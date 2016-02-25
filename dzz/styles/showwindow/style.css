@@ -1,0 +1,333 @@
+
+
+/* ---- X_widget 样式 ---- */
+
+
+.fwinmask {
+	background:#FBFBFB;
+	/*box-shadow:0 3px 7px rgba(0,0,0,0.3),inset 0 0 10px #FFF;*/
+	box-shadow:1px 3px 15px rgba(0,0,0,0.8),inset 0 0 10px #FFF;
+	/*border:1px solid rgba(0,0,0,0.7);*/
+	padding:5px;
+	border:1px solid #CCC\0;
+	*border:1px solid #CCC;
+	border-radius:3px;
+}
+/*.fwinmask.modal-content{
+	box-shadow:none;
+	border:0;
+}*/
+.fwinmask p{
+	margin:0;
+	padding:5px 0 0;
+}
+.fwinmask .altw { width: 350px; }
+	.fwinmask .altw .fltc { margin-bottom: 0; padding: 8px; }
+		.fwinmask .alert_right, .fwinmask .alert_error, .fwinmask .alert_info { padding: 6px 0 6px 58px; min-height: 45px; height: auto !important; height: 40px; line-height: 160%; background:url(images/right.png) no-repeat 8px 8px; font-size: 14px; }
+		.fwinmask .alert_error { background-image: url(images/error.png); }
+			.fwinmask .alert_error a { font-weight: 700;  }
+		.fwinmask .alert_info { background-image: url(images/info.png); }
+		.fwinmask .alert_btnleft { margin-top: 8px; }
+		.fwinmask .alert_btn { margin-top: 20px; text-align: center; }
+		.fwinmask .alert_act { margin-top: 20px; padding-left: 58px; }
+	
+
+/*去除原来透明边框*/
+.fwinmask .t_l, .fwinmask .t_r, .fwinmask .b_l, .fwinmask .b_r {
+    height: 0px;
+    width: 0px;
+}
+.fwinmask .t_c, .fwinmask .m_l, .fwinmask .m_r,  .fwinmask .b_c {
+    width:0px;
+	height:0px;
+}
+
+.fwinmask  .nfl .f_c {
+    background: none;
+    border:none;
+    margin: auto;
+    padding: 20px;
+    width: 380px;
+}
+/*.fwinmask .bm{
+	border:none;
+	background:none;
+}
+.fwinmask .m_c{
+	background:none;
+	
+}*/
+.fwinmask .m_c .form-signin {
+	background: none;
+	border: none;
+	border-radius: none;
+	box-shadow: none;
+	margin: 0;
+	padding: 0;
+}
+.fwinmask .m_c  .form-group{
+	border-bottom: 1px solid #e7e7e7;
+    border-top: 1px solid #FFFFFF;
+	margin:0px;
+	padding:10px 0;
+}
+.fwinmask .m_c  .form-group .help-block{
+	margin:5px 0;
+}
+
+
+.fwinmask .m_c h3{
+	border-bottom:1px solid #e7e7e7;
+	font-size:16px;
+	margin:0; 
+	font-weight:bold;
+	
+}
+
+.fwinmask .m_c h3{*zoom:1}
+.fwinmask .m_c h3:before,.fwinmask .m_c h3:after{display:table;line-height:0;content:""}
+.fwinmask .m_c h3:after{clear:both}
+.fwinmask .m_c h3 .close{
+	margin-right:10px\0;
+	*zoom:1
+}
+.fwinmask .m_c h3 em{
+	font-style:normal;
+	float:left;
+	padding:10px;
+}
+.fwinmask .m_c .o {
+    background: none;
+    border-top: none;
+  /* */
+    padding: 5px;
+    text-align: right;
+	border-top:1px solid #FFF
+}
+.fwinmask .m_c .c {
+    border-bottom: 1px solid #e7e7e7;
+    border-top: 1px solid #FFFFFF;
+    padding: 10px;
+	margin: 0 !important;
+	min-width:350px;
+}
+.fwinmask .m_c .last{
+	border-bottom: none;
+    border-top: 1px solid #FFFFFF;
+	margin:0px;
+	padding:10px 0;
+}
+
+.fwinmask .alert_icon .alert_icon_img{
+	padding:1px;
+	background:#FFF;
+	width:48px;
+	height:48px;
+	height: 48px;
+    margin-left: -58px;
+    padding: 1px;
+    position: absolute;
+    width: 48px;
+}
+.fwinmask .alert_icon {
+  font-size: 14px;
+  height: auto !important;
+  line-height: 160%;
+  min-height: 50px;
+  padding: 6px 0 6px 68px;
+}
+
+
+
+
+.fwinmask .ROUND{
+	background:url(images/showwindow_y.png) 999px 999px;
+	position:absolute;
+	overflow:hidden;
+	z-index:-1;
+	font-size: 1px;
+
+}
+/*按钮*/
+.fwinmask .flbc{
+	width:18px;
+	height:18px;
+	font-size:20px;
+	position:absolute;
+	right:5px;
+	top:5px;
+	text-indent:100;
+}
+/*新建文件夹*/
+
+.foldertype{
+	
+}
+.foldertype .foldertype_item{
+	width:80px;
+	height:80px;
+	margin:5px;
+	float:left;
+	border:1px solid transparent;
+	cursor:pointer;
+	position:relative;
+}
+.foldertype .hover.foldertype_item{
+	background: #FFF1E1/* RGBA(200,200,200,0.5)*/;
+	border:1px solid #FF9900/*#EEE*/;
+	/*border-radius:5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;*/
+}
+.foldertype .selected.foldertype_item{
+	background:#FFF1E1/*RGBA(200,200,200,0.8)*/;
+	border:1px solid #FF9900;
+	/*border-radius:5px;-moz-border-radius: 5px;-webkit-border-radius: 5px;border-radius: 5px;*/
+}
+.foldertype .icon_sel{
+	position:absolute;
+	z-index:10;
+	right:0px;
+	bottom:20px;
+	width:47px;
+	height:47px;
+	background:url(images/selected.png) no-repeat;
+	display:none;
+}
+.foldertype .foldertype_item .icon_sel{
+	width:47px;
+	height:47px;
+}
+.foldertype .selected .icon_sel{
+	display:block;
+}
+
+
+/*.pn {
+  background: url("./images/anniu.png") no-repeat 0 -279px;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  height: 31px;
+  margin:0 5px;
+  overflow: hidden;
+  padding: 0 0 0 3px;
+  vertical-align: middle;
+  float:right;
+  color: #254264 !important;
+}
+.pnc, a.pnc {
+	background: url("./images/anniu.png") no-repeat 0 -93px;
+	
+	color: #254264 !important;
+}
+.pn strong {
+	height:31px;
+	display:inline-block;
+	line-height: 31px;
+	background: url("./images/anniu.png") no-repeat 100% -310px transparent;
+	padding:0 10px;
+}
+.pnc strong {
+	height:31px;
+	display:inline-block;
+	line-height: 31px;
+	background: url("./images/anniu.png") no-repeat 100% -124px transparent;
+	padding:0 10px;
+}
+.pn:active{
+	 background-position: 0 -186px;
+}
+.pn:active strong{
+	 background-position: 100% -217px;
+}
+.pnc:active{
+	 background-position: 0 0;
+}
+.pnc:active strong{
+	 background-position: 100% -31px;
+}*/
+
+
+/* 边框样式 */
+/*
+.fwinmask .LEFT_TOP
+{
+	width: 43px;
+	height: 97px;
+	left:-30px;
+	top:-25px;
+	background-position:0 0;
+	background-repeat:no-repeat;
+}
+
+.fwinmask .TOP
+{
+	
+	height: 97px;
+	left:13px;
+	right:12px;
+	top:-25px;
+	background-position:0px -288px;
+	background-repeat:repeat-x;
+}
+.fwinmask .RIGHT_TOP
+{
+	width: 42px;
+	height: 97px;
+	right:-30px;
+	top:-25px;
+	background-position:0px -97px;
+	background-repeat:no-repeat;
+	
+}
+
+.fwinmask .RIGHT
+{
+	
+	width: 42px;
+	right:-30px;
+	top:72px;
+	bottom:13px;
+	background:url(images/showwindow_x.png) 0px 0px repeat-y;
+	
+}
+.fwinmask .RIGHT_BOTTOM
+{
+	height: 47px;
+	width: 42px;
+	right:-30px;
+	bottom:-34px;
+	background-position:0px -241px;
+	background-repeat:no-repeat;
+}
+
+.fwinmask .BOTTOM
+{
+	
+	height: 47px;
+	bottom:-34px;
+	left:13px;
+	right:12px;
+	background-position:0px -401px;
+	background-repeat:repeat-x;
+	
+}
+
+.fwinmask .LEFT_BOTTOM
+{
+	width: 43px;
+	height: 47px;
+	bottom:-34px;
+	left:-29px;
+	background-position:0px -194px;
+	background-repeat:no-repeat;
+}
+
+
+.fwinmask .LEFT
+{
+	width: 43px;
+	bottom: 13px;
+	top:72px;
+	left:-30px;
+	background:url(images/showwindow_x.png) -42px 0px repeat-y;
+}*/

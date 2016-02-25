@@ -1,0 +1,96 @@
+<!--{template common/header_simple_start}-->
+
+<!--{template common/header_simple_end}-->
+<div class="container" style="width:100%;text-align:center">
+    <div id="ie_nopdf_plugin" class="well" style="margin:40px auto;width:400px;display:none;">
+        <p style="font-size:18px;font-weight:bold;text-align:center;text-shadow:1px 1px 1px #EEE">您的浏览器需要下载插件才能在线查看</p>
+        <p  style="font-size:18px;text-align:center;text-shadow:1px 1px 1px #EEE"><a href="http://get.adobe.com/cn/reader/?promoid=HRZAC" target="_blank">立即下载 Adobe Reader</a>	</p>
+        <p  style="font-size:14px;text-align:right;margin-bottom:0;text-shadow:1px 1px 1px #EEE"">插件安装完成后&nbsp;&nbsp;<a  href="javascript:;" onclick="window.location.reload()">点此刷新</a></p>
+    </div>
+</div>
+<script type="text/javascript">
+
+jQuery(document).ready(function(e) {
+		if(PdfDetect()) window.location.href='{$url}';
+		else{
+			jQuery('#ie_nopdf_plugin').show();
+		}
+});
+function PdfDetect(){
+	var isInstalled = false;
+	var version = 0;
+	if(parseInt(BROWSER.firefox)>18){
+		return BROWSER.firefox;
+	}else if(parseInt(BROWSER.safari)>0){
+		return BROWSER.safari;
+	}else if(parseInt(BROWSER.chrome)>7){
+		return BROWSER.chrome;
+	/*}else if(parseInt(BROWSER.rv)>10){//待测试
+		return BROWSER.rv;*/
+	}else if (window.ActiveXObject) {
+		  var control = null;
+		  try {
+			// AcroPDF.PDF is used by version 7 and later
+			control = new ActiveXObject('AcroPDF.PDF');
+		  } catch (e) {
+			// Do nothing
+		  }
+		  if (!control) {
+			try {
+			  // PDF.PdfCtrl is used by version 6 and earlier
+			  control = new ActiveXObject('PDF.PdfCtrl');
+			} catch (e) {}
+		  }
+		  if (control) {
+			try{ 
+				isInstalled = true;
+				version = control.GetVersions().split(',');
+				version = version[0].split('=');
+				version = parseFloat(version[1]);
+			}catch(e){}
+				return version;
+		  }
+		  return version;
+	} else{
+		
+		if (navigator.plugins['Adobe Acrobat'] || navigator.plugins['Adobe PDF Plug-in']) {
+			if (BROWSER.chrome || BROWSER.safari) {
+				//  version = navigator.plugins[i].name.match(/([\d.]+)/) + "<br />"
+				version = 8; //chrome浏览器无法有效检测pdf版本
+			} else {
+				version = navigator.plugins['Adobe PDF Plug-in'] ? 
+				navigator.plugins['Adobe Acrobat'].version : 
+				navigator.plugins['Adobe Acrobat'].version;
+			}
+			return version;
+		}else{
+			 try {
+			// AcroPDF.PDF is used by version 7 and later
+			control = new ActiveXObject('AcroPDF.PDF');
+		  } catch (e) {
+			// Do nothing
+		  }
+		  if (!control) {
+			try {
+			  // PDF.PdfCtrl is used by version 6 and earlier
+			  control = new ActiveXObject('PDF.PdfCtrl');
+			} catch (e) {}
+		  }
+		  if (control) {
+			try{ 
+				isInstalled = true;
+				version = control.GetVersions().split(',');
+				version = version[0].split('=');
+				version = parseFloat(version[1]);
+			}catch(e){}
+				return version;
+		  }
+		  return version;
+		}
+		
+	}
+	return isInstalled
+}
+
+</script>
+<!--{template common/footer}-->

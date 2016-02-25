@@ -1,0 +1,96 @@
+.cropFrame {
+	overflow : hidden;
+	position : relative;
+    display: inline-block;
+}
+
+.cropImage {
+	position : absolute;
+	top      : 0;
+	left     : 0;
+	cursor   : move;
+	max-width: none;
+}
+
+.cropControls {
+	background : #000;
+	width      : 100%;
+	height     : 36px;
+	position   : absolute;
+	z-index    : 100;
+	bottom     : 0;
+	left       : 0;
+	opacity    : 0;
+	filter     : alpha(opacity=0);
+	transition : opacity .25s linear;
+	-moz-transition    : opacity .25s linear;
+	-webkit-transition : opacity .25s linear;
+
+    t-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.cropFrame.hover .cropControls {
+	opacity    : .55;
+	filter     : alpha(opacity=55);
+}
+
+.cropControls span {
+	display   : block;
+	float     : left;
+	color     : #fff;
+	font-size : 11px;
+	margin    : 10px 0 0 5px;
+}
+
+.cropZoomIn,
+.cropZoomOut {
+	display         : block;
+	float           : right;
+	margin          : 4px 4px 0 0;
+	padding         : 0;
+	background      : #fff;
+    border: 1px solid #000;
+	color           : #000;
+	border-radius   : 4px;
+	width           : 28px;
+	height          : 28px;
+	line-height     : 0;
+	font-size       : 28px;
+	text-align      : center;
+	text-decoration : none;
+	cursor          : pointer;
+}
+
+.cropZoomIn::after,
+.cropZoomIn .after {
+	content : "+";
+	display : block;
+	text-align:center;
+}
+
+.cropZoomOut::after,
+.cropZoomOut .after {
+	content        : "-";
+	display        : block;
+	text-align:center;
+}
+
+/*IE8*/
+.cropZoomIn:after,
+.cropZoomIn .after {
+	content : "+";
+	display : block;
+	text-align:center;
+}
+/*IE8*/
+.cropZoomOut:after,
+.cropZoomOut .after {
+	content        : "-";
+	display        : block;
+	text-align:center;
+}

@@ -1,0 +1,97 @@
+<div class="main-header" style="line-height:39px;padding:0 15px;">
+	<b><!--{if $org['forgid']<1}-->机构<!--{else}-->部门<!--{/if}-->名称：$org['orgname'] </b>
+    <!--{if $_G['adminid']==1}--><a href="{ADMINSCRIPT}?mod=orguser&op=export&orgid=$orgid" class="btn btn-link pull-right" title="导出此部门的所有用户到excl文件" target="_blank">导出用户</a><!--{/if}-->
+</div>
+<div class="main-body" style="padding:15px 15px 15px 22px;">
+    <!--{if $folder_available}-->
+    <dl>
+    	<dt>共享目录设置:</dt>
+        <dd class="clearfix">
+        	<label class="radio-inline"><input type="radio" id="folder_available_1" name="fid" value="1" <!--{if $org[available]>0}-->checked="checked"<!--{/if}-->      onclick="folder_available(1,'$orgid');"  />启用</label>
+            <label class="radio-inline ml20"><input type="radio" id="folder_available_0" name="fid"  value="0" <!--{if $org[available]<1}-->checked="checked"<!--{/if}--> onclick="folder_available(0,'$orgid');" />不启用</label>
+           <!--{if $org['forgid']<1}--> 
+           		<span class="help-inline ml20">如不启用，下级所有部门中将不能使用共享目录；启用后，企业盘才会显示共享目录。</span>
+           <!--{else}-->
+          	 <span class="help-inline ml20">启用后，企业盘机构下才会显示此部门的共享目录。</span>
+           <!--{/if}-->
+        </dd>
+    </dl>
+    <dl id="indesk" <!--{if $org[available]<1}-->style="display:none"<!--{/if}-->>
+    	<dt>共享目录桌面快捷方式:</dt>
+        <dd class="clearfix">
+        	<label class="radio-inline"><input type="radio" id="folder_indesk_1" onclick="folder_indesk(1,'$orgid');" name="indesk" value="1" <!--{if $org[indesk]>0}-->checked="checked"<!--{/if}--> />创建</label>
+            <label class="radio-inline"><input type="radio" id="folder_indesk_0" onclick="folder_indesk(0,'$orgid');" name="indesk" value="0" <!--{if $org[indesk]<1}-->checked="checked"<!--{/if}--> />不创建</label>
+            <span class="help-inline ml20">创建快捷方式后，所属成员桌面默认都会有相应快捷方式。</span>
+        </dd>
+    </dl> 
+    <!--{/if}-->
+    <dl>
+    	<dt>职位管理:</dt>
+        <dd class="clearfix jobs">
+        	<!--{loop $jobs $value}-->
+            <div id="job_$value[jobid]" orgid="$value['orgid']" class="job-item-edit pull-left mb10">
+                <button onclick="job_show_editor('$value[jobid]','$value['orgid']', this)"  class="btn btn-simple job-name mr20">$value[name]</button>
+                <div class="edit hide" style="min-width:250px">
+                    <div class="job-edit-control pull-left" >
+                    <input type="text" class="form-control" value="$value[name]" style="width:100px" onkeyup="if(event.keyCode==13){job_save('$value[jobid]','$value['orgid']');return false;}">
+                    </div>
+                    <button onclick="job_save('$value[jobid]','$value['orgid']')" data-loading-text="保存" class="btn btn-success job-save">保存 </button>
+                    <button class="btn btn-link todo-del" onclick="job_del('$value[jobid]','$value['orgid']')"> 删除 </button>
+                </div> 
+        	</div>
+            <!--{/loop}-->
+        	<div  class="new-job pull-left" style="padding:0 10px;"> 
+                	<a href="javascript:;" onclick="job_show_add_editor('$orgid',this)" class="btn btn-simple "> 添加职位 </a>
+                  <div class="new-job-control hide" style="min-width:250px">
+                    <div class="pull-left">
+                      <input type="text" class="new-job-text form-control" style="width:100px" onkeyup="if(event.keyCode==13){job_add('$orgid');return false;}" placeholder="职位名称">
+                    </div>
+                    <button class="btn btn-success" data-loading-text="添加" onclick="job_add('$orgid')">添加 </button>
+                    <button class="btn btn-link job-del" onclick="job_cancel_add_editor('$orgid')"> 取消 </button>
+                  </div>
+                 
+                </div>
+        </dd>
+        
+    </dl>
+    
+    <dl>
+    	<dt><!--{if $org['forgid']<1}-->机构<!--{else}-->部门<!--{/if}-->管理员</dt>
+        <dd class="clearfix">
+        	<ul id="moderators_container_$orgid" class="moderators-container list-unstyled clearfix">
+            <!--{if $pmoderator}-->
+            	<li  class="moderators-acceptor pull-left" orgid="$orgid" style=""> 
+                   <div class="avatar-cover"></div>
+                    <div class="user-item-avatar"> 
+                    	<div class="avatar-face">
+                    		<img src="avatar.php?uid=0&size=middle"> 
+                        </div>
+                    </div>
+               </li>
+               <!--{/if}-->
+            	<!--{loop $moderators $value}-->
+                <li  class="user-item pull-left" uid="$value[uid]"> 
+                    <!--{if $pmoderator}--> <div class="delete" onclick="moderator_del('$value[id]','$orgid',this);" ><i style="color:#d2322d;font-size:16px" class="glyphicon glyphicon-remove-sign">&nbsp;</i></div><!--{/if}-->
+                    <div class="avatar-cover"></div>
+                    <div class="user-item-avatar"> 
+                    	<div class="avatar-face">
+                    		<img src="avatar.php?uid=$value[uid]&size=middle"> 
+                        </div>
+                    </div>
+                    <p class="text-center" style="height:20px;margin:5px 0;line-height:25px;overflow:hidden;"> $value[username]</p>
+               </li>
+                <!--{/loop}-->
+            
+            </ul>
+        </dd>
+        <dd class="clearfix">
+        	
+         	<ul class="help-block " style="line-height:2">
+            	<strong class="pull-left" style="margin-left:-45px;">注：</strong>
+            	<li>机构管理员权限：设置本机构下所有部门管理员，管理本机构中所有人员，管理本机构所有共享目录。</li>
+                <li>部门管理员权限：设置本部门下所有子部门管理员，管理本部门中所有人员，管理本部门所有共享目录。</li>
+            </ul>
+        </dd>
+    </dl>
+   
+</div>

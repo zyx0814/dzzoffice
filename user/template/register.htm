@@ -1,0 +1,280 @@
+ <!--{if empty($_GET['inajax'])}-->
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script src="user/scripts/register.js?{VARHASH}" ></script>
+<style>
+body{
+	background:rgb(58, 110, 165);
+}
+.col-sm-4 .help-block{
+	margin-bottom:0;
+}
+<!--{if defined('IN_MOBILE')}-->
+body{
+	background:#FFF !important;
+	overflow:auto !important;
+}
+<!--{/if}-->
+</style>
+<!--{template common/header_simple_end}-->
+<!--{if !defined('IN_MOBILE')}-->
+<div id="popModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: block;">
+	<div class="modal-dialog">
+        <div class="modal-content">
+<!--{/if}-->
+<!--{else}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<!--{/if}-->
+<!--[if lt IE 9]>
+  <script src="static/js/jquery.placeholder.js" type="text/javascript"></script>
+<![endif]-->
+<!--      
+-->
+<!--{if $bbrules && $bbrulesforce && !$_GET['agree'] }-->
+        <div class="modal-header">
+             <!--{if !empty($_GET['inajax'])}--><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><!--{/if}-->
+            <h4  class="modal-title" ><span id="returnmessage_$loginhash"><!--{echo addslashes($this->setting['sitename']);}--> {lang rulemessage}</span></h4>
+         </div>
+      <div  class="modal-body">
+        $bbrulestxt
+      </div>
+     <div class="modal-footer">
+     	<button type="button" class="btn btn-default" onclick="location.href='$_G[siteurl]'">不同意</button>
+        <button type="button" class="btn btn-success" onclick="try{_login.register('user.php?mod=register&agree=1&inajax=1')}catch(e){location.href='user.php?mod=register&agree=1';}">同意</button>
+     </div>
+<!--{elseif $bbrules &&  $_GET['showbbrules']}-->
+	<div class="modal-header">
+             <!--{if !empty($_GET['inajax'])}--><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><!--{/if}-->
+            <h4  class="modal-title" ><span id="returnmessage_$loginhash"><!--{echo addslashes($this->setting['sitename']);}--> {lang rulemessage}</span></h4>
+         </div>
+      <div  class="modal-body">
+        $bbrulestxt
+      </div>
+      <div class="modal-footer">
+     	<button type="button" class="btn btn-default" onclick="location.href='$_G[siteurl]'">不同意</button>
+        <button type="button" class="btn btn-success" onclick="try{_login.register('user.php?mod=register&agree=1&inajax=1');}catch(e){location.href='user.php?mod=register&agree=1';}">同意</button>
+     </div>
+
+<!--{else}-->
+	<div id="register_form">
+ 		<div class="modal-header">
+             <!--{if !empty($_GET['inajax'])}--><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><!--{/if}-->
+            <h4  class="modal-title" ><span id="returnmessage4">$_G['setting']['reglinkname']</span></h4>
+         </div>
+      <div  class="modal-body">
+        <form class="form-signin form-horizontal" method="post" role="form"  name="registerform" id="registerform" enctype="multipart/form-data"  action="user.php?mod=register" onsubmit="checksubmit();return false" >
+   <input type="hidden" name="regsubmit" value="yes" />
+  <input type="hidden" name="formhash" value="{FORMHASH}" />
+  <input type="hidden" name="referer" value="$dreferer" />
+  <input type="hidden" name="handlekey" value="$_GET[handlekey]" />
+  
+        <!--{if $invite}--> 
+              <!--{if $invite['uid']}-->
+                 <div class="form-group">
+                  <label class="control-label col-sm-3" for="invitecode">{lang register_from}:</label>
+                  <a class="span8" href="user.php?mod=invite&uid=$invite[uid]" target="_blank">$invite[username]</a>
+                 </div>
+              <!--{else}-->
+               	 <div class="form-group">
+                  <label class="control-label col-sm-3" for="invitecode">{lang invite_code}:</label>
+                  <div class="col-sm-5">
+                   <input type="text" class="form-control" id="invitecode" name="invitecode" placeholder="{lang invite_code}" required>
+                  </div>
+                </div>
+            
+              <!--{eval $invitecode = 1;}--> 
+              <!--{/if}--> 
+        <!--{/if}--> 
+        <!--{if empty($invite) && $this->setting['regstatus'] == 2 && !$invitestatus}-->
+            <div class="form-group">
+                <label class="control-label col-sm-3" for="invitecode">{lang invite_code}:</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="invitecode" name="" placeholder="{lang invite_code}" autocomplete="off" onblur="checkinvite()">
+                </div>
+                 <div class="col-sm-4">
+                      <!--{if $this->setting['inviteconfig']['buyinvitecode'] && $this->setting['inviteconfig']['invitecodeprice'] && ($this->setting[ec_tenpay_bargainor] || $this->setting[ec_tenpay_opentrans_chnid] || $this->setting[ec_account])}-->
+                      <span class="help-block"><a href="misc.php?mod=buyinvitecode" target="_blank" class="xi2">{lang register_buyinvitecode}</a></span>
+                       
+                      <!--{/if}-->
+                      <span id="chk_invitecode" class="help-block"><span id="suc_invitecode"></span><kbd  class="p_chk"></kbd></span>
+                </div>
+            </div>
+            <!--{eval $invitecode = 1;}--> 
+         <!--{/if}-->
+         <!--{if $_GET[action] != 'activation'}-->
+          		<div class="form-group">
+                      <label class="control-label col-sm-3" for="email">{lang login_email}</label>
+                      <div class="col-sm-5">
+                        <input type="text" id="email"  class="form-control" name="" autocomplete="off" placeholder="{lang register_email_tips}" >
+                        <p  id="emailmore" style="height:1px;margin:0;">&nbsp;</p>
+                      </div>
+                         <div class="col-sm-4">
+                            <span id="chk_email" class="help-block">
+                                <span id="suc_email"></span><kbd class="p_chk"></kbd> 
+                            </span>
+                            
+                         </div>
+                </div>
+               <div class="form-group">
+                      <label class="control-label col-sm-3" for="nickname">用户名</label>
+                      <div class="col-sm-5">
+                        <input type="text" id="nickname"  class="form-control" name="" autocomplete="off" placeholder="登录用户名(选填)" >
+                      </div>
+                         <div class="col-sm-4">
+                            <span id="chk_nickname" class="help-block">
+                                <span id="suc_nickname"></span><kbd class="p_chk"></kbd> 
+                            </span>
+                            
+                         </div>
+                </div>
+              <div class="form-group">
+                  <label class="control-label col-sm-3" for="username">{lang username}</label>
+                  <div class="col-sm-5">
+                    <input type="text" class="form-control" id="username" name="username" autocomplete="off" placeholder="{lang register_username_tips}" >
+                  </div>
+                  <div class="col-sm-4">
+                    <span id="chk_username" class="help-block"><span id="suc_username"></span><kbd class="p_chk"></kbd></span>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="control-label col-sm-3" for="password">{lang password}</label>
+                  <div class="col-sm-5">
+                    <input type="password" class="form-control" id="password" name="" autocomplete="off" placeholder="{lang register_password_tips}" >
+                  </div>
+                  <div class="col-sm-4">
+                   <span id="chk_password" class="help-block"> <span id="suc_password"></span><kbd  class="p_chk"></kbd></span>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="control-label col-sm-3" for="password2">{lang password_confirm}</label>
+                  <div class="col-sm-5">
+                    <input type="password" class="form-control"  id="password2" name="" autocomplete="off" placeholder="{lang register_repassword_tips}" >
+                  </div>
+                  <div class="col-sm-4">
+                    <span id="chk_password2" class="help-block">
+                        <span id="suc_password2"></span>
+                        <kbd class="p_chk"></kbd>
+                    </span>
+                  </div>
+              </div>
+                
+          <!--{/if}-->
+       <!--{if $this->setting['regverify'] == 2}-->
+            <div class="form-group">
+              <label class="control-label col-sm-3" for="regmessage">注册原因:</label>
+              <div class="col-sm-5">
+                <input type="text" class="form-control" id="regmessage" name="regmessage" autocomplete="off" placeholder="申请注册原因" >
+              </div>
+              <div class="col-sm-4">
+                 <span id="chk_$field['fieldid']" class="help-block">您填写的注册原因会被当作人工审核的重要参考依据，请认真填写。 </span>
+              </div>
+            </div>
+       <!--{/if}-->  
+       <!--{if empty($invite) && $this->setting['regstatus'] == 3}-->
+       		 <div class="form-group">
+                <label class="control-label col-sm-3" for="invitecode">{lang invite_code}</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="invitecode" name="invitecode" placeholder="{lang invite_code}" autocomplete="off" id="invitecode"{if $this->setting['regstatus'] == 2} onblur="checkinvite()"{/if}>
+				</div>
+                <!--{eval $invitecode = 1;}-->
+         	 </div>
+						
+		<!--{/if}-->
+
+        <!--{loop $_G['cache']['fields_register'] $field}-->
+            <!--{if $htmls[$field['fieldid']]}-->
+            	 <div class="form-group">
+                    <label class="control-label col-sm-3" for="$field['fieldid']">$field[title]</label>
+                    <div class="col-sm-5">
+                        $htmls[$field['fieldid']]
+                    </div>
+                     <div class="col-sm-4">
+                        <span id="chk_$field['fieldid']" class="help-block">
+                            <span id="suc_$field['fieldid']"></span><kbd id="chk_$field['fieldid']" class="p_chk"></kbd> 
+                        </span>
+                    </div>
+                 </div>
+            
+            <!--{/if}-->
+        <!--{/loop}-->
+       
+           
+     <!--{if $secqaacheck || $seccodecheck}-->
+            <!--{block sectpl}--><sec><sec><sec><!--{/block}-->
+             <div class="form-group">
+            	<label class="control-label col-sm-3">验证码</label>
+              	<div class="col-sm-9">
+                <!--{subtemplate common/seccheck}-->
+                </div>
+           	 </div>
+        <!--{/if}--> 
+   <!--{if $bbrules}--> 
+    <div class="form-group">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-9">
+      <label class="control-label checkbox-inline"><input type="checkbox"  name="agreebbrule" value="$bbrulehash" id="agreebbrule" checked="checked" />同意<a href="javascript:;" onclick="try{_login.register('user.php?mod=register&inajax=1&showbbrules=1');}catch(e){location.href='user.php?mod=register&showbbrules=1';}">服务条款</a></label> 
+      </div>
+    </div>
+    <!--{/if}-->
+    <div class="form-group last">
+      <div class="col-sm-3"></div>
+      <div class="col-sm-9">
+        <button type="submit" class="btn btn-primary btn-width "><!--{if $_GET[action] == 'activation'}-->{lang activation}<!--{else}-->$_G[setting][reglinkname]<!--{/if}--><!--{if $qqopenid}-->并绑定<!--{/if}--></button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <!--{if $qqopenid}-->
+        	<button type="button" class="btn btn-default" onclick="location.href='user.php?mod=qqlogin&type=calback'}" title="返回登录">返回登录</button>
+        <!--{else}--> 
+        	<button type="button" class="btn btn-default" onclick="try{_login.logging();}catch(e){location.href='user.php?mod=logging'}" title="返回登录">返回登录</button>
+        <!--{/if}-->
+      </div>
+    </div>
+  </form>
+      </div>
+    </div>
+      <script type="text/javascript" reload="1">
+		var lastusername = '', lastpassword = '', lastemail = '', lastinvitecode = '', stmp = new Array(), modifypwd = false;
+		var ignoreEmail = false;
+		var strongpw = new Array();
+		<!--{if $_G['setting']['strongpw']}-->
+			<!--{loop $_G['setting']['strongpw'] $key $val}-->
+			strongpw[$key] = $val;
+			<!--{/loop}-->
+		<!--{/if}-->
+		var pwlength = <!--{if $_G['setting']['pwlength']}-->$_G['setting']['pwlength']<!--{else}-->0<!--{/if}-->;
+		<!--{if $this->showregisterform}-->
+			<!--{if $sendurl}-->
+			addMailEvent($('email'));
+			<!--{else}-->
+			addFormEvent('registerform', 0);
+			<!--{/if}-->
+		<!--{/if}-->
+		jQuery(document).ready(function(e) {
+			if(jQuery('.ie8,.ie9').length){ //ie8模拟placeholder;
+				jQuery(':input[placeholder]').each(function(){
+					jQuery(this).placeholder();
+				});
+			}
+		});
+   	</script>
+<!--{/if}-->
+	<div class="nfl" id="main_succeed" style="display: none">
+        <div class="modal-body">
+          <div class="alert_right">
+            <div id="succeedmessage"></div>
+            <div id="succeedlocation" class="alert_btnleft"></div>
+            <p class="alert_btnleft"><a id="succeedmessage_href">{lang message_forward}</a></p>
+          </div>
+        </div>
+      </div>
+
+<!--{if empty($_GET['inajax'])}--> 
+<!--{if !defined('IN_MOBILE')}-->
+	</div>
+  </div>
+</div>
+<!--{/if}-->
+<script type="text/javascript">
+	jQuery('body').addClass('modal-open');
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer}--> 
+<!--{/if}--> 

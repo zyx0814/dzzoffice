@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset={CHARSET} />
+<title>mp3播放器</title>
+<meta http-equiv="Content-Type" content="text/html; charset={CHARSET}" />
+<link href="{MP3_DIR}images/jplayer.pink.flag.css?{VERHASH}" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{MP3_DIR}scripts/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="dzz/scripts/jquery.json-2.4.min.js"></script>
+<script type="text/javascript" src="{MP3_DIR}scripts/jquery.jplayer.js?{VERHASH}"></script>
+<script type="text/javascript" src="{MP3_DIR}scripts/jplayer.playlist.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/scripts/dzz.api.js?{VERHASH}"></script>
+<script type="text/javascript">
+
+var jplay=null;
+
+var url='{DZZSCRIPT}?mod=player:mp3&op=jplayer';
+var streamurl='{DZZSCRIPT}?mod=io&op=getStream';
+var icoid='{$icoid}';
+var saveurl=url+'&do=saveplaylist';
+var api=_api.init();
+var win=api.win;
+
+
+jQuery(document).ready(function(){
+	jQuery.getJSON(url+'&do=getplaylist',function(json){
+		//console.log(json);
+			jplay=new jPlayerPlaylist({
+					jPlayer: "#jquery_jplayer_1",
+					cssSelectorAncestor: "#jp_container_1"
+				}, 
+				json.playlist, 
+				{
+					swfPath: "{MP3_DIR}scripts",
+					supplied: "mp3",
+					wmode: "window",
+					playlistOptions: {
+						enableRemoveControls: true,
+						autoPlay:true,
+						displayTime: 0,
+						addTime: 0
+					}
+			});
+			if(json.isadmin>0){
+				jQuery('.jp_header').show();
+			}
+			
+			if(icoid && parent._config.sourcedata.icos[icoid]) {
+				var icodata=parent._config.sourcedata.icos[icoid];
+				if(icodata.type=='shortcut') icodata=icodata.tdata;
+				checkRepeat(icodata);
+				var data={};
+				data.params={"multiple":false};
+				data.icodata=icodata;
+				acceptdata(data);
+			}
+	});
+	//_api.move(document.body);
+	jQuery('#open_mp3').on('click',function(){
+		parent.OpenFile('open','打开mp3文件',{"mp3":['mp3文件(*.MP3)',['MP3'],'selected']},{bz:'all',multiple:true},function(data){
+			acceptdata(data);
+		}); 
+		return false;
+	});
+	
+});
+function checkeURL(URL){
+	var str=URL;
+	if(str=='about:blank') return true;
+	var Expression=/[a-zA-z]+:\/\/[^\s]*/;
+	var objExp=new RegExp(Expression);
+	if(objExp.test(str)==true){
+		return true;
+	}else{
+		return false;
+	}
+} ;
+var  acceptdata=function(data){
+	if( data.params.multiple){
+		for(var i in data.icodata){
+			var media={};
+			var name=data.icodata[i].name.substr(0,data.icodata[i].name.lastIndexOf('?')-1);
+			media['title']=name?name:data.icodata[i].name;
+			var url=(data.icodata[i].url);
+			if(data.icodata[i].dpath){
+				var url=streamurl+'&icoid='+data.icodata[i].icoid+'&path='+data.icodata[i].dpath;
+			}else{
+				var url=(data.icodata.url);
+			}
+			checkRepeat(data.icodata[i]);
+			media[data.icodata[i].ext?data.icodata[i].ext:'mp3']=url;
+			jplay.add(media,true);	
+		}
+	}else{
+		
+		var media={};
+		var name=data.icodata.name.substr(0,data.icodata.name.lastIndexOf('?')-1);
+		media['title']=name?name:data.icodata.name;
+		if(data.icodata.dpath){
+			var url=streamurl+'&icoid='+data.icodata.icoid+'&path='+data.icodata.dpath;
+		}else{
+			var url=(data.icodata.url);
+		}
+		checkRepeat(data.icodata);
+		media[data.icodata.ext?data.icodata.ext:'mp3']=url;
+		jplay.add(media,true);	
+	}
+}
+function checkRepeat(icodata){
+	var playlist=jplay.playlist;
+	var setplaylist=false;
+	for(var i=0;i<playlist.length;i++){
+		if(icodata.icoid){
+			var reg=new RegExp('icoid='+icodata.icoid);
+			if(playlist[i].mp3.match(reg,'i')){
+				  jplay.playlist.splice(i,1);
+				  setplaylist=true;
+			}
+		}else{
+			if(playlist[i].mp3==icodata.path && playlist[i].title==icodata.name){
+				setplaylist=true;
+				jplay.playlist.splice(i,1);
+			}
+		}
+	}
+	if(setplaylist) jplay.setPlaylist(jplay.playlist);
+}
+window.multiOpen=function(url){
+	var icoid=getUrl('icoid',url);//url.match(/path=([\w|=]+)[&|$]/i);
+	if(!icoid) return;
+	var icodata=parent._config.sourcedata.icos[icoid];
+	if(icodata.type=='shortcut') icodata=icodata.tdata;
+	checkRepeat(icodata);
+	var data={};
+	data.params={"multiple":false};
+	data.icodata=icodata;
+	acceptdata(data);
+}
+function getUrl(name,url) {
+	if(!url) url=window.location.search.substr(1);
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+	var r = url.match(reg);
+	if (r != null) return unescape(r[2]); return false;
+}
+</script>
+</head>
+<body style="overflow:hidden">
+<div id="_blank" style="position:absolute; z-index:9999;display:none; width:100%; height:100%;top:0px; left:0px;background:url(dzz/images/b.gif)"></div>
+
+		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+
+		<div id="jp_container_1" class="jp-audio">
+			<div class="jp_header" style="height:16px;margin-top:-5px;font-size:12px;display:none;"><a id="open_mp3" style="float:left;cursor:pointer">打开文件</a><a style="float:right;cursor:pointer" onClick="win.Close();">关闭</a></div>
+			<div class="jp-type-playlist">
+				<div class="jp-gui jp-interface">
+					<div id="jp-title-bar" class="jp-title-bar">
+						<div id="jp-title-value" class="jp-title-bar-value"></div>
+					</div>
+					<ul class="jp-controls">
+						<li><a href="javascript:;" class="jp-previous" tabindex="1">previous</a></li>
+						<li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+						<li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+						<li><a href="javascript:;" class="jp-next" tabindex="1">next</a></li>
+						<li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+						<li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+						<li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+						<li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+					</ul>
+					<div class="jp-progress">
+						<div class="jp-seek-bar">
+							<div class="jp-play-bar"></div>
+
+						</div>
+					</div>
+					<div class="jp-volume-bar">
+						<div class="jp-volume-bar-value"></div>
+					</div>
+					<div class="jp-current-time"></div>
+					<div class="jp-duration"></div>
+					<ul class="jp-toggles">
+						<li><a href="javascript:;" class="jp-shuffle" tabindex="1" title="shuffle">shuffle</a></li>
+						<li><a href="javascript:;" class="jp-shuffle-off" tabindex="1" title="shuffle off">shuffle off</a></li>
+						<li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+						<li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+					</ul>
+				</div>
+				<div class="jp-playlist">
+					<ul>
+						<li></li>
+					</ul>
+				</div>
+				<div class="jp-no-solution">
+					<span>Update Required</span>
+					To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>
+				</div>
+			</div>
+		</div>
+</body>
+
+</html>

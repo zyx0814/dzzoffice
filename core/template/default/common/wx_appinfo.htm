@@ -1,0 +1,165 @@
+<style>
+.line {
+	height: 2px;
+	margin: 10px 0;
+	font-size: 0;
+	overflow: hidden;
+	background-color: transparent;
+	border-width: 0;
+	border-top: 1px solid #e7e7e7;
+	border-bottom: 1px solid #FFF;
+}
+.pull-in {
+	margin-left: -15px;
+	margin-right: -15px;
+}
+/*.line-dashed {
+	border-style: dashed;
+	background: transparent;
+}*/
+.line-lg {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+.padding-left .col-sm-12 {
+	padding-left: 40px;
+}
+.relative {
+	position: relative;
+}
+.copy-success {
+	position: absolute;
+	left: -210px;
+	top: -15px;
+	padding: 8px;
+}
+.absoluter {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 5px;
+}
+</style>
+
+<div class="main-header">
+  <ul  class="nav nav-pills nav-pills-bottomguide">
+    <li class="active"><a href="{$baseurl_info}">{eval echo $base_info_title?$base_info_title:'应用信息';}</a></li>
+    <li><a href="{$baseurl_menu}">{eval echo $base_menu_title?$base_menu_title:'应用菜单';}</a></li>
+  </ul>
+</div>
+<div class="main-content" style="border-top:1px solid #FFF">
+<div class="panel-body" >
+  <div class="entity-panel-body form-horizontal">
+    <div class="form-group clearfix relative"> <img src="$wxapp[icon]" style="width:80px;position:absolute;left:20px;top:0px">
+      <div class=" ml20" style="padding-left:100px;">
+        <h4 class="relative"><strong>$wxapp[name]</strong></h4>
+        <p class="relative" style="padding-top:5px">$wxapp[desc]</p>
+       
+      </div>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group clearfix relative">
+    <form  name="settingform" class="form-horizontal form-horizontal-left" action="$baseurl_info" method="post" style="margin:0">
+          <input type="hidden" name="settingsubmit" value="true" />
+          <input type="hidden" name="formhash" value="{FORMHASH}" />
+          <div class="form-group">
+            <label class="control-label" for="agentid">AgendID：</label>
+            <input id="agentid" type="text" class="form-control" style="width:80px;" name="agentid" value="$wxapp[agentid]" />
+            <span class="help-inline">获取方法：［登录企业号后台］－［应用中心］－［选择需要绑定的应用］－［复制应用ID］</span> </div>
+          <div class="form-group">
+            <label class="control-label">应用状态：</label>
+            
+              <label class="radio-inline"><input type="radio" name="appstatus" value="0" <!--{if !$wxapp[status]}-->checked="checked"<!--{/if}--> >开启</label>
+              <label class="radio-inline"><input type="radio" name="appstatus" value="1" <!--{if $wxapp[status]>0}-->checked="checked"<!--{/if}--> >关闭</label>
+           
+            <span class="help-inline">关闭应用后，将不在向此应用发送消息，应用的菜单事件也将没有回应</span> </div>
+          <div class="form-group" >
+            <label class="control-label">&nbsp;</label>
+            <button type="submit" id="ueditorform_btn" class="btn btn-primary" style="padding:6px 25px" data-loading-text="保存中..." >保存</button>
+          </div>
+        </form>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group clearfix padding-left">
+      <div class="col-sm-12">
+        <p class="form-control-static danger relative"><i class="glyphicon glyphicon-hand-down"></i> <strong style="font-size:1.5em">以下的所有设置都需要到微信企业号内设置</strong> <a href="http://qy.weixin.qq.com/" target="_blank" class="pull-right btn btn-default">去微信企业号修改</a> </p>
+      </div>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group  clearfix padding-left">
+      <label class="col-sm-12">
+      <h5><strong>应用可见范围</strong></h5>
+      </label>
+      <div class="col-sm-12">
+        <p class="form-control-static relative">顶级机构<span class="gray">(微信企业号内通讯录里最顶级的机构)</span> </p>
+      </div>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-sm-12">
+      <h5><strong>可信域名</strong></h5>
+      </label>
+      <div class="col-sm-12">
+        <p class="form-control-static relative">$wxapp[host] <span class="absoluter">
+          <button class="btn btn-default js_copy" data-clipboard-text="$wxapp[host]" title="复制">复制</button>
+          <span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span> </span> </p>
+      </div>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-sm-12">
+      <h5><strong>回调URL及密钥配置信息</strong></h5>
+      </label>
+    </div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-xs-2 control-label">URL</label>
+      <div class="col-xs-10">
+        <p class="form-control-static relative" style="padding-left:0;">$wxapp[callback] <span class="absoluter">
+          <button class="btn btn-default js_copy" data-clipboard-text="$wxapp[callback]" title="复制">复制</button>
+          <span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span> </span> </p>
+      </div>
+    </div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-xs-2 control-label">Token</label>
+      <div class="col-xs-10">
+        <p class="form-control-static relative">$wxapp['token'] <span class="absoluter">
+          <button class="btn btn-default js_copy" data-clipboard-text="$wxapp[token]" title="复制">复制</button>
+          <span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span> </span> </p>
+      </div>
+    </div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-xs-2 control-label">AESKey</label>
+      <div class="col-xs-10">
+        <p class="form-control-static relative">$wxapp[encodingaeskey] <span class="absoluter">
+          <button class="btn btn-default js_copy" data-clipboard-text="$wxapp[encodingaeskey]" title="复制">复制</button>
+          <span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span> </span> </p>
+      </div>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <label class="col-sm-12">
+    <h5><strong>其他项配置信息</strong></h5>
+    </label>
+    <div class="col-sm-12">
+      <p class="form-control-static relative"><img src="$wxapp[otherpic]" style="max-width:100%"></p>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">  
+jQuery(document).ready(function(e) {
+    var client = new ZeroClipboard(jQuery('.js_copy'));
+	client.on( "load", function( client ) {
+	  // alert( "ZeroClipboard SWF is ready!" );
+	  client.on( "complete", function( client,args ) {
+		  var self=this;
+		  jQuery(this).parent().find('.copy-success').removeClass('hide');
+		  window.setTimeout(function(){
+		  		jQuery(self).parent().find('.copy-success').addClass('hide');
+		  },1000);
+	  });
+	});
+});
+
+</script> 
+<script src="static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"></script> 
+
+<!--{template common/footer_simple}--> 

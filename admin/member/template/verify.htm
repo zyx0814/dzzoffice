@@ -1,0 +1,274 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript" src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html, body {
+	overflow: hidden;
+	background: #FBFBFB;
+}
+.bs-left-container {
+	width: 120px;
+	top:0
+}
+.bs-main-container {
+	margin-left: 120px;
+	overflow: auto;
+}
+.form-horizontal-left .radio-inline {
+	margin: 0;
+}
+.mod_validate td {
+	background: #dff0d8 !important;
+}
+.mod_refusal td {
+	background: #f2dede !important;
+}
+.table-sub tr{
+	height:30px;
+}
+.table td img {
+	max-width: 50px;
+	max-height: 50px;
+	margin:0px;
+}
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix" style="padding-top:0px;">
+<div class="bs-left-container  clearfix"> 
+  <!--{template left}--> 
+</div>
+<div class="left-drager">
+  <div class="left-drager-op">
+    <div class="left-drager-sub"></div>
+  </div>
+</div>
+<div class="bs-main-container  clearfix" >
+  <div class="main-header">
+    <ul class="nav nav-pills nav-pills-bottomguide">
+      <li <!--{if $anchor=='authstr'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=member&op=verify&anchor=authstr&vid=$vid">待审核</a></li>
+      <li <!--{if $anchor=='refusal'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=member&op=verify&anchor=refusal&vid=$vid">已拒绝</a></li>
+      <!--{if $vid}-->
+      <li <!--{if $anchor=='pass'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=member&op=verify&anchor=pass&vid=$vid">已通过</a></li>
+      <!--{/if}-->
+    </ul>
+  </div>
+  <div class=" " style="padding:15px 15px 0 15px;font-size:85%;">
+    <form  action="{BASESCRIPT}" method="get">
+      <table cellspacing="5" cellpadding="5" style="min-width:390px">
+        <tbody>
+          <tr height="35">
+            <th>用户姓名*</th>
+            <td><input type="text" name="username" value="$_GET[username]" class="form-control input-sm" style="width:120px;"></td>
+            <th style="text-align:right">UID：</th>
+            <td><input type="text" name="uid" value="$_GET[uid]" class="form-control input-sm" style="width:125px;"></td>
+          </tr>
+          <!--{if $anchor!='pass'}-->
+          <tr height="35">
+            <th>提交时间：</th>
+            <td colspan="3"><input type="text" name="dateline1" value="$_GET[dateline1]" class="form-control input-sm" style="width:120px;display:inline-block"  onclick="showcalendar(event, this)" />
+              &nbsp;&nbsp;&nbsp;&nbsp; ~ &nbsp;&nbsp;&nbsp;&nbsp;
+              <input type="text" name="dateline2" value="$_GET[dateline2]" class="form-control input-sm" style="width:125px;display:inline-block"  onclick="showcalendar(event, this)" /></td>
+          </tr>
+          <!--{/if}-->
+          <tr height="35">
+            <th>结果排序：</th>
+            <td colspan="3">
+             <!--{if $anchor!='pass'}-->
+              <select name="orderby"  class="form-control input-sm" style="width:95px;display:inline-block">
+                <option value="dateline">提交时间</option>
+              </select>
+              <!--{else}-->
+               <select name="orderby"  class="form-control input-sm" style="width:95px;display:inline-block">
+                <option value="uid">UID</option>
+              </select>
+              <!--{/if}-->
+              <select name="ordersc"  class="form-control input-sm" style="width:73px;display:inline-block">
+                <option value="desc" <!--{if $_GET[ordersc]=='desc'}-->selected="selected"<!--{/if}-->>递减</option>
+                <option value="asc" <!--{if $_GET[ordersc]=='asc'}-->selected="selected"<!--{/if}-->>递增</option>
+              </select>
+              <select name="perpage"  class="form-control input-sm" style="width:125px;display:inline-block">
+                <option value="10" <!--{if $_GET[perpage]=='10'}-->selected="selected"<!--{/if}-->>每页显示10个</option>
+                <option value="20" <!--{if $_GET[perpage]=='20'}-->selected="selected"<!--{/if}-->>每页显示20个</option>
+                <option value="50" <!--{if $_GET[perpage]=='50'}-->selected="selected"<!--{/if}-->>每页显示50个</option>
+                <option value="100" <!--{if $_GET[perpage]=='100'}-->selected="selected"<!--{/if}-->>每页显示100个</option>
+              </select>
+              <input type="hidden" name="mod" value="member" >
+              <input type="hidden" name="op" value="verify">
+              <input type="hidden" name="vid" value="$vid">
+              <input type="hidden" name="anchor" value="$anchor"></td>
+          </tr>
+          <tr height="45">
+            <td>&nbsp;</td>
+            <td colspan="3"><input type="submit" name="searchsubmit" value="搜索" class="btn btn-default btn-sm btn-width">
+              <span class="help-inline">&nbsp;&nbsp;&nbsp;*表示支持模糊查询</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    <script type="text/javascript" src="static/js/calendar.js?{VERHASH}"></script> 
+  </div>
+  <div class="main-content" style="border-top:1px solid #DDD">
+ 	<iframe id="frame_profile" name="frame_profile" style="display: none"></iframe>
+
+    <form id="cpform" action="{BASESCRIPT}?mod=member&op=verify" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+      <input type="hidden" value="{FORMHASH}" name="formhash">
+      <input type="hidden" value="true" name="verifysubmit">
+      <input type="hidden" value="$vid" name="vid">
+      <input type="hidden" name="anchor" value="$anchor">
+      <table class="table table-hover" style="font-size:12px;">
+        <!--{if $anchor!='pass'}-->   
+            <thead>
+              <th width="90" style="text-align:center">用户名</th>
+              <th width="120">提交时间</th>
+              <th>审核信息</th>
+            </thead>
+            <!--{loop $list  $value}-->
+            <tr id="mod_{$value[vid]}_row" verifyid="{$value[vid]}" class="hover">
+              <td width="90" align="center">$value[username]</td>
+              <td width="120">$value[dateline]</td>
+              <td>$value[fieldstr]</td>
+            </tr>
+            <!--{/loop}-->
+            <thead>
+              <td colspan="15">
+            
+                 <input type="submit" class="btn btn-primary" id="submit_batchverifysubmit" name="batchverifysubmit" title="" value="提交">
+                  &nbsp;<a href="javascript:;" class="btn btn-link" onclick="mod_setbg_all('validate')">全部通过</a> &nbsp;<a class="btn btn-link"  href="javascript:;" onclick="mod_setbg_all('refusal')">全选拒绝</a> &nbsp;<a class="btn btn-link"  href="javascript:;" onclick="mod_cancel_all();">取消选择</a>
+                  $multi
+               </td>
+            </thead>
+        <!--{else}-->
+        	<thead>
+           	  <th width="80"></th>
+              <th width="90" style="text-align:center">用户名</th>
+             
+              <th>审核信息</th>
+            </thead>
+            <!--{loop $list  $value}-->
+            <tr id="mod_{$value[uid]}_row" verifyid="{$value[uid]}" class="hover">
+              <td width="80">$value[opstr]</td>
+              <td width="90" align="center">$value[username]</td>
+              <td>$value[fieldstr]</td>
+            </tr>
+            <!--{/loop}-->
+            <thead>
+              <td colspan="15">
+                 <input type="submit" class="btn btn-primary" id="submit_batchverifysubmit" name="batchverifysubmit" title="" value="提交">
+                  &nbsp;<a href="javascript:;" class="btn btn-link" onclick="mod_setbg_all('export')">全选导出</a> &nbsp;<a class="btn btn-link"  href="javascript:;" onclick="mod_setbg_all('refusal')">全选拒绝</a> &nbsp;<a class="btn btn-link"  href="{ADMINSCRIPT}?mod=member&op=verify&vid=$vid&anchor=pass&verifysubmit=yes">全部导出</a>
+                  $multi
+               </td>
+            </thead>
+        <!--{/if}-->
+      </table>
+    </form>
+  </div>
+</div>
+<!-- <table width="96%">
+                  <thead>
+                    <tr  height="30">
+                      <th width="30" >拒绝</th>
+                      <th width="100">审核项</th>
+                      <th>提交信息</th>
+                    </tr>
+                  </thead>
+                  <tbody id="verifyitem_28">
+                    <tr  height="30">
+                      <td ><input type="checkbox" name="refusal[28][company]" value="company" onclick="$('refusal28').click();"></td>
+                      <td>公司:</td>
+                      <td>灌灌灌灌hhhhhhhhhhh</td>
+                    </tr>
+                    <tr  height="30">
+                      <td ><input type="checkbox" name="refusal[28][occupation]" value="occupation" onclick="$('refusal28').click();"></td>
+                      <td>职业:</td>
+                      <td>顶顶顶顶顶hhhhhhhhhhhh</td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr height="30">
+                      <td colspan="5"><label class="radio-inline"><input  type="radio" name="verify[28]" value="validate" onclick="mod_setbg(28, 'validate');showreason(28, 0);">通过</label>
+                        <label  class="radio-inline"><input type="radio" name="verify[28]" value="refusal" id="refusal28" onclick="mod_setbg(28, 'refusal');showreason(28, 1);"> 拒绝</label>
+                        <span id="reason_28" style="display: none;">
+                        <input type="text" class="form-control input-sm" name="reason[28]" style="margin: 0px;" placeholder="操作理由">
+                        </span>&nbsp;
+                        <input type="button" value="审核" name="singleverifysubmit" class="btn btn-success btn-sm" onclick="singleverify(28);"></td>
+                    </tr>
+                  </tbody>
+                </table>-->
+<script type="text/javascript">
+	function showreason(vid, flag) {
+		var reasonobj = $('reason_'+vid);
+		if(reasonobj) {
+			reasonobj.style.display = flag ? '' : 'none';
+		}
+		if(!flag && $('verifyitem_' + vid) != null) {
+			var checkboxs = $('verifyitem_' + vid).getElementsByTagName('input');
+			for(var i in checkboxs) {
+				if(checkboxs[i].type == 'checkbox') {
+					checkboxs[i].checked = '';
+				}
+			}
+		}
+	}
+	function mod_setbg(vid, value) {
+		$('mod_' + vid + '_row').className = 'mod_' + value;
+	}
+	function mod_setbg_all(value) {
+		checkAll('option', $('cpform'), value);
+		var trs = $('cpform').getElementsByTagName('TR');
+		for(var i in trs) {
+			if(trs[i].id && trs[i].id.substr(0, 4) == 'mod_') {
+				trs[i].className = 'mod_' + value;
+				showreason(trs[i].getAttribute('verifyid'), value == 'refusal' ? 1 : 0);
+			}
+		}
+	}
+	function mod_cancel_all() {
+		var inputs = $('cpform').getElementsByTagName('input');
+		for(var i in inputs) {
+			if(inputs[i].type == 'radio') {
+				inputs[i].checked = '';
+			}
+		}
+		var trs = $('cpform').getElementsByTagName('TR');
+		for(var i in trs) {
+			if(trs[i].id && trs[i].id.match(/^mod_(\d+)_row$/)) {
+				trs[i].className = "mod_cancel";
+				showreason(trs[i].getAttribute('verifyid'), 0)
+			}
+		}
+	}
+	function singleverify(vid) {
+		var formobj = $('cpform');
+		var oldaction = formobj.action;
+		formobj.action = oldaction+'&singleverify='+vid;
+		formobj.target = "frame_profile";
+		formobj.submit();
+		formobj.action = oldaction;
+		formobj.target = "";
+	}
+
+</script>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();	
+var url='{BASESCRIPT}?mod=member';
+
+   
+jQuery(document).ready(function(e) {
+    /*jQuery('input').iCheck({
+		  checkboxClass: 'icheckbox_minimal-blue',
+		  radioClass: 'iradio_minimal-blue',
+	});
+	jQuery('input').on('ifChecked',function(e){
+		jQuery(this).trigger('click');
+	});*/
+	
+	
+});
+
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script> 
+<!--{template common/footer_simple}--> 

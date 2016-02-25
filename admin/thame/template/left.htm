@@ -1,0 +1,14 @@
+<ul class="nav nav-pills nav-stacked nav-pills-leftguide" >
+    <li <!--{if !$operation}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod">主题设置</a>
+    </li>
+    <li <!--{if $operation=='syscolor'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&operation=syscolor">偏好色设置</a>
+    </li>
+    <li <!--{if $operation=='color'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&operation=color">颜色类壁纸</a>
+    </li>
+    <li <!--{if $operation=='repeat'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&operation=repeat">平铺类壁纸</a>
+    </li>
+    <li <!--{if $operation=='scale'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&operation=scale">拉伸类壁纸</a>
+    </li>
+    <li <!--{if $operation=='url'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&operation=url">动态壁纸</a>
+    </li>
+  </ul>

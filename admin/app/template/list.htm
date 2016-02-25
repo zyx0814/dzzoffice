@@ -1,0 +1,55 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="admin/images/app.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+<nav class="navbar navbar-default bs-navbar-default navbar-fixed-top" role="navigation" style="margin:0">
+      <!--{template top}--> 
+</nav>
+<div class="bs-container clearfix" style="border-top:1px solid #FFF">
+  <div class="bs-main-container">
+   	<div class="main-header2">
+     <ul class="nav nav-pills clearfix">
+              <li <!--{if $do=='available'}-->class="active"<!--{/if}-->>
+                  <a href="{BASESCRIPT}?mod=app&op=list&do=available">已关闭</a>
+              </li>
+              <li <!--{if $do=='notinstall'}-->class="active"<!--{/if}-->>
+                  <a href="{BASESCRIPT}?mod=app&op=list&do=notinstall">未安装</a>
+              </li>
+              <li <!--{if $do=='updatelist'}-->class="active"<!--{/if}-->>
+                  <a href="{BASESCRIPT}?mod=app&op=list&do=updatelist">可更新</a>
+              </li>
+             
+             <li class="pull-right">
+                  <a href="{BASESCRIPT}?mod=app&op=cp&do=import&refer=$refer">导入应用</a>
+              </li>
+              <li class="pull-right">
+                  <a href="{BASESCRIPT}?mod=app&op=edit&do=add&refer=$refer">添加应用</a>
+              </li>
+       </ul>
+    </div>
+    <div class="main-content clearfix" style="border-top:1px solid #FFF">
+    <!--{if $do=='notinstall'}-->
+    	<!--{template list_list_notinstall}-->
+    <!--{elseif $do=='available'}-->
+    	<!--{template list_list_available}-->
+    <!--{elseif $do=='updatelist'}-->
+    	<!--{template list_list_upgrade}-->
+    
+    <!--{/if}-->
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

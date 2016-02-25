@@ -1,0 +1,21 @@
+<!--{template common/header_simple_start}-->
+<!--{template common/header_simple_end}-->
+<div class="container" style="padding:30px;">
+  <div class="well" style="overflow:hidden;padding:40px;">
+    <form id="appkey_form" name="appkey_form" class="" action="{DZZSCRIPT}?mod=zoho&op=appkey" method="post" >
+            <input type="hidden" name="confirmsubmit" value="true" />
+            <input type="hidden" name="adminurl" value="$_GET['adminurl']" />
+            <input type="hidden" name="formhash" value="{FORMHASH}" />
+            <div class="form-group">
+            	<label >请输入ZohoAPIKey值：</label>
+           		<input id="app_key" type="text" class="form-control" style="max-width:200px;" name="app_key" value="" />
+            	<span class="help-block">填写申请到的ZohoAPIKey,<a href="https://zapi.zoho.com/apigen.do" target="_blank">申请地址</a></span>
+             </div>
+             <div class="form-group">
+            	<button type="button" class="btn btn-primary" style="padding:8px 50px" onclick="if($('app_key').value==''){$('app_key').focus();}else{$('appkey_form').submit()}">提交</button>
+            </div>
+            
+    </form>
+   </div>
+</div>
+<!--{template common/footer_simple}-->  

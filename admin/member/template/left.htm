@@ -1,0 +1,33 @@
+<ul class="nav nav-pills nav-stacked nav-pills-leftguide" style="margin:10px 0;">
+          <!--{if $_G['adminid']==1}-->
+          <li <!--{if $op=='index' || $op=='edituser'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod">用户列表</a>
+          </li>
+          <!--{if $_G['adminid']==1}-->
+          <li <!--{if $op=='profileset'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&op=profileset">资料设置</a>
+          </li>
+          <li <!--{if $op=='verifyset'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&op=verifyset">认证设置</a>
+          </li>
+          <!--{/if}--> 
+         <!--{/if}--> 
+         <!--{if $_G['adminid']==1 || $_G['member']['grid']==5}-->
+          <li <!--{if $op=='verify' && !$vid}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&op=verify">资料审核</a>
+          </li>
+          <!--{/if}-->
+          <!--{loop $_G[setting][verify] $key $value}-->
+          <!--{if $value[available]}-->
+         	 <!--{if $key==1 && ($_G['adminid']==1 || $_G['member']['grid']==4)}-->
+               <li <!--{if $op=='verify' && $vid==$key}-->class="active"<!--{/if}-->>
+                    <a href="{BASESCRIPT}?mod=$mod&op=verify&vid=$key">$value['title']</a>
+               </li>
+           	<!--{elseif $_G['adminid']==1}-->
+           		<li <!--{if $op=='verify' && $vid==$key}-->class="active"<!--{/if}-->>
+                    <a href="{BASESCRIPT}?mod=$mod&op=verify&vid=$key">$value['title']</a>
+                </li>
+           	<!--{/if}-->
+          <!--{/if}-->
+          <!--{/loop}-->
+    </ul>

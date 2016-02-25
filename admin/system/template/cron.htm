@@ -1,0 +1,166 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+input[type="text"]{
+	margin:0;
+}
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" >
+      	 <div class="main-header">
+        	<ul class="nav nav-pills nav-pills-bottomguide" >
+                <li <!--{if empty($_GET['edit']) && empty($_GET['run'])}-->class="active"<!--{/if}-->><a hidefocus="true" href="{BASESCRIPT}?mod=$mod&op=cron">计划任务</a></li>
+                 <!--{if !empty($_GET['edit'])}--><li class="active"><a hidefocus="true" href="{BASESCRIPT}?mod=$mod&op=cron&edit=$_GET[edit]">编辑计划任务</a></li><!--{/if}-->
+                  <!--{if !empty($_GET['run'])}--><li class="active"><a hidefocus="true" href="{BASESCRIPT}?mod=$mod&op=cron&run=$_GET[run]">运行计划任务</a></li><!--{/if}-->
+            </ul>
+        </div>
+    	<div class="main-content" style="padding:15px;border-top:1px solid #FFF">
+         <!--{if $msg}-->
+            <div class="well"> 
+            	<p class="$msg_type">$msg</p>
+            	 <!--{if $redirecturl}-->
+                     <p class="text-info"><a href="{$redirecturl}" class="lightlink">如果您的浏览器没有自动跳转，请点击这里</a></p>
+                     <script type="text/JavaScript">setTimeout(function(){location.href='{$redirecturl}';}, 2000);</script>
+                   <!--{/if}-->
+            </div>
+          <!--{else}-->
+          	<!--{if $_GET['edit']>0}-->
+            	<ul class="help-block">
+                  <h4>提示信息</h4>
+                    {lang misc_cron_edit_tips}
+                </ul>
+                 <form id="cpform" action="{BASESCRIPT}?mod=system&op=cron&edit=$cronid" class="form-horizontal form-horizontal-left"   method="post" name="cpform">
+                    <input type="hidden" value="{FORMHASH}" name="formhash">
+                    <input type="hidden" value="true" name="editsubmit">
+                    <dl>
+                    	<dt>每周:</dt>
+                        <dd class="clearfix">
+                        	<select name="weekdaynew" class="form-control">
+                            <option value="-1" selected="selected">*</option>
+                            $weekdayselect
+                            </select>
+                            <span class="help-inline">设置星期几执行本任务，“*”为不限制，本设置会覆盖下面的“日”设定</span>
+                        </dd>
+                        
+                   </dl>
+                   <dl>
+                    	<dt>每日:</dt>
+                        <dd class="clearfix">
+                        	<select name="daynew" class="form-control">
+                            <option value="-1" selected="selected">*</option>
+                            $dayselect
+                            </select> 
+                            <span class="help-inline">设置哪一日执行本任务，“*”为不限制</span>
+                        </dd>
+                        
+                   </dl>
+                    <dl>
+                    	<dt>小时:</dt>
+                        <dd class="clearfix">
+                        	<select name="hournew" class="form-control">
+                            <option value="-1" selected="selected">*</option>
+                            $hourselect
+                            </select>
+                            <span class="help-inline">设置哪一小时执行本任务，“*”为不限制</span>
+                        </dd>
+                   </dl>
+                   <dl>
+                    	<dt>分钟:</dt>
+                        <dd class="clearfix">
+                        	<input name="minutenew" value="{eval echo implode(',',$cron[minute])}" type="text" class="form-control">
+                         	<span class="help-inline">设置哪些分钟执行本任务，至多可以设置 12 个分钟值，多个值之间用半角逗号 "," 隔开</span>
+                        </dd>
+                   </dl>
+                   <dl>
+                    	<dt>任务脚本:</dt>
+                        <dd class="clearfix">
+                        	<input name="filenamenew" value="$cron[filename]" type="text" class="form-control">
+                            <span class="help-inline">设置本任务的执行程序文件名，请勿包含路径，系统计划任务位于 core/cron/ 目录中</span>
+                        </dd>
+                         
+        			</dl>
+                    <dl>
+                    <dd class="clearfix">
+                    	<button type="submit" class="btn btn-primary" name="exportsubmit" value="true" />提  交</button>
+                    </dd>
+                    </dd>
+                  </form>
+            <!--{elseif $_GET['run']}-->
+            
+            <!--{else}-->
+                <ul class="help-block">
+                  <h5>提示信息</h5>
+                    {lang misc_cron_tips}
+                </ul>
+                <form id="cpform" action="{BASESCRIPT}?mod=system&op=cron" class="form-horizontal form-horizontal-left" style="margin:-15px -15px 0"  method="post" name="cpform">
+                    <input type="hidden" value="{FORMHASH}" name="formhash">
+                    <input type="hidden" value="true" name="cronssubmit">
+                    <table class="table">
+                    <thead><th></th><th>名称</th><th>可用</th><th>类型</th><th>时间</th><th>上次执行时间</th><th>下次执行时间</th><th></th></thead>
+                    <!--{loop $crons $cron}-->
+                        <tr>
+                            <td><input type="checkbox" name="delete[]" value="$cron[cronid]" <!--{if $cron[type] == 'system'}-->disabled<!--{/if}-->></td>
+                            <td>
+                            <p class="clearfix">
+                             <input type="text"  name="namenew[{$cron[cronid]}]"  class="form-control" value="$cron[name]" ></p>
+                             <strong>$cron[filename]</strong>
+                             </td>
+                            <td><label class="checkbox-inline"><input  type="checkbox" name="availablenew[{$cron[cronid]}]" value="1" <!--{if $cron[available]>0}-->checked="checked"<!--{/if}-->> </td>
+                            <td><!--{if $cron['type'] == 'system'}-->
+                            		{lang inbuilt}
+                                <!--{elseif $cron['type'] == 'user'}-->
+                            		{lang custom}
+                                <!--{/if}-->
+                             </td>
+                            <td>$cron[time]</td>
+                            <td>$cron[lastrun]</td>
+                            <td>$cron[nextrun]</td>
+                            
+                            <td>
+                                <a href="{BASESCRIPT}?mod=system&op=cron&edit=$cron[cronid]" >编辑</a>
+                                <br />
+                                <!--{if $cron['run']}-->
+                                	<a href="{BASESCRIPT}?mod=system&op=cron&run=$cron[cronid]" >执行</a>
+                                <!--{else}-->
+                                	<a href="javascript:;" class="text-muted">执行</a>
+                                <!--{/if}-->
+                           </td>
+                       </tr>
+                      
+                    <!--{/loop}-->
+                    <tr><td>新增</td><td colspan="10"><input type="text"  name="newname" value="" class="form-control" ></td></tr>
+                    <tr ><td colspan="15"><label class="checkbox-inline ml20"><input type="checkbox" name="chkall" id="chkallspKI"  onclick="checkAll('prefix', this.form, 'delete')">删？</label>&nbsp;&nbsp;<button type="submit" class="btn btn-primary" name="exportsubmit" value="true" />提  交</button></td></tr>
+                    </table>
+            </form>
+            <!--{/if}-->
+        <!--{/if}-->
+        </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">  
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<!--{template common/footer_simple}-->

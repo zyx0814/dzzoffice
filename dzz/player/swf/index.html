@@ -1,0 +1,31 @@
+<!doctype html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="../../scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="../../scripts/jquery.json-2.4.min.js"></script>
+    <script type="text/javascript" src="../../scripts/dzz.api.js"></script>
+    <script type="text/javascript" src="../../scripts/_fun.js"></script>
+
+<style>
+body ,html{overflow:hidden}
+</style>	
+</head>
+<body>
+   <div id="container" style="width:100%;height:100%;position:absolute;left:0;top:0;overflow:hidden"></div>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	var api=_api.init();
+	var data=api.sourcedata;
+	var url='';
+	if(data.url){
+		url=data.url;
+	}else{
+		url='../../../index.php?mod=io&op=getStream&path='+encodeURI(data.path);
+	}
+	jQuery('#container').html(AC_FL_RunContent('width', '100%', 'height', '100%', 'allowNetworking', 'internal', 'allowScriptAccess', 'never', 'src',url, 'quality', 'high', 'bgcolor', '#ffffff', 'wmode', 'transparent', 'allowfullscreen', 'true'));
+});
+	//api.setTitle('ddddddddddddddd');
+</script>
+
+</body>
+</html>

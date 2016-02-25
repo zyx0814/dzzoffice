@@ -1,0 +1,190 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+html, body {
+	overflow: hidden;
+	background: #FBFBFB;
+}
+.bs-left-container {
+	width: 120px;
+}
+.bs-main-container {
+	margin-left: 120px;
+	overflow: auto;
+}
+.line {
+	height: 2px;
+	margin: 10px 0;
+	font-size: 0;
+	overflow: hidden;
+	background-color: transparent;
+	border-width: 0;
+	border-top: 1px solid #e7e7e7;
+	border-bottom:1px solid #FFF;
+}
+
+.pull-in {
+	margin-left: -15px;
+	margin-right: -15px;
+}
+/*.line-dashed {
+	border-style: dashed;
+	background: transparent;
+}*/
+.line-lg {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+.padding-left .col-sm-12 {
+	padding-left: 40px;
+}
+.relative{
+	position:relative;
+}
+.copy-success {
+	position: absolute;
+	left: -210px;
+	top: -15px;
+	padding:8px;
+}
+.absoluter {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding:5px;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix"> 
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+  <div class="bs-main-container  clearfix" >
+    <div class="main-header">
+      <ul  class="nav nav-pills nav-pills-bottomguide">
+        <li><a href="{BASESCRIPT}?mod=setting&operation=qywechat">企业号绑定</a></li>
+        <li class="active"><a href="{BASESCRIPT}?mod=setting&op=assistant">企业小助手</a></li>
+        <li><a href="{BASESCRIPT}?mod=setting&op=wxsyn">数据同步</a></li>
+      </ul>
+    </div>
+    <div class="main-content" style="border-top:1px solid #FFF"> 
+      <!-- <ul class="help-block" style="line-height:2">
+            <li>一般只有初次绑定时才需要在此同步</li>
+            <li>同步操作会把本站的机构和部门及机构和部门下的用户同步到微信企业号</li>
+            <li>机构和用户管理里的操作会自动同步到微信端，不需要在此手工同步</li>
+            <li>此同步不会把微信企业号内的机构和部门及用户同步到本站</li>
+        </ul>-->
+      <div class="panel-body" >
+        <div class="entity-panel-body form-horizontal">
+          <div class="form-group relative">
+            <img src="admin/setting/images/0.png" style="width:80px;position:absolute;left:20px;top:0px">
+            <div class=" ml20" style="padding-left:100px;">
+              <h4 class="relative"><strong>企业小助手</strong></h4>
+              <p class="relative" style="padding-top:5px">该应用为默认应用，可以通过它向全公司范围推送消息。如关注成功通知，公司文件，通报等。</p>
+            </div>
+          </div>
+          <div class="line line-dashed line-lg pull-in"></div>
+           <div class="form-group padding-left">
+            <div class="col-sm-12">
+              <p class="form-control-static danger relative"><i class="glyphicon glyphicon-hand-down"></i> <strong style="font-size:1.5em">以下的所有设置都需要到微信企业号内设置</strong>
+              <a href="http://qy.weixin.qq.com/" target="_blank" class="pull-right btn btn-default">去微信企业号修改</a>
+              </p>
+            </div>
+          </div>
+           <div class="line line-dashed line-lg pull-in"></div>
+          <div class="form-group padding-left">
+            <label class="col-sm-12">
+            <h5><strong>应用可见范围</strong></h5>
+            </label>
+            <div class="col-sm-12">
+              <p class="form-control-static relative">顶级机构<span class="gray">(微信企业号内通讯录里最顶级的机构)</span> </p>
+            </div>
+          </div>
+          <div class="line line-dashed line-lg pull-in"></div>
+          <div class="form-group padding-left">
+            <label class="col-sm-12">
+            <h5><strong>可信域名</strong></h5>
+            </label>
+            <div class="col-sm-12">
+              <p class="form-control-static relative">$host 
+               <span class="absoluter">
+               		<button class="btn btn-default js_copy" data-clipboard-text="$host" title="复制">复制</button>
+              		<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span>
+                </span>
+             </p>
+            </div>
+          </div>
+          <div class="line line-dashed line-lg pull-in"></div>
+          <div class="form-group padding-left">
+            <div ><label class="col-sm-12">
+            <h5><strong>回调URL及密钥配置信息</strong></h5>
+            </label></div>
+            
+            <label class="col-xs-2  control-label">URL</label>
+            <div class="col-xs-10  mb10">
+              <p class="form-control-static relative" style="padding-left:0;">$callback
+              	<span class="absoluter">
+               		<button class="btn btn-default js_copy" data-clipboard-text="$callback" title="复制">复制</button>
+              		<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span>
+                </span>
+              </p>
+            </div>
+            <label class="col-xs-2 control-label">Token</label>
+            <div class="col-xs-10  mb10">
+              <p class="form-control-static relative">$_G['setting']['token_0']
+              	<span class="absoluter">
+               		<button class="btn btn-default js_copy" data-clipboard-text="$_G['setting']['token_0']" title="复制">复制</button>
+              		<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span>
+                </span>
+              </p>
+            </div>
+            <label class="col-xs-2 control-label">AESKey</label>
+            <div class="col-xs-10">
+              <p class="form-control-static relative">$_G['setting']['encodingaeskey_0']
+              	<span class="absoluter">
+               		<button class="btn btn-default js_copy" data-clipboard-text="$_G['setting']['encodingaeskey_0']" title="复制">复制</button>
+              		<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span>
+                </span>
+              </p>
+            </div>
+          </div>
+          <div class="line line-dashed line-lg pull-in"></div>
+            <label class="col-sm-12">
+            <h5><strong>其他项配置信息</strong></h5>
+            </label>
+            <div class="col-sm-12">
+              <p class="form-control-static relative"><img src="admin/setting/images/c.png" style="max-width:100%"></p>
+            </div>
+          
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">  
+jQuery('.left-drager').leftDrager_layout();
+jQuery(document).ready(function(e) {
+    var client = new ZeroClipboard(jQuery('.js_copy'));
+	client.on( "load", function( client ) {
+	  // alert( "ZeroClipboard SWF is ready!" );
+	  client.on( "complete", function( client,args ) {
+		  var self=this;
+		  jQuery(this).parent().find('.copy-success').removeClass('hide');
+		  window.setTimeout(function(){
+		  		jQuery(self).parent().find('.copy-success').addClass('hide');
+		  },1000);
+	  });
+	});
+});
+
+</script> 
+<script src="static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"></script>
+
+<!--{template common/footer_simple}--> 

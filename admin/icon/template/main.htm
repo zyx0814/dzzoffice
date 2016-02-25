@@ -1,0 +1,199 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="admin/icon/images/icon.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/tip.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+
+<!--{template common/header_simple_end}-->
+
+<nav class="navbar navbar-default bs-navbar-default navbar-fixed-top" role="navigation" style="margin:0;padding:0 10px;"> 
+	<ul class="nav nav-pills nav-pills-bottomguide">
+              <li class="active"><a href="{BASESCRIPT}?mod=icon">图标列表</a></li>
+              
+             <!-- <li><a href="{BASESCRIPT}?mod=member&op=import">从文件导入</a></li>
+               <li><a href="{BASESCRIPT}?mod=member&op=invite">Email邀请</a></li>-->
+               <li class="pull-right">
+              		<form name="search" action="{BASESCRIPT}?mod=icon" method="get">
+                    	<input type="hidden" name="mod" value="icon" />
+                         <div class="input-group" style="width:180px;padding-top:4px;">
+                            <input name="domain"  type="text" value="$domain" class="form-control input-sm" placeholder="输入域名">
+                            <a href="javascript:;" class="input-group-addon" onclick="this.parentNode.parentNode.submit()"><i class="glyphicon glyphicon-search"></i></a>
+                        </div>
+                    </form>
+              </li>
+              
+              <li class="pull-right" style="padding:7px 15px 5px 5px"><label class="checkbox-inline" ><input type="checkbox" onclick="selectedall(this)" />全选</label></li>
+              <li class="pull-right hide" id="deleteSelected" ><button class="btn btn-sm btn-danger" style="margin:4px 15px 0 0;" onclick="deleteSelected()">删除所选</button></li>
+              <li ><button class="btn btn-sm btn-primary" style="margin-top:4px;margin-left:20px;" onclick="addicon()">添加</button></li>
+        </ul>
+</nav>
+<div class="bs-container clearfix">
+<div class="bs-main-container">
+    <div class="main-content clearfix" style="padding:15px;">
+        <!--{template icon_item}-->
+    </div>
+    <div id="editmodal" class="modal fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" style="max-width:480px;min-width:280px">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">编辑</h4>
+          </div>
+          <div class="modal-body">
+            
+          </div>
+          <div class="modal-footer" style="margin:0">
+            <span id="return_iconedit"></span>
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" data-loading-text="提交中...">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	<div id="icon-item-template" style="display:none">
+ <div id="icon__%did%_" class="icon-item" did="_%did%_">
+          <table cellpadding="0" cellspacing="0" width="100%" height="100%" style="table-layout:fixed;">
+            <tbody>
+              <tr>
+                <td align="center" valign="middle" style="overflow:hidden;" height="58px">
+                <div class="icoimgContainer icoimgContainer_link" style="position:relative;width:50px;height:50px">
+                    <table width="100%" height="100%" cellpadding="0" cellspacing="0">
+                      <tbody>
+                        <tr>
+                          <td align="center" valign="middle"><img class="img_50_50" src="_%pic%_"></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  </td>
+              </tr>
+              <tr height="35px">
+                <td align="center" valign="middle">
+                <div  class="IcoText_div" style="height:40px;">
+                    <table cellpadding="0" cellspacing="0" width="100%" height="100%">
+                      <tbody>
+                        <tr>
+                          <td valign="middle" align="center">
+                          <a class="IcoText">_%domain%_</a>
+                         	<br />_%reg%_
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();  
+jQuery(document).ready(function(e) {
+    jQuery(document).on('mouseenter','.icon-item',function(){
+		jQuery(this).addClass('hover');
+	});
+	jQuery(document).on('mouseleave','.icon-item',function(){
+		jQuery(this).removeClass('hover');
+	});
+	jQuery(document).on('click','.icon-item',function(){
+		 var did=jQuery(this).attr('did');
+		jQuery('#editmodal .modal-body').load('{ADMINSCRIPT}?mod=icon&op=ajax&did='+did,function(){
+			jQuery('#editmodal').modal();
+			jQuery('#editmodal .modal-title').html('编辑');
+		});
+	});
+	jQuery('#editmodal button.btn-primary').click(function(){
+		var form=document.getElementById('iconform');
+		jQuery(this).button('loading');
+		form.onsubmit();
+	});
+	jQuery('.bs-main-container').scroll(function(e) {
+		var clientHeight = jQuery('.bs-main-container').height();
+		var scrollHeight = jQuery('.main-content').height();
+		if(jQuery('.bs-main-container').scrollTop()+clientHeight>scrollHeight-20) jQuery('#getMore .more').trigger('click');
+	});
+	jQuery('.icoblank_rightbottom').click(function(){
+		jQuery(this).parent().toggleClass('Icoselected');
+		if(jQuery('.icon-item.Icoselected').length){
+			jQuery('#deleteSelected').removeClass('hide');
+		}else{
+			jQuery('#deleteSelected').addClass('hide');
+		}
+		return false;
+	});
+});
+function selectedall(obj){
+	var el=jQuery(obj);
+	if(el.is(':checked')){
+		jQuery('.icon-item').addClass('Icoselected');
+		jQuery('#deleteSelected').removeClass('hide');
+	}else{
+		jQuery('.icon-item').removeClass('Icoselected');
+		jQuery('#deleteSelected').addClass('hide');
+	}
+}
+function deleteSelected(){
+	if(confirm('删除图标后，原先添加过此域名的图标将显示默认图标，确定要删除所选图标吗？')){
+		var dids=[];
+		jQuery('.icon-item.Icoselected').each(function(){
+			dids.push(jQuery(this).attr('did'));
+		});
+		if(dids.length>0){
+			jQuery.getJSON('{ADMINSCRIPT}?mod=icon&op=ajax&do=delete',{dids:dids},function(json){
+				if(json.msg=='success'){
+					for(var i in dids){
+						jQuery('#icon_'+dids[i]).remove();
+					}
+					jQuery('#deleteSelected').addClass('hide');
+				}
+			});
+		}
+	}
+}
+function addicon(){
+	jQuery('#editmodal .modal-body').load('{ADMINSCRIPT}?mod=icon&op=ajax',function(){
+		jQuery('#editmodal').modal();
+		jQuery('#editmodal .modal-title').html('添加');
+	});
+}
+ function succeedhandle_iconedit(url, message, values) {
+	var data= eval('(' + decodeURIComponent(values['data']) + ')');
+	appendIconitem(data);
+	jQuery('#editmodal button.btn-primary').button('reset');
+	jQuery('#editmodal').modal('hide');
+  };
+function errorhandle_iconedit(url, message, values) {
+  jQuery('#editmodal button.btn-primary').button('reset');
+  jQuery('#editmodal').modal('hide');
+}
+function appendIconitem(data){
+	var html=jQuery('#icon-item-template').html();
+		html=html.replace(/_%(\w+)%_/g, function($1){
+			key=$1.replace(/[_%%_]/g,'');
+			return data[key]?data[key]:'';
+		});	
+	
+	if(jQuery('#icon_'+data.did).length){
+		jQuery('#icon_'+data.did).replaceWith(html);
+	}else{
+		if(jQuery('.icon-item').length){
+			jQuery('.icon-item').first().before(html);
+		}else{
+			jQuery('.main-content').html(html);
+		}
+	}
+}
+function getMore(page){
+	jQuery.get('{ADMINSCRIPT}?mod=icon&&do=getMore',{'page':parseInt(page)+1},function(html){
+		jQuery('#getMore').replaceWith(html);
+	});
+}
+
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}" type="text/javascript"></script>
+<!--{template common/footer_simple}-->

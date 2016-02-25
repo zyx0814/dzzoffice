@@ -1,0 +1,113 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+	top:0;
+	height:100%;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+@media (max-width: 768px) {
+	.bs-left-container{
+		display:none;
+	}
+	.bs-main-container{
+		margin-left:0;
+	}
+}
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix" style="padding:0">
+  <div class="bs-left-container  clearfix">
+    <ul class="nav nav-pills nav-stacked nav-pills-leftguide" >
+        <li > <a href="{BASESCRIPT}?mod=$mod&feedType=aboutme">与我相关</a> </li>
+        <li > <a href="{BASESCRIPT}?mod=$mod&feedType=fromme">我发布的</a></li>
+        <li > <a href="{BASESCRIPT}?mod=$mod&feedType=atme">@我的<span class="newtips" id="new_tips_atme"></span></a></li>
+        <li> <a href="{BASESCRIPT}?mod=$mod&feedType=collect">我收藏的</a></li>
+        <li> <a href="{BASESCRIPT}?mod=$mod&feedType=replyme">回复我的<span class="newtips" id="new_tips_replyme"></span></a></li>
+        <li> <a href="{BASESCRIPT}?mod=$mod&feedType=all">全部动态</a></li>
+        <li class="active"> <a href="{BASESCRIPT}?mod=$mod&op=setting">@设置</a></li>
+        <li> <a href="{BASESCRIPT}?mod=$mod&op=wxsetting">微信设置</a></li>
+      </ul> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+  <div class="bs-main-container  clearfix" > 
+        <div class="main-content" style="height:auto;padding:5px 15px;min-width:350px">
+             <form id="cpform" action="{BASESCRIPT}?mod=feed&op=setting" class="form-horizontal-left"  method="post" name="cpform">
+                <input type="hidden" value="{FORMHASH}" name="formhash">
+                <input type="hidden" value="settingsubmit" name="true">
+                 <dl>
+                  <dt>消息中心首页:</dt>
+                  <dd class="clearfix"> 
+                  <!--{loop $typearr $key $value}-->
+                    <label class="radio radio-inline" style="margin:0 15px"><input type="radio" name="settingnew[feed_feedType_default]" value="$key" <!--{if $setting[feed_feedType_default]==$key}-->checked="checked"<!--{/if}--> />$value</label>
+                    <!--{/if}-->
+                  </dd>
+                  <dd class="clearfix">
+                  
+                  </dd>
+                </dl>
+                <dl>
+                  <dt>发布公开消息权限:</dt>
+                  <dd class="clearfix"> 
+                  
+                    <label class="radio radio-inline" style="margin:0 15px"><input type="radio" name="settingnew[feed_publish_public]" value="1" <!--{if $setting[feed_publish_public]>0}-->checked="checked"<!--{/if}--> />仅系统管理员</label>
+                    <label class="radio radio-inline" style="margin:0 15px"><input type="radio" name="settingnew[feed_publish_public]" value="0" <!--{if $setting[feed_publish_public]<1}-->checked="checked"<!--{/if}--> />全部成员</label>
+                  </dd>
+                  <dd class="clearfix">
+                  
+                  </dd>
+                </dl>
+               
+                <dl>
+                  <dt>@部门范围设置:</dt>
+                  
+                  <!--{loop $usergroups $value}-->
+                  <dd class="clearfix">
+                    <dl>
+                        <dt>$value[grouptitle]</dt>
+                        <dd class="clearfix">
+                      	<label class="radio-inline ml10"><input type="radio" name="settingnew[feed_at_range][{$value[groupid]}]" <!--{if $setting['feed_at_range'][{$value[groupid]}]==3}-->checked="checked"<!--{/if}--> value="3">所有机构部门</label>
+                        <label class="radio radio-inline"><input type="radio"  name="settingnew[feed_at_range][{$value[groupid]}]" <!--{if $setting['feed_at_range'][{$value[groupid]}]==2}-->checked="checked"<!--{/if}--> value="2">本机构部门</label>
+                        <label class="radio radio-inline"><input type="radio"  name="settingnew[feed_at_range][{$value[groupid]}]" <!--{if $setting['feed_at_range'][{$value[groupid]}]==1}-->checked="checked"<!--{/if}--> value="1">本部门</label>
+                        <label class="radio radio-inline"><input type="radio"  name="settingnew[feed_at_range][{$value[groupid]}]" <!--{if $setting['feed_at_range'][{$value[groupid]}]==0}-->checked="checked"<!--{/if}--> value="0">不能@部门</label>
+                        </dd>
+                    </dl>
+                       
+                   </dd>
+                   <!--{/loop}-->
+                </dl>
+                <dl>
+                  <dt>游客访问:</dt>
+                  <dd class="clearfix"> 
+                
+                    <label class="radio-inline" style="margin:0 15px;"><input type="radio" name="settingnew[feed_guest_allow]" value="0" checked="checked" />不允许</label>
+                    <label class="radio-inline" style="margin:0 15px;"><input type="radio" name="settingnew[feed_guest_allow]" value="1" <!--{if $setting[feed_guest_allow]}-->checked="checked"<!--{/if}--> />允许访问</label>
+                    
+                  </dd>
+                  <dd class="clearfix">
+                  	<span class="help-inline">设置不允许游客访问，可以保证消息中心不被外站人员查看，也可以有效的阻止被搜索引擎搜索，保护信息安全</span>
+                  </dd>
+                </dl>
+               <dl><dd><input class="btn btn-primary" id="submit_editsubmit" name="settingsubmit" value="保存更改" type="submit" ></dd> </dl>
+              </form>
+    	</div>
+	</div>
+</div>
+<script type="text/javascript" >  
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

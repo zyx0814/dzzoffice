@@ -1,0 +1,157 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+  <div class="bs-main-container  clearfix">
+    <div class="main-header ">
+      <!--{template right_header}-->
+    </div>
+    <div class="main-content clearfix" style="padding:15px;border-top:1px solid #FFF" >
+     <form id="cpform" action="{BASESCRIPT}?mod=cloud&op=movetool" class="form-horizontal form-horizontal-left"  method="post" name="cpform" onsubmit="return validate(this);">
+        <input type="hidden" value="{FORMHASH}" name="formhash">
+        <input type="hidden" value="movesubmit" name="true">
+        <dl>
+          <dt>目标存储位置:</dt>
+          <dd class="clearfix">
+            <select name="remoteid" class="form-control" style="width:250px">
+            	<!--{loop $spaces $value}-->
+                <option value="$value[remoteid]" <!--{if $router[remoteid]==$value[remoteid]}-->selected="selected"<!--{/if}-->>$value[name]($value[fusesize] / $value[ftotalsize])</option>
+                <!--{/loop}-->
+                </select> 
+            <ul class="help-block ">
+              <li>标志符：此类的唯一标志，全站唯一,注意区分大小写</li>
+            </ul>
+          </dd>
+        </dl>
+        <dl>
+          <dt>原存储位置:</dt>
+          <dd class="clearfix">
+            <select name="oremoteid" class="form-control" style="width:250px">
+            	<!--{loop $spaces $value}-->
+                <option value="$value[remoteid]" >$value[name]($value[fusesize] / $value[ftotalsize])</option>
+                <!--{/loop}-->
+                </select> 
+            <ul class="help-block ">
+              <li>标志符：此类的唯一标志，全站唯一,注意区分大小写</li>
+            </ul>
+            </dd>
+          </dl>
+          <dl> <dt><a href="javascript:;" onclick="jQuery('#filter').toggle(); document.getElementById('filter_guide').className=(document.getElementById('filter_guide').className=='glyphicon glyphicon-chevron-down'?'glyphicon glyphicon-chevron-up':'glyphicon glyphicon-chevron-down');">筛选条件&nbsp;<i id="filter_guide"  class="glyphicon glyphicon-chevron-down"></i></a></dt>          </dl>
+         
+        </dl>
+        <div id="filter" style="display:none;padding-left:50px;">
+        <dl>
+          <dt>文件类型:</dt>
+          <dd class="clearfix">
+            <textarea type="textarea" id="exts" class="form-control" name="router[exts]" row="6" cols="6" style="width:300px;height:60px"></textarea>
+          </dd>
+          <dd class="clearfix mt10">
+            <a href="javascript:;" onclick="setExts('jpg,jpeg,png,gif')">图片类</a> &nbsp;&nbsp;
+            <a href="javascript:;" onclick="setExts('doc,docx,rtf,odt,htm,html,txt')">word文档</a> &nbsp;&nbsp;
+            <a href="javascript:;" onclick="setExts('xls,xlsx,ods,sxc,csv,tsv')">excel文档</a> &nbsp;&nbsp;
+            <a href="javascript:;" onclick="setExts('ppt,pptx,pps,ppsx,odp,sxi')">ppt文档</a> &nbsp;&nbsp;
+            <a href="javascript:;" onclick="setExts('mp4,avi,wmv,mkv,rmvb,rm,asf,mpg,mpeg,mov')">视频文件</a> &nbsp;&nbsp;
+            <a href="javascript:;" onclick="setExts('txt,ini,conf,log,bat,sql,js,css,htm,html,xml,asp,aspx,php,jsp,json,py,h,c')">文本类</a> &nbsp;&nbsp;
+           </dd>
+           <dd class="clearfix">
+             <ul class="help-block ">
+              <li>请填写文件的后缀名，多个请使用半角逗号隔开</li>
+              <li>留空，不限制</li>
+            </ul>
+          </dd>
+        </dl>
+        <dl>
+          <dt>文件大小:</dt>
+          <dd class="clearfix ">
+          		<div class="input-group pull-left" style="width:100px">
+                    <span class="input-group-addon">文件大于</span>
+                    <input type="text" class="form-control" name="router[size][lt]" style="width:60px;" value=""  />
+                    <span class="input-group-addon">M</span>
+               </div>
+               <div class="pull-left ml20 mr20" style="line-height:30px;"> AND</div>
+               <div class="input-group pull-left" style="width:100px">
+                    <span class="input-group-addon">文件小于</span>
+                    <input type="text" class="form-control" name="router[size][gt]" value="" style="width:60px;" />
+                    <span class="input-group-addon">M</span>
+               </div>
+           </dd>
+           <dd class="clearfix ">
+         	 <ul class="help-block ">
+               <li>留空，则此项不限制</li>
+              <li>大于和小于都填写时 是“and”的关系，如果只想一项起作用，另外一项留空</li>
+            </ul>
+          </dd>
+         </dl>
+         </div>
+        <input class="btn btn-primary"  name="movesubmit" value="开始迁移" type="submit" >
+      </form>
+     </div>
+      <div class="tip" style="margin:10px;">
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h5>提示信息</h5>
+                <ul>
+                    <li>此工具可以将文件在不同存储位置中迁移。</li>
+                    <li>此工具只能转移企业盘里的文件，直接在网盘内的文件不在转移的范围内</li>
+                    <li>通过筛选条件，可以只迁移部分文件</li>
+                </ul>
+            </div>
+       </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+ jQuery('.left-drager').leftDrager_layout();
+ var  spaces=$spaces_json;
+ function validate(form){
+	 //验证原和目标位置
+	 if(form.remoteid.value==form.oremoteid.value){
+		alert('目标存储位置不能和原存储位置相同');
+		form.remoteid.focus();
+		return false; 
+	 }
+	 //判断原位置有无数据
+	 if(spaces[form.oremoteid.value].usesize<1){
+		 alert('原位置没有需要迁移的数据');
+		form.oremoteid.focus();
+		return false; 
+	 }
+	
+	 return true;
+ }
+
+ function setExts(str){
+	  var old=trim($('exts').value).replace(/，{1,}/g,',').replace(/,{1,}/g,',').replace(/^\,/g,'');
+	  var arr=old?old.split(','):[]; 
+	  var newarr=str.split(',');
+	  for(var i=0;i<newarr.length;i++){
+		  if(jQuery.inArray(newarr[i],arr)<0){
+			  arr.push(newarr[i]);
+		  }
+	  } 
+	  $('exts').value=arr.join(',');
+  }
+</script>
+<!--{template common/footer_simple}--> 

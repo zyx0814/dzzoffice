@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<title>README: JW Player</title>
+<style>
+    body { padding: 50px 100px; width: 700px; font: 13px/20px Arial; background: #FFF; }
+    a, h1, h2 { color: #369; }
+    h2 { margin-top: 50px; }
+    pre { font-size: 12px; background:#E5F3C8; padding:5px 10px; border: 1px solid #D3EAA4; }
+    dt { font-weight: bold; }
+</style>
+</head><body>
+
+<h1>README: JW Player</h1>
+
+<p>Thank you for downloading JW Player 6, the world's most popular HTML5/Flash video player! See <a href="http://www.longtailvideo.com/support/jw-player/28832/about-jw-player">About JW Player</a> for an overview of supported browsers/devices, as well as a more detailed feature list. See the <a href="http://www.longtailvideo.com/support/jw-player/28835/release-notes">Release Notes</a> if you want to learn what changed with this latest release.</p>
+
+<h2>Quick Start</h2>
+
+<p>Copy the <strong>jwplayer</strong> folder that contains this README to the www root of your website. Next, include the <em>jwplayer.js</em> script in the &lt;head&gt; of your HTML page.</p>
+
+<p>If you have purchased the <a href="http://www.longtailvideo.com/jw-player/pricing/">Pro, Premium or Ads edition</a> of JW Player, its features can be activated by inserting your server-less JW Player license key in the second line:</p>
+
+<pre>
+&lt;script type="text/javascript" src="/jwplayer/jwplayer.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;jwplayer.key="ABCDEFGHIJKLMOPQ";&lt;/script&gt;
+</pre>
+
+<p>Note: A key is not required to use the Free edition, but will still be available from your <a href="https://account.longtailvideo.com/">JW Player Account</a>. Including your key will enable the free <a href="http://www.longtailvideo.com/support/jw-player/28852/using-jw-player-analytics">JW Player Analytics</a> for your account.</p>
+
+<h3>Embed Code</h3>
+
+<p>When the script and key are set, scroll down to the &lt;body&gt; of your HTML page and insert the JW Player embed code at the place you want your video to appear:</p>
+
+<pre>
+&lt;div id="myElement"&gt;Loading the player...&lt;/div&gt;
+
+&lt;script type="text/javascript"&gt;
+    jwplayer("myElement").setup({
+        file: "/uploads/myVideo.mp4",
+        image: "/uploads/myPoster.jpg"
+    });
+&lt;/script&gt;
+</pre>
+
+<p>See <a href="http://www.longtailvideo.com/support/jw-player/28839/embedding-the-player">Embedding JW Player</a> for a more elaborate description of options and some example embeds.</p>
+
+<h3>Premium Skins</h3>
+
+<p>If you have purchased the Premium or Ads edition of the player, your player includes a set of Premium skins. These skins can be downloaded from your <a href="https://account.longtailvideo.com/">JW Player Account</a>, but you can also load them off our CDN by simply inserting the skin name:</p>
+<pre>    skin: "bekle"</pre>
+
+<p>See <a href="http://www.longtailvideo.com/support/jw-player/28846/using-jw-player-skins">Using JW Player Skins</a> for more info.</p>
+
+
+
+<h2>Documentation</h2>
+
+<p>If you need help, the LongTail Support Community contains a wealth of information, including guides on:</p>
+
+<ul>
+<li>Supported <a href="http://www.longtailvideo.com/support/jw-player/28836/media-format-support">Media Formats</a> and <a href="http://www.longtailvideo.com/support/jw-player/28837/browser-device-support">Browsers &amp; Devices</a>.</li>
+<li> How to <a href="http://www.longtailvideo.com/support/jw-player/28839/embedding-the-player">Customize</a> and <a href="http://www.longtailvideo.com/support/jw-player/28840/troubleshooting-your-setup">Troubleshoot</a> your embeds.</li>
+<li>Configuring <a href="http://www.longtailvideo.com/support/jw-player/28842/working-with-playlists">Inline Playlists</a> or <a href="http://www.longtailvideo.com/support/jw-player/28843/loading-rss-feeds">RSS Feeds</a> (with multiple formats/qualities).</li>
+<li>The <a href="http://www.longtailvideo.com/support/jw-player/28846/using-jw-player-skins">PNG Skinning Model</a> and <a href="http://www.longtailvideo.com/support/jw-player/28850/using-the-javascript-api">JavaScript API</a>.</li>
+<li>Using <a href="http://www.longtailvideo.com/support/jw-player/28854/using-rtmp-streaming">RTMP Streaming</a> and <a href="http://www.longtailvideo.com/support/jw-player/28856/using-apple-hls-streaming/">Apple HLS</a> (Premium/Ads edition only).</li>
+<li>How to <a href="http://www.longtailvideo.com/support/jw-player/28862/configuring-video-ads">Configure Video Ads</a> (Ads edition only).</li>
+</ul>
+
+<p>Visit our <a href="http://www.longtailvideo.com/support/forums/jw-player/">Support Forums</a> for setup problems, bug reports or suggestions for new features or enhancements. The forums are very active and frequently visited by members of the JW Player development team. Please see your <a href="http://account.longtailvideo.com">JW Player Account</a> for more information on obtaining technical support.</p>
+
+<p>Follow the <a href="http://www.longtailvideo.com/blog/">LongTail Video Blog</a> for news on the JW Player and online video in general. We frequently publish posts on topics such as HTML5, video SEO, H.264, VAST advertising, etc. You can also <a href="http://twitter.com/longtailvideo">follow us on Twitter</a> or <a href="http://www.facebook.com/longtailvideo">like us on Facebook</a> to stay connected.</p>
+
+
+
+<h2>Licensing</h2>
+
+<p>Please be aware that each player edition has its own license:</p>
+
+<dl>
+<dt>JW Player Free</dt>
+<dd>Under the terms of our <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Creative Commons license</a>, you can use, modify and redistribute the player for non-commercial purposes only. 
+Commercial sites must <a href=" http://www.longtailvideo.com/jw-player/pricing/">purchase a license</a> for the <strong>Pro</strong>, <strong>Premium</strong> or <strong>Ads</strong> editions. See the <a href="http://www.longtailvideo.com/jw-player/license/jw-player-license-text">JW Player 6 License</a> for further details.</dd>
+<dt>JW Player Pro</dt>
+<dd>
+Under the terms of our <a href="http://www.longtailvideo.com/jw-player/license/jw-player-license-text">Commercial License</a>, you can deploy your copy of JW Player <strong>Pro</strong> for commercial use on 1 domain.  See our <a href="http://www.longtailvideo.com/jw-player/pricing/">pricing page</a> for more information on edition features and pricing.
+</dd>
+<dt>JW Player Premium</dt>
+<dd>
+  Under the terms of our <a href="http://www.longtailvideo.com/jw-player/license/jw-player-license-text">Commercial License</a>, you can deploy your copy of JW Player <strong>Premium</strong> for commercial use on up to 10 domains. See our <a href="http://www.longtailvideo.com/jw-player/pricing/">pricing page</a> for more information on edition features and pricing.
+</dd>
+<dt>JW Player Ads</dt>
+<dd>
+Under the terms of our <a href="http://www.longtailvideo.com/jw-player/license/jw-player-license-text">Commercial License</a>, you can deploy your copy of JW Player <strong>Ads</strong> for commercial use on up to 10 domains, with an additional restriction of up to 250.000 filled ad impressions per month. See our <a href="http://www.longtailvideo.com/jw-player/pricing/">pricing page</a> for more information on edition features and price.</dd>
+</dl>
+
+<p>Examples of <strong>commercial use</strong> includes websites with any advertisements, websites owned or operated by businesses, websites designed to promote products or services, and tools (e.g. a CMS) that bundle JW Player in their offering.</p>
+
+<p>Note all editions of JW Player incorporate the <a href="http://www.movable-type.co.uk/scripts/tea-block.html">Block TEA library</a> from Movable Type (CC-BY license).</p>
+
+
+</body>
+</html>

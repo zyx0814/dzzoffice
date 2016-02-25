@@ -1,0 +1,104 @@
+html,body{
+	width:100%;
+	height:100%;
+}
+
+.container{
+	width:100%;
+	height:100%;
+	position:relative;
+}
+
+
+.main-header2 {
+  border-bottom: 1px solid #DDD;
+  padding: 0 10px;
+  position:relative;
+  margin:0;
+}
+.main-header2 span{
+	margin-left:20px;
+}
+.main-header2 .input-group{
+	margin:3px 0 0;
+}
+.main-header2 .input-group{
+	margin:3px 0 0;
+}
+
+
+.main-header2 .nav>li>a{
+	padding:5px 10px;
+	margin:5px;
+	border-radius:3px;
+}
+
+.main-header2 .child-org .child-tree{
+	display:inline-block;
+	width:20px;
+	height:26px;
+	margin-left:10px;
+}
+
+.main-content{
+	
+}
+
+.partion{
+	padding:10px;
+	margin:10px;
+	background:#F5F5F5;
+}
+
+.controls .nav-pills{
+	margin-bottom:5px;
+}
+.nav-pills form{
+	margin:0;
+}
+.p_right {
+	background: url(../../static/image/common/check_right.gif) no-repeat 10px 12px;
+	width: 30px;
+}
+.table td{
+	vertical-align:middle;
+}
+.table td input{
+	margin:0;
+}
+
+.table td img{
+	max-width:32px;
+	max-height:32px;
+	margin-right:10px;
+	padding:0;
+}
+.table td p{
+	margin:5px 0;
+}
+.tag-header{
+  border-bottom: 1px solid #DDD;
+  padding: 0 10px;
+  position:relative;
+  margin:0;
+}
+.tag-header  .nav>li>a{
+	padding:5px;
+	margin:5px 10px;
+}
+.tag-header table td{
+	vertical-align:middle;
+}
+.tag-container{
+	margin:0;
+}
+.tag-container a{
+	padding:0 5px;
+	float:left;
+}
+.table thead th{
+	vertical-align:top;
+}
+a i{
+	font-size:1.2em;
+}

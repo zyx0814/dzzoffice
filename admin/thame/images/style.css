@@ -1,0 +1,40 @@
+
+.thumbnails{
+	clear:both
+}
+.thumbnails li{
+	cursor:pointer;
+	width:150px;
+	float:left;
+	height:120px;
+	
+}
+.img-thumbnail {
+	cursor:pointer;
+	padding:0px;
+}
+.img_100_64{
+	max-width: 101px;
+	max-height: 64px;
+}
+* html .img_100_64 {
+width: expression(this.width > 101 && this.width>=this.height ? 101 : true);
+height: expression(this.height > 64 && this.width<=this.height ? 64 : true);
+}
+.img_120_75{
+	max-width: 120px;
+	max-height: 75px;
+}
+* html .img_120_75 {
+width: expression(this.width > 120 && this.width>=this.height ? 120 : true);
+height: expression(this.height > 75 && this.width<=this.height ? 75 : true);
+}
+.active .img-thumbnail,.active1 .img-thumbnail {border:1px solid #F90;}
+.hover .img-thumbnail{border:1px solid #F90;}
+#colorContainer .delete{
+	display:none;
+	
+}
+#colorContainer .hover .delete{
+	display:block;
+}

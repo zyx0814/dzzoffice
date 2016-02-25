@@ -1,0 +1,88 @@
+
+      <div id="reply_$value[pid]" class="cmt_fed">
+      <a name="feed_tid_$value[tid]"></a>
+        <div class="item_cfed">
+          <div class="left_icfed"> <a href="user.php?uid=$value[authorid]" title="" hidefocus="true"> <img src="avatar.php?uid=$value[authorid]&size=small" alt="$value[author]" width="30" height="30"> </a> </div>
+          <div class="right_icfed">
+              <div class="master_cfed"> 
+            	 <a href="user.php?uid=$value[authorid]" title="" class="avatar_mcfed skip_cmfed" hidefocus="true">$value[author]</a>
+                 <!--{if $value['rpost']}-->
+                 <span class="amal_fed">回复</span>  <a href="user.php?uid=$value[rpost][authorid]" title="" class="avatar_mcfed skip_cmfed" hidefocus="true" target="_blank">$value[rpost][author]</a>
+                 <!--{/if}-->
+                 <span>：$value[message]</span> 
+          	 </div>
+             <div class="attachment_fed">
+              <!--{loop $value[attachs] $attach}-->
+          
+            <div class="item_afed">
+            <!--{if $attach[isimage]}-->
+            	<div class="pic_fed clearfix">
+                    <div class="img_pfed"> <a class="min_ipfed" hidefocus="true" href="$attach[url]" rel="$attach[url]" target="_blank"><img src="$attach[img]" alt="$attach[title]" class="artZoom"  style="cursor: url(dzz/feed/images/zoomin.cur), pointer;" >
+                    
+                    </a> </div>
+                </div>
+                <div class="file_fed imgfile_fed clearfix"> $attach[title]<span class="kb_nffed">($attach[filesize])</span>
+                   <p class="down_ffed"> 
+                    	<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach('$attach[qid]')">下载<!--{if $attach[downloads]>0}-->($attach[downloads]次)<!--{/if}--></a>
+                    	<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto('$attach[qid]')">保存到我的文档</a> 
+                        <!--{if $_G['uid']==$value[authorid] || $_G[adminid]==1}--><a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('$attach[qid]',this)">删除</a> <!--{/if}--> 
+                   </p>
+                </div>
+            <!--{elseif $attach['type']=='video'}-->
+            	<div class="file_fed file_fed_{$attach[type]} clearfix">
+                <div class="ico_ffed " style="margin-right:20px"><a href="javascript:;" onclick="feed_attach_preview('$attach[qid]')"><img src="$attach[img]" alt="$attach[title]" class="videoclass50_50" ></a></div>
+                    <p class="name_ffed">$attach[title]</p>
+                    <p class="down_ffed"> 
+                           <!--{if $attach[preview]>0}-->
+                            <a href="javascript:void(0);" title="" hidefocus="true" class="preview_dffed skip_mmfed" onclick="feed_attach_preview('$attach[qid]')">预览</a>
+                           <!--{/if}-->
+                           <!--{if $_G['uid']==$value[authorid] || $_G[adminid]==1}--><a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('$attach[qid]',this)">删除</a> <!--{/if}--> 
+                    </p>
+              </div>
+               <!--{elseif $attach['type']=='dzzdoc' || $attach['type']=='link'}-->
+            	<div class="file_fed file_fed_{$attach[type]} clearfix">
+                <div class="ico_ffed " ><a href="javascript:;" onclick="feed_attach_preview('$attach[qid]')"><img src="$attach[img]" alt="$attach[title]" style="max-height:50px;" ></a></div>
+                    <p class="name_ffed">$attach[title]</p>
+                    <p class="down_ffed"> 
+                            <a href="javascript:void(0);" title="" hidefocus="true" class="preview_dffed skip_mmfed" onclick="feed_attach_preview('$attach[qid]')">预览</a>
+                            <!--{if $_G['uid']==$value[authorid] || $_G[adminid]==1}--><a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('$attach[qid]',this)">删除</a> <!--{/if}--> 
+                          
+                    </p>
+              </div>
+            <!--{else}-->
+             <div class="file_fed file_fed_{$attach[type]} clearfix">
+                <div class="ico_ffed"><img src="$attach[img]" alt="$attach[filename]" style="max-height:50px;"> </div>
+                <p class="name_ffed">$attach[title] <!--{if $attach['filesize']}--><span class="kb_nffed">($attach[filesize])</span><!--{/if}--> </p>
+                <p class="down_ffed"> 
+                         <!--{if $attach[preview]>0}-->
+                        <a href="javascript:void(0);" title="" hidefocus="true" class="preview_dffed skip_mmfed" onclick="feed_attach_preview('$attach[qid]')">预览</a>
+                       <!--{/if}-->
+                     	<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach('$attach[qid]')">下载<!--{if $attach[downloads]>0}--><span class="text-gray">($attach[downloads]次)</span><!--{/if}--></a>
+                        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto('$attach[qid]')">保存到我的文档</a> 
+                        <!--{if $_G['uid']==$value[authorid] || $_G[adminid]==1}--><a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('$attach[qid]',this)">删除</a> <!--{/if}--> 
+                </p>
+              </div>
+            <!--{/if}-->
+             
+            </div>
+         
+          <!--{/loop}-->
+            </div>
+            <div class="action_cfed clearfix">
+              <div class="btn_acfed">
+                <ul>
+                <!--{if $_G['uid']==$value[authorid] || $_G[adminid]==1}-->
+                  <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit('$value[pid]','reply_$value[pid]','$value[tid]')">编辑</a></li>
+                  <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_delete('$value[pid]','reply_$value[pid]','$value[tid]')">删除</a></li>
+                  <!--{/if}-->
+                   <!--{if $_G['uid']>0}--><li class="reply_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_publish_reply('$value[tid]','$value['pid']');">回复</a></li> <!--{/if}-->
+                </ul>
+              </div>
+             <!--{if $value[readperm]<0}--> <span class="lock_fed" original-title="">私密</span> <!--{/if}--><span class="time_acfed">$value[dateline]</span> </div>
+          </div>
+        </div>
+      	</div>
+      </div>
+      
+      
+ 

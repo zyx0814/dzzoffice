@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="robots" content="noindex, nofollow"/>
+    <script type="text/javascript" src="../internal.js"></script>
+   <link rel="stylesheet" type="text/css" href="../../../../../static/css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../../../static/bootstrap/css/bootstrap.min.css">
+   <script type="text/javascript" src="../../../../../dzz/scripts/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript" src="../../../../../data/cache/smilies_var.js"></script>
+    <script type="text/javascript" src="../../../../../dzz/scripts/_fun.js"></script>
+    <script>var cookiepre = 'AQTa_2132_', cookiedomain = '';STATICURL = '../../../../../static/'</script>
+    <style>
+	 html ,body{overflow:hidden;height:282px;}
+	 .sllt {
+		 padding: 4px; 
+	 }
+	</style>
+</head>
+<body onload="smilies_onload('smiley_container',9)">
+<div id="smiley_container" class="sllt"></div>
+
+<script type="text/javascript">
+var thumb=24;
+
+function smilies_onload(id, smcols, seditorkey) {
+	seditorkey = !seditorkey ? '' : seditorkey;
+	smile = getcookie('smile').split('D');
+	if(typeof smilies_type == 'object') {
+		if(smile[0] && smilies_array[smile[0]]) {
+			CURRENTSTYPE = smile[0];
+		} else {
+			for(i in smilies_array) {
+				CURRENTSTYPE = i;break;
+			}
+		}
+		var k=0;
+		smiliestype = '<div id="'+id+'_tb" class="tb tb_s cl"><ul class="nav nav-pills nav-pills-bottomguide" style="margin:0;border-bottom:1px solid #DDD;">';
+		for(i in smilies_type) {
+			key = i.substring(1);
+			if(smilies_type[i][0]) {
+				k++;
+				smiliestype += '<li ' + (CURRENTSTYPE == key ? 'class="active"' : '') + ' id="'+seditorkey+'stype_'+key+'" onclick="smilies_switch(\'' + id + '\', \'' + smcols + '\', '+key+', 1, \'' + seditorkey + '\');if(CURRENTSTYPE) {$(\''+seditorkey+'stype_\'+CURRENTSTYPE).className=\'\';}this.className=\'active\';CURRENTSTYPE='+key+';doane(event);" ><a href="javascript:;" hidefocus="true">'+smilies_type[i][0]+'</a></li>';
+			}
+		}
+		smiliestype += '</ul></div>';
+		if(k<2) smiliestype='';//只有一组表情时不现实分类栏
+		$(id).innerHTML = smiliestype + '<div id="' + id + '_data" style="width:'+((smthumb*1+16)*smcols)+'px;height:'+(smthumb*1+16)*5+'px;"></div><div class="sllt_p" id="' + id + '_page"></div>';
+		smilies_switch(id, smcols, CURRENTSTYPE, smile[1], seditorkey);
+		/*smilies_fastdata = '';
+		if(seditorkey == 'fastpost' && $('fastsmilies') && smilies_fast) {
+			var j = 0;
+			for(i = 0;i < smilies_fast.length; i++) {
+				if(j == 0) {
+					smilies_fastdata += '<tr>';
+				}
+				j = ++j > 3 ? 0 : j;
+				s = smilies_array[smilies_fast[i][0]][smilies_fast[i][1]][smilies_fast[i][2]];
+				smilieimg = STATICURL + 'image/smiley/' + smilies_type['_' + smilies_fast[i][0]][1] + '/' + s[2];
+				img[k] = new Image();
+				img[k].src = smilieimg;
+				smilies_fastdata += s ? '<td onmouseover="smilies_preview(\'' + seditorkey + '\', \'fastsmiliesdiv\', this, ' + s[5] + ')" onmouseout="$(\'smilies_preview\').style.display = \'none\'" onclick="insertSmiley(' + s[0] + ')" id="' + seditorkey + 'smilie_' + s[0] + '_td"><img id="smilie_' + s[0] + '" width="24" height="24" src="' + smilieimg + '" alt="' + s[1] + '"  />' : '<td>';
+			}
+			$('fastsmilies').innerHTML = '<table cellspacing="0" cellpadding="0"><tr>' + smilies_fastdata + '</tr></table>';
+		}*/
+	}
+	
+}
+function insertSmiley(key) {
+	
+	 var obj = {
+        src: editor.options.UEDITOR_HOME_URL.replace('dzz/system/ueditor/','') + jQuery('#smilie_'+key).attr('src').replace('../../../../../static','static')
+    };
+    obj._src = obj.src;
+    editor.execCommand( 'insertimage', obj );
+     dialog.popup.hide();
+    
+	
+}
+function smilies_switch(id, smcols, type, page, seditorkey) {
+	page = page ? page : 1;
+	if(!smilies_array[type] || !smilies_array[type][page]) return;
+	setcookie('smile', type + 'D' + page, 31536000);
+	smiliesdata = '<table id="' + id + '_table" cellpadding="0" cellspacing="0"><tr>';
+	j = k = 0;
+	img = [];
+	for(var i = 0; i < smilies_array[type][page].length; i++) {
+		if(j >= smcols) {
+			smiliesdata += '<tr>';
+			j = 0;
+		}
+		s = smilies_array[type][page][i];
+		smilieimg = STATICURL + 'image/smiley/' + smilies_type['_' + type][1] + '/' + s[2];
+		img[k] = new Image();
+		img[k].src = smilieimg;
+		smiliesdata += s && s[0] ? '<td onmouseover="smilies_preview(\'' + seditorkey + '\', \'' + id + '\', this, ' + s[5] + ')" onclick="insertSmiley(' + s[0] + ')" id="' + seditorkey + 'smilie_' + s[0] + '_td"><img title="'+s[6]+'" alt="'+s[6]+'" id="smilie_' + s[0] + '" width="24" height="24" src="' + smilieimg + '" alt="' + s[1] + '" />' : '<td>';
+		j++;k++;
+	}
+	smiliesdata += '</table>';
+	smiliespage = '';
+	if(smilies_array[type].length > 2) {
+		prevpage = ((prevpage = parseInt(page) - 1) < 1) ? smilies_array[type].length - 1 : prevpage;
+		nextpage = ((nextpage = parseInt(page) + 1) == smilies_array[type].length) ? 1 : nextpage;
+		smiliespage = '<div style="line-height:24px;display:inline-block;padding-right:20px;"><a href="javascript:;" onclick="smilies_switch(\'' + id + '\', \'' + smcols + '\', ' + type + ', ' + prevpage + ', \'' + seditorkey + '\');doane(event);">上页</a>' +
+			'&nbsp;&nbsp;<a href="javascript:;" onclick="smilies_switch(\'' + id + '\', \'' + smcols + '\', ' + type + ', ' + nextpage + ', \'' + seditorkey + '\');doane(event);">下页</a></div>' +
+			page + '/' + (smilies_array[type].length - 1);
+	}
+	$(id + '_data').innerHTML = smiliesdata;
+	$(id + '_page').innerHTML = smiliespage;
+	
+	//if($(id + '_tb')) $(id + '_tb').style.width = smcols*(16+parseInt(s[3])) + 'px';
+}
+
+function smilies_preview(seditorkey, id, obj, w) {
+	var menu = $('smilies_preview');
+	if(!menu) {
+		menu = document.createElement('div');
+		menu.id = 'smilies_preview';
+		menu.className = 'sl_pv';
+		menu.style.display = 'none';
+		$('smiley_container').appendChild(menu);
+	}
+	menu.innerHTML = '<img width="' + w + '" src="' + obj.childNodes[0].src + '" />';
+	mpos = fetchOffset($(id + '_data'));
+	spos = fetchOffset(obj);
+	pos = spos['left'] >= mpos['left'] + $(id + '_data').offsetWidth / 2 ? '13' : '24';
+	showMenu({'ctrlid':obj.id,'showid':id + '_data','menuid':menu.id,'pos':pos,'layer':3});
+}
+</script>
+</body>
+</html>

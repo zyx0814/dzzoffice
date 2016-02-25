@@ -1,0 +1,169 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+html, body {
+	overflow: hidden;
+	background: #FBFBFB;
+}
+.bs-left-container {
+	width: 120px;
+	top:0
+}
+.bs-main-container {
+	margin-left: 120px;
+	overflow: auto;
+}
+.form-horizontal-left .radio-inline {
+	margin: 0;
+}
+.form-horizontal-left .checkbox-inline {
+	margin: 0;min-width:130px;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix" style="padding-top:0">
+<div class="bs-left-container  clearfix"> 
+  <!--{template left}--> 
+</div>
+<div class="left-drager">
+  <div class="left-drager-op">
+    <div class="left-drager-sub"></div>
+  </div>
+</div>
+<div class="bs-main-container  clearfix" >
+  <div class="main-header">
+    <ul class="nav nav-pills nav-pills-bottomguide">
+      <li ><a href="{BASESCRIPT}?mod=member&op=verifyset">认证设置</a></li>
+      <li class="active"><a href="{BASESCRIPT}?mod=member&op=verifyset&do=edit&vid=$vid">编辑</a></li>
+    </ul>
+  </div>
+  <div class="main-content" style="padding:20px;">
+    <form id="cpform" action="{BASESCRIPT}?mod=member&op=verifyset&do=edit" class="form-horizontal form-horizontal-left" method="post" name="cpform" enctype="multipart/form-data">
+      <input type="hidden" value="{FORMHASH}" name="formhash">
+      <input type="hidden" value="true" name="verifysubmit">
+       <input type="hidden" value="$vid" name="vid">
+       <dl>
+       		<dt>认证名称：</dt>
+            <dd class="clearfix">
+            	<input name="verify[title]" value="$verifyarr[title]" type="text" class="form-control" <!--{if $verifyarr[readonly]}-->disabled="disabled"<!--{/if}-->>
+                
+            </dd>
+       </dl>
+        <dl>
+       		<dt>认证简介：</dt>
+            <dd class="clearfix">
+            	<textarea name="verify[desc]"  type="textarea" class="form-control"  rows="3">$verifyarr[desc]</textarea>
+                <span class="help-inline">认证简单介绍，会在用户认证页面显示，支持UBB</span>
+            </dd>
+       </dl>
+      <dl>
+       		<dt>是否启用：</dt>
+            <dd class="clearfix">
+            	<label class="radio-inline"><input type="radio" name="verify[available]" value="1" <!--{if $verifyarr[available]}-->checked="checked"<!--{/if}--> />启用</label>
+                <label class="radio-inline"><input type="radio" name="verify[available]" value="0" <!--{if !$verifyarr[available]}-->checked="checked"<!--{/if}--> />不启用</label>
+            </dd>
+       </dl>
+       <dl>
+       		<dt>认证图标：</dt>
+            <dd class="clearfix">
+            	<label class="radio-inline"><input type="radio" name="verify[showicon]" value="1" <!--{if $verifyarr[showicon]}-->checked="checked"<!--{/if}--> onclick="$('hidden_verify_showicon').style.display = '';"  />显示</label>
+                <label class="radio-inline"><input type="radio" name="verify[showicon]" value="0" <!--{if !$verifyarr[showicon]}-->checked="checked"<!--{/if}--> onclick="$('hidden_verify_showicon').style.display = 'none';" />不显示</label>
+            </dd>
+            <dd id="hidden_verify_showicon" class="clearfix mt10" <!--{if !$verifyarr[showicon]}-->style="display:none"<!--{/if}-->>
+            	<dl>
+                	<dt>未认证图标:</dt>
+                    <dd class="clearfix">
+                    <table ><tr>
+                    <td valign="top">
+                        <div>
+                            <input id="fileQ3_0" style="display:" name="unverifyiconnew" value="" type="file" class="form-control uploadbtn marginbot">
+                            <input id="fileQ3_1" style="display:none" name="TMPunverifyiconnew" value="$verifyarr[unverifyicon]" type="text" class="form-control marginbot">
+                        </div>
+                        <div>
+                            <a id="fileQ3_0a" class="btn btn-link" style="font-weight:bold;" href="javascript:;" onclick="$('fileQ3_1a').style.fontWeight = '';this.style.fontWeight = 'bold';$('fileQ3_1').name = 'TMPunverifyiconnew';$('fileQ3_0').name = 'unverifyiconnew';$('fileQ3_0').style.display = '';$('fileQ3_1').style.display = 'none'">本地上传</a>&nbsp;<a id="fileQ3_1a" class="btn btn-link" style="" href="javascript:;" onclick="$('fileQ3_0a').style.fontWeight = '';this.style.fontWeight = 'bold';$('fileQ3_0').name = 'TMPunverifyiconnew';$('fileQ3_1').name = 'unverifyiconnew';$('fileQ3_1').style.display = '';$('fileQ3_0').style.display = 'none'">输入URL</a>
+                         </div>
+                     </td>
+                    <td><div class="ml20">$unverifyiconhtml</div></td>
+                    </tr></table>
+                    </dd>
+                </dl>
+                <dl>
+                	<dt>认证图标:</dt>
+                    <dd class="clearfix">
+                    <table ><tr>
+                    <td valign="top">
+                        <div>
+                            <input id="fileO4_0" style="display:" name="iconnew" value="" type="file" class="form-control uploadbtn marginbot">
+                            <input id="fileO4_1" style="display:none" name="TMPiconnew" value="$verifyarr[icon]" type="text" class="form-control marginbot">
+                        </div>
+                        <div>
+                            <a id="fileO4_0a" class="btn btn-link" style="font-weight:bold" href="javascript:;" onclick="$('fileO4_1a').style.fontWeight = '';this.style.fontWeight = 'bold';$('fileO4_1').name = 'TMPiconnew';$('fileO4_0').name = 'iconnew';$('fileO4_0').style.display = '';$('fileO4_1').style.display = 'none'">本地上传</a>&nbsp;<a class="btn btn-link" id="fileO4_1a" style="" href="javascript:;" onclick="$('fileO4_0a').style.fontWeight = '';this.style.fontWeight = 'bold';$('fileO4_0').name = 'TMPiconnew';$('fileO4_1').name = 'iconnew';$('fileO4_1').style.display = '';$('fileO4_0').style.display = 'none'">输入URL</a>
+                        </div>
+                    </td>
+                    <td><div class="ml20">$verificonhtml</div></td>
+                    </tr></table>
+                   
+                    </dd>
+                </dl>
+            </dd>
+       </dl>
+       <dl>
+       		<dt>可选资料项：</dt>
+            <dd class="clearfix">
+            <!--{loop $fieldarr $value}-->
+            	<label class="checkbox-inline"> <input type="checkbox" name="verify[field][{$value[fieldid]}]" value="$value[fieldid]" <!--{if $verifyarr[field][$value[fieldid]]}-->checked="checked"<!--{/if}-->>$value[title]</label>
+            <!--{/loop}-->
+            </dd>
+            <dd class="clearfix">
+            <span class="help-block danger">注意：此处勾选的资料项只会在对应的认证页面显示，不在用户基本资料中显示，此认证未启用时也有效。</span>
+            </dd>
+       </dl>
+        <dl>
+       		<dt>允许参于认证的用户组：</dt>
+            <dd class="clearfix">
+                <select name="verify[groupid][]" multiple="multiple" class="form-control" size="7">
+                    <!--{loop $usergroups $value}-->
+                    <option value="$value[groupid]" <!--{if in_array($value[groupid],$verifyarr[groupid])}-->selected="selected"<!--{/if}-->>$value[grouptitle]</option>
+                    <!--{/loop}-->
+                </select>
+                <span class="help-inline">设置允许参与认证的用户组，可以按住 CTRL 多选， 空代表都可以参于认证</span>
+            </dd>
+        </dl>
+         <dl>
+            <dd class="clearfix">
+                <input type="submit" class="btn btn-primary btn-width"  name="verifysubmit" value="保存设置">
+             </dd>
+         </dl>
+    </form>
+  </div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();	
+var url='{BASESCRIPT}?mod=member';
+
+   
+jQuery(document).ready(function(e) {
+	<!--{if $verifyarr['icon']}-->
+	jQuery('#fileO4_1a').trigger('click');
+	<!--{/if}-->
+	<!--{if $verifyarr['unverifyicon']}-->
+	jQuery('#fileQ3_1a').trigger('click');
+	<!--{/if}-->
+    jQuery('input').iCheck({
+		  checkboxClass: 'icheckbox_minimal-blue',
+		  radioClass: 'iradio_minimal-blue',
+	});
+	jQuery('input').on('ifChecked',function(e){
+		jQuery(this).trigger('click');
+	});
+	
+});
+
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script> 
+<!--{template common/footer_simple}--> 

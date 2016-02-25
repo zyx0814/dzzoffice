@@ -1,0 +1,39 @@
+
+  <table class="table table-hover " style="margin:0;">
+    <thead>
+      <th>应用名称</th>
+      <th>组权限</th>
+      <th>可用部门</th>
+      <th>目录</th>
+      <th>供应商</th>
+      <th>操作</th>
+   </thead>
+   <!--{if $list}-->
+      <!--{loop $list $value}-->
+    <tr>
+      <td><a href="$value[appurl]" target="_blank"><img src="$value[appico]" />$value[appname]</a></td>
+      <td>$value[grouptitle]</td>
+      <td> 
+      <!--{loop $value['department'] $key $value1}-->
+        <p appid="$value[appid]" orgid="$key"> {eval $i=0;}
+        <!--{loop $value1 $value2}-->
+        <!--{if $i>0}-->--><!--{/if}-->$value2[orgname]
+        {eval $i++;}
+         <!--{/loop}-->
+        </p>
+      <!--{/loop}-->
+      </td>
+      <td>$value[identifier]</td>
+      <td>$value[vendor]</td>
+      <td > <a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=edit&do=edit&appid=$value[appid]&refer=$refer" title="编辑"><i class="glyphicon glyphicon-edit"></i></a>
+       		<a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=cp&do=enable&appid=$value[appid]&refer=$refer" title="启用"><i class="glyphicon glyphicon-ok-circle"></i></a>
+          <a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=cp&do=export&appid=$value[appid]&refer=$refer" title="导出"><i class="glyphicon glyphicon-export"></i></a>
+     	  <a class="btn btn-link text-danger" style="color:#e83110" href="{BASESCRIPT}?mod=app&op=cp&do=uninstall&appid=$value[appid]&refer=$refer" title="卸载" onclick="if(confirm('确定要卸载此应用（应用的所有数据都将被删除，包括应用内部的数据，并且不可恢复）？'))return true;else return false"><i class="glyphicon glyphicon-remove-circle"></i></a>
+       </td>
+    </tr>
+    <!--{/loop}-->
+   <!--{else}-->
+   <tr>
+      <td colspan="10">还没有相关的应用，应用关闭后会在此处显示</td></tr>
+   <!--{/if}-->
+  </table>

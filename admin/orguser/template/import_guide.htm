@@ -1,0 +1,74 @@
+<!--{template common/header_simple_start}-->
+<link href="static/bootstrap/css/bootstrapSwitch.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script src="admin/scripts/admin.js?{VERHASH}" type="text/javascript"></script>
+<style>
+p {
+	min-height: 25px;
+	min-width: 50px;
+	margin:5px 0;
+}
+p input.form-control{
+	box-shadow:none;
+	height:25px;
+	width:90%;
+	
+}
+p input.form-control:focus{
+	box-shadow:none;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<div class="container" style="height:100%">
+<div class="main-header">
+  <ul class="nav nav-pills nav-pills-bottomguide">
+  	<li><a href="{ADMINSCRIPT}?mod=orguser">机构和用户管理</a></li>
+    <li class="active"><a href="{BASESCRIPT}?mod=orguser&op=import">用户导入</a></li>
+  </ul>
+</div>
+<div class="main-content">
+  
+  <div style="padding:25px;line-height:2">
+    <p style="line-height:3"><strong>步骤</strong><strong>1</strong><strong>：<a class="btn btn-simple" href="{ADMINSCRIPT}?mod=orguser&op=export_tmpl" target="_blank">下载人员信息导入模板</a></strong>
+    <span class="help-inline ml10">模板的项目会根据用户资料项的多少自动生成</span>
+    </p>
+    <p style="line-height:4"><strong>步骤</strong><strong>2</strong>：根据模板编辑需要人员信息表。</p>
+   
+   <div>
+    <form name="importfile" class="form-horizontal form-horizontal-left" method="post"  action="{ADMINSCRIPT}?mod=orguser&op=import" id="importfile" enctype="multipart/form-data">
+        <input type="hidden" name="formhash" value="{FORMHASH}">
+        <input type="hidden" name="importfilesubmit" value="true">
+        
+      <div class="form-group">
+        <label class="control-label " style="width:140px;text-align:left;padding-left:0">步骤3：选择excel表</label>
+        <div class="controls">
+          <input type="file" name="importfile" class="form-control" style="padding:6px 12px;" />
+        </div>
+        <span  class="help-inline">选择编辑好的人员信息表，支持 .xls、.xlsx格式</span> 
+       </div>
+       <div class="form-group">
+            <label class="control-label" ></label>
+            <div class="controls ml20">
+              <input type="submit" name="" class="btn  btn-simple" style="padding:6px 25px" value="下一步" />
+            </div>
+       </div>
+  </form>
+  </div>
+  <div class="alert alert-warning " style="color:#333;text-shadow:1px 1px 1px #FFF">
+       <p><strong>编辑人员信息表注意事项</strong></p>
+       <ul class="list-unstyled" style="padding-left:25px;">
+        <li>1、根据模板的字段来编辑需要导人员信息，如果已经有档案信息表，只需将现有的档案信息表中的相关字段名称改成跟“模板”里提供的名称一样即可，字段的位置不影响，只要名称对应上就行；</li>
+        <li>2、模板中“姓名”字段必须填写，“邮箱”和“用户名”至少有一项不为空，其他字段根据需要填写。</li>
+        <li>3、表中“邮箱”“用户名”字段中的信息必须是唯一的，不能重复。“邮箱”和“用户名”至少有一项不为空，如果邮箱为空，系统导入时将随机生成邮箱地址。</li>
+        <li class="danger">4、表中“所属部门”字段可以多列，如果表中的“所属部门”有多列，则需要从左到右分别为一级部门、二级部门...这样排列，系统会根据从左到右的原则依次创建部门、下级部门..。也支持一列部门来创建多级部门，此列的内容如：小学/一年级/一班 ，这种形式即：上下级部门使用“/”来分割</li>
+        <li>5、导入用户只能按机构导入，多机构需要分批导入。</li>
+        <li>6、表中“用户密码”字段可不填，导入界面中可为用户批量添加统一的密码。用户使用统一密码登录后可自行修改密码。</li>
+        <li>7、导入界面中有“增量”“覆盖”两种导入方式，增量方式为遇到相同用户，只会增加用户缺少的字段信息，用户原有信息不会被改动。例如，系统中已有用户A，密码为123.在导入新用户表中，也有用户A,导入时使用了统一密码为123456.导入完成后，其他用户的密码都是123456，用户A还是保持他的原有密码为123；覆盖导入，则会以导入的表中人员信息，完全替换原有系统中已有的用户信息。</li>
+        <li>8、如果导入的人员很多，建议先做一个少量人员、部门的测试表，先导入小部分用户，测试没有问题，再使用增量导入所有用户。</li>
+       </ul>
+   </div>
+ </div>
+</div>
+</div>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}" type="text/javascript"></script> 
+<!--{template common/footer_simple}--> 

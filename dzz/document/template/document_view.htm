@@ -1,0 +1,94 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/document/images/document.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/styles/showwindow/style.css" rel="stylesheet" media="all" />
+<link href="dzz/comment/images/comment.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/system/ueditor/third-party/dzzattach/dzzattach.css?{VERHASH}"  rel="stylesheet"  media="all">
+<script src="dzz/scripts/dzz.api.js?{VERHASH}"></script>
+<script type="text/javascript" >  
+try{
+	var api=_api.init();
+	api.setTitle('{$icoarr[name]}');
+	api.win.needsave=0;
+}catch(e){}
+</script>
+<style>
+.attach-item.attach{
+	height:16px;
+	overflow:hidden;
+	display:inline-block;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<div class="container" >
+
+<div class="document-header clearfix" ><div class="document-info clearfix ">  
+<!--{if $editperm}-->
+	<!--{if $version>0 && count($versions)>1 }-->
+    	
+                    
+               <a class="pull-left" href="{DZZSCRIPT}?mod=document&icoid=$dicoid"><i class="glyphicon glyphicon-hand-left"></i>&nbsp;返回</a>
+               <div class="dropdown pull-left"><a href="javascript:;" id="document_reversion" class="pull-left " data-toggle="dropdown"> <i class="glyphicon glyphicon-leaf"></i>&nbsp;<b>#{$version}：</b>{eval echo dgmdate($current[dateline])} by {$current[username]}</span><b class="caret"></b></a>
+                    <ul  class="dropdown-menu" role="menu" aria-labelledby="document_reversion">
+                    <!--{loop $versions $value1}-->
+                      <li role="presentation"><a href="{DZZSCRIPT}?mod=document&icoid=$dicoid&v=$value1[version]" tabindex="-1" role="menuitem" ><b>#{$value1[version]}：</b>{eval echo dgmdate($value1[dateline])} by {$value1[username]}</a></li>
+                    <!--{/loop}-->
+                   </ul>
+                </div>
+               <!--{if count($versions)>1 }--> <a class="pull-right" href="{DZZSCRIPT}?mod=document&do=deleteVersion&icoid=$dicoid&v=$version" onclick="if(confirm('确定要删除文档的当前版本吗')){return true;}else{return false}" title="删除此版本"><i class="glyphicon glyphicon-remove"></i>&nbsp;删除此版本</a><!--{/if}-->  
+                <!--{if $document[version]!=$version }--><a class="pull-right" href="{DZZSCRIPT}?mod=document&do=applyVersion&icoid=$dicoid&v=$version" ><i class="glyphicon glyphicon-ok"></i>&nbsp;使用此版本 </a> <!--{/if}--> 
+         
+      
+   <!--{else}-->
+       	
+            <!--{if $document[version]>1}--><a  class="pull-right" href="{DZZSCRIPT}?mod=document&icoid=$dicoid&v=$document[version]"  title="所有版本" ><i class="glyphicon glyphicon-leaf"></i></a> <!--{/if}-->
+             <a class="pull-right" href="{DZZSCRIPT}?mod=document&op=edit&icoid=$dicoid" title="编辑" ><i class="glyphicon glyphicon-edit"></i></a>
+    	 
+    <!--{/if}-->
+<!--{/if}-->
+    &nbsp;</div>
+   </div>
+   
+	<div class="main-content clearfix">
+    	<div class="document-container clearfix" >
+        	
+            <div class="document-body clearfix">$str</div>
+            <!--{if !$version}--> 
+             <a name="comment_container"></a>
+            <div id="comment_container" class="document-comment clearfix">
+            		<script type="text/javascript"> ajaxget('{DZZSCRIPT}?mod=comment&op=ajax&do=getcomment&idtype=document&id=$document[did]&allowattach=3&allowat=0&allowsmiley=1','comment_container','comment_container')</script>
+                 
+            </div>
+            <a name="comment_reply_form"></a>
+             <div id="comment_reply_form" class="comment-reply-form clearfix">
+                 
+                  <div class="itemfeed" >
+                 	<div class="left_ifed"> <a href="user.php?uid=$_G[uid]" title="$_G[username]" hidefocus="true"><img width="50" height="50" src="avatar.php?uid=$_G[uid]" alt="$_G[username]"></a> </div>
+                     <div  class="cmt_fed right-ifed" id="documnet_reply"> 
+                     <script type="text/javascript">ajaxget('{DZZSCRIPT}?mod=comment&op=ajax&do=getPublishForm&id=$document[did]&idtype=document&allowattach=3&allowat=0&allowsmiley=1','documnet_reply','documnet_reply')</script>
+                     </div>
+                 </div>
+             </div>
+           <!--{/if}-->
+        </div>
+    </div>
+</div>
+<script>
+jQuery(document).ready(function(e) {
+	   uParse('.document-body',{'rootPath':'dzz/system/ueditor'});
+	   dzzattach.init('.document-body');
+});
+</script>
+<script src="dzz/system/ueditor/ueditor.parse.js?{VERHASH}"></script>
+<script src="dzz/system/ueditor/third-party/dzzattach/dzzattach.js?{VERHASH}" type="text/javascript"></script>
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script src="dzz/scripts/jquery_file_upload/jquery.ui.widget.js?" type="text/javascript"></script>
+<script src="dzz/scripts/jquery_file_upload/jquery.iframe-transport.js?" type="text/javascript"></script>
+<!-- The basic File Upload plugin -->
+<script src="dzz/scripts/jquery_file_upload/jquery.fileupload.js?" type="text/javascript"></script>
+<script src="dzz/comment/scripts/comment.js?{VERHASH}" type="text/javascript"></script>
+<script type="text/javascript"  src="static/js/smilies.js?{VERHASH}"></script>
+
+ <script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

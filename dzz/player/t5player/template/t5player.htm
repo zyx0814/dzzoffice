@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset={CHARSET} />
+<title>百度播放器</title>
+<meta http-equiv="Content-Type" content="text/html; charset={CHARSET}" />
+<script type="text/javascript" src="dzz/scripts/jquery-1.10.2.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="{APP_DIR}js/cyberplayer.min.js?{VERHASH}"></script>
+
+
+   <style>
+   /* site specific styling */
+   html ,body{width:100%;height:100%;overflow:hidden;margin:0;padding:0;}
+   body {
+      font: 12px "Myriad Pro", "Lucida Grande", "Helvetica Neue", sans-serif;
+      text-align: center;
+      padding-top: 0;
+      color: #999;
+      background-color: #333333;
+   }
+</style>
+
+</head>
+
+<body>
+
+<div id="player" style="width:100%;height:100%">
+
+<table width="100%" height="100%">
+<tr><td align="center" valign="middle">
+<h3 style="color:#FFF;padding:30px;">初次加载比较慢，请耐心等待下，如果出现错误时点击播放器会自动重试</h3>
+<img src="dzz/player/t5player/images/baiduplayer.png">
+</td></tr>
+</table>
+
+</div>
+<script type="text/javascript">
+var sum=0;
+jQuery(document).ready(function(e) {
+	 jQuery.getJSON('$ajaxurl',function(json){
+		if(json.update>0){
+		}else if(json.update>1){
+			sum++;
+		}else{
+			jQuery.get('$ajaxurl');
+		}
+		window.setTimeout(function(){
+			if(sum<10){
+				jQuery.get('$ajaxurl');	
+			}
+		},15000);
+	});
+	var myPlayer = cyberplayer("player").setup({
+				 //flashplayer:"{APP_DIR}player/cyberplayer.flash.swf",
+				 flashplayer:"http://pan.baidu.com/res/static/thirdparty/flashvideo/player/cyberplayer.swf?t="+new Date().getTime(),
+				  width:'100%', 
+				  height:'100%', 
+				  file:'$url',
+				  ak:'$ak',
+				  sk:'$sk',
+				  autoStart:true
+				 }); 
+});
+var timer=window.setTimeout(function(){
+		if(sum<10){
+			jQuery.get('$ajaxurl');	
+		}
+	},15000);
+</script>
+
+  
+
+</body>
+</html>

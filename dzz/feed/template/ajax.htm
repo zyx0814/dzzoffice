@@ -1,0 +1,65 @@
+
+<!--{if $do == 'getNewThreads'}-->
+    <!--{loop $list $value}-->
+    <!--{template feed_thread_item}-->
+    <!--{/loop}--> 
+	<script type="text/javascript" >
+		timestamp=parseInt($_G['timestamp']);
+	</script>
+  
+<!--{elseif $do == 'getReplys'}-->
+	<!--{template common/header_ajax}-->
+    <!--{loop $list $value}-->
+      <!--{template feed_reply_item}-->
+    <!--{/loop}-->	
+    <script type="text/javascript" >
+		 
+	<!--{if $limit==''}-->
+	  jQuery('#comment_{$tid} ').find('.txt_cfed a').off('click').addClass('cur')
+	  .on('click',function(){
+			if(jQuery(this).hasClass('cur')){
+				
+				var el=jQuery('#reply_list_{$tid} .cmt_fed');
+				for(var i=0;i<el.size();i++){
+					if(i<el.size()-5){
+						el.eq(i).hide();
+					}
+				}
+				jQuery(this).removeClass('cur')
+			}else{
+				jQuery('#reply_list_{$tid} .cmt_fed').show();
+				jQuery(this).addClass('cur')
+			}
+	   });
+	 <!--{/if}-->
+	  
+   </script>
+   <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'getThread'}-->
+	<!--{template common/header_ajax}-->
+	<!--{template feed_thread_item}-->
+	
+    <!--{template common/footer_ajax}-->
+   
+    
+<!--{elseif $do == 'getReply'}-->
+	<!--{template common/header_ajax}-->
+	<!--{template feed_reply_item}-->
+    
+    <!--{template common/footer_ajax}-->
+    
+<!--{elseif $do == 'getReplyForm'}-->
+	<!--{template common/header_ajax}-->
+	<!--{template publish_reply}-->
+    <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'edit'}-->
+	<!--{template common/header_ajax}-->
+    <!--{template edit_form}-->
+    <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'getfeedbypid'}-->
+	<!--{if $value['first']<1}-->
+     <!--{template feed_reply_item}-->
+    <!--{else}-->
+      <!--{template feed_thread_item}-->
+    <!--{/if}-->
+<!--{/if}--> 

@@ -1,0 +1,229 @@
+@charset "utf-8";
+/* CSS Document */
+html, body {
+	overflow: hidden;
+	background: #FBFBFB;
+	
+}
+.bs-main-container{
+	overflow:hidden;
+	margin-left:0;
+	border-top:0;
+}
+.list-share{
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+
+.copy-success {
+	position: absolute;
+	left: -140px;
+	top: -30px;
+	padding: 8px;
+	z-index: 100;
+}
+.module-list-toolbar {
+	position: relative;
+	z-index: 90;
+	display: none;
+	font-size:13px;
+}
+.module-list-toolbar .bar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	color: #666;
+	margin: 0;
+	height: 41px;
+	line-height: 41px;
+	background: #F2F6FF;
+	width: 100%;
+}
+.module-list-toolbar .chk-box {
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	left: 5px;
+	top: 5px;
+}
+.module-list-toolbar .chk {
+	background: transparent url(checkbox.png) no-repeat;
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: 10px;
+	left:10px;
+}
+.module-list-toolbar .chk.chked{
+	background: transparent url(selected.png) no-repeat;
+}
+.module-list-toolbar .text {
+	margin: 0 10px 0 40px;
+}
+.module-list-view {
+	margin: 0;
+	font-size:13px;
+}
+.module-list-view .title {
+	background: #F7F7F7;
+	color: #888;
+	border-bottom:1px solid #e1e1e1;
+}
+.module-list-view .title .asc {
+	background: url(sort_asc.gif) no-repeat;
+	display: inline-block;
+	width: 13px;
+	height: 6px;
+	position: relative;
+	top: 1px;
+	visibility: hidden;
+	_vertical-align: middle;
+	_margin: 15px 0;
+}
+
+.module-list-view .title .desc {
+	background: url(sort_desc.gif) no-repeat;
+}
+.module-list-view .item {
+	border-bottom: 1px solid #e1e1e1;
+	border-top:1px solid #FFF;
+}
+.module-list-view .item:first{
+	border-top:0;
+}
+.module-list-view .item .chk {
+	width: 32px;
+	height: 38px;
+	position: absolute;
+	cursor: default;
+	top: 0;
+	left: 3px;
+}
+.module-list-view .title .item {
+	border-bottom: 1px solid transparent;
+}
+.module-list-view .item-hover {
+	background-color: #f0f8fd;
+}
+.module-list-view .item-active {
+	background-color: #f2f7ff;
+}
+.module-list-view .item .icon {
+	max-width:24px;
+	max-height:24px;
+	margin-top:-2px;
+}
+
+.module-list-view .title .c1 {
+	border-left: 0;
+}
+.module-list-view .title .item .chk {
+	top: 2px;
+	left: 2px;
+}
+.module-list-view .item .chk-ico {
+	background: transparent url(checkbox.png) no-repeat;
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: 12px;
+	left: 12px;
+}
+.module-list-view .item .chked .chk-ico {
+	background: transparent url(selected.png) no-repeat;
+}
+.module-list-view .item .name {
+	width: 100%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	text-indent:38px;
+}
+.module-list-view .list-share .item .name-text {
+	cursor: pointer;
+}
+.module-list-view .list-share .item .name-text:hover {
+	text-decoration:underline;
+}
+.module-list-view .title .name {
+	text-indent: 42px;
+}
+
+.module-list-view .title .col {
+	height: 41px;
+	line-height: 41px;
+	border-left: 1px solid #fff;
+	border-right: 1px solid #e5e5e5;
+	cursor: pointer;
+	_overflow: hidden;
+}
+.module-list-view .title .col:hover {
+	background-color: #E8F5FD;
+}
+.module-list-view .col {
+	float: left;
+	height: 38px;
+	line-height: 38px;
+	text-indent: 10px;
+	width: 10%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.module-list-view .title .col {
+	height: 41px;
+	line-height: 41px;
+	border-left: 1px solid #fff;
+	border-right: 1px solid #e5e5e5;
+	cursor: pointer;
+	_overflow: hidden;
+}
+.module-list-view .c1 {
+	position: relative;
+	text-align: left;
+	top: 0;
+	overflow: visible;
+}
+.module-list-view .list-share .item .ico-private-share {
+	position: absolute;
+	top: 10px;
+	left: 38px;
+	width: 11px;
+	height: 12px;
+	background: url(locked.gif) no-repeat;
+}
+.module-list-view .item .copy-bar {
+	position: relative;
+	clear: both;
+	padding: 0 0 0 44px;
+	height: 38px;
+	line-height: 38px;
+	border-top: 1px solid #D9E2F1;
+	display: none;
+	color: #666;
+}
+
+.js_copy{
+	padding:3px 8px;
+}
+.module-list-view .item .btn-copy {
+	display: inline-block;
+	background: url(/yun-static/common/images/btn_sprit.gif?t=1421217684742) #F2F6FF no-repeat right 0;
+	background-position: 0 -144px;
+	height: 28px;
+	width: 35px;
+	line-height: 28px;
+	padding-left: 35px;
+	position: relative;
+	margin: 0 5px;
+}
+.module-share-empty .no-result-pic {
+	text-align: center;
+}
+.module-share-empty .no-result-title {
+	font-size: 16px;
+	color: #999;
+	font-weight: 700;
+	text-align: center;
+	padding: 10px 0;
+}

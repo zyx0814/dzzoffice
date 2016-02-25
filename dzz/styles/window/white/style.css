@@ -1,0 +1,547 @@
+﻿
+/* ---- white 样式 ---- */
+.white
+{
+	
+}
+/* 边框样式 */
+.white .LEFT_TOP
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 4px;
+	height: 40px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current .white .LEFT_TOP
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.window_current.white .LEFT_TOP
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .LEFT_TOP .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	left:0px;
+	top:0px;
+	width: 4px;
+	height: 40px;
+	border-top:1px solid RGBA(0,0,0,0.4);
+	border-left:1px solid RGBA(0,0,0,0.4);
+
+}
+.white .TOP
+{
+	/* 上边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 40px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.white .TOP
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .TOP .inner
+{
+	/* 上边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	left:0;
+	top:0px;
+	height: 40px;
+	width:100%;
+	border-top:1px solid RGBA(0,0,0,0.4);
+	border-bottom:1px solid RGBA(0,0,0,0.3);
+}
+.white .RIGHT_TOP
+{
+	/* 右上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	right:0px;
+	top:0px;
+	width: 5px;
+	height: 40px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+
+}
+.window_current.white .RIGHT_TOP
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .RIGHT_TOP .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:0px;
+	right:0px;
+	_right:-1px;
+	width: 5px;
+	height: 40px;
+	border-top:1px solid RGBA(0,0,0,0.4);
+	border-right:1px solid RGBA(0,0,0,0.4);
+}
+
+.white .RIGHT
+{
+	/* 右边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.white .RIGHT
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .RIGHT .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:0px;
+	right:0px;
+	_right:-1px;
+	width: 5px;
+	height: 100%;
+	border-right:1px solid RGBA(0,0,0,0.4);
+	border-left:1px solid RGBA(0,0,0,0.3);
+}
+
+.white .RIGHT_BOTTOM
+{
+	/* 右下：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	height: 5px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.white .RIGHT_BOTTOM
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .RIGHT_BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	right:0px;
+	_bottom:-1px;
+	_right:-1px;
+	width: 5px;
+	height:5px;
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+	border-right:1px solid RGBA(0,0,0,0.4);
+
+}
+.white .RIGHT_BOTTOM_BY_BUTTON
+{
+	/* 右下(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width:5px;
+	height: 38px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.white .RIGHT_BOTTOM_BY_BUTTON
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .RIGHT_BOTTOM_BY_BUTTON .inner{
+	bottom:0px;
+	right:0px;
+	_bottom:-1px;
+	_right:-1px;
+	width: 5px;
+	height: 38px;
+	border-right:1px solid RGBA(0,0,0,0.4);
+	border-bottom:1px solid RGBA(0,0,0,0.3);
+}
+.white .BOTTOM
+{
+	/* 下边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 5px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+
+}
+.window_current.white .BOTTOM
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:0px;
+	width:100%;
+	height: 5px;
+	border-top:1px solid RGBA(0,0,0,0.3);
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+
+
+}
+.white .BOTTOM_BY_BUTTON
+{
+	/* 下边(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 38px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.white .BOTTOM_BY_BUTTON
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .BOTTOM_BY_BUTTON .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:0px;
+	width:100%;
+	height: 38px;
+	border-top:1px solid RGBA(0,0,0,0.3);
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+
+}
+.white .LEFT_BOTTOM
+{
+	/* 右下：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	height: 5px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.white .LEFT_BOTTOM
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .LEFT_BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:0px;
+	width: 5px;
+	height: 5px;
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+	border-left:1px solid RGBA(0,0,0,0.4);
+
+}
+.white .LEFT_BOTTOM_BY_BUTTON
+{
+	/* 左下(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	height: 38px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+	
+}
+.window_current.white .LEFT_BOTTOM_BY_BUTTON
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .LEFT_BOTTOM_BY_BUTTON .inner
+{
+	bottom:0px;
+	_bottom:-1px;
+	left:0;
+	width: 5px;
+	height: 38px;
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+	border-left:1px solid RGBA(0,0,0,0.4);
+}
+
+.white .LEFT
+{
+	/* 右边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	background:#EAEAEA;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+	
+}
+.window_current.white .LEFT
+{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .LEFT .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:0px;
+	left:0px;
+	width:5px;
+	height: 100%;
+	border-right:1px solid RGBA(0,0,0,0.3);
+	border-left:1px solid RGBA(0,0,0,0.4);
+
+}
+
+
+/* 功能区样式 */
+.white .RESIZE
+{
+	width: 15px;
+	height: 15px;
+	right: -8px;
+	bottom: -8px;
+	z-index:10;
+}
+.white .RESIZE-X
+{
+	width: 15px;
+	right: -8px;
+	height:100%;
+	z-index:9;
+	top:0;
+}
+.white .RESIZE-Y
+{
+	height: 15px;
+	width:100%;
+	bottom: -8px;
+	z-index:9;
+	left:0;
+}
+.white .CLOSE
+{
+    width: 34px;
+    height: 38px;
+	margin-top:1px;
+    float:right;
+	background:url(images/ico.png) 0 0 no-repeat;
+	
+}
+.white .CLOSE:hover
+{
+  background:url(images/ico.png) 0 -40px no-repeat;
+}
+.white .CLOSE:active
+{
+  background:url(images/ico.png) 0 -80px no-repeat;
+}
+.white .MIN
+{
+    width: 34px;
+    height: 38px;
+	margin-top:1px;
+    float:right;
+	
+	background:url(images/ico.png) 0 -360px no-repeat;
+}
+.white .MIN:hover
+{
+   background:url(images/ico.png) 0 -400px no-repeat;
+	
+}
+.white .MIN:active
+{
+   background:url(images/ico.png) 0 -440px no-repeat;
+}
+.white .MAX
+{
+     width: 34px;
+    height: 38px;
+	margin-top:1px;
+    float:right;
+	
+	background:url(images/ico.png) 0 -120px no-repeat;
+}
+.white .MAX:hover
+{
+	background:url(images/ico.png) 0 -160px no-repeat;
+}
+.white .MAX:active
+{
+	background:url(images/ico.png) 0 -200px no-repeat;
+}
+.white .RESTORE
+{
+    width: 34px;
+    height: 38px;
+	margin-top:1px;
+    float:right;
+	
+	background:url(images/ico.png) 0 -240px no-repeat;
+}
+.white .RESTORE:hover
+{
+	background:url(images/ico.png) 0 -280px no-repeat;
+}
+.white .RESTORE:active
+{
+	background:url(images/ico.png) 0 -320px no-repeat;
+}
+.white .FULLSCREEN
+{
+    width: 34px;
+    height: 38px;
+	margin-top:1px;
+	float:right;
+   background:url(images/ico.png) 0 -480px no-repeat;
+}
+.white .FULLSCREEN:hover
+{
+	background:url(images/ico.png) 0 -520px no-repeat;
+ 
+}
+.white .FULLSCREEN:active
+{
+	background:url(images/ico.png) 0 -560px no-repeat;
+ 
+}
+.white .REFRESH
+{
+}
+.white .REFRESH:hover
+{
+}
+
+.white .HOME
+{
+   
+}
+.white .HOME:hover,.white .HOME1
+{
+   
+	
+}
+
+
+
+
+/* 逻辑区样式 */
+.white .CONTENT
+{
+	/* 请不要定义padding/margin属性 */
+	/* 请定义left = -(border-left),top = -(border-top) */
+	left: 0px;
+	top: 0px;
+	background:#FFF;
+	overflow:auto;
+	font-size: 13px;
+}
+.white .CONTENT .FORM
+{
+	font-size: 14px;
+	margin: 0px;
+	padding: 12px;
+}
+.white .CONTENT .FORM_NOTITLE
+{
+	font-size: 14px;
+	margin: 0px;
+	padding: 0px;
+}
+.white .TITLE
+{
+	/* 请不要定义margin属性 */
+ /*  background:#0a246a;
+   background:-webkit-gradient(linear, 0 0, 100% 100%, from(#0a246a), to(#a6caf0));
+   background:-moz-linear-gradient(left,#0a246a,#a6caf0);
+   FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=1,startColorStr=#0a246a,endColorStr=#a6caf0);*/
+   left:5px ;
+   top:0px;
+   height:40px;
+   padding:0;
+   z-index:10;
+   overflow:hidden;
+  
+}
+.white .TITLE .titleBar{
+	margin:0;
+	
+}
+.white .TITLE .titleBar .titleButtonBar{
+	margin:0;
+	padding:2px 0 0 0;
+	position:relative;
+	z-index:1;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.white .TITLE .titleBar .titleButtonBar a{
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.white .titleBar .titleButtonBar a{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.white .TITLE .titleBar .titleText{
+	text-align:left;
+	padding:0 5px;
+	height:40px;font-size:14px; color:white;line-height: 36px;overflow: hidden;	
+	 color:#666870;
+   	text-shadow:0px 1px 1px #FFF;
+	
+}
+.white .TITLE .titleBar .titleText a{
+	text-align:left;
+	padding:0 5px;
+	height:40px;font-size:14px; color:white;line-height: 36px;overflow: hidden;	
+	 color:#666870;
+   	text-shadow:0px 1px 1px #FFF;
+	
+}
+
+.white .BUTTON
+{
+	/* 请不要定义margin属性 (暂不支持:width:100%;bottom:0px;) */
+	padding: 3px 0px 5px 0;
+	text-align:right;
+}
+.white .BUTTON button
+{
+	padding:3px 10px;
+	margin:0 15px;
+}
+.white .BUTTON .DISABLED
+{
+	
+}
+
+/* 各种按钮样式 */
+.white .BUTTON .OK
+{
+	
+}
+.white .BUTTON .CANCEL
+{
+	
+}
+
+/* 窗口最大化时隐藏的阴影 */
+.white .SHADOW_TOP
+{
+	height:0px;
+}
+.white .SHADOW_LEFT
+{
+	width:0px;
+}
+.white .SHADOW_RIGHT
+{
+	width:0px;
+}
+.white .SHADOW_BOTTOM
+{
+	height:0px;
+}
+/* ---- mac 样式 ---- */

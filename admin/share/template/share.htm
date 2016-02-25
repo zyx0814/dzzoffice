@@ -1,0 +1,337 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/share/images/share.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+
+<!--{template common/header_simple_end}-->
+<nav class="navbar navbar-default bs-navbar-default navbar-fixed-top " role="navigation" style="margin:0;padding:0 10px;">
+  <ul class="nav nav-pills tag-container nav-pills-bottomguide clearfix" >
+    <li <!--{if !$type}-->class="active"<!--{/if}-->><a href="{ADMINSCRIPT}?mod=share">全部</a>
+    </li>
+    <!--{loop $typearr $key $value}--> 
+    <li <!--{if $type==$key}-->class="active"<!--{/if}-->><a href="{ADMINSCRIPT}?mod=share&type=$key">$value</a>
+    </li>
+    <!--{/loop}-->
+    <li class="pull-right " style="margin:4px 0;">
+      <form name="search" action="{ADMINSCRIPT}" class="form-inline" method="get" >
+        <input type="hidden" name="mod" value="share" />
+        <input type="hidden" name="type" value="$type" />
+        <input name="username" type="text" value="$username" class="form-control input-sm" style="width:90px ;display:inline-block" placeholder="用户名" />&nbsp;<input name="keyword"  type="text" class="form-control input-sm" value="$keyword" style="width:90px ;display:inline-block"  placeholder="分享标题">
+        <button class="btn btn-sm btn-default"  onclick="this.parentNode.parentNode.submit()"><i class="glyphicon glyphicon-search"></i></button>
+      </form>
+    </li>
+  </ul>
+  </div>
+</nav>
+<div class="bs-container clearfix" >
+  <div class="bs-main-container">
+    <div class="main-content clearfix"> 
+    <!--{if !$count}-->
+        <div node-type="module" class="module-share-empty text-center clearfix">
+            <div class="no-result-div" style="padding-top:40px;">
+                <p class="no-result-pic"><em class="shr"></em></p>
+                <p class="no-result-title">好东西要晒出来，快把你的文件分享给身边的朋友们吧。</p>
+            </div>
+        </div>
+     <!--{else}-->
+        <div node-type="module" class="module-list-toolbar" style="display: none;">
+          <div class="bar clearfix"> 
+          	<span node-type="chk" class="chk-box"> 
+            	<span class="chk"></span> 
+             </span> 
+             <span class="text"> 已选中<span node-type="num">0</span>个文件/文件夹</span> 
+             <button class="btn btn-sm btn-danger" data-key="unshare" ><span>删除分享</span> </button>
+             &nbsp;<button class="btn btn-sm btn-warning" data-key="forbidden" ><span>屏蔽分享</span> </button>
+             &nbsp;<button class="btn btn-sm btn-success" data-key="allow" ><span>取消屏蔽</span> </button>
+           </div>
+        </div>
+        <div node-type="module" class="module-list-view">
+          <div node-type="wrapper" class="list-view-home">
+            <div node-type="title" class="title" style="padding-right: 16px;">
+              <div class="item clearfix"> 
+                <!-- 第一列 -->
+                <div node-type="title-col" data-key="title" class="col c1" style="width: 50%"> 
+                	<span node-type="chk-all" class="chk"> <span class="chk-ico"></span> </span>
+                  	<div class="name"> <span>分享文件</span> 
+                    <span node-type="order-status" class="asc <!--{if $asc}-->desc<!--{/if}-->" style="visibility: <!--{if $order=='title'}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> </div>
+                </div>
+                <!-- 其他列 -->
+                <div node-type="title-col" data-key="dateline" class="col" style="width: 15%;"> 分享时间 
+                	<span node-type="order-status" class="asc <!--{if $asc}-->desc<!--{/if}-->" style="visibility: <!--{if $order=='dateline'}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> 
+                </div>
+                <div node-type="title-col" data-key="count" class="col" style="width: 8%;"> 浏览次数 
+                	<span node-type="order-status" class="asc <!--{if $asc}-->desc<!--{/if}-->" style="visibility: <!--{if $order=='count'}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> 
+                </div>
+                <div node-type="title-col" data-key="size" class="col" style="width: 8%;"> 文件大小 
+                	<span node-type="order-status" class="asc <!--{if $asc}-->desc<!--{/if}-->" style="visibility: <!--{if $order=='size'}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> 
+                </div>
+                <div node-type="title-col" data-key="type" class="col" style="width: 8%;"> 文件类型 
+                	<span node-type="order-status" class="asc <!--{if $asc}-->desc<!--{/if}-->" style="visibility: <!--{if $order=='type'}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> 
+                </div> 
+                <div node-type="title-col" data-key="username" class="col" style="width: 8%; border-right: none;"> 分享用户 
+                	<span node-type="order-status" class="asc <!--{if $asc}-->desc<!--{/if}-->" style="visibility: <!--{if $order=='username'}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> 
+                </div>
+              </div>
+             
+            </div>
+            <div node-type="list" class="list list-share" >
+            <!--{loop $list $value}-->
+              <div node-type="item" data-sid="$value[sid]" data-status="$value[status]" class="item clearfix"> 
+                <!-- 第一列 -->
+                <div class="col c1 name" style="width: 50%;" data-name="$value[title]"> 
+                	  <span node-type="chk" class="chk"> <span class="chk-ico"></span></span> 
+                      <!-- 私密分享图标 --> 
+                      <!--{if $value[password]}--><span class="ico-private-share" title="私密分享"></span> <!--{/if}--> 
+                                        
+                      <div node-type="name" class="name" title="$value[title]">
+                      	<!--{if $value[img]}--><img class="icon" src="$value[img]" /><!--{/if}-->
+                        <!--{if $value[status]<0}--><span node-type="name-tip" style="color: red;">($value[fstatus])</span><!--{/if}-->
+                        <span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="name-text enabled">$value[title]</span> </span> 
+                      </div>
+                     
+                 </div>
+                 
+                <!-- 其他列 -->
+                <div class="col dateline" style="width: 15%" data-dateline="$value[dateline]">$value[fdateline]</div>
+                <div class="col count" style="width: 8%" data-count="$value[count]">$value[count]次</div>
+                <div class="col size" style="width: 8%" data-size="$value[size]">$value[fsize]</div>
+                <div class="col type" style="width: 8%" data-type="$value[ftype]">$value[ftype]</div>
+                <div class="col username" style="width: 8%" data-type="$value[username]"><a href="user.php?uid=$value[uid]">$value[username]</a></div>
+                <!-- 复制 -->
+                <div node-type="copy-bar" class="copy-bar"> 
+                <!--{if $value[qrcode]}--><a href="javascript:;" class="qrcode glyphicon glyphicon-qrcode" title="扫描二维码,发送到手机"  data-container="body" data-html="true" data-trigger="hover" data-toggle="popover" data-placement="right" data-content="<p class='text-center'><img src='$value[qrcode]'></p>"></a><!--{/if}-->
+                	链接：<a href="$value[shareurl]" target="_dzz">$value[shareurl]</a> 
+                    <!--{if $value[password]}-->&nbsp;提取密码：$value[password] <!--{/if}--> 
+                	&nbsp;<button class="btn btn-sm btn-default js_copy"  data-clipboard-text="{eval echo $value[password]?('链接:'.$value[shareurl].'  密码:'.$value[password]):$value[shareurl];}" style="position:relative"><i class="glyphicon glyphicon-duplicate"></i> 复制<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span></button>
+                    <!--{if $value[endtime]}-->&nbsp;到期时间：$value[fendtime] <!--{/if}--> 
+                    <!--{if $value[times]}-->&nbsp;限制次数：$value[count] / $value[times] <!--{/if}--> 
+                </div>
+              </div>
+            <!--{/loop}-->
+            <div class="page clearfix">$multi</div>
+            </div> 
+           
+          </div>
+		</div>
+        
+     <!--{/if}-->
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout(function(){
+	jQuery('.list').css('height',jQuery('.bs-main-container').outerHeight(true)-jQuery('.list-view-home .title').outerHeight(true));
+});
+jQuery(document).ready(function(e) {
+	
+    jQuery(document).on('mouseenter','div[node-type=item]',function(){
+		jQuery(this).addClass('item-hover');
+	});
+	 jQuery(document).on('mouseleave','div[node-type=item]',function(){
+		jQuery(this).removeClass('item-hover');
+	});
+	 jQuery(document).on('click','span[node-type=name-text]',function(){
+		if(top._config){
+			top.OpenWindow('url',jQuery(this).data('href'),jQuery(this).html());
+		}else{
+			window.open(jQuery(this).data('href'),jQuery(this).html());
+		}
+	});
+	jQuery('.chk[node-type=chk-all]').on('click',function(){
+		jQuery(this).addClass('chked');
+		jQuery('.item').each(function(){
+			jQuery(this).addClass('item-active').find('span[node-type=chk]').addClass('chked');
+		});
+		refresh_header();
+		return false;
+	});
+	jQuery(document).on('click','.item .chk',function(){
+		jQuery(this).toggleClass('chked');
+		jQuery(this).closest('.item').toggleClass('item-active');
+		jQuery('.copy-bar').hide();
+		refresh_header();
+		return false;
+	});
+	jQuery('.module-list-toolbar .chk').on('click',function(){
+		if(jQuery(this).hasClass('chked')){
+			jQuery(this).removeClass('chked');
+			jQuery('.chk[node-type=chk-all]').removeClass('chked');
+			jQuery('.module-list-toolbar').hide();
+			jQuery('.item.item-active').each(function(){
+				jQuery(this).removeClass('item-active').find('span[node-type=chk]').removeClass('chked');
+				jQuery(this).find('.copy-bar').hide();
+			});
+		}else{
+			jQuery(this).addClass('chked');
+			jQuery('.item:not(.item-active)').each(function(){
+				jQuery(this).addClass('item-active').find('span[node-type=chk]').addClass('chked');
+			});
+		}
+	});
+	jQuery(document).on('click','div[node-type=item]',function(e){
+		e=e?e:event;
+		var el=jQuery(this);
+		var actives=jQuery('.item-active').length;
+		if(e.ctrlKey){
+			jQuery('.item-active').not(this).find('.copy-bar').hide();
+		}else{
+			jQuery('.item-active').not(this).each(function(){
+				jQuery(this).removeClass('item-active').find('span[node-type=chk]').removeClass('chked')
+				.end().find('.copy-bar').hide();
+			});
+		}
+		if(el.hasClass('item-active') && (actives==1 || e.ctrlKey)){
+			el.removeClass('item-active').find('span[node-type=chk]').removeClass('chked');
+			el.find('.copy-bar').hide();
+		}else{
+			el.addClass('item-active').find('span[node-type=chk]').addClass('chked');
+			if(parseInt(el.data('status'))>-1) el.find('.copy-bar').show();
+		}
+		refresh_header();
+	});
+	 var client = new ZeroClipboard(jQuery('.js_copy'));
+	  client.on( "load", function( client ) {
+		  client.on( "complete", function( client,args ) {
+			  var self=this;
+			  jQuery(this).parent().find('.copy-success').removeClass('hide');
+			  window.setTimeout(function(){
+					jQuery(self).parent().find('.copy-success').addClass('hide');
+			  },1000);
+		  });
+	 });
+	 jQuery('.title .item .col[node-type=title-col]').on('click',function(){
+		 var el=jQuery(this);
+		 el.find('.asc').css('visibility','visible').toggleClass('desc');
+		 el.siblings().find('.asc').css('visibility','hidden');
+		 item_sort(el.data('key'), el.find('.asc').hasClass('desc')?'desc':'asc');
+	 });
+	 jQuery('button[data-key=unshare]').on('click',function(){
+		 var msg='<p class="text-center">取消分享后，该条分享记录将被删除，将无法再访问此分享链接。</p><p class="text-center">你确认要取消分享吗？</p>';
+		 showDialog(msg, 'confirm', '确认取消分享', share_delete, 1)
+	 });
+	  jQuery('button[data-key=forbidden]').on('click',function(){
+		 var msg='<p class="text-center">该条分享记录将被屏蔽，将无法再访问此分享链接。</p><p class="text-center">你确认要屏蔽该条分享吗？</p>';
+		 showDialog(msg, 'confirm', '确认屏蔽分享', share_forbidden, 1)
+	 });
+	  jQuery('button[data-key=allow]').on('click',function(){
+		 var msg='<p class="text-center">该条分享记录将被恢复访问。</p><p class="text-center">你确认要取消屏蔽该条分享吗？</p>';
+		 showDialog(msg, 'confirm', '确认取消屏蔽', share_allow, 1)
+	 });
+	jQuery('[data-toggle="popover"]').popover();
+});
+
+function item_sort(key,order){
+	location.href='$theurl&order='+key+'&asc='+(order=='desc'?1:0);
+	return;
+	/*var sarr=new Array();
+	jQuery('.list-share .item').each(function(index){
+		sarr.push((jQuery(this).find('.col.'+key).data(key))+'____'+index);
+	});
+	if(key=='dateline' || key=='size'){
+		sarr=sarr.sort(function(a,b){
+			return (parseInt(a)>parseInt(b))?1:0;
+		});
+	}else{
+		sarr=sarr.sort();
+	}
+	var frage=document.createDocumentFragment();
+	var list=jQuery('.list-share .item');
+	if(order=='desc'){
+		for(var i=sarr.length-1;i>=0;i--){
+			var index=sarr[i].split('____')[1];
+			frage.appendChild(list.get(index));
+		}
+	}else{
+		for(var i=0;i<sarr.length;i++){
+			var index=parseInt(sarr[i].split('____')[1]);
+			console.log(index);
+			frage.appendChild(list.get(index));
+		}
+	}
+	jQuery(frage).appendTo(jQuery('.list').empty());*/
+}
+function share_delete(){
+	var sids=new Array();
+	jQuery('.list .item-active').each(function(){
+		sids.push(jQuery(this).data('sid'));
+	});
+	jQuery.post('{ADMINSCRIPT}?mod=share&op=ajax&do=delete',{"sids":sids},function(json){
+		if(json.msg=='success'){
+			showmessage('取消分享成功','success',2000,1);
+			jQuery('.list .item-active').remove();
+			refresh_header();
+		}else{
+			showmessage(json.error,'danger',3000,1);
+		}
+	},'json');
+}
+function share_forbidden(){
+	var sids=new Array();
+	jQuery('.list .item-active').each(function(){
+		sids.push(jQuery(this).data('sid'));
+	});
+	jQuery.post('{ADMINSCRIPT}?mod=share&op=ajax&do=forbidden',{"sids":sids,"flag":'forbidden'},function(json){
+		if(json.msg=='success'){
+			showmessage('分享屏蔽成功','success',2000,1);
+			jQuery('.list .item-active').each(function(){
+				jQuery(this).attr('data-status','-4');
+				if(jQuery(this).find('span[node-type=name-tip]').length){
+					jQuery(this).find('span[node-type=name-tip]').html('(已屏蔽)');
+				}else{
+					jQuery('<span node-type="name-tip" style="color: red;">(已屏蔽)</span>').insertBefore('.list .item-active .name-text-wrapper');
+				}
+			});
+			refresh_header();
+		}else{
+			showmessage('屏蔽失败','danger',3000,1);
+		}
+	},'json');
+}
+function share_allow(){
+	var sids=new Array();
+	jQuery('.list .item-active').each(function(){
+		if(jQuery(this).data('status')=='-4') sids.push(jQuery(this).data('sid'));
+	});
+	if(sids.length){
+		jQuery.post('{ADMINSCRIPT}?mod=share&op=ajax&do=forbidden',{"sids":sids,"flag":'allow'},function(json){
+			if(json.msg=='success'){
+				showmessage('取消屏蔽成功','success',2000,1);
+				jQuery('.list .item-active').attr('data-status','0').find('span[node-type=name-tip]').remove();
+				refresh_header();
+			}else{
+				showmessage('取消屏蔽失败','danger',3000,1);
+			}
+		},'json');
+	}
+}
+
+function refresh_header(){
+	var sum=jQuery('.list .item.item-active').length;
+	var tsum=jQuery('.list .item').length;
+	var psum=jQuery('.list .item.item-active[data-status=-4]').length;
+	if(sum>0){
+		jQuery('.module-list-toolbar').find('span[node-type=num]').html(sum).end().show();
+		if(sum==tsum){
+			 jQuery('.module-list-toolbar').find('.chk').addClass('chked');
+		}else{
+			 jQuery('.module-list-toolbar').find('.chk').removeClass('chked');
+		}
+		if(psum==sum){
+			jQuery('.module-list-toolbar .bar').find('button[data-key=forbidden]').hide();
+		}else{
+			jQuery('.module-list-toolbar .bar').find('button[data-key=forbidden]').show();
+		}
+		if(psum>0){
+			jQuery('.module-list-toolbar .bar').find('button[data-key=allow]').show();
+		}else{
+			jQuery('.module-list-toolbar .bar').find('button[data-key=allow]').hide();
+		}
+	}else{
+		jQuery('.module-list-toolbar').hide();
+		jQuery('.chk[node-type=chk-all]').removeClass('chked');
+	}
+}
+</script> 
+<!--{template common/footer_simple}--> 
+<script type="text/javascript" src="static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"></script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 

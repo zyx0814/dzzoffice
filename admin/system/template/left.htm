@@ -1,0 +1,13 @@
+{eval $oparr=array('updatecache','database','cron','upgrade','log');}
+{eval $leftmenu=array();}
+{eval foreach($oparr as $key => $value){}
+{eval $leftmenu[$value]=array('title'=>lang('message',$value),'active'=>'');}
+	{eval if($value==$op) $leftmenu[$value]['active']='class="active"';}
+{eval }}
+
+
+<ul class="nav nav-pills nav-stacked nav-pills-leftguide" style="margin:10px 0;">
+   <!--{loop $leftmenu $key $value}-->
+          <li $value[active]><a hidefocus="true" href="{BASESCRIPT}?mod=$mod&op=$key">$value[title]</a></li>
+     <!--{/if}--> 
+</ul>

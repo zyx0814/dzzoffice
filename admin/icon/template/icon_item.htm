@@ -1,0 +1,38 @@
+<!--{loop $list $value}-->
+<div id="icon_$value[did]" class="icon-item" did="$value[did]">
+	<div class="icoblank_tip icoblank_rightbottom" style="z-index:10"></div>
+  <table cellpadding="0" cellspacing="0" width="100%" height="100%" style="table-layout:fixed;">
+    <tbody>
+      <tr>
+        <td align="center" valign="middle" style="overflow:hidden;" height="58px"><div class="icoimgContainer icoimgContainer_link" style="position:relative;width:50px;height:50px">
+            <table width="100%" height="100%" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td align="center" valign="middle"><img class="img_50_50" src="$_G['setting']['attachurl']{$value[pic]}"  onerror="this.src='dzz/images/default/icodefault.png'"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div></td>
+      </tr>
+      <tr height="35px">
+        <td align="center" valign="middle"><div  class="IcoText_div" style="height:40px;">
+            <table cellpadding="0" cellspacing="0" width="100%" height="100%">
+              <tbody>
+                <tr>
+                  <td valign="middle" align="center"><a class="IcoText">$value[domain]</a> 
+                    <!--{if $value['reg']}--><br />
+                    $value[reg]<!--{/if}--></td>
+                </tr>
+              </tbody>
+            </table>
+          </div></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+ <!--{/loop}-->
+  <!--{if $next}-->
+    <div id="getMore"  class="icon-item-next">
+      <div class="" style="width:110px;height:100px;margin:0;padding:2px;overflow:hidden;text-align:center;border-radius:5px;background:#fbfbfb"> <a class="more"  href="javascript:;" onclick="getMore('{$page}');return false">...<p style="font-size:14px;line-height:35px">加载更多</p></a> </div>
+    </div>
+<!--{/if}-->

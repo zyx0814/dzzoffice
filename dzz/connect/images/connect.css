@@ -1,0 +1,44 @@
+
+.menu{ width:100px;}
+.menu-text{width:70px;}
+
+
+.thumbnails .cloud-item{
+	margin:15px;
+	width:165px;
+	float:left;
+}
+.thumbnails>li img{
+	cursor:pointer;
+}
+.thumbnails>li.hover .thumbnail{
+	background:#F7F7F7;
+}
+.thumbnails>li.Selected  .thumbnail {
+	background:#F7F7F7/*RGBA(200,200,200,0.8)*/;
+	
+}
+.thumbnails .thumbnail{
+	position:relative;
+}
+.thumbnails>li .selectbox{
+	position:absolute;
+	width:16px;
+	height:16px;
+	right:0px;
+	top:0px;
+	background:url(checkbox.png) no-repeat;
+	display:none;
+}
+
+.thumbnails>li.hover .selectbox {
+	display:block;
+}
+.thumbnails>li.Selected .selectbox{
+	background:url(selected_folder.png) no-repeat;
+	display:block;
+}
+
+
+
+

@@ -1,0 +1,181 @@
+
+<div id="publish_{$tid}" class="publishsharewrap">
+  <div id="return_publish_{$tid}" style="display:none"></div>
+  <form id="form_{$tid}" name="form_{$tid}" class="form-horizontal" action="{DZZSCRIPT}?mod=feed&op=ajax" method="post"  onsubmit="ajaxpost(this.id,'return_publish_{$tid}','return_publish_{$tid}')">
+    <input type="hidden" name="formhash" value="{FORMHASH}" />
+    <input type="hidden" name="replysubmit" value="true" />
+    <input type="hidden" name="handlekey" value="publish_{$tid}" />
+    <input type="hidden" name="tid" value="$tid" />
+    <input type="hidden" id="appid_{$tid}" name="appid" value="0" />
+    <input id="reply_pid_{$tid}" type="hidden" name="pid" value="0" />
+    <div class="container_psw">
+      <div class="notice_cpsw clearfix">
+        <div id="reply_who_{$tid}" class="who_cpsw"> <span>回复</span> <span class="toname_wcpsw"></span> <span>：</span> <a class="closed_wcpsw" title="" hidefocus="true" href="javascript:void(0);" onclick="jQuery(this).parent().hide();jQuery('#reply_pid_$tid').val('0')">关闭</a> </div>
+      </div>
+      <div class="textarea_cpsw">
+        <div class="wrap_tcpsw">
+          <textarea rows="" id="message_{$tid}" name="message" cols="" onkeyup="check_publish_enable('$tid')"   class="write_wtcpsw _bb_write_wtcpsw " style="overflow: hidden; word-wrap: break-word; resize: horizontal;border:none;box-shadow:none;height:62px"></textarea>
+        </div>
+        <div id="publish_count_{$tid}" class="count_cpsw"> <span id="num_input_{$tid}" class="num_ccpsw">0</span>/<span class="leng_ccpsw">1000</span> </div>
+      </div>
+    </div>
+    <div id="publish_action_{$tid}" class="action_cpsw">
+      <ul class="list_acpsw">
+        <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_{$tid}" onclick="showMenu({'ctrlid':'upload_from_{$tid}'});" href="javascript:void(0);" title="" class="item_lacpsw">文件/图片</a> </li>
+            
+        <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_{$tid}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">表情</a></li>
+        <script type="text/javascript" reload="1">smilies_show('message_{$tid}_sml_div','{$_G[setting][smcols]}', 'message_{$tid}');</script>
+      </ul>
+      <input id="readperm_{$tid}" name="readperm" value="0" type="hidden" />
+      <a hidefocus="true" class="cancel_cpsw" href="javascript:void(0);" onclick="jQuery('#publish_{$tid}').slideUp(500);"> <b><i>取消</i></b></a>
+      <button id="publish_submit_{$tid}" class="btn btn-primary" title="回复(Ctrl+Enter)"><b>回复</b></button>
+    </div>
+    <div id="attachmentViewBox_{$tid}" class="attachmentContainer clearfix"> </div>
+  </form>
+  <div class="actionUploadAttachment" id="upload_from_{$tid}_menu" style="display:none">
+    <div class="local_auatth" style="position:relative;overflow:hidden;"><a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">本地上传
+      <input id="fileupload_{$tid}" class="form-control" type="file" name="files[]" multiple >
+      </a> </div>
+    <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop('{$tid}');jQuery(this).parent().parent().hide();">从我的文件中选择</a></div>
+  </div>
+  <div class="departtree-menu" id="at_department_{$tid}_menu" tid="$tid" style="display:none"> $orgtree </div>
+</div>
+<script type="text/javascript" >
+document.getElementById('appid_{$tid}').value=appid;
+jQuery(document).ready(function(e) {
+	jQuery('#message_{$tid}').TextAreaExpander(62,99999);
+    jQuery('#publish_submit_{$tid}').click(function(){
+		var val=jQuery('#message_{$tid}').val();
+			if(strlen(val)>0 && strlen(val)<1000){
+			document.getElementById('form_{$tid}').onsubmit();
+		}
+	});
+	jQuery(document).on('keydown' ,'#form_{$tid}',function(event){
+		if(event.ctrlKey && event.keyCode == 13) {
+			document.getElementById('form_{$tid}').onsubmit();
+		}
+	});
+});
+function succeedhandle_publish_{$tid}(url, message, values) {
+	var data= eval('(' + decodeURIComponent(values['data']) + ')');
+	if(data && data.pid>0) feed_reply(data);
+};
+
+jQuery('#readperm_sel_{$tid}_menu li').on('click',function(){
+	var li =jQuery(this);
+	var readperm=parseInt(li.attr('isvisible'));
+	li.siblings().removeClass('cur');
+	li.addClass('cur');
+	jQuery('#readperm_{$tid}').val(readperm);
+	jQuery('#readperm_sel_{$tid}').html(this.innerHTML);
+	li.parent().parent().parent().hide();
+	if(readperm<0) jQuery('#message_{$tid}').addClass('writelock ');
+	else jQuery('#message_{$tid}').removeClass('writelock ');
+	
+});
+/*jslint unparam: true */
+/*global window, $ */
+jQuery(function () {
+    'use strict';
+    // Change this to the location of your server-side upload handler:
+   	var attachextensions='{eval echo implode('|',$space[attachextensions]);}';
+	if(attachextensions=='') attachextensions="\.*$";
+	else attachextensions="(\.|\/)("+(attachextensions)+")$";
+    jQuery('#fileupload_{$tid}').fileupload({
+        url: ajaxurl+'&do=upload',
+        dataType: 'json',
+		autoUpload: true,
+		maxChunkSize:(parseInt('{$_G[setting][maxChunkSize]}') || 2000000), //2M
+		dropZone:jQuery('#publish_{$tid}'),
+		pasteZone:jQuery('#message_{$tid}'),
+		maxFileSize: parseInt('{$space[maxattachsize]}')>0?parseInt('{$space[maxattachsize]}'):null, // 5 MB
+		acceptFileTypes:new RegExp(attachextensions,'i'),
+		add:function(e,data){
+			 data.context = jQuery('<div/>').appendTo('#attachmentViewBox_{$tid}');
+			jQuery.each(data.files, function (index, file) {
+				if(!file.name) file.name='clipboardData.png';
+				var html='';
+					html+=' <div  class="attachment_previewer">';
+					
+					html+='     <div class="attachmentviewbox">';
+					html+='         <div class="view_attvb clearfix">';
+					html+='           <div class="ico_vattvb "><img alt="'+file.name+'" src="dzz/images/default/upload_failure.png" style="height:50px"></div>';
+					html+='  		  <div class="ico_vattvb_right">';
+					html+='            	<div class="ico_name">'+file.name+'</div>';
+					html+='             <div class="progress  active" style="margin:0;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>';
+					html+='          </div>';
+					
+					html+='      	</div>';
+					html+='    </div>';
+					html+=' </div>';
+				
+				jQuery(html).appendTo(data.context);
+			});
+			
+			data.process().done(function () {
+				data.submit();
+			});
+			
+		},
+		progress: function (e,data){
+			 var index = 0;//data.index,
+            // file = data.files[index],
+            var  node = jQuery(data.context.children()[index]);
+			
+			  var progress = parseInt(data.loaded / data.total * 100, 10);
+				node.find('.progress-bar').css(
+					'width',
+					progress + '%'
+				);
+		},
+        done: function (e, data) {
+            jQuery.each(data.result.files, function (index, file) {
+				if(file.error){
+					jQuery(data.context.children()[index]).find('.progress').replaceWith('<span class="text-danger">'+file.error+'</span>');
+				}else{
+					feed_addAttach(file.data,jQuery(data.context.children()[index]),'{$tid}');
+				}
+            });
+        }
+    });
+});
+jQuery(function(){
+	var cachequeryMentions = [], itemsMentions;
+   jQuery('#message_{$tid}').atwho({
+        at: "@",
+		data: '{DZZSCRIPT}?mod=feed&op=ajax&do=getAtData',
+		callbacks:{
+					remote_filter: function (query, render_view) {
+						var thisVal = query,
+						self = jQuery(this);
+						if( !self.data('active') && thisVal.length >= 1 ){
+							self.data('active', true);                            
+							itemsMentions = cachequeryMentions[thisVal]
+							if(typeof itemsMentions == "object"){
+								render_view(itemsMentions);
+							}else
+							{                            
+								if (self.xhr) {
+									self.xhr.abort();
+								}
+								self.xhr = jQuery.getJSON('{DZZSCRIPT}?mod=feed&op=ajax&do=getAtData',{
+									term: thisVal
+								}, function(data) {
+									cachequeryMentions[thisVal] = data
+									render_view(data);
+								});
+							}                            
+							self.data('active', false);                            
+						}                    
+					}
+		},
+		 tpl: "<li data-value='@[${name}:${id}]' title='${title}'><img src='${icon}'>&nbsp;${name}</li>",
+		 search_key: "searchkey",
+		 start_with_space: false,
+		 limit: 5,
+		 max_len: 20,
+		 display_timeout: 300
+    });
+  
+});
+</script> 

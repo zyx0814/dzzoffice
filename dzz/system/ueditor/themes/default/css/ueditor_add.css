@@ -1,0 +1,16 @@
+
+/*去除纸张宽度*/
+.edui-default .edui-editor{
+	min-width:inherit
+}
+.edui-default .edui-editor{
+	background:inherit;
+	min-width:inherit;
+}
+.edui-default .edui-editor-iframeholder{
+	margin: 0;
+	border: 0;
+	width:auto;
+	background: #FFF;
+	box-shadow: none
+}

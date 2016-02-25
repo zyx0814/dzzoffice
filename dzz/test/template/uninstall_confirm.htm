@@ -1,0 +1,20 @@
+<!--{template common/header_simple_start}-->
+<!--{template common/header_simple_end}-->
+<div class="container" style="padding:30px;">
+  <div class="well" style="overflow:hidden;">
+    <form id="confirm_uninstall_form" name="confirm_uninstall_form" class="form-horizontal-left form-horizontal" action="{DZZSCRIPT}?mod=test&op=uninstall_confirm" method="post" >
+            <input type="hidden" name="confirmsubmit" value="true" />
+            <input type="hidden" name="adminurl" value="$_GET['adminurl']" />
+            <input type="hidden" name="appid" value="$appid" />
+            <input type="hidden" name="formhash" value="{FORMHASH}" />
+            <p class="text-danger">
+            	此操作将删除应用：<b>$app[appname]</b> &nbsp;内所有数据，请慎<br /><br />如果确实需要删除，请在下面输入 DELETE 字样确认删除
+            </p>
+            <p><input id="confirm" type="text" class="form-control" style="max-width:200px;" name="confirm" value="" /></p>
+            
+            <button type="button" class="btn btn-danger" onclick="if($('confirm').value!='DELETE'){$('confirm').focus();}else{$('confirm_uninstall_form').submit()}">确定卸载应用</button>
+            &nbsp;&nbsp;&nbsp;<button type="button" class="btn btn-default" onclick="$('confirm').value='';$('confirm_uninstall_form').submit();">不卸载</button>
+    </form>
+   </div>
+</div>
+<!--{template common/footer_simple}--> 

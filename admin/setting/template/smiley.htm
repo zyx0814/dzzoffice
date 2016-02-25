@@ -1,0 +1,105 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" style="min-width:350px">
+        <div class="main-header" style="padding:0 10px;">
+       	 	<ul class="nav nav-pills nav-pills-bottomguide ">
+                <li ><a href="{BASESCRIPT}?mod=setting&operation=smiley">表情设置</a></li>
+              	<li class="active"><a href="{BASESCRIPT}?mod=setting&operation=$operation&op=smiley">表情分类</a></li>
+             </ul>
+              
+        </div>
+       
+  		<div class="main-content clearfix table-responsive" style="border-top:1px solid #FFF">
+         <form id="appform" name="appform"   action="{BASESCRIPT}?mod=setting&op=smiley" method="post" >
+            <input type="hidden" name="smileysubmit" value="true" />
+            <input type="hidden" name="formhash" value="{FORMHASH}" />
+           <table class="table table-hover" >
+                <thead>
+                  <th width="30">&nbsp;</th>
+                  <th>排序</th>
+                  <th>启用</th>
+              	  <th>分类</th>
+                  <th>目录</th>
+                  <th>数量</th>
+                  <th></th>
+                </thead>
+             <!--{loop $list $value}-->
+                <tr >
+                  <td align="center">
+                 	<label><input type="checkbox"  name="delete[]" value="$value[typeid]" <!--{if $value[smiliesnum]}-->disabled<!--{/if}--> /></label>
+                  </td>
+                  <td ><input type="text" class="form-control"  name="displayordernew[{$value[typeid]}]" value="$value[displayorder]" style="width:45px;" /></td>
+                   <td ><label><input type="checkbox"  name="availablenew[{$value[typeid]}]" value="1" <!--{if $value[available]}-->checked<!--{/if}--> /></label></td>
+                   <td ><input type="text" class="form-control "  name="namenew[{$value[typeid]}]" value="$value[name]" /></td>
+                  <td valign="middle">./static/image/smiley/{$value[directory]}</td>
+                  <td>$value[smiliesnum]<input type="hidden" name="smiliesnum[{$value[typeid]}]" value="$value[smiliesnum]" /></td>
+                  <td valign="middle">
+                  <a href="{ADMINSCRIPT}?mod=setting&op=smiley&operation=update&id=$value[typeid]" class="" onclick="return confirm('此操作将自动搜索 static/image/smiley/$value[directory] 目录 目录下尚未启用的表情，并自动添加到表情分类“$value[name]”，请确认！')">更新</a>&nbsp;&nbsp;
+                  <a href="{ADMINSCRIPT}?mod=setting&op=smiley&operation=edit&id=$value[typeid]" class="" >详细</a>
+                  </td>
+                  
+                </tr>
+             <!--{/loop}-->
+             <!--{if $list_no}-->
+                 <!--{loop $list_no $key $value1}-->
+                 <tr><td  align="center">新增</td>
+                 <td ><input type="text" class="form-control " style="width:45px"  name="newdisplayorder[{$key}]" value="$value1[displayorder]" /></td>
+                 <td ><label><input type="checkbox"  name="newavailable[{$key}]" value="1" <!--{if $value1[available]}-->checked<!--{/if}-->></label></td>
+                 <td ><input type="text" class="form-control "  name="newname[{$key}]" value="" /></td>
+                 <td>./static/image/smiley/{$value1[entry]}<input type="hidden" name="newdirectory[{$key}]" value="$value1[entry]"></td>
+                  <td>$value1[smnums]<input type="hidden" name="smnums[{$key}]" value="$value1[smnums]" /></td>
+                  <td>$value1[smilies]</td></tr>
+                 <!--{/loop}-->
+             <!--{else}-->
+             	 <tr><td align="center">新增</td>
+                 <td colspan="15"><span class="help-inline">没有找到尚未使用的表情分类，您可以通过 FTP 在 static/image/smiley/ 目录中创建表情分类目录并上传表情图片，然后刷新本页。表情分类目录名只允许数字、26 个英文字母及下划线</span></td></tr>
+             <!--{/if}-->
+              <thead>
+                 <th colspan="15"  valign="middle"><label for="chkall" class="checkbox-inline"><input type="checkbox" name="chkall" id="chkall"  onclick="checkAll('prefix', this.form, 'delete')">&nbsp;删？</label>&nbsp;&nbsp;<input type="submit" class="btn btn-primary" value="提交" /></th>
+             </thead>
+            </table>
+          </form>
+           <div class="tip" style="margin:10px;">
+              <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h5>提示信息</h5>
+                <ul >
+                    <li>表情导出包含表情分类信息及表情代码信息，表情图片文件请通过 FTP 下载。</li>
+                    <li>请不要同时启用过多的表情分类，并控制好表情分类的名称长度，以免表情窗口无法完全显示所有表情分类。</li>
+                    <li>删除表情分类请先删除该分类下所有表情。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+   </div>
+</div>
+<script type="text/javascript">  
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<!--{template common/footer_simple}-->

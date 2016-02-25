@@ -1,0 +1,73 @@
+<!--{template common/header_simple_start}-->
+<script src="http://open.web.meitu.com/sources/xiuxiu.js" type="text/javascript"></script>
+<style type="text/css">
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+body {
+	margin: 0;
+}
+</style>
+<script type="text/javascript">
+window.onload=function(){
+	xiuxiu.params.wmode = "transparent";
+	xiuxiu.setLaunchVars("preventBrowseDefault", 1);
+	xiuxiu.setLaunchVars("preventUploadDefault", 1);
+	xiuxiu.embedSWF("altContent",3,"100%","100%");
+       /*第1个参数是加载编辑器div容器，第2个参数是编辑器类型，第3个参数是div容器宽，第4个参数是div容器高*/
+	
+	xiuxiu.onInit = function (){
+		if('{$stream}') xiuxiu.loadPhoto("{$stream}");
+		xiuxiu.setUploadURL("{$_G[siteurl]}"+DZZSCRIPT+"?mod=xiuxiu&do=save");//修改为您自己的上传接收图片程序
+		xiuxiu.setUploadType (1);
+	}	
+	xiuxiu.onUploadResponse = function (data){
+		try{
+			var data1=eval('(' + data + ')')
+			parent._ico.createIco(data1);
+		}catch(e){}
+	}
+	xiuxiu.onBeforeUpload = function(data, id) {
+		  return true; 
+	}
+	
+	xiuxiu.onBrowse = function (channel, multipleSelection, canClose, id){
+		/*调用桌面文件接口，打开桌面文件*/
+		parent.OpenFile('open','打开文件',{image:['图像(*.jpg,*.jpeg,*.png,*.gif)',['IMAGE','JPG','JPEG','PNG','GIF'],'']},{bz:'all',multiple:multipleSelection},function(data){
+			var datas=[];
+			if(data.params.multiple){
+				datas=data.icodata
+			}else{
+				datas=[data.icodata];
+			}
+			var images=[];
+			for(var i in datas){
+				if(data.params.ishref){ //文件为远程图片网址
+					images.push(encodeURI(datas[i].url));
+				}else{ //桌面图片
+					images.push(encodeURI(SITEURL+DZZSCRIPT+'?mod=io&op=thumbnail&path='+datas[i].dpath+'&original=1'));
+				}
+			}
+			xiuxiu.loadPhoto(images,false,id,{loadImageChannel: channel});
+		});
+	  
+		return true;
+	}
+	<!--{if $_G['uid']}-->
+	xiuxiu.onUpload = function(id) {
+		/*调用桌面文件接口，保存图片到桌面*/
+		parent.OpenFile('saveto','保存图像',{image:['图像(*.jpg,*.jpeg,*.png,*.gif)',['IMAGE','JPG','JPEG','PNG','GIF'],'selected']},{bz:'all',multiple:false,'name':'metu.jpg'},function(data){
+			xiuxiu.setUploadArgs({path:encodeURIComponent(data.position), name:encodeURIComponent(data.name),tpath:data.icodata?encodeURIComponent(data.icodata.path):''});
+			xiuxiu.upload();
+		});
+	}
+	<!--{/if}-->
+}
+</script>
+<!--{template common/header_simple_end}-->
+<div id="altContent">
+  <h1>美图秀秀</h1>
+</div>
+
+<!--{template common/footer_simple}-->

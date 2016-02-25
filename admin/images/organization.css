@@ -1,0 +1,145 @@
+html,body{
+	width:100%;
+	height:100%;
+	overflow:hidden;
+}
+#ajaxwaitid { display: none; position: absolute; right: 0; top: 0; z-index: 1; padding: 0 5px; background: #F7F7F7 }
+a,a:hover,a:focus{
+	text-decoration:none;
+}
+.container{
+	width:100%;
+	height:100%;
+	overflow:hidden;
+	position:relative;
+}
+.left-container{
+	width:210px;
+}
+.main-container{
+	margin-left:210px;
+}
+
+/*ul li, .xl li {
+  list-style: none outside none;
+}*/
+.list-item{
+	margin:0;
+	padding-top:10px;
+}
+.list-item li {
+  
+  color: black;
+  height: 34px;
+  line-height: 34px;
+  padding: 0 10px;
+  position: relative;
+  background-image: url("aside-hover-on.png");
+  background-position: 0 100px;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  
+
+}
+.list-item li.sel {
+  background-position: 0 -33px;
+}
+.list-item li.hover {
+  background-position:0 0;
+}
+.list-item li .list-wrap {
+  display: block;
+  /*float: left;*/
+ /* max-width: 150px;
+  overflow: hidden;
+  padding-right: 60px;*/
+  position: relative;
+  white-space: nowrap;
+}
+.list-item li .list-wrap .name {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow:1px 1px 1px #F7F7F7;
+  width: 140px;
+}
+.list-item li .list-wrap .edit, .list-item li .list-wrap .del {
+  background-image: url("icon.png");
+  position: absolute;
+}
+.list-item li .list-wrap .del:hover {
+  background-position: -247px -87px;
+}
+.list-item li .list-wrap .hide {
+  left: 0;
+  visibility: hidden;
+  width: 0;
+}
+.list-wrap .g-edit input {
+  width: 150px;
+  font-size:12px;
+}
+.list-item li .list-wrap .visible {
+	 visibility: visible;
+}
+
+.list-item li .list-wrap .edit {
+  background-position: -187px -87px;
+  height: 19px;
+  right: 20px;
+  top: 6px;
+  width: 19px;
+}
+.list-item li .list-wrap .edit:hover {
+  background-position: -208px -87px;
+}
+.list-item li .list-wrap .del {
+  background-position: -229px -87px;
+  height: 18px;
+  right: 0px;
+  top: 7px;
+  width: 15px;
+}
+.mou-evt {
+  cursor: pointer;
+}
+
+.tips {
+	left:50%;
+	position:fixed;
+	top:0px;
+	width:350px;
+	margin-left:-125px;
+	z-index:999;
+}
+
+.main-header span{
+	font-size:16px;
+	text-shadow:1px 1px 1px #F7F7F7;
+	font-weight:bold;
+}
+.main-content .table td{
+	vertical-align:middle;
+}
+.main-content .table td input{
+	margin-bottom:0;
+}
+.main-content .table tbody + tbody {
+  border-top: 1px solid #CCCCCC;
+}
+
+
+
+.main-content .child-org .child-tree{
+	display:inline-block;
+	width:20px;
+	height:26px;
+	margin-left:10px;
+	float:left;
+}
+.form-submit{
+	padding:0 20px;
+}
+.moderators-item{
+	margin:0 5px;
+}

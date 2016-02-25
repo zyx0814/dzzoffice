@@ -1,0 +1,14 @@
+<!--{eval updatesession();}-->
+<!--{if !$_G['setting']['bbclosed']}-->
+	<!--{if !isset($_G['cookie']['sendmail'])}-->
+	<script type="text/javascript" src="misc.php?mod=sendmail&rand=$_G[timestamp]"></script>
+	<!--{/if}-->
+    <!--{if $_G['setting']['CorpID'] && !isset($_G['cookie']['sendwx'])}-->
+        <script type="text/javascript" src="misc.php?mod=sendwx&rand=$_G[timestamp]"></script>
+    <!--{/if}-->
+<!--{/if}-->
+<!--{if $_G[uid] && $_G['adminid'] == 1 && !isset($_G['cookie']['checkupgrade'])}-->
+		<script type="text/javascript" src="misc.php?mod=upgrade&action=checkupgrade&rand=$_G[timestamp]"></script>
+<!--{/if}-->
+</body>
+</html>

@@ -1,0 +1,320 @@
+.menu{
+	position:absolute;
+	background:#F7F7F7;
+	margin:0;
+	padding:2px;
+	border:1px solid #ccc;
+	width:150px;
+	z-index:99999;
+}
+.menu-item{
+	position:relative;
+	margin:0;
+	padding:0;
+	height:22px;
+	line-height:20px;
+	font-size:12px;
+	cursor:pointer;
+	border:1px solid #F7F7F7; 
+}
+
+	
+.menu-text{
+	position:absolute;
+	left:28px;
+	top:0px;
+	width:120px;
+	height:22px;
+	overflow:hidden;
+}
+
+.menu-item-nodelete .menu-text{
+	position:absolute;
+	left:28px;
+	top:0px;
+	color:#999;
+}
+.menu-icon{
+	position:absolute;
+	width:16px;
+	height:16px;
+	top:2px;
+	left:2px;
+	background-image:url(images/icons.png);
+	background-repeat:no-repeat;
+	
+}
+.menu-icon img{
+	vertical-align:inherit;
+}
+ie6 .menu-icon{
+	background-image:url('images/icons.gif');
+}
+
+.menu-rightarrow{
+	position: absolute;
+	width:4px;
+	height:7px;
+	top:7px;
+	right:5px;
+	background:url('images/menu_rightarrow.png') no-repeat;
+}
+.menu-sep{
+	position:relative;
+	display:block;
+	height:2px;
+	margin:3px 0px 3px 24px;
+	line-height:2px;
+	font-size:2px;
+	background:url('images/menu_sep.png') repeat-x;
+}
+.menu-active{
+	border:1px solid #7eabcd;
+	background:#fafafa;
+	-moz-border-radius:3px;
+	-webkit-border-radius: 3px;
+}
+.menu_active{
+	
+	background:#FFF;
+	-moz-border-radius:3px;
+	-webkit-border-radius: 3px;
+	border:1px solid #7eabcd;
+}
+.menu-shadow{
+	position:absolute;
+	background:#ddd;
+	-moz-border-radius:5px;
+	-webkit-border-radius: 5px;
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+	filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2,MakeShadow=false,ShadowOpacity=0.2);
+}
+.menu .menu .icon-no {
+	background-position:-0px -0px;
+}
+.menu .icon-appshop {
+	background-position:-16px -0px;
+}
+.menu .icon-back {
+	background-position:-32px -0px;
+}
+.menu .icon-config {
+	background-position:-48px -0px;
+}
+.menu .icon-copy {
+	background-position:-64px -0px;
+}
+.menu .icon-create {
+	background-position:-80px -0px;
+}
+.menu .icon-cut {
+	background-position:-96px -0px;
+}
+.menu .icon-delete {
+	background-position:-112px -0px;
+}
+.menu .icon-desktop {
+	background-position:-128px -0px;
+}
+.menu .icon-todesktop {
+	background-position:-416px -16px;
+}
+.menu .icon-todock {
+	background-position:-432px -16px;
+}
+.menu .icon-property {
+	background-position:-448px -16px;
+}
+.menu .icon-newwindow {
+	background-position:-480px -16px;
+}
+.menu .icon-innerwindow {
+	background-position:-464px -16px;
+}
+.menu .icon-direction {
+	background-position:-144px -0px;
+}
+.menu .icon-door {
+	background-position:-160px -0px;
+}
+.menu .icon-download {
+	background-position:-176px -0px;
+}
+.menu .icon-dzzdoc {
+	background-position:-192px -0px;
+}
+.menu .icon-excel {
+	background-position:-192px -0px;
+}
+.menu .icon-doc {
+	background-position:-192px -0px;
+}
+.menu .icon-powerpoint {
+	background-position:-192px -0px;
+}
+.menu .icon-edit {
+	background-position:-208px -0px;
+}
+.menu .icon-edit_add {
+	background-position:-224px -0px;
+}
+.menu .icon-edit_remove {
+	background-position:-240px -0px;
+}
+.menu .icon-editnote {
+	background-position:-256px -0px;
+}
+.menu .icon-empty {
+	background-position:-272px -0px;
+}
+.menu .icon-filemanage {
+	background-position:-288px -0px;
+}
+.menu .icon-filesave {
+	background-position:-304px -0px;
+}
+.menu .icon-groupedit {
+	background-position:-320px -0px;
+}
+.menu .icon-guanbi {
+	background-position:-336px -0px;
+}
+.menu .icon-help {
+	background-position:-352px -0px;
+}
+.menu .icon-home {
+	background-position:-368px -0px;
+}
+.menu .icon-huanyuan {
+	background-position:-384px -0px;
+}
+.menu .icon-iconview {
+	background-position:-400px -0px;
+}
+.menu .icon-topic {
+	background-position:-400px -16px;
+}
+.menu .icon-indesktop {
+	background-position:-416px -0px;
+}
+.menu .icon-movegroup {
+	background-position:-432px -0px;
+}
+.menu .icon-newdoc {
+	background-position:-448px -0px;
+}
+.menu .icon-newfolder {
+	background-position:-464px -0px;
+}
+.menu .icon-newlink {
+	background-position:-480px -0px;
+}
+.menu .icon-autolist {
+	background-position:-496px -0px;
+}
+.menu .icon-notselect {
+	background-position:-512px -0px;
+}
+.menu .icon-ok {
+	background-position:-528px -0px;
+}
+.menu .icon-open {
+	background-position:-496px -16px;
+}
+.menu .icon-openwith {
+	background-position:-512px -16px;
+}
+.menu .icon-paste {
+	background-position:-560px -0px;
+}
+.menu .icon-pencil {
+	background-position:-576px -0px;
+}
+.menu .icon-realdel {
+	background-position:-0px -16px;
+}
+.menu .icon-pin {
+	background-position:-16px -16px;
+}
+.menu .icon-rename {
+	background-position:-32px -16px;
+}
+.menu .icon-position {
+	background-position:-48px -16px;
+}
+.menu .icon-print {
+	background-position:-64px -16px;
+}
+.menu .icon-recycle {
+	background-position:-80px -16px;
+}
+.menu .icon-redo {
+	background-position:-96px -16px;
+}
+.menu .icon-reload {
+	background-position:-112px -16px;
+}
+.menu .icon-restore {
+	background-position:-128px -16px;
+}
+.menu .icon-search {
+	background-position:-144px -16px;
+}
+.menu .icon-select {
+	background-position:-160px -16px;
+}
+.menu .icon-sendmsg {
+	background-position:-176px -16px;
+}
+.menu .icon-setwidget {
+	background-position:-192px -16px;
+}
+.menu .icon-share {
+	background-position:-208px -16px;
+}
+.menu .icon-userdetail {
+	background-position:-224px -16px;
+}
+.menu .icon-sort {
+	background-position:-240px -16px;
+}
+.menu .icon-txt {
+	background-position:-256px -16px;
+}
+.menu .icon-upload {
+	background-position:-272px -16px;
+}
+.menu .icon-viewdesktop {
+	background-position:-288px -16px;
+}
+.menu .icon-wallpaper {
+	background-position:-304px -16px;
+}
+.menu .icon-widget {
+	background-position:-320px -16px;
+}
+.menu .icon-world {
+	background-position:-336px -16px;
+}
+.menu .icon-zhuti {
+	background-position:-352px -16px;
+}
+.menu .icon-zuida {
+	background-position:-368px -16px;
+}
+.menu .icon-zuixiao {
+	background-position:-384px -16px;
+}
+.menu .icon-chmod {
+	background-position:-528px -16px;
+}
+.menu .icon-docx {
+	background:url(../../../images/icons/docx.png) center no-repeat;
+}
+.menu .icon-xlsx {
+	background:url(../../../images/icons/xlsx.png) center no-repeat;
+}
+.menu .icon-pptx {
+	background:url(../../../images/icons/pptx.png) center no-repeat;
+}

@@ -1,0 +1,14 @@
+<ul class="nav nav-pills  nav-pills-bottomguide">
+    <li <!--{if $_GET[op]=='edit'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz"> 设置</a></li>
+    <li <!--{if $_GET[op]=='space'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=cloud&op=space">空间管理</a></li>
+     <li <!--{if $_GET[op]=='router'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=cloud&op=router">路由管理</a></li>
+    
+     <!--{if $_GET[op]=='routeredit'}-->
+    	<!--{if $routerid}-->
+         <li class="active"><a href="{BASESCRIPT}?mod=cloud&op=routeredit&routerid=$routerid">编辑路由</a></li>
+        <!--{else}-->
+         <li class="active"><a href="{BASESCRIPT}?mod=cloud&op=routeredit">添加路由</a></li>
+        <!--{/if}-->
+      <!--{/if}-->
+      <li <!--{if $_GET[op]=='movetool'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=cloud&op=movetool">迁移工具</a></li>
+  </ul>

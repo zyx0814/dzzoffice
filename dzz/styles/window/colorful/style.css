@@ -1,0 +1,494 @@
+﻿
+/* ---- colorful 样式 ---- */
+.colorful
+{
+	
+}
+
+/* 边框样式 */
+.colorful .LEFT_TOP
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 4px;
+	height: 23px;
+	background:#d4d0c8;
+
+}
+.colorful .LEFT_TOP .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	left:0px;
+	top:0px;
+	width: 4px;
+	height: 23px;
+	border-top:1px solid RGBA(0,0,0,0.4);
+	border-left:1px solid RGBA(0,0,0,0.4);
+
+}
+.colorful .TOP
+{
+	/* 上边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 23px;
+	background:#d4d0c8;
+}
+.colorful .TOP .inner
+{
+	/* 上边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	left:0;
+	top:0px;
+	height: 23px;
+	width:100%;
+	border-top:1px solid RGBA(0,0,0,0.4);
+	border-bottom:1px solid RGBA(0,0,0,0.3);
+}
+.colorful .RIGHT_TOP
+{
+	/* 右上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	right:0px;
+	top:0px;
+	width: 5px;
+	height: 23px;
+	background:#d4d0c8;
+
+}
+.colorful .RIGHT_TOP .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:0px;
+	right:0px;
+	_right:-1px;
+	width: 5px;
+	height: 23px;
+	border-top:1px solid RGBA(0,0,0,0.4);
+	border-right:1px solid RGBA(0,0,0,0.4);
+
+}
+
+.colorful .RIGHT
+{
+	/* 右边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	background:#d4d0c8;
+	
+}
+.colorful .RIGHT .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:0px;
+	right:0px;
+	_right:-1px;
+	width: 5px;
+	height: 100%;
+	border-right:1px solid RGBA(0,0,0,0.4);
+	border-left:1px solid RGBA(0,0,0,0.3);
+
+}
+
+.colorful .RIGHT_BOTTOM
+{
+	/* 右下：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	height: 5px;
+	background:#d4d0c8;
+}
+.colorful .RIGHT_BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	right:0px;
+	_bottom:-1px;
+	_right:-1px;
+	width: 5px;
+	height:5px;
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+	border-right:1px solid RGBA(0,0,0,0.4);
+
+}
+.colorful .RIGHT_BOTTOM_BY_BUTTON
+{
+	/* 右下(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width:5px;
+	height: 38px;
+	background:#d4d0c8;
+	
+	
+}
+.colorful .RIGHT_BOTTOM_BY_BUTTON .inner{
+	bottom:0px;
+	right:0px;
+	_bottom:-1px;
+	_right:-1px;
+	width: 5px;
+	height: 38px;
+	border-right:1px solid RGBA(0,0,0,0.4);
+	border-bottom:1px solid RGBA(0,0,0,0.3);
+}
+.colorful .BOTTOM
+{
+	/* 下边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 5px;
+	background:#d4d0c8;
+
+}
+.colorful .BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:0px;
+	width:100%;
+	height: 5px;
+	border-top:1px solid RGBA(0,0,0,0.3);
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+
+
+}
+.colorful .BOTTOM_BY_BUTTON
+{
+	/* 下边(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 38px;
+	background:#d4d0c8;
+}
+.colorful .BOTTOM_BY_BUTTON .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:0px;
+	width:100%;
+	height: 38px;
+	border-top:1px solid RGBA(0,0,0,0.3);
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+
+}
+.colorful .LEFT_BOTTOM
+{
+	/* 右下：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	height: 5px;
+	background:#d4d0c8;
+}
+.colorful .LEFT_BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:0px;
+	width: 5px;
+	height: 5px;
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+	border-left:1px solid RGBA(0,0,0,0.4);
+
+}
+.colorful .LEFT_BOTTOM_BY_BUTTON
+{
+	/* 左下(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	height: 38px;
+	background:#d4d0c8;
+	
+}
+.colorful .LEFT_BOTTOM_BY_BUTTON .inner
+{
+	bottom:0px;
+	_bottom:-1px;
+	left:0;
+	width: 5px;
+	height: 38px;
+	border-bottom:1px solid RGBA(0,0,0,0.4);
+	border-left:1px solid RGBA(0,0,0,0.4);
+}
+
+.colorful .LEFT
+{
+	/* 右边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	background:#d4d0c8;
+	
+}
+.colorful .LEFT .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:0px;
+	left:0px;
+	width:5px;
+	height: 100%;
+	border-right:1px solid RGBA(0,0,0,0.3);
+	border-left:1px solid RGBA(0,0,0,0.4);
+
+}
+
+
+/* 功能区样式 */
+.colorful .RESIZE
+{
+	width: 15px;
+	height: 15px;
+	right: -8px;
+	bottom: -8px;
+	z-index:10;
+}
+.colorful .RESIZE-X
+{
+	width: 15px;
+	right: -8px;
+	height:100%;
+	z-index:9;
+	top:0;
+}
+.colorful .RESIZE-Y
+{
+	height: 15px;
+	width:100%;
+	bottom: -8px;
+	z-index:9;
+	left:0;
+}
+.colorful .CLOSE
+{
+    width: 18px;
+    height: 18px;
+	margin:0px 2px 2px;
+    float:right;
+   	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='colorful/styles/window/colorful/images/CLOSE.png', sizingMethod='scale');
+	background-image:url(images/CLOSE.png) !important;
+	background-image:none;
+	background-repeat:no-repeat;
+	opacity:0.7;
+	_filter:Alpha(opacity=70)
+}
+.colorful .CLOSE:hover
+{
+  opacity:1;
+	_filter:Alpha(opacity=100)
+}
+.colorful .MIN
+{
+    width: 18px;
+    height: 18px;
+    float:right;
+	margin:0px 2px 2px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='colorful/styles/window/colorful/images/MIN.png', sizingMethod='scale');
+	background-image:url(images/MIN.png) !important;
+	background-image:none;
+	background-repeat:no-repeat;
+	opacity:0.7;
+	_filter:Alpha(opacity=70)
+}
+.colorful .MIN:hover
+{
+    opacity:1;
+	_filter:Alpha(opacity=100)
+	
+}
+.colorful .MAX
+{
+    width: 18px;
+    height: 18px;
+    float:right;
+	margin:0px 2px 2px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='colorful/styles/window/colorful/images/MAX.png', sizingMethod='scale');
+	background-image:url(images/MAX.png) !important;
+	background-image:none;
+	background-repeat:no-repeat;
+	opacity:0.7;
+	_filter:Alpha(opacity=70)
+}
+.colorful .MAX:hover
+{
+    opacity:1;
+	_filter:Alpha(opacity=100)
+	
+}
+.colorful .RESTORE
+{
+    width: 18px;
+    height: 18px;
+    float:right;
+	margin:0px 2px 2px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='colorful/styles/window/colorful/images/RESTORE.png', sizingMethod='scale');
+	background-image:url(images/RESTORE.png) !important;
+	background-image:none;
+	background-repeat:no-repeat;
+	opacity:0.7;
+	_filter:Alpha(opacity=70)
+}
+.colorful .RESTORE:hover
+{
+    opacity:1;
+	_filter:Alpha(opacity=100)
+	
+}
+.colorful .FULLSCREEN
+{
+    width: 18px;
+    height: 18px;
+	margin:0px 2px 10px;
+    float:right;
+   	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='colorful/styles/window/colorful/images/FULLSCREEN.png', sizingMethod='scale');
+	background-image:url(images/FULLSCREEN.png) !important;
+	background-image:none;
+	background-repeat:no-repeat;
+	opacity:0.7;
+	_filter:Alpha(opacity=70)
+}
+.colorful .FULLSCREEN:hover
+{
+	opacity:1;
+	_filter:Alpha(opacity=100)
+ 
+}
+.colorful .REFRESH
+{
+    width: 18px;
+    height: 18px;
+    float:left;
+	margin:0px 2px 2px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='colorful/styles/window/colorful/images/REFRESH.png', sizingMethod='scale');
+	background-image:url(images/REFRESH.png) !important;
+	background-image:none;
+	background-repeat:no-repeat;
+	opacity:0.7;
+	_filter:Alpha(opacity=70)
+}
+.colorful .REFRESH:hover
+{
+    
+     opacity:1;
+	_filter:Alpha(opacity=100)
+}
+.colorful .FLAGIMG
+{
+    width: 16px;
+    height: 16px;
+    float:left;
+	margin:3px 5px;
+	
+}
+.colorful .HOME
+{
+    width: 18px;
+    height: 18px;
+    float:left;
+	margin:2px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='colorful/styles/window/colorful/images/HOME.png', sizingMethod='scale');
+	background-image:url(images/HOME.png) !important;
+	background-image:none;
+	background-repeat:no-repeat;
+}
+.colorful .HOME:hover,.colorful .HOME1
+{
+   
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='colorful/styles/window/colorful/images/HOME1.png', sizingMethod='scale');
+	background-image:url(images/HOME1.png) !important;
+	background-image:none;
+	background-repeat:no-repeat;
+}
+
+
+
+
+/* 逻辑区样式 */
+.colorful .CONTENT
+{
+	/* 请不要定义padding/margin属性 */
+	/* 请定义left = -(border-left),top = -(border-top) */
+	left: 0px;
+	top: 0px;
+	background:#FFF;
+	overflow:auto;
+	font-size: 13px;
+}
+.colorful .CONTENT .FORM
+{
+	font-size: 14px;
+	margin: 0px;
+	padding: 12px;
+}
+.colorful .CONTENT .FORM_NOTITLE
+{
+	font-size: 14px;
+	margin: 0px;
+	padding: 0px;
+}
+.colorful .TITLE
+{
+	/* 请不要定义margin属性 */
+ /*  background:#0a246a;
+   background:-webkit-gradient(linear, 0 0, 100% 100%, from(#0a246a), to(#a6caf0));
+   background:-moz-linear-gradient(left,#0a246a,#a6caf0);
+   FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=1,startColorStr=#0a246a,endColorStr=#a6caf0);*/
+   left:5px ;
+   top:3px;
+   height:18px;
+   padding:0;
+   z-index:10;
+   overflow:hidden;
+  
+}
+.colorful .TITLE .titleBar{
+	margin:0;
+	
+}
+.colorful .TITLE .titleBar .titleButtonBar{
+	margin:0;
+	padding:0;
+	position:relative;
+	z-index:1;
+}
+.colorful .TITLE .titleBar .titleText a{
+	text-align:left;
+	padding:0 5px;
+	height:18px;font-size:12px; color:black;line-height: 18px;overflow: hidden;	
+	 color:#000;
+   	text-shadow:0px 1px 2px #EEE;
+	font-weight:bold;
+}
+/*.colorful .TITLE .titleBar .titleButtonBar a:active{
+	background:#428bca;
+}*/
+.colorful .BUTTON
+{
+	/* 请不要定义margin属性 (暂不支持:width:100%;bottom:0px;) */
+	padding: 5px 0px;
+	text-align:right;
+}
+.colorful .BUTTON button
+{
+	margin:0 15px;
+	padding:3px 10px;
+}
+.colorful .BUTTON .DISABLED
+{
+	
+}
+
+/* 各种按钮样式 */
+.colorful .BUTTON .OK
+{
+	
+	
+}
+.colorful .BUTTON .CANCEL
+{
+	
+}
+
+/* 窗口最大化时隐藏的阴影 */
+.colorful .SHADOW_TOP
+{
+	height:0px;
+}
+.colorful .SHADOW_LEFT
+{
+	width:0px;
+}
+.colorful .SHADOW_RIGHT
+{
+	width:0px;
+}
+.colorful .SHADOW_BOTTOM
+{
+	height:0px;
+}
+/* ---- mac 样式 ---- */

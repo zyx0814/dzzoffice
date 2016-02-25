@@ -1,0 +1,15 @@
+/*Popup Calendar*/
+#calendar { padding: 5px; text-align: left; border: 1px solid #C2D5E3; background: #FFF; margin-bottom: 0.8em; }
+	#calendar td { padding: 2px; font-weight: 700; }
+	#calendar_week td { height: 2em; line-height: 2em; border-bottom: 1px solid #DDD;}
+		#calendar_week a { color: #369; }
+	#hourminute td {padding: 4px 2px; border-top: 1px solid #DDD;}
+		.calendar_expire, .calendar_expire a:link, .calendar_expire a:visited {	color: #666; font-weight: normal; }
+		.calendar_default, .calendar_default a:link, .calendar_default a:visited { color: #369;}
+		.calendar_checked, .calendar_checked a:link, .calendar_checked a:visited { color: #F26C4F; font-weight: bold;}
+		td.calendar_checked, span.calendar_checked{ background: #DDD;}
+		.calendar_today, .calendar_today a:link, .calendar_today a:visited { color: #444; font-weight: bold; }
+	#calendar_header td{ width: 30px; height: 20px; border-bottom: 1px solid #DDD; font-weight: normal; }
+	#calendar_year { display: none;	line-height: 130%; background: #FFF; position: absolute; z-index: 10; }
+		#calendar_year .col { float: left; background: #FFF; margin-left: 1px; border: 1px solid #DDD; padding: 4px; }
+	#calendar_month { display: none; background: #FFF; line-height: 130%; border: 1px solid #DDD; padding: 4px; position: absolute; z-index: 11; }

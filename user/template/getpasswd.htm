@@ -1,0 +1,84 @@
+<!--{template common/header_simple_start}-->
+<style>
+body{background:rgb(58, 110, 165);}
+</style>
+<!--{template common/header_simple_end}-->
+<div id="modal_login"  class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:block" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+			
+			 <form class="form-horizontal" role="form" method="post" action="user.php?mod=getpasswd&uid=$uid&id=$hashid" onsubmit="return validate(this);">
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+                
+              <div class="modal-header">
+                <h4  class="modal-title text-center" > 找回密码</h4>
+             </div>
+          	 <div class="modal-body">
+                 <div class="form-group">
+                    <label class="control-label col-sm-3">登录邮箱:</label>
+                    <div class="col-sm-9">
+                    	<p class="form-control-static">$member[email]</p>
+                    </div>
+                 </div>
+                  <div class="form-group">
+                  <label class="control-label col-sm-3" for="newpasswd1">新密码</label>
+                  <div class="col-sm-5">
+                    <input class="form-control" type="password" id="newpasswd1" name="newpasswd1" autocomplete="off" placeholder="新密码" >
+                  </div>
+                  <div class="col-sm-4">
+                   <span id="chk_newpasswd1" class="help-inline"> <span id="suc_newpasswd1"></span><kbd  class="p_chk"></kbd></span>
+                  </div>
+                </div>
+              <div class="form-group">
+                  <label class="control-label col-sm-3" for="newpasswd2">确认新密码</label>
+                  <div class="col-sm-5">
+                    <input  class="form-control" type="password" id="newpasswd2" name="newpasswd2" autocomplete="off" placeholder="确认新密码" >
+                   </div>
+                   <div class="col-sm-4">
+                    <span id="chk_newpasswd2" class="help-inline">
+                        <span id="suc_newpasswd2"></span>
+                        <kbd class="p_chk"></kbd>
+                    </span>
+                  </div>
+                </div>
+             </div>
+             <div class="modal-footer">
+                 <button class="btn btn-primary" role="button" type="submit" name="getpwsubmit" value="true">确定更改</button>
+                 <a class="btn btn-default" href="$_G['siteurl']" title="返回首页">返回首页</a>
+             </div> 
+			</form>
+        </div>
+     </div>
+  </div>
+			<script type="text/javascript" src="user/scripts/register.js?{VERHASH}"></script>
+			<script type="text/javascript">
+				function validate(form){
+					if($('newpasswd1').value==''){ 
+						$('newpasswd1').focus();
+						return false;
+					}else if($('newpasswd2').value==''){
+						$('newpasswd2').focus();
+						return false;
+					}else if($('newpasswd1').value!=$('newpasswd1').value){
+						$('newpasswd2').focus();
+						return false;
+					}
+					return true;
+				}
+				var strongpw = new Array();
+				<!--{if $_G['setting']['strongpw']}-->
+					<!--{loop $_G['setting']['strongpw'] $key $val}-->
+					strongpw[$key] = $val;
+					<!--{/loop}-->
+				<!--{/if}-->
+				var pwlength = <!--{if $_G['setting']['pwlength']}-->$_G['setting']['pwlength']<!--{else}-->0<!--{/if}-->;
+				checkPwdComplexity($('newpasswd1'), $('newpasswd2'));
+			</script>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('body').addClass('modal-open');
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer}-->

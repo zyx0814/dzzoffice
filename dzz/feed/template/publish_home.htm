@@ -1,0 +1,257 @@
+<div  class="pubblog_home"><!-- <i class="ico_cp"></i>-->
+  <div id="publish_0" class="publishsharewrap line_publishsharewrap">
+    <div id="return_publish_0" style="display:none"></div>
+    <form id="form_0" name="form_0" class="form-horizontal" action="{DZZSCRIPT}?mod=feed&op=ajax" method="post"  onsubmit="return publish_home_validate(this);" style="margin:0">
+      <input type="hidden" name="formhash" value="{FORMHASH}" />
+      <input type="hidden" name="feedsubmit" value="true" />
+      <input type="hidden" name="handlekey" value="publish_0" />
+      <input type="hidden" name="tid" value="0" />
+     
+      <input id="appid_0" type="hidden" name="appid" value="0" />
+      <div class="container_psw">
+        <div class="textarea_cpsw">
+          <div class="wrap_tcpsw">
+            <textarea rows="" id="message_0" name="message" cols="" onkeyup="check_publish_enable()" tip="你在忙什么？" class="write_wtcpsw _bb_write_wtcpsw " style="overflow: hidden; word-wrap: break-word; resize: horizontal;border:none;box-shadow:none;">你在忙什么？</textarea>
+          </div>
+          <div id="publish_count_0" class="count_cpsw"> <span id="num_input_0" class="num_ccpsw">0</span>/<span class="leng_ccpsw">1000</span> </div>
+        </div>
+      </div>
+      <div id="publish_action_0" class="action_cpsw">
+        <ul class="list_acpsw">
+          <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_0" onclick="showMenu({'ctrlid':'upload_from_0'});" href="javascript:void(0);" title="" class="item_lacpsw">文件/图片</a> </li>
+          <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">表情</a></li>
+          <script type="text/javascript" reload="1">smilies_show('message_0_sml_div', '{$_G[setting][smcols]}', 'message_0');</script>
+           <input id="votestatus_0" type="hidden" name="votestatus" value="0" />
+          <li class="vote_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0_vote" onclick="feed_vote_switch();">投票</a></li>
+        </ul>
+        <!--{if $_G['setting']['feed_publish_public']<1 ||  $_G['adminid']==1}-->
+        <input id="readperm_0" name="readperm" value="0" type="hidden" />
+        <span class="quna_cpsw down_quna_cpsw"> <a id="readperm_sel_0" onclick="showMenu({'ctrlid':'readperm_sel_0'});" href="javascript:void(0);" title="" class="item_lacpsw">所有人可见</a> </span>
+        <!--{else}-->
+        <input id="readperm_0" name="readperm" value="1" type="hidden" />
+        <span class="quna_cpsw down_quna_cpsw"> <a id="readperm_sel_0" onclick="showMenu({'ctrlid':'readperm_sel_0'});" href="javascript:void(0);" title="" class="item_lacpsw">仅@的人可见</a> </span>
+        <!--{/if}-->
+        
+        <button id="publish_submit_0" class="btn btn-primary" title="分享(Ctrl+Enter)" type="submit"><b>分享</b></button> </div>
+      <div id="attachmentViewBox_0" class="attachmentContainer clearfix"> </div> 
+      <div class="vote-post-container" id="vote_post_container_0" tid="0" style="display:none;margin-bottom:10px;"> 
+    	<div id="vote_container_body_0" class="form-horizontal form-horizontal-left">
+    	<script>ajaxget('{DZZSCRIPT}?mod=dzzvote&op=ajax&do=getvotepost&id=&idtype=feed','vote_container_body_0','vote_container_body_0');</script>
+        </div>
+     </div>
+    </form>
+    <div class="actionUploadAttachment" id="upload_from_0_menu" style="display:none">
+      <div class="local_auatth" style="position:relative;overflow:hidden"> <a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">本地上传
+        <input id="fileupload_0" type="file" name="files[]" multiple >
+        </a> </div>
+      <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop();jQuery(this).parent().parent().hide();">从我的文件中选择</a></div>
+    </div>
+   
+    <div class="qunartipwrapmvc" id="readperm_sel_0_menu" style="display:none">
+      <div class="qunartip">
+        <ul class="list-unstyled">
+         <!--{if $_G['setting']['feed_publish_public']<1 ||  $_G['adminid']==1}--> <li class="public_qunat cur"  isvisible="0"><a href="javascript:void(0);" title="" ><span>所有人可见</span></a></li><!--{/if}-->
+          <li class="private_qunat  <!--{if $_G['setting']['feed_publish_public']>0 &&  $_G['adminid']!=1}-->cur<!--{/if}-->"  isvisible="1"><a href="javascript:void(0);" title="" ><span>仅@的人可见</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" >
+document.getElementById('appid_0').value=appid;
+function publish_home_validate(form){
+	//验证投票相关
+	 if(jQuery('#votestatus_0').val()>0 ){ 
+		 var voteitemnum=0;
+		 if(jQuery('#publish_0 input[name="vote[type]"]').val()>1){//图片投票模式
+		 	 if(!jQuery('#publish_0 input[name=vote_subject_2]').val()){
+				 showmessage('投票标题不能为空','danger',3000,1);
+				 jQuery('input[name=vote_subject_2]').focus();
+				  return false;
+			 }
+			 jQuery('#publish_0 .dzzvote-post-image-item input[type=hidden]').each(function(index){
+				 if(jQuery(this).val()>0) voteitemnum++;
+			 });
+		 }else{ //文本投票模式
+		     if(!jQuery('#publish_0 input[name=vote_subject_1]').val()){
+				 showmessage('投票标题不能为空','danger',3000,1);
+				jQuery('#publish_0 input[name=vote_subject_1]').focus();
+				 return false;
+			 }
+			 jQuery('#publish_0 .dzzvote-post-text-item input[type=text]').each(function(index){
+				 if(jQuery(this).val()) voteitemnum++;
+			 });
+		 }
+		 if(voteitemnum<2) {
+			  showmessage('投票项目至少为2项！','danger',3000,1);
+			  return false;
+		 }
+	}else{
+		var val=jQuery('#message_0').val();
+		if(strlen(val)<1 || strlen(val)>1000){
+			 showmessage('请输入分享内容','danger',1000,1);
+			 return false;
+		}else if(strlen(val)>1000){
+			showmessage('分享内容不能超过1000字符','danger',1000,1);
+			return false;
+		}
+	}
+	ajaxpost(form.id, 'return_publish_0','return_publish_0');
+}
+jQuery(document).ready(function(e) {
+	
+	jQuery('#message_0')
+		.TextAreaExpander(62,99999)
+		.on('focus',function(){
+			if(this.value==jQuery(this).attr('tip')){
+				this.value='';
+				jQuery(this).css({'height':62});
+				jQuery('#publish_count_0').show();
+				jQuery('#publish_action_0').show();
+			};
+			
+			jQuery(document).on('click.publish_0',function(e){
+				e=e?e:window.event;
+				var obj = e.srcElement ? e.srcElement :e.target;
+				if(!jQuery(obj).closest('#publish_0,.dzzvote-post-delitem').length){
+					jQuery(document).off('click.paublish_0');
+					if(jQuery('#message_0').val()==''){
+						jQuery('#message_0').val(jQuery('#message_0').attr('tip'));
+						jQuery('#message_0').css({'height':25});
+						jQuery('#publish_count_0').hide();
+						jQuery('#publish_action_0').hide();
+						if(jQuery('#votestatus_0').val()>0) feed_vote_switch();
+					}
+				}
+			});
+		});
+		jQuery(document).on('keydown','#publish_0',function(event){
+			if(event.ctrlKey && event.keyCode == 13) {
+				document.getElementById('form_0').onsubmit();
+			}
+		});
+});
+function succeedhandle_publish_0(url, message, values) {
+	var data= eval('(' + decodeURIComponent(values['data']) + ')');
+	if(data && data.pid>0) feed_publish(data);
+};
+
+jQuery('#readperm_sel_0_menu li').on('click',function(){
+	var li =jQuery(this);
+	var readperm=parseInt(li.attr('isvisible'));
+	li.siblings().removeClass('cur');
+	li.addClass('cur');
+	jQuery('#readperm_0').val(readperm);
+	jQuery('#readperm_sel_0').html(this.innerHTML);
+	li.parent().parent().parent().hide();
+	if(readperm<0) jQuery('#message_0').addClass('writelock ');
+	else jQuery('#message_0').removeClass('writelock ');
+	
+});
+/*jslint unparam: true */
+/*global window, $ */
+jQuery(function () {
+    'use strict';
+    // Change this to the location of your server-side upload handler:
+   	var attachextensions='{eval echo implode('|',$space[attachextensions]);}';
+	if(attachextensions=='') attachextensions="\.*$";
+	else attachextensions="(\.|\/)("+(attachextensions)+")$";
+    jQuery('#fileupload_0').fileupload({
+        url: ajaxurl+'&do=upload',
+        dataType: 'json',
+		autoUpload: true,
+		maxChunkSize:(parseInt('{$_G[setting][maxChunkSize]}') || 2000000), //2M
+		dropZone:jQuery('#publish_0 .container_psw'),
+		pasteZone:jQuery('#publish_0 .container_psw'),
+		maxFileSize: parseInt('{$space[maxattachsize]}')>0?parseInt('{$space[maxattachsize]}'):null, // 5 MB
+		acceptFileTypes:new RegExp(attachextensions,'i'),
+		add:function(e,data){
+			 data.context = jQuery('<div/>').appendTo('#attachmentViewBox_0');
+			jQuery.each(data.files, function (index, file) {
+				if(!file.name) file.name='clipboardData.png';
+				var html='';
+					html+=' <div  class="attachment_previewer">';
+					
+					html+='     <div class="attachmentviewbox">';
+					html+='         <div class="view_attvb clearfix">';
+					html+='           <div class="ico_vattvb "><img alt="'+file.name+'" src="dzz/images/default/upload_failure.png" style="height:50px"></div>';
+					html+='  		  <div class="ico_vattvb_right">';
+					html+='            	<div class="ico_name">'+file.name+'</div>';
+					html+='             <div class="progress  active" style="margin:0;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>';
+					html+='          </div>';
+					
+					html+='      	</div>';
+					html+='    </div>';
+					html+=' </div>';
+				
+				jQuery(html).appendTo(data.context);
+			});
+			
+			data.process().done(function () {
+				data.submit();
+			});
+			
+		},
+		progress: function (e,data){
+			 var index = 0;//data.index,
+            // file = data.files[index],
+            var  node = jQuery(data.context.children()[index]);
+			
+			  var progress = parseInt(data.loaded / data.total * 100, 10);
+				node.find('.progress-bar').css(
+					'width',
+					progress + '%'
+				);
+		},
+        done: function (e, data) {
+            jQuery.each(data.result.files, function (index, file) {
+				if(file.error){
+					jQuery(data.context.children()[index]).find('.progress').replaceWith('<span class="text-danger">'+file.error+'</span>');
+				}else{
+					feed_addAttach(file.data,jQuery(data.context.children()[index]));
+				}
+            });
+        }
+    });
+});
+jQuery(function(){
+	var cachequeryMentions = [], itemsMentions;
+    jQuery('#message_0').atwho({
+       at: "@",
+		//data: '{DZZSCRIPT}?mod=feed&op=ajax&do=getUserToJson',
+		data: '{DZZSCRIPT}?mod=feed&op=ajax&do=getAtData',
+		callbacks:{
+					remote_filter: function (query, render_view) {
+						var thisVal = query,
+						self = jQuery(this);
+						if( !self.data('active') && thisVal.length >= 1 ){
+							self.data('active', true);                            
+							itemsMentions = cachequeryMentions[thisVal]
+							if(typeof itemsMentions == "object"){
+								render_view(itemsMentions);
+							}else
+							{                            
+								if (self.xhr) {
+									self.xhr.abort();
+								}
+								self.xhr = jQuery.getJSON('{DZZSCRIPT}?mod=feed&op=ajax&do=getAtData',{
+									term: thisVal
+								}, function(data) {
+									cachequeryMentions[thisVal] = data
+									render_view(data);
+								});
+							}                            
+							self.data('active', false);                            
+						}                    
+					}
+		},
+		 tpl: "<li data-value='@[${name}:${id}]' title='${title}'><img src='${icon}'>&nbsp;${name}</li>",
+		 search_key: "searchkey",
+		 start_with_space: false,
+		 limit: 5,
+		 max_len: 20,
+		 display_timeout: 300
+    });
+  
+});
+</script> 

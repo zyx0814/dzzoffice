@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset={CHARSET}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit">
+   <!--{if $_G['config']['output']['iecompatible']}--><meta http-equiv="X-UA-Compatible" content="IE=EmulateIE{$_G['config']['output']['iecompatible']}" /><!--{/if}-->
+	<title><!--{if !empty($navtitle)}-->$navtitle - <!--{/if}--><!--{if !empty($_G[setting][sitename])}--> $_G[setting][sitename]<!--{/if}--></title>
+	<meta name="keywords" content="{if !empty($_G[setting][metakeywords])}{echo htmlspecialchars($_G[setting][metakeywords])}{/if} " />
+	<meta name="description" content="{if !empty($_G[setting][metadescription])}{echo htmlspecialchars($_G[setting][metadescription])} {/if}" />
+	<meta name="generator" content="DzzOffice {CORE_VERSION}" />
+	<meta name="author" content="DzzOffice" />
+	<meta name="copyright" content="2011-2016 www.dzzoffice.com" />
+	<meta name="MSSmartTagsPreventParsing" content="True" />
+	<meta http-equiv="MSThemeCompatible" content="Yes" />
+	<meta http-equiv="X-Frame-Options" content="SAMEORIGIN ">
+	<base href="{$_G['siteurl']}" />
+     <link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css?{VERHASH}">
+ <!--{if defined('CURMODULE') && CURMODULE == 'dzzindex' }--> 
+    <!--基础css-->
+    <link rel="stylesheet" type="text/css" href="static/css/common.css?{VERHASH}">
+    <link rel="stylesheet" type="text/css" href="dzz/styles/index.css?{VERHASH}">
+    <!--showwindow 提示窗体-->
+    <link id="css_showwindow" href="dzz/styles/showwindow/style.css?{VERHASH}" rel="stylesheet" type="text/css">
+   
+    <!--{loop $space[thame][modules] $key $value}-->
+        <link id="css_$key" href="dzz/styles/{$key}/{$value}/style.css?{VERHASH}" rel="stylesheet" type="text/css">
+    <!--{/loop}-->
+    <!--{if $space[thame][color]}-->
+        <link id="css_color" href="{DZZSCRIPT}?mod=system&op=ajax&do=getColorCss&color={eval echo rawurlencode($space[thame][color])}&css=$space[thame][folder]" rel="stylesheet" type="text/css">
+    <!--{/if}-->
+    <!--主题自定义样式，如果定义将覆盖上述相关样式-->
+    <link id="css_thame" href="dzz/styles/thame/{$space[thame][folder]}/style.css?{VERHASH}" rel="stylesheet" type="text/css">
+         <!-- the jQuery lib script -->
+		<script type="text/javascript" src="dzz/scripts/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="dzz/scripts/jquery.ui.touch.js"></script>
+		<script type="text/javascript" src="dzz/scripts/jquery.json-2.4.min.js"></script>
+		<script type="text/javascript" src="dzz/scripts/jquery.mousewheel.js"></script>
+        <!--{if defined('CURMODULE') && CURMODULE == 'dzzindex' }--> 
+			 <script type="text/javascript" src="dzz/language/zh_CN.js?{VERHASH}"></script>
+		<!--{/if}-->
+ <!--{/if}-->
+	<script type="text/javascript">var DZZSCRIPT='{DZZSCRIPT}', STATICURL = 'static/', IMGDIR = '{$_G[setting][imgdir]}', VERHASH = '{VERHASH}', charset = '{CHARSET}', dzz_uid = '$_G[uid]', cookiepre = '{$_G[config][cookie][cookiepre]}', cookiedomain = '{$_G[config][cookie][cookiedomain]}', cookiepath = '{$_G[config][cookie][cookiepath]}',attackevasive = '{$_G[config][security][attackevasive]}', disallowfloat = '{$_G[setting][disallowfloat]}',  REPORTURL = '$_G[currenturl_encode]', SITEURL = '$_G[siteurl]', JSPATH = '$_G[setting][jspath]';</script>
+	 <script type="text/javascript" src="dzz/scripts/_fun.js?{VERHASH}"></script>
+	 <script type="text/javascript" src="dzz/scripts/_config.min.js?{VERHASH}"></script>
+     <!--[if lt IE 9]>
+      <script src="static/bootstrap/js/html5shiv.min.js"></script>
+      <script src="static/bootstrap/js/respond.min.js"></script>
+    <![endif]-->
+    </head>
+    <body id="nv_dzz" >
+	<div id="append_parent" ></div><div id="ajaxwaitid" ></div>

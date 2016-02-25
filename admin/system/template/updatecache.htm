@@ -1,0 +1,80 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" >
+    <div class="main-header">
+        	<div class="clearfix" style="line-height:40px;padding:0 10px">
+            	<strong style="font-size:14px;">更新缓存</strong>
+                <span class="text-muted"  id="step1" <!--{if $step==1}-->style="color:green"<!--{/if}-->>1.确认开始</span>
+                <span  class="text-muted" id="step2" <!--{if $step==2}-->style="color:green"<!--{/if}-->>2.开始更新</span>
+                <span  class="text-muted" id="step3" <!--{if $step==3}-->style="color:green"<!--{/if}-->>3.更新结果</span>
+       		 </div>
+        </li>
+      </ul>
+    </div>
+    <div class="main-content" style="padding:20px;border-top:1px solid #FFF">
+      <div class="well well-sm"> 
+        <!--{if $step==1}-->
+        <form method="post" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=$mod&op=updatecache&step=2">
+          <input name="formhash" value="{VERHASH}" type="hidden">
+          <p class="clearfix ml20">
+            <label class="checkbox-inline">
+              <input name="type[]" value="data"   checked="" type="checkbox">
+              数据缓存</label>
+            <label class="checkbox-inline">
+              <input name="type[]" value="tpl" id="tplcache"  checked="" type="checkbox">
+              模板缓存</label>
+          </p>
+          <p  class="clearfix ml20">
+            <input class="btn btn-primary" name="confirmed" value="确定" type="submit">
+            &nbsp; 
+            <script type="text/javascript">if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<input type="button" class="btn btn-default" value="取消" onClick="history.go(-1);">');</script> 
+          </p>
+        </form>
+        <!--{elseif $step==2}-->
+        <p class="ml20">正在更新缓存，请稍候......</p>
+        <p class="text-success ml20"><a href="{BASESCRIPT}?mod=system&op=updatecache&step=3&type=data_tpl" class="lightlink">如果您的浏览器没有自动跳转，请点击这里</a></p>
+        <script type="text/JavaScript">setTimeout(function(){location.href='{BASESCRIPT}?mod=system&op=updatecache&step=3&type=data_tpl';}, 2000);</script> 
+        <!--{elseif $step==3}-->
+        <p class="text-success ml20" style="margin:10px;">全部缓存更新完毕</p>
+        <script type="text/javascript">window.setTimeout(function(){location.href='{BASESCRIPT}?mod=system&op=updatecache';},5000);</script> 
+        <!--{/if}--> 
+      </div>
+        <ul class="help-block">
+          <h5>提示信息</h5>
+          <li>当平台进行了数据恢复、升级或者工作出现异常的时候，您可以使用本功能重新生成缓存。更新缓存的时候，可能让服务器负载升高，请尽量避开会员访问的高峰时间</li>
+          <li>数据缓存：更新平台的全部数据缓存</li>
+          <li>模板缓存：更新模板、风格等缓存文件，当您修改了模板或者风格，但是没有立即生效的时候使用</li>
+        </ul>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">  
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<!--{template common/footer_simple}-->

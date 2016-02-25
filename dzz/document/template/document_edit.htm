@@ -1,0 +1,165 @@
+<!--{template common/header_simple_start}-->
+<link href="dzz/system/ueditor/themes/default/css/ueditor.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/document/images/document.css?{VERHASH}" rel="stylesheet" media="all">
+<script src="dzz/scripts/dzz.api.js?{VERHASH}"></script>
+<script type="text/javascript" >  
+var needsave=0;
+try{
+	var api=_api.init();
+	var appid=api.wname.appid;
+	api.setFileExt(['image','document','attach','dzzdoc','link','video']);
+}catch(e){}
+</script>
+
+
+<!--{template common/header_simple_end}-->
+<div class="container" style="width:100%">
+  	<!--<div class="main-header clearfix" style="background:#FFF">
+        <ul class="nav nav-pills pull-left" style="padding-top:3px;margin:0" >
+              
+        </ul>
+    </div>-->
+	<div class="main-content clearfix">
+    	<div style="">
+           <form id="ueditorform" name="ueditorform" class="form-horizontal" action="{BASESCRIPT}?mod=document&op=edit" method="post" style="margin:0" onsubmit="validate(this);return false" >
+            <input type="hidden" name="edit" value="true" />
+            <input id="did" type="hidden" name="did" value="$did" />
+            <input type="hidden" name="icoid" value="$icoid" />
+            <input type="hidden" name="area" value="$_GET[area]" />
+            <input type="hidden" name="areaid" value="$_GET[areaid]" />
+            <input type="hidden" name="message" id="message" value="" />
+            <input type="hidden" name="formhash" value="{FORMHASH}" />
+            <input id="autosave" type="hidden" name="autosave" value="0" />
+        	<input id="reversion" type="hidden" name="newversion" value="0" />
+             <input type="hidden" name="handlekey" value="ueditorform" />
+               
+             
+           </form>
+           <div style="width:100%;margin:0">
+				<script type="text/plain" id="editor" style="width:100%;height:250px;">$str</script>
+               <!-- <p style="margin:10px 0 0 0"><input type="button" value="保存" class="btn btn-primary" onclick="document.getElementById('ueditorform').onsubmit();" />  &nbsp;&nbsp;<input type="button" value="保存" class="btn btn-info" onclick="document.getElementById('ueditorform').onsubmit();" /></p>-->
+                 <p style="margin:10px;"><button type="button" id="ueditorform_btn_0" class="btn btn-primary" data-loading-text="保存中..." onclick="document.getElementById('reversion').value='0';document.getElementById('ueditorform').onsubmit();" >保存</button>&nbsp;&nbsp;<button type="button" id="ueditorform_btn_1" class="btn btn-info" data-loading-text="保存中..." onclick="document.getElementById('reversion').value='1';document.getElementById('ueditorform').onsubmit();" >保存为新版本</button><small id="autosaveTime" class="pull-right " style="color:#999;padding:0 10px"></small></p>
+            </div>
+        </div>
+    </div>
+ </div>
+ <script type="text/javascript">
+ 
+  function validate(form){
+	  needsave=0;
+	  window.onbeforeunload=null;
+	 try{ 
+	    api.win.needsave=needsave;
+	    api.setFileExt([]);
+	  }catch(e){}
+	  document.getElementById('autosave').value='0';
+	   var newreversion=document.getElementById('reversion').value;
+	  document.getElementById('message').value=UE.getEditor('editor').getContent();
+	  jQuery('#ueditorform_btn_'+newreversion).button('loading');
+	  ajaxpost(form.id,'ueditorform_btn_'+newreversion,'ueditorform_btn_'+newreversion,null,null,function(){
+		  window.setTimeout(function(){jQuery('#ueditorform_btn_'+newreversion).button('reset');},3000);
+	  });
+  }
+
+  var autoTimer=null;
+  var i=0;
+	function AutoSave(){
+		i=0;
+		if(autoTimer) window.clearTimeout(autoTimer);
+		window.setTimeout(AutoSaveHander,5000);
+	}
+	function AutoSaveHander(){
+		var form=document.getElementById('ueditorform');
+		if(!form) return;
+		 needsave=0;
+		  window.onbeforeunload=null;
+		 try{ 
+			api.win.needsave=0;
+		  }catch(e){}
+		  var newreversion='0';
+		  document.getElementById('reversion').value='0'
+		  document.getElementById('autosave').value='1';
+		  document.getElementById('message').value=UE.getEditor('editor').getContent();
+		  jQuery('#ueditorform_btn_'+newreversion).button('loading');
+		 // form.submit();
+		  ajaxpost(form.id,'ueditorform_btn_'+newreversion,'ueditorform_btn_'+newreversion,null,null,function(){
+			  window.setTimeout(function(){jQuery('#ueditorform_btn_'+newreversion).button('reset');},3000);
+		  });
+	}
+  function succeedhandle_ueditorform(url, message, values) {
+	var data= eval('(' + decodeURIComponent(values['data']) + ')');
+	if(data.autosave>0){
+		jQuery('#autosaveTime').html('最后一次自动保存时间：'+ new Date().format('hh:mm:ss'));
+	}else{
+		try{ 
+			api.setFileExt([]);
+		  }catch(e){}
+		location.href=DZZSCRIPT+'?mod=document&icoid='+data.icoid;
+	}
+  };
+  jQuery(document).ready(function(e) {
+	 
+	  var ue = UE.getEditor('editor', {
+		    UEDITOR_HOME_URL:SITEURL+'dzz/system/ueditor/',
+			toolbars: UEDITOR_CONFIG.mode.simple,
+			serverUrl:SITEURL+DZZSCRIPT + "?mod=attach&op=controller",
+			focus: true,
+			zIndex : 1900,
+			initialFrameWidth:'750px', //初始化编辑器宽度,默认500
+			topOffset:1,
+			scrollContainer:'body'
+			
+		});
+		ue.addListener( 'contentChange', function(  ) {
+			 needsave=1;
+			 try{api.win.needsave=needsave;}catch(e){}
+			 i++;
+			 if(i>10) AutoSave();
+		 });
+		
+		
+			
+		
+		
+	});	
+
+window.onbeforeunload=function(){
+	try{api.setFileExt([]);}catch(e){}
+	if(needsave>0) return '当前内容没有保存，确定要离开吗？';
+}
+Date.prototype.format = function(format) {
+		   var date = {
+				  "M+": this.getMonth() + 1,
+				  "d+": this.getDate(),
+				  "h+": this.getHours(),
+				  "m+": this.getMinutes(),
+				  "s+": this.getSeconds(),
+				  "q+": Math.floor((this.getMonth() + 3) / 3),
+				  "S+": this.getMilliseconds()
+		   };
+		   if (/(y+)/i.test(format)) {
+				  format = format.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length));
+		   }
+		   for (var k in date) {
+				  if (new RegExp("(" + k + ")").test(format)) {
+						 format = format.replace(RegExp.$1, RegExp.$1.length == 1
+								? date[k] : ("00" + date[k]).substr(("" + date[k]).length));
+				  }
+		   }
+		   return format;
+	}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<script src="dzz/system/ueditor/ueditor.config.js?{VERHASH}"></script> 
+<script src="dzz/system/ueditor/ueditor.all.js?{VERHASH}"></script> 
+<script src="dzz/system/ueditor/lang/zh-cn/zh-cn.js?{VERHASH}"></script> 
+<script src="data/cache/smilies_var.js?{VERHASH}"></script> 
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
+<!-- The basic File Upload plugin -->
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

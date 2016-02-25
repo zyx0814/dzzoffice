@@ -1,0 +1,281 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/folder/images/folder.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/folder/images/dzzthumb.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/styles/icoblock/default/style.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/folder/scripts/jquery.dzzthumb.js?{VERHASH}"></script>
+<!--{template common/header_simple_end}-->
+<nav class="navbar navbar-default bs-navbar-default navbar-fixed-top" role="navigation" style="margin:0;padding:0 10px;">
+  <ol class="breadcrumb" style="margin-bottom:0;padding:5px 10px;line-height:30px;border-bottom:1px solid #e1e1e1;border-top:1px solid #e1e1e1">
+      <li class="active home" data-href="{DZZSCRIPT}?mod=folder&sid=$sid">全部文件</li>
+      <div class="btn-group pull-right" role="group"> 
+         <button type="button"  class="btn btn-success" style="padding:2px 8px;margin-top:3px" onclick="viewSwitch(this,'.module-list-view')"><i class="glyphicon glyphicon-th-list"></i></button>
+      	 <button type="button" class="btn btn-default" style="padding:2px 8px;margin-top:3px" onclick="viewSwitch(this,'.module-grid-view')"><i class="glyphicon glyphicon-th-large"></i></button>
+      </div>
+      <div class="pull-right gray" style="font-size:12px;padding-right:10px;">已加载<span class="loaded-num danger">{eval echo count($list);}</span>个<span class="total-num"></span></div>
+  </ol>
+</nav>
+<div class="bs-container clearfix" >
+  <div class="bs-main-container">
+    <div class="main-content clearfix">
+    	
+        <div node-type="module" class="module-grid-view" style="display: none;overflow:auto">
+            <div node-type="list" class="wrapper window clearfix" style="z-index:1000">
+                <div class="list-wrapper clearfix">
+                <!--{loop $list $value}-->
+                
+                    <div node-type="item" data-dpath="$value[dpath]" data-type="$value[type]"  class="item file-icoitem bigicon Icoblock ">
+                      <table width="150" height="160" style="table-layout:fixed;">
+                        <tbody>
+                          <tr>
+                            <td align="center" valign="middle" style="" height="115"><div class="icoimgContainer icoimgContainer_{$value[type]}" >
+                                <table width="100%" height="100%" cellpadding="0" cellspacing="0">
+                                  <tbody>
+                                    <tr>
+                                      <td align="center" valign="middle">
+                                      <img title="$value[name]" class="<!--{if $value['type']=='video'}-->videoclass100_100<!--{elseif $value[type]=='image'}-->imageclass<!--{else}-->radius<!--{/if}-->" src="$value[img]" title="$value[name]" <!--{if $value[type]=='image'}--> data-original="$value[url]" data-dpath="$value[dpath]"<!--{/if}--> /></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                               
+                              </div></td>
+                          </tr>
+                          <tr>
+                            <td align="center" valign="middle"><div class="IcoText_div" style="width:135px;max-height:40px;" title="$value[name]"> <a  class="ico_item ico_item_name IcoText_folder" style="width:135px;height:40px;overflow:hidden" title="$value[name]">$value[name]</a> </div></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <!--{if in_array($value[type],array('attach','document','image'))}-->
+                      <div class="icoblank_tip icoblank_rightbottom"><a node-type="btn-item" data-key="download" class="pull-right ibtn glyphicon glyphicon-download-alt" href="javascript:void(0);" ></a></div>
+                      <!--{/if}-->
+                      <div class="backgound_radius" style="position: absolute; left: 0px; top: 0px; z-index: -5; width: 148px; height: 158px;"></div>
+                  </div>
+                  <!--{/loop}-->
+                  <!--{if $nextpage}-->
+                     <div class="more text-center pull-left" onclick="getMore(this,'{DZZSCRIPT}?mod=folder&op=ajax&path=$dpath&page=$nextpage&rander=grid&marker=$marker')">
+                     <table width="150" height="120" style="table-layout:fixed;">
+                        <tbody>
+                          <tr>
+                            <td align="center" valign="middle" style=""> <span style="">加载更多</span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                     </div>
+                 <!--{/if}--> 
+               </div>
+           </div>
+        </div>
+        <div node-type="module" class="module-list-view" style="display:block">
+          <div node-type="wrapper" class="list-view-home">
+            <div node-type="title" class="title" style="padding-right: 16px;">
+              <div class="item clearfix"> 
+                <!-- 第一列 -->
+                <div node-type="title-col" data-key="name" class="col c1" style="width: 50%"> 
+                  	<div class="name"> <span>文件名</span> <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+                </div>
+                <!-- 其他列 -->
+               
+                <div node-type="title-col" data-key="size" class="col" style="width: 15%;"> 文件大小 <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+                <div node-type="title-col" data-key="type" class="col" style="width: 15%;border-right: none;"> 文件类型 <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+                 <div node-type="title-col" data-key="dateline" class="col" style="width: 20%;"> 修改时间 <span node-type="order-status" class="asc desc" style="visibility: visible;"></span> </div>
+              </div>
+            </div>
+            <div node-type="list" class="list list-share" >
+            <div class="list-wrapper clearfix">
+            <!--{loop $list $value}-->
+              <div node-type="item" data-dpath="$value[dpath]" data-type="$value[type]" class="item clearfix"> 
+                <!-- 第一列 -->
+                <div class="col c1 name" style="width: 50%;" data-name="$value[name]"> 
+                      <div node-type="name" class="name" title="$value[name]">
+                      	<!--{if $value[img]}--><img class="icon" title="$value[name]"  src="$value[img]" <!--{if $value[type]=='image'}--> data-original="$value[url]" data-dpath="$value[dpath]"<!--{/if}--> /><!--{/if}-->
+                        <span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="name-text enabled">$value[name]</span> </span> 
+                      </div>
+                     <!--{if in_array($value[type],array('attach','document','image'))}-->
+                     <div class="btns">
+                        <a node-type="btn-item" data-key="download" class="glyphicon glyphicon-download-alt" href="javascript:void(0);"></a>
+                    </div>
+                    <!--{/if}-->
+                 </div>
+                <!-- 其他列 -->
+                <div class="col size" style="width: 15%" data-size="$value[size]">$value[fsize]</div>
+                <div class="col type" style="width:15%" data-type="$value[ftype]">$value[ftype]</div>
+                <div class="col dateline" style="width: 20%" data-dateline="$value[dateline]">$value[fdateline]</div>
+              </div>
+            <!--{/loop}-->
+            <!--{if $nextpage}-->
+                 <div class="more text-center clearfix" onclick="getMore(this,'{DZZSCRIPT}?mod=folder&op=ajax&path=$dpath&page=$nextpage&rander=list&marker=$marker')">加载更多</div>
+            <!--{/if}-->
+            </div>
+            </div>
+          </div>
+		</div>
+    </div>
+  </div>
+</div>
+<iframe id="hideframe" name="hideframe" src="about:blank" frameBorder="0" marginHeight="0" marginWidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
+<div id="dataContainer" class="hide"></div>
+<script type="text/javascript">
+var page_loading=false;
+jQuery('.left-drager').leftDrager_layout(function(){
+	jQuery('.list').css('height',jQuery('.bs-main-container').outerHeight(true)-jQuery('.list-view-home .title').outerHeight(true));
+	jQuery('.module-grid-view').css('height',jQuery('.bs-main-container').outerHeight(true));
+});
+jQuery('.module-list-view:visible .list-share').scroll(function(e) {
+	var clientHeight = jQuery('.list-share').height();
+	var scrollHeight = jQuery('.list-share .list-wrapper').height();
+    if(jQuery('.list-share').scrollTop()+clientHeight>=(scrollHeight-5) && !page_loading) jQuery('.list-share .more').trigger('click');
+});
+jQuery('.module-grid-view').scroll(function(e) {
+	var clientHeight = jQuery('.module-grid-view').height();
+	var scrollHeight = jQuery('.module-grid-view .list-wrapper').height();
+    if(jQuery('.module-grid-view').scrollTop()+clientHeight>=(scrollHeight-150) && !page_loading) jQuery('.module-grid-view .more').trigger('click');
+});
+function viewSwitch(obj,tclass){
+	jQuery(obj).removeClass('btn-default').addClass('btn-success').siblings().removeClass('btn-success').addClass('btn-default');
+	jQuery('div[node-type="module"]').hide();
+	jQuery(tclass).show();
+}
+
+function getMore(obj,href){
+	page_loading=true;
+	jQuery(obj).html('<table width="100%" height="100%"><tr><td><img src="dzz/images/loading.gif">正在加载...</td></tr></table>');
+	jQuery.get(href,function(html){
+		page_loading=false;
+		jQuery('#dataContainer').html(html);
+		jQuery('.module-list-view .list-wrapper .more').replaceWith(jQuery('#dataContainer').find('.module-list').html());
+		jQuery('.module-grid-view .list-wrapper .more').replaceWith(jQuery('#dataContainer').find('.module-grid').html());
+		jQuery('#dataContainer').empty();
+		jQuery('img[data-original]').dzzthumb();
+		setLoadedNum();
+	});
+}
+function setLoadedNum(){
+	jQuery('.loaded-num').html(jQuery('.list-share .item').length);
+	if(!jQuery('.list-share .more').length){	
+		jQuery('.total-num').html(',已全部加载');
+	}else{
+		jQuery('.total-num').html('');
+	}
+}
+function list_sub(obj,url){
+	
+	obj.html('<p class="text-center" style="padding-top:30px;"><img src="dzz/images/loading.gif">正在加载...</p>');
+	jQuery.get(url,function(html){
+	
+		jQuery('#dataContainer').html(html);
+		jQuery('.module-list-view .list-wrapper').html(jQuery('#dataContainer').find('.module-list').html());
+		jQuery('.module-grid-view .list-wrapper').html(jQuery('#dataContainer').find('.module-grid').html());
+		setLoadedNum();
+		jQuery(jQuery('#dataContainer').find('.breadcrumb-data:first').html()).insertAfter(jQuery('.breadcrumb li').last());
+		jQuery('.breadcrumb li:not(:last)').each(function(){
+			jQuery(this).removeClass('active');
+			jQuery(this).html('<a href="javascript:;">'+jQuery(this).html()+'</a>');
+		});
+		jQuery('#dataContainer').empty();
+		jQuery('img[data-original]').dzzthumb();
+	});
+}
+
+jQuery(document).ready(function(e) {
+    jQuery(document).on('mouseenter','div[node-type=item]',function(){
+		jQuery(this).addClass('item-hover');
+	});
+	 jQuery(document).on('mouseleave','div[node-type=item]',function(){
+		jQuery(this).removeClass('item-hover');
+	});
+	jQuery(document).on('click','.breadcrumb li a',function(){
+		var li=jQuery(this).parent();
+		
+		var url=li.data('href');
+		if(li.hasClass('home')){
+			location.href=url;
+			return false;
+		}
+		list_sub(jQuery('[node-type="module"]:visible').find('.list-wrapper'),url);
+		li.nextAll('li').remove();
+		li.remove();
+		
+		return false;
+	});
+	jQuery(document).on('click','span[node-type=name-text],.module-grid-view .item',function(){
+		 var item=jQuery(this).closest('.item');
+		 var type=item.data('type');
+		 if(item.closest('.module-grid-view').length){
+			 var rander='grid';
+		 }else{
+			 var rander='list';
+		 }
+		 if(type=='folder'){
+			 list_sub(item.parent(),'{DZZSCRIPT}?mod=folder&op=ajax&path='+item.data('dpath')+'&rander='+rander);
+			 return false;
+		 }else{
+			 if(type=='image' && item.find('img[data-original]').trigger('click.dzzthumb')){
+			 }else{
+				 var preurl='share.php?a=view&s='+item.data('dpath');
+				 if(top._config){
+					 top.OpenWindow('url',preurl,item.find('img').attr('title'),null,{img:item.find('img').attr('src'),name:item.find('img').attr('title')});
+				}else{
+					window.open(preurl,jQuery(this).html());
+				}
+			 }
+		 }
+		return false;
+	});
+	 jQuery('.title .item .col[node-type=title-col]').on('click',function(){
+		 var el=jQuery(this);
+		 el.find('.asc').css('visibility','visible').toggleClass('desc');
+		 el.siblings().find('.asc').css('visibility','hidden');
+		 item_sort(el.data('key'), el.find('.asc').hasClass('desc')?'desc':'asc');
+	 });
+	 jQuery(document).on('click','a[data-key=download]',function(){
+		 share_download(this);
+		 return false;
+	 });
+	jQuery('img[data-original]').dzzthumb();
+});
+
+function item_sort(key,order){
+	
+	var sarr=new Array();
+	jQuery('.list-share .item').each(function(index){
+		sarr.push((jQuery(this).find('.col.'+key).data(key))+'____'+index);
+	});
+	if(key=='dateline' || key=='size'){
+		sarr=sarr.sort(function(a,b){
+			return parseInt(a)-parseInt(b);
+		});
+	}else{
+		sarr=sarr.sort();
+	}
+	var frage=document.createDocumentFragment();
+	var list=jQuery('.list-share .item');
+	if(order=='desc'){
+		for(var i=sarr.length-1;i>=0;i--){
+			var index=sarr[i].split('____')[1];
+			frage.appendChild(list.get(index));
+		}
+	}else{
+		for(var i=0;i<sarr.length;i++){
+			var index=parseInt(sarr[i].split('____')[1]);
+			frage.appendChild(list.get(index));
+		}
+	}
+	var page=jQuery('.list-wrapper .more').clone();
+	jQuery(frage).appendTo(jQuery('.list .list-wrapper').empty());
+	page.appendTo('.list .list-wrapper');
+}
+function share_download(obj){
+	var li=jQuery(obj).closest('.item');
+	var url=DZZSCRIPT+'?mod=io&op=download&path='+li.data('dpath');
+	if(BROWSER.ie){
+		window.open(url);
+	}else{
+		window.frames['hideframe'].location=url;
+	}
+}
+
+</script> 
+<!--{template common/footer_simple}--> 
+<script type="text/javascript" src="static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"></script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 

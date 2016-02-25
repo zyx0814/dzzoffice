@@ -1,0 +1,93 @@
+
+<!--{if $do == 'getcomment'}-->
+	<!--{template common/header_ajax}-->
+   
+    <!--{loop $list $value}-->
+      <!--{template thread_item}-->
+    <!--{/loop}-->
+     <!--{if $multi}--><div class="comment-page clearfix">$multi</div><!--{/if}-->	
+    
+    <script type="text/javascript" reload="1">
+		  jQuery(document)
+			.on('mouseenter','.cmt_fed',function(){
+				jQuery(this).addClass('hover_cmt_fed');
+			})
+			.on('mouseleave','.cmt_fed',function(){
+				jQuery(this).removeClass('hover_cmt_fed');
+			});
+			jcLoader().load({  
+				type:'js', 
+				ids:'js_artZoom', 
+				url:'static/artZoom/jquery.artZoom.js?{VERHASH}'  
+			},function(){  
+				jQuery('.artZoom').artZoom({
+					path: './dzz/comment/images',	// 设置artZoom图片文件夹路径
+					preload: true,		// 设置是否提前缓存视野内的大图片
+					blur: true,			// 设置加载大图是否有模糊变清晰的效果
+					
+					// 语言设置
+					hide: '收起',		// 左旋转按钮文字
+					left: '左旋转',		// 左旋转按钮文字
+					right: '右旋转',		// 右旋转按钮文字
+					source: '看原图'		// 查看原图按钮文字
+				});
+			});
+		
+   </script>
+   
+   <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'getcommentbycid'}-->
+	<!--{if $value['pcid']>0}-->
+    {eval $value1=$value}
+     <!--{template reply_item}-->
+    <!--{else}-->
+      <!--{template thread_item}-->
+    <!--{/if}-->
+    
+<!--{elseif $do == 'getreplys'}-->
+	<!--{template common/header_ajax}-->
+    <!--{loop $list $value1}-->
+      <!--{template reply_item}-->
+    <!--{/loop}-->	
+    <script type="text/javascript" reload="1">
+		  
+	<!--{if $limit=='0'}-->
+	  jQuery('#comment_{$cid}').find('.txt_cfed a').off('click').addClass('cur')
+	  .on('click',function(){
+			if(jQuery(this).hasClass('cur')){
+				var el=jQuery('#reply_list_{$cid} .cmt_fed');
+				for(var i=0;i<el.size();i++){
+					if(i>4){
+						el.eq(i).hide();
+					}
+				}
+				jQuery(this).removeClass('cur')
+			}else{
+				jQuery('#reply_list_{$cid} .cmt_fed').show();
+				jQuery(this).addClass('cur')
+			}
+			return false;
+	   });
+	 <!--{else}-->  
+	  jQuery('#comment_{$cid}').find('.txt_cfed a').on('click',function(){
+			 ajaxget('{DZZSCRIPT}?mod=comment&op=ajax&do=getreplys&cid=$cid','reply_list_$cid','reply_list_$cid');
+			 return false;
+	  });
+	 <!--{/if}-->
+	
+   </script>
+   <!--{template common/footer_ajax}-->
+
+<!--{elseif $do == 'getReplyForm'}-->
+	<!--{template common/header_ajax}-->
+	<!--{template reply_form}-->
+    <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'getPublishForm'}-->
+	<!--{template common/header_ajax}-->
+    <!--{template publish_form}-->
+    <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'edit'}-->
+	<!--{template common/header_ajax}-->
+    <!--{template edit_form}-->
+    <!--{template common/footer_ajax}-->
+<!--{/if}--> 

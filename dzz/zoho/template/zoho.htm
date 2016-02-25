@@ -1,0 +1,68 @@
+<!--{template common/header_simple_start}-->
+<link rel="stylesheet" type="text/css" href="dzz/styles/index.css">
+<style>
+html, body {
+	height: 100%;
+	overflow: hidden;
+}
+#load_img {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	text-align: center;
+}
+.load_center {
+	position: absolute;
+	left: 0;
+	right: 0;
+	
+}
+.load_header {
+	font-family: calibri, tahoma, verdana, arial, sans serif;
+	font-size: 18pt;
+	color: #444444;
+	line-height: 150%;
+}
+.load_text {
+	font-family: calibri, tahoma, verdana, arial, sans serif;
+	font-size: 10pt;
+	color: #444444;
+}
+#load_img img {
+	position: relative;
+}
+.load_center img {
+	margin: 5px;
+}
+</style>
+<!--{template common/header_simple_end}-->
+
+<div id="load_img">
+  <div class="load_center">
+        <div class="load_logo"><img src="dzz/zoho/images/zoho.png" /></div>
+        <div class="load_header">正在提取您的文件...</div>
+        <div class="load_text">正在从 Internet 上的主页中检索您的文件，请稍候</div>
+        <img align="absmiddle" src="data:image/gif;base64,R0lGODlhGAAYAIABAJmZmf///yH/C05FVFNDQVBFMi4wAwEAAAAh+QQFCgABACwAAAAAGAAYAAACHYyPCZDtt9abMNIrr968+w+G4kiW5omm6sq27lYAACH5BAUKAAEALBQABgAEAAQAAAIFDGCnl1EAIfkEBQoAAQAsFAAOAAQABAAAAgUMYKeXUQAh+QQFCgABACwOABQABAAEAAACBQxgp5dRACH5BAUKAAEALAYAFAAEAAQAAAIFDGCnl1EAIfkEBQoAAQAsAAAOAAQABAAAAgUMYKeXUQAh+QQFCgABACwAAAYABAAEAAACBQxgp5dRACH5BAkKAAEALAYAAAAMAAQAAAILDBCperfb0GNyhgIAIfkECQoAAQAsAAAAABgAGAAAAh2MHwDI3aqcZHDNmyzevPsPhuJIluaJpurKtu47FgAh+QQJCgABACwAAAAAGAAYAAACMowfAMjdqpxkcM2bLN687+hRUIhUZKmd6sq2HhhG5luNtJx2sMs/ecaZGYQTIrH42x0KACH5BAkKAAEALAAAAAAYABgAAAIwjB8AyN2qnGRwzZss3rzv6FFQiFRkqZ3qyrYeqJrxuMLujWdPOsmG36P9hBfb0FEAACH5BAkKAAEALAAAAAAYABgAAAIqjB8AyN2qnGRwzZss3rzv6FFQiFRkqZ3qyrYeqJrxuMLujWesfPJ9iikAACH5BAkKAAEALAAAAAAYABgAAAImjB8AyN2qnGRwzZss3rzv6FFQiFRkqZ3qyrYeqJrxuMLujef6PhUAIfkECQoAAQAsAAAAABgAGAAAAiOMHwDI3aqcZHDNmyzevO/oUVCIVGSpnerKtu4Lx/JM1zZWAAAh+QQJCgABACwAAAAAGAAYAAACHYwfAMjdqpxkcM2bLN68+w+G4kiW5omm6sq27jsWADs="> 
+	</div>
+</div>
+<script type="text/javascript">
+jQuery(document).ready(function(e) {
+   jQuery.getJSON('{DZZSCRIPT}?mod=zoho&do=send&path=$_GET[path]',function(json){
+	   
+		if(json.msg=='success'){
+			 jQuery('<iframe id="hideframe" name="hideframe" src="'+json.url+'" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" onload="jQuery(\'#load_img\').hide()"></iframe>').appendTo('body');//window.frames['hideframe'].location=json.url;
+			window.setTimeout(function(){jQuery('#load_img').hide();},10000);
+		}else if(json.error){
+			if(json.error_code==500){
+				jQuery('head').remove();
+				jQuery('body').replaceWith(json.error);
+			}else{
+				 showmessage(json.error,'danger');
+			}
+		}
+		
+	}); 
+});
+
+</script> 
+<!--{template common/footer_simple}--> 

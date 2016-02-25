@@ -1,0 +1,379 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="admin/images/app.css?{VERHASH}" rel="stylesheet" media="all">
+<link rel="stylesheet" type="text/css" href="static/tagsinput/jquery.tagsinput.css" />
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/system/scripts/selorg.js?{VERHASH}"></script>
+
+<script type="text/javascript">
+<!--{if $openarr}-->
+selorg.openarr=$openarr;
+<!--{/if}-->
+</script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.img_128_128{
+	max-width: 128px;
+	max-height: 128px;
+	border:1px solid #CCC;
+	padding:2px;
+}
+.btn-sorg{
+	margin:5px;
+}
+* html .img_128_128 {
+	width: expression(this.width > 128 && this.width>=this.height ? 128 : true);
+	height: expression(this.height > 128 && this.width<=this.height ? 128 : true);
+}
+</style>
+<!--{template common/header_simple_end}-->
+<nav class="navbar navbar-default bs-navbar-default navbar-fixed-top" role="navigation" style="margin:0">
+      <!--{template top}--> 
+</nav>
+<div class="bs-container clearfix" style="border-top:1px solid #FFF">
+  <div class="bs-main-container">
+      <div class="main-content " style="padding:15px;">
+        <form id="appform" name="appform" class="form-horizontal-left form-horizontal" action="{BASESCRIPT}?mod=app&op=edit&appid=$appid" method="post" enctype="multipart/form-data" onsubmit="return validate(this)">
+        <input type="hidden" name="appsubmit" value="true" />
+        <input type="hidden" name="appid" value="$appid" />
+        <input type="hidden" name="refer" value="$refer" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+          <div class="form-group">
+            <label class="control-label " for="appname">应用名称</label>
+           
+              <input type="text" class="form-control input-sm" id="appname"  name="appname" autocomplete="off" value="$app[appname]">
+              <span class="help-inline"></span>
+          
+          </div>
+          <div class="form-group">
+              <label class="control-label" for="appurl">应用地址</label>
+                <input type="text" class="form-control input-sm"  id="appurl" name="appurl" autocomplete="off" value="$app[appurl]" >
+                <ul class="help-block">
+                    <li>应用地址，可以是相对地址（相对于站点根目录)或网络地址</li>
+                    <li>如果要调用桌面函数可以如：dzzjs:OpenFileManage()这种方式，dzzjs:标识表示调用桌面函数，“:”后为函数及参数</li>
+                    <li>应用的地址可以带有参数如：{dzzscript}?mod=document&op=textviewer&icoid={icoid}</li>
+                    <li>参数：将地址中的参数用"{}"包裹，dzzscript:为桌面主程序（即index.php),adminscript:为后台管理主程序(即admin.php),添加应用时使用此参数可以增加应用的兼容性和移植性</li>
+                    <li>dzz_icos表中的字段都可以作为参数带入</li>
+                </ul>
+            </div>
+             <div class="form-group">
+              <label class="control-label" for="noticeurl">通知接口</label>
+                <input type="text" class="form-control input-sm" id="noticeurl" name="noticeurl" autocomplete="off" value="$app[noticeurl]" >
+                <ul class="help-block">
+                    <li>应用通知接口地址，可以是相对地址（相对于站点根目录)或网络地址</li>
+                    <li>留空为不启用此应用的通知，设置了地址后，前端将会定时的查询此接口，将结果反映到界面上</li>
+                    <li>接口返回数据格式如：{sum:10,timeout:0,notice:[]}表示： sum:新消息数量；timeout:轮询时间，前端查询到此数据后，相应的应用的右上角会出现10的提醒</li>
+                    <li>参数：将地址中的参数用"{}"包裹，dzzscript:为桌面主程序（即index.php),adminscript:为后台管理主程序(即admin.php),添加应用时使用此参数可以增加应用的兼容性和移植性</li>
+                </ul>
+            </div>
+           <div class="form-group">
+              <label class="control-label" for="vendor">供应商</label>
+                <input type="text" class="form-control input-sm" id="vendor" name="vendor" autocomplete="off" value="$app[vendor]" >
+                <span class="help-inline">应用提供商名称</span>
+            </div>
+          <div class="form-group">
+              <label class="control-label" >应用图标</label>
+                 <div class="controls">
+                <!--{if $appid>0}-->
+                                <p ><input id="fileiz_0" class="form-control input-sm" name="TMPiconnew" value="" style="display: none;" type="file">
+                                <input id="fileiz_1" class="form-control input-sm" style="" name="iconnew" value="$app[appico]"  type="text"></p>
+                                <p><a id="fileiz_0a" style="" href="javascript:;" onclick="document.getElementById('fileiz_1a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileiz_1').name = 'TMPiconnew';document.getElementById('fileiz_0').name = 'iconnew';document.getElementById('fileiz_0').style.display = '';document.getElementById('fileiz_1').style.display = 'none'">上传</a>&nbsp;
+                                <a id="fileiz_1a" style="font-weight: bold;" href="javascript:;" onclick="document.getElementById('fileiz_0a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileiz_0').name = 'TMPiconnew';document.getElementById('fileiz_1').name = 'iconnew';document.getElementById('fileiz_1').style.display = '';document.getElementById('fileiz_0').style.display = 'none'">网址</a></p>
+                                <!--{else}-->
+                                 <p ><input id="fileiz_0" class="form-control input-sm" name="iconnew" value=""  type="file" accept="image/*">
+                                <input id="fileiz_1" class="form-control input-sm" style="display: none;" name="TMPiconnew" value="$app[appico]"  type="text"></p>
+                                <p><a id="fileiz_0a" style="font-weight: bold;" href="javascript:;" onclick="document.getElementById('fileiz_1a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileiz_1').name = 'TMPiconnew';document.getElementById('fileiz_0').name = 'iconnew';document.getElementById('fileiz_0').style.display = '';document.getElementById('fileiz_1').style.display = 'none'">上传</a>&nbsp;<a id="fileiz_1a" style="" href="javascript:;" onclick="document.getElementById('fileiz_0a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileiz_0').name = 'TMPiconnew';document.getElementById('fileiz_1').name = 'iconnew';document.getElementById('fileiz_1').style.display = '';document.getElementById('fileiz_0').style.display = 'none'">网址</a></p>
+                                <!--{/if}-->
+                                <p class="text-muted">建议图片大小128X128 px</p>
+                  </div>
+                <span  class="help-inline" >
+                <!--{if $appid}--><img class="img_128_128" src="$app[appico]?t=$_G[timestamp]" >
+                <!--{else}--> <img class="img_128_128" src="dzz/images/default/icodefault.png" >
+                <!--{/if}-->
+                </span>
+             </div>
+            <div class="form-group">
+                <label class="control-label" >组权限</label>
+                    <div class="controls ml20">
+                    <!--{loop $grouptitle $key $value}--> 
+                    <label class="radio wd120"><input type="radio" name="group" value="$key" <!--{if $app[group]==$key}-->checked<!--{/if}--> onclick="{if $key==1}jQuery('#perm_depart').show();{else}jQuery('#perm_depart').hide();{/if}">$value </label>
+                    <!--{/loop}-->
+                    </div>
+                    <span class="help-block">组权限限定此应用使用范围</span>
+          </div> 
+         <div class="form-group" id="perm_depart" <!--{if $app['group']!=1}-->style="display:none"<!--{/if}-->>
+              <label class="control-label" >部门权限</label> 
+              <div class="controls-adapt" >
+              	  <div class="dropdown controls_adapt">
+                      <button class="btn btn-default dropdown-toggle" id="orgids_Menu" data-toggle="dropdown">选择机构或部门<span class="caret"></span></button>
+                      <div id="orgids_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgids_Menu">
+                           <iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&ctrlid=orgids&multiple=1&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+                      </div>
+                    </div>
+                  <div id="orgids"> 
+                    <!--{loop $sel_org $value}-->
+                    <button id="orgids_sl_$value[orgid]" type="button" class="btn btn-simple btn-sorg" data-val="$value['orgid']">
+                    <!--{if $value['forgid']}--> 
+                    <img src="dzz/system/images/department.png" /> 
+                    <!--{else}--> 
+                    <img src="dzz/system/images/organization.png" /> 
+                    <!--{/if}--> 
+                    $value[orgname] <a href="javascript:;" class="ibtn glyphicon glyphicon-remove" style="width:20px !important;height:20px;line-height:20px;margin-top:-3px;margin-right:-10px;" title="删除" onclick="selorg.remove('orgids',this);"></a>
+                    </button>
+                    <!--{/loop}--> 
+                  </div>
+                 
+                  <input id="sel_orgids" name="orgids" type="hidden" value="$sel" />
+                </div>
+              <span class="help-block">
+                设定应用的部门使用权限，一般应用于某些特殊的应用只允许特定部门的成员使用的情况
+              </span>
+          </div>
+          <div class="form-group ">
+                <label class="control-label" for="tag">应用标签</label>
+                <div class="controls" >
+                  <input type="text"  name="tag" autocomplete="off" id="tag" data-source="$tag_source" data-items="5" value="$app[tags]"  style="margin: 0 auto;" > 
+                </div>
+               <ul class="help-block">
+                   <li>此项为多项输入框，输入标签按回车或","确认</li>
+                   <li>清晰、明确的标签方便用户查找添加应用</li>
+               </ul>
+          </div>
+           <div class="form-group">
+            <label class="control-label" for="fileext">支持扩展名</label>
+              <div class="controls" style="position:relative;overflow:visible">
+              	<input type="text"  name="fileext" autocomplete="off" id="fileext" data-source="$fileext_source" value="$app[fileext]" style="margin: 0 auto;" >
+              </div>
+              <label class="checkbox-inline" style="padding-left:30px;"><input type="checkbox" value="1" name="nodup" <!--{if $app[nodup]>0}-->checked="checked"<!--{/if}-->>&nbsp;不允许多开</label>
+               <ul class="help-block">
+                <li>填写此应用可以打开的扩展名</li>
+                <li>特殊扩展名：image：图片；link：网址；video：网络视频</li>
+                <li>此项为多项输入框，输入标签按回车或","确认</li>
+                <li>对于不允许多开的应用，只会打开应用的一个窗体（如：带播放列表的播放器）</li>
+               </ul>
+            </div>
+          <div class="form-group">
+                <label class="control-label" >打开方式</label>
+                    <div  class="controls ml20"> 
+                    <label class="radio radio-inline"><input type="radio" name="open" value="0" <!--{if $app[open]<1}-->checked<!--{/if}--> onclick="jQuery('#feature').show();">内部窗口 </label>
+                    <label class="radio radio-inline"><input type="radio" name="open" value="1" <!--{if $app[open]>0}-->checked<!--{/if}--> onclick="jQuery('#feature').hide();">新窗口</label>
+                    </div>
+                    
+                    <ul class="help-block">
+                        <li>默认内部窗口打开，有些应用不适合内部打开时，可以选择在新窗口打开</li>
+                        <li>当应用地址为类似dzzjs:时，只能内部打开，这里的设置不起作用</li>
+                   </ul>
+          </div> 
+           <div class="form-group" id="feature" <!--{if $app[open]>0}-->style="display:none"<!--{/if}-->>
+              <label class="control-label" for="feature1">窗体参数</label>
+                <textarea rows="3"  id="feature1" class="form-control" style="width:350px;" name="feature" >$app[feature]</textarea>
+                <ul class="help-block">
+                <li>此项功能属于高级功能,留空表示使用系统默认，未定义的项目使用默认设置，各个值之间用,号隔开</li>
+                <li>如："class=noborder,titlebutton=fullscreen|refresh|close|max|min,width=500,height=400,left=50%,top=50%,right=0,bottom=0,resize=no,size=no,autorun=yes"</li>
+                <li>left,top,right,bottom:设定窗体的默认位置，如果用户拖动，将以用户拖动的位置为准；left优先于right，top优先于bottom；值可以是整数或百分比值</li>
+                <li>autorun：设置此应用是否自动运行，可用值yes 或者 no ,必须用户安装了此应用才有效</li>
+                <li>closetime：自动关闭时间，可用值 整数 单位秒 ,仅对自动运行的应用才有效；如：closetime=3 三秒后自动关闭</li>
+                <li>class：应用窗体的风格，设置后此窗体的风格将不随着桌面的主题变化（必须保证 ./dzz/styles/window/风格名称/style.css 存在</li>
+                <li>size：应用窗体默认大小，可用值 no：(默认); max:窗体最大化；min：窗体最小化；</li>
+                <li>titlebutton：应用窗体的功能按钮;目前仅支持fullscreen,refresh,close,max,min(注意refresh目前只对同域的应用有效);默认值:titlebutton=close|max|min</li>
+                <li>width 、height：应用窗体的默认打开高度和宽度;默认width=800,height=500;</li>
+                <li>resize:应用窗体改变大小;可用值：'no',resize,resize-x,resize-y;默认resize=resize|resize-x|resize-y</li>
+               </ul>
+            </div>
+         <div class="form-group">
+                <label class="control-label" > <a href="javascript:;" onclick="jQuery('#app_advance').toggle(); document.getElementById('app_advance_guide').className=(document.getElementById('app_advance_guide').className=='glyphicon glyphicon-chevron-down'?'glyphicon glyphicon-chevron-up':'glyphicon glyphicon-chevron-down');">高级选项&nbsp;<i id="app_advance_guide"  class="glyphicon glyphicon-chevron-down"></i></a></label>
+                
+          </div>
+         <div id="app_advance" style="display:none;padding-left:20px;">
+            
+             <!--<div class="form-group">
+                <label class="control-label" >默认安装位置</label>
+                    <div class="controls ml20" >
+                    
+                    <label class="radio-inline "><input type="radio" name="position" value="0" checked>无 </label>
+                    <label class="radio radio-inline"><input type="radio" name="position" value="2" <!--{if $app[position]==2}-->checked<!--{/if}-->>桌面 </label>
+                    <label class="radio radio-inline"><input type="radio" name="position" value="1" <!--{if $app[position]==1}-->checked<!--{/if}-->>开始菜单 </label>
+                    
+                    <label class="radio radio-inline"><input type="radio" name="position" value="2" <!--{if $app[position]==3}-->checked<!--{/if}-->>任务栏 </label>
+                   
+                    </div>
+                    <span class="help-block">默认安装位置，应用将会默认安装到相应的位置</span>
+          </div> -->
+          
+           <div class="form-group">
+                <label class="control-label" >在应用库中</label>
+                    <div class="controls ml20" >
+                    <label class="radio radio-inline"><input type="radio" name="hideInMarket" value="0" <!--{if $app[hideInMarket]<1}-->checked<!--{/if}-->>显示 </label>
+                    <label class="radio radio-inline"><input type="radio" name="hideInMarket" value="1" <!--{if $app[hideInMarket]>0}-->checked<!--{/if}-->>隐藏 </label>
+                    </div>
+                    
+                    <span class="help-block">不在应用库中显示后，用户将无法添加此应用，一般适应于系统默认安装的应用</span>
+          </div> 
+          <div class="form-group">
+                <label class="control-label" >显示图标</label>
+                    <div class="controls ml20" >
+                    <label class="radio radio-inline"><input type="radio" name="isshow" value="1" <!--{if $app[isshow]>0}-->checked<!--{/if}-->>显示 </label>
+                    <label class="radio radio-inline"><input type="radio" name="isshow" value="0" <!--{if $app[isshow]<1}-->checked<!--{/if}-->>隐藏 </label>
+                    </div>
+                    <span class="help-block">选择"隐藏"时此应用将不会在应用库，用户桌面或开始菜单等位置显示，一般用于内置的默认安装的且不用点击应用打开的应用</span>
+          </div> 
+          <div class="form-group">
+                <label class="control-label" >显示任务栏</label>
+                    <div class="controls ml20" > 
+                    <label class="radio radio-inline"><input type="radio" name="havetask" value="1" <!--{if $app[havetask]>0}-->checked<!--{/if}-->>显示 </label>
+                    <label class="radio radio-inline"><input type="radio" name="havetask" value="0" <!--{if $app[havetask]<1}-->checked<!--{/if}-->>隐藏 </label>
+                    </div>
+                    <span class="help-block">某些特殊应用可以设置不显示任务栏</span>
+          </div> 
+          <div class="form-group">
+                <label class="control-label" >窗口遮罩</label>
+                    <div class="controls ml20"> 
+                    <label class="radio radio-inline"><input type="radio" name="haveflash" value="0" <!--{if $app[haveflash]<1}-->checked<!--{/if}-->>不需要 </label>
+                    <label class="radio radio-inline"><input type="radio" name="haveflash" value="1" <!--{if $app[haveflash]>0}-->checked<!--{/if}-->>需要</label>
+                    </div>
+                    
+                    <span class="help-block">如果应用不在最前端时，应用窗体内的内容影响到前端的其他应用窗体，这时需要启用窗口遮罩；通常此类应用内含有flash部分</span>
+          </div> 
+           
+     </div>
+            <div class="form-group">
+              <label class="control-label" for="appdesc">应用介绍</label>
+                <textarea rows="3" class="form-control" name="appdesc" id="appdesc" style="width:350px;">$app[appdesc]</textarea>
+           </div>
+            <div id="pic_delete"></div>
+           <input id="editbutton" name="appbutton" value="{lang submit}" onclick="validate(this);" style="display: none;" type="button">
+        </form>
+      
+        <div class="form-horizontal-left form-horizontal">
+            <div class="form-group">
+             <label class="control-label" >应用介绍图片</label>
+             <div class="controls">
+                <!--{if $piclist}-->
+                    <ul id="pic_container" class="thumbnails list-unstyled ml20">
+                        <!--{loop $piclist $key $value}-->
+                        <li class="wd120" style="margin:10px;width:90px;" id="pic_{$value[picid]}">
+                            <div class="thumbnail text-center" style="margin-bottom:10px;">
+                                <img data_src="$value[pic]" src="$value[pic]" />
+                             </div>
+                             <p class="text-center">
+                                <a class="btn btn-link" href="javascript:;" onclick="delete_pic(this,{$value[picid]})">删除</a>
+                            </p>
+                        </li> 
+                        <!--{/loop}-->
+                    </ul>
+             
+                <!--{/if}-->
+                    
+                    <table class="tb tb2 ">
+                        <tbody id="attachbodyhidden" style="display:none">
+                            <tr class="noborder"><td class="tb27" >
+                                    <form method="post" autocomplete="off" id="upload" action="{BASESCRIPT}?mod=$mod&op=$op&do=upload" enctype="multipart/form-data" target="uploadframe">
+                                        <input type="file" name="attach" class="pf" size="0" accept="image/*"  />
+                                        <span id="localfile"></span>
+                                        <input type="hidden" name="uploadsubmit" id="uploadsubmit" value="true" />
+                                        <input type="hidden" name="formhash" value="{FORMHASH}" />
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody id="attachbody"></tbody>
+                    </table>
+                    
+                    <script src="admin/scripts/uploadpic.js?{VERHASH}" type="text/javascript"></script>
+                    <iframe id="uploadframe" name="uploadframe" width="0" height="0" marginwidth="0" frameborder="0" src="about:blank"></iframe>
+               </div>     
+            </div>
+            <div class="form-group">
+                    <label></label>
+                     <input class="btn btn-primary" id="submit_editsubmit" name="appsubmit" value="{lang submit}" type="button" onclick="document.getElementById('editbutton').click();">
+              </div> 
+        </div>
+      </div>
+   </div>
+</div>
+
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();
+
+jQuery(document).ready(function(e) {
+   
+	jQuery('#fileext').tagsInput({
+					   'height':'0px',
+					   'width':'300px',
+					   'interactive':true,
+					   'defaultText':'',
+					   //'onAddTag':callback_function,
+					   //'onRemoveTag':callback_function,
+					   //'onChange' : callback_function,
+					   'removeWithBackspace' : true,
+					   'minChars' : 0,
+					   'maxChars' : 0, //if not provided there is no limit,
+					   'placeholderColor' : '#666666',
+					   'typeahead':{
+							source:jQuery('#fileext').data('source')
+					   }
+					});
+	
+	jQuery('#tag').tagsInput({
+					   'height':'0px',
+					   'width':'300px',
+					   'interactive':true,
+					   'defaultText':'',
+					   //'onAddTag':callback_function,
+					   //'onRemoveTag':callback_function,
+					   //'onChange' : callback_function,
+					   'removeWithBackspace' : true,
+					   'minChars' : 0,
+					   'maxChars' : 0, //if not provided there is no limit,
+					   'placeholderColor' : '#666666',
+					   'typeahead':{
+							source:jQuery('#tag').data('source')
+					   }
+					});
+});
+
+jQuery('#un_selector_tag,#un_selector_fileext').on('click',function(e){
+	document.getElementById(this.id.replace('un_selector_','')).focus();
+});
+function addtaginput(key,id){
+	var html='<span>';
+        html+='<button data-dismiss="alert" class="close" type="button">×</button>';
+        html+='<em title="'+key+'" class="pull-left">'+key+'</em><input type="hidden"  value="'+key+'" name="'+id+'[]">';
+        html+='</span>';
+	jQuery('#'+id).val('').before(html).focus();
+}
+
+
+
+
+						 
+ function validate(obj) {
+	 //获取用户部门 并添加到form中
+		
+		var appname = document.getElementById('appname');
+		var appurl = document.getElementById('appurl');
+		if (appname) {
+			var slen = strlen(appname.value);
+			if (slen < 1 || slen > 80) {
+				showmessage("{lang appname_tip}",'danger',3000,1);
+				appname.focus();
+				return false;
+			}
+		}
+		if(strlen(appurl.value)<1){
+			showmessage("{lang not_empty_appurl}",'danger',3000,1);
+			appurl.focus();
+			return false;
+		}
+		uploadSubmit(obj);
+		return true;
+}
+                  
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/tagsinput/jquery.tagsinput.js"></script>
+<script src="static/bootstrap/js/bootstrap-typeahead.js"></script>
+<!--{template common/footer_simple}-->

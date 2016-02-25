@@ -1,0 +1,180 @@
+@charset "utf-8";
+/* CSS Document */
+
+html,body{
+	background:#F7F7F7;
+	margin:0;
+	padding:0;
+}
+
+.main-header{
+	background:#FFF;
+}
+del.diffdel,del.diffmod ,del.diffdel a,del.diffmod a{
+	background: #f3e1dd;
+	color: #cf372b;
+}
+ins.diffins,ins.diffmod,ins.diffins a ,ins.diffmod a{
+	background: #e7f3d7;
+	color: #3d9e00;
+}
+ins.diffins img,ins.diffmod img{
+	border: 3px solid #3d9e00;
+	background: #e7f3d7;
+}
+del.diffdel img,del.diffmod img{
+	border: 3px solid #cf372b;
+	background: #f3e1dd;
+}
+.editor-edit-subject {
+	border-style:solid;
+	border-width:1px 1px 0 1px;
+	border-color:#CCC;
+	width:748px;
+}
+.editor-edit-subject .doc-subject{
+	word-wrap: break-word; 
+	height: 22px;
+	display: block;
+	padding: 30px 10px 20px 10px;
+	margin: 0 auto;
+	border: 0;
+	font-size: 22px;
+	min-height: 22px;
+	line-height:22px;
+	font-weight: bold;
+	text-align: center;
+	overflow: hidden;
+	resize: none;
+	border-radius:0;
+	
+}
+/*.editor-edit-subject .doc-subject:focus{
+	box-shadow:none;
+	border:0;
+}*/
+
+
+.document-container {
+	width:750px;
+	margin:0 auto 20px;
+	border:1px solid #CCC;
+	background:#FFF;
+	box-shadow:2px 2px 10px #CCC;
+}
+.document-container .document-header {
+		border-bottom:3px solid #DDD;
+		margin:10px 20px 5px 20px;
+}
+.document-header{
+	text-align:right;
+	line-height:35px;
+	padding:0 10px;
+	background:#F7F7F7;
+	z-index:100;
+	width:750px;
+	margin:0 auto
+}
+@media (max-width: 750px) {
+.edui-container{
+	border:0;
+	border-bottom:1px solid #D4D4D4;	
+}
+.document-container {
+	width:100%;
+	margin:0;
+	border:none;
+	border-top:1px solid #DDD;
+	background:#FFF;
+	box-shadow:none;
+	overflow-x:hidden;
+}
+.document-container .document-header {
+		border-bottom:3px solid #DDD;
+		margin:10px 20px 5px 20px;
+}
+.document-header{
+	text-align:right;
+	line-height:35px;
+	padding:0 10px;
+	background:#F7F7F7;
+	z-index:100;
+	width:100%;
+	margin:0
+}
+}
+.document-header .document-info {
+	color:#999;
+	font-size:12px;
+	padding:5px 0;
+	line-height:1.5em;
+}
+ .document-info a,.document-info span {
+	padding:3px 10px;
+}
+.document-info .version-list{
+	color:#999;
+}
+.document-info .version-list .caret{
+	margin-top:7px;	
+}
+.document-info .version-list .reversion-tag{
+	font-weight:bold;
+	padding:0;
+}
+.document-operation-container{
+	position:absolute;
+	height:0;
+	top:0;
+	right:0;
+	overflow:visible;
+}
+.document-operation{
+	
+}
+.document-operation a{
+	padding:3px 10px;
+}
+.document-container .document-body {
+	padding: 20px 0 0 0;
+	margin: 0 20px 0 20px;
+	/*min-height:200px;*/
+	overflow-x:hidden;
+	position:relative;
+	font-family:"lucida grande", "lucida sans unicode", "lucida", "Helvetica Neue", "helvetica", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", "sans-serif";
+	line-height:30px;
+	font-size:16px;
+	text-shadow:1px 1px 1px #FFF;
+	padding:50px;
+}
+@media (max-width: 750px) {
+	.document-container .document-body {
+		padding: 20px 0 0 0;
+		margin: 0 20px 0 20px;
+	}
+}
+.document-container .nav-pills .dropdown-menu {
+	max-height: 300px;
+	overflow: auto;
+	box-shadow:0px 3px 10px #CCC;
+}
+.document-container .document-comment {
+	padding: 20px 0 0 0;
+	margin: 0 20px;
+}
+.document-comment .attach-item{
+	height:20px;
+	line-height:20px;
+	padding:0 10px;
+}
+
+span.attach-item{
+	line-height:24px;
+	display:inline-block;
+	height:24px;
+	padding-right:8px;
+}
+span.attach-item img{
+	max-height:100%;
+	padding-right:5px;
+}

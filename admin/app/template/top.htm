@@ -1,0 +1,11 @@
+
+<ul class="nav nav-pills nav-pills-bottomguide" style="padding:0 10px;">
+      <li <!--{if $op=='index'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=app">应用列表</a></li>
+       <li <!--{if $op=='list'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=app&op=list&refer=$refer">安装和卸载</a></li>
+      <li class="pull-right <!--{if $op=='extopen'}-->active<!--{/if}-->"><a href="{BASESCRIPT}?mod=app&op=extopen">打开方式管理</a></li>
+      <li class="pull-right <!--{if $op=='default'}-->active<!--{/if}-->"><a href="{BASESCRIPT}?mod=app&op=default">默认应用设置</a></li>
+      <!--{if $op=='edit'}-->
+       <li class="active"><a href="{BASESCRIPT}?mod=app&op=edit&appid=$appid"><!--{if !$appid}-->添加应用<!--{else}-->编辑应用<!--{/if}--></a></li>
+      <!--{/if}-->
+</ul>
+  

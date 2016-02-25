@@ -1,0 +1,224 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" >
+        <div class="main-header">
+        	<ul class="nav nav-pills nav-pills-bottomguide">
+                <li <!--{if $operation=='export'}-->class="active"<!--{/if}-->><a hidefocus="true" href="{BASESCRIPT}?mod=$mod&op=database&operation=export">导出</a></li>
+                 <li <!--{if $operation=='import'}-->class="active"<!--{/if}-->><a hidefocus="true" href="{BASESCRIPT}?mod=$mod&op=database&operation=import">恢复</a></li>
+                  <li <!--{if $operation=='runquery'}-->class="active"<!--{/if}-->><a hidefocus="true" href="{BASESCRIPT}?mod=$mod&op=database&operation=runquery">升级</a></li>
+            </ul>
+        </div>
+        <!--{if $operation=='export'}-->
+        <ul class="help-block mt20">
+            <h5>提示信息</h5>
+             {lang db_export_tips}
+         </ul>
+   		<div class="main-content" style="padding:15px">
+         <!--{if !$submit}-->
+             
+         <form id="cpform" action="{BASESCRIPT}?mod=system&op=database&operation=export&setup=1" class="form-horizontal form-horizontal-left"   method="post" name="cpform">
+            <input type="hidden" value="{FORMHASH}" name="formhash">
+            <input type="hidden" value="true" name="exportsubmit">
+             <dl>
+           		<dt>数据备份类型:</dt>
+                <dd class="clearfix"><label class="radio radio-inline"><input type="radio" name="type" value="dzz" checked="" onclick="$('showtables').style.display = 'none';">所有数据表</label></dd>
+                 <dd class="clearfix"><label class="radio radio-inline"><input type="radio" name="type" value="custom"  onclick="$('showtables').style.display = '';">自定义备份</label></dd>
+                <dd id="showtables" class="clearfix" style="display:none;border:1px solid #D2D2D2">
+                	<h4 class="clearfix ml20"> <label class="checkbox-inline" for ="chkalltables"><input  name="chkall" onclick="checkAll('prefix', this.form, 'customtables', 'chkall', true)" checked="checked" type="checkbox" id="chkalltables">全选 - 所有数据表</label></h4>
+                    <ul class="list-unstyled">
+                        <!--{loop $dztables $value}-->
+                        	<li class="col-xs-4"><label class="checkbox-inline"><input type="checkbox" name="customtables[]" value="$value"  checked="checked">$value</label></li>
+                        <!--{/loop}-->
+                      </ul>
+                </dd>
+             </dl>
+             <div id="advanceoption" style="display:none">
+             	
+                    <dl>
+                        <dt>数据备份方式:</dt>
+                        <dd class="clearfix"><label class="radio radio-inline"><input type="radio" name="method" value="shell" onclick="if('0') {if(this.form.sqlcompat[2].checked==true) this.form.sqlcompat[0].checked=true; this.form.sqlcompat[2].disabled=true; this.form.sizelimit.disabled=true;} else {this.form.sqlcharset[0].checked=true; for(var i=1; i&lt;=5; i++) {if(this.form.sqlcharset[i]) this.form.sqlcharset[i].disabled=true;}}" id="method_shell"> 系统 MySQL Dump (Shell) 备份</label></dd>
+                         <dd class="clearfix"><label class="radio radio-inline"><input  type="radio" name="method" value="multivol" checked="checked" onclick="this.form.sqlcompat[2].disabled=false; this.form.sizelimit.disabled=false; for(var i=1; i<=5; i++) {if(this.form.sqlcharset[i]) this.form.sqlcharset[i].disabled=false;}" id="method_multivol"> Dzz! 分卷备份 - 文件长度限制(单位：KB)</label>
+                         <input type="text" class="input-sm form-control" style="width:50px;" name="sizelimit" value="2048" >
+                         </dd>
+                     </dl>
+                     <dl>
+                        <dt>使用扩展插入(Extended Insert)方式:</dt>
+                        <dd class="clearfix"><label class="radio radio-inline"><input  type="radio" name="extendins" value="1">是</label><label class="radio radio-inline"><input  type="radio" name="extendins" value="0" checked="checked">否</label></dd>
+                     </dl>
+                     <dl>
+                        <dt>建表语句格式:</dt>
+                        <dd class="clearfix"><label class="radio radio-inline"><input  type="radio" name="sqlcompat" value="" checked="">默认</label></dd>
+                        <dd class="clearfix"><label class="radio radio-inline"><input  type="radio" name="sqlcompat" value="MYSQL40"> MySQL 3.23/4.0.x</label></dd>
+                        <dd class="clearfix"><label class="radio radio-inline"><input  type="radio" name="sqlcompat" value="MYSQL41" disabled="">  MySQL 4.1.x/5.x</label></dd>
+                     </dl>
+                     <dl>
+                        <dt>强制字符集:</dt>
+                        <dd class="clearfix"><label class="radio radio-inline"><input  type="radio" name="sqlcharset" value="">默认</label>
+                        <label class="radio radio-inline"><input  type="radio" name="sqlcharset" value="utf8">  UTF8</label></dd>
+                     </dl>
+                     <dl>
+                        <dt>十六进制方式:</dt>
+                        <dd class="clearfix"><label class="radio radio-inline"><input type="radio" name="usehex" value="1" checked="checked">是</label>
+                        <label class="radio radio-inline"><input type="radio" name="usehex" value="0" >否</label></dd>
+                     </dl>
+                     <dl>
+                        <dt>压缩备份文件:</dt>
+                        <dd class="clearfix"><label class="radio radio-inline"><input type="radio" name="usezip" value="1">多分卷压缩成一个文件</label></dd>
+                        <dd class="clearfix"><label class="radio radio-inline"><input type="radio" name="usezip" value="2">每个分卷压缩成单独文件</label></dd>
+                         <dd class="clearfix"><label class="radio radio-inline"><input type="radio" name="usezip" value="0" checked>不压缩</label></dd>
+                     </dl>
+                     <dl>
+                     	<dt>备份文件名:</dt>
+                        <dd class="clearfix"><input type="text" class="form-control"  name="filename" value="$defaultfilename"></dd>
+                      </dl>
+             </div>
+             <dl>
+           		<dd class="clearfix"><button type="submit" class="btn btn-primary" name="exportsubmit" value="true" />提  交</button>
+                &nbsp; &nbsp;<label class="checkbox inline"><input  type="checkbox" value="1" onclick="$('advanceoption').style.display = $('advanceoption').style.display == 'none' ? '' : 'none'; this.value = this.value == 1 ? 0 : 1; this.checked = this.value == 1 ? false : true" id="btn_more">更多选项</label></dd>
+            </dl>
+        </form>
+         <!--{else}-->
+             <div class="well">
+                   <!--{if $msg}-->
+                     <p class="$msg_type">$msg</p>
+                   <!--{/if}-->
+                   <!--{if $redirecturl}-->
+                     <p class="text-info"><a href="{$redirecturl}" class="lightlink">如果您的浏览器没有自动跳转，请点击这里</a></p>
+                     <script type="text/JavaScript">setTimeout(function(){location.href='{$redirecturl}';}, 2000);</script>
+                   <!--{/if}-->
+              </div>
+         <!--{/if}-->
+       </div>
+       <!--{elseif $operation=='import'}-->
+         <div class="main-content" style="padding:15px 0;border:1px solid #FFF">
+          <!--{if $msg}-->
+            <div class="well"> 
+            	<p class="$msg_type">$msg</p>
+            	 <!--{if $redirecturl}-->
+                     <p class="text-info"><a href="{$redirecturl}" class="lightlink">如果您的浏览器没有自动跳转，请点击这里</a></p>
+                     <script type="text/JavaScript">setTimeout(function(){location.href='{$redirecturl}';}, 2000);</script>
+                   <!--{/if}-->
+            </div>
+          <!--{else}-->
+          	 
+             <ul class="help-block">
+             <h5>提示信息</h5>
+                 {lang db_import_tips}
+             </ul>
+            $do_import_option 
+             <form id="cpform" action="{BASESCRIPT}?mod=system&op=database&operation=import" class="form-horizontal form-horizontal-left "   method="post" name="cpform">
+                <input type="hidden" value="{FORMHASH}" name="formhash">
+                <input type="hidden" value="true" name="deletesubmit">
+                <table class="table table-hover" style="border-top:1px solid #DDD">
+                <thead><th></th><th>文件名</th><th>版本</th><th>时间</th><th>类型</th><th>大小</th><th>方式</th><th>卷数</th><th></th></thead>
+                <!--{loop $list $key $val}-->
+                    <tr>
+                    	<td><input type="checkbox" name="delete[]" value="$key"></td>
+                        <td>
+                        	<!--{if $val['list']}-->
+                        		<a href="javascript:;" onclick="jQuery('#exportlog_{$key}').toggle()">$key</a>
+                            <!--{else}-->    
+                            	<a href="$val[filename]">$key</a>
+                            <!--{/if}-->
+                         </td>
+                        <td>$val[version]</td>
+                        <td>$val[dateline]</td>
+                        <td>$val[ftype]</td>
+                        <td>$val[size]</td>
+                        <td>$val[method]</td>
+                        <td>$val[volume]</td>
+                       	<td>
+                       		<!--{if $val['list']}-->
+                            <a href="{$datasiteurl}restore.php?operation=import&from=server&datafile_server=$val[datafile_server]&importsubmit=yes" <!--{if $info['version'] != $_G['setting']['version']}--> onclick="return confirm('{lang db_import_confirm}');" <!--{else}-->  onclick="return confirm('{lang db_import_confirm_sql}');"<!--{/if}-->   target="_blank">{lang import}</a>
+                            <!--{else}-->  
+                             <a href="{$datasiteurl}restore.php?operation=importzip&datafile_server=$info[datafile_server]&importsubmit=yes"  onclick="return confirm('{lang db_import_confirm_zip}');"  target="_blank">{lang db_import_unzip}</a>
+                            <!--{/if}-->  
+                       </td>
+                   </tr>
+                   <thead id="exportlog_{$key}" style="display:none;">
+                   <!--{loop $val[list] $key1 $val1}-->
+                   		<tr>
+                        <td></td>
+                        <td>
+                        	 <a href="$val1[filename]">$val1[filename]</a>
+                         </td>
+                        <td>$val1[version]</td>
+                        <td>$val1[dateline]</td>
+                        <td></td>
+                        <td>$val1[size]</td>
+                        <td></td>
+                        <td>$val1[volume]</td>
+                       	<td></td>
+                        </tr>
+                    <!--{/loop}-->
+                    </thead>
+                <!--{/loop}-->
+                <thead ><tr><td colspan="15"><input type="checkbox" name="chkall" id="chkallspKI"  onclick="checkAll('prefix', this.form, 'delete')">删？&nbsp;&nbsp;<button type="submit" class="btn btn-primary" name="exportsubmit" value="true" />提  交</button></td></tr></thead>
+                </table>
+        </form>
+        <!--{/if}-->
+        </div>
+      <!--{elseif $operation=='runquery'}-->
+         <div class="main-content" style="padding:15px">
+             
+             <ul class="help-block">
+             	<h4>提示信息</h4>
+                 <li>如果您想自己随意书写 SQL 升级语句，需要将 core/config/config.php 当中的 '_config[admincp][runquery]' 设置修改为 1。</li>
+             </ul>
+          <!--{if $msg}-->
+            <div class="well"> 
+            	<p class="$msg_type">$msg</p>
+            	 <!--{if $redirecturl}-->
+                     <p class="text-info"><a href="{$redirecturl}" class="lightlink">如果您的浏览器没有自动跳转，请点击这里</a></p>
+                     <script type="text/JavaScript">setTimeout(function(){location.href='{$redirecturl}';}, 5000);</script>
+                   <!--{/if}-->
+            </div>
+          <!--{else}-->
+          	
+             <form id="cpform" action="{BASESCRIPT}?mod=system&op=database&operation=runquery"   method="post" name="cpform">
+                <input type="hidden" value="{FORMHASH}" name="formhash">
+                <input type="hidden" value="true" name="sqlsubmit">
+                <dl>
+                	<dt>Dzz! 数据库升级 - 请将数据库升级语句粘贴在下面</dt>
+                    <dd class="clearfix"><textarea cols="85" rows="10" name="queries" style="width:500px;"></textarea></dd>
+                    <dd class="clearfix mt10"><label class="checkbox-inline"><input name="createcompatible" type="checkbox" value="1" checked="checked" />转换建表语句格式和字符集</label></dd>
+                </dl>
+                <dl>
+                	<dd class="clearfix"><button type="submit" class="btn btn-primary">提  交</button></dd>
+                </dl>
+            </form>
+            <!--{/if}-->
+         </div>
+     <!--{/if}-->
+    </div>
+</div>
+<script type="text/javascript">  
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<!--{template common/footer_simple}-->

@@ -1,0 +1,116 @@
+.container {
+  text-align: left;
+  width:300px;
+}
+.img_150_150{
+	max-width: 150px;
+	max-height: 150px;
+}
+* html .img_150_150{
+width: expression(this.width > 150 && this.width>=this.height ? 150 : true);
+height: expression(this.height > 150 && this.width<=this.height ? 150 : true);
+}
+.logintips{
+	color:red;
+	line-height:30px;
+	padding:20px;
+	background:#F7F7F7;
+	margin:30px 10px 0 10px;
+	border-radius:2px;
+	border:1px solid #e3e3e3;	
+	box-shadow:inset 0 0px 1px rgba(0,0,0,0.05);
+	-webkit-box-shadow:inset 0 0px 1px rgba(0,0,0,0.05);
+	-moz-box-shadow:inset 0 0px 1px rgba(0,0,0,0.05);
+}
+
+#loginform{
+	margin:0;
+	text-align:center	
+}
+/*.login {
+  background: url("bg_login.gif") no-repeat scroll right 50% transparent;
+  height: 150px;
+  padding-right: 30px;
+  width: 310px;
+}*/
+.login h4 {
+ /* background: url("login_title.gif") no-repeat scroll 0 0 transparent;*/
+  height: 35px;
+  margin-bottom: 10px;
+  /*text-indent: -9999px;*/
+  
+}
+.avatarContainer{
+	width:274px; 
+	margin-bottom:20px;
+	overflow:hidden;
+	text-align:center;
+}
+.loginformContainer{
+	
+	padding:40px 40px 10px 40px;
+
+	text-align:center;
+	background:#F7F7F7;
+	margin:10px 0 0;
+	border-radius:2px;
+	border:1px solid #e3e3e3;	
+	box-shadow:inset 0 1px 1px rgba(0,0,0,0.05);
+	-webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,0.05);
+	-moz-box-shadow:inset 0 1px 1px rgba(0,0,0,0.05);
+}
+.loginformContainer .username {
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	margin: 10px 0 0;
+	min-height: 1em;
+}
+.loginformContainer .email{
+	color: #404040;
+	line-height: 2;
+	margin-bottom: 0;
+	font-size: 14px;
+}
+input[type="password"],input[type="text"]{
+	height:40px;
+	width:274px;
+	direction: ltr;
+	font-size: 16px;
+	outline:none;
+	width:286px\0;
+	*width:286px;
+}
+input[type="submit"]{
+	width:274px;
+	height:40px;
+	font-size: 20px;
+	font-weight: 700;
+	width:286px\0;
+	*width:286px;
+}
+input[type="password"]:focus,input[type="text"]:focus{
+	box-shadow:none;outline:none;
+}
+
+
+.footer .copyright {
+  border: medium none;
+  font-size: 12px;
+  position: static;
+  text-align: center;
+}
+.copyright {
+  color:#899;
+  font-family: Tahoma;
+  font-size: 11px;
+  left: 5px;
+  line-height: 150%;
+  padding-top: 15px;
+  text-align: center;
+  z-index: 10;
+  text-shadow:1px 1px 1px #FFF;
+}
+.copyright a {
+	 color:#899;
+}

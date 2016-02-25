@@ -1,0 +1,43 @@
+<!--{loop $list $value}-->
+<div node-type="item" data-sid="$value[sid]" data-status="$value[status]" class="item clearfix"> 
+    <!-- 第一列 -->
+    <div class="col c1 name" style="width: 50%;" data-name="$value[title]"> 
+          <span node-type="chk" class="chk"> <span class="chk-ico"></span></span> 
+          <!-- 私密分享图标 --> 
+          <!--{if $value[password]}--><span class="ico-private-share" title="密码分享"></span> <!--{/if}--> 
+                            
+          <div node-type="name" class="name" title="$value[title]">
+            <!--{if $value[img]}--><img class="icon" src="$value[img]" /><!--{/if}-->
+            <!--{if $value[status]<0}--><span node-type="name-tip" style="color: red;">($value[fstatus])</span><!--{/if}-->
+            <span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="name-text enabled">$value[title]</span> </span> 
+          </div>
+         
+     </div>
+     
+    <!-- 其他列 -->
+    <div class="col dateline" style="width: 20%" data-dateline="$value[dateline]">$value[fdateline]</div>
+    <div class="col count" style="width: 9%" data-count="$value[count]">$value[count]次</div>
+    <div class="col size" style="width: 9%" data-size="$value[size]">$value[fsize]</div>
+    <div class="col type" style="width: 9%" data-type="$value[ftype]">$value[ftype]</div>
+    
+    <!-- 复制 -->
+    <div node-type="copy-bar" class="copy-bar"> 
+        <!--{if $value[qrcode]}--><a href="javascript:;" class="qrcode glyphicon glyphicon-qrcode" title="扫描二维码,发送到手机"  data-container="body" data-html="true" data-trigger="hover" data-toggle="popover" data-placement="right" data-content="<p class='text-center'><img src='$value[qrcode]'></p>"></a><!--{/if}-->
+        链接：<a href="$value[shareurl]" target="_dzz">$value[shareurl]</a> 
+        <!--{if $value[password]}-->&nbsp;提取密码：$value[password] <!--{/if}--> 
+        &nbsp;<button class="btn btn-sm btn-default js_copy"  data-clipboard-text="{eval echo $value[password]?('链接:'.$value[shareurl].'  密码:'.$value[password]):$value[shareurl];}" style="position:relative"><i class="glyphicon glyphicon-duplicate"></i> 复制<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span></button>
+        <!--{if $value[endtime]}-->&nbsp;到期时间：$value[fendtime] <!--{/if}--> 
+        <!--{if $value[times]}-->&nbsp;限制次数：$value[count] / $value[times] <!--{/if}--> 
+    </div>
+    <!--{if $value[downurl]}-->
+    <div node-type="copy-bar" class="copy-bar"> 
+        下载链接：<a href="$value[downurl]" target="_blank">$value[downurl]</a> 
+         <!--{if $value[password]}-->&nbsp;提取密码：$value[password] <!--{/if}--> 
+        &nbsp;<button class="btn btn-sm btn-default js_copy"  data-clipboard-text="{eval echo $value[password]?('下载链接:'.$value[downurl].'  密码:'.$value[password]):$value[downurl];}" style="position:relative"><i class="glyphicon glyphicon-duplicate"></i> 复制<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span></button>
+    </div>
+    <!--{/if}-->
+</div>
+<!--{/loop}-->
+<!--{if $nextpage}-->
+ <div class="more text-center clearfix" onclick="getMore(this,'$nextpage')">加载更多</div>
+<!--{/loop}-->

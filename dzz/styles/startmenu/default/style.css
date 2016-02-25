@@ -1,0 +1,167 @@
+/*startmenu start*/
+
+#startmenu{
+	position:absolute;margin:0;padding:0;z-index:10001;
+	border:1px solid rgba(0, 0, 0, 0.5);
+	left:auto;
+	top:auto;
+	max-width:none;
+	display:block;
+	box-shadow:0 5px 10px RGBA(0,0,0,0.2);
+	width:380px;
+	height:420px;
+	background:#FBFBFB;
+	display:none;
+}
+#startmenu.bottom{
+	 bottom:41px;
+	 left:0px;
+}
+#startmenu.left{
+	 top:0px;
+	 left:41px;
+}
+#startmenu.top{
+	 top:41px;
+	 left:0px;
+}
+#startmenu.right{
+	 right:41px;
+	 top:0px;
+}
+#startmenu_back{
+	position: absolute; top:0px; left: 0px; z-index:-10;width:100%;height:100%;margin:0;padding:0; right: 0px; bottom: 0px; opacity:0.8
+}
+#startmenu .startmenu-title {
+  background-color: #F9F9F9;
+  border-bottom: 1px solid #e1e1e1;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 18px;
+  margin: 0;
+  padding: 0 52px 0 50px;
+  position:relative;
+  height:50px;
+  overflow:hidden;
+}
+
+#startmenu .startmenu-title .avatar {
+	width:50px;
+	height:50px;
+	position:absolute;
+	left:0;
+	top:0;
+}
+#startmenu .startmenu-title .logout {
+	height:50px;
+	position:absolute;
+	right:10px;
+	top:0;
+	
+}
+#startmenu .startmenu-title .logout a{
+	color:#3071a9;
+	text-shadow:1px 1px 1px #FFF;
+}
+#startmenu .startmenu-title .logout .register{
+	padding-left:5px;
+}
+#startmenu .startmenu-title .avatar img{
+	background:#FFF;
+	padding:1px;
+	width:40px;
+	height:40px;
+	border:1px solid #EBEBEB;
+	margin:2px;
+}
+#startmenu .startmenu-title .startmenu-title-item {
+	line-height:50px;
+	font-size:16px;
+	text-shadow:1px 1px 1px #FFF;
+	
+	
+}
+#startmenu .startmenu-title .username {
+}
+#startmenu .startmenu-title .right a {
+	padding-left:10px;
+}
+#startmenu .startmenu-appContainer {
+	
+	padding:0;
+	overflow:auto;
+	position:relative;
+	border-top:1px solid #FFF;
+}
+
+#startmenu_app {
+	position:relative;
+}
+#startmenu_app .startapp{
+	
+	position:relative;
+	margin:10px;
+	float:left;
+	z-index:100;
+	cursor:pointer;
+	width:70px;
+	height:70px;
+	overflow:hidden;
+}
+#startmenu_app .startapp.hover .backgound_radius{
+	background:#E5F3FB;border:#70C0E7 1px solid;filter:Alpha(opacity=100); opacity:1;transition: all 0.2s ease-in 0s;
+}
+
+#startmenu_app .appname{
+	color:#383838;
+	display:inline-block;
+	height:20px;
+	line-height:20px;
+	overflow:hidden;
+	width:60px;
+}
+#startmenu_page {
+	background:#FFF;
+	text-align:center;
+	overflow:hidden;
+	padding:0 20px;
+	+font-size:1px;
+}
+#startmenu_page .startmenu-page-guide  {
+	display:inline-block;
+	width:60px;
+	height:26px;
+	text-decoration:none;
+	font-size:1px;
+	padding:10px;
+	+margin:10px;
+	+height:5px;
+	
+}
+#startmenu_page .startmenu-page-guide  .startmenu-page-guide-block {
+	background:RGBA(0,0,0,0.2);
+	border-radius:3px 3px 3px 3px;
+	text-decoration:none;
+	font-size:1px;
+}
+.ie8 #startmenu_page .startmenu-page-guide  .startmenu-page-guide-block {
+	background:#CCC;
+}
+#startmenu_page .startmenu-page-guide.current .startmenu-page-guide-block{
+	background:#0088CC;
+}
+#startmenu .startmenu-bottom {
+  background-color: #FCFCFC;
+  border-top: 1px solid #e2e2e2;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 18px;
+  margin: 0;
+  padding: 5px 14px;
+}
+#searchInput {
+	margin:0;
+
+}
+/*startmenu end*/
+

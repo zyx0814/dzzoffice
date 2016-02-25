@@ -1,0 +1,206 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/styles/showwindow/style.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/feed/images/jquery.artZoom.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/feed/images/feed.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/atwho/css/jquery.atwho.css?{VERHASH}" rel="stylesheet" media="all">
+<script src="static/atwho/js/jquery.caret.js?{VERHASH}"></script>
+<script src="static/atwho/js/jquery.atwho.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/smilies.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+	top:0;
+	height:100%;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+@media (max-width: 768px) {
+	.bs-left-container{
+		display:none;
+	}
+	.bs-main-container{
+		margin-left:0;
+	}
+}
+</style>
+<!--{template common/header_simple_end}-->
+<script type="text/javascript" > 
+try{ 
+	var appid=api.wname.appid;
+}catch(e){}
+</script>
+<div class="bs-container clearfix" style="padding:0">
+  <div class="bs-left-container  clearfix">
+    <ul class="nav nav-pills nav-stacked nav-pills-leftguide" >
+       <!--{if $_G[uid]>0}-->
+        <li <!--{if $feedType=='aboutme'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&feedType=aboutme">与我相关</a>
+        </li>
+        <li <!--{if $feedType=='fromme'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&feedType=fromme">我发布的</a>
+        </li>
+        <li <!--{if $feedType=='atme'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&feedType=atme">@我的<span class="newtips" id="new_tips_atme"></span></a>
+        </li>
+        <li <!--{if $feedType=='collect'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&feedType=collect">我收藏的</a>
+        </li>
+        <li <!--{if $feedType=='replyme'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&feedType=replyme">回复我的<span class="newtips" id="new_tips_replyme"></span></a>
+        </li>
+        <!--{/if}-->
+        <li <!--{if !$_G[uid] || ($feedType=='all') }-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&feedType=all">全部动态</a>
+         </li>
+        <!--{if $_G['adminid']==1}-->
+        <li <!--{if $op=='setting'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&op=setting">@设置</a></li>
+         <li <!--{if $op=='wxsetting'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=$mod&op=wxsetting">微信设置</a></li>
+        <!--{/if}-->
+      </ul> 
+  </div>
+  <div class="left-drager">
+    <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" > 
+
+        <div class="main-content" style="height:auto;padding:5px 15px;min-width:350px">
+             <!--{if $_G[uid]>0 && ($feedType=='aboutme' || $feedType=='fromme' || $feedType=='all')}-->      
+             <!--{template publish_home}-->
+            <!--{/if}-->
+            <div id="feed_container" class="feed-container">
+                <a id="feed_notes" class="notes" href="javascript:void(0);" style="display:none" onclick="getNewThread('$feedType')">有<span>0</span> 条新信息，点击查看</a>
+               <!--{if $count}-->  
+                 <!--{loop $list $value}-->
+                     <!--{template feed_thread_item}-->
+                 <!--{/loop}-->
+               <!--{else}--> 
+               <div class="alert alert-info">
+                 <button type="button" class="close" data-dismiss="alert">&times;</button>
+                   还没有相关的动态
+                 
+                </div>
+               <!--{/if}-->  
+            </div>
+           <!-- <!--{if $count>$page*$perpage}-->
+            <div class="showmorefeed" id="pagerFeed">
+            <a href="javascript:void(0);" hidefocus="true" title="" class="text_fsm" style="border-top:none;">
+                <span>查看更多</span>
+            </a>
+            </div>
+            <!--{/if}-->-->
+            <!--{if $multi}-->
+                $multi
+            <!--{/if}-->
+    	</div>
+</div>
+<iframe id="hideframe" name="hideframe" src="about:blank" frameBorder="0" marginHeight="0" marginWidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
+<script type="text/javascript" >  
+jQuery('.left-drager').leftDrager_layout();
+var timestamp='$_G[timestamp]';
+var ajaxurl='{DZZSCRIPT}?mod=feed&op=ajax&appid='+appid;
+jQuery(document).ready(function(e) {
+   jQuery(document).on('click','.collect_bamfed a',function(){
+	   var tid=jQuery(this).attr('tid');
+		jQuery.getJSON(ajaxurl+'&do=collect&tid='+tid,function(json){
+			if(json.msg=='success'){
+				if(jQuery('#collect_'+tid).html()=='收藏'){
+					jQuery('#collect_'+tid).html('取消收藏');
+				}else{
+					
+					if('{$feedType}'=='collect'){
+						jQuery('#feed_tid_'+tid).slideUp(500);
+					}else{
+						jQuery('#collect_'+tid).html('收藏');
+					}
+				}
+			}
+		});
+	});
+	jQuery(document).on('click','.top_bamfed a',function(){
+	   var tid=jQuery(this).attr('tid');
+		jQuery.getJSON(ajaxurl+'&do=top&tid='+tid,function(json){
+			if(json.msg=='success'){
+				if(jQuery('#top_'+tid).html()=='置顶'){
+					jQuery('#top_'+tid).html('取消置顶');
+					jQuery('<span class="top_sfed"></span>').appendTo('#feed_tid_'+tid+' .source_fed');
+				}else{
+					jQuery('#top_'+tid).html('置顶');
+					jQuery('#feed_tid_'+tid+' .top_sfed').remove();
+				}
+			}
+		});
+	});
+	
+	jQuery(document)
+			.on('mouseenter','.itemfeed',function(){
+				jQuery(this).addClass('hover_itemfeed');
+			})
+			.on('mouseleave','.itemfeed',function(){
+				jQuery(this).removeClass('hover_itemfeed');
+			});
+	jQuery(document).on('click','.txt_cfed a',function(){
+			var tid=jQuery(this).attr('tid');
+			ajaxget('{DZZSCRIPT}?mod=feed&op=ajax&do=getReplys&tid='+tid,'reply_list_'+tid,'reply_list_'+tid);
+	}); 
+	
+	jQuery('.artZoom').artZoom({
+		path: './dzz/feed/images',	// 设置artZoom图片文件夹路径
+		preload: true,		// 设置是否提前缓存视野内的大图片
+		blur: true,			// 设置加载大图是否有模糊变清晰的效果
+		
+		// 语言设置
+		hide: '收起',		// 左旋转按钮文字
+		left: '左旋转',		// 左旋转按钮文字
+		right: '右旋转',		// 右旋转按钮文字
+		source: '看原图'		// 查看原图按钮文字
+	});
+	 jQuery(document)
+			.on('mouseenter','.cmt_fed',function(){
+				jQuery(this).addClass('hover_cmt_fed');
+			})
+			.on('mouseleave','.cmt_fed',function(){
+				jQuery(this).removeClass('hover_cmt_fed');
+			});
+	
+	
+	getNoticeNum(timestamp);
+});
+
+function getNoticeNum(t){
+	jQuery.getJSON(DZZSCRIPT+'?mod=feed&op=notice&t='+t,function(json){
+		if(json.sum_atme>0) jQuery('#new_tips_atme').html(json.sum_atme).show();
+		if(json.sum_replyme>0) jQuery('#new_tips_replyme').html(json.sum_replyme).show();
+		if(json.sum>0 &&json.tids && json.tids.length>0){
+			var sum=0;
+			for(var i in json.tids){
+				if(!document.getElementById('feed_tid_'+json.tids[i])){
+					sum++;
+				}
+			}
+			if(sum>0) jQuery('#feed_notes').html('有 '+json.sum+' 条新信息，点击查看').show();
+		}
+		window.setTimeout(function(){getNoticeNum(t);},json.timeout*1000);
+	});
+}
+
+	
+</script>
+
+<script type="text/javascript" src="dzz/feed/scripts/jquery.artZoom.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/feed/scripts/feed.js?{VERHASH}"></script>
+
+
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
+<!-- The basic File Upload plugin -->
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
+
+
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

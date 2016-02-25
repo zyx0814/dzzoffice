@@ -1,0 +1,350 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+.thumbnails li{
+	cursor:pointer;
+	float:left;
+	
+}
+.img-thumbnail {
+	cursor:pointer;
+	
+}
+.img_100_64{
+	max-width: 100px;
+	max-height: 64px;
+}
+* html .img_100_64 {
+	width: expression(this.width > 100 && this.width>=this.height ? 100 : true);
+	height: expression(this.height > 64 && this.width<=this.height ? 64 : true);
+}
+.img_120_75{
+	max-width: 120px;
+	max-height: 75px;
+}
+* html .img_120_75 {
+	width: expression(this.width > 120 && this.width>=this.height ? 120 : true);
+	height: expression(this.height > 75 && this.width<=this.height ? 75 : true);
+}
+.active .img-thumbnail , .active1 .img-thumbnail  {border:1px solid #F90;background:#FEFEE9}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <ul class="nav nav-pills nav-stacked nav-pills-leftguide" style="margin:10px 0;">
+        <li <!--{if $do=='systhame'}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=thame&do=systhame" hidefocus>{lang system_theme}</a></li>
+        <li <!--{if $do=='syscolor'}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=thame&do=syscolor" hidefocus>{lang system_color}</a></li>
+        <li <!--{if $do=='color'}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=thame&do=color" hidefocus>{lang wallpaper_color}</a></li>
+        <li <!--{if $do=='repeat'}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=thame&do=repeat" hidefocus>{lang wallpaper_repeat}</a></li>
+        <li <!--{if $do=='scale'}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=thame&do=scale" hidefocus>{lang wallpaper_scale}</a></li>
+        <li <!--{if $do=='url'}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=thame&do=url" hidefocus>{lang wallpaper_url}</a></li>
+    </ul>
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" > 
+
+<!--{if $do=='systhame'}-->
+	
+		<div style="padding:15px;">
+        	<!--{if $count}-->
+            	<ul class="thumbnails list-unstyled clearfix">
+            	<!--{loop $thames $key $value}-->
+                	<li id="$value[id]"  class="thame_block  text-center" style="padding:10px 10px 0 10px;width:150px;height:120px;">
+                        	<img  title="$value[name]" alt="$value[name]" class="img-thumbnail img_120_75" src="dzz/styles/thame/$value[folder]/thumb.jpg" />
+                            <p style="height:20px;line-height:20px;overflow:hidden;margin:10px 0 0 0">$value[name]</p>
+                    </li>
+                <!--{/loop}-->
+              	</ul>
+				<!--{if $multi}--><div class="text-center clearfix" >$multi</div><!--{/if}-->
+            <!--{else}-->
+            	    <div class="well well-small">{lang no_system_theme}</div>
+            <!--{/if}-->
+      	</div>
+        <script type="text/javascript">
+			jQuery(document).ready(function(){
+				var el=jQuery('.thame_block');
+				el.on('mouseover',function(){
+					jQuery(this).addClass('active');
+				});
+				el.on('mouseout',function(){
+					jQuery(this).removeClass('active');
+				});
+				el.on('click',function(){
+					jQuery('.thame_block').removeClass('active1');
+					jQuery(this).addClass('active1');
+					top._config.setthame(thamejson['thame_'+this.id]);
+				});
+				el.each(function(){
+					if(this.id==top._config.thame.system.id) jQuery(this).addClass('active1');
+				});
+			});
+			var thamejson=$thamejson;
+		</script>
+<!--{elseif $do=='syscolor'}-->
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				var el=jQuery('.color_block');
+				el.bind('mouseover',function(){
+					jQuery(this).addClass('active');
+				});
+				el.on('mouseout',function(){
+					jQuery(this).removeClass('active');
+				});
+				el.on('click',function(){
+					jQuery('.color_block').removeClass('active1');
+					jQuery(this).addClass('active1');
+					 document.getElementById('color_val').value=jQuery(this).attr('backimg');
+					 document.getElementById('c1').style.backgroundColor=jQuery(this).attr('backimg');
+					top._config.setColor(jQuery(this).attr('backimg'));
+				});
+				var custom_color='';
+				if(top._config.thame.system.enable_color>0 && top._config.thame.custom.custom_color.indexOf('#')===0){
+					 custom_color=top._config.thame.custom.custom_color;
+					 document.getElementById('color_val').value=custom_color;
+					 document.getElementById('c1').style.backgroundColor=custom_color;
+					el.each(function(){
+						if(jQuery(this).attr('backimg')==custom_color) jQuery(this).addClass('active1');
+					});
+				}
+			});
+		</script>
+		
+	
+        <div class="main-header clearfix" style="position:inherit;padding:5px;"> 
+        	<span  style="line-height:30px;float:left">自定义颜色&nbsp;&nbsp;</span>
+    		<div class="input-group pull-left" style="width:180px;padding-right:20px;">
+     			<input id="color_val" type="text" value="#000" class="form-control input-sm"  placeholder="点击右侧色块选择颜色">
+     			 <a  class="input-group-addon" initialized="true" id="c1" onclick="c1_frame.location='static/image/tool/getcolor.htm?c1|color_val';showMenu({'ctrlid':'c1'})" style="background-color: #000;width:30px;"></a>
+            </div>
+            <span id="c1_menu" style="display: none"><iframe name="c1_frame" src="" frameborder="0" height="148" scrolling="no" width="210"></iframe></span>  
+            <button type="button"  class="btn btn-primary btn-sm pull-left"  onclick="top._config.setColor($('color_val').value);" />设置</button>
+            <span  style="line-height:30px;float:left"  id="return_color"></span>
+   	 </div>
+        <div class="main-content clearfix" style="padding:10px;border-top:1px solid #FFF">
+        	
+        	<!--{if $count}-->
+            	<ul class="list-unstyled clearfix">
+            	<!--{loop $thames $key $value}-->
+                	<li backimg="$value[val]" class="color_block  pull-left <!--{if $value[val]==$color}-->active1<!--{/if}-->"style="padding:10px;width:110px;height:110px">
+                        <a class="color_div img-thumbnail"  style="display:inline-block;width:90px;height:90px;background:$value[val]" title="$value[title]"></a>
+                    </li>
+                <!--{/loop}-->
+              	</ul>
+                <!--{if $multi}--><div class="text-center clearfix" style="margin:10px">$multi</div><!--{/if}-->
+            <!--{else}-->
+            	    <div class="well well-small">{lang no_result}</div>
+            <!--{/if}-->
+        </div>
+<!--{elseif $do=='color'}-->
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				var el=jQuery('.color_block');
+				el.bind('mouseover',function(){
+					jQuery(this).addClass('active');
+				});
+				el.bind('mouseout',function(){
+					jQuery(this).removeClass('active');
+				});
+				el.bind('click',function(){
+					jQuery('.color_block').removeClass('active1');
+					jQuery(this).addClass('active1');
+					 document.getElementById('color_val').value=jQuery(this).attr('backimg');
+					 document.getElementById('c1').style.backgroundColor=jQuery(this).attr('backimg');
+					top._config.setback(jQuery(this).attr('backimg'),2,'','backimg');
+				});
+				var custom_color='';
+				if(top._config.thame.custom.custom_backimg.indexOf('#')===0){
+					 custom_color=top._config.thame.custom.custom_backimg;
+					 document.getElementById('color_val').value=custom_color;
+					 document.getElementById('c1').style.backgroundColor=custom_color;
+					el.each(function(){
+						if(jQuery(this).attr('backimg')==custom_color) jQuery(this).addClass('active1');
+					});
+				}
+			});
+		</script>
+		<div class="main-header clearfix" style="position:inherit;padding:5px;"> 
+        	<span  style="line-height:30px;float:left">自定义背景颜色&nbsp;&nbsp;</span>
+    		<div class="input-group pull-left" style="width:180px;padding-right:20px;">
+     			<input id="color_val" type="text" value="#000" class="form-control input-sm"  placeholder="点击右侧色块选择颜色">
+     			 <a  class="input-group-addon" initialized="true" id="c1" onclick="c1_frame.location='static/image/tool/getcolor.htm?c1|color_val';showMenu({'ctrlid':'c1'})" style="background-color: #000;width:30px;"></a>
+            </div>
+            <span id="c1_menu" style="display: none"><iframe name="c1_frame" src="" frameborder="0" height="148" scrolling="no" width="210"></iframe></span>  
+            <button type="button"  class="btn btn-primary btn-sm pull-left"  onclick="top._config.setback($('color_val').value,2,'','backimg');" />设置</button>
+            <span  style="line-height:30px;float:left"  id="return_color"></span>
+   	 </div>
+        <div class="main-content clearfix" style="padding:10px;border-top:1px solid #FFF">
+        	<!--{if $count}-->
+            	<ul class="clearfix list-unstyled" style="list-style:none;margin:0">
+            	<!--{loop $thames $key $value}-->
+                	<li backimg="$value[val]" class="pull-left color_block   <!--{if $value[val]==$color}-->active1<!--{/if}-->" style="padding:10px;width:110px;height:110px">
+                        	<a class="img-thumbnail"  style="display:inline-block;width:90px;height:90px;background:$value[val]" title="$value[title]"></a>
+                    </li>
+                <!--{/loop}-->
+              	</ul>
+                <!--{if $multi}--><div class="text-center clearfix" >$multi</div><!--{/if}-->
+            <!--{else}-->
+            	    <div class="well well-small">{lang no_result}</div>
+            <!--{/if}-->
+        </div>
+<!--{elseif $do=='repeat' }-->
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				var el=jQuery('.color_block');
+				el.bind('mouseover',function(){
+					jQuery(this).addClass('active');
+				});
+				el.bind('mouseout',function(){
+					jQuery(this).removeClass('active');
+				});
+				el.bind('click',function(){
+					jQuery('.color_block').removeClass('active1');
+					jQuery(this).addClass('active1');
+					top._config.setback(jQuery(this).attr('backimg'),2,'','backimg');
+				});
+				el.each(function(){
+						if(jQuery(this).attr('backimg')==top._config.thame.custom.custom_backimg) jQuery(this).addClass('active1');
+					});
+					
+				
+			});
+		</script>
+		
+		<!--{if $class}-->
+        <div class="main-header clearfix">
+            <ul class="nav nav-pills nav-pills-bottomguide">
+                  <li <!--{if !$classid}--> class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">全部</a></li>
+                  <!--{loop $class $value}-->
+                   <li <!--{if $value[classid]==$classid}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do&classid=$value[classid]">$value[classname]</a></li>
+                  <!--{/loop}-->
+            </ul>
+        </div>
+		<!--{/if}-->
+        <div class="main-content" style="padding:15px;border-top:1px solid #FFF">
+        	<!--{if $count}-->
+            	<ul class="clearfix list-unstyled">
+            	<!--{loop $thames $key $value}-->
+                	<li backimg="$value[val]" class="pull-left color_block" style="width:110px;height:110px;padding:10px">
+                        <div class="img-thumbnail" src="$value[thumbpic]"  style="width:90px;height:90px;background:url($value[thumbpic]) repeat" />
+                    </li>
+                <!--{/loop}-->
+              	</ul>
+				<!--{if $multi}--><div class="text-center clearfix">$multi</div><!--{/if}-->
+            <!--{else}-->
+            	    <div class="well well-small">{lang no_result}</div>
+            <!--{/if}-->
+        </div>
+<!--{elseif $do=='url' }-->
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				var el=jQuery('.color_block');
+				el.bind('mouseover',function(){
+					jQuery(this).addClass('active');
+				});
+				el.bind('mouseout',function(){
+					jQuery(this).removeClass('active');
+				});
+				el.bind('click',function(){
+					jQuery('.color_block').removeClass('active1');
+					jQuery(this).addClass('active1');
+					top._config.setback('',0,jQuery(this).attr('url'),'url');
+				});
+				el.each(function(){
+						if(jQuery(this).attr('url')==top._config.thame.custom.custom_url) jQuery(this).addClass('active1');
+					});
+			});
+		</script>
+		<!--{if $class}-->
+        <div class="main-header clearfix">
+            <ul class="nav nav-pills nav-pills-bottomguide">
+                  <li <!--{if !$classid}--> class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">全部</a></li>
+                  <!--{loop $class $value}-->
+                   <li <!--{if $value[classid]==$classid}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do&classid=$value[classid]">$value[classname]</a></li>
+                  <!--{/loop}-->
+            </ul>
+        </div>
+		<!--{/if}-->
+        <div class="main-content" style="padding:15px;border-top:1px solid #FFF">
+        	<!--{if $count}-->
+            	<ul class="clearfix list-unstyled" >
+            	<!--{loop $thames $key $value}-->
+                	<li url="$value[val]" class="pull-left color_block" style="width:120px;height:85px;padding:10px">
+                        <img title="$value[title]" alt="$value[title]" class="img-thumbnail img_100_64" src="$value[thumbpic]"  />
+                    </li>
+                <!--{/loop}-->
+              	</ul>
+				<!--{if $multi}--><div class="text-center clearfix" style="margin:10px">$multi</div><!--{/if}-->
+            <!--{else}-->
+            	    <div class="well well-small">{lang no_result}</div>
+            <!--{/if}-->
+        </div>
+<!--{elseif $do=='scale' }-->
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				var el=jQuery('.color_block');
+				el.bind('mouseover',function(){
+					jQuery(this).addClass('active');
+				});
+				el.bind('mouseout',function(){
+					jQuery(this).removeClass('active');
+				});
+				el.bind('click',function(){
+					jQuery('.color_block').removeClass('active1');
+					jQuery(this).addClass('active1');
+					top._config.setback(jQuery(this).attr('backimg'),1,'','backimg');
+				});
+				el.each(function(){
+						if(jQuery(this).attr('backimg')==top._config.thame.custom.custom_backimg) jQuery(this).addClass('active1');
+					});
+			});
+		</script>
+		<!--{if $class}-->
+        <div class="main-header clearfix">
+            <ul class="nav nav-pills nav-pills-bottomguide">
+                  <li <!--{if !$classid}-->class=" active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">全部</a></li>
+                  <!--{loop $class $value}-->
+                   <li <!--{if $value[classid]==$classid}--> class=" active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do&classid=$value[classid]">$value[classname]</a></li>
+                  <!--{/loop}-->
+            </ul>
+        </div>
+		<!--{/if}-->
+        <div class="main-content" style="padding:15px;border-top:1px solid #FFF">
+        	<!--{if $count}-->
+            	<ul  class="clearfix list-unstyled">
+            	<!--{loop $thames $key $value}-->
+                	<li backimg="$value[val]"  class="pull-left color_block" style="width:120px;height:85px;padding:10px;overflow:hidden;text-align:center">
+                        <img title="$value[title]" alt="$value[title]" class="img-thumbnail img_100_64" src="$value[thumbpic]"  />
+                    </li>
+                <!--{/loop}-->
+              	</ul>
+				<!--{if $multi}--><div class="text-center clearfix" >$multi</div><!--{/if}-->
+            <!--{else}-->
+            	    <div class="well well-small">{lang no_result}</div>
+            <!--{/if}-->
+        </div>
+
+<!--{/if}-->
+</div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<!--{template common/footer_simple}-->

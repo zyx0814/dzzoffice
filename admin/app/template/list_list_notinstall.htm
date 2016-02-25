@@ -1,0 +1,27 @@
+
+  <table class="table table-hover " style="margin:0;">
+    <thead>
+      <th>应用名称</th>
+      
+      <th>组权限</th>
+      <th>版本</th>
+      <th>目录</th>
+      <th>供应商</th>
+      <th>操作</th>
+   </thead>
+    <!--{if $list}-->
+      <!--{loop $list $value}-->
+    <tr>
+      <td><a href="$value[appurl]" target="_blank"><img src="$value[appico]" />$value[appname]</a></td>
+      <td>$value[grouptitle]</td>
+      <td>$value[version]</td> 
+      <td>$value[identifier]</td>
+      <td>$value[vendor]</td>
+      <td><a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=cp&do=install&dir=$value[identifier]&refer=$refer" title="安装">安装</a> </td>
+    </tr>
+    <!--{/loop}-->
+     <!--{else}-->
+   <tr>
+      <td colspan="10">还没有可以安装的应用，把应用的安装包解压到dzz/目录下后，可以在此选择安装</td></tr>
+   <!--{/if}-->
+  </table>

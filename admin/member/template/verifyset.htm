@@ -1,0 +1,99 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+	top:0
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+.form-horizontal .form-control{
+	min-width:90px;
+	max-width:250px;
+	
+}
+
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix" style="padding-top:0px;">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" > 
+  	<div class="main-header">
+        <ul class="nav nav-pills nav-pills-bottomguide">
+              <li class="active"><a href="{BASESCRIPT}?mod=member&op=verifyset">认证设置</a></li>
+        </ul>
+    </div>
+    <div class=" alert alert-warning " style="margin:10px;padding-left:0;font-size:85%;line-height:2">
+      <ul>
+           <li>系统默认支持实名认证，其他的认证用户可以自定义</li>
+           <li>启用相应的认证后，用户资料管理里将出现对应的认证栏目</li>
+      </ul>
+    </div>
+  <div class="main-content" style="border-top:1px solid #DDD">
+       <form id="cpform" action="{BASESCRIPT}?mod=member&op=verifyset" class="form-horizontal" method="post" name="cpform">
+        <input type="hidden" value="{FORMHASH}" name="formhash">
+        <input type="hidden" value="true" name="verifysubmit">
+       	 <table class="table table-hover" style="font-size:12px;">
+          		<thead>
+                  <th width="60">启用</th>
+                  <th width="120">认证代码</th>
+                  <th>认证名称</td>
+                  <th  width="120">编辑</th>
+               </thead>
+             <!--{eval for($i=1;$i<8;$i++){}--> 
+           	   {eval $value=$_G['setting']['verify'][$i]}
+                <tr>
+                  <td  width="60"><input type="checkbox" name="settingnew[verify][$i][available]" <!--{if $value[available]}-->checked="checked"<!--{/if}--> value="1" /></td>
+                  <td width="120">verify{$i}</td>
+                  <td ><!--{if $value[readonly]}-->$value[title]<input type="hidden" name="settingnew[verify][$i][title]" value="$value[title]" /><!--{else}--><input type="text" class="form-control input-sm" name="settingnew[verify][$i][title]" value="$value[title]"><!--{/if}-->&nbsp;<!--{if $value['icon']}--><img src="$value[icon]" /><!--{/if}--></td>
+                  <td width="120"> 
+                  	<a href="{BASESCRIPT}?mod=member&op=verifyset&do=edit&vid=$i"  class="ibtn glyphicon glyphicon-edit " title="编辑"></a>
+                  </td>
+                </tr>
+             <!--{eval }}-->
+            
+             <tr>
+                 <td colspan="20"><input class="btn btn-primary btn-width" type="submit" value="保存设置" /></td>
+             </tr>  
+            </table>
+           
+          </form>
+    </div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();	
+var url='{BASESCRIPT}?mod=member';
+
+   
+jQuery(document).ready(function(e) {
+    jQuery('input').iCheck({
+		  checkboxClass: 'icheckbox_minimal-blue',
+		  radioClass: 'iradio_minimal-blue',
+	});
+	jQuery('input').on('ifChecked',function(e){
+		jQuery(this).trigger('click');
+	});
+	
+	
+});
+
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

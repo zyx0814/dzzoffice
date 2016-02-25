@@ -1,0 +1,120 @@
+.ui-artZoom {
+	padding: 0 10px 10px 10px;
+	background: #f9f9f9;
+	border: solid 1px #D0D9DA
+}
+.ui-artZoom img {
+	-ms-interpolation-mode: bicubic
+}
+.ui-artZoom-toolbar {
+	height: 36px;
+	line-height: 26px;
+	padding: 5px 0
+}
+.ui-artZoom-buttons {
+	display: inline-block;
+*display:inline;
+*zoom:1;
+	height: 26px;
+	line-height: 0;
+	margin-right: 5px;
+	outline: 0
+}
+.ui-artZoom-loading {
+	color: gray;
+	font-size: 12px
+}
+.ui-artZoom-buttons a{
+	display: inline-block;
+	padding: 5px 15px 5px 0;
+	font: 12px/1.11 "Microsoft Yahei", Tahoma, Arial, Helvetica, STHeiti;
+	_font-family: Tahoma, Arial, Helvetica, STHeiti;
+	-o-font-family: Tahoma, Arial;
+	_font-size: 12px;
+	color: #3C3C3D;
+	white-space: nowrap;
+	overflow: visible;
+	cursor: pointer;
+	text-decoration: none;
+	outline: 0;
+	position: relative;
+	zoom: 1;
+*display:inline;
+*vertical-align:middle
+}
+.ui-artZoom-buttons a:hover, .ui-artZoom-buttons ._tt_tasklist li .title_tttl:hover, ._tt_tasklist li .ui-artZoom-buttons .title_tttl:hover {
+	color: #2d83cf;
+	text-decoration: none;
+	background-position: 0 -40px
+}
+.ui-artZoom-buttons a:active, .ui-artZoom-buttons ._tt_tasklist li .title_tttl:active, ._tt_tasklist li .ui-artZoom-buttons .title_tttl:active {
+	color: #2d83cf
+}
+.ui-artZoom-noLoad a.ui-artZoom-left, .ui-artZoom-noLoad ._tt_tasklist li .ui-artZoom-left.title_tttl, ._tt_tasklist li .ui-artZoom-noLoad .ui-artZoom-left.title_tttl, .ui-artZoom-noLoad a.ui-artZoom-right, .ui-artZoom-noLoad ._tt_tasklist li .ui-artZoom-right.title_tttl, ._tt_tasklist li .ui-artZoom-noLoad .ui-artZoom-right.title_tttl {
+	color: #999;
+	cursor: default
+}
+.ui-artZoom-ready .ui-artZoom-loading span {
+	width: 5px;
+	overflow: hidden;
+	visibility: hidden
+}
+a.ui-artZoom-left, ._tt_tasklist li .ui-artZoom-left.title_tttl {
+	margin-right: 0;
+	border-right: 0
+}
+a.ui-artZoom-right, ._tt_tasklist li .ui-artZoom-right.title_tttl {
+	margin-right: 0;
+	margin-left: 0
+}
+a.ui-artZoom-source, ._tt_tasklist li .ui-artZoom-source.title_tttl {
+	margin-left: 0
+}
+a.ui-artZoom-left:active, ._tt_tasklist li .ui-artZoom-left.title_tttl:active, a.ui-artZoom-right:active, ._tt_tasklist li .ui-artZoom-right.title_tttl:active, a.ui-artZoom-source:active, ._tt_tasklist li .ui-artZoom-source.title_tttl:active {
+	top: 0
+}
+.ui-artZoom-buttons a span, .ui-artZoom-buttons ._tt_tasklist li .title_tttl span, ._tt_tasklist li .ui-artZoom-buttons .title_tttl span {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin: auto 3px auto auto;
+	position: relative;
+	top: 0;
+*top:0;
+	background-image: url(icons.png);
+	background-repeat: no-repeat;
+*font-size:0;
+	vertical-align: middle
+}
+a.ui-artZoom-right span, ._tt_tasklist li .ui-artZoom-right.title_tttl span, .ui-artZoom-noLoad .ui-artZoom-buttons a.ui-artZoom-right span, .ui-artZoom-noLoad .ui-artZoom-buttons ._tt_tasklist li .ui-artZoom-right.title_tttl span, ._tt_tasklist li .ui-artZoom-noLoad .ui-artZoom-buttons .ui-artZoom-right.title_tttl span {
+	background-position: 0 -0
+}
+a.ui-artZoom-left span, ._tt_tasklist li .ui-artZoom-left.title_tttl span, .ui-artZoom-noLoad .ui-artZoom-buttons a.ui-artZoom-left span, .ui-artZoom-noLoad .ui-artZoom-buttons ._tt_tasklist li .ui-artZoom-left.title_tttl span, ._tt_tasklist li .ui-artZoom-noLoad .ui-artZoom-buttons .ui-artZoom-left.title_tttl span {
+	background-position: -12px 0
+}
+a.ui-artZoom-hide span, ._tt_tasklist li .ui-artZoom-hide.title_tttl span, .ui-artZoom-noLoad .ui-artZoom-buttons a.ui-artZoom-hide span, .ui-artZoom-noLoad .ui-artZoom-buttons ._tt_tasklist li .ui-artZoom-hide.title_tttl span, ._tt_tasklist li .ui-artZoom-noLoad .ui-artZoom-buttons .ui-artZoom-hide.title_tttl span {
+	background-position: -36px 0
+}
+a.ui-artZoom-source span, ._tt_tasklist li .ui-artZoom-source.title_tttl span {
+	background-position: -24px 0
+}
+a.ui-artZoom-right:hover span, ._tt_tasklist li .ui-artZoom-right.title_tttl:hover span, a.ui-artZoom-right:active span, ._tt_tasklist li .ui-artZoom-right.title_tttl:active span {
+	background-position: 0 -12px
+}
+a.ui-artZoom-left:hover span, ._tt_tasklist li .ui-artZoom-left.title_tttl:hover span, a.ui-artZoom-left:active span, ._tt_tasklist li .ui-artZoom-left.title_tttl:active span {
+	background-position: -12px -12px
+}
+a.ui-artZoom-source:hover span, ._tt_tasklist li .ui-artZoom-source.title_tttl:hover span, a.ui-artZoom-source:active span, ._tt_tasklist li .ui-artZoom-source.title_tttl:active span {
+	background-position: -24px -12px
+}
+a.ui-artZoom-hide:hover span, ._tt_tasklist li .ui-artZoom-hide.title_tttl:hover span, a.ui-artZoom-hide:active span, ._tt_tasklist li .ui-artZoom-hide.title_tttl:active span {
+	background-position: -36px -12px
+}
+.ui-artZoom-show {
+	background: transparent
+}
+.ui-artZoom-ready .ui-artZoom-photo {
+	font-size: 0;
+	line-height: 0
+}
+.ui-artZoom-box{line-height:0}

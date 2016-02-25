@@ -1,0 +1,29 @@
+﻿[name]windows经典[/name] 		
+	主题名称；
+
+[folder]window_jd[/folder]		
+	主题文件目录名
+
+[btype]1[/btype]  	
+ 	0:为html背景（必须定义[url]标签）; 1:拉伸；2：平铺；3：居中；
+
+[url][/url] 			
+	当btype为0时必须设定此值
+
+
+[window]window_jd[/window]	
+	窗体风格目录名
+
+
+[background-color]#3a6ea5[/background-color]	
+	背景颜色,如果不加入此项，则使用此目录的背景图片back.jpg作为背景
+
+[icoblock]default[/icoblock]	
+	图标样式目录名
+
+[menu]default[/menu]		
+	右键菜单样式目录名
+
+[openfile]window_jd[/openfile]	
+	打开选择文件样式目录名
+

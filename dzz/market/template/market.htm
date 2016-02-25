@@ -1,0 +1,102 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+html, body {
+	overflow: hidden;
+	background: #FBFBFB;
+}
+.table td {
+	vertical-align: middle;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<nav class="navbar navbar-default bs-navbar-default navbar-fixed-top" role="navigation" style="margin:0;padding:0 10px;"> 
+  <ul class="nav nav-pills tag-container nav-pills-bottomguide clearfix" >
+      <li <!--{if !$tagid}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=market">全部</a>
+      </li>
+      <!--{loop $tags  $value}--> 
+      <li <!--{if $tagid==$value[tagid]}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=market&tagid=$value[tagid]">$value[tagname]</a>
+      </li>
+      <!--{/loop}-->
+      <li class="pull-right " style="margin:4px 0;">
+        <form name="search" action="{DZZSCRIPT}" method="get">
+          <input type="hidden" name="mod" value="market" />
+          <div class="input-group" style="width:180px">
+            <input name="keyword"  type="text" class="form-control input-sm" value="$keyword"  placeholder="应用名称或供应商">
+            <a class="input-group-addon" herf="javascript:;" onclick="this.parentNode.parentNode.submit()"><i class="glyphicon glyphicon-search"></i></a> </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="bs-container clearfix" >
+  <div class="bs-main-container">
+  <div class="main-content clearfix">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>应用名称</th>
+          <th>供应商</th>
+          <th>标签</th>
+          <th>编辑</th>
+        </tr>
+      </thead>
+      <!--{loop $list $value}-->
+      <tr>
+        <td><a href="$value[url]" target="_blank" isinstall="$value[isinstall]" onclick="return Preview('{$value[appid]}');" title="预览"><img src="$value[appico]" />$value[appname]</a></td>
+        <td>$value[vendor]</td>
+        <td><!--{loop $value[tags] $key $value1}--> 
+          <a href="{DZZSCRIPT}?mod=market&tagid=$value1[tagid]">$value1[tagname]</a> 
+          <!--{/loop}--></td>
+        <td><!--{if $value[isinstall]}--> 
+          <span>已安装</span> 
+          <!--{else}--> 
+          <a id="app_$value[appid]" href="javascript:;" isinstall="$value[isinstall]"  onclick="Install('{$value[appid]}')"><span>安装</span></a> 
+          <!--{/if}--></td>
+      </tr>
+      <!--{/loop}-->
+      <!--{if $multi}-->
+      <tr>
+      	<td colspan="20"> $multi</td>
+      </tr>
+       <!--{/if}-->
+    </table>
+  </div>
+</div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();
+var appdata=$jsondata;
+function Preview(appid){
+	try{
+		if(appdata[appid]) parent._config.sourcedata.app[appid]=appdata[appid];
+		parent.OpenApp(appid);
+		return false
+	}catch(e){
+		return true;
+	}
+}
+function Install(appid){
+	try{
+		if(appdata[appid]) parent._config.sourcedata.app[appid]=appdata[appid];
+		else return;
+		parent.showmessage('正在安装"'+appdata[appid].appname+'"，请稍候','info',0,1,'right-bottom');
+		jQuery.getJSON('{DZZSCRIPT}?mod=market&do=install&appid='+appid,function(json){
+			if(json.msg=='success'){
+				parent._config.appList.push(appid);
+				parent._start.refreshlist();
+				jQuery('#app_'+appid).find('span').html('已安装').unwrap();
+				parent.showmessage(appdata[appid].appname+'已安装到开始菜单','success',3,1,'right-bottom');
+				parent._start.setStartTip(1);
+			}else if(json.error){
+				parent.showmessage(json.error,'info',3,1,'right-bottom');
+			}
+		});
+	}catch(e){
+		alert('请在桌面内使用');
+	}
+}
+
+</script> 
+<!--{template common/footer_simple}--> 

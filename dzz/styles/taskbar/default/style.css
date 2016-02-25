@@ -1,0 +1,862 @@
+/*taskbar start*/
+#taskbar{
+	 position:absolute;margin:0;padding:0;z-index:5000;
+}
+#taskbar *,.Icoblock *{
+	box-sizing:content-box;
+	-moz-box-sizing:content-box;
+	-webkit-box-sizing:content-box;
+}
+.taskbar-bottom{
+	width:100%;
+	height:40px;
+	left:0px;
+	bottom:0px;
+}
+
+.taskbar-left{
+	width:40px;
+	height:100%;
+	left:0px;
+	top:0px;
+}
+
+.taskbar-top{
+	height:40px;
+	width:100%;
+	left:0px;
+	top:0px;
+}
+
+.taskbar-right{
+	width:40px;
+	height:100%;
+	right:0px;
+	top:0px;
+}
+#taskbar .hover .backgound_radius{background:#eee;border:#0088CC 1px solid;filter:Alpha(opacity=50);opacity:0.5;transition: all 0.2s ease-in 0s;border-radius:0;}
+#taskbar  .task-current .backgound_radius{background:#eee;border:#0088CC 1px solid;filter:Alpha(opacity=50);opacity:0.5;transition: all 0.2s ease-in 0s;border-radius:0;}
+#taskbar_dock_inner{
+	position:absolute;
+	width:40px;
+	height:40px;
+	left:0px;
+	top:0px;
+}
+#taskbar .taskbar-back {
+	background:#d4d0c8;
+	width:100%;
+	height:100%;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:-1;
+}
+.taskbar-bottom .taskbar-back{
+	border-top:1px solid #fff;
+}
+.taskbar-left .taskbar-back{
+	border-right:1px solid #404040;
+}
+.taskbar-top .taskbar-back{
+	border-bottom:1px solid #404040;
+}
+.taskbar-right .taskbar-back{
+	border-left:1px solid #fff;
+}
+
+.taskbar-guide-logging{
+	position:absolute;width:253px;height:76px;display:none;
+}
+.taskbar-bottom .taskbar-guide-logging{
+	bottom:40px;left:20px;
+	background:url(images/guide_logging_bottom.png) left bottom no-repeat;
+}
+.taskbar-left .taskbar-guide-logging{
+	top:10px;left:40px;
+	background:url(images/guide_logging_left.png) left top no-repeat;
+}
+.taskbar-top .taskbar-guide-logging{
+	top:40px;left:20px;
+	background:url(images/guide_logging_top.png) left top no-repeat;
+}
+.taskbar-right .taskbar-guide-logging{
+	right:40px;top:10px;
+	background:url(images/guide_logging_right.png) right top no-repeat;
+}
+.taskbar-sub{
+	position:relative;
+	left:0;
+	top:0;
+	overflow:hidden;
+}
+
+.taskbar-bottom .taskbar-sub,.taskbar-top .taskbar-sub{
+	float:left;
+}
+.taskbar-bottom .taskbar-spacer,.taskbar-top .taskbar-spacer{
+	float:left;
+	width:15px;
+	height:38px;
+	margin-top:2px;
+/*	border-left:1px solid #FFF;
+	border-right:1px solid #808080;
+*/	
+}
+.taskbar-bottom .taskbar-spacer-left,.taskbar-top .taskbar-spacer-left{
+	background:url(images/arrow_left.png) no-repeat center;
+	cursor:pointer;
+	opacity:0.7;
+	filter:Alpha(opacity=70)
+}
+.taskbar-bottom .taskbar-spacer-left:hover,.taskbar-top .taskbar-spacer-left:hover{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.taskbar-bottom .taskbar-spacer-right,.taskbar-top .taskbar-spacer-right{
+	background:url(images/arrow_right.png) no-repeat center;
+	cursor:pointer;
+	opacity:0.7;
+	filter:Alpha(opacity=70)
+}
+.taskbar-bottom .taskbar-spacer-right:hover,.taskbar-top .taskbar-spacer-right:hover{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.taskbar-left .taskbar-spacer,.taskbar-right .taskbar-spacer{
+	width:38px;
+	height:10px;
+	margin-top:2px;
+/*	background:#d4d0c8;
+	border-top:1px solid #FFF;
+	border-bottom:1px solid #808080;
+*/	
+}
+.taskbar-left .taskbar-spacer-left,.taskbar-right .taskbar-spacer-left{
+	background:url(images/arrow_up.png) no-repeat center;
+	cursor:pointer;
+	opacity:0.7;
+	filter:Alpha(opacity=70)
+}
+.taskbar-left .taskbar-spacer-left:hover,.taskbar-right .taskbar-spacer-left:hover{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.taskbar-left .taskbar-spacer-right,.taskbar-right .taskbar-spacer-right{
+	background:url(images/arrow_down.png) no-repeat center;
+	cursor:pointer;
+	opacity:0.7;
+	filter:Alpha(opacity=70)
+}
+.taskbar-left .taskbar-spacer-right:hover,.taskbar-right .taskbar-spacer-right:hover{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.taskbar-bottom .taskbar-tray,.taskbar-top .taskbar-tray{
+	float:right;
+	width:65px;
+	overflow:visible;
+	
+}
+.taskbar-left .taskbar-tray,.taskbar-right .taskbar-tray{
+	float:left;
+	height:65px;
+	overflow:visible;
+}
+
+.taskbar-tray-item  {
+	float:left;
+	width:25px;
+	height:25px;
+	position:relative;
+}
+.taskbar-tray-item .gb_I,.taskbar-tray-item .gb_H{
+	display:none;
+}
+
+.taskbar-bottom  .taskbar-tray-item .gb_H {
+	border-color: transparent;
+	border-style: solid dashed solid;
+	border-width: 8px 8px 0;
+	position: absolute;
+	left: 4px;
+	top: -16px;
+	z-index: 1;
+	height: 0;
+	width: 0;
+	border-top-color: #F7F7F7;
+}
+.taskbar-bottom  .taskbar-tray-item .gb_I {
+	border-color: transparent;
+	border-style: solid dashed solid;
+	border-width: 8px 8px 0;
+	position: absolute;
+	left: 4px;
+	z-index: 1;
+	height: 0;
+	width: 0;
+	border-top-color: #ccc;
+	border-top-color: rgba(0,0,0,.5);
+	top: -15px;
+}
+.taskbar-top  .taskbar-tray-item .gb_H {
+	border-color: transparent;
+	border-style: dashed dashed solid;
+	border-width: 0 8px 8px;
+	position: absolute;
+	left: 4px;
+	top: 35px;
+	z-index: 1;
+	height: 0;
+	width: 0;
+	border-bottom-color: #F7F7F7;
+}
+.taskbar-top  .taskbar-tray-item .gb_I {
+	border-color: transparent;
+	border-style: dashed dashed solid;
+	border-width: 0 8px 8px;
+	position: absolute;
+	left: 4px;
+	z-index: 1;
+	height: 0;
+	width: 0;
+	border-bottom-color: #ccc;
+	border-bottom-color: rgba(0,0,0,.5);
+	top: 34px;
+}
+.taskbar-left  .taskbar-tray-item .gb_H {
+	border-color: transparent;
+	border-right-color: #fff;
+	border-style: dashed solid dashed;
+	border-width: 8px 8px 8px ;
+	position: absolute;
+	top: 4px;
+	left: 27px;
+	z-index: 1;
+	height: 0;
+	width: 0;
+	border-right-color: #F7F7F7;
+}
+.taskbar-left  .taskbar-tray-item .gb_I {
+	border-color: transparent;
+	border-style: dashed solid dashed;
+	border-width: 8px 8px 8px ;
+	position: absolute;
+	top: 4px;
+	z-index: 1;
+	height: 0;
+	width: 0;
+	border-right-color: #ccc;
+	border-right-color: rgba(0,0,0,.5);
+	left: 26px;
+}
+.taskbar-right  .taskbar-tray-item .gb_H {
+	border-color: transparent;
+	border-left-color: #fff;
+	border-style: dashed dashed dashed solid;
+	border-width:8px ;
+	position: absolute;
+	top: 4px;
+	right: 25px;
+	z-index: 1;
+	height: 0;
+	width: 0;
+	border-left-color: #F7F7F7;
+}
+.taskbar-right  .taskbar-tray-item .gb_I {
+	border-color: transparent;
+	border-style: dashed dashed dashed solid ;
+	border-width: 8px ;
+	position: absolute;
+	top: 4px;
+	z-index: 1;
+	height: 0;
+	width: 0;
+	border-left-color: rgba(0,0,0,.5);
+	right: 24px;
+}
+.taskbar-left .taskbar-tray-item ,.taskbar-right .taskbar-tray-item  {
+	margin:0 7px;
+	
+}
+.taskbar-top .taskbar-tray-item ,.taskbar-bottom .taskbar-tray-item  {
+	margin:7px 0;
+}
+.taskbar-tray-notification{
+	background:url(images/tray_icon.png) center 0 no-repeat
+}
+.taskbar-tray-notification:hover{
+	background:url(images/tray_icon.png) center -25px no-repeat;
+}
+.taskbar-tray-copyright{
+	background:url(images/tray_icon.png) center -100px no-repeat;
+}
+.taskbar-tray-copyright:hover{
+	background:url(images/tray_icon.png) center -125px no-repeat;
+}
+
+.taskbar-tray-showdesktop{
+	background-color: RGBA(255,255,255,0.5);
+	border-color: #D4D4D4;
+	padding: 1px 5px;
+	border-width: 2px;
+	border-style:solid;
+	opacity:0.5;
+	filter:Alpha(opacity=20);
+	*border-color:#FFF;
+	margin:0;
+}
+.ie6 .taskbar-tray-showdesktop,.ie7 .taskbar-tray-showdesktop,.ie8 .taskbar-tray-showdesktop { 
+   
+   /*filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#20FFFFFF,endColorstr=#50FFFFFF);*/ 
+  
+} 
+.taskbar-tray-showdesktop:hover{
+	background-color: #CCC;
+	border-color: #FFF;
+	text-decoration: none;
+}
+.taskbar-left .taskbar-tray-showdesktop ,.taskbar-right .taskbar-tray-showdesktop  {
+	width:28px;
+	height:10px;
+	margin:0;
+	
+}
+.ie7 .taskbar-tray-showdesktop,.ie8 .taskbar-tray-showdesktop{
+	padding:1px 4px;
+}
+.taskbar-top .taskbar-tray-showdesktop ,.taskbar-bottom .taskbar-tray-showdesktop  {
+	height:36px;
+	width:1px;
+	margin:0;
+	
+}
+.taskbar-start{
+	width:40px;
+	height:40px;
+}
+.taskbar-start:hover{
+	background: rgba(0,0,0,0.3);
+}
+.taskbar-start.startmenu-opened{
+	background: rgba(0,0,0,0.3);
+}
+.taskbar-start img{
+	vertical-align:inherit;
+}
+.taskbar-start .tips{
+	position:absolute;
+	right:0;
+	top:0;
+	text-align:center;
+	line-height:16px;
+	font-size:12px;
+	width:21px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/taskbar/images/tips_1.png', sizingMethod='scale');
+	background-image:url(images/tips_1.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+	display:none;
+}
+
+/*taskbar end*/
+
+/*noticeContainer start*/
+
+#noticeContainer{
+	display:none;
+	position:absolute;margin:0;padding:0;z-index:4999;
+	border:1px solid rgba(0,0,0,.5);
+	box-shadow:0 5px 10px RGBA(0,0,0,0.2);
+	width:380px;
+	background:#F7F7F7;
+	
+}
+.ie6 #noticeContainer,.ie7 #noticeContainer,.ie8 #noticeContainer{
+}
+#noticeContainer {
+	font-family:tahoma,arial,simsun,"宋体";
+}
+#noticeContainer.bottom{
+	 bottom:48px;
+	 right:8px;
+}
+#noticeContainer.left{
+	 bottom:9px;
+	 left:49px;
+}
+#noticeContainer.top{
+	 top:49px;
+	 right:9px;
+}
+#noticeContainer.right{
+	 right:47px;
+	 bottom:7px;
+}
+
+#noticeContainer .noticeContainer-title {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 30px;
+  margin: 0;
+  padding: 0;
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:35px;z-index:100;
+}
+#noticeContainer.top .noticeContainer-title{
+	top:0px;
+	bottom:auto;
+	
+}
+#noticeContainer .noticeContainer-title .left{
+	line-height:25px;
+	padding:0px 10px;
+}
+#noticeContainer.top .noticeContainer-title .left{
+	margin:5px 10px;
+}
+#noticeContainer .noticeContainer-title .left span{
+	display:inline-block;
+	line-height:20px;
+	padding:5px 5px 5px 15px;
+}
+
+#noticeContainer .noticeContainer-title .left .filter-return{
+	background:url(images/arrow_left.png) no-repeat 0 center;
+	cursor:pointer;
+}
+#noticeContainer .noticeContainer-title .right a {
+	width:20px;
+	height:20px;
+	margin:4px 10px;
+	background-image:url(images/notification_icon.png);
+	background-repeat:no-repeat;
+	text-indent:1000px;
+	overflow:hidden;
+	display:inline-block;
+}
+#noticeContainer.top  .noticeContainer-title .right a{
+	margin:8px 10px;
+}
+#noticeContainer .noticeContainer-title .right a.mute {
+	background-position:0 0;
+}
+#noticeContainer .noticeContainer-title .right a.mute-on {
+	background-position:0 -40px;
+}
+
+#noticeContainer .noticeContainer-title .right a.mute:hover {
+	background-position:0 -20px;
+}
+#noticeContainer .noticeContainer-title .right a.mute-on:hover {
+	background-position:0 -40px;
+}
+#noticeContainer .noticeContainer-title .right a.clear {
+	background-position:0 -60px;
+}
+
+#noticeContainer .noticeContainer-title .right a.clear:hover {
+	background-position:0 -80px;
+}
+#noticeContainer .noticeContainer-title .right a.filter {
+	background-position:0 -100px;
+}
+
+#noticeContainer .noticeContainer-title .right a.filter:hover {
+	background-position:0 -120px;
+}
+
+
+
+#noticeContainer .noticeContainer-body {
+	padding:10px 3px 35px 10px;
+	position:relative;
+	min-height:100px;
+	
+}
+#noticeContainer .noticeContainer-body .noticelist {
+	position:relative;
+	min-height:100px;
+	max-height:500px;
+	overflow-x:hidden;
+	overflow-y:auto;
+	padding-right:10px;
+}
+#noticeContainer.top .noticeContainer-body{
+	padding:35px 3px 10px 10px;
+}
+
+#noticeContainer .noticeContainer-filter {
+	
+	width:380px;
+	padding:0px 10px 35px 10px;
+	overflow:hidden;
+	position:relative;
+	bottom:0;
+	left:0;
+	top:auto;
+	display:none;
+	z-index:10;
+}
+#noticeContainer .noticeContainer-filter .filterlist {
+	position:relative;
+	padding:5px 0px 5px 10px;
+	min-height:100px;
+	max-height:480px;
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+#noticeContainer.top .noticeContainer-filter{
+	padding:35px 10px 0px 10px;
+	top:0;
+	bottom:auto;
+}
+#noticeContainer .noticeContainer-filter .title {
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 30px;
+  margin: 0;
+  padding: 0;
+}
+#noticeContainer .noticeContainer-filter .subtitle {
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 20px;
+  margin: 0;
+  padding: 0;
+}
+.filterlist .filter-item {
+	/*line-height:40px;*/
+}
+.img_16_16{
+	max-width: 16px;
+	max-height: 16px;
+}
+* html .img_16_16 {
+	width: expression(this.width > 16 && this.width>=this.height ? 16 : true);
+	height: expression(this.height > 16 && this.width<=this.height ? 1 : true);
+}
+.filterlist .filter-item .appinfo{
+	float:left;
+}
+.filterlist .filter-item  .appsel{
+	float:left;
+}
+.filterlist .filter-item .appinfo .appico{
+	width:40px;
+	text-align:center;
+	float:left;
+	vertical-align:middle;
+}
+.filterlist .filter-item .appinfo .appname{
+	float:left;
+	width:290px;
+	overflow:hidden;
+}
+/*noticeContainer end*/
+
+/*pop_noticeContainer start*/
+#pop_noticeContainer{
+	position:absolute;
+	bottom:0;
+	right:0;
+	margin:0;padding:0;
+	z-index:4999;
+	border:none;
+	box-shadow:none;
+	background:none;
+	padding:0 10px;
+	width:360px;
+	text-shadow:1px 1px 1px #FFF;
+	float:right;
+	
+}
+
+.bottom #pop_noticeContainer{
+	 bottom:40px;
+	 right:0;
+	 top:auto;
+	 left:auto;
+	 
+}
+.left #pop_noticeContainer{
+	 bottom:0px;
+	 left:40px;
+	 top:auto;
+	 right:auto;
+	 float:left;
+}
+.top #pop_noticeContainer{
+	 top:40px;
+	 right:0px;
+	 bottom:auto;
+	 left:auto;
+}
+.right #pop_noticeContainer{
+	 right:40px;
+	 bottom:0px;
+	  top:auto;
+	 left:auto;
+}
+#pop_noticeContainer .notice-item{
+	display:none;
+	
+}
+/*pop_noticeContainer end*/
+
+/*notice-itme  每条通知*/
+.notice-item {
+	/*height:80px;*/
+	border:1px solid #ccc;
+	position:relative;
+	box-shadow:0 1px 5px RGBA(0,0,0,0.5);
+	margin:10px 0;
+}
+#noticeContainer .notice-item{
+	box-shadow:0 0 5px #CCC;
+}
+.notice-item .imgContainer{
+	position:absolute;
+	width:80px;
+	height:80px;
+	background:#EFEFEF;
+	text-align:center;
+	left:0px;
+	top:0px;
+	overflow:hidden;
+}
+.notice-item .imgContainer .img{
+	border:0;
+}
+.img_80_80{
+	max-width: 80px;
+	max-height: 80px;
+}
+* html .img_80_80 {
+	width: expression(this.width > 80 && this.width>=this.height ? 80 : true);
+	height: expression(this.height > 80 && this.width<=this.height ? 80 : true);
+}
+.notice-item .content{
+	margin-left:80px;
+	overflow:hidden;
+	padding:5px 15px;
+	background:#FFF;
+	height:80px;
+	color: #444;
+	text-shadow: 1px 1px 1px #F7F7F7;
+}
+.notice-item .content .title{
+	font-size:14px;
+	line-height:25px;
+	
+}
+.notice-item .content .message{
+	font-size:12px;
+	line-height:20px;
+	height:40px;
+	overflow:hidden;
+	word-break:break-all;
+}
+.notice-item .close{
+	position:absolute;
+	right:5px;
+	top:5px;
+	width:20px;
+	height:20px;
+	background-image:url(images/notification_icon.png);
+	background-repeat:no-repeat;
+	background-position:0 -140px;
+}
+.notice-item .close:hover{
+	background-position:0 -160px;
+}
+
+/*通知条目end*/
+
+/* copyrightmenu start*/
+
+
+#copyrightmenu{
+	display:none;
+	position:absolute;
+	margin:0;padding:0;
+	z-index:4999;
+	border:1px solid rgba(0,0,0,.5);
+	box-shadow:0 5px 10px RGBA(0,0,0,0.2);
+	width:265px;
+	height:265px;
+	background:#F7F7F7;
+	overflow:hidden;
+}
+#copyrightmenu {
+	
+}
+#copyrightmenu.bottom{
+	 bottom:48px;
+	 right:8px;
+}
+#copyrightmenu.left{
+	 bottom:9px;
+	 left:49px;
+}
+#copyrightmenu.top{
+	 top:49px;
+	 right:9px;
+}
+#copyrightmenu.right{
+	 right:47px;
+	 bottom:7px;
+}
+.copyrightmenu .sitecopyright{
+	position:relative;
+	height:235px;
+	
+}
+.copyrightmenu .dzzcopyright{
+	padding:5px 0;
+	position:absolute;
+	bottom:0px;
+	left:0px;
+	width:263px;
+	height:30px;
+	text-align:center;
+	overflow:hidden;
+	z-index:5000;
+	text-shadow:1px 1px 1px #FFF;
+	font-size:12px;
+	
+}
+.copyrightmenu .dzzcopyright a{
+	color:#333;
+}
+
+
+.copyrightmenu .item-logo{
+	padding:10px 0px 10px 70px;
+	background:url(images/logo.png) no-repeat 20px center;
+	text-align:left;
+	background-size:40px;
+}
+
+.copyrightmenu .item .title{
+	font-size:14px;
+	font-weight:bold;
+	padding: 0 0 5px 0;
+}
+.copyrightmenu .item .subtitle{
+	font-size:12px;
+}
+/*copyrightmenu end*/
+
+
+/*任务栏右侧图标右上角数字提醒*/
+.taskbar_tips{
+	float:left;
+	margin:2px 0px 0 -2px;
+	position:absolute;
+	top:-8px;
+	left:12px;
+	text-align:center;
+}
+.left .taskbar_tips{
+	top:-8px;
+	right:auto;
+	bottom:auto;
+	left:12px;
+}
+.top .taskbar_tips{
+	top:-8px;
+	right:auto;
+	bottom:auto;
+	left:12px;
+}
+.right .taskbar_tips{
+	top:-8px;
+	right:10px;
+	bottom:auto;
+	left:auto;
+}
+.bottom .taskbar_tips{
+	top:-8px;
+	left:12px;
+	bottom:auto;
+	right:auto;
+}
+.taskbar_tips .tips_size_1{
+	line-height:16px;
+	font-size:12px;
+	width:21px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/taskbar/images/tips_1.png', sizingMethod='scale');
+	background-image:url(images/tips_1.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+	
+}
+.taskbar_tips .tips_size_2{
+	line-height:16px;
+	font-size:12px;
+	width:29px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/taskbar/images/tips_2.png', sizingMethod='scale');
+	background-image:url(images/tips_2.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+}
+
+.taskbar_tips .tips_size_3{
+	line-height:16px;
+	font-size:12px;
+	width:35px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/taskbar/images/tips_3.png', sizingMethod='scale');
+	background-image:url(images/tips_3.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+}
+
+.taskbar_tips .tips_size_4{
+	line-height:16px;
+	font-size:12px;
+	width:40px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/taskbar/images/tips_4.png', sizingMethod='scale');
+	background-image:url(images/tips_4.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+}
+/*图标图标tips*/
+.taskbar .taskbar-tray-fullscreen{
+	position:absolute;color:#FFF;font-size:20px;
+}
+.ie_all .taskbar .taskbar-tray-fullscreen{
+	display:none;
+}
+.taskbar-bottom .taskbar-tray-fullscreen{
+	left:auto;top:-30px;right:5px;bottom:auto;
+}
+.taskbar-left .taskbar-tray-fullscreen{
+	left:auto;top:auto;right:-25px;bottom:5px;
+}
+.taskbar-top .taskbar-tray-fullscreen{
+	left:auto;top:auto;right:5px;bottom:-30px;
+}
+.taskbar-right .taskbar-tray-fullscreen{
+	left:-25px;top:auto;right:auto;bottom:5px;
+}

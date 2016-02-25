@@ -1,0 +1,45 @@
+{eval
+	$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+	$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+	$sectpl = !empty($sectpl) ? explode("<sec>", $sectpl) : array('<br />',': ','<br />','');
+	$sectpldefault = $sectpl;
+	$sectplqaa = str_replace('<hash>', 'qaa'.$sechash, $sectpldefault);
+	$sectplcode = str_replace('<hash>', 'code'.$sechash, $sectpldefault);
+	$secshow = !isset($secshow) ? 1 : $secshow;
+	$sectabindex = !isset($sectabindex) ? 1 : $sectabindex;
+}
+<!--{block seccheckhtml}-->
+<input name="sechash" type="hidden" value="$sechash" />
+<!--{if $sectpl}-->
+	<!--{if $secqaacheck}-->
+    		<div class="clearfix" style="padding:0">
+           		 <input name="secanswer" class="form-control"  style="width:100px;float:left" id="secqaaverify_$sechash" type="text" autocomplete="off" style="width:100px"  onblur="checksec('qaa', '$sechash')"  />
+            &nbsp; &nbsp;<a href="javascript:;" onclick="updatesecqaa('$sechash');doane(event);" >换一个</a>
+                <span id="checksecqaaverify_$sechash"><img src="{STATICURL}image/common/none.gif" width="16" height="16" class="vm" /></span>
+            </div>
+            <div style="padding:5px 0">
+                $sectplqaa[2]<span id="secqaa_$sechash"></span>
+                <!--{if $secshow}--><script type="text/javascript" reload="1">updatesecqaa('$sechash');</script><!--{/if}-->
+                $sectplqaa[3]
+            </div>
+       
+	<!--{/if}-->
+   
+	<!--{if $seccodecheck}-->
+    			<div class="clearfix" style="padding:0">
+                  <input name="seccodeverify" class="form-control"  style="width:100px;float:left"  id="seccodeverify_$sechash" type="text" autocomplete="off" style="{if $_G[setting][seccodedata][type] != 1}ime-mode:disabled;{/if}"  onblur="checksec('code', '$sechash')"  />
+                  &nbsp;&nbsp;<a tabindex="-1" href="javascript:;" onclick="updateseccode('$sechash');doane(event);" class="btn btn-link">换一个</a>
+                  <span id="checkseccodeverify_$sechash"><img src="{STATICURL}image/common/none.gif" width="16" height="16" class="vm" /></span>
+                </div> 
+                <div  style="padding:5px 0">
+                {$sectplcode[2]}<span id="seccode_$sechash"></span>
+                <!--{if $secshow}--><script type="text/javascript" reload="1">updateseccode('$sechash');</script><!--{/if}-->
+                $sectplcode[3]
+                </div>
+             
+		
+	<!--{/if}-->
+<!--{/if}-->
+<!--{/block}-->
+<!--{eval unset($secshow);}-->
+<!--{if empty($secreturn)}-->$seccheckhtml<!--{/if}-->

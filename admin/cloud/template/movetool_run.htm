@@ -1,0 +1,194 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+.thumbnails li{
+	float:left;
+}
+.thumbnail{
+	border:none;
+	box-shadow:none;
+}
+.progress-title{
+	word-break:break-all;
+	font-weight:normal;
+	max-height:40px;
+	line-height:20px;
+	overflow:hidden;
+}
+
+#upload_progress .back{
+	position:absolute;
+	width:200px;
+	text-align:center;
+	color:#900;
+	font-weight:bold;
+}
+#upload_progress .back span{
+	padding:0 5px;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+  <div class="bs-main-container  clearfix" style="min-width:570px;">
+    <div class="main-header ">
+      <!--{template right_header}-->
+    </div>
+    <div class="main-content clearfix"  style="padding:20px 20px 10px;border-top:1px solid #FFF">
+     <div class="clearfix" style="margin:0 auto" >
+     	 <p id="operation" class="text-center" style="width:500px;">
+         	<button class="btn btn-success start" onclick="moveing_start('start')" >开始迁移</button> &nbsp; &nbsp;
+            <button class="btn btn-danger stop" onclick="moveing_start('stop')" disabled="disabled">停止</button>&nbsp; &nbsp;
+         </p>
+         <ul class="thumbnails list-unstyled clearfix" style="width:570px;">
+          <li id="source_space"  style="width:150px;">
+             <div class="thumbnail"> 
+              <!--{if $sourcedata[bz]=='dzz'}-->
+              	<img src="dzz/images/default/system/home.png" width="100" >
+              <!--{else}-->
+              	<img src="dzz/images/default/system/$sourcedata[bz].png" width="100" >
+              <!--{/if}--> 
+              <h5 class="text-center" style="line-height:20px;margin-bottom:5px"><a href="javascript:;" title="$sourcedata[name]">$sourcedata[name] </a></h5>
+              </div>
+          </li>
+        
+          <li id="moveinfo" >
+            <div id="upload_progress" style="width:200px;overflow:hidden">
+					 
+                     <h5 class="progress-subject" style="margin-top:5px"></h5>
+                    <h5 class="progress-title">$first[attachment]</h5>
+                    <div class="progress progress-striped active" >
+                    	<div class="back"><span id="moved">$first[fsize]</span>/<span>$fmovesize</span></div>
+                        <div class="progress-bar" style="width:1%;"></div>
+                    </div>
+                
+            </div>
+          </li>
+        
+           <li id="target_space"  style="width:150px;">
+             <div class="thumbnail"> 
+              <!--{if $targetdata[bz]=='dzz'}-->
+              	<img src="dzz/images/default/system/home.png" width="100" >
+              <!--{else}-->
+              	<img src="dzz/images/default/system/$targetdata[bz].png" width="100" >
+              <!--{/if}--> 
+              <h5 class="text-center" style="line-height:20px;margin-bottom:5px"><a href="javascript:;" title="$targetdata[name]">$targetdata[name]</a></h5>
+              </div>
+          </li>
+        </ul>
+     </div>
+      <div class="tip" style="margin:10px;">
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h5>提示信息</h5>
+                <ul>
+                    <li>完成前，请不要关闭此页。</li>
+                    <li>文件较大时，进度条可能长时间不活动。</li>
+                    
+                </ul>
+            </div>
+       </div>
+    </div>
+  </div>
+</div>
+<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();
+var runurl='$runurl';
+var sizemoved=0;
+var totalsize=parseInt('$movesize');
+var ignore=[];
+var ignore_attach={};
+var attach={};
+var ignoreTimer=null;
+function setProgress(data){
+	attach=data;
+	var el=jQuery('#upload_progress');
+	if(data.error){
+		el.find('.progress-title').html(data.attachment);
+		var html='';
+		html+='<p><span class="text-danger">'+data.error+'</span></p>';
+		html+='<p><span class="text-info">文件名：'+data.attachment+'</span>';
+		html+='<p><span class="text-info">大小：'+formatSize(data.filesize)+'</span></p>';
+		html+='<p><a href="javascript:;" onclick="moveing_start(\'retry\')">重试</a>&nbsp;&nbsp;<a href="javascript:;" onclick="moveing_start(\'ignore\');">忽略继续</a></p>';
+		ignoreTimer=window.setTimeout(function(){moveing_start('ignore');},1000);
+		el.find('.progress-subject').html(html);
+	}else{
+		el.find('.progress-subject').html('正在移动...');
+		sizemoved+=parseInt(data.filesize);
+		el.find('.progress-title').html(data.attachment);
+		el.find('#moved').html(formatSize(sizemoved));
+		jQuery('#upload_progress .progress-bar').css('width',Math.floor((sizemoved/totalsize)*100));
+	}
+	
+	
+}
+function setComplete(){
+	var html='';
+		html+='<p><span class="text-success">迁移完成</span></p>';
+		if(ignore.length>0){
+			html+='<p class="text-warning">'+ignore.length+'个文件被忽略！</p>';
+		}
+		jQuery('#upload_progress .progress-bar').css('width','100%');
+		jQuery('#upload_progress .progress-subject').html(html);
+		jQuery('#operation .stop').attr('disabled',true);
+		jQuery('#operation .start').attr('disabled',true);
+}
+function moveing_start(op){
+	if(ignoreTimer) window.clearTimeout(ignoreTimer);
+	if(op=='start'){
+		jQuery('#operation .stop').removeAttr('disabled');
+		jQuery('#operation .start').attr('disabled',true);
+		jQuery('#upload_progress .progress-subject').html('正在移动...');
+		jQuery('#upload_progress .progress-bar').css('width',Math.floor((sizemoved/totalsize)*100));
+		window.frames['hideframe'].location=runurl+'&dateline='+(attach.dateline || 0);;
+	}else if(op=='stop'){
+		jQuery('#operation .start').removeAttr('disabled');
+		jQuery('#operation .stop').attr('disabled',true);
+		window.frames['hideframe'].location='about:blank';
+		jQuery('#upload_progress .progress-subject').html('已停止...');
+	}else if(op=='ignore'){
+		 ignore.push(attach.aid);
+		 ignore_attach[attach.aid]=attach;
+		 jQuery('#upload_progress .progress-subject').html('已忽略...');
+		 sizemoved+=parseInt(attach.filesize);
+		 jQuery('#upload_progress .progress-bar').css('width',Math.floor((sizemoved/totalsize)*100));
+		 window.frames['hideframe'].location=runurl+'&dateline='+attach.dateline;
+	}else if(op=='retry'){
+		jQuery('#upload_progress .progress-subject').html('正在重试...');
+		jQuery('#upload_progress .progress-bar').css('width',Math.floor((sizemoved/totalsize)*100));
+		window.frames['hideframe'].location=runurl+'&dateline='+attach.dateline;;
+	}else if(op=='refresh'){
+		window.location.reload();		
+	}
+}
+function formatSize(bytes){
+	var i = -1; 
+	do {
+		bytes = bytes / 1024;
+		i++;  
+	} while (bytes > 99);
+   
+	return Math.max(bytes, 0).toFixed(1) + ['kB', 'MB', 'GB', 'TB', 'PB', 'EB'][i];          
+};
+
+</script>
+<!--{template common/footer_simple}--> 

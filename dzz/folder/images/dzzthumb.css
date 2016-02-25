@@ -1,0 +1,450 @@
+/*可以在这里添加你自己的css*/
+
+
+/*在线预览*/
+.preview-box {
+	position:absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index:10000;
+	/*min-width:640px;*/
+	background-color:rgba(0, 0, 0, 0.5);
+	background-image:url(preview/b.gif);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7F000000', endColorstr='#7F000000');
+}
+.preview-handle b,
+.contents-panel li i {
+	background-image:url(preview/icon_handle.gif);
+	background-repeat:no-repeat;
+	-webkit-user-select:none;
+	-moz-user-select:none;
+}
+.preview-handle {
+	position:absolute;
+	top:0;
+	right:0;
+	_right:-1px;
+	z-index:111;
+	height:40px;
+}
+.preview-handle b {
+	float:left;
+	width:40px;
+	height:40px;
+	margin-left:1px;
+	line-height:10;
+	overflow:hidden;
+	background-color:#2F2F2F;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+	cursor:pointer;
+}
+.preview-handle b:hover {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+.pr-close {
+	background-position:0 -20px;
+}
+.pr-minimize {
+	background-position:-40px -20px;
+}
+.close-hint {
+	position:absolute;
+	top:40px;
+	right:30px;
+	width:200px;
+	height:129px;
+	background:url(preview/close_hint.png) no-repeat 0 0;
+	_background-image:url(preview/close_hint.gif);
+}
+/**/
+.preview-panel {
+	position:absolute;
+	top:0;
+	right:0;
+	z-index:101;
+	width:100%;
+	height:40px;
+	overflow:hidden;
+	background:rgba(0, 0, 0, 0.9);
+	background-image:url(preview/b.gif);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#E5000000', endColorstr='#E5000000');
+}
+.contents-panel {
+	position: absolute;
+	top: 7px;
+	right: 95px;
+	z-index: 2;
+}
+.contents-panel li {
+	position: relative;
+	float: left;
+	height: 26px;
+	margin-left: 20px;
+	padding-left: 20px;
+	line-height: 26px;
+	overflow: hidden;
+	cursor: pointer;
+	zoom: 1;
+	display:inline-block;
+}
+.contents-panel li b {
+	font-weight: normal;
+	color: #999;
+}
+.contents-panel li:hover b {
+	color: #FFF;
+}
+.contents-panel li i {
+	position: absolute;
+	top: 5px;
+	left: 0;
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}
+.contents-panel li:hover i {
+	opacity: 1;
+	filter: alpha(opacity=100);
+}
+.pr-rotate {
+	background-position: 0 0;
+}
+.pr-share {
+	background-position: -20px 0;
+}
+.pr-download {
+	background-position: -40px 0;
+}
+.pr-save {
+	background-position: -60px 0;
+}
+/**/
+.contents-control {
+	text-align: center;
+}
+.contents-control li {
+	position: relative;
+	top: 7px;
+	display: inline-block;
+	height: 26px;
+	margin: 0 5px;
+	line-height: 26px;
+	cursor: pointer;
+	*display: inline;
+	*zoom: 1;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+.contents-control li b {
+	font-weight: normal;
+	color: #999;
+}
+.contents-control li:hover b,
+.contents-control li.focus b  {
+	color: #FFF;
+}
+.contents-control li i {
+	position: relative;
+	float: left;
+	margin-right: 3px;
+	overflow: hidden;
+	border: 2px solid #999;
+}
+.contents-control li:hover i,
+.contents-control li.focus i {
+	border-color: #FFF;
+}
+.sz-01 {
+	top: 9px;
+	 width: 8px;
+	 height: 4px;
+}
+.sz-02 {
+	top: 8px;
+	width: 10px;
+	height: 6px;
+}
+.sz-03 {
+	top: 7px;
+	width: 12px;
+	height: 8px;
+}
+.sz-04 {
+	top: 6px;
+	width: 14px;
+	height: 10px;
+}
+/**/
+html:root .preview-box,
+html:root .preview-panel { filter:none; }
+/*文件名*/
+.previewer-filename {
+	top:0;
+	left:0;
+	z-index:2;
+	position:absolute;
+	width:240px;
+	height:40px;
+	padding-left:10px;
+	line-height:40px;
+	text-align:left;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	font-size:12px;
+	color:#999;
+}
+/*上一个、下一个*/
+.pr-btn-switch b {
+	position: absolute;
+	top: 50%;
+	z-index: 12;
+	width: 60px;
+	height: 120px;
+	margin-top: -40px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-indent: 100px;
+	background-image: url(preview/btn_switch.png);
+	_background-image: url(preview/btn_switch.gif);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.pr-btn-prev {
+	left: 0;
+	background-position: 0 0;
+}
+.pr-btn-prev:hover {
+	background-position: 0 -120px;
+}
+.pr-btn-next {
+	right: 0;
+	background-position: -60px 0;
+	_right: -1px;
+}
+.pr-btn-next:hover {
+	background-position: -60px -120px;
+}
+/*文档预览*/
+.previewer-document {
+	position:absolute;
+	top:50px;
+	bottom:10px;
+	left:5%;
+	z-index:11;
+	width:90%;
+	_height:90%;
+	margin-left:-3px;
+	border:3px solid #FFF;
+	background:#FFF;
+	_background:#CCC;
+	box-shadow:0 0 20px rgba(0, 0, 0, 0.8);
+}
+/*图片预览*/
+.previewer-photo {
+	position:absolute;
+	top:40px;
+	right:0;
+	bottom:0;
+	left:0;
+	width:100%;
+	overflow:hidden;
+	_height:100%;
+}
+.previewer-photo img {
+	position:absolute;
+	border:3px solid #FFF;
+	box-shadow:0 0 20px rgba(0, 0, 0, 0.8);
+	-webkit-transition:-webkit-transform 0.3s ease-in-out;
+	-moz-transition:-moz-transform 0.3s ease-in-out;
+	-o-transition:-o-transform 0.3s ease-in-out;
+}
+
+/*不能预览的文档*/
+.previewer-unable {
+	position:absolute;
+	top:50%;
+	left:50%;
+	z-index:11;
+	width:470px;
+	height:170px;
+	margin:-85px 0 0 -235px;
+	border-radius:5px;
+	background:#FFF;
+	box-shadow:0 0 30px rgba(0, 0, 0, 0.8);
+}
+.previewer-unable .file-thumb {
+	position:absolute;
+	top:35px;
+	left:45px;
+}
+.previewer-unable strong {
+	position:absolute;
+	top:54px;
+	left:165px;
+	width:265px;
+	height:32px;
+	line-height:32px;
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	font-size:18px;
+}
+.previewer-unable span {
+	position:absolute;
+	top:86px;
+	left:165px;
+	width:265px;
+	height:32px;
+	line-height:32px;
+	overflow:hidden;
+	font-size:14px;
+	color:#666;
+}
+/*载入中*/
+.previewer-loading {
+	position:absolute;
+	top:50%;
+	left:50%;
+	z-index:11;
+	margin:-40px 0 0 -40px;
+	width:80px;
+	height:80px;
+	line-height:50;
+	overflow:hidden;
+	border-radius:3px;
+	background:url(preview/loading.gif) no-repeat 0 0;
+}
+/*视频*/
+.preview-video {
+	position:absolute;
+	top:50%;
+	left:50%;
+	z-index:11;
+	margin:-205px 0 0 -360px;
+	width:720px;
+	background:#FFF;
+	box-shadow:0 0 20px rgba(0, 0, 0, 0.8);
+}
+.prvideo-box {
+	width:720px;
+	height:405px;
+	background:#000;
+}
+.prvideo-panel {
+	position:relative;
+	height:36px;
+	background:#1E1E1E;
+}
+/**/
+.popup-hint {
+    position: absolute;
+}
+
+.popup-hint .hint-icon {
+    left: 5px;
+    position: absolute;
+    top: 5px;
+    z-index: 1;
+}
+.popup-hint .sl {
+    background-position: 0 0;
+}
+.popup-hint .sr {
+    background-position: -15px 0;
+}
+.popup-hint em {
+    background-image: url("preview/hint_cor.png");
+    float: left;
+    height: 30px;
+    overflow: hidden;
+    position: relative;
+    width: 15px;
+	
+}
+.popup-hint em b {
+  display: none;
+  height: 30px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 30px;
+}
+.popup-hint span {
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+  
+  color: #FFFFFF;
+  float: left;
+  height: 30px;
+  line-height: 31px;
+  overflow: hidden;
+  padding-left: 15px;
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#7F000000', endColorstr='#7F000000'); 
+}
+.popup-hint .sr b {
+  left: -15px;
+}
+/*for IE 6*/
+*html .preview-box {
+	width:100%;
+	height:100%;
+}
+.next-tips {
+  background: url("preview/popup_title.png") repeat-x scroll center top transparent;
+  border-radius: 20px 20px 3px 3px / 8px 8px 3px 3px;
+  color: #FFFFFF;
+  display: none;
+  height: 30px;
+  right:5px;
+  line-height: 30px;
+  max-width: 300px;
+  overflow: hidden;
+  padding: 5px 10px 0;
+  position: absolute;
+  text-overflow: ellipsis;
+  top:50%;
+  margin-top:80px;
+  white-space: nowrap;
+  z-index: 9999999;
+}
+.prev-tips {
+  background: url("preview/popup_title.png") repeat-x scroll center top transparent;
+  border-radius: 20px 20px 3px 3px / 8px 8px 3px 3px;
+  color: #FFFFFF;
+  display: none;
+  height: 30px;
+  left:5px;
+  line-height: 30px;
+  max-width: 300px;
+  overflow: hidden;
+  padding: 5px 10px 0;
+  position: absolute;
+  text-overflow: ellipsis;
+  top:50%;
+  margin-top:80px;
+  white-space: nowrap;
+  z-index: 9999999;
+}
+.esc-tips {
+  background: url("preview/popup_title.png") repeat-x scroll center top transparent;
+  border-radius: 20px 20px 3px 3px / 8px 8px 3px 3px;
+  color: #FFFFFF;
+  display: none;
+  height: 30px;
+  right:5px;
+  line-height: 30px;
+  max-width: 300px;
+  overflow: hidden;
+  padding: 5px 10px 0;
+  position: absolute;
+  text-overflow: ellipsis;
+  top:40px;
+  white-space: nowrap;
+  z-index: 9999999;
+}

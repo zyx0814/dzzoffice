@@ -1,0 +1,90 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="admin/images/app.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html, body {
+	overflow: hidden;
+	background: #FBFBFB;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<nav class="navbar navbar-default bs-navbar-default navbar-fixed-top" role="navigation" style="margin:0"> 
+  <!--{template top}--> 
+</nav>
+<div class="bs-container clearfix" >
+  <div class="bs-main-container">
+    <div class="tag-header">
+      <table width="100%" height="100%" style="table-layout:fixed">
+        <tr>
+          <td width="60"><strong>标签：</strong></td>
+          <td><ul class="nav nav-pills tag-container clearfix">
+              <!--{loop $tags  $value}--> 
+              <li <!--{if $tagid==$value[tagid]}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=app&tagid=$value[tagid]">$value[tagname]</a>
+              </li>
+              <!--{/loop}-->
+            </ul></td>
+      </table>
+    </div>
+    <div class="main-header2" style="border-top:1px solid #FFF" >
+      <ul class="nav nav-pills clearfix">
+        <strong class="pull-left" style="padding-left:0px;">筛选：</strong>
+        <li class="dropdown"> <a href="{BASESCRIPT}?mod=app&group=$group" data-toggle="dropdown" role="button" id="drop-group" class="dropdown-toggle">$grouptitle[$group]<b class="caret"></b></a>
+          <ul aria-labelledby="drop-group" role="menu" class="dropdown-menu" id="drop-group-menu">
+            <!--{loop $grouptitle $key $value}-->
+            <li role="presentation"><a href="{BASESCRIPT}?mod=app&group=$key" tabindex="-1" role="menuitem" >$value</a></li>
+            <!--{/loop}-->
+          </ul>
+        </li>
+        <li class="pull-right">
+          <form name="search" action="{BASESCRIPT}" method="get">
+            <input type="hidden" name="mod" value="app" />
+            <div class="input-group group-sm" style="width:180px;">
+              <input name="keyword"  type="text" value="$keyword" class="form-control "  placeholder="应用名称或供应商">
+              <a href="javascript:;" class="input-group-addon" onclick="this.parentNode.parentNode.submit();return false;"><i class="glyphicon glyphicon-search"></i></a> </div>
+          </form>
+        </li>
+      </ul>
+    </div>
+    <div class="main-content clearfix" style="border-top:1px solid #FFF" >
+      <form id="appform" name="appform" class="form-horizontal" action="{BASESCRIPT}?mod=app" method="post" >
+        <input type="hidden" name="appsubmit" value="true" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+        <table class="table table-hover">
+          <thead><th>排序</th><th>应用名称</th><th>供应商</th><th>标签</th><th>组权限</th><th>可用部门</th><th>操作</th></thead>
+          <!--{loop $list $value}-->
+          <tr>
+            <td width="40"><input  type="text" class="form-control input-sm" style="width:45px" name="disp[{$value[appid]}]" value="$value[disp]" style="width:20px;" /></td>
+            <td><a href="$value[appurl]" target="_blank"><img src="$value[appico]" />$value[appname]</a></td>
+            <td>$value[vendor]</td>
+            <td><!--{loop $value[tags] $key $value1}--> 
+              <a href="{BASESCRIPT}?mod=app&tagid=$value1[tagid]">$value1[tagname]</a> 
+              <!--{/loop}--></td>
+            <td>$value[grouptitle]</td>
+            <td><!--{loop $value['department'] $key $value1}-->
+              
+              <p appid="$value[appid]" orgid="$key"> {eval $i=0;} 
+                <!--{loop $value1 $value2}--> 
+                <!--{if $i>0}-->--><!--{/if}-->$value2[orgname]
+                {eval $i++;} 
+                <!--{/loop}--> 
+              </p>
+              
+              <!--{/loop}--></td>
+            <td><a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=edit&do=edit&appid=$value[appid]&refer=$refer" title="编辑"><i class="glyphicon glyphicon-edit"></i></a> <a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=cp&do=export&appid=$value[appid]&refer=$refer" title="导出" target="_blank"><i class="glyphicon glyphicon-export"></i></a> <a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=cp&do=disable&appid=$value[appid]&refer=$refer" title="关闭"><i class="glyphicon glyphicon-ban-circle"></i></a></td>
+          </tr>
+          <!--{/loop}-->
+          <tr>
+            <td colspan="20"><input type="submit" class="btn btn-primary" value="提交" />$multi </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 
+<!--{template common/footer_simple}--> 

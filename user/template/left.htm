@@ -1,0 +1,12 @@
+<ul class="nav nav-pills nav-stacked nav-pills-leftguide" style="margin:10px 0;">
+    <li <!--{if $mod=='profile' && !$vid}-->class="active"<!--{/if}-->><a href="user.php?&mod=profile">基本资料</a></li>
+    <li <!--{if $mod=='avatar'}-->class="active"<!--{/if}-->><a  href="user.php?mod=avatar">修改头像</a></li>
+    <li <!--{if $mod=='password'}-->class="active"<!--{/if}-->><a href="user.php?mod=password">密码与安全</a></li>
+     <!--{loop $_G[setting][verify] $key $value}-->
+      <!--{if $value[available] && (empty($value[groupid]) || ($value[groupid] && in_array($_G[groupid],$value[groupid])))}-->
+       <li <!--{if $mod=='profile' && $vid==$key}-->class="active"<!--{/if}-->>
+            <a href="user.php?mod=profile&vid=$key">$value['title']</a>
+       </li>
+       <!--{/if}-->
+      <!--{/loop}-->
+</ul>

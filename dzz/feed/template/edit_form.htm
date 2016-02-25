@@ -1,0 +1,237 @@
+<link href="dzz/styles/showwindow/style.css" rel="stylesheet" media="all">
+
+
+
+ <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    	<h4 class="modal-title" id="return_$_GET[handlekey]">编辑</h4>
+ </div>
+<div id="publish_edit_{$pid}" class="publishsharewrap" >
+    <form id="form_edit_{$pid}" name="form_edit_{$pid}" class="form-horizontal" action="{DZZSCRIPT}?mod=feed&op=ajax&do=edit" method="post"   onsubmit="return publish_edit_{$pid}_validate(this);" target="_blank">
+    <input type="hidden" name="formhash" value="{FORMHASH}" />
+    <input type="hidden" name="editsubmit" value="true" />
+    <input type="hidden" name="handlekey" value="publish_edit_{$pid}" />
+    <input type="hidden" name="tid" value="$data[tid]" />
+    <input type="hidden" name="pid" value="$pid" />
+    <input type="hidden" id="appid_edit_{$pid}" name="appid" value="0" />
+   <div class="modal-body">
+    <div class="container_psw">
+      <div class="notice_cpsw clearfix">
+        <div id="reply_who_edit_{$pid}" class="who_cpsw"> <span>回复</span> <span class="toname_wcpsw"></span> <span>：</span> <a class="closed_wcpsw" title="" hidefocus="true" href="javascript:void(0);" onclick="jQuery(this).parent().hide();jQuery('#reply_pid_$tid').val('0')">关闭</a> </div>
+      </div>
+      <div class="textarea_cpsw">
+        <div class="wrap_tcpsw">
+          <textarea rows="" id="message_edit_{$pid}" name="message" cols="" onkeyup="check_publish_enable('edit_$pid')"   class="write_wtcpsw _bb_write_wtcpsw " style="overflow: hidden; word-wrap: break-word; resize: horizontal;border:none;box-shadow:none;height:62px">$data['message']</textarea>
+        </div>
+        <div id="publish_count_edit_{$pid}" class="count_cpsw"> <span id="num_input_edit_{$pid}" class="num_ccpsw">0</span>/<span class="leng_ccpsw">1000</span> </div>
+      </div>
+    </div>
+    <div id="publish_action_edit_{$pid}" class="action_cpsw">
+      <ul class="list_acpsw">
+        <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_edit_{$pid}" onclick="showMenu({'ctrlid':'upload_from_edit_{$pid}'});" href="javascript:void(0);" title="" class="item_lacpsw">文件/图片</a> </li>
+       
+        <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_edit_{$pid}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">表情</a></li>
+        <script type="text/javascript" reload="1">smilies_show('message_edit_{$pid}_sml_div','{$_G[setting][smcols]}', 'message_edit_{$pid}');</script>
+        <!--{if $data[first]>0}-->
+        <input id="votestatus_{$data[tid]}" type="hidden" name="votestatus" value="$data[votestatus]" />
+          <li class="vote_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0_vote" onclick="feed_vote_switch('$data[tid]');">投票</a></li>
+          <!--{/if}-->
+      </ul>
+      <input id="readperm_edit_{$pid}" name="readperm" value="0" type="hidden" />
+      <a hidefocus="true" class="cancel_cpsw" href="javascript:void(0);" onclick="hideWindow('$_GET[handlekey]');return false;"> <b><i>取消</i></b></a>
+      <button id="publish_submit_edit_{$pid}" type="submit" class="btn btn-primary" title="保存(Ctrl+Enter)"><b>保存</b></button>
+    </div>
+     <div id="attachmentViewBox_edit_{$pid}" class="attachmentContainer edit clearfix" style="max-height:250px;padding:10px;overflow:auto;"> 
+     	<!--{loop $data[attachs] $value}-->
+        <div id="attachment_previewer_$value[qid]" class="attachment_previewer " style="float:none;width:auto;margin-right:0">
+          <div class="attachmentviewbox">
+            <div class="view_attvb clearfix">
+              <div class="ico_vattvb "><img class="img_50_50" alt="value[title]" src="$value[img]"></div>
+              <div class="ico_vattvb_right">
+                <div class="ico_name">$value[title]</div>
+                <a href="javascript:void(0);" title="" class="del_fattvb" onclick="removeAttach(jQuery(this).closest('.attachment_previewer'),'edit_{$pid}');">删除附件</a>
+                 <input type="hidden" name="attach[qid][]" value="$value[qid]">
+                <input type="hidden" name="attach[aid][]" value="$value[id]">
+                <input type="hidden" name="attach[title][]" value="$value[title]">
+                <input type="hidden" name="attach[type][]" value="$value[type]">
+                <input type="hidden" name="attach[img][]" value="$value[img]">
+                <input type="hidden" name="attach[url][]" value="$value[url]">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--{/loop}-->
+     </div>
+     <!--{if $data[first]>0}-->
+   	 <div class="vote-post-container" id="vote_post_container_{$data[tid]}" tid="$data[tid]" style="<!--{if $data[votestatus]<1}-->display:none;<!--{/if}--> margin-bottom:10px;"> 
+    	<div id="vote_container_body_$data[tid]" class="form-horizontal form-horizontal-left">
+    	<script type="text/javascript" reload="1">ajaxget('{DZZSCRIPT}?mod=dzzvote&op=ajax&do=getvotepost&id={$data[tid]}&idtype=feed','vote_container_body_$data[tid]','vote_container_body_$data[tid]');</script>
+        </div>
+     </div>
+     <!--{/if}-->
+   </div>
+    
+  </form>
+     <div class="actionUploadAttachment tobody" id="upload_from_edit_{$pid}_menu" style="display:none">
+        <div class="local_auatth" style="position:relative;overflow:hidden;"><a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">本地上传
+          <input id="fileupload_edit_{$pid}" class="form-control" type="file" name="files[]" multiple >
+          </a> </div>
+        <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop('edit_{$pid}');jQuery(this).parent().parent().hide();">从我的文件中选择</a></div>
+      </div>
+</div>
+<script type="text/javascript" reload="1">
+document.getElementById('appid_edit_{$pid}').value=appid;
+jQuery(document).ready(function(e) {
+	jQuery('actionUploadAttachment:not(.tobody)').remove();
+	jQuery('#upload_from_edit_{$pid}_menu.tobody').removeClass('tobody').appendTo('body');
+	jQuery('#message_edit_{$pid}').TextAreaExpander(62,99999);
+    
+	jQuery(document).on('keydown' ,'#form_edit_{$pid}',function(event){
+		if(event.ctrlKey && event.keyCode == 13) {
+			document.getElementById('form_edit_{$pid}').onsubmit();
+		}
+	});
+});
+function publish_edit_{$pid}_validate(form){
+	//验证投票相关
+	
+	 if(jQuery('#votestatus_{$data[tid]}').val()>0 ){ 
+		 var voteitemnum=0;
+		 if(jQuery('#vote_post_container_{$data[tid]} input[name="vote[type]"]').val()>1){//图片投票模式
+		 	 if(!jQuery('#vote_post_container_{$data[tid]} input[name=vote_subject_2]').val()){
+				 showmessage('投票标题不能为空','danger',3000,1);
+				 jQuery('#vote_post_container_{$data[tid]} input[name=vote_subject_2]').focus();
+				  return false;
+			 }
+			 jQuery('#vote_post_container_{$data[tid]} .dzzvote-post-image-item input[type=hidden]').each(function(index){
+				 if(jQuery(this).val()>0) voteitemnum++;
+			 });
+		 }else{ //文本投票模式
+		     if(!jQuery('#vote_post_container_{$data[tid]} input[name=vote_subject_1]').val()){
+				 showmessage('投票标题不能为空','danger',3000,1);
+				jQuery('#vote_post_container_{$data[tid]} input[name=vote_subject_1]').focus();
+				 return false;
+			 }
+			 jQuery('#vote_post_container_{$data[tid]} .dzzvote-post-text-item input[type=text]').each(function(index){
+				 if(jQuery(this).val()) voteitemnum++;
+			 });
+		 }
+		 if(voteitemnum<2) {
+			  showmessage('投票项目至少为2项！','danger',3000,1);
+			  return false;
+		 }
+	}else{
+		var val=jQuery('#message_edit_{$pid}').val();
+		if(strlen(val)<1 || strlen(val)>1000){
+			 showmessage('请输入分享内容','danger',1000,1);
+			 return false;
+		}else if(strlen(val)>1000){
+			showmessage('分享内容不能超过1000字符','danger',1000,1);
+			return false;
+		}
+		if(jQuery('#vote_container_body_{$data[tid]} input[name=voteid]').val()>0){
+			if(!confirm('此编辑将会删除原先添加的投票，您确定删除投票？')){
+				showmessage('打开投票框时保存，不会删除已有的投票','warning',5000,1);
+				return false;
+			}
+		}
+	}
+	ajaxpost(form.id,'return_publish_edit_{$pid}','return_publish_edit_{$pid}')
+}
+function succeedhandle_publish_edit_{$pid}(url, message, values) {
+	var data= eval('(' + decodeURIComponent(values['data']) + ')');
+	hideWindow('$_GET[handlekey]');
+	feed_edit_finish(data);
+};
+
+jQuery('#readperm_sel_edit_{$pid}_menu li').on('click',function(){
+	var li =jQuery(this);
+	var readperm=parseInt(li.attr('isvisible'));
+	li.siblings().removeClass('cur');
+	li.addClass('cur');
+	jQuery('#readperm_edit_{$pid}').val(readperm);
+	jQuery('#readperm_sel_edit_{$pid}').html(this.innerHTML);
+	li.parent().parent().parent().hide();
+	if(readperm<0) jQuery('#message_edit_{$pid}').addClass('writelock ');
+	else jQuery('#message_edit_{$pid}').removeClass('writelock ');
+	
+});
+/*jslint unparam: true */
+/*global window, $ */
+jQuery(function () {
+    'use strict';
+    // Change this to the location of your server-side upload handler:
+   	var attachextensions='{eval echo implode('|',$space[attachextensions]);}';
+	if(attachextensions=='') attachextensions="\.*$";
+	else attachextensions="(\.|\/)("+(attachextensions)+")$";
+    jQuery('#fileupload_edit_{$pid}').fileupload({
+        url: ajaxurl+'&do=upload',
+        dataType: 'json',
+		autoUpload: true,
+		maxChunkSize:(parseInt('{$_G[setting][maxChunkSize]}') || 2000000), //2M
+		dropZone:jQuery('#publish_edit_{$pid}'),
+		pasteZone:jQuery('#message_edit_{$pid}'),
+		maxFileSize: parseInt('{$space[maxattachsize]}')>0?parseInt('{$space[maxattachsize]}'):null, // 5 MB
+		acceptFileTypes:new RegExp(attachextensions,'i'),
+		add:function(e,data){
+			 data.context = jQuery('<div/>').appendTo('#attachmentViewBox_edit_{$pid}');
+			jQuery.each(data.files, function (index, file) {
+				var html='';
+					html+=' <div  class="attachment_previewer">';
+					
+					html+='     <div class="attachmentviewbox">';
+					html+='         <div class="view_attvb clearfix">';
+					html+='           <div class="ico_vattvb "><img alt="'+file.name+'" src="dzz/images/default/upload_failure.png" style="height:50px"></div>';
+					html+='  		  <div class="ico_vattvb_right">';
+					html+='            	<div class="ico_name">'+file.name+'</div>';
+					html+='             <div class="progress  active" style="margin:0;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>';
+					html+='          </div>';
+					
+					html+='      	</div>';
+					html+='    </div>';
+					html+=' </div>';
+				
+				jQuery(html).appendTo(data.context);
+			});
+			
+			data.process().done(function () {
+				data.submit();
+			});
+			
+		},
+		progress: function (e,data){
+			 var index = 0;//data.index,
+            // file = data.files[index],
+            var  node = jQuery(data.context.children()[index]);
+			
+			  var progress = parseInt(data.loaded / data.total * 100, 10);
+				node.find('.progress-bar').css(
+					'width',
+					progress + '%'
+				);
+		},
+        done: function (e, data) {
+            jQuery.each(data.result.files, function (index, file) {
+				if(file.error){
+					jQuery(data.context.children()[index]).find('.progress').replaceWith('<span class="text-danger">'+file.error+'</span>');
+				}else{
+					feed_addAttach(file.data,jQuery(data.context.children()[index]),'edit_{$pid}');
+				}
+            });
+        }
+    });
+});
+jQuery(function(){
+   jQuery('#message_edit_{$pid}').atwho({
+         at: "@",
+        data: 'index.php?mod=feed&op=ajax&do=getUserToJson',
+        tpl: "<li data-value='@[${username}:${email}]'>${username}<small>${email}</small></li>",
+		 search_key: "searchkey",
+		  start_with_space: false,
+		  limit: 5,
+		  max_len: 20,
+		  display_timeout: 300
+    }).atwho('run');
+  
+});
+</script> 

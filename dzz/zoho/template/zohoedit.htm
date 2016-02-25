@@ -1,0 +1,20 @@
+<!--{template common/header_simple_start}-->
+<script type="text/javascript" src="dzz/scripts/jquery-1.10.2.min.js"></script>
+
+<!--{template common/header_simple_end}-->
+<form id="zoho" method="POST" action="$posturl" target="_self" accept-charset="UTF-8">
+<input type="hidden" name="url" value="$stream" >
+<input type="hidden" name="apikey" value="$ZohoAPIKey">
+<input type="hidden" name="output" value="editor">
+<input type="hidden" name="mode" value="$mode">
+<input type="hidden" name="filename" value="$data[name]">
+<input type="hidden" name="lang" value="zh">
+<input type="hidden" name="id" value="$_G[uid]">
+<input type="hidden" name="format" value="$data[ext]">
+<input type="hidden" name="saveurl" value="$saveurl">
+</form>
+
+<script type="text/javascript">
+jQuery('#zoho').trigger('submit');
+</script>
+<!--{template common/footer_simple}-->

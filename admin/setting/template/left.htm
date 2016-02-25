@@ -1,0 +1,45 @@
+<ul class="nav nav-pills nav-stacked nav-pills-leftguide" style="margin:10px 0;">
+          <li <!--{if $operation=='basic'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=basic">基本设置</a>
+          </li>
+          
+          <li <!--{if $operation=='datetime'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=datetime">时间设置</a>
+          </li>
+          <li <!--{if $operation=='access'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=access">注册和访问</a>
+          </li>
+          
+          <li <!--{if $operation=='sec'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=sec">验证码设置</a>
+          </li>
+       	  <li <!--{if $operation=='qqlogin'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=qqlogin">QQ登录设置</a>
+          </li>
+          
+            <li <!--{if $operation=='mail' || $op=='mailcheck'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=mail">邮件设置</a>
+          </li>
+           <li <!--{if $operation=='at'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=at">@部门设置</a>
+          	</li> 
+           <li <!--{if $operation=='upload'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=upload">上传设置</a>
+          	</li> 
+            <li <!--{if $operation=='smiley' || $op=='smiley'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=smiley">表情管理</a>
+          	</li> 
+            <li <!--{if $operation=='censor'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=censor">敏感词管理</a>
+          	</li>
+            
+             <li <!--{if $operation=='desktop'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=desktop">桌面设置</a>
+          	</li> 
+            <li <!--{if $operation=='loginset'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=loginset">登录页设置</a>
+          	</li>
+            <li <!--{if $operation=='qywechat' || $op=='assistant' || $op=='wxsyn'}-->class="active"<!--{/if}-->>
+                <a href="{BASESCRIPT}?mod=$mod&operation=qywechat">微信企业号</a>
+          	</li>
+    </ul>

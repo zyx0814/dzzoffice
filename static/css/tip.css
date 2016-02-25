@@ -1,0 +1,49 @@
+/*Popup tip*/
+.tip {
+	position: absolute;
+	padding: 10px;
+	_width: 200px;
+	max-width:350px;
+	border:solid 1px #b1b1b1;
+	background:#FEFEE9;;
+	box-shadow: 0 1px 3px #eee, inset 0 0 3px #fff;
+	border-radius:5px;
+	box-shadow:0 5px 15px RGBA(0,0,0,0.5);
+}
+.tip_1, .tip_2 {
+	margin-top: 8px;
+}
+.tip_3, .tip_4 {
+	margin-top: -8px;
+}
+.tip_horn {
+	position: absolute;
+	width: 11px;
+	height: 6px;
+	overflow: hidden;
+}
+.tip_1 .tip_horn {
+	left: 10px;
+	top: -6px;
+	background: url(../image/common/tip_top.png);
+}
+.tip_2 .tip_horn {
+	right: 10px;
+	top: -6px;
+	background: url(../image/common/tip_top.png);
+}
+.tip_3 .tip_horn {
+	right: 10px;
+	bottom: -6px;
+	background: url(../image/common/tip_bottom.png);
+}
+.tip_4 .tip_horn {
+	left: 10px;
+	bottom: -6px;
+	background: url(../image/common/tip_bottom.png);
+}
+.tip_js .tip_horn {
+	right: 61px;
+	bottom: -6px;
+	background: url(../image/common/tip_bottom.png);
+}

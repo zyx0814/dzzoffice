@@ -1,0 +1,57 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+	top:0;
+	height:100%;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+@media (max-width: 768px) {
+	.bs-left-container{
+		display:none;
+	}
+	.bs-main-container{
+		margin-left:0;
+	}
+}
+</style>
+<!--{template common/header_simple_end}-->
+<div class="bs-container clearfix" style="padding-top:0">
+  <div class="bs-left-container  clearfix">
+    <ul class="nav nav-pills nav-stacked nav-pills-leftguide" >
+        <li > <a href="{BASESCRIPT}?mod=$mod&feedType=aboutme">与我相关</a> </li>
+        <li > <a href="{BASESCRIPT}?mod=$mod&feedType=fromme">我发布的</a></li>
+        <li > <a href="{BASESCRIPT}?mod=$mod&feedType=atme">@我的<span class="newtips" id="new_tips_atme"></span></a></li>
+        <li> <a href="{BASESCRIPT}?mod=$mod&feedType=collect">我收藏的</a></li>
+        <li> <a href="{BASESCRIPT}?mod=$mod&feedType=replyme">回复我的<span class="newtips" id="new_tips_replyme"></span></a></li>
+        <li> <a href="{BASESCRIPT}?mod=$mod&feedType=all">全部动态</a></li>
+        <li> <a href="{BASESCRIPT}?mod=$mod&op=setting">@设置</a></li>
+        <li class="active"> <a href="{BASESCRIPT}?mod=$mod&op=wxsetting">微信设置</a></li>
+      </ul> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+   <div class="bs-main-container" style="position:relative">
+     <!--{if $operation=='menu'}-->
+      <!--{template common/wx_menu}--> 
+     <!--{else}-->
+     <!--{template common/wx_appinfo}--> 
+     <!--{/if}-->
+   </div>
+</div>
+<script type="text/javascript" >  
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

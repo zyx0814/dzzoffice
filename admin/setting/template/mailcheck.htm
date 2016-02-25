@@ -1,0 +1,64 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" > 
+      <div class="main-header">
+      	 <ul  class="nav nav-pills nav-pills-bottomguide">
+              <li><a href="{BASESCRIPT}?mod=setting&operation=mail">设置</a></li>
+              <li class="active"><a href="{BASESCRIPT}?mod=setting&op=mailcheck">检测</a></li>
+        </ul>
+    		
+      </div>
+      <div class="main-content" style="padding:20px">
+      
+         <form id="cpform" action="{BASESCRIPT}?mod=setting&op=mailcheck" class="form-horizontal form-horizontal-left"  autocomplete="off" method="post" name="cpform" target="mailcheckiframe">
+            <input type="hidden" value="{FORMHASH}" name="formhash">
+            <input type="hidden" value="true" name="mailchecksubmit">
+             <div class="form-group" >
+           		  <label class="control-label">测试发件人:</label>
+                  <input type="text" class="form-control" name="test_from" autocomplete="off" value="">
+            </div>
+            <div class="form-group" >
+           		  <label class="control-label">测试收件人:</label>
+                  <textarea type="textarea" class="form-control" name="test_to" autocomplete="off" ></textarea>
+                  <span class="help-block text-muted">如果要测试包含用户名的邮件地址，格式为“username &lt;user@domain.com&gt;”。多个邮件地址用逗号分隔</span>
+            </div>
+          <div class="form-group" >
+           		  <label class="control-label"></label>
+           		 <input class="btn btn-primary" id="submit_mailchecksubmit" name="mailchecksubmit" value="检测邮件发送设置" type="submit" >
+         		<iframe style="display: none" name="mailcheckiframe"> </iframe>
+         </div>
+        </form>
+
+      </div>
+  </div>
+</div>
+<script type="text/javascript">  
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<!--{template common/footer_simple}-->

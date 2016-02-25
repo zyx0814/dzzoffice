@@ -1,0 +1,236 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/select2/select2.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/select2/select2-bootstrap.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+html, body {
+	overflow: hidden;
+	background: #FBFBFB;
+	
+	text-shadow:1px 1px 1px #FFF;
+}
+.bs-left-container {
+	width: 120px;
+	top:0;
+}
+.bs-main-container {
+	margin-left: 120px;
+	overflow: auto;
+}
+.form-horizontal-left .radio-inline {
+	margin: 0;
+}
+
+.form-horizontal-left .form-group .controls{
+	min-width:250px;
+}
+.form-horizontal-left .form-group .controls-adapt{
+	padding-left: 130px;
+}
+.form-horizontal-left .form-group  label{
+	min-width:125px;
+	
+}
+.form-horizontal-left .control-label{
+	font-weight:500;
+}
+.icheckbox_minimal-blue, .iradio_minimal-blue{
+	margin-left:-20px;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<div class="bs-container clearfix" style="padding-top:0px;">
+  <div class="bs-left-container  clearfix"> 
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+    <div class="left-drager-op">
+      <div class="left-drager-sub"></div>
+    </div>
+  </div>
+  <div class="bs-main-container  clearfix" >
+    <div class="main-header">
+      <ul class="nav nav-pills nav-pills-bottomguide">
+        <li <!--{if !$fieldid}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=member&op=profileset">资料项列表</a>
+        </li>
+        <!--{if $fieldid}-->
+        <li class="active"><a href="{BASESCRIPT}?mod=member&op=profileset&fieldid=$fieldid">资料项编辑</a></li>
+        <!--{/if}-->
+      </ul>
+    </div>
+    <div class="main-content" style="padding:15px 0 0 10px;">
+      <form id="cpform" action="{BASESCRIPT}?mod=member&op=profileset" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+        <input type="hidden" value="{FORMHASH}" name="formhash">
+        <input type="hidden" value="true" name="editsubmit">
+        <input type="hidden" value="$fieldid" name="fieldid">
+       <input type="hidden" value="$field[displayorder]" name="displayorder">
+       
+         <div class="form-group">
+          	<label class="control-label ">名称：</label>
+          	<input type="text" class="form-control" value="$field[title]" name="title" required="required" <!--{if $field[isfixed2]}-->disabled="disabled"<!--{/if}--> />
+        </div>
+        <div class="form-group">
+          	<label class="control-label ">介绍：</label>
+          	<input type="text" class="form-control" value="$field[description]" name="description" <!--{if $field[isfixed2]}-->disabled="disabled"<!--{/if}--> />
+        </div>
+       
+        <!--{if !$field[isfixed2]}-->
+        <div class="form-group">
+          	<label class="control-label ">表单类型：</label>
+          	<div class="controls-adapt">
+                <label class="radio-inline"><input type="radio" name="formtype" value="text" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='text'}-->checked="checked"<!--{/if}-->>单行文本框</label>
+              <!--{if $fieldid!='realname'}-->
+              <label class="radio-inline"><input type="radio" name="formtype" value="textarea" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='textarea'}-->checked="checked"<!--{/if}-->>多行文本框</label>
+              <label class="radio-inline"><input type="radio" name="formtype" value="radio" onclick="$('valuenumber').style.display = 'none';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='radio'}-->checked="checked"<!--{/if}-->>单选框</label>
+              <label class="radio-inline"><input type="radio" name="formtype" value="checkbox" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='checkbox'}-->checked="checked"<!--{/if}-->>复选框</label>
+              <label class="radio-inline"><input type="radio" name="formtype" value="select" onclick="$('valuenumber').style.display = 'none';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='select'}-->checked="checked"<!--{/if}-->>下拉菜单</label>
+              <label class="radio-inline"><input type="radio" name="formtype" value="list" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = '';" <!--{if $field[formtype]=='list'}-->checked="checked"<!--{/if}-->>多选列表框</label>
+              <label class="radio-inline"><input type="radio" name="formtype" value="file" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='file'}-->checked="checked"<!--{/if}-->>上传图片</label>
+              <!--{/if}--> 
+            </div>
+        </div>
+        <div class="form-group" id="valuenumber" <!--{if $field[formtype]=='select' || $field[formtype]=='radio'}-->style="display:none"<!--{/if}-->>
+            <label class="control-label ">大小限定：</label>
+            <input name="size" value="$field[size]" type="text" class="form-control">
+            <span class="help-inline">最多可填写的字符数或最多可选择的项数,图片类型时限制了上传图片大小(单位:KB)</span>
+       </div>
+        <div class="form-group" id="fieldchoices" <!--{if $field[formtype]=='text' || $field[formtype]=='textarea' || $field[formtype]=='file'}-->style="display:none"<!--{/if}-->>
+            <label class="control-label ">可选值：</label>
+            <textarea rows="6"  name="choices" id="choices"  class="form-control">$field[choices]</textarea>
+            <span class="help-inline">每行一个值，例如输入:<br> 北京<br> 上海<br></span>
+       </div>            
+        <div class="form-group" id="fieldvalidate" <!--{if $field[formtype]=='radio' || $field[formtype]=='select' || $field[formtype]=='list' || $field[formtype]=='checkbox' || $field[formtype]=='file'}-->style="display:none"<!--{/if}-->>
+            <label class="control-label ">正则验证：</label>
+            <input name="validate" value="$field[validate]" type="text" class="form-control">
+            <span class="help-inline">检验输入数据的正则表达式，请慎重修改</span>
+       </div>          
+       
+       <!--{/if}-->
+       <div class="form-group">
+          	<label class="control-label ">是否启用：</label>
+            <div class="controls">
+          	<label class="radio-inline"><input type="radio" name="available" value="1" <!--{if $field[available]}-->checked="checked"<!--{/if}-->>启用</label>
+            <label class="radio-inline"><input type="radio" name="available" value="0" <!--{if !$field[available]}-->checked="checked"<!--{/if}-->>不启用</label>
+            </div>
+        </div>
+        
+        <!--{if !$field[ isfixed1]}-->
+        <div class="form-group">
+          	<label class="control-label ">提交后：</label>
+            <div class="controls">
+                <label class="radio-inline"><input type="radio" name="unchangeable" value="1" <!--{if $field[unchangeable]}-->checked="checked"<!--{/if}-->>不可修改</label>
+                <label class="radio-inline"><input type="radio" name="unchangeable" value="0" <!--{if !$field[unchangeable]}-->checked="checked"<!--{/if}-->>可修改</label>
+            </div>
+        </div>
+        <div class="form-group">
+          	<label class="control-label ">修改后：</label>
+            <div class="controls">
+                <label class="radio-inline"><input type="radio" name="needverify" value="1" <!--{if $field[needverify]}-->checked="checked"<!--{/if}-->>需审核</label>
+                <label class="radio-inline"><input type="radio" name="needverify" value="0" <!--{if !$field[needverify]}-->checked="checked"<!--{/if}-->>不需审核</label>
+            </div>
+        </div>
+       <div class="form-group">
+          	<label class="control-label ">是否必填：</label>
+            <div class="controls">
+                <label class="radio-inline"><input type="radio" name="required" value="1" <!--{if $field[required]}-->checked="checked"<!--{/if}-->>必填</label>
+                <label class="radio-inline"><input type="radio" name="required" value="0" <!--{if !$field[required]}-->checked="checked"<!--{/if}-->>选填</label>
+            </div>
+        </div>
+         <div class="form-group">
+          	<label class="control-label ">资料页面：</label>
+            <div class="controls">
+          	<label class="radio-inline"><input type="radio" name="invisible" value="1" <!--{if $field[invisible]}-->checked="checked"<!--{/if}-->>隐藏</label>
+            <label class="radio-inline"><input type="radio" name="invisible" value="0" <!--{if !$field[invisible]}-->checked="checked"<!--{/if}-->>显示</label>
+            </div>
+            <span class="help-inline">如果设为隐藏，则不论个人隐私如何设定都不会在资料页面显示</span>
+        </div>
+        <!--{/if}-->
+        <div class="form-group">
+          	<label class="control-label ">默认隐私：</label>
+            <div class="contols-adapt">
+            <label class="radio-inline"><input type="radio" name="privacy" value="-1"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='-1'}-->checked="checked"<!--{/if}-->>私密</label>
+            <label class="radio-inline"><input type="radio" name="privacy" value="0"  <!--{if empty($_G['setting']['privacy']['profile'][$fieldid])}-->checked="checked"<!--{/if}-->>公开</label>
+            <label class="radio-inline"><input type="radio" name="privacy" value="1"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='1'}-->checked="checked"<!--{/if}-->>本部门可见</label>
+            <label class="radio-inline"><input type="radio" name="privacy" value="2"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='2'}-->checked="checked"<!--{/if}-->>本机构可见</label>
+          
+            
+            </div>
+            
+        </div>
+        <div class="form-group">
+          	<label class="control-label ">在名片中：</label>
+            <div class="controls">
+          	<label class="radio-inline"><input type="radio" name="showincard" value="1" <!--{if $field[showincard]}-->checked="checked"<!--{/if}-->>显示</label>
+            <label class="radio-inline"><input type="radio" name="showincard" value="0" <!--{if !$field[showincard]}-->checked="checked"<!--{/if}-->>不显示</label>
+            </div>
+        </div>
+        <div class="form-group">
+          	<label class="control-label ">在注册页：</label>
+            <div class="controls">
+          	<label class="radio-inline"><input type="radio" name="showinregister" value="1" <!--{if $field[showinregister]}-->checked="checked"<!--{/if}-->>显示</label>
+            <label class="radio-inline"><input type="radio" name="showinregister" value="0" <!--{if !$field[showinregister]}-->checked="checked"<!--{/if}-->>不显示</label>
+            </div>
+        </div>
+        <div class="form-group">
+          	<label class="control-label ">允许搜索：</label>
+            <div class="controls">
+          	 <label class="radio-inline"><input type="radio" name="allowsearch" value="1" <!--{if $field[allowsearch]}-->checked="checked"<!--{/if}-->>允许搜索</label>
+            <label class="radio-inline"><input type="radio" name="allowsearch" value="0" <!--{if !$field[allowsearch]}-->checked="checked"<!--{/if}-->>不允许搜索</label>
+            </div>
+        </div>
+        <div class="form-group">
+          	<label class="control-label "></label>
+          	<div class="controls">
+             	<input type="submit" class="btn btn-primary btn-width"  name="editsubmit"  value="保存设置">
+            </div>
+        </div>
+        
+      </form>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();	
+var url='{BASESCRIPT}?mod=member';
+jQuery(document).ready(function(e) {
+    jQuery('input').iCheck({
+		  checkboxClass: 'icheckbox_minimal-blue',
+		  radioClass: 'iradio_minimal-blue',
+	});
+	jQuery('input').on('ifChecked',function(e){
+		jQuery(this).trigger('click');
+	});
+	
+	jQuery(document).on('blur','input[required]',function(){
+		var self=this;
+		var val=this.value;
+		 if(this.value==''){
+			 jQuery(this).addClass('input-error');
+		 }else if(jQuery(this).hasClass('fieldid')){
+			 jQuery('.fieldid').not(this).each(function(){
+				if(jQuery(this).is('td') && this.innerHTML==val){
+					 jQuery(self).addClass('input-error');
+					 showmessage('标志符已经被使用，请更换','danger',3000,1);
+					 return;
+				}else if(jQuery(this).is('input') && this.value==val) {
+					jQuery(self).addClass('input-error');
+					showmessage('标志符已经被使用，请更换','danger',3000,1);
+					return;
+				}
+			 });
+		 }else{
+			 jQuery(this).removeClass('input-error');
+		 }
+	 });
+	 jQuery(document).on('change','input[required]',function(){
+		 if(this.value==''){jQuery(this).addClass('input-error')}else{jQuery(this).removeClass('input-error');}
+	 });
+});
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/select2/select2.min.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/select2/select2_locale_zh-CN.js?{VERHASH}"></script> 
+<!--{template common/footer_simple}--> 

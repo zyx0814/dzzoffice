@@ -1,0 +1,160 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript" src="admin/scripts/admin.js?{VERHASH}"></script>
+ <script type="text/javascript">
+	  	var selorg={};
+		//添加
+		selorg.add=function(ctrlid,vals){
+			if(vals[0].orgid=='other') vals[0].path='请选择机构或部门';
+			jQuery('#'+ctrlid+'_Menu').html(vals[0].path+' <span class="caret"></span>');
+			if(jQuery('#sel_'+ctrlid).val()!=vals[0].orgid){
+				location.href=location.href+'&orgid='+vals[0].orgid+'&page=1';
+			}
+		}
+</script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+	top:0
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+.form-horizontal-left .radio-inline{
+	padding: 5px 20px;
+	margin:0;
+}
+.table td img {
+	max-width: 48px;
+	max-height: 48px;
+	margin:0;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix" style="padding-top:0">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" > 
+  	<div class="main-header">
+        <ul class="nav nav-pills nav-pills-bottomguide">
+              <li class="active"><a href="{BASESCRIPT}?mod=member">成员列表</a></li>
+              <li><a href="{BASESCRIPT}?mod=member&op=edituser">添加成员</a></li>
+             <!-- <li><a href="{BASESCRIPT}?mod=member&op=import">从文件导入</a></li>
+               <li><a href="{BASESCRIPT}?mod=member&op=invite">Email邀请</a></li>-->
+        </ul>
+    </div>
+    <div class="main-header2">
+    <ul class="nav nav-pills nav-pills-bottomguide">
+              <strong class="pull-left" style="padding-left:0">筛选：</strong>
+              <li class="dropdown" style="padding-top:4px;">
+                  <input id="sel_orgid"  type="hidden" name="orgid"  value="$orgid"  />
+                  <button type="button" id="orgid_Menu" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                    $department <span class="caret"></span>
+                  </button>
+                  <div id="orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_Menu">
+                       <iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&ctrlid=orgid&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+                  </div>
+            </li>
+              
+              <li class="pull-right">
+              		<form name="search" action="{BASESCRIPT}?mod=member" method="get">
+                    	<input type="hidden" name="mod" value="member" />
+                         <div class="input-group" style="width:180px;padding-top:4px;">
+                            <input name="keyword"  type="text" value="$keyword" class="form-control input-sm" placeholder="用户姓名或邮箱">
+                            <a href="javascript:;" class="input-group-addon" onclick="this.parentNode.parentNode.submit()"><i class="glyphicon glyphicon-search"></i></a>
+                        </div>
+                    </form>
+              </li>
+            </ul>
+    </div>
+    <div class="main-content">
+         <form id="appform" name="appform" class="form-horizontal " action="{BASESCRIPT}?mod=member" method="post" >
+        <input type="hidden" name="deletesubmit" value="true" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+       <table class="table table-hover">
+              <thead>
+                <tr>
+                 <th width="20"></th>
+                  <th width="50">头像</th>
+                  <th align="left">邮箱/姓名/用户名</th>
+                  <th>用户组</th>
+                  <th >空间使用</th>
+                  <th class="hidden-xs">部门</th>
+                  <th>注册时间<br />最后访问</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+             
+             <!--{loop $list $value}-->
+                <tr>
+                  <td><!--{if $value[uid]>1}--><input type="checkbox" name="delete[]" value="$value[uid]"  /><!--{/if}--></td>
+                  <td>
+                  	<div class="avatar-verify">
+                      <a href="user.php?mod=space&uid=$value[uid]" target="_blank"><img src="avatar.php?uid=$value[uid]&size=small" /></a> 
+                      
+                 	</div>
+                  
+                  </td>
+                  <td align="left">$value[email]<br /><a href="user.php?mod=space&uid=$value[uid]" target="_blank">$value[username] <!--{if $value['verify']}-->$value['verify']<!--{/if}--> </a><!--{if $value['nickname']}--><br /> $value[nickname]<!--{/if}-->
+                 
+                 
+                  </td>
+                  <td>$value[grouptitle]</td>
+                  <td>$value[fusesize] / $value[ftotalsize]</td>
+                  <td class="hidden-xs">
+                  <!--{loop $value['department'] $key $value1}-->
+                  	<p uid="$value[uid]" orgid="$key"> {eval $i=0;}
+                    <!--{loop $value1 $value2}-->
+                    <!--{if $i>0}-->-<!--{/if}-->$value2[orgname]
+                    {eval $i++;}
+                     <!--{/loop}-->
+                    </p>
+                  <!--{/loop}-->
+                  </td>
+                 <td>
+                 {eval echo dgmdate($value[regdate])}<br />{eval echo dgmdate($value[lastvisit])}
+                 </td>
+                  <td> <a href="{BASESCRIPT}?mod=member&op=edituser&do=edit&uid=$value[uid]"  class="ibtn glyphicon glyphicon-edit " title="编辑"></a><!--{if $value[uid]>1}--><a href="{BASESCRIPT}?mod=member&op=edituser&do=deluser&uid=$value[uid]"  onclick="return deleteuser(this,'$value[uid]')" class="ibtn glyphicon glyphicon-trash " title="删除"></a><!--{/if}--></td>
+                </tr>
+             <!--{/loop}-->
+             <thead>
+                 <td colspan="20">
+                 <label for="chkall" class="checkbox-inline"><input type="checkbox" name="chkall" id="chkall" onclick="checkAll('prefix', this.form, 'delete')">删？</label>&nbsp;&nbsp;<input type="submit" class="btn btn-danger" onclick="return confirm('确定要删除此用户吗？此用户的所有是数据和文件都将被清空，无法恢复')" value="彻底删除，请谨慎操作" />
+                  $multi</td>
+             </thead>
+            </table>
+          </form>
+         
+    </div>
+    
+
+
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();	
+function deleteuser(obj,uid){
+	if(confirm('确定要删除此用户吗？此用户的所有数据和文件都将被清空，无法恢复')){
+		jQuery.getJSON('{ADMINSCRIPT}?mod=member&op=ajax&do=deleteuser&uid='+uid,function(json){
+			if(json.error) showmessage(json.error,'danger',3000,1);
+			else if(json.msg=='success'){
+				jQuery(obj).closest('tr').fadeOut('slow');
+			}
+		});
+	}
+	return false;
+}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

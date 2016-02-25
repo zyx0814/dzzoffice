@@ -1,0 +1,155 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+	top:0;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:hidden;
+}
+.form-horizontal-left .radio-inline{
+	margin:0;
+}
+.itemContainer{
+	overflow:auto;
+}
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix" style="padding-top:0px;">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" > 
+  	<div class="main-header">
+        <ul class="nav nav-pills nav-pills-bottomguide">
+              <li <!--{if !$fieldid}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=member&op=profileset">资料项列表</a></li>
+              <!--{if $fieldid}-->
+              <li class="active"><a href="{BASESCRIPT}?mod=member&op=profileset&fieldid=$fieldid">资料项编辑</a></li>
+              <!--{/if}-->
+        </ul>
+    </div>
+    <table id="table-header" class="table" style="margin:0;font-size:12px;">
+              
+                <thead>
+                  <th width="60">排序</th>
+                  <th width="120">标识符</th>
+                  <th>名称</td>
+                  <th width="60">启用</th>
+                  <th width="60">资料页显示</th>
+                  <th  width="60">名片中显示</th>
+                  <th  width="60">注册页显示</th>
+                  <th  width="120">操作</th>
+               </thead>
+              
+      </table>
+    <div class="itemContainer">
+    <div class="main-content">
+       <form id="cpform" action="{BASESCRIPT}?mod=member&op=profileset"  method="post" name="cpform">
+        <input type="hidden" value="{FORMHASH}" name="formhash">
+        <input type="hidden" value="true" name="ordersubmit">
+       	 <table class="table table-hover" >
+             <!--{loop $list $fieldid $value}-->
+                <tr>
+                
+                  <td  width="60"><input type="text" class="form-control input-sm" name="displayorder[$fieldid]" value="$value[displayorder]" ></td>
+                  <td class="fieldid <!--{if !$value[customable]}-->gray<!--{/if}-->" width="120">$fieldid</td>
+                  <td >$value[title] </td>
+                 
+                  <td width="60"><input type="checkbox" class="checkbox" name="available[$fieldid]" <!--{if $value[available]}-->checked="checked" <!--{/if}--> value="1"></td>
+                  <td width="60"><input type="checkbox" class="checkbox" name="invisible[$fieldid]" <!--{if !$value[invisible]}-->checked="checked" <!--{/if}--> value="1"></td>
+                   <td width="60"><input type="checkbox" class="checkbox" name="showincard[$fieldid]" <!--{if $value[showincard]}-->checked="checked" <!--{/if}--> value="1"></td>
+                   <td width="60"><input type="checkbox" class="checkbox" name="showinregister[$fieldid]" <!--{if $value[showinregister]}-->checked="checked" <!--{/if}--> value="1"></td>
+                  <td width="100"> 
+                  <a href="{BASESCRIPT}?mod=member&op=profileset&fieldid=$fieldid"  class="ibtn glyphicon glyphicon-edit " title="编辑"></a>
+                  <!--{if $value['customable']}-->&nbsp;&nbsp;&nbsp;&nbsp;<a href="{BASESCRIPT}?mod=member&op=profileset&do=delete&fieldid=$fieldid"  onclick="return confirm('确定要删除此资料项？此操作无法恢复')" class="ibtn glyphicon glyphicon-trash " title="删除"></a><!--{/if}-->
+                  </td>
+                </tr>
+             <!--{/loop}-->
+             <tr><td colspan="20"><button type="button" class="btn btn-default btn-width" onclick="addRow(this)"><i class="glyphicon glyphicon-plus"></i> 添加资料项</button></td></tr>
+           
+             <tr>
+                 <td colspan="20"><input class="btn btn-primary btn-width" type="submit" value="保存设置" /></td>
+             </tr>  
+            </table>
+           
+          </form>
+         </div>
+    </div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout(initHeight);	
+var url='{BASESCRIPT}?mod=member';
+
+   
+jQuery(document).ready(function(e) {
+    jQuery('input').iCheck({
+		  checkboxClass: 'icheckbox_minimal-blue',
+		  radioClass: 'iradio_minimal-blue',
+	});
+	jQuery('input').on('ifChecked',function(e){
+		jQuery(this).trigger('click');
+	});
+	
+	jQuery(document).on('blur','input[required]',function(){
+		var self=this;
+		var val=this.value;
+		 if(this.value==''){
+			 jQuery(this).addClass('input-error');
+		 }else if(jQuery(this).hasClass('fieldid')){
+			 jQuery('.fieldid').not(this).each(function(){
+				if(jQuery(this).is('td') && this.innerHTML==val){
+					 jQuery(self).addClass('input-error');
+					 showmessage('标志符已经被使用，请更换','danger',3000,1);
+					 return;
+				}else if(jQuery(this).is('input') && this.value==val) {
+					jQuery(self).addClass('input-error');
+					showmessage('标志符已经被使用，请更换','danger',3000,1);
+					return;
+				}
+			 });
+		 }else{
+			 jQuery(this).removeClass('input-error');
+		 }
+	 });
+	 jQuery(document).on('change','input[required]',function(){
+		 if(this.value==''){jQuery(this).addClass('input-error')}else{jQuery(this).removeClass('input-error');}
+	 });
+});
+function initHeight(){
+	jQuery('.itemContainer').css('height',document.documentElement.clientHeight-jQuery('.main-header').outerHeight(true)-jQuery('#table-header').outerHeight(true));
+}
+function addRow(obj){
+	var html='<tr class="add">'
+			+'<td  width="60"><input type="text" class="form-control input-sm" name="add[displayorder][]" value="0" ></td>'
+			+'<td  width="120"><input type="text" class="form-control input-sm fieldid" name="add[fieldid][]" value="" placeholder="不能重复" required="true"></td>'
+			+'<td ><input type="text" class="form-control input-sm" name="add[title][]" value="" style="max-width:150px;" placeholder="资料项名称"></td>'
+			+'<td width="60"><input type="checkbox" class="checkbox" name="add[available][]" value="1"></td>'
+			+'<td width="60"><input type="checkbox" class="checkbox" name="add[invisible][]" value="1"></td>'
+			+'<td width="60"><input type="checkbox" class="checkbox" name="add[showincard][]" value="1"></td>'
+			+'<td width="60"><input type="checkbox" class="checkbox" name="add[showinregister][]" value="1"></td>'
+			+'<td width="120"><a href="javascript:;" onclick="jQuery(this).parent().parent().remove()"><i class="ibtn glyphicon glyphicon-trash"></i></a></td>';
+	jQuery(html).insertBefore(jQuery(obj).parent().parent());
+	 jQuery('.add input').iCheck({
+		  checkboxClass: 'icheckbox_minimal-blue',
+		  radioClass: 'iradio_minimal-blue',
+	});
+			
+}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

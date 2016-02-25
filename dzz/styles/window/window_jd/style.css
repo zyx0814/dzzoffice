@@ -1,0 +1,519 @@
+﻿
+/* ---- dzz 样式 ---- */
+.window_jd
+{
+	/*font-size: 0px;*/
+	/*-moz-border-radius: 5px 5px 0 0;-webkit-border-radius: 5px 5px 0 0;border-radius:5px 5px 0 0;
+	box-shadow:0px 0px 15px #000;*/
+	
+	
+}
+
+
+/* 边框样式 */
+.window_jd .LEFT_TOP
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 4px;
+	height: 23px;
+	background:#d4d0c8;
+
+}
+.window_jd .LEFT_TOP .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	left:1px;
+	top:1px;
+	width: 4px;
+	height: 23px;
+	border-top:1px solid #FFF;
+	border-left:1px solid #FFF;
+
+}
+.window_jd .TOP
+{
+	/* 上边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 23px;
+	background:#d4d0c8;
+	
+}
+.window_jd .TOP .inner
+{
+	/* 上边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	left:0;
+	top:1px;
+	border-top:1px solid #FFF;
+	height: 23px;
+	width:100%;
+	background:#d4d0c8;
+	
+}
+.window_jd .RIGHT_TOP
+{
+	/* 右上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	right:0px;
+	top:0px;
+	width: 5px;
+	height: 23px;
+	border-right:1px solid #404040;
+	background:#d4d0c8;
+
+}
+.window_jd .RIGHT_TOP .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:1px;
+	right:0px;
+	_right:-1px;
+	width: 5px;
+	height: 23px;
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+
+}
+
+.window_jd .RIGHT
+{
+	/* 右边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	background:#d4d0c8;
+	border-right:1px solid #404040;
+	
+}
+.window_jd .RIGHT .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:0px;
+	right:0px;
+	_right:-1px;
+	width: 5px;
+	height: 100%;
+	border-right:1px solid #808080;
+
+}
+
+.window_jd .RIGHT_BOTTOM
+{
+	/* 右下：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 5px;
+	height: 5px;
+	background:#d4d0c8;
+	border-right:1px solid #404040;
+	border-bottom:1px solid #404040;
+}
+.window_jd .RIGHT_BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	right:0px;
+	_bottom:-1px;
+	_right:-1px;
+	width: 5px;
+	height: 5px;
+	border-bottom:1px solid #808080;
+	border-right:1px solid #808080;
+
+}
+.window_jd .RIGHT_BOTTOM_BY_BUTTON
+{
+	/* 右下(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width:5px;
+	height: 34px;
+	background:#d4d0c8;
+	border-right:1px solid #404040;
+	border-bottom:1px solid #404040;
+	
+}
+.window_jd .RIGHT_BOTTOM_BY_BUTTON .inner{
+	bottom:0px;
+	right:0px;
+	_bottom:-1px;
+	_right:-1px;
+	width: 5px;
+	height: 34px;
+	border-bottom:1px solid #808080;
+	border-right:1px solid #808080;
+}
+.window_jd .BOTTOM
+{
+	/* 下边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 5px;
+	background:#d4d0c8;
+	border-bottom:1px solid #404040;
+	
+}
+.window_jd .BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:0px;
+	width:100%;
+	height: 5px;
+	border-bottom:1px solid #808080;
+
+}
+.window_jd .BOTTOM_BY_BUTTON
+{
+	/* 下边(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 34px;
+	background:#d4d0c8;
+	border-bottom:1px solid #404040;
+	
+}
+.window_jd .BOTTOM_BY_BUTTON .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:0px;
+	width:100%;
+	height: 30px;
+	border-bottom:1px solid #808080;
+
+}
+.window_jd .LEFT_BOTTOM
+{
+	/* 右下：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 4px;
+	height: 5px;
+	background:#d4d0c8;
+	border-bottom:1px solid #404040;
+}
+.window_jd .LEFT_BOTTOM .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	bottom:0px;
+	_bottom:-1px;
+	left:1px;
+	width: 4px;
+	height: 5px;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+
+}
+.window_jd .LEFT_BOTTOM_BY_BUTTON
+{
+	/* 左下(有按钮时)：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 4px;
+	height: 34px;
+	background:#d4d0c8;
+	border-bottom:1px solid #404040;
+	
+}
+.window_jd .LEFT_BOTTOM_BY_BUTTON .inner
+{
+	bottom:0px;
+	_bottom:-1px;
+	left:1px;
+	width: 4px;
+	height: 34px;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+
+.window_jd .LEFT
+{
+	/* 右边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 4px;
+	background:#d4d0c8;
+	
+}
+.window_jd .LEFT .inner
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	top:0px;
+	left:1px;
+	width:4px;
+	height: 100%;
+	border-left:1px solid #FFF;
+
+}
+
+
+/* 功能区样式 */
+.window_jd .RESIZE
+{
+	width: 15px;
+	height: 15px;
+	right: -8px;
+	bottom: -8px;
+	z-index:10;
+}
+.window_jd .RESIZE-X
+{
+	width: 15px;
+	right: -8px;
+	height:100%;
+	z-index:9;
+	top:0;
+}
+.window_jd .RESIZE-Y
+{
+	height: 15px;
+	width:100%;
+	bottom: -8px;
+	z-index:9;
+	left:0;
+}
+
+.window_jd .CLOSE
+{
+    width: 18px;
+    height: 16px;
+	margin:1px 2px 0 0;
+    float:right;
+   	background:#d4d0c8 url(images/ico.gif) 0 0 no-repeat;
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+
+.window_jd .MIN
+{
+    width: 18px;
+    height: 16px;
+	margin:1px 0px;
+    float:right;
+   	background:#d4d0c8 url(images/ico.gif) 1px -42px no-repeat;
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+
+.window_jd .MAX
+{
+    width: 18px;
+    height: 16px;
+	margin:1px 0px;
+    float:right;
+   	background:#d4d0c8 url(images/ico.gif) 1px -14px no-repeat;
+	  border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+
+.window_jd .FULLSCREEN
+{
+    width: 18px;
+    height: 16px;
+	margin:1px 0px;
+    float:right;
+   	background:#d4d0c8 url(images/ico.gif) 1px -56px no-repeat;
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+.window_jd .FULLSCREEN:hover
+{
+  
+}
+.window_jd .RESTORE
+{
+    width: 18px;
+    height: 16px;
+	margin:1px 0px;
+    float:right;
+   	background:#d4d0c8 url(images/ico.gif) 0 -28px no-repeat;
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+.window_jd .RESTORE:hover
+{
+  
+}
+
+.window_jd .FLAGIMG
+{
+    width: 16px;
+    height: 16px;
+	margin:0px 5px 0px 5px;
+    float:left;
+   	background:#d4d0c8;
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+.window_jd .HOME
+{
+    width: 18px;
+    height: 16px;
+	margin:1px 2px 1px 5px;
+    float:left;
+   	background:#d4d0c8 url(images/ico.gif) 0 -70px no-repeat;
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+.window_jd .HOME1
+{
+  	border-top:1px solid #808080;
+	border-right:1px solid #FFF;
+	border-bottom:1px solid #FFF;
+	border-left:1px solid #808080;
+}
+.window_jd .REFRESH
+{
+    width: 18px;
+    height: 16px;
+	margin:1px 2px;
+    float:left;
+   	background:#d4d0c8 url(images/ico.gif) 0 -84px no-repeat;
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+}
+
+
+
+/* 逻辑区样式 */
+.window_jd .CONTENT
+{
+	/* 请不要定义padding/margin属性 */
+	/* 请定义left = -(border-left),top = -(border-top) */
+	left: 0px;
+	top: 0px;
+	border:1px solid #808080;
+	background:#FFF;
+	overflow:auto;
+	font-size: 13px;
+}
+.window_jd .CONTENT .FORM
+{
+	font-size: 14px;
+	margin: 0px;
+	padding: 12px;
+}
+.window_jd .CONTENT .FORM_NOTITLE
+{
+	font-size: 14px;
+	margin: 0px;
+	padding: 0px;
+}
+.window_jd .TITLE
+{
+	/* 请不要定义margin属性 */
+   background:#0a246a;
+   background:-webkit-gradient(linear, 0 0, 100% 100%, from(#0a246a), to(#a6caf0));
+   background:-moz-linear-gradient(left,#0a246a,#a6caf0);
+   FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=1,startColorStr=#0a246a,endColorStr=#a6caf0);
+   left:4px ;
+   top:4px;
+   height:18px;
+   padding:0;
+   z-index:10;
+   overflow:hidden;
+}
+.window_jd .TITLE .titleBar{
+	margin:0;
+	
+}
+.window_jd .TITLE .titleBar .titleButtonBar{
+	margin:0;
+	padding:0;
+	position:relative;
+	z-index:1;
+}
+.window_jd .TITLE .titleBar .titleButtonBar a:active{
+	border-top:1px solid #404040;
+	border-right:1px solid #FFF;
+	border-bottom:1px solid #FFF;
+	border-left:1px solid #404040;
+}
+.window_jd .TITLE .titleBar .titleText{
+	text-align:left;
+	padding:0 5px;
+	font-size:13px;
+	height:18px;
+	line-height: 18px;
+	overflow: hidden;	
+	color:#FFF;
+	font-weight:bold;
+}
+.window_jd .TITLE .titleBar .titleText a{
+	color:#FFF;
+}
+.window_jd .BUTTON
+{
+	/* 请不要定义margin属性 (暂不支持:width:100%;bottom:0px;) */
+	padding: 4px 0px 5px 0px;
+	text-align:right;
+}
+.window_jd .BUTTON button
+{
+	width:53px;
+	height:26px;
+	line-height: 20px;
+	padding:2px 10px;
+	/*border:0px;
+	padding:0px;
+	background-color: transparent;
+	background-repeat:no-repeat;*/
+	margin: 0px 15px 0px 15px;
+	
+	border-top:1px solid #FFF;
+	border-right:1px solid #808080;
+	border-bottom:1px solid #808080;
+	border-left:1px solid #FFF;
+	background:#d4d0c8;
+	color:#333;
+	outline:none;
+}
+.window_jd .BUTTON button:focus
+{
+	outline:none;
+}
+.window_jd .BUTTON button:active
+{
+	border-top:1px solid #808080;
+	border-right:1px solid #FFF;
+	border-bottom:1px solid #FFF;
+	border-left:1px solid #808080;
+}
+.window_jd .BUTTON .DISABLED
+{
+	_filter:Alpha(opacity=36);
+	opacity:0.36;
+}
+
+/* 各种按钮样式 */
+.window_jd .BUTTON .OK
+{
+	/*_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/window/dzz/images/OK.png', sizingMethod='scale');
+	background-image:url(images/OK.png) !important;
+	background-image:none;*/
+}
+.window_jd .BUTTON .CANCEL
+{
+	/*_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/window/dzz/images/CANCEL.png', sizingMethod='scale');
+	background-image:url(images/CANCEL.png) !important;
+	background-image:none;*/
+}
+
+/* 窗口最大化时隐藏的阴影 */
+.window_jd .SHADOW_TOP
+{
+	height:0px;
+}
+.window_jd .SHADOW_LEFT
+{
+	width:0px;
+}
+.window_jd .SHADOW_RIGHT
+{
+	width:0px;
+}
+.window_jd .SHADOW_BOTTOM
+{
+	height:0px;
+}
+/* ---- mac 样式 ---- */

@@ -1,0 +1,189 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:120px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}.pagination {
+	float:right;	
+}
+
+input[type="text"]{
+	margin:0;
+}
+html,body{
+	width:100%;heiht:100%;
+	overflow:hidden;
+	word-break:break-all;word-wrap:break-word;
+}
+
+
+</style>
+<!--{template common/header_simple_end}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+     <div class="left-drager-op"><div class="left-drager-sub"></div></div>
+  </div>
+      
+  <div class="bs-main-container  clearfix" >
+
+
+      	 <div class="main-header">
+        	<ul class="nav nav-pills  nav-pills-bottomguide" >
+                <li <!--{if $operation=='illegal'}-->class="active"<!--{/if}-->><a hidefocus="true" href="{BASESCRIPT}?mod=system&op=log&operation=illegal">用户错误登录</a></li> 
+                <li <!--{if $operation=='sendmail'}-->class="active"<!--{/if}-->><a hidefocus="true" href="{BASESCRIPT}?mod=system&op=log&operation=sendmail">邮件发送失败</a></li>
+                 <li <!--{if $operation=='cp'}-->class="active"<!--{/if}-->><a hidefocus="true" href="{BASESCRIPT}?mod=system&op=log&operation=cp">后台访问</a></li> 
+                 <li <!--{if $operation=='error'}-->class="active"<!--{/if}-->><a hidefocus="true" href="{BASESCRIPT}?mod=system&op=log&operation=error">系统错误</a></li>
+                <span class="pull-right" style="margin:3px;">$sel</span>
+            </ul>
+        </div>
+    	<div class="main-content" style="border-top:1px solid #FFF">
+       
+          	<!--{if $operation=='illegal'}-->
+            <form id="cpform" action="{BASESCRIPT}?mod=system&op=log&operation=$operation" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+                <input type="hidden" value="{FORMHASH}" name="formhash">
+                <input type="hidden" name="lpp" value="20">
+            	<table class="table">
+                	<thead><th>{lang time}</th><th>{lang ip}</th><th>{lang logs_passwd_username}</th><th>{lang logs_passwd_password}</th><th>{lang logs_passwd_security}</th></thead>
+                 <!--{if $list}-->
+                    <!--{loop $list $log}-->
+                    <tr><td>$log[1]</td><td>$log[5]</td><td>$log[2]</td><td>$log[3]</td><td>$log[4]</td></tr>
+                    <!--{/loop}-->
+                 <!--{else}--> 
+                 	<tr><td colspan="5">没有相关的结果</td>
+                 <!--{/if}-->
+                <tr>
+                	<td colspan="5">
+                         <div class="pull-left input-group" style="width:100px;">
+                             <span class="input-group-addon">每页显示</span>
+                             <select class="input-sm form-control" style="margin:0;width:60px;" onchange="if(this.options[this.selectedIndex].value != '') {this.form.lpp.value = this.options[this.selectedIndex].value;this.form.submit(); }" ><option value="20" $checklpp[20]> 20 </option><option value="40" $checklpp[40]> 40 </option><option value="80" $checklpp[80]> 80 </option></select>
+                          </div>
+                           <div class="pull-left input-group" style="width:128px;">
+                           <input type="text" class="input-sm form-control" style="width:90px;border-left:0" name="keyword" value="$_GET[keyword]">
+                           <a href="javascript:;" class="input-group-addon" onclick="$('cpform').submit();return false"><i class="glyphicon glyphicon-search"></i></a>
+                           </div>
+                           $multipage
+                       
+               		 </td>
+                 </tr>
+                </table>
+            </form>
+            <!--{elseif $operation=='sendmail'}-->
+            <form id="cpform" action="{BASESCRIPT}?mod=system&op=log&operation=$operation" class="form-horizontal form-horizontal-left"  method="post" name="cpform">
+                <input type="hidden" value="{FORMHASH}" name="formhash">
+                <input type="hidden" name="lpp" value="20">
+            	<table class="table">
+                	<thead><th>{lang time}</th><th>{lang username}</th><th>{lang email}</th></thead>
+                   <!--{if $list}-->
+                    <!--{loop $list $log}-->
+                    <tr><td>$log[1]</td><td>$log[6]</td><td>$log[5]</td></tr>
+                    <!--{/loop}-->
+                 <!--{else}--> 
+                 	<tr><td colspan="5">没有相关的结果</td>
+                 <!--{/if}-->
+                <tr>
+                	<td colspan="15">
+                       <div class="pull-left input-group" style="width:100px;">
+                             <span class="input-group-addon">每页显示</span>
+                             <select class="input-sm form-control" style="margin:0;width:60px;" onchange="if(this.options[this.selectedIndex].value != '') {this.form.lpp.value = this.options[this.selectedIndex].value;this.form.submit(); }" ><option value="20" $checklpp[20]> 20 </option><option value="40" $checklpp[40]> 40 </option><option value="80" $checklpp[80]> 80 </option></select>
+                          </div>
+                           <div class="pull-left input-group" style="width:128px;">
+                           <input type="text" class="input-sm form-control" style="width:90px;border-left:0" name="keyword" value="$_GET[keyword]">
+                           <a href="javascript:;" class="input-group-addon" onclick="$('cpform').submit();return false"><i class="glyphicon glyphicon-search"></i></a>
+                           </div>
+                           $multipage
+               		 </td>
+                 </tr>
+                </table>
+            </form>
+            <!--{elseif $operation=='cp'}-->
+            <form id="cpform" action="{BASESCRIPT}?mod=system&op=log&operation=$operation" class="form-horizontal form-horizontal-left"  method="post" name="cpform">
+                <input type="hidden" value="{FORMHASH}" name="formhash">
+                <input type="hidden" name="lpp" value="20">
+            	<table class="table" >
+                	<thead><th width="80">{lang operator}</th><th  width="80">{lang usergroup}</th><th  width="100">{lang ip}</th><th width="120">{lang time}</th><th>{lang other}</th></thead>
+                  <!--{if $list}--> 
+                    <!--{loop $list $key $log}-->
+                    <tr><td>$log[2]</td><td>$log[3]</td><td>$log[4]</td><td>$log[1]</td><td ><a href="javascript:;" onclick="togglecplog('{$key}')">{eval echo cutstr($log[6], 200)}</a></td></tr>
+                    <thead id="cplog_{$key}" style="display:none"><td colspan="10">$log[6]</td></thead>
+                    <!--{/loop}-->
+                <!--{else}--> 
+                 	<tr><td colspan="5">没有相关的结果</td>
+                 <!--{/if}-->
+                <tr>
+                	<td colspan="15">
+                       <div class="pull-left input-group" style="width:100px;">
+                             <span class="input-group-addon">每页显示</span>
+                             <select class="input-sm form-control" style="margin:0;width:60px;" onchange="if(this.options[this.selectedIndex].value != '') {this.form.lpp.value = this.options[this.selectedIndex].value;this.form.submit(); }" ><option value="20" $checklpp[20]> 20 </option><option value="40" $checklpp[40]> 40 </option><option value="80" $checklpp[80]> 80 </option></select>
+                          </div>
+                           <div class="pull-left input-group" style="width:128px;">
+                           <input type="text" class="input-sm form-control" style="width:90px;border-left:0" name="keyword" value="$_GET[keyword]">
+                           <a href="javascript:;" class="input-group-addon" onclick="$('cpform').submit();return false"><i class="glyphicon glyphicon-search"></i></a>
+                           </div>
+                           $multipage
+               		 </td>
+                 </tr>
+                </table>
+            </form>
+            
+            <script type="text/javascript">
+				function togglecplog(k) {
+					var cplogobj = $('cplog_'+k);
+					if(cplogobj.style.display == 'none') {
+						cplogobj.style.display = '';
+					} else {
+						cplogobj.style.display = 'none';
+					}
+				}
+			</script>
+            <!--{elseif $operation=='error'}-->
+               <form id="cpform" action="{BASESCRIPT}?mod=system&op=log&operation=$operation" class="form-horizontal form-horizontal-left"   method="post" name="cpform">
+                <input type="hidden" value="{FORMHASH}" name="formhash">
+                <input type="hidden" name="lpp" value="20">
+            	<table class="table" >
+                	<thead><th width="80">{lang time}</th><th >{lang message}</th></thead>
+                  <!--{if $list}-->
+                    <!--{loop $list $log}-->
+                    <tr><td width="80">$log[1]</td><td  style="">$log[2]</td></tr>
+                    <!--{/loop}-->
+                 <!--{else}--> 
+                 	<tr><td colspan="5">没有相关的结果</td>
+                 <!--{/if}-->
+                <tr>
+                	<td colspan="2">
+                       <div class="pull-left input-group" style="width:100px;">
+                             <span class="input-group-addon">每页显示</span>
+                             <select class="input-sm form-control" style="margin:0;width:60px;" onchange="if(this.options[this.selectedIndex].value != '') {this.form.lpp.value = this.options[this.selectedIndex].value;this.form.submit(); }" ><option value="20" $checklpp[20]> 20 </option><option value="40" $checklpp[40]> 40 </option><option value="80" $checklpp[80]> 80 </option></select>
+                          </div>
+                           <div class="pull-left input-group" style="width:128px;">
+                           <input type="text" class="input-sm form-control" style="width:90px;border-left:0" name="keyword" value="$_GET[keyword]">
+                           <a href="javascript:;" class="input-group-addon" onclick="$('cpform').submit();return false"><i class="glyphicon glyphicon-search"></i></a>
+                           </div>
+                           $multipage
+                       
+               		 </td>
+                 </tr>
+                </table>
+            </form>
+                   
+            <!--{/if}-->
+        </div>
+    </div>
+</div>
+<script type="text/javascript">  
+jQuery('.left-drager').leftDrager_layout();
+</script>
+<!--{template common/footer_simple}-->
