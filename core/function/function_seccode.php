@@ -8,12 +8,11 @@ function make_seccode($idhash){
 	$seccode = random(6, 1);
 	$seccodeunits = '';
 	if($_G['setting']['seccodedata']['type'] == 1) {
-		$lang = lang('seccode');
 		$len = strtoupper(CHARSET) == 'GBK' ? 2 : 3;
 		$code = array(substr($seccode, 0, 3), substr($seccode, 3, 3));
 		$seccode = '';
 		for($i = 0; $i < 2; $i++) {
-			$seccode .= substr($lang['chn'], $code[$i] * $len, $len);
+			$seccode .= substr(lang('chn'), $code[$i] * $len, $len);
 		}
 	} elseif($_G['setting']['seccodedata']['type'] == 3) {
 		$s = sprintf('%04s', base_convert($seccode, 10, 20));

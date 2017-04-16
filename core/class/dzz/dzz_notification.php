@@ -22,11 +22,11 @@ class dzz_notification {
 			return false;
 		}
 		
-		$notestring = lang('notification', $note, $notevars,'',$langfolder);
-		$notestring_wx = lang('notification', $note.'_wx', $notevars,'',$langfolder);
-		$redirect=lang('notification', $note.'_redirecturl', $notevars,'',$langfolder);
+		$notestring = lang($note, $notevars,'',$langfolder);
+		$notestring_wx = lang($note.'_wx', $notevars,'',$langfolder);
+		$redirect=lang( $note.'_redirecturl', $notevars,'',$langfolder);
 		
-		$title=lang('notification', $note.'_title',$notevars,'',$langfolder);
+		$title=lang($note.'_title',$notevars,'',$langfolder);
 		$oldnote = array();
 		//if($notevars['from_id'] && $notevars['from_idtype']) {
 			$oldnote = C::t('notification')->fetch_by_fromid_uid_type($notevars['from_id'], $notevars['from_idtype'], $touid,$type);

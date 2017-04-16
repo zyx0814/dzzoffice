@@ -1,54 +1,48 @@
 (function($) {
- 
+	$.fn.ResizeTextarea=function () {
+
+		var target = this.get(0);
+	   // 保存初始高度，之后需要重新设置一下初始高度，避免只能增高不能减低。
+		var dh = $(target).attr('defaultHeight') || 30;
+		if (!dh) {
+			dh = target.clientHeight;
+			$(target).attr('defaultHeight', dh);
+		}
+
+		target.style.height = dh +'px';
+		var clientHeight = target.clientHeight;
+		var scrollHeight = target.scrollHeight;
+		if (clientHeight !== scrollHeight) { target.style.height = scrollHeight + 10 + "px";
+		}
+			return true;
+	};
 	// jQuery plugin definition
 	$.fn.TextAreaExpander = function(minHeight, maxHeight) {
- 
-		var hCheck = !(BROWSER.ie || BROWSER.opera);
- 
-		// resize a textarea
-		function ResizeTextarea(e) {
- 
-			// event or initialize element?S
-			e = e.target || e;
- 
-			// find content length and box width
-			var vlen = e.value.length, ewidth = e.offsetWidth;
-			if (vlen != e.valLength || ewidth != e.boxWidth) {
- 
-				//if (hCheck && (vlen < e.valLength || ewidth != e.boxWidth)) e.style.height = ewidth+"px";
-				var h = Math.max(e.expandMin, Math.min(e.scrollHeight, e.expandMax));
- 				
-				e.style.overflow = (e.scrollHeight > h ? "auto" : "hidden");
-				e.style.height = h + "px";
-				e.valLength = vlen;
-				e.boxWidth = ewidth;
-			}
- 
-			return true;
-		};
- 
-		// initialize
-		this.each(function() {
- 
-			// is a textarea?
-			if (this.nodeName.toLowerCase() != "textarea") return;
-			// set height restrictions
-			var p = this.className.match(/expand(\d+)\-*(\d+)*/i);
-			this.expandMin = minHeight || (p ? parseInt('0'+p[1], 10) : 0);
-			this.expandMax = maxHeight || (p ? parseInt('0'+p[2], 10) : 99999);
- 
-			// initial resize
-			ResizeTextarea(this);
- 
-			// zero vertical padding and add events
-			if (!this.Initialized) {
-				this.Initialized = true;
-				//$(this).css("padding-top", 0).css("padding-bottom", 0);
-				$(this).bind("keyup", ResizeTextarea);
-			}
+		this.on('focus',function(){
+			$(this).trigger('input');
 		});
- 
+		this.off("input propertychange").on("input propertychange", function (e) {
+			
+		   var target = e.target;
+		   // 保存初始高度，之后需要重新设置一下初始高度，避免只能增高不能减低。
+			var dh = $(target).attr('defaultHeight') || minHeight;
+			if(minHeight && dh<minHeight) dh=minHeight;
+			if (!dh) {
+				dh = target.clientHeight;
+				if(minHeight && dh>minHeight) dh=minHeight;
+				$(target).attr('defaultHeight', dh);
+			}
+			
+			target.style.height = dh +'px';
+			var clientHeight = target.clientHeight;
+			var scrollHeight = target.scrollHeight || maxHeight;
+			if(scrollHeight>maxHeight) scrollHeight=maxHeight;
+			
+			if (clientHeight !== scrollHeight) { target.style.height = scrollHeight + 10 + "px";}
+		});
 		return this;
 	};
- 
+
+	
+
 })(jQuery);

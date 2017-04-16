@@ -14,10 +14,10 @@
 /*目录内图标文字样式*/
 .IcoText_folder {font-size:12px; color:#333; font-weight:nomal;font-family:Tahoma,'微软雅黑','Simsun';word-break:break-all;display:inline-block}
 
-.IcoText_div { max-height:35px; overflow:hidden;padding:0 3px 3px 0;word-break:break-all; }
+.IcoText_div { max-height:38px; overflow:hidden;padding:0 3px 3px 0;word-break:break-all; }
 .IcoText_div table{table-layout:fixed;}
 .icosContainer .IcoText_div{position:relative;}
-* html .IcoText_div { height: expression(this.height > 35 ? 35 : true);}
+* html .IcoText_div { height: expression(this.height > 38 ? 38 : true);}
 .IcoText_textarea {
     border: 1px solid #6CABE7;
     font-size: 12px;

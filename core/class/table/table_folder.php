@@ -17,7 +17,7 @@ class table_folder extends dzz_table
 		$this->_table = 'folder';
 		$this->_pk    = 'fid';
 		$this->_pre_cache_key = 'folder_';
-		$this->_cache_ttl = 300;
+		$this->_cache_ttl = 60*60;
 		parent::__construct();
 	}
 	public function fetch_all_by_fid($fids){
@@ -81,14 +81,15 @@ class table_folder extends dzz_table
 			return;
 		}
 		if(!$force && !perm_check::checkperm_container($fid,'delete')){
-			return array('error'=>lang('message','no_privilege'));
+			return array('error'=>lang('no_privilege'));
 		}
 		foreach(DB::fetch_all("select icoid from %t where pfid=%d",array('icos',$fid)) as $value){
 			C::t('icos')->delete_by_icoid($value['icoid'],$force);
 		}
 		
-		//删除统计
-		C::t('count')->delete_by_type($fid,'folder');
+		//删除快捷方式
+		C::t('source_shortcut')->delete_by_path('fid_'.$fid,true);
+		C::t('source_shortcut')->delete_by_bz('folder_'.$fid,true);
 		
 		//删除下级目录
 		foreach(DB::fetch_all("SELECT * FROM %t WHERE pfid=%d and isdelete<1",array($this->_table,$fid)) as $value){
@@ -100,10 +101,10 @@ class table_folder extends dzz_table
 	public function empty_by_fid($fid){ //清空目录
 		global $_G;
 		if(!$folder=self::fetch($fid)){
-			return array('error'=>lang('message','folder_not_exist'));
+			return array('error'=>lang('folder_not_exist'));
 		}
 		if(!perm_check::checkperm_container($fid,'delete')){
-			return array('error'=>lang('message','no_privilege'));
+			return array('error'=>lang('no_privilege'));
 		}
 		if($folder['flag']=='recycle'){
 			foreach(DB::fetch_all("SELECT icoid FROM %t WHERE uid=%d and isdelete>0", array('icos',$_G['uid'])) as $value){

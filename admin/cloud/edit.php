@@ -10,7 +10,6 @@
 if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-
 if($_GET['do']=='usercloud'){
 	$bz=trim($_GET['bz']);
 	$cloud=C::t('connect')->fetch($bz);
@@ -58,9 +57,9 @@ if($_GET['do']=='usercloud'){
 	$id=$_GET['id'];
 	$key=$_GET['key'];
 	if($re=io_ALIOSS::getBucketList($id,$key)){
-		echo  json_encode_gbk($re);
+		echo  json_encode($re);
 	}else{
-		echo  json_encode_gbk(array());
+		echo  json_encode(array());
 	}
 	exit();
 
@@ -68,6 +67,7 @@ if($_GET['do']=='usercloud'){
 	$bz=$_GET['bz'];
 	$cloud=C::t('connect')->fetch($bz);
 	if(submitcheck('editsubmit')){
+		$_GET=dhtmlspecialchars($_GET);
 		if($cloud['type']=='pan'){
 			$setarr=array(
 							'name'=>$_GET['name'],
@@ -90,6 +90,11 @@ if($_GET['do']=='usercloud'){
 							'name'=>$_GET['name'],
 							'available'=>1,
 						);
+		}else{
+			$setarr=array(
+							'name'=>$_GET['name'],
+							'available'=>intval($_GET['available'])>1?2:1,
+							);
 		}
 		if(!is_file(DZZ_ROOT.'./core/class/io/io_'.($cloud['bz']).'.php')){
 			$setarr['available']=0;
@@ -111,10 +116,9 @@ if($_GET['do']=='usercloud'){
 	}else{
 		
 		if(!is_file(DZZ_ROOT.'./core/class/io/io_'.($cloud['bz']).'.php')){
-			$cloud['warning']='api文件：io_'.($cloud['bz']).'.php不存在！,无法设置';
+			$cloud['warning'] = lang('cloud_index_api') . ($cloud['bz']) . lang('cloud_edit_php');
 		}
 		include template('edit');
 	}
 }
-
 ?>

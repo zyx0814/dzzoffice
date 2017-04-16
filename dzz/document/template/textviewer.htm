@@ -18,7 +18,7 @@
     <script src="dzz/document/codemirror/addon/search/searchcursor.js"></script>
     <script src="dzz/document/codemirror/addon/search/search.js"></script>
     <!--{/if}-->
-    <script src="dzz/scripts/dzz.api.js"></script>
+    <script src="dzz/scripts/dzz.api.js?{VERHASH}"></script>
    
   </head>
   <body>
@@ -109,25 +109,25 @@ var code='{$code}';
 				 dataType:"json",
 				 success:function(json){
 					 if(json.msg=='success'){
-						showTips('文档自动保存成功!');
+						showTips('{lang document_saved_success}');
 						win.needsave=0;
 						retry=0;
 						var ico=json.icodata;
 						parent._config.sourcedata.icos[ico.icoid]=ico;
 					 }else{
 						 if(retry>10){
-							  showTips('无法保存文档，请确认您的网络连接正常后再次打开！'); 
+							  showTips('{lang unable_save_document}'); 
 						 }else{
-						 	showTips(json.msg+'! 正在重试 retry '+retry+'...'); 
+						 	showTips(json.msg+'! {lang are_retry_text} retry '+retry+'...'); 
 						 }
 						 window.setTimeout(codesave,3000);
 					 }
 				 },
 				 error:function(){
 					 if(retry>10){
-						  showTips('无法保存文档，请确认您的网络连接正常后再次打开！'); 
+						  showTips('{lang unable_save_document}'); 
 					 }else{
-						  showTips('保存失败! 正在重试 '+retry+'...'); 
+						  showTips('{lang save_unsuccess}! {lang are_retry_text} '+retry+'...'); 
 					 }
 					 window.setTimeout(codesave,3000);
 				 }

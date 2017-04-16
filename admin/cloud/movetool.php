@@ -10,6 +10,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
 if(submitcheck('movesubmit')){
+   $_GET=dhtmlspecialchars($_GET);
    $gets = array(
 		'mod'=>'cloud',
 		'op'=>'movetool_run',
@@ -21,24 +22,28 @@ if(submitcheck('movesubmit')){
 	);
 	$runurl = BASESCRIPT."?".url_implode($gets);
 	if(!$sourcedata=C::t('local_storage')->fetch_by_remoteid($gets['oremoteid'])){
-		showmessage('原存储位置不存在',dreferer());
+		showmessage('storage_location_exist', dreferer());
 	}
 	$sourcedata['fusesize']=formatsize($sourcedata['usesize']);
-	if($sourcedata['totalsize']) $sourcedata['ftotalsize']=formatsize($sourcedata['totalsize']);
-	else $sourcedata['ftotalsize']='无限制';
+	if ($sourcedata['totalsize'])
+		$sourcedata['ftotalsize'] = formatsize($sourcedata['totalsize']);
+	else
+		$sourcedata['ftotalsize'] = lang('unlimited');
 	if(!$targetdata=C::t('local_storage')->fetch_by_remoteid($gets['remoteid'])){
-		showmessage('目标存储位置不存在',dreferer());
+		showmessage('target_storage_location_exist', dreferer());
 	}
 	
 	$targetdata['fusesize']=formatsize($targetdata['usesize']);
-	if($targetdata['totalsize']) $targetdata['ftotalsize']=formatsize($targetdata['totalsize']);
-	else $targetdata['ftotalsize']='无限制';
+	if ($targetdata['totalsize'])
+		$targetdata['ftotalsize'] = formatsize($targetdata['totalsize']);
+	else
+		$targetdata['ftotalsize'] = lang('unlimited');
 	
 	//获取需要迁移的数据量
 	$movesize=C::t('attachment')->getAttachByFilter($gets,1);
 	$fmovesize=formatsize($movesize);
 	if(!$first=C::t('attachment')->getAttachByFilter($gets)){
-		showmessage('没有需要移动的数据',dreferer());
+		showmessage('movetool_move_data', dreferer());
 	}
 	$first['fsize']=formatsize($first['filesize']);
 	include template('movetool_run');
@@ -47,8 +52,10 @@ if(submitcheck('movesubmit')){
 	foreach(C::t('local_storage')->fetch_all_orderby_disp() as $key=>$value){
 		if($arr=C::t('local_storage')->update_sizecount_by_remoteid($value['remoteid'])){
 			$value['fusesize']=formatsize($arr['usesize']);
-			if($arr['totalsize']) $value['ftotalsize']=formatsize($arr['totalsize']);
-			else $value['ftotalsize']='无限制';
+			if ($arr['totalsize'])
+				$value['ftotalsize'] = formatsize($arr['totalsize']);
+			else
+				$value['ftotalsize'] = lang('unlimited');
 		}
 		$spaces[$value['remoteid']]=$value;
 	}

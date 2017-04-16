@@ -22,4 +22,6 @@ body.view{
 }
 .at-item{
 	text-decoration:none;
+	color:#337ab7;
+	display:inline-block;
 }

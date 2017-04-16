@@ -15,7 +15,7 @@ class helper_form {
 			preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST'])))) {
 				//if(checkperm('seccode')) {
 					if($secqaacheck && !check_secqaa($_GET['secanswer'], $_GET['sechash'])) {
-						showmessage('submit_secqaa_invalid');
+						showmessage('login_question_invalid');
 					}
 					if($seccodecheck && !check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
 						showmessage('submit_seccode_invalid');

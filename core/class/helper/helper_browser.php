@@ -124,11 +124,11 @@ class helper_browser {
 		$agent = strtolower($_SERVER['HTTP_USER_AGENT']);
 		$os = array();;
 	
-		if (preg_match("/win/i",$agent) && eregi('nt 5.1', $agent))
+		if (preg_match("/win/i",$agent) && preg_match('/nt 5.1/', $agent))
 		{
 		  $os = array('Windows'=>'XP');
 		}
-		elseif (preg_match('win',$agent) && preg_match('nt 5.0',$agent))
+		elseif (preg_match('win',$agent) && preg_match('/nt 5.0/',$agent))
 		{
 		   $os = array('Windows'=>'2000');
 		}
@@ -160,19 +160,19 @@ class helper_browser {
 		{
 		   $os = array('Windows'=>'nt');
 		}
-		elseif (preg_match("/ipad/i",$agent) && ereg('mac os', $agent))
+		elseif (preg_match("/ipad/i",$agent) && preg_match('/mac os/i', $agent))
 		{
 		   $os = array('iPad'=>true);
 		}
-		elseif (preg_match("/iphone/i",$agent) && ereg('mac os', $agent))
+		elseif (preg_match("/iphone/i",$agent) && preg_match('/mac os/i', $agent))
 		{
 			$os = array('iPhone'=>true);
 		}
-		elseif (preg_match("/ipod/i",$agent) && ereg('mac os', $agent))
+		elseif (preg_match("/ipod/i",$agent) && preg_match('/mac os/i', $agent))
 		{
 		  $os = array('iPod'=>true);
 		}
-		elseif (preg_match("/linux/i",$agent) && ereg('Android', $agent))
+		elseif (preg_match("/linux/i",$agent) && preg_match('/Android/i', $agent))
 		{
 		   $os = array('Android'=>true);
 		}

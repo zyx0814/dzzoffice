@@ -13,6 +13,7 @@
 		var opt={	
 					'cookieid':null, //记忆左侧大小和关闭状态的cookie标志符
 					'cookietime':60*60*24*30,
+					'leftHide':700
 				}
 	  	options=$.extend(opt,options);
 		var self=this;
@@ -62,7 +63,7 @@
 				if(options.cookieid) setcookie(options.cookieid+'_isshow','hide',options.cookietime);
 			}else if(flag=='show'){
 				$leftContainer.css('display','block').css('width',left);
-				$mainContainer.css('marginLeft',left);
+				$mainContainer.css('marginLeft',clientWidth<opt.leftHide?0:left);
 				$this.css('left',left).css('cursor','w-resize');
 				$this.find('.left-drager-op').removeClass('left-drager-op2').addClass('left-drager-op1');
 				if(options.cookieid) setcookie(options.cookieid+'_isshow','show',options.cookietime);
@@ -107,7 +108,15 @@
 			 jQuery('.bs-left-container,.bs-main-container,.left-drager').css('height',clientHeight-headerHeight);
 			 jQuery('.left-drager,.bs-left-container').css('top',headerHeight);
 			 if(typeof(resizefunc)=='function') resizefunc(); 
-			 
+			 leftHide();
+		}
+		var  leftHide=function(){
+			
+			 if(clientWidth<opt.leftHide){
+				dragerClick('hide');
+			}else{
+				dragerClick('show');
+			}
 		}
 		var init=function(){
 			Layout();
@@ -132,19 +141,17 @@
 			}
 			 
 			
-			
+			var clientWidth = Math.max(document.documentElement.clientWidth, document.body.clientWidth);
 			dragging();
 			var resizeTimer=null;
 			window.onresize=function(){
 				if(resizeTimer) window.clearTimeout(resizeTimer);
 				window.setTimeout(function(){Layout();},100);
+				
+				
 			}
-			var clientWidth = Math.max(document.documentElement.clientWidth, document.body.clientWidth);
-				if(clientWidth<600){
-					dragerClick('hide');
-				}else{
-					dragerClick('show');
-				}
+			leftHide();
+			
 		}
 		init();
 	}

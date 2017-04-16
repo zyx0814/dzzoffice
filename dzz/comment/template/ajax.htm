@@ -26,12 +26,12 @@
 					blur: true,			// 设置加载大图是否有模糊变清晰的效果
 					
 					// 语言设置
-					hide: '收起',		// 左旋转按钮文字
-					left: '左旋转',		// 左旋转按钮文字
-					right: '右旋转',		// 右旋转按钮文字
-					source: '看原图'		// 查看原图按钮文字
+					hide: '{lang pack_up}',		// 左旋转按钮文字
+					left: '{lang left_rotation}',		// 左旋转按钮文字
+					right: '{lang right_rotation}',		// 右旋转按钮文字
+					source: '{lang look_original}'		// 查看原图按钮文字
 				});
-			});
+			}); 
 		
    </script>
    
@@ -56,7 +56,7 @@
 	  .on('click',function(){
 			if(jQuery(this).hasClass('cur')){
 				var el=jQuery('#reply_list_{$cid} .cmt_fed');
-				for(var i=0;i<el.size();i++){
+				for(var i=0;i<el.length;i++){
 					if(i>4){
 						el.eq(i).hide();
 					}

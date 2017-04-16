@@ -7,7 +7,7 @@
  * @author      zyx(zyx@dzz.cc)
  */
 error_reporting(0);
-define('UC_API', strtolower(($_SERVER['HTTPS'] == 'on' ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'))));
+define('SITEURL', strtolower(($_SERVER['HTTPS'] == 'on' ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'))));
 
 $uid = isset($_GET['uid']) ? $_GET['uid'] : 0;
 $size = isset($_GET['size']) ? $_GET['size'] : '';
@@ -38,7 +38,7 @@ if(empty($random)) {
 	header("Expires: ".date('r', time() + 86400));
 }
 
-header('Location: '.UC_API.'/'.$avatar_url);
+header('Location: '.SITEURL.'/'.$avatar_url);
 exit;
 
 function get_avatar($uid, $size = 'middle', $type = '') {

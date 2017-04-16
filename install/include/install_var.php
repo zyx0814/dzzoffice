@@ -62,28 +62,28 @@ define('UNDEFINE_FUNC', 32);
 define('MISSING_PARAMETER', 33);
 define('LOCK_FILE_NOT_TOUCH', 34);
 
-$func_items = array('mysql_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init','mcrypt_module_open');
+if(function_exists('mysqli_connect')) $func_items = array('mysqli_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init');
+else $func_items = array('mysql_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init');
 
 $filesock_items = array('fsockopen', 'pfsockopen', 'stream_socket_client');
 
 $env_items = array
 (
 	'os' => array('c' => 'PHP_OS', 'r' => 'notset', 'b' => 'unix'),
-	'php' => array('c' => 'PHP_VERSION', 'r' => '5.2', 'b' => '5.3'),
+	'php' => array('c' => 'PHP_VERSION', 'r' => '5.3', 'b' => '5.4+'),
 	'attachmentupload' => array('r' => 'notset', 'b' => '2M'),
-	'gdversion' => array('r' => '1.0', 'b' => '2.0'),
-	'diskspace' => array('r' => '50M', 'b' => 'notset'),
+	'gdversion' => array('r' => '1.0', 'b' => '2.0+'),
+	'diskspace' => array('r' => '50M', 'b' => '10G+'),
 	
 );
 
 $dirfile_items = array
 (
 
-	//'config' => array('type' => 'file', 'path' => CONFIG),
 	'config_dir' => array('type' => 'dir', 'path' => './core/config'),
-	//'data' => array('type' => 'dir', 'path' => './data'),
-	'cache' => array('type' => 'dir', 'path' => './data/cache'),
 	'avatar' => array('type' => 'dir', 'path' => './data/avatar'),
+	'cache' => array('type' => 'dir', 'path' => './data/cache'),
+	'logs' => array('type' => 'dir', 'path' => './data/log'),
 	'ftemplates' => array('type' => 'dir', 'path' => './data/template'),
 	'attach' => array('type' => 'dir', 'path' => './data/attachment'),
 	'attach_dzz' => array('type' => 'dir', 'path' => './data/attachment/dzz'),

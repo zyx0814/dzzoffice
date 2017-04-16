@@ -18,15 +18,15 @@ if($operation=='setting'){
 			
 			if($value['type']=='pan' && (empty($value['key']) || empty($value['secret']))){
 				$value['available']=0;
-				$value['warning']='请设置后开启';
+				$value['warning'] = lang('please_open_after_setting');
 			}
 			if(!is_file(DZZ_ROOT.'./core/class/io/io_'.($value['bz']).'.php')){
-				$value['warning']='api文件：io_'.($value['bz']).'.php不存在！';
+				$value['warning'] = lang('cloud_index_api') . ($value['bz']) . lang('cloud_index_php');
 			}
 			$list[]=$value;
 		}
 	}else{
-		
+		$_GET=dhtmlspecialchars($_GET);
 		foreach($_GET['name'] as $bz => $value){
 			
 			if(empty($value)) continue;
@@ -49,13 +49,12 @@ if($operation=='setting'){
 }elseif($operation=='delete'){
 	$bz=trim($_GET['bz']);
 	if(is_file(DZZ_ROOT.'./core/class/io/io_'.($bz).'.php')){
-		showmessage('标志为'.$bz.'的api正在使用，不能删除，如果确信此api不再使用，请ftp删除'.DZZ_ROOT.'./core/class/io/io_'.($bz).'.php后重试',dreferer());
+		showmessage(lang('cloud_index_sign') . $bz . lang('cloud_index_sign1') . DZZ_ROOT . './core/class/io/io_' . ($bz) . lang('cloud_index_sig2'), dreferer());
 	}
 	C::t('connect')->delete_by_bz($bz);
-	showmessage('删除成功！',dreferer());
+	showmessage('delete_success', dreferer());
 
 }
 
 include template('cloud');
-
 ?>

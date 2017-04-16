@@ -162,9 +162,9 @@ class io_ALIOSS extends io_api
 			$hostname=$_GET['hostname'];
 			$bucket=$_GET['bucket'];
 			if(!$access_id || !$access_key) {
-				showmessage('please input aliyun Access Key ID and Access Key Secret',dreferer());
+				showmessage(lang('input_aliyun_acc_sec').'Access Key ID and Access Key Secret',dreferer());
 			}
-			if(!$bucket || !$hostname) showmessage('请选择bucket和节点地址',dreferer());
+			if(!$bucket || !$hostname) showmessage('select_bucket_node_address',dreferer());
 			
 			require_once DZZ_ROOT.'./core/api/oss_sdk/sdk.class.php';
 			$oss = new ALIOSS($access_id,$access_key,$hostname);
@@ -226,7 +226,7 @@ class io_ALIOSS extends io_api
 			}	
 		}
 		if(strpos($this->alc,'read')!==false){
-			return ($oss->use_ssl?'https://':'http://').str_replace('-internal.aliyuncs.com','.aliyuncs.com',$oss->hostname).'/'.$arr['bucket'].'/'.$arr['object'];
+			return ($oss->use_ssl?'https://':'http://').$arr['bucket'].'.'.$oss->hostname.'/'.$arr['object'];
 		}else{
 			return  $oss->get_sign_url($arr['bucket'],$arr['object'],60*60*2);
 		}
@@ -234,19 +234,20 @@ class io_ALIOSS extends io_api
 	public function deleteThumb($path){
 		global $_G;
 		$imgcachePath='./imgcache/';
-		$arr=array(array(256,256),array(1440,900));
 		$cachepath=str_replace('//','/',str_replace(':','/',$path));
-		foreach($arr as $value){
-			$target=$imgcachePath.($cachepath).'.'.$value[0].'_'.$value[1].'.jpeg';
+		foreach($_G['setting']['thumbsize'] as $value){
+			$target=$imgcachePath.($cachepath).'.'.$value['width'].'_'.$value['height'].'.jpeg';
 			@unlink($_G['setting']['attachdir'].$target);
 		}
-	}
-	public function createThumb($path,$width,$height){
-		global $_G;
 		
+	}
+	public function createThumb($path,$size,$width=0,$height=0){
+		global $_G;
+		if(intval($width)<1) $width=$_G['setting']['thumbsize'][$size]['width'];
+		if(intval($height)<1) $height=$_G['setting']['thumbsize'][$size]['height'];
 		$enable_cache=true; //是否启用缓存
 		$imgcachePath='imgcache/';
-		$cachepath=str_replace('//','/',str_replace(':','/',$path));
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace('//','/',str_replace(':','/',$path))));
 		$imgurl=self::getFileUri($path);
 			
 		if(!$imginfo=@getimagesize($imgurl)){
@@ -277,13 +278,22 @@ class io_ALIOSS extends io_api
 	public function getThumb($path,$width,$height,$original,$returnurl=false){
 		global $_G;
 		$imgcachePath='./imgcache/';
-		$cachepath=str_replace(':','/',$path);
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace(':','/',$path)));
 		if($original){
 			$imgurl=self::getFileUri($path);
 			if($returnurl) return $imgurl;
-			$imginfo=@getimagesize($imgurl);
+			$file=$imgurl;
+			$etag = @md5_file($file); 
 			
-			@header('cache-control:public'); 
+			//header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			$imginfo=@getimagesize($imgurl);
+			@header('cache-control:public');   
 			@header("Content-Type: " . image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($imgurl);
@@ -292,9 +302,20 @@ class io_ALIOSS extends io_api
 		}
 		$target='./imgcache/'.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		$target1='imgcache/'.($cachepath).'.'.$width.'_'.$height.'.jpeg';
-		if(@getimagesize($_G['setting']['attachdir'].$target)){
+		if(@getimagesize($_G['setting']['attachdir'].'./'.$target)){
 			if($returnurl) return $_G['setting']['attachurl'].$target1;
-			@header('cache-control:public'); 
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');ob_start('ob_gzhandler');
 			@readfile($_G['setting']['attachdir'].$target);
@@ -306,7 +327,15 @@ class io_ALIOSS extends io_api
 		$imginfo=@getimagesize($imgurl);
 		if(is_array($imginfo) && $imginfo[0]<$width && $imginfo[1]<$height) {
 			if($returnurl) return $imgurl;
-			@header('cache-control:public'); 
+			$file=$imgurl;
+			$etag = @md5_file($file); 
+			header("Etag: $etag"); 
+			
+			if (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header("Content-Type: " . image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($imgurl);
@@ -317,7 +346,18 @@ class io_ALIOSS extends io_api
 		$image = new image();
 		if($thumb = $image->Thumb($imgurl,$target1,$width, $height,1) ){
 			if($returnurl) return $_G['setting']['attachurl'].$target1;
-			@header('cache-control:public'); 
+			$file=$_G['setting']['attachdir'].$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($_G['setting']['attachdir'].$target);
@@ -325,7 +365,17 @@ class io_ALIOSS extends io_api
 			exit();
 		}else{
 			if($returnurl) return $imgurl;
-			@header('cache-control:public'); 
+			$file=$imgurl;
+			//$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			//header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				@header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header("Content-Type: " . image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($imgurl);
@@ -347,7 +397,7 @@ class io_ALIOSS extends io_api
 			}	
 		}
 		if(strpos($this->alc,'read')!==false){
-			return ($oss->use_ssl?'https://':'http://').$oss->hostname.'/'.$arr['bucket'].'/'.$arr['object'];
+			return ($oss->use_ssl?'https://':'http://').$arr['bucket'].'.'.str_replace('-internal.aliyuncs.com','.aliyuncs.com',$oss->hostname).'/'.$arr['object'];
 		}else{
 			return  $oss->get_sign_url($arr['bucket'],$arr['object'],60*60*2);
 		}
@@ -406,7 +456,7 @@ class io_ALIOSS extends io_api
 				return array('error'=>$response->status);
 			}
 			if(md5($fileContent)!=strtolower(trim($response->header['etag'],'"'))){ //验证上传是否完整
-				return array('error'=>'上传文件不完整，请重试');
+				return array('error'=>lang('upload_file_incomplete'));
 			}
 			$meta=array(
 						'Key'=>$arr['object'],
@@ -708,8 +758,8 @@ class io_ALIOSS extends io_api
 			elseif(in_array($ext,$documentexts)) $type='document';
 			else $type='attach';
 			if($type=='image'){
-				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=256&height=256&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['Key']);
-				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=1440&height=900&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['Key']);
+				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=small&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['Key']);
+				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=large&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['Key']);
 			}else{
 				@include_once DZZ_ROOT.'./dzz/function/dzz_core.php';
 				$img=geticonfromext($ext,$type);
@@ -820,13 +870,19 @@ class io_ALIOSS extends io_api
 		return file_get_contents($url);
 	}
 	//打包下载文件
-	public function zipdownload($path){
+	public function zipdownload($paths,$filename){
 		global $_G;
-		$meta=self::getMeta($path);
+		$paths=(array)$paths;
+		set_time_limit(0);
+		
+		if(empty($filename)){
+			$meta=self::getMeta($paths[0]);
+			$filename=$meta['name'].(count($paths)>1?lang('wait'):'');
+		}
+		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
 		include_once libfile('class/ZipStream');
-		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
 		$zip = new ZipStream($filename.".zip");
-		$data=self::getFolderInfo($path,'',$zip);
+		$data=self::getFolderInfo($paths,'',$zip);
 		/*if($data['error']){
 			topshowmessage($data['error']);
 			exit();
@@ -836,29 +892,32 @@ class io_ALIOSS extends io_api
 		}*/
 		$zip->finalize();
 	}
-	public function getFolderInfo($path,$position='',$zip){
+	public function getFolderInfo($paths,$position='',$zip){
 		static $data=array();
 		try{
-			$arr=IO::parsePath($path);
-			$oss=self::init($path,1); 
-			if(is_array($oss) && $oss['error']) return $oss;
-			$meta=self::getMeta($path);
-			switch($meta['type']){
-				case 'folder':
-					  $position.=$meta['name'].'/';
-					 
-					   $contents=self::listFilesAll($oss,$path);
-					 foreach($contents as $key=>$value){
-						 if($value['path']!=$path){
-							self::getFolderInfo($value['path'],$position,$zip);
+			foreach($paths as $path){
+				$arr=IO::parsePath($path);
+				$oss=self::init($path,1); 
+				if(is_array($oss) && $oss['error']) return $oss;
+				$meta=self::getMeta($path);
+				switch($meta['type']){
+					case 'folder':
+					     $lposition=$position.$meta['name'].'/';
+						 $contents=self::listFilesAll($oss,$path);
+						 $arr=array();
+						 foreach($contents as $key=>$value){
+							 if($value['path']!=$path){
+								$arr[]=$value['path'];
+							 }
 						 }
-					 }
-					break;
-				default:
-				 $meta['url']=self::getStream($meta['path']);
-				 $meta['position']=$position.$meta['name'];
-				 //$data[$meta['icoid']]=$meta;
-				 $zip->addLargeFile(@fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+						 if($arr) self::getFolderInfo($arr,$lposition,$zip);
+						break;
+					default:
+					 $meta['url']=self::getStream($meta['path']);
+					 $meta['position']=$position.$meta['name'];
+					 //$data[$meta['icoid']]=$meta;
+					 $zip->addLargeFile(@fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+				}
 			}
 		
 		}catch(Exception $e){
@@ -869,8 +928,15 @@ class io_ALIOSS extends io_api
 		return $data;
 	}
 	//下载文件
-	public function download($path){
+	public function download($paths,$filename){
 		global $_G;
+		$paths=(array)$paths;
+		if(count($paths)>1){
+			self::zipdownload($paths,$filename);
+			exit();
+		}else{
+			$path=$paths[0];
+		}
 		$path=rawurldecode($path);
 		
 		//header("location: $url");
@@ -883,10 +949,9 @@ class io_ALIOSS extends io_api
 				exit();
 			}
 			if(!$fp = @fopen($url, 'rb')) {
-				topshowmessage('文件不存在');
+				topshowmessage(lang('file_not_exist1'));
 			}
-			$db = DB::object();
-			$db->close();
+			
 			
 			$chunk = 10 * 1024 * 1024; 
 			//$file['data'] = self::getFileContent($path);
@@ -1160,7 +1225,7 @@ class io_ALIOSS extends io_api
 						return array('error'=>'upload partNember 1 error');
 					}
 					if(md5_file($file)!=strtolower(trim($response->header['etag'],'"'))){ //验证上传是否完整
-						return array('error'=>'上传文件不完整，请重试');
+						return array('error'=>lang('upload_file_incomplete'));
 					}
 				
 					
@@ -1168,6 +1233,7 @@ class io_ALIOSS extends io_api
 					$data['upload_id']=$upload_id;
 					$data['filesize']=filesize($file);
 					$data['partnum']=1;
+					$data['path']=$path;
 					$data['parts'][$data['partnum']]=array('PartNumber'=>$data['partnum'],'ETag'=>$response->header['etag']);
 					
 					self::saveCache($path,$data);
@@ -1181,7 +1247,7 @@ class io_ALIOSS extends io_api
 						return array('error'=>'upload partNember '.$cache['partnum'].' error');
 					}
 					if(md5_file($file)!=strtolower(trim($response->header['etag'],'"'))){ //验证上传是否完整
-						return array('error'=>'上传文件不完整，请重试');
+						return array('error'=>lang('upload_file_incomplete'));
 					}
 
 					//print_r($cache);
@@ -1219,7 +1285,7 @@ class io_ALIOSS extends io_api
 					return array('error'=>$response->status);
 				}
 				if(md5_file($file)!=strtolower(trim($response->header['etag'],'"'))){ //验证上传是否完整
-					return array('error'=>'上传文件不完整，请重试');
+					return array('error'=>lang('upload_file_incomplete'));
 				}
 				$meta=array(
 							'Key'=>$arr['object'],
@@ -1242,14 +1308,14 @@ class io_ALIOSS extends io_api
 		$patharr=explode('/',$arr['object']);
 		$arr['object1']='';
 		if(strrpos($path,'/')==(strlen($path)-1)){//是目录
-			return array('error'=>'文件夹不允许重命名');
+			return array('error'=>lang('folder_not_allowed_rename'));
 		}else{
 			$ext=strtolower(substr(strrchr($arr['object'], '.'), 1));
 			foreach($patharr as $key =>$value){
 				if($key>=count($patharr)-1) break;
 				$arr['object1'].=$value.'/';
 			}
-			$arr['object1'].=$ext?(rtrim($name,'.'.$ext).'.'.$ext):$name;
+			$arr['object1'].=$ext?(preg_replace("/\.\w+$/i",'.'.$ext,$name)):$name;
 		}
 		if($arr['object']!=$arr['object1']){
 			$oss=self::init($path);
@@ -1341,10 +1407,7 @@ class io_ALIOSS extends io_api
 	}
 	public function multiUpload($opath,$path,$filename,$attach=array(),$ondup="newcopy"){
 		global $_G;
-	/* 
-	 * 分块上传文件
-	 * param $file:文件路径（可以是url路径，需要服务器开启allow_url_fopen);
-	*/
+	
 		
 		$partsize=1024*1024*5; //分块大小2M
 		if($attach){
@@ -1364,7 +1427,7 @@ class io_ALIOSS extends io_api
 			//获取文件内容
 			$fileContent='';
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
 			while (!feof($handle)) {
 			  $fileContent .= fread($handle, 8192);
@@ -1377,14 +1440,14 @@ class io_ALIOSS extends io_api
 
 			$partinfo=array('ispart'=>true,'partnum'=>0,'iscomplete'=>false);
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
-		    $ext=strtolower(substr(strrchr($filename, '.'), 1));
-			$cachefile=$_G['setting']['attachdir'].'./cache/'.md5($opath).'.'.$ext;
+		    
+			$cachefile=$_G['setting']['attachdir'].'./cache/'.md5($opath).'.dzz';
 			$fileContent='';
 			while (!feof($handle)) {
 				$fileContent.=fread($handle, 8192);
-				if(strlen($fileContent)==0) return array('error'=>'文件不存在');
+				if(strlen($fileContent)==0) return array('error'=>lang('file_not_exist1'));
 				if(strlen($fileContent)>=$partsize){
 					if($partinfo['partnum']*$partsize+strlen($fileContent)>=$size) $partinfo['iscomplete']=true;
 					$partinfo['partnum']+=1;

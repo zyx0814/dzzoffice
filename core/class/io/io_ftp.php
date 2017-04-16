@@ -111,7 +111,7 @@ class io_ftp extends io_api
 			$uid=defined('IN_ADMIN')?0:$_G['uid'];
 			$config['on']=1;
 			$ftp = new dzz_ftp($config);
-			if($ftp->error()) showmessage('FTP 参数设置错误，请检查',dreferer());
+			if($ftp->error()) showmessage(lang('ftp_Parameter_setting_error').$ftp->error(),dreferer());
 			if($ftp->connect()){
 				$config['uid']=$uid;
 				if($id=DB::result_first("select id from %t where uid=%d and host=%s and port=%d and username=%s",array(self::T,$uid,$config['host'],$config['port'],$config['username']))){
@@ -136,7 +136,7 @@ class io_ftp extends io_api
 					showmessage('do_success',$refer?$refer:BASESCRIPT.'?mod=connect');
 				}
 			}else{
-				showmessage('尝试连接ftp未成功，请检查参数后重试',dreferer());
+				showmessage('try_connect_FTP_failed',dreferer());
 			}
 			
 		}else{
@@ -176,16 +176,16 @@ class io_ftp extends io_api
 	public function deleteThumb($path){
 		global $_G;
 		$imgcachePath='./imgcache/';
-		$arr=array(array(256,256),array(1440,900));
 		$cachepath=preg_replace("/\/+/",'/',str_replace(':','/',$path));
-		foreach($arr as $value){
-			$target=$imgcachePath.($cachepath).'.'.$value[0].'_'.$value[1].'.jpeg';
+		foreach($_G['setting']['thumbsize'] as $value){
+			$target=$imgcachePath.($cachepath).'.'.$value['width'].'_'.$value['height'].'.jpeg';
 			@unlink($_G['setting']['attachdir'].$target);
 		}
 	}
-	public function createThumb($path,$width,$height){
+	public function createThumb($path,$size,$width=0,$height=0){
 		global $_G;
-		
+		if(intval($width)<1) $width=$_G['setting']['thumbsize'][$size]['width'];
+		if(intval($height)<1) $height=$_G['setting']['thumbsize'][$size]['height'];
 		$enable_cache=true; //是否启用缓存
 		$imgcachePath='imgcache/';
 		$cachepath=preg_replace("/\/+/",'/',str_replace(':','/',$path));
@@ -225,7 +225,15 @@ class io_ftp extends io_api
 			$imgurl=self::getStream($path);
 			if($returnurl) return $imgurl;
 			$imginfo=@getimagesize($imgurl);
-			@header('cache-control:public'); 
+			$file=$imgurl;
+			$etag = @md5_file($file); 
+			header("Etag: $etag"); 
+			
+			if (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: '.image_type_to_mime_type($imginfo[2]));
 			@readfile($imgurl);
 			@flush(); @ob_flush();
@@ -235,7 +243,18 @@ class io_ftp extends io_api
 		$target=$imgcachePath.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		if(@getimagesize($_G['setting']['attachdir'].'./'.$target)){
 			if($returnurl) return $_G['setting']['attachurl'].$target;
-			@header('cache-control:public'); 
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($_G['setting']['attachdir'].'./'.$target);
@@ -246,7 +265,15 @@ class io_ftp extends io_api
 		$imginfo=@getimagesize($imgurl);
 		if(is_array($imginfo) && $imginfo[0]<$width && $imginfo[1]<$height) {
 			if($returnurl) return $imgurl;
-			@header('cache-control:public'); 
+			$file=$imgurl;
+			$etag = @md5_file($file); 
+			header("Etag: $etag"); 
+			
+			if (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header("Content-Type: " . image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($imgurl);
@@ -258,7 +285,18 @@ class io_ftp extends io_api
 		$image = new image();
 		if($thumb = $image->Thumb($imgurl,$target,$width, $height,1) ){
 			if($returnurl) return $_G['setting']['attachurl'].$target;
-			@header('cache-control:public'); 
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($_G['setting']['attachdir'].'./'.$target);
@@ -266,7 +304,15 @@ class io_ftp extends io_api
 			exit();
 		}else{
 			if($returnurl) return $imgurl;
-			@header('cache-control:public'); 
+			$file=$imgurl;
+			$etag = @md5_file($file); 
+			header("Etag: $etag"); 
+			
+			if (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/PNG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($imgurl);
@@ -282,7 +328,7 @@ class io_ftp extends io_api
 		$bzarr=self::parsepath($path);
 		$temp = tempnam(sys_get_temp_dir(), 'tmpimg_');
 		if(!file_put_contents($temp,$data)){
-			return array('写入临时文件错误,请检查临时目录有无写入权限');
+			return array(lang('error_writing_temporary_file'));
 		}
 		 if($this->conn->upload($temp,$bzarr['path'])){
 			 
@@ -338,11 +384,70 @@ class io_ftp extends io_api
 	public function multiUpload($opath,$path,$filename,$attach=array(),$ondup="newcopy"){
 		global $_G;
 	
+		$partsize=1024*1024*5; //分块大小2M
+		if($attach){
+			$data=$attach;
+			$data['size']=$attach['filesize'];
+		}else{
+			$data=IO::getMeta($opath);
+			if($data['error']) return $data;
+		}
+		$size=$data['size'];
 		if(is_array($filepath=IO::getStream($opath))){
 			return array('error'=>$filepath['error']);
 		}
-		//exit($filepath);
-		return self::upload($filepath,$path,$filename);
+		
+		//exit(($size<$partsize).'===='.$size.'==='.$filepath.'===='.$path);
+		if($size<$partsize){
+			//获取文件内容
+			$fileContent='';
+			if(!$handle=fopen($filepath, 'rb')){
+				return array('error'=>lang('open_file_error'));
+			}
+			while (!feof($handle)) {
+			  $fileContent .= fread($handle, 8192);
+			  //if(strlen($fileContent)==0) return array('error'=>'文件不存在');
+			}
+			fclose($handle);
+			//exit('upload');
+			return self::upload_by_content($fileContent,$path,$filename);
+		}else{ //分片上传		
+
+			$partinfo=array('ispart'=>true,'partnum'=>0,'iscomplete'=>false);
+			if(!$handle=fopen($filepath, 'rb')){
+				return array('error'=>lang('open_file_error'));
+			}
+			$cachefile=$_G['setting']['attachdir'].'./cache/'.md5($opath).'.dzz';
+			$fileContent='';
+			while (!feof($handle)) {
+				$fileContent.=fread($handle, 8192);
+				if(strlen($fileContent)==0) return array('error'=>lang('file_not_exist1'));
+				if(strlen($fileContent)>=$partsize){
+					if($partinfo['partnum']*$partsize+strlen($fileContent)>=$size) $partinfo['iscomplete']=true;
+					$partinfo['partnum']+=1;
+					file_put_contents($cachefile,$fileContent);
+					$re=self::upload($cachefile,$path,$filename,$partinfo);
+					if($re['error']) return $re;
+					if($partinfo['iscomplete']){
+						 @unlink($cachefile);
+						 return $re;
+					}
+					$fileContent='';
+				}
+			}
+			fclose($handle);
+			if(!empty($fileContent)){
+				$partinfo['partnum']+=1;
+				$partinfo['iscomplete']=true;
+				file_put_contents($cachefile,$fileContent);
+				$re=self::upload($cachefile,$path,$filename,$partinfo);
+				if($re['error']) return $re;
+				if($partinfo['iscomplete']){
+					 @unlink($cachefile);
+					 return $re;
+				}
+			}
+		}
 	}
 	/**
 	 * 获取指定文件夹下的文件列表
@@ -434,14 +539,15 @@ class io_ftp extends io_api
 				$icosdata=$icoarr;
 			
 		}else{
-			$ext=strtoupper(substr(strrchr($meta['path'], '.'), 1));
+			$pathinfo = pathinfo($meta['path']);
+			$ext = strtolower($pathinfo['extension']);
 			if(in_array($ext,$imageexts)) $type='image';
 			elseif(in_array($ext,$documentexts)) $type='document';
 			else $type='attach';
 			
 			if($type=='image'){
-				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=256&height=256&path='.dzzencode($bz.$meta['path']);
-				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=1440&height=900&path='.dzzencode($bz.$meta['path']);
+				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=small&path='.dzzencode($bz.$meta['path']);
+				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=large&path='.dzzencode($bz.$meta['path']);
 			}else{
 				$img=geticonfromext($ext,$type);
 				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.dzzencode($bz.$meta['path']);
@@ -485,7 +591,7 @@ class io_ftp extends io_api
 						  'path'=>$icosdata['path'],
 						  'fname'=>$icosdata['name'],
 						  'uid'=>$icosdata['uid'],
-						  'pfid'=>$icoadata['pfid'],
+						  'pfid'=>$icosdata['pfid'],
 						  'iconview'=>$_GET['iconview']?intval($_GET['iconview']):1,
 						  'disp'=>$_GET['disp']?intval($_GET['disp']):1,
 						  'perm'=>$this->perm,
@@ -504,41 +610,50 @@ class io_ftp extends io_api
 		return file_get_contents($url);
 	}
 	//打包下载文件
-	public function zipdownload($path){
+	public function zipdownload($paths,$filename){
 		global $_G;
-		$meta=self::getMeta($path);
+		$paths=(array)$paths;
+		set_time_limit(0);
+		
+		if(empty($filename)){
+			$meta=self::getMeta($paths[0]);
+			$filename=$meta['name'].(count($paths)>1?lang('wait'):'');
+		}
+		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
 		include_once libfile('class/ZipStream');
 		
-		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
 		$zip = new ZipStream($filename.".zip");
 		//$zip->setComment("$meta[name] " . date('l jS \of F Y h:i:s A'));
-		$data=self::getFolderInfo($path,'',$zip);
+		$data=self::getFolderInfo($paths,'',$zip);
 		/*foreach($data as $value){
 			 $zip->addLargeFile(fopen($value['url'],'rb'), $value['position'], $value['dateline']);
 		}*/
 		$zip->finalize();
 	}
-	public function getFolderInfo($path,$position='',$zip){
+	public function getFolderInfo($paths,$position='',&$zip){
 		static $data=array();
 		try{
-			$arr=self::parsePath($path);
-			
-			$meta=self::getMeta($path);
-			
-			switch($meta['type']){
-				case 'folder':
-					  $position.=$meta['name'].'/';
-					 $contents=self::listFiles($path);
-					
-					 foreach($contents as $key=>$value){
-						self::getFolderInfo($value['path'],$position,$zip);
-					 }
-					break;
-				default:
-				$meta['url']=self::getStream($meta['path']);
-				$meta['position']=$position.$meta['name'];
-				//$data[$meta['icoid']]=$meta;
-				$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+			foreach($paths as $path){
+				$arr=self::parsePath($path);
+				
+				$meta=self::getMeta($path);
+				
+				switch($meta['type']){
+					case 'folder':
+						 $lposition=$position.$meta['name'].'/';
+						 $contents=self::listFiles($path);
+						 $arr=array();
+						 foreach($contents as $key=>$value){
+							$arr[]=$value['path'];
+						 }
+						if($arr) self::getFolderInfo($arr,$lposition,$zip);
+						break;
+					default:
+					$meta['url']=self::getStream($meta['path']);
+					$meta['position']=$position.$meta['name'];
+					//$data[$meta['icoid']]=$meta;
+					$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+				}
 			}
 		
 		}catch(Exception $e){
@@ -550,10 +665,16 @@ class io_ftp extends io_api
 	}
 	
 	//下载文件
-	public function download($path){
+	public function download($paths,$filename){
 		global $_G;
+		$paths=(array)$paths;
+		if(count($paths)>1){
+			self::zipdownload($paths,$filename);
+			exit();
+		}else{
+			$path=$paths[0];
+		}
 		$path=rawurldecode($path);
-		
 		try {
 			// Download the file
 			$file=self::getMeta($path);
@@ -563,10 +684,8 @@ class io_ftp extends io_api
 			}
 			$url=self::getStream($path);
 			if(!$fp = @fopen($url, 'rb')) {
-				topshowmessage('文件不存在');
+				topshowmessage(lang('file_not_exist1'));
 			}
-			$db = DB::object();
-			$db->close();
 			
 			$chunk = 10 * 1024 * 1024; 
 			//$file['data'] = self::getFileContent($path);
@@ -603,12 +722,13 @@ class io_ftp extends io_api
 		$arr=self::parsePath($path);
 		$patharr=explode('/',$arr['path1']);
 		$arr['path2']='';
-		$ext=strtolower(substr(strrchr($arr['path1'], '.'), 1));
+		$pathinfo = pathinfo($arr['path1']);
+		$ext = strtolower($pathinfo['extension']);
 		foreach($patharr as $key =>$value){
 			if($key>=count($patharr)-1) break;
 			$arr['path2'].=$value.'/';
 		}
-		$arr['path2'].=$ext?(rtrim($name,'.'.$ext).'.'.$ext):$name;
+		$arr['path2'].=$ext?(preg_replace("/\.\w+$/i",'.'.$ext,$name)):$name;
 		$arr['path3']=diconv($arr['path2'],CHARSET,$this->encode);
 		if($arr['path1']!=$arr['path2']){
 			if($this->conn->ftp_rename($arr['path'],$arr['path3'])){
@@ -802,7 +922,7 @@ class io_ftp extends io_api
 		//获取文件内容
 		$fileContent='';
 		if(!$handle=fopen($file, 'rb')){
-			return array('error'=>'打开文件错误');
+			return array('error'=>lang('open_file_error'));
 		}
 		while (!feof($handle)) {
 		  $fileContent .= fread($handle, 8192);
@@ -818,7 +938,7 @@ class io_ftp extends io_api
 			 }
 			
 			if(!file_put_contents($_G['setting']['attachdir'].$target,$fileContent,FILE_APPEND)){
-				return array('error'=>'缓存文件到本地出现错误，请确认目录/data/attachment/cache/有写入权限，并且更新系统缓存后重试');
+				return array('error'=>lang('cache_file_error1'));
 			}
 			if(!$partinfo['iscomplete']) return true;
 			else{
@@ -833,9 +953,7 @@ class io_ftp extends io_api
 				 return array('error'=>$this->conn->error());
 			 }
 		 } 
-		 
 		 return self::getMeta($path.'/'.$filename);
-		
 	}
 	public function upload_by_content($content,$path,$filename){
 		global $_G;
@@ -843,10 +961,13 @@ class io_ftp extends io_api
 		$bzarr=self::parsePath($path.'/'.$filename);
 		//获取文件内容
 		 $file=$_G['setting']['attachdir'].'./cache/'.md5($path.'/'.$filename);
-		 file_put_contents($file,$content);
-		 $return=self::upload($file,$path,$filename);
+		 @file_put_contents($file,$content);
+		// $return=self::upload($file,$path,$filename);
+		 if(!$this->conn->upload($file,$bzarr['path'])){
+			 return array('error'=>$this->conn->error());
+		 }
 		 @unlink($file);
-		 return $return;
+		 return self::getMeta($path.'/'.$filename);
 	}
 }
 ?>

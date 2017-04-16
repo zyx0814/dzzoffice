@@ -17,7 +17,7 @@ class table_user extends dzz_table
 		$this->_table = 'user';
 		$this->_pk    = 'uid';
 		$this->_pre_cache_key = 'user_';
-
+		
 		parent::__construct();
 	}
 	public function delete_by_uid($uid){
@@ -61,17 +61,17 @@ class table_user extends dzz_table
 			return false;
 		}
 	}
-	public function setAdministror($uid,$adminid){
+	public function setAdministror($uid,$groupid){
 		$user=getuserbyuid($uid);
-		if($user['adminid']==$adminid) return true;
+		//if($user['adminid']==$adminid) return true;
 		if(self::checkfounder($user)){ //创始人不允许修改
 			return true;
 		}
 		$arr=array();
-		if($adminid>0){
+		if($groupid==1){
 			parent::update($uid,array('adminid'=>1,'groupid'=>1));
 		}else{
-			$groupid=9;
+			if(empty($groupid)) $groupid=9;
 			if(C::t('organization_admin')->fetch_orgids_by_uid($uid)){
 				$groupid=2;
 			}

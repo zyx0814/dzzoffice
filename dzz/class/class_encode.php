@@ -89,7 +89,7 @@ class Encode_Core {
 		if(empty($encoding)){
 			$encoding=mb_detect_encoding($str,$ary);
 		}
-		
+		if($encoding=='ASCII') $encoding='UTF-8';
 		return $encoding;
 	}
 	

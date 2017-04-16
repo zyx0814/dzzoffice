@@ -32,7 +32,7 @@ if($do=='newlink'){
 		if(!preg_match("/^(http|ftp|https|mms)\:\/\/.{5,300}$/i", ($link))){
 			$link='http://'.preg_replace("/^(http|ftp|https|mms)\:\/\//i",'',$link);
 		}
-		if(!preg_match("/^(http|ftp|https|mms)\:\/\/.{4,300}$/i",($link))) showmessage(lang('message','网址格式错误！'));
+		if(!preg_match("/^(http|ftp|https|mms)\:\/\/.{4,300}$/i",($link))) showmessage('invalid_format_url');
 	
 		$ext=strtolower(substr(strrchr($link, '.'), 1, 10));
 		//static $videoext  = array('swf', 'flv');
@@ -42,11 +42,11 @@ if($do=='newlink'){
 		//是图片时处理
 		if($isimage){
 			if(!perm_check::checkperm_Container($pfid,'newtype')){
-					showmessage(lang('message','target_not_accept_image'));
+					showmessage('target_not_accept_image');
 				}
 			if($data=io_dzz::linktoimage($link,$pfid)){
 				if($data['error']) showmessage($data['error']);
-				showmessage('do_success',$refer.'',array('data'=>rawurlencode(json_encode_gbk($data))),array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
+				showmessage('do_success',$refer.'',array('data'=>rawurlencode(json_encode($data))),array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
 			}
 		
 		}else{
@@ -54,21 +54,21 @@ if($do=='newlink'){
 			
 			if($data=io_dzz::linktovideo($link,$pfid)){
 				if(!perm_check::checkperm_Container($pfid,'video')){
-					showmessage(lang('message','target_not_accept_video'));
+					showmessage('target_not_accept_video');
 				}
 				if($data['error']) showmessage($data['error']);
 				
-				showmessage('do_success',$refer.'',array('data'=>rawurlencode(json_encode_gbk($data))),array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
+				showmessage('do_success',$refer.'',array('data'=>rawurlencode(json_encode($data))),array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
 			}
 			//作为网址处理
 			if(!perm_check::checkperm_Container($pfid,'link')){
-					showmessage(lang('message','target_not_accept_link'));
+					showmessage('target_not_accept_link');
 			}
 			if($data=io_dzz::linktourl($link,$pfid)){
 				if($data['error']) showmessage($data['error']);
-				showmessage('do_success',$refer.'',array('data'=>rawurlencode(json_encode_gbk($data))),array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
+				showmessage('do_success',$refer.'',array('data'=>rawurlencode(json_encode($data))),array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
 			}else{
-				showmessage(lang('message','network_error'));
+				showmessage('network_error');
 			}
 		}
 	}
@@ -111,7 +111,7 @@ if($do=='newlink'){
 		}else{
 			 $ext='txt';
 		}
-		$name=lang('message','new_'.$ext);
+		$name=lang('new_'.$ext);
 	}else{
 		$filename=$_GET['filename'].'.'.$_GET['ext'];
 		if($arr=IO::upload_by_content(' ',$path,$filename)){
@@ -119,11 +119,11 @@ if($do=='newlink'){
 				showmessage($arr['error']);
 		  }else{
 				$arr['msg']='success';
-				showmessage('do_success',dreferer(),array('data'=>rawurlencode(json_encode_gbk($arr))));
+				showmessage('do_success',dreferer(),array('data'=>rawurlencode(json_encode($arr))));
 			}
 		}else{
 			$arr=array();
-			$arr['msg']=lang('template','failure_newfolder');
+			$arr['msg']=lang('failure_newfolder');
 			showmessage($arr['msg']);
 		}
 	}
@@ -140,7 +140,7 @@ if($do=='newlink'){
 				$permarr=perm_binPerm::groupPowerPack();
 			//}
 		}
-		$foldername=IO::getFolderName(lang('template','newfolder',null,'dzz'),$path);
+		$foldername=IO::getFolderName(lang('newfolder',null,'dzz'),$path);
 		
 	}else{
 		$perm=intval($_GET['perm']);
@@ -151,11 +151,11 @@ if($do=='newlink'){
 				showmessage($arr['error']);
 		  }else{
 				$arr['msg']='success';
-				showmessage('do_success',dreferer(),array('data'=>rawurlencode(json_encode_gbk($arr))));
+				showmessage('do_success',dreferer(),array('data'=>rawurlencode(json_encode($arr))));
 			}
 		}else{
 			$arr=array();
-			$arr['msg']=lang('template','failure_newfolder');
+			$arr['msg']=lang('failure_newfolder');
 			showmessage($arr['msg']);
 		}
 	}
@@ -172,8 +172,15 @@ if($do=='newlink'){
 	}
 	exit(json_encode(array('icoarr'=>$icoarr,'folderarr'=>$folderarr)));
 }elseif($do=='share'){
-	$sharestatus=array('-4'=>'已屏蔽','-3'=>'分享文件删除','-2'=>'次数用尽','-1'=>'已过期','0'=>'正常');
-	if(!submitcheck('sharesubmit')){
+	$sharestatus=array('-4'=>lang('been_blocked'),'-3'=>lang('share_file_delete'),'-2'=>lang('degree_exhaust'),'-1'=>lang('out_of_date'),'0'=>lang('normal'));
+	if($_GET['operation']=='share_delete'){
+		$sid=trim($_GET['sid']);
+		if(C::t('share')->delete($sid)){
+			exit(json_encode(array('msg'=>'success')));
+		}else{
+			exit(json_encode(array('error'=>lang('delete_unsuccess'))));
+		}
+	}elseif(!submitcheck('sharesubmit')){
 		$path=dzzdecode($_GET['path']);
 		$icoarr=IO::getMeta($path);
 		if($icoarr['type']=='shortcut'){
@@ -184,32 +191,37 @@ if($do=='newlink'){
 		if($share=C::t('share')->fetch_by_path($path.'&uid='.$_G['uid'])){
 			if(is_file($_G['setting']['attachdir'].'./qrcode/'.$share['sid'][0].'/'.$share['sid'].'.png')) $share['qrcode']=$_G['setting']['attachurl'].'./qrcode/'.$share['sid'][0].'/'.$share['sid'].'.png';
 			if($share['password']) $share['password']=dzzdecode($share['password'],'DECODE');
+			if($share['status']>=-2){
+				 if($share['endtime'] && $share['endtime']<TIMESTAMP) $share['status']=-1;
+				 elseif($share['times'] && $share['times']<=$share['count']) $share['status']=-2;
+				 else $share['status']=0;
+			}
 			if($share['endtime']){
-				 if($share['endtime']<TIMESTAMP && $share['status']>-1) $share['status']=-1;
 				 $share['endtime']=dgmdate($share['endtime'],'Y-m-d');
 			}else $share['endtime']='';
-			if($share['times']) {
-				if($share['times']>=$share['count'] && $share['status']>-1) $share['status']=-2;
-			}else{
+			if(!$share['times']) {
 				$share['times']='';
 			}
 			$share['stitle']=$sharestatus[$share['status']];
 			$share['shareurl']=$_G['siteurl'].'s.php?sid='.$share['sid'];
+			if(in_array($icoarr['type'],array('folder','image','attach','document'))) $share['downurl']=$_G['siteurl'].'s.php?sid='.$share['sid'].'&a=down';
 		}else{
 			$share=array('title'=>$icoarr['name']);
-		}	
+		}
+	
 	}else{
 		$share=$_GET['share'];
 		$share['title']=getstr($share['title']);
-		if($share['endtime']) $share['endtime']=strtotime($share['endtime']);
+		if($share['endtime']) $share['endtime']=strtotime($share['endtime'])+24*60*60;
 		if($share['password']) $share['password']=dzzencode($share['password']);
 		$share['times']=intval($share['times']);
-		$share['count']=0;
 		if($ret=C::t('share')->insert_by_sid($share)){
+			if(in_array($share['type'],array('folder','image','attach','document'))) $ret['downurl']=$_G['siteurl'].'s.php?sid='.$ret['sid'].'&a=down';
+			$ret['stitle']=$sharestatus[$ret['status']];
 			$ret['msg']='success';
 			exit(json_encode($ret));
 		}else{
-			exit(json_encode(array('error'=>'创建失败！')));
+			exit(json_encode(array('error'=>lang('create_failure').'！')));
 		}
 	}
 }elseif($do=='property'){
@@ -223,7 +235,7 @@ if($do=='newlink'){
 		$return=array();
 		if(!$icoarr['bz']){
 			$ret=0;
-			$name=io_dzz::name_filter(trim($_GET['name']));
+			$name=str_replace('...','',getstr(io_dzz::name_filter($_GET['name']),80));
 			if($perm && $icoarr['name']!=$name){
 				C::t('icos')->update_by_name($icoid,$name);
 				$ret=1;
@@ -268,7 +280,7 @@ if($do=='newlink'){
 		if($icoarr['bz']){
 			$bzarr=explode(':',$icoarr['path']);
 			$info['path']=$icoarr['path'];
-			$info['size']=lang('template','property_info_size',array('fsize'=>$icoarr['size']>0?formatsize($icoarr['size']):$icoarr['size'],'size'=>$icoarr['size']));
+			$info['size']=lang('property_info_size',array('fsize'=>$icoarr['size']>0?formatsize($icoarr['size']):$icoarr['size'],'size'=>$icoarr['size']));
 		}else{
 			
 			$arr=getPathByPfid($icoarr['pfid']);
@@ -315,12 +327,12 @@ if($do=='newlink'){
 					
 					$info['icon']=$icoarr['img']?$icoarr['img']:'dzz/images/default/system/folder.png';
 					$contains=getContainsByFid($icoarr['oid']);
-					$info['size']=lang('template','property_info_size',array('fsize'=>formatsize($contains['size']),'size'=>$contains['size']));
-					$info['contain']=lang('template','property_info_contain',array('filenum'=>$contains['contain'][0],'foldernum'=>$contains['contain'][1]));
+					$info['size']=lang('property_info_size',array('fsize'=>formatsize($contains['size']),'size'=>$contains['size']));
+					$info['contain']=lang('property_info_contain',array('filenum'=>$contains['contain'][0],'foldernum'=>$contains['contain'][1]));
 					break;
 				case 'dzzdoc':
 					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-					$info['size']=lang('template','property_info_size',array('fsize'=>formatsize($icoarr['size']),'size'=>$icoarr['size']));
+					$info['size']=lang('property_info_size',array('fsize'=>formatsize($icoarr['size']),'size'=>$icoarr['size']));
 					break;
 				case 'link':
 					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
@@ -337,7 +349,7 @@ if($do=='newlink'){
 						
 				default:
 					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-					$info['size']=lang('template','property_info_size',array('fsize'=>formatsize($icoarr['size']),'size'=>$icoarr['size']));
+					$info['size']=lang('property_info_size',array('fsize'=>formatsize($icoarr['size']),'size'=>$icoarr['size']));
 					
 			}
 		}
@@ -357,7 +369,7 @@ if($do=='newlink'){
 			if($return['error']) showmessage($return['error']);
 			showmessage('do_success',dreferer(),array(),array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
 		}
-		showmessage('权限修改失败,Windows服务器不支持此操作');
+		showmessage('permissions_change_failure');
 	}else{
 		$meta=IO::getMeta($path);
 		$meta['name']=getstr($meta['name'],30);

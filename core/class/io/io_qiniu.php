@@ -101,7 +101,7 @@ class io_qiniu extends io_api
 	*初始化OSS 返回oss 操作符
 	*/
 	public function init($bz,$isguest=0){
-		global $_G;
+		global $_G,$HOSTS,$QINIU_UP_HOST;
 		$bzarr=explode(':',$bz);
 		$id=trim($bzarr[1]);
 		if(!$root=DB::fetch_first("select * from ".DB::table(self::T)." where  id='{$id}'")){
@@ -111,18 +111,21 @@ class io_qiniu extends io_api
 		$access_id=authcode($root['access_id'],'DECODE',$root['bz']);
 		if(empty($access_id)) $access_id=$root['access_id'];
 		$access_key=authcode($root['access_key'],'DECODE',$root['bz']);
-		$this->_domain=$root['hostname'];
+		list($hostname,$region)=explode('|',$root['hostname']);
+		$this->_domain=$hostname;
 		if($root['cloudname']){
 			$this->_rootname=$root['cloudname'];
 		}else{
 			$this->_rootname.=':'.($root['bucket']?$root['bucket']:cutstr($root['access_id'], 4, $dot = ''));
 		}
 		$this->bucket=$root['bucket'];
+		if(!isset($HOSTS[$region]))  $region='huadong';
 		Qiniu_SetKeys($access_id, $access_key);
+		Qiniu_UploadHost($HOSTS[$region]['up_http']);
 		return new Qiniu_MacHttpClient(null);
 	}
 	public function authorize($refer){
-		global $_G,$_GET,$clouds;
+		global $_G,$_GET,$clouds,$HOSTS;
 		if(empty($_G['uid'])) {
 			dsetcookie('_refer', rawurlencode(BASESCRIPT.'?mod=connect&op=oauth&bz=qiniu'));
 			showmessage('to_login', '', array(), array('showmsg' => true, 'login' => 1));
@@ -132,11 +135,15 @@ class io_qiniu extends io_api
 			$access_key=$_GET['access_key'];
 			$hostname=$_GET['hostname'];
 			$bucket=$_GET['bucket'];
+			$region=$_GET['region'];
 			if(!$access_id || !$access_key) {
 				showmessage('please input qiniu AK and SK',dreferer());
 			}
-			if(!$bucket || !$hostname) showmessage('请设置bucket名称和访问域名',dreferer());
-				Qiniu_setKeys($access_id,$access_key);
+			if(!$bucket || !$hostname) showmessage(lang('set_bucket_name_region'),dreferer());
+			Qiniu_setKeys($access_id,$access_key);
+			if(!isset($HOSTS[$region]))  $region='huadong';
+			Qiniu_UploadHost($HOSTS[$region]['up_http']);
+			//print_r($_GET);exit('dddd');
 			try{
 				$putPolicy = new Qiniu_RS_PutPolicy($bucket);
 				$upToken = $putPolicy->Token(null);
@@ -151,10 +158,9 @@ class io_qiniu extends io_api
 				$baseUrl = Qiniu_RS_MakeBaseUrl($hostname,'b.gif');
 				$getPolicy = new Qiniu_RS_GetPolicy();
 				$privateUrl = $getPolicy->MakeRequest($baseUrl, null);
-				if(!@getimagesize($privateUrl)){
-					showmessage('测试读取失败，请检查您设置的访问域名是否正确',dreferer());
+				if(!getimagesize($privateUrl)){
+					showmessage('test_read_failure',dreferer());
 				}
-				
 			}catch(Exception $e){
 				showmessage($e->getMessage(),dreferer());
 			}
@@ -169,7 +175,7 @@ class io_qiniu extends io_api
 							'access_key'=>authcode($access_key,'ENCODE',$type),
 							'bz'=>$type,
 							'bucket'=>$bucket,
-							'hostname'=>$hostname,
+							'hostname'=>$hostname.'|'.$region,
 							'dateline'=>TIMESTAMP,					
 						);
 			if($id=DB::result_first("select id from ".DB::table(self::T)." where uid='{$uid}' and access_id='{$access_id}' and bucket='{$bucket}'")){
@@ -214,14 +220,15 @@ class io_qiniu extends io_api
 	public function deleteThumb($path){
 		global $_G;
 		$imgcachePath='./imgcache/';
-		$arr=array(array(256,256),array(1440,900));
-		$cachepath=str_replace(':','/',$path);
-		foreach($arr as $value){
-			$target=$imgcachePath.($cachepath).'.'.$value[0].'_'.$value[1].'.jpeg';
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace(':','/',$path)));
+		foreach($_G['setting']['thumbsize'] as $value){
+			$target=$imgcachePath.($cachepath).'.'.$value['width'].'_'.$value['height'].'.jpeg';
 			@unlink($_G['setting']['attachdir'].$target);
 		}
 	}
-	public function createThumb($path,$width,$height){
+	public function createThumb($path,$size,$width=0,$height=0){
+		if(intval($width)<1) $width=$_G['setting']['thumbsize'][$size]['width'];
+		if(intval($height)<1) $height=$_G['setting']['thumbsize'][$size]['height'];
 		return;
 	}
 	//获取缩略图
@@ -234,6 +241,13 @@ class io_qiniu extends io_api
 			$imgurl=self::getFileUri($path);
 			if($returnurl) return $imgurl;
 			$imginfo=@getimagesize($imgurl);
+			$file=$imgurl;
+			$etag = @md5_file($file); 
+			header("Etag: $etag"); 
+			if (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
 			@header('cache-control:public'); 
 			@header("Content-Type: ".image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
@@ -243,10 +257,20 @@ class io_qiniu extends io_api
 		}
 		
 		$imgcachePath='imgcache/';
-		$cachepath=str_replace(':','/',$path);
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace(':','/',$path)));
 		$target=$imgcachePath.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		if($imginfo=@getimagesize($_G['setting']['attachdir'].'./'.$target)){
 			if($returnurl) return $_G['setting']['attachurl'].$target;
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
 			@header('cache-control:public'); 
 			@header("Content-Type: ".image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
@@ -271,6 +295,16 @@ class io_qiniu extends io_api
 		@file_put_contents($_G['setting']['attachdir'].'./'.$target,fopen($imgViewPrivateUrl,'rb'));
 		if($imginfo=@getimagesize($_G['setting']['attachdir'].'./'.$target)){
 			if($returnurl) return $_G['setting']['attachurl'].$target;
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
 			@header('cache-control:public'); 
 			@header("Content-Type: ".image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
@@ -326,14 +360,14 @@ class io_qiniu extends io_api
 		$patharr=explode('/',$arr['object']);
 		$arr['object1']='';
 		if(strrpos($path,'/')==(strlen($path)-1)){//是目录
-			return array('error'=>'文件夹不允许重命名');
+			return array('error'=>lang('folder_not_allowed_rename'));
 		}else{
 			$ext=strtolower(substr(strrchr($arr['object'], '.'), 1));
 			foreach($patharr as $key =>$value){
 				if($key>=count($patharr)-1) break;
 				$arr['object1'].=$value.'/';
 			}
-			$arr['object1'].=$ext?(rtrim($name,'.'.$ext).'.'.$ext):$name;
+			$arr['object1'].=$ext?(preg_replace("/\.\w+$/i",'.'.$ext,$name)):$name;
 		}
 		$client=self::init($path);
 		$err = Qiniu_RS_Move($client, $arr['bucket'], $arr['object'], $arr['bucket'], $arr['object1']);
@@ -352,6 +386,7 @@ class io_qiniu extends io_api
 		 * @return string
 		 */
 	function upload_by_content($fileContent,$path,$filename,$ondup='overwrite'){
+		global $QINIU_UP_HOST;
 		$path.=$filename;
 		$arr=self::parsePath($path);
 		$client=self::init($path);
@@ -610,8 +645,8 @@ class io_qiniu extends io_api
 			elseif(in_array($ext,$documentexts)) $type='document';
 			else $type='attach';
 			if($type=='image'){
-				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=256&height=256&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['key']);
-				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=1440&height=900&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['key']);
+				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=small&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['key']);
+				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=large&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['key']);
 			}else{
 				$img=geticonfromext($ext,$type);
 				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['key']);;
@@ -720,37 +755,46 @@ class io_qiniu extends io_api
 		return file_get_contents($url);
 	}
 	//打包下载文件
-	public function zipdownload($path){
+	public function zipdownload($paths,$filename){
 		global $_G;
-		$meta=self::getMeta($path);
+		$paths=(array)$paths;
+		set_time_limit(0);
+		
+		if(empty($filename)){
+			$meta=self::getMeta($paths[0]);
+			$filename=$meta['name'].(count($paths)>1?'等':'');
+		}
+		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
 		include_once libfile('class/ZipStream');
-		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
 		$zip = new ZipStream($filename.".zip");
 		$data=self::getFolderInfo($path,'',$zip);
-		
 		$zip->finalize();
 	}
-	public function getFolderInfo($path,$position='',$zip){
+	public function getFolderInfo($paths,$position='',&$zip){
 		static $data=array();
 		try{
-			$arr=IO::parsePath($path);
-			$client=self::init($path,1); 
-			$meta=self::getMeta($path);
-			switch($meta['type']){
-				case 'folder':
-					 $position.=$meta['name'].'/';
-					 $contents=self::listFilesAll($client,$path);
-					 foreach($contents as $key=>$value){
-						 if($value['path']!=$path){
-							self::getFolderInfo($value['path'],$position,$zip);
+			foreach($paths as $path){
+				$arr=IO::parsePath($path);
+				$client=self::init($path,1); 
+				$meta=self::getMeta($path);
+				switch($meta['type']){
+					case 'folder':
+						 $lposition=$position.$meta['name'].'/';
+						 $contents=self::listFilesAll($client,$path);
+						 $arr=array();
+						 foreach($contents as $key=>$value){
+							 if($value['path']!=$path){
+								$arr[]=$value['path'];
+							 }
 						 }
-					 }
-					break;
-				default:
-				 $meta['url']=self::getStream($meta['path']);
-				 $meta['position']=$position.$meta['name'];
-				 //$data[$meta['icoid']]=$meta;
-				 $zip->addLargeFile(@fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+						 if($arr) self::getFolderInfo($arr,$lposition,$zip);
+						break;
+					default:
+					 $meta['url']=self::getStream($meta['path']);
+					 $meta['position']=$position.$meta['name'];
+					 //$data[$meta['icoid']]=$meta;
+					 $zip->addLargeFile(@fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+				}
 			}
 		
 		}catch(Exception $e){
@@ -761,8 +805,15 @@ class io_qiniu extends io_api
 		return $data;
 	}
 	//下载文件
-	public function download($path){
+	public function download($paths,$filename){
 		global $_G;
+		$paths=(array)$paths;
+		if(count($paths)>1){
+			self::zipdownload($paths,$filename);
+			exit();
+		}else{
+			$path=$paths[0];
+		}
 		$path=rawurldecode($path);
 		
 		//header("location: $url");
@@ -775,10 +826,9 @@ class io_qiniu extends io_api
 				exit();
 			}
 			if(!$fp = @fopen($url, 'rb')) {
-				topshowmessage('文件不存在');
+				topshowmessage(lang('file_not_exist1'));
 			}
-			$db = DB::object();
-			$db->close();
+		
 			$chunk = 10 * 1024 * 1024; 
 			//$file['data'] = self::getFileContent($path);
 			//if($file['data']['error']) topshowmessage($file['data']['error']);
@@ -1074,7 +1124,7 @@ class io_qiniu extends io_api
 				}
 				$partnum=count($data);
 				if(!$handle=fopen($cachefile,'rb')){
-					return array('error'=>'上传错误,未获取到上传的文件');
+					return array('error'=>lang('upload_error_not_file'));
 				}
 				$tried=0;$tryTimes=3;
 				for($i=$partnum;$i<floor($filesize/$partsize);$i++){
@@ -1157,7 +1207,7 @@ class io_qiniu extends io_api
 		$oarr=self::parsePath($opath);
 		$client=self::init($opath);
 		$data=self::getMeta($opath);
-		
+		$arr=self::parsePath($path);
 		switch($data['type']){
 			case 'folder'://创建目录
 				//exit($arr['path'].'===='.$data['name']);
@@ -1185,6 +1235,7 @@ class io_qiniu extends io_api
 				break;
 			
 			default:
+			   
 				if($arr['bz']==$oarr['bz']){//同一个api时
 					$arr=self::parsePath($path.$data['name']);
 					$err = Qiniu_RS_Move($client, $arr['bucket'], $arr['object'], $oarr['bucket'], $oarr['object']);
@@ -1195,6 +1246,7 @@ class io_qiniu extends io_api
 						$data['success']=true;
 					}
 				}else{
+					
 					if($re=IO::multiUpload($opath,$path,$data['name'])){
 						if($re['error']) $data['success']=$re['error'];
 						else{
@@ -1231,7 +1283,7 @@ class io_qiniu extends io_api
 			//获取文件内容
 			$fileContent='';
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
 			while (!feof($handle)) {
 			  $fileContent .= fread($handle, 8192);
@@ -1241,7 +1293,7 @@ class io_qiniu extends io_api
 			return self::upload_by_content($fileContent,$path,$filename);
 		}else{ //分片上传		
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
 			$partinfo=array('ispart'=>true);
 			$cachefile=$_G['setting']['attachdir'].'./cache/'.md5($opath);

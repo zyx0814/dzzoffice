@@ -18,7 +18,7 @@ $.fn.artZoom = function (config) {
 		loading = path + '/loading.gif',
 		max = path + '/zoomin.cur',
 		min = path + '/zoomout.cur';
-	
+	$this.selector='img.artZoom';
 	new Image().src = loading;
 	max = 'url(\'' + max + '\'), pointer';
 	min = 'url(\'' + min + '\'), pointer';
@@ -62,7 +62,7 @@ $.fn.artZoom = function (config) {
 	].join('');
 	
 	// jQuery事件代理
-	$(document).on('click',$this.selector, function (event) {
+	$(document).off('click.artZoom').on('click.artZoom','.artZoom', function (event) {
 		if (this.nodeName !== 'IMG' && this.getAttribute('data-live') === 'stop') return false;
 		
 		var $artZoom, buttonClick,
@@ -198,15 +198,15 @@ $.fn.artZoom = function (config) {
 			return false;
 		};
 		$artZoom.show().find('.ui-artZoom-toolbar').slideDown(150);
-		$artZoom.find('[data-go]').on('click', buttonClick);
+		$artZoom.find('[data-go]').off('click').on('click', buttonClick);
 			
 		return false;
 	});
 	
 	// 给目标缩略图应用外部指针样式
-	$(document).on('mouseover',$this.selector, function () {
-		if (this.className !== 'ui-artZoom-show') this.style.cursor = max;
-	});
+	/*$(document).on('mouseover','img.artZoom', function () {
+		//if (this.className !== 'ui-artZoom-show') this.style.cursor = max;
+	});*/
 	
 	// 预加载指针形状图标
 	if (this[0]) this[0].style.cursor = max;

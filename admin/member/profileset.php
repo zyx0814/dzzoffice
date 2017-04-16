@@ -25,7 +25,7 @@ if($do=='delete'){
 	C::t('user_profile_setting')->delete_by_fieldid($fieldid);
 	require_once libfile('function/cache');
 	updatecache(array('profilesetting', 'fields_required', 'fields_optional', 'fields_register', 'setting'));
-	showmessage('资料项删除成功！',dreferer(),array(),array('alert'=>'right'));
+	showmessage('data_del_success',dreferer(),array(),array('alert'=>'right'));
 	
 }elseif($fieldid) {
 		$_G['setting']['privacy'] = !empty($_G['setting']['privacy']) ? $_G['setting']['privacy'] : array();
@@ -39,7 +39,7 @@ if($do=='delete'){
 		$field['validate'] = $field['validate'] ? $field['validate'] : ($profilevalidate[$fieldid]?$profilevalidate[$fieldid]:'');
 		if(!submitcheck('editsubmit')) {	
 			
-			
+			$checkLanguage = checkLanguage();
 			include template('profileset_edit');
 			exit();
 		} else {
@@ -54,7 +54,7 @@ if($do=='delete'){
 			if(!$field['isfixed2']) {
 				$_POST['title'] = dhtmlspecialchars(trim($_POST['title']));
 				if(empty($_POST['title'])) {
-					showmessage('资料名称不能为空', ADMINSCRIPT.'?mod=member&op=profileset&fieldid='.$fieldid, array(),array('alert'=>'error'));
+					showmessage('data_name_empty', ADMINSCRIPT.'?mod=member&op=profileset&fieldid='.$fieldid, array(),array('alert'=>'error'));
 				}
 				$setarr['title'] = $_POST['title'];
 				$setarr['description'] = dhtmlspecialchars(trim($_POST['description']));
@@ -99,7 +99,7 @@ if($do=='delete'){
 			}
 			updatecache(array('profilesetting','fields_required', 'fields_optional', 'fields_register', 'setting'));
 			
-			showmessage('用户资料编辑成功', ADMINSCRIPT.'?mod=member&op=profileset', array(),array('alert'=>'right'));
+			showmessage('subscriber_data_edit_success', ADMINSCRIPT.'?mod=member&op=profileset', array(),array('alert'=>'right'));
 		}
 }else {
 		
@@ -157,7 +157,7 @@ if($do=='delete'){
 			}
 			require_once libfile('function/cache');
 			updatecache(array('profilesetting', 'fields_required', 'fields_optional', 'fields_register', 'setting'));
-			showmessage('用户资料项编辑成功',dreferer(),array(),array('alert'=>'right'));
+			showmessage('subscriber_data_item_edit_success',dreferer(),array(),array('alert'=>'right'));
 	}
 }
 

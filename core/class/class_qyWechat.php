@@ -316,7 +316,7 @@ class qyWechat
         $array = $pc->decrypt($encryptStr,$this->appid);
         if (!isset($array[0]) || ($array[0] != 0)) {
             if (!$return) {
-        	    die('解密失败！');
+        	    die(lang('decryption_failure'));
         	} else {
         	    return false;
         	}

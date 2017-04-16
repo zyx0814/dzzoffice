@@ -18,7 +18,7 @@ Class dzz_upload{
 	function init($attach, $type = 'temp', $extid = 0, $forcename = '') {
 		if(!is_array($attach) || empty($attach) || !$this->is_upload_file($attach['tmp_name']) || trim($attach['name']) == '' || $attach['size'] == 0) {
 			$this->attach = array();
-			$this->errorcode = -1;
+			$this->errorcode = -101;
 			return false;
 		} else {
 			$this->type = $this->check_dir_type($type);
@@ -79,7 +79,7 @@ Class dzz_upload{
 	}
 
 	function errormessage() {
-		return lang('error', 'file_upload_error_'.$this->errorcode);
+		return lang('file_upload_error_'.$this->errorcode);
 	}
 
 	function fileext($filename) {

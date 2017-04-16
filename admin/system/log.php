@@ -17,7 +17,7 @@ $checklpp[$lpp] = 'selected="selected"';
 $extrainput = '';
 
 $operation = in_array($_GET['operation'], array('illegal', 'cp','error',  'sendmail')) ? $_GET['operation'] : 'illegal';
-$navtitle=lang('template','nav_logs_'.$operation).' - '.$lang['admin_navtitle'];
+$navtitle=lang('nav_logs_'.$operation).' - '.lang('admin_navtitle');
 
 $logdir = DZZ_ROOT.'./data/log/';
 $logfiles = get_log_files($logdir, $operation.($operation == 'sendmail' ? '' : 'log'));

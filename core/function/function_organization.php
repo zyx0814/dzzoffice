@@ -58,7 +58,7 @@ function getDepartmentOption($orgid,$url='',$all=false,$i=0,$pname=array()){
 			for($j=0;$j<$i-1;$j++){
 				$html.='<span class="child-tree tree-su">&nbsp;</span>';
 			}
-			$html.='全部';
+			$html.=lang('all');
 			$html.='</div>';
 			$html.='</a></li>';
 		}
@@ -266,9 +266,11 @@ function getOrgidByUid($uid,$sub=true){//获取用户所在部门ID和所有下�
 function getOrgidTree($orgid){
 	$oids=array();
 	if($org=C::t('organization')->fetch($orgid)){
-		foreach(DB::fetch_all("select orgid from %t where pathkey REGEXP %s ",array('organization','^'.$org['pathkey'])) as $value){
+		foreach(DB::fetch_all("select orgid from %t where pathkey REGEXP %s order by disp",array('organization','^'.$org['pathkey'])) as $value){
 			$oids[]=$value['orgid'];
 		}
+		$oids=array_diff($oids,array($orgid));
+		array_unshift($oids,$orgid);
 	}
 	return $oids;
 }

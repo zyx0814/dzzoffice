@@ -8,19 +8,19 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_DZZ')) {
+if (!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-$appid=intval($_GET['appid']);
-if(!submitcheck('confirmsubmit')){
-	
+$appid = intval($_GET['appid']);
+if (!submitcheck('confirmsubmit')) {
+
 	include template('appkey');
-}else{
-	if($_GET['app_key'] && preg_match("/\w{32}$/",$_GET['app_key'])){
-		$url=$_GET['adminurl'].'&op=cp&app_key='.$_GET['app_key'].'&do=install&dir=zoho';
+} else {
+	if ($_GET['app_key'] && preg_match("/\w{32}$/", $_GET['app_key'])) {
+		$url = $_GET['adminurl'] . '&op=cp&app_key=' . $_GET['app_key'] . '&do=install&dir=zoho';
 		@header("Location: $url");
-	}else{
-		showmessage('ZohoAPIKey 不合法，无法完成安装',$_GET['adminurl']);
+	} else {
+		showmessage('ZohoAPIKey_cannot_install', $_GET['adminurl']);
 	}
 	exit();
 }

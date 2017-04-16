@@ -11,14 +11,14 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 require_once libfile('function/organization');
 require_once DZZ_ROOT.'./core/class/class_PHPExcel.php';
-if($_G['adminid']!=1) showmessage('没有权限，只有系统管理员才能导出用户',dreferer());
-	$h0=array('username'=>'姓名','email'=>'邮箱','nickname'=>'用户名','birth'=>'出生日期','gender'=>'性别','mobile'=>'手机','weixinid'=>'微信号','orgname'=>'所属部门','job'=>'部门职位');
+if($_G['adminid']!=1) showmessage('system_administrator_export',dreferer());
+	$h0=array('username'=>lang('compellation'),'email'=>lang('email'),'nickname'=>lang('username'),'birth'=>lang('date_birth'),'gender'=>lang('gender'),'mobile'=>lang('cellphone'),'weixinid'=>lang('weixin'),'orgname'=>lang('category_department'),'job'=>lang('department_position'));
 	$h1=getProfileForImport();
 	$h0=array_merge($h0,$h1);
 $orgid=intval($_GET['orgid']);
 if(!submitcheck('exportsubmit')){
 	$orgpath=C::t('organization')->getPathByOrgid($orgid);
-	if(empty($orgpath)) $orgpath='请选择导出范围';
+	if(empty($orgpath)) $orgpath=lang('please_select_range_export');
 	
 	//默认选中
 	$open=array();
@@ -36,7 +36,7 @@ if(!submitcheck('exportsubmit')){
 	include template('export');
 	exit();
 }else{
-	if(!is_array($_GET['item'])) showmessage("请选择导出项目",dreferer());
+	if(!is_array($_GET['item'])) showmessage('please_select_project_export',dreferer());
 	foreach($h0 as $key=>$value){
 		if(!in_array($key,$_GET['item'])) unset($h0[$key]);
 	}
@@ -57,11 +57,11 @@ if(!submitcheck('exportsubmit')){
 	
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator($_G['username'])
-								 ->setTitle($title.' - 人员信息表 - DzzOffice')
-								 ->setSubject($title.' - 人员信息表')
-								 ->setDescription($title.' - 人员信息表 Export By DzzOffice  '.date('Y-m-d H:i:s'))
-								 ->setKeywords($title.' - 人员信息表')
-								 ->setCategory("人员信息表");
+								 ->setTitle($title.' - '.lang('user_information_table').' - DzzOffice')
+								 ->setSubject($title.' - '.lang('user_information_table'))
+								 ->setDescription($title.' - '.lang('user_information_table').' Export By DzzOffice  '.date('Y-m-d H:i:s'))
+								 ->setKeywords($title.' - '.lang('user_information_table'))
+								 ->setCategory(lang('user_information_table'));
 	$list=array();
 	// Create a first sheet
 	$objPHPExcel->setActiveSheetIndex(0);
@@ -86,10 +86,10 @@ if(!submitcheck('exportsubmit')){
 		$profile=C::t('user_profile1')->fetch_all($user['uid']);
 		if($profile) $value=array_merge($user,$profile[$user['uid']]);
 		else $value=$user;
-		if($value['birthyear'] && $value['birsthmonth'] && $value['birthday']) $value['birth']=$value['birthyear'] .'-'. $value['birsthmonth'] .'-'. $value['birthday'];
+		if($value['birthyear'] && $value['birthmonth'] && $value['birthday']) $value['birth']=$value['birthyear'] .'-'. $value['birthmonth'] .'-'. $value['birthday'];
 		if($value['gender']){
-			if($value['gender']==2) $value['gender']='女';
-			elseif($value['gender']==1) $value['gender']='男';
+			if($value['gender']==2) $value['gender']=lang('woman');
+			elseif($value['gender']==1) $value['gender']=lang('man');
 			else $value['gender']='';
 		}
 		//获取用户的部门和职位
@@ -127,13 +127,13 @@ if(!submitcheck('exportsubmit')){
 	$objWriter->save($filename);
 	
 	
-	$name=$title.' - 人员信息表.xlsx';
+	$name=$title.' - '.lang('user_information_table').'.xlsx';
 	$name = '"'.(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($name) : $name).'"';
 	
 	$filesize=filesize($filename);
 	$chunk = 10 * 1024 * 1024; 
 	if(!$fp = @fopen($filename, 'rb')) {
-		exit('导出失败！');
+		exit(lang('export_failure'));
 	}
 	dheader('Date: '.gmdate('D, d M Y H:i:s', TIMESTAMP).' GMT');
 	dheader('Last-Modified: '.gmdate('D, d M Y H:i:s', TIMESTAMP).' GMT');

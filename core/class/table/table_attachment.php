@@ -106,7 +106,7 @@ class table_attachment extends dzz_table
 		
 	}
 	public function getAttachByFilter($filter,$sizecount=false){ //统计占用空间
-	    $where='copys>0';
+	    $where='copys>0 and remote!='.$filter['remoteid'];
 		if($filter['oremoteid']){
 			if($filter['oremoteid']<2){
 				$where.="  and remote<2";
@@ -114,6 +114,7 @@ class table_attachment extends dzz_table
 				$where.="  and remote= '{$filter[oremoteid]}'";
 			}
 		}
+		
 		if($filter['aid']){
 			$where.=" and aid={$filter['aid']}";
 		}
@@ -132,7 +133,7 @@ class table_attachment extends dzz_table
 			}
 		}
 		if($filter['dateline']){
-			$where.=" and dateline>{$filter['dateline']}";
+			$where.=" and dateline>{$filter[dateline]}";
 		}
 		
 		if($filter['ignore']){

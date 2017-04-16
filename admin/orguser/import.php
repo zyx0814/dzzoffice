@@ -9,7 +9,7 @@
 if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-if($_G['adminid']!=1) showmessage('没有权限，只有系统管理员才能导入用户',dreferer());
+if($_G['adminid']!=1) showmessage('orguser_import_user',dreferer());
 require_once libfile('function/organization');
 $do=trim($_GET['do']);
 if($do=='importing'){
@@ -26,8 +26,8 @@ if($do=='importing'){
 	$_GET['weixinid']=addslashes(trim(stripslashes(trim($_GET['weixinid']))));
 	$_GET['mobile']=addslashes(trim(stripslashes(trim($_GET['mobile']))));
 	
-	if(empty($email) || empty($_GET['username'])) exit(json_encode(array('error'=>'姓名和邮箱不能为空')));
-	if(!isemail($email)) exit(json_encode(array('error'=>'email格式错误')));
+	if(empty($email) || empty($_GET['username'])) exit(json_encode(array('error'=>lang('name_email_empty'))));
+	if(!isemail($email)) exit(json_encode(array('error'=>'email'.lang('format_error'))));
 	
 	$isappend=intval($_GET['append']);
 	$sendmail=intval($_GET['sendmail']);
@@ -51,27 +51,27 @@ if($do=='importing'){
 			}
 			if($_GET['mobile'] && empty($user['phone'])){
 				if(!preg_match("/^\d+$/",$_GET['mobile'])){
-					exit(json_encode(array('error'=>'手机号码不合法')));
+					exit(json_encode(array('error'=>lang('phone_number_illegal'))));
 				}
 				if(C::t('user')->fetch_by_phone($_GET['mobile']) ) {
-					exit(json_encode(array('error'=>'手机号码已经存在')));
+					exit(json_encode(array('error'=>lang('user_phone_exist'))));
 				}
 				$appendfield['phone']=$_GET['mobile'];
 				
 			}
 			if($_GET['weixinid'] && empty($user['weixinid'])){
 				if(!preg_match("/^[a-zA-Z\d_]{5,}$/i",$_GET['weixinid'])){
-					exit(json_encode(array('error'=>'微信号不合法')));
+					exit(json_encode(array('error'=>lang('weixin_illegal'))));
 				}
 				if(C::t('user')->fetch_by_weixinid($_GET['weixinid']) ) {
-					exit(json_encode(array('error'=>'微信号已经存在')));
+					exit(json_encode(array('error'=>lang('weixin_exist'))));
 				}
 				$appendfield['weixinid']=$_GET['weixinid'];
 			}
 			if($appendfield) C::t('user')->update($uid,$appendfield);
 		}else{ //覆盖导入时，覆盖用户的姓名和密码
 			$salt=substr(uniqid(rand()), -6);
-			if(!check_username($_GET['username'])) exit(json_encode(array('error'=>'用户姓名含有敏感字符')));
+			if(!check_username($_GET['username'])) exit(json_encode(array('error'=>lang('user_name_sensitive'))));
 			$setarr=array('username'=>$_GET['username'],
 						  'password'=>md5(md5($_GET['password']).$salt),
 						  'salt'=>$salt
@@ -83,39 +83,39 @@ if($do=='importing'){
 			}
 			if($_GET['mobile'] && $_GET['mobile']!=$user['phone']){
 				if(!preg_match("/^\d+$/",$_GET['mobile'])){
-					exit(json_encode(array('error'=>'手机号码不合法')));
+					exit(json_encode(array('error'=>lang('phone_number_illegal'))));
 				}
 				if(C::t('user')->fetch_by_phone($_GET['mobile']) ) {
-					exit(json_encode(array('error'=>'手机号码已经存在')));
+					exit(json_encode(array('error'=>lang('user_phone_exist'))));
 				}
 				$setarr['phone']=$_GET['mobile'];
 				
 			}
 			if($_GET['weixinid'] && $_GET['weixinid']!=$user['weixinid']){
 				if(!preg_match("/^[a-zA-Z\d_]{5,}$/i",$_GET['weixinid'])){
-					exit(json_encode(array('error'=>'微信号不合法')));
+					exit(json_encode(array('error'=>lang('weixin_illegal'))));
 				}
 				if(C::t('user')->fetch_by_weixinid($_GET['weixinid']) ) {
-					exit(json_encode(array('error'=>'微信号已经存在')));
+					exit(json_encode(array('error'=>lang('weixin_exist'))));
 				}
 				$setarr['weixinid']=$_GET['weixinid'];
 			}
 			C::t('user')->update($uid,$setarr);
 			if($sendmail){ //发送密码到用户邮箱，延时发送
-				$email_password_message = lang('email', 'email_password_message', array(
+				$email_password_message = lang('email_password_message', array(
 						'sitename' => $_G['setting']['sitename'],
 						'siteurl' => $_G['siteurl'],
 						'email'=>$email,
 						'password'=>$_GET['password']
 					));
 					
-					if(!sendmail_cron("$email <$email>", lang('email', 'email_password_subject'), $email_password_message)) {
+					if(!sendmail_cron("$email <$email>", lang('email_password_subject'), $email_password_message)) {
 						runlog('sendmail', "$email sendmail failed.");
 					}
 			}
 		}
 	}else{ //新添用户
-		if(!check_username($_GET['username'])) exit(json_encode(array('error'=>'用户姓名含有敏感字符')));
+		if(!check_username($_GET['username'])) exit(json_encode(array('error'=>lang('user_name_sensitive'))));
 		
 		if($_GET['nickname']){
 			if(check_username($_GET['nickname']) && !C::t('user')->fetch_by_nickname($_GET['nickname'])){
@@ -126,7 +126,7 @@ if($do=='importing'){
 		$user=uc_add_user($_GET['username'], $_GET['password'], $email, $_GET['nickname']);
 		
 		$uid=$user['uid'];
-		if($uid<1)  exit(json_encode(array('error'=>'导入不成功')));
+		if($uid<1)  exit(json_encode(array('error'=>lang('import_failure'))));
 		$base = array(
 				'uid' => $uid,
 				'adminid' => 0,
@@ -150,14 +150,14 @@ if($do=='importing'){
 			}
 		C::t('user')->update($uid,$base);
 		if($sendmail){ //发送密码到用户邮箱，延时发送
-			$email_password_message = lang('email', 'email_password_message', array(
+			$email_password_message = lang('email_password_message', array(
 					'sitename' => $_G['setting']['sitename'],
 					'siteurl' => $_G['siteurl'],
 					'email'=>$email,
 					'password'=>$_GET['password']
 				));
 				
-				if(!sendmail_cron("$email <$email>", lang('email', 'email_password_subject'), $email_password_message)) {
+				if(!sendmail_cron("$email <$email>", lang('email_password_subject'), $email_password_message)) {
 					runlog('sendmail', "$email sendmail failed.");
 				}
 		}
@@ -181,8 +181,8 @@ if($do=='importing'){
 			 }
 		}
 		if(!empty($_GET['gender']) && empty($oldprofile['gender'])){
-			if($_GET['gender']=='男') $profile['gender']=1;
-			elseif($_GET['gender']=='女') $profile['gender']=2;
+			if($_GET['gender']==lang('man')) $profile['gender']=1;
+			elseif($_GET['gender']==lang('woman')) $profile['gender']=2;
 			else $profile['gender']=0;
 		}
 		
@@ -211,8 +211,8 @@ if($do=='importing'){
 			 }
 		}
 		if(!empty($_GET['gender'])){
-			if($_GET['gender']=='男') $profile['gender']=1;
-			elseif($_GET['gender']=='女') $profile['gender']=2;
+			if($_GET['gender']==lang('man')) $profile['gender']=1;
+			elseif($_GET['gender']==lang('woman')) $profile['gender']=2;
 			else $profile['gender']=0;
 		}
 		
@@ -302,14 +302,14 @@ if($do=='importing'){
 	require_once DZZ_ROOT.'./core/class/class_PHPExcel.php';
 	$inputFileName = $_G['setting']['attachdir'].$_GET['file'];
 	if(!is_file($inputFileName)){
-		showmessage('人员信息表上传未成功，请重新上传',ADMINSCRIPT.'?mod=orguser&op=import');
+		showmessage('orguser_import_user_table',ADMINSCRIPT.'?mod=orguser&op=import');
 	}
 	$inputFileType = PHPExcel_IOFactory::identify($inputFileName);
 	$objReader = PHPExcel_IOFactory::createReader($inputFileType);
 	$objPHPExcel = $objReader->load($inputFileName);
 	$sheetData = $objPHPExcel->getActiveSheet()->toArray(null,true,true,true);
 	//获取导入数据的字段
-	$h0=array('username'=>'姓名','email'=>'邮箱','nickname'=>'用户名','birth'=>'出生日期','gender'=>'性别','mobile'=>'手机','weixinid'=>'微信号','orgname'=>'所属部门','job'=>'部门职位','password'=>'登录密码');
+	$h0=array('username'=>lang('compellation'),'email'=>lang('email'),'nickname'=>lang('username'),'birth'=>lang('date_birth'),'gender'=>lang('gender'),'mobile'=>lang('cellphone'),'weixinid'=>lang('weixin'),'orgname'=>lang('category_department'),'job'=>lang('department_position'),'password'=>lang('user_login_password'));
 	$h1=getProfileForImport();
 	$h0=array_merge($h0,$h1);
 	//获取可导入的用户资料
@@ -325,9 +325,9 @@ if($do=='importing'){
 	}
 	
 	if(!in_array('username',$h)){
-		showmessage('缺少必填字段"姓名"');
+		showmessage('lack_required_fields_name');
 	}elseif(!in_array('email',$h) && !in_array('username',$h)){
-		 showmessage('缺少必填字段”用户名“或”邮箱“');
+		 showmessage('lack_required_fields_name_email');
 	} 
 	if(!in_array('email',$h)){
 		$h=array_merge(array('_'=>'email'),$h);
@@ -366,7 +366,7 @@ if($do=='importing'){
 	}
 	$h=array_unique($h);
 	$orgpath=C::t('organization')->getPathByOrgid($orgid);
-	if(empty($orgpath)) $orgpath='选择导入的机构或部门';
+	if(empty($orgpath)) $orgpath=lang('choose_import_agency_department');
 
 	//默认选中
 	$open=array();
@@ -386,17 +386,17 @@ if($do=='importing'){
 		if($_FILES['importfile']['tmp_name']){
 			$allowext=array('xls','xlsx');
 			$ext=strtolower(substr(strrchr($_FILES['importfile']['name'], '.'), 1, 10));
-			if(!in_array($ext,$allowext)) showmessage('只允许导入xls,xlsx类型的文件',dreferer());
-			if($file=uploadtolocal($_FILES['importfile'],'cache')){
+			if(!in_array($ext,$allowext)) showmessage('orguser_import_xls_xlsx',dreferer());
+			if($file=uploadtolocal($_FILES['importfile'],'cache','',array('xls','xlsx'))){
 				$url=ADMINSCRIPT.'?mod=orguser&op=import&do=list&file='.urlencode($file);
 				@header("Location: $url");
 				exit();
-				showmessage('人员信息表上传成功，正在调转到导入页面',ADMINSCRIPT.'?mod=orguser&op=import&do=list&file='.urlencode($file));
+				showmessage('orguser_import_user_message',ADMINSCRIPT.'?mod=orguser&op=import&do=list&file='.urlencode($file));
 			}else{
-				showmessage('上传信息表未成功，请稍候重试',dreferer());
+				showmessage('orguser_import_tautology',dreferer());
 			}
 		}else{
-			showmessage('请选择人员信息表',dreferer());
+			showmessage('orguser_import_user_message_table',dreferer());
 		}
 	}else{
 		

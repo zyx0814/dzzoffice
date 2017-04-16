@@ -32,7 +32,7 @@ class table_organization extends dzz_table
 			return array('error'=>'删除错误！要删除的对象已经不存在');
 		}
 		
-		if(self::fetch_all_by_forgid($org['orgid'],true) || ($org['fid'] && C::t('folder')->fetch_all_by_pfid($org['fid'],true)) || ($org['fid'] && C::t('icos')->fetch_all_by_pfid($org['fid'],'',0,'','',0,true))){
+		if(self::fetch_all_by_forgid($org['orgid'],true) || ($org['fid'] && C::t('icos')->fetch_all_by_pfid($org['fid'],'',0,'','',0,true))){
 			return array('error'=>'删除错误！请检查以下内容：<br><ul><li>此部门没有下级部门</li><li>此部门共享目录下没有文件或子目录</li></ul>');
 		}
 		if($org['fid']){

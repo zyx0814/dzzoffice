@@ -14,7 +14,7 @@ if(!defined('IN_DZZ')) {
 $qid=intval($_GET['qid']);
 $attach=C::t('feed_attach')->fetch_by_qid($qid);
 if(!$attach){
-	topshowmessage(lang('message','attachment_nonexistence'));
+	topshowmessage(lang('attachment_nonexistence'));
 }
 if($attach['aid']){
 	$shareurl=$_G['siteurl'].'share.php?a=view&s='.dzzencode('attach::'.$attach['aid']).'&n='.rawurlencode(trim($attach['filename'],'.'.$attach['filetype'])).'.'.$attach['filetype'];

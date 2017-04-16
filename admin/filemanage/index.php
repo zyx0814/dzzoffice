@@ -10,12 +10,12 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
 define('DZZSCRIPT','index.php');
-$typearr=array('image'=>'图片',
-			   'document'=>'文档',
-			   'link'=>'网址',
-			   'video'=>'网络视频',
-			   'dzzdoc'=>'DZZ文档',
-			   'attach'=>'其他附件'
+$typearr=array('image'=>lang('photo'),
+			   'document'=>lang('type_attach'),
+			   'link'=>lang('type_link'),
+			   'video'=>lang('online_video'),
+			   'dzzdoc'=>'DZZ'.lang('type_attach'),
+			   'attach'=>lang('rest_attachment')
 			   );
 require libfile('function/organization');
 if(submitcheck('delsubmit')){
@@ -30,14 +30,16 @@ if(submitcheck('delsubmit')){
 		
 	$type=trim($_GET['type']);
 	$keyword=trim($_GET['keyword']);
-	
+	$orgid=intval($_GET['orgid']);
 	$page = empty($_GET['page'])?1:intval($_GET['page']);
 	$perpage=20;
 	$gets = array(
 			'mod'=>'filemanage',
 			'keyword'=>$keyword,
 			'type' => $_GET['type'],
-			'size'=>$_GET['size']
+			'size'=>$_GET['size'],
+			'dateline'=>$_GET['dateline'],
+			'orgid'=>$orgid
 		);
 	$theurl = BASESCRIPT."?".url_implode($gets);
 	$refer=$theurl.'&page='.$page;
@@ -45,15 +47,19 @@ if(submitcheck('delsubmit')){
 		$order='ORDER BY size DESC';
 	}elseif($_GET['size']=='asc'){
 		$order='ORDER BY size ASC';
-	}else{
-		$order='ORDER BY dateline DESC';
 	}
+	if($_GET['dateline']=='desc'){
+		$order='ORDER BY size DESC';
+	}elseif($_GET['dateline']=='asc'){
+		$order='ORDER BY dateline ASC';
+	}
+	
 	$start=($page-1)*$perpage;
 	$sql=" type!='folder' and type!='app' and type!='shortcut'";
 	
 	$param=array();
 	if($keyword) {
-		$sql.=' and name like %s OR username=%s';
+		$sql.=' and (name like %s OR username=%s)';
 		$param[]='%'.$keyword.'%';
 		$param[]=$keyword;
 	}
@@ -61,7 +67,19 @@ if(submitcheck('delsubmit')){
 		$sql.=' and type=%s';
 		$param[]=$type;
 	}
+	if($org=C::t('organization')->fetch($orgid)){
+		$fids=array($org['fid']);
+		foreach(DB::fetch_all("select fid from %t where pfid=%d",array('folder',$org['fid'])) as $value){
+			$fids[]=$value['fid'];
+		}
+		$sql.=' and  pfid IN(%n)';
+		$param[]=$fids;
+	}
 	if($count=DB::result_first("SELECT COUNT(*) FROM ".DB::table('icos')." WHERE $sql",$param)){
+		if(ceil($count/$perpage)<$page){
+			$page=ceil($count/$perpage);
+			$start=($page-1)*$perpage;
+		}
 		$data=DB::fetch_all("SELECT uid,icoid,oid,name,type,pfid,dateline,size,ext FROM ".DB::table('icos')." WHERE $sql $order limit $start,$perpage",$param);
 		$multi=multi($count, $perpage, $page, $theurl,'pull-right');
 	}
@@ -92,6 +110,14 @@ if(submitcheck('delsubmit')){
 		
 		
 		$list[]=$value;
+	}
+	if($org=C::t('organization')->fetch($orgid)){
+		$orgpath=getPathByOrgid($org['orgid']);
+		$org['depart']=implode('-',array_reverse($orgpath));
+	}else{
+		$org=array();
+		$org['depart']=lang('select_a_organization_or_department');
+		$org['orgid']=$orgid;
 	}
 	include template('main');
 }

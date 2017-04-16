@@ -159,11 +159,12 @@ INSERT INTO `dzz_app_relative` VALUES(19, 31, 1);
 -- 转存表中的数据 `dzz_connect`
 --
 INSERT INTO `dzz_connect` VALUES('百度网盘', '', '', 'pan', 'baiduPCS', '', 0, 'connect_pan', '', 10);
-INSERT INTO `dzz_connect` VALUES('阿里云存储', '', '', 'storage', 'ALIOSS', '', 1, 'connect_storage', '', 0);
-INSERT INTO `dzz_connect` VALUES('企业盘', '', '', 'local', 'dzz', '', 2, '', '', -1);
-INSERT INTO `dzz_connect` VALUES('FTP', '', '', 'ftp', 'ftp', '', 1, 'connect_ftp', '', 0);
-INSERT INTO `dzz_connect` VALUES('七牛云存储', '', '', 'storage', 'qiniu', '', 1, 'connect_storage', '', 0);
-INSERT INTO `dzz_connect` VALUES('OneDrive', '', '', 'pan', 'OneDrive', '', 2, 'connect_onedrive', '', 0);
+INSERT INTO `dzz_connect` VALUES('阿里云存储', '', '', 'storage', 'ALIOSS', '', 2, 'connect_storage', '', 0);
+INSERT INTO `dzz_connect` VALUES('企业盘', '', '', 'local', 'dzz', '', 2, '', '', -2);
+INSERT INTO `dzz_connect` VALUES('FTP', '', '', 'ftp', 'ftp', '', 2, 'connect_ftp', '', 0);
+INSERT INTO `dzz_connect` VALUES('七牛云存储', '', '', 'storage', 'qiniu', '', 2, 'connect_storage', '', 0);
+INSERT INTO `dzz_connect` VALUES('OneDrive', '', '', 'pan', 'OneDrive', '', 0, 'connect_onedrive', '', 0);
+INSERT INTO `dzz_connect` VALUES('本地磁盘', '', '', 'disk', 'disk', '', 1, 'connect_disk', '', -1);
 
 --
 -- 转存表中的数据 `dzz_local_storage`
@@ -191,6 +192,7 @@ INSERT INTO `dzz_cron` VALUES(2, 1, 'system', '每周刷新百度网盘token', '
 INSERT INTO `dzz_cron` VALUES(3, 1, 'system', '每周清理缓存文件', 'cron_cache_cleanup_week.php', 1395635931, 0, 1, -1, 5, '0');
 INSERT INTO `dzz_cron` VALUES(4, 0, 'system', '每周清理缓存缩略图', 'cron_imgcache_cleanup_week.php', 1395635931,0, 1, -1, 5, '0');
 INSERT INTO `dzz_cron` VALUES(5, 0, 'system', '每月清除未用附件', 'cron_clean_copys0_attachment_by_month.php', 1395388548,0, -1, 1, 4, '30');
+INSERT INTO `dzz_cron` VALUES(6, 0, 'system', '定时备份数据库', 'cron_database_backup.php', 1460797274, 1460840400, 0, -1, 5, '0');
 
 
 --
@@ -225,20 +227,22 @@ INSERT INTO `dzz_usergroup` VALUES(6, 0, 'system', 'private', '禁止 IP', 0, 0,
 INSERT INTO `dzz_usergroup` VALUES(7, 0, 'system', 'private', '游客', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 10);
 INSERT INTO `dzz_usergroup` VALUES(8, 0, 'system', 'private', '等待验证成员', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
 INSERT INTO `dzz_usergroup` VALUES(9, 0, 'system', 'private', '普通成员', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
+INSERT INTO `dzz_usergroup` VALUES(10, 0, 'system', 'private', '信息录入员', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
 
 --
 -- 转存表中的数据 `dzz_usergroup_field`
 --
 
-INSERT INTO `dzz_usergroup_field` VALUES(1, 0, '', 0, 524207);
-INSERT INTO `dzz_usergroup_field` VALUES(2, 0, '', 0, 524207);
-INSERT INTO `dzz_usergroup_field` VALUES(3, 0, '', 0, 524207);
+INSERT INTO `dzz_usergroup_field` VALUES(1, 0, '', 0, 524287);
+INSERT INTO `dzz_usergroup_field` VALUES(2, 0, '', 0, 524287);
+INSERT INTO `dzz_usergroup_field` VALUES(3, 0, '', 0, 524287);
 INSERT INTO `dzz_usergroup_field` VALUES(4, -1, '', 0, 7);
 INSERT INTO `dzz_usergroup_field` VALUES(5, -1, '', 0, 1);
 INSERT INTO `dzz_usergroup_field` VALUES(6, -1, '', 0, 1);
 INSERT INTO `dzz_usergroup_field` VALUES(7, -1, 'gif, jpg, jpeg, png', 0, 7);
 INSERT INTO `dzz_usergroup_field` VALUES(8, -1, '', 0, 7);
-INSERT INTO `dzz_usergroup_field` VALUES(9, 10240, '', 0, 524207);
+INSERT INTO `dzz_usergroup_field` VALUES(9, 10240, '', 0, 524287);
+INSERT INTO `dzz_usergroup_field` VALUES(10, 10240, '', 0, 229039);
 
 
 --
@@ -292,7 +296,7 @@ INSERT INTO `dzz_setting` VALUES('feed_at_depart_title', '部门');
 INSERT INTO `dzz_setting` VALUES('feed_at_user_title', '同事');
 INSERT INTO `dzz_setting` VALUES('feed_at_range', 'a:3:{i:9;s:1:"1";i:2;s:1:"2";i:1;s:1:"3";}');
 INSERT INTO `dzz_setting` VALUES('at_range', 'a:3:{i:9;s:1:"1";i:2;s:1:"2";i:1;s:1:"3";}');
-INSERT INTO `dzz_setting` VALUES('sitecopyright', '<img alt="dzzoffice" src="dzz/images/logo.png" width="263" height="82"><div style="font-size: 16px;font-weight:bold;text-align:center;padding: 20px 0 10px 0;text-shadow: 1px 1px 1px #FFF;">dzzoffice</div><div style="font-size: 16px;font-weight:bold;text-align:center;padding: 0 0 25px 0;text-shadow:1px 1px 1px #fff">协同办公平台</div><div style="font-size: 12px;text-align:center;padding: 0 0 10px 0;text-shadow:1px 1px 1px #fff">@2013-2016 DzzOffice</div><div style="font-size: 12px;text-align:center;text-shadow:1px 1px 1px #fff">备案信息</div>');
+INSERT INTO `dzz_setting` VALUES('sitecopyright', '<img alt="dzzoffice" src="dzz/images/logo.png" width="263" height="82"><div style="font-size: 16px;font-weight:bold;text-align:center;padding: 20px 0 10px 0;text-shadow: 1px 1px 1px #FFF;">dzzoffice</div><div style="font-size: 16px;font-weight:bold;text-align:center;padding: 0 0 25px 0;text-shadow:1px 1px 1px #fff">协同办公平台</div><div style="font-size: 12px;text-align:center;padding: 0 0 10px 0;text-shadow:1px 1px 1px #fff">©2012-2017 DzzOffice</div><div style="font-size: 12px;text-align:center;text-shadow:1px 1px 1px #fff">备案信息</div>');
 INSERT INTO `dzz_setting` VALUES('loginset', 'a:5:{s:9:"available";s:1:"0";s:5:"title";s:9:"DzzOffice";s:8:"subtitle";s:18:"协同办公平台";s:10:"background";s:0:"";s:6:"bcolor";s:17:"rgb(58, 110, 165)";}');
 INSERT INTO `dzz_setting` VALUES('privacy', 'a:1:{s:7:"profile";a:17:{s:9:"education";i:1;s:8:"realname";i:-1;s:7:"address";i:0;s:9:"telephone";i:0;s:15:"affectivestatus";i:0;s:10:"department";i:0;s:8:"birthday";i:0;s:13:"constellation";i:0;s:9:"bloodtype";i:0;s:6:"gender";i:0;s:6:"mobile";i:0;s:2:"qq";i:0;s:7:"zipcode";i:0;s:11:"nationality";i:0;s:14:"graduateschool";i:0;s:8:"interest";i:0;s:3:"bio";i:0;}}');
 INSERT INTO `dzz_setting` VALUES('verify', 'a:8:{i:1;a:9:{s:4:"desc";s:0:"";s:9:"available";s:1:"1";s:8:"showicon";s:1:"1";s:5:"field";a:1:{s:8:"realname";s:8:"realname";}s:8:"readonly";i:1;s:5:"title";s:12:"实名认证";s:4:"icon";s:31:"common/verify/1/verify_icon.jpg";s:12:"unverifyicon";s:0:"";s:7:"groupid";a:0:{}}i:2;a:8:{s:5:"title";s:0:"";s:4:"desc";s:0:"";s:9:"available";s:1:"0";s:8:"showicon";s:1:"0";s:8:"readonly";N;s:4:"icon";s:0:"";s:12:"unverifyicon";s:0:"";s:7:"groupid";a:0:{}}i:3;a:8:{s:5:"title";s:0:"";s:4:"desc";s:0:"";s:9:"available";s:1:"0";s:8:"showicon";s:1:"0";s:8:"readonly";N;s:4:"icon";s:0:"";s:12:"unverifyicon";s:0:"";s:7:"groupid";a:0:{}}i:4;a:4:{s:4:"icon";s:0:"";s:12:"unverifyicon";s:0:"";s:9:"available";i:0;s:5:"title";s:0:"";}i:5;a:4:{s:4:"icon";s:0:"";s:12:"unverifyicon";s:0:"";s:9:"available";i:0;s:5:"title";s:0:"";}i:6;a:4:{s:4:"icon";s:0:"";s:12:"unverifyicon";s:0:"";s:9:"available";i:0;s:5:"title";s:0:"";}i:7;a:4:{s:4:"icon";s:0:"";s:12:"unverifyicon";s:0:"";s:9:"available";i:0;s:5:"title";s:0:"";}s:7:"enabled";b:1;}');

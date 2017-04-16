@@ -17,12 +17,12 @@ if(empty($_G['uid'])) {
 	echo "try{win.Close();}catch(e){}";
 	echo "</script>";	
 	include template('common/footer_reload');
-	exit('<a href="user.php?mod=logging&action=login">需要登录</a>');
+	exit('<a href="user.php?mod=logging&action=login">'.lang('need_login').'</a>');
 }
 $qid=intval($_GET['qid']);
 $attach=C::t('feed_attach')->fetch_by_qid($qid);
 if(!$attach){
-	topshowmessage(lang('message','attachment_nonexistence'));
+	topshowmessage(lang('attachment_nonexistence'));
 }$attach['filename']=$attach['title'];
 $pfid=DB::result_first("select fid from %t where flag='document' and uid= %d",array('folder',$_G['uid']));
 $icoarr=io_dzz::uploadToattachment($attach,$pfid);
@@ -30,7 +30,7 @@ if(isset($icoarr['error'])) topshowmessage($icoarr['error']);
  include template('common/header_simple');
 	echo "<script type=\"text/javascript\">";
 	echo "top._ico.createIco(".json_encode($icoarr).");";
-	echo "top.Alert('”".$attach['title']."“ 成功添加到桌面“我的文档”中！',3,'','','info');";
+	echo "top.Alert('”".$attach['title'].lang('successfully_added_desktop')."',3,'','','info');";
 	echo "</script>";
 include template('common/footer');
 exit();

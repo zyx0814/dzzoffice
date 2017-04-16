@@ -1,7 +1,7 @@
 /*!
  * UEditor
- * version: ueditor
- * build: Thu May 29 2014 16:47:49 GMT+0800 (中国标准时间)
+ * version: ueditor 1.4.3.2
+ * build: Thu Feb 25 2016 11:44:16 GMT+0800 (CST)
  */
 
 (function(){
@@ -912,6 +912,7 @@ var utils = UE.utils = {
             for (var p in obj) {
                 element.setAttribute(p, obj[p]);
             }
+			element.setAttribute('editor','baidu');
             element.onload = element.onreadystatechange = function () {
                 if (!this.readyState || /loaded|complete/.test(this.readyState)) {
                     item = getItem(doc, obj);
@@ -3418,7 +3419,7 @@ var domUtils = dom.domUtils = {
      */
     removeClasses:function (elm, classNames) {
        try{
-		    classNames = utils.isArray(classNames) ? classNames :
+        classNames = utils.isArray(classNames) ? classNames :
             utils.trim(classNames).replace(/[ ]{2,}/g,' ').split(' ');
         for(var i = 0,ci,cls = elm.className;ci=classNames[i++];){
             cls = cls.replace(new RegExp('\\b' + ci + '\\b'),'')
@@ -6890,6 +6891,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                     options.initialFrameHeight = options.minFrameHeight = container.offsetHeight;
                 }
 				try{
+					
                 container.style.width = /%$/.test(options.initialFrameWidth) ?  '100%' : options.initialFrameWidth-
                     getStyleValue("padding-left")- getStyleValue("padding-right") +'px';}catch(e){}
                 container.style.height = /%$/.test(options.initialFrameHeight) ?  '100%' : options.initialFrameHeight -
@@ -6904,7 +6906,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                     '.view{padding:0;word-wrap:break-word;cursor:text;height:90%;}\n' +
                     //设置默认字体和字号
                     //font-family不能呢随便改，在safari下fillchar会有解析问题
-                    'body{margin:8px;font-family:sans-serif;font-size:16px;}' +
+                    "body{margin:8px;font-family:Tahoma,'Microsoft Yahei','Simsun';font-size:16px;}" +
                     //设置段落间距
                     'p{margin:5px 0;}</style>' +
                     ( options.iframeCssUrl ? '<link rel=\'stylesheet\' type=\'text/css\' href=\'' + utils.unhtml(options.iframeCssUrl) + '\'/>' : '' ) +
@@ -10307,6 +10309,7 @@ UE.commands['inserthtml'] = {
                             domUtils.insertAfter(li,child.firstChild);
                             li = li.nextSibling;
                         }
+
                         domUtils.remove(child)
                     }else{
                         var tmpLi;
@@ -11760,6 +11763,7 @@ UE.plugins['font'] = function () {
                             }
 
                             tmpNode = tmpNode.parentNode;
+
                         }
                         return 'none';
                     }
@@ -11996,6 +12000,7 @@ UE.plugins['link'] = function(){
 
 UE.plugins['insertframe'] = function() {
    var me =this;
+
     function deleteIframe(){
         me._iframe && delete me._iframe;
     }
@@ -13723,6 +13728,79 @@ UE.commands['cleardoc'] = {
  */
 
 
+UE.plugin.register('save',function(){
+    var me = this;
+    return {
+        commands : {
+            'save':{
+                execCommand:function () {
+					//try{
+						
+                   		editor_validate($('ueditorform'),function(json){
+							if(json.error){
+								me.trigger('showmessage',{
+									content : json.error,
+									timeout : 2000
+								});
+							}else if(json.autosave>0){
+								me.trigger('showmessage',{
+									content : '自动保存成功',
+									timeout : 2000
+								});
+							}else{
+								me.trigger('showmessage',{
+									content : '保存成功',
+									timeout : 2000
+								});
+							}
+						});
+						
+					//}catch(e){}
+                },
+                queryCommandState:function () {
+                    return 1;
+                },
+                notNeedUndo:false
+            }
+        }
+    }
+});
+UE.plugin.register('savever',function(){
+    var me = this;
+    return {
+        commands : {
+            'savever':{
+                execCommand:function () {
+					try{
+						$('ueditorform').reversion.value='1';
+                   		editor_validate($('ueditorform'),function(json){
+							if(json.error){
+								me.trigger('showmessage',{
+									content : json.error,
+									timeout : 2000
+								});
+							}else if(json.autosave>0){
+								me.trigger('showmessage',{
+									content : '自动保存成功',
+									timeout : 2000
+								});
+							}else{
+								me.trigger('showmessage',{
+									content : '保存成功',
+									timeout : 2000
+								});
+							}
+						});
+					}catch(e){}
+                },
+                queryCommandState:function () {
+                    return 1;
+                },
+                notNeedUndo:false
+            }
+        }
+    }
+});
 UE.plugin.register('dzzfile',function(){
     var me = this;
     return {
@@ -17468,7 +17546,11 @@ UE.plugins['autoheight'] = function () {
                 }
                 if(node && node.nodeType == 1){
                     node.style.clear = 'both';
-                    currentHeight = Math.max(domUtils.getXY(node).y + node.offsetHeight + 25 ,Math.max(options.minFrameHeight, options.initialFrameHeight)) ;
+                    currentHeight = Math.max(domUtils.getXY(node).y + node.offsetHeight + 25+16 ,Math.max(options.minFrameHeight, options.initialFrameHeight)) ;
+					paddingTop=parseInt(jQuery(me.iframe.parentNode).css('padding-top'));
+					if(isNaN(paddingTop)) paddingTop=0;
+					paddingBottom=parseInt(jQuery(me.iframe.parentNode).css('padding-bottom'));
+					if(isNaN(paddingBottom)) paddingBottom=0;
                     if (currentHeight != lastHeight) {
                         if (currentHeight !== parseInt(me.iframe.parentNode.style.height)) {
                             me.iframe.parentNode.style.height = currentHeight + 'px';
@@ -19925,6 +20007,7 @@ UE.plugins['video'] = function (){
         }
     }
 })();
+
 
 // plugins/table.action.js
 /**
@@ -23037,6 +23120,7 @@ UE.plugin.register('searchreplace',function(){
     return {
         commands:{
             'searchreplace':{
+
                 execCommand:function(cmdName,opt){
                     utils.extend(opt,{
                         all : false,
@@ -23277,6 +23361,7 @@ UE.plugins['catchremoteimage'] = function () {
                 }
                 return false;
             };
+
         for (var i = 0, ci; ci = imgs[i++];) {
             if (ci.getAttribute("word_img")) {
                 continue;
@@ -23284,11 +23369,11 @@ UE.plugins['catchremoteimage'] = function () {
             var src = ci.getAttribute("_src") || ci.src || "";
 			if(/^(https?|ftp):/i.test(src)){
 				if(domUtils.hasClass(ci, 'dzz-link-icon') ){
-					remoteImages.push(src);
+                remoteImages.push(src);
 				}else if ( !test(src, catcherLocalDomain)) {
 					remoteImages.push(src);
-				}
-			}
+            }
+        }
         }
         if (remoteImages.length) {
             catchremoteimage(remoteImages, {
@@ -23305,7 +23390,6 @@ UE.plugins['catchremoteimage'] = function () {
 
                     for (i = 0; ci = imgs[i++];) {
                         oldSrc = ci.getAttribute("_src") || ci.src || "";
-						
                         for (j = 0; cj = list[j++];) {
 							
                             if ((oldSrc.replace(/&amp;/ig,'&')) == (cj.source.replace(/&amp;/ig,'&')) && cj.state == "SUCCESS") {  //抓取失败时不做替换处理
@@ -23889,7 +23973,7 @@ UE.plugin.register('autoupload', function (){
         }
         /* 判断文件格式是否超出允许 */
         var fileext = file.name ? file.name.substr(file.name.lastIndexOf('.')):'';
-        if ((allowFiles && (allowFiles.join('') + '.').indexOf(fileext.toLowerCase() + '.') == -1)) {
+        if ((fileext && filetype != 'image') || (allowFiles && (allowFiles.join('') + '.').indexOf(fileext.toLowerCase() + '.') == -1)) {
             errorHandler(me.getLang('autoupload.exceedTypeError'));
             return;
         }
@@ -24887,11 +24971,11 @@ UE.plugin.register('insertfile', function (){
 								'<a class="dzz-attach-title" href="' + item.url +'" title="' + title + '" aid="'+item.attach.aid+'"  dsize="'+item.attach.filesize+'" ext="'+item.attach.filetype+'" apath="'+item.attach.apath+'" path="attach::'+item.attach.aid+'">' + title + '</a>' +
 								'</span>';
 						}else{
-							html += '<p style="line-height: 16px;">' +
-								'<img style="vertical-align: middle; margin-right: 2px;" src="'+ icon + '" _src="' + icon + '" />' +
-								'<a style="font-size:12px; color:#0066cc;" href="' + item.url +'" title="' + title + '">' + title + '</a>' +
-								'</p>';
-						}
+                        html += '<p style="line-height: 16px;">' +
+                            '<img style="vertical-align: middle; margin-right: 2px;" src="'+ icon + '" _src="' + icon + '" />' +
+                            '<a style="font-size:12px; color:#0066cc;" href="' + item.url +'" title="' + title + '">' + title + '</a>' +
+                            '</p>';
+                    }
                     }
                     me.execCommand('insertHtml', html);
                 }
@@ -27903,7 +27987,7 @@ UE.ui = baidu.editor.ui = {};
             title:editor.options.labelMap.dzzfile || editor.getLang("labelMap.dzzfile") || '',
             theme:editor.options.theme,
             onclick:function () {
-				
+
                editor.execCommand('dzzfile');
             }
         });
@@ -27914,6 +27998,43 @@ UE.ui = baidu.editor.ui = {};
         });
         return ui;
     };
+	  //插入桌面文件；
+    editorui.save = function (editor) {
+        var ui = new editorui.Button({
+            className:'edui-for-save',
+            title:editor.options.labelMap.save || editor.getLang("labelMap.save") || '',
+            theme:editor.options.theme,
+            onclick:function () {
+				
+               editor.execCommand('save');
+            }
+        });
+        editorui.buttons["save"] = ui;
+		//
+        editor.addListener('selectionchange', function () {
+           ui.setDisabled(editor.queryCommandState('save') == -1);
+        });
+        return ui;
+    };
+	  //插入桌面文件；
+    editorui.savever = function (editor) {
+        var ui = new editorui.Button({
+            className:'edui-for-savever',
+            title:editor.options.labelMap.savever || editor.getLang("labelMap.savever") || '',
+            theme:editor.options.theme,
+            onclick:function () {
+				
+               editor.execCommand('savever');
+            }
+        });
+        editorui.buttons["savever"] = ui;
+		//
+        editor.addListener('selectionchange', function () {
+           ui.setDisabled(editor.queryCommandState('savever') == -1);
+        });
+        return ui;
+    };
+	
 	  //插入图表；
     editorui.insertcharts = function (editor) {
         var ui = new editorui.Button({
@@ -29489,6 +29610,7 @@ UE.ui = baidu.editor.ui = {};
                     if (opt.initialFrameHeight) {
                         opt.minFrameHeight = opt.initialFrameHeight;
                     } else {
+						
                         opt.initialFrameHeight = opt.minFrameHeight = holder.offsetHeight;
                     }
                     for(var i = 0 ,ci;ci=parents[i];i++){
@@ -29630,6 +29752,9 @@ UE.registerUI('autosave', function(editor) {
         clearTimeout(timer);
 
         timer = setTimeout(function(){
+			try{
+				AutoSaveHander()
+			}catch(e){}
             if(uid){
                 editor.trigger('hidemessage',uid);
             }
@@ -29642,7 +29767,6 @@ UE.registerUI('autosave', function(editor) {
     })
 
 });
-
 
 
 

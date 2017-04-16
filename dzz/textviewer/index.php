@@ -6,17 +6,17 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-if(!defined('IN_DZZ')) {
+if (!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-$path=dzzdecode($_GET['path']);	
-$str=IO::getFileContent($path);
+$path = dzzdecode($_GET['path']);
+$str = IO::getFileContent($path);
 
-require_once DZZ_ROOT.'./dzz/class/class_encode.php';
-$p=new Encode_Core();
-$code=$p->get_encoding($str);
-if($code) $str=diconv($str,$code, CHARSET); 
-$str=htmlspecialchars($str);
-$str=nl2br(str_replace(array("\t", '   ', '  '), array('&nbsp; &nbsp; &nbsp; &nbsp; ', '&nbsp; &nbsp;', '&nbsp;&nbsp;'), $str));
-include template('textviewer');
+require_once DZZ_ROOT . './dzz/class/class_encode.php';
+$p = new Encode_Core();
+$code = $p -> get_encoding($str);
+if ($code)$str = diconv($str, $code, CHARSET);
+$str = htmlspecialchars($str);
+$str = nl2br(str_replace(array("\t", '   ', '  '), array('&nbsp; &nbsp; &nbsp; &nbsp; ', '&nbsp; &nbsp;', '&nbsp;&nbsp;'), $str));
+include  template('textviewer');
 ?>

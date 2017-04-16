@@ -6,15 +6,15 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
+if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-if(empty($_GET['app_key'])){
-	$url='index.php?mod=zoho&op=appkey&adminurl='.urlencode($request_uri);
+if (empty($_GET['app_key'])) {
+	$url = 'index.php?mod=zoho&op=appkey&adminurl=' . urlencode($request_uri);
 	header("Location: $url");
 	exit();
 
-}else{
-	$apparray['app']['extra']['ZohoAPIKey']=$_GET['app_key'];
+} else {
+	$apparray['app']['extra']['ZohoAPIKey'] = $_GET['app_key'];
 	$finish = true;
 }

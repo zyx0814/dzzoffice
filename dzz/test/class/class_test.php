@@ -7,8 +7,7 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-class test{
-	
-}
+class test {
 
+}
 ?>

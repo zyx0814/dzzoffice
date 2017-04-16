@@ -31,7 +31,7 @@ function selDepart(obj){
 			
 			if(li.parent().find('.job .dropdown-menu li').length>1) li.parent().find('.job .dropdown-toggle').trigger('click');
 		});
-	li.parent().find('.job .dropdown-toggle').attr('_jobid',0).find('span').html('无');
+	li.parent().find('.job .dropdown-toggle').attr('_jobid',0).find('span').html(__lang.none);
 	li.parent().find('.job input').val('0');
 }
 function errormessage(id, msg,passlevel) {
@@ -56,7 +56,7 @@ function checkemail(id) {
 		return;
 	} 
 	if(email.match(/<|"/ig)) {
-		errormessage(id, 'Email 包含敏感字符');
+		errormessage(id, __lang.Email_sensitivity);
 		return;
 	}
 	
@@ -74,13 +74,13 @@ function checknick(id) {
 		return;
 	} 
 	if(username.match(/<|"/ig)) {
-		errormessage(id, '用户名包含敏感字符');
+		errormessage(id, __lang.profile_nickname_illegal);
 		return;
 	}
 	if(username){
 		var unlen = username.replace(/[^\x00-\xff]/g, "**").length;
 		if(unlen < 3 || unlen > 30) {
-			errormessage(id, unlen < 3 ? '用户名3-30个字符' : '用户名3-30个字符');
+			errormessage(id, unlen < 3 ? __lang.username_character : __lang.username_character);
 			return;
 		}
 		var x = new Ajax();
@@ -95,27 +95,27 @@ function checkPwdComplexity(firstObj, secondObj, modify) {
 	modifypwd = modify || false;
 	firstObj.onblur = function () {
 		if(firstObj.value == '') {
-			var pwmsg = !modifypwd ? '请填写密码' : '如不需要更改密码，此处请留空';
+			var pwmsg = !modifypwd ? __lang.register_password_tips : __lang.js_change_password;
 			if(pwlength > 0) {
-				pwmsg += ', 最小长度为 '+pwlength+' 个字符';
+				pwmsg += '，'+__lang.register_password_length_tips1+pwlength+__lang.register_password_length_tips2;
 			}
 			if(!modifypwd) errormessage(firstObj.id, pwmsg);
 		}else{
-			errormessage(firstObj.id, !modifypwd ? 'succeed' : '如不需要更改密码，此处请留空');
+			errormessage(firstObj.id, !modifypwd ? 'succeed' :  __lang.js_change_password);
 		}
 		checkpassword(firstObj.id, secondObj.id);
 	};
 	firstObj.onkeyup = function () {
 		if(pwlength == 0 || $(firstObj.id).value.length >= pwlength) {
-			var passlevels = new Array('','弱','中','强');
+			var passlevels = new Array('',__lang.weak,__lang.center,_lang.strong);
 			var passlevel = checkstrongpw(firstObj.id);
 			
-			errormessage(firstObj.id, '<span class="passlevel passlevel'+passlevel+'">强度:'+passlevels[passlevel]+'</span>','passlevel');
+			errormessage(firstObj.id, '<span class="passlevel passlevel'+passlevel+'">'+__lang.intension+':'+passlevels[passlevel]+'</span>','passlevel');
 		}
 	};
 	secondObj.onblur = function () {
 		if(secondObj.value == '') {
-			if(!modifypwd) errormessage(secondObj.id, !modifypwd ?'succeed' :'请再次输入密码');
+			if(!modifypwd) errormessage(secondObj.id, !modifypwd ?'succeed' :__lang.register_repassword_tips);
 		}
 		checkpassword(firstObj.id, secondObj.id);
 	};
@@ -127,7 +127,7 @@ function checkpassword(id1, id2) {
 	}
 	if(pwlength > 0) {
 		if($(id1).value.length < pwlength) {
-			errormessage(id1, '密码太短，不得少于 '+pwlength+' 个字符');
+			errormessage(id1, __lang.password_too_short+pwlength+__lang.register_password_length_tips2);
 			return;
 		}
 	}
@@ -137,33 +137,33 @@ function checkpassword(id1, id2) {
 		for(var i in strongpw) {
 			if(strongpw[i] === 1 && !$(id1).value.match(/\d+/g)) {
 				strongpw_error = true;
-				strongpw_str[j] = '数字';
+				strongpw_str[j] = __lang.strongpw_1;
 				j++;
 			}
 			if(strongpw[i] === 2 && !$(id1).value.match(/[a-z]+/g)) {
 				strongpw_error = true;
-				strongpw_str[j] = '小写字母';
+				strongpw_str[j] = __lang.strongpw_2;
 				j++;
 			}
 			if(strongpw[i] === 3 && !$(id1).value.match(/[A-Z]+/g)) {
 				strongpw_error = true;
-				strongpw_str[j] = '大写字母';
+				strongpw_str[j] = __lang.strongpw_3;
 				j++;
 			}
 			if(strongpw[i] === 4 && !$(id1).value.match(/[^A-Za-z0-9]+/g)) {
 				strongpw_error = true;
-				strongpw_str[j] = '特殊符号';
+				strongpw_str[j] = __lang.strongpw_4;
 				j++;
 			}
 		}
 		if(strongpw_error) {
-			errormessage(id1, '密码太弱，密码中必须包含 '+strongpw_str.join('，'));
+			errormessage(id1, __lang.password_weak +strongpw_str.join('，'));
 			return;
 		}
 	}
 	errormessage(id2);
 	if($(id1).value != $(id2).value) {
-		errormessage(id2, '两次输入的密码不一致');
+		errormessage(id2, __lang.profile_passwd_notmatch);
 	} else {
 		if(modifypwd) errormessage(id1,  'succeed' );
 		errormessage(id2,  'succeed' );

@@ -8,15 +8,14 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
+if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
 //提示用户删除的严重程度
-if($_GET['confirm']=='DELETE'){
-	include DZZ_ROOT.'./dzz/test/uninstall_real.php';
-}else{
-	$url='index.php?mod=test&appid='.$appid.'&op=uninstall_confirm&adminurl='.urlencode($request_uri);
+if ($_GET['confirm'] == 'DELETE') {
+	include DZZ_ROOT . './dzz/test/uninstall_real.php';
+} else {
+	$url = 'index.php?mod=test&appid=' . $appid . '&op=uninstall_confirm&adminurl=' . urlencode($request_uri);
 	header("Location: $url");
 	exit();
 }
-

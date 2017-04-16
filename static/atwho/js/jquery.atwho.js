@@ -313,7 +313,8 @@ Controller = (function() {
     caret_pos = this.$inputor.caret('pos', {
       iframe: this.app.iframe
     });
-    subtext = content.slice(0, caret_pos);
+	content=content.slice(0,caret_pos);
+    subtext = content.slice(content.lastIndexOf(this.at) || 0, caret_pos);
     query = this.callbacks("matcher").call(this, this.at, subtext, this.get_opt('start_with_space'));
     if (typeof query === "string" && query.length <= this.get_opt('max_len', 20)) {
       start = caret_pos - query.length;
@@ -712,7 +713,7 @@ DEFAULT_CALLBACKS = {
     _y = decodeURI("%C3%BF");
 	subtext=subtext.replace(/'/g,''); 
 	subtext=subtext.replace(new RegExp(flag + "\\[.+?\\]",'gi'),'');
-	regexp = new RegExp("" + flag + "(.+?)$",'gi');
+	regexp = new RegExp("" + flag + "(.*?)$",'gi');
     match = regexp.exec(subtext);
     if (match) {
       return  match[1];

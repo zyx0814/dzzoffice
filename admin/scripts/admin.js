@@ -32,11 +32,11 @@ function checkAll(type, form, value, checkall, changestyle) {
 function fixTree_organization(el){
 	el.find('.tree-heng1').each(function(){
 		var tr=jQuery(this).parent().parent().parent();
-		var dep=jQuery(this).parent().find('.tree-su').size();
+		var dep=jQuery(this).parent().find('.tree-su').length;
 		
 		tr.nextAll().each(function(){
 			var child_org=jQuery(this).find('.child-org');
-			var dep1=child_org.find('.tree-su').size();
+			var dep1=child_org.find('.tree-su').length;
 			if(dep1<=dep) return false;
 			else{
 				child_org.find('.tree-su').eq(dep).removeClass('tree-su');

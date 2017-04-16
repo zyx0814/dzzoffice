@@ -10,7 +10,7 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-if(empty($_G['uid']) && !C::t('setting')->fetch('feed_guest_allow')){
+if(empty($_G['uid'])){
 	include template('common/header_reload');
 	echo "<script type=\"text/javascript\">";
 	echo "try{top._login.logging();win.Close();}catch(e){location.href='user.php?mod=logging'}";
@@ -41,6 +41,7 @@ while($value=DB::fetch($query)){
 				'oid'=>DB::result_first("select fid from ".DB::table('folder')." where flag='home' and uid='{$_G[uid]}'")
 				
 			);
+	
 	}elseif($value['type']=='pan'){
 		foreach(DB::fetch_all("select cloudname,cuid,cusername,id,dateline from ".DB::table($value['dname'])." where uid='{$_G[uid]}'") as $value1){
 			if(!$value1['cloudname']) $value1['cloudname']=$value['name'].':'.($value1['cusername']?$value1['cusername']:$value1['cuid']);
@@ -112,7 +113,7 @@ while($value=DB::fetch($query)){
 			$mycloud[]=$value1;
 			
 			$icosdata[md5($value['bz'].':'.$value1['id'].':')]=array(
-				'icoid'=>md5($value['bz'].':'.$value1['id'].':'.$value1['bucket']),
+				'icoid'=>md5($value['bz'].':'.$value1['id'].':'),
 				'name'=>$value1['cloudname'],
 				'img'=>'dzz/images/default/system/'.$value['bz'].'.png',
 				'bz'=>$value['bz'].':'.$value1['id'].':',
@@ -129,6 +130,36 @@ while($value=DB::fetch($query)){
 				'bz'=>$value['bz'].':'.$value1['id'].':',
 				'path'=>$value['bz'].':'.$value1['id'].':',
 				'type'=>'ftp',
+				'fsperm'=>perm_FolderSPerm::flagPower($value['bz']),
+				'perm'=>perm_binPerm::getGroupPower('all'),
+				);
+		}
+	}elseif($value['type']=='disk'){
+		
+		foreach(DB::fetch_all("select id,bz,cloudname,dateline from ".DB::table($value['dname'])." where bz='{$value[bz]}' and uid='{$_G[uid]}'") as $value1){
+			$value1['bz']=$value['bz'];
+			$value1['icoid']=md5($value['bz'].':'.$value1['id'].':');
+			$value1['img']='dzz/images/default/system/'.$value['bz'].'.png';
+			$mycloud[]=$value1;
+			
+			$icosdata[md5($value['bz'].':'.$value1['id'].':')]=array(
+				'icoid'=>md5($value['bz'].':'.$value1['id'].':'),
+				'name'=>$value1['cloudname'],
+				'img'=>'dzz/images/default/system/'.$value['bz'].'.png',
+				'bz'=>$value['bz'].':'.$value1['id'].':',
+				'path'=>$value['bz'].':'.$value1['id'].':',
+				'type'=>'disk',
+				'oid'=>md5($value['bz'].':'.$value1['id'].':'),
+				
+			);
+			$folderdata[md5($value['bz'].':'.$value1['id'].':')]=array(
+				'fid'=>md5($value['bz'].':'.$value1['id'].':'),
+				'pfid'=>0,
+				'fname'=>$value1['cloudname'],
+				'icon'=>'dzz/images/default/system/'.$value['bz'].'.png',
+				'bz'=>$value['bz'].':'.$value1['id'].':',
+				'path'=>$value['bz'].':'.$value1['id'].':',
+				'type'=>'disk',
 				'fsperm'=>perm_FolderSPerm::flagPower($value['bz']),
 				'perm'=>perm_binPerm::getGroupPower('all'),
 				);

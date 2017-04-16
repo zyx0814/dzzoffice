@@ -41,6 +41,7 @@ class table_local_storage extends dzz_table
 		if($data['type']=='pan') $bz=$data['bz'].':'.$data['id'].':'.$data['root'];
 		elseif($data['type']=='storage') $bz=$data['bz'].':'.$data['id'].':'.$data['bucket'];
 		elseif($data['type']=='ftp') $bz=$data['bz'].':'.$data['id'].':'.$data['root'];
+		elseif($data['type']=='disk') $bz=$data['bz'].':'.$data['id'].':'.$data['root'];
 		else $bz='dzz';
 		return $bz;
 	}
@@ -79,6 +80,9 @@ class table_local_storage extends dzz_table
 		if($data['type']=='local'){
 			$return['usesize']=C::t('attachment')->getSizeByRemote($remoteid);
 			$return['totalsize']=disk_free_space($_G['setting']['attachdir']);
+		}elseif($data['type']=='disk'){
+			$return['usesize']=C::t('attachment')->getSizeByRemote($remoteid);
+			$return['totalsize']=disk_free_space($data['attachdir']);
 		}elseif($data['type']=='pan'){
 			$bz=$data['bz'].':'.$data['id'].':';
 			$arr=IO::getQuota($bz);

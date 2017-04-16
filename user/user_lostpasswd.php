@@ -19,29 +19,28 @@ if(submitcheck('lostpwsubmit')) {
 	if($_GET['email']) {
 		$emailcount = C::t('user')->count_by_email($_GET['email'], 1);
 		if(!$emailcount) {
-			showmessage('抱歉，使用此 Email 的用户不存在，不能使用取回密码功能');
+			showmessage('use_Email_user_not_exist');
 		}
 		
 		$member = C::t('user')->fetch_by_email($_GET['email'], 1);
 		$tmp['email'] = $member['email'];
 	}
 	if(!$member) {
-		showmessage('抱歉，您填写的账户资料不匹配，不能使用取回密码功能，如有疑问请与管理员联系');
+		showmessage('apology_account_data_mismatching');
 	} elseif($member['adminid'] == 1) {
-		showmessage('管理员帐号不允许找回');
+		showmessage('administrator_account_not_allowed_find');
 	}
 
 	
 	if($member['username'] != $_GET['username']) {
-		showmessage('抱歉，您填写的账户资料不匹配，不能使用取回密码功能，如有疑问请与管理员联系');
+		showmessage('apology_account_data_mismatching');
 	}
 
 	$idstring = random(6);
 	C::t('user')->update($member['uid'], array('authstr' => "$_G[timestamp]\t1\t$idstring"));
 	require_once libfile('function/mail');
-	$get_passwd_subject = lang('email', 'get_passwd_subject');
+	$get_passwd_subject = lang('get_passwd_subject');
 	$get_passwd_message = lang(
-		'email',
 		'get_passwd_message',
 		array(
 			'username' => $member['username'],
@@ -55,7 +54,7 @@ if(submitcheck('lostpwsubmit')) {
 	if(!sendmail("$_GET[username] <$tmp[email]>", $get_passwd_subject, $get_passwd_message)) {
 		runlog('sendmail', "$tmp[email] sendmail failed.");
 	}
-	showmessage('取回密码的方法已通过 Email 发送到您的信箱('.$_GET['email'].')中，<br />请在 3 天之内修改您的密码', $_G['siteurl'], array('email'=>$_GET['email']));
+	showmessage(lang('password_has_been_sent_email').'('.$_GET['email'].')'.lang('please_tree_edit_password'), $_G['siteurl'], array('email'=>$_GET['email']));
 }else{
 	
 	include template('lostpasswd');

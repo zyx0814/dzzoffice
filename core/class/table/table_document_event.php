@@ -31,19 +31,19 @@ class table_document_event extends dzz_table
 		foreach(DB::fetch_all("select * from %t where did = %d order by dateline",array($this->_table,$did)) as $value){
 			switch($value['action']){
 				case 'create':
-					$value['faction']='创建了文档';
+					$value['faction']=lang('create_document');
 					break;
 				case 'reversion':
-					$value['faction']='编辑了文档';
+					$value['faction']=lang('edit_document');
 					break;
 				case 'edit':
-					$value['faction']='编辑了文档';
+					$value['faction']=lang('edit_document');
 					break;
 				case 'delete':
-					$value['faction']='删除了文件';
+					$value['faction']=lang('delete_document');
 					break;
 				case 'rename':
-					$value['faction']='修改了文档名称';
+					$value['faction']=lang('rename_document');
 					break;
 			}
 			$data[]=$value;

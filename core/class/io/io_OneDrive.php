@@ -137,7 +137,7 @@ class io_OneDrive extends io_api
 				$onedrive->setState($token);
 				return $onedrive;
 			}else{
-				return array('error'=>'刷新access_token失败');
+				return array('error'=>lang('refresh_access_token'));
 			}
 		}
 		return false;
@@ -315,18 +315,19 @@ class io_OneDrive extends io_api
 	public function deleteThumb($path){
 		global $_G;
 		$imgcachePath='./imgcache/';
-		$arr=array(array(256,256),array(1440,900));
-		$cachepath=str_replace('//','/',str_replace(':','/',$path));
-		foreach($arr as $value){
-			$target=$imgcachePath.($cachepath).'.'.$value[0].'_'.$value[1].'.jpeg';
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace(':','/',$path)));
+		foreach($_G['setting']['thumbsize'] as $value){
+			$target=$imgcachePath.($cachepath).'.'.$value['width'].'_'.$value['height'].'.jpeg';
 			@unlink($_G['setting']['attachdir'].$target);
 		}
 	}
-	public function createThumb($path,$width,$height){
+	public function createThumb($path,$size,$width=0,$height=0){
 		global $_G;
+		if(intval($width)<1) $width=$_G['setting']['thumbsize'][$size]['width'];
+		if(intval($height)<1) $height=$_G['setting']['thumbsize'][$size]['height'];
 		$enable_cache=true; //是否启用缓存
 		$imgcachePath='imgcache/';
-		$cachepath=str_replace('//','/',str_replace(':','/',$path));
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace('//','/',str_replace(':','/',$path))));
 		
 		$target=$imgcachePath.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		if(@getimagesize($_G['setting']['attachdir'].$target)){
@@ -349,7 +350,14 @@ class io_OneDrive extends io_api
 		$enable_cache=true; //是否启用缓存
 		if($original || $width<1 || $height<1){
 			if($returnurl) return self::getFileUri($path);
-			@header('cache-control:public'); 
+			$file=self::getStream($path);
+			$etag = @md5_file($file); 
+			header("Etag: $etag"); 
+			if (trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			readfile(self::getStream($path));
@@ -357,11 +365,21 @@ class io_OneDrive extends io_api
 			exit();
 		}
 		$imgcachePath='imgcache/';
-		$cachepath=str_replace('//','/',str_replace(':','/',$path));
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace('//','/',str_replace(':','/',$path))));
 		$target=$imgcachePath.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		if($enable_cache && @getimagesize($_G['setting']['attachdir'].'./'.$target)){
 			if($returnurl) return $_G['setting']['attachurl'].$target;
-			@header('cache-control:public'); 
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($_G['setting']['attachdir'].'./'.$target);
@@ -384,7 +402,17 @@ class io_OneDrive extends io_api
 			dmkdir($targetpath,false);
 			if($enable_cache) file_put_contents($_G['setting']['attachdir'].'./'.$target,$data);
 			
-			@header('cache-control:public'); 
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			echo $data;
@@ -515,8 +543,8 @@ class io_OneDrive extends io_api
 			else $type='attach';
 			
 			if($type=='image'){
-				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=256&height=256&path='.dzzencode($path);
-				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=1440&height=900&path='.dzzencode($path);
+				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=small&path='.dzzencode($path);
+				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=large&path='.dzzencode($path);
 			}else{
 				$img=geticonfromext($ext,$type);
 				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.dzzencode($path).'&n='.urlencode($meta['name']);
@@ -610,7 +638,7 @@ class io_OneDrive extends io_api
 		if(is_array($onedrive) && $onedrive['error']) return $onedrive;
 		//exit($path1.'==='.$path.'==='.$bz);
 		$ext=strtolower(substr(strrchr($path, '.'), 1));
-		$name=($ext?(str_replace('.','_',preg_replace("/\.".$ext."$/i",'',$name)).'.'.$ext):$name);
+		$name=($ext?(str_replace('.','_',preg_replace("/\.\w+$/i",'',$name)).'.'.$ext):$name);
 		$name=io_dzz::name_filter($name);
 		$meta=$onedrive->updateObject($path1,array('name'=>$name));
 		if($meta['error']) return array('error'=>$meta['error']);
@@ -645,12 +673,18 @@ class io_OneDrive extends io_api
 		return $return;
 	}
 	//打包下载文件
-	public function zipdownload($path){
+	public function zipdownload($paths,$filename){
 		global $_G;
-		$meta=self::getMeta($path);
+		$paths=(array)$paths;
+		set_time_limit(0);
+		
+		if(empty($filename)){
+			$meta=self::getMeta($paths[0]);
+			$filename=$meta['name'].(count($paths)>1?lang('wait'):'');
+		}
+		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
 		include_once libfile('class/ZipStream');
 		
-		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
 		$zip = new ZipStream($filename.".zip");
 		$data=self::getFolderInfo($path,'',$zip);
 		//$zip->setComment("$meta[name] " . date('l jS \of F Y h:i:s A'));
@@ -659,27 +693,29 @@ class io_OneDrive extends io_api
 		}*/
 		$zip->finalize();
 	}
-	public function getFolderInfo($path,$position='',$zip){
+	public function getFolderInfo($paths,$position='',&$zip){
 		static $data=array();
 		try{
-			$onedrive=self::init($path,1); 
-			if(is_array($onedrive) && $onedrive['error']) return $onedrive;
-			$meta=self::getMeta($path);
-			
-			switch($meta['type']){
-				case 'folder':
-					  $position.=$meta['name'].'/';
-					 $contents=self::listFiles($path);
-					
-					 foreach($contents as $key=>$value){
-						self::getFolderInfo($value['path'],$position,$zip);
-					 }
-					break;
-				default:
-					$meta['url']=self::getStream($meta['path']);
-					$meta['position']=$position.$meta['name'];
-					//$data[$meta['icoid']]=$meta;
-					$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+			foreach($paths as $path){
+				$onedrive=self::init($path,1); 
+				if(is_array($onedrive) && $onedrive['error']) return $onedrive;
+				$meta=self::getMeta($path);
+				switch($meta['type']){
+					case 'folder':
+						 $lposition=$position.$meta['name'].'/';
+						 $contents=self::listFiles($path);
+						 $arr=array();
+						 foreach($contents as $key=>$value){
+							$arr[]=$value['path'];
+						 }
+						 if($arr) self::getFolderInfo($arr,$lposition,$zip);
+						break;
+					default:
+						$meta['url']=self::getStream($meta['path']);
+						$meta['position']=$position.$meta['name'];
+						//$data[$meta['icoid']]=$meta;
+						$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+				}
 			}
 		
 		}catch(Exception $e){
@@ -691,8 +727,16 @@ class io_OneDrive extends io_api
 	}
 	
 	//下载文件
-	public function download($path){
+	public function download($paths,$filename){
 		global $_G;
+		$paths=(array)$paths;
+		if(count($paths)>1){
+			self::zipdownload($paths,$filename);
+			exit();
+		}else{
+			$path=$paths[0];
+		}
+		
 		$path=rawurldecode($path);
 		$url=self::getStream($path);
 		try {
@@ -742,7 +786,7 @@ class io_OneDrive extends io_api
 		if($size<$partsize){
 			//获取文件内容
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
 			while(!feof($handle)){
 				$fileContent.= fread($handle, 8192);
@@ -753,10 +797,9 @@ class io_OneDrive extends io_api
 			self::deleteCache($path.'/'.$filename);
 			$partinfo=array('ispart'=>true,'partnum'=>0,'iscomplete'=>false);
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
-		    $ext=strtolower(substr(strrchr($filename, '.'), 1));
-			$cachefile=$_G['setting']['attachdir'].'./cache/'.md5($opath).random(5).'.'.$ext;
+			$cachefile=$_G['setting']['attachdir'].'./cache/'.md5($opath).random(5).'.dzz';
 			$start=0;
 			while (!feof($handle)) {
 				$fileContent.=fread($handle, 8192);

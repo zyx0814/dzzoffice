@@ -8,8 +8,8 @@ class helper_sysmessage {
 
 	public static function show($message, $title = '', $msgvar = array()) {
 		if(function_exists('lang')) {
-			$message = lang('message', $message, $msgvar);
-			$title = $title ? lang('message', $title) : lang('error', 'System Message');
+			$message = lang($message, $msgvar);
+			$title = $title ? lang($title) : lang('System_Message');
 		} else {
 			$title = $title ? $title : 'System Message';
 		}

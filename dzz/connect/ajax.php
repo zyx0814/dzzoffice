@@ -15,23 +15,23 @@ if($_GET['do']=='delete'){
 	$bz=trim($_GET['bz']);
 	$id=intval($_GET['id']);
 	if($bz=='dzz'){
-		echo json_encode(array('error'=>'内置盘不允许删除'));
+		echo json_encode(array('error'=>lang('builtin_dish_allowed_delete')));
 		exit();
 	}
 	$cloud=DB::fetch_first("select * from %t where bz=%s",array('connect',$bz));
 	if(!$item=C::t($cloud['dname'])->fetch($id)){
-		echo json_encode(array('error'=>'对象不存在或已被删除'));
+		echo json_encode(array('error'=>lang('object_exist_been_deleted')));
 		exit();
 	}
 	//查找icoid
 	//判断删除权限
 	if($item['uid']!=$_G['uid'] && $_G['admimid']!=1){
-		echo json_encode(array('error'=>'没有权限'));exit();
+		echo json_encode(array('error'=>lang('privilege')));exit();
 	}
 	if($re=C::t($cloud['dname'])->delete_by_id($item['id'])){
 		echo  json_encode($re);
 	}else{
-		echo json_encode(array('error'=>'删除失败'));
+		echo json_encode(array('error'=>lang('delete_unsuccess')));
 	}
 	exit();
 }elseif($_GET['do']=='getBucket'){
@@ -62,18 +62,18 @@ if($_GET['do']=='delete'){
 			C::t('connect')->update($bz,array('name'=>$name));
 			echo json_encode(array('msg'=>'success'));exit();
 		}else{
-			echo json_encode(array('error'=>'没有权限'));exit();
+			echo json_encode(array('error'=>lang('privilege')));exit();
 		}
 	}else{
 		$cloud=DB::fetch_first("select * from %t where bz=%s",array('connect',$bz));
 		if($mycloud=C::t($cloud['dname'])->fetch($id)){
 			if($mycloud['uid']!=$_G['uid'] && $_G['adminid']!=1){
-				echo json_encode(array('error'=>'没有权限'));exit();
+				echo json_encode(array('error'=>lang('privilege')));exit();
 			}elseif(C::t($cloud['dname'])->update($id,array('cloudname'=>$name))){
 				echo json_encode(array('msg'=>'success'));exit();
 			}
 		}
-		echo json_encode(array('error'=>'重命名失败'));exit();
+		echo json_encode(array('error'=>lang('rechristen_failure')));exit();
 	}
 		
 }elseif($_GET['do']=='todesktop'){
@@ -106,7 +106,7 @@ if($_GET['do']=='delete'){
 		}elseif($icoarr['icoid']=DB::insert('icos',($icoarr),1,1)){
 			addtoconfig($icoarr);
 		}else{
-			echo json_encode(array('error'=>'添加到桌面失败'));exit();
+			echo json_encode(array('error'=>lang('added_desktop')));exit();
 		}
 		$icoarr['bz']='';
 		
@@ -118,7 +118,7 @@ if($_GET['do']=='delete'){
 	}
 	$cloud=DB::fetch_first("select * from %t where bz=%s",array('connect',$bz));
 	if(!$item=C::t($cloud['dname'])->fetch_by_id($id)){
-		echo  json_encode(array('error'=>'对象不存在或已被删除'));
+		echo  json_encode(array('error'=>lang('object_exist_been_deleted')));
 		exit();
 	}
 	$pfid=DB::result_first("select fid from ".DB::table('folder')." where uid='{$_G[uid]}' and flag='desktop'");
@@ -148,7 +148,7 @@ if($_GET['do']=='delete'){
 		addtoconfig($icoarr);
 		
 	}else{
-		echo json_encode(array('error'=>'添加到桌面失败'));exit();
+		echo json_encode(array('error'=>lang('added_desktop')));exit();
 	}
 	$icoarr['oid']=$item['fid'];
 	$icoarr['bz']='';

@@ -14,7 +14,7 @@ if(!defined('IN_DZZ')) {
 $qid=intval($_GET['qid']);
 $attach=C::t('comment_attach')->fetch_by_qid($qid);
 if(!$attach){
-	topshowmessage(lang('message','attachment_nonexistence'));
+	topshowmessage(lang('attachment_nonexistence'));
 }
 $attach['filename']=$attach['title'];
 if($attach['aid']){

@@ -10,11 +10,12 @@
 /*	$arr=new  SimpleXMLElement($str);
 	print_r($arr);
 	exit($arr->image->url);
-*/	if(preg_match("/<url>(.+?)<\/url>/ies",$str,$matches)){
+*/	if(preg_match("/<url>(.+?)<\/url>/is",$str,$matches)){
 		$imgurl='http://cn.bing.com'.$matches[1];
 	}else{
 		$imgurl='../../../../images/b.gif';
 	}
+	
 	header('Content-Type: image/JPEG');
 	@ob_end_clean();
 	@readfile($imgurl);

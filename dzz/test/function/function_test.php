@@ -10,6 +10,6 @@ if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
 function test(){
-	return lang('test','title');
+	return lang('title1');
 }
 ?>

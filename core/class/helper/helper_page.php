@@ -117,8 +117,8 @@ class helper_page {
 
 	public static function simplepage($num, $perpage, $curpage, $mpurl) {
 		$return = '';
-		$lang['next'] = lang('core', 'nextpage');
-		$lang['prev'] = lang('core', 'prevpage');
+		$lang['next'] = lang('nextpage');
+		$lang['prev'] = lang('prevpage');
 		$next = $num == $perpage ? '<a href="'.(self::mpurl($mpurl, '&amp;page=', $curpage + 1)).'" class="nxt">'.$lang['next'].'</a>' : '';
 		$prev = $curpage > 1 ? '<span class="pgb"><a href="'.(self::mpurl($mpurl, '&amp;page=', $curpage - 1)).'">'.$lang['prev'].'</a></span>' : '';
 		if($next || $prev) {

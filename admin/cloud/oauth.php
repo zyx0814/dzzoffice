@@ -20,14 +20,13 @@ if($_GET['do']=='getBucket'){
 	$re=$p->getBucketList($id,$key);
 		
 	if($re){
-		echo  json_encode_gbk($re);
+		echo  json_encode($re);
 	}else{
-		echo  json_encode_gbk(array());
+		echo  json_encode(array());
 	}
 	exit();
 }else{
 	IO::authorize($bz);
 	exit();
 }
-
 ?>

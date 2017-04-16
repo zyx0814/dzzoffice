@@ -76,7 +76,7 @@ function toggleFullScreen(videoElement) {
 var onousermove=onmouseup=onselectstart=null;
 var DetachEvent=function(e,el){
 	try{
-		document.body.style.cursor="url('dzz/images/cur/aero_arrow.cur'),auto";
+		//document.body.style.cursor="url('dzz/images/cur/aero_arrow.cur'),auto";
 		document.onmousemove=onmousemove;
 		document.onmouseup=onmouseup;
 		document.onselectstart=onselectstart;
@@ -133,7 +133,7 @@ function addFavorite(url, title) {
 		try {
 			window.sidebar.addPanel(title, url, '');
         	} catch (e) {
-			alert(_lang.prompt1.ctrlD);
+			alert(__lang.js_prompt1_ctrlD);
 		}
 	}
 }
@@ -143,7 +143,7 @@ function setHomepage(sURL) {
 		document.body.style.behavior = 'url(#default#homepage)';
 		document.body.setHomePage(sURL);
 	} else {
-		alert(_lang.prompt1.sethome, 'notice');
+		alert(__lang.js_prompt1_sethome, 'notice');
 		
 	}
 };
@@ -162,7 +162,7 @@ function copyToClipboard(copyText) {
             var divinfo = '<embed width="0" height="0" allownetworking="internal" allowscriptaccess="never" src="./dzz/scripts/clipboard/_clipboard.swf" flashvars="clipboard='+encodeURIComponent(copyText)+'" quality="high" wmode="transparent" allowfullscreen="false" type="application/x-shockwave-flash">'
             document.getElementById(flashcopier).innerHTML = divinfo;
         }
-      alert(copyText+'=====成功复制到粘贴板');
+      alert(copyText+'====='+__lang.success_copied_clipboard);
 } ;
 
 function dbind(id,ev,recall){
@@ -239,7 +239,7 @@ function nowTime(ev,type){
 	}
 	(function(){
 		var d=new Date();
-		var Week=['星期天','星期一','星期二','星期三','星期四','星期五','星期六'];
+		var Week=[__lang.Sunday,__lang.Monday,__lang.Tuesday,__lang.Wednesday,__lang.Thursday,__lang.Friday,__lang.Saturday];
 		Y=d.getFullYear();
 		M=fillZero(d.getMonth()+1);
 		D=fillZero(d.getDate());
@@ -259,7 +259,7 @@ function nowTime(ev,type){
 				H='下午&nbsp;00';
 			}
 		}
-		ev.innerHTML=Y+'年'+M+'月'+D+'日 '+' '+W+'&nbsp;'+H+':'+I+':'+S;
+		ev.innerHTML=Y+__lang.year+M+__lang.month+D+__lang.day + ' '+W+'&nbsp;'+H+':'+I+':'+S;
 		//每秒更新时间
 		setTimeout(arguments.callee,1000);
 	})();

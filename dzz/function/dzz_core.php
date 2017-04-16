@@ -184,21 +184,6 @@ if ( !function_exists('json_encode') ){
     }
 }
 
-function arr_encode(&$array){
-	foreach($array as $key => $value){
-		if(is_array($value)){
-			arr_encode($array[$key]);
-		}else{
-			$array[$key] = (diconv(stripslashes($value),CHARSET,'UTF-8'));
-		}
-	}
-}
-function json_encode_gbk($array){
-	global $_G;
-	arr_encode($array);
-	$json = json_encode($array);
-	return ($json);
-}
 function getThames(){//处理风格
 	global $_G;
 	$thames=DB::fetch_first("SELECT * FROM ".DB::table('user_thame')." WHERE uid='{$_G['uid']}'");
@@ -243,7 +228,7 @@ function getThames(){//处理风格
 							'backimg'=>$thames['custom_backimg']?$thames['custom_backimg']:$arr['backimg'],
 							'color'=>$arr['enable_color']?($thames['custom_color']?$thames['custom_color']:$arr['color']):'',
 							'modules'=>$arr['modules'],
-				);
+				          );
 	return $return;
 }
 function getTableBytype($type){
@@ -315,7 +300,7 @@ function SpaceSize($size,$gid,$isupdate=0,$uid){
 		if($gid>0){
 			C::t('organization')->update($gid,array('usesize'=>$new_usesize));
 		}else{
-			C::t('user_field')->update($_uid,array('usesize'=>$new_usesize));
+			C::t('user_field')->update($uid,array('usesize'=>$new_usesize));
 		}
 		return true;
 	}else{
@@ -342,10 +327,10 @@ function getPositionName($fid){
 	$return='';
 	$folder=C::t('folder')->fetch($fid);
 	if($folder['flag']=='dock'){
-		$return=lang('message','dock');
+		$return=lang('dock');
 	
 	}elseif($folder['flag']=='desktop'){
-		$return =lang('message','desktop');
+		$return =lang('desktop');
 	}else{
 		$return=$folder['fname'];
 	}
@@ -530,48 +515,48 @@ function getFileTypeName($type,$ext){
 	$typename='';
 	switch($type){
 		case 'image':
-			$typename=lang('message','typename_image');
+			$typename=lang('type_image');
 			break;
 		case 'video':
-			$typename=lang('message','typename_video');
+			$typename=lang('type_video');
 			break;
 		case 'music':
-			$typename=lang('message','typename_music');
+			$typename=lang('type_music');
 			break;
 		case 'attach':
-			$typename=lang('message','typename_attach');
+			$typename=lang('typename_attach');
 			break;
 		case 'app':
-			$typename=lang('message','typename_app');
+			$typename=lang('type_app');
 			break;
 		case 'user':
-			$typename=lang('message','typename_user');
+			$typename=lang('typename_user');
 			break;
 		case 'link':
-			$typename=lang('message','typename_link');
+			$typename=lang('type_link');
 			break;
 		case 'folder':
-			$typename=lang('message','typename_folder');
+			$typename=lang('type_folder');
 			break;
 		case 'document':
-			$typename=lang('message','typename_document');
+			$typename=lang('type_attach');
 			break;
 		case 'pan':
-			$typename=lang('message','typename_pan');
+			$typename=lang('typename_pan');
 			break;
 		case 'storage':
-			$typename=lang('message','typename_storage');
+			$typename=lang('typename_storage');
 			break;
 		case 'shortcut':
-			$typename=lang('message','typename_shortcut');
+			$typename=lang('typename_shortcut');
 			return $typename;
 	}
 
 	$name='';
 	if($ext =='dzzdoc'){
-		$name=lang('message','extname_dzzdoc');
+		$name=lang('extname_dzzdoc');
 	}elseif($ext=='txt'){
-		$name=lang('message','extname_txt');
+		$name=lang('extname_txt');
 	}else{
 		$name=strtoupper($ext).' '.$typename;
 	}
@@ -624,11 +609,16 @@ function dzzgetspace($uid){
 		}else{
 			$config['maxspacesize']=($usergroup['maxspacesize']+$config['addsize']+$config['buysize'])*1024*1024;
 		}
-		
 		$space=array_merge($space,$config);
 	}
 	$space['fusesize']=formatsize($space['usesize']);
-	
+	if($space['maxspacesize']>0){
+		$space['fmaxspacesize']=formatsize($space['maxspacesize']);
+	}elseif($space['maxspacesize']==0){
+		$space['fmaxspacesize']=lang('unlimited');
+	}else{
+		$space['fmaxspacesize']=lang('unallocated_space');
+	}
 	$space['attachextensions']=str_replace(' ','',$space['attachextensions']);
 	$typefid=array();
 	
@@ -831,7 +821,7 @@ function image_to_icon($source,$target,$domain){
 		}
 		if(!$target){
 			$imageext=array('jpg','jpeg','png','gif');
-			$ext=strtolower(substr(strrchr($source, '.'), 1, 10));
+			$ext=str_replace("/\?.+?/i",'',strtolower(substr(strrchr($source, '.'), 1, 10)));
 			if(!in_array($ext,$imageext)) $ext='jpg';
 			$subdir = $subdir1 = $subdir2 = '';
 			$subdir1 = date('Ym');
@@ -891,26 +881,29 @@ function dzz_default_folder_init(){
 }
 function dzz_organization_shortcut(){
 	global $_G;
-	foreach(DB::fetch_all("select o.* from %t o LEFT JOIN %t u ON o.orgid=u.orgid where o.`available`>0 and o.indesk>0 and o.fid>0 and u.uid=%d",array('organization','organization_user',$_G['uid'])) as $org){
-		$path='fid_'.$org['fid'];
+	$cutids=array();
+	foreach(DB::fetch_all("select o.* from %t u LEFT JOIN %t o ON o.orgid=u.orgid where o.`available`>0 and o.indesk>0 and o.fid>0 and u.uid=%d",array('organization_user','organization',$_G['uid'])) as $org){
 		
-		if(!$cutid=DB::result_first("select cutid from %t where path=%s ",array('source_shortcut',$path))){
+		if(!$cutid=DB::result_first("select cutid from %t where bz=%s ",array('source_shortcut','org_'.$_G['uid'].'_'.$org['orgid']))){
 			$tdata=array();
-			$tdata=C::t('source_shortcut')->getDataByPath($path);
+			$tdata=C::t('source_shortcut')->getDataByPath('fid_'.$org['fid']);
 			if($tdata['error']){
 				continue;
 			}
 			$shortcut=array(
-							'path'=>$path,
+							'path'=>'fid_'.$org['fid'],
 							'data'=>serialize($tdata),
+							'bz'=>'org_'.$_G['uid'].'_'.$org['orgid']
 							);
 			$cutid=C::t('source_shortcut')->insert($shortcut,1);
 		}
-		if($cutid<1) continue;
+		if(!$cutid) continue;
+		$cutids[]=$cutid;
 		if($icoid=DB::result_first("select icoid from %t where type='shortcut' and oid=%d and uid=%d",array('icos',$cutid,$_G['uid']))){
 			C::t('icos')->update($icoid,array('name'=>$org['orgname'],'isdelete'=>0));
 			continue;	
 		}
+		
 		$pfid=DB::result_first("select fid from ".DB::table('folder')." where uid='{$_G[uid]}' and flag='desktop'");
 	
 		$icoarr=array(
@@ -929,6 +922,22 @@ function dzz_organization_shortcut(){
 		
 		if($icoarr['icoid']=C::t('icos')->insert($icoarr,1)){
 			addtoconfig($icoarr);
+		}
+	}
+	//检查是否有多余的部门快捷方式
+	$sql="bz LIKE %s";
+	$param=array('source_shortcut','org_'.$_G['uid'].'_%');
+	if($cutids){
+		$sql.=" and cutid NOT IN(%n)";
+		$param[]=$cutids;
+	}
+	$cutids_del=array();
+	foreach(DB::fetch_all("select cutid from %t where $sql",$param) as $value){
+		$cutids_del[]=$value['cutid'];
+	};
+	if($cutids_del){
+		foreach(DB::fetch_all("select icoid from %t where type='shortcut' and oid IN(%n)",array('icos',$cutids_del)) as $value){
+			C::t('icos')->delete_by_icoid($value['icoid'],true);
 		}
 	}
 }
@@ -1563,7 +1572,7 @@ function dzz_app_pic_save($FILE,$dir='appimg') {
 	global $_G;
 	$imageext=array('jpg','jpeg','png','gif');
 	$ext=strtolower(substr(strrchr($FILE['name'], '.'), 1, 10));
-	if(!in_array($ext,$imageext)) return '文件格式不允许';
+	if(!in_array($ext,$imageext)) return lang('file_format_allowed');
 		$subdir = $subdir1 = $subdir2 = '';
 		$subdir1 = date('Ym');
 		$subdir2 = date('d');
@@ -1571,7 +1580,7 @@ function dzz_app_pic_save($FILE,$dir='appimg') {
 	$target=$dir.'/'.$subdir;
 	$filename=date('His').''.strtolower(random(16));
 	if(!$attach=io_dzz::UploadSave($FILE)){
-		return '应用图片上传失败';
+		return lang('app_image_upload_failed');
 	}
 	$setarr = array(
 		'uid' => $_G['uid'],

@@ -14,18 +14,19 @@ if($_GET['action'] == 'update') {
 		$idhash = isset($_GET['idhash']) && preg_match('/^\w+$/', $_GET['idhash']) ? $_GET['idhash'] : '';
 		$ani = $_G['setting']['seccodedata']['animator'] ? '_ani' : '';
 		if($_G['setting']['seccodedata']['type'] == 2) {
-			$message = '<span id="seccodeswf_'.$idhash.'"></span>'.(extension_loaded('ming') ? "<script type=\"text/javascript\" reload=\"1\">\n$('seccodeswf_$idhash').innerHTML='".lang('core', 'seccode_image'.$ani.'_tips')."' + AC_FL_RunContent(
+			$message = '<span id="seccodeswf_'.$idhash.'"></span>'.(extension_loaded('ming') ? "<script type=\"text/javascript\" reload=\"1\">\n$('seccodeswf_$idhash').innerHTML='".lang('seccode_image'.$ani.'_tips')."' + AC_FL_RunContent(
 				'width', '".$_G['setting']['seccodedata']['width']."', 'height', '".$_G['setting']['seccodedata']['height']."', 'src', 'misc.php?mod=seccode&update=$rand&idhash=$idhash',
 				'quality', 'high', 'wmode', 'transparent', 'bgcolor', '#ffffff',
 				'align', 'middle', 'menu', 'false', 'allowScriptAccess', 'sameDomain');\n</script>" :
-				"<script type=\"text/javascript\" reload=\"1\">\n$('seccodeswf_$idhash').innerHTML='".lang('core', 'seccode_image'.$ani.'_tips')."' + AC_FL_RunContent(
+				"<script type=\"text/javascript\" reload=\"1\">\n$('seccodeswf_$idhash').innerHTML='".lang('seccode_image'.$ani.'_tips')."' + AC_FL_RunContent(
 				'width', '".$_G['setting']['seccodedata']['width']."', 'height', '".$_G['setting']['seccodedata']['height']."', 'src', '$_G[siteurl]static/image/seccode/flash/flash2.swf',
 				'FlashVars', 'sFile=".rawurlencode("$_G[siteurl]misc.php?mod=seccode&update=$rand&idhash=$idhash")."', 'menu', 'false', 'allowScriptAccess', 'sameDomain', 'swLiveConnect', 'true', 'wmode', 'transparent');\n</script>");
+				
 		} elseif($_G['setting']['seccodedata']['type'] == 3) {
-			$flashcode = "<span id=\"seccodeswf_$idhash\"></span><script type=\"text/javascript\" reload=\"1\">\n$('seccodeswf_$idhash').innerHTML='".lang('core', 'seccode_sound_tips')."' + AC_FL_RunContent(
+			$flashcode = "<span id=\"seccodeswf_$idhash\"></span><script type=\"text/javascript\" reload=\"1\">\n$('seccodeswf_$idhash').innerHTML='".lang('seccode_sound_tips')."' + AC_FL_RunContent(
 				'id', 'seccodeplayer_$idhash', 'name', 'seccodeplayer_$idhash', 'width', '0', 'height', '0', 'src', '$_G[siteurl]static/image/seccode/flash/flash1.swf',
 				'FlashVars', 'sFile=".rawurlencode("$_G[siteurl]misc.php?mod=seccode&update=$rand&idhash=$idhash")."', 'menu', 'false', 'allowScriptAccess', 'sameDomain', 'swLiveConnect', 'true', 'wmode', 'transparent');\n</script>";
-			$message = 'seccode_player';
+			$message =$flashcode.'<span style="padding:2px"><img border="0" style="vertical-align:middle" src="static/image/common/seccodeplayer.gif" /> <a href="javascript:;" onclick="window.document.seccodeplayer_{idhash}.SetVariable(\'isPlay\', 1)">播放验证码</a></span>';
 		} else {
 			if(!is_numeric($_G['setting']['seccodedata']['type'])) {
 				
@@ -47,12 +48,12 @@ if($_GET['action'] == 'update') {
 				}
 				exit;
 			} else {
-				$message = lang('core', 'seccode_image'.$ani.'_tips').'<img onclick="updateseccode(\''.$idhash.'\')" width="'.$_G['setting']['seccodedata']['width'].'" height="'.$_G['setting']['seccodedata']['height'].'" src="misc.php?mod=seccode&update='.$rand.'&idhash='.$idhash.'" class="vm" alt="" />';
+				$message = lang('seccode_image'.$ani.'_tips').'<img onclick="updateseccode(\''.$idhash.'\')" width="'.$_G['setting']['seccodedata']['width'].'" height="'.$_G['setting']['seccodedata']['height'].'" src="misc.php?mod=seccode&update='.$rand.'&idhash='.$idhash.'" class="vm" alt="" />';
 			}
 		}
 	}
 	include template('common/header_ajax');
-	echo lang('message', $message, array('flashcode' => $flashcode, 'idhash' => $idhash));
+	echo lang($message, array('flashcode' => $flashcode, 'idhash' => $idhash));
 	include template('common/footer_ajax');
 
 } elseif($_GET['action'] == 'check') {

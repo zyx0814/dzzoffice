@@ -203,7 +203,7 @@ html, body {
 	position: relative;
 	clear: both;
 	padding: 0 0 0 44px;
-	height: 38px;
+	/*height: 38px;*/
 	line-height: 38px;
 	border-top: 1px solid #D9E2F1;
 	display: none;

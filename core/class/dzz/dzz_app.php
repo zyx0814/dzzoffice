@@ -54,7 +54,7 @@ class dzz_app extends dzz_base{
 	}
 
 	public function init() {
-		
+
 		if(!$this->initated) {
 			$this->_init_db();
 			$this->_init_setting();
@@ -63,6 +63,7 @@ class dzz_app extends dzz_base{
 			$this->_init_cron();
 			$this->_init_misc();
 		}
+
 		$this->initated = true;
 	}
 
@@ -149,7 +150,7 @@ class dzz_app extends dzz_base{
 		} elseif(defined('IN_ARCHIVER')) {
 			$sitepath = preg_replace("/\/archiver/i", '', $sitepath);
 		}
-		$_G['isHTTPS'] = ($_SERVER['HTTPS'] && strtolower($_SERVER['HTTPS']) != 'off') ? true : false;
+		$_G['isHTTPS'] = $this->is_HTTPS();//($_SERVER['HTTPS'] && strtolower($_SERVER['HTTPS']) != 'off') ? true : false;
 		$_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
 
 		$url = parse_url($_G['siteurl']);
@@ -165,7 +166,19 @@ class dzz_app extends dzz_base{
 		$this->var = & $_G;
 
 	}
-
+	private function is_HTTPS(){  
+		if(!isset($_SERVER['HTTPS']))  return FALSE;  
+		if($_SERVER['HTTPS'] === 1){  //Apache  
+			return TRUE;  
+		}elseif($_SERVER['HTTPS'] === 'on'){ //IIS  
+			return TRUE;  
+		}elseif($_SERVER['SERVER_PORT'] == 443){ //其他  
+			return TRUE;  
+		}elseif($_SERVER['REQUEST_SCHEME'] == 'https'){ //其他  
+			return TRUE;  
+		}  
+		return FALSE;  
+	}  
 	private function _get_script_url() {
 		if(!isset($this->var['PHP_SELF'])){
 			$scriptName = basename($_SERVER['SCRIPT_FILENAME']);
@@ -179,7 +192,7 @@ class dzz_app extends dzz_base{
 				$this->var['PHP_SELF'] = substr($_SERVER['SCRIPT_NAME'],0,$pos).'/'.$scriptName;
 			} else if(isset($_SERVER['DOCUMENT_ROOT']) && strpos($_SERVER['SCRIPT_FILENAME'],$_SERVER['DOCUMENT_ROOT']) === 0) {
 				$this->var['PHP_SELF'] = str_replace('\\','/',str_replace($_SERVER['DOCUMENT_ROOT'],'',$_SERVER['SCRIPT_FILENAME']));
-				$this->var['PHP_SELF'][0] != '/' && $this->var['PHP_SELF'] = '/'.$this->var['PHP_SELF'];
+				$this->var['PHP_SELF'][0] != '/' && ($this->var['PHP_SELF'] = '/'.$this->var['PHP_SELF']);
 			} else {
 				system_error('request_tainting');
 			}
@@ -372,9 +385,9 @@ class dzz_app extends dzz_base{
 
 	private function _init_db() {
 		if($this->init_db) {
-			$driver = function_exists('mysql_connect') ? 'db_driver_mysql' : 'db_driver_mysqli';
+			$driver = function_exists('mysqli_connect') ? 'db_driver_mysqli' : 'db_driver_mysql';
 			if(getglobal('config/db/slave')) {
-				$driver = function_exists('mysql_connect') ? 'db_driver_mysql_slave' : 'db_driver_mysqli_slave';
+				$driver = function_exists('mysqli_connect') ? 'db_driver_mysqli_slave' : 'db_driver_mysql_slave';
 			}
 			DB::init($driver, $this->config['db']);
 		}
@@ -430,9 +443,9 @@ class dzz_app extends dzz_base{
 			}
 			
 			if(!empty($user) && $user['password'] == $dzz_pw && ($user['status']<1 || $user['uid']==1)) {//加上判断用户是否被停用
-				if(isset($user['_inarchive'])) {
+				/*if(isset($user['_inarchive'])) {
 					C::t('user_archive')->move_to_master($dzz_uid);
-				}
+				}*/
 				$this->var['member'] = $user;
 			} else {
 				$user = array();
@@ -447,6 +460,7 @@ class dzz_app extends dzz_base{
 		} else {
 			$this->_init_guest();
 		}
+		
 		setglobal('groupid', getglobal('groupid', 'member'));
 		!empty($this->cachelist) && loadcache($this->cachelist);
 		if($this->var['member'] && $this->var['group']['radminid'] == 0 && $this->var['member']['adminid'] > 0 && $this->var['member']['groupid'] != $this->var['member']['adminid'] && !empty($this->var['cache']['admingroup_'.$this->var['member']['adminid']])) {
@@ -460,8 +474,23 @@ class dzz_app extends dzz_base{
 		} else {
 			$this->var['member']['lastvisit'] = $this->var['cookie']['lastvisit'];
 		}
-
+		
 		setglobal('uid', getglobal('uid', 'member'));
+		//设置语言；
+		if(!empty($this->var['member']['language'])){
+			$language=$this->var['member']['language'];
+		}else{
+			$language=checkLanguage();
+		}
+		if(!is_file(DZZ_ROOT.'./dzz/language/'.$language.'/lang.php')){
+			$language = getglobal('config/output/language');
+		}elseif(!is_file(DZZ_ROOT.'./user/language/'.$language.'/lang.php')){
+			$language = getglobal('config/output/language');
+		}elseif(!is_file(DZZ_ROOT.'./admin/language/'.$language.'/lang.php')){
+			$language = getglobal('config/output/language');
+		}
+		setglobal('language',$language);
+		
 		setglobal('username', getglobal('username', 'member'));
 		setglobal('adminid', getglobal('adminid', 'member'));
 		setglobal('groupid', getglobal('groupid', 'member'));
@@ -472,7 +501,7 @@ class dzz_app extends dzz_base{
 		$username = '';
 		$groupid = 7;
 		
-		setglobal('member', array( 'uid' => 0, 'username' => $username, 'adminid' => 0, 'groupid' => $groupid, 'credits' => 0, 'timeoffset' => 9999));
+		setglobal('member', array( 'uid' => 0, 'username' => $username, 'adminid' => 0, 'groupid' => $groupid, 'credits' => 0, 'timeoffset' => 9999,'language'=>getglobal('language', 'cookie')?getglobal('language', 'cookie'):checklanguage()));
 	}
 
 	private function _init_cron() {
@@ -488,7 +517,7 @@ class dzz_app extends dzz_base{
 		if(!$this->init_misc) {
 			return false;
 		}
-		lang('core');
+//		lang();
 
 		if($this->init_setting && $this->init_user) {
 			if(!isset($this->var['member']['timeoffset']) || $this->var['member']['timeoffset'] == 9999 || $this->var['member']['timeoffset'] === '') {
@@ -497,6 +526,7 @@ class dzz_app extends dzz_base{
 		}
 
 		$timeoffset = $this->init_setting ? $this->var['member']['timeoffset'] : $this->var['setting']['timeoffset'];
+		
 		$this->var['timenow'] = array(
 			'time' => dgmdate(TIMESTAMP),
 			'offset' => $timeoffset >= 0 ? ($timeoffset == 0 ? '' : '+'.$timeoffset) : $timeoffset

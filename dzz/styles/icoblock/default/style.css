@@ -11,6 +11,7 @@
 .window .Icoselected .backgound_radius {background:#D1E8FF;border:#66A7E8 1px solid;opacity:1;filter:Alpha(opacity=100);transition: all 0.2s ease-in 0s; }
 .icoimgContainer .icoimgtips{
 	cursor:pointer;
+	overflow:hidden;
 }
 /*图标文字部分*/
 /*桌面图标文字样式*/
@@ -24,13 +25,13 @@
 /*目录内图标文字样式*/
 .IcoText_folder {font-size:13px; color:#333; font-weight:nomal;font-family:Tahoma,'微软雅黑','Simsun';word-break:break-all;text-decoration:none}
 
-.IcoText_div { max-height:35px; overflow:hidden;word-break:break-all; }
+.IcoText_div { max-height:38px; overflow:hidden;word-break:break-all; }
 .IcoText_div table{table-layout:fixed;}
 .IcoText_div a{
 	text-decoration:none;
 }
 .icosContainer .IcoText_div{position:relative;}
-* html .IcoText_div { height: expression(this.height > 35 ? 35 : true);}
+* html .IcoText_div { height: expression(this.height > 38 ? 38 : true);}
 .IcoText_textarea {
     border: 1px solid #6CABE7;
     font-size: 13px;

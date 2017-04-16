@@ -8,29 +8,33 @@
  */
 
 @set_time_limit(0);
-include_once libfile('class/ZipStream');
+include_once  libfile('class/ZipStream');
 
-$patharr=$_GET['paths'];
-print_r($_GET);exit('dfdsfsf');
-$meta=IO::getMeta(dzzdecode($patharr[0]));
-if($meta['error']) exit($meta['error']);
-$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
-$zip = new ZipStream($filename.".zip");
-foreach($patharr as $dpath){
-	$path=dzzdecode($dpath);
-	$meta=IO::getMeta($path);
-	switch($meta['type']){
-		case 'app':case 'video':case 'dzzdoc':case 'link':
+$patharr = $_GET['paths'];
+//print_r($_GET);
+exit('dfdsfsf');
+$meta = IO::getMeta(dzzdecode($patharr[0]));
+if ($meta['error'])exit($meta['error']);
+$filename = (strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
+$zip = new ZipStream($filename . ".zip");
+foreach ($patharr as $dpath) {
+	$path = dzzdecode($dpath);
+	$meta = IO::getMeta($path);
+	switch($meta['type']) {
+		case 'app' :
+		case 'video' :
+		case 'dzzdoc' :
+		case 'link' :
 			continue;
 			break;
-		case 'folder':
-			IO::getFolderInfo($path,$meta['name'],$zip);
+		case 'folder' :
+			IO::getFolderInfo($path, $meta['name'], $zip);
 			break;
-			
-		default:
-			$zip->addLargeFile(fopen(IO::getStream($path),'rb'), $meta['name'], $meta['dateline']);	
-	  		break;
+
+		default :
+			$zip -> addLargeFile(fopen(IO::getStream($path), 'rb'), $meta['name'], $meta['dateline']);
+			break;
 	}
 }
-$zip->finalize();
+$zip -> finalize();
 ?>

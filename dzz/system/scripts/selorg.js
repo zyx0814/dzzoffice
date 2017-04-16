@@ -10,7 +10,7 @@ selorg.add=function(ctrlid,vals){
 		html+='<button id="'+ctrlid+'_sl_'+vals[i].orgid+'" type="button" class="btn btn-simple btn-sorg" data-val="'+vals[i].orgid+'">';
 		html+='<img src="'+vals[i].icon+'">&nbsp;';
 		html+=vals[i].path;
-		html+='<a href="javascript:;" class="ibtn glyphicon glyphicon-remove" style="width:20px !important;height:20px;line-height:20px;margin-top:-3px;margin-right:-10px;" title="删除" onclick="selorg.remove(\''+ctrlid+'\',this);"></a>';
+		html+='<a href="javascript:;" class="ibtn glyphicon glyphicon-remove" style="width:20px !important;height:20px;line-height:20px;margin-top:-3px;margin-right:-10px;" title="'+__lang.delete+'" onclick="selorg.remove(\''+ctrlid+'\',this);"></a>';
 		jQuery('#'+ctrlid).append(html);
 	}
 	selorg.set(ctrlid);

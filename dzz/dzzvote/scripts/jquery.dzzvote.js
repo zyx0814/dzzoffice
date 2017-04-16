@@ -43,9 +43,9 @@
 			var option='';
 			for(var i=1 ;i<=sum; i++){
 				if(i==val){
-					option+='<option value="'+i+'" checked="checked">最多可选择 '+i+' 项</option>';
+					option+='<option value="'+i+'" checked="checked">'+__lang.most_can_choose+i+__lang.item+'</option>';
 				}else{
-					option+='<option value="'+i+'">最多可选择 '+i+' 项</option>';
+					option+='<option value="'+i+'">'+__lang.most_can_choose+i+__lang.item+'</option>';
 				}
 			}
 			jQuery('#dzzvote_maxselect_num_'+options['voteid']+'').html(option);

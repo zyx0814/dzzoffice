@@ -31,7 +31,6 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	 try{
 		updatesession();
 		if($re=io_remote::Migrate($attach,$gets['remoteid'])){
-			//print_r($re);exit();
 			include template('common/header_common');
 			echo "<script type=\"text/javascript\">";
 			echo "parent.setProgress(".json_encode($re).");";

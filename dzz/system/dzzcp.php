@@ -53,12 +53,13 @@ if($do=='upload'){
 	
 	$tdata=C::t('source_shortcut')->getDataByPath($path);
 	if($tdata['error']){
-		echo json_encode(array('error'=>'创建快捷方式失败'));exit();
+		echo json_encode(array('error'=>lang('failed_create_shortcut')));exit();
 	}
 	$flag=trim($tdata['flag']);
 	$shortcut=array(
 					'path'=>$path,
 					'data'=>serialize($tdata),
+					'bz'=>($tdata['bz'] && $tdata['bz']!='dzz')?$tdata['bz']:$tdata['type'].'_'.$tdata['oid']
 					);
 	
 	if($cutid=C::t('source_shortcut')->insert($shortcut,1)){
@@ -94,13 +95,13 @@ if($do=='upload'){
 			echo json_encode($icoarr);exit();
 		}
 	}
-	echo json_encode(array('error'=>'添加快捷方式失败'));exit();
+	echo json_encode(array('error'=>lang('add_shortcuts_fail')));exit();
 	
 }elseif($do=='applinkto'){ //添加应用快捷方式到特定容器
 	$appid=intval($_GET['appid']);
 	$pfid=intval($_GET['pfid']);
 	if(!$app=C::t('app_market')->fetch_by_appid($appid)){
-		echo json_encode(array('error'=>'应用已不存在'));exit();
+		echo json_encode(array('error'=>lang('app_longer_exists')));exit();
 	}
 	$icoarr=array(
 					'uid'=>$_G['uid'],
@@ -142,7 +143,7 @@ if($do=='upload'){
 		$icoarr['sperm']=perm_FileSPerm::typePower($icoarr['type'],'');
 		echo json_encode($icoarr);exit();
 	}else{
-		echo json_encode(array('error'=>'添加快捷方式失败'));exit();
+		echo json_encode(array('error'=>lang('add_shortcuts_fail')));exit();
 	}
 }elseif($do=='appuninstall'){ //删除用户应用
 	$appid=intval($_GET['appid']);
@@ -161,12 +162,12 @@ if($do=='upload'){
 	if(C::t('user_field')->update($_G['uid'],array('applist'=>implode(',',$applist)))){
 		echo json_encode($return);exit();
 	}else{
-		echo json_encode(array('error'=>'删除失败'));exit();
+		echo json_encode(array('error'=>lang('delete_unsuccess')));exit();
 	}
 
 }elseif($do=='rename'){
 	$path=dzzdecode($_GET['path']);
-	$text=io_dzz::name_filter(diconv(str_replace('...','',getstr($_POST['text'],80)),'UTF-8'));
+	$text=str_replace('...','',getstr(io_dzz::name_filter($_GET['text']),80));
 	
 	$ret=IO::rename($path,$text);
 	exit(json_encode($ret));
@@ -178,37 +179,37 @@ if($do=='upload'){
 	$bz=getBzByPath($path);
 	switch ($type){
 		case 'NewTxt':
-		 	$filename='新建文本文档.txt';
+		 	$filename=lang('new_txt').'.txt';
 			if(!perm_check::checkperm_Container($path,'newtype',$bz)){
-				exit(json_encode(array('error'=>'没有权限')));
+				exit(json_encode(array('error'=>lang('privilege'))));
 			}
 			$content=' ';
 			break;
 		case 'NewDzzDoc':
-		 	$filename='新建Dzz文档.dzzdoc';
+		 	$filename=lang('new_dzzdoc').'.dzzdoc';
 			if(!perm_check::checkperm_Container($path,'dzzdoc',$bz)){
-				exit(json_encode(array('error'=>'没有权限')));
+				exit(json_encode(array('error'=>lang('privilege'))));
 			}
 			$content=' ';
 			break;
 		case 'newdoc':
-		 	$filename='新建Word文档.docx';
+		 	$filename=lang('new_word').'.docx';
 			if(!perm_check::checkperm_Container($path,'newtype',$bz)){
-				exit(json_encode(array('error'=>'没有权限')));
+				exit(json_encode(array('error'=>lang('privilege'))));
 			}
 			$content=file_get_contents(DZZ_ROOT.'./dzz/images/newfile/word.docx');
 			break;
 		case 'newexcel':
-		 	$filename='新建Excel工作表.xlsx';
+		 	$filename=lang('new_excel').'.xlsx';
 			if(!perm_check::checkperm_Container($path,'newtype',$bz)){
-				exit(json_encode(array('error'=>'没有权限')));
+				exit(json_encode(array('error'=>lang('privilege'))));
 			}
 			$content=file_get_contents(DZZ_ROOT.'./dzz/images/newfile/excel.xlsx');
 			break;
 		case 'newpowerpoint':
-		 	$filename='新建PowerPoint演示文稿.pptx';
+		 	$filename=lang('new_PowerPoint').'.pptx';
 			if(!perm_check::checkperm_Container($path,'newtype',$bz)){
-				exit(json_encode(array('error'=>'没有权限')));
+				exit(json_encode(array('error'=>lang('privilege'))));
 			}
 			$content=file_get_contents(DZZ_ROOT.'./dzz/images/newfile/ppt.pptx');
 			break;
@@ -221,7 +222,7 @@ if($do=='upload'){
 		}
 	}else{
 		$arr=array();
-		$arr['error']=lang('template','新建失败');
+		$arr['error']=lang('new_failure');
 		
 	}
 	echo json_encode($arr);
@@ -233,18 +234,25 @@ if($do=='upload'){
 	$icoids=$_GET['icoids'];
 	$bz=trim($_GET['bz']);
 	foreach($icoids as $icoid){
-		
-		$return=IO::Delete($icoid);
-		if(!$return['error']){
-			//处理数据
-			$arr['sucessicoids'][$return['icoid']]=$return['icoid'];
-			$arr['msg'][$return['icoid']]='success';
-			$i++;
+		$icoid=dzzdecode($icoid);
+		if(empty($icoid)){
+			continue;
+		}
+		if(strpos($icoid,'../')!==false){
+			$arr['msg'][$return['icoid']]=lang('illegal_calls');
 		}else{
-			$arr['msg'][$return['icoid']]=$return['error'];
+			$return=IO::Delete($icoid);
+			if(!$return['error']){
+				//处理数据
+				$arr['sucessicoids'][$return['icoid']]=$return['icoid'];
+				$arr['msg'][$return['icoid']]='success';
+				$i++;
+			}else{
+				$arr['msg'][$return['icoid']]=$return['error'];
+			}
 		}
 	}
-	echo json_encode_gbk($arr);
+	echo json_encode($arr);
 	exit();
 
 }elseif($do=='emptyFolder'){
@@ -257,7 +265,7 @@ if($do=='upload'){
 			$arr['error']=$return['error'];
 		}
 	}
-	echo json_encode_gbk($arr);
+	echo json_encode($arr);
 	exit();
 }elseif($do=='restore'){
 	$icoids=explode(',',trim($_GET['icoid']));
@@ -266,13 +274,13 @@ if($do=='upload'){
 			addtoconfig($value);
 		}
 	}
-	echo json_encode_gbk(array('msg'=>'success'));
+	echo json_encode(array('msg'=>'success'));
 	exit();
 
 
 }elseif($do=='linktodesktop'){
 	if(!$_G['uid']){
-		exit(json_encode(array('error'=>'您还没有登录')));
+		exit(json_encode(array('error'=>lang('you_not_recorded'))));
 	}
 	$data=array();
 	$link=(trim($_GET['link']));
@@ -281,7 +289,7 @@ if($do=='upload'){
 		$link='http://'.$link;
 	}
 	if(!preg_match("/^(http|ftp|https|mms)\:\/\/.{4,300}$/i", $link)){
-			$data['error']=lang('message','href_illegal');
+			$data['error']=lang('href_illegal');
 			echo json_encode($data);
 			exit();
 	}
@@ -290,7 +298,7 @@ if($do=='upload'){
 		echo json_encode($data);
 		exit();
 	}else{
-		$data['error']='添加到桌面失败';
+		$data['error']=lang('added_desktop_failure');
 		echo json_encode($data);
 		exit();
 	}
@@ -305,8 +313,8 @@ if($do=='upload'){
 		$link='http://'.preg_replace("/^(http|ftp|https|mms)\:\/\//i",'',$link);
 	}
 	if(!preg_match("/^(http|ftp|https|mms)\:\/\/.{4,300}$/i", $link)){
-			$data['error']=lang('message','href_illegal');
-			echo json_encode_gbk($data);
+			$data['error']=lang('href_illegal');
+			echo json_encode($data);
 			exit();
 	}
 	// 首先判断网址是否存在；
@@ -321,12 +329,12 @@ if($do=='upload'){
 	if($isimage){
 		if(!perm_check::checkperm_Container($pfid,'newtype')){
 			
-			$data['error']=lang('message','target_not_accept_image');
-			echo json_encode_gbk($data);
+			$data['error']=lang('target_not_accept_image');
+			echo json_encode($data);
 			exit();
 		}
 		if($data=io_dzz::linktoimage($link,$pfid)){
-				echo json_encode_gbk($data);
+				echo json_encode($data);
 				exit();
 			
 			showmessage('do_success',$refer.'',$data,array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
@@ -334,40 +342,40 @@ if($do=='upload'){
 	}elseif($ismusic){
 		if(!perm_check::checkperm_Container($pfid,'newtype')){
 			
-			$data['error']=lang('message','target_not_accept_music');
-			echo json_encode_gbk($data);
+			$data['error']=lang('target_not_accept_music');
+			echo json_encode($data);
 			exit();
 		}
 		if($data=io_dzz::linktomusic($link,$pfid)){
-			echo json_encode_gbk($data);
+			echo json_encode($data);
 			exit();
 			showmessage('do_success',$refer.'',$data,array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
 		}
 	}elseif($data=io_dzz::linktovideo($link,$pfid)){//试图作为视频处理
 		//作为网址处理
 		if(!perm_check::checkperm_Container($pfid,'video')){
-			$data['error']=lang('message','target_not_accept_link');
-			echo json_encode_gbk($data);
+			$data['error']=lang('target_not_accept_link');
+			echo json_encode($data);
 			exit();
 		}
-		echo json_encode_gbk($data);
+		echo json_encode($data);
 		exit();
 	}else{
 		if(!perm_check::checkperm_Container($pfid,'link')){
-			$data['error']=lang('message','target_not_accept_link');
-			echo json_encode_gbk($data);
+			$data['error']=lang('target_not_accept_link');
+			echo json_encode($data);
 			exit();
 		}
 		if($data=io_dzz::linktourl($link,$pfid)){
 			
-			echo json_encode_gbk($data);
+			echo json_encode($data);
 			exit();
 			
 			showmessage('do_success',$refer.'',$data,array('showdialog'=>1, 'showmsg' => true, 'closetime' => 1));
 		}else{
 			
-			$data['error']=lang('message','network_error');
-			echo json_encode_gbk($data);
+			$data['error']=lang('network_error');
+			echo json_encode($data);
 			exit();
 			
 		}

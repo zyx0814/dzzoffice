@@ -109,9 +109,16 @@ class table_organization_admin extends dzz_table
 		else $orgids=array($orgid);
 		return DB::result_first("select COUNT(*) from %t where orgid IN (%n) and uid=%d ",array($this->_table,$orgids,$uid));
 	}
-	
-	
-	
+	public function fetch_toporgids_by_uid($uid){
+		$ret=array();
+		$orgids=self::fetch_orgids_by_uid($uid);
+		foreach(C::t('organization')->fetch_all($orgids) as $value){
+			$topids=explode('-',$value['pathkey']);
+			$topid=intval(str_replace('_','',$topids[0]));
+			$ret[$topid]=$topid;
+		}
+		return $ret;
+	}
 	
 }
 

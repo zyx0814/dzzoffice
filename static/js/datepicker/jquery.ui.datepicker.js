@@ -64,8 +64,8 @@ function Datepicker() {
                 currentText: '今天',
                 monthNames: ['一月','二月','三月','四月','五月','六月',
                 '七月','八月','九月','十月','十一月','十二月'],
-                monthNamesShort: ['一','二','三','四','五','六',
-                '七','八','九','十','十一','十二'],
+                monthNamesShort: ['1月','2月','3月','4月','5月','6月',
+                '7月','8月','9月','10月','11月','12月'],
                 dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
                 dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],
                 dayNamesMin: ['日','一','二','三','四','五','六'],
@@ -74,7 +74,7 @@ function Datepicker() {
                 firstDay: 1,
                 isRTL: false,
                 showMonthAfterYear: true,
-                yearSuffix: '年'};
+                yearSuffix: ''};
 	this._defaults = { // Global defaults for all the date picker instances
 		showOn: "focus", // "focus" for popup on focus,
 			// "button" for trigger button, or "both" for either
@@ -90,8 +90,8 @@ function Datepicker() {
 			// if not applicable, false to just disable them
 		navigationAsDateFormat: false, // True if date formatting applied to prev/today/next links
 		gotoCurrent: false, // True if today link goes back to current selection instead
-		changeMonth: false, // True if month can be selected directly, false if only prev/next
-		changeYear: false, // True if year can be selected directly, false if only prev/next
+		changeMonth: true, // True if month can be selected directly, false if only prev/next
+		changeYear: true, // True if year can be selected directly, false if only prev/next
 		yearRange: "c-10:c+10", // Range of years to display in drop-down,
 			// either relative to today's year (-nn:+nn), relative to currently displayed year
 			// (c-nn:c+nn), absolute (nnnn:nnnn), or a combination of the above (nnnn:-n)
@@ -1094,7 +1094,6 @@ $.extend(Datepicker.prototype, {
 		if (value === "") {
 			return null;
 		}
-
 		var iFormat, dim, extra,
 			iValue = 0,
 			shortYearCutoffTemp = (settings ? settings.shortYearCutoff : null) || this._defaults.shortYearCutoff,
@@ -1109,6 +1108,7 @@ $.extend(Datepicker.prototype, {
 			day = -1,
 			doy = -1,
 			literal = false,
+			interrupt=0,
 			date,
 			// Check whether a format character is doubled
 			lookAhead = function(match) {
@@ -1126,6 +1126,7 @@ $.extend(Datepicker.prototype, {
 					digits = new RegExp("^\\d{1," + size + "}"),
 					num = value.substring(iValue).match(digits);
 				if (!num) {
+					
 					throw "Missing number at position " + iValue;
 				}
 				iValue += num[0].length;
@@ -1139,7 +1140,6 @@ $.extend(Datepicker.prototype, {
 					}).sort(function (a, b) {
 						return -(a[1].length - b[1].length);
 					});
-
 				$.each(names, function (i, pair) {
 					var name = pair[1];
 					if (value.substr(iValue, name.length).toLowerCase() === name.toLowerCase()) {
@@ -1157,13 +1157,15 @@ $.extend(Datepicker.prototype, {
 			// Confirm that a literal character matches the string value
 			checkLiteral = function() {
 				if (value.charAt(iValue) !== format.charAt(iFormat)) {
-					throw "Unexpected literal at position " + iValue;
+					interrupt=1;
+					//throw "Unexpected literal at position " + iValue;
 				}
 				iValue++;
 			};
-
+		
 		for (iFormat = 0; iFormat < format.length; iFormat++) {
 			if (literal) {
+				
 				if (format.charAt(iFormat) === "'" && !lookAhead("'")) {
 					literal = false;
 				} else {
@@ -1210,10 +1212,12 @@ $.extend(Datepicker.prototype, {
 						break;
 					default:
 						checkLiteral();
+						
 				}
+				if(interrupt) break;
 			}
 		}
-
+		
 		if (iValue < value.length){
 			extra = value.substr(iValue);
 			if (!/^\s+/.test(extra)) {
@@ -1240,7 +1244,8 @@ $.extend(Datepicker.prototype, {
 				day -= dim;
 			} while (true);
 		}
-
+		if(month<0) month=1;
+		if(day<0) day=1;
 		date = this._daylightSavingAdjust(new Date(year, month - 1, day));
 		if (date.getFullYear() !== year || date.getMonth() + 1 !== month || date.getDate() !== day) {
 			throw "Invalid date"; // E.g. 31/02/00

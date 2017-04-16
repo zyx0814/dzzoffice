@@ -132,16 +132,16 @@
 </style> 
  <div class="main-header">
       <ul  class="nav nav-pills nav-pills-bottomguide">
-        <li><a href="{$baseurl_info}">{eval echo $base_info_title?$base_info_title:'应用信息';}</a></li>
-        <li class="active"><a href="{$baseurl_menu}">{eval echo $base_menu_title?$base_menu_title:'应用菜单';}</a></li>
+        <li><a href="{$baseurl_info}">{eval echo $base_info_title?$base_info_title:'{lang application_message}';}</a></li>
+        <li class="active"><a href="{$baseurl_menu}">{eval echo $base_menu_title?$base_menu_title:'{lang application_menu}';}</a></li>
       </ul>
   </div>
  <div class="main-content" style="border-top:1px solid #FFF;"> 
     	<ul class="help-block text_center custom_menu_title_text ">
-        	<li>可创建最多 3 个一级菜单，每个一级菜单下可创建最多 5 个二级菜单。</li>
-            <li>编辑中的菜单不会马上被用户看到，请放心调试。</li>
-            <li>菜单发布后24小时内所有用户都将更新到新的菜单</li>
-            <li>拖动可以排序</li>
+        	<li>{lang creat_three_level_menu}</li>
+            <li>{lang edit_menu_in_the_user_can_not_see}</li>
+            <li>{lang menu_release_24_hours_to_update}</li>
+            <li>{lang drag_can_be_sorted}</li>
         </ul>
         <div class="custom_menu_mainList_wrap">
         <!--{loop $menu[button] $key $value}-->
@@ -151,15 +151,15 @@
                 <span class="icon icon_arrow_down"></span><span class="custom_menu_name">$value[name]</span>
                 
                 <!--{if $value[type] && $value[type]=='view'}-->
-                <a class=" pull-right js_link" href="javascript:;" title="跳转链接" onclick="setEventkey(this,'link');return false"><span class="icon icon_link_gray"></span></a>
+                <a class=" pull-right js_link" href="javascript:;" title="{lang skip_links}" onclick="setEventkey(this,'link');return false"><span class="icon icon_link_gray"></span></a>
                 <!--{elseif $value[type]}-->
-                <a class=" pull-right js_click " href="javascript:;" title="菜单KEY" onclick="setEventkey(this,'click');return false"><span class="icon icon_click_gray"></span></a>
+                <a class=" pull-right js_click " href="javascript:;" title="{lang menu}KEY" onclick="setEventkey(this,'click');return false"><span class="icon icon_click_gray"></span></a>
                 
                 <!--{/if}-->
-                <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="修改"></a>
+                <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="{lang modification}"></a>
                 <input type="text" class="custom_menu_input js_add_2_menu js_input_limit  " value="$value[name]" autofocus="true" data-limit="8">
                
-                <span class="custom_menu_notice ">一级菜单名称不多于4个汉字或8个字母，超出部分自动截断。</span>
+                <span class="custom_menu_notice ">{lang level_1_menu_name_limit_beyond_truncation}</span>
             </div> 
             <div class="custom_menu_list_wrap" data-id="$key">
              <!--{loop $value[sub_button] $key1 $value1}-->
@@ -167,36 +167,36 @@
                     <a class="icon icon_remove pull-right js_menu_remove hover_visible" href="javascript:;"></a>
                    <span class="custom_menu_subName">$value1[name]</span>
                     <!--{if $value1[type]=='view'}-->
-                    <a class=" pull-right js_link" href="javascript:;" title="跳转链接" onclick="setEventkey(this,'link');return false"><span class="icon icon_link_gray"></span></a>
+                    <a class=" pull-right js_link" href="javascript:;" title="{lang skip_links}" onclick="setEventkey(this,'link');return false"><span class="icon icon_link_gray"></span></a>
                      <!--{elseif $value1[type]=='click'}-->
-                      <a class=" pull-right js_click " href="javascript:;" title="菜单KEY" onclick="setEventkey(this,'click');return false"><span class="icon icon_click_gray"></span></a>
+                      <a class=" pull-right js_click " href="javascript:;" title="{lang menu}KEY" onclick="setEventkey(this,'click');return false"><span class="icon icon_click_gray"></span></a>
                     <!--{/if}-->
-                    <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="修改"></a>
+                    <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="{lang modification}"></a>
                     <input type="text" class="custom_menu_input js_add_2_menu js_input_limit" value="$value1[name]" autofocus="true" data-limit="16" >
-                    <span class="custom_menu_notice ">二级菜单名称不多于8个汉字或16个字母，超出部分自动截断。</span>
+                    <span class="custom_menu_notice ">{lang level_2_menu_name_limit_beyond_truncation}</span>
                 </div>
              <!--{/loop}--> 
              </div>
             <div class="custom_menu_list js_add_second" data-id="$key">
                 <span class="icon icon_add_small"></span>
-                <span class="custom_menu_addName gray">添加二级菜单</span>
-                <input type="text" class="custom_menu_input js_add_2_menu js_input_limit" data-limit="16" autofocus="true" placeholder="二级菜单名称不多于8个汉字或16个字母">
-                <span class="custom_menu_notice ">二级菜单名称不多于8个汉字或16个字母，超出部分自动截断。</span>
+                <span class="custom_menu_addName gray">{lang add_second_level_of_menus}</span>
+                <input type="text" class="custom_menu_input js_add_2_menu js_input_limit" data-limit="16" autofocus="true" placeholder="{lang level_2_menu_name_limit}">
+                <span class="custom_menu_notice ">{lang level_2_menu_name_limit_beyond_truncation}</span>
             </div>
           </div>
         <!--{/loop}-->
        </div> 
        	 <div class="custom_menu_list js_add">
             <span class="icon icon_add_small"></span>
-            <span class="custom_menu_addName gray">添加一级级菜单</span>
-            <input type="text" class="custom_menu_input js_add_menu js_input_limit " data-limit="8" autofocus="true" placeholder="二级菜单名称不多于8个汉字或16个字母">
-            <span class="custom_menu_notice ">一级菜单名称不多于4个汉字或8个字母，超出部分自动截断。</span>
+            <span class="custom_menu_addName gray">{lang add_themselves_menu}</span>
+            <input type="text" class="custom_menu_input js_add_menu js_input_limit " data-limit="8" autofocus="true" placeholder="{lang level_2_menu_name_limit}">
+            <span class="custom_menu_notice ">{lang level_1_menu_name_limit_beyond_truncation}</span>
         </div>
     	<div style="padding:10px;">
-        	<button class="btn btn-primary" onclick="menu_save(this)" data-loading-text="保存中..." style="width:80px;">保存</button>
-            &nbsp;&nbsp;<button class="btn btn-success" onclick="menu_publish(this)" data-loading-text="发布中..." style="width:120px;" <!--{if !$setting['agentid']}-->disabled="disabled"<!--{/if}-->>发布到微信</button>
-            &nbsp;&nbsp;<button class="btn btn-danger" onclick="menu_default(this)" data-loading-text="恢复中..." style="width:80px;">恢复默认</button>
-            <small class="pull-right gray mt10">发布后24小时内所有用户都将更新到新的菜单</small>
+        	<button class="btn btn-primary" onclick="menu_save(this)" data-loading-text="{lang In_the_save}" style="width:80px;">{lang save}</button>
+            &nbsp;&nbsp;<button class="btn btn-success" onclick="menu_publish(this)" data-loading-text="{lang release}" style="width:120px;" <!--{if !$setting['agentid']}-->disabled="disabled"<!--{/if}-->>{lang published_weixin}</button>
+            &nbsp;&nbsp;<button class="btn btn-danger" onclick="menu_default(this)" data-loading-text="{lang in_recovery}" style="width:80px;">{lang restore_defaults}</button>
+            <small class="pull-right gray mt10">{lang release_24_hours_to_update}</small>
         </div>
  </div>
 
@@ -211,7 +211,7 @@ jQuery(document).ready(function(e) {
 	 jQuery(document).on('click','.js_add_second',function(){
 		if(!jQuery('.custom_menu_list_wrap[data-id='+jQuery(this).attr('data-id')+'] .cm_subname').length){//如果一级目录有事件，弹窗提示；
 		   var self=this;
-			showDialog('使用二级菜单后，当前编辑的消息将会被清除。确定使用二级菜单?', 'confirm', '二级菜单确认', function(){
+			showDialog('{lang use_the_secondary_menu}', 'confirm', '{lang secondary_menu_confirm}', function(){
 				jQuery(self).addClass('editing').find('.custom_menu_input').focus();
 			});
 		}else{
@@ -256,16 +256,16 @@ jQuery(document).ready(function(e) {
 							+'   <span class="custom_menu_subName">'+cut_val+'</span>'
 							+'	<div class="btn-group pull-right eventkey">'
 							+'	  <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">'
-							+'		添加事件类型 <span class="caret"></span>'
+							+'		{lang add_the_event_type} <span class="caret"></span>'
 							+'	  </button>'
 							+'	  <ul class="dropdown-menu" role="menu">'
-							+'		<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">菜单key</a></li>'
-							+'		<li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">跳转到网页</a></li>'
+							+'		<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">{lang menu}key</a></li>'
+							+'		<li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">{lang jump_page}</a></li>'
 							+'	  </ul>'
 							+'	</div>'
-							+'	 <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="修改"></a>'
+							+'	 <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="{lang modification}"></a>'
 							+'	 <input type="text" class="custom_menu_input js_add_2_menu js_input_limit " value="'+cut_val+'" autofocus="true" data-limit="16" >'
-							+'	<span class="custom_menu_notice ">二级级菜单名称不多于8个汉字或16个字母，超出部分自动截断。</span>'
+							+'	<span class="custom_menu_notice ">{lang level_2_menu_name_limit_beyond_truncation}</span>'
 							+' </div>';
 					jQuery('.custom_menu_list_wrap[data-id='+pid+']').append(html);
 					jQuery('.js_li[data-id='+pid+']').attr('data-type','').find('.js_click,.js_link,.btn-group').remove();
@@ -279,16 +279,16 @@ jQuery(document).ready(function(e) {
 							+'	<a class="icon icon_remove pull-right js_menu_remove hover_visible" href="javascript:;"></a>'
 							+'	<span class="icon icon_arrow_down"></span><span class="custom_menu_name">'+cut_val+'</span>'
 						
-							+'	<a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="修改"></a>'
+							+'	<a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="{lang modification}"></a>'
 							+'	<input type="text" class="custom_menu_input js_add_2_menu js_input_limit  " value="'+cut_val+'" autofocus="true" data-limit="8">'
-							+'	<span class="custom_menu_notice ">一级菜单名称不多于4个汉字或8个字母，超出部分自动截断。</span>'
+							+'	<span class="custom_menu_notice ">{lang level_1_menu_name_limit_beyond_truncation}</span>'
 							+'</div>'
 							+'<div class="custom_menu_list_wrap"></div>'
 							+'<div class="custom_menu_list js_add_second">'
 							+'	<span class="icon icon_add_small"></span>'
-							+'	<span class="custom_menu_addName gray">添加二级菜单</span>'
-							+'	<input type="text" class="custom_menu_input js_add_2_menu js_input_limit" data-limit="16" autofocus="true" placeholder="二级菜单名称不多于8个汉字或16个字母">'
-							+'	<span class="custom_menu_notice ">二级菜单名称不多于8个汉字或16个字母，超出部分自动截断。</span>'
+							+'	<span class="custom_menu_addName gray">{lang add_second_level_of_menus}</span>'
+							+'	<input type="text" class="custom_menu_input js_add_2_menu js_input_limit" data-limit="16" autofocus="true" placeholder="{lang level_2_menu_name_limit}">'
+							+'	<span class="custom_menu_notice ">{lang level_2_menu_name_limit_beyond_truncation}</span>'
 							+'</div>';
 					jQuery(html).appendTo('.custom_menu_mainList_wrap');
 					check_add_second();
@@ -355,15 +355,15 @@ function menu_save(obj){
 	});
 	jQuery.post(ajaxurl+'&action=menu_save',{menu:menu},function(json){
 		if(json.msg=='success'){
-			showmessage('保存成功!','success',1000,1);
+			showmessage('{lang save_success}!','success',1000,1);
 		}else{
-			showmessage('保存失败!','danger',3000,1);
+			showmessage('{lang save_unsuccess}!','danger',3000,1);
 		}
 		button.button('reset');
 	},'json');
 }
 function menu_default(obj){
-	if(confirm('确定要恢复默认菜单吗？')){
+	if(confirm('{lang restore_the_default_menu}')){
 		var button=jQuery(obj);
 		button.button('loading');
 		jQuery.post(ajaxurl+'&action=menu_default',function(json){
@@ -376,7 +376,7 @@ function menu_publish(obj){
 	button.button('loading');
 	var menu=[];
 	if(jQuery('.custom_menu_mainList_wrap .js_li .btn-group').length){
-		showmessage('还有没有设置响应事件的菜单，请检查','danger',5000,1);
+		showmessage('{lang none_response_event_please_check}','danger',5000,1);
 		button.button('reset');
 		return;	
 	}
@@ -418,7 +418,7 @@ function menu_publish(obj){
 	});
 	jQuery.post(ajaxurl+'&action=menu_publish',{menu:menu},function(json){
 		if(json.msg=='success'){
-			showmessage('发布成功!','success',1000,1);
+			showmessage('{lang release_success}!','success',1000,1);
 		}else{
 			showmessage(json.error,'danger',3000,1);
 		}
@@ -447,14 +447,14 @@ function check_add_second(){
 					var el=jQuery(this);
 					el.attr('data-id',(i-1)+'_'+index); 
 					if(el.attr('data-type')==''){
-						jQuery('<div class="btn-group pull-right eventkey"><button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">添加事件类型 <span class="caret"></span></button><ul class="dropdown-menu" role="menu">	<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">菜单key</a></li><li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">跳转到网页</a></li></ul>	</div>').appendTo(this);
+						jQuery('<div class="btn-group pull-right eventkey"><button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">{lang add_the_event_type}<span class="caret"></span></button><ul class="dropdown-menu" role="menu">	<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">{lang menu}key</a></li><li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">{lang jump_page}</a></li></ul>	</div>').appendTo(this);
 					}
 				 });
 				 li.attr('data-type','').find('.js_click,.js_link,.btn-group').remove();
 			}else{
 				if(li.attr('data-type')==''){
 					li.find('.js_click,.js_link,.btn-group').remove();
-					jQuery('<div class="btn-group pull-right eventkey"><button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">添加事件类型 <span class="caret"></span></button><ul class="dropdown-menu" role="menu">	<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">菜单key</a></li><li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">跳转到网页</a></li></ul>	</div>').appendTo(li);
+					jQuery('<div class="btn-group pull-right eventkey"><button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">{lang add_the_event_type}<span class="caret"></span></button><ul class="dropdown-menu" role="menu">	<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">{lang menu}key</a></li><li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">{lang jump_page}</a></li></ul>	</div>').appendTo(li);
 				}
 			}
 			

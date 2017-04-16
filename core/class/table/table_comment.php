@@ -103,9 +103,9 @@ class table_comment extends dzz_table
 			}
 		}
 		
-		if($iscount) return DB::result_first("select COUNT(*) from %t where id=%d and idtype=%s and pcid=0",array($this->_table,$id,$idtype));
+		if($iscount) return DB::result_first("select COUNT(*) from %t where id=%s and idtype=%s and pcid=0",array($this->_table,$id,$idtype));
 		$data=array();
-		foreach(DB::fetch_all("select * from %t where id=%d and idtype=%s and pcid=0 order by dateline DESC $limitsql",array($this->_table,$id,$idtype)) as $value){
+		foreach(DB::fetch_all("select * from %t where id=%s and idtype=%s and pcid=0 order by dateline DESC $limitsql",array($this->_table,$id,$idtype)) as $value){
 			$value['message']=dzzcode($value['message']);
 			$value['dateline']=dgmdate($value['dateline'],'u');
 			$value['replies']=DB::result_first("select COUNT(*) from  %t where pcid=%d",array($this->_table,$value['cid']));
@@ -142,7 +142,7 @@ class table_comment extends dzz_table
 	
 	public function copy_by_id_idtype($oid,$id,$idtype){
 		$return=0;
-		foreach(DB::fetch_all("select * from %t where id=%d and idtype=%s and pcid='0'",array($this->_table,$oid,$idtype)) as $value){
+		foreach(DB::fetch_all("select * from %t where id=%s and idtype=%s and pcid='0'",array($this->_table,$oid,$idtype)) as $value){
 			$ocid=$value['cid'];
 			unset($value['cid']);
 			$value['id']=$id;

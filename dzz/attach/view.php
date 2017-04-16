@@ -14,7 +14,7 @@ if($_GET['a']=='down'){
 	exit();
 }elseif($_GET['a']=='view'){
 	$icoarr=IO::getMeta($path);
-	print_r($icoarr);
+	// print_r($icoarr);
 	if($icoarr['type']=='video'){
 		@header("Location: $icoarr[url]");
 		exit();
@@ -76,7 +76,7 @@ if($_GET['a']=='down'){
 }
 //获取文件流地址
 if(!$url=(IO::getStream($path))){
-	exit('获取文件失败');
+	exit(lang('failed_get_file'));
 }
 if(is_array($url)) exit($url['error']);
 

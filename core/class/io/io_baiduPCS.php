@@ -192,7 +192,7 @@ class io_baiduPCS extends io_api
 					$id=DB::insert(self::T,$token,1);
 				}
 				if(strpos($state,'in_admin_')===0){ //插入企业盘空间库(local_storage);
-					$setarr=array('name'=>'百度网盘：'.$token['cusername'],
+					$setarr=array('name'=>lang('baidu_network_disk').'：'.$token['cusername'],
 								  'bz'=>'baiduPCS',
 								  'isdefault'=>0,
 								  'dname'=>self::T,
@@ -261,10 +261,10 @@ class io_baiduPCS extends io_api
 	public function deleteThumb($path){
 		global $_G;
 		$imgcachePath='./imgcache/';
-		$arr=array(array(256,256),array(1440,900));
-		$cachepath=str_replace('//','/',str_replace(':','/',$path));
-		foreach($arr as $value){
-			$target=$imgcachePath.($cachepath).'.'.$value[0].'_'.$value[1].'.jpeg';
+		
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace('//','/',str_replace(':','/',$path))));
+		foreach($_G['setting']['thumbsize'] as $value){
+			$target=$imgcachePath.($cachepath).'.'.$value['width'].'_'.$value['height'].'.jpeg';
 			@unlink($_G['setting']['attachdir'].$target);
 		}
 	}
@@ -272,7 +272,7 @@ class io_baiduPCS extends io_api
 		global $_G;
 		$enable_cache=true; //是否启用缓存
 		$imgcachePath='imgcache/';
-		$cachepath=str_replace('//','/',str_replace(':','/',$path));
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace('//','/',str_replace(':','/',$path))));
 		
 		$target=$imgcachePath.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		if(@getimagesize($_G['setting']['attachdir'].$target)){
@@ -295,7 +295,7 @@ class io_baiduPCS extends io_api
 		$enable_cache=true; //是否启用缓存
 		$quality = 80;
 		$imgcachePath='imgcache/';
-		$cachepath=str_replace('//','/',str_replace(':','/',$path));
+		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace('//','/',str_replace(':','/',$path))));
 		if($original){
 			$width=50000;
 			$height=50000;
@@ -303,7 +303,18 @@ class io_baiduPCS extends io_api
 		$target=$imgcachePath.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		if($enable_cache && @getimagesize($_G['setting']['attachdir'].'./'.$target)){
 			if($returnurl) return $_G['setting']['attachurl'].$target;
-			@header('cache-control:public'); 
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = @filemtime($file); 
+			$etag = @md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($_G['setting']['attachdir'].'./'.$target);
@@ -322,7 +333,17 @@ class io_baiduPCS extends io_api
 			 file_put_contents($_G['setting']['attachdir'].'./'.$target,$result);
 			 if($returnurl) return $_G['setting']['attachurl'].$target;
 		}
+		$file=$_G['setting']['attachdir'].'./'.$target;
+		$last_modified_time = @filemtime($file); 
+		$etag = @md5_file($file); 
+		header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+		header("Etag: $etag"); 
 		
+		if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+			trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+			header("HTTP/1.1 304 Not Modified"); 
+			exit; 
+		}
 		@header('cache-control:public'); 
 		@header('Content-Type: image/JPEG');
 		@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
@@ -368,7 +389,7 @@ class io_baiduPCS extends io_api
 			if($key>=count($patharr)-1) break;
 			$arr['path1'].=$value.'/';
 		}
-		$arr['path1'].=$ext?(rtrim($name,'.'.$ext).'.'.$ext):$name;
+		$arr['path1'].=$ext?(preg_replace("/\.\w+$/i",'.'.$ext,$name)):$name;
 		
 		if($arr['path']!=$arr['path1']){
 			$pcs=self::init($path);
@@ -476,7 +497,7 @@ class io_baiduPCS extends io_api
 		if($size<$partsize){
 			//获取文件内容
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
 			while(!feof($handle)){
 				$fileContent.= fread($handle, 8192);
@@ -487,7 +508,7 @@ class io_baiduPCS extends io_api
 		}else{ //分片上传
 			self::deleteCache($path.$filename);
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
 			$fileContent='';
 			while (!feof($handle)) {
@@ -620,8 +641,8 @@ class io_baiduPCS extends io_api
 			else $type='attach';
 			
 			if($type=='image'){
-				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=256&height=256&path='.dzzencode($bz.$meta['path']);
-				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&width=1440&height=900&path='.dzzencode($bz.$meta['path']);
+				$img=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=small&path='.dzzencode($bz.$meta['path']);
+				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=large&path='.dzzencode($bz.$meta['path']);
 			}else{
 				$img=geticonfromext($ext,$type);
 				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.rawurlencode($bz.$meta['path']);
@@ -690,44 +711,52 @@ class io_baiduPCS extends io_api
 		}
 	}
 	//打包下载文件
-	public function zipdownload($path){
+	public function zipdownload($paths,$filename){
 		global $_G;
-		$meta=self::getMeta($path);
+		$paths=(array)$paths;
+		set_time_limit(0);
+		
+		if(empty($filename)){
+			$meta=self::getMeta($paths[0]);
+			$filename=$meta['name'].(count($paths)>1?lang('wait'):'');
+		}
+		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
 		include_once libfile('class/ZipStream');
 		
-		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
 		$zip = new ZipStream($filename.".zip");
-		$data=self::getFolderInfo($path,'',$zip);
+		$data=self::getFolderInfo($paths,'',$zip);
 		//$zip->setComment("$meta[name] " . date('l jS \of F Y h:i:s A'));
 		/*foreach($data as $value){
 			 $zip->addLargeFile(fopen($value['url'],'rb'), $value['position'], $value['dateline']);
 		}*/
 		$zip->finalize();
 	}
-	public function getFolderInfo($path,$position='',$zip){
+	public function getFolderInfo($paths,$position='',&$zip){
 		static $data=array();
 		try{
-			$arr=IO::parsePath($path);
-			$pcs=self::init($path,1); 
-			if(is_array($pcs) && $pcs['error']) return $pcs;
-			$meta=self::getMeta($path);
-			
-			switch($meta['type']){
-				case 'folder':
-					  $position.=$meta['name'].'/';
-					 $contents=self::listFiles($path);
-					
-					 foreach($contents as $key=>$value){
-						self::getFolderInfo($value['path'],$position,$zip);
-					 }
-					break;
-				default:
-				$meta['url']=self::getStream($meta['path']);
-				$meta['position']=$position.$meta['name'];
-				//$data[$meta['icoid']]=$meta;
-				$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+			foreach($paths as $path){
+				$arr=IO::parsePath($path);
+				$pcs=self::init($path,1); 
+				if(is_array($pcs) && $pcs['error']) return $pcs;
+				$meta=self::getMeta($path);
+				
+				switch($meta['type']){
+					case 'folder':
+						 $lposition=$position.$meta['name'].'/';
+						 $contents=self::listFiles($path);
+						 $arr=array();
+						 foreach($contents as $key=>$value){
+							$arr[]=$value['path'];
+						 }
+						 if($arr) self::getFolderInfo($arr,$lposition,$zip);
+						break;
+					default:
+					$meta['url']=self::getStream($meta['path']);
+					$meta['position']=$position.$meta['name'];
+					//$data[$meta['icoid']]=$meta;
+					$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+				}
 			}
-		
 		}catch(Exception $e){
 			//var_dump($e);
 			$data['error']=$e->getMessage();
@@ -737,8 +766,15 @@ class io_baiduPCS extends io_api
 	}
 	
 	//下载文件
-	public function download($path){
+	public function download($paths,$filename){
 		global $_G;
+		$paths=(array)$paths;
+		if(count($paths)>1){
+			self::zipdownload($paths,$filename);
+			exit();
+		}else{
+			$path=$paths[0];
+		}
 		$path=rawurldecode($path);
 		$url=self::getStream($path);
 		try {
@@ -796,7 +832,7 @@ class io_baiduPCS extends io_api
 			$pcs=self::init($bz);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			$response = $pcs->upload($fileContent, $path, $filename,null,$isCreateSuperFile,$ondup);
-			
+			unset($fileContent);
 			$response=json_decode($response,true);
 			if($response['error_msg']){
 				return array('error'=>$response['error_msg']);
@@ -828,7 +864,7 @@ class io_baiduPCS extends io_api
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			$path0=$bz.$path.$filename;
 			if(!($params=array_values(self::getCache($path0)))){
-				return array('error'=>'文件合并出差错');
+				return array('error'=>lang('file_merge_error'));
 			}
 			$response = $pcs->createSuperFile($path, $filename,$params,null,$ondup);
 			$response=json_decode($response,true);
@@ -1002,7 +1038,7 @@ class io_baiduPCS extends io_api
 		//获取文件内容
 		$fileContent='';
 		if(!$handle=fopen($file, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
 		while (!feof($handle)) {
 		  $fileContent .= fread($handle, 8192);

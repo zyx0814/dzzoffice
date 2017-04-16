@@ -13,8 +13,10 @@ if($_GET['do']=='checkspace'){
 	$remoteid=intval($_GET['remoteid']);
 	if($arr=C::t('local_storage')->update_sizecount_by_remoteid($remoteid)){
 		$arr['fusesize']=formatsize($arr['usesize']);
-		if($arr['totalsize']) $arr['ftotalsize']=formatsize($arr['totalsize']);
-		else $arr['ftotalsize']='无限制';
+		if ($arr['totalsize'])
+			$arr['ftotalsize'] = formatsize($arr['totalsize']);
+		else
+			$arr['ftotalsize'] = lang('unlimited');
 	}
 	echo json_encode($arr);
 	exit();
@@ -31,7 +33,7 @@ if($_GET['do']=='checkspace'){
 							  'disp'=>intval($_GET['disp'][$remoteid]),
 							  'isdefault'=>($remoteid==$isdefault)?1:0
 							  );
-				if(!empty($value)) $setarr['name']=$value;
+				if(!empty($value)) $setarr['name']=getstr($value);
 				C::t('local_storage')->update($remoteid,$setarr);
 			}
 		showmessage('do_success',dreferer());
@@ -39,16 +41,17 @@ if($_GET['do']=='checkspace'){
 		$list=array();
 		foreach(C::t('local_storage')->fetch_all_orderby_disp() as $key=>$value){
 			    
-			//if($arr=C::t('local_storage')->update_sizecount_by_remoteid($value['remoteid'])){
+			if($arr=C::t('local_storage')->update_sizecount_by_remoteid($value['remoteid'])){
 				$value['fusesize']=formatsize($value['usesize']);
-				if($value['totalsize']) $value['ftotalsize']=formatsize($value['totalsize']);
-				else $value['ftotalsize']='无限制';
-			//}
+				if ($value['totalsize'])
+					$value['ftotalsize'] = formatsize($value['totalsize']);
+				else
+					$value['ftotalsize'] = lang('unlimited');
+			}
 			
 			$list[]=$value;
 		}
 	}
 	include template('space');
 }
-
 ?>

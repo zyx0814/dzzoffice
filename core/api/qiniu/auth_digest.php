@@ -73,7 +73,12 @@ function Qiniu_SetKeys($accessKey, $secretKey)
 	$QINIU_ACCESS_KEY = $accessKey;
 	$QINIU_SECRET_KEY = $secretKey;
 }
+function Qiniu_UploadHost($upload_host)
+{
+	global $QINIU_UP_HOST;
 
+	if($upload_host) $QINIU_UP_HOST = $upload_host;
+}
 function Qiniu_RequireMac($mac) // => $mac
 {
 	if (isset($mac)) {

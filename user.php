@@ -1,12 +1,11 @@
 <?php
-/*
+ /*
  * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
  * @license     http://www.dzzoffice.com/licenses/license.txt
  * @package     DzzOffice
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-
 define('APPTYPEID', 0);
 define('CURSCRIPT', 'user');
 require './core/class/class_core.php';
@@ -21,13 +20,12 @@ define('CURMODULE', $mod);
 $cachelist=array('usergroup','fields_register');
 $dzz->cachelist = $cachelist;
 $dzz->init();
-include_once libfile('function/cache');
+include_once libfile('function/cache'); 
 updatecache('fields_register');
 if(@!file_exists(DZZ_ROOT.'./user/user_'.$mod.'.php')) {
-	system_error(lang('message','undefined_action'));
+	system_error(lang('undefined_action'));
 }
 
 require DZZ_ROOT.'./user/user_'.$mod.'.php';
 
 ?>
-

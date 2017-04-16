@@ -38,7 +38,7 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 		$verifyvalue = NULL;
 		if(isset($_G['profile_verifys'][$uid][$fieldid])) {
 			if($fieldid=='gender') {
-				$verifyvalue = lang('message', 'gender_'.intval($_G['profile_verifys'][$uid][$fieldid]));
+				$verifyvalue = lang('gender_'.intval($_G['profile_verifys'][$uid][$fieldid]));
 			} elseif($fieldid=='birthday') {
 				$verifyvalue = $_G['profile_verifys'][$uid]['birthyear'].'-'.$_G['profile_verifys'][$uid]['birthmonth'].'-'.$_G['profile_verifys'][$uid]['birthday'];
 				
@@ -62,7 +62,7 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 	$field['unchangeable'] = !$ignoreunchangable && $field['unchangeable'] ? 1 : 0;
 	if($fieldid == 'birthday') {
 		if($field['unchangeable'] && !empty($space[$fieldid])) {
-			return '<p class="form-control-static profile profile-'.$fieldid.'">'.$space['birthyear'].'-'.$space['birthmonth'].'-'.$space['birthday'].'</p>';
+			return '<p class="form-control-static profile profile-'.$fieldid.'">'.$space['birthyear'].'-'.$space['birthmonth'].'-'.$space['birthday'].'</p><input type="hidden" name="birthyear" value="'.$space['birthyear'].'" />			<input type="hidden" name="birthmonth" value="'.$space['birthmonth'].'" /><input type="hidden" name="birthday" value="'.$space['birthday'].'" />';
 		}
 		$birthyeayhtml = '';
 		$nowy = dgmdate($_G['timestamp'], 'Y');
@@ -92,37 +92,37 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 		}
 		$html = '<div class="profile-group-birthday">'
 					.'<select name="birthyear" id="birthyear"  onchange="showbirthday();" class="form-control input-sm pull-left profile profile-birthyear"  style="width:80px;margin-right:5px;">'
-					.'<option value="">'.lang('message', 'year').'</option>'
+					.'<option value="">'.lang('year').'</option>'
 					.$birthyeayhtml
 					.'</select>'
 					.'<select name="birthmonth" id="birthmonth"  onchange="showbirthday();"  class="form-control input-sm pull-left profile profile-birthmonth"    style="width:60px;margin-right:5px;">'
-					.'<option value="">'.lang('message', 'month').'</option>'
+					.'<option value="">'.lang('month').'</option>'
 					.$birthmonthhtml
 					.'</select>'
 					.'<select name="birthday" id="birthday" class="form-control input-sm pull-left profile profile-birthday"    style="width:60px">'
-					.'<option value="">'.lang('message', 'day').'</option>'
+					.'<option value="">'.lang('day').'</option>'
 					.$birthdayhtml
 					.'</select>'
 				.'</div>';
 
 	} elseif($fieldid=='gender') {
 		if($field['unchangeable'] && $space[$fieldid] > 0) {
-			return '<p class="form-control-static profile profile-'.$fieldid.'">'.lang('message', 'gender_'.intval($space[$fieldid])).'</span>';
+			return '<p class="form-control-static profile profile-'.$fieldid.'">'.lang('gender_'.intval($space[$fieldid])).'</span><input type="hidden" name="'.$fieldid.'" value="'.$space[$fieldid].'" />';
 		}
 		$selected = array($space[$fieldid]=>' selected="selected"');
 		$html = '<select name="gender" id="gender" class="form-control input-sm  profile profile-'.$fieldid.'" >';
 		if($field['unchangeable']) {
-			$html .= '<option value="">'.lang('message', 'gender').'</option>';
+			$html .= '<option value="">'.lang('gender').'</option>';
 		} else {
-			$html .= '<option value="0"'.($space[$fieldid]=='0' ? ' selected="selected"' : '').'>'.lang('message', 'gender_0').'</option>';
+			$html .= '<option value="0"'.($space[$fieldid]=='0' ? ' selected="selected"' : '').'>'.lang('gender_0').'</option>';
 		}
-		$html .= '<option value="1"'.($space[$fieldid]=='1' ? ' selected="selected"' : '').'>'.lang('message', 'gender_1').'</option>'
-			.'<option value="2"'.($space[$fieldid]=='2' ? ' selected="selected"' : '').'>'.lang('message', 'gender_2').'</option>'
+		$html .= '<option value="1"'.($space[$fieldid]=='1' ? ' selected="selected"' : '').'>'.lang('gender_1').'</option>'
+			.'<option value="2"'.($space[$fieldid]=='2' ? ' selected="selected"' : '').'>'.lang('gender_2').'</option>'
 			.'</select>';
 
 	} elseif($fieldid=='department') {
 		if($field['unchangeable'] && $space[$fieldid] > 0) {
-			return '<p class="form-control-static profile profile-'.$fieldid.'">'.$space['department_tree'].'</span>';
+			return '<p class="form-control-static profile profile-'.$fieldid.'">'.$space['department_tree'].'</span><input type="hidden" name="'.$fieldid.'" value="'.$space[$fieldid].'" />';
 		}
 			$html=' <script type="text/javascript">'
 				  .'	var selorg={};'
@@ -145,9 +145,9 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 		if($field['unchangeable'] && $space[$fieldid]!='') {
 			if($field['formtype']=='file') {
 				$imgurl = getglobal('setting/attachurl').$space[$fieldid];
-				return '<p class="form-control-static profile profile-'.$fieldid.'"><a href="'.$imgurl.'" target="_blank"><img src="'.$imgurl.'" /></a></span>';
+				return '<p class="form-control-static profile profile-'.$fieldid.'"><a href="'.$imgurl.'" target="_blank"><img src="'.$imgurl.'" /></a></span><input type="hidden" name="'.$fieldid.'" value="'.$space[$fieldid].'" />';
 			} else {
-				return '<p class="form-control-static profile profile-'.$fieldid.'">'.nl2br($space[$fieldid]).'</span>';
+				return '<p class="form-control-static profile profile-'.$fieldid.'">'.nl2br($space[$fieldid]).'</span><input type="hidden" name="'.$fieldid.'" value="'.$space[$fieldid].'" />';
 			}
 		}
 		if($field['formtype']=='textarea') {
@@ -190,7 +190,7 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 			$html = "<input type=\"file\" value=\"\" name=\"$fieldid\" id=\"$fieldid\" class=\"form-control input-sm profile profile-$fieldid\" /><input type=\"hidden\" name=\"$fieldid\" value=\"$space[$fieldid]\"  />";
 			if(!empty($space[$fieldid])) {
 				$url = getglobal('setting/attachurl').$space[$fieldid];
-				$html .= "&nbsp;<label class=\"checkbox-inline\"><input type=\"checkbox\" name=\"deletefile[$fieldid]\" id=\"$fieldid\" value=\"yes\" />".lang('message', 'delete')."</label><br /><a href=\"$url\" target=\"_blank\"><img src=\"$url\" width=\"200\" class=\"mtm\" /></a>";
+				$html .= "&nbsp;<label class=\"checkbox-inline\"><input type=\"checkbox\" name=\"deletefile[$fieldid]\" id=\"$fieldid\" value=\"yes\" />".lang('delete')."</label><br /><a href=\"$url\" target=\"_blank\"><img src=\"$url\" width=\"200\" class=\"mtm\" /></a>";
 			}
 		
 		} else {
@@ -205,12 +205,12 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 				$imgurl = getglobal('setting/attachurl').$verifyvalue;
 				$verifyvalue = "<img src='$imgurl' alt='$imgurl' style='max-width: 500px;'/>";
 			}
-			$html.= lang('message', 'profile_is_verifying')." (<a href=\"javascript:;\" onclick=\"display('newvalue_$fieldid');return false;\">".lang('message', 'profile_mypost')."</a>)"
+			$html.= lang('profile_is_verifying')." (<a href=\"javascript:;\" onclick=\"display('newvalue_$fieldid');return false;\">".lang('profile_mypost')."</a>)"
 				."<p id=\"newvalue_$fieldid\" style=\"display:none\">".$verifyvalue."</p>";
 		} elseif($field['needverify']) {
-			$html .= lang('message', 'profile_need_verifying');
+			$html .= lang('profile_need_verifying');
 		}elseif($space[$fieldid]=='' && $field['unchangeable']) {
-			$html .= lang('message', 'profile_unchangeable');
+			$html .= lang('profile_unchangeable');
 		}
 		$html .= '</span>';
 	}
@@ -290,11 +290,11 @@ function profile_show($fieldid, $space=array(), $getalone = false) {
 	}
 
 	if($fieldid=='gender') {
-		return lang('message', 'gender_'.intval($space['gender']));
+		return lang('gender_'.intval($space['gender']));
 	} elseif($fieldid=='birthday' && !$getalone) {
-		$return = $space['birthyear'] ? $space['birthyear'].' '.lang('message', 'year').' ' : '';
+		$return = $space['birthyear'] ? $space['birthyear'].' '.lang('year').' ' : '';
 		if($space['birthmonth'] && $space['birthday']) {
-			$return .= $space['birthmonth'].' '.lang('message', 'month').' '.$space['birthday'].' '.lang('message', 'day');
+			$return .= $space['birthmonth'].' '.lang('month').' '.$space['birthday'].' '.lang('day');
 		}
 		return $return;
 	}elseif($fieldid=='department'){
@@ -304,7 +304,7 @@ function profile_show($fieldid, $space=array(), $getalone = false) {
 			$orgtree=getPathByOrgid($space['department']);
 			return implode('-',array_reverse($orgtree));
 		}else{
-			return '未选择机构和部门';
+			return lang('not_choose_agencies_departments');
 		}
 	}  else {
 		return nl2br($space[$fieldid]);
@@ -353,7 +353,7 @@ function showdistrict($values, $elems=array(), $container='districtbox', $showle
 		if(!empty($options[$level])) {
 			$jscall = "showdistrict('$container', ['$elems[0]', '$elems[1]', '$elems[2]', '$elems[3]'], $showlevel, $level, '$containertype')";
 			$html .= '<select name="'.$elems[$i].'" id="'.$elems[$i].'" style="width:100px;" onchange="'.$jscall.'" >';
-			$html .= '<option value="">'.lang('message', 'district_level_'.$level).'</option>';
+			$html .= '<option value="">'.lang('district_level_'.$level).'</option>';
 			foreach($options[$level] as $option) {
 				$selected = $option[0] == $values[$i] ? ' selected="selected"' : '';
 				$html .= '<option did="'.$option[0].'" value="'.$option[1].'"'.$selected.'>'.$option[1].'</option>';
@@ -388,18 +388,12 @@ function countprofileprogress($uid = 0) {
 	}
 	
 	$progress = floor($complete / count($fields) * 100);
-	if($uid && !C::t('user_status')->fetch($uid)){
-		$status = array(
-				'uid' => $uid,
-				'lastvisit' => TIMESTAMP,
-				'lastactivity' => TIMESTAMP,
-				'lastsendmail' => 0,
-				'profileprogress' => $progress > 100 ? 100 : $progress
-			);
-		C::t('user_status')->insert($status, false, true);
-	}else{
+	if(DB::result_first("select COUNT(*) from %t where uid=%d",array('user_status',$uid))){
 		C::t('user_status')->update($uid, array('profileprogress' => $progress > 100 ? 100 : $progress), 'UNBUFFERED');
+	}else{
+		C::t('user_status')->insert(array('uid'=>$uid,'regip'=>$_G['clientip'],'lastip'=>$_G['clientip'],'lastvisit'=>TIMESTAMP,'lastactivity'=>TIMESTAMP,'profileprogress' => $progress > 100 ? 100 : $progress,));
 	}
+	
 	return $progress;
 }
 
@@ -414,13 +408,13 @@ function get_constellation($birthmonth,$birthday) {
 			$idx = $birthmonth - 1;
 		}
 	}
-	return $idx > 0 && $idx <= 12 ? lang('message', 'constellation_'.$idx) : '';
+	return $idx > 0 && $idx <= 12 ? lang('constellation_'.$idx) : '';
 }
 
 function get_zodiac($birthyear) {
 	$birthyear = intval($birthyear);
 	$idx = (($birthyear - 1900) % 12) + 1;
-	return $idx > 0 && $idx <= 12 ? lang('message', 'zodiac_'. $idx) : '';
+	return $idx > 0 && $idx <= 12 ? lang('zodiac_'. $idx) : '';
 }
 function profile_privacy_check($uid,$privacy){
 	global $_G;

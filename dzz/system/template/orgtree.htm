@@ -17,7 +17,7 @@ html,body{
 	
 }
 .orgtree-search .form-control{
-	padding:5px 40px 5px 5px;
+	padding:5px 50px 5px 5px;
 	border:0;
 	border-top:1px solid #CCC;
 	box-shadow:none;
@@ -28,14 +28,22 @@ html,body{
 .orgtree-search .search{
 	position:absolute;
 	right:25px;
-	top:8px;
+	top:1px;
+	width:24px;
+	height:32px;
+	padding:8px 5px;
 }
 .orgtree-search .delete {
 	position: absolute;
-	right: 4px;
-	top: 8px;
+	right: 1px;
+	top: 1px;
+	width:24px;
+	height:32px;
+	padding:8px 5px;
 }
-
+.orgtree-search a:hover{
+	background:#F7F7F7;
+}
 .jstree-default-responsive .jstree-anchor>.jstree-themeicon{
 	background-size:auto;
 }
@@ -43,9 +51,9 @@ html,body{
 <!--{template common/header_simple_end}-->
 <div id="orgtree" class="orgtree-container" style="padding:5px;overflow:auto;"></div>
 <div  class="orgtree-search">
-        <a href="javascript:;" class="search" onclick="jstree_search();return false" title="搜索"><i class="glyphicon glyphicon-search"></i></a>
-        <a href="javascript:;" class="delete" onclick="jstree_search('stop');return false" title="关闭搜索框"><i class="glyphicon glyphicon-remove"></i></a>
-        <input id="jstree_search_input" type="text" placeholder="搜索部门或用户" class="form-control" onkeyup="if(event.keyCode==13){jstree_search()}"  />
+        <a href="javascript:;" class="search" onclick="jstree_search();return false" title="{lang search}"><i class="glyphicon glyphicon-search"></i></a>
+        <a href="javascript:;" class="delete" onclick="jstree_search('stop');return false" title="{lang close_search}"><i class="glyphicon glyphicon-remove"></i></a>
+        <input id="jstree_search_input" type="text" placeholder="{lang search_department_user}" class="form-control" onkeyup="if(event.keyCode==13){jstree_search()}"  />
     </div>
 
 <script type="text/javascript">
@@ -63,9 +71,9 @@ jQuery(document).ready(function(e) {
 			"themes" : { "responsive":(ismobile?true:false)},
 			'data':function(node,cb){
 				var self=this;
-				jQuery.getJSON(DZZSCRIPT+'?mod=system&op=orgtree&do=orgtree',{'id':node.id,'nouser':nouser,'moderator':moderator},function(json){
+				jQuery.post(DZZSCRIPT+'?mod=system&op=orgtree&do=orgtree',{'id':node.id,'nouser':nouser,'moderator':moderator,'zero':'$zero'},function(json){
 					cb.call(this,json);
-				});
+				},'json');
 			}
 		  },
 		 "checkbox" : {

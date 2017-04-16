@@ -47,7 +47,7 @@ class table_icos extends dzz_table
 	public function fetch_by_idtype($id,$type){
 		return DB::fetch_first("SELECT * FROM %t WHERE oid = %d AND type = %s ",array($this->_table,$id,$type));
 	}
-	public function fetch_by_icoid($icoid){ //返回一条数据同时加载资源表数据
+	public function fetch_by_icoid($icoid,$force_from_db=false){ //返回一条数据同时加载资源表数据
 	 global $_G;
 		$icoid = intval($icoid);
 		$data = $icodata = $soucedata = array();
@@ -62,8 +62,8 @@ class table_icos extends dzz_table
 			$data=array_merge($sourcedata,$icodata);
 			$data['size']=isset($sourcedata['filesize'])?$sourcedata['filesize']:0;
 			if($data['type']=='image'){
-					$data['img']=DZZSCRIPT.'?mod=io&op=thumbnail&width=256&height=256&path='.dzzencode($data['icoid']);
-					$data['url']=DZZSCRIPT.'?mod=io&op=thumbnail&width=1440&height=900&original=1&path='.dzzencode($data['icoid']);
+					$data['img']=DZZSCRIPT.'?mod=io&op=thumbnail&size=small&path='.dzzencode($data['icoid']);
+					$data['url']=DZZSCRIPT.'?mod=io&op=thumbnail&size=large&path='.dzzencode($data['icoid']);
 			}elseif($data['type']=='attach' || $data['type']=='document'){
 				$data['img']=geticonfromext($data['ext'],$data['type']);
 				$data['url']=DZZSCRIPT.'?mod=io&op=getStream&path='.dzzencode($data['icoid']);
@@ -98,6 +98,16 @@ class table_icos extends dzz_table
 			//if(!empty($data)) $this->store_cache('parse_'.$icoid, $data);
 		//}
 		return $data;
+	}
+	public function fetch_parents_by_pfid($pfid,$ret=array()){
+		$icoid=DB::result_first("select icoid from %t where type='folder' and oid=%d ",array($this->table,$pfid));
+		if($data=self::fetch_by_icoid($icoid)){
+			$ret[$pfid]=$data;
+			if($data['pfid']>0){
+				$ret=array_merge($ret,self::fetch_parents_by_pfid($data['pfid'],$ret));
+			}
+		}
+		return $ret;
 	}
 	public function getsourcedata($type,$oid){
 		global $_G;
@@ -146,7 +156,7 @@ class table_icos extends dzz_table
 		global $_G;
 		$icoid=intval($icoid);
 		$data=self::fetch_by_icoid($icoid);
-		if(!$force && !perm_check::checkperm('delete',$data)){ return array('error'=>lang('message','no_privilege'));}
+		if(!$force && !perm_check::checkperm('delete',$data)){ return array('error'=>lang('no_privilege'));}
 		//删除sourcedata
 		self::deletesourcedata($data,$force);
 		
@@ -155,6 +165,8 @@ class table_icos extends dzz_table
 		
 		if(self::delete($icoid) ){
 			delete_icoid_from_container($icoid,$data['pfid']);
+			//删除快捷方式
+			C::t('source_shortcut')->delete_by_path('icoid_'.$icoid,true);
 			return $data;
 		}else{
 			return false;
@@ -228,35 +240,58 @@ class table_icos extends dzz_table
 		}
 		if(is_array($pfid)){
 			$arr=array();
+			
 			foreach($pfid as $fid){
-				$arr[]=' pfid = %d ';
+				$temp=array('pfid = %d');
 				$para[]=$fid;
+				if($folder=C::t('folder')->fetch($fid)){
+					$where1=array();
+					if($folder['gid']>0 ){
+						$folder['perm']=perm_check::getPerm($folder['fid']);
+						if($folder['perm']>0){
+							if(perm_binPerm::havePower('read1',$folder['perm'])){
+								$where1[]="uid='{$_G[uid]}'";
+							}
+							if(perm_binPerm::havePower('read2',$folder['perm'])){
+								 $where1[]="uid!='{$_G[uid]}'";
+							}
+						}
+						if($where1) $temp[]="(".implode(' OR ' ,$where1).")";
+						else $temp[]="0";
+					}else{
+						$temp[]=" uid='{$_G[uid]}'";
+					}
+				}
+				$arr[]='('.implode(' and ',$temp).')';
+				unset($temp);
 			}
 			if($arr)  $where[]='('.implode(' OR ',$arr).')';
 		}elseif($pfid){
-			 $where[]='pfid= %d';
+			 $temp=array('pfid= %d');
 			 $para[]=$pfid;
-		}
-		$wheresql1='';
-		if($folder=C::t('folder')->fetch_by_fid($pfid)){
-			$where1=array();
-			if($folder['gid']>0 ){
-				$folder['perm']=perm_check::getPerm($folder['fid']);
-				
-				if($folder['perm']>0){
-					if(perm_binPerm::havePower('read1',$folder['perm'])){
-						$where1[]="uid='{$_G[uid]}'";
+			 if($folder=C::t('folder')->fetch($pfid)){
+				$where1=array();
+				if($folder['gid']>0 ){
+					$folder['perm']=perm_check::getPerm($folder['fid']);
+					
+					if($folder['perm']>0){
+						if(perm_binPerm::havePower('read1',$folder['perm'])){
+							$where1[]="uid='{$_G[uid]}'";
+						}
+						if(perm_binPerm::havePower('read2',$folder['perm'])){
+							 $where1[]="uid!='{$_G[uid]}'";
+						}
 					}
-					if(perm_binPerm::havePower('read2',$folder['perm'])){
-						 $where1[]="uid!='{$_G[uid]}'";
-					}
+					if($where1) $temp[]="(".implode(' OR ' ,$where1).")";
+					else $temp[]="0";
+				}else{
+					$temp[]=" uid='{$_G[uid]}'";
 				}
-				if($where1) $wheresql1=" and (".implode(' OR ' ,$where1).")";
-				else $wheresql1=" and 0";
-			}
+			 }
+			 $where[]='('.implode(' and ',$temp).')';
+			 unset($temp);
 		}
-		
-		if($where) $wheresql='WHERE '.implode(' AND ',$where).($wheresql1?$wheresql1:'');
+		if($where) $wheresql='WHERE '.implode(' AND ',$where);
 		else return false;
 		if($count) return DB::result_first("SELECT COUNT(*) FROM %t  $wheresql ", $para);
 		$ordersql='';
@@ -302,11 +337,11 @@ class table_icos extends dzz_table
 		$arr=array();
 		$arr['text']=$text;
 		if(!$icoarr=self::fetch($icoid)) {
-			$arr['error']=lang('message','icoid_not_exist');
+			$arr['error']=lang('icoid_not_exist');
 			return $arr;
 		}
 		if(!perm_check::checkperm('rename',$icoarr)){ 
-			$arr['error']=lang('message','no_privilege');
+			$arr['error']=lang('no_privilege');
 			return $arr; 
 		}
 		switch($icoarr['type']){

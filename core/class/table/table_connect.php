@@ -31,12 +31,12 @@ class table_connect extends dzz_table
 			//检测可用性
 			if($value['type']=='pan' && (empty($value['key']) || empty($value['secret']))){
 				$value['available']=0;
-				$value['warning']='请设置后开启';
+				$value['warning']=lang('please_open_after_setting');
 				continue;
 			}
 			if(!is_file(DZZ_ROOT.'./core/class/io/io_'.($value['bz']).'.php')){
 				$value['available']=0;
-				$value['warning']='api文件：io_'.($value['bz']).'.php不存在！';
+				$value['warning']='api'.lang('typename_attach').'：io_'.($value['bz']).'.php'.lang('inexistence').'！';
 				continue;
 			}
 			

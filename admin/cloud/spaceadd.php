@@ -16,8 +16,7 @@ $list=array();
 foreach(C::t('connect')->fetch_all_by_available() as $value){
 	//if($value['type']!='storage' && $value['type']!='ftp') continue; //限制只有云存储 ftp才能使用
 	$list[$value['type']]['list'][]=$value;
-	$list[$value['type']]['header']=lang('message','cloud_type_'.$value['type']);
+	$list[$value['type']]['header'] = lang('cloud_type_' . $value['type']);
 }
 include template("spaceadd");
-
 ?>

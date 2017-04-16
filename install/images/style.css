@@ -3,7 +3,7 @@
 html ,body {height:100%;overflow:hidden}
 body {height:100%;margin:0;padding:0;overflow:auto;}
 body{background:#0E6C37; text-align:left; color:#FFF}
-body, td, button{ color:#FFF; font:15px/1.5 Verdana, Tahoma, Arial,  sans-serif; }
+body, td, button{ color:#FFF; font-size:15px;line-height:1.5 ;font-family:Tahoma,'Microsoft Yahei','Simsun'; }
 
 a{ color:#FFF; text-decoration:none; }
 	a:hover { text-decoration:none;background:RGBA(255,255,255,0.1); }
@@ -28,10 +28,10 @@ h3{
 	font-size:32px;
 }
 .step_0{text-align:center;margin:0 auto;}
-.spacer{height:100px}
+.spacer{height:60px}
 .button_start{
 	display:inline-block;
-	padding:3px 30px;
+	padding:6px 40px;
 	border:1px solid #FFF;
 	background:RGBA(255,255,255,0.2);
 	text-decoration:none;
@@ -49,9 +49,9 @@ h3{
 	font-size:15px;
 	font-weight:bold;
 }
-table{ border-collapse:collapse; width:95%; }
-	th{ text-align:left;color:yellow; line-height:30px;padding:3px 5px}
-    td{line-height:24px;padding:3px 5px}
+table{ border-collapse:collapse; width:100%; }
+	th{ text-align:left;color:yellow; line-height:34px;padding:3px 5px;}
+    td{line-height:20px;padding:3px 5px}
 	.tb .pdleft1 {
 		padding-left: 45px;
 	}
@@ -70,7 +70,7 @@ input[type="button"],input[type="submit"]{
 	border:none;
 	background:none;
 	cursor:pointer;
-	padding:3px 30px;
+	padding:6px 40px;
 	color:#FFF;
 	font-weight:bold;
 }

@@ -7,9 +7,9 @@ if(!defined('IN_DZZ')) {
 function build_cache_setting() {
 	global $_G;
 
-	$skipkeys = array('closedreason','backupdir','custombackup');
+	$skipkeys = array('backupdir','custombackup');
 	$serialized = array('verify','unRunExts','iconview','storage','reginput', 'memory',   'secqaa', 'sitemessage','disallowfloat', 
-		'seccodedata', 'strongpw','upgrade','desktop_default','loginset','at_range');
+		'seccodedata', 'strongpw','upgrade','desktop_default','loginset','at_range','thumbsize');
 
 	$data = array();
 
@@ -76,8 +76,10 @@ function build_cache_setting() {
 			} else {
 				$data['watermarktext']['fontpath'][$k] = 'static/image/seccode/font/'.$data['watermarktext']['fontpath'][$k];
 			}
-			$data['watermarktext']['color'][$k] = preg_replace('/#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/e', "hexdec('\\1').','.hexdec('\\2').','.hexdec('\\3')", $data['watermarktext']['color'][$k]);
-			$data['watermarktext']['shadowcolor'][$k] = preg_replace('/#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/e', "hexdec('\\1').','.hexdec('\\2').','.hexdec('\\3')", $data['watermarktext']['shadowcolor'][$k]);
+			$data['watermarktext']['color'][$k] = preg_replace_callback('/#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/', function($matches) { return hexdec($matches[1]).','.hexdec($matches[2]).','.hexdec($matches[3]); }, $data['watermarktext']['color'][$k]);
+			$data['watermarktext']['shadowcolor'][$k] = preg_replace_callback('/#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})/', function($matches) { return hexdec($matches[1]).','.hexdec($matches[2]).','.hexdec($matches[3]); }, $data['watermarktext']['shadowcolor'][$k]);
+			
+			
 		} else {
 			$data['watermarktext']['text'][$k] = '';
 			$data['watermarktext']['fontpath'][$k] = '';

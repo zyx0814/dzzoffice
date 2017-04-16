@@ -18,7 +18,7 @@ class table_app_market extends dzz_table
 		$this->_table = 'app_market';
 		$this->_pk    = 'appid';
 		$this->_pre_cache_key = 'app_market_';
-		$this->_cache_ttl = 0;
+		$this->_cache_ttl = 60*60;
 
 		parent::__construct();
 	}
@@ -87,6 +87,7 @@ class table_app_market extends dzz_table
 			C::t('app_pic')->delete_by_appid($value['appid']);//删除介绍图片
 			
 			C::t('icos')->delete_by_appid($value['appid']);//删除桌面图标
+			C::t('source_shortcut')->delete_by_bz('app_'.$value['appid']);//删除快捷方式；
 			C::t('app_open')->delete_by_appid($value['appid']);//删除打开方式；
 			C::t('app_relative')->delete_by_appid($value['appid']);//删除标签
 			C::t('app_user')->delete_by_appid($value['appid']); //删除用户默认打开方式

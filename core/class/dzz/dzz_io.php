@@ -16,12 +16,15 @@ if(!defined('IN_DZZ')) {
 class dzz_io
 {
 	protected function initIO($path){
+		$path=self::clean($path);
 		$bzarr=explode(':',$path);
-		$allowbz=C::t('connect')->fetch_all_bz();//array('baiduPCS','ALIOSS','dzz','JSS');
+		$allowbz=C::t('connect')->fetch_all_bz();//array('baiduPCS','ALIOSS','dzz','JSS','disk');
 		
 		if(strpos($path,'dzz::')!==false){
 			$classname= 'io_dzz';
 		}elseif(strpos($path,'attach::')!==false){
+			$classname= 'io_dzz';
+		}elseif(strpos($path,'TMP::')!==false){
 			$classname= 'io_dzz';
 		}elseif(is_numeric($bzarr[0])){
 			$classname= 'io_dzz';
@@ -33,6 +36,7 @@ class dzz_io
 		return new $classname($path);
 	}
 	function MoveToSpace($path,$attach,$ondup='overwrite'){
+		$path=self::clean($path);
 		if($io=self::initIO($path)){
 			return $io->MoveToSpace($path,$attach,$ondup);
 		}else{
@@ -59,6 +63,7 @@ class dzz_io
 		}
 	}
 	function parsePath($path){
+		$path=self::clean($path);
 		if($io=self::initIO($path)){
 			return $io->parsePath($path);
 		}else{
@@ -67,6 +72,7 @@ class dzz_io
 	}
 	//获取缩略图
 	function getThumb($path,$width,$height,$original,$returnurl=false){
+		$path=self::clean($path);
 		if($io=self::initIO($path)) return $io->getThumb($path,$width,$height,$original,$returnurl);
 	}
 	/*
@@ -80,12 +86,15 @@ class dzz_io
 	//$path: 路径
 	//$force==1时不使用api的缓存数据，强制重新获取api数据；
 	//$bz==''是表示获取的是本地；此时path为icoid；
-	function getMeta($path,$force=0){ 
+	function getMeta($path,$force=0){
+		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getMeta($path,$force);
 		else return false;
 	}
 	//重命名文件
 	function rename($path,$newname){ 
+		$path=self::clean($path);
+		$newname=self::name_filter($newname);
 		if($io=self::initIO($path))	return $io->rename($path,$newname);
 		else return false;
 	}
@@ -93,6 +102,7 @@ class dzz_io
 	
 	//根据路径获取目录树的数据；
 	function getFolderDatasByPath($path){ 
+		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getFolderDatasByPath($path);
 		else return false;
 	}
@@ -101,6 +111,7 @@ class dzz_io
 	//获取文件流；
 	//$path: 路径
 	public function getStream($path,$fop){ 
+		$path=self::clean($path);
 		$io=self::initIO($path);
 		if($io)	return $io->getStream($path,$fop);
 		else return $path;
@@ -108,7 +119,7 @@ class dzz_io
 	//获取文件地址；
 	//$path: 路径
 	function getFileUri($path,$fop){ 
-	
+		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getFileUri($path,$fop);
 		else return $path;
 	}
@@ -123,6 +134,7 @@ class dzz_io
 	 * @return icosdatas
 	 */
 	function listFiles($path,$by='time',$order='DESC',$limit='',$force=0){  
+		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->listFiles($path,$by,$order,$limit,$force);
 		else return false;
 	}
@@ -134,7 +146,8 @@ class dzz_io
 	//返回：
 	//$icosdata数组；
 	function CopyTo($opath,$path,$iscopy=0){
-	
+		$path=self::clean($path);
+		$opath=self::clean($opath);
 		if($io=self::initIO($opath)) return $io->CopyTo($opath,$path,$iscopy);
 		else return false;
 	}
@@ -175,6 +188,8 @@ class dzz_io
 	//$fname：目录名称;
 	//$path：目录位置路径，如果是本地，$path 为pfid
 	function CreateFolder($path,$fname,$perm=0,$ondup='newcopy'){
+		$path=self::clean($path);
+		$fname=self::name_filter($fname);
 		if($io=self::initIO($path))	return $io->CreateFolder($path,$fname,$perm,$ondup);
 		else return false;
 	}
@@ -202,6 +217,7 @@ class dzz_io
 	//$data：文件的信息数组 
 	//返回我文件data；
 	function getFileContent($path){
+		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getFileContent($path);
 		else return false;
 	}
@@ -209,6 +225,7 @@ class dzz_io
 	//$data：文件的信息数组 
 	//返回我文件data；
 	function setFileContent($path,$data,$force=false){
+		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->setFileContent($path,$data,$force);
 		else return false;
 	}
@@ -216,6 +233,8 @@ class dzz_io
 	//分片上传文件；
 	//$path: 路径
 	function multiUpload($file,$path,$filename,$attach=array(),$ondup="newcopy"){ 
+		$path=self::clean($path);
+		$filename=self::name_filter($filename);
 		if($io=self::initIO($path))	return $io->multiUpload($file,$path,$filename,$attach,$ondup);
 		else return false;
 	}
@@ -225,41 +244,48 @@ class dzz_io
 	//$container：目标位置;
 	//$bz：api;
 	function upload($fileContent,$path,$filename){
+		$path=self::clean($path);
+		$filename=self::name_filter($filename);
 		if($io=self::initIO($path))		return $io->upload($fileContent,$path,$filename);
 		else return false;
 	}
 	
 	function upload_by_content($fileContent,$path,$filename){
+		$path=self::clean($path);
+		$filename=self::name_filter($filename);
 		if($io=self::initIO($path))		return $io->upload_by_content($fileContent,$path,$filename);
 		else return false;
 	}
 	
 	public function uploadStream($file,$name,$path,$relativePath,$content_range){
-	  $path=urldecode($path);
-	  $relative=urldecode($relative);
-	 if( $io=self::initIO($path))  return $io->uploadStream($file,$name,$path,$relativePath,$content_range);
-	 else return false;
+	  	$path=self::clean(urldecode($path));
+		$name=self::name_filter(urldecode($name));
+	  	$relativePath=self::clean(urldecode($relativePath));
+	 	if($io=self::initIO($path))  return $io->uploadStream($file,$name,$path,$relativePath,$content_range);
+	 	else return false;
   }
 	
 	function Delete($path,$force=false){
+		$path=self::clean($path);
 		if($io=self::initIO($path))	{
-				return $io->Delete($path,$force);
+			return $io->Delete($path,$force);
 		}
 		else return false;
 	}
 	
  //获取不重复的目录名称
   public function getFolderName($fname,$path){
+	  $path=self::clean($path);
+	  $fname=self::name_filter($fname);
 	  if($io=self::initIO($path))	  return $io->getFolderName($fname,$path);
 	  else return false;
   }
   
  
-  public function download($path,$filename=''){
-		  $path=urldecode($path);
-		 if($io=self::initIO($path))  $io->download($path,$filename); 
+  public function download($paths,$filename=''){
+		 $paths=self::clean($paths);
+		 if($io=self::initIO($paths[0]))  $io->download($paths,$filename); 
 		 else return false;
-		 
 	 }
 	 
 	public function getCloud($bz){
@@ -274,10 +300,114 @@ class dzz_io
 			if(!$root['cloudname']) $root['cloudname']=$cloud['name'].':'.($root['bucket']?$root['bucket']:cutstr($root['access_id'], 4, $dot = ''));
 		}elseif($cloud['type']=='ftp'){
 			$root=DB::fetch_first("select * from ".DB::table($cloud['dname'])." where id='{$bzarr[1]}'");
+		}elseif($cloud['type']=='disk'){
+			$root=DB::fetch_first("select * from ".DB::table($cloud['dname'])." where id='{$bzarr[1]}'");
+		}else{
+			$root=DB::fetch_first("select * from ".DB::table($cloud['dname'])." where id='{$bzarr[1]}'");
 		}
 		$root['cloudtype']=$cloud['type'];
 		return $root;
 	}
 	
+	public function clean($str) {//清除路径
+		if(is_array($str)){
+			foreach($str as $key=> $value){
+				$str[$key]=str_replace(array( "\n", "\r", '../'), '', $value);
+			}
+		}else{
+			$str= str_replace(array( "\n", "\r", '../'), '', $str);
+		}
+		return $str;
+	}
+	public function name_filter($name){
+		return str_replace(array('/','\\',':','*','?','<','>','|','"',"\n"),'',$name);
+	}
+	public function saveToAttachment($file_path,$filename,$tospace=1,$width=256,$height=256) {
+        $md5=md5_file($file_path);
+		$filesize=filesize($file_path);
+		if($md5 && $attach=DB::fetch_first("select * from %t where md5=%s and filesize=%d",array('attachment',$md5,$filesize))){
+			$attach['filename']=$filename;
+			$pathinfo = pathinfo($filename);
+			$ext = $pathinfo['extension']?$pathinfo['extension']:'';
+			$attach['filetype']=$ext;
+			if(in_array(strtolower($attach['filetype']),array('png','jpeg','jpg','gif','bmp'))){
+				$attach['img']=C::t('attachment')->getThumbByAid($attach,$width,$height);
+				$attach['isimage']=1;
+			}else{
+				//$attach['img']=geticonfromext($ext);
+				$attach['isimage']=0;
+			}
+			//$attach['ffilesize']=formatsize($tattach['filesize']);
+			@unlink($file_path);
+			return $attach;
+		}else{
+			$target=self::getPath($filename);
+			$pathinfo = pathinfo($filename);
+			$ext = $pathinfo['extension']?$pathinfo['extension']:'';
+			if($ext && in_array(strtolower($ext) ,getglobal('setting/unRunExts'))){
+				$unrun=1;
+			}else{
+				$unrun=0;
+			}
+			$filepath=getglobal('setting/attachdir').$target;
+			$handle=fopen($file_path, 'r');
+			$handle1=fopen($filepath,'w');
+			while (!feof($handle)) {
+			   fwrite($handle1,fread($handle, 8192));
+			}
+			fclose($handle);
+			fclose($handle1);
+			@unlink($file_path);
+			
+			$filesize=filesize($filepath);
+			$remote=0;
+			
+        	$attach=array(
+			
+				'filesize'=>$filesize,
+				'attachment'=>$target,
+				'filetype'=>strtolower($ext),
+				'filename' =>$filename,
+				'remote'=>$remote,
+				'copys' => 0,
+				'md5'=>$md5,
+				'unrun'=>$unrun,
+				'dateline' => $_G['timestamp'],
+			);
+			
+			if($attach['aid']=C::t('attachment')->insert($attach,1)){
+				C::t('local_storage')->update_usesize_by_remoteid($attach['remote'],$attach['filesize']);
+				if($tospace) dfsockopen(getglobal('siteurl').'misc.php?mod=movetospace&aid='.$attach['aid'].'&remoteid=0',0, '', '', FALSE, '',1);
+				if(in_array(strtolower($attach['filetype']),array('png','jpeg','jpg','gif','bmp'))){
+					$attach['img']=C::t('attachment')->getThumbByAid($attach['aid'],$this->options['thumbnail']['max-width'],$this->options['thumbnail']['max-height']);
+					$attach['isimage']=1;
+				}else{
+					$attach['img']=geticonfromext($ext);
+					$attach['isimage']=0;
+				}
+				//$attach['ffilesize']=formatsize($tattach['filesize']);
+				return $attach;
+			}else{
+				return false;
+			}
+		}
+    }
+	public function getPath($filename,$dir='dzz'){
+			$pathinfo = pathinfo($filename);
+			$ext = $pathinfo['extension']?($pathinfo['extension']):'';
+			if($ext && in_array(strtolower($ext) ,getglobal('setting/unRunExts'))){
+				$ext='dzz';
+			}
+		    $subdir = $subdir1 = $subdir2 = '';
+			$subdir1 = date('Ym');
+			$subdir2 = date('d');
+			$subdir = $subdir1.'/'.$subdir2.'/';
+			$target1=$dir.'/'.$subdir.'index.html';
+			$target=$dir.'/'.$subdir;
+			$target_attach=getglobal('setting/attachdir').$target1;
+			$targetpath = dirname($target_attach);
+			dmkdir($targetpath);
+			return $target.date('His').''.strtolower(random(16)).'.'.$ext;
+	 }
 }
 ?>

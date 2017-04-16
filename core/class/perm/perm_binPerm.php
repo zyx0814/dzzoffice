@@ -48,37 +48,38 @@ class perm_binPerm{
 	}
 	function getPowerTitle(){
 		return array( 
-					  'flag' 		=> '标志位为1表示权限设置,否则表示未设置，继承上级',
-					  'read1'		=> '读取自己的文件',
-					  'read2'		=> '读取所有文件',
-					  'delete1'		=> '删除自己的文件',
-					  'delete2'		=> '删除所有文件',
-					  'edit1'		=> '编辑自己的文件',
-					  'edit2'		=> '编辑所有文件',
-					  'download1'   =>'下载自己的文件',
-					  'download2'   =>'下载所有文件',
-					  'copy1'       =>'复制自己的文件',
-					  'copy2'  		=>'复制所有文件',
-					  'upload'		=> '上传',
-					  'newtype'		=> '新建其他类型文件（除文件夹、网址、文档、视频以外）',
-					  'folder'      => '新建文件夹',
-					  'link'        => '新建网址',
-					  'dzzdoc'      => '新建文档', 
-					  'video'	    => '新建视频',
-					  'shortcut'	=> '快捷方式',
-					  'share'	    => '分享',
+					  'flag' 		=> 	lang('flag_purview_setting'),
+					  'read1'		=> 	lang('read_my_file'),
+					  'read2'		=> 	lang('read_my_file1'),
+					  'delete1'		=> 	lang('delete_my_file'),
+					  'delete2'		=> 	lang('delete_all_file'),
+					  'edit1'		=> 	lang('edit_my_file'),
+					  'edit2'		=>	lang('edit_all_file'),
+					  'download1'   =>	lang('upload_my_file'),
+					  'download2'   =>	lang('upload_all_file'),
+					  'copy1'       =>	lang('copy_my_file'),
+					  'copy2'  		=>	lang('copy_all_file'),
+					  'upload'		=> lang('uploading'),
+					  'newtype'		=> lang('new_other_types_files'),
+					  'folder'      => lang('newfolder'),
+					  'link'        => lang('newlink'),
+					  'dzzdoc'      => lang('new_document'), 
+					  'video'	    => lang('new_video'),
+					  'shortcut'	=> lang('typename_shortcut'),
+					  'share'	    => lang('share'),
 					);
 	}
 	function getMyPower(){//获取用户桌面默认的权限
 		return self::getSumByAction(array('read1','read2','delete1','edit1','download1','download2','copy1','copy2','upload','newtype','folder','link','dzzdoc','video','shortcut','share'));
 	}
 	function groupPowerPack(){
-		$data= array('read'         =>array('title' =>'只读', 'flag'=>'read', 'permitem'=>array('read1','read2'),'tip'=>'只允许成员查看由管理员添加的内容，不能上传、新建、复制、编辑、删除内容。'),
-					 'only-download'=>array('title' =>'仅下载','flag'=>'only-download', 'permitem'=>array('read1','read2','download1','download2','copy1','copy2'),'tip'=>'只允许成员查看由管理员添加的内容。可以下载、拷贝内容。'),
-					 'read-write1'  =>array('title' =>'读写1', 'flag'=>'read-write1', 'permitem'=>array('read1','read2','delete1','edit1','download1','copy1','upload','newtype','folder','link','dzzdoc','video'),'tip'=>'允许成员上传、新建、编辑、复制、查看、删除自己的内容，不能编辑、复制、删除其他成员添加的内容'),
-					 'read-write2'  =>array('title' =>'读写2', 'flag'=>'read-write2', 'permitem'=>array('read1','read2','delete1','edit1','edit2','download1','download2','copy1','copy2','upload','newtype','folder','link','dzzdoc','video'),'tip'=>'允许成员上传、新建、编辑、复制、查看、删除自己的内容，不能删除其他成员的内容。'),
-					 'only-write1'  =>array('title' =>'只写', 'flag'=>'only-write1',  'permitem'=>array('read1','upload','newtype','folder','link','dzzdoc','video'),'tip'=>'只允许成员上传、新建、添加内容。成员只能查看自己添加的内容。不能编辑、删除内容。只写目录下的只能创建只写目录（管理员也不例外）。'),
-					 'all'          =>array('title' =>'完全控制','flag'=>'all', 'permitem'=>'all','tip'=>'允许成员上传、新建、添加、编辑、复制、查看、删除所有内容，包括其他成员的内容。')
+		$data= array('read'         =>array('title' =>lang('read_only'), 'flag'=>'read', 'permitem'=>array('read1','read2'),'tip'=>lang('read_only_state')),
+					 'only-download'=>array('title' =>lang('upload_only'),'flag'=>'only-download', 'permitem'=>array('read1','read2','download1','download2','copy1','copy2'),'tip'=>lang('upload_only_state')),
+					 'read-write1'  =>array('title' =>lang('read_write').'1', 'flag'=>'read-write1', 'permitem'=>array('read1','read2','delete1','edit1','download1','copy1','upload','newtype','folder','link','dzzdoc','video'),'tip'=>lang('read_write_state')),
+					 'read-write2'  =>array('title' =>lang('read_write').'2', 'flag'=>'read-write2', 'permitem'=>array('read1','read2','delete1','edit1','edit2','download1','download2','copy1','copy2','upload','newtype','folder','link','dzzdoc','video'),'tip'=>lang('read_write_state1')),
+					 'read-write3'  =>array('title' =>lang('read_write').'3', 'flag'=>'read-write3', 'permitem'=>array('read1','read2','edit1','edit2','download1','download2','copy1','copy2','upload','newtype','folder','link','dzzdoc','video'),'tip'=>lang('read_write_state2')),
+					 'only-write1'  =>array('title' =>lang('write_only'), 'flag'=>'only-write1',  'permitem'=>array('read1','upload','newtype','folder','link','dzzdoc','video'),'tip'=>lang('write_only_state')),
+					 'all'          =>array('title' =>lang('full_control'),'flag'=>'all', 'permitem'=>'all','tip'=>lang('full_control_state'))
 			  );
 		foreach($data as $key=>$value){
 			$data[$key]['power']=self::getSumByAction($value['permitem']);

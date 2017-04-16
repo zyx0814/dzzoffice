@@ -15,7 +15,7 @@ $path=dzzdecode($path);
 $aid=intval(str_replace('attach::','',$path));
 $name=trim($_GET['filename']);
 if(!$attach=C::t('attachment')->fetch($aid)){
-	topshowmessage('附件不存在，或不是可下载的文件');
+	topshowmessage(lang('attachment_not_exist'));
 	if(!empty($_GET['filename'])) $attach['filename']=trim($_GET['filename']);
 }
 $filename = $_G['setting']['attachdir'].$attach['attachment'];
@@ -24,16 +24,14 @@ $filesize = $attach['remote']<2 ? filesize($filename) : $attach['filesize'];
 
 $attachurl=getAttachUrl($attach,true);
 
-if($attach['filename']) $attach['filename'] = '"'.(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($attach['filename']) : $attach['filename']).'"';
-else{
-	$attach['filename'] = '"'.(strtolower(CHARSET) == 'utf-8' && strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') ? urlencode($attach['filename']) : $attach['filename']).'"';
-}
+$attach['filename'] = '"'.(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($attach['filename']) : $attach['filename']).'"';
+
 	
 	$db = DB::object();
 	$db->close();
 	$chunk = 10 * 1024 * 1024; 
 	if(!$fp = @fopen($attachurl, 'rb')) {
-		exit('文件不存在');
+		exit(lang('attachment_nonexistence'));
 	}
 	dheader('Date: '.gmdate('D, d M Y H:i:s', $attach['dateline']).' GMT');
 	dheader('Last-Modified: '.gmdate('D, d M Y H:i:s', $attach['dateline']).' GMT');

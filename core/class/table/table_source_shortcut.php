@@ -18,12 +18,35 @@ class table_source_shortcut extends dzz_table
 		$this->_table = 'source_shortcut';
 		$this->_pk    = 'cutid';
 		$this->_pre_cache_key = 'source_shortcut_';
-		$this->_cache_ttl = 0;
+		$this->_cache_ttl = 60*60;
 		parent::__construct();
 	}
 	public function delete_by_cutid($cutid){ 
 	 	$cutid=intval($cutid);
 		return self::delete($cutid);
+	}
+	public function delete_by_bz($bz){ 
+		$cutids=array();
+	 	foreach(DB::fetch_all("select cutid from %t where bz=%s",array($this->_table,$bz)) as $value){
+			$cutids[]=$value['cutid'];
+		}
+		if($cutids){
+			foreach(DB::fetch_all("select icoid from %t where type='shortcut' and oid IN(%n)",array('icos',$cutids)) as $value){
+				C::t('icos')->delete_by_icoid($value['icoid'],true);
+			}
+		}
+	}
+	public function delete_by_path($path){ 
+		$cutids=array();
+	 	foreach(DB::fetch_all("select cutid from %t where path=%s",array($this->_table,$path)) as $value){
+			$cutids[]=$value['cutid'];
+		}
+		if($cutids){
+			foreach(DB::fetch_all("select icoid from %t where type='shortcut' and oid IN(%n)",array('icos',$cutids)) as $value){
+				C::t('icos')->delete_by_icoid($value['icoid'],true);
+			}
+		}
+		return parent::delete($cutids);
 	}
 	public function fetch_by_cutid($cutid){ //返回一条数据同时加载附件表数据
 		$cutid = intval($cutid);
@@ -52,7 +75,7 @@ class table_source_shortcut extends dzz_table
 		if($bz=='dzz'){
 			list($idtype,$id)=explode('_',str_replace('dzz:','',$path));
 			if($idtype=='fid'){
-				$data=C::t('folder')->fetch_by_fid($id);
+				if(!$data=C::t('folder')->fetch_by_fid($id)) return array('error'=>'获取数据错误');
 				$data['name']=$data['title'];
 				$data['oid']=$data['fid'];
 				$data['bz']='';

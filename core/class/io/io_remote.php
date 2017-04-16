@@ -41,7 +41,6 @@ class io_remote
 		if(!$remoteid) $remoteid=self::getRemoteid($attach); //未指定时根据路由获取；
 		$bz=self::getBzByRemoteid($remoteid);
 		$obz=self::getBzByRemoteid($attach['remote']);
-		
 		if($bz==$obz) return false; //同一区域不需要移动
 		if($bz=='dzz'){
 			$path='attach::'.$attach['aid'];

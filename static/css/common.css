@@ -113,7 +113,7 @@ a:hover i{
 }*/
 
 .nav-tabs li a{
-	margin-left:10px;
+	/*margin-left:10px;*/
 }
 dl dt{
 	
@@ -621,6 +621,9 @@ select {
 	border-left:0;
 }
 }
+.bs-left-container .nav-tabs-vertical .nav-tabs{
+	float: none;
+}
 /*end左侧*/
 /*start导航*/
 .bs-navbar-default{
@@ -754,9 +757,9 @@ select {
 	height: 300px;
 	background: #FBFBFB;
 	border-radius: 5px;
-	overflow-y: hidden;
-	overflow-x: auto;
+	overflow: hidden;
 	z-index: 11000;
+	padding-bottom:0;
 }
 
 /*调试信息*/

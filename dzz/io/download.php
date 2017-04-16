@@ -13,8 +13,18 @@ if(!defined('IN_DZZ')) {
 }
 define('NOROBOT', TRUE);
 $path = empty($_GET['icoid'])?trim($_GET['path']):$_GET['icoid'];
-if($path=dzzdecode($path)){
-	IO::download($path,$_GET['filename']);
+$patharr=explode(',',$path);
+$paths=array();
+foreach($patharr as $path){
+	if($path=dzzdecode($path)){
+		$paths[]=$path;
+	}
 }
-exit();
+if($paths){
+	IO::download($paths,$_GET['filename']);
+	exit();
+}else{
+	exit('path error!');
+}
+
 ?>

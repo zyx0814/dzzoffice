@@ -42,8 +42,8 @@ class logging_ctl {
 					$msg.='		<div class="modal-body">';
 					$msg.='		  <div class="alert_right">';
 					$msg.='			<p id="succeedmessage"></p>';
-					$msg.='			<p id="succeedlocation" class="alert_btnleft">'.lang('message', 'login_succeed', $param).'</p>';
-					$msg.='			<p class="alert_btnleft"><a href="'.$referer.'" id="succeedmessage_href">'.lang('template','message_forward').'</a></p>';
+					$msg.='			<p id="succeedlocation" class="alert_btnleft">'.lang('login_succeed', $param).'</p>';
+					$msg.='			<p class="alert_btnleft"><a href="'.$referer.'" id="succeedmessage_href">'.lang('message_forward').'</a></p>';
 					$msg.='		  </div>';
 					$msg.='		</div>';
 					$msg.='	  </div><script type="text/javascript">setTimeout("window.location.href =\''.$referer.'\';", 3000);</script></div>';
@@ -78,7 +78,7 @@ class logging_ctl {
 				require_once $this->extrafile;
 			}
 
-			$navtitle = lang('core', 'title_login');
+			$navtitle = lang('login');
 			include template($this->template);
 
 		} else {
@@ -120,9 +120,9 @@ class logging_ctl {
 				}
 			}elseif($result['status']==- 2){
 				
-				showmessage('此用户已停用，请联系管理员');
+				showmessage('user_stopped_please_admin');
 			}elseif($_G['setting']['bbclosed']>0 && $result['member']['adminid']!=1){
-				showmessage('站点关闭中，请联系管理员');
+				showmessage('site_closed_please_admin');
 			}
 		
 			if($result['status'] > 0) {
@@ -166,9 +166,9 @@ class logging_ctl {
 
 				$location = $_G['groupid'] == 8 ? 'index.php?open=password' : dreferer();
 				if(empty($_GET['handlekey']) || !empty($_GET['lssubmit'])) {
-					if(defined('IN_MOBILE')) {
+					/*if(defined('IN_MOBILE')) {
 						showmessage('location_login_succeed_mobile', $location, array('username' => $result['ucresult']['username']), array('location' => true));
-					} else {
+					} else {*/
 						if(!empty($_GET['lssubmit'])) {
 							
 							showmessage($loginmessage, $location, $param, $extra);
@@ -185,13 +185,13 @@ class logging_ctl {
 										'$(\'succeedmessage_href\').href = \''.$href.'\';'.
 										'$(\'main_message\').style.display = \'none\';'.
 										'$(\'main_succeed\').style.display = \'\';'.
-										'$(\'succeedlocation\').innerHTML = \''.lang('message', $loginmessage, $param).'\';</script>',
+										'$(\'succeedlocation\').innerHTML = \''.lang( $loginmessage, $param).'\';</script>',
 									'striptags' => false,
 									'showdialog' => false
 								)
 							);
 						}
-					}
+					//}
 				} else {
 					showmessage($loginmessage, $location, $param, $extra);
 				}
@@ -234,7 +234,7 @@ class logging_ctl {
 		$_G['uid'] = $_G['member']['uid'] = 0;
 		$_G['username'] = $_G['member']['username'] = $_G['member']['password'] = '';
 		if(defined('IN_MOBILE')) {
-			showmessage('location_logout_succeed_mobile', dreferer(), array('formhash' => FORMHASH));
+			showmessage('logout_succeed', dreferer(), array('formhash' => FORMHASH));
 		} else {
 			showmessage('logout_succeed', dreferer(), array('formhash' => FORMHASH));
 		}
@@ -382,24 +382,24 @@ class register_ctl {
 			if($this->setting['strongpw']) {
 				$strongpw_str = array();
 				if(in_array(1, $this->setting['strongpw']) && !preg_match("/\d+/", $_GET['password'])) {
-					$strongpw_str[] = lang('user/template', 'strongpw_1');
+					$strongpw_str[] = lang('strongpw_1');
 				}
 				if(in_array(2, $this->setting['strongpw']) && !preg_match("/[a-z]+/", $_GET['password'])) {
-					$strongpw_str[] = lang('user/template', 'strongpw_2');
+					$strongpw_str[] = lang('strongpw_2');
 				}
 				if(in_array(3, $this->setting['strongpw']) && !preg_match("/[A-Z]+/", $_GET['password'])) {
-					$strongpw_str[] = lang('user/template', 'strongpw_3');
+					$strongpw_str[] = lang('strongpw_3');
 				}
 				if(in_array(4, $this->setting['strongpw']) && !preg_match("/[^a-zA-z0-9]+/", $_GET['password'])) {
-					$strongpw_str[] = lang('user/template', 'strongpw_4');
+					$strongpw_str[] = lang('strongpw_4');
 				}
 				if($strongpw_str) {
-					showmessage(lang('user/template', 'password_weak').implode(',', $strongpw_str));
+					showmessage(lang('password_weak').implode(',', $strongpw_str));
 				}
 			}
 			//验证两次密码一致性
 			if($_GET['password'] !== $_GET['password2']) {
-				showmessage('两次密码不匹配');
+				showmessage('admininfo_password2_invalid');
 			}
 
 			if(!$_GET['password'] || $_GET['password'] != addslashes($_GET['password'])) {
@@ -425,9 +425,9 @@ class register_ctl {
 
 				if(!profile_check($field_key, $field_val)) {
 					$showid = !in_array($field['fieldid'], array('birthyear', 'birthmonth')) ? $field['fieldid'] : 'birthday';
-					showmessage($field['title'].lang('message', 'profile_illegal'), '', array(), array(
+					showmessage($field['title'].lang('profile_illegal'), '', array(), array(
 						'showid' => 'chk_'.$showid,
-						'extrajs' => $field['title'].lang('message', 'profile_illegal').($field['formtype'] == 'text' ? '<script type="text/javascript">'.
+						'extrajs' => $field['title'].lang('profile_illegal').($field['formtype'] == 'text' ? '<script type="text/javascript">'.
 							'$(\'registerform\').'.$field['fieldid'].'.parentNode.parentNode.className = \'form-group warning\';'.
 							'$(\'registerform\').'.$field['fieldid'].'.onblur = function () { if(this.value != \'\') {this.parentNode.parentNode.className = \'form-group\';$(\'chk_'.$showid.'\').innerHTML = \'\';}}'.
 							'</script>' : '')
@@ -568,13 +568,13 @@ class register_ctl {
 					$authstr = $this->setting['regverify'] == 1 ? "$_G[timestamp]\t2\t$idstring" : '';
 					C::t('user')->update($_G['uid'], array('authstr' => $authstr));
 					$verifyurl = "{$_G[siteurl]}user.php?mod=activate&amp;uid={$_G[uid]}&amp;id=$idstring";
-					$email_verify_message = lang('email', 'email_verify_message', array(
+					$email_verify_message = lang('email_verify_message', array(
 						'username' => $_G['member']['username'],
 						'sitename' => $this->setting['sitename'],
 						'siteurl' => $_G['siteurl'],
 						'url' => $verifyurl
 					));
-					if(!sendmail("$username <$email>", lang('email', 'email_verify_subject'), $email_verify_message)) {
+					if(!sendmail("$username <$email>", lang('email_verify_subject'), $email_verify_message)) {
 						runlog('sendmail', "$email sendmail failed.");
 					}
 					$message = 'register_email_verify';
@@ -608,7 +608,7 @@ class register_ctl {
 										'$(\'succeedmessage_href\').href = \''.$url_forward.'\';'.
 										'$(\'register_form\').style.display = \'none\';'.
 										'$(\'main_succeed\').style.display = \'\';'.
-										'$(\'succeedlocation\').innerHTML = \''.lang('message', $message, $param).'\';</script>',
+										'$(\'succeedlocation\').innerHTML = \''.lang( $message, $param).'\';</script>',
 									'striptags' => false,
 									'showdialog' => false
 								)

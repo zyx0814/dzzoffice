@@ -3,6 +3,7 @@
  * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
  * @license     http://www.dzzoffice.com/licenses/license.txt
  * @package     DzzOffice
+ * @version     DzzOffice 1.0 release  2014.3.30
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
@@ -45,7 +46,7 @@ function _getNotification(){
 		
 		 $value['from_num'] = intval($value['from_num']);
 		if(empty($value['title'])){
-			$value['title']=lang('notification',$value['type'].'_title');
+			$value['title']=lang($value['type'].'_title');
 		}
 		$value['note1']=strip_tags($value['note']);
 		$list[] = $value;

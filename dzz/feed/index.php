@@ -39,7 +39,7 @@ $feedType=empty($_GET['feedType'])?($_G['uid']?($_G['setting']['feed_feedType_de
 	$sql='p.`first`>0';
 	switch($feedType){
 		case 'aboutme':
-			$navtitle='与我相关';
+			$navtitle=lang('related_me');
 			$wherearr=array();
 			//@我的
 			if($at_tids=C::t('feed_at')->fetch_all_tids_by_uid($_G['uid'])){
@@ -59,7 +59,7 @@ $feedType=empty($_GET['feedType'])?($_G['uid']?($_G['setting']['feed_feedType_de
 			$sql.=" and (".implode(' or ',$wherearr).")";
 			break;
 		case 'atme':
-			$navtitle='@我的';
+			$navtitle='@'.lang('mine');
 			if($at_tids=C::t('feed_at')->fetch_all_tids_by_uid($_G['uid'])){
 				
 			   $sql.=" and t.tid IN (".dimplode($at_tids).")";
@@ -69,7 +69,7 @@ $feedType=empty($_GET['feedType'])?($_G['uid']?($_G['setting']['feed_feedType_de
 			dsetcookie('feed_readtime_atme',$_G['timestamp'],60*60*24*7);
 			break;
 		case 'collect':
-		    $navtitle='我收藏的';
+		    $navtitle=lang('my_collection');
 			if($at_tids=C::t('feed_collection')->fetch_all_tids_by_uid($_G['uid'])){
 			   $sql.=" and t.tid IN (".dimplode($at_tids).")";
 			}else{
@@ -80,7 +80,7 @@ $feedType=empty($_GET['feedType'])?($_G['uid']?($_G['setting']['feed_feedType_de
 			$sql.=" and t.authorid = '{$_G[uid]}'";
 			break;
 		case 'replyme':
-		     $navtitle='回复我的';
+		     $navtitle=lang('reply_my');
 			if($r_tids=C::t('feed_reply')->fetch_all_tids_by_ruid($_G['uid'])){
 			   $sql.=" and t.tid IN (".dimplode($r_tids).")";
 			}else{
@@ -89,7 +89,7 @@ $feedType=empty($_GET['feedType'])?($_G['uid']?($_G['setting']['feed_feedType_de
 			dsetcookie('feed_readtime_replyme',$_G['timestamp'],60*60*24*7);
 			break;
 		case 'all':
-		    $navtitle='全部动态';
+		    $navtitle=lang('all_dynamic');
 			$sql.=" and readperm='0'";
 			$orderby=' order by t.top DESC,t.lastpost DESC';
 			break;

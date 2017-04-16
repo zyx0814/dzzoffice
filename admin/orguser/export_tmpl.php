@@ -9,10 +9,10 @@
 if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-	$h0=array('username'=>'姓名','email'=>'邮箱','nickname'=>'用户名','birth'=>'出生日期','gender'=>'性别','mobile'=>'手机','weixinid'=>'微信号','orgname'=>'所属部门','job'=>'部门职位');
+	$h0=array('username'=>lang('compellation'),'email'=>lang('email'),'nickname'=>lang('username'),'password'=>lang('user_login_password'),'birth'=>lang('date_birth'),'gender'=>lang('gender'),'mobile'=>lang('cellphone'),'weixinid'=>lang('weixin'),'orgname'=>lang('category_department'),'job'=>lang('department_position'));
 	$h1=getProfileForImport();
 	$h0=array_merge($h0,$h1);
-	$title='批量导入用户模板';
+	$title=lang('bulk_import_user_template');
 	$objPHPExcel = new PHPExcel();
 	$objPHPExcel->getProperties()->setCreator($_G['username'])
 								 ->setTitle($title.' - DzzOffice')
@@ -46,7 +46,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	$filesize=filesize($filename);
 	$chunk = 10 * 1024 * 1024; 
 	if(!$fp = @fopen($filename, 'rb')) {
-		exit('导出失败！');
+		exit(lang('export_failure'));
 	}
 	dheader('Date: '.gmdate('D, d M Y H:i:s', TIMESTAMP).' GMT');
 	dheader('Last-Modified: '.gmdate('D, d M Y H:i:s', TIMESTAMP).' GMT');

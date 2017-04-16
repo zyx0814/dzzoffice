@@ -11,28 +11,28 @@
       <div class="container_psw">
         <div class="textarea_cpsw">
           <div class="wrap_tcpsw">
-            <textarea rows="" id="message_0" name="message" cols="" onkeyup="check_publish_enable()" tip="你在忙什么？" class="write_wtcpsw _bb_write_wtcpsw " style="overflow: hidden; word-wrap: break-word; resize: horizontal;border:none;box-shadow:none;">你在忙什么？</textarea>
+            <textarea rows="" id="message_0" name="message" cols="" onkeyup="check_publish_enable()" tip="{lang what_are_you_up}" class="write_wtcpsw _bb_write_wtcpsw " style="overflow: hidden; word-wrap: break-word; resize: horizontal;border:none;box-shadow:none;">{lang what_are_you_up}</textarea>
           </div>
           <div id="publish_count_0" class="count_cpsw"> <span id="num_input_0" class="num_ccpsw">0</span>/<span class="leng_ccpsw">1000</span> </div>
         </div>
       </div>
       <div id="publish_action_0" class="action_cpsw">
         <ul class="list_acpsw">
-          <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_0" onclick="showMenu({'ctrlid':'upload_from_0'});" href="javascript:void(0);" title="" class="item_lacpsw">文件/图片</a> </li>
-          <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">表情</a></li>
+          <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_0" onclick="showMenu({'ctrlid':'upload_from_0'});" href="javascript:void(0);" title="" class="item_lacpsw">{lang typename_attach}/{lang photo}</a> </li>
+          <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">{lang photo}</a></li>
           <script type="text/javascript" reload="1">smilies_show('message_0_sml_div', '{$_G[setting][smcols]}', 'message_0');</script>
            <input id="votestatus_0" type="hidden" name="votestatus" value="0" />
-          <li class="vote_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0_vote" onclick="feed_vote_switch();">投票</a></li>
+          <li class="vote_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0_vote" onclick="feed_vote_switch();">{lang vote}</a></li>
         </ul>
         <!--{if $_G['setting']['feed_publish_public']<1 ||  $_G['adminid']==1}-->
         <input id="readperm_0" name="readperm" value="0" type="hidden" />
-        <span class="quna_cpsw down_quna_cpsw"> <a id="readperm_sel_0" onclick="showMenu({'ctrlid':'readperm_sel_0'});" href="javascript:void(0);" title="" class="item_lacpsw">所有人可见</a> </span>
+        <span class="quna_cpsw down_quna_cpsw"> <a id="readperm_sel_0" onclick="showMenu({'ctrlid':'readperm_sel_0'});" href="javascript:void(0);" title="" class="item_lacpsw">{lang all_visible}</a> </span>
         <!--{else}-->
         <input id="readperm_0" name="readperm" value="1" type="hidden" />
-        <span class="quna_cpsw down_quna_cpsw"> <a id="readperm_sel_0" onclick="showMenu({'ctrlid':'readperm_sel_0'});" href="javascript:void(0);" title="" class="item_lacpsw">仅@的人可见</a> </span>
+        <span class="quna_cpsw down_quna_cpsw"> <a id="readperm_sel_0" onclick="showMenu({'ctrlid':'readperm_sel_0'});" href="javascript:void(0);" title="" class="item_lacpsw">{lang visible_only_look}</a> </span>
         <!--{/if}-->
         
-        <button id="publish_submit_0" class="btn btn-primary" title="分享(Ctrl+Enter)" type="submit"><b>分享</b></button> </div>
+        <button id="publish_submit_0" class="btn btn-primary" title="{lang share}(Ctrl+Enter)" type="submit"><b>{lang share}</b></button> </div>
       <div id="attachmentViewBox_0" class="attachmentContainer clearfix"> </div> 
       <div class="vote-post-container" id="vote_post_container_0" tid="0" style="display:none;margin-bottom:10px;"> 
     	<div id="vote_container_body_0" class="form-horizontal form-horizontal-left">
@@ -41,17 +41,17 @@
      </div>
     </form>
     <div class="actionUploadAttachment" id="upload_from_0_menu" style="display:none">
-      <div class="local_auatth" style="position:relative;overflow:hidden"> <a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">本地上传
+      <div class="local_auatth" style="position:relative;overflow:hidden"> <a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">{lang web_upload}
         <input id="fileupload_0" type="file" name="files[]" multiple >
         </a> </div>
-      <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop();jQuery(this).parent().parent().hide();">从我的文件中选择</a></div>
+      <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop();jQuery(this).parent().parent().hide();">{lang choose_from_my_file}</a></div>
     </div>
    
     <div class="qunartipwrapmvc" id="readperm_sel_0_menu" style="display:none">
       <div class="qunartip">
         <ul class="list-unstyled">
-         <!--{if $_G['setting']['feed_publish_public']<1 ||  $_G['adminid']==1}--> <li class="public_qunat cur"  isvisible="0"><a href="javascript:void(0);" title="" ><span>所有人可见</span></a></li><!--{/if}-->
-          <li class="private_qunat  <!--{if $_G['setting']['feed_publish_public']>0 &&  $_G['adminid']!=1}-->cur<!--{/if}-->"  isvisible="1"><a href="javascript:void(0);" title="" ><span>仅@的人可见</span></a></li>
+         <!--{if $_G['setting']['feed_publish_public']<1 ||  $_G['adminid']==1}--> <li class="public_qunat cur"  isvisible="0"><a href="javascript:void(0);" title="" ><span>{lang all_visible}</span></a></li><!--{/if}-->
+          <li class="private_qunat  <!--{if $_G['setting']['feed_publish_public']>0 &&  $_G['adminid']!=1}-->cur<!--{/if}-->"  isvisible="1"><a href="javascript:void(0);" title="" ><span>{lang visible_only_look}</span></a></li>
         </ul>
       </div>
     </div>
@@ -65,7 +65,7 @@ function publish_home_validate(form){
 		 var voteitemnum=0;
 		 if(jQuery('#publish_0 input[name="vote[type]"]').val()>1){//图片投票模式
 		 	 if(!jQuery('#publish_0 input[name=vote_subject_2]').val()){
-				 showmessage('投票标题不能为空','danger',3000,1);
+				 showmessage('{lang vote_title_empty}','danger',3000,1);
 				 jQuery('input[name=vote_subject_2]').focus();
 				  return false;
 			 }
@@ -74,7 +74,7 @@ function publish_home_validate(form){
 			 });
 		 }else{ //文本投票模式
 		     if(!jQuery('#publish_0 input[name=vote_subject_1]').val()){
-				 showmessage('投票标题不能为空','danger',3000,1);
+				 showmessage('{lang vote_title_empty}','danger',3000,1);
 				jQuery('#publish_0 input[name=vote_subject_1]').focus();
 				 return false;
 			 }
@@ -83,16 +83,16 @@ function publish_home_validate(form){
 			 });
 		 }
 		 if(voteitemnum<2) {
-			  showmessage('投票项目至少为2项！','danger',3000,1);
+			  showmessage('{lang vote_item}','danger',3000,1);
 			  return false;
 		 }
 	}else{
 		var val=jQuery('#message_0').val();
 		if(strlen(val)<1 || strlen(val)>1000){
-			 showmessage('请输入分享内容','danger',1000,1);
+			 showmessage('{lang please_share_content}','danger',1000,1);
 			 return false;
 		}else if(strlen(val)>1000){
-			showmessage('分享内容不能超过1000字符','danger',1000,1);
+			showmessage('{lang share_content_character}','danger',1000,1);
 			return false;
 		}
 	}

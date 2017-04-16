@@ -41,7 +41,7 @@ class table_user_verify_info extends dzz_table
 				$verifytype = dintval($verifytype, is_array($verifytype) ? true : false);
 				$addsql = ' AND '.DB::field('verifytype', $verifytype);
 			}
-			return DB::fetch_first('DELETE FROM %t WHERE '.(is_array($uid) ? 'uid IN(%n)' : 'uid=%d').$addsql, array($this->_table, $uid));
+			return DB::query('DELETE FROM %t WHERE '.(is_array($uid) ? 'uid IN(%n)' : 'uid=%d').$addsql, array($this->_table, $uid));
 		}
 		return false;
 	}

@@ -17,7 +17,7 @@ function _api(win,wname){
 _api.init=function(){
 	var wname = window.name;
 	if (wname == "") return false;
-	wname=jQuery.evalJSON(decodeURIComponent(wname));
+	wname=jQuery.parseJSON(decodeURIComponent(wname));
 	var winid=wname.winid;
 	if(parent._window.windows[winid]){
 		win=parent._window.windows[winid];
@@ -78,7 +78,7 @@ function acceptdata(data){
 	   for(var i in datas){
 			var arr=datas[i];
 			if(arr['bz'] && arr['bz']!='dzz'){
-				 try{top.showmessage('不支持非企业盘内文件插入','',3000,true);}catch(e){alert('不支持非企业盘内文件插入');}
+				 try{top.showmessage(__lang.Insert_nonenterprise_files_not_supported,'',3000,true);}catch(e){alert(__lang.Insert_nonenterprise_files_not_supported);}
 				  continue;
 			}
 			switch(arr['type']){

@@ -177,7 +177,7 @@ EOT;
 }
 
 function sendmail_cron($toemail, $subject, $message) {
-
+	global $_G;
 	$toemail = addslashes($toemail);
 
 	$value = C::t('mailcron')->fetch_all_by_email($toemail, 0, 1);

@@ -9,7 +9,7 @@
 	</style>
     <div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-    	<h4 class="modal-title" id="return_$_GET[handlekey]">新建文档</h4>
+    	<h4 class="modal-title" id="return_$_GET[handlekey]">{lang new_document}</h4>
     </div>
 	
 		<form id="newdocform" name="newdocform" class="form-horizontal" role="form" action="{DZZSCRIPT}?mod=system&op=ajax&do=$do" method="post"  onsubmit="ajaxpost(this.id, 'return_$_GET[handlekey]','return_$_GET[handlekey]');" style="margin:0">
@@ -82,7 +82,7 @@
                             </td>
                           </tr>
                           <tr>
-                            <td align="center">继承($permtitle['title'])</td>
+                            <td align="center">{lang inherit}($permtitle['title'])</td>
                           </tr>
                         
                       </table>
@@ -103,7 +103,7 @@
             <div class="tip" id="tip-0" style="margin:0px;">
                 <div class="alert alert-success" style="padding:5px 0;margin:0;">
                     <ul style="padding:5px 5px 5px 25px">
-                        <li>继承 指继承上级文件夹设置的权限。</li>
+                        <li>{lang inherit_state}</li>
                     </ul>
                 </div>
             </div>
@@ -158,7 +158,7 @@
 	</style>
 	<div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-    	<h4 class="modal-title" id="return_$_GET[handlekey]">添加网址</h4>
+    	<h4 class="modal-title" id="return_$_GET[handlekey]">{lang add_url}</h4>
     </div>
 		<form id="newlinkform" name="newlinkform" class="form-horizontal" role="form" action="{DZZSCRIPT}?mod=system&op=ajax&do=newlink" method="post"  onsubmit="ajaxpost(this.id, 'return_$_GET[handlekey]','return_$_GET[handlekey]','',$('newlinksubmit_btn'));" style="margin:0">
 			<input type="hidden" name="refer" value="" />
@@ -238,7 +238,7 @@
                       <tr><td align="center">
                             <img src="dzz/images/default/system/folder-{$permtitle['flag']}.png" width="50">
                       </td></tr>
-                      <tr><td align="center">继承($permtitle['title'])</td></tr>
+                      <tr><td align="center">{lang inherit}($permtitle['title'])</td></tr>
                     
                   </table>
                 </div>
@@ -327,7 +327,7 @@
 	</style>
      <div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-    	<h4 class="modal-title" id="return_$_GET[handlekey]">更改权限 - $meta[name]</h4>
+    	<h4 class="modal-title" id="return_$_GET[handlekey]">{lang change_permissions} - $meta[name]</h4>
     </div>
 	
     <form id="chmodform" name="chmodform" class="form-horizontal" role="form" action="{DZZSCRIPT}?mod=system&op=ajax&do=chmod" method="post" autocomplete="off" onsubmit="ajaxpost(this.id, 'return_$_GET[handlekey]');" style="margin:0">
@@ -338,27 +338,27 @@
      <div class="m_c modal-body" style="padding:0;">
        		<div class="c ctw clearfix" style="padding:10px 0;" >
                 <div class="col-xs-4" >
-                	<p ><b>所有权</b></p>
-                	<label class="checkbox" style="font-weight:normal"><input id="chmod_8" class="mod" type="checkbox" value="1" name="chmod[8]" onclick="changeMod()" <!--{if $chmod[8]>0}--> checked="checked"<!--{/if}-->>读取</label>
-                    <label class="checkbox" style="font-weight:normal"><input id="chmod_7" class="mod" type="checkbox" value="1" name="chmod[7]" onclick="changeMod()" <!--{if $chmod[7]>0}--> checked="checked"<!--{/if}-->>写入</label>
-                    <label class="checkbox" style="font-weight:normal"><input id="chmod_6" class="mod" type="checkbox" value="1" name="chmod[6]" onclick="changeMod()" <!--{if $chmod[6]>0}--> checked="checked"<!--{/if}-->>执行</label>
+                	<p ><b>{lang ownership}</b></p>
+                	<label class="checkbox" style="font-weight:normal"><input id="chmod_8" class="mod" type="checkbox" value="1" name="chmod[8]" onclick="changeMod()" <!--{if $chmod[8]>0}--> checked="checked"<!--{/if}-->>{lang read}</label>
+                    <label class="checkbox" style="font-weight:normal"><input id="chmod_7" class="mod" type="checkbox" value="1" name="chmod[7]" onclick="changeMod()" <!--{if $chmod[7]>0}--> checked="checked"<!--{/if}-->>{lang write_in}</label>
+                    <label class="checkbox" style="font-weight:normal"><input id="chmod_6" class="mod" type="checkbox" value="1" name="chmod[6]" onclick="changeMod()" <!--{if $chmod[6]>0}--> checked="checked"<!--{/if}-->>{lang execute}</label>
                 </div>
                 <div class="col-xs-4" >
-                	<p ><b>组</b></p>
-                	<label class="checkbox" style="font-weight:normal"><input id="chmod_5" class="mod" type="checkbox" value="1" name="chmod[5]" onclick="changeMod()" <!--{if $chmod[5]>0}--> checked="checked"<!--{/if}-->>读取</label>
-                    <label class="checkbox" style="font-weight:normal"><input id="chmod_4" class="mod" type="checkbox" value="1" name="chmod[4]" onclick="changeMod()" <!--{if $chmod[4]>0}--> checked="checked"<!--{/if}-->>写入</label>
-                    <label class="checkbox" style="font-weight:normal"><input id="chmod_3" class="mod" type="checkbox" value="1" name="chmod[3]" onclick="changeMod()" <!--{if $chmod[3]>0}--> checked="checked"<!--{/if}-->>执行</label>
+                	<p ><b>{lang group1}</b></p>
+                	<label class="checkbox" style="font-weight:normal"><input id="chmod_5" class="mod" type="checkbox" value="1" name="chmod[5]" onclick="changeMod()" <!--{if $chmod[5]>0}--> checked="checked"<!--{/if}-->>{lang read}</label>
+                    <label class="checkbox" style="font-weight:normal"><input id="chmod_4" class="mod" type="checkbox" value="1" name="chmod[4]" onclick="changeMod()" <!--{if $chmod[4]>0}--> checked="checked"<!--{/if}-->>{lang write_in}</label>
+                    <label class="checkbox" style="font-weight:normal"><input id="chmod_3" class="mod" type="checkbox" value="1" name="chmod[3]" onclick="changeMod()" <!--{if $chmod[3]>0}--> checked="checked"<!--{/if}-->>{lang execute}</label>
                 </div>
                 <div class="col-xs-4" >
-                	<p ><b>公共</b></p>
-                	<label class="checkbox" style="font-weight:normal"><input id="chmod_2" class="mod" type="checkbox" value="1" name="chmod[2]" onclick="changeMod()" <!--{if $chmod[2]>0}--> checked="checked"<!--{/if}-->>读取</label>
-                    <label class="checkbox" style="font-weight:normal"><input id="chmod_1" class="mod" type="checkbox" value="1" name="chmod[1]" onclick="changeMod()" <!--{if $chmod[1]>0}--> checked="checked"<!--{/if}-->>写入</label>
-                    <label class="checkbox" style="font-weight:normal"><input id="chmod_0" class="mod" type="checkbox" value="1" name="chmod[0]" onclick="changeMod()" <!--{if $chmod[0]>0}--> checked="checked"<!--{/if}-->>执行</label>
+                	<p ><b>{lang commonality}</b></p>
+                	<label class="checkbox" style="font-weight:normal"><input id="chmod_2" class="mod" type="checkbox" value="1" name="chmod[2]" onclick="changeMod()" <!--{if $chmod[2]>0}--> checked="checked"<!--{/if}-->>{lang read}</label>
+                    <label class="checkbox" style="font-weight:normal"><input id="chmod_1" class="mod" type="checkbox" value="1" name="chmod[1]" onclick="changeMod()" <!--{if $chmod[1]>0}--> checked="checked"<!--{/if}-->>{lang write_in}</label>
+                    <label class="checkbox" style="font-weight:normal"><input id="chmod_0" class="mod" type="checkbox" value="1" name="chmod[0]" onclick="changeMod()" <!--{if $chmod[0]>0}--> checked="checked"<!--{/if}-->>{lang execute}</label>
                 </div>
             </div>
            <div class="c ctw clearfix" style="padding:10px;" >
                 <div class="input-group pull-left" style="width:120px;padding-top:0px;margin-right:20px;">
-                     <a href="javascript:;" class="input-group-addon">权限</a><input   id="chmod"  type="text" value="$meta[mod]" class="form-control focus" onkeyup="setMod(this.value);">
+                     <a href="javascript:;" class="input-group-addon">{lang permissions}</a><input   id="chmod"  type="text" value="$meta[mod]" class="form-control focus" onkeyup="setMod(this.value);">
                  </div>
                  <label class="checkbox-inline"><input type="checkbox" name="son" value="1"  />应用更改到所有子文件夹和文件</label>
             </div>
@@ -425,10 +425,15 @@
 		padding: 8px;
 		z-index:100;
 	}
+	#shareform .popover-title{
+		font-weight:normal;
+		color:#999;
+		font-size:12px;
+	}
 	</style>
 	<div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-    	<h4 class="modal-title" id="return_$_GET[handlekey]">创建分享</h4>
+    	<h4 class="modal-title" id="return_$_GET[handlekey]">{lang create_share}</h4>
     </div>
 		<form id="shareform" name="shareform" class="form-horizontal" role="form" action="{DZZSCRIPT}?mod=system&op=ajax&do=share" method="post"  onsubmit="return shareValidate(this);" style="margin:0">
 			<input type="hidden" name="formhash" value="{FORMHASH}" />
@@ -438,59 +443,109 @@
             <input type="hidden" name="share[img]" value="$icoarr[img]" />
             <input type="hidden" name="share[ext]" value="$icoarr[ext]" />
             <input type="hidden" name="share[type]" value="$icoarr[type]" />
-           <!-- <input type="hidden" name="share[count]" value="$share[count]" />-->
 			<input type="hidden" name="handlekey" value="$_GET[handlekey]" />
             <div class="m_c modal-body">
             	<div class="form-group" style="border:0">
-                	<div class="form-control-static col-sm-2">分享标题:</div>
+                	<div class="form-control-static col-sm-2">{lang share_title}:</div>
                     <div class="col-sm-10">
                     <input type="text" class="form-control" name="share[title]"  value="$share[title]"  />
                     </div>
                 </div> 
                 <div class="form-group" style="border:0">
-                	<div class="form-control-static col-sm-2">到期时间:</div>
+                	<div class="form-control-static col-sm-2">{lang expiration_time}:</div>
                     <div class="col-sm-10">
-                    <input type="text" class="form-control endtime" name="share[endtime]"  style="width:150px;display:inline-block" value="$share[endtime]"  placeholder="到期时间" />
-                    <span class="help-inline ml10" style="display:inline-block">留空或0、不设置到期时间</span>
+                    <input type="text" class="form-control endtime" name="share[endtime]"  style="width:150px;display:inline-block" value="$share[endtime]"  placeholder="{lang expiration_time}" />
+                    <span class="help-inline ml10" style="display:inline-block">{lang not_set_time}</span>
                     </div>
                 </div>
                 
                 <div class="form-group" style="border:0">
-                	<div class="form-control-static col-sm-2">分享次数:</div>
+                	<div class="form-control-static col-sm-2">{lang sharetimes}:</div>
                     <div class="col-sm-10">
-                    <input type="text" class="form-control" autocomplete="off" name="share[times]" style="width:150px;display:inline-block" value="$share[times]" placeholder="分享限制次数" />
-                    <span class="help-inline ml10" style="display:inline-block">留空或0表示不限制</span>
+                    <input type="text" class="form-control" autocomplete="off" name="share[times]" style="width:150px;display:inline-block" value="$share[times]" placeholder="{lang sharetimes1}" />
+                    <span class="help-inline ml10" style="display:inline-block">{lang said_not_restrict}</span>
                     </div>
                 </div>   
                 <div class="form-group" style="border:0">
-                	<div class="form-control-static col-sm-2">提取密码:</div>
+                	<div class="form-control-static col-sm-2">{lang extract_password}:</div>
                     <div class="col-sm-10">
-                    <input type="text" autocomplete="off" class="form-control" name="share[password]" style="width:150px;display:inline-block" value="$share['password']" placeholder="分享密码" />
-                    <span class="help-inline ml10" style="display:inline-block">留空、表示不设置密码</span>
+                    <input type="text" autocomplete="off" class="form-control" name="share[password]" style="width:150px;display:inline-block" value="$share['password']" placeholder="{lang share_password}" />
+                    <span class="help-inline ml10" style="display:inline-block">{lang not_set_password}</span>
                     </div>
                 </div>
+                <!--{if $_G['setting']['innerShare']}-->
+                <div class="form-group" style="border:0">
+                	<div class="form-control-static col-sm-2">{lang innerShare}:</div>
+                    <div class="col-sm-10">
+                    
+                 	<div class="input-group">
+                           <input type="text" autocomplete="off" class="form-control" name=""  value="$_G['siteurl']?open=icoid_$icoarr['icoid']"  style="cursor:default;background:#FFF" spellingcheck="false" readonly="readonly" onfocus="this.select()" />
+                          <span id="js_innerCopy_{$icoarr[icoid]}" class="input-group-addon js_copy" data-clipboard-text="$_G['siteurl']?open=icoid_$icoarr['icoid']" style="position:relative">{lang copy_address}<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span></span>
+                          
+                        </div>
+                    </div>
+                </div>
+                <!--{/if}-->
                 <div  class="form-group shareurl <!--{if !$share[shareurl]}-->hide<!--{/if}-->" style="border:0">
-                    <div class="form-control-static col-sm-2">分享地址:</div>
+                    <div class="form-control-static col-sm-2">{lang share_address}:</div>
                     <div class="col-sm-9">
                         <div class="input-group">
                           <input type="text" class="form-control" style="cursor:default;background:#FFF"  spellingcheck="false" readonly="readonly" name="shareurl" id="shareurl" value='$share[shareurl]' onfocus="this.select()">
-                          <span id="js_copy_{$share[sid]}" class="input-group-addon js_copy" data-clipboard-text="$share[shareurl]" style="position:relative">复制地址<span class="alert copy-success  alert-success hide ">复制成功,请粘帖到您需要的地方</span></span>
-                          <span class="input-group-addon"> <a href="javascript:;" id="shareform_qrcode" class="qrcode glyphicon glyphicon-qrcode" title="扫描二维码,发送到手机"  data-container=".modal" data-html="true" data-trigger="hover" data-toggle="popover" data-placement="left" data-content="<p class='text-center'><img src='$share[qrcode]'></p>"></a></span>
+                          <span id="js_copy_{$share[sid]}" class="input-group-addon js_copy" data-clipboard-text="$share[shareurl]" style="position:relative">{lang copy_address}<span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span></span>
+                          <span class="input-group-addon"> <a href="javascript:;" id="shareform_qrcode" class="qrcode glyphicon glyphicon-qrcode" title="{lang scan_qr_code}"  data-container="#shareform_qrcode" data-html="true" data-trigger="focus" data-toggle="popover" data-placement="top" data-content="<p class='text-center'><img class='allowContextMenu' src='$share[qrcode]'></p>"></a></span>
                         </div>
-                        <!--{if $share['status']<0}--><div class="mt10">状态：<span class="danger">$share['stitle']</span></div><!--{/if}-->
+                        
                     </div>
-                </div>         
+                    
+                </div>
+               
+                <div  class="form-group downurl <!--{if !$share[downurl]}-->hide<!--{/if}-->" style="border:0">
+                    <div class="form-control-static col-sm-2">下载地址:</div>
+                    <div class="col-sm-10">
+                        <div class="input-group">
+                          <input type="text" class="form-control" style="cursor:default;background:#FFF"  spellingcheck="false" readonly="readonly"  id="downurl" value='$share[downurl]' onfocus="this.select()">
+                          <span id="js_dcopy_{$share[sid]}" class="input-group-addon js_copy" data-clipboard-text="$share[downurl]" style="position:relative">{lang copy_address}<span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span></span>
+                          
+                        </div>
+                       
+                    </div>
+                </div> 
+                
+                 <div  class="form-group share-status <!--{if !$share['status']}-->hide<!--{/if}--> " style="border:0">
+                 	<div class="form-control-static col-sm-2">分享状态:</div>
+                    <div class="col-sm-9 share-status-title form-control-static"><span class="danger">$share['stitle']</span></div>     
+                 </div>  
             </div>	
             <div class="modal-footer">
-                   <button type="submit" name="shareform_btn" id="shareform_btn" value="创建分享" class="btn btn-primary" data-loading-text="创建中..." ><strong>创建分享</strong></button> &nbsp;&nbsp; <button type="button"  data-dismiss="modal" class="btn btn-default"><strong>{lang close}</strong></button>
+            	<button type="button" id="share_delete_btn" data-sid="$share[sid]" class="pull-left btn btn-danger <!--{if empty($share[sid])}-->hide<!--{/if}-->" >{lang delete_share}</button>
+                   <button type="submit" name="shareform_btn" id="shareform_btn" value="{lang create_share}" class="btn btn-primary" data-loading-text="{lang create_in}" >{lang create_share}</button> &nbsp;&nbsp; <button type="button"  data-dismiss="modal" class="btn btn-default"><strong>{lang close}</strong></button>
             </div>
 		</form>
 	
 	<script type="text/javascript" reload="1">
+		jQuery('#share_delete_btn').on('click',function(){
+			var el=jQuery(this);
+			if(!el.data('sid')) return ;
+			if(!confirm('{lang delete_share1}')) return false;
+			el.button('loading');
+			jQuery.post('{DZZSCRIPT}?mod=system&op=ajax&do=share&operation=share_delete',{sid:el.data('sid')},function(json){
+				if(json.msg=='success'){
+					jQuery('#shareform').find('.shareurl,.downurl,.share-status').addClass('hide')
+					.end().find('input[name="share[endtime]"]').val('')
+					.end().find('input[name="share[times]"]').val('')
+					.end().find('input[name="share[password]"]').val('');
+					el.data('sid','').addClass('hide').button('reset');
+				}else{
+					el.button('reset');
+					showmessage(json.error,'danger',3000,1);
+				}
+			},'json');
+			return false;
+		});
 		function shareValidate(form){
 			//判断分享标题不能为空
 			if(jQuery('#shareform input[name="share[title]"]').val()==''){
-				  showmessage('请填写分享标题','danger',3000,1);
+				  showmessage('{lang please_fill_share_title}','danger',3000,1);
 				  jQuery('#shareform input[name="share[title]"]').focus();
 				  return false;
 			}
@@ -498,7 +553,7 @@
 			 if(endtime && endtime!='0'){
 				  var reg=/\d{4}-\d{2}-\d{2}$/;
 				  if(!reg.test(endtime)){
-					  showmessage('到期时间格式错误，请检查','danger',3000,1);
+					  showmessage('{lang due_time_format_error}','danger',3000,1);
 					  jQuery('#shareform input[name="share[endtime]"]').focus();
 					  return false;
 				  }
@@ -509,12 +564,26 @@
 					  //showmessage('创建成功','success',1000,1); 
 					  jQuery('#shareform .shareurl').removeClass('hide').find('.js_copy').attr('data-clipboard-text',json.shareurl);
 					  jQuery('#shareurl').val(json.shareurl).focus();
-					  jQuery('#shareform_qrcode').attr('data-content',"<p class='text-center'><img src='"+json.qrcode+"'></p>");
+					  jQuery('#shareform_qrcode').attr('data-content',"<p class='text-center'><img class='allowContextMenu'  src='"+json.qrcode+"'></p>");
+					  if(json.downurl){
+					  jQuery('#shareform .downurl').removeClass('hide').find('.js_copy').attr('data-clipboard-text',json.downurl);
+						 jQuery('#downurl').val(json.downurl);
+					  }
+					  if(json.stitle){
+						   jQuery('#shareform .share-status-title').html('<span class="danger">'+json.stitle+'</span>');
+					  }
+					  if(json.status<0){
+						  jQuery('#shareform .share-status').removeClass('hide');
+					  }else{
+						 jQuery('#shareform .share-status').addClass('hide'); 
+					  }
+					  jQuery('#share_delete_btn').data('sid',json.sid).removeClass('hide');
 					  jQuery('#shareform_qrcode').popover();
-					  jQuery('#shareform_btn').html('创建成功');
+					  jQuery('#shareform_btn').html('{lang create_success}');
 					  window.setTimeout(function(){ jQuery('#shareform_btn').button('reset');},1000);
+					  
 				  }else{
-					  jQuery('#shareform_btn').html('创建失败');
+					  jQuery('#shareform_btn').html('{lang create_failure}');
 					  window.setTimeout(function(){ jQuery('#shareform_btn').button('reset');},3000);
 				  }
 				 
@@ -530,7 +599,7 @@
 		}
 		jcLoader().load({type:'css',ids:'css_datepicker',url:'./static/js/datepicker/datepicker.css?{VERHASH}'});
 	
-	 	jcLoader().load({type:"js",ids:'js_ui_core,js_datepicker,js_ZeroClipboard',url:"static/js/jquery.ui.core.js?{VERHASH},static/js/datepicker/jquery.ui.datepicker.min.js?{VERHASH},static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"},function(){
+	 	jcLoader().load({type:"js",ids:'js_ui_core,js_datepicker,js_ZeroClipboard',url:"static/js/jquery.ui.core.js?{VERHASH},static/js/datepicker/jquery.ui.datepicker.js?{VERHASH},static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"},function(){
 			
 			
 			 jQuery('#shareform .endtime').datepicker({minDate:0});
@@ -546,7 +615,9 @@
 					}
 				  });
 			} else {
-				 var client = new ZeroClipboard(jQuery('#js_copy_{$share[sid]}'));
+				jQuery('#shareform .js_copy').each(function(){
+					
+				  var client = new ZeroClipboard(jQuery(this));
 				  client.on( "load", function( client ) {
 					  client.on( "complete", function( client,args ) {
 						  var self=this;
@@ -555,7 +626,8 @@
 								jQuery(self).find('.copy-success').addClass('hide');
 						  },1000);
 					  });
-				 });
+				  });
+				});
 			}
 			
 		}); 

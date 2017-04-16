@@ -13,7 +13,7 @@ if(!defined('IN_DZZ')) {
 include_once libfile('function/cache');
 $dzz->reject_robot(); //阻止机器人访问
 if($_G['adminid']!=1){
-	showmessage('没有权限',dreferer());
+	showmessage('privilege',dreferer());
 }
 $operation=trim($_GET['operation']);
 
@@ -31,8 +31,8 @@ if(empty($operation)){
 		updatecache('setting');
 		showmessage('do_success',dreferer(),array(),array('alert'=>'right'));
 	}else{
-		$navtitle='微信设置';
-		$navlast='微信设置';
+		$navtitle=lang('weixin_set');
+		$navlast=lang('weixin_set');
 		$settingnew=array();
 		if(empty($setting['token'])) $settingnew['token']=$setting['token']=random(8);
 		if(empty($setting['encodingaeskey'])) $settingnew['encodingaeskey']=$setting['encodingaeskey']=random(43);
@@ -41,8 +41,8 @@ if(empty($operation)){
 			updatecache('setting');
 		}
 		$wxapp=array('appid'=>$appid,
-					 'name'=>'消息中心',
-					 'desc'=>'消息中心应用，通过它可以让员工分享工作信息、和同事交流。',
+					 'name'=>lang('message_center'),
+					 'desc'=>lang('message_center_state'),
 					 'icon'=>'dzz/feed/images/0.jpg',
 					 'agentid'=> $setting['agentid'],
 					 'token'=>$setting['token'],
@@ -58,26 +58,26 @@ if(empty($operation)){
 		C::t('wx_app')->insert($wxapp,1,1);
 	}
 }elseif($operation=='menu'){
-	$navtitle='菜单设置';
+	$navtitle=lang('menu_settings');
 	$menu=$setting['menu']?($setting['menu']):'';
 }elseif($operation=='ajax'){	
 	if($_GET['action']=='setEventkey'){
 		//支持的菜单事件
 		$menu_select=array('click'=>array(),
 							'link'=>array(
-									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=aboutme'=>'与我相关',
-									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=fromme'=>'我发布的',
-									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=atme'=>'@我的',
-									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=collect'=>'我收藏的',
-									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=replyme'=>'回复我的',
-									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=all'=>'全部动态'
+									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=aboutme'=>lang('related_me'),
+									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=fromme'=>lang('my_release'),
+									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=atme'=>'@'.lang('mine'),
+									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=collect'=>lang('my_collection'),
+									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=replyme'=>lang('reply_my'),
+									$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=all'=>lang('all_dynamic')
 							)
 					);
 		
 		
 		$json_menu_select=json_encode($menu_select);
 		$type=trim($_GET['type']);
-		$typetitle=array('click'=>'设置菜单KEY值','link'=>'设置菜单跳转链接');
+		$typetitle=array('click'=>lang('set_menu_KEY_values'),'link'=>lang('set_menu_links_jump'));
 		
 	}elseif($_GET['action']=='menu_save'){ //菜单保存
 			$setting['menu']=array('button'=>$_GET['menu']);
@@ -109,10 +109,10 @@ if(empty($operation)){
 				if($wx->createMenu($data,$setting['agentid'])){
 					exit(json_encode(array('msg'=>'success')));
 				}else{
-					exit(json_encode(array('error'=>'发布失败,errCode:'.$wx->errCode.',errMsg:'.$wx->errMsg)));
+					exit(json_encode(array('error'=>lang('post_failure').$wx->errCode.',errMsg:'.$wx->errMsg)));
 				}
 			}else{
-				exit(json_encode(array('error'=>'发布失败,应用还没有创建微信agentid')));
+				exit(json_encode(array('error'=>lang('post_failure1'))));
 			}
 			
 	}elseif($_GET['action']=='menu_default'){//恢复默认
@@ -120,35 +120,35 @@ if(empty($operation)){
 		$setting['menu']=array('button'=>array(
 											array(
 												'type'=>'view',	
-												'name'=>'全部动态',
+												'name'=>lang('all_dynamic'),
 												'url'=>$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=all'
 											),
 											array(
 												'type'=>'view',	
-												'name'=>'与我相关',
+												'name'=>lang('related_me'),
 												'url'=>$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=aboutme'
 											),
 											array(
-												'name'=>'我的动态',
+												'name'=>lang('my_feed'),
 												'sub_button'=>array(
 													array(
 														'type'=>'view',	
-														'name'=>'我发布的',
+														'name'=>lang('my_release'),
 														'url'=>$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=fromme'
 													),
 													array(
 														'type'=>'view',	
-														'name'=>'@我的',
+														'name'=>'@'.lang('mine'),
 														'url'=>$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=atme'
 													),
 													array(
 														'type'=>'view',	
-														'name'=>'回复我的',
+														'name'=>lang('reply_my'),
 														'url'=>$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=replyme'
 													),
 													array(
 														'type'=>'view',	
-														'name'=>'我收藏的',
+														'name'=>lang('my_collection'),
 														'url'=>$_G['siteurl'].DZZSCRIPT.'?mod=feed&feedType=collect'
 													)
 												

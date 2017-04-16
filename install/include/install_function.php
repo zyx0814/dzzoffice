@@ -41,6 +41,7 @@ function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
 				}
 			}
 		}
+		$back = lang('to_back');
 		echo <<<EOT
 		<div class="content red">
 			
@@ -50,7 +51,7 @@ function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
 			<h4>$title</h4>
 			<ul >$comment</ul>
 		
-			<div style="text-align:right;width:80%;padding-top:50px;"><a href="#" class="button" onclick="history.back();return false"><input type="button" value="返回上一步"></a></div>
+			<div style="text-align:right;width:80%;padding-top:50px;"><a href="#" class="button" onclick="history.back();return false"><input type="button" value="$back"></a></div>
 		</div>
 EOT;
  show_footer($quit);
@@ -58,7 +59,7 @@ EOT;
 
 function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
 	if(!function_exists('mysql_connect') && !function_exists('mysqli_connect')) {
-		show_msg('undefine_func', 'mysql_connect', 0);
+		show_msg('undefine_func', 'mysql_connect && mysqli_connect', 0);
 	}
 	$mysqlmode = function_exists('mysql_connect') ? 'mysql' : 'mysqli';
 	$link = ($mysqlmode == 'mysql') ? @mysql_connect($dbhost, $dbuser, $dbpw) : new mysqli($dbhost, $dbuser, $dbpw);
@@ -361,15 +362,22 @@ function show_license() {
 	global $self,  $step;
 	$next = $step + 1;
 	show_header();
+	$title = lang('step_env_check_title');
+	$version='DzzOffice'.CORE_VERSION.'_'.INSTALL_LANG.' '.CORE_RELEASE;
+	$release = CORE_RELEASE;
+	$install_lang = lang(INSTALL_LANG);
 	echo <<<EOT
 		<style>
 		 body{background:#180153}
 		</style>
 		<table width="90%" height="100%">
-		<tr><td valign="middle">
+		<tr><td valign="middle" align="center">
 				<h1><img src="images/logo.png"></h1>
 				<div class="spacer"></div>
-			<div ><a href="?step=1" class="button_start"><span>开始安装</span></a></div>
+				<h3>$install_lang</h3>
+				<h4>$version</h4>
+				<div class="spacer"></div>
+			<div><a href="?step=1" class="button_start"><span>$title</span></a></div>
 			<div class="spacer"></div>
 		</td></tr>
 		</table>
@@ -389,7 +397,7 @@ if(!function_exists('file_put_contents')) {
 function createtable($sql, $dbver) {
 
 	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
-	$type = in_array($type, array('MYISAM', 'HEAP', 'MEMORY')) ? $type : 'MYISAM';
+	$type = in_array($type, array('MYISAM', 'HEAP', 'MEMORY','INNODB')) ? $type : 'MyISAM';
 	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql).
 	(" ENGINE=$type DEFAULT CHARSET=".DBCHARSET);
 }
@@ -434,8 +442,8 @@ function show_header() {
 	$title = lang('title_install');
 	$charset = CHARSET;
 	echo <<<EOT
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE>
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=$charset" />
 <title>$title</title>
@@ -829,11 +837,11 @@ function check_env() {
 		$quit = true;
 	}
 
-	if(!file_exists(ROOT_PATH.'./config.inc.php')) {
-		$errors[] = 'config_nonexistence';
+	if(!file_exists(ROOT_PATH.'./config.php')) {
+		$errors[] = lang('config_nonexistence');
 		$quit = true;
-	} elseif(!is_writeable(ROOT_PATH.'./config.inc.php')) {
-		$errors[] = 'config_unwriteable';
+	} elseif(!is_writeable(ROOT_PATH.'./config.php')) {
+		$errors[] = lang('config_unwriteable');
 		$quit = true;
 	}
 

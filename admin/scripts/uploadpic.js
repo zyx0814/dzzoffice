@@ -84,7 +84,7 @@ function insertAttach(id) {
 		return;
 	}
 	if(extensions != '' && (re.exec(extensions) == null || ext == '')) {
-		alert('对不起，不支持上传此类扩展名的图片');
+		alert(__lang.support_upload_pictures_extensions);
 		return;
 	}
 	attachexts[id] = inArray(ext, ['gif', 'jpg', 'jpeg', 'png']) ? 2 : 1;
@@ -92,7 +92,7 @@ function insertAttach(id) {
 	var inhtml = '<table cellspacing="0" cellpadding="0" class="up_row"><tr>';
 	
 	inhtml += '<td><strong>' + localfile +'</strong>';
-	inhtml += '</td><td class="o"><span id="showmsg' + id + '"><a href="javascript:;" onclick="delAttach(' + id + ');return false;" class="xi2">[删除]</a></span>';
+	inhtml += '</td><td class="o"><span id="showmsg' + id + '"><a href="javascript:;" onclick="delAttach(' + id + ');return false;" class="xi2">['+__lang.delete+']</a></span>';
 	inhtml += '</td></tr></table>';
 
 	document.getElementById('localfile_' + id).innerHTML = inhtml;
@@ -147,7 +147,7 @@ function upload() {
 	if(nowUid>0) {
 		var upobj = document.getElementById('showmsg'+nowid);
 		if(uploadStat==1) {
-			upobj.innerHTML = '上传成功';
+			upobj.innerHTML = __lang.upload_success;
 			successState = true;
 			var InputNode;
 			try {
@@ -163,11 +163,11 @@ function upload() {
 
 		} else {
 			upobj.style.color = "#f00";
-			upobj.innerHTML = '上传失败 '+uploadStat;
+			upobj.innerHTML = __lang.upload_failed+uploadStat;
 		}
 	}
 	if(document.getElementById('showmsg'+nid) != null) {
-		document.getElementById('showmsg'+nid).innerHTML = '上传中，请等待(<a href="javascript:;" onclick="forms[nowUid].submit();">重试</a>)';
+		document.getElementById('showmsg'+nid).innerHTML = __lang.upload_await+'(<a href="javascript:;" onclick="forms[nowUid].submit();">'+__lang.founder_upgrade_reset+'</a>)';
 		forms[nowUid].submit();
 	} else if(nowUid+1 == forms.length) {
 		window.onbeforeunload = null;

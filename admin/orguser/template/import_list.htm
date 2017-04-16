@@ -25,7 +25,7 @@ p input.form-control:focus{
 	selorg.openarr=$openarr;  
 	<!--{/if}-->
 	selorg.add=function(ctrlid,vals){
-		if(vals[0].orgid=='other') vals[0].path='请选择机构或部门';
+		if(vals[0].orgid=='other') vals[0].path='{lang please_select_a_organization_or_department}';
 		jQuery('#'+ctrlid+'_Menu').html(vals[0].path+' <span class="caret"></span>');
 		jQuery('#sel_'+ctrlid).val(vals[0].orgid);
 	}
@@ -34,9 +34,9 @@ p input.form-control:focus{
 <div class="container" style="height:100%">
 <div class="main-header">
   <ul class="nav nav-pills nav-pills-bottomguide"> 
-  	<li><a href="{ADMINSCRIPT}?mod=orguser">机构和用户管理</a></li>
-    <li ><a href="{ADMINSCRIPT}?mod=orguser&op=import">开始导入</a></li>
-    <li class="active"><a href="{ADMINSCRIPT}?mod=orguser&op=import&do=list">导入设置</a></li>
+  	<li><a href="{ADMINSCRIPT}?mod=orguser">{lang organization_user_manage}</a></li>
+    <li ><a href="{ADMINSCRIPT}?mod=orguser&op=import">{lang start_import}</a></li>
+    <li class="active"><a href="{ADMINSCRIPT}?mod=orguser&op=import&do=list">{lang import_set}</a></li>
    
     <!-- <li><a href="{BASESCRIPT}?mod=member&op=import">从文件导入</a></li>
                <li><a href="{BASESCRIPT}?mod=member&op=invite">Email邀请</a></li>-->
@@ -46,7 +46,7 @@ p input.form-control:focus{
   <div class="main-header2 clearfix" style="padding:20px 0 10px 10px;">
     <div  class="form-horizontal form-horizontal-left">
       <div class="form-group">
-        <label class="control-label" for="email">导入机构：</label>
+        <label class="control-label" for="email">{lang import_organization}：</label>
         <div class="controls">
           <div class="dropdown">
                   <input id="sel_orgid"  type="hidden" name="orgid"  value="$orgid" />
@@ -58,13 +58,13 @@ p input.form-control:focus{
                   </div>
             </div>
         </div>
-        <span  class="help-inline">选择要导入到的机构，如果不导入任何机构，会根据用户信息表中的所属部门来生成新的机构和部门，没有则会直接导入到"无机构人员"下</span> </div>
+        <span  class="help-inline">{lang import_list_organization}</span> </div>
       <div class="form-group" id="pass_default">
-        <label class="control-label" for="email">默认密码：</label>
+        <label class="control-label" for="email">{lang default_password}：</label>
         <div class="controls">
           <input id="pswdefault" type="text" class="form-control" value="111" name="pswdefault" />
         </div>
-        <span  class="help-inline">默认用户密码，当登录密码项未设置时，会使用此处设置的密码作为新导入的用户的密码</span> </div>
+        <span  class="help-inline">{lang import_list_password}</span> </div>
        <!--<div class="form-group">
         <label class="control-label"></label>
         <div class="controls">
@@ -74,23 +74,20 @@ p input.form-control:focus{
         </div>
       </div>-->
       <div class="form-group" >
-        <label class="control-label" >导入方式：</label>
+        <label class="control-label" >{lang import_way}：</label>
         <div class="controls ml20" style="width:160px">
           <label class="radio radio-inline">
             <input type="radio" id="append"  name="append" value="1" checked="checked" >
-            增量</label>
+            {lang bulking}</label>
           <label class="radio radio-inline">
             <input type="radio" name="append" value="0" >
-            覆盖</label>
+            {lang coverage}</label>
         </div>
-        <span  class="help-inline">增量导入方式：新导入的用户信息智能的增加到原有用户信息中；覆盖导入：新导入的信息覆盖原有用户的信息,建议使用增量方式。</span> </div>
+        <span  class="help-inline">{lang import_list_coverage}</span> </div>
      
     </div>
     <ul  class="help-block" style="line-height:1.8em">
-      <li>姓名和邮箱项目为必填项</li>
-      <li>点击下面的导入项的内容，可以临时编辑，编辑部门时注意，部门每行是上下级的关系，上一行为下一行的上级部门</li>
-      <li>不需要导入的项目，可以点击右侧的"X"删除掉</li>
-      <li>点击导入按钮，导入当前项目，全部导入按钮，按顺序导入所有项，中途可以再次点击停止</li>
+      {lang import_list_text}
     </ul>
   </div>
   <div style="padding:0;">
@@ -100,7 +97,7 @@ p input.form-control:focus{
           <!--{loop $h $key $value}-->
           <th>$h0[$value]</th>
           <!--{/loop}-->
-          <th><button type="button" id="button_import_all" class="btn btn-primary" style="padding:6px 25px;" data-loading-text="导入完成" onclick="toggle_import_all(this)">全部导入</button></th>
+          <th><button type="button" id="button_import_all" class="btn btn-primary" style="padding:6px 25px;" data-loading-text="{lang import_finish}" onclick="toggle_import_all(this)">{lang all_import}</button></th>
         </tr>
       </thead>
        {eval $i=0;}
@@ -116,8 +113,8 @@ p input.form-control:focus{
         <td class="editable" key="$value1"><p>$value[$value1]</p></td>
         <!--{/if}--> 
         <!--{/loop}-->
-        <td><button type="button" id="button_item_$i" class="btn btn-simple" style="width:90px;" onclick="item_import('item_$i',this);" data-loading-text="导入中...">导&nbsp;入</button>
-          &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" title="删除此项" onclick="item_remove(this);return false;"><i class="glyphicon glyphicon-remove"></i></a></td>
+        <td><button type="button" id="button_item_$i" class="btn btn-simple" style="width:90px;" onclick="item_import('item_$i',this);" data-loading-text="{lang in_import}">{lang import_nbsp}</button>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" title="{lang delete_item}" onclick="item_remove(this);return false;"><i class="glyphicon glyphicon-remove"></i></a></td>
       </tr>
       {eval $i++;}
       <!--{/loop}-->
@@ -133,10 +130,10 @@ function toggle_import_all(obj){
 	var el=jQuery(obj);
 	if(importing){
 		importing=false;
-		el.html('继续导入');
+		el.html('{lang continue_import}');
 	}else{
 		importing=true;
-		el.html('导入中,点击停止');
+		el.html('{lang import_click_stop}');
 		run_import_all();
 	}
 }
@@ -162,7 +159,7 @@ function item_import(id){
 			el.parent().parent().addClass('danger');
 		}else{
 			el.parent().parent().addClass('success1');
-			el.html('导入成功');
+			el.html('{lang import_success}');
 			//el.parent().parent().fadeOut(50,function(){jQuery(this).remove();});
 			window.setTimeout(function(){el.parent().parent().remove();if(importing) run_import_all();},0);
 		}

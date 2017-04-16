@@ -7,9 +7,9 @@ class dzz_error
 
 	public static function system_error($message, $show = true, $save = true, $halt = true) {
 		if(!empty($message)) {
-			$message = lang('error', $message);
+			$message = lang($message);
 		} else {
-			$message = lang('error', 'error_unknow');
+			$message = lang('error_unknow');
 		}
 
 		list($showtrace, $logtrace) = dzz_error::debug_backtrace();
@@ -35,7 +35,7 @@ class dzz_error
 	}
 
 	public static function template_error($message, $tplname) {
-		$message = lang('error', $message);
+		$message = lang($message);
 		$tplname = str_replace(DZZ_ROOT, '', $tplname);
 		$message = $message.': '.$tplname;
 		dzz_error::system_error($message);
@@ -75,11 +75,11 @@ class dzz_error
 
 		list($showtrace, $logtrace) = dzz_error::debug_backtrace();
 
-		$title = lang('error', 'db_'.$message);
-		$title_msg = lang('error', 'db_error_message');
-		$title_sql = lang('error', 'db_query_sql');
-		$title_backtrace = lang('error', 'backtrace');
-		$title_help = lang('error', 'db_help_link');
+		$title = lang('db_'.$message);
+		$title_msg = lang('db_error_message');
+		$title_sql = lang('db_query_sql');
+		$title_backtrace = lang('backtrace');
+		$title_help = lang('db_help_link');
 
 		$db = &DB::object();
 		$dberrno = $db->errno();
@@ -266,7 +266,7 @@ EOT;
 		$helplink = '';
 		
 
-		$endmsg = lang('error', 'error_end_message', array('host'=>$host));
+		$endmsg = lang('error_end_message', array('host'=>$host));
 		echo <<<EOT
 <div class="help">$endmsg. $helplink</div>
 </div>
@@ -335,7 +335,7 @@ EOT;
 </tr>
 EOT;
 		}
-		$endmsg = lang('error', 'mobile_error_end_message', array('host'=>$host));
+		$endmsg = lang('mobile_error_end_message', array('host'=>$host));
 		echo <<<EOT
 <tr>
 	<td class="help"><br />$endmsg</td>

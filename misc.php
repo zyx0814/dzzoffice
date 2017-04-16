@@ -24,7 +24,7 @@ $modcachelist = array(
 
 $mod = getgpc('mod');
 $mod = (empty($mod) || !in_array($mod, $modarray)) ? 'error' : $mod;
-if(in_array($mod, array('seccode', 'secqaa', 'initsys','movetospace','setunrun','ajax','syscache,stat','sendmail','sendwx'))) {
+if(in_array($mod, array('seccode', 'secqaa', 'initsys','movetospace','setunrun','ajax','syscache','stat','sendmail','sendwx'))) {
 	define('ALLOWGUEST', 1);
 }
 $cachelist = array();
@@ -37,6 +37,7 @@ switch ($mod) {
 	case 'userstatus':
 	case 'seccode':
 	case 'updatecache':
+	case 'movetospace':
 		$dzz->init_cron = false;
 		$dzz->init_session = false;
 	default:

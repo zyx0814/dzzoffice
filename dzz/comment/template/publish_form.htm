@@ -15,7 +15,7 @@
       <div class="container_psw">
         <div class="textarea_cpsw">
           <div class="wrap_tcpsw">
-            <textarea rows="" id="message_{$idtype}_{$id}" name="message" cols="" onkeyup="check_publish_enable('{$idtype}_{$id}')" tip="我说两句" class="write_wtcpsw _bb_write_wtcpsw " style="overflow: hidden; word-wrap: break-word; resize: vertical;border:none;box-shadow:none;height:25px;">我说两句</textarea>
+            <textarea rows="" id="message_{$idtype}_{$id}" name="message" cols="" onkeyup="check_publish_enable('{$idtype}_{$id}')" tip="{lang said_two_sentences}" class="write_wtcpsw _bb_write_wtcpsw " style="overflow: hidden; word-wrap: break-word; resize: vertical;border:none;box-shadow:none;height:25px;">{lang said_two_sentences}</textarea>
           </div>
           <div id="publish_count_{$idtype}_{$id}" class="count_cpsw"> <span id="num_input_{$idtype}_{$id}" class="num_ccpsw">0</span>/<span class="leng_ccpsw">1000</span> </div>
         </div>
@@ -24,15 +24,15 @@
         <ul class="list_acpsw">
         <!--{if $_GET[allowattach]>0}-->
        	   <li class="ament_lacpsw" style="position: relative; cursor: pointer;">
-           <a id="upload_from_{$idtype}_{$id}" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;" href="javascript:void(0);" title="" class="item_lacpsw">文件/图片</a> 
+           <a id="upload_from_{$idtype}_{$id}" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;" href="javascript:void(0);" title="" class="item_lacpsw">{lang typename_attach}/{lang photo}</a> 
            
            </li>
            <!--{/if}-->
             <!--{if $_GET[allowat]>0}-->
-          <li class="at_lacpsw"><a id="at_home" href="javascript:void(0);" title="" class="item_lacpsw">同事</a></li>
+          <li class="at_lacpsw"><a id="at_home" href="javascript:void(0);" title="" class="item_lacpsw">{lang colleague}</a></li>
           <!--{/if}-->
          <!--{if $_GET[allowsmiley]>0}-->
-          <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_{$idtype}_{$id}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">表情</a></li>
+          <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_{$idtype}_{$id}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">{lang face}</a></li>
            <script type="text/javascript" reload="1"> 
 			jcLoader().load({  
 				type:'js', 
@@ -44,20 +44,21 @@
         </script>
           <!--{/if}-->
         </ul>
-         <a id="publish_submit_{$idtype}_{$id}" class="btn btn-primary btn-sm" disabled="disabled" title="发表(Ctrl+Enter)" href="javascript:void(0);" ><b>发表</b></a> 
+         <a id="publish_submit_{$idtype}_{$id}" class="btn btn-primary btn-sm" disabled="disabled" title="{lang publish}(Ctrl+Enter)" href="javascript:void(0);" ><b>{lang publish}</b></a> 
       </div>
        <div id="attachmentViewBox_{$idtype}_{$id}" class="attachmentContainer clearfix"> </div>
     </form>
     <div class="actionUploadAttachment tobody" id="upload_from_{$idtype}_{$id}_menu" style="display:none">
-      <!--{if $_GET[allowattach]>=2 }--><div class="local_auatth" style="position:relative;overflow:hidden"> <a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">本地上传
+      <!--{if $_GET[allowattach]>=2 }--><div class="local_auatth" style="position:relative;overflow:hidden"> <a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">{lang web_upload}
         <input id="fileupload_{$idtype}_{$id}" type="file" name="files[]" multiple >
         </a> </div><!--{/if}-->
         <!--{if $_GET[allowattach]==1 || $_GET[allowattach]>2}-->
-      <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop();jQuery(this).parent().parent().hide();">从我的文件中选择</a></div>
+      <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop('{$idtype}_{$id}');jQuery(this).parent().parent().hide();">{lang choose_from_my_file}</a></div>
       <!--{/if}-->
     </div>
   </div>
 </div>
+<script type="text/javascript" src="dzz/comment/scripts/comment.js?{VERHASH}"></script>
 <script type="text/javascript" reload="1">
 jQuery(document).ready(function(e) {
 	jQuery('#upload_from_{$idtype}_{$id}_menu.tobody').removeClass('tobody').appendTo('#append_parent');
@@ -94,8 +95,8 @@ jQuery(document).ready(function(e) {
 	});
 	jcLoader().load({  
 				type:'js', 
-				ids:'caret,atwho,comment', 
-				url:'static/atwho/js/jquery.caret.js?{VERHASH},static/atwho/js/jquery.atwho.js?{VERHASH},dzz/comment/scripts/comment.js?{VERHASH}'  
+				ids:'caret,atwho', 
+				url:'static/atwho/js/jquery.caret.js?{VERHASH},static/atwho/js/jquery.atwho.js?{VERHASH}'  
 			},function(){  
 			   
 			
@@ -177,7 +178,7 @@ jQuery(document).ready(function(e) {
 
 
 		<!--{if $_GET[allowat]>0}-->
-	
+		var cachequeryMentions = [], itemsMentions;
 		jQuery('#message_{$idtype}_{$id}').atwho({
 			at: "@",
 			//data: '{DZZSCRIPT}?mod=feed&op=ajax&do=getUserToJson',
@@ -186,7 +187,7 @@ jQuery(document).ready(function(e) {
 						remote_filter: function (query, render_view) {
 							var thisVal = query,
 							self = jQuery(this);
-							if( !self.data('active') && thisVal.length >= 2 ){
+							if( !self.data('active') && thisVal.length >= 1 ){
 								self.data('active', true);                            
 								itemsMentions = cachequeryMentions[thisVal]
 								if(typeof itemsMentions == "object"){

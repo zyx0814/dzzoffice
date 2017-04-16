@@ -29,7 +29,7 @@ class table_user_profile1 extends dzz_table
 		return $data;
 	}
 	public function fetch_by_field($uid,$field){ //获取用户某项资料的值
-		return DB::result_first("select value from %t where uid=%d and fieldid=%s",array($this->_table,$feild));
+		return DB::result_first("select value from %t where uid=%d and fieldid=%s",array($this->_table,$uid,$field));
 	}
     public function update($uid,$fieldarr){//插入用户资料
 		foreach($fieldarr as $key=>$value){

@@ -31,10 +31,12 @@ if($do=='userfield'){
 	$data=array();
 	$datanamearr=array( 'margintop', 'marginright', 'marginbottom', 'marginleft', 'iconview', 'iconposition', 'direction',  'autolist','taskbar');
 	foreach($_GET as $key=>$val){
-		if(in_array($key,$datanamearr)) $data[$key]=$val;
+		if($key=='taskbar'){
+			$data[$key]=in_array($val,array('bottom','left','top','right'))?$val:'';
+		}elseif(in_array($key,$datanamearr)) $data[$key]=intval($val);
 	}
 	//if(perm_check::checkperm_Container('icosContainer_body_'.$space['typefid']['desktop'],'admin')){
-			C::t('user_field')->update($_G['uid'],$data);
+		C::t('user_field')->update($_G['uid'],$data);
 	//}
 	exit('success');
 }elseif($do=='folder'){
@@ -47,14 +49,13 @@ if($do=='userfield'){
 	}
 	exit('success');
 }elseif($do=='clearIcoposition'){
-	$icoids=$_POST['icoid'];
+	$icoids=$_GET['icoid'];
 	$pfid=trim($_POST['fid']);
 	if(!$icoids) exit();
 	if(!is_array($icoids)){
 		$icoids=array($icoids);	
 	}
-	if(!perm_check::checkperm_Container($pfid,'admin')) exit(lang('message','no_privilege'));
-	
+	if(!perm_check::checkperm_Container($pfid,'admin')) exit(lang('no_privilege'));
 	C::t("dzz_icos")->update($icoids,array('position'=>''));
 	exit();
 	
@@ -73,7 +74,7 @@ if($do=='userfield'){
 	$tbz=trim($_GET['tbz']);
 	$sourcetype=trim($_GET['sourcetype']);
 	$icoids=explode(',',$_GET['icoid']);
-	$ticoid=intval($_GET['ticoid']);
+	$ticoid=intval(dzzdecode($_GET['ticoid']));
 	$container=trim($_GET['container']);
 	$iscut=isset($_GET['iscut'])?intval($_GET['iscut']):0;
 	$data=array();
@@ -81,7 +82,7 @@ if($do=='userfield'){
 	$folderarr=array();
 	
 	if(!$icoids){
-		$data=array('error'=>lang('message','data_error'));
+		$data=array('error'=>lang('data_error'));
 		echo json_encode($data);
 		exit();
 	}
@@ -89,7 +90,7 @@ if($do=='userfield'){
 	//判断目标容器$container;
 	if($ticoid){
 		if(!$ticoarr=C::t('icos')->fetch_by_icoid($ticoid)){
-			$data=array('error'=>lang('message','target_not_exist'));
+			$data=array('error'=>lang('target_not_exist'));
 			echo json_encode($data);
 			exit();
 		}
@@ -106,10 +107,10 @@ if($do=='userfield'){
 	
 	
 	//判断是否为复制状态；
-	$iscopy=checkCopy($icoids[0],$sourcetype,$iscut,$obz,$tbz);
+	$iscopy=checkCopy(0,$sourcetype,$iscut,$obz,$tbz);
 	$gid=getGidByContainer($container);
 	if(!$tbz && !$pfid=getFidByContainer($container)){
-		$data=array('error'=>lang('message','container_not_found'));
+		$data=array('error'=>lang('folder_not_exist'));
 			echo json_encode($data);
 			exit();
 	}
@@ -126,15 +127,19 @@ if($do=='userfield'){
 		
 		foreach($icoids as $icoid){
 			//在目标位置创建
+			$icoid=dzzdecode(rawurldecode($icoid));
+			if(empty($icoid)){
+				$data['error'][]=$icoid.'：'.lang('forbid_operation');
+				continue; 
+			}
 			$opath=rawurldecode($icoid);
 			$path=rawurldecode(str_replace(array('_dock_','icosContainer_folder_','icosContainer_body_'),'',$container));
-			
-			 $return=IO::CopyTo($opath,$path,$iscopy);
-			 if(!$iscopy && !$return['moved']){
-				 $return = IO::DeleteByData($return);
-			 }
+			$return=IO::CopyTo($opath,$path,$iscopy);
 			
 			if($return['success']===true){
+				if(!$iscopy && $return['moved']!==true){
+					 IO::DeleteByData($return);
+				 }
 				$data['icoarr'][]=$return['newdata'];
 				if(!$tbz){
 					addtoconfig($return['newdata'],$ticoid);

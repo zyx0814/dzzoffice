@@ -55,7 +55,7 @@ class io_JSS extends io_api
 		}
 		$file=fopen($url,'rb');
 		if(!$file){
-			return array('error'=>'文件打开错误');
+			return array('error'=>lang('open_file_error'));
 		}
 	    try{$jss->delete_object($arr['bucket'],$arr['object']);}catch(Exception $e){}
 		try{	
@@ -125,14 +125,14 @@ class io_JSS extends io_api
 			$access_key=$_GET['access_key'];
 			$bucket=$_GET['bucket'];
 			if(!$access_id || !$access_key) {
-				showmessage('请输入京东云存储的accessKey和secretKey',dreferer());
+				showmessage('input_jd_acc_sec',dreferer());
 			}
 			
 			$jss = new JingdongStorageService($access_id,$access_key);
 			try{
 				$bucketslist=$jss->list_buckets();
 			}catch(Exception $e){
-				showmessage('京东云存储测试连接失败，请确认accessKey和secretKey正确，且当前京东云存储可用',dreferer());
+				showmessage('input_jd_acc_sec1',dreferer());
 				//showmessage($e->getMessage(),dreferer());
 			}
 			$type='JSS';
@@ -913,7 +913,7 @@ class io_JSS extends io_api
 		//exit('createrfolder==='.$fname.'===='.$path1.'===='.$bz);
 		//exit($path.$fname.'vvvvvvvvvvv');
 		$return=array();
-		return array('error'=>'暂不支持目录功能');
+		return array('error'=>lang('temporary_support_directory'));
 		try {
 			$jss=self::init($path);
 			if(is_array($jss) && $jss['error']) return $jss;
@@ -1063,7 +1063,7 @@ class io_JSS extends io_api
 					$filepath=$_G['setting']['attachdir'].'./cache/'.random(5).$filename;
 					
 					if(!$handle=fopen($file,'rb')){
-						return array('error'=>'文件打开错误');
+						return array('error'=>lang('open_file_error'));
 					}
 					file_put_contents($filepath,fread($handle,filesize($file)),FILE_APPEND);
 					fclose($handle);
@@ -1092,7 +1092,7 @@ class io_JSS extends io_api
 					$cache=self::getCache($path);
 					$filepath=$cache['filepath'];
 					if(!$handle=fopen($file,'rb')){
-						return array('error'=>'文件打开错误');
+						return array('error'=>lang('open_file_error'));
 					}
 					file_put_contents($filepath,fread($handle,filesize($file)),FILE_APPEND);
 					fclose($handle);
@@ -1119,7 +1119,7 @@ class io_JSS extends io_api
 					$cache=self::getCache($path);
 					$filepath=$cache['filepath'];
 					if(!$handle=fopen($filepath,'rb')){
-						return array('error'=>'文件打开错误');
+						return array('error'=>lang('open_file_error'));
 					}
 					try{	
 						$response = $jss->put_mpu_object($arr['bucket'],$arr['object'],$handle);
@@ -1272,7 +1272,7 @@ class io_JSS extends io_api
 			//获取文件内容
 			$fileContent='';
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'文件打开错误');
+				return array('error'=>lang('open_file_error'));
 			}
 			while (!feof($handle)) {
 			  $fileContent .= fread($handle, 8192);
@@ -1285,7 +1285,7 @@ class io_JSS extends io_api
 
 			$partinfo=array('ispart'=>true,'partnum'=>0,'iscomplete'=>false);
 			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'文件打开错误');
+				return array('error'=>lang('open_file_error'));
 			}
 			//stream_set_timeout($handle,5);
 		    $ext=strtolower(substr(strrchr($filename, '.'), 1));

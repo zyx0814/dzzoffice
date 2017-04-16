@@ -8,9 +8,9 @@
     <input type="hidden" name="tid" value="$tid" />
     <input type="hidden" id="appid_{$tid}" name="appid" value="0" />
     <input id="reply_pid_{$tid}" type="hidden" name="pid" value="0" />
-    <div class="container_psw">
+    <div class="container_psw"> 
       <div class="notice_cpsw clearfix">
-        <div id="reply_who_{$tid}" class="who_cpsw"> <span>回复</span> <span class="toname_wcpsw"></span> <span>：</span> <a class="closed_wcpsw" title="" hidefocus="true" href="javascript:void(0);" onclick="jQuery(this).parent().hide();jQuery('#reply_pid_$tid').val('0')">关闭</a> </div>
+        <div id="reply_who_{$tid}" class="who_cpsw"> <span>{lang reply}</span> <span class="toname_wcpsw"></span> <span>：</span> <a class="closed_wcpsw" title="" hidefocus="true" href="javascript:void(0);" onclick="jQuery(this).parent().hide();jQuery('#reply_pid_$tid').val('0')">{lang close}</a> </div>
       </div>
       <div class="textarea_cpsw">
         <div class="wrap_tcpsw">
@@ -21,22 +21,22 @@
     </div>
     <div id="publish_action_{$tid}" class="action_cpsw">
       <ul class="list_acpsw">
-        <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_{$tid}" onclick="showMenu({'ctrlid':'upload_from_{$tid}'});" href="javascript:void(0);" title="" class="item_lacpsw">文件/图片</a> </li>
+        <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_{$tid}" onclick="showMenu({'ctrlid':'upload_from_{$tid}'});" href="javascript:void(0);" title="" class="item_lacpsw">{lang typename_attach}/{lang photo}</a> </li>
             
-        <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_{$tid}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">表情</a></li>
+        <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_{$tid}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">{lang face}</a></li>
         <script type="text/javascript" reload="1">smilies_show('message_{$tid}_sml_div','{$_G[setting][smcols]}', 'message_{$tid}');</script>
       </ul>
       <input id="readperm_{$tid}" name="readperm" value="0" type="hidden" />
-      <a hidefocus="true" class="cancel_cpsw" href="javascript:void(0);" onclick="jQuery('#publish_{$tid}').slideUp(500);"> <b><i>取消</i></b></a>
-      <button id="publish_submit_{$tid}" class="btn btn-primary" title="回复(Ctrl+Enter)"><b>回复</b></button>
+      <a hidefocus="true" class="cancel_cpsw" href="javascript:void(0);" onclick="jQuery('#publish_{$tid}').slideUp(500);"> <b><i>{lang cancel}</i></b></a>
+      <button id="publish_submit_{$tid}" class="btn btn-primary" title="{lang reply}(Ctrl+Enter)"><b>{lang reply}</b></button>
     </div>
     <div id="attachmentViewBox_{$tid}" class="attachmentContainer clearfix"> </div>
   </form>
   <div class="actionUploadAttachment" id="upload_from_{$tid}_menu" style="display:none">
-    <div class="local_auatth" style="position:relative;overflow:hidden;"><a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">本地上传
+    <div class="local_auatth" style="position:relative;overflow:hidden;"><a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">{lang web_upload}
       <input id="fileupload_{$tid}" class="form-control" type="file" name="files[]" multiple >
       </a> </div>
-    <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop('{$tid}');jQuery(this).parent().parent().hide();">从我的文件中选择</a></div>
+    <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop('{$tid}');jQuery(this).parent().parent().hide();">{lang choose_from_my_file}</a></div>
   </div>
   <div class="departtree-menu" id="at_department_{$tid}_menu" tid="$tid" style="display:none"> $orgtree </div>
 </div>

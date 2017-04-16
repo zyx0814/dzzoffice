@@ -19,7 +19,7 @@ if(empty($_G['uid']) && !in_array($do,$guests)) {
 	echo "try{top._login.logging();}catch(e){}";
 	echo "try{win.Close();}catch(e){}";
 	echo "</script>";	
-	echo '<a href="user.php?mod=logging&action=login">需要登录</a>';
+	echo '<a href="user.php?mod=logging&action=login">'.lang('need_login').'</a>';
 	include template('common/footer_reload');
 	exit();
 }
@@ -30,7 +30,7 @@ if(submitcheck('feedsubmit')){
 	$appid=C::t('app_market')->fetch_appid_by_mod('{dzzscript}?mod=feed',1);
 	$message=censor($_GET['message']);
 	if(empty($message) && empty($_GET['votestatus'])){
-		showmessage('请输入分享内容',DZZSCRIPT.'?mod=feed',array(),array('showdialog'=>true,'timeout'=>1));
+		showmessage('please_share_content',DZZSCRIPT.'?mod=feed',array(),array('showdialog'=>true,'timeout'=>1));
 	}
 	//处理@
 	$at_users=array();
@@ -48,7 +48,7 @@ if(submitcheck('feedsubmit')){
 				 );
 	
 	if(!$tid=C::t('feed_thread')->insert($thread,1)){
-		showmessage('服务器内部错误,请稍候再试，或联系管理员',DZZSCRIPT.'?mod=feed',array('message'=>$message));
+		showmessage('internal_server_error',DZZSCRIPT.'?mod=feed',array('message'=>$message));
 	}
 	$post=array('tid'=>$tid,
 				'first'=>1,
@@ -63,7 +63,7 @@ if(submitcheck('feedsubmit')){
 				);
 	if(!$post['pid']=C::t('feed_post')->insert($post,1)){
 		C::t('feed_thread')->delete($post['tid']);
-		showmessage('服务器内部错误,请稍候再试，或联系管理员',DZZSCRIPT.'?mod=feed',array('message'=>$message));
+		showmessage('internal_server_error',DZZSCRIPT.'?mod=feed',array('message'=>$message));
 	}
 	//处理@
 	if($at_users){
@@ -157,7 +157,7 @@ if(submitcheck('feedsubmit')){
 	$appid=C::t('app_market')->fetch_appid_by_mod('{dzzscript}?mod=feed',1);
 	$message=censor($_GET['message']);
 	if(empty($message)){
-		showmessage('请输入分享内容',DZZSCRIPT.'?mod=feed',array());
+		showmessage('please_share_content',DZZSCRIPT.'?mod=feed',array());
 	}
 	$at_users=array();
 	$message=preg_replace_callback("/@\[(.+?):(.+?)\]/i","atreplacement",$message);
@@ -177,7 +177,7 @@ if(submitcheck('feedsubmit')){
 				);
 	
 	if(!$post['pid']=C::t('feed_post')->insert($post,1)){
-		showmessage('内部错误',DZZSCRIPT.'?mod=feed',array());
+		showmessage('internal_error',DZZSCRIPT.'?mod=feed',array());
 	}
 	
 	//更新thread表
@@ -335,7 +335,7 @@ if(submitcheck('feedsubmit')){
 	$pid=intval($_GET['pid']);
 	
 	$post=C::t('feed_post')->fetch($pid);
-	if($_G['adminid']!=1 && $_G['uid']==$value['authorid']) exit(json_encode(array('msg'=>'没有权限')));
+	if($_G['adminid']!=1 && $_G['uid']==$value['authorid']) exit(json_encode(array('msg'=>lang('privilege'))));
 	if($post['first']>0){
 		C::t('feed_thread')->delete_by_tid($post['tid']);
 	}else{
@@ -348,16 +348,16 @@ if(submitcheck('feedsubmit')){
 }elseif($do=='attachdel'){
 	$qid=intval($_GET['qid']);
 	if(!$attach=C::t('feed_attach')->fetch($qid)){
-		exit(json_encode(array('error'=>'附件不存在或已经删除')));
+		exit(json_encode(array('error'=>lang('attachment_not_exist_deleted'))));
 	}
 	if($_G['adminid']!=1){
 		$thread=C::t('feed_thread')->fetch($attach['tid']);
-		if($_G['uid']!=$thread['authorid']) exit(json_encode(array('error'=>'没有权限')));
+		if($_G['uid']!=$thread['authorid']) exit(json_encode(array('error'=>lang('privilege'))));
 	}
 	if(C::t('feed_attach')->delete_by_qid($qid)){
 		exit(json_encode(array('msg'=>'success')));
 	}else{
-		exit(json_encode(array('error'=>'删除错误，稍后重试')));
+		exit(json_encode(array('error'=>lang('delete_error1'))));
 	}
 	
 }elseif($do=='collect'){
@@ -410,9 +410,9 @@ if(submitcheck('feedsubmit')){
 	include_once libfile('function/code');
 	$pid=intval($_GET['pid']);
   if($data=C::t('feed_post')->fetch($pid)){
-	  if(!$_G['adminid']==1 && $_G['uid']!=$data['authorid']) showmessage('没有权限');
+	  if(!$_G['adminid']==1 && $_G['uid']!=$data['authorid']) showmessage('privilege');
   }else{
-	 showmessage('消息不存在或已删除'); 
+	 showmessage('message_does_exist_deleted'); 
   }
   if(!submitcheck('editsubmit')){
 	 $data['message']=dhtmlspecialchars($data['message']);
@@ -424,7 +424,7 @@ if(submitcheck('feedsubmit')){
   }else{
 	$message=censor($_GET['message']);
 	if(empty($message) && empty($_GET['votestatus'])){
-		showmessage('请输入分享内容');
+		showmessage('please_share_content');
 	}
 	 $post=array('message'=>$message);
 	 C::t('feed_post')->update($pid,$post);
@@ -631,15 +631,24 @@ function checkFeedAtPerm($gid){
 		return true;
 	}elseif($range==2){//机构
 		$orgids=C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
+		if(in_array($gid,$orgids)) return true;
 		foreach($orgids as $orgid){
 			$toporgids=getUpOrgidTree($orgid);
 			if(in_array($gid,$toporgids)) return true;
+		}
+		foreach($orgids as $orgid){
+			$suborgids=getOrgidTree($orgid);
+			if(in_array($gid,$suborgids)) return true;
 		}
 		return false;
 		
 	}elseif($range==1){//部门
 		$orgids=C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
 		if(in_array($gid,$orgids)) return true;
+		foreach($orgids as $orgid){
+			$suborgids=getOrgidTree($orgid);
+			if(in_array($gid,$suborgids)) return true;
+		}
 		return false;
 	}
 	return false;

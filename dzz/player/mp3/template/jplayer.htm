@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset={CHARSET} />
-<title>mp3播放器</title>
+<title>mp3{lang player}</title>
 <meta http-equiv="Content-Type" content="text/html; charset={CHARSET}" />
 <link href="{MP3_DIR}images/jplayer.pink.flag.css?{VERHASH}" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="{MP3_DIR}scripts/jquery-1.7.2.min.js"></script>
@@ -41,9 +41,9 @@ jQuery(document).ready(function(){
 						addTime: 0
 					}
 			});
-			if(json.isadmin>0){
-				jQuery('.jp_header').show();
-			}
+//			if(json.isadmin>0){
+//				jQuery('.jp_header').show();
+//			}
 			
 			if(icoid && parent._config.sourcedata.icos[icoid]) {
 				var icodata=parent._config.sourcedata.icos[icoid];
@@ -57,7 +57,7 @@ jQuery(document).ready(function(){
 	});
 	//_api.move(document.body);
 	jQuery('#open_mp3').on('click',function(){
-		parent.OpenFile('open','打开mp3文件',{"mp3":['mp3文件(*.MP3)',['MP3'],'selected']},{bz:'all',multiple:true},function(data){
+		parent.OpenFile('open','{lang player}mp3{lang typename_attach}',{"mp3":['mp3{lang typename_attach}(*.MP3)',['MP3'],'selected']},{bz:'all',multiple:true},function(data){
 			acceptdata(data);
 		}); 
 		return false;
@@ -150,7 +150,6 @@ function getUrl(name,url) {
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
 
 		<div id="jp_container_1" class="jp-audio">
-			<div class="jp_header" style="height:16px;margin-top:-5px;font-size:12px;display:none;"><a id="open_mp3" style="float:left;cursor:pointer">打开文件</a><a style="float:right;cursor:pointer" onClick="win.Close();">关闭</a></div>
 			<div class="jp-type-playlist">
 				<div class="jp-gui jp-interface">
 					<div id="jp-title-bar" class="jp-title-bar">

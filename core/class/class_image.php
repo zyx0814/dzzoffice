@@ -17,19 +17,26 @@ class image {
 	var $param = array();
 	var $errorcode = 0;
 
+	var $extension = array();
+
 	function image() {
 		global $_G;
+
+
+		$this->extension['gd'] = extension_loaded('gd');
+		$this->extension['imagick'] = extension_loaded('imagick');
+
 		$this->param = array(
-			'imagelib'		=> $_G['setting']['imagelib'],
-			'imageimpath'		=> $_G['setting']['imageimpath'],
-			'thumbquality'		=> 80,
-			'watermarkstatus'	=> dunserialize($_G['setting']['watermarkstatus']),
-			'watermarkminwidth'	=> dunserialize($_G['setting']['watermarkminwidth']),
-			'watermarkminheight'	=> dunserialize($_G['setting']['watermarkminheight']),
-			'watermarktype'		=> $_G['setting']['watermarktype'],
-			'watermarktext'		=> $_G['setting']['watermarktext'],
-			'watermarktrans'	=> dunserialize($_G['setting']['watermarktrans']),
-			'watermarkquality'	=> dunserialize($_G['setting']['watermarkquality']),
+				'imagelib'		=> isset($_G['setting']['imagelib'])?$_G['setting']['imagelib']:1,
+				'imageimpath'		=> $_G['setting']['imageimpath'],
+				'thumbquality'		=> $_G['setting']['thumbquality']?$_G['setting']['thumbquality']:80,
+				'watermarkstatus'	=> dunserialize($_G['setting']['watermarkstatus']),
+				'watermarkminwidth'	=> dunserialize($_G['setting']['watermarkminwidth']),
+				'watermarkminheight'	=> dunserialize($_G['setting']['watermarkminheight']),
+				'watermarktype'		=> $_G['setting']['watermarktype'],
+				'watermarktext'		=> $_G['setting']['watermarktext'],
+				'watermarktrans'	=> dunserialize($_G['setting']['watermarktrans']),
+				'watermarkquality'	=> dunserialize($_G['setting']['watermarkquality']),
 		);
 	}
 
@@ -43,11 +50,11 @@ class image {
 		if($this->imginfo['animated']) {
 			return $this->returncode(0);
 		}
-		$this->param['thumbwidth'] = $thumbwidth;
+		$this->param['thumbwidth'] = intval($thumbwidth);
 		if(!$thumbheight || $thumbheight > $this->imginfo['height']) {
 			$thumbheight = $thumbwidth > $this->imginfo['width'] ? $this->imginfo['height'] : $this->imginfo['height']*($thumbwidth/$this->imginfo['width']);
 		}
-		$this->param['thumbheight'] = $thumbheight;
+		$this->param['thumbheight'] = intval($thumbheight);
 		$this->param['thumbtype'] = $thumbtype;
 		if($thumbwidth < 100 && $thumbheight < 100) {
 			$this->param['thumbquality'] = 100;
@@ -68,12 +75,12 @@ class image {
 		if($dstwidth < 0 || $dstheight < 0) {
 			return $this->returncode(false);
 		}
-		$this->param['dstwidth'] = $dstwidth;
-		$this->param['dstheight'] = $dstheight;
-		$this->param['srcx'] = $srcx;
-		$this->param['srcy'] = $srcy;
-		$this->param['srcwidth'] = $srcwidth ? $srcwidth : $dstwidth;
-		$this->param['srcheight'] = $srcheight ? $srcheight : $dstheight;
+		$this->param['dstwidth'] = intval($dstwidth);
+		$this->param['dstheight'] = intval($dstheight);
+		$this->param['srcx'] = intval($srcx);
+		$this->param['srcy'] = intval($srcy);
+		$this->param['srcwidth'] = intval($srcwidth ? $srcwidth : $dstwidth);
+		$this->param['srcheight'] = intval($srcheight ? $srcheight : $dstheight);
 
 		$return = !$this->libmethod ? $this->Cropper_GD() : $this->Cropper_IM();
 	}
@@ -113,7 +120,7 @@ class image {
 			if(empty($target)) {
 				return -2;
 			}
-			$data = file_get_contents($source);
+			$data = dfsockopen($source);
 			$this->tmpfile = $source = tempnam($_G['setting']['attachdir'].'./cache/', 'tmpimg_');
 			if(!$data || $source === FALSE) {
 				return -2;
@@ -144,7 +151,14 @@ class image {
 		$this->imginfo['height'] = $imginfo[1];
 		$this->imginfo['mime'] = $imginfo['mime'];
 		$this->imginfo['size'] = @filesize($source);
-		$this->libmethod = $this->param['imagelib'] && $this->param['imageimpath'];
+		$this->libmethod = $this->param['imagelib'];
+		if($this->param['imagelib'] && $this->extension['imagick']) {
+			$this->libmethod = 1;
+		}elseif($this->extension['gd']){
+			$this->libmethod = 0;
+		} else {
+			return -4;
+		}
 
 		if(!$this->libmethod) {
 			switch($this->imginfo['mime']) {
@@ -308,41 +322,66 @@ class image {
 		switch($this->param['thumbtype']) {
 			case 'fixnone':
 			case 1:
-				if($this->imginfo['width'] > $this->param['thumbwidth'] || $this->imginfo['height'] > $this->param['thumbheight']) {
-					$exec_str = $this->param['imageimpath'].'/convert -quality '.intval($this->param['thumbquality']).' -geometry '.$this->param['thumbwidth'].'x'.$this->param['thumbheight'].' '.$this->source.' '.$this->target;
-					$return = exec($exec_str);
-					if(!file_exists($this->target)) {
+				if($this->imginfo['width'] >= $this->param['thumbwidth'] || $this->imginfo['height'] >= $this->param['thumbheight']) {
+					$im = new Imagick();
+					$im->readImage(realpath($this->source));
+					$im->setImageCompressionQuality($this->param['thumbquality']);
+					$im->thumbnailImage($this->param['thumbwidth'], $this->param['thumbheight'], true);
+					if(!$im->writeImage($this->target)) {
+						$im->destroy();
 						return -3;
 					}
+					$im->destroy();
 				}
 				break;
 			case 'fixwr':
 			case 2:
 				if(!($this->imginfo['width'] <= $this->param['thumbwidth'] || $this->imginfo['height'] <= $this->param['thumbheight'])) {
 					list($startx, $starty, $cutw, $cuth) = $this->sizevalue(1);
-					$exec_str = $this->param['imageimpath'].'/convert -quality '.intval($this->param['thumbquality']).' -crop '.$cutw.'x'.$cuth.'+'.$startx.'+'.$starty.' '.$this->source.' '.$this->target;
-					exec($exec_str);
-					if(!file_exists($this->target)) {
+					$im = new Imagick();
+					$im->readImage(realpath($this->source));
+					$im->setImageCompressionQuality($this->param['thumbquality']);
+					$im->cropImage($cutw, $cuth, $startx, $starty);
+					if(!$im->writeImage($this->target)) {
+						$im->destroy();
 						return -3;
 					}
-					$exec_str = $this->param['imageimpath'].'/convert -quality '.intval($this->param['thumbquality']).' -thumbnail \''.$this->param['thumbwidth'].'x'.$this->param['thumbheight'].'\' -resize '.$this->param['thumbwidth'].'x'.$this->param['thumbheight'].' -gravity center -extent '.$this->param['thumbwidth'].'x'.$this->param['thumbheight'].' '.$this->target.' '.$this->target;
-					exec($exec_str);
-					if(!file_exists($this->target)) {
+
+					$im->readImage(realpath($this->target));
+					$im->setImageCompressionQuality($this->param['thumbquality']);
+					$im->thumbnailImage($this->param['thumbwidth'], $this->param['thumbheight']);
+					$im->resizeImage($this->param['thumbwidth'], $this->param['thumbheight']);
+					$im->setGravity(imagick::GRAVITY_CENTER );
+					$im->extentImage($this->param['thumbwidth'], $this->param['thumbheight']);
+
+					if(!$im->writeImage($this->target)) {
+						$im->destroy();
 						return -3;
 					}
+					$im->destroy();
 				} else {
 					$startx = -($this->param['thumbwidth'] - $this->imginfo['width']) / 2;
 					$starty = -($this->param['thumbheight'] - $this->imginfo['height']) / 2;
-					$exec_str = $this->param['imageimpath'].'/convert -quality '.intval($this->param['thumbquality']).' -crop '.$this->param['thumbwidth'].'x'.$this->param['thumbheight'].'+'.$startx.'+'.$starty.' '.$this->source.' '.$this->target;
-					exec($exec_str);
-					if(!file_exists($this->target)) {
+
+					$im = new Imagick();
+					$im->readImage(realpath($this->source));
+					$im->setImageCompressionQuality($this->param['thumbquality']);
+					$im->cropImage($this->param['thumbwidth'], $this->param['thumbheight'], $startx, $starty);
+					if(!$im->writeImage($this->target)) {
+						$im->destroy();
 						return -3;
 					}
-					$exec_str = $this->param['imageimpath'].'/convert -quality '.intval($this->param['thumbquality']).' -thumbnail \''.$this->param['thumbwidth'].'x'.$this->param['thumbheight'].'\' -gravity center -extent '.$this->param['thumbwidth'].'x'.$this->param['thumbheight'].' '.$this->target.' '.$this->target;
-					exec($exec_str);
-					if(!file_exists($this->target)) {
+
+					$im->readImage(realpath($this->target));
+					$im->setImageCompressionQuality($this->param['thumbquality']);
+					$im->thumbnailImage($this->param['thumbwidth'], $this->param['thumbheight']);
+					$im->setGravity(imagick::GRAVITY_CENTER );
+					$im->extentImage($this->param['thumbwidth'], $this->param['thumbheight']);
+					if(!$im->writeImage($this->target)) {
+						$im->destroy();
 						return -3;
 					}
+					$im->destroy();
 				}
 				break;
 		}
@@ -362,11 +401,14 @@ class image {
 		return true;
 	}
 	function Cropper_IM() {
-		$exec_str = $this->param['imageimpath'].'/convert -quality 100 '.
-			'-crop '.$this->param['srcwidth'].'x'.$this->param['srcheight'].'+'.$this->param['srcx'].'+'.$this->param['srcy'].' '.
-			'-geometry '.$this->param['dstwidth'].'x'.$this->param['dstheight'].' '.$this->source.' '.$this->target;
-		exec($exec_str);
-		if(!file_exists($this->target)) {
+		$im = new Imagick();
+		$im->readImage(realpath($this->source));
+		$im->cropImage($this->param['srcwidth'], $this->param['srcheight'], $this->param['srcx'], $this->param['srcy']);
+		$im->thumbnailImage($this->param['dstwidth'], $this->param['dstheight']);
+
+		$result = $im->writeImage($this->target);
+		$im->destroy();
+		if(!$result) {
 			return -3;
 		}
 	}
@@ -491,68 +533,116 @@ class image {
 	function Watermark_IM($type = 'forum') {
 		switch($this->param['watermarkstatus'][$type]) {
 			case 1:
-				$gravity = 'NorthWest';
+				$gravity = imagick::GRAVITY_NORTHWEST;
 				break;
 			case 2:
-				$gravity = 'North';
+				$gravity = imagick::GRAVITY_NORTH;
 				break;
 			case 3:
-				$gravity = 'NorthEast';
+				$gravity = imagick::GRAVITY_NORTHEAST;
 				break;
 			case 4:
-				$gravity = 'West';
+				$gravity = imagick::GRAVITY_WEST;
 				break;
 			case 5:
-				$gravity = 'Center';
+				$gravity = imagick::GRAVITY_CENTER;
 				break;
 			case 6:
-				$gravity = 'East';
+				$gravity = imagick::GRAVITY_EAST;
 				break;
 			case 7:
-				$gravity = 'SouthWest';
+				$gravity = imagick::GRAVITY_SOUTHWEST;
 				break;
 			case 8:
-				$gravity = 'South';
+				$gravity = imagick::GRAVITY_SOUTH;
 				break;
 			case 9:
-				$gravity = 'SouthEast';
+				$gravity = imagick::GRAVITY_SOUTHEAST;
 				break;
 		}
 
 		if($this->param['watermarktype'][$type] != 'text') {
-			$exec_str = $this->param['imageimpath'].'/composite'.
-				($this->param['watermarktype'][$type] != 'png' && $this->param['watermarktrans'][$type] != '100' ? ' -watermark '.$this->param['watermarktrans'][$type] : '').
-				' -quality '.$this->param['watermarkquality'][$type].
-				' -gravity '.$gravity.
-				' '.$this->param['watermarkfile'][$type].' '.$this->source.' '.$this->target;
+			$watermark = new Imagick(realpath($this->param['watermarkfile'][$type]));
+			if($this->param['watermarktype'][$type] != 'png' && $this->param['watermarktrans'][$type] != '100') {
+				$watermark->setImageOpacity($this->param['watermarktrans'][$type]);
+			}
+
+
+			$canvas = new Imagick(realpath($this->source));
+			$canvas->setImageCompressionQuality($this->param['watermarkquality'][$type]);
+
+			$dw = new ImagickDraw();
+			$dw->setGravity($gravity);
+			$dw->composite($watermark->getImageCompose(), 0, 0, 0, 0, $watermark);
+			$canvas->drawImage($dw);
+
+			$result = $canvas->writeImage($this->target);
+			$watermark->destroy();
+			$canvas->destroy();
+			$dw->destroy();
+
+			if(!$result) {
+				return -3;
+			}
 		} else {
-			$watermarktextcvt = str_replace(array("\n", "\r", "'"), array('', '', '\''), pack("H*", $this->param['watermarktext']['text'][$type]));
+			$watermarktextcvt = escapeshellcmd(pack("H*", $this->param['watermarktext']['text'][$type]));
 			$angle = -$this->param['watermarktext']['angle'][$type];
-			$translate = $this->param['watermarktext']['translatex'][$type] || $this->param['watermarktext']['translatey'][$type] ? ' translate '.$this->param['watermarktext']['translatex'][$type].','.$this->param['watermarktext']['translatey'][$type] : '';
-			$skewX = $this->param['watermarktext']['skewx'][$type] ? ' skewX '.$this->param['watermarktext']['skewx'][$type] : '';
-			$skewY = $this->param['watermarktext']['skewy'][$type] ? ' skewY '.$this->param['watermarktext']['skewy'][$type] : '';
-			$exec_str = $this->param['imageimpath'].'/convert'.
-				' -quality '.$this->param['watermarkquality'][$type].
-				' -font "'.$this->param['watermarktext']['fontpath'][$type].'"'.
-				' -pointsize '.$this->param['watermarktext']['size'][$type].
-				(($this->param['watermarktext']['shadowx'][$type] || $this->param['watermarktext']['shadowy'][$type]) && $this->param['watermarktext']['shadowcolor'][$type] ?
-					' -fill "rgb('.$this->param['watermarktext']['shadowcolor'][$type].')"'.
-					' -draw "'.
-						' gravity '.$gravity.$translate.$skewX.$skewY.
-						' rotate '.$angle.
-						' text '.$this->param['watermarktext']['shadowx'][$type].','.$this->param['watermarktext']['shadowy'][$type].' \''.$watermarktextcvt.'\'"' : '').
-				' -fill "rgb('.$this->param['watermarktext']['color'][$type].')"'.
-				' -draw "'.
-					' gravity '.$gravity.$translate.$skewX.$skewY.
-					' rotate '.$angle.
-					' text 0,0 \''.$watermarktextcvt.'\'"'.
-				' '.$this->source.' '.$this->target;
-		}
-		exec($exec_str);
-		if(!file_exists($this->target)) {
-			return -3;
+			$translate = $this->param['watermarktext']['translatex'][$type] || $this->param['watermarktext']['translatey'][$type] ? ' translate '.intval($this->param['watermarktext']['translatex'][$type]).','.intval($this->param['watermarktext']['translatey'][$type]) : '';
+			$skewX = $this->param['watermarktext']['skewx'][$type] ? ' skewX '.intval($this->param['watermarktext']['skewx'][$type]) : '';
+			$skewY = $this->param['watermarktext']['skewy'][$type] ? ' skewY '.intval($this->param['watermarktext']['skewy'][$type]) : '';
+
+			$canvas = new Imagick(realpath($this->source));
+			$canvas->setImageCompressionQuality($this->param['watermarkquality'][$type]);
+
+			$dw = new ImagickDraw();
+			$dw->setFont($this->param['watermarktext']['fontpath'][$type]);
+			$dw->setFontSize($this->param['watermarktext']['size'][$type]);
+
+			if(($this->param['watermarktext']['shadowx'][$type] || $this->param['watermarktext']['shadowy'][$type]) && $this->param['watermarktext']['shadowcolor'][$type]) {
+				$dw->setFillColor(new ImagickPixel($this->param['watermarktext']['shadowcolor'][$type]));
+				$dw->setGravity($gravity);
+				if($translate) {
+					$dw->translate($this->param['watermarktext']['translatex'][$type], $this->param['watermarktext']['translatey'][$type]);
+				}
+				if($skewX) {
+					$dw->skewX($this->param['watermarktext']['skewx'][$type]);
+				}
+				if($skewY) {
+					$dw->skewY($this->param['watermarktext']['skewy'][$type]);
+				}
+				$dw->annotation($this->param['watermarktext']['shadowx'][$type], $this->param['watermarktext']['shadowy'][$type], escapeshellcmd(pack("H*", $this->param['watermarktext']['text'][$type])));
+				$canvas->drawImage($dw);
+
+			}
+
+			$dw->setFillColor(new ImagickPixel($this->param['watermarktext']['shadowcolor'][$type]));
+			$dw->setGravity($gravity);
+			if($translate) {
+				$dw->translate($this->param['watermarktext']['translatex'][$type], $this->param['watermarktext']['translatey'][$type]);
+			}
+			if($skewX) {
+				$dw->skewX($this->param['watermarktext']['skewx'][$type]);
+			}
+			if($skewY) {
+				$dw->skewY($this->param['watermarktext']['skewy'][$type]);
+			}
+			$dw->rotate($angle);
+			$dw->annotation(0, 0, escapeshellcmd(pack("H*", $this->param['watermarktext']['text'][$type])));
+
+			$canvas->drawImage($dw);
+
+			$result = $canvas->writeImage($this->target);
+			$canvas->destroy();
+			$dw->destroy();
+			if(!$result) {
+				return -3;
+			}
 		}
 		return 1;
+	}
+
+	function IM_filter($str) {
+		return escapeshellarg(str_replace(' ', '', $str));
 	}
 
 }

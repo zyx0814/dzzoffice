@@ -2,14 +2,45 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-/*function DzzImage($str){//转换图片为绝对地址，可以提高服务器承载能力；
-	return preg_replace_callback("/\"index\.php\?mod=io(&amp;|&)op=thumbnail(&amp;|&)width=(\d+)(&amp;|&)height=(\d+)(&amp;|&)original=(\d+)(&amp;|&)path=(.+?)\"/i",function($match){
-		$imgurl=IO::getThumb(dzzdecode($match[9]),intval($match[3]),intval($match[5]),intval($match[7]),true);
-		return '"'.$imgurl.'"';
-	},
-	$str
-	);
-}*/
+
+if (!function_exists('sys_get_temp_dir')) { 
+  function sys_get_temp_dir() { 
+    if (!empty($_ENV['TMP'])) { return realpath($_ENV['TMP']); } 
+    if (!empty($_ENV['TMPDIR'])) { return realpath( $_ENV['TMPDIR']); } 
+    if (!empty($_ENV['TEMP'])) { return realpath( $_ENV['TEMP']); } 
+    $tempfile=tempnam(__FILE__,''); 
+    if (file_exists($tempfile)) { 
+      unlink($tempfile); 
+      return realpath(dirname($tempfile)); 
+    } 
+    return null; 
+  } 
+} 
+function dzzMD5($file,$maxchunk=100,$chunksize_first=256){
+/*
+  获取文件的dzzhash值
+  $file:文件地址,仅支持本地文件地址；
+  $maxchunk:获取多少块数据
+  $chunksize_first:每块取多少字节计算md5;
+  return:第一块md5和所有块的md5;
+*/
+  if(!is_file($file)) return false;
+  $filesize=filesize($file);
+  $chunk=round($filesize/$maxchunk);
+  if($chunk<$chunksize_first) $chunk=$chunksize_first;
+  if(!$fp=fopen($file)){
+	 return false; 
+  }
+  $i=0;
+  $arr=array();
+  while(!feof($fp)){
+	  fseek($fp,$chunk*$i,SEEK_SET);
+	  $arr[]=md5(fread($fp,$chunksize_first));
+	  $i++;
+  }
+  fclose($fp);
+  return array($arr[0],md5(implode('',$arr)));
+}
 function getCode62($url) {//获取url的code62码
    $url = crc32($url);
    $x = sprintf("%u", $url);
@@ -357,7 +388,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0,$ckey_l
 	$cryptkey = $keya.md5($keya.$keyc);
 	$key_length = strlen($cryptkey);
 
-	$string = $operation == 'DECODE' ? base64_decode(substr($string, $ckey_length)) : sprintf('%010d', $expiry ? $expiry + time() : 0).substr(md5($string.$keyb), 0, 16).$string;
+	$string = $operation == 'DECODE' ?base64_decode(substr(str_replace(array('_','-'),array('/','+'),$string), $ckey_length)) : sprintf('%010d', $expiry ? $expiry + time() : 0).substr(md5($string.$keyb), 0, 16).$string;
 	$string_length = strlen($string);
 
 	$result = '';
@@ -391,7 +422,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0,$ckey_l
 			return '';
 		}
 	} else {
-		return $keyc.str_replace('=', '', base64_encode($result));
+		return $keyc.str_replace(array('/','+'),array('_','-'),str_replace('=', '', base64_encode($result)));
 	}
 }
 //key的格式以|隔开，参数支持全局函数，如地址为 index.php?mod=io&op=getStream&path=***&key=uid|setting/authkey|username
@@ -646,115 +677,120 @@ function avatar($uid, $size = 'middle', $returnsrc = FALSE, $real = FALSE, $stat
 		return $returnsrc ? $file : '<img src="'.$file.'" onerror="this.onerror=null;this.src=\'data/avatar/noavatar_'.$size.'.gif\'" />';
 	}
 }
-
-function lang($file, $langvar = null, $vars = array(), $default = null,$curpath='') {
+function checkLanguage(){
 	global $_G;
-	$fileinput = $file;
-	@list($path, $file) = explode('/', $file);
-	if(!$file) {
-		$file = $path;
-		$path = '';
-	}
+	$uid = getglobal('uid');
+	$langList = $_G['config']['output']['language_list'];
+	$langSet='';
 	
+	/*if($_G['cookie']['language']) $langSet=$_G['cookie']['language'];
+	else*/
+	if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){// 自动侦测浏览器语言
+		preg_match('/^([a-z\d\-]+)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $matches);	 
+		$langSet = strtolower($matches[1]);	
+		if($langSet == 'zh-hans-cn' || $langSet == 'zh-cn'){
+			$langSet = 'zh-cn';
+		}elseif($langSet == 'zh-tw'){
+			$langSet = 'zh-tw';
+		}else{
+			$langSet = $matches[1];
+		}
+	}
+	if(!in_array($langSet, array_keys($langList))) { // 非法语言参数
+        $langSet = $_G['config']['output']['language'];
+    }
+	return $langSet;
+}
+
+function lang($langvar = null, $vars = array(), $default = null,$curpath='') {
+
+	global $_G;
+	$checkLanguage = $_G['language'];
 	if($curpath){
-		include DZZ_ROOT.'./'.$curpath.'/language/'.($path == '' ? '' : $path.'/').'lang_'.$file.'.php';
-		$key = $path == '' ? $file : $path.'_'.$file;
-		$_G['lang'][$key] = $lang;
+		include DZZ_ROOT.'./'.$curpath.'/language/'.$checkLanguage.'/'.'lang.php';
+		$_G['lang']['template'] = $lang;
 	}else{
-		$key = ($path == '' ? $file : $path.'_'.$file);
-		if(defined('CURSCRIPT')) $key1 = CURSCRIPT.'_'.$key;
-		if(defined('CURSCRIPT') && defined('CURMODULE')) $key2=CURSCRIPT.'_'.CURMODULE.'_'.$key;
-		if(!isset($_G['lang'][$key])) {
-			$_G['lang'][$key]=array();
-			if(file_exists(DZZ_ROOT.'./core/language/'.($path == '' ? '' : $path.'/').'lang_'.$file.'.php')){
-				include DZZ_ROOT.'./core/language/'.($path == '' ? '' : $path.'/').'lang_'.$file.'.php';
-				$_G['lang'][$key] = $lang;
+		if(defined('CURSCRIPT')){
+			$key1 = CURSCRIPT.'_template';
+		} 
+		if(defined('CURSCRIPT') && defined('CURMODULE')){		
+			$key2=CURSCRIPT.'_'.CURMODULE.'_template';
+		} 
+
+		if(!isset($_G['lang']['template'])) {
+			$_G['lang']['template']=array();
+			
+			if(file_exists(DZZ_ROOT.'./core/language/'.$checkLanguage.'/'.'lang.php')){
+				include DZZ_ROOT.'./core/language/'.$checkLanguage.'/'.'lang.php';
+				$_G['lang']['template'] = $lang;
 			}
 		}
-		if(isset($key1) && !isset($_G['lang'][$key1])) {
-			if( file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/language/'.($path == '' ? '' : $path.'/').'lang_'.$file.'.php')){
-				include DZZ_ROOT.'./'.CURSCRIPT.'/language/'.($path == '' ? '' : $path.'/').'lang_'.$file.'.php';
-				$_G['lang'][$key]=array_merge($_G['lang'][$key],$lang);
+
+		if(isset($key1) && !isset($_G['lang'][$key1])) {		
+			if(file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/language/'.$checkLanguage.'/'.'lang.php')){							
+				include DZZ_ROOT.'./'.CURSCRIPT.'/language/'.$checkLanguage.'/'.'lang.php';	
+				$_G['lang']['template']=array_merge($_G['lang']['template'],$lang);
+	
 			}
 		}
+
 		if(isset($key2) && !isset($_G['lang'][$key2])) {
-			if(file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/'.CURMODULE.'/language/'.($path == '' ? '' : $path.'/').'lang_'.$file.'.php')){
-				include DZZ_ROOT.'./'.CURSCRIPT.'/'.CURMODULE.'/language/'.($path == '' ? '' : $path.'/').'lang_'.$file.'.php';
-				$_G['lang'][$key]=array_merge($_G['lang'][$key],$lang);
+			if(file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/'.CURMODULE.'/language/'.$checkLanguage.'/'.'lang.php')){
+				
+				include DZZ_ROOT.'./'.CURSCRIPT.'/'.CURMODULE.'/language/'.$checkLanguage.'/'.'lang.php';
+				$_G['lang']['template']=array_merge($_G['lang']['template'],$lang);
 			}
 		}
 		
 	}
-		$returnvalue = &$_G['lang'];
+	$returnvalue = &$_G['lang'];
 	
-	$return = $langvar !== null ? (isset($returnvalue[$key][$langvar]) ? $returnvalue[$key][$langvar] : null) : $returnvalue[$key];
+	$return = $langvar !== null ? (isset($returnvalue['template'][$langvar]) ? $returnvalue['template'][$langvar] : null) : $returnvalue['template'];
 	$return = $return === null ? ($default !== null ? $default : $langvar) : $return;
 	$searchs = $replaces = array();
+
 	if($vars && is_array($vars)) {
+
 		foreach($vars as $k => $v) {
 			$searchs[] = '{'.$k.'}';
 			$replaces[] = $v;
 		}
 	}
+	
 	if(is_string($return) && strpos($return, '{_G/') !== false) {
 		preg_match_all('/\{_G\/(.+?)\}/', $return, $gvar);
 		foreach($gvar[0] as $k => $v) {
+			
 			$searchs[] = $v;
 			$replaces[] = getglobal($gvar[1][$k]);
 		}
 	}
+
 	$return = str_replace($searchs, $replaces, $return);
 	return $return;
 }
 
-function checktplrefresh($maintpl, $subtpl, $timecompare, $templateid, $cachefile, $tpldir, $file) {
+function template($file, $tpldir = '' ) {
+	global $_G;
 	static $tplrefresh, $timestamp, $targettplname;
+
+	$file .= !empty($_G['inajax']) && ($file == 'common/header' || $file == 'common/footer') ? '_ajax' : '';
+
+	$tplfile = $file;
+
 	if($tplrefresh === null) {
 		$tplrefresh = getglobal('config/output/tplrefresh');
 		$timestamp = getglobal('timestamp');
 	}
-	
+
 	if(empty($timecompare) || $tplrefresh == 1 || ($tplrefresh > 1 && !($timestamp % $tplrefresh))) {
-		if(empty($timecompare) || @filemtime(DZZ_ROOT.$subtpl) > $timecompare) {
 			require_once DZZ_ROOT.'/core/class/class_template.php';
 			$template = new template();
-			$template->parse_template($maintpl, $templateid, $tpldir, $file, $cachefile);
-		
-			return TRUE;
-		}
+			$cachefile = $template->fetch_template($tplfile, $tpldir);
+			return $cachefile;
 	}
 	return FALSE;
-}
 
-function template($file, $templateid = 0, $tpldir = '', $gettplfile = 0, $primaltpl='') {
-	global $_G;
-	
-	$oldfile = $file;
-
-	$file .= !empty($_G['inajax']) && ($file == 'common/header' || $file == 'common/footer') ? '_ajax' : '';
-	
-	$templateid = $templateid ? $templateid : (defined('TEMPLATEID') ? TEMPLATEID : '');
-	if(!$tpldir){
-		if(file_exists (DZZ_ROOT.'./core/template/default/'.$file.'.htm')){
-			$tpldir= './core/template/default/';
-			$tplkey='core';
-		}elseif( defined('CURSCRIPT') && defined('CURMODULE') && file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/'.CURMODULE.'/template/'.$file.'.htm')){
-			$tpldir= './'.CURSCRIPT.'/'.CURMODULE.'/template/';
-			$tplkey=CURSCRIPT.'_'.str_replace('/','_',CURMODULE);
-		}elseif(defined('CURSCRIPT') && file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/template/'.$file.'.htm')){
-			$tpldir= './'.CURSCRIPT.'/template/';
-			$tplkey=CURSCRIPT;
-		}
-	}
-	$tplfile = $tpldir.$file.'.htm';
-	$cachefile = './data/template/'.$tplkey. '_'.str_replace('/', '_', $file).'.tpl.php';
-	
-
-	if($gettplfile) {
-		return $tplfile;
-	}
-	checktplrefresh($tplfile, $tplfile, @filemtime(DZZ_ROOT.$cachefile), $templateid, $cachefile, $tpldir, $file);
-	return DZZ_ROOT.$cachefile;
 }
 
 function dsign($str, $length = 16){
@@ -803,7 +839,7 @@ function dgmdate($timestamp, $format = 'dt', $timeoffset = '9999', $uformat = ''
 		$tformat = getglobal('setting/timeformat');
 		$dtformat = $dformat.' '.$tformat;
 		$offset = getglobal('member/timeoffset');
-		$lang = lang('core', 'date');
+		$lang = lang('date');
 	}
 	$timeoffset = $timeoffset == 9999 ? $offset : $timeoffset;
 	$timestamp += $timeoffset * 3600;
@@ -858,7 +894,7 @@ function dmktime($date) {
 }
 
 function dnumber($number) {
-	return abs($number) > 10000 ? '<span title="'.$number.'">'.intval($number / 10000).lang('core', '10k').'</span>' : $number;
+	return abs($number) > 10000 ? '<span title="'.$number.'">'.intval($number / 10000).lang('10k').'</span>' : $number;
 }
 
 function savecache($cachename, $data) {
@@ -1030,45 +1066,30 @@ function output() {
 	} else {
 		define('DZZ_OUTPUTED', 1);
 	}
-
-	if($_G['setting']['ftp']['connid']) {
-		@ftp_close($_G['setting']['ftp']['connid']);
-	}
-	$_G['setting']['ftp'] = array();
-
-	if(defined('CACHE_FILE') && CACHE_FILE && !defined('CACHE_FORBIDDEN') && !defined('IN_MOBILE') && !checkmobile()) {
-		if(diskfreespace(DZZ_ROOT.'./'.$_G['setting']['cachethreaddir']) > 1000000) {
-			if($fp = @fopen(CACHE_FILE, 'w')) {
-				flock($fp, LOCK_EX);
-				fwrite($fp, empty($content) ? ob_get_contents() : $content);
-			}
-			@fclose($fp);
-			chmod(CACHE_FILE, 0777);
-		}
+	if($_G['config']['rewritestatus']) {
+		$content = ob_get_contents();
+		$content = output_replace($content);
+		ob_end_clean();
+		$_G['gzipcompress'] ? ob_start('ob_gzhandler') : ob_start();
+		echo $content;
 	}
 	if(defined('DZZ_DEBUG') && DZZ_DEBUG && @include(libfile('function/debug'))) {
 		function_exists('debugmessage') && debugmessage();
 	}
 }
-
 function output_replace($content) {
 	global $_G;
-	if(defined('IN_MODCP') || defined('IN_ADMINCP')) return $content;
+	if(defined('IN_ADMINCP')) return $content;
 	if(!empty($_G['setting']['output']['str']['search'])) {
-		if(empty($_G['setting']['domain']['app']['default'])) {
+		/*if(empty($_G['setting']['domain']['app']['default'])) {
 			$_G['setting']['output']['str']['replace'] = str_replace('{CURHOST}', $_G['siteurl'], $_G['setting']['output']['str']['replace']);
-		}
-		$content = str_replace($_G['setting']['output']['str']['search'], $_G['setting']['output']['str']['replace'], $content);
+		}*/
+		$content = str_replace($_G['setting']['rewrite']['str']['search'], $_G['setting']['rewrite']['str']['replace'], $content);
 	}
-	if(!empty($_G['setting']['output']['preg']['search']) && (empty($_G['setting']['rewriteguest']) || empty($_G['uid']))) {
-		if(empty($_G['setting']['domain']['app']['default'])) {
-			$_G['setting']['output']['preg']['search'] = str_replace('\{CURHOST\}', preg_quote($_G['siteurl'], '/'), $_G['setting']['output']['preg']['search']);
-			$_G['setting']['output']['preg']['replace'] = str_replace('{CURHOST}', $_G['siteurl'], $_G['setting']['output']['preg']['replace']);
-		}
-
-		$content = preg_replace($_G['setting']['output']['preg']['search'], $_G['setting']['output']['preg']['replace'], $content);
+	if(!empty($_G['config']['rewrite']['preg']['search'])) {
+		$content = preg_replace($_G['config']['rewrite']['preg']['search'], $_G['config']['rewrite']['preg']['replace'], $content);
 	}
-
+	
 	return $content;
 }
 
@@ -1104,7 +1125,7 @@ function debug($var = null, $vardump = false) {
 
 function debuginfo() {
 	global $_G;
-	if(getglobal('setting/debug')) {
+	if(getglobal('config/debug')) {
 		$db = & DB::object();
 		$_G['debuginfo'] = array(
 		    'time' => number_format((microtime(true) - $_G['starttime']), 6),
@@ -1172,7 +1193,7 @@ function space_merge(&$values, $tablename, $isarchive = false) {
 					if($_G[$var]['department']){
 						$_G[$var]['department_tree']=C::t('organization')->getPathByOrgid(intval($_G[$var]['department']));
 					}else{
-						$_G[$var]['department_tree']='请选择机构或部门';
+						$_G[$var]['department_tree']=lang('please_select_a_organization_or_department');
 					}
 				}
 			}else{
@@ -1451,4 +1472,22 @@ function browserversion($type) {
 	}
 	return $return[$type];
 }
+function removedirectory($dirname, $keepdir = FALSE ,$time=0) {
+	$dirname = str_replace(array( "\n", "\r", '..'), array('', '', ''), $dirname);
+
+	if(!is_dir($dirname)) {
+		return FALSE;
+	}
+	$handle = opendir($dirname);
+	while(($file = readdir($handle)) !== FALSE) {
+		if($file != '.' && $file != '..') {
+			$dir = $dirname . DIRECTORY_SEPARATOR . $file;
+			$mtime=filemtime($dir);
+			is_dir($dir) ? removedir($dir) : (((TIMESTAMP-$mtime)>$time)? unlink($dir):'');
+		}
+	}
+	closedir($handle);
+	return !$keepdir ? (@rmdir($dirname) ? TRUE : FALSE) : TRUE;
+}
+
 ?>

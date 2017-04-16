@@ -6,6 +6,7 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
+
 $bz=$_GET['bz'];
 IO::authorize($bz);
 exit();

@@ -108,7 +108,7 @@ class db_driver_mysqli
 	}
 
 	public function query($sql, $silent = false, $unbuffered = false) {
-		if(defined('DISCUZ_DEBUG') && DISCUZ_DEBUG) {
+		if(defined('DZZ_DEBUG') && DZZ_DEBUG) {
 			$starttime = microtime(true);
 		}
 
@@ -132,7 +132,7 @@ class db_driver_mysqli
 			}
 		}
 
-		if(defined('DISCUZ_DEBUG') && DISCUZ_DEBUG) {
+		if(defined('DZZ_DEBUG') && DZZ_DEBUG) {
 			$this->sqldebug[] = array($sql, number_format((microtime(true) - $starttime), 6), debug_backtrace(), $this->curlink);
 		}
 

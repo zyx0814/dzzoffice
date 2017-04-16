@@ -13,6 +13,7 @@ if(!defined('IN_DZZ')) {
 include_once libfile('function/organization');
 $ismobile=helper_browser::ismobile();
 $uid =isset($_GET['uid'])?intval($_GET['uid']):$_G['uid'];
+$zero=$_GET['zero']?urldecode($_GET['zero']):lang('no_institution_users');
 if($_GET['do']=='orgtree'){
 	$id=intval($_GET['id']);
 	$nouser=intval($_GET['nouser']);
@@ -34,7 +35,9 @@ if($_GET['do']=='orgtree'){
 	}
 	$data=array();
 	if($_GET['id']=='#'){
+		//if($_G['adminid']!=1) $topids=C::t('organization_admin')->fetch_toporgids_by_uid($_G['uid']);
 		foreach(C::t('organization')->fetch_all_by_forgid($id) as $value){
+			//if($_G['adminid']!=1 && !in_array($value['orgid'],$topids)) continue;
 			if(!$moderator || C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'],$_G['uid'])){
 				$orgdisable=false;
 				$orgtype='organization';
@@ -45,7 +48,7 @@ if($_GET['do']=='orgtree'){
 			$data[]=array('id'=>$value['orgid'],'text'=>$value['orgname'],'icon'=>$icon,'state'=>array('disabled'=>$orgdisable),"type"=>$orgtype,'children'=>true);
 		}
 	
-		$data[]=array('id'=>'other','text'=>'无机构用户','icon'=>'dzz/system/images/department.png','state'=>array('disabled'=>$disable),"type"=>($type=="disabled")?$type:'default','children'=>true);
+		$data[]=array('id'=>'other','text'=>$zero,'icon'=>'dzz/system/images/department.png','state'=>array('disabled'=>$disable),"type"=>($type=="disabled")?$type:'default','children'=>true);
 			
 	}else{
 		//获取用户列表
@@ -74,7 +77,6 @@ if($_GET['do']=='orgtree'){
 					}
 				}
 			}
-		
 	}
 	
 	/*$list=array();

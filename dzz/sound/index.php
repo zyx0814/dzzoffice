@@ -6,12 +6,12 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-if(!defined('IN_DZZ')) {
+if (!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-if(!$path=dzzdecode($_GET['path'])){
-	exit('参数错误');
+if (!$path = dzzdecode($_GET['path'])) {
+	exit(lang('parameter_error'));
 }
-$stream=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.rawurldecode($_GET['path']);
+$stream = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=getStream&path=' . rawurldecode($_GET['path']);
 include template('play');
 ?>

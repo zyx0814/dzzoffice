@@ -15,12 +15,13 @@ $dzz->init();
 if(!$path=dzzdecode(trim($_GET['s']))){
 	exit('Access Denied');
 }
-
 if($_GET['a']=='down'){
-	IO::download($path);
+	IO::download($path,$_GET['filename']);
 	exit();
 }elseif($_GET['a']=='view'){
-	$icoarr=IO::getMeta($path);
+	if(!$icoarr=IO::getMeta($path)){
+		showmessage(lang('attachment_nonexistence'));
+	}
 	if($icoarr['type']=='video'){
 		@header("Location: $icoarr[url]");
 		exit();
@@ -64,7 +65,16 @@ if($_GET['a']=='down'){
 			 exit();
 		}else{
 			//替换参数
-			$url=preg_replace("/{(\w+)}/ie", "cansu_replace('\\1')", $url);
+			$url=preg_replace_callback("/{(\w+)}/i", function($matches) use($icoarr){
+				$key=$matches[1];
+				if($key=='path'){
+					return $icoarr['dpath'];
+				}else if($key=='icoid'){
+					return 'preview_'.random(5);
+				}else{
+					return urlencode($icoarr[$key]);
+				}
+			}, $url);
 					
 			//添加path参数；
 			if(strpos($url,'?')!==false  && strpos($url,'path=')===false){
@@ -82,7 +92,7 @@ if($_GET['a']=='down'){
 }
 //获取文件流地址
 if(!$url=(IO::getStream($path))){
-	exit('获取文件失败');
+	exit(lang('failed_get_file'));
 }
 if(is_array($url)) exit($url['error']);
 
@@ -99,16 +109,4 @@ if($ext && in_array($ext,$_G['setting']['unRunExts'])){
 @flush(); 
 @ob_flush();
 exit();
-
-function cansu_replace($key){
-	global $_GET,$icoarr;
-	if($key=='path'){
-		return $_GET['s'];
-	}else if($key=='icoid'){
-		return 'preview_'.random(5);
-	}elseif(isset($icoarr[$key])){
-		return urlencode($icoarr[$key]);
-	}else return '';
-}
-
 ?>

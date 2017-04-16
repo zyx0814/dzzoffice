@@ -6,23 +6,23 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-	
-if(!defined('IN_DZZ')) {
+
+if (!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
 $uid = $_G['uid'];
-$space = getuserbyuid($_G['uid']);
-$space['self']=intval($space['self']);
+$space = dzzgetspace($_G['uid']);
+$space['self'] = intval($space['self']);
 
-$thame=getThames();
-$thamejson=json_encode_gbk($thame['data']);
-$space['thame']=$thame['thame'];
-if(isset($_G['setting']['dzz_iconview']) && $_G['setting']['dzz_iconview']){
-	$iconview=$_G['setting']['iconview'];
-}else{
-	$iconview=C::t('iconview')->fetch_all();
+$thame = getThames();
+$thamejson = json_encode($thame['data']);
+$space['thame'] = $thame['thame'];
+if (isset($_G['setting']['dzz_iconview']) && $_G['setting']['dzz_iconview']) {
+	$iconview = $_G['setting']['iconview'];
+} else {
+	$iconview = C::t('iconview') -> fetch_all();
 }
-$sitename=addslashes($_G['setting']['sitename']);
-include DZZ_ROOT.'./core/core_version.php';
-include template('dzz_index');
+$sitename = addslashes($_G['setting']['sitename']);
+include DZZ_ROOT . './core/core_version.php';
+include  template('dzz_index');
 ?>

@@ -79,7 +79,7 @@ class table_local_router extends dzz_table
 		$guize=self::fetch_all_orderby_priority(true);
 		foreach($guize as  $value){
 			//没有此存储位置
-			if(!$cdata=C::t('local_storage')->fetch_by_remoteid($value['remoteid'])){
+			if(!C::t('local_storage')->fetch($value['remoteid'])){
 				continue;
 			}
 			//云停用跳转
@@ -91,8 +91,8 @@ class table_local_router extends dzz_table
 			if(is_numeric($value['router']['size']['lt']) && $data['filesize']<$value['router']['size']['lt']*1024*1024) continue;
 			if(is_numeric($value['router']['size']['gt']) && $data['filesize']>$value['router']['size']['gt']*1024*1024) continue;
 			return $value['remoteid'];
-			
 		}
+		
 		return $remoteid;
 	}
 }

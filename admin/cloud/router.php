@@ -10,6 +10,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
 if(submitcheck('routersubmit')){
+	$_GET=dhtmlspecialchars($_GET);
 	$delete=$_GET['delete'];
 	foreach($_GET['name'] as $routerid => $value){
 		if(in_array($routerid,$delete)) continue;
@@ -27,7 +28,7 @@ if(submitcheck('routersubmit')){
 	foreach(C::t('local_storage')->fetch_all_orderby_disp() as $key=>$value){
 			$value['fusesize']=formatsize($value['usesize']);
 			if($value['totalsize']) $value['ftotalsize']=formatsize($value['totalsize']);
-			else $value['ftotalsize']='无限制';
+			else $value['ftotalsize']=lang('unlimited');
 		$storage[$value['remoteid']]=$value;
 	}
 	$list=array();

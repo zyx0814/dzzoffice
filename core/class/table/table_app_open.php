@@ -80,10 +80,11 @@ class table_app_open extends dzz_table
 		}
 		return $data;
 	}
-	public function fetch_all_orderby_ext($uid){
+	public function fetch_all_orderby_ext($uid,$ext_all=array()){
 		$data = array();
 		$appids=C::t('icos')->fetch_appids_by_uid($uid);
-		foreach(self::fetch_all_ext() as $value){
+		if(!$ext_all) $ext_all=self::fetch_all_ext();
+		foreach($ext_all as $value){
 			if($value['appid'] && !in_array($value['appid'],$appids)){
 				continue;
 			}

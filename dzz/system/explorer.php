@@ -6,19 +6,18 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-	
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
+
 define('CURRENT_PATH','dzz/system');
 $do = empty($_GET['do'])?'':$_GET['do'];
 $uid =isset($_GET['uid'])?intval($_GET['uid']):$_G['uid'];
+
 $space=dzzgetspace($uid);
 //判断数据唯一
 $refer=dreferer();
 $msg='';
-	//if(!$space['self']) showmessage('no_privelege',DZZSCRIPT,'',array('showdialog'=>1, 'showmsg' => true, 'closetime' => 3));
-
 if($do=='get_children'){
 	$sid=empty($_GET['id'])?0:$_GET['id'];
 	$winid=$_GET['winid'];
@@ -26,7 +25,6 @@ if($do=='get_children'){
 	$path=rawurldecode($_GET['path']);
 	
 	$data=array();
-	
 	list($prex,$id)=explode('-',$sid);
 	if(!$prex){
 		if($bz=='all'){//获取所有的顶级目录，包括企业盘，网盘，云存储 和机构和部门；
@@ -74,6 +72,7 @@ if($do=='get_children'){
 			if(count($data)>0)	$data[]=array('icosdata'=>'','folderdata'=>$folderarr);
 			
 		}else{
+		
 			if($bz){
 				$bzarr=explode(':',$bz);
 				$root=IO::getCloud($bz);
@@ -176,13 +175,15 @@ if($do=='get_children'){
 						$ismoderator=C::t('organization_admin')->ismoderator_by_uid_orgid($value['gid'],$_G['uid']);
 						if(!in_array($_G['uid'],$uids) && !$ismoderator && $_G['adminid']!=1) continue;
 						$orglist[$value['gid']]=$value;continue;
+					}elseif($value['flag']=='folder' && !DB::result_first("select COUNT(*) from %t where type='folder' and pfid=%d and oid=%d",array('icos',$folder['fid'],$value['fid']))){
+						continue;
 					}
 					
 					$folderids[]=$value['fid'];	
 					$data[]=array('attr'=>array('id'=>'f-'.$value['fid'].'-'.$winid,'rel'=>$value['flag']),
 								   'data'=>$value['fname'],
 								   'state'=>'closed'
-								   );
+								 );
 				}
 				if($orglist){
 					include_once libfile('function/organization');
@@ -216,7 +217,7 @@ if($do=='get_children'){
 		}
 	}
 	
-	echo json_encode_gbk($data);
+	echo json_encode($data);
 	exit();
 }elseif($do=='filemanage'){
 	$perpage=isset($_GET['perpage'])?intval($_GET['perpage']):100;
@@ -228,6 +229,7 @@ if($do=='get_children'){
 	$marker=empty($_GET['marker'])?'':trim($_GET['marker']);
 	$bz=empty($_GET['bz'])?'':urldecode($_GET['bz']);
 	$path=rawurldecode($_GET['path']);
+	
 	$arr=array();
 	$icoid=intval($_GET['icoid']);
 	$uid=empty($_GET['uid'])?0:intval($_GET['uid']);
@@ -238,7 +240,7 @@ if($do=='get_children'){
 		$icoarr['ftype']=getFileTypeName($icoarr['type'],$icoarr['ext']);
 		$icoarr['fdateline']=dgmdate($icoarr['dateline']);
 		$data1[$icoarr['icoid']]=$icoarr;
-		$json_data1=json_encode_gbk($data1);
+		$json_data1=json_encode($data1);
 	}
 	$data=array();$userdata=array();
 	$folderids=$folderdata=$baiduids=$storageids=array();
@@ -276,7 +278,6 @@ if($do=='get_children'){
 			 $limit=$perpage;
 			 $force=$marker;
 		}
-		
 		$icosdata=IO::listFiles($path,$by,$order,$limit,$force);
 		
 		if($icosdata['error']){
@@ -303,6 +304,7 @@ if($do=='get_children'){
 			$userdata[$value['uid']]=$value['username'];
 			$data[$key]=$value;
 		}
+		
 		//$sid=md5(rawurldecode($sid));
 		//$data=$icosdata;
 		$bz=($bz);
@@ -411,6 +413,8 @@ if($do=='get_children'){
 	}else{
 		$total=$start+count($data);
 	}
+	if(!$json_data=json_encode($data)) $data=array();
+	if(!$json_data=json_encode($folderdata)) $folderdata=array();
 	$return=array(	'sid'=>$sid,
 					'total'=>$total,
 					'data'=>$data?$data:array(),
@@ -427,9 +431,10 @@ if($do=='get_children'){
 									'localsearch'=>$bz?1:0
 									)
 				 );
+	
 	if(!$uid) $return['userdata']=$userdata?$userdata:array(); 
-	//$json_folder=json_encode_gbk($folderdata);
-	//$json=json_encode_gbk($data);
+	//$json_folder=json_encode($folderdata);
+	//$json=json_encode($data);
 	echo (json_encode($return));
 	exit();
 }

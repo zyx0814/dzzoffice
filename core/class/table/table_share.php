@@ -35,19 +35,26 @@ class table_share extends dzz_table
 	public function insert_by_sid($arr){
 		$arr['uid']=getglobal('uid');
 		$arr['username']=getglobal('username');
-		$arr['status']=0;
+		
 		if(empty($arr['path'])) return false;
 		$sid=self::getSid($arr['path'].'&uid='.getglobal('uid'));
-		if(DB::result_first("select COUNT(*) from %t where sid=%s",array($this->_table,$sid))){
+		if($data=DB::fetch_first("select * from %t where sid=%s",array($this->_table,$sid))){
+			if($data['status']>=-2){
+				 if($arr['endtime'] && $arr['endtime']<TIMESTAMP) $arr['status']=-1;
+				 elseif($arr['times'] && $arr['times']<=$data['count']) $arr['status']=-2;
+				 else $arr['status']=0;
+			}
+			if(!isset($arr['status'])) $arr['status']=$data['status'];
 			parent::update($sid,$arr);
-			if(!is_file(getglobal('setting/attachurl').'./qrcode/'.$sid[0].'/'.$sid.'.png')) self::getQRcodeBySid($sid);
-		    return array('sid'=>$sid,'shareurl'=>getglobal('siteurl').'s.php?sid='.$sid,'qrcode'=>getglobal('setting/attachurl').'./qrcode/'.$sid[0].'/'.$sid.'.png');
+			if(!is_file(getglobal('setting/attachurl').'qrcode/'.$sid[0].'/'.$sid.'.png')) self::getQRcodeBySid($sid);
+		    return array('sid'=>$sid,'shareurl'=>getglobal('siteurl').'s.php?sid='.$sid,'qrcode'=>getglobal('setting/attachurl').'qrcode/'.$sid[0].'/'.$sid.'.png','status'=>$arr['status']);
 		}else{
+			$arr['status']=0;
 			$arr['sid']=$sid;
 			$arr['dateline']=TIMESTAMP;
 			if(parent::insert($arr,1,1)){
 				self::getQRcodeBySid($sid);
-				return array('sid'=>$sid,'shareurl'=>getglobal('siteurl').'s.php?sid='.$sid,'qrcode'=>getglobal('setting/attachurl').'./qrcode/'.$sid[0].'/'.$sid.'.png');
+				return array('sid'=>$sid,'shareurl'=>getglobal('siteurl').'s.php?sid='.$sid,'qrcode'=>getglobal('setting/attachurl').'qrcode/'.$sid[0].'/'.$sid.'.png','status'=>$arr['status']);
 			}
 		}
 		return false;

@@ -11,7 +11,7 @@ if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
 $do=$_GET['do']?$_GET['do']:'systhame';
-$navtitle=lang('template','theme');
+$navtitle=lang('theme');
 
 if($do=='systhame'){
 //获取用户选择的主题信息

@@ -20,14 +20,14 @@ if($_GET['do']=='checklogin'){
 	$uid=intval($_GET['uid']);
 	if($uid!=$_G['uid']) $change_login_status=1;
 	else $change_login_status=0;
-	echo json_encode_gbk(array('needfresh'=>$change_login_status));
+	echo json_encode(array('needfresh'=>$change_login_status));
 
 
 }elseif($_GET['do']=='save'){
 	if(!$_G['uid']){
 		$arr=array();
-		$arr['msg']= lang('message','no_privilege');
-		echo json_encode_gbk($arr);
+		$arr['msg']= lang('no_privilege');
+		echo json_encode($arr);
 		exit();
 	}
 	$arr=array('msg'=>'success');
@@ -71,10 +71,12 @@ if($_GET['do']=='checklogin'){
 		$data['noticebanlist']=implode(',',$_GET['noticebanlist']);
 	}
 	if($data) C::t('user_field')->update($_G['uid'],$data);
-	echo json_encode_gbk($arr);
+	echo json_encode($arr);
 	exit();
 }else{
 	@include DZZ_ROOT.'./core/core_version.php';
+	$arr=array();
+	//$arr['start']=microtime(true);
 	
 	$data=array();
 	$data['version']=CORE_VERSION;
@@ -87,14 +89,14 @@ if($_GET['do']=='checklogin'){
 	}else{
 		$config=dzz_check_default();
 	}
-	
+	//$arr['config']=microtime(true);
 	
 	if($_G['setting']['upgrade']) $space['upgrade']=1;
 	else $space['upgrade']=0;
 	
 	//获取打开方式
 	$data['extopen']['all']=C::t('app_open')->fetch_all_ext();
-	$data['extopen']['ext']=C::t('app_open')->fetch_all_orderby_ext($_G['uid']);
+	$data['extopen']['ext']=C::t('app_open')->fetch_all_orderby_ext($_G['uid'],$data['extopen']['all']);
 	$data['extopen']['user']=C::t('app_open_default')->fetch_all_by_uid($_G['uid']);
 	//获取用户的默认打开方式
 	$data['extopen']['userdefault']=C::t('app_open_default')->fetch_all_by_uid($_G['uid']);
@@ -106,7 +108,7 @@ if($_GET['do']=='checklogin'){
 	}
 	
 	$data['iconview']=$iconview;
-
+	//$arr['extopen']=microtime(true);
 	
 	//获取系统桌面设置信息
 	$screenlist=$navids=array();
@@ -133,20 +135,25 @@ if($_GET['do']=='checklogin'){
 	/*if($icos_home=C::t('icos')->fetch_by_icoid($space['homeicoid'])){
 		$icos_all[$icos_home['icoid']]=$icos_home;
 	}*/
-	
+	//$arr['icos_all']=microtime(true);
 	//获取默认打开的icoid数据
 	if($_GET['openid']){
 		$openarr=explode(':',$_GET['openid']);
 		$openicoids=array();
 		foreach($openarr as $val){
 			if(strpos($val,'icoid_')===0){
-				$openicoids[]=intval(str_replace('icoid_',''));
+				$openicoids[]=intval(str_replace('icoid_','',$val));
 			}
 		}
 		$openicoids=array_unique($openicoids);
 		foreach($openicoids as $icoid){
 			$arr=C::t('icos')->fetch_by_icoid($icoid);
-			$icoarr_all[$arr['icoid']]=$arr;
+			if($arr['pfid']>0){
+				if($parents=C::t('icos')->fetch_parents_by_pfid($arr['pfid'])){
+					$icos_all=array_merge($icos_all,$parents);
+				}
+			}
+			$icos_all[$arr['icoid']]=$arr;
 		}
 	}
 	$shortcutFolderdata=array();
@@ -187,7 +194,7 @@ if($_GET['do']=='checklogin'){
 	//应用数据
 	$appdata=array();
 	$appdata=C::t('app_market')->fetch_all_by_appid($applist);
-	
+	//$arr['appdata']=microtime(true);
 	$applist_1=array();
 	foreach($appdata as $value){
 		if($value['isshow']<1) continue;
@@ -239,24 +246,32 @@ if($_GET['do']=='checklogin'){
 	
 	//目录数据
 	$folderdata=array();
+	
 	//默认目录全部调用
 	foreach($space['typefid'] as $fid){
 		$folderids[]=$fid;
 	}
+	//机构目录全部调用
+	foreach(DB::fetch_all("select fid from %t where pfid=0 and gid>0 and flag='organization'",array('folder')) as $value){
+		$folderids[]=$value['fid'];
+	}
+	
 	$folderids=array_unique($folderids);
 	if($folderids){
 		$folderdata=C::t('folder')->fetch_all_by_fid($folderids);
 	}
 	
+	//$arr['folderdata']=microtime(true);
 	//获取云盘目录数据
 	$pandata=C::t('connect')->fetch_all_folderdata($_G['uid']);
 	
 	foreach($pandata as $key =>$value){
 		$folderdata[$key]=$value;
 	}
+	//快捷方式目录数据
 	foreach($shortcutFolderdata as $key=>$value1){
-			 $folderdata[$key]=$value1;
-		}
+		if(empty($folderdata[$key])) $folderdata[$key]=$value1;
+	}
 	
 	$data['formhash']=$_G['formhash'];
 	
@@ -274,10 +289,9 @@ if($_GET['do']=='checklogin'){
 	$space['attachextensions']=$space['attachextensions']?explode(',',$space['attachextensions']):array();
 	
 	$data['myspace']=$data['space']=$space;
-	
-	//print_r($data);
-	
-	echo json_encode_gbk($data);
+	//$arr['end']=microtime(true);
+	//$data['microtime']=$arr;
+	echo json_encode($data);
 	exit();
 }
 

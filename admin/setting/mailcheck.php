@@ -11,7 +11,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 
 if(!submitcheck('mailchecksubmit')) {
-	$navtitle='邮件发送测试';
+	$navtitle=lang('email_send_test');
 	include template('mailcheck');
 }else{
 	if(!is_array($_G['setting']['mail'])) {
@@ -22,19 +22,19 @@ if(!submitcheck('mailchecksubmit')) {
 	$date = date('Y-m-d H:i:s');
 	$alertmsg = '';
 
-	$title = lang('message','setting_mail_check_title_'.$_G['setting']['mail']['mailsend']);
-	$message = lang('message','setting_mail_check_message_'.$_G['setting']['mail']['mailsend']).' '.$test_from.lang('message','setting_mail_check_date').' '.$date;
+	$title = lang('setting_mail_check_title_'.$_G['setting']['mail']['mailsend']);
+	$message = lang('setting_mail_check_message_'.$_G['setting']['mail']['mailsend']).' '.$test_from.lang('setting_mail_check_date').' '.$date;
 
-	$_G['setting']['bbname'] = lang('message','setting_mail_check_method_1');
+	$_G['setting']['bbname'] = lang('setting_mail_check_method_1');
 	include libfile('function/mail');
 	$succeed = sendmail($test_to, $title.' @ '.$date, $_G['setting']['bbname']."\n\n\n$message", $test_from);
-	$_G['setting']['bbname'] = lang('message','setting_mail_check_method_2');
+	$_G['setting']['bbname'] = lang('setting_mail_check_method_2');
 	$succeed = sendmail($test_to, $title.' @ '.$date, $_G['setting']['bbname']."\n\n\n$message", $test_from);
 	
 	if($succeed) {
-		$alertmsg = lang('message','setting_mail_check_success_1')."$title @ $date".lang('message','setting_mail_check_success_2');
+		$alertmsg = lang('setting_mail_check_success_1')."$title @ $date".lang('setting_mail_check_success_2');
 	} else {
-		$alertmsg = lang('message','setting_mail_check_error').$alertmsg;
+		$alertmsg = lang('setting_mail_check_error').$alertmsg;
 	}
 	echo '<script language="javascript">alert(\''.str_replace(array('\'', "\n", "\r"), array('\\\'', '\n', ''), $alertmsg).'\');</script>';
 }

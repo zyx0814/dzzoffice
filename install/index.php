@@ -9,21 +9,22 @@
 
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 @set_time_limit(1000);
-@set_magic_quotes_runtime(0);
-
+if(function_exists('set_magic_quotes_runtime')) {
+	@set_magic_quotes_runtime(0);
+}
 define('IN_DZZ', TRUE);
 define('IN_LEYUN', TRUE);
 define('ROOT_PATH', dirname(__FILE__).'/../');
 
 require ROOT_PATH.'./core/core_version.php';
 require ROOT_PATH.'./install/include/install_var.php';
-if(function_exists('mysql_connect')) {
-	require ROOT_PATH.'./install/include/install_mysql.php';
-} else {
+if(function_exists('mysqli_connect')) {
 	require ROOT_PATH.'./install/include/install_mysqli.php';
+} else {
+	require ROOT_PATH.'./install/include/install_mysql.php';
 }
 require ROOT_PATH.'./install/include/install_function.php';
-require ROOT_PATH.'./install/include/install_lang.php';
+require ROOT_PATH.'./install/language/zh-cn/lang.php';
 
 $view_off = getgpc('view_off');
 define('VIEW_OFF', $view_off ? TRUE : FALSE);
@@ -100,7 +101,8 @@ if($method == 'show_license') {
 	$dbpw = $_config['db'][1]['dbpw'];
 	$dbuser = $_config['db'][1]['dbuser'];
 	$tablepre = $_config['db'][1]['tablepre'];
-	$adminemail = 'admin@admin.com';
+	$adminemail = 'admin@dzzoffice.com';
+	$company='dzzoffice';
 
 	$error_msg = array();
 	if(isset($form_db_init_items) && is_array($form_db_init_items)) {
@@ -146,11 +148,11 @@ if($method == 'show_license') {
 		if(empty($dbname)) {
 			show_msg('dbname_invalid', $dbname, 0);
 		} else {
-			$mysqlmode = function_exists("mysql_connect") ? 'mysql' : 'mysqli';
-			$link = ($mysqlmode == 'mysql') ? @mysql_connect($dbhost, $dbuser, $dbpw) : new mysqli($dbhost, $dbuser, $dbpw);
+			$mysqlmode = function_exists("mysqli_connect") ? 'mysqli' :  'mysql';
+			$link = ($mysqlmode == 'mysqli') ? new mysqli($dbhost, $dbuser, $dbpw) : @mysql_connect($dbhost, $dbuser, $dbpw) ;
 			if(!$link) {
-				$errno = ($mysqlmode == 'mysql') ? mysql_errno($link) : $link->errno;
-				$error = ($mysqlmode == 'mysql') ? mysql_error($link) : $link->error;
+				$errno = ($mysqlmode == 'mysqli') ? $link->errno :mysql_errno($link) ;
+				$error = ($mysqlmode == 'mysqli') ? $link->error :mysql_error($link) ;
 				if($errno == 1045) {
 					show_msg('database_errno_1045', $error, 0);
 				} elseif($errno == 2003) {
@@ -159,28 +161,28 @@ if($method == 'show_license') {
 					show_msg('database_connect_error', $error, 0);
 				}
 			}
-			$mysql_version = ($mysqlmode == 'mysql') ? mysql_get_server_info() : $link->server_info;
+			$mysql_version = ($mysqlmode == 'mysqli') ? $link->server_info : mysql_get_server_info() ;
 			if($mysql_version > '4.1') {
-				if($mysqlmode == 'mysql') {
-					mysql_query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET ".DBCHARSET, $link);
-				} else {
+				if($mysqlmode == 'mysqli') {
 					$link->query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET ".DBCHARSET);
+				} else {
+					mysql_query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET ".DBCHARSET, $link);
 				}
 			} else {
-				if($mysqlmode == 'mysql') {
-					mysql_query("CREATE DATABASE IF NOT EXISTS `$dbname`", $link);
-				} else {
+				if($mysqlmode == 'mysqli') {
 					$link->query("CREATE DATABASE IF NOT EXISTS `$dbname`");
+				} else {
+					mysql_query("CREATE DATABASE IF NOT EXISTS `$dbname`", $link);
 				}
 			}
 
-			if(($mysqlmode == 'mysql') ? mysql_errno($link) : $link->errno) {
-				show_msg('database_errno_1044', ($mysqlmode == 'mysql') ? mysql_error($link) : $link->error, 0,0);
+			if(($mysqlmode == 'mysqli') ?  $link->errno : mysql_errno($link)) {
+				show_msg('database_errno_1044', ($mysqlmode == 'mysqli') ? $link->error: mysql_error($link) , 0,0);
 			}
-			if($mysqlmode == 'mysql') {
-				mysql_close($link);
-			} else {
+			if($mysqlmode == 'mysqli') {
 				$link->close();
+			} else {
+				mysql_close($link);
 			}
 		}
 
@@ -211,28 +213,28 @@ if($method == 'show_license') {
 			show_install();
 		}
 		for($i=0; $i<5;$i++){
-			showjsmessage('开始建立数据表...');
+			showjsmessage(lang('begin_establish_data_tables'));
 		}
 		$sql = file_get_contents($sqlfile);
 		$sql = str_replace("\r\n", "\n", $sql);
 		runquery($sql);
 		for($i=0; $i<5;$i++){
-			showjsmessage('所有数据表成功创建！');
+			showjsmessage(lang('table_clear_success'));
 		}
 		
 		runquery($extrasql);
 		for($i=0; $i<5;$i++){
-			showjsmessage('开始导入初始化数据...');
+			showjsmessage(lang('start_importing_initialized_data'));
 		}
 		$sql = file_get_contents(ROOT_PATH.'./install/data/install_data.sql');
 		$sql = str_replace("\r\n", "\n", $sql);
 		runquery($sql);
 		for($i=0; $i<5;$i++){
-			showjsmessage('开始导入初始化数据...成功！');
+			showjsmessage(lang('start_importing_initialized_data1'));
 		}
 		
 		for($i=0; $i<5;$i++){
-			showjsmessage('正在设置系统...');
+			showjsmessage(lang('set_system'));
 		}
 		$onlineip = $_SERVER['REMOTE_ADDR'];
 		$timestamp = time();
@@ -258,25 +260,24 @@ if($method == 'show_license') {
 		if($company){
 			$db->query("REPLACE INTO {$tablepre}setting (skey, svalue) VALUES ('sitename', '".$company."')");
 			$db->query("REPLACE INTO {$tablepre}setting (skey, svalue) VALUES ('bbname', '".$company."')");
-			
-			$db->query("INSERT INTO {$tablepre}organization ( `orgname`, `forgid`, `fid`, `disp`, `dateline`, `usesize`, `maxspacesize`, `indesk`,`available`) VALUES( '$company', 0, 0, 0, '$timestamp', 0, 0, 0,0)");
-			$orgid=$db->insert_id();
-			
+			//插入默认机构
+			$db->query("INSERT INTO {$tablepre}organization (`orgid`,`orgname`, `forgid`, `fid`, `disp`, `dateline`, `usesize`, `maxspacesize`, `indesk`,`available`,`pathkey`) VALUES( 1, '$company', 0, 0, 0, '$timestamp', 0, 0, 0,0,'_1_')");
 			//将管理员加入默认机构
-			if($orgid)	$db->query("INSERT INTO {$tablepre}organization_user (`orgid`, `uid`,`jobid`, `dateline`) VALUES('$orgid', 1, 0, '$timestamp')");
+			$db->query("INSERT INTO {$tablepre}organization_user (`orgid`, `uid`,`jobid`, `dateline`) VALUES(1, 1, 0, '$timestamp')");
+			
 		}
 		$db->query("UPDATE {$tablepre}cron SET lastrun='0', nextrun='".($timestamp + 3600)."'");
 		for($i=0; $i<5;$i++){
-			showjsmessage('正在设置系统...成功！');
+			showjsmessage(lang('set_system1'));
 		}
 		
 		for($i=0; $i<5;$i++){
-			showjsmessage('正在导入区划数据...');
+			showjsmessage(lang('import_division_data'));
 		}
 		install_districtdata();
 		
 		for($i=0; $i<5;$i++){
-			showjsmessage('正在导入区划数据...成功！');
+			showjsmessage(lang('import_division_data1'));
 		}
 		
 		$yearmonth = date('Ym_', time());
@@ -293,10 +294,10 @@ if($method == 'show_license') {
 			$db->query("REPLACE INTO {$tablepre}setting VALUES ('$k', '$v')");
 		}
 		if($runqueryerror){
-			showjsmessage('<span class="red">'.$lang['error_quit_msg'].'</span>');
+			showjsmessage('<span class="red">'.lang('error_quit_msg').'</span>');
 			exit();
 		};
-		showjsmessage('系统数据安装成功！请点击下一步设置管理员</span>');
+		showjsmessage(lang('system_data_installation_successful'));
 		echo '<script type="text/javascript">function setlaststep() {document.getElementById("laststep").disabled=false;}</script><script type="text/javascript">setTimeout(function(){window.location=\'index.php?step=4\'}, 30000);setlaststep();</script>'."\r\n";
 	
 		show_footer();
@@ -305,7 +306,7 @@ if($method == 'show_license') {
 	
 } elseif($method == 'admin_init') {
 	$submit = true;
-	$adminemail = 'admin@admin.com';
+	$adminemail = 'admin@dzzoffice.com';
 	$error_msg = array();
 	if(isset($form_admin_init_items) && is_array($form_admin_init_items)) {
 		foreach($form_admin_init_items as $key => $items) {
@@ -367,6 +368,7 @@ if($method == 'show_license') {
 		$tablepre = $_config['db'][1]['tablepre'];
 		$db->connect($dbhost, $dbuser, $dbpw, $dbname, DBCHARSET);
 		$db->query("REPLACE INTO {$tablepre}user (uid, username,nickname, password, adminid, groupid, email, regdate,salt,authstr) VALUES ('$uid', '$username', '$nickname','$password', '1', '1', '$email', '".time()."','$salt','');");
+		$db->query("REPLACE INTO {$tablepre}user_status (uid, regip,lastip, lastvisit, lastactivity, lastsendmail, invisible, profileprogress) VALUES ('$uid', '', '','$timestamp', '$timestamp', '0', '0', '0');");
 		$query = $db->query("SELECT COUNT(*) FROM {$tablepre}user");
 		$totalmembers = $db->result($query, 0);
 		$userstats = array('totalmembers' => $totalmembers, 'newsetuser' => $username);
@@ -383,9 +385,9 @@ if($method == 'show_license') {
 	@unlink(ROOT_PATH.'./install/index.php');
 	show_header();
 	echo '<iframe src="../misc.php?mod=syscache" style="display:none;"></iframe>';
-	echo '<h3>恭喜！安装成功</h3>';
-	echo '<h4 class="red">为了安全起见，请手工删除"./install/index.php"文件</h4>';
-	echo '<div style="text-align:right;width:80%;padding-top:50px;"><a href="'.$bbserver.'" class="button" ><input type="button" value="进入桌面"></a></div>';
+	echo '<h3>'.lang('install_successfully').'</h3>';
+	echo '<h4 class="red">'.lang('handwork_del').'"./install/index.php"文件</h4>';
+	echo '<div style="text-align:right;width:80%;padding-top:50px;"><a href="'.$bbserver.'" class="button" ><input type="button" value="'.lang('enter_desktop').'"></a></div>';
 	show_footer();
 	
 

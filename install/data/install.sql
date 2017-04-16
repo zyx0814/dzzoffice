@@ -288,7 +288,7 @@ CREATE TABLE dzz_comment (
   uid int(10) unsigned NOT NULL DEFAULT '0',
   pcid int(10) unsigned NOT NULL DEFAULT '0',
   rcid int(10) unsigned NOT NULL DEFAULT '0',
-  id mediumint(8) unsigned NOT NULL DEFAULT '0',
+  id varchar(60) NOT NULL DEFAULT '',
   idtype varchar(20) NOT NULL DEFAULT '',
   module varchar(50) NOT NULL DEFAULT '' COMMENT '调用的模块名，通常为应用的目录',
   authorid int(10) unsigned NOT NULL DEFAULT '0',
@@ -431,6 +431,19 @@ CREATE TABLE dzz_connect_storage (
   PRIMARY KEY (id)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS dzz_connect_disk;
+CREATE TABLE IF NOT EXISTS dzz_connect_disk (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
+  cloudname varchar(255) NOT NULL DEFAULT '',
+  attachdir varchar(255) NOT NULL DEFAULT '' COMMENT '绝对位置',
+  attachurl varchar(255) NOT NULL DEFAULT '' COMMENT '访问地址（选填）',
+  uid int(10) unsigned NOT NULL DEFAULT '0',
+  perm smallint(6) unsigned NOT NULL DEFAULT '0',
+  bz varchar(10) NOT NULL DEFAULT 'DISK',
+  dateline int(10) unsigned NOT NULL DEFAULT '0',
+  `charset` varchar(30) NOT NULL DEFAULT 'GBK',
+  PRIMARY KEY (id)
+) ENGINE=MyISAM  DEFAULT;
 
 --
 -- 表的结构 'dzz_count'
@@ -460,7 +473,7 @@ DROP TABLE IF EXISTS dzz_cron;
 CREATE TABLE dzz_cron (
   cronid smallint(6) unsigned NOT NULL AUTO_INCREMENT,
   available tinyint(1) NOT NULL DEFAULT '0',
-  `type` enum('user','system','plugin') NOT NULL DEFAULT 'user',
+  `type` enum('user','system','app') NOT NULL DEFAULT 'user',
   `name` char(50) NOT NULL DEFAULT '',
   filename char(50) NOT NULL DEFAULT '',
   lastrun int(10) unsigned NOT NULL DEFAULT '0',
@@ -1259,7 +1272,7 @@ DROP TABLE IF EXISTS dzz_source_shortcut;
 CREATE TABLE dzz_source_shortcut (
   cutid int(10) unsigned NOT NULL AUTO_INCREMENT,
   path text NOT NULL,
-  bz char(15) NOT NULL,
+  bz varchar(255) NOT NULL,
   `data` mediumtext NOT NULL,
   PRIMARY KEY (cutid)
 ) ENGINE=MyISAM;
@@ -1340,7 +1353,7 @@ CREATE TABLE dzz_user (
   weixinid varchar(255) NOT NULL DEFAULT '' COMMENT '微信号',
   wechat_userid varchar(255) NOT NULL DEFAULT '',
   wechat_status tinyint(1) NOT NULL DEFAULT '4' COMMENT '1:已关注；2：已冻结；4：未关注',
-  nickname char(30) DEFAULT NULL,
+  nickname char(30) NOT NULL DEFAULT '',
   username char(30) NOT NULL DEFAULT '',
   `password` char(32) NOT NULL DEFAULT '',
   `status` tinyint(1) NOT NULL DEFAULT '0',
@@ -1354,6 +1367,7 @@ CREATE TABLE dzz_user (
   authstr char(30) NOT NULL,
   newprompt smallint(6) unsigned NOT NULL DEFAULT '0',
   timeoffset char(4) NOT NULL DEFAULT '9999',
+  language char(10) NOT NULL DEFAULT '',
   grid smallint(6) NOT NULL DEFAULT '0',
   PRIMARY KEY (uid),
   UNIQUE KEY email (email),

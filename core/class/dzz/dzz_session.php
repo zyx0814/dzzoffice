@@ -70,7 +70,7 @@ class dzz_session {
 		$this->set('sid', random(6));
 		$this->set('uid', $uid);
 		$this->set('ip', $ip);
-		$uid && $this->set('invisible', getuserprofile('invisible'));
+		//$uid && $this->set('invisible', getuserprofile('invisible'));
 		$this->set('lastactivity', time());
 		$this->sid = $this->var['sid'];
 

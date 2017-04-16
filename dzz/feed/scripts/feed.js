@@ -13,7 +13,7 @@ function feed_vote_switch(tid){
 function getNewThread (feedType){
 	jQuery.get(DZZSCRIPT+'?mod=feed&op=ajax&do=getNewThreads&t='+timestamp,function(json){
 		 var el=jQuery('#feed_container > .itemfeed:first');
-		   if(el.size()>0) el.before(json);
+		   if(el.length>0) el.before(json);
 		   else jQuery('#feed_container').html(json);
 		jQuery('#feed_notes').hide();
 	});
@@ -26,11 +26,11 @@ function feed_publish(arr,flag){
   	html+='	<div class="right_ifed">';
     html+=' 	<div class="main_fed">';
 	if(arr['readperm']>0){
-		html+='     	 <span class="lockline_fed">仅@的人可见</span>';
+		html+='     	 <span class="lockline_fed">'+__lang.visible_only_look+'</span>';
 	}else{
-		html+='     	 <span class="openline_fed">所有人可见</span>';
+		html+='     	 <span class="openline_fed">'+__lang.all_visible+'</span>';
 	}
-    html+='  		 <div class="source_fed"> <a href="user.php?uid='+arr['authorid']+'" title="'+arr['author']+'" hidefocus="true" class="name_sfed skip_mmfed">'+arr['author']+'</a><span class="cont_sfed">说：</span> </div>';
+    html+='  		 <div class="source_fed"> <a href="user.php?uid='+arr['authorid']+'" title="'+arr['author']+'" hidefocus="true" class="name_sfed skip_mmfed">'+arr['author']+'</a><span class="cont_sfed">'+__lang.talk+'：</span> </div>';
 	if(arr['message']!=''){
     html+='  		<div class="master_mfed"> <span class="lquote_mmfed"></span><span class="content_mmfed">'+arr['message']+'</span><span class="rquote_mmfed"></span> </div>';
 	}
@@ -45,12 +45,12 @@ for(var i in arr['attachs']){
      html+='		<div class="file_fed imgfile_fed clearfix"> '+attach['title']+'<span class="kb_nffed">('+attach['filesize']+')</span>';
      html+='			<p class="down_ffed">';
 	 if(attach.downloads>0){
-     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">下载('+attach['downloads']+'次)</a>';
+     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'('+attach['downloads']+__lang.degree+')</a>';
 	 }else{
-	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">下载</a>'; 
+	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'</a>'; 
 	 }
-   	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">保存到我的文档</a> ';
-	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">删除</a> ';
+   	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
+	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">'+__lang.delete+'</a> ';
      html+='	        </p>';
      html+='	     </div>';
 	}else if(attach.type=='video'){
@@ -58,8 +58,8 @@ for(var i in arr['attachs']){
       html+='          <div class="ico_ffed " style="margin-right:20px"><a href="javascript:;" onclick="feed_attach_preview(\''+attach['qid']+'\')"><img src="'+attach['img']+'" alt="'+attach['title']+'" class="videoclass50_50" ></a></div>';
       html+='          <p class="name_ffed">'+attach['title']+'</p>';
      html+='           <p class="down_ffed">';
-	  html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">预览</a>';
-	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">删除</a> ';
+	  html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
+	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">'+__lang.delete+'</a> ';
      html+='	        </p>';
      html+='	     </div>';
 }else if(attach.type=='dzzdoc' || attach.type=='link'){
@@ -67,8 +67,8 @@ for(var i in arr['attachs']){
       html+='          <div class="ico_ffed "><a href="javascript:;" onclick="feed_attach_preview(\''+attach['qid']+'\')"><img src="'+attach['img']+'" alt="'+attach['title']+'" style="max-height:50px;"></a></div>';
       html+='          <p class="name_ffed">'+attach['title']+'</p>';
       html+='           <p class="down_ffed">';
-      html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">预览</a>';
-	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">删除</a> ';
+      html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
+	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">'+__lang.delete+'</a> ';
       html+='	</div>';
 }else{
       html+='	<div class="file_fed file_fed_'+attach.type+' clearfix">';
@@ -76,15 +76,15 @@ for(var i in arr['attachs']){
       html+='          <p class="name_ffed">'+attach['title']+'</p>';
      html+='           <p class="down_ffed">';
 	 if(attach.preview>0){
-     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">预览</a>';
+     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
 	 }
      if(attach.downloads>0){
-     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">下载('+attach['downloads']+'次)</a>';
+     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'('+attach['downloads']+__lang.degree+')</a>';
 	 }else{
-	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">下载</a>'; 
+	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'</a>'; 
 	 }
-   		 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">保存到我的文档</a> ';
-		 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">删除</a> ';
+   		 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
+		 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">'+__lang.delete+'</a> ';
      	html+='	        </p>';
      	html+='	     </div>';
  }
@@ -99,11 +99,11 @@ for(var i in arr['attachs']){
     html+='   		<div class="action_mfed clearfix">';
     html+='     			<div class="btn_amfed">';
     html+='      	 		<ul>';
-    html+='        	 			<li class="more_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['pid']+'\',\'feed_tid_'+arr['tid']+'\')">编辑</a></li>';
-   html+='        	 			<li class="more_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_delete(\''+arr['pid']+'\',\'feed_tid_'+arr['tid']+'\')">删除</a></li>';
+    html+='        	 			<li class="more_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['pid']+'\',\'feed_tid_'+arr['tid']+'\')">'+__lang.edit+'</a></li>';
+   html+='        	 			<li class="more_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_delete(\''+arr['pid']+'\',\'feed_tid_'+arr['tid']+'\')">'+__lang.delete+'</a></li>';
   // html+='         				<li class="notice_bamfed"><a class="notice_setting" href="javascript:void(0)" data="{&quot;objid&quot;:&quot;237802_200444511_1_1_635186733527126642&quot;,&quot;objType&quot;:&quot;4&quot;}">提醒我</a></li>';
-   html+='        		 		<li class="_bb_collect"> <a hidefocus="true" href="javascript:void(0);" iscollected="false">收藏</a> </li>';
-   html+='         				<li class="reply_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_publish_reply(\''+arr['tid']+'\');">回复</a></li>';
+   html+='        		 		<li class="_bb_collect"> <a hidefocus="true" href="javascript:void(0);" iscollected="false">'+__lang.collect+'</a> </li>';
+   html+='         				<li class="reply_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_publish_reply(\''+arr['tid']+'\');">'+__lang.reply+'</a></li>';
    html+='      	 		</ul>';
    html+='     			</div>';
    html+='    		   '+arr['dateline'];
@@ -114,7 +114,7 @@ for(var i in arr['attachs']){
    html+='	</div>';
    html+='</div>';
    var el=jQuery('#feed_container > .itemfeed:first');
-   if(el.size()>0) el.before(html);
+   if(el.length>0) el.before(html);
    else jQuery('#feed_container').html(html);
    jQuery('#feed_tid_'+arr['tid']).slideDown(500);
    if(jQuery('#vote_container_'+arr['tid']).length){
@@ -141,7 +141,7 @@ function feed_reply(arr){
      html+='     <div class="right_icfed">';
      html+='       <div class="master_cfed"> <a href="user.php?uid='+arr['authorid']+'" title="" class="avatar_mcfed skip_cmfed" hidefocus="true">'+arr['author']+'</a> ';
 	 if(arr['rpost']){
-		html+='<span class="amal_fed">回复</span>  <a href="user.php?uid='+arr['rpost']['authorid']+'" title="" class="avatar_mcfed skip_cmfed" hidefocus="true" target="_blank">'+arr['rpost']['author']+'</a>'; 
+		html+='<span class="amal_fed">'+__lang.reply+'</span>  <a href="user.php?uid='+arr['rpost']['authorid']+'" title="" class="avatar_mcfed skip_cmfed" hidefocus="true" target="_blank">'+arr['rpost']['author']+'</a>'; 
 	 }
 	 html+='          <span>：'+arr['message']+'</span> ';
 	 html+='		</div>';
@@ -155,12 +155,12 @@ for(var i in arr['attachs']){
      html+='		<div class="file_fed imgfile_fed clearfix"> '+attach['title']+'<span class="kb_nffed">('+attach['filesize']+')</span>';
      html+='			<p class="down_ffed">';
 	 if(attach.downloads>0){
-     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">下载('+attach['downloads']+'次)</a>';
+     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'('+attach['downloads']+__lang.degree+')</a>';
 	 }else{
-	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">下载</a>'; 
+	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'</a>'; 
 	 }
-   	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">保存到我的文档</a> ';
-	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">删除</a> ';
+   	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
+	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">'+__lang.delete+'</a> ';
      html+='	        </p>';
      html+='	     </div>';
 }else if(attach.type=='video'){
@@ -169,8 +169,8 @@ for(var i in arr['attachs']){
       html+='          <p class="name_ffed">'+attach['title']+'</p>';
      html+='           <p class="down_ffed">';
 	 
-      html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">预览</a>';
-	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">删除</a> ';
+      html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
+	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">'+__lang.delete+'</a> ';
      html+='	        </p>';
      html+='	     </div>';
 }else if(attach.type=='dzzdoc' || attach.type=='link'){
@@ -178,8 +178,8 @@ for(var i in arr['attachs']){
       html+='          <div class="ico_ffed "><a href="javascript:;" onclick="feed_attach_preview(\''+attach['qid']+'\')"><img src="'+attach['img']+'" alt="'+attach['title']+'" style="max-height:50px;"></a></div>';
       html+='          <p class="name_ffed">'+attach['title']+'</p>';
       html+='           <p class="down_ffed">';
-      html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">预览</a>';
-	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">删除</a> ';
+      html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
+	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">'+__lang.delete+'</a> ';
       html+='	</div>';
 }else{
       html+='	<div class="file_fed file_fed_'+attach.type+' clearfix">';
@@ -187,15 +187,15 @@ for(var i in arr['attachs']){
       html+='          <p class="name_ffed">'+attach['title']+'</p>';
      html+='           <p class="down_ffed">';
 	 if(attach.preview>0){
-     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">预览</a>';
+     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')"'+__lang.preview+'</a>';
 	 }
      if(attach.downloads>0){
-     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">下载('+attach['downloads']+'次)</a>';
+     	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'('+attach['downloads']+__lang.degree+')</a>';
 	 }else{
-	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">下载</a>'; 
+	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'</a>'; 
 	 }
-   		 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">保存到我的文档</a> ';
-		 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">删除</a> ';
+   		 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
+		 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="del_dffed skip_mmfed"  onclick="feed_attach_delete('+attach['qid']+',this)">'+__lang.delete+'</a> ';
      	html+='	        </p>';
      	html+='	     </div>';
 	 }
@@ -206,14 +206,14 @@ for(var i in arr['attachs']){
      html+='         <div class="btn_acfed">';
      html+='           <ul>';
 	 if(arr['haveperm']>0){
-	 html+='             <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['pid']+'\',\'reply_'+arr['pid']+'\',\''+arr['tid']+'\')">编辑</a></li>';
-     html+='             <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_delete(\''+arr['pid']+'\',\'reply_'+arr['pid']+'\',\''+arr['tid']+'\')">删除</a></li>';
+	 html+='             <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['pid']+'\',\'reply_'+arr['pid']+'\',\''+arr['tid']+'\')">'+__lang.edit+'</a></li>';
+     html+='             <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_delete(\''+arr['pid']+'\',\'reply_'+arr['pid']+'\',\''+arr['tid']+'\')">'+__lang.delete+'</a></li>';
 	 }
-     html+='             <li class="reply_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_publish_reply(\''+arr['tid']+'\',\''+arr['pid']+'\');">回复</a></li>';
+     html+='             <li class="reply_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_publish_reply(\''+arr['tid']+'\',\''+arr['pid']+'\');">'+__lang.reply+'</a></li>';
      html+='           </ul>';
      html+='         </div>';
 	 if(arr['readperm']<0){
-	 html+='       <span class="lock_fed" original-title="">私密</span>';
+	 html+='       <span class="lock_fed" original-title="">'+__lang.secret+'</span>';
      }
 	 html+='       <span class="time_acfed">'+arr['dateline']+'</span> </div>';
      html+='     </div>';
@@ -286,7 +286,7 @@ if(arr['isimage']){
 }
   	html+='  		  <div class="ico_vattvb_right">';
     html+='            <div class="ico_name">'+arr['filename']+'</div>';
-    html+='            <a href="javascript:void(0);" title="" class="del_fattvb" onClick="removeAttach(jQuery(this).parent().parent().parent().parent(),\''+tid+'\');" >删除附件</a>';
+    html+='            <a href="javascript:void(0);" title="" class="del_fattvb" onClick="removeAttach(jQuery(this).parent().parent().parent().parent(),\''+tid+'\');" >'+__lang.del_adjunct+'</a>';
 	//if(arr['aid
     html+='            <input type="hidden" name="attach[aid][]" value="'+arr['aid']+'" />';
 	html+='            <input type="hidden" name="attach[title][]" value="'+arr['filename']+'" />';
@@ -318,7 +318,7 @@ function feed_attach_saveto(qid){
 	
 }
 function feed_attach_delete(qid,obj){
-	if(confirm('确定要删除此附件吗？')){
+	if(confirm(__lang.sure_want_delete_attachment)){
 		jQuery.getJSON(DZZSCRIPT+'?mod=feed&op=ajax&do=attachdel&qid='+qid,function(json){
 			if(json.error) showmessage(json.error,'danger',3000,1);
 			else if(json.msg=='success'){
@@ -366,9 +366,9 @@ function feed_edit_finish(data){
 }
 function feed_delete(pid,domid,tid){
 	if(tid){
-		var msg='确定要删除此条回复吗？';
+		var msg=__lang.sure_want_delete_reply;
 	}else{
-		var msg='删除消息时，消息的所有回复都会被删除，确定要删除吗？'
+		var msg=__lang.all_delete_messages;
 	}
 	if(confirm(msg)){
 		jQuery.getJSON(ajaxurl+'&do=delete&pid='+pid,function(json){
@@ -402,16 +402,16 @@ function check_publish_enable(tid){
 }
 function check_attach_share_tid(tid){
 	if(!tid) tid='0';
-	var sum=jQuery('#attachmentViewBox_'+tid).find('.attachment_previewer').size(); 
+	var sum=jQuery('#attachmentViewBox_'+tid).find('.attachment_previewer').length; 
 	var val=jQuery('#message_'+tid).val();
-	var reg=/^分享了(\d+)个文件/ig;
+	var reg=/^__lang.share_the(\d+)__lang.js_a_file}/ig;
 	if(sum<1){
 		jQuery('#message_'+tid).val(val.replace(reg,''));
 	}else{
 		if(val==''){
-			jQuery('#message_'+tid).val('分享了'+sum+'个文件');
+			jQuery('#message_'+tid).val(__lang.share_the+sum+__lang.js_a_file);
 		}else{
-			jQuery('#message_'+tid).val(val.replace(reg,'分享了'+sum+'个文件'));
+			jQuery('#message_'+tid).val(val.replace(reg,__lang.share_the+sum+__lang.js_a_file));
 		}
 	}
 	check_publish_enable(tid);
@@ -426,7 +426,7 @@ function removeAttach(el,tid){
 //从桌面选择文件
 function uploadfrom_desktop(tid){
 	if(!tid) tid='0';
-	parent.OpenFile('open','打开文件',{attach:['文件',['ATTACH','IMAGE','DOCUMENT','VIDEO','LINK','DZZDOC'],''],image:['图像(*.jpg,*.jpeg,*.png,*.gif)',['IMAGE','JPG','JPEG','PNG','GIF'],'']},{bz:'',multiple:true},function(data){//只打开本地盘
+	parent.OpenFile('open',__lang.open_file,{attach:[__lang.typename_attach,['ATTACH','IMAGE','DOCUMENT','VIDEO','LINK','DZZDOC'],''],image:[_lang.type_image+'(*.jpg,*.jpeg,*.png,*.gif)',['IMAGE','JPG','JPEG','PNG','GIF'],'']},{bz:'',multiple:true},function(data){//只打开本地盘
 		var datas=[];
 		if(data.params.multiple){
 			datas=data.icodata
@@ -442,7 +442,7 @@ function uploadfrom_desktop(tid){
 				html+='           <div class="ico_vattvb "><img alt="'+arr['name']+'" src="'+arr['img']+'" class="img_50_50"></div>';
 			  	html+='  		  <div class="ico_vattvb_right">';
 				html+='            <div class="ico_name">'+arr['name']+'</div>';
-				html+='            <a href="javascript:void(0);" title="" class="del_fattvb" onClick="removeAttach(jQuery(this).parent().parent().parent().parent(),\''+tid+'\');" >删除附件</a>';
+				html+='            <a href="javascript:void(0);" title="" class="del_fattvb" onClick="removeAttach(jQuery(this).parent().parent().parent().parent(),\''+tid+'\');" >'+__lang.del_adjunct+'</a>';
 				if(arr['type']=='image' || arr['type']=='attach' || arr['type']=='document'){
 				html+='            <input type="hidden" name="attach[aid][]" value="'+arr['aid']+'" />';
 				html+='            <input type="hidden" name="attach[img][]" value="" />';
@@ -535,11 +535,11 @@ function checkInDom(obj,id){
 function fixTree_organization(el){
 	el.find('.tree-heng1').each(function(){
 		var tr=jQuery(this).parent().parent().parent();
-		var dep=jQuery(this).parent().find('.tree-su').size();
+		var dep=jQuery(this).parent().find('.tree-su').length;
 		
 		tr.nextAll().each(function(){
 			var child_org=jQuery(this).find('.child-org');
-			var dep1=child_org.find('.tree-su').size();
+			var dep1=child_org.find('.tree-su').length;
 			if(dep1<=dep) return false;
 			else{
 				child_org.find('.tree-su').eq(dep).removeClass('tree-su');

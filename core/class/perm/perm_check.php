@@ -38,10 +38,14 @@ class perm_check{
 					if($_G['setting']['allowshare']){
 						$perm=$power->delPower('share');
 					}
-					return $perm;
+					$power1=new perm_binPerm($perm);
+					return $power1->mergePower(self::getuserPerm());
 				}else{ //继承上级，查找上级
 					if($folder['pfid']>0 && $folder['pfid']!=$folder['fid']){ //有上级目录
-						return self::getPerm($folder['pfid'],$bz,$i);
+						//return self::getPerm($folder['pfid'],$bz,$i);
+						$perm=self::getPerm($folder['pfid'],$bz,$i);
+						$power1=new perm_binPerm($perm);
+						return $power1->mergePower(self::getuserPerm());
 					}else{   //其他的情况使用
 						return perm_binPerm::getGroupPower('read');
 					}
@@ -51,7 +55,8 @@ class perm_check{
 					if($_G['setting']['allowshare']){
 						$perm=$power->delPower('share');
 					}
-					return $perm;
+					$power1=new perm_binPerm($perm);
+					return $power1->mergePower(self::getuserPerm());;
 				}else{ //继承上级，查找上级
 					/*if($folder['pfid']>0 && $folder['pfid']!=$folder['fid']){ //有上级目录
 						return self::getPerm($folder['pfid'],$bz,$i);

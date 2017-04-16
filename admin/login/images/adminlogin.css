@@ -41,15 +41,12 @@ height: expression(this.height > 150 && this.width<=this.height ? 150 : true);
   
 }
 .avatarContainer{
-	width:274px; 
 	margin-bottom:20px;
 	overflow:hidden;
 	text-align:center;
 }
 .loginformContainer{
-	
 	padding:40px 40px 10px 40px;
-
 	text-align:center;
 	background:#F7F7F7;
 	margin:10px 0 0;
@@ -74,7 +71,7 @@ height: expression(this.height > 150 && this.width<=this.height ? 150 : true);
 }
 input[type="password"],input[type="text"]{
 	height:40px;
-	width:274px;
+	width:100%;
 	direction: ltr;
 	font-size: 16px;
 	outline:none;
@@ -82,9 +79,9 @@ input[type="password"],input[type="text"]{
 	*width:286px;
 }
 input[type="submit"]{
-	width:274px;
+	width:100%;
 	height:40px;
-	font-size: 20px;
+	font-size: 16px;
 	font-weight: 700;
 	width:286px\0;
 	*width:286px;

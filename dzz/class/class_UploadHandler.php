@@ -9,6 +9,7 @@
  * Licensed under the MIT license:
  * http://www.opensource.org/licenses/MIT
  */
+error_reporting(E_ERROR);
 class UploadHandler
 {
     protected $options;
@@ -172,7 +173,7 @@ class UploadHandler
     protected function validate($uploaded_file,$file, $error,$content_range) {
 		
 		if(strpos($error,'multipart')!==false){
-			$file->name='上传错误';
+			$file->name=lang('loadError');
 			$file->error = $this->get_error_message('post_max_size');
             return false;
 		}
@@ -342,7 +343,7 @@ class UploadHandler
 						clearstatcache();
 						$filesize=$this->get_file_size($filepath);
 					}else{
-						$file->error='移动文件错误，检查文件路径('.$filepath.')的权限';
+						$file->error=lang('move_file_error').$filepath.lang('jurisdiction');
 						@unlink($filepath);
 						return $file;
 					}
@@ -357,10 +358,10 @@ class UploadHandler
                     $append_file ? FILE_APPEND : 0
                 );*/
 				$filepath='php://input';
-				$filesize=strlen($filepath);
+				$filesize=$size;
             }
 			if(!$filesize && $filesize!=$size){
-				$file->error='获取文件大小错误';
+				$file->error=lang('access_file_size_error');
 				@unlink($filepath);
 				return $file;
 			}
@@ -370,7 +371,7 @@ class UploadHandler
 			if(is_numeric($path)){ //传到本地时
 				//判断权限
 				if(!perm_check::checkperm_Container($path,'newtype') || !perm_check::checkperm_Container($path,'upload') ) {
-					 $file->error =' 没有上传权限';
+					 $file->error =lang('no_upload_permissions');
 					 @unlink($filepath);
 					  return $file;
 				}
@@ -378,7 +379,7 @@ class UploadHandler
 				//判断空间大小
 				$gid=DB::result_first("select gid from ".DB::table('folder')." where fid='{$path}'");
 				if(!SpaceSize($file->size,$gid)){
-					 $file->error = lang('message','inadequate_capacity_space');
+					 $file->error = lang('inadequate_capacity_space');
 					 @unlink($filepath);
 					 return $file;
 				 }

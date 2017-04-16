@@ -135,7 +135,7 @@ function arrayeval($array, $level = 0) {
 function cleartemplatecache() {
 	$tpl = dir(DZZ_ROOT.'./data/template');
 	while($entry = $tpl->read()) {
-		if(preg_match("/\.tpl\.php$/", $entry)) {
+		if(preg_match("/(\.tpl\.php|\.js)$/", $entry)) {
 			@unlink(DZZ_ROOT.'./data/template/'.$entry);
 		}
 	}

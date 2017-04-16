@@ -10,7 +10,7 @@ if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
 $path=rawurldecode($_GET['path']);
-if(!$path) exit('此应用不支持单独打开');
+if(!$path) exit(lang('app_not_support_open_alone'));
 $stream=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.urlencode($path);
 header("location: https://docs.google.com/viewer?url=".urlencode($stream));
 ?>

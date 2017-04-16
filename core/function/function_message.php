@@ -31,7 +31,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 		'striptags'	=> false,
 	);
 
-	$navtitle = lang('core', 'title_board_message');
+	$navtitle = lang('board_message');
 
 	if($custom) {
 		$alerttype = 'alert_info';
@@ -126,9 +126,9 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 
 	$vars = explode(':', $message);
 	if(count($vars) == 2) {
-		$show_message = lang('message', $vars[1], $values,null,$vars[0]);
+		$show_message = lang($vars[1], $values,null,$vars[0]);
 	} else {
-		$show_message = lang('message', $message, $values);
+		$show_message = lang($message, $values);
 	}
 
 	if(isset($_GET['ajaxdata'])) {

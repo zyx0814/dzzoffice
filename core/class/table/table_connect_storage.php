@@ -57,12 +57,13 @@ class table_connect_storage extends dzz_table
 	public function delete_by_id($id){	
 		//删除此应用的快捷方式
 		$return=array();
-		/*foreach(DB::fetch_all("select icoid from ".DB::table('icos')." where type='storage' and oid='{$id}'") as $value){
-			$return['icoids'][]=$value['icoid'];
-			C::t('icos')->delete_by_icoid($value['icoid'],true);
-		}*/
+		$data=parent::fetch($id);
 		if(parent::delete($id)){
 			$return['msg']='success';
+			C::t('source_shortcut')->delete_by_bz($data['bz'].':'.$id.':',true);//删除快捷方式；
+			//删除图片缓存文件
+			$imgcache=getglobal('setting/attachdir').'./imgcache/'.$data['bz'].'/'.$id.'/';
+			removedirectory($imgcache);
 		}
 		return $return;
 	}

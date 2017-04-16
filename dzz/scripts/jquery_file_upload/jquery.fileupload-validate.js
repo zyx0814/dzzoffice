@@ -69,10 +69,10 @@
 
             // Error and info messages:
             messages: {
-                maxNumberOfFiles: '超过最大数量',
-                acceptFileTypes: '不允许的文件类型！',
-                maxFileSize: '文件太大了！',
-                minFileSize: '文件太小了！'
+                maxNumberOfFiles: __lang.more_largest_number,
+                acceptFileTypes: __lang.allow_file_type,
+                maxFileSize: __lang.file_too_large,
+                minFileSize: __lang.file_too_small
             }
         },
 

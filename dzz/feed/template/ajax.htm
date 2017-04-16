@@ -13,15 +13,15 @@
       <!--{template feed_reply_item}-->
     <!--{/loop}-->	
     <script type="text/javascript" >
-		 
+		  
 	<!--{if $limit==''}-->
 	  jQuery('#comment_{$tid} ').find('.txt_cfed a').off('click').addClass('cur')
 	  .on('click',function(){
 			if(jQuery(this).hasClass('cur')){
 				
 				var el=jQuery('#reply_list_{$tid} .cmt_fed');
-				for(var i=0;i<el.size();i++){
-					if(i<el.size()-5){
+				for(var i=0;i<el.length;i++){
+					if(i<el.length-5){
 						el.eq(i).hide();
 					}
 				}

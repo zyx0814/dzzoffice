@@ -39,7 +39,7 @@ try{
            <div style="width:100%;margin:0">
 				<script type="text/plain" id="editor" style="width:100%;height:250px;">$str</script>
                <!-- <p style="margin:10px 0 0 0"><input type="button" value="保存" class="btn btn-primary" onclick="document.getElementById('ueditorform').onsubmit();" />  &nbsp;&nbsp;<input type="button" value="保存" class="btn btn-info" onclick="document.getElementById('ueditorform').onsubmit();" /></p>-->
-                 <p style="margin:10px;"><button type="button" id="ueditorform_btn_0" class="btn btn-primary" data-loading-text="保存中..." onclick="document.getElementById('reversion').value='0';document.getElementById('ueditorform').onsubmit();" >保存</button>&nbsp;&nbsp;<button type="button" id="ueditorform_btn_1" class="btn btn-info" data-loading-text="保存中..." onclick="document.getElementById('reversion').value='1';document.getElementById('ueditorform').onsubmit();" >保存为新版本</button><small id="autosaveTime" class="pull-right " style="color:#999;padding:0 10px"></small></p>
+                 <p style="margin:10px;"><button type="button" id="ueditorform_btn_0" class="btn btn-primary" data-loading-text="{lang In_the_save}" onclick="document.getElementById('reversion').value='0';document.getElementById('ueditorform').onsubmit();" >{lang save}</button>&nbsp;&nbsp;<button type="button" id="ueditorform_btn_1" class="btn btn-info" data-loading-text="{lang In_the_save}" onclick="document.getElementById('reversion').value='1';document.getElementById('ueditorform').onsubmit();" >{lang save_new_version}</button><small id="autosaveTime" class="pull-right " style="color:#999;padding:0 10px"></small></p>
             </div>
         </div>
     </div>
@@ -90,7 +90,7 @@ try{
   function succeedhandle_ueditorform(url, message, values) {
 	var data= eval('(' + decodeURIComponent(values['data']) + ')');
 	if(data.autosave>0){
-		jQuery('#autosaveTime').html('最后一次自动保存时间：'+ new Date().format('hh:mm:ss'));
+		jQuery('#autosaveTime').html('{lang last_automatically_save_time}：'+ new Date().format('hh:mm:ss'));
 	}else{
 		try{ 
 			api.setFileExt([]);
@@ -126,7 +126,7 @@ try{
 
 window.onbeforeunload=function(){
 	try{api.setFileExt([]);}catch(e){}
-	if(needsave>0) return '当前内容没有保存，确定要离开吗？';
+	if(needsave>0) return '{lang current_contents_without_saving}';
 }
 Date.prototype.format = function(format) {
 		   var date = {
@@ -153,7 +153,7 @@ Date.prototype.format = function(format) {
 <script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
 <script src="dzz/system/ueditor/ueditor.config.js?{VERHASH}"></script> 
 <script src="dzz/system/ueditor/ueditor.all.js?{VERHASH}"></script> 
-<script src="dzz/system/ueditor/lang/zh-cn/zh-cn.js?{VERHASH}"></script> 
+<script src="dzz/system/ueditor/lang/$_G['language']/$_G['language'].js?{VERHASH}"></script>
 <script src="data/cache/smilies_var.js?{VERHASH}"></script> 
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 <script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>

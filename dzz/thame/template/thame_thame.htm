@@ -89,7 +89,7 @@ html,body{
 				});
 				el.on('click',function(){
 					jQuery('.thame_block').removeClass('active1');
-					jQuery(this).addClass('active1');
+					jQuery(this).addClass('active1');				
 					top._config.setthame(thamejson['thame_'+this.id]);
 				});
 				el.each(function(){
@@ -129,13 +129,13 @@ html,body{
 		
 	
         <div class="main-header clearfix" style="position:inherit;padding:5px;"> 
-        	<span  style="line-height:30px;float:left">自定义颜色&nbsp;&nbsp;</span>
+        	<span  style="line-height:30px;float:left">{lang custom_colors}&nbsp;&nbsp;</span>
     		<div class="input-group pull-left" style="width:180px;padding-right:20px;">
-     			<input id="color_val" type="text" value="#000" class="form-control input-sm"  placeholder="点击右侧色块选择颜色">
+     			<input id="color_val" type="text" value="#000" class="form-control input-sm"  placeholder="{lang click_right_side_color_chooser}">
      			 <a  class="input-group-addon" initialized="true" id="c1" onclick="c1_frame.location='static/image/tool/getcolor.htm?c1|color_val';showMenu({'ctrlid':'c1'})" style="background-color: #000;width:30px;"></a>
             </div>
             <span id="c1_menu" style="display: none"><iframe name="c1_frame" src="" frameborder="0" height="148" scrolling="no" width="210"></iframe></span>  
-            <button type="button"  class="btn btn-primary btn-sm pull-left"  onclick="top._config.setColor($('color_val').value);" />设置</button>
+            <button type="button"  class="btn btn-primary btn-sm pull-left"  onclick="top._config.setColor($('color_val').value);" >{lang set}</button>
             <span  style="line-height:30px;float:left"  id="return_color"></span>
    	 </div>
         <div class="main-content clearfix" style="padding:10px;border-top:1px solid #FFF">
@@ -182,13 +182,13 @@ html,body{
 			});
 		</script>
 		<div class="main-header clearfix" style="position:inherit;padding:5px;"> 
-        	<span  style="line-height:30px;float:left">自定义背景颜色&nbsp;&nbsp;</span>
+        	<span  style="line-height:30px;float:left">{lang thame_custom_color}&nbsp;&nbsp;</span>
     		<div class="input-group pull-left" style="width:180px;padding-right:20px;">
-     			<input id="color_val" type="text" value="#000" class="form-control input-sm"  placeholder="点击右侧色块选择颜色">
+     			<input id="color_val" type="text" value="#000" class="form-control input-sm"  placeholder="{lang click_right_side_color_chooser}">
      			 <a  class="input-group-addon" initialized="true" id="c1" onclick="c1_frame.location='static/image/tool/getcolor.htm?c1|color_val';showMenu({'ctrlid':'c1'})" style="background-color: #000;width:30px;"></a>
             </div>
             <span id="c1_menu" style="display: none"><iframe name="c1_frame" src="" frameborder="0" height="148" scrolling="no" width="210"></iframe></span>  
-            <button type="button"  class="btn btn-primary btn-sm pull-left"  onclick="top._config.setback($('color_val').value,2,'','backimg');" />设置</button>
+            <button type="button"  class="btn btn-primary btn-sm pull-left"  onclick="top._config.setback($('color_val').value,2,'','backimg');" >{lang set}</button>
             <span  style="line-height:30px;float:left"  id="return_color"></span>
    	 </div>
         <div class="main-content clearfix" style="padding:10px;border-top:1px solid #FFF">
@@ -231,7 +231,7 @@ html,body{
 		<!--{if $class}-->
         <div class="main-header clearfix">
             <ul class="nav nav-pills nav-pills-bottomguide">
-                  <li <!--{if !$classid}--> class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">全部</a></li>
+                  <li <!--{if !$classid}--> class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">{lang all}</a></li>
                   <!--{loop $class $value}-->
                    <li <!--{if $value[classid]==$classid}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do&classid=$value[classid]">$value[classname]</a></li>
                   <!--{/loop}-->
@@ -243,7 +243,7 @@ html,body{
             	<ul class="clearfix list-unstyled">
             	<!--{loop $thames $key $value}-->
                 	<li backimg="$value[val]" class="pull-left color_block" style="width:110px;height:110px;padding:10px">
-                        <div class="img-thumbnail" src="$value[thumbpic]"  style="width:90px;height:90px;background:url($value[thumbpic]) repeat" />
+                        <div class="img-thumbnail" src="$value[thumbpic]"  style="width:90px;height:90px;background:url($value[thumbpic]) repeat" ></div>
                     </li>
                 <!--{/loop}-->
               	</ul>
@@ -275,7 +275,7 @@ html,body{
 		<!--{if $class}-->
         <div class="main-header clearfix">
             <ul class="nav nav-pills nav-pills-bottomguide">
-                  <li <!--{if !$classid}--> class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">全部</a></li>
+                  <li <!--{if !$classid}--> class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">{lang all}</a></li>
                   <!--{loop $class $value}-->
                    <li <!--{if $value[classid]==$classid}-->class="active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do&classid=$value[classid]">$value[classname]</a></li>
                   <!--{/loop}-->
@@ -319,7 +319,7 @@ html,body{
 		<!--{if $class}-->
         <div class="main-header clearfix">
             <ul class="nav nav-pills nav-pills-bottomguide">
-                  <li <!--{if !$classid}-->class=" active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">全部</a></li>
+                  <li <!--{if !$classid}-->class=" active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do">{lang all}</a></li>
                   <!--{loop $class $value}-->
                    <li <!--{if $value[classid]==$classid}--> class=" active"<!--{/if}-->><a href="{DZZSCRIPT}?mod=$mod&op=$op&do=$do&classid=$value[classid]">$value[classname]</a></li>
                   <!--{/loop}-->

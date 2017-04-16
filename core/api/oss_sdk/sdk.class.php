@@ -246,7 +246,7 @@ class ALIOSS{
 	/**
 	 * 路径表现方式
 	 */
-	private $enable_domain_style = false;
+	private $enable_domain_style = true;
 	
 	/**
 	 * 请求URL

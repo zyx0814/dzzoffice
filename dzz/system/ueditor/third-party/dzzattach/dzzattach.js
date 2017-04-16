@@ -38,7 +38,7 @@ dzzattach.init=function(root){
 				var html='';
 				html+='<h5>'+el.attr('title')+'&nbsp;<small>('+el.attr('dsize')+')</small></h5>';
 				html+='<div class="tip-op">';
-				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'attach\')" >预览</a><a class="download" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.download(this);" >下载</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'attach\');" >保存到我的文档</a>'
+				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'attach\')" >'+__lang.preview+'</a><a class="download" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.download(this);" >'+__lang.download+'</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'attach\');" >'+__lang.js_saved_my_documents+'</a>';
 				html+='</div>';
 				
 				hideMenu('','prompt');
@@ -56,7 +56,7 @@ dzzattach.init=function(root){
 				var html='';
 				html+='<h5>'+el.attr('title')+'</h5>';
 				html+='<div class="tip-op">';
-				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'link\')" >预览</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'link\');" >保存到我的文档</a>'
+				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'link\')" >'+__lang.preview+'</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'link\');" >'+__lang.js_saved_my_documents+'</a>';
 				html+='</div>';
 				
 				hideMenu('','prompt');
@@ -74,7 +74,7 @@ dzzattach.init=function(root){
 				var html='';
 				html+='<h5>'+el.attr('title')+'</h5>';
 				html+='<div class="tip-op">';
-				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'dzzdoc\')" >预览</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'dzzdoc\');" >保存到我的文档</a>'
+				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'dzzdoc\')" >'+__lang.preview+'</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'dzzdoc\');" >'+__lang.js_saved_my_documents+'</a>';
 				html+='</div>';
 				
 				hideMenu('','prompt');
@@ -302,32 +302,32 @@ dzzattach.thumb=function(id){
 		var html='';
 		html+='<div id="preview_Container" class="modal"  style="position:fixed;width:100%;height:100%;top:0px;left:0px;bottom:0px;right:0px;display:none;z-index:10000">';
 		html+='<div id="preview-box" class="preview-box">';
-		html+='	<div class="preview-handle" style="z-index: 118;"><b data_title="ESC退出" btn="close" class="pr-close" onclick="dzzattach.thumb.btnClick(\'close\');">ESC退出</b></div>';
+		html+='	<div class="preview-handle" style="z-index: 118;"><b data_title="ESC'+__lang.logout+'" btn="close" class="pr-close" onclick="dzzattach.thumb.btnClick(\'close\');">ESC'+__lang.logout+'</b></div>';
 		html+='	<div id="btn_hand" class="preview-panel" style="z-index: 117;">';
 		html+='		<ul id="contents-panel" style="right:55px;" class="contents-panel">';
-		html+='			<li btn="rotate"  onclick="dzzattach.thumb.btnClick(\'rotate\');"><i class="pr-rotate"></i><b>旋转</b></li>';
-		html+='			<li class="hidden-xs"  btn="collect" onclick="dzzattach.thumb.btnClick(\'collect\');"><i class="pr-save"></i><b>保存到我的文档</b></li>';
-		html+='			<li class="hidden-xs"  btn="download" onclick="dzzattach.thumb.btnClick(\'download\');"><i class="pr-download"></i><b>下载</b></li>';
-		html+='			<li btn="newwindow"   onclick="dzzattach.thumb.btnClick(\'newwindow\');"><i class="pr-newwindow"></i><b>查看原图</b></li>';
+		html+='			<li btn="rotate"  onclick="dzzattach.thumb.btnClick(\'rotate\');"><i class="pr-rotate"></i><b>'+__lang.rotation+'</b></li>';
+		html+='			<li class="hidden-xs"  btn="collect" onclick="dzzattach.thumb.btnClick(\'collect\');"><i class="pr-save"></i><b>'+__lang.js_saved_my_documents+'</b></li>';
+		html+='			<li class="hidden-xs"  btn="download" onclick="dzzattach.thumb.btnClick(\'download\');"><i class="pr-download"></i><b>'+__lang.download+'</b></li>';
+		html+='			<li btn="newwindow"   onclick="dzzattach.thumb.btnClick(\'newwindow\');"><i class="pr-newwindow"></i><b>'+__lang.look_artwork+'</b></li>';
 		html+='		</ul>';
 		html+='		<div id="file_name" class="previewer-filename hidden-xs"></div>';
 		html+='	</div>';
 		html+='	<div id="con" class="preview-contents">';
 		html+='		<div class="pr-btn-switch">';
-		html+='			<b data_title="按键盘“←”键上一个" btn="prev" class="pr-btn-prev" style="z-index: 116;" onclick="dzzattach.thumb.btnClick(\'prev\');">上一个</b>';
-		html+='			<b data_title="按键盘“→”键下一个" btn="next" class="pr-btn-next" style="z-index: 116;" onclick="dzzattach.thumb.btnClick(\'next\');">下一个</b>';
+		html+='			<b data_title="'+__lang.keyboard+'“←”'+__lang.key_on+'" btn="prev" class="pr-btn-prev" style="z-index: 116;" onclick="dzzattach.thumb.btnClick(\'prev\');">'+__lang.on_a+'</b>';
+		html+='			<b data_title="'+__lang.keyboard+'“→”'+__lang.key_under+'" btn="next" class="pr-btn-next" style="z-index: 116;" onclick="dzzattach.thumb.btnClick(\'next\');">'+__lang.under_a+'</b>';
 		html+='		</div>';
-		html+='		<div id="pre_loading" style="display: none;" class="previewer-loading">载入中...</div>';
+		html+='		<div id="pre_loading" style="display: none;" class="previewer-loading">'+__lang.loading_in+'</div>';
 		html+='		<div id="previewer-photo" class="previewer-photo" style="overflow: visible; z-index: 114; display: none; left: 0px; top: 40px;" onclick="dzzattach.thumb.btnClick(\'close\');"></div>';
 		html+='	</div>';
 		html+='</div>';
-		html+='<div id="prev-tips" class="prev-tips" >按键盘“←”键上一个</div>';
-		html+='<div id="next-tips" class="next-tips">按键盘“→”键下一个</div>';
-		html+='<div id="close-tips" class="esc-tips">ESC退出</div>';
+		html+='<div id="prev-tips" class="prev-tips" >'+__lang.keyboard+'“←”'+__lang.key_on+'</div>';
+		html+='<div id="next-tips" class="next-tips">'+__lang.keyboard+'“→”'+__lang.key_under+'</div>';
+		html+='<div id="close-tips" class="esc-tips">ESC'+__lang.logout+'</div>';
 		html+='<div id="popup-hint" style="z-index: 999999999; top: 50%; left:50%;margin-left:-86px; display:none;" class="popup-hint">';
 		html+='	<i rel="type" class="hint-icon hint-inf-m"></i>';
 		html+='	<em class="sl"><b></b></em>';
-		html+='	<span rel="con">已到最后一个图片了！</span>';
+		html+='	<span rel="con">'+__lang.has_last_picture1+'</span>';
 		html+='	<em class="sr"><b></b></em>';
 		html+='</div>';
 		html+='</div>';
@@ -426,7 +426,7 @@ dzzattach.thumb.btnClick=function(btn){
 				break;	
 			case "prev":
 				if(dzzattach.thumb.current==0){
-					jQuery('#popup-hint').find('span').html('已是第一张图片了');
+					jQuery('#popup-hint').find('span').html(__lang.has_last_picture);
 					jQuery('#popup-hint').show();
 					window.setTimeout(function(){jQuery('#popup-hint').hide();},3000);
 				}else{
@@ -436,7 +436,7 @@ dzzattach.thumb.btnClick=function(btn){
 				break;
 			case "next":
 				if(dzzattach.thumb.current==dzzattach.thumb.datas.length-1){
-					jQuery('#popup-hint').find('span').html('已是最后一张图片了');
+					jQuery('#popup-hint').find('span').html(__lang.has_last_picture1);
 					jQuery('#popup-hint').show();
 					window.setTimeout(function(){jQuery('#popup-hint').hide();},3000);
 				}else{

@@ -16,7 +16,7 @@ $icoarr=C::t('icos')->fetch_by_icoid($icoid);
  include template('common/header_common');
 	echo "<script type=\"text/javascript\">";
 	//echo "top._config.sourcedata.icos['feed_attach_".$attach['qid']."']=".json_encode($icoarr).";";
-	echo "try{top._api.Open(".json_encode($icoarr).");}catch(e){alert('请在桌面内使用');}";
+	echo "try{top._api.Open(".json_encode($icoarr).");}catch(e){alert(".lang('filemanage_desktop').");}";
 	echo "</script>";
 include template('common/footer');
 exit();

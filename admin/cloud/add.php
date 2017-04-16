@@ -12,34 +12,26 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 $operation='setting';
 
 if(submitcheck('addcloudsubmit')){
-	
+	$_GET=dhtmlspecialchars($_GET);
 	$error=array();
 	if(empty($_GET['name'])){
-		$error[]='名称不能为空';
+		$error[] = lang('name_cannot_empty');
 	}
 	if(empty($_GET['bz'])){
-		$error[]='标志符不能为空';
+		$error[] = lang('identifier_can_not_empty');
 	}
 	if(DB::result_first("select COUNT(*) from ".DB::table('connect')." where bz='{$_GET[bz]}'")){
-		$error[]='标志符'.$_GET['bz'].'已经存在';
+		$error[] = lang('designator') . $_GET['bz'] . lang('already_existed');
 	}
-	if($error) showmessage(implode('<br>',$error),dreferer());
+	if ($error)
+		showmessage(implode('<br>', $error), dreferer());
 	if($_GET['type']=='pan'){
-		$setarr=array(
-						'name'=>$_GET['name'],
-						'root'=>trim($_GET['root']),
-						'key'=>trim($_GET['key']),
-						'secret'=>trim($_GET['secret'])
-					);
+		$setarr = array('name' => $_GET['name'], 'root' => trim($_GET['root']), 'key' => trim($_GET['key']), 'secret' => trim($_GET['secret']));
 
 	}elseif($_GET['type']=='storage'){
-		$setarr=array(
-						'name'=>$_GET['name']
-						);
+		$setarr = array('name' => $_GET['name']);
 	}elseif($_GET['type']=='ftp'){
-		$setarr=array(
-						'name'=>$_GET['name']
-						);
+		$setarr = array('name' => $_GET['name']);
 	}
 	$setarr['bz']=$_GET['bz'];
 	$setarr['dname']=$_GET['dname'];
@@ -50,5 +42,4 @@ if(submitcheck('addcloudsubmit')){
 	showmessage('do_success',BASESCRIPT.'?mod=cloud');
 }
 include template('add');
-
 ?>

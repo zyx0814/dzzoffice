@@ -28,8 +28,10 @@ class FileDownload{ // class start
 	  }
   
      if(!$fp = fopen($file, 'rb')){
-		 topshowmessage('文件不存在');
+		 topshowmessage(lang('file_not_exist1'));
 	 }
+	 $db = DB::object();
+	 $db->close();
 	 @ob_end_clean();
 	 if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 	  if(!$file_size)   $file_size = filesize($file); 
@@ -81,26 +83,19 @@ class FileDownload{ // class start
   * @return Array 
   */
   private function getRange($file_size){ 
-  	if (isset($HTTP_SERVER_VARS['HTTP_RANGE'])) $range = substr($HTTP_SERVER_VARS['HTTP_RANGE'] , strlen('bytes='));  
-    elseif($_SERVER['HTTP_RANGE']) $range = substr($_SERVER['HTTP_RANGE'] , strlen('bytes='));  
-    if($range){  
-		$range = explode('-', $range); 
-		 if ($range[0] > 0){  
-		   $range[0] = intval($range[0]);  
-		}  
-		if(count($range)<2){  
-			$range[1] = $file_size-1;  
-		} 
-		if ($range[1] > 0) $range[1] = intval($range[1]);  
-		else $range[1] = $file_size-1;   
-		$range = array_combine(array('start','end'), $range);  
-		if(empty($range['start']) || $range['start']<0){  
-			$range['start'] = 0;  
-		}  
-		if(empty($range['end']) || ($range['end']>$file_size-1)){  
-			$range['end'] = $file_size-1;  
-		}  
-		return $range;  
+  	
+    if($_SERVER['HTTP_RANGE']){
+		list($a, $range) = explode("=",$_SERVER['HTTP_RANGE'],2);
+		list($range) = explode(",",$range,2);
+		list($start, $range_end) = explode("-", $range);
+		$start=intval($start);
+		if(!$range_end) {
+			$range_end=$file_size-1;
+		} else {
+			$range_end=intval($range_end);
+		}
+	   $range = array('start'=>$start,'end'=>$range_end);
+	   return $range;  
 	}  
 	return null;
   }

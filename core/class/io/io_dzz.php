@@ -50,7 +50,7 @@ class io_dzz extends io_api
 		$obz=io_remote::getBzByRemoteid($attach['remote']);
 		
 		if($obz=='dzz'){
-			return array('error'=>'同一存储区域,不需要移动');
+			return array('error'=>lang('same_storage_area'));
 		}else{
 			$url=IO::getFileUri($obz.'/'.$attach['attachment']) ;
 			if(is_array($url)) return array('error'=>$url['error']);
@@ -58,15 +58,14 @@ class io_dzz extends io_api
 			$targetpath=dirname($target);
 			dmkdir($targetpath);
 			try{
-				
 				if(file_put_contents($target,fopen($url,'rb'))===false){
-					return array('error'=>'写入本地时出错，请检查本地存储目录是否有写入权限');
+					return array('error'=>lang('error_occurred_written_local'));
 				}
 			}catch(Exception $e){
 				return array('error'=>$e->getMessage());
 			}
 			if(md5_file($target)!=$attach['md5']){
-				return array('error'=>'文件传输错误,请重试');
+				return array('error'=>lang('file_transfer_errors'));
 			}
 		}
 		return true;
@@ -76,7 +75,7 @@ class io_dzz extends io_api
 		//查找当前目录下是否有同名文件
 		$icoarr=C::t('icos')->fetch_by_icoid($icoid);
 		if($icoarr['name']!=$text && ($ricoid=io_dzz::getRepeatIDByName($text,$icoarr['pfid'],($icoarr['type']=='folder')?true:false))){//如果目录下有同名文件
-			return array('error'=>'文件名已存在!');
+			return array('error'=>lang('filename_already_exists'));
 		}
 		if(!$arr=C::t('icos')->update_by_name($icoid,$text)){
 			return array('error'=>'Not modified!');
@@ -111,7 +110,11 @@ class io_dzz extends io_api
 				return IO::getStream($bz.'/'.$attach['attachment'],$fop);
 			}
 		}elseif(strpos($path,'dzz::')===0){
+			if(strpos($icoid,'../')!==false) return '';
 			return $_G['setting']['attachdir'].preg_replace("/^dzz::/",'',$path);
+		}elseif(strpos($path,'TMP::')===0){
+			$tmp=str_replace('\\','/',sys_get_temp_dir());
+			return str_replace('TMP::',$tmp.'/',$path);
 		}elseif(is_numeric($path)){
 			$icoarr=C::t('icos')->fetch_by_icoid($path);
 			$bz=io_remote::getBzByRemoteid($icoarr['remote']);
@@ -123,6 +126,8 @@ class io_dzz extends io_api
 			}else{
 				return IO::getStream($bz.'/'.$icoarr['attachment'],$fop);
 			}
+		}else{
+			return $path;
 		}
 		return '';
 	}
@@ -139,7 +144,10 @@ class io_dzz extends io_api
 			}
 			return IO::getFileUri($path);
 		}elseif(strpos($path,'dzz::')===0){
+			if(strpos($icoid,'../')!==false) return '';
 			return $_G['siteurl'].$_G['setting']['attachurl'].preg_replace("/^dzz::/",'',$path);
+		}elseif(strpos($path,'TMP::')===0){
+			return $_G['siteurl'].'index.php?mod=io&op=getStream&path='.dzzencode($path);
 		}elseif(is_numeric($path)){
 			$icoarr=C::t('icos')->fetch_by_icoid($path);
 			$bz=io_remote::getBzByRemoteid($icoarr['remote']);
@@ -160,52 +168,59 @@ class io_dzz extends io_api
 		return file_get_contents($url);
 	}
 	
-	public function deleteThumb($icoid){
+	public function deleteThumb($icoid,$width=0,$height=0){
 		global $_G;
 		$data=C::t('icos')->fetch_by_icoid($path);
 		$imgcachePath='./imgcache/';
-		$arr=array(array(256,256),array(1440,900));
 		$cachepath=str_replace('//','/',str_replace(':','/',$data['attachment']));
-		foreach($arr as $value){
-			$target=$imgcachePath.($cachepath).'.'.$value[0].'_'.$value[1].'.jpeg';
+		foreach($_G['setting']['thumbsize'] as $value){
+			$target=$imgcachePath.($cachepath).'.'.$value['width'].'_'.$value['height'].'.jpeg';
 			@unlink($_G['setting']['attachdir'].$target);
 		}
 	}
-	public function createThumb($path,$width,$height){
+	public function createThumb($path,$size,$width=0,$height=0){
 		global $_G;
 		if(is_numeric($path)){
 			$data=C::t('icos')->fetch_by_icoid($path);
 			$bz=io_remote::getBzByRemoteid($data['remote']);
 			if($bz!='dzz'){
 				$path=$bz.'/'.$data['attachment'];
-				return IO::createThumb($path,$width,$height);
+				return IO::createThumb($path,$size,$width,$height);
 			}
 		}else{
 			if(strpos($path,'attach::')===0){
 				$data=C::t('attachment')->fetch(intval(str_replace('attach::','',$path)));
 				$bz=io_remote::getBzByRemoteid($data['remote']);
 				if($bz!='dzz'){
-					return IO::createThumb($bz.'/'.$data['attachment'],$width,$height);
+					return IO::createThumb($bz.'/'.$data['attachment'],$size,$width,$height);
 					
 				}
+			}elseif(strpos($path,'TMP::')===0){
+				$tmp=str_replace('\\','/',sys_get_temp_dir());
+			    $data=array('attachment'=>str_replace('TMP::',$tmp.'/',$path));
+			
 			}elseif(strpos($path,'dzz::')===0){
 				$data=array('attachment'=>str_replace('dzz::','',$path));
 			}else{
+				
 				return -2;//$path路径不正确
 			}
 		}
-		
+		$filepath=self::getStream($path);
+		if(intval($width)<1) $width=$_G['setting']['thumbsize'][$size]['width'];
+		if(intval($height)<1) $height=$_G['setting']['thumbsize'][$size]['height'];
 		
 		$enable_cache=true; //是否启用缓存
 		$imgcachePath='imgcache/';
 		$cachepath=str_replace('//','/',str_replace(':','/',$data['attachment']));
-		if(!$imginfo=@getimagesize($_G['setting']['attachdir'].'./'.$data['attachment'])){
+		if(!$imginfo=@getimagesize($filepath)){
 			return -1; //非图片不能生成
 		}
 	
 		if(($imginfo[0]<$width && $imginfo[1]<$height) ) {
 			return 3;//小于要求尺寸，不需要生成
 		}
+		
 		$target=$imgcachePath.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		if(@getimagesize($_G['setting']['attachdir'].$target)){
 			return 2;//已经存在缩略图
@@ -216,7 +231,7 @@ class io_dzz extends io_api
 		$targetpath = dirname($target_attach);
 		dmkdir($targetpath);
 		$image=new image();
-		if($thumb = $image->Thumb($_G['setting']['attachdir'].'./'.$data['attachment'],$target,$width, $height,1)){
+		if($thumb = $image->Thumb($filepath,$target,$width, $height,1)){
 			return 1;//生成缩略图成功
 		}else{
 			return 0;//生成缩略图失败
@@ -246,6 +261,9 @@ class io_dzz extends io_api
 					if($returnurl) return $ret;
 					exit();
 				}
+			}elseif(strpos($path,'TMP::')===0){
+				$tmp=str_replace('\\','/',sys_get_temp_dir());
+			    $data=array('attachment'=>str_replace('TMP::',$tmp.'/',$path));
 			}elseif(strpos($path,'dzz::')===0){
 					$data=array('attachment'=>str_replace('dzz::','',$path));
 			}else{
@@ -254,35 +272,68 @@ class io_dzz extends io_api
 				exit();
 			}
 		}
-		
+		$filepath=self::getStream($path);
 		$enable_cache=true; //是否启用缓存
 		$quality = 80;
 		$imgcachePath='imgcache/';
 		$cachepath=str_replace('//','/',str_replace(':','/',$data['attachment']));
-		$imginfo=@getimagesize($_G['setting']['attachdir'].'./'.$data['attachment']);
+		$imginfo=@getimagesize($filepath);
 		
 		if($original){
-			if($returnurl) return $_G['setting']['attachurl'].'./'.$data['attachment'];
-			@header('cache-control:public'); 
+			if($returnurl) return self::getFileUri($path);//$_G['setting']['attachurl'].'./'.$data['attachment'];
+			$file=self::getStream($path);//$_G['setting']['attachdir'].'./'.$data['attachment'];
+			$last_modified_time = filemtime($file); 
+			$etag = md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');  
 			@header("Content-Type: " . image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
-			@readfile($_G['setting']['attachdir'].'./'.$data['attachment']);
+			@readfile($file);
 			@flush(); @ob_flush();
 			exit();
 		}
 		if(($imginfo[0]<$width && $imginfo[1]<$height) ) {
-			if($returnurl) return $_G['setting']['attachurl'].'./'.$data['attachment'];
-			@header('cache-control:public'); 
+			if($returnurl) return self::getFileUri($path);
+			$file=self::getStream($path);//$_G['setting']['attachdir'].'./'.$data['attachment'];
+			$last_modified_time = filemtime($file); 
+			$etag = md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');  
 			header("Content-Type: " . image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
-			@readfile($_G['setting']['attachdir'].'./'.$data['attachment']);
+			@readfile($file);
 			@flush(); @ob_flush();
 			exit();
 		}
 		$target=$imgcachePath.($cachepath).'.'.$width.'_'.$height.'.jpeg';
 		if($enable_cache && @getimagesize($_G['setting']['attachdir'].$target)){
 			if($returnurl) return $_G['setting']['attachurl'].'./'.$target;
-			@header('cache-control:public'); 
+			$file=$_G['setting']['attachdir'].'./'.$target;
+			$last_modified_time = filemtime($file); 
+			$etag = md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');  
 			header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($_G['setting']['attachdir'].$target);
@@ -293,21 +344,44 @@ class io_dzz extends io_api
 		include_once libfile('class/image');
 		$target_attach=$_G['setting']['attachdir'].$target;
 		$targetpath = dirname($target_attach);
+		$file=self::getStream($path);
 		dmkdir($targetpath);
 		$image=new image();
-		if($thumb = $image->Thumb($_G['setting']['attachdir'].'./'.$data['attachment'],$target,$width, $height,1)){
+		if($thumb = $image->Thumb($file,$target,$width, $height,1)){
 			if($returnurl) return $_G['setting']['attachurl'].'./'.$target;
-			@header('cache-control:public'); 
+			$file=$target_attach;
+			$last_modified_time = filemtime($file); 
+			$etag = md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');   
 			@header('Content-Type: image/JPEG');
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 			@readfile($_G['setting']['attachdir'].$target);
 			@flush(); @ob_flush();	
 		}else{
-			if($returnurl) return $_G['setting']['attachurl'].'./'.$data['attachment'];
-			@header('cache-control:public'); 
+			if($returnurl) return self::getFileUri($path);;
+			
+			$last_modified_time = filemtime($file); 
+			$etag = md5_file($file); 
+			header("Last-Modified: ".gmdate("D, d M Y H:i:s", $last_modified_time)." GMT"); 
+			header("Etag: $etag"); 
+			
+			if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time || 
+				trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag) { 
+				header("HTTP/1.1 304 Not Modified"); 
+				exit; 
+			}
+			@header('cache-control:public');  
 			@header("Content-Type: " . image_type_to_mime_type($imginfo[2]));
 			@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
-			@readfile($_G['setting']['attachdir'].'./'.$data['attachment']);
+			@readfile($file);
 			@flush(); @ob_flush();
 		}
 		exit();
@@ -317,31 +391,31 @@ class io_dzz extends io_api
 	//@param number $icoid  文件的icoid
 	//@param string $message  文件的新内容
 	public function setFileContent($icoid,$fileContent,$force=false){
-		global $_G,$space;
+		global $_G;
 		
 		if(!$icoarr=C::t('icos')->fetch_by_icoid($icoid)){
-			return array('error' => lang('message','file_not_exist'));
+			return array('error' => lang('file_not_exist'));
 		}
 		if($icoarr['type']!='document' && $icoarr['type']!='attach' && $icoarr['type']!='image'){
-			return array('error' => lang('message','no_privilege'));
+			return array('error' => lang('no_privilege'));
 		}
 		$gid=DB::result_first("select gid from %t where fid=%d",array('folder',$icoarr['pfid']));
 		if(!$force && !perm_check::checkperm('edit',$icoarr)){
-			return array('error' => lang('message','no_privilege'));
+			return array('error' => lang('no_privilege'));
 		}
 	
 		if(!$attach=getTxtAttachByMd5($fileContent,$icoarr['name'],$icoarr['ext'])){
-			return array('error' => lang('message','file_save_failure'));
+			return array('error' => lang('file_save_failure'));
 		}
 		
 		//计算用户新的空间大小
 		$csize=$attach['filesize']-$icoarr['size'];
 		//重新计算用户空间
 		if($csize){
-			if(!SpaceSize($csize,$gid)){
-				return array('error' => lang('message','inadequate_capacity_space'));
+			if(!SpaceSize($csize,$gid,0,$icoarr['uid'])){
+				return array('error' => lang('inadequate_capacity_space'));
 			}
-			SpaceSize($csize,$gid ,1);
+			SpaceSize($csize,$gid ,1,$icoarr['uid']);
 		}
 		$oldaid=$icoarr['aid'];
 		//更新附件数量
@@ -397,6 +471,16 @@ class io_dzz extends io_api
 						  'url'=>getAttachUrl($attach),
 						  'bz'=>io_remote::getBzByRemoteid($attach['remote'])
 						 );
+		}elseif(strpos($icoid,'TMP::')===0){
+			$file=self::getStream($icoid);
+			$pathinfo=pathinfo($file);
+			return array( 'icoid'=>md5($icoid),
+						  'name'=>$pathinfo['basename'],
+						  'ext'=>$pathinfo['extension'],
+						  'size'=>filesize($file),
+						  'url'=>'',
+						  'bz'=>''
+						 );
 		}else{
 			return C::t('icos')->fetch_by_icoid($icoid);
 		}
@@ -408,42 +492,48 @@ class io_dzz extends io_api
 		return array();
 	}
 	//打包下载文件
-	public function zipdownload($path){
+	public function zipdownload($paths,$filename){
 		global $_G;
+		$paths=(array)$paths;
 		set_time_limit(0);
-		$meta=self::getMeta($path);
-		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
+		
+		if(empty($filename)){
+			$meta=self::getMeta($paths[0]);
+			$filename=$meta['name'].(count($paths)>1?lang('wait'):'');
+		}
+		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
 		//$data=self::getFolderInfo($path);
 		include_once libfile('class/ZipStream');	
 		$zip = new ZipStream($filename.".zip");
-		$data=self::getFolderInfo($path,'',$zip);
+		$data=self::getFolderInfo($paths,'',$zip);
 		/*foreach($data as $value){
 			 $zip->addLargeFile(fopen($value['url'],'rb'), $value['position'], $value['dateline']);
 		}*/
 		$zip->finalize();
 	}
-	public function getFolderInfo($path,$position='',$zip){
+	public function getFolderInfo($paths,$position='',&$zip){
 		static $data=array();
 		try{
-			$meta=self::getMeta($path);
-			
-			switch($meta['type']){
-				case 'folder':
-					 $position.=$meta['name'].'/';
-					 $contents=C::t('icos')->fetch_all_by_pfid($meta['oid']);
-					 foreach($contents as $key=>$value){
-						self::getFolderInfo($value['icoid'],$position,$zip);
-					 }
-					break;
-				case 'discuss':case 'dzzdoc':case 'shortcut':case 'user':case 'link':case 'music':case 'video':case 'topic':case 'app'://这些内容不能移动到api网盘内；
+			foreach($paths as $path){
+				$meta=self::getMeta($path);
+				
+				switch($meta['type']){
+					case 'folder':
+						 $lposition=$position.$meta['name'].'/';
+						 $contents=C::t('icos')->fetch_all_by_pfid($meta['oid']);
+						 foreach($contents as $key=>$value){
+							self::getFolderInfo(array($value['icoid']),$lposition,$zip);
+						 }
 						break;
-				default:
-					$meta['url']=IO::getStream($meta['path']);
-					$meta['position']=$position.$meta['name'];
-					/*$data[$meta['icoid']]=$meta;*/
-					$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+					case 'discuss':case 'dzzdoc':case 'shortcut':case 'user':case 'link':case 'music':case 'video':case 'topic':case 'app'://这些内容不能移动到api网盘内；
+							break;
+					default:
+						$meta['url']=IO::getStream($meta['path']);
+						$meta['position']=$position.$meta['name'];
+						/*$data[$meta['icoid']]=$meta;*/
+						$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
+				}
 			}
-		
 		}catch(Exception $e){
 			$data['error']=$e->getMessage();
 			return $data;
@@ -451,9 +541,15 @@ class io_dzz extends io_api
 		return $data;
 	}
 	//下载
-	public function download($path,$filename){
+	public function download($paths,$filename){
 		global $_G;
-		
+		$paths=(array)$paths;
+		if(count($paths)>1){
+			self::zipdownload($paths,$filename);
+			exit();
+		}else{
+			$path=$paths[0];
+		}
 		@set_time_limit(0);
 		$attachexists = FALSE;
 		if(strpos($path,'attach::')===0){
@@ -464,18 +560,24 @@ class io_dzz extends io_api
 		}elseif(strpos($path,'dzz::')===0){
 			$attachment=array('attachment'=>preg_replace("/^dzz::/i",'',$path),'name'=>$filename?$filename:substr(strrpos($path, '/')));
 			$attachurl=$_G['setting']['attachdir'].$attachment['attachment'];
+		}elseif(strpos($path,'TMP::')===0){
+			$tmp=str_replace('\\','/',sys_get_temp_dir());
+			$attachurl= str_replace('TMP::',$tmp.'/',$path);
+			$pathinfo=pathinfo($attachurl);
+			$attachment=array('attachment'=>$attachurl,'name'=>$filename?$filename:$pathinfo['basename']);
+			
 		}elseif(is_numeric($path)){
 			$icoid=intval($path);
 			$icoarr = C::t('icos')->fetch_by_icoid($path);
 			
 			if(!$icoarr['icoid']){
-				topshowmessage(lang('message','attachment_nonexistence'));
+				topshowmessage(lang('attachment_nonexistence'));
 			}elseif($icoarr['type']=='folder'){
 				self::zipdownload($path);
 				exit();
 			}
 			if(!$icoarr['aid']){
-				topshowmessage(lang('message','attachment_nonexistence'));
+				topshowmessage(lang('attachment_nonexistence'));
 			}
 			$attachment=$icoarr;
 			$attachurl=IO::getStream($path);
@@ -489,16 +591,12 @@ class io_dzz extends io_api
 		}
 		
 		 $attachment['name'] = '"'.(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($attachment['name']) : ($attachment['name'])).'"';
-		
-		
-		$db = DB::object();
-		$db->close();
 		$d=new FileDownload();
 		$d->download($attachurl,$attachment['name'],$filesize,$attachment['dateline'],true);
 		exit();
 		$chunk = 10 * 1024 * 1024; 
 		if(!$fp = @fopen($attachurl, 'rb')) {
-			topshowmessage('文件不存在');
+			topshowmessage(lang('file_not_exist1'));
 		}
 		$db = DB::object();
 		$db->close();
@@ -530,21 +628,26 @@ class io_dzz extends io_api
 	public function Delete($icoid,$force=false){
 		global $_G;
 		if(strpos($icoid,'dzz::')===0){
+			if(strpos($icoid,'../')!==false) return false;
 			@unlink($_G['setting']['attachdir'].preg_replace('/^dzz::/i','',$icoid));
 			return true;
 		
 		}elseif(strpos($icoid,'attach::')===0){
+			if(strpos($icoid,'../')!==false) return false;
 			return C::t('attachment')->delete_by_aid(intval(str_replace('attach::','',$icoid)));
+		}elseif(strpos($icoid,'TMP::')===0){
+			$tmp=str_replace('\\','/',sys_get_temp_dir());
+			return @unlink(str_replace('TMP::',$tmp.'/',$path));
 		}else{
 			try{
 				if(!$icoarr= C::t('icos')->fetch($icoid)){
-					return array('icoid'=>$icoid,'error'=>'文件已经不存在');
+					return array('icoid'=>$icoid,'error'=>lang('file_longer_exists'));
 				}
 				if($force || $icoarr['isdelete']){
 					if(perm_check::checkperm('delete',$icoarr)){
 						C::t('icos')->delete_by_icoid($icoid,true);
 					}else{
-						return array('icoid'=>$icoarr['icoid'],'error'=>lang('message','no_privilege'));
+						return array('icoid'=>$icoarr['icoid'],'error'=>lang('no_privilege'));
 					}
 				}else{
 					
@@ -552,7 +655,7 @@ class io_dzz extends io_api
 						 C::t('icos')->update($icoid,array('uid'=>getglobal('uid'),'username'=>getglobal('username'),'isdelete'=>1,'deldateline'=>TIMESTAMP));
 						 if($icoarr['type']=='folder') C::t('folder')->update($icoarr['oid'],array('uid'=>getglobal('uid'),'username'=>getglobal('username'),'isdelete'=>1,'deldateline'=>TIMESTAMP));
 					}else{
-						return array('icoid'=>$icoarr['icoid'],'error'=>lang('message','no_privilege'));
+						return array('icoid'=>$icoarr['icoid'],'error'=>lang('no_privilege'));
 					}
 				}
 				return array('icoid'=>$icoarr['icoid'],'name'=>$icoarr['name']);
@@ -567,7 +670,7 @@ class io_dzz extends io_api
 	}
 	//过滤文件名称
 	public function name_filter($name){
-		return str_replace(array('/','\\',':','*','?','<','>','|','"'),'',$name);
+		return str_replace(array('/','\\',':','*','?','<','>','|','"',"\n"),'',$name);
 	}
 	
 	//获取不重复的目录名称
@@ -620,13 +723,14 @@ class io_dzz extends io_api
 	//创建目录
 	public function CreateFolder($pfid,$fname,$perm,$ondup='newcopy'){
 		global $_G,$_GET;
+		
 		$fname=self::name_filter($fname);
 		if(!$folder=DB::fetch_first("select fid,pfid,iconview,disp,gid from %t where fid=%d",array('folder',$pfid))){
-			return array('error'=>'父目录不存在');
+			return array('error'=>lang('parent_directory_not_exist'));
 		}
 		
 		if(!perm_check::checkperm_Container($pfid,'folder')){
-			return array('error'=>lang('message','no_privilege'));
+			return array('error'=>lang('no_privilege'));
 		}
 		
 		if(($ondup=='overwrite') && ($icoid=self::getRepeatIDByName($fname,$pfid,true))){//如果目录下有同名目录
@@ -716,6 +820,7 @@ class io_dzz extends io_api
 			$ext = $pathinfo['extension']?$pathinfo['extension']:'';
 			$attach['filetype']=strtolower($ext);
 			@unlink($filepath);
+			unset($attach['attachment']);
 			return $attach;
 		}else{
 			$pathinfo = pathinfo($filename);
@@ -747,11 +852,16 @@ class io_dzz extends io_api
 				$remoteid=io_remote::getRemoteid($attach);
 				if($_G['setting']['thumb_active'] && $remoteid<2 && in_array($attach['filetype'],array('jpg','jpeg','png'))){//主动模式生成缩略图
 					try{
-						self::createThumb('dzz::'.$attach['attachment'],256,256);
+						foreach($_G['setting']['thumbsize'] as $key => $value){
+							self::createThumb('dzz::'.$attach['attachment'],$key);
+						}
+						/*self::createThumb('dzz::'.$attach['attachment'],256,256);
+						self::createThumb('dzz::'.$attach['attachment'],1440,900);*/
 					}catch(Exception $e){}
 				}
 				C::t('local_storage')->update_usesize_by_remoteid($attach['remote'],$attach['filesize']);
-				dfsockopen($_G['siteurl'].'misc.php?mod=movetospace&aid='.$attach['aid'].'&remoteid=0',0, '', '', false, '',1);
+				if($remoteid>1) dfsockopen($_G['siteurl'].'misc.php?mod=movetospace&aid='.$attach['aid'].'&remoteid=0',0, '', '', false, '',1);
+				unset($attach['attachment']);
 				return $attach;
 			}else{
 				return false;
@@ -803,8 +913,8 @@ class io_dzz extends io_api
 				);
 				if($icoarr['icoid']=DB::insert('icos',($icoarr),1)){
 					$icoarr=array_merge($attach,$sourcedata,$icoarr);
-					$icoarr['img']=DZZSCRIPT.'?mod=io&op=thumbnail&width=256&height=256&path='.dzzencode($icoarr['icoid']);
-				    $icoarr['url']=DZZSCRIPT.'?mod=io&op=thumbnail&width=1440&height=900&path='.dzzencode($icoarr['icoid']);
+					$icoarr['img']=DZZSCRIPT.'?mod=io&op=thumbnail&size=small&path='.dzzencode($icoarr['icoid']);
+				    $icoarr['url']=DZZSCRIPT.'?mod=io&op=thumbnail&size=large&path='.dzzencode($icoarr['icoid']);
 					$icoarr['bz']='';
 					$icoarr['rbz']=io_remote::getBzByRemoteid($attach['remote']);
 					$icoarr['path']=$icoarr['icoid'];
@@ -819,8 +929,7 @@ class io_dzz extends io_api
 								'uid'=>$_G['uid'],
 								'username'=>$_G['username'],
 								'aid'=>$attach['aid'],
-			
-			);
+							 );
 			
 			if($sourcedata['did']=C::t('document')->insert($sourcedata)){
 				$icoarr=array(
@@ -881,7 +990,7 @@ class io_dzz extends io_api
 								'ext'=>$attach['filetype'],
 								'size'=>$attach['filesize']
 								
-				);
+				           );
 			
 				if($icoarr['icoid']=DB::insert('icos',($icoarr),1)){
 					$icoarr=array_merge($sourcedata,$attach,$icoarr);
@@ -950,17 +1059,17 @@ class io_dzz extends io_api
 			$icoarr['fdateline']=dgmdate($icoarr['dateline']);
 			return $icoarr;
 		}else{
-			return array('error' => lang('message','data error'));			
+			return array('error' => lang('data_error'));			
 		}
 	}
 	protected function createFolderByPath($path,$pfid){
-		
 		$data=array('pfid'=>$pfid);
 		if(!$path){
 			$data['pfid']=$pfid;
 		}else{
 			$patharr=explode('/',$path);
 			//生成目录
+			
 			foreach($patharr as $fname){
 				if(!$fname) continue;
 				//判断是否含有此目录
@@ -1037,7 +1146,7 @@ class io_dzz extends io_api
 		//获取文件内容
 		$fileContent='';
 		if(!$handle=fopen($file, 'rb')){
-				return array('error'=>'打开文件错误');
+				return array('error'=>lang('open_file_error'));
 			}
 		while (!feof($handle)) {
 		  $fileContent .= fread($handle, 8192);
@@ -1111,7 +1220,7 @@ class io_dzz extends io_api
                         FILE_APPEND
                     )
 				){
-					return array('error'=>'缓存文件到本地出现错误，请确认目录有写入权限，并且更新系统缓存后重试');
+					return array('error'=>lang('cache_file_error'));
 				}
 			
 			if(!$partinfo['iscomplete']) return true;
@@ -1125,7 +1234,7 @@ class io_dzz extends io_api
 				$target=$this->getPath($ext?('.'.$ext):'','dzz');
 				
 				if(!empty($fileContent) && !file_put_contents($_G['setting']['attachdir'].$target,$fileContent)){
-					return array('error'=>'缓存文件到本地出现错误，请确认目录有写入权限，并且更新系统缓存后重试');
+					return array('error'=>lang('cache_file_error'));
 				}
 		}
 		
@@ -1133,7 +1242,7 @@ class io_dzz extends io_api
 		$gid=DB::result_first("select gid from %t where fid=%d",array('folder',$fid));
 		if(!SpaceSize(filesize($_G['setting']['attachdir'].$target),$gid)){
 			  @unlink($_G['setting']['attachdir'].$target);
-			 return array('error' => lang('message','inadequate_capacity_space'));
+			 return array('error' => lang('inadequate_capacity_space'));
 		 }
 	  
 		if($attach=$this->save($target,$nfilename)){
@@ -1152,19 +1261,19 @@ class io_dzz extends io_api
 		global $_G,$space;
 		
 		if(!$fileContent){
-			return array('error'=>'文件内容不能为空');
+			return array('error'=>lang('file_content_cannot_empty'));
 		}
 		if(!$icoarr=C::t('icos')->fetch_by_icoid($icoid)){
-			return array('error' => lang('message','文件不存在'));
+			return array('error' => lang('file_not_exist1'));
 		}
 		$gid=DB::result_first("select gid from %t where fid=%d",array('folder',$icoarr['pfid']));
 		
 		if(in_array($icoarr['type'],array('folder','link','video','dzzdoc','shortcut'))){
 			if(!perm_check::checkperm_Container($icoarr['pfid'],$icoarr['type'])) {
-				return array('error'=>' 没有权限');
+				return array('error'=>lang('privilege'));
 			}
 		}elseif(!perm_check::checkperm_Container($icoarr['pfid'],'newtype')){
-			return array('error'=>' 没有权限');
+			return array('error'=>lang('privilege'));
 		}
 		$target=$icoarr['attachment'];
 		if($partinfo['ispart']){
@@ -1184,14 +1293,14 @@ class io_dzz extends io_api
 	
 		
 		if(!$attach=self::save($target,$icoarr['name'])){
-			return array('error' => lang('message','文件保存错误'));
+			return array('error' => lang('file_save_exist'));
 		}
 		//计算用户新的空间大小
 		$csize=$attach['filesize']-$icoarr['size'];
 		//重新计算用户空间
 		if($csize){
 			if(!SpaceSize($csize,$gid)){
-				return array('error' => lang('message','inadequate_capacity_space'));
+				return array('error' => lang('inadequate_capacity_space'));
 			}
 			SpaceSize($csize,$gid ,1);
 		}
@@ -1219,7 +1328,7 @@ class io_dzz extends io_api
 		if($md5 && $attach=C::t('attachment')->fetch_by_md5($md5)){
 			  //判断空间大小
 			  if(!SpaceSize($attach['filesize'],$gid)){
-				 return array('error' => lang('message','inadequate_capacity_space'));
+				 return array('error' => lang('inadequate_capacity_space'));
 			 }
 			return $attach;
 		}else{
@@ -1229,7 +1338,7 @@ class io_dzz extends io_api
 				//判断空间大小
 				 if(!SpaceSize($size,$gid)){
 					@unlink($_G['setting']['attachdir'].$target);
-					return array('error' => lang('message','inadequate_capacity_space'));
+					return array('error' => lang('inadequate_capacity_space'));
 				 }
 				 $object=str_replace('/','-',$target);
 				 $remote=0;
@@ -1271,15 +1380,16 @@ class io_dzz extends io_api
 				$cimage['cid']=DB::insert('cai_image',($cimage),1);
 				
 			}else{
-				return array('error' => lang('message','image_to_local_error'));
+				return array('error' => lang('image_to_local_error'));
 			}
 		}else{
 			$attach=C::t('attachment')->fetch($cimage['aid']);
 		}
 		//判断空间大小
 		  if(!SpaceSize($attach['filesize'],$gid)){
-			 return array('error' => lang('message','inadequate_capacity_space'));
+			 return array('error' => lang('inadequate_capacity_space'));
 		 }
+		$attachment=$_G['setting']['attachdir'].'./'.$attach['attachment'];
 		$imginfo=@getimagesize($attachment);
 		$sourcedata=array(
 					'uid'=>$_G['uid'],
@@ -1298,8 +1408,6 @@ class io_dzz extends io_api
 		if($sourcedata['picid']=DB::insert('source_image',($sourcedata),1)){
 			C::t('cai_image')->update($cimage['cid'],array('copys'=>$cimage['copys']+1));
 			if($cimage['aid']) C::t('attachment')->update($cimage['aid'],array('copys'=>$attach['copys']+1));
-	
-			
 			
 			$icoarr=array(
 							'uid'=>$_G['uid'],
@@ -1317,8 +1425,8 @@ class io_dzz extends io_api
 			);
 			
 			if($icoarr['icoid']=DB::insert('icos',($icoarr),1)){
-				$icoarr['img']=DZZSCRIPT.'?mod=io&op=thumbnail&width=256&height=256&path='.rawurlencode($icoarr['icoid']);
-				$icoarr['url']=DZZSCRIPT.'?mod=io&op=thumbnail&width=1440&height=900&path='.rawurlencode($icoarr['icoid']);
+				$icoarr['img']=DZZSCRIPT.'?mod=io&op=thumbnail&&size=small&path='.rawurlencode($icoarr['icoid']);
+				$icoarr['url']=DZZSCRIPT.'?mod=io&op=thumbnail&&size=large&path='.rawurlencode($icoarr['icoid']);
 				$icoarr['bz']='';
 				$icoarr['aid']=$sourcedata['aid'];
 				$data['rbz']=io_remote::getBzByRemoteid($icoarr['remote']);
@@ -1338,7 +1446,7 @@ class io_dzz extends io_api
 		if($icoarr['icoid'] ){
 			return $icoarr;
 		}else{
-			return array('error' => lang('message','linktoimage_error'));
+			return array('error' => lang('linktoimage_error'));
 		}
 	}
 	public function linktomusic($link,$pfid){
@@ -1405,7 +1513,7 @@ class io_dzz extends io_api
 		if($icoarr['icoid'] ){
 			return $icoarr;
 		}else{
-			return array('error' => lang('message','linketomusic_error'));
+			return array('error' => lang('linktomusic_error'));
 		}
 	}
 	public function linktovideo($link,$pfid){
@@ -1493,7 +1601,7 @@ class io_dzz extends io_api
 		if($icoarr['icoid'] ){
 			return $icoarr;
 		}else{
-			return array('error' => lang('message','linktovideo_error'));
+			return array('error' => lang('linktovideo_error'));
 		}
 	}
 	
@@ -1578,7 +1686,7 @@ class io_dzz extends io_api
 		if($icoarr['icoid'] ){
 			return $icoarr;
 		}else{
-			return array('error' => lang('message','linktourl_error'));
+			return array('error' => lang('linktourl_error'));
 		}
 	}
 		
@@ -1597,6 +1705,7 @@ class io_dzz extends io_api
 					$re=self::FileMove($icoid,$path,true);
 					$data['newdata']=$re['icoarr'];
 					$data['success']=true;
+					$data['moved']=true;
 				}else{
 					$re=self::FileCopy($icoid,$path,true);
 					$data['newdata']=$re['icoarr'];
@@ -1623,7 +1732,7 @@ class io_dzz extends io_api
 						}
 						break;
 					case 'shortcut':case 'discuss':case 'dzzdoc':case 'user':case 'link':case 'music':case 'video':case 'topic':case 'app'://这些内容不能移动到api网盘内；
-						$data['success']=lang('message','非文件类只能存储在企业盘');
+						$data['success']=lang('document_only_stored_enterprise');
 						break;
 					default:
 						$re=IO::multiUpload($icoid,$path,$data['name']);
@@ -1647,20 +1756,20 @@ class io_dzz extends io_api
 		@set_time_limit(0);
 		@ini_set("memory_limit","512M");
 		if(!$tfolder=DB::fetch_first("select * from ".DB::table('folder')." where fid='{$pfid}'")){
-			return array('error'=>' 目标位置不存在');
+			return array('error'=>lang('target_location_not_exist'));
 		}
 		if($icoarr=C::t('icos')->fetch($icoid)){
 			if($icoarr['pfid']!=$tfolder['fid']){
 				//判断有无删除权限
 				if(!perm_check::checkperm('delete',$icoarr)){
-					return array('error'=>' 没有权限');
+					return array('error'=>lang('privilege'));
 				}
 				if(in_array($icoarr['type'],array('folder','link','video','dzzdoc','shortcut'))){
 					if(!perm_check::checkperm_Container($pfid,$icoarr['type'])) {
-						return array('error'=>' 没有权限');
+						return array('error'=>lang('privilege'));
 					}
 				}elseif(!perm_check::checkperm_Container($pfid,'newtype')){
-					return array('error'=>' 没有权限');
+					return array('error'=>lang('privilege'));
 				}
 			}
 			//判断重复
@@ -1673,7 +1782,7 @@ class io_dzz extends io_api
 				$ogid=$icoarr['gid'];
 				$gid=DB::result_first("select gid from ".DB::table('folder')." where fid='{$pfid}'");
 				if($orgid!=$gid && $icoarr['size'] && !SpaceSize($icoarr['size'],$gid)){ 
-					return array('error' => lang('message','inadequate_capacity_space'));
+					return array('error' => lang('inadequate_capacity_space'));
 				}
 				if($icoarr['type']=='folder'){
 					if($folder=C::t('folder')->fetch($icoarr['oid'])){
@@ -1693,7 +1802,7 @@ class io_dzz extends io_api
 							}
 						}
 					}else{
-						return array('error',lang('message','folder_not_exist'));
+						return array('error',lang('folder_not_exist'));
 					}
 				}
 					
@@ -1724,7 +1833,7 @@ class io_dzz extends io_api
 			unset($icoarr);
 			return $return;
 		//}
-		return array('error'=>'移动错误！');
+		return array('error'=>lang('movement_error').'！');
 	}
 	
 	//本地文件复制到本地其它区域
@@ -1732,27 +1841,27 @@ class io_dzz extends io_api
 		global $_G,$_GET;
 		
 		if(!$tfolder=DB::fetch_first("select * from ".DB::table('folder')." where fid='{$pfid}'")){
-			return array('error'=>' 目标位置不存在');
+			return array('error'=>lang('target_location_not_exist'));
 		}
 		if($icoarr=C::t('icos')->fetch($icoid)){
 			
 			//判断当前文件有没有拷贝权限；
 			if(!perm_check::checkperm('copy',$icoarr)){
-				return array('error'=>' 没有权限');
+				return array('error'=>lang('privilege'));
 			}
 			//判断目录目录有无当前类型的添加权限
 			if(in_array($icoarr['type'],array('folder','link','video','dzzdoc','shortcut'))){
 				if(!perm_check::checkperm_Container($pfid,$icoarr['type'])) {
-					return array('error'=>' 没有权限');
+					return array('error'=>lang('privilege'));
 				}
 			}elseif(!perm_check::checkperm_Container($pfid,'newtype')){
-				return array('error'=>' 没有权限');
+				return array('error'=>lang('privilege'));
 			}
 			$success=0;
 			if($gid=DB::result_first("select gid from ".DB::table('folder')." where fid='{$pfid}'")){
 				//判断空间大小
 				if(!SpaceSize($icoarr['size'],$gid)){ 
-					return array('error' => lang('message','inadequate_capacity_space'));
+					return array('error' => lang('inadequate_capacity_space'));
 				}
 			}
 			//判断重复
@@ -1787,7 +1896,7 @@ class io_dzz extends io_api
 							$success=1;
 						}
 					}else{
-						return array('error',lang('message','folder_not_exist'));
+						return array('error',lang('folder_not_exist'));
 					}
 					break;
 				case 'user':
@@ -1819,7 +1928,7 @@ class io_dzz extends io_api
 							$success=1;
 						}
 					}else{
-						return array('error',lang('message','image_not_exist'));
+						return array('error',lang('image_not_exist'));
 					}
 					
 					break;
@@ -1837,7 +1946,7 @@ class io_dzz extends io_api
 							$success=1;
 						}
 					}else{
-						return array('error',lang('message','video_not_exist'));
+						return array('error',lang('video_not_exist'));
 					}
 					break;
 				case 'music':
@@ -1854,7 +1963,7 @@ class io_dzz extends io_api
 							$success=1;
 						}
 					}else{
-						return array('error',lang('message','video_not_exist'));
+						return array('error',lang('video_not_exist'));
 					}
 					break;
 				case 'link':
@@ -1872,7 +1981,7 @@ class io_dzz extends io_api
 							$success=1;
 						}
 					}else{
-						return array('error',lang('message','link_not_exist'));
+						return array('error',lang('link_not_exist'));
 					}
 					break;
 				case 'attach':
@@ -1889,7 +1998,7 @@ class io_dzz extends io_api
 							$success=1;
 						}
 					}else{
-						return array('error',lang('message','attach_not_exist'));
+						return array('error',lang('attach_not_exist'));
 					}
 					break;
 				case 'document':
@@ -1906,7 +2015,7 @@ class io_dzz extends io_api
 							$success=1;
 						}
 					}else{
-						return array('error',lang('message','document_not_exist'));
+						return array('error',lang('document_not_exist'));
 					}
 					break;
 				case 'dzzdoc':
@@ -1914,7 +2023,7 @@ class io_dzz extends io_api
 							$icoarr['oid']=$did;
 							$success=1;
 					}else{
-						return array('error','创建Dzz文档失败');
+						return array('error',lang('failed_create_Dzz_document'));
 					}
 					break;
 				default:
@@ -1941,7 +2050,7 @@ class io_dzz extends io_api
 						return $return;
 					}
 				}else{
-					return array('error'=>'此类文件不允许复制');
+					return array('error'=>lang('files_allowed_copy'));
 				}
 			}
 		}
@@ -1969,6 +2078,7 @@ class io_dzz extends io_api
 		if($md5 && $attach=DB::fetch_first("select * from ".DB::table('attachment')." where md5='{$md5}'")){
 			$attach['filename']=$FILE['name'];
 			@unlink($filepath);
+			unset($attach['attachment']);
 			return $attach;
 		}else{
 			$remote=0;
@@ -1987,7 +2097,7 @@ class io_dzz extends io_api
 			if($attach['aid']=DB::insert('attachment',($attach),1)){
 				C::t('local_storage')->update_usesize_by_remoteid($attach['remote'],$attach['filesize']);
 				dfsockopen($_G['siteurl'].'misc.php?mod=movetospace&aid='.$attach['aid'].'&remoteid=0',0, '', '', FALSE, '',1);
-				
+				unset($attach['attachment']);
 				return $attach;
 			}else{
 				return false;
@@ -2001,56 +2111,65 @@ class io_dzz extends io_api
 	 * 分块上传文件
 	 * param $file:文件路径（可以是url路径，需要服务器开启allow_url_fopen);
 	*/
-		$partsize=1024*1024*5; //分块大小2M
+		
 		$data=IO::getMeta($opath);
 		if($data['error']) return $data;
 		$size=$data['size'];
 		if(is_array($filepath=IO::getStream($opath))){
 			return array('error'=>$filepath['error']);
 		}
-		
-		if($size<$partsize){
-			//获取文件内容
-			$fileContent='';
-			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
-			}
+		//判断大小
+		//判断空间大小
+		$filename=self::name_filter($filename);
+					
+		if(strpos($path,'dzz::')===false && strpos($path,'TMP::')===false){
+			$gid=DB::result_first("select gid from %t where fid=%d",array('folder',$path));
+			if(!SpaceSize($size,$gid)){
+				 return array('error' => lang('inadequate_capacity_space'));
+			 }
+		}
+		if(!$handle=fopen($filepath, 'rb')){
+			return array('error'=>lang('open_file_error'));
+		}
+		if(strpos($path,'dzz::')!==false || strpos($path,'TMP::')!==false){
+			$file=self::getStream($path.'/'.$filename);
 			while (!feof($handle)) {
-			  $fileContent .= fread($handle, 8192);
+			  $fileContent= fread($handle, 8192);
+			  file_put_contents($file,$fileContent,FILE_APPEND);
+			  unset($fileContent);
 			}
 			fclose($handle);
-			
-			return self::upload($fileContent,$path,$filename);
-		}else{ //分片上传
-		
-			$partinfo=array('ispart'=>true,'partnum'=>0,'flag'=>$path,'iscomplete'=>false);
-			if(!$handle=fopen($filepath, 'rb')){
-				return array('error'=>'打开文件错误');
-			}
-			$fileContent='';
+			return true;
+		}else{
+			$pathinfo = pathinfo($filename);
+			$ext = strtolower($pathinfo['extension']);
+			$target=$this->getPath($ext?('.'.$ext):'','dzz');
+			$file=getglobal('setting/attachdir').'/'.$target;
 			while (!feof($handle)) {
-			  $fileContent .= fread($handle, 8192);
-			  if(strlen($fileContent)>=$partsize){
-				  if($partinfo['partnum']*$partsize+strlen($fileContent)>=$size) $partinfo['iscomplete']=true;
-				  $partinfo['partnum']+=1;
-				  if($re=self::upload($fileContent,$path,$filename,$partinfo)){
-					  if($re['error']) return $re;
-					 if($partinfo['iscomplete']) return $re;
-				  }
-				  $fileContent='';
-			  }
+			  $fileContent= fread($handle, 8192);
+			  file_put_contents($file,$fileContent,FILE_APPEND);
+			  unset($fileContent);
 			}
-			fclose($handle); 
-			if(!empty($fileContent)){
-				$partinfo['partnum']+=1;
-				$partinfo['iscomplete']=true;
-				if($re=self::upload($fileContent,$path,$filename,$partinfo)){
-					if($re['error']) return $re;
-					if($partinfo['iscomplete']) return $re;
-				}
-			}
-				  
+			fclose($handle);
 		}
+		
+		$nfilename=self::getFileName($filename,$path); //重命名
+	  
+		if($attach=$this->save($target,$nfilename)){
+			//return array('error'=>json_encode($attach));
+			if($attach['error']){
+				  return array('error'=>$attach['error']);
+			}else{
+				return $this->uploadToattachment($attach,$path);
+			}
+		} else {
+			return array('error'=>'failure');
+		}
+		
 	}
+	 public function shenpiCreateFile($fid,$path,$attach){
+		$data = self::createFolderByPath($path,$fid);
+		return self::uploadToattachment($attach,$data['pfid']);	
+	 }
 }
 ?>

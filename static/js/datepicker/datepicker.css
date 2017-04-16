@@ -48,7 +48,12 @@
 	color: #555;
 }
 .ui-datepicker{padding:10px;border:1px solid #CCC;box-shadow:0px 2px 5px #CCC}
-.ui-datepicker select.ui-datepicker-month,.ui-datepicker select.ui-datepicker-year{width:40%}
+.ui-datepicker select.ui-datepicker-month,.ui-datepicker select.ui-datepicker-year{width:40%;border-color:#e1e1e1}
+.ui-datepicker select.ui-datepicker-year{margin-right:3px;padding:2px 1px;}
+.ui-datepicker select.ui-datepicker-month{padding:1px 2px}
+.ui-datepicker select.ui-datepicker-month:focus,.ui-datepicker select.ui-datepicker-year:focus{
+	border-color:#66afe9
+}
 .ui-widget-header{border:0;background:none}
 .ui-widget-header .ui-icon{background:none}
 .ui-state-hover.ui-datepicker-prev-hover{background:none}

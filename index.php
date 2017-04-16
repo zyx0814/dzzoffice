@@ -14,6 +14,7 @@ require './core/class/class_core.php';
 require './dzz/function/dzz_core.php';
 $dzz = C::app();
 $cachelist = array();
+
 $dzz->cachelist = $cachelist;
 $dzz->init();
 $mod = $_GET['mod'];
@@ -37,7 +38,7 @@ if(empty($mod)){
 		define('CURMODULE', str_replace(':','/',$mod));
 		$modfile='./dzz/'.str_replace(':','/',$mod).'/'.($op?$op:'index').'.php';
 		if(@!file_exists(DZZ_ROOT.$modfile)){
-			showmessage($modefile.lang('message','file_nonexistence',array('modfile'=>$modfile)));
+			showmessage($modefile.lang('file_nonexistence',array('modfile'=>$modfile)));
 		}
 	}else{
 		if(!preg_match("/\w+/i",$mod)) showmessage('undefined_action');
@@ -47,6 +48,11 @@ if(empty($mod)){
 			showmessage('undefined_action', '', array('mod' => $mod));
 		}
 	}
-	include DZZ_ROOT.$modfile;
+	if($modfile=realpath(DZZ_ROOT.$modfile)){
+		include $modfile;
+	}else{
+		showmessage('undefined_action', '', array('mod' => $mod));
+	}
+	
 }
 ?>

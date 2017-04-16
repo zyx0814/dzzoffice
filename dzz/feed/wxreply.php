@@ -40,7 +40,7 @@ switch($type) {
 			}elseif($data['Event']=='subscribe'){
 				DB::update('user',array('wechat_status'=>1),"wechat_userid='{$data[FromUserName]}'");
 				//发送关注成功消息
-				 $weObj->text($_G['setting']['sitename'].'欢迎您！,平台的消息和通知会及时的发送到此处')->reply();
+				 $weObj->text($_G['setting']['sitename'].lang('news_platform_notification'))->reply();
 			}elseif($data['Event']=='view'){
 				// $weObj->text($data['url'])->reply();
 			}elseif($data['Event']=='click'){

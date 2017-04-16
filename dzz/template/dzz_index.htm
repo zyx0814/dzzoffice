@@ -51,13 +51,13 @@ function notice_image_resize(obj){
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            <h4 id="popModal_title" class="modal-title" id="myModalLabel">正在加载，请稍候...</h4>
+            <h4 id="popModal_title" class="modal-title" id="myModalLabel">{lang loading_please_wait}</h4>
           </div>
           <div id="popModal_body" class="modal-body">
             	 <table   height="100%" width="100%"><tbody><tr><td align="center" valign="middle"><div class="loading_img"><div class="loading_process"></div></div></td></tr></tbody></table>
           </div>
           <div id="popModal_footer" class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">{lang close}</button>
           </div>
 
         </div><!-- /.modal-content -->
@@ -66,7 +66,7 @@ function notice_image_resize(obj){
 <iframe id="hideframe" name="hideframe" src="about:blank" frameBorder="0" marginHeight="0" marginWidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
 <div id="_blank"  unselectable="on" onselectstart="return event.srcElement.type== 'text';" style="display:none; background: url(dzz/images/b.gif); z-index:10000;width:100%;height:100%;margin:0;padding:0; right: 0px; bottom: 0px;position: absolute; top:0px; left: 0px;"></div>
 
-<div id="MsgContainer"  unselectable="on" onselectstart="return event.srcElement.type== 'text';" style="display:none; background: url(dzz/images/b.gif); z-index:10001;width:100%;height:100%;margin:0;padding:0; right: 0px; bottom: 0px;position: absolute; top:0px; left: 0px;"></div>
+<div id="MsgContainer"  unselectable="on" onselectstart="return event.srcElement.type== 'text';" style="display:none; background: url(dzz/images/b.gif); z-index:20001;width:100%;height:100%;margin:0;padding:0; right: 0px; bottom: 0px;position: absolute; top:0px; left: 0px;"></div>
 
 <div id="input_" style="position:relative;word-wrap: break-word;padding:2px; word-break: normal;display:none; background:'' "></div>
 <div id="loading_info" style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;margin:0;padding:0;overflow:hidden; z-index: 11000;background:transparent;">
@@ -77,7 +77,7 @@ function notice_image_resize(obj){
 <div id="wrapper_div" style=" width:100%; height:100%;right: 0px; bottom: 0px;position: absolute; top: 0px; left: 0px;margin:0;padding:0;overflow:hidden;  z-index:-9999; background:rgb(58, 110, 165);font-size:0px;">
     <img src="dzz/images/b.gif" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index: -1;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%">
     <iframe id="wrapper_frame" name="wrapper_frame" src="about:blank" frameBorder="0" marginHeight="0" marginWidth="0" width="0" height="0" allowtransparency="true"></iframe>
-    <a id="hidebackground_button" title="显示桌面" href="javascript:;" onclick="_login.showBackground();" style="display:none" ></a>
+    <a id="hidebackground_button" title="{lang show_desktop}" href="javascript:;" onclick="_login.showBackground();" style="display:none" ></a>
 </div>
 <div id="body_container" style="position:absolute;margin:0;padding:0;overflow:hidden">
   <div id="_body" style="position:absolute;margin:0;padding:0;overflow:hidden">
@@ -86,7 +86,7 @@ function notice_image_resize(obj){
  <div class="taskbar" id="taskbar" unselectable="on" onselectstart="return event.srcElement.type== 'text';" style="position:absolute;margin:0;padding:0;">
      <div class="taskbar-guide-logging" ></div>
 	<div id="taskbar_back" class="taskbar-back"></div>
-     <div id="taskbar_start" class="taskbar-sub taskbar-start" data-toggle="tooltip" data-original-title="开始">
+     <div id="taskbar_start" class="taskbar-sub taskbar-start" data-toggle="tooltip" data-original-title="{lang start}">
      	<img src="dzz/images/default/start.png" style="width:32px;height:32px; margin:4px" />
         <div class="gb_I"></div>
         <div class="gb_H"></div>
@@ -96,15 +96,15 @@ function notice_image_resize(obj){
      <div id="taskbar_dock" class="taskbar-sub taskbar-dock" ><div id="taskbar_dock_inner"></div> </div>
      <div id="taskbar_spacer_tray" class="taskbar-spacer taskbar-spacer-tray "></div>
      <div id="taskbar_tray" class="taskbar-sub taskbar-tray">
-     	<a id="tray_notification" class="taskbar-tray-item taskbar-tray-notification" title="通知">
+     	<a id="tray_notification" class="taskbar-tray-item taskbar-tray-notification" title="{lang notice}">
        		<div class="gb_I"></div>
              <div class="gb_H"></div>
         </a>
-        <a id="tray_copyright" class="taskbar-tray-item taskbar-tray-copyright" title="版权">
+        <a id="tray_copyright" class="taskbar-tray-item taskbar-tray-copyright" title="{lang copyright}">
         	<div class="gb_I"></div>
             <div class="gb_H"></div>
         </a>
-        <a id="tray_showdesktop" class="taskbar-tray-item taskbar-tray-showdesktop btn btn-primary btn-xs" title="显示桌面"></a>
+        <a id="tray_showdesktop" class="taskbar-tray-item taskbar-tray-showdesktop btn btn-primary btn-xs" title="{lang show_desktop}"></a>
      </div>
 </div>
  <div id="startmenu" class="startmenu fade in " >        	
@@ -112,12 +112,16 @@ function notice_image_resize(obj){
 
     <div id="startmenu_title" class="startmenu-title clearfix">
     	<div class=" startmenu-title-item avatar"><img src="avatar.php?uid={$_G[uid]}" /></div>
-        <div class="startmenu-title-item username"><a href="javascript:;" onclick="_login.configWindow('profile');jQuery('#startmenu').hide();return false;">$_G[username]</a></div>
+        <div class="startmenu-title-item username"><a href="javascript:;" onclick="_login.configWindow('profile');jQuery('#startmenu').hide();return false;">$_G[username]</a>
+        <!--{if $_G['uid']}-->
+        &nbsp;&nbsp;<small title="{lang space_usage}"><i class="glyphicon glyphicon-hdd"></i>&nbsp; {$space[fusesize]} / {$space[fmaxspacesize]} </small>
+        <!--{/if}-->
+        </div>
         <div class="startmenu-title-item logout">
             <!--{if $_G[uid]}-->
-          	 <a href="javascript:;" onclick="_login.click('logout');jQuery('#startmenu').hide();return false" class=" exit">退出</a>
+          	 <a href="javascript:;" onclick="_login.click('logout');jQuery('#startmenu').hide();return false" class="exit">{lang logout}</a>
             <!--{else}-->
-            <a href="javascript:;" onclick="_login.logging();jQuery('#startmenu').hide();return false" class=" logon">登 录</a>
+            <a href="javascript:;" onclick="_login.logging();jQuery('#startmenu').hide();return false" class=" logon">{lang login1}</a>
             <!--{if $_G['setting']['regstatus']>0}--><a href="javascript:;" onclick="_login.register();jQuery('#startmenu').hide();return false" class=" register">$_G[setting][reglinkname]</a> <!--{/if}-->
             <!--{/if}-->
         </div>
@@ -133,11 +137,11 @@ function notice_image_resize(obj){
  </div>  
   <div id="noticeContainer" class="noticeContainer fade in " >
     <div id="noticeContainer_title" class="noticeContainer-title clearfix">
-        <div class="pull-left noticeContainer-title-item left"><span id="filter_return" class="">通知</span></div>
+        <div class="pull-left noticeContainer-title-item left"><span id="filter_return" class="">{lang notice}</span></div>
         <div class="pull-right noticeContainer-title-item right">
-          	<a id="notice_mute" class="mute" title="免打扰模式">免打扰</a>
-            <a id="notice_clear" class="clear " title="全部清除">全部清除</a>
-            <a id="notice_filter" class="filter" title="通知过滤设置">设置</a>
+          	<a id="notice_mute" class="mute" title="{lang no_disturbing1}">{lang no_disturbing}</a>
+            <a id="notice_clear" class="clear " title="{lang all_clear}">{lang all_clear}</a>
+            <a id="notice_filter" class="filter" title="{lang notify_filter_settings}">{lang set}</a>
         </div>
     </div>
     <div  class="noticeContainer-body" id="noticeContainer_body">
@@ -146,8 +150,8 @@ function notice_image_resize(obj){
         </div>
     </div>
     <div  class="noticeContainer-filter" id="noticeContainer_filter">
-    	<div class="title">设置</div>
-        <div class="subtitle">允许以下来源的通知：</div>
+    	<div class="title">{lang set}</div>
+        <div class="subtitle">{lang allows_following_sources_notice}：</div>
     	<div class="filterlist" id="filterlist">
         	<div class="filter-item clearfix">
             	<div class="appsel"><input type="checkbox" value="1" checked  /></div>
@@ -199,6 +203,8 @@ function notice_image_resize(obj){
   </div> 		
 		
 		<div id="right_img" class="menu" style="display:none;">
+        	<div class="menu-item download" onClick="_ico.downAttach('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();return false;"><span class="menu-icon icon-download"></span><span class="menu-text">{lang download_original_image}</span></div>
+            <div class="menu-item download" onClick="_ico.downThumb('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();return false;"><span class="menu-icon icon-download"></span><span class="menu-text">{lang download_photo}</span></div>
           	<div class="menu-item"><span class="menu-icon icon-wallpaper"></span><span class="menu-text">{lang setwallpaper}</span><span class="menu-rightarrow"></span>
 			 	<div class=" menu " style="display:none">
 					<div class="menu-item" onClick="_config.setback('_imgurl',1,'','backimg');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();return false;"><span class="menu-text">{lang custom_option_layout_1}</span></div>
@@ -213,16 +219,18 @@ function notice_image_resize(obj){
 			 <!--<div class="menu-item restore" onClick="_ico.Restore('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-restore"></span><span class="menu-text">{lang ico_restore}</span></div>-->
             <div class="menu-item open" onClick="_ico.Open('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-open"></span><span class="menu-text">{lang open}</span></div>
              <div class="menu-item openwith"><span class="menu-icon icon-openwith"></span><span class="menu-text">{lang openwith}</span></div>
-             <div class="menu-item shortcut" onClick="_ico.ShortCut('icoid__icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-desktop"></span><span class="menu-text">创建桌面快捷方式</span></div>
+             <div class="menu-item shortcut" onClick="_ico.ShortCut('icoid__icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-desktop"></span><span class="menu-text">{lang creat_desktop_shortcut}</span></div>
              
 			<div class="menu-item cut" onClick="_select.Cut('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-cut"></span><span class="menu-text">{lang cut}</span></div>
 			<div class="menu-item copy" onClick="_select.Copy('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-copy"></span><span class="menu-text">{lang copy}</span></div>
 			
            
-			<div class="menu-item rename" onClick="_ico.Rename('_icoid','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-rename"></span><span class="menu-text">{lang rename}</span></div>
+			<div class="menu-item rename" onClick="_ico.Rename('_icoid','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-rename"></span><span class="menu-text">{lang rechristen}</span></div>
 			
 			
 			<div class="menu-item download" onClick="_ico.downAttach('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();return false;"><span class="menu-icon icon-download"></span><span class="menu-text">{lang download}</span></div>
+            <div class="menu-item downpackage" onClick="_ico.downpackage('_icoids');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();return false;"><span class="menu-icon icon-download"></span><span class="menu-text">{lang packaging_download}</span></div>
+            <div class="menu-item downselected" onClick="_ico.downselected('_icoids');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();return false;"><span class="menu-icon icon-download"></span><span class="menu-text">{lang download_selected}</span></div>
 			<div class="menu-item share" onClick="_ico.Share('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();return false;"><span class="menu-icon icon-share"></span><span class="menu-text">{lang share}</span></div>
 			
 			
@@ -235,10 +243,10 @@ function notice_image_resize(obj){
 			</div>
 			<!--<div class="menu-item setwidget" onClick="_widget.setToWidget('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-setwidget"></span><span class="menu-text">{lang setwidget}</span></div>-->
 			 
-			 <div class="menu-item realdelete" onClick="_ajax.delIco('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-delete"></span><span class="menu-text">{lang realdelete}</span></div> 
+			 <div class="menu-item realdelete" onClick="_ajax.delIco('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-delete"></span><span class="menu-text">{lang delete}</span></div> 
 			<div class="menu-item empty" onClick="_ico.Empty('_oid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-empty"></span><span class="menu-text">{lang empty_recycle}</span></div>
             <div class="menu-item property" onClick="_ico.property('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-property"></span><span class="menu-text">{lang property}</span></div>
-            <div class="menu-item chmod" onClick="_ico.chmod('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-chmod"></span><span class="menu-text">权限 CHMOD</span></div>
+            <div class="menu-item chmod" onClick="_ico.chmod('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-chmod"></span><span class="menu-text">{lang privilege} CHMOD</span></div>
         </div>
 		
         <div id="right_folder" class=" menu " style="position:absolute;display:none">
@@ -269,8 +277,8 @@ function notice_image_resize(obj){
 					<div class="menu-item newfolder" onClick="_ico.NewIco('Newfolder','_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-newfolder"></span><span class="menu-text">{lang newfolder}</span></div>
                     <span class="menu-sep"></span>
 					<div class="menu-item newlink" onclick="_ico.NewIco('Newlink','_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-newlink"></span><span class="menu-text">{lang newlink}</span></div>
-					<div class="menu-item newdzzdoc" onclick="_ico.NewIco('NewDzzDoc','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-dzzdoc"></span><span class="menu-text">{lang newdzzdoc}</span></div>
-					<div class="menu-item newtext" onclick="_ico.NewIco('NewTxt','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-txt" ></span><span class="menu-text">{lang newtxt}</span></div>
+					<div class="menu-item newdzzdoc" onclick="_ico.NewIco('NewDzzDoc','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-dzzdoc"></span><span class="menu-text">{lang extname_dzzdoc}</span></div>
+					<div class="menu-item newtext" onclick="_ico.NewIco('NewTxt','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-txt" ></span><span class="menu-text">{lang extname_txt}</span></div>
                     <span class="menu-sep"></span>
                     <div class="menu-item newdoc" onclick="_ico.NewIco('newdoc','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-docx" ></span><span class="menu-text">{lang newdoc}</span></div> 
                     <div class="menu-item newexcel" onclick="_ico.NewIco('newexcel','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-xlsx" ></span><span class="menu-text">{lang newexcel}</span></div>
@@ -278,7 +286,7 @@ function notice_image_resize(obj){
 			   </div>
 			   <span  class="menu-shadow"></span>
 			</div>
-			<div class="menu-item upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);jQuery('#shadow').hide();return true;"><span class="menu-icon icon-upload"></span><span class="menu-text">{lang upload}</span></div>
+			<div class="menu-item upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);jQuery('#shadow').hide();return true;"><span class="menu-icon icon-upload"></span><span class="menu-text">{lang uploading}</span></div>
 			<span class="menu-sep"></span>
 			 <!--<div class="menu-item appmarket" onClick="_login.click('sys_market','_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-appshop"></span><span class="menu-text">{lang appmarket}</span></div>-->
 			  <div class="menu-item empty" onClick="_ico.Empty('_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-empty"></span><span class="menu-text">{lang empty_recycle}</span></div>
@@ -304,8 +312,8 @@ function notice_image_resize(obj){
 			</div>
 			<div class="menu-item  direction" ><span class="menu-icon icon-direction"></span><span class="menu-text">{lang direction}</span><span class="menu-rightarrow"></span>
 				<div class=" menu " style="display:none">
-					<div class="menu-item" onClick="_ico.Arrange('0','_container','direction')"><span did="menu_icon_direction_0" class="menu-icon icon-notselect menu-icon-direction"></span><span class="menu-text">{lang direction_vertical}</span></div>
-					<div class="menu-item" onClick="_ico.Arrange('1','_container','direction')"><span did="menu_icon_direction_1" class="menu-icon icon-notselect menu-icon-direction"></span><span class="menu-text">{lang direction_horizontal}</span></div>
+					<div class="menu-item" onClick="_ico.Arrange('0','_container','direction')"><span did="menu_icon_direction_0" class="menu-icon icon-notselect menu-icon-direction"></span><span class="menu-text">{lang lengthways_arrange}</span></div>
+					<div class="menu-item" onClick="_ico.Arrange('1','_container','direction')"><span did="menu_icon_direction_1" class="menu-icon icon-notselect menu-icon-direction"></span><span class="menu-text">{lang crosswise_arrange}</span></div>
 					
 			   </div>
 			   <span  class="menu-shadow"></span>
@@ -323,8 +331,8 @@ function notice_image_resize(obj){
 				<div class=" menu " style="display:none">
 					<div class="menu-item newfolder" onClick="_ico.NewIco('Newfolder','_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-newfolder"></span><span class="menu-text">{lang newfolder}</span></div>
 					<div class="menu-item newlink" onclick="_ico.NewIco('Newlink','_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-newlink"></span><span class="menu-text">{lang newlink}</span></div>
-					<div class="menu-item newdzzdoc" onclick="_ico.NewIco('NewDzzDoc','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-dzzdoc"></span><span class="menu-text">{lang newdzzdoc}</span></div>
-					<div class="menu-item newtext" onclick="_ico.NewIco('NewTxt','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-txt"></span><span class="menu-text">{lang newtxt}</span></div>
+					<div class="menu-item newdzzdoc" onclick="_ico.NewIco('NewDzzDoc','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-dzzdoc"></span><span class="menu-text">{lang extname_dzzdoc}</span></div>
+					<div class="menu-item newtext" onclick="_ico.NewIco('NewTxt','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-txt"></span><span class="menu-text">{lang extname_txt}</span></div>
                      <span class="menu-sep"></span>
                     <div class="menu-item newdoc" onclick="_ico.NewIco('newdoc','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-docx" ></span><span class="menu-text">{lang newdoc}</span></div> 
                     <div class="menu-item newexcel" onclick="_ico.NewIco('newexcel','_container','_filemanageid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();" ><span class="menu-icon icon-xlsx" ></span><span class="menu-text">{lang newexcel}</span></div>
@@ -332,7 +340,7 @@ function notice_image_resize(obj){
 			   </div>
 			   <span  class="menu-shadow"></span>
 			</div>
-			<div class="menu-item  upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);jQuery('#shadow').hide();"><span class="menu-icon icon-upload"></span><span class="menu-text">{lang upload}</span></div>
+			<div class="menu-item  upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);jQuery('#shadow').hide();"><span class="menu-icon icon-upload"></span><span class="menu-text">{lang uploading}</span></div>
 			<div class="menu-item paste" onClick="_select.Paste('_container',XX,YY);jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-paste"></span><span class="menu-text">{lang paste}</span></div>
 			<!-- <div class="menu-item newwidget" onclick="_widget.New('_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-setwidget"></span><span class="menu-text">{lang newwidget}</span></div>-->
 			<span class="menu-sep"></span>
@@ -352,7 +360,7 @@ function notice_image_resize(obj){
         </div>
         
          <div id="jstree_right_Ico" class="menu " style="display:none">
-            <div class="menu-item shortcut" onClick="_ico.ShortCut('fid_{fid}');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-desktop"></span><span class="menu-text">创建桌面快捷方式</span></div>
+            <div class="menu-item shortcut" onClick="_ico.ShortCut('fid_{fid}');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-desktop"></span><span class="menu-text">{lang creat_desktop_shortcut}</span></div>
           
         </div>
 	<div id="shadow" style="display:none;position:absolute"  class="DM">
@@ -383,8 +391,9 @@ function notice_image_resize(obj){
 <script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/scripts/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/scripts/md5.js?{VERHASH}"></script>
-<script type="text/javascript" src="dzz/scripts/dzz_min.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/scripts/_common.js?{VERHASH}"></script>
+
+<script type="text/javascript" src="dzz/scripts/dzz_min.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/sound/_sound.js?{VERHASH}"></script>
 
 <script type="text/javascript">
@@ -405,4 +414,4 @@ function notice_image_resize(obj){
 <div style="display:none">$_G['setting']['statcode']</div>
 <div class="notice" id="notice"></div>
 
-<!--{template common/footer}-->
+<!--{template common/footer}--> 	

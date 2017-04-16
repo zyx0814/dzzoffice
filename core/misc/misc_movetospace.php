@@ -15,6 +15,11 @@ require_once DZZ_ROOT.'./dzz/function/dzz_core.php';
 $remoteid=intval($_GET['remoteid']);
 $aid=intval($_GET['aid']);
 if($attach=C::t('attachment')->fetch($aid)){
+	if(empty($attach['md5'])){
+		if($md5=md5_file($_G['setting']['attachdir'].$attach['attachment'])){
+			
+		}
+	}
 	$re=io_remote::Migrate($attach,$remoteid);
 	if($re['error']) exit($re['error']);
 }

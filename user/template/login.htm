@@ -34,10 +34,10 @@
 }
 </style>
     <div id="main_message">
-      <div id="layer_login_$loginhash" > 
+      <div id="layer_login_$loginhash" >
       	 <div class="modal-header">
              <!--{if !empty($_GET['inajax'])}--><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><!--{/if}-->
-            <h4  class="modal-title text-center" ><span id="returnmessage_$loginhash">$_G['setting']['sitename']<!--{if $_G['setting']['bbclosed']>0}--> - 网站关闭中<!--{/if}--> </span></h4>
+            <h4  class="modal-title text-center" ><span id="returnmessage_$loginhash">$_G['setting']['sitename']<!--{if $_G['setting']['bbclosed']>0}--> - $_G['setting']['closedreason']<!--{/if}--> </span></h4>
          </div>
           <div class="modal-body" style="font-size:14px;padding:30px 30px 20px 30px;">
             <form method="post"  name="login " id="loginform_$loginhash" class="form-login"   role="form" onsubmit="{if $this->setting['pwdsafety']}pwmd5('password3_$loginhash');{/if}pwdclear = 1; ajaxpost('loginform_$loginhash', 'returnmessage_$loginhash', 'returnmessage_$loginhash');return false;"  action="user.php?mod=logging&action=login&loginsubmit=yes{if !empty($_GET['handlekey'])}&handlekey=$_GET[handlekey]{/if}{if isset($_GET['frommessage'])}&frommessage{/if}&loginhash=$loginhash">
@@ -55,11 +55,11 @@
               
               <!--{if !$auth}-->
               <div class="form-group form-group-lg">
-                  <input type="text" class="form-control" id="email_$loginhash" placeholder="邮箱或用户名" name="email"  autocomplete="off"  >
+                  <input type="text" class="form-control" id="email_$loginhash" placeholder="{lang email_username}" name="email"  autocomplete="off"  >
                
               </div>
               <div class="form-group form-group-lg">
-                  <input type="password"  class="form-control " id="password3_$loginhash" placeholder="登录密码" name="password" onfocus="clearpwd()" autocomplete="off"  >
+                  <input type="password"  class="form-control " id="password3_$loginhash" placeholder="{lang user_login_password}" name="password" onfocus="clearpwd()" autocomplete="off"  >
               </div>
               
               <!--{/if}--> 
@@ -70,7 +70,7 @@
                   <input type="text" class="form-control"  name="answer" id="loginanswer_$loginhash" autocomplete="off"  />
               </div>
               <div class="form-group form-group-lg" >
-                <label class="checlbox checkbox-inline"><input type="checkbox"  name="cookietime" id="cookietime_$loginhash"  value="2592000" $cookietimecheck /> 30天内自动登录</label>
+                <label class="checlbox checkbox-inline"><input type="checkbox"  name="cookietime" id="cookietime_$loginhash"  value="2592000" $cookietimecheck /> {lang automatic_login_within_thirtydays}</label>
                 <a class="pull-right" tabindex="-1" href="javascript:;" onclick="{if !empty($_GET['inajax'])}_login.logging('user.php?mod=lostpasswd&inajax=1'){else}jQuery('#popModal .modal-dialog').load('user.php?mod=lostpasswd&inajax=1'){/if};return false">{lang getpassword}</a>
                </div>
               <!--{/if}--> 
@@ -82,24 +82,24 @@
               <sec>
               <!--{/block}-->
               <div class="form-group" style="margin-bottom:20px;"> 
-                  <!--{subtemplate common/seccheck}--> 
+                  <!--{template common/seccheck}--> 
               </div>
               <!--{/if}-->
                
               <div class="form-group form-group-lg" >
-                  <button class="btn btn-primary btn-block"  type="submit" name="loginsubmit" value="true" ><strong style="line-height:30px;">登&nbsp;&nbsp;&nbsp;录</strong></button>
+                  <button class="btn btn-primary btn-block"  type="submit" name="loginsubmit" value="true" ><strong style="line-height:30px;">{lang login_empty}</strong></button>
                  <!-- <!--{if !$this->setting['bbclosed'] && !empty($_GET['inajax'])}--><a class="btn btn-link" href="javascript:;" onclick="ajaxget('user.php?mod=clearcookies&formhash={FORMHASH}', 'returnmessage1_$loginhash', 'returnmessage1_$loginhash');return false;" title="{lang login_clearcookies}" class="pull-right"> <span id="returnmessage1_$loginhash" class="text-muted ">{lang login_clearcookies}</span></a><!--{/if}--> -->
               </div>
               <!--{if $_G['setting']['regstatus']>0}-->
               <div class="form-group last" style="margin-bottom:0" >
-                	还没有帐号？&nbsp;<a  class="" tabindex="-1" href="user.php?mod=register"  <!--{if !empty($_GET['inajax'])}-->onclick="_login.register();return false;"<!--{/if}-->  title="$_G['setting']['reglinkname']">$_G['setting']['reglinkname']</a>
+                	{lang no_account_yet}&nbsp;<a  class="" tabindex="-1" href="user.php?mod=register"  <!--{if !empty($_GET['inajax'])}-->onclick="_login.register();return false;"<!--{/if}-->  title="$_G['setting']['reglinkname']">$_G['setting']['reglinkname']</a>
               </div>
               <!--{/if}-->
             </form>
             <!--{if $_G['setting']['qq_login']>0}-->
               <div class="third-login-wraper" style="padding-top:15px;margin-top:15px;border-top:1px solid #DDD;">
-                <span class="third-login-header">其他登录：</span>
-                <a class="qqlogion" style="margin:0 5px" href="user.php?mod=qqlogin&type=login" title="QQ登录"><img src="user/images/qq.png" height="24" /></a>
+                <span class="third-login-header">{lang other_login}：</span>
+                <a class="qqlogion" style="margin:0 5px" href="user.php?mod=qqlogin&type=login" title="{lang qq_login}"><img src="user/images/qq.png" height="24" /></a>
               </div>
               <!--{/if}-->
           </div>

@@ -289,7 +289,6 @@ function check_emailaccess($email) {
 	}
 }
 function check_emailexists($email) {
-	$sqladd = $username !== '' ? "AND username<>'$username'" : '';
 	$email =C::t('user')->fetch_by_email($email);
 	return $email;
 }
@@ -314,7 +313,7 @@ function uc_user_checkusername($username) {
 function check_username($username) {
 	$guestexp = '^Guest';
 	$len = dstrlen($username);
-	if($len < 3 || preg_match("/\s+|^c:\\con\\con|[%,\*\"\s\<\>\&]|$guestexp/is", $username)) {
+	if($len < 3 || preg_match("/^c:\\con\\con|[%,\*\"\<\>\&]|$guestexp/is", $username)) {
 		return FALSE;
 	} else {
 		return TRUE;

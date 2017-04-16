@@ -116,7 +116,7 @@ overflow-y:hidden;
                <!--{if $org}-->
                <a href="javascript:;" data-toggle="dropdown" role="button" id="drop-org" _orgid="$org[orgid]" class="dropdown-toggle" style="padding:8px 10px;">$org[orgname]<b class="caret"></b></a>
               <!--{else}-->
-               <a href="{BASESCRIPT}?mod=$mod&orgid=0" data-toggle="dropdown" role="button" id="drop-org" _orgid="0" class="dropdown-toggle">全部<b class="caret"></b></a>
+               <a href="{BASESCRIPT}?mod=$mod&orgid=0" data-toggle="dropdown" role="button" id="drop-org" _orgid="0" class="dropdown-toggle">{lang all}<b class="caret"></b></a>
               <!--{/if}-->
                 <ul aria-labelledby="drop-org" role="menu" class="dropdown-menu" id="drop-org-menu">
                     $orgtree
@@ -133,25 +133,25 @@ overflow-y:hidden;
     <div class="col-xs-2" style="border-right:1px solid #DDD;border-left:1px solid #DDD;height:350px;">
     	<table width="100%" height="100%">
         <tr><td></td></tr>
-        <tr><td align="center" valign="middle"><a id="seluser_addall" href="javascript:;" class="btn btn-primary " title="添加所有"><i class="glyphicon glyphicon-forward"></i><i class="glyphicon glyphicon-forward" style="margin-left:-2px;"></i></a></td></tr>
-         <tr><td align="center" valign="top"><a id="seluser_removeall" href="javascript:;"  class="btn btn-danger"  title="移除所有"><i class="glyphicon glyphicon-backward"></i><i class="glyphicon glyphicon-backward"  style="margin-left:-2px;"></i></a></td></tr>
+        <tr><td align="center" valign="middle"><a id="seluser_addall" href="javascript:;" class="btn btn-primary " title="{lang add_all}"><i class="glyphicon glyphicon-forward"></i><i class="glyphicon glyphicon-forward" style="margin-left:-2px;"></i></a></td></tr>
+         <tr><td align="center" valign="top"><a id="seluser_removeall" href="javascript:;"  class="btn btn-danger"  title="{lang remover_all}"><i class="glyphicon glyphicon-backward"></i><i class="glyphicon glyphicon-backward"  style="margin-left:-2px;"></i></a></td></tr>
         </table>
     </div>
     <div class="col-xs-5" style="height:345px;"> 
     	 <h5 class="member-info">
-         	已选择: <span id="member_sum" class="sum">0</span>&nbsp;&nbsp; 管理员：<span id="moderator_sum" class="sum">0</span>
+         	{lang selected}: <span id="member_sum" class="sum">0</span>&nbsp;&nbsp; {lang administrator}：<span id="moderator_sum" class="sum">0</span>
          </h5>
     	 <ul id="seluser_selected" class="user-list seluser-selected">
         	<!--{loop $userlist $value}-->
             	<li username="$value[username]" uid="$value[uid]">
                  <!--{if $value[ismoderator]}-->
-                 <a href="javascript:;"   class="setmoderator glyphicon glyphicon-user"  title="取消管理员"><i class="glyphicon-ismoderator glyphicon  glyphicon-user "></i></a>
+                 <a href="javascript:;"   class="setmoderator glyphicon glyphicon-user"  title="{lang cancel_administrator}"><i class="glyphicon-ismoderator glyphicon  glyphicon-user "></i></a>
                  <!--{else}-->
-                 <a href="javascript:;"   class="setmoderator glyphicon"  title="设置管理员"><i class="glyphicon glyphicon-ismoderator"></i></a>
+                 <a href="javascript:;"   class="setmoderator glyphicon"  title="{lang set_administrator}"><i class="glyphicon glyphicon-ismoderator"></i></a>
                   <!--{/if}-->
                   <img src="avatar.php?uid=$value[uid]">
                   <span>$value[username]</span>
-                 <a class="pull-right remove" href="javascript:;" onclick="deleteMember(this,'$value[uid]');" title="删除"><i class="glyphicon glyphicon-remove"></i></a>
+                 <a class="pull-right remove" href="javascript:;" onclick="deleteMember(this,'$value[uid]');" title="{lang delete}"><i class="glyphicon glyphicon-remove"></i></a>
                 </li>
             <!--{/loop}-->
         </ul>
@@ -159,7 +159,7 @@ overflow-y:hidden;
   </div>
 </div>
 <script type="text/javascript" >
-jQuery('#myModalLabel').html('成员管理&nbsp;－&nbsp;$org[orgname]');
+jQuery('#myModalLabel').html('{lang member_management}&nbsp;－&nbsp;$org[orgname]');
 fixTree_seluser();
 setCount();
 getUserList('{$orgid}');
@@ -240,26 +240,26 @@ function setCount(){
 	jQuery('#moderator_sum').html(j);
 }
 function removeToLeft(li){
-	if(jQuery('#seluser_select li[uid='+li.attr('uid')+']').size()>0){
+	if(jQuery('#seluser_select li[uid='+li.attr('uid')+']').length>0){
 		li.remove();	
 	}else{
 		li.removeClass('selected').removeClass('hover')
 		.find('.setmoderator').remove()
 		.end()
-		.find('.remove').replaceWith('<a class="pull-right add" href="javascript:;" title="添加"><i class="glyphicon glyphicon-forward"></i></a>')
+		.find('.remove').replaceWith('<a class="pull-right add" href="javascript:;" title="{lang add}"><i class="glyphicon glyphicon-forward"></i></a>')
 		.end()
 		.appendTo('#seluser_select');
 	}
 }
 function addToRight(li){
-	if(jQuery('#seluser_selected li[uid='+li.attr('uid')+']').size()>0){
+	if(jQuery('#seluser_selected li[uid='+li.attr('uid')+']').length>0){
 		 li.remove();
 		 return false;
 	}
 	li.attr('class','')
-	.find('img').before('<a href="javascript:;"  class="setmoderator glyphicon"  title="设置管理员"><i class="glyphicon glyphicon-ismoderator"></i></a>&nbsp;')
+	.find('img').before('<a href="javascript:;"  class="setmoderator glyphicon"  title="{lang set_administrator}"><i class="glyphicon glyphicon-ismoderator"></i></a>&nbsp;')
 	.end()
-	.find('.add').replaceWith('<a class="pull-right remove" href="javascript:;" onclick="deleteMember(this,'+li.attr('uid')+');" title="删除"><i class="glyphicon glyphicon-remove"></i></a>')
+	.find('.add').replaceWith('<a class="pull-right remove" href="javascript:;" onclick="deleteMember(this,'+li.attr('uid')+');" title="{lang delete}"><i class="glyphicon glyphicon-remove"></i></a>')
 	.end()
 	.appendTo('#seluser_selected');
 }
@@ -270,11 +270,11 @@ function deleteMember(obj,uid){
 function fixTree_seluser(){
 	jQuery('#drop-depart-menu .tree-heng1').each(function(){
 		var tr=jQuery(this).parent().parent().parent();
-		var dep=jQuery(this).parent().find('.tree-su').size();
+		var dep=jQuery(this).parent().find('.tree-su').length;
 		
 		tr.nextAll().each(function(){
 			var child_org=jQuery(this).find('.child-org');
-			var dep1=child_org.find('.tree-su').size();
+			var dep1=child_org.find('.tree-su').length;
 			if(dep1<=dep) return false;
 			else{
 				child_org.find('.tree-su').eq(dep).removeClass('tree-su');

@@ -4,7 +4,7 @@
 
  <div class="modal-header">
     	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-    	<h4 class="modal-title" id="return_$_GET[handlekey]">编辑</h4>
+    	<h4 class="modal-title" id="return_$_GET[handlekey]">{lang edit}</h4>
  </div>
 <div id="publish_edit_{$pid}" class="publishsharewrap" >
     <form id="form_edit_{$pid}" name="form_edit_{$pid}" class="form-horizontal" action="{DZZSCRIPT}?mod=feed&op=ajax&do=edit" method="post"   onsubmit="return publish_edit_{$pid}_validate(this);" target="_blank">
@@ -17,7 +17,7 @@
    <div class="modal-body">
     <div class="container_psw">
       <div class="notice_cpsw clearfix">
-        <div id="reply_who_edit_{$pid}" class="who_cpsw"> <span>回复</span> <span class="toname_wcpsw"></span> <span>：</span> <a class="closed_wcpsw" title="" hidefocus="true" href="javascript:void(0);" onclick="jQuery(this).parent().hide();jQuery('#reply_pid_$tid').val('0')">关闭</a> </div>
+        <div id="reply_who_edit_{$pid}" class="who_cpsw"> <span>{lang reply}</span> <span class="toname_wcpsw"></span> <span>：</span> <a class="closed_wcpsw" title="" hidefocus="true" href="javascript:void(0);" onclick="jQuery(this).parent().hide();jQuery('#reply_pid_$tid').val('0')">{lang close}</a> </div>
       </div>
       <div class="textarea_cpsw">
         <div class="wrap_tcpsw">
@@ -28,18 +28,18 @@
     </div>
     <div id="publish_action_edit_{$pid}" class="action_cpsw">
       <ul class="list_acpsw">
-        <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_edit_{$pid}" onclick="showMenu({'ctrlid':'upload_from_edit_{$pid}'});" href="javascript:void(0);" title="" class="item_lacpsw">文件/图片</a> </li>
+        <li class="ament_lacpsw" style="position: relative; cursor: pointer;"><a id="upload_from_edit_{$pid}" onclick="showMenu({'ctrlid':'upload_from_edit_{$pid}'});" href="javascript:void(0);" title="" class="item_lacpsw">{lang typename_attach}/{lang photo}</a> </li>
        
-        <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_edit_{$pid}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">表情</a></li>
+        <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_edit_{$pid}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">{lang face}</a></li>
         <script type="text/javascript" reload="1">smilies_show('message_edit_{$pid}_sml_div','{$_G[setting][smcols]}', 'message_edit_{$pid}');</script>
         <!--{if $data[first]>0}-->
         <input id="votestatus_{$data[tid]}" type="hidden" name="votestatus" value="$data[votestatus]" />
-          <li class="vote_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0_vote" onclick="feed_vote_switch('$data[tid]');">投票</a></li>
+          <li class="vote_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_0_vote" onclick="feed_vote_switch('$data[tid]');">{lang vote}</a></li>
           <!--{/if}-->
       </ul>
       <input id="readperm_edit_{$pid}" name="readperm" value="0" type="hidden" />
-      <a hidefocus="true" class="cancel_cpsw" href="javascript:void(0);" onclick="hideWindow('$_GET[handlekey]');return false;"> <b><i>取消</i></b></a>
-      <button id="publish_submit_edit_{$pid}" type="submit" class="btn btn-primary" title="保存(Ctrl+Enter)"><b>保存</b></button>
+      <a hidefocus="true" class="cancel_cpsw" href="javascript:void(0);" onclick="hideWindow('$_GET[handlekey]');return false;"> <b><i>{lang cancel}</i></b></a>
+      <button id="publish_submit_edit_{$pid}" type="submit" class="btn btn-primary" title="{lang save}(Ctrl+Enter)"><b>{lang save}</b></button>
     </div>
      <div id="attachmentViewBox_edit_{$pid}" class="attachmentContainer edit clearfix" style="max-height:250px;padding:10px;overflow:auto;"> 
      	<!--{loop $data[attachs] $value}-->
@@ -49,7 +49,7 @@
               <div class="ico_vattvb "><img class="img_50_50" alt="value[title]" src="$value[img]"></div>
               <div class="ico_vattvb_right">
                 <div class="ico_name">$value[title]</div>
-                <a href="javascript:void(0);" title="" class="del_fattvb" onclick="removeAttach(jQuery(this).closest('.attachment_previewer'),'edit_{$pid}');">删除附件</a>
+                <a href="javascript:void(0);" title="" class="del_fattvb" onclick="removeAttach(jQuery(this).closest('.attachment_previewer'),'edit_{$pid}');">{lang del_adjunct}</a>
                  <input type="hidden" name="attach[qid][]" value="$value[qid]">
                 <input type="hidden" name="attach[aid][]" value="$value[id]">
                 <input type="hidden" name="attach[title][]" value="$value[title]">
@@ -73,16 +73,16 @@
     
   </form>
      <div class="actionUploadAttachment tobody" id="upload_from_edit_{$pid}_menu" style="display:none">
-        <div class="local_auatth" style="position:relative;overflow:hidden;"><a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">本地上传
+        <div class="local_auatth" style="position:relative;overflow:hidden;"><a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">{lang web_upload}
           <input id="fileupload_edit_{$pid}" class="form-control" type="file" name="files[]" multiple >
           </a> </div>
-        <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop('edit_{$pid}');jQuery(this).parent().parent().hide();">从我的文件中选择</a></div>
+        <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop('edit_{$pid}');jQuery(this).parent().parent().hide();">{lang choose_from_my_file}</a></div>
       </div>
 </div>
 <script type="text/javascript" reload="1">
 document.getElementById('appid_edit_{$pid}').value=appid;
 jQuery(document).ready(function(e) {
-	jQuery('actionUploadAttachment:not(.tobody)').remove();
+	jQuery('actionUploadAttachment:not(.tobody)').remove(); 
 	jQuery('#upload_from_edit_{$pid}_menu.tobody').removeClass('tobody').appendTo('body');
 	jQuery('#message_edit_{$pid}').TextAreaExpander(62,99999);
     
@@ -99,7 +99,7 @@ function publish_edit_{$pid}_validate(form){
 		 var voteitemnum=0;
 		 if(jQuery('#vote_post_container_{$data[tid]} input[name="vote[type]"]').val()>1){//图片投票模式
 		 	 if(!jQuery('#vote_post_container_{$data[tid]} input[name=vote_subject_2]').val()){
-				 showmessage('投票标题不能为空','danger',3000,1);
+				 showmessage('{lang vote_title_empty}','danger',3000,1);
 				 jQuery('#vote_post_container_{$data[tid]} input[name=vote_subject_2]').focus();
 				  return false;
 			 }
@@ -108,7 +108,7 @@ function publish_edit_{$pid}_validate(form){
 			 });
 		 }else{ //文本投票模式
 		     if(!jQuery('#vote_post_container_{$data[tid]} input[name=vote_subject_1]').val()){
-				 showmessage('投票标题不能为空','danger',3000,1);
+				 showmessage('{lang vote_title_empty}','danger',3000,1);
 				jQuery('#vote_post_container_{$data[tid]} input[name=vote_subject_1]').focus();
 				 return false;
 			 }
@@ -117,21 +117,21 @@ function publish_edit_{$pid}_validate(form){
 			 });
 		 }
 		 if(voteitemnum<2) {
-			  showmessage('投票项目至少为2项！','danger',3000,1);
+			  showmessage('{lang vote_item}','danger',3000,1);
 			  return false;
 		 }
 	}else{
 		var val=jQuery('#message_edit_{$pid}').val();
 		if(strlen(val)<1 || strlen(val)>1000){
-			 showmessage('请输入分享内容','danger',1000,1);
+			 showmessage('{lang please_share_content}','danger',1000,1);
 			 return false;
 		}else if(strlen(val)>1000){
-			showmessage('分享内容不能超过1000字符','danger',1000,1);
+			showmessage('{lang share_content_character}','danger',1000,1);
 			return false;
 		}
 		if(jQuery('#vote_container_body_{$data[tid]} input[name=voteid]').val()>0){
-			if(!confirm('此编辑将会删除原先添加的投票，您确定删除投票？')){
-				showmessage('打开投票框时保存，不会删除已有的投票','warning',5000,1);
+			if(!confirm('{lang edit_vote}')){
+				showmessage('{lang open_vote}','warning',5000,1);
 				return false;
 			}
 		}

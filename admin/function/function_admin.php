@@ -48,7 +48,7 @@ function createtable($sql, $dbcharset) {
 	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
 	$type = in_array($type, array('MYISAM', 'HEAP')) ? $type : 'MYISAM';
 	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql).
-	(DB::$db->version() > '4.1' ? " ENGINE=$type DEFAULT CHARSET=$dbcharset" : " TYPE=$type");
+	( " ENGINE=$type DEFAULT CHARSET=$dbcharset");
 }
 
 function cron_create($pluginid, $filename, $name, $weekday, $day, $hour, $minute) {
@@ -165,14 +165,14 @@ function getimportdata($name = '', $addslashes = 0, $ignoreerror = 0,$data='') {
 	$xmldata = xml2array($data);
 	if(!is_array($xmldata) || !$xmldata) {
 		if(!$ignoreerror) {
-			showmessage('数据导入错误',dreferer());
+			showmessage('data_import_error', dreferer());
 		} else {
 			return array();
 		}
 	} else {
 		if($name && $name != $xmldata['Title']) {
 			if(!$ignoreerror) {
-				showmessage('数据类型错误，只能导入应用数据');
+				showmessage('function_admin_error');
 			} else {
 				return array();
 			}
@@ -287,7 +287,7 @@ function importByarray($arr,$force=0){
 	//判断应用是否已经存在
 	$oapp=DB::fetch_first("select * from %t where appurl=%s",array('app_market',$app['appurl'],$app['identifier']));
 	if(!$force && $oapp){
-		showmessage('应用已经存在！');
+		showmessage('application_been');
 	}
 	
 	//转化应用图标
