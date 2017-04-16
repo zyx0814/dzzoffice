@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>messageEvent</title>
+<style>
+#doc { width:760px; margin:40px; font-family:'微软雅黑'; }
+h1 { height:60px; color:#039; font-size:34px; font-family:'Constantia'; }
+h1 span { font-size:12px; font-weight:normal; color:#CCC }
+.code { margin-left:5px; font-size:12px; padding-left:2em; color:#039; border-left:solid #F0F4FF 1px }
+.code li strong { display:inline-block; *zoom:1; *display:inline; width:8em; }
+em { font-size:14px; color: #888; }
+p.code { border-left-color:#FFF; font-size:12px; }
+</style>
+</head>
+
+<body>
+<div id="doc">
+  <h1>messageEvent.js <span>&#8482;</span><span>v0.2</span></h1>
+  <p style="color:#888; font-weight:normal;">messageEvent.js 可以让 IE6+ 浏览器拥有 html5 时代的双向跨域通讯能力</p>
+  <h3>程序接口</h3>
+  <h5>绑定消息事件</h5>
+  <em>add(callback)</em>
+  <pre class="code">messageEvent.add(function (event) {
+	alert(event.data)
+});</pre>
+  <p>回调函数第一个参数接收 event 对象，它有几个有用的属性:</p>
+  <ul class="code">
+    <li><strong>data:</strong> {String, Object} 消息</li>
+    <li><strong>origin:</strong> {String} 来源页面地址</li>
+    <li><strong>source:</strong> {Object} 来源页面 window 对象引用</li>
+  </ul>
+  <h5>卸载消息事件</h5>
+  <em>remove(callback)</em>
+  <pre class="code">messageEvent.remove(callback);</pre>
+  <h5>发送消息</h5>
+  <em>postMessage(otherWindow, message, targetOrigin)</em>
+  <pre class="code">var iframe = document.getElementById('iframe');
+messageEvent.postMessage(iframe.contentWindow, 'hello world', '*');</pre>
+  <p>参数说明:</p>
+  <ol class="code">
+    <li><strong>otherWindow:</strong> {DOMWindow} 窗口</li>
+    <li><strong>message:</strong> {String, Object} 消息</li>
+    <li><strong>targetOrigin:</strong> {String} (可选) 限定URL接受消息, 默认 '*'</li>
+  </ol>
+  <h3>部署规范</h3>
+  <p>1. 双方的页面统一引用 messageEvent.js</p>
+
+  <pre class="code">&lt;script src=&quot;messageEvent.js&quot;&gt;&lt;/script&gt;</pre>
+  <p>2. 双方拷贝 messageEvent-proxy.html 到页面所在域根的目录</p>
+  <p class="code">如 app.planeart.cn 所在域的应用，访问地址应为：</p>
+  <pre class="code">http://app.planeart.cn/messageEvent-proxy.html</pre>
+  <em>（messageEvent-proxy.html 是跨域代理，IE6、7需要使用它）</em>
+  <h3>跨域测试例子</h3>
+  <p>1. 开启本地测试服务器，复制 messageEvent-proxy.html 文件到根目录中 </p>
+  <p>2. 使用浏览器打开 （IEtester无效）<a href="http://127.0.0.1/messageEvent/_test/" target="_blank">http://127.0.0.1/messageEvent/_test/</a></p>
+  <h3>项目主页</h3>
+  <p><a href="http://code.google.com/p/message-event/">http://code.google.com/p/message-event/</a></p>
+  <div id="me" style="background:#EDF8F5; padding:3px 12px">
+    <p style="color:#888">若有幸被您项目采用，期待您支付小额资金鼓励我 :) <br>
+      <a style="color:#888" href="https://me.alipay.com/planeart" target="_blank">https://me.alipay.com/planeart</a> </p>
+    <p style="color:#CCC">
+    Code license: GNU Lesser GPL<br>
+    <a style="color:#CCC;" href="http://t.qq.com/tangbin">@tangbin</a> - &copy;2011 planeArt.cn</p>
+  </div>
+  <script>
+ // google-analytics
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-19823759-2']);
+_gaq.push(['_setDomainName', '.planeart.cn']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script> 
+</div>
+</body>
+</html>

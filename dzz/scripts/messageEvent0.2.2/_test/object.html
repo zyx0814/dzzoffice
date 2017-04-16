@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title>messageEvent 跨域通讯测试</title>
+	<script src="../messageEvent.js"></script>
+	<style>
+	#demoIframe { width:550px; height:150px;overflow:hidden }
+	</style>
+</head>
+<body>
+<h1>JSON 对象消息测试</h1>
+<div><a href="./">返回</a></div>
+<div><button id="button">发送数据</button></div>
+<iframe id="demoIframe" src="http://localhost:80/messageEvent/_test/object-iframe.html"></iframe>
+<div id="log"></div>
+<script>
+var button = document.getElementById('button');
+var iframe = document.getElementById('demoIframe');
+var log = document.getElementById('log');
+
+button.onclick = function () {
+	messageEvent.postMessage(iframe.contentWindow, {
+		name: 'tangbin',
+		site: 'http://www.planeart.cn',
+		weibo: 'http://t.qq.com/tangbin',
+		email: '1987.tangbin[a]gmail.com'
+	}, '*');
+};
+
+messageEvent.add(function (event) {
+	if (event.origin === 'http://localhost') {
+		log.innerHTML = event.origin + '说：' + event.data;
+	};
+});
+</script>
+</body>
+</html>

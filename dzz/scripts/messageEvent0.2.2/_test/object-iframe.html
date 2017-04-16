@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title>messageEvent 跨域通讯测试</title>
+	<script src="../messageEvent.js"></script>
+</head>
+<body>
+<div id="log"></div>
+<script>
+var log = document.getElementById('log');
+
+messageEvent.add(function (event) {
+	var html = '', data;
+	if (event.origin === 'http://127.0.0.1') {
+		data = event.data;
+		for (var i in data) {
+			html += i + ': ' + data[i] + '<br>';
+		};
+		log.innerHTML = event.origin + '说：<br>' + html;
+		
+		messageEvent.postMessage(window.parent, '我已经收到 object 类型的数据了！' + event.timeStamp, '*');
+	};
+});
+</script>
+</body>
+</html>

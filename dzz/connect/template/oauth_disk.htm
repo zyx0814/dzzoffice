@@ -1,0 +1,82 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/connect/images/connect.css?{VERHASH}" rel="stylesheet" media="all">
+
+<!--{template common/header_simple_end}-->
+<div class="container" style="height:100%">
+	<div class="main-header clearfix">
+		<ul class="nav nav-pills nav-pills-bottomguide">
+			<li>
+				<a href="{BASESCRIPT}?mod=connect">{lang my_clouds}</a>
+			</li>
+			<li>
+				<a href="{BASESCRIPT}?mod=connect&op=addcloud">{lang add_clouds}</a>
+			</li>
+			<li class="active">
+				<a href="{BASESCRIPT}?mod=connect&op=oauth&bz=disk">{lang add}{lang cloud_type_disk}</a>
+			</li>
+		</ul>
+	</div>
+	<div class="main-content clearfix">
+		<div class="container" style="padding:30px 15px;">
+			<form name="aliform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=connect&op=oauth" method="post" onsubmit="return validate(this)">
+				<input type="hidden" name="disksubmit" value="true" />
+				<input type="hidden" name="bz" value="disk" />
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+				<div class="form-group">
+					<label class="control-label">{lang disk_name}</label>
+					<input type="text" class="form-control required" name="config[cloudname]" value="">
+
+				</div>
+				<div class="form-group">
+					<label class="control-label">{lang disk_dir}</label>
+					<input type="text" class="form-control required" name="config[attachdir]" value="">
+                    <span class="help-block">{lang disk_dir_tip}</span>
+
+				</div>
+				
+				<div class="form-group">
+					<label class="control-label">{lang encode}</label>
+                    
+					<select class="form-control" name="config[charset]">
+						<option value="GBK">GBK</option>
+						<option value="UTF-8" selected="selected">UTF-8</option>
+						<option value="BIG5">BIG5</option>
+					</select>
+					<span class="help-block">{lang disk_encode_tip}</span>
+
+				</div>
+                <div class="alert alert-warning">
+                	
+				<ul class="help-block ">
+                	{lang disk_warning}
+                </ul>
+                </div>
+				<div class="form-group">
+					<label class="control-label"></label>
+					<input type="submit" class="btn btn-primary" style="padding:6px 25px" value="{lang add}">
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function validate(form) {
+		var i = 0;
+		jQuery("input.required").each(function() {
+			if(jQuery(this).val() == '') {
+				jQuery(this).focus();
+				return false;
+			}
+			i++;
+		});
+		if(i < jQuery("input.required").length) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+
+<!--{template common/footer_simple}-->

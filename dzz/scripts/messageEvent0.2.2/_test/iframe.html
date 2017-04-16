@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>iframe</title>
+	<style>
+		body{font-size:12px;background-color:#fff;}
+		iframe {
+		  width: 500;
+		  border: 2px solid #ccc;
+		  position:absolute; 
+		  right:30px;top:50px;
+		}
+		#test{background-color:#ebebeb;border:1px solid #999;padding:10px;width:400px; }
+	</style>
+	<script src="../messageEvent.js"></script>
+</head>
+<body>
+	<h4>当前主机 <script>document.write(location.host)</script></h4>
+		<p><label for="message">给父窗口发个信息：</label><input type="text" value="hello world" id="input" /> <button id="button">提 交</button>
+		</p>
+	<h4>父窗口传来的信息：</h4>
+	<p id="test">暂无信息</p>
+	<script>
+	var input = document.getElementById('input');
+	var button = document.getElementById('button');
+	button.onclick = function () {
+		messageEvent.postMessage(parent, input.value);
+	};
+	
+	messageEvent.add(function (event) {
+		document.getElementById("test").innerHTML = 'origin: ' + event.origin + '<br> data:' + event.data;
+	});
+	
+	</script>
+	
+</body>
+</html>

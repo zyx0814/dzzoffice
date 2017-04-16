@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title>messageEvent 跨域通讯测试</title>
+	<style>
+		body{font-size:12px;}
+		iframe {
+		  width: 500px;
+		  height: 240px;
+		  border: 2px solid #ccc;
+		  position:absolute; 
+		  right:30px;top:50px;
+		  box-shadow:5px 5px 10px #333;
+		}
+		.red{color:red;font-weight:bold;}
+		#test{background-color:#ebebeb;border:1px solid #999;padding:10px;width:400px; }
+	</style>
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="../messageEvent.js"></script>
+</head>
+<body>
+<section id="wrapper">
+    <header>
+      <h1>messageEvent</h1>
+	  <a href="autoIframeSize.html">iframe 高度自适应演示</a> | <a href="object.html">JSON 对象消息传递</a>
+	  		<p style="color:#999">请使用 http://127.0.0.1/messageEvent/_test/ 地址访问本页</p>
+		<h4>当前主机 <script>document.write(location.host)</script></h4>
+
+    </header>
+	
+    <article>
+	  <p><label for="message">给iframe发一个信息：</label><input type="text" value="hello world" id="input" /> <button id="button">提 交</button>
+	  </p>
+	<h4>目标iframe传来的信息：</h4>
+
+	<p id="test">暂无信息</p>
+	<iframe src="http://localhost/messageEvent/_test/iframe.html"></iframe>
+    </article>
+	<script>
+	jQuery(window).bind('message', function (event) {
+		//window.console && console.log(event);
+		jQuery("#test").html('origin: ' + event.origin + '<br> data:' + event.data);
+		jQuery.postMessage(event.source, '父窗口表示收到了消息 ' + event.timeStamp, '*');
+	});
+	
+	jQuery('#button').click(function () {
+		var val = jQuery('#input').val();
+		var contentWindow = jQuery('iframe')[0].contentWindow;
+		jQuery.postMessage(contentWindow, val, '*');
+	});
+	</script>
+</section>
+</body>
+</html>

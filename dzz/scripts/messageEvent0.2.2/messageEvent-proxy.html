@@ -1,0 +1,48 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="version" content="0.2.2">
+<meta name="about" content="http://code.google.com/p/message-event/">
+<title>messageEvent.js proxy</title>
+</head>
+<body>
+<script>
+!function (onmessage) {
+
+var event, target, parseQuery;
+
+function parseQuery (hash) {
+	var ret = {}, items = hash.split('&'), i, item;
+	for (i = 0, j = items.length; i < j; i++) {
+		item = items[i].split('=');
+		if (item.length === 2 && item[0].length > 0) {
+			ret['' + decodeURIComponent(item[0])] = decodeURIComponent(item[1]);
+		};
+	};
+	return ret;
+};
+
+event = parseQuery(location.hash.slice(1));
+
+if (/\(|\)/.test(event.targetName)) {
+	return;
+};
+
+try {
+	target = eval('(parent.frames["' + event.targetName + '"])');
+	onmessage = target[onmessage];
+} catch (e) {
+	return;
+};
+
+if (onmessage) {
+	event.data = name;
+	event.source = parent;
+	event.origin = document.referrer.match(/[A-Za-z]+:\/{0,3}([^\/]+)/)[0];
+	onmessage(event);
+};
+
+}('_MESSAGEEVENT_');
+</script>
+</body>
+</html>
