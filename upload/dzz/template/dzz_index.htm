@@ -241,8 +241,6 @@ function notice_image_resize(obj){
 					<div class="menu-item" onClick="_config.setback('_imageurl',3,'','backimg');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();return false;"><span class="menu-text">{lang custom_option_layout_3}</span></div>
 				</div>
 			</div>
-			<!--<div class="menu-item setwidget" onClick="_widget.setToWidget('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-setwidget"></span><span class="menu-text">{lang setwidget}</span></div>-->
-			 
 			 <div class="menu-item realdelete" onClick="_ajax.delIco('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-delete"></span><span class="menu-text">{lang delete}</span></div> 
 			<div class="menu-item empty" onClick="_ico.Empty('_oid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-empty"></span><span class="menu-text">{lang empty_recycle}</span></div>
             <div class="menu-item property" onClick="_ico.property('_icoid');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-property"></span><span class="menu-text">{lang property}</span></div>
@@ -288,8 +286,8 @@ function notice_image_resize(obj){
 			</div>
 			<div class="menu-item upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);jQuery('#shadow').hide();return true;"><span class="menu-icon icon-upload"></span><span class="menu-text">{lang uploading}</span></div>
 			<span class="menu-sep"></span>
-			 <!--<div class="menu-item appmarket" onClick="_login.click('sys_market','_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-appshop"></span><span class="menu-text">{lang appmarket}</span></div>-->
 			  <div class="menu-item empty" onClick="_ico.Empty('_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-empty"></span><span class="menu-text">{lang empty_recycle}</span></div>
+               <div class="menu-item property" onClick="_ico.property('_fid','folder');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-property"></span><span class="menu-text">{lang property}</span></div>
 		</div>
 		 <div id="right_body" class=" menu " style="position:absolute;display:none">
 			<div class="menu-item " ><span id="menu_icon_view" class="menu-icon icon-iconview"></span><span class="menu-text">{lang iconviev}</span><span class="menu-rightarrow"></span>
@@ -318,14 +316,6 @@ function notice_image_resize(obj){
 			   </div>
 			   <span  class="menu-shadow"></span>
 			</div>
-			<!--<div class="menu-item  autolist" ><span class="menu-icon icon-autolist"></span><span class="menu-text">{lang autolist}</span><span class="menu-rightarrow"></span>
-				<div class=" menu " style="display:none">
-					<div class="menu-item" onClick="_ico.Arrange('0','_container','autolist')"><span pid="menu_icon_autolist_0" class="menu-icon icon-notselect menu-icon-autolist"></span><span class="menu-text">{lang autolist_0}</span></div>
-					<div class="menu-item" onClick="_ico.Arrange('1','_container','autolist')"><span pid="menu_icon_autolist_1" class="menu-icon icon-notselect menu-icon-autolist"></span><span class="menu-text">{lang autolist_1}</span></div>
-					
-			   </div>
-			   <span  class="menu-shadow"></span>
-			</div>-->
 			<span class="menu-sep"></span>
 			<div class="menu-item  create" ><span class="menu-icon icon-create"></span><span class="menu-text">{lang create}</span><span class="menu-rightarrow"></span>
 				<div class=" menu " style="display:none">
@@ -342,13 +332,8 @@ function notice_image_resize(obj){
 			</div>
 			<div class="menu-item  upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);jQuery('#shadow').hide();"><span class="menu-icon icon-upload"></span><span class="menu-text">{lang uploading}</span></div>
 			<div class="menu-item paste" onClick="_select.Paste('_container',XX,YY);jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-paste"></span><span class="menu-text">{lang paste}</span></div>
-			<!-- <div class="menu-item newwidget" onclick="_widget.New('_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-setwidget"></span><span class="menu-text">{lang newwidget}</span></div>-->
 			<span class="menu-sep"></span>
-			<!--<div class="menu-item  appmarket" onClick="_login.click('sys_market','_container');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-appshop"></span><span class="menu-text">{lang appmarket}</span></div>-->
-			<!--<div class="menu-item  widgetmarket" onClick="_login.click('sys_widget');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-widget"></span><span class="menu-text">{lang widgetmarket}</span></div>-->
-			
 			<div class="menu-item  thame" onClick="_login.click('sys_theme');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-zhuti"></span><span class="menu-text">{lang theme_config}</span></div>
-			<!--<div class="menu-item  config" onClick="showWindow('sys_deskconfig','{DZZSCRIPT}?mod=dzzcp&ac=setdefault');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-config"></span><span class="menu-text">{lang desk_config}</span></div>-->
 			
 		</div>
        

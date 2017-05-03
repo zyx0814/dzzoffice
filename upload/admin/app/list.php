@@ -43,6 +43,36 @@ if ($do == 'available') {
 			if (file_exists($entrydir . '/dzz_app_' . $entry . '.xml')) {
 				//echo $entrydir.'/dzz_app_'.$entry.'.xml'.'<br>';
 				$importtxt = implode('', file($entrydir . '/dzz_app_' . $entry . '.xml'));
+			}else{
+				$plugindir1 = $entrydir;
+				$pluginsdir1 = dir($plugindir1);
+				while ($entry1 = $pluginsdir1 -> read()) {
+					if (!in_array($entry1, array('.', '..')) && is_dir($plugindir1 . '/' . $entry1) && !in_array($entry.':'.$entry1, $identifiers)) {
+						$entrydir1 = $entrydir.'/'. $entry1;
+						//$filemtime = filemtime($entrydir1);
+						$entrytitle1 = $entry1;
+						$entryversion1 = $entrycopyright1 = $importtxt = '';
+						if (file_exists($entrydir1 . '/dzz_app_' . $entry.'_'.$entry1 . '.xml')) {
+							
+							$importtxt = @implode('', file($entrydir1 . '/dzz_app_' . $entry.'_'.$entry1 . '.xml'));
+						}
+						if ($importtxt) {
+							$apparray = getimportdata('Dzz! app', 0, 1, $importtxt);
+							$value = $apparray['app'];
+							if (!empty($value['appname'])) {
+								$value['appname'] = dhtmlspecialchars($value['appname']);
+								$value['identifier'] = dhtmlspecialchars($entry.':'.$entry1);
+								$value['version'] = dhtmlspecialchars($value['version']);
+								$value['vendor'] = dhtmlspecialchars($value['vendor']);
+								$value['grouptitle'] = $grouptitle[$value['group']];
+								$list[$entry.':'.$entry1] = $value;
+							}
+							
+						}
+					}
+					
+				}
+							
 			}
 			if ($importtxt) {
 				$apparray = getimportdata('Dzz! app', 0, 1, $importtxt);

@@ -570,6 +570,19 @@ class io_baiduPCS extends io_api
 			return array('error'=>$e->getMessage());
 		}
 	}
+	/*获取目录信息*/
+	public function getContains($path,$suborg=false,$contains=array('size'=>0,'contain'=>array(0,0))){
+		foreach(self::listFiles($path) as $value){
+			if($value['type']=='folder'){
+				$contains=self::getContains($value['path'],false,$contains);
+				$contains['contain'][1]+=1;
+			}else{
+				$contains['size']+=$value['size'];
+				$contains['contain'][0]+=1;
+			}
+		}
+		return $contains;
+	}
 	/*
 	 *获取文件的meta数据
 	 *返回标准的icosdata

@@ -472,6 +472,19 @@ class io_ftp extends io_api
 		}
 		return $icosdata;
 	}
+	/*获取目录信息*/
+	public function getContains($path,$suborg=false,$contains=array('size'=>0,'contain'=>array(0,0))){
+		foreach(self::listFiles($path) as $value){
+			if($value['type']=='folder'){
+				$contains=self::getContains($value['path'],false,$contains);
+				$contains['contain'][1]+=1;
+			}else{
+				$contains['size']+=$value['size'];
+				$contains['contain'][0]+=1;
+			}
+		}
+		return $contains;
+	}
 	/*
 	 *获取文件的meta数据
 	 *返回标准的icosdata
@@ -493,6 +506,7 @@ class io_ftp extends io_api
 				if($this->conn->ftp_isdir($bzarr['path'])){
 					$meta['type']='folder';
 					$meta['size']='-';
+					$meta['mtime']=$this->conn->ftp_mdtm($bzarr['path']);
 				}else{
 					$meta['type']='file';
 					$meta['size']=$this->conn->ftp_size($bzarr['path']);
@@ -540,7 +554,7 @@ class io_ftp extends io_api
 			
 		}else{
 			$pathinfo = pathinfo($meta['path']);
-			$ext = strtolower($pathinfo['extension']);
+			$ext = strtoupper($pathinfo['extension']);
 			if(in_array($ext,$imageexts)) $type='image';
 			elseif(in_array($ext,$documentexts)) $type='document';
 			else $type='attach';

@@ -41,6 +41,32 @@ class io_dzz extends io_api
 		}
 		return $data;
 	}
+	public function getContains($fid,$suborg=false,$contains=array('size'=>0,'contain'=>array(0,0))){
+		if(!$folder=C::t('folder')->fetch($fid)) return $contains;
+		$fids[]=$fid;
+		if($suborg && ($folder['flag']=='organization')){
+			foreach(DB::fetch_all("select fid from %t where flag='organization' and pfid=%d and isdelete<1",array('folder',$fid)) as $value){
+				$fids[]=$value['fid'];
+			}
+		}
+		if(empty($folder['default']) && $folder['flag']!='folder' && $folder['flag']!='organization'){//没有生成icos表的 单独查出来
+			foreach(DB::fetch_all("select fid,fname from %t where `default`='' and flag!='folder' and pfid=%d and isdelete<1",array('folder',$fid)) as $value){
+				$fids[]=$value['fid'];
+			}
+		}
+		foreach($fids as $fid){
+			foreach(C::t('icos')->fetch_all_by_pfid($fid) as $value){
+				if($value['type']=='folder'){
+					$contains=self::getContains($value['oid'],false,$contains);
+					$contains['contain'][1]+=1;
+				}else{
+					$contains['size']+=$value['size'];
+					$contains['contain'][0]+=1;
+				}
+			}
+		}
+		return $contains;
+	}
 	/**
 	 * 获取空间配额信息
 	 * @return string
@@ -96,7 +122,7 @@ class io_dzz extends io_api
 		return $folderarr;
 	}
 	//获取文件流地址
-	public function getStream($path,$fop){
+	public function getStream($path,$fop=''){
 		global $_G;
 		if(strpos($path,'attach::')===0){
 			$attach=C::t('attachment')->fetch(intval(str_replace('attach::','',$path)));

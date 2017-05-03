@@ -31,7 +31,11 @@ class io_disk extends io_api
 		$did=trim($bzarr[1]);
 		if($config=DB::fetch_first("select * from ".DB::table(self::T)." where  id='{$did}'")){
 			$this->_root='disk:'.$config['id'].':';
-			$this->encode=$config['charset'];
+			if(PHP_VERSION>=7.1){
+				$this->encode=CHARSET;
+			}else{
+				$this->encode=$config['charset'];
+			}
 			$this->_rootname=$config['cloudname'];
 			$this->attachdir=$config['attachdir'].DS;
 			
@@ -87,6 +91,19 @@ class io_disk extends io_api
 			}
 		}
 		return $folderarr;
+	}
+	/*获取目录信息*/
+	public function getContains($path,$suborg=false,$contains=array('size'=>0,'contain'=>array(0,0))){
+		foreach(self::listFiles($path) as $value){
+			if($value['type']=='folder'){
+				$contains=self::getContains($value['path'],false,$contains);
+				$contains['contain'][1]+=1;
+			}else{
+				$contains['size']+=$value['size'];
+				$contains['contain'][0]+=1;
+			}
+		}
+		return $contains;
 	}
 	private function checkdisk($config){//测试磁盘是否可以读写正常
 		$str='test read write';
@@ -423,17 +440,25 @@ class io_disk extends io_api
 	 */
 	function listFiles($path,$by='time',$order='desc',$limit='',$force=0){
 		if($this->error)  return array('error'=>$this->error);
-		//echo $path;
 		$bzarr=self::parsePath($path); 
-		//print_r($bzarr);
 		$filepath=$this->attachdir.($bzarr['path']?('./'.$bzarr['path']):'');
 		$icosdata=array();
-		foreach(new DirectoryIterator($filepath) as  $file){
+		try{
+			$dirs=new DirectoryIterator($filepath);
+		}catch(Exception $e){
+			return array('error'=>$e->getMessage());
+		}
+		foreach($dirs as  $file){
 			
 			if ($file->isDot()) {
                     continue;
             }
-			$filename=diconv($file->getFilename(),$this->encode,CHARSET);
+			/*if(PHP_VERSION>7.1){
+				$filename=$file->getFilename();
+			}else{*/
+				$filename=diconv($file->getFilename(),$this->encode,CHARSET);
+			//}
+			
 			if($file->isDir()){
 				
 				$fileinfo=array(
@@ -485,6 +510,7 @@ class io_disk extends io_api
 			if(is_dir($file)){
 				$meta['type']='folder';
 				$meta['size']='-';
+				$meta['mtime']=filectime($file);
 			}else{
 				$meta['type']='file';
 				$meta['size']=filesize($file);

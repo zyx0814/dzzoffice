@@ -345,7 +345,7 @@ class io_OneDrive extends io_api
 		return true;
 	}
 	//获取缩略图
-	public function getThumb($path,$width,$height,$original=0,$returnurl){
+	public function getThumb($path,$width,$height,$original=0,$returnurl=false){
 		global $_G;
 		$enable_cache=true; //是否启用缓存
 		if($original || $width<1 || $height<1){
@@ -399,7 +399,7 @@ class io_OneDrive extends io_api
 		}
 		if($data){
 			$targetpath = dirname($_G['setting']['attachurl'].'./'.$target);
-			dmkdir($targetpath,false);
+			dmkdir($targetpath);
 			if($enable_cache) file_put_contents($_G['setting']['attachdir'].'./'.$target,$data);
 			
 			$file=$_G['setting']['attachdir'].'./'.$target;
@@ -472,6 +472,20 @@ class io_OneDrive extends io_api
 		}catch(Exception $e){
 			return array('error'=>$e->getMessage());
 		}
+	}
+	
+	/*获取目录信息*/
+	public function getContains($path,$suborg=false,$contains=array('size'=>0,'contain'=>array(0,0))){
+		foreach(self::listFiles($path) as $value){
+			if($value['type']=='folder'){
+				$contains=self::getContains($value['path'],false,$contains);
+				$contains['contain'][1]+=1;
+			}else{
+				$contains['size']+=$value['size'];
+				$contains['contain'][0]+=1;
+			}
+		}
+		return $contains;
 	}
 	/*
 	 *获取文件的meta数据
@@ -673,7 +687,7 @@ class io_OneDrive extends io_api
 		return $return;
 	}
 	//打包下载文件
-	public function zipdownload($paths,$filename){
+	public function zipdownload($paths,$filename=''){
 		global $_G;
 		$paths=(array)$paths;
 		set_time_limit(0);
@@ -727,7 +741,7 @@ class io_OneDrive extends io_api
 	}
 	
 	//下载文件
-	public function download($paths,$filename){
+	public function download($paths,$filename=''){
 		global $_G;
 		$paths=(array)$paths;
 		if(count($paths)>1){

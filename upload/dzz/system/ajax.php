@@ -226,36 +226,168 @@ if($do=='newlink'){
 	}
 }elseif($do=='property'){
 	
-	$icoid=rawurldecode($_GET['icoid']);
 	
-	$icoarr=IO::getMeta($icoid);
-	$perm=perm_check::checkperm('rename',$icoarr);
-	if($icoarr['error']) showmessage($icoarr['error']);
-	if(submitcheck('propertysubmit')){
-		$return=array();
-		if(!$icoarr['bz']){
-			$ret=0;
-			$name=str_replace('...','',getstr(io_dzz::name_filter($_GET['name']),80));
-			if($perm && $icoarr['name']!=$name){
-				C::t('icos')->update_by_name($icoid,$name);
-				$ret=1;
+	
+	$icoid=rawurldecode($_GET['icoid']);
+	$flag='file';
+	$info=array();
+	if(strpos($icoid,'fid_')!==false){//目录属性
+		
+		$path=trim(str_replace('fid_','',$icoid));
+		$fid=intval($path);
+		$flag='file';
+		if($icoid=DB::result_first("select icoid from %t where type='folder' and oid=%d",array('icos',$fid))){
+			$folder=C::t('folder')->fetch_by_fid($fid);
+		}elseif($fid){
+			$folder=C::t('folder')->fetch_by_fid($fid);
+			
+		}else{
+			$icoarr=IO::getMeta($path);
+			$folder=IO::getFolderByIcosdata($icoarr);
+		}
+		$info['name']=getstr($folder['fname'],30);
+		$info['ftype']=getFileTypeName('folder','');
+		if($folder['flag']=='organization'){
+			if($folder['pfid']>0) $info['ftype']=lang('type_department');
+			else $info['ftype']=lang('type_organization');
+		}
+		//获取路径
+		if($folder['bz'] && $folder['bz']!='dzz'){
+			$bzarr=explode(':',$folder['path']);
+			$info['path']=$folder['path'];
+			$info['icon']='dzz/images/default/system/folder.png';
+			$contains=IO::getContains($folder['path']);
+			$info['size']=lang('property_info_size',array('fsize'=>formatsize($contains['size']),'size'=>$contains['size']));
+			$info['fdateline']=$folder['dateline']>0?dgmdate($folder['dateline'],'Y-m-d H:i:s'):'-';
+			$info['contain']=lang('property_info_contain',array('filenum'=>$contains['contain'][0],'foldernum'=>$contains['contain'][1]));
+				
+			//$info['size']='';//lang('property_info_size',array('fsize'=>$icoarr['size']>0?formatsize($icoarr['size']):$icoarr['size'],'size'=>$icoarr['size']));
+		}else{
+			$arr=C::t('folder')->getPathByPfid($fid);
+			$patharr=array();
+			while($arr){
+				$patharr[]=array_pop($arr);
 			}
-			if($icoarr['type']=='folder' && $icoarr['gid']>0){
-				$ismoderator=0;
-				if((C::t('organization_admin')->ismoderator_by_uid_orgid($icoarr['gid'],$_G['uid']) || $_G['adminid']==1) ){//是部门管理员或系统管理员
+			$info['path']=implode('/',$patharr);
+			
+			if($folder['gid']>0 && $folder['flag']=='folder'){
+				if((C::t('organization_admin')->ismoderator_by_uid_orgid($folder['gid'],$_G['uid']) || $_G['adminid']==1) ){//是部门管理员或系统管理员
 					$ismoderator=1;	
-				}elseif(($pfolder=C::t('folder')->fetch_by_fid($icoarr['pfid'])) && (perm_binPerm::havePower('edit2',$pfolder['perm1']) || (perm_binPerm::havePower('edit1',$pfolder['perm1']) && $icoarr['uid']==$_G['uid']))){//上级目录
+				}elseif(($pfolder=C::t('folder')->fetch_by_fid($folder['pfid'])) && (perm_binPerm::havePower('edit2',$pfolder['perm1']) || (perm_binPerm::havePower('edit1',$pfolder['perm1']) && $folder['uid']==$_G['uid']))){//上级目录
 					$ismoderator=1;	
 				}
 				if($ismoderator){
-					C::t('folder')->update($icoarr['fid'],array('perm'=>intval($_GET['perm'])));
-					$ret=1;
+					$folder=C::t('folder')->fetch($icoarr['oid']);
+					$permtitle=perm_binPerm::getGroupTitleByPower($icoarr['perm1']);
+					$permarr=perm_binPerm::groupPowerPack();
 				}
 			}
-			if($ret){
-				$return=C::t('icos')->fetch_by_icoid($icoid);
-				$return['msg']='success';
+			if($folder['gid']>0){
+				$permtitle=perm_binPerm::getGroupTitleByPower($folder['perm1']);
+				if(file_exists('dzz/images/default/system/folder-'.$permtitle['flag'].'.png')){
+					$folder['icon']='dzz/images/default/system/folder-'.$permtitle['flag'].'.png';
+				}else{
+					$folder['icon']='dzz/images/default/system/folder-read.png';
+				}
+			}else{
+				$folder['icon']='dzz/images/default/system/folder.png';
 			}
+					
+			$info['icon']=$folder['icon'];
+			$contains=IO::getContains($fid);
+		
+			$info['size']=lang('property_info_size',array('fsize'=>formatsize($contains['size']),'size'=>$contains['size']));
+			$info['contain']=lang('property_info_contain',array('filenum'=>$contains['contain'][0],'foldernum'=>$contains['contain'][1]));
+				
+				
+		}
+		$info['username']=$folder['username'];
+		$info['uid']=$folder['uid'];
+		$info['fdateline']=$folder['dateline']?dgmdate($folder['dateline'],'Y-m-d'):'';
+		
+	
+	}elseif(strpos($icoid,',')!==false){//多选属性
+		$flag='files';
+		$dpaths=explode(',',$icoid);
+		$icoids=array();
+		foreach($dpaths as $dpath){
+			$icoids[]=dzzdecode($dpath);
+		}
+		/*$icoarr=IO::getMeta($icoids[0]);
+		if($icoarr['error']) showmessage($icoarr['error']);*/
+		//获取路径
+			$size=0;
+			$contents=array(0,0);
+			$types=array();
+			foreach($icoids as $icoid){	
+				if(!$icoarr=IO::getMeta($icoid)) continue;
+				switch($icoarr['type']){
+					case 'shortcut':
+						$contents[0]+=1;
+						break;
+					case 'folder':
+						$fid=(empty($icoarr['bz']) || $icoarr['bz']=='dzz')?intval($icoarr['oid']):$icoarr['path'];
+						$contains=IO::getContains($fid);
+						$size+=intval($contains['size']);
+						$contents[0]+=$contains['contain'][0];
+						$contents[1]+=$contains['contain'][1]+1;
+						
+						break;
+					case 'dzzdoc':
+						$contents[0]+=1;
+						break;
+					case 'link':
+						$contents[0]+=1;
+						break;
+					case 'video':
+						$contents[0]+=1;
+						break;
+					case 'app':
+						$contents[0]+=1;
+						break;	
+					default:
+						$size+=$icoarr['size'];
+						$contents[0]+=1;
+						break;
+				}
+			}
+			$info['size']=lang('property_info_size',array('fsize'=>formatsize($size),'size'=>$size));
+			$info['contain']=lang('property_info_contain',array('filenum'=>$contents[0],'foldernum'=>$contents[1]));
+		
+		
+		
+	}else{ //单文件（目录）属性
+	
+		$icoid=dzzdecode($_GET['icoid']);
+		$icoarr=IO::getMeta($icoid);
+		if($icoarr['error']) showmessage($icoarr['error']);
+		$perm=perm_check::checkperm('rename',$icoarr);
+		
+		if(submitcheck('propertysubmit')){
+			$return=array();
+			if(empty($icoarr['bz']) || $icoarr['bz']=='dzz'){
+				$ret=0;
+				$name=str_replace('...','',getstr(io_dzz::name_filter($_GET['name']),80));
+				if($perm && $icoarr['name']!=$name){
+					C::t('icos')->update_by_name($icoid,$name);
+					$ret=1;
+				}
+				if($icoarr['type']=='folder' && $icoarr['gid']>0){
+					$ismoderator=0;
+					if((C::t('organization_admin')->ismoderator_by_uid_orgid($icoarr['gid'],$_G['uid']) || $_G['adminid']==1) ){//是部门管理员或系统管理员
+						$ismoderator=1;	
+					}elseif(($pfolder=C::t('folder')->fetch_by_fid($icoarr['pfid'])) && (perm_binPerm::havePower('edit2',$pfolder['perm1']) || (perm_binPerm::havePower('edit1',$pfolder['perm1']) && $icoarr['uid']==$_G['uid']))){//上级目录
+						$ismoderator=1;	
+					}
+					if($ismoderator){
+						C::t('folder')->update($icoarr['fid'],array('perm'=>intval($_GET['perm'])));
+						$ret=1;
+					}
+				}
+				if($ret){
+					$return=C::t('icos')->fetch_by_icoid($icoid);
+					$return['msg']='success';
+				}
 		}else{
 			$name=io_dzz::name_filter(trim($_GET['name']));
 			if($icoarr['name']!=$name){
@@ -267,96 +399,105 @@ if($do=='newlink'){
 				}
 			}
 		}
+	
 		showmessage('do_success',$refer.'',$return,array());
 	}else{
-		
-		$info=array();
-		
-		$info['icon']=$icoarr['img']?$icoarr['img']:geticonfromext($icoarr['ext'],$icoarr['type']);
-		$info['name']=getstr($icoarr['name'],30);
-		$info['ftype']=$icoarr['ftype'];
-		
-		//获取路径
-		if($icoarr['bz']){
-			$bzarr=explode(':',$icoarr['path']);
-			$info['path']=$icoarr['path'];
-			$info['size']=lang('property_info_size',array('fsize'=>$icoarr['size']>0?formatsize($icoarr['size']):$icoarr['size'],'size'=>$icoarr['size']));
-		}else{
+			$info['icon']=$icoarr['img']?$icoarr['img']:geticonfromext($icoarr['ext'],$icoarr['type']);
+			$info['name']=getstr($icoarr['name'],30);
+			$info['ftype']=$icoarr['ftype'];
 			
-			$arr=getPathByPfid($icoarr['pfid']);
-			$patharr=array();
-			while($arr){
-				$patharr[]=array_pop($arr);
-			}
-			$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-			
-			switch($icoarr['type']){
-				case 'shortcut':
-					$icoarr['bz']=$icoarr['tdata']['bz'];
-					$icoarr['path']=$icoarr['tdata']['path'];
-					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-					if($icoarr['bz']){
-						$info['path']=$icoarr['path'];
-					}else{
-						$arr1=getPathByPfid($icoarr['tdata']['pfid']);
+			//获取路径
+			if($icoarr['bz'] && $icoarr['bz']!='dzz'){
+				$bzarr=explode(':',$icoarr['path']);
+				$info['path']=$icoarr['path'];
+				$contains=IO::getContains($icoarr['path']);
+				if($icoarr['type']=='folder'){
+					$contains=IO::getContains($icoarr['path']);
+				}else{
+					$contains=array('size'=>$icoarr['size'],'contain'=>array(1,0));
+				}
+				$info['size']=lang('property_info_size',array('fsize'=>formatsize($contains['size']),'size'=>$contains['size']));
+				$info['contain']=lang('property_info_contain',array('filenum'=>$contains['contain'][0],'foldernum'=>$contains['contain'][1]));
+		
+		
+			}else{
+				$arr=C::t('folder')->getPathByPfid($icoarr['pfid']);
+				//print_r($arr);exit('ddd');
+				$patharr=array();
+				while($arr){
+					$patharr[]=array_pop($arr);
+				}
+				$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
+				
+				switch($icoarr['type']){
+					case 'shortcut':
+						$icoarr['bz']=$icoarr['tdata']['bz'];
+						$icoarr['path']=$icoarr['tdata']['path'];
+						$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
+						if($icoarr['bz']){
+							$info['path']=$icoarr['path'];
+						}else{
+							$arr1=C::t('folder')->getPathByPfid($icoarr['tdata']['pfid']);
+							
+							$patharr1=array();
+							while($arr1){
+								$patharr1[]=array_pop($arr1);
+							}
+							$info['path']=implode('/',$patharr1).'/'.$icoarr['tdata']['name'];
+						}
+						$info['size']='-';
+						if($icoarr['tdata']['type']=='folder'){
+							$info['icon']='dzz/images/default/system/folder.png';
+						}
+						break;
+					case 'folder':
+						if($icoarr['gid']>0){
+							if((C::t('organization_admin')->ismoderator_by_uid_orgid($icoarr['gid'],$_G['uid']) || $_G['adminid']==1) ){//是部门管理员或系统管理员
+								$ismoderator=1;	
+							}elseif(($pfolder=C::t('folder')->fetch_by_fid($icoarr['pfid'])) && (perm_binPerm::havePower('edit2',$pfolder['perm1']) || (perm_binPerm::havePower('edit1',$pfolder['perm1']) && $icoarr['uid']==$_G['uid']))){//上级目录
+								$ismoderator=1;	
+							}
+							if($ismoderator){
+								$folder=C::t('folder')->fetch($icoarr['oid']);
+								$permtitle=perm_binPerm::getGroupTitleByPower($icoarr['perm1']);
+								$permarr=perm_binPerm::groupPowerPack();
+							}
+						}
 						
-						$patharr1=array();
-						while($arr1){
-							$patharr1[]=array_pop($arr1);
-						}
-						$info['path']=implode('/',$patharr1).'/'.$icoarr['tdata']['name'];
-					}
-					$info['size']='-';
-					if($icoarr['tdata']['type']=='folder'){
-						$info['icon']='dzz/images/default/system/folder.png';
-					}
-					break;
-				case 'folder':
-					if($icoarr['gid']>0){
-						if((C::t('organization_admin')->ismoderator_by_uid_orgid($icoarr['gid'],$_G['uid']) || $_G['adminid']==1) ){//是部门管理员或系统管理员
-							$ismoderator=1;	
-						}elseif(($pfolder=C::t('folder')->fetch_by_fid($icoarr['pfid'])) && (perm_binPerm::havePower('edit2',$pfolder['perm1']) || (perm_binPerm::havePower('edit1',$pfolder['perm1']) && $icoarr['uid']==$_G['uid']))){//上级目录
-							$ismoderator=1;	
-						}
-						if($ismoderator){
-							$folder=C::t('folder')->fetch($icoarr['oid']);
-							$permtitle=perm_binPerm::getGroupTitleByPower($icoarr['perm1']);
-							$permarr=perm_binPerm::groupPowerPack();
-						}
-					}
-					
-					$info['icon']=$icoarr['img']?$icoarr['img']:'dzz/images/default/system/folder.png';
-					$contains=getContainsByFid($icoarr['oid']);
-					$info['size']=lang('property_info_size',array('fsize'=>formatsize($contains['size']),'size'=>$contains['size']));
-					$info['contain']=lang('property_info_contain',array('filenum'=>$contains['contain'][0],'foldernum'=>$contains['contain'][1]));
-					break;
-				case 'dzzdoc':
-					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-					$info['size']=lang('property_info_size',array('fsize'=>formatsize($icoarr['size']),'size'=>$icoarr['size']));
-					break;
-				case 'link':
-					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-					$info['size']='-';
-					break;
-				case 'video':
-					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-					$info['size']='-';
-					break;
-				case 'app':
-					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-					$info['size']='-';
-					break;	
+						$info['icon']=$icoarr['img']?$icoarr['img']:'dzz/images/default/system/folder.png';
+						$contains=IO::getContains($icoarr['oid']);
+						$info['size']=lang('property_info_size',array('fsize'=>formatsize($contains['size']),'size'=>$contains['size']));
+						$info['contain']=lang('property_info_contain',array('filenum'=>$contains['contain'][0],'foldernum'=>$contains['contain'][1]));
+						break;
+					case 'dzzdoc':
+						$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
+						$info['size']=lang('property_info_size',array('fsize'=>formatsize($icoarr['size']),'size'=>$icoarr['size']));
+						break;
+					case 'link':
+						$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
+						$info['size']='-';
+						break;
+					case 'video':
+						$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
+						$info['size']='-';
+						break;
+					case 'app':
+						$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
+						$info['size']='-';
+						break;	
+							
+					default:
+						$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
+						$info['size']=lang('property_info_size',array('fsize'=>formatsize($icoarr['size']),'size'=>$icoarr['size']));
 						
-				default:
-					$info['path']=implode('/',$patharr).'/'.$icoarr['name'];
-					$info['size']=lang('property_info_size',array('fsize'=>formatsize($icoarr['size']),'size'=>$icoarr['size']));
-					
+				}
 			}
+			$info['username']=$icoarr['username'];
+			$info['uid']=$icoarr['uid'];
+			$info['fdateline']=($icoarr['fdateline']);
 		}
-		$info['username']=$icoarr['username'];
-		$info['uid']=$icoarr['uid'];
-		$info['fdateline']=($icoarr['fdateline']);
 	}
+	
 }elseif($do=='chmod'){
 
 	$path=rawurldecode($_GET['path']);

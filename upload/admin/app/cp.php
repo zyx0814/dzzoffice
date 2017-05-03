@@ -28,7 +28,7 @@ if ($do == 'export') {//应用导出
 	unset($app['dateline']);
 	$apparray = array();
 	if ($app['identifier']) {
-		$entrydir = DZZ_ROOT . './dzz/' . $app['identifier'];
+		$entrydir = DZZ_ROOT . './dzz/' . str_replace(':','/',$app['identifier']);
 
 		if (file_exists($entrydir . '/install.php')) {
 			$app['extra']['installfile'] = 'install.php';
@@ -51,7 +51,7 @@ if ($do == 'export') {//应用导出
 	}
 	$apparray['app'] = $app;
 	$apparray['version'] = strip_tags($_G['setting']['version']);
-	exportdata('Dzz! app', $app['identifier'] ? $app['identifier'] : random(5), $apparray);
+	exportdata('Dzz! app', $app['identifier'] ? str_replace(':','_',$app['identifier']) : random(5), $apparray);
 	exit();
 
 } elseif ($do == 'import') {//导入应用
@@ -60,13 +60,13 @@ if ($do == 'export') {//应用导出
 	} else {
 		$apparray = getimportdata('Dzz! app');
 		if ($apparray['app']['identifier']) {
-			if (!is_dir(DZZ_ROOT . './dzz/' . $apparray['app']['identifier'])) {
+			if (!is_dir(DZZ_ROOT . './dzz/' . str_replace(':','/',$apparray['app']['identifier']))) {
 				showmessage('list_cp_Application_directory_exist');
 			}
 			$extra = unserialize($apparray['app']['extra']);
 			$filename = $extra['installfile'];
 			if (!empty($filename) && preg_match('/^[\w\.]+$/', $filename)) {
-				$filename = DZZ_ROOT . './dzz/' . $$apparray['app']['identifier'] . '/' . $filename;
+				$filename = DZZ_ROOT . './dzz/' . str_replace(':','/',$apparray['app']['identifier']) . '/' . $filename;
 				if (file_exists($filename)) {
 					@include_once $filename;
 				} else {
@@ -93,8 +93,8 @@ if ($do == 'export') {//应用导出
 		showmessage('list_cp_Application_delete');
 	}
 	if ($app['identifier']) {
-		$entrydir = DZZ_ROOT . './dzz/' . $app['identifier'];
-		$file = $entrydir . '/dzz_app_' . $value['identifier'] . '.xml';
+		$entrydir = DZZ_ROOT . './dzz/' . str_replace(':','/',$app['identifier']);
+		$file = $entrydir . '/dzz_app_' . str_replace(':','_',$app['identifier']) . '.xml';
 		if (!file_exists($file)) {
 			$apparray['disablefile'] = $app['extra']['disablefile'];
 			$apparray['app']['version'] = $app['version'];
@@ -103,7 +103,7 @@ if ($do == 'export') {//应用导出
 			$apparray = getimportdata('Dzz! app');
 		}
 		if (!empty($apparray['disablefile']) && preg_match('/^[\w\.]+$/', $apparray['disablefile'])) {
-			$filename = entrydir . '/' . $apparray['disablefile'];
+			$filename = $entrydir . '/' . $apparray['disablefile'];
 			if (file_exists($filename)) {
 				@include $filename;
 			} else {
@@ -127,8 +127,8 @@ if ($do == 'export') {//应用导出
 	}
 	$finish = FALSE;
 	if ($app['identifier']) {
-		$entrydir = DZZ_ROOT . './dzz/' . $app['identifier'];
-		$file = $entrydir . '/dzz_app_' . $value['identifier'] . '.xml';
+		$entrydir = DZZ_ROOT . './dzz/' . str_replace(':','/',$app['identifier']);
+		$file = $entrydir . '/dzz_app_' . str_replace(':','_',$app['identifier']) . '.xml';
 		if (!file_exists($file)) {
 			$apparray['app']['extra']['enablefile'] = $app['extra']['enablefile'];
 			$apparray['app']['version'] = $app['version'];
@@ -137,7 +137,7 @@ if ($do == 'export') {//应用导出
 			$apparray = getimportdata('Dzz! app');
 		}
 		if (!empty($apparray['app']['extra']['enablefile']) && preg_match('/^[\w\.]+$/', $apparray['app']['extra']['enablefile'])) {
-			$filename = entrydir . '/' . $apparray['app']['extra']['enablefile'];
+			$filename = $entrydir . '/' . $apparray['app']['extra']['enablefile'];
 			if (file_exists($filename)) {
 				@include $filename;
 			} else {
@@ -157,17 +157,17 @@ if ($do == 'export') {//应用导出
 } elseif ($do == 'install') {//安装应用
 	$finish = FALSE;
 	$dir = $_GET['dir'];
-	$xmlfile = 'dzz_app_' . $dir . '.xml';
-	$importfile = DZZ_ROOT . './dzz/' . $dir . '/' . $xmlfile;
+	$xmlfile = 'dzz_app_' . str_replace(':','_',$dir) . '.xml';
+	$importfile = DZZ_ROOT . './dzz/' . str_replace(':','/',$dir) . '/' . $xmlfile;
 	if (!file_exists($importfile)) {
-		showmessage('list_cp_Application_allocation' . '：' . $xmlfile, $_GET['refer']);
+		showmessage('list_cp_Application_allocation' . ':' . $xmlfile, $_GET['refer']);
 	}
 	$importtxt = @implode('', file($importfile));
 	$apparray = getimportdata('Dzz! app');
 	$filename = $apparray['app']['extra']['installfile'];
 	$request_uri = ADMINSCRIPT . '?mod=app';
 	if (!empty($filename) && preg_match('/^[\w\.]+$/', $filename)) {
-		$filename = DZZ_ROOT . './dzz/' . $dir . '/' . $filename;
+		$filename = DZZ_ROOT . './dzz/' . str_replace(':','/',$dir) . '/' . $filename;
 		if (file_exists($filename)) {
 			@include_once $filename;
 		} else {
@@ -193,8 +193,8 @@ if ($do == 'export') {//应用导出
 	$request_uri = ADMINSCRIPT . '?mod=app';
 	$msg = lang('application_uninstall_successful');
 	if ($app['identifier']) {
-		$entrydir = DZZ_ROOT . './dzz/' . $app['identifier'];
-		$file = $entrydir . '/dzz_app_' . $app['identifier'] . '.xml';
+		$entrydir = DZZ_ROOT . './dzz/' . str_replace(':','/',$app['identifier']);
+		$file = $entrydir . '/dzz_app_' . str_replace(':','_',$app['identifier']) . '.xml';
 		if (!file_exists($file)) {
 			$apparray['app']['extra']['uninstallfile'] = $app['extra']['uninstallfile'];
 			$apparray['app']['version'] = $app['version'];
@@ -230,8 +230,8 @@ if ($do == 'export') {//应用导出
 	$finish = FALSE;
 	$msg = lang('application_upgrade_successful');
 
-	$entrydir = DZZ_ROOT . './dzz/' . $app['identifier'];
-	$file = $entrydir . '/dzz_app_' . $app['identifier'] . '.xml';
+	$entrydir = DZZ_ROOT . './dzz/' . str_replace(':','/',$app['identifier']);
+	$file = $entrydir . '/dzz_app_' . str_replace(':','_',$app['identifier']) . '.xml';
 	if (!file_exists($file)) {
 		showmessage('list_cp_Application_tautology');
 	}
