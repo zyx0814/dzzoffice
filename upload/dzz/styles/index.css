@@ -51,11 +51,13 @@ height: expression(this.height > 50 && this.width<=this.height ? 50 : true);
 	left: 0;
 	top: 0;
 	width: 100%;
+	z-index:30001
 }
 #ajaxwaitid {
 	position: absolute;
 	right: 0;
 	top: 0;
+	z-index:30002
 }
 .MODAL {
 	background-color: #000;

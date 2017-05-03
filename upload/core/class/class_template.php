@@ -5,7 +5,6 @@ if (!defined('IN_DZZ')) {
 
 class template {
 
-	public $csscurmodules = '';
 	public $replacecode = array('search' => array(), 'replace' => array());
 	public $language = array();
 	public $file = '';
@@ -201,10 +200,6 @@ class template {
 
 	}
 
-	function parse_template_callback_loadsubtemplate_2($matches) {
-		return $this -> loadsubtemplate($matches[2]);
-	}
-
 	function parse_template_callback_languagevar_1($matches) {
 		return $this -> languagevar($matches[1]);
 	}
@@ -359,9 +354,8 @@ class template {
 	function languagevar1($var) {
 		$langvar = lang();
 		if (!isset($langvar[$var])) {
-	 		return '!'.$var.'!';
+	 		return  "'".$var."'";
 		}
-		$jsonencode = json_encode($langvar[$var]);
 		if(is_array($langvar[$var])){
 		  $jsonencode = json_encode($langvar[$var]);
 		}else{
@@ -371,10 +365,10 @@ class template {
 	}
 //	img的src替换
 	function language_img($var) {
-		$var[3] = str_replace(' ','',$var[3]);
-		$str = strrchr(basename($var[3]),'.');
+		$var[3] = trim($var[3]);
+		$ext = strtolower(strrchr(basename($var[3]),'.'));
 		$arr = array('.png','.gif','.jpg','.jpeg','.bmp');
-		if(in_array($str, $arr)){
+		if(in_array($ext, $arr)){
 			$name = $this -> site_operation($var[3]);
 			$src = $this -> check_file_exists($name);
 			if($src){
@@ -389,7 +383,7 @@ class template {
 	}
 //	url的地址替换
 	function language_url($var) {
-		$var = str_replace(' ','',$var);
+		$var = trim($var);
 		$name = $this -> site_operation($var);
 		$src = $this -> check_file_exists($name);
 		if($src){
@@ -399,8 +393,8 @@ class template {
 		}		
 	}
 	function language_linkurl($var) {
-		$var[3] = str_replace(' ','',$var[3]);
-		$link_src = str_replace('?{VERHASH}','',$var[3]);		
+		$var[3] = trim($var[3]);
+		$link_src = preg_replace("/\?.*$/i",'',$var[3]);		
 		$name = $this -> site_operation($link_src);
 		$src = $this -> check_file_exists($name);	
 		if($src){		
@@ -470,17 +464,6 @@ class template {
 		return '{phpcode:' . $type . '/' . (count($this -> phpcode[$type]) - 1) . '}';
 	}
 
-	function loadsubtemplate($file) {
-		$tplfile = template($file, 0, '', 1);
-		$filename = DZZ_ROOT . $tplfile;
-
-		if (($content = @implode('', file($filename))) || ($content = $this -> getphptemplate(@implode('', file(substr($filename, 0, -4) . '.php'))))) {
-			$this -> subtemplates[] = $tplfile;
-			return $content;
-		} else {
-			return '<!-- ' . $file . ' -->';
-		}
-	}
 
 	function getphptemplate($content) {
 		$pos = strpos($content, "\n");
@@ -488,20 +471,6 @@ class template {
 	}
 
 	
-	function cssvtags($param, $content) {
-		global $_G;
-		$modules = explode(',', $param);
-		foreach ($modules as $module) {
-			$module .= '::';
-			//fix notice
-			list($b, $m) = explode('::', $module);
-			if ($b && $b == $_G['basescript'] && (!$m || $m == CURMODULE)) {
-				$this -> csscurmodules .= $content;
-				return;
-			}
-		}
-		return;
-	}
 
 	function transamp($str) {
 		$str = str_replace('&', '&amp;', $str);

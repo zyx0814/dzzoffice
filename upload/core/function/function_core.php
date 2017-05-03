@@ -214,7 +214,7 @@ function url_implode($gets) {
 	}
 	return implode('&', $arr);
 }
-function getstr($string, $length, $in_slashes=0, $out_slashes=0, $bbcode=0, $html=0) {
+function getstr($string, $length=0, $in_slashes=0, $out_slashes=0, $bbcode=0, $html=0) {
 	global $_G;
 
 	$string = trim($string);
@@ -429,7 +429,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0,$ckey_l
 //这种格式，加密时，需要把|分割的每个参数都带上，dzzencode($string,'1|'.getglobal('setting/authkey').'|管理员',$expiry);
 //如果解密时，|隔开的部分使用getglobal函数获取不到值，将会使用原值，如index.php?mod=io&op=getStream&path=***&key=xxxxx|ppppp
 //解密时的key会使用原值 xxxxx|ppppp ;
-function dzzencode($string,$key,$expiry=0,$ckey_length=0){ 
+function dzzencode($string,$key='',$expiry=0,$ckey_length=0){ 
 	$key = md5($key != '' ? $key : getglobal('setting/authkey'));
 	return base64_encode(authcode($string,'ENCODE',$key,$expiry,$ckey_length));
 }

@@ -70,7 +70,7 @@ class perm_binPerm{
 					);
 	}
 	function getMyPower(){//获取用户桌面默认的权限
-		return self::getSumByAction(array('read1','read2','delete1','edit1','download1','download2','copy1','copy2','upload','newtype','folder','link','dzzdoc','video','shortcut','share'));
+		return self::getSumByAction(array('read1','read2','delete1','delete2','edit1','edit2','download1','download2','copy1','copy2','upload','newtype','folder','link','dzzdoc','video','shortcut','share'));
 	}
 	function groupPowerPack(){
 		$data= array('read'         =>array('title' =>lang('read_only'), 'flag'=>'read', 'permitem'=>array('read1','read2'),'tip'=>lang('read_only_state')),

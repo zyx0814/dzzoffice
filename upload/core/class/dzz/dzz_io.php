@@ -110,7 +110,7 @@ class dzz_io
 	
 	//获取文件流；
 	//$path: 路径
-	public function getStream($path,$fop){ 
+	public function getStream($path,$fop=''){ 
 		$path=self::clean($path);
 		$io=self::initIO($path);
 		if($io)	return $io->getStream($path,$fop);
@@ -118,7 +118,7 @@ class dzz_io
 	}
 	//获取文件地址；
 	//$path: 路径
-	function getFileUri($path,$fop){ 
+	function getFileUri($path,$fop=''){ 
 		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getFileUri($path,$fop);
 		else return $path;
@@ -283,11 +283,21 @@ class dzz_io
   
  
   public function download($paths,$filename=''){
+	     $paths=(array)$paths;
 		 $paths=self::clean($paths);
 		 if($io=self::initIO($paths[0]))  $io->download($paths,$filename); 
 		 else return false;
 	 }
-	 
+	//获取目录的统计信息
+	/*
+		return array('size'=>$size,contain=array('filenum','foldersum'));
+	
+	*/
+	 public function getContains($path,$suborg=true){
+		 $path=self::clean($path);
+		 if($io=self::initIO($path)) return $io->getContains($path,$suborg);
+		 else return false;
+	 } 
 	public function getCloud($bz){
 		$bzarr=explode(':',$bz);
 		$cloud=DB::fetch_first("select * from ".DB::table('connect')." where bz='{$bzarr[0]}'");
@@ -409,5 +419,7 @@ class dzz_io
 			dmkdir($targetpath);
 			return $target.date('His').''.strtolower(random(16)).'.'.$ext;
 	 }
+	 
+	
 }
 ?>

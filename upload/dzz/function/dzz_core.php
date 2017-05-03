@@ -274,7 +274,7 @@ function topshowmessage($msg){
 	exit();
 }
 	
-function SpaceSize($size,$gid,$isupdate=0,$uid){
+function SpaceSize($size,$gid,$isupdate=0,$uid=0){
 	//size: 增加的话为正值，减少的话为负值；
 	//gid : 大于零位群组空间，否则为$_G['uid']的空间，
 	//isupdate: 为true，则实际改变空间，否则只是检查是否有空间
@@ -1159,7 +1159,7 @@ function dzz_desktop_init(){
 	}
 }
 
-function getTxtAttachByMd5($message,$filename_title,$ext){
+function getTxtAttachByMd5($message,$filename_title,$ext='dzzdoc'){
 	global $_G;
 	@set_time_limit(0);
 	$filename =date('His').''.strtolower(random(16));
@@ -1234,7 +1234,7 @@ function getTxtAttachByMd5($message,$filename_title,$ext){
 }
 
 
-function checkCopy($icoid=0,$sourcetype='',$iscut=0,$obz,$tbz){
+function checkCopy($icoid=0,$sourcetype='',$iscut=0,$obz='',$tbz=''){
 	global $_G;
 	$copy=1;
 	if($sourcetype=='uid'){
@@ -1345,7 +1345,7 @@ function getDzzPath($attach){
 	return $url;
 }
 
-function geticonfromext($ext,$type){
+function geticonfromext($ext,$type=''){
 	global $_G;
 	$img='dzz/images/extimg/'.strtolower($ext).'.png';
 	if(!is_file(DZZ_ROOT.$img)){

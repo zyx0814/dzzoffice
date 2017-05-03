@@ -51,11 +51,11 @@ function createtable($sql, $dbcharset) {
 	( " ENGINE=$type DEFAULT CHARSET=$dbcharset");
 }
 
-function cron_create($pluginid, $filename, $name, $weekday, $day, $hour, $minute) {
+function cron_create($pluginid, $filename='', $name='', $weekday=-1, $day=-1, $hour=-1, $minute=-1) {
 	if(!ispluginkey($pluginid)) {
 		return false;
 	}
-	$dir = DZZ_ROOT.'./dzz/'.$pluginid.'/cron';
+	$dir = DZZ_ROOT.'./dzz/'.str_replace(':','/',$pluginid).'/cron';
 	if(!file_exists($dir)) {
 		return false;
 	}
@@ -108,7 +108,7 @@ function cron_delete($pluginid) {
 	if(!ispluginkey($pluginid)) {
 		return false;
 	}
-	$dir = DZZ_ROOT.'./dzz/'.$pluginid.'/cron';
+	$dir = DZZ_ROOT.'./dzz/'.str_replace(':','/',$pluginid).'/cron';
 	if(!file_exists($dir)) {
 		return false;
 	}
@@ -125,11 +125,11 @@ function cron_delete($pluginid) {
 	return $count;
 }
 function isplugindir($dir) {
-	return preg_match("/^[a-z]+[a-z0-9_]*\/$/", $dir);
+	return preg_match("/^[a-z]+[:a-z0-9_]*\/$/", $dir);
 }
 
 function ispluginkey($key) {
-	return preg_match("/^[a-z]+[a-z0-9_]*$/i", $key);
+	return preg_match("/^[a-z]+[a-z0-9_:]*$/i", $key);
 }
 
 function dir_writeable($dir) {

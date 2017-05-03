@@ -12,6 +12,7 @@
 $lang=array (
 
   'username' => '姓名',
+  'nickname'=>'用户名',
   'login_guest' => '没有帐号？<a href="user.php?mod={$_G[setting][regname]}">{$_G[setting][reglinkname]}</a>',
   'faq' => '帮助',
   'Modify_the_picture' => '修改头像',
@@ -141,7 +142,6 @@ $lang=array (
   'terms_service' => '服务条款',
   'merge_bound' => '并绑定',
   'edit_data' => '编辑资料',
-  'not_choose_agencies_departments' => '未选择机构和部门',
   'user_change_lang'=>'更换语言需要重新加载，<a href="#" onclick="window.location.reload()">立即重新加载</a>',
 );
 

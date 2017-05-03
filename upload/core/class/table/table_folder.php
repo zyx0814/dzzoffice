@@ -75,6 +75,18 @@ class table_folder extends dzz_table
 		}
 		return $fids;
 	}
+	public function getPathByPfid($pfid,$arr=array(),$count=0){
+		if($count>100) return $arr; //防止死循环；
+		else $count++;
+		if($value=DB::fetch_first("select pfid,fid,fname from ".DB::table('folder')." where fid='{$pfid}'")){
+			$arr[$value['fid']]=$value['fname'];
+			if($value['pfid']>0 && $value['pfid']!=$pfid) $arr=self::getPathByPfid($value['pfid'],$arr,$count);
+		}
+		//$arr=array_reverse($arr);
+	
+		return $arr;
+		
+	}
 	public function delete_by_fid($fid,$force){ //删除目录
 		$folder=self::fetch($fid);
 		if(!defined('IN_ADMIN') && $folder['flag']!='folder'){
@@ -153,6 +165,45 @@ class table_folder extends dzz_table
 		}
 		if($count) return DB::result_first("SELECT COUNT(*) FROM %t WHERE $wheresql",array($this->_table,$pfid));
 		else return DB::fetch_all("SELECT * FROM %t WHERE $wheresql",array($this->_table,$pfid),'fid');
+	}
+	
+	//获取目录的信息(总大小，文件数和目录数);
+	public function getContainsByFid($fid,$suborg=false){
+		static $contains=array('size'=>0,'contain'=>array(0,0));
+		if(!$folder=parent::fetch($fid)) return $contains;
+		$fids[]=$fid;
+		if($suborg && ($folder['flag']=='organization')){
+			foreach(DB::fetch_all("select fid from %t where flag='organization' and pfid=%d ",array($this->_table,$fid)) as $value){
+				$fids[]=$value['fid'];
+			}
+		}
+		if(empty($folder['default']) && $folder['flag']!='organization'){//没有生成icos表的 单独查出来
+			foreach(DB::fetch_all("select fid from %t where `default`='' and pfid=%d ",array($this->_table,$fid)) as $value){
+				$fids[]=$value['fid'];
+			}
+		}
+		foreach($fids as $fid){
+			foreach(C::t('icos')->fetch_all_by_pfid($fid) as $value){
+				$contains['size']+=$value['size'];
+				if($value['type']=='folder'){
+					$contains['contain'][1]+=1;
+					self::getContainsByFid($value['oid']);
+				}else{
+					$contains['contain'][0]+=1;
+				}
+			}
+		}
+		return $contains;
+	}
+	//返回自己和上级目录fid数组；
+	public function getTopFid($fid,$i=0,$arr=array()){
+		$arr[]=$fid;
+		if($i>100) return $arr; //防止死循环；
+		else $i++;
+		if($pfid=DB::result_first("select pfid from ".DB::table('folder')." where fid='{$fid}'")){
+			if($pfid!=$fid) $arr=getTopFid($pfid,$i,$arr);
+		}
+		return $arr;
 	}
 	
 }
