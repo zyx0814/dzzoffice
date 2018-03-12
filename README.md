@@ -3,7 +3,7 @@
 ### 官方网站:http://dzzoffice.com
 ### 演示地址:http://demo.dzzoffice.com
 
-> 预计beta版发布时间：2018年3月19日
+> 预计beta版发布时间：2018年3月下旬
 
 ### DzzOffice 介绍：
 
