@@ -1,0 +1,78 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all"> 
+<link href="static/select2/select2.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/select2/select2-bootstrap.css?{VERHASH}" rel="stylesheet" media="all">
+
+<link rel="stylesheet" href="static/css/checkbox.css">
+<link href="static/css/app_manage.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/header.js"></script>	
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix" style="border-top:1px solid #FFF">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>	
+	<div class="bs-main-container">
+		<div class="main-header clearfix">
+			<h4 class="main-header-title navbar-left"><a href="{BASESCRIPT}?mod=appmarket">返回</a>&nbsp;&nbsp;|&nbsp;&nbsp;{lang Install_and_uninstall}&nbsp;&nbsp;/&nbsp;&nbsp;{lang import_type_app}</h4> 
+			<div  class="button_add_content">
+				<a href="{BASESCRIPT}?mod=appmarket&op=edit&do=add" id="button_add1" title="{lang add_app}" class="hide">+</a>				
+				<a href="{BASESCRIPT}?mod=appmarket&op=cp&do=import" id="button_add2" class="hide" title="{lang import_type_app}" style="font-size:20px ;"><span class="glyphicon glyphicon-download-alt"></span></a>				
+				<a href="javascript:;" class="" id="button_add">+</a>				
+			</div>
+		</div>
+		<div class="main-content clearfix" style="padding:25px;border-top:1px solid #FFF">
+			<form id="importform" name="importform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=appmarket&op=cp&do=import" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="importsubmit" value="true" />
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+				<dl>
+					<dt>{lang choose_import_way}</dt>
+					<dd class="clearfix">
+						<label class="radio radio-inline"><input type="radio" name="importtype" value="file" checked="checked" onclick="document.getElementById('importfile').style.display='';document.getElementById('importtxt').style.display='none';" />{lang uploading_files}</label>
+						<label class="radio radio-inline"><input type="radio" name="importtype" value="txt"  onclick="document.getElementById('importfile').style.display='none';document.getElementById('importtxt').style.display='';" />{lang import_paste_text}</label>
+					</dd>
+				</dl>
+				<dl id="importfile">
+					<dt>{lang import_upload}</dt>
+					<dd class="clearfix"><input type="file" class="form-control" name="importfile" style="padding:5px;" /></dd>
+				</dl>
+				<dl id="importtxt" style="display:none">
+					<dt>{lang import_paste_data}：</dt>
+					<dd class="clearfix"><textarea type="textarea" class="form-control" style="width:80%;" name="importtxt" rows="5"></textarea></dd>
+				</dl>
+				<input type="submit" class="btn btn-primary" value="{lang submit}" style="padding:6px 25px" />
+			</form>
+
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	jQuery('#button_add').click(function(){
+		if(jQuery("#button_add1").hasClass('hide')){
+			jQuery("#button_add").html("×");
+			jQuery("#button_add1").removeClass("hide");
+			jQuery("#button_add2").removeClass("hide");
+			jQuery("#button_add1").stop().animate({top:"-124px"},500);
+			jQuery("#button_add2").stop().animate({top:"-62px"},500);
+		}else{
+			jQuery("#button_add").html("＋");
+			jQuery("#button_add1").stop().animate({top:"0px"},500);
+			jQuery("#button_add2").stop().animate({top:"0px"},500);
+			setTimeout(function(){
+				jQuery("#button_add1").addClass("hide");
+				jQuery("#button_add2").addClass("hide");
+			},500)
+			
+		}
+	});
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

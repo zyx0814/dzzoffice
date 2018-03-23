@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>外部分享</title>
+    <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="{$_G['siteurl']}static/css/checkbox.css">
+    <script type="text/javascript" src="static/jquery/jquery.min.js"></script>
+    <style>
+       body{
+		background-color: #f2f2f2;
+	}
+	.shares-list.container{
+		margin-top: 40px;
+	}
+		.panel-default>.panel-heading{
+			background-color:#2196f3 ;
+			color: #fff;
+			border: 1px solid #2196f3;
+		}
+		.panel-heading{
+			padding: 15px;
+		}
+		.ex-listname{
+			position: relative;
+			width: 50%;
+			float: left;
+		}
+		.ex-listncheck{
+			position: relative;
+			display: inline-block;
+		}
+		.ex-listname .ex-checked{
+			padding-left: 35px;
+		}
+		.ex-checked{
+			display: none;
+		}
+		.ex-allchecked{
+			display: none;
+		}
+		.ex-listname .ex-name{
+			padding-left: 35px;
+		}
+		.ex-listname,.ex-size,.ex-type,.ex-data{
+			display: inline-block;
+		}
+		.ex-listtop .ex-size{
+			width: 10%;
+		}
+		.ex-listtop .ex-type{
+			width: 18%;
+		}
+		.ex-listtop .ex-data{
+			width: 20%;
+		}
+		.ex-listtop{
+			height: 45px;
+			line-height: 2;
+			border-bottom: 1px solid #eee;
+			overflow: hidden;
+		}
+		.imgMenu {
+		    position: absolute;
+		    top: 15px;
+		    left: 35px;
+		}
+		.folder-img {
+		    width: 30px;
+		    height: 35px;
+		}
+		.ex-file01{
+			position: relative;
+			padding: 15px;
+			line-height: 2.5;
+			border-bottom: 1px solid #eee;
+			cursor: pointer;
+		}
+		.ex-file01:hover{
+			background-color: #fafafa;
+		}
+		.ex-file01 .ex-filename .checkbox-custom{
+			left: 20px;
+			top: 15px;
+		}
+		.ex-filetitle{
+			padding-left:70px ;
+		}
+		.ex-filename,.ex-filesize,.ex-fileimg,.ex-filedata{
+			display: inline-block;
+		}
+		.ex-file01 .ex-filename{
+			width: 50%;
+		}
+		.ex-file01 .ex-filesize{
+			width: 10%;
+		}
+		.ex-file01 .ex-fileimg{
+			width: 18%;
+		}
+		.ex-file01 .ex-filedata{
+			width: 20%;
+		}
+		.ex-filename .ex-save{
+			padding-right: 10px;
+			padding-top: 10px;
+			color: #2196f3;
+			display: none;
+		}
+		.ex-file01:hover .ex-filename .ex-save{
+			display: inline;
+		}
+		.shares-list .panel-body{
+			border: 1px solid #ddd;
+			padding: 20px;
+			border-bottom-left-radius: 4px;
+			border-bottom-right-radius: 4px;
+		}
+		.ex-fileclick{
+			background-color: #fafafa;
+		}
+		.btn{
+			padding: 5px 20px;
+		}
+		.radio-custom input[type="radio"], .checkbox-custom input[type="checkbox"]{
+			margin-top: 10px;
+		}
+    </style>
+</head>
+<body>
+<div class="container shares-list">
+    <!--面板开始-->
+    <div class="panel panel-default" style="border: none;">
+        <div class="panel-heading">
+            <h3 class="panel-title">DzzOffice文件分享</h3>
+        </div>
+        <div class="panel-body">
+            <p>全部文件</p>
+            <!--列表开始-->
+            <div class="ex-list">
+                <!--列表头部开始-->
+                <div class="ex-listtop ex-allnormal">
+                    <div class="ex-listname">
+                        <div class="checkbox-custom checkbox-primary">
+                            <input type="checkbox" id="allshare">
+                            <label></label>
+                        </div>
+                       <span class="ex-name">文件名</span>
+                       <div class="ex-checked">
+                        <span>已选中<span class="ex-number">1</span>文件/文件夹</span>
+                        <button type="button" class="btn btn-primary-outline">下载</button>
+                        </div>
+                    </div>
+                   <div class="ex-hide">
+	                    <div class="ex-size">
+	                        <span>大小</span>
+	                    </div>
+	                    <div class="ex-type">
+	                        <span>文件类型</span>
+	                    </div>
+	                    <div class="ex-data">
+	                        <span>修改日期</span>
+	                    </div>
+                    </div>
+                </div>
+                <!--列表头部结束-->
+                <!--列表内容开始-->
+                <div class="ex-filelist">
+                    {loop $shareinfo $val}
+                    <div class="ex-file01" id="$val[rid]">
+                        <div class="ex-filename">
+                            <div class="checkbox-custom checkbox-primary">
+                                <input type="checkbox" class="ex-filechecked">
+                                <label></label>
+                            </div>
+                            <div class="imgMenu">
+                                <img src="{$_G[siteurl]}$val[img]" class="folder-img">
+                            </div>
+                            <div class="ex-filetitle">
+                                <span>$val[name]</span>
+                                <span class="glyphicon glyphicon-save pull-right ex-save downfile" onclick="downfile(this)"></span>
+                            </div>
+
+                        </div>
+                        <div class="ex-filesize">
+                            <span>{eval echo formatsize($val[size]);}</span>
+                        </div>
+                        <div class="ex-fileimg">
+                            <span>{eval echo getFileTypeName($val[type],$val[ext]);}</span>
+                        </div>
+                        <div class="ex-filedata">
+                            <span>{eval echo dgmdate($val[dateline],'Y-m-d H:i');}</span>
+                        </div>
+
+
+                    </div>
+                    {/loop}
+                </div>
+                <!--列表内容结束-->
+            </div>
+            <!--列表结束-->
+        </div>
+    </div>
+    <!--面板结束-->
+</div>
+
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+</body>
+<script type="text/javascript">
+//文件夹全选
+var share = [];
+$(document).on('click','#allshare',function(){
+	var ext = $(this).prop('checked');	
+		$('.ex-file01 input:checkbox').each(function(){
+			if(ext){
+				$(this).prop('checked',true).closest('.ex-file01').addClass('ex-fileclick');
+				var eid = $(this).closest('.ex-file01').attr('id');
+				if($.inArray(eid,share)==-1){
+					share.push(eid);
+				}
+				$(this).closest('.ex-file01').find('.ex-filetitle .downfile').remove();
+			}else{
+				$(this).prop('checked',false).closest('.ex-file01').removeClass('ex-fileclick');
+				var eid = $(this).attr('id');
+                var index = $.inArray(eid, share);
+                share.splice(index, 1);
+                $(this).closest('.ex-file01').find('.ex-filetitle').append('<span class="glyphicon glyphicon-save pull-right ex-save downfile" onclick="downfile(this)"></span>');
+			}
+				
+		})
+
+	has_checked();
+});
+
+function has_checked() {
+        if (share.length > 0) {
+            $('.ex-name,.ex-hide').hide();
+            $('.ex-checked').show();
+
+        } else {
+            $('.ex-name,.ex-hide').show();
+            $('.ex-checked').hide();
+        }
+        if(share.length == $('.ex-file01').length){
+        	$('#allshare').prop('checked',true);
+        }else{
+        	$('#allshare').prop('checked',false);
+        }                
+        $('.ex-number').html(share.length+'个');
+    }
+
+
+ $(document).on('click', '.ex-file01 .ex-filechecked', function (event) {
+        var Lchecked = $(this).prop('checked');
+        var _clfile =  $(this).closest('.ex-file01');
+        if (Lchecked) {
+            _clfile.addClass('ex-fileclick');
+            var eid = _clfile.attr('id');
+            if ($.inArray(eid, share) == -1) {
+                share.push(eid);
+            }
+            _clfile.find('.ex-filetitle .downfile').remove();
+        } else {
+            _clfile.removeClass('ex-fileclick');
+            $('#allshare').prop('checked', false);
+            var eid = _clfile.attr('id');
+            var index = $.inArray(eid, share);
+            share.splice(index, 1);
+            _clfile.find('.ex-filetitle').append('<span class="glyphicon glyphicon-save pull-right ex-save downfile" onclick="downfile(this)"></span>');
+        }
+        has_checked();
+        event.stopPropagation();
+    });
+
+</script>
+</html>

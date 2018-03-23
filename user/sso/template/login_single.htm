@@ -1,0 +1,260 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<!--[if lt IE 9]>
+  <script src="static/js/jquery.placeholder.js" type="text/javascript"></script>
+<![endif]-->
+<script src="user/scripts/login.js" type="text/javascript"></script>
+<style>
+html body {
+	overflow: hidden
+}
+.mainContainer{
+	overflow-x:hidden;
+	overflow-y:auto;
+	position:relative;
+	z-index:10;
+	background:url(dzz/images/b.gif);
+}
+
+.modal-content {
+	position: absolute;
+	width: auto;
+	margin: 10px;
+	left: 0;
+	top: 0;
+	right: 0;
+	z-index: 900;
+	text-shadow: 1px 1px 1px #FFF;
+	background-color: RGBA(255,255,255,0.9);
+	
+}
+.ie8 .modal-content {
+	width: 350px;
+	margin: 10px;
+	position: absolute;
+	right: 80px;
+	top: 80px;
+	z-index: 900;
+	left: auto;
+	background-color: RGBA(255,255,255,0.9);
+}
+
+@media (min-width: 510px) {
+.modal-content{
+	width: 350px;
+	position: absolute;
+	right: 80px;
+	top: 80px;
+	z-index: 900;
+	left: auto;
+	background-color: RGBA(255,255,255,0.9);
+}
+}
+@media (min-width: 768px) {
+.modal-content {
+	width: 350px;
+	margin: 0;
+	position: absolute;
+	top: 80px;
+	right: 80px;
+	left: auto;
+	z-index: 900;
+	background-color: RGBA(255,255,255,0.9);
+}
+}
+.form-login .form-group-lg {
+	margin-bottom: 20px;
+}
+.form-login .form-group-lg .form-control {
+	padding: 10px 16px;
+	height: 46px;
+}
+
+.siteinfo{
+	padding:50px 20px 20px 50px;
+	opacity: 0.9;
+	font-weight: 700;
+	text-shadow: 1px 1px 1px #000;
+	color: #FFF;
+}
+.siteinfo-title {
+	font-size: 40px;
+	padding-bottom:20px;
+}
+.siteinfo-subtitle {
+	font-size: 30px;
+	padding-bottom:20px;
+}
+</style>
+<script type="text/javascript" src="static/js/imgReady.js"></script>
+
+<!--{template common/header_simple_end}-->
+<!--{eval $loginhash = 'L'.random(4);}-->
+<!--背景层-->
+<div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:-1;  font-size: 0px; background:$_G['setting']['loginset']['bcolor'];"> 
+	<!--{if $_G['setting']['loginset']['img']}--><img src="$_G['setting']['loginset']['img']" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index: 10;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%"><!--{/if}-->
+  <!--{if $_G['setting']['loginset']['url']}--><iframe id="wrapper_frame" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" style="z-index:20;position:absolute;width:100%;height:100%;background:url(dzz/images/b.gif);"></iframe><!--{/if}-->
+</div>
+<div class="mainContainer clearfix" >
+<!--文字层-->
+    <div class="siteinfo">
+        <div class="siteinfo-title"> $_G['setting']['loginset']['title'] </div>
+        <div class="siteinfo-subtitle"> $_G['setting']['loginset']['subtitle'] </div>
+    </div>
+
+<div class="modal-content" >
+<div id="main_message">
+  <div id="layer_login_$loginhash" >
+    <div class="modal-header" style="border-bottom:1px solid #DDD;" >
+      <h4  class="modal-title text-center" ><span id="returnmessage_$loginhash">$_G['setting']['sitename']<!--{if $_G['setting']['bbclosed']>0}--> $_G['setting']['closedreason']<!--{/if}--> </span></h4>
+    </div>
+    <div class="modal-body" style="font-size:14px;padding:30px 30px 20px 30px;">
+      <form method="post"  name="login " id="loginform_$loginhash" class="form-login"   role="form" onsubmit="
+      {if $setting['pwdsafety'] } pwmd5('password3_$loginhash');{/if} pwdclear = 1; loginsub('loginform_$loginhash', 'returnmessage_$loginhash');return false;"  action="user.php?mod=sso&op=login&loginsubmit=yes{if !empty($_GET['handlekey'])}&handlekey=$_GET[handlekey]{/if}{if isset($_GET['frommessage'])}&frommessage{/if}&loginhash=$loginhash">
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+        <input type="hidden" name="referer" value="{$backurl}" />
+        <input type="hidden" name="keyid" value="{$keyid}" />
+        <input type="hidden" name="state" value="{$state}" />
+        <!--{if $auth}-->
+        <input type="hidden" name="auth" value="$auth" />
+        <!--{else}-->
+        <div class="form-group form-group-lg">
+          <input type="text" class="form-control" id="email_$loginhash" placeholder="邮箱或用户名" name="email"  autocomplete="off"  >
+        </div>
+        <div class="form-group form-group-lg">
+          <input type="password"  class="form-control " id="password3_$loginhash" placeholder="登录密码" name="password" onfocus="clearpwd()" autocomplete="off"  >
+        </div>
+        <!--{/if}--> 
+        
+       
+        <div class="form-group form-group-lg" >
+          <label class="checlbox checkbox-inline">
+            <input type="checkbox"  name="cookietime" id="cookietime_$loginhash"  value="2592000" $cookietimecheck />
+            30天内自动登</label>
+          <a class="pull-right" tabindex="-1" href="user.php?mod=login&op=logging&action=lostpasswd">{lang getpassword}</a> </div>
+        
+        <!--{if $secqaacheck || $seccodecheck}--> 
+        <!--{block sectpl}-->
+        <sec>
+        <sec>
+        <sec>
+        <!--{/block}-->
+        <div class="form-group" style="margin-bottom:20px;"> 
+          <!--{template common/seccheck}--> 
+        </div>
+        <!--{/if}-->
+        
+        <div class="form-group form-group-lg" >
+          <button class="btn btn-primary btn-block"  type="submit" name="loginsubmit" value="true" ><strong style="line-height:30px;">登&nbsp;&nbsp;&nbsp;录</strong></button>
+           <!--{if !$setting['bbclosed'] && !empty($_GET['inajax'])}--><a class="btn btn-link" href="javascript:;" onclick="ajaxget('user.php?mod=clearcookies&formhash={FORMHASH}', 'returnmessage1_$loginhash', 'returnmessage1_$loginhash');return false;" title="{lang login_clearcookies}" class="pull-right"> <span id="returnmessage1_$loginhash" class="text-muted ">{lang login_clearcookies}</span></a><!--{/if}--></div>
+        <!--{if $_G['setting']['regstatus']>0}-->
+        <div class="form-group last" style="margin-bottom:" > 还没有帐号？&nbsp;<a  class="" tabindex="-1" href="user.php?mod=register"  <!--{if !empty($_GET['inajax'])}-->onclick="_login.register();return false;"<!--{/if}--> title="$_G['setting']['reglinkname']">$_G['setting']['reglinkname']</a> </div>
+        <!--{/if}-->
+      </form>
+      <!--{if !empty($_G['allow_loginmod'])}-->
+      <div class="third-login-wraper" style="padding-top:15px;margin-top:15px;border-top:1px solid #DDD;">
+      	<span class="third-login-header">其他登录：</span>
+        <!--{Hook login_mod}-->
+      </div>
+      <!--{/if}-->
+    </div>
+    <!--{if $_G['setting']['pwdsafety']}--> 
+    <script type="text/javascript" src="static/js/md5.js?{VERHASH}" reload="1"></script> 
+    <!--{/if}--> 
+  </div>
+  
+</div>
+<div class="nfl" id="main_succeed" style="display: none">
+        <div class="modal-body">
+          <div class="alert_right">
+            <div id="succeedmessage"></div>
+            <div id="succeedlocation" class="alert_btnleft"></div>
+            <p class="alert_btnleft"><a id="succeedmessage_href" href="javascript:;">{lang message_forward}</a></p>
+          </div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+var clientHeight,clientWidth;
+var width,height;
+function setHeightCenter(flag){
+	clientWidth=document.documentElement.clientWidth;
+	clientHeight=document.documentElement.clientHeight;
+	var modalHeight=jQuery('.modal-content').outerHeight(true);
+	jQuery('.mainContainer').css('height',clientHeight);
+	if(jQuery('.ie8').length){
+		if(clientWidth<430){
+			jQuery('.modal-content').css({'top':0,'width':'auto','margin':'10px','left':0,'right':0});
+		}else if(clientWidth<768){
+			jQuery('.modal-content').css({'top':'80px','width':'350px','margin':'0','left':'auto','right':'80px'});
+		}else{
+			jQuery('.modal-content').css({'top':'80px','width':'350px','margin':'0','left':'auto','right':'80px'});
+		}
+	}
+	var top=(clientHeight-modalHeight)/2;
+	if(top>100) top=100;
+	
+	if(top>10) jQuery('.modal-content').css('top',top);
+	else jQuery('.modal-content').css('top',10);
+}
+var pwdclear = 1;
+function initinput_login() {
+	document.body.focus();
+	<!--{if !$auth}-->
+		if(document.getElementById('loginform_$loginhash')) {
+			document.getElementById('loginform_$loginhash').email.focus();
+		}
+	<!--{/if}-->
+}
+
+function clearpwd() {
+	if(pwdclear) {
+		document.getElementById('password3_$loginhash').value = '';
+	}
+	pwdclear = 0;
+}
+function setImage(){
+	clientWidth=document.documentElement.clientWidth;
+	clientHeight=document.documentElement.clientHeight;
+	var r0=clientWidth/clientHeight;
+	var r1=width/height;
+	if(r0>r1){//width充满
+		w=clientWidth;
+		h=w*(height/width);
+	}else{
+		h=clientHeight;
+		w=h*(width/height);
+	}
+	if(document.getElementById('imgbg')){
+      document.getElementById('imgbg').style.width=w+'px';
+      document.getElementById('imgbg').style.height=h+'px';
+    }
+}
+var Timer=null;
+window.onresize=function(){
+	if(Timer) window.clearTimeout(Timer);
+	Timer=window.setTimeout(function(){setHeightCenter();setImage();},50);
+}
+
+
+jQuery(document).ready(function(e) {
+    setHeightCenter(true);
+	initinput_login();
+	if(document.getElementById('imgbg')){
+		imgReady(document.getElementById('imgbg').src, function () {
+			width=this.width; 
+			height=this.height;
+		});
+	}
+	if(jQuery('.ie8,.ie9').length){ //ie8模拟placeholder;
+		jQuery(':input[placeholder]').each(function(){
+			jQuery(this).placeholder();
+		});
+	}
+});
+
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 
+
+<!--{template common/footer}-->

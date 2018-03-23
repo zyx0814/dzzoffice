@@ -1,0 +1,40 @@
+<div class="main-content main-allnotice bs-main-container clearfix">
+
+    <div class="panel panel-default clearfix">
+        <div class="panel-heading">
+            <span class="dzz dzz-notifications dzz-allnotice"></span>
+            <h3>{$navtitle}</h3>
+        </div>
+        <div class="panel-body">
+            <ul id="notification-list" class="notification-list list-unstyled u-gutter clearfix">
+                <!--{if $list}-->
+                <!--{loop $list $value}-->
+                <li class="notification-list-item clearfix">
+                    <!--{if $value['avatarstatus']}-->
+                    <div class="member member-no-menu">
+                        <img class="member-avatar" src="avatar.php?uid=$value[authorid]&size=small" alt="$value[author]" title="$value[author]">
+                    </div>
+                    <!--{else}-->
+                    <div class="member member-no-menu">
+                        <span class="member-initials" title="$value[author]">{eval echo cutstr(ucfirst($value[author]),1,'');}</span>
+                    </div>
+                    <!--{/if}-->
+                    <div class="details">
+                        <p class="note u-bottom" >$value[note]</p>
+                        <div class="note-iconimg"><img src="$value[appico]"></div>
+                        <p class="dateline u-bottom">$value[dateline]</p>
+                    </div>
+                </li>
+                <!--{/loop}-->
+                <!--{else}-->
+                <p class="text-warning" style="line-height:35px;">没有相关的通知…</p>
+                <!--{/if}-->
+            </ul>
+
+        </div>
+
+    </div>
+    <nav aria-label="Page navigation" class="notice-navigation">
+        {$multi}
+    </nav>
+</div>

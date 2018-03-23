@@ -1,0 +1,412 @@
+@charset "utf-8";
+/* CSS Document */
+html, body {
+	overflow: hidden;
+	height:100%;
+	background: #fff;
+	moz-user-select: -moz-none; 
+	-moz-user-select: none; 
+	-o-user-select:none; 
+	-khtml-user-select:none; /* you could also put this in a class */ 
+	-webkit-user-select:none;/* and add the CSS class here instead */ 
+	-ms-user-select:none; 
+	user-select:none;/**禁止选中文字*/ 
+}
+.bs-main-container{
+	overflow:hidden;
+	margin-left:0;
+	border-top:0;
+}
+.list-share{
+	overflow-y:auto;
+	overflow-x:hidden;
+}
+.loaded-num{
+	padding:0 5px;
+	font-weight:700;
+}
+.module-list-view {
+	margin: 0;
+	font-size:13px;
+}
+.module-list-view .title {
+	/*background: #F7F7F7;*/
+	color: #888;
+	/*border-bottom:1px solid #e1e1e1;*/
+}
+.module-list-view .title .asc {
+	background: url(sort_asc.gif) no-repeat;
+	display: inline-block;
+	width: 13px;
+	height: 6px;
+	position: relative;
+	top: 1px;
+	visibility: hidden;
+	_vertical-align: middle;
+	_margin: 15px 0;
+}
+
+.module-list-view .title .desc {
+	background: url(sort_desc.gif) no-repeat;
+}
+.module-list-view .item {
+	border-bottom: 1px solid #EEEEEE;
+/*	border-top:1px solid #FFF;*/
+}
+.module-list-view .item:first{
+	border-top:0;
+}
+.module-list-view .item .chk {
+	width: 32px;
+	height: 38px;
+	position: absolute;
+	cursor: default;
+	top: 0;
+	left: 3px;
+}
+.module-list-view .title .item {
+	/*border-bottom: 1px solid transparent;*/
+}
+.module-list-view .item-hover {
+	background-color: #F2F2F2;
+}
+.module-list-view .item-active {
+	background-color: #F2F2F2;
+}
+.module-list-view .item .icon {
+	max-width:24px;
+	max-height:24px;
+	margin-top:-2px;
+}
+
+.module-list-view .title .c1 {
+	border-left: 0;
+}
+.module-list-view .title .item .chk {
+	top: 2px;
+	left: 2px;
+}
+.module-list-view .item .chk-ico {
+	background: transparent url(checkbox.png) no-repeat;
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: 12px;
+	left: 12px;
+}
+.module-list-view .item .chked .chk-ico {
+	background: transparent url(selected.png) no-repeat;
+}
+.module-list-view .item .name {
+	width: 100%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.module-list-view .list-share .item .name-text {
+	cursor: pointer;
+}
+.module-list-view .list-share .item .name-text:hover {
+	text-decoration:underline;
+}
+
+
+.module-list-view .title .col {
+	/*border-left: 1px solid #fff;
+	border-right: 1px solid #e5e5e5;*/
+	cursor: pointer;
+	_overflow: hidden;
+}
+.module-list-view .title .col:hover {
+	background-color: #F2F2F2;
+}
+.module-list-view .col {
+	float: left;
+	height: 51px;
+	line-height: 51px;
+	text-indent: 10px;
+	width: 10%;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.module-list-view .title .col {
+	/*border-left: 1px solid #fff;
+	border-right: 1px solid #e5e5e5;*/
+	cursor: pointer;
+	_overflow: hidden;
+}
+.module-list-view .c1 {
+	position: relative;
+	text-align: left;
+	top: 0;
+	overflow: visible;
+}
+.module-list-view .item .btns {
+	position: absolute;
+	top: 0;
+	right: 15px;
+	height: 38px;
+	background-color: #f2f2f2;
+	display: none;
+}
+.module-list-view .item .btns a.dzz,.select-toperate-center .btns a.dzz{
+	font-size: 18px;
+}
+.select-toperate-center .btns{
+	border-right: 1px solid rgba(0, 0, 0, 0.25);
+	padding-right: 20px;
+}
+.select-toperate-center .btns a.dzz{
+	color: #666666;
+	opacity: 0.65;
+}
+.select-toperate-center .btns:hover a.dzz{
+	color: #666666;
+	opacity: 1;
+}
+.module-list-view .item-hover .btns{
+	display:inline-block;
+}
+.module-list-view .item .btns .btn {
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+	margin: 10px 0 0 5px;
+}
+.module-grid-view .wrapper {
+	margin: 0 0 0 10px;
+	position: relative;
+}
+.module-grid-view .wrapper .item {
+	float: left;
+	margin: 5px 10px;
+	border: 1px solid #DDDDDD;
+	cursor: pointer;
+	position: relative;
+	z-index: 100;
+	border-radius: 2px;
+}
+.module-grid-view .item .backgound_radius {
+	display:none;
+	/*filter: Alpha(opacity=40);
+	opacity: 0.4;
+	border: 1px solid transparent;*/
+}
+.module-grid-view .item-hover .backgound_radius {
+	display:block;
+	background: #f2f2f2;
+	opacity: 1;
+	filter: Alpha(opacity=100);
+	transition: all 0.2s ease-in 0s;
+	border-radius: 2px;
+}
+.module-grid-view .item .sharepame-checked{
+	display: none;
+}
+.module-grid-view .item-hover .sharepame-checked{
+	display: block;
+}
+.module-grid-view .item-hover .icoblank_rightbottom{
+	top:3px;
+	right:3px;
+	display:block;
+}
+.module-grid-view .wrapper .thumb-large {
+	width: 90px;
+	height: 92px;
+	overflow: hidden;
+	margin: 0 auto;
+	border: 2px solid #fff;
+	position: relative;
+}
+.module-grid-view .wrapper .icoimgContainer *{
+	 -webkit-box-sizing: content-box; 
+	-moz-box-sizing: content-box;
+	box-sizing: content-box; 
+}
+.module-grid-view .wrapper .icoimgContainer{
+	width:100px;
+	height:100px;
+	position:relative;
+}
+.module-grid-view .wrapper .icoimgContainer .imageclass{
+	display:block;
+}
+.module-grid-view .wrapper .icoimgContainer img{
+	max-width:100px;
+	max-height:100px;
+}
+.module-grid-view .more{
+	cursor:pointer;
+	border:1px solid transparent;
+	width:150px;
+	height:120px;
+}
+.module-grid-view .more:hover{
+	background:#F7F7F7;border:1px solid #DDD;
+}
+.module-grid-view .wrapper .file-name {
+	line-height: 28px;
+	height: 28px;
+}
+.module-grid-view .wrapper .file-name a {
+	color: #333;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: inline-block;
+	width: 100%;
+	cursor: default;
+}
+.module-grid-view .wrapper .enabled .thumb-large, .module-grid-view .wrapper .enabled .file-name a {
+	cursor: pointer;
+}
+.module-grid-view .wrapper .item-block.item{
+	    border: 1px solid #4C89FB;
+}
+
+.module-grid-view .wrapper .item-hover .IcoFont_text{
+	background-color:#F2F2F2;
+}
+.module-grid-view .wrapper .item-block .IcoFont_text{
+	background-color:#4C89FB;
+}
+.module-grid-view .wrapper .Icoblock .IcoFont_text .IcoText_div{
+	overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    white-space: nowrap;
+}
+.module-grid-view .wrapper .item-block .IcoFont_text .IcoText_div .ico_item_name{
+	color: #FFFFFF;
+}
+.module-grid-view .wrapper .item-block .IcoFont_text td{
+	color: #FFFFFF;
+}
+/*文件分享单页开始*/
+.sharepame-title{
+	line-height: 64px;
+	color: #fff;
+	font-size: 22px;
+	font-family: "微软雅黑";
+}
+.sharepame-images{
+	width:54px;
+	height: 54px;
+	float: left;
+}
+.sharepame-right{
+	float: left;
+	padding-left: 10px;
+}
+.sharepame-name{
+	font-size: 14px;
+	color: #666666;
+	margin-bottom: 12px;
+}
+.sharepame-detailed{
+	font-size: 12px;
+	color: #999;
+}
+.sharepame-detailed .sharepame-time{
+	padding-right:5px ;
+}
+.sharepame-selected{
+	display: inline-block;
+}
+
+.breadcrumb{
+	background-color: #fff;
+	margin-bottom: 0px;
+	float: left;
+	padding-right: 100px;
+	border-bottom: none;
+	padding: 1.42rem 0px;
+}
+.breadcrumb>li+li:before{
+	content: "";
+}
+.breadcrumb li a span{
+	padding-left: 10px;
+	padding-right: 5px;
+}
+.sharepame-bread .btn-group{
+	padding-top:1.21rem;
+}
+.sharepame-checked{
+	position: absolute;
+	top: 5px;
+	left: 5px;
+}
+.window .icoblank_rightbottom{
+	background-color: transparent!important;
+}
+/*.module-grid-view .item-block .backgound_radius{
+	background-color: #e3f2fd;
+	border-radius: 2px;
+	display: block;
+	opacity: 1;
+}
+.module-grid-view .item-block .sharepame-checked{
+	display: block;
+}
+.module-grid-view .item-block .icoblank_rightbottom{
+	display: block;
+	top: 3px;
+	right: 3px;
+}*/
+.sharepame-pictitle{
+	padding-top: 1.42rem;
+	border-bottom: 1px solid #DCDCDC;
+	padding-bottom: 1.42rem;
+}
+
+.button-share-group .btn,.btn-group .btn{
+	padding: 0px;
+    font-size: 14px;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    color: #FFFFFF;
+    line-height: 64px;
+}
+.select-toperate-right .btn-group .btn{
+	padding: 0px;
+    font-size: 14px;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    color: #666;
+    line-height: 64px;
+}
+.select-toperate-right .btn-group{
+	padding-right: 1.42rem;
+}
+.button-share-group .btn span{
+	font-size: 18px;
+	padding:5px 20px;
+	border-right: 1px solid #FFFFFF;
+}
+
+.btn-group .btn.btn-group-list i{
+	font-size: 18px;
+	padding: 0px 0.71rem 0px 1.42rem;
+}
+.btn-group .btn.btn-group-thumbnail i{
+	font-size: 18px;
+	padding: 0px 0px 0px 0.71rem;
+}
+/*文件分享单页结束*/
+.select-option{
+	border: 1px solid #4c89fb;
+	background: #fff;
+	border-radius: 2px;
+	color:#4c89fb;
+}
+.nav-pills li{
+	padding-right: 5px;
+}
+.main-header{
+	border: none;
+}

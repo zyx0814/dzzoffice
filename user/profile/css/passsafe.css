@@ -1,0 +1,73 @@
+ul,ul li,li{
+    list-style: none;
+    margin: 0;
+    padding:0;
+}
+.all{
+    width: 681px;
+    height: 33px;
+    margin-bottom: 30px;
+}
+.firstme{
+background-position: left top;
+}
+.firstul{
+    overflow: hidden;
+}
+.firstul li{
+    float: left;
+    width: 227px;
+    height: 33px;
+    line-height: 33px;
+    font-size: 14px;
+    text-align: center;
+}
+.firstul li.active{
+    color: #fff;
+}
+.secondme{
+    background-position: 0px -41px;
+}
+.thirdme{
+    background-position: 0px -80px;
+}
+.conTent{
+    overflow: hidden;
+    margin:40px 140px 0px;
+    margin-top: 40px;
+}
+.success{
+    font-size: 20px;
+}
+.success span{
+    color: #66a100;
+    margin-right:20px ;
+}
+.theme{
+    background-color:#efefef ;
+    padding: 15px 15px 5px;
+    margin-top: 15px;
+    font-size: 12px;
+}
+.theme .phone{
+    color:#66a100 ;
+}
+.email{
+    margin-top: 15px;
+    font-size: 12px;
+}
+.email span .time{
+    font-weight: normal;
+}
+/*1.8修改*/
+.form-horizontal-left .help-inline {
+    padding: 5px 5px 5px 0px; 
+}
+kbd {
+    padding: 2px 0px;
+    font-size: 90%;
+    color: red;
+    background: none; 
+    box-shadow:none;
+}
+/*结束*/

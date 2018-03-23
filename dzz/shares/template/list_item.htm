@@ -1,0 +1,87 @@
+<div class="hide breadcrumb-data">
+	<li class="active" data-href="{DZZSCRIPT}?mod=shares&op=ajax&path=$morepath">$foldername<span>></span></li>
+</div>
+<div class="module-list">
+	<!--{loop $list $value}-->
+	<div node-type="item" data-value="true" data-dpath="$value[dpath]" <!--{if $value[type] == 'folder' && $value[dhpath]}--> data-containpath="$value[dhpath]"<!--{/if}--> data-type="$value[type]" class="item shareitem Icoblock clearfix">
+		<div class="col c1 name" style="width: 50%;" data-name="$value[name]">
+			<div node-type="name" class="name" title="$value[name]">
+				<!--{if $value[img]}--><img title="$value[name]" class="icon" src="$value[img]" data-original="$value[url]" data-dpath="$value[dpath]" />
+				<!--{/if}-->
+				<span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="enabled">$value[name]</span> </span>
+			</div>
+
+			<div class="btns">
+				<a node-type="btn-item" data-key="download" class="dzz dzz-download
+" href="javascript:void(0);"></a>
+			</div>
+
+		</div>
+		<!-- 其他列 -->
+		<div class="col size" style="width: 12%" data-size="$value[size]">$value[fsize]</div>
+		<div class="col type" style="width:15%" data-type="$value[ftype]">$value[ftype]</div>
+		<div class="col dateline" style="width: 20%" data-dateline="$value[dateline]">$value[fdateline]</div>
+	</div>
+	<!--{/loop}-->
+	<!--{if $nextpage}-->
+	<div class="more text-center clearfix" onclick="getMore(this,'{DZZSCRIPT}?mod=shares&op=ajax&morepath=$morepath&page=$nextpage&rander=list&marker=$marker')" style="padding-top: 10px;padding-bottom: 10px;">{lang upload_more}</div>
+	<!--{/if}-->
+</div>
+<div class="module-grid">
+	<!--{loop $list $value}-->
+	<div node-type="item" data-dpath="$value[dpath]" <!--{if $value[type] == 'folder' && $value[dhpath]}--> data-containpath="$value[dhpath]"<!--{/if}--> data-type="$value[type]" class="item file-icoitem bigicon Icoblock ">
+		<table width="180" height="180" style="table-layout:fixed;">
+			<tbody>
+				<tr>
+					<td align="center" valign="middle" style="" height="142">
+						<div class="icoimgContainer icoimgContainer_{$value[type]}">
+							<table width="100%" height="100%" cellpadding="0" cellspacing="0">
+								<tbody>
+									<tr>
+										<td align="center" valign="middle">
+											<img title="$value[name]" class="<!--{if $value['type']=='video'}-->videoclass100_100<!--{elseif $value[type]=='image'}-->imageclass<!--{else}-->radius<!--{/if}-->" src="$value[img]" title="$value[name]" <!--{if $value[type]=='image' }--> data-original="$value[url]" data-dpath="$value[dpath]"<!--{/if}-->/>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="icoimgCover_up" style="position:absolute;left:0px;top:0px;width:100px;height:100px;z-index:1"></div>
+							<div class="icoimgtips" style="position:absolute;left:0px;top:0px;width:100px;height:100px;z-index:2"></div>
+							<div class="icoimgCover_down" style="position:absolute;left:0px;top:0px;width:100px;height:100px;z-index:-1"></div>
+						</div>
+					</td>
+				</tr>
+				<tr class="IcoFont_text">
+					<td align="center" valign="middle">
+						<div class="IcoText_div" style="width:135px;max-height:40px;" title="$value[name]">
+							<a class="ico_item ico_item_name IcoText_folder" style="width:135px;height:40px;overflow:hidden" title="$value[name]">$value[name]</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!--{if in_array($value[type],array('attach','document','image'))}-->
+		<!--<div class="icoblank_tip icoblank_rightbottom">
+			<a node-type="btn-item" data-key="download" class="pull-right ibtn glyphicon glyphicon-download-alt" href="javascript:void(0);"></a>
+		</div>-->
+		<!--{/if}-->
+		<!--<div class="sharepame-checked">
+			<div class="checkbox-custom checkbox-primary">
+		      <input type="checkbox" name="inputCheckboxesCall" data-dpath="$value[dpath]">
+		      <label></label>
+		    </div>
+		</div>-->
+		<div class="backgound_radius" style="position: absolute; left: 0px; top: 0px; z-index: -5;"></div>
+	</div>
+	<!--{/loop}-->
+	<!--{if $nextpage}-->
+	<div class="more text-center pull-left" onclick="getMore(this,'{DZZSCRIPT}?mod=shares&op=ajax&morepath=$morepath&page=$nextpage&rander=grid&marker=$marker')">
+		<table width="150" height="120" style="table-layout:fixed;">
+			<tbody>
+				<tr>
+					<td align="center" valign="middle" style=""> <span style="">{lang upload_more}</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!--{/if}-->
+</div>

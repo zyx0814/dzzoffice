@@ -1,0 +1,232 @@
+
+<style>
+.group-tabul{
+    margin-left: 0px;
+    padding-left: 0px;
+    float: left;
+}
+.line {
+	height: 2px;
+	margin: 10px 0;
+	font-size: 0;
+	overflow: hidden;
+	background-color: transparent;
+	border-width: 0;
+	border-top: 1px solid #e7e7e7;
+	border-bottom: 1px solid #FFF;
+}
+/*.pull-in {*/
+	/*margin-left: -15px;*/
+	/*margin-right: -15px;*/
+/*}*/
+/*.line-dashed {
+	border-style: dashed;
+	background: transparent;
+}*/
+  .form-horizontal .form-group {
+    margin-right: 0;
+    margin-left: 0;
+  }
+.line-lg {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.relative {
+	position: relative;
+}
+  .form-group {
+    margin-bottom: 0;
+  }
+.copy-success {
+	position: absolute;
+	left: -210px;
+	top: -15px;
+	padding: 8px;
+}
+.absoluter {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 5px;
+}
+  .panel-body {
+    padding: 15px 0;
+  }
+.ul_hide{
+    display: block;
+}
+  .form-group .input-black .input-animate {
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#4c89fb), to(#4c89fb)), -webkit-gradient(linear, left top, left bottom, from(#e6e8eb), to(#e6e8eb));
+    background-image: -webkit-linear-gradient(#4c89fb, #4c89fb), -webkit-linear-gradient(#e6e8eb, #e6e8eb);
+    background-image: -o-linear-gradient(#4c89fb, #4c89fb), -o-linear-gradient(#e6e8eb, #e6e8eb);
+    background-image: linear-gradient(#4c89fb, #4c89fb), linear-gradient(#e6e8eb, #e6e8eb);
+  }
+  .form-group .input-black .input-animate.animate {
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#4c89fb), to(#4c89fb)), -webkit-gradient(linear, left top, left bottom, from(#e6e8eb), to(#e6e8eb));
+    background-image: -webkit-linear-gradient(#4c89fb, #4c89fb), -webkit-linear-gradient(#e6e8eb, #e6e8eb);
+    background-image: -o-linear-gradient(#4c89fb, #4c89fb), -o-linear-gradient(#e6e8eb, #e6e8eb);
+    background-image: linear-gradient(#4c89fb, #4c89fb), linear-gradient(#e6e8eb, #e6e8eb);
+  }
+</style>
+<div class="main-header clearfix">
+	
+	<ul class="group-tabul" style="margin-bottom:0px">
+    	<li class="active"><a href="{$baseurl_info}">{eval echo $base_info_title?$base_info_title:'{lang application_message}';}</a></li>
+   		<li><a href="{$baseurl_menu}">{eval echo $base_menu_title?$base_menu_title:'{lang application_menu}';}</a></li>
+    </ul>
+</div>
+
+<div class="main-content" style="border-top:1px solid #FFF">
+<div class="panel-body" >
+  <div class="entity-panel-body form-horizontal">
+    <div class="form-group clearfix relative"> <img src="$wxapp[icon]" style="width:80px;position:absolute;left:20px;top:0px">
+      <div class=" ml20" style="padding-left:100px;">
+        <h4 class="relative"><strong>$wxapp[name]</strong></h4>
+        <p class="relative" style="padding-top:5px">$wxapp[desc]</p>
+       
+      </div>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group clearfix relative">
+    <form  name="settingform" class="form-horizontal form-horizontal-left" action="$baseurl_info" method="post" style="margin:0">
+          <input type="hidden" name="settingsubmit" value="true" />
+          <input type="hidden" name="formhash" value="{FORMHASH}" />
+          <div class="form-group">
+            <div class="input-black input-static input-form">
+              <label class="control-label wxlabel">AgendID：</label><br>
+              <div class="input-animate" style="width: 200px;display: inline-block;margin-top: 15px;">
+                <input type="text" id="agentid" class="form-control" name="agentid" value="$wxapp[agentid]" placeholder="AgendID">
+              </div>
+              <span class="help-inline help-info">{lang access_method_login_application}</span>
+            </div>
+            <!--<label class="control-label" for="agentid">AgendID：</label>-->
+            <!--<input id="agentid" type="text" class="form-control" style="width:80px;" name="agentid" value="$wxapp[agentid]" />-->
+            <!--<span class="help-inline">{lang access_method_login_application}</span>-->
+          </div>
+		  <div class="form-group">
+            <div class="input-black input-static input-form">
+              <label class="control-label wxlabel">Secret：</label><br>
+              <div class="input-animate" style="width: 200px;display: inline-block;margin-top: 15px;">
+                <input type="text" id="agentid" class="form-control" name="secret" value="$wxapp[secret]" placeholder="Secret">
+              </div>
+              <span class="help-inline help-info">{lang access_method_login_application_secret}</span>
+            </div>
+            <!--<label class="control-label" for="agentid">Secret：</label> -->
+            <!--<input id="agentid" type="text" class="form-control" style="width:80px;" name="secret" value="$wxapp[secret]" />-->
+            <!--<span class="help-inline">{lang access_method_login_application_secret}</span>-->
+          </div>
+          <div class="form-group">
+            <div class="input-black input-static input-form">
+              <label class="control-label wxlabel">{lang application_state}：</label><br>
+
+              <!--<label class="radio-inline"><input type="radio" name="appstatus" value="0" &lt;!&ndash;{if !$wxapp[status]}&ndash;&gt;checked="checked"&lt;!&ndash;{/if}&ndash;&gt; >{lang open_start}</label>-->
+              <!--<label class="radio-inline"><input type="radio" name="appstatus" value="1" &lt;!&ndash;{if $wxapp[status]>0}&ndash;&gt;checked="checked"&lt;!&ndash;{/if}&ndash;&gt; >{lang close}</label>-->
+           
+            <span class="help-inline help-info" style="padding-bottom:0;vertical-align: 0;margin-top: 2px;display: inline-block;padding-left: 0;">{lang application_state_message}</span>
+            <div style="display:inline-block;margin-bottom: 10px;margin-left: 30px;">
+              <span class="switch-info">开启</span>
+              <input type="checkbox" class="js-switch-primary" checked="" data-switchery="true">
+              <script type="text/javascript">
+                  var elem = document.querySelector('.js-switch-primary');
+                  Switchery(elem, {
+                      color: '#62a8ea'
+                  });
+              </script>
+            </div>
+            </div>
+          <div class="form-group" >
+            <button type="submit" id="ueditorform_btn" class="btn btn-primary" style="padding:6px 25px;" data-loading-text="{lang In_the_save}" >{lang save}</button>
+          </div>
+        </form>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group clearfix padding-left">
+      <div class="col-sm-12" style="padding: 0">
+        <p class="form-control-static danger relative"><strong style="font-size: 1em;color: rgba(51, 51, 51, 1);">*{lang need_weixin_enterprises_set}</strong> <a href="http://qy.weixin.qq.com/" target="_blank" class="pull-right btn btn-primary-outline">{lang weixin_enterprises_edit}</a> </p>
+      </div>
+    </div>
+    <!--<div class="line line-dashed line-lg pull-in"></div>-->
+    <div class="form-group  clearfix padding-left margin-10">
+      <label class="wxlabel-item">
+      <h5><strong>{lang scope_application_visible}:</strong></h5>
+      </label>
+      <div class="wxlabel-info">
+        <p class="form-control-static relative">{lang top_institutions}<span class="gray">{lang weixin_enterprises_address_book_}</span> </p>
+      </div>
+    </div>
+    <!--<div class="line line-dashed line-lg pull-in"></div>-->
+    <div class="form-group clearfix padding-left margin-10">
+      <label class="wxlabel-item">
+      <h5><strong>{lang trusted_domain_name}:</strong></h5>
+      </label>
+      <div class="wxlabel-info">
+        <p class="">$wxapp[host]<span class="copyBtn-wrap">
+          <span class="copy-btn js_copy" style="border: none;" data-clipboard-text="$wxapp[host]" title="{lang copy}">{lang copy}</span>
+          <span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span> </span> </p>
+      </div>
+    </div>
+    <!--<div class="line line-dashed line-lg pull-in"></div>-->
+    <div class="form-group clearfix padding-left margin-10">
+      <label class="col-sm-12" style="padding: 0;color: rgba(104, 120, 146, 1);">
+      <h5><strong>{lang syntony_URL_configuration_information}:</strong></h5>
+      </label>
+    </div>
+    <div class="form-group clearfix padding-left margin-10">
+      <label class="wxlabel-item">URL</label>
+      <div class="wxlabel-info">
+        <p class="form-control-static relative" style="padding-left:0;">$wxapp[callback] <span class="copyBtn-wrap">
+          <span class="copy-btn js_copy" data-clipboard-text="$wxapp[callback]" title="{lang copy}">{lang copy}</span>
+          <span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span> </span> </p>
+      </div>
+    </div>
+    <div class="form-group clearfix padding-left margin-10">
+      <label class="wxlabel-item">Token</label>
+      <div class="wxlabel-info">
+        <p class="form-control-static relative">$wxapp['token'] <span class="copyBtn-wrap">
+          <span class="copy-btn js_copy" data-clipboard-text="$wxapp[token]" title="{lang copy}">{lang copy}</span>
+          <span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span> </span> </p>
+      </div>
+    </div>
+    <div class="form-group clearfix padding-left margin-10">
+      <label class="wxlabel-item">AESKey</label>
+      <div class="wxlabel-info">
+        <p class="form-control-static relative">$wxapp[encodingaeskey] <span class="copyBtn-wrap">
+          <span class="copy-btn js_copy" data-clipboard-text="$wxapp[encodingaeskey]" title="{lang copy}">{lang copy}</span>
+          <span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span> </span> </p>
+      </div>
+    </div>
+    <div class="line line-dashed line-lg pull-in"></div>
+    <label class="col-sm-12" style="padding: 0">
+    <h5><strong>{lang other_configuration_information}</strong></h5>
+    </label>
+    <div class="col-sm-12" style="margin-bottom:20px;padding: 0;">
+      <p class="form-control-static relative">
+        <img src="$wxapp[otherpic]" style="max-width:100%">
+      </p>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">  
+
+jQuery(document).ready(function(e) {
+    jQuery('.input-black').each(function() {
+        InputAnimate.init(jQuery(this));
+    })
+    var client = new ZeroClipboard(jQuery('.js_copy'));
+	client.on( "load", function( client ) {
+	  // alert( "ZeroClipboard SWF is ready!" );
+	  client.on( "complete", function( client,args ) {
+		  var self=this;
+		  jQuery(this).parent().find('.copy-success').removeClass('hide');
+		  window.setTimeout(function(){
+		  		jQuery(self).parent().find('.copy-success').addClass('hide');
+		  },1000);
+	  });
+	});
+});
+
+</script> 
+<script src="static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"></script>
+  <script src="static/js/input_field.js"></script>
+<!--{template common/footer_simple}-->

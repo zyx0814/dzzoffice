@@ -1,0 +1,71 @@
+
+
+
+
+/* 边框样式 */
+.showmessage .LEFT_TOP
+{
+	/* 左上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 30px;
+	height: 25px;
+	background:url(images/showwindow_y.png) 0px 0px no-repeat;
+}
+
+.showmessage .TOP
+{
+	/* 上边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	
+	height: 25px;
+	background:url(images/showwindow_y.png) 0px -288px repeat-x;
+}
+.showmessage .RIGHT_TOP
+{
+	/* 右上：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 30px;
+	height: 25px;
+	background:url(images/showwindow_y.png) 0px -97px no-repeat;
+	
+}
+
+.showmessage .RIGHT
+{
+	/* 右边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	
+	width: 30px;
+	background:url(images/showwindow_x.png) 0px 0px repeat-y;
+	
+}
+.showmessage .RIGHT_BOTTOM
+{
+	/* 右下：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	height: 32px;
+	width: 30px;
+	background:url(images/showwindow_y.png) 0px -241px no-repeat;
+}
+
+.showmessage .BOTTOM
+{
+	/* 下边：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	
+	height: 32px;
+
+	background:url(images/showwindow_y.png) 0px -401px repeat-x;
+	
+}
+
+.showmessage .LEFT_BOTTOM
+{
+	/* 左下：请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 30px;
+	height: 32px;
+	
+	background:url(images/showwindow_y.png) 0px -194px no-repeat;
+}
+
+
+.showmessage .LEFT
+{
+	/* 请不要定义padding/margin/border/top/right/bottom/left属性 */
+	width: 32px;
+	background:url(images/showwindow_x.png) -42px 0px repeat-y;
+}

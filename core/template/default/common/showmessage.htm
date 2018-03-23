@@ -1,0 +1,98 @@
+<!--{if !$_G['inajax']}-->
+	<!--{template common/header_common}-->
+	<div id="ct" class="container " style="position: absolute;top: 30%;width: 100%;text-align: center;">
+		<!--{if !$param[login]}-->
+			<div class="">
+		<!--{else}-->
+			<div class="" id="main_succeed" style="max-width:500px;margin:0 auto;display: none">
+				<div class="f_c altw">
+					<div class="alert_right">
+						<h5 id="succeedmessage"></h5>
+						<p id="succeedlocation" class="alert_btnleft"></p>
+						<p class="alert_btnleft"><a id="succeedmessage_href">{lang message_forward}</a></p>
+					</div>
+				</div>
+			</div>
+			<div class="well" id="main_message">
+             
+		<!--{/if}-->
+<!--{else}-->
+	<!--{template common/header_ajax}-->
+<!--{/if}-->
+<!--{if $param[msgtype] == 1 || $param[msgtype] == 2 && !$_G[inajax]}-->
+		<div class="f_c altw">
+			<div id="messagetext">
+				<!--{if $alerttype == 'alert_right'}-->
+				<img src="static/image/common/noFilePage-successful.png">
+				<!--{elseif $alerttype == 'alert_info'}-->
+				<img src="static/image/common/noFilePage-fail.png">
+				<!--{/if}-->
+				<h5 style="color: #999999;">$show_message</h5>
+				<!--{if $url_forward}-->
+					<!--{if !$param[redirectmsg]}-->
+						<button class="btn-jump btn btn-primary" onclick="location.href='$url_forward';return false;" >{lang immdeiate_jump}（<span class="num">3</span>s）</button>
+					<!--{else}-->
+						<button class="btn-jump btn btn-primary" onclick="location.href='$url_forward';return false;">{lang return_to_the_naxt_level}（<span class="num">3</span>s）</button>
+						<!--<p class="alert_btnleft"><a href="$url_forward">{lang attach_forward}</a></p>-->
+					<!--{/if}-->
+				<!--{elseif $allowreturn}-->
+				<script type="text/javascript">
+					if(history.length > (BROWSER.ie ? 0 : 1)) {
+						document.write('<p class="alert_btnleft"><a href="javascript:history.back()">{lang message_go_back}</a></p>');
+					} else {
+						document.write('<p class="alert_btnleft"><a href="./">[ $_G['setting']['bbname'] {lang homepage} ]</a></p>');
+					}
+					
+				</script>
+				<!--{/if}-->
+			</div>
+			<!--{if $param[login]}-->
+				
+			<!--{/if}-->
+		</div>
+		<script type="text/javascript">
+		jQuery(document).ready(function(){
+					function jump(cont){						
+						window.setTimeout(function(){
+							cont--;
+							if(cont>0){
+								$('.num').text(cont);
+								jump(cont);
+							}
+						},1000)
+					}
+					jump(3);
+				});
+		</script>
+<!--{elseif $param[msgtype] == 2}-->
+		
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <h4 class="modal-title">{lang board_message}</h4>
+        </div>
+        <div class="modal-body">
+			<div class="$alerttype">$show_message</div>
+        </div>
+		<div class="modal-footer">
+			<!--{if $param['closetime']}-->
+				<span class="btn btn-link text-muted">$param['closetime'] {lang message_closetime}</span>
+			<!--{elseif $param['locationtime']}-->
+				<span class="btn btn-link text-muted">$param['locationtime'] {lang message_locationtime}</span>
+			<!--{/if}-->
+			<!--{if $param[login]}-->
+				<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');showWindow('login', 'user.php?mod=logging&action=login');"><strong>{lang login}</strong></button>
+				<!--{if !$_G['setting']['bbclosed']}-->
+					<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');window.open('user.php?mod=rigister');"><em>$_G['setting']['reglinkname']</em></button>
+				<!--{/if}-->
+			
+			<!--{/if}-->
+            <button type="button"  data-dismiss="modal" class="btn btn-default"><strong>{lang close}</strong></button>
+		</div>
+<!--{else}-->$show_message<!--{/if}-->
+<!--{if !$_G['inajax']}-->
+		</div>
+	</div>
+	<!--{template common/footer}-->
+<!--{else}-->
+	<!--{template common/footer_ajax}-->
+<!--{/if}-->

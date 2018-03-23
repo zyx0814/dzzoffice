@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html><head>
+	<meta http-equiv="Content-Type" content="text/html; charset={CHARSET}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title><!--{if !empty($navtitle)}-->$navtitle - <!--{/if}--><!--{if !empty($_G[setting][sitename])}--> $_G[setting][sitename] - <!--{/if}--></title>
+	<meta name="keywords" content="{if !empty($_G[setting][metakeywords])}{echo htmlspecialchars($_G[setting][metakeywords])}{/if}" />
+	<meta name="description" content="{if !empty($_G[setting][metadescription])}{echo htmlspecialchars($_G[setting][metadescription])} {/if}" />
+	<meta name="generator" content="DzzOffice" />
+	<meta name="author" content="DzzOffice" />
+	<meta name="copyright" content="2012-{eval echo dgmdate(TIMESTAMP,'Y-m-d');} www.dzzoffice.com" />
+    <meta name="MSSmartTagsPreventParsing" content="True" />
+    <meta http-equiv="MSThemeCompatible" content="Yes" />
+    <meta name="renderer" content="webkit">
+	<base href="{$_G['siteurl']}" />
+     <link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css?{VERHASH}">
+     <link rel="stylesheet" type="text/css" href="static/css/app_manage.css?{VERHASH}">
+	<script type="text/javascript" src="static/jquery/jquery.min.js?{VERHASH}"></script>
+	<script type="text/javascript" src="static/jquery/jquery.json-2.4.min.js?{VERHASH}"></script>
+	<script type="text/javascript">var DZZSCRIPT='{DZZSCRIPT}',LANG='{$_G[language]}', STATICURL = 'static/', IMGDIR = '{$_G[setting][imgdir]}', VERHASH = '{VERHASH}', charset = '{CHARSET}', dzz_uid = '$_G[uid]', cookiepre = '{$_G[config][cookie][cookiepre]}', cookiedomain = '{$_G[config][cookie][cookiedomain]}', cookiepath = '{$_G[config][cookie][cookiepath]}',attackevasive = '{$_G[config][security][attackevasive]}', disallowfloat = '{$_G[setting][disallowfloat]}',  REPORTURL = '$_G[currenturl_encode]', SITEURL = '$_G[siteurl]', JSPATH = '$_G[setting][jspath]',MOD_PATH='{MOD_PATH}',APP_URL='{MOD_URL}',MOD_URL = '{MOD_URL}';</script>
+	<script type="text/javascript" src="static/js/common.js?{VERHASH}"></script>
+    </head>
+    <body id="nv_dzz" class="$bodyClass">
+	<div id="append_parent" style="z-index:99999;"></div><div id="ajaxwaitid" style="z-index:99999;"></div>

@@ -1,0 +1,238 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/jquery.textareaexplander.js?{VERHASH}"></script>
+<style>
+html,body{
+	overflow:hidden;
+	background:#FBFBFB;
+}
+.bs-left-container{
+	width:150px;
+}
+.bs-main-container{
+	margin-left:120px;
+	overflow:auto;
+}
+.form-horizontal-left .form-group .controls{
+	width:70%;
+	padding:0 5px;
+}
+.form-horizontal-left .form-group .controls-container{
+	width:320px;
+	float:left;
+}
+@media (max-width: 605px){
+	.form-horizontal-left .control-label {
+		 text-align: left; 
+		width: 120px;
+	}
+}
+@media (max-width: 480px){
+	.form-horizontal-left .form-group .controls-container {
+		width:100%;
+	}
+	.form-horizontal-left .form-group .controls{
+		width:100%;
+		padding:0 5px;
+	}
+}
+
+@media (max-width: 420px){
+	.form-horizontal-left .form-group .controls {
+		min-width: 100%;
+	}
+}
+.form-horizontal-left label{
+	padding:7px 10px 0 0;
+}
+.form-horizontal-left .help-inline{
+	padding:5px;
+}
+
+.form-horizontal-left .form-control{
+	width:100%;
+}
+.has-error .form-control.privacy{
+	border-color:#e1e1e1;
+}
+.has-error .form-control.privacy:focus{
+	border-color:#66afe9;
+}
+.rq{
+	color:red;
+}
+.progress-relative{
+	position:relative;
+	height:26px;
+	line-height:24px;
+	background-color: #e6e6e6;
+
+}
+.progress-relative .progress-cover{
+	position:absolute;
+	text-align:center;
+	width:100%;
+	font-size:75%;
+	height:24px;
+	line-height:24px;
+	color:#FFF;
+	text-shadow:1px 1px 1px #000;
+	font-weight:700;
+}
+
+#department_Menu span.iconFirstWord{
+	background: #f35b42;
+	border-radius: 50%;
+	display: inline-block;
+	line-height: 18px;
+	text-align: center;
+	margin-right: 2px;
+	color: #FFFFFF;
+	width: 18px;
+	height: 18px
+}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix">
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+  </div>
+  <div class="bs-main-container  clearfix" >
+    <div class="main-content" style="padding:15px;">
+      <!--{if $vid}-->
+          <div class="alert <!--{if $showbtn}-->alert-warning<!--{else}-->alert-success<!--{/if}-->" style="margin-bottom:20px;max-width:750px;line-height:1.8">
+              <!--{if $showbtn}-->
+                <p><i class="glyphicon glyphicon-question-sign" ></i> {lang profile_message1}</p> 
+                <!--{if $_G['setting']['verify'][$vid]['desc']}-->
+                {eval $desc=dzzcode($_G['setting']['verify'][$vid]['desc']);}
+                <p class="ml20">$desc</p>
+                <!--{/if}-->
+              <!--{else}-->
+               <p><i class="glyphicon glyphicon-ok" ></i> {lang profile_message2}</p>
+              <!--{/if}-->
+         
+		</div>
+      <!--{else}-->
+      <div class="" style="padding:0 20px 20px 20px;max-width:450px;line-height:1.8">
+      	<div class="progress progress-relative" style="margin:0">
+          <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="$userstatus[profileprogress]" aria-valuemin="0" aria-valuemax="100" style="width: {$userstatus[profileprogress]}%">
+            <span class="sr-only">{lang Information_complete} $userstatus[profileprogress]% </span>
+          </div>
+          <div class="progress-cover">{lang Information_complete} {$userstatus[profileprogress]}%</div>
+        </div>
+      </div>
+      <!--{/if}-->
+      <iframe id="frame_profile" name="frame_profile" style="display: none"></iframe>
+      <form id="accountform" name="accountform" class="form-horizontal form-horizontal-left" action="user.php?mod=profile" method="post" enctype="multipart/form-data" target="frame_profile" onsubmit="clearErrorInfo();">
+        <input type="hidden" name="profilesubmit" value="true" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+         <input type="hidden" name="vid" value="$vid" />
+        
+        <div class="form-group">
+          <label class="control-label">{lang username}</label>
+          <div class="controls-container">
+            <p class="form-control-static">$_G[username]&nbsp; <!--{if $qqlogin[openid] && $qqlogin[unbind]<1}--><img src="user/images/qq.png" height="16" title="{lang qq_bind}" />&nbsp;&nbsp;<a  href="user.php?mod=profile&action=qq_unbind&openid=$qqlogin[openid]">{lang do_unbind}</a><!--{/if}--></p>
+          </div>
+        </div>
+       
+        <!--{loop $settings $key $value}--> 
+        <!--{if $value[available]}-->
+        <div class="form-group" id="th_$key">
+          <label class="control-label" for="$key" >$value[title]<!--{if $value[required]}--><span class="rq" title="{lang required}">*</span><!--{/if}--></label>
+          <div class="controls-container">
+          <div class="controls">
+            $htmls[$key]
+          </div>
+          <div class="pull-left">
+                <!--{if $vid || $key=='department'}-->
+                <input type="hidden" name="privacy[$key]" value="$privacy[$key]" />
+                <!--{else}-->
+                <select name="privacy[$key]" class="form-control input-sm ml10 privacy" style="width:80px;">
+                    <!--{loop $_config['profile']['privacy'] $k $v}-->
+                    <option value="$k" {if $privacy[$key] == $k} selected="selected"{/if}>$v</option>
+                    <!--{/loop}-->
+                </select>
+                <!--{/if}-->
+          </div>
+         </div>
+        </div>
+        <!--{/if}--> 
+        <!--{/loop}--> 
+        <!--{if in_array('timeoffset', $allowitems)}-->
+          <div class="form-group">
+              <label class="control-label ">{lang time_zone}</label>
+              <div class="controls-container">
+                  <!--{eval $timeoffset = array({lang timezone});}-->
+                  <select name="timeoffset" class="form-control">
+                      <!--{loop $timeoffset $key $desc}-->
+                      <option value="$key" {if $key==$space[timeoffset]} selected="selected" {/if}>$desc</option>
+                      <!--{/loop}-->
+                  </select>
+                  <p class="mt10">{lang current_time} :
+                      <!--{date($_G[timestamp])}-->
+                  </p>
+                  <p class="gray">{lang time_zone_state}</p>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label language">{lang language}</label>
+              <div class="controls-container">
+                  <select name="language" class="form-control">
+                      <option value="">{lang language_auto}</option>
+                      <!--{loop $langList $key $value}-->
+                      <option value="$key" <!--{if $space[language] == $key}-->selected="selected"<!--{/if}--> /> $value</option>
+                      <!--{/loop}-->
+                  </select>
+
+              </div>
+          </div>
+          <!--{/if}-->
+        <!--{if !$vid || $showbtn}-->
+        <div class="form-group">
+             <label class="control-label " ></label>
+            <div class="controls">
+                <input type="submit" class="btn btn-primary btn-width" <!--{if $vid}-->value="{lang submit_audit}"<!--{else}-->value="{lang save}"<!--{/if}-->>
+            </div>
+        </div>
+         <!--{/if}-->
+      </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();
+jQuery(document).ready(function(){
+	jQuery('textarea').TextAreaExpander(30,999);
+})
+jQuery(document).on('blur','.has-error .form-control',function(){
+	if(this.value) jQuery(this).closest('.form-group').removeClass('has-error');
+});
+function show_error(fieldid, extrainfo) {
+	var elem = jQuery('#th_'+fieldid);
+	if(elem) {
+		elem.addClass('has-error');
+		elem.title = elem.innerHTML;
+		extrainfo = (typeof extrainfo == "string") ? extrainfo : "";
+		
+		document.getElementById('showerror_'+fieldid).innerHTML = "{lang check_date_item} " + extrainfo;
+		$(fieldid).focus();
+	}
+}
+function show_success(message) {
+	message = message == '' ? '{lang update_date_success}' : message;
+	showDialog(message, 'right', '{lang reminder}', function(){
+		window.location.href=window.location.href;
+	}, 0, null, '', '', '', '', 3);
+}
+function clearErrorInfo() {
+	jQuery('.has-error').removeClass('has-error');
+}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js"></script>
+<!--{template common/footer_simple}--> 

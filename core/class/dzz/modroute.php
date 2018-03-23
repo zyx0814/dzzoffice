@@ -1,0 +1,36 @@
+<?php
+namespace core\dzz;
+
+class Modroute{
+
+    public function run(&$params){
+
+        global $_config;
+
+        $return = false;
+
+        $action = !empty($params[$_config['action_name']]) ? $params[$_config['action_name']]:$_config['default_action'];
+
+        $do     = !empty($params[$_config['do_name']]) ? $params[$_config['do_name']]:'';
+
+        if(!empty($action)){
+
+            if(!preg_match("/\w+/i",$action)) showmessage('undefined_action');
+
+            if(!preg_match("/\w+/i",$do) && $do !== '') showmessage('undefined_action');
+
+            if(@!file_exists($file = DZZ_ROOT.CURSCRIPT.BS.CURMODULE.BS.OP_NAME.BS.$action.EXT) ){
+
+                if(@!file_exists($file = DZZ_ROOT.CURSCRIPT.BS.CURMODULE.BS.OP.BS.$action.BS.$do.EXT)){
+
+                    showmessage($file.lang('file_nonexistence',array('file'=>$file)));
+                }
+
+            }
+
+            $return = include $file;
+        }
+        if($return) return false;
+        else return true;
+    }
+}

@@ -1,0 +1,154 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html, body {
+	overflow: hidden;
+	background: #FFF;
+	color: #4B4B4B;
+}
+.bs-main-container {
+	margin-left: 200px;/*padding: 15px 30px;*/
+}
+.form-horizontal-left .radio-inline {
+	padding: 5px 20px 5px 0px;
+	margin: 0;
+}
+.loginset-template {
+	width: 100px;
+	height: 100px;
+	overflow: hidden;
+	float: left;
+	margin-right: 10px;
+	display: block;
+	position: relative;
+}
+.loginset-template .loginset-template-icon {
+	width: 20px;
+	height: 20px;
+	border: 1px solid #AAB479;
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	color: #DD4B39;
+	font-size: 15px;
+	display: none;
+}
+.loginset-template:hover .loginset-template-icon {
+	display: block;
+}
+.loginset-template:hover .loginset-template-icon > span {
+	display: none;
+}
+.loginset-template .loginset-template-icon1 {
+	display: block !important;
+}
+.loginset-template .loginset-template-icon1 > span {
+	display: block !important;
+}
+#cpform {
+	margin-top: 15px;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix"> 
+    <!--{template left}--> 
+  </div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>
+
+	<div class="bs-main-container  clearfix">
+		<div class="main-header">
+			<ul class="nav nav-pills nav-pills-bottomguide">
+				
+			</ul>
+
+		</div>
+		<div class="main-header clearfix"> 
+			<ul class="nav navbar-nav nav-pills-bottomguide">
+				<li> <a href="{BASESCRIPT}?mod=setting&operation=qywechat">{lang enterprise_binding}</a> </li>
+	
+		        <li> <a href="{BASESCRIPT}?mod=setting&op=assistant">{lang enterprise_little_helper}</a> </li>
+		        <li class="active"> <a href="{BASESCRIPT}?mod=setting&op=wxsyn">{lang data_synchronization}</a> </li>
+	
+			</ul>
+		</div>		
+		<div class="main-content" style="padding:15px"> 
+			<p style="line-height: 2;">{lang seeting_wxsyn_bound_state} </p>
+			<button class="btn btn-width btn-info" data-loading-text="{lang are_synchronized}" onclick="qywechat_syn_org(this,0,0)">{lang start_sync_weixin}</button>
+			&nbsp;&nbsp;
+			<button class="btn btn-width btn-info ml20" data-loading-text="{lang are_synchronized}" onclick="qywechat_syn_org(this,1,0)">{lang start_sync_weixin_down}</button>
+			<div id="syn_info" class="alert"></div>
+
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+
+	function qywechat_syn_org(button,j,i) {
+		if(!i) i = 0;
+		var el = jQuery(button);
+		if(i == 0) el.button('loading');
+		var url='{ADMINSCRIPT}?mod=setting&op=wxsyn&do=qiwechat_syn_org&i=' + i;
+		var msg = '{lang start_sync_section_weixin}';
+		if( j==1 ){
+			url='{ADMINSCRIPT}?mod=setting&op=wxsyn_down&do=qiwechat_syn_org&i=' + i;
+			msg = '{lang start_sync_section_weixin_down}';
+		}
+		jQuery.getJSON(url, function(json) {
+			if(json.error) {
+				el.html(json.error);
+				window.setTimeout(function() {
+					el.html( msg );
+					el.button('reset'); }, 1000);
+			} else if(json.msg == 'continue') {
+				jQuery('#syn_info').append('<p>' + json.message + '</p>');
+				jQuery('.bs-main-container').scrollTop(jQuery('.main-content').height());
+				window.setTimeout(function() { qywechat_syn_org(button,j, json.start) }, 500);
+			} else if(json.msg == 'success') {
+				jQuery('#syn_info').append('{lang synchronization_section_p}');
+				jQuery('.bs-main-container').scrollTop(jQuery('.main-content').height());
+				qywechat_syn_user(button,j, 0);
+			}
+		});
+	}
+
+	function qywechat_syn_user(button,j, i) {
+		if(!i) i = 0;
+		var el = jQuery(button);
+		if(i == 0) el.button('loading');
+		var url='{ADMINSCRIPT}?mod=setting&op=wxsyn&do=qiwechat_syn_user&i=' + i;
+		var msg = '{lang synchronization_weinxin}';
+		var msg2 = '{lang synchronization_weinxin_success_down}';
+		if( j==1 ){
+			url='{ADMINSCRIPT}?mod=setting&op=wxsyn_down&do=qiwechat_syn_user&i=' + i;
+			msg =  '{lang synchronization_weinxin_down}'; 
+			msg2 =  '{lang synchronization_weinxin_success_down}';
+		}
+		
+		jQuery.getJSON(url, function(json) {
+			if(json.error) {
+				jQuery('#syn_info').append('<p>' + json.error + '</p>');
+				window.setTimeout(function() { el.html( msg );
+					el.button('reset'); }, 1000);
+			} else if(json.msg == 'continue') {
+				if(json.message) jQuery('#syn_info').append('<p>' + json.message + '</p>');
+				jQuery('.bs-main-container').scrollTop(jQuery('.main-content').height());
+				window.setTimeout(function() { qywechat_syn_user(button,j, json.start) }, 500);
+			} else if(json.msg == 'success') {
+				jQuery('#syn_info').append('{lang synchronization_success}');
+				window.setTimeout(function() { el.html( msg2 ); }, 1000);
+			}
+		});
+	}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+
+<!--{template common/footer_simple}-->

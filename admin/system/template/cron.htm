@@ -1,0 +1,182 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+	input[type="text"] {
+		margin: 0;
+	}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+	</div>
+
+	<div class="bs-main-container  clearfix">
+		<div class="main-header clearfix">
+			<ul class="nav nav-pills nav-pills-bottomguide">
+				<li <!--{if empty($_GET[ 'edit']) && empty($_GET[ 'run'])}-->class="active"<!--{/if}-->>
+					<a hidefocus="true" href="{BASESCRIPT}?mod={MOD_NAME}&op=cron">{lang cron}</a>
+				</li>
+				<!--{if !empty($_GET['edit'])}-->
+				<li class="active">
+					<a hidefocus="true" href="{BASESCRIPT}?mod={MOD_NAME}&op=cron&edit=$_GET[edit]">{lang misc_cron_edit}</a>
+				</li>
+				<!--{/if}-->
+				<!--{if !empty($_GET['run'])}-->
+				<li class="active">
+					<a hidefocus="true" href="{BASESCRIPT}?mod={MOD_NAME}&op=cron&run=$_GET[run]">{lang misc_cron_operation}</a>
+				</li>
+				<!--{/if}-->
+			</ul>
+		</div>
+		<div class="main-content" style="padding:15px;border-top:1px solid #FFF">
+			<!--{if $msg}-->
+			<div class="well">
+				<p class="$msg_type">$msg</p>
+				<!--{if $redirecturl}-->
+				<p class="text-info">
+					<a href="{$redirecturl}" class="lightlink">{lang message_redirect}</a>
+				</p>
+				<script type="text/JavaScript">setTimeout(function(){location.href='{$redirecturl}';}, 2000);</script>
+				<!--{/if}-->
+			</div>
+			<!--{else}-->
+			<!--{if $_GET['edit']>0}-->
+			<ul class="help-block">
+				<h4>{lang board_message}</h4> {lang misc_cron_edit_tips}
+			</ul>
+			<form id="cpform" action="{BASESCRIPT}?mod=system&op=cron&edit=$cronid" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+				<input type="hidden" value="{FORMHASH}" name="formhash">
+				<input type="hidden" value="true" name="editsubmit">
+				<dl>
+					<dt>{lang weekly}:</dt>
+					<dd class="clearfix">
+						<select name="weekdaynew" class="form-control">
+							<option value="-1" selected="selected">*</option>
+							$weekdayselect
+						</select>
+						<span class="help-inline">{lang misc_cron_edit_weekday_comment}</span>
+					</dd>
+
+				</dl>
+				<dl>
+					<dt>{lang everyday}:</dt>
+					<dd class="clearfix">
+						<select name="daynew" class="form-control">
+							<option value="-1" selected="selected">*</option>
+							$dayselect
+						</select>
+						<span class="help-inline">{lang misc_cron_edit_day_comment}</span>
+					</dd>
+
+				</dl>
+				<dl>
+					<dt>{lang hour}:</dt>
+					<dd class="clearfix">
+						<select name="hournew" class="form-control">
+							<option value="-1" selected="selected">*</option>
+							$hourselect
+						</select>
+						<span class="help-inline">{lang misc_cron_edit_hour_comment}</span>
+					</dd>
+				</dl>
+				<dl>
+					<dt>{lang minute}:</dt>
+					<dd class="clearfix">
+						<input name="minutenew" value="{eval echo implode(',',$cron[minute])}" type="text" class="form-control">
+						<span class="help-inline">{lang misc_cron_edit_minute_comment}</span>
+					</dd>
+				</dl>
+				<dl>
+					<dt>{lang misc_cron_edit_filename}:</dt>
+					<dd class="clearfix">
+						<input name="filenamenew" value="$cron[filename]" type="text" class="form-control">
+						<span class="help-inline">{lang misc_cron_edit_filename_comment}</span>
+					</dd>
+
+				</dl>
+				<dl>
+					<dd class="clearfix">
+						<button type="submit" class="btn btn-primary" name="exportsubmit" value="true">{lang blank_submit}</button>
+					</dd>
+				</dl>
+			</form>
+			<!--{elseif $_GET['run']}-->
+
+			<!--{else}-->
+			<ul class="help-block">
+				<h5>{lang board_message}</h5> {lang misc_cron_tips}
+			</ul>
+			<form id="cpform" action="{BASESCRIPT}?mod=system&op=cron" class="form-horizontal form-horizontal-left" style="margin:-15px -15px 0" method="post" name="cpform">
+				<input type="hidden" value="{FORMHASH}" name="formhash">
+				<input type="hidden" value="true" name="cronssubmit">
+				<table class="table">
+					<thead>
+						<th width="45"></th>
+						<th>{lang name}</th>
+						<th>{lang available}</th>
+						<th>{lang type}</th>
+						<th>{lang time}</th>
+						<th>{lang misc_cron_last_run}</th>
+						<th>{lang misc_cron_next_run}</th>
+						<th></th>
+					</thead>
+					<!--{loop $crons $cron}-->
+					<tr>
+						<td align="right"><input type="checkbox" name="delete[]" value="$cron[cronid]" <!--{if $cron[type]=='system' }-->disabled
+							<!--{/if}-->></td>
+						<td>
+							<p class="clearfix">
+								<input type="text" name="namenew[{$cron[cronid]}]" class="form-control" value="$cron[name]"></p>
+							<strong>$cron[filename]</strong>
+						</td>
+						<td><label class="checkbox-inline"><input  type="checkbox" name="availablenew[{$cron[cronid]}]" value="1" <!--{if $cron[available]>0}-->checked="checked"<!--{/if}-->></label></td>
+						<td>
+							<!--{if $cron['type'] == 'system'}-->
+							{lang inbuilt}
+							<!--{elseif $cron['type'] == 'user'}-->
+							{lang custom}
+							<!--{/if}-->
+						</td>
+						<td>$cron[time]</td>
+						<td>$cron[lastrun]</td>
+						<td>$cron[nextrun]</td>
+
+						<td>
+							<a href="{BASESCRIPT}?mod=system&op=cron&edit=$cron[cronid]">{lang edit}</a>
+							<br />
+							<!--{if $cron['run']}-->
+							<a href="{BASESCRIPT}?mod=system&op=cron&run=$cron[cronid]">{lang execute}</a>
+							<!--{else}-->
+							<a href="javascript:;" class="text-muted">{lang execute}</a>
+							<!--{/if}-->
+						</td>
+					</tr>
+
+					<!--{/loop}-->
+					<tr>
+						<td>{lang add_new}</td>
+						<td colspan="10"><input type="text" name="newname" value="" class="form-control"></td>
+					</tr>
+					<tr>
+						<td colspan="15" style="border-bottom:none"><label class="checkbox-inline ml20"><input type="checkbox" name="chkall" id="chkallspKI"  onclick="checkAll('prefix', this.form, 'delete')">{lang del}</label>&nbsp;&nbsp;<button type="submit" class="btn btn-primary" name="exportsubmit" value="true">{lang blank_submit}</button>
+						</td>
+					</tr>
+				</table>
+			</form>
+			<!--{/if}-->
+			<!--{/if}-->
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

@@ -1,0 +1,404 @@
+<!--{template common/header_simple_start}-->
+<link rel="stylesheet" type="text/css" href="static/tagsinput/jquery.tagsinput.css" />
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+
+<link rel="stylesheet" href="static/css/checkbox.css">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/system/scripts/selorg.js?{VERHASH}"></script>
+<script type="text/javascript">
+	<!--{if $openarr}-->
+	selorg.openarr = $openarr;
+	<!--{/if}-->
+</script>
+<style>
+	.img_128_128 {
+		max-width: 128px;
+		max-height: 128px;
+		border: 1px solid #CCC;
+		padding: 2px;
+	}
+	
+	.btn-sorg {
+		margin: 5px;
+	}
+	
+	* html .img_128_128 {
+		width: expression(this.width > 128 && this.width>=this.height ? 128: true);
+		height: expression(this.height > 128 && this.width<=this.height ? 128: true);
+	}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix" style="border-top:1px solid #FFF">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>	
+	<div class="bs-main-container">	
+		<div class="main-header clearfix">
+			<!--{if !$appid}-->
+				<h4 class="main-header-title navbar-left"><a href="{MOD_URL}">{lang goback}</a>&nbsp;&nbsp;&nbsp;/&nbsp;{lang add_app}</h4>			
+			<!--{else}-->
+				<h4 class="main-header-title navbar-left"><a href="{MOD_URL}">{lang goback}</a>&nbsp;&nbsp;/&nbsp;&nbsp;{lang edit_app}</h4>
+			<!--{/if}-->
+			
+			<!--{if !$appid && $op=='edit'}-->
+			<div  class="button_add_content">
+				<a href="{MOD_URL}&op=edit&do=add&refer=$refer" id="button_add1" title="{lang add_app}" class="hide">+</a>				
+				<a href="{MOD_URL}&op=cp&do=import&refer=$refer" id="button_add2" class="hide" title="{lang import_type_app}" style="font-size:20px ;"><span  class="glyphicon glyphicon-download-alt"></span></a>				
+				<a href="javascript:;" id="button_add" style="z-index: 10;">+</a>				
+			</div>
+			<!--{/if}-->
+		</div>
+		<div class="main-content " style="padding:15px;">
+			<form id="appform" name="appform" class="form-horizontal-left form-horizontal" action="{MOD_URL}&op=edit&appid=$appid" method="post" enctype="multipart/form-data" onsubmit="return validate(this)">
+				<input type="hidden" name="appsubmit" value="true" />
+				<input type="hidden" name="appid" value="$appid" />
+				<input type="hidden" name="refer" value="$refer" />
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+				<div class="form-group">
+					<label class="control-label " for="appname">{lang application_name}</label>
+
+					<input type="text" class="form-control input-sm" id="appname" name="appname" autocomplete="off" value="$app[appname]">
+					<span class="help-inline"></span> 
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="identifier">{lang application_identifier}</label>
+					<input type="text" class="form-control input-sm" id="identifier" name="identifier" autocomplete="off" value="$app[identifier]">
+					<ul class="help-block">
+						{lang app_application_identifier_text}
+					</ul>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="app_path">{lang application_app_path}</label>
+					<input type="text" class="form-control input-sm" id="app_path" name="app_path" autocomplete="off" value="$app[app_path]">
+					<ul class="help-block">
+						{lang app_application_app_path_text}
+					</ul>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="appurl">{lang application_site}</label>
+					<input type="text" class="form-control input-sm" id="appurl" name="appurl" autocomplete="off" value="$app[appurl]">
+					<ul class="help-block">
+						{lang app_application_site_text}
+					</ul>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="appadminurl">{lang application_appadminurl}</label>
+					<input type="text" class="form-control input-sm" id="appadminurl" name="appadminurl" autocomplete="off" value="$app[appadminurl]">
+					<ul class="help-block">
+						{lang app_application_appadminurl_text}
+					</ul>
+				</div>
+				<!--<div class="form-group">
+					<label class="control-label" for="noticeurl">{lang notification_interface}</label>
+					<input type="text" class="form-control input-sm" id="noticeurl" name="noticeurl" autocomplete="off" value="$app[noticeurl]">
+					<ul class="help-block">
+						{lang app_notification_interface_text}
+					</ul>
+				</div>-->
+				<div class="form-group">
+					<label class="control-label" for="vendor">{lang supplier}</label>
+					<input type="text" class="form-control input-sm" id="vendor" name="vendor" autocomplete="off" value="$app[vendor]">
+					<span class="help-inline">{lang application_provider_name}</span>
+				</div>
+				<div class="form-group">
+					<label class="control-label">{lang application_ico}</label>
+					<div class="controls">
+						<!--{if $appid>0}-->
+						<p><input id="fileiz_0" class="form-control input-sm" name="TMPiconnew" value="" style="display: none;" type="file">
+							<input id="fileiz_1" class="form-control input-sm" style="" name="iconnew" value="$app[appico]" type="text"></p>
+						<p>
+							<a id="fileiz_0a" style="" href="javascript:;" onclick="document.getElementById('fileiz_1a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileiz_1').name = 'TMPiconnew';document.getElementById('fileiz_0').name = 'iconnew';document.getElementById('fileiz_0').style.display = '';document.getElementById('fileiz_1').style.display = 'none'">{lang uploading}</a>&nbsp;
+							<a id="fileiz_1a" style="font-weight: bold;" href="javascript:;" onclick="document.getElementById('fileiz_0a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileiz_0').name = 'TMPiconnew';document.getElementById('fileiz_1').name = 'iconnew';document.getElementById('fileiz_1').style.display = '';document.getElementById('fileiz_0').style.display = 'none'">{lang type_link}</a>
+						</p>
+						<!--{else}-->
+						<p><input id="fileiz_0" class="form-control input-sm" name="iconnew" value="" type="file">
+							<input id="fileiz_1" class="form-control input-sm" style="display: none;" name="TMPiconnew" value="$app[appico]" type="text"></p>
+						<p>
+							<a id="fileiz_0a" style="font-weight: bold;" href="javascript:;" onclick="document.getElementById('fileiz_1a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileiz_1').name = 'TMPiconnew';document.getElementById('fileiz_0').name = 'iconnew';document.getElementById('fileiz_0').style.display = '';document.getElementById('fileiz_1').style.display = 'none'">{lang uploading}</a>&nbsp;
+							<a id="fileiz_1a" style="" href="javascript:;" onclick="document.getElementById('fileiz_0a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileiz_0').name = 'TMPiconnew';document.getElementById('fileiz_1').name = 'iconnew';document.getElementById('fileiz_1').style.display = '';document.getElementById('fileiz_0').style.display = 'none'">{lang type_link}</a>
+						</p>
+						<!--{/if}-->
+						<p class="text-muted">{lang suggest_image_size}128X128 px</p>
+					</div>
+					<span class="help-inline">
+                <!--{if $appid}--><img class="img_128_128" src="$app[appico]?t=$_G[timestamp]" >
+                <!--{else}--> <img class="img_128_128" src="dzz/images/default/icodefault.png" >
+                <!--{/if}-->
+                </span>
+				</div>
+				<div class="form-group">
+					<label class="control-label">{lang group_permissions}</label>
+					<div class="controls ml20">
+						<!--{loop $grouptitle $key $value}-->
+						<label class="radio wd120"><input type="radio" name="group" value="$key" <!--{if $app[group]==$key}-->checked<!--{/if}--> onclick="{if $key==1}jQuery('#perm_depart').show();{else}jQuery('#perm_depart').hide();{/if}">$value </label>
+						<!--{/loop}-->
+					</div>
+					<span class="help-block">{lang app_group_permissions}</span>
+				</div>
+				<div class="form-group" id="perm_depart" <!--{if $app[ 'group']!=1}-->style="display:none"
+					<!--{/if}-->>
+					<label class="control-label">{lang department_permissions}</label>
+					<div class="controls-adapt">
+						<div class="dropdown controls_adapt">
+							<button class="btn btn-default dropdown-toggle" id="orgids_Menu" data-toggle="dropdown">{lang please_select_a_organization_or_department}<span class="caret"></span></button>
+							<div id="orgids_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgids_Menu">
+								<iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&ctrlid=orgids&multiple=1&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+							</div>
+						</div>
+						<div id="orgids">
+							<!--{loop $sel_org $value}-->
+							<button id="orgids_sl_$value[orgid]" type="button" class="btn btn-simple btn-sorg" data-val="$value['orgid']">
+								{eval echo avatar_group($value['orgid']);} $value[orgname] 
+								<a href="javascript:;" class="ibtn dzz dzz-close"  title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
+							</button>
+							<!--{/loop}-->
+						</div>
+
+						<input id="sel_orgids" name="orgids" type="hidden" value="$sel" />
+					</div>
+					<span class="help-block">{lang app_set_application_jurisdiction}</span>
+				</div>
+				<div class="form-group ">
+					<label class="control-label" for="tag">{lang application_label}</label>
+					<div class="controls">
+						<input type="text" name="tag" autocomplete="off" id="tag" data-source="$tag_source" data-items="5" value="$app[tags]" style="margin: 0 auto;">
+					</div>
+					<ul class="help-block">
+						<li>{lang app_number_fields}</li>
+						<li>{lang app_clear_label}</li>
+					</ul>
+				</div>
+				<div class="form-group">
+					<label class="control-label" for="fileext">{lang app_support_extension}</label>
+					<div class="controls" style="position:relative;overflow:visible">
+						<input type="text" name="fileext" autocomplete="off" id="fileext" data-source="$fileext_source" value="$app[fileext]" style="margin: 0 auto;">
+					</div>
+					
+					<ul class="help-block">
+						{lang app_not_allowed_open_text}
+					</ul>
+				</div>
+				<div class="form-group">
+					<label class="control-label">{lang open_mode}</label>
+					<div class="controls ml20">
+						<label class="radio radio-inline"><input type="radio" name="open" value="0" <!--{if $app[open]<1}-->checked<!--{/if}--> onclick="jQuery('#feature').show();">{lang app_internal_frame} </label>
+						<label class="radio radio-inline"><input type="radio" name="open" value="1" <!--{if $app[open]>0}-->checked<!--{/if}--> onclick="jQuery('#feature').hide();">{lang new_Window}</label>
+					</div>
+
+					<ul class="help-block">
+						{lang app_internal_frame_text}
+					</ul>
+				</div>
+				
+				
+				
+		
+				<div class="form-group">
+					<label class="control-label">{lang app_application_library}</label>
+					<div class="controls ml20">
+						<label class="radio radio-inline"><input type="radio" name="hideInMarket" value="0" <!--{if $app[hideInMarket]<1}-->checked<!--{/if}-->>{lang show} </label>
+						<label class="radio radio-inline"><input type="radio" name="hideInMarket" value="1" <!--{if $app[hideInMarket]>0}-->checked<!--{/if}-->>{lang hide} </label>
+					</div>
+		
+					<span class="help-block">{lang app_application_library_text}</span>
+				</div>
+				<div class="form-group">
+					<label class="control-label">{lang show_ico}</label>
+					<div class="controls ml20">
+						<label class="radio radio-inline"><input type="radio" name="isshow" value="1" <!--{if $app[isshow]>0}-->checked<!--{/if}-->>{lang show} </label>
+						<label class="radio radio-inline"><input type="radio" name="isshow" value="0" <!--{if $app[isshow]<1}-->checked<!--{/if}-->>{lang hide} </label>
+					</div>
+					<span class="help-block">{lang app_show_ico_text}</span>
+				</div>
+				
+		
+			
+			
+			
+			<div class="form-group">
+				<label class="control-label" for="appdesc">{lang application_introduce}</label>
+				<textarea rows="3" class="form-control" name="appdesc" id="appdesc" style="width:350px;">$app[appdesc]</textarea>
+			</div>
+			<div id="pic_delete"></div>
+			<input id="editbutton" name="appbutton" value="{lang submit}" onclick="validate(this);" style="display: none;" type="button" />
+			</form>
+		
+			<div class="form-horizontal-left form-horizontal">
+				<div class="form-group">
+					<label class="control-label">{lang application_introduce_img}</label>
+					<div class="controls">
+						<!--{if $piclist}-->
+						<ul id="pic_container" class="thumbnails list-unstyled ml20">
+							<!--{loop $piclist $key $value}-->
+							<li class="wd120" style="margin:10px;width:90px;" id="pic_{$value[picid]}">
+								<div class="thumbnail text-center" style="margin-bottom:10px;">
+									<img data_src="$value[pic]" src="$value[pic]" />
+								</div>
+								<p class="text-center">
+									<a class="btn btn-link" href="javascript:;" onclick="delete_pic(this,{$value[picid]})">{lang delete}</a>
+								</p>
+							</li>
+							<!--{/loop}-->
+						</ul>
+		
+						<!--{/if}-->
+		
+						<table class="tb tb2 ">
+							<tbody id="attachbodyhidden" style="display:none">
+								<tr class="noborder">
+									<td class="tb27">
+										<form method="post" autocomplete="off" id="upload" action="{MOD_URL}&op=$op&do=upload" enctype="multipart/form-data" target="uploadframe">
+											<input type="file" name="attach" class="pf" size="0" />
+											<span id="localfile"></span>
+											<input type="hidden" name="uploadsubmit" id="uploadsubmit" value="true" />
+											<input type="hidden" name="formhash" value="{FORMHASH}" />
+										</form>
+									</td>
+								</tr>
+							</tbody>
+							<tbody id="attachbody"></tbody>
+						</table>
+		
+						<script src="admin/scripts/uploadpic.js?{VERHASH}" type="text/javascript"></script>
+						<iframe id="uploadframe" name="uploadframe" width="0" height="0" marginwidth="0" frameborder="0" src="about:blank"></iframe>
+					</div>
+				</div>
+				<div class="form-group">
+					<label></label>
+					<input class="btn btn-primary" id="submit_editsubmit" name="appsubmit" value="{lang submit}" type="button" onclick="document.getElementById('editbutton').click();">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	function screen_app(tagid,group){	
+		var url = '{MOD_URL}';
+		if(tagid){
+			url += '&tagid='+tagid;
+		}
+		if(group){
+			url += '&group='+group;
+		}
+		var inputval = jQuery('#screen_keyword').val();
+		if(inputval){
+			url += '&keyword='+inputval;
+		}
+		console.log(url);
+//		return false;
+		window.location.href =url;	 
+	}
+	jQuery('#button_add').click(function(){
+		if(jQuery("#button_add1").hasClass('hide')){
+			jQuery("#button_add").html("×");
+			jQuery("#button_add1").removeClass("hide");
+			jQuery("#button_add2").removeClass("hide");
+			jQuery("#button_add1").stop().animate({top:"-124px"},500);
+			jQuery("#button_add2").stop().animate({top:"-62px"},500);
+		}else{
+			jQuery("#button_add").html("＋");
+			jQuery("#button_add1").stop().animate({top:"0px"},500);
+			jQuery("#button_add2").stop().animate({top:"0px"},500);
+			setTimeout(function(){
+				jQuery("#button_add1").addClass("hide");
+				jQuery("#button_add2").addClass("hide");
+			},500)
+			
+		}
+	});
+	jQuery(document).ready(function(e) {
+
+		jQuery('#fileext').tagsInput({
+			'height': '0px',
+			'width': '300px',
+			'interactive': true,
+			'defaultText': '',
+			//'onAddTag':callback_function,
+			//'onRemoveTag':callback_function,
+			//'onChange' : callback_function,
+			'removeWithBackspace': true,
+			'minChars': 0,
+			'maxChars': 0, //if not provided there is no limit,
+			'placeholderColor': '#666666',
+			'typeahead': {
+				source: jQuery('#fileext').data('source')
+			}
+		});
+
+		jQuery('#tag').tagsInput({
+			'height': '0px',
+			'width': '300px',
+			'interactive': true,
+			'defaultText': '',
+			//'onAddTag':callback_function,
+			//'onRemoveTag':callback_function,
+			//'onChange' : callback_function,
+			'removeWithBackspace': true,
+			'minChars': 0,
+			'maxChars': 0, //if not provided there is no limit,
+			'placeholderColor': '#666666',
+			'typeahead': {
+				source: jQuery('#tag').data('source')
+			}
+		});
+	});
+
+	jQuery('#un_selector_tag,#un_selector_fileext').on('click', function(e) {
+		document.getElementById(this.id.replace('un_selector_', '')).focus();
+	});
+
+	function addtaginput(key, id) {
+		var html = '<span>';
+		html += '<button data-dismiss="alert" class="close" type="button">×</button>';
+		html += '<em title="' + key + '" class="pull-left">' + key + '</em><input type="hidden"  value="' + key + '" name="' + id + '[]">';
+		html += '</span>';
+		jQuery('#' + id).val('').before(html).focus();
+	}
+
+	function validate(obj) {
+		//获取用户部门 并添加到form中
+
+		var appname = document.getElementById('appname');
+		var appurl = document.getElementById('appurl');
+		var identifier = document.getElementById('identifier');
+		var app_path = document.getElementById('app_path');
+		var notempty = '{lang not_empty}'; 
+		if(appname) {
+			var slen = strlen(appname.value);
+			if(slen < 1 || slen > 80) {
+				showmessage('{lang application_name}'+notempty, 'danger', 3000, 1);
+				appname.focus();
+				return false;
+			}
+		}
+		if(strlen(appurl.value) < 1) {
+			showmessage('{lang application_site}'+notempty, 'danger', 3000, 1);
+			appurl.focus();
+			return false;
+		}
+		if(strlen(identifier.value) < 1) {
+			showmessage('{lang application_identifier}'+notempty, 'danger', 3000, 1);
+			appurl.focus();
+			return false;
+		}
+		if(strlen(app_path.value) < 1) {
+			showmessage('{lang application_app_path}'+notempty, 'danger', 3000, 1);
+			appurl.focus();
+			return false;
+		}
+		uploadSubmit(obj);
+		return true;
+	}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js"></script>
+<script src="static/tagsinput/jquery.tagsinput.js"></script>
+<script src="static/bootstrap/js/bootstrap-typeahead.js"></script>
+<!--{template common/footer_simple}-->

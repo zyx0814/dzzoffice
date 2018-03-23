@@ -1,0 +1,127 @@
+<div class="all firstme " id="step" style=" background-image: url('{MOD_PATH}/images/step.png');background-repeat:  no-repeat;">
+    <div class="first">
+        <ul class="firstul">
+            <li class="active">1.{lang perform_security_verification}</li>
+            <!--{if !$emailchange}--> <li >2.{lang set_user_email}</li><!--{else}--><li >2.{lang change_user_email}</li><!--{/if}-->
+            <!--{if !$bindstatus}--> <li >3.{lang email_bind_success}</li><!--{else}--><li >3.{lang email_edit_success}</li><!--{/if}-->
+
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    function safeverifystep(i){
+
+            jQuery('#safechkbox').html('');
+
+            var index = parseInt(i);
+            switch(index){
+                case 0: className = 'firstme';
+                    break;
+                case 1: className = 'secondme';
+                    break;
+                case 2: className = 'thirdme';
+                    break;
+                default: className = 'firstme';
+            }
+
+            jQuery('#step').removeClass().addClass('all '+className);
+
+            jQuery('#step').find('ul li').removeClass('active');
+
+            jQuery('#step').find('ul li:eq('+index+')').addClass('active');
+
+            jQuery('#changeemailbox').show();
+
+    }
+</script>
+<!--{if !$newchange}-->
+<form id="emailform" name="emailform" class="form-horizontal form-horizontal-left" role="form" action="user.php?mod=profile&op=password&do=changeemail" method="post" onsubmit="bind_email();return false">
+    <input type="hidden" name="changeemail" value="true" />
+    <input type="hidden" name="uid" value="$uid" />
+    <input type="hidden" name="formhash" value="{FORMHASH}" />
+  <div id="safechkbox">{Hook safe_chk}</div>
+    <div id="changeemailbox" style="display:none;">
+    <div class="form-group">
+        <label class="control-label" for="newemail" required>{lang email_new}</label>
+        <input type="text" name="newemail" class="form-control" autocomplete="off" id="newemail" placeholder="{lang fill_email_here}">
+        <span id="chk_newemail" class="help-inline"> <span id="suc_newemail"></span> <kbd  class="p_chk"><!--{if !$emailchange}-->*{lang bind_email_tips}<!--{else}-->*{lang change_bindemail_tips}<!--{/if}--></kbd> </span>
+    </div>
+    <!--{if !$emailchange}-->
+    <div class="form-group">
+        <label class="control-label"></label>
+        <div class="controls"><input type="button" class="btn btn-primary" value="{lang set}" onclick="bind_email()"></div>
+    </div>
+    <!--{else}-->
+        <div class="form-group">
+            <label class="control-label"></label>
+            <div class="controls"><input type="button" class="btn btn-primary" value="{lang change}" onclick="bind_email()"></div>
+        </div>
+        <script>
+            {if $verifyresult} safeverifystep(1); {/if}
+        </script>
+    <!--{/if}-->
+    </div>
+</form>
+<div class="conTent" id="emailsendmsg" style="display:none;">
+    <div class="success">
+        <span class="glyphicon glyphicon-ok"></span>
+        <span class="msgobj">{lang verify_email_send}</span>
+    </div>
+    <div class="theme">
+        <p><span class="msgobj">{lang verify_email}</span>{lang email_sended} <span class="phone"><a  href="" id="returnemail" target="_blank"></a></span>,{lang click_link}。</p>
+        {lang verify_email_tips}
+    </div>
+    <div class="email">
+        <button type="button" class="btn btn-success" id="refferemail">{lang now_your_email}</button>
+        <span><span id="send_start">{lang email_sended}</span><span id="send_status" style="display:none;"><b class="time" id="downtime">60</b>s<span id="falseresend">{lang  validator_send}</span><span id="resend" style="display:none"><input type="button" class="btn btn-success"  value="{lang  validator_send}" onclick="bind_email()" ></span></span></span>
+    </div>
+</div>
+<!--{elseif $id && $newchange}-->
+<div class="conTent">
+    <div class="success">
+        <span class="glyphicon glyphicon-ok"></span>
+        {lang email_bind_success}
+    </div>
+</div>
+<script>
+    safeverifystep(2);
+</script>
+<!--{/if}-->
+<script>
+    function bind_email(){
+        jQuery('#send_status').hide();
+        jQuery('#downtime').html(60);
+        jQuery('#resend').hide();
+        jQuery('#send_start').html('{lang sending_wait}');
+        var form = jQuery('#emailform');
+        var url = form.attr('action');
+        jQuery.post(url+'&returnType=json',form.serialize(),function(json){
+                if(json['success']){
+                    jQuery('#send_start').html('{lang verify_email_send}');
+                    jQuery('#send_status').show();
+                    jQuery('#falseresend').show();
+                    jQuery('#emailform').hide();
+                    jQuery('#emailsendmsg').show();
+                    var path = getEmailPath(json['success']['email']);
+                    jQuery('#returnemail').html(json['success']['email']).attr('href',path);
+                    jQuery('#refferemail').click(function(){
+                        window.location.href = path;
+                    });
+                    var sum = 60;
+                    var timer = setInterval(function(){
+                        if(sum <= 0) {
+                            sum = 0;
+                            jQuery('#falseresend').hide();
+                            jQuery('#resend').show();
+                            clearTimeout(timer);
+                        }
+                        jQuery('#downtime').html(sum);
+                        sum--;
+                    },1000);
+                }else if(json['error']){
+                    showmessage(json['error'],'danger',3000,1);
+                }
+        },'json')
+        return false;
+    }
+</script>

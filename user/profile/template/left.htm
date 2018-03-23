@@ -1,0 +1,15 @@
+<div class="leconMenu">
+	<h3 class="bs-left-title">{lang myCountCenter}</h3>
+	<ul class="nav-stacked">
+	    <li <!--{if OP_NAME=='index' && !$vid}-->class="active"<!--{/if}-->><a href="user.php?mod=profile">{lang basic_information}</a></li>
+	    <li <!--{if OP_NAME=='avatar'}-->class="active"<!--{/if}-->><a  href="user.php?mod=profile&op=avatar">{lang Modify_the_picture}</a></li>
+	    <li <!--{if OP_NAME=='password'}-->class="active"<!--{/if}-->><a href="user.php?mod=profile&op=password">{lang password_and_security}</a></li>
+	 	<!--{loop $_G[setting][verify] $key $value}-->
+	  	<!--{if $value[available] && (empty($value[groupid]) || ($value[groupid] && in_array($_G[groupid],$value[groupid])))}-->
+	   <li <!--{if MOD_NAME=='profile' && $vid==$key}-->class="active"<!--{/if}-->>
+	        <a href="user.php?mod=profile&vid=$key">$value['title']</a>
+	   </li>
+	   <!--{/if}-->
+	      <!--{/loop}-->
+	</ul>
+</div>

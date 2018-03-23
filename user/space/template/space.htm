@@ -1,0 +1,73 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<style>
+body{
+	
+}
+.userspace{
+	position: relative;
+	height:auto;
+	border:none;
+	padding:0;
+	border-bottom:1px solid #DDD;
+}
+.userspace .avatar{
+	position:absolute;
+
+	left:8px;
+	top:15px;
+}
+
+.userspace .userinfo{
+	padding:20px 10px 15px 70px;
+	line-height:40px;
+	overflow:hidden;
+}
+.userspace .userinfo a{
+	padding-right:20px;
+	font-size:24px;
+	
+}
+span.label{
+	white-space:normal;display:inline-block;
+	margin:0 10px 10px 0;
+	line-height:1.4;
+}
+	
+
+</style>
+<!--{template common/header_simple_end}-->
+<div class="container" style="height:100%;">
+ <div class=" userspace">
+  		<div class="avatar">{eval echo avatar_block($uid);}</div>
+        <div class="userinfo clearfix">
+            <a  href="javascript:" class="username "><strong>$space['username']</strong></a>
+           <!--{if $uid==$_G['uid']}--> <a  href="user.php?mod=profile">{lang edit_data}</a><!--{/if}-->
+          
+        </div>
+      
+  </div>
+  <div class="main-content clearfix" style="padding:20px;border-top:1px solid #FFF">
+   <div class="form-horizontal">
+   		<!--<div class="form-group clearfix">
+        	<label class="control-label col-sm-2"><img class=" img-circle" src="avatar.php?uid=$uid&size=small" /></label>
+            <div class="col-sm-10">
+            	<table width="100%" height="55">
+                <tr><td><strong>$space['username']</strong></td></tr>
+          		 <!--{if $uid==$_G['uid']}-->  <tr><td><a  href="user.php?mod=profile">{lang edit_data}</a></td></tr><!--{/if}-->
+                 </table>
+            </div>
+        </div>-->
+    <!--{loop $profiles $key $value}-->
+        <div class="form-group clearfix">
+        	<label class="control-label col-sm-2" style="max-width:120px">$value[title]:</label>
+            <div class="col-sm-10">
+            	<p class="form-control-static">$value[value]</p>
+            </div>
+        </div>
+	<!--{/loop}-->
+  </div>
+  </div>
+</div>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>	
+<!--{template common/footer_simple}-->

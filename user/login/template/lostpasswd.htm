@@ -1,0 +1,142 @@
+<!--{if empty($_GET['inajax'])}-->
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script src="user/scripts/login.js" type="text/javascript"></script>
+<!--[if lt IE 9]>
+  <script src="static/js/jquery.placeholder.js" type="text/javascript"></script>
+<![endif]-->	
+<style>
+
+
+.page{
+    height: 100%;
+    padding: 0;
+    margin: 0!important;
+    background-color: transparent;
+    position: relative;
+    text-align: center!important;
+	overflow:auto;
+}
+.page:before{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    content: "";
+}
+.Mcontent{
+    padding: 30px;
+    vertical-align: middle;
+    display: inline-block;
+    max-width:410px;
+    font-size: 14px;
+}
+.Mbody{
+	padding:20px 0px;
+}
+
+p{
+    color: #a3afb7;
+    margin: 0 0 11px;
+}
+form{
+    width: 350px;
+    margin: 30px 0 0 0;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group.last{
+ 	margin-bottom: 0;
+	margin-top: 30px;
+}
+	
+.Mcontent{
+	background-color:#FFF;
+}
+
+div.error-msg{
+	text-align:left;
+	margin:20px 0;
+}
+@media (max-width: 380px){
+    
+	.Mcontent{
+		margin:15px;
+	}
+   .loginForm {
+        width: auto;
+    }
+}
+.brand {
+   margin:15px 0;
+}
+.brand img {
+	max-width:350px;
+	max-height:350px;
+}
+	
+</style>
+<!--{template common/header_simple_end}-->
+<!--{eval $loginhash = 'L'.random(4);}-->
+
+<div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:0;  font-size: 0px; background:{eval echo $_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#76838f';};"> 
+	<!--{if $_G['setting']['loginset']['img']}-->
+	<img src="$_G['setting']['loginset']['img']" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index:10;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%">
+	<!--{/if}-->
+    <!--{if $_G['setting']['loginset']['url']}-->
+    <iframe id="wrapper_frame" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" style="z-index:20;position:absolute;width:100%;height:100%;background:url(dzz/images/b.gif);"></iframe>
+    <!--{/if}-->
+</div>
+<div class="page" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:block;" >
+		
+        <div class="Mcontent" id="lostpw_container_$loginhash">
+            <div class="brand"> <img src="{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}" /></div>
+            <h3 class="Mtitle" ><span >{lang getpassword}</span></h3>
+            <p>{lang lostpassword_tip}</p>
+            <!--{if !empty($_GET['inajax'])}--><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><!--{/if}-->
+            <div class="Mbody">
+                <form class="loginForm" method="post" autocomplete="off" id="lostpwform_$loginhash" role="form"  onsubmit="lostpass('lostpw_container_$loginhash','lostpwform_$loginhash','returnmessage3_$loginhash');return false;" action="user.php?mod=login&op=logging&action=lostpasswd">
+                    <input type="hidden" name="formhash" value="{FORMHASH}" />
+                    <input type="hidden" name="lostpwsubmit" value="true" />
+                    <input type="hidden" name="handlekey" value="lostpw_$loginhash" />
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="email" id="lostpw_email"  value=""  placeholder="{lang fill_your_login_email}" />
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control"  name="username" id="lostpw_username"  value=""  placeholder="{lang names_fill_registration}"  />
+                    </div>
+                     <div class="error-msg text-danger" id="returnmessage3_$loginhash"></div>
+                    <div class="form-group last">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg" name="lostpwsubmit" value="true">{lang sure_find}</button>
+                        <a href="user.php?mod=login"  onclick="try{_login.logging();return false}catch(e){return true}" title="{lang back_login}" style="display:inline-block;margin-top:25px;">{lang back_login}</a>
+                    </div>
+                  
+                </form>
+  	        </div>
+  	       
+            <div class="modal-footer" style="display:none;">
+            	<button type="button" class="btn btn-primary toMail" >{lang now_your_email}</button>
+                <button type="button" class="btn btn-default toIndex" onclick="location.href='$_G[siteurl]'">{lang back_homepage}</button>
+            </div>
+            <script type="text/javascript">
+             	
+            	
+            	jQuery(document).ready(function(e) {
+            		jQuery('#lostpw_email').focus();
+                    if(jQuery('.ie8').length){ //ie8模拟placeholder;
+            			jQuery(':input[placeholder]').each(function(){
+            				jQuery(this).placeholder();
+            			});
+            		}
+                });
+            </script>
+        </div>
+</div>
+<script type="text/javascript">
+	jQuery('body').addClass('modal-open');
+</script>
+<script type="text/javascript" src="user/scripts/setbacksize.js?{VERHASH}"></script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer}-->
+<!--{/if}-->
+

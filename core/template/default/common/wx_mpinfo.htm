@@ -1,0 +1,147 @@
+<style>
+.line {
+	height: 2px;
+	margin: 10px 0;
+	font-size: 0;
+	overflow: hidden;
+	background-color: transparent;
+	border-width: 0;
+	border-top: 1px solid #e7e7e7;
+	border-bottom: 1px solid #FFF;
+}
+.pull-in {
+	margin-left: -15px;
+	margin-right: -15px;
+}
+/*.line-dashed {
+	border-style: dashed;
+	background: transparent;
+}*/
+.line-lg {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+.padding-left .col-sm-12 {
+	padding-left: 40px;
+}
+.relative {
+	position: relative;
+}
+.copy-success {
+	position: absolute;
+	left: -210px;
+	top: -15px;
+	padding: 8px;
+}
+.absoluter {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 5px;
+}
+</style>
+
+<div class="main-header">
+  <ul  class="nav nav-pills nav-pills-bottomguide">
+    <li class="active"><a href="{$baseurl_info}">{eval echo $base_info_title?$base_info_title:'{lang application_message}';}</a></li>
+    <li><a href="{$baseurl_menu}">{eval echo $base_menu_title?$base_menu_title:'{lang application_menu}';}</a></li>
+  </ul>
+</div>
+<div class="main-content" style="border-top:1px solid #FFF">
+<div class="panel-body" >
+  <div class="entity-panel-body form-horizontal">
+   
+   
+   
+    <form id="settingform" name="settingform" class="form-horizontal form-horizontal-left" action="$baseurl_info" method="post" style="margin:0">
+          <input type="hidden" name="settingsubmit" value="true" />
+          <input type="hidden" name="formhash" value="{FORMHASH}" />
+           <dl>
+          <dt>AppID:</dt>
+          <dd class="clearfix">
+            <input type="text" id="AppID" class="form-control" name="AppID" value="$setting[AppID]" required="true" /> 
+            <span class="help-block">{lang developer_credentials_login_commonality_terrace}</span>
+          </dd>
+        </dl>
+        <dl>
+          <dt>AppSecret:</dt>
+          <dd class="clearfix">
+            <input type="text" id="AppSecret"  class="form-control" name="AppSecret" value="$setting[AppSecret]" required="true" />
+            <span class="help-block">{lang developer_credentials_login_commonality_terrace}</span>
+          </dd>
+        </dl>
+        <dl>
+            <dd>
+            <input type="hidden" id="fbind" name="fbind" value="bind" />
+            <button class="btn btn-success btn-width" onclick="document.getElementById('settingform').onsubmit();" >{lang bundle}</button>
+            &nbsp;&nbsp;<button class="btn btn-danger btn-width" onclick="document.getElementById('fbind').value='unbind';document.getElementById('settingform').onsubmit();">{lang unbundle}</button>
+            </dd>
+        </dl>  
+    </form>
+   
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group clearfix padding-left">
+      <div class="col-sm-12">
+        <p class="form-control-static danger relative"><i class="glyphicon glyphicon-hand-down"></i> <strong style="font-size:1.5em">{lang need_developer_center_settings}</strong> <a href="https://mp.weixin.qq.com/advanced/advanced?action=dev" target="_blank" class="pull-right btn btn-default">{lang weixin_public_number}</a> </p>
+      </div>
+    </div>
+   
+    
+    <div class="line line-dashed line-lg pull-in"></div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-sm-12">
+      <h5><strong>{lang server_configuration_information}</strong></h5>
+      </label>
+    </div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-xs-2 control-label">URL({lang server_address})</label>
+      <div class="col-xs-10">
+        <p class="form-control-static relative" style="padding-left:0;">$wxmp[callback] <span class="absoluter">
+          <button class="btn btn-default js_copy" data-clipboard-text="$wxmp[callback]" title="{lang copy}">{lang copy}</button>
+          <span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span> </span> </p>
+      </div>
+    </div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-xs-2 control-label">Token({lang token})</label>
+      <div class="col-xs-10">
+        <p class="form-control-static relative">$wxmp['token'] <span class="absoluter">
+          <button class="btn btn-default js_copy" data-clipboard-text="$wxmp[token]" title="{lang copy_success_paste_need_place}">{lang copy_success_paste_need_place}</button>
+          <span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span> </span> </p>
+      </div>
+    </div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-xs-2 control-label">EncodingAESKey({lang message_encryption_key})</label>
+      <div class="col-xs-10">
+        <p class="form-control-static relative">$wxmp[encodingaeskey] <span class="absoluter">
+          <button class="btn btn-default js_copy" data-clipboard-text="$wxmp[encodingaeskey]" title="{lang copy}">{lang copy}</button>
+          <span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span> </span> </p>
+      </div>
+    </div>
+    <div class="form-group clearfix padding-left">
+      <label class="col-xs-2 control-label">{lang message_encryption}</label>
+      <div class="col-xs-10">
+        <p class="form-control-static relative">{lang safe_mode}</p>
+      </div>
+    </div>
+   
+  </div>
+</div>
+<script type="text/javascript">  
+jQuery(document).ready(function(e) {
+    var client = new ZeroClipboard(jQuery('.js_copy'));
+	client.on( "load", function( client ) {
+	  // alert( "ZeroClipboard SWF is ready!" );
+	  client.on( "complete", function( client,args ) {
+		  var self=this;
+		  jQuery(this).parent().find('.copy-success').removeClass('hide');
+		  window.setTimeout(function(){
+		  		jQuery(self).parent().find('.copy-success').addClass('hide');
+		  },1000);
+	  });
+	});
+});
+
+</script> 
+<script src="static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"></script> 
+
+<!--{template common/footer_simple}--> 

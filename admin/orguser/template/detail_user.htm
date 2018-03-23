@@ -1,0 +1,144 @@
+<div class="main-header" style="padding:0 15px">
+	<ul class="nav nav-pills nav-pills-bottomguide">
+		<strong class="pull-left">$user[username]</strong>
+		<li class="active">
+			<a href="{BASESCRIPT}?mod=orguser&op=edituser&uid=$user[uid]" onclick="jQuery('#orguser_container').load(this.href);return false;">{lang basic_message}</a>
+		</li>
+		<li>
+			<a href="{BASESCRIPT}?mod=orguser&op=edituser&do=profile&uid=$user[uid]" onclick="jQuery('#orguser_container').load(this.href);return false;">{lang details_information}</a>
+		</li>
+
+	</ul>
+</div>
+<div class="main-body" style="padding:15px 15px 15px 22px;">
+	<form id="accountform" name="accountform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=member&op=edituser&do=edit" method="post" onsubmit="account_submit();return false">
+		<input type="hidden" name="accountedit" value="true" />
+		<input type="hidden" name="uid" value="$uid" />
+		<input type="hidden" name="formhash" value="{FORMHASH}" />
+		<div class="form-group">
+			<label class="control-label" for="email">{lang login_email}</label>
+			<div class="controls">
+				<input type="text" class="form-control input-sm" id="email" name="email" autocomplete="off" value="$user[email]">
+				<p id="emailmore" style="height:1px;margin:0;">&nbsp;</p>
+			</div>
+			<span id="chk_email" class="help-inline">
+                <span id="suc_email"></span><kbd class="p_chk"></kbd>
+			</span>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="username">{lang compellation}</label>
+			<div class="controls">
+				<input type="text" class="form-control input-sm" class="form-control input-sm" id="username" name="username" autocomplete="off" value="$user[username]">
+			</div>
+			<span id="chk_username" class="help-inline"><span id="suc_username"></span><kbd class="p_chk"></kbd></span>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="password">{lang user_login_password}</label>
+			<div class="controls">
+				<input type="text" class="form-control input-sm" name="password" autocomplete="off" id="password" placeholder="{lang space_not_change_password}">
+			</div>
+			<span id="chk_password" class="help-inline">
+                <span id="suc_password"></span>
+			<kbd id="chk_password" class="p_chk"></kbd>
+			</span>
+
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="password2">{lang new_password_confirm}</label>
+			<div class="controls">
+				<input type="text" class="form-control input-sm" id="password2" name="password2" autocomplete="off" placeholder="{lang space_not_change_password}">
+			</div>
+			<span id="chk_password2" class="help-inline">
+                <span id="suc_password2"></span>
+			<kbd id="chk_password2" class="p_chk"></kbd>
+			</span>
+
+		</div>
+
+		<div class="form-group">
+			<label class="control-label" for="">{lang disable_user}</label>
+			<div class="controls">
+				<div class="switch switch-small" data-on="success" data-off="danger" tabindex="0">
+					<input type="checkbox" name="status" value="1" <!--{if !$user[status]}-->checked
+					<!--{/if}-->>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="depart">{lang organization_department}&nbsp;[&nbsp;<a href="javascript:;" class="glyphicon glyphicon-plus" onclick="addorgsel()" ttitle="{lang add_a_item}"></a>&nbsp;]</label>
+
+			<div id="selorg_container" class="controls">
+				<!--{loop $data_depart $value}-->
+				<ul class="nav nav-pills">
+					<li class="dropdown org">
+						<a href="javascript:;" data-toggle="dropdown" role="button" _orgid="$value[org][orgid]" class="dropdown-toggle orgid"><span>$value[org][orgname]</span><b class="caret"></b></a>
+						<ul aria-labelledby="drop-org" role="menu" class="dropdown-menu">
+							<!--{loop $orglist $value1}-->
+							<li role="presentation">
+								<a href="javascript:;" tabindex="-1" role="menuitem" _orgid="$value1[orgid]" onclick="selOrg(this)">$value1[orgname]</a>
+							</li>
+							<!--{/loop}-->
+						</ul>
+					</li>
+					<li class="dropdown depart">
+						<!--{if $value[depart]}-->
+						<a href="javascript:;" data-toggle="dropdown" role="button" _orgid="$value[depart][orgid]" class="dropdown-toggle depid"><span>$value[depart][orgname]</span><b class="caret"></b></a>
+						<!--{else}-->
+						<a href="javascript:;" data-toggle="dropdown" role="button" _orgid="0" class="dropdown-toggle depid"><span>{lang please_select_department}</span><b class="caret"></b></a>
+						<!--{/if}-->
+						<ul aria-labelledby="drop-depart" role="menu" class="dropdown-menu">
+							<li role="presentation">
+								<a href="javascript:;" tabindex="-1" role="menuitem" _orgid="0" onclick="selDepart(this)">{lang please_select_department}</a>
+							</li>
+							$value[tree]
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;" onclick="delDepart(this)" ttitle="{lang delete}"><i class="glyphicon glyphicon-remove"></i></a>
+					</li>
+				</ul>
+
+				<!--{/loop}-->
+				<ul id="nav" class="nav nav-pills">
+					<li class="dropdown org">
+						<a href="javascript:;" data-toggle="dropdown" role="button" _orgid="0" class="dropdown-toggle orgid"><span>{lang please_select_department}</span><b class="caret"></b></a>
+						<ul aria-labelledby="drop-org" role="menu" class="dropdown-menu">
+							<!--{loop $orglist $value}-->
+							<li role="presentation">
+								<a href="javascript:;" tabindex="-1" role="menuitem" _orgid="$value[orgid]" onclick="selOrg(this)">$value[orgname]</a>
+							</li>
+							<!--{/loop}-->
+						</ul>
+					</li>
+					<li class="dropdown depart">
+						<a href="javascript:;" data-toggle="dropdown" role="button" _orgid="0" class="dropdown-toggle depid"><span>{lang please_select_department}</span><b class="caret"></b></a>
+						<ul aria-labelledby="drop-depart" role="menu" class="dropdown-menu">
+						</ul>
+					</li>
+					<li>
+						<a href="javascript:;" onclick="delDepart(this)" ttitle="{lang delete}"><i class="glyphicon glyphicon-remove"></i></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="addsize">{lang exceptional_space}</label>
+			<div class="controls">
+				<div class="input-group " style="width:115px;">
+					<input type="text" class="form-control input-sm" style="width:80px;" id="addsize" name="addsize" value="$userfield[addsize]" autocomplete="off">
+					<span class="input-group-addon">M</span>
+				</div>
+			</div>
+			<span class="help-block">{lang adduser_exceptional_space_text}</span>
+		</div>
+		<div class="form-group">
+
+			<div class="controls ml20">
+				<input type="button" class="btn btn-primary" value="{lang save_changes}" onclick="account_submit()">
+
+			</div>
+		</div>
+
+	</form>
+
+</div>

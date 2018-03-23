@@ -1,0 +1,75 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>	
+	<div class="bs-main-container">
+		<div class="main-header clearfix">
+			<ul class="nav navbar-nav nav-pills-bottomguide">
+				<li <!--{if $op=='cloudappmarket'}-->class="active"<!--{/if}-->>
+					<a href="{BASESCRIPT}?mod={MOD_NAME}&op=cloudappmarket">{lang appmarket}</a>
+				</li>
+                <li <!--{if $op=='list'}-->class="active"<!--{/if}-->>
+					<a href="{BASESCRIPT}?mod={MOD_NAME}&op=list&do=notinstall">{lang appInLocal}</a>
+				</li>
+			</ul>
+			<div  class="button_add_content">
+				<a href="{BASESCRIPT}?mod=appmarket&op=edit&do=add&refer=$refer" id="button_add1" title="{lang add_app}" class="hide">+</a>				
+				<a href="{BASESCRIPT}?mod=appmarket&op=cp&do=import&refer=$refer" id="button_add2" class="hide" title="{lang import_type_app}" style="font-size:20px ;"><i class="glyphicon glyphicon-download-alt"></i></a>				
+				<a href="javascript:;" id="button_add" style="z-index: 10;">+</a>				
+			</div>					
+		</div>		
+		<div class="main-content clearfix" style="border-top:1px solid #FFF">
+			<!--{if $do=='notinstall'}-->
+
+			<!--{template list_list_notinstall}-->
+
+			<!--{elseif $do=='available'}-->
+
+			<!--{template list_list_available}-->
+
+			<!--{elseif $do=='updatelist'}-->
+
+			<!--{template list_list_upgrade}-->
+
+			<!--{/if}-->
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	jQuery('#button_add').click(function(){
+		if(jQuery("#button_add1").hasClass('hide')){
+			jQuery("#button_add").html("×");
+			jQuery("#button_add1").removeClass("hide");
+			jQuery("#button_add2").removeClass("hide");
+			jQuery("#button_add1").stop().animate({top:"-124px"},500);
+			jQuery("#button_add2").stop().animate({top:"-62px"},500);
+		}else{
+			jQuery("#button_add").html("＋");
+			jQuery("#button_add1").stop().animate({top:"0px"},500);
+			jQuery("#button_add2").stop().animate({top:"0px"},500);
+			setTimeout(function(){
+				jQuery("#button_add1").addClass("hide");
+				jQuery("#button_add2").addClass("hide");
+			},500)
+			
+		}
+	});
+
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

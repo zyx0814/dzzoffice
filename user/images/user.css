@@ -1,0 +1,49 @@
+.userspace{
+	height:auto;
+	border:none;
+	padding:0;
+}
+.userspace .avatar{
+	position:absolute;
+	height:70px;
+	width:70px;
+	padding:10px;
+}
+.img_50_50{
+	max-width: 50px;
+	max-height: 50px;
+}
+* html .img_50_50 {
+	width: expression(this.width > 50 && this.width>=this.height ? 50 : true);
+	height: expression(this.height > 50 && this.width<=this.height ? 50 : true);
+}
+
+.userspace .userinfo{
+	padding:10px 10px 10px 70px;
+	line-height:50px;
+	height:70px;
+	overflow:hidden;
+}
+.userspace .userinfo a{
+	padding-right:20px;
+	
+}
+.nav-tabs li{
+	margin-bottom: -1px;
+}
+.space-item{
+	float:left;
+	padding:10px 15px;
+	width:250px;
+}
+.space-item .title{
+	display:inline-block;
+	width:80px;
+	text-align:right;
+}
+.space-item .value{
+
+	width:130px;
+	padding-left:10px;
+	height:20px;
+}

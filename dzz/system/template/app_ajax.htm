@@ -1,0 +1,67 @@
+<!--{if $operation=='app'}-->
+    <div id="app_context" >
+        <ul id="app_popup" class="app_popup">
+        <!--{loop $applist_1 $key $value}-->
+        {eval if($key>11) continue;}
+        	<li>
+	          <a class="app-popup-li" href="$value['url']" title="$value[appname]" <!--{if $value['open']}-->target="_blank"<!--{/if}-->>
+                <span class="app-popup-li-appico">
+                    <img src="$value[appico]">
+                </span>
+                <span class="app-popup-li-appname">
+                    $value[appname]
+                </span>
+				</a>
+	         </li>
+        <!--{/loop}-->
+        </ul>
+        <ul id="app_popup1" class="app_popup" style="display: none;border-top:1px solid #EBEBEB;">
+  
+         <!--{eval for($i=12;$i<count($applist_1);$i++){}-->
+        {eval $value=$applist_1[$i];}
+        	<li>
+	          <a class="app-popup-li" href="$value['url']" title="$value[appname]" <!--{if $value['open']}-->target="_blank"<!--{/if}-->>
+                <span class="app-popup-li-appico">
+                    <img src="$value[appico]">
+                </span>
+                <span class="app-popup-li-appname">
+                    $value[appname]
+                </span>
+				</a>
+	         </li>
+        <!--{eval }}-->
+        </ul>
+       
+        <a class="app-more <!--{if count($applist_1)<=12}-->hide<!--{/if}-->" href="javascript:;">更多应用</a>
+        
+    </div>  
+	<script type="text/javascript" reload="1">
+		
+	jQuery('#app_context').off().on("mousewheel DOMMouseScroll", function (e) {
+	    var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||  // chrome & ie
+	                (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));              // firefox
+	                
+	    if(jQuery('#app_popup1').find('li').length){
+	    	if (delta > 0) {
+		        // 向上滚
+		        if(jQuery('#app_context').scrollTop() < 150){
+		        	jQuery('#app_popup1').hide();
+		       	 	jQuery('#app_context .app-more').removeClass('hide');
+		        }
+		    } else if (delta < 0) {
+		        // 向下滚
+		        jQuery('#app_popup1').show();
+		        jQuery('#app_context .app-more').addClass('hide');
+		    }
+	    }
+	
+	});
+    
+    jQuery('#app_context .app-more').off('click.app-more').on('click.app-more',function(){
+    	jQuery('#app_popup1').show();
+        jQuery('#app_context .app-more').addClass('hide');
+        return false;
+    })
+
+	</script>
+<!--{/if}-->

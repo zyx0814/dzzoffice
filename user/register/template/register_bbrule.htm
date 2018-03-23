@@ -1,0 +1,10 @@
+<!--{template common/header_ajax}-->
+ <div class="modal-header">
+  <h4 class="modal-title"><!--{eval echo addslashes($_G['setting']['sitename']);}--> {lang rulemessage}</span> </h4>
+</div>
+<div class="modal-body"> $bbrulestxt </div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" onclick="location.href='$_G[siteurl]'">{lang disagree}</button>
+  <button type="button" class="btn btn-success" data-dismiss="modal" onClick="jQuery('#agreebbrule').prop('checked','true');"> {lang agree} </button>
+</div>
+<!--{template common/footer_ajax}-->

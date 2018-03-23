@@ -1,0 +1,27 @@
+<ul class="nav-stacked">
+		<li <!--{if $operation=='basic' || $operation=='datetime' || $operation=='upload' || $operation=='desktop' || $operation=='at' }-->class="active"<!--{/if}-->>
+				<a href="{BASESCRIPT}?mod={MOD_NAME}&operation=basic">{lang basicSet}</a>
+		</li>
+	
+		<li <!--{if $operation=='access' || $operation=='sec' || $operation=='qqlogin' || $operation=='loginset' }-->class="active"<!--{/if}-->>
+				<a href="{BASESCRIPT}?mod={MOD_NAME}&operation=access">{lang loginSet}</a>
+		</li>
+		<li <!--{if $operation=='space'}-->class="active"<!--{/if}-->>
+			<a href="{BASESCRIPT}?mod={MOD_NAME}&operation=space">{lang spaceSet}</a>
+		</li>
+		<li <!--{if $operation=='mail' || $op=='mailcheck' }-->class="active"<!--{/if}-->>
+				<a href="{BASESCRIPT}?mod={MOD_NAME}&operation=mail">{lang mail}</a>
+		</li>
+		<li <!--{if $operation=='smiley' || $op=='smiley' }-->class="active"<!--{/if}-->>
+				<a href="{BASESCRIPT}?mod={MOD_NAME}&operation=smiley">{lang expression_manage}</a>
+		</li>
+		<li <!--{if $operation=='permgroup'}-->class="active"<!--{/if}-->>
+			<a href="{BASESCRIPT}?mod={MOD_NAME}&operation=permgroup">{lang permGroupSet}</a>
+		</li>
+		<li <!--{if $operation=='censor' }-->class="active"<!--{/if}-->>
+				<a href="{BASESCRIPT}?mod={MOD_NAME}&operation=censor">{lang words_management}</a>
+		</li>
+		<!--<li <!--{if $operation=='qywechat' || $op=='assistant' || $op=='wxsyn' }-->class="active"<!--{/if}-->>
+				<a href="{BASESCRIPT}?mod={MOD_NAME}&operation=qywechat">{lang weinxin_company}</a>
+		</li>-->
+</ul>

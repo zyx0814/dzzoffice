@@ -1,0 +1,139 @@
+<!--{template common/header_ajax}-->
+<!--{if $_GET['action']=='setEventkey'}-->
+	<style>
+		 #fwin_setEvent .modal-dialog{max-width:450px;}
+		
+	</style>
+	<div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    	<h4 class="modal-title">$typetitle[$type]</h4>
+    </div>
+	<div class="modal-body" style="padding:30px;">
+       <form class="form-horizontal">
+			 <input type="hidden" id="eventkey" />
+            <!--{if $type=='click'}-->
+               <div class="form-group">
+               <!--{if $menu_select[click]}-->
+                     <select class="form-control" id="js_select_click" onchange="eventkey_select_change(this)">
+                        <option value="" data-url="" >{lang please_choose}</option>
+                        <!--{loop $menu_select[click] $key $value}-->
+                        <option value="$key" >$value</option>
+                        <!--{/loop}-->
+                        <option value="keys" >{lang custom}KEY</option>
+                    </select>
+                <!--{else}-->
+                        <input type="hidden" id="js_select_click" value="keys" />
+                        <input type="text" class="form-control js_input_limit" data-limit="64" id="js_select_click_input" value="" >
+                        <p class="help-inline">{lang menu_information_not_more_than_64_words}</p>
+                        <p class="help-inline">{lang set_value_interface_function_effect}</p>    
+                 <!--{/if}-->         
+                </div>
+            
+           		<div class="form-group hidden">
+                    <input type="text" class="form-control js_input_limit" data-limit="64" id="js_select_click_input" value="" >
+                    <p class="help-inline">{lang menu_information_not_more_than_64_words}</p>
+                    <p class="help-inline">{lang set_value_interface_function_effect}</p>    
+                </div>
+            <!--{else}-->
+                <div class="form-group">
+                  <!--{if $menu_select[link]}-->
+                        <select class="form-control" id="js_select_link" onchange="eventkey_select_change(this)">
+                        <option value="" data-url="" >{lang please_choose}</option>
+                        <!--{loop $menu_select[link] $key $value}-->
+                        <option value="$key" >$value</option>
+                        <!--{/loop}-->
+                        <option value="links">{lang custom_link}</option>
+                        </select>
+                   <!--{else}-->
+                        <input type="hidden" id="js_select_link" value="links" />
+                        <input type="text" class="form-control" id="js_select_link_input" value="" >
+                        <span class="help-inline">{lang member_click_skip_link}</span>
+                   <!--{/if}-->
+                </div>
+                <div class="form-group hidden">
+                   
+                        <input type="text" class="form-control" id="js_select_link_input" value="">
+                        <span class="help-inline">{lang member_click_skip_link}</span>
+                   
+                </div>
+            
+            
+            <!--{/if}-->
+       </form>
+	</div>	
+    <div class="modal-footer">
+			<button type="submit"  class="btn btn-primary btn-width" data-dismiss="modal" onclick="setEventkeyComplete()"><strong>{lang confirms}</strong></button>&nbsp;&nbsp; <button type="button"  data-dismiss="modal" class="btn btn-default"><strong>{lang cancel}</strong></button>
+	</div>
+		
+	
+	<script type="text/javascript" reload="1">
+		jQuery('.fwinmask .focus').select();
+		var dataid='$_GET[dataid]';
+		var menuarr=$json_menu_select;
+		var type='$type';
+		if(dataid!=''){
+			var li=jQuery('.js_li[data-id='+dataid+']');
+			if(type=='click'){
+				var val=li.attr('data-key');
+				if(!val ||(val && !menuarr['click'][val])){
+					val='keys';
+				}
+				jQuery('#js_select_click').val(val);
+				jQuery('#eventkey').val(val);
+				jQuery('#js_select_click_input').val(val);
+				if(val=='keys'){
+					jQuery('#js_select_click_input').parent().removeClass('hidden').end().val(li.attr('data-key')).focus();
+				}
+			}else{
+				var val=li.attr('data-url');
+				if(!val ||(val && !menuarr['link'][val])){
+					val='links';
+				}
+				//jQuery('#js_link_select').val(val);
+				jQuery('#js_select_link').val(val);
+				jQuery('#eventkey').val(val);
+				jQuery('#js_select_link_input').val(val);
+				if(val=='links'){
+					jQuery('#js_select_link_input').parent().removeClass('hidden').end().val(li.attr('data-url')).focus();
+				}
+			}
+		}
+		function eventkey_select_change(obj){
+			var el=jQuery(obj);
+			if(el.val()=='keys'){
+				jQuery('#js_select_click_input').parent().removeClass('hidden').end().focus();
+			}else{
+				jQuery('#js_select_click_input').parent().addClass('hidden');
+			}
+			if(el.val()=='links'){
+				jQuery('#js_select_link_input').parent().removeClass('hidden').end().focus();
+			}else{
+				jQuery('#js_select_link_input').parent().addClass('hidden');
+			}
+			jQuery('#eventkey').val(el.val());
+		}
+		function setEventkeyComplete(){
+			
+			var li=jQuery('.js_li[data-id='+dataid+']');
+			var val=jQuery('#eventkey').val();
+			if(val=='') return;
+			if(type=='click'){
+				if(val=='keys'){
+					val=jQuery('#js_select_click_input').val();
+				}
+				li.attr('data-type','click');
+				li.attr('data-key',val);
+				li.find('.btn-group').replaceWith('<a class=" pull-right js_click " href="javascript:;" title="{lang menu}KEY" onclick="setEventkey(this,\'click\');return false"><span class="icon icon_click_gray"></span></a>');
+			}else{
+				if(val=='links'){
+					val=jQuery('#js_select_link_input').val();
+				}
+				li.attr('data-type','view');
+				li.attr('data-url',val);
+				li.find('.btn-group').replaceWith('<a class=" pull-right js_link" href="javascript:;" title="{lang skip_links}" onclick="setEventkey(this,\'link\');return false"><span class="icon icon_link_gray"></span></a>');
+			}
+			
+		}
+	</script> 
+<!--{/if}-->
+<!--{template common/footer_ajax}-->

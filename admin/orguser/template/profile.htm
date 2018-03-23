@@ -1,0 +1,50 @@
+<div class="main-header" style="padding:0 15px">
+	<ul class="nav nav-pills nav-pills-bottomguide">
+		<strong class="pull-left">$space[username]</strong>
+		<li>
+			<a href="{BASESCRIPT}?mod=orguser&op=edituser&uid=$uid#user_{$user[uid]}_" onclick="jQuery('#orguser_container').load(this.href);return false;">{lang basic_message}</a>
+		</li>
+		<li class="active">
+			<a href="{BASESCRIPT}?mod=orguser&op=edituser&do=profile&uid=$uid" onclick="jQuery('#orguser_container').load(this.href);return false;">{lang details_information}</a>
+		</li>
+
+	</ul>
+</div>
+<div class="main-body" style="padding:15px 15px 15px 22px;">
+	<div id="return_edituserprofile"></div>
+	<form id="accountform" name="accountform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=orguser&op=edituser&do=profile" method="post" onsubmit="account_submit();return false">
+		<input type="hidden" name="profilesubmit" value="true" />
+		<input type="hidden" name="uid" value="$uid" />
+		<input type="hidden" name="handlekey" value="edituserprofile" />
+		<input type="hidden" name="formhash" value="{FORMHASH}" />
+		<!--{loop $settings $key $value}-->
+		<!--{if $value[available]}-->
+		<div class="form-group">
+			<label class="control-label" for="$key">$value[title]</label>
+			<div class="controls">
+				$htmls[$key]
+			</div>
+		</div>
+		<!--{/if}-->
+		<!--{/loop}-->
+		<div class="form-group">
+			<label class="control-label"></label>
+			<div class="controls">
+				<input type="submit" class="btn btn-primary" value="{lang save_changes}">
+			</div>
+		</div>
+	</form>
+</div>
+<script type="text/javascript" reload="1">
+	currentHash = 'user_{$space[uid]}_profile';
+	location.hash = '#user_{$space[uid]}_profile';
+
+	function account_submit() {
+		ajaxpost('accountform', 'ajaxwaitid', 'return_edituserprofile');
+		return false;
+	}
+
+	function succeedhandle_edituserprofile(url, message, values) {
+		showmessage(message, 'success', 3000, 1);
+	};
+</script>

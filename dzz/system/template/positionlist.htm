@@ -1,0 +1,339 @@
+<!--{template common/header_simple_start}-->
+<link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/system/css/selfilewindow.css?{VERHASH}" rel="stylesheet" media="all">
+<style>
+    body {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        overflow: auto;
+        padding-bottom: 34px;
+    }
+
+    .orgtree-search {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        bottom: 0;
+        background-color: #FFF;
+
+    }
+
+    .orgtree-search .form-control {
+        padding: 5px 50px 5px 5px;
+        border: 0;
+        border-top: 1px solid #CCC;
+        box-shadow: none;
+        background-color: #FFFFFF;
+    }
+
+    .orgtree-search .form-control:focus {
+        box-shadow: none;
+    }
+
+    .orgtree-search .search {
+        position: absolute;
+        right: 25px;
+        top: 1px;
+        width: 24px;
+        height: 32px;
+        padding: 8px 5px;
+        font-size: 18px;
+    }
+
+    .orgtree-search .delete {
+        position: absolute;
+        right: 1px;
+        top: 1px;
+        width: 24px;
+        height: 32px;
+        padding: 8px 5px;
+        font-size: 18px;
+    }
+
+    .orgtree-search a:hover {
+        background: #F7F7F7;
+    }
+
+    .jstree-default-responsive .jstree-anchor > .jstree-themeicon {
+        background-size: auto;
+    }
+
+    .iconFirstWord {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: inline-block;
+        line-height: 24px;
+        text-align: center;
+        margin-right: 2px;
+        color: #FFFFFF;
+    }
+
+    .jstree-default .jstree-node {
+        line-height: 2.4rem;
+    }
+
+    .jstree-default .jstree-node, .jstree-default .jstree-icon {
+        background-image: url(dzz/system/images/32px.png);
+    }
+
+    .jstree-default .jstree-last {
+        background: 0 0;
+    }
+
+    .jstree-default .jstree-themeicon-custom {
+        background-color: transparent;
+        background-image: none;
+    }
+    #position{
+	     position: absolute;
+	    left: 0;
+	    right: 0;
+	    top: 0px;	
+	    bottom: 64px;
+	    overflow: auto;
+	    padding:5px 0;	    
+    }
+	.modal-footer{
+		    position: fixed;
+		    left: 0;
+		    right: 0;
+		    bottom: 0;
+	}
+    <!--
+    {
+        if $ _GET [ 'nosearch' ] > 0
+    }
+    -->
+    .orgtree-search {
+        display: none;
+    }
+
+    body {
+        padding-bottom: 0;
+    }
+
+    <!--
+    {
+    /
+    if
+    }
+    -->
+</style>
+<script type="text/javascript">
+    var ctrlid = '$ctrlid';
+    /*var multiple=parseInt('$_GET[multiple]')>0?true:false;
+     var nouser=parseInt('$_GET[nouser]')>0?1:0;
+     var stype='$_GET[stype]'?parseInt('$_GET[stype]'):0;//0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
+     var moderator=parseInt('$_GET[moderator]')>0?1:0;*/
+    var ismobile = '$ismobile' ? 1 : 0;
+</script>
+<!--{template common/header_simple_end}-->
+<div class="mechsnismMenu" id="position" class="usertree-container list-unstyled"></div>
+<script type="text/javascript">
+
+    var opened = {};
+    /*jstree 左侧个人、机构及群组*/
+    $(document).ready(function (e) {
+        opened = window.opener;
+        var _explorer = {};
+        _explorer.jstree = jQuery('#position').jstree({
+            "core": {
+                "multiple": true,
+                "check_callback": true,
+                "themes": {
+                    "responsive": false
+                },
+                'data': function (node, cb) {
+                    var self = this;
+                    $.getJSON('index.php?mod=system&op=positionlist&do=get_children&range={$range}&selhome={$selhome}&selorg={$selorg}&selgroup={$selgroup}', {'id': node.id}, function (json) {
+                        cb.call(this, json);
+                    });
+                }
+            },
+            "types": {
+                "#": {
+                    "max_children": -1,
+                    "max_depth": -1,
+                    "valid_children": -1
+                },
+                "organization": {//部门
+                    "icon": "dzz dzz-account-box",
+                    "valid_children": ['depart', 'folder']
+                },
+                "department": {
+                    "icon": "dzz/system/images/department.png",
+                    "valid_children": ['depart', 'folder']
+                },
+                "group": {//群组
+                    "li_attr": 'aaa',
+                    "icon": "dzz dzz-group",
+                    "valid_children": ['folder']
+                },
+                "home": {//我的网盘
+                    "icon": "dzz dzz-mydisk",
+                    "valid_children": ['folder']
+                },
+                "folder": {//群组
+                    "icon": "dzz dzz-folder",
+                    "valid_children": ['folder']
+                },
+            },
+            "plugins": ['types', 'search', 'wholerow']
+        });
+
+        $('#position').off('select_node.jstree').on('select_node.jstree', function (e, data) {
+            var inst = $('#position').jstree(true);
+            var node = data.node;
+            if (!node.li_attr.fid) {
+                var replacematch = /^([a-z]|[A-Z])+_/;
+                var fid = node.id.replace(replacematch, '');
+
+            } else {
+                var fid = node.li_attr.fid;
+            }
+            var nummatch = /^\d+$/;
+            if(nummatch.test(fid)){
+                $.post('index.php?mod=system&op=positionlist&do=checkupload',{'fid':fid},function(data){
+                    if(data['perm']){
+                        $('#' + ctrlid).val(fid);
+                    }else{
+                        inst.deselect_node(node);
+                        $('#' + ctrlid).val('');
+                    }
+                },'json')
+            }else{
+                inst.deselect_node(node);
+                $('#' + ctrlid).val('');
+            }
+            inst.open_node(node);
+            return false;
+        });
+    });
+    function createNewFolder() {
+        var inst = $('#position').jstree(true);
+        var id = $('#position').jstree("get_selected");
+        console.log(id);
+        if(id.length < 1){
+            showmessage(__lang.please_select_dir,'danger',2000,1);
+            return false;
+        }else{
+            var pnode = inst.get_node(id);
+        }
+        var fid = '';
+        if (!pnode.li_attr.fid) {
+            var replacematch = /^([a-z]|[A-Z])+_/;
+             fid = pnode.id.replace(replacematch, '');
+
+        } else {
+            fid = pnode.li_attr.fid;
+        }
+        if (!fid) {
+            showmessage(__lang.please_select_dir,'danger',2000,1);
+            return false;
+        } else {
+            $.post('index.php?mod=system&op=positionlist&do=getfoldername', {'fid': fid}, function (data) {
+                if (data['success']) {
+                    var node = {
+                        'text': data.fname,
+                        'icon': "dzz dzz-folder",
+                        'id': 'new_folder',
+                        'type': "folder",
+                    };
+                    inst.create_node(id, node, 'last', function (datas) {
+                        inst.open_node(pnode);
+                        $('#new_folder').css({'position': 'relative'});
+                        var html = '<div id="replace_jstreeli" class="layer" style="position:absolute;top:0px;left:50px;">' +
+                            '<input type="text" value="' + data.fname + '" class="nameinput" style="height:24px"/>' +
+                            '<button type="button" class="btn btn-primary-outline button-rightcolor" onclick="realcreate(this,' + node.id + ','+pnode.id+')">' +
+                            '<span class="dzz dzz-done"></span>' +
+                            '</button>' +
+                            '<button type="button" class="btn btn-primary-outline button-rightcolor" onclick="canclecreate(this,' + node.id + ')">' +
+                            '<span class="dzz dzz-close"></span>' +
+                            '</button> ' +
+                            '</div>';
+                        $('#new_folder').append(html);
+                    });
+                }else{
+//                    showDialog(data['error']);
+                    showmessage(data['error'],"danger",2000,1);
+                }
+            }, 'json');
+            return false;
+        }
+    }
+    function realcreate(obj, node,parentnode) {
+        var inst = $('#position').jstree(true);
+        var pnode = inst.get_node(parentnode);
+        var fid = '';
+        if (!pnode.li_attr.fid) {
+            var replacematch = /^([a-z]|[A-Z])+_/;
+            fid = pnode.id.replace(replacematch, '');
+
+        } else {
+            fid = pnode.li_attr.fid;
+        }
+        var fname = $(obj).closest('.layer').find('.nameinput').val();
+        var empty = /^\s*$/;
+        if (empty.test(fname)) {
+            showmessage(__lang.name_cannot_empty,"danger",2000,1);
+            return false;
+        }
+        $.post('index.php?mod=system&op=positionlist&do=creatnewfolder',{'fid':fid,'foldername':fname},function(data){
+            if(data['msg'] == 'success'){
+                inst.rename_node(node, fname);
+                inst.set_id(node, 'f_'+data.fid);
+                $(obj).closest('.layer').remove();
+                inst.deselect_node(parentnode);
+                inst.select_node(node);
+            }else {
+              showmessage(data['error'],"danger",2000,1);
+            }
+        },'json');
+        return false;
+    }
+    function canclecreate(obj, node) {
+        var inst = $('#position').jstree(true);
+        $(obj).closest('.layer').remove();
+        inst.delete_node(node);
+    }
+    function submitdata(){
+        var fid = $('#'+ctrlid).val();
+        if(!fid){
+//            showDialog(__lang.please_select_dir);
+            showmessage(__lang.please_select_dir,"danger",2000,1);
+            return false;
+        }else{
+            $.post(MOD_URL+'&op=positionlist&do=geffolderinfo',{'fid':fid},function(data){
+                if(parent.$callback){
+                    parent.$callback(fid,data);
+                }else{
+                    opened.$callback(fid,data);
+                }
+                hide_window();
+            },'json')
+        }
+        return false;
+    }
+    function hide_window(){
+        if(opened){
+            window.close();
+        }else{
+            parent.hide_window();
+        }
+    }
+
+</script>
+<div class="modal-footer">
+    <input id="$ctrlid" type="hidden" name="fid" value=""/>
+    <!--{if $allowcreate}-->
+    <button type="button" class="btn btn-primary-outline pull-left" onclick="createNewFolder();return false;">{lang newfolder}</button>
+    <!--{/if}-->
+    <button type="button" class="btn btn-primary" onclick="submitdata()">{lang confirms}</button>
+    <button type="button" class="btn btn-default-outline cancel" data-dismiss="modal" aria-label="Close" onclick="hide_window()">{lang cancel} </button>
+
+</div>
+</body>
+</html>
+<script type="text/javascript" src="static/js/jstree.min.js?{VERHASH}"></script>

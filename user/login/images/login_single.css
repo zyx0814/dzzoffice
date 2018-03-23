@@ -1,0 +1,120 @@
+
+body{
+	height: 100%;
+	color:#566481;
+}
+ .mainContainer{
+	animation-duration: 800ms;
+    position: relative;
+    animation-fill-mode: both;
+	z-index: 10;
+	height: 100%;
+	 text-align: center;
+    oveflow:auto
+}
+.mainContainer:before{
+	display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    content: "";
+}
+   
+.modal-content{
+	padding: 30px;
+	vertical-align: middle;
+	display: inline-block;
+    max-width: 100%; 
+    font-size: 14px;  
+	color:#333;
+    box-shadow: none;
+    border: none;
+    background: #FFF; 
+	min-width:320px;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+
+.brand {
+   margin:15px 0;
+}
+.brand img {
+	max-width:300px;
+	max-height:300px;
+}
+ .main-title {
+   font-size:24px;
+    margin: 11px 0;
+    color: #000;
+    vertical-align: middle;
+}
+ .sub-title {
+   font-size:16px;
+    margin: 11px 0;
+    color: #000;
+    vertical-align: middle;
+}
+
+.loginForm{
+	width: 350px;
+    margin: 30px 0 0 0;
+	
+}
+span.spacer{
+	margin:0 5px;
+	color:#eee;
+}
+.seccode-wrapper{
+	text-align:left;
+}
+p.error-msg{
+	text-align:left;
+	margin:20px 0;
+}
+.btn-lg{
+	margin-top:20px;
+}
+
+@media (max-width: 420px){
+    .mainContainer:before{
+		display:none;
+    }
+	.modal-content{
+		margin:15px;
+	}
+   .loginForm {
+        width: auto;
+    }
+}
+
+.checkbox-custom {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.checkbox-custom label, .radio-custom label{
+	font-size:14px;
+	padding-left: 5px;
+}
+.copyright-container{
+   position: absolute;
+    bottom: 0;
+	width:100%;
+	left:0;
+}
+footer.page-copyright {
+    position: absolute;
+	width:100%;
+	left:0;
+	top:0;
+    margin: 20px 10px 10px 10px;
+    font-size: 12px;
+	color:#FFF;
+	text-shadow:1px 1px 1px RGBA(0,0,0,.2);
+}
+footer.page-copyright a{
+	color:#FFF;
+	text-decoration: underline;
+}
+.btn-primary{
+	background-color:#3779ff;
+}

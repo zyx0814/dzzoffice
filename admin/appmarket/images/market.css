@@ -1,0 +1,362 @@
+@charset "utf-8";
+/* CSS Document */
+html, body {
+	overflow: hidden;
+	word-break:break-all;
+	background:#FFF;
+}
+
+.navbar-brand{
+	padding-left:50px;
+	position:relative;
+	
+}
+.navbar-brand .logo{
+	position:absolute;
+	left:0;top:0;
+	padding:5px;
+	width:50px;
+	height:50px;
+}
+
+
+.img_236{
+	max-width: 236px;
+}
+* html .img_236 {
+	width: expression(this.width > 236 && this.width>=this.height ? 236 : true);
+	
+}
+.market-container .appitem{
+	
+	background:#FFF;
+	width:236px;
+	height:330px;
+	box-shadow:0 1px 3px rgba(0,0,0,.3);
+	position:relative;
+	border-radius:2px;
+	margin:8px;
+}
+.ie8 .market-container .appitem{
+	border:1px solid #D9D9D7;
+}
+.img-container {
+	width:236px;
+	height:136px;
+	padding:0;
+	text-align:center;
+	position:relative;
+	overflow:hidden;
+	display:block;
+	border-radius:2px 2px 0 0;
+}
+.ie8 .img-container {
+	width:234px;
+	height:135px;
+}
+
+.appitem-desc{
+	padding:10px 0;
+	height:84px;
+	line-height:1.5;
+	overflow:hidden;
+	color:#808080;
+}
+.appitem-footer{
+	line-height:35px;
+}
+
+.appitem-title a{
+	font-size:14px;font-weight:bold;color:#333;
+	text-shadow:1px 1px 1px #FFF;
+}
+.appitem .appmeta{
+	color: #353535;
+	padding: 15px 15px 0 15px;
+	background: #fff;
+}
+.appmeta a {
+	color: #333;
+	font-weight: bold;
+	display: block;
+	text-decoration: none;
+}
+.appmeta a h3 {
+	display: block;
+	font-size: 14px;
+	line-height: 14px;
+	margin: 0 0 10px 0;
+	height:14px;
+	text-overflow: ellipsis;
+	overflow: hidden;font-weight: bold;
+}
+.appmeta h4 {
+	font-size: 11px;
+	color: #808080;
+	margin:0;
+	/*margin-top: -8px;*/
+	padding-bottom: 8px;
+	border-bottom: 1px solid #eee;
+}
+.color-block-1 {
+	background: #B82F68;
+}
+.color-block-2 {
+	background: #DB4B00;
+}
+.color-block-3 {
+	background: #BA4B3A;
+}
+.color-block-4 {
+	background: #009BCB;
+}
+.color-block-5 {
+	background: #37B298;
+}
+.color-block-6 {
+	background: #F1C42C;
+}
+.color-block-7 {
+	background: #7BBA39;
+}
+.color-block-8 {
+	background: #7938BA;
+}
+.color-block-9 {
+	background: #3850BA;
+}
+.color-block-10 {
+	background: #51CB8F;
+}
+
+.price-container p{ margin:0 0 5px 0}
+
+
+
+.document-container {
+	background:#FFF;
+}
+
+.document-header{
+	
+	padding:0;
+	position:relative;
+	margin:0;
+	border-bottom:1px solid #DDD;
+	min-height:137px;
+	text-shadow: 0 1px 0 rgba(0,0,0,.1);
+	background-color: #6f5499;
+	background-image: -webkit-gradient(linear,left top,left bottom,from(#563d7c),to(#6f5499));
+	background-image: -webkit-linear-gradient(top,#563d7c 0,#6f5499 100%);
+	background-image: -o-linear-gradient(top,#563d7c 0,#6f5499 100%);
+	background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#563d7c', endColorstr='#6F5499', GradientType=0);
+	background-repeat: repeat-x;
+	color: #cdbfe3;
+	border-radius:2px 2px 0 0;
+}
+.ie8 .document-header{
+	min-height:135px;
+}
+.document-header .img-container{
+	border-radius:2px 0 0 0;
+	position:absolute;
+	left:0;top:0;
+	
+}
+.document-header .header-info{
+	padding: 0px 0 10px 246px;
+	line-height:30px;
+	min-width:500px;
+}
+.ie8 .document-header .header-info{
+	min-width:150px;
+}
+.document-header .header-info .appname{
+	font-size:16px;
+	line-height:35px;
+	color:#FFF;
+}
+.download-container{
+	position:absolute;
+	right:10px;top:10px;
+	z-index:100;
+}
+
+.document-container {
+	width:100%;
+	margin:0;
+	border:none;
+	background:#FFF;
+	box-shadow:none;
+	overflow-x:hidden;
+}
+
+
+.document-container .document-body {
+	padding: 20px 0 0 0;
+	margin: 0 20px 0 20px;
+	overflow-x:hidden;
+	position:relative;
+	line-height:2;
+	
+	
+}
+.document-container .document-body img.dzz-image{
+	max-width: 100%;
+}
+.document-container .document-Carousel {
+	padding: 20px 0 0 0;
+	margin: 0 20px 0 20px;
+	min-height:200px;
+	overflow-x:hidden;
+	position:relative;
+}
+.document-container .document-comment {
+	padding: 20px 0 0 0;
+	margin: 0 20px;
+}
+.document-comment .attach-item{
+	height:20px;
+	line-height:20px;
+	padding:0 10px;
+}
+
+span.attach-item{
+	line-height:24px;
+	display:inline-block;
+	height:24px;
+	padding-right:8px;
+}
+span.attach-item img{
+	max-height:100%;
+	padding-right:5px;
+}
+
+
+.carousel-inner>.item>img, .carousel-inner>.item>a>img{
+	margin:0 auto;
+}
+.bs-navbar-default .navbar-nav li{
+	overflow:hidden;
+}
+.bs-navbar-default .navbar-nav>li>a{
+	padding:15px;
+	
+}
+.bs-navbar-default .navbar-toggle{
+	margin-top:8px
+}
+.bs-navbar-default .navbar-form{
+	margin-top:8px
+}
+.bs-navbar-default .container-fluid>.navbar-header{
+	margin-right:0;
+	margin-left:0;
+}
+
+
+
+/*12.12修改*/
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+	white-space:nowrap;
+}
+.group-td-wrapper{
+	max-width:120px;
+	white-space:normal;
+	overflow: hidden;
+    text-overflow: ellipsis;
+}
+.group-td-wrapper>span {
+	white-space:nowrap;
+	overflow: hidden;
+    text-overflow: ellipsis;
+}
+.group-td-wrapper>span>img {
+	margin:0;
+	vertical-align: text-bottom;
+}
+.tag-td-wrapper{
+	max-width:120px;
+	height: 20px;
+	white-space:normal;
+	overflow: hidden;
+    text-overflow: ellipsis;
+}
+.tag-td-wrapper a{
+	color:#666;
+	display:inline-block;
+	padding:0 2px;
+	white-space:nowrap;
+	overflow: hidden;
+    text-overflow: ellipsis;
+}
+.app-info>a{
+	color:#999;
+	line-height: 34px;
+}
+.app-info .select-info{
+	position:absolute;
+	left:0;
+	top:0;
+	display:none;
+}
+span.num {
+	color:#4A89FD;
+	font-weight:700;
+	padding:0 2px;
+	margin:0;
+
+}
+.main-header{
+	padding:5px
+}
+.main-header>div{
+	line-height:34px;
+	/*margin:0 5px;*/
+}
+.checkbox-custom{
+	margin-bottom:0;	
+	margin-top:0;
+}
+
+
+
+.appname{
+	margin:0;
+	line-height:25px;
+	
+}
+.appname a{
+	color:#333;
+	font-weight:600;
+	font-size:14px;
+}
+.appdesc{
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	color:#999;
+	font-size:13px;
+	cursor:default;
+	line-height: 25px;
+}
+.btn-top{
+	margin-left: 30px;
+
+}
+.btn-top a{
+	margin-right: 10px;
+}
+.all-center-top{
+	padding: 13px;
+	position:relative;
+}
+
+
+
+
+
+
+
+/*结束*/

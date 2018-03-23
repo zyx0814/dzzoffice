@@ -1,0 +1,35 @@
+<!--{if $filter=='new'}-->
+    <div class="popbox-header text-center">
+          <button class="close notice-close dzz dzz-close"></button>
+        <h3>{lang app_notice}</h3>
+      </div>
+      <div class="popbox-body notification-list" style="min-width:300px;max-height:400px;overflow:auto;padding:0 10px">
+        <!--{if $list}-->
+            <!--{loop $list $value}-->
+            <div class="notification-list-item clearfix">
+                <!--{if $value['avatarstatus']}-->
+                <div class="member member-no-menu">
+                    <img class="member-avatar" src="avatar.php?uid=$value[authorid]&size=small" alt="$value[author]" title="$value[author]">
+                </div>
+                <!--{else}-->
+                <div class="member member-no-menu">
+                    <span class="member-initials" title="$value[author]">{eval echo substr(ucfirst($value[author]),0,1);}</span>
+                </div>
+                <!--{/if}-->
+                <div class="details">
+                  <p class="note u-bottom" >$value[note]</p>
+                  <p class="dateline u-bottom">$value[dateline]</p>
+                </div>
+            </div>
+            <!--{/loop}-->
+        <!--{else}-->
+        <p class="text-warning u-bottom" style="line-height:35px;">{lang noapp_notice}</p>
+        <!--{/if}-->
+      </div>
+     <div class="popbox-footer" style="border-top:1px solid #DDD;padding:10px 5px;margin:0 5px">
+     	<a href="{DZZSCRIPT}?mod=system&op=notification" class="notification-all">{lang lookallapp_notice}</a>
+     </div>    
+	<script type="text/javascript" reload="1">
+		try{_notice.showTips(0);}catch(e){}
+	</script>
+<!--{/if}-->

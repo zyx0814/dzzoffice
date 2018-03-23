@@ -1,0 +1,300 @@
+<style>
+.modal-body{
+	
+	padding:0;
+}
+.user-list{
+	padding:10px 0;
+	overflow-x:hidden;
+	overlfow-y:auto
+}
+.user-list li{
+	line-height:30px;
+	list-style:none;
+	padding:5px;
+	margin:5px;
+	cursor:pointer;
+	border:1px solid #FFF;
+	overflow:hidden;
+}
+
+.user-list li.selected{
+	background-color: #0081C2;
+    background-image: linear-gradient(to bottom, #0088CC, #0077B3);
+    background-repeat: repeat-x;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+.user-list li img{
+	width:21px;
+	height:21px;
+	margin-top:-2px;
+}
+.user-list li span{
+	padding:0 10px;
+	line-height:21px;
+}
+.seluser-select,.seluser-selected{
+	height:295px;
+	border-top:1px solid #DDD;
+}
+
+ul{
+	margin:0;
+}
+.range{
+	padding:5px;
+}
+.dropdown-menu .child-org{
+  height: 20px;
+  line-height: 20px;
+  overflow: hidden;
+}
+.dropdown-menu .child-org .child-tree {
+  display: inline-block;
+  height: 20px;
+  margin-left: 10px;
+  width: 10px;
+}
+.user-list .hover{
+	background:#F1F1F1;
+	border:1px solid #CCC;
+}
+.user-list  a{
+	display:none;
+	padding:0 5px;
+}
+.user-list .setmoderator{
+	padding:0 2px 0 0;
+}
+.seluser-selected a{
+	display:inline-block;
+}
+.seluser-selected a .glyphicon-ismoderator{
+	display:inline-block;
+	
+}
+.seluser-selected .remove{
+	display:none;
+}
+.seluser-selected .hover .remove{
+	display:inline-block;
+}
+.seluser-select .add{
+	display:none;
+}
+.seluser-select .hover .add{
+	display:inline-block;
+}
+.seluser-select a{
+	display:none;
+}
+
+.seluser-selected a.glyphicon-user .glyphicon-user,.seluser-selected a.glyphicon-user .glyphicon-ismoderator{
+	display:none;
+}
+
+.modal-body{
+overflow-y:hidden;	
+}
+.member-info {
+	height:33px;
+	line-height:30px;
+}
+.member-info .sum{
+	color:#F60;
+}
+</style>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="col-xs-5">
+    	<div class="seluser-range" >
+        	 <ul class="nav nav-pills nav-stacked" style="margin:10px 0;height:33px;overflow:visible;">
+   			 
+              <!--{if $orgtree}-->
+               <li class="dropdown <!--{if $org}-->active<!--{/if}-->">
+               <!--{if $org}-->
+               <a href="javascript:;" data-toggle="dropdown" role="button" id="drop-org" _orgid="$org[orgid]" class="dropdown-toggle" style="padding:8px 10px;">$org[orgname]<b class="caret"></b></a>
+              <!--{else}-->
+               <a href="{BASESCRIPT}?mod=$mod&orgid=0" data-toggle="dropdown" role="button" id="drop-org" _orgid="0" class="dropdown-toggle">{lang all}<b class="caret"></b></a>
+              <!--{/if}-->
+                <ul aria-labelledby="drop-org" role="menu" class="dropdown-menu" id="drop-org-menu">
+                    $orgtree
+                </ul>
+              </li>
+              <!--{/if}-->
+            </ul>
+            
+        </div> 
+        <ul id="seluser_select" class="user-list seluser-select">
+        	
+        </ul>
+    </div>
+    <div class="col-xs-2" style="border-right:1px solid #DDD;border-left:1px solid #DDD;height:350px;">
+    	<table width="100%" height="100%">
+        <tr><td></td></tr>
+        <tr><td align="center" valign="middle"><a id="seluser_addall" href="javascript:;" class="btn btn-primary " title="{lang add_all}"><i class="glyphicon glyphicon-forward"></i><i class="glyphicon glyphicon-forward" style="margin-left:-2px;"></i></a></td></tr>
+         <tr><td align="center" valign="top"><a id="seluser_removeall" href="javascript:;"  class="btn btn-danger"  title="{lang remover_all}"><i class="glyphicon glyphicon-backward"></i><i class="glyphicon glyphicon-backward"  style="margin-left:-2px;"></i></a></td></tr>
+        </table>
+    </div>
+    <div class="col-xs-5" style="height:345px;"> 
+    	 <h5 class="member-info">
+         	{lang selected}: <span id="member_sum" class="sum">0</span>&nbsp;&nbsp; {lang administrator}：<span id="moderator_sum" class="sum">0</span>
+         </h5>
+    	 <ul id="seluser_selected" class="user-list seluser-selected">
+        	<!--{loop $userlist $value}-->
+            	<li username="$value[username]" uid="$value[uid]">
+                 <!--{if $value[ismoderator]}-->
+                 <a href="javascript:;"   class="setmoderator glyphicon glyphicon-user"  title="{lang cancel_administrator}"><i class="glyphicon-ismoderator glyphicon  glyphicon-user "></i></a>
+                 <!--{else}-->
+                 <a href="javascript:;"   class="setmoderator glyphicon"  title="{lang set_administrator}"><i class="glyphicon glyphicon-ismoderator"></i></a>
+                  <!--{/if}-->
+                  <img src="avatar.php?uid=$value[uid]">
+                  <span>$value[username]</span>
+                 <a class="pull-right remove" href="javascript:;" onclick="deleteMember(this,'$value[uid]');" title="{lang delete}"><i class="glyphicon glyphicon-remove"></i></a>
+                </li>
+            <!--{/loop}-->
+        </ul>
+     </div>
+  </div>
+</div>
+<script type="text/javascript" >
+jQuery('#myModalLabel').html('{lang member_management}&nbsp;－&nbsp;$org[orgname]');
+fixTree_seluser();
+setCount();
+getUserList('{$orgid}');
+jQuery(document).off('click','.setmoderator');
+jQuery(document).on('click','.setmoderator',function(){
+	if(jQuery(this).hasClass('glyphicon-user')){
+		jQuery(this).removeClass('glyphicon-user')
+	}else{
+		jQuery(this).addClass('glyphicon-user')
+	}
+	setCount();
+	return false;
+});
+jQuery(document).off('click','.add');
+jQuery(document).on('click','.add',function(){
+	var li=jQuery(this).parent();
+	addToRight(li);
+	setCount();
+	return false;
+});
+
+jQuery(document).off('dblclick','.user-list li');
+jQuery(document).on('dblclick','.user-list li',function(e){
+	addToRight(jQuery(this));
+	setCount();
+	return false;	
+});
+jQuery(document).off('mouseenter','.user-list li');
+jQuery(document).on('mouseenter','.user-list li',function(e){
+	jQuery(this).addClass('hover');
+	jQuery(this).find('.glyphicon-ismoderator').addClass('glyphicon-user');
+});
+jQuery(document).off('mouseleave','.user-list li');
+jQuery(document).on('mouseleave','.user-list li',function(e){
+	jQuery(this).removeClass('hover');
+	jQuery(this).find('.glyphicon-ismoderator').removeClass('glyphicon-user');
+});
+/*jQuery(document).off('click','#seluser_add');
+jQuery(document).on('click','#seluser_add',function(e){
+	jQuery('#seluser_select li.selected').each(function(){
+		addToRight(jQuery(this));
+	});
+	return false;
+});*/
+jQuery(document).off('click','#seluser_addall');
+jQuery(document).on('click','#seluser_addall',function(e){
+	jQuery('#seluser_select li').each(function(){
+		addToRight(jQuery(this));
+	});
+	setCount();
+	return false;
+});
+/*jQuery(document).off('click','#seluser_remove');
+jQuery(document).on('click','#seluser_remove',function(e){
+	jQuery('#seluser_selected li.selected').each(function(){
+		 removeToLeft(jQuery(this));
+	});
+	return false;
+});*/
+jQuery(document).off('click','#seluser_removeall');
+jQuery(document).on('click','#seluser_removeall',function(e){
+	jQuery('#seluser_selected li').each(function(){
+		removeToLeft(jQuery(this));
+	});
+	setCount();
+	return false;
+});
+function setCount(){
+	var i=0;
+	var j=0;
+	jQuery('#seluser_selected li').each(function(){
+		i++;
+		if(jQuery(this).find('.setmoderator').hasClass('glyphicon-user')){
+			j++;
+		}
+	});
+	jQuery('#member_sum').html(i);
+	jQuery('#moderator_sum').html(j);
+}
+function removeToLeft(li){
+	if(jQuery('#seluser_select li[uid='+li.attr('uid')+']').length>0){
+		li.remove();	
+	}else{
+		li.removeClass('selected').removeClass('hover')
+		.find('.setmoderator').remove()
+		.end()
+		.find('.remove').replaceWith('<a class="pull-right add" href="javascript:;" title="{lang add}"><i class="glyphicon glyphicon-forward"></i></a>')
+		.end()
+		.appendTo('#seluser_select');
+	}
+}
+function addToRight(li){
+	if(jQuery('#seluser_selected li[uid='+li.attr('uid')+']').length>0){
+		 li.remove();
+		 return false;
+	}
+	li.attr('class','')
+	.find('img').before('<a href="javascript:;"  class="setmoderator glyphicon"  title="{lang set_administrator}"><i class="glyphicon glyphicon-ismoderator"></i></a>&nbsp;')
+	.end()
+	.find('.add').replaceWith('<a class="pull-right remove" href="javascript:;" onclick="deleteMember(this,'+li.attr('uid')+');" title="{lang delete}"><i class="glyphicon glyphicon-remove"></i></a>')
+	.end()
+	.appendTo('#seluser_selected');
+}
+function deleteMember(obj,uid){
+	removeToLeft(jQuery(obj).parent());
+	setCount();
+}
+function fixTree_seluser(){
+	jQuery('#drop-depart-menu .tree-heng1').each(function(){
+		var tr=jQuery(this).parent().parent().parent();
+		var dep=jQuery(this).parent().find('.tree-su').length;
+		
+		tr.nextAll().each(function(){
+			var child_org=jQuery(this).find('.child-org');
+			var dep1=child_org.find('.tree-su').length;
+			if(dep1<=dep) return false;
+			else{
+				child_org.find('.tree-su').eq(dep).removeClass('tree-su');
+			}
+		});
+		
+	});
+}
+function selDepart(obj){
+	var el=jQuery(obj);
+	var orgid=jQuery(obj).attr('_orgid');
+	if(orgid!=jQuery('#drop-org').attr('_orgid')){
+		jQuery('#drop-org').attr('_orgid',orgid).html(el.find('.child-org').html().replace(/<span.+?<\/span>/g,'')+'<b class="caret"></b></a>');
+		getUserList(orgid);
+	}
+}
+function getUserList(orgid){
+	jQuery('#seluser_select').load('misc.php?mod=ajax&op=getuserlist&orgid='+orgid,function(){
+		
+	});
+}
+
+</script>

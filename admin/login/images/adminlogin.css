@@ -1,0 +1,125 @@
+input:-webkit-autofill {
+	box-shadow: 0 0 0px 1000px white inset !important;
+}
+.mainContainer {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	z-index: 10;
+}
+.loginContainer {
+	height: 100%;
+	width: 100%
+}
+.logintips {
+	color: red;
+	line-height: 30px;
+	padding: 20px;
+	width: 350px;
+	background: #FFF;
+	border-radius: 5px;
+	border: 1px solid #e3e3e3;
+	-webkit-box-shadow: 0 5px 15px RGBA(0,0,0,.3);
+	-moz-box-shadow: 0 5px 15px RGBA(0,0,0,.3);
+	box-shadow: 0 5px 15px RGBA(0,0,0,.3);
+}
+#loginform {
+	width: 350px;
+	margin: 0;
+	text-align: center;
+}
+.login h4 {
+	height: 35px;
+	margin-bottom: 10px;
+}
+.avatarContainer {
+	margin-bottom: 50px;
+	margin-top: 20px;
+	overflow: hidden;
+	text-align: center;
+}
+.avatarContainer img {
+	max-width: 128px;
+	max-height: 128px;
+}
+#admin_password_Container {
+	padding: 30px 0 30px 0;
+}
+#admin_password_Container .input-black {
+	margin-bottom: 10px;
+}
+.loginformContainer {
+	padding: 30px;
+	text-align: center;
+	background-color: #FFF;
+	border-radius: 5px;
+	border: 1px solid #e3e3e3;
+	-webkit-box-shadow: 0 5px 15px RGBA(0,0,0,.3);
+	-moz-box-shadow: 0 5px 15px RGBA(0,0,0,.3);
+	box-shadow: 0 5px 15px RGBA(0,0,0,.3);
+}
+.loginformContainer .username {
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+	margin: 10px 0 0;
+	min-height: 1em;
+}
+.loginformContainer .email {
+	color: #404040;
+	line-height: 2;
+	margin-bottom: 0;
+	font-size: 14px;
+}
+input[type="password"], input[type="text"] {
+	height: 40px;
+	width: 100%;
+	direction: ltr;
+	font-size: 14px;
+	outline: none;
+	width: 286px\0;
+ *width:286px;
+}
+input[type="submit"] {
+	width: 100%;
+	height: 40px;
+	font-size: 16px;
+	font-weight: 700;
+	width: 286px\0;
+ *width:286px;
+}
+input[type="password"]:focus, input[type="text"]:focus {
+	box-shadow: none;
+	outline: none;
+}
+.footer .copyright {
+	border: medium none;
+	font-size: 12px;
+	position: static;
+	text-align: center;
+}
+.copyright {
+	color: #899;
+	font-family: "微软雅黑";
+	font-size: 12px;
+	left: 5px;
+	line-height: 150%;
+	padding-top: 20px;
+	text-align: center;
+	z-index: 10;
+}
+.copyright a {
+	color: #899;
+}
+.wrapper-placeholder {
+	text-align: left
+}
+.Topcarousel {
+	display: inline-block;
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	line-height: 100px;
+	font-size: 45px;
+	color: #fff;
+}

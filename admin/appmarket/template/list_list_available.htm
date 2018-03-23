@@ -1,0 +1,42 @@
+<table class="table table-hover " style="margin:0;">
+	<thead>
+		<th>{lang application_name}</th>
+		<th>{lang group_permissions}</th>
+		<th>{lang version}</th>
+		<th>{lang dir}</th>
+		<th>{lang supplier}</th>
+		<th>{lang operation}</th>
+	</thead>
+	<!--{if $list}-->
+	<!--{loop $list $value}-->
+	<tr>
+		<td>
+			<a href="$value[appurl]" target="_blank"><img src="$value[appico]" />$value[appname]</a>
+		</td>
+		<td>$value[grouptitle]</td>
+		<td>
+			<!--{loop $value['department'] $key $value1}-->
+			<p appid="$value[appid]" orgid="$key"> {eval $i=0;}
+				<!--{loop $value1 $value2}-->
+				<!--{if $i>0}-->--><!--{/if}-->$value2[orgname] 
+				{eval $i++;}
+				<!--{/loop}-->
+			</p>
+			<!--{/loop}-->
+		</td>
+		<td>$value[identifier]</td>
+		<td>$value[vendor]</td>
+		<td>
+			<a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=edit&do=edit&appid=$value[appid]&refer=$refer" title="{lang edit}"><i class="glyphicon glyphicon-edit"></i></a>
+			<a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=cp&do=enable&appid=$value[appid]&refer=$refer" title="{lang enable}"><i class="glyphicon glyphicon-ok-circle"></i></a>
+			<a class="btn btn-link" href="{BASESCRIPT}?mod=app&op=cp&do=export&appid=$value[appid]&refer=$refer" title="{lang export}"><i class="glyphicon glyphicon-export"></i></a>
+			<a class="btn btn-link text-danger" style="color:#e83110" href="{BASESCRIPT}?mod=app&op=cp&do=uninstall&appid=$value[appid]&refer=$refer" title="{lang uninstall}" onclick="if(confirm('{lang list_uninstall_application}'))return true;else return false"><i class="glyphicon glyphicon-remove-circle"></i></a>
+		</td>
+	</tr>
+	<!--{/loop}-->
+	<!--{else}-->
+	<tr>
+		<td colspan="10">{lang list_no_related_application}</td>
+	</tr>
+	<!--{/if}-->
+</table>

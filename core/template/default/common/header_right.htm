@@ -1,0 +1,22 @@
+<ul class="nav navbar-nav">
+	<li>
+		<a href="javascript:;">
+			<span class="navbar-borderleft"></span>
+		</a>
+	</li>
+	<li class="app_popup-parent">
+
+		<a href="javascript:;" id="desktop_app" data-href="index.php?mod=system&op=app_ajax&operation=app" class="app_popup_icon js-popbox" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover"><span class="dzz dzz-apps basil"></span></a>
+	</li>
+	<li>
+		<a href="javascript:;" id="dzz_notification" data-href="index.php?mod=system&op=notification&filter=new" class="navbar-notice js-popbox" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover">
+			<span class="dzz dzz-notifications"></span>
+			<span class="badge hide">&nbsp;</span>
+		</a>
+	</li>
+	<li>
+		<a href="javascript:;" class="imgHeight js-popbox" data-href="user.php?mod=space&op=navmenu&modname={MOD_NAME}" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover">
+			{eval echo avatar_block($_G[uid]);}	
+		</a>
+	</li>
+</ul>

@@ -1,0 +1,214 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<style>
+p {
+	min-height: 25px;
+	min-width: 50px;
+	margin:5px 0;
+}
+p input.form-control{
+	box-shadow:none;
+	height:25px;
+	width:90%;
+	
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+	text-overflow: ellipsis;
+}
+p input.form-control:focus{
+	box-shadow:none;
+}
+</style>
+<script type="text/javascript">
+	var selorg={};
+	<!--{if $openarr}-->
+	selorg.openarr=$openarr;  
+	<!--{/if}-->
+	selorg.add=function(ctrlid,vals){
+		if(vals[0].orgid=='other') vals[0].path='{lang please_select_a_organization_or_department}';
+		jQuery('#'+ctrlid+'_Menu').html(vals[0].path+' <span class="caret"></span>');
+		jQuery('#sel_'+ctrlid).val(vals[0].orgid);
+	}
+  </script>
+<!--{template common/header_simple_end}-->
+<!--{template commer_header}-->
+<div class="container" style="height:100%">
+<div class="main-header">
+  <ul class="nav nav-pills nav-pills-bottomguide"> 
+    <li ><a href="{ADMINSCRIPT}?mod=orguser&op=import">{lang start_import}</a></li>
+    <li class="active"><a href="{ADMINSCRIPT}?mod=orguser&op=import&do=list">{lang import_set}</a></li>
+   
+    <!-- <li><a href="{BASESCRIPT}?mod=member&op=import">从文件导入</a></li>
+               <li><a href="{BASESCRIPT}?mod=member&op=invite">Email邀请</a></li>-->
+  </ul>
+</div>
+<div class="main-content">
+  <div class="main-header2 clearfix" style="padding:20px 0 10px 10px;">
+    <div  class="form-horizontal form-horizontal-left">
+      <div class="form-group">
+        <label class="control-label" for="email">{lang import_organization}：</label>
+        <div class="controls">
+          <div class="dropdown">
+                  <input id="sel_orgid"  type="hidden" name="orgid"  value="$orgid" />
+                  <button type="button" id="orgid_Menu" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    $orgpath <span class="caret"></span>
+                  </button>
+                  <div id="orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_Menu">
+                       <iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&ctrlid=orgid&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+                  </div>
+            </div>
+        </div>
+        <span  class="help-inline">{lang import_list_organization}</span> </div>
+      <div class="form-group" id="pass_default">
+        <label class="control-label" for="email">{lang default_password}：</label>
+        <div class="controls">
+          <input id="pswdefault" type="text" class="form-control" value="111" name="pswdefault" />
+        </div>
+        <span  class="help-inline">{lang import_list_password}</span> </div>
+       <!--<div class="form-group">
+        <label class="control-label"></label>
+        <div class="controls">
+          <label class="checkbox-inline">
+            <input type="checkbox" id="sendmail" name="sendmail" value="1" onclick="jQuery('#pass_default').toggle();">
+            使用随机密码并发送密码到用户邮箱中</label>
+        </div>
+      </div>-->
+      <div class="form-group" >
+        <label class="control-label" >{lang import_way}：</label>
+        <div class="controls ml20" style="width:160px">
+          <label class="radio radio-inline">
+            <input type="radio" id="append"  name="append" value="1" checked="checked" >
+            {lang bulking}</label>
+          <label class="radio radio-inline">
+            <input type="radio" name="append" value="0" >
+            {lang coverage}</label>
+        </div>
+        <span  class="help-inline">{lang import_list_coverage}</span> </div>
+     
+    </div>
+    <ul  class="help-block" style="line-height:1.8em">
+      {lang import_list_text}
+    </ul>
+  </div>
+  <div style="padding:0;">
+    <table class="table table-hover" style="border-bottom:1px solid #DDD;table-layout:fixed">
+      <thead>
+        <tr> 
+          <!--{loop $h $key $value}-->
+          <th>$h0[$value]</th>
+          <!--{/loop}-->
+          <th><button type="button" id="button_import_all" class="btn btn-primary" style="padding:6px 25px;" data-loading-text="{lang import_finish}" onclick="toggle_import_all(this)">{lang all_import}</button></th>
+        </tr>
+      </thead>
+       {eval $i=0;}
+      <!--{loop $list $value}-->
+     
+      <tr class="item" id="item_$i"> 
+        <!--{loop $h $key1 $value1}--> 
+        <!--{if is_array($value[$value1])}-->
+        <td class="editable" key="$value1"><!--{loop $value[$value1] $value2}-->
+          <p>$value2</p>
+          <!--{/loop}--></td>
+        <!--{else}-->
+        <td class="editable" key="$value1"><p>$value[$value1]</p></td>
+        <!--{/if}--> 
+        <!--{/loop}-->
+        <td><button type="button" id="button_item_$i" class="btn btn-simple" style="width:90px;" onclick="item_import('item_$i',this);" data-loading-text="{lang in_import}">{lang import_nbsp}</button>
+          &nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" title="{lang delete_item}" onclick="item_remove(this);return false;"><i class="glyphicon glyphicon-remove"></i></a></td>
+      </tr>
+      {eval $i++;}
+      <!--{/loop}-->
+      
+    </table>
+  </div>
+</div>
+<script type="text/javascript">
+var url='{BASESCRIPT}?mod=member';
+var importing=false;
+
+function toggle_import_all(obj){
+	var el=jQuery(obj);
+	if(importing){
+		importing=false;
+		el.html('{lang continue_import}');
+	}else{
+		importing=true;
+		el.html('{lang import_click_stop}');
+		run_import_all();
+	}
+}
+function run_import_all(){
+	if(!importing) return;
+	var list=jQuery('.item:not(.danger,.success)');
+	if(!list.length){
+		jQuery('#button_import_all').button('loading');
+	}else{
+		var id=jQuery('.item:not(.danger,.success1)').attr('id');
+		if(id) item_import(id);
+	}
+}
+function item_import(id){
+	
+	var data=getData(id);
+	var el=jQuery('#button_'+id);
+	el.button('loading');
+	jQuery.getJSON('{ADMINSCRIPT}?mod=orguser&op=import&do=importing',data,function(json){
+		if(json.error){
+			el.button('reset');
+			el.html(json.error);
+			el.parent().parent().addClass('danger');
+		}else{
+			el.parent().parent().addClass('success1');
+			el.html('{lang import_success}');
+			//el.parent().parent().fadeOut(50,function(){jQuery(this).remove();});
+			window.setTimeout(function(){el.parent().parent().remove();if(importing) run_import_all();},0);
+		}
+	});
+}
+function getData(id){
+	var data={};
+	//获取设置项数据
+	data.orgid=jQuery('#sel_orgid').val();
+	data.pswdefault=jQuery('#pswdefault').val();
+	data.append=jQuery('#append').prop('checked')?1:0;
+	data.sendmail=jQuery('#sendmail').prop('checked')?1:0;
+	
+	//获取导入项的数据
+	if(document.getElementById(id)){
+		jQuery('#'+id).children().each(function(){
+			var el=jQuery(this);
+			if(el.attr('key')){
+				if(el.find('p').length>1){
+					var vals=[];
+					el.find('p').each(function(){
+						vals.push(jQuery(this).html());
+					});
+				 	data[el.attr('key')]=vals.join('/');
+				}else{
+					 data[el.attr('key')]=el.find('p').html();
+				}
+			}
+		});
+	}
+	return data;
+}
+function item_remove(obj){
+	jQuery(obj).parent().parent().remove();
+}
+jQuery(document).ready(function(e) {
+  jQuery('.editable p').on('click',function(e){
+	  e=e?e:window.event;
+		var tag = e.srcElement ? e.srcElement :e.target;
+		if(tag.type=="text"||tag.type=="textarea"){
+			return true;
+		}		
+	  var val=jQuery(this).html();
+	  jQuery(this).html('<input type="text" class="form-control input-sm editinput" onkeyup="if(event.keyCode==13){jQuery(this).parent().html(this.value);}" style="width:'+(jQuery(this).width())+'px" value="'+val+'"  onblur="jQuery(this).parent().html(this.value);">');
+	  jQuery(this).find('input').focus();
+  });
+  
+  
+});
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}" type="text/javascript"></script> 
+<!--{template common/footer_simple}--> 

@@ -1,0 +1,104 @@
+<!--{template common/header_ajax}-->
+<style>
+    .user-select-search .input-black {
+        margin-bottom: 0;
+    }
+    .user-select-body {
+        padding-top: 20px!important;
+    }
+    .user-select-body .user-select-content {
+        margin-top: 0;
+        border-bottom: 1px solid #e1e1e1;
+    }
+    .user-select-body .user-select-content .user-select-content-left {
+        float: left;
+        height: 300px;
+        oveflow: hidden;
+        width: 50%;
+        height: 300px;
+        border-right: 1px solid #e1e1e1;
+    }
+    .user-select-body .user-select-content .user-select-content-right {
+        height: 300px;
+        overflow: auto;
+        float: left;
+        width: 50%
+    }
+    .user-select-content-right .sele-right-classa {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .user-select-content-right .sele-right-classa li {
+        padding-left: 15px;
+        line-height: 40px;
+        margin-left: 5px;
+        position: relative;
+        height: 40px;
+        padding-right: 30px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .user-select-content-right .sele-right-classa li img {
+        max-width: 24px;
+        max-height: 24px;
+    }
+    .user-select-content-right .sele-right-classa li .ti-close {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 30px;
+        height: 30px;
+        margin: 5px 0;
+        line-height: 30px;
+        text-align: center;
+        display: none;
+        cursor: pointer;
+        padding: 0;
+        background-color: #f2f2f2;
+    }
+    .user-select-content-right .sele-right-classa li:hover {
+        background-color: #f2f2f2;
+        border-radius: 3px;
+    }
+    .user-select-content-right .sele-right-classa li:hover .ti-close {
+        display: block;
+    }
+    #seluser_dropdown_menu {
+        height: 299px;
+    }
+    .iconFirstWord {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: inline-block;
+        line-height: 24px;
+        text-align: center;
+        margin-right: 2px;
+        color: #FFFFFF;
+    }
+</style>
+<script>
+    var savefile ='{$savefile}';
+</script>
+<link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/system/css/selfilewindow.css?{VERHASH}" rel="stylesheet" media="all">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+    <h4 class="modal-title">{lang select_position}</h4>
+</div>
+    <div class="group-content" id="seluser_dropdown_menu" style="overflow:hidden">
+        <iframe name="selposition_iframe" id="selposition_iframe" class="org-sel-box-iframe"
+                src="$theurl"
+                frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"
+                allowtransparency="true"></iframe>
+    </div>
+
+<script type="text/javascript" reload="1">
+    function hide_window(){
+        hideWindow("$_GET['handlekey']");
+        return false;
+    }
+</script>
+<!--{template common/footer_ajax}-->

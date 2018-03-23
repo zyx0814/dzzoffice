@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<item id="Title"><![CDATA[Dzz! theme]]></item>
+	<item id="Version"><![CDATA[1.2.1]]></item>
+	<item id="Time"><![CDATA[2014-09-22 16:53]]></item>
+	<item id="From"><![CDATA[上海乐云网络协作平台 (http://127.0.0.1/)]]></item>
+	<item id="Data">
+		<item id="thame">
+			<item id="id"><![CDATA[2]]></item>
+			<item id="name"><![CDATA[多彩]]></item>
+			<item id="folder"><![CDATA[colorful]]></item>
+			<item id="backimg"><![CDATA[#3A6EA5]]></item>
+			<item id="thumb"><![CDATA[]]></item>
+			<item id="btype"><![CDATA[1]]></item>
+			<item id="url"><![CDATA[]]></item>
+			<item id="default"><![CDATA[1]]></item>
+			<item id="dateline"><![CDATA[0]]></item>
+			<item id="disp"><![CDATA[0]]></item>
+			<item id="color"><![CDATA[#58B1FC]]></item>
+			<item id="enable_color"><![CDATA[1]]></item>
+			<item id="version"><![CDATA[1.0]]></item>
+			<item id="vendor"><![CDATA[乐云网络]]></item>
+			<item id="__modules">
+				<item id="window"><![CDATA[colorful]]></item>
+				<item id="filemanage"><![CDATA[window_jd]]></item>
+				<item id="icoblock"><![CDATA[default]]></item>
+				<item id="menu"><![CDATA[default]]></item>
+				<item id="startmenu"><![CDATA[default]]></item>
+				<item id="taskbar"><![CDATA[default]]></item>
+			</item>
+		</item>
+	</item>
+</root>

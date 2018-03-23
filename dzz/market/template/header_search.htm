@@ -1,0 +1,16 @@
+<div class="input-search">
+<form name="search" action="{DZZSCRIPT}" method="get">
+    <input type="hidden" name="mod" value="market" />
+    <i class="input-search-icon glyphicon glyphicon-search" aria-hidden="true" onclick="this.parentNode.submit()"></i>
+    <input type="text" class="form-control search  form-search" name="keyword" value="$_GET[keyword]" placeholder="{lang application_name_suppliers}" id="searchval">
+    </div>
+</form>
+</div>
+<script type="text/javascript">
+jQuery('#searchval').focus(function (e) {//头部搜索框变颜色
+    jQuery(this).parent().parent().addClass('focus');
+});
+jQuery('#searchval').blur(function (e) {//失去焦点时
+	 jQuery(this).parent().parent().removeClass('focus');
+})
+</script>

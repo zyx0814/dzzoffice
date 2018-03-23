@@ -1,0 +1,127 @@
+<!--{template common/header_simple_start}-->
+<link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/checkbox.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="admin/orguser/images/orguser.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/orguser/scripts/orguser.js?{VERHASH}"></script>
+<script type="text/javascript">
+	var selorg={};
+	<!--{if $openarr}-->
+	selorg.openarr=$openarr;
+	<!--{/if}-->
+	selorg.add=function(ctrlid,vals){
+		if(vals[0].orgid=='other') vals[0].path='{lang please_select_a_organization_or_department}';
+		jQuery('#'+ctrlid+'_Menu').html(vals[0].path+' <span class="caret"></span>');
+		jQuery('#sel_'+ctrlid).val(vals[0].orgid).trigger('change');
+	}
+</script>
+<style>
+	.selorg-container li.dropdown {
+		/*min-width:150px;*/
+		margin: 0 10px 10px 0;
+	}
+	
+	.selorg-container .job .dropdown-menu {
+		max-height: 300px;
+		overflow-y: auto;
+		padding: 10px;
+	}
+	
+	.selorg-container li a {
+		padding: 5px 10px;
+	}
+	
+	.selorg-container li.dropdown a .caret {
+		margin-left: 5px;
+	}
+	
+	.btn-simple.disabled,
+	.btn-simple[disabled],
+	fieldset[disabled] .btn-simple {
+		pointer-events: none;
+		cursor: not-allowed;
+		opacity: 1;
+		box-shadow: none;
+		background: none repeat scroll 0% 0% #EEE;
+	}
+	.bs-main-container{
+		margin-left:215px;
+	}
+	.bs-left-container{
+		width:215px;
+	}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template commer_header}-->
+<div class="bs-container clearfix">
+	<div class="bs-left-container  clearfix">
+		<!--{template tree}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>
+	<div class="bs-main-container">
+		<div class="main-content clearfix" style="padding:0">
+			<div id="orguser_container" class="orguser-container">
+
+			</div>
+		</div>
+	</div>
+	<div id="loading_info" style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;margin:0;padding:0;overflow:hidden; z-index: 11000;background:transparent;display:none;">
+		<table height="100%" width="100%">
+			<tbody>
+				<tr>
+					<td align="center" valign="middle">
+						<div class="loading_img">
+							<div class="loading_process"></div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout(function() {
+		jQuery('#classtree').css('height', jQuery('.bs-left-container').outerHeight(true) - jQuery('#classtree_top').outerHeight(true));
+	});
+	var currentHash = '';
+	jQuery(document).ready(function(e) {
+		
+		jQuery(document).on('mouseenter', '.moderators-container .user-item', function() {
+			jQuery(this).addClass('hover');
+		});
+		jQuery(document).on('mouseleave', '.moderators-container .user-item', function() {
+			jQuery(this).removeClass('hover');
+		});
+		var hash = window.location.hash.replace('#', '');
+		if(hash) {
+			var hasharr = hash.split('_');
+			showDetail(hasharr[1], hasharr[0], hasharr[2], hasharr[3]);
+		} else {
+			show_guide();
+		}
+	});
+	window.onhashchange = function() { //调转到指定的页面
+		var hash = window.location.hash.replace('#', '');
+		if(hash && hash != currentHash) {
+			var hasharr = hash.split('_');
+			showDetail(hasharr[1], hasharr[0], hasharr[2], hasharr[3]);
+		}
+	}
+</script>
+<script type="text/javascript" src="static/js/jstree.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/jquery.textareaexplander.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
+<!-- The basic File Upload plugin -->
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+
+<!--{template common/footer_simple}-->

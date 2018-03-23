@@ -1,0 +1,302 @@
+/*公共*/
+.table-hover>tbody>tr:hover{
+	background: none;
+}
+.nav>li>a{
+	color: #777;
+}
+.nav>li>a:focus, .nav>li>a:hover,.active>a{
+	/*background: none;*/
+	/*color: #4285F4;*/
+}
+ul,ul li,li{
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+html{
+	/*width: 100%;
+	margin: 0;
+	overflow: hidden;*/
+	height: 100%;
+}
+body{
+	width: 100%;
+	height: 100%;
+    min-width:768px;
+    /*overflow-y: hidden;*/
+    font-family: "微软雅黑";
+    background: #fff;
+}
+button:focus{
+	outline: 0;
+}
+#middleconMenu{
+	padding: 0 60px;
+}
+.bs-container{
+    height: 100%;
+}
+.bs-left-container{
+	height:100%;
+	position: absolute;
+ 	top: 0;
+	left: 0;
+	z-index:10;
+	overflow:hidden;
+	transition: left .35s ease-in-out;
+	background: #FFF;
+	
+}
+.bs-main-container{
+	margin-left:151px;
+	border:0;
+	transition: margin-left .35s ease-in-out;
+}
+/*左边部分*/
+
+.article_left_ul{
+	padding: 0px 0px;
+}
+.article_left_ul>li>a{ 
+	color: #838383;
+    display: block;           
+	height: 55px;
+	line-height: 55px;
+	padding-left: 30px;
+	color: #818181;
+	cursor: pointer;
+	font-size: 14px;
+}
+.article_left_ul>li>ul>li>a{
+	padding-left: 60px;
+}
+.articleCon_left_ul{
+	padding-left: 30px;
+	display: none;
+}
+.article_left_ul li>a:hover {
+    background: #F4F4F4;
+}
+/*结束*/
+
+
+/*右侧部分*/
+.corpus-item{
+	margin:0px 35px 35px 0;
+}
+/*结束*/
+/*头部*/
+
+
+
+.navbar-corpus{
+	position: fixed;
+	height:60px;
+	left: 0;
+	right: 0;
+	z-index: 10;
+	min-width: 678px;
+}
+@media (min-width: 0px){
+	.navbar-nav>li {
+	    float: left;
+	}	
+}
+
+.navbar-corpus{
+	background: #3270d0;
+	border-color:#3270D0;
+	box-shadow : 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.navbar{
+	margin-bottom: 0;
+}
+.resCon{
+	height: 60px;
+	text-align: center;
+}
+.navbar-corpus .navbar-toggle{
+	border:0;
+}
+
+.navbar-corpus .navbar-nav>li>a{
+	color: #FFFFFF;
+	font-size: 16px;
+	line-height: 30px;
+	padding: 15px;
+}
+.imgHeight{
+	height: 60px;
+	padding: 10px 15px!important;
+	line-height: 60px;
+}
+@media (max-width: 768px){
+.navbar-nav>li>a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}	
+.navbar-nav{
+	margin: 0;
+}
+}
+@media (min-width: 768px){
+.navbar {
+    border-radius: 0px;
+}	
+}
+/*.leftTopmenu{*/
+	/*left: 0!important;*/
+	/*cursor: pointer!important;*/
+/*}*/
+
+.left-drager-op .icon-bar{
+	background-color: #FFFFFF;
+	display: block;
+    width: 22px;
+    height: 1px;
+}
+.left-drager-op  .icon-bar+.icon-bar {
+    margin-top: 6px;
+}
+.input-search input{
+	height: 40px;
+}
+.input-search .form-search{
+	border-radius: 4px;
+}
+
+.input-search-dark .form-search{
+	background: rgba(255,255,255,0.3);
+	border: 0;
+}
+/*.input-search .form2-search{
+	background-color:#fff;
+}*/
+.input-search-dark .form-search:focus{
+	background: rgba(255,255,255,1);
+}
+
+.resSearch{
+	width: 35%;
+    float: left;
+    margin-left: 25px;
+}
+.resSearch .form-group{
+	margin-bottom: 0;
+	padding-top: 10px;
+}
+.input-search .input-search-icon,.input-search .input-search-drop{
+	color: #FFFFFF;
+	opacity: 1;
+}
+
+.input-search-word input.search{
+	color: #fff;
+}
+.input-search-word input.leave{
+	color: rgba(255,255,255,0.7);
+}
+/*html,body{
+	width:100%;
+	height:100%;
+}*/
+
+.container{
+	width:100%;
+	height:100%;
+	position:relative;
+}
+
+
+.main-header2 {
+  padding: 5px 8px;
+  position:relative;
+  margin:0;
+}
+.main-header2 span{
+	margin-left:20px;
+}
+.main-header2 .input-group{
+	margin:3px 0 0;
+}
+.main-header2 .input-group{
+	margin:3px 0 0;
+}
+
+
+.main-header2 .nav>li>a{
+	padding:5px 10px;
+	margin:5px;
+}
+
+.main-header2 .child-org .child-tree{
+	display:inline-block;
+	width:20px;
+	height:26px;
+	margin-left:10px;
+}
+
+.main-content{
+	
+}
+
+.partion{
+	padding:10px;
+	margin:10px;
+	background:#F5F5F5;
+}
+
+.controls .nav-pills{
+	margin-bottom:5px;
+}
+.nav-pills form{
+	margin:0;
+}
+.p_right {
+	background: url(../../static/image/common/check_right.gif) no-repeat 10px 12px;
+	width: 30px;
+}
+.table td{
+	vertical-align:middle;
+}
+.table td input{
+	margin:0;
+}
+
+.table td img{
+	max-width:32px;
+	max-height:32px;
+	margin-right:10px;
+	padding:0;
+}
+.table td p{
+	margin:5px 0;
+}
+.tag-header{
+  border-bottom: 1px solid #DDD;
+  padding: 0 10px;
+  position:relative;
+  margin:0;
+}
+.tag-header  .nav>li>a{
+	padding:5px;
+	margin:5px 10px;
+}
+.tag-header table td{
+	vertical-align:middle;
+}
+.tag-container{
+	margin:0;
+}
+.tag-container a{
+	padding:0 5px;
+	float:left;
+}
+.table thead th{
+	vertical-align:top;
+}
+a i{
+	font-size:1.2em;
+}

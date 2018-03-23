@@ -1,0 +1,154 @@
+/*
+ * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     LGPL (http://www.gnu.org/licenses/lgpl.html)
+ * @package     DzzOffice
+ * @version     DzzOffice Alpha 2013.9.10
+ * @link        http://www.dzzoffice.com
+ * @author      dzzfox(dzzfox@gmail.com)
+ */
+#taskbar .taskbar-back {
+	background:_BACKGROUND_;
+	opacity:0.4;
+	filter:Alpha(opacity=40)
+}
+.taskbar-bottom .taskbar-back{
+	border-top:1px solid rgba(255,255,255,0.4);
+}
+.taskbar-left .taskbar-back{
+	border-right:1px solid rgba(255,255,255,0.4);
+}
+.taskbar-top .taskbar-back{
+	border-bottom:1px solid rgba(255,255,255,0.4);
+}
+.taskbar-right .taskbar-back{
+	border-left:1px solid rgba(255,255,255,0.4);
+}
+
+/* 窗体样式×/
+
+/* 边框样式 */
+.window .LEFT_TOP
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+
+.window_current.window .LEFT_TOP{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.window .TOP
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .TOP{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.window .RIGHT_TOP
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .RIGHT_TOP{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+.window .RIGHT
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .RIGHT{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.window .RIGHT_BOTTOM
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .RIGHT_BOTTOM{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.window .RIGHT_BOTTOM_BY_BUTTON
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .RIGHT_BOTTOM_BY_BUTTON{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.window .BOTTOM
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .BOTTOM{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.window .BOTTOM_BY_BUTTON
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .BOTTOM_BY_BUTTON{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.window .LEFT_BOTTOM
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .LEFT_BOTTOM{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.window .LEFT_BOTTOM_BY_BUTTON
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .LEFT_BOTTOM_BY_BUTTON{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+.window .LEFT
+{
+	background:_BACKGROUND_;
+	opacity:0.5;
+	filter:Alpha(opacity=50)
+}
+.window_current.window .LEFT{
+	opacity:1;
+	filter:Alpha(opacity=100)
+}
+
+/*图标背景*/
+/*.hover .backgound_radius{background:_BACKGROUND_;border:1px solid RGBA(0,0,0,0.1); }
+.Icoselected .backgound_radius {background:_BACKGROUND_;border:1px solid RGBA(0,0,0,0.2);}
+*/
+

@@ -1,0 +1,30 @@
+<table class="table table-hover " style="margin:0;">
+	<thead>
+		<th>{lang application_name}</th>
+		<th>{lang group_permissions}</th>
+		<th>{lang version}</th>
+		<th>{lang dir}</th>
+		<th>{lang supplier}</th>
+		<th>{lang operation}</th>
+	</thead>
+	<!--{if $list}-->
+	<!--{loop $list $value}-->
+	<tr>
+		<td>
+			<a href="$value[appurl]" target="_blank"><img src="$value[appico]" />$value[appname]</a>
+		</td>
+		<td>$value[grouptitle]</td>
+		<td>$value[version]</td>
+		<td>$value[identifier]</td>
+		<td>$value[vendor]</td>
+		<td>
+			<a class="btn btn-link" href="{BASESCRIPT}?mod=appmarket&op=cp&do=install&app_path=$value[app_path]&app_name=$value[identifier]&refer=$refer" title="{lang install}">{lang install}</a>
+		</td>
+	</tr>
+	<!--{/loop}-->
+	<!--{else}-->
+	<tr>
+		<td colspan="10">{lang list_notinstall_application}</td>
+	</tr>
+	<!--{/if}-->
+</table>

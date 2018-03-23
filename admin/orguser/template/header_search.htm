@@ -1,0 +1,25 @@
+ <!--{if empty($_GET[op])}-->
+ <div class="input-search">
+ <form name="search" action="{BASESCRIPT}"  onsubmit="return false">
+    <i class="input-search-icon glyphicon glyphicon-search" aria-hidden="true" onclick="jstree_search(jQuery('#searchval').val())"></i>
+    <input type="text"  class="form-control search  form-search"  value="" placeholder="{lang search}" id="searchval" onkeyup="if(this.value!=''){jQuery('#emptysearchcondition').show();}if(event.keyCode==13){jstree_search(jQuery('#searchval').val())}">
+    <span aria-hidden="true" id="emptysearchcondition" class="header-closebutton">×</span>
+ </form>
+</div>
+
+<script type="text/javascript">
+jQuery('#searchval').focus(function (e) {//头部搜索框变颜色
+    jQuery(this).closest('.input-search').addClass('focus');
+	if(this.value!='') jQuery('#emptysearchcondition').show();
+});
+jQuery('#searchval').blur(function (e) {//失去焦点时
+	 jQuery(this).closest('.input-search').removeClass('focus');
+	 if(this.value=='') jQuery('#emptysearchcondition').hide();
+});
+jQuery('#emptysearchcondition').on('click',function(){
+	jstree_search('stop');
+	jQuery('#emptysearchcondition').hide();
+	return false;
+});
+</script>
+<!--{/if}-->

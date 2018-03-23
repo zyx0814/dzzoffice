@@ -1,0 +1,65 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+
+<script type="text/javascript">
+	var selorg={};
+	<!--{if $openarr}-->
+	selorg.openarr=$openarr;  
+	<!--{/if}-->
+	selorg.add=function(ctrlid,vals){
+		if(vals[0].orgid=='other') vals[0].path='{lang all_personnel}';
+		jQuery('#'+ctrlid+'_Menu').html(vals[0].path+' <span class="caret"></span>');
+		jQuery('#sel_'+ctrlid).val(vals[0].orgid);
+	}
+  </script>
+<!--{template common/header_simple_end}-->
+<!--{template commer_header}-->
+<div class="container" style="height:100%">
+<div class="main-header">
+  <ul class="nav nav-pills nav-pills-bottomguide"> 
+    <li class="active"><a href="{ADMINSCRIPT}?mod=orguser&op=export&orgid=$orgid">{lang export_change}</a></li>
+   
+  </ul>
+</div>
+<div class="main-content" style="padding:20px;">
+    <form id="cpform" action="{BASESCRIPT}?mod=orguser&op=export" class="form-horizontal form-horizontal-left"  method="post" name="cpform" onsubmit="return validate(this)">
+        <input type="hidden" value="{FORMHASH}" name="formhash">
+        <input type="hidden" value="true" name="exportsubmit">
+      <div class="form-group">
+        <label class="control-label">{lang export_range}：</label>
+        <div class="controls">
+           <div class="dropdown">
+                  <input id="sel_orgid"  type="hidden" name="orgid"  value="$orgid" />
+                  <button type="button" id="orgid_Menu" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    $orgpath <span class="caret"></span>
+                  </button>
+                  <div id="orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_Menu">
+                       <iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&ctrlid=orgid&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+                  </div>
+            </div>
+        </div>
+        <span  class="help-inline">{lang export_range_user}</span> </div>
+      <div class="form-group">
+        <label class="control-label">{lang export_data}：</label>
+        <div class="controls-adapt">
+          <!--{loop $h0 $key $title}-->
+          	<label class="checkbox-inline" style="min-width:150px;margin:0"><input type="checkbox" name="item[]" value="$key" checked="checked" /> $title</label>
+          <!--{/loop}-->
+        </div>
+        <span  class="help-inline"></span> </div>
+       
+      <div class="form-group" >
+        <label class="control-label" ></label>
+        <button type="submit" class="btn btn-primary btn-width" data-loading-text="{lang in_export}">{lang export_immediately}</button>
+      </div>
+     </form>
+   </div>
+ </div>
+ <script type="text/javascript">
+ function validate(form){
+	 jQuery(form).find('button[type=submit]').button('loading');
+	 return true;
+ }
+ </script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}" type="text/javascript"></script> 
+<!--{template common/footer_simple}--> 

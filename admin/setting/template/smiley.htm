@@ -1,0 +1,113 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<style type="text/css">
+/*.bs-main-container{
+  padding: 15px 30px;
+}
+.nav-pills-bottomguide>li:nth-child(1){
+  margin-left: 0px;
+}
+.nav-pills-bottomguide>li>a{
+  padding: 5px 0px;
+  margin-right: 30px;
+}
+.bs-main-container .main-content{
+    padding: 20px 0;
+}
+.table>tbody>tr>td:nth-child(1), .table>tbody>tr>th:nth-child(1), .table>tfoot>tr>td:nth-child(1), .table>tfoot>tr>th:nth-child(1), .table>thead>tr>td:nth-child(1), .table>thead>tr>th:nth-child(1) {
+    padding: 8px 0px;
+}*/
+</style>
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix"> 
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+    <div class="left-drager-op">
+      <div class="left-drager-sub"></div>
+    </div>
+  </div>
+  <div class="bs-main-container  clearfix" style="min-width:350px">
+    <div class="main-header clearfix">
+		<ul class="nav navbar-nav nav-pills-bottomguide">
+			<li> <a href="{BASESCRIPT}?mod=setting&operation=smiley">{lang expression_set}</a> </li>
+        	<li class="active"> <a href="{BASESCRIPT}?mod=setting&op=smiley">{lang expression_class}</a> </li>
+		</ul>
+	</div>
+    <div class="main-content clearfix table-responsive" style="border-top:1px solid #FFF">
+      <form id="appform" name="appform" action="{BASESCRIPT}?mod=setting&op=smiley" method="post">
+        <input type="hidden" name="smileysubmit" value="true" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+        <table class="table table-hover">
+          <thead>
+          	<th width="50">&nbsp;</th>
+            <th>{lang sort}</th>
+            <th>{lang enable}</th>
+            <th>{lang classify}</th>
+            <th>{lang catalogue}</th>
+            <th>{lang number}</th>
+            <th></th>
+           </thead>
+          <!--{loop $list $value}-->
+          <tr>
+            <td align="center"><label><input type="checkbox"  name="delete[]" value="$value[typeid]" <!--{if $value[smiliesnum]}-->disabled<!--{/if}--> /></label></td>
+            <td><input type="text" class="form-control" name="displayordernew[{$value[typeid]}]" value="$value[displayorder]" style="width:45px;" /></td>
+            <td><label><input type="checkbox"  name="availablenew[{$value[typeid]}]" value="1" <!--{if $value[available]}-->checked<!--{/if}--> /></label></td>
+            <td><input type="text" class="form-control " name="namenew[{$value[typeid]}]" value="$value[name]" /></td>
+            <td valign="middle">./static/image/smiley/{$value[directory]}</td>
+            <td>$value[smiliesnum]
+              <input type="hidden" name="smiliesnum[{$value[typeid]}]" value="$value[smiliesnum]" /></td>
+            <td valign="middle"><a href="{ADMINSCRIPT}?mod=setting&op=smiley&operation=update&id=$value[typeid]" class="" onclick="return confirm('{lang seeting_smiley_search}')">{lang update}</a>&nbsp;&nbsp; <a href="{ADMINSCRIPT}?mod=setting&op=smiley&operation=edit&id=$value[typeid]" class="">{lang detailedness}</a></td>
+          </tr>
+          <!--{/loop}--> 
+          <!--{if $list_no}--> 
+          <!--{loop $list_no $key $value1}-->
+          <tr>
+            <td align="center">{lang add_new}</td>
+            <td><input type="text" class="form-control " style="width:45px" name="newdisplayorder[{$key}]" value="$value1[displayorder]" /></td>
+            <td><label><input type="checkbox"  name="newavailable[{$key}]" value="1" <!--{if $value1[available]}-->checked<!--{/if}-->></label></td>
+            <td><input type="text" class="form-control " name="newname[{$key}]" value="" /></td>
+            <td>./static/image/smiley/{$value1[entry]}
+              <input type="hidden" name="newdirectory[{$key}]" value="$value1[entry]"></td>
+            <td>$value1[smnums]
+              <input type="hidden" name="smnums[{$key}]" value="$value1[smnums]" /></td>
+            <td>$value1[smilies]</td>
+          </tr>
+          <!--{/loop}--> 
+          <!--{else}-->
+          <tr>
+            <td align="center">{lang add_new}</td>
+            <td colspan="15"><span class="help-inline">{lang seeting_add_new}</span></td>
+          </tr>
+          <!--{/if}-->
+          <thead>
+          <th colspan="15" valign="middle"  style="border:none"><label for="chkall" class="checkbox-inline">
+                <input type="checkbox" name="chkall" id="chkall"  onclick="checkAll('prefix', this.form, 'delete')">
+                &nbsp;{lang del}</label>
+              &nbsp;&nbsp;
+              <input type="submit" class="btn btn-primary" value="{lang submit}" />
+          </th>
+          </thead>
+        </table>
+      </form>
+      <div class="tip" style="margin: 20px;color: #444;text-shadow: 1px 1px 1px #FFF;line-height: 1.8;">
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <h5>{lang board_message}</h5>
+          <ul>
+            {lang seeting_smiley_board_message_state}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+</script> 
+<!--{template common/footer_simple}-->

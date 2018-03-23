@@ -1,0 +1,503 @@
+<style>
+.group-tabul{
+	margin-left: 0px;
+	padding-left: 0px;
+	float: left;
+}
+.custom_menu_list {
+	padding: 2px 15px;
+	border-top: 1px solid #FFF;
+	border-bottom: 1px solid #e5e5e5;
+	height: 38px;
+	overflow:visible;
+}
+.custom_menu_list:hover{
+	background:#F7F7F7;
+}
+.custom_menu_addName, .custom_menu_name, .custom_menu_subName {
+	height: 34px;
+	line-height: 32px;
+	display: inline-block;
+	vertical-align: middle;
+	cursor: pointer;
+}
+.js_add_second{
+	padding-left:42px;
+}
+
+.custom_menu_list.cm_subname {
+	padding-left: 42px;
+}
+.custom_menu_title_text {
+	padding: 12px 15px 12px 35px;
+	border-bottom: 1px solid #e5e5e5;
+	margin:0;
+}
+.hover_visible{
+	
+	opacity:0;
+	_filter: Alpha(opacity=0);
+}
+
+.custom_menu_list:hover .hover_visible{
+	opacity:1;
+	_filter: Alpha(opacity=100);
+}
+.custom_menu_list.editing:hover .hover_visible,.custom_menu_list.editing .hover_visible{
+	display:none;
+}
+.custom_menu_input{
+	height: 26px;
+	border: 1px solid #ddd;
+	outline: 0;
+	width: 250px;
+	padding:0 5px;
+	display: none;
+	margin: 2px 0;
+}
+.custom_menu_notice {
+	margin-left: 20px;
+	display: none;
+	color: #da4a38;
+}
+.error .custom_menu_input{
+	border-color:#da4a38;
+}
+.error .js_input_limit{
+	border-color:#da4a38;
+}
+.error .custom_menu_notice{
+	display:inline-block;
+}
+.custom_menu_list.editing .custom_menu_subName,.custom_menu_list.editing .custom_menu_name,.custom_menu_list.editing .custom_menu_addName,.custom_menu_list.editing .icon{
+	display:none;
+}
+.custom_menu_list.editing .custom_menu_input{
+	display:inline-block;
+}
+.icon {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	background-image: url(static/image/common/icon_main.png)!important;
+	background-repeat: no-repeat!important;
+}
+.icon_click_gray {
+	width: 28px;
+	height: 16px;
+	background-position: -224px -126px;
+}
+.icon_link_gray {
+	width: 20px;
+	height: 20px;
+	background-position: -190px -158px;
+}
+.custom_menu_list .icon_link_gray {
+	margin: 8px 0 0;
+}
+.custom_menu_list .icon_click_gray {
+	margin: 8px -4px 0 0;
+}
+.custom_menu_list .icon_arrow_down, .custom_menu_list .icon_arrow_right {
+	margin-right: 8px;
+}
+.icon_arrow_down {
+	width: 8px;
+	height: 8px;
+	background-position: -64px -96px;
+}
+.custom_menu_list .icon_add_small {
+	vertical-align: -3px;
+	margin-right: 5px;
+}
+.icon_add_small {
+	width: 14px;
+	height: 14px;
+	background-position: -32px -160px;
+}
+.icon_edit_gray {
+	height: 16px;
+	width: 16px;
+	background-position: -192px -33px;
+}
+
+.custom_menu_list .icon_edit_gray {
+	vertical-align: middle;
+	margin-left: 8px;
+}
+.custom_menu_list .icon_remove {
+	margin: 8px 0 0 10px;
+}
+.icon_remove, .icon_remove_gray {
+	width: 16px;
+	height: 17px;
+	background-position: -160px -32px;
+}
+</style> 
+ <div class="main-header clearfix"> 		
+	
+	<ul class="group-tabul" style="margin-bottom:0px">
+        <li><a href="{$baseurl_info}">{eval echo $base_info_title?$base_info_title:'{lang application_message}';}</a></li>
+        <li class="active"><a href="{$baseurl_menu}">{eval echo $base_menu_title?$base_menu_title:'{lang application_menu}';}</a></li>
+  	</ul>
+</div>
+ <div class="main-content" style="border-top:1px solid #FFF;"> 
+    	<ul class="help-block text_center custom_menu_title_text ">
+        	<li>{lang creat_three_level_menu}</li>
+            <li>{lang edit_menu_in_the_user_can_not_see}</li>
+            <li>{lang menu_release_24_hours_to_update}</li>
+            <li>{lang drag_can_be_sorted}</li>
+        </ul>
+        <div class="custom_menu_mainList_wrap">
+        <!--{loop $menu[button] $key $value}-->
+       	  <div class="custom_cmname_list_wrap">
+            <div class="custom_menu_list cm_name js_li clearfix" data-id="$key" data-name="$value[name]" data-type="$value[type]" <!--{if $value[type]=='click'}--> data-key="$value[key]"<!--{elseif $value[type]=='view'}-->data-url="$value[url]"<!--{/if}-->>
+                <a class="icon icon_remove pull-right js_menu_remove hover_visible" href="javascript:;"></a>
+                <span class="icon icon_arrow_down"></span><span class="custom_menu_name">$value[name]</span>
+                
+                <!--{if $value[type] && $value[type]=='view'}-->
+                <a class=" pull-right js_link" href="javascript:;" title="{lang skip_links}" onclick="setEventkey(this,'link');return false"><span class="icon icon_link_gray"></span></a>
+                <!--{elseif $value[type]}-->
+                <a class=" pull-right js_click " href="javascript:;" title="{lang menu}KEY" onclick="setEventkey(this,'click');return false"><span class="icon icon_click_gray"></span></a>
+                
+                <!--{/if}-->
+                <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="{lang modification}"></a>
+                <input type="text" class="custom_menu_input js_add_2_menu js_input_limit  " value="$value[name]" autofocus data-limit="8">
+               
+                <span class="custom_menu_notice ">{lang level_1_menu_name_limit_beyond_truncation}</span>
+            </div> 
+            <div class="custom_menu_list_wrap" data-id="$key">
+             <!--{loop $value[sub_button] $key1 $value1}-->
+             	<div class="custom_menu_list cm_subname js_li clearfix" data-id="{$key}_{$key1}" data-name="$value1[name]" data-type="$value1[type]" <!--{if $value1[type]=='click'}--> data-key="$value1[key]"<!--{elseif $value1[type]=='view'}-->data-url="$value1[url]"<!--{/if}-->>
+                    <a class="icon icon_remove pull-right js_menu_remove hover_visible" href="javascript:;"></a>
+                   <span class="custom_menu_subName">$value1[name]</span>
+                    <!--{if $value1[type]=='view'}-->
+                    <a class=" pull-right js_link" href="javascript:;" title="{lang skip_links}" onclick="setEventkey(this,'link');return false"><span class="icon icon_link_gray"></span></a>
+                     <!--{elseif $value1[type]=='click'}-->
+                      <a class=" pull-right js_click " href="javascript:;" title="{lang menu}KEY" onclick="setEventkey(this,'click');return false"><span class="icon icon_click_gray"></span></a>
+                    <!--{/if}-->
+                    <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="{lang modification}"></a>
+                    <input type="text" class="custom_menu_input js_add_2_menu js_input_limit" value="$value1[name]" autofocus data-limit="16" >
+                    <span class="custom_menu_notice ">{lang level_2_menu_name_limit_beyond_truncation}</span>
+                </div>
+             <!--{/loop}--> 
+             </div>
+            <div class="custom_menu_list js_add_second" data-id="$key">
+                <span class="icon icon_add_small"></span>
+                <span class="custom_menu_addName gray">{lang add_second_level_of_menus}</span>
+                <input type="text" class="custom_menu_input js_add_2_menu js_input_limit" data-limit="16" autofocus placeholder="{lang level_2_menu_name_limit}">
+                <span class="custom_menu_notice ">{lang level_2_menu_name_limit_beyond_truncation}</span>
+            </div>
+          </div>
+        <!--{/loop}-->
+       </div> 
+       	 <div class="custom_menu_list js_add">
+            <span class="icon icon_add_small"></span>
+            <span class="custom_menu_addName gray">{lang add_themselves_menu}</span>
+            <input type="text" class="custom_menu_input js_add_menu js_input_limit " data-limit="8" autofocus placeholder="{lang level_2_menu_name_limit}">
+            <span class="custom_menu_notice ">{lang level_1_menu_name_limit_beyond_truncation}</span>
+        </div>
+    	<div style="padding:10px;">
+        	<button class="btn btn-primary" onclick="menu_save(this)" data-loading-text="{lang In_the_save}" style="width:80px;">{lang save}</button>
+            &nbsp;&nbsp;<button class="btn btn-success" onclick="menu_publish(this)" data-loading-text="{lang release}" style="width:120px;" <!--{if !$setting['agentid']}-->disabled="disabled"<!--{/if}-->>{lang published_weixin}</button>
+            &nbsp;&nbsp;<button class="btn btn-danger" onclick="menu_default(this)" data-loading-text="{lang in_recovery}">{lang restore_defaults}</button>
+            <small class="pull-right gray mt10">{lang release_24_hours_to_update}</small>
+        </div>
+ </div>
+
+
+<script type="text/javascript">  
+jQuery(document).ready(function(e) {
+	check_add_second();
+    jQuery(document).on('click','.js_change_name',function(){
+		jQuery(this).parent().addClass('editing');
+		jQuery(this).parent().find('.custom_menu_input').focus();
+	});
+	 jQuery(document).on('click','.js_add_second',function(){
+		if(!jQuery('.custom_menu_list_wrap[data-id='+jQuery(this).attr('data-id')+'] .cm_subname').length){//如果一级目录有事件，弹窗提示；
+		   var self=this;
+			showDialog('{lang use_the_secondary_menu}', 'confirm', '{lang secondary_menu_confirm}', function(){
+				jQuery(self).addClass('editing').find('.custom_menu_input').focus();
+			});
+		}else{
+			jQuery(this).addClass('editing');
+			jQuery(this).find('.custom_menu_input').focus();
+		}
+	});
+	 jQuery(document).on('click','.js_add',function(){
+		jQuery(this).addClass('editing');
+		jQuery(this).find('.custom_menu_input').focus();
+	});
+	
+	jQuery(document).on('click','.js_menu_remove',function(){
+		var li=jQuery(this).parent();
+		if(li.hasClass('cm_name')){//是主菜单时，删除所有子菜单
+			jQuery('.custom_menu_list[data-id='+li.attr('data-id')+']').remove();
+			jQuery('.custom_menu_list_wrap[data-id='+li.attr('data-id')+']').remove();
+		}
+		li.remove();
+		check_add_second();
+	});
+	jQuery(document).on('keyup','.js_input_limit',function(e){
+		var val=jQuery(this).val();
+		if(mb_strlen(val)>jQuery(this).attr('data-limit')){
+			jQuery(this).parent().addClass('error');
+		}else{
+			jQuery(this).parent().removeClass('error');
+		}
+		if(e.keyCode=='13'){
+			jQuery(this).trigger('blur');
+		}
+	});
+	jQuery(document).on('blur','.custom_menu_input',function(){
+		var li=jQuery(this).parent();
+		var cut_val=mb_cutstr(this.value,jQuery(this).attr('data-limit'));
+		if(this.value){
+			if(li.hasClass('js_add_second')){
+				var pid=li.attr('data-id');
+				if(jQuery('.custom_menu_list_wrap[data-id='+pid+'] .cm_subname').length<5){//判定是否已经有5个二级菜单了
+					var html='<div class="custom_menu_list cm_subname js_li clearfix" data-name="'+cut_val+'">'
+							+'	<a class="icon icon_remove pull-right js_menu_remove hover_visible" href="javascript:;"></a>'
+							+'   <span class="custom_menu_subName">'+cut_val+'</span>'
+							+'	<div class="btn-group pull-right eventkey">'
+							+'	  <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">'
+							+'		{lang add_the_event_type} <span class="caret"></span>'
+							+'	  </button>'
+							+'	  <ul class="dropdown-menu" role="menu">'
+							+'		<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">{lang menu}key</a></li>'
+							+'		<li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">{lang jump_page}</a></li>'
+							+'	  </ul>'
+							+'	</div>'
+							+'	 <a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="{lang modification}"></a>'
+							+'	 <input type="text" class="custom_menu_input js_add_2_menu js_input_limit " value="'+cut_val+'" autofocus="true" data-limit="16" >'
+							+'	<span class="custom_menu_notice ">{lang level_2_menu_name_limit_beyond_truncation}</span>'
+							+' </div>';
+					jQuery('.custom_menu_list_wrap[data-id='+pid+']').append(html);
+					jQuery('.js_li[data-id='+pid+']').attr('data-type','').find('.js_click,.js_link,.btn-group').remove();
+					check_add_second();
+					init_dragsort(2);
+				}
+				this.value='';
+			}else if(li.hasClass('js_add')){
+				if(jQuery('.cm_name').length<3){
+					var html='<div class="custom_menu_list cm_name js_li clearfix"  data-name="'+cut_val+'" data-type="">'
+							+'	<a class="icon icon_remove pull-right js_menu_remove hover_visible" href="javascript:;"></a>'
+							+'	<span class="icon icon_arrow_down"></span><span class="custom_menu_name">'+cut_val+'</span>'
+						
+							+'	<a class="js_change_name ml10 hover_visible icon icon_edit_gray" href="javascript:;" title="{lang modification}"></a>'
+							+'	<input type="text" class="custom_menu_input js_add_2_menu js_input_limit  " value="'+cut_val+'" autofocus="true" data-limit="8">'
+							+'	<span class="custom_menu_notice ">{lang level_1_menu_name_limit_beyond_truncation}</span>'
+							+'</div>'
+							+'<div class="custom_menu_list_wrap"></div>'
+							+'<div class="custom_menu_list js_add_second">'
+							+'	<span class="icon icon_add_small"></span>'
+							+'	<span class="custom_menu_addName gray">{lang add_second_level_of_menus}</span>'
+							+'	<input type="text" class="custom_menu_input js_add_2_menu js_input_limit" data-limit="16" autofocus="true" placeholder="{lang level_2_menu_name_limit}">'
+							+'	<span class="custom_menu_notice ">{lang level_2_menu_name_limit_beyond_truncation}</span>'
+							+'</div>';
+					jQuery(html).appendTo('.custom_menu_mainList_wrap');
+					check_add_second();
+					init_dragsort(1);
+				}
+			}else{
+				li.find('.custom_menu_subName,.custom_menu_name').html(cut_val);
+				li.attr('data-name',cut_val);
+				this.value=cut_val;
+			}
+		}
+		li.removeClass('editing');
+	});
+	
+	init_dragsort();
+});
+var ajaxurl='$baseurl_ajax';
+function init_dragsort(flag){
+	if(flag==1)	jQuery('.custom_menu_mainList_wrap').dragsort(null,function(){check_add_second();});
+	else if(flag==2) jQuery('.custom_menu_list_wrap').dragsort(null,function(){check_add_second();});
+	else{
+		jQuery('.custom_menu_list_wrap').dragsort(null,function(){check_add_second();});
+		jQuery('.custom_menu_mainList_wrap').dragsort(null,function(){check_add_second();});
+	}
+}
+function menu_save(obj){
+	var button=jQuery(obj);
+	button.button('loading');
+	var menu=[];
+	jQuery('.custom_menu_mainList_wrap .js_li').each(function(){
+		var li=jQuery(this);
+		if(li.hasClass('cm_name')){
+			var dataid=li.attr('data-id');
+			var type=li.attr('data-type');
+			var arr={}
+			arr['name']=li.attr('data-name');
+			if(type){
+				arr['type']=li.attr('data-type');
+				if(type=='click'){
+					arr['key']=li.attr('data-key');
+					
+				}else{
+					arr['url']=li.attr('data-url');
+				}
+			}else{
+				arr['sub_button']=[];
+			}
+			menu.push(arr);
+		}else if(li.hasClass('cm_subname')){
+			var id0=li.parent().attr('data-id');
+			var type=li.attr('data-type');
+			var arr={};
+			arr['name']=li.attr('data-name');
+			if(type){
+				arr['type']=li.attr('data-type');
+				if(type=='click'){
+					arr['key']=li.attr('data-key');
+				}else{
+					arr['url']=li.attr('data-url');
+				}
+			}
+			menu[id0]['sub_button'].push(arr);
+		}
+	});
+	jQuery.post(ajaxurl+'&action=menu_save',{menu:menu},function(json){
+		if(json.msg=='success'){
+			showmessage('{lang save_success}!','success',1000,1);
+		}else{
+			showmessage('{lang save_unsuccess}!','danger',3000,1);
+		}
+		button.button('reset');
+	},'json');
+}
+function menu_default(obj){
+	if(confirm('{lang restore_the_default_menu}')){
+		var button=jQuery(obj);
+		button.button('loading');
+		jQuery.post(ajaxurl+'&action=menu_default',function(json){
+			window.location.reload();
+		});
+	}
+}
+function menu_publish(obj){
+	var button=jQuery(obj);
+	button.button('loading');
+	var menu=[];
+	if(jQuery('.custom_menu_mainList_wrap .js_li .btn-group').length){
+		showmessage('{lang none_response_event_please_check}','danger',5000,1);
+		button.button('reset');
+		return;	
+	}
+	jQuery('.custom_menu_mainList_wrap .js_li').each(function(){
+		var li=jQuery(this);
+		if(li.hasClass('cm_name')){
+			
+			var dataid=li.attr('data-id');
+			var type=li.attr('data-type');
+			var arr={}
+			arr['name']=li.attr('data-name');
+			if(type){
+				arr['type']=li.attr('data-type');
+				if(type=='click'){
+					arr['key']=li.attr('data-key');
+					
+				}else{
+					arr['url']=li.attr('data-url');
+				}
+			}else{
+				arr['sub_button']=[];
+			}
+			menu.push(arr);
+		}else if(li.hasClass('cm_subname')){
+			var id0=li.parent().attr('data-id');
+			var type=li.attr('data-type');
+			var arr={};
+			if(type){
+				arr['name']=li.attr('data-name');
+				arr['type']=li.attr('data-type');
+				if(type=='click'){
+					marr['key']=li.attr('data-key');
+				}else{
+					arr['url']=li.attr('data-url');
+				}
+				menu[id0]['sub_button'].push(arr);
+			}
+		}
+	});
+	jQuery.post(ajaxurl+'&action=menu_publish',{menu:menu},function(json){
+		if(json.msg=='success'){
+			showmessage('{lang release_success}!','success',1000,1);
+		}else{
+			showmessage(json.error,'danger',3000,1);
+		}
+		button.button('reset');
+	},'json');
+}
+function setEventkey(obj,type){
+	var el=jQuery(obj);
+	var dataid=el.closest('.js_li').attr('data-id');
+	showWindow('setEvent',ajaxurl+'&action=setEventkey&type='+type+'&dataid='+dataid+'&t='+new Date().getTime());
+}
+
+function check_add_second(){
+	var i=0;
+	jQuery('.custom_menu_mainList_wrap .custom_menu_list,.custom_menu_mainList_wrap .custom_menu_list_wrap').each(function(){
+		var me=jQuery(this);
+		if(me.hasClass('cm_name')){
+			me.attr('data-id',i);
+			i++;
+			
+		}else if(me.hasClass('custom_menu_list_wrap')){
+			me.attr('data-id',(i-1)); 
+			var li=jQuery('.cm_name[data-id='+(i-1)+']');
+			if(jQuery('.custom_menu_list_wrap[data-id='+(i-1)+'] .cm_subname').length){//有子菜单，主菜单去除evnent
+				jQuery('.custom_menu_list_wrap[data-id='+(i-1)+'] .cm_subname').each(function(index){
+					var el=jQuery(this);
+					el.attr('data-id',(i-1)+'_'+index); 
+					if(el.attr('data-type')==''){
+						jQuery('<div class="btn-group pull-right eventkey"><button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">{lang add_the_event_type}<span class="caret"></span></button><ul class="dropdown-menu" role="menu">	<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">{lang menu}key</a></li><li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">{lang jump_page}</a></li></ul>	</div>').appendTo(this);
+					}
+				 });
+				 li.attr('data-type','').find('.js_click,.js_link,.btn-group').remove();
+			}else{
+				if(li.attr('data-type')==''){
+					li.find('.js_click,.js_link,.btn-group').remove();
+					jQuery('<div class="btn-group pull-right eventkey"><button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">{lang add_the_event_type}<span class="caret"></span></button><ul class="dropdown-menu" role="menu">	<li><a href="javascript:;" onclick="setEventkey(this,\'click\');return false">{lang menu}key</a></li><li><a href="javascript:;" onclick="setEventkey(this,\'link\');return false">{lang jump_page}</a></li></ul>	</div>').appendTo(li);
+				}
+			}
+			
+		}else if(me.hasClass('js_add_second')){
+			me.attr('data-id',i-1);
+			if(jQuery('.custom_menu_list_wrap[data-id='+(i-1)+'] .cm_subname').length>4) me.addClass('hidden');
+			else me.removeClass('hidden');
+		}
+	});
+	if(i>2){
+		jQuery('.js_add').addClass('hidden');
+	}else{
+		jQuery('.js_add').removeClass('hidden');
+	}
+}
+function mb_strlen(str) {
+	var len = 0;
+	for(var i = 0; i < str.length; i++) {
+		len += str.charCodeAt(i) < 0 || str.charCodeAt(i) > 255 ?  2 : 1;
+	}
+	return len;
+}
+function mb_cutstr(str, maxlen) {
+	var len = 0;
+	var ret = '';
+	var dot = '';
+	maxlen = maxlen - dot.length;
+	for(var i = 0; i < str.length; i++) {
+		len += str.charCodeAt(i) < 0 || str.charCodeAt(i) > 255 ? 2 : 1;
+		if(len > maxlen) {
+			ret += dot;
+			break;
+		}
+		ret += str.substr(i, 1);
+	}
+	return ret;
+}
+
+</script> 
+<script type="text/javascript" src="static/js/jquery.dragsort.js?{VERHASH}"></script>
+

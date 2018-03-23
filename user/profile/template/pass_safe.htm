@@ -1,0 +1,39 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="{MOD_PATH}/css/passsafe.css?{VERHASH}" rel="stylesheet" media="all">
+<script src="user/scripts/register.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+    .main-content{padding-top:30px;}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+    <div class="bs-left-container  clearfix">
+        <!--{template left}-->
+    </div>
+    <div class="left-drager">
+    </div>
+
+    <div class="bs-main-container  clearfix" >
+        <div class="main-header">
+            <ul class="nav nav-pills nav-pills-bottomguide">
+                <li {if $do == 'editpass'}class="active"{/if}><a href="user.php?mod=profile&op=password">{lang password_edit}</a></li>
+                <li {if $do == 'changeemail'}class="active"{/if}><a href="user.php?mod=profile&op=password&do=changeemail">{lang bindemail_subject}</a></li>
+                <!--<li {if $do == 'bindphone'}class="active"{/if}><a href="">绑定手机</a></li>-->
+               
+            </ul>
+        </div>
+        <div class="main-content">
+            <!--{if $do == 'editpass'}-->
+                <!--{template editpass}-->
+            <!--{elseif $do == 'changeemail'}-->
+                <!--{template changeemail}-->
+
+           <!--{/if}-->
+        </div>
+<script type="text/javascript"  reload="1">
+    jQuery('.left-drager').leftDrager_layout();
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

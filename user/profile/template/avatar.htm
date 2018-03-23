@@ -1,0 +1,132 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="user/scripts/jquery.cropbox.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="user/scripts/hammer.js"></script>
+<script type="text/javascript" src="user/scripts/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="user/scripts/jquery.cropbox.js"></script>
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+    <!-- 左边部分 -->
+    <div class="bs-left-container affix-top clearfix">
+        <!--{template left}-->
+    </div>
+
+    <!-- 左边拖动部分 -->
+    <div class="left-drager">
+        <div class="left-drager-op">
+            <div class="left-drager-sub"></div>
+        </div>
+    </div>  
+    <!-- 结束 -->
+    <!-- 右边部分 -->
+    <div class="bs-main-container clearfix"> 
+        <div class="main-content" style="padding:20px;">
+            <script type="text/javascript">
+                function updateavatar() {
+                    window.location.href = document.location.href.replace('&reload=1', '') + '&reload=1';
+                }
+            </script>
+            <form id="avatar_form" method="post" autocomplete="off" action="user.php?mod=avatar">
+                <input type="hidden" name="formhash" value="{FORMHASH}" />
+                <input id="imagedata" type="hidden" name="imagedata" value="" />
+                <input id="aid" type="hidden" name="aid" value="0" />
+                <input type="hidden" name="avatarsubmit" value="true" />
+            </form>
+            <h4>{lang set_avatar}</h4>
+            <p>{lang setting_avatar_message}</p>
+            <p>{lang setting_avatar_message1}</p>
+
+            <div class="crop-container clearfix" style="margin-bottom:10px;">
+                <img class="cropimage" src="avatar.php?uid=$_G[uid]&size=big&ramdom=1" />
+            </div>
+            <div class=" clearfix">
+                <div class="pull-left" style="position:relative;padding:5px;overflow:hidden">
+                    <button class="btn btn-success">{lang upload_image}</button>
+                    <input id="upload" name="files[]" tabIndex="-1" style="position: absolute;outline:none; filter: alpha(opacity=0); PADDING-BOTTOM: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; font-family: Arial; font-size: 180px;height:40px;width:86px;display:inline-block;top: 0px; cursor: pointer; right: 0px; padding-top: 0px; opacity: 0;direction:ltr;background-image:none" type="file" accept="image/png,image/gif,image/jpeg">
+                </div>
+                <div class="pull-left ml20" style="padding:5px;"><button type="button" id="avatar_form_btn" data-loading-text="{lang are_uploading}" class="btn btn-danger" onclick="return validate()" disabled="disabled">{lang save_avatar}</button></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery('.left-drager').leftDrager_layout();
+    jQuery(document).ready(function(e) {
+        var corp = jQuery('.cropimage').cropbox({ width: 200, height: 200, showControls: 'auto', label: '{lang drag_move}' })
+                .on('cropbox', function(event, results, img) {
+                    //jQuery('.myavatar img').attr('src',img.getDataURL());
+                });
+        if(window.FileReader) {
+            jQuery('#upload').on('change', function() {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    jQuery('.cropimage').attr('src', e.target.result);
+                    jQuery('#avatar_form_btn').prop('disabled',false);
+                    jQuery('.cropimage').cropbox({ width: 300, height: 300, showControls: 'auto', label: '{lang drag_move}' })
+                }
+                reader.readAsDataURL(this.files[0]);
+                this.files = null;
+            })
+        } else {
+            jQuery('#upload').fileupload({
+                url: 'user.php?mod=profile&op=avatar&do=imageupload',
+                dataType: 'json',
+                autoUpload: true,
+                maxChunkSize: 2000000, //2M
+                maxFileSize: 5000000, // 5 MB
+                acceptFileTypes: new RegExp("(\.|\/)([jpeg|jpg|gif|png|bmp])$", 'i'),
+                dropZone: jQuery('.crop-container'),
+                pasteZone: jQuery('.crop-container'),
+                sequentialUploads: true
+
+            }).on('fileuploadfail', function(e, data) {
+                jQuery.each(data.result.files, function(index, file) {
+                    if(file.error) {
+                        showmessage(json.error, 'danger', 3000, 1);
+                    }
+                });
+            }).on('fileuploaddone', function(e, data) {
+                jQuery.each(data.result.files, function(index, file) {
+                    if(file.error) {
+                        showmessage(json.error, 'danger', 3000, 1);
+                    } else {
+                        jQuery('#aid').val(file.data.aid);
+                        jQuery('.cropimage').attr('src', file.data.img);
+                        jQuery('#avatar_form_btn').prop('disabled',false);
+                        jQuery('.cropimage').cropbox({ width: 300, height: 300, showControls: 'auto', label: '{lang drag_move}' })
+                    }
+                });
+            });
+        }
+    });
+
+    function validate() {
+        var inst = jQuery('.cropimage').data('cropbox');
+        jQuery('#imagedata').val(inst.getDataURL());
+        jQuery('#avatar_form_btn').button('loading');
+        jQuery.post('user.php?mod=profile&op=avatar', jQuery('#avatar_form').serialize(), function(json) {
+            if(json.msg == 'success') {
+                showmessage('{lang avatar_uploaded_successfully_time}', 'success', 3000, 1);
+                window.setTimeout(function() { window.location.href = 'user.php?mod=profile&op=avatar&t=' + new Date().getTime(); }, 3000);
+            } else {
+                showmessage(json.error, 'success', 3, 1);
+            }
+            jQuery('#avatar_form_btn').button('reset');
+        }, 'json');
+        return false;
+    }
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
+<!-- The basic File Upload plugin -->
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
+
+<!--{template common/footer_simple}-->

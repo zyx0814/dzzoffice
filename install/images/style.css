@@ -1,0 +1,134 @@
+
+*{ word-wrap:break-word; }
+html ,body {height:100%;overflow:hidden}
+body {height:100%;margin:0;padding:0;overflow:auto;}
+body{background:#2d2f3a; text-align:left; color:#FFF;text-shadow: 1px 1px 1px RGBA(0,0,0,.3)}
+body, td, button{ color:#FFF; font-size:15px;line-height:1.5 ;font-family:Tahoma,'Microsoft Yahei','Simsun'; }
+
+a{ color:#FFF; text-decoration:none; }
+	a:hover { text-decoration:none;background:RGBA(255,255,255,0.1); }
+	a img{ border:none; }
+.red{ color:yellow}
+.container{
+	width:920px;
+	margin: 50px auto;
+}
+.step_0{
+	padding:0;
+	height:100%;
+}
+h3,h2{
+	
+	font-family:"Microsoft YaHei","微软雅黑",tahoma,arial,simsun,"宋体";
+	font-weight:normal;
+}
+h2{
+	font-size:24px;
+}
+h3{
+	font-size:32px;
+}
+.step_0{text-align:center;margin:0 auto;}
+.spacer{height:60px}
+.button_start{
+	display:inline-block;
+	padding:6px 40px;
+	border:1px solid #FFF;
+	background:RGBA(255,255,255,0.2);
+	text-decoration:none;
+	margin-left:20px;
+}
+.button{
+	display:inline-block;
+	
+	border:1px solid #FFF;
+	background:RGBA(255,255,255,0.2);
+	text-decoration:none;
+	margin-left:20px;
+}
+.button span{
+	font-size:15px;
+	font-weight:bold;
+}
+table{ border-collapse:collapse; width:95%; }
+	th{ text-align:left;color:#76a9ff; line-height:34px;padding:3px 5px;}
+    td{line-height:20px;padding:3px 5px}
+	.tb .pdleft1 {
+		padding-left: 45px;
+	}
+	.tb .pdleft {
+		padding-left: 45px;
+	}
+
+.tb2{width:auto;line-height:30px;}
+.tbopt{width:150px;color:#FFF}	
+.w {
+	background:url(right.png) no-repeat;
+}
+.nw {
+	background:url(error.png) no-repeat;
+}
+input[type="button"],input[type="submit"]{
+	border:none;
+	background:none;
+	cursor:pointer;
+	padding:6px 40px;
+	color:#FFF;
+	font-weight:bold;
+}
+input[type="text"],input[type="password"],select{
+	border:none;
+	padding:6px 5px;
+	color:#333;
+}
+.pContainer{
+	position:relative;
+	z-index:100;
+	width:80%;
+	height:65px;
+	line-height:65px;
+	border:1px solid #FFF;
+	margin:100px 0
+}
+.pContainer .progress{
+	position:absolute;
+	left:0;
+	top:0;
+	width:1%;
+	height:100%;
+	background:#4c8fff;
+	z-index:-1;
+}
+#notice{
+	padding:0 20px;
+	color:#FFF;
+	font-size:24px;
+}
+.header{
+	padding:30px 0;
+}
+
+.content{line-height:1.5em;text-align:left;padding:30px 100px 0;}
+
+.step_0 .content{padding:30px 200px 0;}
+
+#ali_available_img{
+	width:22px;
+	height:22px;
+	display:inline-block;
+	border:0;
+	float:left;
+}
+.sel{
+	background:url(sel.png) no-repeat;
+}
+.seled{
+	background:url(seled.png) no-repeat;
+}
+label{
+	height:24px;
+	float:left;
+	cursor:pointer;
+	position:relative;
+}
+	

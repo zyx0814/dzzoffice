@@ -1,0 +1,403 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+
+<link rel="stylesheet" href="static/css/checkbox.css">
+<link href="{MOD_PATH}/images/market.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="admin/scripts/admin.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+.app_upgradelist{
+	margin: auto;
+	padding: 8px;
+	border-bottom: 1px solid #f2f2f2;
+	position: relative;
+}
+.app_upgradelist .progess{
+	position: absolute;
+	top:0;
+	left: 0;
+	height:30px;width:0%;
+	height: 100%;
+	width:100%;
+}
+.app_upgradelist .progess .upgrade_progess{
+	background-color:#dff0d8;
+	position: absolute;
+	width:0%;
+	height: 100%;
+}
+
+.app-name-wrapper {
+    padding-left: 55px;
+    position: relative;
+	max-width:350px;
+	min-height:50px;
+}
+.app-name-wrapper .appicon {
+    position: absolute;
+    left: 0;
+    top: 2px;
+}.app-name-wrapper .appicon img {
+    max-width: 45px;
+    max-height: 45px;
+    margin: 0;
+}
+.app-name-wrapper .appname{
+	margin:0;
+	line-height:30px;
+	
+}
+.app-name-wrapper .appname a{
+	color:#000;
+	font-weight:500;
+	font-size:14px;
+}
+.app-name-wrapper .appdesc{
+	white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	color:#999;
+	font-size:13px;
+	cursor:default;
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+	white-space:nowrap;
+}
+.group-td-wrapper{
+	max-width:320px;
+	white-space:normal;
+	overflow: hidden;
+    text-overflow: ellipsis;
+}
+.group-td-wrapper>span {
+	white-space:nowrap;
+	overflow: hidden;
+    text-overflow: ellipsis;
+}
+.group-td-wrapper>span>img {
+	margin:0;
+	vertical-align: text-bottom;
+}
+
+.app-info a{
+	color:#999;
+}
+.app-info .select-info{
+	position:absolute;
+	left:30px;
+	top:9px;
+	display:none;
+	background-color:#FFF;
+	padding:5px 10px;
+	line-height: 34px;
+}
+ 
+.main-header{
+	padding:5px
+}
+.main-header>div{
+	line-height:34px;
+	margin:0 5px;
+	
+}
+#update_selected{
+	margin-left:20px;
+}
+.checkbox-custom{
+	margin-bottom:0;	
+}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+	</div>	
+	<div class="bs-main-container">
+		<div class="all-center-top clearfix">
+			<div class="pull-left">
+				 <div class="checkbox-custom checkbox-primary" style="margin-top: .6em;">
+                        <input type="checkbox" name="chkall" id="chkall" >
+                        <label></label>
+                 </div>
+            </div>
+			
+			<div class="app-info pull-left">
+                <a href="{BASESCRIPT}?mod=appmarket">{lang total}<span class="num">$count</span>{lang ge}{lang app}</a>
+                <div class="select-info">
+                {lang selected}<span class="num">0</span>{lang ge}{lang app}
+                <a class="btn btn-success-outline " id="update_selected" title="{lang update_onekey}" href="javascript:;" onclick="upgrade_all();"><i class="glyphicon glyphicon-upload"></i> {lang update_onekey}</a>
+                </div>
+            </div> 
+			<div class="pull-right">
+				<button class="btn btn-success-outline " id="update_check" title="{lang app_upgrade_check_need_update}"  onclick="upgrade_check(this);" data-loading-text="{lang app_upgrade_check_need_update}">{lang app_upgrade_check_need_update2}</button>
+			</div>
+		</div> 
+		<div class="main-content clearfix" style="border-top:1px solid #FFF;padding:0;">
+			<form id="appform" name="appform" class="form-horizontal" action="{BASESCRIPT}?mod=appmarket" method="post">
+				<input type="hidden" name="appsubmit" value="true" />
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+				<!--{loop $list $value}--> 
+					<div id="app_div_{$value[appid]}" class="row app_upgradelist" > 
+						<div id="progess_{$value[appid]}" class="progess">
+							<span id="upgrade_progess_{$value[appid]}" class="upgrade_progess"></span> 
+						</div>
+						
+						<div class="col-md-4 col-sm-4 col-xs-4" style="padding-left: 4px;"> 
+							<div class="checkbox-custom checkbox-primary" style="float: left; line-height: 50px; ">
+								<input type="checkbox" name="del[]" value="$value[appid]" data-mid="$value[mid]">
+								<label></label>
+							</div> 
+						 
+                        	<div class="app-name-wrapper" style="margin-left: 30px;">
+								{eval $appadminurl=$value[appadminurl]?$value[appadminurl]:$value[appurl]}
+								<a href="$appadminurl" target="_blank" class="appicon"><img src="$value[appico]" style="margin:0" /></a>
+								<p class="appname">
+									<a href="$appadminurl" target="_blank" class="">$value[appname]</a>
+								</p>
+								<div class="appdesc" title="$value['appdesc']">{eval echo $value[upgrade_version][desc_short]?$value[upgrade_version][desc_short]:lang('none');}</div>
+                            </div>
+						</div>
+						
+						<div class="col-md-2 col-sm-2 col-xs-2"> 
+                        	<p>{lang installed}:$value[version]</p>
+                            <div>{lang newest}:$value[upgrade_version][version]</div>
+						</div>
+						
+						<div class="col-md-4 col-sm-4 col-xs-4"> 
+							<div class="group-td-wrapper">
+								$value[upgrade_version][desc]
+							</div>
+                        </div>
+						
+						<div class="col-md-2 col-sm-2 col-xs-2"> 
+							<a class="btn btn-success-outline" id="upgrade_info_{$value[appid]}" href="javascript:;" onclick="start_check_upgrade('$value[appid]',1);" title="{lang update_onekey}">{lang update_onekey}</a>
+						</div> 
+					</div> 
+				<!--{/loop}-->
+				<table class="table table-hover">  
+                    <!--{if $multi}-->
+					<tr>
+						<td colspan="20" align="center">$multi </td>
+					</tr> 
+                    <!--{/if}-->
+				</table> 
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var upgrade=false;
+	var appids=[];
+	var mids=[];
+	var nowupgradeappid=0;
+	jQuery('.left-drager').leftDrager_layout();
+	jQuery('input[name="del[]"]').on('change',function(){
+		//console.log('change==='+this.value);
+		checkSelected();
+	});
+	jQuery('#chkall').on('change',function(){
+		if(jQuery(this).prop('checked')){
+			jQuery('input[name="del[]"]').prop('checked',true);
+		}else{
+			jQuery('input[name="del[]"]').prop('checked',false);
+		}
+		checkSelected();
+	});
+	
+	function checkSelected(){
+		var i=0;
+		appids=[];
+		mids=[];
+		jQuery('input[name="del[]"]').each(function(){
+			//console.log(this);
+			if(jQuery(this).prop('checked')){
+				appids.push(this.value);
+				mids.push(jQuery(this).data("mid"));
+			}
+			i++;
+		});
+		var num=appids.length;
+		//console.log([i,num]);
+		if(num>0){
+			jQuery('.select-info').show().find('.num').text(num);
+			if(i>0 && i==num){//全部选中时
+				jQuery('#chkall').prop('checked',true);
+			}else{
+				jQuery('#chkall').prop('checked',false);
+			}
+		}else{
+			jQuery('.select-info').hide().find('.num').text('0');
+		}
+	}
+	function upgrade_check(obj){//强制检测更新，不受一天一次的限制，一般用于刚上传或修改了应用的配置信息，通过这个按钮可以强制刷新出需要更新的应用
+		jQuery(obj).button('loading');
+		jQuery.post('{MOD_URL}&op=check_upgrade',function(json){
+			var oldsum=parseInt(jQuery('#update_app_num').text()); 
+			if(json.sum!=oldsum){
+				window.location.reload();
+			}else{
+				showmessage('没有检测到新的更新','success',1000,1);
+			}
+			jQuery(obj).button('reset');
+		},'json');
+	}
+	function upgrade_all(){ 
+		var num=appids.length;
+		if( upgrade ){
+			alert("正在升级,请稍等...");
+			return false;
+		}
+		if(num>0){
+			start_check_upgrade( 0 ,2); 
+		}
+	}
+	
+	function start_check_upgrade(appid,s){
+		var url="";
+		var appid = parseInt(appid);
+		var url_s='{MOD_URL}&op=upgrade_app_ajax&operation=check_upgrade&appid='; 
+		if( upgrade ){
+			//alert("正在升级,请稍等...");
+			return false;
+		}
+		upgrade=true;
+		if( s==2 ){
+			if(nowupgradeappid==0 && appids.length>0 ){
+				url=url_s+appids[0]; 
+				nowupgradeappid=appids[0];
+				appids.shift();
+			}else{ 
+				url=url_s+nowupgradeappid; 
+			} 
+		}else{
+			if( appid==0 || isNaN(appid) ){
+				appid=nowupgradeappid; 
+			}
+			url=url_s+appid;
+			nowupgradeappid=appid;
+		}
+		
+		jQuery.post({
+			type:'json',
+			async: false, 
+			url:url,
+			data:{},
+			success:function(json){
+				if(json.status==0){
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+					nowupgradeappid=0;
+					upgrade=false; 
+					if( appids.length>0 && s==2){ 
+						nowupgradeappid=0;
+						url=url_s+appids[0]; 
+						start_check_upgrade(url,s);
+					} 
+				}else{
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+					jQuery('#upgrade_progess_'+nowupgradeappid).animate({width:json.percent+"%"},json.second,function(){
+						if(json.mid>0){
+							startupgrade(json.url,s);
+						}else{
+							upgradeover(json.url,s);
+						} 
+					});
+				}
+			} 
+		});
+	}
+	
+	function startupgrade(url,s){
+		jQuery.ajax({
+			type:'json',
+			async: false, 
+			url:url,
+			data:{},
+			success:function(json){ 
+				if(json.status==0){
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+					upgrade=false;
+				}else{
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+					jQuery('#upgrade_progess_'+nowupgradeappid).animate({width:json.percent+"%"},json.second,function(){
+						startgetcrossorpatchfile(json.url,s);
+					});
+				}
+			} 
+		});
+	}
+	
+	function startgetcrossorpatchfile(url,s){
+		jQuery.ajax({
+			type:'json',
+			async: false, 
+			url:url,
+			data:{},
+			success:function(json){ 
+				if(json.status==0){ 
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+					upgrade=false; 
+				}else{
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+					jQuery('#upgrade_progess_'+nowupgradeappid).animate({width:json.percent+"%"},json.second,function(){
+						if(json.step==2){
+							startgetcrossorpatchfile(json.url,s);
+						}else{
+							startupgradefile(json.url,s);
+						}
+					}); 
+				}
+			} 
+		});
+	}
+	
+	function startupgradefile(url,s){
+		jQuery.ajax({
+			type:'json',
+			async: false, 
+			url:url,
+			data:{},
+			success:function(json){ 
+				if(json.status==0){ 
+					upgrade=false; 
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+				}else{
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+					jQuery('#upgrade_progess_'+nowupgradeappid).animate({width:json.percent+"%"},json.second,function(){
+						 if(json.step!=5){
+							startupgradefile(json.url,s);
+						}else{
+							upgradeover(json.url,s);
+						}
+					}); 
+				}
+			} 
+		});
+	}
+	
+	function upgradeover(url,s){
+		jQuery.ajax({
+			type:'json',
+			async: false, 
+			url:url,
+			data:{},
+			success:function(json){ 
+				if(json.status==0){ 
+					upgrade=false; 
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+				}else{
+					jQuery('#upgrade_info_'+nowupgradeappid).html(json.msg);
+					jQuery('#upgrade_progess_'+nowupgradeappid).animate({width:"100%"},300,function(){
+						jQuery('#upgrade_progess_'+nowupgradeappid).css("width","0%");
+						upgrade=false; 
+						start_check_upgrade(json.url,s);
+					}); 
+				}
+			} 
+		});
+	}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

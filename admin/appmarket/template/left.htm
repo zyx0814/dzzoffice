@@ -1,0 +1,18 @@
+<ul class="nav-stacked">
+	<li <!--{if $op=='index' || ($op=='edit' && $appid)}-->class="active"<!--{/if}-->>
+		<a href="{MOD_URL}"><i class="glyphicon glyphicon-file"></i> {lang installed}</a>
+	</li>
+   
+    <li <!--{if $op=='upgrade_app' || $op=='appupgrade'}-->class="active"<!--{/if}-->>
+		<a href="{MOD_URL}&op=appupgrade&refer=$refer"><i class="glyphicon glyphicon-upload"></i> {lang upgrade} <span id="update_app_num" class="badge badge-danger <!--{if ($upsum=get_update_app_num())<1}-->hide<!--{/if}-->">$upsum</span></a>
+	</li>
+	<li <!--{if $op=='cloudappmarket' || $op=='list'}-->class="active"<!--{/if}-->>
+		<a href="{MOD_URL}&op=cloudappmarket"><i class="glyphicon glyphicon-th-large"></i> {lang appmarket}</a>
+	</li>
+	<li <!--{if $op=='extopen'}-->class="active"<!--{/if}-->>
+		<a href="{MOD_URL}&op=extopen"><i class="glyphicon glyphicon-filter"></i> {lang open_way}</a>
+	</li>
+	<li <!--{if $op=='default'}-->class="active"<!--{/if}-->>
+		<a href="{MOD_URL}&op=default"><i class="glyphicon glyphicon-cog"></i> {lang permission_management}</a>
+	</li>
+</ul>

@@ -1,0 +1,114 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/checkbox.css?{VERHASH}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{MOD_PATH}/images/login_single2.css?{VERHASH}"/>
+<!--[if lt IE 9]>
+  <script src="static/js/jquery.placeholder.js" type="text/javascript"></script>
+<![endif]-->
+<script type="text/javascript" src="user/scripts/login.js?{VERHASH}"></script>
+
+<!--{template common/header_simple_end}-->
+<!--{eval $loginhash = 'L'.random(4);}-->
+<!--背景层-->
+<div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:0;  font-size: 0px; background:{eval echo $_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#76838f';};"> 
+	
+	<img src="{eval echo $_G['setting']['loginset']['img']?$_G['setting']['loginset']['img']:MOD_PATH.'/images/login.jpg';}" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index:1;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%">
+	
+    <!--{if $_G['setting']['loginset']['url']}-->
+    <iframe id="wrapper_frame" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" style="z-index:2;position:absolute;width:100%;height:100%;background:url(dzz/images/b.gif);"></iframe>
+    <!--{/if}-->
+</div>
+
+<div class="mainContainer" id="main_message">
+	<div class="modal-content">
+		 <div class="brand"> <img src="{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}" /> </div>
+		<!--{if $_G[setting][loginset][title]}-->
+		<div class="main-title">演示用户自动登录</div>
+		<!--{/if}--> 
+		
+		<!--{if $_G[setting][bbclosed]}-->
+		<div class="text-danger">{lang site_closed_please_admin}</div>
+		<!--{/if}-->
+      	<form method="post"  name="login" id="loginform_$loginhash" class="loginForm" role="form" action="login.php">
+			<input type="hidden" name="formhash" value="{FORMHASH}" />
+			<input type="hidden" name="referer" value="{$referer}" />
+			<!--{if $auth}-->
+			<input type="hidden" name="auth" value="$auth" />
+			<!--{else}--> 
+			<div class="form-group">
+				<input type="text" class="form-control" id="email_$loginhash" placeholder="{lang email_username}" name="email"  autocomplete="off">
+			</div>
+			<div class="form-group">
+				<input type="text" class="form-control" id="password3_$loginhash" placeholder="{lang user_login_password}" name="password" onfocus="this.type='password'" autocomplete="off">
+			</div>
+			<!--{/if}-->
+			
+
+	       <!--{if $seccodecheck}-->
+		  <div class="form-group seccode-wrapper clearfix"> 
+			<!--{template common/seccheck}--> 
+		  </div>
+		  <!--{/if}-->
+		  <div class="form-group  clearfix">
+			<div class="checkbox-custom checkbox-primary pull-left">
+			  <input type="checkbox" name="cookietime" id="cookietime_$loginhash" value="2592000" $cookietimecheck />
+			  <label for="cookietime_$loginhash">{lang automatic_login_within_thirtydays}</label>
+			</div>
+			<!--{if $_G['setting']['regstatus']>0}--> 
+			<a  class="pull-right"  href="user.php?mod=register&referer={eval echo urlencode($referer);}"  <!--{if !empty($_GET['inajax'])}-->onclick="_login.register($referer);return false;"<!--{/if}--> title="$_G['setting']['reglinkname']">$_G['setting']['reglinkname']</a> 
+			<span class="spacer  pull-right">|</span> 
+			<!--{/if}--> 
+			<a class="pull-right"  href="user.php?mod=login&op=logging&action=lostpasswd">{lang getpassword}</a> </div>
+		  <p class="error-msg text-danger" id="returnmessage_$loginhash"></p>
+		  <button class="btn btn-lg btn-primary btn-block" type="submit" name="loginsubmit" value="true">{lang login_empty}</button>
+			
+		</form>
+		<div class="copyright-container">
+		<!--{template login_copyright}-->
+		</div>
+	</div>
+</div>
+<div class="nfl" id="main_succeed" style="display: none;text-align: center;">
+	<div class="modal-body">
+  		<div class="alert_right" style="display: inline-block;">
+    		<div id="succeedmessage"></div>
+    		<div id="succeedlocation" class="alert_btnleft"></div>
+    		<p class="alert_btnleft"><a id="succeedmessage_href" href="javascript:;">{lang message_forward}</a></p>
+  		</div>
+	</div>
+</div>
+<!--{if $_G['setting']['pwdsafety']}--> 
+<script type="text/javascript" src="user/scripts/md5.js?{VERHASH}" reload="1"></script> 
+<!--{/if}--> 
+<script type="text/javascript">
+var pwdclear = 1;
+function initinput_login() {
+	document.body.focus();
+	<!--{if !$auth}-->
+		if(document.getElementById('loginform_$loginhash')) {
+			document.getElementById('loginform_$loginhash').email.focus();
+		}
+	<!--{/if}-->
+}
+
+function clearpwd() {
+	if(pwdclear) {
+		document.getElementById('password3_$loginhash').value = '';
+	}
+	pwdclear = 0;
+}
+
+jQuery(document).ready(function(e) {
+	initinput_login();
+	
+	if(jQuery('.ie8,.ie9').length){ //ie8模拟placeholder;
+		jQuery(':input[placeholder]').each(function(){
+			jQuery(this).placeholder();
+		});
+	}
+});
+
+</script> 
+<script type="text/javascript" src="user/scripts/setbacksize.js?{VERHASH}"></script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 
+<!--{template common/footer}-->

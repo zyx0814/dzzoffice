@@ -1,0 +1,217 @@
+
+body{
+	height: 100%;
+	color:#FFF;
+}
+ .mainContainer{
+	animation-duration: 800ms;
+    position: relative;
+    animation-fill-mode: both;
+	z-index: 10;
+	height: 100%;
+	text-align: center;
+	overflow:auto;
+}
+.mainContainer:before{
+	display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    content: "";
+}
+   
+.modal-content{
+	padding: 30px;
+	vertical-align: middle;
+	display: inline-block;
+    max-width: 100%; 
+    font-size: 14px;  
+	color:#333;
+    box-shadow: none;
+    border: none;
+    background: #FFF; 
+	min-width:320px;
+	box-shadow: 0 5px 15px RGBA(0,0,0,0.3);
+}
+.form-group {
+    margin-bottom: 20px;
+}
+
+
+
+
+.brand {
+   margin:15px 0;
+}
+.brand img {
+	max-width:300px;
+	max-height:300px;
+}
+ .main-title {
+   font-size:24px;
+    margin: 11px 0;
+    color: #000;
+    vertical-align: middle;
+}
+ .sub-title {
+   font-size:15px;
+    margin: 11px 0;
+    color: #999;
+    vertical-align: middle;
+}
+
+.loginForm{
+	width: 480px;
+    margin: 30px 0 0 0;
+	
+}
+span.spacer{
+	margin:0 5px;
+	color:#eee;
+}
+.seccode-wrapper{
+	text-align:left;
+}
+p.error-msg{
+	text-align:left;
+	margin:20px 0;
+}
+.btn-lg{
+	margin-top:20px;
+}
+
+@media (max-width: 420px){
+    .mainContainer:before{
+		display:none;
+    }
+	.modal-content{
+		margin:15px;
+	}
+   .loginForm {
+        width: auto;
+    }
+}
+
+.checkbox-custom {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.checkbox-custom label, .radio-custom label{
+	font-size:14px;
+	padding-left: 5px;
+}
+
+.copyright-container{
+   position: absolute;
+    bottom: 0;
+	width:100%;
+	left:0;
+}
+footer.page-copyright {
+    position: absolute;
+	width:100%;
+	left:0;
+	top:0;
+    margin: 20px 10px 10px 10px;
+    font-size: 12px;
+	color:#FFF;
+	text-shadow:1px 1px 1px RGBA(0,0,0,.2);
+}
+footer.page-copyright a{
+	color:#FFF;
+	text-decoration: underline;
+}
+.btn-primary{
+	background-color:#3779ff;
+}
+.user-name {
+	width: 100%;
+}
+.user-ul {
+	padding-left: 0;
+	margin-top: 0;
+	list-style: none;
+}
+.section {
+	font-size: 16px;
+	padding-left: 15px;
+	font-weight: 600;
+	color: rgba(43, 43, 43, 1);
+	line-height: 30px;
+	margin-bottom:10px;
+	
+}
+.section-wrap li  {
+	position:relative;
+	display: block;
+	float:left;
+	padding: 6px 15px;
+	cursor: pointer;
+	margin-right: 20px;
+	margin-bottom: 0;
+	width: 135px;
+	oveflow:hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	border-radius:5px;
+	border:1px solid transparent;
+}
+.section-wrap li:hover,.section-wrap li.hover {
+	background: rgba(241, 241, 241, 1);
+}
+.section-wrap li.hover {
+	background: rgba(241, 241, 241, 1);
+	border:1px solid #3779ff;
+}
+
+.section-wrap li .user-a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	font-size: 18px;
+	font-weight: 300;
+	color: rgba(43, 43, 43, 1);
+	padding-left:40px;
+	
+} 
+
+.section-wrap li .user-a .cavatar {
+	position:absolute;
+	left:6px;
+	top:10px;
+}
+.section-wrap li .user-a .cavatar>img {
+	width:35px;
+	height:35px;
+	margin-right:10px;
+}
+.section-wrap li .user-a .cusername>span {
+	display:block;
+	overflow:hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.section-wrap li .user-a .cusername>span.orgname {
+	font-size:12px;
+	color:#999;
+}
+.section-wrap li .user-a:hover {
+	text-decoration: none;
+}
+.section-wrap {
+	width: 100%;
+	margin-bottom: 20px;
+	text-align:left;
+}
+.Topcarousel {
+    border-radius: 50%;
+    text-align: center;
+    display: inline-block;
+    /* padding: 0px 10px; */
+    font-size: 18px;
+    margin-top: 2px;
+    margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    color: #FFF;
+}

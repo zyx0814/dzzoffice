@@ -1,0 +1,28 @@
+/*可以在这里添加你自己的css*/
+img{
+	max-width:100%;
+}
+body.view{
+	font-weight: 100;
+	line-height: 30px;
+	padding:42px;
+}
+.dzz-attach,.dzz-link,.dzz-dzzdoc {
+	padding:0 10px;
+	display:inline-block;
+}
+.dzz-attach-icon,.dzz-dzzdoc-icon,.dzz-link-icon{
+	width:16px;
+	height:16px;
+	vertical-align: middle;
+	margin-top:-5px;
+	margin-right:5px;
+}
+.dzz-attach-title,.dzz-dzzdoc-title,.dzz-link-title{
+	text-decoration:none;
+}
+.at-item{
+	text-decoration:none;
+	color:#337ab7;
+	display:inline-block;
+}

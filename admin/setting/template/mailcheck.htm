@@ -1,0 +1,77 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/app_manage.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<style type="text/css">
+/*.bs-main-container{
+	padding: 15px 30px;
+}
+.nav-pills-bottomguide>li:nth-child(1){
+	margin-left: 0px;
+}
+.nav-pills-bottomguide>li>a{
+	padding: 5px 0px;
+	margin-right: 30px;
+}
+.bs-main-container .main-content{
+	padding: 20px 0px;
+}
+
+.form-horizontal-left .control-label{
+	text-align: left;
+}
+.form-horizontal-left label{
+	padding-left: 0px;
+}*/
+#cpform {
+	margin-top: 15px;
+}
+</style>
+<div class="bs-container clearfix">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>
+
+	<div class="bs-main-container  clearfix">
+		<div class="main-header clearfix">
+			<ul class="nav navbar-nav nav-pills-bottomguide">
+				<li> <a href="{BASESCRIPT}?mod=setting&operation=mail">{lang set}</a> </li>
+		        <li class="active"> <a href="{BASESCRIPT}?mod=setting&op=mailcheck">{lang setting_mail_check}</a> </li>
+			</ul>
+		</div>
+		<div class="main-content">
+
+			<form id="cpform" action="{BASESCRIPT}?mod=setting&op=mailcheck" class="form-horizontal form-horizontal-left" autocomplete="off" method="post" name="cpform" target="mailcheckiframe">
+				<input type="hidden" value="{FORMHASH}" name="formhash">
+				<input type="hidden" value="true" name="mailchecksubmit">
+				<div class="form-group">
+					<label class="control-label" style="">{lang setting_mail_check_test_from}:</label>
+					<input type="text" class="form-control" name="test_from" autocomplete="off" value="">
+				</div>
+				<div class="form-group">
+					<label class="control-label">{lang setting_mail_check_test_to}:</label>
+					<textarea type="textarea" class="form-control" name="test_to" autocomplete="off"></textarea>
+					<span class="help-block text-muted">{lang setting_mail_check_test_to_comment}</span>
+				</div>
+				<div class="form-group">
+					<label class="control-label"></label>
+					<input class="btn btn-primary" id="submit_mailchecksubmit" name="mailchecksubmit" value="{lang setting_mail_check_submit}" type="submit">
+					<iframe style="display: none" name="mailcheckiframe"> </iframe>
+				</div>
+			</form>
+
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+</script>
+<!--{template common/footer_simple}-->

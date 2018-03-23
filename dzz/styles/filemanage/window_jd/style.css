@@ -1,0 +1,267 @@
+﻿.CONTENT.filemanage{
+	font-size:13px;
+	overflow:hidden;
+	background:#FBFBFB;
+}
+	
+.filemanage .file-icoitem{
+	float:left;
+	margin:5px 10px;
+	border:1px solid #FBFBFB;
+	cursor:pointer;
+	position:relative;
+	z-index:100;
+}
+.filemanage .icosContainer{
+	overflow-y:auto;overflow-x:hidden;
+	width:100%;
+	border-top:1px solid #FFF;
+}
+.filemanage .icosContainer_inner{
+	min-height:100%;
+}
+.filemanage .filemanage-ltdrager{
+	left:180px;
+	top:0px;
+	bottom:0px;
+	position:absolute;
+	cursor:e-resize;
+	width:5px;
+	border-left:1px solid #FFF;
+	z-index:101;
+}
+
+.window .jstree-default.jstree-focused{
+	background:#F7F7F7;
+}
+.window .filemanage-left{
+	left:0px;top:0px;padding:0px;height:100%; width:180px;overflow-y:auto;overflow-x:hidden;position:absolute;
+	background: none repeat scroll 0 0 #F7F7F7;
+	border-right:1px solid #D2D2D2;
+	z-index:99;
+}
+.window .jstree * {
+	box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+}.window .jstree li{
+	min-height: 22px;
+	line-height: 22px;
+}
+.window .jstree li a{
+	min-height: 18px;
+	line-height: 20px;
+	height:20px;
+	position:relative;
+	border:1px solid transparent;
+	padding:0 2px 0 20px;
+	margin-bottom:2px;
+}
+.window .jstree a > ins {
+    position:absolute;
+	left:0px;
+	top:2px;
+}
+.filemanage .filemanage-right{
+	left:0px;top:0px;padding:0px;height:100%; position:relative;
+	margin-left:180px;
+}
+.filemanage .filemanage-right .filemanage-header{
+  background: #FbFbFb;
+  border-bottom: 1px solid #ddd;
+  font-size: 12px;
+  overflow:visible;
+}
+.filemanage-header .nav,.filemanage-bottom .nav{
+	margin:0;
+}
+.nav > li > a:focus {
+  background: none;
+  text-decoration: none;
+}
+.nav-pills .dropdown-menu{
+	border-radius:0;
+	min-width:100px;
+}
+.filemanage .filemanage-right .filemanage-bottom{
+  background: #FbFbFb;
+  font-size: 12px;
+  position:absolute;
+  z-index:100;
+  left:0;
+  top:0;
+  width:100%;
+  border-left:1px solid #FFF;
+  display:none;
+ }
+ .filemanage-bottom span{
+	 padding:0 10px;
+ }
+.filemanage-detail-header{
+	
+}
+.filemanage .table {
+	border-collapse: initial;
+}
+
+.filemanage .table th,  .filemanage .table td {
+  border-bottom: 1px solid #e7e7e7;
+  border-top:1px solid #FFF;
+  line-height: 30px;
+}
+.filemanage .detail_header_tr{
+	/*background:url(images/header.gif) repeat-x;*/
+}
+
+.filemanage .detail_header_asc{
+	display: inline-block;
+	vertical-align:middle;
+	height: 4px;
+	width: 13px;
+	margin-left: 3px;
+	background-repeat:no-repeat;
+	_margin-top:10px;
+}
+.filemanage .detail_header_asc_0{
+	background:url(images/sort_desc.gif) no-repeat;
+}
+.filemanage .detail_header_asc_1{
+	background:url(images/sort_asc.gif) no-repeat;
+}
+.filemanage .detail_header{
+/*	border-left:1px solid #FF;
+	border-right:1px solid #FFF;
+*/	overflow:visible;
+}
+.filemanage .detail_header:hover,.filemanage .detail_header_hover{
+	background:#F7F7F7;
+	/*border-left:1px solid #CCC;
+	border-right:1px solid #CCC*/
+}
+.filemanage .detail_header_td_div{
+	overflow:hidden;
+	line-height:22px;
+	height:22px;
+	overflow:visible;
+	position:relative;
+}
+.filemanage .detail_header_drag{
+	position:absolute;
+	width:10px;
+	height:22px;
+	top:0px ;
+	right:-5px;
+	z-index:10;
+}
+.filemanage .detail_item_name_icon,.DragCopy .detail_item_name_icon{
+	max-width:28px;
+	max-height:28px;
+	display:inline;
+	vertical-align:middle;
+	margin-top:-5px;
+	
+}
+*html .filemanage .detail_item_name_icon, *html .DragCopy .detail_item_name_icon{
+	width: expression(this.width > 28 && this.width>=this.height ? 28 : true);
+	height: expression(this.height > 28 && this.width<=this.height ? 28 : true);
+}
+
+.filemanage .detail_item_name_text,.DragCopy .detail_item_name_text{
+	margin-left:5px;
+	cursor:pointer;
+	
+}
+.filemanage .detail_text{
+	text-shadow:1px 1px 1px #FFF;
+	word-break:break-all;
+}
+.filemanage .detail_tr{
+	height:32px;
+	border-bottom: 1px dotted rgb(204, 204, 204);
+}
+
+
+.filemanage .detail_item_td_div,.DragCopy .detail_item_td_div{
+	
+	overflow:hidden;
+	line-height:30px;
+	height:30px;
+	overflow:hidden;
+	float:left;
+	
+}
+
+.filemanage .treeshow-guide{
+	width:15px;
+	height:35px;
+	display:inline-block;
+	float:left;
+	margin-right:10px;
+	background:url(images/treeshow.png) 0 -2px no-repeat;
+}
+.filemanage .treeshow-guide .treeshow-guide-left{
+	width:15px;
+	height:35px;
+	display:inline-block;
+	background:url(images/treeshow.png) -15px -2px no-repeat;
+}
+.filemanage .treeshow-guide .treeshow-guide-left:hover{
+	background:url(images/treeshow.png) -30px -2px no-repeat;
+}
+.filemanage .treeshow-guide .treeshow-guide-right{
+	width:15px;
+	height:35px;
+	display:inline-block;
+	background:url(images/treeshow.png) -45px -2px no-repeat;
+}
+.filemanage .treeshow-guide .treeshow-guide-right:hover{
+	background:url(images/treeshow.png) -60px -2px no-repeat;
+}
+
+
+
+.filemanage .detail_tr a:hover{
+	text-decoration:none;	
+}
+.filemanage .detail_tr.hover{
+	background:#F7F7F7;
+	transition: all 0.2s ease-in 0s; 
+}
+.filemanage .detail_tr.Icoselected{
+	background:#EFEFEF;
+	transition: all 0.2s ease-in 0s; 
+}
+.filemanage .detail_item_name{
+	margin:0 10px;
+	line-height:30px;
+	font-size:12px;
+	height:30px;
+	text-shadow:1px 1px 1px #FFF;
+	font-weight:700;
+	overflow:hidden;
+	word-wrap:nowrap;
+}
+.filemanage .detail_item_name span{
+	cursor:pointer;
+}
+.filemanage .detail_item_info{
+	margin:0 10px;
+	font-size:12px;
+	color:#999;
+	text-shadow:1px 1px 1px #FFF;
+	overflow:hidden;
+	word-wrap:nowrap;
+	height:18px;
+	
+}
+.filemanage .detail_item_hover{
+	overflow:hidden;
+	word-wrap:nowrap;
+	position:relative;
+	
+	line-height:50px;
+}
+
+.filemanage .detail_item_info span{
+	padding:0 10px 0 0;
+}

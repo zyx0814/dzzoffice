@@ -1,0 +1,594 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="{MOD_PATH}/images/folder.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/dzzthumb/jquery.dzzthumb.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/explorer/js/_hotkey.js?{VERHASH}"></script>
+<!--{template common/header_simple_end}-->
+
+<!--头部信息框-->
+<div class="navtopheader">
+	<div class="navtoperate">
+		<div class="select-toperate">
+			<div class="select-toperate select-toperate-left selectall-box">
+				<span class="dzz dzz-chevron-left dzz-backing-out"></span>
+				<!--选中后的效果-->
+				<div class="col sharepame-selected">
+					<span>{lang user_select_selected}<span class="ex-number"></span>{lang nape}</span>
+					<!--<button type="button" class="btn btn-primary" style="padding:4px 20px ;" onclick="downmorefile();return false;">下载</button>-->
+				</div>
+			</div>
+			<div class="select-toperate select-toperate-center  toolButtons">
+				<div class="btns">
+					<a node-type="btn-item"  href="javascript:void(0);" onclick="savefile();return false;" class="shares-topbtns">
+						<span class="dzz dzz-save" data-key="save" data-toggle="tooltip" data-placement="bottom" data-original-title="{lang save}"></span>
+					</a>
+					<a node-type="btn-item"  href="javascript:void(0);" onclick="downfileselect();return false;" class="shares-topbtns">
+						<span class="dzz dzz-download" data-key="download" data-toggle="tooltip" data-placement="bottom" data-original-title="{lang download}"></span>
+					</a>
+				</div>
+			</div>
+			<div class="select-toperate select-toperate-right">
+				<div class="btn-group pull-right" role="group">
+					<a type="button" class="btn btn-group-list"  onclick="viewSwitch(this,'.module-list-view')"><i class="dzz dzz-view-list"  data-toggle="tooltip" data-placement="bottom" data-original-title="{lang change_list}"></i></a>
+					<a type="button" class="btn btn-group-thumbnail"  onclick="viewSwitch(this,'.module-grid-view')" data-toggle="tooltip" data-placement="bottom" data-original-title="{lang change_thumbnail}"><i class="dzz dzz-view-module"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="contains_content">
+	<!--固定的头部-->
+	<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+	
+	<div class="bs-main-container" style="padding: 0px;">
+	<div class="container">
+		<div class="sharepame-pictitle clearfix">
+			<img src="$share[img]" class="sharepame-images">
+			<div class="sharepame-right">
+				<div class="sharepame-name">$share[title]</div>
+				<div class="sharepame-detailed">
+					<span class="sharepame-time">$share[fdateline]</span>
+					<span>{lang expires_time}：$share['expireday']</span>
+				</div>
+			</div>
+		</div>
+		<!--地址栏开始-->
+		<div class="sharepame-bread clearfix">
+			<ol class="breadcrumb">
+				<li class="home" data-href="{DZZSCRIPT}?mod=shares&sid=$osid">
+					<a href="javascript:;">{lang all_typename_attach}<span>></span></a>
+				</li>
+				<!--<li><a href="javascript:;">分享<span>></span></a></li>
+	  <li class="active">文件</li>-->
+			</ol>
+			
+		</div>
+		<!--地址栏结束-->
+		<div class="main-content clearfix">
+
+			<div node-type="module" class="module-grid-view data-list" style="display: none;overflow:auto">
+				<div node-type="list" class="wrapper window clearfix" style="z-index:1000">
+					<!--选中后的效果-->
+					<div class="list-wrapper clearfix">
+						<!--{loop $list $value}-->
+						<div node-type="item" data-dpath="$value[dpath]" <!--{if $value[type]=='folder' && $value[dhpath]}--> data-containpath="$value[dhpath]"
+								<!--{/if}--> data-type="$value[type]" class="item data-list-col file-icoitem bigicon Icoblock ">
+							<table width="180" height="180" style="table-layout:fixed;">
+								<tbody>
+									<tr>
+										<td align="center" valign="middle" style="" height="142">
+											<div class="icoimgContainer icoimgContainer_{$value[type]}">
+												<table width="100%" height="100%" cellpadding="0" cellspacing="0">
+													<tbody>
+														<tr>
+															<td align="center" valign="middle">
+																<img title="$value[name]" class="<!--{if $value['type']=='video'}-->videoclass100_100<!--{elseif $value[type]=='image'}-->imageclass<!--{else}-->radius<!--{/if}-->" src="$value[img]" title="$value[name]" <!--{if $value[type]=='image' }--> data-original="$value[url]" data-dpath="$value[dpath]"
+																<!--{/if}-->/></td>
+														</tr>
+													</tbody>
+												</table>
+
+											</div>
+										</td>
+									</tr>
+									<tr class="IcoFont_text">
+										<td align="center" valign="middle">
+											<div class="IcoText_div" style="width:135px;max-height:40px;" title="$value[name]">
+												<a class="ico_item ico_item_name IcoText_folder" style="width:135px;height:40px;overflow:hidden" title="$value[name]">$value[name]</a>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<div class="backgound_radius" style="position: absolute; left: 0px; top: 0px; z-index: -5;"></div>
+						</div>
+						<!--{/loop}-->
+						<!--{if $nextpage}-->
+						<div class="more text-center pull-left" onclick="getMore(this,'{DZZSCRIPT}?mod=shares&op=ajax&morepath=$morepath&page=$nextpage&rander=grid&marker=$marker')">
+							<table width="150" height="120" style="table-layout:fixed;">
+								<tbody>
+									<tr>
+										<td align="center" valign="middle" style=""> <span style="">{lang upload_more}</span></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!--{/if}-->
+					</div>
+				</div>
+			</div>
+			<div node-type="module" class="module-list-view data-list" style="display:block;">
+				<div node-type="wrapper" class="list-view-home">
+					<div node-type="title" class="title">
+						<div class="item  col-first clearfix">
+							<!--选框-->							
+							<!-- 第一列 -->
+							<div node-type="title-col" data-key="name" class="col c1" style="width: 50%">
+								<div class="name"> <span>{lang filename}</span> <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+							</div>
+							<!-- 其他列 -->
+
+							<div node-type="title-col" data-key="size" class="col" style="width: 12%;"> {lang file_size} <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+							<div node-type="title-col" data-key="type" class="col" style="width: 15%;border-right: none;"> {lang file_type} <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+							<div node-type="title-col" data-key="dateline" class="col" style="width: 20%;"> {lang edit_time} <span node-type="order-status" class="asc desc" style="visibility: visible;"></span> </div>
+						</div>
+					</div>
+					<div node-type="list" class="list list-share">
+						<div class="list-wrapper clearfix">
+							<!--{loop $list $value}-->
+							<div  data-value="true" node-type="item" data-dpath="$value[dpath]" <!--{if $value[type]=='folder' && $value[dhpath]}--> data-containpath="$value[dhpath]"
+								<!--{/if}-->data-type="$value[type]" class="item shareitem clearfix Icoblock" id="$value[rid]">
+								<!-- 第一列 -->
+								<div class="col c1 name" style="width: 50%;" data-name="$value[name]">
+									<div node-type="name" class="name" title="$value[name]">
+										<!--{if $value[img]}--><img class="icon" title="$value[name]" src="$value[img]" <!--{if $value[type]=='image' }--> data-original="$value[url]" data-dpath="$value[dpath]"
+										<!--{/if}-->/>
+										<!--{/if}-->
+										<span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="enabled">$value[name]</span> </span>
+									</div>
+									<div class="btns">
+										<a node-type="btn-item" data-key="download" class="dzz dzz-download" href="javascript:void(0);"></a>
+									</div>
+								</div>
+								<!-- 其他列 -->
+								<div class="col size" style="width: 12%" data-size="$value[size]">$value[fsize]</div>
+								<div class="col type" style="width:15%" data-type="$value[ftype]">$value[ftype]</div>
+								<div class="col dateline" style="width: 20%" data-dateline="$value[dateline]">$value[fdateline]</div>
+							</div>
+							<!--{/loop}-->
+							<!--{if $nextpage}-->
+							<div class="more text-center clearfix" onclick="getMore(this,'{DZZSCRIPT}?mod=shares&op=ajax&morepath=$morepath&page=$nextpage&rander=list&marker=$marker')" style="padding-top: 10px;padding-bottom: 10px;">{lang upload_more}</div>
+							<!--{/if}-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+</div>
+
+
+<iframe id="hideframe" name="hideframe" src="about:blank" frameBorder="0" marginHeight="0" marginWidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
+<div id="dataContainer" class="hide"></div>
+</div>
+<script type="text/javascript">
+    var share = [];
+    var uid = '{$_G[uid]}';
+	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip();
+	  	share = [];
+        sharelength();
+	});
+	//头部信息返回操作
+	jQuery(document).off('click.backing').on('click.backing','.select-toperate .dzz-backing-out',function(){
+		jQuery(this).parents('.navtopheader').hide();
+		jQuery('.item').removeClass('item-block');
+		share.length = 0;
+	});
+	//页面高度js
+	var page_loading = false;
+	jQuery('.left-drager').leftDrager_layout(function() {
+	});
+	jQuery('.module-list-view:visible .list-share').scroll(function(e) {
+		var clientHeight = jQuery('.list-share').height();
+		var scrollHeight = jQuery('.list-share .list-wrapper').height();
+		if(jQuery('.list-share').scrollTop() + clientHeight >= (scrollHeight - 5) && !page_loading) jQuery('.list-share .more').trigger('click');
+	});
+	jQuery('.bs-main-container').scroll(function(e) {
+		var clientHeight = jQuery('.bs-main-container').height();
+		var scrollHeight = jQuery('.bs-main-container .list-wrapper').height();
+		if(jQuery('.bs-main-container').scrollTop() + clientHeight >= (scrollHeight - 150) && !page_loading) jQuery('.module-grid-view .more').trigger('click');
+	});
+
+	function getMore(obj, href) {
+		page_loading = true;
+		jQuery(obj).html('<table width="100%" height="100%"><tr><td><img src="dzz/images/loading.gif">{lang loading}</td></tr></table>');
+		jQuery.get(href, function(html) {
+			page_loading = false;
+			jQuery('#dataContainer').html(html);
+			jQuery('.module-list-view .list-wrapper .more').replaceWith(jQuery('#dataContainer').find('.module-list').html());
+			jQuery('.module-grid-view .list-wrapper .more').replaceWith(jQuery('#dataContainer').find('.module-grid').html());
+			jQuery('#dataContainer').empty();
+			jQuery('img[data-original]').dzzthumb();
+			setLoadedNum();
+		});
+	}
+
+	function setLoadedNum() {
+		jQuery('.loaded-num').html(jQuery('.list-share .item').length);
+		if(!jQuery('.list-share .more').length) {
+			jQuery('.total-num').html('{lang loading_all}');
+		} else {
+			jQuery('.total-num').html('');
+		}
+	}
+
+	function list_sub(obj, url,data) {
+			
+		obj.html('<p class="text-center" style="padding-top:30px;"><img src="dzz/images/loading.gif">{lang loading}</p>');
+		for(var o in data){
+		    url += '&'+o+'='+data[o];
+		}
+		jQuery.get(url, function(html) {
+			
+//			jQuery('.bs-container').css('height', Height);
+			jQuery('#dataContainer').html(html);
+			var Height = jQuery(document).height();
+			jQuery('.bs-container').css({'height': Height-60+'px','overflow':'auto'});
+			jQuery('.module-list-view .list-wrapper').html(jQuery('#dataContainer').find('.module-list').html());
+			jQuery('.module-grid-view .list-wrapper').html(jQuery('#dataContainer').find('.module-grid').html());
+			setLoadedNum();
+			jQuery(jQuery('#dataContainer').find('.breadcrumb-data:first').html()).insertAfter(jQuery('.breadcrumb li').last());
+			jQuery('.breadcrumb li:not(:last)').each(function() {
+				jQuery(this).removeClass('active');
+				jQuery(this).html('<a href="javascript:;">' + jQuery(this).html() + '</a>');
+			});
+			jQuery('#dataContainer').empty();
+			jQuery('img[data-original]').dzzthumb();
+		});
+	}
+
+	jQuery(document).ready(function(e) {
+		//鼠标滑过缩略图
+		jQuery(document).on('mouseenter', 'div[node-type=item]', function() {
+			jQuery(this).addClass('item-hover');
+		});
+		jQuery(document).on('mouseleave', 'div[node-type=item]', function() {
+			jQuery(this).removeClass('item-hover');
+		});
+		//地址栏
+		jQuery(document).on('click', '.breadcrumb li a', function() {
+			var li = jQuery(this).parent();
+
+			var url = li.data('href');
+			if(li.hasClass('home')) {
+				location.href = url;
+				return false;
+			}
+			list_sub(jQuery('[node-type="module"]:visible').find('.list-wrapper'), url);
+			li.nextAll('li').remove();
+			li.remove();
+
+			return false;
+		});
+		//缩略图文字部分操作
+		jQuery(document).on('dblclick', 'span[node-type=name-text],.module-grid-view .item', function() {
+			var item = jQuery(this).closest('.item');
+			var type = item.data('type');
+			if(item.closest('.module-grid-view').length) {
+				var rander = 'grid';
+			} else {
+				var rander = 'list';
+			}
+			if(type == 'folder') {
+			    var containpath = item.data('containpath');
+			    var currentfolder = 0;
+			    jQuery('.navtopheader').hide();
+				jQuery('.ex-number').empty();
+				share.length = 0;
+			    if(!containpath){
+			        containpath = item.data('dpath');
+                    currentfolder = 1;
+				}
+				list_sub(item.parent(), '{MOD_URL}&op=ajax',{path: containpath ,rander: rander,currentfolder:currentfolder});
+				return false;
+			} else {
+				if(type == 'image' && item.find('img[data-original]').trigger('click.dzzthumb')) {} else {
+					var preurl = 'share.php?a=view&s=' + item.data('dpath');
+					if(top._config) {
+						top.OpenWindow('url', preurl, item.find('img').attr('title'), null, {
+							img: item.find('img').attr('src'),
+							name: item.find('img').attr('title')
+						});
+					} else {
+						window.open(preurl, jQuery(this).html());
+					}
+				}
+			}
+			
+			return false;
+		});
+		//点击列表的操作
+		jQuery('.title .item .col[node-type=title-col]').on('click', function() {
+			var el = jQuery(this);
+			el.find('.asc').css('visibility', 'visible').toggleClass('desc');
+			el.siblings().find('.asc').css('visibility', 'hidden');
+			item_sort(el.data('key'), el.find('.asc').hasClass('desc') ? 'desc' : 'asc');
+		});
+		jQuery(document).on('click', 'a[data-key=download]', function() {
+			share_download(this);
+			return false;
+		});
+		jQuery('img[data-original]').dzzthumb();
+	});
+
+	function item_sort(key, order) {
+
+		var sarr = new Array();
+		jQuery('.list-share .item').each(function(index) {
+			sarr.push((jQuery(this).find('.col.' + key).data(key)) + '____' + index);
+		});
+		if(key == 'dateline' || key == 'size') {
+			sarr = sarr.sort(function(a, b) {
+				return parseInt(a) - parseInt(b);
+			});
+		} else {
+			sarr = sarr.sort();
+		}
+		var frage = document.createDocumentFragment();
+		var list = jQuery('.list-share .item');
+		if(order == 'desc') {
+			for(var i = sarr.length - 1; i >= 0; i--) {
+				var index = sarr[i].split('____')[1];
+				frage.appendChild(list.get(index));
+			}
+		} else {
+			for(var i = 0; i < sarr.length; i++) {
+				var index = parseInt(sarr[i].split('____')[1]);
+				frage.appendChild(list.get(index));
+			}
+		}
+		var page = jQuery('.list-wrapper .more').clone();
+		jQuery(frage).appendTo(jQuery('.list .list-wrapper').empty());
+		page.appendTo('.list .list-wrapper');
+	}
+
+	function share_download(obj) {
+		var li = jQuery(obj).closest('.item');
+		jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
+			if(data['success']) {
+				var url = DZZSCRIPT + '?mod=io&op=download&path=' + li.data('dpath');
+				var url = DZZSCRIPT + '?mod=io&op=download&path=' + li.data('dpath');
+				if(BROWSER.ie) {
+					window.open(url);
+				} else {
+					window.frames['hideframe'].location = url;
+				}
+			} else {
+				console.log('aaaa');
+			}
+		}, 'json');
+		return false;
+	}
+
+	function downmorefile() {
+		var dpath = share.join(',');
+		jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
+			if(data['success']) {
+				var url = DZZSCRIPT + '?mod=io&op=download&path=' + dpath;
+				if(BROWSER.ie) {
+					window.open(url);
+				} else {
+					window.frames['hideframe'].location = url;
+				}
+			}
+		}, 'json');
+		return false;
+	}
+
+	//列表和缩略图的切换
+	function viewSwitch(obj, tclass) {
+		if(share.length > 0) {
+			if(tclass == '.module-grid-view') {
+				jQuery(".list-wrapper").each(function() {
+					var Icoblock = jQuery(this).find('.Icoblock');
+					if(Icoblock.hasClass('item-block')){
+						jQuery(this).closest('.Icoblock').removeClass('item-block');
+					}					
+				});
+				for(var o in share) {
+					var inputobj = jQuery(".list-wrapper div[data-dpath='" + share[o] + "']");
+					inputobj.prop('checked', true);
+					inputobj.closest('.Icoblock').addClass('item-block');
+				}
+			} else {
+				jQuery(".list-view-home").each(function() {
+					jQuery(this).prop('checked', false);
+				})
+				for(var o in share) {
+					var inputobj = jQuery(".list-view-home div[data-dpath='" + share[o] + "']");
+					inputobj.prop('checked', true);
+				}
+			}
+		}else{
+			if(tclass == '.module-grid-view') {
+				jQuery(".list-wrapper").each(function() {
+					var Icoblock = jQuery(this).find('.Icoblock');
+					if(Icoblock.hasClass('item-block')){
+						jQuery(this).closest('.Icoblock').removeClass('item-block');
+					}
+					
+				})				
+			} else {
+				jQuery(".list-view-home").each(function() {
+					var Icoblock = jQuery(this).find('.Icoblock');
+					if(Icoblock.hasClass('item-block')){
+					jQuery(this).closest('.shareitem').removeClass('item-block');
+					}
+				})				
+			}
+		}
+		jQuery('div[node-type="module"]').hide();
+		jQuery(tclass).show();
+
+	}
+
+	//下载选中项
+	function downfileselect(){
+	    var sharids = share;
+            jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
+                console.log(sharids);
+                if(data['success']) {
+                    var url = DZZSCRIPT + '?mod=io&op=download&path=' + share;
+                    if(BROWSER.ie) {
+                        window.open(url);
+                    } else {
+                        window.frames['hideframe'].location = url;
+                    }
+                }
+            }, 'json');
+            return false;
+	}
+		//缩略图好列表选中操作
+		jQuery(document).off('click.sharesclick').on('click.sharesclick', '.Icoblock', function(e) {
+		if(_hotkey.ctrl > 0){
+			
+			if(jQuery(this).hasClass('item-block')) {
+				var rid = jQuery(this).closest('.Icoblock').data('dpath');			
+				var index = jQuery.inArray(rid, share);
+				if(index != -1) {
+					share.splice(index, 1);
+				}
+				jQuery(this).removeClass('item-block');
+			}else{
+				var rid = jQuery(this).closest('.Icoblock').data('dpath');
+				if(jQuery.inArray(rid, share) == -1) {
+					share.push(rid);
+				}
+				jQuery(this).closest('.Icoblock').addClass('item-block');
+			}
+		}else{				
+			if(jQuery(this).hasClass('item-block')) {
+				var rid = jQuery(this).closest('.Icoblock').data('dpath');			
+				var index = jQuery.inArray(rid, share);
+				if(index != -1) {
+					share.splice(index, 1);
+				}
+				jQuery(this).removeClass('item-block');
+			}else{
+				var rid = jQuery(this).closest('.Icoblock').data('dpath');
+				if(jQuery.inArray(rid, share) == -1) {
+					share = [rid];
+				}
+				jQuery(this).closest('.Icoblock').addClass('item-block').siblings().removeClass('item-block');
+			}
+		}
+		e.stopPropagation();
+		sharelength();
+	});
+	//选中数量
+	function sharelength() {
+		if(share.length > 0) {
+			jQuery('.sharepame-selected').show();
+			jQuery('.navtopheader').show();
+		} else {
+			jQuery('.sharepame-selected').hide();
+			jQuery('.navtopheader').hide();
+		}
+		jQuery('.ex-number').html(share.length);
+	}
+	function downAll(obj){
+		//var rids = $(obj).data('allrids');
+		//var ridarr = rids.split(',');
+		var rids = [];
+		jQuery('div[data-value="true"]').each(function(){
+            rids.push(jQuery(this).data('dpath'));
+		});
+        jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
+            if(data['success']) {
+                var url = DZZSCRIPT + '?mod=io&op=download&path=' + rids;
+                if(BROWSER.ie) {
+                    window.open(url);
+                } else {
+                    window.frames['hideframe'].location = url;
+                }
+            }
+        }, 'json');
+        return false;
+	}
+
+    function savefile(){
+        if(uid == 0){
+            location.href='$_G[siteurl]user.php?mod=login';
+            return false;
+        }
+        jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
+            if(data['success']) {
+                var rids = share.join(',');
+                var userhref = 'index.php?mod=system&op=selposition&handlekey=seldir&allowcreate=1&callback=save_file';
+                showWindow('seldir',userhref,'get','0');
+            }
+        }, 'json');
+        return false;
+    }
+	//点击空白处，取消全选
+	$(document).off('click.main-content').on('click.main-content','#contains_content',function(e){
+        var target = $(e.target);
+        if(target.closest('.main-content').length==0){
+            $('.main-content').find('.item').removeClass('item-block');
+            jQuery('.navtopheader').hide();
+            jQuery('.ex-number').empty();
+            share.length = 0;
+        }
+	})
+
+function  allsave(obj){
+
+	if(uid == 0){
+	    location.href='$_G[siteurl]user.php?mod=login';
+	    return false;
+	}
+	var userhref = 'index.php?mod=system&op=selposition&handlekey=seldir&allowcreate=1&callback=saveall_file';
+	showWindow('seldir',userhref,'get','0');
+}
+function saveall_file(fid){
+    //var rids = $('#allsave').data('allrids');
+    var rids = [];
+    jQuery('div[data-value="true"]').each(function(){
+        rids.push(jQuery(this).data('dpath'));
+    });
+    $.post('{MOD_URL}&op=save',{'fid':fid,'dzzrids':rids},function(data){
+        var msg = '';
+        for (var i in data.msg) {
+            if (data.msg[i] === 'success') {
+                msg += '<p class="text-success">' +data.name[i] + __lang.save_success + '</p>';
+            } else {
+                msg += '<p class="text-danger">' + ((data.name[i]) ? data.name[i]:'') + data.error[i] + '</p>';
+            }
+        }
+        showmessage(msg, 'info', 3000, 1, 'right-bottom');
+	},'json');
+}
+function save_file(fid){
+	var rids = share.join(',');
+	$.post('{MOD_URL}&op=save',{'fid':fid,'dzzrids':rids},function(data){
+		var msg = '';
+		for (var i in data.msg) {
+			if (data.msg[i] === 'success') {
+				msg += '<p class="text-success">' +data.name[i] + __lang.save_success + '</p>';
+			} else {
+				msg += '<p class="text-danger">' + ((data.name[i]) ? data.name[i]:'')  + data.error[i] + '</p>';
+			}
+		}
+		showmessage(msg, 'info', 3000, 1, 'right-bottom');
+	},'json');
+}
+
+</script>
+
+<!--{template common/footer_simple}-->
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>

@@ -1,0 +1,352 @@
+<!--{template common/header_simple_start}-->
+<link rel="stylesheet" href="static/css/checkbox.css">
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all"> 
+<link href="{MOD_PATH}/images/folder.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/dzzthumb/jquery.dzzthumb.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/styles/icoblock/default/style.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
+<style type="text/css">
+#orgid__Menu{
+	border: 1px solid #4c89fb;
+	background: #fff;
+	border-radius: 2px;
+	color: #4c89fb;
+	height: 34px;
+	padding: 6px 12px;
+	font-size: 14px;
+	font-weight: normal;
+}
+.module-list-view .item-block.item{
+    border-bottom:1px solid #eee; 
+}
+.module-list-view .item-block{
+    background:none;
+}
+.module-list-view .item-block .col{
+	color:#333;
+}
+#filem_search .iconFirstWord{
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	display: inline-block;
+	line-height: 16px;
+	font-size: 14px;
+	margin-left: 0;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<script type="text/javascript">
+	var selorg={};
+	selorg.add=function(ctrlid,vals){
+		if(vals[0].orgid=='other') vals[0].path='{lang please_select_a_organization_or_department}';
+		jQuery('#'+ctrlid+'_Menu').html(vals[0].path+' <span class="caret"></span>');
+		jQuery('#sel_'+ctrlid).val(vals[0].orgid);
+		//jQuery('#orgid_{$org[orgid]}_Menu').dropdown('toggle');
+	}
+</script>
+
+<div class="bs-container clearfix">
+  <div class="bs-main-container" style="overflow:auto">
+    <div class="sharepame-bread clearfix">
+      <ol class="breadcrumb">
+        <li class="home" data-href="{MOD_URL}"><a href="{MOD_URL}" >{lang all_typename_attach}<span>></span></a></li>
+        <!--{if !empty($foldername)}-->
+        {eval $i=0;}
+		 {loop $foldername $v}
+		 {eval $i++;}
+		 <!--{if $i==count($foldername)}-->
+		 <li class="active"  data-fid="$v[fid]">$v[fname]<span></span></li>
+		 <!--{else}-->
+		  <li class=""  data-fid="$v[fid]"><a href="{MOD_URL}&pfid=$v[fid]">$v[fname]<span>></span></a></li>
+		  <!--{/if}-->
+		{/loop} 
+	    <!--{/if}--> 
+      </ol>
+    </div>
+    <div class="main-header" style="border-top:1px solid #FFF;padding:0 10px 20px 5px;">
+      <form name="search" action="{BASESCRIPT}" method="get" id="filem_search">
+        <input type="hidden" name="mod" value="filemanage" />
+        <ul class="nav nav-pills clearfix" style="padding: 5px 0 5px 0;">
+          <!--<strong class="pull-left" style="padding-left:0px;padding-top: 5px;">{lang filtrate}：</strong>-->
+          <li>
+            <select class="form-control select-option" name="type" value="$type">
+              <option value="" selected="selected">{lang select_by_filetype}</option>
+              <!--{loop $typearr $type1 $value}--> 
+              <option value="$type1" <!--{if $type1==$type}-->selected="selected"<!--{/if}-->>$value
+              </option>
+              <!--{/loop}-->
+            </select>
+          </li>
+          <!--{if !isset($pfid) || $pfid <= 0}-->
+          <li class="dropdown org">
+            <input id="sel_orgid_{$org[orgid]}" type="hidden" name="orgid"  value="$org[orgid]" onchange="selDepart(this)" />
+            <button type="button" id="orgid_{$org[orgid]}_Menu" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> $org[depart] <span class="caret"></span> </button>
+            <div id="orgid_$orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_{$org[orgid]}_Menu">
+              <iframe name="orgid_{$org[orgid]}_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&ctrlid=orgid_{$org[orgid]}&nouser=1&moderator=1&zero={eval echo urlencode('{lang unselect_a_organization_or_department}');}" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+            </div>
+          </li>
+          <!--{/if}-->
+          
+          <li class="pull-left">
+            <input name="keyword"  type="text" value="$keyword" class="form-control "  placeholder="{lang filemanage_file_user}">
+          </li>
+          <li class="pull-left">
+            <input type="hidden" name="pfid" id="pfid" value="$pfid"/>
+            <button  class="btn btn-primary " type="submit" style="height:34px;">{lang search}</button>
+          </li>
+          <li class="pull-left btn-secetlt" style="display: none;">
+            <button  class="btn btn-danger " type="submit" value="{lang delete}" onclick="delete_file();" style="height:34px;">删除</button>
+          </li>
+        </ul>
+      </form>
+    </div>
+    <div node-type="module" class="module-list-view" style="display:block">
+      <form id="appform" name="appform" class="form-horizontal " action="{BASESCRIPT}?mod=filemanage" method="post" >
+        <input type="hidden" name="delsubmit" value="true" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+        <input type="hidden" name="refer" value="$refer" />
+        <div node-type="wrapper" class="list-view-home">
+          <div node-type="title" class="title" >
+            <div class="item clearfix">
+              <div node-type="title-col"  class="col" style="width: 3%;text-indent: 0;padding-left: 5px;">
+                <div class="checkbox-custom checkbox-primary">
+                  <input type="checkbox" name="del[]" id="chkall">
+                  <label></label>
+                </div>
+              </div>
+              <!--选中后的效果-->
+              <div class="col sharepame-selected" style="display: none;width:27%">{lang checkednum}</span> </div>
+              <!-- 第一列 -->
+              <div node-type="title-col" data-key="name" class="col c1 show_first" style="width: 25%">
+                <div class="name"> <span>{lang filename}</span> <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+              </div>
+              <!-- 其他列 -->
+              <div node-type="title-col" data-key="size" class="col" style="width: 10%;"> {lang file_size} <span node-type="order-status" class="asc $_GET[size]" style="visibility:<!--{if $_GET[size]}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> </div>
+              <div node-type="title-col" data-key="type" class="col" style="width: 10%;border-right: none;"> {lang file_type} <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+              <div node-type="title-col" data-key="type" class="col" style="width: 20%;border-right: none;"> {lang file_location} <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+              <div node-type="title-col" data-key="type" class="col" style="width: 10%;border-right: none;"> {lang possessor}<span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
+              <div node-type="title-col" data-key="dateline" class="col" style="width: 15%;"> {lang add_time} <span node-type="order-status" class="asc $_GET[dateline]" style="visibility: <!--{if $_GET[dateline]}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> </div>
+              <div node-type="title-col" data-key="dateline" class="col" style="width: 5%;"> {lang delete} </div>
+            </div>
+          </div>
+          <div node-type="list" class="list list-share">
+            <div class="list-wrapper clearfix"> 
+              <!--{loop $list $value}--> 
+              <div node-type="item" data-dpath="$value[dpath]" data-rid="$value[rid]" <!--{if $value[type] == 'folder' && $value[oid]}--> data-containpath="$value[oid]"<!--{/if}--> data-type="$value[type]" class="item shareblock clearfix"> 
+              <!-- 第一列 -->
+              <div class="col size" style="width: 3%;text-indent: 0;padding-left: 5px;" >
+                <div class="checkbox-custom checkbox-primary">
+                  <input type="checkbox" name="del[]" value="$value[rid]" data-rid="$value[rid]">
+                  <label></label>
+                </div>
+              </div>
+              <div class="col c1 name" style="width: 27%;" data-name="$value[name]">
+                <div node-type="name" class="name" title="$value[name]"> 
+                  <!--{if $value[img]}--><img class="icon" title="$value[name]" src="$value[img]" <!--{if $value[type]=='image' }--> data-original="$value[url]" data-dpath="$value[dpath]" 
+                  <!--{/if}-->/> 
+                  <!--{/if}--> 
+                  <span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="name-text enabled">$value[name]</span> </span> </div>
+                
+                	<div class="btns">
+										<a node-type="btn-item" data-key="download" class="glyphicon glyphicon-download-alt" href="javascript:void(0);"></a>
+									</div>
+                
+              </div>
+              <!-- 其他列 -->
+              <div class="col size" style="width: 10%" data-size="$value[size]">$value[fsize]</div>
+              <div class="col type" style="width:10%" data-type="$value[ftype]">$value[ftype]</div>
+              <div class="col type" style="width:20%" data-type="$value[relpath]">$value[relpath]</div>
+              <div class="col type" style="width:10%" data-type="$value[username]">$value[username]</div>
+              <div class="col dateline" style="width: 15%" data-dateline="$value[dateline]">$value[fdateline]</div>
+              <div class="col delete" style="width: 5%" > <a class="" href="{BASESCRIPT}?mod=filemanage&do=delete&icoid=$value[rid]&refer={eval echo urlencode($refer);}" title="{lang delete}" style="color:rgb(85, 85, 85);font-size:20px;" onclick="if(confirm('{lang filemanage_del_file}')){return true}else{return false}"><i class="dzz dzz-delete"></i></a> </div>
+            </div>
+            <!--{/loop}--> 
+            <!--{if $nextpage}-->
+            <div class="more text-center clearfix" onclick="getMore(this,'{BASESCRIPT}?mod=filemanage&op=ajax&type=$type&orgid=$orgid&keyword=$keyword&pfid=$pfid&page=$nextpage')">{lang upload_more}</div>
+            <!--{/if}--> 
+          </div>
+        </div>
+      </form>
+    </div>
+	<div class="clearfix" style="padding:10px;text-align:center">$multi</div>
+  </div>
+</div>
+
+<iframe id="hideframe" name="hideframe" src="about:blank" frameBorder="0" marginHeight="0" marginWidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
+<div id="dataContainer" class="hide"> 
+  <!--{if !empty($foldername)}-->
+  <div class="hide breadcrumb-data"> {loop $foldername $v}
+    <li class="active" data-href="{BASESCRIPT}?mod=filemanage&op=ajax&pfid=$v[fid]" data-fid="$v[fid]">$v[fname]<span></span></li>
+    {/loop} </div>
+  <!--{/if}--> 
+</div>
+<script type="text/javascript">
+
+	var page_loading = false;
+	jQuery('.left-drager').leftDrager_layout();
+	
+
+
+
+
+	function setLoadedNum() {
+		jQuery('.loaded-num').html(jQuery('.list-share .item').length);
+		if(!jQuery('.list-share .more').length) {
+			jQuery('.total-num').html('{lang loading_all}');
+		} else {
+			jQuery('.total-num').html('');
+		}
+	}
+
+	
+var theurl='$theurl';
+	jQuery(document).ready(function(e) {
+		jQuery(document).on('mouseenter', 'div[node-type=item]', function() {
+			jQuery(this).addClass('item-hover');
+		});
+		jQuery(document).on('mouseleave', 'div[node-type=item]', function() {
+			jQuery(this).removeClass('item-hover');
+		});
+		
+		jQuery(document).on('click', 'span[node-type=name-text],.module-grid-view .item', function() {
+			var item = jQuery(this).closest('.item');
+			var type = item.data('type');
+			if(item.closest('.module-grid-view').length) {
+				var rander = 'grid';
+			} else {
+				var rander = 'list';
+			}
+			if(type == 'folder') {
+				jQuery('#pfid').val(item.data('containpath'));
+				location.href='{MOD_URL}&pfid=' + item.data('containpath');
+				return false;
+			} else {
+				if(type == 'image' && item.find('img[data-original]').trigger('click.dzzthumb')) {} else {
+					var preurl = 'share.php?a=view&s=' + item.data('dpath');
+					if(top._config) {
+						top.OpenWindow('url', preurl, item.find('img').attr('title'), null, { img: item.find('img').attr('src'), name: item.find('img').attr('title') });
+					} else {
+						window.open(preurl, jQuery(this).html());
+					}
+				}
+			}
+			return false;
+		});
+		jQuery('.title .item .col[node-type=title-col][data-key=dateline],.title .item .col[node-type=title-col][data-key=size]').on('click', function() {
+			var el = jQuery(this);
+			el.find('.asc').css('visibility', 'visible').toggleClass('desc');
+			el.siblings().find('.asc').css('visibility', 'hidden');
+			
+			var param=el.data('key')+'='+ (el.find('.asc').hasClass('desc') ? 'desc' : 'asc');
+			var regx=new RegExp('&(dateline|size)=(asc|desc)','i');
+			var url=theurl.replace(regx,'')+'&'+param;
+			location.href=url;
+		});
+		jQuery(document).on('click', 'a[data-key=download]', function() {
+			download(this);
+			return false;
+		});
+		jQuery('img[data-original]').dzzthumb();
+	});
+   function download(obj) {
+		var li = jQuery(obj).closest('.item');
+	
+		var url = DZZSCRIPT + '?mod=io&op=download&path=' + li.data('dpath');
+		if(BROWSER.ie) {
+			window.open(url);
+		} else {
+			window.frames['hideframe'].location = url;
+		}
+	}
+	
+var rids=[];
+//复选框选中问题
+jQuery(document).off('click.shareclick').on('click.shareclick',".shareblock",function(){
+	var checkinput = jQuery(this).find("input[name='del[]']");
+	if(checkinput.prop('checked')){
+		checkinput.prop('checked',false);
+		jQuery(this).removeClass('item-active');
+		
+		var rid=jQuery(this).find('input[name="del[]"]').data('rid');
+		var index = jQuery.inArray(rid,rids);
+		if(index != -1){
+			rids.splice(index,1);
+		}
+
+	}else{
+		checkinput.prop('checked',true);
+		jQuery(this).addClass('item-active');
+		var rid=jQuery(this).data('rid');
+			if(jQuery.inArray(rid,rids) == -1){
+				rids.push(rid);
+			}
+
+	}
+	sharelength();
+});
+jQuery(document).off('click.inputclick').on('click.inputclick',".shareblock input[name='del[]']",function(){
+	if($(this).prop('checked')){
+		jQuery(this).prop('checked',false);
+		jQuery(this).removeClass('item-active');
+		
+	}else{
+		jQuery(this).prop('checked',true);
+		jQuery(this).addClass('item-active');
+	}
+});
+//复选框全选
+jQuery(document).off('click.allclick').on('click.allclick','#chkall',function(){
+	var allchecked=jQuery(this).prop('checked');
+	jQuery(this).closest('.title').next('.list-share').find('input[name="del[]"]').each(function(){
+		if(allchecked){
+			jQuery(this).prop('checked',true);
+			jQuery(this).closest('.item').addClass('item-block');
+			var rid=jQuery(this).data('rid');
+			if(jQuery.inArray(rid,rids) == -1){
+				rids.push(rid);
+			}
+		}else{
+			jQuery(this).prop('checked',false);
+			jQuery(this).closest('.item').removeClass('item-block');
+			var rid=jQuery(this).data('rid');
+			var index = jQuery.inArray(rid,rids);
+			if(index != -1){
+				rids.splice(index,1);
+			}
+
+		}
+	});
+	sharelength();
+})
+
+function sharelength(){
+	if(rids.length>0){
+		jQuery('.sharepame-selected').show().next('.show_first').hide();
+		jQuery('#chkall').prop('checked',true);
+		jQuery('.btn-secetlt').show();
+	}else{
+		jQuery('.sharepame-selected').hide().next('.show_first').show();
+		jQuery('#chkall').prop('checked',false);
+		jQuery('.btn-secetlt').hide();
+	}
+	jQuery('.ex-number').html(rids.length);
+}
+function delete_file(){
+	var delnums = rids.length;
+	var icoids = rids.join(',');
+	if(confirm('您确定要删除这'+delnums+'文件(如果是文件夹将包含其下的子文件都会被删除)吗？删除之后不可恢复！')){
+		jQuery.post('{MOD_URL}&do=delete',{'icoid':icoids},function(data){
+			if(data['success']){
+				location.reload();
+			}else{
+
+			}
+		})
+	}
+}
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}--> 

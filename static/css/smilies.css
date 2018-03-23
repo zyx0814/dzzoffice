@@ -1,0 +1,18 @@
+.sllt {
+	padding: 4px;
+	border: 1px solid;
+	min-width: 60px;
+	border-color: #DDD;
+	background: #FEFEFE;
+	box-shadow: 1px 2px 2px rgba(0,0,0,0.3);
+}
+.sllt { padding: 5px !important; }
+.sllt .sllt-wrap{
+	width:288px;
+	height:188px;
+}
+.sllt td { padding: 6px; border: none; cursor: pointer; }
+.sllt_p { *float: left; text-align: right; }
+	.sllt_p a { margin-right: 5px; font-size:12px;}
+.sl_pv { margin-top: 5px; padding: 8px; background: #FAFAFA; border: 1px solid #CCC; }
+.ie6 .slg, .ie7 .slg { width: expression(this.parentNode.offsetWidth); }

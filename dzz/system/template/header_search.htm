@@ -1,0 +1,33 @@
+<div class="input-search">
+    <form name="search" action="{BASESCRIPT}" method="get" class="search_top">
+        <input type="hidden" name="mod" value="system" />
+        <input type="hidden" name="op" value="notification" />
+        <input type="hidden" name="do" value="" />
+
+        <i class="input-search-icon glyphicon glyphicon-search" aria-hidden="true" onclick="this.form.submit()"></i>
+
+        <input id="searchval" class="form-control search form-search" name="keyword" placeholder="{lang search_title}" type="text" value="$keyword" placeholder=""/>
+        <span aria-hidden="true" id="emptysearchcondition" class="header-closebutton">×</span>
+
+    </form>
+</div>
+<script type="text/javascript">
+
+    jQuery('#searchval').focus(function (e) {//头部搜索框变颜色
+        jQuery(this).closest('.input-search').addClass('focus');
+        if(this.value!='') jQuery('#emptysearchcondition').show();
+    });
+    jQuery('#searchval').blur(function (e) {//失去焦点时
+        jQuery(this).closest('.input-search').removeClass('focus');
+        if(this.value=='') jQuery('#emptysearchcondition').hide();
+    });
+    jQuery('#searchval').keyup(function (e) {//失去焦点时
+        if(this.value!='') jQuery('#emptysearchcondition').show();
+    });
+    jQuery('#emptysearchcondition').on('click',function(){
+        jQuery('#searchval').val('');
+        jQuery('#searchval').closest('form').submit();
+        jQuery('#emptysearchcondition').hide();
+        return false;
+    });
+</script>

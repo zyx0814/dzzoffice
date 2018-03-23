@@ -1,0 +1,140 @@
+<!--{template common/header_simple_start}-->
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}--> 
+<link rel="stylesheet" href="static/css/common.css">
+<div class="bs-container">
+<div class="all-notice bs-container">
+<div class="left-notice  bs-left-container affix-top clearfix">
+	<ul class="ul-notice">
+		<li <!--{if !isset($fromid) || $fromid == ''}-->class="active"<!--{/if}-->>
+			<a href="{MOD_URL}&op=notification">
+				<span class="dzz dzz-notifications dzz-noticeicon"></span>
+				<span class="notice-text">{lang all_app}</span>
+			</a>
+		</li>
+		<!--{loop $searchcats $val}-->
+		<li <!--{if $fromid == $val['appid']}-->class="active"<!--{/if}-->  data-appid="$val[appid]">
+			<a href="{MOD_URL}&op=notification&appid=$val[appid]">
+				<img src="$val[appico]">
+				<span class="notice-text">$val[appname]</span>
+			</a>
+		</li>
+		<!--{/loop}-->
+	</ul>
+</div>
+ <div class=" main-allnotice bs-main-container clearfix">
+
+	<div class="panel-container main-allcontent clearfix">
+		<div class="panel-heading">
+			<span class="dzz dzz-notifications dzz-allnotice"></span>
+		    <h3>{$navtitle}($count)</h3>
+		</div>
+		<div class="panel-body">
+		    <ul id="notification-list" class="notification-list list-unstyled u-gutter clearfix"> 
+	             <!--{if $list}-->
+	             <!--{loop $list $value}-->
+	                <li class="notification-list-item clearfix">
+	                
+	                    <div class="member member-no-menu">
+	                         {eval echo avatar_block($value[authorid]);}
+	                    </div>
+	                   
+	                    <div class="details">
+	                      <p class="note u-bottom" >$value[note]</p>
+	                      {if !isset($fromid) || is_string($fromid)}<div class="note-iconimg"><img src="$value[appico]"></div>{/if}
+	                      <p class="dateline u-bottom">$value[dateline]</p>
+	                    </div>
+	                </li>
+	                <!--{/loop}-->
+	             <!--{else}-->
+	           		<p class="text-warning" style="line-height:35px;">{lang noappall_notice}…</p>
+	            <!--{/if}-->
+	            </ul>
+	           
+		 </div>
+		 
+	</div>
+		<nav aria-label="Page navigation" class="notice-navigation">
+			{$multi}
+		</nav>
+ </div>
+
+</div>
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript">
+//获取左侧高度
+jQuery('.left-drager').leftDrager_layout(function(){
+	
+});
+jQuery(window).scroll(function(e) {
+	var clientHeight = document.documentElement.clientHeight;
+	var scrollHeight =document.documentElement.scrollHeight;
+    if(jQuery(window).scrollTop()+clientHeight>scrollHeight-20) jQuery('.js-loadmore').trigger('click');
+});
+/*jQuery(document).on('click','.js-loadmore',function(){
+		var el=jQuery(this);
+		jQuery.get(el.data('href'),function(html){
+			el.parent().replaceWith(html);
+		});
+		return false;
+});*/
+/*jQuery(document).ready(function(e) {
+    jQuery('.js-popbox').each(function(){
+		jQuery(this).popbox();
+	});
+	
+});*/
+var search_timer=null;
+jQuery('.js-search-input').on('keyup',function(e){
+	if(search_timer) window.clearTimeout(search_timer);
+	search_timer=window.setTimeout(function(){
+		document.getElementById('archive_search_form').onsubmit();
+	},1000);
+});
+jQuery('.js-search-addon').on('click',function(){
+	if(jQuery(this).find('i').hasClass('fa-remove')){
+		jQuery('#archive_search_form .js-search-input').val('');
+		document.getElementById('archive_search_form').onsubmit();
+	}else{
+		document.getElementById('archive_search_form').onsubmit();
+	}
+	return false;
+});
+function filter_by_orgid(orgid){
+	jQuery('#archive_search_orgid').val(orgid);
+	jQuery('#board_list_archive').load('{DZZSCRIPT}?mod=corpus&op=archive&do=list&orgid='+orgid);
+}
+function search_validate(form){
+	jQuery('#board_list_archive').load(form.action+'?'+jQuery(form).serialize(),function(){
+		if(jQuery('#archive_search_form .js-search-input').val()!=''){
+			jQuery('.js-search-addon i').addClass('fa-remove').removeClass('fa-serach');
+		}else{
+			jQuery('.js-search-addon i').addClass('fa-search').removeClass('fa-remove');
+		}
+	});
+	return false;
+}
+function OpenApp(){
+	return false;
+}
+if(!_notice) _notice={};
+_notice.setIsread=function(){
+	return false;
+}
+/*jQuery(document).off('click.noticefilter').on('click.noticefilter','.ul-notice li',function(){
+    var obj=jQuery(this);
+    var fromid = obj.data('appid');
+    if(typeof fromid == 'undefined'){
+        fromid = '';
+	}
+    jQuery.post(MOD_URL+'&op=notification&do=list',{"fromid":fromid},function(html){
+        jQuery('#notification-list').replaceWith(html);
+    });
+    return false;
+})*/
+
+
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--codestrings-->
+<!--{template common/footer_simple}--> 

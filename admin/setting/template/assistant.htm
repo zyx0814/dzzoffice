@@ -1,0 +1,185 @@
+<!--{template common/header_simple_start}-->
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<style>
+html, body {
+	overflow: hidden;
+	background: #FFF;
+	color: #4B4B4B;
+}
+.bs-main-container {
+	margin-left: 200px;/*padding: 15px 30px;*/
+}
+.form-horizontal-left .radio-inline {
+	padding: 5px 20px 5px 0px;
+	margin: 0;
+}
+.loginset-template {
+	width: 100px;
+	height: 100px;
+	overflow: hidden;
+	float: left;
+	margin-right: 10px;
+	display: block;
+	position: relative;
+}
+.loginset-template .loginset-template-icon {
+	width: 20px;
+	height: 20px;
+	border: 1px solid #AAB479;
+	position: absolute;
+	right: 1px;
+	top: 1px;
+	color: #DD4B39;
+	font-size: 15px;
+	display: none;
+}
+.loginset-template:hover .loginset-template-icon {
+	display: block;
+}
+.loginset-template:hover .loginset-template-icon > span {
+	display: none;
+}
+.loginset-template .loginset-template-icon1 {
+	display: block !important;
+}
+.loginset-template .loginset-template-icon1 > span {
+	display: block !important;
+}
+#cpform {
+	margin-top: 15px;
+}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>
+	<div class="bs-main-container  clearfix">
+		<div class="main-header clearfix">
+			<ul class="nav navbar-nav nav-pills-bottomguide">
+				<li>
+					<a href="{BASESCRIPT}?mod=setting&operation=qywechat">{lang enterprise_binding}</a>
+				</li>
+				<li class="active">
+					<a href="{BASESCRIPT}?mod=setting&op=assistant">{lang enterprise_little_helper}</a>
+				</li>
+				<li>
+					<a href="{BASESCRIPT}?mod=setting&op=wxsyn">{lang data_synchronization}</a>
+				</li>
+			</ul>
+		</div> 
+		<div class="main-content" style="border-top:1px solid #FFF">
+			<!-- <ul class="help-block" style="line-height:2">
+            <li>一般只有初次绑定时才需要在此同步</li>
+            <li>同步操作会把本站的机构和部门及机构和部门下的用户同步到微信企业号</li>
+            <li>机构和用户管理里的操作会自动同步到微信端，不需要在此手工同步</li>
+            <li>此同步不会把微信企业号内的机构和部门及用户同步到本站</li>
+        </ul>-->
+			<div class="panel-body">
+				<div class="entity-panel-body form-horizontal">
+					<div class="form-group relative">
+						<img src="admin/setting/images/0.png" style="width:80px;position:absolute;left:20px;top:0px">
+						<div class=" ml20" >
+							<h4 class="relative"><strong>{lang enterprise_little_helper}</strong></h4>
+							<p class="relative" style="padding-top:5px">{lang assistant_app}</p>
+						</div>
+					</div>
+					<div class="line line-dashed line-lg pull-in"></div>
+					<div class="form-group padding-left">
+						<div class="col-sm-12">
+							<p class="form-control-static danger relative"><i class="glyphicon glyphicon-hand-down"></i> <strong style="font-size:1.5em">{lang need_weixin_enterprises_set}</strong>
+								<a href="http://qy.weixin.qq.com/" target="_blank" class="pull-right btn btn-default">{lang weixin_enterprises_edit}</a>
+							</p>
+						</div>
+					</div>
+					<div class="line line-dashed line-lg pull-in"></div>
+					<div class="form-group padding-left">
+						<label class="col-sm-12"><h5><strong>{lang scope_application_visible}</strong></h5></label>
+						<div class="col-sm-12">
+							<p class="form-control-static relative">{lang top_institutions}<span class="gray">{lang weixin_enterprises_address_book_}</span> </p>
+						</div>
+					</div>
+					<div class="line line-dashed line-lg pull-in"></div>
+					<div class="form-group padding-left">
+						<label class="col-sm-12"><h5><strong>{lang trusted_domain_name}</strong></h5></label>
+						<div class="col-sm-12">
+							<p class="form-control-static relative">$host
+								<span class="absoluter">
+               		<button class="btn btn-default js_copy" data-clipboard-text="$host" title="{lang co}">{lang copy}</button>
+              		<span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span>
+								</span>
+							</p>
+						</div>
+					</div>
+					<div class="line line-dashed line-lg pull-in"></div>
+					<div class="form-group padding-left">
+						<div>
+							<label class="col-sm-12"><h5><strong>{lang syntony_URL_configuration_information}</strong></h5></label>
+						</div>
+
+						<label class="col-xs-2  control-label">URL</label>
+						<div class="col-xs-10  mb10">
+							<p class="form-control-static relative" style="padding-left:0;">$callback
+								<span class="absoluter">
+               		<button class="btn btn-default js_copy" data-clipboard-text="$callback" title="{lang copy}">{lang copy}</button>
+              		<span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span>
+								</span>
+							</p>
+						</div>
+						<label class="col-xs-2 control-label">Token</label>
+						<div class="col-xs-10  mb10">
+							<p class="form-control-static relative">$_G['setting']['token_0']
+								<span class="absoluter">
+				               		<button class="btn btn-default js_copy" data-clipboard-text="$_G['setting']['token_0']" title="{lang copy}">{lang copy}</button>
+				              		<span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span>
+								</span>
+							</p>
+						</div>
+						<label class="col-xs-2 control-label">AESKey</label>
+						<div class="col-xs-10">
+							<p class="form-control-static relative">$_G['setting']['encodingaeskey_0']
+								<span class="absoluter">
+               		<button class="btn btn-default js_copy" data-clipboard-text="$_G['setting']['encodingaeskey_0']" title="{lang copy}">{lang copy}</button>
+              		<span class="alert copy-success  alert-success hide ">{lang copy_success_paste_need_place}</span>
+								</span>
+							</p>
+						</div>
+					</div>
+					<div class="line line-dashed line-lg pull-in"></div><label class="col-sm-12"><h5><strong>{lang other_configuration_information}</strong></h5></label>
+					<div class="col-sm-12">
+						<p class="form-control-static relative"><img src="admin/setting/images/c.png" style="max-width:100%"></p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	jQuery(document).ready(function(e) {
+		var client = new ZeroClipboard(jQuery('.js_copy'));
+		client.on("load", function(client) {
+			// alert( "ZeroClipboard SWF is ready!" );
+			client.on("complete", function(client, args) {
+				var self = this;
+				jQuery(this).parent().find('.copy-success').removeClass('hide');
+				window.setTimeout(function() {
+					jQuery(self).parent().find('.copy-success').addClass('hide');
+				}, 1000);
+			});
+		});
+	});
+</script>
+<script src="static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"></script>
+
+<!--{template common/footer_simple}-->

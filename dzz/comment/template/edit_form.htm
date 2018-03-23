@@ -1,0 +1,174 @@
+
+ <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    	<h4 class="modal-title" id="return_$_GET[handlekey]">{lang edit}</h4>
+ </div>
+	
+ <div id="publish_edit_{$cid}" class="publishsharewrap">
+  <form id="form_edit_{$cid}" name="form_edit_{$cid}" class="form-horizontal" action="{DZZSCRIPT}?mod=comment&op=ajax&do=edit" method="post"  onsubmit="ajaxpost('form_edit_{$cid}','return_publish_edit_{$cid}','return_publish_edit_{$cid}');return false">
+    <input type="hidden" name="formhash" value="{FORMHASH}" />
+    <input type="hidden" name="editsubmit" value="true" />
+    <input type="hidden" name="handlekey" value="publish_edit_{$cid}" />
+    <input type="hidden" name="cid" value="$cid" />
+    <input type="hidden" id="reply_pid_edit_$cid" name="rcid" value="$data[rcid]" />
+        <input type="hidden" name="allowattach" value="$_GET['allowattach']" />  
+        <input type="hidden" name="allowat" value="$_GET['allowat']" />  
+        <input type="hidden" name="allowsmiley" value="$_GET['allowat']" /> 
+    <div class="modal-body">
+    <div class="container_psw">
+      <div class="notice_cpsw clearfix">
+       <!--{if $data['rpost']}--> <div id="reply_who_{$cid}" class="who_cpsw"> <span>{lang reply}</span> <span class="toname_wcpsw">$data[rpost][author]</span> <span>：</span> <a class="closed_wcpsw" title="" hidefocus="true" href="javascript:void(0);" onclick="jQuery(this).parent().hide();jQuery('#reply_pid_edit_{$cid}').val('0')">{lang close}</a> </div><!--{/if}-->
+      </div>
+      <div class="textarea_cpsw">
+        <div class="wrap_tcpsw">
+          <textarea rows="" id="message_edit_{$cid}" name="message" cols="" onkeyup="check_publish_enable('edit_{$cid}')"  onfocus="jQuery(this).caret('pos',this.value.length);"  class="write_wtcpsw _bb_write_wtcpsw writein" style="overflow: hidden; word-wrap: break-word; resize: horizontal;border:none;box-shadow:none;height:60px">$data[message]</textarea>
+        </div>
+        <div id="publish_count_edit_{$cid}" class="count_cpsw"> <span id="num_input_edit_{$cid}" class="num_ccpsw">0</span>/<span class="leng_ccpsw">1000</span> </div>
+      </div>
+    </div>
+    <div id="publish_action_edit_{$cid}" class="action_cpsw">
+      <ul class="list_acpsw">
+      <!--{if $_GET['allowattach']>0}-->
+      	 <li class="ament_lacpsw" style="position: relative; cursor: pointer;"> <a id="upload_from_edit_{$cid}" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;" href="javascript:;" title="" class="item_lacpsw">{lang typename_attach}/{lang photo}</a></li>
+         <!--{/if}-->
+         <!--{if $_GET['allowsmiley']>0}-->
+        <li class="emotion_lacpsw"><a href="javascript:;"  class="item_lacpsw" id="message_edit_{$cid}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;">{lang face}</a></li>
+        <script type="text/javascript" reload="1"> 
+			jcLoader().load({  
+				type:'js', 
+				ids:'js_smiles', 
+				url:'static/js/smilies.js?{VERHASH}'  
+			},function(){  
+			   smilies_show('message_edit_{$cid}_sml_div','{$_G[setting][smcols]}', 'message_edit_{$cid}');
+			})
+        </script>
+        <!--{/if}-->
+      </ul>
+      <a hidefocus="true" class="cancel_cpsw" href="javascript:;" onclick="hideWindow('publish_edit_{$cid}');"> <b><i>{lang cancel}</i></b></a>
+      <button id="publish_submit_edit_{$cid}" class="btn btn-sm btn-primary"  title="{lang reply}(Ctrl+Enter)"><b>{lang save}</b></button>
+    </div>
+    <!--{if $_GET['allowattach'] || $data[attachs]}-->
+     <div id="attachmentViewBox_edit_{$cid}" class="attachmentContainer clearfix" style="max-height:250px;padding:10px;overflow:auto;"> 
+     	<!--{loop $data[attachs] $value}-->
+        <div id="attachment_previewer_$value[qid]" class="attachment_previewer" style="float:none;width:auto;margin-right:0">
+          <div class="attachmentviewbox">
+            <div class="view_attvb clearfix">
+              <div class="ico_vattvb "><img class="img_50_50" alt="$value[title]" src="$value[img]"></div>
+              <div class="ico_vattvb_right">
+                <div class="ico_name">$value[title]</div>
+                <a href="javascript:void(0);" title="" class="del_fattvb" onclick="removeAttach(jQuery(this).closest('.attachment_previewer'),'edit_{$cid}');">{lang del_adjunct}</a>
+                 <input type="hidden" name="attach[qid][]" value="$value[qid]">
+                <input type="hidden" name="attach[aid][]" value="$value[id]">
+                <input type="hidden" name="attach[title][]" value="$value[title]">
+                <input type="hidden" name="attach[type][]" value="$value[type]">
+                <input type="hidden" name="attach[img][]" value="$value[img]">
+                <input type="hidden" name="attach[url][]" value="$value[url]">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--{/loop}-->
+     </div>
+     <!--{/if}-->
+     </div>
+  </form>
+  <div class="actionUploadAttachment tobody" id="upload_from_edit_{$cid}_menu" style="display:none;">
+      <!--{if $_GET[allowattach]>=2}-->
+      <div class="local_auatth" style="position:relative;overflow:hidden"> <a href="javascript:void(0);" hidefocus onclick="jQuery(this).parent().parent().hide();">{lang web_upload}
+        <input id="fileupload_edit_{$cid}" type="file" name="files[]" multiple >
+        </a> </div>
+        <!--{/if}-->
+         <!--{if $_GET[allowattach]==1 || $_GET[allowattach]>2}-->
+     <!-- <div class="own_auatth" style=""><a href="javascript:void(0);" hidefocus onclick="uploadfrom_desktop('edit_{$cid}');jQuery(this).parent().parent().hide();">{lang choose_from_my_file}</a></div>-->
+      <!--{/if}-->
+	</div>
+</div>
+<script type="text/javascript" reload="1">
+jQuery(document).ready(function(e) {
+	jQuery('#upload_from_edit_{$cid}_menu.tobody').removeClass('tobody').appendTo('body');
+    jQuery('#message_edit_{$cid}').TextAreaExpander(25,99999)
+    jQuery('#publish_submit_edit_{$cid}').click(function(){
+		var val=jQuery('#message_edit_{$cid}').val();
+			if(strlen(val)>0 && strlen(val)<1000){
+			document.getElementById('form_edit_{$cid}').onsubmit();
+		}
+	});
+	jQuery(document).on('keydown' ,'#form_edit_{$cid}',function(event){
+		if(event.ctrlKey && event.keyCode == 13) {
+			document.getElementById('form_edit_{$cid}').onsubmit();
+		}
+	});
+});
+function succeedhandle_{$_GET[handlekey]}(url, message, values) {
+		hideWindow('{$_GET[handlekey]}');
+		feed_edit_finish('{$cid}','$_GET[allowattach]','$_GET[allowat]','$_GET[allowsmiley]');
+	
+};
+function errorhandle_{$_GET[handlekey]}(url, message, values) {
+	hideWindow('{$_GET[handlekey]}');
+}
+<!--{if $_GET[allowattach]>=2}-->
+	var attachextensions='{eval echo implode('|',$space[attachextensions]);}';
+	if(attachextensions=='') attachextensions="\.*$";
+	else attachextensions="(\.|\/)("+(attachextensions)+")$";
+    jQuery('#fileupload_edit_{$cid}').fileupload({
+        url: DZZSCRIPT+'?mod=comment&op=ajax&do=upload',
+        dataType: 'json',
+		autoUpload: true,
+		maxChunkSize:(parseInt('{$_G[setting][maxChunkSize]}') || 2000000), //2M
+		dropZone:jQuery('#publish_edit_{$cid}'),
+		pasteZone:jQuery('#publish_edit_{$cid}'),
+		maxFileSize: parseInt('{$space[maxattachsize]}')>0?parseInt('{$space[maxattachsize]}'):null, // 5 MB
+		acceptFileTypes:new RegExp(attachextensions,'i'),
+		add:function(e,data){
+			
+			 data.context = jQuery('<div/>').appendTo('#attachmentViewBox_edit_{$cid}');
+			jQuery.each(data.files, function (index, file) {
+				if(!file.name) file.name='clipboardData.png';
+				
+				var html='';
+					html+=' <div  class="attachment_previewer">';
+					html+='     <div class="attachmentviewbox">';
+					html+='         <div class="view_attvb clearfix">';
+					html+='           <div class="ico_vattvb "><img alt="'+file.name+'" src="dzz/images/default/upload_failure.png" style="height:50px"></div>';
+					html+='  		  <div class="ico_vattvb_right">';
+					html+='            	<div class="ico_name">'+file.name+'</div>';
+					html+='             <div class="progress  active" style="margin:0;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>';
+					html+='          </div>';
+					
+					html+='      	</div>';
+					html+='    </div>';
+					html+=' </div>';
+				
+				jQuery(html).appendTo(data.context);
+			});
+			
+			data.process().done(function () {
+				data.submit();
+			});
+			
+		},
+		progress: function (e,data){
+			 var index = 0;//data.index,
+            // file = data.files[index],
+            var  node = jQuery(data.context.children()[index]);
+			
+			  var progress = parseInt(data.loaded / data.total * 100, 10);
+				node.find('.progress-bar').css(
+					'width',
+					progress + '%'
+				);
+		},
+        done: function (e, data) {
+            jQuery.each(data.result.files, function (index, file) {
+				if(file.error){
+					jQuery(data.context.children()[index]).find('.progress').replaceWith('<span class="text-danger">'+file.error+'</span>');
+				}else{
+					feed_addAttach(file.data,jQuery(data.context.children()[index]),'edit_{$cid}');
+				}
+            });
+        }
+    });
+<!--{/if}-->
+</script> 
+

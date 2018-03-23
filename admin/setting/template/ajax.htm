@@ -1,0 +1,113 @@
+<!--{template common/header_ajax}-->
+<!--{if $operation == 'editpermgroup'}-->
+<form onsubmit="return false;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{lang edit_folder_permissions}</h4>
+    </div>
+    <div class="modal-body group-top">
+    	<div class="input-black input-float  col-md-12 clearfix">
+            <label class="control-label  input-label">
+                {lang folder_permission_name}
+            </label>
+            <div class="input-animate">
+            <input type="text" class="form-control"
+                   name="pername" value="$groupperm[pername]"/>
+            </div>
+        </div>
+
+        <div class="select-p clearfix">
+            <p class="select-perm ">{lang choose_permission}：</p>
+            <ul class="select-properties col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <!--{loop $perms $k $val}-->
+                <li class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <div class="checkbox-custom checkbox-primary">
+                        <input type="checkbox" name="perms[]" value="$val[1]"  id="inputval$val[1]"<!--{if $groupperm[perm] & $val[1]}-->
+                        checked="checked" <!--{/if}-->>
+                        <label for="inputval$val[1]">
+                            <div class="all-yourself">
+                                <span class="{$val[2]} view-eidt"></span>$val[0]
+                            </div>
+                        </label>
+                    </div>
+                </li>
+                <!--{/loop}-->
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="proper-bottom" style="position: relative;">
+            <div class="checkbox-custom checkbox-primary">
+                <input type="checkbox" name="default" value="1" id="inputdefault" <!--{if $groupperm['default']}-->checked="checked"
+                <!--{/if}-->>
+                <label for="inputdefault"><span class="proper-span">{lang set_default_permission_group}</span></label>
+            </div>
+
+        </div>
+        <input type="hidden" name="id" value="$id"/>
+        <input type="hidden" name="submit" value="true"/>
+        <button type="button" class="btn btn-primary" onclick="permedit(this.form)">{lang confirms}</button>
+        <button type="button" class="btn btn-primary-outline" data-dismiss="modal">{lang cancel}</button>
+        
+    </div>
+</form>
+<script type="text/javascript" reload="1">
+    //名称初始化
+    jQuery(document).ready(function (e) {
+        $('.input-black').each(function() {			
+			InputAnimate.init($(this));			
+		});
+    });
+    function permedit(form) {
+        jQuery.post(MOD_URL+'&op=ajax&operation=editpermgroup', $(form).serialize(), function (data) {
+            if (data['success']) {
+                var perms = data['success']['perm'];
+                var permstr = '';
+                if (data['success']['default'] == 0) {
+                    var defaultstr = '<span class="proper-perm proper-set" onclick="setDefault(this,' + data['success']['id'] + ')"><span class="dzz dzz-done perm-ok"></span>设为默认</span> ';
+                } else {
+                    var defaultstr = '<span class="proper-perm proper-default"><span class="dzz dzz-done perm-ok perm-ok-color"></span>默认权限</span>';
+                }
+                var permoff = '';
+                if (data['success']['off']) {
+                    permoff = '<input type="checkbox" onchange="edit_perm(this,' + data['success']['id'] + ')" class="js-switch"  />';
+                } else {
+                    permoff = '<input type="checkbox" onchange="edit_perm(this,' + data['success']['id'] + ')" class="js-switch" checked="checked" />';
+                    jQuery('.properties-list').each(function () {
+                        var idval = jQuery(this).attr('id');
+                        idval = idval.replace('perm_', '');
+                        jQuery(this).find('.proper-delhover').html('<span class="proper-perm proper-set" onclick="setDefault(this,' + idval + ')"><span class="dzz dzz-done perm-ok"></span>设为默认</span>')
+
+                    })
+                }
+                for (var o in perms) {
+                    permstr += '<li><span class="' + perms[o] + '"></span></li>';
+                }
+
+                var html = '<li class="properties-list" id="perm_' + data['success']['id'] + '"> ' +
+                        '<div class="properties-listLeft">' +
+                        ' <div class="proper-leftimg">' +
+                        ' <img src="dzz/styles/thame/colorful/system/folder.png"> <span class="properties-admin">' + data['success']['pername'] + '</span> ' +
+                        '</div> ' +
+                        '<ul class="proper-show proper-iconshow">' + permstr + '</ul> </div> ' +
+                        '<div class="properties-listRight"> ' +
+                        '<div class="proper-absoleopera">' +
+                        '<span class="dzz dzz-netdisk-edit proper-delete" onclick="editpermgroup(' + data['success']['id'] + ')" style="cursor:pointer;"></span> ' +
+                        '<span class="dzz dzz-delete proper-delete" onclick="delete_perm(this,' + data['success']['id'] + ')"></span> ' + permoff +
+                        '</div> ' +
+                        '<div class="proper-delhover"> ' + defaultstr + '</div> ' +
+                        '</div> ' +
+                        '</li>';
+                jQuery('#perm_' + data['success']['id']).replaceWith(html);
+                var elem = jQuery('#perm_' + data['success']['id']).find('.js-switch');
+                var switchery = new Switchery(elem.get(0));
+                hideWindow('editpermgroup');
+            } else {
+                showDialog(data['error']);
+            }
+        }, 'json');
+    }
+</script>
+<!--{/if}-->
+<!--{template common/footer_ajax}-->

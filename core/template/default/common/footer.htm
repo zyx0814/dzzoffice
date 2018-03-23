@@ -1,0 +1,39 @@
+<!--{eval updatesession();}-->
+<!--{if debuginfo()}-->
+<script type="text/javascript">
+try{
+	if(console && console.log){
+		console.log('Processed in $_G[debuginfo][time] second(s), $_G[debuginfo][queries] queries <!--{if $_G[gzipcompress]}-->, Gzip On<!--{/if}--><!--{if C::memory()->type}-->, <!--{echo ucwords(C::memory()->type)}--> On<!--{/if}-->.');
+	}
+}catch(e){}
+</script>
+<!--{/if}-->	
+<!--{if !$_G['setting']['bbclosed']}-->
+	<!--{if !isset($_G['cookie']['sendmail'])}-->
+	<script type="text/javascript" src="misc.php?mod=sendmail&rand=$_G[timestamp]"></script>
+	<!--{/if}-->
+    <!--{if isset($_G['setting']['CorpID']) && !isset($_G['cookie']['sendwx'])}-->
+        <script type="text/javascript" src="misc.php?mod=sendwx&rand=$_G[timestamp]"></script>
+    <!--{/if}-->
+<!--{/if}-->
+<!--{if $_G[uid] && $_G['adminid'] == 1}-->
+	<!--{if !isset($_G['cookie']['checkupgrade'])}-->
+		<script type="text/javascript" src="misc.php?mod=upgrade&action=checkupgrade&rand=$_G[timestamp]"></script>
+	<!--{/if}-->
+	<!--{if !isset($_G['cookie']['checkappupgrade'])}-->
+		<script type="text/javascript" src="misc.php?mod=upgrade&action=checkappupgrade&rand=$_G[timestamp]"></script>
+	<!--{/if}-->
+	<!--{if !isset($_G['cookie']['upgradenotice'] )}-->
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			try{jQuery('#systemNotice').load('misc.php?mod=upgrade&action=upgradenotice');}catch(e){};	
+		});
+	</script>
+	<div id="systemNotice" class="systemNotice" style="position: fixed;right:10px;bottom:10px;max-width:50%;box-shadow:0px 5px 10px RGBA(0,0,0,0.3);z-index:999999"></div>
+	<!--{/if}-->
+<!--{/if}-->
+<!--{if $_G['setting']['statcode']}-->
+	$_G['setting']['statcode']
+<!--{/if}-->	
+</body>
+</html>

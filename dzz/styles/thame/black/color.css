@@ -1,0 +1,26 @@
+/*
+ * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
+ */
+#taskbar .taskbar-back {
+	background:_BACKGROUND_;
+	opacity:0.4;
+	filter:Alpha(opacity=40)
+}
+.taskbar-bottom .taskbar-back{
+	border-top:1px solid rgba(255,255,255,0.4);
+}
+.taskbar-left .taskbar-back{
+	border-right:1px solid rgba(255,255,255,0.4);
+}
+.taskbar-top .taskbar-back{
+	border-bottom:1px solid rgba(255,255,255,0.4);
+}
+.taskbar-right .taskbar-back{
+	border-left:1px solid rgba(255,255,255,0.4);
+}
+
+

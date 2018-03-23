@@ -1,0 +1,17 @@
+<!--{loop $voteuser $value}-->
+<div class="vote-user-item pull-left mt10 mr10">
+    {eval echo avatar_block($value[uid]);}
+</div>
+<!--{/loop}-->
+<!--{if $nextpage>0}-->
+<div class="vote-user-item pull-left mt10 mr10">
+	<a href="javascript:;" title="{lang upload_more}" class="avatar-font-small img-circle" style="text-indent:0;line-height:20px;" onclick="voteuser_getNext(this,'{$theurl}');return false">...</a>
+</div>
+<script type="text/javascript">
+	function voteuser_getNext(obj, url) {
+		jQuery.get(url, function(html) {
+			jQuery(obj).parent().replaceWith(html);
+		});
+	}
+</script>
+<!--{/if}-->

@@ -1,0 +1,146 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+	html,
+	body {
+		overflow: hidden;
+		background: #FBFBFB;
+	}
+	
+	.table td {
+		vertical-align: middle;
+	}
+	.bs-main-container {
+		margin:0;
+	}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+	<div class="bs-main-container">
+		<div class="main-header clearfix">
+			<ul class="nav navbar-nav nav-pills-bottomguide">
+				<li <!--{if !$tagid}-->class="active"<!--{/if}-->>
+					<a href="{DZZSCRIPT}?mod=market">{lang all}</a>
+				</li>
+				<!--{loop $tags  $value}-->
+				<li <!--{if $tagid==$value[tagid]}-->class="active"<!--{/if}-->>
+					<a href="{DZZSCRIPT}?mod=market&tagid=$value[tagid]">$value[tagname]</a>
+				</li>
+				<!--{/loop}-->	
+               
+			</ul>
+		</div> 
+		
+		<div class="main-content clearfix">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>{lang appname}</th>
+						<th>{lang supplier}</th>
+						<th>{lang label}</th>
+						<th>{lang edit}</th>
+					</tr>
+				</thead>
+				<!--{loop $list $value}-->
+				<tr>
+					<td>
+						<a href="$value[url]" target="_blank" isinstall="$value[isinstall]" onclick="return Preview('{$value[appid]}');" title="{lang preview}"><img src="$value[appico]" />$value[appname]</a>
+					</td>
+					<td>$value[vendor]</td>
+					<td>
+						<!--{loop $value[tags] $key $value1}-->
+						<a href="{DZZSCRIPT}?mod=market&tagid=$value1[tagid]">$value1[tagname]</a>
+						<!--{/loop}-->
+					</td>
+					<td>
+						<!--{if $value[isinstall]}-->
+						<span>{lang been_install}</span>
+						<!--{if $value[notdelete] == 0}-->												
+						<a href="javascript:;"  data-notdelete="$value[notdelete]" onclick="appUninstall(this,'{$value[appid]}')">&nbsp;{lang uninstall}</a>
+						<!--{/if}-->
+						<!--{else}-->
+						<a id="app_$value[appid]" href="javascript:;" data-notdelete="$value[notdelete]" isinstall="$value[isinstall]" onclick="Install(this,'{$value[appid]}')"><span>{lang install}</span></a>
+						<!--{/if}-->
+					</td>
+				</tr>
+				<!--{/loop}-->
+				<!--{if $multi}-->
+				<tr>
+					<td colspan="20"> $multi</td>
+				</tr>
+				<!--{/if}-->
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	var appdata = $jsondata;
+
+	function Preview(appid) {
+		try {
+			if(appdata[appid]) parent._config.sourcedata.app[appid] = appdata[appid];
+			parent.OpenApp(appid);
+			return false
+		} catch(e) {
+			return true;
+		}
+	}
+	function appUninstall(obj,appid){
+		var parent = jQuery(obj).closest('td');
+		var notdelete = jQuery(obj).data('notdelete');
+		jQuery.getJSON(DZZSCRIPT+'?mod=system&op=dzzcp&do=appuninstall&appid='+appid,function(json){
+			if(json.error){
+				showmessage(json.error,'error',3000,1,'right-bottom');
+			}else{
+				var html = '<a id="app_'+appid+'" href="javascript:;" data-notdelete="'+notdelete+'" onclick="Install(this,'+appid+')"><span>{lang install}</span></a>'
+				parent.html(html);
+			}
+		});
+	};
+	function Install(obj,appid) {	
+		try {
+			var a = obj;
+			var td = jQuery(a).closest('td');
+			if(appdata[appid]){
+				var uid = '{$_G["uid"]}';
+				if(parent._config){
+					parent._config.sourcedata.app[appid] = appdata[appid];
+				}else if(uid){
+					
+				}else{
+					alert('{lang please_use_desktop}');
+				}
+				
+			}else{
+				return;
+			} 
+			parent.showmessage('{lang being_installed}"' + appdata[appid].appname + '"，{lang please_wait1}', 'info', 0, 1, 'right-bottom');
+			jQuery.getJSON('{DZZSCRIPT}?mod=market&do=install&appid=' + appid, function(json) {
+				if(json.msg == 'success') {
+					if(parent._config){
+						parent._config.appList.push(appid);
+						parent._start.refreshlist();
+						parent._start.setStartTip(1);
+					}
+					var notdelete = jQuery(a).data('notdelete');
+					var html = '<span>{lang been_install}</span>';
+					if(notdelete == 0){																	
+						html +='<a href="javascript:;"  data-notdelete="'+notdelete+'" onclick="appUninstall(this,'+appid+')">&nbsp;&nbsp;{lang uninstall}</a>';
+					}
+					td.html(html);
+					parent.showmessage(appdata[appid].appname + '{lang been_installed_start_menu}', 'success', 3, 1, 'right-bottom');
+					
+				} else if(json.error) {
+					parent.showmessage(json.error, 'info', 3, 1, 'right-bottom');
+				}
+			});
+		} catch(e) {
+			alert('{lang please_use_desktop}');
+		}
+	}
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

@@ -1,0 +1,34 @@
+{eval
+	$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+	$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+	$sectpl = !empty($sectpl) ? explode("<sec>", $sectpl) : array('',': ','','');
+	$sectpldefault = $sectpl;
+	$sectplqaa = str_replace('<hash>', 'qaa'.$sechash, $sectpldefault);
+	$sectplcode = str_replace('<hash>', 'code'.$sechash, $sectpldefault);
+	$secshow = !isset($secshow) ? 1 : $secshow;
+	$sectabindex = !isset($sectabindex) ? 1 : $sectabindex;
+}
+<!--{block seccheckhtml}-->
+<input name="sechash" type="hidden" value="$sechash" />
+<!--{if $sectpl}-->
+	<!--{if $seccodecheck}-->
+   			<div class="seccode-wrapper seccode_type_{$_G[setting][seccodedata][type]}">
+    			<div class="input-group seccode-input">
+                  <input name="seccodeverify" class="form-control" id="seccodeverify_$sechash" type="text" autocomplete="off" style="{if $_G[setting][seccodedata][type] != 1}ime-mode:disabled;{/if}"  onblur="checksec('code', '$sechash')"  placeholder="{lang seccode}" />
+					<span class="input-group-addon" id="checkseccodeverify_$sechash"></span>
+                </div> 
+                <div  class="seccode-show" >
+					{$sectplcode[2]}
+					<span id="seccode_$sechash"></span>
+					<a tabindex="-1" href="javascript:;" onclick="updateseccode('$sechash');doane(event);" class="seccode-refresh-guide"><span class="dzz dzz-refresh"></span></a>
+					<!--{if $secshow}--><script type="text/javascript" reload="1">updateseccode('$sechash');</script><!--{/if}-->
+					$sectplcode[3]
+                </div>
+				<span class="help-msg"></span>
+			</div>    
+		
+	<!--{/if}-->
+<!--{/if}-->
+<!--{/block}-->
+<!--{eval unset($secshow);}-->
+<!--{if empty($secreturn)}-->$seccheckhtml<!--{/if}-->

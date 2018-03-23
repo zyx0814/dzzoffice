@@ -1,0 +1,159 @@
+<!--{template common/header_simple_start}-->
+<link rel="stylesheet" href="static/switchery/switchery.min.css">
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all"> 
+
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+.bs-main-container{
+	margin-left:200px;
+}
+.main-header2 .nav>li>a{
+	padding:6px 10px;
+}
+
+/*12.2添加*/
+.main-header2 .nav>li{
+	padding-top: 8px 
+}
+	ul, ul li, li {
+		list-style: unset;
+	}
+/*结束*/
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>
+	<div class="bs-main-container">
+		<div class="main-header clearfix">
+			<ul class="nav navbar-nav nav-pills-bottomguide">
+				
+				<li <!--{if $group=='0' && !$org}-->class="active"<!--{/if}-->>
+					<a href="{BASESCRIPT}?mod={MOD_NAME}&op=default&group=0">{lang universal_application}</a>
+				</li>
+				<li <!--{if $group=='-1' && !$org}-->class="active"<!--{/if}-->>
+					<a href="{BASESCRIPT}?mod={MOD_NAME}&op=default&group=-1">{lang tourist_application}</a>
+				</li>
+	
+				<li <!--{if $group=='1'}-->class="active"<!--{/if}-->>
+					<a href="{BASESCRIPT}?mod={MOD_NAME}&op=default&group=1">{lang rank_file_application}</a>
+				</li>
+				<li <!--{if $group=='3' && !$org}-->class="active"<!--{/if}-->>
+					<a href="{BASESCRIPT}?mod={MOD_NAME}&op=default&group=3">{lang system_administrator_application}</a>
+				</li>
+				<li <!--{if $group=='2' && !$org}-->class="active"<!--{/if}-->>
+					<a href="{BASESCRIPT}?mod={MOD_NAME}&op=default&group=2">{lang section_administrator_application}</a>
+				</li>
+			</ul>
+		</div> 
+		
+
+		<div class="main-content clearfix" style="border-top:1px solid #FFF;padding:0">
+			<form id="appform" name="appform" class="form-horizontal" action="{BASESCRIPT}?mod={MOD_NAME}&op=default" method="post">
+				<input type="hidden" name="appsubmit" value="true" />
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+				<table class="table table-hover">
+					<thead>
+						<th width="50">{lang sort}</th>
+						<th>{lang application_name}</th>
+						<th>{lang default_location}</th>
+						<!--{if $group==1}--><th>{lang allow_department}<small style="display:block;font-size:12px;color:#999">{lang allow_department_tip}</small></th><!--{/if}-->
+						<th>{lang force_installed}<small style="display:block;font-size:12px;color:#999">{lang force_installed_tip}</small></th>
+						<th>{lang clear}<small style="display:block;font-size:12px;color:#999">{lang clear_application_install}</small></th>
+					</thead>
+					<!--{loop $list $value}-->
+					<tr>
+						<!-- <td width="20"><input type="checkbox" name="appids[]" value="$value[appid]"  /></td>-->
+						<td width="40"><input type="text" class="form-control input-sm" name="disp[{$value[appid]}]" value="$value[disp]" style="width:45px;" /></td>
+						<td>
+							<a href="$value[appurl]"><img src="$value[appico]" />$value[appname]</a>
+						</td>
+						<td>
+							<select name="position[{$value[appid]}]" class="form-control input-sm" style="width:120px">
+								<!--{loop $positionarr $key $value1}-->
+								<option value="$key" <!--{if $value[position]==$key}-->selected="selected"<!--{/if}-->>$value1</option>
+								<!--{/loop}-->
+							</select>
+						</td>
+						<!--{if $group==1}-->
+						<td>
+							<!--{loop $value[orgs] $value1}-->
+							<span class=" btn-sorg">
+								{eval echo avatar_group($value1['orgid']);} 
+							</span>
+							<!--{/loop}-->
+							
+						</td>
+						<!--{/if}-->
+						<td>
+							<input type="checkbox" class="js-switch" name="notdelete[{$value[appid]}]" value="1" <!--{if $value[notdelete]>0}-->checked<!--{/if}--> />
+				         </td>
+					    <td><button id="clear_{$value['appid']}" style="width:100px;" class="btn btn-default" data-loading-text="{lang in_clear}" type="button" title="{lang clear_application_install}" onclick="clearAppFromUser('$value[appid]');return false">{lang clear}</button>
+						</td>
+					</tr>
+					<!--{/loop}-->
+					<tr>
+						<th valign="middle" style="border-bottom:none"><input type="submit" class="btn btn-primary" value="{lang save_set}" /></th>
+						<th colspan="5" style="border-bottom:none"> $multi</th>
+					</tr>
+				</table>
+			</form>
+			<div class="tip" style="margin:10px;color:#333;line-height:1.8">
+				<div class="alert alert-warning">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<h5>{lang board_message}</h5>
+					<ul class="help-block">
+						{lang appdefault_board_message_text}
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	var selorg = {};
+
+	
+
+	function clearAppFromUser(appid, i) {
+		if(!i) i = 0;
+		var el = jQuery('#clear_' + appid);
+		if(i == 0) el.button('loading');
+		jQuery.getJSON('{MOD_URL}&op=default&do=clear&appid=' + appid + '&i=' + i, function(json) {
+			if(json.error) {
+				el.html(json.error);
+				window.setTimeout(function() {
+					el.html('{lang clear}');
+					el.button('reset');
+				}, 1000);
+			} else if(json.msg == 'continue') {
+				clearAppFromUser(appid, json.start);
+			} else if(json.msg == 'success') {
+				window.setTimeout(function() { el.html('{lang clear_success}'); }, 1000);
+				window.setTimeout(function() {
+					el.html('{lang clear}');
+					el.button('reset');
+				}, 2000);
+			}
+		});
+	}
+	 //开关样式
+    jQuery.getScript('static/switchery/switchery.min.js',function(){
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html);
+        });
+    });
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

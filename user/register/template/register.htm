@@ -1,0 +1,112 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/checkbox.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="{MOD_PATH}/images/register.css?{VERHASH}" rel="stylesheet" media="all">
+<script src="user/scripts/register.js?{VARHASH}"></script>
+<style>
+	#popModal .modal-dialog{
+		width:410px;
+	}
+</style>
+<!--{template common/header_simple_end}-->
+<!--[if lt IE 9]>
+	<script src="static/js/jquery.placeholder.js" type="text/javascript"></script>
+	<![endif]-->
+<div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:0;  font-size: 0px; background:{eval echo $_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#566481';};"> 
+  <!--{if $_G['setting']['loginset']['img']}--> 
+  <img src="$_G['setting']['loginset']['img']" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index:10;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%"> 
+  <!--{/if}--> 
+  <!--{if $_G['setting']['loginset']['url']}-->
+  <iframe id="wrapper_frame" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" style="z-index:20;position:absolute;width:100%;height:100%;background:url(dzz/images/b.gif);"></iframe>
+  <!--{/if}--> 
+</div>
+<div id="popModal" class="modal_in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:1;display: block">
+  <div class="modal-dialog">
+    <div class="modal-content"> 
+      <div id="register_form">
+        <div class="modal-body"> 
+          <!--{template register_brand}-->
+          <form class="loginForm" method="post" role="form" name="registerform" id="registerform" enctype="multipart/form-data" action="user.php?mod=register"
+                          onsubmit="check_submit(this);return false">
+            <input type="hidden" name="regsubmit" value="yes"/>
+            <input type="hidden" name="formhash" value="{FORMHASH}"/>
+            <input type="hidden" name="referer" value="$referer"/>
+            <input type="hidden" name="handlekey" value="$_GET[handlekey]"/>
+            
+            <!--{if $_GET[action] != 'activation'}-->
+            <div class="form-group">
+              <input type="text" id="email" class="form-control" name="email" autocomplete="off"
+                                       placeholder="{lang register_email_tips}">
+               <span id="chk_email" class="help-msg"></span>         
+            </div>
+            <div class="form-group">
+              <input type="text" id="username" class="form-control" name="username" autocomplete="off" placeholder="{lang username}">
+              <span id="chk_username" class="help-msg"></span>
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" id="password" name="password"
+                                       autocomplete="off" placeholder="{lang register_password_tips}">
+              <span id="chk_password" class="help-msg"></span> 
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" id="password2" name="password2"
+                                       autocomplete="off" placeholder="{lang register_repassword_tips}">
+              <span id="chk_password2" class="help-msg"></span> 
+            </div>
+            <!--{/if}--> 
+           
+            <!--{if $secqaacheck || $seccodecheck}-->
+            <div class="form-group"> 
+              <!--{template common/seccheck}--> 
+            </div>
+            <!--{/if}--> 
+            <!--{if $bbrules}-->
+            <div class="form-group clearfix">
+              <div class="checkbox-custom checkbox-primary pull-left">
+                <input type="checkbox" name="agreebbrule" value="$bbrulehash" id="agreebbrule" checked="checked" />
+                <label>{lang agree}</label>
+              </div>
+              <a class="ml20 pull-left" href="javascript:;" onclick="showWindow('bbrule','user.php?mod=register&op=ajax&do=bbrule')">{lang rulemessage}</a> 
+            </div>
+            <!--{/if}-->
+            <div class="error-msg text-danger" id="returnmessage4"></div>
+            <div class="form-group last">
+              <button type="submit" class="btn btn-lg btn-primary btn-block "> 
+              <!--{if $_GET[action] == 'activation'}-->{lang activation}<!--{else}--> 
+              $_G[setting][reglinkname]<!--{/if}--></button>
+              <button type="button" class="btn btn-link btn-block" onclick="try{_login.logging();}catch(e){location.href='user.php?mod=login'}" title="{lang back_login}">{lang back_login} </button>
+            </div>
+          </form>
+        </div>
+        <div class="copyright-container">
+		<!--{template register_copyright}-->
+		</div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	var lastusername = '', lastpassword = '', lastemail = '', lastinvitecode = '', stmp = new Array(), modifypwd = false;
+	var ignoreEmail = false;
+	var strongpw = new Array();
+	<!--{if $_G['setting']['strongpw']}-->
+		<!--{loop $_G['setting']['strongpw'] $key $val}-->
+			strongpw[$key] = $val;
+		<!--{/loop}-->
+	<!--{/if}-->
+	var pwlength = <!--{if $_G['setting']['pwlength']}-->$_G['setting']['pwlength']<!--{else}-->0<!--{/if}-->;
+	
+	jQuery(document).ready(function (e) {
+	
+		addFormEvent('registerform',1);
+		if (jQuery('.ie8,.ie9').length) { //ie8模拟placeholder;
+			jQuery(':input[placeholder]').each(function () {
+				jQuery(this).placeholder();
+			});
+		}
+	});
+</script> 
+<script type="text/javascript" src="user/scripts/setbacksize.js?{VERHASH}"></script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 
+<!--{template common/footer}--> 

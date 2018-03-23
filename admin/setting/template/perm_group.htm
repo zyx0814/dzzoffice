@@ -1,0 +1,233 @@
+<link rel="stylesheet" href="static/switchery/switchery.min.css">
+<link rel="stylesheet" href="static/css/checkbox.css">
+<link rel="stylesheet" href="{MOD_PATH}/images/setting.css">
+
+<div class="middle-center-content"> 
+  
+  <!--地址栏结束-->
+  <div class="">
+    <div class="perm-top middletopMenu">
+      <div class="new-button">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myjurisdic"> {lang new_permissions} </button>
+        <div class="modal fade" id="myjurisdic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog modal-center" role="document">
+            <div class="modal-content modal-color">
+              <form action="{MOD_URL}&op=permgroup&do=addpermgroup" method="post"
+                                  onsubmit="return permchk(this);">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">{lang add_folder_permission_group}</h4>
+                </div>
+                <div class="modal-body group-top">
+                  <div class="col-md-12 clearfix">
+                    <label class="control-label  input-label"> {lang folder_permissions}{lang name} </label>
+                    <input type="text" class="form-control"
+                                                name="pername" value=""/>
+                  </div>
+                  <div class="select-p clearfix">
+                    <p class="select-perm ">{lang choose_permission}：</p>
+                    <ul class="select-properties col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                      <!--{loop $perms $k $val}-->
+                      <li class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="checkbox-custom checkbox-primary">
+                          <input type="checkbox" name="perms[]" value="$val[1]" >
+                          <label> <span class="$val[2] view-eidt"></span>$val[0] </label>
+                        </div>
+                      </li>
+                      <!--{/loop}-->
+                    </ul>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <div class="proper-bottom" style="position: relative;">
+                    <div class="checkbox-custom checkbox-primary">
+                      <input type="checkbox" name="default" value="1" id="inputfore">
+                      <label for="inputfore"> <span class="proper-span">{lang set_default_permission_group}</span> </label>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">{lang confirms}</button>
+                  <button type="button" class="btn btn-primary-outline" data-dismiss="modal">{lang cancel} </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="properties-table">
+      <div class="properties-th">
+        <div class="properties-left">
+          <p class="properties-Name">{lang name}</p>
+          <p class="properties-establish">{lang jurisdiction}</p>
+        </div>
+        <div class="properties-operation"> {lang operation} </div>
+      </div>
+      <div class="recent-con scroll-y">
+        <div class="properties-con"> 
+          <!--{loop $permgroups $v}-->
+          <li class="properties-list" id="perm_$v[id]">
+          <div class="properties-listLeft">
+            <div class="proper-leftimg"> <img src="dzz/styles/thame/colorful/system/folder.png"> <span class="properties-admin">$v[pername]</span> </div>
+            <ul class="proper-show proper-iconshow">
+              <!--{loop $perms $k $val}--> 
+              <li  <!--{if $val[1]&$v[perm]}-->style="display:block"<!--{else}--> 
+              style="display:none"<!--{/if}-->><span class="{$val[2]}"></span>
+              </li>
+              <!--{/loop}-->
+            </ul>
+          </div>
+          <div class="properties-listRight">
+            <div class="proper-absoleopera"> 
+              <!--{if !$v['system']}--> 
+              <span class="dzz dzz-netdisk-edit proper-delete" onclick="editpermgroup('$v[id]')"
+                                      style="cursor:pointer;"></span> <span class="dzz dzz-delete proper-delete" onclick="delete_perm(this,'$v[id]')"></span> <input type="checkbox" onchange="edit_perm(this,'$v[id]')" class="js-switch"
+                                <!--{if !$v[off]}-->checked="checked" <!--{/if}--> /> 
+              <!--{else}-->
+              <p class="label label-gainsboro">{lang system_default}</p>
+              <input type="checkbox" onchange="edit_perm(this,'$v[id]')" class="js-switch"
+                                <!--{if !$v[off]}-->checked="checked" <!--{/if}--> /> 
+              <!--{/if}--> 
+            </div>
+            <div class="proper-delhover"> 
+              <!--{if $v[default]}--> 
+              <span class="proper-perm proper-default"><span
+                                        class="icon ti-check perm-ok perm-ok-color"></span>{lang default_permission}</span> 
+              <!--{else}--> 
+              <span class="proper-perm proper-set" onclick="setDefault(this,'$v[id]')"><span
+                                        class="icon ti-check perm-ok"></span>{lang set_default}</span> 
+              <!--{/if}--> 
+            </div>
+          </div>
+          </li>
+          <!--{/loop}--> 
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="properties-title">
+    <div class="properties-baground">
+      <p class="properties-orange">{lang folder_property_group_permission}</p>
+      <ul class="properties-explain">
+        <!--{loop $perms $k $val}-->
+        <li><span class="{$val[2]}"></span>$val[0]</li>
+        <!--{/loop}-->
+      </ul>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+    //鼠标滑过
+//  jQuery(document).on('mouseenter','.proper-absoleopera .proper-edit',function(){
+//      jQuery(this).removeClass('edit3').addClass('edit1');
+//  })
+//  jQuery(document).on('mouseleave','.proper-absoleopera .proper-edit',function(){
+//      jQuery(this).removeClass('edit1').addClass('edit3');
+//  })
+    //名称初始化
+    jQuery(document).ready(function (e) {
+        $('.input-black').each(function() {			
+			InputAnimate.init($(this));			
+		});
+    });
+    function permchk(form) {
+        jQuery.post(form.action, jQuery(form).serialize(), function (data) {
+            if (data['success']) {
+                var perms = data['success']['perm'];
+                var permstr = '';
+                if (data['success']['default'] == 0) {
+                    var defaultstr = '<span class="proper-perm proper-set" onclick="setDefault(this,'+data['success']['id']+')"><span class="dzz dzz-done perm-ok"></span>{lang set_default}</span> ';
+                } else {
+                    var defaultstr = '<span class="proper-perm proper-default"><span class="dzz dzz-done perm-ok perm-ok-color"></span>{lang default_permission}</span>';
+                    jQuery('.properties-list').each(function(){
+                        var idval = jQuery(this).attr('id');
+                      idval = idval.replace('perm_','');
+                        jQuery(this).find('.proper-delhover').html('<span class="proper-perm proper-set" onclick="setDefault(this,'+idval+')"><span class="dzz dzz-done perm-ok"></span>{lang set_default}</span>')
+
+                    })
+                }
+                for(var o in perms){
+                    permstr += '<li><span class="'+perms[o]+'" ></span></li>';
+                }
+
+                var html ='<li class="properties-list" id="perm_'+data['success']['id']+'"> ' +
+                        '<div class="properties-listLeft">' +
+                        ' <div class="proper-leftimg">' +
+                        ' <img src="dzz/styles/thame/colorful/system/folder.png"> <span class="properties-admin">'+data['success']['pername']+'</span> ' +
+                        '</div> ' +
+                        '<ul class="proper-show proper-iconshow">' +permstr+'</ul> </div> ' +
+                        '<div class="properties-listRight"> ' +
+                        '<div class="proper-absoleopera">' +
+                        '<span class="dzz dzz-netdisk-edit proper-delete" onclick="editpermgroup('+data['success']['id']+')" style="cursor:pointer;"></span> ' +
+                        '<span class="dzz dzz-delete proper-delete" onclick="delete_perm(this,'+data['success']['id']+')"></span> ' +
+                        '<input type="checkbox" onchange="edit_perm(this,'+data['success']['id']+')" class="js-switch" checked="checked"/>' +
+                        '</div> ' +
+                        '<div class="proper-delhover"> '+defaultstr+'</div> ' +
+                        '</div> ' +
+                        '</li>';
+                var elem = jQuery(html).appendTo('.properties-con').find('.js-switch');
+                var switchery = new Switchery(elem.get(0));
+                jQuery('#myjurisdic').modal('hide');
+                return false;
+            } else {
+                showDialog(data['error']);
+                return false;
+            }
+        }, 'json');
+        return false;
+    }
+    function edit_perm(obj, pid) {
+        if (jQuery(obj).prop('checked')) {
+            var off = 0;
+        } else var off = 1;
+        jQuery.post(MOD_URL+'&op=permgroup&do=editpermgroup_off', {'off': off, id: pid}, function (data) {
+            if (data['success']==true) {
+                if (off == 0) {
+                    jQuery(obj).attr('checked', true);
+                    showmessage('{lang permission_group_open_succeeded}','success',1000,1);
+
+                }else {
+                    jQuery(obj).attr('checked', false);
+                    showmessage('{lang permission_group_close_succeeded}','success',1000,1);
+                }
+            }
+        }, 'json')
+    }
+    function setDefault(obj, pid) {
+        jQuery.post(MOD_URL+'&op=permgroup&do=setdefault', {'id': pid}, function (data) {
+            if (data['success']) {
+                jQuery('.properties-list').each(function () {
+                    var id = jQuery(this).attr('id').replace('perm_', '');
+                    if (id != pid) {
+                        jQuery(this).find('.proper-delhover').html('<span class="proper-perm proper-set" onclick="setDefault(this,' + id + ')"><span class="dzz dzz-done perm-ok"></span>{lang set_default}</span>');
+                    }
+
+                })
+                jQuery(obj).replaceWith('<span class="proper-perm proper-default"><span class="dzz dzz-done perm-ok perm-ok-color"></span>{lang default_permission}</span>');
+                showmessage('{lang set_default_permission_succeeded}','success',1000,1);
+            }
+        }, 'json');
+    }
+    function delete_perm(obj, pid) {
+        if(confirm('{lang delete_permission_group_sure}')){
+            jQuery.post(MOD_URL+'&op=permgroup&do=deleteperm', {'id': pid}, function (data) {
+                if (data['success']) {
+                    jQuery(obj).parents('.properties-list').remove();
+                    showmessage('{lang permission_group_delete_succeeded}','success',1000,1);
+                }
+            }, 'json')
+        }
+        return false;
+    }
+    function editpermgroup(pid) {
+        showWindow('editpermgroup', MOD_URL+'&op=ajax&operation=editpermgroup&id=' + pid);
+    }
+    //开关样式
+    jQuery.getScript('static/switchery/switchery.min.js',function(){
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html);
+        });
+    });
+
+</script> 
