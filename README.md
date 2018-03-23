@@ -3,8 +3,6 @@
 ### 官方网站:http://dzzoffice.com
 ### 演示地址:http://demo.dzzoffice.com
 
-> 预计beta版发布时间：2018年3月下旬
-
 ### DzzOffice 介绍：
 
    Dzzoffice是一套开源办公套件，适用于企业、团队搭建自己的 类似“Google企业应用套件”、“微软Office365”的企业协同办公平台。套件由多个工具组成，包含但不限于如：
