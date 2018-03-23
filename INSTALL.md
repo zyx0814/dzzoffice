@@ -32,9 +32,9 @@
 
 ### DzzOffice的下载及技术支持
 
-1. 官方网站：http://www.dzzoffice.com
+1. 官方网站：   http://www.dzzoffice.com
 2. github地址：https://github.com/zyx0814/dzzoffice
-3. https://gitee.com/zyx0814/dzzoffice
+3. 码云地址：   https://gitee.com/zyx0814/dzzoffice
 
 
 ### DzzOffice安装方法
