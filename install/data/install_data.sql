@@ -2,18 +2,18 @@
 -- 转存表中的数据 `dzz_app_market`
 -- 
 INSERT INTO `dzz_app_market` (`appid`,`mid`, `appname`, `appico`, `appdesc`, `appurl`,`appadminurl`, `noticeurl`, `dateline`, `disp`, `vendor`, `haveflash`, `isshow`, `havetask`, `hideInMarket`, `feature`, `fileext`, `group`, `orgid`, `position`, `system`, `notdelete`, `open`, `nodup`, `identifier`, `app_path`, `available`, `version`, `upgrade_version`, `check_upgrade_time`, `extra`) VALUES
-(1, 1, '管理', 'appico/201712/21/184312rthhhg9oujti9tuu.png', '', '{dzzscript}?mod=appmanagement', '', '', 0, 1, '乐云网络', 0, 1, 1, 0, '', '', 1, 0, 1, 2, 1, 0, 0, 'appmanagement', 'dzz', 1, '1.0', '', 20171115, ''),
-(2, 2, '机构用户', 'appico/201712/21/131016is1wjww2uwvljllw.png', '用户管理，添加用户等', '{adminscript}?mod=orguser', '', '', 1377753015, 2, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'orguser', 'admin', 1, '1.0', '', 20171211, ''),
-(3, 3, '系统设置', 'appico/201712/21/160754fwfmziiiift3gwsw.png', '系统基本设置', '{adminscript}?mod=setting', '', '', 1377677273, 3, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'setting', 'admin', 1, '1.1', '', 20171115, ''),
-(4, 4, '应用市场', 'appico/201712/21/152718k9g2pc6wouwkklwl.png', '', '{adminscript}?mod=appmarket', '', '', 1377674837, 4, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'appmarket', 'admin', 1, '1.0', '', 20171115, ''),
---(5, 5, '云设置和管理', 'appico/201712/21/171106u1dk40digrrr79ed.png', '', '{adminscript}?mod=cloud', '', '', 0, 5, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'cloud', 'admin', 1, '1.0', '', 20171115, ''),
-(6, 6, '文件管理', 'appico/201712/21/175535t47bad99b7sssdwq.png', '', '{adminscript}?mod=filemanage', '', '', 0, 6, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'filemanage', 'admin', 1, '1.0', '', 20180206, ''),
-(7, 7, '分享管理', 'appico/201712/21/165535t47bad99b7qqqdwq.png', '', '{adminscript}?mod=share', '', '', 0, 7, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'share', 'admin', 1, '1.0', '', 20180206, ''),
-(8, 8, '系统日志', 'appico/201712/21/113527zz2665xg7d3h2777.png', '', '{adminscript}?mod=systemlog', '{adminscript}?mod=systemlog&op=admin', '', 0, 8, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'systemlog', 'admin', 1, '1.0', '', 20171115, 'a:2:{s:11:\"installfile\";s:11:\"install.php\";s:13:\"uninstallfile\";s:13:\"uninstall.php\";}'),
-(9, 9, '系统工具', 'appico/201712/21/160537cikgw2v6s6z4scuv.png', '系统工具，缓存更新，数据库管理等', '{adminscript}?mod=system', '', '', 1377677136, 9, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'system', 'admin', 1, '1.1', '', 20171115, ''),
-(10, 10, '应用库', 'appico/201712/21/123754pb0s666i6sjws1jc.png', '', '{dzzscript}?mod=market', '', '{dzzscript}?mod=market&op=notice', 1378615073, 10, '乐云网络', 0, 1, 1, 0, '', '', 1, 0, 1, 0, 1, 0, 0, 'market', 'dzz', 1, '1.0', '', 20171115, ''),
-(11, 11, '投票', 'appico/201712/21/150002d834yjjqnq82qj8z.png', '', '{dzzscript}?mod=dzzvote', '', '', 1378615073, 11, '乐云网络', 0, 0, 1, 0, '', '', 3, 0, 1, 0, 1, 0, 0, 'dzzvote', 'dzz', 1, '1.0', '', 20171115, ''), 
-(12, 12, '评论', 'appico/201712/21/128754pb0s666i6sjws1jc.png', '', '{dzzscript}?mod=comment', '', '', 1378615073, 12, '乐云网络', 0, 0, 1, 0, '', '', 3, 0, 1, 0, 1, 0, 0, 'comment', 'dzz', 1, '1.0', '', 20171115, '');
+(1, 1, '管理', 'appico/201712/21/184312rthhhg9oujti9tuu.png', '管理员应用集合，方便管理员管理各个管理应用', '{dzzscript}?mod=appmanagement', '', '', 0, 1, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 1, 2, 1, 0, 0, 'appmanagement', 'dzz', 1, '2.0', '', 20171115, ''),
+(2, 2, '机构用户', 'appico/201712/21/131016is1wjww2uwvljllw.png', 'Dzz机构用户管理', '{adminscript}?mod=orguser', '', '', 1377753015, 2, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'orguser', 'admin', 1, '2.0', '', 20171211, ''),
+(3, 3, '系统设置', 'appico/201712/21/160754fwfmziiiift3gwsw.png', '系统基础设置', '{adminscript}?mod=setting', '', '', 1377677273, 3, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'setting', 'admin', 1, '2.0', '', 20171115, ''),
+(4, 4, '应用市场', 'appico/201712/21/152718k9g2pc6wouwkklwl.png', '应用管理，应用市场，支持应用在线安装，在线升级等', '{adminscript}?mod=appmarket', '', '', 1377674837, 4, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'appmarket', 'admin', 1, '2.0', '', 20171115, ''),
+--(5, 5, '云设置和管理', 'appico/201712/21/171106u1dk40digrrr79ed.png', '设置和管理第三方云盘、云存储等', '{adminscript}?mod=cloud', '', '', 0, 5, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'cloud', 'admin', 1, '2.0', '', 20171115, ''),
+(6, 6, '文件管理', 'appico/201712/21/175535t47bad99b7sssdwq.png', '管理和查看系统所有文件', '{adminscript}?mod=filemanage', '', '', 0, 6, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'filemanage', 'admin', 1, '2.0', '', 20180206, ''),
+(7, 7, '分享管理', 'appico/201712/21/165535t47bad99b7qqqdwq.png', '管理和查阅所有分享', '{adminscript}?mod=share', '', '', 0, 7, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'share', 'admin', 1, '2.0', '', 20180206, ''),
+(8, 8, '系统日志', 'appico/201712/21/113527zz2665xg7d3h2777.png', 'Dzz 日志记录', '{adminscript}?mod=systemlog', '{adminscript}?mod=systemlog&op=admin', '', 0, 8, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'systemlog', 'admin', 1, '2.0', '', 20171115, 'a:2:{s:11:\"installfile\";s:11:\"install.php\";s:13:\"uninstallfile\";s:13:\"uninstall.php\";}'),
+(9, 9, '系统工具', 'appico/201712/21/160537cikgw2v6s6z4scuv.png', '系统维护相关工具集合，如：更新缓存、数据库备份，计划任务，在线升级等', '{adminscript}?mod=system', '', '', 1377677136, 9, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'system', 'admin', 1, '2.0', '', 20171115, ''),
+(10, 10, '应用库', 'appico/201712/21/123754pb0s666i6sjws1jc.png', '通过应用库用户选择安装自己需要的应用', '{dzzscript}?mod=market', '', '{dzzscript}?mod=market&op=notice', 1378615073, 10, '乐云网络', 0, 1, 1, 0, '', '', 1, 0, 1, 0, 1, 0, 0, 'market', 'dzz', 0, '2.0', '', 20171115, ''),
+(11, 11, '投票', 'appico/201712/21/150002d834yjjqnq82qj8z.png', 'Dzz 内置投票组件，结合其他应用使用，如新闻中用到投票插件，其他开发者也可以为自己的应用调用这个通用评论插件', '{dzzscript}?mod=dzzvote', '', '', 1378615073, 11, '乐云网络', 0, 0, 1, 0, '', '', 3, 0, 1, 0, 1, 0, 0, 'dzzvote', 'dzz', 1, '2.0', '', 20171115, ''), 
+(12, 12, '评论', 'appico/201712/21/128754pb0s666i6sjws1jc.png', 'Dzz 系统评论组件，结合在其他应用使用，如新闻。其他开发者也可以为自己的应用调用这个通用评论插件', '{dzzscript}?mod=comment', '', '', 1378615073, 12, '乐云网络', 0, 0, 1, 0, '', '', 3, 0, 1, 0, 1, 0, 0, 'comment', 'dzz', 1, '2.0', '', 20171115, '');
 --
 -- 转存表中的数据 `dzz_app_tag`
 --
@@ -189,7 +189,7 @@ INSERT INTO `dzz_setting` VALUES('dateconvert', '1');
 
 INSERT INTO `dzz_setting` VALUES('smcols', '8');
 INSERT INTO `dzz_setting` VALUES('smrows', '5');
-INSERT INTO `dzz_setting` VALUES('smthumb', '20');
+INSERT INTO `dzz_setting` VALUES('smthumb', '24');
 
 INSERT INTO `dzz_setting` VALUES('unRunExts', 'a:16:{i:0;s:3:"exe";i:1;s:3:"bat";i:2;s:2:"sh";i:3;s:3:"dll";i:4;s:3:"php";i:5;s:4:"php4";i:6;s:4:"php5";i:7;s:4:"php3";i:8;s:3:"jsp";i:9;s:3:"asp";i:10;s:4:"aspx";i:11;s:2:"vs";i:12;s:2:"js";i:13;s:3:"htm";i:14;s:4:"html";i:15;s:3:"xml";}');
 INSERT INTO `dzz_setting` VALUES('maxChunkSize', '2048000');

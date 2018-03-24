@@ -60,7 +60,6 @@ $lang = array(
     'js_finallydelete_confirm' => '<span style="color:#d43f3a">确实要删除“{name}“吗？删除之后不可恢复</span>',
     'js_finallydelete_confirm_recycle' => '确实要删除"{name}"吗？删除之后不可恢复',
     'js_empty_folder' => '<span style="color:#d43f3a">确实要删除"{name}"中的所有项目吗？</span>',
-    'sayByeToIE6' => '<span><b>Dzz提醒您：</b>微软倡议<a href="http://theie6countdown.cn/" target="_blank" style="color:green">对IE6说再见</a>，告别速度慢、风险高的IE6，免费升级快速又安全的浏览器！推荐使用：<a href="http://firefox.com.cn/" target="_blank" style="color:green">火狐浏览器</a>&nbsp;&nbsp;<a href="http://www.google.cn/intl/zh-CN/chrome/browser/?hl=zh-CN&brand=CHMI" target="_blank" style="color:green">谷歌浏览器</a></span>',
     'need_email_avation' => '<p>你好 {username}：</p><p>你的登录邮箱未验证，你的帐号功能受到限制</p><p>请登录邮箱"{email}",点击激活链接来激活帐号</p><p>邮箱不正确？没有收到邮件？<a href="javascript:;" onclick="hideMenu(\\\'fwin_dialog\\\', \\\'dialog\\\');_login.configWindow(\\\'password\\\');">重新验证邮件</a></p>',
     'js_save_error' => '数据保存错误,可能您的网络出现故障！',
     'confirmexit' => '您确定要离开',

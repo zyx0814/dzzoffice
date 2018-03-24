@@ -47,15 +47,18 @@ if($operation == 'app'){
 	}else{
 		 $applist =array_keys(C::t('app_market')->fetch_all_by_default());
 	}
-
-	
-	 
 	//获取已安装应用
 	$app=C::t('app_market')->fetch_all_by_appid($applist); 
 	$applist_1=array();
+	
 	foreach($app as $key => $value){
 		if($value['isshow']<1) continue;
 		if($value['available']<1) continue;
+		if($value['position']<1) continue;//位置为无的忽略
+		//判断管理员应用
+		if($_G['adminid']!=1 && $value['group']==3){
+			continue;
+		}
 		//if($value['system'] == 2) continue;
 		$applist_1[] = $value; 
 	}
