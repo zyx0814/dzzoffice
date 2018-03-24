@@ -17,7 +17,7 @@ include_once libfile('function/cache');
 $map=array();
 $today = dgmdate(TIMESTAMP,'Ymd');
 $map["available"]=1;
-$applist = C::tp_t('app_market')->where($map)->select();
+$applist =DB::fetch_all("select * from %t where `available`>0",array('app_market'));
  
 $return = array("sum"=>0);
 $num=0;
@@ -43,7 +43,7 @@ if( $applist ){
 							"upgrade_version"=>serialize($response["data"]),
 							"check_upgrade_time"=>dgmdate(TIMESTAMP,'Ymd')
 						);
-						$re=C::tp_t('app_market')->where("appid=".$v['appid'])->save( $map );
+						$re=C::t('app_market')->update($v['appid'],$map);//C::tp_t('app_market')->where("appid=".$v['appid'])->save( $map );
 						$num++;
 					}
 				}
@@ -56,7 +56,8 @@ if( $applist ){
 				if($apparray["app"]["version"]>$v["version"]){
 					$num++;
 					$savedata=array( "upgrade_version"=>serialize($apparray["app"]), "check_upgrade_time"=>$today );
-					$re= C::tp_t('app_market')->where("appid=".$v["appid"])->save( $savedata ); 
+					$re=C::t('app_market')->update($v['appid'],$savedata);
+					//$re= C::tp_t('app_market')->where("appid=".$v["appid"])->save( $savedata ); 
 				}
 			} 
 		} 

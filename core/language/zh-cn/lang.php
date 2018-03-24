@@ -49,6 +49,9 @@ $lang = array (
 	'all_username'=>'全部用户',
 	'login_email'=>'登录邮箱',
 	'login_username'=>'登录用户名',
+	'login_username_placeholder'=>'登录用户名',
+	'login_username_tips'=>'必填，用户在系统中的唯一标识，可用于系统登录',
+	
 	'confirm_add' => '确认添加',
 	'simulate'=>'模拟',
 	'icon'=>'图标',
@@ -752,15 +755,15 @@ $lang = array (
 	'profile_nickname_toolong' => '抱歉，您输入的用户名大于于 30 个字符，请输入一个较短的用户名', 
 	'profile_nickname_illegal' => '用户名包含敏感字符',
 	'profile_nickname_duplicate' => '该用户名已被注册',
-	'profile_username_tooshort' => '抱歉，您输入的用户姓名小于 3 个字符，请输入一个较长的用户名',
-	'profile_username_toolong' => '抱歉，您输入的用户姓名大于于 30 个字符，请输入一个较短的用户名', 
-	'profile_username_illegal' => '姓名包含敏感字符',
+	'profile_username_tooshort' => '抱歉，您输入的用户名小于 3 个字符，请输入一个较长的用户名',
+	'profile_username_toolong' => '抱歉，您输入的用户名大于于 30 个字符，请输入一个较短的用户名', 
+	'profile_username_illegal' => '用户名包含敏感字符',
 	'profile_passwd_notmatch' => '抱歉，两次输入的密码不一致',
 	'refresh_verification_code' => '刷新验证码',
 	'play_verification_code' => '播放验证码',
 	'profile_illegal' => '格式不正确或为空',
 	'profile_nickname_protect' => '用户名包含被系统屏蔽的字符',
-	'profile_username_protect' => '姓名包含被系统屏蔽的字符',
+	'profile_username_protect' => '用户名包含被系统屏蔽的字符',
 	'register_check_found' => '该用户名已注册，请更换用户名&nbsp;<a href="user.php?mod=logging&action=login" onclick="try{_login.logging();}catch(e){return true}">登录</a>',
 	'register_activation' => '用户名已存在',
 	'no_invitation_code' => '抱歉，邀请码为空请填写，没有邀请码不允许注册',
@@ -1380,7 +1383,8 @@ $_G[siteurl]',
 	'license'=>'授权协议',
 	'service_and_support'=>'服务支持',
 	'public_license'=>'开源协议',
-	'community_edition'=>'社区版'
+	'community_edition'=>'社区版',
+	'title_admincp'=>'管理员登录入口'
 	
 );
 

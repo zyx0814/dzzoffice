@@ -49,18 +49,21 @@ $start = ($page - 1) * $perpage;
 $apps = array();
 
 $sql = '1';
+$param=array('app_open');
 if ($appid) {
 	$sql .= " and `appid` = '{$appid}'";
 	$map["appid"]=$appid;
+	$param[]=$appid;
 } elseif ($ext) {
 	$sql .= " and `ext` = '{$ext}'";
 	$map["ext"]=$ext;
+	$param[]=$ext;
 }
  
-$count = C::tp_t("app_open")->where($map)->count();
+$count = DB::result_first("select COUNT(*) from %t where 1",array('app_market'));//C::tp_t("app_open")->where($map)->count();
 if($count){
-	$appdatas = C::tp_t('app_market')->getField("appid,appico,appname,appurl"); 
-	$list = C::tp_t("app_open")->where($map)->order("appid desc")->select();
+	$appdatas =DB::fetch_all("select appid,appico,appname,appurl from %t where 1",array('app_market'),'appid');// C::tp_t('app_market')->getField("appid,appico,appname,appurl"); 
+	$list = DB::fetch_all("select * from %t where $sql ORDER BY appid DESC",$param);//C::tp_t("app_open")->where($map)->order("appid desc")->select();
 	$newlist=array();
 	foreach($list as $k=>$v ){
 		$appdata = $appdatas[$v["appid"]];

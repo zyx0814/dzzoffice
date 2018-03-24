@@ -43,7 +43,7 @@ if (!submitcheck('settingsubmit')) {
 			$defaultdepartment = lang('no_join_agency_department');
 			$setting['defaultdepartment'] = 'other';
 		}
-		$applist =DB::fetch_all("select appname,identifier from %t where isshow>0 and `available`>0 ORDER BY disp",array('app_market'));
+		$applist =DB::fetch_all("select appname,identifier from %t where isshow>0 and `available`>0 and app_path='dzz' ORDER BY disp",array('app_market'));
 		
 		//$orgtree=getDepartmentOption(0);
 	} elseif ($operation == 'qywechat') {

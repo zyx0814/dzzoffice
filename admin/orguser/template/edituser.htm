@@ -29,21 +29,15 @@
 			</span>
 		</div>
 		<div class="form-group">
-			<label class="control-label" for="nickname">{lang login_username}</label>
+			<label class="control-label" for="username">{lang username}</label>
 			<div class="controls">
-				<input type="text" class="form-control input-sm" id="nickname" name="nickname" placeholder="{lang login_username_placeholder}" autocomplete="off" value="$user[nickname]" onblur="checknick(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
+				<input type="text" class="form-control input-sm" id="username" name="username" placeholder="{lang login_username_placeholder}" autocomplete="off" value="$user[username]" onblur="checknick(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
 			</div>
-			<span id="chk_nickname" class="help-inline">
-                <span id="suc_nickname"></span><kbd class="p_chk"></kbd> {lang edituser_login_email_text}
+			<span id="chk_username" class="help-inline">
+                <span id="suc_username"></span><kbd class="p_chk"></kbd> {lang login_username_tips}
 			</span>
 		</div>
-		<div class="form-group">
-			<label class="control-label" for="username">{lang compellation}</label>
-			<div class="controls">
-				<input type="text" class="form-control input-sm" class="form-control input-sm" placeholder="{lang UserTrueName}" id="username" name="username" autocomplete="off" value="$user[username]" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
-			</div>
-			<span id="chk_username" class="help-inline">{lang adduser_compellation_text}</span>
-		</div>
+		
 		<div class="form-group">
 			<label class="control-label" for="username">{lang phone_number}</label>
 			<div class="controls">
@@ -246,7 +240,22 @@
 	function account_submit() {
 		
 		//判断用户名
-		if(jQuery('#username').val() == '' || jQuery('#email').val() == '' || ((jQuery('#password').val() != '' || jQuery('#password2').val() != '') && jQuery('#password').val() != jQuery('#password2').val())) return false;
+		if(jQuery('#email').val() == '') {
+			jQuery('#email').focus();
+			showmessage('{lang login_email_required}', 'danger', 1000, 1);
+			return false;
+		}
+		if(jQuery('#username').val() == '') {
+			jQuery('#username').focus();
+			showmessage('{lang name_will}', 'danger', 1000, 1);
+			return false;
+		}
+
+		
+		if((jQuery('#password').val() != '' || jQuery('#password2').val() != '') && jQuery('#password').val() != jQuery('#password2').val()){
+			jQuery('#password').focus();
+			return false;
+		} 
 		
 		var flag = 0;
 		jQuery('#accountform kbd').each(function(){

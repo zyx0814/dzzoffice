@@ -24,27 +24,21 @@ function errormessage(el, msg,passlevel) {
 
 function addFormEvent(formid, focus){
 	
-	jQuery('#username').on('blur', function () {
+	jQuery('#username').on('blur keyup', function () {
 		if(this.value == '') {
 			errormessage(jQuery(this), __lang.username_character);
 		}else{
 			checkusername(jQuery(this));
 		}
 	});
-	jQuery('#email').on('blur', function () {
+	jQuery('#email').on('blur keyup', function () {
 		if(this.value == '') {
 			errormessage(jQuery(this), __lang.register_email_tips1);
 		}else{
 			checkemail(jQuery(this));
 		}
 	});
-	jQuery('#email').on('blur', function () {
-		if(this.value == '') {
-			errormessage(jQuery(this), __lang.register_email_tips1);
-		}else{
-			checkemail(jQuery(this));
-		}
-	});
+	
 
 	checkPwdComplexity(document.getElementById('password'), document.getElementById('password2'));
 	
@@ -79,7 +73,7 @@ function checkPwdComplexity(Obj1, Obj2, modify) {
 			errormessage(firstObj, '<span class="passlevel passlevel'+passlevel+'">'+__lang.intension+':'+passlevels[passlevel]+'</span>','passlevel');
 		}
 	});
-	secondObj.on('blur', function () {
+	secondObj.on('blur keyup', function () {
 		if(secondObj.val() == '') {
 			if(!modify){
 				errormessage(secondObj, !modifypwd ? __lang.register_repassword_tips : profileTips);

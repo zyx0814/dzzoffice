@@ -14,7 +14,7 @@ include_once DZZ_ROOT . './core/core_version.php';
 $map=array();
 $today = date("Ymd");
 $map["check_upgrade_time"]=array("lt",$today); 
-$applist = C::tp_t('app_market')->where($map)->limit(10)->select(); 
+$applist =DB::fetch_all("select * from %t where check_upgrade_time<%d limit 10",array('app_market',$today)); //C::tp_t('app_market')->where($map)->limit(10)->select(); 
 if( $applist ){
 	$dzz_upgrade = new dzz_upgrade_app();
 	//根据当前版本查询是否需要更新 
@@ -54,7 +54,7 @@ if( $applist ){
 			}
 		} 
 		if( $savedata ){
-			$re= C::tp_t('app_market')->where("appid=".$v["appid"])->save( $savedata ); 
+			$re= C::t('app_market')->update($appid,$savedata);//C::tp_t('app_market')->where("appid=".$v["appid"])->save( $savedata ); 
 		} 
 	}
 }

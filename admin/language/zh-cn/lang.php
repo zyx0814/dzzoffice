@@ -39,7 +39,7 @@ $lang = array
 
 	'export_range_user'=>'选择导出范围,此范围内的所有用户都会导出',
 	'export_data'=>'导出资料项',
-	'compellation'=>'姓名',
+	'compellation'=>'用户名',
 	'UserTrueName'=>'用户真实姓名',
 	'phone_number'=>'手机号码',
 	'phone_number_illegal'=>'手机号码不合法',
@@ -58,16 +58,16 @@ $lang = array
 	'supervisor_position'=>'上司职位',
 	'send_password_user_mailbox'=>'发送密码到用户邮箱',
 	'login_email_required'=>'登录邮箱必填',
-	'name_will'=>'姓名必填',
+	'name_will'=>'用户名必填',
 	'none_write_login_password'=>'还没有填写登录密码',
 	'none_write_affirm_password'=>'还没有填写确认密码',	
 	'none_write_add_theme'=>'还没有添加主题',
 	'illegal'=>'不合法',
 	'space_not_change_password'=>'留空，不修改密码',
 	'data_set'=>'资料设置',
-	'user_name'=>'用户姓名',
-	'user_name_email'=>'用户姓名或邮箱',
-	'user_name_sensitive'=>'用户姓名含有敏感字符',
+	'user_name'=>'用户用户名',
+	'user_name_email'=>'用户名或邮箱',
+	'user_name_sensitive'=>'用户名含有敏感字符',
 	'avatar'=>'头像',
 	'space_usage'=>'空间使用',
 	'department'=>'部门',
@@ -154,8 +154,8 @@ $lang = array
 	'please_select_project_export'=>'请选择导出项目',
 	'user_information_table'=>'人员信息表',
 	'bulk_import_user_template'=>'批量导入用户模板',
-	'name_email_empty'=>'姓名和邮箱不能为空',
-	'lack_required_fields_name'=>'缺少必填字段"姓名"',
+	'name_email_empty'=>'用户名和邮箱不能为空',
+	'lack_required_fields_name'=>'缺少必填字段"用户名"',
 	'lack_required_fields_name_email'=>'缺少必填字段”用户名“或”邮箱“',
 	'choose_import_agency_department'=>'选择导入的机构或部门',
 	'enterprise_binding'=>'企业号绑定',
@@ -404,8 +404,8 @@ $lang = array
 	
 	'current_contents_without_saving'=>'当前内容没有保存，确定要离开吗？',
 	'mail'=>'邮件设置',
-	'login_username_placeholder'=>'登录用户名（选填）',
-	'login_username_text'=>'选填，可用于系统登录',
+	'login_username_placeholder'=>'登录用户名',
+	'login_username_text'=>'必填，可用于系统登录',
 	'required_used_login_system'=>'必填，可用于系统登录',
 	// admin/system/database.html
 //	'nav_db' => '数据库',
@@ -827,7 +827,7 @@ $lang = array
 	'edit_type_dzzoffice1'=>'为dzzoffice提供各种主题和风格',
 	'edit_type_dzzoffice2'=>'为dzzoffice提供各种扩展和功能增强',
 	// admin/dzzmarket/filemanage.html
-	'filemanage_file_user'=>'文件名称或用户姓名',
+	'filemanage_file_user'=>'文件名称或用户名',
 	'filemanage_del_file'=>'确定要彻底删除（此操作不可恢复）此文件吗？',
 	'filemanage_del_all_file'=>'确定要彻底删除（此操作不可恢复）所有选择的文件吗？',
 	'filemanage_desktop'=>'请在桌面内使用',
@@ -908,7 +908,7 @@ $lang = array
 	'inport_guide_layout'=>'选择编辑好的人员信息表，支持 .xls、.xlsx格式',
 	'inport_guide_notice'=>'编辑人员信息表注意事项',
 	'inport_guide_notice_text'=>'<li>1、根据模板字段来编辑需要导入的人员信息，如果已经有档案信息表，则只需将现有的档案信息表中的相关字段名称改为与“模板”里提供的名称一致即可，只要名称对应，字段的位置不影响结果。</li>
-<li>2、模板中“姓名”字段必填，其他字段根据需要填写。</li>
+<li>2、模板中“用户名”字段必填，其他字段根据需要填写。</li>
 <li>3、表中“邮箱”、“用户名”字段中的信息必须是唯一的，不可重复。如果邮箱为空，系统导入时将随机生成邮箱地址。</li>
 <li class="danger">4、多级部门创建：方法1：表中添加多列“所属部门”，从左到右分别为一级部门、二级部门、三级部门，顺序排列，系统会根据从左到右的原则，依次创建部门、下级部门、下下级部门等。方法2：表格中使用单列，上下级部门使用“/”来分割（例如：小学/一年级/一班）。</li>
 <li>5、导入用户只能按机构导入，多个机构需要分批导入。</li>
@@ -920,7 +920,7 @@ $lang = array
 	'import_list_organization'=>'选择要导入到的机构，如果不导入任何机构，会根据用户信息表中的所属部门来生成新的机构和部门，没有则会直接导入到"无机构人员"下',
 	'import_list_password'=>'默认用户密码，当登录密码项未设置时，会使用此处设置的密码作为新导入的用户的密码',
 	'import_list_coverage'=>'增量导入方式：新导入的用户信息智能的增加到原有用户信息中；覆盖导入：新导入的信息覆盖原有用户的信息,建议使用增量方式。',
-	'import_list_text'=>'<li>姓名和邮箱项目为必填项</li>
+	'import_list_text'=>'<li>用户名和邮箱项目为必填项</li>
       <li>点击下面的导入项的内容，可以临时编辑，编辑部门时注意，部门每行是上下级的关系，上一行为下一行的上级部门</li>
       <li>不需要导入的项目，可以点击右侧的"X"删除掉</li>
       <li>点击导入按钮，导入当前项目，全部导入按钮，按顺序导入所有项，中途可以再次点击停止</li>',
@@ -999,7 +999,7 @@ $lang = array
 	'qq_app_key'=>'在QQ互联申请的应用APP KEY',
 	'whether_allow_direct'=>'是否允许直接使用',
 	'user_must_binding'=>'必须绑定用户',
-	'user_must_binding_text'=>'用户不绑定用户，直接使用的话，系统将根据QQ的信息自动添加用户到系统并且和此QQ绑定。用户名和姓名默认使用QQ昵称；邮箱、密码随机生成。用户可以通过QQ登录正常登录或找回密码',
+	'user_must_binding_text'=>'用户不绑定用户，直接使用的话，系统将根据QQ的信息自动添加用户到系统并且和此QQ绑定。用户名默认使用QQ昵称；邮箱、密码随机生成。用户可以通过QQ登录正常登录或找回密码',
 	'allow_direct_use'=>'允许直接使用',
 	'token_url'=>'回调地址',
 	'enable_independent_login_page'=>'启用独立登录页',
@@ -1357,7 +1357,7 @@ $lang = array
 	'space_organization_set'=>'机构存储空间设置',
 	'space_organization_set_tip'=>'设置机构默认空间大小，如果留空或为0则共享系统所有空间，为-1则没有存储空间',
 	'space_group_set'=>'群组存储空间设置',
-	'space_group_set_tip'=>'设置群组默认空间大小，如果留空或为0则共享系统所有空间，为-1则没有存储空间'
+	'space_group_set_tip'=>'设置群组默认空间大小，如果留空或为0则共享系统所有空间，为-1则没有存储空间'	
 	
 );
 

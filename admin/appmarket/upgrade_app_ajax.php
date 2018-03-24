@@ -22,7 +22,7 @@ header('Content-type:text/json');
 $steplang = array('', lang('founder_upgrade_updatelist'), lang('founder_upgrade_download'), lang('founder_upgrade_compare'), lang('founder_upgrade_upgrading'), lang('founder_upgrade_complete'), 'dbupdate' => lang('founder_upgrade_dbupdate'));
 if ($operation == 'check_upgrade' ) {//根据appid检查app应用是否需要更新
     $appid = $_GET["appid"]; 
-    $appinfo = C::tp_t('app_market')->find( $appid );
+    $appinfo = C::t('app_market')->fetch($appid);//C::tp_t('app_market')->find( $appid );
     $time =dgmdate(TIMESTAMP,'Ymd');
     $return=array(
         "url"=>ADMINSCRIPT .'?mod=appmarket&op=upgrade', 
@@ -77,7 +77,7 @@ if ($operation == 'check_upgrade' ) {//根据appid检查app应用是否需要更
                 "upgrade_version"=>serialize($response["data"]),
                 "check_upgrade_time"=>dgmdate(TIMESTAMP,'Ymd')
             );
-            $re=C::tp_t('app_market')->where("appid=".$appid)->save( $map );
+            $re=C::t('app_market')->update($appid,$map);//C::tp_t('app_market')->where("appid=".$appid)->save( $map );
             $return["url"] = ADMINSCRIPT .'?mod=appmarket&op=upgrade_app_ajax&appid='.$appid;
             exit(json_encode($return));//需要更新
         } else {
@@ -86,7 +86,7 @@ if ($operation == 'check_upgrade' ) {//根据appid检查app应用是否需要更
                 "upgrade_version"=>"",
                 "check_upgrade_time"=>$time
             );
-            $re=C::tp_t('app_market')->where("appid=".$appid)->save( $map );
+            $re=C::t('app_market')->update($appid,$map);//C::tp_t('app_market')->where("appid=".$appid)->save( $map );
             $return["status"]=0;
             $return["msg"]=lang("app_upgrade_to_lastversion");
             exit(json_encode($return));//不需要更新
@@ -102,7 +102,7 @@ elseif($operation == 'upgrade' ){
         "second"=>1, 
         "msg"=>lang("app_upgrade_newversion_will_start")
     );
-    $appinfo = C::tp_t('app_market')->find( $appid );
+    $appinfo = C::t('app_market')->fetch($appid);//C::tp_t('app_market')->find( $appid );
     $respon =$appinfo["upgrade_version"];
     if( $respon=="" ){
         $return["status"]=0;
@@ -198,7 +198,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
     $upgradeinfo = $upgrade_step = array();
     
     $appid = $_GET["appid"]; 
-    $appinfo = C::tp_t('app_market')->find( $appid );
+    $appinfo = C::t('app_market')->fetch($appid);//C::tp_t('app_market')->find( $appid );
     if( !$appinfo["upgrade_version"] ){
         $linkurl=ADMINSCRIPT.'?mod=appmarket&op=upgrade';
         $return["url"]=$linkurl;
@@ -551,7 +551,7 @@ elseif($operation == 'localupgrade' ){
             "upgrade_version"=>"",
             "check_upgrade_time"=>0
         );
-        $re=C::tp_t('app_market')->where("appid=".$appid)->save( $map );  
+        $re=C::t('app_market')->update($appid,$map);//C::tp_t('app_market')->where("appid=".$appid)->save( $map );  
 	}
     
     $return["url"] = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=check_upgrade&appid='.$app["appid"];
@@ -571,13 +571,14 @@ function getappidentifier( $baseinfo=array() ) {
 			"identifier"=>$baseinfo["identifier"],
 			"app_path"=>$baseinfo["app_path"]
 		);
-		$count= C::tp_t('app_market')->where($map)->count(); 
+		$count=DB::result_first("select COUNT(*) from %t where mid!=%d and identifier=%s and app_path=%s",array('app_market',$baseinfo["mid"],$baseinfo["identifier"],$baseinfo["app_path"]));// C::tp_t('app_market')->where($map)->count(); 
 		if( $count>0 ){
 			$pos=true;
 			$i=1;
 			while($pos !== false) {
 				$map["identifier"]=$baseinfo["identifier"]."_".$baseinfo["mid"]."_".$i ;
-				$count= C::tp_t('app_market')->where($map)->count(); 
+				$count=DB::result_first("select COUNT(*) from %t where mid!=%d and identifier=%s and app_path=%s",array('app_market',$baseinfo["mid"],$map["identifier"],$baseinfo["app_path"]));
+				//$count= C::tp_t('app_market')->where($map)->count(); 
 				if( $count==0 ){
 					$pos=false;
 				}else{

@@ -21,7 +21,7 @@
 			</div>
 			<div class="select-toperate select-toperate-center  toolButtons">
 				<div class="btns">
-					<a node-type="btn-item"  href="javascript:void(0);" onclick="savefile();return false;" class="shares-topbtns">
+					<a node-type="btn-item"  href="javascript:void(0);"  class="shares-topbtns share_save">
 						<span class="dzz dzz-save" data-key="save" data-toggle="tooltip" data-placement="bottom" data-original-title="{lang save}"></span>
 					</a>
 					<a node-type="btn-item"  href="javascript:void(0);" onclick="downfileselect();return false;" class="shares-topbtns">
@@ -521,20 +521,32 @@
         return false;
 	}
 
-    function savefile(){
+   /* function savefile(){
         if(uid == 0){
             location.href='$_G[siteurl]user.php?mod=login';
             return false;
         }
         jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
             if(data['success']) {
-                var rids = share.join(',');
                 var userhref = 'index.php?mod=system&op=selposition&handlekey=seldir&allowcreate=1&callback=save_file';
                 showWindow('seldir',userhref,'get','0');
             }
         }, 'json');
         return false;
-    }
+    }*/
+	$(document).off('click.sharesave').on('click.sharesave','.share_save',function(){
+		if(uid == 0){
+			location.href='$_G[siteurl]user.php?mod=login';
+			return false;
+		}
+		jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
+			if(data['success']) {
+				var userhref = 'index.php?mod=system&op=selposition&handlekey=seldir&allowcreate=1&callback=save_file';
+				showWindow('seldir',userhref,'get','0');
+			}
+		}, 'json');
+		return false;
+	})
 	//点击空白处，取消全选
 	$(document).off('click.main-content').on('click.main-content','#contains_content',function(e){
         var target = $(e.target);
@@ -561,6 +573,7 @@ function saveall_file(fid){
     jQuery('div[data-value="true"]').each(function(){
         rids.push(jQuery(this).data('dpath'));
     });
+	var rids = rids.join(',');
     $.post('{MOD_URL}&op=save',{'fid':fid,'dzzrids':rids},function(data){
         var msg = '';
         for (var i in data.msg) {

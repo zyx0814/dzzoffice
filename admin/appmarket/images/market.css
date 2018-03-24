@@ -340,10 +340,10 @@ span.num {
 	font-size:13px;
 	cursor:default;
 	line-height: 25px;
+	max-width:300px;
 }
 .btn-top{
 	margin-left: 30px;
-
 }
 .btn-top a{
 	margin-right: 10px;

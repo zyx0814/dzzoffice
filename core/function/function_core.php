@@ -3378,7 +3378,7 @@ function get_update_app_num()
     $map = array();
     $map["upgrade_version"] = array("neq", "");
     $map["available"] = array("gt", "0");
-    $num = C::tp_t('app_market')->where($map)->count("*");
+    $num = DB::result_first("select COUNT(*) from %t where `available`>0 and upgrade_version!=''",array('app_market'));// C::tp_t('app_market')->where($map)->count("*");
     return $num;
 }
 

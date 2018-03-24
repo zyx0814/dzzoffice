@@ -33,7 +33,7 @@ if( $json["status"]==1){
 	$multi=multi($total, $perpage, $page, $theurl);
 }
 //print_r($list);exit;
-$local_applist=C::tp_t("app_market")->select();
+$local_applist=DB::fetch_all("select * from %t where 1",array('app_market'));//C::tp_t("app_market")->select();
 if( $list ){ 
 	foreach($list as $k=>$v){
 		$list[$k]["local_appinfo"]=array();

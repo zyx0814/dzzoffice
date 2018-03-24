@@ -184,7 +184,7 @@ $lang=array (
   'system_data_installation_successful' => '<span>系统数据安装成功！请点击下一步设置管理员</span>',
   'install_successfully' => '恭喜！安装成功',
   'handwork_del' => '为了安全起见，请手工删除',
-  'enter_desktop' => '进入桌面',
+  'enter_desktop' => '进入首页',
   'undefine_func' => '未定义函数',
 );
 ?>	

@@ -348,7 +348,7 @@ function user_register($userArr,$addorg = 1){
 
 	if(empty($userArr)) return ;
 
-	if($userArr['nickname'] && ($status = uc_user_checkname($userArr['nickname'])) < 0) {
+	if($userArr['username'] && ($status = uc_user_checkname($userArr['username'])) < 0) {
 		return $status;
 	}
 

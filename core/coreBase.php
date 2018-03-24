@@ -31,7 +31,7 @@ $_config = array_merge($_config,core::loadConfig(DZZ_ROOT.CONFIG_NAME.BS.'config
 
 $install = core::loadConfig(DZZ_ROOT.CONFIG_NAME.BS.CONFIG_NAME.EXT);
 if(!$install){
-    header('Location:/install/index.php');
+    header('Location: install/index.php');
     exit();
 }
 

@@ -122,15 +122,16 @@ function html_login_form() {
 	$isguest = !getglobal('uid');
 	$lang1 = lang();
     $year=dgmdate(TIMESTAMP,'Y');
+	$maintitle=lang('title_admincp');
 	$loginuser = $isguest ? '<input class="form-control" name="admin_email"  type="text" title="" onfocus="if(this.value==\'' . lang('login_email_username') . '\'){this.value=\'\'}"   onblur="if(this.value==\'\'){this.value=\'' . lang('login_email_username') . '\'}"  autocomplete="off" />' : '<div class="username">' . $_G['member']['username'] . '</div><div class="email">' . $_G['member']['email'] . '</div>';
 	$sid = getglobal('sid');
     $avatarstatus=getglobal('avatarstatus','member');
    if(!$uid ){
 	   $avastar ='<img src="'.($_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png').'" />';
    }else{
-	   $avastar =avatar_block($uid); 
+	   $avastar = avatar_block($uid); 
    }
-	 
+	$avastar.='<div class="maintitle">'.$maintitle.'</div>';
 	$extra = BASESCRIPT . '?' . $_SERVER['QUERY_STRING'];
 	$forcesecques = '<option value="0">' . ($_G['config']['admincp']['forcesecques'] ? $lang1['forcesecques'] : $lang1['security_question_0']) . '</option>';
 	echo <<<EOT
@@ -139,6 +140,7 @@ function html_login_form() {
             <input type="hidden" name="sid" value="$sid">
             <div class="loginformContainer">       
                 <div class="avatarContainer">$avastar</div>
+				
                 $loginuser
                 <div id="admin_password_Container">
 						<input  name="admin_password"  id="admin_password"  type="password" class="form-control"  value="" autocomplete="off" placeholder="$lang1[password]" />

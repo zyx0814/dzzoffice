@@ -11,7 +11,7 @@
 
 $lang=array (
 	
-  'username' => '姓名',
+  'username' => '用户名',
   'login_guest' => '没有帐号？<a href="user.php?mod={$_G[setting][regname]}">{$_G[setting][reglinkname]}</a>',
   'faq' => '帮助',
   'Modify_the_picture' => '修改头像',
@@ -107,11 +107,11 @@ $lang=array (
   'no_account_yet' => '还没有帐号？',
   'fill_your_login_email' => '填写您的登录邮箱',
   'real_name' => '真实姓名',
-  'names_fill_registration' => '填写注册时使用的姓名',
+  'names_fill_registration' => '填写注册时使用的用户名',
   'sure_find' => '确定找回',
   'back_login' => '返回登录',
   'lostpassword'=>'找回密码',
-   'lostpassword_tip'=>'输入注册时邮箱和姓名来找回密码',
+   'lostpassword_tip'=>'输入注册时邮箱和用户名来找回密码',
 	
   'now_your_email' => '现在去邮箱',
   'fill_email_here' => '这里输入邮箱',

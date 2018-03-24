@@ -35,7 +35,7 @@ class dzz_upgrade_app {
 		$today =dgmdate(TIMESTAMP,'Ymd');
 		$map["available"]=1;
 		$map["check_upgrade_time"]=array("lt",$today); 
-		$applist = C::tp_t('app_market')->where($map)->limit(10)->select(); 
+		$applist = DB::fetch_all("select * from %t where `available`>0 and check_upgrade_time<%d ",array('app_market',$today));//C::tp_t('app_market')->where($map)->limit(10)->select(); 
 		if( $applist ){
 			//根据当前版本查询是否需要更新 
 			$appinfo["mysqlversion"] = helper_dbtool::dbversion();
@@ -75,14 +75,14 @@ class dzz_upgrade_app {
 					}
 				} 
 				if( $savedata ){
-					$re= C::tp_t('app_market')->where("appid=".$v["appid"])->save( $savedata ); 
+					$re= C::t('app_market')->update($appid,$savedata);//C::tp_t('app_market')->where("appid=".$v["appid"])->save( $savedata ); 
 				} 
 			}
 		}
 		$map=array(); 
 		$map["available"]=1;
 		$map["upgrade_version"]=array("neq",""); 
-		$need_upgrade_num = C::tp_t('app_market')->where($map)->count();
+		$need_upgrade_num = DB::result_first("select COUNT(*) from %t where `available`>0 and upgrade_version!=''",array('app_market'));// C::tp_t('app_market')->where($map)->count();
 	 
 		if( $need_upgrade_num>0 ) {
 			C::t('setting')->update('upgrade_app_num', $need_upgrade_num);

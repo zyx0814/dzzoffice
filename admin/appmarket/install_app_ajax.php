@@ -51,7 +51,7 @@ if ($operation == 'check_install' ) {//根据appid检查app应用是否需要更
         exit(json_encode($return));//不需要安装
     }
 
-    $appinfo = C::tp_t('app_market')->where($map)->find();
+    $appinfo = DB::result_first("select COUNT(*) from %t where mid=%d",array('app_market',$baseinfo['mid']));//C::tp_t('app_market')->where($map)->find();
     $time =dgmdate(TIMESTAMP,'Ymd');
     $return=array(
         "url"=>ADMINSCRIPT .'?mod='.MOD_NAME.'&op=install_app_ajax', 

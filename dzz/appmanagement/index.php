@@ -12,12 +12,8 @@ if(!defined('IN_DZZ')) {
 $navtitle=lang('后台管理');
 //管理权限进入
 Hook::listen('adminlogin');
-$map=array(
-	"isshow"=>1,
-	"available"=>1,
-	"group"=>3
-);
-$appdata=C::tp_t('app_market')->where($map)->order("disp asc")->select(); 
+
+$appdata=DB::fetch_all("select appname,appico,appurl,identifier from %t where `group`=3 and isshow>0 and `available`>0",array('app_market')); 
 $data=array();
 foreach($appdata as $k => $v){
 	if( $v["identifier"]=="appmanagement") continue;
@@ -28,6 +24,3 @@ foreach($appdata as $k => $v){
 	$data[]=$v;
 }
 include template('main');
- 
-
-
