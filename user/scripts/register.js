@@ -198,9 +198,9 @@ function checkusername(el) {
 		}
 		
 		
-		jQuery.post('user.php?mod=ajax&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=checkusername&username=' + encodeURI(username), function(json) {
+		jQuery.getJSON('user.php?mod=ajax&action=checkusername&username=' + encodeURI(username), function(json) {
 			errormessage(el, json.error||'');
-		},'json');
+		});
 	}
 }
 
@@ -268,9 +268,9 @@ function checkemail(el) {
 		errormessage(el, __lang.email_illegal);
 		return;
 	}
-	jQuery.post('user.php?mod=ajax&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=checkemail&email=' + email, function(json) {	
+	jQuery.getJSON('user.php?mod=ajax&inajax=yes&action=checkemail&email=' + email, function(json) {	
 			errormessage(el, json.error||'');	
-	},'json');
+	});
 }
 
 
