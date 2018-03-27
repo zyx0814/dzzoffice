@@ -128,10 +128,9 @@ $form_admin_init_items = array
 	'admininfo' => array
 	(
 		'email' => array('type' => 'text', 'required' => 1, 'reg' => '/@/', 'value' => array('type' => 'var', 'var' => 'adminemail')),
-		'nickname' => array('type' => 'text', 'required' => 0, 'reg' => '/^.*$/'),
+		'username' => array('type' => 'text', 'required' => 1, 'reg' => '/^.*$/', 'value' => array('type' => 'constant', 'var' => 'admin')),
 		'password' => array('type' => 'password', 'required' => 1, 'reg' => '/^.*$/'),
 		'password2' => array('type' => 'password', 'required' => 1, 'reg' => '/^.*$/'),
-		'username' => array('type' => 'text', 'required' => 1, 'reg' => '/^.*$/', 'value' => array('type' => 'constant', 'var' => 'admin')),
 		
 	)
 );

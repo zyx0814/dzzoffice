@@ -364,9 +364,7 @@ if($method == 'show_license') {
 		}else {
 			show_msg('admininfo_invalid', '', 0);
 		}
-		if($nickname && (strlen($nickname) > 30 || preg_match("/^$|^c:\\con\\con$|　|[,\"\s\t\<\>&]|^Guest/is", $username))) {
-			show_msg('admin_nickname_invalid', $nickname, 0);
-		}
+		
 		$uid =  1 ;
 
 		$onlineip = $_SERVER['REMOTE_ADDR'];
@@ -381,7 +379,7 @@ if($method == 'show_license') {
 		$dbuser = $_config['db'][1]['dbuser'];
 		$tablepre = $_config['db'][1]['tablepre'];
 		$db->connect($dbhost, $dbuser, $dbpw, $dbname, DBCHARSET);
-		$db->query("REPLACE INTO {$tablepre}user (uid, username,nickname, password, adminid, groupid, email, regdate,salt,authstr) VALUES ('$uid', '$username', '$nickname','$password', '1', '1', '$email', '".time()."','$salt','');");
+		$db->query("REPLACE INTO {$tablepre}user (uid, username,nickname, password, adminid, groupid, email, regdate,salt,authstr) VALUES ('$uid', '$username', '','$password', '1', '1', '$email', '".time()."','$salt','');");
         $db->query("update {$tablepre}folder set `uid`=$uid,`username`='$username' where `fid` = 1");
 		$db->query("REPLACE INTO {$tablepre}user_status (uid, regip,lastip, lastvisit, lastactivity, lastsendmail, invisible, profileprogress) VALUES ('$uid', '', '','$timestamp', '$timestamp', '0', '0', '0');");
 		$query = $db->query("SELECT COUNT(*) FROM {$tablepre}user");
