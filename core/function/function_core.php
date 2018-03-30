@@ -1819,7 +1819,7 @@ function removedirectory($dirname, $keepdir = FALSE, $time = 0)
         if ($file != '.' && $file != '..') {
             $dir = $dirname . DIRECTORY_SEPARATOR . $file;
             $mtime = filemtime($dir);
-            is_dir($dir) ? removedir($dir) : (((TIMESTAMP - $mtime) > $time) ? unlink($dir) : '');
+            is_dir($dir) ? removedirectory($dir) : (((TIMESTAMP - $mtime) > $time) ? unlink($dir) : '');
         }
     }
     closedir($handle);
@@ -3239,7 +3239,7 @@ function get_resources_some_setting()
                 $uesrs = array();
                 foreach ($usersarr as $v) {
                     //群组id
-                    if (preg_match('/\d+/', $v)) {
+                    if (preg_match('/^\d+$/', $v)) {
                         foreach (C::t('organization_user')->fetch_user_byorgid($v) as $val) {
                             $users[] = $val['uid'];
                         }
@@ -3247,7 +3247,7 @@ function get_resources_some_setting()
                         foreach (C::t('user')->fetch_uid_by_groupid(9) as $val) {
                             $users[] = $val['uid'];
                         }
-                    } elseif (preg_match('/uid_\d+/', $v)) {
+                    } elseif (preg_match('/^uid_\d+$/', $v)) {
                         $users[] = preg_replace('/uid_/', '');
                     }
 
@@ -3286,10 +3286,6 @@ function get_resources_some_setting()
     }
     if(!isset($setting['explorer_groupcreate'])){
         $data['allownewgroup'] = true;
-        /*'explorer_groupcreate',
-            'explorer_mermorygroupsetting',
-            'explorer_memorygroupusers',
-            'explorer_catcreate'*/
     }else{
         if ($setting['explorer_groupcreate'] == 1) {
             $groupcreateon = isset($setting['explorer_mermorygroupsetting']) ? $setting['explorer_mermorygroupsetting'] : '';
@@ -3298,7 +3294,7 @@ function get_resources_some_setting()
                 $uesrs = array();
                 foreach ($usersarr as $v) {
                     //群组id
-                    if (preg_match('/\d+/', $v)) {
+                    if (preg_match('/^\d+$/', $v)) {
                         foreach (C::t('organization_user')->fetch_user_byorgid($v) as $val) {
                             $users[] = $val['uid'];
                         }
@@ -3306,8 +3302,8 @@ function get_resources_some_setting()
                         foreach (C::t('user')->fetch_uid_by_groupid(9) as $val) {
                             $users[] = $val['uid'];
                         }
-                    } elseif (preg_match('/uid_\d+/', $v)) {
-                        $users[] = preg_replace('/uid_/', '');
+                    } elseif (preg_match('/^uid_\d+$/', $v)) {
+                        $users[] = preg_replace('/uid_/', '',$v);
                     }
 
                 }

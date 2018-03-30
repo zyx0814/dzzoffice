@@ -175,7 +175,10 @@
 		});
 		jQuery(document).on('click', 'div[node-type=item]', function(e) {
 			e = e ? e : event;
+			
 			var el = jQuery(this);
+			var obj = e.srcElement ? e.srcElement : e.target;
+			if(jQuery(obj).closest('.js_copy').length) return false;
 			var actives = jQuery('.item-active').length;
 			if(e.ctrlKey) {
 				jQuery('.item-active').not(this).find('.copy-bar').hide();
@@ -194,16 +197,16 @@
 			}
 			refresh_header();
 		});
-		var client = new ZeroClipboard(jQuery('.js_copy'));
-		client.on("load", function(client) {
-			client.on("complete", function(client, args) {
-				var self = this;
-				jQuery(this).parent().find('.copy-success').removeClass('hide');
-				window.setTimeout(function() {
-					jQuery(self).parent().find('.copy-success').addClass('hide');
-				}, 1000);
-			});
+		
+		var client = new Clipboard('.js_copy');
+		client.on("success", function(e) {
+			var self = e.trigger;
+			jQuery(self).find('.copy-success').removeClass('hide');
+			window.setTimeout(function() {
+				jQuery(self).find('.copy-success').addClass('hide');
+			}, 1000);
 		});
+		
 		jQuery('.title .item .col[node-type=title-col]').on('click', function() {
 			var el = jQuery(this);
 			el.find('.asc').css('visibility', 'visible').toggleClass('desc');
@@ -235,22 +238,13 @@
 		jQuery('.list .item-active').each(function() {
 			sids.push(jQuery(this).data('sid'));
 		});
-		jQuery.post('{ADMINSCRIPT}?mod=share&op=ajax&do=delete', { "sids": sids }, function(json) {
-		    console.log(json.msg);
+		jQuery.post('{MOD_URL}&op=ajax&do=delete', { "sids": sids }, function(json) {
 		    for(var o in json.msg){
-		        console.log(json.msg[o]);
 				if(json.msg[o]['success']){
                     jQuery('.list div[data-sid="'+o+'"]').remove();
 				}
 			}
             refresh_header();
-			/*if(json.msg == 'success') {
-				showmessage('{lang stop_sharing_success}', 'success', 2000, 1);
-				jQuery('.list .item-active').remove();
-				refresh_header();
-			} else {
-				showmessage(json.error, 'danger', 3000, 1);
-			}*/
 		}, 'json');
 	}
 
@@ -323,5 +317,5 @@
 	}
 </script>
 <!--{template common/footer_simple}-->
-<script type="text/javascript" src="static/js/ZeroClipboard/ZeroClipboard.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/clipboard/clipboard.min.js?{VERHASH}"></script>
 <script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>

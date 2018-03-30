@@ -170,7 +170,7 @@ class Wopi
 		$ooServerURL=rtrim($ooServerURL,'/').'/hosting/discovery';
 		
 		$fileExtension = $meta['ext'];
-		$guid = dzzencode($meta['uid'].'|'.$lock);
+		$guid = dzzencode(getglobal('uid').'|'.$lock);
 		$wopi_url_temlpate = "WOPISrc={0}&access_token={1}";
 		$fileID=dzzencode($meta['path']);
 	    $discovery=self::getActionByDiscovery($ooServerURL);

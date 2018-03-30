@@ -203,7 +203,8 @@ if ($do == 'upload') {//上传图片文件
 	if (!$ismoderator = C::t('organization_admin') -> ismoderator_by_uid_orgid($forgid, $_G['uid'])) {
 		exit(json_encode(array('error' => lang('privilege'))));
 	}
-	$setarr = array('forgid' => intval($_GET['forgid']), 'orgname' => lang('new_department'), 'fid' => 0, 'disp' => intval($_GET['disp']), 'indesk' => 0, 'dateline' => TIMESTAMP, 'available' => 1,'syatemon'=>1);
+	/*默认新建机构和部门开始群组manageon群组管理员开启 syatemon系统管理员开启 available 系统管理员开启共享目录,保留diron(群组管理员开启目录)控制是否开启目录显示在前台*/
+	$setarr = array('forgid' => intval($_GET['forgid']), 'orgname' => lang('new_department'), 'fid' => 0, 'disp' => intval($_GET['disp']), 'indesk' => 0, 'dateline' => TIMESTAMP, 'available' => 1,'syatemon'=>1,'manageon'=>1);
 	if ($setarr = C::t('organization') -> insert_by_forgid($setarr, $borgid)) {
 		include_once  libfile('function/cache');
 		updatecache('organization');
