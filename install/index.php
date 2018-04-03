@@ -170,6 +170,8 @@ if($method == 'show_license') {
 				$errno =  $link->connect_errno;
 				$error =  $link->connect_error;
 			}else{
+				list($dbhost1,$port)=explode(':',$dbhost);
+				if(empty($port)) $port='3306';
 				$link = @mysql_connect($dbhost, $dbuser, $dbpw);
 				$errno = mysql_errno();
 				$error = mysql_error();
@@ -218,6 +220,7 @@ if($method == 'show_license') {
 		$_config['db'][1]['dbname'] = $dbname;
 		$_config['db'][1]['dbpw'] = $dbpw;
 		$_config['db'][1]['dbuser'] = $dbuser;
+		$_config['db'][1]['port'] = $port?$port:'3306';
 		$_config['db'][1]['tablepre'] = $tablepre;
 		$_config['admincp']['founder'] = (string)$uid;
 		$_config['security']['authkey'] = $authkey;
