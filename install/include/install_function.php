@@ -59,16 +59,31 @@ EOT;
 
 function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
 	if(!function_exists('mysql_connect') && !function_exists('mysqli_connect')) {
-		show_msg('undefine_func', 'mysql_connect', 0);
+		show_msg('undefine_func', 'mysql_connect | mysqli_connect', 0);
 	}
 	$mysqlmode = function_exists('mysqli_connect') ? 'mysqli' : 'mysql';
-	$link = ($mysqlmode == 'mysql') ? @mysql_connect($dbhost, $dbuser, $dbpw) : new mysqli($dbhost, $dbuser, $dbpw);
-	if(!$link) {
-		$errno = ($mysqlmode == 'mysql') ? mysql_errno() : mysqli_errno();
-		$error = ($mysqlmode == 'mysql') ? mysql_error() : mysqli_error();
+	if($mysqlmode=='mysqli'){
+		//兼容支持域名直接带有端口的情况
+		if(strpos($dbhost,':')!==false){
+			list($dbhost,$port)=explode(':',$dbhost);
+			
+		}elseif(strpos($dbhost,'.sock')!==false){//地址直接是socket地址
+			$unix_socket=$dbhost;
+			$dbhost='localhost';
+		}
+		if(empty($port)) $port='3306';
+		$link =  new mysqli($dbhost, $dbuser, $dbpw, '', $port, $unix_socket);
+		$errno =  $link->connect_errno;
+		$error =  $link->connect_error;
+	}else{
+		$link = @mysql_connect($dbhost, $dbuser, $dbpw);
+		$errno = mysql_errno();
+		$error = mysql_error();
+	}
+	if($errno) {
 		if($errno == 1045) {
 			show_msg('database_errno_1045', $error, 0);
-		} elseif($errno == 2003) {
+		} elseif($errno == 2003 || $errno==2002) {
 			show_msg('database_errno_2003', $error, 0);
 		} else {
 			show_msg('database_connect_error', $error, 0);
@@ -256,11 +271,13 @@ function show_env_result(&$env_items, &$func_items, &$filesock_items) {
 function show_dirfile_result(&$dirfile_items) {
 
 	$file_str = '';
+	$dir_str = '';
 	$error_code = 0;
 
 	foreach($dirfile_items as $key => $item) {
-		$tagname = $item['type'] == 'file' ? 'File' : 'Dir';
+		$tagname = $item['type'] == 'file' ? 'file' : 'dir';
 		$variable = $item['type'].'_str';
+		  if(empty($$variable)) $$variable='';
 			$$variable .= "<tr>\n";
 			$$variable .= "<td>$item[path]</td><td class=\"w pdleft1\">".lang('writeable')."</td>\n";
 			if($item['status'] == 1) {
@@ -338,7 +355,7 @@ function show_form(&$form_items, $error_msg) {
 					}elseif($v['value']['type'] == 'array') {
 						$value = $v['value']['var'];
 					} else {
-						$value = $GLOBALS[$v['value']['var']];
+						$value = !empty($GLOBALS[$v['value']['var']])?$GLOBALS[$v['value']['var']]:'';
 					}
 				} else {
 					$value = '';

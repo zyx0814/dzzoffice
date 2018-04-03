@@ -156,11 +156,25 @@ if($method == 'show_license') {
 			show_msg('dbname_invalid', $dbname, 0);
 		} else {
 			$mysqlmode = function_exists("mysqli_connect") ? 'mysqli' :  'mysql';
-			$link = ($mysqlmode == 'mysqli') ? new mysqli($dbhost, $dbuser, $dbpw) : @mysql_connect($dbhost, $dbuser, $dbpw) ;
-			
-			$errno = ($mysqlmode == 'mysqli') ? $link->connect_errno :mysql_errno($link) ;
-			$error = ($mysqlmode == 'mysqli') ? $link->connect_error :mysql_error($link) ;
-			if($errno){
+			if($mysqlmode=='mysqli'){
+				//兼容支持域名直接带有端口的情况
+				if(strpos($dbhost,':')!==false){
+					list($dbhost1,$port)=explode(':',$dbhost);
+
+				}elseif(strpos($dbhost,'.sock')!==false){//地址直接是socket地址
+					$unix_socket=$dbhost1;
+					$dbhost1='localhost';
+				}
+				if(empty($port)) $port='3306';
+				$link =  new mysqli($dbhos1, $dbuser, $dbpw, $dbname, $port, $unix_socket);
+				$errno =  $link->connect_errno;
+				$error =  $link->connect_error;
+			}else{
+				$link = @mysql_connect($dbhost, $dbuser, $dbpw);
+				$errno = mysql_errno();
+				$error = mysql_error();
+			}
+			if($errno) {
 				if($errno == 1045) {
 					show_msg('database_errno_1045', $error, 0);
 				} elseif($errno == 2003 || $errno==2002) {

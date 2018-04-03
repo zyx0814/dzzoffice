@@ -18,13 +18,15 @@ $_config = array();
  * $_config['db']['2']['dbhost'] = 'localhost';
  * ...
  */
-$_config['db'][1]['dbhost']  		= '127.0.0.1';
+$_config['db'][1]['dbhost']  		= 'localhost';//支持直接加端口如：127.0.0.1:3306或使用UNix socket 如：/tmp/mysql.sock
 $_config['db'][1]['dbuser']  		= 'root';
 $_config['db'][1]['dbpw'] 	 		= 'root';
 $_config['db'][1]['dbcharset'] 		= 'utf8';
 $_config['db'][1]['pconnect'] 		= 0;
 $_config['db'][1]['dbname']  		= 'dzzoffice';
 $_config['db'][1]['tablepre'] 		= 'dzz_';
+$_config['db'][1]['port'] = '3306';//mysql端口
+$_config['db'][1]['unix_socket'] = '';//使用此方式连接时 dbhost设置为localhost
 
 /**
  * 数据库从服务器设置( slave, 只读 ), 支持多组服务器设置, 当设置多组服务器时, 系统根据每次随机使用

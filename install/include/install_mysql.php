@@ -45,7 +45,7 @@ class dbstuff {
 		if($dbname) {
 			mysql_select_db($dbname, $this->link);
 		}
-
+		
 	}
 
 	function fetch_array($query, $result_type = MYSQL_ASSOC) {

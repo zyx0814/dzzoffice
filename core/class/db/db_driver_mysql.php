@@ -51,7 +51,12 @@ class db_driver_mysql
 		if(empty($this->config) || empty($this->config[$serverid])) {
 			$this->halt('config_db_not_found');
 		}
-
+		if(!empty($this->config[$serverid]['unix_socket'])){//使用socket连接；
+			$this->config[$serverid]['dbhost']=$this->config[$serverid]['unix_socket'];
+		}elseif($this->config[$serverid]['port']){
+			list($dbhost,$port)=explode(':',$this->config[$serverid]['dbhost']);
+			$this->config[$serverid]['dbhost']=$dbhost.':'.$this->config[$serverid]['port'];
+		}
 		$this->link[$serverid] = $this->_dbconnect(
 			$this->config[$serverid]['dbhost'],
 			$this->config[$serverid]['dbuser'],
