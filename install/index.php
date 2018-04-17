@@ -168,7 +168,7 @@ if($method == 'show_license') {
 					$dbhost1=$dbhost;
 				}
 				if(empty($port)) $port='3306';
-				$link =  new mysqli($dbhost1, $dbuser, $dbpw, $dbname, $port, $unix_socket);
+				$link =  new mysqli($dbhost1, $dbuser, $dbpw, '', $port, $unix_socket);
 				$errno =  $link->connect_errno;
 				$error =  $link->connect_error;
 			}else{
