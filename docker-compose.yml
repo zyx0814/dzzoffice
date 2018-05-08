@@ -37,7 +37,7 @@ services:
     volumes_from:
       - php
     ports:
-      - 380:80
+      - 80:80
       
   pma:
       build: ./docker/pma
