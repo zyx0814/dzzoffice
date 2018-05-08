@@ -16,6 +16,18 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-d
 && apk del tzdata \
 && rm -rf /var/cache/apk/*
 
+#dzzoffice
+
+WORKDIR "/tmp"
+
+RUN wget https://github.com/zyx0814/dzzoffice/archive/2.0beta.zip -O dzzoffice.zip && \
+    unzip dzzoffice.zip && \
+    mv /tmp/dzzoffice-2.0beta/* /var/www/html && \
+    chmod -R 777 /var/www/html/data/ /var/www/html/config/ && \
+    rm -fr /tmp/dzz*
+	
+WORKDIR "/var/www/html"
+	
 EXPOSE 9000
 
 CMD ["php-fpm"]

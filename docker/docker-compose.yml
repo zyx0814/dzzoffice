@@ -14,14 +14,12 @@ services:
       - MYSQL_USER=app
       - MYSQL_PASSWORD=123123123
     ports:
-      - 3306:3306
+      - 33306:3306
 
   php:
     build: ./php-fpm
     container_name: lnmp_php-fpm
     restart: always
-    volumes:
-      - ./www/:/var/www/html
     expose:
       - "9000"
 
@@ -37,11 +35,11 @@ services:
     volumes_from:
       - php
     ports:
-      - 80:80
+      - 380:80
       
   pma:
       image: ./pma
       container_name: lnmp-pma
       restart: always
       ports:
-        - "8080:80"
+        - "388:80"
