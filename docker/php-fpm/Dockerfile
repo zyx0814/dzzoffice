@@ -20,7 +20,7 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-d
 
 WORKDIR "/tmp"
 
-RUN wget https://github.com/zyx0814/dzzoffice/archive/2.0beta.zip -O dzzoffice.zip && \
+RUN curl -kL https://github.com/zyx0814/dzzoffice/archive/2.0beta.zip -o dzzoffice.zip && \
     unzip dzzoffice.zip && \
     mv /tmp/dzzoffice-2.0beta/* /var/www/html && \
     chmod -R 777 /var/www/html/data/ /var/www/html/config/ && \
