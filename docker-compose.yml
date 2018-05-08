@@ -1,0 +1,47 @@
+version: '2'
+services:
+
+  db:
+    image: mariadb:10.1
+    container_name: lnmp_mariadb
+    restart: always
+    volumes:
+      - ./docker/mysql/initdb/:/docker-entrypoint-initdb.d
+      - ./docker/mysql/data/:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123123123
+      - MYSQL_DATABASE=app
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=123123123
+    ports:
+      - 33306:3306
+
+  php:
+    build: ./docker/php-fpm
+    container_name: lnmp_php-fpm
+    restart: always
+    expose:
+      - "9000"
+    volumes:
+     - .:/var/www/html/
+
+  nginx:
+    build: ./docker/nginx
+    container_name: lnmp_nginx
+    restart: always
+    volumes:
+      - ./docker/nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+    links:
+      - db:db
+    volumes_from:
+      - php
+    ports:
+      - 380:80
+      
+  pma:
+      build: ./docker/pma
+      container_name: lnmp-pma
+      restart: always
+      ports:
+        - "388:80"
