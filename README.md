@@ -2,7 +2,6 @@
 
 ### 官方网站:http://dzzoffice.com
 ### 演示地址:http://demo.dzzoffice.com
-### Docker部署: [点我传送](https://github.com/n3uz/dzzoffice/blob/master/docker/README.MD)
 
 ### DzzOffice 介绍：
 
