@@ -169,7 +169,7 @@ if ($operation == 'patch' || $operation == 'cross') {
             }
         }
     } elseif ($step == 3) { 
-        list($modifylist, $showlist, $ignorelist,$newlist) = $dzz_upgrade -> compare_basefile($upgradeinfo, $updatefilelist);
+        list($modifylist, $showlist, $ignorelist,$newlist) = $dzz_upgrade -> compare_basefile($upgradeinfo, $updatefilelist,$updatemd5filelist);
         if (empty($modifylist) && empty($showlist) && empty($ignorelist) && empty($newlist)) {
             $msg = lang('filecheck_nofound_md5file', array('upgradeurl' => upgradeinformation(-4)));
         }

@@ -74,19 +74,7 @@ $_config['db']['common'] = array();
  */
 $_config['db']['common']['slave_except_table'] = '';
 
-/**
- *命名空间
- */
-// 命名空间相关设置
-/**
- * 配置相应命名空间路径
- * $_config['namespacelist'] = array(
- *  'root'      =>DZZ_ROOT,
- *  'coreroot'  => DZZ_ROOT.'core')
- *
- */
-$_config['output']['language'] 			= 'zh-cn';	// 页面语言 zh-cn/en-us
-$_config['output']['language_list']['zh-cn']='简体中文';	// 页面语言 zh-cn/en-us
+
 
 /**
  * 内存服务器优化设置
@@ -111,7 +99,7 @@ $_config['memory']['redis']['timeout'] = 0;
  */
 $_config['memory']['redis']['serializer'] = 1;
 
-$_config['memory']['memcache']['server'] = '127.0.0.1';			// memcache 服务器地址
+$_config['memory']['memcache']['server'] = '127.0.0.1'; // memcache 服务器地址
 $_config['memory']['memcache']['port'] = 11211;			// memcache 服务器端口
 $_config['memory']['memcache']['pconnect'] = 1;			// memcache 是否长久连接
 $_config['memory']['memcache']['timeout'] = 1;			// memcache 服务器连接超时
@@ -131,8 +119,7 @@ $_config['memory']['wincache'] = 1;						// 启动对 wincache 的支持
  *  'coreroot'  => DZZ_ROOT.'core')
  *
 */
-$_config['output']['language'] 			= 'zh-cn';	// 页面语言 zh-cn/en-us
-$_config['output']['language_list']['zh-cn']='简体中文';	// 页面语言 zh-cn/en-us
+
 $_config['namespacelist'] = array(
     'root'      =>DZZ_ROOT,
     'coreroot'  => DZZ_ROOT.'core',
@@ -160,7 +147,9 @@ $_config['output']['charset'] 			= 'utf-8';	// 页面字符集
 $_config['output']['forceheader']		= 1;		// 强制输出页面字符集，用于避免某些环境乱码
 $_config['output']['gzip'] 			    = 0;		// 是否采用 Gzip 压缩输出
 $_config['output']['tplrefresh'] 		= 1;		// 模板自动刷新开关 0=关闭, 1=打开
-$_config['output']['language'] 			= 'zh_cn';	// 页面语言 zh_cn/zh_tw
+$_config['output']['language'] 			= 'zh-cn';	// 页面语言 zh-cn/zh-tw
+$_config['output']['language_list']['zh-cn']='简体中文';	// 页面语言 zh-cn/en-us
+
 $_config['output']['staticurl'] 		= 'static/';	// 站点静态文件路径，“/”结尾
 $_config['output']['ajaxvalidate']		= 0;		// 是否严格验证 Ajax 页面的真实性 0=关闭，1=打开
 $_config['output']['iecompatible']		= 0;		// 页面 IE 兼容模式

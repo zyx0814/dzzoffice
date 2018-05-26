@@ -89,12 +89,12 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
 			show_msg('database_connect_error', $error, 0);
 		}
 	} else {
-		if($query = (($mysqlmode == 'mysql') ? @mysql_query("SHOW TABLES FROM $dbname") : $link->query("SHOW TABLES FROM $dbname"))) {
+		if($query = (($mysqlmode == 'mysql') ? @mysql_query("SHOW databases") : $link->query("SHOW databases"))) {
 			if(!$query) {
 				return false;
 			}
 			while($row = (($mysqlmode == 'mysql') ? mysql_fetch_row($query) : $query->fetch_row())) {
-				if(preg_match("/^$tablepre/", $row[0])) {
+				if($dbname==$row[0]) {
 					return false;
 				}
 			}

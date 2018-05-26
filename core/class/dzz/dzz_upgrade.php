@@ -48,16 +48,44 @@ class dzz_upgrade {
 		return $return;
 	}
 
-	public function compare_basefile($upgradeinfo, $upgradefilelist) {
+	public function compare_basefile($upgradeinfo, $upgradefilelist , $upgrademd5list) {
 		if(!$dzzfiles = @file(DZZ_ROOT.'./admin/dzzofficefiles.md5')) {
-			return array();
+			$modifylist = $showlist = $searchlist = $md5datanew = $md5data = array();
+			foreach($upgradefilelist as $key => $file) {
+				$md5datanew[$file] = $upgrademd5list[$key];
+				$md5data[$file] = md5_file(DZZ_ROOT.'./'.$file);
+				if(!file_exists(DZZ_ROOT.'./'.$file)){
+					$newlist[$file] = $file;
+				}elseif($md5datanew[$file] != $md5data[$file]) {
+					if(!$upgradeinfo['isupdatetemplate'] && preg_match('/\.htm$/i', $file)) {
+						$ignorelist[$file] = $file;
+						$searchlist[] = "\r\n".$file;
+						$searchlist[] = "\n".$file;
+						continue;
+					}
+					$modifylist[$file] = $file;
+				} else {
+					$showlist[$file] = $file;
+				}
+			}
+			if($searchlist) {
+				$file = DZZ_ROOT.'./data/update/dzzoffice'.$upgradeinfo['latestversion'].'/updatelist.tmp';
+				$upgradedata = file_get_contents($file);
+				$upgradedata = str_replace($searchlist, '', $upgradedata);
+				$fp = fopen($file, 'w');
+				if($fp) {
+					fwrite($fp, $upgradedata);
+				}
+			}
+			return array($modifylist, $showlist, $ignorelist,$newlist);
 		}
 
 		$newupgradefilelist = $newlist = array();
 		foreach($upgradefilelist as $v) {
-			$newupgradefilelist[$v] = md5_file(DZZ_ROOT.'./'.$v);
-			if( !$newupgradefilelist[$v]  ){
+			if(!file_exists(DZZ_ROOT.'./'.$v)){
 				$newlist[$v]=$v;
+			}else{
+				$newupgradefilelist[$v] = md5_file(DZZ_ROOT.'./'.$v);
 			}
 		}
 		 
