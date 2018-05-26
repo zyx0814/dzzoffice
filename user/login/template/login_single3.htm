@@ -56,6 +56,9 @@
         <a  class="pull-right"  href="user.php?mod=register&referer={eval echo urlencode($referer);}"  <!--{if !empty($_GET['inajax'])}-->onclick="_login.register($referer);return false;"<!--{/if}--> title="$_G['setting']['reglinkname']">$_G['setting']['reglinkname']</a> <span class="spacer  pull-right">|</span> 
         <!--{/if}--> 
         <a class="pull-right"  href="user.php?mod=login&op=logging&action=lostpasswd">{lang getpassword}</a> </div>
+        <div class="third-wrapper clearfix">
+			<!--{hook third_login}--> 
+		</div>
       <p class="error-msg text-danger" id="returnmessage_$loginhash"></p>
       <button class="btn btn-lg btn-primary btn-block" type="submit" name="loginsubmit" value="true">{lang login_empty}</button>
     </form>

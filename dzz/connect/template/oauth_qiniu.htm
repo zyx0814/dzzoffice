@@ -1,0 +1,105 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/connect/images/connect.css?{VERHASH}" rel="stylesheet" media="all">
+<!--{template common/header_simple_end}-->
+<div class="" style="height:100%">
+	<div class="main-header clearfix">
+		<ul class="nav nav-pills nav-pills-bottomguide">
+			<li>
+				<a href="{BASESCRIPT}?mod=connect">{lang my_clouds}</a>
+			</li>
+			<li>
+				<a href="{BASESCRIPT}?mod=connect&op=addcloud">{lang add_clouds}</a>
+			</li>
+			<li class="active">
+				<a href="{BASESCRIPT}?mod=connect&op=oauth&bz=qiniu">{lang oauth_qinniu_add}</a>
+			</li>
+		</ul>
+	</div>
+	<div class="main-content clearfix">
+		<div class="container" style="padding:15px;">
+			<h4 class="clearfix" style="margin-bottom:20px"><div class="col-sm-1"></div><div class="col-sm-10">{lang oauth_qinniu_set}</div></h4>
+			<form name="aliform" class="form-horizontal" action="{BASESCRIPT}?mod=connect&op=oauth" method="post" onsubmit="return validate(this)">
+				<input type="hidden" name="qiniusubmit" value="true" />
+				<input type="hidden" name="bz" value="qiniu" />
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+				<div class="form-group">
+					<label class="control-label col-sm-3" for="access_id">AK：</label>
+					<div class="col-sm-5">
+						<input type="text" id="access_id" class="form-control" name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+					</div>
+					<div class="col-sm-4">
+						<span class="help-block">{lang oauth_qinniu_storage} AK</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-3" for="access_key">SK：</label>
+					<div class="col-sm-5">
+						<input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+					</div>
+					<div class="col-sm-4">
+						<span class="help-inline">{lang oauth_qinniu_storage} SK</span>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="control-label col-sm-3">bucket{lang name}</label>
+					<div class="col-sm-5">
+						<input type="text" id="bucket" name="bucket" class="form-control" value="" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+					</div>
+					<div class="col-sm-4">
+						<span class="help-inline">{lang oauth_qinniu_manage_bucket}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-3" for="hostname">{lang visit_domain_name}</label>
+					<div class="col-sm-5">
+						<input type="text" class="form-control" id="hostname" name="hostname" autocomplete="off" value="$ali[hostname]" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" />
+					</div>
+					<div class="col-sm-4">
+						<span class="help-inline">{lang oauth_qinniu_storage_bucket}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-3" for="region">{lang storage_region}</label>
+					<div class="col-sm-5">
+						<!--{loop $HOSTS $key $value}-->
+						<label class="radio-inline"><input type="radio" <!--{if $key=='huadong'}--> checked="checked"<!--{/if}--> name="region" value="$key" /> $value['title']</label>
+						<!--{/loop}-->
+
+					</div>
+					<div class="col-sm-4">
+						<span class="help-inline">{lang oauth_qinniu_storage_region}</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-3"></div>
+					<div class="col-sm-9">
+						<input type="submit" class="btn btn-primary" value="{lang add}">
+					</div>
+				</div>
+			</form>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function validate(form) {
+			if(jQuery("#access_id").val() == '') {
+				jQuery("#access_id").parent().parent().addClass('has-warning');
+				return false;
+			} else if(jQuery("#access_key").val() == '') {
+				jQuery("#access_key").parent().parent().addClass('has-warning');
+				return false;
+			} else if(jQuery("#bucket").val() == '') {
+				jQuery("#bucket").parent().parent().addClass('has-warning');
+				return false;
+			} else if(jQuery("#hostname").val() == '') {
+				jQuery("#hostname").parent().parent().addClass('has-warning');
+				return false;
+			}
+			return true;
+		}
+	</script>
+	<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+
+	<!--{template common/footer_simple}-->

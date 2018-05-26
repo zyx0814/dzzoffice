@@ -94,8 +94,8 @@ class table_user extends dzz_table
 			foreach(DB::fetch_all("select fid from %t where uid=%d and gid<1 ",array('folder',$uid)) as $value){
 				C::t('folder')->delete_by_fid($value['fid'],true);
 			}
-			
-			wx_deleteUser($uid);
+			 
+			Hook::listen('syntoline_user',$uid,'del');//删除对应到三方用户表
 			return true;
 		}
 		return false;

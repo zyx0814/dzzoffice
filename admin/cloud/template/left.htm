@@ -1,0 +1,10 @@
+<!--{eval $bz=$bz?$bz:'dzz';}-->
+<!--{eval $clouds=DB::fetch_all("select * from ".DB::table('connect')." where 1 order by disp");}-->
+<ul class="nav-stacked">
+  <li <!--{if $operation=='setting'}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=cloud&operation=setting">{lang cloud_set}</a>
+  </li>
+  <!--{loop $clouds $value}--> 
+  <li <!--{if $operation!='setting' && $bz==$value[bz]}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=cloud&op=edit&bz=$value[bz]">$value[name]</a>
+  </li>
+  <!--{/loop}-->
+</ul>

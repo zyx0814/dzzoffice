@@ -172,18 +172,6 @@ class table_resources_recyle extends dzz_table
                 $params[] = $gids;
 
             }else{
-
-                /* //查询有管理权限的群组id
-                 $manageorg= C::t('organization')->fetch_all_manage_orgid();
-                 $manageorgid = array();
-                 foreach($manageorg as $v){
-                     $manageorgid[] = $v['orgid'];
-                 }
-                 if($manageorgid){
-                     $or[] = '(re.gid in(%n))';
-                     $params[] = $manageorgid;
-                 }*/
-
                 if($explorer_setting['useronperm']){
                     $or[] = '(re.uid = %d and re.gid = 0)';
                     $params[] = $uid;
@@ -216,15 +204,14 @@ class table_resources_recyle extends dzz_table
         if($count){
             return DB::result_first("select count(*) from %t re left join %t r on re.rid=r.rid left join %t f on re.pfid=f.fid  $wheresql  $ordersql $limitsql ", $params);
         }
-        $selectfileds = "re.id,re.deldateline,re.username,re.filename,r.name,r.size,r.rid,r.pfid,r.type,r.pfid,r.oid,r.gid,c.id as collect";
+        $selectfileds = "re.id,re.deldateline,re.username,re.filename,re.pathinfo,r.name,r.size,r.rid,re.pfid,r.type,r.pfid,r.oid,r.gid,c.id as collect";
         foreach(DB::fetch_all("select $selectfileds from %t re 
         left join %t r on re.rid=r.rid 
         left join %t f on re.pfid=f.fid 
         left join %t c on re.rid=c.rid and c.uid = re.uid
         $wheresql  $ordersql $limitsql ", $params) as $v){
-            if($v['pfid']){
-                $path = C::t('resources_path')->fetch_pathby_pfid($v['pfid']);
-                $path = preg_replace('/dzz:(.+?):/','',$path);
+            if($v['pathinfo']){
+                $path = preg_replace('/dzz:(.+?):/','',$v['pathinfo']);
                 $v['from'] = substr($path,0,-1);
             }
             //计算最终删除时间
@@ -250,13 +237,11 @@ class table_resources_recyle extends dzz_table
     //获取最终删除时间
     public function diffBetweenTwoDays($end)
     {
-        $start = time();
+        $days = 0;
+        $start = TIMESTAMP;
         if ($start < $end) {
-            $tmp = $end;
-            $end = $start;
-            $start = $tmp;
+            $days = floor(($start - $end) / 86400);
         }
-        $days = floor(($start - $end) / 86400);
         if ($days < 0) $days = 0;
         return $days;
     }

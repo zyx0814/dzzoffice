@@ -9,11 +9,12 @@
 if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
     exit('Access Denied');
 }
-error_reporting(E_ALL);
+
 @set_time_limit(0);
 include_once DZZ_ROOT . './core/core_version.php';
 include_once libfile('function/admin');
-include_once libfile('function/cache'); 
+include_once libfile('function/cache');
+include_once libfile('function/appmarket'); 
 $step = intval($_GET['step']);
 $op = $_GET['op'];
 $step = $step ? $step : 1;
@@ -234,12 +235,11 @@ elseif($operation == 'cross' || $operation == 'patch'){
     $dzz_upgrade = new dzz_upgrade_app(); 
     if($step != 5 &&  !$_GET['fileupgrade'] ) {//$_GET['fileupgrade']是判断还未移动文件。因为移动文件后 updatefilelist 为空
         //获取新版本文件列表
-        $updatefilelist = $dzz_upgrade->fetch_updatefile_list_bymd5($appinfo);
+        /*$updatefilelist = $dzz_upgrade->fetch_updatefile_list_bymd5($appinfo);
         if(empty($updatefilelist)) {
             $return["status"]=0;
             $return["msg"]=  lang('app_upgrade_none', array('upgradeurl' => upgradeinformation_app(-1))); 
-            exit(json_encode($return)); 
-            //echo "更新文件丢失";exit;
+            exit(json_encode($return));  
         }
         
         $updatemd5filelist = $updatefilelist['md5'];
@@ -252,12 +252,12 @@ elseif($operation == 'cross' || $operation == 'patch'){
             $return["status"]=0;
             $return["msg"]=  lang('app_upgrade_exchange_none', array('upgradeurl' => upgradeinformation_app(-9))); 
             exit(json_encode($return));  
-        }
+        }*/
+        $theurl = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=' . $operation . '&appid=' .$appid. '&locale=' . $locale . '&charset=' . $charset;
     }
     
     if($step == 1) {
-        $linkurl=$theurl. '&step=2';
-        $updatefilelist=$updatefilelist ;
+        $linkurl=$theurl. '&step=2'; 
         $return["percent"]=15;
         $return["second"]=1;
         $return["url"]=$linkurl; 
@@ -268,31 +268,43 @@ elseif($operation == 'cross' || $operation == 'patch'){
     }
      
     elseif($step == 2) {
+        //start 下载zip.md5 
+        $updatefilelist = $dzz_upgrade->fetch_installapp_zip( $upgradeinfo );
+        if(empty($updatefilelist)) {
+            $return["status"]=0;
+            $return["msg"]=  lang('app_upgrade_none', array('upgradeurl' => upgradeinformation_app(-1))); 
+            exit(json_encode($return));  
+        }
+        $updatemd5filelist = $updatefilelist['md5'];
+        $updatefilelist = $updatefilelist['file'];
+        //end
+        
         $return["msg"]= lang('app_upgrade_downloading' ); 
         $return["step"]=2;
         $percent = 60;
         
         $fileseq = intval($_GET['fileseq']);
-        $fileseq = $fileseq ? $fileseq : 1; 
+        $fileseq = $fileseq ? $fileseq : 1;
+        $position = intval($_GET['position']);
+        $position = $position ? $position : 0;
+        $offset =  1024 * 1024;
+        $packagesize = $upgradeinfo["packagesize"]; 
         
-        if($fileseq > count($updatefilelist)) {
-            /*if($upgradeinfo['isupdatedb']) {
-                $downloadstatus=$dzz_upgrade->download_file($appinfo, 'update.php');
-            }*/
+        if($fileseq > count($updatefilelist)) { 
             $linkurl = $theurl.'&step=3';
             $percent = 100;
             $return["step"]=3; 
             $return["msg"]=lang('app_upgrade_download_complete', array('upgradeurl' => upgradeinformation_app(6))); 
         } else {
-            $downloadstatus = $dzz_upgrade->download_file($appinfo, $updatefilelist[$fileseq-1], '', $updatemd5filelist[$fileseq-1]);//, $position, $offset);
+            $downloadstatus = $dzz_upgrade->download_file($appinfo, $updatefilelist[$fileseq-1], '', $updatemd5filelist[$fileseq-1] , $position, $offset);
              
             if($downloadstatus == 1) {
                 $linkurl = $theurl.'&step=2&fileseq='.$fileseq.'&position='.($position+$offset);
-                $percent =60+ sprintf("%2d", 40 * $fileseq/count($updatefilelist));
+                $percent =60+ sprintf("%2d", 40 * $position/$packagesize);//60+ sprintf("%2d", 40 * $fileseq/count($updatefilelist));
                 $file =  $updatefilelist[$fileseq-1]; 
             } elseif($downloadstatus == 2) {
                 $linkurl = $theurl.'&step=2&fileseq='.($fileseq+1);
-                $percent =60+ sprintf("%2d", 40 * $fileseq/count($updatefilelist));
+                $percent =60+ sprintf("%2d", 40 * $position/$packagesize);//60+ sprintf("%2d", 40 * $fileseq/count($updatefilelist));
                 $file =  $updatefilelist[$fileseq-1]; 
             } else {
                 $return["status"]=0; 
@@ -313,7 +325,36 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["percent"]=55;
         $return["second"]=300; 
         $return["msg"]= lang('app_upgrade_newversion_ing' ); 
-        $return["step"]=3; 
+        $return["step"]=3;
+        
+        //start此处应下载压缩包内文件的md5文件 并对比
+        $updatefilelist = $dzz_upgrade->fetch_updatefile_list_bymd5($appinfo);
+        if(empty($updatefilelist)) {
+            $return["status"]=0;
+            $return["msg"]=  lang('app_upgrade_none', array('upgradeurl' => upgradeinformation_app(-1))); 
+            exit(json_encode($return));  
+        }
+        
+        $updatemd5filelist = $updatefilelist['md5'];
+        $updatefilelist = $updatefilelist['file'];
+        
+        //与本地文件对比过滤出更新文件
+        list($updatefilelist, $updatemd5filelist) = $dzz_upgrade->compare_basefile_bymd5($appinfo, $updatefilelist,$updatemd5filelist);
+        $theurl = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=' . $operation . '&appid=' .$appid. '&locale=' . $locale . '&charset=' . $charset;
+        if(empty($updatefilelist)) {
+            $return["status"]=0;
+            $return["msg"]=  lang('app_upgrade_exchange_none', array('upgradeurl' => upgradeinformation_app(-9))); 
+            exit(json_encode($return));  
+        }
+        //end
+         
+        //start 解压压缩包
+        $zippath= DZZ_ROOT . 'data/update/app/'.$upgradeinfo["app_path"].'/'.$upgradeinfo["identifier"].'/'.$upgradeinfo['version'].'/';
+        $zipfile=$zippath.$upgradeinfo["identifier"].".zip";
+        $md5file =$zippath.$upgradeinfo["identifier"].".md5.dzz";
+        dzzunzip($zipfile,$zippath,$md5file);
+        //end
+         
         $linkurl = $theurl.'&step=4';
         $return["url"]=$linkurl;
         exit(json_encode($return));  
@@ -325,6 +366,12 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["msg"]=lang('app_upgrade_newversion_ing' ); 
         $return["step"]=4;
         
+        $updatefilelist = $dzz_upgrade->fetch_updatefile_list_bymd5($appinfo);
+        $updatemd5filelist = $updatefilelist['md5'];
+        $updatefilelist = $updatefilelist['file'];
+        //与本地文件对比过滤出更新文件
+        list($updatefilelist, $updatemd5filelist) = $dzz_upgrade->compare_basefile_bymd5($appinfo, $updatefilelist,$updatemd5filelist);
+          
         $confirm = $_GET['confirm'];
         if (!$confirm) { 
             $checkupdatefilelist = $updatefilelist;

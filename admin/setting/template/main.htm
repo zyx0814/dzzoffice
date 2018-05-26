@@ -316,14 +316,14 @@
 									  row="6">$setting[statcode]</textarea>
           <span class="help-block text-muted">{lang support_html_code}</span></dd>
       </dl>
-      <dl>
+      <!--<dl>
         <dt>{lang prompt_leave_platform}:</dt>
         <dd class="clearfix">
           <label class="radio-inline"> <input type="radio" name="settingnew[leavealert]" value="1" <!--{if $setting[leavealert]}-->checked<!--{/if}-->>{lang yes}</label>
           <label class="radio-inline"> <input type="radio" name="settingnew[leavealert]" value="0"<!--{if !$setting[leavealert]}-->checked 
             <!--{/if}-->>{lang no}</label>
           <span class="help-block"> {lang setting_main_leave}</span>
-      </dl>
+      </dl>-->
       <dl>
         <dt>{lang close_terrace}:</dt>
         <dd class="clearfix">
@@ -1264,9 +1264,7 @@
       <dl>
         <dt>{lang need_words_to_replace}:</dt>
         <dd class="clearfix">
-          <textarea class="form-control" name="badwords" rows="1" style="width:100%"/>
-          $badwords
-          </textarea>
+          <textarea class="form-control" name="badwords" rows="1" style="width:100%"/>$badwords</textarea>
           
           <span class="help-block">{lang need_words_to_replace_state}</span></dd>
       </dl>

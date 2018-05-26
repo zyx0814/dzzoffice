@@ -39,7 +39,7 @@ selorg.set=function(ctrlid){
 	var val=[];
 	jQuery('#'+ctrlid+' li').each(function() {
         val.push(jQuery(this).data('val'));
-    });
+   });
 	jQuery('#sel_'+ctrlid).val(val.join(','));
 };
 //y移除，并且取消机构树中的选择

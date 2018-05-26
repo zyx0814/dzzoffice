@@ -16,6 +16,6 @@ $dzz->init();
 $sid=$_GET['sid'];
 $short=C::t('shorturl')->fetch($sid);
 C::t('shorturl')->addview($sid);
-@header("Location: ".$short['url']);
+@header("Location: ". outputurl($short['url']));
 exit();
 ?>

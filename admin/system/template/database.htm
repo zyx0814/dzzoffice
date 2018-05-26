@@ -16,13 +16,13 @@
 		<div class="main-header clearfix">
 			<ul class="nav nav-pills nav-pills-bottomguide">
 				<li <!--{if $operation=='export' }-->class="active"<!--{/if}-->>
-					<a hidefocus="true" href="{BASESCRIPT}?mod={MOD_NAME}&op=database&operation=export">{lang export}</a>
+					<a hidefocus="true" href="{MOD_URL}&op=database&operation=export">{lang export}</a>
 				</li>
 				<li <!--{if $operation=='import' }-->class="active"<!--{/if}-->>
-					<a hidefocus="true" href="{BASESCRIPT}?mod={MOD_NAME}&op=database&operation=import">{lang nav_db_import}</a>
+					<a hidefocus="true" href="{MOD_URL}&op=database&operation=import">{lang nav_db_import}</a>
 				</li>
 				<li <!--{if $operation=='runquery' }-->class="active"<!--{/if}-->>
-					<a hidefocus="true" href="{BASESCRIPT}?mod={MOD_NAME}&op=database&operation=runquery">{lang nav_db_runquery}</a>
+					<a hidefocus="true" href="{MOD_URL}&op=database&operation=runquery">{lang nav_db_runquery}</a>
 				</li>
 			</ul>
 		</div>
@@ -33,7 +33,7 @@
 		<div class="main-content">
 			<!--{if !$submit}-->
 
-			<form id="cpform" action="{BASESCRIPT}?mod=system&op=database&operation=export&setup=1" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+			<form id="cpform" action="{MOD_URL}&op=database&operation=export&setup=1" class="form-horizontal form-horizontal-left" method="post" name="cpform">
 				<input type="hidden" value="{FORMHASH}" name="formhash">
 				<input type="hidden" value="true" name="exportsubmit">
 				<dl>
@@ -126,7 +126,7 @@
 				<h5>{lang board_message}</h5> {lang db_import_tips}
 			</ul>
 			$do_import_option
-			<form id="cpform" action="{BASESCRIPT}?mod=system&op=database&operation=import" class="form-horizontal form-horizontal-left " method="post" name="cpform">
+			<form id="cpform" action="{MOD_URL}&op=database&operation=import" class="form-horizontal form-horizontal-left " method="post" name="cpform">
 				<input type="hidden" value="{FORMHASH}" name="formhash">
 				<input type="hidden" value="true" name="deletesubmit">
 				<table class="table table-hover" style="border-top:1px solid #DDD">
@@ -212,7 +212,7 @@
 			</div>
 			<!--{else}-->
 
-			<form id="cpform" action="{BASESCRIPT}?mod=system&op=database&operation=runquery" method="post" name="cpform">
+			<form id="cpform" action="{MOD_URL}&op=database&operation=runquery" method="post" name="cpform">
 				<input type="hidden" value="{FORMHASH}" name="formhash">
 				<input type="hidden" value="true" name="sqlsubmit">
 				<dl>

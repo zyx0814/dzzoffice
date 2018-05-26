@@ -1,0 +1,252 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/select2/select2.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/select2/select2-bootstrap.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+	html,
+	body {
+		overflow: hidden;
+		background: #FBFBFB;
+		text-shadow: 1px 1px 1px #FFF;
+	}
+	
+	.bs-left-container {
+		width: 150px;
+		top: 0;
+	}
+	
+	.bs-main-container {
+		margin-left: 150px;
+		overflow: auto;
+		padding:0;
+	}
+	
+	.form-horizontal-left .radio-inline {
+		margin: 0;
+	}
+	
+	.form-horizontal-left .form-group .controls {
+		min-width: 250px;
+	}
+	
+	.form-horizontal-left .form-group .controls-adapt {
+		padding-left: 130px;
+	}
+	
+	.form-horizontal-left .form-group label {
+		min-width: 125px;
+	}
+	
+	.form-horizontal-left .control-label {
+		font-weight: 500;
+	}
+	
+	.icheckbox_minimal-blue,
+	.iradio_minimal-blue {
+		margin-left: -20px;
+	}
+	textarea.form-control{
+		border-width:1px 1px 1px 1px;
+	}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix" style="padding-top:0px;">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>
+	<div class="bs-main-container  clearfix">
+		<div class="main-header">
+			<ul class="nav nav-pills nav-pills-bottomguide">
+				<li <!--{if !$fieldid}-->class="active"<!--{/if}-->>
+					<a href="{BASESCRIPT}?mod=member&op=profileset">{lang data_item_list}</a>
+				</li>
+				<!--{if $fieldid}-->
+				<li class="active">
+					<a href="{BASESCRIPT}?mod=member&op=profileset&fieldid=$fieldid">{lang data_edit}</a>
+				</li>
+				<!--{/if}-->
+			</ul>
+		</div>
+		<div class="main-content" style="padding:15px 0 0 10px;">
+			<form id="cpform" action="{BASESCRIPT}?mod=member&op=profileset" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+				<input type="hidden" value="{FORMHASH}" name="formhash">
+				<input type="hidden" value="true" name="editsubmit">
+				<input type="hidden" value="$fieldid" name="fieldid">
+				<input type="hidden" value="$field[displayorder]" name="displayorder">
+
+				<div class="form-group">
+					<label class="control-label ">{lang name}：</label>
+					<input type="text" class="form-control" value="$field[title]" name="title" required="required" <!--{if $field[isfixed2]}-->disabled="disabled"
+					<!--{/if}-->/>
+				</div>
+				<div class="form-group">
+					<label class="control-label ">{lang introduce}：</label>
+					<input type="text" class="form-control" value="$field[description]" name="description" <!--{if $field[isfixed2]}-->disabled="disabled"
+					<!--{/if}-->/>
+				</div>
+
+				<!--{if !$field[isfixed2]}-->
+				<div class="form-group">
+					<label class="control-label ">{lang form_type}：</label>
+					<div class="controls-adapt">
+						<label class="radio-inline"><input type="radio" name="formtype" value="text" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='text'}-->checked="checked"<!--{/if}-->>{lang HtmlInputText}</label>
+						<!--{if $fieldid!='realname'}-->
+						<label class="radio-inline"><input type="radio" name="formtype" value="textarea" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='textarea'}-->checked="checked"<!--{/if}-->>{lang HtmlTextArea}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="radio" onclick="$('valuenumber').style.display = 'none';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='radio'}-->checked="checked"<!--{/if}-->>{lang radio}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="checkbox" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='checkbox'}-->checked="checked"<!--{/if}-->>{lang checkBox}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="select" onclick="$('valuenumber').style.display = 'none';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='select'}-->checked="checked"<!--{/if}-->>{lang combobox}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="list" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = '';" <!--{if $field[formtype]=='list'}-->checked="checked"<!--{/if}-->>{lang more_choose_list}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="file" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='file'}-->checked="checked"<!--{/if}-->>{lang upload_image}</label>
+						<!--{/if}-->
+					</div>
+				</div>
+				<div class="form-group" id="valuenumber" <!--{if $field[formtype]=='select' || $field[formtype]=='radio' }-->style="display:none"<!--{/if}-->>
+					<label class="control-label ">{lang hawkeye_shellinit}：</label>
+					<input name="size" value="$field[size]" type="text" class="form-control">
+					<span class="help-inline">{lang profileset_edit_delete}</span>
+				</div>
+				<div class="form-group" id="fieldchoices" <!--{if $field[formtype]=='text' || $field[formtype]=='textarea' || $field[formtype]=='file' }-->style="display:none"<!--{/if}-->>
+					<label class="control-label ">{lang option_values}：</label>
+					<textarea rows="6" name="choices" id="choices" class="form-control">$field[choices]</textarea>
+					<span class="help-inline">{lang profileset_edit_value}:<br>{lang beijing}<br>{lang shanghai}<br></span>
+				</div>
+				<div class="form-group" id="fieldvalidate" <!--{if $field[formtype]=='radio' || $field[formtype]=='select' || $field[formtype]=='list' || $field[formtype]=='checkbox' || $field[formtype]=='file' }-->style="display:none"<!--{/if}-->>
+					<label class="control-label ">{lang regular_verification}：</label>
+					<input name="validate" value="$field[validate]" type="text" class="form-control">
+					<span class="help-inline">{lang profileset_edit_edit}</span>
+				</div>
+
+				<!--{/if}-->
+				<div class="form-group">
+					<label class="control-label ">{lang members_verify_enable}：</label>
+					<div class="controls">
+						<label class="radio-inline"><input type="radio" name="available" value="1" <!--{if $field[available]}-->checked="checked"<!--{/if}-->>{lang enable}</label>
+						<label class="radio-inline"><input type="radio" name="available" value="0" <!--{if !$field[available]}-->checked="checked"<!--{/if}-->>{lang no_enable}</label>
+					</div>
+				</div>
+
+				<!--{if !$field[ isfixed1]}-->
+				<div class="form-group">
+					<label class="control-label ">{lang submit_hou}：</label>
+					<div class="controls">
+						<label class="radio-inline"><input type="radio" name="unchangeable" value="1" <!--{if $field[unchangeable]}-->checked="checked"<!--{/if}-->>{lang no_modification}</label>
+						<label class="radio-inline"><input type="radio" name="unchangeable" value="0" <!--{if !$field[unchangeable]}-->checked="checked"<!--{/if}-->>{lang revisability}</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label ">{lang modification_hou}：</label>
+					<div class="controls">
+						<label class="radio-inline"><input type="radio" name="needverify" value="1" <!--{if $field[needverify]}-->checked="checked"<!--{/if}-->>{lang need_moderate}</label>
+						<label class="radio-inline"><input type="radio" name="needverify" value="0" <!--{if !$field[needverify]}-->checked="checked"<!--{/if}-->>{lang no_need_moderate}</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label ">{lang if_required}：</label>
+					<div class="controls">
+						<label class="radio-inline"><input type="radio" name="required" value="1" <!--{if $field[required]}-->checked="checked"<!--{/if}-->>{lang required}</label>
+						<label class="radio-inline"><input type="radio" name="required" value="0" <!--{if !$field[required]}-->checked="checked"<!--{/if}-->>{lang certificate}</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label ">{lang data_page}：</label>
+					<div class="controls">
+						<label class="radio-inline"><input type="radio" name="invisible" value="1" <!--{if $field[invisible]}-->checked="checked"<!--{/if}-->>{lang hide}</label>
+						<label class="radio-inline"><input type="radio" name="invisible" value="0" <!--{if !$field[invisible]}-->checked="checked"<!--{/if}-->>{lang show}</label>
+					</div>
+					<span class="help-inline">{lang profileset_edit_hide}</span>
+				</div>
+				<!--{/if}-->
+				<div class="form-group">
+					<label class="control-label ">{lang default_privacy}：</label>
+					<div class="contols-adapt">
+						<label class="radio-inline"><input type="radio" name="privacy" value="-1"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='-1'}-->checked="checked"<!--{/if}-->>{lang secret}</label>
+						<label class="radio-inline"><input type="radio" name="privacy" value="0"  <!--{if empty($_G['setting']['privacy']['profile'][$fieldid])}-->checked="checked"<!--{/if}-->>{lang public}</label>
+						<label class="radio-inline"><input type="radio" name="privacy" value="1"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='1'}-->checked="checked"<!--{/if}-->>{lang department_visible}</label>
+						<label class="radio-inline"><input type="radio" name="privacy" value="2"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='2'}-->checked="checked"<!--{/if}-->>{lang institution_visible}</label>
+
+					</div>
+
+				</div>
+				<div class="form-group">
+					<label class="control-label ">{lang business_card}：</label>
+					<div class="controls">
+						<label class="radio-inline"><input type="radio" name="showincard" value="1" <!--{if $field[showincard]}-->checked="checked"<!--{/if}-->>{lang show}</label>
+						<label class="radio-inline"><input type="radio" name="showincard" value="0" <!--{if !$field[showincard]}-->checked="checked"<!--{/if}-->>{lang no_show}</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label ">{lang registration_page}：</label>
+					<div class="controls">
+						<label class="radio-inline"><input type="radio" name="showinregister" value="1" <!--{if $field[showinregister]}-->checked="checked"<!--{/if}-->>{lang show}</label>
+						<label class="radio-inline"><input type="radio" name="showinregister" value="0" <!--{if !$field[showinregister]}-->checked="checked"<!--{/if}-->>{lang no_show}</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label ">{lang allow_search}：</label>
+					<div class="controls">
+						<label class="radio-inline"><input type="radio" name="allowsearch" value="1" <!--{if $field[allowsearch]}-->checked="checked"<!--{/if}-->>{lang allow_search}</label>
+						<label class="radio-inline"><input type="radio" name="allowsearch" value="0" <!--{if !$field[allowsearch]}-->checked="checked"<!--{/if}-->>{lang no_allow_search}</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label "></label>
+					<div class="controls">
+						<input type="submit" class="btn btn-primary btn-width" name="editsubmit" value="{lang save_set}">
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	var url = '{BASESCRIPT}?mod=member';
+	jQuery(document).ready(function(e) {
+		jQuery('input').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+		});
+		jQuery('input').on('ifChecked', function(e) {
+			jQuery(this).trigger('click');
+		});
+
+		jQuery(document).on('blur', 'input[required]', function() {
+			var self = this;
+			var val = this.value;
+			if(this.value == '') {
+				jQuery(this).addClass('input-error');
+			} else if(jQuery(this).hasClass('fieldid')) {
+				jQuery('.fieldid').not(this).each(function() {
+					if(jQuery(this).is('td') && this.innerHTML == val) {
+						jQuery(self).addClass('input-error');
+						showmessage('{lang identifier_use}', 'danger', 3000, 1);
+						return;
+					} else if(jQuery(this).is('input') && this.value == val) {
+						jQuery(self).addClass('input-error');
+						showmessage('{lang identifier_use}', 'danger', 3000, 1);
+						return;
+					}
+				});
+			} else {
+				jQuery(this).removeClass('input-error');
+			}
+		});
+		jQuery(document).on('change', 'input[required]', function() {
+			if(this.value == '') { jQuery(this).addClass('input-error') } else { jQuery(this).removeClass('input-error'); }
+		});
+	});
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/select2/select2.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/select2/select2_locale_$checkLanguage.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

@@ -100,9 +100,9 @@ if($filter=='new'){//列出所有新通知
     }else{*/
         include template('notification_list');
   //  }
-    exit();
+    dexit();
 }
 
 include template('notification');
-exit();
+dexit();
 ?>

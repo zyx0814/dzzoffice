@@ -1,0 +1,187 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+	html,
+	body {
+		overflow: hidden;
+		background: #FBFBFB;
+	}
+	
+	.bs-left-container {
+		width: 120px;
+		top: 0
+	}
+	
+	.bs-main-container {
+		margin-left: 120px;
+		overflow: auto;
+	}
+	
+
+	.form-horizontal-left .checkbox-inline {
+		margin: 0;
+		min-width: 130px;
+	}
+	textarea.form-control,select.form-control{
+		border-width:1px 1px 1px 1px;
+	}
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix" style="padding-top:0">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>
+	<div class="bs-main-container  clearfix">
+		<div class="main-header">
+			<ul class="nav nav-pills nav-pills-bottomguide">
+				<li>
+					<a href="{MOD_URL}&op=verifyset">{lang members_verify}</a>
+				</li>
+				<li class="active">
+					<a href="{MOD_URL}&op=verifyset&do=edit&vid=$vid">{lang edit}</a>
+				</li>
+			</ul>
+		</div>
+		<div class="main-content" style="padding:20px;">
+			<form id="cpform" action="{MOD_URL}&op=verifyset&do=edit" class="form-horizontal form-horizontal-left" method="post" name="cpform" enctype="multipart/form-data">
+				<input type="hidden" value="{FORMHASH}" name="formhash">
+				<input type="hidden" value="true" name="verifysubmit">
+				<input type="hidden" value="$vid" name="vid">
+				<dl>
+					<dt>{lang members_verify_title}：</dt>
+					<dd class="clearfix">
+						<input name="verify[title]" value="$verifyarr[title]" type="text" class="form-control" <!--{if $verifyarr[readonly]}-->disabled="disabled"<!--{/if}-->>
+
+					</dd>
+				</dl>
+				<dl>
+					<dt>{lang members_verify_synopsis}：</dt>
+					<dd class="clearfix">
+						<textarea name="verify[desc]" type="textarea" class="form-control" rows="3">$verifyarr[desc]</textarea>
+						<span class="help-inline">{lang verifyset_verify_synopsis_text}</span>
+					</dd>
+				</dl>
+				<dl>
+					<dt>{lang members_verify_enable}：</dt>
+					<dd class="clearfix">
+						<label class="radio-inline"><input type="radio" name="verify[available]" value="1" <!--{if $verifyarr[available]}-->checked="checked"<!--{/if}--> />{lang enable}</label>
+						<label class="radio-inline"><input type="radio" name="verify[available]" value="0" <!--{if !$verifyarr[available]}-->checked="checked"<!--{/if}--> />{lang no_enable}</label>
+					</dd>
+				</dl>
+				<dl>
+					<dt>{lang members_verify_icon}：</dt>
+					<dd class="clearfix">
+						<label class="radio-inline"><input type="radio" name="verify[showicon]" value="1" <!--{if $verifyarr[showicon]}-->checked="checked"<!--{/if}--> onclick="document.('hidden_verify_showicon').style.display = '';"  />{lang show}</label>
+						<label class="radio-inline"><input type="radio" name="verify[showicon]" value="0" <!--{if !$verifyarr[showicon]}-->checked="checked"<!--{/if}--> onclick="document.getElementById('hidden_verify_showicon').style.display = 'none';" />{lang no_show}</label>
+					</dd>
+					<dd id="hidden_verify_showicon" class="clearfix mt10" <!--{if !$verifyarr[showicon]}-->style="display:none"<!--{/if}-->>
+						<dl>
+							<dt>{lang members_unverify_icon}:</dt>
+							<dd class="clearfix">
+								<table>
+									<tr>
+										<td valign="top">
+											<div>
+												<input id="fileQ3_0" style="display:" name="unverifyiconnew" value="" type="file" class="form-control uploadbtn marginbot" accept="image/jpeg,image/gif,image/png,image/jpg">
+												<input id="fileQ3_1" style="display:none" name="TMPunverifyiconnew" value="$verifyarr[unverifyicon]" type="text" class="form-control marginbot" accept="image/jpeg,image/gif,image/png,image/jpg">
+											</div>
+											<div>
+												<a id="fileQ3_0a" class="btn btn-link" style="font-weight:bold;" href="javascript:;" onclick="document.getElementById('fileQ3_1a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileQ3_1').name = 'TMPunverifyiconnew';document.getElementById('fileQ3_0').name = 'unverifyiconnew';document.getElementById('fileQ3_0').style.display = '';document.getElementById('fileQ3_1').style.display = 'none'">{lang web_upload}</a>&nbsp;
+												<a id="fileQ3_1a" class="btn btn-link" style="" href="javascript:;" onclick="document.getElementById('fileQ3_0a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileQ3_0').name = 'TMPunverifyiconnew';document.getElementById('fileQ3_1').name = 'unverifyiconnew';document.getElementById('fileQ3_1').style.display = '';document.getElementById('fileQ3_0').style.display = 'none'">{lang input}URL</a>
+											</div>
+										</td>
+										<td>
+											<div class="ml20">$unverifyiconhtml</div>
+										</td>
+									</tr>
+								</table>
+							</dd>
+						</dl>
+						<dl>
+							<dt>{lang members_verify_icon}:</dt>
+							<dd class="clearfix">
+								<table>
+									<tr>
+										<td valign="top">
+											<div>
+												<input id="fileO4_0" style="display:" name="iconnew" value="" type="file" class="form-control uploadbtn marginbot" accept="image/jpeg,image/gif,image/png,image/jpg">
+												<input id="fileO4_1" style="display:none" name="TMPiconnew" value="$verifyarr[icon]" type="text" class="form-control marginbot" accept="image/jpeg,image/gif,image/png,image/jpg">
+											</div>
+											<div>
+												<a id="fileO4_0a" class="btn btn-link" style="font-weight:bold" href="javascript:;" onclick="document.getElementById('fileO4_1a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileO4_1').name = 'TMPiconnew';document.getElementById('fileO4_0').name = 'iconnew';document.getElementById('fileO4_0').style.display = '';document.getElementById('fileO4_1').style.display = 'none'">{lang web_upload}</a>&nbsp;
+												<a class="btn btn-link" id="fileO4_1a" style="" href="javascript:;" onclick="document.getElementById('fileO4_0a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileO4_0').name = 'TMPiconnew';document.getElementById('fileO4_1').name = 'iconnew';document.getElementById('fileO4_1').style.display = '';document.getElementById('fileO4_0').style.display = 'none'">{lang input}URL</a>
+											</div>
+										</td>
+										<td>
+											<div class="ml20">$verificonhtml</div>
+										</td>
+									</tr>
+								</table>
+
+							</dd>
+						</dl>
+					</dd>
+				</dl>
+				<dl>
+					<dt>{lang choosable_data}：</dt>
+					<dd class="clearfix">
+						<!--{loop $fieldarr $value}-->
+						<label class="checkbox-inline"> <input type="checkbox" name="verify[field][{$value[fieldid]}]" value="$value[fieldid]" <!--{if $verifyarr[field][$value[fieldid]]}-->checked="checked"<!--{/if}-->>$value[title]</label>
+						<!--{/loop}-->
+					</dd>
+					<dd class="clearfix">
+						<span class="help-block danger">{lang verifyset_choosable_data_text}</span>
+					</dd>
+				</dl>
+				<dl>
+					<dt>{lang members_verify_group}：</dt>
+					<dd class="clearfix">
+						<select name="verify[groupid][]" multiple="multiple" class="form-control" size="7">
+							<!--{loop $usergroups $value}-->
+							<option value="$value[groupid]" <!--{if in_array($value[groupid],$verifyarr[groupid])}-->selected="selected"<!--{/if}-->>$value[grouptitle]</option>
+							<!--{/loop}-->
+						</select>
+						<span class="help-inline">{lang verifyset_verify_group_text}</span>
+					</dd>
+				</dl>
+				<dl>
+					<dd class="clearfix">
+						<input type="submit" class="btn btn-primary btn-width" name="verifysubmit" value="{lang save_set}">
+					</dd>
+				</dl>
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	var url = '{MOD_URL}';
+
+	jQuery(document).ready(function(e) {
+		<!--{if $verifyarr['icon']}-->
+		jQuery('#fileO4_1a').trigger('click');
+		<!--{/if}-->
+		<!--{if $verifyarr['unverifyicon']}-->
+		jQuery('#fileQ3_1a').trigger('click');
+		<!--{/if}-->
+		jQuery('input').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+		});
+		jQuery('input').on('ifChecked', function(e) {
+			jQuery(this).trigger('click');
+		});
+
+	});
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

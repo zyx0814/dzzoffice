@@ -63,6 +63,8 @@ class dzz_notification {
 			$oldnote['new'] = 0;
 			$setarr['id']=C::t('notification')->insert($setarr, true);
 		}
+		$noteid=$setarr['id'];
+		Hook::listen('online_notification', $noteid);
 		//self::wx_notification($setarr);
 		//$banType = array('task');
 		if(empty($oldnote['new'])) {
@@ -118,7 +120,7 @@ class dzz_notification {
 		}
 	}
 	
-
+	 
 	public function update_newprompt($uid, $type) {
 		global $_G;
 		if($_G['member']['newprompt_num']) {

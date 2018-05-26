@@ -1,3 +1,4 @@
+<!--{eval output();}-->
 <!--{eval updatesession();}-->
 <!--{if debuginfo()}-->
 <script type="text/javascript">
@@ -12,16 +13,14 @@ try{
 	<!--{if !isset($_G['cookie']['sendmail'])}-->
 	<script type="text/javascript" src="misc.php?mod=sendmail&rand=$_G[timestamp]"></script>
 	<!--{/if}-->
-    <!--{if isset($_G['setting']['CorpID']) && !isset($_G['cookie']['sendwx'])}-->
-        <script type="text/javascript" src="misc.php?mod=sendwx&rand=$_G[timestamp]"></script>
-    <!--{/if}-->
+     <script type="text/javascript" src="misc.php?mod=sendwx&rand=$_G[timestamp]"></script>
 <!--{/if}-->
 <!--{if $_G[uid] && $_G['adminid'] == 1}-->
 	<!--{if !isset($_G['cookie']['checkupgrade'])}-->
-		<script type="text/javascript" src="misc.php?mod=upgrade&action=checkupgrade&rand=$_G[timestamp]"></script>
+<script type="text/javascript">jQuery.getScript('misc.php?mod=upgrade&action=checkupgrade&rand=$_G[timestamp]');</script>
 	<!--{/if}-->
 	<!--{if !isset($_G['cookie']['checkappupgrade'])}-->
-		<script type="text/javascript" src="misc.php?mod=upgrade&action=checkappupgrade&rand=$_G[timestamp]"></script>
+<script type="text/javascript">jQuery.getScript('misc.php?mod=upgrade&action=checkappupgrade&rand=$_G[timestamp]');</script>
 	<!--{/if}-->
 	<!--{if !isset($_G['cookie']['upgradenotice'])}-->
 	<script type="text/javascript">
@@ -34,6 +33,6 @@ try{
 <!--{/if}-->
 <!--{if $_G['setting']['statcode']}-->
 	$_G['setting']['statcode']
-<!--{/if}-->	
+<!--{/if}--> 
 </body>
 </html>

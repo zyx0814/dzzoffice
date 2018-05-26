@@ -8,9 +8,10 @@ header("Content-Type: text/html; charset=utf-8");
 
 $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents(DZZ_ROOT."./dzz/attach/config.json")), true);
 $action = $_GET['action'];
+$markdown=intval($_GET['markdown']);
 switch ($action) {
     case 'config':
-        $result =  json_encode($CONFIG);
+        $result =  ($CONFIG);
         break;
 
     /* 上传图片 */
@@ -30,21 +31,30 @@ switch ($action) {
         break;
 
     default:
-        $result = json_encode(array(
+        $result = array(
             'state'=> lang('request_address_wrong')
-        ));
+        );
         break;
 }
 
 /* 输出结果 */
 if (isset($_GET["callback"])) {
     if (preg_match("/^[\w_]+$/", $_GET["callback"])) {
-        echo htmlspecialchars($_GET["callback"]) . '(' . $result . ')';
+        echo htmlspecialchars($_GET["callback"]) . '(' . json_encode($result) . ')';
     } else {
         echo json_encode(array(
             'state'=> lang('callback_parameter_valid')
         ));
     }
 } else {
-    echo $result;
+	
+	if($markdown){
+		$result=array('url'=>$result['url'],
+					  'success'=>$result['state']=='SUCCESS'?1:0,
+					  'message'=>$result['state']);
+	  
+	}
+	 echo json_encode($result);
+   
+    
 }

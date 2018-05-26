@@ -1,0 +1,75 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/css/checkbox.css?{VERHASH}" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{MOD_PATH}/images/login_single4.css?{VERHASH}"/>
+<!--[if lt IE 9]>
+  <script src="static/js/jquery.placeholder.js" type="text/javascript"></script>
+<![endif]-->
+<script type="text/javascript" src="user/scripts/login.js?{VERHASH}"></script>
+
+<!--{template common/header_simple_end}-->
+<!--{eval $loginhash = 'L'.random(4);}-->
+<!--背景层-->
+<div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:0;  font-size: 0px; background:{eval echo $_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#76838f';};"> 
+	
+	<img src="{eval echo $_G['setting']['loginset']['img']?$_G['setting']['loginset']['img']:MOD_PATH.'/images/login.jpg';}" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index:1;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%">
+	
+    <!--{if $_G['setting']['loginset']['url']}-->
+    <iframe id="wrapper_frame" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" style="z-index:2;position:absolute;width:100%;height:100%;background:url(dzz/images/b.gif);"></iframe>
+    <!--{/if}-->
+</div>
+
+<div class="mainContainer" id="main_message">
+	<div class="modal-content">
+		 <div class="brand"> <img src="{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}" /> </div>
+		<!--{if $_G[setting][loginset][title]}-->
+		<div class="main-title">$_G[setting][loginset][title]</div>
+		<!--{/if}--> 
+		<div class="sub-title">请选择下列用户登录</div>
+		<!--{if $_G[setting][bbclosed]}-->
+		<div class="text-danger">{lang site_closed_please_admin}</div>
+		<!--{else}-->	
+		<form method="post"  name="login" id="loginform_$loginhash" class="loginForm" role="form" action="login.php" onsubmit="if(this.uid.value=='') return false">
+			<input type="hidden" name="formhash" value="{FORMHASH}" />
+			<input type="hidden" name="referer" value="{$referer}" />
+			<input type="hidden" id="login_uid" name="uid" value="" />
+		
+			<ul class="user-ul">
+		<!--{loop $orgids $val}-->
+			<div class="section-wrap clearfix">
+				
+				<!--{loop $val[users] $k $v}-->		
+				<li><a data-uid="40" class="user-a" onClick="$('#login_uid').val('$v[uid]');$('#loginsubmit').removeClass('disabled');$(this).closest('.user-ul').find('li').removeClass('hover');$(this).parent().addClass('hover')">
+					<span class="cavatar">{eval echo avatar_block($v[uid]);}</span>
+					<span class="cusername">
+						<span class="username">$v[username]</span>
+						<span class="orgname">$val[path]</span>
+					</span>
+				</a></li>
+				<!--{/loop}-->
+			</div>
+		<!--{/loop}-->
+			</ul>
+		
+      	 <button class="btn btn-lg btn-primary btn-block disabled" type="submit" id="loginsubmit" name="loginsubmit" value="true">{lang login_empty}</button>
+			
+		</form>
+		<!--{/if}-->
+		<div class="copyright-container">
+		<!--{template login_copyright}-->
+		</div>
+	</div>
+</div>
+<div class="nfl" id="main_succeed" style="display: none;text-align: center;">
+	<div class="modal-body">
+  		<div class="alert_right" style="display: inline-block;">
+    		<div id="succeedmessage"></div>
+    		<div id="succeedlocation" class="alert_btnleft"></div>
+    		<p class="alert_btnleft"><a id="succeedmessage_href" href="javascript:;">{lang message_forward}</a></p>
+  		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="user/scripts/setbacksize.js?{VERHASH}"></script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 
+<!--{template common/footer}-->

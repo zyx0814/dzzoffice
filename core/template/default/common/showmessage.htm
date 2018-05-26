@@ -80,7 +80,7 @@
 				<span class="btn btn-link text-muted">$param['locationtime'] {lang message_locationtime}</span>
 			<!--{/if}-->
 			<!--{if $param[login]}-->
-				<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');showWindow('login', 'user.php?mod=logging&action=login');"><strong>{lang login}</strong></button>
+				<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');showWindow('login', 'user.php?mod=login&action=login');"><strong>{lang login}</strong></button>
 				<!--{if !$_G['setting']['bbclosed']}-->
 					<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');window.open('user.php?mod=rigister');"><em>$_G['setting']['reglinkname']</em></button>
 				<!--{/if}-->

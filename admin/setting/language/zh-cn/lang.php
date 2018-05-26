@@ -15,7 +15,7 @@ $lang = array
 (
 	'appname'=>'系统设置',
 	'spaceSet'=>'空间设置',
-	'loginSet'=>'登陆设置',
+	'loginSet'=>'登录设置',
 	'basicSet'=>'基本设置',
 	'permGroupSet'=>'权限包设置',
 	'spaceSet'=>'空间设置',

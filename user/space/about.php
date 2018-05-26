@@ -11,6 +11,7 @@ if(!defined('IN_DZZ')) {
 }
 $about=array();
 $identify=$_GET['modname'];
+$ismobile=helper_browser::ismobile();
 $appConfig=DZZ_ROOT.'./dzz/'.$identify.'/config/config.php';
 if($identify && file_exists($appConfig)){
 	$config=include($appConfig);
@@ -35,5 +36,9 @@ if(empty($about['name_en'])){
 
 //站点logo,留空不显示
 //
-include template('about');
+if ($ismobile && !$_GET['inajax']) {
+	include template('mobile_about');
+} else {
+	include template('about');
+}
 exit();

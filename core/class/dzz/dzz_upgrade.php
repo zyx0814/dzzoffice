@@ -53,11 +53,14 @@ class dzz_upgrade {
 			return array();
 		}
 
-		$newupgradefilelist = array();
+		$newupgradefilelist = $newlist = array();
 		foreach($upgradefilelist as $v) {
 			$newupgradefilelist[$v] = md5_file(DZZ_ROOT.'./'.$v);
+			if( !$newupgradefilelist[$v]  ){
+				$newlist[$v]=$v;
+			}
 		}
-
+		 
 		$modifylist = $showlist = $searchlist = array();
 		foreach($dzzfiles as $line) {
 			$file = trim(substr($line, 34));
@@ -86,7 +89,7 @@ class dzz_upgrade {
 			}
 		}
 
-		return array($modifylist, $showlist, $ignorelist);
+		return array($modifylist, $showlist, $ignorelist,$newlist);
 	}
 
 	public function compare_file_content($file, $remotefile) {
@@ -110,7 +113,7 @@ class dzz_upgrade {
 
 		$return = false;
 		$upgradefile = $this->upgradeurl.$this->versionpath().'/upgrade.xml';
-		$response = xml2array(dfsockopen($upgradefile));
+		$response = xml2array(dfsockopen($upgradefile, 0, '', '', FALSE, '', 1));
 		if(isset($response['cross']) || isset($response['patch'])) {
 			C::t('setting')->update('upgrade', $response);
 			$return = true;
@@ -277,8 +280,8 @@ class dzz_upgrade {
 		$data = '';
 		foreach($update as $key => $value) {
 			$data .= $key.'='.rawurlencode($value).'&';
-		}
-		$upgradeurl =  'ht'.'tp:/'.'/dev'.'.'.'d'.'zzo'.'ffice.'.'c'.'om/co'.'unt'.'.p'.'hp?'.'os=d'.'zzoff'.'ice&update='.rawurlencode(base64_encode($data)).'&timestamp='.TIMESTAMP;
+		} 
+		$upgradeurl = APP_CHECK_URL."market/system/info/".rawurlencode(base64_encode($data))."/".TIMESTAMP; 
 		dfsockopen($upgradeurl,0, '', '', FALSE, '',1);
 	}
 }

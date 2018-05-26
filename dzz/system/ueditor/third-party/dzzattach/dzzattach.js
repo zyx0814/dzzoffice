@@ -18,7 +18,7 @@ dzzattach.init=function(root){
 				var el=jQuery(this);
 				if(!this.id) this.id='tip_' + Math.random();
 				var html='';
-				html+='<h5>'+this.alt+'&nbsp;<small>('+el.attr('dsize')+')</small></h5>';
+				html+='<h5>'+this.alt+' <small>('+el.attr('dsize')+')</small></h5>';
 				html+='<div class="tip-op">';
 				html+='<a class="preview" href="javascript:;" onclick="return dzzattach.preview(\''+this.id+'\',\'image\')" >预览</a><a class="download" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.download(this)" >下载</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this)" >保存到我的文档</a>'
 				html+='</div>';
@@ -36,9 +36,10 @@ dzzattach.init=function(root){
 				var el=jQuery(this);
 				if(!this.id) this.id='tip_' + Math.random();
 				var html='';
-				html+='<h5>'+el.attr('title')+'&nbsp;<small>('+el.attr('dsize')+')</small></h5>';
+				html+='<h5>'+el.attr('title')+' <small>('+el.attr('dsize')+')</small></h5>';
 				html+='<div class="tip-op">';
-				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'attach\')" >'+__lang.preview+'</a><a class="download" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.download(this);" >'+__lang.download+'</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'attach\');" >'+__lang.js_saved_my_documents+'</a>';
+				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'attach\')" ><i class="dzz dzz-visibility dzzattach-i"></i>'+__lang.preview+'</a><a class="download" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.download(this);" ><i class="dzz dzz-download dzzattach-i"></i>'+__lang.download+'</a>';
+					// '<a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'attach\');" >'+__lang.js_saved_my_documents+'</a>';
 				html+='</div>';
 				
 				hideMenu('','prompt');
@@ -300,13 +301,13 @@ dzzattach.thumb=function(id){
 	 var preview_setupDom=function(){
 	
 		var html='';
-		html+='<div id="preview_Container" class="modal"  style="position:fixed;width:100%;height:100%;top:0px;left:0px;bottom:0px;right:0px;display:none;z-index:10000">';
+		html+='<div id="preview_Container" class="modal"  style="position:fixed;width:100%;height:100%;top:0px;left:0px;bottom:0px;right:0px;display:none;z-index:90000">';
 		html+='<div id="preview-box" class="preview-box">';
 		html+='	<div class="preview-handle" style="z-index: 118;"><b data_title="ESC'+__lang.logout+'" btn="close" class="pr-close" onclick="dzzattach.thumb.btnClick(\'close\');">ESC'+__lang.logout+'</b></div>';
 		html+='	<div id="btn_hand" class="preview-panel" style="z-index: 117;">';
 		html+='		<ul id="contents-panel" style="right:55px;" class="contents-panel">';
 		html+='			<li btn="rotate"  onclick="dzzattach.thumb.btnClick(\'rotate\');"><i class="pr-rotate"></i><b>'+__lang.rotation+'</b></li>';
-		html+='			<li class="hidden-xs"  btn="collect" onclick="dzzattach.thumb.btnClick(\'collect\');"><i class="pr-save"></i><b>'+__lang.js_saved_my_documents+'</b></li>';
+		//html+='			<li class="hidden-xs"  btn="collect" onclick="dzzattach.thumb.btnClick(\'collect\');"><i class="pr-save"></i><b>'+__lang.js_saved_my_documents+'</b></li>';
 		html+='			<li class="hidden-xs"  btn="download" onclick="dzzattach.thumb.btnClick(\'download\');"><i class="pr-download"></i><b>'+__lang.download+'</b></li>';
 		html+='			<li btn="newwindow"   onclick="dzzattach.thumb.btnClick(\'newwindow\');"><i class="pr-newwindow"></i><b>'+__lang.look_artwork+'</b></li>';
 		html+='		</ul>';
@@ -332,7 +333,7 @@ dzzattach.thumb=function(id){
 		html+='</div>';
 		html+='</div>';
 		jQuery(html).appendTo(document.body);
-		jQuery('body').addClass('modal-open');
+		jQuery('body').addClass('dzzthumb_body');
 		jQuery('#preview_Container').css({height:'100%',width:'100%'}).show();
 		jQuery('#preview-box b').on('mouseenter',function(){
 			var btn=jQuery(this).attr('btn');
@@ -411,16 +412,38 @@ dzzattach.showContent=function(){
 				var el1=jQuery('<img height="'+height+'" width="'+width+'" style="cursor: move; top: '+top+'px; transform: rotate(0deg); left: '+left+'px;" src="'+data.src+'" ws_property="1" onload="jQuery(\'#pre_loading\').fadeOut();jQuery(\'#previewer-photo\').show();" >').appendTo(el);
 				el1.get(0).onmousedown = function(event) {try{dragMenu(el1.get(0), event, 1);}catch(e){}};
 				el1.on('click',function(){return false});
+				jQuery.getScript('static/js/jquery.mousewheel.js',function(data){
+					el1.on('mousewheel',function(e,delta, deltaX, deltaY){
+						var dy=delta*100;
+						var dx=dy*ratio1;
+						dzzattach.thumb.pic_resize(dx,dy);
+						return false;
+					});
+				});
 			});
+			
 			
 			
 	};	
 dzzattach.thumb.angle=0;
+dzzattach.thumb.pic_resize=function(dx,dy){
+	var el=jQuery('#previewer-photo>img');
+	var pos=el.position();
+	var imgleft=pos.left;
+	var imgtop=pos.top;
+	var imgwidth=el.width();
+	var imgheight=el.height();
+	imgleft-=dx/2;
+	imgtop-=dy/2;
+	imgwidth+=dx;
+	imgheight+=dy;
+	el.css({left:imgleft,top:imgtop,width:imgwidth,height:imgheight,'max-width':'none'});
+}
 dzzattach.thumb.btnClick=function(btn){
 	switch(btn){
 			case "close":
 				jQuery(document).off('.preview');
-				jQuery('body').removeClass('modal-open');
+				jQuery('body').removeClass('dzzthumb_body');
 				jQuery('#preview_Container').remove();
 				jQuery('#previewr-photo').empty();
 				break;	

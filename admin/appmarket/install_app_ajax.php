@@ -9,11 +9,12 @@
 if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
     exit('Access Denied');
 }
-error_reporting(E_ALL);
+
 @set_time_limit(0);
 include_once DZZ_ROOT . './core/core_version.php';
 include_once libfile('function/admin');
-include_once libfile('function/cache'); 
+include_once libfile('function/cache');
+include_once libfile('function/appmarket'); 
 $step = intval($_GET['step']);
 $op = $_GET['op'];
 $step = $step ? $step : 1;
@@ -139,7 +140,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         exit(json_encode($return));
         exit();
     }
-    
+     
     $step = intval($_REQUEST['step']);
     $step = $step ? $step : 1;
      
@@ -155,24 +156,15 @@ elseif($operation == 'cross' || $operation == 'patch'){
     $upgrade_version = unserialize($appinfo["upgrade_version"]);
     $upgradeinfo = $upgrade_version[$operation]; 
     $appinfo["upgradeinfo"]=$upgradeinfo;*/
-    
+     
     $dzz_upgrade = new dzz_upgrade_app();
     if($step != 5) {
-        $updatefilelist = $dzz_upgrade->fetch_installfile_list( $baseinfo );
-         
-        if(empty($updatefilelist)) {
-            $return["status"]=0;
-            $return["msg"]=  lang('app_upgrade_none', array('upgradeurl' => upgradeinformation_app(-1))); 
-            exit(json_encode($return));  
-        } 
-        $updatemd5filelist = $updatefilelist['md5'];
-        $updatefilelist = $updatefilelist['file']; 
+        //$updatefilelist = $dzz_upgrade->fetch_installfile_list( $baseinfo ); 
         $theurl = ADMINSCRIPT . '?mod=appmarket&op=install_app_ajax&operation=' . $operation .'&locale=' . $locale . '&charset=' . $charset; 
     }
     
-    if($step == 1) {
-        $linkurl=$theurl. '&step=2';
-        $updatefilelist=$updatefilelist ;
+    if($step == 1) { 
+        $linkurl=$theurl. '&step=2'; 
         $return["percent"]=15;
         $return["second"]=1;
         $return["url"]=$linkurl; 
@@ -183,32 +175,43 @@ elseif($operation == 'cross' || $operation == 'patch'){
     }
      
     elseif($step == 2) {
+        //start 下载zip.md5 
+        $updatefilelist = $dzz_upgrade->fetch_installapp_zip( $baseinfo );
+        if(empty($updatefilelist)) {
+            $return["status"]=0;
+            $return["msg"]=  lang('app_upgrade_none', array('upgradeurl' => upgradeinformation_app(-1))); 
+            exit(json_encode($return));  
+        } 
+        $updatemd5filelist = $updatefilelist['md5'];
+        $updatefilelist = $updatefilelist['file'];
+        //end
+        
         $return["msg"]=lang("app_upgrade_downloading");
         $return["step"]=2;
         $percent = 60;
         
         $fileseq = intval($_GET['fileseq']);
         $fileseq = $fileseq ? $fileseq : 1;
-        //$position = intval($_GET['position']);
-        //$position = $position ? $position : 0;
-        //$offset = 1000 * 1024;
-        
+        $position = intval($_GET['position']);
+        $position = $position ? $position : 0;
+        $offset =  1024 * 1024;
+        $packagesize = $baseinfo["packagesize"];
         if($fileseq > count($updatefilelist)) {
             $linkurl = $theurl.'&step=3';
             $percent = 100;
             $return["step"]=3; 
             $return["msg"]= lang('app_upgrade_download_complete', array('upgradeurl' => upgradeinformation_app(6)));  
         } else {
-            $downloadstatus = $dzz_upgrade->download_file($baseinfo, $updatefilelist[$fileseq-1], '', $updatemd5filelist[$fileseq-1]);//, $position, $offset);
+            $downloadstatus = $dzz_upgrade->download_file($baseinfo, $updatefilelist[$fileseq-1], '', $updatemd5filelist[$fileseq-1] , $position, $offset);
             if($downloadstatus == 1) {
                 $linkurl = $theurl.'&step=2&fileseq='.$fileseq.'&position='.($position+$offset);
-                $percent = 60+sprintf("%2d", 40 * $fileseq/count($updatefilelist));
+                $percent = 60+ sprintf("%2d", 40 * $position/$packagesize);//60+sprintf("%2d", 40 * $fileseq/count($updatefilelist));
                 $file =  $updatefilelist[$fileseq-1]; 
             } elseif($downloadstatus == 2) {
                 $linkurl = $theurl.'&step=2&fileseq='.($fileseq+1);
-                $percent = 60+sprintf("%2d", 40 * $fileseq/count($updatefilelist));
+                $percent = 60+ sprintf("%2d", 40 * $position/$packagesize);//60+sprintf("%2d", 40 * $fileseq/count($updatefilelist));
                 $file =  $updatefilelist[$fileseq-1]; 
-            } else { 
+            } else {
                 $return["status"]=0; 
                 $return["msg"]= lang('app_upgrade_downloading_error', array('file' => $updatefilelist[$fileseq-1],  'upgradeurl'=>upgradeinformation_app(-3) )) ;
                 exit(json_encode($return));  
@@ -228,18 +231,36 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["second"]=1; 
         $return["msg"]= lang("app_upgrade_check_download_complete");
         $return["step"]=3;
-        //此处应检查验证是否下载完毕所有更新文件
+        //此处应下载压缩包内文件的md5文件 
+        $updatefilelist = $dzz_upgrade->fetch_installfile_list( $baseinfo ); 
+        if(empty($updatefilelist)) {
+           $return["status"]=0;
+           $return["msg"]=  lang('app_upgrade_none', array('upgradeurl' => upgradeinformation_app(-1))); 
+           exit(json_encode($return));  
+        }
+        //解压压缩包
+        $zippath= DZZ_ROOT . 'data/update/app/'.$baseinfo["app_path"].'/'.$baseinfo["identifier"].'/'.$baseinfo['version'].'/';
+        $zipfile=$zippath.$baseinfo["identifier"].".zip";
+        $md5file =$zippath.$baseinfo["identifier"].".md5.dzz";
+        dzzunzip($zipfile,$zippath,$md5file);
+        
          
         $linkurl = $theurl.'&step=4';
         $return["url"]=$linkurl;
         exit(json_encode($return));  
         exit; 
     }
-    elseif($step==4){
+    elseif($step==4){ 
         $return["percent"]=80;
         $return["second"]=1; 
         $return["msg"]= lang("app_upgrade_installing");
         $return["step"]=4;
+        
+         //start 下载更新文件的.md5 
+        $updatefilelist = $dzz_upgrade->fetch_installfile_list( $baseinfo ); 
+        $updatefilelist = $updatefilelist['file'];
+        //end
+        
         
         $confirm = $_GET['confirm'];
         if (!$confirm) {

@@ -17,7 +17,7 @@ if (empty($_G['uid'])) {
 	echo "try{win.Close();}catch(e){}";
 	echo "</script>";
 	include  template('common/footer_reload');
-	exit('<a href="user.php?mod=logging&action=login">'.lang('need_login').'</a>');
+	exit('<a href="user.php?mod=login&action=login">'.lang('need_login').'</a>');
 }
 $qid = intval($_GET['qid']);
 $attach = C::t('comment_attach') -> fetch_by_qid($qid);

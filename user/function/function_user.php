@@ -11,7 +11,7 @@ if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
 
-function uc_user_login($username, $password, $isuid, $checkques, $questionid, $answer, $ip){
+function uc_user_login($username, $password, $isuid, $checkques='', $questionid='', $answer='', $ip=''){
 		if($isuid == 1) {
 			$user = C::t('user')->fetch_by_uid($username);
 
@@ -37,7 +37,7 @@ function uc_user_login($username, $password, $isuid, $checkques, $questionid, $a
 	
 }
 
-function userlogin($username, $password, $questionid, $answer, $loginfield = 'auto', $ip = '') {
+function userlogin($username, $password, $questionid='', $answer='', $loginfield = 'auto', $ip = '') {
 	$return = array();
 
 	if($loginfield == 'uid' && getglobal('setting/uidlogin')) {
@@ -86,7 +86,7 @@ function userlogin($username, $password, $questionid, $answer, $loginfield = 'au
 	return $return;
 }
 
-function setloginstatus($member, $cookietime) {
+function setloginstatus($member, $cookietime=0) {
 	global $_G;
 	$_G['uid'] = intval($member['uid']);
 	$_G['username'] = $member['username'];
@@ -388,7 +388,7 @@ function uc_user_register($username, $password, $email,$nickname ,$questionid = 
 	}
 	return $uid;
 }
-function uc_add_user($username, $password, $email, $nickname,$uid = 0, $questionid = '', $answer = '', $regip = '') {
+function uc_add_user($username, $password, $email, $nickname='',$uid = 0, $questionid = '', $answer = '', $regip = '') {
 	global $_G;
 	$salt=substr(uniqid(rand()), -6);
 	$setarr=array(

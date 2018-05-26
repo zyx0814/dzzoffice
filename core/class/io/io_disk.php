@@ -33,7 +33,7 @@ class io_disk extends io_api
 			$this->_root='disk:'.$config['id'].':';
 			$this->encode=$config['charset'];
 			$this->_rootname=$config['cloudname'];
-			$this->attachdir=$config['attachdir'].DS;
+			$this->attachdir=diconv($config['attachdir'],CHARSET,$config['charset']).DS;
 			
 		}else{
 			$this->error='need authorize';
@@ -92,18 +92,21 @@ class io_disk extends io_api
 		$str='test read write';
 		$filename='新建文本文档__test.txt';
 		$filename_encode=diconv($filename,CHARSET,$config['charset']);
-		if(!$attachdir=realpath($config['attachdir'])) return array('error'=>'folder not exist! or no permission');
+		//$filename_encode=$filename;
+		$filepath=diconv($config['attachdir'],CHARSET,$config['charset']);
+		if(!$attachdir=realpath($filepath)) return array('error'=>'folder not exist! or no permission');
 		if(!file_put_contents($attachdir.DIRECTORY_SEPARATOR.$filename_encode,$str)){
 			return array('error'=>'folder '.$config['attachdir'].' not writable');
 		}
+		//exit($attachdir.DIRECTORY_SEPARATOR.$filename_encode);
 		if($str!=file_get_contents($attachdir.DIRECTORY_SEPARATOR.$filename_encode)){
 			return array('error'=>'folder '.$config['attachdir'].' not readable');
 		}
-		@unlink($attachdir.DIRECTORY_SEPARATOR.'test.txt');
+		@unlink($attachdir.DIRECTORY_SEPARATOR.$filename_encode);
 		return true;
 	}
 	public function authorize($refer){
-		global $_G,$_GET,$clouds;;
+		global $_G,$_GET,$clouds;
 		if(empty($_G['uid'])) {
 			dsetcookie('_refer', rawurlencode(BASESCRIPT.'?mod=connect&op=oauth&bz=disk'));
 			showmessage('to_login', '', array(), array('showmsg' => true, 'login' => 1));
@@ -111,12 +114,10 @@ class io_disk extends io_api
 		if(submitcheck('disksubmit')){
 			$config=$_GET['config'];
 			$config['bz']='disk';
-			//$config['attachdir']=addslashes($config['attachdir']);
 			$uid=defined('IN_ADMIN')?0:$_G['uid'];
 			if($ret = self::checkdisk($config)){
-				if($ret['error']) showmessage($ret['error'],BASESCRIPT.'?mod=connect&op=oauth&bz=disk');
+				if($ret['error']) showmessage($ret['error'],BASESCRIPT.'?mod=cloud&op=space');
 			}
-			
 			$config['uid']=$uid;
 			if($id=DB::result_first("select id from %t where uid=%d and attachdir=%s",array(self::T,$uid,$config['attachdir']))){
 				DB::update(self::T,$config,"id ='{$id}'");
@@ -171,15 +172,18 @@ class io_disk extends io_api
 		$imgcachePath='./imgcache/';
 		$cachepath=preg_replace("/\/+/",'/',str_replace(':','/',$path));
 		foreach($_G['setting']['thumbsize'] as $value){
-			$target=$imgcachePath.($cachepath).'.'.$value['width'].'_'.$value['height'].'.jpeg';
+			$target = $imgcachePath . ($cachepath) . '.' . $value['width'] . '_' . $value['height'] . '_1.jpeg';
+			$target1 = $imgcachePath . ($cachepath) . '.' . $value['width'] . '_' . $value['height'] . '_2.jpeg';
 			@unlink($_G['setting']['attachdir'].$target);
+			@unlink($_G['setting']['attachdir'].$target1);
 		}
 	}
-	public function createThumb($path,$size,$width=0,$height=0,$srcx = 0,$srcy=0){
+	public function createThumb($path,$size,$width = 0,$height = 0,$thumbtype = 1){
 		global $_G;
 		$imgcachePath = 'imgcache/';
 		$cachepath=preg_replace("/\/+/",'/',str_replace(':','/',$path));
 	    $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '.jpeg';
+		$target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_'.$thumbtype.'.jpeg';
 		if (@getimagesize($_G['setting']['attachdir'] .'./'. $target)) {
             return 2;//已经存在缩略图
         }
@@ -189,8 +193,6 @@ class io_disk extends io_api
 			 $fileurls=array('fileurl'=>self::getFileUri($path),'filedir'=>self::getStream($path));
 		}
         $filepath = $fileurls['filedir'];
-        $srcx = 0;
-        $srcy = 0;
         if (intval($width) < 1) $width = $_G['setting']['thumbsize'][$size]['width'];
         if (intval($height) < 1) $height = $_G['setting']['thumbsize'][$size]['height'];
       
@@ -208,16 +210,15 @@ class io_disk extends io_api
         $targetpath = dirname($target_attach);
         dmkdir($targetpath);
         $image = new image();
-        //Thumb($source, $target, $thumbwidth, $thumbheight, $thumbtype = 1, $nosuffix = 0)
-        //Cropper($source, $target, $dstwidth, $dstheight, $srcx = 0, $srcy = 0, $srcwidth = 0, $srcheight = 0)
-        if ($thumb = $image->Cropper($filepath, $target, $width, $height,$srcx,$srcy,$imginfo[0],$imginfo[1])) {
+
+        if ($thumb = $image->Thumb($filepath, $target, $width, $height,$thumbtype)) {
             return 1;//生成缩略图成功
         } else {
             return 0;//生成缩略图失败
         }
 		
 	}
-	public function getThumb($path,$width,$height,$original,$returnurl=false,$srcx = 0,$srcy = 0){
+	public function getThumb($path,$width,$height,$original,$returnurl = false,$thumbtype = 0){
 		global $_G;
 		$imgcachePath='imgcache/';
 		$cachepath=str_replace(':','/',$path);
@@ -225,7 +226,7 @@ class io_disk extends io_api
 		if(!$data=IO::getMeta($path)) return false;
         $enable_cache = true; //是否启用缓存
         $quality = 80;
-		$target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '.jpeg';
+		$target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_'.$thumbtype.'.jpeg';
         if (!$original && $enable_cache && @getimagesize($_G['setting']['attachdir'] .'./'. $target)) {
             if ($returnurl) return $_G['setting']['attachurl'] .'/'. $target;
             $file = $_G['setting']['attachdir'] . './' . $target;
@@ -265,7 +266,7 @@ class io_disk extends io_api
         dmkdir($targetpath);
 		$filepath = $fileurls['filedir'];
         $image = new image();
-        if($thumb = $image->Cropper($filepath, $target, $width, $height,$srcx,$srcy)){
+        if($thumb = $image->Thumb($filepath, $target, $width, $height,$thumbtype)){
         //if ($thumb = $image->Thumb($file, $target, $width, $height, 1)) {
            if ($returnurl) return $_G['setting']['attachurl'] .'/'. $target;
            $file = $target_attach;
@@ -384,13 +385,10 @@ class io_disk extends io_api
 	 */
 	function listFiles($path,$by='time',$order='desc',$limit='',$force=0){
 		if($this->error)  return array('error'=>$this->error);
-		//echo $path;
-		$bzarr=self::parsePath($path); 
-		//print_r($bzarr);
+		$bzarr=self::parsePath($path);
 		$filepath=$this->attachdir.($bzarr['path']?('./'.$bzarr['path']):'');
 		$icosdata=array();
 		foreach(new DirectoryIterator($filepath) as  $file){
-			
 			if ($file->isDot()) {
                     continue;
             }
@@ -425,7 +423,7 @@ class io_disk extends io_api
 	 *$force>0 强制刷新，不读取缓存数据；
 	*/
 	function getMeta($path,$force=0){ 
-		$bzarr=self::parsePath($path); 
+		$bzarr=self::parsePath($path);
 		$meta=array();
 		if($path==$this->_root){
 			$meta['path']='';
@@ -454,7 +452,7 @@ class io_disk extends io_api
 			}
 			
 		}
-		
+
 		$icosdata=self::_formatMeta($meta,$bzarr['bz']);
 		return $icosdata;
 	}

@@ -1,0 +1,262 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<style type="text/css">
+/*修改*/
+/*.bs-main-container{
+    padding: 15px 30px;
+}*/
+
+/*结束*/
+</style>
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix"> 
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+  </div>
+  <div class="bs-main-container  clearfix" > 
+    <!--{if $cloud['type']=='local'}-->
+    <div class="main-header clearfix"> 
+      <!--{template right_header}--> 
+    </div>
+    <div class="main-content" style="padding:20px;border-top:1px solid #FFF;">
+      <form id="cpform" action="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+        <input type="hidden" value="{FORMHASH}" name="formhash">
+        <input type="hidden" value="editsubmit" name="true">
+        <dl>
+          <dt>{lang name}:</dt>
+          <dd class="clearfix">
+            <input type="text"  name="name"  class="form-control"  value="$cloud[name]">
+          </dd>
+        </dl>
+        <dl>
+          <dt>{lang designator}:</dt>
+          <dd class="clearfix">
+            <input type="text"  name="" class="form-control" value="$cloud[bz]"  disabled="disabled">
+          </dd>
+          <dd class="clearfix">
+            <ul class="help-block ">
+              {lang cloud_edit_designator_text}
+            </ul>
+          </dd>
+        </dl>
+        <input class="btn btn-primary" name="editsubmit" value="{lang save_changes}" type="submit">
+      </form>
+    </div>
+    <!--{elseif $cloud['type']=='pan'}-->
+    <div class="main-header clearfix" >
+      <ul class="nav nav-pills nav-pills-bottomguide">
+        <li <!--{if empty($_GET[do])}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz">{lang set}</a>
+        </li>
+        <!--{if $cloud['available']>0}--> 
+        <li <!--{if $_GET[do]=='usercloud' }-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz&do=usercloud">{lang using_user}</a>
+        </li>
+        <!--{/if}-->
+      </ul>
+    </div>
+    <div class="main-content clearfix" style="padding:15px;border-top:1px solid #FFF;"> 
+      <!--{if $_GET[do]=='usercloud'}-->
+      <form id="appform" name="appform" class="form-horizontal form-horizontal-left" style="margin:-15px -15px 0;" action="{BASESCRIPT}?mod=cloud&op=edit&do=usercloud" method="post" >
+        <input type="hidden" name="cloudsubmit" value="true" />
+        <input type="hidden" name="bz" value="$bz" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th width="30"></th>
+              <th>{lang name}</th>
+              <th>{lang username}</th>
+              <th>{lang add_time}</th>
+            </tr>
+          </thead>
+          <!--{loop $list $value}-->
+          <tr>
+            <td width="40"><input type="checkbox"  name="delete[]" value="$value[id]" /></td>
+            <td ><img src="$value[img]" />$value[cloudname]</td>
+            <td>$value[username]</td>
+            <td> $value[dateline] </td>
+          </tr>
+          <!--{/loop}-->
+          <thead>
+          <td colspan="5"><input type="checkbox" name="chkall" id="chkall" onclick="checkAll('prefix', this.form, 'del')">
+              &nbsp;{lang del} &nbsp;&nbsp;&nbsp;
+              <input type="submit" class="btn btn-primary" value="{lang submit}" />
+              $multi </td>
+              </thead>
+        </table>
+      </form>
+      <!--{else}-->
+      <form id="cpform" action="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz" class="form-horizontal form-horizontal-left"   method="post" name="cpform">
+        <input type="hidden" value="{FORMHASH}" name="formhash">
+        <input type="hidden" value="editsubmit" name="true">
+        <dl>
+          <dt>{lang name}:</dt>
+          <dd class="clearfix">
+            <input type="text"  name="name" class="form-control"  value="$cloud[name]">
+          </dd>
+        </dl>
+        <dl>
+          <dt>{lang whether_allow_users_add}:</dt>
+          <dd class="clearfix"> 
+            <!--{if $cloud[available]>0}-->
+            <label class="radio radio-inline"><input type="radio"  name="available"  value="2" <!--{if $cloud[available]>1}-->checked="checked"<!--{/if}--> />{lang yes}</label>
+            <label class="radio radio-inline"><input type="radio"  name="available"  value="1" <!--{if $cloud[available]<2}-->checked="checked"<!--{/if}--> />{lang no}</label>
+            <!--{else}-->
+            <input type="hidden"  name="available"  value="$cloud[available]" />
+            <!--{/if}-->
+            <ul class="help-block">
+              <!--{if $cloud[warning]}-->
+              <li><span class=" text-danger">$cloud[warning]</span></li>
+              <!--{/if}--> 
+              <!--{if $cloud[available]<1}-->
+              <li><span class=" text-danger">{lang cloud_edit_enabled_name}</span></li>
+              <!--{else}-->
+              <li>{lang cloud_edit_enabled_cloud}</li>
+              <!--{/if}-->
+            </ul>
+          </dd>
+        </dl>
+        <dl>
+          <dt>{lang designator}:</dt>
+          <dd class="clearfix">
+            <input type="text" class="form-control" name="bz" value="$cloud[bz]"  disabled="disabled">
+          </dd>
+        </dl>
+        <dl>
+          <dt>{lang root_directory}:</dt>
+          <dd class="clearfix">
+            <input type="text"  name="root" class="form-control" value="$cloud[root]" >
+            <ul class="help-block ">
+              {lang cloud_add_root_directory_text}
+            </ul>
+          </dd>
+        </dl>
+        <dl>
+          <dt>API Key:</dt>
+          <dd class="clearfix">
+            <input type="text"  name="key" class="form-control"  value="$cloud[key]" >
+            <ul class="help-block ">
+              {lang cloud_add_API_KEY_text}
+            </ul>
+          </dd>
+        </dl>
+        <dl>
+          <dt>Secret Key</dt>
+          <dd class="clearfix">
+            <input type="text"  name="secret" class="form-control" value="$cloud[secret]" class="span4">
+            <ul class="help-block ">
+              {lang cloud_add_Secret_KEY_text}
+            </ul>
+          </dd>
+        </dl>
+        <dl>
+          <dt>{lang cloud_add_data_table_name}</dt>
+          <dd class="clearfix">
+            <input type="text" class="form-control" name="dname" value="$cloud[dname]" class="span4">
+            <ul class="help-block ">
+              {lang cloud_add_data_table_name_text}
+            </ul>
+          </dd>
+        </dl>
+        <input class="btn btn-primary" name="editsubmit" value="{lang save_changes}" type="submit">
+      </form>
+      <!--{/if}--> 
+    </div>
+    <!--{else}-->
+    <div class="main-header clearfix">
+      <ul class="nav nav-pills nav-pills-bottomguide">
+        <li <!--{if empty($_GET[do])}-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz">{lang set}</a>
+        </li>
+        <!--{if $cloud['available']>0}--> 
+        <li <!--{if $_GET[do]=='usercloud' }-->class="active"<!--{/if}-->> <a href="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz&do=usercloud">{lang using_user}</a>
+        </li>
+        <!--{/if}-->
+      </ul>
+    </div>
+    <div class="main-content" style="padding:15px;border-top:1px solid #FFF;"> 
+      <!--{if $_GET[do]=='usercloud'}-->
+      <form id="appform" name="appform" class="form-horizontal form-horizontal-left" style="margin:-15px -15px 0;" action="{BASESCRIPT}?mod=cloud&op=edit&do=usercloud" method="post" >
+        <input type="hidden" name="cloudsubmit" value="true" />
+        <input type="hidden" name="bz" value="$bz" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th width="30"></th>
+              <th>{lang name}</th>
+              <th>{lang username}</th>
+              <th>{lang add_time}</th>
+            </tr>
+          </thead>
+          <!--{loop $list $value}-->
+          <tr>
+            <td width="40"><input type="checkbox"  name="delete[]" value="$value[id]" /></td>
+            <td ><img src="$value[img]" />$value[cloudname]</td>
+            <td>$value[username]</td>
+            <td> $value[dateline] </td>
+          </tr>
+          <!--{/loop}-->
+          <thead>
+          <td colspan="5"><input type="checkbox" name="chkall" id="chkall" onclick="checkAll('prefix', this.form, 'del')">
+              &nbsp;{lang del}&nbsp;&nbsp;&nbsp;
+              <input type="submit" class="btn btn-primary" value="{lang submit}" />
+              $multi </td>
+              </thead>
+        </table>
+      </form>
+      <!--{else}-->
+      <form id="cpform" action="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+        <input type="hidden" value="{FORMHASH}" name="formhash">
+        <input type="hidden" value="editsubmit" name="true">
+        <dl>
+          <dt>{lang name}:</dt>
+          <dd class="clearfix">
+            <input type="text" class="form-control" name="name"  value="$cloud[name]">
+            <span class="help-inline text-muted">{lang name} </span> </dd>
+        </dl>
+        <dl>
+          <dt>{lang whether_allow_users_add}:</dt>
+          <dd class="clearfix"> 
+            <!--{if $cloud[available]>0}-->
+            <label class="radio radio-inline"> <input type="radio"  name="available"  value="2" <!--{if $cloud[available]>1}-->checked="checked"<!--{/if}--> />{lang yes}</label>
+            <label class="radio radio-inline"> <input type="radio"  name="available"  value="1" <!--{if $cloud[available]<2}-->checked="checked"<!--{/if}--> />{lang no}</label>
+            <!--{else}-->
+            <input type="hidden"  name="available"  value="$cloud[available]" />
+            <!--{/if}-->
+            <ul class="help-block">
+              <!--{if $cloud[warning]}-->
+              <li><span class=" text-danger">$cloud[warning]</span></li>
+              <!--{/if}--> 
+              <!--{if $cloud[available]<1}-->
+              <li><span class=" text-danger">{lang cloud_edit_enabled_name}</span></li>
+              <!--{else}-->
+              <li>{lang cloud_edit_enabled_cloud}</li>
+              <!--{/if}-->
+              
+            </ul>
+          </dd>
+        </dl>
+        <dl>
+          <dt>{lang designator}:</dt>
+          <dd class="clearfix">
+            <input type="text"  name="bz" class="form-control" value="$cloud[bz]"  disabled="disabled">
+            <ul class="help-block ">
+              {lang cloud_edit_designator_text}
+            </ul>
+          </dd>
+        </dl>
+        <input class="btn btn-primary" name="editsubmit" value="{lang save_changes}" type="submit">
+      </form>
+      <!--{/if}--> 
+    </div>
+    <!--{/if}--> 
+  </div>
+</div>
+<script type="text/javascript">  
+jQuery('.left-drager').leftDrager_layout();
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}--> 

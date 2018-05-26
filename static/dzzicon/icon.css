@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'dzz';
-  src:  url('fonts/dzz.eot?xsayho');
-  src:  url('fonts/dzz.eot?xsayho#iefix') format('embedded-opentype'),
-    url('fonts/dzz.ttf?xsayho') format('truetype'),
-    url('fonts/dzz.woff?xsayho') format('woff'),
-    url('fonts/dzz.svg?xsayho#dzz') format('svg');
+  src:  url('fonts/dzz.eot?dvx94x');
+  src:  url('fonts/dzz.eot?dvx94x#iefix') format('embedded-opentype'),
+    url('fonts/dzz.ttf?dvx94x') format('truetype'),
+    url('fonts/dzz.woff?dvx94x') format('woff'),
+    url('fonts/dzz.svg?dvx94x#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,99 +24,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.dzz-dzz-max:before {
-  content: "\e9ad";
-}
-.dzz-dzz-min:before {
-  content: "\e9ae";
-}
-.dzz-notification-error:before {
-  content: "\e9a9";
-}
-.dzz-notification-info:before {
-  content: "\e9aa";
-}
-.dzz-notification-success:before {
-  content: "\e9ab";
-}
-.dzz-notification-warning:before {
-  content: "\e9ac";
-}
-.dzz-file-excel2:before {
-  content: "\e9a3";
-}
-.dzz-file-ppt2:before {
-  content: "\e9a4";
-}
-.dzz-file-upload:before {
-  content: "\e9a5";
-}
-.dzz-file-word:before {
-  content: "\e9a6";
-}
-.dzz-fold-upload:before {
-  content: "\e9a7";
-}
-.dzz-layout:before {
-  content: "\e9a8";
-}
-.dzz-news:before {
-  content: "\e9a2";
-}
-.dzz-reply:before {
-  content: "\e99a";
-}
-.dzz-appstore:before {
-  content: "\e99b";
-}
-.dzz-installed:before {
-  content: "\e99c";
-}
-.dzz-login:before {
-  content: "\e99d";
-}
-.dzz-mail2:before {
-  content: "\e99e";
-}
-.dzz-open2:before {
-  content: "\e99f";
-}
-.dzz-sensitive:before {
-  content: "\e9a0";
-}
-.dzz-update:before {
-  content: "\e9a1";
-}
-.dzz-theme:before {
-  content: "\e996";
-}
-.dzz-appmarket:before {
-  content: "\e997";
-}
-.dzz-tools:before {
-  content: "\e998";
-}
-.dzz-clouddisk:before {
-  content: "\e999";
-}
-.dzz-export2:before {
-  content: "\e995";
-}
-.dzz-restore:before {
-  content: "\e993";
-}
-.dzz-archive2:before {
-  content: "\e994";
-}
-.dzz-atsign:before {
-  content: "\e990";
-}
-.dzz-top:before {
-  content: "\e991";
-}
-.dzz-link:before {
-  content: "\e992";
-}
 .dzz-account-box:before {
   content: "\e900";
 }
@@ -393,7 +300,7 @@
 .dzz-last-page:before {
   content: "\e956";
 }
-.dzz-link2:before {
+.dzz-link:before {
   content: "\e957";
 }
 .dzz-lock:before {
@@ -564,9 +471,153 @@
 .dzz-wechat:before {
   content: "\e98f";
 }
-
-@keyframes dzz-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}
-.spin {
-    -webkit-animation: dzz-spin 2s infinite linear;
-    animation: dzz-spin 2s infinite linear;
+.dzz-atsign:before {
+  content: "\e990";
+}
+.dzz-top:before {
+  content: "\e991";
+}
+.dzz-link2:before {
+  content: "\e992";
+}
+.dzz-restore:before {
+  content: "\e993";
+}
+.dzz-archive2:before {
+  content: "\e994";
+}
+.dzz-export2:before {
+  content: "\e995";
+}
+.dzz-theme:before {
+  content: "\e996";
+}
+.dzz-appmarket:before {
+  content: "\e997";
+}
+.dzz-tools:before {
+  content: "\e998";
+}
+.dzz-clouddisk:before {
+  content: "\e999";
+}
+.dzz-reply:before {
+  content: "\e99a";
+}
+.dzz-appstore:before {
+  content: "\e99b";
+}
+.dzz-installed:before {
+  content: "\e99c";
+}
+.dzz-login:before {
+  content: "\e99d";
+}
+.dzz-mail2:before {
+  content: "\e99e";
+}
+.dzz-open2:before {
+  content: "\e99f";
+}
+.dzz-sensitive:before {
+  content: "\e9a0";
+}
+.dzz-update:before {
+  content: "\e9a1";
+}
+.dzz-news:before {
+  content: "\e9a2";
+}
+.dzz-file-excel2:before {
+  content: "\e9a3";
+}
+.dzz-file-ppt2:before {
+  content: "\e9a4";
+}
+.dzz-file-upload:before {
+  content: "\e9a5";
+}
+.dzz-file-word:before {
+  content: "\e9a6";
+}
+.dzz-fold-upload:before {
+  content: "\e9a7";
+}
+.dzz-layout:before {
+  content: "\e9a8";
+}
+.dzz-notification-error:before {
+  content: "\e9a9";
+}
+.dzz-notification-info:before {
+  content: "\e9aa";
+}
+.dzz-notification-success:before {
+  content: "\e9ab";
+}
+.dzz-notification-warning:before {
+  content: "\e9ac";
+}
+.dzz-max:before {
+  content: "\e9ad";
+}
+.dzz-min:before {
+  content: "\e9ae";
+}
+.dzz-account:before {
+  content: "\e9af";
+}
+.dzz-forum:before {
+  content: "\e9b0";
+}
+.dzz-home2:before {
+  content: "\e9b1";
+}
+.dzz-reminder:before {
+  content: "\e9b2";
+}
+.dzz-sms2:before {
+  content: "\e9b3";
+}
+.dzz-portrait:before {
+  content: "\e9b4";
+}
+.dzz-edit:before {
+  content: "\e9b5";
+}
+.dzz-calendar:before {
+  content: "\e9b6";
+}
+.dzz-file2:before {
+  content: "\e9b7";
+}
+.dzz-male:before {
+  content: "\e9b8";
+}
+.dzz-female:before {
+  content: "\e9b9";
+}
+.dzz-add2:before {
+  content: "\e9ba";
+}
+.dzz-photo2:before {
+  content: "\e9bb";
+}
+.dzz-fold:before {
+  content: "\e9bc";
+}
+.dzz-menu2:before {
+  content: "\e9bd";
+}
+.dzz-sorta:before {
+  content: "\e9be";
+}
+.dzz-sortz:before {
+  content: "\e9bf";
+}
+.dzz-boxboder:before {
+  content: "\e9c0";
+}
+.dzz-archive3:before {
+  content: "\e9c1";
 }

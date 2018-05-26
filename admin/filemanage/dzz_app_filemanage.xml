@@ -1257,7 +1257,7 @@ AAiAAAjA0ceJaY9cOQAbHgBslgMw5wHATDkAL4CtFBe/Crw+NUAUBrscfYz4PYXFrwGdURj89xmQ
 KWXvsNKmERgG7gJXqeCmpQrHvn1uzQMTURj8KXZCRjZPSx9Q3fFvAHpKcdrrHql1AAAAAElFTkSu
 QmCC
 ]]></item>
-			<item id="appdesc"><![CDATA[]]></item>
+			<item id="appdesc"><![CDATA[管理和查看系统所有文件]]></item>
 			<item id="appurl"><![CDATA[{adminscript}?mod=filemanage]]></item>
 			<item id="appadminurl"><![CDATA[]]></item>
 			<item id="noticeurl"><![CDATA[]]></item>

@@ -12,7 +12,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 require_once libfile('function/organization');
 require_once DZZ_ROOT.'./core/class/class_PHPExcel.php';
 if($_G['adminid']!=1) showmessage('system_administrator_export',dreferer());
-	$h0=array('username'=>lang('compellation'),'email'=>lang('email'),'nickname'=>lang('username'),'birth'=>lang('date_birth'),'gender'=>lang('gender'),'mobile'=>lang('cellphone'),'weixinid'=>lang('weixin'),'orgname'=>lang('category_department'),'job'=>lang('department_position'));
+	$h0=array('username'=>lang('compellation'),'email'=>lang('email'),'birth'=>lang('date_birth'),'gender'=>lang('gender'),'mobile'=>lang('cellphone'),'weixinid'=>lang('weixin'),'orgname'=>lang('category_department'),'job'=>lang('department_position'));
 	$h1=getProfileForImport();
 	$h0=array_merge($h0,$h1);
 $orgid=intval($_GET['orgid']);

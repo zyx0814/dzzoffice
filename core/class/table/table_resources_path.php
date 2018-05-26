@@ -137,27 +137,30 @@ class table_resources_path extends dzz_table
         },$paths);
         if($content != $name) $newpath = str_replace($content,$name,$path);
         else return true;
-        $path = self::path_transferred_meaning($path);
+        $regpath = self::path_transferred_meaning($path);
         $sql = "update %t set path = replace(path,%s,%s) where path regexp %s";
-        if(DB::query($sql,array($this->_table,$path,$newpath,'^'.$path.'.*'))){
+        if(DB::query($sql,array($this->_table,$path,$newpath,'^'.$regpath.'.*'))){
             return true;
         }else{
             return false;
         }
     }
     //修改文件位置时
-    public function update_pathdata_by_fid($fid,$ofid){
+    public function update_pathdata_by_fid($fid,$ofid,$noself = false){
         if($paths = $this->fetch_pathby_pfid($fid,true)){
             $opaths = $this->fetch_pathby_pfid($ofid,true);
             $path = dirname($paths['path']).'/';
-            $path = self::path_transferred_meaning($path);
-            $opath = self::path_transferred_meaning($opaths['path']);
+            //$path = self::path_transferred_meaning($path);
+            $opath = $opaths['path'];
             $pathkey = explode('-',$paths['pathkey']);
             array_pop($pathkey);
             $pathkey=implode('-',$pathkey);
             $opathkey = $opaths['pathkey'];
             $sql = "update %t set path = replace(path,%s,%s),pathkey = replace(pathkey,%s,%s) where path regexp %s";
-            if(DB::query($sql,array($this->_table,$path,$opath,$pathkey,$opathkey,'^'.$paths['path'].'.*'))){
+            $paths['path'] = self::path_transferred_meaning($paths['path']);
+            if($noself) $likepath = $paths['path'].'.+';
+            else $likepath = $paths['path'].'.*';
+            if(DB::query($sql,array($this->_table,$path,$opath,$pathkey,$opathkey,'^'.$likepath))){
                 return true;
             }else{
                 return false;
@@ -192,7 +195,7 @@ class table_resources_path extends dzz_table
         $path = preg_replace('/^dzz:(.+?):/','',$pathkeys['path']);
         $patharr = explode('/',$path);
         unset($patharr[0]);
-        $$result['path'] = implode('/',$patharr);
+        $result['path'] = implode('/',$patharr);
         return $result;
 
     }

@@ -272,6 +272,9 @@ class dzz_app extends dzz_base{
 				system_error('config_notfound');
 			}
 		}
+		//设置默认语言；
+         setglobal('language',$_config['output']['language']);
+	
 		//系统编码配置
 		if (strtoupper(substr(PHP_OS, 0,3)) === 'WIN') {
 			$config['system_os']='windows';

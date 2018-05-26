@@ -15,23 +15,19 @@
 			.on('mouseleave','.cmt_fed',function(){
 				jQuery(this).removeClass('hover_cmt_fed');
 			});
-			jcLoader().load({  
-				type:'js', 
-				ids:'js_artZoom', 
-				url:'static/artZoom/jquery.artZoom.js?{VERHASH}'  
-			},function(){  
-				jQuery('.artZoom').artZoom({
-					path: './dzz/comment/images',	// 设置artZoom图片文件夹路径
-					preload: true,		// 设置是否提前缓存视野内的大图片
-					blur: true,			// 设置加载大图是否有模糊变清晰的效果
-					
-					// 语言设置
-					hide: '{lang pack_up}',		// 左旋转按钮文字
-					left: '{lang left_rotation}',		// 左旋转按钮文字
-					right: '{lang right_rotation}',		// 右旋转按钮文字
-					source: '{lang look_original}'		// 查看原图按钮文字
-				});
-			}); 
+		jcLoader().load({  
+				type:'css', 
+				ids:'js_dzzthumb.css', 
+				url:'static/dzzthumb/jquery.dzzthumb.css?{VERHASH}'  
+			},function(){
+				jcLoader().load({  
+					type:'js', 
+					ids:'js_dzzthumb', 
+					url:'static/dzzthumb/jquery.dzzthumb.js?{VERHASH}'  
+				},function(){  
+					jQuery('img[data-original]').dzzthumb();
+				}); 
+		});
 		
    </script>
    

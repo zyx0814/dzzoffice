@@ -59,7 +59,7 @@ class table_connect_onedrive extends dzz_table
 		$data=parent::fetch($id);
 		if(parent::delete($id)){
 			$return['msg']='success';
-			C::t('source_shortcut')->delete_by_bz($data['bz'].':'.$id.':',true);//删除快捷方式；
+			//C::t('source_shortcut')->delete_by_bz($data['bz'].':'.$id.':',true);//删除快捷方式；
 			//删除图片缓存文件
 			$imgcache=getglobal('setting/attachdir').'./imgcache/'.$data['bz'].'/'.$id.'/';
 			removedirectory($imgcache);

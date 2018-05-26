@@ -11,7 +11,6 @@ define('APPTYPEID', 9);
 define('CURSCRIPT', 'dzz');
 define('DZZSCRIPT', 'index.php');
 require './core/class/class_core.php';
-require './dzz/function/dzz_core.php';
 $dzz = C::app();
 $dzz->cachelist =array();
 $dzz->init();

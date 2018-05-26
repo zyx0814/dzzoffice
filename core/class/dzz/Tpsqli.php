@@ -30,7 +30,9 @@ class Tpsqli extends Tpdb{
         if ( !isset($this->linkID[$linkNum]) ) {
             if(empty($config))  $config =   $this->config;
             $this->linkID[$linkNum] = new \mysqli($config['hostname'],$config['username'],$config['password'],$config['database'],$config['hostport']?intval($config['hostport']):3306);
-            if (mysqli_connect_errno()) E(mysqli_connect_error());
+            if (mysqli_connect_errno()){
+                echo "数据库连接错误";exit;//E(mysqli_connect_error());
+            }
             $dbVersion = $this->linkID[$linkNum]->server_version;
             
             // 设置数据库编码

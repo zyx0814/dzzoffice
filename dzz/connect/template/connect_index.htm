@@ -1,0 +1,68 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/styles/menu/default/style.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/connect/images/connect.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="dzz/scripts/_common.js?{VERHASH}"></script>
+<style>
+	#menu.nav-pills li a {
+		padding: 5px 10px;
+		margin: 4px 4px 0 4px;
+		border-radius: 3px;
+	}
+</style>
+
+<!--{template common/header_simple_end}-->
+<div class="container" style="height:100%">
+	<div class="main-header2 clearfix">
+		<ul class="nav nav-pills nav-pills-bottomguide pull-left">
+			<li class="active">
+				<a href="{BASESCRIPT}?mod=connect">{lang my_clouds}</a>
+			</li>
+			<li>
+				<a href="{BASESCRIPT}?mod=connect&op=addcloud">{lang add_clouds}</a>
+			</li>
+		</ul>
+		<ul id="menu" class="nav nav-pills  list-unstyled pull-right">
+
+		</ul>
+	</div>
+	<div class="main-content clearfix">
+		<div class="" style="padding:15px;">
+			<ul class="thumbnails list-unstyled ">
+				<!--{loop $mycloud $value}-->
+				<li id="item_{$value[bz]}_{$value[id]}" bz="$value[bz]" cid="$value[id]" icoid="$value[icoid]" class="cloud-item ">
+					<div class="thumbnail" style="margin:0">
+						<div class="selectbox"></div>
+						<img src="$value[img]" width="100" icoid="$value[icoid]" />
+						<h5 class="text-center" style="height:20px;line-height:20px;overflow:hidden;margin-bottom:5px"><a icoid="$value[icoid]" href="javascript:;" title="$value[cloudname]">$value[cloudname]</a></h5>
+					</div>
+				</li>
+				<!--{/loop}-->
+			</ul>
+
+		</div>
+	</div>
+</div>
+<div id="right_ico" class="menu " style="display:none;">
+	<div class="menu-item" onClick="Open('-icoid-');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-open"></span><span class="menu-text">{lang open}</span></div>
+	<div class="menu-item delete" onClick="Delete('-cid-','-bz-');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-delete"></span><span class="menu-text">{lang delete}</span></div>
+	<div class="menu-item" onClick="Rename('-cid-','-bz-');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-rename"></span><span class="menu-text">{lang rechristen}</span></div>
+	<div class="menu-item" onClick="Todesktop('-icoid-','-bz-');jQuery('#right_contextmenu').hide();jQuery('#shadow').hide();"><span class="menu-icon icon-desktop"></span><span class="menu-text">{lang apptodesktop}</span></div>
+</div>
+<div id="shadow" style="display:none;position:absolute"></div>
+<div id="renameContainer" style="position:absolute;left:-500px;top:-500px;width:161px;height:35px;z-index:100">
+	<textarea id="rename" bz="" cid="" style="width:100%;height:100%;margin:0"></textarea>
+</div>
+<script type="text/javascript">
+	var json = $icosdata_json;
+	for(var i in json) {
+		parent._config.sourcedata.icos[i] = json[i];
+	}
+	var jsonfolder = $folderdata_json;
+	for(var i in jsonfolder) {
+		parent._config.sourcedata.folder[i] = jsonfolder[i];
+	}
+	var ajaxurl = '{DZZSCRIPT}?mod=connect&op=ajax';
+</script>
+<script type="text/javascript" src="dzz/connect/scripts/mycloud.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

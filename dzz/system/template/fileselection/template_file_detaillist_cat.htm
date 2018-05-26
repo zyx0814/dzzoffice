@@ -1,0 +1,80 @@
+
+<div class="fileMenu detaillist filemanage">
+  <div class="filemanage-detail-header">
+        <table class="table " width="100%" border="0" style="table-layout:fixed;margin:0">
+          <thead class="detail_header_tr">
+            <tr>
+              <th disp="0" class=" detail_header detail_header_0" width="40%">
+              	<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
+                  <a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
+                  	<span class="dzz dzz-expand-less"></span>
+                  	<span class="dzz dzz-expand-more"></span>
+                  </a>
+                  <div disp="0" class="detail_header_drag"></div>
+                </div>
+              </th>
+              <th disp="1" class=" detail_header detail_header_1 " width="10%">
+              	<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
+                <a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
+                	<span class="dzz dzz-expand-less"></span>
+                	<span class="dzz dzz-expand-more"></span>
+                </a>
+                  <div disp="1" class="detail_header_drag"></div>
+                </div>
+              </th>
+             
+              <th disp="2" class="detail_header detail_header_2" width="10%">
+              <div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
+              	  <a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
+              	  	<span class="dzz dzz-expand-less"></span>
+              	  	<span class="dzz dzz-expand-more"></span>
+              	  </a>
+                  <div disp="2" class="detail_header_drag" style="float:right"></div>
+                </div>
+              </th>            
+              <th disp="3" class=" detail_header detail_header_3 " width="10%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
+              	<span class="dzz dzz-expand-less"></span>
+              	<span class="dzz dzz-expand-more"></span>
+              </a></div></th>
+              <th disp="4" class=" detail_header_4 " width="30%"><div class="detail_header_td_div"><span class="detail_header_title">{lang position}</span></div></th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+  <div class="paddingright-con   js-list-body">    
+          <table class="table " width="100%" border="0" style="table-layout:fixed;margin:0">
+            <tbody class="js-file-item-tpl">
+              <tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock" rid="{rid}">
+                <!--<td class="detail_item_td " valign="middle" width="30" style="overflow:hidden;padding-right:0"><div class="detail_item_td_div detail_item_td_select" title="{lang more_select}" rid="{rid}"><a class="selectbox" rid="{rid}" title="{lang choose}"></a></div></td>-->
+                <td class="detail_item_td " valign="middle" width="40%" style="overflow:hidden;position:relative">
+                	<div class="detail_item_td_div detail_item_td_name toggleGlow" title="{name}" rid="{rid}">
+                    	<a href="javascript:;" style="float: left;"><img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))"  data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" /></a>
+                        <a id="file_text_{rid}" class="detail_text detail_item_name_text IcoText_folder">{name}</a>
+                        {collectstatus}
+                     </div>
+                     <!--<div class="hoverTools">
+                     	<button type="button" class="btn download" onclick="_filemanage.downAttach('{rid}')"><i class="dzz dzz-download" title="{lang download}"></i></button>
+                        <button type="button" class="btn share" onclick="_filemanage.share('{rid}','{rids}')"><i
+            class="dzz dzz-share" title="{lang share}"></i> </button>
+                     </div>-->
+                </td>
+                <td class="detail_item_td detail_item_td_size" valign="middle" width="10%" style="overflow:hidden">
+                	<span title="{fsize}">{fsize}</span>
+                </td>
+               
+                <td class="detail_item_td detail_item_td_type" valign="middle" width="10%" style="overflow:hidden">
+                    <span title="{ftype}">{ftype}</span>
+                </td>
+                <td class="detail_item_td detail_item_td_type" valign="middle" width="10%" style="overflow:hidden">
+                	<span title="{fdateline}">{fdateline}</span>
+                </td>
+                <td class=" detail_item_td_position" valign="middle" width="30%" style="overflow:hidden">
+                	<span title="{position}"><a href="javascript:;" class="detail_item_td_position_span" onclick="window.location.hash='{position_hash}';return false;">{position}</a></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+       
+  </div>
+</div>
+       

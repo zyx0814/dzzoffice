@@ -74,16 +74,18 @@ class dzz_io
 	function output_thumb($file,$mine='image/JPEG'){//根据文件地址，输出图像流
 		global $_G;
 		$last_modified_time = filemtime($file);
-		$etag = md5_file($file);
-		header("Last-Modified: " . gmdate("D, d M Y H:i:s", $last_modified_time) . " GMT");
-		header("Etag: $etag");
-
-		if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time ||
-			trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag
-		) {
-			header("HTTP/1.1 304 Not Modified");
-			exit;
+		if($last_modified_time){
+            $etag = md5_file($file);
+            header("Last-Modified: " . gmdate("D, d M Y H:i:s", $last_modified_time) . " GMT");
+            header("Etag: $etag");
+            if (@strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == $last_modified_time ||
+                trim($_SERVER['HTTP_IF_NONE_MATCH']) == $etag
+            ) {
+                header("HTTP/1.1 304 Not Modified");
+                exit;
+            }
 		}
+		/*if(!$last_modified_time) $last_modified_time = TIMESTAMP;*/
 		@header('cache-control:public');
 		header('Content-Type: '.$mine);
 		@ob_end_clean();
@@ -94,9 +96,9 @@ class dzz_io
 		exit();
 	}
 	//获取缩略图
-	function getThumb($path,$width,$height,$original,$returnurl=false,$srcx = 0,$srcy=0){
+	function getThumb($path,$width,$height,$original,$returnurl=false,$thumbtype = 1){
 		$path=self::clean($path);
-		if($io=self::initIO($path)) return $io->getThumb($path,$width,$height,$original,$returnurl,$srcx,$srcy);
+		if($io=self::initIO($path)) return $io->getThumb($path,$width,$height,$original,$returnurl,$thumbtype);
 	}
 	/*
 	 *通过icosdata获取folderdata数据	
@@ -168,10 +170,10 @@ class dzz_io
 	//$tbz:目标api；
 	//返回：
 	//$icosdata数组；
-	function CopyTo($opath,$path,$iscopy=0,$force = false){
+	function CopyTo($opath,$path,$iscopy=0){
 		$path=self::clean($path);
 		$opath=self::clean($opath);
-		if($io=self::initIO($opath)) return $io->CopyTo($opath,$path,$iscopy,$force);
+		if($io=self::initIO($opath)) return $io->CopyTo($opath,$path,$iscopy);
 		else return false;
 	}
 
@@ -197,7 +199,7 @@ class dzz_io
 			if($data['icoid']==$data['newdata']['icoid']){
 				$data['newdata']['move']=1;
 			}else{
-				$arr=IO::Delete($data['path'],true,$force);
+				$arr=IO::Delete($data['path']);
 				if($arr['icoid']) $data['delete']=1;
 				else $data['success']=$arr['error'];
 			}
@@ -208,20 +210,19 @@ class dzz_io
 	//添加目录
 	//$fname：目录名称;
 	//$path：目录位置路径，如果是本地，$path 为pfid
-	//$force:如果为true,忽略权限验证直接执行,默认为false
-	function CreateFolder($path,$fname,$perm=0,$force=false,$params=array(),$ondup='newcopy'){
+	function CreateFolder($path,$fname,$perm=0,$params=array(),$ondup='newcopy'){
 		$path=self::clean($path);//11
 		$fname=self::name_filter($fname);
-		if($io=self::initIO($path))	return $io->CreateFolder($path,$fname,$perm,$force,$params,$ondup);
+		if($io=self::initIO($path))	return $io->CreateFolder($path,$fname,$perm,$params,$ondup);
 		else return false;
 	}
 	//添加多层目录
 	//$fid：父级目录id;
 	//$path：目录位置路径，如aaa/bbb/ccc
-	function CreateFolderByPath($path,$fid,$bz='dzz',$force = false,$params=array()){
+	function CreateFolderByPath($path,$fid,$bz='dzz',$params=array()){
 		$path=self::clean($path);
 		if($io=self::initIO($bz))	{
-			return $io->CreateFolderByPath($path,$fid,$force,$params);
+			return $io->CreateFolderByPath($path,$fid,$params);
 		}
 		else return false;
 	}
@@ -255,18 +256,18 @@ class dzz_io
 	//覆盖文件内容
 	//$data：文件的信息数组 
 	//返回我文件data；
-	function setFileContent($path,$data,$force=false){
+	function setFileContent($path,$data,$force=false,$nocover = true){
 		$path=self::clean($path);
-		if($io=self::initIO($path))	return $io->setFileContent($path,$data,$force);
+		if($io=self::initIO($path))	return $io->setFileContent($path,$data,$force,$nocover);
 		else return false;
 	}
 	
 	//分片上传文件；
 	//$path: 路径
-	function multiUpload($file,$path,$filename,$force = false,$attach=array(),$ondup="newcopy"){
+	function multiUpload($file,$path,$filename,$attach=array(),$ondup="newcopy"){
 		$path=self::clean($path);
 		$filename=self::name_filter($filename);
-		if($io=self::initIO($path))	return $io->multiUpload($file,$path,$filename,$force,$attach,$ondup);
+		if($io=self::initIO($path))	return $io->multiUpload($file,$path,$filename,$attach,$ondup);
 		else return false;
 	}
 	
@@ -281,18 +282,18 @@ class dzz_io
 		else return false;
 	}
 	
-	function upload_by_content($fileContent,$path,$filename,$force = false){
+	function upload_by_content($fileContent,$path,$filename){
 		$path=self::clean($path);
 		$filename=self::name_filter($filename);
-		if($io=self::initIO($path))		return $io->upload_by_content($fileContent,$path,$filename,$force);
+		if($io=self::initIO($path))		return $io->upload_by_content($fileContent,$path,$filename);
 		else return false;
 	}
 	
-	public function uploadStream($file,$name,$path,$relativePath='',$content_range='',$force = false){
+	public function uploadStream($file,$name,$path,$relativePath='',$content_range=''){
 	  	$path=self::clean(urldecode($path));
 		$name=self::name_filter(urldecode($name));
 	  	$relativePath=self::clean(urldecode($relativePath));
-	 	if($io=self::initIO($path))  return $io->uploadStream($file,$name,$path,$relativePath,$content_range,$force);
+	 	if($io=self::initIO($path))  return $io->uploadStream($file,$name,$path,$relativePath,$content_range);
 	 	else return false;
   }
 	
@@ -304,10 +305,10 @@ class dzz_io
 		else return false;
 	}
 	//恢复文件
-	function Recover($path,$force=false,$noperm=false){
+	function Recover($path,$combine=true){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	{
-			return $io->Recover($path,$force,$noperm);
+			return $io->Recover($path,$combine);
 		}
 		else return false;
 	}
@@ -321,10 +322,10 @@ class dzz_io
   }
   
  
-  public function download($paths,$filename=''){
+  public function download($paths,$filename='',$checkperm = true){
   		 $paths = (array)$paths;
 		 $paths=self::clean($paths);
-		 if($io=self::initIO($paths[0]))  $io->download($paths,$filename);
+		 if($io=self::initIO($paths[0]))  $io->download($paths,$filename,$checkperm);
 		 else return false;
 	 }
 	 

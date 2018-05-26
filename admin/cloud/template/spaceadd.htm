@@ -1,0 +1,85 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="{MOD_PATH}/images/connect.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix"> 
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+    <div class="left-drager-op">
+      <div class="left-drager-sub"></div>
+    </div>
+  </div>
+  <div class="bs-main-container  clearfix">
+    <div class="main-header clearfix">
+        <ul class="nav nav-pills nav-pills-bottomguide"  >
+        <li> <a href="{BASESCRIPT}?mod=cloud&op=edit&bz=dzz"> {lang set}</a> </li>
+        <li> <a href="{BASESCRIPT}?mod=cloud&op=space">{lang space_management}</a> </li>
+        <li class="active"> <a href="{BASESCRIPT}?mod=cloud&op=spaceadd">{lang add_storage_location}</a> </li>
+      </ul>
+    </div>
+    <div class="main-content clearfix" style="border-top:1px solid #FFF">
+      <div style="padding:15px;"> 
+        <!--{loop $list $key $value}-->
+        <h4>$value[header]</h4>
+        <ul class="thumbnails list-unstyled clearfix">
+          <!--{loop $value[list] $value1}-->
+          <li bz="$value1[bz]" data_type="$key" class="cloud-item span2">
+            <div class="thumbnail"> <img src="dzz/images/default/system/$value1[bz].png" width="100" />
+              <h5 class="text-center" style="height:20px;line-height:20px;overflow:hidden;margin-bottom:5px">$value1[name]</h5>
+            </div>
+          </li>
+          <!--{/loop}-->
+        </ul>
+        <!--{/loop}--> 
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+
+	function connect_start(bz, type) { //开始云连接
+		switch(type) {
+			case 'pan':
+				url = '{ADMINSCRIPT}?mod=cloud&bz=' + bz + '&op=oauth';
+				window.location.href = url;
+				break;
+			case 'storage':
+				url = '{ADMINSCRIPT}?mod=cloud&bz=' + bz + '&op=oauth';
+				window.location.href = url;
+				break;
+			case 'ftp':
+				url = '{ADMINSCRIPT}?mod=cloud&bz=' + bz + '&op=oauth';
+				window.location.href = url;
+				break;
+			case 'disk':
+				url = '{ADMINSCRIPT}?mod=cloud&bz=' + bz + '&op=oauth';
+				window.location.href = url;
+				break;
+			default:
+			   url = '{ADMINSCRIPT}?mod=cloud&bz=' + bz + '&op=oauth';
+				window.location.href = url;
+				break;
+		}
+	}
+	jQuery(document).ready(function(e) {
+		jQuery('.thumbnails li').mouseenter(function() {
+			jQuery(this).addClass('hover');
+		}).mouseleave(function() {
+			jQuery(this).removeClass('hover');
+		}).click(function() {
+			var bz = jQuery(this).attr('bz');
+			var type = jQuery(this).attr('data_type');
+			connect_start(bz, type);
+		});
+		jQuery(document).mousedown(function() {
+			jQuery('.thumbnails li').removeClass('Selected');
+		});
+	});
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

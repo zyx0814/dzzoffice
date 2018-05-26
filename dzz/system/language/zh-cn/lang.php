@@ -68,6 +68,17 @@ $lang = array
 	'you_not_recorded'=>'您还没有登录',
 	'added_desktop_failure'=>'添加到桌面失败',
 	'no_institution_users'=>'无机构用户',
-	'news_platform_send_here'=>'欢迎您！,平台的消息和通知会及时的发送到此处'
+	'news_platform_send_here'=>'欢迎您！,平台的消息和通知会及时的发送到此处',
+    'downpackage' => '打包下载',
+    'iconview_2' => '中等图标',
+    'iconview_4' => '详细列表',
+    'openwith' => '打开方式',
+    'upload' => '上传',
+    'uploadfile' => '上传文件',
+    'uploadfolder' => '上传文件夹',
+    'newly_build' => '新建',
+    'refresh' => '刷新',
+    'rename' => '重命名',
+    'edit_date' => '修改时间',
 );
 ?>

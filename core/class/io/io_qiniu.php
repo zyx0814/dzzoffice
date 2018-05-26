@@ -222,21 +222,23 @@ class io_qiniu extends io_api
 		$imgcachePath='imgcache/';
 		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace(':','/',$path)));
 		foreach($_G['setting']['thumbsize'] as $value){
-			$target=$imgcachePath.($cachepath).'.'.$value['width'].'_'.$value['height'].'.jpeg';
+			$target = $imgcachePath . ($cachepath) . '.' . $value['width'] . '_' . $value['height'] . '_1.jpeg';
+			$target1 = $imgcachePath . ($cachepath) . '.' . $value['width'] . '_' . $value['height'] . '_2.jpeg';
 			@unlink($_G['setting']['attachdir'].$target);
+			@unlink($_G['setting']['attachdir'].$target1);
 		}
 	}
-	public function createThumb($path,$size,$width=0,$height=0){
+	public function createThumb($path,$size,$width=0,$height=0,$thumbtype  = 1){
 		if(intval($width)<1) $width=$_G['setting']['thumbsize'][$size]['width'];
 		if(intval($height)<1) $height=$_G['setting']['thumbsize'][$size]['height'];
 		return;
 	}
 	//获取缩略图
-	public function getThumb($path,$width,$height,$original,$returnurl=false){
+	public function getThumb($path,$width,$height,$original,$returnurl=false,$thumbtype = 1){
 		global $_G;
 		$imgcachePath='imgcache/';
 		$cachepath=str_replace(urlencode('/'),'/',urlencode(str_replace('//','/',str_replace(':','/',$path))));
-		$target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '.jpeg';
+		$target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height. '_'.$thumbtype.'.jpeg';
 		if(!$original && @getimagesize($_G['setting']['attachdir'].'./'.$target)){
 			if($returnurl) return $_G['setting']['attachurl'].'/'.$target;
 			IO::output_thumb($_G['setting']['attachdir'].'./'.$target);
@@ -252,7 +254,7 @@ class io_qiniu extends io_api
 			dmkdir($targetpath);
 			require_once libfile('class/image');
 			$image = new image();
-			if($thumb = $image->Cropper($imgurl, $target, $width, $height,$srcx,$srcy)){
+			if($thumb = $image->Thumb($imgurl, $target, $width, $height,$thumbtype)){
 				if($returnurl) return $_G['setting']['attachurl'].'/'.$target;
 				IO::output_thumb($_G['setting']['attachdir'].'./'.$target);
 			}else{

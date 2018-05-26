@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>关于</title>
+    <link rel="stylesheet" href="static/jquery_weui/css/weui.min.css">
+    <link rel="stylesheet" href="static/jquery_weui/css/jquery-weui.min.css">
+    <link rel="stylesheet" href="static/dzzicon/icon.css">
+    <script type="text/javascript" src="static/jquery/jquery.min.js"></script>
+    <style>
+        html,body {
+            height: 100%;
+        }
+        .about-container {
+            width: 100%;
+            height: 100%;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-align-content: center;
+            align-content: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+        }
+        .wrapper {
+            text-align: center;
+        }
+        .about-body p {
+            margin-bottom: 10px;
+        }
+        a {
+            cursor: pointer;
+            color: #3779ff;
+        }
+        .about-body .logo {
+            padding: 10px;
+            margin-bottom: 0;
+        }
+        .about-body .name {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .about-body .name>span {
+            padding: 0 2px;
+        }
+        .about-body p .guide {
+            color: #999;
+        }
+        .about-copyright {
+            color: #999;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+        }
+        .about-copyright>a {
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="about-container">
+
+    <div class="wrapper">
+        <div class="modal-body about-body">
+            <p class="logo">
+                <img src="$about[logo]" />
+            </p>
+            <p class="name">
+                <!--{if $about['name_zh']}-->
+                <span class="name-zh">$about[name_zh]</span>
+                <!--{/if}-->
+                <!--{if $about['name_en']}-->
+                <span class="name-en"><b>Dzz</b>$about[name_en]</span>
+                <!--{/if}-->
+
+            </p>
+            <div class="detail">
+                <!--{if $about['version']}-->
+                <p class="version">
+                    <span class="guide">{lang about_current_version}:</span> {lang community_edition} $about[version]
+                </p>
+                <!--{/if}-->
+                <p class="license">
+                    <span class="guide">{lang license}:</span> <a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_blank">AGPL V3 {lang public_license}</a>
+                </p>
+                <p class="support">
+                    <span class="guide">{lang service_and_support}:</span> <a href="http://www.dzzoffice.com" target="_blank">www.dzzoffice.com</a>
+                </p>
+            </div>
+        </div>
+        <div class="about-copyright">Copyright ©2012-{eval echo dgmdate(TIMESTAMP,'Y');} <a href="http://www.dzzoffice.com" target="_blank" >DzzOffice</a>&nbsp; All Rights Reserved</div>
+
+    </div>
+</div>
+
+</body>
+
+</html>

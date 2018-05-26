@@ -1,0 +1,148 @@
+<div class="datacontent">
+    <header class="weui-search-bar" id="searchBar">
+        <form class="weui-search-bar__form" action="" onsubmit="return getSearchData();">
+            <div class="weui-search-bar__box">
+
+                <input type="search" class="weui-search-bar__input" id="searchInput"
+                       placeholder="搜索$folderdata[fname]" required="">
+                <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel"><i
+                        class="weui-icon-clear"></i></a>
+            </div>
+            <label class="weui-search-bar__label" id="searchText">
+                <span>$folderdata[fname]</span>
+                <i class="weui-icon-search"></i>
+            </label>
+        </form>
+        <a href="javascript:" class="weui-search-return__cancel-btn" id="searchreturn">取消</a>
+    </header>
+    <!--{if $fid}-->
+    <p class="weui-type-place weui-type-place-span">类型限制：<span id="extlimit"> 无</span></p>
+    <!--{/if}-->
+    <!--{if $fid}-->
+    <p class="weui-type-place weui-type-resulting hide">‘$folderdata[fname]’中搜索结果</p>
+    <!--{/if}-->
+    <!--搜索框结束-->
+    <!--搜索内容开始-->
+    <section class="weui-search-con weui-cells hide" data-height="topheight">
+        <div class="weui-cell weui-cell-search">
+            <div class="weui-cell__hd"><span class="dzz dzz-grade weui-cell__img weui-cell__search"></span></div>
+            <div class="weui-cell__bd">
+                <p><span class="weui-search-word">搜索：</span><i class="weui-search-value"></i></p>
+            </div>
+        </div>
+    </section>
+    <!--搜索内容结束 -->
+    <section class="weui-cells weui-cells__recent weui-cells__margin_footer" id="fileList-search">
+
+
+    </section>
+    <script type="text/javascript">
+        var fid = '{$fid}';
+        if (fid) _filemanage.dataparam.fid = fid;
+        $(function () {
+            if (_filemanage.defaultexttype) {
+                $('#extlimit').text(_filemanage.defaultexttype);
+            }
+            //搜索页直接获取焦点
+            $('#searchBar').addClass('weui-search-bar_focusing');
+            $('#searchBar').find('.weui-search-bar__input').trigger("click").focus();
+            //取消搜索返回上一页
+            $(document).on('tap', '#searchreturn', function () {
+                var oldhash = '{$oldhash}';
+                oldhash = oldhash.replace(/-/g, '&');
+                console.log(oldhash);
+                location.hash = '#' + oldhash;
+            })
+//出现搜索按钮
+            $(document).off('keyup.search').on('keyup.search', '#searchInput', function (e) {
+                setTimeout(function () {
+                    setsearchVal();
+                }, 500);
+            })
+            function setsearchVal() {
+                var val = $('#searchInput').val(),
+                    emptypreg = /^\s*$/;
+                val = val.replace(/[\ud800-\udbff][\udc00-\udfff]/gi, '', val);
+                $('#searchInput').val(val);
+                if (emptypreg.test(val)) {
+                    jQuery('.weui-search-con').addClass('hide');
+                    $('#fileList-search').html('');
+                     $('.weui-type-resulting').addClass('hide');
+                	$('.weui-type-place-span').removeClass('hide');
+                } else {
+                    jQuery('.weui-search-con').removeClass('hide');
+                }
+                jQuery('.weui-cell__bd').find('.weui-search-value').text(val);
+                height();
+            }
+
+            //清空内容
+            $(document).off('tap.canclesearch').on('tap.canclesearch', '#searchCancel', function () {
+                $('#searchInput').val('');
+                $('.weui-search-con').addClass('hide');
+                $('#fileList-search').html('');
+                $('.weui-type-resulting').addClass('hide');
+                $('.weui-type-place-span').removeClass('hide');
+            })
+            //搜索结果
+            $(document).off('tap.getdata').on('tap.getdata', '.weui-search-con', function () {
+                getSearchData();
+            })
+
+        })
+        function getSearchData() {
+            var keyword = $('#searchInput').val();
+            _filemanage.dataparam.page = 1;
+            if (_filemanage.defaultexttype) {
+                _filemanage.dataparam.exts = _filemanage.defaultexttype;
+            }
+            _filemanage.dataparam.keyword = keyword;
+            $.post(_filemanage.appUrl + '&do=searchfile', _filemanage.dataparam, function (data) {
+                $('#fileList-search').html(data);
+                if ($('.weui-type-resulting').length) {
+                    $('.weui-type-resulting').removeClass('hide');
+                    $('.weui-type-place-span').addClass('hide');
+                }else{
+                	$('.weui-type-resulting').addClass('hide');
+                    $('.weui-type-place-span').removeClass('hide');
+                }
+            })
+            return false;
+        }
+        //获取id高度
+        function height() {
+            var h = $(document).outerHeight(true);
+            var h1 = $('#searchBar').outerHeight(true);
+            var h2 = $('.weui-search-con').outerHeight(true);
+            if ($('.weui-search-con').hasClass('hide')) {
+                $('.weui-cell-search-images').css('height', h - h1);
+            } else {
+                $('.weui-cell-search-images').css('height', h - h1 - h2);
+            }
+            $('.weui-cells__margin_footer').css('margin-bottom', 0);
+        }
+	//单页滚动加载
+	var loading = false;  //状态标记
+	$(document.body).infinite().on("infinite", function () {
+	    if (loading) return;
+	    loading = true;
+	    if (_filemanage.dataparam.page) {
+	        $.post(_filemanage.appUrl + '&do=searchfile', _filemanage.dataparam,function(data){
+                $('#fileList-search').append(data);
+                if ($('.weui-type-resulting').length) {
+                    $('.weui-type-resulting').removeClass('hide');
+                    $('.weui-type-place-span').addClass('hide');
+                }else{
+                    $('.weui-type-resulting').addClass('hide');
+                    $('.weui-type-place-span').removeClass('hide');
+                }
+	        })
+	    } else {
+	        jQuery(document.body).destroyInfinite();
+	    }
+	});
+    </script>
+</div>
+
+
+

@@ -268,7 +268,7 @@ function checkemail(el) {
 		errormessage(el, __lang.email_illegal);
 		return;
 	}
-	jQuery.getJSON('user.php?mod=ajax&inajax=yes&action=checkemail&email=' + email, function(json) {	
+	jQuery.getJSON('user.php?mod=ajax&action=checkemail&email=' + email, function(json) {	
 			errormessage(el, json.error||'');	
 	});
 }

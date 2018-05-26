@@ -218,7 +218,7 @@ function feed_reply(arr){
 function getReplyForm(tid,pid,allowattach,allowat,allowsmiley){
 	jQuery('#comment_container .itemfeed .publishsharewrap').hide();
 	if(!document.getElementById('reply_publish_'+tid)){
-		jQuery('<div id="reply_publish_'+tid+'"></div>').appendTo('#comment_'+tid);
+		var el = jQuery('<div id="reply_publish_'+tid+'"></div>').appendTo('#comment_'+tid);
 		ajaxget(DZZSCRIPT+'?mod=comment&op=ajax&do=getReplyForm&cid='+tid+'&allowattach='+allowattach+'&allowat='+allowat+'&allowsmiley='+allowsmiley,'reply_publish_'+tid,'reply_publish_'+tid,'','',function(){
 			 var el=jQuery('#reply_who_'+tid);
 			 if(pid>0){
@@ -229,6 +229,8 @@ function getReplyForm(tid,pid,allowattach,allowat,allowsmiley){
 				el.hide(); 
 				jQuery('#reply_pid_'+tid).val('0');
 			}
+			jQuery('#comment_'+tid+' textarea[name="message"]').val('').focus();
+			jQuery('#message_'+tid).css('height',25);
 		});
 	}else{ 
 		var el=jQuery('#reply_who_'+tid);
@@ -241,9 +243,10 @@ function getReplyForm(tid,pid,allowattach,allowat,allowsmiley){
 				jQuery('#reply_pid_'+tid).val('0');
 			}
 		jQuery('#reply_publish_'+tid).find('.publishsharewrap').show().end().slideDown(500);
+		jQuery('#comment_'+tid+' textarea[name="message"]').val('').focus();
+		jQuery('#message_'+tid).css('height',25);
 	}
-	jQuery('#message_'+tid).val('').focus();
-	jQuery('#message_'+tid).css('height',25);
+	
 }
 
 function feed_edit(cid,allowattach,allowat,allowsmiley){

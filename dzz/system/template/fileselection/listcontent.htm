@@ -1,0 +1,345 @@
+<!--头部开始-->
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="hide_window()"> <span aria-hidden="true">×</span> </button>
+    <h4 class="modal-title"><!--{if $type}-->另存为<!--{else}-->选择文件<!--{/if}--></h4>
+</div>
+<!--头部结束-->
+<!--内容区开始-->
+<div class="select-fileall clearfix">
+    <div class="select-filetop clearfix bs-top-container">
+        <!--地址栏开始-->
+        <div class="select-address">
+            <div class="address-all">
+                <div class="address-goback">
+                    <a href="javascript:history.back();">
+                        <span class="dzz dzz-nav-back"></span>
+                        <span>返回</span>
+                        <span class="dzz dzz-vline dzz-address-vline"></span>
+                    </a>
+                </div>
+                <div class="address-container">
+                    <div class="address-left-arrow address-arrow">《</div>
+                    <div class="address-right-arrow address-arrow">》</div>
+                    <div class="address-field">
+                    </div>
+                    <input type="text" value="地址栏" class="form-control borderInput inputaddress referer_path"/>
+                </div>
+            </div>
+        </div>
+        <!--地址栏结束-->
+        <!--地址栏右侧开始-->
+        <div class="select-filetopbottom clearfix">           
+            <div class="select-filetopright pull-right">
+            	<div class="input-group">
+	                <input type="text" placeholder="搜索" class="form-control select-display" id="searchval" style="display: none;"/>
+	                <span class="dzz dzz-none"></span>
+	                <span class="dzz dzz-search select-search-block"></span>
+	                
+                </div>
+                	
+            	
+            <input id="$ctrlid" type="hidden" name="fid" value=""/>
+            <!--{if $allowcreate}-->
+            <div class="dropdown newMenu pull-left">
+                <button type="text" class="dropdown-toggle select-button-dropdown" id="exampleColorDropdown2" data-toggle="dropdown"><span class="dzz dzz-folder select-button-folder"></span></button>
+                <ul class="dropdown-menu dropdown-menu-primary" aria-labelledby="exampleGroupDrop1" role="menu">
+
+                    <li role="presentation" class="js-newfolder folderPermMust">
+                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newFolder')" role="menuitem">
+                            <span class="dzz dzz-folder filee-icon filee-folder"></span>
+                            <span class="file-text">{lang default_folder_name}</span></a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li class="yunfile-upload js-upload-file"><a href="javascript:;">
+                        <span class="dzz  dzz-upload filee-icon filee-upload"></span>
+                        <span class="file-text">{lang uploadfile}</span>
+                        <input type="file" name="files[]" id="wangpan-upload-file" class="wangpan-upload-file" multiple></a>
+                    </li>
+                    <li class="yunfile-upload js-upload-folder folderPermMust"><a href="javascript:;">
+                        <span class="dzz dzz-folder filee-icon filee-folder"></span>
+                        <span class="file-text">{lang uploadfolder}</span>
+                        <input type="file" name="files[]" multiple webkitdirectory="" value="" id="wangpan-upload-folder" class="wangpan-upload-file"></a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <!--<li role="presentation">
+                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newLink')" role="menuitem">
+                            <span class="dzz dzz-language filee-icon filee-language"></span>
+                            <span class="file-text">{lang newlink}</span>
+                        </a>
+                    </li>-->
+                    <!--<li role="presentation">
+                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newDzzDoc')" role="menuitem">
+                            <span class="dzz dzz-description filee-icon filee-description"></span>
+                            <span class="file-text">{lang extname_dzzdoc}</span>
+                        </a>
+                    </li>-->
+                    <li role="presentation">
+                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newTxt')" role="menuitem">
+                            <span class="dzz dzz-file filee-icon filee-file"></span>
+                            <span class="file-text">{lang extname_txt}</span>
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li role="presentation">
+                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newDoc')" role="menuitem">
+                            <span class="filee-icon dzz dzz-file-text filee-file-text"></span>
+                            <span class="file-text">{lang word_document}</span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newExcel')" role="menuitem">
+                            <span class="dzz dzz-file-excel filee-icon filee-file-excel"></span>
+                            <span class="file-text">{lang excel_document}</span>
+                        </a>
+                    </li>
+                    <li role="presentation">
+                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newPowerPoint')" role="menuitem">
+                            <span class="dzz dzz-file-ppt filee-icon filee-file-ppt"></span>
+                            <span class="file-text">{lang ppt_document}</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--{/if}-->
+            	
+                <!--{if !$type}-->
+                <!--<div class="select-display dropdown">
+                    <button type="text" class="form-control" value="" data-toggle="dropdown" id="select-button">
+                        <span class="select-alltype">{lang all_type}</span>
+                        <span class="dzz dzz-arrow-dropdown dzz-select-button"></span>
+                    </button>
+                    <ul class="dropdown-menu select-type">
+                        <li>
+                            <a href="javascript:;" data-val="all">{lang all_type}</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" data-val="image">{lang pictures_photos}</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" data-val="pdf">PDF</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" data-val="document">{lang type_attach}</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" data-val="excel">{lang spreadsheet}</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" data-val="ppt">{lang power_point}</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" data-val="video">{lang type_video}</a>
+                        </li>
+
+                        <li>
+                            <a href="javascript:;" data-val="folder">{lang typename_folder}</a>
+                        </li>
+                    </ul>
+                </div>-->
+                <!--{/if}-->
+                
+                <div class="select-change select-display">
+                    <a href="javascript:;" class="icons-thumbnail" onclick="_selectfile.Arrange(this,'')">
+                        <i class="dzz dzz-layout" ></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    	<!--地址栏右侧结束-->
+    </div>
+    <div class="select-filecenter  clearfix">
+        <div class="bs-left-container selectScroll-y clearfix">
+            <div class="mechsnismMenu" id="position" class="usertree-container list-unstyled"></div>
+        </div>
+        <div class="left-drager selectScroll-y" >
+        </div>
+        <div class="bs-main-container selectScroll-y middlecenter" id="middleconMenu" >
+
+        </div>
+    </div>
+
+    <div class="select-filebottom clearfix " data-selectHeight="45">
+    	    <!--{if $type == 1}-->
+        <div class="input-black input-fixation clearfix">
+            <label class="control-label input-label">文件名:</label>
+            <div class="input-animate">
+                <input type="text" class="form-control" placeholder="文件名" value="$savefile[name]" name="savenewname" id="savenewname"/>
+            </div>
+        </div>
+         <!--{/if}-->
+        <div class="input-black input-fixation clearfix">
+            <label class="control-label input-label ">类型:</label>
+            <div class="input-animate ">
+	            <div class="dropup typestyle">
+	            	<button type="text" class="form-control" value="" data-toggle="dropdown" id="type">
+	            		<span class="select-style">文档格式</span>
+	            		<span class="dzz dzz-arrow-dropdown dzz-select-button"></span>
+	            	</button>
+	            	<ul class="dropdown-menu typedropup">
+	            		<li><a href="javascript:;">大型文档格式(*.PSB)</a></li>
+	            		<li><a href="javascript:;">BMP(*.BMP;*DIB)</a></li>
+	            		<li><a href="javascript:;">CompuServe GIF(*.GIF)</a></li>
+	            		<li><a href="javascript:;">Dicom(*.DCM)</a></li>
+	            		<li><a href="javascript:;">JPEG(*.JPG)</a></li>
+	            		<li><a href="javascript:;">PCX(*.PCX)</a></li>
+	            		<li><a href="javascript:;">PNG(*.PNG;*.PNS)</a></li>
+	            		<li><a href="javascript:;">TIFF(*.TIF;*.TIFF)</a></li>
+	            	</ul>
+	            </div>
+	        	
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+<script type="text/javascript" reload="1">
+    //拖拽初始化
+    jQuery('.left-drager').leftDrager_layout(function () {
+    },{'leftHide':480});
+    var opened = {};
+    //input框初始化
+    $(document).ready(function (e) {
+        $('.input-black').each(function () {
+            InputAnimate.init($(this));
+        });
+
+        /*jstree 左侧个人、机构及群组*/
+        opened = window.opener;
+        var _explorer = {};
+        _explorer.jstree = jQuery('#position').jstree({
+            "core": {
+                "multiple": true,
+                "check_callback": true,
+                "themes": {
+                    "responsive": false
+                },
+                'data': function (node, cb) {
+                    var self = this;
+                    $.getJSON('index.php?mod=system&op=fileselection&do=listtree&operation=get_children&range=' + range, {'id': node.id}, function (json) {
+                        cb.call(this, json);
+                    });
+                }
+            },
+            "types": {
+                "#": {
+                    "max_children": -1,
+                    "max_depth": -1,
+                    "valid_children": -1
+                },
+                "organization": {//部门
+                    "icon": "dzz dzz-account-box",
+                    "valid_children": ['depart', 'folder']
+                },
+                "department": {
+                    "icon": "dzz/system/images/department.png",
+                    "valid_children": ['depart', 'folder']
+                },
+                "group": {//群组
+                    "li_attr": 'aaa',
+                    "icon": "dzz dzz-group",
+                    "valid_children": ['folder']
+                },
+                "home": {//我的网盘
+                    "icon": "dzz dzz-mydisk",
+                    "valid_children": ['folder']
+                },
+                "folder": {//群组
+                    "icon": "dzz dzz-folder",
+                    "valid_children": ['folder']
+                },
+            },
+            "plugins": ['types', 'search', 'wholerow']
+        });
+    });
+    //左侧点击
+    $('#position').off('select_node.jstree').on('select_node.jstree', function (e, data) {
+        var inst = $('#position').jstree(true);
+        var node = data.node;
+        var hash = node.li_attr.hashs;
+        var ohash = window.location.hash.replace('#', '');
+        if(!hash){
+            inst.open_node(node);
+            inst.deselect_node(node);
+            _explorer.jstree_select(ohash);
+        }else{
+            if (ohash.replace(/&do=\w+/i, '') == hash) {
+            } else {
+                location.hash = hash;
+            }
+            inst.open_node(node);
+        }
+        return false;
+    });
+    //地址栏获取焦点
+    $(document).off('click.address-container').on('click.address-container', '.address-container', function () {
+        $('.borderInput').show().select();
+        $('.address-field').hide();
+        $(document).on('mousedown.borderInput', function (e) {
+            e = e ? e : window.event;
+            var obj = e.srcElement ? e.srcElement : e.target;
+            if (/input|textarea/i.test(obj.tagName)) {
+                return true;
+            }
+            $('.borderInput').trigger('blur');
+            $(document).off('mousedown.borderInput');
+        });
+    })
+    //地址栏失去焦点
+    $(document).off('blur.borderInput').on('blur.borderInput', '.borderInput', function () {
+        $('.borderInput').hide();
+        $('.address-field').show();
+    })
+    //显示搜索输入框
+    jQuery(document).off('click.showsearch').on('click.showsearch','.select-search-block',function(e){
+        $(this).closest('.input-group').find('#searchval').show().focus();
+        var search = jQuery('.select-filetopbottom').outerWidth();
+        jQuery('.address-all').css({'margin-right':search});
+    });
+    //类型切换
+    jQuery(document).off('click.select-type').on('click.select-type', '.typedropup li', function () {
+        var containsid = _selectfile.winid;
+        var obj = $('a', this);
+        var text = obj.text();
+        var val = obj.data('exts');
+        $('.select-style').html(text).data('exts', val);
+        _selectfile.cons[containsid].exts = val;
+        _selectfile.cons[containsid].pageClick();
+    })
+    //搜索框输入
+    jQuery(document).off('keyup.searchval').on('keyup.searchval', '#searchval', function (e) {
+        var obj = $(this);
+        setTimeout(function(){
+            var containsid = _selectfile.winid;
+            var keyword = obj.val();
+            var emptytest = /^\s*$/;
+            if (!emptytest.test(keyword)) {
+                _selectfile.cons[containsid].keyword = keyword;
+            }else{
+                _selectfile.cons[containsid].keyword = '';
+            }
+            var val = $('.select-style').data('exts');
+            if (val) {
+                _selectfile.cons[containsid].exts = val;
+            }
+            console.log(val);
+            _selectfile.cons[containsid].pageClick();
+        },1000);
+
+        return false;
+    })
+    $(document).off('blur.searchword').on('blur.searchword','#searchval',function(){
+        var emptytest = /^\s*$/;
+        if (emptytest.test(this.value)) {
+            jQuery('#searchval').hide();
+            var search = jQuery('.select-filetopbottom').outerWidth();
+            jQuery('.address-all').css({'margin-right':search});
+        }
+    })
+    function empty_searchkeyword(){
+        $('#searchval').val('');
+        jQuery('#searchval').hide();
+        var search = jQuery('.select-filetopbottom').outerWidth();
+        jQuery('.address-all').css({'margin-right':search});
+    }
+</script>

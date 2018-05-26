@@ -1,0 +1,53 @@
+<div class="datacontent">
+<section class="weui-cells weui-cells__recent">
+    <!--{if $myexplorer}-->
+    <a class="weui-cell weui-cell_access document-data" href="javascript:;" data-hash="#file&fid={$myexplorer[fid]}">
+        <div class="weui-cell__hd"><span class="dzz dzz-member weui-cell__img weui-cell__explorer"></span></div>
+        <div class="weui-cell__bd">
+            <h4>$myexplorer[name]</h4>
+            <p>
+                <span class="file">文件:</span><i class="file-number">$myexplorer[filenum],</i>
+                <span class="folder">文件夹:</span><i class="folder-number">$myexplorer[foldernum]</i>
+            </p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <!--{/if}-->
+    <!--{if count($myorgs)}-->
+    <!--{loop $myorgs $v}-->
+    <a class="weui-cell weui-cell_access document-data" href="javascript:;" data-hash="#file&gid={$v[orgid]}&fid={$v[fid]}">
+        <div class="weui-cell__hd">
+            <!--{if isset($v[icon])}-->
+            <img src=" $v[icon]" class="weui-cell__recentimg"/>
+            <!--{else}-->
+            <!--{eval echo avatar_group($v['orgid'],array($v['orgid']=>array('aid'=>$v['aid'],'orgname'=>$v['orgname'])));}-->
+            <!--{/if}-->
+        </div>
+        <div class="weui-cell__bd">
+            <h4>$v[orgname]</h4>
+            <p>
+                <span class="file">文件:</span><i class="file-number">$v[filenum],</i>
+                <span class="folder">文件夹:</span><i class="folder-number">$v[foldernum]</i>
+            </p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <!--{/loop}-->
+    <!--{/if}-->
+</section>
+<section class="weui-cells weui-cells__recent">
+    <!--{if $mygroup}-->
+    <a class="weui-cell weui-cell_access document-data" href="javascript:;" data-hash="#group">
+        <div class="weui-cell__hd"><span class="dzz dzz-group weui-cell__img weui-cell__group"></span></div>
+        <div class="weui-cell__bd">
+            <h4>群组</h4>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <!--{/if}-->
+</section>
+<script>
+    _filemanage.fid = '';
+    _filemanage.dataparam = {};
+</script>
+</div>

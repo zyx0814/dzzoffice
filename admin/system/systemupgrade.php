@@ -49,8 +49,9 @@ if ($operation == 'patch' || $operation == 'cross') {
 
     if ($_GET['ungetfrom']) {
         if (md5($_GET['ungetfrom'] . $_G['config']['security']['authkey']) == $_GET['ungetfrommd5']) {
-            $dbreturnurl = $_G['siteurl'] . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5';
-            dheader('Location: ' . $_G['siteurl'] . 'install/update.php?step=prepare&from=' . rawurlencode($dbreturnurl) . '&frommd5=' . rawurlencode(md5($dbreturnurl . $_G['config']['security']['authkey'])));
+            $dbreturnurl = $_G['siteurl'] . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5'; 
+            $url = outputurl(  $_G['siteurl'] . 'install/update.php?step=prepare&from=' . rawurlencode($dbreturnurl) . '&frommd5=' . rawurlencode(md5($dbreturnurl . $_G['config']['security']['authkey'])) );
+            dheader('Location: ' . $url);
         } else {
             showmessage('upgrade_param_error');
         }
@@ -101,7 +102,7 @@ if ($operation == 'patch' || $operation == 'cross') {
         $updatefilelist = $dzz_upgrade -> fetch_updatefile_list($upgradeinfo);
         $updatemd5filelist = $updatefilelist['md5'];
         $updatefilelist = $updatefilelist['file'];
-        $theurl = ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&locale=' . $locale . '&charset=' . $charset;
+        $theurl = $_G['siteurl'].ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&locale=' . $locale . '&charset=' . $charset;
 
         if (empty($updatefilelist)) {
             $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_download_upgradelist_error', array('upgradeurl' => upgradeinformation(-2))) . '</p>';
@@ -167,14 +168,12 @@ if ($operation == 'patch' || $operation == 'cross') {
                 exit();
             }
         }
-    } elseif ($step == 3) {
-        list($modifylist, $showlist, $ignorelist) = $dzz_upgrade -> compare_basefile($upgradeinfo, $updatefilelist);
-        if (empty($modifylist) && empty($showlist) && empty($ignorelist)) {
+    } elseif ($step == 3) { 
+        list($modifylist, $showlist, $ignorelist,$newlist) = $dzz_upgrade -> compare_basefile($upgradeinfo, $updatefilelist);
+        if (empty($modifylist) && empty($showlist) && empty($ignorelist) && empty($newlist)) {
             $msg = lang('filecheck_nofound_md5file', array('upgradeurl' => upgradeinformation(-4)));
         }
-
         $linkurl = $theurl . '&step=4';
-
     } elseif ($step == 4) {
 
         $confirm = $_GET['confirm'];
@@ -322,7 +321,9 @@ if ($operation == 'patch' || $operation == 'cross') {
             exit();
 
         }
-        dheader('Location: ' . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5');
+        
+        $url = outputurl( $_G['siteurl'].MOD_URL.'&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5' );
+        dheader('Location: ' . $url);
 
     } elseif ($step == 5) {
         $file = DZZ_ROOT . './data/update/dzzoffice' . $version . '/updatelist.tmp';
@@ -345,9 +346,9 @@ if ($operation == 'patch' || $operation == 'cross') {
 
     }
 
-} elseif ($operation == 'check') {
+}
+elseif ($operation == 'check') {
     $msg = '';
-
     if (!intval($_GET['rechecking'])) {
         $upgrade_step = C::t('cache') -> fetch('upgrade_step');
         if (!empty($upgrade_step['cachevalue'])) {
@@ -377,11 +378,12 @@ if ($operation == 'patch' || $operation == 'cross') {
 
     } else {
         $dzz_upgrade -> check_upgrade();
-
-        dheader('Location: ' . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=showupgrade');
+        $url = outputurl( $_G['siteurl'].MOD_URL.'&op=systemupgrade&operation=showupgrade' );
+        dheader('Location: ' . $url);
     }
 
-} elseif ($operation == 'showupgrade') {
+}
+elseif ($operation == 'showupgrade') {
 
     if ($_G['setting']['upgrade']) {
 
@@ -429,7 +431,8 @@ if ($operation == 'patch' || $operation == 'cross') {
         $msg = lang('upgrade_latest_version');
     }
 
-} elseif ($operation == 'recheck') {
+}
+elseif ($operation == 'recheck') {
     $upgrade_step = C::t('cache') -> fetch('upgrade_step');
     $upgrade_step = dunserialize($upgrade_step['cachevalue']);
     $file = DZZ_ROOT . './data/update/DzzOffice' . $upgrade_step['version'] . '/updatelist.tmp';
@@ -441,7 +444,9 @@ if ($operation == 'patch' || $operation == 'cross') {
     updatecache('setting');
     $old_update_dir = './data/update/';
     $dzz_upgrade -> rmdirs(DZZ_ROOT . $old_update_dir);
-    dheader('Location: ' . ADMINSCRIPT . '?mod=system&op=systemupgrade');
+    
+    $url = outputurl($_G['siteurl'].MOD_URL.'&op=systemupgrade' );
+    dheader('Location: ' . $url);
 }
 include template('upgrade');
 ?>

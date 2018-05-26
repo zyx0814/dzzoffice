@@ -20,16 +20,19 @@ $moderator=intval($_GET['moderator']);//是否仅可以选择我管理的群组�
 $range=intval($_GET['range']);//0：所有部门和群组；1：仅部门；2：仅群组
 $multiple=intval($_GET['multiple']); //是否允许多线
 $callback=$_GET['callback']?$_GET['callback']:'callback_selectuser';//回调函数名称
+$callback_url = isset($_GET['callback_url']) ? trim($_GET['callback_url']):'';
+$deferer = dreferer();
 $token=htmlspecialchars($_GET['token']);
 $gets = array(
 		'zero'=>$zero,
-		'nouser'=>nouser,
+		'nouser'=>$nouser,
 		'stype'=>$stype,
 		'moderator'=>$moderator,
 		'range'=>$range,
 		'multiple'=>$multiple,
 		'nosearch'=>1,
-		'ctrlid'=>'seluser'
+		'ctrlid'=>'seluser',
+		'callback_url'=>$callback_url
 	);
 $theurl = MOD_URL."&op=orgtree&".url_implode($gets);
 $ids=explode(',',$ids);
@@ -96,5 +99,12 @@ if($uids){
 }
 $openarr_length=count($open)?'1':'';
 $openarr=json_encode($open);
-include template('selorguser');
-exit();
+$ismobile = helper_browser::ismobile();
+if($ismobile){
+	include template('mobile_selectuser');
+	dexit();
+}else{
+	include template('selorguser');
+	exit();
+}
+

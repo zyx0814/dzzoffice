@@ -18,7 +18,7 @@ $_config = array();
  * $_config['db']['2']['dbhost'] = 'localhost';
  * ...
  */
-$_config['db'][1]['dbhost']  		= 'localhost';//支持直接加端口如：127.0.0.1:3306或使用UNix socket 如：/tmp/mysql.sock
+$_config['db'][1]['dbhost']  		= 'localhost';//支持三种直接加端口如：127.0.0.1:3306或使用UNix socket 如：/tmp/mysql.sock
 $_config['db'][1]['dbuser']  		= 'root';
 $_config['db'][1]['dbpw'] 	 		= 'root';
 $_config['db'][1]['dbcharset'] 		= 'utf8';
@@ -184,10 +184,10 @@ $_config['security']['querysafe']['afullnote']	= 0;
 
 $_config['admincp']['founder']			= '1';		// 站点创始人：拥有站点管理后台的最高权限，每个站点可以设置 1名或多名创始人
 													// 可以使用uid，也可以使用用户名；多个创始人之间请使用逗号“,”分开;
-$_config['admincp']['checkip']			= 1;		// 后台管理操作是否验证管理员的 IP, 1=是[安全], 0=否。仅在管理员无法登陆后台时设置 0。
-$_config['admincp']['runquery']			= 1;		// 是否允许后台运行 SQL 语句 1=是 0=否[安全]
+$_config['admincp']['checkip']			= 1;		// 后台管理操作是否验证管理员的 IP, 1=是[安全], 0=否。仅在管理员无法登录后台时设置 0。
+$_config['admincp']['runquery']			= 0;		// 是否允许后台运行 SQL 语句 1=是 0=否[安全]
 $_config['admincp']['dbimport']			= 0;		// 是否允许后台恢复网站数据  1=是 0=否[安全]
-$_config['userlogin']['checkip']		= 1; 		//用户登录错误验证ip，对于同一ip同时使用时建议设置为0,否则当有一位用户登录错误次数超过5次，该ip被锁定15分钟，导致其他的同IP用户无法登陆;
+$_config['userlogin']['checkip']		= 1; 		//用户登录错误验证ip，对于同一ip同时使用时建议设置为0,否则当有一位用户登录错误次数超过5次，该ip被锁定15分钟，导致其他的同IP用户无法登录;
 
 //$_config['system_os']	= 'linux';		//windows,linux,mac,系统会自动判断
 //$_config['system_charset']='utf-8';	//操作系统编码，不设置系统将根据操作系统类型来判断linux:utf-8;windows:gbk;

@@ -6,10 +6,10 @@ var InputAnimate = {};
 		self.label = self.box.find('.input-label');
 		var length = obj.find('.input-animate').length;
 		if(self.box.hasClass('disabled')){//需要disabled时
-			self.box.find('input.form-control,textarea.form-control,select.form-control,.tagsinput input').attr("disabled",true);
+			self.box.find('input.form-control,button.form-control,textarea.form-control,select.form-control,.tagsinput input').attr("disabled",true);
 		}
 		obj.find('.input-animate').each(function(i){
-			var inputs = $(this).find('input.form-control,textarea.form-control,select.form-control,.tagsinput input');
+			var inputs = $(this).find('input.form-control,button.form-control,textarea.form-control,select.form-control,.tagsinput input');
 			if(self.box.hasClass('input-float')){//是否为float样式
 				self.float_style(inputs);
 				self.float_change(inputs);
@@ -22,7 +22,7 @@ var InputAnimate = {};
 	}
 	InputAnimate.float_style = function(obj){
 		var self = this;
-		if($.trim(obj.val()) || obj.get(0).tagName == 'SELECT')self.box.addClass('focus');
+		if(obj.length && ($.trim(obj.val()) || obj.get(0).tagName == 'SELECT'))self.box.addClass('focus');
 	}
 	InputAnimate.fixation_style = function(obj){
 		var self = this;

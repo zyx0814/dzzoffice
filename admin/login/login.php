@@ -60,6 +60,7 @@ if ($this -> cpaccess == -3) {
 html_login_footer();
 
 function html_login_header($form = true) {
+	global $_G;
 	$uid = getglobal('uid');
 	$charset = CHARSET;
 	$lang = &lang();
@@ -71,6 +72,7 @@ function html_login_header($form = true) {
 <html>
 <head>
 <title>$title</title>
+<base href="{$_G['siteurl']}">
 <meta http-equiv="Content-Type" content="text/html;charset=$charset" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css" type="text/css" media="all" />

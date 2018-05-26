@@ -13,6 +13,8 @@ if(!defined('IN_DZZ')) {
 }
 define('NOROBOT', TRUE);
 $path = empty($_GET['icoid'])?trim($_GET['path']):$_GET['icoid'];
+$filename = isset($_GET['filename']) ? $_GET['filename'] : '';
+$checkperm = isset($_GET['checkperm']) ? 0 : 1;
 $patharr=explode(',',$path);
 $paths=array();
 foreach($patharr as $path){
@@ -21,7 +23,7 @@ foreach($patharr as $path){
 	}
 }
 if($paths){
-	IO::download($paths,$_GET['filename']);
+	IO::download($paths,$filename,$checkperm);
 	exit();
 }else{
 	exit('path error!');

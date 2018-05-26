@@ -17,6 +17,7 @@ _header.loging_close = function(){
 	}
 };
 _header.leftTopmenu=function(obj,flag){
+	var clientWidth=document.documentElement.clientWidth;
 	if(!flag){
 		if(jQuery('.bs-left-container').is(':visible')){
 			flag='hide';
@@ -24,12 +25,12 @@ _header.leftTopmenu=function(obj,flag){
 			flag='show';
 		}
 	}
-	if(flag=='hide'){
+	if(flag==='hide'){
 		jQuery('.bs-left-container').hide();
 		jQuery('.left-drager').hide();
 		jQuery('.bs-main-container').css('marginLeft',0);
 		jQuery(obj).removeClass('leftOpen');
-	}else if(flag=='show'){
+	}else if(flag==='show'){
 		jQuery('.bs-left-container').show();
 		var leftWidth=jQuery('.bs-left-container').outerWidth(true);
 		if(leftWidth<20){
@@ -38,7 +39,7 @@ _header.leftTopmenu=function(obj,flag){
 			jQuery('.left-drager').css({'left':leftWidth,'cursor':'w-resize'});
 		}
 		jQuery('.left-drager').show();
-		jQuery('.bs-main-container').css('marginLeft',leftWidth);
+		jQuery('.bs-main-container').css('marginLeft',clientWidth<768?0:leftWidth);
 		jQuery(obj).addClass('leftOpen');
 	}
 };

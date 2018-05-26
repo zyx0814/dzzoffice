@@ -19,7 +19,10 @@ if (empty($_G['uid']) && !in_array($do, $guests)) {
 	/*echo "<script type=\"text/javascript\">";
 	 echo "try{top._login.logging();}catch(e){}";
 	 echo "</script>";	*/
-	echo '&nbsp;&nbsp;&nbsp;<a href="user.php?mod=logging&action=login" class="btn btn-primary">'.lang('login').'</a>&nbsp;&nbsp;&nbsp;<a href="user.php?mod=register" class="btn btn-success">'.lang('register').'</a>';
+	echo '&nbsp;&nbsp;&nbsp;<a href="user.php?mod=login" class="btn btn-primary">'.lang('login').'</a>';
+	if( $_G['setting']['regstatus']>0){
+		echo '&nbsp;&nbsp;&nbsp;<a href="user.php?mod=register" class="btn btn-success">'.lang('register').'</a>';
+	}
 	include  template('common/footer_ajax');
 	exit();
 }
@@ -86,7 +89,7 @@ if (submitcheck('replysubmit')) {
 
 	$id = trim($_GET['id'], 60);
 	$idtype = trim($_GET['idtype']);
-	$page = empty($_GET['page']) ? 1 : intval($_GET['page']);
+	$page = empty($_GET['page']) ? 1 : intval($_GET['page']); 
 	$perpage = 10;
 	$start = ($page - 1) * $perpage;
 	$limit = $start . "-" . $perpage;

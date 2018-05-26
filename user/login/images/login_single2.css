@@ -26,7 +26,6 @@ body{
     max-width: 100%; 
     font-size: 14px;  
 	color:#333;
-    box-shadow: none;
     border: none;
     background: #FFF; 
 	min-width:320px;
@@ -79,18 +78,39 @@ p.error-msg{
 	margin-top:20px;
 }
 
-@media (max-width: 420px){
-    .mainContainer:before{
+@media (max-width: 414px){
+	.modal-content{
+		padding:20px;
+		margin-top:15px;
+	}
+	.mainContainer:before{
 		display:none;
     }
+}
+@media (max-width: 375px){
+  
 	.modal-content{
-		margin:15px;
+		padding:15px;
+		min-width:300px
 	}
+	
+   .loginForm {
+        width: 320px;
+    }
+}
+
+@media (max-width: 320px){
+   
+	.modal-content{
+		margin:10px;
+		padding:20px;
+		min-width:300px
+	}
+	
    .loginForm {
         width: auto;
     }
 }
-
 .checkbox-custom {
     margin-top: 0;
     margin-bottom: 0;
@@ -122,4 +142,22 @@ footer.page-copyright a{
 }
 .btn-primary{
 	background-color:#3779ff;
+}
+.third-wrapper{
+	margin-bottom:20px;
+	text-align: left;
+}
+.third-wrapper>a{
+	display: inline-block;
+	width:52px;
+	height:52px;
+	padding:10px;
+}
+.third-wrapper>a:hover{
+	background-color: RGBA(0,0,0,.05);
+}
+.third-wrapper>a>img{
+	max-width:32px;
+	max-height:32px;
+	vertical-align: middle
 }

@@ -30,14 +30,7 @@ if(isset($_GET['path'])){//打开文件夹
         foreach (DB::fetch_all('select rid from %t where pfid = %d and isdelete < 1',array('resources',$morepath)) as $v){
             $rids[] = $v['rid'];
         }
-    }
-	/*if(preg_match('/,/',$morepath)){
-		$dpath = explode(',',$morepath);
-		$rids = array();
-		foreach($dpath as $v){
-			$rids[] = dzzdecode($v);
-		}
-	}*/else{
+    } else{
 		$sid=dzzdecode($_GET['morepath']);
 		$share=C::t('shares')->fetch($sid);
 		$filepaths = $share['filepath'];
@@ -49,8 +42,9 @@ if(isset($_GET['currentfolder']) && $_GET['currentfolder']){
 }else{
     $currentfolder = false;
 }
+$ismobile = helper_browser::ismobile();
 $page = (isset($_GET['page'])) ? intval($_GET['page']):1;
-$perpage = 20;
+$perpage = ($ismobile) ? 10:20;
 $start = ($page - 1) * $perpage;
 $gets = array('mod' => 'shares', 'sid' => $sid, );
 $theurl = BASESCRIPT . "?" . url_implode($gets);
@@ -84,30 +78,40 @@ $limitsql = 'limit '.$start .','. ($perpage);
 $params = array('resources',$rids);
 $wheresql = " where rid in(%n)  and isdelete < 1";
 $list = array();
-
-
 $foldername = '';
 $allrids = '';
-if($currentfolder){
-    $fileinfo = DB::fetch_first("select * from %t where rid = %s",array('resources',$rids[0]));
-    $foldername = $fileinfo['name'];
-    $allrids = dzzencode($fileinfo['rid']);
-    $list = array();
-}else{
-    //获取分享数据
-    foreach(DB::fetch_all("select rid from %t $wheresql $ordersql $limitsql",$params) as $v){
-        $fileinfo = getfileinfo($v['rid']);
-        if($open && !$foldername){
-            $foldername = DB::result_first("select fname from %t where fid = %d",array('folder',$fileinfo['pfid']));
+if(!empty($rids)){
+    if($currentfolder){
+        $fileinfo = DB::fetch_first("select * from %t where rid = %s",array('resources',$rids[0]));
+        $foldername = $fileinfo['name'];
+        $allrids = dzzencode($fileinfo['rid']);
+        $list = array();
+    }else{
+        //获取分享数据
+        foreach(DB::fetch_all("select rid from %t $wheresql $ordersql $limitsql",$params) as $v){
+            $fileinfo = getfileinfo($v['rid']);
+            if($open && !$foldername){
+                $foldername = DB::result_first("select fname from %t where fid = %d",array('folder',$fileinfo['pfid']));
+            }
+            if($fileinfo['type'] == 'folder' && $fileinfo['oid']) {
+                $oid = $fileinfo['oid'];
+                $fileinfo['dhpath'] = $oid;
+                $fileinfo['filenum'] = $fileinfo['contaions']['contain'][0];
+                $fileinfo['foldernum'] = $fileinfo['contaions']['contain'][1];
+            }
+            if ($fileinfo['type'] == 'image') {
+                $fileinfo['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=45&height=45&path=' . dzzencode('attach::' . $fileinfo['aid']);
+                $fileinfo['imgpath'] =  DZZSCRIPT.'?mod=io&op=thumbnail&path='.dzzencode('attach::' . $fileinfo['aid']);
+            }
+            $list[] = $fileinfo;
+            $allrids .= dzzencode($val['rid']).',';
         }
-        if($fileinfo['type'] == 'folder' && $fileinfo['oid']) {
-            $oid = $fileinfo['oid'];
-            $fileinfo['dhpath'] = $oid;
-        }
-        $list[] = $fileinfo;
-        $allrids .= dzzencode($val['rid']).',';
+        $allrids = substr($allrids,0,-1);
     }
-    $allrids = substr($allrids,0,-1);
+}else{
+    if($open && !$foldername){
+        $foldername = DB::result_first("select fname from %t where fid = %d",array('folder',$morepath));
+    }
 }
 
 if (count($list) >= $perpage) {
@@ -115,5 +119,10 @@ if (count($list) >= $perpage) {
 } else {
 	$naxtpage = 0;
 }
-include template('list_item');
+if($ismobile){
+    include template('mobile/list_item');
+}else{
+    include template('list_item');
+}
+dexit();
 ?>

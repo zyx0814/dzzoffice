@@ -1252,7 +1252,7 @@ sKFSVBTBllJZMQSbaoVFEGwrli4cwcZq8UIRbC2XLwzB5vMChSDYfmCiVwhPXAHoFcK8SwC9QBhy
 DcA0wksXAUwhrBDnNp0EyItwJHvk6rG5LAgtU2cunxtMg5CYN3T94GQ3CG2Tps6fHNUDS0LomDHu
 i6OzTQhPgV/AHvHhzo7p8tL/0+MD3v4NAFgLFX0uJNkNAAAAAElFTkSuQmCC
 ]]></item>
-			<item id="appdesc"><![CDATA[系统工具，缓存更新，数据库管理等]]></item>
+			<item id="appdesc"><![CDATA[系统维护相关工具集合，如：更新缓存、数据库备份，计划任务，在线升级等]]></item>
 			<item id="appurl"><![CDATA[{adminscript}?mod=system]]></item>
 			<item id="appadminurl"><![CDATA[]]></item>
 			<item id="noticeurl"><![CDATA[]]></item>

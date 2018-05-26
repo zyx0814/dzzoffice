@@ -19,41 +19,36 @@ if($_GET['a']=='down'){
 	IO::download($path,$_GET['filename']);
 	exit();
 }elseif($_GET['a']=='view'){
-
-	if(!$icoarr=IO::getMeta($path)){
-
-		showmessage(lang('attachment_nonexistence'));
-	}
-	if($icoarr['type']=='video'){
-		@header("Location: $icoarr[url]");
-		exit();
-	}
-	$imageexts=array('jpg','jpeg','png','gif'); //图片使用；
-	$filename=$icoarr['name'];//rtrim($_GET['n'],'.dzz');
-	$ext=$icoarr['ext'];//strtolower(substr(strrchr($filename, '.'), 1, 10));
-	if(!$ext) $ext=preg_replace("/\?.+/i",'',strtolower(substr(strrchr(rtrim($url,'.dzz'), '.'), 1, 10)));
-
+    $vid = isset($_GET['vid']) ? intval($_GET['vid']):0;
+    if($vid){
+        if(!$icoarr = C::t('resources_version')->fetch_version_by_rid_vid($path,$vid)){
+            showmessage(lang('attachment_nonexistence'));
+        }else{
+            $path = dzzdecode($icoarr['icoid']);
+        }
+    }else{
+        if(!$icoarr=IO::getMeta($path)){
+            showmessage(lang('attachment_nonexistence'));
+        }
+        $icoarr['icoid'] = $_GET['s'];
+    }
+    $imageexts=array('jpg','jpeg','png','gif'); //图片使用；
+    $filename=$icoarr['name'];//rtrim($_GET['n'],'.dzz');
+    $ext=$icoarr['ext'];//strtolower(substr(strrchr($filename, '.'), 1, 10));
+    if(!$ext) $ext=preg_replace("/\?.+/i",'',strtolower(substr(strrchr(rtrim($url,'.dzz'), '.'), 1, 10)));
 	if(in_array($ext,$imageexts)){
-		$url=$_G['siteurl'].'index.php?mod=io&op=thumbnail&original=1&path='.$_GET['s'];
-		@header("Location: $url");
-		exit();
-	}elseif($ext=='mp3'){
-		$url=$_G['siteurl'].'index.php?mod=sound&path='.$_GET['s'];
-		@header("Location: $url");
-		exit();
-	}elseif($icoarr['type']=='dzzdoc'){
-		$url=$_G['siteurl'].'index.php?mod=document&icoid='.dzzdecode($_GET['s']);
+		$url=$_G['siteurl'].'index.php?mod=io&op=thumbnail&original=1&path='.$icoarr['icoid'];
 		@header("Location: $url");
 		exit();
 	}
-	$bzarr=explode(':',$icoarr['rbz']?$icoarr['rbz']:$icoarr['bz']);
-	$bz=($bzarr[0]) ? $bzarr[0]:'dzz';
-	$extall=C::t('app_open')->fetch_all_ext();
-	$exts=array();
-	foreach($extall as $value){
-		if(!isset($exts[$value['ext']]) || $value['isdefault']) $exts[$value['ext']]=$value;
-	}
-	
+    $extall=C::t('app_open')->fetch_all_ext();
+    $exts=array();
+    $bzarr=explode(':',$icoarr['rbz']?$icoarr['rbz']:$icoarr['bz']);
+    $bz=($bzarr[0]) ? $bzarr[0]:'dzz';
+    foreach($extall as $value){
+        if(!isset($exts[$value['ext']]) || $value['isdefault']) $exts[$value['ext']]=$value;
+    }
+
 	if(isset($exts[$bz.':'.$ext])){
 		$data=$exts[$bz.':'.$ext];
 	}elseif($exts[$ext]){
@@ -71,18 +66,18 @@ if($_GET['a']=='down'){
 			$url=preg_replace_callback("/{(\w+)}/i", function($matches) use($icoarr){
 				$key=$matches[1];
 				if($key=='path'){
-					return $icoarr['dpath'];
+					return $icoarr['icoid'];
 				}else if($key=='icoid'){
 					return 'preview_'.random(5);
 				}else{
 					return urlencode($icoarr[$key]);
 				}
 			}, $url);
-					
 			//添加path参数；
 			if(strpos($url,'?')!==false  && strpos($url,'path=')===false){
-				$url.='&path='.$_GET['s'];
+				$url.='&path='.$icoarr['icoid'];
 			}
+			$url = $_G['siteurl'].$url;
 			@header("Location: $url");
 			exit();
 		}

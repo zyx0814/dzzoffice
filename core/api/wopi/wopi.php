@@ -200,23 +200,30 @@ class Wopi
 		$urlsrc=$discovery['actions'][$action][$fileExtension];
 		
 		$parts = parse_url($ooServerURL);
-		if ($parts['scheme']=='HTTPS') {
+		if (strtolower($parts['scheme'])=='https') {
+		
+			$webSocketProtocol = "wss://";
+		} else {
+		
+			$webSocketProtocol = "ws://";
+		}
+		$protocol=$_SERVER['SERVER_PROTOCOL'];
+		$parts = parse_url($ooServerURL);
+		if (strtolower($parts['scheme'])=='https') {
 			$protocol = "https";
 			$webSocketProtocol = "wss://";
 		} else {
 			$protocol = "http";
 			$webSocketProtocol = "ws://";
 		}
-		if (isset($_SERVER['HTTP_HOST'])) {
-			$hostName = $_SERVER['HTTP_HOST'];
-		}
+		
 		$webSocket = sprintf("%s%s%s",$webSocketProtocol,$parts['host'],isset($parts['port']) ? ":" . $parts['port'] : "");
 																		 
-		$fileUrl = urlencode($protocol . "://" . $hostName . "/wopi/files/" . $fileID);
+		$fileUrl = urlencode(getglobal('siteurl'). "wopi/files/" . $fileID);
 		$requestUrl = preg_replace("/<.*>/", "", $urlsrc);
 		$requestUrl = $requestUrl . str_replace('{1}', $guid, $wopi_url_temlpate);
 		$requestUrl = str_replace("{0}", $fileUrl, $requestUrl).'&ui=zh-CN&rs=zh-CN'; 
-		$wopiSrc=$protocol . "://" . $hostName . "/wopi/files/$fileID?access_token=$guid&ui=zh-CN&rs=zh-CN";
+		$wopiSrc=getglobal('siteurl'). "wopi/files/$fileID?access_token=$guid&ui=zh-CN&rs=zh-CN";
 		$ret=array(
 			'fileID'=>$fileID,
 			'protocol'=>$protocol,

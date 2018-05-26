@@ -58,13 +58,13 @@
 		}
 		var dragerClick=function(flag){
 			if(flag=='hide'){
-				$leftContainer.css('display','none').css('width',0);
+				$leftContainer.css('display','none');
 				$mainContainer.css('marginLeft',0);
 				$this.css('left',0).css('cursor','default');
 				if(options.cookieid) setcookie(options.cookieid+'_isshow','hide',options.cookietime);
 				jQuery('.left-drager-op').addClass('left-drager-op2');
 			}else if(flag=='show'){
-				$leftContainer.css('display','block').css('width',left);
+				$leftContainer.css('display','block');
 				$mainContainer.css('marginLeft',document.documentElement.clientWidth<opt.leftHide?0:left);
 				$this.css('left',left).css('cursor','w-resize');
 				if(options.cookieid) setcookie(options.cookieid+'_isshow','show',options.cookietime);
@@ -114,11 +114,11 @@
 			 leftHide();
 		}
 		var leftHide=function(){
-			 /*if(document.documentElement.clientWidth<opt.leftHide){
+			 if(document.documentElement.clientWidth<opt.leftHide){
 				dragerClick('hide');
 			}else{
 				dragerClick('show');
-			}*/
+			}
 		}
 		var Icon_location = function(){
 			var nav = jQuery('nav');
@@ -158,6 +158,7 @@
 	
 		}
 		var init=function(){
+			var clientWidth = document.documentElement.clientWidth;
 			//Icon_location();
 			Layout();				
 			$this.find('.left-drager-op').off('click').on('click',function(e){
@@ -183,7 +184,7 @@
 			}
 			 
 			
-			var clientWidth = document.documentElement.clientWidth;
+			
 			dragging();
 			var resizeTimer=null;
 			window.onresize=function(){

@@ -24,7 +24,7 @@
 		<div class="main-content" style="padding:20px;border-top:1px solid #FFF">
 			<div class="well well-sm">
 				<!--{if $step==1}-->
-				<form method="post" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod={MOD_NAME}&op=updatecache&step=2">
+				<form method="post" class="form-horizontal form-horizontal-left" action="{MOD_URL}&op=updatecache&step=2">
 					<input name="formhash" value="{VERHASH}" type="hidden">
 					<p class="clearfix ml20">
 						<label class="checkbox-inline">
@@ -46,13 +46,13 @@
 				<!--{elseif $step==2}-->
 				<p class="ml20">{lang tools_updatecache_waiting}</p>
 				<p class="text-success ml20">
-					<a href="{BASESCRIPT}?mod=system&op=updatecache&step=3&type=data_tpl" class="lightlink">{lang message_redirect}</a>
+					<a href="{MOD_URL}&op=updatecache&step=3&type=data_tpl" class="lightlink">{lang message_redirect}</a>
 				</p>
-				<script type="text/JavaScript">setTimeout(function(){location.href='{BASESCRIPT}?mod=system&op=updatecache&step=3&type=data_tpl';}, 2000);</script>
+				<script type="text/JavaScript">setTimeout(function(){location.href='{MOD_URL}&op=updatecache&step=3&type=data_tpl';}, 2000);</script>
 				<!--{elseif $step==3}-->
 				<p class="text-success ml20" style="margin:10px;">{lang update_cache_succeed}</p>
 				<script type="text/javascript">
-					window.setTimeout(function() { location.href = '{BASESCRIPT}?mod=system&op=updatecache'; }, 5000);
+					window.setTimeout(function() { location.href = '{MOD_URL}&op=updatecache'; }, 5000);
 				</script>
 				<!--{/if}-->
 			</div>

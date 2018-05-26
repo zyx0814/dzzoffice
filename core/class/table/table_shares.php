@@ -46,7 +46,7 @@ class table_shares extends dzz_table
             $eventdata = array(
                 'username'=>$setarr['username'],
                 'filename'=>$fileinfo['name'],
-                'url'=>C::t('shorturl')->getShortUrl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($insert))
+                'url'=>getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($insert)
             );
             if(!C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'],'share_file','share',$eventdata,$fileinfo['gid'],$fileinfo['rid'],$fileinfo['name'])){
                 parent::delete($insert);
@@ -178,6 +178,8 @@ class table_shares extends dzz_table
          $setarr['uid'] = getglobal('uid');
          $setarr['username'] = getglobal('username');
         if(parent::delete($id)){
+            $url = getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($id);
+            C::t('shorturl')->delete_by_url($url);//删除短链接
             $eventdata = array('username'=>$setarr['username'],'filename'=>$shareinfo['title']);
             C::t('resources_event')->addevent_by_pfid($shareinfo['pfid'],'cancle_share','cancleshare',$eventdata,$shareinfo['gid'],'',$shareinfo['title']);
             return array('success'=>true,'shareid'=>$id,'sharetitle'=>$shareinfo['title']);
@@ -205,7 +207,7 @@ class table_shares extends dzz_table
          }
          $sharestatus = array('-5'=>lang('sharefile_isdeleted_or_positionchange'),'-4' => lang('been_blocked'), '-3' => lang('file_been_deleted'), '-2' => lang('degree_exhaust'), '-1' => lang('logs_invite_status_4'), '0' => lang('founder_upgrade_normal'));
         foreach(DB::fetch_all("select * from %t where $wheresql $ordersql $limitsql",$params) as $val){
-            $val['sharelink'] =  C::t('shorturl')->getShortUrl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($val['id']));
+            $val['sharelink'] =  outputurl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($val['id']));
             $val['fdateline'] = dgmdate($val['dateline'],'Y-m-d H:i:s');
             $val['password'] = ($val['password']) ? dzzdecode($val['password']):'';
             $sid = dzzencode($val['id']);
@@ -271,7 +273,7 @@ class table_shares extends dzz_table
         if(@getimagesize(getglobal('setting/attachdir').$target)){
             return getglobal('setting/attachurl').$target;
         }else{//生成二维码
-            QRcode::png(C::t('shorturl')->getShortUrl(getglobal('siteurl').'?index.php&mod=shares&sid='.$sid),getglobal('setting/attachdir').$target,'M',4,2);
+            QRcode::png((getglobal('siteurl').'index.php?mod=shares&sid='.$sid),getglobal('setting/attachdir').$target,'M',4,2);
             return getglobal('setting/attachurl').$target;
         }
     }

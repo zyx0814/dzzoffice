@@ -1260,7 +1260,7 @@ fAobQJQh3DdazdcCwAKEnggZPwXcDS0IFtAAcD0Cxs8AXUarP7UGAHALuLSMW+RPoMNo9TnUbbCI
 7pEpc3+psfEvgFZ7s1VUYZfH3wM7yNQUuoB9ZF51Sy3hd8wBX4G3wBOj1UQ5g1P+7fGE6/8ARsGu
 DS2rCk0AAAAASUVORK5CYII=
 ]]></item>
-			<item id="appdesc"><![CDATA[]]></item>
+			<item id="appdesc"><![CDATA[Dzz 内置投票组件，结合其他应用使用，如新闻中用到投票插件，其他开发者也可以为自己的应用调用这个通用评论插件。]]></item>
 			<item id="appurl"><![CDATA[{dzzscript}?mod=dzzvote]]></item>
 			<item id="appadminurl"><![CDATA[]]></item>
 			<item id="noticeurl"><![CDATA[]]></item>

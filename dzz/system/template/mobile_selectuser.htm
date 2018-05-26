@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <base href="{$_G['siteurl']}"/>
+    <title>成员</title>
+    <link href="static/jquery_weui/css/weui.min.css" rel="stylesheet">
+    <link href="static/jquery_weui/css/jquery-weui.min.css" rel="stylesheet">
+    <link href="static/dzzicon/icon.css" rel="stylesheet">
+    <link href="{MOD_PATH}/css/mobile/mobile_member.css" rel="stylesheet">
+    <script type="text/javascript">var DZZSCRIPT = '{DZZSCRIPT}', LANG = '{$_G[language]}', STATICURL = 'static/', IMGDIR = '{$_G[setting][imgdir]}', VERHASH = '{VERHASH}', charset = '{CHARSET}', dzz_uid = '$_G[uid]', cookiepre = '{$_G[config][cookie][cookiepre]}', cookiedomain = '{$_G[config][cookie][cookiedomain]}', cookiepath = '{$_G[config][cookie][cookiepath]}', attackevasive = '{$_G[config][security][attackevasive]}', disallowfloat = '{$_G[setting][disallowfloat]}', REPORTURL = '$_G[currenturl_encode]', SITEURL = '$_G[siteurl]', JSPATH = '$_G[setting][jspath]', MOD_PATH = '{MOD_PATH}', APP_URL = '{MOD_URL}', MOD_URL = '{MOD_URL}';</script>
+    <script type="text/javascript" reload="1">
+
+    </script>
+
+</head>
+<body>
+<!--搜索开始-->
+
+<header class="weui-search-bar">
+    <div class="weui-search-bar__form" action="" onsubmit="return ">
+        <div class="weui-search-bar__box">
+            <input type="search" class="weui-search-bar__input" id="user_select_search_input" placeholder="全部或部分文件名"
+                   required="">
+            <a href="javascript:" class="weui-search-bar__cancel-btn"><i class="weui-icon-clear"></i></a>
+        </div>
+        <label class="weui-search-bar__label">
+            <span>请输入用户名邮箱或手机号</span>
+            <i class="weui-icon-search"></i>
+        </label>
+    </div>
+    <a href="javascript:" class="weui-search-return__cancel-btn" id="weui_back">取消</a>
+</header>
+<!--搜索结束-->
+<!--列表开始-->
+
+<input type="hidden" name="formhash" value="{FORMHASH}">
+<input type="hidden" name="selectsubmit" value="true">
+<section class="weui-cells_margin_top">
+    <iframe name="seluser_iframe" class="org-sel-box-iframe"
+            src="$theurl"
+            width="100%" height="100%"
+            allowtransparency="true"></iframe>
+    <input id="sel_seluser" type="hidden" name="uids"
+           value="{eval echo implode(',',array_keys($selects));}"/>
+</section>
+<!--列表结束-->
+<footer class="weui-member-select">
+    <div class="weui-member-select-user" id="weui-member-select-user">
+        <div class="scroller">
+            <ul class="weui-member-select-scroller" id="seluser">
+                <!--{loop $selects $key $value}-->
+                <li id="seluser_sl_$key" class="right-classa-depart avatar avatar-xs" data-val="$key"> {eval echo
+                    avatar_block($value[uid]);}<i class="ti-close dzz dzz-close ti-opacity"></i></li>
+                <!--{/loop}-->
+            </ul>
+        </div>
+    </div>
+    <form onsubmit="return seluser_submit(this); return false;">
+        <div class="weui-member-success">
+            <button href="javascript:;" type="submit" class="weui-member-success-word">完成<span>()</span></button>
+        </div>
+    </form>
+</footer>
+
+</body>
+<script type="text/javascript" src="static/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+<script type="text/javascript" src="static/jquery_weui/js/iscroll.js"></script>
+<script type="text/javascript" src="static/jquery_weui/js/navbarscroll.js"></script>
+<!--<script type="text/javascript" src="{MOD_PATH}/scripts/selorguser.js"></script>-->
+<!--{eval output();}-->
+<script type="text/javascript" reload="1">
+    var callback_url = '{$callback_url}',token='{$token}',deferer = '{$deferer}';
+    $(document).on('touchstart', '#weui_back', function () {
+        window.history.go(-1);
+    })
+
+    function lengthti() {
+        var len = $('#seluser').find('.ti-close').length;
+        $('.weui-member-success').find('.weui-member-success-word span').text('(' + len + ')');
+    }
+    $(function () {
+        var h = $(document).outerHeight(true);
+        var h1 = $('.weui-search-bar').outerHeight(true);
+        var h2 = $('.weui-member-select').height();
+        $('.weui-cells_margin_top').css('height', h - h1 - h2);
+        lengthti();
+        $('.weui-member-select-user').navbarscroll();
+    })
+
+    //添加
+    var selorg = {};
+    selorg.add = function (ctrlid, vals) {
+        for (var i in vals) {
+            if (jQuery('#' + ctrlid + '_sl_' + vals[i].orgid).length) {
+                continue;
+            }
+            var html = '';
+            if (vals[i].orgid.indexOf('uid_') === 0) {
+                var headimg = '';
+                if (vals[i].icon) {
+                    headimg = '<img src="' + vals[i].icon + '" class="img-circle special_avatar_class" title="' + vals[i].text.replace(/<em.+?<\/em>/i, '') + '">';
+                } else {
+                    headimg = vals[i].text;
+                }
+                html = '<li id="' + ctrlid + '_sl_' + vals[i].orgid + '" class="right-classa-depart" data-val="' + vals[i].orgid + '">' +
+                        headimg + ' <i class="ti-close dzz dzz-close ti-opacity"></i></li>';
+            } else {
+                html = '<li id="' + ctrlid + '_sl_' + vals[i].orgid + '" class="right-classa-depart" data-val="' + vals[i].orgid + '">' + vals[i].text + ' <i class="ti-close dzz dzz-close ti-opacity"></i></li>';
+            }
+            jQuery('#' + ctrlid).append(html);
+
+        }
+        selorg.set(ctrlid);
+        $('.weui-member-select-user').navbarscroll();
+        lengthti();
+    };
+    //删除
+    selorg.del = function (ctrlid, vals) {
+        for (var i in vals) {
+            if (jQuery('#' + ctrlid + '_sl_' + vals[i]).find('i.ti-close').length > 0) {
+                jQuery('#' + ctrlid + '_sl_' + vals[i]).remove();
+            }
+        }
+        selorg.set(ctrlid);
+        $('.weui-member-select-user').navbarscroll();
+    };
+    //设置输入框的值
+    selorg.set = function (ctrlid) {
+        var val = [];
+        jQuery('#' + ctrlid + ' li').each(function () {
+            val.push(jQuery(this).data('val'));
+        });
+        jQuery('#sel_' + ctrlid).val(val.join(','));
+    };
+    //移除，并且取消机构树中的选择
+    selorg.remove = function (ctrlid, obj) {
+        var unsel_val = jQuery(obj).parent().data('val');
+        jQuery(obj).parent().remove();
+        selorg.set(ctrlid);
+        try {
+            window.frames[ctrlid + '_iframe'].selectorg_remove(unsel_val);
+        } catch (e) {
+        }
+    };
+    selorg.search = function (ctrlid, obj) {
+        try {
+            window.frames[ctrlid + '_iframe'].selectorg_search(obj.value);
+        } catch (e) {
+        }
+    };
+
+    if ('{$openarr_length}') {
+        var openarr = [];
+        openarr['seluser'] = $openarr;
+    }
+    jQuery(document).on('click', '#seluser .ti-close', function () {
+        selorg.remove('seluser', this);
+    });
+    function seluser_submit(form) {
+        var vals = jQuery('#sel_seluser').val();
+        var data = {};
+        var ids = [];
+        jQuery('#seluser>li').each(function () {
+            var val = jQuery(this).data('val');
+            var title = '';
+            var innerhtml = this.innerHTML;
+
+            innerhtml = innerhtml.replace(/<i class=\"ti-close dzz dzz-close\"><\/i>/i, '');
+            innerhtml = innerhtml.replace(/<em.*?>.+?<\/em>/i, '');
+            var regx = new RegExp("<.+>", 'i');
+            var regx1 = new RegExp("title=\"(.+?)\"");
+            var matches;
+            var matches1;
+            if (matches = innerhtml.match(regx)) {
+                innerhtml = matches[0];
+            }
+            if (matches = innerhtml.match(regx1)) {
+                title = matches[1];
+            }
+            if (val && val.indexOf('uid_') === 0) {//是用户
+                val = val.replace('uid_', '');
+                ids.push(val);
+                data[val] = {'id': val, 'html': innerhtml, 'title': title};
+
+            } else {//是机构或部门
+                val = 'g_' + val;
+                ids.push(val);
+                data[val] = {'id': val, 'html': innerhtml, 'title': title};
+            }
+        });
+       ids = ids.join(',');
+        if (vals) {
+            $.post(callback_url, {'uids': vals, 'ids': ids,'token':token}, function (data) {
+                if (data['success']) {
+                    $.toast('操作成功');
+                    location.href=deferer;
+                } else {
+                    $.toast(data['error']);
+                }
+                return false;
+            },'json')
+        }
+        return false;
+    }
+    jQuery('#user_select_search_input').off('keypress').on('keypress', function (event) {
+        var self = this;
+        if (event.keyCode == 13) {
+            if (window.seluser_timer) {
+                window.clearTimeout(window.seluser_timer);
+            }
+            window.seluser_timer = window.setTimeout(function () {
+                selorg.search('seluser', self);
+            }, 300);
+            return false;
+        }
+
+    });
+
+    jQuery('.weui-icon-clear').off('click').on('click', function (event) {
+        $(this).closest('.weui-search-bar__cancel-btn').siblings('#user_select_search_input').val('');
+        var self = this;
+        if (window.seluser_timer) {
+            window.clearTimeout(window.seluser_timer);
+        }
+        window.seluser_timer = window.setTimeout(function () {
+            selorg.search('seluser', self);
+        }, 300);
+    });
+    jQuery('#user_select_search_input').off('keyup').on('keyup', function (event) {
+        var self = this;
+        if (window.seluser_timer) {
+            window.clearTimeout(window.seluser_timer);
+        }
+        window.seluser_timer = window.setTimeout(function () {
+            selorg.search('seluser', self);
+        }, 300);
+        return false;
+    });
+    $(function () {
+
+    })
+</script>
+</html>

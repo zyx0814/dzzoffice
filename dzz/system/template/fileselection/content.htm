@@ -1,0 +1,27 @@
+<input type="hidden" value="$fid" id="fidinput"/>
+<input type="hidden" value="$folderpathstr" id="folderstr"/>
+<div id="filemanage-f-$fid" class="icosContainer"></div>
+<div id="template_middleicon" style="display:none">
+    <!--{template fileselection/template_file_middleicon}-->
+</div>
+<div id="template_detaillist" style="display:none">
+    <!--{template fileselection/template_file_detaillist}-->
+</div>
+<script type="text/javascript">
+    //请求fid
+    var fid = $('#fidinput').val();
+    var path = $('#folderstr').val();
+    _selectfile.fid = fid;
+    _explorer.set_address(path);
+    var getdataurl = MOD_URL + '&op=fileselection&do=explorerfile&operation=filelist&sid=f-' + fid;
+    var search_exts =$('.select-style').data('exts');
+    if(search_exts){
+        _explorer.defaultexttype = search_exts;
+    }
+    if(_explorer.defaultexttype){
+        getdataurl += '&exts='+_explorer.defaultexttype;
+    }
+    _selectfile.getData(getdataurl,function(){
+        empty_searchkeyword();
+    });
+</script>

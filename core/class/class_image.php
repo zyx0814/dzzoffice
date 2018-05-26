@@ -75,37 +75,13 @@ class image {
 		if($dstwidth < 0 || $dstheight < 0) {
 			return $this->returncode(false);
 		}
-		//获取源图相关值
-        $imginfo = @getimagesize($source);
-		
-        //原图像大小比列
-        $yratio = $imginfo[0]/$imginfo[1];
-        //目标图片大小比列
-        $oratio = $dstwidth/$dstheight;
-
-        if ($oratio > $yratio) {
-            $new_height = $dstwidth/$yratio;
-            $new_width = $dstwidth;
-        } else {
-            $new_width = $dstheight*$yratio;
-            $new_height = $dstheight;
-        }
-        if(!$srcx){
-            $mid_x = $new_width/2;
-            $srcx = ($mid_x -($dstwidth/2));
-        }
-        if(!$srcy){
-            $mid_y = $new_height/2;
-            $srcy = ($mid_y -($dstheight/2));
-        }
-        $this->param['dstwidth'] = intval($new_width);
-		$this->param['dstheight'] = intval($new_height);
-		$this->param['width'] = intval($dstwidth);
-		$this->param['height'] = intval($dstheight);
+		$this->param['dstwidth'] = intval($dstwidth);
+		$this->param['dstheight'] = intval($dstheight);
 		$this->param['srcx'] = intval($srcx);
 		$this->param['srcy'] = intval($srcy);
-		$this->param['srcwidth'] = intval($imginfo[0]);
-		$this->param['srcheight'] = intval($imginfo[1]);
+		$this->param['srcwidth'] = intval($srcwidth ? $srcwidth : $dstwidth);
+		$this->param['srcheight'] = intval($srcheight ? $srcheight : $dstheight);
+
 		$return = !$this->libmethod ? $this->Cropper_GD() : $this->Cropper_IM();
 		return $this->sleep($return);
 	}
@@ -420,13 +396,9 @@ class image {
 			return $image;
 		}
 		$newimage = imagecreatetruecolor($this->param['dstwidth'], $this->param['dstheight']);
-		imagecopyresampled($newimage, $image, 0, 0, 0, 0, $this->param['dstwidth'], $this->param['dstheight'], $this->param['srcwidth'], $this->param['srcheight']);
-        $thumb = imagecreatetruecolor($this->param['width'], $this->param['height']);
-		
-        imagecopyresampled($thumb, $newimage, 0, 0, $this->param['srcx'], $this->param['srcy'], $this->param['width'], $this->param['height'], $this->param['width'], $this->param['height']);
-		ImageJpeg($thumb, $this->target, 100);
+		imagecopyresampled($newimage, $image, 0, 0, $this->param['srcx'], $this->param['srcy'], $this->param['dstwidth'], $this->param['dstheight'], $this->param['srcwidth'], $this->param['srcheight']);
+		ImageJpeg($newimage, $this->target, 100);
 		imagedestroy($newimage);
-		imagedestroy($thumb);
 		imagedestroy($image);
 		return true;
 	}

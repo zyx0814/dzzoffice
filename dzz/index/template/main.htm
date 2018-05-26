@@ -1,0 +1,112 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+.resNav .navbar-nav > .open > a, .resNav .navbar-nav > .open > a:focus, .resNav .navbar-nav > .open > a:hover {
+    background-color:transparent;
+}
+	body{
+		font-size:16px;
+		line-height: 2
+	}
+	.main-content{
+		padding:50px
+	}
+	.h1, .h2, .h3, h1, h2, h3{
+		margin:30px 0;
+		line-height: 2
+	}
+	
+	ol{
+		padding-left:20px;
+	}
+	ol li{
+		list-style: inherit;
+	}
+	p{
+		margin-bottom:20px;
+	}
+	.main-content a{
+		padding:0 5px;
+	}
+	.help-block{
+		font-size:0.75em;
+	}
+	blockquote{
+		padding:0 20px;
+	}
+	.col-item {
+		line-height: 30px;
+		margin: 5px 0;
+		text-align: left;
+		position: relative;
+		padding-left:30px;
+		margin-left:10px;
+		margin-bottom: 15px;
+	}
+	.col-item:last-child {
+		margin-bottom:0;
+	}
+	.col-item.item-github{
+		
+		background-image: url(dzz/index/images/github.png) ;
+		background-position: left center;
+		background-repeat:  no-repeat;
+	}.col-item.item-gitee{
+		background-image: url(dzz/index/images/gitee.png);
+		background-position: left center;
+		background-repeat:  no-repeat;
+	}
+	.col-item.item-qqwpa{
+		background-image: url(dzz/index/images/qqwpa.png);
+		background-position: left center;
+		background-repeat:  no-repeat;
+
+	}
+	@media (max-width:767px){
+		.main-content{
+			padding:0;
+		}
+	}
+</style>
+
+<!--{template common/header_simple_end}-->
+<!--模板body区域,直接加入自己的模板代码即可，body标签已经存在-->
+<!--{template commer_header}-->
+<div class="bs-container clearfix">
+  <div class="bs-main-container" style="margin-left:0;">
+    <div class="main-content container">
+		
+		<h2>{lang system_install_success}</h2>
+		<blockquote>
+		<p class="text-muted">{lang thank_you_of}</p>
+		<p class="text-danger">{lang after_installed_tip}</p>
+			<p><b>{lang after_installed_help}</b></p>
+   		<ol>
+			<li>{lang after_installed_step_one}
+				<p class="help-block">{lang after_installed_step_one_tip}</p>
+			</li>
+			<li>{lang after_installed_step_two}</li>
+		</ol>
+		
+   </blockquote>
+   		
+   		<div class="col-body" style="padding-top:30px;">
+   			<h3 >{lang Communication_and_feedback}</h3>
+   			<blockquote>
+			<div class="col-item item-github"><a href="https://github.com/zyx0814/dzzoffice/issues" target="_blank">GitHub</a></div>
+			<div class="col-item item-gitee"><a href="https://gitee.com/zyx0814/dzzoffice/issues" target="_blank">码云</a></div>
+			<div class="col-item item-qqwpa"><a href="http://shang.qq.com/wpa/qunwpa?idkey=e8f8edf6c0ce50fd5916ea6e1ecf16ecbef3759c1d0dfc4e9a8dc89fcec2f211" title="DzzOffice交流群 240726 " target="_blank">QQ群 240726</a></div>
+			</blockquote>
+		</div>
+   		
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

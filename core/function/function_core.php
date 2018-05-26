@@ -97,188 +97,7 @@ function getOauthRedirect($url)
     $wx = new qyWechat(array('appid' => getglobal('setting/CorpID'), 'appsecret' => getglobal('setting/CorpSecret')));
     return $wx->getOauthRedirect(getglobal('siteurl') . 'index.php?mod=system&op=wxredirect&url=' . dzzencode($url));
 }
-
-function wx_deleteUser($uid)
-{
-    if (!getglobal('setting/CorpID') || !getglobal('setting/CorpSecret')) return true;
-    $user = C::t('user')->fetch($uid);
-    if( !$user || !$user["wechat_userid"]){
-        return true;//判断是否绑定了企业微信 未绑定则不请求企业微信删除接口
-    }
-    $wx = new qyWechat(array('appid' => getglobal('setting/CorpID'), 'appsecret' => getglobal('setting/CorpSecret'), 'agentid' => 0));
-    if ($wx->deleteUser( $user["wechat_userid"] )) {
-        return true;
-    } else {
-        $message = 'deleteUser：errCode:' . $wx->errCode . ';errMsg:' . $wx->errMsg;
-        runlog('wxlog', $message);
-    }
-    return true;
-}
-
-function wx_updateUser($uids)
-{
-    @set_time_limit(0); 
-    if (!getglobal('setting/CorpID') || !getglobal('setting/CorpSecret')) return;
-    $uids = (array)$uids;
-    $wx = new qyWechat(array('appid' => getglobal('setting/CorpID'), 'appsecret' => getglobal('setting/CorpSecret'), 'agentid' => 0));
-    $ret = 0;
-    $syngids = array();
-    if ($syngid = getglobal('setting/synorgid')) { //设置的需要同步的部门
-        include_once libfile('function/organization');
-        $syngids = getOrgidTree($syngid);
-    }
-    foreach ($uids as $uid) {
-        if (!$user = C::t('user')->fetch($uid)) continue;
-        $worgids = array();
-        if ($orgids = C::t('organization_user')->fetch_orgids_by_uid($uid)) {
-            if ($syngids) {
-                $orgids = array_intersect($orgids, $syngids);
-            }
-            if ($orgids) {
-                foreach (C::t('organization')->fetch_all($orgids) as $value) {
-                    if( $value['type']>0 ){//群主类型不同步至微信
-                        continue;
-                    }
-                    if ($value['worgid']){
-                        $worgids[] = $value['worgid'];
-                    }else {
-                        if ($worgid = C::t('organization')->wx_update($value['orgid'])) {
-                            $worgids[] = $worgid;
-                        }
-                    }
-                }
-            }
-        }
-        if( !$worgids ) $worgids=array(1);//默认同步到企业微信的跟部门下
-
-        if (!$worgids) {//用户不在机构和部门中，微信中应该禁用此用户
-            $data = array("userid" => $user["wechat_userid"],//"dzz-" . $user['uid'],
-                "enable" => 0,
-                "department" => 1,
-            );
-            if ($wx->updateUser($data)) {
-                $ret += 1;
-            } else {
-                $message = 'deleteUser：errCode:' . $wx->errCode . ';errMsg:' . $wx->errMsg;
-                runlog('wxlog', $message);
-            }
-        } else {
-            $profile = C::t('user_profile')->fetch_all($user['uid']);
-            $wxuser =array();
-            if( $user["wechat_userid"] ){
-                $wxuser = $wx->getUserInfo( $user["wechat_userid"] );
-            }
-            if( $wxuser ){//已绑定企业微信端用户 //if ($wxuser = $wx->getUserInfo('dzz-' . $user['uid'])) {//更新用户信息
-                $data = array(
-                    "userid" => $user["wechat_userid"],
-                    "name" => $user['username'], 
-                    //"position" => '',
-                    "email" => $user['email'],
-                    "enable" => $user['status'] ? 0 : 1
-                );
-                if (array_diff($wxuser['department'], $worgids)) {
-                    $data['department'] = $worgids;
-                }
-                if ($user['phone'] && $user['phone'] != $wxuser['mobile']) {
-                    $data['mobile'] = $user['phone'];
-                }
-               /* if ($user['weixinid'] && $wxuser['wechat_status'] == 4) {
-                    $data['weixinid'] = $user['weixinid'];
-                }*/
-                if ($profile['telephone'] && $profile['telephone'] != $wxuser['telephone']) {
-                    $data['telephone'] = $profile['telephone'];
-                }
-                if ($profile['gender'] && ($profile['gender'] - 1) != $wxuser['gender']) {
-                    $data['gender'] = $profile['gender'] - 1;
-                }
-                
-                if ($wx->updateUser($data)) {
-                    $ret += 1;
-                } else {
-                    $message = 'updateUser：errCode:' . $wx->errCode . ';errMsg:' . $wx->errMsg;
-                    runlog('wxlog', $message);
-                }
-
-                //$setarr = array('wechat_status' => $wxuser['status']);
-                //$setarr['weixinid'] = empty($wxuser['weixinid']) ? $user['weixinid'] : $wxuser['weixinid'];
-                $setarr['phone'] = empty($user['phone']) ? $wxuser['mobile'] : $user['phone'];
-                //$setarr['wechat_userid'] = 'dzz-' . $user['uid'];
-                C::t('user')->update($user['uid'], $setarr);
-            } else {//创建用户信息
-                $data = array(
-                    "userid" => 10000+ $user['uid'],//"dzz-" . $user['uid'],
-                    "name" => $user['username'],
-                    "department" => $worgids,
-                    //"position" => '',
-                    "email" => $user['email'],
-                    //"weixinid" => $user['wechat'],
-                    "enable" => $user['status'] ? 0 : 1
-                );
-                if ($user['phone']) {
-                    $data['mobile'] = $user['phone'];
-                }
-                if ($profile['telephone']) {
-                    $data['telephone'] = $profile['telephone'];
-                }
-                if ($profile['gender']) {
-                    $data['gender'] = $profile['gender'] - 1;
-                }
-                //创建用户前查询企业微信端所有用户，判断是否微信账户重名 如email 或者 mobile相同视为同一用户　则更新信息
-                $userlist =$wx->getUserListall(1,1);
-                $wxuser=array();
-                if( $userlist["userlist"] ){
-                    foreach($userlist["userlist"] as $k=>$v ){
-                        if($v["email"] && $data["email"]==$v["email"] ){
-                            $wxuser=$v;
-                            break;
-                        }
-                        if($v["mobile"] && $data["mobile"]==$v["mobile"] ){
-                            $wxuser=$v;
-                            break;
-                        }
-                    }
-                }
-                if( $wxuser ){//判断是否已存在手机号或者邮箱，如果又则认定为是同一个账户，不需要重新创建
-                    $data["userid"]=$wxuser["userid"];
-                    $result = $wx->updateUser($data);
-                }else{//查询不到企业微信，重新创建 重新创建时判断是否重名，如果重名重新命名，直到不重名
-                    if( $userlist["userlist"] ){
-                        $nowuserid = $data["userid"];
-                        $noneunion=true;
-                        $i=1;
-                        while( $noneunion ){//检查是否和企业微信断已有用户重名
-                            $isunion=false;
-                            foreach($userlist["userlist"] as $k=>$v ){
-                                if($v["userid"] == $nowuserid ){
-                                    $isunion=true;
-                                    break;
-                                }
-                            }
-                            if( $isunion ){
-                                $nowuserid = $data["userid"]."_".$i;
-                            }else{
-                                $data['userid']=$nowuserid;
-                                $noneunion=false;
-                            }
-                            $i++;
-                        }
-                    }
-                    $result = $wx->createUser($data);
-                }
-                
-                if ( $result ) {
-                    C::t('user')->update($user['uid'], array('wechat_userid' =>  $data['userid']));
-                    $ret += 1;
-                } else {
-                    $message = 'createUser：errCode:' . $wx->errCode . ';errMsg:' . $wx->errMsg;
-                    runlog('wxlog', $message);
-                }
-            }
-        }
-    }
-    return $ret;
-}
-
+ 
 function fix_integer_overflow($size)
 { //处理整数溢出
     if ($size < 0) {
@@ -607,10 +426,9 @@ function fsocketopen($hostname, $port = 80, &$errno, &$errstr, $timeout = 15)
     return $fp;
 }
 
-function dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $ip = '', $timeout = 15, $block = TRUE, $encodetype = 'URLENCODE', $allowcurl = TRUE, $position = 0)
-{
-    require_once libfile('function/filesock');
-    return _dfsockopen($url, $limit, $post, $cookie, $bysocket, $ip, $timeout, $block, $encodetype, $allowcurl, $position);
+function dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $ip = '', $timeout = 15, $block = TRUE, $encodetype  = 'URLENCODE', $allowcurl = TRUE, $position = 0, $files = array()) {
+	require_once libfile('function/filesock');
+	return _dfsockopen($url, $limit, $post, $cookie, $bysocket, $ip, $timeout, $block, $encodetype, $allowcurl, $position, $files);
 }
 
 function dhtmlspecialchars($string, $flags = null)
@@ -858,8 +676,9 @@ function avatar_block($uid=0,$headercolors=array(),$class="Topcarousel"){
 	}else{
 		$user=array('uid' => 0, 'username' => 'guest', 'avatarstatus' => 0 ,'adminid' => 0, 'groupid' => 7, 'credits' => 0, 'timeoffset' => 9999);
 	}
+	if(empty($user)) return '';
 	if($user['avatarstatus']){//用户已经上传头像
-		return '<img src="avatar.php?uid='.$user['uid'].'" class="img-circle" title="'.$user['username'].'">';
+		return '<img src="avatar.php?uid='.$user['uid'].'" class="img-circle special_avatar_class" title="'.$user['username'].'">';
 	}else{//没有上传头像，使用背景+首字母
 		if($uid){
 			if($headercolors[$uid]) $headerColor=$headercolors[$uid];
@@ -1365,6 +1184,22 @@ function output()
     }
 }
 
+
+function outputurl( $url="" )
+{
+    global $_G;
+    if ($_G['config']['rewritestatus']) {
+        $url = output_replace($url);
+        ob_end_clean();
+        $_G['gzipcompress'] ? ob_start('ob_gzhandler') : ob_start();
+        return $url;
+    }
+    if (defined('DZZ_DEBUG') && DZZ_DEBUG && @include(libfile('function/debug'))) {
+        function_exists('debugmessage') && debugmessage();
+    }
+    return $url;
+}
+
 function output_replace($content)
 {
     global $_G;
@@ -1376,7 +1211,55 @@ function output_replace($content)
         $content = str_replace($_G['setting']['rewrite']['str']['search'], $_G['setting']['rewrite']['str']['replace'], $content);
     }
     if (!empty($_G['config']['rewrite']['preg']['search'])) {
-        $content = preg_replace($_G['config']['rewrite']['preg']['search'], $_G['config']['rewrite']['preg']['replace'], $content);
+        
+        //处理js中 app_url,mod_url
+        $string1 = "APP_URL='".MOD_URL."'";//",APP_URL='".MOD_URL."',MOD_URL = '".MOD_URL."'";
+        $string2 = "MOD_URL='".MOD_URL."'";
+        $string=array($string1,$string2);
+        $md5[]=md5($string1);
+        $md5[]=md5($string2); 
+        //end
+        
+        //处理非本地连接
+        $reg = "/(https?|ftp|news):[\/]{2}([\w+\d+]+[.]{1})?[\w+\d]+[.]{1}[\w+\d]*+([^(\s|\"|\')]+)/"; 
+        preg_match_all($reg,$content,$links);
+        if( isset($links[0]) && $links[0]){
+            $siteurl =  $_G["siteurl"];
+            //echo $siteurl."******";
+            foreach($links[0] as $k=>$v){
+                //echo $v."------------";
+                if( strpos($v,$siteurl)!==false){
+                    //echo $v."----------<br/>";
+                }else{
+                     $string[]=$v;
+                     $md5[]=md5($v);
+                }
+            }
+        }
+		//end
+
+        $content=str_replace($string,$md5,$content);
+        
+        $search_arr =  $_G['config']['rewrite']['preg']['search'];
+        $replace_arr = $_G['config']['rewrite']['preg']['replace'];
+        $search_new=array();
+        $replace_new=array();
+        foreach($search_arr as $k=>$v ){
+            $s=$v; 
+            $v2 = substr_replace($v, '\&amp;/i',-2,2);
+            array_push($search_new,$v2); 
+            $v = substr_replace($v, '\&/i',-2,2);
+            array_push($search_new,$v);
+            array_push($search_new,$s);
+            array_push($replace_new,$replace_arr[$k]."?");
+            array_push($replace_new,$replace_arr[$k]."?");
+            array_push($replace_new,$replace_arr[$k]);  
+        }
+        $content = preg_replace($search_new, $replace_new, $content);
+        
+        $content=str_replace($md5,$string,$content); 
+         
+        //$content = preg_replace($_G['config']['rewrite']['preg']['search'], $_G['config']['rewrite']['preg']['replace'], $content);
     }
 
     return $content;
@@ -3240,7 +3123,7 @@ function get_resources_some_setting()
                 foreach ($usersarr as $v) {
                     //群组id
                     if (preg_match('/^\d+$/', $v)) {
-                        foreach (C::t('organization_user')->fetch_user_byorgid($v) as $val) {
+                        foreach (C::t('organization_user')->get_all_user_byorgid($v) as $val) {
                             $users[] = $val['uid'];
                         }
                     } elseif ($v == 'other') {
@@ -3295,7 +3178,7 @@ function get_resources_some_setting()
                 foreach ($usersarr as $v) {
                     //群组id
                     if (preg_match('/^\d+$/', $v)) {
-                        foreach (C::t('organization_user')->fetch_user_byorgid($v) as $val) {
+                        foreach (C::t('organization_user')->get_all_user_byorgid($v) as $val) {
                             $users[] = $val['uid'];
                         }
                     } elseif ($v == 'other') {

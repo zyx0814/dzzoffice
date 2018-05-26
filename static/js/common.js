@@ -525,7 +525,7 @@ function evalscript(s) {
 		} else {
 			p1 = /<script(.*?)>([^\x00]+?)<\/script>/i;
 			arr1 = p1.exec(arr[0]);
-			appendscript('', arr1[2], arr1[1].indexOf('reload=') != -1);
+			if(arr1) appendscript('', arr1[2], arr1[1].indexOf('reload=') != -1);
 		}
 	}
 	return s;
@@ -656,8 +656,10 @@ function ajaxget(url, showid, waitid, loading, display, recall) {
 		url = url.substr(0, strlen(url) - 1);
 		x.autogoto = 1;
 	}
-
 	var url = url + '&inajax=1&ajaxtarget=' + showid;
+	if(url && url.indexOf('?')==-1){
+		url=url.replace(/&/i,'?');
+	}
 	x.get(url, function(s, x) {
 		var evaled = false;
 		if(s.indexOf('ajaxerror') != -1) {
@@ -762,8 +764,9 @@ function ajaxpost(formid, showid, waitid, showidclass, submitbtn, recall) {
 	showloading();
 	curform.target = ajaxframeid;
 	var action = curform.getAttribute('action');
-	action = hostconvert(action);
-	curform.action = action.replace(/\&inajax\=1/g, '')+'&inajax=1';
+	action = hostconvert(action).replace(/(&|&|\?)inajax\=1/g, '');
+	var s=(action.indexOf('?') != -1) ? '&' :'?';
+	curform.action = action+s+'inajax=1'; 
 	curform.submit();
 	if(submitbtn) {
 		submitbtn.disabled = true;
@@ -2089,7 +2092,7 @@ function showWindow(k, url, mode, cache, menuv) {
 
 	if(!menuObj) {
 		var html='<div class="modal-dialog modal-center">'
-				 +'	<div class="fwinmask modal-content" >'
+				 +'	<div class="modal-content" >'
 				 +'  <div class="modal-content-inner" id="fwin_content_'+k+'">'
 				/* +'	  <div class="modal-header">'
 				 +'		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>'

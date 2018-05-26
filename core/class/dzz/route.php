@@ -15,7 +15,6 @@ class Route{
         $mod = !empty($params[MOULD]) ? $params[MOULD]:$_config['default_mod'];
 
         $op  = !empty($params[DIVIDE]) ? $params[DIVIDE]:$_config['default_op'];
-
         if(empty($mod)){
 
             if($_G['uid']<1 && !defined('ALLOWGUEST') && $_G['setting']['loginset']['available']){
@@ -74,6 +73,7 @@ class Route{
             define('MOD_URL',BASESCRIPT.'?mod='.$mod);
             define('OP_NAME',$op);
            // $break = true;
+			Hook::listen('mod_run');
             return DZZ_ROOT.$modfile;
         }
     }

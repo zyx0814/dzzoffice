@@ -1,0 +1,37 @@
+<!--{loop $data $v}-->
+<!--{if $v[type] == 'folder'}-->
+<div class="weui-cell weui-cell_access weui-cell_longpress document-data" data-hash="#file&fid={$v[oid]}">
+    <div class="weui-cell__hd">
+        <img src="$v[img]" class="weui-cell__recentimg">
+    </div>
+    <div class="weui-cell__bd">
+        <h4>{eval echo str_replace('\\','',$v['name']);}</h4>
+        <p>
+            <span class="file">文件:</span><i class="file-number">$v[filenum],</i>
+            <span class="folder">文件夹:</span><i class="folder-number">$v[foldernum]</i>
+        </p>
+    </div>
+    <div class="weui-cell__ft"></div>
+</div>
+<!--{else}-->
+<div class="weui-cell weui-cell_access weui-cell_longpress document-filelist" data-rid="$v[rid]">
+    <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
+    <div class="weui-cell__bd">
+        <h4>{eval echo str_replace('\\','',$v['name']);}</h4>
+        <p>
+            <span class="date">$v[monthdate]</span><i class="date-time">$v[hourdate],</i>
+            <span class="size">$v[fsize]</span>
+        </p>
+    </div>
+    <div class="weui-cells_checkbox hide">
+        <input type="checkbox" class="weui-check" name="checkbox1">
+        <i class="weui-icon-checked"></i>
+    </div>
+</div>
+<!--{/if}-->
+<!--{/loop}-->
+</section>
+<script type="text/javascript">
+    _filemanage.fid = '{$fid}';
+    _filemanage.dataparam = eval('('+'{$params}'+')');
+</script>

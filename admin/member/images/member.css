@@ -1,0 +1,94 @@
+.jstree-root{
+	padding:5px 0 0 10px;
+	line-height:24px;
+}
+.classtree-topbar{
+	position:relative;
+	bottom:0px;
+	left:0px;
+	background:#F7F7F7;
+	border-bottom:1px solid #D2D2D2;
+	border-top:1px solid #FFF;
+	padding:7px 10px 3px 10px;
+}
+
+.classtree-topbar a{
+	display:inline-block;
+	margin:0px 5px;
+	width:24px;
+	height:24px;
+	background-image:url(icons_24.png);
+    _filter: Alpha(opacity=70);
+    opacity: 0.7;
+}
+.classtree-topbar .newdir{
+	background-position:0 0;
+}
+.classtree-topbar .newdir_1{
+	background-position:0 -24px;
+}
+.classtree-topbar .newdoc{
+	background-position:0 -48px;
+}
+.classtree-topbar .import{
+	background-position:0 -72px;
+}
+.classtree-topbar .search{
+	background-position:0 -96px;
+}
+.classtree-topbar .guide{
+	background-position:0 -120px;
+}
+.classtree-topbar a:hover{
+	 _filter: Alpha(opacity=100);
+  opacity: 1;
+}
+.classtree-topbar a:active{
+
+}
+
+.classtree-search{
+	position:absolute;
+	left:1px;
+	top:2px;
+	display:none;
+}
+.classtree-search .form-control{
+	padding:5px 40px 5px 5px;
+}
+.classtree-search .form-control:focus{
+	box-shadow:none;
+}
+.classtree-search .search{
+	position:absolute;
+	right:28px;
+	top:8px;
+}
+.classtree-search .delete{
+	position:absolute;
+	right:8px;
+	top:8px;
+}
+/*重定义图标*/
+.jstree-default a i{
+  _filter: Alpha(opacity=80);
+  opacity: 0.8;
+}
+
+.jstree-default .jstree-anchor>.jstree-themeicon {
+	background-image:url(icons.png);
+	width:24px;height:24px;margin:4px 0;
+}
+ .jstree-open .jstree-anchor>.jstree-icon-book{
+	background-position:-4px -24px;
+}
+ .jstree-closed .jstree-anchor>.jstree-icon-book{
+	background-position:-4px 0;
+}
+
+.jstree-leaf .jstree-anchor>.jstree-icon-book{
+	background-position:-4px 0;
+}
+.jstree-node .jstree-anchor>.jstree-icon-file{
+	background-position:-4px -48px;
+}

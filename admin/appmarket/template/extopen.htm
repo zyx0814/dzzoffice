@@ -126,7 +126,8 @@
 		if( jQuery(obj).hasClass("isdefault1") ){
 			return false;
 		}
-		jQuery.post({
+		jQuery.ajax({
+			type:'post',
 			url:'{MOD_URL}&op=extopen',
 			data:{'extid':extid ,'do':'setdefault'},
 			success:function(json){

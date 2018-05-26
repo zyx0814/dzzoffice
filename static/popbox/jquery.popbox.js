@@ -140,7 +140,8 @@
 		}
 		var getdata = function(url) {
 			if(!url) url = me.data('href');
-			url += '&t=' + new Date().getTime();
+			var s=(url.indexOf('?') != -1) ? '&' :'?';
+			url+=s+'t='+new Date().getTime();
 			current = dataurl.push(url);
 			$.get(url, function(html) {
 				box.find('.popbox-container').html(html);

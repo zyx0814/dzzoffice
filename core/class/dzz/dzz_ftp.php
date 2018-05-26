@@ -36,7 +36,7 @@ class dzz_ftp
 		if(empty($this->config['on']) || empty($this->config['host'])) {
 			$this->set_error(FTP_ERR_CONFIG_OFF);
 		} else {
-			$this->func = $this->config['ssl'] && function_exists('ftp_ssl_connect') ? 'ftp_ssl_connect' : 'ftp_connect';
+			$this->func = /*$this->config['ssl'] &&*/ function_exists('ssh2_connect') ? 'ssh2_connect' : 'ftp_connect';
 			if($this->func == 'ftp_connect' && !function_exists('ftp_connect')) {
 				$this->set_error(FTP_ERR_SERVER_DISABLED);
 			} else {

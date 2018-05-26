@@ -1,0 +1,144 @@
+<!--{template common/header_simple_start}-->
+<link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
+<link rel="stylesheet" href="static/perfect-scrollbar/css/perfect-scrollbar.css?{VERHASH}">
+<link rel="stylesheet" href="static/css/common.css">
+<link href="dzz/system/css/selfilewindow.css?{VERHASH}" rel="stylesheet" media="all">
+<link rel="stylesheet" href="{MOD_PATH}/css/rightmenu/style.css"/>
+<!--<link rel="stylesheet" href="{MOD_PATH}/css/filelist_middleicon/style.css" />-->
+<!--<link rel="stylesheet" href="{MOD_PATH}/css/filelist_detaillist/style.css" />-->
+<!--<link rel="stylesheet" href="{MOD_PATH}/css/file_detailed.css">-->
+<link href="dzz/system/css/rightmenu.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="dzz/system/css/select-file.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script type="text/javascript">
+    var ctrlid = '$ctrlid';
+    var ismobile = '$ismobile' ? 1 : 0;
+    var range = '{$range}';
+    var urldefined = '{$urldefined}';
+</script>
+<!--{template common/header_simple_end}-->
+<!--{template fileselection/listcontent}-->
+<!--底部-->
+<div id="contextmenu" style="display: none;">
+    <!--{template fileselection/right_contextmenu}-->
+</div>
+<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0"
+        height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" onclick="submitdata()">{lang confirms}</button>
+    <button type="button" class="btn btn-default-outline cancel" data-dismiss="modal" aria-label="Close"
+            onclick="hide_window()">{lang cancel}
+    </button>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    var opened = window.opener;
+    jQuery(document).ready(function (e) {
+        _explorer.getConfig(MOD_URL + '&op=fileselection&do=json' + urldefined,function(){
+            var typejson = _explorer.allowselecttype,
+            typehtml = '',selecttype='',selectval='';
+            for(var o in typejson){
+                var exts = typejson[o][1].join(',').toLowerCase();
+                if(typejson[o][2] == 'selected'){
+                    selecttype = typejson[o][0];
+                    selectval = exts;
+                }
+                typehtml += '<li><a href="javascript:;" data-exts="'+exts+'">'+typejson[o][0]+'</a></li>';
+            }
+            $('.typedropup').html(typehtml);
+            $('.select-style').text(selecttype).data('exts',selectval);
+        });
+    });
+    function submitdata() {
+        var data = {};
+        var rid = _selectfile.selectall.icos;
+        var fid = _selectfile.fid;
+        var type = '{$type}';
+        if (type == 1) {//保存文件
+            if (rid.length) {//选择文件提示是否覆盖
+                var filedata = _explorer.sourcedata.icos[rid];
+                top.showDialog(__lang.js_save_recover_file.replace('{filename}', filedata.name),'confirm','', function () {
+                    $.post('index.php?mod=system&op=fileselection&do=save&operation=chkperm',{'path':fid,k:Math.random()},function(data){
+                        if(data['error']){
+                            top.showmessage(data['error'],"danger",2000,1);
+                            return false;
+                        }else {
+                            if (parent.$callback) {
+                                parent.$callback(filedata, '$token');
+                            } else {
+                                opened.$callback(filedata, '$token');
+                            }
+                            hide_window();
+                        }
+                    },'json');
+                });
+            } else {//未选择文件创建文件返回
+                var filename = $('#savenewname').val();
+                var filearr = filename.split('.');
+                var ext = filearr.pop();
+                $.post('index.php?mod=system&op=fileselection&do=ajax&operation=newIco', {
+                    'fid': fid,
+                    'filename': filename
+                }, function (data) {
+                    if (data['error']) {
+                        parent.showmessage(data['error'], "danger", 2000, 1);
+                        return false;
+                    } else {
+                        if (parent.$callback) {
+                            parent.$callback(data, '$token');
+                        } else {
+                            opened.$callback(data, '$token');
+                        }
+                        hide_window();
+                    }
+                }, 'json')
+            }
+        } else {//选择文件
+            if (rid.length < 1) {
+                parent.showmessage(__lang.please_select_file, "danger", 2000, 1);
+                return false;
+            } else {
+                for (var o in rid) {
+                    data[rid[o]] = _explorer.sourcedata.icos[rid[o]];
+                }
+                if (parent.$callback) {
+                    parent.$callback(data, '$token');
+                } else {
+                    opened.$callback(data, '$token');
+                }
+                hide_window();
+            }
+        }
+        return false;
+    }
+    function hide_window() {
+        if (opened) {
+            window.close();
+        } else {
+            parent.hide_window();
+        }
+    }
+</script>
+<script type="text/javascript" src="dzz/system/scripts/explorer.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/jstree.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/imgReady.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/system/scripts/select-file.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/system/scripts/_perm.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/system/scripts/_hotkey.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/system/scripts/_select.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/system/scripts/contextmenu.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/perfect-scrollbar/js/perfect-scrollbar.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/input_field.js?{VERHASH}"></script>
+<!-- The basic File Upload plugin -->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
+<!-- The basic File Upload plugin -->
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/perfect-scrollbar/js/perfect-scrollbar.min.js?{VERHASH}"></script>
+
+<!-- The basic File Upload plugin -->
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>

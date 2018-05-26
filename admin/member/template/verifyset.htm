@@ -1,0 +1,117 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<style>
+	html,
+	body {
+		overflow: hidden;
+		background: #FBFBFB;
+	}
+	
+	.bs-left-container {
+		width: 150px;
+		top: 0
+	}
+	
+	.bs-main-container {
+		margin-left: 150px;
+		overflow: auto;
+		padding:0;
+	}
+	
+	.form-horizontal .form-control {
+		min-width: 90px;
+		max-width: 250px;
+	}
+	textarea.form-control,select.form-control{
+		border-width:1px 1px 1px 1px;
+	}
+	
+</style>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix" style="padding-top:0px;">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+		<div class="left-drager-op">
+			<div class="left-drager-sub"></div>
+		</div>
+	</div>
+
+	<div class="bs-main-container  clearfix">
+		<div class="main-header">
+			<ul class="nav nav-pills nav-pills-bottomguide">
+				<li class="active">
+					<a href="{MOD_URL}&op=verifyset">{lang members_verify}</a>
+				</li>
+			</ul>
+		</div>
+		<div class=" alert alert-warning " style="margin:10px;padding-left:0;font-size:85%;line-height:2">
+			<ul>
+				{lang verifyset_members_verify_text}
+			</ul>
+		</div>
+		<div class="main-content" style="border-top:1px solid #DDD">
+			<form id="cpform" action="{MOD_URL}&op=verifyset" class="form-horizontal" method="post" name="cpform">
+				<input type="hidden" value="{FORMHASH}" name="formhash">
+				<input type="hidden" value="true" name="verifysubmit">
+				<table class="table table-hover" style="font-size:12px;">
+					<thead>
+						<th width="60">{lang enable}</th>
+						<th width="120">{lang authentication_code}</th>
+						<th>{lang members_verify_title}</th>
+						<th width="120">{lang edit}</th>
+					</thead>
+					<!--{eval for($i=1;$i<8;$i++){}-->
+					{eval $value=$_G['setting']['verify'][$i]}
+					<tr>
+						<td width="60"><input type="checkbox" name="settingnew[verify][$i][available]" <!--{if $value[available]}-->checked="checked"<!--{/if}-->value="1" /></td>
+						<td width="120">verify{$i}</td>
+						<td>
+							<!--{if $value[readonly]}-->
+							$value[title]<input type="hidden" name="settingnew[verify][$i][title]" value="$value[title]" />
+							<!--{else}-->
+							<input type="text" class="form-control input-sm" name="settingnew[verify][$i][title]" value="$value[title]">
+							<!--{/if}-->&nbsp;
+							<!--{if $value['icon']}-->
+							<img src="$value[icon]" />
+							<!--{/if}-->
+						</td>
+						<td width="120">
+							<a href="{MOD_URL}&op=verifyset&do=edit&vid=$i" class="ibtn glyphicon glyphicon-edit " title="{lang edit}"></a>
+						</td>
+					</tr>
+					<!--{eval }}-->
+
+					<tr>
+						<td colspan="20">
+							<input class="btn btn-primary btn-width" type="submit" value="{lang save_set}" />
+						</td>
+					</tr>
+				</table>
+
+			</form>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+	var url = '{MOD_URL}';
+
+	jQuery(document).ready(function(e) {
+		jQuery('input').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+		});
+		jQuery('input').on('ifChecked', function(e) {
+			jQuery(this).trigger('click');
+		});
+
+	});
+</script>
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

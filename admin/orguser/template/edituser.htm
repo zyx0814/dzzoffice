@@ -227,7 +227,7 @@
 	var orgsel_html = jQuery('#nav').html();
 	var lastusername = '{$user[username]}',
 		lastpassword = '',
-		lastemail = '{$user[email]}',
+		lastemail = '{eval echo strtolower($user[email])}',
 		lastinvitecode = '',
 		stmp = new Array(),
 		modifypwd = true;

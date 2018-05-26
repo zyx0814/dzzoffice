@@ -27,10 +27,22 @@ class table_resources_version extends dzz_table
         }
         return $data['img'];
     }
-   public function fetch_all_by_rid($rid){
+   public function fetch_all_by_rid($rid,$limit = '',$count = false){
        $rid = trim($rid);
        $versions = array();
        $resources = C::t('resources')->fetch_info_by_rid($rid);
+       $limitsql = '';
+       if($limit){
+           $limitarr = explode('-',$limit);
+           if(count($limitarr) > 1){
+               $limitsql = "limit $limitarr[0],$limitarr[1]";
+           }else{
+               $limitsql = "limit 0,$limitarr[0]";
+           }
+       }
+       if($count){
+           return DB::result_first("select count(*) from %t where rid = %s",array($this->_table,$rid));
+       }
        if($resources['vid'] == 0){
            $attrdata = C::t('resources_attr')->fetch_by_rid($rid,0);
             $filedata = array(
@@ -49,7 +61,7 @@ class table_resources_version extends dzz_table
            $filedata['img'] = self::getfileimg($filedata);
            $versions[$filedata['vid']] = $filedata;
        }else{
-           foreach(DB::fetch_all("select * from %t where rid = %s",array($this->_table,$rid)) as $val){
+           foreach(DB::fetch_all("select * from %t where rid = %s order by dateline desc $limitsql ",array($this->_table,$rid)) as $val){
                $attrdata = C::t('resources_attr')->fetch_by_rid($rid,$val['vid']);
                $val['img'] = isset($attrdata['img']) ?$attrdata['img']:'';
                $filedata = $val;
@@ -58,6 +70,17 @@ class table_resources_version extends dzz_table
            }
        }
        return $versions;
+   }
+   public function delete_by_vid($vid,$rid){
+       $vid = intval($vid);
+       $datainfo = C::t('resources')->fetch_info_by_rid($rid);
+       $vinfo = parent::fetch($vid);
+       if(parent::delete($vid)){
+           SpaceSize(-$vinfo['size'],$datainfo['gid'],1,$datainfo['uid']);
+           C::t('resources_attr')->delete_by_rvid($rid,$vid);
+       }
+       return true;
+
    }
     public  function  delete_by_version($icoid,$vid){
         global $_G ;
@@ -77,22 +100,18 @@ class table_resources_version extends dzz_table
             return array('msg'=>$v);
         }else return array('error'=>lang('error_delete_version_failed'));
     }
-    public function delete_by_rid($rid,$data=array()){
-       // if(!is_array($rid)) $rid = (array)$rid;
+    public function delete_by_rid($rid){
         if(!$return = DB::fetch_all("select * from %t where rid = %s",array($this->_table,$rid))){
             return ;
         }
         $aids = array();
-        $totalsize = 0;
         foreach($return as $v){
             $aids[] = $v['aid'];
-            $totalsize += intval($v['size']);
         }
-        if($data['size']) SpaceSize(-$totalsize,$data['gid'],1,$data['uid']);
         if(!empty($aids)){
             C::t('attachment')->addcopy_by_aid($aids,-1);
         }
-        DB::delete($this->_table,'rid in('.dimplode($rid).')');
+        DB::delete($this->_table,array('rid'=>$rid));
     }
     //上传新版本
     public function add_new_version_by_rid($rid,$setarr){
@@ -139,14 +158,12 @@ class table_resources_version extends dzz_table
 
         //文件名
         $filename = $setarr['name'];
-        $filename = self::getFileName($setarr['name'],$resources['pfid']);
+        $filename = self::getFileName($setarr['name'],$resources['pfid'],$rid);
         unset($setarr['name']);
-
         $setarr['rid'] = $rid;
 
         //新数据插入版本表
         if($vid = parent::insert($setarr,1)){
-
             //更新主表数据
             if(DB::update('resources',array('vid'=>$vid,'size'=>$setarr['size'],'ext'=>$setarr['ext'],'type'=>$setarr['type'],'name'=>$filename),array('rid'=>$rid))){
                 SpaceSize($setarr['size'],$resources['gid'],true);
@@ -257,10 +274,16 @@ class table_resources_version extends dzz_table
 
     }
     //判断文件重名
-    public function getFileName($name,$pfid){
+    public function getFileName($name,$pfid,$rid = ''){
         static $i=0;
+        $params = array('resources',$name,$pfid);
+        $wheresql = '';
+        if($rid){
+            $wheresql .= " and rid != %s ";
+            $params[] = $rid;
+        }
         $name=self::name_filter($name);
-        if(DB::result_first("select COUNT(*) from %t where type!='folder' and name=%s and isdelete<1 and pfid=%d",array('resources',$name,$pfid))){
+        if(DB::result_first("select COUNT(*) from %t where type!='folder' and name=%s and isdelete<1 and pfid=%d $wheresql",$params)){
             $ext='';
             $namearr=explode('.',$name);
             if(count($namearr)>1){
@@ -271,7 +294,7 @@ class table_resources_version extends dzz_table
             $tname=implode('.',$namearr);
             $name=preg_replace("/\(\d+\)/i",'',$tname).'('.($i+1).')'.$ext;
             $i+=1;
-            return self::getFileName($name,$pfid);
+            return self::getFileName($name,$pfid,$rid);
         }else{
             return $name;
         }

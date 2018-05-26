@@ -1,0 +1,39 @@
+/*右键菜单开始*/
+.menu {
+    border-radius: 2px;
+    box-shadow: 0px 4px 13px 0px rgba(62,62,62,0.28);
+    background: #fff;
+    width: 190px;
+    padding: 5px 0px;
+    border: 1px solid #D8D8D8;
+    margin-left: 2px;
+}
+.menu-item {
+    height: 36px;
+    line-height: 36px;
+    border: none;
+    font-size: 14px;
+    font-family: "微软雅黑";
+    color: #555555;
+}
+.menu-icon {
+    top: 10px;
+    left: 15px;
+    color: #999999;
+    font-size: 16px;
+    background-image: none;
+}
+.menu-text, .file-text {
+    left: 45px;
+    height: 36px;
+    width: 140px;
+    color: #666666;
+}
+.menu-rightarrow {
+    top: 15px;
+}
+.menu-sep {
+    margin: 5px 0px;
+    background: none;
+    border-top: 1px solid #EEEEEE;
+}

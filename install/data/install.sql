@@ -434,7 +434,7 @@ CREATE TABLE dzz_failedlogin (
 DROP TABLE IF EXISTS dzz_folder;
 CREATE TABLE dzz_folder (
   fid int(10) unsigned NOT NULL AUTO_INCREMENT,
-  pfid int(10) unsigned NOT NULL DEFAULT '0',
+  pfid int(11) NOT NULL DEFAULT '0',
   uid int(10) unsigned NOT NULL DEFAULT '0',
   username char(30) NOT NULL DEFAULT '',
   innav tinyint(1) NOT NULL DEFAULT '1',
@@ -732,7 +732,7 @@ CREATE TABLE dzz_resources (
   oid int(10) unsigned DEFAULT '0',
   uid int(10) unsigned NOT NULL,
   username char(30) NOT NULL DEFAULT '' COMMENT '用戶名',
-  pfid int(10) unsigned NOT NULL DEFAULT '0' COMMENT '上級id',
+  pfid int(11)  NOT NULL DEFAULT '0' COMMENT '上級id',
   gid int(10) unsigned NOT NULL DEFAULT '0' COMMENT '群组id',
   `name` char(80) NOT NULL DEFAULT '' COMMENT '名称',
   `type` char(15) NOT NULL DEFAULT '' COMMENT '类型',

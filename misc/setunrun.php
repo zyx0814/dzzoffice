@@ -11,7 +11,6 @@ ignore_user_abort(true);
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-require_once DZZ_ROOT.'./dzz/function/dzz_core.php';
 $unrunexts=$_G['setting']['unRunExts'];
 //获取所有需要设置为禁止运行的项目
 

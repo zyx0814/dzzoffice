@@ -60,7 +60,6 @@ class io_remote
 	//迁移文件
 	public function Migrate($attach,$remoteid){
 		global $_G;
-		
 		if(is_numeric($re=self::MoveToSpace($attach,$remoteid))){
 			$remoteid=$re;
 			if(C::t('attachment')->update($attach['aid'],array('remote'=>$re))){

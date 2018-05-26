@@ -11,6 +11,25 @@ if (!defined('IN_DZZ')) {
 }
 
 global $_G;
+if($_G['uid']>0){
+	  $param = array(
+            'username' => $_G['username'],
+            'usergroup' => $_G['group']['grouptitle'],
+            'uid' => $_G['uid'],
+            'groupid' => $_G['groupid'],
+            'syn' =>  0
+        );
+        $loginmessage =  'login_succeed';
+
+        $location = dreferer();//待修改
+
+        $href = str_replace("'", "\'", $location);
+        $href = preg_replace("/user.php\?mod\=login.+?$/i", "", $location);
+
+        $messageText = lang($loginmessage, $param);
+        writelog('loginlog', '登录成功');
+		showmessage($messageText,$href);
+}
 
 $setting = isset($_G['setting']) ? $_G['setting']:'';
 
@@ -94,7 +113,7 @@ if(!isset($_GET['loginsubmit'])) {//是否提交
         $location = /*$_G['groupid'] == 8 ? 'user.php?mod=profile' :*/ dreferer();//待修改
 
         $href = str_replace("'", "\'", $location);
-        $href = preg_replace("/user.php?mod=login.+?$/i", "", $location);
+        $href = preg_replace("/user.php\?mod\=login.+?$/i", "", $location);
 
         $messageText = lang($loginmessage, $param);
         writelog('loginlog', '登录成功');

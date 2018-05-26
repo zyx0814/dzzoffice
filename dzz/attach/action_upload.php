@@ -19,7 +19,7 @@ switch (htmlspecialchars($_GET['action'])) {
             "maxSize" => $CONFIG['imageMaxSize'],
             "allowFiles" => $CONFIG['imageAllowFiles']
         );
-        $fieldName = $CONFIG['imageFieldName'];
+		 $fieldName = $markdown?'editormd-image-file':$CONFIG['imageFieldName'];
         break;
     case 'uploadscrawl':
         $config = array(
@@ -66,4 +66,4 @@ $up = new Uploader($fieldName, $config, $base64);
  */
 
 /* 返回数据 */
-return json_encode($up->getFileInfo());
+return ($up->getFileInfo());

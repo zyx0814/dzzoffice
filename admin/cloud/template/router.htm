@@ -1,0 +1,103 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<style type="text/css">
+/*修改*/
+/*.bs-main-container{
+    padding: 15px 30px;
+}*/
+
+/*结束*/
+</style>
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix"> 
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+    <div class="left-drager-op">
+      <div class="left-drager-sub"></div>
+    </div>
+  </div>
+  <div class="bs-main-container  clearfix" style="min-width:680px;">
+    <div class="main-header clearfix"> 
+      <!--{template right_header}--> 
+    </div>
+    <div class="main-content clearfix" style="border-top:1px solid #FFF">
+      <form id="appform" name="appform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=cloud&op=router" method="post">
+        <input type="hidden" name="routersubmit" value="true" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+        <table class="table table-hover">
+          <thead>
+          <th width="20">&nbsp;</th>
+            <th width="80">{lang priority}</th>
+            <th width="150">{lang name}</th>
+            <th width="100">{lang use_storage}</th>
+            <th>{lang routing_rule}</th>
+            <th width="60">{lang enable}</th>
+            <th width="60">{lang edit}</th>
+              </thead>
+            <!--{loop $list $value}-->
+          <tr>
+            <td width="20"><input type="checkbox" name="delete[]" value="$value[routerid]" style="width:20px;" /></td>
+            <td width="80"><input type="text" class="form-control" name="priority[{$value[routerid]}]" value="$value[priority]" style="width:45px;" /></td>
+            <td width="150"><input type="text" class="form-control" name="name[{$value[routerid]}]" value="$value[name]" /></td>
+            <td width="100">$value[position] 
+              <!--{if $value[bz_available]<1}--> 
+              <span class="text-danger">{lang router_routing_failure}</span> 
+              <!--{/if}--></td>
+            <td style="word-break:break-all">$value[drouter]</td>
+            <td width="60"><input type="checkbox" name="available[{$value[routerid]}]" value="1" <!--{if $value[available]>0}-->checked<!--{/if}-->></td>
+            <td width="60"><a href="{BASESCRIPT}?mod=cloud&op=routeredit&routerid=$value[routerid]" class="glyphicon glyphicon-edit " title="{lang edit}">&nbsp;</a></td>
+          </tr>
+          <!--{/loop}-->
+          <thead>
+          <td valign="middle" colspan="7"><input type="checkbox" name="chkall" id="chkall" onclick="checkAll('prefix', this.form, 'delete')">
+              &nbsp;{lang del}&nbsp;&nbsp;&nbsp;
+              <input type="submit" class="btn btn-primary" value="{lang save_set}" />
+              <a href="{BASESCRIPT}?mod=cloud&op=routeredit" title="{lang add_routing}" class="btn btn-success">{lang add_routing}</a>
+              
+              </td>
+              </thead>
+        </table>
+      </form>
+      <div class="tip" style="margin: 20px;color: #444;text-shadow: 1px 1px 1px #FFF;line-height: 1.8;">
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <h5>{lang board_message}</h5>
+          <ul>
+            {lang router_board_message_text}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();
+
+	function checkspace(obj, routerid) {
+		jQuery(obj).html('<img src="admin/images/loadding.gif">');
+		jQuery.getJSON('{ADMINSCRIPT}?mod=cloud&op=space&do=checkspace&routerid=' + routerid, function(json) {
+			if(json.error) {
+				jQuery(this).html('<i class="icon-refresh"></i><span class="text-danger">' + json.error + '</span>');
+			} else {
+				jQuery('#spaceinfo_' + routerid + ' .spacecheck a').html('<span class="text-success" >{lang already_update}</span>');
+				jQuery('#spaceinfo_' + routerid + ' .spacesize').html(json.fusesize + '&nbsp;/&nbsp;' + json.ftotalsize).hide().fadeIn('slow');
+				if(json.usesize < 1) {
+					jQuery('delete_' + routerid).show();
+				} else {
+					jQuery('delete_' + routerid).hide();
+				}
+				window.setTimeout(function() {
+					jQuery('#spaceinfo_' + routerid + ' .spacecheck a').html('<i class="icon-refresh"></i>');
+				}, 5000);
+
+			}
+		});
+	}
+</script> 
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}-->

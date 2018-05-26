@@ -151,7 +151,7 @@ class template {
 
 		$template = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}", $template);
 //	    js的lang替换
-		$template = preg_replace_callback("/<script[^>]+?src=\"(.+?)\".*?>[\s\S]*?/i", array($this, 'parse_template_callback_javascript'), $template);
+		$template = preg_replace_callback("/<script[^>]+?src=\"(.+?)\".*?>[\s\S]*?/is", array($this, 'parse_template_callback_javascript'), $template);
 //	       模版lang替换
 		$template = preg_replace_callback("/\{lang\s+(.+?)\}/is", array($this, 'parse_template_callback_languagevar_1'), $template);
 //	       模版__lang替换
@@ -202,7 +202,7 @@ class template {
 	}
 
 	function parse_template_callback_javascript($matches) {
-		return $this -> loadjstemplate($matches[1]);
+		return $this -> loadjstemplate($matches);
 	}
 
     function parse_template_callback_hook($matches){
@@ -306,7 +306,7 @@ class template {
 	}
 
 	function parse_template_callback_stripscriptamp_12($matches) {
-		return $this -> stripscriptamp($matches[1], $matches[2]);
+		return $this -> stripscriptamp($matches);
 	}
 
 	function parse_template_callback_stripblock_12($matches) {
@@ -323,7 +323,9 @@ class template {
 	 	return $jsonencode;
 	}
 
-	function loadjstemplate($parameter) {
+	function loadjstemplate($matches) {
+        global $_G;
+        $parameter = $matches[1];
 		$paramet = trim($parameter,"\0");
         $parameter = preg_replace_callback('/\{(.+?)\}/i',function($m){
             $defineds = get_defined_constants();
@@ -335,7 +337,14 @@ class template {
 		$src = preg_replace('/\?.*/i', '', $src);
 		$jsname = str_replace('.','_',basename($src,'.js'));	
 		$content = @file_get_contents($src);
-		if(!$content) return '<script type="text/javascript" src="'.$paramet.'">';
+        $_G['template_paramet_replace_value'] = $paramet;
+		if(!$content){
+		    $return = preg_replace_callback("/<script([^>]+?)src=\"(.+?)\"(.*?)>[\s\S]*?/is",function($m){
+		        return '<script'.$m[1].'src="'.getglobal('template_paramet_replace_value').'"'.$m[3].'>';
+            },$matches[0]);
+		    unset($_G['template_paramet_replace_value']);
+            return $return;
+        }
 		$jslangcontent = array();
         if(preg_match_all('/__lang\.(\w+)/i',$content,$match)){
             $jslangcontent[] = 'if(!__lang){var __lang={};}';
@@ -358,9 +367,18 @@ class template {
 		        fwrite($fp, $jscontent);
 		        fclose($fp);
 			}
-		   	return '<script type="text/javascript" src="'.$jscachefile.'"></script><script type="text/javascript" src="'.$paramet.'">';			
+		   	$return = '<script type="text/javascript" src="'.$jscachefile.'"></script>';
+            $return .= preg_replace_callback("/<script([^>]+?)src=\"(.+?)\"(.*?)>[\s\S]*?/is",function($m){
+                return '<script'.$m[1].'src="'.getglobal('template_paramet_replace_value').'"'.$m[3].'>';
+            },$matches[0]);
+            unset($_G['template_paramet_replace_value']);
+            return $return;
 		}
-		return '<script type="text/javascript" src="'.$paramet.'">';			
+        $return = preg_replace_callback("/<script([^>]+?)src=\"(.+?)\"(.*?)>[\s\S]*?/is",function($m){
+            return '<script'.$m[1].'src="'.getglobal('template_paramet_replace_value').'"'.$m[3].'>';
+        },$matches[0]);
+        unset($_G['template_paramet_replace_value']);
+		return $return;
 	}
 //	模版lang替换
 	function languagevar($var) {
@@ -541,10 +559,16 @@ class template {
 		return $expr . $statement;
 	}
 
-	function stripscriptamp($s, $extra) {
-		$extra = str_replace('\\"', '"', $extra);
-		$s = str_replace('&amp;', '&', $s);
-		return "<script src=\"$s\" type=\"text/javascript\"$extra></script>";
+	function stripscriptamp($matches) {
+	    global $_G;
+		$_G['template_extra-replace_val'] = str_replace('\\"', '"', $matches[2]);
+		$_G['template_src_replace_val'] = str_replace('&amp;', '&', $matches[1]);
+        $return =  preg_replace_callback("/\<script([^\>]*?)src=\"(.+?)\"(.*?)\>\s*\<\/script\>/is",function($match){
+            return  "<script".$match[1]."src=\"".getglobal('template_src_replace_val')."\" ".getglobal('template_extra-replace_val')."></script>";
+        },$matches[0]);
+        unset($_G['template_extra-replace_val']);
+        unset($_G['template_src_replace_val']);
+		return $return;
 	}
 
 	function stripblock($var, $s) {

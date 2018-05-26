@@ -126,5 +126,22 @@ footer.page-copyright {
 .btn-primary{
 	background-color:#3779ff;
 }
-
+.third-wrapper{
+	margin-bottom:20px;
+	text-align: left;
+}
+.third-wrapper>a{
+	display: inline-block;
+	width:52px;
+	height:52px;
+	padding:10px;
+}
+.third-wrapper>a:hover{
+	background-color: RGBA(0,0,0,.05);
+}
+.third-wrapper>a>img{
+	max-width:32px;
+	max-height:32px;
+	vertical-align: middle
+}
 

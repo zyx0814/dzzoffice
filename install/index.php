@@ -415,6 +415,7 @@ if($method == 'show_license') {
 } elseif($method == 'ext_info') {
 	@touch($lockfile);
 	@unlink(ROOT_PATH.'./install/index.php');
+	@unlink(ROOT_PATH.'./install/update.php');
 	show_header();
 	echo '<iframe src="../misc.php?mod=syscache" style="display:none;"></iframe>';
 	echo '<h3>'.lang('install_successfully').'</h3>';

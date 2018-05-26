@@ -1,0 +1,45 @@
+<div class="hide breadcrumb-data">
+    <li class="route" data-href="{DZZSCRIPT}?mod=shares&op=ajax&path=$morepath">
+        <a href="javascript:;">$foldername</a><span class="dzz dzz-chevron-right"></span>
+    </li>
+</div>
+<div class="module-list">
+<!--{loop $list $v}-->
+<!--{if $v[type] == 'folder'}-->
+<div class="weui-cell weui-cell_access weui-cell_longpress folderlist" data-dpath="$v[dpath]" data-dhpath="$v[dhpath]" data-rid="$v[rid]">
+    <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
+    <div class="weui-cell__bd">
+        <h4 >$v[name]</h4>
+        <p>
+            <span class="file">文件:</span><i class="file-number">$v[filenum],</i>
+            <span class="folder">文件夹:</span><i class="folder-number">$v[foldernum]</i>
+        </p>
+    </div>
+
+    <div class="weui-cell__ft"></div>
+    <div class="weui-cells_checkbox hide">
+        <input type="checkbox" class="weui-check" name="checkbox1">
+        <i class="weui-icon-checked"></i>
+    </div>
+</div>
+<!--{else}-->
+<div class="weui-cell weui-cell_access weui-cell_longpress filelist" data-dpath="$v[dpath]" data-dpath="{DZZSCRIPT}?mod=io&op=download&path=$v[dpath]"  data-rid="$v[rid]">
+    <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
+    <div class="weui-cell__bd">
+        <h4 >$v[name]</h4>
+        <p>
+            <span class="size">$v[fsize]</span><i class="date">{eval echo dgmdate($v[dateline],'Y/m/d');}</i>
+            <span class="date-time">{eval echo dgmdate($v[dateline],'H:i');}</span>
+        </p>
+    </div>
+    <div class="weui-cells_checkbox hide">
+        <input type="checkbox" class="weui-check" name="checkbox1">
+        <i class="weui-icon-checked"></i>
+    </div>
+</div>
+<!--{/if}-->
+<!--{/loop}-->
+</div>
+<script type="text/javascript">
+    var nextpage = '{$nextpage}',morepath = '{$morepath}';
+</script>

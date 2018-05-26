@@ -3,11 +3,18 @@
 		<li>
 			<a href="javascript:;" onclick="showWindow('about','user.php?mod=space&op=about&modname=$_GET[modname]');">{lang about}</a>
 		</li>
+		<!--{if $_G['uid']>0}-->
 		<li>
-			<a href="user.php?&mod=profile" target="_blank">{lang userCenter}</a>
+			<a href="user.php?mod=profile" target="_blank">{lang userCenter}</a>
 		</li>
+		
 		<li>
 			<a href="javascript:;" onclick="_header.loging_close();">{lang logout}</a>
 		</li>
+		<!--{else}-->
+		<li>
+			<a href="user.php?mod=login">{lang login}</a>
+		</li>
+		<!--{/if}-->
 	</ul>
 </div>

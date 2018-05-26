@@ -155,7 +155,7 @@ class perm_check{
         if($_G['uid']<1){ //游客没有权限
             return false;
         }
-        if($bz || $arr['bz']){
+        if(($bz && $bz!='dzz') || ($arr['bz'] && $arr['bz']!='dzz')){
             return self::checkperm_Container($arr['pfid'],$action,$bz?$bz:$arr['bz']);
         }else{
             //首先判断ico的超级权限；

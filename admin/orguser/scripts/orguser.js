@@ -13,7 +13,7 @@ function checkAdminLogin(str){
 	}
 }
 function show_guide(){
-	jQuery('#orguser_container').load(ajaxurl+'&do=guide',function(){
+	jQuery('#orguser_container').load(ajaxurl+'do=guide',function(){
 		location.hash='';
 	});
 }
@@ -36,7 +36,7 @@ function selJob(obj){
 function selDepart(obj){
 	var orgid=jQuery(obj).val();
 	var li=jQuery(obj).parent();
-	li.parent().find('.job .dropdown-menu').load(ajaxurl+'&do=getjobs&orgid='+orgid,function(html){
+	li.parent().find('.job .dropdown-menu').load(ajaxurl+'do=getjobs&orgid='+orgid,function(html){
 			if(checkAdminLogin(html)){
 				location.reload();
 			}
@@ -63,6 +63,7 @@ function errormessage(id, msg,passlevel) {
 function checkemail(id) {
 	errormessage(id);
 	var email = trim(jQuery('#'+id).val());
+	email=email.toLowerCase();
 	if(jQuery('#'+id).parent()[0].className.match(/ p_right/) && (email == '' || email == lastemail ) || email == lastemail) {
 		return;
 	} 
@@ -220,7 +221,7 @@ function jstree_search(val){
 }
 function jstree_create_organization(){
 	var inst = jQuery("#classtree").jstree(true);
-		jQuery.post(ajaxurl+'&do=create',{'forgid':0,'t':new Date().getTime()},function(json){
+		jQuery.post(ajaxurl+'do=create',{'forgid':0,'t':new Date().getTime()},function(json){
 			if(!json || json.error){
 				showmessage(json.error,'danger',3000,1);
 			}else if(json.orgid>0){
@@ -248,7 +249,7 @@ function jstree_create_dir(){
 		return true;
 	}
 	var inst = jQuery("#classtree").jstree(true);
-	jQuery.post(ajaxurl+'&do=create',{'forgid':obj.id,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=create',{'forgid':obj.id,'t':new Date().getTime()},function(json){
 		if(!json || json.error){
 			showmessage(json.error,'danger',3000,1);
 		}else if(json.orgid>0){
@@ -294,7 +295,7 @@ function showDetail(id,idtype,ajaxdo,orgid){
 	//console..log(hash);
 	urladd+='&t='+new Date().getTime()
 	
-	jQuery('#orguser_container').load(baseurl+'&op=view&id='+id+'&idtype='+idtype+urladd,function(html){
+	jQuery('#orguser_container').load(baseurl+'op=view&id='+id+'&idtype='+idtype+urladd,function(html){
 		if(checkAdminLogin(html)){
 			location.reload();
 		}
@@ -332,7 +333,7 @@ function job_save(jobid,orgid){
 		el.find('.edit').addClass('hide');
 		return;
 	}
-	jQuery.post(ajaxurl+'&do=jobedit',{'name':name,'jobid':jobid,'orgid':orgid,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=jobedit',{'name':name,'jobid':jobid,'orgid':orgid,'t':new Date().getTime()},function(json){
 		if(json.error){
 			el.find('.job-name').html(oname).removeClass('hide');
 			el.find('.edit').addClass('hide');
@@ -364,7 +365,7 @@ function job_cancel_add_editor(orgid){
 }
 function job_del(jobid,orgid){
 	var el=jQuery('#job_'+jobid);
-	jQuery.post(ajaxurl+'&do=jobdel',{'jobid':jobid,'orgid':orgid,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=jobdel',{'jobid':jobid,'orgid':orgid,'t':new Date().getTime()},function(json){
 		if(json.error){
 			showmessage(json.error,'danger',3000,1);
 		}else if(json.jobid>0){
@@ -380,7 +381,7 @@ function job_add(orgid){
 		newtodo.find('.new-job-text').focus();
 		return;
 	}
-	jQuery.post(ajaxurl+'&do=jobadd',{'name':name,'orgid':orgid,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=jobadd',{'name':name,'orgid':orgid,'t':new Date().getTime()},function(json){
 		
 		if(json.jobid>0){
 			appendjob(json);
@@ -404,6 +405,20 @@ function appendjob(json){
     html+='</div>';
 	jQuery('.jobs .new-job').before(html);
 }
+function callback_moderators(ids,data,orgid){
+	console.log(ids);console.log(orgid);
+	//删除不在选择列表内的用户
+	jQuery('.moderators-container .user-item').each(function(){
+		var uid=jQuery(this).attr('uid');
+		if(jQuery.inArray(uid,ids)===-1){
+			jQuery(this).find('.delete').trigger('click');
+		}
+	});
+	for(var i=0;i<ids.length;i++){
+		moderator_add(orgid,ids[i]);
+	}
+	
+}
 function moderator_add(orgid,uid){
 	if(jQuery('#moderators_container_'+orgid+' .user-item[uid='+uid+']').length){
 		jQuery('#moderators_container_'+orgid+' .user-item[uid='+uid+']').insertAfter(jQuery('#moderators_container_'+orgid+' .moderators-acceptor'));
@@ -411,7 +426,7 @@ function moderator_add(orgid,uid){
 		return;
 	}
 	jQuery('#moderators_container_'+orgid+' .moderators-acceptor').removeClass('hover');
-	jQuery.post(ajaxurl+'&do=moderator_add',{'orgid':orgid,'uid':uid,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=moderator_add',{'orgid':orgid,'uid':uid,'t':new Date().getTime()},function(json){
 		if(json.error) showmessage(json.error,'danger',3000,1);
 		else{
 			appendModerator(json);
@@ -425,7 +440,7 @@ function appendModerator(json){
 	html+='			<div class="avatar-cover"></div>';
 	html+='			<div class="user-item-avatar">'; 
 	html+='				<div class="avatar-face">';
-	html+='					<img src="avatar.php?uid='+json.uid+'&size=middle">'; 
+	html+='					'+json.avatar; 
 	html+='				</div>';
 	html+='			</div>';
 	html+='			<p class="text-center" style="height:20px;margin:5px 0;line-height:25px;overflow:hidden;"> '+json.username+'</p>';
@@ -433,7 +448,7 @@ function appendModerator(json){
 	jQuery('#moderators_container_'+json.orgid+' .moderators-acceptor').after(html);
 }
 function moderator_del(id,orgid,obj){
-	jQuery.post(ajaxurl+'&do=moderator_del',{'orgid':orgid,'id':id,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=moderator_del',{'orgid':orgid,'id':id,'t':new Date().getTime()},function(json){
 		if(json.error) showmessage(json.error,'danger',3000,1);
 		else{
 			jQuery(obj).parent().remove();
@@ -443,7 +458,7 @@ function moderator_del(id,orgid,obj){
 }
 
 function folder_available(available,orgid){
-	jQuery.post(ajaxurl+'&do=folder_available',{'orgid':orgid,'available':available,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=folder_available',{'orgid':orgid,'available':available,'t':new Date().getTime()},function(json){
 		if(json.error){
 			 showmessage(json.error,'danger',3000,1);
 		}else{
@@ -458,7 +473,7 @@ function folder_available(available,orgid){
 	},'json');
 }
 function group_on(on,orgid){
-	jQuery.post(ajaxurl+'&do=group_on',{'orgid':orgid,'available':on,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=group_on',{'orgid':orgid,'available':on,'t':new Date().getTime()},function(json){
 		if(json.error){
 			showmessage(json.error,'danger',3000,1);
 		}else{
@@ -471,12 +486,12 @@ function group_on(on,orgid){
 	},'json');
 }
 function folder_indesk(indesk,orgid){
-	jQuery.post(ajaxurl+'&do=folder_indesk',{'orgid':orgid,'indesk':indesk,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=folder_indesk',{'orgid':orgid,'indesk':indesk,'t':new Date().getTime()},function(json){
 		if(json.error) showmessage(json.error,'danger',3000,1);
 	},'json');
 }
 function set_org_logo(orgid,aid){
-	jQuery.post(ajaxurl+'&do=set_org_logo',{'orgid':orgid,'aid':aid},function(json){
+	jQuery.post(ajaxurl+'do=set_org_logo',{'orgid':orgid,'aid':aid},function(json){
 		if(json.error) showmessage(json.error,'danger',3000,1);
 	},'json');
 }
@@ -488,7 +503,7 @@ function set_org_logo(orgid,aid){
 function set_org_orgname(orgid,obj){
 	var oldname=jQuery(obj).data('oldname');
 	console.log(oldname);
-	jQuery.post(ajaxurl+'&do=set_org_orgname',{'orgid':orgid,'orgname':obj.value},function(json){
+	jQuery.post(ajaxurl+'do=set_org_orgname',{'orgid':orgid,'orgname':obj.value},function(json){
 		if(json.error){
 			obj.value=oldname;
 			showmessage(json.error,'danger',3000,1);
@@ -501,14 +516,14 @@ function set_org_orgname(orgid,obj){
 	},'json');
 }
 function set_org_desc(orgid,desc){
-	jQuery.post(ajaxurl+'&do=set_org_desc',{'orgid':orgid,'desc':desc},function(json){
+	jQuery.post(ajaxurl+'do=set_org_desc',{'orgid':orgid,'desc':desc},function(json){
 		if(json.error){
 			showmessage(json.error,'danger',3000,1);
 		}
 	},'json');
 }
 function folder_maxspacesize(obj,orgid){
-	jQuery.post(ajaxurl+'&do=folder_maxspacesize',{'orgid':orgid,'maxspacesize':obj.value,'t':new Date().getTime()},function(json){
+	jQuery.post(ajaxurl+'do=folder_maxspacesize',{'orgid':orgid,'maxspacesize':obj.value,'t':new Date().getTime()},function(json){
 		if(json.error){
 			 obj.value=json.val;
 			 showmessage(json.error,'danger',3000,1);

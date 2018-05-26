@@ -33,8 +33,10 @@ class table_organization_user extends dzz_table
 			   $ret[$v]=$v;
 		   }
 		}
-		wx_updateUser($ret);
-        return $ret;
+      if( $org["type"]==0){//非群主才同步
+         self::syn_user( $ret );
+      } 
+      return $ret;
     }
 
     public function fetch_by_uid_orgid($uid, $orgid)
@@ -61,15 +63,37 @@ class table_organization_user extends dzz_table
         foreach ($updateids as $orgid) {
             if ($orgid > 0) DB::update($this->_table, array('jobid' => $orgarr[$orgid]), "orgid='{$orgid}' and uid='{$uid}'");
         }
-
-        wx_updateUser($uid);
         return true;
+    }
+    
+    public function bind_uid_and_orgid($uid, $orgarr){
+         $orgids = array();
+         foreach ($orgarr as $key => $value) {
+             $orgids[] = $key;
+         }
+ 
+         $Oorgids = self::fetch_orgids_by_uid($uid);
+         if (!is_array($orgids)) $orgids = array($orgids);
+         $insertids = array_diff($orgids, $Oorgids);
+         $delids = array_diff($Oorgids, $orgids);
+         $updateids = array_diff($orgids, $delids, $insertids);
+         //if ($delids) DB::delete($this->_table, "uid='{$uid}' and orgid IN (" . dimplode($delids) . ")");
+         
+         foreach ($insertids as $orgid) {
+             if ($orgid > 0) self::insert_by_orgid($orgid,$uid,$orgarr[$orgid]);
+         }
+         foreach ($updateids as $orgid) {
+             if ($orgid > 0) DB::update($this->_table, array('jobid' => $orgarr[$orgid]), "orgid='{$orgid}' and uid='{$uid}'");
+         }
+ 
+         return true;
     }
 
     public function delete_by_uid($uid, $wxupdate = 1)
     {
         if ($return = DB::delete($this->_table, "uid='{$uid}'")) {
-            if ($wxupdate) wx_updateUser($uid);
+             
+            self::syn_user( $uid );
             return $return;
         } else return false;
     }
@@ -98,19 +122,32 @@ class table_organization_user extends dzz_table
             //删除管理员表数据
             DB::delete('organization_admin', "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'");
             include_once libfile('function/cache');
-            updatecache('organization');
-            if ($wxupdate) wx_updateUser($uids);
+            updatecache('organization'); 
+            self::syn_user( $uids );
             return $uids;
         } else return false;
     }
 
     public function delete_by_orgid($orgids)
     {
-        if (!$orgids) return;
-        $orgids = (array)$orgids;
-        $uids = self::fetch_uids_by_orgid($orgids);
+         if (!$orgids) return;
+         $orgids = (array)$orgids;
+         //$uids = self::fetch_uids_by_orgid($orgids);
+         $syn_uid =array();
+         foreach ($orgids as $orgid) {
+            $org = DB::fetch_first("select orgid,type from %t where orgid=%d", array('organization', $orgid));
+            if( $org ){
+               $query = DB::query("select uid from %t where orgid=%d", array($this->_table, $orgid));
+               while ($value = DB::fetch($query)) { 
+                   if( $org["type"]==0 ) $syn_uid[]=$value['uid'];
+               }
+            }
+         }
+         
+         if( $syn_uid ) $syn_uid = array_unique($syn_uid);
+        
         if ($return = DB::delete($this->_table, "orgid IN (" . dimplode($orgids) . ")")) {
-            if ($uids) wx_updateUser($uids);
+            if ($syn_uid) self::syn_user( $syn_uid );
             return $return;
         } else return false;
     }
@@ -277,7 +314,25 @@ class table_organization_user extends dzz_table
             $params[] = $uid;
         }
         $userinfo = array();
-        foreach (DB::fetch_all("select o.*,u.username from %t o left join %t u on o.uid = u.uid where o.orgid = %d $where", $params) as $v) {
+        foreach (DB::fetch_all("select o.*,u.username,u.email from %t o left join %t u on o.uid = u.uid where o.orgid = %d $where", $params) as $v) {
+            $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", array('organization_admin', $orgid, $v['uid']));
+            if (!$admintype) {
+                $v['perm'] = 0;
+            } else {
+                $v['perm'] = $admintype;
+            }
+            $userinfo[] = $v;
+        }
+        return $userinfo;
+    }
+    //获取当前机构或部门及下级所有的用户
+    public function get_all_user_byorgid($orgid){
+       $pathkey = DB::result_first("select pathkey from %t where orgid = %d",array('organization',$orgid));
+       $params = array('organization','organization_user','user','^'.$pathkey.'.*');
+        $userinfo = array();
+        foreach (DB::fetch_all("select o.orgid,ou.*,u.username,u.email from %t o 
+          left join %t ou on ou.orgid = o.orgid
+          left join %t u on ou.uid = u.uid  where o.pathkey regexp %s", $params) as $v) {
             $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", array('organization_admin', $orgid, $v['uid']));
             if (!$admintype) {
                 $v['perm'] = 0;
@@ -363,5 +418,11 @@ class table_organization_user extends dzz_table
         $uids['all'] = array_merge($uids['partmember'],$uids['adminer']);
         return $uids;
     }
+   
+   public function syn_user( $data=array() ){
+      Hook::listen('syntoline_user',$data);//注册绑定到钉钉用户表
+      //Hook::listen('dzztowxwork_synuser',$data);//注册绑定到企业微信用户表
+   } 
+   
 }
 

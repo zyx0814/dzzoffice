@@ -32,6 +32,9 @@ class table_resources_attr extends dzz_table
         }
         return false;
     }
+    public function delete_by_rvid($rid,$vid){
+        return DB::delete($this->_table,array('rid'=>$rid,'vid'=>$vid));
+    }
     public function delete_by_rid($rid){
         if(!is_array($rid)) $rid = (array)$rid;
         if(DB::delete($this->_table,'rid in('.dimplode($rid).')')){

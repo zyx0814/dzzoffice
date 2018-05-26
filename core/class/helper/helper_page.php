@@ -40,7 +40,7 @@ class helper_page {
 		}
 		$multipage = '';
 		if($jsfunc === FALSE) {
-			$mpurl .= strpos($mpurl, '?') !== FALSE ? '&amp;' : '?';
+			$mpurl .= strpos($mpurl, '?') !== FALSE ? '&' : '?';
 		}
 
 		$realpages = 1;
@@ -120,8 +120,8 @@ class helper_page {
 		$return = '';
 		$lang['next'] = lang('nextpage');
 		$lang['prev'] = lang('prevpage');
-		$next = $num == $perpage ? '<a href="'.(self::mpurl($mpurl, '&amp;page=', $curpage + 1)).'" class="nxt">'.$lang['next'].'</a>' : '';
-		$prev = $curpage > 1 ? '<span class="pgb"><a href="'.(self::mpurl($mpurl, '&amp;page=', $curpage - 1)).'">'.$lang['prev'].'</a></span>' : '';
+		$next = $num == $perpage ? '<a href="'.(self::mpurl($mpurl, '&page=', $curpage + 1)).'" class="nxt">'.$lang['next'].'</a>' : '';
+		$prev = $curpage > 1 ? '<span class="pgb"><a href="'.(self::mpurl($mpurl, '&page=', $curpage - 1)).'">'.$lang['prev'].'</a></span>' : '';
 		if($next || $prev) {
 			$return = '<div class="pg">'.$prev.$next.'</div>';
 		}

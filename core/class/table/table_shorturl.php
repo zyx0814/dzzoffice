@@ -58,5 +58,9 @@ class table_shorturl extends dzz_table
 	public function addview($sid){
 		return DB::query("update %t set count=count+1 where sid=%s",array($this->_table,$sid));
 	}
+	public function delete_by_url($url){
+        $sid=self::getSid($url);
+		return parent::delete($sid);
+	}
 }
 ?>

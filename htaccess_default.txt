@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+  Options +FollowSymlinks
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^wopi\/files\/(\w+)\/contents(.*)$ core/api/wopi/index.php?action=contents&path=$1&$2 [QSA,PT,L]
+  RewriteRule ^wopi\/files\/(\w+)\/(lock|unlock)(.*)$ core/api/wopi/index.php?action=$2&path=$1&$3 [QSA,PT,L]
+  RewriteRule ^wopi\/files\/(\w+)(.*)$ core/api/wopi/index.php?path=$1&$2 [QSA,PT,L]
+  RewriteRule ^wopi\/files\/(.*)$ core/api/wopi/index.php?$1 [QSA,PT,L]
+  RewriteRule ^dingredirect\/(\w+)$ index.php?mod=dingtalk&op=dingredirect&url=$1 [QSA,PT,L]
+  
+</IfModule>

@@ -196,7 +196,7 @@
 	}
 
 	function start_check_install(url,mid,data){ 
-			jQuery.post({
+			jQuery.ajax({
 					type:'post',
 					async: true, 
 					url:url,
@@ -300,7 +300,7 @@
 	}
 
 	function start_check_upgrade(url,mid){
-		jQuery.post({
+		jQuery.ajax({
 			type:'post',
 			async: true, 
 			url:url,

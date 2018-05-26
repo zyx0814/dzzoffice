@@ -1,0 +1,30 @@
+<ul class="nav nav-pills nav-stacked nav-pills-leftguide">
+		
+		<!--{if $_G['adminid']==1 || $_G['member']['grid']==5}-->
+		<li <!--{if $op=='verify' && !$vid}-->class="active"<!--{/if}-->>
+			<a href="{MOD_URL}&op=verify">{lang members_verify_profile}</a>
+		</li>
+		<!--{/if}-->
+		<!--{if $_G['adminid']==1}-->
+		<li <!--{if $op=='profileset' }-->class="active"<!--{/if}-->>
+			<a href="{MOD_URL}&op=profileset">{lang data_set}</a>
+		</li>
+		<li <!--{if $op=='verifyset' }-->class="active"<!--{/if}-->>
+			<a href="{MOD_URL}&op=verifyset">{lang members_verify}</a>
+		</li>
+		<!--{/if}-->
+	
+		<!--{loop $_G[setting][verify] $key $value}-->
+		<!--{if $value[available]}-->
+		<!--{if $key==1 && ($_G['adminid']==1 || $_G['member']['grid']==4)}-->
+		<li <!--{if $op=='verify' && $vid==$key}-->class="active"<!--{/if}-->>
+			<a href="{MOD_URL}&op=verify&vid=$key">$value['title']</a>
+		</li>
+		<!--{elseif $_G['adminid']==1}-->
+		<li <!--{if $op=='verify' && $vid==$key}-->class="active"<!--{/if}-->>
+			<a href="{MOD_URL}&op=verify&vid=$key">$value['title']</a>
+		</li>
+		<!--{/if}-->
+		<!--{/if}-->
+		<!--{/loop}-->
+</ul>

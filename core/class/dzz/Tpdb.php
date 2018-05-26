@@ -433,7 +433,8 @@ class Tpdb {
                 }else{
                     // 查询字段的安全过滤
                     if(!preg_match('/^[A-Z_\|\&\-.a-z0-9\(\)\,]+$/',trim($key))){
-                        E(L('_EXPRESS_ERROR_').':'.$key);
+                        //E(L('_EXPRESS_ERROR_').':'.$key);
+                        echo '表达式错误:'.$key;exit;
                     }
                     // 多条件支持
                     $multi  = is_array($val) &&  isset($val['_multi']);
@@ -502,7 +503,8 @@ class Tpdb {
                     $data = is_string($val[1])? explode(',',$val[1]):$val[1];
                     $whereStr .=  ' ('.$key.' '.strtoupper($val[0]).' '.$this->parseValue($data[0]).' AND '.$this->parseValue($data[1]).' )';
                 }else{
-                    E(L('_EXPRESS_ERROR_').':'.$val[0]);
+                    //E(L('_EXPRESS_ERROR_').':'.$val[0]);
+                    echo '表达式错误:'.$key;exit;
                 }
             }else {
                 $count = count($val);

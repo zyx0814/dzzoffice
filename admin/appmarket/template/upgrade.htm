@@ -280,8 +280,8 @@
 			nowupgradeappid=appid;
 		}
 		
-		jQuery.post({
-			type:'json',
+		jQuery.ajax({
+			type:'GET',
 			async: false, 
 			url:url,
 			data:{},
@@ -311,7 +311,7 @@
 	
 	function startupgrade(url,s){
 		jQuery.ajax({
-			type:'json',
+			type:'GET',
 			async: false, 
 			url:url,
 			data:{},
@@ -331,7 +331,7 @@
 	
 	function startgetcrossorpatchfile(url,s){
 		jQuery.ajax({
-			type:'json',
+			type:'GET',
 			async: false, 
 			url:url,
 			data:{},
@@ -355,7 +355,7 @@
 	
 	function startupgradefile(url,s){
 		jQuery.ajax({
-			type:'json',
+			type:'GET',
 			async: false, 
 			url:url,
 			data:{},
@@ -379,7 +379,7 @@
 	
 	function upgradeover(url,s){
 		jQuery.ajax({
-			type:'json',
+			type:'GET',
 			async: false, 
 			url:url,
 			data:{},

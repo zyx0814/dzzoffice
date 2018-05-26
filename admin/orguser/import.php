@@ -16,10 +16,7 @@ if($do=='importing'){
 	//判断邮箱是否存在
 	require_once libfile('function/user','','user');
 	$email=trim($_GET['email']);
-	$_GET['nickname']=addslashes(trim(stripslashes(trim($_GET['nickname']))));
 	$_GET['username']=addslashes(trim(stripslashes(trim($_GET['username']))));
-	
-	$_GET['nickname']=str_replace('...','',getstr($_GET['nickname'],30));
 	$_GET['username']=str_replace('...','',getstr($_GET['username'],30));
 	$_GET['password']=empty($_GET['password'])?trim($_GET['pswdefault']):trim($_GET['password']);
 	
@@ -38,17 +35,13 @@ if($do=='importing'){
 	$exist=0;
 	
 	//检查用户是否已经存在
-	if(($user=C::t('user')->fetch_by_email($email)) || ($_GET['nickname'] && ($user=C::t('user')->fetch_by_nickname($_GET['nickname'])))){//用户已经存在时
+	if(($user=C::t('user')->fetch_by_email($email)) || ($user=C::t('user')->fetch_by_username($_GET['username']))){//用户已经存在时
 		$uid=$user['uid'];
 		$exist=1;
 		if($isfounder=C::t('user')->checkfounder($user)) $isappend=1;//创始人不支持覆盖导入
 		if($isappend){//增量添加，如果原先没有nickname,增加
 			$appendfield=array();
-			if($_GET['nickname'] && empty($user['nickname'])){
-				if(check_username($_GET['nickname']) && !C::t('user')->fetch_by_nickname($_GET['nickname'])){
-					$appendfield['nickname']=$_GET['nickname'];
-				}
-			}
+			
 			if($_GET['mobile'] && empty($user['phone'])){
 				if(!preg_match("/^\d+$/",$_GET['mobile'])){
 					exit(json_encode(array('error'=>lang('phone_number_illegal'))));
@@ -76,11 +69,7 @@ if($do=='importing'){
 						  'password'=>md5(md5($_GET['password']).$salt),
 						  'salt'=>$salt
 						  );
-			if($_GET['nickname']){
-				if($_GET['nickname']!=$user['nickname'] && check_username($_GET['nickname']) && !C::t('user')->fetch_by_nickname($_GET['nickname'])){
-					$setarr['nickname']=$_GET['nickname'];
-				}
-			}
+			
 			if($_GET['mobile'] && $_GET['mobile']!=$user['phone']){
 				if(!preg_match("/^\d+$/",$_GET['mobile'])){
 					exit(json_encode(array('error'=>lang('phone_number_illegal'))));
@@ -117,13 +106,8 @@ if($do=='importing'){
 	}else{ //新添用户
 		if(!check_username($_GET['username'])) exit(json_encode(array('error'=>lang('user_name_sensitive'))));
 		
-		if($_GET['nickname']){
-			if(check_username($_GET['nickname']) && !C::t('user')->fetch_by_nickname($_GET['nickname'])){
-			}else{
-				$_GET['nickname']='';
-			}
-		}
-		$user=uc_add_user($_GET['username'], $_GET['password'], $email, $_GET['nickname']);
+		
+		$user=uc_add_user($_GET['username'], $_GET['password'], $email);
 		
 		$uid=$user['uid'];
 		if($uid<1)  exit(json_encode(array('error'=>lang('import_failure'))));

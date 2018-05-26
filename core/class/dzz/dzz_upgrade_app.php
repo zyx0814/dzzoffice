@@ -191,6 +191,40 @@ class dzz_upgrade_app {
 		return $return;
 	}
 	
+	public function fetch_installapp_zip( $appinfo ){
+		$file = DZZ_ROOT.'data/update/app/'.$appinfo['app_path'].'/'.$appinfo['identifier'].'/'.$appinfo['version'].'/'.$appinfo['identifier'].'.zip.md5.tmp';
+		$upgradedataflag = true;
+		$upgradedata = @file_get_contents($file); 
+		if(!$upgradedata) { 
+			$upgradedata = dfsockopen($this->upgradeurl.$appinfo['app_path'].'/'.$appinfo['identifier'].'/'.$appinfo['latestversion'].'/'.$appinfo['identifier'].'.zip.md5.dzz' );  
+			$upgradedataflag = false;
+		}
+        
+		$return = array();
+		$upgradedataarr = explode("\n", str_replace("\r\n","\n",$upgradedata));
+		foreach($upgradedataarr as $k => $v) {
+			if(!$v) {
+				continue;
+			}
+			$return['file'][$k] = trim(substr($v, 34));
+			$return['md5'][$k] = substr($v, 0, 32);
+			if(trim(substr($v, 32, 2)) != '*') {
+				@unlink($file);
+				return array();
+			}
+
+		}
+		if(!$upgradedataflag) {
+			$this->mkdirs(dirname($file));
+			$fp = fopen($file, 'w');
+			if(!$fp) {
+				return array();
+			}
+			fwrite($fp, $upgradedata);
+		}
+		return $return;
+	}
+	
 	public function fetch_installfile_list( $appinfo ){
 		$file = DZZ_ROOT.'data/update/app/'.$appinfo['app_path'].'/'.$appinfo['identifier'].'/'.$appinfo['version'].'/'.$appinfo['identifier'].'.md5.tmp';
 		$upgradedataflag = true;

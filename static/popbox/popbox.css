@@ -82,6 +82,12 @@ ul.popbox-menu li>a .fa,ul.popbox-menu li>a .glyphicon:first-child{
     left: 10px;
     top: 10px;
 }
+ul.popbox-menu li>a .fa,ul.popbox-menu li>a .dzz:first-child{    
+	position: absolute;
+    left: 6px;
+    top: 9px;
+	font-size:16px;
+}
 ul.popbox-menu li .icon{float:left;display:block;width:20px;height:20px}
 .popbox .arrow,.popbox .arrow:after{position:absolute;display:block;width:0;height:0;border-color:transparent;border-style:solid}
 .popbox .arrow{border-width:11px}

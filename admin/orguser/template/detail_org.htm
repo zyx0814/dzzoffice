@@ -6,6 +6,7 @@
     background-color: #e6e6e6;
 	overflow:visible;
 	padding:4px;
+	max-width:750px;
 }
 .progress-relative .progress-cover {
     position: absolute;
@@ -65,6 +66,7 @@
       
 	<!--{if $folder_available}-->
 	<dl>
+		<!--原共享目录设置：diron,此处暂时用来控制应用内是否开启共享目录，如网盘群组开关不开启，表示网盘内不显示该目录-->
 		<dt>{lang shared_directory_set}</dt>
 		<dd class="clearfix">
 			<div class="radio-custom radio-primary pull-left"><input type="radio" id="folder_available_1" name="fid" value="1" <!--{if $org[diron]>0}-->checked="checked"<!--{/if}--> onclick="folder_available(1,'$orgid');"  /><label>{lang enable}</label>
@@ -75,7 +77,7 @@
         </dd>
         <dd class="clearfix">
 			<!--{if $org['forgid']<1}-->
-			<span class="help-inline ml20">{lang detail_org_no_enable}</span>
+			<span class="help-inline ml20">{lang detail_org_explorerapp_enable}</span>
 			<!--{else}-->
 			<span class="help-inline ml20">{lang detail_org_enable}</span>
 			<!--{/if}-->
@@ -94,20 +96,20 @@
 	</dl>
 	<!--{/if}-->
     <!--{if $group_on}-->
-	<dl>
+<!--	<dl>
 		<dt>{lang group_on_set}</dt>
 		<dd class="clearfix">
-			<div class="radio-custom radio-primary pull-left"><input type="radio" id="folder_syatemon_1" name="syatemon" value="1" <!--{if $org[manageon]>0}-->checked="checked"<!--{/if}-->      onclick="group_on(1,'$orgid');"  /><label>{lang enable}</label></div>
-			<div class="radio-custom radio-primary ml20 pull-left"><input type="radio" id="folder_syatemon_0" name="syatemon"  value="0" <!--{if $org[manageon]<1}-->checked="checked"<!--{/if}--> onclick="group_on(0,'$orgid');" /><label>{lang no_enable}</label></div>
+			<div class="radio-custom radio-primary pull-left"><input type="radio" id="folder_syatemon_1" name="syatemon" value="1" &lt;!&ndash;{if $org[manageon]>0}&ndash;&gt;checked="checked"&lt;!&ndash;{/if}&ndash;&gt;      onclick="group_on(1,'$orgid');"  /><label>{lang enable}</label></div>
+			<div class="radio-custom radio-primary ml20 pull-left"><input type="radio" id="folder_syatemon_0" name="syatemon"  value="0" &lt;!&ndash;{if $org[manageon]<1}&ndash;&gt;checked="checked"&lt;!&ndash;{/if}&ndash;&gt; onclick="group_on(0,'$orgid');" /><label>{lang no_enable}</label></div>
         </dd>
         <dd class="clearfix">
-			<!--{if $org['forgid']<1}-->
+			&lt;!&ndash;{if $org['forgid']<1}&ndash;&gt;
 			<span class="help-inline ml20">{lang group_org_no_enable}</span>
-			<!--{else}-->
+			&lt;!&ndash;{else}&ndash;&gt;
 			<span class="help-inline ml20">{lang group_org_enable}</span>
-			<!--{/if}-->
+			&lt;!&ndash;{/if}&ndash;&gt;
 		</dd>
-	</dl>
+	</dl>-->
 	<!--{/if}-->
      <!--{if $_G['adminid']==1 || $topmoderator}-->
     <dl>
@@ -125,7 +127,7 @@
         	 {lang org_space_assign_tips}
           </ul>
        </dd>
-       </dl>
+    </dl>
     <!--{/if}-->
      <dl>
     	<dt><!--{if $org[forgid]>0}-->{lang space_use_department}<!--{else}-->{lang space_use_org}<!--{/if}--></dt>
@@ -142,8 +144,7 @@
           </ul>
        </dd>
        </dl>
-    <dl>
-	
+   
 
 	<dl>
 		<dt>{lang position_management}</dt>
@@ -199,7 +200,7 @@
 					<div class="avatar-cover"></div>
 					<div class="user-item-avatar">
 						<div class="avatar-face">
-							<img src="avatar.php?uid=$value[uid]&size=middle">
+							{eval echo avatar_block($value[uid]);}
 						</div>
 					</div>
 					<p class="text-center" style="height:20px;margin:5px 0;line-height:25px;overflow:hidden;"> $value[username]</p>
@@ -235,6 +236,14 @@
         
         return false;
     }
+	jQuery(document).on('click','.moderators-acceptor',function(){
+		var ids=[];
+		jQuery('.moderators-container .user-item').each(function(){
+			ids.push(jQuery(this).attr('uid'));
+		});
+		showWindow('moderators','index.php?mod=system&op=selorguser&stype=2&multiple=1&callback=callback_moderators&token=$orgid&ids='+ids.join(','),'get',0)
+		
+	});
     jQuery(document).on('click','.headinput-checkbox',function(){
         if(jQuery(this).prop("checked")){
             jQuery(this).closest('.head-portrait').siblings('.head-portrait').find('.headinput-checkbox').prop('checked',false).parents('.head-checkbox').removeClass('hover');
@@ -243,7 +252,7 @@
             jQuery(this).parents('.head-portrait').find('.head-checkbox').removeClass('hover');
         }
 
-    })
+    });
 	function upload_bgphoto(obj,fact) {
         'use strict';
         jQuery(obj).fileupload({

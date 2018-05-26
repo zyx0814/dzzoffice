@@ -16,13 +16,25 @@ class table_resources_clipboard extends dzz_table
         $uid = getglobal('uid');
         if(!is_array($paths)) $paths = (array)$paths;
         $rids = '';
-        foreach(DB::fetch_all("select rid,uid,pfid from %t where rid in (%n) and isdelete < 1",array('resources',$paths)) as $v){
+        $typearr = array();
+        foreach(DB::fetch_all("select rid,uid,pfid,type from %t where rid in (%n) and isdelete < 1",array('resources',$paths)) as $v){
             $pfid = $v['pfid'];
             $perm = perm_check::getPerm($pfid);
             if(!perm_binPerm::havePower('copy2', $perm) && !(perm_binPerm::havePower('copy1', $perm) && $uid == $v['uid']) ){
                 continue;
             }
+            if($v['type'] == 'folder'){
+                $typearr[] = 1;
+            }else{
+                $typearr[] = 2;
+            }
             $rids .= $v['rid'].',';
+        }
+        $typearr = array_unique($typearr);
+        if(count($typearr) > 1){
+            $type = 3;
+        }else{
+            $type = $typearr[0];
         }
         if(!$rids) return array('error'=>lang('no_privilege'));
 
@@ -31,12 +43,13 @@ class table_resources_clipboard extends dzz_table
             'uid'=>getglobal('uid'),
             'username'=>getglobal('username'),
             'dateline'=>time(),
+            'type'=>$type,
             'files'=>$rids,
             'copytype'=>$copytype
         );
        self::delete_by_uid();
         if($copyid = parent::insert($setarr,1)){
-            return array('rid'=>$rids,'copyid'=>$copyid);
+            return array('rid'=>$rids,'copyid'=>$copyid,'type'=>$type);
         }
         return array('error'=>lang('sysem_busy'));
     }
@@ -53,6 +66,10 @@ class table_resources_clipboard extends dzz_table
             return $return;
         }
         return false;
+    }
+    public function fetch_user_paste_type(){
+        $uid = getglobal('uid');
+        return DB::result_first("select `type` from %t where uid = %d",array($this->_table,$uid));
     }
     //去掉粘贴板已删除的rid
     public function update_data_by_delrid($rids)

@@ -54,7 +54,7 @@ function _dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FAL
 		if($cookie) {
 			curl_setopt($ch, CURLOPT_COOKIE, $cookie);
 		}
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 1);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 		$data = curl_exec($ch);
 		$status = curl_getinfo($ch);
@@ -150,9 +150,9 @@ function _dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FAL
 			if($position) {
 				for($i=0; $i<$position; $i++) {
 					$char = fgetc($fp);
-					if($char == "\n" && $oldchar != "\r") {
+					/*if($char == "\n" && $oldchar != "\r") {
 						$i++;
-					}
+					}*/
 					$oldchar = $char;
 				}
 			}

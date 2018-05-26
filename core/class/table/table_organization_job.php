@@ -31,6 +31,24 @@ class table_organization_job extends dzz_table
 		$data['orgtree']=getTreeByOrgid($data['orgid']);
 		return $data;
 	}
+	
+	function insert_job_by_name($orgid=0, $name="" ){
+		if (!$orgid || !$name ) return 0;
+		if( !$jobid = DB::result_first("select jobid from %t where orgid = %d and  name=%s", array('organization_job',$orgid,$name)) ) {
+				$data=array(
+						   "orgid" => $orgid,
+						   'name' => $name,
+						   'jobid' => 0,
+						   'dateline' => TIMESTAMP
+						);
+				if($jobid = DB::insert('organization_job',$data,1)){//插入版本数据
+					return $jobid;
+				}
+		}else{
+			return $jobid;
+		}
+		return 0;
+	}
 }
 
 ?>

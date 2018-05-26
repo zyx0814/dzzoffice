@@ -34,7 +34,7 @@ if( $applist ){
 			if( $v["upgrade_version"] ){
 				$num++;
 			}else{ 
-				if( $v["mid"]==80 ){ 
+				//if( $v["mid"]==80 ){ 
 					//根据当前版本查询是否需要更新 
 					$info=array_merge($v,$appinfo);
 					$response = $dzz_upgrade->check_upgrade_byversion( $info ); 
@@ -46,7 +46,7 @@ if( $applist ){
 						$re=C::t('app_market')->update($v['appid'],$map);//C::tp_t('app_market')->where("appid=".$v['appid'])->save( $map );
 						$num++;
 					}
-				}
+				//}
 			}
 		}else{//本地检测
 			$file = DZZ_ROOT . './'.$v['app_path'].'/' . $v['identifier'] . '/dzz_app_' . $v['identifier'] . '.xml'; 

@@ -65,7 +65,7 @@ class perm_FileSPerm{
     return true;  
   }  
  
- public function typePower($type,$ext){ //返回类型的权限
+ public function typePower($type,$ext=''){ //返回类型的权限
  	global $textexts;
 	  switch($type){
 		case 'document'://('wallpaper','widget','share','edit');
@@ -82,6 +82,8 @@ class perm_FileSPerm{
 			return self::getSumByAction(array('wallpaper','widget','download'));
 		case 'folder': //edit，widget,wallpaper
 			return self::getSumByAction(array('wallpaper','widget'));
+		  case 'attachment': //通过attach::xxx和dzz://方式获取的文件不给编辑权限
+			return self::getSumByAction(array('edit','rename','move','wallpaper','widget'));
 		default:
 			return 0;
 	  }

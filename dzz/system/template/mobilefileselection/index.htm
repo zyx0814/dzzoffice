@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>文件首页</title>
+    <base href="{$_G['siteurl']}"/>
+    <link href="static/jquery_weui/css/jquery-weui.min.css" rel="stylesheet">
+    <link href="static/jquery_weui/css/weui.min.css" rel="stylesheet">
+    <link href="static/dzzicon/icon.css" rel="stylesheet">
+    <link href="{MOD_PATH}/css/mobile/mobile_member.css" rel="stylesheet">
+    <script type="text/javascript">var DZZSCRIPT = '{DZZSCRIPT}', LANG = '{$_G[language]}', STATICURL = 'static/', IMGDIR = '{$_G[setting][imgdir]}', VERHASH = '{VERHASH}', charset = '{CHARSET}', dzz_uid = '$_G[uid]', cookiepre = '{$_G[config][cookie][cookiepre]}', cookiedomain = '{$_G[config][cookie][cookiedomain]}', cookiepath = '{$_G[config][cookie][cookiepath]}', attackevasive = '{$_G[config][security][attackevasive]}', disallowfloat = '{$_G[setting][disallowfloat]}', REPORTURL = '$_G[currenturl_encode]', SITEURL = '$_G[siteurl]', JSPATH = '$_G[setting][jspath]', MOD_PATH = '{MOD_PATH}', APP_URL = '{MOD_URL}', MOD_URL = '{MOD_URL}';</script>
+</head>
+<body>
+<header class="weui-file-keep weui-flex">
+    <div class="placeholder weui-file-keep-cancel"><a href="javascript:;" class="weui-file-div-keep-cancel">取消</a>
+    </div>
+    <div class="weui-flex__item"><!--{if $type == 1}-->另存为<!--{elseif $type == 0}-->选择文件<!--{elseif $type == 2}-->选择位置<!--{/if}-->
+    </div>
+    <div class="placeholder weui-file-sumite-keep" id="sub_select">确定</div>
+    </div>
+</header>
+<div id="addressdata" class="weui_cells-margin-top">
+
+</div>
+<!--列表开始-->
+<section  id="middleconMenu">
+
+</section>
+<!--底部开始-->
+<footer class="weui-file-footer weui-tabbar" id="footermenu">
+
+</footer>
+<div id="footer_menu" class="hide">
+    <!--{template mobilefileselection/footer_menu}-->
+</div>
+<div id="containsdata" class="hide">
+
+</div>
+<!--底部结束-->
+
+</body>
+<script type="text/javascript" src="static/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+<script type="text/javascript" src="static/jquery_weui/js/iscroll.js"></script>
+<script type="text/javascript" src="static/jquery_weui/js/navbarscroll.js"></script>
+<script type="text/javascript" src="{MOD_PATH}/scripts/mobile/appevent.js"></script>
+<script type="text/javascript" src="{MOD_PATH}/scripts/mobile/file_keep.js"></script>
+<script type="text/javascript">
+    var jsondata = eval('({$json})');
+    //获取配置值
+    _filemanage.appUrl = '{MOD_URL}&op=mobilefileselection';
+    _filemanage.getConfig(jsondata);
+    $(document).off('tap.cancle').on('tap.cancle','.weui-file-div-keep-cancel',function(){
+        window.location.href='{$deferer}';
+    })
+    //提交数据
+    $(document).off('tap.subdata').on('tap.subdata','#sub_select',function(){
+        //如果是选择位置
+        if(_filemanage.type == 2){
+            if(!_filemanage.fid){
+                $.toast('请选择目录');
+                return false;
+            }else{
+                $.post(_filemanage.callback_url,{'fid':_filemanage.fid,'token':_filemanage.token},function(data){
+                    if(data['success']){
+                        $.toast('操作成功');
+                        setTimeout(function(){
+                            window.location.href='{$deferer}';
+                        },1000);
+                    }else if(data.error){
+                        $.toast(data.error);
+                    }
+                },'json')
+            }
+        }else{
+            var rids = _filemanage.selector;
+            //如果是保存文件
+            if(_filemanage.type == 1){
+                if(rids.length > 0) {//如果选择文件提示是否覆盖
+                    rids = rids[0];
+                    $.confirm({
+                        title: '确认覆盖',
+                        text: '你确定要覆盖当前选择文件吗？',
+                        onOK: function () {
+                            jQuery.post(_filemanage.callback_url, {'rids':rids,'token':_filemanage.token}, function (json) {
+                                if (data['error']) {
+                                    $.toast(data['error'], 1000);
+                                } else {
+                                    $.toast("操作成功");
+                                    window.location.href = '{$deferer}';
+                                }
+                            }, 'json');
+                        },
+                        onCanel:function(){
+                            obj.closest('.moredo').addClass('hide');
+                            obj.closest('.moredo').siblings('.background-none').hide();
+                            obj.closest('.moredo').siblings('.weui-footer-sort').find('p').css('color','#666666');
+                            _filemanage.cancel();
+                        }
+                    });
+                }else{//如果未选择文件
+                    $.prompt({
+                        title: '保存文件',
+                        placeholder: _filemanage.defaultfilename,
+                        empty: false, // 是否允许为空
+                        onOK: function (input) {
+                            var foldername = $('#weui-prompt-input').val(),
+                                    fid = _filemanage.fid, emojpatt = /[\ud800-\udbff][\udc00-\udfff]/gi;
+                            if (emojpatt.test(foldername)) {
+                                $.toast('文件名不合法!', "cancel");
+                                $('#weui-prompt-input').val('');
+                                return false;
+                            }
+                            $.post(_filemanage.callback_url, {
+                                'foldername': foldername,
+                                'fid': fid,
+                                'token':_filemanage.token
+                            }, function (data) {
+                                if (data['error']) {
+                                    $.toast(data['error'], 1000);
+                                } else {
+                                    $.toast("操作成功");
+                                    window.location.href = '{$deferer}';
+                                }
+                            }, 'json');
+
+                        },
+                        onCancel: function () {
+                            $('#weui-prompt-input').val('');
+                            obj.closest('div.weui-dropup').addClass('hide');
+                            obj.closest('div.weui-dropup').siblings('.background-none').hide();
+                            obj.closest('div.weui-dropup').siblings('.weui-footer-new-folder').find('p').css('color', '#666');
+                        }
+                    });
+                }
+            }else{//如果是打开文件
+                if(rids.length > 0) {
+                    rids = (rids.length > 1)? rids.join(','):rids[0];
+                    $.post(_filemanage.callback_url,{'rids':rids,'token':_filemanage.token},function(data){
+                        if(data['success']){
+                            $.toast('操作成功');
+                            setTimeout(function(){
+                                window.location.href='{$deferer}';
+                            },1000);
+                        }else if(data.error){
+                            $.toast(data.error);
+                        }
+                    },'json')
+                }else{
+                    $.toast('请选择文件');
+                    return false;
+                }
+            }
+
+        }
+    })
+</script>
+<!--{eval output();}-->
+</html>
+

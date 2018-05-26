@@ -15,17 +15,15 @@
 					<!--{if $attach[isimage]}-->
 					<div class="pic_fed clearfix">
 						<div class="img_pfed">
-							<a class="min_ipfed" hidefocus="true" href="$attach[url]" rel="$attach[url]" target="_blank"><img src="$attach[img]" alt="$attach[title]" class="artZoom" style="cursor: url(dzz/feed/images/zoomin.cur), pointer;">
-
-							</a>
-						</div>
-					</div>
-					<div class="file_fed imgfile_fed clearfix"> $attach[title]<span class="kb_nffed">($attach[filesize])</span>
-						<p class="down_ffed">
-							<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed" onclick="feed_downAttach('$attach[qid]')">{lang download}
+							<a class="min_ipfed" hidefocus="true" href="javascript:;"><img src="$attach[img]" data-original="$attach[img]&original=1" alt="$attach[title]" class="">
+						</a></div>
+					</div><div class="file_fed imgfile_fed clearfix">
+					<a class="min_ipfed" hidefocus="true" href="javascript:;"> $attach[title]<span class="kb_nffed">($attach[filesize])</span>
+						</a><p class="down_ffed"><a class="min_ipfed" hidefocus="true" href="javascript:;">
+							</a><a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed" onclick="feed_downAttach('$attach[qid]')">{lang download}
 								<!--{if $attach[downloads]>0}-->($attach[downloads]{lang degree})<!--{/if}-->
 							</a>
-							<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>
+							<!--<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>-->
 						</p>
 					</div>
 					<!--{elseif $attach['type']=='video'}-->
@@ -64,7 +62,7 @@
 							<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed" onclick="feed_downAttach('$attach[qid]')">{lang download}
 								<!--{if $attach[downloads]>0}--><span class="text-gray">($attach[downloads]{lang degree})</span><!--{/if}-->
 							</a>
-							<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>
+							<!--<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>-->
 						</p>
 					</div>
 					<!--{/if}-->
@@ -77,9 +75,9 @@
 				<div class="btn_amfed">
 					<ul>
 						<!--{if $_G['uid']==$value[authorid] || $_G[adminid]==1}-->
-						<li class="more_bamfed">
+						<!--<li class="more_bamfed">
 							<a hidefocus="true" href="javascript:void(0);" onclick="feed_edit('$value[cid]','$_GET[allowattach]','$_GET[allowat]','$_GET[allowsmiley]')">{lang edit}</a>
-						</li>
+						</li>-->
 						<li class="more_bamfed">
 							<a hidefocus="true" href="javascript:void(0);" onclick="feed_delete('$value[cid]','comment_$value[cid]')">{lang delete}</a>
 						</li>

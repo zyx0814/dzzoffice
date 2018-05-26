@@ -215,6 +215,7 @@ dl dd{
 	width:54px; 
 	height:54px;
 	background:url(../image/common/logo.png) no-repeat;
+	background-size:100%;
     -webkit-animation: rotateplane 3.2s infinite ease-in-out;
      animation: rotateplane 3.2s infinite ease-in-out;
 	
@@ -1474,4 +1475,10 @@ div.tagsinput{
 }
 
 /*用户头像css结束*/
-
+/*图标旋转*/
+@keyframes dzz-spin{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}
+.spin {
+    -webkit-animation: dzz-spin 2s infinite linear;
+    animation: dzz-spin 2s infinite linear;
+}
+/*图标旋转*/

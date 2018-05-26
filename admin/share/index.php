@@ -51,7 +51,7 @@ $list = array();
 if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", $param)) {
 	$list = DB::fetch_all("SELECT * FROM %t WHERE $sql $orderby limit $start,$perpage", $param); 
 	foreach ($list as $k=> $value) {
-		$value['sharelink'] =  C::t('shorturl')->getShortUrl(getglobal('siteurl').'?index.php&mod=shares&sid='.dzzencode($value['id']));
+		$value['sharelink'] =  C::t('shorturl')->getShortUrl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($value['id']));
 		if ($value['dateline'])
 			$value['fdateline'] = dgmdate($value['dateline']);
 		if ($value['password'])

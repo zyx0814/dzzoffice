@@ -13,7 +13,7 @@ if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
 $limit=100;//考虑到计划任务占用的系统资源，一次最大删除100个;
-foreach(DB::fetch_all("select * from %t where dateline<%d and copys<1 ORDER BY dateline limit $limit",array('attachment',TIMESTAMP-60*60,$limit)) as $value){
+foreach(DB::fetch_all("select * from %t where dateline<%d and copys<1 ORDER BY dateline limit $limit",array('attachment',TIMESTAMP,$limit)) as $value){
 	if(io_remote::DeleteFromSpace($value)){
 		C::t('attachment')->delete($value['aid']);
 	}

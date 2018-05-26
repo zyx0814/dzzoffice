@@ -141,7 +141,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 
 	
 	if($param['msgtype'] == 2 && $param['login']) {
-		dheader('location: user.php?mod=logging&action=login');
+		dheader('location: user.php?mod=login');
 	}
 
 	$show_jsmessage = str_replace("'", "\\'", $param['striptags'] ? strip_tags($show_message) : $show_message);

@@ -1,0 +1,92 @@
+<!--地址栏开始-->
+<div class="addresscontent">
+    <section class="weui-address ">
+        <a href="javascript:;" class="weui-index document-data" data-hash="#home">
+            <span class="dzz dzz-home dzz-index"></span>
+            <i class="dzz dzz-vline dzz-index-vline"></i>
+        </a>
+        <div class="weui-address-container" id="weui_address_scroll">
+            <div class="scroller">
+                <ul class="weui-address-field">
+                    <!--{if $gid && $group['type']}-->
+                    <li class="document-data" data-hash="#group">
+                        <a href="javascript:;">群组</a><span class="dzz dzz-chevron-right"></span>
+                    </li>
+                    <!--{/if}-->
+                    <!--{loop $folderpatharr $v}-->
+                    <li class="document-data" data-hash="#file&gid={$v[gid]}&fid={$v[fid]}">
+                        <a href="javascript:;">$v[name]</a><span class="dzz dzz-chevron-right"></span>
+                    </li>
+                    <!--{/loop}-->
+                </ul>
+            </div>
+        </div>
+    </section>
+    <!--地址栏结束-->
+</div>
+
+<div class="datacontent">
+<!--列表开始-->
+<section class="weui-cells weui-cells__recent weui-cells__margin_footer filelist">
+    <!--{if $groups}-->
+    <!--{loop $groups $v}-->
+    <div class="weui-cell weui-cell_access weui-cell_longpress document-data"
+         data-hash="#file&gid={$v[orgid]}&fid={$v[fid]}">
+        <div class="weui-cell__hd">
+            <!--{if $v['imgs']}-->
+            <img src="$v[img]" class="weui-cell__recentimg">
+            <!--{else}-->
+            <!--{eval echo avatar_group($v['orgid'],array($v['orgid']=>array('aid'=>$v['aid'],'orgname'=>$v['orgname'])));}-->
+            <!--{/if}-->
+        </div>
+        <div class="weui-cell__bd">
+            <h4>$v[orgname]</h4>
+            <p>
+                <span class="file">文件:</span><i class="file-number">$v[filenum],,</i>
+                <span class="folder">文件夹:</span><i class="folder-number">$v[foldernum]</i>
+            </p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </div>
+    <!--{/loop}-->
+    <!--{/if}-->
+
+    <!--{loop $data $v}-->
+    <!--{if $v[type] == 'folder'}-->
+    <div class="weui-cell weui-cell_access weui-cell_longpress document-data" data-hash="#file&fid={$v[oid]}">
+        <div class="weui-cell__hd">
+            <img src="$v[img]" class="weui-cell__recentimg">
+        </div>
+        <div class="weui-cell__bd">
+            <h4>{eval echo str_replace('\\','',$v['name']);}</h4>
+            <p>
+                <span class="file">文件:</span><i class="file-number">$v[filenum],</i>
+                <span class="folder">文件夹:</span><i class="folder-number">$v[foldernum]</i>
+            </p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </div>
+    <!--{else}-->
+    <div class="weui-cell weui-cell_access weui-cell_longpress document-filelist" data-rid="$v[rid]">
+        <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
+        <div class="weui-cell__bd">
+            <h4>{eval echo str_replace('\\','',$v['name']);}</h4>
+            <p>
+                <span class="date">$v[monthdate]</span><i class="date-time">$v[hourdate],</i>
+                <span class="size">$v[fsize]</span>
+            </p>
+        </div>
+        <div class="weui-cells_checkbox hide">
+            <input type="checkbox" class="weui-check" name="checkbox1">
+            <i class="weui-icon-checked"></i>
+        </div>
+    </div>
+    <!--{/if}-->
+    <!--{/loop}-->
+</section>
+<script type="text/javascript">
+    _filemanage.fid = '{$fid}';
+   _filemanage.dataparam = eval('('+'{$params}'+')');
+   $('.weui-member-select-user').navbarscroll();
+</script>
+</div>

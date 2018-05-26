@@ -274,7 +274,7 @@ function upgradeinformation($status = 0) {
 	foreach($update as $key => $value) {
 		$data .= $key.'='.rawurlencode($value).'&';
 	}
-	$upgradeurl =  'ht'.'tp:/'.'/dev'.'.'.'d'.'zzo'.'ffice.'.'c'.'om/upg'.'rade'.'.p'.'hp?'.'os=d'.'zzoff'.'ice&update='.rawurlencode(base64_encode($data)).'&timestamp='.TIMESTAMP;
+	$upgradeurl = APP_CHECK_URL."market/system/upgrade/".rawurlencode(base64_encode($data))."/".TIMESTAMP; 
 	return '<img src="'.$upgradeurl.'" width="0" height="0" />';
 }
 

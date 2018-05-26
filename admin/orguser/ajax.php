@@ -345,6 +345,7 @@ if ($do == 'upload') {//上传图片文件
 	if ($setarr['id'] = C::t('organization_admin') -> insert(intval($_GET['uid']), $orgid)) {
 		$user = getuserbyuid($setarr['uid']);
 		$setarr['username'] = $user['username'];
+		$setarr['avatar']=avatar_block($setarr['uid']);
 		exit(json_encode($setarr));
 	} else {
 		exit(json_encode(array('error' => lang('add_administrator_unsuccess'))));

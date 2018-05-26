@@ -36,16 +36,24 @@ if ($do == 'add') {
 		}
 		if (!$orgids && $_G['adminid'] != 1)
 			showmessage('no_parallelism_jurisdiction');
+		//用户名验证
 		$username = trim($_GET['username']);
-		$usernamelen = dstrlen($_GET['username']);
-		if ($usernamelen < 3) {
-			showmessage('profile_username_tooshort');
-		} elseif ($usernamelen > 30) {
-			showmessage('profile_username_toolong');
-		}
-		$censorexp = '/^(' . str_replace(array('\\*', "\r\n", ' '), array('.*', '|', ''), preg_quote(($_G['setting']['censoruser'] = trim($_G['setting']['censoruser'])), '/')) . ')$/i';
-		if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
-			showmessage('profile_username_protect');
+		if ($username) {
+			$usernamelen = dstrlen($_GET['username']);
+			if ($usernamelen < 3) {
+				showmessage('profile_username_tooshort');
+			} elseif ($usernamelen > 30) {
+				showmessage('profile_username_toolong');
+			}
+			if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
+				showmessage('profile_username_protect');
+			}
+			//如果输入用户名，检查用户名不能重复
+
+			if (C::t('user') -> fetch_by_username($username)) {
+				showmessage('user_registered_retry');
+			}
+
 		}
 		$user_extra = array();
 		//如果输入手机号码，检查手机号码不能重复
@@ -70,25 +78,7 @@ if ($do == 'add') {
 			}
 			$user_extra['weixinid'] = $weixinid;
 		}
-		//用户名验证
-		$nickname = trim($_GET['nickname']);
-		if ($nickname) {
-			$nicknamelen = dstrlen($_GET['nickname']);
-			if ($nicknamelen < 3) {
-				showmessage('profile_nickname_tooshort');
-			} elseif ($nicknamelen > 30) {
-				showmessage('profile_nickname_toolong');
-			}
-			if ($_G['setting']['censoruser'] && @preg_match($censorexp, $nickname)) {
-				showmessage('profile_username_protect');
-			}
-			//如果输入用户名，检查用户名不能重复
-
-			if (C::t('user') -> fetch_by_nickname($nickname)) {
-				showmessage('user_registered_retry');
-			}
-
-		}
+		
 
 		//邮箱验证部分
 		$email = strtolower(trim($_GET['email']));
@@ -115,11 +105,11 @@ if ($do == 'add') {
 		}
 		if ($uid <= 0) {
 			if ($uid == -1) {
-				showmessage('profile_nickname_illegal');
+				showmessage('profile_username_illegal');
 			} elseif ($uid == -2) {
-				showmessage('profile_nickname_protect');
+				showmessage('profile_username_protect');
 			} elseif ($uid == -3) {
-				showmessage('profile_nickname_duplicate');
+				showmessage('profile_username_duplicate');
 			} elseif ($uid == -4) {
 				showmessage('profile_email_illegal');
 			} elseif ($uid == -5) {
@@ -153,7 +143,7 @@ if ($do == 'add') {
 			C::t('organization_user') -> replace_orgid_by_uid($uid, $orgids);
 		//处理上司职位;
 		C::t('organization_upjob') -> insert_by_uid($uid, intval($_GET['upjobid']));
-
+		Hook::listen('syntoline_user',$uid);//注册绑定到钉钉部门表
 		if ($_GET['sendmail']) {
 			$email_password_message = lang('email_password_message', array('sitename' => $_G['setting']['sitename'], 'siteurl' => $_G['siteurl'], 'email' => $_GET['email'], 'password' => $_GET['password']));
 
@@ -214,7 +204,11 @@ if ($do == 'add') {
 
 			showmessage('edit_user_success', ADMINSCRIPT . '?mod=orguser#user_' . $uid, array());
 		}
+	
+
+		//用户名验证
 		$username = trim($_GET['username']);
+		
 		$usernamelen = dstrlen($_GET['username']);
 		if ($usernamelen < 3) {
 			showmessage('profile_username_tooshort');
@@ -223,33 +217,17 @@ if ($do == 'add') {
 		} elseif (!check_username(addslashes(trim(stripslashes($username))))) {
 			showmessage('profile_username_illegal');
 		}
-		$censorexp = '/^(' . str_replace(array('\\*', "\r\n", ' '), array('.*', '|', ''), preg_quote(($_G['setting']['censoruser'] = trim($_G['setting']['censoruser'])), '/')) . ')$/i';
-		if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
-			showmessage('profile_username_protect');
-		}
 
-		//用户名验证
-		$nickname = trim($_GET['nickname']);
-		if ($nickname) {
-			$nicknamelen = dstrlen($_GET['nickname']);
-			if ($nicknamelen < 3) {
-				showmessage('profile_nickname_tooshort');
-			} elseif ($nicknamelen > 30) {
-				showmessage('profile_nickname_toolong');
-			} elseif (!check_username(addslashes(trim(stripslashes($nickname))))) {
-				showmessage('profile_nickname_illegal');
+		//如果输入用户名，检查用户名不能重复
+		if ($username != $user['username']) {
+			if (C::t('user') -> fetch_by_username($username)) {
+				showmessage('user_registered_retry');
 			}
-
-			//如果输入用户名，检查用户名不能重复
-			if ($nickname != $user['nickname']) {
-				if (C::t('user') -> fetch_by_nickname($nickname)) {
-					showmessage('user_registered_retry');
-				}
-				if ($_G['setting']['censoruser'] && @preg_match($censorexp, $nickname)) {
-					showmessage('profile_username_protect');
-				}
+			if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
+				showmessage('profile_username_protect');
 			}
 		}
+		
 
 		//如果输入手机号码，检查手机号码不能重复
 		$phone = trim($_GET['phone']);
@@ -279,7 +257,7 @@ if ($do == 'add') {
 		} elseif (!check_emailaccess($email)) {
 			showmessage('profile_email_domain_illegal', '', array(), array('handle' => false));
 		}
-		if ($email != $user['email']) {
+		if ($email != strtolower($user['email'])) {
 			//邮箱不能重复
 			if (C::t('user') -> fetch_by_email($email)) {
 				showmessage('email_registered_retry');
@@ -301,13 +279,13 @@ if ($do == 'add') {
 		$password = $_GET['password'];
 		if ($password) {
 			$salt = substr(uniqid(rand()), -6);
-			$setarr = array('salt' => $salt, 'password' => md5(md5($password) . $salt), 'username' => $username, 'nickname' => $nickname, 'phone' => $phone, 'weixinid' => $weixinid, 'secques' => '', 'email' => $email, 'status' => intval($_GET['status']));
+			$setarr = array('salt' => $salt, 'password' => md5(md5($password) . $salt), 'username' => $username, 'phone' => $phone, 'weixinid' => $weixinid, 'secques' => '', 'email' => $email, 'status' => intval($_GET['status']));
 
 		} else {
-			$setarr = array('username' => $username, 'email' => $email, 'nickname' => $nickname, 'phone' => $phone, 'weixinid' => $weixinid, 'status' => intval($_GET['status']));
+			$setarr = array('username' => $username, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid, 'status' => intval($_GET['status']));
 		}
 		C::t('user') -> update($uid, $setarr);
-		wx_updateUser($uid);
+		 
 		//处理管理员
 		C::t('user') -> setAdministror($uid, intval($_GET['groupid']));
 		//处理额外空间和用户空间
@@ -325,8 +303,8 @@ if ($do == 'add') {
 		//处理上司职位;
 
 		C::t('organization_upjob') -> insert_by_uid($uid, intval($_GET['upjobid']));
+		Hook::listen('syntoline_user',$uid);//注册绑定到钉钉部门表
 		showmessage('edit_user_success', ADMINSCRIPT . '?mod=orguser#user_' . $uid, array());
-
 	} else {
 		require_once  libfile('function/organization');
 

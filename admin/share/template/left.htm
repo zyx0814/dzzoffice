@@ -1,10 +1,10 @@
 <ul class="nav-stacked">
 	<li <!--{if !$type}-->class="active"<!--{/if}-->>
-		<a href="{ADMINSCRIPT}?mod=share">{lang all}</a>
+		<a href="{MOD_URL}">{lang all}</a>
 	</li>
 	<!--{loop $typearr $key $value}-->
 	<li <!--{if $type==$key}-->class="active"<!--{/if}-->>
-		<a href="{ADMINSCRIPT}?mod={MOD_NAME}&type=$key">$value</a>
+		<a href="{MOD_URL}&type=$key">$value</a>
 	</li>
 	<!--{/loop}-->
 </ul>

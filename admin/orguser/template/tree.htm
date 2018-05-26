@@ -17,8 +17,8 @@
 
 <script type="text/javascript">
 	var orgtree = $orgtree;
-	var ajaxurl = '{ADMINSCRIPT}?mod=orguser&op=ajax';
-	var baseurl = '{ADMINSCRIPT}?mod=orguser';
+	var ajaxurl = '{ADMINSCRIPT}?mod=orguser&op=ajax&';
+	var baseurl = '{ADMINSCRIPT}?mod=orguser&';
 	jQuery(document).ready(function(e) {
 
 		jQuery("#classtree").jstree({
@@ -178,6 +178,7 @@
 
 							var inst = jQuery.jstree.reference(data.reference),
 								obj = inst.get_node(data.reference);
+							console.log('aaaaaaa');
 							inst.edit(obj);
 
 						}
@@ -394,7 +395,8 @@
 		jQuery("#classtree").on('rename_node.jstree', function(e, data) {
 			var inst = jQuery("#classtree").jstree(true);
 			var obj = inst.get_node(data.node);
-			if(data.text == '') {
+            var oldtext = data.old.replace(/<(.+?)>(.+?)<\/(.+?)>/,'');
+			if(data.text == '' || data.text == oldtext) {
 				inst.set_text(obj, data.old);
 				return;
 			}
@@ -406,6 +408,7 @@
 				}else{
 					jQuery('#title_orgname').html(data.text);
 					jQuery('#orgname').val(data.text).data('oldname',data.text);
+					inst.refresh();
 				}
 			}, 'json');
 		});

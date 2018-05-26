@@ -47,7 +47,7 @@
         <!--{/if}-->
       </ul>
       <a hidefocus="true" class="cancel_cpsw" href="javascript:;" onclick="jQuery('#publish_{$cid}').slideUp(500);"> <b><i>{lang cancel}</i></b></a>
-      <button id="publish_submit_{$cid}" class="btn btn-sm btn-primary"   disabled="disabled" title="{lang reply}(Ctrl+Enter)" href="javascript:void(0);"><b>{lang reply}</b></button>
+      <button id="publish_submit_{$cid}" class="btn btn-sm btn-primary" type="button"  disabled="disabled" title="{lang reply}(Ctrl+Enter)" href="javascript:void(0);"><b>{lang reply}</b></button>
     </div>
      <div id="attachmentViewBox_{$cid}" class="attachmentContainer clearfix"> </div>
   </form>
@@ -63,7 +63,7 @@
 	jQuery('#upload_from_{$cid}_menu.tobody').removeClass('tobody').appendTo('#append_parent');
     
 	
-    jQuery('#publish_submit_{$cid}').click(function(){
+    jQuery('#publish_submit_{$cid}').click(function(){ 
 		var val=jQuery('#message_{$cid}').val();
 			if(strlen(val)>0 && strlen(val)<1000){
 			document.getElementById('form_{$cid}').onsubmit();

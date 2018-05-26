@@ -98,7 +98,9 @@ body{
     background-color: transparent;
     background-image: none;
 }
-
+#orgtree{
+	padding:15px;overflow:auto;height:100%;	
+}
 <!--{if $_GET['nosearch']>0}-->
 .orgtree-search{
 	display:none;
@@ -114,10 +116,11 @@ var multiple=parseInt('$_GET[multiple]')>0?true:false;
 var nouser=parseInt('$_GET[nouser]')>0?1:0;
 var stype='$_GET[stype]'?parseInt('$_GET[stype]'):0;//0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
 var moderator=parseInt('$_GET[moderator]')>0?1:0;
+var callback_url = '{$callback_url}';
 var ismobile='$ismobile'?1:0;
 </script>
 <!--{template common/header_simple_end}-->
-<div id="orgtree" class="orgtree-container" style="padding:40px 15px 15px 15px;overflow:auto;height:100%"></div>
+<div id="orgtree" class="orgtree-container" style=""></div>
 <!--{if intval($_GET['nosearch'])<1}-->
 <div  class="orgtree-search">
         <a href="javascript:;" class="search" onclick="jstree_search();return false" title="{lang search}"><i class="dzz dzz-search"></i></a>
@@ -142,7 +145,7 @@ jQuery(document).ready(function(e) {
 		"core" : {
 			"multiple" : multiple,
 			"check_callback" : false,
-			"themes" : { "responsive":(ismobile?true:false)},
+			"themes" : { "responsive":false},
 			'data':function(node,cb){
 				var self=this;
 				jQuery.post(DZZSCRIPT+'?mod=system&op=orgtree&do=orgtree',{'id':node.id,'nouser':nouser,'moderator':moderator,'zero':'$zero','stype':stype},function(json){
@@ -435,7 +438,9 @@ function selectorg_search(keyword){
 	jQuery("#orgtree").jstree(true).search(keyword);
 }
 
-
+$(function(){
+	jQuery('.orgtree-search').siblings('#orgtree').css('padding','40px 15px 15px 15px');
+})
 
 
 </script>

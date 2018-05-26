@@ -1,0 +1,10 @@
+<ul class="nav navbar-nav nav-pills-bottomguide">
+  <li <!--{if $_GET[op]=='edit'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=cloud&op=edit&bz=$bz"> {lang set}</a>
+  </li>
+  <li <!--{if $_GET[op]=='space' || $_GET[op]=='spaceadd'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=cloud&op=space">{lang space_management}</a>
+  </li>
+  <li <!--{if $_GET[op]=='router' || $_GET[op]=='routeredit'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=cloud&op=router">{lang routing_management}</a>
+  </li>
+  <li <!--{if $_GET[op]=='movetool'}-->class="active"<!--{/if}-->><a href="{BASESCRIPT}?mod=cloud&op=movetool">{lang migration_tool}</a>
+  </li>
+</ul>

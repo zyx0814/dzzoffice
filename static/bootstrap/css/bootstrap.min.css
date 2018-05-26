@@ -280,14 +280,28 @@ html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:1
 	border:1px solid #CCC\0;
 	*border:1px solid #CCC;
 	border-radius:3px;
+	min-width:320px;
+	max-width:600px;
 }
 /*.fwinmask.modal-content{
 	box-shadow:none;
 	border:0;
 }*/
+.fwinmask table{
+	width:100%;
+}
 .fwinmask p{
 	margin:0;
 	padding:0px;
+}
+.fwinmask button.close {
+    font-size: 1.5rem;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
 }
 .fwinmask .c.altw p{
 /*	font-size: 1.28rem;*/
@@ -327,7 +341,6 @@ html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:1
 .fwinmask .m_c .c {
 	margin: 0 !important;
 	padding: 0 20px 20px 30px;
-    min-width: 520px;
 }
 .fwinmask .m_c .last{
 	border-bottom: none;
@@ -337,15 +350,12 @@ html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:1
 }
 
 .fwinmask .alert_icon .alert_icon_img{
-	padding:1px;
 	background:#FFF;
 	width:48px;
 	height:48px;
-	height: 48px;
     margin-left: -58px;
     padding: 1px;
     position: absolute;
-    width: 48px;
 }
 .fwinmask .alert_icon {
   font-size: 14px;

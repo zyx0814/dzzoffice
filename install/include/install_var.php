@@ -62,16 +62,16 @@ define('UNDEFINE_FUNC', 32);
 define('MISSING_PARAMETER', 33);
 define('LOCK_FILE_NOT_TOUCH', 34);
 
-if(function_exists('mysqli_connect')) $func_items = array('mysqli_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init');
-else $func_items = array('mysql_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init');
+if(function_exists('mysqli_connect')) $func_items = array('mysqli_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init','zip_open');
+else $func_items = array('mysql_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init','zip_open');
 
 $filesock_items = array('fsockopen', 'pfsockopen', 'stream_socket_client');
 
 $env_items = array
 (
-	'os' => array('c' => 'PHP_OS', 'r' => 'notset', 'b' => 'unix'),
-	'php' => array('c' => 'PHP_VERSION', 'r' => '5.3', 'b' => '5.6'),
-	'attachmentupload' => array('r' => 'notset', 'b' => '2M'),
+	'os' => array('c' => 'PHP_OS', 'r' => 'notset', 'b' => 'Linux'),
+	'php' => array('c' => 'PHP_VERSION', 'r' => '5.3+', 'b' => 'php7+'),
+	'attachmentupload' => array('r' => 'notset', 'b' => '50M'),
 	'gdversion' => array('r' => '1.0', 'b' => '2.0'),
 	'diskspace' => array('r' => '50M', 'b' => '10G以上'),
 	

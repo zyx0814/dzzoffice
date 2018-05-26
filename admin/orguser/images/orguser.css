@@ -141,6 +141,11 @@
 .moderators-container .user-item-avatar .avatar-face{
 	width:90px;height:90px;margin:5px
 	
+}.moderators-container .user-item-avatar .avatar-face .Topcarousel {
+	width:90px;height:90px;
+	font-size:40px;
+	line-height: 90px
+	
 }
 .moderators-container .user-item-avatar img{
 	width:100%;

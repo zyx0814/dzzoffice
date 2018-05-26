@@ -6,11 +6,11 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-
 $path=dzzdecode(urldecode($_GET['path']));
 $width=intval($_GET['width']);
 $height=intval($_GET['height']);
 $size=trim($_GET['size']);
+$thumbtype=$_GET['thumbtype']?intval($_GET['thumbtype']):'1';
 $size=in_array($size,array_keys($_G['setting']['thumbsize']))?$size:'';
 $original=intval($_GET['original']);
 if(!$width) $width=$_G['setting']['thumbsize'][$size]['width'];
@@ -22,7 +22,7 @@ if($download=='down'){
 		$filename=$meta['name'];
 		$filesize=$meta['size'];
 	}
-	$imgurl=IO::getThumb($path,$width,$height,$original,true);
+	$imgurl=IO::getThumb($path,$width,$height,$original,true,$thumbtype);
 	$filesize=filesize($imgurl);
 	$filename = '"'.(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename).'"';
 	$db = DB::object();
@@ -46,7 +46,7 @@ if($download=='down'){
 	exit();
 	
 }else{
-	IO::getThumb($path,$width,$height,$original);
+	IO::getThumb($path,$width,$height,$original,false,$thumbtype);
 }
 if($original){
 	if($returnurl) return $_G['setting']['attachurl'].'./'.$data['attachment'];

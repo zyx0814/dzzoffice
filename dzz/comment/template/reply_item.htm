@@ -20,7 +20,7 @@
 					<!--{if $attach[isimage]}-->
 					<div class="pic_fed clearfix">
 						<div class="img_pfed">
-							<a class="min_ipfed" hidefocus="true" href="$attach[url]" rel="$attach[url]" target="_blank"><img src="$attach[img]" alt="$attach[title]" class="artZoom" style="cursor: url(dzz/feed/images/zoomin.cur), pointer;"></a>
+							<a class="min_ipfed" hidefocus="true" href="javascript:;"><img src="$attach[img]" data-original="$attach[img]&original=1" alt="$attach[title]" class=""></a>
 						</div>
 					</div>
 					<div class="file_fed imgfile_fed clearfix"> $attach[title]<span class="kb_nffed">($attach[filesize])</span>
@@ -29,7 +29,7 @@
 								<!--{if $attach[downloads]>0}-->($attach[downloads]{lang degree})
 								<!--{/if}-->
 							</a>
-							<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>
+							<!--<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>-->
 						</p>
 					</div>
 					<!--{elseif $attach['type']=='video'}-->
@@ -70,7 +70,7 @@
 								<!--{if $attach[downloads]>0}--><span class="text-gray">($attach[downloads]{lang degree})</span>
 								<!--{/if}-->
 							</a>
-							<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>
+							<!--<a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>-->
 						</p>
 					</div>
 					<!--{/if}-->
@@ -83,9 +83,9 @@
 				<div class="btn_acfed">
 					<ul>
 						<!--{if $_G['uid']==$value1[authorid] || $_G[adminid]==1}-->
-						<li class="more_bacfed">
+						<!--<li class="more_bacfed">
 							<a hidefocus="true" href="javascript:void(0);" onclick="feed_edit('$value1[cid]','$_GET[allowattach]','$_GET[allowat]','$_GET[allowsmiley]')">{lang edit}</a>
-						</li>
+						</li>-->
 						<li class="more_bacfed">
 							<a hidefocus="true" href="javascript:void(0);" onclick="feed_delete('$value1[cid]','comment_$value1[cid]','$value1[pcid]')">{lang delete}</a>
 						</li>

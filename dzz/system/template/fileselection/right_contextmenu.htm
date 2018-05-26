@@ -1,0 +1,194 @@
+
+<div id="right_ico">
+    <div class="menu-item open" onclick="_selectfile.Open('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-open"></span>
+        <span class="menu-text">{lang open}</span>
+    </div>
+    <div class="menu-item openwith">
+        <span class="menu-icon dzz dzz-export"></span>
+        <span class="menu-text">{lang openwith}</span>
+        <span class="menu-rightarrow"></span>
+        <div class="menu" style="display: none;">
+
+        </div>
+    </div>
+    <span class="menu-sep"></span>
+    <div class="menu-item download" onclick="_selectfile.downAttach('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-download"></span>
+        <span class="menu-text">{lang download}</span>
+    </div>
+    <div class="menu-item downpackage" onclick="_selectfile.downpackage('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-download"></span>
+        <span class="menu-text">{lang downpackage}</span>
+    </div>
+    <!--<div class="menu-item share" onclick="_selectfile.share('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-share"></span>
+        <span class="menu-text">{lang share}</span>
+    </div>-->
+    <!--<div class="menu-item collect" onclick="_selectfile.collect('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-star"></span>
+        <span class="menu-text">{lang collect}</span>
+    </div>-->
+
+    <div class="menu-item property" onclick="_selectfile.property('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon  dzz"></span>
+        <span class="menu-text">{lang property}</span>
+    </div>
+    <span class="menu-sep"></span>
+
+    <div class="menu-item rename" onclick="_selectfile.rename('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-create"></span>
+        <span class="menu-text">{lang rename}</span>
+    </div>
+    <div class="menu-item cut" onclick="_selectfile.cut('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-content-cut"></span>
+        <span class="menu-text">{lang cut}</span>
+    </div>
+    <div class="menu-item copy" onclick="_selectfile.copy('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-copy"></span>
+        <span class="menu-text">{lang copy}</span>
+    </div>
+
+    <div class="menu-item paste" onclick="_selectfile.paste('{fid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon icon-paste"></span>
+        <span class="menu-text">{lang paste}</span>
+    </div>
+
+
+
+    <span class="menu-sep"></span>
+    <div class="menu-item cancleshare" onclick="_selectfile.cancleshares('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-delete"></span>
+        <span class="menu-text">{lang cancleshare}</span>
+    </div>
+    <div class="menu-item editshare" onclick="_selectfile.share('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-create"></span>
+        <span class="menu-text">{lang editshare}</span>
+    </div>
+    <div class="menu-item delete" onclick="_selectfile.delIco('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-delete"></span>
+        <span class="menu-text">{lang delete}</span>
+    </div>
+    <div class="menu-item recover" onclick="_selectfile.RecoverFile('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-rotate"></span>
+        <span class="menu-text">{lang recoverfile}</span>
+    </div>
+    <div class="menu-item finallydelete" onclick="_selectfile.finallyDelete('{rid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-delete"></span>
+        <span class="menu-text">{lang completely_cancel}</span>
+    </div>
+
+</div>
+
+<div id="right_body">
+    <div class="menu-item">
+        <span class="menu-icon filee-icon"></span>
+        <span class="menu-text">{lang iconviev}</span>
+        <span class="menu-rightarrow"></span>
+        <div class="menu" style="display: none;">
+            <div class="menu-item" iconview="2" onclick="_selectfile.Arrange(this,'{filemanageid}','2');">
+                <span view="2" class="menu-icon dzz dzz-check-box-outline-blank menu-icon-iconview"></span>
+                <span class="menu-text">{lang iconview_2}</span>
+            </div>
+            <div class="menu-item" iconview="4" onclick="_selectfile.Arrange(this,'{filemanageid}','4')">
+                <span view="4" class="menu-icon dzz dzz-check-box-outline-blank menu-icon-iconview"></span>
+                <span class="menu-text">{lang iconview_4}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-item sort">
+        <span class="menu-icon filee-icon"></span>
+        <span class="menu-text">{lang sort}</span>
+        <span class="menu-rightarrow"></span>
+        <div class="menu" style="display: none;">
+            <div class="menu-item disp0" onclick="_selectfile.Disp(this,'{filemanageid}','0')">
+                <span disp="0" class="menu-icon dzz dzz-check-box-outline-blank menu-icon-disp menu_icon_disp_0"></span>
+                <span class="menu-text">{lang menu_filemanagedisp_0} <span class="caret"></span></span>
+
+            </div>
+            <div class="menu-item disp1" onclick="_selectfile.Disp(this,'{filemanageid}','1')">
+                <span disp="1" class="menu-icon dzz dzz-check-box-outline-blank menu-icon-disp menu_icon_disp_1"></span>
+                <span class="menu-text">{lang menu_filemanagedisp_1} <span class="caret"></span></span>
+            </div>
+            <div class="menu-item disp2" onclick="_selectfile.Disp(this,'{filemanageid}','2')">
+                <span disp="2" class="menu-icon dzz dzz-check-box-outline-blank menu-icon-disp menu_icon_disp_2"></span>
+                <span class="menu-text">{lang menu_filemanagedisp_2} <span class="caret"></span></span>
+            </div>
+            <div class="menu-item disp3" onclick="_selectfile.Disp(this,'{filemanageid}','3')">
+                <span disp="3" class="menu-icon dzz dzz-check-box-outline-blank menu-icon-disp menu_icon_disp_3"></span>
+                <span class="menu-text">{lang menu_filemanagedisp_3} <span class="caret"></span></span>
+            </div>
+        </div>
+    </div>
+    <span class="menu-sep"></span>
+    <div class="menu-item paste" onclick="_selectfile.paste('{fid}');jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon icon-paste"></span>
+        <span class="menu-text">{lang paste}</span>
+    </div>
+
+    <div class="menu-item create">
+        <span class="menu-icon dzz dzz-upload"></span>
+        <span class="menu-text">{lang new_and_upload}</span>
+        <span class="menu-rightarrow"></span>
+        <div class="menu" style="display: none;">
+            <div class="menu-item newfolder" onclick="_selectfile.NewIco('newFolder','{fid}');jQuery('#right_contextmenu').hide();">
+                <span class="menu-icon dzz dzz-folder"></span>
+                <span class="menu-text">{lang newfolder}</span>
+            </div>
+            <span class="menu-sep"></span>
+            <div class="menu-item upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);return true;">
+                <span class="menu-icon dzz dzz-upload"></span>
+                <span class="menu-text">{lang uploadfile}</span>
+            </div>
+            <div class="menu-item uploadfolder" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);return true;">
+                <span class="menu-icon dzz dzz-folder"></span>
+                <span class="menu-text">{lang uploadfolder}</span>
+            </div>
+            <span class="menu-sep"></span>
+            <div class="menu-item newlink" onclick="_selectfile.NewIco('newLink','{fid}');jQuery('#right_contextmenu').hide();">
+                <span class="menu-icon dzz dzz-language"></span>
+                <span class="menu-text">{lang newlink}</span>
+            </div>
+            <!--<div class="menu-item newdzzdoc" onclick="_selectfile.NewIco('newDzzDoc','{fid}');jQuery('#right_contextmenu').hide();">
+              <span class="menu-icon dzz dzz-description"></span>
+              <span class="menu-text">{lang extname_dzzdoc}</span>
+             </div>-->
+            <div class="menu-item newtext" onclick="_selectfile.NewIco('newTxt','{fid}');jQuery('#right_contextmenu').hide();">
+                <span class="menu-icon dzz dzz-file"></span>
+                <span class="menu-text">{lang extname_txt}</span>
+            </div>
+            <span class="menu-sep"></span>
+            <div class="menu-item newdoc" onclick="_selectfile.NewIco('newDoc','{fid}');jQuery('#right_contextmenu').hide();">
+                <span class="menu-icon dzz dzz-file-text filee-icon filee-file-text"></span>
+                <span class="menu-text">{lang newdoc}</span>
+            </div>
+            <div class="menu-item newexcel" onclick="_selectfile.NewIco('newExcel','{fid}');jQuery('#right_contextmenu').hide();">
+                <span class="menu-icon dzz dzz-file-excel filee-icon filee-file-excel"></span>
+                <span class="menu-text">{lang newexcel}</span>
+            </div>
+            <div class="menu-item newpowerpoint" onclick="_selectfile.NewIco('newPowerPoint','{fid}');jQuery('#right_contextmenu').hide();">
+                <span class="menu-icon dzz dzz-file-ppt filee-icon filee-file-ppt"></span>
+                <span class="menu-text">{lang newpowerpoint}</span>
+            </div>
+        </div>
+    </div>
+    <span class="menu-sep"></span>
+    <div class="menu-item recoverall" onclick="_selectfile.recoverAll();jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-rotate"></span>
+        <span class="menu-text">{lang recover_all_file}</span>
+    </div>
+    <div class="menu-item deleteall" onclick="_selectfile.deleteAll();jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz dzz-delete"></span>
+        <span class="menu-text">{lang finallydelete_all_file}</span>
+    </div>
+    <div class="menu-item property" onclick="window.location.reload();">
+        <span class="menu-icon dzz dzz-autorenew"></span>
+        <span class="menu-text">{lang refresh}</span>
+    </div>
+    <div class="menu-item property" onClick="_selectfile.property('{fid}',1);jQuery('#right_contextmenu').hide();">
+        <span class="menu-icon dzz"></span>
+        <span class="menu-text">{lang property}</span>
+    </div>
+
+</div>

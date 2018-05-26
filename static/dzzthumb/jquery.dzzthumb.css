@@ -11,7 +11,7 @@
 	right:0;
 	bottom:0;
 	left:0;
-	z-index:10000;
+	z-index:90000;
 	/*min-width:640px;*/
 	background-color:rgba(0, 0, 0, 0.85);
 	background-image:url(preview/b.gif);

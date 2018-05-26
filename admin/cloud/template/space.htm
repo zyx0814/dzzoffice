@@ -1,0 +1,97 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<style type="text/css">
+/*修改*/
+/*.bs-main-container{
+    padding: 15px 30px;
+}*/
+
+/*结束*/
+</style>
+<div class="bs-container clearfix">
+  <div class="bs-left-container  clearfix"> 
+    <!--{template left}--> 
+  </div>
+  <div class="left-drager">
+  </div>
+  <div class="bs-main-container  clearfix" style="min-width:660px;">
+    <div class="main-header clearfix"> 
+      <!--{template right_header}--> 
+  	<!--<div  class="button_add_content">
+		<a href="{BASESCRIPT}?mod=cloud&op=spaceadd" title="{lang add_storage_location}" id="button_add">+</a>				
+	</div>	-->
+    </div>
+    <div class="main-content clearfix" >
+      <form id="appform" name="appform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=cloud&op=space" method="post" >
+        <input type="hidden" name="cloudsubmit" value="true" />
+        <input type="hidden" name="formhash" value="{FORMHASH}" />
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th width="30">{lang sort}</th>
+              <th width="150">{lang storage_location}</th>
+              <th width="50">{lang default}</th>
+              <th>{lang used_surplus}</th>
+              <th width="50">&nbsp;</th>
+            </tr>
+          </thead>
+          <!--{loop $list $value}-->
+          <tr>
+            <td width="40"><input type="text" class="form-control" name="disp[{$value[remoteid]}]" value="$value[disp]" style="width:45px;" /></td>
+            <td width="150"><input type="text" class="form-control"   name="name[{$value[remoteid]}]" value="$value[name]"  /></td>
+            <td><label class="checkbox-inline"><input type="radio" name="isdefault" value="$value[remoteid]" <!--{if $value[isdefault]>0}-->checked<!--{/if}--> ></label></td>
+            <td><div id="spaceinfo_{$value[remoteid]}"> <span class="spacesize" style="padding:0 5px">$value[fusesize]&nbsp;/&nbsp;$value[ftotalsize]</span> <span class="spacecheck" style="padding:0 5px"><a href="javascript:;" title="{lang to_obtain}" onclick="checkspace(this,'$value[remoteid]')"><i class="glyphicon glyphicon-refresh"></i></a></span> 
+                <!--{if $value[available]<1}--> 
+                <span class="text-danger">{lang space_storage_failure}</span> 
+                <!--{/if}--> 
+              </div></td>
+            <td><a id="delete_{$value[remoteid]}" <!--{if $value[bz]=='dzz' || $value[usesize]>0}-->style="display:none"<!--{/if}-->class="text-danger" href="{BASESCRIPT}?mod=cloud&op=space&do=delete&remoteid=$value[remoteid]" onclick="if(confirm('{lang space_del_storage}')){return true;}else{return false}" >{lang delete}</a></td>
+          </tr>
+          <!--{/loop}-->
+          <thead>
+          
+            <th valign="middle" colspan="7"><input type="submit" class="btn btn-primary" value="{lang save_set}" /> <a href="{BASESCRIPT}?mod=cloud&op=spaceadd" title="{lang add_storage_location}" class="btn btn-success">{lang add_storage_location}</a>
+              </thead>
+        </table>
+      </form>
+      <div class="tip" style="margin: 20px;color: #444;text-shadow: 1px 1px 1px #FFF;line-height: 1.8;">
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <h5>{lang board_message}</h5>
+          <ul>
+            {lang space_board_message_text}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+jQuery('.left-drager').leftDrager_layout();
+
+ function checkspace(obj,remoteid){
+	 jQuery(obj).html('<img src="admin/images/loadding.gif">');
+	 jQuery.getJSON('{ADMINSCRIPT}?mod=cloud&op=space&do=checkspace&remoteid='+remoteid,function(json){
+		 if(json.error){
+			 jQuery(this).html('<i class="glyphicon glyphicon-refresh"></i><span class="text-danger">'+json.error+'</span>');
+		 }else{
+				jQuery('#spaceinfo_' + remoteid + ' .spacecheck a').html('<span class="text-success" >{lang already_update}</span>');
+		 	jQuery('#spaceinfo_'+remoteid+' .spacesize').html(json.fusesize+'&nbsp;/&nbsp;'+json.ftotalsize).hide().fadeIn('slow');
+			if(json.usesize<1){
+				jQuery('delete_'+remoteid).show();
+			}else{
+				jQuery('delete_'+remoteid).hide();
+			}
+			
+			window.setTimeout(function(){
+				jQuery('#spaceinfo_'+remoteid+' .spacecheck a').html('<i class="glyphicon glyphicon-refresh"></i>');
+			},5000);
+		 }
+	 });
+ }
+</script>  
+<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
+<!--{template common/footer_simple}--> 

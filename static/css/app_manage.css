@@ -1,8 +1,8 @@
 
 /*头部开始*/
-nav{
+/*nav{
 	min-width: 768px;
-}
+}*/
 
 /*.main-title{
 	border-bottom: 1px solid #DCDCDC;	
@@ -126,7 +126,23 @@ nav{
     justify-content: flex-end; 
 }
 
+@media (max-width: 767px){
+	.resNav>.resNav-center .resSearch,.resNav>.resNav-center .input-search{
+		display:none;
+	}
+}
+@media (max-width: 414px){
+	
+	.resNav-item.resNav-right>.navbar-nav>li:first-child {
+		display:none;
+	}	
+	.resNav>.resNav-item.resNav-left{
+		padding-right:10px;
+		
+		
+	}
 
+}
 @media (max-width: 768px){
 	.resNav .navbar-nav>li>a {
 	    padding-top: 15px;
@@ -144,6 +160,7 @@ nav{
 	    border-radius: 0px;
 	}	
 }
+
 .navbar-inverse{
 	background: #3779ff;
 	border-color:#3779ff;
@@ -778,3 +795,16 @@ button.input-search-drop {
 	text-decoration: underline;
 }
 /*about 关于页 end*/
+/*小页面左侧默认关闭，浮动显示*/
+@media (max-width:767px){
+	.bs-container>.bs-main-container{
+		margin-left:0;	
+	}
+	.bs-container>.bs-left-container{
+		display:none ;
+	}
+	.bs-container>.left-drager{
+		display:none ;
+	}
+	
+}

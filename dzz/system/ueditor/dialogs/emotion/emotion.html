@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="robots" content="noindex, nofollow"/>
     <script type="text/javascript" src="../internal.js"></script>
-   <link rel="stylesheet" type="text/css" href="../../../../../static/css/common.css">
+   <link rel="stylesheet" type="text/css" href="../../../../../static/css/smilies.css">
     <link rel="stylesheet" type="text/css" href="../../../../../static/bootstrap/css/bootstrap.min.css">
    <script type="text/javascript" src="../../../../../static/jquery/jquery.min.js"></script>
 	<script type="text/javascript" src="../../../../../data/cache/smilies_var.js"></script>
@@ -13,9 +13,9 @@
     <script>var cookiepre = 'AQTa_2132_', cookiedomain = '';STATICURL = '../../../../../static/'</script>
     <style>
 	 html ,body{overflow:hidden;height:282px;}
-	 .sllt {
-		 padding: 4px; 
-	 }
+		.sllt td{
+			padding:8px;
+		}
 	</style>
 </head>
 <body onload="smilies_onload('smiley_container',9)">
@@ -23,7 +23,9 @@
 
 <script type="text/javascript">
 var thumb=24;
-
+function $(id){
+	return document.getElementById(id);
+}
 function smilies_onload(id, smcols, seditorkey) {
 	seditorkey = !seditorkey ? '' : seditorkey;
 	smile = getcookie('smile').split('D');
