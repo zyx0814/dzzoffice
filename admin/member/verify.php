@@ -101,7 +101,7 @@ if (!submitcheck('verifysubmit', true)) {
 		} else {
 			$verifyusers = C::t('user_verify') -> fetch_all_search($_GET['uid'], $vid, $_GET['username'], 'v.uid', $start, $perpage, $ordersc);
 			$verifyuids = array_keys($verifyusers);
-			$profiles = C::t('user_profile1') -> fetch_all($verifyuids, false, 0);
+			$profiles = C::t('user_profile') -> fetch_all($verifyuids, false, 0);
 		}
 		$list = array();
 		foreach ($verifyusers as $uid => $value) {
@@ -131,7 +131,7 @@ if (!submitcheck('verifysubmit', true)) {
 
 						$field = profile_show($key, $fields);
 					}
-					$fieldstr .= '<tr>' . ($anchor == 'authstr' ? '<td><input type="checkbox" name="refusal[' . $value['vid'] . '][' . $key . ']" value="' . $key . '" onclick="$(\'refusal' . $value['vid'] . '\').click();" /></td>' : '') . '<td>' . $_G['cache']['profilesetting'][$key]['title'] . ':</td><td>' . $field . '</td></tr>';
+					$fieldstr .= '<tr>' . ($anchor == 'authstr' ? '<td><input type="checkbox" name="refusal[' . $value['vid'] . '][' . $key . ']" value="' . $key . '" onclick="document.getElementById(\'refusal' . $value['vid'] . '\').click();" /></td>' : '') . '<td>' . $_G['cache']['profilesetting'][$key]['title'] . ':</td><td>' . $field . '</td></tr>';
 					$i++;
 				}
 				$opstr = "";
@@ -197,7 +197,7 @@ if (!submitcheck('verifysubmit', true)) {
 				$action = 'user_profile_pass_refusal';
 				$type = 'user_profile_pass_refusal_' . $vid;
 
-				dzz_notification::notification_add($uid, $type, $action, $notevars, 1);
+				dzz_notification::notification_add($uid, $type, $action, $notevars, 1,'');
 			}
 		}
 		if (is_array($verifyuids['refusal']) && !empty($verifyuids['refusal'])) {
@@ -219,7 +219,7 @@ if (!submitcheck('verifysubmit', true)) {
 			$verifyusers = C::t('user_verify') -> fetch_all_by_vid($vid, 1, $uids);
 			$verifyuids = array_keys($verifyusers);
 			$members = C::t('user') -> fetch_all($verifyuids, false, 0);
-			$profiles = C::t('user_profile1') -> fetch_all($verifyuids, false, 0);
+			$profiles = C::t('user_profile') -> fetch_all($verifyuids, false, 0);
 			foreach ($verifyusers as $uid => $value) {
 				$value = array_merge($value, $members[$uid], $profiles[$uid]);
 				$str = $common = '';
@@ -303,9 +303,10 @@ if (!submitcheck('verifysubmit', true)) {
 						$type = 'user_profile_moderate_refusal_' . $vid;
 
 					} else {
-						C::t('user_profile1') -> update(intval($value['uid']), $fields);
+						C::t('user_profile') -> update(intval($value['uid']), $fields);
 						if ($fields['department']) {//含有department时审核通过后，把此用户加入相应的部门
-							C::t('organization_user') -> insert($value['uid'], $fields['department']);
+							
+							C::t('organization_user') -> insert_by_orgid($fields['department'],array($value['uid']));
 						}
 						$verify['delete'][] = $value['vid'];
 						if ($value['verifytype']) {
@@ -318,7 +319,7 @@ if (!submitcheck('verifysubmit', true)) {
 						$type = 'user_profile_moderate_pass_' . $vid;
 
 					}
-					dzz_notification::notification_add($value['uid'], $type, $action, $notevars, 1);
+					dzz_notification::notification_add($value['uid'], $type, $action, $notevars, 1,'');
 				}
 			}
 			if ($vid && !empty($verify["verify"])) {
@@ -339,7 +340,7 @@ if (!submitcheck('verifysubmit', true)) {
 			}
 		}
 		if ($single) {
-			echo "<script type=\"text/javascript\">var trObj = parent.$('mod_{$single}_row');trObj.parentNode.removeChild(trObj);</script>";
+			echo "<script type=\"text/javascript\">var trObj = parent.document.getElementById('mod_{$single}_row');trObj.parentNode.removeChild(trObj);</script>";
 		} else {
 			showmessage('members_verify_succeed', ADMINSCRIPT . '?mod=member&op=verify&vid=' . $vid . '&anchor=' . $_GET['anchor'], array(), array('alert' => 'right'));
 		}

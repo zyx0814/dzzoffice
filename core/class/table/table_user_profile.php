@@ -77,8 +77,7 @@ class table_user_profile extends dzz_table
 
             $setarr=array('uid'=>$uid,
                 'fieldid'=>$key,
-                'value'=>$value['value'],
-                'privacy'=>$value['privacy']
+                'value'=>$value
             );
             DB::insert($this->_table,$setarr,0,1);
         }

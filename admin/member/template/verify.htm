@@ -59,14 +59,14 @@
 		<div class="main-header">
 			<ul class="nav nav-pills nav-pills-bottomguide">
 				<li <!--{if $anchor=='authstr' }-->class="active"<!--{/if}-->>
-					<a href="{BASESCRIPT}?mod=member&op=verify&anchor=authstr&vid=$vid">{lang members_verify_nav_authstr}</a>
+					<a href="{MOD_URL}&op=verify&anchor=authstr&vid=$vid">{lang members_verify_nav_authstr}</a>
 				</li>
 				<li <!--{if $anchor=='refusal' }-->class="active"<!--{/if}-->>
-					<a href="{BASESCRIPT}?mod=member&op=verify&anchor=refusal&vid=$vid">{lang members_verify_nav_refusal}</a>
+					<a href="{MOD_URL}&op=verify&anchor=refusal&vid=$vid">{lang members_verify_nav_refusal}</a>
 				</li>
 				<!--{if $vid}-->
 				<li <!--{if $anchor=='pass' }-->class="active"<!--{/if}-->>
-					<a href="{BASESCRIPT}?mod=member&op=verify&anchor=pass&vid=$vid">{lang already_passed}</a>
+					<a href="{MOD_URL}&op=verify&anchor=pass&vid=$vid">{lang already_passed}</a>
 				</li>
 				<!--{/if}-->
 			</ul>
@@ -128,7 +128,7 @@
 		<div class="main-content" style="border-top:1px solid #DDD">
 			<iframe id="frame_profile" name="frame_profile" style="display: none"></iframe>
 
-			<form id="cpform" action="{BASESCRIPT}?mod=member&op=verify" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+			<form id="cpform" action="{MOD_URL}&op=verify&" class="form-horizontal form-horizontal-left" method="post" name="cpform">
 				<input type="hidden" value="{FORMHASH}" name="formhash">
 				<input type="hidden" value="true" name="verifysubmit">
 				<input type="hidden" value="$vid" name="vid">
@@ -176,7 +176,7 @@
 							<input type="submit" class="btn btn-primary" id="submit_batchverifysubmit" name="batchverifysubmit" title="" value="{lang submit}"> &nbsp;
 							<a href="javascript:;" class="btn btn-link" onclick="mod_setbg_all('export')">{lang select_all_export}</a> &nbsp;
 							<a class="btn btn-link" href="javascript:;" onclick="mod_setbg_all('refusal')">{lang select_all_refuse}</a> &nbsp;
-							<a class="btn btn-link" href="{ADMINSCRIPT}?mod=member&op=verify&vid=$vid&anchor=pass&verifysubmit=yes">{lang all_export}</a>
+							<a class="btn btn-link" href="{MOD_URL}&op=verify&vid=$vid&anchor=pass&verifysubmit=yes">{lang all_export}</a>
 							$multi
 						</td>
 					</thead>
@@ -186,45 +186,15 @@
 		</div>
 	</div>
 </div>
-	<!-- <table width="96%">
-                  <thead>
-                    <tr  height="30">
-                      <th width="30" >拒绝</th>
-                      <th width="100">审核项</th>
-                      <th>提交信息</th>
-                    </tr>
-                  </thead>
-                  <tbody id="verifyitem_28">
-                    <tr  height="30">
-                      <td ><input type="checkbox" name="refusal[28][company]" value="company" onclick="$('refusal28').click();"></td>
-                      <td>公司:</td>
-                      <td>灌灌灌灌hhhhhhhhhhh</td>
-                    </tr>
-                    <tr  height="30">
-                      <td ><input type="checkbox" name="refusal[28][occupation]" value="occupation" onclick="$('refusal28').click();"></td>
-                      <td>职业:</td>
-                      <td>顶顶顶顶顶hhhhhhhhhhhh</td>
-                    </tr>
-                  </tbody>
-                  <tbody>
-                    <tr height="30">
-                      <td colspan="5"><label class="radio-inline"><input  type="radio" name="verify[28]" value="validate" onclick="mod_setbg(28, 'validate');showreason(28, 0);">通过</label>
-                        <label  class="radio-inline"><input type="radio" name="verify[28]" value="refusal" id="refusal28" onclick="mod_setbg(28, 'refusal');showreason(28, 1);"> 拒绝</label>
-                        <span id="reason_28" style="display: none;">
-                        <input type="text" class="form-control input-sm" name="reason[28]" style="margin: 0px;" placeholder="操作理由">
-                        </span>&nbsp;
-                        <input type="button" value="审核" name="singleverifysubmit" class="btn btn-success btn-sm" onclick="singleverify(28);"></td>
-                    </tr>
-                  </tbody>
-                </table>-->
+	
 <script type="text/javascript">
 	function showreason(vid, flag) {
-		var reasonobj = $('reason_' + vid);
+		var reasonobj = document.getElementById('reason_' + vid);
 		if(reasonobj) {
 			reasonobj.style.display = flag ? '' : 'none';
 		}
-		if(!flag && $('verifyitem_' + vid) != null) {
-			var checkboxs = $('verifyitem_' + vid).getElementsByTagName('input');
+		if(!flag && document.getElementById('verifyitem_' + vid) != null) {
+			var checkboxs = document.getElementById('verifyitem_' + vid).getElementsByTagName('input');
 			for(var i in checkboxs) {
 				if(checkboxs[i].type == 'checkbox') {
 					checkboxs[i].checked = '';
@@ -234,12 +204,12 @@
 	}
 
 	function mod_setbg(vid, value) {
-		$('mod_' + vid + '_row').className = 'mod_' + value;
+		document.getElementById('mod_' + vid + '_row').className = 'mod_' + value;
 	}
 
 	function mod_setbg_all(value) {
-		checkAll('option', $('cpform'), value);
-		var trs = $('cpform').getElementsByTagName('TR');
+		checkAll('option', document.getElementById('cpform'), value);
+		var trs = document.getElementById('cpform').getElementsByTagName('TR');
 		for(var i in trs) {
 			if(trs[i].id && trs[i].id.substr(0, 4) == 'mod_') {
 				trs[i].className = 'mod_' + value;
@@ -249,13 +219,13 @@
 	}
 
 	function mod_cancel_all() {
-		var inputs = $('cpform').getElementsByTagName('input');
+		var inputs = document.getElementById('cpform').getElementsByTagName('input');
 		for(var i in inputs) {
 			if(inputs[i].type == 'radio') {
 				inputs[i].checked = '';
 			}
 		}
-		var trs = $('cpform').getElementsByTagName('TR');
+		var trs = document.getElementById('cpform').getElementsByTagName('TR');
 		for(var i in trs) {
 			if(trs[i].id && trs[i].id.match(/^mod_(\d+)_row$/)) {
 				trs[i].className = "mod_cancel";
@@ -265,9 +235,9 @@
 	}
 
 	function singleverify(vid) {
-		var formobj = $('cpform');
+		var formobj = document.getElementById('cpform');
 		var oldaction = formobj.action;
-		formobj.action = oldaction + '&singleverify=' + vid;
+		formobj.action = oldaction + 'singleverify=' + vid;
 		formobj.target = "frame_profile";
 		formobj.submit();
 		formobj.action = oldaction;
@@ -276,18 +246,9 @@
 </script>
 <script type="text/javascript">
 	jQuery('.left-drager').leftDrager_layout();
-	var url = '{BASESCRIPT}?mod=member';
+	var url = '{MOD_URL}';
 
-	jQuery(document).ready(function(e) {
-		/*jQuery('input').iCheck({
-	  checkboxClass: 'icheckbox_minimal-blue',
-	  radioClass: 'iradio_minimal-blue',
-});
-jQuery('input').on('ifChecked',function(e){
-	jQuery(this).trigger('click');
-});*/
 
-	});
 </script>
 <script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script>

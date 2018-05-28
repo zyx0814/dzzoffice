@@ -15,7 +15,7 @@ if(!defined('IN_DZZ')) {
 class dzz_notification {
 
 
-	public static function notification_add($touid, $type, $note, $notevars = array(), $category = 0,$langfolder) {
+	public static function notification_add($touid, $type, $note, $notevars = array(), $category = 0,$langfolder='') {
 		global $_G;
 
 		if(!($tospace = getuserbyuid($touid))) {
