@@ -284,7 +284,7 @@ if($_GET['step'] == 'start') {
 										  'available'=>1),0,1);
 		}
 		//添加用户资料管理应用
-		if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{adminscript}?mod=cloud'))){
+		if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{adminscript}?mod=member'))){
 			
 		 C::t('app_market')->insert(array('appname'=>'用户资料管理',
 		 								  'appico'=>'appico/201712/21/103805dczcm89b0gi8i9gc.png',
