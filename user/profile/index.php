@@ -65,10 +65,10 @@ if (submitcheck('profilesubmit')) {
         if ($field && !$field['available']) {
             continue;
         } elseif ($key == 'timeoffset') {
-			 if ($value >= -12 && $value <= 12 || $value == 9999) {
-                C::t('user')->update($_G['uid'], array('language' => trim($value)));
+			if ($value >= -12 && $value <= 12 || $value == 9999) {
+                C::t('user')->update($_G['uid'], array('timeoffset' => intval($value)));
             }
-		 } elseif ($key == 'language') {
+		} elseif ($key == 'language') {
 			$langList = $_G['config']['output']['language_list'];
             if (isset($langList[$value])) {
                 C::t('user')->update($_G['uid'], array('language' => ($value)));
