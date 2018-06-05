@@ -183,7 +183,7 @@ html,body{
               <label class="control-label language">{lang language}</label>
               <div class="controls-container">
                   <select name="language" class="form-control">
-                      <option value="">{lang language_auto}</option>
+                      <option value="" <!--{if $space[language] == ''}-->selected="selected"<!--{/if}-->>{lang language_auto}</option>
                       <!--{loop $langList $key $value}-->
                       <option value="$key" <!--{if $space[language] == $key}-->selected="selected"<!--{/if}--> /> $value</option>
                       <!--{/loop}-->

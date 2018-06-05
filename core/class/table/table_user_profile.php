@@ -74,11 +74,19 @@ class table_user_profile extends dzz_table
     }
     public function update($uid,$fieldarr){//插入用户资料
         foreach($fieldarr as $key=>$value){
-
-            $setarr=array('uid'=>$uid,
-                'fieldid'=>$key,
-                'value'=>$value
-            );
+			if(is_array($value)){
+				$setarr=array(  'uid'=>$uid,
+								'fieldid'=>$key,
+								'value'=>$value['value'],
+								'privacy'=>$value['privacy']
+							);
+			}else{
+				$setarr=array(  'uid'=>$uid,
+								'fieldid'=>$key,
+								'value'=>$value
+							);
+			}
+            
             DB::insert($this->_table,$setarr,0,1);
         }
         return true;

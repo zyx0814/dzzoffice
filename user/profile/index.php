@@ -65,8 +65,13 @@ if (submitcheck('profilesubmit')) {
         if ($field && !$field['available']) {
             continue;
         } elseif ($key == 'timeoffset') {
-            if ($value >= -12 && $value <= 12 || $value == 9999) {
-                C::t('user')->update($_G['uid'], array('timeoffset' => intval($value)));
+			 if ($value >= -12 && $value <= 12 || $value == 9999) {
+                C::t('user')->update($_G['uid'], array('language' => trim($value)));
+            }
+		 } elseif ($key == 'language') {
+			$langList = $_G['config']['output']['language_list'];
+            if (isset($langList[$value])) {
+                C::t('user')->update($_G['uid'], array('language' => ($value)));
             }
         } elseif ($key == 'site') {
             if (!in_array(strtolower(substr($value, 0, 6)), array('http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://')) && !preg_match('/^static\//', $value) && !preg_match('/^data\//', $value)) {
@@ -82,6 +87,8 @@ if (submitcheck('profilesubmit')) {
         }
         if (empty($field)) {
             continue;
+		}elseif($field['unchangeable'] && !empty($space[$key])){
+			continue;
         } elseif (profile_check($key, $value, $space)) {
             $setarr[$key] = dhtmlspecialchars(trim($value));
         } else {
@@ -302,7 +309,7 @@ if (submitcheck('profilesubmit')) {
     include template('profile');
 }
 
-function profile_showerror($key, $extrainfo)
+function profile_showerror($key, $extrainfo='')
 {
     echo '<script>';
     echo 'parent.show_error("' . $key . '", "' . $extrainfo . '");';
