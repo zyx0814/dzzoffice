@@ -337,6 +337,9 @@ if($do=='importing'){
 				if($h[$col]) $temp[$h[$col]]=$val;
 			}
 		}
+		if(!$temp['username']){
+            		continue;
+		}
 		if(empty($temp['email'])) $temp['email']=random(10,true).'@163.com';
 		if(isset($list[$temp['email']])){
 			foreach($h as $key1 => $value1){
