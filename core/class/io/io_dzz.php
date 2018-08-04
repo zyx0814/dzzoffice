@@ -1576,7 +1576,14 @@ class io_dzz extends io_api
             if (!$partinfo['iscomplete']) return true;
             else {
                 self::deleteCache($partinfo['flag'] . '_' . md5($filename));
-
+                //获取文件内容
+                $fileContent = '';
+                if (!$handle = fopen($_G['setting']['attachdir'] . $target, 'rb')) {
+                    return array('error' => lang('open_file_error'));
+                }
+                while (!feof($handle)) {
+                    $fileContent .= fread($handle, 8192);
+                }
             }
         } else {
             $pathinfo = pathinfo($filename);
@@ -1592,6 +1599,14 @@ class io_dzz extends io_api
         if (!SpaceSize(filesize($_G['setting']['attachdir'] . $target), $gid)) {
             @unlink($_G['setting']['attachdir'] . $target);
             return array('error' => lang('inadequate_capacity_space'));
+        }
+
+        // 文件容灾存储
+        require DZZ_ROOT . '/admin/disasterrecovery/Class/File.php';
+        // Disaster Recovery
+        $DR = new \DisasterRecovery\File();
+        if ($DR->needCopy()) {
+            $DR->storage(C::t('resources_path')->fetch_pathby_pfid($fid), $nfilename, $fileContent);
         }
 
         if ($attach = $this->save($target, $nfilename)) {

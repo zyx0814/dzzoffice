@@ -28,6 +28,13 @@ $_config['mod_view_perm'] = '';
 $_config['action_name'] = 'do';
 $_config['do_name'] = 'action';
 
+/**
+ * 扩展配置
+ */
+$_config['DR']['basicPath'] = 'example';// 需自行建立有可写权限的根目录
+$_config['DR']['is_open'] = 'yes'; //yes 开启;no 关闭
+$_config['DR']['method'] = 'local';//local:本地存储;ftp:远程服务器存储
+
 $_config['profile']['privacy'] = array(
     '-1'=>'私密',
     '0'=>'公开',
