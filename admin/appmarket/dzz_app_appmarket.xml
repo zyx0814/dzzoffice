@@ -1275,8 +1275,9 @@ QmCC
 			<item id="nodup"><![CDATA[0]]></item>
 			<item id="identifier"><![CDATA[appmarket]]></item>
 			<item id="app_path"><![CDATA[admin]]></item>
-			<item id="version"><![CDATA[2.0]]></item>
+			<item id="version"><![CDATA[2.01]]></item>
 			<item id="extra">
+				<item id="upgradefile"><![CDATA[upgrade.php]]></item>
 			</item>
 		</item>
 		<item id="version"><![CDATA[2.0 beta]]></item>

@@ -8,15 +8,11 @@ class table_resources_path extends dzz_table
     {
 
         $this->_table = 'resources_path';
+		$this->_pk    = 'fid';
+        $this->_pre_cache_key = 'resourcespath_';
+        $this->_cache_ttl = 60 * 60;
         parent::__construct();
     }
-    /*public function fetch_fid_by_path($path){
-        $path = trim($path);
-        if($res = DB::fetch_first("select fid from %t where path = %s",array($this->_table,$path))){
-            return $res['fid'];
-        }
-        return false;
-    }*/
     /*
      * 返回文件夹路径
      * $pfid=>文件夹id
@@ -24,16 +20,33 @@ class table_resources_path extends dzz_table
      * */
     public function fetch_pathby_pfid($pfid,$pathkey = false){
         $pfid = intval($pfid);
-
         $fileds = ($pathkey) ? 'path,pathkey':'path';
-
+        if($pathkey){
+            $cachekey = 'patharr_'.$pfid;
+            $fileds = 'path,pathkey';
+        }else{
+            $cachekey = 'path_'.$pfid;
+            $fileds = 'path';
+        }
+        if($data = $this->fetch_cache($cachekey)){
+            return $data;
+        }
         if($data = DB::fetch_first("select {$fileds} from %t where fid = %d",array($this->_table,$pfid))){
-            return (!$pathkey) ? $data['path']:$data;
+            $data = (!$pathkey) ? $data['path']:$data;
+            $this->store_cache($cachekey,$data);
+            return $data;
         }
         return false;
     }
     public function update_by_fid($fid,$setarr){
-        return DB::update($this->_table,$setarr,array('fid'=>$fid));
+       if(DB::update($this->_table,$setarr,array('fid'=>$fid))){
+           $cacheky1 = 'patharr_'.$fid;
+           $cacheky2 = 'path_'.$fid;
+           $this->clear_cache($cacheky1);
+           $this->clear_cache($cacheky2);
+           return true;
+       }
+       return false;
     }
     public function fetch_fid_bypath($path){
         if($data = DB::fetch_first("select p.fid from %t p left join %t f on f.fid = p.fid  where p.path = %s and f.isdelete < %d",array($this->_table,'folder',$path,1))){
@@ -65,6 +78,7 @@ class table_resources_path extends dzz_table
         foreach(DB::fetch_all("select fid from %t where path regexp %s",array($this->_table,'^'.$path.'.*')) as $v){
             $fids[] = $v['fid'];
         }
+
         if(self::delete_by_fid($fids)){
             return true;
         }
@@ -73,14 +87,22 @@ class table_resources_path extends dzz_table
     public function delete_by_fid($fid){
         if(!is_array($fid)) $fids = array($fid);
         else $fids = $fid;
+        $cachekey1 = array();
+        $cachekey2 = array();
+        foreach($fids as $v){
+            $cachekey1[] = 'patharr_'.$v;
+            $cachekey2[] = 'path_'.$v;
+        }
         if(DB::delete($this->_table,"fid in (".dimplode($fids).")")){
+            $this->clear_cache($cachekey1);
+            $this->clear_cache($cachekey2);
             return true;
         }
         return false;
     }
-    public function delete_by_pathkey($pathkey){
+    /*public function delete_by_pathkey($pathkey){
         return DB::delete($this->_table,"pathkey = ".$pathkey);
-    }
+    }*/
     //通过pathkey获取文件夹下级及自身fid
     public function fetch_folder_containfid_by_pfid($pfid){
         $pfids = array($pfid);
@@ -100,11 +122,9 @@ class table_resources_path extends dzz_table
         if($prefix){
             switch ($prefix){
                 case  'g':
-                    $orgid = DB::result_first("select orgid from %t where orgname = %s and forgid = %d and `type` = %d",array('orgnization',$patharr[0],0,1));
+                    $orgid = DB::result_first("select orgid from %t where orgname = %s and forgid = %d and `type` = %d",array('organization',$patharr[0],0,1));
                     $path = 'dzz:gid_'.$orgid.':'.$path;
-                    echo $path;
-                    die;
-                    $fid = DB::result_first("select fid from %t where path = %s ",array($this->_table,$opath));
+                    $fid = DB::result_first("select fid from %t where path = %s ",array($this->_table,$path));
                     break;
                 case  'o':
                     $orgid = DB::result_first("select orgid from %t where orgname = %s and forgid = %d and `type` = %d",array('organization',$patharr[0],0,0));
@@ -117,8 +137,8 @@ class table_resources_path extends dzz_table
             }
         }else{
             $upath = 'dzz:uid_'.$uid.':'.$opath;
-            if(!$fid =  DB::result_first("select fid from %t where path = %s ",array($this->_table,$upath))){
-                $fid =  DB::result_first("select fid from %t where path regexp %s ",array($this->_table,'^dzz:.+:'.$path.'$'));
+            if(!$fid =  DB::result_first("select p.fid from %t p left join %t f on p.fid = f.fid where p.path = %s and f.deldateline < 1  ",array($this->_table,'folder',$upath))){
+                $fid =  DB::result_first("select  p.fid from %t p left join %t f on p.fid = f.fid where p.path regexp %s and f.deldateline < 1",array($this->_table,'folder','^dzz:.+:'.$path.'$'));
             }
         }
         return $fid;
@@ -138,8 +158,16 @@ class table_resources_path extends dzz_table
         if($content != $name) $newpath = str_replace($content,$name,$path);
         else return true;
         $regpath = self::path_transferred_meaning($path);
+        $cachkey1 = array();
+        $cachkey2 = array();
+        foreach(DB::fetch_all("select fid from %t where path regexp %s",array($this->_table,'^'.$regpath.'.*')) as $v){
+            $cachkey1[] = 'patharr_'.$v['fid'];
+            $cachkey2[] = 'path_'.$v['fid'];
+        }
         $sql = "update %t set path = replace(path,%s,%s) where path regexp %s";
         if(DB::query($sql,array($this->_table,$path,$newpath,'^'.$regpath.'.*'))){
+            $this->clear_cache($cachkey1);
+            $this->clear_cache($cachkey2);
             return true;
         }else{
             return false;
@@ -150,7 +178,6 @@ class table_resources_path extends dzz_table
         if($paths = $this->fetch_pathby_pfid($fid,true)){
             $opaths = $this->fetch_pathby_pfid($ofid,true);
             $path = dirname($paths['path']).'/';
-            //$path = self::path_transferred_meaning($path);
             $opath = $opaths['path'];
             $pathkey = explode('-',$paths['pathkey']);
             array_pop($pathkey);
@@ -160,7 +187,15 @@ class table_resources_path extends dzz_table
             $paths['path'] = self::path_transferred_meaning($paths['path']);
             if($noself) $likepath = $paths['path'].'.+';
             else $likepath = $paths['path'].'.*';
+            $cachkey1 = array();
+            $cachkey2 = array();
+            foreach(DB::fetch_all("select fid from %t where path regexp %s",array($this->_table,'^'.$likepath)) as $v){
+                $cachkey1[] = 'patharr_'.$v['fid'];
+                $cachkey2[] = 'path_'.$v['fid'];
+            }
             if(DB::query($sql,array($this->_table,$path,$opath,$pathkey,$opathkey,'^'.$likepath))){
+                $this->clear_cache($cachkey1);
+                $this->clear_cache($cachkey2);
                 return true;
             }else{
                 return false;

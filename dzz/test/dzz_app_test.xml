@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<item id="Title"><![CDATA[Dzz! app]]></item>
+	<item id="Version"><![CDATA[2.0]]></item>
+	<item id="Time"><![CDATA[2014-06-03 00:18]]></item>
+	<item id="From"><![CDATA[上海乐云 (http://127.0.0.1/)]]></item>
+	<item id="Data">
+		<item id="app">
+			<item id="appname"><![CDATA[测试]]></item>
+			<item id="appico"><![CDATA[data:image/png;base64,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
+TkSuQmCC
+]]></item>
+			<item id="appdesc"><![CDATA[演示开发流程应用]]></item>
+			<item id="appurl"><![CDATA[{dzzscript}?mod=test]]></item>
+			<item id="appadminurl"><![CDATA[{dzzscript}?mod=test&op=admin]]></item>
+			<item id="noticeurl"><![CDATA[]]></item>
+			<item id="disp"><![CDATA[0]]></item>
+			<item id="vendor"><![CDATA[乐云网络]]></item>
+			<item id="haveflash"><![CDATA[0]]></item>
+			<item id="isshow"><![CDATA[1]]></item>
+			<item id="havetask"><![CDATA[1]]></item>
+			<item id="hideInMarket"><![CDATA[0]]></item>
+			<item id="feature"><![CDATA[]]></item>
+			<item id="fileext"><![CDATA[]]></item>
+			<item id="group"><![CDATA[0]]></item>
+			<item id="position"><![CDATA[0]]></item>
+			<item id="system"><![CDATA[0]]></item>
+			<item id="notdelete"><![CDATA[1]]></item>
+			<item id="open"><![CDATA[0]]></item>
+			<item id="nodup"><![CDATA[0]]></item>
+			<item id="identifier"><![CDATA[test]]></item>
+			<item id="version"><![CDATA[1.0]]></item>
+			<item id="app_path"><![CDATA[dzz]]></item>
+			<item id="extra">
+				<item id="installfile"><![CDATA[install.php]]></item>
+				<item id="uninstallfile"><![CDATA[uninstall.php]]></item>
+				<item id="upgradefile"><![CDATA[upgrade.php]]></item>
+				<item id="enablefile"><![CDATA[enable.php]]></item>
+				<item id="disablefile"><![CDATA[disable.php]]></item>
+			</item>
+		</item>
+		<item id="hooks">
+			<item id="testone_diaoyong"><![CDATA[dzz\test\classes\testone]]></item>
+		</item>
+		<item id="version"><![CDATA[1.0]]></item>
+	</item>
+</root>

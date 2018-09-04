@@ -14,7 +14,6 @@ class table_folder extends dzz_table
         $this->_pk = 'fid';
         $this->_pre_cache_key = 'folder_';
         $this->_cache_ttl = 60 * 60;
-        $this->noperm = (getglobal('appGreenChannel')) ? getglobal('appGreenChannel') : false;
         parent::__construct();
     }
 
@@ -38,6 +37,17 @@ class table_folder extends dzz_table
         }
         return $ret;
     }
+    public function update_by_pfids($pfids,$setarr){
+        if(!is_array($pfids)) $pfids = (array)$pfids;
+        $fids = array();
+        foreach(DB::fetch_all("select fid from %t where pfid in(%n)",array($this->_table,$pfids)) as $v){
+            $fids[] = $v['fid'];
+        }
+        foreach($fids as $v){
+            self::update($v,$setarr);
+        }
+        return true;
+    }
 
     //更改继承权限
     public function update_perm_inherit_by_fid($fids)
@@ -45,22 +55,19 @@ class table_folder extends dzz_table
         if (!is_array($fids)) $fids = (array)$fids;
         foreach ($fids as $value) {
             $perm_inherit = perm_check::getPerm1($value);
-            DB::update('folder', array('perm_inherit' => $perm_inherit), "fid='{$value}'");
+            parent::update($value,array('perm_inherit' => $perm_inherit));
         }
     }
 
     public function insert($data, $appid = 0)
     {
         if (empty($data)) {
-
             return false;
         }
-
         if ($path['fid'] = parent::insert($data, 1)) {
             $perm_inherit = perm_check::getPerm1($path['fid']);
             parent::update($path['fid'], array('perm_inherit' => $perm_inherit));
             if ($data['pfid']) {
-
                 if (!$pdata = C::t('resources_path')->fetch_pathby_pfid($data['pfid'], true)) {
                     //根据fid生成path和pathkey
                     $pdata = self::create_pathinfo_by_fid($data['pfid'], $appid);
@@ -70,39 +77,32 @@ class table_folder extends dzz_table
                 }
                 $path['path'] = $pdata['path'] . $data['fname'] . "/";
                 $path['pathkey'] = ($pdata['pathkey']) ? $pdata['pathkey'] . '-_' . $path['fid'] . '_' : '_' . $path['fid'] . '_';
-
             } else {
                 if ($appid) {
                     $path['path'] = "dzz:app_" . $appid . ":" . $data['fname'] . "/";
                 } else {
                     $path['path'] = ($data['gid']) ? "dzz:gid_" . $data['gid'] . ":" . $data['fname'] . "/" : "dzz:uid_" . $data['uid'] . ":" . $data['fname'] . "/";
                 }
-
                 $path['pathkey'] = '_' . $path['fid'] . '_';
             }
-
             if (C::t('resources_path')->insert($path)) {
-
                 return $path['fid'];
-
             } else {
-
                 parent::delete($path['fid']);
             }
         }
         return false;
     }
 
-    public function get_folder_pathinfo_by_fid($fid, $folderarr = array())
+    public function get_folder_pathinfo_by_fid($fid, $folderarr = array(), $i = 0)
     {
-
         if (!$folderinfo = parent::fetch($fid)) return;
 
         array_unshift($folderarr, array('fname' => $folderinfo['fname'], 'fid' => $folderinfo['fid'], 'gid' => $folderinfo['gid'], 'uid' => $folderinfo['uid']));
 
-        if ($folderinfo['pfid']) {
-
-            $folderarr = self::get_folder_pathinfo_by_fid($folderinfo['pfid'], $folderarr);
+        if ($folderinfo['pfid'] > 0 && $i < 100) {
+            $i++;
+            $folderarr = self::get_folder_pathinfo_by_fid($folderinfo['pfid'], $folderarr, $i);
         }
         return $folderarr;
     }
@@ -110,25 +110,20 @@ class table_folder extends dzz_table
     //根据fid生成path和pathkey
     public function create_pathinfo_by_fid($fid, $appid = 0)
     {
-
         $patharr = array();
-
         if (!$pathdata = self::get_folder_pathinfo_by_fid($fid)) return $patharr;
-
         $pathprefix = ($appid) ? "dzz:app_" . $appid . ":" : '';
         $path = '';
         $pathkey = '';
         foreach ($pathdata as $v) {
-            if (!$pathprefix) {
-                $pathprefix = ($v['gid']) ? "dzz:gid_" . $v['gid'] . ":" : "dzz:uid_" . $v['uid'] . ":";
-            }
-            $path .= $pathprefix;
             $path .= $v['fname'] . '/';
             $pathkey .= '_' . $v['fid'] . '_-';
         }
-        $patharr['path'] = $path;
+        if (!$pathprefix) {
+            $pathprefix = ($v['gid']) ? "dzz:gid_" . $v['gid'] . ":" : "dzz:uid_" . $v['uid'] . ":";
+        }
+        $patharr['path'] = $pathprefix . $path;
         $patharr['pathkey'] = substr($pathkey, 0, -1);
-
         return $patharr;
     }
 
@@ -159,7 +154,6 @@ class table_folder extends dzz_table
                 'flag' => 'home',
                 'innav' => 1,
                 'fsperm' => perm_FolderSPerm::flagPower('home')
-
             );
             if ($rootfid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$uid}' and flag='home' ")) {
                 C::t('folder')->update($rootfid, array('fname' => $root['fname'], 'isdelete' => 0, 'pfid' => 0, 'fsperm' => $root['fsperm'], 'perm' => $root['perm']));
@@ -171,17 +165,8 @@ class table_folder extends dzz_table
             $root['path'] = C::t('resources_path')->fetch_pathby_pfid($rootfid);
             return $root;
         }
-
     }
-    /*//查询目录下所有数据
-    public function fetch_all_by_fid($fids)
-    {
-        $data = array();
-        foreach (self::fetch_all($fids) as $fid => $value) {
-            if ($arr = self::fetch_by_fid($fid)) $data[$fid] = $arr;
-        }
-        return $data;
-    }*/
+
     //依文件名查询顶级目录
     public function fetch_topby_fname($fname)
     {
@@ -193,11 +178,9 @@ class table_folder extends dzz_table
     public function fetch_by_fid($fid, $gid = '')
     {
         global $_G;
-
         $fid = intval($fid);
         if (!$data = self::fetch($fid)) array('error' => lang('file_not_exist'));
         $data['title'] = $data['fname'];
-
         //统计文件数
         if ($data['gid'] > 0) {//如果是群组
             //文件数
@@ -210,16 +193,15 @@ class table_folder extends dzz_table
             //文件夹数
             $data['foldernum'] = DB::result_first("select COUNT(*) from " . DB::table('resources') . " where pfid='{$fid}' and type='folder' and isdelete < 1");
         }
-
         $data['perm'] = perm_check::getPerm($fid);
         $data['perm1'] = $data['perm_inherit'];
         if ($data['gid'] > 0) {
             $data['isadmin'] = $data['ismoderator'] = C::t('organization_admin')->is_admin_by_orgid($data['gid'], $_G['uid']);
             $permtitle = perm_binPerm::getGroupTitleByPower($data['perm1']);
             if (file_exists('dzz/images/default/system/folder-' . $permtitle['flag'] . '.png')) {
-                $data['icon'] = 'dzz/images/default/system/folder-' . $permtitle['flag'] . '.png';
+                $data['icon'] = './dzz/images/default/system/folder-' . $permtitle['flag'] . '.png';
             } else {
-                $data['icon'] = 'dzz/images/default/system/folder-read.png';
+                $data['icon'] = './dzz/images/default/system/folder-read.png';
             }
         }
         $data['realpath'] = C::t('resources_path')->fetch_pathby_pfid($fid);
@@ -228,6 +210,26 @@ class table_folder extends dzz_table
         $data['oid'] = $data['fid'];
         $data['bz'] = '';
         return $data;
+    }
+
+    //过滤文件名称
+    public function name_filter($name)
+    {
+        return str_replace(array('/', '\\', ':', '*', '?', '<', '>', '|', '"', "\n"), '', $name);
+    }
+
+    public function getFolderName($name, $pfid, $fid)
+    {
+        static $i = 0;
+        $name = self::name_filter($name);
+        //echo("select COUNT(*) from ".DB::table('folder')." where fname='{$name}' and  pfid='{$pfid}'");
+        if (DB::result_first("select COUNT(*) from %t where fname=%s and  pfid=%d and fid != %d and isdelete<1", array('folder', $name, $pfid, $fid))) {
+            $name = preg_replace("/\(\d+\)/i", '', $name) . '(' . ($i + 1) . ')';
+            $i += 1;
+            return self::getFolderName($name, $pfid, $fid);
+        } else {
+            return $name;
+        }
     }
 
     //更改文件夹名称
@@ -243,6 +245,7 @@ class table_folder extends dzz_table
                 return true;
             }
         } else {
+            $name = self::getFolderName($name, $folder['pfid'], $fid);
             //更改路径表数据
             if (C::t('resources_path')->update_path_by_fid($fid, $name)) {
                 //增加统计数
@@ -262,12 +265,17 @@ class table_folder extends dzz_table
     }
 
     //查询组织id
-    public function fetch_gid_by_fid($fid)
+    public function fetch_gid_by_fid($fid, $i = 0)
     {
+
         if (!$folder = parent::fetch($fid)) return 0;
         if ($folder['flag'] == 'organization') return $folder['gid'];
-        elseif ($folder['pfid']) {
-            return self::fetch_gid_by_fid($folder['pfid']);
+        elseif ($folder['pfid'] > 0) {
+            $i++;
+            if ($i > 100) {
+                return $folder['gid'];
+            }
+            return self::fetch_gid_by_fid($folder['pfid'], $i);
         }
     }
 
@@ -276,23 +284,28 @@ class table_folder extends dzz_table
     {
         if (!$folder = parent::fetch($fid)) return;
         $fids[] = $folder['fid'];
-        if ($folder['pfid']) {
+        if ($folder['pfid'] > 0) {
             $fids = self::fetch_path_by_fid($folder['pfid'], $fids);
         }
         return $fids;
     }
 
+    /*
+            此函数不会删除 $fid对应的 rid数据，正常调用是作为C::t('resources')->deletesourcedata()的内部调用；
+         如果单独调用，请注意这个fid应该没有对应的rid；
+         我的网盘 应用主目录 群组和部门主目录 都是没有对应的rid的特殊目录；
+     */
     public function delete_by_fid($fid, $force = false)
     { //清空目录
         $folder = self::fetch($fid);
         //默认只允许删除文件夹和群组根目录，暂时不允许删除应用根目录
-        if ($folder['flag'] != 'folder' && $folder['flag'] != 'organization') {
+        if (!$force && $folder['flag'] != 'folder' && $folder['flag'] != 'organization') {
             return false;
         }
         //判断删除权限
-        if (!perm_check::checkperm_container($fid, 'delete')) {
-            return array('error' => lang('no_privilege'));
-        }
+        /* if (!perm_check::checkperm_container($fid, 'delete')) {
+             return array('error' => lang('no_privilege'));
+         }*/
         $rids = array();
         $isdelrids = array();
         $nodelrids = array();
@@ -325,6 +338,7 @@ class table_folder extends dzz_table
         }
         return self::delete($fid);
     }
+
     //删除目录
     public function delete($fid)
     {
@@ -349,11 +363,6 @@ class table_folder extends dzz_table
             $data[$value['flag']] = $value['fid'];
         }
         return $data;
-    }
-
-    public function fetch_all_by_uid()
-    {
-        return DB::fetch_all("SELECT * FROM %t WHERE  uid='0'  ", array($this->_table), 'fid');
     }
 
     public function fetch_all_by_pfid($pfid, $count)
@@ -409,11 +418,13 @@ class table_folder extends dzz_table
     public function fetch_folderinfo_by_fid($fid)
     {//查询群组目录及文件基本信息
         $fid = intval($fid);
-        $folderinfo = array();
-        if ($info = DB::fetch_first("select f.*,p.path,p.pathkey from %t f left join %t p on f.fid = p.fid  where f.fid = %d ", array($this->_table, 'resources_path', $fid))) {
-            return $info;
+        if (!$folderinfo = self::fetch($fid)) {
+            return false;
         }
-        return false;
+        $pathinfo = C::t('resources_path')->fetch_pathby_pfid($fid, true);
+        $info = array_merge($folderinfo, $pathinfo);
+        return $info;
+
     }
 
     //获取文件夹权限
@@ -482,7 +493,6 @@ class table_folder extends dzz_table
                     } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
                         $where1[] = "uid='{$_G[uid]}'";
                     }
-
                 }
                 $where1 = array_filter($where1);
                 if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
@@ -501,33 +511,33 @@ class table_folder extends dzz_table
         return $infoarr;
     }
 
-    //查询所有有权限文件夹
-    public function fetch_all_fid()
-    {
-        global $_G;
-        $uid = $_G['uid'];
-        $fids = array();
-        //个人根目录
-        $personfid = DB::result_first("select fid from %t where uid = %d and flag = %s", array($this->_table, $uid, 'home'));
-        $fids[] = $personfid;
-        foreach ($this->fetch_all_folderfid_by_pfid($personfid) as $v) {
-            $fids[] = $v;
-        }
-        //群组部门顶级目录
-        $orgs = C::t('organization')->fetch_all_orgid();
-        $orgids = $orgs['orgids'];
-        $fidarr = DB::fetch_all("select fid from %t where orgid in(%n)", array('organization', $orgids));
-
-        //群组目录及下级所有目录fid
-        foreach ($fidarr as $v) {
-            $fids[] = $v['fid'];
-            foreach ($this->fetch_all_folderfid_by_pfid($v['fid']) as $val) {
-                $fids[] = $val;
+    /*    //查询所有有权限文件夹
+        public function fetch_all_fid()
+        {
+            global $_G;
+            $uid = $_G['uid'];
+            $fids = array();
+            //个人根目录
+            $personfid = DB::result_first("select fid from %t where uid = %d and flag = %s", array($this->_table, $uid, 'home'));
+            $fids[] = $personfid;
+            foreach ($this->fetch_all_folderfid_by_pfid($personfid) as $v) {
+                $fids[] = $v;
             }
-        }
-        return $fids;
+            //群组部门顶级目录
+            $orgs = C::t('organization')->fetch_all_orgid();
+            $orgids = $orgs['orgids'];
+            $fidarr = DB::fetch_all("select fid from %t where orgid in(%n)", array('organization', $orgids));
 
-    }
+            //群组目录及下级所有目录fid
+            foreach ($fidarr as $v) {
+                $fids[] = $v['fid'];
+                foreach ($this->fetch_all_folderfid_by_pfid($v['fid']) as $val) {
+                    $fids[] = $val;
+                }
+            }
+            return $fids;
+
+        }*/
 
 
     //查询目录下所有文件夹的fid

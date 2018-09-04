@@ -589,13 +589,12 @@
             location.href = '$_G[siteurl]user.php?mod=login';
             return false;
         }
-        /*jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
-         if(data['success']) {*/
-        //var userhref = 'index.php?mod=system&op=selposition&handlekey=seldir&allowcreate=1&callback=save_file';
-        var userhref = 'index.php?mod=system&op=filewindow&handlekey=seldir&range=group,home&type=0&allowcreate=1&callback=save_file';
-        showWindow('seldir', userhref, 'get', '0');
-        /*	}
-         }, 'json');*/
+        jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
+         if(data['success']) {
+             var userhref = 'index.php?mod=system&op=filewindow&handlekey=svaefile&type=2&perm=write&allowcreate=1&callback=save_file';
+             showWindow('seldir', userhref, 'get', '0');
+        	}
+         }, 'json');
         return false;
     })
     //点击空白处，取消全选
@@ -610,17 +609,14 @@
     })
 
     function allsave(obj) {
-
         if (uid == 0) {
             location.href = '$_G[siteurl]user.php?mod=login';
             return false;
         }
-        var userhref = 'index.php?mod=system&op=selposition&handlekey=seldir&allowcreate=1&callback=saveall_file';
+        var userhref = 'index.php?mod=system&op=filewindow&type=2&perm=write&allowcreate=1&callback=saveall_file';
         showWindow('seldir', userhref, 'get', '0');
     }
     function saveall_file(fid) {
-        //var rids = $('#allsave').data('allrids');
-        return false
         var rids = [];
         jQuery('div[data-value="true"]').each(function () {
             rids.push(jQuery(this).data('dpath'));

@@ -877,14 +877,6 @@ dl>dd{
 }
 
 /*input样式开始*/
-.body-content{
-	display:flex;     
-	/*padding-top: 50px;*/
-}
-.body-content .black-content{
-	flex: 1;    
-	padding: 0 10px;
-}
 .input-black{
 	position: relative;
 	margin-bottom: 50px;
@@ -899,7 +891,7 @@ dl>dd{
 	margin: 0;
 	padding-right: 15px;
 }
-.input-black .input-animate{
+.input-animate{
 	position: relative;
 	background: transparent;
 	background-image: -webkit-gradient(linear, left top, left bottom, from(#4c89fb), to(#4c89fb)), -webkit-gradient(linear, left top, left bottom, from(#e6e8eb), to(#e6e8eb));
@@ -921,7 +913,7 @@ dl>dd{
 	height: auto;
 }
 
-.input-black .input-animate.animate{
+.input-animate.animate{
 	-webkit-background-size: 100% 1px, 100% 1px;
 	background-size: 100% 1px, 100% 1px;
 	-webkit-transition-duration: .1s;
@@ -932,7 +924,9 @@ dl>dd{
 	background-image: -o-linear-gradient(#4c89fb, #4c89fb), -o-linear-gradient(#e6e8eb, #e6e8eb);
 	background-image: linear-gradient(#4c89fb, #4c89fb), linear-gradient(#e6e8eb, #e6e8eb);
 }
-.input-black .input-animate .input-icon{
+
+.input-black .input-animate .input-icon,
+.input-black.input-animate .input-icon{
 	position: absolute;
     right: 0;
     bottom: 5px;
@@ -944,7 +938,9 @@ dl>dd{
 	opacity: 0.5;
 	height: 34px;
 }	
-.input-black .input-animate .form-control{
+.input-black .input-animate .form-control,
+.input-black.input-animate .form-control
+{
 	border: 0;
 	width: 100%;
 	height: 30px;
@@ -952,21 +948,26 @@ dl>dd{
     padding:5px 0;
     box-shadow: none;
 }
-.input-black .input-animate textarea.form-control{
+.input-black .input-animate textarea.form-control,
+.input-black.input-animate textarea.form-control
+{
 	height: 30px;
 	vertical-align: top;
 	max-height: 80px;
 }
-.input-black .input-animate .form-control:focus{
+.input-black .input-animate .form-control:focus,
+.input-black.input-animate .form-control:focus
+{
 	border: 0;
 	outline: 0;
 	width: 100%;
 }
-.input-black.disabled .input-animate .form-control{
+.input-black.disabled .input-animate .form-control,
+.input-black.disabled.input-animate .form-control{
 	background: transparent;
 	cursor: not-allowed;
 }
-.input-black .input-animate .form-control[disabled],.input-black .input-animate .form-control[readonly], fieldset[disabled] .form-control{
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
 	background: transparent;
 }
 .input-black .form-control-file{

@@ -235,7 +235,8 @@ function mb_strlen(str) {
 function mb_cutstr(str, maxlen, dot) {
 	var len = 0;
 	var ret = '';
-	var dot = !dot ? '...' : dot;
+	var dot = (dot != '' && !dot) ? '...' : dot;
+
 	maxlen = maxlen - dot.length;
 	for(var i = 0; i < str.length; i++) {
 		len += str.charCodeAt(i) < 0 || str.charCodeAt(i) > 255 ? (charset == 'utf-8' ? 3 : 2) : 1;
@@ -2032,7 +2033,7 @@ function Confirm(msg,callback)
 	showDialog(msg, 'confirm', __lang.confirm_message, callback, 1);
 };
 
-function showWindow(k, url, mode, cache, menuv) {
+function showWindow(k, url, mode, cache, showWindow_callback) {
 	mode = isUndefined(mode) ? 'get' : mode;
 	cache = isUndefined(cache) ? 1 : cache;
 	var menuid = 'fwin_' + k;
@@ -2128,6 +2129,8 @@ function showWindow(k, url, mode, cache, menuv) {
 	} else {
 		show();
 	}
+
+	if(typeof showWindow_callback == 'function') window.showWindow_callback=showWindow_callback;
 	doane();
 }
 
@@ -2498,8 +2501,13 @@ var AttachEvent=function(e,el){
 function dfire(e){
 	jQuery(document).trigger(e);
 }
-
-
+/*修复url 没有？的时候第一个&改为？*/
+function correcturl(url){
+	if(url && url.indexOf('?')===-1){
+		url=url.replace(/&/i,'?');
+	}
+	return url;
+}
 
 
 

@@ -65,8 +65,9 @@
       </label>
       --> <select name="groupid" class="form-control" <!--{if $_G[ 'adminid']!=1}-->disabled="disabled"<!--{/if}-->> 
       <!--{loop $_G['cache']['usergroups'] $groupid $group}--> 
+      <!--{{if !in_array($groupid ,array('2','3','4','5','6','7','8'))}-->
       <option <!--{if $groupid==9}-->selected="selected"<!--{/if}-->value="$groupid">$group['grouptitle']
-      </option>
+      </option><!--{/if}-->
       <!--{/loop}-->
       </select>
     </div>

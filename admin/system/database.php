@@ -175,7 +175,6 @@ if ($operation == 'export') {
 						C::t('cache') -> insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'], ), false, true);
 						$msg .= lang('database_export_multivol_succeed', array('volume' => $volume, 'filelist' => $filelist));
 						$msg_type = 'text-success';
-						//cpmsg('database_export_multivol_succeed', '', 'succeed', array('volume' => $volume, 'filelist' => $filelist));
 					}
 					unset($sqldump, $zip, $content);
 					fclose($fp);
@@ -184,7 +183,6 @@ if ($operation == 'export') {
 					C::t('cache') -> insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'], ), false, true);
 					$msg .= lang('database_export_zip_succeed', array('filename' => $filename));
 					$msg_type = 'text-success';
-					//cpmsg('database_export_zip_succeed', '', 'succeed', array('filename' => $filename));
 				} else {
 					@touch('./data/' . $backupdir . '/index.htm');
 					for ($i = 1; $i <= $volume; $i++) {
@@ -252,7 +250,6 @@ if ($operation == 'export') {
 			} else {
 				$msg = lang('database_shell_fail');
 				$msg_type = 'text-error';
-				//cpmsg('database_shell_fail', '', 'error');
 
 			}
 
@@ -331,19 +328,8 @@ if ($operation == 'export') {
 			$info['datafile_server'] = '.' . $info['filename'];
 			$key = substr(strrchr($info['filename'], "/"), 1);
 			$list[$key] = $info;
-			/*showtablerow('', '', array(
-			 "<input class=\"checkbox\" type=\"checkbox\" name=\"delete[]\" value=\"".basename($info['filename'])."\">",
-			 "<a href=\"$info[filename]\">".substr(strrchr($info['filename'], "/"), 1)."</a>",
-			 '',
-			 $info['dateline'],
-			 $lang['db_export_'.$info['type']],
-			 $info['size'],
-			 $info['method'],
-			 '',
-			 "<a href=\"".$datasiteurl."restore.php?operation=importzip&datafile_server=$datafile_server&importsubmit=yes\"  onclick=\"return confirm('$lang[db_import_confirm_zip]');\" class=\"act\" target=\"_blank\">$lang[db_import_unzip]</a>"
-			 ));*/
+			
 		}
-		//print_r($list);
 
 	} else {
 		if (is_array($_GET['delete'])) {
@@ -385,7 +371,6 @@ if ($operation == 'export') {
 		exit();
 	}
 	$runquerys = array();
-	//include_once(DZZ_ROOT.'source/admincp/admincp_quickquery.php');
 	if (!submitcheck('sqlsubmit')) {
 
 	} else {
@@ -499,7 +484,7 @@ function sqldumptablestruct($table) {
 	}
 
 	$tablestatus = DB::fetch_first("SHOW TABLE STATUS LIKE '$table'");
-	$tabledump .= ($tablestatus['Auto_increment'] ? " AUTO_INCREMENT=$tablestatus[Auto_increment]" : '') . ";\n\n";
+	$tabledump .= ($tablestatus['Auto_increment'] ? " AUTO_INCREMENT=$tablestatus[Auto_increment]" : ''). ";\n\n";
 	if ($_GET['sqlcompat'] == 'MYSQL40' && $db -> version() >= '4.1' && $db -> version() < '5.1') {
 		if ($tablestatus['Auto_increment'] <> '') {
 			$temppos = strpos($tabledump, ',');
@@ -552,7 +537,7 @@ function sqldumptable($table, $startfrom = 0, $currsize = 0) {
 				while ($row = $db -> fetch_row($rows)) {
 					$comma = $t = '';
 					for ($i = 0; $i < $numfields; $i++) {
-						$t .= $comma . ($_GET['usehex'] && !empty($row[$i]) && (strexists($tablefields[$i]['Type'], 'char') || strexists($tablefields[$i]['Type'], 'text')) ? '0x' . bin2hex($row[$i]) : '\'' . (function_exists('mysqli_real_escape_string')?mysqli_real_escape_string($row[$i]): addslashes($row[$i])) . '\'');
+						$t .= $comma . ($_GET['usehex'] && !empty($row[$i]) && (strexists($tablefields[$i]['Type'], 'char') || strexists($tablefields[$i]['Type'], 'text')) ? '0x' . bin2hex($row[$i]) : '\'' . (function_exists('mysql_escape_string')?mysql_escape_string($row[$i]): addslashes($row[$i])) . '\'');
 						$comma = ',';
 					}
 					if (strlen($t) + $currsize + strlen($tabledump) + 500 < $_GET['sizelimit'] * 1000) {
@@ -584,7 +569,7 @@ function sqldumptable($table, $startfrom = 0, $currsize = 0) {
 					while ($row = $db -> fetch_row($rows)) {
 						$t2 = $comma2 = '';
 						for ($i = 0; $i < $numfields; $i++) {
-							$t2 .= $comma2 . ($_GET['usehex'] && !empty($row[$i]) && (strexists($tablefields[$i]['Type'], 'char') || strexists($tablefields[$i]['Type'], 'text')) ? '0x' . bin2hex($row[$i]) : '\'' . (function_exists('mysqli_real_escape_string')?mysqli_real_escape_string($row[$i]): addslashes($row[$i])) . '\'');
+							$t2 .= $comma2 . ($_GET['usehex'] && !empty($row[$i]) && (strexists($tablefields[$i]['Type'], 'char') || strexists($tablefields[$i]['Type'], 'text')) ? '0x' . bin2hex($row[$i]) : '\'' . (function_exists('mysql_escape_string')?mysql_escape_string($row[$i]): addslashes($row[$i])) . '\'');
 							$comma2 = ',';
 						}
 						if (strlen($t1) + $currsize + strlen($tabledump) + 500 < $_GET['sizelimit'] * 1000) {

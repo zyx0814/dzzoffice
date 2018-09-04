@@ -110,31 +110,6 @@ $_config['memory']['eaccelerator'] = 0;					// 启动对 eaccelerator 的支持
 $_config['memory']['wincache'] = 1;						// 启动对 wincache 的支持
 
 
-
-// 命名空间相关设置
-/**
- * 配置相应命名空间路径
- * $_config['namespacelist'] = array(
- *  'root'      =>DZZ_ROOT,
- *  'coreroot'  => DZZ_ROOT.'core')
- *
-*/
-
-$_config['namespacelist'] = array(
-    'root'      =>DZZ_ROOT,
-    'coreroot'  => DZZ_ROOT.'core',
-    'admin'     => DZZ_ROOT.'admin',
-    'core'      => CORE_PATH,
-    'dzz'       => DZZ_ROOT.APP_DIRNAME,
-    'user'      => DZZ_ROOT.'user',
-    'misc'      => DZZ_ROOT.'misc'
-);
-
-$_config['default_mod'] = 'index';
-
-$_config['default_op'] = 'index';
-
-$_config['dafault_action'] = 'index';
 // 服务器相关设置
 $_config['server']['id']		= 1;			// 服务器编号，多webserver的时候，用于标识当前服务器的ID
 
@@ -147,6 +122,8 @@ $_config['output']['charset'] 			= 'utf-8';	// 页面字符集
 $_config['output']['forceheader']		= 1;		// 强制输出页面字符集，用于避免某些环境乱码
 $_config['output']['gzip'] 			    = 0;		// 是否采用 Gzip 压缩输出
 $_config['output']['tplrefresh'] 		= 1;		// 模板自动刷新开关 0=关闭, 1=打开
+
+
 $_config['output']['language'] 			= 'zh-cn';	// 页面语言 zh-cn/zh-tw
 $_config['output']['language_list']['zh-cn']='简体中文';	// 页面语言 zh-cn/en-us
 

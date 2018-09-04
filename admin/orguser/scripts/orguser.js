@@ -446,6 +446,10 @@ function appendModerator(json){
 	html+='			<p class="text-center" style="height:20px;margin:5px 0;line-height:25px;overflow:hidden;"> '+json.username+'</p>';
 	html+='	   </li>';
 	jQuery('#moderators_container_'+json.orgid+' .moderators-acceptor').after(html);
+	var inst = jQuery("#classtree").jstree(true);
+	
+	var node= inst.get_node('#'+json.orgid);
+	inst.refresh_node(node);
 }
 function moderator_del(id,orgid,obj){
 	jQuery.post(ajaxurl+'do=moderator_del',{'orgid':orgid,'id':id,'t':new Date().getTime()},function(json){

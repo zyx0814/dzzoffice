@@ -1,7 +1,7 @@
 <!--头部开始-->
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="hide_window()"> <span aria-hidden="true">×</span> </button>
-    <h4 class="modal-title"><!--{if $type}-->另存为<!--{else}-->选择文件<!--{/if}--></h4>
+    <h4 class="modal-title"><!--{if $type == 1}-->另存为<!--{elseif $type == 2}-->选择位置<!--{else}-->选择文件<!--{/if}--></h4>
 </div>
 <!--头部结束-->
 <!--内容区开始-->
@@ -42,8 +42,7 @@
             <!--{if $allowcreate}-->
             <div class="dropdown newMenu pull-left">
                 <button type="text" class="dropdown-toggle select-button-dropdown" id="exampleColorDropdown2" data-toggle="dropdown"><span class="dzz dzz-folder select-button-folder"></span></button>
-                <ul class="dropdown-menu dropdown-menu-primary" aria-labelledby="exampleGroupDrop1" role="menu">
-
+                <ul class="dropdown-menu dropdown-menu-primary" aria-labelledby="exampleGroupDrop1" role="menu" id="createmenu">
                     <li role="presentation" class="js-newfolder folderPermMust">
                         <a href="javascript:void(0)" onclick="_selectfile.NewIco('newFolder')" role="menuitem">
                             <span class="dzz dzz-folder filee-icon filee-folder"></span>
@@ -53,26 +52,14 @@
                     <li class="yunfile-upload js-upload-file"><a href="javascript:;">
                         <span class="dzz  dzz-upload filee-icon filee-upload"></span>
                         <span class="file-text">{lang uploadfile}</span>
-                        <input type="file" name="files[]" id="wangpan-upload-file" class="wangpan-upload-file" multiple></a>
+                        <input type="file" name="files[]" id="wangpan-upload-file" class="wangpan-upload-file" multiple=""></a>
                     </li>
-                    <li class="yunfile-upload js-upload-folder folderPermMust"><a href="javascript:;">
+                    <li class="yunfile-upload js-upload-folder"><a href="javascript:;">
                         <span class="dzz dzz-folder filee-icon filee-folder"></span>
                         <span class="file-text">{lang uploadfolder}</span>
-                        <input type="file" name="files[]" multiple webkitdirectory="" value="" id="wangpan-upload-folder" class="wangpan-upload-file"></a>
+                        <input type="file" name="files[]" multiple="" webkitdirectory="" value="" id="wangpan-upload-folder" class="wangpan-upload-file"></a>
                     </li>
                     <li role="separator" class="divider"></li>
-                    <!--<li role="presentation">
-                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newLink')" role="menuitem">
-                            <span class="dzz dzz-language filee-icon filee-language"></span>
-                            <span class="file-text">{lang newlink}</span>
-                        </a>
-                    </li>-->
-                    <!--<li role="presentation">
-                        <a href="javascript:void(0)" onclick="_selectfile.NewIco('newDzzDoc')" role="menuitem">
-                            <span class="dzz dzz-description filee-icon filee-description"></span>
-                            <span class="file-text">{lang extname_dzzdoc}</span>
-                        </a>
-                    </li>-->
                     <li role="presentation">
                         <a href="javascript:void(0)" onclick="_selectfile.NewIco('newTxt')" role="menuitem">
                             <span class="dzz dzz-file filee-icon filee-file"></span>
@@ -196,7 +183,7 @@
 <script type="text/javascript" reload="1">
     //拖拽初始化
     jQuery('.left-drager').leftDrager_layout(function () {
-    },{'leftHide':480});
+    });
     var opened = {};
     //input框初始化
     $(document).ready(function (e) {
@@ -322,7 +309,6 @@
             if (val) {
                 _selectfile.cons[containsid].exts = val;
             }
-            console.log(val);
             _selectfile.cons[containsid].pageClick();
         },1000);
 

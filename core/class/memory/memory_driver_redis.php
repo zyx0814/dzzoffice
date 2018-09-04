@@ -14,7 +14,11 @@ class memory_driver_redis
 				} else {
 					$connect = @$this->obj->connect($config['server'], $config['port']);
 				}
+                if($config['password']){
+                    @$this->obj->auth($config['password']);
+                }
 			} catch (RedisException $e) {
+			    echo $e;
 			}
 			$this->enable = $connect ? true : false;
 			if($this->enable) {

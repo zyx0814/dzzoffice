@@ -69,7 +69,7 @@ INSERT INTO `dzz_icon` VALUES(6, 'localhost', 'mod=discuss', 'discuss', 'icon/20
 INSERT INTO `dzz_cron` VALUES(1, 1, 'system', '每月通知清理', 'cron_clean_notification_month.php', 1393646860, 0, -1, 1, 5, '0');
 INSERT INTO `dzz_cron` VALUES(3, 1, 'system', '每周清理缓存文件', 'cron_cache_cleanup_week.php', 1395635931, 0, 1, -1, 5, '0');
 INSERT INTO `dzz_cron` VALUES(4, 0, 'system', '每周清理缓存缩略图', 'cron_imgcache_cleanup_week.php', 1395635931,0, 1, -1, 5, '0');
-INSERT INTO `dzz_cron` VALUES(5, 0, 'system', '每月清除未用附件', 'cron_clean_copys0_attachment_by_month.php', 1395388548,0, -1, 1, 4, '30');
+INSERT INTO `dzz_cron` VALUES(5, 0, 'system', '每月清除未用附件', 'cron_clean_copys0_attachment_by_month.php', 1395388548,0, -1, -1, -1, '5	10	15	20	25	30	35	40	45	50	55');
 INSERT INTO `dzz_cron` VALUES(6, 0, 'system', '定时备份数据库', 'cron_database_backup.php', 1460797274, 1460840400, 0, -1, 5, '0');
 
 --
@@ -95,7 +95,6 @@ INSERT INTO `dzz_hooks` (`id`, `app_market_id`, `name`, `description`, `type`, `
 (8, 0, 'app_run', '', 1, 0, 'core\\dzz\\apprun', 1, 0),
 (9, 0, 'mod_run', '', 1, 0, 'core\\dzz\\modrun', 1,0),
 (10, 0, 'adminlogin', '', 1, 0, 'admin\\login\\classes\\adminlogin', 1, 0),
-(11, 0, 'login_mod', '', 1, 0, 'user\\qq\\classes\\qqlogin', 1, 0),
 (12, 0, 'mod_start', '', 1, 0, 'core\\dzz\\modroute', 1, 0),
 (13, 0, 'login_check', '', 1, 0, 'user\\login\\classes\\logincheck|user', 1, 0),
 (14, 0, 'login_valchk', '', 1, 0, 'user\\login\\classes\\loginvalchk|user/login', 1, 0),
@@ -166,7 +165,7 @@ INSERT INTO `dzz_setting` VALUES('regname', 'register');
 INSERT INTO `dzz_setting` VALUES('bbrules', '0');
 INSERT INTO `dzz_setting` VALUES('bbrulesforce', '0');
 INSERT INTO `dzz_setting` VALUES('bbrulestxt', '');
-INSERT INTO `dzz_setting` VALUES('seccodedata', 'a:13:{s:4:"type";s:1:"0";s:5:"width";s:3:"150";s:6:"height";s:2:"40";s:7:"scatter";s:1:"0";s:10:"background";s:1:"1";s:10:"adulterate";s:1:"1";s:3:"ttf";s:1:"1";s:5:"angle";s:1:"0";s:7:"warping";s:1:"0";s:5:"color";s:1:"1";s:4:"size";s:1:"0";s:6:"shadow";s:1:"1";s:8:"animator";s:1:"1";}');
+INSERT INTO `dzz_setting` VALUES('seccodedata', 'a:13:{s:4:"type";s:1:"0";s:5:"width";s:3:"150";s:6:"height";s:2:"34";s:7:"scatter";s:1:"0";s:10:"background";s:1:"1";s:10:"adulterate";s:1:"1";s:3:"ttf";s:1:"1";s:5:"angle";s:1:"0";s:7:"warping";s:1:"0";s:5:"color";s:1:"1";s:4:"size";s:1:"0";s:6:"shadow";s:1:"1";s:8:"animator";s:1:"1";}');
 INSERT INTO `dzz_setting` VALUES('bbname', 'dzzoffice');
 INSERT INTO `dzz_setting` VALUES('pwlength', '0');
 INSERT INTO `dzz_setting` VALUES('strongpw', 'a:0:{}');

@@ -382,7 +382,6 @@ _selectfile.prototype.CreateIcos = function (data, flag) {
         jQuery('#' + containerid).find('.emptyPage').remove();
     }
 };
-
 _selectfile.changefileName = function(rid){
     var filename = '';
     if(!rid){
@@ -405,6 +404,7 @@ _selectfile.getData = function (url, callback) {
             for (var fid in json.folderdata) {
                 _explorer.sourcedata.folder[fid] = json.folderdata[fid];
             }
+            _explorer.createMenuSwidth(_selectfile.fid);
             var obj = null;
             if (json.param.page > 1) {
                 obj = _selectfile.cons[json.sid];

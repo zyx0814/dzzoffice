@@ -37,11 +37,11 @@ _notice.showTips=function(sum){
 	if(sum>0){
 		jQuery('#dzz_notification>span.badge').html(sum).removeClass('hide');
 		jQuery('#dzz_notification>span.dzz').hide();
-		_notice.flashTitle();
+		//_notice.flashTitle();
 	}else{
 		jQuery('#dzz_notification>span.badge').addClass('hide');
 		jQuery('#dzz_notification>span.dzz').show();
-		_notice.flashTitle(1);
+		//_notice.flashTitle(1);
 	}
 }
 _notice.flashTitle=function(flag){

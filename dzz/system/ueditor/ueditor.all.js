@@ -13808,13 +13808,17 @@ UE.plugin.register('dzzfile',function(){
             'dzzfile':{
                 execCommand:function () {
                    try{
-					top.OpenFile('open','打开文件',{attach:['文件',['ATTACH','IMAGE','DOCUMENT','VIDEO','LINK','DZZDOC'],''],image:['图像(*.jpg,*.jpeg,*.png,*.gif)',['IMAGE','JPG','JPEG','PNG','GIF'],'']},{bz:'',multiple:true},function(data){//只打开本地盘
-						var datas=[];
-						if(data.params.multiple){
-							datas=data.icodata
-						}else{
-							datas=[data.icodata];
-						}
+					  var openexts = {
+						  attach:["文件",["ATTACH","IMAGE","DOCUMENT","VIDEO","LINK","DZZDOC"],""],
+						  image:["图像(*.jpg,*.jpeg,*.png,*.gif)",["IMAGE","JPG","JPEG","PNG","GIF"],""]
+					};
+					var exts=JSON.stringify(openexts);
+				     exts = exts.replace(/\"/g,'&quot;');
+					exts = exts.replace(/\(/g,'|');
+					exts = exts.replace(/\)/g,'$');
+					exts = encodeURIComponent(exts);
+					 showWindow('openfile', 'index.php?mod=system&op=filewindow&handlekey=svaefile&mulitype=1&exts='+exts+'&callback=opencallback', 'get', '0',function(data){//打开本地盘
+						var datas=data;
 						
 						for(var i in datas){
 							var arr=datas[i];
@@ -13874,13 +13878,12 @@ UE.plugin.register('dzzfile',function(){
 						}
 					}); 
 					}catch(e){
-						alert('请在桌面内使用！');
+						
 					}
                    
                 },
                 queryCommandState:function () {
-                     if(top._config) return 1;
-                    return -1;
+                    return 1;
                 },
                 notNeedUndo:false
             }

@@ -27,7 +27,7 @@
 
 <div class="datacontent">
 <!--列表开始-->
-<section class="weui-cells weui-cells__recent weui-cells__margin_footer filelist">
+<div class="weui-cells weui-cells__recent weui-cells__margin_footer filelist">
     <!--{if $groups}-->
     <!--{loop $groups $v}-->
     <div class="weui-cell weui-cell_access weui-cell_longpress document-data"
@@ -67,7 +67,7 @@
         <div class="weui-cell__ft"></div>
     </div>
     <!--{else}-->
-    <div class="weui-cell weui-cell_access weui-cell_longpress document-filelist" data-rid="$v[rid]">
+    <div class="weui-cell weui-cell_access weui-cell_longpress document-filelist" id="$v[rid]" data-rid="$v[rid]" data-dpath="$v[dpath]">
         <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
         <div class="weui-cell__bd">
             <h4>{eval echo str_replace('\\','',$v['name']);}</h4>
@@ -83,10 +83,10 @@
     </div>
     <!--{/if}-->
     <!--{/loop}-->
-</section>
+</div>
 <script type="text/javascript">
     _filemanage.fid = '{$fid}';
    _filemanage.dataparam = eval('('+'{$params}'+')');
-   $('.weui-member-select-user').navbarscroll();
+// $('.weui-member-select-user').navbarscroll();
 </script>
 </div>

@@ -44,7 +44,7 @@ class io_baiduPCS extends io_api
 	 	if(($re=$this->makeDir($fpath)) && $re['error']){ //创建目录
 			return $re;
 		}
-		
+
 		$obz=io_remote::getBzByRemoteid($attach['remote']);
 		if($obz=='dzz'){
 			$opath='dzz::'.$attach['attachment'];
@@ -55,7 +55,7 @@ class io_baiduPCS extends io_api
 		if($re=$this->multiUpload($opath,$fpath,$filename,$attach,$ondup)){
 			if($re['error']) return $re;
 			else{
-				return true;
+				return $re;
 			}
 		}
 		return false;
@@ -325,6 +325,8 @@ class io_baiduPCS extends io_api
 		$imgcachePath='imgcache/';
 		$cachepath=str_replace(':','/',$path);
 		$cachepath=preg_replace("/\/+/",'/',str_replace(':','/',$path));
+		echo $path;
+		die;
 		$target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height. '_'.$thumbtype.'.jpeg';
 		if(!$original && @getimagesize($_G['setting']['attachdir'].'./'.$target)){
 			if($returnurl) return $_G['setting']['attachurl'].'/'.$target;
@@ -366,7 +368,7 @@ class io_baiduPCS extends io_api
 		$bzarr=self::parsePath($path); 
 		$pcs=self::init($path,1);
 		if(is_array($pcs) && $pcs['error']) return $pcs;
-		$result = $pcs->thumbnail($bzarr['path'], $width, $height, $quality);
+		$result = $pcs->thumbnail($bzarr['path'], $width, $height,80);
 		$targetpath = dirname($_G['setting']['attachurl'].'./'.$target);
 		dmkdir($targetpath);
 		file_put_contents($_G['setting']['attachdir'].'./'.$target,$result);

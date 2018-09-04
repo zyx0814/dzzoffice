@@ -52,15 +52,23 @@ class Wopi
     static function GetFile($path)
     {
         $filepath=IO::getStream($path);
-		header('Content-Description: File Transfer');
-		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename=' .$meta['name']);
-		header('Expires: 0');
-		header('Cache-Control: must-revalidate');
-		header('Pragma: public');
-		header('Content-Length: ' .filesize($filepath)); 
-		readfile($filepath);
-		exit;
+		$meta=IO::getMeta($path);
+		if(!$filesize=filesize($filepath)) $filesize=$meta['size'];
+		$chunk = 10 * 1024 * 1024; 
+		if(!$fp = @fopen($filepath, 'rb')) {
+			exit();
+		}
+		dheader('Content-Disposition: attachment; filename='.$meta['name']);
+		dheader('Content-Type: application/octet-stream');
+		dheader('Content-Length: '.$filesize);
+		@ob_end_clean();if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
+		while (!feof($fp)) { 
+			echo fread($fp, $chunk);
+			@ob_flush();  // flush output
+			@flush();
+		}
+		fclose($fp);
+		exit();
       
     }
 	 static function PutFile($path,$lock='')
@@ -268,7 +276,7 @@ class Wopi
 				'urlsrc'=>(string)$value['urlsrc']
 			);
 			if(empty($temparr['ext'])) continue;
-			if(isset($actions[$temparr['action']][$temparr['ext']])) continue;
+			//if(isset($actions[$temparr['action']][$temparr['ext']])) continue;
 			$exts[$temparr['ext']]=$temparr['ext'];
 			$actions[$temparr['action']][$temparr['ext']]=$temparr['urlsrc'];
 		}

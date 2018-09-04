@@ -33,7 +33,7 @@ class table_organization_user extends dzz_table
 			   $ret[$v]=$v;
 		   }
 		}
-      if( $org["type"]==0){//非群主才同步
+      if( $org["type"]==0){//非群组才同步
          self::syn_user( $ret );
       } 
       return $ret;

@@ -41,7 +41,7 @@
         if (fid) _filemanage.dataparam.fid = fid;
         $(function () {
             if (_filemanage.defaultexttype) {
-                $('#extlimit').text(_filemanage.defaultexttype);
+             $('#extlimit').text(_filemanage.defaultexttype);
             }
             //搜索页直接获取焦点
             $('#searchBar').addClass('weui-search-bar_focusing');
@@ -50,10 +50,9 @@
             $(document).on('tap', '#searchreturn', function () {
                 var oldhash = '{$oldhash}';
                 oldhash = oldhash.replace(/-/g, '&');
-                console.log(oldhash);
                 location.hash = '#' + oldhash;
             })
-//出现搜索按钮
+			//出现搜索按钮
             $(document).off('keyup.search').on('keyup.search', '#searchInput', function (e) {
                 setTimeout(function () {
                     setsearchVal();
@@ -97,7 +96,11 @@
                 _filemanage.dataparam.exts = _filemanage.defaultexttype;
             }
             _filemanage.dataparam.keyword = keyword;
-            $.post(_filemanage.appUrl + '&do=searchfile', _filemanage.dataparam, function (data) {
+            var queryurl = _filemanage.appUrl + '&do=searchfile';
+            if(queryurl.indexOf('?') == -1){
+                queryurl = queryurl.replace('&','?');
+            }
+            $.post(queryurl, _filemanage.dataparam, function (data) {
                 $('#fileList-search').html(data);
                 if ($('.weui-type-resulting').length) {
                     $('.weui-type-resulting').removeClass('hide');
@@ -127,7 +130,11 @@
 	    if (loading) return;
 	    loading = true;
 	    if (_filemanage.dataparam.page) {
-	        $.post(_filemanage.appUrl + '&do=searchfile', _filemanage.dataparam,function(data){
+            var queryurl = _filemanage.appUrl + '&do=searchfile';
+            if(queryurl.indexOf('?') == -1){
+                queryurl = queryurl.replace('&','?');
+            }
+	        $.post(queryurl, _filemanage.dataparam,function(data){
                 $('#fileList-search').append(data);
                 if ($('.weui-type-resulting').length) {
                     $('.weui-type-resulting').removeClass('hide');

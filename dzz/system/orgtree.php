@@ -35,15 +35,12 @@ if($_GET['do']=='orgtree'){
 	$data=array();
 	if($_GET['id']=='#'){
 		if($_G['adminid']!=1  && $moderator) $topids=C::t('organization_admin')->fetch_toporgids_by_uid($_G['uid']);
-		foreach(C::t('organization')->fetch_all_by_forgid($id) as $value){
+		foreach(C::t('organization')->fetch_all_by_forgid($id,false,-1) as $value){
 			if($_G['adminid']!=1  && $moderator && !in_array($value['orgid'],$topids)) continue;
-			switch($value['type']){
-				case '1'://是群组
-					if($range==1) continue;
-					break;
-				case '0'://是机构和部门
-					if($range==2) continue;
-					break;
+			if($value['type']=='1' && $range==1){
+					continue;
+			}elseif($value['type']=='0' && $range==2){		
+					continue;
 			}
 			if(!$moderator || C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'],$_G['uid'])){
 				$orgdisable=false;
@@ -72,7 +69,6 @@ if($_GET['do']=='orgtree'){
 			$data[]=array('id'=>'other','text'=>$zero,'state'=>array('disabled'=>$disable),"type"=>($type=="disabled")?$type:'default','children'=>true);
 		}
 		
-			
 	}else{
 		//获取用户列表
 		if($_GET['id']=='other'){//无机构用户

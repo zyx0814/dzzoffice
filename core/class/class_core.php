@@ -18,7 +18,10 @@ class core
     private static $prefixDirsPsr4    = array();
     private static $fallbackDirsPsr4  = array();
 
-	public static function app() {
+	public static function app($params=array()) {
+		if(!is_object(self::$_app)) {
+			self::$_app = dzz_app::instance($params);
+		}
 		return self::$_app;
 	}
 
@@ -321,7 +324,7 @@ class core
 	public static function loadConfig($file = null){
 	    if($file && file_exists($file)){
 
-            return include_once $file;
+            return include $file;
 
         }else{
             return false;

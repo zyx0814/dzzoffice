@@ -22,10 +22,11 @@ class table_organization_admin extends dzz_table
 	public function insert($uid, $orgid,$admintype = 1) {
 		if(!$uid || !$orgid) return 0;
 		if(!C::t('organization_user')->fetch_num_by_orgid_uid($orgid,$uid)){
-            C::t('organization_user')->insert_by_orgid(orgid,uid);
+            $ret = C::t('organization_user')->insert_by_orgid($orgid,$uid);
 		}
 		$id=parent::insert(array("orgid"=>$orgid,'uid'=>$uid,'opuid'=>getglobal('uid'),'dateline'=>TIMESTAMP,'admintype'=>$admintype),1,1);
-		//self::update_groupid_by_uid($uid);
+        self::update_groupid_by_uid($uid);
+
 
 		return DB::result_first('select id from %t where uid=%d and orgid=%d',array($this->_table,$uid,$orgid));
 	}
@@ -45,7 +46,7 @@ class table_organization_admin extends dzz_table
 		$data=self::fetch($id);
         if($data['admintye'] == 2) return false;
 		if($return=parent::delete($id)){
-			self::update_groupid_by_uid($data['uid']);
+            self::update_groupid_by_uid($data['uid']);
 		}
 		return $return;
 	}
@@ -77,9 +78,11 @@ class table_organization_admin extends dzz_table
 		return $username;
 	}
 	public function update_groupid_by_uid($uid){
+	    return true;
 		$user=getuserbyuid($uid);
 		if($user['groupid']==1) return ;
-		if(DB::result_first("select COUNT(*) from %t where uid=%d",array($this->_table,$uid))){
+		//判断当前用户是否仍为机构和部门管理员
+		if(DB::result_first("select COUNT(*) from %t a left join %t o on o.orgid = a.orgid where a.uid=%d and o.type = 0 ",array($this->_table,'organization',$uid))){
 			$groupid=2;
 		}else{
 			$groupid=9;

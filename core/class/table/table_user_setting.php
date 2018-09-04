@@ -106,8 +106,8 @@ class table_user_setting extends dzz_table
         $uids=(array)$uids;
 		$cachekeys=array();
 	
-		foreach(DB::fetch_all("select skey from %t where uid IN (%n)",array($this->_table,$uids)) as $skey){
-			$cachekeys[]=$uid.'_'.$skey;
+		foreach(DB::fetch_all("select skey,uid from %t where uid IN (%n)",array($this->_table,$uids)) as $value){
+			$cachekeys[]=$value['uid'].'_'.$value['skey'];
 		}
         if($ret= DB::delete($this->_table,"uid IN (".dimplode($uids).")")){
 			$this->clear_cache($cachekeys);

@@ -162,9 +162,10 @@
                             	<a href="$value[appadminurl]" target="_blank" >$value[appname]</a>
                             <!--{else}-->
                             	<a href="$value[appurl]" target="_blank" >$value[appname]</a>
-                            <!--{/if}-->     
+                            <!--{/if}--> 
+                            <small class="text-muted" title="{lang version}">$value[version]</small>    
                             </p>
-                            <div class="appdesc" title="$value['appdesc']">{eval echo $value['appdesc']?$value['appdesc']:lang('none');}</div>
+							<div class="appdesc" title="$value['appdesc']"> {eval echo $value['appdesc']?$value['appdesc']:lang('none');}</div>
                             <!-- </div> -->
 						</td>
 						<td>$value[vendor]</td>

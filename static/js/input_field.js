@@ -2,23 +2,35 @@ var InputAnimate = {};
 (function($){
 	InputAnimate.init = function(obj){
 		var self = this;	
+		self.what = true;
 		self.box = obj;
-		self.label = self.box.find('.input-label');
-		var length = obj.find('.input-animate').length;
-		if(self.box.hasClass('disabled')){//需要disabled时
-			self.box.find('input.form-control,button.form-control,textarea.form-control,select.form-control,.tagsinput input').attr("disabled",true);
+		if(obj.hasClass('input-animate')){
+			self.what = false;
 		}
-		obj.find('.input-animate').each(function(i){
-			var inputs = $(this).find('input.form-control,button.form-control,textarea.form-control,select.form-control,.tagsinput input');
-			if(self.box.hasClass('input-float')){//是否为float样式
-				self.float_style(inputs);
-				self.float_change(inputs);
-			}else if(self.box.hasClass('input-fixation') && (i == 0)){//是否为Fixation样式
-				self.fixation_style($(this));
+		self.inputs = self.box.find('input.form-control,button.form-control,textarea.form-control,select.form-control,.tagsinput input');
+		if(!self.inputs.length)return false;
+		if(self.what){
+			self.label = self.box.find('.input-label');
+			var length = obj.find('.input-animate').length;
+			if(self.box.hasClass('disabled')){//需要disabled时
+				self.box.find('input.form-control,button.form-control,textarea.form-control,select.form-control,.tagsinput input').attr("disabled",true);
 			}
-			self.input_style($(this),inputs,i,length);
-			self.input_event($(this),inputs);//绑定事件
-		})
+			obj.find('.input-animate').each(function(i){
+				var inputs = $(this).find('input.form-control,button.form-control,textarea.form-control,select.form-control,.tagsinput input');
+				if(self.box.hasClass('input-float')){//是否为float样式
+					self.float_style(inputs);
+					self.float_change(inputs);
+				}else if(self.box.hasClass('input-fixation') && (i == 0)){//是否为Fixation样式
+					self.fixation_style($(this));
+				}
+				self.input_style($(this),inputs,i,length);
+				self.input_event($(this),inputs);//绑定事件
+			})
+		}else{
+			self.input_style(self.box,self.inputs,1,2);
+			self.input_event(self.box,self.inputs);//绑定事件
+		}
+		
 	}
 	InputAnimate.float_style = function(obj){
 		var self = this;
@@ -73,11 +85,12 @@ var InputAnimate = {};
 			$(this).closest('.input-animate').removeClass('animate');
 			
 		});
-		self.label.on('click',function(){
-			$(this).siblings('.input-animate').click();
-		})
-		
-	}
+		if(self.label){
+			self.label.on('click',function(){
+				$(this).siblings('.input-animate').click();
+			});
+		}
+	};
 	InputAnimate.float_change = function(obj){
 		obj.change(function(){
 			if($(this).closest('.tagsinput').length && $(this).closest('.input-animate').find('input.form-control').val()){//兼容tagsinput
@@ -88,11 +101,11 @@ var InputAnimate = {};
 				$(this).closest('.input-black').removeClass('focus');
 			}
 		});	
-	}
+	};
 	$(document).ready(function(){
 		$('.input-black').each(function() {			
 			InputAnimate.init($(this));	
-		})	
-	})
+		});
+	});
 })(jQuery);
 	

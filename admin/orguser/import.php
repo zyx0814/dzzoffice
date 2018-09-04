@@ -372,10 +372,10 @@ if($do=='importing'){
 			$ext=strtolower(substr(strrchr($_FILES['importfile']['name'], '.'), 1, 10));
 			if(!in_array($ext,$allowext)) showmessage('orguser_import_xls_xlsx',dreferer());
 			if($file=uploadtolocal($_FILES['importfile'],'cache','',array('xls','xlsx'))){
-				$url=ADMINSCRIPT.'?mod=orguser&op=import&do=list&file='.urlencode($file);
+				$url=outputurl($_G['siteurl'].MOD_URL.'&op=import&do=list&file='.urlencode($file));
 				@header("Location: $url");
 				exit();
-				showmessage('orguser_import_user_message',ADMINSCRIPT.'?mod=orguser&op=import&do=list&file='.urlencode($file));
+				showmessage('orguser_import_user_message',outputurl($_G['siteurl'].MOD_URL.'?mod=orguser&op=import&do=list&file='.urlencode($file)));
 			}else{
 				showmessage('orguser_import_tautology',dreferer());
 			}

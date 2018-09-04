@@ -4,9 +4,6 @@
 <link rel="stylesheet" href="static/css/common.css">
 <link href="dzz/system/css/selfilewindow.css?{VERHASH}" rel="stylesheet" media="all">
 <link rel="stylesheet" href="{MOD_PATH}/css/rightmenu/style.css"/>
-<!--<link rel="stylesheet" href="{MOD_PATH}/css/filelist_middleicon/style.css" />-->
-<!--<link rel="stylesheet" href="{MOD_PATH}/css/filelist_detaillist/style.css" />-->
-<!--<link rel="stylesheet" href="{MOD_PATH}/css/file_detailed.css">-->
 <link href="dzz/system/css/rightmenu.css?{VERHASH}" rel="stylesheet" media="all">
 <link href="dzz/system/css/select-file.css?{VERHASH}" rel="stylesheet" media="all">
 <script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
@@ -35,19 +32,19 @@
 <script type="text/javascript">
     var opened = window.opener;
     jQuery(document).ready(function (e) {
-        _explorer.getConfig(MOD_URL + '&op=fileselection&do=json' + urldefined,function(){
+        _explorer.getConfig(MOD_URL + '&op=fileselection&do=json' + urldefined, function () {
             var typejson = _explorer.allowselecttype,
-            typehtml = '',selecttype='',selectval='';
-            for(var o in typejson){
+                typehtml = '', selecttype = '', selectval = '';
+            for (var o in typejson) {
                 var exts = typejson[o][1].join(',').toLowerCase();
-                if(typejson[o][2] == 'selected'){
+                if (typejson[o][2] == 'selected') {
                     selecttype = typejson[o][0];
                     selectval = exts;
                 }
-                typehtml += '<li><a href="javascript:;" data-exts="'+exts+'">'+typejson[o][0]+'</a></li>';
+                typehtml += '<li><a href="javascript:;" data-exts="' + exts + '">' + typejson[o][0] + '</a></li>';
             }
             $('.typedropup').html(typehtml);
-            $('.select-style').text(selecttype).data('exts',selectval);
+            $('.select-style').text(selecttype).data('exts', selectval);
         });
     });
     function submitdata() {
@@ -58,20 +55,30 @@
         if (type == 1) {//保存文件
             if (rid.length) {//选择文件提示是否覆盖
                 var filedata = _explorer.sourcedata.icos[rid];
-                top.showDialog(__lang.js_save_recover_file.replace('{filename}', filedata.name),'confirm','', function () {
-                    $.post('index.php?mod=system&op=fileselection&do=save&operation=chkperm',{'path':fid,k:Math.random()},function(data){
-                        if(data['error']){
-                            top.showmessage(data['error'],"danger",2000,1);
+                top.showDialog(__lang.js_save_recover_file.replace('{filename}', filedata.name), 'confirm', '', function () {
+                    $.post('index.php?mod=system&op=fileselection&do=save&operation=chkperm', {
+                        'path': fid,
+                        k: Math.random()
+                    }, function (data) {
+                        if (data['error']) {
+                            top.showmessage(data['error'], "danger", 2000, 1);
                             return false;
-                        }else {
-                            if (parent.$callback) {
-                                parent.$callback(filedata, '$token');
-                            } else {
-                                opened.$callback(filedata, '$token');
-                            }
+                        } else {
+							try{
+								if(typeof parent.showWindow_callback == 'function'){
+									parent.showWindow_callback(data,'$token');
+								}else if(typeof opened.showWindow_callback == 'function'){
+									parent.showWindow_callback(data,'$token');
+								} 
+							}catch(e){}	
+							if (parent.$callback) {
+								try{parent.$callback(data, '$token');}catch(e){}
+							} else {
+							   try{ opened.$callback(data, '$token');}catch(e){}
+							}
                             hide_window();
                         }
-                    },'json');
+                    }, 'json');
                 });
             } else {//未选择文件创建文件返回
                 var filename = $('#savenewname').val();
@@ -85,15 +92,58 @@
                         parent.showmessage(data['error'], "danger", 2000, 1);
                         return false;
                     } else {
+						try{
+							if(typeof parent.showWindow_callback == 'function'){
+								parent.showWindow_callback(data,'$token');
+							}else if(typeof opened.showWindow_callback == 'function'){
+								parent.showWindow_callback(data,'$token');
+							} 
+						}catch(e){}	
                         if (parent.$callback) {
-                            parent.$callback(data, '$token');
+                            try{parent.$callback(data, '$token');}catch(e){}
                         } else {
-                            opened.$callback(data, '$token');
+                           try{ opened.$callback(data, '$token');}catch(e){}
                         }
                         hide_window();
                     }
-                }, 'json')
+                }, 'json');
             }
+        } else if (type == 2) {//选择位置时
+            var fid = _selectfile.fid;
+            if (!fid) {
+                showmessage(__lang.please_select_dir, "danger", 2000, 1);
+                return false;
+            } else {
+                var data = _explorer.sourcedata.folder[fid];
+                if(_explorer.permfilter){
+                    var permfilter = _explorer.permfilter.split(',');
+                    for(var o in permfilter){
+                        if(permfilter[o] == 'write'){
+                            permfilter[o] = 'edit';
+                        }
+                        if(!_explorer.Permission_Container(permfilter[o],fid)){
+                            showmessage(__lang.no_privilege, "danger", 2000, 1);
+                            return false;
+                        }
+                    }
+                }
+				try{
+					if(typeof parent.showWindow_callback == 'function'){
+						parent.showWindow_callback(fid,data);
+					}else if(typeof opened.showWindow_callback == 'function'){
+						parent.showWindow_callback(fid,data);
+					} 
+				}catch(e){}	
+              
+                if (parent.$callback) {
+                   try{ parent.$callback(fid, data);}catch(e){}
+                } else {
+                    try{ opened.$callback(fid, data);}catch(e){}
+                }
+                hide_window();
+
+            }
+            return false;
         } else {//选择文件
             if (rid.length < 1) {
                 parent.showmessage(__lang.please_select_file, "danger", 2000, 1);
@@ -102,10 +152,21 @@
                 for (var o in rid) {
                     data[rid[o]] = _explorer.sourcedata.icos[rid[o]];
                 }
+				try{
+					if(typeof parent.showWindow_callback == 'function'){
+							parent.showWindow_callback(data,'$token');
+					}else if(typeof opened.showWindow_callback == 'function'){
+							parent.showWindow_callback(data,'$token');
+					} 
+				}catch(e){}	
                 if (parent.$callback) {
-                    parent.$callback(data, '$token');
+					try{
+                    	parent.$callback(data, '$token');
+					}catch(e){}	
                 } else {
-                    opened.$callback(data, '$token');
+					try{
+						opened.$callback(data, '$token');
+					}catch(e){}
                 }
                 hide_window();
             }

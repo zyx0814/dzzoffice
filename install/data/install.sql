@@ -661,12 +661,12 @@ CREATE TABLE dzz_organization (
   `desc` varchar(200) NOT NULL DEFAULT '' COMMENT '群组描述',
   groupback int(11) unsigned NOT NULL COMMENT '群组背景图',
   aid varchar(30) NOT NULL default '' COMMENT '群组缩略图,可以是aid,也可以是颜色值',
-  manageon tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '群組管理员开启关闭0关闭，1开启',
+  manageon tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '群組管理员开启关闭0关闭，1开启',
   syatemon tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '系统管理员开启群组，关闭群组，0关闭，1开启',
   diron tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '群组管理员共享目录开启，0关闭，1开启',
   extraspace int(11) unsigned NOT NULL DEFAULT '0' COMMENT '机构群组额外空间大小',
   buyspace int(11) unsigned NOT NULL DEFAULT '0' COMMENT '购买空间',
-  ` allotspace` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分配空间大小',
+  `allotspace` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分配空间大小',
   PRIMARY KEY (orgid),
   KEY disp (disp),
   KEY pathkey (pathkey),
@@ -1068,7 +1068,7 @@ CREATE TABLE dzz_usergroup (
   groupid smallint(6) unsigned NOT NULL AUTO_INCREMENT,
   radminid tinyint(3) NOT NULL DEFAULT '0',
   `type` enum('system','special','member') NOT NULL DEFAULT 'member',
-  system varchar(255) NOT NULL DEFAULT 'private',
+  `system` varchar(255) NOT NULL DEFAULT 'private',
   grouptitle varchar(255) NOT NULL DEFAULT '',
   creditshigher int(10) NOT NULL DEFAULT '0',
   creditslower int(10) NOT NULL DEFAULT '0',
@@ -1157,28 +1157,6 @@ CREATE TABLE dzz_user_profile_setting (
   validate text NOT NULL,
   customable tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (fieldid)
-) ENGINE=MyISAM;
-
-
-DROP TABLE IF EXISTS dzz_user_salf;
-CREATE TABLE dzz_user_salf (
-  keyid varchar(15) NOT NULL DEFAULT '',
-  tokenid varchar(255) NOT NULL DEFAULT '',
-  `date` int(11) unsigned NOT NULL,
-  expire int(10) NOT NULL,
-  refreshtoken varchar(255) NOT NULL DEFAULT '',
-  uid int(11) unsigned NOT NULL,
-  PRIMARY KEY (uid)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS dzz_user_sdk;
-CREATE TABLE dzz_user_sdk (
-  `key` varchar(30) NOT NULL DEFAULT '',
-  secret varchar(30) NOT NULL,
-  `host` varchar(50) NOT NULL DEFAULT '',
-  backurl text NOT NULL,
-  usename varchar(120) NOT NULL DEFAULT '',
-  PRIMARY KEY (`key`)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS dzz_user_status;

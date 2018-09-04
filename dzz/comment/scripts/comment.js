@@ -14,7 +14,7 @@ for(var i in arr['attachs']){
     html+='		 <div class="item_afed">';
     if(attach.type=='image'){
      html+='		 <div class="pic_fed  clearfix">';
-     html+='		   <div class="img_pfed"> <a class="min_ipfed" hidefocus="true" href="'+attach['url']+'" rel="'+attach['url']+'"  target="_blank"><img src="'+attach['img']+'" alt="'+attach['title']+'" class="artZoom"  style="cursor: url(dzz/feed/images/zoomin.cur), pointer;" ></a> </div>';
+     html+='		   <div class="img_pfed"> <a class="min_ipfed" hidefocus="true" href="javascript:;"><img src="'+attach['img']+'" data-original="'+attach['img']+'&original=1" alt="'+attach['title']+'" class=""></a> </div>';
      html+='		 </div>';
      html+='		<div class="file_fed imgfile_fed clearfix"> '+attach['title']+'<span class="kb_nffed">('+attach['filesize']+')</span>';
      html+='			<p class="down_ffed">';
@@ -23,7 +23,7 @@ for(var i in arr['attachs']){
 	 }else{
 	 	html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download+'</a>'; 
 	 }
-   	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
+   	html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
      html+='	        </p>';
      html+='	     </div>';
 	}else if(attach.type=='video'){
@@ -71,7 +71,7 @@ for(var i in arr['attachs']){
    html+='   		<div class="action_mfed clearfix">';
    html+='     			<div class="btn_amfed">';
    html+='      	 		<ul>';
-   html+='             			<li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['cid']+'\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\')">'+__lang.edit+'</a></li>';
+   //html+='             			<li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['cid']+'\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\')">'+__lang.edit+'</a></li>';
    html+='        	 			<li class="more_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_delete(\''+arr['cid']+'\',\'comment_'+arr['cid']+'\')">'+__lang.delete+'</a></li>';
    html+='         				<li class="reply_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="getReplyForm(\''+arr['cid']+'\',\'0\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\');">'+__lang.reply+'</a></li>';
    html+='      	 		</ul>';
@@ -100,7 +100,7 @@ for(var i in arr['attachs']){
 	jQuery('#message_'+tid).css({'height':25});
 	jQuery('#attachmentViewBox_'+tid).empty();
 	//location.hash='#comment_'+arr['cid'];
-	
+	jQuery('#comment_'+arr['cid']+' img[data-original]').dzzthumb();
 	try{
 		callback_by_comment('comment_'+arr['cid'],'add');
 	}catch(e){}
@@ -126,7 +126,7 @@ function feed_reply(arr){
     html+='		 <div class="item_afed">';
     if(attach.type=='image'){
      html+='		 <div class="pic_fed clearfix">';
-     html+='		   <div class="img_pfed"> <a class="min_ipfed" hidefocus="true" href="'+attach['url']+'" rel="'+attach['url']+'"  target="_blank"><img src="'+attach['img']+'" alt="'+attach['title']+'" class="artZoom"  style="cursor: url(dzz/feed/images/zoomin.cur), pointer;" ></a> </div>';
+     html+='		   <div class="img_pfed"> <a class="min_ipfed" hidefocus="true" href="javascript:;"><img src="'+attach['img']+'" data-original="'+attach['img']+'&original=1" alt="'+attach['title']+'" class=""></a> </div>';
      html+='		 </div>';
      html+='		<div class="file_fed imgfile_fed clearfix"> '+attach['title']+'<span class="kb_nffed">('+attach['filesize']+')</span>';
      html+='			<p class="down_ffed">';
@@ -144,7 +144,7 @@ function feed_reply(arr){
       html+='          <p class="name_ffed">'+attach['title']+'</p>';
       html+='           <p class="down_ffed">';
       html+='	 			<a href="javascript:;" title="" hidefocus="true" class="btn_dffed skip_mmfed"  onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
-   	  html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
+   	 // html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
      html+='	        </p>';
      html+='	     </div>';
 }else if(attach.type=='dzzdoc' || attach.type=='link'){
@@ -179,7 +179,7 @@ function feed_reply(arr){
      html+='         <div class="btn_acfed">';
      html+='           <ul>';
 	 if(arr['haveperm']>0){
-     html+='             <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['cid']+'\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\')">'+__lang.edit+'</a></li>';
+    // html+='             <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['cid']+'\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\')">'+__lang.edit+'</a></li>';
 	 html+='             <li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_delete(\''+arr['cid']+'\',\'comment_'+arr['cid']+'\',\''+arr['pcid']+'\')">'+__lang.delete+'</a></li>';
 	 }
      html+='             <li class="reply_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="getReplyForm(\''+arr['pcid']+'\',\''+arr['cid']+'\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\');">'+__lang.reply+'</a></li>';
@@ -213,6 +213,7 @@ function feed_reply(arr){
    jQuery('#reply_publish_'+arr['pcid']).slideUp(500);
    jQuery('#attachmentViewBox_'+arr['pcid']).empty();
   //location.hash=('#comment_'+arr['pcid']);
+	jQuery('#comment_'+arr['cid']+' img[data-original]').dzzthumb();
  
 }
 function getReplyForm(tid,pid,allowattach,allowat,allowsmiley){
@@ -321,8 +322,16 @@ function feed_downAttach(qid){
 }
 function feed_attach_saveto(qid){
 	var url=DZZSCRIPT+'?mod=comment&op=saveto&qid='+qid;
-	if(!window.frames['hidefram']) jQuery('<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>').appendTo('body');
-	window.frames['hideframe'].location=url;
+	showWindow('saveto','index.php?mod=system&op=filewindow&type=2','get','0',function(fid,data){
+		jQuery.post(url,{fid:fid},function(json){
+			if(json.error){
+				showmessage(json.error,'danger',3000,1);
+			}else{
+				showmessage(__lang.savetosuccess+data.relativepath+json.filename,'success',3000,1);
+			}
+		},'json');
+	});
+	
 	
 }
 function feed_attach_preview(qid){
@@ -332,6 +341,10 @@ function feed_attach_preview(qid){
 		if(!window.frames['hidefram']) jQuery('<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>').appendTo('body');
 		window.frames['hideframe'].location=url;
 	}
+}
+function feed_attach_del(qid){
+	var url=DZZSCRIPT+'?mod=comment&op=delete&qid='+qid;
+	
 }
 
 function check_attach_share_tid(tid){
@@ -361,13 +374,18 @@ function removeAttach(el,tid){
 function uploadfrom_desktop(tid){
 	if(!tid) tid='0';
 	try{
-	parent.OpenFile('open',__lang.open_file,{attach:[__lang.typename_attach,['ATTACH','IMAGE','DOCUMENT','VIDEO','LINK','DZZDOC'],''],image:[__lang.type_image+'(*.jpg,*.jpeg,*.png,*.gif)',['IMAGE','JPG','JPEG','PNG','GIF'],'']},{bz:'',multiple:true},function(data){//只打开本地盘
-		var datas=[];
-		if(data.params.multiple){
-			datas=data.icodata
-		}else{
-			datas=[data.icodata];
-		}
+		var openexts = {
+			  attach:[__lang.typename_attach,["ATTACH","IMAGE","DOCUMENT","VIDEO","LINK","DZZDOC"],""],
+			  image:[__lang.typename_image+"(*.jpg,*.jpeg,*.png,*.gif)",["IMAGE","JPG","JPEG","PNG","GIF"],""]
+		};
+		var exts=JSON.stringify(openexts);
+		 exts = exts.replace(/\"/g,'&quot;');
+		exts = exts.replace(/\(/g,'|');
+		exts = exts.replace(/\)/g,'$');
+		exts = encodeURIComponent(exts);
+		 showWindow('openfile', 'index.php?mod=system&op=filewindow&handlekey=svaefile&mulitype=1&exts='+exts+'&callback=opencallback', 'get', '0',function(data){//只打开本地盘
+		var datas=data;
+		
 		
 		for(var i in datas){
 			var arr=datas[i];
@@ -403,7 +421,7 @@ function uploadfrom_desktop(tid){
 		}
 	}); 
 	}catch(e){
-		alert(__lang.please_use_desktop);
+		
 	}
 }
 

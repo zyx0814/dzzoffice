@@ -48,6 +48,7 @@ if ($do == 'adddowns') {
             }
             dsetcookie('pass_' . $sid, authcode($_GET['password'], 'ENCODE'));
         } else {
+            $rightpassword = dzzdecode($share['password']);
             if ($ismobile) {
                 include template('mobile/share_password');
             } else {

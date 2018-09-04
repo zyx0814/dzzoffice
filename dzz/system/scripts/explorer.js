@@ -13,17 +13,29 @@ _explorer = function (json) {
     _explorer.formhash = json.formhash; //FORMHASH
     _explorer.extopen = json.extopen || {}; //打开方式信息
     _explorer.sourcedata = json.sourcedata || []; //所有文件信息
-    _explorer.type = json.fileselectiontype || 0;//文件选择类型，0为选择文件,1为保存文件
+    _explorer.type = json.fileselectiontype || 0;//文件选择类型，0为选择文件,1为保存文件，2选择位置
+    _explorer.defaultselect = json.defaultselect;
+    _explorer.allowcreate = json.allowcreate;
     _explorer.mulitype = json.mulitype || 0;//是否允许多选，默认不允许
-    _explorer.allowselecttype = json.allowselecttype || '';//允许筛选文件类型
+    _explorer.permfilter = json.permfilter || '';//文件检索写入权限过滤
+    //如果是保存文件并且未带入权限过滤参数，强制过滤写入权限
+    if(_explorer.type == 1){
+        _explorer.permfilter = (json.permfilter) ? json.permfilter:'write';
+    }
+    //如果是选择位置
+    if (_explorer.type == 2) {
+        _explorer.allowselecttype = {'folder': ['文件夹', ['folder'], 'selected']};
+    } else {
+        _explorer.allowselecttype = json.allowselecttype || '';//允许筛选文件类型
+    }
     //默认筛选文件类型
-    if(json.allowselecttype){
-        for(var o in json.allowselecttype){
-            if(json.allowselecttype[o][2] == 'selected'){
+    if (json.allowselecttype) {
+        for (var o in json.allowselecttype) {
+            if (json.allowselecttype[o][2] == 'selected') {
                 _explorer.defaultexttype = json.allowselecttype[o][1].join(',').toLowerCase();
             }
         }
-    }else{
+    } else {
         _explorer.defaultexttype = '';
     }
     _explorer.defaultfilename = json.defaultfilename || '';
@@ -42,7 +54,6 @@ _explorer.getConfig = function (url, callback) {
         new _explorer(json);
         _explorer.hashHandler();
         _explorer.initEvents();
-        //_explorer.infoPanel();
         if (typeof callback === "function") {
             callback(json);
         }
@@ -61,7 +72,6 @@ _explorer.initEvents = function () { //初始化页面事件
 
     //右侧加载完成事件
     $(document).off('ajaxLoad.middleContent').on('ajaxLoad.middleContent', function () {
-//        _explorer.Scroll($('.scroll-y'));
         var hash = location.hash.replace(/^#/i, '');
         var op = hash.replace(/&(.+?)$/ig, ''); //(hash,'op');
         _explorer.topNav_init();
@@ -72,19 +82,52 @@ _explorer.initEvents = function () { //初始化页面事件
         }
     });
 };
-_explorer.set_address = function(path){
+_explorer.createMenuSwidth = function (fid) {
+    //判断新建和上传图标显示
+    var folderperm = false;//文件夹权限
+    var uploadperm = false;//上传权限
+    if(_explorer.allowcreate){
+        //文件夹权限(判断是否有文件夹权限如果没有隐藏文件夹相关新建上传),如果是选择位置隐藏新建文件
+        if (!_explorer.Permission_Container('upload', fid) || _explorer.type == 2) {
+            $('#createmenu').find('li').not('.folderPermMust').addClass('hide');
+        } else {
+            $('#createmenu').find('li').not('.folderPermMust').removeClass('hide');
+            folderperm = true;
+        }
+        if (!_explorer.Permission_Container('folder', fid)) { //其它类型新建权限，如果无权限，隐藏文件相关权限
+            jQuery('#createmenu').find('li.folderPermMust').addClass('hide');
+        } else {
+            jQuery('#createmenu').find('li.folderPermMust').removeClass('hide');
+            uploadperm = true;
+        }
+        if (folderperm || uploadperm) { //如果没有文件夹权限和文件权限，隐藏新建上传菜单
+            $('#createmenu').removeClass('hide');
+            $('#exampleColorDropdown2').removeClass('hide');
+        } else {
+            $('#createmenu').addClass('hide');
+            $('#exampleColorDropdown2').addClass('hide');
+        }
+        //去掉多余的分割线
+        $('.divider').each(function(){
+            if($(this).prev('li:visible').length < 1){
+                $(this).remove();
+            }
+        })
+    }
+}
+_explorer.set_address = function (path) {
     var pathstr = path;
     $('.select-address input.inputaddress').val(pathstr);
     var patharr = pathstr.split('\\');
     var address_html = '';
-    for(var o in patharr){
-        address_html += ' <li class="routes"> <a href="javascript:;">'+patharr[o]+'</a> <span class="dzz dzz-chevron-right"></span></li>';
+    for (var o in patharr) {
+        address_html += ' <li class="routes"> <a href="javascript:;">' + patharr[o] + '</a> <span class="dzz dzz-chevron-right"></span></li>';
     }
     $('.select-address div.address-field').html(address_html);
 }
 _explorer.address_resize = function (dir) {
     var container = jQuery('.address-container');
-    var address = jQuery('.address-field');    
+    var address = jQuery('.address-field');
     var cwidth = container.width();
     var speed = cwidth;
     var awidth = 0;
@@ -151,7 +194,7 @@ _explorer.address_resize = function (dir) {
 _explorer.topNav_init = function () {
 
     /*页面地址栏相关事件*/
-    $(document).off('click.address-left-arrow').on('click.address-left-arrow','.address-left-arrow', function () {
+    $(document).off('click.address-left-arrow').on('click.address-left-arrow', '.address-left-arrow', function () {
         _explorer.address_resize('left');
         return false;
     });
@@ -163,7 +206,7 @@ _explorer.topNav_init = function () {
     //点击路径切栏切换位置
     $(document).off('click.routes').on('click.routes', '.address-container  .routes', function () {
         var path = '';
-        var text = $(this).text().replace(/(^\s*)|(\s*$)/g,'');
+        var text = $(this).text().replace(/(^\s*)|(\s*$)/g, '');
         var textprefix = /[:：]/;
         var prefix = '';
         var textarr = [];
@@ -174,7 +217,7 @@ _explorer.topNav_init = function () {
         }
         $(this).closest('li').prevAll().find('a').each(function () {
 
-            path += $(this).text().replace(/(^\s*)|(\s*$)/g,'') + '/';
+            path += $(this).text().replace(/(^\s*)|(\s*$)/g, '') + '/';
         });
         path += text;
         //path = path.replace(/>/g,'/');
@@ -272,7 +315,7 @@ _explorer.routerule = function (path, prefix) {
             var hash = '';
             if (!isNaN(parseInt(data.success['gid']))) {
                 hash = 'group&gid=' + data.success['gid'] + (data.success['fid'] ? '&fid=' + data.success['fid'] : '');
-            }else {
+            } else {
                 hash = 'home&fid=' + data.success['fid'];
             }
             location.hash = hash;
@@ -283,9 +326,9 @@ _explorer.routerule = function (path, prefix) {
 _explorer.hashHandler = function () { //处理页面hash变化
     var hash = location.hash;
     hash = hash.replace(/^#/i, '');
-    _explorer.jstree_select(hash);
     if (!hash) {
-        hash = 'home=1';
+        hash = _explorer.defaultselect;
+        _explorer.jstree_select(hash);
     }
     if (hash === _explorer.hash) {
         return false;
@@ -323,7 +366,7 @@ _explorer.jstree_select = function (hash) {
     if (!hash) {
         hash = location.hash.replace('#', '');
     }
-    if(!hash){
+    if (!hash) {
         hash = $('#position').find("li[flag='home']").attr('hashs');
     }
     var op = hash.replace(/&(.+?)$/ig, ''); //(hash,'op');
@@ -334,8 +377,8 @@ _explorer.jstree_select = function (hash) {
     } else if (op === 'home') {
         _explorer.open_node_by_id(fid);
     } /*else if (op === 'mygroup') {
-        $('#position').jstree(true).select_node('#group');
-    }*/ else {
+     $('#position').jstree(true).select_node('#group');
+     }*/ else {
         if ($('#position').length > 0) {
             $('#position').jstree(true).deselect_all();
         }

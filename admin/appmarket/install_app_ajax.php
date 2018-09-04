@@ -51,9 +51,9 @@ if ($operation == 'check_install' ) {//根据appid检查app应用是否需要更
         $return["msg"]=lang('app_upgrade_mysqlversion_error', array('version' => $baseinfo['mysqlversion'])); 
         exit(json_encode($return));//不需要安装
     }
-
-    $appinfo = DB::result_first("select COUNT(*) from %t where mid=%d",array('app_market',$baseinfo['mid']));//C::tp_t('app_market')->where($map)->find();
     $time =dgmdate(TIMESTAMP,'Ymd');
+    
+    $appinfo = DB::result_first("select COUNT(*) from %t where mid=%d",array('app_market',$baseinfo['mid']));//C::tp_t('app_market')->where($map)->find();
     $return=array(
         "url"=>ADMINSCRIPT .'?mod='.MOD_NAME.'&op=install_app_ajax', 
         "status"=>1,
@@ -61,14 +61,40 @@ if ($operation == 'check_install' ) {//根据appid检查app应用是否需要更
         "second"=>1, 
         "msg"=>lang("app_upgrade_check_is_install")
     );
-    if( $appinfo ){
+    //start 处理检查是否已有该目录
+    $isinstall=0;
+    $app_folder=DZZ_ROOT.'./'.$baseinfo['app_path'].'/'.$baseinfo['identifier'];
+    if( is_dir($app_folder) ){
+       $isinstall=1;
+       $xmlfile = 'dzz_app_' . $baseinfo['identifier'] . '.xml';
+       $importfile = $app_folder . '/' . $xmlfile;
+       if ( file_exists($importfile) ) {
+           $importtxt = @implode('', file($importfile));
+          	$apparray = getimportdata('Dzz! app', 0, 0, $importtxt);
+           $mid = isset($apparray['app']['mid'])?intval($apparray['app']['mid']):0;
+           if( $mid==$baseinfo['mid'] ){
+               $isinstall=0;
+           }
+       }
+    }
+    //end处理检查是否已有该目录
+    
+    if( $appinfo || $isinstall){
         $return["status"]=0;
-        $return["msg"]= lang("app_upgrade_installed");
+        if($appinfo){
+            $return["msg"]= lang("app_upgrade_installed");
+        }else{
+            $return["msg"]= lang( $baseinfo["app_path"]."/".$baseinfo["identifier"]." 目录已存在,请重命名该目录或移除,防止重复或覆盖" );
+        }
         /*if( $appinfo["mid"]==0 ){
             $return["msg"]= lang("app_upgrade_installed_local");
         }*/
         exit(json_encode($return));//不需要安装
     }
+    
+    //删除安装临时文件
+    $temp_download=DZZ_ROOT.'./data/update/app/'.$baseinfo['app_path'].'/'.$baseinfo['identifier'];
+    removedirectory($temp_download);
     exit(json_encode($return));//未安装
 }
 elseif($operation == 'upgrade' ){
@@ -250,7 +276,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         exit(json_encode($return));  
         exit; 
     }
-    elseif($step==4){ 
+    elseif($step==4){
         $return["percent"]=80;
         $return["second"]=1; 
         $return["msg"]= lang("app_upgrade_installing");

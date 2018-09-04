@@ -13,6 +13,7 @@ $(document).off('tap.openfile').on('tap.openfile', '.filelist', function () {
         return false;
     } else {
         if (is_wxwork) {
+            var href = obj.data('href');
             window.location.href = href;
             return false;
         } else {

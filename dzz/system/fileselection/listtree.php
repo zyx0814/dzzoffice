@@ -10,7 +10,7 @@ if (!C::t('folder')->check_home_by_uid($uid)) {
 }
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 $operation = $_GET['operation'] ? $_GET['operation'] : '';
-$ismobile = helper_browser::ismobile();
+$range = isset($_GET['range']) ? trim($_GET['range']):'';//指定范围
 $data = array();
 $powerarr = perm_binPerm::getPowerArr();
 if ($operation == 'get_children') {

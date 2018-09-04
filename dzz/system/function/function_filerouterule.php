@@ -45,6 +45,13 @@ function filerouteParse($path){
             }
         }
     }
+    if(isset($arr['gid']) && $arr['gid']){
+        $arr['hash'] = 'group&do=file&gid='.$arr['gid'].(isset($arr['fid']) ? '&fid='.$arr['fid']:'');
+    }elseif(isset($arr['fid']) && $arr['fid']){
+        $arr['hash'] = 'home&do=file&fid='.$arr['fid'];
+    }else{
+        $arr['hash'] = '';
+    }
     return $arr;
 
 }

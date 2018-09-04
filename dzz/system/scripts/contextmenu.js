@@ -36,6 +36,10 @@ _contextmenu.right_ico = function (e, rid) {
     if (obj.type == 'shortcut' || obj.type == 'storage' || obj.type == 'pan' || _explorer.myuid < 1) {
         el.find('.shortcut').remove();
     }
+    //如果是选择位置则只保留新建文件夹菜单
+    if(_explorer.type == 2){
+        el.find('.download,.cut,.copy,.delete').remove();
+    }
     //判断copy
     if (!_explorer.Permission('copy', obj)) {
         el.find('.copy').remove();

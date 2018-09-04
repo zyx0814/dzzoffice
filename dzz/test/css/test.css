@@ -1,0 +1,7 @@
+/*左边部分*/
+a{
+	color:#555;
+}
+a:focus, a:hover {
+    color: #e11d2a;
+}

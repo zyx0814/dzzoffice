@@ -35,22 +35,22 @@
 		<div class="main-header" style="padding:0 15px">
 			<ul class="nav nav-pills nav-pills-bottomguide">
 				<li>
-					<a href="{BASESCRIPT}?mod=member">{lang member_list}</a>
+					<a href="{MOD_URL}">{lang member_list}</a>
 				</li>
 				<li>
-					<a href="{BASESCRIPT}?mod=member&op=edituser&uid=$uid">{lang basic_information}</a>
+					<a href="{MOD_URL}&op=edituser&uid=$uid">{lang basic_information}</a>
 				</li>
 				<li class="active">
-					<a href="{BASESCRIPT}?mod=member&op=edituser&do=profile&uid=$uid">{lang details_information}</a>
+					<a href="{MOD_URL}&op=edituser&do=profile&uid=$uid">{lang details_information}</a>
 				</li>
-				<!-- <li><a href="{BASESCRIPT}?mod=member&op=import">从文件导入</a></li>
-               <li><a href="{BASESCRIPT}?mod=member&op=invite">Email邀请</a></li>-->
+				<!-- <li><a href="{MOD_URL}&op=import">从文件导入</a></li>
+               <li><a href="{MOD_URL}&op=invite">Email邀请</a></li>-->
 			</ul>
 		</div>
 
 		<div class="main-body" style="padding:15px 15px 15px 22px;">
 			<div id="return_edituserprofile"></div>
-			<form id="accountform" name="accountform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=member&op=edituser&do=profile" method="post" onsubmit="account_submit();return false">
+			<form id="accountform" name="accountform" class="form-horizontal form-horizontal-left" action="{MOD_URL}&op=edituser&do=profile" method="post" onsubmit="account_submit();return false">
 				<input type="hidden" name="profilesubmit" value="true" />
 				<input type="hidden" name="uid" value="$uid" />
 				<input type="hidden" name="handlekey" value="edituserprofile" />

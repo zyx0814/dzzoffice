@@ -100,6 +100,7 @@ if (submitcheck('appsubmit')) {
 		$setarr['dateline'] = $_G['timestamp'];
 		if (!$setarr['appico'])
 			$setarr['appico'] = 'dzz/images/default/icodefault.png';
+			$setarr["version"]="1.0";//默认版本1.0开始
 		$appid = C::t('app_market') -> insert($setarr, 1);
 	}
 	//处理标签

@@ -11,15 +11,6 @@ if (!defined('IN_DZZ')) {
 $operation = (isset($_GET['operation'])) ? trim($_GET['operation']) : '';
 $gid = isset($_GET['gid']) ? intval($_GET['gid']) : '';
 $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
-//如果未接收到gid，fid按默认选中项获取数据
-if (!$gid && !$fid) {
-    if (isset($defaultselect['gid'])) {
-        $gid = $defaultselect['gid'];
-        $fid = isset($defaultselect['fid']) ? $defaultselect['fid'] : '';
-    } else {
-        $fid = isset($defaultselect['fid']) ? $defaultselect['fid'] : '';
-    }
-}
 if ($gid) {
     if (!$group = C::t('organization')->fetch($gid)) {
         showmessage(lang('no_group'), dreferer());

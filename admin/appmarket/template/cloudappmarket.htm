@@ -121,7 +121,7 @@
           <div id="progess_{$value[mid]}" class="progess"> <span id="upgrade_progess_{$value[mid]}" class="upgrade_progess"></span> </div>
           <div class="col-md-5  col-sm-5 col-xs-5" style="padding-left: 4px;">
             <div class="app-name-wrapper" > <a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer"  class="appicon view-detail" title="$value[name]"><img src="$value[coverimg]" style="margin:0" /></a>
-              <p class="appname"> <a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" target="_blank" class="view-detail" title="$value[name]">$value[name]</a> </p>
+              <p class="appname"> <a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" target="_blank" class="view-detail" title="$value[name]">$value[name]</a> <small class="text-muted" title="{lang version}">$value[version]</small></p>
               <div class="appdesc" title="$value['appdesc']">{eval echo $value[desc_short]?$value[desc_short]:lang('none');}</div>
             </div>
           </div>

@@ -49,7 +49,7 @@ _explorer.FolderSPower=function(power,action){//判断有无权限;
 	};
 	if(action=='copy') action='delete';
 	if(parseInt(actionArr[action])<1) return true;
-	//权限比较时，进行与操作，得到0的话，表示没有权限  
+	//权限比较时，进行与操作，得到0的话，表示没有权限
     if( (power & parseInt(actionArr[action])) == parseInt(actionArr[action]) ) return false;  
     return true; 
 }
@@ -145,7 +145,6 @@ _explorer.Permission_Container=function(action,fid){
 			if(_explorer.myuid==_explorer.sourcedata.folder[fid].uid) action+='1';
 			else action+='2';
 		}
-
 		return _explorer.isPower(perm,action);
 		
 	}

@@ -22,6 +22,9 @@ selorg.add=function(ctrlid,vals){
 		
 	}
 	selorg.set(ctrlid);
+	try{
+		update_selected_sum();
+	}catch(e){}
 };
 
 //删除
@@ -32,6 +35,9 @@ selorg.del=function(ctrlid,vals){
 		}
 	}
 	 selorg.set(ctrlid);
+	try{
+		update_selected_sum();
+	}catch(e){}
 };
 
 //设置输入框的值
@@ -48,6 +54,9 @@ selorg.set=function(ctrlid){
 	jQuery(obj).parent().remove();
 	selorg.set(ctrlid);
 	try{window.frames[ctrlid+'_iframe'].selectorg_remove(unsel_val);}catch(e){}
+	try{
+		update_selected_sum();
+	}catch(e){}
 };
  selorg.search=function(ctrlid,obj){
 	 try{window.frames[ctrlid+'_iframe'].selectorg_search(obj.value);}catch(e){}

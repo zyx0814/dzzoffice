@@ -50,8 +50,8 @@ if($_GET['type']=='link'){
 if(isset($icoarr['error'])) topshowmessage($icoarr['error']);
 	 include template('common/header_simple');
 		echo "<script type=\"text/javascript\">";
-		echo "try{top._ico.createIco(".json_encode($icoarr).");}catch(e){alert(".lang('saved_my_documents').")}";
-		echo "try{top.Alert('”".$attach['filename'].lang('successfully_added_desktop')."',3,'','','info');}catch(e){}";
+		echo "try{top._ico.createIco(".json_encode($icoarr).");}catch(e){alert('".lang('saved_my_documents')."')}";
+		echo "try{top.Alert('".$attach['filename'].lang('successfully_added_desktop')."',3,'','','info');}catch(e){}";
 		echo "</script>";
 	include template('common/footer');
 	exit();

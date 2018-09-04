@@ -62,9 +62,9 @@ if ($keyword) {
 
 //类型筛选
 if ($exts) {
-    if($exts == 'folder'){
+    if ($exts == 'folder') {
         $conditions['type'] = array('folder', '=', 'and');
-    }else{
+    } else {
         $extarr = explode(',', $exts);
         $conditions['ext'] = array($extarr, 'in', 'and');
     }
@@ -160,6 +160,17 @@ $next = false;
 if (count($data) + count($groups) >= $perpage) {
     $next = $page + 1;
 }
+$createFolderPerm = false;
+if($gid){
+    if ($folder['ismoderator']) {
+        $createFolderPerm = true;
+    } else {
+        $$createFolderPerm = perm_binPerm::havePower('folder', $folder['perm_inherit']) ? true:false;
+    }
+}else{
+    $createFolderPerm = true;
+}
+
 //返回数据
 $return = array('fid' => $fid, 'data' => $data ? $data : array(), 'param' => array(
     'perpage' => $perpage,
@@ -172,7 +183,8 @@ $return = array('fid' => $fid, 'data' => $data ? $data : array(), 'param' => arr
     'gid' => $gid,
     'datatotal' => (count($data) + count($groups) + $datastart),
     'groupnext' => $gropunext,
-    'localsearch' => $bz ? 1 : 0
+    'localsearch' => $bz ? 1 : 0,
+    'createFolderPerm'=>$createFolderPerm
 )
 );
 $params = json_encode($return['param']);

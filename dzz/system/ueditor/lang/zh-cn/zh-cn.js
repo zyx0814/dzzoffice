@@ -25,7 +25,7 @@ UE.I18N['zh-cn'] = {
         'imageleft':'左浮动', 'imageright':'右浮动', 'attachment':'附件', 'imagecenter':'居中', 'wordimage':'图片转存',
         'lineheight':'行间距','edittip' :'编辑提示','customstyle':'自定义标题', 'autotypeset':'自动排版',
         'webapp':'百度应用','touppercase':'字母大写', 'tolowercase':'字母小写','background':'背景','template':'模板','scrawl':'涂鸦',
-        'music':'音乐','inserttable':'插入表格','drafts': '从草稿箱加载', 'charts': '设置图表','insertcharts':'插入图表','dzzfile':'从桌面插入'
+        'music':'音乐','inserttable':'插入表格','drafts': '从草稿箱加载', 'charts': '设置图表','insertcharts':'插入图表','dzzfile':'从网盘插入'
     },
     'insertorderedlist':{
         'num':'1,2,3...',
@@ -371,10 +371,10 @@ UE.I18N['zh-cn'] = {
         '"default"':"默认",
         'block':"独占一行",
         'urlError':"输入的视频地址有误，请检查后再试！",
-        'loading':" &nbsp;视频加载中，请等待……",
+        'loading':"  视频加载中，请等待……",
         'clickToSelect':"点击选中",
         'goToSource':'访问源视频',
-        'noVideo':" &nbsp; &nbsp;抱歉，找不到对应的视频，请重试！",
+        'noVideo':"    抱歉，找不到对应的视频，请重试！",
 
         'browseFiles':'浏览文件',
         'uploadSuccess':'上传成功!',

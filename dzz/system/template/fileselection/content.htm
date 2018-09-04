@@ -13,7 +13,7 @@
     var path = $('#folderstr').val();
     _selectfile.fid = fid;
     _explorer.set_address(path);
-    var getdataurl = MOD_URL + '&op=fileselection&do=explorerfile&operation=filelist&sid=f-' + fid;
+    var getdataurl = MOD_URL + '&op=fileselection&do=explorerfile&operation=filelist&sid=f-' + fid+'&permfilter='+_explorer.permfilter;
     var search_exts =$('.select-style').data('exts');
     if(search_exts){
         _explorer.defaultexttype = search_exts;

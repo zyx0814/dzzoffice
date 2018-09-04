@@ -66,17 +66,17 @@
 		<div class="main-header">
 			<ul class="nav nav-pills nav-pills-bottomguide">
 				<li <!--{if !$fieldid}-->class="active"<!--{/if}-->>
-					<a href="{BASESCRIPT}?mod=member&op=profileset">{lang data_item_list}</a>
+					<a href="{MOD_URL}&op=profileset">{lang data_item_list}</a>
 				</li>
 				<!--{if $fieldid}-->
 				<li class="active">
-					<a href="{BASESCRIPT}?mod=member&op=profileset&fieldid=$fieldid">{lang data_edit}</a>
+					<a href="{MOD_URL}&op=profileset&fieldid=$fieldid">{lang data_edit}</a>
 				</li>
 				<!--{/if}-->
 			</ul>
 		</div>
 		<div class="main-content" style="padding:15px 0 0 10px;">
-			<form id="cpform" action="{BASESCRIPT}?mod=member&op=profileset" class="form-horizontal form-horizontal-left" method="post" name="cpform">
+			<form id="cpform" action="{MOD_URL}&op=profileset" class="form-horizontal form-horizontal-left" method="post" name="cpform">
 				<input type="hidden" value="{FORMHASH}" name="formhash">
 				<input type="hidden" value="true" name="editsubmit">
 				<input type="hidden" value="$fieldid" name="fieldid">
@@ -97,14 +97,14 @@
 				<div class="form-group">
 					<label class="control-label ">{lang form_type}：</label>
 					<div class="controls-adapt">
-						<label class="radio-inline"><input type="radio" name="formtype" value="text" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='text'}-->checked="checked"<!--{/if}-->>{lang HtmlInputText}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="text" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='text'}-->checked="checked"<!--{/if}-->>{lang HtmlInputText}</label>
 						<!--{if $fieldid!='realname'}-->
-						<label class="radio-inline"><input type="radio" name="formtype" value="textarea" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='textarea'}-->checked="checked"<!--{/if}-->>{lang HtmlTextArea}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="radio" onclick="$('valuenumber').style.display = 'none';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='radio'}-->checked="checked"<!--{/if}-->>{lang radio}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="checkbox" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='checkbox'}-->checked="checked"<!--{/if}-->>{lang checkBox}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="select" onclick="$('valuenumber').style.display = 'none';$('fieldchoices').style.display = '';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='select'}-->checked="checked"<!--{/if}-->>{lang combobox}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="list" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = '';" <!--{if $field[formtype]=='list'}-->checked="checked"<!--{/if}-->>{lang more_choose_list}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="file" onclick="$('valuenumber').style.display = '';$('fieldchoices').style.display = 'none';$('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='file'}-->checked="checked"<!--{/if}-->>{lang upload_image}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="textarea" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='textarea'}-->checked="checked"<!--{/if}-->>{lang HtmlTextArea}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="radio" onclick="document.getElementById('valuenumber').style.display = 'none';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='radio'}-->checked="checked"<!--{/if}-->>{lang radio}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="checkbox" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='checkbox'}-->checked="checked"<!--{/if}-->>{lang checkBox}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="select" onclick="document.getElementById('valuenumber').style.display = 'none';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='select'}-->checked="checked"<!--{/if}-->>{lang combobox}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="list" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = '';" <!--{if $field[formtype]=='list'}-->checked="checked"<!--{/if}-->>{lang more_choose_list}</label>
+						<label class="radio-inline"><input type="radio" name="formtype" value="file" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='file'}-->checked="checked"<!--{/if}-->>{lang upload_image}</label>
 						<!--{/if}-->
 					</div>
 				</div>
@@ -209,7 +209,7 @@
 </div>
 <script type="text/javascript">
 	jQuery('.left-drager').leftDrager_layout();
-	var url = '{BASESCRIPT}?mod=member';
+	var url = '{MOD_URL}';
 	jQuery(document).ready(function(e) {
 		jQuery('input').iCheck({
 			checkboxClass: 'icheckbox_minimal-blue',

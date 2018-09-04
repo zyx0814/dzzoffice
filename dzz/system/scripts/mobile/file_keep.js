@@ -51,6 +51,11 @@ _filemanage.initEvents = function () { //初始化页面事件
         if (hash.indexOf('search') == 0) {
             $('#footermenu').html('');
         } else if (_filemanage.fid) {
+            if(_filemanage.dataparam.createFolderPerm){
+                $('#footer_menu').find('.filelistmenu .new-folder').removeClass('hide');
+            }else{
+                $('#footer_menu').find('.filelistmenu .new-folder').addClass('hide');
+            }
             $('#footermenu').html($('#footer_menu').find('.filelistmenu').html());
         } else {
             $('#footermenu').html($('#footer_menu').find('.formatmenu').html());
@@ -87,7 +92,7 @@ _filemanage.initEvents = function () { //初始化页面事件
                 if (_filemanage.dataparam.page) {
                     $.post(_filemanage.appUrl + '&do=' + _filemanage.hash, _filemanage.dataparam, function (data) {
                         $('#containsdata').html(data);
-                        $('#middleconMenu .filelist').append($('#containsdata').find('.datacontent').html());
+                        $('#middleconMenu .filelist').append($('#containsdata').find('.weui-cells__margin_footer').html());
                         $('#containsdata').empty();
                         if (!_filemanage.dataparam.page) {
                             loading = false;
@@ -129,6 +134,9 @@ _filemanage.hashHandler = function () { //处理页面hash变化
 };
 _filemanage.getContent = function (hash, container) { //处理页面加载
     var url = _filemanage.appUrl + '&do=' + hash;
+    if(url.indexOf('?') == -1){
+        url = url.replace('&','?');
+    }
     _filemanage.dataparam = {};
     if (_filemanage.defaultexttype) {
         _filemanage.dataparam.exts = _filemanage.defaultexttype;
@@ -139,9 +147,15 @@ _filemanage.getContent = function (hash, container) { //处理页面加载
         if ($('#containsdata').find('.addresscontent').length) {
             $('#addressdata').html($('#containsdata').find('.addresscontent').html());
             $('#addressdata').removeClass('hide');
-        }else if(_filemanage.hash.indexOf('search') == 0){
+        }else if( _filemanage.hash.indexOf('home') == 0){
             $('#addressdata').html('');
-            $('#addressdata').removeClass('hide');
+          	$('#addressdata').removeClass('hide');
+        }
+        if(_filemanage.hash.indexOf('search') == 0){
+        	$('.weui-file-keep').addClass('hide');
+        	$('#addressdata').addClass('hide');
+        }else{
+        	$('.weui-file-keep').removeClass('hide');
         }
         $('#containsdata').empty();
         $(document).trigger('ajaxLoad.middleContent', [hash]);

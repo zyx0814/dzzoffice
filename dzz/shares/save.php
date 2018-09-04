@@ -42,7 +42,12 @@ if(!$doing){
     $data['error'][$fid] = lang('no_privilege');
     $data['msg'][$fid] = 'error';
     $data['name'][$fid] = '';
-    exit(json_encode($data));
+    if(isset($_GET['token'])){
+        exit(json_encode(array('error'=>lang('no_privilege'))));
+    }else{
+        exit(json_encode($data));
+    }
+
 }
 
 $totalsize = 0;

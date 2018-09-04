@@ -47,11 +47,11 @@ class table_comment_attach extends dzz_table
 			$setarr=array('cid'=>$cid,
 						  'dateline'=>TIMESTAMP,
 						  'aid'=>intval($attach['aid'][$key]),
-						  'title'=>trim($value),
-						  'type'=>trim($attach['type'][$key]),
-						  'img'=>trim($attach['img'][$key]),
-						  'url'=>trim($attach['url'][$key]),
-						  'ext'=>trim($attach['ext'][$key])
+						  'title'=>getstr($value),
+						  'type'=>getstr($attach['type'][$key]),
+						  'img'=>getstr($attach['img'][$key]),
+						  'url'=>getstr($attach['url'][$key]),
+						  'ext'=>getstr($attach['ext'][$key])
 						  );
 			
 			if(parent::insert($setarr)){
@@ -132,6 +132,12 @@ class table_comment_attach extends dzz_table
 		$data=array();
 		//$openext=C::t('app_open')->fetch_all_orderby_ext($_G['uid']);
 		foreach(DB::fetch_all("select * from %t where cid= %d",array($this->_table,$cid)) as $value){
+			$value['title']=getstr($value['title']);
+			$value['type']=getstr($value['type']);
+			$value['url']=getstr($value['url']);
+			$value['ext']=getstr($value['ext']);
+			$value['img']=getstr($value['img']);
+			
 			if($value['aid']>0){
 				$attach=C::t('attachment')->fetch($value['aid']);
 				if(in_array(strtolower($attach['filetype']),array('png','jpeg','jpg','gif','bmp'))){
@@ -151,6 +157,7 @@ class table_comment_attach extends dzz_table
 				$value['preview']=1;
 				$data[$value['qid']]=$value;
 			}
+			
 		}
 		return $data;
 	}

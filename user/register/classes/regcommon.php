@@ -12,7 +12,7 @@ class Regcommon{
         $type = isset($_GET['returnType']) ? $_GET['returnType']:'';
 
         //执行注册
-        $result =C::t('user')->user_register($params,0);
+        $result =C::t('user')->user_register($params);
 
         //获取注册状态
         $uid= is_array($result) ? $result['uid']:$result;

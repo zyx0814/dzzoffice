@@ -83,6 +83,7 @@ class table_user extends dzz_table
 		if(self::checkfounder($user)){//创始人不能删除
 			return false;
 		}
+			  
 		if(parent::delete($uid)){
 			C::t('user_field')->delete($uid);
 			C::t('user_profile')->delete($uid);
@@ -91,8 +92,8 @@ class table_user extends dzz_table
 			C::t('organization_user')->delete_by_uid($uid,0);
 			
 			//删除用户文件
-			foreach(DB::fetch_all("select fid from %t where uid=%d and gid<1 ",array('folder',$uid)) as $value){
-				C::t('folder')->delete_by_fid($value['fid'],true);
+			if($homefid=DB::result_first("select fid from %t where uid=%d and flag='home' ",array('folder',$uid))){
+				C::t('folder')->delete_by_fid($homefid,true);
 			}
 			 
 			Hook::listen('syntoline_user',$uid,'del');//删除对应到三方用户表
@@ -506,4 +507,29 @@ class table_user extends dzz_table
 
         return $users;
     }
+    public function fetch_userinfo_detail_by_uid($uid){
+        $uid = intval($uid);
+        $users = DB::fetch_first("select u.uid,u.phone,u.email,ug.* from %t u left join %t ug  on u.groupid=ug.groupid where uid = %d",array('user','usergroup',$uid));
+        foreach(DB::fetch_all("select * from %t where uid = %d",array('user_profile',$uid)) as $v){
+            if(!$v['privacy']){
+                $users['information'][$v['fieldid']] = $v['value'];
+            }
+        }
+        return $users;
+    }
+    /*//获取用户信息，包含资料等信息
+    public function fetch_user_infomessage_by_uid($uid){
+        $users = array();
+        foreach(DB::fetch_all("select u.*,s.svalue from %t u left join %t s on u.uid=s.uid and s.skey=%s where u.uid =%d",array('user','user_setting','headerColor',$uid)) as $v){
+            if($v['avatarstatus'] == 1){
+                $v['avatarstatus'] = 1;
+            }else{
+                $v['avatarstatus'] = 0;
+                $v['headerColor'] = $v['svalue'];
+            }
+            $users[$v['uid']] = $v;
+        }
+
+        return $users;
+    }*/
 }

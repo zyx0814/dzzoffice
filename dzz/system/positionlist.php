@@ -5,6 +5,7 @@ if (!defined('IN_DZZ')) {
 global $_G;
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 $uid = $_G['uid'];
+include libfile('function/filerouterule');
 if(!C::t('folder')->check_home_by_uid($uid)){
     C::t('folder')->fetch_home_by_uid($uid);
 }
@@ -18,7 +19,9 @@ $selhome = isset($_GET['selhome']) ? $_GET['selhome']:0;//展示网盘0不展示
 $selorg = isset($_GET['selorg']) ? $_GET['selorg']:0;//展示机构0不展示
 $selgroup = isset($_GET['selgroup']) ? $_GET['$selgroup']:0;//展示群组0不展示
 $range = isset($_GET['range']) ? $_GET['range']:0;//是否限制展示0不限定
-$ismobile=helper_browser::ismobile();
+//默认选中,支持路径如：我的网盘/xxx,群组xxx/xxx,群组或机构|xxx，群组或机构|xxx/新建文件夹
+$defaultselect =  isset($_GET['defaultsel']) ? filerouteParse(trim($_GET['defaultsel'])):filerouteParse('我的网盘');
+$defaultjson = json_encode($defaultselect);
 $data = array();
 $powerarr = perm_binPerm::getPowerArr();
 if ($do == 'get_children') {

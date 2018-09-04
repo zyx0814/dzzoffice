@@ -383,7 +383,6 @@
      position: absolute;
     top: 0;
     right: 10px;
-    display: inline-block;
     width: 36px;
     text-align: center;
     font-size: 22px;
@@ -803,8 +802,4 @@ button.input-search-drop {
 	.bs-container>.bs-left-container{
 		display:none ;
 	}
-	.bs-container>.left-drager{
-		display:none ;
-	}
-	
 }

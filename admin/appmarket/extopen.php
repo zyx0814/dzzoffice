@@ -32,38 +32,43 @@ if ( $do =="setdefault" ) {
 	}
 	error(lang('set_default').lang('failure'));
 }
-
+$sql_app="`available`>0";
+$param_app=array('app_market');
+$sql = '1';
+$param=array('app_open');
+if(preg_match("/[a-zA-Z0-9]{1,10}/i",$_GET['ext'])){
+	$ext = trim($_GET['ext']);
+	$sql .= " and `ext` = %s";
+	$param[]=$ext;
+}elseif($_GET['ext']){
+	$appname=trim($_GET['ext']);
+	$sql_app.=' and appname LIke %s';
+	$param_app[]='%'.$appname.'%';
+}
 $ext = trim($_GET['ext']);
 $appid = intval($_GET['appid']);
-$orderby = trim($_GET['s']);
+
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;
 $gets = array('mod' => 'appmarket', 'op' => 'extopen', 'ext' => $ext, 'appid' => $appid);
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $refer = urlencode($theurl . '&page=' . $page);
-if ($orderby)
-	$order = 'ORDER BY ' . $orderby;
-else
-	$order = 'order by disp DESC';
+
 $start = ($page - 1) * $perpage;
 $apps = array();
 
-$sql = '1';
-$param=array('app_open');
+
 if ($appid) {
-	$sql .= " and `appid` = '{$appid}'";
-	$map["appid"]=$appid;
+	$sql .= " and `appid` = %d";
 	$param[]=$appid;
-} elseif ($ext) {
-	$sql .= " and `ext` = '{$ext}'";
-	$map["ext"]=$ext;
-	$param[]=$ext;
-}
+} 
  
-$count = DB::result_first("select COUNT(*) from %t where 1",array('app_market'));//C::tp_t("app_open")->where($map)->count();
+$count = DB::result_first("select COUNT(*) from %t where $sql_app ",$param_app);
 if($count){
-	$appdatas =DB::fetch_all("select appid,appico,appname,appurl from %t where 1",array('app_market'),'appid');// C::tp_t('app_market')->getField("appid,appico,appname,appurl"); 
-	$list = DB::fetch_all("select * from %t where $sql ORDER BY appid DESC",$param);//C::tp_t("app_open")->where($map)->order("appid desc")->select();
+	$appdatas =DB::fetch_all("select appid,appico,appname,appurl from %t where $sql_app ",$param_app,'appid');
+	$sql .= ' and `appid` IN(%n)';
+	$param[] = array_keys($appdatas);
+	$list = DB::fetch_all("select * from %t where  $sql  ORDER BY ext DESC",$param);
 	$newlist=array();
 	foreach($list as $k=>$v ){
 		$appdata = $appdatas[$v["appid"]];
@@ -78,6 +83,7 @@ if($count){
 }
 $multi = multi($count, $perpage, $page, $theurl );
 //根据分页截取数组
+ksort($newlist,SORT_STRING );
 $list = array_slice($newlist,$start,$perpage);
 foreach($list as $k=>$nlist){ 
 	$sort = array(
@@ -95,6 +101,6 @@ foreach($list as $k=>$nlist){
 	}
 	$list[$k]=$nlist;
 }
-// print_r($list);exit;
+//print_r($list);exit;
 include template('extopen');
 ?>

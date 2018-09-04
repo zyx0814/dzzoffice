@@ -72,11 +72,11 @@ if (!submitcheck('settingsubmit')) {
 		$setting['maxChunkSize'] = round($setting['maxChunkSize'] / (1024 * 1024), 2);
 		$navtitle = lang('upload_set');
 		$setting['unRunExts'] = implode(',', dunserialize($setting['unRunExts']));
-		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid IN ('1','2','9') order by groupid DESC", array('usergroup_field', 'usergroup'));
+		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
 	} elseif ($operation == 'at') {
 		$navtitle = '@'.lang('sector_set');
 		$setting['at_range'] = dunserialize($setting['at_range']);
-		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid IN ('1','2','9') order by groupid DESC", array('usergroup_field', 'usergroup'));
+		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
 	} elseif ($operation == 'access') {
 		$navtitle = lang('register_visit');
 		/*if($setting['welcomemsg'] == 1) {
@@ -144,7 +144,7 @@ if (!submitcheck('settingsubmit')) {
 		}*/
 		$openarr=json_encode(array('orgids'=>$open));
 		//获取用户组空间设置数据
-		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid IN ('1','2','9') order by groupid DESC", array('usergroup_field', 'usergroup'));
+		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
 
 	}elseif($operation == 'permgroup'){
 		$perms = get_permsarray();//获取所有权限;
@@ -209,6 +209,7 @@ if (!submitcheck('settingsubmit')) {
 			}
 			$settingnew['thumbsize'][$key] = $value;
 		}
+		
 		//设置默认应用
 		if($settingnew["default_mod"] && $settingnew["default_mod"]!=$_GET["old_default_mod"]){ 
 			$configfile = DZZ_ROOT.'data/cache/default_mod.php';  
@@ -387,6 +388,14 @@ if (!submitcheck('settingsubmit')) {
 	if ($settings) {
 		C::t('setting') -> update_batch($settings);
 	}
+	if($operation == 'basic'){
+		
+		if($settingnew['sitelogo'] && $settingnew['sitelogo']!=$setting['sitelogo']){
+			if($setting['sitelogo']) C::t('attachment')->delete_by_aid($setting['sitelogo']);
+			C::t('attachment')->addcopy_by_aid($settingnew['sitelogo'],1);
+		}
+	}
+	
 	if ($updatecache) {
 		updatecache('setting');
 	}

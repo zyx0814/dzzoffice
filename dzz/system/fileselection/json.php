@@ -132,5 +132,8 @@ if($exttype){
 }
 $data['allowselecttype'] = json_decode($exttype);
 $data['defaultfilename'] = isset($filename) ? $filename:'';
+$data['defaultselect'] = $_GET['defaultselect'];
+$data['allowcreate'] = $_GET['allowcreate'];
+$data['permfilter'] = $_GET['perm'];
 echo json_encode($data);
 exit();

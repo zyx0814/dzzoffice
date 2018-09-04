@@ -14,7 +14,8 @@ function runquery($sql) {
 	$tablepre = $_G['config']['db'][1]['tablepre'];
 	$dbcharset = $_G['config']['db'][1]['dbcharset'];
 
-	$sql = str_replace(array(' dzz_', ' `dzz_',' cdb_', ' `cdb_', ' pre_', ' `pre_'), array(' {tablepre}', ' `{tablepre}',' {tablepre}', ' `{tablepre}', ' {tablepre}', ' `{tablepre}'), $sql);
+	$sql = str_replace(array(' dzz_', ' `dzz_',' cdb_', ' `cdb_' ), array(' {tablepre}', ' `{tablepre}',' {tablepre}', ' `{tablepre}' ), $sql);
+		
 	$sql = str_replace("\r", "\n", str_replace(array(' {tablepre}', ' `{tablepre}'), array(' '.$tablepre, ' `'.$tablepre), $sql));
 
 	$ret = array();
@@ -162,10 +163,10 @@ function exportdata($name, $filename, $data) {
 		'Version' => $_G['setting']['version'],
 		'Time' => dgmdate(TIMESTAMP, 'Y-m-d H:i'),
 		'From' => $_G['setting']['bbname'].' ('.$_G['siteurl'].')',
-		'Data' => exportarray($data, 1)
-	);
+		'Data' => exportarray($data, 1) 
+	); 
 	$filename = strtolower(str_replace(array('!', ' '), array('', '_'), $name)).'_'.$filename.'.xml';
-	$plugin_export = array2xml($root, 1);
+	$plugin_export = array2xml($root, 1); 
 	ob_end_clean();
 	dheader('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	dheader('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
@@ -242,8 +243,8 @@ function importByarray($arr,$force=0){
 		$app['available']=0;
 		$appid=$app['appid']=C::t('app_market')->insert($app,1);
 	}
-	if($arr['hooks']){//初始化钩子
-		C::t('hooks')->insert_by_appid($appid,$arr['hooks']);
+	if($arr['hooks']){//初始化钩子 
+		C::t('hooks')->insert_by_appid($appid,$arr['hooks'],$arr['_attributes']['hooks']);
 	}
 	if($appid){
 		C::t('app_open')->insert_by_exts($appid,($app['fileext']?explode(',',$app['fileext']):array()));

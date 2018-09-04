@@ -87,7 +87,7 @@ if (submitcheck('replysubmit')) {
 
 } elseif ($do == 'getcomment') {
 
-	$id = trim($_GET['id'], 60);
+	$id = getstr($_GET['id'], 60);
 	$idtype = trim($_GET['idtype']);
 	$page = empty($_GET['page']) ? 1 : intval($_GET['page']); 
 	$perpage = 10;

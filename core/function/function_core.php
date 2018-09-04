@@ -1163,10 +1163,7 @@ function aidencode($aid, $type = 0, $tid = 0)
 
 function output()
 {
-
     global $_G;
-
-
     if (defined('DZZ_OUTPUTED')) {
         return;
     } else {
@@ -1190,12 +1187,6 @@ function outputurl( $url="" )
     global $_G;
     if ($_G['config']['rewritestatus']) {
         $url = output_replace($url);
-        ob_end_clean();
-        $_G['gzipcompress'] ? ob_start('ob_gzhandler') : ob_start();
-        return $url;
-    }
-    if (defined('DZZ_DEBUG') && DZZ_DEBUG && @include(libfile('function/debug'))) {
-        function_exists('debugmessage') && debugmessage();
     }
     return $url;
 }
@@ -1205,9 +1196,7 @@ function output_replace($content)
     global $_G;
     if (defined('IN_ADMINCP')) return $content;
     if (!empty($_G['setting']['output']['str']['search'])) {
-        /*if(empty($_G['setting']['domain']['app']['default'])) {
-			$_G['setting']['output']['str']['replace'] = str_replace('{CURHOST}', $_G['siteurl'], $_G['setting']['output']['str']['replace']);
-		}*/
+        
         $content = str_replace($_G['setting']['rewrite']['str']['search'], $_G['setting']['rewrite']['str']['replace'], $content);
     }
     if (!empty($_G['config']['rewrite']['preg']['search'])) {
@@ -1258,8 +1247,6 @@ function output_replace($content)
         $content = preg_replace($search_new, $replace_new, $content);
         
         $content=str_replace($md5,$string,$content); 
-         
-        //$content = preg_replace($_G['config']['rewrite']['preg']['search'], $_G['config']['rewrite']['preg']['replace'], $content);
     }
 
     return $content;
@@ -2282,7 +2269,6 @@ function dzzgetspace($uid)
     if ($_G['adminid'] == 1) {
         $space['self'] = 2;
     }
-
     //用户组信息
     if (!isset($_G['cache']['usergroups'])) loadcache('usergroups');
     $usergroup = $_G['cache']['usergroups'][$space['groupid']];
@@ -2290,7 +2276,6 @@ function dzzgetspace($uid)
 
     //获取相关设置信息
     $setting = $_G['setting'];
-
     if ($config = DB::fetch_first("select usesize,attachextensions,maxattachsize,addsize,buysize,perm,taskbar,userspace from " . DB::table('user_field') . " where uid='{$uid}'")) {
         $config['perm'] = ($config['perm'] < 1) ? $usergroup['perm'] : $config['perm'];
         $config['attachextensions'] = ($config['attachextensions'] < 0) ? $usergroup['attachextensions'] : $config['attachextensions'];
@@ -3131,7 +3116,7 @@ function get_resources_some_setting()
                             $users[] = $val['uid'];
                         }
                     } elseif (preg_match('/^uid_\d+$/', $v)) {
-                        $users[] = preg_replace('/uid_/', '');
+                        $users[] = preg_replace('/uid_/', '',$v);
                     }
 
                 }
@@ -3277,9 +3262,10 @@ function getimportdata($name = '', $addslashes = 0, $ignoreerror = 0,$data='') {
 			}
 		}
 	}
-	 require_once libfile('class/xml');
+	require_once libfile('class/xml');
 
 	$xmldata = xml2array($data);
+    $_attributes=xmlattribute($data); //item 属性获取 
 	if(!is_array($xmldata) || !$xmldata) {
 		if(!$ignoreerror) {
 			showmessage('data_import_error', dreferer());
@@ -3299,7 +3285,7 @@ function getimportdata($name = '', $addslashes = 0, $ignoreerror = 0,$data='') {
 	if($addslashes) {
 		$data = daddslashes($data, 1);
 	}
-
+    if($data && $_attributes) $data["_attributes"]=$_attributes["Data"];
 	return $data;
 }
 
@@ -3436,7 +3422,7 @@ function dzz_userconfig_init()
         }
         if (!$fid) continue;
         if ($rid = DB::result_first("select rid from " . DB::table('resources') . " where uid='{$_G[uid]}' and oid='{$appid}' and type='app'")) {
-            C::t('resources')->update($rid, array('pfid' => $fid, 'isdelete' => 0));
+            C::t('resources')->update_by_rid($rid, array('pfid' => $fid, 'isdelete' => 0));
             if ($app['position'] == 2) $userconfig['screenlist'][] = $rid;
             else $userconfig['docklist'][] = $rid;
         } else {
@@ -3465,3 +3451,75 @@ function dzz_userconfig_init()
 	if ($userconfig['applist']) C::t('app_user')->insert_by_uid($_G['uid'], $userconfig['applist'], 1);
 	return C::t('user_field')->fetch($_G['uid']);
 }
+/*判断字符串是否是序列化后的数据*/
+/* @param string $data   Value to check to see if was serialized.
+ * @param bool   $strict Optional. Whether to be strict about the end of the string. Default true.
+ * @return bool False if not serialized and true if it was.
+ */
+ function is_serialized( $data, $strict = true ) {
+		// if it isn't a string, it isn't serialized.
+		if ( ! is_string( $data ) ) {
+				return false;
+		}
+		$data = trim( $data );
+		if ( 'N;' == $data ) {
+				return true;
+		}
+		if ( strlen( $data ) < 4 ) {
+				return false;
+		}
+		if ( ':' !== $data[1] ) {
+				return false;
+		}
+		if ( $strict ) {
+				$lastc = substr( $data, -1 );
+				if ( ';' !== $lastc && '}' !== $lastc ) {
+						return false;
+				}
+		} else {
+				$semicolon = strpos( $data, ';' );
+				$brace     = strpos( $data, '}' );
+				// Either ; or } must exist.
+				if ( false === $semicolon && false === $brace )
+						return false;
+				// But neither must be in the first X characters.
+				if ( false !== $semicolon && $semicolon < 3 )
+						return false;
+				if ( false !== $brace && $brace < 4 )
+						return false;
+		}
+		$token = $data[0];
+		switch ( $token ) {
+				case 's' :
+						if ( $strict ) {
+								if ( '"' !== substr( $data, -2, 1 ) ) {
+										return false;
+								}
+						} elseif ( false === strpos( $data, '"' ) ) {
+								return false;
+						}
+				case 'a' :
+				case 'O' :
+						return (bool) preg_match( "/^{$token}:[0-9]+:/s", $data );
+				case 'b' :
+				case 'i' :
+				case 'd' :
+						$end = $strict ? '$' : '';
+						return (bool) preg_match( "/^{$token}:[0-9.E-]+;$end/", $data );
+		}
+		return false;
+ }
+ /**
+  * 短信发送函数
+  * @$param $tplsign string 模板标识
+  * @$param $to number 短信接收手机号
+  * @$param $params  array 拓展参数 expire 过期时间 codelength 验证码长度 gateways指定网关
+  * @return 如果发送成功则返回 验证码发送时间 验证码 过期时间,如果失败返回错误信息
+  * */
+ function sms($tplsign,$to,$params=array('expire'=>15,'codelength'=>6)){
+     $params['tplsign'] = $tplsign;
+     $params['to'] = $to;
+    $result = Hook::listen('sms',$params);
+     return $result[0];
+
+ }

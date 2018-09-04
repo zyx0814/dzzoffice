@@ -115,7 +115,7 @@
   <div class="modal-body user-select-body">
     <div class="user-select-search" >
       <div class="input-black">
-        <label class="control-label">已选要添加的成员</label>
+        <label class="control-label">{lang selecte_user_to_add}</label>
         <div class="input-animate">
         	<i class="dzz dzz-search dzz-search-icon"></i>
           <input id="user_select_search_input" type="text" class="form-control" placeholder="{lang user_select_search_tip}" style="padding-left: 1.42rem;"/>
@@ -134,7 +134,7 @@
         </div>
       </div>
       <div class="user-select-content-right">
-        <div class="selected-member">{lang user_select_selected}</div>
+        <div class="selected-member">{lang user_select_selected}<b class="selected_sum" style="padding:0 5px;">{eval echo count($selects);}</b>{lang selected_ge_user}</div>
         <div class="group-content" id="group-contents">
           <ul class="sele-right-classa" id="seluser">
             <!--{loop $selects $key $value}-->
@@ -147,6 +147,7 @@
     </div>
   </div>
   <div class="modal-footer">
+	 
     <button type="submit" class="btn btn-primary">{lang confirms}</button>
     <button type="button" class="btn btn-default-outline cancel" data-dismiss="modal" aria-label="Close">{lang cancel} </button>
   </div>
@@ -197,6 +198,7 @@
         });
         jQuery(document).on('click', '#seluser .ti-close', function () {
             selorg.remove('seluser', this);
+			update_selected_sum()
         });
     });
 
@@ -238,6 +240,8 @@
 	 hideWindow("$_GET['handlekey']");
 	 return false;
  }
-
+ function update_selected_sum(){
+	 jQuery('.selected_sum').html($('#seluser>li').length);
+ }
 </script> 
 <!--{template common/footer_ajax}-->

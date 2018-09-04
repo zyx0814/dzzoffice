@@ -86,21 +86,24 @@
         background-color: transparent;
         background-image: none;
     }
-    #position{
-	     position: absolute;
-	    left: 0;
-	    right: 0;
-	    top: 0px;	
-	    bottom: 64px;
-	    overflow: auto;
-	    padding:5px 0;	    
+
+    #position {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0px;
+        bottom: 64px;
+        overflow: auto;
+        padding: 5px 0;
     }
-	.modal-footer{
-		    position: fixed;
-		    left: 0;
-		    right: 0;
-		    bottom: 0;
-	}
+
+    .modal-footer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+
     <!--
     {
         if $ _GET [ 'nosearch' ] > 0
@@ -127,7 +130,7 @@
      var nouser=parseInt('$_GET[nouser]')>0?1:0;
      var stype='$_GET[stype]'?parseInt('$_GET[stype]'):0;//0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
      var moderator=parseInt('$_GET[moderator]')>0?1:0;*/
-    var ismobile = '$ismobile' ? 1 : 0;
+    var defaultjson = eval('(' + '{$defaultjson}' + ')');
 </script>
 <!--{template common/header_simple_end}-->
 <div class="mechsnismMenu" id="position" class="usertree-container list-unstyled"></div>
@@ -147,7 +150,7 @@
                 },
                 'data': function (node, cb) {
                     var self = this;
-                    $.getJSON('index.php?mod=system&op=positionlist&do=get_children&range={$range}&selhome={$selhome}&selorg={$selorg}&selgroup={$selgroup}', {'id': node.id}, function (json) {
+                    $.getJSON('index.php?mod=system&op=positionlist&do=get_children&range={$range}&selhome={$selhome}&selorg={$selorg}&selgroup={$selgroup}&defaultsel={$defaultselect}', {'id': node.id}, function (json) {
                         cb.call(this, json);
                     });
                 }
@@ -181,6 +184,8 @@
                 },
             },
             "plugins": ['types', 'search', 'wholerow']
+        }).on("ready.jstree", function () {
+            init_selected();
         });
 
         $('#position').off('select_node.jstree').on('select_node.jstree', function (e, data) {
@@ -194,16 +199,16 @@
                 var fid = node.li_attr.fid;
             }
             var nummatch = /^\d+$/;
-            if(nummatch.test(fid)){
-                $.post('index.php?mod=system&op=positionlist&do=checkupload',{'fid':fid},function(data){
-                    if(data['perm']){
+            if (nummatch.test(fid)) {
+                $.post('index.php?mod=system&op=positionlist&do=checkupload', {'fid': fid}, function (data) {
+                    if (data['perm']) {
                         $('#' + ctrlid).val(fid);
-                    }else{
+                    } else {
                         inst.deselect_node(node);
                         $('#' + ctrlid).val('');
                     }
-                },'json')
-            }else{
+                }, 'json')
+            } else {
                 inst.deselect_node(node);
                 $('#' + ctrlid).val('');
             }
@@ -211,26 +216,80 @@
             return false;
         });
     });
+    function init_selected() {
+        var inst = $('#position').jstree(true);
+        if(!defaultjson.gid){
+            defaultjson.gid = 0;
+        }
+        if(!defaultjson.fid){
+            defaultjson.fid = 0;
+        }
+        open_node_by_id(defaultjson.gid,defaultjson.fid);
+    }
+    function open_node_by_id(gid, fid) {
+        var inst = $('#position').jstree(true);
+        var node = null;
+        if (fid) {
+            node = inst.get_node('#f_' + fid) || inst.get_node('#u_' + fid);
+        } else if (gid) {
+            node = inst.get_node('#g_' + gid) || inst.get_node('#gid_' + gid);
+        } else {
+            inst.deselect_all();
+            return;
+        }
+        if (node) {
+            inst.deselect_all();
+            var selects = inst.get_selected();
+            for (var i = 0; i < selects.length; i++) {
+                if (selects[i] === node.id) {
+                    continue;
+                }
+                inst.deselect_node('#' + selects[i]);
+            }
+            inst.select_node(node);
+        } else {
+            $.post('index.php?mod=system&op=positionlist&do=getParentsArr', {
+                'fid': fid,
+                'gid': gid
+            }, function (data) {
+                var node = inst.get_node('#' + data[0]);
+                open_node_bg(inst, node, data);
+            }, 'json');
+        }
+    }
+    function open_node_bg(inst, node, arr) {
+        inst.open_node(node, function (node) {
+            var i = jQuery.inArray(node.id, arr);
+            if (i < arr.length && i > -1 && document.getElementById(arr[i + 1])) {
+                open_node_bg(inst, document.getElementById(arr[i + 1]), arr);
+            } else {
+                inst.deselect_all();
+                inst.select_node(node);
+            }
+        });
+    };
+
+
     function createNewFolder() {
         var inst = $('#position').jstree(true);
         var id = $('#position').jstree("get_selected");
         console.log(id);
-        if(id.length < 1){
-            showmessage(__lang.please_select_dir,'danger',2000,1);
+        if (id.length < 1) {
+            showmessage(__lang.please_select_dir, 'danger', 2000, 1);
             return false;
-        }else{
+        } else {
             var pnode = inst.get_node(id);
         }
         var fid = '';
         if (!pnode.li_attr.fid) {
             var replacematch = /^([a-z]|[A-Z])+_/;
-             fid = pnode.id.replace(replacematch, '');
+            fid = pnode.id.replace(replacematch, '');
 
         } else {
             fid = pnode.li_attr.fid;
         }
         if (!fid) {
-            showmessage(__lang.please_select_dir,'danger',2000,1);
+            showmessage(__lang.please_select_dir, 'danger', 2000, 1);
             return false;
         } else {
             $.post('index.php?mod=system&op=positionlist&do=getfoldername', {'fid': fid}, function (data) {
@@ -246,7 +305,7 @@
                         $('#new_folder').css({'position': 'relative'});
                         var html = '<div id="replace_jstreeli" class="layer" style="position:absolute;top:0px;left:50px;">' +
                             '<input type="text" value="' + data.fname + '" class="nameinput" style="height:24px"/>' +
-                            '<button type="button" class="btn btn-primary-outline button-rightcolor" onclick="realcreate(this,' + node.id + ','+pnode.id+')">' +
+                            '<button type="button" class="btn btn-primary-outline button-rightcolor" onclick="realcreate(this,' + node.id + ',' + pnode.id + ')">' +
                             '<span class="dzz dzz-done"></span>' +
                             '</button>' +
                             '<button type="button" class="btn btn-primary-outline button-rightcolor" onclick="canclecreate(this,' + node.id + ')">' +
@@ -255,15 +314,15 @@
                             '</div>';
                         $('#new_folder').append(html);
                     });
-                }else{
+                } else {
 //                    showDialog(data['error']);
-                    showmessage(data['error'],"danger",2000,1);
+                    showmessage(data['error'], "danger", 2000, 1);
                 }
             }, 'json');
             return false;
         }
     }
-    function realcreate(obj, node,parentnode) {
+    function realcreate(obj, node, parentnode) {
         var inst = $('#position').jstree(true);
         var pnode = inst.get_node(parentnode);
         var fid = '';
@@ -277,20 +336,23 @@
         var fname = $(obj).closest('.layer').find('.nameinput').val();
         var empty = /^\s*$/;
         if (empty.test(fname)) {
-            showmessage(__lang.name_cannot_empty,"danger",2000,1);
+            showmessage(__lang.name_cannot_empty, "danger", 2000, 1);
             return false;
         }
-        $.post('index.php?mod=system&op=positionlist&do=creatnewfolder',{'fid':fid,'foldername':fname},function(data){
-            if(data['msg'] == 'success'){
+        $.post('index.php?mod=system&op=positionlist&do=creatnewfolder', {
+            'fid': fid,
+            'foldername': fname
+        }, function (data) {
+            if (data['msg'] == 'success') {
                 inst.rename_node(node, fname);
-                inst.set_id(node, 'f_'+data.fid);
+                inst.set_id(node, 'f_' + data.fid);
                 $(obj).closest('.layer').remove();
                 inst.deselect_node(parentnode);
                 inst.select_node(node);
-            }else {
-              showmessage(data['error'],"danger",2000,1);
+            } else {
+                showmessage(data['error'], "danger", 2000, 1);
             }
-        },'json');
+        }, 'json');
         return false;
     }
     function canclecreate(obj, node) {
@@ -298,28 +360,28 @@
         $(obj).closest('.layer').remove();
         inst.delete_node(node);
     }
-    function submitdata(){
-        var fid = $('#'+ctrlid).val();
-        if(!fid){
+    function submitdata() {
+        var fid = $('#' + ctrlid).val();
+        if (!fid) {
 //            showDialog(__lang.please_select_dir);
-            showmessage(__lang.please_select_dir,"danger",2000,1);
+            showmessage(__lang.please_select_dir, "danger", 2000, 1);
             return false;
-        }else{
-            $.post(MOD_URL+'&op=positionlist&do=geffolderinfo',{'fid':fid},function(data){
-                if(parent.$callback){
-                    parent.$callback(fid,data);
-                }else{
-                    opened.$callback(fid,data);
+        } else {
+            $.post(MOD_URL + '&op=positionlist&do=geffolderinfo', {'fid': fid}, function (data) {
+                if (parent.$callback) {
+                    parent.$callback(fid, data);
+                } else {
+                    opened.$callback(fid, data);
                 }
                 hide_window();
-            },'json')
+            }, 'json')
         }
         return false;
     }
-    function hide_window(){
-        if(opened){
+    function hide_window() {
+        if (opened) {
             window.close();
-        }else{
+        } else {
             parent.hide_window();
         }
     }
@@ -328,10 +390,14 @@
 <div class="modal-footer">
     <input id="$ctrlid" type="hidden" name="fid" value=""/>
     <!--{if $allowcreate}-->
-    <button type="button" class="btn btn-primary-outline pull-left" onclick="createNewFolder();return false;">{lang newfolder}</button>
+    <button type="button" class="btn btn-primary-outline pull-left" onclick="createNewFolder();return false;">{lang
+        newfolder}
+    </button>
     <!--{/if}-->
     <button type="button" class="btn btn-primary" onclick="submitdata()">{lang confirms}</button>
-    <button type="button" class="btn btn-default-outline cancel" data-dismiss="modal" aria-label="Close" onclick="hide_window()">{lang cancel} </button>
+    <button type="button" class="btn btn-default-outline cancel" data-dismiss="modal" aria-label="Close"
+            onclick="hide_window()">{lang cancel}
+    </button>
 
 </div>
 </body>

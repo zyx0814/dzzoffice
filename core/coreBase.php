@@ -75,6 +75,6 @@ require DZZ_ROOT.'core/function/function_misc.php';
 //    HookRead::_init();//注册钩子
 //}
 
-C::creatapp();
+//C::creatapp();
 
 

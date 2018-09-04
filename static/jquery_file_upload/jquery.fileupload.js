@@ -1231,11 +1231,16 @@
 			 }
             if (dataTransfer && dataTransfer.files && dataTransfer.files.length) {
                 e.preventDefault();
+				data.files=[];
                 this._getDroppedFiles(dataTransfer).always(function (files) {
-                    data.files = files;
-                   // if (that._trigger('drop', e, data) !== false) {
-                        that._onAdd(e, data);
-                   // }
+					for(var i=0;i<files.length;i++){
+						if(files[i]) {
+							data.files.push(files[i]);
+						}
+					}
+					   //if (that._trigger('drop', e, data) !== false) {
+							that._onAdd(e, data);
+					  // }
                 });
             }
         },

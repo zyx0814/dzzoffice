@@ -24,7 +24,7 @@ if ($do == 'export') {//应用导出
 	$app['appico'] = imagetobase64($app['appico']);
 	$app['extra'] = array();
 	$appid=$app['appid'];
-	unset($app['mid']);
+	//unset($app['mid']);
 	unset($app['appid']);
 	unset($app['orgid']);
 	unset($app['available']);
@@ -58,8 +58,10 @@ if ($do == 'export') {//应用导出
 	$apparray['app'] = $app;
 	$apparray['version'] = strip_tags($_G['setting']['version']);
 	$hooks=array();
-	foreach(DB::fetch_all("SELECT name,addons FROM %t where `status`='1' and app_market_id='".$appid."' ORDER BY priority",array('hooks')) as $value) {
-               $hooks[$value['name']]=$value['addons'];
+	 
+	foreach(DB::fetch_all("SELECT * FROM %t where `status`='1' and app_market_id='".$appid."' ORDER BY priority",array('hooks')) as $value) {
+        $hooks[$value['name']]=$value['addons'];
+		$hooks['_attributes'][$value['name']]=array("priority"=>$value['priority'],'description'=>$value['description']);
     }
 	
 	if($hooks) $apparray['hooks']=$hooks;
@@ -71,8 +73,7 @@ elseif ($do == 'import') {//导入应用
 	if (!submitcheck('importsubmit')) {
 		include template('import');
 	} else {
-		$apparray = getimportdata('Dzz! app'); 
-
+		$apparray = getimportdata('Dzz! app');
 		if ($apparray['app']['identifier']) {
 			if(empty($apparray['app']['app_path'])) $apparray['app']['app_path']='dzz';
 			if (!is_dir(DZZ_ROOT . './'.$apparray['app']['app_path'].'/' . $apparray['app']['identifier'])) {

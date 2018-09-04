@@ -320,12 +320,12 @@ class table_organization extends dzz_table
     public function setFolderAvailableByOrgid($orgid, $available=0)
     {
         if (!$org = parent::fetch($orgid)) return false;
-        /*if ($available > 0 && $org['forgid'] > 0) {//上级没有开启目录共享，下级无法开启
+        if ($available > 0 && $org['forgid'] > 0) {//上级没有开启目录共享，下级无法开启
             $parent = parent::fetch($org['forgid']);
             if ($parent['diron'] < 1) return false;
-        }*/
+        }
         if (parent::update($orgid, array('diron' => $available))) {
-            self::setFolderByOrgid($orgid);
+            //self::setFolderByOrgid($orgid);
             //include_once libfile('function/cache');
             //updatecache('organization');
             return true;
@@ -372,11 +372,11 @@ class table_organization extends dzz_table
         }
 
         if ($fid = DB::result_first("select fid from " . DB::table('folder') . " where gid='{$orgid}' and flag='organization'")) {
-            C::t('folder')->update($fid, array('fname' => $org['orgname'], 'display' => $org['disp'], 'pfid' => $pfid, 'innav' => $org['available']));
-            C::t('resources_path')->update_path_by_fid($fid, $org['orgname']);
-            self::update($orgid, array('fid' => $fid));
+            if(C::t('folder')->rename_by_fid($fid,$org['orgname'])){
+                self::update($orgid, array('fid' => $fid));
+            }
         } else {
-            $folder = array('fname' => $org['orgname'],
+            $folder = array('fname' => C::t('folder')->getFolderName($org['orgname'],$pfid,$org['fid']),
                 'pfid' => $pfid,
                 'display' => $org['disp'],
                 'flag' => 'organization',
@@ -450,9 +450,9 @@ class table_organization extends dzz_table
         return $disp;
     }
 
-    public function chk_by_orgname($orgname)
+    public function chk_by_orgname($orgname,$type = 0)
     {
-        if (DB::result_first("select count(*) from %t where orgname = %s", array($this->_table, $orgname, getglobal('uid'))) > 0) {
+        if (DB::result_first("select count(*) from %t where orgname = %s and `type` = %d", array($this->_table, $orgname,$type, getglobal('uid'))) > 0) {
             return false;
         }
         return true;

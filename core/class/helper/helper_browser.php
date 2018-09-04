@@ -111,10 +111,15 @@ class helper_browser
     {
         $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
         if (preg_match("/WindowsWechat/i", $agent)) {
-            return 'WindowsWechat';
-        } elseif (preg_match("/MicroMessenger/i", $agent)) {
+            return false;//return 'WindowsWechat';pc微信客户端打开pc版
+        }
+        elseif (preg_match("/macintosh/i", $agent) && preg_match("/MicroMessenger/i", $agent)) {
+             return false;//苹果电脑系统pc端
+        }
+        elseif (preg_match("/MicroMessenger/i", $agent)) {
             return 'wechat';
-        } elseif (preg_match("/iphone/i", $agent) && preg_match("/mac os/i", $agent)) {
+        }
+        elseif (preg_match("/iphone/i", $agent) && preg_match("/mac os/i", $agent)) {
             return 'iPhone';
         } elseif (preg_match("/ipod/i", $agent) && preg_match("/mac os/i", $agent)) {
             return 'iPod';

@@ -12,12 +12,6 @@ class table_resources_recyle extends dzz_table
         $this->_pk = 'id';
         parent::__construct();
     }
-    /*  public function delete_by_rid($rid){
-          if(DB::delete($this->_table,array('rid'=>$rid))){
-              return array('success'=>lang('exploder_do_succeed'));
-          }
-          return array('error'=>lang('exploder_do_failed'));
-      }*/
     //插入回收站文件
     public function insert_data($setarr)
     {
@@ -57,16 +51,6 @@ class table_resources_recyle extends dzz_table
 
         }
     }
-    /* public function fetch_by_uid($uid){
-         $uid = intval($uid);
-         $result = array();
-         foreach(DB::fetch_all("select * from %t where uid = %d and gid = %d",array($this->_table,$uid,0)) as $v){
-             $v['info'] = C::t('resources')->fetch_by_rid($v['rid']);
-             $v['info']['deldateline'] = dgmdate($v['info']['deldateline']);
-             $result[] = $v;
-         }
-         return $result;
-     }*/
     //查询群组回收站文件
     public function fetch_by_gid($gid)
     {

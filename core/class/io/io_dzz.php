@@ -502,7 +502,7 @@ class io_dzz extends io_api
             $oldaid = $icoarr['aid'];
             //更新附件数量
             if ($oldaid != $attach['aid']) {
-                C::t('resources')->update($rid, array('size' => $attach['filesize']));
+                C::t('resources')->update_by_rid($rid, array('size' => $attach['filesize']));
                 C::t('resources_statis')->add_statis_by_rid($rid, array('editdateline' => TIMESTAMP));
                 C::t('resources_attr')->update_by_skey($icoarr['rid'], $icoarr['vid'], array('aid' => $attach['aid']));
                 C::t('attachment')->update($attach['aid'], array('copys' => $attach['copys'] + 1));
@@ -1042,7 +1042,7 @@ class io_dzz extends io_api
         }
         $fname = self::name_filter($fname);
 
-        if (!$folder = DB::fetch_first("select fid,pfid,iconview,disp,gid,perm_inherit from %t where fid=%d", array('folder', $pfid))) {
+        if (!$folder = C::t('folder')->fetch($pfid)){//DB::fetch_first("select fid,pfid,iconview,disp,gid,perm_inherit from %t where fid=%d", array('folder', $pfid))) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         if (!perm_check::checkperm_Container($pfid, 'folder')) {
@@ -1127,7 +1127,8 @@ class io_dzz extends io_api
                 }
                 return array('icoarr' => $setarr1, 'folderarr' => $setarr);
             } else {
-                C::t('folder')->delete_by_fid();
+                C::t('folder')->delete_by_fid($setarr['fid'],true);
+                return array('error' => lang('data_error'));
             }
         }
         return false;
@@ -1517,7 +1518,7 @@ class io_dzz extends io_api
                 }
                 $re['monthdate'] = dgmdate($re['dateline'],'m-d');
                 $re['hourdate'] = dgmdate($re['dateline'],'H:i');
-                $re['pfid'] = $pfid;
+                $re['pfid'] = $data['pfid'];
                 $re['colect'] = 0;
                 $data['icoarr'][] = $re;
                 return $data;
@@ -2212,9 +2213,11 @@ class io_dzz extends io_api
                                 $newname = self::getFolderName($fname, $pfid);
                                 self::rename($finfo['rid'], $newname);
                             }
-                            DB::update('resources', array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid), array('rid' => $finfo['rid']));
+                            //DB::update('resources', array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid), array('rid' => $finfo['rid']));
+                            C::t('resources')->update_by_rid($finfo['rid'],array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid));
                         }
-                        DB::update('folder', array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid), array('fid' => $finfo['fid']));
+                        //DB::update('folder', array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid), array('fid' => $finfo['fid']));
+                        C::t('folder')->update($finfo['fid'],array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid));
                     }
                     $pfid = $data['pfid'] = $finfo['fid'];
                 } else {
@@ -2291,8 +2294,10 @@ class io_dzz extends io_api
                             $rids[] = $v['rid'];
                         }
                     }
-                    if (count($rids) > 0) DB::update('resources', array('pfid' => $rinfo['oid']), 'rid in(' . dimplode($rids) . ')');
-                    if (count($fids) > 0) DB::update('folder', array('pfid' => $rinfo['oid']), 'fid in(' . dimplode($fids) . ')');
+                    // DB::update('resources', array('pfid' => $rinfo['oid']), 'rid in(' . dimplode($rids) . ')');
+                    if (count($rids) > 0) C::t('resources')->update_by_rid($rids,array('pfid' => $rinfo['oid']));
+                    //DB::update('folder', array('pfid' => $rinfo['oid']), 'fid in(' . dimplode($fids) . ')');
+                    if (count($fids) > 0) C::t('folder')->update($fids, array('pfid' => $rinfo['oid']));
                     //更改当前目录下所有下级文件路径
                     C::t('resources_path')->update_pathdata_by_fid($icoarr['oid'], $rinfo['oid'], true);
                     //更改动态归属
@@ -2317,7 +2322,8 @@ class io_dzz extends io_api
                     if ($icoarr['isdelete'] > 0) {
                         $recoverarr = array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $icoarr['pfid']);
                         //恢复文件夹表数据和resources表数据
-                        if (DB::update('folder', $recoverarr, 'fid =' . $icoarr['oid']) && DB::update('resources', $recoverarr, "rid ='{$rid}'")) {
+                        //if (DB::update('folder', $recoverarr, 'fid =' . $icoarr['oid']) && DB::update('resources', $recoverarr, "rid ='{$rid}'")) {
+                        if(C::t('folder')->update($icoarr['oid'],$recoverarr) && C::t('resources')->update_by_rid($rid,$recoverarr)){
                             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
                             //添加事件
                             $eventdata1 = array('username' => $_G['username'], 'position' => $path, 'filename' => $icoarr['name'], 'hash' => $hash);
@@ -2361,7 +2367,8 @@ class io_dzz extends io_api
                 }
 
                 //恢复文件
-                if (DB::update('resources', $recoverarr, array('rid' => $rid))) {
+                //if (DB::update('resources', $recoverarr, array('rid' => $rid))) {
+                if(C::t('resources')->update_by_rid($rid,$recoverarr)){
                     //删除回收站收据
                     C::t('resources_recyle')->delete_by_rid($icoarr['rid']);
                     //添加事件
@@ -2490,19 +2497,22 @@ class io_dzz extends io_api
                             $rids[] = $v['rid'];
                         }
                         //修改文件夹表数据和resources表数据
+                        // DB::update('resources', array('oid' => $folder['fid'], 'pfid' => $pfid, 'gid' => $gid, 'uid' => $_G['uid'], 'username' => $_G['username']), array('rid' => $rid)
                         if (C::t('folder')->update($folder['fid'], $folder) &&
-                            DB::update('resources', array('oid' => $folder['fid'], 'pfid' => $pfid, 'gid' => $gid, 'uid' => $_G['uid'], 'username' => $_G['username']), array('rid' => $rid))
+                           C::t('resources')->update_by_rid($rid,array('oid' => $folder['fid'], 'pfid' => $pfid, 'gid' => $gid, 'uid' => $_G['uid'], 'username' => $_G['username']))
                         ) {
 
                             //更改文件夹路径
                             C::t('resources_path')->update_pathdata_by_fid($folder['fid'], $pfid);
                             if ($fids) {
                                 //修改资源表数据
-                                DB::update('resources', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
+                                //DB::update('resources', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
+                                C::t('resources')->update_by_pfids($fids,$folderinfo);
                                 //更改动态表数据
                                 DB::update('resources_event', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
                                 //更改folder表数据
-                                DB::update('folder', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
+                               // DB::update('folder', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
+                                C::t('folder')->update_by_pfids($fids,$folderinfo);
                             }
                             if ($contains['size'] > 0) {
                                 SpaceSize(-$contains['size'], $ogid, 1);
@@ -2552,7 +2562,7 @@ class io_dzz extends io_api
                 $icoarr['pfid'] = $pfid;
                 $icoarr['isdelete'] = 0;
 
-                if (C::t('resources')->update($icoarr['rid'], $icoarr)) {
+                if (C::t('resources')->update_by_rid($icoarr['rid'], $icoarr)) {
                     //更改文件动态归属位置
                     C::t('resources_event')->update_position_by_rid($icoarr['rid'], $icoarr['pfid'], $icoarr['gid']);
                     //修改分享表状态
@@ -2578,7 +2588,7 @@ class io_dzz extends io_api
             }
 
         } else {
-            C::t('resources')->update($icoarr['rid'], array('isdelete' => 0, 'deldateline' => 0));
+            C::t('resources')->update_by_rid($icoarr['rid'], array('isdelete' => 0, 'deldateline' => 0));
             addtoconfig($icoarr);
         }
         if ($icoarr['type'] == 'folder') C::t('folder')->update($icoarr['oid'], array('isdelete' => 0));

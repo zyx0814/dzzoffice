@@ -3,7 +3,12 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-
+if(function_exists('ini_get')) {
+	$memorylimit = @ini_get('memory_limit');
+	if($memorylimit && return_bytes($memorylimit) < 536870912 && function_exists('ini_set')) {
+		ini_set('memory_limit', '512m');
+	}
+}
 
 class image {
 

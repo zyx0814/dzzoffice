@@ -6,11 +6,7 @@
 <link href="dzz/system/css/select-file.css?{VERHASH}" rel="stylesheet" media="all">
 <script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
 <style>  
-<!--
-{
-    if $ _GET [ 'nosearch' ] > 0
-}
--->
+<!--{ if $ _GET [ 'nosearch' ] > 0}-->
 .orgtree-search {
     display: none;
 }
@@ -19,12 +15,7 @@ body {
     padding-bottom: 0;
 }
 
-<!--
-{
-/
-if
-}
--->
+<!--{/if}-->
 </style>
 <script type="text/javascript">
     var ctrlid = '$ctrlid';
@@ -219,7 +210,6 @@ _selectfile.getData(MOD_URL+'&op=explorerfile&do=filelist&sid=f-'+fid);
 function createNewFolder() {
     var inst = $('#position').jstree(true);
     var id = $('#position').jstree("get_selected");
-    console.log(id);
     if(id.length < 1){
         showmessage(__lang.please_select_dir,'danger',2000,1);
         return false;
@@ -311,11 +301,13 @@ function submitdata(){
         return false;
     }else{
         $.post(MOD_URL+'&op=positionlist&do=geffolderinfo',{'fid':fid},function(data){
+			try{if(typeof parent.showWindow_callback == 'function') parent.showWindow_callback(fid,data);}catch(e){}
             if(parent.$callback){
-                parent.$callback(fid,data);
+               try{ parent.$callback(fid,data);}catch(e){}
             }else{
-                opened.$callback(fid,data);
+               try{ opened.$callback(fid,data);}catch(e){}
             }
+			
             hide_window();
         },'json')
     }

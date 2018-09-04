@@ -49,11 +49,11 @@
 		<div class="main-header">
 			<ul class="nav nav-pills nav-pills-bottomguide">
 				<li <!--{if !$fieldid}-->class="active"<!--{/if}-->>
-					<a href="{BASESCRIPT}?mod=member&op=profileset">{lang data_item_list}</a>
+					<a href="{MOD_URL}&op=profileset">{lang data_item_list}</a>
 				</li>
 				<!--{if $fieldid}-->
 				<li class="active">
-					<a href="{BASESCRIPT}?mod=member&op=profileset&fieldid=$fieldid">{lang data_edit}</a>
+					<a href="{MOD_URL}&op=profileset&fieldid=$fieldid">{lang data_edit}</a>
 				</li>
 				<!--{/if}-->
 			</ul>
@@ -74,7 +74,7 @@
 		</table>
 		<div class="itemContainer">
 			<div class="main-content">
-				<form id="cpform" action="{BASESCRIPT}?mod=member&op=profileset" method="post" name="cpform">
+				<form id="cpform" action="{MOD_URL}&op=profileset" method="post" name="cpform">
 					<input type="hidden" value="{FORMHASH}" name="formhash">
 					<input type="hidden" value="true" name="ordersubmit">
 					<table class="table table-hover">
@@ -89,9 +89,9 @@
 							<td width="60"><input type="checkbox" class="checkbox" name="showincard[$fieldid]" <!--{if $value[showincard]}-->checked="checked"<!--{/if}-->value="1"></td>
 							<td width="60"><input type="checkbox" class="checkbox" name="showinregister[$fieldid]" <!--{if $value[showinregister]}-->checked="checked"<!--{/if}-->value="1"></td>
 							<td width="100">
-								<a href="{BASESCRIPT}?mod=member&op=profileset&fieldid=$fieldid" class="ibtn glyphicon glyphicon-edit " title="{lang edit}"></a>
+								<a href="{MOD_URL}&op=profileset&fieldid=$fieldid" class="ibtn glyphicon glyphicon-edit " title="{lang edit}"></a>
 								<!--{if $value['customable']}-->&nbsp;&nbsp;&nbsp;&nbsp;
-								<a href="{BASESCRIPT}?mod=member&op=profileset&do=delete&fieldid=$fieldid" onclick="return confirm('{lang profileset_delete}')" class="ibtn glyphicon glyphicon-trash " title="{lang delete}"></a>
+								<a href="{MOD_URL}&op=profileset&do=delete&fieldid=$fieldid" onclick="return confirm('{lang profileset_delete}')" class="ibtn glyphicon glyphicon-trash " title="{lang delete}"></a>
 								<!--{/if}-->
 							</td>
 						</tr>
@@ -112,7 +112,7 @@
 </div>
 <script type="text/javascript">
 	jQuery('.left-drager').leftDrager_layout(initHeight);
-	var url = '{BASESCRIPT}?mod=member';
+	var url = '{MOD_URL}';
 
 	jQuery(document).ready(function(e) {
 		jQuery('input').iCheck({

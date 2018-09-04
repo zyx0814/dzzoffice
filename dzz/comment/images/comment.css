@@ -514,7 +514,9 @@ a.ui-artZoom-hide:hover span, ._tt_tasklist li .ui-artZoom-hide.title_tttl:hover
 .item_afed{
 	padding-bottom:10px;
 }
-
+.item_afed:hover {
+    background-color: #FBFBFB;
+}
 .lquote_mmfed {
 	width: 16px;
 	height: 11px;
@@ -754,7 +756,6 @@ a.ui-artZoom-hide:hover span, ._tt_tasklist li .ui-artZoom-hide.title_tttl:hover
 }
 .img_pfed .txt_ipfed {
 	padding: 2px 5px;
-	font: 12px/14px Verdana, "\5B8B\4F53", "\65B0\5B8B\4F53", sans-serif;
 	border: 1px solid #aaa;
 	display: inline-block
 }
@@ -767,12 +768,8 @@ a.ui-artZoom-hide:hover span, ._tt_tasklist li .ui-artZoom-hide.title_tttl:hover
 	display: inline-block
 }
 .img_pfed .min_ipfed img {
-	max-width: 120px;
-	max-height: 80px
-}
-* .img_pfed .min_ipfed img{
-	width: expression(this.width > 120 && this.width>=this.height ? 120: true);
-	height: expression(this.height > 80 && this.width<=this.height ? 80 : true);
+	max-width: 100%;
+	/*max-height: 80px*/
 }
 
 .name_pfed {

@@ -34,6 +34,7 @@ class dzz_io
 		}else{
 			return false;
 		}
+
 		return new $classname($path);
 	}
 	function MoveToSpace($path,$attach,$ondup='overwrite'){
