@@ -26,14 +26,8 @@ class table_resources_collect extends dzz_table
                     'dateline'=>time(),
                     'pfid'=>$data['pfid']
                 );
-                if ($data['gid'] > 0) {
-                    $pfid = $data['pfid'];
-                    $perm = perm_check::getPerm($pfid);
-                    if ($perm > 0) {
-                        if (!perm_binPerm::havePower('read2', $perm) && !(perm_binPerm::havePower('read1', $perm) && $_G['uid'] == $data['uid'])) {
-                            continue;
-                        }
-                    }
+                if (!perm_check::checkperm_Container($data['pfid'], 'read2') && !($_G['uid'] == $data['uid'] && perm_check::checkperm_Container($data['pfid'], 'read1'))) {
+                    continue;
                 }
                 if(self::add_collect($setarr)){
                     //处理数据

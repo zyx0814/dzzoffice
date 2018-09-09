@@ -19,9 +19,8 @@ class table_resources_clipboard extends dzz_table
         $typearr = array();
         foreach(DB::fetch_all("select rid,uid,pfid,type from %t where rid in (%n) and isdelete < 1",array('resources',$paths)) as $v){
             $pfid = $v['pfid'];
-            $perm = perm_check::getPerm($pfid);
-            if(!perm_binPerm::havePower('copy2', $perm) && !(perm_binPerm::havePower('copy1', $perm) && $uid == $v['uid']) ){
-                continue;
+            if (!perm_check::checkperm_Container($pfid, 'copy2') && !($uid == $v['uid'] && perm_check::checkperm_Container($pfid, 'copy1'))) {
+                return array('error'=>lang('no_privilege'));
             }
             if($v['type'] == 'folder'){
                 $typearr[] = 1;

@@ -118,13 +118,13 @@ class table_attachment extends dzz_table
 		if($filter['aid']){
 			$where.=" and aid={$filter['aid']}";
 		}
-		$filter['sizelt']=intval($filter['sizelt'])*1024*1024;
+		$filter['sizelt']=intval($filter['sizelt']*1024*1024);
 		if($filter['sizelt']>0){
-			$where.=" and filesize>'{$filter[sizelt]}'";
+			$where.=" and filesize>$filter[sizelt]";
 		}
-		$filter['sizegt']=intval($filter['sizegt'])*1024*1024;;
+		$filter['sizegt']=intval($filter['sizegt']*1024*1024);
 		if($filter['sizegt']>0){
-			$where.=" and filesize<'{$filter[sizegt]}'";
+			$where.=" and filesize<$filter[sizegt]";
 		}
 		if($filter['exts']){
 			$extarr=explode(',',$filter['exts']);
@@ -142,7 +142,6 @@ class table_attachment extends dzz_table
 				$where.=" and aid NOT IN (".dimplode($ignores).")";
 			}
 		}
-		
 		if($sizecount)	return DB::result_first("SELECT  sum(filesize) FROM ".DB::table($this->_table)."  WHERE $where ");
 		else  return DB::fetch_first("SELECT  * FROM ".DB::table($this->_table)." WHERE $where order by dateline");
 		

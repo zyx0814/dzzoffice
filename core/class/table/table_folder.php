@@ -450,16 +450,11 @@ class table_folder extends dzz_table
         if ($folder = C::t('folder')->fetch($pfid)) {
             $where1 = array();
             if (!$this->noperm && $folder['gid'] > 0) {
-                $folder['perm'] = perm_check::getPerm($folder['fid']);
-                if ($folder['perm'] > 0) {
-                    if (perm_binPerm::havePower('read2', $folder['perm'])) {
-                        //$where1[]="uid!='{$_G[uid]}'"; //原来查询思路，read2权限只能看到其他人建立文件，不能看到自己的
+                    if (perm_check::checkperm_Container($folder['fid'], 'read2')) {
                         $where1[] = "1";
-                    } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
+                    } elseif (perm_check::checkperm_Container($folder['fid'], 'read1')) {
                         $where1[] = "uid='{$_G[uid]}'";
                     }
-
-                }
                 $where1 = array_filter($where1);
                 if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
                 else $temp[] = "0";

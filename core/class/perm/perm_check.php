@@ -69,53 +69,7 @@ class perm_check{
             return 3;
         }
     }
-	/*function getPerm($fid, $bz=''){
-        global $_G;
-    	if($paths=C::t('resources_path')->fetch($fid)){
-			$pfids=array_reverse((array)explode('-',str_replace('_','',$paths['pathkey'])));
-			foreach($pfids as $fid){
-				 if($folder=C::t('folder')->fetch($fid)){
-					$perm=intval($folder['perm']);
-					$power=new perm_binPerm($perm);
-					if($folder['gid']){
-						if(C::t('organization_admin')->chk_memberperm($folder['gid'],$_G['uid'])) return perm_binPerm::getGroupPower('all');
 
-						if($power->isPower('flag')){//不继承，使用此权限
-							if($_G['setting']['allowshare']){
-								$perm=$power->delPower('share');
-							}
-							$power1=new perm_binPerm($perm);
-							return $power1->power;//mergePower(self::getuserPerm());
-						}else{ //继承上级，查找上级
-							if($folder['pfid']>0 && $folder['pfid']!=$folder['fid']){ //有上级目录
-								continue;
-							}else{   //其他的情况使用
-								return perm_binPerm::getGroupPower('read');
-							}
-						}
-					}else{
-						if($power->isPower('flag')){//不继承，使用此权限
-							if($_G['setting']['allowshare']){
-								$perm=$power->delPower('share');
-							}
-							$power1=new perm_binPerm($perm);
-							return $power1->mergePower(self::getuserPerm());;
-						}else{ //继承上级，查找上级
-							if($folder['pfid']>0 && $folder['pfid']!=$folder['fid']){ //有上级目录
-								//return self::getPerm($folder['pfid'],$bz,$i);
-								continue;
-							}else{   //其他的情况使用
-								return self::getuserPerm();
-							}
-						}
-					}
-				 }
-			}
-			return 7;
-		}else{
-			return 7;
-		}
-    }*/
     function getPerm1($fid, $bz='',$i=0,$newperm = 0){
         global $_G;
 

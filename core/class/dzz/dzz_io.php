@@ -259,7 +259,16 @@ class dzz_io
 	//返回我文件data；
 	function setFileContent($path,$data,$force=false,$nocover = true){
 		$path=self::clean($path);
-		if($io=self::initIO($path))	return $io->setFileContent($path,$data,$force,$nocover);
+		if($io=self::initIO($path))	{
+		    if($data = $io->setFileContent($path,$data,$force,$nocover)){
+		    	$filedata = $data;
+                \Hook::listen('setfilecontent_after', $filedata);
+                return $data;
+			}else{
+                return false;
+			}
+
+		}
 		else return false;
 	}
 	

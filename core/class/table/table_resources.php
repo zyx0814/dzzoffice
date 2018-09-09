@@ -73,14 +73,8 @@ class table_resources extends dzz_table
             $updatepath = true;
         }
         $fid = $infoarr['pfid'];
-        if ($infoarr['gid'] > 0) {
-            $pfid = $infoarr['pfid'];
-            $perm = perm_check::getPerm($pfid);
-            if ($perm > 0) {
-                if (!perm_binPerm::havePower('edit2', $perm) && !(perm_binPerm::havePower('edit1', $perm) && $uid == $infoarr['uid'])) {
-                    return array('error' => true);
-                }
-            }
+        if (!perm_check::checkperm_Container($infoarr['pfid'], 'edit2') && !($_G['uid'] == $infoarr['uid'] && perm_check::checkperm_Container($infoarr['pfid'], 'edit1'))) {
+            return array('error' => true);
         }
         $setarr = array(
             'isdelete' => 1,
@@ -246,10 +240,8 @@ class table_resources extends dzz_table
             $dels[] = $rid;
         } else {
             //文件权限判断
-            if ($infoarr['gid'] > 0) {
-                if (!perm_check::checkperm_Container($fid, 'delete2') && !(perm_check::checkperm_Container($fid, 'delete1') && $uid == $infoarr['uid'])) {
-                    return array('error' => lang('no_privilege'));
-                }
+            if (!perm_check::checkperm_Container($fid, 'delete2') && !($uid == $infoarr['uid'] && perm_check::checkperm_Container($fid, 'delete1'))) {
+                return array('error' => lang('no_privilege'));
             }
             if (DB::result_first("select count(*) from %t where rid = %s", array('resources_recyle', $rid))) {
                 return array('error' => lang('file_isdelete_in_recycle'));
@@ -723,18 +715,16 @@ class table_resources extends dzz_table
             if ($value['type'] == 'folder') {
                 $value['path'] = $path . $value['name'] . '/';//路径
                 if ($checkperm) {
-                    if ($value['uid'] == $currentuid && !perm_check::checkperm_Container($value['oid'], 'read1')) {
-                        continue;
-                    } elseif (!perm_check::checkperm_Container($value['oid'], 'read2')) {
+                    if (!perm_check::checkperm_Container($value['oid'], 'read2') &&
+                        !($value['uid'] == $currentuid && perm_check::checkperm_Container($value['oid'], 'read1'))) {
                         continue;
                     }
                 }
             } else {
                 if ($checkperm) {
                     $value['path'] = $path . $value['name'];//路径
-                    if ($value['uid'] == $currentuid && !perm_check::checkperm_Container($value['pfid'], 'read1')) {
-                        continue;
-                    } elseif (!perm_check::checkperm_Container($value['pfid'], 'read2')) {
+                    if (!perm_check::checkperm_Container($value['oid'], 'read2') &&
+                        !($value['uid'] == $currentuid) && perm_check::checkperm_Container($value['oid'], 'read1')) {
                         continue;
                     }
                 }

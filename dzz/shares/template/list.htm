@@ -410,7 +410,7 @@
 
     function share_download(obj) {
         var li = jQuery(obj).closest('.item');
-        jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function (data) {
+        jQuery.post('{MOD_URL}&do=adddowns', {'sid':'$_GET[sid]'},function (data) {
             if (data['success']) {
                 var url = DZZSCRIPT + '?mod=io&op=download&checkperm=false&path=' + li.data('dpath');
                 if (BROWSER.ie) {
@@ -418,8 +418,6 @@
                 } else {
                     window.frames['hideframe'].location = url;
                 }
-            } else {
-                console.log('aaaa');
             }
         }, 'json');
         return false;
@@ -427,7 +425,7 @@
 
     function downmorefile() {
         var dpath = share.join(',');
-        jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function (data) {
+        jQuery.post('{MOD_URL}&do=adddowns,{'sid':'$_GET[sid]'}, function (data) {
             if (data['success']) {
                 var url = DZZSCRIPT + '?mod=io&op=download&checkperm=false&path=' + dpath;
                 if (BROWSER.ie) {
@@ -490,8 +488,7 @@
     //下载选中项
     function downfileselect() {
         var sharids = share;
-        jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function (data) {
-            console.log(sharids);
+        jQuery.post('{MOD_URL}&do=adddowns',{'sid':'$_GET[sid]'}, function (data) {
             if (data['success']) {
                 var url = DZZSCRIPT + '?mod=io&op=download&checkperm=false&path=' + share;
                 if (BROWSER.ie) {
@@ -558,7 +555,7 @@
         jQuery('div[data-value="true"]').each(function () {
             rids.push(jQuery(this).data('dpath'));
         });
-        jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function (data) {
+        jQuery.post('{MOD_URL}&do=adddowns',{'sid':'$_GET[sid]'}, function (data) {
             if (data['success']) {
                 var url = DZZSCRIPT + '?mod=io&op=download&checkperm=false&path=' + rids;
                 if (BROWSER.ie) {
@@ -589,7 +586,7 @@
             location.href = '$_G[siteurl]user.php?mod=login';
             return false;
         }
-        jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function(data) {
+        jQuery.post('{MOD_URL}&do=adddowns',{'sid':'$_GET[sid]'}, function(data) {
          if(data['success']) {
              var userhref = 'index.php?mod=system&op=filewindow&handlekey=svaefile&type=2&perm=write&allowcreate=1&callback=save_file';
              showWindow('seldir', userhref, 'get', '0');

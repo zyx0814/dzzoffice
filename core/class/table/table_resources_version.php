@@ -132,13 +132,7 @@ class table_resources_version extends dzz_table
             return array('error'=>lang('file_not_exist'));
         }
         //检测权限
-        if(perm_check::checkperm_Container($resources['pfid'],'upload')){
-            if(!perm_check::checkperm_Container($resources['pfid'],'edit2')){
-                return array('error'=>lang('no_privilege'));
-            }elseif($resources['uid'] == $setarr['uid'] && !perm_check::checkperm_Container($resources['pfid'],'edit1')){
-                return array('error'=>lang('no_privilege'));
-            }
-        }else{
+        if (!perm_check::checkperm_Container($resources['pfid'], 'edit2') && !( $_G['uid'] == $resources['uid'] && perm_check::checkperm_Container($resources['pfid'], 'edit1'))) {
             return array('error'=>lang('no_privilege'));
         }
         //文件类型获取
@@ -150,9 +144,10 @@ class table_resources_version extends dzz_table
         }else{
             $setarr['type'] = 'attach';
         }
-        $oldattr = C::t('resources_attr')->fetch_by_rid($rid);
+        
         //没有版本时,属性表和版本数据处理
         if($resources['vid'] == 0){
+			$oldattr = C::t('resources_attr')->fetch_by_rid($rid);
             $setarr1 = array(
                 'rid'=>$rid,
                 'uid'=>$resources['uid'],
@@ -162,13 +157,15 @@ class table_resources_version extends dzz_table
                 'ext'=>$resources['ext'],
                 'type'=>$resources['type'],
                 'dateline'=>$resources['dateline'],
-                'aid'=>isset($oldattr['aid'])? $oldattr['aid']:''
+                'aid'=>intval($oldattr['aid'])
             );
             //将原数据插入版本表
-            $oldvid = parent::insert($setarr1,1);
+            if($oldvid = parent::insert($setarr1,1)){
             //更新原属性表数据
-           // DB::update('resources_attr',array('vid'=>$oldvid),array('rid'=>$rid,'vid'=>0));
-            C::t('resources_attr')->update_by_skey($rid,0,array('vid'=>$oldvid));
+				C::t('resources_attr')->update_by_skey($rid,0,array('vid'=>$oldvid));
+			}else{
+				 return array('error'=>lang('failure'));
+			}
         }
 
         //文件名
@@ -238,17 +235,11 @@ class table_resources_version extends dzz_table
         if(!$versioninfo = parent::fetch($vid)){
             return array('error'=>lang('file_not_exist'));
         }
-        $fileinfo = C::t('resources')->fetch_info_by_rid($versioninfo['rid']);
+        if(!$fileinfo = C::t('resources')->fetch($versioninfo['rid'])) return array('error'=>lang('file_not_exist'));
 
         //判断编辑权限
-        if ($fileinfo['gid'] > 0) {
-            $pfid = $fileinfo['pfid'];
-            $perm = perm_check::getPerm($pfid);
-            if ($perm > 0) {
-                if (!perm_binPerm::havePower('edit2', $perm) && !(perm_binPerm::havePower('edit1', $perm) && $_G['uid'] == $fileinfo['uid'])) {
-                    return array('error'=>lang('no_privilege'));
-                }
-            }
+        if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
+            return array('error'=>lang('no_privilege'));
         }
         $vfilename = DB::result_first("select sval from %t where vid = %d and rid = %s and skey = %s",array('resources_attr',$vid,$versioninfo['rid'],'title'));
 
@@ -336,14 +327,8 @@ class table_resources_version extends dzz_table
         $fileinfo = C::t('resources')->fetch_info_by_rid($versioninfo['rid']);
 
         //判断编辑权限
-        if ($fileinfo['gid'] > 0) {
-            $pfid = $fileinfo['pfid'];
-            $perm = perm_check::getPerm($pfid);
-            if ($perm > 0) {
-                if (!perm_binPerm::havePower('edit2', $perm) && !(perm_binPerm::havePower('edit1', $perm) && $_G['uid'] == $fileinfo['uid'])) {
-                    return array('error'=>lang('no_privilege'));
-                }
-            }
+        if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
+            return array('error'=>lang('no_privilege'));
         }
         $sertarr = array('vname'=>$vname,'dateline'=>TIMESTAMP);
         if(parent::update($vid,$sertarr)){
@@ -383,14 +368,8 @@ class table_resources_version extends dzz_table
         }
 
         //判断编辑权限
-        if ($fileinfo['gid'] > 0) {
-            $pfid = $fileinfo['pfid'];
-            $perm = perm_check::getPerm($pfid);
-            if ($perm > 0) {
-                if (!perm_binPerm::havePower('edit2', $perm) && !(perm_binPerm::havePower('edit1', $perm) && $_G['uid'] == $fileinfo['uid'])) {
-                    return array('error'=>lang('no_privilege'));
-                }
-            }
+        if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
+            return array('error'=>lang('no_privilege'));
         }
         //没有版本时,属性表和版本数据处理
         $setarr = array(
