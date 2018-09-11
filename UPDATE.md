@@ -6,7 +6,7 @@
 2. github地址：https://github.com/zyx0814/dzzoffice
 3. 码云地址：   https://gitee.com/zyx0814/dzzoffice
 
-### DzzOffice2.01主要更新内容
+### DzzOffice2.02主要更新内容
 
 1. 缓存优化，开启内存huanc(如：memcached等)会显著提高效率；
 

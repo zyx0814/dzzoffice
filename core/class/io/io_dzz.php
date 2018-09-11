@@ -484,7 +484,7 @@ class io_dzz extends io_api
                 'ext' => $attach['filetype'],
                 'dateline' => TIMESTAMP
             );
-            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr);
+            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr,$force);
             if($return['error']){
                 return array('error'=>$return['error']);
             }

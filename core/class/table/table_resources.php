@@ -410,13 +410,13 @@ class table_resources extends dzz_table
             $data['url'] = DZZSCRIPT . '?mod=document&icoid=' . dzzencode('attach::' . $data['aid']);
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         } elseif ($data['type'] == 'folder') {
-            $contaions = self::get_contains_by_fid($data['oid'], true);
-            $data['contaions'] = $contaions;
+            //$contaions = self::get_contains_by_fid($data['oid'], true);
+            //$data['contaions'] = $contaions;
             $relativepath = str_replace(':', '', strrchr($data['path'], ':'));
             $data['position'] = substr($relativepath, 0, strlen($relativepath) - 1);
             $data['fsize'] = formatsize($contaions['size']);
-            $data['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-            $data['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+           // $data['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
+           // $data['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
             $data['img'] = './dzz/images/extimg/folder.png';
         } else {
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
