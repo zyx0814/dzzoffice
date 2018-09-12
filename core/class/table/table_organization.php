@@ -21,7 +21,7 @@ class table_organization extends dzz_table
         $this->_table = 'organization';
         $this->_pk = 'orgid';
         $this->_pre_cache_key = 'organization_';
-        $this->_cache_ttl = 60*60;
+       // $this->_cache_ttl = 60*60;
 
         parent::__construct();
     }
@@ -199,6 +199,7 @@ class table_organization extends dzz_table
     //获取机构群组下级
     public function fetch_org_by_uidorgid($uid, $orgid)
     {
+		
         $resultarr = array();
         //如果该用户是当前部门普通成员则不获取下级机构信息,如果是下级机构成员或当前机构管理员则获取下级部门信息
         if (C::t('organization_admin')->chk_memberperm($orgid, $uid)) {//如果是管理员
@@ -206,19 +207,20 @@ class table_organization extends dzz_table
 
         } elseif ($this->ismember($orgid,$uid,true)) {//如果是当前机构或部门下级的成员
             $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid,0);
-
             $pathkeyarr = DB::fetch_all("select pathkey from %t where orgid in (%n) ", array($this->_table, $orgids));
             $porgids = array();
             foreach ($pathkeyarr as $v) {
                 $vs = str_replace('_', '', $v['pathkey']);
                 $varr = explode('-', $vs);
-                $porgids = array_merge($varr);
+                $porgids = array_merge($porgids,$varr);
             }
+			
             $orgsarr = self::fetch_all_by_forgid($orgid,0,0);
             $orgidarr = array();
             foreach ($orgsarr as $v) {
                 
                     if (!in_array($v['orgid'], $orgidarr) && in_array($v['orgid'], $porgids)) {
+						
                         if (C::t('organization_admin')->chk_memberperm($v['orgid'], $uid) > 0 && $v['syatemon'] == 1) {
                             $resultarr[] = $v;
                         } elseif ($v['syatemon'] && $v['manageon'] && $v['diron']) {
@@ -229,6 +231,7 @@ class table_organization extends dzz_table
             }
 
 		}
+		//print_r($resultarr);
         return $resultarr;
     }
 
@@ -572,7 +575,7 @@ class table_organization extends dzz_table
             }
             if ($org['pathkey'] == $npathkey) return $npathkey; //没有改变；
             $like = '^' . $org['pathkey'];
-			foreach(DB::fetch_all("select orgid,pathkey where pathkey REGEXP %s", array($this->_table, $like)) as $value){
+			foreach(DB::fetch_all("select orgid,pathkey from %t where pathkey REGEXP %s", array($this->_table, $like)) as $value){
 				parent::update($value['orgid'],array('pathkey'=>str_replace($org['pathkey'],$npathkey,$value['pathkey'])));
 			}
             /*if (DB::query("update %t set pathkey=REPLACE(pathkey,%s,%s) where pathkey REGEXP %s", array($this->_table, $org['pathkey'], $npathkey, $like))) {
