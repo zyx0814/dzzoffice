@@ -425,7 +425,7 @@
 
     function downmorefile() {
         var dpath = share.join(',');
-        jQuery.post('{MOD_URL}&do=adddowns,{'sid':'$_GET[sid]'}, function (data) {
+        jQuery.post('{MOD_URL}&do=adddowns',{'sid':'$_GET[sid]'}, function (data) {
             if (data['success']) {
                 var url = DZZSCRIPT + '?mod=io&op=download&checkperm=false&path=' + dpath;
                 if (BROWSER.ie) {
