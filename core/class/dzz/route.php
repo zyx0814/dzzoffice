@@ -34,7 +34,7 @@ class Route{
 
                 foreach($patharr as $path){
 
-                    if(!preg_match("/\w+/i",$path)) showmessage(lang('undefined_action'));
+                    if(!preg_match("/^\w+$/i",$path)) showmessage(lang('undefined_action'));
 
                 }
                 $modfile='./'.CURSCRIPT.'/'.str_replace(':','/',$mod).'/'.($op?$op:'index').EXT;
@@ -44,22 +44,22 @@ class Route{
                    //兼容老版
                     if(@!file_exists($modfile='./'.CURSCRIPT.'/'.CURSCRIPT.'_'.str_replace(':','/',$mod).EXT)){
 
-                        showmessage($modfile.lang('file_nonexistence',array('modfile'=>$modfile)));
+                        showmessage($modfile.lang('file_nonexistence',array('modfile'=>htmlspecialchars($modfile))));
                     }
 
                 }
 
             }else{
 
-                if(!preg_match("/\w+/i",$mod) && $mod !== '') showmessage('undefined_action');
+                if(!preg_match("/^\w+$/i",$mod) && $mod !== '') showmessage('undefined_action');
 
-                if(!preg_match("/\w+/i",$op)) showmessage('undefined_action');
+                if(!preg_match("/^\w+$/i",$op)) showmessage('undefined_action');
 
                 if(@!file_exists(DZZ_ROOT.($modfile = './'.CURSCRIPT.'/'.$mod.'/'.$op.EXT)) && @!file_exists(DZZ_ROOT.($modfile = './'.CURSCRIPT.'/'.$mod.'/'.$mod.EXT))) {
                     //兼容老版
                     if(@!file_exists($modfile='./'.CURSCRIPT.'/'.$mod.EXT)){
 
-                        showmessage(lang('file_nonexistence',array('modfile'=>$modfile)));
+                        showmessage(lang('file_nonexistence',array('modfile'=>htmlspecialchars($modfile))));
                     }
 
                 }
