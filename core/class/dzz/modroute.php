@@ -23,7 +23,7 @@ class Modroute{
                 }
 
             }
-			$params['route_file']=$file;
+			return include $file;
         }
     }
 }
