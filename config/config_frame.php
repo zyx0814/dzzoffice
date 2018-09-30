@@ -14,7 +14,7 @@ $_config['default_mod'] = 'index';
 
 $_config['default_op'] = 'index';
 
-$_config['dafault_action'] = 'index';
+$_config['default_action'] = 'index';
 
 
 /**
