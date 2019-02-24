@@ -5,7 +5,7 @@ if (!defined('IN_DZZ')) {
 }
 global  $_G;
 
-$oauth = new user\sso\classes\Oauth();
+$oauth = new user\sso\classes\oauth();
 
 $do = isset($_GET['do']) ? $_GET['do']:'';
 
