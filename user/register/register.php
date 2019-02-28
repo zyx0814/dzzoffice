@@ -14,6 +14,7 @@ $setting = $_G['setting'];
 $showregisterform = 1;
 
 Hook::listen('register_before');//注册预处理钩子
+
 if($_G['uid']) {
 			
 	$url_forward = dreferer();
@@ -36,9 +37,10 @@ $seccodecheck = $setting['seccodestatus'] & 1;
 
 
 //判断是否提交
-if(!submitcheck('regsubmit', 0, $seccodecheck)) { 
- 
+if(!submitcheck('regsubmit', 0, $seccodecheck)) {
 
+        //应用注册页挂载点
+        Hook::listen('appregister');
 		$bbrules = $setting['bbrules'];
 		
 		$regname =$setting['regname'];
@@ -50,30 +52,20 @@ if(!submitcheck('regsubmit', 0, $seccodecheck)) {
 		if($seccodecheck) {
 			$seccode = random(6, 1);
 		}
-
 		$navtitle = $setting['reglinkname'];
+
 		$dreferer = dreferer();
-			
 		include template('register');
 		exit();
 }else{
 	
     Hook::listen('check_val',$_GET);//用户数据验证钩子,用户注册资料信息提交验证
-    $return = Hook::listen('register_common',$_GET);//用户注册钩子
+	$result=$_GET;
+    Hook::listen('register_common',$result);//用户注册钩子
     $type = isset($_GET['returnType']) ? $_GET['returnType']:'';
-
-    if(!empty($return[0])){
-
-        $result = $return[0];
-
-    }else{
-        showTips(array('error'=>lang('registe_failed')),$type);
-    }
-
+   
     //获取ip
     $ip = $_G['clientip'];
-
-   
     //用户状态表数据
     $status = array(
         'uid' => $result['uid'],
@@ -95,7 +87,7 @@ if(!submitcheck('regsubmit', 0, $seccodecheck)) {
     ), 0);
 
     //设置显示提示文字
-    $param = daddslashes(array('sitename' => $setting['sitename'], 'username' => $result['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $result['uid']));
+    $param = daddslashes(array('sitename' => $setting['sitename'], 'username' => $result['username'], 'usergroup' => $_G['cache']['usergroups'][$result['groupid']]['grouptitle'], 'uid' => $result['uid']));
 
     $messageText = lang('register_succeed', $param);
 

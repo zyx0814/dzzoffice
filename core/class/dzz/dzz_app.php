@@ -186,7 +186,6 @@ class dzz_app extends dzz_base{
 
     }
     private function is_HTTPS(){
-        if(!isset($_SERVER['HTTPS']))  return FALSE;
         if($_SERVER['HTTPS'] === 1){  //Apache
             return TRUE;
         }elseif($_SERVER['HTTPS'] === 'on'){ //IIS
@@ -618,7 +617,7 @@ class dzz_app extends dzz_base{
         if($data){
             Hook::import($data);
         }else{
-            foreach(DB::fetch_all("SELECT name,addons FROM %t where `status`='1' ORDER BY priority",array('hooks')) as $value) {
+            foreach(DB::fetch_all("SELECT name,addons FROM %t where `status`='1' ORDER BY priority DESC",array('hooks')) as $value) {
                 $addons = $value['addons'];//同一个挂载点下多个钩子改为多条记录
                 Hook::add($value['name'],$addons);
             }

@@ -18,18 +18,17 @@ class table_tag extends dzz_table
         foreach($tags as $v){
             if(preg_match('/^\s*$/',$v)) continue;
             if($result = DB::fetch_first("select tid from %t where idtype = %s and tagname = %s",array($this->_table,$idtype,$v))){
-                self::addhot_by_tid($result['tid'],$hot = 1);
-                $tids[] = array('tid'=>$result['tid'],'tagname'=>$v);
+                $tids[$result['tid']] = array('tid'=>$result['tid'],'tagname'=>$v);
             }else{
                 $setarr = array(
                     'tagname'=>$v,
                     'uid'=>getglobal('uid'),
                     'username'=>getglobal('username'),
                     'idtype'=>$idtype,
-                    'hot' =>1
+                    'hot' =>0
                 );
                $tid =  parent::insert($setarr,1);
-               $tids[] =  array('tid'=>$tid,'tagname'=>$v);
+               $tids[$tid] =  array('tid'=>$tid,'tagname'=>$v);
             }
         }
         return $tids;
@@ -61,5 +60,11 @@ class table_tag extends dzz_table
            $tids = array();
        }
        return $tids;
+    }
+    public function fetch_tag_byidtype($idtype,$limit=10){
+        $tags = array();
+        if(!$idtype) return $tags;
+        $tags = DB::fetch_all("select tid,tagname from %t where idtype=%s order by hot limit 0,$limit",array($this->_table,$idtype));
+        return $tags;
     }
 }

@@ -195,7 +195,7 @@ class table_organization_user extends dzz_table
 			 $uids_org[$value['uid']]=$value['uid'];
 		}
 		//获取不属于所有机构和部门的用户
-		return DB::fetch_all("select username,uid,email from %t where uid NOT IN(%n) order by username $limitsql ",array('user',$uids_org),'uid');
+		return DB::fetch_all("select username,uid,email,groupid from %t where uid NOT IN(%n) order by username $limitsql ",array('user',$uids_org),'uid');
     }
 
     public function fetch_user_by_orgid($orgids, $limit = 0, $count = false)
@@ -205,7 +205,7 @@ class table_organization_user extends dzz_table
         if ($limit) $limitsql = "limit $limit";
 		
         if ($count) return DB::result_first("select COUNT(*) %t where orgid IN(%n)", array($this->_table, $orgids));
-        return DB::fetch_all("select o.* ,u.username,u.email from " . DB::table('organization_user') . " o LEFT JOIN " . DB::table('user') . " u ON o.uid=u.uid where o.orgid IN(" . dimplode($orgids) . ") order by dateline DESC $limitsql ");
+        return DB::fetch_all("select o.* ,u.username,u.email,u.groupid from " . DB::table('organization_user') . " o LEFT JOIN " . DB::table('user') . " u ON o.uid=u.uid where o.orgid IN(" . dimplode($orgids) . ") order by dateline DESC $limitsql ");
     }
 
    public function fetch_orgids_by_uid($uids,$orgtype = 0){

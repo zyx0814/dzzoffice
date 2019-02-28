@@ -22,10 +22,10 @@ if($_G['uid']>0){
         $loginmessage =  'login_succeed';
 
         $location = dreferer();//待修改
-
+        
         $href = str_replace("'", "\'", $location);
-        $href = preg_replace("/user.php\?mod\=login.+?$/i", "", $location);
-
+        $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
+	
         $messageText = lang($loginmessage, $param);
         writelog('loginlog', '登录成功');
 		showmessage($messageText,$href);
@@ -61,9 +61,10 @@ if(!isset($_GET['loginsubmit'])) {//是否提交
     $navtitle = lang('title_login');
 	include template('login_single'.($_GET['template']?$_GET['template']:(isset($setting['loginset']['template']) ? $setting['loginset']['template'] : 1)));
 } else {
+    $type = isset($_GET['returnType']) ?  $_GET['returnType']: 'json';//返回值方式
+
     Hook::listen('login_valchk',$_GET);//验证登录输入值及登录失败次数
 
-    $type = isset($_GET['returnType']) ?  $_GET['returnType']: 'json';//返回值方式
 
     //验证码开启，检测验证码
     if($seccodecheck && !check_seccode( $_GET['seccodeverify'],$_GET['sechash'])){
@@ -113,7 +114,7 @@ if(!isset($_GET['loginsubmit'])) {//是否提交
         $location = /*$_G['groupid'] == 8 ? 'user.php?mod=profile' :*/ dreferer();//待修改
 
         $href = str_replace("'", "\'", $location);
-        $href = preg_replace("/user.php\?mod\=login.+?$/i", "", $location);
+        $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
 
         $messageText = lang($loginmessage, $param);
         writelog('loginlog', '登录成功');

@@ -9,7 +9,7 @@ class Checkvalue{
 
         global $_G;
 
-        $type = isset($_GET['returnType']) ? $_GET['returnType']:'';
+        $type = isset($params['returnType']) ? $params['returnType']:'';
 		
         $setting =  $_G['setting'];
 		

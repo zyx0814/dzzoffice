@@ -63,7 +63,7 @@ html body {
 		<div class="sub-title">$_G[setting][loginset][subtitle]</div>
 		<!--{/if}-->
 
-		<form method="post"  name="login" id="loginform_$loginhash" class="loginForm" role="form" onsubmit="{if $this->setting['pwdsafety']}pwmd5('password3_$loginhash');{/if}pwdclear = 1; loginsub('loginform_$loginhash', 'returnmessage_$loginhash');return false;"  action="user.php?mod=login&op=logging&action=login&loginsubmit=yes{if !empty($_GET['handlekey'])}&handlekey=$_GET[handlekey]{/if}{if isset($_GET['frommessage'])}&frommessage{/if}&loginhash=$loginhash">
+		<form method="post"  name="login" id="loginform_$loginhash" class="loginForm" role="form" onsubmit="{if $_G['setting']['pwdsafety']}pwmd5('password3_$loginhash');{/if}pwdclear = 1; loginsub('loginform_$loginhash', 'returnmessage_$loginhash');return false;"  action="user.php?mod=login&op=logging&action=login&loginsubmit=yes{if !empty($_GET['handlekey'])}&handlekey=$_GET[handlekey]{/if}{if isset($_GET['frommessage'])}&frommessage{/if}&loginhash=$loginhash">
 			<input type="hidden" name="formhash" value="{FORMHASH}" />
 			<input type="hidden" name="referer" value="{$referer}" />
 			<!--{if $auth}-->

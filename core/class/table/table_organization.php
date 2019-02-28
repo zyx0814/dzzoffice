@@ -70,19 +70,26 @@ class table_organization extends dzz_table
     //查询机构群组信息
     public function fetch_all_orggroup($uid,$getmember = true)
     {
+        global $_G;
         $groups = array();
-        if ($uid) {
-            $orgids = C::t('organization_user')->fetch_org_by_uid($uid);
-            $orgids = array_unique($orgids);
-            $toporgids = array();
-            foreach (parent::fetch_all($orgids) as $v) {
+        if($_G['adminid'] == 1){
+            $orgids = DB::fetch_all("select orgid from %t where `type`=%d and forgid = %d",array($this->_table,0,0));
+            foreach($orgids as $v){
+                $groups['org'][]= parent::fetch($v['orgid']);
+            }
+        }else{
+            if ($uid) {
+                $orgids = C::t('organization_user')->fetch_org_by_uid($uid);
+                $orgids = array_unique($orgids);
+                $toporgids = array();
+                foreach (parent::fetch_all($orgids) as $v) {
                     if ($v['type'] == 0) {
                         $patharr = explode('-', $v['pathkey']);
                         $toporgid = intval(str_replace('_', '', $patharr[0]));
                         if (in_array($toporgid, $toporgids)) {
                             continue;
                         }
-						$orginfo=parent::fetch($toporgid);
+                        $orginfo=parent::fetch($toporgid);
                         if (C::t('organization_admin')->chk_memberperm($toporgid, $uid) > 0) {
                             if($orginfo['syatemon'] == 1){
                                 if($getmember){
@@ -106,6 +113,7 @@ class table_organization extends dzz_table
                     }
                 }
 
+            }
         }
         return $groups;
     }
@@ -420,9 +428,9 @@ class table_organization extends dzz_table
         return $disp;
     }
 
-    public function chk_by_orgname($orgname,$type = 0)
+    public function chk_by_orgname($orgname,$type = 0,$forgid=0)
     {
-        if (DB::result_first("select count(*) from %t where orgname = %s and `type` = %d", array($this->_table, $orgname,$type, getglobal('uid'))) > 0) {
+        if (DB::result_first("select count(*) from %t where orgname = %s and `type` = %d and forgid = %d", array($this->_table, $orgname,$type,$forgid)) > 0) {
             return false;
         }
         return true;
@@ -678,7 +686,12 @@ class table_organization extends dzz_table
         $orgids_admin = array();
         $orgids_member = array();
         $explorer_setting = get_resources_some_setting();
-        foreach (DB::fetch_all("select u.orgid,o.`type` from %t u left join %t o on u.orgid=o.orgid where uid = %d", array('organization_user', 'organization', $uid)) as $v) {
+        if($_G['adminid'] == 1){
+            $orgdatas = DB::fetch_all("select orgid,`type` from %t where 1", array('organization'));
+        }else{
+            $orgdatas = DB::fetch_all("select u.orgid,o.`type` from %t u left join %t o on u.orgid=o.orgid where uid = %d", array('organization_user', 'organization', $uid));
+        }
+        foreach ($orgdatas as $v) {
             if (!$explorer_setting['grouponperm'] && $v['type'] == 1) {
                 continue;
             }
@@ -1026,5 +1039,28 @@ class table_organization extends dzz_table
         }
         return $allowusespace;
     }
+	
+	
+	//获取我有管理权限的机构和部门(包括下级部门）orgids
+	public function fetch_all_manage_orgids_by_uid($uids,$sub=true){
+		if(!is_array($uids)) $uids=(array)$uids;
+		if(!$orgids=C::t('organization_admin')->fetch_orgids_by_uid($uids)) return array();
+		$sql="1";
+		$param=array($this->_table);
+		$sqlarr=array();
+		if($sub){
+			foreach(parent::fetch_all($orgids) as $value){
+				$sqlarr[]='pathkey regexp %s';
+				$param[]='^'.$value['pathkey'].'.*';
+			}
+			if($sqlarr){
+				$sql.=' and (' . implode(' OR ',$sqlarr).')';
+				foreach(DB::fetch_all("select orgid from %t where $sql",$param) as $value){
+					$orgids[]=$value['orgid'];
+				}
+			}
+		}
+		return array_unique($orgids);
+	}
 
 }

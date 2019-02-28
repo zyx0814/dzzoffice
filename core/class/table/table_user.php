@@ -127,9 +127,9 @@ class table_user extends dzz_table
 			parent::update($uid,array('adminid'=>1,'groupid'=>1));
 		}else{
 			if(empty($groupid)) $groupid=9;
-			if(C::t('organization_admin')->fetch_orgids_by_uid($uid)){
+			/*if(C::t('organization_admin')->fetch_orgids_by_uid($uid)){
 				$groupid=2;
-			}
+			}*/
 			parent::update($uid,array('adminid'=>0,'groupid'=>$groupid));
 		}
 	}
@@ -438,6 +438,51 @@ class table_user extends dzz_table
 			C::t('user_profile')->update($uid,$profile);
 		}
 	}
+	public function insert_user($userarr,$groupid = 9,$profilearr=array()){
+	    global $_G;
+        if(empty($userarr)){
+            return false;
+        }
+        $ip = $_G['clientip'];
+        $salt=substr(uniqid(rand()), -6);
+        $setarr=array(
+            'username'=>addslashes($userarr['username']),
+            'email'=>$userarr['email'],
+            'salt'=>$salt,
+            'password'=>md5(md5($userarr['password']).$salt),
+            'regdate'=>TIMESTAMP,
+            'regip'=>$ip,
+            'groupid'=>$groupid,
+            'phone'=>$userarr['phone'],
+            'phonestatus'=>$userarr['phonestatus']
+        );
+        $uid = parent::insert($setarr,1);
+        if($uid){
+            $status = array(
+                'uid' => $uid,
+                'regip' => (string)$ip,
+                'lastip' => (string)$ip,
+                'lastvisit' => TIMESTAMP,
+                'lastactivity' => TIMESTAMP,
+                'lastsendmail' => 0
+            );
+            C::t('user_status')->insert($status,1);
+            if(!empty($profilearr)){
+                C::t('user_profile')->update($uid,$profilearr);
+            }
+            $setarr['uid'] = $uid;
+            return $setarr;
+        }else{
+            return false;
+        }
+
+
+
+    }
+	public function insert_user_setarr($setarr){
+		if(empty($setarr)) return ;
+		return parent::insert($setarr,1);
+	}
 
 	public function delete($val, $unbuffered = false, $fetch_archive = 0) {
 		$ret = false;
@@ -516,6 +561,9 @@ class table_user extends dzz_table
             }
         }
         return $users;
+    }
+    public function fetch_all_user_data(){
+        return DB::fetch_all("select * from %t where 1",array($this->_table));
     }
     /*//获取用户信息，包含资料等信息
     public function fetch_user_infomessage_by_uid($uid){

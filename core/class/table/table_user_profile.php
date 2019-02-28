@@ -91,6 +91,17 @@ class table_user_profile extends dzz_table
         }
         return true;
     }
+    public function update_by_skey($fieldid,$val,$uid = 0){
+        if(!$uid)$uid = getglobal('uid');
+        if(!DB::update($this->_table,array('value'=>$val),array('uid'=>$uid,'fieldid'=>$fieldid))){
+            $setarr=array('uid'=>$uid,
+                'fieldid'=>$fieldid,
+                'value'=>$val
+            );
+            DB::insert($this->_table,$setarr,0,1);
+        }
+        return true;
+    }
     public function fetch_phone($phone){
         return DB::fetch_first("select * from %t where `fieldid` = %s and `value` = %s",array($this->_table,'phone',$phone));
     }

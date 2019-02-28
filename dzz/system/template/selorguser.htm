@@ -210,9 +210,8 @@
 		 var val=jQuery(this).data('val');
 		 var title='';
 		 var innerhtml=this.innerHTML;
-		 
 		 innerhtml=innerhtml.replace(/<i class=\"ti-close dzz dzz-close\"><\/i>/i,'');
-		 innerhtml=innerhtml.replace(/<em.*?>.+?<\/em>/i,'');
+		 innerhtml=innerhtml.replace(/<em.*?>.+?<\/em>/ig,'');
 		 var regx=new RegExp("<.+>",'i');
 		 var regx1=new RegExp("title=\"(.+?)\"");
 		 var matches;

@@ -130,7 +130,7 @@ class table_organization_admin extends dzz_table
 	public function fetch_moderators_by_orgid($orgids,$count=false){
 		if(!is_array($orgids)) $orgids=array($orgids);
 		if($count) return DB::result_first("select COUNT(*) from %t where orgid IN (%n)",array($this->_table,$orgids));
-		return DB::fetch_all("select o.* ,u.username,u.email from ".DB::table($this->_table). " o LEFT JOIN ".DB::table('user')." u ON o.uid=u.uid where o.orgid IN(".dimplode($orgids).") order by o.dateline DESC");
+		return DB::fetch_all("select o.* ,u.username,u.email,u.uid from ".DB::table($this->_table). " o LEFT JOIN ".DB::table('user')." u ON o.uid=u.uid where o.orgid IN(".dimplode($orgids).") order by o.dateline DESC");
 	}
 	public function fetch_orgids_by_uid($uids,$orgtype = 0){
 		$uids=(array)$uids;

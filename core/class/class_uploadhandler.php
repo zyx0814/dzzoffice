@@ -1097,10 +1097,12 @@ class UploadHandler
                     $this->handle_image_file($file_path, $file);
                 }
 				$file->oname=$file->name;
-                if($re = $this->save($file_path,$file->name)){
-					$file->data=$re;
+				if(filesize($file_path)!=$file->size) $file->error='文件大小错误,请重新上传';
+				else{
+					if($re = $this->save($file_path,$file->name)){
+						$file->data=$re;
+					}
 				}
-                
             } else {
                 $file->size = $file_size;
                 if (!$content_range && $this->options['discard_aborted_uploads']) {

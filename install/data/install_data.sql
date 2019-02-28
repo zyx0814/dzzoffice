@@ -362,3 +362,9 @@ INSERT INTO `dzz_resources_permgroup` (`id`, `pername`, `perm`, `off`, `default`
 (5, '读写1', 10927, 0, 0, 1),
 (6, '读写2', 12271, 0, 0, 1),
 (7, '读写3', 12263, 0, 0, 1);
+
+INSERT INTO `dzz_folder_flag` (`flag`, `fsperm`, `perm`, `iconview`, `disp`) VALUES
+('home',	0,	0,	1,	0),
+('folder',	0,	0,	1,	0),
+('app',	0,	7,	1,	0),
+('organization',	0,	7,	1,	0);

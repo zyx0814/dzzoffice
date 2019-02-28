@@ -28,18 +28,27 @@
  */ 
 class perm_FolderSPerm{ 
 	public function getPowerarr(){
-		 return array(    'delete'    	=> 1,		
-						  'folder' 		=> 2,		
-						  'link'   		=> 4,		
-						  'upload'   	=> 8,		
-						  'document'    => 16,
-						  'dzzdoc'  	=> 32,	
-						  'app'	  		=> 64,	
-						  'widget' 		=> 128,	
-						  'user'        => 256,
-						  'shortcut'    => 512,
-						  'discuss'    => 1024,
-						  'download'   => 2048,
+		 return array(     
+			'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
+            'read1' => 2,        //读取自己的文件
+            'read2' => 4,        //读取所有文件
+            'delete1' => 8,        //删除自己的文件
+            'delete2' => 16,        //删除所有文件
+            'edit1' => 32,        //编辑自己的文件
+            'edit2' => 64,        //编辑所有文件
+            'download1' => 128,        //下载自己的文件
+            'download2' => 256,        //下载所有文件
+            'copy1' => 512,        //拷贝自己的文件
+            'copy2' => 1024,    //拷贝所有文件
+            'upload' => 2048,    //新建和上传
+            //'newtype' => 4096,    //新建其他类型文件（除文件夹以外）
+            'folder' => 8192,    //新建文件夹
+            //'link' => 16384,    //新建网址
+            //'dzzdoc' => 32768,    //新建dzz文档
+            //'video' => 65536,    //新建视频
+           // 'shortcut' => 131072,    //快捷方式
+            'share' => 262144,    //分享
+            'approve' => 524288,//审批
 						);
 		
 	  } 
@@ -72,29 +81,29 @@ class perm_FolderSPerm{
 		 case 'home':case 'dock':case 'app':case 'organization':
 			return 0;
 		case 'recycle':
-			 return self::getSumByAction(array('upload','folder','document','shortcut','link','app','dzzdoc','widget','user','discuss'));
+			 return self::getSumByAction('all');
 		/* case 'document': case 'image': case 'video': case 'music': case 'app':case 'desktop':case 'dock':
 			return 0;*/
 		 case 'external': //外部目录（网盘，云存储等）//不能 link(4),app(64),dzzdoc(32),widget(128),user(256)
-		 	return self::getSumByAction(array('link','app','dzzdoc','widget','user','discuss','shortcut'));
+		 	return 0;
 		 case 'bucketlist': //外部云存储bucket列表页//全不能 
-		 	return self::getSumByAction('all');
+		 	return 0;
 		case 'baiduPCS': //不能 link(4),app(64),dzzdoc(32),widget(128),user(256)
-			return self::getSumByAction(array('link','app','dzzdoc','widget','user','discuss','shortcut'));
+			return 0;
 		case 'ftp': //不能 link(4),app(64),dzzdoc(32),widget(128),user(256)
-			return self::getSumByAction(array('link','app','dzzdoc','widget','user','discuss','shortcut'));
+			return 0;
 		case 'ALIOSS': //不能 link(4),app(64),dzzdoc(32),widget(128),user(256)
-			return self::getSumByAction(array('link','app','dzzdoc','widget','user','discuss','shortcut'));
+			return 0;
 		case 'ALIOSS_root': //全不能 
-			return self::getSumByAction('all');
+			return 0;
 		case 'qiniu': //不能 link(4),app(64),dzzdoc(32),widget(128),user(256)
-			return self::getSumByAction(array('link','app','dzzdoc','widget','user','discuss','shortcut'));
+			return 0;
 		case 'qiniu_root': //全不能 
-			return self::getSumByAction('all');
+			return 0;
 		case 'JSS': //不能 link(4),app(64),dzzdoc(32),widget(128),user(256)
-			return self::getSumByAction(array('link','app','dzzdoc','widget','user','discuss','shortcut'));
+			return 0;
 		case 'JSS_root': //全不能 
-			return self::getSumByAction('all');
+			return 0;
 		default:
 			return 0;
 	  }

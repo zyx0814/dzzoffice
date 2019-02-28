@@ -31,7 +31,6 @@ if(!submitcheck('mailchecksubmit')) {
 	$succeed = sendmail($test_to, $title.' @ '.$date, $_G['setting']['bbname']."\n\n\n$message", $test_from);
 	$_G['setting']['bbname'] = lang('setting_mail_check_method_2');
 	$succeed = sendmail($test_to, $title.' @ '.$date, $_G['setting']['bbname']."\n\n\n$message", $test_from);
-	
 	if($succeed) {
 		$alertmsg = lang('setting_mail_check_success_1')."$title @ $date".lang('setting_mail_check_success_2');
 	} else {

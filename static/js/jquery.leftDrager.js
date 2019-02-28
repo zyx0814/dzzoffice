@@ -145,14 +145,14 @@
 			$this.find('.left-drager-op').off('click').on('click',function(){
 				dragerClick();
 			});
-			jQuery('.leftTopmenu.left-drager-op').off('click').on('click',function(){
+			jQuery('.leftTopmenu').off('click').on('click',function(){
 				
 				if($leftContainer.width()<10 || $leftContainer.is(':hidden')){
 					dragerClick('hide');
 				}else{
 					dragerClick('show');
 				}
-				return false;
+				
 			});
 			
 			var isshow='';

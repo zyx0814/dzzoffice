@@ -11,6 +11,7 @@ if(!C::t('folder')->check_home_by_uid($uid)){
 }
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 $do = $_GET['do'] ? $_GET['do'] : '';
+$savefile = isset($_GET['savefile']) ? intval($_GET['savefile']) : 0;//是否直接保存文件
 $ctrlid = isset($_GET['ctrlid']) ? trim($_GET['ctrlid']):'selposition';
 $callback=isset($_GET['callback']) ? trim($_GET['callback']):'callback_selectposition';
 $inwindow = isset($_GET['inwindow']) ? intval($_GET['inwindow']):0;
@@ -280,10 +281,10 @@ if ($do == 'get_children') {
     }
 }elseif($do == 'geffolderinfo'){
     $fid = isset($_GET['fid']) ? intval($_GET['fid']):'';
-    if(!perm_check::checkperm_Container($fid,'read')){
+    $data = C::t('folder')->fetch_by_fid($fid);
+    if(!perm_check::checkperm_Container('read',$data)){
         exit(json_encode(array('error'=>lang('no_privilege'))));
     }
-    $data = C::t('folder')->fetch_by_fid($fid);
     exit(json_encode($data));
 }elseif($do == 'savefile'){
 

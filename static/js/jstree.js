@@ -1693,7 +1693,7 @@
 //					node.childNodes[1].childNodes[0].appendChild('<span class="dzz dzz-account-box"></span>');
 					node.childNodes[1].childNodes[0].style.backgroundImage = 'url('+obj.icon+')';
 					node.childNodes[1].childNodes[0].style.backgroundPosition = 'center center';
-					node.childNodes[1].childNodes[0].style.backgroundSize = 'contain';
+					node.childNodes[1].childNodes[0].style.backgroundSize = 'auto';
 					node.childNodes[1].childNodes[0].className += ' jstree-themeicon-custom';
 				}
 			}		

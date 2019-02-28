@@ -13,12 +13,14 @@ if(!defined('IN_DZZ')) {
 include_once libfile('function/organization');
 $ismobile=helper_browser::ismobile();
 $ids =isset($_GET['ids'])?rawurldecode($_GET['ids']):'';
+
 $zero=$_GET['zero']?urldecode($_GET['zero']):lang('no_institution_users');//无机构用户名称
 $nouser=intval($_GET['nouser']);//不显示用户
 $stype=intval($_GET['stype']); //0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
 $moderator=intval($_GET['moderator']);//是否仅可以选择我管理的群组或部门
 $range=intval($_GET['range']);//0：所有部门和群组；1：仅部门；2：仅群组
 $multiple=intval($_GET['multiple']); //是否允许多线
+$showjob=intval($_GET['showjob']); //是否显示职位
 $callback=$_GET['callback']?$_GET['callback']:'callback_selectuser';//回调函数名称
 $callback_url = isset($_GET['callback_url']) ? trim($_GET['callback_url']):'';
 $deferer = dreferer();
@@ -31,6 +33,7 @@ $gets = array(
 		'range'=>$range,
 		'multiple'=>$multiple,
 		'nosearch'=>1,
+		'showjob'=>$showjob,
 		'ctrlid'=>'seluser',
 		'callback_url'=>$callback_url
 	);

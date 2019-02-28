@@ -5,17 +5,22 @@ class Regcommon{
 
     public function run(&$params){
 
-        global $_G;
+        global $_G,$_GET;
 
         $setting= $_G['setting'];
 
-        $type = isset($_GET['returnType']) ? $_GET['returnType']:'';
+        $type = isset($params['returnType']) ? $params['returnType']:'';
 
         //执行注册
-        $result =C::t('user')->user_register($params);
-
+        $result = C::t('user')->user_register($params);
         //获取注册状态
-        $uid= is_array($result) ? $result['uid']:$result;
+        if(is_array($result)){
+            $uid = $result['uid'];
+            $params = array_merge($params,$result);
+        }else{
+            $uid= $result;
+            $params['uid'] = $result;
+        }
 
         //判断注册状态，返回提示信息
         if($uid <= 0) {
@@ -57,9 +62,6 @@ class Regcommon{
 
             showTips(array('error'=>lang('register_empty_data')),$type);
 
-        }else{
-
-            return $result;
         }
 
     }

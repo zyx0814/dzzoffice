@@ -22,7 +22,8 @@ $gets = array(
     'selorg'=>$selorg,
     'selgroup'=>$selgroup,
     'range'=>$range,
-    'defaultsel'=>$defaultselect
+    'defaultsel'=>$defaultselect,
+    'savefile'=>$savefile
 );
 $theurl = MOD_URL . "&op=positionlist&callback=".$callback.'&'. url_implode($gets);
 include template('selposition');

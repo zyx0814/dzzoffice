@@ -17,25 +17,43 @@ class table_folder extends dzz_table
         parent::__construct();
     }
 
-    public function update($fid, $data)
+    public function update($fid, $data,$applytosub=false)
     {
         if (isset($data['perm'])) {
             $perm = intval($data['perm']);
             $data['perm_inherit'] = perm_check::getPerm1($fid, '', 0, $perm);
         }
         if ($ret = parent::update($fid, $data)) {
-            if ($data['perm_inherit']) {//如果更新权限的话，需要单独处理子目录的继承权限
-                $power = new perm_binPerm($perm);
+            if (!empty($data['perm_inherit'])) {//如果更新权限的话，需要单独处理子目录的继承权限
+                $this->set_newperm_by_pfid($fid,$data['perm_inherit'],$applytosub);
+                $indexdata = array('fid'=>$fid);
+                Hook::listen('changepermafter_updateindex',$indexdata);
+                /*$power = new perm_binPerm($perm);
                 if ($power->isPower('flag')) {//不继承，更新下级继承权限
                     $subfids = array();
-                    foreach (DB::fetch_all("select p.fid from %t p  LEFT JOIN %t f ON p.fid=f.fid where p.pathkey LIKE %s and f.perm='0'", array('resources_path', 'folder', '%_' . $fid . '_%')) as $value) {
+                    foreach (DB::fetch_all("select p.fid from %t p  LEFT JOIN %t f ON p.fid=f.fid where p.pathkey regexp %s and f.perm='0'", array('resources_path', 'folder', '^_'.$fid.'_.+')) as $value) {
                         $subfids[] = $value['fid'];
                     }
                     if ($subfids) parent::update($subfids, array('perm_inherit' => $perm));
-                }
+                }*/
             }
         }
         return $ret;
+    }
+    //更改权限修改下级,$force==true，强制修改所有下级目录权限为继承（perm值设置为0）
+    public function set_newperm_by_pfid($pfid,$perm,$force=false){
+        $pfid = intval($pfid);
+        foreach(DB::fetch_all("select fid,perm from %t where pfid = %d",array($this->_table,$pfid)) as $v){
+            if(!$force && $v['perm']>0){
+                continue;
+            }else{
+                parent::update($v['fid'],array('perm'=>0,'perm_inherit'=>$perm));
+                $indexdata = array('fid'=>$v['fid']);
+                Hook::listen('changepermafter_updateindex',$indexdata);
+                $this->set_newperm_by_pfid($v['fid'],$perm,$force);
+            }
+        }
+		return true;
     }
     public function update_by_pfids($pfids,$setarr){
         if(!is_array($pfids)) $pfids = (array)$pfids;
@@ -85,15 +103,26 @@ class table_folder extends dzz_table
                 }
                 $path['pathkey'] = '_' . $path['fid'] . '_';
             }
-            if (C::t('resources_path')->insert($path)) {
-                return $path['fid'];
-            } else {
-                parent::delete($path['fid']);
-            }
+            C::t('resources_path')->insert($path);
+            self::check_sub_by_flag($path['fid'],$data['flag']);
+			return $path['fid'];
         }
         return false;
     }
-
+	public function  check_sub_by_flag($pfid,$flag){//检查这个目录是否含有子目录,有就创建
+		$subids=C::t('folder_sub')->fetch_all_by_flag($flag);
+		foreach($subids as $value){
+			$params=array(
+				'flag'=>$value['flag'],
+				'fsperm'=>$value['fsperm'],
+				'allow_exts'=>$value['allow_exts'],
+				'iconview'=>$value['iconview'],
+				'disp'=>$value['disp']
+			);
+			IO::CreateFolder($pfid, $value['fname'], $value['perm'], $params,'newcopy',true);
+		}
+		return true;
+	}
     public function get_folder_pathinfo_by_fid($fid, $folderarr = array(), $i = 0)
     {
         if (!$folderinfo = parent::fetch($fid)) return;
@@ -180,6 +209,10 @@ class table_folder extends dzz_table
         global $_G;
         $fid = intval($fid);
         if (!$data = self::fetch($fid)) array('error' => lang('file_not_exist'));
+		//获取目录的附加信息
+		if($attr=C::t('folder_attr')->fetch_all_by_fid($fid)){
+			$data=array_merge($data,$attr);
+		}
         $data['title'] = $data['fname'];
         //统计文件数
         if ($data['gid'] > 0) {//如果是群组
@@ -209,6 +242,7 @@ class table_folder extends dzz_table
         $data['path'] = $data['fid'];
         $data['oid'] = $data['fid'];
         $data['bz'] = '';
+		Hook::listen('filter_folder_fid', $data);//数据过滤挂载点
         return $data;
     }
 
@@ -299,7 +333,7 @@ class table_folder extends dzz_table
     { //清空目录
         $folder = self::fetch($fid);
         //默认只允许删除文件夹和群组根目录，暂时不允许删除应用根目录
-        if (!$force && $folder['flag'] != 'folder' && $folder['flag'] != 'organization') {
+        if (!$force && $folder['flag'] =='app') {
             return false;
         }
         //判断删除权限
@@ -467,8 +501,11 @@ class table_folder extends dzz_table
         $wheresql = "where  pfid = %d and flag != %s and ";
         if ($where) $wheresql .= implode(' AND ', $where);
         else return false;
-        $infoarr = DB::fetch_all("select $fielddata from %t $wheresql and isdelete < 1", array($this->_table, $pfid, 'organization'));
-
+        $infoarr = DB::fetch_all("select $fielddata from %t $wheresql and isdelete < 1 order by 
+		convert(fname,UNSIGNED)" .
+		",SUBSTRING_INDEX(fname,'-',1)" .
+		",convert(replace(replace(SUBSTRING_INDEX(fname,'-',2),SUBSTRING_INDEX(fname,'-',1),''),'-','') , UNSIGNED) " .
+		",convert(replace(replace(SUBSTRING_INDEX(fname,'-',3),SUBSTRING_INDEX(fname,'-',2),''),'-','') , UNSIGNED) ", array($this->_table, $pfid, 'organization'));
         return $infoarr;
     }
 

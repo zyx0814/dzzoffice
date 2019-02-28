@@ -60,7 +60,7 @@ class io_ftp extends io_api
         $fpath=substr($path,0,strrpos($path,'/'));
         $obz=io_remote::getBzByRemoteid($attach['remote']);
         if($obz=='dzz'){
-            $opath='dzz::'.$attach['attachment'];
+            $opath='attach::'.$attach['aid'];
         }else{
             $opath=$obz.'/'.$attach['attachment'];
         }

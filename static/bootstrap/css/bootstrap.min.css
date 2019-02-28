@@ -157,7 +157,7 @@ html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:1
 }*/
 /*弹出消息相关css*/
 .altw .fltc { margin-bottom: 0; padding: 8px; }
- .alert_right,  .alert_error,  .alert_info { padding: 6px 0 6px 50px; min-height: 40px; height: auto !important; height: 40px; line-height: 160%; background-repeat:no-repeat;background-position:8px 5px; font-size: 14px; }
+ .alert_right,  .alert_error,  .alert_info { padding: 6px 0; min-height: 40px; height: auto !important; height: 40px; line-height: 160%; background-repeat:no-repeat;background-position:8px 5px; font-size: 14px; }
  /*.alert_right { background-image: url(../../image/common/right.png); }
  .alert_error { background-image: url(../../image/common/error.png); }*/
 	 .alert_error a { font-weight: 700;  }
@@ -661,7 +661,7 @@ html{font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:1
     border-bottom-right-radius: 3px;
 }
 .pagination li>a{
-	padding: 9px 15px;
+	padding: 8px 15px;
 }
 .pagination li>span{
 	padding: 6px 15px;
@@ -1754,9 +1754,6 @@ fieldset[disabled] .btn-pure.focus {
 	border-color: #e1e1e1;
 }
 
-table td .form-control{
-	border-width:1px;
-}
 
 
 /*输入框下划线部分结束*/

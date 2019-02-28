@@ -200,14 +200,18 @@
             }
             var nummatch = /^\d+$/;
             if (nummatch.test(fid)) {
-                $.post('index.php?mod=system&op=positionlist&do=checkupload', {'fid': fid}, function (data) {
-                    if (data['perm']) {
-                        $('#' + ctrlid).val(fid);
-                    } else {
-                        inst.deselect_node(node);
-                        $('#' + ctrlid).val('');
-                    }
-                }, 'json')
+                if('{$savefile}'){
+                    $.post('index.php?mod=system&op=positionlist&do=checkupload', {'fid': fid}, function (data) {
+                        if (data['perm']) {
+                            $('#' + ctrlid).val(fid);
+                        } else {
+                            inst.deselect_node(node);
+                            $('#' + ctrlid).val('');
+                        }
+                    }, 'json')
+                }else{
+                    $('#' + ctrlid).val(fid);
+                }
             } else {
                 inst.deselect_node(node);
                 $('#' + ctrlid).val('');

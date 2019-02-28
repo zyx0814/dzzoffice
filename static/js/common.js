@@ -2033,7 +2033,8 @@ function Confirm(msg,callback)
 	showDialog(msg, 'confirm', __lang.confirm_message, callback, 1);
 };
 
-function showWindow(k, url, mode, cache, showWindow_callback) {
+function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) {
+
 	mode = isUndefined(mode) ? 'get' : mode;
 	cache = isUndefined(cache) ? 1 : cache;
 	var menuid = 'fwin_' + k;
@@ -2090,7 +2091,6 @@ function showWindow(k, url, mode, cache, showWindow_callback) {
 		hideMenu('fwin_dialog', 'dialog');
 		jQuery(menuObj).modal('show');
 	};
-
 	if(!menuObj) {
 		var html='<div class="modal-dialog modal-center">'
 				 +'	<div class="modal-content" >'
@@ -2113,6 +2113,11 @@ function showWindow(k, url, mode, cache, showWindow_callback) {
 		menuObj = document.createElement('div');
 		menuObj.id = menuid;
 		menuObj.className = ' modal ';
+		if(disablebacktohide){
+			menuObj.setAttribute('data-backdrop','static');
+			menuObj.setAttribute('data-keyboard','false');
+			
+		} 
 		menuObj.style.display = 'none';
 		document.body.appendChild(menuObj);
 		

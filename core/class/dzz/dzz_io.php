@@ -121,7 +121,11 @@ class dzz_io
 	function rename($path,$newname){ 
 		$path=self::clean($path);
 		$newname=self::name_filter($newname);
-		if($io=self::initIO($path))	return $io->rename($path,$newname);
+		if($io=self::initIO($path)){
+            $return =  $io->rename($path,$newname);
+            Hook::listen('renameafter_updateindex',$return);
+            return $return;
+		}
 		else return false;
 	}
 	
@@ -171,10 +175,10 @@ class dzz_io
 	//$tbz:目标api；
 	//返回：
 	//$icosdata数组；
-	function CopyTo($opath,$path,$iscopy=0){
+	function CopyTo($opath,$path,$iscopy=0,$force=0){
 		$path=self::clean($path);
 		$opath=self::clean($opath);
-		if($io=self::initIO($opath)) return $io->CopyTo($opath,$path,$iscopy);
+		if($io=self::initIO($opath)) return $io->CopyTo($opath,$path,$iscopy,$force);
 		else return false;
 	}
 
@@ -211,10 +215,10 @@ class dzz_io
 	//添加目录
 	//$fname：目录名称;
 	//$path：目录位置路径，如果是本地，$path 为pfid
-	function CreateFolder($path,$fname,$perm=0,$params=array(),$ondup='newcopy'){
+	function CreateFolder($path,$fname,$perm=0,$params=array(),$ondup='newcopy',$force=false){
 		$path=self::clean($path);//11
 		$fname=self::name_filter($fname);
-		if($io=self::initIO($path))	return $io->CreateFolder($path,$fname,$perm,$params,$ondup);
+		if($io=self::initIO($path))	return $io->CreateFolder($path,$fname,$perm,$params,$ondup,$force);
 		else return false;
 	}
 	//添加多层目录
@@ -288,14 +292,22 @@ class dzz_io
 	function upload($fileContent,$path,$filename){
 		$path=self::clean($path);
 		$filename=self::name_filter($filename);
-		if($io=self::initIO($path))		return $io->upload($fileContent,$path,$filename);
+		if($io=self::initIO($path)){
+            $return = $io->upload($fileContent,$path,$filename);
+            Hook::listen('createafter_addindex',$return);
+            return $return;
+		}
 		else return false;
 	}
 	
-	function upload_by_content($fileContent,$path,$filename){
+	function upload_by_content($fileContent,$path,$filename,$partinfo=array()){
 		$path=self::clean($path);
 		$filename=self::name_filter($filename);
-		if($io=self::initIO($path))		return $io->upload_by_content($fileContent,$path,$filename);
+		if($io=self::initIO($path)){
+            $return =  $io->upload_by_content($fileContent,$path,$filename,$partinfo);
+            Hook::listen('createafter_addindex',$return);
+            return $return;
+		}
 		else return false;
 	}
 	
@@ -303,22 +315,28 @@ class dzz_io
 	  	$path=self::clean(urldecode($path));
 		$name=self::name_filter(urldecode($name));
 	  	$relativePath=self::clean(urldecode($relativePath));
-	 	if($io=self::initIO($path))  return $io->uploadStream($file,$name,$path,$relativePath,$content_range);
+	 	if($io=self::initIO($path)) {
+            $return=$io->uploadStream($file,$name,$path,$relativePath,$content_range);
+            Hook::listen('createafter_addindex',$return['icoarr'][0]);
+            return $return;
+		}
 	 	else return false;
   }
 	
 	function Delete($path,$force=false){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	{
-			return $io->Delete($path,$force);
+			$return =  $io->Delete($path,$force);
+			Hook::listen("deleteafter_delindex",$return);
+			return $return;
 		}
 		else return false;
 	}
 	//恢复文件
-	function Recover($path,$combine=true){
+	function Recover($path,$combine=true,$force=false){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	{
-			return $io->Recover($path,$combine);
+			return $io->Recover($path,$combine,$force);
 		}
 		else return false;
 	}

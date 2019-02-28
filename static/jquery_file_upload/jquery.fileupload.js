@@ -1060,9 +1060,11 @@
                         dfd.resolve(files);
                     }).fail(errorHandler);
                 },
+				
                 readEntries = function () {
                     dirReader.readEntries(function (results) {
                         if (!results.length) {
+							entries = entries.concat(folderfile);
                             successHandler(entries);
                         } else {
                             entries = entries.concat(results);
@@ -1077,6 +1079,7 @@
                     // Workaround for Chrome bug #149735
                     entry._file.relativePath = path;
                     dfd.resolve(entry._file);
+					
                 } else {
                     entry.file(function (file) {
                         file.relativePath = path;
@@ -1084,7 +1087,12 @@
                     }, errorHandler);
                 }
             } else if (entry.isDirectory) {
-                dirReader = entry.createReader();
+               
+				var folderfile={"isFile":true,"name":entry.name+'.folder',"_file":new File([],entry.name+'.folder',{type:"text/plain","lastModified":new Date()})};
+				
+				// file.relativePath = path;
+				
+				 dirReader = entry.createReader();
                 readEntries();
             } else {
                 // Return an empy list for file system items

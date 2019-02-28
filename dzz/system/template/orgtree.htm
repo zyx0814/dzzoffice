@@ -114,6 +114,7 @@ body{
 var ctrlid='$_GET[ctrlid]';
 var multiple=parseInt('$_GET[multiple]')>0?true:false;
 var nouser=parseInt('$_GET[nouser]')>0?1:0;
+var showjob=parseInt('$_GET[showjob]')>0?1:0;
 var stype='$_GET[stype]'?parseInt('$_GET[stype]'):0;//0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
 var range='$_GET[range]'?parseInt('$_GET[range]'):0;//0:机构和用户；1：仅机构和部门：2：仅群组
 var moderator=parseInt('$_GET[moderator]')>0?1:0;
@@ -149,7 +150,7 @@ jQuery(document).ready(function(e) {
 			"themes" : { "responsive":false},
 			'data':function(node,cb){
 				var self=this;
-				jQuery.post(DZZSCRIPT+'?mod=system&op=orgtree&do=orgtree',{'id':node.id,'nouser':nouser,'moderator':moderator,'zero':'$zero','stype':stype,'range':range},function(json){
+				jQuery.post(DZZSCRIPT+'?mod=system&op=orgtree&do=orgtree',{'id':node.id,'nouser':nouser,'moderator':moderator,'zero':'$zero','stype':stype,'range':range,'showjob':showjob},function(json){
 					cb.call(this,json);
 				},'json');
 			}

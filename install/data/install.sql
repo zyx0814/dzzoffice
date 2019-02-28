@@ -441,7 +441,7 @@ CREATE TABLE dzz_folder (
   fname char(50) NOT NULL DEFAULT '',
   perm int(10) unsigned NOT NULL DEFAULT '0' COMMENT '0:继承；1：只读；2：可写',
   perm_inherit int(10) NOT NULL DEFAULT '0',
-  fsperm smallint(6) unsigned NOT NULL DEFAULT '0',
+  fsperm int(10) unsigned NOT NULL DEFAULT '0',
   disp smallint(6) NOT NULL DEFAULT '0',
   iconview tinyint(1) NOT NULL DEFAULT '1',
   display smallint(6) NOT NULL DEFAULT '0',
@@ -464,6 +464,29 @@ CREATE TABLE dzz_folder_attr (
   PRIMARY KEY (id),
   KEY fid (fid),
   KEY skey (skey)
+) ENGINE=MyISAM;
+DROP TABLE IF EXISTS dzz_folder_sub;
+CREATE TABLE dzz_folder_sub (
+  `subid` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `pflag` varchar(30) NOT NULL DEFAULT '' COMMENT '所属目录标识符',
+  `fname` char(50) NOT NULL DEFAULT '' COMMENT '目录名称',
+  `flag` varchar(30) NOT NULL DEFAULT 'folder' COMMENT '目录标识符',
+  `fsperm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目录超级权限',
+  `perm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目录权限',
+  `allow_exts` text NOT NULL COMMENT '允许的文件类型，使用英文逗号隔开',
+  `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '排序',
+  PRIMARY KEY (`subid`),
+  KEY `pflag` (`pflag`)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS dzz_folder_flag;
+CREATE TABLE dzz_folder_flag (
+  `flag` char(30) NOT NULL DEFAULT '' COMMENT '目录标识符',
+  `fsperm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目录默认超级权限',
+  `perm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目录默认权限',
+  `iconview` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '目录默认排列方式：4：列表：1：图标',
+  `disp` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '目录默认排序字段：0:name;1:size:2:type:3:dateline',
+  PRIMARY KEY (`flag`)
 ) ENGINE=MyISAM;
 
 
@@ -752,11 +775,13 @@ CREATE TABLE dzz_resources (
 
 DROP TABLE IF EXISTS dzz_resources_attr;
 CREATE TABLE dzz_resources_attr (
+  id int(10) unsigned NOT NULL AUTO_INCREMENT,
   rid char(32) NOT NULL DEFAULT '0' COMMENT '资源id',
   skey varchar(30) NOT NULL,
   sval text NOT NULL COMMENT '属性值',
   vid int(11) unsigned NOT NULL DEFAULT '0',
-  KEY rid (rid)
+  PRIMARY KEY (`id`),
+  KEY `rid_skey_vid` (`rid`,`skey`,`vid`)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS dzz_resources_cat;

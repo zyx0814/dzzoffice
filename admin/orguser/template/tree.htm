@@ -20,7 +20,6 @@
 	var ajaxurl = '{ADMINSCRIPT}?mod=orguser&op=ajax&';
 	var baseurl = '{ADMINSCRIPT}?mod=orguser&';
 	jQuery(document).ready(function(e) {
-
 		jQuery("#classtree").jstree({
 			"core": {
 				"multiple": true,
@@ -140,17 +139,20 @@
 						"action": function(data) {
 							var inst = jQuery.jstree.reference(data.reference),
 								obj = inst.get_node(data.reference);
-							jQuery.post('{ADMINSCRIPT}?mod=orguser&op=ajax&do=create', { 'forgid': obj.id, 't': new Date().getTime() }, function(json) {
-								if(!json || json.error) {
-									showmessage(json.error, 'danger', 3000, 1);
-								} else if(json.orgid > 0) {
-									var arr = { "id": json.orgid, "text": json.orgname, "type": "organization", "icon": (json.forgid > 0) ? 'dzz/system/images/department.png' : 'dzz/system/images/organization.png' };
-
-									inst.create_node(obj, arr, "first", function(new_node) {
-										setTimeout(function() { inst.edit(new_node); }, 0);
-									});
-								}
-							}, 'json');
+							inst.open_node(obj,function(){
+								jQuery.post('{ADMINSCRIPT}?mod=orguser&op=ajax&do=create', { 'forgid': obj.id, 't': new Date().getTime() }, function(json) {
+									if(!json || json.error) {
+										showmessage(json.error, 'danger', 3000, 1);
+									} else if(json.orgid > 0) {
+										var arr = { "id": json.orgid, "text": json.orgname, "type": "organization", "icon": (json.forgid > 0) ? 'dzz/system/images/department.png' : 'dzz/system/images/organization.png' };
+	
+										inst.create_node(obj, arr, "first", function(new_node) {
+											setTimeout(function() { inst.edit(new_node); }, 0);
+										});
+									}
+								}, 'json');
+							});
+							
 						}
 					},
 

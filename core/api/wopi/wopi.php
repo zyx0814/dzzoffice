@@ -80,7 +80,7 @@ class Wopi
 			header('X-WOPI-LOCK: '.$arr[1]);
 		}else{
 			$content=file_get_contents("php://input");
-			IO::setFileContent($path,$content,true);	
+			IO::setFileContent($path,$content,true);
 		}
 		return $code;
     }
@@ -167,10 +167,11 @@ class Wopi
 		$ooServerURL : 文档服务器地址；如http://oos.dzz.com
 		$path        : 文件路径;
 	*/
-	static function GenerateFileLink($path,$ooServerURL,$lock='')
+	static function GenerateFileLink($path,$ooServerURL,$lock='',$internalUrl='',$action='')
 	{
 		$code=200;
 		$meta=IO::getMeta($path);
+		if(empty($internalUrl)) $internalUrl=getglobal('siteurl');
 		if($meta['error']) return $meta;
 		$editperm=perm_check::checkperm('edit',$meta);
 		$code=self::checkLock($path,$lock);
@@ -188,23 +189,27 @@ class Wopi
 			return array('error'=>'filetype error');
 		}
 		
-		if($editperm){
-			if(in_array($fileExtension,array_keys($discovery['actions']['edit']))){
-				$action='edit';
-			}elseif(in_array($fileExtension,array_keys($discovery['actions']['view']))){
-				$action='view';
+		if(empty($action) || empty($discovery['actions'][$action])){
+			
+			if($editperm){
+				if(in_array($fileExtension,array_keys($discovery['actions']['edit']))){
+					$action='edit';
+				/*}elseif(in_array($fileExtension,array_keys($discovery['actions']['convert']))){
+					$action='convert';*/
+				}elseif(in_array($fileExtension,array_keys($discovery['actions']['view']))){
+					$action='view';
+				}
+			}else{
+				if(in_array($fileExtension,array_keys($discovery['actions']['view']))){
+					$action='view';
+				}elseif(in_array($fileExtension,array_keys($discovery['actions']['edit']))){
+					$action='edit';
+				}
 			}
-		}else{
-			if(in_array($fileExtension,array_keys($discovery['actions']['view']))){
-				$action='view';
-			}elseif(in_array($fileExtension,array_keys($discovery['actions']['edit']))){
-				$action='edit';
+			if( defined('IN_MOBILE') && in_array($fileExtension,array_keys($discovery['actions']['mobileView']))){
+				$action='mobileView';
 			}
 		}
-		if( defined('IN_MOBILE') && in_array($fileExtension,array_keys($discovery['actions']['mobileView']))){
-			$action='mobileView';
-		}
-				
 		$urlsrc=$discovery['actions'][$action][$fileExtension];
 		
 		$parts = parse_url($ooServerURL);
@@ -227,11 +232,11 @@ class Wopi
 		
 		$webSocket = sprintf("%s%s%s",$webSocketProtocol,$parts['host'],isset($parts['port']) ? ":" . $parts['port'] : "");
 																		 
-		$fileUrl = urlencode(getglobal('siteurl'). "wopi/files/" . $fileID);
+		$fileUrl = urlencode($internalUrl. "wopi/files/" . $fileID);
 		$requestUrl = preg_replace("/<.*>/", "", $urlsrc);
 		$requestUrl = $requestUrl . str_replace('{1}', $guid, $wopi_url_temlpate);
 		$requestUrl = str_replace("{0}", $fileUrl, $requestUrl).'&ui=zh-CN&rs=zh-CN'; 
-		$wopiSrc=getglobal('siteurl'). "wopi/files/$fileID?access_token=$guid&ui=zh-CN&rs=zh-CN";
+		$wopiSrc=$internalUrl. "wopi/files/$fileID?access_token=$guid&ui=zh-CN&rs=zh-CN";
 		$ret=array(
 			'fileID'=>$fileID,
 			'protocol'=>$protocol,

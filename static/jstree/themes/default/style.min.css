@@ -852,9 +852,10 @@
 .jstree-default-large .jstree-leaf>.jstree-ocl {
 	background-position: -64px 0
 }
-
 .jstree-default-large .jstree-anchor>.jstree-themeicon {
-	background-position: -256px 0
+	background-position: -256px 0;
+   	background-size: cover !important;
+    opacity: 1;
 }
 
 .jstree-default-large>.jstree-no-dots .jstree-node,

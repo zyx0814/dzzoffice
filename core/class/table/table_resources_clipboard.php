@@ -17,15 +17,30 @@ class table_resources_clipboard extends dzz_table
         if(!is_array($paths)) $paths = (array)$paths;
         $rids = '';
         $typearr = array();
-        foreach(DB::fetch_all("select rid,uid,pfid,type from %t where rid in (%n) and isdelete < 1",array('resources',$paths)) as $v){
+        foreach(DB::fetch_all("select rid,uid,pfid,gid,oid,`type` from %t where rid in (%n) and isdelete < 1",array('resources',$paths)) as $v){
             $pfid = $v['pfid'];
-            if (!perm_check::checkperm_Container($pfid, 'copy2') && !($uid == $v['uid'] && perm_check::checkperm_Container($pfid, 'copy1'))) {
-                return array('error'=>lang('no_privilege'));
-            }
-            if($v['type'] == 'folder'){
-                $typearr[] = 1;
+            if($copytype == 1){
+                if($v['type'] == 'folder'){
+                    $return = C::t('resources')->check_folder_perm($v,'copy');
+                    if($return['error']) return array('error'=>$return['error']);
+                    $typearr[] = 1;
+                }else{
+                    if (!perm_check::checkperm_Container($pfid, 'copy2') && !($uid == $v['uid'] && perm_check::checkperm_Container($pfid, 'copy1'))) {
+                        return array('error'=>lang('no_privilege'));
+                    }
+                    $typearr[] = 2;
+                }
             }else{
-                $typearr[] = 2;
+                if($v['type'] == 'folder'){
+                    $return = C::t('resources')->check_folder_perm($v,'cut');
+                    if($return['error']) return array('error'=>$return['error']);
+                    $typearr[] = 1;
+                }else{
+                    if (!perm_check::checkperm_Container($pfid, 'delete2') && !($uid == $v['uid'] && perm_check::checkperm_Container($pfid, 'delete1'))) {
+                        return array('error'=>lang('no_privilege'));
+                    }
+                    $typearr[] = 2;
+                }
             }
             $rids .= $v['rid'].',';
         }

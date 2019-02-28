@@ -138,27 +138,36 @@
 				}
 			});
 		}
+		
 		var getdata = function(url) {
 			if(!url) url = me.data('href');
-			var s=(url.indexOf('?') != -1) ? '&' :'?';
-			url+=s+'t='+new Date().getTime();
-			current = dataurl.push(url);
-			$.get(url, function(html) {
-				box.find('.popbox-container').html(html);
-				box.find('.js-popbox').on('click', function() {
-					getdata($(this).data('href'));
-					return false;
+			if(url == '#'){
+				var html = me.siblings('.popbox-html').html();
+				data_operate(html);
+			}else{
+				var s=(url.indexOf('?') != -1) ? '&' :'?';
+				url+=s+'t='+new Date().getTime();
+				current = dataurl.push(url);
+				$.get(url, function(html) {
+					data_operate(html);
 				});
-				box.find('.js-popbox-prev').on('click', function() {
-					goto_prev()
-					return false;
-				});
-				box.find('.close,.cancel').on('click', function(event) {
-					event.preventDefault();
-					close();
-				});
-				show();
+			}
+		}
+		var data_operate = function(html){
+			box.find('.popbox-container').html(html);
+			box.find('.js-popbox').on('click', function() {
+				getdata($(this).data('href'));
+				return false;
 			});
+			box.find('.js-popbox-prev').on('click', function() {
+				goto_prev()
+				return false;
+			});
+			box.find('.close,.cancel').on('click', function(event) {
+				event.preventDefault();
+				close();
+			});
+			show();
 		}
 		var goto_prev = function() {
 			if(current > 1) {

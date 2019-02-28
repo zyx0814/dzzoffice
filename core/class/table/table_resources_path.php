@@ -93,7 +93,7 @@ class table_resources_path extends dzz_table
             $cachekey1[] = 'patharr_'.$v;
             $cachekey2[] = 'path_'.$v;
         }
-        if(DB::delete($this->_table,"fid in (".dimplode($fids).")")){
+        if(self::delete($fid)){
             $this->clear_cache($cachekey1);
             $this->clear_cache($cachekey2);
             return true;
@@ -237,7 +237,7 @@ class table_resources_path extends dzz_table
     public function parse_path_get_rootdirinfo($path){
         $dirpath = explode('/',$path);
         $rootpath = $dirpath[0].'/';//根目录路径
-        $rootfid = DB::result_first("select fid from %t where path = %s",array($this->_table,self::path_transferred_meaning($rootpath)));
+        $rootfid = DB::result_first("select fid from %t where path = %s order by fid DESC",array($this->_table,self::path_transferred_meaning($rootpath)));
         if(!$rootfid){
             return false;
         }

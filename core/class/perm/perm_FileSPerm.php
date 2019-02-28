@@ -28,16 +28,27 @@
 class perm_FileSPerm{  
 
   public function getPowerarr(){
-	 return array(  'delete'	=>	1,       // 不允许删除；
-					'edit'     	=>	2,		//不允许编辑	
-					'rename'   	=>	4,		//不允许重命名
-					'move'		=>	8,		//不允许移动
-					'download'	=>	16,		//不允许下载
-					'share'		=>	32,		//不允许分享
-					'widget'	=>	64,		//不允许添加挂件
-					'wallpaper'	=>	128,	//不允许设为壁纸
-					'copy'      =>  256,	//不允许拷贝
-					'shortcut'  =>  512,    //不允许创建快捷方式
+	 return array(   
+		   'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
+            'read1' => 2,        //读取自己的文件
+            'read2' => 4,        //读取所有文件
+            'delete1' => 8,        //删除自己的文件
+            'delete2' => 16,        //删除所有文件
+            'edit1' => 32,        //编辑自己的文件
+            'edit2' => 64,        //编辑所有文件
+            'download1' => 128,        //下载自己的文件
+            'download2' => 256,        //下载所有文件
+            'copy1' => 512,        //拷贝自己的文件
+            'copy2' => 1024,    //拷贝所有文件
+            'upload' => 2048,    //新建和上传
+            //'newtype' => 4096,    //新建其他类型文件（除文件夹以外）
+            'folder' => 8192,    //新建文件夹
+            //'link' => 16384,    //新建网址
+            //'dzzdoc' => 32768,    //新建dzz文档
+            //'video' => 65536,    //新建视频
+           // 'shortcut' => 131072,    //快捷方式
+            'share' => 262144,    //分享
+            'approve' => 524288,//审批
 			);
   } 
   public function getPerm($action){
@@ -68,22 +79,6 @@ class perm_FileSPerm{
  public function typePower($type,$ext=''){ //返回类型的权限
  	global $textexts;
 	  switch($type){
-		case 'document'://('wallpaper','widget','share','edit');
-		    return self::getSumByAction(array('wallpaper','widget'));
-		case 'attach'://edit,widget,wallpaper
-			return self::getSumByAction(array('wallpaper','widget'));
-		case 'shortcut': case 'app'://不能设为壁纸，不能下载，不能编辑
-			return self::getSumByAction(array('wallpaper','widget','download','share'));
-		case 'user'://不能设为壁纸，不能下载，不能编辑，不能设为挂件，不能分享
-			return self::getSumByAction(array('wallpaper','widget','download','share'));
-		case 'dzzdoc': //edit
-			return self::getSumByAction('wallpaper','widget','download');
-		case 'video': case 'music':case 'link'://edit,down,wallpaper
-			return self::getSumByAction(array('wallpaper','widget','download'));
-		case 'folder': //edit，widget,wallpaper
-			return self::getSumByAction(array('wallpaper','widget'));
-		  case 'attachment': //通过attach::xxx和dzz://方式获取的文件不给编辑权限
-			return self::getSumByAction(array('edit','rename','move','wallpaper','widget'));
 		default:
 			return 0;
 	  }
@@ -91,11 +86,11 @@ class perm_FileSPerm{
   public function flagPower($flag){ //返回默认目录的权限 
 	  switch($flag){
 		  case 'home':case 'document': case 'image': case 'video': case 'music': case 'app':case 'desktop':case 'dock':
-			return self::getSumByAction(array('delete','wallpaper','widget','share','edit','copy','rename','move','download'));
+			return self::getSumByAction(array('delete1','delete2','share','edit1','edit2','copy1','copy2','download1','download2'));
 		case 'recycle':
-			return self::getSumByAction(array('delete','wallpaper','widget','share','edit','copy','rename','move','download'));
+			return self::getSumByAction(array('delete1','delete2','share','edit1','edit2','copy1','copy2','folder','upload','download1','download2'));
 		default:
-			return self::getSumByAction(array('wallpaper','widget','share','edit','copy','rename','delete','move'));
+			return 0;
 	  }
   }
 }  

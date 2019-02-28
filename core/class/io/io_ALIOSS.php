@@ -42,7 +42,7 @@ class io_ALIOSS extends io_api
 		}
 		$obz=io_remote::getBzByRemoteid($attach['remote']);
 		if($obz=='dzz'){
-			$opath='dzz::'.$attach['attachment'];
+			$opath='attach::'.$attach['aid'];
 		}else{
 			$opath=$obz.'/'.$attach['attachment'];
 		}

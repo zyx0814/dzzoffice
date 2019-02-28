@@ -14,6 +14,8 @@ if($_GET['formhash'] != $_G['formhash']) {
 
     showmessage(lang('logout_succeed'), dreferer(), array('formhash' => FORMHASH));
 }
+//应用退出登录挂载点
+Hook::listen('applogout');
 
 clearcookies();
 

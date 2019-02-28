@@ -20,6 +20,8 @@
 </div>
 
 <div class="mainContainer" id="main_message">
+<table width="100%" height="100%">
+<tr><td align="center" valign="middle">
 	<div class="modal-content">
 		 <div class="brand"> <img src="{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}" /> </div>
 		<!--{if $_G[setting][loginset][title]}-->
@@ -32,7 +34,7 @@
 		<div class="text-danger">{lang site_closed_please_admin}</div>
 		<!--{/if}-->
 
-		<form method="post"  name="login" id="loginform_$loginhash" class="loginForm" role="form" onsubmit="{if $this->setting['pwdsafety']}pwmd5('password3_$loginhash');{/if}pwdclear = 1; loginsub('loginform_$loginhash', 'returnmessage_$loginhash');return false;"  action="user.php?mod=login&op=logging&action=login&loginsubmit=yes{if !empty($_GET['handlekey'])}&handlekey=$_GET[handlekey]{/if}{if isset($_GET['frommessage'])}&frommessage{/if}&loginhash=$loginhash">
+		<form method="post"  name="login" id="loginform_$loginhash" class="loginForm" role="form" onsubmit="{if $_G['setting']['pwdsafety']}pwmd5('password3_$loginhash');{/if}pwdclear = 1; loginsub('loginform_$loginhash', 'returnmessage_$loginhash');return false;"  action="user.php?mod=login&op=logging&action=login&loginsubmit=yes{if !empty($_GET['handlekey'])}&handlekey=$_GET[handlekey]{/if}{if isset($_GET['frommessage'])}&frommessage{/if}&loginhash=$loginhash">
 			<input type="hidden" name="formhash" value="{FORMHASH}" />
 			<input type="hidden" name="referer" value="{$referer}" />
 			<!--{if $auth}-->
@@ -72,6 +74,7 @@
 		<!--{template login_copyright}-->
 		</div>
 	</div>
+    </td></tr></table>
 </div>
 <div class="nfl" id="main_succeed" style="display: none;text-align: center;">
 	<div class="modal-body">

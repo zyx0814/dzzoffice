@@ -161,8 +161,7 @@ class table_resources_version extends dzz_table
             );
             //将原数据插入版本表
             if($oldvid = parent::insert($setarr1,1)){
-            //更新原属性表数据
-				C::t('resources_attr')->update_by_skey($rid,0,array('vid'=>$oldvid));
+                C::t('resources_attr')->update_vid_by_rvid($rid,0,$oldvid);
 			}else{
 				 return array('error'=>lang('failure'));
 			}
@@ -220,6 +219,8 @@ class table_resources_version extends dzz_table
                 if($resources['vid'] == 0){
                     $setarr['olddatavid'] = $oldvid;
                 }
+                $indexarr = array('rid'=>$rid);
+                Hook::listen('createafter_addindex',$indexarr);
                 $setarr['dpath'] = dzzencode($rid);
                 return $setarr;
             }else{
@@ -241,10 +242,11 @@ class table_resources_version extends dzz_table
         if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
             return array('error'=>lang('no_privilege'));
         }
+
         $vfilename = DB::result_first("select sval from %t where vid = %d and rid = %s and skey = %s",array('resources_attr',$vid,$versioninfo['rid'],'title'));
 
         //获取不重复的名字
-        $filename = self::getFileName($vfilename,$fileinfo['pfid']);
+        $filename = self::getFileName($vfilename,$fileinfo['pfid'],$versioninfo['rid']);
         if(!$filename){
             $filename = $versioninfo['vname'];
             if($filename != $vfilename){
@@ -276,6 +278,8 @@ class table_resources_version extends dzz_table
             );
             C::t('resources_statis')->add_statis_by_rid($versioninfo['rid'],$statis);
             C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], $event, 'setprimaryversion', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
+            $indexarr = array('rid'=>$versioninfo['rid']);
+            Hook::listen('createafter_addindex',$indexarr);
             return array('rid'=>$versioninfo['rid']);
         }else{
             return array('error'=>lang('explorer_do_failed'));

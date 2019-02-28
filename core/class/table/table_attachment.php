@@ -116,15 +116,15 @@ class table_attachment extends dzz_table
 		}
 		
 		if($filter['aid']){
-			$where.=" and aid={$filter['aid']}";
+			$where.=" and aid='{$filter['aid']}'";
 		}
 		$filter['sizelt']=intval($filter['sizelt']*1024*1024);
 		if($filter['sizelt']>0){
-			$where.=" and filesize>$filter[sizelt]";
+			$where.=" and filesize>'$filter[sizelt]'";
 		}
 		$filter['sizegt']=intval($filter['sizegt']*1024*1024);
 		if($filter['sizegt']>0){
-			$where.=" and filesize<$filter[sizegt]";
+			$where.=" and filesize<'$filter[sizegt]'";
 		}
 		if($filter['exts']){
 			$extarr=explode(',',$filter['exts']);
@@ -133,7 +133,10 @@ class table_attachment extends dzz_table
 			}
 		}
 		if($filter['dateline']){
-			$where.=" and dateline>{$filter[dateline]}";
+			$where.=" and dateline>='{$filter[dateline]}'";
+		}
+		if($filter['aid1']){
+			$where.=" and aid>'{$filter[aid1]}'";
 		}
 		
 		if($filter['ignore']){
@@ -143,8 +146,15 @@ class table_attachment extends dzz_table
 			}
 		}
 		if($sizecount)	return DB::result_first("SELECT  sum(filesize) FROM ".DB::table($this->_table)."  WHERE $where ");
-		else  return DB::fetch_first("SELECT  * FROM ".DB::table($this->_table)." WHERE $where order by dateline");
+		else  return DB::fetch_first("SELECT  * FROM ".DB::table($this->_table)." WHERE $where order by aid");
 		
+	}
+	public function insert($setarr,$return_insert_id=1){
+		if($aid=parent::insert($setarr,$return_insert_id)){
+			Hook::listen('table_attachment_insert', $aid);//插入附件表时的挂载点
+			return $aid;
+		}
+		return false;
 	}
 }
 

@@ -21,21 +21,25 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 		'sizegt'=>$_GET['sizegt'],
 		
 	);
-	$runurl = BASESCRIPT."?".url_implode($gets);
 	$gets['aid']=intval($_GET['aid']);
+	$runurl = BASESCRIPT."?".url_implode($gets);
+	$gets['aid1']=intval($_GET['aid1']);
 	$gets['dateline']=intval($_GET['dateline']);
+	
 
 	//获取需要迁移的数据量
 	if($attach=C::t('attachment')->getAttachByFilter($gets)){
 		//print_r($attach);exit($runurl);
+		$runurl.='&dateline='.$attach['dateline'].'&aid1='.$attach['aid'];
 	 try{
 		updatesession();
 		if($re=io_remote::Migrate($attach,$gets['remoteid'])){
+			//print_r($re);exit();
 			include template('common/header_common');
 			echo "<script type=\"text/javascript\">";
 			echo "parent.setProgress(".json_encode($re).");";
 			if(!$re['error']){
-			  echo "window.location.href='".$runurl."&dateline=".$attach['dateline']."';";
+			  echo "window.location.href='".$runurl;
 			}
 			echo "</script>";	
 			include template('common/footer');

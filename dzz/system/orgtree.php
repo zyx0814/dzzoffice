@@ -14,6 +14,7 @@ include_once libfile('function/organization');
 $ismobile=helper_browser::ismobile();
 $uid =isset($_GET['uid'])?intval($_GET['uid']):$_G['uid'];
 $zero=$_GET['zero']?urldecode($_GET['zero']):lang('no_institution_users');
+
 $limit=1000;
 if($_GET['do']=='orgtree'){
 	$id=intval($_GET['id']);
@@ -21,6 +22,7 @@ if($_GET['do']=='orgtree'){
 	$stype=intval($_GET['stype']);  //0:可以选择部门群组和用户；1：仅选择部门群组：2：仅选择用户
 	$moderator=intval($_GET['moderator']);//是否仅可以选择我管理的群组或部门
 	$range=intval($_GET['range']);//0：所有部门和群组；1：仅部门；2：仅群组
+	$showjob=intval($_GET['showjob']); //是否显示职位
 	//判断用户有没有操作权限
 	$ismoderator=C::t('organization_admin')->ismoderator_by_uid_orgid($id,$_G['uid']);
 	
@@ -112,10 +114,12 @@ if($_GET['do']=='orgtree'){
 			}else{
 				$uids = array();
 				$datas = array();
+				
 				foreach(C::t('organization_user')->fetch_user_by_orgid($id,$limit) as $value){
 					if(!$value['uid']) continue;
 					$uids[] = $value['uid'];
-					$datas[]=array('id'=>'orgid_'.$value['orgid'].'_uid_'.$value['uid'],'text'=>$value['username'].'<em class="hide">'.$value['email'].'</em>','icon'=>'dzz/system/images/user.png','state'=>array('disabled'=>$disable),"type"=>$type,'li_attr'=>array('uid'=>$value['uid']));
+					if($showjob && $value['jobid']) $jobname=DB::result_first("select name from %t where jobid=%d",array('organization_job',$value['jobid']));
+					$datas[]=array('id'=>'orgid_'.$value['orgid'].'_uid_'.$value['uid'],'text'=>$value['username'].($jobname?'<em> ['.$jobname.']</em>':'').'<em class="hide">'.$value['email'].'</em>','icon'=>'dzz/system/images/user.png','state'=>array('disabled'=>$disable),"type"=>$type,'li_attr'=>array('uid'=>$value['uid']));
 				}
 				getuserIcon($uids,$datas,$data);
 			}
