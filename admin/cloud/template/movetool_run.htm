@@ -155,7 +155,7 @@
 			jQuery('#upload_progress .progress-subject').html('{lang ignored}');
 			sizemoved += parseInt(attach.filesize);
 			jQuery('#upload_progress .progress-bar').css('width', Math.floor((sizemoved / totalsize) * 100));
-			window.frames['hideframe'].location = runurl ;
+			window.frames['hideframe'].location = runurl+'&dateline='+attach.dateline+'&aid1='+attach.aid ;
 		} else if(op == 'retry') {
 			jQuery('#upload_progress .progress-subject').html('{lang are_retry}');
 			jQuery('#upload_progress .progress-bar').css('width', Math.floor((sizemoved / totalsize) * 100));
