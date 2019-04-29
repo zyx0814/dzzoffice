@@ -39,7 +39,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 			echo "<script type=\"text/javascript\">";
 			echo "parent.setProgress(".json_encode($re).");";
 			if(!$re['error']){
-			  echo "window.location.href='".$runurl;
+			  echo "window.location.href='".$runurl."'";
 			}
 			echo "</script>";	
 			include template('common/footer');
