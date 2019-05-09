@@ -136,14 +136,26 @@ function sqldumptablestruct($table) {
 	} else {
 		return '';
 	}
-	$create = $db->fetch_row($createtable);
-	if(strpos($table, '.') !== FALSE) {
+	
+
+	$create = $db -> fetch_row($createtable);
+
+	if (strpos($table, '.') !== FALSE) {
 		$tablename = substr($table, strpos($table, '.') + 1);
-		$create[1] = str_replace("CREATE TABLE $tablename", 'CREATE TABLE '.$table, $create[1]);
+		$create[1] = str_replace("CREATE TABLE $tablename", 'CREATE TABLE ' . $table, $create[1]);
 	}
-	$tabledump .= $create[1].";\n";
+	$tabledump .= $create[1];
 	$tablestatus = DB::fetch_first("SHOW TABLE STATUS LIKE '$table'");
-	$tabledump .= ($tablestatus['Auto_increment'] ? " AUTO_INCREMENT=$tablestatus[Auto_increment]" : '').";\n\n";
+	$tabledump .= (($tablestatus['Auto_increment'] && (strpos($tabledump,'AUTO_INCREMENT')===false))? " AUTO_INCREMENT=$tablestatus[Auto_increment]" : ''). ";\n\n";
+	if ($_GET['sqlcompat'] == 'MYSQL40' && $db -> version() >= '4.1' && $db -> version() < '5.1') {
+		if ($tablestatus['Auto_increment'] <> '') {
+			$temppos = strpos($tabledump, ',');
+			$tabledump = substr($tabledump, 0, $temppos) . ' auto_increment' . substr($tabledump, $temppos);
+		}
+		if ($tablestatus['Engine'] == 'MEMORY') {
+			$tabledump = str_replace('TYPE=MEMORY', 'TYPE=HEAP', $tabledump);
+		}
+	}
 	return $tabledump;
 }
 
