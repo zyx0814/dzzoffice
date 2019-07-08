@@ -9,7 +9,7 @@ $_config = array();
  * @example
  * $_config['db']['1']['dbhost'] = 'localhost'; // 服务器地址
  * $_config['db']['1']['dbuser'] = 'root'; // 用户
- * $_config['db']['1']['dbpw'] = 'root';// 密码
+ * $_config['db']['1']['dbpw'] = '';// 密码
  * $_config['db']['1']['dbcharset'] = 'gbk';// 字符集
  * $_config['db']['1']['pconnect'] = '0';// 是否持续连接
  * $_config['db']['1']['dbname'] = 'x1';// 数据库
@@ -90,6 +90,7 @@ $_config['memory']['redis']['server'] = '';
 $_config['memory']['redis']['port'] = 6379;
 $_config['memory']['redis']['pconnect'] = 1;
 $_config['memory']['redis']['timeout'] = 0;
+$_config['memory']['redis']['requirepass'] = '';//如果redis需要密码，请填写redis密码
 /**
  * 是否使用 Redis::SERIALIZER_IGBINARY选项,需要igbinary支持,windows下测试时请关闭，否则会出>现错误Reading from client: Connection reset by peer
  * 支持以下选项，默认使用PHP的serializer
@@ -103,6 +104,11 @@ $_config['memory']['memcache']['server'] = '127.0.0.1'; // memcache 服务器地
 $_config['memory']['memcache']['port'] = 11211;			// memcache 服务器端口
 $_config['memory']['memcache']['pconnect'] = 1;			// memcache 是否长久连接
 $_config['memory']['memcache']['timeout'] = 1;			// memcache 服务器连接超时
+
+$_config['memory']['memcached']['server'] = '127.0.0.1'; // memcached 服务器地址
+$_config['memory']['memcached']['port'] = 11211;		// memcached 服务器端口
+$_config['memory']['memcached']['pconnect'] = 1;		// memcached 是否长久连接
+$_config['memory']['memcached']['timeout'] = 1;			// memcached 服务器连接超时
 
 $_config['memory']['apc'] = 1;							// 启动对 apc 的支持
 $_config['memory']['xcache'] = 1;						// 启动对 xcache 的支持
@@ -124,8 +130,8 @@ $_config['output']['gzip'] 			    = 0;		// 是否采用 Gzip 压缩输出
 $_config['output']['tplrefresh'] 		= 1;		// 模板自动刷新开关 0=关闭, 1=打开
 
 
-$_config['output']['language'] 			= 'zh-cn';	// 页面语言 zh-cn/zh-tw
-$_config['output']['language_list']['zh-cn']='简体中文';	// 页面语言 zh-cn/en-us
+$_config['output']['language'] 			= 'zh-CN';	// 页面语言 zh-cn/zh-tw
+$_config['output']['language_list']['zh-CN']='简体中文';	// 页面语言 zh-CN/en-US
 
 $_config['output']['staticurl'] 		= 'static/';	// 站点静态文件路径，“/”结尾
 $_config['output']['ajaxvalidate']		= 0;		// 是否严格验证 Ajax 页面的真实性 0=关闭，1=打开

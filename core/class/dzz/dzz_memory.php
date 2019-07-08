@@ -18,6 +18,7 @@ class dzz_memory extends dzz_base
 	public function __construct() {
 		$this->extension['redis'] = extension_loaded('redis');
 		$this->extension['memcache'] = extension_loaded('memcache');
+		$this->extension['memcached'] = extension_loaded('memcached');
 		$this->extension['apc'] = function_exists('apc_cache_info') && @apc_cache_info();
 		$this->extension['xcache'] = function_exists('xcache_get');
 		$this->extension['eaccelerator'] = function_exists('eaccelerator_get');
@@ -36,8 +37,14 @@ class dzz_memory extends dzz_base
 				$this->memory = null;
 			}
 		}
-
-		if($this->extension['memcache'] && !empty($config['memcache']['server'])) {
+		if(!$this->memory->enable && $this->extension['memcached'] && !empty($config['memcached']['server'])) {
+			$this->memory = new memory_driver_memcached();
+			$this->memory->init($this->config['memcached']);
+			if(!$this->memory->enable) {
+				$this->memory = null;
+			}
+		}
+		if(!$this->memory->enable && $this->extension['memcache'] && !empty($config['memcache']['server'])) {
 			$this->memory = new memory_driver_memcache();
 			$this->memory->init($this->config['memcache']);
 			if(!$this->memory->enable) {

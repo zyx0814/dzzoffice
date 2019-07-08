@@ -4,26 +4,27 @@ if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
 
-class memory_driver_memcache
+class memory_driver_memcached
 {
 	public $enable;
 	public $obj;
-	public 
 
 	public function init($config) {
 		if(!empty($config['server'])) {
-			
-			$this->obj = new Memcache;
-			if($config['pconnect']) {
-				$connect = @$this->obj->pconnect($config['server'], $config['port']);
-			} else {
-				$connect = @$this->obj->connect($config['server'], $config['port']);
-			}
-			
+			$this->obj = new Memcached();
+			$connect = $this->connectd($config['server'], $config['port']);
 			$this->enable = $connect ? true : false;
 		}
 	}
-	
+	 public function connectd($host , $port){ 
+		$servers = $this->obj->getServerList(); 
+		if(is_array($servers)) { 
+			foreach ($servers as $server) {
+				if($server['host'] == $host and $server['port'] == $port) return true; 
+			}
+		} 
+		return $this->obj->addServer($host , $port); 
+	} 
 	public function get($key) {
 		return $this->obj->get($key);
 	}
@@ -32,7 +33,7 @@ class memory_driver_memcache
 		return $this->obj->get($keys);
 	}
 	public function set($key, $value, $ttl = 0) {
-		return $this->obj->set($key, $value, MEMCACHE_COMPRESSED, $ttl);
+		return $this->obj->set($key, $value, $ttl);
 	}
 
 	public function rm($key) {
