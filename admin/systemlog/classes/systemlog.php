@@ -53,7 +53,7 @@ class Systemlog{
                 $cur_url = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
                 $from_url = $_SERVER['HTTP_REFERER']; 
                 foreach($log as $tmp) {
-                    $tmp=implode("\t", clearlogstring(array($_G['timestamp'], $_G['username'], $_G['uid'], $_G['clientip'],$tmp,$cur_url,$from_url))) ;
+                    $tmp=implode("\t", clearlogstring(array($_G['timestamp'], $_G['username'], $_G['groupid'], $_G['clientip'],$tmp,$cur_url,$from_url))) ;
                     fwrite($fp, "<?PHP exit;?>\t".str_replace(array('<?', '?>'), '', $tmp)."\n");
                 }
                 fclose($fp);
