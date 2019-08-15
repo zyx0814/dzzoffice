@@ -146,6 +146,8 @@ if (!submitcheck('settingsubmit')) {
 		//获取用户组空间设置数据
 		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
 
+		include_once libfile('function/cache');
+        updatecache('usergroups');
 	}elseif($operation == 'permgroup'){
 		$perms = get_permsarray();//获取所有权限;
 		$permgroups = C::t('resources_permgroup')->fetch_all();
