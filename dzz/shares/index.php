@@ -107,7 +107,7 @@ if ($do == 'adddowns') {
     //增加浏览次数
     C::t('shares')->add_views_by_id($sid);
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
-    $perpage = ($ismobile) ? 10 : 20;
+    $perpage = ($ismobile) ? 20 : 20;
     $start = ($page - 1) * $perpage;
     $gets = array('mod' => 'shares', 'sid' => $sid,);
     $theurl = BASESCRIPT . "?" . url_implode($gets);
@@ -153,6 +153,7 @@ if ($do == 'adddowns') {
         if ($fileinfo['type'] == 'folder' && $fileinfo['oid']) {
             $oid = $fileinfo['oid'];
             $fileinfo['dhpath'] = $oid;
+			$fileinfo['contaions']= C::t('resources')->get_contains_by_fid($fileinfo['oid']);
             $fileinfo['filenum'] = $fileinfo['contaions']['contain'][0];
             $fileinfo['foldernum'] = $fileinfo['contaions']['contain'][1];
         }
@@ -160,6 +161,7 @@ if ($do == 'adddowns') {
             $fileinfo['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=45&height=45&path=' . dzzencode('attach::' . $fileinfo['aid']);
             $fileinfo['imgpath'] = DZZSCRIPT . '?mod=io&op=thumbnail&path=' . dzzencode('attach::' . $fileinfo['aid']);
         }
+		
         $list[] = $fileinfo;
         $allrids .= dzzencode($v['rid']) . ',';
     }

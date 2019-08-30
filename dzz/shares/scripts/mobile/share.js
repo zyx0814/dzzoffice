@@ -107,11 +107,26 @@ $(document.body).infinite().on("infinite", function () {
             $('#dataContainer').html(data);
             $('#filelist #nextpage').replaceWith($('#dataContainer').find('.module-list').html());
             $('#dataContainer').empty();
-        })
+        });
     } else {
-        jQuery(document.body).destroyInfinite();
+		loading = false;
     }
 });
+function nextPageLoad(){
+	if (loading) return;
+    loading = true;
+	var nextpage=$('#nextpage');
+    if (nextpage.length) {
+        $.post(DZZSCRIPT + '?mod=shares&op=ajax', {'morepath': nextpage.data('morepath'), 'page': nextpage.data('nextpage')}, function (data) {
+			loading = false;
+            $('#dataContainer').html(data);
+            $('#filelist #nextpage').replaceWith($('#dataContainer').find('.module-list').html());
+            $('#dataContainer').empty();
+        });
+    } else {
+		loading = false;
+    }
+}
 //保存文件
 $(document).off('tap.savefile').on('tap.savefile', '.savefiles', function () {
     var action = 'index.php?mod=system&op=mobilefileselection&type=2&handlekey=seldir&allowcreate=1',
