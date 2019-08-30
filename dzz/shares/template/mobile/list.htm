@@ -105,15 +105,8 @@ $(function(){
         $('.downfile').removeClass('hide');
     }
     $('#weui_address_scroll').navbarscroll();
-	height();
 });
-function height(){
-	var h=$(document).outerHeight(true);
-	var h1=$('.weui-cell-member').outerHeight(true);
-	var h2=$('.weui-address').outerHeight(true);
-	var h3=$('.weui-member-footer').outerHeight(true);
-	$('#filelist').css({'height':h-h1-h2-h3,'margin-bottom':'100px'});
-}
+
 function downfile(downurl){
     jQuery.post('{MOD_URL}&do=adddowns&sid={$_GET[sid]}', function (data) {
         if (data['success']) {

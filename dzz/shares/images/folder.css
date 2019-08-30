@@ -301,9 +301,9 @@ html, body {
 /*文件分享单页开始*/
 .sharepame-title{
 	line-height: 64px;
-	color: #fff;
 	font-size: 22px;
 	font-family: "微软雅黑";
+	color:#FFF;
 }
 .sharepame-images{
 	width:54px;

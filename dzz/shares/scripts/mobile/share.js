@@ -41,7 +41,6 @@ $(document).off('tap.openfolder').on('tap.openfolder', '.folderlist', function (
                 $(this).html('<a href="javascript:;">' + $(this).html() + '</a>');
             });
             $('#weui_address_scroll').navbarscroll();
-            height();
             $('#dataContainer').empty();
         })
     }
@@ -101,10 +100,12 @@ var loading = false;  //状态标记
 $(document.body).infinite().on("infinite", function () {
     if (loading) return;
     loading = true;
-    if (nextpage) {
-        $.post(DZZSCRIPT + '?mod=shares&op=ajax', {'morepath': morepath, 'page': nextpage}, function (data) {
+	var nextpage=$('#nextpage');
+    if (nextpage.length) {
+        $.post(DZZSCRIPT + '?mod=shares&op=ajax', {'morepath': nextpage.data('morepath'), 'page': nextpage.data('nextpage')}, function (data) {
+			loading = false;
             $('#dataContainer').html(data);
-            $('#filelist').append($('#dataContainer').find('.module-list').html());
+            $('#filelist #nextpage').replaceWith($('#dataContainer').find('.module-list').html());
             $('#dataContainer').empty();
         })
     } else {

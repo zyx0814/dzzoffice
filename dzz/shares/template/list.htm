@@ -4,7 +4,7 @@
 <link href="static/dzzthumb/jquery.dzzthumb.css?{VERHASH}" rel="stylesheet" media="all">
 <script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
-<script type="text/javascript" src="dzz/explorer/js/_hotkey.js?{VERHASH}"></script>
+<script type="text/javascript" src="dzz/vapp/js/_hotkey.js?{VERHASH}"></script>
 <!--{template common/header_simple_end}-->
 
 <!--头部信息框-->
@@ -21,10 +21,10 @@
             </div>
             <div class="select-toperate select-toperate-center  toolButtons">
                 <div class="btns">
-                    <a node-type="btn-item" href="javascript:void(0);" class="shares-topbtns share_save">
+                   <!-- <a node-type="btn-item" href="javascript:void(0);" class="shares-topbtns share_save">
                         <span class="dzz dzz-save" data-key="save" data-toggle="tooltip" data-placement="bottom"
                               data-original-title="{lang save}"></span>
-                    </a>
+                    </a>-->
                     <a node-type="btn-item" href="javascript:void(0);" onclick="downfileselect();return false;"
                        class="shares-topbtns">
                         <span class="dzz dzz-download" data-key="download" data-toggle="tooltip" data-placement="bottom"
@@ -48,8 +48,7 @@
 <div id="contains_content">
     <!--固定的头部-->
     <!--{template common/commer_header}-->
-    <div class="bs-container clearfix">
-
+    <div class="bs-container1 clearfix">
         <div class="bs-main-container" style="padding: 0px;">
             <div class="container">
                 <div class="sharepame-pictitle clearfix">
@@ -76,7 +75,7 @@
                 <!--地址栏结束-->
                 <div class="main-content clearfix">
 
-                    <div node-type="module" class="module-grid-view data-list" style="display: none;overflow:auto">
+                    <div node-type="module" class="module-grid-view data-list" style="display: none;">
                         <div node-type="list" class="wrapper window clearfix" style="z-index:1000">
                             <!--选中后的效果-->
                             <div class="list-wrapper clearfix">
@@ -233,17 +232,16 @@
     });
     //页面高度js
     var page_loading = false;
-    jQuery('.left-drager').leftDrager_layout(function () {
-    });
-    jQuery('.module-list-view:visible .list-share').scroll(function (e) {
+    jQuery('.left-drager').leftDrager_layout();
+  /*  jQuery('.module-list-view:visible .list-share').scroll(function (e) {
         var clientHeight = jQuery('.list-share').height();
         var scrollHeight = jQuery('.list-share .list-wrapper').height();
         if (jQuery('.list-share').scrollTop() + clientHeight >= (scrollHeight - 5) && !page_loading) jQuery('.list-share .more').trigger('click');
-    });
+    });*/
     jQuery('.bs-main-container').scroll(function (e) {
         var clientHeight = jQuery('.bs-main-container').height();
-        var scrollHeight = jQuery('.bs-main-container .list-wrapper').height();
-        if (jQuery('.bs-main-container').scrollTop() + clientHeight >= (scrollHeight - 150) && !page_loading) jQuery('.module-grid-view .more').trigger('click');
+        var scrollHeight = jQuery('.bs-main-container > .container').height();
+        if (jQuery('.bs-main-container').scrollTop() + clientHeight >= (scrollHeight - 50) && !page_loading) jQuery('.module-grid-view .more').trigger('click');
     });
 
     function getMore(obj, href) {
