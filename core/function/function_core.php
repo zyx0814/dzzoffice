@@ -733,7 +733,49 @@ function avatar_group($gid,$groupcolors=array(),$class='iconFirstWord'){
 		} 
 	}
 }
-
+function getResourceByLang($flag){
+	$langset=getglobal('language');
+	if(empty($langset)) return '';
+	switch($flag){
+		case 'select2':
+			$t="static/select2/select2_locale_{lang}.js";
+			$src=str_replace('{lang}',$langset,$t);
+			if(file_exists($src)){
+				return $src;
+			}else{
+				return '';
+			}
+			break;
+		case 'datepicker':
+			$t="static/datepicker/i18n/datepicker-{lang}.js";
+			$src=str_replace('{lang}',$langset,$t);
+			if(file_exists($src)){
+				return $src;
+			}else{
+				return '';
+			}
+			break;
+		case 'timepicker':
+			$t="static/datepicker/timepicker/i18n/jquery-ui-timepicker-{lang}.js";
+			$src=str_replace('{lang}',$langset,$t);
+			if(file_exists($src)){
+				return $src;
+			}else{
+				return '';
+			}
+			break;
+		case 'ueditor':
+			$t="dzz/system/ueditor/lang/{lang}/{lang}.js";
+			$src=str_replace('{lang}',strtolower($langset),$t);
+			if(file_exists($src)){
+				return $src;
+			}else{
+				return '';
+			}
+			break;
+				
+	}
+}
 function checkLanguage()
 {
     global $_G;
