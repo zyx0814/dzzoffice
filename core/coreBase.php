@@ -10,7 +10,7 @@ define('CACHE_NAME','cache');//缓存文件目录名
 define('CACHE_DIR',DZZ_ROOT.DATA_NAME.BS.CACHE_NAME);//缓存目录
 define('CORE_PATH',DZZ_ROOT.CORE_NAME.BS.'class');//核心类目录
 define('APP_DIRNAME','dzz');//应用目录名
-define('APP_CHECK_URL', "http://www.dzzoffice.com/");//检测应用更新地址 http://test.286.com.cn/ 
+define('APP_CHECK_URL', "http://www.dzz.cc/");//检测应用更新地址 http://dzz.cc/ 
 //define('APP_DIR',DZZ_ROOT.APP_DIRNAME.BS);//应用目录
 define('MOULD','mod');//路由模块键名
 define('DIVIDE','op');//路由操作键名
