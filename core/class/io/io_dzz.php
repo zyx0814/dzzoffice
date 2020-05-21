@@ -2657,7 +2657,7 @@ class io_dzz extends io_api
     }
 
     //本地文件复制到本地其它区域
-    public function FileCopy($rid, $pfid, $first = true,$force)
+    public function FileCopy($rid, $pfid, $first = true,$force=false)
     {
         global $_G, $_GET;
         if (!$tfolder = DB::fetch_first("select * from " . DB::table('folder') . " where fid='{$pfid}'")) {
