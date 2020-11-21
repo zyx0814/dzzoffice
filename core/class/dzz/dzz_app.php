@@ -194,6 +194,8 @@ class dzz_app extends dzz_base{
             return TRUE;
         }elseif($_SERVER['REQUEST_SCHEME'] == 'https'){ //其他
             return TRUE;
+        }elseif($_SERVER['HTTP_X_SCHEME'] == 'https'){ //其他, k8s集群nginx-ingress
+            return TRUE;
         }
         return FALSE;
     }
