@@ -44,6 +44,8 @@ INSERT INTO `dzz_connect` VALUES('FTP', '', '', 'ftp', 'ftp', '', 2, 'connect_ft
 INSERT INTO `dzz_connect` VALUES('七牛云存储', '', '', 'storage', 'qiniu', '', 2, 'connect_storage', '', 0);
 INSERT INTO `dzz_connect` VALUES('OneDrive', '', '', 'pan', 'OneDrive', '', 0, 'connect_onedrive', '', 0);
 INSERT INTO `dzz_connect` VALUES('本地磁盘', '', '', 'disk', 'disk', '', 1, 'connect_disk', '', -1);
+INSERT INTO `dzz_connect` VALUES('Minio', '', '', 'storage', 'Minio', '', 2, 'connect_storage', '', 0);
+INSERT INTO `dzz_connect` VALUES('Qcos', '', '', 'storage', 'QCOS', '', 2, 'connect_storage', '', 0);
 
 --
 -- 转存表中的数据 `dzz_local_storage`
@@ -362,9 +364,3 @@ INSERT INTO `dzz_resources_permgroup` (`id`, `pername`, `perm`, `off`, `default`
 (5, '读写1', 10927, 0, 0, 1),
 (6, '读写2', 12271, 0, 0, 1),
 (7, '读写3', 12263, 0, 0, 1);
-
-INSERT INTO `dzz_folder_flag` (`flag`, `fsperm`, `perm`, `iconview`, `disp`) VALUES
-('home',	0,	0,	1,	0),
-('folder',	0,	0,	1,	0),
-('app',	0,	7,	1,	0),
-('organization',	0,	7,	1,	0);

@@ -1,10 +1,10 @@
 <?php
 /*
- * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
- * @license     http://www.dzzoffice.com/licenses/license.txt
- * @package     DzzOffice
- * @link        http://www.dzzoffice.com
- * @author      zyx(zyx@dzz.cc)
+ * @copyright   QiaoQiaoShiDai Internet Technology(Shanghai)Co.,Ltd
+ * @license     https://www.oaooa.com/licenses/
+ * 
+ * @link        https://www.oaooa.com
+ * @author      zyx(zyx@oaooa.com)
  */
 if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
@@ -16,10 +16,15 @@ if($_GET['do']=='getBucket'){
 	$id=$_GET['id'];
 	$key=$_GET['key'];
 	$bz=empty($_GET['bz'])?'ALIOSS':$_GET['bz'];
-	$class='io_'.$bz;
-	$p=new $class($bz);
-	$re=$p->getBucketList($id,$key);
+    $class='io_'.$bz;
 
+    $p=new $class($bz);
+	if($bz == 'QCOS'){
+		$region = $_GET['region'];
+        $re=$p->getBucketList($id,$key,$region);
+	}else{
+        $re=$p->getBucketList($id,$key);
+	}
 	if($re){
 		echo  json_encode($re);
 	}else{
@@ -27,6 +32,7 @@ if($_GET['do']=='getBucket'){
 	}
 	exit();
 }else{
+	//error_reporting(E_ALL);
 	IO::authorize($bz);
 	exit();
 }
