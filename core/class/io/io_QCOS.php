@@ -127,7 +127,7 @@ class io_Qcos extends io_api
         if ($save_path['error']) {
             return array('error' => $save_path['error']);
         } else {
-            return $save_path['ETag'];
+            return true;
         }
         return false;
     }
