@@ -7,7 +7,7 @@
 * @author      zyx(zyx@oaooa.com)
 */
 
-if (!defined('IN_OAOOA')) {
+if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 include_once DZZ_ROOT . './core/api/Qcos/vendor/autoload.php';

@@ -747,6 +747,19 @@ $lang = array
 	'oauth_ALIOSS_node15'=>'新加坡外网地址',
 	'oauth_ALIOSS_node16'=>'新加坡内网地址',
 	'oauth_ALIOSS_node17'=>'选择内网地址时，必须保证服务器和云存储bucket在同一节点内。',
+	
+	// admin/cloud/template/auth_qcos.html
+    'oauth_QCOS_add_ALY'=>'添加腾讯云存储',
+    'oauth_QCOS_ALY_storage'=>'腾讯云云存储',
+    'oauth_QCOS_click_gain'=>'点此获取bucket列表',
+    'oauth_QCOS_bucket'=>'选择要管理的bucket，点击左侧的连接可以自动获取bucket列表',
+    'region'=>'填写存储桶地域',
+    'oauth_QCOS_agree'=>'协议',
+    'oauth_QCOS_agree_tip'=>'协议头部，默认为http',
+    'oauth_QCOS_region'=>'存储桶地域',
+    'oauth_QCOS_region_tip'=>'设置一个默认的存储桶地域',
+    'oauth_QCOS_endpoint'=>'腾讯云存储地址',
+    'oauth_QCOS_endpoint_tip'=>'腾讯云存储 endpoint 地址',
 	// admin/cloud/template/oauth_ftp.html
 	'FTP_encode'=>'编码',
 	'add_FTP_storage'=>'添加FTP存储',
