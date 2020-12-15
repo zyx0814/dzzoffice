@@ -212,7 +212,7 @@ if($method == 'show_license') {
 			}
 		}
 
-		if(strpos($tablepre, '.') !== false || intval($tablepre{0})) {
+		if(!preg_match("/^[a-z][a-z0-9]+_$/i",$tablepre)) {
 			show_msg('tablepre_invalid', $tablepre, 0);
 		}
 
