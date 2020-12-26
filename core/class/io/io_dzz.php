@@ -876,9 +876,9 @@ class io_dzz extends io_api
 
             if ($force || perm_check::checkperm('delete', $icoarr)) {
                 if ($finaldelete) {//强制彻底删除
-                    C::t('resources')->delete_by_rid($path, $force);
+                    C::t('resources')->delete_by_rid($path, true);
                 } elseif ($icoarr['isdelete'] > 0) {//删除状态彻底删除
-                    C::t('resources')->delete_by_rid($path, $force);
+                    C::t('resources')->delete_by_rid($path, true);
                 } else {//非删除状态删除到回收站
                     $return = C::t('resources')->recyle_by_rid($icoarr['rid'],$force);
                     if ($return['error']) {
@@ -913,9 +913,9 @@ class io_dzz extends io_api
                 }*/
                 if ($force || perm_check::checkperm('delete', $icoarr)) {
                     if ($finaldelete) {//强制彻底删除
-                        C::t('resources')->delete_by_rid($path, $force);
+                        C::t('resources')->delete_by_rid($path, true);
                     } elseif ($icoarr['isdelete'] > 0) {//删除状态彻底删除
-                        C::t('resources')->delete_by_rid($path, $force);
+                        C::t('resources')->delete_by_rid($path, true);
                     } else {//非删除状态删除到回收站
                         $return = C::t('resources')->recyle_by_rid($icoarr['rid'],$force);
                         if ($return['error']) {
