@@ -836,11 +836,13 @@ class io_dzz extends io_api
         exit();
     }
 
-    //删除
+   //删除
     //当文件在回收站时，彻底删除；
-    //$force 真实删除，不放入回收站
-    public function Delete($path, $force = false)
+    //finaldelete 真实删除，不放入回收站
+	//$force 强制删除，不受权限控制
+    public function Delete($path,$finaldelete=false, $force = false)
     {
+
         global $_G;
         if (strpos($path, 'dzz::') === 0) {
             if (strpos($path, './') !== false) return false;
@@ -866,27 +868,19 @@ class io_dzz extends io_api
                 $filename = end($patharr);
             }
 
-            if (!$icoarr = DB::fetch_first("select * from %t where pfid = %d and name = %s and isdelete < 1", array('resources', $pfid, $filename))) {
-                return array('rid' => $icoarr['rid'], 'error' => lang('file_longer_exists'));
-            }
-            $size = 0;
-            if ($icoarr['type'] == 'folder') {
-                $contains = C::t('resources')->get_contains_by_fid($icoarr['oid'], true);
-                $size = $contains['size'];
-            } else {
-                if ($icoarr['vid'] > 0) {
-                    $size = DB::result_first("select sum(size) from %t where rid = %s", array('resources_version', $icoarr['rid']));
-                } else {
-                    $size = $icoarr['size'];
-                }
-            }
-            if (perm_check::checkperm('delete', $icoarr)) {
-                if ($force) {//强制彻底删除
-                    C::t('resources')->delete_by_rid($path, true);
+            if ($rid = DB::result_first("select rid from %t where pfid = %d and name = %s and isdelete < 1", array('resources', $pfid, $filename))) {
+				$icoarr=C::t('resources')->fetch_by_rid($rid);
+            }else{
+				 return array('rid' => $icoarr['rid'], 'error' => lang('file_longer_exists'));
+			}
+
+            if ($force || perm_check::checkperm('delete', $icoarr)) {
+                if ($finaldelete) {//强制彻底删除
+                    C::t('resources')->delete_by_rid($path, $force);
                 } elseif ($icoarr['isdelete'] > 0) {//删除状态彻底删除
-                    C::t('resources')->delete_by_rid($path, false);
+                    C::t('resources')->delete_by_rid($path, $force);
                 } else {//非删除状态删除到回收站
-                    $return = C::t('resources')->recyle_by_rid($icoarr['rid']);
+                    $return = C::t('resources')->recyle_by_rid($icoarr['rid'],$force);
                     if ($return['error']) {
                         return $return;
                     }
@@ -894,16 +888,19 @@ class io_dzz extends io_api
             } else {
                 return array('rid' => $icoarr['rid'], 'error' => lang('no_privilege'));
             }
-            if ($size > 0 && !$icoarr['isdelete']) {
-                SpaceSize(-$size, $icoarr['gid'], true);
-            }
+			
             return array('rid' => $icoarr['rid'], 'name' => $icoarr['name']);
         } elseif (preg_match('/\w{32}/i', $path)) {//rid删除
             try {
-                if (!$icoarr = C::t('resources')->fetch_info_by_rid($path)) {
+                if (!$icoarr = C::t('resources')->fetch_by_rid($path)) {
                     return array('rid' => $path, 'error' => lang('file_longer_exists'));
                 }
-                $size = 0;
+				//当文件在回收站时，补全文件的原pfid(通过回收站表)
+				if($icoarr['pfid']=='-1' && ($recycle=C::t('resources_recyle')->fetch_by_rid($path))){
+					$icoarr['pfid']=$recycle['pfid'];
+				}
+				//文件大小统计改到 resources表中处理
+               /* $size = 0;
                 if ($icoarr['type'] == 'folder') {
                     $contains = C::t('resources')->get_contains_by_fid($icoarr['oid'], true);
                     $size = $contains['size'];
@@ -913,14 +910,14 @@ class io_dzz extends io_api
                     } else {
                         $size = $icoarr['size'];
                     }
-                }
-                if (perm_check::checkperm('delete', $icoarr)) {
-                    if ($force) {//强制彻底删除
-                        C::t('resources')->delete_by_rid($path, true);
+                }*/
+                if ($force || perm_check::checkperm('delete', $icoarr)) {
+                    if ($finaldelete) {//强制彻底删除
+                        C::t('resources')->delete_by_rid($path, $force);
                     } elseif ($icoarr['isdelete'] > 0) {//删除状态彻底删除
-                        C::t('resources')->delete_by_rid($path, false);
+                        C::t('resources')->delete_by_rid($path, $force);
                     } else {//非删除状态删除到回收站
-                        $return = C::t('resources')->recyle_by_rid($icoarr['rid']);
+                        $return = C::t('resources')->recyle_by_rid($icoarr['rid'],$force);
                         if ($return['error']) {
                             return $return;
                         }
@@ -928,9 +925,10 @@ class io_dzz extends io_api
                 } else {
                     return array('rid' => $icoarr['rid'], 'error' => lang('no_privilege'));
                 }
-                if ($size > 0 && !$icoarr['isdelete']) {
+				//文件大小统计改到 resources表中处理
+                /*if ($size > 0 && !$icoarr['isdelete']) {
                     SpaceSize(-$size, $icoarr['gid'], true);
-                }
+                }*/
                 return array('rid' => $icoarr['rid'], 'name' => $icoarr['name']);
             } catch (Exception $e) {
                 return array('error' => $e->getMessage());
