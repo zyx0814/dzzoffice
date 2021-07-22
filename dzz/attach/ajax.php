@@ -22,7 +22,7 @@ if($_GET['do']=='imageUpload'){
 	$upload_handler = new uploadhandler($options);
 	
 	$type = $_GET['type'];
-    $editorId=$_GET['editorid'];
+    $editorId=htmlspecialchars($_GET['editorid']);
     if(!$info = $upload_handler->getFileInfo()){
 		exit();
 	}
