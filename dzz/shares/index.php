@@ -174,9 +174,9 @@ if ($do == 'adddowns') {
     if (count($list) >= $perpage) {
         $nextpage = $page + 1;
     } else {
-        $naxtpage = 0;
+        $nextpage = 0;
     }
-
+    //echo $nextpage;die;
     if ($ismobile) {
         include template('mobile/list');
     } else {
