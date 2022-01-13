@@ -12,15 +12,30 @@ $(document).off('tap.openfile').on('tap.openfile', '.filelist', function () {
         select_file(obj);
         return false;
     } else {
-        if (is_wxwork) {
-            var href = obj.data('href');
-            window.location.href = href;
-            return false;
-        } else {
-            var dpath = obj.data('dpath');
-            var preurl = 'share.php?a=view&s=' + dpath;
-            window.open(preurl);
-        }
+       var type=obj.data('type');
+		if(type=='image'){
+			var imglists = [];
+			$('.filelist[data-type="image"]').each(function(){
+				imglists.push($(this).data('url'));
+			});
+			var index = $.inArray(obj.data('url'), imglists);
+			var pb = jQuery.photoBrowser({
+				items: imglists,
+				initIndex: [index],
+			});
+			pb.open(index);
+		}else if(type=='download'){
+				var path=obj.data('dpath');
+				if(obj.data('url')) downfile(path);
+		} else {
+			
+			if (is_wxwork) {
+				window.location.href = obj.data('url');
+				return false;
+			} else {
+				window.open(obj.data('url'));
+			}
+		}
     }
 
 

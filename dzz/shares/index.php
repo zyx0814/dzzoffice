@@ -156,7 +156,11 @@ if ($do == 'adddowns') {
 			$fileinfo['contaions']= C::t('resources')->get_contains_by_fid($fileinfo['oid']);
             $fileinfo['filenum'] = $fileinfo['contaions']['contain'][0];
             $fileinfo['foldernum'] = $fileinfo['contaions']['contain'][1];
-        }
+        }else{
+			$opendata=getOpenUrl($fileinfo,$share);
+				$fileinfo['type']=$opendata['type'];
+				$fileinfo['url']=$opendata['url'];
+		}
         if ($fileinfo['type'] == 'image') {
             $fileinfo['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=45&height=45&path=' . dzzencode('attach::' . $fileinfo['aid']);
             $fileinfo['imgpath'] = DZZSCRIPT . '?mod=io&op=thumbnail&path=' . dzzencode('attach::' . $fileinfo['aid']);

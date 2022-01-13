@@ -6,7 +6,7 @@
 <div class="module-list">
 <!--{loop $list $v}-->
 <!--{if $v[type] == 'folder'}-->
-<div class="weui-cell weui-cell_access weui-cell_longpress folderlist" data-dpath="$v[dpath]" data-dhpath="$v[dhpath]" data-rid="$v[rid]">
+<div class="weui-cell weui-cell_access weui-cell_longpress folderlist" data-type="folder" data-dpath="$v[dpath]" data-dhpath="$v[dhpath]" data-rid="$v[rid]">
     <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
     <div class="weui-cell__bd">
         <h4 >$v[name]</h4>
@@ -23,7 +23,7 @@
     </div>
 </div>
 <!--{else}-->
-<div class="weui-cell weui-cell_access weui-cell_longpress filelist" data-dpath="$v[dpath]" data-href="{DZZSCRIPT}?mod=io&op=download&path=$v[dpath]"  data-rid="$v[rid]">
+<div class="weui-cell weui-cell_access weui-cell_longpress filelist" data-type="$v[type]" data-dpath="$v[dpath]" data-url="$v[url]"  data-href="{DZZSCRIPT}?mod=io&op=download&path=$v[dpath]"  data-rid="$v[rid]">
     <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
     <div class="weui-cell__bd">
         <h4 >$v[name]</h4>
