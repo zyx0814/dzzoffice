@@ -138,7 +138,7 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 				  .'	'.($space['department_tree']?$space['department_tree']:lang('please_select_a_organization_or_department')).' <span class="caret"></span>'
 				  .'  </button>'
 				  .'  <div id="'.$fieldid.'_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="'.$fieldid.'_Menu">'
-				  .'	   <iframe name="'.$fieldid.'_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&ctrlid='.$fieldid.'&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>'
+				  .'	   <iframe name="'.$fieldid.'_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&ctrlid='.$fieldid.'&nouser=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>'
 				 .'	  </div>'
 				 .'</div>';
 	} else {
