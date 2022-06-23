@@ -6,6 +6,7 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
+require('function/function_common.php');
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
