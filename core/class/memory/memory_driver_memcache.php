@@ -8,7 +8,6 @@ class memory_driver_memcache
 {
 	public $enable;
 	public $obj;
-	public 
 
 	public function init($config) {
 		if(!empty($config['server'])) {
