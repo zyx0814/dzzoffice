@@ -7,7 +7,7 @@
  * @author      zyx(zyx@oaooa.com)
  */
 
-if ( !defined( 'IN_OAOOA' ) ) { //所有的php文件必须加上此句，防止被外部调用
+if ( !defined( 'IN_DZZ' ) ) { //所有的php文件必须加上此句，防止被外部调用
 	exit( 'Access Denied' );
 }
 function checkShare($share){
