@@ -11,8 +11,7 @@
 include_once  libfile('class/ZipStream');
 
 $patharr = $_GET['paths'];
-//print_r($_GET);
-exit('dfdsfsf');
+
 $meta = IO::getMeta(dzzdecode($patharr[0]));
 if ($meta['error'])exit($meta['error']);
 $filename = (strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($meta['name']) : $meta['name']);
