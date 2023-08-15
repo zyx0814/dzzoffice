@@ -50,7 +50,10 @@ if ($operation == 'export') {
 		$submit = true;
 		DB::query('SET SQL_QUOTE_SHOW_CREATE=0', 'SILENT');
 		if (!$_GET['filename'] || preg_match("/(\.)(exe|jsp|asp|aspx|cgi|fcgi|pl)(\.|$)/i", $_GET['filename'])) {
-			cpmsg('database_export_filename_invalid', '', 'error');
+			showmessage('database_export_filename_invalid');
+		}
+		if(!preg_match("/^[a-zA-Z0-9_]+$/i",$_GET['filename'])){
+			showmessage('database_export_filename_invalid');
 		}
 
 		$time = dgmdate(TIMESTAMP);
