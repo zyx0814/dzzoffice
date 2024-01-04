@@ -40,8 +40,11 @@ $start = ($page - 1) * $perpage;
 $apps = array();
 //system=2代表系统自带安装应用不能卸载  notdelete=1表示不能删除的，不能删除的直接不可见
 $sql = 'system!=2 and available>0 and hideInMarket<1 and notdelete<1';
+$param=array('app_market');
 if ($keyword) {
-	$sql .= " and (appname like '%$keyword%' or vendor like '%$keyword%')";
+	$sql .= " and (appname like %s or vendor like %s)";
+	$param[]='%'.$keyword.'%';
+	$param[]='%'.$keyword.'%';
 } elseif ($tagid) {
 	$appids = C::t('app_relative') -> fetch_appids_by_tagid($tagid);
 	$sql .= " and appid IN (" . dimplode($appids) . ")";
@@ -63,8 +66,8 @@ if (!$_G['uid']) {//游客
 	}
 	$sql .= " and (`group`='0' OR (" . $l . "))";
 }
-if ($count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('app_market') . " WHERE  $sql ")) {
-	$apps = DB::fetch_all("SELECT * FROM " . DB::table('app_market') . " WHERE  $sql  $order limit $start,$perpage");
+if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE  $sql ",$param)) {
+	$apps = DB::fetch_all("SELECT * FROM %t WHERE  $sql  $order limit $start,$perpage",$param);
 	$multi = multi($count, $perpage, $page, $theurl, 'pull-right');
 }
 $list = array();

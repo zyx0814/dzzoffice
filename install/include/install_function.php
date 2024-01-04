@@ -510,7 +510,7 @@ function random($length) {
 	$max = strlen($chars) - 1;
 	PHP_VERSION < '4.2.0' && mt_srand((double)microtime() * 1000000);
 	for($i = 0; $i < $length; $i++) {
-		$hash .= $chars[mt_rand(0, $max)];
+		$hash .= $chars[random_int(0, $max)];
 	}
 	return $hash;
 }

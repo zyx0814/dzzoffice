@@ -41,8 +41,11 @@ $order = ' ORDER BY disp';
 $start = ($page - 1) * $perpage;
 $apps = array();
 $string = " 1 ";
+$param=array();
 if ($keyword) {
-	$string .= " and appname like '%$keyword%' or vendor like '%$keyword%'";
+	$string .= " and appname like %s or vendor like %s";
+	$param[]='%'.$keyword.'%';
+	$param[]='%'.$keyword.'%';
 }
 if ($tagid) {
 	$appids = C::t('app_relative') -> fetch_appids_by_tagid($tagid);
@@ -52,8 +55,8 @@ if ($group) {
 	$sql = " and `group` = '{$group}'";
 	$string .= " and `group` = '{$group}'";
 }
-if ($count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('app_market') . " WHERE ".$string)) {
-	$apps = DB::fetch_all("SELECT * FROM " . DB::table('app_market') . " WHERE ".$string." $order limit $start,$perpage");
+if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE ".$string,$param)) {
+	$apps = DB::fetch_all("SELECT * FROM %t WHERE ".$string." $order limit $start,$perpage",$param);
 	$multi = multi($count, $perpage, $page, $theurl, 'pull-right');
 }
 
