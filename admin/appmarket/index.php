@@ -41,7 +41,7 @@ $order = ' ORDER BY disp';
 $start = ($page - 1) * $perpage;
 $apps = array();
 $string = " 1 ";
-$param=array();
+$param=array('app_market');
 if ($keyword) {
 	$string .= " and appname like %s or vendor like %s";
 	$param[]='%'.$keyword.'%';
