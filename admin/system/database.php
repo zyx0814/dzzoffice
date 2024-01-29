@@ -499,7 +499,7 @@ function sqldumptablestruct($table) {
 	}
 
 	$tablestatus = DB::fetch_first("SHOW TABLE STATUS LIKE '$table'");
-	$tabledump .= ($tablestatus['Auto_increment'] ? " AUTO_INCREMENT=$tablestatus['Auto_increment']" : ''). ";\n\n";
+	$tabledump .= ($tablestatus['Auto_increment'] ? (" AUTO_INCREMENT=".$tablestatus['Auto_increment']): ''). ";\n\n";
 	if ($_GET['sqlcompat'] == 'MYSQL40' && $db -> version() >= '4.1' && $db -> version() < '5.1') {
 		if ($tablestatus['Auto_increment'] <> '') {
 			$temppos = strpos($tabledump, ',');
