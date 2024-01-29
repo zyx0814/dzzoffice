@@ -275,7 +275,7 @@ class table_resources extends dzz_table
                 return 1;
             default :
                 if (!$resource['vid']) {
-                    C::t('attachment')->addcopy_by_aid($resource['aid'], -1);
+                    C::t('attachment')->delete_by_aid($resource['aid']);
                 }
                 return 1;
         }
@@ -307,6 +307,10 @@ class table_resources extends dzz_table
             C::t('resources_statis')->delete_by_rid($rid);
             //删除resources表数据
             if (parent::delete($rid)) {
+				//处理删除后空间大小
+				 if (!$data['vid'] && $data['size']) {//更新空间大小
+                    SpaceSize(-$data['size'], $data['gid'], true, $data['uid']);
+                }
                 //记录删除事件
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($data['pfid'], $data['gid']);
                 $eventdata = array('username' => $_G['username'], 'position' => $data['relpath'], 'filename' => $data['name'], 'hash' => $hash);

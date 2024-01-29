@@ -76,18 +76,27 @@ class table_resources_version extends dzz_table
        //$this->store_cache($cachekey,$versions);
        return $versions;
    }
-   public function delete_by_vid($vid,$rid){
+  public function delete_by_vid($vid,$rid=''){
        $vid = intval($vid);
-       $cachekey = 'resourcesversiondata_'.$rid;
+	   if(!$vinfo = parent::fetch($vid)) return false;
+	   if(empty($rid)) $rid=$vinfo['rid'];
        $datainfo = C::t('resources')->fetch_info_by_rid($rid);
-       $vinfo = parent::fetch($vid);
+	   if($datainfo['vid']==$vinfo['vid']){//如果删除的是主版本，判断是否是最后一个版本，最后一个版本不让删除
+			if(!$nvid=DB::result_first("select vid form %t where rid=%s and vid!=%d order by vid DESC",array($this->_table,$rid,$vid))){
+				return false;
+			}
+	   }
+       $cachekey = 'resourcesversiondata_'.$rid;
        if(parent::delete($vid)){
+		   if($vinfo['aid']) C::t('attachment')->delete_by_aid($vinfo['aid']);
            SpaceSize(-$vinfo['size'],$datainfo['gid'],1,$datainfo['uid']);
            C::t('resources_attr')->delete_by_rvid($rid,$vid);
            $this->clear_cache($cachekey);
+		   if($nvid){//如果删除的是主版本，需要重新设置文件其他版本为主版本
+			   self::set_primary_version_by_vid($nvid,true);
+		   }
        }
        return true;
-
    }
    /* public  function  delete_by_version($icoid,$vid){
         global $_G ;
@@ -109,20 +118,25 @@ class table_resources_version extends dzz_table
             return array('msg'=>$v);
         }else return array('error'=>lang('error_delete_version_failed'));
     }*/
-    public function delete_by_rid($rid){
-        if(!$return = DB::fetch_all("select * from %t where rid = %s",array($this->_table,$rid))){
-            return ;
+	 public function delete_by_rid($rid){
+		$vids=array();
+		$aids=array();
+		$size=0;
+		$datainfo = C::t('resources')->fetch($rid);
+        foreach(DB::fetch_all("select * from %t where rid = %s",array($this->_table,$rid)) as $value){
+            $vids[]=$value['vid'];
+		    $aids[]=$value['aid'];
+		    $size+=intval($value['size']);
         }
-        $cachekey = 'resourcesversiondata_'.$rid;
-        $aids = array();
-        foreach($return as $v){
-            $aids[] = $v['aid'];
-        }
-        if(!empty($aids)){
-            C::t('attachment')->addcopy_by_aid($aids,-1);
-        }
-        DB::delete($this->_table,array('rid'=>$rid));
-        $this->clear_cache($cachekey);
+		 $cachekey = 'resourcesversiondata_'.$rid;
+		if($ret=parent::delete($vids)){
+			$this->clear_cache($cachekey);
+			foreach($aids as $aid){
+				C::t('attachment')->delete_by_aid($aid);
+			}
+			SpaceSize(-$size,$datainfo['gid'],1,$datainfo['uid']);
+		}
+		return $ret;
     }
     //上传新版本
     public function add_new_version_by_rid($rid,$setarr,$force=false){
