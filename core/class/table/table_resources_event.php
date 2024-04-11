@@ -365,12 +365,14 @@ class table_resources_event extends dzz_table
             foreach ($condition as $k => $v) {
                 if (!is_array($v)) {
                     $connect = 'and';
-                    $wheresql .= $connect . ' e.' . $k . " = '" . $v . "' ";
+                    $wheresql .= $connect . ' e.' . $k . " = %s ";
+                    $params[] = $v;
                 } else {
                     $relative = isset($v[1]) ? $v[1] : '=';
                     $connect = isset($v[2]) ? $v[2] : 'and';
                     if ($relative == 'in') {
-                        $wheresql .= $connect . "  e." . $k . " " . $relative . " (" . $v[0] . ") ";
+                        $wheresql .= $connect . "  e." . $k . " in (%n) ";
+                        $params[]=$v[0];
                     } elseif ($relative == 'nowhere') {
                         continue;
                     } elseif ($relative == 'stringsql') {
@@ -379,7 +381,8 @@ class table_resources_event extends dzz_table
                         $wheresql .= $connect . " e." . $k . " like %s ";
                         $params[] = '%' . $v[0] . '%';
                     } else {
-                        $wheresql .= $connect . ' e.' . $k . ' ' . $relative . ' ' . $v[0] . ' ';
+                        $wheresql .= $connect . ' e.' . $k . ' = %s ';
+                        $params[]=$v[0] ;
                     }
 
                 }
