@@ -59,7 +59,7 @@ class table_organization extends dzz_table
 	}
 	//插入数据
 	public function insert($arr){
-		if($orgid=parent::insert($arr)){
+		if($orgid=parent::insert($arr,1)){
 			if(intval($arr['aid'])){//如果有头像图片，增加copys
 				C::t('attachment')->add_by_aid(intval($arr['aid']));
 			}
@@ -73,9 +73,9 @@ class table_organization extends dzz_table
         global $_G;
         $groups = array();
         if($_G['adminid'] == 1){
-            $orgids = DB::fetch_all("select orgid from %t where `type`=%d and forgid = %d",array($this->_table,0,0));
-            foreach($orgids as $v){
-                $groups['org'][]= parent::fetch($v['orgid']);
+            $orgs = DB::fetch_all("select * from %t where `type`=%d and forgid = %d order by disp",array($this->_table,0,0));
+            foreach($orgs as $v){
+                $groups['org'][]= $v;
             }
         }else{
             if ($uid) {
@@ -160,6 +160,7 @@ class table_organization extends dzz_table
         if (self::fetch_all_by_forgid($org['orgid'], true) || ($org['fid'] && DB::result_first("select count(*) from %t where pfid = %d and isdelete < 1", array('resources', $org['fid'])))) {
             return array('error' => lang('remove_error_check_the_content'));
         }
+		
         //删除对应目录
         if ($org['fid']) {
             C::t('folder')->delete_by_fid($org['fid'],true);
@@ -171,6 +172,7 @@ class table_organization extends dzz_table
         //删除对应管理员
         C::t('organization_admin')->delete_by_orgid($orgid);
         if (parent::delete($orgid)) {
+			self::sequenceByForgid($org['forgid']);
             if (intval($org['aid']) != 0) {
                 C::t('attachment')->addcopy_by_aid($org['aid'], -1);
             }
@@ -377,25 +379,40 @@ class table_organization extends dzz_table
         }
         return false;
     }
-
+    public function sequenceByForgid($forgid){
+		
+		foreach(DB::fetch_all("select orgid from %t where forgid=%d and type='0' order by disp",array($this->_table,$forgid)) as $key => $value){
+			parent::update($value['orgid'],array('disp'=>$key));
+		}
+	}
     public function setDispByOrgid($orgid, $disp, $forgid = 0)
     {
+		self::sequenceByForgid($forgid);
         if (!$org = parent::fetch($orgid)) return false;
-
-        if ($torg = DB::fetch_first("select disp,orgid from %t where forgid=%d and orgid!=%d order by disp limit %d,1", array($this->_table, $forgid, $orgid, $disp))) {
-            $disp = $torg['disp'];
-         
-			foreach (DB::fetch_all("select orgid,disp from %t where disp>%d and forgid=%d", array($this->_table, $disp, $forgid)) as $value) {
-				parent::update($value['orgid'],array('disp'=>$value['disp']+1));
+      	$ceof=0;
+		$wheresql="forgid=%d and type='0' "; 
+		$param=array($this->_table,$forgid);
+         if($org['disp']>$disp){//向前移动
+			 $wheresql.=" and disp>=%d and disp<%d ";
+			 $param[]=$disp;
+			 $param[]=$org['disp'];
+			 $ceof=1;
+		 }else{//向后移动
+			 $wheresql.=" and disp>%d and disp<=%d ";
+			 $param[]=$org['disp'];
+			 $param[]=$disp;
+			 $ceof=-1;
+		 }
+			foreach (DB::fetch_all("select orgid,disp from %t where $wheresql", $param) as $value) {
+				parent::update($value['orgid'],array('disp'=>$value['disp']+$ceof));
 				//self::wx_update($value['orgid']);
 			}
             
-        } else {
-            $disp = DB::result_first("select max(disp) from %t where forgid=%d", array($this->_table, $forgid)) + 1;
-        }
+        
         if ($return = parent::update($orgid, array('disp' => $disp, 'forgid' => $forgid))) {
 
             if ($org['forgid'] != $forgid) {
+				self::sequenceByForgid($org['forgid']);
                 //检查重名
                 $orgname = self::get_uniqueName_by_forgid($forgid, $org['orgname'], $org['orgid']);
                 if ($orgname != $org['orgname']) {//有重名
@@ -409,11 +426,7 @@ class table_organization extends dzz_table
                     }
                 }
             }
-            if ($disp > 10000) {
-				foreach (DB::fetch_all("select orgid ,disp from %t where forgid=%d", array($this->_table, $forgid)) as $value) {
-					parent::update($value['orgid'],array('disp'=>$value['disp']-9000));
-				}
-            } 
+           
             return $return;
         } else {
             return false;
@@ -455,6 +468,13 @@ class table_organization extends dzz_table
             $eventdata = array('groupname' => $setarr['orgname'], 'uid' => getglobal('uid'), 'username' => getglobal('username'));
             C::t('resources_event')->addevent_by_pfid($fid, 'create_group', 'create', $eventdata, $setarr['orgid']);
             self::setPathkeyByOrgid($setarr['orgid']);
+			if($setarr['type']=='0'){
+				//更新disp
+				foreach(DB::fetch_all("select orgid,disp form %t where forgid=%d and type='0' and disp>=%d and orgid!=%d",array($this->_table,$setarr['forgid'],intval($setarr['disp']),$setarr['orgid'] )) as $value){
+					parent::update($value['orgid'],array('disp'=>$value['disp']+1));
+				}
+			}
+			
             return $setarr['orgid'];
         }
         return false;
@@ -464,7 +484,9 @@ class table_organization extends dzz_table
     {
         if ($borgid) {
             $setarr['disp'] = self::getDispByOrgid($borgid);
-        }
+        }elseif(!isset($setarr['disp'])){
+			 $setarr['disp']=0;
+		}
         $setarr['orgname'] = self::get_uniqueName_by_forgid($setarr['forgid'], $setarr['orgname']);
         if ($setarr['orgid'] = parent::insert($setarr, true)) {
             self::setFolderByOrgid($setarr['orgid']);
@@ -477,6 +499,10 @@ class table_organization extends dzz_table
             
             self::setPathkeyByOrgid($setarr['orgid']); 
             if(isset($setarr['type']) && $setarr['type'] == 0 ) self::syn_organization($setarr['orgid']);
+			//更新disp
+			foreach(DB::fetch_all("select orgid,disp from %t where forgid=%d and type='0' and disp>=%d and orgid!=%d",array($this->_table,$setarr['forgid'],$setarr['disp'],$setarr['orgid'] )) as $value){
+				parent::update($value['orgid'],array('disp'=>$value['disp']+1));
+			}
             return $setarr;
         }
 
@@ -1061,6 +1087,18 @@ class table_organization extends dzz_table
 			}
 		}
 		return array_unique($orgids);
+	}
+	
+	//删除文件夹时，更新群组信息；$force=true时，删除群组；
+	public function delete_by_fid($fid,$force=true){
+		if(empty($fid)) return false;
+		foreach(DB::fetch_all("select orgid from %t where fid=%d",array($this->_table,$fid)) as $value){
+			parent::update($value['orgid'],array('fid'=>0));
+			if($force){
+				self::delete_by_orgid($value['orgid'],true);
+			}
+		}
+		return true;
 	}
 
 }
