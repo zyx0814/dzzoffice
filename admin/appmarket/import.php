@@ -15,7 +15,7 @@ $do = empty($_GET['do']) ? 'available' : trim($_GET['do']);
 
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;
-$gets = array('mod' => 'app', 'op' => 'import', 'do' => $do, );
+$gets = array('mod' => 'appmarket', 'op' => 'import', 'do' => $do, );
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $refer = urlencode($theurl . '&page=' . $page);
 
