@@ -323,10 +323,10 @@ class dzz_io
 	 	else return false;
   }
 	
-	function Delete($path,$force=false){
+	function Delete($path,$finaldelete=false,$force=false){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	{
-			$return =  $io->Delete($path,$force);
+			$return =  $io->Delete($path,$finaldelete,$force);
 			Hook::listen("deleteafter_delindex",$return);
 			return $return;
 		}
