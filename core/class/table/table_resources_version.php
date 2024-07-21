@@ -199,7 +199,7 @@ class table_resources_version extends dzz_table
                     'postip' => $_G['clientip'],
                     'title' => $filename,
                     'aid' => isset($setarr['aid']) ? $setarr['aid'] : '',
-                    'img'=>geticonfromext($setarr['ext'],$setarr['type'])
+                  //  'img'=>geticonfromext($setarr['ext'],$setarr['type'])
                 );
                 //插入属性表
                 if (C::t('resources_attr')->insert_attr($rid,$vid,$sourceattrdata)) {

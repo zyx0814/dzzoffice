@@ -1315,7 +1315,7 @@ class io_dzz extends io_api
                     'title' => $attach['filename'],
                     'desc' => '',
                     'aid' => $attach['aid'],
-                    'img' => geticonfromext($icoarr['ext'], $icoarr['type'])
+
                 );
 
                 if (C::t('resources_attr')->insert_attr($icoarr['rid'], $icoarr['vid'], $sourcedata)) {
@@ -1369,7 +1369,7 @@ class io_dzz extends io_api
                     'title' => $attach['filename'],
                     'desc' => '',
                     'aid' => $attach['aid'],
-                    'img' => geticonfromext($icoarr['ext'], $icoarr['type'])
+
                 );
                 C::t('attachment')->update($attach['aid'], array('copys' => $attach['copys'] + 1));
                 if (C::t('resources_attr')->insert_attr($icoarr['rid'], $icoarr['vid'], $sourcedata)) {

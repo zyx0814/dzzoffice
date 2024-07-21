@@ -323,10 +323,10 @@ class dzz_io
 	 	else return false;
   }
 	
-	function Delete($path,$force=false){
+	function Delete($path,$finaldelete=false,$force=false){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	{
-			$return =  $io->Delete($path,$force);
+			$return =  $io->Delete($path,$finaldelete,$force);
 			Hook::listen("deleteafter_delindex",$return);
 			return $return;
 		}
@@ -451,14 +451,14 @@ class dzz_io
 				'copys' => 0,
 				'md5'=>$md5,
 				'unrun'=>$unrun,
-				'dateline' => $_G['timestamp'],
+				'dateline' => getglobal('timestamp'),
 			);
 			
 			if($attach['aid']=C::t('attachment')->insert($attach,1)){
 				C::t('local_storage')->update_usesize_by_remoteid($attach['remote'],$attach['filesize']);
 				if($tospace) dfsockopen(getglobal('siteurl').'misc.php?mod=movetospace&aid='.$attach['aid'].'&remoteid=0',0, '', '', FALSE, '',1);
 				if(in_array(strtolower($attach['filetype']),array('png','jpeg','jpg','gif','bmp'))){
-					$attach['img']=C::t('attachment')->getThumbByAid($attach['aid'],$this->options['thumbnail']['max-width'],$this->options['thumbnail']['max-height']);
+					$attach['img']=C::t('attachment')->getThumbByAid($attach['aid'],255,255);
 					$attach['isimage']=1;
 				}else{
 					$attach['img']=geticonfromext($ext);
