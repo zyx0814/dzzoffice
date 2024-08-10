@@ -82,7 +82,7 @@ class table_resources_version extends dzz_table
 	   if(empty($rid)) $rid=$vinfo['rid'];
        $datainfo = C::t('resources')->fetch_info_by_rid($rid);
 	   if($datainfo['vid']==$vinfo['vid']){//如果删除的是主版本，判断是否是最后一个版本，最后一个版本不让删除
-			if(!$nvid=DB::result_first("select vid form %t where rid=%s and vid!=%d order by vid DESC",array($this->_table,$rid,$vid))){
+			if(!$nvid=DB::result_first("select vid from %t where rid=%s and vid!=%d order by vid DESC",array($this->_table,$rid,$vid))){
 				return false;
 			}
 	   }

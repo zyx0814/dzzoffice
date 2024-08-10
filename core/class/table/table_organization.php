@@ -470,7 +470,7 @@ class table_organization extends dzz_table
             self::setPathkeyByOrgid($setarr['orgid']);
 			if($setarr['type']=='0'){
 				//更新disp
-				foreach(DB::fetch_all("select orgid,disp form %t where forgid=%d and type='0' and disp>=%d and orgid!=%d",array($this->_table,$setarr['forgid'],intval($setarr['disp']),$setarr['orgid'] )) as $value){
+				foreach(DB::fetch_all("select orgid,disp from %t where forgid=%d and type='0' and disp>=%d and orgid!=%d",array($this->_table,$setarr['forgid'],intval($setarr['disp']),$setarr['orgid'] )) as $value){
 					parent::update($value['orgid'],array('disp'=>$value['disp']+1));
 				}
 			}
