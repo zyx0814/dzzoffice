@@ -885,7 +885,7 @@ dl>dd{
 	transition: top 0.2s;
 	-webkit-transition: top 0.2s;
 	-o-transition: top 0.2s;
-	position: absolute;
+	/* position: absolute; */
 	left: 0;
 	line-height: 30px;
 	margin: 0;
