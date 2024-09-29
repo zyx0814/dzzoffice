@@ -161,6 +161,9 @@ class perm_check{
     //$arr=array('uid','gid','desktop');其中这几项必须
     function checkperm($action,$arr,$bz=''){ //检查某个图标是否有权限;
         global $_G;
+        if($arr['preview'] && $action === 'read'){
+            return true;
+        }
         if($_G['uid']<1){ //游客没有权限
             return false;
         }
