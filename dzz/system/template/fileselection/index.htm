@@ -71,10 +71,10 @@
 									parent.showWindow_callback(data,'$token');
 								} 
 							}catch(e){}	
-							if (parent.$callback) {
-								try{parent.$callback(data, '$token');}catch(e){}
+							if (parent.{$callback}) {
+								try{parent.{$callback}(data, '$token');}catch(e){}
 							} else {
-							   try{ opened.$callback(data, '$token');}catch(e){}
+							   try{ opened.{$callback}(data, '$token');}catch(e){}
 							}
                             hide_window();
                         }
@@ -99,10 +99,10 @@
 								parent.showWindow_callback(data,'$token');
 							} 
 						}catch(e){}	
-                        if (parent.$callback) {
-                            try{parent.$callback(data, '$token');}catch(e){}
+                        if (parent.{$callback}) {
+                            try{parent.{$callback}(data, '$token');}catch(e){}
                         } else {
-                           try{ opened.$callback(data, '$token');}catch(e){}
+                           try{ opened.{$callback}(data, '$token');}catch(e){}
                         }
                         hide_window();
                     }
@@ -135,10 +135,10 @@
 					} 
 				}catch(e){}	
               
-                if (parent.$callback) {
-                   try{ parent.$callback(fid, data);}catch(e){}
+                if (parent.{$callback}) {
+                   try{ parent.{$callback}(fid, data);}catch(e){}
                 } else {
-                    try{ opened.$callback(fid, data);}catch(e){}
+                    try{ opened.{$callback}(fid, data);}catch(e){}
                 }
                 hide_window();
 
@@ -159,13 +159,13 @@
 							parent.showWindow_callback(data,'$token');
 					} 
 				}catch(e){}	
-                if (parent.$callback) {
+                if (parent.{$callback}) {
 					try{
-                    	parent.$callback(data, '$token');
+                    	parent.{$callback}(data, '$token');
 					}catch(e){}	
                 } else {
 					try{
-						opened.$callback(data, '$token');
+						opened.{$callback}(data, '$token');
 					}catch(e){}
                 }
                 hide_window();

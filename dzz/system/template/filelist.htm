@@ -302,10 +302,10 @@ function submitdata(){
     }else{
         $.post(MOD_URL+'&op=positionlist&do=geffolderinfo',{'fid':fid},function(data){
 			try{if(typeof parent.showWindow_callback == 'function') parent.showWindow_callback(fid,data);}catch(e){}
-            if(parent.$callback){
-               try{ parent.$callback(fid,data);}catch(e){}
+            if(parent.{$callback}){
+               try{ parent.{$callback}(fid,data);}catch(e){}
             }else{
-               try{ opened.$callback(fid,data);}catch(e){}
+               try{ opened.{$callback}(fid,data);}catch(e){}
             }
 			
             hide_window();

@@ -234,7 +234,7 @@
 		 }
 	 });
 	 try{
-		$callback(ids,data,'$token');//ids:选中的id列表如：[g_1,125,g_32...],g_开头的标识是机构部门或群组 
+       {$callback}(ids,data,'$token');//ids:选中的id列表如：[g_1,125,g_32...],g_开头的标识是机构部门或群组
 	 }catch(e){};
 	 hideWindow("$_GET['handlekey']");
 	 return false;
