@@ -375,7 +375,7 @@ class table_resources extends dzz_table
         return $resourcedata;
     }
 
-    public function fetch_by_rid($rid, $force_from_db = false)
+    public function fetch_by_rid($rid, $force_from_db = false,$preview = false)
     { //返回一条数据同时加载资源表数据
         global $_G;
         $cachekey = 'resourcesdata_' . $rid;
@@ -425,6 +425,7 @@ class table_resources extends dzz_table
         $data['relpath'] = dirname(preg_replace('/dzz:(.+?):/', '', $data['relativepath'])) . '/';
         $data['path'] = $data['rid'];
         $data['bz'] = '';
+        $data['preview'] = $preview;
         $data['collect'] = C::t('resources_collect')->fetch_by_rid($rid);
         if ($data['remote'] > 1) $data['rbz'] = io_remote::getBzByRemoteid($data['remote']);
 

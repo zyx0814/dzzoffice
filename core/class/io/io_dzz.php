@@ -127,6 +127,9 @@ class io_dzz extends io_api
     public function getStream($path, $fop = '')
     {
         global $_G;//123
+        if (strpos($path, 'preview_') === 0) {
+            $path = preg_replace('/^preview_/', '', $path);
+        }
         if (strpos($path, 'attach::') === 0) {
             $attach = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
 			Hook::listen('io_dzz_getstream_attach',$attach);//挂载点
@@ -548,6 +551,10 @@ class io_dzz extends io_api
     //获取icosdata
     public function getMeta($icoid)
     {
+        if (strpos($icoid, 'preview_') === 0) {
+            $icoid = preg_replace('/^preview_/', '', $icoid);
+            $preview = true;
+        }
         if (strpos($icoid, 'dzz::') === 0) {
             $attachment = preg_replace('/^dzz::/i', '', $icoid);
             $name = array_pop(explode('/', $icoid));
@@ -611,9 +618,9 @@ class io_dzz extends io_api
             if (!$rid = DB::result_first("select rid from %t where pfid = %d and name = %s", array('resources', $pfid, $filename))) {
                 return false;
             }
-            return C::t('resources')->fetch_by_rid($rid);
+            return C::t('resources')->fetch_by_rid($rid,'',$preview);
         } elseif (preg_match('/\w{32}/i', $icoid)) {
-            return C::t('resources')->fetch_by_rid($icoid);
+            return C::t('resources')->fetch_by_rid($icoid,'',$preview);
         } else {
             return false;//C::t('resources')->fetch_by_icoid($icoid);
         }
@@ -729,6 +736,9 @@ class io_dzz extends io_api
         }
         @set_time_limit(0);
         $attachexists = FALSE;
+        if (strpos($path, 'preview_') === 0) {
+            $path = preg_replace('/^preview_/', '', $path);
+        }
         if (strpos($path, 'attach::') === 0) {
             $attachment = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
             $attachment['name'] = $filename ? $filename : $attachment['filename'];
@@ -844,6 +854,9 @@ class io_dzz extends io_api
     {
 
         global $_G;
+        if (strpos($path, 'preview_') === 0) {
+            $path = preg_replace('/^preview_/', '', $path);
+        }
         if (strpos($path, 'dzz::') === 0) {
             if (strpos($path, './') !== false) return false;
             @unlink($_G['setting']['attachdir'] . preg_replace('/^dzz::/i', '', $path));
@@ -2896,7 +2909,9 @@ class io_dzz extends io_api
         //判断大小
         //判断空间大小
         $filename = self::name_filter($filename);
-
+        if (strpos($path, 'preview_') === 0) {
+            $path = preg_replace('/^preview_/', '', $path);
+        }
         if (strpos($path, 'dzz::') === false && strpos($path, 'TMP::') === false) {
             $gid = DB::result_first("select gid from %t where fid=%d", array('folder', $path));
             if (!SpaceSize($size, $gid)) {
