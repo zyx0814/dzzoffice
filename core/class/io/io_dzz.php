@@ -190,6 +190,9 @@ class io_dzz extends io_api
     public function getFileUri($path, $fop = '')
     {
         global $_G;
+        if (strpos($path, 'preview_') === 0) {
+            $path = preg_replace('/^preview_/', '', $path);
+        }
         if (strpos($path, 'attach::') === 0) {
             $attach = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
 			Hook::listen('io_dzz_getstream_attach',$attach);//挂载点
@@ -442,6 +445,9 @@ class io_dzz extends io_api
     public function setFileContent($rid, $fileContent, $force = false, $nocover = true)
     {
         global $_G;
+        if (strpos($rid, 'preview_') === 0) {
+            $rid = preg_replace('/^preview_/', '', $rid);
+        }
         if (!$icoarr = C::t('resources')->fetch_by_rid($rid)) {
             return array('error' => lang('file_not_exist'));
         }
