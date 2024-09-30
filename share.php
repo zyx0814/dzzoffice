@@ -8,6 +8,7 @@
  */
 
 define('APPTYPEID', 200);
+define('DZZSCRIPT', 'index.php');
 require './core/coreBase.php';
 $dzz = C::app();
 $dzz->init();
