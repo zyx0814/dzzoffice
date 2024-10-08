@@ -161,10 +161,14 @@ class perm_check{
     //$arr=array('uid','gid','desktop');其中这几项必须
     function checkperm($action,$arr,$bz=''){ //检查某个图标是否有权限;
         global $_G;
-        if($arr['preview'] && $action === 'read'){
+        if ($arr['preview'] && $action === 'read') {
             return true;
         }
         if($_G['uid']<1){ //游客没有权限
+            return false;
+        }
+        if($_G['adminid']==1) return true; //网站管理员 有权限;
+        if (!$arr['gid'] && $arr['uid'] !== $_G['uid']) {//我的网盘文件只限于当前用户
             return false;
         }
         if(($bz && $bz!='dzz') || ($arr['bz'] && $arr['bz']!='dzz')){
@@ -184,8 +188,6 @@ class perm_check{
                 //首先判断目录的超级权限；
                 if(!perm_FolderSPerm::isPower($folder['fsperm'],$action)) return false;
             }
-            if($_G['adminid']==1) return true; //网站管理员 有权限;
-           
             return self::checkperm_Container($arr['pfid'],$action,$bz);
         }
     }
