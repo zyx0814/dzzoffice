@@ -168,41 +168,41 @@ if ($operation == 'upload') {//上传图片文件
     switch ($type) {
         case 'newTxt':
             $filename = lang('new_txt') . '.txt';
-            if (!perm_check::checkperm_Container($path, 'upload', $bz)) {
+            if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
                 exit(json_encode(array('error' => lang('privilege'))));
             }
             $content = ' ';
             break;
         case 'newDzzDoc':
             $filename = lang('new_dzzdoc') . '.dzzdoc';
-            if (!perm_check::checkperm_Container($path, 'upload', $bz)) {
+            if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
                 exit(json_encode(array('error' => lang('privilege'))));
             }
             $content = ' ';
             break;
         case 'newDoc':
             $filename = lang('new_word') . '.docx';
-            if (!perm_check::checkperm_Container($path, 'upload', $bz)) {
+            if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
                 exit(json_encode(array('error' => lang('privilege'))));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/word.docx');
             break;
         case 'newExcel':
             $filename = lang('new_excel') . '.xlsx';
-            if (!perm_check::checkperm_Container($path, 'upload', $bz)) {
+            if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
                 exit(json_encode(array('error' => lang('privilege'))));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/excel.xlsx');
             break;
         case 'newPowerPoint':
             $filename = lang('new_PowerPoint') . '.pptx';
-            if (!perm_check::checkperm_Container($path, 'upload', $bz)) {
+            if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
                 exit(json_encode(array('error' => lang('privilege'))));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/ppt.pptx');
             break;
         default:
-            if (!perm_check::checkperm_Container($path, 'upload', $bz)) {
+            if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
                 exit(json_encode(array('error' => lang('privilege'))));
             }
             $content = ' ';
