@@ -10,6 +10,7 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
+Hook::listen('check_login');
 include_once libfile('function/organization');
 $ismobile=helper_browser::ismobile();
 $uid =isset($_GET['uid'])?intval($_GET['uid']):$_G['uid'];

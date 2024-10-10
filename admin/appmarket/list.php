@@ -12,7 +12,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 include libfile('function/admin');
 include libfile('function/organization');
 $do = empty($_GET['do']) ? 'available' : trim($_GET['do']);
-$refer = urlencode(ADMINSCRIPT . '?mod=app&op=list&do=' . $do);
+$refer = urlencode(MOD_URL . '&op=list&do=' . $do);
 $grouptitle = array('0' => lang('all'), '-1' => lang('visitors_visible'), '1' => lang('members_available'), '2' => lang('section_administrators_available'), '3' => lang('system_administrators_available'));
 $list = array();
 $op=$_GET['op'];
