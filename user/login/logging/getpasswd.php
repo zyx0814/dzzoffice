@@ -12,7 +12,9 @@ if(!defined('IN_DZZ')) {
 }
 
 define('NOROBOT', TRUE);
-
+if($_G['setting']['bbclosed']) {
+	dheader("Location: user.php?mod=login");
+}
 if($_GET['uid'] && $_GET['id']) {
 
     $dzz_action = 141;

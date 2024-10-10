@@ -61,7 +61,7 @@ $keyword = trim($_GET['keyword']);
 
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;
-$gets = array('mod' => 'app', 'op' => 'default', 'keyword' => $keyword, 'depid' => $depid, 'group' => $group, 'position' => $position, );
+$gets = array('mod' => MOD_NAME, 'op' => 'default', 'keyword' => $keyword, 'depid' => $depid, 'group' => $group, 'position' => $position, );
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $refer = urlencode($theurl . '&page=' . $page);
 

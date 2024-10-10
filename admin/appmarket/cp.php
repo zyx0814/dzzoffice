@@ -70,6 +70,7 @@ if ($do == 'export') {//应用导出
 
 }
 elseif ($do == 'import') {//导入应用
+	$navtitle=lang('import_type_app').' - '.lang('appname');
 	if (!submitcheck('importsubmit')) {
 		include template('import');
 	} else {
@@ -96,11 +97,11 @@ elseif ($do == 'import') {//导入应用
 					cron_create($app);
 				}
 
-				showmessage(lang('application_import_successful'), ADMINSCRIPT . '?mod=appmarket', array(), array('alert' => 'right'));
+				showmessage(lang('application_import_successful'), MOD_URL, array(), array('alert' => 'right'));
 			}
 		} else {
 			$app = importByarray($apparray, 0);
-			showmessage('application_import_successful', ADMINSCRIPT . '?mod=appmarket', array(), array('alert' => 'right'));
+			showmessage('application_import_successful', MOD_URL, array(), array('alert' => 'right'));
 		}
 	}
 }
@@ -211,7 +212,7 @@ elseif ($do == 'install') {//安装应用
     if(empty($apparray['app']['app_path'])) $apparray['app']['app_path']=$dir;
 	$filename = $apparray['app']['extra']['installfile'];
 
-	$request_uri = ADMINSCRIPT . '?mod=appmarket';
+	$request_uri = MOD_URL;
 	if (!empty($filename) && preg_match('/^[\w\.]+$/', $filename)) {
 		$filename = DZZ_ROOT . './'.$dir.'/' . $appname . '/' . $filename;
 		if (file_exists($filename)) {
@@ -227,7 +228,7 @@ elseif ($do == 'install') {//安装应用
 			cron_create($app);
 		}
 		writelog('otherlog', "安装应用 ".$apparray['app']['appname']);
-		showmessage('application_install_successful', ADMINSCRIPT . '?mod=appmarket', array(), array('alert' => 'right'));
+		showmessage('application_install_successful', MOD_URL, array(), array('alert' => 'right'));
 	}
 
 }
@@ -238,8 +239,8 @@ elseif ($do == 'uninstall') {//卸载应用
 	}
 	$app['extra'] = unserialize($app['extra']);
 	$finish = FALSE;
-	$request_uri = ADMINSCRIPT . '?mod=app';
-	$refer = $_GET['refer']; 
+	$request_uri = MOD_URL;
+	$refer = $_GET['refer'];
 	$appinfo=$app;
 	$msg='';
 	if ($app['identifier']) {
@@ -276,7 +277,7 @@ elseif ($do == 'uninstall') {//卸载应用
 		$temp_install=DZZ_ROOT.'./data/update/app/'.$app['app_path'].'/'.$app['identifier'];
 		removedirectory($temp_install);
 		writelog('otherlog', "卸载应用 ".$app['appname']);
-		showmessage($msg, ADMINSCRIPT . '?mod=appmarket', array(), array('alert' => 'right'));
+		showmessage($msg, MOD_URL, array(), array('alert' => 'right'));
 	}
 }
 elseif ($do == 'uninstall_confirm') {//卸载应用
@@ -319,7 +320,7 @@ elseif ($do == 'upgrade') {//本地升级应用
 	}
 	if ($finish) {
 		C::t('app_market') -> update($appid, array('version' => $toversion));
-		showmessage('application_upgrade_successful', ADMINSCRIPT . '?mod=appmarket', array(), array('alert' => 'right'));
+		showmessage('application_upgrade_successful', MOD_URL, array(), array('alert' => 'right'));
 	}
 
 } 
