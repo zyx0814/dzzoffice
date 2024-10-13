@@ -612,6 +612,7 @@
         showWindow('seldir', userhref, 'get', '0');
     }
     function saveall_file(fid) {
+        showmessage(__lang.In_the_save, 'info',0,1, 'right-bottom');
         var rids = [];
         jQuery('div[data-value="true"]').each(function () {
             rids.push(jQuery(this).data('dpath'));
@@ -630,6 +631,7 @@
         }, 'json');
     }
     function save_file(fid) {
+        showmessage(__lang.In_the_save, 'info',0,1, 'right-bottom');
         var rids = share.join(',');
         $.post('{MOD_URL}&op=save', {'fid': fid, 'dzzrids': rids}, function (data) {
             var msg = '';

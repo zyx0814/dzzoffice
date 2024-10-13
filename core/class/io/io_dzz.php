@@ -2173,6 +2173,10 @@ class io_dzz extends io_api
     {
 		
         try {
+            if (strpos($rid, 'preview_') === 0) {
+                $rid = preg_replace('/^preview_/', '', $rid);
+                $preview = true;
+            }
             $data = C::t('resources')->fetch_by_rid($rid);
 			
             if (is_numeric($pfid)) {//如果目标位置也是本地
@@ -2190,7 +2194,7 @@ class io_dzz extends io_api
                     $data['success'] = true;
                     $data['moved'] = true;
                 } else {
-                    $re = self::FileCopy($rid, $pfid, true,$force);
+                    $re = self::FileCopy($rid, $pfid, true,$force,$preview);
                     $data['newdata'] = $re['icoarr'];
                     $data['success'] = true;
                 }
@@ -2674,13 +2678,13 @@ class io_dzz extends io_api
     }
 
     //本地文件复制到本地其它区域
-    public function FileCopy($rid, $pfid, $first = true,$force=false)
+    public function FileCopy($rid, $pfid, $first = true,$force=false,$preview = false)
     {
         global $_G, $_GET;
         if (!$tfolder = DB::fetch_first("select * from " . DB::table('folder') . " where fid='{$pfid}'")) {
             return array('error' => lang('target_location_not_exist'));
         }
-        if ($icoarr = C::t('resources')->fetch_by_rid($rid)) {
+        if ($icoarr = C::t('resources')->fetch_by_rid($rid,'',$preview)) {
 
             unset($icoarr['rid']);
             //判断当前文件有没有拷贝权限；
@@ -2732,7 +2736,7 @@ class io_dzz extends io_api
                         //复制源文件夹数据到目标目录同名文件夹
                         foreach (C::t('resources')->fetch_by_pfid($icoarr['oid']) as $value) {
                             try {
-                                self::FileCopy($value['rid'], $currentfid, false);
+                                self::FileCopy($value['rid'], $currentfid, false,$preview);
                             } catch (Exception $e) {
                             }
                         }
@@ -2744,7 +2748,7 @@ class io_dzz extends io_api
                         if ($data = self::createFolderByPath($icoarr['name'], $pfid)) {//根据文件夹名字和当前文件夹路径创建文件夹
                             foreach (C::t('resources')->fetch_by_pfid($folder['fid']) as $value) {//查询原文件夹中文件
                                 try {
-                                    self::FileCopy($value['rid'], $data['pfid'], false);//复制原文件夹中文件到新文件夹
+                                    self::FileCopy($value['rid'], $data['pfid'], false,$preview);//复制原文件夹中文件到新文件夹
                                 } catch (Exception $e) {
                                 }
                             }
