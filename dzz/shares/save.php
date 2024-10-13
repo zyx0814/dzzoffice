@@ -61,6 +61,7 @@ foreach ($icoids as $icoid) {
         $data['msg'][] = 'error';
         continue;
     }
+    $rid = 'preview_' . $rid;
     $return = IO::CopyTo($rid, $fid, 1);
     if ($return['success'] === true) {
         $data['icoarr'][] = $return['newdata'];
@@ -73,9 +74,9 @@ foreach ($icoids as $icoid) {
         $ridarr[] = $return['newdata']['rid'];
         $i++;
     } else {
-        $data['name'][$return['newdata']['rid']] = $return['newdata']['name'];
-        $data['error'][$return['newdata']['rid']] = $return['newdata']['name'] . ':' . $return['error'];
-        $data['msg'][$return['newdata']['rid']] = 'error';
+        $data['name'][$return['rid']] = $return['name'];
+        $data['error'][$return['rid']] = $return['success'];
+        $data['msg'][$return['rid']] = 'error';
         $errorarr[] = $return['error'];
     }
 }
