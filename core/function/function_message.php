@@ -71,8 +71,6 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 	if(!empty($_G['inajax'])) {
 		$handlekey = $_GET['handlekey'] = !empty($_GET['handlekey']) ? dhtmlspecialchars($_GET['handlekey']) : '';
 		$param['handle'] = true;
-	}
-	if(!empty($_G['inajax'])) {
 		$param['msgtype'] = empty($_GET['ajaxmenu']) && (empty($_POST) || !empty($_GET['nopost'])) ? 2 : 3;
 	}
 	if($url_forward) {
