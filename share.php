@@ -33,6 +33,10 @@ if($_GET['a']=='down'){
         }
         $icoarr['icoid'] = $_GET['s'];
     }
+	if ($icoarr['type'] == 'link') {
+		@header('Location: '.$icoarr['url']);
+		exit();
+	}
     $imageexts=array('jpg','jpeg','png','gif'); //图片使用；
     $filename=$icoarr['name'];//rtrim($_GET['n'],'.dzz');
     $ext=$icoarr['ext'];//strtolower(substr(strrchr($filename, '.'), 1, 10));
