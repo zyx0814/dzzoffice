@@ -889,6 +889,8 @@ class table_resources extends dzz_table
                 if ($currentfolder = C::t('folder')->fetch($fileinfo['oid'])) {
                     $fileinfo['isgroup'] = ($currentfolder['flag'] == 'organization') ? true : false;
                 }
+            } elseif ($fileinfo['type'] == 'link') {
+                $fileinfo['type'] = lang('type_link');
             } elseif ($fileinfo['ext']) {
                 $fileinfo['type'] = getFileTypeName($fileinfo['type'], $fileinfo['ext']);
             } else {

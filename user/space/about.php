@@ -10,7 +10,7 @@ if(!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $about=array();
-$identify=$_GET['modname'];
+$identify = filter_var($_GET['modname'], FILTER_SANITIZE_STRING);
 $ismobile=helper_browser::ismobile();
 $appConfig=DZZ_ROOT.'./dzz/'.$identify.'/config/config.php';
 if($identify && file_exists($appConfig)){

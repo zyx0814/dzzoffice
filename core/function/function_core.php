@@ -364,7 +364,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0, $ckey_
     }
 
     if ($operation == 'DECODE') {
-        if ((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) == substr(md5(substr($result, 26) . $keyb), 0, 16)) {
+        if ((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) === substr(md5(substr($result, 26) . $keyb), 0, 16)) {
             return substr($result, 26);
         } else {
             return '';
@@ -1621,21 +1621,18 @@ function getexpiration()
     return mktime(0, 0, 0, $date['mon'], $date['mday'], $date['year']) + 86400;
 }
 
-function return_bytes($val)
-{
-    $val = trim($val);
-    $last = strtolower($val{strlen($val) - 1});
-    switch ($last) {
-        case 'g':
-            $val *= 1024;
-        case 'm':
-            $val *= 1024;
-        case 'k':
-            $val *= 1024;
-    }
-    return $val;
+function return_bytes($val) {
+	$last = strtolower($val[strlen($val)-1]);
+	if (!is_numeric($val)) {
+		$val = substr(trim($val), 0, -1);
+	}
+	switch($last) {
+		case 'g': $val *= 1024;
+		case 'm': $val *= 1024;
+		case 'k': $val *= 1024;
+	}
+	return $val;
 }
-
 
 function getimgthumbname($fileStr, $extend = '.thumb.jpg', $holdOldExt = true)
 {
@@ -1673,7 +1670,7 @@ function strhash($string, $operation = 'DECODE', $key = '')
 {
     $key = md5($key != '' ? $key : getglobal('authkey'));
     if ($operation == 'DECODE') {
-        $hashcode = gzuncompress(base64_decode(($string)));
+        $hashcode = gzuncompress(base64_decode($string));
         $string = substr($hashcode, 0, -16);
         $hash = substr($hashcode, -16);
         unset($hashcode);
