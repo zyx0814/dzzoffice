@@ -309,7 +309,12 @@ class io_dzz extends io_api
         $quality = 80;
         $imgcachePath = 'imgcache/';
         $cachepath = str_replace('//', '/', str_replace(':', '/', $data['attachment'] ? $data['attachment'] : $data['path']));
-        $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_'.$thumbtype.'.jpeg';
+        if ($data['ext'] == 'png' || $data['ext'] == 'PNG') {
+            $targetext = '.png';
+        } else {
+            $targetext = '.jpeg';
+        }
+        $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_'.$thumbtype.$targetext;
         if (!$original && $enable_cache && @getimagesize($_G['setting']['attachdir'] . './' . $target)) {
             if ($returnurl) return $_G['setting']['attachurl'] . '/' . $target;
             $file = $_G['setting']['attachdir'] . './' . $target;
