@@ -14,7 +14,7 @@ Hook::listen('check_login');
 include_once libfile('function/organization');
 $ismobile=helper_browser::ismobile();
 $uid =isset($_GET['uid'])?intval($_GET['uid']):$_G['uid'];
-$zero=$_GET['zero']?urldecode($_GET['zero']):lang('no_institution_users');
+$zero=$_GET['zero']?htmlspecialchars($_GET['zero']):lang('no_institution_users');
 
 $limit=1000;
 if($_GET['do']=='orgtree'){
