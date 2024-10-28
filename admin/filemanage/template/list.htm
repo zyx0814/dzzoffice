@@ -136,12 +136,12 @@
               <div node-type="title-col" data-key="type" class="col" style="width: 20%;border-right: none;"> {lang file_location} <span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
               <div node-type="title-col" data-key="type" class="col" style="width: 10%;border-right: none;"> {lang possessor}<span node-type="order-status" class="asc desc" style="visibility: hidden;"></span> </div>
               <div node-type="title-col" data-key="dateline" class="col" style="width: 15%;"> {lang add_time} <span node-type="order-status" class="asc $_GET[dateline]" style="visibility: <!--{if $_GET[dateline]}-->visible<!--{else}-->hidden<!--{/if}-->;"></span> </div>
-              <div node-type="title-col" data-key="dateline" class="col" style="width: 5%;"> {lang delete} </div>
+              <div node-type="title-col" data-key="dateline" class="col" style="width: 5%;"> {lang operation} </div>
             </div>
           </div>
           <div node-type="list" class="list list-share">
             <div class="list-wrapper clearfix"> 
-              <!--{loop $list $value}--> 
+              <!--{loop $list $key $value}--> 
               <div node-type="item" data-dpath="$value[dpath]" data-rid="$value[rid]" <!--{if $value[type] == 'folder' && $value[oid]}--> data-containpath="$value[oid]"<!--{/if}--> data-type="$value[type]" class="item shareblock clearfix"> 
               <!-- 第一列 -->
               <div class="col size" style="width: 3%;text-indent: 0;padding-left: 5px;" >
@@ -155,12 +155,11 @@
                   <!--{if $value[img]}--><img class="icon" title="$value[name]" src="$value[img]" <!--{if $value[type]=='image' }--> data-original="$value[url]" data-dpath="$value[dpath]" 
                   <!--{/if}-->/> 
                   <!--{/if}--> 
-                  <span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="name-text enabled">$value[name]</span> </span> </div>
-                
-                	<div class="btns">
-										<a node-type="btn-item" data-key="download" class="glyphicon glyphicon-download-alt" href="javascript:void(0);"></a>
-									</div>
-                
+                  <span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="name-text enabled">$value[name]</span> </span>
+				</div>
+				<div class="btns">
+					<a node-type="btn-item" data-key="download" class="glyphicon glyphicon-download-alt" href="javascript:void(0);"></a>
+				</div>
               </div>
               <!-- 其他列 -->
               <div class="col size" style="width: 10%" data-size="$value[size]">$value[fsize]</div>
@@ -168,8 +167,17 @@
               <div class="col type" style="width:20%" data-type="$value[relpath]">$value[relpath]</div>
               <div class="col type" style="width:10%" data-type="$value[username]">$value[username]</div>
               <div class="col dateline" style="width: 15%" data-dateline="$value[dateline]">$value[fdateline]</div>
-              <div class="col delete" style="width: 5%" > <a class="" href="{BASESCRIPT}?mod=filemanage&do=delete&icoid=$value[rid]&refer={eval echo urlencode($refer);}" title="{lang delete}" style="color:rgb(85, 85, 85);font-size:20px;" onclick="if(confirm('{lang filemanage_del_file}')){return true}else{return false}"><i class="dzz dzz-delete"></i></a> </div>
+              <div class="col delete" style="width: 5%" > <a class="" href="{BASESCRIPT}?mod=filemanage&do=delete&icoid=$value[rid]&refer={eval echo urlencode($refer);}" title="{lang delete}" style="color:rgb(85, 85, 85);font-size:20px;" onclick="if(confirm('{lang filemanage_del_file}')){return true}else{return false}"><i class="dzz dzz-delete"></i></a>
+				<a href="javascript:;" onclick="togglecplog('{$key}')" style="color:rgb(85, 85, 85);font-size:20px;" title="更多信息"><i class="dzz dzz-description"></i></a>
+				</div>
             </div>
+			<div class="list-group-item" id="cplog_{$key}" style="display:none;">
+			<!--{if $value[type]!=='folder'}-->
+			<!--{eval $zldz=IO::getFileUri($value[path])}-->直链地址：<a href="$zldz">$zldz</a><br/>
+				引用：$value[copys]<br/>
+			<!--{/if}-->
+			  是否在回收站：<!--{if $value[isdelete]}-->是<!--{else}-->否<!--{/if}-->
+			</div>
             <!--{/loop}--> 
             <!--{if $nextpage}-->
             <div class="more text-center clearfix" onclick="getMore(this,'{BASESCRIPT}?mod=filemanage&op=ajax&type=$type&orgid=$orgid&keyword=$keyword&pfid=$pfid&page=$nextpage')">{lang upload_more}</div>
@@ -348,6 +356,14 @@ function delete_file(){
 			}
 		})
 	}
+}
+function togglecplog(k) {
+  var cplogobj = document.getElementById('cplog_' + k);
+  if(cplogobj.style.display == 'none') {
+    cplogobj.style.display = '';
+  } else {
+    cplogobj.style.display = 'none';
+  }
 }
 </script> 
 <script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>

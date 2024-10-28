@@ -34,10 +34,14 @@ if (submitcheck('replysubmit')) {
 	if (empty($message)) {
 		showmessage('please_enter_comment', DZZSCRIPT . '?mod=comment', array());
 	}
+	$os= get_os();
+	foreach ($_G['browser'] as $key => $value) {
+		$outputer= $key;
+	}
 	//处理@
 	$at_users = array();
 	$message = preg_replace_callback("/@\[(.+?):(.+?)\]/i", "atreplacement", $message);
-	$setarr = array('author' => $_G['username'], 'authorid' => $_G['uid'], 'pcid' => intval($_GET['pcid']), 'rcid' => intval($_GET['rcid']), 'id' => getstr($_GET['id'], 60), 'idtype' => trim($_GET['idtype']), 'module' => trim($_GET['module']), 'ip' => $_G['clientip'], 'dateline' => TIMESTAMP, 'message' => $message, );
+	$setarr = array('author' => $_G['username'], 'authorid' => $_G['uid'], 'pcid' => intval($_GET['pcid']), 'rcid' => intval($_GET['rcid']), 'id' => getstr($_GET['id'], 60), 'idtype' => trim($_GET['idtype']), 'module' => trim($_GET['module']), 'ip' => $_G['clientip'],'xtllq' =>$os.' '.$outputer, 'dateline' => TIMESTAMP, 'message' => $message, );
 	if (!$setarr['cid'] = C::t('comment') -> insert_by_cid($setarr, $at_users, $_GET['attach'])) {
 		showmessage('internal_server_error', DZZSCRIPT . '?mod=comment', array('message' => $message));
 	}

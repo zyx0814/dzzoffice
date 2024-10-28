@@ -25,32 +25,47 @@
  <div class=" main-allnotice bs-main-container clearfix">
 
 	<div class="panel-container main-allcontent clearfix">
+		<!--{if $list}-->
 		<div class="panel-heading">
+			<!--{if $img}-->
+			<img src="$img" style="max-width: 30px;">
+			<!--{else}-->
 			<span class="dzz dzz-notifications dzz-allnotice"></span>
-		    <h3>{$navtitle}($count)</h3>
+			<!--{/if}-->
+			<h3>{$tongzhileixing}($count)</h3>
 		</div>
+		<!--{/if}-->
 		<div class="panel-body">
 		    <ul id="notification-list" class="notification-list list-unstyled u-gutter clearfix"> 
 	             <!--{if $list}-->
 	             <!--{loop $list $value}-->
-	                <li class="notification-list-item clearfix">
-	                
-	                    <div class="member member-no-menu">
-	                         {eval echo avatar_block($value[authorid]);}
-	                    </div>
-	                   
-	                    <div class="details">
-	                      <p class="note u-bottom" >$value[note]</p>
-	                      {if !isset($fromid) || is_string($fromid)}<div class="note-iconimg"><img src="$value[appico]"></div>{/if}
-	                      <p class="dateline u-bottom">$value[dateline]</p>
-	                    </div>
-	                </li>
-	                <!--{/loop}-->
-	             <!--{else}-->
-	           		<p class="text-warning" style="line-height:35px;">{lang noappall_notice}…</p>
+				<li class="notification-list-item clearfix">
+					<div class="member member-no-menu">
+						<a href="user.php?uid=$value[authorid]">
+							{eval echo avatar_block($value[authorid]);}
+						</a>
+					</div>
+					<div class="details">
+						<!--{if $value[title]}-->
+						<p class="note u-title">$value[title]</p>
+						<!--{/if}-->
+						<!--{if $value[note]}-->
+						<p class="note u-bottom">$value[note]</p>
+						<!--{else}-->
+						<p class="note u-bottom">无内容</p>
+						<!--{/if}-->
+						<!--{if $value[redirecturl]}-->
+						<p class="dateline u-bottom text-muted">来源地址:<a href="$value[redirecturl]" target="_blank">$value[redirecturl]</a></p>
+						<!--{/if}-->
+						{if !isset($fromid) || is_string($fromid)}<div class="note-iconimg"><img src="$value[appico]"></div>{/if}
+						<p class="dateline u-bottom">$value[dateline]</p>
+					</div>
+				</li>
+				<!--{/loop}-->
+	            <!--{else}-->
+				 <div class="alert alert-warning" style="margin:10px;">{lang noappall_notice}…</div>
 	            <!--{/if}-->
 	            </ul>
-	           
 		 </div>
 		 
 	</div>

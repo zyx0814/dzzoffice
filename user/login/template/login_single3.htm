@@ -19,7 +19,7 @@
 </div>
 <div class="page animsition" id="main_message">
   <div class="page-login-main">
-    <div class="brand"> <img src="{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}" /> </div>
+    <div class="brand"> <img src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->" /> </div>
     <!--{if $_G[setting][loginset][title]}-->
     <div class="main-title">$_G[setting][loginset][title]</div>
     <!--{/if}--> 
@@ -75,7 +75,7 @@
   </div>
 </div>
 <!--{if $_G['setting']['pwdsafety']}--> 
-<script type="text/javascript" src="user/scripts/md5.js?{VERHASH}" reload="1"></script> 
+<script type="text/javascript" src="static/js/md5.js?{VERHASH}" reload="1"></script> 
 <!--{/if}--> 
 <script type="text/javascript">
 var pwdclear = 1;

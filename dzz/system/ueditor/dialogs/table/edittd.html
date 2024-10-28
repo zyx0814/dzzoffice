@@ -2,12 +2,13 @@
 <html>
 <head>
     <title></title>
-    <script type="text/javascript" src="../internal.js"></script>
+    <script type="text/javascript" src="../internal.js?aea0c61c"></script>
     <style type="text/css">
         .section {
             text-align: center;
             margin-top: 10px;
         }
+
         .section input {
             margin-left: 5px;
             width: 70px;
@@ -21,13 +22,13 @@
 </div>
 <script type="text/javascript">
     var tone = $G("J_tone"),
-            colorPiker = new UE.ui.ColorPicker({
-                editor:editor
-            }),
-            colorPop = new UE.ui.Popup({
-                editor:editor,
-                content:colorPiker
-            });
+        colorPiker = new UE.ui.ColorPicker({
+            editor: editor
+        }),
+        colorPop = new UE.ui.Popup({
+            editor: editor,
+            content: colorPiker
+        });
     domUtils.on(tone, "click", function () {
         colorPop.showAnchor(tone);
     });
@@ -39,18 +40,18 @@
         colorPop.hide();
     });
     colorPiker.addListener("picknocolor", function () {
-        tone.value="";
+        tone.value = "";
         colorPop.hide();
     });
-    dialog.onok=function(){
-        editor.execCommand("edittd",tone.value);
+    dialog.onok = function () {
+        editor.execCommand("edittd", tone.value);
     };
 
     var start = editor.selection.getStart(),
         cell = start && domUtils.findParentByTagName(start, ["td", "th"], true);
-    if(cell){
-        var color = domUtils.getComputedStyle(cell,'background-color');
-        if(/^#/.test(color)){
+    if (cell) {
+        var color = domUtils.getComputedStyle(cell, 'background-color');
+        if (/^#/.test(color)) {
             tone.value = color
         }
 

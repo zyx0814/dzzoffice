@@ -1,7 +1,7 @@
 <ul class="nav nav-pills nav-stacked nav-pills-leftguide">
 		
 		<!--{if $_G['adminid']==1 || $_G['member']['grid']==5}-->
-		<li <!--{if $op=='verify' && !$vid}-->class="active"<!--{/if}-->>
+		<li <!--{if $op=='verify' && !$vid}-->class="active"<!--{elseif $op=='profileset' || $op=='verifyset' || $op=='verify'}--><!--{else}-->class="active"<!--{/if}-->>
 			<a href="{MOD_URL}&op=verify">{lang members_verify_profile}</a>
 		</li>
 		<!--{/if}-->

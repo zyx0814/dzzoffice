@@ -39,24 +39,38 @@ $seccodecheck = $setting['seccodestatus'] & 1;
 //判断是否提交
 if(!submitcheck('regsubmit', 0, $seccodecheck)) {
 
-        //应用注册页挂载点
-        Hook::listen('appregister');
-		$bbrules = $setting['bbrules'];
-		
-		$regname =$setting['regname'];
-		
-		$bbrulehash = $bbrules ? substr(md5(FORMHASH), 0, 8) : '';
-		$auth = $_GET['auth'];
+    //应用注册页挂载点
+    Hook::listen('appregister');
+    $bbrules = $setting['bbrules'];
+    
+    $regname =$setting['regname'];
+    
+    $bbrulehash = $bbrules ? substr(md5(FORMHASH), 0, 8) : '';
+    $auth = $_GET['auth'];
 
-		$username = isset($_GET['username']) ? dhtmlspecialchars($_GET['username']) : '';
-		if($seccodecheck) {
-			$seccode = random(6, 1);
-		}
-		$navtitle = $setting['reglinkname'];
+    $username = isset($_GET['username']) ? dhtmlspecialchars($_GET['username']) : '';
+    $allowitems = array();
+    foreach ($_G['cache']['profilesetting'] as $key => $value) {
+        if ($value['available'] > 0)
+            $allowitems[] = $key;
+    }
+    $htmls = $settings = array();
+    foreach($_G['cache']['fields_register'] as $field) {
+        $fieldid = $field['fieldid'];
+        $html = profile_setting($fieldid, array(), false, false, true);
+        if($html) {
+        $settings[$fieldid] = $_G['cache']['profilesetting'][$fieldid];
+        $htmls[$fieldid] = $html;
+        }
+    }
+    if($seccodecheck) {
+        $seccode = random(6, 1);
+    }
+    $navtitle = $setting['reglinkname'];
 
-		$dreferer = dreferer();
-		include template('register');
-		exit();
+    $dreferer = dreferer();
+    include template('register');
+    exit();
 }else{
 	
     Hook::listen('check_val',$_GET);//用户数据验证钩子,用户注册资料信息提交验证
@@ -76,8 +90,27 @@ if(!submitcheck('regsubmit', 0, $seccodecheck)) {
         'lastsendmail' => 0
     );
     //插入用户状态表
-    \DB::insert('user_status',$status,1); 
+    DB::insert('user_status',$status,1); 
+    $setarr = array();
+    foreach ($_GET as $key => $value) {
+        $field = $_G['cache']['profilesetting'][$key];
+        if (empty($field)) {
+            continue;
+        } elseif (profile_check($key, $value, $space)) {
+            $setarr[$key] = dhtmlspecialchars(trim($value));
+        }
+    }
+    if (isset($_POST['birthmonth']) && ($space['birthmonth'] != $_POST['birthmonth'] || $space['birthday'] != $_POST['birthday'])) {
+        $setarr['constellation'] = get_constellation($_POST['birthmonth'], $_POST['birthday']);
+    }
+    if (isset($_POST['birthyear']) && $space['birthyear'] != $_POST['birthyear']) {
+        $setarr['zodiac'] = get_zodiac($_POST['birthyear']);
+    }
 
+    if ($setarr) {
+        $setarr['uid'] = $result['uid'];
+        C::t('user_profile') -> insert($setarr);
+    }
     //新用户登录
     setloginstatus(array(
         'uid' => $result['uid'],

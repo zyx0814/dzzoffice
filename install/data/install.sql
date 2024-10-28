@@ -3,7 +3,7 @@ CREATE TABLE dzz_admincp_session (
   uid int(10) unsigned NOT NULL DEFAULT '0',
   adminid smallint(6) unsigned NOT NULL DEFAULT '0',
   panel tinyint(1) NOT NULL DEFAULT '0',
-  ip varchar(15) NOT NULL DEFAULT '',
+  ip varchar(45) NOT NULL DEFAULT '',
   dateline int(10) unsigned NOT NULL DEFAULT '0',
   errorcount tinyint(1) NOT NULL DEFAULT '0',
   `storage` mediumtext NOT NULL,
@@ -200,6 +200,7 @@ CREATE TABLE dzz_comment (
   authorid int(10) unsigned NOT NULL DEFAULT '0',
   author varchar(15) NOT NULL DEFAULT '',
   ip varchar(20) NOT NULL DEFAULT '',
+  `xtllq` tinytext,
   `port` smallint(6) unsigned NOT NULL DEFAULT '0',
   dateline int(10) unsigned NOT NULL DEFAULT '0',
   message text NOT NULL,
@@ -423,7 +424,7 @@ CREATE TABLE dzz_document_reversion (
 
 DROP TABLE IF EXISTS dzz_failedlogin;
 CREATE TABLE dzz_failedlogin (
-  ip char(15) NOT NULL DEFAULT '',
+  ip varchar(45) NOT NULL DEFAULT '',
   username char(32) NOT NULL DEFAULT '',
   count tinyint(1) unsigned NOT NULL DEFAULT '0',
   lastupdate int(10) unsigned NOT NULL DEFAULT '0',
@@ -934,10 +935,7 @@ CREATE TABLE dzz_resources_version (
 DROP TABLE IF EXISTS dzz_session;
 CREATE TABLE dzz_session (
   sid char(6) NOT NULL DEFAULT '',
-  ip1 tinyint(3) unsigned NOT NULL DEFAULT '0',
-  ip2 tinyint(3) unsigned NOT NULL DEFAULT '0',
-  ip3 tinyint(3) unsigned NOT NULL DEFAULT '0',
-  ip4 tinyint(3) unsigned NOT NULL DEFAULT '0',
+  ip varchar(45) NOT NULL DEFAULT '',
   uid int(10) unsigned NOT NULL DEFAULT '0',
   username char(15) NOT NULL DEFAULT '',
   groupid smallint(6) unsigned NOT NULL DEFAULT '0',

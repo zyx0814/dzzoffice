@@ -9,20 +9,17 @@
     };
 
     /* 初始化tab标签 */
-    function initTabs(){
+    function initTabs() {
         var tabs = $G('tabHeads').children;
         for (var i = 0; i < tabs.length; i++) {
             domUtils.on(tabs[i], "click", function (e) {
                 var target = e.target || e.srcElement;
                 for (var j = 0; j < tabs.length; j++) {
-                    if(tabs[j] == target){
+                    if (tabs[j] == target) {
                         tabs[j].className = "focus";
                         var contentId = tabs[j].getAttribute('data-content-id');
                         $G(contentId).style.display = "block";
-                        if(contentId == 'imgManager') {
-                            initImagePanel();
-                        }
-                    }else {
+                    } else {
                         tabs[j].className = "";
                         $G(tabs[j].getAttribute('data-content-id')).style.display = "none";
                     }
@@ -32,7 +29,7 @@
     }
 
     /* 初始化颜色设置 */
-    function initColorSelector () {
+    function initColorSelector() {
         var obj = editor.queryCommandValue('background');
         if (obj) {
             var color = obj['background-color'],
@@ -43,10 +40,10 @@
                 x = parseInt(pos[0]) || 0,
                 y = parseInt(pos[1]) || 0;
 
-            if(repeat == 'no-repeat' && (x || y)) repeat = 'self';
+            if (repeat == 'no-repeat' && (x || y)) repeat = 'self';
 
             image = image.match(/url[\s]*\(([^\)]*)\)/);
-            image = image ? image[1]:'';
+            image = image ? image[1] : '';
             updateFormState('colored', color, image, repeat, x, y);
         } else {
             updateFormState();
@@ -58,10 +55,10 @@
         }
         domUtils.on($G('nocolorRadio'), 'click', updateBackground);
         domUtils.on($G('coloredRadio'), 'click', updateHandler);
-        domUtils.on($G('url'), 'keyup', function(){
-            if($G('url').value && $G('alignment').style.display == "none") {
-                utils.each($G('repeatType').children, function(item){
-                    item.selected = ('repeat' == item.getAttribute('value') ? 'selected':false);
+        domUtils.on($G('url'), 'keyup', function () {
+            if ($G('url').value && $G('alignment').style.display == "none") {
+                utils.each($G('repeatType').children, function (item) {
+                    item.selected = ('repeat' == item.getAttribute('value') ? 'selected' : false);
                 });
             }
             updateHandler();
@@ -112,50 +109,45 @@
         });
     }
 
-    /* 初始化在线图片列表 */
-    function initImagePanel() {
-        onlineImage = onlineImage || new OnlineImage('imageList');
-    }
-
     /* 更新背景色设置面板 */
-    function updateFormState (radio, color, url, align, x, y) {
+    function updateFormState(radio, color, url, align, x, y) {
         var nocolorRadio = $G('nocolorRadio'),
             coloredRadio = $G('coloredRadio');
 
-        if(radio) {
-            nocolorRadio.checked = (radio == 'colored' ? false:'checked');
-            coloredRadio.checked = (radio == 'colored' ? 'checked':false);
+        if (radio) {
+            nocolorRadio.checked = (radio == 'colored' ? false : 'checked');
+            coloredRadio.checked = (radio == 'colored' ? 'checked' : false);
         }
-        if(color) {
+        if (color) {
             domUtils.setStyle($G("colorPicker"), "background-color", color);
         }
 
-        if(url && /^\//.test(url)) {
+        if (url && /^\//.test(url)) {
             var a = document.createElement('a');
             a.href = url;
             browser.ie && (a.href = a.href);
-            url = browser.ie ? a.href:(a.protocol + '//' + a.host + a.pathname + a.search + a.hash);
+            url = browser.ie ? a.href : (a.protocol + '//' + a.host + a.pathname + a.search + a.hash);
         }
 
-        if(url || url === '') {
+        if (url || url === '') {
             $G('url').value = url;
         }
-        if(align) {
-            utils.each($G('repeatType').children, function(item){
-                item.selected = (align == item.getAttribute('value') ? 'selected':false);
+        if (align) {
+            utils.each($G('repeatType').children, function (item) {
+                item.selected = (align == item.getAttribute('value') ? 'selected' : false);
             });
         }
-        if(x || y) {
+        if (x || y) {
             $G('x').value = parseInt(x) || 0;
             $G('y').value = parseInt(y) || 0;
         }
 
-        $G('alignment').style.display = coloredRadio.checked && $G('url').value ? '':'none';
-        $G('custom').style.display = coloredRadio.checked && $G('url').value && $G('repeatType').value == 'self' ? '':'none';
+        $G('alignment').style.display = coloredRadio.checked && $G('url').value ? '' : 'none';
+        $G('custom').style.display = coloredRadio.checked && $G('url').value && $G('repeatType').value == 'self' ? '' : 'none';
     }
 
     /* 更新背景颜色 */
-    function updateBackground () {
+    function updateBackground() {
         if ($G('coloredRadio').checked) {
             var color = domUtils.getStyle($G("colorPicker"), "background-color"),
                 bgimg = $G("url").value,
@@ -185,6 +177,7 @@
         this.container = utils.isString(target) ? document.getElementById(target) : target;
         this.init();
     }
+
     OnlineImage.prototype = {
         init: function () {
             this.reset();
@@ -208,7 +201,7 @@
             var _this = this;
 
             /* 滚动拉取图片 */
-            domUtils.on($G('imageList'), 'scroll', function(e){
+            domUtils.on($G('imageList'), 'scroll', function (e) {
                 var panel = this;
                 if (panel.scrollHeight - (panel.offsetHeight + panel.scrollTop) < 10) {
                     _this.getImageData();
@@ -247,7 +240,7 @@
             this.getImageData();
         },
         /* 重置界面 */
-        reset: function() {
+        reset: function () {
             this.initContainer();
             this.initData();
         },
@@ -255,31 +248,32 @@
         getImageData: function () {
             var _this = this;
 
-            if(!_this.listEnd && !this.isLoadingData) {
+            if (!_this.listEnd && !this.isLoadingData) {
                 this.isLoadingData = true;
                 var url = editor.getActionUrl(editor.getOpt('imageManagerActionName')),
                     isJsonp = utils.isCrossDomainUrl(url);
                 ajax.request(url, {
                     'timeout': 100000,
-                    'dataType': isJsonp ? 'jsonp':'',
+                    'dataType': isJsonp ? 'jsonp' : '',
                     'data': utils.extend({
-                            start: this.listIndex,
-                            size: this.listSize
-                        }, editor.queryCommandValue('serverparam')),
+                        start: this.listIndex,
+                        size: this.listSize
+                    }, editor.queryCommandValue('serverparam')),
+                    'headers': editor.options.serverHeaders || {},
                     'method': 'get',
                     'onsuccess': function (r) {
                         try {
-                            var json = isJsonp ? r:eval('(' + r.responseText + ')');
+                            var json = isJsonp ? r : eval('(' + r.responseText + ')');
                             if (json.state == 'SUCCESS') {
                                 _this.pushData(json.list);
                                 _this.listIndex = parseInt(json.start) + parseInt(json.list.length);
-                                if(_this.listIndex >= json.total) {
+                                if (_this.listIndex >= json.total) {
                                     _this.listEnd = true;
                                 }
                                 _this.isLoadingData = false;
                             }
                         } catch (e) {
-                            if(r.responseText.indexOf('ue_separate_ue') != -1) {
+                            if (r.responseText.indexOf('ue_separate_ue') != -1) {
                                 var list = r.responseText.split(r.responseText);
                                 _this.pushData(list);
                                 _this.listIndex = parseInt(list.length);
@@ -299,18 +293,18 @@
             var i, item, img, icon, _this = this,
                 urlPrefix = editor.getOpt('imageManagerUrlPrefix');
             for (i = 0; i < list.length; i++) {
-                if(list[i] && list[i].url) {
+                if (list[i] && list[i].url) {
                     item = document.createElement('li');
                     img = document.createElement('img');
                     icon = document.createElement('span');
 
-                    domUtils.on(img, 'load', (function(image){
-                        return function(){
+                    domUtils.on(img, 'load', (function (image) {
+                        return function () {
                             _this.scale(image, image.parentNode.offsetWidth, image.parentNode.offsetHeight);
                         }
                     })(img));
                     img.width = 113;
-                    img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=':'&noCache=') + (+new Date()).toString(36) );
+                    img.setAttribute('src', urlPrefix + list[i].url + (list[i].url.indexOf('?') == -1 ? '?noCache=' : '&noCache=') + (+new Date()).toString(36));
                     img.setAttribute('_src', urlPrefix + list[i].url);
                     domUtils.addClass(icon, 'icon');
 

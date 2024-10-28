@@ -40,6 +40,7 @@ if($filter=='new'){//列出所有新通知
         'op' =>'notification',
         'filter'=>'all'
     );
+    $sitelogo=$_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';
     //获取通知包含类型
     $searchappid = array();
     foreach(DB::fetch_all("select distinct(from_id) from %t where uid = %d",array('notification',$_G['uid'])) as $v){
@@ -49,7 +50,7 @@ if($filter=='new'){//列出所有新通知
     if(in_array(0,$searchappid)){
         $systemindex = array_search(0,$searchappid);
         unset($searchappid[$systemindex]);
-        $searchcats[1] = array('appid'=>1,'appname'=>'系统','appico'=>'dzz/images/default/notice_system.png');
+        $searchcats[1] = array('appid'=>1,'appname'=>'系统','appico'=>$sitelogo);
     }
     if(count($searchappid) > 0){
         foreach(DB::fetch_all("select appname,appid,appico from %t where appid in(%n)",array('app_market',$searchappid)) as $v){
@@ -62,9 +63,12 @@ if($filter=='new'){//列出所有新通知
         $gets['appid'] = $fromid;
         $appid = $fromid -1;
         $searchsql .= " and n.from_id = {$appid}";
-        $navtitle=$searchcats[$fromid]['appname'];
+        $navtitle=$searchcats[$fromid]['appname'].' - '.lang('panel_notice_title');
+        $img=$searchcats[$fromid]['appico'];
+        $tongzhileixing=$searchcats[$fromid]['appname'];
     }else{
-        $navtitle='全部通知';
+        $tongzhileixing='全部通知';
+        $navtitle='全部通知'.' - '.lang('panel_notice_title');
     }
     $params = array('notification','user','app_market',$_G['uid']);
     $countparam = array('notification',$_G['uid']);
@@ -84,7 +88,7 @@ if($filter=='new'){//列出所有新通知
             $value['dateline']=dgmdate($value['dateline'],'u');
 			$value['note']=dzzcode($value['note'],1,1,1,1,1);
 			if(!$value['appico']){
-			    $value['appico'] = 'dzz/images/default/notice_system.png';
+			    $value['appico'] = $sitelogo;
             }else{
                 $value['appico'] = $_G['setting']['attachurl']. $value['appico'];
             }

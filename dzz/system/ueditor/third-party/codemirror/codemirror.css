@@ -1,5 +1,5 @@
 .CodeMirror {
-    line-height: 1em;
+    line-height: 1.5;
     font-family: monospace;
 }
 
@@ -45,6 +45,7 @@
 .CodeMirror-wrap pre {
     word-wrap: break-word;
     white-space: pre-wrap;
+    line-height: 1.4;
 }
 .CodeMirror-wrap .CodeMirror-scroll {
     overflow-x: hidden;
@@ -59,6 +60,7 @@
     position: absolute;
     visibility: hidden;
     border-left: 1px solid black;
+    margin-top: -2px;
 }
 .CodeMirror-focused pre.CodeMirror-cursor {
     visibility: visible;

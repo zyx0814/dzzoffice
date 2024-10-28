@@ -299,7 +299,7 @@ class dzz_database {
 		$i = $find = 0;
 		$ret = '';
 		while ($i <= $len && $find < $count) {
-			if ($sql{$i} == '%') {
+			if ($sql[$i] == '%') {
 				$next = $sql[$i + 1];
 				if ($next == 't') {
 					$ret .= self::table($arg[$find]);

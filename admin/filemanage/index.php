@@ -15,6 +15,7 @@ $typearr = array('image' => lang('photo'),
     'document' => lang('type_attach'),
     'link' => lang('type_link'),
     'video' => lang('online_video'),
+    'folder' => lang('type_folder'),
     'dzzdoc' => 'DZZ' . lang('type_attach'),
     'attach' => lang('rest_attachment')
 );

@@ -5,21 +5,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="robots" content="noindex, nofollow"/>
     <script type="text/javascript" src="../internal.js"></script>
-   <link rel="stylesheet" type="text/css" href="../../../../../static/css/smilies.css">
-    <link rel="stylesheet" type="text/css" href="../../../../../static/bootstrap/css/bootstrap.min.css">
-   <script type="text/javascript" src="../../../../../static/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="../../../../../data/cache/smilies_var.js"></script>
-    <script type="text/javascript" src="../../../../../static/js/common.js"></script>
-    <script>var cookiepre = 'AQTa_2132_', cookiedomain = '';STATICURL = '../../../../../static/'</script>
+   <link rel="stylesheet" type="text/css" href="/static/css/smilies.css">
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css">
+   <script type="text/javascript" src="/static/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/data/cache/smilies_var.js"></script>
+    <script type="text/javascript" src="/static/js/common.js"></script>
+    <script>var cookiepre = 'AQTa_2132_', cookiedomain = '';STATICURL = '/static/'</script>
     <style>
-	 html ,body{overflow:hidden;height:282px;}
+	 html ,body{overflow:auto;}
 		.sllt td{
 			padding:8px;
 		}
+        .sllt {
+            border:none;
+            background:none;
+            box-shadow:none;
+        }
 	</style>
 </head>
 <body onload="smilies_onload('smiley_container',9)">
-<div id="smiley_container" class="sllt"></div>
+<div id="smiley_container" class="da sllt"></div>
 
 <script type="text/javascript">
 var thumb=24;
@@ -38,12 +43,12 @@ function smilies_onload(id, smcols, seditorkey) {
 			}
 		}
 		var k=0;
-		smiliestype = '<div id="'+id+'_tb" class="tb tb_s cl"><ul class="nav nav-pills nav-pills-bottomguide" style="margin:0;border-bottom:1px solid #DDD;">';
+		smiliestype = '<div id="'+id+'_tb" class="tb tb_s cl"><ul class="nav nav-pills">';
 		for(i in smilies_type) {
 			key = i.substring(1);
 			if(smilies_type[i][0]) {
 				k++;
-				smiliestype += '<li ' + (CURRENTSTYPE == key ? 'class="active"' : '') + ' id="'+seditorkey+'stype_'+key+'" onclick="smilies_switch(\'' + id + '\', \'' + smcols + '\', '+key+', 1, \'' + seditorkey + '\');if(CURRENTSTYPE) {$(\''+seditorkey+'stype_\'+CURRENTSTYPE).className=\'\';}this.className=\'active\';CURRENTSTYPE='+key+';doane(event);" ><a href="javascript:;" hidefocus="true">'+smilies_type[i][0]+'</a></li>';
+				smiliestype += '<li class="nav-item"><a class="' + (CURRENTSTYPE == key ? 'active"' : '') + '" id="'+seditorkey+'stype_'+key+'" onclick="smilies_switch(\'' + id + '\', \'' + smcols + '\', '+key+', 1, \'' + seditorkey + '\');if(CURRENTSTYPE) {document.getElementById(\''+seditorkey+'stype_\'+CURRENTSTYPE).className=\'\';}this.className=\'nav-link active\';CURRENTSTYPE='+key+';doane(event);" href="javascript:;" hidefocus="true">'+smilies_type[i][0]+'</a></>';
 			}
 		}
 		smiliestype += '</ul></div>';
@@ -72,7 +77,7 @@ function smilies_onload(id, smcols, seditorkey) {
 function insertSmiley(key) {
 	
 	 var obj = {
-        src: editor.options.UEDITOR_HOME_URL.replace('dzz/system/ueditor/','') + jQuery('#smilie_'+key).attr('src').replace('../../../../../static','static')
+        src: editor.options.UEDITOR_HOME_URL.replace('dzz/system/ueditor/','') + jQuery('#smilie_'+key).attr('src').replace('/static','static')
     };
     obj._src = obj.src;
     editor.execCommand( 'insertimage', obj );

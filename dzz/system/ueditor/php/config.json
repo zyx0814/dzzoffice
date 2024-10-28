@@ -55,7 +55,13 @@
     "videoAllowFiles": [
         ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
         ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid"], /* 上传视频格式显示 */
-
+    /* 上传音频配置 */
+    "audioActionName": "uploadfile", /* 执行上传视频的action名称 */
+    "audioFieldName": "upfile", /* 提交的视频表单名称 */
+    "audioPathFormat": "/ueditor/php/upload/audio/{yyyy}{mm}{dd}/{time}{rand:6}", /* 上传保存路径,可以自定义保存路径和文件名格式 */
+    "audioUrlPrefix": "", /* 视频访问路径前缀 */
+    "audioMaxSize": 102400000, /* 上传大小限制，单位B，默认100MB */
+    "audioAllowFiles": [".mp3"],
     /* 上传文件配置 */
     "fileActionName": "uploadfile", /* controller里,执行上传视频的action名称 */
     "fileFieldName": "upfile", /* 提交的文件表单名称 */
@@ -67,7 +73,7 @@
         ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
         ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid",
         ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso",
-        ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml"
+        ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml", ".html", ".js", ".css"
     ], /* 上传文件格式显示 */
 
     /* 列出指定目录下的图片 */
@@ -88,7 +94,7 @@
         ".flv", ".swf", ".mkv", ".avi", ".rm", ".rmvb", ".mpeg", ".mpg",
         ".ogg", ".ogv", ".mov", ".wmv", ".mp4", ".webm", ".mp3", ".wav", ".mid",
         ".rar", ".zip", ".tar", ".gz", ".7z", ".bz2", ".cab", ".iso",
-        ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml"
+        ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".pdf", ".txt", ".md", ".xml", ".html", ".js", ".css"
     ] /* 列出的文件类型 */
 
 }

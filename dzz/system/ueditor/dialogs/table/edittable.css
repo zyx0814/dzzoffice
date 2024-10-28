@@ -1,7 +1,8 @@
-body{
+body {
     overflow: hidden;
     width: 540px;
 }
+
 .wrapper {
     margin: 10px auto 0;
     font-size: 12px;

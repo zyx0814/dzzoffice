@@ -40,19 +40,13 @@
 .tip {
 	position: absolute;
 	padding: 10px;
-	_width: 200px;
-	max-width:350px;
-	border:solid 1px #b1b1b1;
-	background:#FEFEE9;;
+	background:#FEFEE9;
 	box-shadow: 0 1px 3px #eee, inset 0 0 3px #fff;
-	border-radius:5px;
-	/*box-shadow:0 5px 15px RGBA(0,0,0,0.5);*/
 	word-break:break-all;
 	margin:0 10px;
+	border: 1px solid rgb(0 0 0 / 10%);
 }
 .tip .tip-op a{
-	
-	color:#4c8afb;
 	padding-top: 1px;
 	margin-right: 10px;
 	padding-bottom: 1px;
@@ -96,9 +90,6 @@
 /*}*/
 .tip_1, .tip_2 {
 	margin-top: 8px;
-}
-.tip_3, .tip_4 {
-	margin-top: -8px;
 }
 .tip_horn {
 	position: absolute;
@@ -391,7 +382,6 @@ html:root .preview-panel { filter:none;overflow:hidden }
 }
 .previewer-photo img {
 	position:absolute;
-	border:3px solid #FFF;
 	box-shadow:0 0 20px rgba(0, 0, 0, 0.8);
 	-webkit-transition:-webkit-transform 0.3s ease-in-out;
 	-moz-transition:-moz-transform 0.3s ease-in-out;

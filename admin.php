@@ -14,6 +14,3 @@ define('CURSCRIPT', 'admin');
 define('APPTYPEID', 0);
 
 require './core/adminstart.php';
-
-
-

@@ -14,17 +14,6 @@ dzzattach.init=function(root){
 	jQuery.getJSON(dzzattach.previewurl,function(data){
 		dzzattach.exts=data;	
 		jQuery(root).find('.dzz-image').css({'max-width':'100%','width':'auto','height':'auto'})
-			/*.on('mouseover',function(){
-				var el=jQuery(this);
-				if(!this.id) this.id='tip_' + Math.random();
-				var html='';
-				html+='<h5>'+this.alt+' <small>('+el.attr('dsize')+')</small></h5>';
-				html+='<div class="tip-op">';
-				html+='<a class="preview" href="javascript:;" onclick="return dzzattach.preview(\''+this.id+'\',\'image\')" >预览</a><a class="download" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.download(this)" >下载</a><a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this)" >保存到我的文档</a>'
-				html+='</div>';
-				//hideMenu('','prompt');
-				showTip(this,'12',html);
-			})*/
 			.on('click',function(){
 				if(!this.id) this.id='tip_' + Math.random();
 				dzzattach.preview(this.id,'image');
@@ -39,7 +28,6 @@ dzzattach.init=function(root){
 				html+='<h5>'+el.attr('title')+' <small>('+el.attr('dsize')+')</small></h5>';
 				html+='<div class="tip-op">';
 				html+='<a class="preview" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.preview(\''+this.id+'\',\'attach\')" ><i class="dzz dzz-visibility dzzattach-i"></i>'+__lang.preview+'</a><a class="download" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.download(this);" ><i class="dzz dzz-download dzzattach-i"></i>'+__lang.download+'</a>';
-					// '<a class="saveto" href="javascript:;" data-id="'+this.id+'" onclick="return dzzattach.saveto(this,\'attach\');" >'+__lang.js_saved_my_documents+'</a>';
 				html+='</div>';
 				
 				hideMenu('','prompt');
@@ -301,7 +289,7 @@ dzzattach.thumb=function(id){
 	 var preview_setupDom=function(){
 	
 		var html='';
-		html+='<div id="preview_Container" class="modal"  style="position:fixed;width:100%;height:100%;top:0px;left:0px;bottom:0px;right:0px;display:none;z-index:90000">';
+		html+='<div id="preview_Container" class="modal fade" style="position:fixed;width:100%;height:100%;top:0px;left:0px;bottom:0px;right:0px;display:none;z-index:90000">';
 		html+='<div id="preview-box" class="preview-box">';
 		html+='	<div class="preview-handle" style="z-index: 118;"><b data_title="ESC'+__lang.logout+'" btn="close" class="pr-close" onclick="dzzattach.thumb.btnClick(\'close\');">ESC'+__lang.logout+'</b></div>';
 		html+='	<div id="btn_hand" class="preview-panel" style="z-index: 117;">';
@@ -319,7 +307,7 @@ dzzattach.thumb=function(id){
 		html+='			<b data_title="'+__lang.keyboard+'“→”'+__lang.key_under+'" btn="next" class="pr-btn-next" style="z-index: 116;" onclick="dzzattach.thumb.btnClick(\'next\');">'+__lang.under_a+'</b>';
 		html+='		</div>';
 		html+='		<div id="pre_loading" style="display: none;" class="previewer-loading">'+__lang.loading_in+'</div>';
-		html+='		<div id="previewer-photo" class="previewer-photo" style="overflow: visible; z-index: 114; display: none; left: 0px; top: 40px;" onclick="dzzattach.thumb.btnClick(\'close\');"></div>';
+		html+='		<div id="previewer-photo" class="previewer-photo" style="overflow: visible; z-index: 114; display: none; left: 0px; top: 40px;background-color: rgba(0,0,0,.5);" onclick="dzzattach.thumb.btnClick(\'close\');"></div>';
 		html+='	</div>';
 		html+='</div>';
 		html+='<div id="prev-tips" class="prev-tips" >'+__lang.keyboard+'“←”'+__lang.key_on+'</div>';
