@@ -128,8 +128,12 @@ function html_login_form() {
 	$loginuser = $isguest ? '<input class="form-control" name="admin_email"  type="text" title="" onfocus="if(this.value==\'' . lang('login_email_username') . '\'){this.value=\'\'}"   onblur="if(this.value==\'\'){this.value=\'' . lang('login_email_username') . '\'}"  autocomplete="off" />' : '<div class="username">' . $_G['member']['username'] . '</div><div class="email">' . $_G['member']['email'] . '</div>';
 	$sid = getglobal('sid');
     $avatarstatus=getglobal('avatarstatus','member');
-   if(!$uid ){
-	   $avastar ='<img src="'.($_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png').'" />';
+   if(!$uid){
+	if($_G['setting']['bbclosed']){
+		$sitelogo = 'static/image/common/logo.png';
+	}else{
+		$sitelogo=$_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';
+	}
    }else{
 	   $avastar = avatar_block($uid); 
    }

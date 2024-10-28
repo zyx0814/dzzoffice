@@ -20,7 +20,7 @@ $space = C::t('user_profile')->get_userprofile_by_uid($uid);//用户资料信息
 
 
 $userstatus = C::t('user_status')->fetch($uid);//用户状态
-
+$users = getuserbyuid($uid);
 //$qqlogin = DB::fetch_first("select openid,unbind from %t where uid=%d", array('user_qqconnect', $uid));
 
 //读取缓存

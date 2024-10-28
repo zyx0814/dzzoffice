@@ -9,6 +9,7 @@
 if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
+$navtitle = lang('data_set').' - '.lang('appname');
 $op=$_GET['op'];
 $profilevalidate = array(
 	'telephone' => '/^((\\(?\\d{3,4}\\)?)|(\\d{3,4}-)?)\\d{7,8}$/',

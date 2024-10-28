@@ -23,6 +23,8 @@ function uc_user_login($username, $password, $isuid, $checkques = '', $questioni
 
     } elseif ($isuid == 2) {
         $user = C::t('user')->fetch_by_email($username);
+    } elseif ($isuid == 3) {//手机号码登录
+        $user = C::t('user')->fetch_by_phone($username);
     } else {
         $user = C::t('user')->fetch_by_username($username);
     }
@@ -61,6 +63,8 @@ function userlogin($username, $password, $questionid = '', $answer = '', $loginf
             $return['ucresult'] = uc_user_login($username, $password, 1, 1, $questionid, $answer, $ip);
         } elseif (isemail($username)) {
             $return['ucresult'] = uc_user_login($username, $password, 2, 1, $questionid, $answer, $ip);
+        } elseif (isphone($username)) {
+            $return['ucresult'] = uc_user_login($username, $password, 3, 1, $questionid, $answer, $ip);
         }
         if ($return['ucresult'][0] <= 0 && $return['ucresult'][0] != -3) {
             $return['ucresult'] = uc_user_login(addslashes($username), $password, 0, 1, $questionid, $answer, $ip);

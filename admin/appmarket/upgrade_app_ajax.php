@@ -112,7 +112,6 @@ elseif($operation == 'upgrade' ){
         $return["status"]=0;
         $return["msg"]= lang("app_upgrade_newversioninfo_error");
         exit(json_encode($return));
-        exit;
     }
     
     $version =$appinfo["version"];
@@ -189,8 +188,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $msg .= "</script></p>";
         $return["status"]=0;
         $return["msg"]=lang('upgrade_close_site') ;
-        exit(json_encode($return)); 
-        exit();
+        exit(json_encode($return));
     }
     
     $step = intval($_REQUEST['step']);
@@ -209,7 +207,6 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["status"]=0;
         $return["msg"]= lang( "app_upgrade_data_error" );
         exit(json_encode($return));
-        exit;
     }
     $appinfo["app_path_old"]=$appinfo["app_path"];
     $appinfo["identifier_old"]=$appinfo["identifier"];
@@ -276,8 +273,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["url"]=$linkurl; 
         $return["msg"]= lang('app_upgrade_already_downloadfile' ); 
         $return["step"]=2; 
-        exit(json_encode($return)); 
-        exit;
+        exit(json_encode($return));
     }
      
     elseif($step == 2) {
@@ -322,8 +318,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
             } else {
                 $return["status"]=0; 
                 $return["msg"]= lang('app_upgrade_downloading_error', array('file' => $updatefilelist[$fileseq-1],  'upgradeurl'=>upgradeinformation_app(-3) )) ;
-                exit(json_encode($return));  
-                exit;
+                exit(json_encode($return));
             }
             $msg = lang('app_upgrade_downloading_file', array('file' => $updatefilelist[$fileseq - 1], 'percent' =>$percent. '%','upgradeurl'=>'')) ;
         } 
@@ -331,8 +326,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["url"]=$linkurl; 
         $return["percent"]=intval(50*$percent/100);
         $return["second"]=1;
-        exit(json_encode($return));  
-        exit; 
+        exit(json_encode($return));
     }
     elseif($step == 3) { 
         $return["percent"]=55;
@@ -370,8 +364,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
          
         $linkurl = $theurl.'&step=4';
         $return["url"]=$linkurl;
-        exit(json_encode($return));  
-        exit; 
+        exit(json_encode($return));
     }
     elseif($step==4){
         $return["percent"]=80;
@@ -419,8 +412,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
                 $return["second"]=0;
                 $return["msg"]= lang('app_upgrade_backuping', array('upgradeurl' => upgradeinformation(2))) ;
                 $return["step"]=4;
-                exit(json_encode($return)); 
-                exit();
+                exit(json_encode($return));
             } 
             foreach ($updatefilelist as $updatefile) {
                 $destfile = DZZ_ROOT .$appinfo['app_path_old'].'/' . $appinfo['identifier_old'].'/'.$updatefile; 
@@ -439,8 +431,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
             $return["percent"]=60;
             $return["second"]=300;
             $return["msg"]=lang('app_upgrade_backup_complete', array('upgradeurl' => upgradeinformation(3))) ;
-            exit(json_encode($return));  
-            exit(); 
+            exit(json_encode($return));
         } 
         
         if(!$_GET['fileupgrade']) {
@@ -470,8 +461,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
             $return["percent"]=75;
             $return["second"]=2000;
             $return["msg"]=lang('app_upgrade_file_success', array( 'upgradeurl' => upgradeinformation_app(4))); 
-            exit(json_encode($return)); 
-            exit();
+            exit(json_encode($return));
         }
           
         if($_GET['dodabase']){ 
@@ -534,8 +524,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
             $return["second"]=300;
             $return["step"]=5;
             $return["msg"]=lang('app_upgrade_database_success', array( 'upgradeurl' => upgradeinformation_app(5))); 
-            exit(json_encode($return)); 
-            exit;
+            exit(json_encode($return));
         }
         
         $linkurl = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=' . $operation . '&appid=' .$appid. '&step=5&confirm=' . $confirm; 
@@ -546,7 +535,6 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["step"]=5;
         $return["msg"]=lang('app_upgrade_newversion_will_success'); 
         exit(json_encode($return));
-        exit;
     }
     elseif($step==5){ 
         //删除更新文件列表tmp临时文件

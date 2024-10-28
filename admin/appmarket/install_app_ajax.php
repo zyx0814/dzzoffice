@@ -78,7 +78,6 @@ if ($operation == 'check_install' ) {//根据appid检查app应用是否需要更
        }
     }
     //end处理检查是否已有该目录
-    
     if( $appinfo || $isinstall){
         $return["status"]=0;
         if($appinfo){
@@ -164,7 +163,6 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["status"]=0;
         $return["msg"]=lang('upgrade_close_site') ;
         exit(json_encode($return));
-        exit();
     }
      
     $step = intval($_REQUEST['step']);
@@ -196,8 +194,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["url"]=$linkurl; 
         $return["msg"]="应用文件即将下载...";
         $return["step"]=2;
-        exit(json_encode($return));  
-        exit;
+        exit(json_encode($return));
     }
      
     elseif($step == 2) {
@@ -240,8 +237,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
             } else {
                 $return["status"]=0; 
                 $return["msg"]= lang('app_upgrade_downloading_error', array('file' => $updatefilelist[$fileseq-1],  'upgradeurl'=>upgradeinformation_app(-3) )) ;
-                exit(json_encode($return));  
-                exit;
+                exit(json_encode($return));
             }
             $msg = lang('upgrade_downloading_file', array('file' => $updatefilelist[$fileseq - 1], 'percent' =>$percent. '%' ,'upgradeurl'=>'')) ;
         } 
@@ -249,8 +245,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["url"]=$linkurl; 
         $return["percent"]=intval(50*$percent/100);
         $return["second"]=1;
-        exit(json_encode($return));  
-        exit; 
+        exit(json_encode($return));
     }
     elseif($step == 3) {
         $return["percent"]=55;
@@ -273,8 +268,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
          
         $linkurl = $theurl.'&step=4';
         $return["url"]=$linkurl;
-        exit(json_encode($return));  
-        exit; 
+        exit(json_encode($return));
     }
     elseif($step==4){
         $return["percent"]=80;
@@ -361,8 +355,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
             $return["percent"]=75;
             $return["second"]=1;
             $return["msg"]= lang('app_upgrade_move_success', array( 'upgradeurl' => upgradeinformation_app(4))); 
-            exit(json_encode($return));  
-            exit(); 
+            exit(json_encode($return));
         }
         
         if($_GET['dodabase']){
@@ -423,7 +416,6 @@ elseif($operation == 'cross' || $operation == 'patch'){
             $return["step"]=5;
             $return["msg"]= lang("app_upgrade_install_will_success"); 
             exit(json_encode($return));
-            exit;
         }
         
         $linkurl = ADMINSCRIPT . '?mod=appmarket&op=install_app_ajax&operation=' . $operation . '&appid=' .$appid. '&step=5';
@@ -433,7 +425,6 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["step"]=5;
         $return["msg"]=lang("app_upgrade_install_will_success"); 
         exit(json_encode($return));
-        exit;
     }
     elseif($step==5){ 
         //判断如果是网址类型删除对应目录
