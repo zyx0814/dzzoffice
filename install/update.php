@@ -51,7 +51,7 @@ if($_GET['from']) {
 
 $lockfile = DZZ_ROOT.'./data/update.lock';
 if(file_exists($lockfile) && !$_GET['from']) {
-	show_msg('请您先登录服务器ftp，手工删除 ./data/update.lock 文件，再次运行本文件进行升级。');
+	show_msg('请您先手工删除 ./data/update.lock 文件，再次运行本文件进行升级。');
 }
 
 $sqlfile = DZZ_ROOT.'./install/data/install.sql';

@@ -74,7 +74,6 @@ class dzz_error
 		global $_G;
 
 		list($showtrace, $logtrace) = dzz_error::debug_backtrace();
-
 		$title = lang('db_'.$message);
 		$title_msg = lang('db_error_message');
 		$title_sql = lang('db_query_sql');
@@ -89,7 +88,6 @@ class dzz_error
 		$msg = '<li>[Type] '.$title.'</li>';
 		$msg .= $dberrno ? '<li>['.$dberrno.'] '.$dberror.'</li>' : '';
 		$msg .= $sql ? '<li>[Query] '.$sql.'</li>' : '';
-
 		dzz_error::show_error('db', $msg, $showtrace, false);
 		unset($msg, $phperror);
 
@@ -178,7 +176,27 @@ class dzz_error
 		ob_end_clean();
 		$gzip = getglobal('gzipcompress');
 		ob_start($gzip ? 'ob_gzhandler' : null);
+		//发送通知
+		$cur_url = $_SERVER['REQUEST_URI'];
+		foreach (C::t('user')->fetch_all_by_adminid(1) as $value) {
+			if ($value['uid'] != $_G['uid']) {
+				//发送通知
+				$notevars = array(
+					'from_id' => '0',
+					'from_idtype' => 'app',
+					'url' => $cur_url,
+					'author' => getglobal('username'),
+					'authorid' => getglobal('uid'),
+					'dataline' => dgmdate(TIMESTAMP),
+					'title' => '系统错误提醒',
+					'errormsg'=> '考虑到系统的稳定性'
+				);
+				$action = 'Error';
+				$type = 'Error_' . $value['uid'];
 
+				dzz_notification::notification_add($value['uid'], $type, $action, $notevars);
+			}
+		}
 		$host = $_SERVER['HTTP_HOST'];
 		$title = $type == 'db' ? 'Database' : 'System';
 		echo <<<EOT
@@ -261,8 +279,8 @@ EOT;
 			}
 			echo '</table></div>';
 		}
-
-
+		echo '<div class="help">'.lang('suggestion_user').'</div>';
+		echo '<div class="help">'.lang('suggestion').'</div>';
 		$helplink = '';
 		
 
@@ -273,8 +291,7 @@ EOT;
 </body>
 </html>
 EOT;
-		$exit && exit();
-
+$exit && exit();
 	}
 
 	public static function mobile_show_error($type, $errormsg, $phpmsg) {
@@ -282,7 +299,27 @@ EOT;
 
 		ob_end_clean();
 		ob_start();
+		//发送通知
+		$cur_url = $_SERVER['REQUEST_URI'];
+		foreach (C::t('user')->fetch_all_by_adminid(1) as $value) {
+			if ($value['uid'] != $_G['uid']) {
+				//发送通知
+				$notevars = array(
+					'from_id' => '0',
+					'from_idtype' => 'app',
+					'url' => $cur_url,
+					'author' => getglobal('username'),
+					'authorid' => getglobal('uid'),
+					'dataline' => dgmdate(TIMESTAMP),
+					'title' => '系统错误提醒',
+					'errormsg'=> '考虑到系统的稳定性'
+				);
+				$action = 'Error';
+				$type = 'Error_' . $value['uid'];
 
+				dzz_notification::notification_add($value['uid'], $type, $action, $notevars);
+			}
+		}
 		$host = $_SERVER['HTTP_HOST'];
 		$phpmsg = trim($phpmsg);
 		$title = 'Mobile '.($type == 'db' ? 'Database' : 'System');

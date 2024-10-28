@@ -126,12 +126,6 @@
     -o-transform: scale(1,1);
     transform: scale(1,1);
 }
-
-.checkbox-custom input[type=radio]:focus+label::before, .checkbox-custom input[type=checkbox]:focus+label::before {
-    outline: thin dotted;
-    outline: 0.36em auto -webkit-focus-ring-color;
-    outline-offset: -2px;
-}
 .checkbox-primary input[type=radio]:checked+label::before, .checkbox-primary input[type=checkbox]:checked+label::before {
     background-color: #4C89FB;
     border-color: #4C89FB;

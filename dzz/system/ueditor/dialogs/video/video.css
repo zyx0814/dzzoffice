@@ -1,6 +1,16 @@
 @charset "utf-8";
-.wrapper{ width: 570px;_width:575px;margin: 10px auto; zoom:1;position: relative}
-.tabbody{height: 335px;}
+.wrapper {
+    width: 570px;
+    _width: 575px;
+    margin: 10px auto;
+    zoom: 1;
+    position: relative
+}
+
+.tabbody {
+    height: 355px;
+}
+
 .tabbody .panel {
     position: absolute;
     width: 0;
@@ -9,33 +19,84 @@
     overflow: hidden;
     display: none;
 }
+
 .tabbody .panel.focus {
     width: 100%;
-    height: 335px;
+    height: 355px;
     display: block;
 }
 
-.tabbody .panel table td{vertical-align: middle;}
+.tabbody .panel table td {
+    vertical-align: middle;
+}
+
 #videoUrl {
-    width: 490px;
-    height: 21px;
-    line-height: 21px;
+    width: 380px;
+    height: 26px;
+    line-height: 26px;
     margin: 8px 5px;
     background: #FFF;
     border: 1px solid #d7d7d7;
+    outline: none;
+    border-radius: 3px;
+    padding: 0 5px;
 }
-#videoSearchTxt{margin-left:15px;background: #FFF;width:200px;height:21px;line-height:21px;border: 1px solid #d7d7d7;}
-#searchList{width: 570px;overflow: auto;zoom:1;height: 270px;}
-#searchList div{float: left;width: 120px;height: 135px;margin: 5px 15px;}
-#searchList img{margin: 2px 8px;cursor: pointer;border: 2px solid #fff} /*不用缩略图*/
-#searchList p{margin-left: 10px;}
-#videoType{
+
+#videoSelect {
+    width: 100px;
+    display: inline-block;
+    background: #FFF;
+    border: 1px solid #EEE;
+    line-height: 26px;
+    text-align: center;
+    color: #333;
+    text-decoration: none;
+    border-radius: 3px;
+    vertical-align: middle;
+}
+
+#videoSearchTxt {
+    margin-left: 15px;
+    background: #FFF;
+    width: 200px;
+    height: 21px;
+    line-height: 21px;
+    border: 1px solid #d7d7d7;
+}
+
+#searchList {
+    width: 570px;
+    overflow: auto;
+    zoom: 1;
+    height: 270px;
+}
+
+#searchList div {
+    float: left;
+    width: 120px;
+    height: 135px;
+    margin: 5px 15px;
+}
+
+#searchList img {
+    margin: 2px 8px;
+    cursor: pointer;
+    border: 2px solid #fff
+}
+
+/*不用缩略图*/
+#searchList p {
+    margin-left: 10px;
+}
+
+#videoType {
     width: 65px;
     height: 23px;
     line-height: 22px;
     border: 1px solid #d7d7d7;
 }
-#videoSearchBtn,#videoSearchReset{
+
+#videoSearchBtn, #videoSearchReset {
     /*width: 80px;*/
     height: 25px;
     line-height: 25px;
@@ -46,12 +107,46 @@
 }
 
 
+#preview {
+    position: relative;
+    width: 420px;
+    padding: 0;
+    overflow: hidden;
+    margin-left: 10px;
+    _margin-left: 5px;
+    height: 280px;
+    background-color: #ddd;
+    float: left
+}
 
-#preview{position: relative;width: 420px;padding:0;overflow: hidden; margin-left: 10px; _margin-left:5px; height: 280px;background-color: #ddd;float: left}
-#preview .previewMsg {position:absolute;top:0;margin:0;padding:0;height:280px;width:100%;background-color: #666;}
-#preview .previewMsg span{display:block;margin: 125px auto 0 auto;text-align:center;font-size:18px;color:#fff;}
-#preview .previewVideo {position:absolute;top:0;margin:0;padding:0;height:280px;width:100%;}
-.edui-video-wrapper fieldset{
+#preview .previewMsg {
+    position: absolute;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    height: 280px;
+    width: 100%;
+    background-color: #666;
+}
+
+#preview .previewMsg span {
+    display: block;
+    margin: 125px auto 0 auto;
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+}
+
+#preview .previewVideo {
+    position: absolute;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    height: 280px;
+    width: 100%;
+}
+
+.edui-video-wrapper fieldset {
     border: 1px solid #ddd;
     padding-left: 5px;
     margin-bottom: 20px;
@@ -59,17 +154,30 @@
     width: 115px;
 }
 
-#videoInfo {width: 120px;float: left;margin-left: 10px;_margin-left:7px;}
-fieldset{
+#videoInfo {
+    width: 120px;
+    float: left;
+    margin-left: 10px;
+    _margin-left: 7px;
+}
+
+fieldset {
     border: 1px solid #ddd;
     padding-left: 5px;
     margin-bottom: 20px;
     padding-bottom: 5px;
     width: 115px;
 }
-fieldset legend{font-weight: bold;}
-fieldset p{line-height: 30px;}
-fieldset input.txt{
+
+fieldset legend {
+    font-weight: bold;
+}
+
+fieldset p {
+    line-height: 30px;
+}
+
+fieldset input.txt {
     width: 65px;
     height: 21px;
     line-height: 21px;
@@ -77,12 +185,35 @@ fieldset input.txt{
     background: #FFF;
     border: 1px solid #d7d7d7;
 }
-label.url{font-weight: bold;margin-left: 5px;color: #06c;}
-#videoFloat div{cursor:pointer;opacity: 0.5;filter: alpha(opacity = 50);margin:9px;_margin:5px;width:38px;height:36px;float:left;}
-#videoFloat .focus{opacity: 1;filter: alpha(opacity = 100)}
-span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: blue}
 
+label.url {
+    font-weight: bold;
+    margin-left: 5px;
+}
 
+#videoFloat div {
+    cursor: pointer;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    margin: 9px;
+    _margin: 5px;
+    width: 38px;
+    height: 36px;
+    float: left;
+}
+
+#videoFloat .focus {
+    opacity: 1;
+    filter: alpha(opacity=100)
+}
+
+span.view {
+    display: inline-block;
+    width: 30px;
+    float: right;
+    cursor: pointer;
+    color: blue
+}
 
 
 /* upload video */
@@ -95,17 +226,45 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     background: #fff;
     display: block;
 }
+
 .tabbody #upload.panel.focus {
     width: 100%;
     height: 335px;
     display: block;
     clip: auto;
 }
-#upload_alignment div{cursor:pointer;opacity: 0.5;filter: alpha(opacity = 50);margin:9px;_margin:5px;width:38px;height:36px;float:left;}
-#upload_alignment .focus{opacity: 1;filter: alpha(opacity = 100)}
-#upload_left { width:427px; float:left; }
-#upload_left .controller { height: 30px; clear: both; }
-#uploadVideoInfo{margin-top:10px;float:right;padding-right:8px;}
+
+#upload_alignment div {
+    cursor: pointer;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    margin: 9px;
+    _margin: 5px;
+    width: 38px;
+    height: 36px;
+    float: left;
+}
+
+#upload_alignment .focus {
+    opacity: 1;
+    filter: alpha(opacity=100)
+}
+
+#upload_left {
+    width: 427px;
+    float: left;
+}
+
+#upload_left .controller {
+    height: 30px;
+    clear: both;
+}
+
+#uploadVideoInfo {
+    margin-top: 10px;
+    float: right;
+    padding-right: 8px;
+}
 
 #upload .queueList {
     margin: 0;
@@ -128,7 +287,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
 
 #upload .placeholder {
     margin: 10px;
-    margin-right:0;
+    margin-right: 0;
     border: 2px dashed #e6e6e6;
     *border: 0px dashed #e6e6e6;
     height: 161px;
@@ -140,7 +299,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     color: #cccccc;
     font-size: 18px;
     position: relative;
-    top:0;
+    top: 0;
     *margin-left: 0;
     *left: 10px;
 }
@@ -325,12 +484,14 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     -ms-transition: 200ms ease-out;
     transition: 200ms ease-out;
 }
+
 #upload .filelist li p.imgWrap.notimage {
     margin-top: 0;
     width: 111px;
     height: 111px;
     border: 1px #eeeeee solid;
 }
+
 #upload .filelist li p.imgWrap.notimage i.file-preview {
     margin-top: 15px;
 }
@@ -349,7 +510,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     line-height: 28px;
     width: 100%;
     z-index: 100;
-    display:none;
+    display: none;
 }
 
 #upload .filelist li .success {
@@ -371,7 +532,8 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     border: 1px solid #eeeeee;
     border-radius: 0;
 }
-#upload .filelist li.filePickerBlock div.webuploader-pick  {
+
+#upload .filelist li.filePickerBlock div.webuploader-pick {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -404,7 +566,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     background: url(./images/icons.gif) no-repeat \9;
     margin: 5px 1px 1px;
     cursor: pointer;
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -412,7 +574,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
 }
 
 #upload .filelist div.file-panel span.rotateLeft {
-    display:none;
+    display: none;
     background-position: 0 -24px;
 }
 
@@ -421,7 +583,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
 }
 
 #upload .filelist div.file-panel span.rotateRight {
-    display:none;
+    display: none;
     background-position: -24px -24px;
 }
 
@@ -460,6 +622,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     color: #6dbfff;
     margin: 0 10px 0 0;
 }
+
 #upload .statusBar .progress span.percentage {
     width: 0;
     height: 100%;
@@ -468,6 +631,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     background: #1483d8;
     position: absolute;
 }
+
 #upload .statusBar .progress span.text {
     position: relative;
     z-index: 10;
@@ -490,6 +654,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     display: inline-block;
     float: left;
 }
+
 #upload .statusBar .btns .webuploader-pick,
 #upload .statusBar .btns .uploadBtn,
 #upload .statusBar .btns .uploadBtn.state-uploading,
@@ -509,6 +674,7 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
     -ms-user-select: none;
     user-select: none;
 }
+
 #upload .statusBar .btns .webuploader-pick-hover,
 #upload .statusBar .btns .uploadBtn:hover,
 #upload .statusBar .btns .uploadBtn.state-uploading:hover,
@@ -517,20 +683,21 @@ span.view{display: inline-block;width: 30px;float: right;cursor: pointer;color: 
 }
 
 #upload .statusBar .btns .uploadBtn,
-#upload .statusBar .btns .uploadBtn.state-paused{
+#upload .statusBar .btns .uploadBtn.state-paused {
     background: #00b7ee;
     color: #fff;
     border-color: transparent;
 }
+
 #upload .statusBar .btns .uploadBtn:hover,
-#upload .statusBar .btns .uploadBtn.state-paused:hover{
+#upload .statusBar .btns .uploadBtn.state-paused:hover {
     background: #00a2d4;
 }
 
 #upload .statusBar .btns .uploadBtn.disabled {
     pointer-events: none;
-    filter:alpha(opacity=60);
-    -moz-opacity:0.6;
+    filter: alpha(opacity=60);
+    -moz-opacity: 0.6;
     -khtml-opacity: 0.6;
     opacity: 0.6;
 }
@@ -547,41 +714,51 @@ i.file-preview {
     background-position: -140px center;
     background-repeat: no-repeat;
 }
-i.file-preview.file-type-dir{
+
+i.file-preview.file-type-dir {
     background-position: 0 center;
 }
-i.file-preview.file-type-file{
+
+i.file-preview.file-type-file {
     background-position: -140px center;
 }
-i.file-preview.file-type-filelist{
+
+i.file-preview.file-type-filelist {
     background-position: -210px center;
 }
+
 i.file-preview.file-type-zip,
 i.file-preview.file-type-rar,
 i.file-preview.file-type-7z,
 i.file-preview.file-type-tar,
 i.file-preview.file-type-gz,
-i.file-preview.file-type-bz2{
+i.file-preview.file-type-bz2 {
     background-position: -280px center;
 }
+
 i.file-preview.file-type-xls,
-i.file-preview.file-type-xlsx{
+i.file-preview.file-type-xlsx {
     background-position: -350px center;
 }
+
 i.file-preview.file-type-doc,
-i.file-preview.file-type-docx{
+i.file-preview.file-type-docx {
     background-position: -420px center;
 }
+
 i.file-preview.file-type-ppt,
-i.file-preview.file-type-pptx{
+i.file-preview.file-type-pptx {
     background-position: -490px center;
 }
-i.file-preview.file-type-vsd{
+
+i.file-preview.file-type-vsd {
     background-position: -560px center;
 }
-i.file-preview.file-type-pdf{
+
+i.file-preview.file-type-pdf {
     background-position: -630px center;
 }
+
 i.file-preview.file-type-txt,
 i.file-preview.file-type-md,
 i.file-preview.file-type-json,
@@ -592,18 +769,22 @@ i.file-preview.file-type-js,
 i.file-preview.file-type-css,
 i.file-preview.file-type-php,
 i.file-preview.file-type-jsp,
-i.file-preview.file-type-asp{
+i.file-preview.file-type-asp {
     background-position: -700px center;
 }
-i.file-preview.file-type-apk{
+
+i.file-preview.file-type-apk {
     background-position: -770px center;
 }
-i.file-preview.file-type-exe{
+
+i.file-preview.file-type-exe {
     background-position: -840px center;
 }
-i.file-preview.file-type-ipa{
+
+i.file-preview.file-type-ipa {
     background-position: -910px center;
 }
+
 i.file-preview.file-type-mp4,
 i.file-preview.file-type-swf,
 i.file-preview.file-type-mkv,
@@ -615,21 +796,23 @@ i.file-preview.file-type-mpeg,
 i.file-preview.file-type-ogv,
 i.file-preview.file-type-webm,
 i.file-preview.file-type-rm,
-i.file-preview.file-type-rmvb{
+i.file-preview.file-type-rmvb {
     background-position: -980px center;
 }
+
 i.file-preview.file-type-ogg,
 i.file-preview.file-type-wav,
 i.file-preview.file-type-wmv,
 i.file-preview.file-type-mid,
-i.file-preview.file-type-mp3{
+i.file-preview.file-type-mp3 {
     background-position: -1050px center;
 }
+
 i.file-preview.file-type-jpg,
 i.file-preview.file-type-jpeg,
 i.file-preview.file-type-gif,
 i.file-preview.file-type-bmp,
 i.file-preview.file-type-png,
-i.file-preview.file-type-psd{
+i.file-preview.file-type-psd {
     background-position: -140px center;
 }

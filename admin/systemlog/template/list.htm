@@ -62,7 +62,8 @@
 							<td colspan="10">
 								{lang loginfo}: $log[5]
 								<br/>{lang visit}: $log[6]
-								<br/>{lang from}: $log[7]</td>
+								<br/>{lang from}: $log[7]
+								<br/>设备信息：$log[8]</td>
 						</thead>
 						<!--{/loop}-->
 						<tr>
@@ -74,10 +75,6 @@
 										<option value="40" $checklpp[40]> 40 </option>
 										<option value="80" $checklpp[80]> 80 </option>
 									</select>
-								</div>
-								<div class="pull-left input-group" style="width:128px;">
-									<input type="text" class="input-sm form-control" style="width:90px;border-left:0" name="keyword" value="$_GET[keyword]">
-									<a href="javascript:;" class="input-group-addon" onclick="document.getElementById('cpform').submit();return false"><i class="glyphicon glyphicon-search"></i></a>
 								</div>
 								$multipage
 							</td>

@@ -4,6 +4,9 @@ if(!defined('IN_DZZ')) {
 }
 
 define('NOROBOT', TRUE);
+if($_G['setting']['bbclosed']) {
+	dheader("Location: user.php?mod=login");
+}
 global $_G;
 if(isset($_GET['lostpwsubmit'])) {
     $_GET['email'] = strtolower(trim($_GET['email']));

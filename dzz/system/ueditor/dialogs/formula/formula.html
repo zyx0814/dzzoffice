@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript" src="../internal.js?aea0c61c"></script>
+    <style type="text/css">
+        .wrapper {
+            box-sizing: border-box;
+            width: 800px;
+            height: 390px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid #d7d7d7
+        }
+
+        .editor-wrap {
+            display: flex;
+            margin: 10px;
+        }
+
+        .editor-wrap #editor {
+            width: 0;
+            flex-grow: 1;
+            border: 1px solid #CCC;
+            border-radius: 3px;
+            padding: 5px;
+            height: 100px;
+            outline: none;
+        }
+
+        .input-tip {
+            margin: 10px;
+        }
+
+        .input-tip a {
+            color: #0f0d0d;
+        }
+
+        .editor-preview {
+            background: #FFF;
+            border-radius: 3px;
+            border: 1px solid #EEE;
+            display: none;
+            margin: 10px;
+        }
+
+        .editor-preview .title {
+            padding: 5px;
+        }
+
+        .editor-preview .body {
+            padding: 5px 5px 15px 5px;
+            text-align: center;
+        }
+
+        .editor-preview .body .image {
+            max-width: 100%;
+            max-height: 100px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <div id="modeLive" style="display:none;">
+        <iframe id="liveEditor"
+                frameborder="0"
+                style="width:800px;height:390px;border: 0;outline: none;"
+        ></iframe>
+    </div>
+
+    <div id="modePlain" style="display:none;">
+        <div class="editor-wrap">
+            <textarea id="editor"></textarea>
+        </div>
+        <div class="input-tip">
+            基于 latex 语法，<a href="javascript:;" id="inputDemo">点击输入示例</a>。
+        </div>
+        <div class="editor-preview" id="preview">
+            <div class="title">预览</div>
+            <div class="body">
+                <img class="image" id="previewImage"/>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="../../third-party/jquery-1.10.2.js?628072e7"></script>
+<script type="text/javascript" src="../../third-party/clipboard/clipboard.js?555edf0a"></script>
+<script type="text/javascript" src="formula.js?8fdd0a42"></script>
+<script type="text/javascript">
+    utils.domReady(function () {
+        Formula.init();
+    });
+</script>
+</body>
+</html>

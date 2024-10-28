@@ -53,6 +53,19 @@
                                        autocomplete="off" placeholder="{lang register_repassword_tips}">
               <span id="chk_password2" class="help-msg"></span> 
             </div>
+            <!--{loop $_G['cache']['fields_register'] $field}-->
+              <!--{if $htmls[$field['fieldid']]}-->
+							<div class="form-group">
+								<table>
+									<tr>
+										<th><!--{if $field['required']}--><span class="rq">*</span><!--{/if}--><label for="$field['fieldid']">$field[title]:</label></th>
+										<td>$htmls[$field['fieldid']]</td>
+										<td class="tipcol"><i id="tip_$field['fieldid']" class="help-inline"><!--{if $field['description']}--><!--{echo dhtmlspecialchars($field[description])}--><!--{/if}--></i><kbd id="chk_$field['fieldid']" class="p_chk"></kbd></td>
+									</tr>
+								</table>
+							</div>
+              <!--{/if}-->
+						<!--{/loop}-->
             <!--{/if}--> 
            
             <!--{if $secqaacheck || $seccodecheck}-->
@@ -79,8 +92,8 @@
           </form>
         </div>
         <div class="copyright-container">
-		<!--{template register_copyright}-->
-		</div>
+        <!--{template register_copyright}-->
+        </div>
       </div>
       
     </div>

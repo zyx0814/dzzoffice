@@ -605,10 +605,13 @@ function dstrpos($string, $arr, $returnvalue = false)
     }
     return false;
 }
-
 function isemail($email)
 {
     return strlen($email) > 6 && strlen($email) <= 32 && preg_match("/^([A-Za-z0-9\-_.+]+)@([A-Za-z0-9\-]+[.][A-Za-z0-9\-.]+)$/", $email);
+}
+function isphone($phone)
+{
+    return preg_match("/^1[3456789]\d{9,10}$/", $phone);
 }
 
 function quescrypt($questionid, $answer)
@@ -1753,89 +1756,74 @@ $idtype2type = array(
     'qid' => 'attach',
     'uid' => 'user'
 );
-function get_os()
+function get_os($agent = '')
 {
-    $agent = $_SERVER['HTTP_USER_AGENT'];
-    $os = false;
-
-    if (eregi('win', $agent) && eregi('nt 5.1', $agent)) {
-        $os = 'Windows XP';
-    } else if (eregi('win', $agent) && eregi('nt 5.0', $agent)) {
-        $os = 'Windows 2000';
-    } else if (eregi('win', $agent) && eregi('nt 5.2', $agent)) {
-        $os = 'Windows 2003';
-    } else if (eregi('win', $agent) && eregi('nt 6.0', $agent)) {
-        $os = 'Windows 2008';
-    } else if (eregi('win', $agent) && eregi('6.0', $agent)) {
-        $os = 'Windows vista';
-    } else if (eregi('win', $agent) && eregi('6.1', $agent)) {
+    if (!$agent) $agent = $_SERVER['HTTP_USER_AGENT'];
+    $os = 'unknow';
+    if (stristr($agent, 'iPad')) {
+        $os = "iPad";
+    } elseif (preg_match('/Android (([0-9_.]{1,3})+)/i', $agent, $version)) {
+        $os = "Android " . $version[1];
+    } elseif (preg_match('/iPhone OS (([0-9_.]{1,3})+)/i', $agent, $version)) {
+        $os = "iPhone " . $version[1];
+    } elseif (preg_match('/win/i', $agent) && strpos($agent, '95')) {
+        $os = 'Windows 95';
+    } elseif (preg_match('/win 9x/i', $agent) && strpos($agent, '4.90')) {
+        $os = 'Windows ME';
+    } elseif (preg_match('/win/i', $agent) && preg_match('/98/i', $agent)) {
+        $os = 'Windows 98';
+    } elseif (preg_match('/win/i', $agent) && preg_match('/nt 6.0/i', $agent)) {
+        $os = 'Windows Vista';
+    } elseif (preg_match('/win/i', $agent) && preg_match('/nt 6.1/i', $agent)) {
         $os = 'Windows 7';
-    } else if (eregi('win', $agent) && eregi('6.2', $agent)) {
+    } elseif (preg_match('/win/i', $agent) && preg_match('/nt 6.2/i', $agent)) {
         $os = 'Windows 8';
-    } else if (eregi('win', $agent) && eregi('nt', $agent)) {
+    } elseif (preg_match('/win/i', $agent) && preg_match('/nt 10.0/i', $agent)) {
+        $os = 'Windows 10';
+    } elseif (preg_match('/win/i', $agent) && preg_match('/nt 5.1/i', $agent)) {
+        $os = 'Windows XP';
+    } elseif (preg_match('/win/i', $agent) && preg_match('/nt 5/i', $agent)) {
+        $os = 'Windows 2000';
+    } elseif (preg_match('/win/i', $agent) && preg_match('/nt/i', $agent)) {
         $os = 'Windows NT';
-    } else if (eregi('win', $agent) && ereg('32', $agent)) {
+    } elseif (preg_match('/win/i', $agent) && preg_match('/32/i', $agent)) {
         $os = 'Windows 32';
-    } else if (eregi('linux', $agent) && ereg('Android', $agent)) {
-        $os = 'Android';
-    } else if (eregi('linux', $agent)) {
+    } elseif (preg_match('/linux/i', $agent)) {
         $os = 'Linux';
-    } else if (eregi('unix', $agent)) {
+    } elseif (preg_match('/unix/i', $agent)) {
         $os = 'Unix';
-    } else if (eregi('sun', $agent) && eregi('os', $agent)) {
+    } elseif (preg_match('/sun/i', $agent) && preg_match('/os/i', $agent)) {
         $os = 'SunOS';
-    } else if (eregi('ibm', $agent) && eregi('os', $agent)) {
+    } elseif (preg_match('/ibm/i', $agent) && preg_match('/os/i', $agent)) {
         $os = 'IBM OS/2';
-    } else if (eregi('Mac', $agent) && eregi('Macintosh', $agent)) {
+    } elseif (preg_match('/Mac/i', $agent) && preg_match('/PC/i', $agent)) {
         $os = 'Macintosh';
-    } else if (eregi('PowerPC', $agent)) {
+    } elseif (preg_match('/PowerPC/i', $agent)) {
         $os = 'PowerPC';
-    } /* else if (eregi('AIX', $agent))
-     {
-       $os = 'AIX';
-     }
-     else if (eregi('HPUX', $agent))
-     {
-       $os = 'HPUX';
-     }
-     else if (eregi('NetBSD', $agent))
-     {
-       $os = 'NetBSD';
-     }
-     else if (eregi('BSD', $agent))
-     {
-       $os = 'BSD';
-     }
-     else if (ereg('OSF1', $agent))
-     {
-       $os = 'OSF1';
-     }
-     else if (ereg('IRIX', $agent))
-     {
-       $os = 'IRIX';
-     }
-     else if (eregi('FreeBSD', $agent))
-     {
-       $os = 'FreeBSD';
-     }
-     else if (eregi('teleport', $agent))
-     {
-       $os = 'teleport';
-     }
-     else if (eregi('flashget', $agent))
-     {
-       $os = 'flashget';
-     }
-     else if (eregi('webzip', $agent))
-     {
-       $os = 'webzip';
-     }
-     else if (eregi('offline', $agent))
-     {
-       $os = 'offline';
-     }*/
-    else {
-        $os = 'Unknown';
+    } elseif (preg_match('/AIX/i', $agent)) {
+        $os = 'AIX';
+    } elseif (preg_match('/HPUX/i', $agent)) {
+        $os = 'HPUX';
+    } elseif (preg_match('/NetBSD/i', $agent)) {
+        $os = 'NetBSD';
+    } elseif (preg_match('/BSD/i', $agent)) {
+        $os = 'BSD';
+    } elseif (preg_match('/OSF1/i', $agent)) {
+        $os = 'OSF1';
+    } elseif (preg_match('/IRIX/i', $agent)) {
+        $os = 'IRIX';
+    } elseif (preg_match('/FreeBSD/i', $agent)) {
+        $os = 'FreeBSD';
+    } elseif (preg_match('/teleport/i', $agent)) {
+        $os = 'teleport';
+    } elseif (preg_match('/flashget/i', $agent)) {
+        $os = 'flashget';
+    } elseif (preg_match('/webzip/i', $agent)) {
+        $os = 'webzip';
+    } elseif (preg_match('/offline/i', $agent)) {
+        $os = 'offline';
+    } else {
+        $os = 'unkonow';
     }
     return $os;
 }

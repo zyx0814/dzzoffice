@@ -1,0 +1,114 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<!--{template common/header_simple_end}-->
+<style>
+	.list-group-item.active {
+		color: #fff;
+		background: #0d6efd;
+	}
+	th {
+		text-align:center;
+		color: #76a9ff;
+		line-height: 34px;
+		padding: 3px 5px;
+	}
+	tr {
+		text-align:center;
+	}
+	.bei{
+		color: #fff;
+		border-radius: 50%;
+		padding: 2px;
+		background-color: #52c41a;
+	}
+	.beii{
+		color: #fff;
+		border-radius: 50%;
+		padding: 2px;
+		background-color: #f5222d;
+	}
+	.ext span:first-child{
+		display: inline-block;
+    	width: 55%;
+	}
+	.label{
+		padding: 2px;
+		margin: 2px;
+	}
+	.beijing{
+		background-color: #f2f2f2;
+		border-radius: var(--radius);
+		display: inline-block;
+		font-weight: bold;
+		padding: var(--radius);
+		font-size: 1em;
+	}
+	.dagai{
+		display: flex
+	}
+	.dagai dl{
+		margin: var(--radius);
+	}
+</style>
+<!--{template common/commer_header}-->
+<div class="bs-container clearfix">
+	<div class="bs-left-container  clearfix">
+		<!--{template left}-->
+	</div>
+	<div class="left-drager">
+	</div>
+	<div class="bs-main-container  clearfix">
+		<div class="main-content">
+			<div class="list-group">
+				<div class="list-group-item active">用户信息</div>
+				<div class="list-group-item">
+				  <span class="badge">$zaixianrenshu</span>当前在线数
+				</div>
+				<div class="list-group-item">
+					<span class="badge">$yonghurenshu</span>总用户数
+				</div>
+				<div class="list-group-item">
+				<span class="badge">$tingyongrenshu</span>停用人数
+				</div>
+			  </div>
+			  <div class="list-group">
+				<div class="list-group-item active">文件信息</div>
+				<div class="list-group-item">
+				  <span class="badge">$wenjiangeshu</span>文件个数
+				</div>
+				<div class="list-group-item">
+					<span class="badge">$kongjianshiyong</span>空间使用
+				</div>
+			  </div>
+			  <div class="list-group">
+				<div class="list-group-item active">版本信息</div>
+				<div class="list-group-item">
+				  <span class="badge">$version</span>版本号
+				</div>
+				<div class="list-group-item">
+					<span class="badge">$RELEASE</span>版本更新日期
+				</div>
+				<div class="list-group-item">
+				<span class="badge">$FIXBUG</span>BUG维护时间
+				</div>
+			  </div>
+			<div class="list-group">
+				<!--{eval echo shuchu();}-->
+			</div>
+			<div class="list-group">
+				<div class="list-group-item active">PHP扩展信息<a href="{MOD_URL}&op=xtxx&do=phpinfo" target="_blank" class="btn btn-success-outline btn-small">PHP详情</a></div>
+				<div class="list-group-item">
+					<!--{eval echo kuozhan();}-->
+					<div>已加载的扩展:<br>
+						$extensions
+					</div>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery('.left-drager').leftDrager_layout();  
+</script>
+<!--{template common/footer_simple}-->

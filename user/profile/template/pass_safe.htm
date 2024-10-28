@@ -19,6 +19,7 @@
         <div class="main-header">
             <ul class="nav nav-pills nav-pills-bottomguide">
                 <li {if $do == 'editpass'}class="active"{/if}><a href="user.php?mod=profile&op=password">{lang password_edit}</a></li>
+                <li {if $do == 'login'}class="active"{/if}"><a href="user.php?mod=profile&op=password&do=login">登录记录</a></li>
                 <li {if $do == 'changeemail'}class="active"{/if}><a href="user.php?mod=profile&op=password&do=changeemail">{lang bindemail_subject}</a></li>
                 <!--<li {if $do == 'bindphone'}class="active"{/if}><a href="">绑定手机</a></li>-->
                
@@ -29,7 +30,8 @@
                 <!--{template editpass}-->
             <!--{elseif $do == 'changeemail'}-->
                 <!--{template changeemail}-->
-
+            <!--{elseif $do == 'login'}-->
+                <!--{template login}-->
            <!--{/if}-->
         </div>
 <script type="text/javascript"  reload="1">

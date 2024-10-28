@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <script type="text/javascript" src="../internal.js?aea0c61c"></script>
+    <style type="text/css">
+        .wrapper {
+            width: 600px;
+            padding: 10px;
+            height: 352px;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid #d7d7d7;
+        }
+
+        .wrapper .file-upload {
+            display: flex;
+            align-items: center;
+        }
+
+        .wrapper .file-upload .file-tip {
+            color: #999;
+            font-size: 12px;
+            padding-left: 10px;
+            flex-grow: 1;
+        }
+
+        .wrapper .file-manual {
+            background: #EEE;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            line-height: 2;
+        }
+
+        .wrapper .file-manual .title {
+            font-weight: bold;
+            font-size: 120%;
+        }
+
+        .wrapper .file-manual .body {
+        }
+
+        .wrapper .file-manual .body li {
+            list-style: disc;
+            margin-left: 20px;
+        }
+
+        .wrapper .upload-button {
+            width: 100px;
+            height: 30px;
+            background-color: #F8F8F8;
+            border: 1px solid #EEE;
+            border-radius: 4px;
+            text-align: center;
+            line-height: 28px;
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+            margin-right: 5px;
+        }
+
+        .wrapper .upload-button .text {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .wrapper .upload-button input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+        }
+
+        .wrapper .file-result {
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 5px;
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 50px;
+            background: #FFF;
+            bottom: 10px;
+            overflow: auto;
+            display: none;
+        }
+        .wrapper .file-input{
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 50px;
+            background: #EEE;
+            bottom: 10px;
+            border-radius: 5px;
+            display:none;
+        }
+        .wrapper .file-input textarea{
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: none;
+            resize: none;
+            border-radius: 5px;
+            padding: 5px;
+            outline: none;
+            top: 30px;
+        }
+        .wrapper .file-input .tool{
+            text-align: right;
+            padding: 5px 10px;
+        }
+        .wrapper .file-input .tool a{
+            display: inline-block;
+            text-decoration: none;
+            color: #333;
+            background: #FFF;
+            padding: 0 10px;
+            line-height: 20px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="file-upload">
+        <div class="upload-button">
+            <div class="text">选择本地文件</div>
+            <input type="file" id="contentImport"/>
+        </div>
+        <div class="upload-button">
+            <div class="text" onclick="$('.file-input').show();">粘贴Markdown</div>
+        </div>
+        <div class="file-tip"></div>
+    </div>
+    <div class="file-manual">
+        <div class="title">
+            支持文档格式
+        </div>
+        <div class="body">
+            <ul>
+                <li><b>Word</b>：docx</li>
+                <li><b>Markdown</b>：md</li>
+            </ul>
+        </div>
+    </div>
+    <div class="file-result"></div>
+    <div class="file-input">
+        <textarea id="fileInputContent"></textarea>
+        <div class="tool">
+            <a href="javascript:;" id="fileInputConfirm">
+                确定
+            </a>
+            <a href="javascript:;" onclick="$(this).closest('.file-input').hide();">
+                关闭
+            </a>
+        </div>
+    </div>
+</div>
+<script src="../../third-party/jquery-1.10.2.js?628072e7"></script>
+<script src="mammoth.browser.min.js?bfaf513f"></script>
+<script src="showdown.min.js?b4bef047"></script>
+<script type="text/javascript" src="contentimport.js?5760833a"></script>
+<script type="text/javascript">
+    utils.domReady(function () {
+        var options = {};
+        var callbacks = {};
+        contentImport.init(options, callbacks);
+    });
+</script>
+</body>
+</html>

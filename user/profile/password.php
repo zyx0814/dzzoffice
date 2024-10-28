@@ -10,7 +10,7 @@ if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 } 
 Hook::listen('email_chk',$_GET);
-
+$navtitle=lang('myCountCenter');
 Hook::listen('check_login');
 
 $do=trim($_GET['do']) ? trim($_GET['do']):'editpass';
@@ -90,8 +90,151 @@ if($do == 'editpass'){
         }
     }
 
-}
-elseif($do == 'changeemail'){
+}elseif($do == 'login'){
+	function get_log_files($logdir = '', $action = 'action') {
+		$dir = opendir($logdir);
+		$files = array();
+		while($entry = readdir($dir)) {
+			$files[] = $entry;
+		}
+		closedir($dir);
+
+		if($files) {
+			sort($files);
+			$logfile = $action;
+			$logfiles = array();
+			$ym = '';
+			foreach($files as $file) {
+				if(strpos($file, $logfile) !== FALSE) {
+					if(substr($file, 0, 6) != $ym) {
+						$ym = substr($file, 0, 6);
+					}
+					$logfiles[$ym][] = $file;
+				}
+			}
+			if($logfiles) {
+				$lfs = array();
+				foreach($logfiles as $ym => $lf) {
+					$lastlogfile = $lf[0];
+					unset($lf[0]);
+					$lf[] = $lastlogfile;
+					$lfs = array_merge($lfs, $lf);
+				}
+				return $lfs;
+			}
+			return array();
+		}
+		return array();
+	}
+	!isset($_GET['page']) && $_GET['page']=1;
+	$lpp = empty($_GET['lpp']) ? 20 : $_GET['lpp'];
+	$checklpp = array();
+	$checklpp[$lpp] = 'selected="selected"';
+	$keyword = "uid=".$_G['uid'];
+	$extrainput = '';
+	$operation = "loginlog";
+	$page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
+	$start = ($page - 1) * $lpp;
+	$gets = array(
+		'mod' => MOD_NAME,
+		'op' => $_GET['op'],
+		'do' => $_GET['do']
+  	);
+  	$theurl = BASESCRIPT . "?" . url_implode($gets);
+	$logdir = DZZ_ROOT.'./data/log/';
+	$logfiles = get_log_files($logdir, $operation);
+	 
+	if($logfiles) $logfiles=array_reverse($logfiles);
+	$firstlogs = file( $logdir.$logfiles[0] ) ; 
+	$firstlogsnum = count($firstlogs);
+	$countlogfile=count($logfiles);
+	 
+	$logs = array();
+	$jishu=4000;//每个日志文件最多行数
+	$start = ($page - 1) * $lpp;
+	$lastlog=$last_secondlog="";
+	
+	$newdata=array();
+	foreach($logfiles as $k=>$v){
+		$nowfilemaxnum=($jishu*($k+1))-($jishu-$firstlogsnum);
+		$startnum=($nowfilemaxnum-$jishu)<=0?0:($nowfilemaxnum-$jishu+1); 
+		$newdata[]=array("file"=>$v,"start"=>$startnum,"end"=>$nowfilemaxnum); 
+	}
+	//print_R($newdata);
+	//查询当前分页数据位于哪个日志文件
+	$lastlog=$last_secondlog="";
+	foreach($newdata as $k=>$v){
+		if( $start<=$v["end"]){
+			$lastlog=$v;
+			if( ($start+$lpp)<$v["end"]){
+				 
+			}else{
+				if( isset($newdata[$k+1])){
+					$last_secondlog=$newdata[$k+1];
+				}
+			}
+			break;
+		}
+	}
+	 
+	$j=0; 
+	for($i=$lastlog["start"];$i<$lastlog["end"];$i++){
+		if(  $start<=($lastlog["start"]+$j) ){ 
+			break;
+		}
+		$j++;
+	}
+	//获取数据开始
+	$logs = file( $logdir.$lastlog["file"] );
+	$logs = array_reverse($logs);
+	foreach($logs as $key => $value) {
+		if(!empty($keyword) && strpos($value, $keyword) === FALSE) {
+		unset($logs[$key]);
+		}
+	}
+	$count = count($logs);
+	if( $lastlog["file"]!=$logfiles[0] ){
+		$j++;
+	}
+	$logs = array_slice($logs, $j, $lpp);
+	$onecountget = count($logs);
+	 
+	$jj=0;
+	if( $last_secondlog ){
+		for($i=$last_secondlog["start"];$i<$last_secondlog["end"];$i++){
+			if( ($jj)>= ($lpp-$onecountget)  ){//$last_secondlog["start"] ){ 
+				break;
+			}
+			$jj++;
+		} 
+	}
+	 
+	if($last_secondlog){
+		$logs2 = file( $logdir.$last_secondlog["file"] );
+		$logs2 = array_reverse($logs2);
+		$end=$lpp-count($logs); 
+		$logs2 = array_slice( $logs2, 0, $jj);
+		$logs=array_merge($logs,$logs2);
+	}
+	$usergroup = array(); 
+	foreach(C::t('usergroup')->range() as $group) {
+		$usergroup[$group['groupid']] = $group['grouptitle'];
+	}
+	$list=array();
+	foreach($logs as $k => $logrow) {
+		$log = explode("\t", $logrow); 
+		if(empty($log[1])) {
+			continue;
+		}
+		$log[1] = dgmdate($log[1], 'y-n-j H:i:s');
+		$log[2] = $log[2];
+		$log[2] = ($log[2] != $_G['member']['username'] ? "<b>$log[2]</b>" : $log[2]);
+		$log[3] = $usergroup[$log[3]];
+		
+		$list[$k]=$log;
+	}
+	$multi = multi($count, $lpp, $page, $theurl,'pull-right');
+}elseif($do == 'changeemail'){
 
     $emailchange = $member['emailstatus'];
 

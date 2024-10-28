@@ -1,28 +1,88 @@
+:root {
+    --webuploader-color-primary: var(--color-primary, #00B7EE);
+    --webuploader-color-content-bg: var(--color-content-bg, #FFFFFF);
+}
+
 .webuploader-container {
-	position: relative;
+    position: relative
 }
+
 .webuploader-element-invisible {
-	position: absolute !important;
-	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-    clip: rect(1px,1px,1px,1px);
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px)
 }
+
 .webuploader-pick {
-	position: relative;
-	display: inline-block;
-	cursor: pointer;
-	background: #00b7ee;
-	padding: 10px 15px;
-	color: #fff;
-	text-align: center;
-	border-radius: 3px;
-	overflow: hidden;
+    position: relative;
+    display: block;
+    cursor: pointer;
+    padding: 0;
+    color: #666;
+    text-align: center;
+    border-radius: 2px;
+    overflow: hidden;
 }
+
 .webuploader-pick-hover {
-	background: #00a2d4;
 }
 
 .webuploader-pick-disable {
-	opacity: 0.6;
-	pointer-events:none;
+    opacity: .6;
+    pointer-events: none
 }
+
+.webuploader-list {
+    display: block;
+    margin: 0;
+    padding: 0;
+    position: static;
+    border: 1px solid #EEE;
+    border-radius: 0.2rem;
+    padding: 0.2rem;
+    background-color: var(--webuploader-color-content-bg);
+}
+
+.webuploader-list:empty {
+    display: none;
+}
+
+.webuploader-list > li {
+    list-style: none;
+    display: block;
+    border: 1px solid #EEE;
+    padding: 0px;
+    margin-bottom: 0.1rem;
+    background: var(--webuploader-color-content-bg);
+    border-radius: 0.2rem;
+}
+
+.webuploader-list > li .progress-box {
+    background-color: #EEE;
+    margin: 2px;
+    border-radius: 4px;
+}
+
+.webuploader-list > li .progress-box .progress-bar {
+    height: 3px;
+    background-color: var(--webuploader-color-primary);
+    border-radius: 4px;
+}
+
+.webuploader-list > li .progress-info {
+    font-size: 12px;
+    line-height: 20px;
+    width: 100%;
+    word-wrap: normal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #999
+}
+
+.webuploader-list > li .progress-info .status {
+    display: inline;
+    line-height: 20px
+}
+
 

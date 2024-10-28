@@ -37,7 +37,21 @@
                 <span id="suc_username"></span><kbd class="p_chk"></kbd> {lang login_username_tips}
 			</span>
 		</div>
-		
+		<!--{if $user[regip]}-->
+		<div class="form-group">
+			<label class="control-label">注册时间</label>
+			 <p class="form-control-static"><!--{eval echo dgmdate($user[regdate])}--></p>
+		  </div>
+		  <div class="form-group">
+			<label class="control-label">注册 IP</label>
+			 <p class="form-control-static">$user[regip]</p>
+		  </div>
+		  <!--{else}-->
+		  <div class="form-group">
+			<label class="control-label">{lang add_time}</label>
+			 <p class="form-control-static"><!--{eval echo dgmdate($user[regdate])}--></p>
+		  </div>
+		<!--{/if}-->
 		<div class="form-group">
 			<label class="control-label" for="username">{lang phone_number}</label>
 			<div class="controls">

@@ -12,12 +12,11 @@ class dzz_session_close {
 	public $sid = null;
 	public $var;
 	public $isnew = false;
-	protected $newguest = array('sid' => 0, 'ip1' => 0, 'ip2' => 0, 'ip3' => 0, 'ip4' => 0,
+	protected $newguest = array('sid' => 0, 'ip' => '',
 		'uid' => 0, 'username' => '', 'groupid' => 0, 'invisible' => 0, 'action' => 0,
 		'lastactivity' => 0, 'fid' => 0, 'tid' => 0, 'lastolupdate' => 0);
 
 	protected $table;
-
 	public function __construct($sid = '', $ip = '', $uid = 0) {
 		$this->old = array('sid' =>  $sid, 'ip' =>  $ip, 'uid' =>  $uid);
 		$this->var = $this->newguest;
@@ -34,20 +33,12 @@ class dzz_session_close {
 	public function set($key, $value) {
 		if(isset($this->newguest[$key])) {
 			$this->var[$key] = $value;
-		} elseif ($key == 'ip') {
-			$ips = explode('.', $value);
-			$this->set('ip1', $ips[0]);
-			$this->set('ip2', $ips[1]);
-			$this->set('ip3', $ips[2]);
-			$this->set('ip4', $ips[3]);
 		}
 	}
 
 	public function get($key) {
 		if(isset($this->newguest[$key])) {
 			return $this->var[$key];
-		} elseif ($key == 'ip') {
-			return $this->get('ip1').'.'.$this->get('ip2').'.'.$this->get('ip3').'.'.$this->get('ip4');
 		}
 	}
 
@@ -120,11 +111,6 @@ class dzz_session_close {
 	public function count_invisible($type = 1) {
 		return $this->table->count_by_lastactivity_invisible($this->oltimestamp, $type);
 	}
-
-	public function update_by_ipban($ip1, $ip2, $ip3, $ip4) {
-		return false;
-	}
-
 	public function update_max_rows($max_rows) {
 		return false;
 	}

@@ -6,60 +6,76 @@
  * To change this template use File | Settings | File Templates.
  */
 
-(function(){
+(function () {
 
     var video = {},
         uploadVideoList = [],
         isModifyUploadVideo = false,
         uploadFile;
+    var editorOpt = {};
 
-    window.onload = function(){
+    window.onload = function () {
+        editorOpt = editor.getOpt('videoConfig');
         $focus($G("videoUrl"));
         initTabs();
         initVideo();
-        /*initUpload();*/
+        initUpload();
     };
 
     /* 初始化tab标签 */
-    function initTabs(){
+    function initTabs() {
         var tabs = $G('tabHeads').children;
         for (var i = 0; i < tabs.length; i++) {
             domUtils.on(tabs[i], "click", function (e) {
                 var j, bodyId, target = e.target || e.srcElement;
                 for (j = 0; j < tabs.length; j++) {
                     bodyId = tabs[j].getAttribute('data-content-id');
-                    if(tabs[j] == target){
+                    if (tabs[j] == target) {
                         domUtils.addClass(tabs[j], 'focus');
                         domUtils.addClass($G(bodyId), 'focus');
-                    }else {
+                    } else {
                         domUtils.removeClasses(tabs[j], 'focus');
                         domUtils.removeClasses($G(bodyId), 'focus');
                     }
                 }
             });
         }
+        if (!editorOpt.disableUpload) {
+            $G('tabHeads').querySelector('[data-content-id="upload"]').style.display = 'inline-block';
+        }
+        if (!!editorOpt.selectCallback) {
+            $G('videoSelect').style.display = 'inline-block';
+            domUtils.on($G('videoSelect'), "click", function (e) {
+                editorOpt.selectCallback(editor, function (info) {
+                    if (info) {
+                        $G('videoUrl').value = info.path;
+                        createPreviewVideo(info.path);
+                    }
+                });
+            });
+        }
     }
 
-    function initVideo(){
-        createAlignButton( ["videoFloat"] );
+    function initVideo() {
+        createAlignButton(["videoFloat", "upload_alignment"]);
         addUrlChangeListener($G("videoUrl"));
         addOkListener();
 
         //编辑视频时初始化相关信息
-        (function(){
-            var img = editor.selection.getRange().getClosedNode(),url;
-            if(img && img.className){
+        (function () {
+            var img = editor.selection.getRange().getClosedNode(), url;
+            if (img && img.className) {
                 var hasFakedClass = (img.className == "edui-faked-video"),
-                    hasUploadClass = img.className.indexOf("edui-upload-video")!=-1;
-                if(hasFakedClass || hasUploadClass) {
+                    hasUploadClass = img.className.indexOf("edui-upload-video") != -1;
+                if (hasFakedClass || hasUploadClass) {
                     $G("videoUrl").value = url = img.getAttribute("_url");
                     $G("videoWidth").value = img.width;
                     $G("videoHeight").value = img.height;
-                    var align = domUtils.getComputedStyle(img,"float"),
-                        parentAlign = domUtils.getComputedStyle(img.parentNode,"text-align");
-                    updateAlignButton(parentAlign==="center"?"center":align);
+                    var align = domUtils.getComputedStyle(img, "float"),
+                        parentAlign = domUtils.getComputedStyle(img.parentNode, "text-align");
+                    updateAlignButton(parentAlign === "center" ? "center" : align);
                 }
-                if(hasUploadClass) {
+                if (hasUploadClass) {
                     isModifyUploadVideo = true;
                 }
             }
@@ -70,11 +86,11 @@
     /**
      * 监听确认和取消两个按钮事件，用户执行插入或者清空正在播放的视频实例操作
      */
-    function addOkListener(){
-        dialog.onok = function(){
+    function addOkListener() {
+        dialog.onok = function () {
             $G("preview").innerHTML = "";
-            var currentTab =  findFocus("tabHeads","tabSrc");
-            switch(currentTab){
+            var currentTab = findFocus("tabHeads", "tabSrc");
+            switch (currentTab) {
                 case "video":
                     return insertSingle();
                     break;
@@ -86,7 +102,7 @@
                     break;
             }
         };
-        dialog.oncancel = function(){
+        dialog.oncancel = function () {
             $G("preview").innerHTML = "";
         };
     }
@@ -95,15 +111,15 @@
      * 依据传入的align值更新按钮信息
      * @param align
      */
-    function updateAlignButton( align ) {
-        var aligns = $G( "videoFloat" ).children;
-        for ( var i = 0, ci; ci = aligns[i++]; ) {
-            if ( ci.getAttribute( "name" ) == align ) {
-                if ( ci.className !="focus" ) {
+    function updateAlignButton(align) {
+        var aligns = $G("videoFloat").children;
+        for (var i = 0, ci; ci = aligns[i++];) {
+            if (ci.getAttribute("name") == align) {
+                if (ci.className != "focus") {
                     ci.className = "focus";
                 }
             } else {
-                if ( ci.className =="focus" ) {
+                if (ci.className == "focus") {
                     ci.className = "";
                 }
             }
@@ -113,40 +129,39 @@
     /**
      * 将单个视频信息插入编辑器中
      */
-    function insertSingle(){
+    function insertSingle() {
         var width = $G("videoWidth"),
             height = $G("videoHeight"),
-            url=$G('videoUrl').value,
-            align = findFocus("videoFloat","name");
-        if(!url) return false;
-		
-        if ( !checkNum( [width, height] ) ) return false;
+            url = $G('videoUrl').value,
+            align = findFocus("videoFloat", "name");
+        if (!url) return false;
+        if (!checkNum([width, height])) return false;
         editor.execCommand('insertvideo', {
             url: convert_url(url),
             width: width.value,
             height: height.value,
             align: align
-        }, isModifyUploadVideo ? 'upload':null);
+        }, isModifyUploadVideo ? 'upload' : null);
     }
 
     /**
      * 将元素id下的所有代表视频的图片插入编辑器中
      * @param id
      */
-    function insertSearch(id){
-        var imgs = domUtils.getElementsByTagName($G(id),"img"),
-            videoObjs=[];
-        for(var i=0,img; img=imgs[i++];){
-            if(img.getAttribute("selected")){
+    function insertSearch(id) {
+        var imgs = domUtils.getElementsByTagName($G(id), "img"),
+            videoObjs = [];
+        for (var i = 0, img; img = imgs[i++];) {
+            if (img.getAttribute("selected")) {
                 videoObjs.push({
-                    url:img.getAttribute("ue_video_url"),
-                    width:420,
-                    height:280,
-                    align:"none"
+                    url: img.getAttribute("ue_video_url"),
+                    width: 420,
+                    height: 280,
+                    align: "none"
                 });
             }
         }
-        editor.execCommand('insertvideo',videoObjs);
+        editor.execCommand('insertvideo', videoObjs);
     }
 
     /**
@@ -154,95 +169,107 @@
      * @param id
      * @param returnProperty
      */
-    function findFocus( id, returnProperty ) {
-        var tabs = $G( id ).children,
-                property;
-        for ( var i = 0, ci; ci = tabs[i++]; ) {
-            if ( ci.className=="focus" ) {
-                property = ci.getAttribute( returnProperty );
+    function findFocus(id, returnProperty) {
+        var tabs = $G(id).children,
+            property;
+        for (var i = 0, ci; ci = tabs[i++];) {
+            if (ci.className == "focus") {
+                property = ci.getAttribute(returnProperty);
                 break;
             }
         }
         return property;
     }
-    function convert_url(url){
-        if ( !url ) return '';
-        url = utils.trim(url)
-            .replace(/v\.youku\.com\/v_show\/id_([\w\-=]+)\.html(.*?)$/i, 'player.youku.com/player.php/sid/$1/v.swf')
-            .replace(/(www\.)?youtube\.com\/watch\?v=([\w\-]+)/i, "www.youtube.com/v/$2")
-            .replace(/youtu.be\/(\w+)$/i, "www.youtube.com/v/$1")
-            .replace(/v\.ku6\.com\/.+\/([\w\.]+)\.html.*$/i, "player.ku6.com/refer/$1/v.swf")
-            .replace(/www\.56\.com\/u\d+\/v_([\w\-]+)\.html/i, "player.56.com/v_$1.swf")
-            .replace(/www.56.com\/w\d+\/play_album\-aid\-\d+_vid\-([^.]+)\.html/i, "player.56.com/v_$1.swf")
-            .replace(/v\.pps\.tv\/play_([\w]+)\.html.*$/i, "player.pps.tv/player/sid/$1/v.swf")
-            .replace(/www\.letv\.com\/ptv\/vplay\/([\d]+)\.html.*$/i, "i7.imgs.letv.com/player/swfPlayer.swf?id=$1&autoplay=0")
-            .replace(/www\.tudou\.com\/programs\/view\/([\w\-]+)\/?/i, "www.tudou.com/v/$1")
-            .replace(/v\.qq\.com\/cover\/[\w]+\/[\w]+\/([\w]+)\.html/i, "static.video.qq.com/TPout.swf?vid=$1")
-            .replace(/v\.qq\.com\/.+[\?\&]vid=([^&]+).*$/i, "static.video.qq.com/TPout.swf?vid=$1")
-            .replace(/my\.tv\.sohu\.com\/[\w]+\/[\d]+\/([\d]+)\.shtml.*$/i, "share.vrs.sohu.com/my/v.swf&id=$1");
 
+    function convert_url(url) {
+        if (!url) return '';
+        url = utils.trim(url)
+            .replace(/v\.youku\.com\/v_show\/id_([\w\-=]+)\.html/i, 'player.youku.com/embed/$1')
+            // .replace(/(www\.)?youtube\.com\/watch\?v=([\w\-]+)/i, "www.youtube.com/v/$2")
+            // .replace(/youtu.be\/(\w+)$/i, "www.youtube.com/v/$1")
+            //.replace(/www\.iqiyi\.com\/v_(\w+)\.html/i, "www.youtube.com/v/$1")
+            // .replace(/v\.ku6\.com\/.+\/([\w\.]+)\.html.*$/i, "player.ku6.com/refer/$1/v.swf")
+            // .replace(/www\.56\.com\/u\d+\/v_([\w\-]+)\.html/i, "player.56.com/v_$1.swf")
+            // .replace(/www.56.com\/w\d+\/play_album\-aid\-\d+_vid\-([^.]+)\.html/i, "player.56.com/v_$1.swf")
+            // .replace(/v\.pps\.tv\/play_([\w]+)\.html.*$/i, "player.pps.tv/player/sid/$1/v.swf")
+            // .replace(/www\.letv\.com\/ptv\/vplay\/([\d]+)\.html.*$/i, "i7.imgs.letv.com/player/swfPlayer.swf?id=$1&autoplay=0")
+            // .replace(/www\.tudou\.com\/programs\/view\/([\w\-]+)\/?/i, "www.tudou.com/v/$1")
+            // https://v.qq.com/x/cover/wagzbx91asjomnu/w05337nxfof.html
+            // https://v.qq.com/iframe/player.html?vid=w05337nxfof&tiny=0&auto=0
+            .replace(/v\.qq\.com\/x\/cover\/[\w]+\/([\w]+)\.html/i, "v.qq.com/iframe/player.html?vid=$1&tiny=0&auto=0")
+            .replace(/v\.qq\.com\/x\/page\/([\w]+)\.html/i, "v.qq.com/iframe/player.html?vid=$1&tiny=0&auto=0")
+            .replace(/www\.bilibili\.com\/video\/([a-zA-Z0-9]+)\/?.*$/i, "player.bilibili.com/player.html?bvid=$1")
+        // .replace(/v\.qq\.com\/cover\/[\w]+\/[\w]+\/([\w]+)\.html/i, "static.video.qq.com/TPout.swf?vid=$1")
+        // .replace(/v\.qq\.com\/.+[\?\&]vid=([^&]+).*$/i, "static.video.qq.com/TPout.swf?vid=$1")
+        // .replace(/my\.tv\.sohu\.com\/[\w]+\/[\d]+\/([\d]+)\.shtml.*$/i, "share.vrs.sohu.com/my/v.swf&id=$1")
+        ;
         return url;
     }
 
     /**
-      * 检测传入的所有input框中输入的长宽是否是正数
-      * @param nodes input框集合，
-      */
-     function checkNum( nodes ) {
-         for ( var i = 0, ci; ci = nodes[i++]; ) {
-             var value = ci.value;
-             if ( !isNumber( value ) && value) {
-                 alert( lang.numError );
-                 ci.value = "";
-                 ci.focus();
-                 return false;
-             }
-         }
-         return true;
-     }
+     * 检测传入的所有input框中输入的长宽是否是正数
+     * @param nodes input框集合，
+     */
+    function checkNum(nodes) {
+        for (var i = 0, ci; ci = nodes[i++];) {
+            var value = ci.value;
+            if (!isNumber(value) && value) {
+                alert(lang.numError);
+                ci.value = "";
+                ci.focus();
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * 数字判断
      * @param value
      */
-    function isNumber( value ) {
-        return /(0|^[1-9]\d*$)/.test( value );
+    function isNumber(value) {
+        return /(0|^[1-9]\d*$)/.test(value);
     }
 
     /**
-      * 创建图片浮动选择按钮
-      * @param ids
-      */
-     function createAlignButton( ids ) {
-         for ( var i = 0, ci; ci = ids[i++]; ) {
-             var floatContainer = $G( ci ),
-                     nameMaps = {"none":lang['default'], "left":lang.floatLeft, "right":lang.floatRight, "center":lang.block};
-             for ( var j in nameMaps ) {
-                 var div = document.createElement( "div" );
-                 div.setAttribute( "name", j );
-                 if ( j == "none" ) div.className="focus";
-                 div.style.cssText = "background:url(images/" + j + "_focus.jpg);";
-                 div.setAttribute( "title", nameMaps[j] );
-                 floatContainer.appendChild( div );
-             }
-             switchSelect( ci );
-         }
-     }
+     * 创建图片浮动选择按钮
+     * @param ids
+     */
+    function createAlignButton(ids) {
+        for (var i = 0, ci; ci = ids[i++];) {
+            var floatContainer = $G(ci),
+                nameMaps = {
+                    "none": lang['default'],
+                    "left": lang.floatLeft,
+                    "right": lang.floatRight,
+                    "center": lang.block
+                };
+            for (var j in nameMaps) {
+                var div = document.createElement("div");
+                div.setAttribute("name", j);
+                if (j == "none") div.className = "focus";
+                div.style.cssText = "background:url(images/" + j + "_focus.jpg);";
+                div.setAttribute("title", nameMaps[j]);
+                floatContainer.appendChild(div);
+            }
+            switchSelect(ci);
+        }
+    }
 
     /**
      * 选择切换
      * @param selectParentId
      */
-    function switchSelect( selectParentId ) {
-        var selects = $G( selectParentId ).children;
-        for ( var i = 0, ci; ci = selects[i++]; ) {
-            domUtils.on( ci, "click", function () {
-                for ( var j = 0, cj; cj = selects[j++]; ) {
+    function switchSelect(selectParentId) {
+        var selects = $G(selectParentId).children;
+        for (var i = 0, ci; ci = selects[i++];) {
+            domUtils.on(ci, "click", function () {
+                for (var j = 0, cj; cj = selects[j++];) {
                     cj.className = "";
-                    cj.removeAttribute && cj.removeAttribute( "class" );
+                    cj.removeAttribute && cj.removeAttribute("class");
                 }
                 this.className = "focus";
-            } )
+            })
         }
     }
 
@@ -250,15 +277,15 @@
      * 监听url改变事件
      * @param url
      */
-    function addUrlChangeListener(url){
+    function addUrlChangeListener(url) {
         if (browser.ie) {
             url.onpropertychange = function () {
-                createPreviewVideo( this.value );
+                createPreviewVideo(this.value);
             }
         } else {
-            url.addEventListener( "input", function () {
-                createPreviewVideo( this.value );
-            }, false );
+            url.addEventListener("input", function () {
+                createPreviewVideo(this.value);
+            }, false);
         }
     }
 
@@ -266,33 +293,45 @@
      * 根据url生成视频预览
      * @param url
      */
-    function createPreviewVideo(url){
-        if ( !url )return;
+    function createPreviewVideo(url) {
+        if (!url) return;
+
         var conUrl = convert_url(url);
-        $G("preview").innerHTML = '<div class="previewMsg"><span>'+lang.urlError+'</span></div>'+
-        '<embed class="previewVideo" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
+
+        conUrl = utils.unhtml(conUrl);
+
+        // $G("preview").innerHTML = '<div class="previewMsg"><span>'+lang.urlError+'</span></div>'+
+        // '<embed class="previewVideo" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"' +
+        //     ' src="' + conUrl + '"' +
+        //     ' width="' + 420  + '"' +
+        //     ' height="' + 280  + '"' +
+        //     ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >' +
+        // '</embed>';
+
+        $G("preview").innerHTML = '<div class="previewMsg"><span>' + lang.urlError + '</span></div>' +
+            '<iframe class="previewVideo" ' +
             ' src="' + conUrl + '"' +
-            ' width="' + 420  + '"' +
-            ' height="' + 280  + '"' +
-            ' wmode="transparent" play="true" loop="false" menu="false" allowscriptaccess="never" allowfullscreen="true" >' +
-        '</embed>';
+            ' width="' + 420 + '"' +
+            ' height="' + 280 + '"' +
+            ' frameborder=0 allowfullscreen>' +
+            '</iframe>';
     }
 
 
     /* 插入上传视频 */
-    function insertUpload(){
-        var videoObjs=[],
+    function insertUpload() {
+        var videoObjs = [],
             uploadDir = editor.getOpt('videoUrlPrefix'),
             width = $G('upload_width').value || 420,
             height = $G('upload_height').value || 280,
-            align = findFocus("upload_alignment","name") || 'none';
-        for(var key in uploadVideoList) {
+            align = findFocus("upload_alignment", "name") || 'none';
+        for (var key in uploadVideoList) {
             var file = uploadVideoList[key];
             videoObjs.push({
                 url: uploadDir + file.url,
-                width:width,
-                height:height,
-                align:align
+                width: width,
+                height: height,
+                align: align
             });
         }
 
@@ -306,7 +345,7 @@
     }
 
     /*初始化上传标签*/
-    function initUpload(){
+    function initUpload() {
         uploadFile = new UploadFile('queueList');
     }
 
@@ -316,6 +355,7 @@
         this.$wrap = target.constructor == String ? $('#' + target) : $(target);
         this.init();
     }
+
     UploadFile.prototype = {
         init: function () {
             this.fileList = [];
@@ -330,34 +370,34 @@
             var _this = this,
                 $ = jQuery,    // just in case. Make sure it's not an other libaray.
                 $wrap = _this.$wrap,
-            // 图片容器
+                // 图片容器
                 $queue = $wrap.find('.filelist'),
-            // 状态栏，包括进度和控制按钮
+                // 状态栏，包括进度和控制按钮
                 $statusBar = $wrap.find('.statusBar'),
-            // 文件总体选择信息。
+                // 文件总体选择信息。
                 $info = $statusBar.find('.info'),
-            // 上传按钮
+                // 上传按钮
                 $upload = $wrap.find('.uploadBtn'),
-            // 上传按钮
+                // 上传按钮
                 $filePickerBtn = $wrap.find('.filePickerBtn'),
-            // 上传按钮
+                // 上传按钮
                 $filePickerBlock = $wrap.find('.filePickerBlock'),
-            // 没选择文件之前的内容。
+                // 没选择文件之前的内容。
                 $placeHolder = $wrap.find('.placeholder'),
-            // 总体进度条
+                // 总体进度条
                 $progress = $statusBar.find('.progress').hide(),
-            // 添加的文件数量
+                // 添加的文件数量
                 fileCount = 0,
-            // 添加的文件总大小
+                // 添加的文件总大小
                 fileSize = 0,
-            // 优化retina, 在retina下这个值是2
+                // 优化retina, 在retina下这个值是2
                 ratio = window.devicePixelRatio || 1,
-            // 缩略图大小
+                // 缩略图大小
                 thumbnailWidth = 113 * ratio,
                 thumbnailHeight = 113 * ratio,
-            // 可能有pedding, ready, uploading, confirm, done.
+                // 可能有pedding, ready, uploading, confirm, done.
                 state = '',
-            // 所有文件的进度信息，key为file id
+                // 所有文件的进度信息，key为file id
                 percentages = {},
                 supportTransition = (function () {
                     var s = document.createElement('p').style,
@@ -369,11 +409,12 @@
                     s = null;
                     return r;
                 })(),
-            // WebUploader实例
+                // WebUploader实例
                 uploader,
                 actionUrl = editor.getActionUrl(editor.getOpt('videoActionName')),
                 fileMaxSize = editor.getOpt('videoMaxSize'),
-                acceptExtensions = (editor.getOpt('videoAllowFiles') || []).join('').replace(/\./g, ',').replace(/^[,]/, '');;
+                acceptExtensions = (editor.getOpt('videoAllowFiles') || []).join('').replace(/\./g, ',').replace(/^[,]/, '');
+            ;
 
             if (!WebUploader.Uploader.support()) {
                 $('#filePickerReady').after($('<div>').html(lang.errorNotSupport)).hide();
@@ -383,7 +424,7 @@
                 return;
             }
 
-            uploader = _this.uploader = WebUploader.create({
+            var uploaderOption = {
                 pick: {
                     id: '#filePickerReady',
                     label: lang.uploadSelectFile
@@ -393,8 +434,28 @@
                 fileVal: editor.getOpt('videoFieldName'),
                 duplicate: true,
                 fileSingleSizeLimit: fileMaxSize,
+                headers: editor.getOpt('serverHeaders') || {},
                 compress: false
-            });
+            };
+            if(editor.getOpt('uploadServiceEnable')) {
+                uploaderOption.customUpload = function (file, callback) {
+                    editor.getOpt('uploadServiceUpload')('video', file, {
+                        success: function( res ) {
+                            callback.onSuccess(file, {_raw:JSON.stringify(res)});
+                        },
+                        error: function( err ) {
+                            callback.onError(file, err);
+                        },
+                        progress: function( percent ) {
+                            callback.onProgress(file, percent);
+                        }
+                    }, {
+                        from: 'video'
+                    });
+                };
+            }
+
+            uploader = _this.uploader = WebUploader.create(uploaderOption);
             uploader.addButton({
                 id: '#filePickerBlock'
             });
@@ -446,7 +507,7 @@
                     showError(file.statusText);
                 } else {
                     $wrap.text(lang.uploadPreview);
-                    if ('|png|jpg|jpeg|bmp|gif|'.indexOf('|'+file.ext.toLowerCase()+'|') == -1) {
+                    if ('|png|jpg|jpeg|bmp|gif|'.indexOf('|' + file.ext.toLowerCase() + '|') == -1) {
                         $wrap.empty().addClass('notimage').append('<i class="file-preview file-type-' + file.ext.toLowerCase() + '"></i>' +
                             '<span class="file-title">' + file.name + '</span>');
                     } else {
@@ -466,7 +527,7 @@
                             }, thumbnailWidth, thumbnailHeight);
                         }
                     }
-                    percentages[ file.id ] = [ file.size, 0 ];
+                    percentages[file.id] = [file.size, 0];
                     file.rotation = 0;
 
                     /* 检查文件格式 */
@@ -486,11 +547,11 @@
                     // 成功
                     if (cur === 'error' || cur === 'invalid') {
                         showError(file.statusText);
-                        percentages[ file.id ][ 1 ] = 1;
+                        percentages[file.id][1] = 1;
                     } else if (cur === 'interrupt') {
                         showError('interrupt');
                     } else if (cur === 'queued') {
-                        percentages[ file.id ][ 1 ] = 0;
+                        percentages[file.id][1] = 0;
                     } else if (cur === 'progress') {
                         $info.hide();
                         $prgress.css('display', 'block');
@@ -543,7 +604,7 @@
             // 负责view的销毁
             function removeFile(file) {
                 var $li = $('#' + file.id);
-                delete percentages[ file.id ];
+                delete percentages[file.id];
                 updateTotalProgress();
                 $li.off().find('.file-panel').off().end().remove();
             }
@@ -555,8 +616,8 @@
                     percent;
 
                 $.each(percentages, function (k, v) {
-                    total += v[ 0 ];
-                    loaded += v[ 0 ] * v[ 1 ];
+                    total += v[0];
+                    loaded += v[0] * v[1];
                 });
 
                 percent = total ? loaded / total : 0;
@@ -582,7 +643,8 @@
                             $queue.addClass('element-invisible');
                             $statusBar.addClass('element-invisible');
                             $placeHolder.removeClass('element-invisible');
-                            $progress.hide(); $info.hide();
+                            $progress.hide();
+                            $info.hide();
                             uploader.refresh();
                             break;
 
@@ -591,25 +653,29 @@
                             $placeHolder.addClass('element-invisible');
                             $queue.removeClass('element-invisible');
                             $statusBar.removeClass('element-invisible');
-                            $progress.hide(); $info.show();
+                            $progress.hide();
+                            $info.show();
                             $upload.text(lang.uploadStart);
                             uploader.refresh();
                             break;
 
                         /* 上传中 */
                         case 'uploading':
-                            $progress.show(); $info.hide();
+                            $progress.show();
+                            $info.hide();
                             $upload.text(lang.uploadPause);
                             break;
 
                         /* 暂停上传 */
                         case 'paused':
-                            $progress.show(); $info.hide();
+                            $progress.show();
+                            $info.hide();
                             $upload.text(lang.uploadContinue);
                             break;
 
                         case 'confirm':
-                            $progress.show(); $info.hide();
+                            $progress.show();
+                            $info.hide();
                             $upload.text(lang.uploadStart);
 
                             stats = uploader.getStats();
@@ -620,7 +686,8 @@
                             break;
 
                         case 'finish':
-                            $progress.hide(); $info.show();
+                            $progress.hide();
+                            $info.show();
                             if (stats.uploadFailNum) {
                                 $upload.text(lang.uploadRetry);
                             } else {
@@ -654,9 +721,7 @@
                     }
                 } else {
                     stats = uploader.getStats();
-                    text = lang.updateStatusFinish.replace('_', fileCount).
-                        replace('_KB', WebUploader.formatSize(fileSize)).
-                        replace('_', stats.successNum);
+                    text = lang.updateStatusFinish.replace('_', fileCount).replace('_KB', WebUploader.formatSize(fileSize)).replace('_', stats.successNum);
 
                     if (stats.uploadFailNum) {
                         text += lang.updateStatusError.replace('_', stats.uploadFailNum);
@@ -701,7 +766,7 @@
                     case 'startUpload':
                         /* 添加额外的GET参数 */
                         var params = utils.serializeParam(editor.queryCommandValue('serverparam')) || '',
-                            url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') == -1 ? '?':'&') + 'encode=utf-8&' + params);
+                            url = utils.formatUrl(actionUrl + (actionUrl.indexOf('?') == -1 ? '?' : '&') + 'encode=utf-8&' + params);
                         uploader.option('server', url);
                         setState('uploading', files);
                         break;
@@ -713,7 +778,9 @@
 
             uploader.on('uploadBeforeSend', function (file, data, header) {
                 //这里可以通过data对象添加POST参数
-                header['X_Requested_With'] = 'XMLHttpRequest';
+                if (actionUrl.toLowerCase().indexOf('jsp') != -1) {
+                    header['X_Requested_With'] = 'XMLHttpRequest';
+                }
             });
 
             uploader.on('uploadProgress', function (file, percentage) {
@@ -721,7 +788,7 @@
                     $percent = $li.find('.progress span');
 
                 $percent.css('width', percentage * 100 + '%');
-                percentages[ file.id ][ 1 ] = percentage;
+                percentages[file.id][1] = percentage;
                 updateTotalProgress();
             });
 
@@ -730,13 +797,19 @@
                 try {
                     var responseText = (ret._raw || ret),
                         json = utils.str2json(responseText);
+                    json = editor.getOpt('serverResponsePrepare')(json);
                     if (json.state == 'SUCCESS') {
                         uploadVideoList.push({
                             'url': json.url,
                             'type': json.type,
-                            'original':json.original
+                            'original': json.original
                         });
                         $file.append('<span class="success"></span>');
+                        // 触发上传视频事件
+                        editor.fireEvent("uploadsuccess", {
+                            res: json,
+                            type: 'video'
+                        });
                     } else {
                         $file.find('.error').text(json.state).show();
                     }
@@ -747,9 +820,11 @@
 
             uploader.on('uploadError', function (file, code) {
             });
-            uploader.on('error', function (code, file) {
-                if (code == 'Q_TYPE_DENIED' || code == 'F_EXCEED_SIZE') {
-                    addFile(file);
+            uploader.on('error', function (code, param1, param2) {
+                if (code === 'F_EXCEED_SIZE') {
+                    editor.getOpt('tipError')(lang.errorExceedSize + ' ' + (param1 / 1024 / 1024).toFixed(1) + 'MB');
+                } else {
+                    console.log('error', code, param1, param2);
                 }
             });
             uploader.on('uploadComplete', function (file, ret) {
@@ -774,13 +849,13 @@
         },
         getQueueCount: function () {
             var file, i, status, readyFile = 0, files = this.uploader.getFiles();
-            for (i = 0; file = files[i++]; ) {
+            for (i = 0; file = files[i++];) {
                 status = file.getStatus();
                 if (status == 'queued' || status == 'uploading' || status == 'progress') readyFile++;
             }
             return readyFile;
         },
-        refresh: function(){
+        refresh: function () {
             this.uploader.refresh();
         }
     };
