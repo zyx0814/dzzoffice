@@ -10,7 +10,9 @@
 if(!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-
+if($_G['setting']['bbclosed']) {
+	dheader("Location: user.php?mod=login");
+}
 define('NOROBOT', TRUE);
 
 if($_GET['uid'] && $_GET['id']) {
