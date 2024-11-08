@@ -207,8 +207,12 @@ class io_Qcos extends io_api
         try {
             //请求成功
             if ($list = $qcos->listBuckets()) {
-                foreach ($list['Buckets'][0] as $value) {
-                    $re[] = $value['Name'];
+                if (isset($list['Buckets']) && !empty($list['Buckets'][0]['Bucket'])) {
+                    foreach ($list['Buckets'][0]['Bucket'] as $value) {
+                        $re[] = $value['Name'];
+                    }
+                } else {
+                    return array('error' => 'Bucket为空！');
                 }
             } else {
                 return array();
