@@ -112,7 +112,7 @@
         }
         jQuery.getJSON('{BASESCRIPT}?mod=cloud&op=oauth&do=getBucket', { id: id, key: key,region:region,bz:bz }, function(json) {
             if(json.error){
-                showmessage(json.error);
+                showmessage(json.error,'error',3000,1);
             }else{
                 if(json.length > 0) {
                     var html = '';
