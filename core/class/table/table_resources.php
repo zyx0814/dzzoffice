@@ -885,16 +885,9 @@ class table_resources extends dzz_table
             //文件图标信息
             $fileinfo['img'] = self::get_icosinfo_by_rid($fileinfo['rid']);
             if ($fileinfo['type'] == 'folder') {
-                $fileinfo['type'] = '文件夹';
                 if ($currentfolder = C::t('folder')->fetch($fileinfo['oid'])) {
                     $fileinfo['isgroup'] = ($currentfolder['flag'] == 'organization') ? true : false;
                 }
-            } elseif ($fileinfo['type'] == 'link') {
-                $fileinfo['type'] = lang('type_link');
-            } elseif ($fileinfo['ext']) {
-                $fileinfo['type'] = getFileTypeName($fileinfo['type'], $fileinfo['ext']);
-            } else {
-                $fileinfo['type'] = lang('undefined_file_type');
             }
             if ($contains) {
                 //文件大小信息
@@ -911,6 +904,7 @@ class table_resources extends dzz_table
                 }
 
             }
+            $fileinfo['type'] = getFileTypeName($fileinfo['type'], $fileinfo['ext']);
         }
 
         return $fileinfo;
