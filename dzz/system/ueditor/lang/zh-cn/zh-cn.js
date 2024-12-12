@@ -94,7 +94,6 @@ UE.I18N['zh-cn'] = {
         'scrawl': '涂鸦',
         'inserttable': '插入表格',
         'dzzfile':'从网盘插入',
-        'kityminder':'插入思维导图',
         'charts': '设置图表',
         'insertcharts':'插入图表'
     },
