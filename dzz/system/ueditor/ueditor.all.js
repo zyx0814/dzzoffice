@@ -34956,7 +34956,6 @@ UE.ui = baidu.editor.ui = {};
         formula: "~/dialogs/formula/formula.html?9a5a1511",
         attachment: "~/dialogs/attachment/attachment.html?d632fa7c",
         insertframe: "~/dialogs/insertframe/insertframe.html?807119a5",
-        kityminder:"~/dialogs/kityminder/kityMinderDialog.html",
         edittip: "~/dialogs/table/edittip.html?fa0ea189",
         edittable: "~/dialogs/table/edittable.html?134e2f06",
         edittd: "~/dialogs/table/edittd.html?9fe1a06e",
@@ -34984,7 +34983,6 @@ UE.ui = baidu.editor.ui = {};
             "formula",
             "background",
             "contentimport",
-            "kityminder",
         ]
     };
     for (var p in dialogBtns) {
@@ -35016,7 +35014,7 @@ UE.ui = baidu.editor.ui = {};
                                         className: "edui-for-" + cmd,
                                         title: title,
                                         holdScroll: cmd === "insertimage",
-                                        fullscreen: /preview|kityminder/.test(cmd),
+                                        fullscreen: /preview/.test(cmd),
                                         closeDialog: editor.getLang("closeDialog")
                                     },
                                     type === "ok"
