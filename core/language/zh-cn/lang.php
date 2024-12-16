@@ -1474,12 +1474,7 @@ $_G[siteurl]',
 	'community_edition'=>'社区版',
 	'title_admincp'=>'管理员登录入口',
 	'forbid_folder_to_sub_folder'=>'目标文件夹是源文件夹的子文件夹',
-	//系统出错通知
-	'Error'=>'{errormsg}，详情请前往系统日志中查看。',
-	'Error_wx'=>'你收到了{title}',
-	'Error_redirecturl'=>'{url}',
-	'Error_title'=>'{title}',
-	
+	'system_error'=>'系统异常!',
 );
 
 ?>
