@@ -1,0 +1,252 @@
+<!--{template lyear:header_simple_start}-->
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-body">
+				<ul class="nav nav-pills">
+					<li class="nav-item">
+						<a class="nav-link <!--{if $operation=='export' }-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=export">{lang export}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link <!--{if $operation=='import' }-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=import">{lang nav_db_import}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link <!--{if $operation=='runquery' }-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=runquery">{lang nav_db_runquery}</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<!--{if $operation=='export'}-->
+				<div class="alert alert-warning">
+					<h5>{lang board_message}</h5>
+					<ul class="form-text">
+						{lang db_export_tips}
+					</ul>
+				</div>
+				<!--{if !$submit}-->
+				<form id="cpform" action="{MOD_URL}&op=database&operation=export&setup=1" class="form-horizontal" method="post" name="cpform">
+				<input type="hidden" value="{FORMHASH}" name="formhash">
+				<input type="hidden" value="true" name="exportsubmit">
+				<div class="row mb-3">
+					<label class="col-sm-2">{lang db_export_type}</label>
+					<div class="col-sm-10">
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" id="type1" name="type" value="dzz" checked="" onclick="document.getElementById('showtables').style.display = 'none';">{lang all_data_table}</label>
+					</div>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" id="type2" name="type" value="custom"  onclick="document.getElementById('showtables').style.display = '';">{lang db_export_custom}</label>
+					</div>
+					</div>
+					<div id="showtables" style="display:none;">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox"  class="form-check-input" name="chkall" onclick="checkAll('prefix', this.form, 'customtables', 'chkall', true)" checked="checked" type="checkbox" id="chkalltables">
+						<label class="form-check-label" for="chkalltables">{lang check_all_data_table}</label>
+					</div>
+					<div class="border-example">
+						<!--{loop $dztables $value}-->
+						<div class="form-check form-check-inline col-6 col-sm-4">
+							<input class="form-check-input" type="checkbox"  class="form-check-input" name="customtables[]" value="$value" id="$value" checked="checked">
+							<label class="form-check-label" for="$value">$value</label>
+						</div>
+						<!--{/loop}-->
+					</div>
+				</div>
+				<div id="advanceoption" style="display:none">
+					<div class="row mb-3">
+					<label class="col-sm-2">{lang db_export_method}</label>
+					<div class="col-sm-10">
+						<label class="radio radio-inline">
+							<input type="radio" class="form-check-input" name="method" value="shell" onclick="if('0') {if(this.form.sqlcompat[2].checked==true) this.form.sqlcompat[0].checked=true; this.form.sqlcompat[2].disabled=true; this.form.sizelimit.disabled=true;} else {this.form.sqlcharset[0].checked=true; for(var i=1; i&lt;=5; i++) {if(this.form.sqlcharset[i]) this.form.sqlcharset[i].disabled=true;}}" id="method_shell">{lang db_export_shell}</label>
+							<label class="radio radio-inline">
+								<input  type="radio" class="form-check-input" name="method" value="multivol" checked="checked" onclick="this.form.sqlcompat[2].disabled=false; this.form.sizelimit.disabled=false; for(var i=1; i<=5; i++) {if(this.form.sqlcharset[i]) this.form.sqlcharset[i].disabled=false;}" id="method_multivol">{lang db_export_multivol}</label>
+						<input type="text" class="form-control" style="width:50px;" name="sizelimit" value="2048">
+					</div>
+				</div>
+					<div class="row mb-3">
+					<label  class="col-sm-2">{lang db_export_options_extended_insert}</label>
+					<div class="col-sm-10">
+						<label class="radio radio-inline">
+						<input  type="radio" class="form-check-input" name="extendins" value="1">{lang yes}</label><label class="radio radio-inline"><input  type="radio" class="form-check-input" name="extendins" value="0" checked="checked">{lang no}</label></div>
+					</div>
+					<div class="row mb-3">
+					<label  class="col-sm-2">{lang db_export_options_sql_compatible}</label>
+					<div class="col-sm-10"><label class="radio radio-inline"><input  type="radio" class="form-check-input" name="sqlcompat" value="" checked="">{lang default}</label><label class="radio radio-inline"><input  type="radio" class="form-check-input" name="sqlcompat" value="MYSQL40"> MySQL 3.23/4.0.x</label><label class="radio radio-inline"><input  type="radio" class="form-check-input" name="sqlcompat" value="MYSQL41" disabled="">  MySQL 4.1.x/5.x</label></div>
+					</div>
+					<div class="row mb-3">
+					<label  class="col-sm-2">{lang db_export_options_charset}</label>
+					<div class="col-sm-10"><label class="radio radio-inline"><input  type="radio" class="form-check-input" name="sqlcharset" value="">{lang db_export_options_charset}</label>
+						<label class="radio radio-inline"><input  type="radio" class="form-check-input" name="sqlcharset" value="utf8">  UTF8</label></div>
+					</div>
+					<div class="row mb-3">
+					<label  class="col-sm-2">{lang db_export_usehex}</label>
+					<div class="col-sm-10"><label class="radio radio-inline"><input type="radio" class="form-check-input" name="usehex" value="1" checked="checked">{lang yes}</label>
+						<label class="radio radio-inline"><input type="radio" class="form-check-input" name="usehex" value="0" >{lang no}</label></div>
+					</div>
+					<div class="row mb-3">
+					<label  class="col-sm-2">{lang db_export_usezip}</label>
+					<div class="col-sm-10"><label class="radio radio-inline"><input type="radio" class="form-check-input" name="usezip" value="1">{lang db_export_zip_1}</label><label class="radio radio-inline"><input type="radio" class="form-check-input" name="usezip" value="2">{lang db_export_zip_2}</label><label class="radio radio-inline"><input type="radio" class="form-check-input" name="usezip" value="0" checked>{lang db_export_zip_3}</label></div>
+					</div>
+					<div class="row mb-3">
+					<label  class="col-sm-2">{lang db_export_filename}</label>
+					<div class="col-sm-10"><input type="text" class="form-control" class="form-check-input" name="filename" value="$defaultfilename"></div>
+					</div>
+				</div>
+				<dl class="mb-3 d-grid">
+					<button type="submit" class="btn btn-primary btn-round bodyloading" name="exportsubmit" value="true" >{lang blank_submit}</button>
+					<div class="form-check">
+					<input  type="checkbox" class="form-check-input" value="1" onclick="document.getElementById('advanceoption').style.display = document.getElementById('advanceoption').style.display == 'none' ? '' : 'none'; this.value = this.value == 1 ? 0 : 1; this.checked = this.value == 1 ? false : true" id="btn_more">
+					<label class="form-check-label" for="btn_more">{lang more_options}</label>
+					</div>
+				</dl>
+				</form>
+				<!--{else}-->
+				<!--{if $msg}-->
+				<div class="alert alert-{$msg_type}" role="alert">
+					$msg
+				</div>
+				<!--{/if}-->
+				<!--{if $redirecturl}-->
+				<dl class="mb-3 d-grid">
+					<a href="{$redirecturl}" class="btn btn-primary">{lang message_redirect}</a>
+				</dl>
+				<script type="text/JavaScript">setTimeout(function(){location.href='{$redirecturl}';}, 2000);</script>
+				<!--{/if}-->
+				<!--{/if}-->
+				<!--{elseif $operation=='import'}-->
+				<!--{if $msg}-->
+				<div class="alert alert-{$msg_type}" role="alert">
+					$msg
+				</div>
+				<!--{if $redirecturl}-->
+				<dl class="mb-3 d-grid">
+					<a href="{$redirecturl}" class="btn btn-primary">{lang message_redirect}</a>
+				</dl>
+				<script type="text/JavaScript">setTimeout(function(){location.href='{$redirecturl}';}, 2000);</script>
+				<!--{/if}-->
+				<!--{else}-->
+				<div class="alert alert-warning">
+					<h5>{lang board_message}</h5>
+					<ul class="form-text">
+						{lang db_import_tips}
+					</ul>
+				</div>
+				$do_import_option
+				<form id="cpform" action="{MOD_URL}&op=database&operation=import" class="form-horizontal" method="post" name="cpform">
+					<input type="hidden" value="{FORMHASH}" name="formhash">
+					<input type="hidden" value="true" name="deletesubmit">
+					<div class="table-responsive">
+						<table class="table table-hover align-middle" style="border-top:1px solid #DDD">
+							<thead>
+								<th></th>
+								<th>{lang filename}</th>
+								<th>{lang version}</th>
+								<th>{lang time}</th>
+								<th>{lang type}</th>
+								<th>{lang big_small}</th>
+								<th>{lang db_method}</th>
+								<th>{lang db_volume}</th>
+								<th></th>
+							</thead>
+							<!--{loop $list $key $val}-->
+							<tr>
+								<td><input type="checkbox" class="form-check-input" name="delete[]" value="$key"></td>
+								<td>
+									<!--{if $val['list']}-->
+									<a href="javascript:;" onclick="jQuery('#exportlog_{$key}').toggle()">$key</a>
+									<!--{else}-->
+									<a href="$val[filename]">$key</a>
+									<!--{/if}-->
+								</td>
+								<td>$val[version]</td>
+								<td>$val['dateline']</td>
+								<td>$val[ftype]</td>
+								<td>$val[size]</td>
+								<td>$val[method]</td>
+								<td>$val[volume]</td>
+								<td>
+									<!--{if $val['list']}-->
+									<a href="{$datasiteurl}restore.php?operation=import&from=server&datafile_server=$val[datafile_server]&importsubmit=yes" class="btn btn-outline-primary" <!--{if $info[ 'version'] !=$_G[ 'setting'][ 'version']}--> onclick="return confirm('{lang db_import_confirm}');"<!--{else}-->onclick="return confirm('{lang db_import_confirm_sql}');"<!--{/if}-->target="_blank">{lang import}</a>
+									<!--{else}-->
+									<a href="{$datasiteurl}restore.php?operation=importzip&datafile_server=$info[datafile_server]&importsubmit=yes" class="btn btn-outline-primary" onclick="return confirm('{lang db_import_confirm_zip}');" target="_blank">{lang db_import_unzip}</a>
+									<!--{/if}-->
+								</td>
+							</tr>
+							<thead id="exportlog_{$key}" style="display:none;">
+								<!--{loop $val[list] $key1 $val1}-->
+								<tr>
+									<td></td>
+									<td>
+										<a href="$val1[filename]">$val1[filename]</a>
+									</td>
+									<td>$val1[version]</td>
+									<td>$val1['dateline']</td>
+									<td></td>
+									<td>$val1[size]</td>
+									<td></td>
+									<td>$val1[volume]</td>
+									<td></td>
+								</tr>
+								<!--{/loop}-->
+							</thead>
+							<!--{/loop}-->
+						</table>
+					</div>
+					<div class="col-12">
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" name="chkall" id="chkallspKI" onclick="checkAll('prefix', this.form, 'delete')">
+							<label class="form-check-label" for="chkallspKI">{lang del}</label>
+						</div>
+					</div>
+					<div class="col-12">
+						<button type="submit" class="btn btn-primary btn-round bodyloading" name="exportsubmit" value="true" >{lang blank_submit}</button>
+					</div>
+				</form>
+				<!--{/if}-->
+				<!--{elseif $operation=='runquery'}-->
+				<div class="alert alert-warning">
+					<h5>{lang board_message}</h5>
+					<ul class="form-text">
+						{lang db_runquery_tips}
+					</ul>
+				</div>
+				<!--{if $msg}-->
+				<div class="alert alert-{$msg_type}" role="alert">
+					$msg
+				</div>
+				<!--{if $redirecturl}-->
+				<dl class="mb-3 d-grid">
+					<a href="{$redirecturl}" class="btn btn-primary">{lang message_redirect}</a>
+				</dl>
+				<script type="text/JavaScript">setTimeout(function(){location.href='{$redirecturl}';}, 5000);</script>
+				<!--{/if}-->
+				<!--{else}-->
+				<form id="cpform" action="{MOD_URL}&op=database&operation=runquery" method="post" name="cpform">
+					<input type="hidden" value="{FORMHASH}" name="formhash">
+					<input type="hidden" value="true" name="sqlsubmit">
+					<div class="mb-3">
+						<label for="queries" class="form-label">{lang db_runquery_sql}</label>
+						<textarea cols="85" rows="10" name="queries" id="queries" class="form-control"></textarea>
+					  </div>
+					  <div class="col-12">
+						<div class="form-check">
+						  <input class="form-check-input" type="checkbox" id="createcompatible" name="createcompatible" value="1" checked="checked">
+						  <label class="form-check-label" for="createcompatible">
+							{lang db_runquery_createcompatible}
+						  </label>
+						</div>
+					  </div>
+					<dl class="mb-3 d-grid">
+						<div class="col-sm-10"><button type="submit" class="btn btn-primary btn-round bodyloading">{lang blank_submit}</button></div>
+					</dl>
+				</form>
+				<!--{/if}-->
+				<!--{/if}-->
+			</div>
+		</div>
+	</div>
+</main>
+<!--{template lyear:footer_simple}-->

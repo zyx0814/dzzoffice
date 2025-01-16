@@ -14,7 +14,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 if($_GET['do']=='usercloud'){
 	$bz=trim($_GET['bz']);
 	$cloud=C::t('connect')->fetch($bz);
-	$navtitle=$cloud['name'].' - '.lang('using_user');
+	$navtitle=$cloud['name'].' - '.lang('using_user').' - '.lang('cloud_set');
 	if(submitcheck('cloudsubmit')){
 		$dids=$_GET['delete'];
 		foreach($dids as $id){
@@ -68,7 +68,7 @@ if($_GET['do']=='usercloud'){
 }else{
 	$bz=$_GET['bz'];
 	$cloud=C::t('connect')->fetch($bz);
-	$navtitle=$cloud['name'].' - '.lang('set');
+	$navtitle=$cloud['name'].' - '.lang('cloud_set');
 	if(submitcheck('editsubmit')){
 		$_GET=dhtmlspecialchars($_GET);
 		if($cloud['type']=='pan'){

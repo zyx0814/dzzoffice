@@ -20,7 +20,6 @@ function uc_user_login($username, $password, $isuid, $checkques = '', $questioni
 
     if ($isuid == 1) {
         $user = C::t('user')->fetch_by_uid($username);
-
     } elseif ($isuid == 2) {
         $user = C::t('user')->fetch_by_email($username);
     } elseif ($isuid == 3) {//手机号码登录

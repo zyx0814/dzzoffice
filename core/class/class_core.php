@@ -2,6 +2,7 @@
 if(!defined('IN_DZZ')) {
     exit('Access Denied');
 }
+
 class core
 {
 	private static $_tables;
@@ -104,7 +105,10 @@ class core
 	}
 
 	public static function import($name, $folder = '', $force = true) {
-		
+		//如果文件名为空或者false，阻止向下进行
+	    if(preg_match('/^\s*$/',$name) || $name == false){
+	        return false;
+        }
 		$key = $folder.$name;
 		if(!isset(self::$_imports[$key])) {
 			if($folder){

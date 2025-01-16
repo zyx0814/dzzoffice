@@ -549,7 +549,7 @@ class PHPExcel_Writer_Excel5_Parser
 			return pack("C", $this->ptg[$token]);
 
         // match error codes
-		} elseif (preg_match("/^#[A-Z0\/]{3,5}[!?]{1}$/", $token) or $token == '#N/A') {
+		} elseif (preg_match("/^#[A-Z0\/]{3,5}[!?][1]$/", $token) or $token == '#N/A') {
 		    return $this->_convertError($token);
 
 		// commented so argument number can be processed correctly. See toReversePolish().
@@ -1021,7 +1021,7 @@ class PHPExcel_Writer_Excel5_Parser
 		$col    = 0;
 		$col_ref_length = strlen($col_ref);
 		for ($i = 0; $i < $col_ref_length; ++$i) {
-			$col += (ord($col_ref{$i}) - 64) * pow(26, $expn);
+			$col += (ord($col_ref[$i]) - 64) * pow(26, $expn);
 			--$expn;
 		}
 
@@ -1043,28 +1043,28 @@ class PHPExcel_Writer_Excel5_Parser
 		$formula_length = strlen($this->_formula);
 		// eat up white spaces
 		if ($i < $formula_length) {
-			while ($this->_formula{$i} == " ") {
+			while ($this->_formula[$i] == " ") {
 				++$i;
 			}
 
 			if ($i < ($formula_length - 1)) {
-				$this->_lookahead = $this->_formula{$i+1};
+				$this->_lookahead = $this->_formula[$i+1];
 			}
 			$token = '';
 		}
 
 		while ($i < $formula_length) {
-			$token .= $this->_formula{$i};
+			$token .= $this->_formula[$i];
 
 			if ($i < ($formula_length - 1)) {
-				$this->_lookahead = $this->_formula{$i+1};
+				$this->_lookahead = $this->_formula[$i+1];
 			} else {
 				$this->_lookahead = '';
 			}
 
 			if ($this->_match($token) != '') {
 				//if ($i < strlen($this->_formula) - 1) {
-				//    $this->_lookahead = $this->_formula{$i+1};
+				//    $this->_lookahead = $this->_formula[$i+1];
 				//}
 				$this->_current_char = $i + 1;
 				$this->_current_token = $token;
@@ -1175,7 +1175,7 @@ class PHPExcel_Writer_Excel5_Parser
 					return $token;
 				}
 			    // If it's an error code
-			    elseif (preg_match("/^#[A-Z0\/]{3,5}[!?]{1}$/", $token) or $token == '#N/A')
+			    elseif (preg_match("/^#[A-Z0\/]{3,5}[!?][1]$/", $token) or $token == '#N/A')
 			    {
 			        return $token;
 			    }
@@ -1205,7 +1205,7 @@ class PHPExcel_Writer_Excel5_Parser
 	{
 		$this->_current_char = 0;
 		$this->_formula      = $formula;
-		$this->_lookahead    = isset($formula{1}) ? $formula{1} : '';
+		$this->_lookahead    = isset($formula[1]) ? $formula[1] : '';
 		$this->_advance();
 		$this->_parse_tree   = $this->_condition();
 		return true;
@@ -1274,7 +1274,7 @@ class PHPExcel_Writer_Excel5_Parser
 			$this->_advance();
 			return $result;
         // If it's an error code
-        } elseif (preg_match("/^#[A-Z0\/]{3,5}[!?]{1}$/", $this->_current_token) or $this->_current_token == '#N/A'){
+        } elseif (preg_match("/^#[A-Z0\/]{3,5}[!?][1]$/", $this->_current_token) or $this->_current_token == '#N/A'){
 		    $result = $this->_createTree($this->_current_token, 'ptgErr', '');
 		    $this->_advance();
 		    return $result;

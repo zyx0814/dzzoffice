@@ -1,0 +1,293 @@
+<!--{template lyear:header_simple_start}-->
+<script src="admin/scripts/admin.js?{VERHASH}"></script>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+    <!--{if $cloud['type']=='local'}-->
+    <!--{template lyear:right_header}-->
+    <div class="card">
+      <div class="card-body">
+        <form id="cpform" action="{MOD_URL}&op=edit&bz=$bz" class="form-horizontal" method="post" name="cpform">
+          <input type="hidden" value="{FORMHASH}" name="formhash">
+          <input type="hidden" value="editsubmit" name="true">
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang name}:</label>
+            <div class="col-sm-10">
+              <input type="text"  name="name"  class="form-control"  value="$cloud[name]">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang designator}:</label>
+            <div class="col-sm-10">
+              <input type="text"  name="" class="form-control" value="$cloud[bz]"  disabled="disabled">
+            </div>
+            <div class="col-sm-10">
+              <ul class="form-text">
+                {lang cloud_edit_designator_text}
+              </ul>
+            </div>
+          </div>
+          <dl class="mb-3 d-grid">
+            <input class="btn btn-primary btn-round bodyloading" name="editsubmit" value="{lang save_changes}" type="submit">
+          </dl>
+        </form>
+      </div>
+    </div>
+    <!--{elseif $cloud['type']=='pan'}-->
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-pills">
+          <li class="nav-item"> <a class="nav-link <!--{if empty($_GET[do])}-->active<!--{/if}-->" href="{MOD_URL}&op=edit&bz=$bz">{lang set}</a>
+          </li>
+          <!--{if $cloud['available']>0}--> 
+          <li class="nav-item"> <a class="nav-link <!--{if $_GET[do]=='usercloud' }-->active<!--{/if}-->" href="{MOD_URL}&op=edit&bz=$bz&do=usercloud">{lang using_user}</a>
+          </li>
+          <!--{/if}-->
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <!--{if $_GET[do]=='usercloud'}-->
+        <form id="appform" name="appform" class="form-horizontal" action="{MOD_URL}&op=edit&do=usercloud" method="post" >
+          <input type="hidden" name="cloudsubmit" value="true" />
+          <input type="hidden" name="bz" value="$bz" />
+          <input type="hidden" name="formhash" value="{FORMHASH}" />
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th width="30"></th>
+                  <th>{lang name}</th>
+                  <th>{lang username}</th>
+                  <th>{lang add_time}</th>
+                </tr>
+              </thead>
+              <!--{loop $list $value}-->
+              <tr>
+                <td width="40"><input type="checkbox" class="form-check-input" name="delete[]" value="$value[id]" /></td>
+                <td ><img src="$value[img]" />$value[cloudname]</td>
+                <td>$value[username]</td>
+                <td> $value[dateline] </td>
+              </tr>
+              <!--{/loop}-->
+            </table>
+          </div>
+          <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="chkall" id="chkall" onclick="checkAll('prefix', this.form, 'del')">
+              <label class="form-check-label" for="chkall">
+                {lang del}
+              </label>
+            </div>
+          </div>
+          <dl class="mb-3 d-grid">
+            <input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang submit}" />
+          </dl>
+            $multi
+        </form>
+        <!--{else}-->
+        <form id="cpform" action="{MOD_URL}&op=edit&bz=$bz" class="form-horizontal"   method="post" name="cpform">
+          <input type="hidden" value="{FORMHASH}" name="formhash">
+          <input type="hidden" value="editsubmit" name="true">
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang name}:</label>
+            <div class="col-sm-10">
+              <input type="text"  name="name" class="form-control"  value="$cloud[name]">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang whether_allow_users_add}:</label>
+            <div class="col-sm-10">
+              <!--{if $cloud[available]>0}-->
+              <div class="form-check form-check-inline">
+                <input type="radio"  class="form-check-input" name="available"  value="2" <!--{if $cloud[available]>1}-->checked="checked"<!--{/if}--> />
+                <label class="form-check-label" for="bbrules1">{lang yes}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type="radio"  class="form-check-input" name="available"  value="1" <!--{if $cloud[available]<2}-->checked="checked"<!--{/if}--> />
+                <label class="form-check-label" for="bbrules1">{lang no}</label>
+              </div>
+              <!--{else}-->
+              <input type="hidden"  name="available"  value="$cloud[available]" />
+              <!--{/if}-->
+              <ul class="form-text">
+                <!--{if $cloud[warning]}-->
+                <li><span class=" text-danger">$cloud[warning]</span></li>
+                <!--{/if}--> 
+                <!--{if $cloud[available]<1}-->
+                <li><span class=" text-danger">{lang cloud_edit_enabled_name}</span></li>
+                <!--{else}-->
+                <li>{lang cloud_edit_enabled_cloud}</li>
+                <!--{/if}-->
+              </ul>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang designator}:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="bz" value="$cloud[bz]"  disabled="disabled">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang root_directory}:</label>
+            <div class="col-sm-10">
+              <input type="text"  name="root" class="form-control" value="$cloud[root]" >
+              <ul class="form-text">
+                {lang cloud_add_root_directory_text}
+              </ul>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">API Key:</label>
+            <div class="col-sm-10">
+              <input type="text"  name="key" class="form-control"  value="$cloud[key]" >
+              <ul class="form-text">
+                {lang cloud_add_API_KEY_text}
+              </ul>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">Secret Key</label>
+            <div class="col-sm-10">
+              <input type="text"  name="secret" class="form-control" value="$cloud[secret]" class="span4">
+              <ul class="form-text">
+                {lang cloud_add_Secret_KEY_text}
+              </ul>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang cloud_add_data_table_name}</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="dname" value="$cloud[dname]" class="span4">
+              <ul class="form-text">
+                {lang cloud_add_data_table_name_text}
+              </ul>
+            </div>
+          </div>
+          <dl class="mb-3 d-grid">
+              <input class="btn btn-primary btn-round bodyloading" name="editsubmit" value="{lang save_changes}" type="submit">
+          </dl>
+        </form>
+        <!--{/if}-->
+      </div>
+    </div>
+    <!--{else}-->
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-pills">
+          <li class="nav-item"> <a class="nav-link <!--{if empty($_GET[do])}-->active<!--{/if}-->" href="{MOD_URL}&op=edit&bz=$bz">{lang set}</a>
+          </li>
+          <!--{if $cloud['available']>0}--> 
+          <li class="nav-item"> <a class="nav-link <!--{if $_GET[do]=='usercloud' }-->active<!--{/if}-->" href="{MOD_URL}&op=edit&bz=$bz&do=usercloud">{lang using_user}</a>
+          </li>
+          <!--{/if}-->
+        </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <!--{if $_GET[do]=='usercloud'}-->
+         <!--{if $list}-->
+        <form id="appform" name="appform" class="form-horizontal" action="{MOD_URL}&op=edit&do=usercloud" method="post" >
+          <input type="hidden" name="cloudsubmit" value="true" />
+          <input type="hidden" name="bz" value="$bz" />
+          <input type="hidden" name="formhash" value="{FORMHASH}" />
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead>
+                <tr>
+                  <th width="30"></th>
+                  <th>{lang name}</th>
+                  <th>{lang username}</th>
+                  <th>{lang add_time}</th>
+                </tr>
+              </thead>
+              <!--{loop $list $value}-->
+              <tr>
+                <td width="40"><input type="checkbox"  class="form-check-input" name="delete[]" value="$value[id]" /></td>
+                <td ><img src="$value[img]" />$value[cloudname]</td>
+                <td>$value[username]</td>
+                <td> $value[dateline] </td>
+              </tr>
+              <!--{/loop}-->
+            </table>
+          </div>
+          <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="chkall" id="chkall" onclick="checkAll('prefix', this.form, 'del')">
+              <label class="form-check-label" for="chkall">
+                {lang del}
+              </label>
+            </div>
+          </div>
+          <dl class="mb-3 d-grid">
+            <input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang submit}" />
+          </dl>
+          $multi
+        </form>
+        <!--{else}-->
+        <div class="text-center">
+          <img src="static/image/common/no_list.png" /><br>
+          <span class="lead">{lang no_relevant_content}…</span>
+        </div>
+        <!--{/if}-->
+        <!--{else}-->
+        <form id="cpform" action="{MOD_URL}&op=edit&bz=$bz" class="form-horizontal" method="post" name="cpform">
+          <input type="hidden" value="{FORMHASH}" name="formhash">
+          <input type="hidden" value="editsubmit" name="true">
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang name}:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="name"  value="$cloud[name]">
+              <span class="form-text">{lang name} </span> </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang whether_allow_users_add}:</label>
+            <div class="col-sm-10">
+              <!--{if $cloud[available]>0}-->
+              <div class="form-check form-check-inline">
+                <input type="radio"  class="form-check-input" name="available"  value="2" <!--{if $cloud[available]>1}-->checked="checked"<!--{/if}--> />
+                <label class="form-check-label" for="bbrules1">{lang yes}</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input type="radio"  class="form-check-input" name="available"  value="1" <!--{if $cloud[available]<2}-->checked="checked"<!--{/if}--> />
+                <label class="form-check-label" for="bbrules1">{lang no}</label>
+              </div>
+              <!--{else}-->
+              <input type="hidden"  name="available"  value="$cloud[available]" />
+              <!--{/if}-->
+              <ul class="form-text">
+                <!--{if $cloud[warning]}-->
+                <li><span class=" text-danger">$cloud[warning]</span></li>
+                <!--{/if}--> 
+                <!--{if $cloud[available]<1}-->
+                <li><span class=" text-danger">{lang cloud_edit_enabled_name}</span></li>
+                <!--{else}-->
+                <li>{lang cloud_edit_enabled_cloud}</li>
+                <!--{/if}-->
+
+              </ul>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang designator}:</label>
+            <div class="col-sm-10">
+              <input type="text"  name="bz" class="form-control" value="$cloud[bz]"  disabled="disabled">
+              <ul class="form-text">
+                {lang cloud_edit_designator_text}
+              </ul>
+            </div>
+          </div>
+          <dl class="mb-3 d-grid">
+              <input class="btn btn-primary btn-round bodyloading" name="editsubmit" value="{lang save_changes}" type="submit">
+          </dl>
+        </form>
+        <!--{/if}-->
+      </div>
+    </div>
+    <!--{/if}-->
+    </div>
+  </div>
+</main>
+<!--{template lyear:footer_simple}--> 

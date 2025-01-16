@@ -24,7 +24,7 @@ class table_folder_sub extends dzz_table
 		return parent::insert($setarr,1);
 		
    }
-	public function update($subid,$setarr){
+	public function update($subid,$setarr, $unbuffered = false, $low_priority = false){
 		if($ret=parent::update($subid,$setarr)){
 			$flag=$setarr['flag'];
 			$allow_exts=isset($setarr['allow_exts'])?$setarr['allow_exts']:null;

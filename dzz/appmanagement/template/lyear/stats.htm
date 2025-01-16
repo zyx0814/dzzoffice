@@ -1,0 +1,112 @@
+<!--{template lyear:header_simple}-->
+<style>
+	body {
+		overflow: auto;
+	}
+</style>
+<!--日期选择器css-->
+<link rel="stylesheet" type="text/css" href="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker3.min.css">
+<div class="card" style="border-radius: 0;margin-bottom:0;">
+	<div class="card-header">
+		<ul class="nav nav-pills">
+			<li class="nav-item"><a class="nav-link <!--{if $time=='all'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=all">概览</a></li>
+			<li class="nav-item"><a class="nav-link <!--{if $time=='month'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=month">月线</a></li>
+			<li class="nav-item"><a class="nav-link <!--{if $time=='week'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=week">周线</a></li>
+			<li class="nav-item"><a class="nav-link <!--{if $time=='day'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=day">日线</a></li>
+		  </ul>
+	</div>
+	<div class="card-body">
+		<!--{if $time!='all'}-->
+		<div class="mb-3">
+			<div class="input-group" data-provide="datepicker">
+			  <span class="input-group-text">从</span>
+			  <input type="text" class="form-control" id="datepicker_start" value="$starttime">
+			  <span class="input-group-text">至</span>
+			  <input type="text" class="form-control" id="datepicker_end" value="$endtime">
+			</div>
+		  </div>
+		  <!--{/if}-->
+		  <canvas class="js-chartjs-bars" id="userstats"></canvas>
+	</div>
+</div>
+<script type="text/javascript">
+	var myChart;
+	jQuery(document).ready(function(e) {
+		myChart = new Chart($("#userstats"), {
+			type: 'line',
+			data: [],
+			options: {
+				responsive: true,
+				plugins: {
+					legend: {
+					position: 'top',
+					},
+					title: {
+					display: true,
+					text: '用户增长统计'
+					},
+				}
+			}
+		});
+		getdatebytime();
+		jQuery('#datepicker_start').datepicker({
+			showWeek:true,
+				selectWeek:true,
+				todayBtn:true,//今日按钮
+				autoclose:true,//选中自动关闭
+				todayHighlight:true,//今天日期高亮显示
+				language: 'zh_CN',
+				<!--{if $time=='month'}-->
+				format: 'yyyy-mm',
+				viewMode: "months", 
+				minViewMode: "months",
+				<!--{/if}-->
+			}).on('changeDate', function(e) {
+				getdatebytime();
+		});
+		jQuery('#datepicker_end').datepicker({
+				showWeek:true,
+				selectWeek:true,
+				todayBtn:true,//今日按钮
+				autoclose:true,//选中自动关闭
+				todayHighlight:true,//今天日期高亮显示
+				language: 'zh_CN',
+				<!--{if $time=='month'}-->
+				format: 'yyyy-mm',
+				viewMode: "months", 
+				minViewMode: "months",
+				<!--{/if}-->
+			}).on('changeDate', function(e) {
+				getdatebytime();
+		});
+	});
+	function getdatebytime(){
+		var start=jQuery('#datepicker_start').val();
+		var end=jQuery('#datepicker_end').val();
+		<!--{if $time !=='all'}-->
+		if (!start || !end) {
+			showmessage('请选择有效的开始和结束日期', 'danger', '3000', 1);
+			return;
+		}
+		<!--{/if}-->
+		var url='{MOD_URL}&do=stats&operation=getdata&time=$time&starttime='+start+'&endtime='+end;
+		var time='{$time}';
+		jQuery.post(url,function(json){
+		if(json['success']){
+			// 更新图表数据
+			myChart.data.labels = json['labels'];
+			myChart.data.datasets = json['datasets'];
+			myChart.update(); // 重新渲染图表
+		} else {
+			showmessage('{lang error}', 'danger', '3000', 1);
+		}
+		},'json')
+		.fail(function() {
+			showmessage('操作异常', 'danger', '3000', 1);
+		});
+	}
+</script>
+<!--日期选择器js-->
+<script type="text/javascript" src="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="static/lyear/js/chart.min.js"></script>
+<!--{template lyear:footer}-->

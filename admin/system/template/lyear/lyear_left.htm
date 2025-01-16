@@ -1,0 +1,8 @@
+<!--{eval
+$oparr = array('updatecache' => 'mdi-cog-counterclockwise','database' => 'mdi-database', 'cron' => 'mdi-clipboard-clock-outline','systemupgrade' => 'mdi-upload','xtxx' => 'mdi-cog-pause-outline','fileperms' => 'mdi-floppy');
+}-->
+<ul class="nav-drawer nav-stacked nav-pills">
+	<!--{loop $oparr $key $value}-->
+	<li class="nav-item"><a class="nav-link <!--{if $op==$key}-->active<!--{/if}-->" href="{MOD_URL}&op=$key"><i class="mdi $value"></i><span><!--{eval echo lang($key)}--></span></a></li>
+	<!--{/loop}-->
+</ul>

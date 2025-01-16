@@ -11,8 +11,8 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 
 if(!submitcheck('mailchecksubmit')) {
-	$op = $_GET['op']?$_GET['op']:' ';
-	$navtitle=lang('email_send_test');
+	$op = isset($_GET['op']) ? $_GET['op'] : '';
+	$navtitle=lang('email_send_test').' - '.lang('appname');
 	include template('mailcheck');
 }else{
 	if(!is_array($_G['setting']['mail'])) {

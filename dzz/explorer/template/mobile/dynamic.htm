@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--{template mobile/mobile_header}-->
+    <title>动态</title>
+</head>
+<body>
+<!--列表开始-->
+<section class="weui-cells weui-cells__recent" id="dynamic_list">
+
+</section>
+<!--列表结束-->
+</body>
+<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+<script type="text/javascript">
+    var rid = '{$rid}', fid = '{$fid}',param={};
+    $(function () {
+        $.post(MOD_URL+'&op=mobile&do=dynamic&operation=dynamiclist', {
+            'rid': rid,
+            'fid': fid,
+            k: Math.random()
+        }, function (html) {
+            $('#dynamic_list').html(html);
+        })
+
+    })
+//单页滚动加载
+var loading = false;  //状态标记
+jQuery(document.body).infinite().on("infinite", function() {
+  if(loading) return;
+  loading = true;
+  if (param.page) {
+	jQuery.ajax({
+		url:MOD_URL+'&op=mobile&do=dynamic&operation=dynamiclist',
+	    type: 'get',
+	    data:param,
+	    success: function(data) {
+	        jQuery(data).appendTo("#dynamic_list");
+		        if(!param.page){
+		        	 loading = false;
+		        }else{
+		        	loading = true;
+		        }
+	           
+	        }
+	    })
+	  } else {
+	    jQuery(document.body).destroyInfinite();
+	  }
+});
+</script>
+<!--{hook footer_tpl}-->
+<!--{eval output();}-->
+</html>

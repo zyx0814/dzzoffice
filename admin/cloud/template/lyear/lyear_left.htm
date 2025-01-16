@@ -1,0 +1,10 @@
+<!--{eval $bz=$bz?$bz:'dzz';}-->
+<!--{eval $clouds=DB::fetch_all("select * from ".DB::table('connect')." where 1 order by disp");}-->
+<ul class="nav-drawer nav-stacked nav-pills">
+	<li class="nav-item"> <a class="nav-link <!--{if $operation=='setting'}-->active<!--{/if}-->" href="{MOD_URL}&operation=setting"><i class="mdi mdi-cog"></i><span>{lang cloud_set}</span></a>
+	</li>
+	<!--{loop $clouds $value}--> 
+	<li class="nav-item"><a class="nav-link <!--{if $operation!='setting' && $bz==$value[bz]}-->active<!--{/if}-->" href="{MOD_URL}&op=edit&bz=$value[bz]"><i class="mdi mdi-cloud"></i><span>$value[name]</span></a>
+	</li>
+	<!--{/loop}-->
+</ul>

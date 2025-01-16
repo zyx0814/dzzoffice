@@ -1,0 +1,144 @@
+/*单页面样式开始*/
+/*.group-filemember{
+	position: relative;
+}*/
+.group-filemember table{
+	table-layout: fixed;
+	margin: 0;
+}
+.group-filemember .table td .emptyPage img{
+	max-height: 180px;
+	max-width: 240px;
+}
+.group-filemember .table th{
+	border-bottom:1px solid #ddd;
+	line-height: 30px;
+	color: rgba(99, 99, 99, 1);
+	cursor: pointer;
+}
+.group-filemember  td, .group-filemember th,.group-filemember .member_item_td_name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.group-filemember .member_header_td_div {
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 25px;
+    height: 22px;
+}
+.member_header_select{
+	
+}
+.group-filemember .member_tr{
+	height: 32px;
+}
+.group-filemember .member_tr.hover{
+	background-color:rgba(247, 248, 249, 1);
+}
+.group-filemember .member_tr.Icoselected{
+	background-color:#d8e6fe;
+}
+.group-filemember  .table .Icoselected td{
+	  border-bottom: 1px solid #cbd8f0;
+}
+.group-filemember .table td{
+	border-top: 0;
+	border-bottom: 1px solid rgba(238, 238, 238, 1);
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	/*cursor: pointer;*/
+}
+.group-filemember .member_item_td_div{
+	line-height: 30px;
+	height: 30px;
+	float: left;
+	overflow: hidden;
+}
+.group-filemember .member_item_td_name{
+	overflow: hidden;
+}
+.group-filemember .member_text{
+	 word-break: break-all;
+}
+.group-filemember .member_item_name_text{
+	margin-left: 5px;
+	cursor: pointer;
+}
+.group-filemember .table td,.group-filemember .table th{
+	line-height: 30px;
+}
+.group-filemember .table td.member_header_color{
+	cursor: pointer;
+}
+.member_item_dropdown_a{
+	border-radius: 2px;
+	position: relative;
+    padding: 0px 83px 0px 15px;
+    display:inline-block ;
+    width: 154px;
+    height: 31px;
+    line-height: 31px;
+}
+.member_item_caret{
+	position: absolute;
+    right: 10px;
+    line-height: 32px;
+    top: 13px;
+}
+/*@media only screen and (min-width: ) {
+	
+}*/
+.recent-allcon .group-filemember-header{
+	padding-right: 0px;
+}
+
+.group-filemember-header .table tr th:hover{
+	background: rgba(247, 248, 249, 1);
+}
+.group-filemember-header .table tr th .detail_header_icon{
+	display: none;
+}
+.group-filemember-header .table tr th:first-child .detail_header_icon{
+	display: inline-block;
+}
+.group-filemember-header .table tr th .detail_header_icon span{
+	color:#3779ff;
+}
+.group-filemember .member_item_td .member_item_dropdown{
+	max-width: 140px;
+}
+.group-filemember .member_item_td .member_item_dropdown .dropdown-menu .member_item_menuli a{
+	padding: 8px 10px;
+}
+.group-filemember .member_item_td_name .member_item_td_images{
+	width: 24px;
+	height: 24px;
+	font-size: 24px;
+	vertical-align: middle;
+	display: inline-block;
+	margin-right: 0px;
+}
+.group-filemember .member_item_member{
+	overflow: visible!important;
+}
+.member_display .selectbox{
+	background-color:#eee ;
+}
+.detail_header_icon span{
+	font-size: 16px;
+    color: rgba(155, 155, 155, 1);
+}
+#memberlist .Icoblock *{
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
+#memberlist .Icoblock .switchery{
+	box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+}
+/*单页面样式结束*/

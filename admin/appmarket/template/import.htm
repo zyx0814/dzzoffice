@@ -2,7 +2,7 @@
 <link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all"> 
 <link href="static/select2/select2.css?{VERHASH}" rel="stylesheet" media="all">
 <link href="static/select2/select2-bootstrap.css?{VERHASH}" rel="stylesheet" media="all">
-
+<link rel="stylesheet" href="static/switchery/switchery.min.css">
 <link rel="stylesheet" href="static/css/checkbox.css">
 <link href="static/css/app_manage.css?{VERHASH}" rel="stylesheet" media="all">
 <script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
@@ -47,6 +47,10 @@
 					<dt>{lang import_paste_data}：</dt>
 					<dd class="clearfix"><textarea type="textarea" class="form-control" style="width:80%;" name="importtxt" rows="5"></textarea></dd>
 				</dl>
+				<dl>
+					<dt>忽略版本限制</dt>
+					<dd class="clearfix"><input type="checkbox" class="js-switch" name="ignoreversion"/> </dd>
+				</dl>
 				<input type="submit" class="btn btn-primary" value="{lang submit}" style="padding:6px 25px" />
 			</form>
 
@@ -73,6 +77,13 @@
 			
 		}
 	});
+	//开关样式
+    jQuery.getScript('static/switchery/switchery.min.js',function(){
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html);
+        });
+    });
 </script>
 <script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
 <!--{template common/footer_simple}-->

@@ -5,7 +5,8 @@ if(!defined('IN_DZZ')) {
 }
 
 require_once libfile('function/seccode');
-if($_GET['action'] == 'update') {
+$action = isset($_GET['action']) ? $_GET['action'] : '';
+if($action == 'update') {
 
 	$message = '';
 	if($_G['setting']['seccodestatus']) {
@@ -48,7 +49,7 @@ if($_GET['action'] == 'update') {
 				}
 				exit;
 			} else {
-				$message = lang('seccode_image'.$ani.'_tips').'<img onclick="updateseccode(\''.$idhash.'\')" width="'.$_G['setting']['seccodedata']['width'].'" height="'.$_G['setting']['seccodedata']['height'].'" src="misc.php?mod=seccode&update='.$rand.'&idhash='.$idhash.'" class="img-seccode" title="'.lang('refresh_verification_code').'" alt="" />';
+				$message = '<img onclick="updateseccode(\''.$idhash.'\')" width="'.$_G['setting']['seccodedata']['width'].'" height="'.$_G['setting']['seccodedata']['height'].'" src="misc.php?mod=seccode&update='.$rand.'&idhash='.$idhash.'" class="img-seccode" title="'.lang('refresh_verification_code').'" alt="" />';
 			}
 		}
 	}
@@ -56,34 +57,30 @@ if($_GET['action'] == 'update') {
 	echo lang($message, array('flashcode' => $flashcode, 'idhash' => $idhash));
 	include template('common/footer_ajax');
 
-} elseif($_GET['action'] == 'check') {
+} elseif($action == 'check') {
 
 	include template('common/header_ajax');
 	echo check_seccode($_GET['secverify'], $_GET['idhash']) ? 'succeed' : 'invalid';
 	include template('common/footer_ajax');
 
 } else {
-
-	$refererhost = parse_url($_SERVER['HTTP_REFERER']);
-	$refererhost['host'] .= !empty($refererhost['port']) ? (':'.$refererhost['port']) : '';
-
-	if($_G['setting']['seccodedata']['type'] < 2 && ($refererhost['host'] != $_SERVER['HTTP_HOST'] || !$_G['setting']['seccodestatus']) || $_G['setting']['seccodedata']['type'] == 2 && !extension_loaded('ming') && $_POST['fromFlash'] != 1 || $_G['setting']['seccodedata']['type'] == 3 && $_GET['fromFlash'] != 1) {
+	$refererhost = parse_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
+	$refererhost['host'] = (isset($refererhost['host']) ? $refererhost['host'] : '').(!empty($refererhost['port']) ? (':'.$refererhost['port']) : '');
+	if(($_G['setting']['seccodedata']['type'] < 2 && ($refererhost['host'] != $_SERVER['HTTP_HOST'])) || !$_G['setting']['seccodestatus'] || (($_G['setting']['seccodedata']['type'] == 2 && !extension_loaded('ming') && $_POST['fromFlash'] != 1 || $_G['setting']['seccodedata']['type'] == 3 && $_GET['fromFlash'] != 1))) {
 		exit('Access Denied');
 	}
 
 	$seccode = make_seccode($_GET['idhash']);
-
-	if(!$_G['setting']['nocacheheaders']) {
+	if(!isset($_G['setting']['nocacheheaders'])) {
 		@header("Expires: -1");
 		@header("Cache-Control: no-store, private, post-check=0, pre-check=0, max-age=0", FALSE);
 		@header("Pragma: no-cache");
 	}
 
 	require_once libfile('class/seccode');
-
 	$code = new seccode();
 	$code->code = $seccode;
-	$code->type = $_G['setting']['seccodedata']['type'];
+	$code->type = (in_array($_G['setting']['seccodedata']['type'], array(2, 3))) ? 0 : $_G['setting']['seccodedata']['type'];
 	$code->width = $_G['setting']['seccodedata']['width'];
 	$code->height = $_G['setting']['seccodedata']['height'];
 	$code->background = $_G['setting']['seccodedata']['background'];
@@ -99,7 +96,6 @@ if($_GET['action'] == 'update') {
 	$code->fontpath = DZZ_ROOT.'./static/image/seccode/font/';
 	$code->datapath = DZZ_ROOT.'./static/image/seccode/';
 	$code->includepath = DZZ_ROOT.'./core/class/';
-
 	$code->display();
 
 }

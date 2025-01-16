@@ -308,9 +308,9 @@ class PHPExcel_Calculation_Functions {
 
 	public static function _ifCondition($condition) {
 		$condition	= PHPExcel_Calculation_Functions::flattenSingleValue($condition);
-		if (!isset($condition{0}))
+		if (!isset($condition[0]))
 			$condition = '=""';
-		if (!in_array($condition{0},array('>', '<', '='))) {
+		if (!in_array($condition[0],array('>', '<', '='))) {
 			if (!is_numeric($condition)) { $condition = PHPExcel_Calculation::_wrapResult(strtoupper($condition)); }
 			return '='.$condition;
 		} else {
@@ -531,7 +531,7 @@ class PHPExcel_Calculation_Functions {
 				break;
 			case 'string'	:
 				//	Errors
-				if ((strlen($value) > 0) && ($value{0} == '#')) {
+				if ((strlen($value) > 0) && ($value[0] == '#')) {
 					return $value;
 				}
 				break;
@@ -581,7 +581,7 @@ class PHPExcel_Calculation_Functions {
 				//break;
 		} elseif(is_string($value)) {
 			//	Errors
-			if ((strlen($value) > 0) && ($value{0} == '#')) {
+			if ((strlen($value) > 0) && ($value[0] == '#')) {
 				return 16;
 			}
 			return 2;

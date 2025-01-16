@@ -1,0 +1,20 @@
+<!--{loop $groups $v}-->
+<a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=file&gid={$v[orgid]}&fid={$v[fid]}">
+	<div class="weui-cell__hd">
+		<!--{if $v['imgs']}-->
+		<img src="$v[img]" class="weui-cell__recentimg">
+		<!--{else}-->
+		<!--{eval echo avatar_group($v['orgid'],array($v['orgid']=>array('aid'=>$v['aid'],'orgname'=>$v['orgname'])));}-->
+		<!--{/if}-->
+	</div>
+	<div class="weui-cell__bd">
+		<h4>$v[orgname]</h4>
+		<p>
+			<span class="file">{lang typename_attach}:</span><i class="file-number">$v[filenum],</i>
+			<span class="folder">{lang type_folder}:</span><i class="folder-number">$v[foldernum]</i>
+		</p>
+	</div>
+	<div class="weui-cell__ft"></div>
+</a>
+<!--{/loop}-->
+			

@@ -7,6 +7,7 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
+Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 $weObj=new qyWechat(array('token'=>getglobal('setting/token_0'),'appid'=>getglobal('setting/CorpID'),'appsecret'=>getglobal('setting/CorpSecret'),'agentid'=>0,'encodingaeskey'=>getglobal('setting/encodingaeskey_0'),'debug'=>false));
 
 $weObj->valid(); //注意, 企业号与普通公众号不同，必须打开验证，不要注释掉

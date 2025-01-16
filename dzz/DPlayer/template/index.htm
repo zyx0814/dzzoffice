@@ -1,0 +1,37 @@
+<!--{template common/header_common}-->
+<style>
+  html,
+	body {
+		height: 100%;
+		overflow: hidden;
+	}
+	.dplayer{
+		height: 100%;
+		width: 100%;
+	}
+</style>
+<div id="dplayer"></div>
+<script src="{MOD_PATH}/images/flv.min.js"></script>
+<script src="{MOD_PATH}/images/dash.all.min.js"></script>
+<script src="{MOD_PATH}/images/DPlayer.min.js"></script>
+<script src="{MOD_PATH}/images/hls.min.js"></script>
+<script src="{MOD_PATH}/images/dash.all.min.js"></script>
+<script src="{MOD_PATH}/images/webtorrent.min.js"></script>
+<script>
+  const dp = new DPlayer({
+      container: document.getElementById('dplayer'),
+      screenshot: true,
+      video: {
+          url: '$src',
+          type: '',
+          customType: {
+              shakaDash: function (video, player) {
+                  var src = video.src;
+                  var playerShaka = new shaka.Player(video); // 将会修改 video.src
+                  playerShaka.load(src);
+              },
+          },
+      },
+  });
+</script>
+<!--{template common/footer}-->

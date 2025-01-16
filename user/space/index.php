@@ -9,24 +9,27 @@
 if(!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-
-Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-
+$navtitle="用户资料";
+$uid=intval($_GET['uid']?$_GET['uid']:$_G['uid']);
+if(!$uid) {
+    Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
+}
 include_once libfile('function/profile');
 include_once libfile('function/organization');
-$uid=intval($_GET['uid']?$_GET['uid']:$_G['uid']);
-
+$users = getuserbyuid($uid);
+$userstatus = C::t('user_status')->fetch($uid);//用户状态
 $space = C::t('user_profile')->get_user_info_by_uid($uid);
-
 $privacy = $space['privacy']['profile'] ? $space['privacy']['profile'] : array();
 
 $space['regdate'] = dgmdate($space['regdate']);
 
 if($space['lastvisit']) $profiles['lastvisit']=array('title'=>lang('last_visit'),'value'=>dgmdate($space['lastvisit']));
 
-
-$profiles['regdate']=array('title'=>lang('registration_time'),'value'=>$space['regdate']);
-
+if($users['regip']){
+    $profiles['regdate']=array('title'=>lang('registration_time'),'value'=>$space['regdate']);
+}else{
+    $profiles['regdate']=array('title'=>lang('add_time'),'value'=>$space['regdate']);
+}
 $user=array();
 
 $space['fusesize']=formatsize($space['usesize']);
@@ -38,7 +41,7 @@ $profiles['usergroup']=array('title'=>lang('usergroup'),'value'=>$usergroup['gro
 $department='';
 foreach(C::t('organization_user')->fetch_orgids_by_uid($uid) as $orgid){
     $orgpath=getPathByOrgid($orgid);
-    $department.='<span class="label label-primary">'.implode('-',($orgpath)).'</span>';
+    $department.='<span class="label label-primary badge rounded-pill bg-primary me-2">'.implode('-',($orgpath)).'</span>';
 }
 if(empty($department)) $department=lang('not_join_agency_department');
 $profiles['department']=array('title'=>lang('category_department'),'value'=>$department);

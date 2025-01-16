@@ -2,6 +2,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
+Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 include libfile('function/filerouterule');
 $savefile = isset($_GET['savefile']) ? intval($_GET['savefile']) : 0;//是否直接保存文件
 $callback = isset($_GET['callback']) ? $_GET['callback'] : 'callback_selectposition';//回调函数名称

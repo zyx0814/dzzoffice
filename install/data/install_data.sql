@@ -3,18 +3,42 @@
 -- 
 INSERT INTO `dzz_app_market` (`appid`,`mid`, `appname`, `appico`, `appdesc`, `appurl`,`appadminurl`, `noticeurl`, `dateline`, `disp`, `vendor`, `haveflash`, `isshow`, `havetask`, `hideInMarket`, `feature`, `fileext`, `group`, `orgid`, `position`, `system`, `notdelete`, `open`, `nodup`, `identifier`, `app_path`, `available`, `version`, `upgrade_version`, `check_upgrade_time`, `extra`) VALUES
 (1, 1, '管理', 'appico/201712/21/184312rthhhg9oujti9tuu.png', '管理员应用集合，方便管理员管理各个管理应用', '{dzzscript}?mod=appmanagement', '', '', 0, 1, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 1, 2, 1, 0, 0, 'appmanagement', 'dzz', 1, '2.0', '', 20171115, ''),
-(2, 2, '机构用户', 'appico/201712/21/131016is1wjww2uwvljllw.png', 'Dzz机构用户管理', '{adminscript}?mod=orguser', '', '', 1377753015, 2, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'orguser', 'admin', 1, '2.0', '', 20171211, ''),
+(2, 2, '机构用户', 'appico/201712/21/131016is1wjww2uwvljllw.png', 'Dzz机构用户管理', '{dzzscript}?mod=orguser', '', '', 1377753015, 2, '乐云网络', 0, 1, 0, 0, '', '', 1, 0, 1, 2, 1, 1, 0, 'orguser', 'dzz', 1, '2.0', '', 20171211, ''),
 (3, 3, '系统设置', 'appico/201712/21/160754fwfmziiiift3gwsw.png', '系统基础设置', '{adminscript}?mod=setting', '', '', 1377677273, 3, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'setting', 'admin', 1, '2.0', '', 20171115, ''),
 (4, 4, '应用市场', 'appico/201712/21/152718k9g2pc6wouwkklwl.png', '应用管理，应用市场，支持应用在线安装，在线升级等', '{adminscript}?mod=appmarket', '', '', 1377674837, 4, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'appmarket', 'admin', 1, '2.0', '', 20171115, ''),
 (5, 5, '云设置和管理', 'appico/201712/21/171106u1dk40digrrr79ed.png', '设置和管理第三方云盘、云存储等', '{adminscript}?mod=cloud', '', '', 0, 5, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'cloud', 'admin', 1, '2.0', '', 20171115, ''),
-(6, 6, '文件管理', 'appico/201712/21/175535t47bad99b7sssdwq.png', '管理和查看系统所有文件', '{adminscript}?mod=filemanage', '', '', 0, 6, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'filemanage', 'admin', 1, '2.0', '', 20180206, ''),
-(7, 7, '分享管理', 'appico/201712/21/165535t47bad99b7qqqdwq.png', '管理和查阅所有分享', '{adminscript}?mod=share', '', '', 0, 7, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'share', 'admin', 1, '2.0', '', 20180206, ''),
+(6, 6, '文件管理', 'appico/201712/21/175535t47bad99b7sssdwq.png', '管理和查看系统所有文件', '{dzzscript}?mod=filemanage', '', '', 0, 6, '乐云网络', 0, 1, 0, 0, '', '', 1, 0, 1, 2, 1, 1, 0, 'filemanage', 'dzz', 1, '2.0', '', 20180206, ''),
+(7, 7, '分享管理', 'appico/201712/21/165535t47bad99b7qqqdwq.png', '管理和查阅所有分享', '{dzzscript}?mod=share', '', '', 0, 7, '乐云网络', 0, 1, 0, 0, '', '', 1, 0, 1, 2, 1, 1, 0, 'share', 'dzz', 1, '2.0', '', 20180206, ''),
 (8, 8, '系统日志', 'appico/201712/21/113527zz2665xg7d3h2777.png', 'Dzz 日志记录', '{adminscript}?mod=systemlog', '{adminscript}?mod=systemlog&op=admin', '', 0, 8, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'systemlog', 'admin', 1, '2.0', '', 20171115, 'a:2:{s:11:\"installfile\";s:11:\"install.php\";s:13:\"uninstallfile\";s:13:\"uninstall.php\";}'),
 (9, 9, '系统工具', 'appico/201712/21/160537cikgw2v6s6z4scuv.png', '系统维护相关工具集合，如：更新缓存、数据库备份，计划任务，在线升级等', '{adminscript}?mod=system', '', '', 1377677136, 9, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'system', 'admin', 1, '2.0', '', 20171115, ''),
-(10, 10, '应用库', 'appico/201712/21/123754pb0s666i6sjws1jc.png', '通过应用库用户选择安装自己需要的应用', '{dzzscript}?mod=market', '', '{dzzscript}?mod=market&op=notice', 1378615073, 10, '乐云网络', 0, 1, 1, 0, '', '', 1, 0, 1, 0, 1, 0, 0, 'market', 'dzz', 0, '2.0', '', 20171115, ''),
 (11, 11, '投票', 'appico/201712/21/150002d834yjjqnq82qj8z.png', 'Dzz 内置投票组件，结合其他应用使用，如新闻中用到投票插件，其他开发者也可以为自己的应用调用这个通用评论插件', '{dzzscript}?mod=dzzvote', '', '', 1378615073, 11, '乐云网络', 0, 0, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'dzzvote', 'dzz', 1, '2.0', '', 20171115, ''), 
-(12, 12, '评论', 'appico/201712/21/128754pb0s666i6sjws1jc.png', 'Dzz 系统评论组件，结合在其他应用使用，如新闻。其他开发者也可以为自己的应用调用这个通用评论插件', '{dzzscript}?mod=comment', '', '', 1378615073, 12, '乐云网络', 0, 0, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'comment', 'dzz', 1, '2.0', '', 20171115, ''),
-(13, 37, '用户资料管理', 'appico/201712/21/103805dczcm89b0gi8i9gc.png', '管理用户资料、资料审核、认证等', '{adminscript}?mod=member', '', '', 1378615073, 13, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'member', 'admin', 1, '2.0', '', 20171115, '');
+(12, 12, '评论', 'appico/201712/21/128754pb0s666i6sjws1jc.png', 'Dzz 系统评论组件，结合在其他应用使用，如新闻。其他开发者也可以为自己的应用调用这个通用评论插件', '{dzzscript}?mod=comment', '', '', 1378615073, 12, '乐云网络', 0, 1, 0, 0, '', '', 1, 0, 1, 2, 1, 0, 0, 'comment', 'dzz', 1, '2.0', '', 20171115, ''),
+(13, 37, '用户资料管理', 'appico/201712/21/103805dczcm89b0gi8i9gc.png', '管理用户资料、资料审核、认证等', '{adminscript}?mod=member', '', '', 1378615073, 13, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'member', 'admin', 1, '2.0', '', 20171115, ''),
+(14, 27, '网盘', 'appico/202411/02/170040bgapsjg4pt4nuee4.png', '企业、团队文件集中管理。主要体现的功能是支持企业部门的组织架构建立共享目录，也支持组的方式灵活建立共享目录。支持文件标签，多版本，评论，详细的目录权限等协作功能', '{dzzscript}?mod=explorer', '', '', 0, 0, '乐云网络', 0, 1, 1, 0, '', '', 1, 0, 1, 0, 1, 0, 0, 'explorer', 'dzz', 1, '2.05', '', 0, ''),
+(15, 25, '图片预览', 'appico/202411/02/184008xbuvo0sh8y1xey8f.png', '简易的图片浏览器', 'dzzjs:OpenPicWin(''{icoid}'')', '', '', 0, 101, '乐云网络', 0, 0, 1, 0, '', 'image', 0, 0, 1, 0, 1, 0, 0, 'OpenPicWin', 'dzz/link', 1, '2.1', '', 0, ''),
+(16, 41, 'DPlayer', 'appico/202411/02/184037v0by6dzb1wwobdy3.png', 'DPlayer，支持MP3,mp4,flv,wav等格式', '{dzzscript}?mod=DPlayer', '', '', 0, 0, '小胡（gitee.com/xiaohu2024)', 0, 0, 1, 0, '', 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne', 0, 0, 1, 0, 1, 1, 0, 'DPlayer', 'dzz', 1, '1.2', '', 0, ''),
+(17, 13, 'PDF阅读器', 'appico/202411/02/170328nz056he0mixeezpo.png', '通过HTML5的方式来实现pdf在线预览', 'index.php?mod=pdf', '', '', 0, 17, 'PDS.JS', 0, 0, 1, 0, '', 'pdf,ai,qiniu:doc,qiniu:docx,qiniu:ppt,qiniu:pptx,qiniu:xls,qiniu:xlsx', 0, 0, 1, 0, 1, 0, 0, 'pdf', 'dzz', 1, '2.1', '', 0, '');
+
+--
+-- 转存表中的数据 `dzz_app_open`
+--
+INSERT INTO `dzz_app_open` (`ext`, `appid`, `disp`, `extid`, `isdefault`) VALUES
+('image', 15, 0, 1, 0),
+('mp3', 16, 0, 2, 0),
+('mp4', 16, 0, 3, 0),
+('m4v', 16, 0, 4, 0),
+('flv', 16, 0, 5, 0),
+('webm', 16, 0, 6, 0),
+('ogv', 16, 0, 7, 0),
+('wav', 16, 0, 8, 0),
+('m3u8', 16, 0, 9, 0),
+('f4v', 16, 0, 10, 0),
+('webmv', 16, 0, 11, 0),
+('mkv', 16, 0, 12, 0),
+('magne', 16, 0, 13, 0),
+('pdf', 17, 0, 14, 0),
+('ai', 17, 0, 15, 0);
+
 --
 -- 转存表中的数据 `dzz_app_tag`
 --
@@ -210,6 +234,8 @@ INSERT INTO `dzz_setting` VALUES('systemlog_setting','a:7:{s:8:"errorlog";a:3:{s
 
 INSERT INTO `dzz_setting` VALUES('fileVersion', '1');
 INSERT INTO `dzz_setting` VALUES('fileVersionNumber', '50');
+
+INSERT INTO `dzz_setting` VALUES('default_mod', 'explorer');
 --
 -- 转存表中的数据 `dzz_imagetype`
 --

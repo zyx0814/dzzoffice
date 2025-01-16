@@ -8,6 +8,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
+Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 $savefile = isset($_GET['savefile']) ? intval($_GET['savefile']) : 0;//是否直接保存文件
 $callback = isset($_GET['callback']) ? $_GET['callback'] : 'callback_selectposition';//回调函数名称
 $allowcreate = isset($_GET['allowcreate']) ? intval($_GET['allowcreate']):0;//是否允许新建文件夹

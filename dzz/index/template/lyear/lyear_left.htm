@@ -1,0 +1,9 @@
+<ul class="nav-drawer nav-stacked nav-pills popup-index ui-sortable">
+	<li class="nav-item">
+		<a href="{MOD_URL}" class="nav-link active">
+		<img src="<!--{if !$_G['setting']['bbclosed']}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{else}-->static/image/common/logo.png<!--{/if}-->">
+		  <span>{lang index}</span>
+		</a>
+	  </li>
+</ul>
+	

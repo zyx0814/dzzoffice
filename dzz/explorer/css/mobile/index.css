@@ -1,0 +1,612 @@
+/*头部搜索*/
+.weui-search-bar{
+	background-color:#F2F2F2;
+	padding: 0.5rem 0.5rem 0rem 0.5rem;
+	margin-bottom: 0.5rem;
+}
+.weui-search-bar__form{
+	background-color: transparent;
+	height: 1.5rem;
+}
+.weui-search-bar__box{
+	padding-left: 0.5rem;
+}
+.weui-search-bar__box .weui-icon-search{
+	right: 0.5rem;
+	left: auto;
+}
+.weui-search-return__cancel-btn{
+	margin-left: 0.5rem;
+    line-height: 1.4rem;
+    color: #3779ff;
+    white-space: nowrap;
+}
+.weui-search-index__label,.weui-search-bar__label{
+	position: absolute;
+	text-align: left;
+	padding-left: 0.5rem;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	border-radius: 30px;
+	z-index: 2;
+	color: #9b9b9b;
+    background: #fff;
+}
+.weui-search-index__label .weui-icon-search,.weui-search-bar__label .weui-icon-search{
+	float: right;
+    clear: both;
+    line-height: 1.5rem;
+    margin-right: 0.5rem;
+}
+.weui-search-index__label span,.weui-search-bar__label span{
+	vertical-align: middle;
+	font-size: 14px;
+/*	padding: 0.25rem 0;*/
+	line-height: 1.5rem;
+}
+.weui-search-bar__member{
+	margin-left: 0.5rem;   
+    color: #3779ff;
+}
+.weui-search-bar__member i{
+	font-size: 24px;
+	vertical-align: middle;
+}
+.weui-search-bar__form:after{
+	border-radius: 30px;
+}
+.weui-search-bar:after{
+	border: none;
+}
+.weui-cell__bd p .weui-search-word{
+	color:#555555 ;
+	font-size: 0.8rem;
+	font-family: "微软雅黑";
+}
+.weui-cell__bd p .weui-search-value{
+	color:#3779ff ;
+	font-size: 0.8rem;
+	font-family: "微软雅黑";
+}
+.weui-cell-search-images{
+    width: 100%;
+    text-align: center;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.weui-cell-search-images-con{
+	display: block;
+    margin: auto;
+    color: #999999;
+    width:140px;
+}
+.weui-cell-search-images img{
+	display: block;
+    margin: auto;
+    color: #999999;
+    width:140px;
+}
+.weui-search-bar__box .weui-search-bar__input{
+	padding:0;
+	line-height: 1.5rem;
+	height: auto;
+}
+.weui-search-bar__box .weui-icon-clear{
+	line-height: 1.5rem;
+}
+/*头部搜索结束*/
+/*列表开始*/
+.weui-cells{
+	margin-top: 0rem;
+	margin-bottom: 0.5rem;
+}
+
+.weui-cell__img{
+	font-size: 24px;
+	margin-right:0.5rem;
+	display:block;
+	color: #FFFFFF;	
+	padding:0.4rem;
+	border-radius: 0.14rem;
+}
+
+.iconFirstWord{
+	display: block;
+	color: #fff;
+	font-size:1rem;
+	width: 2rem;
+	height: 2rem;
+	line-height: 2rem;
+	text-align: center;
+	border-radius: 2px;
+	margin-right: 0.5rem;
+	font-weight: bold;
+	
+}
+.weui-cell__bd{
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+.weui-cell__bd h4{
+	color:#555555;
+	font-size: 0.8rem;
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+.weui-cell__bd p{
+	color: #999999;
+	font-size: 0.7rem;
+}
+.weui-cell__bd p i{
+	font-style: normal;
+}
+.weui-cell_access .weui-cell__ft:after{
+	color:#CCCCCC;
+}
+.weui-cell:before{
+	left: 3.25rem;
+}
+.weui-cells__margin_footer{
+	margin-bottom: 70px;
+}
+/*列表结束*/
+/*底部开始*/
+.weui-cells__recent{
+	margin-top: 0rem;
+}
+.weui-cell-footer{
+	display: -webkit-flex;
+	display: -webkit-box;
+	display: flex;
+	box-sizing: border-box;
+	position: fixed;
+	bottom: 0rem;
+	background-color: #FFFFFF;
+	box-shadow: 0px 0px 6px 0px 
+		rgba(0, 0, 0, 0.1);
+	right: 0rem;
+	left: 0rem;
+	border-radius: 0rem;
+	z-index: 999;
+}
+.weui-footer-item{
+	display: block;
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	flex: 1;
+	text-align: center;
+	padding: 0.25rem 0px;
+	position: relative;
+}
+.weui-footer-item i{
+	color:#3779ff;
+	font-size: 1rem;
+}
+.weui-footer-item p{
+	font-size: 0.6rem;
+	color: #666666;
+}
+.weui-footer-item a{
+	display: block;
+	position: relative;
+}
+.weui-cell__hd .weui-cell__recentimg{
+	width: 2rem;
+	height: 2rem;
+	margin-right: 0.5rem;
+	border-radius: 2px;
+}
+.weui-cell__hd .right-topicon{
+	font-size: 2rem;
+    vertical-align: text-top;
+}
+.weui-cell__bd p .date{
+	padding-right:0.25rem;
+}
+.weui-dropup{
+	box-shadow: 0px 2px 6px 0px 
+		rgba(0, 0, 0, 0.1);
+	background-color: #fff;
+	border-radius: 2px;
+	position: absolute;
+	bottom: 100%;
+    left: 10%;
+    float: left;
+    min-width: 180px;
+    margin-bottom: 5px;
+    z-index: 3;
+}
+.weui-dropup-right{
+	left: auto;
+	right: 10%;
+}
+.weui-dropup>li{
+	margin: 0 1rem;
+	overflow: hidden;
+}
+.weui-dropup>li>a{
+	display: block;
+	padding: 0.5rem 0rem;
+	border-bottom:1px solid #f2f2f2 ;
+	color: #666666;
+	text-align: left;
+	position: relative;
+}
+.weui-dropup>li:last-child>a{
+	border-bottom: none;
+}
+.weui-dropup>li>a .weui-iput{
+	position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    opacity: 0;
+}
+/*底部结束*/
+/*我的网盘开始*/
+.weui-address{
+	position: relative;
+}
+.weui-index{
+	position: absolute;
+	top: 0.4rem;
+	left: 0.5rem;
+	width: 3rem;
+	line-height: 1rem;
+}
+.weui-index .dzz-index{
+	font-size: 1.2rem;
+	color:#3779FF ;
+}
+.weui-index .dzz-index-vline{
+	font-size: 1.2rem;
+	color:#DDDDDD ;
+}
+.weui-address-container{
+	overflow: hidden;
+}
+.weui-address-container{
+	margin-left: 3rem;
+	overflow: hidden;
+	line-height: 1.7rem;
+	position: relative;
+	height: 2rem; 
+}
+.weui-address-field{
+	position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    white-space: nowrap;
+    padding: 0.15rem;
+    min-width: 100%;	
+}
+.weui-address-field li{
+	float: left;
+	color:#666666 ;
+}
+.weui-address-field li a{
+	font-size: 0.7rem;
+	color: #666666;
+}
+.weui-address-field li span{
+	vertical-align: middle;
+}
+.weui-dialog__bd .weui-prompt-input{
+	border: none;
+	width: 100%;
+	padding: 4px 0px;
+}
+.weui-dialog__hd{
+	padding:1rem 1rem 0.5rem;
+	text-align: left;
+	color: #666666;
+	font-size:0.8rem ;
+}
+.weui-dialog__bd{
+	padding:0rem 1rem 0rem;
+	text-align: left;
+}
+
+.weui-dialog .weui-dialog__ft{
+	font-size: 0.7rem;
+	line-height: 2.9rem;
+}
+
+.weui-dialog .weui-dialog__btn.default{
+	color: #666666;
+}
+.weui-dialog .weui-dialog__btn.primary{
+	color: #3779ff;
+}
+
+/*我的网盘结束*/
+/*分享开始*/
+.weui-cell__exprie{
+	color:#3779FF ;
+	font-size: 0.7rem;
+}
+.weui-cell__exprie .weui-cell__exprie_date .weui-cell__exprie_time{
+	font-style: normal;
+}
+.weui-form-share__detail{
+	margin-top: 0.5rem;
+}
+.weui-form-preview__bd{
+	text-align: left;
+}
+.weui-form-preview__bd .weui-form-preview__label{
+	color: #555555;
+}
+.weui-form-preview__bd .weui-form-preview__time{
+	color:#3779ff ;
+}
+.weui-form-preview__bd .weui-form-button{
+	color: #3779ff;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	display: block;
+}
+.weui-share-edit{
+	background-color: #FFFFFF;
+	line-height: 2.75rem;
+	text-align: center;
+	font-size: 0.8rem;
+}
+.weui-share-edit .weui-flex__item{
+	color: #666666;
+}
+.weui-share-edit .placeholder{
+	color: #2196f3;
+}
+.weui-share-edit .weui-share-edit-cancel{
+	padding-left: 1rem;
+}
+.weui-share-div-edit-cancel{
+	display: block;
+	color: #2196f3;
+}
+.weui-share-edit .weui-share-edit-keep{
+	padding-right: 1rem;
+}
+.weui-cells_form{
+	font-size: 0.8rem;
+}
+.weui-label{
+	color:#555555 ;
+	
+}
+.weui-input-more{
+	position: absolute;
+    right: 1em;
+    color: #c7c7cc;
+}
+.weui-input-more-date{
+	font-size: 1.2rem;
+    line-height: 1.2rem;
+}
+.weui-iput-more-copy{
+	font-size: 0.8rem;
+	color: #2196f3;
+}
+.weui-share-edit-form .weui-cell:before{
+	left: 0;
+}
+.img-thumbnail {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+    padding: 4px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border-radius: 4px;
+    -webkit-transition: all .2s ease-in-out;
+    -o-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.shareClose {
+    background-color: transparent;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border: none;
+    padding: 5px;
+}
+.shareClose i {
+    font-size: 22px;
+    color: rgb(153, 153, 153);
+}
+.weui-dialog__bd p{
+	text-align: center;
+}
+.shareInfo{
+	margin: 0.5rem 0rem;
+}
+/*分享结束*/
+/*属性开始*/
+.weui-form-preview__attr{
+	border-top: 1px solid #E5E5E5;
+}
+.weui-form-preview__value li{
+	float: left;
+	padding-right: 0.6rem;
+}
+.weui-form-preview__value li span{
+	color:#4c89fb;
+	font-size: 1rem;
+}
+.weui-progress__bar{
+	height: 0.3rem;
+}
+.weui-progress__inner-bar{
+	background-color: #4c89fb;
+}
+.weui-attr-progress{
+	margin-bottom: 0.5rem;
+}
+/*属性结束*/
+/*动态开始*/
+.weui-dynamic-user-time{
+	color: #999;
+	font-size: 0.6rem;
+	font-weight: normal;
+	float: right;
+}
+.weui-dynamic-name{
+	color: #3779FF;
+}
+.Topcarousel{
+	display: block;
+    color: #fff;
+    font-size: 1rem;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    text-align: center;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+.weui-cell__bd_p{
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
+}
+.weui-cell__bd_p a{
+	color: #3779FF;
+}
+/*动态结束*/
+/*成员开始*/
+.weui-member-type{
+	float: right;
+	font-size: 0.7rem;
+}
+.weui-member-creator{
+	color:#e53935 ;
+}
+.weui-member-cooperation{
+	color:#3779FF ;
+}
+.weui-cell__hd .special_avatar_class{
+	display: block;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+/*成员结束*/
+/*评论开始*/
+.weui-cell_swiped.weui-cell{
+	padding: 0rem;
+} 
+.weui-cell__hd{
+	display: block;
+	float: left;
+}
+.weui-cell_swiped .delete-swipeout{
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center
+}
+.weui-footer-comment{
+	position: fixed;
+	bottom: 0.5rem;
+    background-color: #FFFFFF;
+    box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 1.5rem;
+    z-index: 9999;
+    width: 5rem;
+    height: 2.5rem;
+    left: 50%;
+    margin-left:-2.5rem;
+}
+.weui-footer-comment .weui-footer-create-comment{
+	display: inline-block;
+	-webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    text-align: center;
+    padding: 0.25rem;
+    position: relative;
+}
+.weui-footer-comment .weui-footer-create-comment i{
+	color: #3779ff;
+    font-size: 1rem;
+}
+.weui-footer-comment .weui-footer-create-comment p{
+	color: #666666;
+    font-size: 0.6rem;
+}
+.weui-comment-div-edit-cancel{
+    display: block;
+    color: #2196f3;
+}
+.weui-share-edit .weui-comment-edit-keep {
+    padding-right: 1rem;
+}
+.comment-body{
+	position: fixed;
+	top: 0;
+	left: 0;
+    right: 0;
+    top:0rem;
+}
+.weui-comment-edit-textarea{	
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 2.95rem;
+    bottom: 0;
+    padding-bottom: 2rem;
+}
+.weui-comment-on{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    word-break: break-all;
+    display: block;	
+}
+.weui-comment-on .img-emotion{
+	width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    padding-left: 5px;
+}
+/*评论结束*/
+.weui-uploader__file{
+    width: 100%;
+    height: 3.25rem;	
+}
+/*人员*/
+.weui-member-footer.weui-tabbar{
+	background-color: #FFFFFF;
+	position: fixed;
+}
+.weui-member-footer.weui-tabbar:before{
+	border-top: none;
+}
+.weui-member-footer .weui-member-dzzicon{
+	font-size: 1.1rem;
+	color: #3779ff;
+}
+.weui-member-footer .weui-tabbar__label{
+	color: #666;
+	font-size: 0.6rem;
+}

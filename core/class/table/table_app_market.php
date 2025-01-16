@@ -22,7 +22,7 @@ class table_app_market extends dzz_table
 
 		parent::__construct();
 	}
-	public function update($appid,$setarr){
+	public function update($appid,$setarr, $unbuffered = false, $low_priority = false){
 		if(($ret=parent::update($appid,$setarr)) && isset($setarr['available'])){
 			//如果是启用或关闭时，更新钩子表的status字段
 			C::t('hooks')->update_by_appid($appid,array('status'=>intval($setarr['available'])));
@@ -139,33 +139,44 @@ class table_app_market extends dzz_table
 		}
 	  	return DB::fetch_all("select * from %t where $sql and  notdelete>0 and available>0 order by disp ",array($this->_table),'appid');
 	}
-	public function fetch_all_by_default($uid=0){ //取得所有默认的应用
-		if($uid && $space=getuserbyuid($uid)){
-			if($space['groupid']==1){//系统管理员
-				 $l="`group` = '1'";
-				if($notappids=C::t('app_organization')->fetch_notin_appids_by_uid($uid)){
-					$l.=" and appid  NOT IN (".dimplode($notappids).") ";
+
+	public function fetch_all_by_default($uid = 0, $appid = false) { // 取得所有默认的应用
+		if ($uid && $space = getuserbyuid($uid)) {
+			if ($space['groupid'] == 1) { // 系统管理员
+				$l = "`group` = '1'";
+				if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
+					$l .= " and appid NOT IN (" . dimplode($notappids) . ") ";
 				}
-				 $sql="`position`>0 and (`group`='0' OR `group`='2' OR `group`='3' OR (".$l."))"; 
-			}elseif($space['groupid']==2){
-				 $l=" (`group` = '1')";
-				if($notappids=C::t('app_organization')->fetch_notin_appids_by_uid($uid)){
-					$l.=" and appid  NOT IN (".dimplode($notappids).") ";
+				$sql = "`position` > 0 and (`group` = '0' OR `group` = '2' OR `group` = '3' OR (" . $l . "))";
+			} elseif ($space['groupid'] == 2) {
+				$l = " (`group` = '1')";
+				if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
+					$l .= " and appid NOT IN (" . dimplode($notappids) . ") ";
 				}
-				$sql=" `position`>0 and (`group` = '2' OR `group`='0' or (".$l."))";
-			}else{								//普通成员
-				//属于普通用户应用但不属于特定部门的应用
-				$l=" (`group` = '1')";
-				if($notappids=C::t('app_organization')->fetch_notin_appids_by_uid($uid)){
-					$l.=" and appid  NOT IN (".dimplode($notappids).") ";
+				$sql = "`position` > 0 and (`group` = '2' OR `group` = '0' or (" . $l . "))";
+			} else { // 普通成员
+				// 属于普通用户应用但不属于特定部门的应用
+				$l = " (`group` = '1')";
+				if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
+					$l .= " and appid NOT IN (" . dimplode($notappids) . ") ";
 				}
-				$sql="`position`>0 and (`group`='0' or  (".$l."))";
+				$sql = "`position` > 0 and (`group` = '0' or (" . $l . "))";
 			}
-		}else{ //游客
-			$sql="`position`>0 and (`group`='-1' or `group`='0')";
+		} else { // 游客
+			$sql = "`position` > 0 and (`group` = '-1' or `group` = '0')";
 		}
-		//exit($sql);
-	  	return DB::fetch_all("select * from %t where $sql and available>0 order by disp ",array($this->_table),'appid');
+	
+		// 根据 $appid 参数决定返回哪些字段
+		$select = $appid ? "appid" : "*";
+	
+		if ($appid) {
+			// 如果只需要 appid，直接返回一个包含所有 appid 的数组
+			$result = DB::fetch_all("select $select from %t where $sql and available > 0 order by disp ", array($this->_table));
+			return array_column($result, 'appid');
+		} else {
+			// 返回所有字段
+			return DB::fetch_all("select $select from %t where $sql and available > 0 order by disp ", array($this->_table), 'appid');
+		}
 	}
 	public function fetch_appid_by_mod($mod,$match=0){//$match==1表示全匹配，默认模糊匹配
 	    $sql='';
@@ -181,6 +192,10 @@ class table_app_market extends dzz_table
 	}
 	public function fetch_by_identifier($identifier,$app_path='dzz'){
 	    return DB::fetch_first("select * from %t where app_path=%s and identifier=%s ",array($this->_table,$app_path,$identifier));
+	}
+
+	public function fetch_by_allidentifier($identifier){
+	    return DB::fetch_first("select * from %t where identifier=%s ",array($this->_table,$identifier));
 	}
 	public function fetch_by_mod(){
 	    return DB::fetch_first("select * from %t where app_path=%s and identifier=%s ",array($this->_table,CURSCRIPT,CURMODULE));

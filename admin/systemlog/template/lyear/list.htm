@@ -1,0 +1,193 @@
+<!--{template lyear:header_simple_start}-->
+<link rel="stylesheet" href="static/lyear/js/layui/css/layui.css">
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-body">
+				<ul class="nav nav-pills">
+					<!--{loop $systemlog_setting $mark $info}-->
+						<!--{if $info[is_open]==1}-->
+						<li class="nav-item">
+							<a href="javascript:;" class="nav-link type-btn <!--{if $operation==$mark}-->active<!--{/if}-->" data-operation="$mark">{$info['title']}</a>
+						</li>
+						<!--{/if}-->
+					<!--{/loop}-->  
+				</ul>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="card-search mb-2-5">
+					  <div class="row">
+						<div class="col-sm-4">
+							<input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="关键词">
+						</div>
+						<div class="col-md-4">
+						  <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
+						  <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+						</div>
+					  </div>
+				  </div>
+				<table class="layui-hide" id="table" lay-filter="table"></table>
+				<script type="text/html" id="toolbar">
+					<div class="layui-btn-container">
+						<button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+					</div>
+				</script>
+				  <script type="text/html" id="barDemo">
+					<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看详情</a>
+				  </script>
+			</div>
+		</div>
+	</div>
+</main>
+<script src="static/lyear/js/layui/layui.js"></script>
+<script>
+layui.use('table', function(){
+  var table = layui.table;
+  table.render({
+    elem: '#table',
+	url: '{MOD_URL}&do=getinfo',
+	toolbar: '#toolbar',
+	title: '系统日志数据表格',
+	text: {
+		none: '暂无相关数据'
+	},
+	page: {
+      limit: 20, // 默认显示20行
+      limits: [10, 20, 50, 100, 200, 500, 900] // 可选的行数
+    },
+    cellMinWidth: 80 //全局定义常规单元格的最小宽度
+    ,cols: [[
+	{type:'checkbox', fixed: 'left'},
+      {field:'id', title: 'ID',width:80, fixed: 'left'}
+      ,{field:'operator', title: '{lang operator}', align: 'center'}
+      ,{field:'usergroup', title: '{lang usergroup}', align: 'center'}
+      ,{field:'ip', title: 'IP', align: 'center'}
+      ,{field:'time', title: '{lang time}', align: 'center'}
+      ,{field:'loginfo', title: '{lang info}', align: 'center'}
+      ,{field:'visit', title: '{lang visit}', align: 'right',hide:true}
+      ,{field:'from', title: '{lang from}', align: 'right',hide:true}
+      ,{field:'info', title: '{lang Equipment information}', align: 'right',hide:true}
+	  ,{title: '{lang operation}',fixed: 'right',width:100, align:'center', toolbar: '#barDemo', fixed: 'right'}
+    ]]
+  });
+    //头工具栏事件
+	table.on('toolbar(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var data = checkStatus.data;
+		switch(obj.event){
+			case 'getCheckData':
+				if (data.length === 0) {
+					showmessage("请至少选择一行", 'danger', 3000, 1);
+					return;
+				}
+				var template = '<div class="accordion">';
+				data.forEach(function(item) {
+					template += `<div class="accordion-item">`;
+					template += `<h2 class="accordion-header" id="Open-heading${item.id}">`;
+					template += `<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#Open-collapse${item.id}" aria-expanded="true" aria-controls="Open-collapse${item.id}">`;
+					template += `ID：${item.id}`;
+					template += `</button>`;
+					template += `</h2>`;
+					template += `<div id="Open-collapse${item.id}" class="accordion-collapse collapse show" aria-labelledby="Open-heading${item.id}">`;
+					template += `<div class="accordion-body">`;
+					template += `<p><strong>{lang operator}:</strong> ${item.operator}</p>`;
+					template += `<p><strong>{lang usergroup}:</strong> ${item.usergroup}</p>`;
+					template += `<p><strong>IP:</strong> ${item.ip}</p>`;
+					template += `<p><strong>{lang time}:</strong> ${item.time}</p>`;
+					template += `<p><strong>{lang info}:</strong> ${item.loginfo}</p>`;
+					template += `<p><strong>{lang visit}:</strong><a href="${item.visit}" target="_blank">${item.visit}</a></p>`;
+					template += `<p><strong>{lang from}:</strong><a href="${item.from}" target="_blank">${item.from}</a></p>`;
+					template += `<p><strong>{lang Equipment information}:</strong> ${item.info}</p>`;
+					template += `</div>`;
+					template += `</div>`;
+					template += `</div>`;
+				});
+				template += '</div>';
+				layer.alert(template, {
+					title: '选中的文件数据',
+					btn: ['确定']
+				});
+				break;
+			};
+		});
+  //监听工具条
+  table.on('tool(table)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'detail'){
+		showDataTemplate(obj);
+    }
+  });
+  table.on('rowDouble(table)', function(obj){
+	showDataTemplate(obj);
+  });
+	function showDataTemplate(obj) {
+		var data = obj.data;
+		var template = `
+			<div>
+			<p><strong>ID:</strong> ${data.id}</p>
+			<p><strong>{lang operator}:</strong> ${data.operator}</p>
+			<p><strong>{lang usergroup}:</strong> ${data.usergroup}</p>
+			<p><strong>IP:</strong> ${data.ip}</p>
+			<p><strong>{lang time}:</strong> ${data.time}</p>
+			<p><strong>{lang info}:</strong> ${data.loginfo}</p>
+			<p><strong>{lang visit}:</strong> <a href="${data.visit}" target="_blank">${data.visit}</a></p>
+			<p><strong>{lang from}:</strong> <a href="${data.from}" target="_blank">${data.from}</a></p>
+			<p><strong>{lang Equipment information}:</strong> ${data.info}</p>
+			</div>
+		`;
+
+		layer.alert(JSON.stringify(data), {
+			title: '当前行日志详情：',
+			content: template,
+		});
+
+	// 标注选中样式
+	obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+	}
+	// 搜索按钮功能
+	$(document).on('click', '#search-btn', function() {
+    // 获取搜索关键词
+    var keyword = $('#keyword').val();
+    // 刷新表格并传递搜索参数
+    table.reload('table', {
+      where: { keyword: keyword },
+      page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  });
+   // 重置按钮功能
+   $('#refreshsearch').click(function() {
+    // 清空表单内容
+    $('#keyword').val('');
+    // 刷新表格
+    table.reload('table', {
+      where: {}, // 清空搜索参数
+      page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  });
+  // 类型按钮功能
+  $(document).on('click', '.type-btn', function() {
+    // 移除所有 .type-btn 的 active 类
+    $('.type-btn').removeClass('active');
+    // 为当前点击的按钮添加 active 类
+    $(this).addClass('active');
+    // 获取当前的 type 值
+    operation = $(this).data('operation');
+	$('#keyword').val('');
+    // 刷新表格并传递 operation 参数
+    table.reload('table', {
+      where: {operation: operation },
+      page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  });
+});
+</script>
+<!--{template lyear:footer_simple}-->

@@ -1,0 +1,81 @@
+<div class="middle-center-content">
+<div class="middle-groupname middle-groupshink"> 
+  
+  <!-- Nav tabs -->
+  <div class="group-tab topNav"> 
+  <div class="topNav-item topNav-left">
+    <!--地址栏开始-->
+    <div class="address-wrapper">
+    	 <div class="goback"> <a href="javascript:history.back();" ><span class="dzz dzz-nav-back"></span></a> </div>
+         <div class="address-container arrow-right arrow-left">
+         	<div class="address-left-arrow">《</div>
+            <div class="address-right-arrow">》</div>
+             <div class="address">
+                 <!--{loop $grouppatharr $v}-->
+                 <li>
+                     <a href="javascript:;" class="routes"
+                        data-type="group-gid_$gid">$v<span class="dzz dzz-chevron-right"></span></a>
+                 </li>
+                 <!--{/loop}-->
+             </div>
+             <input type="text" class="form-control bordeInput referer_path" name="referer_path"
+                    value="$grouppathstr" style="display: none;"/>
+        </div>
+    </div>
+ </div>
+
+  </div>
+</div>
+
+	
+<!-- Tab panes -->
+<div class="tab-content" id="content_data" style="position:relative">
+    <div role="tabpanel" class="tab-pane active" id="home-file">
+        <input type="hidden" value="{$groupinfo[fid]}" id="fidinput"/>
+        <input type="text" class="form-control bordeInput referer_path" name="referer_path"
+               value="$grouppathstr" style="display: none;"/>
+        <div class="middlebottomMenu">
+            <div class="middlecenter">
+                <div class="middleMenu">
+                    <div class="middle-padding-left">
+                        <div class="all-center-top toolButtons clearfix">
+                            <div class="shareMenu"></div>
+                            <ul class="sizeMenu">
+                                <li><a class="icons-thumbnail" href="javascript:;"  onclick="_filemanage.Arrange(this,'f-$fid')" iconview="$folderinfo[iconview]"><i class="dzz dzz-view-list" title="{lang iconview}"></i></a></li>
+                                <li><a href="javascript:;" class="toggRight"><i class="dzz dzz-info" ></i></a></li>
+                            </ul>
+                        </div>
+                        <!--文件列表开始 -->
+                        <div id="filemanage-f-$fid" class="groupfilelist"></div>
+
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+
+    </div>
+<div id="template_middleicon" style="display:none">
+<!--{template template_file_middleicon}-->
+</div>
+<div id="template_detaillist"  style="display:none">
+<!--{template template_file_detaillist}-->
+</div>
+<div id="template_toolButton" style="display:none">
+<!--{template template_file_toolButton}-->
+</div>
+</div>
+<script type="text/javascript">
+    $.getScript('{MOD_PATH}/js/uplodfile.js?{VERHASH}');
+    $(document).ready(function(e) {
+        var hash=location.hash;
+        var fid=_explorer.getUrlParam(hash,'fid') || '$fid';
+        if(!fid) return;
+        if('{$contenterrormsg[error]}'){
+            $('.groupfilelist').html('$contenterrormsg[error]');
+        }else{
+            _filemanage.getData(_explorer.appUrl+'&op=explorerfile&do=filelist&sid=f-'+fid);
+        }
+
+    });
+</script>

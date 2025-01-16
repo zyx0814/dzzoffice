@@ -12,7 +12,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 if (!$_G['cache']['usergroups']) {
 	loadcache('usergroups');
 }
-$op=$_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 //error_reporting(E_ALL);
 //资料审核员和实名认证员跳转到对应的页面
 if ($_G['member']['grid'] == '4') {

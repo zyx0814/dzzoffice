@@ -1,0 +1,538 @@
+<!--{template common/header_ajax}-->
+<!--{if $_GET['do']== 'getvotepost'}-->
+<div id="dzzvote_post_$vote[voteid]">
+	<ul class="nav nav-tabs" role="tablist">
+		<li class="nav-item" role="presentation">
+			<a data-bs-target="#dzzvote_post_text_$vote[voteid]" class="nav-link <!--{if $vote[type]!=2}-->active<!--{/if}-->" role="tab" data-bs-toggle="tab" type="button"><i class="glyphicon glyphicon-file"></i> {lang sponsor_text_voting}</a>
+		</li>
+		<li class="nav-item" role="presentation">
+			<a data-bs-target="#dzzvote_post_image_$vote[voteid]" class="nav-link <!--{if $vote[type]==2}-->active<!--{/if}-->" role="tab" data-bs-toggle="tab" type="button"><i class="glyphicon glyphicon-picture"></i> {lang sponsor_img_voting}</a>
+		</li>
+	</ul>
+	<input type="hidden" id="dzzvoteid_$vote[voteid]" name="voteid" value="$vote[voteid]" />
+	<input type="hidden" id="dzzvotetype_$vote[voteid]" name="vote[type]" value="$vote[type]" />
+	<!-- Tab panes -->
+	<div class="tab-content">
+		<div class="tab-pane <!--{if $vote[type]!=2}-->active<!--{/if}-->" id="dzzvote_post_text_$vote[voteid]">
+			<div class="row mb-3">
+				<label for="vote_subject_1" class="col-sm-2 col-form-label">{lang vote_title}</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control " id="vote_subject_1" name="vote_subject_1" placeholder="{lang vote_title}" value="$vote['subject']" onblur="if(this.value==''){jQuery(this).addClass('input-error')}else{jQuery(this).removeClass('input-error');}">
+					<span class="form-text">{lang vote_choose}</span>
+				</div>
+			  </div>
+				<div class="dzzvote-post-item-container">
+					<!--{if $vote[items][type_1]}-->
+					<!--{loop $vote[items][type_1] $key $value}-->
+					<div class="row mb-3 dzzvote-post-text-item">
+						<label class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-10">
+							<div class="input-group mb-3">
+								<span class="input-group-text"><span class="badge bg-primary">{eval echo $key+1;}</span></span>
+								<input type="text" class="form-control" name="voteitem[{$value[itemid]}][content]" value="$value[content]">
+								<input type="hidden" name="voteitemnew[{$value[itemid]}][aid]" value="$value[aid]">
+								<span class="input-group-text"><a href="javascript:;" data-itemid="$value[itemid]" class="dzzvote-post-delitem mdi mdi-delete lead dcolor"></a></span>
+							</div>
+						</div>
+					  </div>
+					<!--{/loop}-->
+					<!--{else}-->
+					<!--{eval for($i=1;$i<4;$i++){}-->
+					<div class="row mb-3 dzzvote-post-text-item">
+						<label class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-10">
+							<div class="input-group mb-3">
+								<span class="input-group-text"><span class="badge bg-primary">$i</span></span>
+								<input type="text" class="form-control" name="voteitemnew[content][]" value="">
+								<input type="hidden" name="voteitemnew[aid][]" value="">
+								<span class="input-group-text"><a href="javascript:;" data-itemid="0" class="dzzvote-post-delitem mdi mdi-delete lead dcolor"></a></span>
+							</div>
+						</div>
+					</div>
+					<!--{eval }}-->
+					<!--{/if}-->
+				</div>
+				<div class="row mb-3">
+					<label class="col-sm-2 col-form-label"></label>
+					<div class="col-sm-10  d-grid"><a href="javascript:;" class="dzzvote-post-additem btn btn-primary btn-round"><i class="mdi mdi-plus"></i> {lang add_option}</a></div>
+				</div>
+		</div>
+		<div class="tab-pane <!--{if $vote[type]==2}-->active<!--{/if}-->" id="dzzvote_post_image_$vote[voteid]">
+			<div id="dzzvote_post_image_container_$vote[voteid]" class="dzzvote-post-image-container" style="">
+				<div class="row mb-3">
+					<label for="vote_subject_2" class="col-sm-2 col-form-label">{lang vote_title}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control " id="vote_subject_2" name="vote_subject_2" placeholder="{lang vote_title}" value="$vote['subject']" onblur="if(this.value==''){jQuery(this).addClass('input-error')}else{jQuery(this).removeClass('input-error');}">
+					</div>
+				  </div>
+				  <div class="row mb-3">
+					<label class="col-sm-2 col-form-label">投票照片</label>
+					<div class="col-sm-10">
+						<div class="image-header clearfix">
+							<div class="pull-left" style="position:relative;overflow:hidden">
+							<button class="btn btn-outline-primary btn-sm me-2 mb-2" onclick="return false;">{lang vote_upload_pictures}</button>
+							<input id="dzzvote_post_image_upload_$vote[voteid]" name="dzzvotefiles[]" tabindex="-1" style="position: absolute;outline:none;display:none; filter: alpha(opacity=0); PADDING-BOTTOM: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; font-family: Arial; font-size: 180px;height:40px;width:100%;top: 0px; cursor: pointer; right: 0px; padding-top: 0px; opacity: 0;direction:ltr;background-image:none;" type="file" accept="image/jpeg,image/png,image/gif" multiple>
+							</div>
+							<button class="btn btn-outline-primary btn-sm needindzz"  onclick="dzzvote_uploadfrom_desktop();return false">{lang from_desktop_choose}</button>
+						</div>
+						<span class="form-text">{lang upload_img_vote}</span>
+						<div class="dzzvote-image-body clearfix">
+						<ul class="list-inline row lyear-uploads-pic dzzvote-post-item-container clearfix">
+						<!--{loop $vote[items][type_2] $value}-->
+							<li class="dzzvote-post-image-item col-6 col-sm-3 col-md-2 list-images-item shadow-sm p-2 mb-3 me-2 rounded">
+								<a href="javascript:;" class="dzzvote-post-delitem" data-itemid="$value['itemid']">
+									<i class="mdi mdi-delete lead"></i>
+								</a>
+								<div class="thumbnail mb-3 text-center"> 
+									<a style="display:inline-block" href="$value[url]" target="_blank"><img src="$value[img]" alt="$value['content']"></a>
+								</div>
+								<input type="text" class="form-control input-image-title" name="voteitem[{$value[itemid]}][content]" value="$value[content]"/>
+								<input type="hidden" name="voteitem[{$value[itemid]}][aid]" value="$value[aid]" />
+							</li>
+						<!--{/loop}-->
+						</ul>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<label for="dzzvote_maxselect_num_$vote[voteid]" class="col-sm-2 col-form-label">{lang vote_choose1}</label>
+			<div class="col-sm-10">
+				<select id="dzzvote_maxselect_num_$vote[voteid]" name="vote[maxselectnum]" class="form-select">
+					<!--{if $vote[voteid] && $vote['items']['type_'.$vote[type]]}-->
+					<!--{loop $vote['items']['type_'.$vote[type]] $key $value}-->
+					{eval $i=$key+1};
+					<option value="$i" <!--{if $vote[maxselectnum]==$i}-->selected="selected"<!--{/if}-->>{lang most_can_choose} $i {lang item}
+					</option>
+					<!--{/loop}-->
+					<!--{else}-->
+					<option value="1">{lang most_can_choose} 1 {lang item}</option>
+					<option value="2">{lang most_can_choose} 2 {lang item}</option>
+					<option value="3">{lang most_can_choose} 3 {lang item}</option>
+					<!--{/if}-->
+				</select>
+			</div>
+		  </div>
+		<div class="row mb-3">
+			<label class="col-sm-2 col-form-label">{lang deadline}</label>
+			<div class="col-sm-10">
+				<div class="input-group mb-3">
+					<select class="form-select input-group-text" onchange="if(this.value){jQuery('#dzzvote_endtime_$vote[voteid]').datepicker('setDate',this.value)}else{jQuery('#dzzvote_endtime_$vote[voteid]').val('')}">
+						<option value="" selected="">{lang unlimited}</option>
+						<option value="now" <!--{if $vote['endtime']}-->selected="selected"<!--{/if}-->>{lang custom}
+						</option>
+						<option value="7">{lang one_week}</option>
+						<option value="1 month">{lang one_month}</option>
+						<option value="6 month">{lang half_year}</option>
+						<option value="12 month">{lang a_year}</option>
+					</select>
+					<input type="text" id="dzzvote_endtime_$vote[voteid]" name="vote[endtime]" class="form-control" value="$vote[endtime]" />
+				  </div>
+				<span class="form-text">{lang input_self_defined_time}</span>
+			</div>
+		  </div>
+		<div class="row mb-3">
+			<label class="col-sm-2 col-form-label">{lang vote_result}</label>
+			<div class="col-sm-10">
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="vote[isvisible]" id="isvisible1" value="1" <!--{if $vote['isvisible']}-->checked="checked"<!--{/if}-->>
+					<label class="form-check-label" for="isvisible1">{lang vote_visible}</label>
+				  </div>
+				  <div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="vote[isvisible]" id="isvisible" value="0" <!--{if !$vote['isvisible']}-->checked="checked"<!--{/if}-->>
+					<label class="form-check-label" for="isvisible2">{lang anyone_seen}</label>
+				  </div>
+			</div>
+		  </div>
+		  <div class="row mb-3">
+			<label class="col-sm-2 col-form-label">{lang vote_user}</label>
+			<div class="col-sm-10">
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="vote[showuser]" id="showuser1" value="0" <!--{if !$vote[showuser]}-->checked="checked"<!--{/if}-->>
+					<label class="form-check-label" for="showuser1">{lang no_show}</label>
+				  </div>
+				  <div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="vote[showuser]" id="showuser2" value="1" <!--{if $vote[showuser]}-->checked="checked"<!--{/if}-->>
+					<label class="form-check-label" for="showuser2">{lang show}</label>
+				  </div>
+			</div>
+		  </div>
+	</div>
+</div>
+<script type="text/javascript" src="dzz/dzzvote/scripts/lyear_jquery.dzzvote.js?{VERHASH}"></script>
+<script type="text/javascript" reload="1">
+	jQuery(document).ready(function(e) {
+		jQuery('#dzzvote_post_{$vote[voteid]}').find('a[data-bs-target="#dzzvote_post_text_{$vote[voteid]}"]').on('shown.bs.tab', function(e) {
+			jQuery('#dzzvotetype_{$vote[voteid]}').val(1);
+		});
+		jQuery('#dzzvote_post_{$vote[voteid]}').find('a[data-bs-target="#dzzvote_post_image_{$vote[voteid]}"]').on('shown.bs.tab', function(e) {
+			jQuery('#dzzvotetype_{$vote[voteid]}').val(2);
+		});
+		jcLoader().load({ type: 'css', ids: 'css_vote,css_datepicker', url: './dzz/dzzvote/images/lyear_vote.css?{VERHASH},./dzz/dzzvote/images/datepicker.css?{VERHASH}' });
+		jcLoader().load({ type: "js", ids: 'js_ui_core,js_datepicker,js_dzzvote', url: "static/js/jquery.ui.core.js?{VERHASH},static/js/datepicker/jquery.ui.datepicker.min.js?{VERHASH}" }, function() {
+			jQuery('#dzzvote_post_{$vote[voteid]}').dzzvote({ voteid: '$vote[voteid]' });
+			jQuery('#dzzvote_post_image_upload_{$vote[voteid]}').show();
+			jQuery('#dzzvote_endtime_{$vote[voteid]}').datepicker();
+		});
+		jQuery('#dzzvote_post_image_upload_{$vote[voteid]}').fileupload({
+			url: '{DZZSCRIPT}?mod=dzzvote&op=ajax&do=imageUpload',
+			dataType: 'json',
+			autoUpload: true,
+			paramName: 'dzzvotefiles[]',
+			maxFileSize: 2000000, // 2 MB
+			maxChunkSize: 2000000, //2M
+			acceptFileTypes: new RegExp("\.(gif|jpe?g|png)$", 'i'),
+			dropZone: jQuery('#dzzvote_post_image_container_{$vote[voteid]}'),
+			pasteZone: jQuery('#dzzvote_post_image_container_{$vote[voteid]}'),
+			sequentialUploads: true,
+			add: function(e, data) {
+				data.context = jQuery('<li class="dzzvote-post-image-item col-6 col-sm-3 col-md-2 list-images-item shadow-sm p-2 mb-3 me-2 rounded"></li>');
+				jQuery('#dzzvote_post_image_container_{$vote[voteid]} .dzzvote-post-item-container').append(data.context);
+
+				jQuery.each(data.files, function(index, file) {
+					if(!file.name) file.name = 'clipboardData.png';
+					var html = '';
+					html += '  <a href="javascript:;" data-itemid="0" class="dzzvote-post-delitem" ><i class="mdi mdi-delete lead"></i></a>';
+					html += ' <div class="thumbnail mb-3 text-center">';
+					html += '		<img src="dzz/images/default/upload_failure.png">';
+					html += '    </div>';
+					html += '    <div class="progress-container mt-2" >';
+					html += '  	 <div class="progress active" style="margin:0;" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">';
+					html += '          <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%;"></div>';
+					html += '         </div>';
+					html += '     </div>';
+					html += ' </div>';
+					jQuery(html).appendTo(data.context);
+				});
+				data.process().done(function() {
+					data.submit();
+				});
+
+			},
+			progress: function(e, data) {
+				var index = 0; //data.index,
+				var node = jQuery(data.context.children()[index]);
+				var progress = parseInt(data.loaded / data.total * 100, 10);
+				node.find('.progress-bar').css(
+					'width',
+					progress + '%'
+				);
+			},
+			done: function(e, data) {
+				jQuery.each(data.result.dzzvotefiles, function(index, file) {
+					if(file.error) {
+						data.context.find('.progress-container').replaceWith('<span class="text-danger">' + file.error + '</span>');
+					} else {
+						var html = '<input type="text" class="form-control input-image-title" name="voteitemnew[content][]" value="' + file.data.filename.replace(/\.(gif|jpe?g|png)$/i, '') + '" /><input type="hidden" name="voteitemnew[aid][]" value="' + file.data.aid + '" />';
+						data.context.find('img').attr('src', file.data.img).end().find('.progress-container').replaceWith(html);
+						dzzvote_maxselect_num();
+
+					}
+				});
+			}
+		});
+
+	});
+
+	function dzzvote_maxselect_num() {
+		var val = parseInt(jQuery('#dzzvote_maxselect_num_{$vote[voteid]}').val());
+		if(jQuery('#dzzvotetype_{$vote[voteid]}').val() > 1) {
+			var sum = jQuery('#dzzvote_post_image_container_{$vote[voteid]} .dzzvote-post-image-item').length;
+		} else {
+			var sum = jQuery('#dzzvote_post_image_container_{$vote[voteid]} .dzzvote-post-text-item').length;
+		}
+		var option = '';
+		for(var i = 1; i <= sum; i++) {
+			if(i == val) {
+				option += '<option value="' + i + '" checked="checked">{lang most_can_choose} ' + i + ' {lang item}</option>';
+			} else {
+				option += '<option value="' + i + '">{lang most_can_choose} ' + i + ' {lang item}</option>';
+			}
+		}
+		jQuery('#dzzvote_maxselect_num_{$vote[voteid]}').html(option);
+	}
+	function dzzvote_uploadfrom_desktop() {
+		var openexts = {
+			image:['图像(*.jpg,*.jpeg,*.png,*.gif)',['IMAGE','JPG','JPEG','PNG','GIF'],'selected']
+		};
+		var exts = JSON.stringify(openexts);
+		exts = exts.replace(/\"/g, '&quot;');
+		exts = exts.replace(/\(/g, '|');
+		exts = exts.replace(/\)/g, '$');
+		exts = encodeURIComponent(exts);
+		showWindow('openfile', 'index.php?mod=system&op=filewindow&handlekey=svaefile&perm=read&mulitype=0&exts=' + exts + '&callback=openfile', 'get', '0', function (data) {
+			var datas = data;
+			var html = '';
+			for(var i in datas) {
+				if(datas[i].type == 'image') {
+					var img = DZZSCRIPT + '?mod=io&op=thumbnail&width=240&height=160&path=' + (datas[i].apath ? datas[i].apath : datas[i].dpath);
+					html += '<li class="dzzvote-post-image-item col-6 col-sm-3 col-md-2 list-images-item shadow-sm p-2 mb-3 me-2 rounded">';
+					html += '  <a href="javascript:;" data-itemid="0" class="dzzvote-post-delitem" ><i class="mdi mdi-delete lead"></i></a>';
+					html += '  <div class="thumbnail mb-3 text-center">';
+					html += '		<img  src="' + img + '">';
+					html += '  </div>';
+					html += '  	<input type="text" class="form-control input-image-title" name="voteitemnew[content][]" value="' + datas[i].name.replace(/\.(gif|jpe?g|png)$/i, '') + '">';
+					html += '   <input type="hidden" name="voteitemnew[aid][]" value="' + datas[i].aid + '">';
+					html += '</li>';
+				}
+			}
+			if(html != '') {
+				jQuery('#dzzvote_post_image_container_{$vote[voteid]} .dzzvote-post-item-container').append(html);
+			}
+		});
+	}
+</script>
+<!--{elseif $_GET['do']=='getvote'}-->
+<div id="dzzvote_$vote[voteid]" class="dzzvote dzzvote-text">
+	<div class="card-header clearfix">
+		<div class="pull-left">
+			<div class="dzzvote-header-plate"> <span class="plate-title">{lang number_participants}</span> <em class="voter-num ">$votesum</em> </div>
+		</div>
+		<h4 class="card-title">$vote['subject']</h4>
+		<div class="dzzvote-info">$endtime | {lang most_can_choose1} $vote['maxselectnum'] {lang item}</div>
+	</div>
+	<!--{if $status>0}-->
+	<div class="card-body" id="vote_text_$vote[voteid]">
+		<!--{if $vote[type]==1}-->
+		<!--{loop $vote['items']['type_1'] $value}-->
+		<div class="mb-3 row align-items-center">
+			<div class="col-md-2">$value[content]</div>
+			<div class="col">
+				<div class="progress">
+					<!--{if $value[number]}-->
+					{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+					<!--{else}-->
+					{eval $progressvalue = '0';}
+					<!--{/if}-->
+					<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{$progressvalue}" aria-valuemin="0" aria-valuemax="100" style="width: {$progressvalue}%;min-width: 20px;"> {$progressvalue}% </div>
+				</div>
+			</div>
+		  </div>
+		<!--{/loop}-->
+		<!--{else}-->
+		<div class="dzzvote-image-body clearfix">
+		<ul class="list-inline row lyear-uploads-pic dzzvote-post-item-container clearfix">
+			<!--{loop $vote['items']['type_2'] $value}-->
+			<li class="dzzvote-image-item noactive hasprogress col-6 col-sm-3 col-md-2 list-images-item shadow-sm p-2 mb-3 me-2 rounded" id="item_$value[itemid]" data-itemid="$value[itemid]">
+				<div class="thumbnail mb-3 text-center"> 
+					<a href="$value[url]" target="_blank" target="_blank"><img src="$value[img]" alt="$value['content']"></a>
+					<div class="progress mt-2 mb-2">
+						<!--{if $value[number]}-->
+						{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+						<!--{else}-->
+						{eval $progressvalue = '0';}
+						<!--{/if}-->
+						<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{$progressvalue}" aria-valuemin="0" aria-valuemax="100" style="width: {$progressvalue}%;min-width: 20px;"> {$progressvalue}% </div>
+					</div>
+					<p class="mt-2">$value['content']</p>
+				</div>
+			</li>
+			<!--{/loop}-->
+		</ul>
+	</div>
+		<!--{/if}-->
+	</div>
+	<!--{if $status==1}-->
+	<div class="card-footer">
+		<span class="success">{lang vote_thinks}</span>
+		<!--{if $vote[showuser]}-->
+		<div id="voteuser_{$vote[voteid]}" class="dzzvote-user mt-2 clearfix">
+			<script type="text/javascript" reload="1">
+				jQuery('#voteuser_{$vote[voteid]}').load('{DZZSCRIPT}?mod=dzzvote&op=ajax&do=getvoteuser&template=1&voteid=$vote[voteid]&page=1');
+			</script>
+		</div>
+		<!--{/if}-->
+	</div>
+	<!--{/if}-->
+
+	<!--{else}-->
+	<form id="voteform_$vote[voteid]" name="voteform" action="{DZZSCRIPT}?mod=dzzvote&op=ajax&do=itemvote&template=1" method="post" style="margin:0" onsubmit="validate_{$vote[voteid]}(this);return false">
+		<input type="hidden" name="votesubmit" value="true" />
+		<input type="hidden" name="handlekey" value="dzzvote_{$vote[voteid]}" />
+		<input type="hidden" name="formhash" value="{FORMHASH}" />
+		<div class="card-body" id="vote_text_$vote[voteid]">
+			<!--{if $vote[type]==1}-->
+			<!--{loop $vote['items']['type_1'] $value}-->
+			<div class="mb-3 row align-items-center">
+				<div class="col-md-2"><input type="checkbox" id="item_$value[itemid]"  name="vote[]" value="$value[itemid]" >$value[content]</div>
+				<!--{if !$vote['isvisible']}-->
+				<div class="col">
+					<div class="progress">
+						<!--{if $value[number]}-->
+						{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+						<!--{else}-->
+						{eval $progressvalue = '0';}
+						<!--{/if}-->
+						<div class="progress-bar  progress-bar-success" role="progressbar" aria-valuenow="{$progressvalue}" aria-valuemin="0" aria-valuemax="100" style="width: {$progressvalue}%;min-width: 20px;"> {$progressvalue}% </div>
+					</div>
+				</div>
+			</div>
+			<!--{/if}-->
+			<!--{/loop}-->
+			<!--{else}-->
+			<div class="dzzvote-image-body clearfix">
+				<ul class="list-inline row lyear-uploads-pic dzzvote-post-item-container clearfix">
+				<!--{loop $vote['items']['type_2'] $value}-->
+				<!--{if $vote['isvisible']>0}-->
+				<li id="item_$value[itemid]" data-itemid="$value[itemid]" class="dzzvote-image-item col-6 col-sm-3 col-md-2 list-images-item shadow-sm p-2 mb-3 me-2 rounded">
+					<i class="mdi mdi-check-bold lead"></i>
+					<div class="thumbnail mb-3 text-center">
+						<a href="$value[url]" target="_blank"><img src="$value[img]" alt="$value['content']"></a>
+						<p class="mt-2">$value['content']</p>
+					</div>
+				</li>
+				<!--{else}-->
+				<li class="dzzvote-image-item hasprogress col-6 col-sm-3 col-md-2 list-images-item shadow-sm p-2 mb-3 me-2 rounded" id="item_$value[itemid]" data-itemid="$value[itemid]">
+					<i class="mdi mdi-check-bold lead"></i>
+					<div class="thumbnail mb-3 text-center"> 
+						<a href="$value[url]" target="_blank" target="_blank"><img src="$value[img]" alt="$value['content']"></a>
+						<div class="progress mt-2 mb-2">
+							<!--{if $value[number]}-->
+							{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+							<!--{else}-->
+							{eval $progressvalue = '0';}
+							<!--{/if}-->
+							<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{$progressvalue}" aria-valuemin="0" aria-valuemax="100" style="width: {$progressvalue}%;min-width: 20px;"> {$progressvalue}% </div>
+						</div>
+						<p class="mt-2">$value['content']</p>
+					</div>
+				</li>
+				<!--{/if}-->
+				<!--{/loop}-->
+				</ul>
+			</div>
+			<!--{/if}-->
+		</div>
+		<div class="card-footer">
+			<button id="votesubmit_btn_$vote[voteid]" class="btn btn-outline-primary" data-loading-text="{lang in_vote}">{lang vote}</button>
+			<small id="error_msg" style="color:red;padding:0 10px;line-height:30px;"></small>
+			<!--{if $vote[showuser]}-->
+			<div id="voteuser_{$vote[voteid]}" class="dzzvote-user mt-2 clearfix">
+				<script type="text/javascript" reload="1">
+					jQuery('#voteuser_{$vote[voteid]}').load('{DZZSCRIPT}?mod=dzzvote&op=ajax&do=getvoteuser&template=1&voteid=$vote[voteid]&page=1');
+				</script>
+			</div>
+			<!--{/if}-->
+		</div>
+	</form>
+	<!--{/if}-->
+</div>
+
+<script type="text/javascript">
+	var maxselectnum_{$vote[voteid]} = parseInt('$vote[maxselectnum]');
+	var checkarr_{$vote[voteid]} = [];
+	jcLoader().load({ type: 'css', url: './dzz/dzzvote/images/lyear_vote.css?{VERHASH},static/icheck/skins/minimal/blue.css?{VERHASH}' });
+	jcLoader().load({ type: 'js', url: 'static/icheck/icheck.min.js?{VERHASH}' }, function() {
+		jQuery('#dzzvote_{$vote[voteid]} input').iCheck({
+			checkboxClass: 'icheckbox_minimal-blue',
+			radioClass: 'iradio_minimal-blue',
+		});
+		jQuery('#dzzvote_{$vote[voteid]} input').on('ifChecked', function(e) {
+			if(checkarr_{$vote[voteid]}.length >= maxselectnum_{$vote[voteid]}) {
+				jQuery('#'+checkarr_{$vote[voteid]}.pop()).iCheck('uncheck');
+			}
+			checkarr_{$vote[voteid]}.push(this.id);
+		});
+		jQuery('#dzzvote_{$vote[voteid]} input').on('ifUnchecked', function(e) {
+			var i = jQuery.inArray(this.id, checkarr_{$vote[voteid]});
+			if(i > -1) checkarr_{$vote[voteid]}.splice(i, 1);
+		});
+		jQuery('#dzzvote_{$vote[voteid]} .dzzvote-image-item:not(.noactive)').on('click', function() {
+
+			if(jQuery(this).hasClass('active')) {
+				var i = jQuery.inArray(this.id, checkarr_{$vote[voteid]});
+				if(i > -1) checkarr_{$vote[voteid]}.splice(i, 1);
+				jQuery(this).removeClass('active');
+				jQuery(this).find('input[type=hidden]').remove();
+
+			} else {
+				if(checkarr_{$vote[voteid]}.length >= maxselectnum_{$vote[voteid]}) {
+					var oldid = checkarr_{$vote[voteid]}.pop();
+					var i = jQuery.inArray(oldid, checkarr_{$vote[voteid]});
+					if(i > -1) checkarr_{$vote[voteid]}.splice(i, 1);
+					jQuery('#' + oldid).removeClass('active');
+					jQuery('#' + oldid).find('input[type=hidden]').remove();
+				}
+				checkarr_{$vote[voteid]}.push(this.id);
+				jQuery(this).addClass('active');
+				jQuery('<input type="hidden" name="vote[]" value="' + jQuery(this).data('itemid') + '" />').appendTo(this);
+			}
+
+		});
+
+	});
+
+	function validate_$vote[voteid](form) {
+		if(checkarr_{$vote[voteid]}.length < 1) {
+			showmessage('{lang please_select_vote_project}', 'danger', 3000, 1);
+			return false;
+		}
+		jQuery('#votesubmit_btn_$vote[voteid]').button('loading');
+		ajaxpost(form.id, 'votesubmit_btn_$vote[voteid]', 'votesubmit_btn_$vote[voteid]');
+	}
+
+	function succeedhandle_dzzvote_{$vote[voteid]}(url, message, values) {
+		ajaxget('{DZZSCRIPT}?mod=dzzvote&op=ajax&do=getvoteresult&template=1&voteid=$vote[voteid]', 'dzzvote_$vote[voteid]', 'dzzvote_$vote[voteid]');
+	};
+</script>
+
+<!--{elseif $_GET['do']=='getvoteresult'}-->
+<div class="card-header clearfix">
+	<div class="pull-left">
+		<div class="dzzvote-header-plate"> <span class="plate-title">{lang number_participants}</span> <em id="voter_num">$votesum</em> </div>
+	</div>
+	<h4 class="card-title">$vote[subject]</h4>
+	<div class="dzzvote-info">$endtime | {lang most_can_choose1} $vote['maxselectnum'] {lang item}</div>
+</div>
+<div class="card-body" id="vote_text_$vote[voteid]">
+	<!--{if $vote[type]==1}-->
+	<!--{loop $vote['items']['type_1'] $value}-->
+	<div class="mb-3 row align-items-center">
+		<div class="col-md-2">$value[content]</div>
+		<div class="col">
+			<div class="progress">
+				<!--{if $value[number]}-->
+				{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+				<!--{else}-->
+				{eval $progressvalue = '0';}
+				<!--{/if}-->
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{$progressvalue}" aria-valuemin="0" aria-valuemax="100" style="width: {$progressvalue}%;min-width: 20px;"> {$progressvalue}% </div>
+			</div>
+		</div>
+	</div>
+	<!--{/loop}-->
+	<!--{else}-->
+	<div class="dzzvote-image-body clearfix">
+	<ul class="list-inline row lyear-uploads-pic dzzvote-post-item-container clearfix">
+	<!--{loop $vote['items']['type_2'] $value}-->
+	<li class="dzzvote-image-item hasprogress col-6 col-sm-3 col-md-2 list-images-item shadow-sm p-2 mb-3 me-2 rounded" id="item_$value[itemid]" data-itemid="$value[itemid]">
+		<div class="thumbnail mb-3 text-center"> 
+			<a href="$value[url]" target="_blank" target="_blank"><img src="$value[img]" alt="$value['content']"></a>
+			<div class="progress mt-2 mb-2">
+				<!--{if $value[number]}-->
+				{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+				<!--{else}-->
+				{eval $progressvalue = '0';}
+				<!--{/if}-->
+				<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="{$progressvalue}" aria-valuemin="0" aria-valuemax="100" style="width: {$progressvalue}%;min-width: 20px;"> {$progressvalue}% </div>
+			</div>
+			<p class="mt-2">$value['content']</p>
+		</div>
+	</li>
+	<!--{/loop}-->
+	</ul>
+</div>
+	<!--{/if}-->
+</div>
+<div class="card-footer"><span class="success">{lang vote_thinks}</span>
+	<!--{if $vote[showuser]}-->
+	<div id="voteuser_{$vote[voteid]}" class="dzzvote-user mt-2 clearfix">
+		<script type="text/javascript" reload="1">
+			jQuery('#voteuser_{$vote[voteid]}').load('{DZZSCRIPT}?mod=dzzvote&op=ajax&do=getvoteuser&template=1&voteid=$vote[voteid]&page=1');
+		</script>
+	</div>
+	<!--{/if}-->
+</div>
+<!--{/if}-->
+<!--{template common/footer_ajax}-->

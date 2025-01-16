@@ -9,9 +9,9 @@
 if(!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-Hook::listen('check_login');
 require libfile('function/code');
 $filter=trim($_GET['filter']);
+$template = isset($_GET['template']) ? $_GET['template'] : '';
 if($filter=='new'){//列出所有新通知
     $list=array();
     $nids=array();//new>0
@@ -28,6 +28,7 @@ if($filter=='new'){//列出所有新通知
     $num=DB::result_first("select COUNT(*) from %t where new>0 and uid=%d",array('notification',$_G['uid']));
     exit(json_encode(array('sum'=>$num,'timeout'=>60*1000)));
 }else{
+    Hook::listen('check_login');
     $list=array();
     $page = empty($_GET['page'])?1:intval($_GET['page']);
     $fromid = isset($_GET['appid']) ? intval($_GET['appid']):'';
@@ -98,15 +99,14 @@ if($filter=='new'){//列出所有新通知
     $next=false;
     if($count && $count>$start+count($list)) $next=true;
     $theurl = DZZSCRIPT . "?" . url_implode ($gets);//分页链接
-    $multi = multi($count , $perpage ,$page, $theurl  );
-  /* if($_GET['do']=='list'){
-        include template('notification_list_item');
-    }else{*/
-        include template('notification_list');
-  //  }
+    $multi = multi($count , $perpage ,$page, $theurl,'pull-right');
+    include template('notification_list');
     dexit();
 }
-
-include template('notification');
+if ($template == '1') {
+    include template('lyear_notification','lyear');
+} else {
+    include template('notification');
+}
 dexit();
 ?>

@@ -7,7 +7,6 @@ $lang = array (
 	'have_expired'=>'已过期',
 	'normal'=>'正常',
 	'rest'=>'其他',
-	'file_been_deleted'=>'文件已删除',
 	'change_list'=>'切换列表',
 	'change_thumbnail'=>'切换缩略图',
 	'password_share'=>'加密分享',

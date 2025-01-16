@@ -1,0 +1,15 @@
+<div id="logo" class="sidebar-header">
+	<!--{if $_GET['op'] == 'import' || $_GET['op'] == 'export'}-->
+	<a class="text-white lead brhover" href="{MOD_URL}">
+		<i class="mdi mdi-chevron-left"></i>
+	</a>
+	<a class="text-white text-truncate lead" href="{MOD_URL}">
+        {lang goback}
+	</a>
+	<!--{else}-->
+	<a class="text-white text-truncate lead" href="{MOD_URL}">
+		<img src="<!--{if !$_G['setting']['bbclosed']}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{else}-->static/image/common/logo.png<!--{/if}-->">
+		{lang appname}
+	  </a>
+	<!--{/if}-->
+</div>

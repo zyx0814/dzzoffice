@@ -54,7 +54,7 @@ class helper_security {
 			$replaces[] = '&gt;';
 			
 			if($ms[1]) {
-				$allowtags = 'img|a|font|div|table|tbody|caption|tr|td|th|br|p|b|strong|i|u|em|span|ol|ul|li|blockquote|pre|hr|embed|h1|h2|h3|h4|h5|h6';
+				$allowtags = 'img|a|font|div|table|tbody|caption|tr|td|th|br|p|b|strong|i|u|em|span|ol|ul|li|blockquote|pre|hr|embed|h1|h2|h3|h4|h5|h6|iframe';
 				$ms[1] = array_unique($ms[1]);
 				foreach ($ms[1] as $value) {
 					$searchs[] = "&lt;".$value."&gt;";

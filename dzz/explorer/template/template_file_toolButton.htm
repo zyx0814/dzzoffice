@@ -1,0 +1,66 @@
+<div class="yunfile-btnMenu">
+    <a href="javascript:;" type="button" class="btn open single"  data-placement="bottom" data-auto-adapt="true"  onclick="_filemanage.Open('{rid}')" ><i
+            class="dzz dzz-open" data-toggle="tooltip" data-placement="bottom" title="{lang open}" data-original-title="{lang open}"></i> </a>
+    <!--<button type="button" class="btn open single" onclick="_filemanage.Open('{rid}')" ><i
+    class="dzz dzz-open" data-toggle="tooltip" data-placement="bottom" title="{lang open}"></i> </button>-->
+
+    <a href="javascript:;" type="button" class="btn download single" onclick="_filemanage.downAttach('{rid}')" ><i
+            class="dzz dzz-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i></a>
+    <a href="javascript:;" type="button" class="btn downpackage multi" onclick="_filemanage.downpackage('{rid}')" ><i
+            class="dzz dzz-download" data-toggle="tooltip" data-placement="bottom" title="{lang downpackage}"></i>
+    </a>
+     <a href="javascript:;" type="button" class="btn rename single" onclick="_filemanage.rename('{rid}')" ><i
+            class="dzz dzz-create" data-toggle="tooltip" data-placement="bottom" title="{lang rename}"></i></a>
+    <a href="javascript:;" type="button" class="btn delete" onclick="_filemanage.delIco('{rid}')" ><i
+            class="dzz dzz-delete" data-toggle="tooltip" data-placement="bottom" title="{lang delete}"></i></a>
+    <a href="javascript:;" type="button" class="btn copy" onclick="_filemanage.copy('{rid}')" ><i
+            class="dzz dzz-copy"  data-toggle="tooltip" data-placement="bottom" title="{lang copy}"></i></a>
+    <a href="javascript:;" type="button" class="btn cut" onclick="_filemanage.cut('{rid}')" ><i
+            class="dzz dzz-content-cut" data-toggle="tooltip" data-placement="bottom" title="{lang cut}"></i></a>
+    <a href="javascript:;" type="button" class="btn paste" onclick="_filemanage.paste('{fid}')" ><i class="glyphicon glyphicon-paste"    data-toggle="tooltip" data-placement="bottom" title="{lang paste}"></i></a>
+    <a href="javascript:;" type="button" class="btn share" onclick="_filemanage.share('{rid}')" ><i
+            class="dzz dzz-share" data-toggle="tooltip" data-placement="bottom"  title="{lang share}"></i> </a>
+    
+</div>
+<div class="yunfile-moreMenu">
+    <div class="dropdown">
+        <a href="javascript:;" type="button" class="btn dropdown-toggle more" data-toggle="dropdown"><i
+                class="dzz dzz-more" data-toggle="tooltip" data-placement="bottom"  title="{lang more}"></i></a>
+        <ul class="dropdown-menu">
+            <li class="open single"><a href="javascript:;" onclick="_filemanage.Open('{rid}')"><i
+                    class="dzz dzz-open"></i> {lang open}</a></li>
+            <li class="dropdown-submenu openwith single"><a href="javascript:;"><i
+                    class="dzz dzz-export"></i> {lang openwith}</a>
+                <ul class="dropdown-menu"></ul>
+            </li>
+            <li class="rename single"><a href="javascript:;" onclick="_filemanage.rename('{rid}')"><i
+                    class="dzz dzz-create"></i> {lang rename}</a></li>
+            <li class="copy"><a href="javascript:;" onclick="_filemanage.copy('{rid}')"><i
+                    class="dzz dzz-copy"></i> {lang copy}</a></li>
+            <li class="cut"><a href="javascript:;" onclick="_filemanage.cut('{rid}')"><i
+                    class="dzz dzz-content-cut"></i> {lang cut}</a></li>
+            <li class="paste"><a href="javascript:;" onclick="_filemanage.paste('{fid}')"><i
+                    class="dzz dzz dzz-content-paste"></i> {lang paste}</a></li>
+            <li class="download single"><a href="javascript:;" onclick="_filemanage.downAttach('{rid}')"><i
+                    class="dzz dzz-download"></i> {lang download}</a></li>
+            <li class="downpackage multi"><a href="javascript:;" onclick="_filemanage.downpackage('{rid}')"><i
+                    class="dzz dzz-archive"></i> {lang downpackage}</a></li>
+
+            <li class="delete"><a href="javascript:;" onclick="_filemanage.delIco('{rid}')"><i
+                    class="dzz dzz-delete"></i> {lang delete}</a></li>
+			<li class="paste"><a href="javascript:;" onclick="_filemanage.paste('{rid}')"><i class="glyphicon glyphicon-paste" ></i>{lang paste}</a></li>
+            <li class="share"><a href="javascript:;" onclick="_filemanage.share('{rid}')"><i
+                    class="dzz dzz-share"></i> {lang share}</a></li>
+            <li class="collect"><a href="javascript:;" onclick="_filemanage.collect('{rid}')"><i
+                    class="dzz dzz-star"></i> {lang collect}</a></li>
+            <li class="property"><a href="javascript:;" onclick="_filemanage.property('{rid}')"><i
+                    class=""></i> {lang property}</a></li>
+            
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" reload="1">
+	jQuery(function () {
+	  jQuery('[data-toggle="tooltip"]').tooltip();
+	});
+</script>

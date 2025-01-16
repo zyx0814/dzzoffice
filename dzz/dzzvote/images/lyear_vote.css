@@ -1,0 +1,82 @@
+@charset "utf-8";
+.dzzvote-post-image-item .dzzvote-post-delitem {
+    position:absolute;
+    top:0px;
+    right:-15px;
+    display: none;
+}
+.dzzvote-post-image-item:hover .dzzvote-post-delitem {
+    display: block;
+}
+.dzzvote-post-image-item .thumbnail img {
+	max-height:100px;
+}
+/*start 前台显示部分*/
+.dzzvote-header-plate{
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(88, 88, 92, .3);
+	-moz-box-shadow: 0 1px 1px rgba(88, 88, 92, .3);
+	box-shadow: 0 1px 1px rgba(88, 88, 92, .3);
+	min-width: 60px;
+	height: 60px;
+	background-color: #FFF;
+	border: 1px solid #EBEFF6;
+	text-align: center;
+	margin-right:10px;
+}
+.dzzvote-header-plate span {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	background-color: #3497DB;
+	font-size: 10px;
+	color: #FFF;
+	display: block;
+	
+}
+.dzzvote-header-plate em {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	font-style: normal;
+	font-size: 20px;
+	padding:0 5px;
+	line-height: 2;
+}
+
+.dzzvote-image-body .dzzvote-image-item{
+	border:1px solid #dee2e6;
+}
+.dzzvote-image-body .dzzvote-image-item .thumbnail {
+	max-height: 100%;
+}
+.dzzvote-image-body .dzzvote-image-item.active{
+	border:1px solid #428bca
+}
+.dzzvote-image-body .dzzvote-image-item .mdi-check-bold{
+	display:none;
+	position: absolute;
+	right: 0;
+	top: 0;
+	margin: 5px;
+	line-height: 1;
+}
+.dzzvote-image-body .dzzvote-image-item:hover .mdi-check-bold{
+	display:block;
+	background:#F7F7F7;
+	color:#428bca
+}
+.dzzvote-image-body .dzzvote-image-item.active .mdi-check-bold{
+	display:block;
+	background:#428bca;
+	color:#FFF;
+	opacity: 1;
+}
+.dzzvote-image-item .thumbnail img {
+	max-height: 100px;
+}
+
+.dzzvote-image-body .progress{
+	margin-bottom:10px;
+}
+/*end 前台显示部分*/

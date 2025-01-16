@@ -6,6 +6,6 @@ return array(
 
     'allow_view'=>0,
 
-	'libfile'=>'function/common',
+    'libfile'=>'function/common',
 
 );

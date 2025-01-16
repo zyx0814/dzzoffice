@@ -1,0 +1,33 @@
+<!--{loop $groups $v}-->
+<tr id="group_{$v[orgid]}" class="member_tr Icoblock opengroup"  data-gid="$v[orgid]" data-groupon="$v[manageon]" data-diron="$v['available']">
+    <td class="member_item_td" valign="middle" width="40%" style="position: relative;">
+        <div class="member_item_td_div member_item_td_name">
+            <a href="javascript:;" style="float: left;">
+                {eval echo avatar_group($v['orgid']);}
+            </a>
+            <a href="javascript:;"  class="member_text member_item_name_text IcoText_folder">$v[orgname]</a>
+        </div>
+        <div class="member_hoverTools">
+    		<button type="button" class="btn">
+    		<span class="dzz dzz-delete delete_group" data-gid="$v[orgid]"></span></button>
+    	</div>
+    </td>
+    <td class="member_item_td" valign="middle" width="10%">
+        <span> $v[creater]</span>
+    </td>
+    <td class="member_item_td" valign="middle" width="10%">
+        <span>$v[usernum]</span>
+    </td>
+    <td class="member_item_td" valign="middle" width="20%">
+        <span>{eval echo dgmdate($v['dateline'],'Y-m-d');}</span>
+    </td>
+     <td class="member_item_td" valign="middle" width="10%">
+        <input type="checkbox" class="js-switch sysdiron" value="$v['available']" data-gid="{$v[orgid]}" <!--{if $v['available']}-->checked="checked"<!--{/if}-->
+               name="available" />
+    </td>
+    <!--<td class="member_item_td" valign="middle" width="10%">
+        <input type="checkbox" class="js-switch systemon"  data-gid="{$v[orgid]}"
+               name="syatemon" value="$v['syatemon']" <!--{if $v['syatemon']}-->checked="checked"<!--{/if}-->/>
+    </td>-->
+</tr>
+<!--{/loop}-->

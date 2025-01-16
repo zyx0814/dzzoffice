@@ -30,7 +30,7 @@ class table_user_profile_setting extends dzz_table
 	    $this->clear_cache('fields_1');
 	   return parent::insert($data,$return_insert_id,$replace,$silent);
    }
-	public function range($start = 0, $limit = 0) {
+	public function range($start = 0, $limit = 0, $sort = '') {
 		return DB::fetch_all('SELECT * FROM '.DB::table($this->_table).' ORDER BY available DESC, displayorder'.DB::limit($start, $limit), null, $this->_pk);
 	}
 	public function fetch_all_by_available_unchangeable($available, $unchangeable) {

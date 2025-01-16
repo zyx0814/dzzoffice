@@ -64,6 +64,9 @@ class Chinese {
 		} elseif($this->config['SourceLang'] == 'BIG5' || $this->config['TargetLang'] == 'BIG5') {
 			$this->table = CODETABLE_DIR.$this->config['BIG5toUnicode_table'];
 		}
+		if(!$this->table) {
+			return;
+		}
 		$fp = fopen($this->table, 'rb');
 		$tabletmp = fread($fp, filesize($this->table));
 		for($i = 0; $i < strlen($tabletmp); $i += 4) {

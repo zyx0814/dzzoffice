@@ -710,7 +710,7 @@ class io_ALIOSS extends io_api
 				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=thumbnail&size=large&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['Key']);
 			}else{
 				$img=geticonfromext($ext,$type);
-				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['Key']);;
+				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.dzzencode($arr['bz'].$arr['bucket'].$meta['Key']);
 			}
 			
 			$icoarr=array(

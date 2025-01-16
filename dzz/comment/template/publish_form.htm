@@ -115,7 +115,7 @@ jQuery(document).ready(function(e) {
 		
 		jQuery('#message_{$idtype}_{$id}').TextAreaExpander(25,99999);
 		<!--{if $_GET[allowattach]>=2}-->
-		var attachextensions='{eval echo implode('|',$space[attachextensions]);}';
+		var attachextensions='{eval echo implode('|',$space['attachextensions']);}';
 		if(attachextensions=='') attachextensions="\.*$";
 		else attachextensions="(\.|\/)("+(attachextensions)+")$";
 		jQuery('#fileupload_{$idtype}_{$id}').fileupload({

@@ -407,26 +407,6 @@ a.ui-artZoom-hide:hover span, ._tt_tasklist li .ui-artZoom-hide.title_tttl:hover
 	overflow:hidden;
 }
 
-
-.cancel_cpsw {
-	text-decoration: none;
-	display: table-cell;
-	display: inline-block;
-	vertical-align: middle;
-	font: 12px/14px '\5B8B\4F53','\65B0\5B8B\4F53',sans-serif;
-}
-.cancel_cpsw i {
-	display: block;
-	font-style: normal;
-	font-weight: 400;
-	padding: 4px 10px;
-	color: #aaa;
-	cursor: pointer;
-}
-.cancel_cpsw:hover i {
-	color:#08c
-}
-
 .itemfeed {
 	font-size: 12px;
 	line-height: 14px;
@@ -658,6 +638,9 @@ a.ui-artZoom-hide:hover span, ._tt_tasklist li .ui-artZoom-hide.title_tttl:hover
 	/*padding: 0 5px;*/
 	margin-top: 1px;
 *zoom:1
+}
+.cmt_fed:hover .btn_acfed{
+	display: inline-block;
 }
 .item_cfed {
 	padding: 10px 0 10px 40px;

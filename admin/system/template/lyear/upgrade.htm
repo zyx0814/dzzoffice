@@ -1,0 +1,234 @@
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<!--{if $operation == 'patch' || $operation == 'cross'}-->		
+			<header class="card-header">
+				<div class="card-title"><strong>{lang upgrade}</strong></div>
+				<!--{loop $steplang $key $value}-->
+				<!--{if $key>0 && $key<=5}-->
+				<span <!--{if $key==$step}-->style="color:green"<!--{/if}-->>{$key}.{$value}</span>
+				<!--{/if}-->
+				<!--{/loop}-->	
+			</header>
+			<!--{/if}-->
+			<!--{if $operation=='check'}-->
+			<!--{if $msg}-->
+			<div class="card-body">
+				<div id="step4">
+					<div class="alert alert-warning text-center">
+						$msg
+					</div>
+				</div>
+			</div>
+			<!--{else}-->
+			<div class="card-body">
+				<div class="text-center m-2">
+					<h2 class="text-success ml20">{lang upgrade_checking}</h2>
+					<div class="progress">
+						<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
+				</div>
+			</div>
+			<script type="text/javascript">
+				jQuery('.progress-bar').animate({ width: '100%' }, 3000, function() {
+					window.location.href = '{MOD_URL}&op=systemupgrade&operation=check&checking=1';
+				});
+			</script>
+			<!--{/if}-->
+			<!--{elseif $operation=='showupgrade'}-->
+			<!--{if $msg}-->
+			<div class="card-body">
+				<div id="step4">
+					<div class="alert alert-warning">
+						$msg
+					</div>
+				</div>
+			</div>
+			<!--{else}-->
+			<div class="card-header">
+				<div class="card-title">{lang founder_upgrade_select_version}</div>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover align-middle">
+						<!--{loop $list $value}-->
+						<tr>
+							<td>$value[title]</td>
+							<td>$value[btn1]</td>
+							<!--{if $value[official]}-->
+							<td>$value[official]</td>
+							<!--{/if}-->
+						</tr>
+						<!--{/loop}-->
+					</table>
+				</div>
+			</div>
+			<!--{/if}-->
+			<!--{elseif $operation=='patch' || $operation=='cross' }-->
+				<!--{if !$_G['setting']['bbclosed']}-->
+				<div class="card-body">
+					<div class="alert alert-warning text-center">
+						$msg
+					</div>
+				</div>
+				<!--{elseif $step==1}-->
+				<div class="card-header">
+					<div class="card-title">{lang founder_upgrade_preupdatelist}</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-hover align-middle">
+							<!--{loop $updatefilelist $value}-->
+							<tr>
+								<td>&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-file"></i> $value</td>
+							</tr>
+							<!--{/loop}-->
+							<thead>
+								<th colspan="5">&nbsp;{lang founder_upgrade_store_directory} ./data/update/dzzoffice$version</th>
+							</thead>
+							<thead>
+								<th colspan="5">&nbsp;<input type="button" class="btn btn-primary" onclick="window.location.href='$linkurl'" value="{lang founder_upgrade_download}">{eval echo upgradeinformation(0)}</th>
+							</thead>
+
+						</table>
+					</div>
+				</div>
+				<!--{elseif $step==2}-->
+				<div class="card-body">
+					<div>$msg</div>
+				</div>
+				<!--{elseif $step==3}-->
+				<!--{if $msg}-->
+				<div class="card-body">
+					<div id="step4">
+						<div class="alert alert-warning text-center">
+							$msg
+						</div>
+					</div>
+				</div>
+				<!--{else}-->
+				<div class="card-header">
+					<div class="card-title">{lang founder_upgrade_diff_show}</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-hover align-middle">
+							<!--{loop $updatefilelist $v}-->
+							<!--{if isset($ignorelist[$v])}-->
+
+							<!--{elseif isset($modifylist[$v])}-->
+							<tr>
+								<td class="text-danger">&nbsp;&nbsp;&nbsp;&nbsp;{lang founder_upgrade_diff} &nbsp;<i class="glyphicon glyphicon-exclamation-sign"></i> $v</td>
+							</tr>
+							<!--{elseif isset($showlist[$v])}-->
+							<tr>
+								<td class="text-success">&nbsp;&nbsp;&nbsp;&nbsp;{lang founder_upgrade_normal} &nbsp;<i class="mdi mdi-check-bold"></i> $v</td>
+							</tr>
+							<!--{elseif isset($newlist[$v])}-->
+							<tr>
+								<td class="text-info">&nbsp;&nbsp;&nbsp;&nbsp;{lang founder_upgrade_new} &nbsp;<i class="glyphicon glyphicon-plus"></i> $v</td>
+							</tr>
+							<!--{/if}-->
+							<!--{/loop}-->
+							<thead>
+								<th colspan="5">{lang founder_upgrade_download_file} ./data/update/dzzoffice{$version}</th>
+							</thead>
+							<thead>
+								<th colspan="5">&nbsp;{lang founder_upgrade_backup_file} ./data/back/dzzoffice{CORE_VERSION} {lang founder_upgrade_backup_file2} </th>
+							</thead>
+							<thead>
+								<th colspan="5">&nbsp;<input type="button" class="btn btn-primary" onclick="window.location.href='{$linkurl}';" value="<!--{if !empty($modifylist)}-->{lang founder_upgrade_force}<!--{else}-->{lang founder_upgrade_regular}<!--{/if}-->" /> {eval echo upgradeinformation(0)}</th>
+							</thead>
+
+						</table>
+					</div>
+				</div>
+				<!--{/if}-->
+				<!--{elseif $step==4}-->
+				<!--{if $msg}-->
+				<div class="card-body">
+					<div id="step4">
+						<div class="alert alert-warning text-center">
+							$msg
+						</div>
+					</div>
+				</div>
+				<!--{elseif $_GET['siteftpsetting']}-->
+				<div class="card-body">
+					<form name="aliform" class="form-horizontal" action="$action" method="post" style="padding:20px;">
+						<input type="hidden" name="formhash" value="{FORMHASH}">
+						<p style="padding-left:20px;font-weight:bold;font-size:16px;padding-bottom:20px;">{lang upgrade_website_FTP_set}</p>
+						<div class="form-group">
+							<label>FTP {lang server_address}</label>
+							<input type="text" class="form-control required" name="siteftp[host]" value="" placeholder="{lang host_IP_address}">
+							<span class="form-text">{lang FTP_server_IP_site_domain}</span>
+						</div>
+						<div class="form-group">
+							<label>FTP {lang server_port}</label>
+							<input type="text" class="form-control required" name="siteftp[port]" value="21" placeholder="{lang port}">
+							<span class="form-text">{lang default_for_the_21st}</span>
+						</div>
+						<div class="form-group">
+							<label>FTP {lang account}</label>
+							<input type="text" class="form-control required" name="siteftp[username]" value="" placeholder="{lang FTP_account_user_name}">
+							<span class="form-text">{lang accounts_supreme_authority}</span>
+						</div>
+						<div class="form-group">
+							<label>FTP {lang password}</label>
+							<input type="password" class="form-control required" name="siteftp[password]" value="" placeholder="{lang FTP_account_user_password}">
+
+						</div>
+						<!--<div class="form-group">
+							<label>编码</label>
+							<select class="form-control" name="siteftp[charset]">
+							<option value="GBK" selected="selected">GBK</option>
+							<option value="UTF-8">UTF-8</option>
+							<option value="BIG5">BIG5</option>
+							</select>
+							<span class="form-text">根据FTP服务器的编码设置，不一致会导致乱码</span>
+							
+						</div>-->
+
+						<div class="form-group">
+							<label>{lang sitepath}</label>
+							<input type="text" class="form-control required" name="siteftp[attachdir]" value="">
+							<span class="form-text">{lang site_absolute_path_root_directory}</span>
+						</div>
+						<div class="form-group">
+							<label></label>
+							<label class="checkbox-inline" style="width:180px;"><input type="checkbox"  class="form-check-input" name="siteftp[pasv]" value="1">{lang use_Passive_Mode}</label>
+							<span class="form-text">{lang general_condition_passive_mode}</span>
+						</div>
+						<div class="form-group">
+							<label></label>
+							<label class="checkbox-inline" style="width:180px;"><input type="checkbox"  class="form-check-input" name="siteftp[ssl]" value="1">{lang enable_secure_link}</label>
+							<span class="form-text">{lang notice_FTP_open_SSL}</span>
+						</div>
+						<div class="form-group">
+							<label></label>
+							<input type="submit" class="btn btn-primary btn-round bodyloading" style="padding:6px 25px" value="{lang confirms}">
+						</div>
+					</form>
+				</div>
+				<!--{/if}-->
+				<!--{elseif $step==5}-->
+				<div class="card-body">
+					<div style="padding:20px;">
+						<div class="alert alert-success text-center">
+							$msg
+						</div>
+					</div>
+				</div>
+				<!--{/if}-->
+			<!--{/if}-->
+		</div>
+	</div>
+</main>
+<script type="text/javascript">
+	function createIframe(src) {
+		document.getElementById('step4').innerHTML = '<iframe  marginheight="0" marginwidth="0" allowtransparency="true" frameborder="0"  src="' + src + '" style="width:100%;height:100%;"></iframe>';
+	}
+</script>
+<!--{template lyear:footer_simple}-->

@@ -139,21 +139,23 @@ class table_resources_version extends dzz_table
 		return $ret;
     }
     //上传新版本
-    public function add_new_version_by_rid($rid,$setarr,$force=false){
+    public function add_new_version_by_rid($rid,$setarr,$force=false,$editperm = false){
         global $_G,$documentexts;
         $cachekey = 'resourcesversiondata_'.$rid;
         if(!$resources = C::t('resources')->fetch_info_by_rid($rid)){
             return array('error'=>lang('file_not_exist'));
         }
         //检测权限
-        if (!$force && !perm_check::checkperm_Container($resources['pfid'], 'edit2') && !( $_G['uid'] == $resources['uid'] && perm_check::checkperm_Container($resources['pfid'], 'edit1'))) {
-            return array('error'=>lang('no_privilege'));
+        if(!$editperm) {
+            if (!$force && !perm_check::checkperm_Container($resources['pfid'], 'edit2') && !( $_G['uid'] == $resources['uid'] && perm_check::checkperm_Container($resources['pfid'], 'edit1'))) {
+                return array('error'=>lang('no_privilege'));
+            }
         }
         //文件类型获取
-        $imgexts = array('jpg', 'jpeg', 'gif', 'png', 'bmp');
+        $imgexts = array('jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp');
         if (in_array(strtolower($setarr['ext']), $imgexts)){
             $setarr['type'] = 'image';
-        }elseif(in_array(strtoupper($setarr['ext']), $documentexts)){
+        }elseif(in_array(strtoupper($setarr['ext']),$documentexts)){
             $setarr['type'] = 'document';
         }else{
             $setarr['type'] = 'attach';

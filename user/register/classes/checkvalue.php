@@ -99,15 +99,12 @@ class Checkvalue{
         $profile = $verifyarr = array();
 
         foreach($_G['cache']['fields_register'] as $field) {
-
             $field_key = $field['fieldid'];
             $field_val = $_GET[''.$field_key];
             if($field['formtype'] == 'file' && !empty($_FILES[$field_key]) && $_FILES[$field_key]['error'] == 0) {
                 $field_val = true;
             }
-
             if(!profile_check($field_key, $field_val)) {
-
                 showTips(array('error'=>$field['title'].lang('profile_illegal')),$type);
             }
         }

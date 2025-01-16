@@ -62,11 +62,11 @@ class table_local_router extends dzz_table
 		
 		return $html;
 	}
-	public function insert($setarr){
+	public function insert($setarr, $return_insert_id = false, $replace = false, $silent = false){
 		$setarr['router']=serialize($setarr['router']);
 		return parent::insert($setarr,1);
 	}
-	public function update($routerid,$setarr){
+	public function update($routerid,$setarr, $unbuffered = false, $low_priority = false){
 		if($setarr['router']) $setarr['router']=serialize($setarr['router']);
 		return parent::update($routerid,$setarr);
 	}

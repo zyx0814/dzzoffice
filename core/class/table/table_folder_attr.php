@@ -23,7 +23,7 @@ class table_folder_attr extends dzz_table
 		}
 		return $ret;
 	}
-	public function update($id,$setarr){
+	public function update($id,$setarr, $unbuffered = false, $low_priority = false){
 		if(!$data=parent::fetch($id)) return false;
 		if($ret=parent::update($id,$setarr)){
 			if($setarr['skey']=='icon'){
@@ -33,7 +33,7 @@ class table_folder_attr extends dzz_table
 		}
 		return $ret;
 	}
-	public function insert($setarr){
+	public function insert($setarr, $return_insert_id = false, $replace = false, $silent = false){
 		if($id=DB::result_first("select id from %t where fid=%d and skey=%s",array($this->_table,$setarr['fid'],$setarr['skey']))){
 			if($setarr['skey']=='icon'){
 				$o=parent::fetch($id);

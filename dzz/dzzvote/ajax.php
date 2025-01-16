@@ -10,6 +10,7 @@
 if (!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
+$template = isset($_GET['template']) ? $_GET['template'] : '';
 if ($_GET['do'] == 'imageUpload') {
 
 	include libfile('class/uploadhandler');
@@ -100,8 +101,12 @@ if ($_GET['do'] == 'imageUpload') {
 	if ($count > $page * $perpage) {
 		$nextpage = $page + 1;
 	}
-	$theurl = DZZSCRIPT . '?mod=dzzvote&op=ajax&do=getvoteuser&voteid=' . $voteid . '&page=' . $nextpage;
-	include template('vote_user');
+	$theurl = DZZSCRIPT . '?mod=dzzvote&op=ajax&do=getvoteuser&template='.$template.'&voteid=' . $voteid . '&page=' . $nextpage;
+	if ($template == '1') {
+		include template('lyear_vote_user','lyear');
+	} else {
+		include template('vote_user');
+	}
 	exit();
 } elseif ($_GET['do'] == 'getvoteresult') {
 	$voteid = empty($_GET['voteid']) ? 0 : intval($_GET['voteid']);
@@ -155,5 +160,9 @@ if ($_GET['do'] == 'imageUpload') {
 	}
 }
 //error_reporting(E_ALL);
-include template('vote_ajax');
+if ($template == '1') {
+	include template('lyear_vote_ajax','lyear');
+} else {
+	include template('vote_ajax');
+}
 ?>

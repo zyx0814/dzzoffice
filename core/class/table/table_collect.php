@@ -15,11 +15,11 @@ class table_collect extends dzz_table
         $lid=intval($cid);
         $link=self::fetch($cid);
         if($link['cid']){
-            $copys=DB::result_first("select copys from ".DB::table('collect')." where cid='{$link[cid]}' and type = 'link'");
+            $copys=DB::result_first("select copys from ".DB::table('collect')." where cid='{$link['cid']}' and type = 'link'");
             if($copys<=1){
-                return DB::delete('collect',"cid='{$link[cid]}'");
+                return DB::delete('collect',"cid='{$link['cid']}'");
             }else{
-               return  DB::update('collect',array('copys'=>$copys-1),"cid='{$link[cid]}'");
+               return  DB::update('collect',array('copys'=>$copys-1),"cid='{$link['cid']}'");
             }
         }
     }

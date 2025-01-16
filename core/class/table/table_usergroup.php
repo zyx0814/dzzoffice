@@ -45,7 +45,7 @@ class table_usergroup extends dzz_table
 		return DB::fetch_all('SELECT '.($allfields ? '*' : 'groupid, grouptitle').' FROM %t '.$wheresql, $parameter, $this->_pk);
 	}
 
-	public function update($id, $data, $type = '') {
+	public function update($id, $data, $type= false, $low_priority = false) {
 		if(!is_array($data) || !$data || !is_array($data) || !$id) {
 			return null;
 		}
@@ -56,7 +56,7 @@ class table_usergroup extends dzz_table
 		return DB::update($this->_table, $data, $condition);
 	}
 
-	public function delete($id, $type = '') {
+	public function delete($id, $type = false) {
 		if(!$id) {
 			return null;
 		}
@@ -91,7 +91,7 @@ class table_usergroup extends dzz_table
 			return DB::result_first($sql);
 		}
 	}
-	public function fetch_all($ids) {
+	public function fetch_all($ids, $force_from_db = false) {
 		if(!$ids) {
 			return null;
 		}

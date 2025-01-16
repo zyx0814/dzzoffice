@@ -11,7 +11,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 $navtitle=lang('open_way').' - '.lang('appname');
 $op='extopen';
-$do=$_GET['do'];
+$do = isset($_GET['do']) ? $_GET['do'] : '';
 
 if ( $do =="setdefault" ) {
 	$extid = intval( $_GET["extid"] );
@@ -81,7 +81,7 @@ if($count){
 	}
 	$count = count($newlist);
 }
-$multi = multi($count, $perpage, $page, $theurl );
+$multi = multi($count, $perpage, $page, $theurl, 'pull-right');
 //根据分页截取数组
 ksort($newlist,SORT_STRING );
 $list = array_slice($newlist,$start,$perpage);

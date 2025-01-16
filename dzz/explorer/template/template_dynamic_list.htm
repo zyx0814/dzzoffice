@@ -1,0 +1,233 @@
+{if !isset($tplmore)}
+<!--{if $events}-->
+{eval $today=strtotime(dgmdate(TIMESTAMP,'Y-m-d'))}
+{eval $timearr=array();}
+<!--{loop $events $eventval}-->
+{eval $t=strtotime(dgmdate($eventval['dateline'],'Y-m-d'));}
+<!--{if $t==$today && !in_array($t,$timearr)}-->
+<p class="toadytitle">{lang today}</p>
+{eval $timearr[]=$t;}
+<!--{elseif $t==$today-24*60*60 && !in_array($t,$timearr)}-->
+<p class="toadytitle">{lang ytoday}</p>
+{eval $timearr[]=$t;}
+<!--{elseif $t==$today-24*60*60*2 && !in_array($t,$timearr)}-->
+<p class="toadytitle">{lang bytoday}</p>
+{eval $timearr[]=$t;}
+<!--{elseif $t<$today-24*60*60*2 && !in_array($t,$timearr)}-->
+<p class="toadytitle">{eval echo dgmdate($t,'Y-m-d');}</p>
+{eval $timearr[]=$t;}
+<!--{/if}-->
+<!--{if $eventval['type'] == 0}-->
+<div class="dynameic-comment">
+    <div class="toadysmalltime"><span>{eval echo dgmdate($eventval['dateline'],'H:i');}</span></div>
+    <div class="toadycon">
+        <div class="toadycon-img">{eval echo
+            avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}
+        </div>
+        <p class="activity-content"><span class="activity-name">$eventval['username']</span>
+            <span>{$eventval[details]}</span></p>
+    </div>
+</div>
+<!--{elseif $eventval['type'] == 1 }-->
+<div class="dynameic-comment">
+    <div class="toadysmalltime"><span>{eval echo dgmdate($eventval['dateline'],'H:i');}</span></div>
+    <div class="toadycon">
+        <div class="toadycon-img">{eval echo
+            avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}
+        </div>
+        <p class="activity-content"><span class="activity-name">$eventval['username']</span>
+            <span>{$eventval[details]}</span>
+            <span class="delete-comment dzz dzz-delete" data-commentid="$eventval[id]"></span></p>
+    </div>
+</div>
+<!--{/if}-->
+<!--{/loop}-->
+<!--{if $next}-->
+<a href="javascript:;"
+   class="{if !isset($tplmore)}btn_dynamic_more {else}btn_dynamic_more_less{/if}btn-link btn-block {if isset($tplmore)} hide {/if}"
+   onclick="load_dynamic(this,'{eval echo ($next-3)}','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$_GET['fid']',0);">{lang
+    upload_more}</a>
+<!--{/if}-->
+<!--{/if}-->
+<!--{else}-->
+<!--{if $events}-->
+{eval $today=strtotime(dgmdate(TIMESTAMP,'Y-m-d'))}
+{eval $timearr=array();}
+<!--{loop $events $eventval}-->
+{eval $t=strtotime(dgmdate($eventval['dateline'],'Y-m-d'));}
+<!--{if $t==$today && !in_array($t,$timearr)}-->
+<p class="toadytitle">{lang today}</p>
+{eval $timearr[]=$t;}
+<!--{elseif $t==$today-24*60*60 && !in_array($t,$timearr)}-->
+<p class="toadytitle">{lang ytoday}</p>
+{eval $timearr[]=$t;}
+<!--{elseif $t==$today-24*60*60*2 && !in_array($t,$timearr)}-->
+<p class="toadytitle">{lang bytoday}</p>
+{eval $timearr[]=$t;}
+<!--{elseif $t<$today-24*60*60*2 && !in_array($t,$timearr)}-->
+<p class="toadytitle">{eval echo dgmdate($t,'Y-m-d');}</p>
+{eval $timearr[]=$t;}
+<!--{/if}-->
+
+<!--{if $eventval['type'] == 0}-->
+<div class="dynameic-comment">
+    <div class="toadysmalltime"><span>{eval echo dgmdate($eventval['dateline'],'H:i');}</span></div>
+    <div class="toadycon">
+        <div class="toadycon-img">{eval echo
+            avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}
+        </div>
+        <p class="activity-content"><span class="activity-name">$eventval['username']</span>
+            <span>{$eventval[details]}</span></p>
+    </div>
+</div>
+<!--{elseif $eventval['type'] == 1 }-->
+<div class="dynameic-comment">
+    <div class="toadysmalltime"><span>{eval echo dgmdate($eventval['dateline'],'H:i');}</span></div>
+    <div class="toadycon">
+        <div class="toadycon-img">{eval echo
+            avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}
+        </div>
+        <p class="activity-content"><span class="activity-name">$eventval['username']</span>
+            <span>{$eventval[details]}</span>
+            <span class="delete-comment dzz dzz-delete" data-commentid="$eventval[id]"></span></p>
+    </div>
+</div>
+<!--{/if}-->
+<!--{/loop}-->
+<!--{if $next}-->
+<a href="javascript:;" class="btn_dynamic_more_less btn-link btn-block {if isset($tplmore)} hide {/if}"
+   onclick="load_dynamic(this,$next,'{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}',$pfid,1);">{lang upload_more}</a>
+<!--{/if}-->
+<!--{/if}-->
+<!--{/if}-->
+<script type="text/javascript" src="static/atwho/js/jquery.atwho.js"></script>
+<script type="text/javascript" src="static/atwho/js/jquery.caret.js"></script>
+<script type="text/javascript">
+    var gid = '{$gid}';
+    var commentfid = '';
+    var commentrid='';
+    jQuery(document).on('click', '.btn_dynamic_more', function () {
+        jQuery('.rightbasic').hide();
+        jQuery('#more_dynameic').show();
+    });
+
+    function load_dynamic(obj, next, rid, fid, tplmore) {
+        var queryObj = {'next': next};
+        if (rid) {
+            queryObj.rid = rid;
+        } else {
+            queryObj.rid = fid;
+        }
+        
+        var adddynamisc = '';
+        if (tplmore) adddynamisc = '&adddynamisc=1';
+        jQuery.get(DZZSCRIPT + '?mod={MOD_NAME}&op=dynamic&do=loadmoredynamic&gid=' + gid + adddynamisc, queryObj, function (html) {
+            if (tplmore) {
+                jQuery(obj).replaceWith(html);
+            } else {
+                jQuery('#rightinfo_content').replaceWith(html);
+            }
+            _explorer.Scroll();
+            jQuery('#leave_message').off("input.commet propertychange.comment").on("input.comment propertychange.comment", function (e) {
+                var el = jQuery(this);
+                var msg = el.val();
+                var disbutton = el.closest('.comment-area').find('button');
+                if (msg.length <= 0) {
+                    disbutton.addClass("disabled");
+                    disbutton.css({'color': 'rgba(55,121,255,0.3)'});
+                } else {
+                    disbutton.removeClass("disabled");
+                    disbutton.css({'color': 'rgba(55,121,255,1)'});
+                }
+            });
+            jQuery('#leave_message').focus(function () {
+                var el = jQuery(this);
+                var msg = el.val();
+                var disbutton = el.closest('.comment-area').find('button');
+                if (msg.length <= 0) {
+                    disbutton.addClass("disabled");
+                    disbutton.css({'color': 'rgba(55,121,255,0.3)'});
+                } else {
+                    disbutton.removeClass("disabled");
+                    disbutton.css({'color': 'rgba(55,121,255,1)'});
+                }
+            })
+
+        });
+    }
+   jQuery(function(){
+        if (gid > 0 && jQuery('#commentid').length > 0) {
+            commentfid = jQuery('#commentid').find('input[name=fid]').val();
+            commentrid = jQuery('#commentid').find('input[name=rid]').val();
+            var cachequeryMentions = [], itemsMentions;
+            var querystr = '';
+            if(commentfid){
+                querystr = '&fid='+commentfid;
+            }else{
+                querystr = '&rid='+commentrid;
+            }
+            jQuery('#leave_message').atwho({
+                at: "@",
+                data: '{DZZSCRIPT}?mod=explorer&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,
+                callbacks: {
+                    remote_filter: function (query, render_view) {
+//                        console.log(query);
+                        var thisVal = query,
+                            self = jQuery(this);
+                        if (!self.data('active') && thisVal.length >= 1) {
+                            self.data('active', true);
+                            itemsMentions = cachequeryMentions[thisVal]
+                            if (typeof itemsMentions == "object") {
+                                render_view(itemsMentions);
+                            } else {
+                                if (self.xhr) {
+                                    self.xhr.abort();
+                                }
+                                self.xhr = jQuery.getJSON('{DZZSCRIPT}?mod=explorer&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,{
+                                    term: thisVal
+                                }, function (data) {
+                                    cachequeryMentions[thisVal] = data
+                                    render_view(data);
+                                });
+                            }
+                            self.data('active', false);
+                        }
+                    }
+                },
+                tpl: "<li data-value='@[${name}:${id}]' title='${title}'>${avatar}&nbsp;${name}</li>",
+                search_key: "searchkey",
+                start_with_space: false,
+                limit: 5,
+                max_len: 20,
+                display_timeout: 300
+            });
+        }
+
+    })
+/*    jQuery('#leave_message').on('keydown',function(){
+       var obj = $(this);
+        if(obj.val().indexOf('@') == 0)
+        textarea.caret('pos',textarea.val().length);
+        //textarea.focus().atwho('run');
+        //return false;
+    });*/
+    jQuery(document).off('click.commentdelete').on('click.commentdelete','.delete-comment',function(){
+        var obj = $(this);
+        var commentid = obj.data('commentid');
+        var msg = '<span class="delect_text_red">'+__lang.delete_filenorecover_confirm+'</span>';
+        var title = '<span class="delect-title-normal">'+__lang.delete_comment_confirm+'<span>';
+        if(typeof commentid == 'undefined' || commentid < 0){
+            showDialog("{lang delete_error}");
+        }
+        showDialog(msg,'confirm',title,function(){
+            $.post('{MOD_URL}&op=dynamic&do=deletecomment',{'id':commentid},function(data){
+                if(data['success']){
+                    obj.parents('.dynameic-comment').html('');
+                }else if(data['error']){
+                    showDialog(data['error']);
+                }
+            },'json');
+        })
+
+    })
+</script>

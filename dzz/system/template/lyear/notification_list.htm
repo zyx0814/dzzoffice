@@ -1,0 +1,45 @@
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container main-allnotice">
+	<div class="container-fluid">
+	  <div class="card">
+		<!--{if $list}-->
+		<div class="card-header">
+			<div class="card-title">
+				<!--{if $img}--><img src="$img" class="img-avatar-36"><!--{else}--><span class="mdi mdi-bell-circle lead"></span><!--{/if}--><span class="p-2">{$tongzhileixing}($count)</span>
+			</div>
+		</div>
+		<!--{/if}-->
+		<div class="card-body">
+			<!--{if $list}-->
+			<ul class="list-group">
+				<!--{loop $list $value}-->
+				<li class="list-group-item d-flex justify-content-between align-items-start">
+					<span><a href="user.php?uid=$value[authorid]">{eval echo avatar_block($value[authorid]);}</a></span>
+					<div class="ms-2 me-auto">
+					  <div class="fw-bold">$value[title]</div>
+					  $value[note]
+					  <div><small class="text-muted">$value['dateline']</small></div>
+					<!--{if $value[redirecturl]}-->
+					<p class="text-muted">来源地址:<a href="$value[redirecturl]" target="_blank" class="dcolor">$value[redirecturl]</a></p>
+					<!--{/if}-->
+					</div>
+					<span class="badge rounded-pill"><img src="$value[appico]" class="img-avatar-48"></span>
+				  </li>
+				<!--{/loop}-->
+			</ul>
+			<div class="row p-2">
+					{$multi}
+			  </div>
+			
+			<!--{else}-->
+			<div style="text-align: center;">
+			<img src="static/image/common/no_list.png" /><br>
+			<span class="lead">{lang noappall_notice}…</span>
+			</div>
+			<!--{/if}-->
+		</div>
+	</div>
+</div>
+</main>
+<!--{template lyear:footer_simple}--> 

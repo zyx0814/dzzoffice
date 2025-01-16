@@ -119,7 +119,7 @@ var stype='$_GET[stype]'?parseInt('$_GET[stype]'):0;//0:可以选择机构和用
 var range='$_GET[range]'?parseInt('$_GET[range]'):0;//0:机构和用户；1：仅机构和部门：2：仅群组
 var moderator=parseInt('$_GET[moderator]')>0?1:0;
 var callback_url = '{$callback_url}';
-var ismobile='$ismobile'?1:0;
+var ismobile='$_G['ismobile']'?1:0;
 </script>
 <!--{template common/header_simple_end}-->
 <div id="orgtree" class="orgtree-container" style=""></div>

@@ -181,6 +181,10 @@ class image {
 					$this->imagecreatefromfunc = function_exists('imagecreatefrompng') ? 'imagecreatefrompng' : '';
 					$this->imagefunc = function_exists('imagepng') ? 'imagepng' : '';
 					break;
+				case 'image/webp':
+					$this->imagecreatefromfunc = function_exists('imagecreatefromwebp') ? 'imagecreatefromwebp' : '';
+					$this->imagefunc = function_exists('imagewebp') ? 'imagewebp' : '';
+					break;
 			}
 		} else {
 			$this->imagecreatefromfunc = $this->imagefunc = TRUE;
@@ -196,6 +200,20 @@ class image {
 			$content = fread($fp, $this->imginfo['size']);
 			fclose($fp);
 			$this->imginfo['animated'] = strpos($content, 'NETSCAPE2.0') === FALSE ? 0 : 1;
+		} elseif(!$this->libmethod && $this->imginfo['mime'] == 'image/webp') {
+			if(!$this->imagecreatefromfunc) {
+				return -4;
+			}
+			if(!($fp = @fopen($source, 'rb'))) {
+				return -2;
+			}
+		   	$content = fread($fp, 40);
+			fclose($fp);
+			if (stripos($content, 'WEBPVP8X') !== FALSE && stripos($content, 'ANIM') !== FALSE) {
+				$this->imginfo['animated'] = 1;
+			}else{
+				$this->imginfo['animated'] = 0;
+			}
 		}
 
 		return $this->imagecreatefromfunc ? 1 : -4;
@@ -277,9 +295,11 @@ class image {
 			return $attach_photo;
 		}
 		//@ini_set('memory_limit','512M');
-		$copy_photo = imagecreatetruecolor($this->imginfo['width'], $this->imginfo['height']);
-		imagecopy($copy_photo, $attach_photo ,0, 0, 0, 0, $this->imginfo['width'], $this->imginfo['height']);
-		$attach_photo = $copy_photo;
+		if($this->imginfo['mime'] != 'image/png') {
+			$copy_photo = imagecreatetruecolor($this->imginfo['width'], $this->imginfo['height']);
+			imagecopy($copy_photo, $attach_photo , 0, 0, 0, 0, $this->imginfo['width'], $this->imginfo['height']);
+			$attach_photo = $copy_photo;
+		}
 
 		$thumb_photo = null;
 		switch($this->param['thumbtype']) {
@@ -291,6 +311,10 @@ class image {
 					$cx = $this->imginfo['width'];
 					$cy = $this->imginfo['height'];
 					$thumb_photo = imagecreatetruecolor($thumb['width'], $thumb['height']);
+					if($this->imginfo['mime'] == 'image/png') {
+						imagealphablending($thumb_photo, false);
+						imagesavealpha($thumb_photo, true);
+					}
 					imagecopyresampled($thumb_photo, $attach_photo ,0, 0, 0, 0, $thumb['width'], $thumb['height'], $cx, $cy);
 				}
 				break;
@@ -301,9 +325,17 @@ class image {
 					$dst_photo = imagecreatetruecolor($cutw, $cuth);
 					imagecopymerge($dst_photo, $attach_photo, 0, 0, $startx, $starty, $cutw, $cuth, 100);
 					$thumb_photo = imagecreatetruecolor($this->param['thumbwidth'], $this->param['thumbheight']);
+					if($this->imginfo['mime'] == 'image/png') {
+						imagealphablending($thumb_photo, false);
+						imagesavealpha($thumb_photo, true);
+					}
 					imagecopyresampled($thumb_photo, $dst_photo ,0, 0, 0, 0, $this->param['thumbwidth'], $this->param['thumbheight'], $cutw, $cuth);
 				} else {
 					$thumb_photo = imagecreatetruecolor($this->param['thumbwidth'], $this->param['thumbheight']);
+					if($this->imginfo['mime'] == 'image/png') {
+						imagealphablending($thumb_photo, false);
+						imagesavealpha($thumb_photo, true);
+					}
 					$bgcolor = imagecolorallocate($thumb_photo, 255, 255, 255);
 					imagefill($thumb_photo, 0, 0, $bgcolor);
 					$startx = ($this->param['thumbwidth'] - $this->imginfo['width']) / 2;
@@ -357,9 +389,9 @@ class image {
 					$im->readImage(realpath($this->target));
 					$im->setImageCompressionQuality($this->param['thumbquality']);
 					$im->thumbnailImage($this->param['thumbwidth'], $this->param['thumbheight']);
-					$im->resizeImage($this->param['thumbwidth'], $this->param['thumbheight']);
+					$im->resizeImage($this->param['thumbwidth'], $this->param['thumbheight'], imagick::FILTER_LANCZOS, 1, true);
 					$im->setGravity(imagick::GRAVITY_CENTER );
-					$im->extentImage($this->param['thumbwidth'], $this->param['thumbheight']);
+					$im->extentImage($this->param['thumbwidth'], $this->param['thumbheight'], 0, 0);
 
 					if(!$im->writeImage($this->target)) {
 						$im->destroy();
@@ -383,7 +415,7 @@ class image {
 					$im->setImageCompressionQuality($this->param['thumbquality']);
 					$im->thumbnailImage($this->param['thumbwidth'], $this->param['thumbheight']);
 					$im->setGravity(imagick::GRAVITY_CENTER );
-					$im->extentImage($this->param['thumbwidth'], $this->param['thumbheight']);
+					$im->extentImage($this->param['thumbwidth'], $this->param['thumbheight'], 0, 0);
 					if(!$im->writeImage($this->target)) {
 						$im->destroy();
 						return -3;

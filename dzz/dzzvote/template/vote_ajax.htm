@@ -38,7 +38,7 @@
 								<input type="hidden" name="voteitemnew[{$value[itemid]}][aid]" value="$value[aid]">
 							</div>
 							<div class="col-xs-2">
-								<a href="javascript:;" data-itemid="$value[itemid]" class="dzzvote-post-delitem ibtn dzz dzz-delete"></a>
+								<a href="javascript:;" data-itemid="$value[itemid]" class="dzzvote-post-delitem ibtn mdi mdi-delete lead dcolor"></a>
 							</div>
 						</div>
 					</div>
@@ -53,7 +53,7 @@
 								<input type="hidden" name="voteitemnew[aid][]" value="">
 							</div>
 							<div class="col-xs-2">
-								<a href="javascript:;" data-itemid="0" class="dzzvote-post-delitem ibtn dzz dzz-delete"></a>
+								<a href="javascript:;" data-itemid="0" class="dzzvote-post-delitem ibtn mdi mdi-delete lead dcolor"></a>
 							</div>
 						</div>
 					</div>
@@ -131,7 +131,7 @@
 			<label class="control-label">{lang deadline}</label>
 			<select class="form-control col-xs-10" onchange="if(this.value){jQuery('#dzzvote_endtime_$vote[voteid]').datepicker('setDate',this.value)}else{jQuery('#dzzvote_endtime_$vote[voteid]').val('')}" style="width:120px;margin-left:10px">
 				<option value="" selected="">{lang unlimited}</option>
-				<option value="now" <!--{if $vote[endtime]}-->selected="selected"<!--{/if}-->>{lang custom}
+				<option value="now" <!--{if $vote['endtime']}-->selected="selected"<!--{/if}-->>{lang custom}
 				</option>
 				<option value="7">{lang one_week}</option>
 				<option value="1 month">{lang one_month}</option>
@@ -306,7 +306,7 @@
 			<div class="dzzvote-header-plate"> <span class="plate-title">{lang number_participants}</span> <em class="voter-num ">$votesum</em> </div>
 		</div>
 		<div class="dzzvote-header-body">
-			<h4 class="dzzvote-subject">$vote[subject]</h4>
+			<h4 class="dzzvote-subject">$vote['subject']</h4>
 			<div class="dzzvote-info">$endtime | {lang most_can_choose1} $vote['maxselectnum'] {lang item}</div>
 		</div>
 	</div>

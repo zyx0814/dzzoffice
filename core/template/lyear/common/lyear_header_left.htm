@@ -1,0 +1,6 @@
+<div id="logo" class="sidebar-header">
+	<a class="text-white text-truncate lead" href="{$_G[siteurl]}">
+	  <img src="<!--{if !$_G['setting']['bbclosed']}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{else}-->static/image/common/logo.png<!--{/if}-->">
+	  $_G['setting']['sitename']
+	</a>
+  </div>

@@ -10,7 +10,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
 $cloud=DB::fetch_first("select * from %t where bz='dzz'",array('connect'));
-$navtitle=$cloud['name'].' - '.lang('space_management');
+$navtitle=$cloud['name'].' - '.lang('space_management').' - '.lang('cloud_set');
 if($_GET['do']=='checkspace'){
 	$remoteid=intval($_GET['remoteid']);
 	if($arr=C::t('local_storage')->update_sizecount_by_remoteid($remoteid)){

@@ -10,13 +10,9 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $setting = $_G['setting'];
-
 $showregisterform = 1;
-
 Hook::listen('register_before');//注册预处理钩子
-
 if($_G['uid']) {
-			
 	$url_forward = dreferer();
 	if(strpos($url_forward, 'user.php') !== false) {
 		$url_forward = 'index.php';

@@ -6,10 +6,8 @@
  * Time: 18:53
  */
 if (!defined('IN_DZZ')) {
-
     exit('Access Denied');
 }
-
 global $_G;
 if($_G['uid']>0){
 	  $param = array(
@@ -34,7 +32,6 @@ if($_G['uid']>0){
 $setting = isset($_G['setting']) ? $_G['setting']:'';
 
 if(empty($setting)){
-
 	$setting= C::t('setting')->fetch_all(array(),true);
 }
 $_G['allow_loginmod'] = $setting['allow_loginmod'] = unserialize($setting['allow_loginmod']);
@@ -97,7 +94,6 @@ if(!isset($_GET['loginsubmit'])) {//是否提交
 
         //记录登录
         C::t('user_status')->update($_G['uid'], array('lastip' => $_G['clientip'], 'lastvisit' =>TIMESTAMP, 'lastactivity' => TIMESTAMP));
-
         //邀请登录
         //Hook::listen('inviate');
 
@@ -141,6 +137,4 @@ if(!isset($_GET['loginsubmit'])) {//是否提交
             showTips(array('error'=>lang('login_strike')),$type);
         }
     }
-
-
 }

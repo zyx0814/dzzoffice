@@ -133,7 +133,7 @@ class table_resources extends dzz_table
             $extrasql = ' and isdelete < 1 ';
         }
         //获取当前文件下所有下级rid
-        foreach (DB::fetch_all("select rid,pfid,oid,uid,sperm from %t where (oid in(%n) or pfid in(%n)) and rid != %s $extrasql", array($this->_table, $fids, $fids, $icoarr['rid'])) as $v) {
+        foreach (DB::fetch_all("select rid,pfid,oid,uid,gid,sperm from %t where (oid in(%n) or pfid in(%n)) and rid != %s $extrasql", array($this->_table, $fids, $fids, $icoarr['rid'])) as $v) {
             $rids[] = $v['rid'];
             $resources[] = $v;
         }
@@ -160,7 +160,8 @@ class table_resources extends dzz_table
             if (count($resources)) {
                 foreach ($resources as $v) {
                     if (!perm_check::checkperm($action, $v)) {
-                        return array('error' => lang('has_no_privilege_file'));
+                        $arr = self::fetch_by_rid($v['rid']);
+                        return array('error' => lang('has_no_privilege_file').' '.$arr['name']);
                     }
                 }
             }
@@ -375,7 +376,7 @@ class table_resources extends dzz_table
         return $resourcedata;
     }
 
-    public function fetch_by_rid($rid, $force_from_db = false,$preview = false)
+    public function fetch_by_rid($rid, $force_from_db = false,$preview = false,$sid = false)
     { //返回一条数据同时加载资源表数据
         global $_G;
         $cachekey = 'resourcesdata_' . $rid;
@@ -426,6 +427,7 @@ class table_resources extends dzz_table
         $data['path'] = $data['rid'];
         $data['bz'] = '';
         $data['preview'] = $preview;
+        $data['sid'] = $sid;
         $data['collect'] = C::t('resources_collect')->fetch_by_rid($rid);
         if ($data['remote'] > 1) $data['rbz'] = io_remote::getBzByRemoteid($data['remote']);
 
@@ -532,39 +534,6 @@ class table_resources extends dzz_table
         return $folderinfo;
     }
 
-    //查詢文件夹下文件信息
-    /*public function fetch_folderinfo_by_pfid($fid)
-    {
-        global $_G;
-        if ($fid) {
-            if ($folder = C::t('folder')->fetch($fid)) {
-                $where1 = array();
-                if ($folder['gid'] > 0) {
-                    $folder['perm'] = perm_check::getPerm($folder['fid']);
-                    if ($folder['perm'] > 0) {
-                        if (perm_binPerm::havePower('read2', $folder['perm'])) {
-                            $where1[] = "1";
-                        } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
-                            $where1[] = "uid='{$_G[uid]}'";
-                        }
-
-                    }
-                    $where1 = array_filter($where1);
-                    if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
-                    else $temp[] = "0";
-                } else {
-                    $temp[] = " uid='{$_G[uid]}'";
-                }
-                $where[] = '(' . implode(' and ', $temp) . ')';
-                unset($temp);
-            }
-            $wheresql = "";
-            if ($where) $wheresql .= implode(' AND ', $where);
-
-            return DB::fetch_all("select * from %t where pfid = %d and isdelete = 0  and $wheresql", array($this->_table, $fid));
-        }
-    }*/
-
     public function fetch_all_by_pfid($pfid, $conditions = array(), $limit = 0, $orderby = '', $order = '', $start = 0, $count = false)
     {
         global $_G;
@@ -618,7 +587,7 @@ class table_resources extends dzz_table
                             if (perm_binPerm::havePower('read2', $folder['perm'])) {
                                 $where1[] = "1";
                             } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
-                                $where1[] = "uid='{$_G[uid]}'";
+                                $where1[] = "uid='{$_G['uid']}'";
                             }
 
                         }
@@ -626,7 +595,7 @@ class table_resources extends dzz_table
                         if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
                         else $temp[] = "0";
                     } else {
-                        $temp[] = " uid='{$_G[uid]}'";
+                        $temp[] = " uid='{$_G['uid']}'";
                     }
                 }
                 $arr[] = '(' . implode(' and ', $temp) . ')';
@@ -644,14 +613,14 @@ class table_resources extends dzz_table
                         if (perm_binPerm::havePower('read2', $folder['perm'])) {
                             $where1[] = "1 = 1";
                         } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
-                            $where1[] = "uid='{$_G[uid]}'";
+                            $where1[] = "uid='{$_G['uid']}'";
                         }
                     }
                     $where1 = array_filter($where1);
                     if ($where1) $temp[] = "(" . implode(' OR ', $where1) . ")";
                     else $temp[] = "0";
                 } else {
-                    $temp[] = " uid='{$_G[uid]}'";
+                    $temp[] = " uid='{$_G['uid']}'";
                 }
             }
             $where[] = '(' . implode(' and ', $temp) . ')';
@@ -873,6 +842,11 @@ class table_resources extends dzz_table
             $fileinfo['opendateline'] = ($filestatis['opendateline']) ? dgmdate($filestatis['opendateline'], 'Y-m-d H:i:s') : dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
             $fileinfo['editdateline'] = ($filestatis['editdateline']) ? dgmdate($filestatis['editdateline'], 'Y-m-d H:i:s') : dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
             $fileinfo['fdateline'] = dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
+            if ($_G['adminid']) {
+                $fileinfo['downs'] = $filestatis['downs'];
+                $fileinfo['views'] = $filestatis['views'];
+                $fileinfo['edits'] = $filestatis['edits'];
+            }
             //编辑权限信息
             $fileinfo['editperm'] = 1;
             if ($fileinfo['gid'] > 0) {

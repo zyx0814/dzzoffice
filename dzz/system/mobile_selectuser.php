@@ -12,7 +12,6 @@ if (!defined('IN_DZZ')) {
 }
 include_once libfile('function/organization');
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
-$ismobile = helper_browser::ismobile();
 $ids = isset($_GET['ids']) ? rawurldecode($_GET['ids']) : '';
 $zero = $_GET['zero'] ? urldecode($_GET['zero']) : lang('no_institution_users');//无机构用户名称
 $nouser = intval($_GET['nouser']);//不显示用户

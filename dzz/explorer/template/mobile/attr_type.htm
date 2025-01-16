@@ -1,0 +1,39 @@
+<!--列表开始-->
+<section class="weui-cells weui-cells__recent">
+    <a class="weui-cell weui-cell_access" href="javascript:;">
+        <div class="weui-cell__hd">
+            {if $cat[catname] == '文档'}
+            <img src="{MOD_PATH}/img/mobile/1.jpg" class="weui-cell__recentimg">
+            {elseif  $cat[catname] == '图片'}
+            <img src="{MOD_PATH}/img/mobile/1.jpg" class="weui-cell__recentimg">
+            {else}
+            <img src="{MOD_PATH}/img/mobile/1.jpg" class="weui-cell__recentimg">
+            {/if}
+
+        </div>
+        <div class="weui-cell__bd">
+            <h4>$cat[catname]</h4>
+        </div>
+    </a>
+</section>
+<!--列表结束-->
+<!--列表详情开始-->
+<section class="weui-form-preview weui-form-share__detail">
+    <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">类型名称</label>
+            <span class="weui-form-preview__value">$cat[catname]</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">扩展名</label>
+            <span class="weui-form-preview__value">$cat[ext]</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">标签</label>
+            <span class="weui-form-preview__value">$cat[tag]</span>
+        </div>
+
+    </div>
+
+</section>
+<!--列表详情结束-->

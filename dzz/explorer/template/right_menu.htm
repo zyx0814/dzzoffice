@@ -1,0 +1,504 @@
+<!--右侧文件开始-->
+<div class="rightBorder" id="rightinfo_content">
+    <!--右侧头部开始-->
+    <div class="briefMenu clearfix" id="rightfileinfo-{$fileinfo[rid]}">
+        <div class="briefMenuimg">
+            <img src="{$_G['siteurl']}$fileinfo[img]" id="detailsimage">
+            <p class="right-imgname"><span>$fileinfo[name]</span></p>
+            <div class="toggRight toggright-icon">
+                <span class="dzz dzz-close "></span>
+            </div>
+        </div>
+    </div>
+    <!--右侧头部结束-->
+    <input type="hidden" value="$fileinfo[rid]" id="fileridinput"/>
+    <!--右侧中间部分开始-->
+    <div class="right-messagetable scroll-y" data-subtractor="{eval echo ($pfid || $rid)?53:0}">
+        <!--文件详情开始-->
+        <div class="right_projectmain">
+            <!--属性开始-->
+            <div class="right-attribute">
+                <div class="ensemble-left">
+                    <div class="attribute-basic clearfix">
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang type}</span>
+                            <span class="detailed_contenter">
+							$fileinfo['type']
+						</span>
+                        </p>
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang position}</span>
+                            <span class="detailed_contenter">$fileinfo[realpath]</span></p>
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang possessor}</span>
+                            <span class="detailed_contenter">$fileinfo['username']</span></p>
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang big_small}</span>
+                            <span class="detailed_contenter">$fileinfo[fsize]</span></p>
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang preceding_edit_time}</span>
+                            <span class="detailed_contenter">$fileinfo[editdateline]</span></p>
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang preceding_open_time}</span>
+                            <span class="detailed_contenter">$fileinfo[opendateline]</span></p>
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang create_time}</span>
+                            <span class="detailed_contenter">$fileinfo[fdateline]</span>
+                        </p>
+                        <!--{if $_G['adminid']}-->
+                        <!--{if $fileinfo[downs]}-->
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang download_times}</span>
+                            <span class="detailed_contenter">$fileinfo[downs]</span>
+                        </p>
+                        <!--{/if}-->
+                        <!--{if $fileinfo[views]}-->
+                        <p class="attribute-position">
+                            <span class="attribute-width">{lang view_count}</span>
+                            <span class="detailed_contenter">$fileinfo[views]</span>
+                        </p>
+                        <!--{/if}-->
+                        <!--{if $fileinfo[edits]}-->
+                        <p class="attribute-position">
+                            <span class="attribute-width">修改次数</span>
+                            <span class="detailed_contenter">$fileinfo[edits]</span>
+                        </p>
+                        <!--{/if}-->
+                        <!--{/if}-->
+                    </div>
+                </div>
+            </div>
+            <!--属性结束-->
+            <!--标签开始-->
+            <div class="right-label clearfix">
+                <div class="ensemble-left">
+                    <div class="right-newlabel clearfix">
+                        <p class="right-labelname">{lang label}</p>
+                        <p class="right-addlabel">
+                            <a href="javascript:;" class="opentagwindow"
+                               onclick="showWindow('addTag','{MOD_URL}&op=ajax&operation=tag&rid=$rid','get',0)">
+                                <span class="dzz dzz-create dzz-edit-button"></span>
+                            </a>
+                        </p>
+                    </div>
+                    <div class="right-morelabel" id="taglist-{$rid}">
+                        <!--{if $tags}-->
+                        <!--{loop $tags $v}-->
+                        <span class="label label-wathet" daat-tid="$v[tid]" id="{$rid}-{$v[tid]}">$v[tagname]</span>
+                        <!--{/loop}-->
+                        <!--{else}-->
+                        {lang no_labels_set}
+                        <!--{/if}-->
+                    </div>
+                </div>
+            </div>
+            <!--标签结束-->
+            <!--{if $fileinfo['isdelete'] < 1}-->
+            <!--历史版本开始-->
+            <div class="historyMenu historyedall">
+                <div class="historyedition clearfix">
+                    <p class="editionMenu">{lang history_revision}</p>
+                    <!--{if $editperm && $explorer_setting['fileVersion'] && ($explorer_setting['fileVersionNumber'] == 0 || $explorer_setting['fileVersionNumber'] > $versionnums )}-->
+                    <p class="upload">
+                        <a href="javascript:;">
+                            <span>{lang upload_update}</span>
+                            <input type="file" name="files[]" class="version_upload_file"/>
+                        </a>
+                    </p>
+                    <!--{/if}-->
+                </div>
+                <ul class="unameMenu" id="versionmenulist">
+                    <!--{if $versions}-->
+                    <!--{loop $versions  $v}-->
+                    <li class="unameMenu-list version_menu" id="version_{$v[vid]}">
+                        <i class="round-drop"></i>
+                        <div class="unameMenuicon-icons">
+                            <div class="unameMenu-upload">
+                                <!--{if !$v['vname']}-->
+                                <span class="nameMenu">$v['username']{lang upload_to}</span>
+                                <p class="versioninfos">{eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}
+                                    <!--{if $fileinfo['vid'] == $v['vid']}--><span class="label label-gainsboro">{lang principal_edition}</span>
+                                    <!--{/if}--></p>
+                                <!--{else}-->
+                                <span class="nameMenu">$v[vname]</span>
+                                <p class="versioninfos"><span class="versioninfo-dateline">{eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}</span>
+                                    <!--{if $fileinfo['vid'] == $v['vid']}--><span class="label label-gainsboro">{lang principal_edition}</span>
+                                    <!--{/if}-->
+                                </p>
+                                <!--{/if}-->
+                            </div>
+                            <p class="editMenu">{eval echo formatsize($v['size']);}</p>
+
+                            <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span
+                                    class="caret"></span></a>
+                            <ul class="dropdown-menu dropdown-menu-version">
+                                <div class="h3-title">{lang version_information}</div>
+                                <li class="listedit-title">
+                                    <a href="javascript:;" class="view_versions" data-dpath="$fileinfo[dpath]"
+                                       data-vid="$v[vid]" onclick="viewversion(this)">
+                                        <span class="dzz dzz-visibility"></span>{lang view_version}
+                                    </a>
+                                </li>
+                                <!--{if $fileinfo['editperm']}-->
+                                <li class="listedit-title">
+                                    <a href="javascript:;" class="primary_versions" data-vid="$v[vid]"
+                                    <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}-->
+                                    data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><span
+                                        class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a>
+                                </li>
+                                <li class="listedit-title listedit-edit">
+                                    <a href="javascript:;" class="edit_versions" data-rid="$fileinfo[rid]"
+                                       data-vid="$v[vid]" onclick="editVersionName(this)">
+                                        <span class="glyphicon glyphicon-pencil"></span>{lang edit_version_information}
+                                    </a>
+                                </li>
+                                <!--{/if}-->
+                            </ul>
+                        </div>
+                    </li>
+                    <!--{/loop}-->
+                    <!--{else}-->
+                    <li class="unameMenu-list" id="unnameMenu-olddata-noversion_{$fileinfo[rid]}">
+                        <i class="glyphicon glyphicon-record"></i>
+                        <div class="unameMenuicon-icons">
+                            <div class="unameMenu-upload">
+                                <span class="nameMenu">$fileinfo['username']{lang upload_to}</span>
+                                <p class="versioninfos">$fileinfo[fdateline]
+                                    <span class="label label-gainsboro">{lang principal_edition}</span>
+                                </p>
+                            </div>
+                            <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span
+                                    class="caret"></span></a>
+                            <ul class="dropdown-menu dropdown-menu-version">
+                                <div class="h3-title">{lang version_information}</div>
+                                <li class="listedit-title">
+                                    <a href="javascript:;" class="view_versions" data-path="$fileinfo[dpath]"
+                                       data-vid="$fileinfo[vid]" onclick="viewversion(this)">
+                                        <span class="dzz dzz-visibility"></span>{lang view_version}
+                                    </a>
+                                </li>
+                                <li class="listedit-title">
+                                    <a href="javascript:;" class="primary_version" data-rid="$fileinfo[rid]"
+                                       data-vid="$fileinfo[vid]" data-primary="yes" onclick="primaryVersion(this)">
+                                        <span class="glyphicon glyphicon-screenshot"></span>{lang
+                                        sign_principal_edition}
+                                    </a>
+                                </li>
+                                <li class="listedit-title listedit-edit">
+                                    <a href="javascript:;" data-rid="$fileinfo[rid]" class="edit_versions"
+                                       data-vid="$fileinfo[vid]" onclick="editVersionName(this)">
+                                        <span class="glyphicon glyphicon-pencil"></span>{lang edit_version_information}
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </li>
+                    <!--{/if}-->
+
+                </ul>
+                <!-- {if $vnext}-->
+                <a href="javascript:;" class="btn_button_more btn btn-link"
+                   onclick="loadingMoreVersion(this,0);" data-rid="{$rid}">{lang upload_more}</a>
+                <!--{/if}-->
+            </div>
+            <!--{/if}-->
+            <!--历史版本结束-->
+        </div>
+        <!--文件详情结束-->
+        <!--动态开始-->
+        <div class="right_projectmain" id="filerightdynamic">
+            <!--{template fileright_dynamic}-->
+        </div>
+        <!--动态结束-->
+
+    </div>
+</div>
+<!--右侧中间部分结束-->
+<!--右侧底部评论开始-->
+<!--{if $fileinfo['isdelete'] < 1}-->
+<div class="comment-area">
+    <div class="messageMenu">
+        <form action="{MOD_URL}&op=ajax&operation=comment" method="post" onsubmit="return comment_file(this)"
+              id="commentid">
+            <input type="hidden" name="rid" value="$rid"/>
+            <input type="hidden" name="fid" value="$fid"/>
+            <div class="discuss-content">
+                    <textarea type="text" id="leave_message" name="msg" rows="1" placeholder="{lang input_comments}"
+                              class="form-control comment-input"></textarea>
+                <div class="comment-file">
+                    <ul class="list_acpsw">
+                        <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml"
+                                                      onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span
+                                class="dzz dzz-smile"></span></a>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </div>
+            <div class="activity-handler clearfix">
+                <button type="submit" class="dzz dzz-send pull-right disabled input-search-drop dzz-submit-send"
+                        style="color:rgba(55,121,255,0.3);"></button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--{/if}-->
+<!--右侧底部评论结束-->
+</div>
+<!--右侧文件结束-->
+<div id="old_rightinfo" class="hide"></div>
+<script type="text/javascript" src="{MOD_PATH}/js/uplodfile.js?{VERHASH}"></script>
+<script type="text/javascript" reload="1">
+    //滚动条滚动，头部加阴影
+    $('.right-messagetable').scroll(function () {
+        if ($(this).scrollTop() > 0) {
+            $('.briefMenu').css({'box-shadow': '0px 0px 10px 0px rgba(0,0,0,0.15)'});
+        } else {
+            $('.briefMenu').css({'box-shadow': 'none'});
+        }
+    })
+    $('.dynconMenu').scroll(function () {
+        if ($(this).scrollTop() > 0) {
+            $('.righttop_title').css({'box-shadow': '0px 0px 10px 0px rgba(0,0,0,0.15)'});
+        } else {
+            $('.righttop_title').css({'box-shadow': 'none'});
+        }
+    });
+
+    function primaryVersion(obj) {
+        var el = $(obj);
+        var vid = el.data('vid');
+        var primaryVersion = el.data('primary');
+        //如果当前版本已经是主版本或者只有当前版本
+        if (typeof vid == 'undefined' || !vid || primaryVersion == 'yes') {
+            return false;
+        }
+        $.post('{MOD_URL}&op=dzzcp&do=setpramiryversion', {'vid': vid}, function (data) {
+            if (data['success']) {
+                var datas = data['data'];
+                $('.version_menu').each(function () {
+                    $(this).find('.label-gainsboro').remove().end().find('.dropdown-menu-version .primary_versions').data('primary', 'no');
+                })
+                $('#version_' + vid).find('p.versioninfos').append('<span class="label label-gainsboro">{lang principal_edition}</span>').end().find('.dropdown-menu-version .pramiry_version').data('primary', 'yes');
+                ;
+                var src = '{$_G['siteurl']}' + datas.img;
+                var rid = '{$fileinfo[rid]}';
+                $('#rightfileinfo-' + rid).find('img').attr('src', src);
+                $('#rightfileinfo-' + rid).find('p.right-imgname').html(datas.name);
+                _explorer.sourcedata.icos[datas.rid] = datas;
+                datas.vid = 0;
+                _filemanage.addIndex(datas);
+                _filemanage.cons['f-' + datas.pfid].CreateIcos(datas, true);
+
+            } else {
+                showDialog(data['msg']);
+            }
+        }, 'json');
+
+    };
+
+    function editVersionName(obj) {
+        var rid = $(obj).data('rid');
+        var vid = $(obj).data('vid');
+        var querystr = '';
+        if (rid) {
+            querystr += '&rid=' + rid;
+        }
+        if (vid) {
+            querystr += '&vid=' + vid;
+        }
+        showWindow('editfileversion', MOD_URL + '&op=ajax&operation=editFileVersionInfo' + querystr, 'get', 0);
+        return false;
+    };
+    //右侧上传版本结束
+    var rid = $('#fileridinput').val();
+    $('.version_upload_file').fileupload({
+        url: MOD_URL + '&op=ajax&operation=uploadfiles',
+        dataType: 'json',
+        autoUpload: true,
+        maxChunkSize: parseInt(_explorer.space.maxChunkSize), //2M
+        //dropZone: '#middleconMenu',
+        dropZone: '.historyMenu',
+        //pasteZone: '#middleconMenu',
+        pasteZone: '.historyMenu',
+        maxFileSize: parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null, // 5 MB
+        acceptFileTypes: new RegExp(attachextensions, 'i'),
+        sequentialUploads: true
+    }).on('fileuploadadd', function (e, data) {
+        data.context = $('<li class="dialog-file-list"></li>').appendTo(_upload.el);
+        $.each(data.files, function (index, file) {
+            $(getItemTpl(file)).appendTo(data.context);
+            uploadadd();
+            _uploadheight();
+        });
+    }).on('fileuploadsubmit', function (e, data) {
+        data.context.find('.upload-cancel').off('click').on('click', function () {
+            data.abort();
+            data.files = '';
+            uploaddone();
+            $(this).parents('.dialog-info').find('.upload-cancel').hide();
+            $(this).parents('.dialog-info').find('.upload-file-status').html('<span class="cancel show_uploading_status"><em></em><i>' + __lang.already_cancel + '</i></span>');
+        });
+        uploadsubmit();
+        $.each(data.files, function (index, file) {
+            var relativePath = (file.webkitRelativePath ? file.webkitRelativePath : '');
+            data.formData = {relativePath: relativePath};
+            return;
+        });
+    }).on('fileuploadprocessalways', function (e, data) {
+        var index = data.index,
+            file = data.files[index];
+        if (file.error) {
+            uploaddone();
+            data.context.find('.upload-item.percent').html('<span class="danger" title="' + file.error + '">' + file.error + '</span>');
+        }
+    }).on('fileuploadprogress', function (e, data) {
+        var index = data.index;
+        _upload.bitrate = formatSize(data.bitrate / 8);
+        var progre = parseInt(data.loaded / data.total * 100, 10);
+        data.context.find('.upload-file-status .speed').html(_upload.bitrate + '/s');
+        data.context.find('.upload-file-status .precent').html(progre + '%');
+    }).on('fileuploadprogressall', function (e, data) {
+        _upload.bitrate = formatSize(data.bitrate / 8);
+        var progre = parseInt(data.loaded / data.total * 100, 10);
+        uploadprogress(_upload.bitrate + '/s', progre + '%');
+        _upload.el.find('.panel-heading .upload-progress-mask').css('width', progre + '%');
+    }).on('fileuploaddone', function (e, data) {
+        uploaddone();
+        data.context.find('.upload-progress-mask').css('width', '0%');
+        data.context.find('.upload-cancel').hide();
+        $.each(data.result.files, function (index, file) {
+            if (file.error) {
+                var relativePath = (file.relativePath ? file.relativePath : '');
+                data.context.find('.upload-item.percent').html('<span class="danger" title="' + file.error + '">' + file.error + '</span>');
+            } else {
+                var filedata = file.data;
+                _upload.tips.find('.dialog-body-text').html(_upload.completed + '/' + _upload.total);
+                data.context.find('.upload-file-status .speed').html('');
+                data.context.find('.upload-file-operate').html('{lang completed}');
+                $.post('{MOD_URL}&op=dzzcp&do=uploadnewVersion', {
+                    'rid': rid,
+                    'aid': filedata.aid,
+                    'name': filedata.filename,
+                    'ext': filedata.filetype,
+                    'size': filedata.filesize,
+                }, function (data) {
+                    if (data['success']) {
+                        var resourcesdata = data['filedata'];
+                        var versiontdata = data['data'];
+                        // _filemanage.updateIndex(updatedata);
+                        var html = '<li class="unameMenu-list version_menu" id="version_' + versiontdata['vid'] + '"> ' +
+                            '<div class="unameMenuicon-icons"> ' +
+                            '<div class="unameMenu-upload"> ' +
+                            '<span class="nameMenu">' + versiontdata['username'] + '{lang upload_to}</span> ' +
+                            '<p class="versioninfos">' + versiontdata['fdateline'] + '<span class="label label-gainsboro">{lang principal_edition}</span></p> ' +
+                            '</div> <p class="editMenu">' + versiontdata['size'] + '</p> <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>' +
+                            '<ul class="dropdown-menu dropdown-menu-version"> ' +
+                            '<div class="h3-title" >{lang version_information}</div> ' + '<li class="listedit-title">' + '<a href="javascript:;" class="view_version" data-dpath="' + versiontdata['dpath'] + '" data-vid="' + versiontdata['vid'] + '" onclick="viewversion(this)"><span class="dzz dzz-visibility"></span>' + __lang.view_version + '</a></li>' +
+                            '<li class="listedit-title"><a href="javascript:;" class="primary_version"' +
+                            'data-vid="' + versiontdata['vid'] + '" data-pramiry="yes"><span class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a></li> ' +
+                            '<li class="listedit-title listedit-edit"><a href="javascript:;"  data-vid="' + versiontdata['vid'] + ' data-rid="' + rid + ' onclick="editVersionName(this)"><span class="glyphicon glyphicon-pencil" ></span>{lang edit_version_information}</a></li> ' +
+                            '</ul> </div> <div class="editMenu-input clearfix"> ' +
+                            '</div> </div> </li>';
+                        $('.version_menu').each(function () {
+                            $(this).find('p.versioninfos .label-gainsboro').remove().end().find('.dropdown-menu-version .primary_version').data('primary', 'no');
+                            ;
+                        })
+                        if (typeof versiontdata.olddatavid != 'undefined' && versiontdata.olddatavid) {
+                            $('#version_0').find('.primary_versions').data('vid', versiontdata.olddatavid);
+                            $('#version_0').find('.view_versions').data('vid', versiontdata.olddatavid);
+                            $('#version_0').find('.edit_versions').data('vid', versiontdata.olddatavid);
+                            $('#version_0').attr('id', 'version_' + versiontdata.olddatavid);
+                        }
+                        $('#versionmenulist').prepend(html);
+
+                        $('#detailsimage').attr('src', '{$_G['siteurl']}' + resourcesdata['img']);
+                        _explorer.sourcedata.icos[data['filedata'].rid] = data['filedata'];
+                        _filemanage.cons['f-' + data['filedata'].pfid].CreateIcos(data['filedata'], true);
+                        resourcesdata.vid = 0;
+                        _filemanage.addIndex(resourcesdata);
+                    } else if (data['error']) {
+                        showDialog(data['error']);
+                    }
+                }, 'json')
+
+
+            }
+        });
+
+    }).on('fileuploadfail', function (e, data) {
+        $.each(data.files, function (index, file) {
+            uploaddone();
+            data.context.find('.upload-item.percent').html('<span class="danger" title="' + file.error + '">' + file.error + '</span>');
+        });
+
+    });
+    function getItemTpl(file) {
+        var relativePath = (file.webkitRelativePath ? file.webkitRelativePath : (file.relativePath ? file.relativePath : file.name));
+        var filearr = file.name.split('.');
+        var ext = filearr.pop();
+        var imgicon = '<img src="dzz/images/extimg/' + ext + '.png" onerror="replace_img(this)" style="width:24px;height:24px;position:absolute;left:0;"/>';
+        var html =
+            '<div class="process" style="position:absolute;z-index:-1;height:100%;background-color:#e8f5e9;-webkit-transition:width 0.6s ease;-o-transition:width 0.6s ease;transition:width 0.6s ease;width:0%;"></div> <div class="dialog-info"> <div class="upload-file-name">' +
+            '<div class="dialog-file-icon" align="center">' + imgicon + '</div> <span class="name-text">' + file.name + '</span> ' +
+            '</div> <div class="upload-file-size">' + (file.size ? formatSize(file.size) : '') + '</div> <div class="upload-file-path">' +
+            '<a title="" class="" href="javascript:;">' + relativePath + '</a> </div> <div class="upload-file-status"> <span class="uploading"><em class="precent"></em><em class="speed">排队中</em>' +
+            '</span> <span class="success"><em></em><i></i></span> </div> <div class="upload-file-operate"> ' +
+            '<em class="operate-pause"></em> <em class="operate-continue"></em> <em class="operate-retry"></em> <em class="operate-remove"></em> ' +
+            '<a class="error-link upload-cancel" href="javascript:void(0);">取消</a> </div> </div>';
+        return html;
+    }
+    function uploadadd() {
+        _upload.total++;
+        _upload.tips.show();
+        _upload.tips.find('.dialog-body-text').html(_upload.completed + '/' + _upload.total);
+    }
+    function _uploadheight() {
+        var winHeight = $('#uploading_file_list').height();
+        if (winHeight > 441) {
+            _upload.el.animate({scrollTop: winHeight});//滚动条跟着滚动
+            _upload.el.css({'overflow-y': 'auto', 'overflow-x': 'hidden', 'max-height': '460px'});
+        }
+    }
+    ;
+    function uploadsubmit() {
+        _upload.el.find('.upload-sum-title').show().html(_upload.completed + '/' + _upload.total);
+    }
+    function uploaddone() {
+        _upload.completed++;
+        if (_upload.completed > _upload.total) {
+            _upload.el.find('.upload-sum-title').html(__lang.upload_finish + ':');
+            _upload.el.find('.panel').addClass('ismin');
+            _upload.ismin = 1;
+        } else {
+            _upload.el.find('.upload-sum-completed').show().html(_upload.completed + '/' + _upload.total);
+        }
+    }
+
+    function uploadprogress(speed, per) {
+        _upload.el.find('.upload-speed').show().find('.upload-speed-value').html(speed);
+        if (_upload.speedTimer) window.clearTimeout(_upload.speedTimer);
+        _upload.speedTimer = window.setTimeout(function () {
+            _upload.el.find('.upload-speed').hide();
+        }, 2000);
+    }
+    function viewversion(obj) {
+        var path = $(obj).data('dpath');
+        var viewhref = '{$_G['siteurl']}share.php?a=view&s=' + path;
+        var vid = $(obj).data('vid');
+        if (vid) {
+            viewhref += '&vid=' + vid;
+        }
+        window.open(viewhref);
+
+    }
+    function loadingMoreVersion(obj) {
+        var rid = $(obj).data('rid');
+        $.post(MOD_URL + '&op=dynamic&do=loadmoreversion', {'rid': rid, 'next': 0}, function (html) {
+            jQuery('#rightinfo_content').replaceWith(html);
+            _explorer.Scroll();
+        })
+    }
+</script>

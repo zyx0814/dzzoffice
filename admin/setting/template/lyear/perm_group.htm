@@ -1,0 +1,223 @@
+<link rel="stylesheet" href="{MOD_PATH}/images/lsetting.css?{VERHASH}">
+<link rel="stylesheet" href="static/dzzicon/icon.css?{VERHASH}">
+<style type="text/css">
+	.view-eidt{
+		padding-right: 5px;
+    color: #3779ff;
+	}
+  .perm-ok{
+    padding-right: 5px;
+  }
+  .proper-bottom{
+    position: relative;
+    display: inline-block;
+    padding-right: 20px;
+  }
+  .proper-set{
+    display: none;
+  }
+  .properties-list:hover .proper-set{
+    display:inline-block;
+  }
+  .proper-delhover{
+    display: inline-block;
+  }
+</style>
+<div class="middle-center-content"> 
+  <!--地址栏结束-->
+    <div class="new-button">
+      <button type="button" class="btn btn-primary btn-round" data-bs-toggle="modal" id="myModalLabel" data-bs-target="#myjurisdic" aria-expanded="false"> {lang new_permissions} </button>
+      <div class="modal fade" id="myjurisdic" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <form action="{MOD_URL}&op=permgroup&do=addpermgroup" method="post" onsubmit="return permchk(this);">
+              <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">{lang add_folder_permission_group}</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <label for="newpername" class="form-label">{lang folder_permissions}{lang name}</label>
+                  <input type="text" class="form-control" id="newpername" name="pername" value=""/>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang choose_permission}</label>
+                  <div class="col-sm-10">
+                    <!--{loop $perms $k $val}-->
+                  <div class="form-check form-check-inline col-6 col-sm-5">
+                    <input class="form-check-input" type="checkbox" name="perms[]" id="$val[2]" value="$val[1]">
+                    <label class="form-check-label" for="$val[2]"><span class="{$val[2]} view-eidt perm_chk" data-perm="$val[1]"></span><span>$val[0]</span></label>
+                  </div>
+                  <!--{/loop}-->
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="default" value="1" id="inputfore">
+                  <label class="form-check-label" for="inputfore">{lang set_default_permission_group}</label>
+                </div>
+                <button type="submit" class="btn btn-outline-primary bodyloading">{lang confirms}</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{lang cancel} </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>{lang name}</th>
+            <th style="min-width: 120px;">{lang jurisdiction}</th>
+            <th>启用</th>
+            <th width="180px">{lang operation}</th>
+          </tr>
+        </thead>
+        <tbody class="properties-con">
+          <!--{loop $permgroups $v}-->
+          <tr class="properties-list lead" id="perm_$v[id]">
+            <td>
+              <img src="dzz/images/extimg/folder.png">
+              <h6 class="d-inline-flex">$v[pername]<!--{if $v['system']}--><span class="badge bg-primary ms-2">{lang system_default}</span><!--{/if}--></h6>
+            </td>
+            <td>
+              <ul class="nav nav-pills text-primary">
+                <!--{loop $perms $k $val}--> 
+                <li  class="nav-item" <!--{if $val[1]&$v[perm]}-->style="display:block"<!--{else}--> style="display:none"<!--{/if}-->><span class="{$val[2]}"></span>
+                </li>
+                <!--{/loop}-->
+              </ul>
+            </td>
+            <td>
+              <div class="form-check form-switch">
+                <input type="checkbox" onchange="edit_perm(this,'$v[id]')" class="form-check-input" <!--{if !$v[off]}-->checked="checked" <!--{/if}--> /> 
+              </div>
+            </td>
+            <td>
+              <!--{if !$v['system']}--> 
+              <span class="mdi mdi-pencil lead dcolor" onclick="editpermgroup('$v[id]')"  style="cursor:pointer;"></span>
+              <span class="mdi mdi-delete lead dcolor" onclick="delete_perm(this,'$v[id]')"></span>
+              <!--{/if}-->
+              <div class="proper-delhover">
+              <!--{if $v[default]}--> 
+              <span class="proper-perm proper-default"><button type="button" class="btn btn-primary btn-sm" disabled=""><span class="mdi mdi-check perm-ok"></span>{lang default_permission}</button></span>
+              <!--{else}--> 
+              <span class="proper-perm proper-set" onclick="setDefault(this,'$v[id]')"><button type="button" class="btn btn-outline-primary btn-sm"><span class="mdi mdi-check perm-ok"></span>{lang set_default}</button></span> 
+              <!--{/if}-->
+            </div>
+            </td>
+          </tr>
+          <!--{/loop}--> 
+        </tbody>
+      </table>
+    </div>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{lang folder_property_group_permission}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <ul class="list-inline fs-6">
+      <!--{loop $perms $k $val}-->
+      <li class="col-sm-2 list-inline-item"><span class="text-primary {$val[2]}"></span>$val[0]</li>
+      <!--{/loop}-->
+    </ul>
+  </div>
+<script type="text/javascript">
+    function permchk(form) {
+      jQuery.post(form.action, jQuery(form).serialize(), function (data) {
+          if (data['success']) {
+              var perms = data['success']['perm'];
+              var permstr = '';
+              if (data['success']['default'] == 0) {
+                  var defaultstr = '<span class="proper-perm proper-set" onclick="setDefault(this,'+data['success']['id']+')"><button type="button" class="btn btn-outline-primary btn-sm"><span class="mdi mdi-check perm-ok"></span>{lang set_default}</button></span>';
+              } else {
+                var defaultstr = '<span class="proper-perm proper-default"><button type="button" class="btn btn-primary"><span class="mdi mdi-check perm-ok"></span>{lang default_permission}</button></span>';
+                  jQuery('.properties-list').each(function(){
+                      var idval = jQuery(this).attr('id');
+                    idval = idval.replace('perm_','');
+                    jQuery(this).find('.proper-delhover').html('<span class="proper-perm proper-set" onclick="setDefault(this,'+idval+')"><button type="button" class="btn btn-outline-primary btn-sm"><span class="mdi mdi-check perm-ok"></span>{lang set_default}</button></span>')
+
+                  })
+              }
+              for(var o in perms){
+                  permstr += '<li class="nav-item"><span class="'+perms[o]+'" ></span></li>';
+              }
+              var html ='<tr class="properties-list lead" id="perm_'+data['success']['id']+'"> ' +
+                        '<td>' +
+                        '<img src="dzz/images/extimg/folder.png"><h6 class="d-inline-flex">' + data['success']['pername'] + '</h6></td>'+
+                        '<td><ul class="nav nav-pills text-primary">' +permstr+'</ul></td>' +
+                        '<td>' +
+                        '<div class="form-check form-switch"><input type="checkbox" onchange="edit_perm(this,'+data['success']['id']+')" class="form-check-input" checked="checked"/></div>' +
+                        '</td>' +
+                        '<td>' +
+                        '<span class="mdi mdi-pencil lead dcolor" onclick="editpermgroup('+data['success']['id']+')" style="cursor:pointer;"></span> ' +
+                        '<span class="mdi mdi-delete lead dcolor" onclick="delete_perm(this,'+data['success']['id']+')"></span><div class="proper-delhover">'+defaultstr+'</div>' +
+                        '</td>' +
+                        '</tr>';
+                var elem = jQuery(html).appendTo('.properties-con').find('.js-switch');
+                jQuery('#myjurisdic').modal('hide');
+                showmessage('添加成功','success','3000',1);
+                return false;
+            } else {
+                showDialog(data['error']);
+                return false;
+            }
+        }, 'json');
+        return false;
+    }
+    function edit_perm(obj, pid) {
+        if (jQuery(obj).prop('checked')) {
+            var off = 0;
+        } else var off = 1;
+        jQuery.post(MOD_URL+'&op=permgroup&do=editpermgroup_off', {'off': off, id: pid}, function (data) {
+            if (data['success']==true) {
+                if (off == 0) {
+                    jQuery(obj).attr('checked', true);
+                    showmessage('{lang permission_group_open_succeeded}','success','3000',1);
+                }else {
+                    jQuery(obj).attr('checked', false);
+                    showmessage('{lang permission_group_close_succeeded}','success','3000',1);
+                }
+            } else {
+                showmessage('操作失败,请刷新重试','error','3000',1);
+            }
+        }, 'json')
+    }
+    function setDefault(obj, pid) {
+        jQuery.post(MOD_URL+'&op=permgroup&do=setdefault', {'id': pid}, function (data) {
+            if (data['success']) {
+                jQuery('.properties-list').each(function () {
+                    var id = jQuery(this).attr('id').replace('perm_', '');
+                    if (id != pid) {
+                      jQuery(this).find('.proper-delhover').html('<span class="proper-perm proper-set" onclick="setDefault(this,' + id + ')"><button type="button" class="btn btn-outline-primary btn-sm"><span class="mdi mdi-check perm-ok"></span>{lang set_default}</button></span>');
+                    }
+
+                })
+                jQuery(obj).replaceWith('<span class="proper-perm proper-default"><button type="button" class="btn btn-primary btn-sm" disabled=""><span class="mdi mdi-check perm-ok"></span>{lang default_permission}</button></span>');
+                showmessage('{lang set_default_permission_succeeded}','success','3000',1);
+            } else {
+                showmessage('设置失败,请刷新重试','error','3000',1);
+            }
+        }, 'json');
+    }
+    function delete_perm(obj, pid) {
+      var msg ='{lang delete_permission_group_sure}';
+      if(msg){	
+        showDialog( msg, 'confirm','', function(){		
+          jQuery.post(MOD_URL+'&op=permgroup&do=deleteperm', {'id': pid}, function (data) {
+                if (data['success']) {
+                    jQuery(obj).parents('.properties-list').remove();
+                    showmessage('权限组删除成功','success','3000',1);
+                } else {
+                showmessage('删除失败,请刷新重试','error','3000',1);
+            }
+            }, 'json')
+        });
+      }
+      return false;
+    }
+    function editpermgroup(pid) {
+        showWindow('editpermgroup', MOD_URL+'&op=ajax&operation=editpermgroup&id=' + pid);
+    }
+
+</script> 

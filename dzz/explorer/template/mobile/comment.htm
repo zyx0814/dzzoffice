@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--{template mobile/mobile_header}-->
+		<title>评论</title>
+	</head>
+	<body>
+		<!--列表开始-->
+		<section class="weui-cells weui-cells__recent weui-cells__margin_footer" id="commentlist">
+
+		</section>
+		<!--无内容提示页-->
+		<div class="weui-cell-search-normal" style="display: none;">
+				<!--{template mobile/template_normal}-->
+		</div>
+		<!--列表结束-->
+		<footer class="weui-footer">
+			<div class="weui-footer-comment">
+                <a href="{MOD_URL}&op=mobile&do=file&fid=$fid" class="weui-footer-create-comment commentadd">
+                    <i class="dzz dzz-sort"></i>
+                    <p>返回</p>
+                </a>
+				<a href="javascript:;" class="weui-footer-create-comment commentadd">
+					<i class="dzz dzz-create"></i>
+					<p>评论</p>
+				</a>
+			</div>
+		</footer>
+	</body>
+	<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+	<script type="text/javascript" src="{MOD_PATH}/js/mobile/appevent.js"></script>
+	<script type="text/javascript">
+        var rid = '{$rid}',fid = '{$fid}';
+        $(function(){
+            $.post(MOD_URL+'&op=mobile&do=comment&operation=filelist',{'rid':rid,'fid':fid,k:Math.random()},function(html){
+                if(html){
+                    $('#commentlist').html(html);
+                }else{//待处理
+                    $('#commentlist').html('暂无数据');
+                }
+            })
+            //删除评论
+            $(document).off('tap.delcomment').on('tap.delcomment','.delete-swipeout',function(){
+                var obj = $(this),commentid = obj.data('commentid');
+                $.post(MOD_URL+'&op=mobile&do=comment&operation=delcomment',{'id':commentid,k:Math.random()},function(data){
+                    if(data['success']){
+                        obj.closest('.weui-cell_swiped').remove();
+                    }else{
+                        $.toast(data['error'])
+                    }
+                },'json')
+            })
+            //新增评论
+            $(document).off('tap.commentadd').on('tap.commentadd','.commentadd',function(){
+                window.location.href = MOD_URL+'&op=mobile&do=comment&operation=commentadd&rid='+rid+'&fid='+fid;
+            })
+        })
+        //获取id高度
+        function height(){
+            var h = $(document).outerHeight(true);
+            var h2 = $('.weui-cell-footer').outerHeight(true);
+            $('.weui-cell-search-images').css('height',h-h2);
+        }
+	</script>
+	<!--{hook footer_tpl}-->
+	<!--{eval output();}-->
+</html>
+

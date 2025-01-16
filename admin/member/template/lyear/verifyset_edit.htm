@@ -1,0 +1,150 @@
+<!--{template lyear:header_simple_start}-->
+<link rel="stylesheet" type="text/css" href="static/lyear/js/bootstrap-lyear-select/bootstrap-lyear-select.css?{VERHASH}">
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+      <div class="card">
+          <div class="card-body">
+            <ul class="nav nav-pills">
+              <li class="nav-item">
+                <a class="nav-link" href="{MOD_URL}&op=verifyset">{lang members_verify}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" href="{MOD_URL}&op=verifyset&do=edit&vid=$vid">{lang edit}</a>
+              </li>
+            </ul>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+            <form id="cpform" action="{MOD_URL}&op=verifyset&do=edit" class="form-horizontal" method="post" name="cpform" enctype="multipart/form-data">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="true" name="verifysubmit">
+              <input type="hidden" value="$vid" name="vid">
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang members_verify_title}</label>
+                <div class="col-sm-10">
+                  <input name="verify[title]" value="$verifyarr[title]" type="text" class="form-control" <!--{if $verifyarr[readonly]}-->disabled="disabled"<!--{/if}-->>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang members_verify_synopsis}</label>
+                <div class="col-sm-10">
+                  <textarea name="verify[desc]" type="textarea" class="form-control" rows="3">$verifyarr[desc]</textarea>
+                  <span class="form-text">{lang verifyset_verify_synopsis_text}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang members_verify_enable}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="verify[available]1" name="verify[available]" value="1" <!--{if $verifyarr[available]}-->checked="checked"<!--{/if}-->>{lang enable}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="verify[available]2" name="verify[available]" value="0" <!--{if !$verifyarr[available]}-->checked="checked"<!--{/if}-->>{lang no_enable}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang members_verify_icon}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="verify[showicon]1" name="verify[showicon]" value="1" <!--{if $verifyarr[showicon]}-->checked="checked"<!--{/if}--> onclick="document.('hidden_verify_showicon').style.display = '';">{lang show}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="verify[showicon]2" name="verify[showicon]" value="0" <!--{if !$verifyarr[showicon]}-->checked="checked"<!--{/if}--> onclick="document.getElementById('hidden_verify_showicon').style.display = 'none';">{lang no_show}</label>
+                  </div>
+                </div>
+                <dd id="hidden_verify_showicon" class="clearfix mt10" <!--{if !$verifyarr[showicon]}-->style="display:none"<!--{/if}-->>
+                  <div class="row mb-3">
+                    <label class="col-sm-2">{lang members_unverify_icon}</label>
+                    <div class="col-sm-10">
+                      <table>
+                        <tr>
+                          <td valign="top">
+                            <div>
+                              <input id="fileQ3_0" style="display:" name="unverifyiconnew" value="" type="file" class="form-control uploadbtn marginbot" accept="image/jpeg,image/gif,image/png,image/jpg">
+                              <input id="fileQ3_1" style="display:none" name="TMPunverifyiconnew" value="$verifyarr[unverifyicon]" type="text" class="form-control marginbot" accept="image/jpeg,image/gif,image/png,image/jpg">
+                            </div>
+                            <div>
+                              <a id="fileQ3_0a" class="btn btn-primary" style="font-weight:bold;" href="javascript:;" onclick="document.getElementById('fileQ3_1a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileQ3_1').name = 'TMPunverifyiconnew';document.getElementById('fileQ3_0').name = 'unverifyiconnew';document.getElementById('fileQ3_0').style.display = '';document.getElementById('fileQ3_1').style.display = 'none'">{lang web_upload}</a>&nbsp;
+                              <a id="fileQ3_1a" class="btn btn-primary" style="" href="javascript:;" onclick="document.getElementById('fileQ3_0a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileQ3_0').name = 'TMPunverifyiconnew';document.getElementById('fileQ3_1').name = 'unverifyiconnew';document.getElementById('fileQ3_1').style.display = '';document.getElementById('fileQ3_0').style.display = 'none'">{lang input}URL</a>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="ml20">$unverifyiconhtml</div>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-2">{lang members_verify_icon}</label>
+                    <div class="col-sm-10">
+                      <table>
+                        <tr>
+                          <td valign="top">
+                            <div>
+                              <input id="fileO4_0" style="display:" name="iconnew" value="" type="file" class="form-control uploadbtn marginbot" accept="image/jpeg,image/gif,image/png,image/jpg">
+                              <input id="fileO4_1" style="display:none" name="TMPiconnew" value="$verifyarr[icon]" type="text" class="form-control marginbot" accept="image/jpeg,image/gif,image/png,image/jpg">
+                            </div>
+                            <div>
+                              <a id="fileO4_0a" class="btn btn-primary" style="font-weight:bold" href="javascript:;" onclick="document.getElementById('fileO4_1a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileO4_1').name = 'TMPiconnew';document.getElementById('fileO4_0').name = 'iconnew';document.getElementById('fileO4_0').style.display = '';document.getElementById('fileO4_1').style.display = 'none'">{lang web_upload}</a>&nbsp;
+                              <a class="btn btn-primary" id="fileO4_1a" style="" href="javascript:;" onclick="document.getElementById('fileO4_0a').style.fontWeight = '';this.style.fontWeight = 'bold';document.getElementById('fileO4_0').name = 'TMPiconnew';document.getElementById('fileO4_1').name = 'iconnew';document.getElementById('fileO4_1').style.display = '';document.getElementById('fileO4_0').style.display = 'none'">{lang input}URL</a>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="ml20">$verificonhtml</div>
+                          </td>
+                        </tr>
+                      </table>
+
+                    </div>
+                  </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang choosable_data}</label>
+                <div class="col-sm-10">
+                  <!--{loop $fieldarr $value}-->
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="verify[field][{$value[fieldid]}]" name="verify[field][{$value[fieldid]}]" value="$value[fieldid]"<!--{if $verifyarr[field][$value[fieldid]]}--> checked="checked"<!--{/if}-->>
+                    <label class="form-check-label" for="verify[field][{$value[fieldid]}]">$value[title]</label>
+                  </div>
+                  <!--{/loop}-->
+                  <span class="form-text">{lang verifyset_choosable_data_text}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang members_verify_group}</label>
+                <div class="col-sm-10">
+                  <select class="form-select" name="verify[groupid][]" multiple>
+                    <!--{loop $usergroups $value}-->
+                    <option value="$value[groupid]" <!--{if in_array($value[groupid],$verifyarr[groupid])}-->selected="selected"<!--{/if}-->>$value[grouptitle]</option>
+                    <!--{/loop}-->
+                  </select>
+                  <span class="form-text">{lang verifyset_verify_group_text}</span>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input type="submit" class="btn btn-primary btn-round bodyloading" name="verifysubmit" value="{lang save_set}">
+              </dl>
+            </form>
+        </div>
+      </div>
+    </div>
+</main>
+<script type="text/javascript">
+	var url = '{MOD_URL}';
+
+	jQuery(document).ready(function(e) {
+		<!--{if $verifyarr['icon']}-->
+		jQuery('#fileO4_1a').trigger('click');
+		<!--{/if}-->
+		<!--{if $verifyarr['unverifyicon']}-->
+		jQuery('#fileQ3_1a').trigger('click');
+		<!--{/if}-->
+
+	});
+</script>
+<script type="text/javascript" src="static/lyear/js/bootstrap-lyear-select/bootstrap-lyear-select.js?{VERHASH}"></script>
+<!--{template lyear:footer_simple}-->

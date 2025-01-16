@@ -1,0 +1,57 @@
+<div class="middle-padding-left share-content scroll-y scroll-srcollbars" id="selectBoardPosition">
+
+    <!--文件列表开始-->
+   <div id="filemanage-share-list"></div>
+    <!--文件列表结束-->
+
+</div>
+<!--头部信息框-->
+<div class="navtopheader">
+</div>
+<div id="template_detaillist"  style="display:none">
+    <!--{template template_file_share}-->
+</div>
+<div id="template_file" style="display:none">
+    <!--{template template_file_navtopfile}-->
+</div>
+<div id="template_toolButton" style="display:none">
+    <!--{template template_file_toolButton}-->
+</div>
+<table id="template_nofile_notice" style="display:none">
+    <tbody id="emptyshareHtml">
+    <tr class="emptyshare">
+        <td colspan="6" style="border: none;">
+            <!--{template noFilePage-share}-->
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script type="text/javascript">
+	jQuery.getScript('static/clipboard/clipboard.min.js?{VERHASH}');
+    $(document).ready(function(e) {
+        var hash=location.hash;
+        _filemanage.getData(_explorer.appUrl+'&op=share&do=filelist&sid=share-list');
+        $('.input-black').each(function() {
+            InputAnimate.init($(this));
+        });
+    });
+	jQuery(document).on('showIcos_done',function(){
+		jQuery('.js_copy').each(function(){
+			var clipboard = new Clipboard(this);
+				clipboard.on('success', function(e) {
+					jQuery(e.trigger).find('.copy-success').removeClass('hide');
+					window.setTimeout(function(){jQuery(e.trigger).find('.copy-success').addClass('hide');},1000);
+				});
+				clipboard.on('error', function(e) {
+				});
+		});
+		 //鼠标滑过弹出二维码
+		$('.deatisinfo .share-copyaress .input-group-addoncode').off('mouseenter.hoverqurcode').on('mouseenter.hoverqurcode', function () {
+			$(this).parent().find('.input-group-addonhover').show();
+		})
+		$(document).off('mouseleave.leavequrcode').on('mouseleave.leavequrcode', '.deatisinfo .share-copyaress .input-group-addoncode', function () {
+			$(this).parent().find('.input-group-addonhover').hide();
+		})
+
+	});
+</script>

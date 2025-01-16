@@ -1,0 +1,191 @@
+<div class="rightBorder" id="rightinfo_content">
+<div class="righttop_title  clearfix">
+	<span class="dzz dzz-chevron-left dzz-right-backing"  data-rid="$ridval" onclick="reback_last(this)"></span>
+	<p class="right_name">动态</p>
+	<div class="toggRight toggright-icon">
+	 	 <span class="dzz dzz-close "></span>
+	</div>
+</div>
+<div class="dynconMenu  scroll-y" id="dynconMenu" data-subtractor="{eval echo ($pfid || $rid)?53:0}">
+<div class="just-now" id="just-now"></div>
+<div class="toadyTime">
+<!--{if $events}-->
+{eval $today=strtotime(dgmdate(TIMESTAMP,'Y-m-d'))} 
+        {eval $timearr=array();} 
+<!--{loop $events $eventval}--> 
+    {eval $t=strtotime(dgmdate($eventval['dateline'],'Y-m-d'));} 
+    <!--{if $t==$today && !in_array($t,$timearr)}-->
+        <p class="toadytitle">{lang today}</p>
+        {eval $timearr[]=$t;} 
+    <!--{elseif $t==$today-24*60*60 && !in_array($t,$timearr)}-->
+        <p class="toadytitle">{lang ytoday}</p>
+        {eval $timearr[]=$t;} 
+    <!--{elseif $t==$today-24*60*60*2 && !in_array($t,$timearr)}-->
+        <p class="toadytitle">{lang bytoday}</p>
+        {eval $timearr[]=$t;} 
+    <!--{elseif $t<$today-24*60*60*2 && !in_array($t,$timearr)}-->
+        <p class="toadytitle">{eval echo dgmdate($t,'Y-m-d');}</p>
+        {eval $timearr[]=$t;} 
+    <!--{/if}--> 
+    <!--{if $eventval['type'] == 0}-->
+    <div class="dynameic-comment">
+      <div class="toadysmalltime"> <span class="dynameic-times">{eval echo dgmdate($eventval['dateline'],'H:i');}</span> </div>
+      <div class="toadycon">
+          <div class="toadycon-img">{eval echo avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}</div>
+        <p class="activity-content"><span class="activity-name">$eventval['username']</span> <span>{$eventval[details]}</span></p>
+      </div>
+    </div>
+    <!--{elseif $eventval['type'] == 1 }-->
+    <div class="dynameic-comment">
+      <div class="toadysmalltime"> <span class="dynameic-times">{eval echo dgmdate($eventval['dateline'],'H:i');}</span> </div>
+      <div class="toadycon">
+         <div class="toadycon-img">{eval echo avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}</div>
+        <p class="activity-content"><span class="activity-name">$eventval['username']</span> <span>{$eventval[details]}</span>
+            <span class="delete-comment dzz dzz-delete" data-commentid="$eventval[id]"></span></p>
+      </div>
+    </div>
+    <!--{/if}--> 
+ 
+<!--{/loop}--> 
+<!--{if $next}-->
+<a href="javascript:;" class="btn_dynamic_more_less btn-link btn-block hide" onclick="load_dynamic(this,'$next','{eval echo implode(',',$rids);}',$pfid,1);"></a>
+<!--<a href="javascript:;" class="btn_dynamic_more btn btn-link btn-block">{lang upload_more}</a>-->
+<!--{/if}-->
+<!--{/if}-->
+</div>
+</div>
+<!--右侧底部评论开始-->
+<!--{if $pfid || $rid}-->
+<div class="comment-area">
+    <div class="messageMenu"> 
+	    <form action="{MOD_URL}&op=ajax&operation=comment" method="post" onsubmit="return comment_file(this)" id="commentid">
+	        <input type="hidden" name="rid" value="$rid" />
+	        <input type="hidden" name="fid" value="$pfid" />
+	    	<div class="discuss-content">
+	            <textarea type="text" id="leave_message" name="msg" rows="1"  placeholder="{lang input_comments}" class="form-control comment-input" ></textarea>
+	            <div class="comment-file">
+	                <ul class="list_acpsw">
+	                    <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span class="dzz dzz-smile"></span></a>
+	                    </li>
+	                    
+	                </ul>
+	            </div>
+	             
+	        </div>
+	        <div class="activity-handler clearfix">		            
+	             <button type="submit" class="dzz dzz-send pull-right disabled input-search-drop dzz-submit-send" style="color:rgba(55,121,255,0.3);"></button>
+	        </div>
+	    </form>
+    </div>
+</div>
+<!--{/if}-->
+<!--右侧底部评论结束-->
+</div>
+<script type="text/javascript">
+jcLoader().load({  
+				type:'js', 
+				ids:'js_textareaexplander', 
+				url:'static/js/jquery.textareaexplander.js?{VERHASH}'  
+			},function(){
+			  jQuery('#leave_message').TextAreaExpander(32,300);
+		});
+ jQuery('.dynconMenu.scroll-y').scroll(function(e) {
+	var clientHeight = jQuery('.dynconMenu.scroll-y').height();
+	var scrollHeight =jQuery('.dynconMenu.scroll-y').get(0).scrollHeight;
+  	if(jQuery('.dynconMenu.scroll-y').scrollTop()+clientHeight>scrollHeight-20) 	jQuery('.btn_dynamic_more_less').trigger('click');
+	if($(this).scrollTop()>0){
+		$('.righttop_title').css({'box-shadow':'0px 0px 10px 0px rgba(0,0,0,0.15)'});
+	}else{
+		$('.righttop_title').css({'box-shadow':'none'});
+	}
+})
+
+jQuery(document).off('click.commentdelete').on('click.commentdelete','.delete-comment',function(){
+	var obj = $(this);
+    var commentid = obj.data('commentid');
+    var msg = '<span class="delect_text_red">'+__lang.delete_filenorecover_confirm+'</span>';
+    var title = '<span class="delect-title-normal">'+__lang.delete_comment_confirm+'<span>';
+    if(typeof commentid == 'undefined' || commentid < 0){
+        showDialog("{lang delete_error}");
+    }   
+	showDialog(msg,'confirm',title,function(){
+    	$.post('{MOD_URL}&op=dynamic&do=deletecomment',{'id':commentid},function(data){
+        if(data['success']){
+            obj.parents('.dynameic-comment').html('');
+        }else if(data['error']){
+            showDialog(data['error']);
+        }
+    },'json');
+    })
+    
+})
+jQuery(function(){
+    if (gid && jQuery('#commentid').length > 0) {
+        commentfid = jQuery('#commentid').find('input[name=fid]').val();
+        commentrid = jQuery('#commentid').find('input[name=rid]').val();
+        var cachequeryMentions = [], itemsMentions;
+        var querystr = '';
+        if(commentfid){
+            querystr = '&fid='+commentfid;
+        }else{
+            querystr = '&rid='+commentrid;
+        }
+        jQuery('#leave_message').atwho({
+            at: "@",
+            data: '{DZZSCRIPT}?mod=explorer&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,
+            callbacks: {
+                remote_filter: function (query, render_view) {
+                    console.log(query);
+                    var thisVal = query,
+                        self = jQuery(this);
+                    if (!self.data('active') && thisVal.length >= 1) {
+                        self.data('active', true);
+                        itemsMentions = cachequeryMentions[thisVal]
+                        if (typeof itemsMentions == "object") {
+                            render_view(itemsMentions);
+                        } else {
+                            if (self.xhr) {
+                                self.xhr.abort();
+                            }
+                            self.xhr = jQuery.getJSON('{DZZSCRIPT}?mod=explorer&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,{
+                                term: thisVal
+                            }, function (data) {
+                                cachequeryMentions[thisVal] = data
+                                render_view(data);
+                            });
+                        }
+                        self.data('active', false);
+                    }
+                }
+            },
+            tpl: "<li data-value='@[${name}:${id}]' title='${title}'>${avatar}&nbsp;${name}</li>",
+            search_key: "searchkey",
+            start_with_space: false,
+            limit: 5,
+            max_len: 20,
+            display_timeout: 300
+        });
+    }
+
+})
+function reback_last(obj){
+    var ridmatch = /\w{32}/;
+    var rid = $(obj).data('rid');
+    var url = '',questry={};
+    if(ridmatch.test(rid)){
+        url = MOD_URL+'&op=dynamic&do=getfiledynamic';
+        questry.rid = rid;
+    }else{
+        url = MOD_URL+'&op=dynamic&do=getfolderdynamic';
+        questry.fid = rid;
+    }
+    $.post(url,questry,function(data){
+        $('#rightMenu').html(data);
+    });
+    _filemanage.infoPanelUrl=rid;
+  return false;
+}
+
+
+
+</script>

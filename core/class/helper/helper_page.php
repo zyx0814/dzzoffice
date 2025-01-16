@@ -75,11 +75,11 @@ class helper_page {
 				}
 			}
 			$_G['page_next'] = $to;
-			$multipage = ($curpage - $offset > 1 && $pages > $page ? '<li><a href="'.(self::mpurl($mpurl, $pagevar, 1)).($ajaxtarget  && $autogoto ? '#' : $a_name).'" class="first"'.$ajaxtarget.'>1 '.$dot.'</a></li>' : '').
-			($curpage > 1 && !$simple ? '<li><a href="'.(self::mpurl($mpurl, $pagevar, $curpage - 1)).($ajaxtarget  && $autogoto ? '#' : $a_name).'" class="dzz dzz-chevron-left"'.$ajaxtarget.'></a></li>' : '');
+			$multipage = ($curpage - $offset > 1 && $pages > $page ? '<li class="page-item"><a href="'.(self::mpurl($mpurl, $pagevar, 1)).($ajaxtarget  && $autogoto ? '#' : $a_name).'" title="第一页" class="page-link first"'.$ajaxtarget.'>1 '.$dot.'</a></li>' : '').
+			($curpage > 1 && !$simple ? '<li class="page-item"><a href="'.(self::mpurl($mpurl, $pagevar, $curpage - 1)).($ajaxtarget  && $autogoto ? '#' : $a_name).'" class="page-link"'.$ajaxtarget.' title="上一页">«</a></li>' : '');
 			for($i = $from; $i <= $to; $i++) {
-				$multipage .= $i == $curpage ? '<li class="active"><a>'.$i.'</strong></a>' :
-				'<li><a href="'.(self::mpurl($mpurl, $pagevar, $i)).($ajaxtarget  && $autogoto ? '#' : $a_name).'"'.$ajaxtarget.'>'.$i.'</a></li>';
+				$multipage .= $i == $curpage ? '<li class="page-item active"><a class="page-link" title="第'.$i.'页">'.$i.'</strong></a>' :
+				'<li class="page-item"><a href="'.(self::mpurl($mpurl, $pagevar, $i)).($ajaxtarget  && $autogoto ? '#' : $a_name).'"'.$ajaxtarget.' class="page-link" title="第'.$i.'页">'.$i.'</a></li>';
 			}
 
 			$wml = defined('IN_MOBILE') && IN_MOBILE == 3;
@@ -88,13 +88,13 @@ class helper_page {
 				$jsurl = $mpurl.(strpos($mpurl, '{page}') !== false ? '\'.replace(\'{page}\', this.value == 1 ? \'\' : this.value)': $pagevar.'\'+this.value;').'; doane(event);';
 			}
 
-			$multipage .= ($to < $pages ? '<li><a href="'.(self::mpurl($mpurl, $pagevar, $pages)).$a_name.'" class="last"'.$ajaxtarget.'>'.$dot.' '.$realpages.'</a></li>' : '').
-			($showpagejump && !$simple && !$ajaxtarget && !$wml ? '<li><span title="'.$lang['total'].' '.$pages.' '.$lang['pageunit'].'"><input  type="text" name="custompage"  title="'.$lang['pagejumptip'].'" value="'.$curpage.'" onkeydown="if(event.keyCode==13) {window.location=\''.$jsurl.'}" /> / '.$pages.' '.$lang['pageunit'].'</span></li>' : '').
-			($curpage < $pages && !$simple ? '<li><a href="'.(self::mpurl($mpurl, $pagevar, $curpage + 1)).($ajaxtarget  && $autogoto ? '#' : $a_name).'" class="dzz dzz-chevron-right
-"'.$ajaxtarget.'></a></li>' : '').
+			$multipage .= ($to < $pages ? '<li class="page-item"><a href="'.(self::mpurl($mpurl, $pagevar, $pages)).$a_name.'" title="最后一页" class="page-link last"'.$ajaxtarget.'>'.$dot.' '.$realpages.'</a></li>' : '').
+			($showpagejump && !$simple && !$ajaxtarget && !$wml ? '<li class="page-item"><a class="page-link"><div class="input-group" title="跳转页数，共'.$lang['total'].' '.$pages.' '.$lang['pageunit'].'页"><input  type="text" name="custompage"  class="form-control height-24" style="width: 45px;" title="'.$lang['pagejumptip'].'" value="'.$curpage.'" onkeydown="if(event.keyCode==13) {window.location=\''.$jsurl.'}" /><span class="input-group-text"> / '.$pages.' '.$lang['pageunit'].'</span></div></a></li>' : '').
+			($curpage < $pages && !$simple ? '<li><a href="'.(self::mpurl($mpurl, $pagevar, $curpage + 1)).($ajaxtarget  && $autogoto ? '#' : $a_name).'" class="page-link
+"'.$ajaxtarget.' title="下一页">»</a></li>' : '').
 			($showkbd && !$simple && $pages > $page && !$ajaxtarget && !$wml ? '<li><kbd><input type="text" name="custompage" size="3" onkeydown="if(event.keyCode==13) {window.location=\''.$jsurl.'}" /></kbd></li>' : '');
 
-			$multipage = $multipage ? '<ul class="pagination '.($classname?$classname:'').'">'.$multipage.($shownum && !$simple ? '<li class="disable"><a>'.$num.'</a></li>' : '').'</ul>' : '';
+			$multipage = $multipage ? '<ul class="pagination '.($classname?$classname:'').'">'.$multipage.($shownum && !$simple ? '<li class="disable"><a class="page-link" title="共有'.$num.'条记录">'.$num.'</a></li>' : '').'</ul>' : '';
 		}
 		$maxpage = $realpages;
 		return $multipage;

@@ -1,0 +1,199 @@
+<div class="middlecenter  scroll-100 scroll-srcollbars" style="z-index: 100;">
+<div class="middle-padding-left middle-recycle height-100 " id="selectBoardPosition">
+	<!--选择项开始-->
+    <div class="middletopMenu recyleadmin-top clearfix ">
+			<div class="recyle-option-all clearfix">	              
+                <div class="recyle-option-dropdown input-float">
+					<div class="dropdown">
+					  <button class="dropdown-toggle form-control"  type="button"  data-toggle="dropdown"style="min-width: 140px;text-align:left;">
+					  	<span id="search_data_text">{lang all}</span>
+					  	<i class="dzz dzz-arrow-dropdown input-icon" style="float: right;font-size:20px;"></i>
+					  </button>
+					  <ul class="dropdown-menu" id="position_menulist">
+                          <li><a href="javascript:;" data-val="">{lang all}</a></li>
+                          <!--{if $homearr}-->
+                          <li><a href="javascript:;" data-val="f_$homearr[fid]">$homearr['name']</a></li>
+                          <!--{/if}-->
+                          <!--{loop $manageorg $v}-->
+                          <li><a href="javascript:;" data-val="g_$v[orgid]">$v['orgname']</a></li>
+                          <!--{/loop}-->
+					  </ul>
+					</div>
+				</div>
+				<div class="recyle-date groupmanage-time">
+					<div class="group-time-animate">
+							<input type="text" id="selectTime01" class="selectTime form-control"   placeholder="{lang start_time}"/>
+					</div>
+					<label class="group-time-animate-label"><span class="dzz dzz-vline"></span></label>
+					<div class="group-time-animate">
+							<input type="text" class="selectTime form-control" id="selectTime02" placeholder="{lang finish_time}" />
+					</div>
+				</div>
+            	
+            </div>
+                
+    </div>
+        	
+    <!--选择项结束-->
+    <!--文件列表开始-->
+	<div id="filemanage-recycle-list"></div>
+    <!--文件列表结束-->
+</div>
+</div>
+
+<!--右侧菜单结束-->
+
+<!--头部信息框-->
+<div class="navtopheader">
+</div>
+<div id="template_middleicon" style="display:none">
+<!--{template template_file_middleicon}-->
+</div>
+<div id="template_detaillist"  style="display:none">
+<!--{template template_file_detaillist_recycle}-->
+</div>
+<div id="template_toolButton" style="display:none">
+<!--{template template_file_toolButton}-->
+</div>
+<div id="template_file" style="display:none">
+<!--{template template_file_navtopfile}-->
+</div>
+<div id="template_nofile_notice" style="display:none">
+	<!--{template noFilePage-recycle}-->
+</div>
+<script type="text/javascript">
+    $(document).ready(function(e) {
+        var hash=location.hash;
+        _filemanage.getData(_explorer.appUrl+'&op=recycle&do=filelist&sid=recycle-list');
+        $('.input-black').each(function() {
+            InputAnimate.init($(this));
+        });
+    });
+   /* jQuery('.middlecenter').on('resize',function(e){
+    });*/
+
+ /*   //自动加载内容
+    jQuery('#group-filemember .scroll-y').scroll(function (e) {
+        var clientHeight = jQuery('#group-filemember .scroll-y').height();
+        var scrollHeight = jQuery(this).find('.table').outerHeight(true);
+        var scrollTop = jQuery('#group-filemember .scroll-y').scrollTop();
+        if (scrollTop + clientHeight > scrollHeight - 60) {
+            $('.btn_button_more').trigger('click');
+        }
+    })*/
+   // var recycleids = [];//定义全局变量
+   var searchrecyclejson = {'after':0,'before':0,'gid':0,'fid':0,'asc':0,'disp':0,'page':0};
+/*    function loading(obj, next) {
+        searchrecyclejson.page = next;
+        $.post(MOD_URL+'&op=recycle&do=filelist', searchrecyclejson, function (data) {
+            $(obj).closest('tr').replaceWith(data);
+            for(var o in recycleids){
+                if(!$(' tr.Icoblock[data-recycleid="'+recycleids[o]+'"]').hasClass('Icoselected')){
+                    $(' tr.Icoblock[data-recycleid="'+recycleids[o]+'"]').addClass('Icoselected');
+                }
+
+            }
+
+        })
+
+    }*/
+    //筛选条件   
+	/*$(document).off('click.recycleclick').on('click.recycleclick','.group-filemember-header .member_header',function(){
+    	$(this).closest('.group-filemember-header tr').children('.group-filemember-header .member_header').find('.detail_header_icon').hide();
+	$(this).find('.detail_header_icon').css('display','inline-block');
+	if($(this).find('.dzz').hasClass('dzz-expand-more')){
+		$(this).find('.dzz').removeClass('dzz-expand-more').addClass('dzz-expand-less');
+        searchrecyclejson.asc = 1;
+	}else{
+		$(this).find('.dzz').addClass('dzz-expand-more').removeClass('dzz-expand-less');
+        searchrecyclejson.asc = 0;
+	}
+        var dispval =$(this).find('.detail_header_icon').data('val');
+        searchrecyclejson.disp = dispval;
+        searchRecycledata();
+    })*/
+   /* //鼠标滑入效果
+    $(document).on('mouseenter', '.group-filemember tr', function () {
+        $(this).addClass('hover');
+    })
+    //鼠标滑出效果
+    $(document).on('mouseleave', '.group-filemember tr', function () {
+        $(this).removeClass('hover');
+    })*/
+
+
+	$("#selectTime01").datepicker({ //添加日期选择功能
+			numberOfMonths: 1, //显示几个月
+			showButtonPanel: false, //是否显示按钮面板
+			dateFormat: 'yy-mm-dd', //日期格式
+			clearText: "{lang clear}", //清除日期的按钮名称
+			closeText: "{lang close}", //关闭选择框的按钮名称
+			yearSuffix: '{lang year}', //年的后缀
+			showMonthAfterYear: true, //是否把月放在年的后面
+			constrainInput: true,
+			maxDate: new Date(),
+			setDate: 'date',
+			zIndex:'50'
+	});
+	$("#selectTime02").datepicker({ //添加日期选择功能
+			numberOfMonths: 1, //显示几个月
+			showButtonPanel: false, //是否显示按钮面板
+			dateFormat: 'yy-mm-dd', //日期格式
+			clearText: "{lang clear}", //清除日期的按钮名称
+			closeText: "{lang close}", //关闭选择框的按钮名称
+			yearSuffix: '{lang year}', //年的后缀
+			showMonthAfterYear: true, //是否把月放在年的后面
+			constrainInput: true,
+			maxDate: new Date(),
+			setDate: 'date',
+			zIndex:'50'
+	});
+
+	//时间筛选项值发生变化时
+	$('#selectTime01').change(function(){
+		searchrecyclejson.after = $(this).val();
+		searchRecycledata();
+	})
+    $('#selectTime02').change(function(){
+        searchrecyclejson.before = $(this).val();
+        searchRecycledata();
+    })
+	//位置筛选项发生改变时
+	$(document).off('click.recycleposition').on('click.recycleposition','#position_menulist li',function(){
+		var val = $('a',this).data('val');
+        var text = $(this).text();
+        $('#search_data_text').text(text);
+		var pregf = /^f_\d+/;
+		var pregg = /^g_\d+/;
+		if(pregf.test(val)){
+			searchrecyclejson.fid = val.replace(/f_/,'');
+			searchrecyclejson.gid = 0;
+		}else if(pregg.test(val)){
+			searchrecyclejson.gid = val.replace(/g_/,'');
+			searchrecyclejson.fid = 0;
+		}else{
+			searchrecyclejson.gid = 0;
+			searchrecyclejson.fid = 0;
+		}
+		searchRecycledata();
+	})
+	//执行筛选
+	function searchRecycledata(){
+        var filemanage=_filemanage.cons['recycle-list'];
+        filemanage.gid=(searchrecyclejson.gid > 0) ? searchrecyclejson.gid:'';
+
+        filemanage.fids=(searchrecyclejson.fid > 0) ?searchrecyclejson.fid:'';
+        filemanage.after=(searchrecyclejson.after > 0) ? searchrecyclejson.after:'';
+        filemanage.before=(searchrecyclejson.before > 0) ? searchrecyclejson.before:'';
+        _filemanage.cons['recycle-list'].pageClick();
+	}
+    function finally_delete(obj,id){
+        $.post(MOD_URL+'&op=operation_file&do=deletefinally',{'id':id},function(data){
+            if(data['success']){
+                $(obj).closest('.liste').remove();
+            }else if(data['error']){
+
+            }
+        },'json')
+    }
+</script>

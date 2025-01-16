@@ -10,6 +10,7 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
+Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 $do = empty($_GET['do'])?'':trim($_GET['do']);
 if(empty($_G['uid'])) {
 	if($_SERVER['REQUEST_METHOD'] == 'GET') {

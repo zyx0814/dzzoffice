@@ -1,0 +1,53 @@
+<!--{loop $return $val}-->
+<!--{if $val['type'] == 'folder'}-->
+<li class="liste typefolder" data-href="{MOD_URL}&op=home"
+    data-hash="uid{$uid}_file|$val[oid]" data-args="uid_{$uid}-do_file-fid_$val[oid]" data-fid="$val[newdata][fid]" id="$val[newdata][rid]" data-rid="$val[newdata][rid]">
+    <!--{else}-->
+<li class="liste typefile"  <!--{if $val['type'] == 'link'}-->data-href="$val[newdata][url]" <!--{else}-->data-href="{eval echo dzzencode($val[newdata]['path']);}"<!--{/if}-->
+data-rid="$val[newdata][rid]" data-ext="$val[newdata][ext]" data-type="$val[newdata]['type']"data-name="$val[newdata][name]" id="$val[newdata][rid]">
+<!--{/if}-->
+<div class="checkbox-custom checkbox-primary">
+    <input type="checkbox" class=" listecheck"/>
+    <label></label>
+</div>
+<div class="fileitemMenu">
+    <div class="imgMenu">
+        <img src="{$_G['siteurl']}$val[img]" style="width: 40px;height: 45px;">
+    </div>
+    <div class="itemMenu">
+        <div class="firstMenu clearfix">
+            <div class="filenameMenu">
+                <span class="filename">$val[newdata][name]</span>
+                <div class="iconleft">
+                    <i onclick="collectfile(this)" class="mstars <!--{if $val[collect]}--> yellowstars <!--{else}--> fivestarts <!--{/if}-->" title="{lang add_to_favorites}" data-rid="$val[rid]" data-collect="$val[collect]"></i>
+                    <button type="button" class="mlabel tagmanage" title="{lang label}" data-rid="$val[rid]"></button>
+                </div>
+            </div>
+            <ul class="nrightiMenu">
+                <li><span class="icon ti-share"></span></li>
+                <li><span class="icon ti-comment"></span></li>
+                <li><span class="icon ti-download"></span></li>
+                <li class="leftClick">
+                    <span class="glyphicon glyphicon-triangle-bottom "></span>
+                </li>
+            </ul>
+        </div>
+        <div class="dateMenu">
+            <p class="upMwnu">{eval echo dgmdate($val[newdata]['dateline'],'Y-m-d');}
+                <span class="timeMenu">{eval echo dgmdate($val[newdata]['dateline'],'H:i');}</span>
+                <i class="dimenMenu">-{eval echo formatsize($val[newdata]['size']);}</i>
+                <b class="recentMenu"><span class="glyphicon glyphicon-envelope"></span>45</b>
+            </p>
+        </div>
+        <div class="labelMenu">
+            <ul id="taglistul_$val[rid]">
+                {loop $val[taginfo] $v}
+                <li class="active" id="{$val[rid]}_$v[tid]">$v[tagname]</li>
+                {/loop}
+            </ul>
+        </div>
+
+    </div>
+</div>
+</li>
+<!--{/loop}-->

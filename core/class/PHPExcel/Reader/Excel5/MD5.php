@@ -72,7 +72,7 @@ class PHPExcel_Reader_Excel5_MD5
     {
         $s = '';
         foreach (array('a', 'b', 'c', 'd') as $i) {
-            $v = $this->{$i};
+            $v = $this->[$i];
             $s .= chr($v & 0xff);
             $s .= chr(($v >> 8) & 0xff);
             $s .= chr(($v >> 16) & 0xff);

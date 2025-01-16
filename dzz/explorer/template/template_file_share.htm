@@ -1,0 +1,109 @@
+<div class="fileMenu detaillist filemanage">
+    <div class="filemanage-detail-header">
+        <table class="table" width="100%" border="0">
+            <thead class="detail_header_tr">
+            <tr>
+                <th disp="0"class="detail_header detail_header_0" width="40%">
+                    <div class="detail_header_td_div">
+                        <span class="detail_header_title">{lang description}</span>
+                        <a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
+                            <span class="dzz dzz-expand-less"></span>
+                            <span class="dzz dzz-expand-more"></span>
+                        </a>
+                        <div disp="0" class="detail_header_drag"></div>
+                    </div>
+                </th>
+                <th  disp="1" class="detail_header detail_header_1" width="12%">
+                    <div class="detail_header_td_div">
+                        <span class="detail_header_title">{lang examine_times}</span>
+                        <a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
+                            <span class="dzz dzz-expand-less"></span>
+                            <span class="dzz dzz-expand-more"></span>
+                        </a>
+                        <div disp="1" class="detail_header_drag"></div>
+                    </div>
+                </th>
+                <th   disp="2" class="detail_header detail_header_2" width="13%">
+                    <div class="detail_header_td_div">
+                        <span class="detail_header_title">{lang download_times}</span>
+                        <a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
+                            <span class="dzz dzz-expand-less"></span>
+                            <span class="dzz dzz-expand-more"></span>
+                        </a>
+                        <div disp="2" class="detail_header_drag"></div>
+                    </div>
+                </th>
+                <th  disp="3"  class="detail_header detail_header_3" width="20%">
+                    <div class="detail_header_td_div">
+                        <span class="detail_header_title">{lang edit_date}</span>
+                        <a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
+                            <span class="dzz dzz-expand-less"></span>
+                            <span class="dzz dzz-expand-more"></span>
+                        </a>
+                        <div disp="3" class="detail_header_drag"></div>
+                    </div>
+                </th>
+                <th class="detail_header detail_header_4" width="15%">
+                    <div class="detail_header_td_div">
+                        <span class="detail_header_title">{lang failure_time}</span>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="paddingright-con   js-list-body">
+
+        <table class="table " width="100%" border="0" style="table-layout:fixed;margin:0">
+            <tbody class="js-file-item-tpl">
+            <tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock" rid="{rid}">
+                <td class="detail_item_td " valign="middle" width="40%" style="overflow:hidden;position:relative">
+                    <div class="detail_item_td_div detail_item_td_name toggleGlow" title="metu.jpg" rid="{rid}">
+                        <a href="javascript:;" style="float: left;"><img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))"  data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}"></a>
+                        <a id="file_text_{rid}" class="detail_text detail_item_name_text IcoText_folder">{sharestatus}{name}</a>
+                    </div>
+                </td>
+                <td class="detail_item_td detail_item_td_size" valign="middle" width="12%" style="overflow:hidden">
+                    <span>{views}{lang degree}</span>
+                </td>
+                <!--回收站td开始-->
+                <td class="detail_item_td detail_item_td_type" valign="middle" width="13%" style="overflow:hidden">
+                    <span>{downs}{lang degree}</span>
+                </td>
+                <td class="detail_item_td detail_item_td_type" valign="middle" width="20%" style="overflow:hidden">
+                    <span>{fdateline}</span>
+                </td>
+                <td class="detail_item_td detail_item_td_type" valign="middle" width="15%" style="overflow:hidden">
+                    <span>{expireday}</span>
+                </td>
+                <!--回收站td结束-->
+
+            </tr>
+            <tr id="shareinfo_{rid}" class="hide hover deatisinfo">
+                <td colspan="1"><a class="sharelink" href="{sharelink}" onclick="window.open('{sharelink}');return false" target="_blank">{sharelink}</a>
+                <td colspan="4" class="member_item_member">
+                    <div class="share-copyaress share-copybutton">
+						<span id="js_copy_{rid}" class="input-group-addon js_copy"
+							  data-clipboard-text="{sharelink}" data-clipboard-action="copy"  style="position:relative;cursor: pointer;">{lang copy_address}
+							<span class="alert copy-success  alert-success hide " >{lang copy_address_succeeded}</span>
+						</span>
+                        <span class="input-group-addon input-group-addoncode">
+                        	<a href="javascript:;" class="shareform_qrcode shareform_qrcodeqrcode glyphicon glyphicon-qrcode" ></a>
+                   		</span>
+                       <div class="input-group-addonhover" style="display: none;">
+                            <a href="javascript:;" class="shareform_qrcode qrcode"
+                               title="{lang scan_code}，{lang send_phone}" data-html="true">
+                                <img class='allowContextMenu' dsrc="{qrcode}">
+                            </a>
+                        </div>
+                    </div>
+                     <span class="hide sharepasswordval" data-password="{password}" data-passwordval1="{lang extract_password}:{password}" data-passwordval2="{lang share_type}:{lang open_links}"></span>
+                     <span class="hide sharetimes" data-times="{times}" data-timesval1="{lang sharenums}:{count}/{times}" data-timesval2="{lang no_limit_times}"></span>
+                     <span class="sharetextinfo"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div>

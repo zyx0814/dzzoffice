@@ -10,7 +10,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
 $navtitle=lang('permission_management').' - '.lang('appname');
-$op=$_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 if ($_GET['do'] == 'clear') {
 	$i = intval($_GET['i']);
 	$appid = intval($_GET['appid']);

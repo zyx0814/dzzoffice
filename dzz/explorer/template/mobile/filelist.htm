@@ -1,0 +1,90 @@
+<!--{if $groups}-->
+<!--{loop $groups $v}-->
+<div class="weui-cell weui-cell_access weui-cell_longpress" data-open="href"
+     href="{MOD_URL}&op=mobile&do=file&gid={$v[orgid]}&fid={$v[fid]}">
+    <div class="weui-cell__hd">
+        <!--{if $v['imgs']}-->
+        <img src="$v[img]" class="weui-cell__recentimg">
+        <!--{else}-->
+        <!--{eval echo avatar_group($v['orgid'],array($v['orgid']=>array('aid'=>$v['aid'],'orgname'=>$v['orgname'])));}-->
+        <!--{/if}-->
+    </div>
+    <div class="weui-cell__bd">
+        <h4>$v[orgname]</h4>
+        <p>
+            <span class="file">文件:</span><i class="file-number">$v[filenum],</i>
+            <span class="folder">文件夹:</span><i class="folder-number">$v[foldernum]</i>
+        </p>
+    </div>
+    <div class="weui-cell__ft nochecked"></div>
+</div>
+<!--{/loop}-->
+<!--{/if}-->
+<!--{loop $data $v}-->
+<!--{if $v['type'] == 'folder'}-->
+<div class="weui-cell weui-cell_access weui-cell_longpress select-files" data-collect="$v[collect]" rid="$v[rid]"
+     data-open="href" href="{MOD_URL}&op=mobile&do=file&fid={$v[oid]}" data-rid="$v[rid]" data-dpath="$v[dpath]"
+     data-url="$v[url]">
+    <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg">
+    </div>
+    <div class="weui-cell__bd">
+        <h4 rid="$v[rid]">{eval echo str_replace('\\','',$v['name']);}</h4>
+        <p>
+            <span class="file">文件:</span><i class="file-number">$v[filenum],</i>
+            <span class="folder">文件夹:</span><i class="folder-number">$v[foldernum]</i>
+        </p>
+    </div>
+    <div class="weui-cell__ft"></div>
+    <div class="weui-cells_checkbox hide">
+        <input type="checkbox" class="weui-check" name="checkbox1">
+        <i class="weui-icon-checked"></i>
+    </div>
+    <div class="weui-uploader__file-content">0%</div>
+</div>
+<!--{else}-->
+<div class="weui-cell weui-cell_access weui-cell_longpress select-files" rid="$v[rid]" data-collect="$v[collect]"
+     data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-rid="$v[rid]" data-dpath="$v[dpath]"
+     data-url="$v[url]">
+    <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
+    <div class="weui-cell__bd">
+        <h4 rid="$v[rid]">{eval echo str_replace('\\','',$v['name']);}</h4>
+        <p>
+            <span class="date">$v[monthdate]</span><i class="date-time">$v[hourdate],</i>
+            <span class="size">$v[fsize]</span>
+        </p>
+    </div>
+    <div class="weui-cells_checkbox hide">
+        <input type="checkbox" class="weui-check" name="checkbox1">
+        <i class="weui-icon-checked"></i>
+    </div>
+    <div class="weui-uploader__file-content">0%</div>
+</div>
+<!--{/if}-->
+<!--{/loop}-->
+<script type="text/javascript"></script>
+<script type="text/javascript">
+    if ('{$folderjson}') {
+        var folderjson = '{$folderjson}';
+        if (_filemanage.datajson.param.page > 1) {
+            _filemanage.folderdata = $.extend(_filemanage.folderdata, eval('(' + folderjson + ')'));
+        } else {
+            _filemanage.folderdata = eval('(' + folderjson + ')');
+        }
+    }
+    if ('{$return}') {
+        //获取数据
+        var datas = eval('(' + '{$return}' + ')');
+        //如果已有数据，执行合并
+        if (_filemanage.datajson.param.page > 1 && _filemanage.datajson.data) {
+            var tempjson = {};
+            for (var o in _filemanage.datajson) {
+                tempjson[o] = $.extend(_filemanage.datajson[o], datas[o]);
+            }
+            _filemanage.datajson = tempjson;
+        } else {
+            _filemanage.datajson = datas;//文件数据
+
+        }
+    }
+
+</script>

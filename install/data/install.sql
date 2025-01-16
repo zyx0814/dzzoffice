@@ -796,7 +796,7 @@ CREATE TABLE dzz_resources_cat (
   `default` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1,系統默認；0，非系统默认',
   iconview tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (id)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS dzz_resources_clipboard;
 CREATE TABLE dzz_resources_clipboard (
@@ -968,6 +968,7 @@ CREATE TABLE dzz_shares (
   gid int(11) unsigned NOT NULL DEFAULT '0' COMMENT '群组id',
   pfid int(11) NOT NULL DEFAULT '0',
   `password` varchar(256) NOT NULL DEFAULT '' COMMENT '分享密码，留空为公开分享',
+  perm varchar(120) NOT NULL DEFAULT '' COMMENT '分享权限',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '-4：文件不存在；-3：次数到；-1：已过期；0：正常',
   private tinyint(1) unsigned NOT NULL DEFAULT '1',
   count smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '分享使用次数',

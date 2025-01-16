@@ -10,7 +10,7 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
 $navtitle = lang('data_set').' - '.lang('appname');
-$op=$_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 $profilevalidate = array(
 	'telephone' => '/^((\\(?\\d{3,4}\\)?)|(\\d{3,4}-)?)\\d{7,8}$/',
 	'mobile' => '/^(\+)?(86)?0?1\\d{10}$/',
@@ -21,7 +21,7 @@ $profilevalidate = array(
 	'qq' => '/^[1-9]*[1-9][0-9]*$/'
 );
 $fieldid = $_GET['fieldid'] ? $_GET['fieldid'] : '';
-$do=$_GET['do'] ? $_GET['do'] : '';
+$do = isset($_GET['do']) ? $_GET['do'] : '';
 if($do=='delete'){
 	C::t('user_profile_setting')->delete_by_fieldid($fieldid);
 	require_once libfile('function/cache');

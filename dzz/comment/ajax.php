@@ -12,13 +12,11 @@ if (!defined('IN_DZZ')) {
 }
 include libfile('function/code');
 
-$do = trim($_GET['do']);
+$do = isset($_GET['do']) ? $_GET['do'] : '';
+$template = isset($_GET['template']) ? $_GET['template'] : '';
 $guests = array('getcomment', 'getThread', 'getNewThreads', 'getReply', 'getReplys', 'getUserToJson');
 if (empty($_G['uid']) && !in_array($do, $guests)) {
 	include  template('common/header_ajax');
-	/*echo "<script type=\"text/javascript\">";
-	 echo "try{top._login.logging();}catch(e){}";
-	 echo "</script>";	*/
 	echo '&nbsp;&nbsp;&nbsp;<a href="user.php?mod=login" class="btn btn-primary">'.lang('login').'</a>';
 	if( $_G['setting']['regstatus']>0){
 		echo '&nbsp;&nbsp;&nbsp;<a href="user.php?mod=register" class="btn btn-success">'.lang('register').'</a>';
@@ -54,9 +52,12 @@ if (submitcheck('replysubmit')) {
 	$setarr['avatar']=avatar_block($setarr['authorid']);
 	if ($_G['adminid'] == 1 || $_G['uid'] == $setarr['authorid'])
 		$setarr['haveperm'] = 1;
-	showmessage('do_success', DZZSCRIPT . '?mod=comment', array('data' => rawurlencode(json_encode($setarr))));
+	showmessage('comment_success', DZZSCRIPT . '?mod=comment', array('data' => rawurlencode(json_encode($setarr))));
 } elseif ($do == 'edit') {
 	$cid = intval($_GET['cid']);
+	if(!$cid) {
+		exit('Access Denied');
+	}
 	if ($data = C::t('comment') -> fetch($cid)) {
 		$data['message'] = dzzcode($data['message'], 0, 0, 0, 0, 1);
 		if (!$_G['adminid'] == 1 && $_G['uid'] != $data['authorid'])
@@ -90,14 +91,17 @@ if (submitcheck('replysubmit')) {
 	}
 
 } elseif ($do == 'getcomment') {
-
 	$id = getstr($_GET['id'], 60);
 	$idtype = trim($_GET['idtype']);
+	if(!$id || !$idtype) {
+		exit('Access Denied');
+	}
+	$modal = intval($_GET['modal']);
 	$page = empty($_GET['page']) ? 1 : intval($_GET['page']); 
 	$perpage = 10;
 	$start = ($page - 1) * $perpage;
 	$limit = $start . "-" . $perpage;
-	$gets = array('mod' => 'comment', 'op' => 'ajax', 'do' => 'getcomment', 'id' => $id, 'idtype' => $idtype, );
+	$gets = array('mod' => 'comment', 'op' => 'ajax','template'=> $template, 'do' => 'getcomment', 'id' => $id, 'idtype' => $idtype, 'modal' => $modal);
 	$theurl = BASESCRIPT . "?" . url_implode($gets);
 	$count = C::t('comment') -> fetch_all_by_idtype($id, $idtype, $limit, true);
 	$list = array();
@@ -107,7 +111,10 @@ if (submitcheck('replysubmit')) {
 	$multi = multi($count, $perpage, $page, $theurl, 'pull-right');
 } elseif ($do == 'getcommentbycid') {
 	$cid = intval($_GET['cid']);
-
+	if(!$cid) {
+		exit('Access Denied');
+	}
+	$modal = intval($_GET['modal']);
 	if ($value = C::t('comment') -> fetch($cid)) {
 		$value['message'] = dzzcode($value['message']);
 		$value['dateline'] = dgmdate($value['dateline'], 'u');
@@ -118,7 +125,6 @@ if (submitcheck('replysubmit')) {
 		}
 		$value['replies'] = DB::result_first("select COUNT(*) from  %t where pcid=%d", array('comment', $value['cid']));
 		$value['replys'] = C::t('comment') -> fetch_all_by_pcid($value['cid'], 5);
-
 	}
 } elseif ($do == 'getreplys') {
 	$cid = intval($_GET['cid']);
@@ -198,6 +204,9 @@ function atreplacement($matches) {
 		}
 	}
 }
-
-include template('ajax');
+if ($template == '1') {
+	include template('lyear_ajax','lyear');
+} else {
+	include template('ajax');
+}
 ?>

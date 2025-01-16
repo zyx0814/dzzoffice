@@ -1,6 +1,5 @@
 <?php
 require __DIR__.'/coreBase.php';
-  // error_reporting(E_ALL);
 $dzz = C::app();
 Hook::listen('dzz_initbefore');//初始化前钩子
 $dzz->init();

@@ -9,8 +9,8 @@
 if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-$op = $_GET['op'];
-$do=$_GET['do'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
+$do = isset($_GET['do']) ? $_GET['do'] : '';
 if($do == 'phpinfo'){
 	exit(phpinfo());
 }
@@ -125,15 +125,13 @@ function kuozhan(){
   else $func_items = array('mysql_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init','zip_open','ffmpeg','imagick','imagemagick','cURL','date','Exif','Fileinfo','Ftp','GD','gettext','intl','Iconv','json','ldap','Mbstring','Mcrypt','Memcached','MySQLi','SQLite3','OpenSSL','PDO','pdo_mysql','pdo_sqlite','Redis','session','Sockets','Swoole','dom','xml','SimpleXML','libxml','bz2','zip','zlib');
   foreach($func_items as $item) {
     $status = function_exists($item);
-    $func_str .= "<div class=\"ext col-sm-6 col-lg-3\">\n";
-    $func_str .= "<span>$item</span>\n";
+    $func_str .= "<div class=\"col-sm-4 float-start\">$item\n";
     if($status) {
-      $func_str .= "<span class=\"bei dzz dzz-done\"></span>\n";
-      $func_str .= "</div>\n";
+      $func_str .= "<span class=\"mdi mdi-check-circle bei dzz dzz-done text-success lead\"></span>\n";
     } else {
-      $func_str .= "<span class=\"beii dzz dzz-close\"></span>\n";
-      $func_str .= "</div>\n";
+      $func_str .= "<span class=\"mdi mdi-close-circle beii dzz dzz-close text-danger lead\"></span>\n";
     }
+    $func_str .= "</div>\n";
   }
   echo $func_str;
 }
@@ -141,7 +139,7 @@ function kuozhan(){
 $loaded_extensions = get_loaded_extensions();
 $extensions = '';
 foreach ($loaded_extensions as $key => $value) {
-	$extensions .= '<span class="label label-primary">'.$value . '</span>';
+	$extensions .= '<span class="bg label label-primary">'.$value . '</span>';
 }
 $zaixianrenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('session') . " WHERE uid");
 $yonghurenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE uid");

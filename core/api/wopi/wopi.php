@@ -180,7 +180,7 @@ class Wopi
 		
 		$fileExtension = $meta['ext'];
 		$guid = dzzencode(getglobal('uid').'|'.$lock);
-		$wopi_url_temlpate = "WOPISrc={0}&access_token={1}";
+		$wopi_url_temlpate = "WOPISrc=[0]&access_token=[1]";
 		$fileID=dzzencode($meta['path']);
 	    $discovery=self::getActionByDiscovery($ooServerURL);
 		if($discovery['error']) return  $discovery;
@@ -234,8 +234,8 @@ class Wopi
 																		 
 		$fileUrl = urlencode($internalUrl. "wopi/files/" . $fileID);
 		$requestUrl = preg_replace("/<.*>/", "", $urlsrc);
-		$requestUrl = $requestUrl . str_replace('{1}', $guid, $wopi_url_temlpate);
-		$requestUrl = str_replace("{0}", $fileUrl, $requestUrl).'&ui=zh-CN&rs=zh-CN'; 
+		$requestUrl = $requestUrl . str_replace('[1]', $guid, $wopi_url_temlpate);
+		$requestUrl = str_replace("[0]", $fileUrl, $requestUrl).'&ui=zh-CN&rs=zh-CN'; 
 		$wopiSrc=$internalUrl. "wopi/files/$fileID?access_token=$guid&ui=zh-CN&rs=zh-CN";
 		$ret=array(
 			'fileID'=>$fileID,

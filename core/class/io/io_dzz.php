@@ -130,6 +130,13 @@ class io_dzz extends io_api
         if (strpos($path, 'preview_') === 0) {
             $path = preg_replace('/^preview_/', '', $path);
         }
+        // 检查是否以 'sid:' 开头并以 '_' 结尾
+        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
+            // 提取 sid 后面的值
+            $sid = $matches[1];
+            // 去掉 sid 及其值
+            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
+        }
         if (strpos($path, 'attach::') === 0) {
             $attach = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
 			Hook::listen('io_dzz_getstream_attach',$attach);//挂载点
@@ -192,6 +199,11 @@ class io_dzz extends io_api
         global $_G;
         if (strpos($path, 'preview_') === 0) {
             $path = preg_replace('/^preview_/', '', $path);
+        }
+        // 检查是否以 'sid:' 开头并以 '_' 结尾
+        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
+            // 去掉 sid 及其值
+            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
         }
         if (strpos($path, 'attach::') === 0) {
             $attach = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
@@ -320,13 +332,12 @@ class io_dzz extends io_api
             $file = $_G['setting']['attachdir'] . './' . $target;
             IO::output_thumb($file);
         }
-
-
         $fileurls = array();
         Hook::listen('thumbnail', $fileurls, $path);//调用挂载点程序生成缩略图绝对和相对地址；
         if (!$fileurls) {
             $fileurls = array('fileurl' => self::getFileUri($path), 'filedir' => self::getStream($path));
         }
+        
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
             $imgurl = geticonfromext($data['ext'], $data['type']);
@@ -366,85 +377,6 @@ class io_dzz extends io_api
         }
         exit();
     }
-
-    /*//将文件内容保存成文件，放入附件表
-    private function saveFilecontentToAttach($icoarr,$filecontent){
-        global $_G;
-        //保存的文件名
-        $filename = $icoarr['name'];
-        $pathinfo = pathinfo($filename);
-        //获取后缀名
-        $ext = strtolower($pathinfo['extension']);
-        //生成路径
-        $target = $this->getPath($ext ? ('.' . $ext) : '', 'dzz');
-
-        if (!empty($fileContent) && !file_put_contents($_G['setting']['attachdir'] . $target, $fileContent)) {
-            return array('error' => lang('cache_file_error'));
-        }
-        //判断空间大小
-        $gid = DB::result_first("select gid from %t where fid=%d", array('folder', $icoarr['pfid']));
-        if (!SpaceSize(filesize($_G['setting']['attachdir'] . $target), $gid)) {
-            @unlink($_G['setting']['attachdir'] . $target);
-            return array('error' => lang('inadequate_capacity_space'));
-        }
-        //保存到附件表
-        if ($attach = $this->save($target, $filename)) {
-            return $attach;
-        } else {
-            return array('error' => 'Could not save uploaded file. The upload was cancelled, or server error encountered');
-        }
-    }*/
-  /*  //将文件内容作为新版本保存(用于保存时，选择文件覆盖的情形)
-    private function coverFilebynewVersion($attach, $icoarr)
-    {
-        global $_G;
-        $setting = $_G['setting'];
-        //当前文件版本数量
-        $versionnum = DB::result_first("select count(*) from %t where rid = %s", array('resources_version', $icoarr['rid']));
-        //
-        //版本开启
-        $vperm = (!isset($setting['fileVersion']) || $setting['fileVersion']) ? true : false;
-        //版本数量限制
-        $vnumlimit = isset($setting['fileVersionNumber']) ? intval($setting['fileVersionNumber']) : 0;
-        $covertype = 0;
-        //当上传版本开启，上传版本数量不限制；或者上传版本开启，文件版本数量未达到上限：设置当前文件为最新版本
-        if ($vperm && (!$vnumlimit || ($vnumlimit && ($versionnum < $vnumlimit)))) {
-            $covertype = 1;
-            //当上传版本关闭，并且文件包含版本；或者上传版本开启，并且版本数量达到上限：剔除最老版本，并设置新文件为主版本
-        } elseif ((!$vperm && $versionnum > 0) || ($vperm && $vnumlimit && $versionnum > $vnumlimit)) {
-            $covertype = 2;
-            //当上传版本关闭，且当前文件不含有版本：替换当前文件
-        } elseif (!$vperm && !$versionnum) {
-            $covertype = 3;
-        }
-        if ($covertype == 1) {
-            $setarr = array(
-                'uid' => $_G['uid'],
-                'username' => $_G['username'],
-                'name' => $attach['filename'],
-                'aid' => $attach['aid'],
-                'size' => $attach['filesize'],
-                'ext' => $attach['filetype'],
-                'dateline' => TIMESTAMP
-            );
-            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr);
-        } elseif ($covertype == 2) {
-            $setarr = array(
-                'uid' => $_G['uid'],
-                'username' => $_G['username'],
-                'name' => $attach['filename'],
-                'aid' => $attach['aid'],
-                'size' => $attach['filesize'],
-                'ext' => $attach['filetype'],
-                'dateline' => TIMESTAMP
-            );
-            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr);
-            $vid = DB::result_first("select min(dateline),vid from %t where rid = %s ", array('resources_version', $icoarr['rid']));
-            C::t('rescources_version')->delete_by_vid($vid, $icoarr['rid']);
-        } elseif ($covertype == 3) {
-
-        }
-    }*/
     //@param number $rid  文件的rid
     //@param string $message  文件的新内容
     public function setFileContent($rid, $fileContent, $force = false, $nocover = true)
@@ -453,16 +385,26 @@ class io_dzz extends io_api
         if (strpos($rid, 'preview_') === 0) {
             $rid = preg_replace('/^preview_/', '', $rid);
         }
-        if (!$icoarr = C::t('resources')->fetch_by_rid($rid)) {
+       // 检查是否以 'sid:' 开头并以 '_' 结尾
+       if (preg_match('/^sid:([^\_]+)_/', $rid, $matches)) {
+            // 提取 sid 后面的值
+            $sid = $matches[1];
+            // 去掉 sid 及其值
+            $rid = preg_replace('/^sid:[^\_]+_/', '', $rid);
+        }
+        if (!$icoarr = C::t('resources')->fetch_by_rid($rid,'',$preview,$sid)) {
             return array('error' => lang('file_not_exist'));
+        }
+        if ($icoarr['isdelete']) {
+            return array('error' => lang('file_been_deleted'));
         }
         if ($icoarr['type'] != 'document' && $icoarr['type'] != 'attach' && $icoarr['type'] != 'image') {
             return array('error' => lang('no_privilege'));
         }
-
         $gid = DB::result_first("select gid from %t where fid=%d", array('folder', $icoarr['pfid']));
-        if (!$force && !perm_check::checkperm('edit', $icoarr)) {
-            return array('error' => lang('no_privilege'));
+        $editperm = perm_check::checkperm('edit', $icoarr);
+        if (!$force && !$editperm) {
+            return array('error' => lang('file_edit_no_privilege'));
         }
         if (!$attach = getTxtAttachByMd5($fileContent, $icoarr['name'], $icoarr['ext'])) {
             return array('error' => lang('file_save_failure'));
@@ -495,14 +437,14 @@ class io_dzz extends io_api
             }
             $setarr = array(
                 'uid' => $_G['uid'],
-                'username' => $_G['username'],
+                'username' => $_G['username'] ? $_G['username'] : '游客',
                 'name' => $icoarr['name'],
                 'aid' => $attach['aid'],
                 'size' => $attach['filesize'],
                 'ext' => $attach['filetype'],
                 'dateline' => TIMESTAMP
             );
-            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr,$force);
+            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr,$force,$editperm);
             if($return['error']){
                 return array('error'=>$return['error']);
             }
@@ -565,6 +507,13 @@ class io_dzz extends io_api
         if (strpos($icoid, 'preview_') === 0) {
             $icoid = preg_replace('/^preview_/', '', $icoid);
             $preview = true;
+        }
+        // 检查是否以 'sid:' 开头并以 '_' 结尾
+        if (preg_match('/^sid:([^\_]+)_/', $icoid, $matches)) {
+            // 提取 sid 后面的值
+            $sid = $matches[1];
+            // 去掉 sid 及其值
+            $icoid = preg_replace('/^sid:[^\_]+_/', '', $icoid);
         }
         if (strpos($icoid, 'dzz::') === 0) {
             $attachment = preg_replace('/^dzz::/i', '', $icoid);
@@ -629,9 +578,9 @@ class io_dzz extends io_api
             if (!$rid = DB::result_first("select rid from %t where pfid = %d and name = %s", array('resources', $pfid, $filename))) {
                 return false;
             }
-            return C::t('resources')->fetch_by_rid($rid,'',$preview);
+            return C::t('resources')->fetch_by_rid($rid,'',$preview,$sid);
         } elseif (preg_match('/\w{32}/i', $icoid)) {
-            return C::t('resources')->fetch_by_rid($icoid,'',$preview);
+            return C::t('resources')->fetch_by_rid($icoid,'',$preview,$sid);
         } else {
             return false;//C::t('resources')->fetch_by_icoid($icoid);
         }
@@ -750,6 +699,11 @@ class io_dzz extends io_api
         if (strpos($path, 'preview_') === 0) {
             $path = preg_replace('/^preview_/', '', $path);
         }
+        // 检查是否以 'sid:' 开头并以 '_' 结尾
+        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
+            // 去掉 sid 及其值
+            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
+        }
         if (strpos($path, 'attach::') === 0) {
             $attachment = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
             $attachment['name'] = $filename ? $filename : $attachment['filename'];
@@ -867,6 +821,11 @@ class io_dzz extends io_api
         global $_G;
         if (strpos($path, 'preview_') === 0) {
             $path = preg_replace('/^preview_/', '', $path);
+        }
+        // 检查是否以 'sid:' 开头并以 '_' 结尾
+        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
+            // 去掉 sid 及其值
+            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
         }
         if (strpos($path, 'dzz::') === 0) {
             if (strpos($path, './') !== false) return false;
@@ -1041,7 +1000,7 @@ class io_dzz extends io_api
                 $top[$k] = $v;
             }
         }
-        if ($topfid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G[uid]}' and fname = '{$top[fname]}' and flag='{$top[flag]}' ")) {
+        if ($topfid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G['uid']}' and fname = '{$top['fname']}' and flag='{$top['flag']}' ")) {
             C::t('folder')->update($topfid, $top);
         } else {
             $appid = $params['appid'] ? $params['appid'] : 0;
@@ -1257,7 +1216,6 @@ class io_dzz extends io_api
     {
         global $_G, $documentexts, $space, $docexts;
         if (!perm_check::checkperm_Container($fid, 'upload')) {
-
             return array('error' => lang('no_privilege'));
         }
         $gid = DB::result_first("select gid from %t where fid=%d", array('folder', $fid));
@@ -1266,7 +1224,7 @@ class io_dzz extends io_api
 
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
 
-        $imgexts = array('jpg', 'jpeg', 'gif', 'png', 'bmp');
+        $imgexts = array('jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp');
         //图片文件时
         if (in_array(strtolower($attach['filetype']), $imgexts)) {
             $icoarr = array(
@@ -1408,13 +1366,15 @@ class io_dzz extends io_api
                     $icoarr['apath'] = dzzencode('attach::' . $attach['aid']);
                     $event = 'creat_file';
                     $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
+                    $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $icoarr['gid']);
                     $eventdata = array(
                         'title' => $icoarr['name'],
                         'aid' => $icoarr['aid'],
                         'username' => $icoarr['username'],
                         'uid' => $icoarr['uid'],
                         'path' => $icoarr['path'],
-                        'position' => $path
+                        'position' => $path,
+                        'hash' => $hash
                     );
                     C::t('resources_event')->addevent_by_pfid($fid, $event, 'create', $eventdata, $icoarr['gid'], $icoarr['rid']);
                 } else {
@@ -1826,7 +1786,6 @@ class io_dzz extends io_api
         if ($icoarr['rid'] = C::t('resources')->insert_data($icoarr)) {
             $sourceattr = array(
                 'title' => $attach['filename'],
-                'desc' => '',
                 'postip' => $_G['clientip'],
                 'desc' => $data['desc'],
                 'aid' => $data['aid'],
@@ -2182,6 +2141,13 @@ class io_dzz extends io_api
                 $rid = preg_replace('/^preview_/', '', $rid);
                 $preview = true;
             }
+            // 检查是否以 'sid:' 开头并以 '_' 结尾
+            if (preg_match('/^sid:([^\_]+)_/', $rid, $matches)) {
+                // 提取 sid 后面的值
+                $sid = $matches[1];
+                // 去掉 sid 及其值
+                $rid = preg_replace('/^sid:[^\_]+_/', '', $rid);
+            }
             $data = C::t('resources')->fetch_by_rid($rid);
 			
             if (is_numeric($pfid)) {//如果目标位置也是本地
@@ -2199,7 +2165,7 @@ class io_dzz extends io_api
                     $data['success'] = true;
                     $data['moved'] = true;
                 } else {
-                    $re = self::FileCopy($rid, $pfid, true,$force,$preview);
+                    $re = self::FileCopy($rid, $pfid, true,$force,$preview,$sid);
                     $data['newdata'] = $re['icoarr'];
                     $data['success'] = true;
                 }
@@ -2683,13 +2649,13 @@ class io_dzz extends io_api
     }
 
     //本地文件复制到本地其它区域
-    public function FileCopy($rid, $pfid, $first = true,$force=false,$preview = false)
+    public function FileCopy($rid, $pfid, $first = true,$force=false,$preview = false,$sid = false)
     {
         global $_G, $_GET;
         if (!$tfolder = DB::fetch_first("select * from " . DB::table('folder') . " where fid='{$pfid}'")) {
             return array('error' => lang('target_location_not_exist'));
         }
-        if ($icoarr = C::t('resources')->fetch_by_rid($rid,'',$preview)) {
+        if ($icoarr = C::t('resources')->fetch_by_rid($rid,'',$preview,$sid)) {
 
             unset($icoarr['rid']);
             //判断当前文件有没有拷贝权限；
@@ -2741,7 +2707,7 @@ class io_dzz extends io_api
                         //复制源文件夹数据到目标目录同名文件夹
                         foreach (C::t('resources')->fetch_by_pfid($icoarr['oid']) as $value) {
                             try {
-                                self::FileCopy($value['rid'], $currentfid, false,$preview);
+                                self::FileCopy($value['rid'], $currentfid, false,$preview,$sid);
                             } catch (Exception $e) {
                             }
                         }
@@ -2753,7 +2719,7 @@ class io_dzz extends io_api
                         if ($data = self::createFolderByPath($icoarr['name'], $pfid)) {//根据文件夹名字和当前文件夹路径创建文件夹
                             foreach (C::t('resources')->fetch_by_pfid($folder['fid']) as $value) {//查询原文件夹中文件
                                 try {
-                                    self::FileCopy($value['rid'], $data['pfid'], false,$preview);//复制原文件夹中文件到新文件夹
+                                    self::FileCopy($value['rid'], $data['pfid'], false,$sid,$sid);//复制原文件夹中文件到新文件夹
                                 } catch (Exception $e) {
                                 }
                             }
@@ -2926,6 +2892,11 @@ class io_dzz extends io_api
         $filename = self::name_filter($filename);
         if (strpos($path, 'preview_') === 0) {
             $path = preg_replace('/^preview_/', '', $path);
+        }
+        // 检查是否以 'sid:' 开头并以 '_' 结尾
+        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
+            // 去掉 sid 及其值
+            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
         }
         if (strpos($path, 'dzz::') === false && strpos($path, 'TMP::') === false) {
             $gid = DB::result_first("select gid from %t where fid=%d", array('folder', $path));

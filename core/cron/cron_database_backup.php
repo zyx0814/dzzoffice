@@ -48,7 +48,7 @@ $startrow=0;
 $volume=0;$tableid = 0;$startfrom = 0;
 while(!$success){
 	$volume +=  1;
-	$idstring = '# Identify: '.base64_encode("$_G[timestamp],".$_G['setting']['version'].",dzz,multivol,{$volume},{$tablepre},{$dbcharset}")."\n";
+	$idstring = '# Identify: '.base64_encode("{$_G['timestamp']},".$_G['setting']['version'].",dzz,multivol,{$volume},{$tablepre},{$dbcharset}")."\n";
 	$dumpcharset =  str_replace('-', '', $_G['charset']);
 	$backupfilename = './data/'.$backupdir.'/'.str_replace(array('/', '\\', '.', "'"), '', $filename);
 	$sqldump = '';

@@ -10,7 +10,7 @@ function xml2array(&$xml, $isnormal = FALSE,$encodeing='ISO-8859-1') {
 	return $data;
 }
 
-function xmlattribute( $xml, $encodeing='ISO-8859-1') {
+function xmlattribute($xml, $encodeing='ISO-8859-1') {
 	$xml = str_replace($encodeing, 'UTF-8', $xml);
 	libxml_disable_entity_loader(true);
     $values = json_decode(json_encode(simplexml_load_string($xml, 'SimpleXMLElement')), true);
@@ -20,16 +20,16 @@ function xmlattribute( $xml, $encodeing='ISO-8859-1') {
 	return $data;
 }
 
-function attribute2arr( $values,$data=array() ){
+function attribute2arr($values,$data=array() ){
 	foreach( $values as $k=>$v ){
 		if( isset($v["item"]) ){
 			$return = attribute2arr($v["item"]);
 			if($return) $data[$v['@attributes']["id"]]=$return ; 
 		}
-		if( count($v['@attributes'])>1 ){
-			$data[$v['@attributes']["id"]]["_attributes"]=$v['@attributes'];
-			unset($data[$v['@attributes']["id"]]["_attributes"]["id"]);
-		}
+		if(count($v['@attributes'])>1){
+            $data[$v['@attributes']["id"]]["_attributes"] = $v['@attributes'];
+            unset($data[$v['@attributes']["id"]]["_attributes"]["id"]);
+        }
 	}
 	return $data;
 }

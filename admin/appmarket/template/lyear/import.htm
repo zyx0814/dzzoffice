@@ -1,0 +1,84 @@
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-body">
+				<ul class="nav nav-pills">
+				<li class="nav-item">
+					<a class="nav-link" href="{MOD_URL}">{lang installed}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{MOD_URL}&op=edit&do=add">{lang add_app}</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link active" href="{MOD_URL}&op=cp&do=import">{lang import_type_app}</a>
+				</li>
+				</ul>
+			</div>
+		</div>
+	<div class="card">
+		<div class="card-body">
+			<form id="importform" name="importform" class="form-horizontal" action="{MOD_URL}&op=cp&do=import" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="importsubmit" value="true" />
+				<input type="hidden" name="formhash" value="{FORMHASH}" />
+				<div class="row mb-3">
+					<label class="col-sm-2">{lang choose_import_way}</label>
+					<div class="col-sm-10">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="radio"id="importtype1" name="importtype" value="file" checked="checked" onclick="document.getElementById('importfile').style.display='';document.getElementById('importtxt').style.display='none';">
+							<label class="form-check-label" for="importtype1">{lang uploading_files}</label>
+						</div>
+						 <input class="form-check-input" type="radio"id="importtype1" name="importtype" value="txt"  onclick="document.getElementById('importfile').style.display='none';document.getElementById('importtxt').style.display='';">
+						 <label class="form-check-label" for="importtype1">{lang import_paste_text}</label>
+						</div>
+					</div>
+					<div class="row mb-3" id="importfile">
+						<label class="col-sm-2">{lang import_upload}</label>
+						<div class="col-sm-10">
+							<input type="file" class="form-control" name="importfile" style="padding:5px;" />
+						</div>
+					</div>
+					<div class="row mb-3" id="importtxt" style="display:none">
+						<label class="col-sm-2" for="importtxt">{lang import_paste_data}</label>
+						<div class="col-sm-10">
+							<textarea type="textarea" class="form-control" id="importtxt" name="importtxt" rows="5"></textarea>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<label class="col-sm-2" for="ignoreversion">忽略版本限制</label>
+						<div class="col-sm-10">
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" id="ignoreversion" name="ignoreversion">
+							  </div>
+						</div>
+					  </div>
+				<dl class="mb-3 d-grid">
+					<input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang submit}"/>
+				</dl>
+			</form>
+		</div>
+	</div>
+</div>
+</main>
+<script type="text/javascript">
+	jQuery('#button_add').click(function(){
+		if(jQuery("#button_add1").hasClass('hide')){
+			jQuery("#button_add").html("×");
+			jQuery("#button_add1").removeClass("hide");
+			jQuery("#button_add2").removeClass("hide");
+			jQuery("#button_add1").stop().animate({top:"-124px"},500);
+			jQuery("#button_add2").stop().animate({top:"-62px"},500);
+		}else{
+			jQuery("#button_add").html("＋");
+			jQuery("#button_add1").stop().animate({top:"0px"},500);
+			jQuery("#button_add2").stop().animate({top:"0px"},500);
+			setTimeout(function(){
+				jQuery("#button_add1").addClass("hide");
+				jQuery("#button_add2").addClass("hide");
+			},500)
+			
+		}
+	});
+</script>
+<!--{template lyear:footer_simple}-->

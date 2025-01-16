@@ -58,7 +58,7 @@ class table_organization extends dzz_table
 		return array();
 	}
 	//插入数据
-	public function insert($arr){
+	public function insert($arr, $return_insert_id = false, $replace = false, $silent = false){
 		if($orgid=parent::insert($arr,1)){
 			if(intval($arr['aid'])){//如果有头像图片，增加copys
 				C::t('attachment')->add_by_aid(intval($arr['aid']));

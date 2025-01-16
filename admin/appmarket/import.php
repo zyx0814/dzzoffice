@@ -12,6 +12,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 include libfile('function/admin');
 include libfile('function/organization');
 $do = empty($_GET['do']) ? 'available' : trim($_GET['do']);
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 $navtitle=lang('import_type_app').' - '.lang('appname');
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;

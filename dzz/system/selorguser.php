@@ -10,10 +10,10 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
+Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 include_once libfile('function/organization');
-$ismobile=helper_browser::ismobile();
 $ids =isset($_GET['ids'])?rawurldecode($_GET['ids']):'';
-
+$template = isset($_GET['template']) ? $_GET['template'] : '';
 $zero=$_GET['zero']?urldecode($_GET['zero']):lang('no_institution_users');//无机构用户名称
 $nouser=intval($_GET['nouser']);//不显示用户
 $stype=intval($_GET['stype']); //0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
@@ -30,6 +30,7 @@ $gets = array(
 		'nouser'=>$nouser,
 		'stype'=>$stype,
 		'moderator'=>$moderator,
+		'template'=>$template,
 		'range'=>$range,
 		'multiple'=>$multiple,
 		'nosearch'=>1,
@@ -102,12 +103,14 @@ if($uids){
 }
 $openarr_length=count($open)?'1':'';
 $openarr=json_encode($open);
-$ismobile = helper_browser::ismobile();
-if($ismobile){
-	include template('mobile_selectuser');
-	dexit();
-}else{
-	include template('selorguser');
-	exit();
+if ($template == '1') {
+    include template('lyear_selorguser','lyear');
+} else {
+	if($_G['ismobile']){
+		include template('mobile_selectuser');
+		dexit();
+	}else{
+		include template('selorguser');
+		exit();
+	}
 }
-

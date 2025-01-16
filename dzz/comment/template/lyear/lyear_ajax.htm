@@ -1,0 +1,112 @@
+<!--{if $do == 'getcomment'}-->
+	<!--{template common/header_ajax}-->
+	<!--{if $modal}-->
+   <div class="modal-header">
+	<h4 class="modal-title">所有评论列表</h4>
+	<div class="float-end">
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		<button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
+	  </div>
+  </div>
+  <div class="modal-body">
+	<ul class="list-unstyled lyear-message-list" id="comment_container" style="">
+  <!--{/if}-->
+    <!--{loop $list $value}-->
+		<!--{template lyear:lyear_thread_item}-->
+    <!--{/loop}-->
+    <!--{if $multi}--><div class="comment-page clearfix">$multi</div><!--{/if}-->	
+    <script type="text/javascript" reload="1">
+		jcLoader().load({  
+				type:'css', 
+				ids:'js_dzzthumb.css', 
+				url:'static/dzzthumb/jquery.dzzthumb.css?{VERHASH}'  
+			},function(){
+				jcLoader().load({  
+					type:'js', 
+					ids:'js_dzzthumb', 
+					url:'static/dzzthumb/jquery.dzzthumb.js?{VERHASH}'  
+				},function(){  
+					jQuery('img[data-original]').dzzthumb();
+				}); 
+		});
+   </script>
+   <!--{if $modal}-->
+</ul>
+</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{lang close}</button>
+	</div>
+	<!--{/if}-->
+   <!--{template common/footer_ajax}-->
+   <!--{elseif $do == 'getcommentbycid'}-->
+   <!--{if $modal}-->
+   <!--{template common/header_ajax}-->
+   <div class="modal-header">
+	<h4 class="modal-title">当前评论列表</h4>
+	<div class="float-end">
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		<button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
+	  </div>
+  </div>
+  <div class="modal-body">
+  <!--{/if}-->
+  <ul class="list-unstyled lyear-message-list" id="comment_container" style="">
+   <!--{if $value['pcid']>0}-->
+    {eval $value1=$value}
+     <!--{template lyear:lyear_reply_item}-->
+    <!--{else}-->
+      <!--{template lyear:lyear_thread_item}-->
+    <!--{/if}-->
+</ul>
+	<!--{if $modal}-->
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{lang close}</button>
+	</div>
+	<!--{template common/footer_ajax}-->
+	<!--{/if}-->
+<!--{elseif $do == 'getreplys'}-->
+	<!--{template common/header_ajax}-->
+    <!--{loop $list $value1}-->
+      <!--{template lyear:lyear_reply_item}-->
+    <!--{/loop}-->	
+    <script type="text/javascript" reload="1">
+	<!--{if $limit=='0'}-->
+	  jQuery('#comment_{$cid}').find('.txt_cfed a').off('click').addClass('cur')
+	  .on('click',function(){
+			if(jQuery(this).hasClass('cur')){
+				var el=jQuery('#reply_list_{$cid} .cmt_fed');
+				for(var i=0;i<el.length;i++){
+					if(i>4){
+						el.eq(i).hide();
+					}
+				}
+				jQuery(this).removeClass('cur')
+			}else{
+				jQuery('#reply_list_{$cid} .cmt_fed').show();
+				jQuery(this).addClass('cur')
+			}
+			return false;
+	   });
+	 <!--{else}-->  
+	  jQuery('#comment_{$cid}').find('.txt_cfed a').on('click',function(){
+			 ajaxget('{DZZSCRIPT}?mod=comment&op=ajax&template=1&do=getreplys&cid=$cid','reply_list_$cid','reply_list_$cid');
+			 return false;
+	  });
+	 <!--{/if}-->
+	
+   </script>
+   <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'getReplyForm'}-->
+	<!--{template common/header_ajax}-->
+	<!--{template lyear:lyear_reply_form}-->
+    <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'getPublishForm'}-->
+	<!--{template common/header_ajax}-->
+    <!--{template lyear:lyear_publish_form}-->
+    <!--{template common/footer_ajax}-->
+<!--{elseif $do == 'edit'}-->
+	<!--{template common/header_ajax}-->
+    <!--{template lyear:lyear_edit_form}-->
+    <!--{template common/footer_ajax}-->
+<!--{/if}--> 

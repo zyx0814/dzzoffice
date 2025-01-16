@@ -1,0 +1,494 @@
+﻿/*图标闪烁*/
+.glow {
+    filter: glow(color=#FF9900, strengh=2);
+    -moz-box-shadow: 0px 0px 2px #FF9900;
+    -webkit-box-shadow: 0px 0px 2px #FF9900;
+    box-shadow: 0px 0px 2px #FF9900;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webket-border-radius: 2px;
+}
+/*图标剪切时*/
+.Icoblock.iscut{
+	opacity:0.6;
+	filter:alpha(opacity=60);
+}
+.Icoblock.middleicon{
+	position: relative; float: left;  width: 100px; height: 103px;padding:0; z-index:10;overflow: visible;margin:10px;
+}
+.Icoblock.middleicon .icoimgContainer{
+	position:relative;width:50px;height:50px;
+}
+
+.Icoblock.middleicon .Icoblock_icon{
+	width:50px;height:50px;
+}
+.Icoblock.middleicon .icoimgCover_up{
+	position:absolute;left:0px;top:0px;width:100%;height:100%;z-index:1
+}
+.Icoblock.middleicon .icoimgtips{
+	position:absolute;left:0px;top:0px;width:50px;height:50px;z-index:2
+}
+.Icoblock.middleicon .icoimgCover_down{
+	position:absolute;left:0px;top:0px;width:100%;height:100%;z-index:-1
+}
+
+.Icoblock.middleicon .IcoText_div{
+	padding:0 5px;
+}
+.backgound_radius{
+	position: absolute; left: 0px; top: 0px; z-index: -5; width: 100%; height: 100%;
+}
+/*图标悬停和选中时背景样式*/
+.hover .backgound_radius{filter:Alpha(opacity=20);opacity:0.2;background:#000;border:#FFF 1px solid;transition: all 0.2s ease-in 0s; }
+.Icoselected .backgound_radius {filter:Alpha(opacity=30);opacity:0.5;background:#000;border:#FFF 1px solid;transition: all 0.2s ease-in 0s; }
+.window .hover .backgound_radius{background:#E5F3FB;border:#70C0E7 1px solid;opacity:1;filter:Alpha(opacity=100);transition: all 0.2s ease-in 0s; }
+.window .Icoselected .backgound_radius {background:#D1E8FF;border:#66A7E8 1px solid;opacity:1;filter:Alpha(opacity=100);transition: all 0.2s ease-in 0s; }
+.icoimgContainer .icoimgtips{
+	cursor:pointer;
+	overflow:hidden;
+}
+/*图标文字部分*/
+/*桌面图标文字样式*/
+.IcoText { color:#fff; font-weight:700;font-family:Tahoma,'微软雅黑','Simsun'; word-break:break-all;text-shadow: 1px 1px 1px #000,0px 0px 1px #000,0px 0px 1px #000,0px 0px 1px #000;display:inline-block;
+
+}
+.IcoText:hover,.IcoText:focus{
+	color:#FFF;
+	text-decoration:none;
+}
+/*目录内图标文字样式*/
+.IcoText_folder {font-size:13px; color:#333; font-weight:nomal;font-family:Tahoma,'微软雅黑','Simsun';word-break:break-all;text-decoration:none}
+.IcoText_folder>a:hover{
+	color:#333;
+}
+
+.IcoText_div { max-height:38px; overflow:hidden;word-break:break-all; }
+.IcoText_div table{table-layout:fixed;}
+.IcoText_div a{
+	text-decoration:none;
+}
+.icosContainer .IcoText_div{position:relative;}
+* html .IcoText_div { height: expression(this.height > 38 ? 38 : true);}
+.IcoText_textarea {
+    border: 1px solid #6CABE7;
+    font-size: 13px;
+    overflow: visible;
+    z-index: 99999999;
+}
+
+/*桌面图标前景层*/
+/*html结构
+<div style="position: absolute; left: 0px; top: 0px;  width: 100px; height: 103px; z-index: 1041;" class="icoblank" id="icoblank_2789" icoid="2789"> 
+	<a class="icoblank_tip icoblank_lefttop"></a>
+	<a class="icoblank_tip icoblank_righttop"></a>
+	<a class="icoblank_tip icoblank_leftbottom"></a>
+	<a class="icoblank_tip icoblank_rightbottom"></a> 
+</div>
+*/
+.icoblank_tip{
+	position:absolute;
+	display:none;
+	z-index:10;
+	
+}
+.Icoselected .icoblank_tip,.hover .icoblank_tip{
+	display:block;
+	transition: all 0.5s ease-in 0s;
+}
+.icoblank_tip .icon
+{
+	display:none;
+	width:17px;
+	height:17px;
+	margin:0 5px;
+	float:left;
+	background-image:url(/dzz/styles/icoblock/default/images/ops.png);
+	background-repeat:no-repeat;
+}
+
+.hover .icoblank_tip .icon{
+	transition: all 0.2s ease-in 0s;
+	display:inline-block;
+}
+.like_icon{
+	background-position:0px 0px;
+}
+.liked_icon{
+	background-position:-20px 0px;
+}
+.like_icon:hover{
+	background-position:-20px 0;
+}
+
+.hover .icoblank_tip .liked_icon:hover{
+	background-position:-20px 0;
+}
+
+.share_icon{
+	background-position:0px -20px;
+}
+.share_icon:hover{
+	background-position:-20px -20px;
+}
+.download_icon{
+	background-position:0px -40px;
+}
+.download_icon:hover{
+	background-position:-20px -40px;
+}
+.saveto_icon{
+	background-position:0px -60px;
+}
+.saveto_icon:hover{
+	background-position:-20px -60px;
+}
+
+
+
+.op_righttop{
+	right:-24px;
+	top:0px;
+	width:27px;
+	
+}
+.op_righttop .icon{
+	margin-bottom:5px;
+}
+.op_lefttop{
+	left:0px;
+	top:-17px;
+	height:17px;
+}
+.op_lefttop .icon{
+	margin-right:5px;
+}
+
+
+/*右下角选择框*/
+
+.icoblank_rightbottom{
+	width:16px;
+	height:16px;
+	bottom:2px;
+	right:2px;
+	transition: all 0.2s ease-in 0s;
+	z-index:10;
+}
+.window .icoblank_rightbottom{
+	background-color:#FFF;
+}
+.hover .icoblank_rightbottom{
+	
+	left:3px;
+	top:3px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/checkbox.png', sizingMethod='scale');
+	background-image:url(images/checkbox.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	
+}
+.Icoselected .icoblank_rightbottom{
+	left:3px;
+	top:3px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/selected.png', sizingMethod='scale');
+	background-image:url(images/selected.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	
+}
+.Icoselected .icoblank_rightbottom,.hover .icoblank_rightbottom,.hover .icoblank_leftbottom{
+	display:block;
+}
+.selectbox{
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/default/images/checkbox.png', sizingMethod='scale');
+	background-image:url(./images/checkbox.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	width:16px;
+	height:16px;
+	display:inline-block;
+	margin:5px;
+}
+.Icoselected .selectbox{
+	display:inline-block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/default/images/selected_folder.png', sizingMethod='scale');
+	background-image:url(./images/selected_folder.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+}
+
+
+
+
+
+
+
+
+
+
+/*图标图片层start*/
+
+/*图标图片层html
+ <div style="position:relative;width:50px;height:50px" class="icoimgContainer icoimgContainer_image">
+	<table width="100%" height="100%" cellspacing="0" cellpadding="0">
+		<tbody>
+			<tr>
+				<td valign="middle" align="center">
+					<img onload="_ico.image_resize(this,50,50,false);" title="cej5GQ6F1GPU.jpg" style="display: inline-block; width: 50px; height: 31.6832px;" src="data/attachment/dzz/201207/22/15284233hkk7yowhk2nkwm.jpg.thumb.jpg" class="Icoblock_icon imageclass">
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<!--图标遮罩前景层-->
+	<div style="position:absolute;left:0px;top:0px;width:50px;height:50px;z-index:1" class="icoimgCover_up"></div>
+	<!--图片tip层-->
+	<div style="position:absolute;left:0px;top:0px;width:50px;height:50px;z-index:2" class="icoimgtips">
+		<div class="icoimg_share_tips"></div>
+	</div>
+	<!--图标遮罩背景层-->
+	<div style="position:absolute;left:0px;top:0px;width:50px;height:50px;z-index:-1" class="icoimgCover_down"></div>
+</div>
+此例中图标样式为50×50的中图标
+*/
+
+.icoimgContainer_folder{}
+.icoimgContainer_image{}
+.icoimgContainer_video{}
+.icoimgContainer_music{}
+.icoimgContainer_user{}
+.icoimgContainer_link{}
+.icoimgContainer_attach{}
+
+.icoimgContainer_shortcut .icoimgCover_up{ /*通用图标遮罩层前景层*/
+	background-image:url(images/shortcut.png);
+	background-repeat: no-repeat ;
+	background-size:100%;
+}
+.icoimgContainer .icoimgCover_up{ /*通用图标遮罩层前景层*/
+	
+}
+.icoimgContainer .icoimgCover_down{/*通用图标遮罩层背景层*/
+	
+}
+.icoimgContainer_image .icoimgCover_up{ /*图片类图标遮罩层前景层*/
+	
+}
+.icoimgContainer_image .icoimgCover_down{ /*图片类图标遮罩层背景层*/
+	
+}
+
+/*图标图标tips*/
+/*用户图标左上角数字提醒*/
+.icoimgtips .icobutton_tips{
+	float:left;
+	margin:2px 0px 0 -2px;
+	position:absolute;
+	top:-5px;
+	right:-5px;
+}
+.icoimgtips .tips_size_1{
+	line-height:16px;
+	font-size:12px;
+	width:21px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/tips_1.png', sizingMethod='scale');
+	background-image:url(images/tips_1.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+}
+.icoimgtips .tips_size_2{
+	line-height:16px;
+	font-size:12px;
+	width:29px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/tips_2.png', sizingMethod='scale');
+	background-image:url(images/tips_2.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+}
+.icoimgtips .tips_size_3{
+	line-height:16px;
+	font-size:12px;
+	width:35px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/tips_3.png', sizingMethod='scale');
+	background-image:url(images/tips_3.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+}
+.icoimgtips .tips_size_4{
+	line-height:16px;
+	font-size:12px;
+	width:40px;
+	height:21px;
+	display:block;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/tips_4.png', sizingMethod='scale');
+	background-image:url(images/tips_4.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	color:#FFF;
+}
+/*图标右下喜欢提醒*/
+.icoimgtips .icoimg_liked_tips{
+	position:absolute;
+	left:-5px;
+	top:-5px;
+	width:17px;
+	height:17px;
+	background:url(/dzz/styles/icoblock/default/images/ops.png) -20px 0 no-repeat;
+}
+/*图标左下角分享提醒*/
+.icoimgtips .icoimg_share_tips{
+	position:absolute;
+	left:-5px;
+	bottom:0px;
+}
+.icoimgtips .icoimg_share_tips_1{
+	float:left;
+	height:16px;
+	width:16px;
+	margin-right:5px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/share1.png', sizingMethod='scale');
+	background-image:url(images/share1.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	cursor:pointer
+}
+.icoimgtips .icoimg_share_tips_2{
+	float:left;
+	height:16px;
+	width:16px;
+	margin-right:5px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/share2.png', sizingMethod='scale');
+	background-image:url(images/share2.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	cursor:pointer
+}
+.icoimgtips .icoimg_share_tips_3{
+	float:left;
+	height:16px;
+	width:16px;
+	margin-right:5px;
+	_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='dzz/styles/icoblock/images/share3.png', sizingMethod='scale');
+	background-image:url(images/share3.png) !important;
+	background-image:none;
+	background-repeat: no-repeat;
+	cursor:pointer
+}
+/*图标左下角分享提醒*/
+/*图标图片*/
+.IcoImg img {background-color: #FFF; color: #FFF; padding: 2px; vertical-align: bottom;}
+.imageclass{ 
+	background:  #FFFFFF;
+    border: 1px solid #999;
+    padding: 2px;
+	box-shadow:1px 1px 2px #000;
+	display:none;
+	margin: -3px;
+}
+.ie6 .imageclass,.ie7 .imageclass{
+	margin:0;	
+	position:relative;
+	left:-3px;
+}
+
+.appclass{ 
+	box-shadow:1px 1px 2px #000;
+	display:none;
+}
+.videocss_loaded_flag,.usercss_loaded_flag{
+	width:1px;
+	height:1px;
+}
+.videoclass{ 
+    border: 1px solid #000;
+	box-shadow:1px 1px 2px #000;
+	display:none;
+	margin:-2px;
+}
+.ie6 .videoclass,.ie7 .videoclass{
+	margin:0;	
+	position:relative;
+	left:-2px;
+}
+.videoclass100_100{ 
+	background: url(images/video100.png) center no-repeat;
+    padding: 6px 16px 6px 16px;
+	width:102px;
+	height:83px;
+	margin: -6px -16px -6px -16px;
+}
+.ie6 .videoclass100_100,.ie7 .videoclass100_100{
+	margin:0;	
+	position:relative;
+	left:-16px;
+}
+.videoclass50_50{ 
+	background: url(images/video50.png) center no-repeat;
+    padding: 3px 9px;
+	width:50px;
+	height:41px;
+	margin: -3px -9px;
+}
+.ie6 .videoclass50_50{
+	margin:0;
+}
+.ie7 .videoclass50_50{
+	margin:0;	
+	position:relative;
+	left:-9px;
+}
+.userclass{ 
+	background:  #FFFFFF;
+    border: 1px solid #999;
+    padding: 2px;
+	box-shadow:1px 1px 2px #000;
+	display:none;
+	margin: -3px;
+}
+.ie6 .userclass,.ie7 .userclass{
+	margin:0;	
+	position:relative;
+	left:-3px;
+	top:-3px;
+}
+
+.userclass100_100{ 
+	background: url(images/user100.png) center no-repeat;
+   padding:15px 19px 21px 16px;width:85px;height:84px;
+   margin:-15px -19px -21px -16px;
+}
+.ie6 .userclass100_100,.ie7 .userclass100_100{
+	margin:0;	
+	position:relative;
+	left:-8px;
+}
+.userclass50_50{ 
+	background: url(images/user50.png) center no-repeat;
+   	padding:7px 10px 11px 8px;
+	width:42px;height:41px;
+	margin:-7px -10px -11px -8px;
+}
+.ie6 .userclass50_50,.ie7 .userclass50_50{
+	margin:0;	
+	position:relative;
+	left:-4px;
+}
+
+.image_tosmall.imageclass{
+	
+}
+.icoimgContainer_link .image_tosmall{
+	background:url('./images/link_small_bg.png') no-repeat center center;
+	background-size:contain;
+}
+
+/*图标图片层end*/

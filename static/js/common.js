@@ -9,22 +9,23 @@
 
 var BROWSER = {};
 var USERAGENT = navigator.userAgent.toLowerCase();
-browserVersion({'ie':'msie','edge':'edge','rv':'rv','firefox':'','chrome':'','opera':'','safari':'','mozilla':'','webkit':'','maxthon':'','qq':'qqbrowser','ie11':'trident'});
+browserVersion({'ie':'msie','trident':'','edge':'edge','rv':'rv','firefox':'','chrome':'','opera':'','safari':'','mozilla':'','webkit':'','maxthon':'','qq':'qqbrowser','ie11':'trident'});
 if(BROWSER.ie11){
 	BROWSER.ie=11;
 	BROWSER.rv=11;
 }else{
 	BROWSER.rv=0;
 }
-if(BROWSER.safari) {
+if(BROWSER.safari || BROWSER.rv) {
 	BROWSER.firefox = true;
 }
 BROWSER.opera = BROWSER.opera ? opera.version() : 0;
 HTMLNODE = document.getElementsByTagName('head')[0].parentNode;
-if(BROWSER.ie) {
+if(BROWSER.ie || BROWSER.trident) {
 	BROWSER.iemode = parseInt(typeof document.documentMode != 'undefined' ? document.documentMode : BROWSER.ie);
-	HTMLNODE.className = 'ie_all ie' + BROWSER.iemode;
+	HTMLNODE.className = (BROWSER.iemode<9?'ie_all ':'') +'ie' + BROWSER.iemode;
 }
+
 var CSSLOADED = [];
 var JSLOADED = [];
 var JSMENU = [];
@@ -2076,18 +2077,6 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 	};
 	var initMenu = function() {
 		clearTimeout(loadingst);
-		/*var objs = menuObj.getElementsByTagName('*');
-		var fctrlidinit = false;
-		for(var i = 0; i < objs.length; i++) {
-			if(objs[i].id) {
-				objs[i].setAttribute('fwin', k);
-			}
-			if(objs[i].className == 'flb' && !fctrlidinit) {
-				if(!objs[i].id) objs[i].id = 'fctrl_' + k;
-				drag = objs[i].id;
-				fctrlidinit = true;
-			}
-		}*/
 	};
 	var show = function() {
 		hideMenu('fwin_dialog', 'dialog');
@@ -2097,17 +2086,6 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		var html='<div class="modal-dialog modal-center">'
 				 +'	<div class="modal-content" >'
 				 +'  <div class="modal-content-inner" id="fwin_content_'+k+'">'
-				/* +'	  <div class="modal-header">'
-				 +'		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>'
-				 +'		<h4 class="modal-title" id="fwin_title_'+k+'">加载中,请稍候</h4>'
-				 +'	  </div>'*/
-				/* +'	  <div class="m_c modal-body" id="fwin_content_' + k + '">'
-				 +'		<table   height="100%" width="100%"><tbody><tr><td align="center" valign="middle"><div class="loading_img"><div class="loading_process"></div></div></td></tr></tbody></table>'
-				 +'	  </div>'
-			   +'	  <div class="modal-footer">'
-				 +'		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
-				 +'		<button type="button" class="btn btn-primary">Save changes</button>'
-				 +'	  </div>'*/
 				 +'	 </div>'
 				 +'	</div>'
 				 +'</div>';
@@ -2864,4 +2842,35 @@ function htmlspecialchars_decode (string, quote_style) {
   string = string.replace(/&/g, '&');
 
   return string;
+};
+function dzzNotification() {
+	var h5n = new Object();
+
+	h5n.issupport = function() {
+		return 'Notification' in window;
+	};
+
+	h5n.shownotification = function(replaceid, url, imgurl, subject, message) {
+		if (Notification.permission === 'granted') {
+			sendit();
+		} else if (Notification.permission !== 'denied') {
+			Notification.requestPermission().then(function (perm) {
+				if (perm === 'granted') {
+					sendit();
+				}
+			});
+		}
+		function sendit() {
+			var n = new Notification(subject, {
+				tag: replaceid,
+				icon: imgurl,
+				body: message
+			});
+			n.onclick = function (e) {
+				e.preventDefault();
+				window.open(url, '_blank');
+			};
+		}
+	};
+	return h5n;
 };

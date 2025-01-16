@@ -11,7 +11,7 @@ class Emailchk{
         $bindstatus = 0;
         $id = isset($params['id']) ? $params['id'] : '';
         $idchk = isset($params['idchk']) ? $params['idchk'] : '';
-        $do = trim($params['do']) ? trim($params['do']) : '';
+        $do = isset($params['do']) ? trim($params['do']) : '';
         if ($id && $do === 'changeemail') {
 
             $email = $params['email'];

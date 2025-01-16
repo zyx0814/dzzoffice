@@ -1,0 +1,1215 @@
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+  <div class="container-fluid">
+    <!--{if $operation !== 'permgroup' && $operation !=='censor' && $operation!=='space'}-->
+    <div class="card">
+        <div class="card-body">
+          <ul class="nav nav-pills">
+          <!--{if $operation=='mail'}-->
+          <li class="nav-item"><a class="nav-link active" href="{MOD_URL}&operation=mail">{lang set}</a></li>
+          <li class="nav-item"><a class="nav-link" href="{MOD_URL}&op=mailcheck">{lang setting_mail_check}</a></li>
+          <!--{elseif $operation=='smiley'}-->
+          <li class="nav-item"><a class="nav-link active" href="{MOD_URL}&operation=smiley">{lang expression_set}</a> </li>
+          <li class="nav-item"><a class="nav-link" href="{MOD_URL}&op=smiley">{lang expression_class}</a></li>
+          <!--{elseif $operation=='basic'}-->
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+          <!--{elseif $operation=='at'}-->
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+          <!--{elseif $operation=='upload'}-->
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=upload">{lang upload_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+          <!--{elseif $operation=='loginset'}-->
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=sec">{lang verification_code_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=loginset">{lang login_page_set}</a> </li>
+          <!--{elseif $operation=='access'}-->
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=sec">{lang verification_code_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=loginset">{lang login_page_set}</a> </li>
+          <!--{elseif $operation=='datetime'}-->
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+          <!--{elseif $operation=='sec'}-->
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=sec">{lang verification_code_set}</a> </li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=loginset">{lang login_page_set}</a> </li>
+          <!--{/if}-->
+          </ul>
+        </div>
+      </div>
+      <!--{/if}-->
+      <div class="card">
+        <div class="card-body">
+            <!--{if $operation=='basic'}-->
+            <form id="cpform" action="{MOD_URL}" method="post"  name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="basic" name="operation">
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang sitelogo}</label>
+                <div class="col-sm-10">		
+                  <div class="file-hidde-content">
+                    <img src="{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}" class="upold-add img-avatar-96 p-2">
+                    <input type="file" name="files[]" value="" class="form-control file-hidde" />
+                    <input type="hidden" name="settingnew[sitelogo]" value="$setting[sitelogo]" class="build-images" /> 
+                    <div class="progress-bar"></div>
+                  </div>	
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="sitename">{lang terrace_name}</label>
+                <div class="col-sm-10">
+                  <input type="text" id="sitename" required name="settingnew[sitename]" class="form-control" value="$setting[sitename]">
+                  <span class="form-text">{lang terrace_name_state} </span>
+                </div>
+              </div>
+              <div class="row mb-3"> 
+                <label class="col-sm-2">{lang default_app}</label>
+                <div class="col-sm-10">
+                  <input type="hidden" name="old_default_mod" class="form-control" value="$setting[default_mod]">
+                  <select name="settingnew[default_mod]" class="form-select">
+                    <option value="">{lang please_select_default_index}</option> 
+                    <!--{loop $applist $value}--> 
+                    <option value="$value[identifier]" <!--{if $value[ 'identifier']==$setting[default_mod]}-->selected="selected"  <!--{/if}-->>$value[appname] </option>
+                    <!--{/loop}-->
+                  </select>
+                  <span class="form-text">{lang default_app_desc} </span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang user_default_join_department}</label>
+                <div class="col-sm-10">
+                  <div class="dropdown">
+                    <input id="sel_defaultdepartment" type="hidden" name="settingnew[defaultdepartment]" value="$setting[defaultdepartment]"/>
+                    <button type="button" id="defaultdepartment_Menu" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"> $defaultdepartment </button>
+                    <div id="defaultdepartment_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="defaultdepartment_Menu">
+                      <iframe name="defaultdepartment_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=defaultdepartment&nouser=1&stype=1"  frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"  allowtransparency="true"></iframe>
+                    </div>
+                  </div>
+                  <span class="form-text">{lang setting_main_section}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang thumbnail_size}</label>
+                <div class="col-sm-10">
+                  <span class="badge rounded-pill bg-primary" style="display:inline-block;padding:10px 15px;margin-right:10px;">{lang large_size}</span>
+                  <input name="settingnew[thumbsize][small][width]" class="form-control" style="display:inline-block;float:none;width:60px" placeholder="{lang width}" value="{eval echo $setting['thumbsize']['small']['width']?$setting['thumbsize']['small']['width']:'256'}"/>
+                  <span style="display:inline-block;padding:6px 3px">X</span>
+                  <input name="settingnew[thumbsize][small][height]" class="form-control" style="display:inline-block;float:none;width:60px" placeholder="{lang height}" value="{eval echo $setting['thumbsize']['small']['height']?$setting['thumbsize']['small']['height']:'256'}"/>
+                  <span class="badge rounded-pill bg-success" style="display:inline-block;padding:10px 15px;margin-right:10px;">{lang chinese_size}</span>
+                  <input name="settingnew[thumbsize][middle][width]" class="form-control" style="display:inline-block;float:none;width:60px" placeholder="{lang width}" value="{eval echo $setting['thumbsize']['middle']['width']?$setting['thumbsize']['middle']['width']:'800'}"/>
+                  <span style="display:inline-block;padding:6px 3px">X</span>
+                  <input name="settingnew[thumbsize][middle][height]" class="form-control" style="display:inline-block;float:none;width:60px" placeholder="{lang height}" value="{eval echo $setting['thumbsize']['middle']['height']?$setting['thumbsize']['middle']['height']:'600'}"/>
+                  <span class="badge rounded-pill bg-danger" style="display:inline-block;padding:10px 15px;margin-right:10px;">{lang max_size}</span>
+                  <input name="settingnew[thumbsize][large][width]" class="form-control" style="display:inline-block;float:none;width:60px" placeholder="{lang width}" value="{eval echo $setting['thumbsize']['large']['width']?$setting['thumbsize']['large']['width']:'1440'}"/>
+                  <span style="display:inline-block;padding:6px 3px">X</span>
+                  <input name="settingnew[thumbsize][large][height]" class="form-control" style="display:inline-block;float:none;width:60px" placeholder="{lang height}" value="{eval echo $setting['thumbsize']['large']['height']?$setting['thumbsize']['large']['height']:'900'}"/>
+                  <ul class="form-text">
+                    {lang setting_main_thumbnail_size}
+                  </ul>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang thumbnail_generation}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="thumb_active1" name="settingnew[thumb_active]" <!--{if $setting['thumb_active']}-->checked="checked"<!--{/if}--> value="1">
+                    <label class="form-check-label" for="thumb_active1">{lang active_mode}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="thumb_active2" name="settingnew[thumb_active]" <!--{if !$setting['thumb_active']}-->checked="checked"<!--{/if}--> value="0">
+                    <label class="form-check-label" for="thumb_active2">{lang  passive_mode}</label>
+                  </div>
+                  <ul class="form-text" >
+                    {lang setting_main_thumbnail_generation}
+                  </ul>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">图片处理库类型</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="imagelib1" name="settingnew[imagelib]" value="0" <!--{if !$setting[imagelib]}-->checked="checked" <!--{/if}-->>
+                    <label class="form-check-label" for="imagelib1">GD</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="imagelib2" name="settingnew[imagelib]" value="1" <!--{if $setting[imagelib]}-->checked="checked"<!--{/if}-->>
+                    <label class="form-check-label" for="imagelib2">ImageMagick</label>
+                  </div>
+                  <span class="form-text">处理缩略图和水印的图像处理库。GD 是最广泛的处理库但是使用的系统资源较多。ImageMagick速度快系统资源占用少，但安全性相对较差，且需要服务器安装 ImageMagick 扩展。</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang file_sharing}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="allowshare1" name="settingnew[allowshare]" value="0"<!--{if !$setting[allowshare]}--> checked <!--{/if}-->>
+                    <label class="form-check-label" for="allowshare1">{lang enable}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="allowshare2" name="settingnew[allowshare]"  value="1"<!--{if $setting[allowshare]}--> checked <!--{/if}-->>
+                    <label class="form-check-label" for="allowshare2">{lang forbidden}</label>
+                  </div>
+                  <span class="form-text"> {lang setting_main_file_sharing}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="sitebeian">{lang platform_beian}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="sitebeian" name="settingnew[sitebeian]" value="$setting[sitebeian]" />
+                  <span class="form-text">{lang setting_main_html_size}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="metakeywords">{lang platform_keywords}</label>
+                <div class="col-sm-10">
+                  <textarea type="textarea" class="form-control" id="metakeywords" name="settingnew[metakeywords]" row="6">$setting[metakeywords]</textarea>
+                  <span class="form-text"> {lang platform_seo_keywords}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="metadescription">{lang Platform_described}</label>
+                <div class="col-sm-10">
+                  <textarea type="textarea" class="form-control" id="metadescription" name="settingnew[metadescription]" row="6">$setting[metadescription]</textarea>
+                  <span class="form-text"> {lang Platform_seo_described}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="statcode">{lang statistical_code}</label>
+                <div class="col-sm-10">
+                  <textarea type="textarea" class="form-control" id="statcode" name="settingnew[statcode]" row="6">$setting[statcode]</textarea>
+                  <span class="form-text">{lang support_html_code}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">模板切换</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="template1" name="settingnew[template]" value=""<!--{if !$setting[template]}--> checked <!--{/if}-->>
+                    <label class="form-check-label" for="template1">默认模板</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="template2" name="settingnew[template]" value="lyear"<!--{if $setting[template] == 'lyear'}--> checked <!--{/if}-->>
+                    <label class="form-check-label" for="template2">光年模板</label>
+                  </div>
+                  <span class="form-text">只对当前页面具有多套模板的情况下生效</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">升级提醒</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="upgradetis1" name="settingnew[upgradetis]" value="0"<!--{if !$setting[upgradetis]}--> checked <!--{/if}-->>
+                    <label class="form-check-label" for="upgradetis1">全部开启</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="upgradetis2" name="settingnew[upgradetis]" value="1"<!--{if $setting[upgradetis] == '1'}--> checked <!--{/if}-->>
+                    <label class="form-check-label" for="upgradetis2">关闭系统</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="upgradetis3" name="settingnew[upgradetis]" value="2"<!--{if $setting[upgradetis] == '2'}--> checked <!--{/if}-->>
+                    <label class="form-check-label" for="upgradetis3">关闭插件</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="upgradetis4" name="settingnew[upgradetis]" value="3"<!--{if $setting[upgradetis] == '3'}--> checked <!--{/if}-->>
+                    <label class="form-check-label" for="upgradetis4">全部关闭</label>
+                  </div>
+                  <span class="form-text">关闭系统升级提醒后，只能前往系统工具中进行手动检测升级。关闭插件升级提醒后，只能前往应用市场进行手动检测升级。</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang close_terrace}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="bbclosed1" name="settingnew[bbclosed]" value="1" <!--{if $setting[bbclosed]}-->checked<!--{/if}--> onclick="document.getElementById('bbclosedreason').style.display='block'">
+                    <label class="form-check-label" for="bbclosed1">{lang yes}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="bbclosed2" name="settingnew[bbclosed]" value="0" <!--{if !$setting[bbclosed]}-->checked<!--{/if}--> onclick="document.getElementById('bbclosedreason').style.display='none'">
+                    <label class="form-check-label" for="bbclosed2">{lang no}</label>
+                  </div>
+                  <span class="form-text">{lang setting_main_close_terrace}</span>
+                </div>
+              </div>
+              <div id="bbclosedreason" style=" <!--{if !$setting[bbclosed]}-->display:none;<!--{/if}--> ">
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang setting_main_cause}</label>
+                  <div class="col-sm-10">
+                    <textarea type="textarea" class="form-control" id="closedreason" required name="settingnew[closedreason]">$setting[closedreason]</textarea>
+                    <span class="form-text">{lang setting_main_board_message}</span>
+                  </div>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <script type="text/javascript">
+              var selorg={};
+                //添加
+                selorg.add = function (ctrlid, vals) {
+                    if (vals[0].orgid == 'other') vals[0].path = '{lang no_join_agency_department}';
+                    jQuery('#' + ctrlid + '_Menu').html(vals[0].path + ' ');
+                    jQuery('#sel_' + ctrlid).val(vals[0].orgid);
+                }
+              jQuery(document).ready(function (e) {
+              jQuery('.file-hidde').fileupload({
+                url: '{MOD_URL}&op=upload',
+                dataType: 'json',
+                autoUpload: true,
+                maxChunkSize: 2000000, //2M
+                maxFileSize: 2000000, // 2 MB
+                acceptFileTypes: new RegExp("\.([jpe?g|gif|png])$", 'i'),
+                sequentialUploads: true,
+                add: function(e, data) {
+                  data.images = jQuery(this).siblings('.upold-add');
+                  data.images_src = jQuery(this).siblings('.upold-add').attr('src');
+                  data.input_id = jQuery(this).siblings('.build-images');
+                  data.progre = jQuery(this).siblings('.progress-bar');
+                  data.images.attr('src','dzz/images/default/thumb.png');
+                  data.process().done(function() {
+                    data.submit();
+                  });
+                },
+                progress: function(e, data) {
+                  var progress = parseInt(data.loaded / data.total * 100, 10);
+                  data.progre.css(
+                    'width',
+                    progress + '%'
+                  );
+                },
+                done: function(e, data) {
+                  jQuery.each(data.result.files, function(index, file) {
+                    if(file.error) {
+                      data.images.attr('src',data.images_src);
+                      data.progre.css('width', 0);
+                      showmessage('图片上传失败', 'danger', 3000, 1);
+                    } else {
+                      data.images.attr('src',file.data.img);
+                      data.input_id.val(file.data.aid);
+                      setTimeout(function(){
+                        data.progre.css('width', 0);
+                      },2000)
+                    }
+                    
+                  });
+                }
+              });
+              });
+          </script>
+          <script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
+          <script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
+          <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
+          <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
+          <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
+            <!--{elseif $operation=='at'}-->
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="upload" name="operation">
+                <!--{loop $usergroups $value}-->
+                <div class="col-sm-10">
+                  <div class="row mb-3">
+                    <label class="col-sm-2">$value[grouptitle]</label>
+                    <div class="col-sm-10">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="settingnew[at_range][{$value[groupid]}]1" name="settingnew[at_range][{$value[groupid]}]" <!--{if $setting['at_range'][{$value[groupid]}]==3}-->checked="checked" 
+                        <!--{/if}--> value="3">
+                        <label class="form-check-label" for="settingnew[at_range][{$value[groupid]}]1">{lang all_agencies}</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="settingnew[at_range][{$value[groupid]}]2" name="settingnew[at_range][{$value[groupid]}]" <!--{if $setting['at_range'][{$value[groupid]}]==2}-->checked="checked" 
+                        <!--{/if}--> value="2">
+                        <label class="form-check-label" for="settingnew[at_range][{$value[groupid]}]2">{lang agency_department}</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="settingnew[at_range][{$value[groupid]}]3" name="settingnew[at_range][{$value[groupid]}]" <!--{if $setting['at_range'][{$value[groupid]}]==1}-->checked="checked" 
+                        <!--{/if}--> value="1">
+                        <label class="form-check-label" for="settingnew[at_range][{$value[groupid]}]3">{lang profile_privacy_1}</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" id="settingnew[at_range][{$value[groupid]}]4" name="settingnew[at_range][{$value[groupid]}]" <!--{if $setting['at_range'][{$value[groupid]}]==0}-->checked="checked" 
+                        <!--{/if}--> value="0">
+                        <label class="form-check-label" for="settingnew[at_range][{$value[groupid]}]4">{lang no_section}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--{/loop}-->
+              <dl class="mb-3 d-grid">
+                  <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <!--{elseif $operation=='upload'}-->
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="upload" name="operation">
+              <div class="row mb-3">
+                <label for="upload_file_ext" class="col-sm-2">{lang setting_main_suffix}</label>
+                <div class="col-sm-10">
+                  <div class="input-group mb-3">
+                    <input class="js-tags-input form-control" type="text" id="upload_file_ext" name="settingnew[unRunExts]" value="$setting[unRunExts]" >
+                  </div>
+                  <ul class="form-text">
+                    {lang setting_main_suffix_text}
+                  </ul>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="maxChunkSize" class="col-sm-2">{lang upload_block_size}</label>
+                <div class="col-sm-10">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="maxChunkSize" required name="settingnew[maxChunkSize]" value="$setting[maxChunkSize]">
+                    <span class="input-group-text">M</span>
+                  </div>
+                  <ul class="form-text">
+                      {lang upload_block_size_text}
+                    </ul>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang file_more_version_set}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="fileVersion1" name="settingnew[fileVersion]" value="1" <!--{if !isset($setting[fileVersion]) || (isset($setting[fileVersion]) && $setting[fileVersion])}--> checked="checked" <!--{/if}-->>
+                    <label class="form-check-label" for="fileVersion1">{lang enable}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="fileVersion2" name="settingnew[fileVersion]" value="0" <!--{if isset($setting[fileVersion]) && !$setting[fileVersion]}-->checked="checked"<!--{/if}-->>
+                    <label class="form-check-label" for="fileVersion2">{lang close}</label>
+                  </div>
+                </div>
+              </div>
+              <div id="fileVersionNumber" class="function-space <!--{if isset($setting[fileVersion]) && !$setting[fileVersion]}--> hide <!--{/if}-->">
+                <div class="row mb-3">
+                  <label for="fileVersionNumber1" class="col-sm-2">{lang file_multiple_version_features}</label>
+                  <div class="col-sm-10">
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" required id="fileVersionNumber1" name="settingnew[fileVersionNumber]" <!--{if isset($setting['fileVersion'])}-->value="$setting[fileVersionNumber]" <!--{/if}-->  placeholder="0">
+                      <span class="input-group-text">{lang individual}</span>
+                    </div>
+                    <ul class="form-text">
+                      <li>{lang allow_number_uploaded_versions_tip}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                  <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <link rel="stylesheet" type="text/css" href="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css">
+            <script type="text/javascript" src="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+            <script type="text/javascript">
+                jQuery('input[name="settingnew[fileVersion]"]').click(function(){
+                    var val = $(this).val();
+                    if(val == 0){
+                        jQuery('#fileVersionNumber').addClass('hide');
+                    }else{
+                        jQuery('#fileVersionNumber').removeClass('hide');
+                    }
+                })
+            </script>
+            <!--{elseif $operation=='loginset'}-->
+            <style>
+              .loginset-template {
+                width: 100px;
+                overflow: hidden;
+                float: left;
+                margin-right: 10px;
+                display: block;
+                position: relative;
+              }
+              .loginset-template .loginset-template-icon {
+                width: 20px;
+                height: 20px;
+                border: 1px solid #AAB479;
+                position: absolute;
+                right: 1px;
+                top: 1px;
+                color: #DD4B39;
+                font-size: 15px;
+                display: none;
+              }
+              .loginset-template:hover .loginset-template-icon {
+                display: block;
+              }
+              .loginset-template:hover .loginset-template-icon > span {
+                display: none;
+              }
+              .loginset-template .loginset-template-icon1 {
+                display: block !important;
+              }
+              .loginset-template .loginset-template-icon1 > span {
+                display: block !important;
+              }
+            </style>
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="loginset" name="operation">
+              <input type="hidden" value="1" name="settingnew[loginset][available]">
+              <div class="row mb-3">
+                <label class="col-sm-2" for="title">{lang main_title_page}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="title" name="settingnew[loginset][title]" value="$setting[loginset][title]"/>
+                  <span class="form-text">{lang main_title_page_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="subtitle">{lang page_subtitle}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="subtitle" name="settingnew[loginset][subtitle]" value="$setting[loginset][subtitle]"/>
+                  <span class="form-text">{lang page_subtitle_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="background">{lang page_background}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="background" name="settingnew[loginset][background]" value="$setting[loginset][background]"/>
+                  <span class="form-text">{lang for_color_set}设置的图片或网站会同步到首页背景设置。</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang Login template}</label>
+                <div class="col-sm-10">
+                  <div class="input-group mb-3">
+                    <a class="loginset-template" href="admin/setting/images/template1.jpg" target="_blank">
+                      <div class="loginset-template-icon<!--{if $setting[loginset][template] ==1}--> loginset-template-icon1<!--{/if}-->" data-template="1">
+                        <span class="mdi mdi-check-bold"></span>
+                      </div>
+                      <img style="width: 100%;" src="admin/setting/images/template1.jpg" alt=""/>
+                    </a>
+                    <a class="loginset-template" href="admin/setting/images/template2.jpg" target="_blank">
+                      <div class="loginset-template-icon<!--{if $setting[loginset][template] == 2}--> loginset-template-icon1<!--{/if}-->" data-template="2">
+                          <span class="mdi mdi-check-bold"></span>
+                      </div>
+                      <img style="width: 100%;" src="admin/setting/images/template2.jpg" alt=""/>
+                    </a>
+                    <a class="loginset-template" href="admin/setting/images/template3.jpg" target="_blank">
+                      <div class="loginset-template-icon<!--{if $setting[loginset][template] == 3}--> loginset-template-icon1<!--{/if}-->" data-template="3">
+                          <span class="mdi mdi-check-bold"></span>
+                      </div>
+                      <img style="width: 100%;" src="admin/setting/images/template3.jpg" alt=""/>
+                    </a>
+                    <input type="hidden" class="form-control loginset-template-input" name="settingnew[loginset][template]" value="$setting[loginset][template]"/>
+                  </div>
+                  <span class="form-text">{lang Independent login page login template; Parameters will be synchronized to login (including administrator login), registration, password retrieval, and home application.}</span>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                  <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <script type="text/javascript">
+                jQuery(document).on('click', '.loginset-template-icon', function () {
+                    jQuery(this).addClass('loginset-template-icon1').closest('.loginset-template').siblings().find('.loginset-template-icon').removeClass('loginset-template-icon1');
+                    jQuery('.loginset-template-input').val(jQuery(this).data('template'));
+                    return false;
+                })
+            </script> 
+            <!--{elseif $operation=='mail'}-->
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="mail" name="operation">
+              <div class="row mb-3">
+                <label class="col-sm-2" for="adminemail">{lang administrator_email}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="adminemail" name="settingnew[adminemail]" value="$setting[adminemail]">
+                  <span class="form-text"> {lang administrator_email_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang mail_way_send}</label>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" id="mailsend1" name="settingnew[mail][mailsend]" value="1" <!--{if $setting[mail][mailsend]=='1'}--> checked<!--{/if}--> onclick="document.getElementById('hidden1').style.display='none';document.getElementById('hidden2').style.display='none';">
+                    <label class="form-check-label" for="mailsend1">{lang mail_way_send1}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" id="mailsend2" name="settingnew[mail][mailsend]" value="2" <!--{if $setting[mail][mailsend]=='2'}--> checked<!--{/if}--> onclick="document.getElementById('hidden1').style.display='table';document.getElementById('hidden2').style.display='none';">
+                    <label class="form-check-label" for="mailsend2">{lang mail_way_send2}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" id="mailsend3" name="settingnew[mail][mailsend]" value="3" <!--{if $setting[mail][mailsend]=='3'}-->checked<!--{/if}--> onclick="document.getElementById('hidden2').style.display='table';document.getElementById('hidden1').style.display='none';">
+                    <label class="form-check-label" for="mailsend3">{lang mail_way_send3}</label>
+                  </div>
+                </div>
+                <div class="col-sm-10">
+                  <table id="hidden1" class="table text-center" style="margin-bottom:0; <!--{if $setting[mail][mailsend]!=2}-->display:none<!--{/if}-->">
+                    <thead>
+                      <tr> {lang mail_way_send4}</tr>
+                    </thead>
+                    <!--{loop $smtps $id $smtp}-->
+                    <tr>
+                      <td>
+                        <label>
+                          <input type="checkbox" class="form-check-input" name="settingnew[mail][esmtp][delete][]" value="$id"/>
+                        </label>
+                      </td>
+                      <td><input class="form-control" style="width:120px;" type="text" name="settingnew[mail][esmtp][$id][server]" value="$smtp[server]"/></td>
+                      <td width="40"><input class="form-control" style="width:30px" type="text" name="settingnew[mail][esmtp][$id][port]" value="$smtp[port]"/></td>
+                      <td width="40">
+                        <label>
+                          <input type="checkbox"  class="form-check-input" name="settingnew[mail][esmtp][$id][auth]" value="1" $smtp[authcheck]/>
+                        </label>
+                      </td>
+                      <td><input class="form-control" style="width:120px;" type="text" name="settingnew[mail][esmtp][$id][from]" value="$smtp[from]"/></td>
+                      <td><input class="form-control" style="width:100px;" type="text" name="settingnew[mail][esmtp][$id][auth_username]" value="$smtp[auth_username]"/></td>
+                      <td><input class="form-control" style="width:100px;" type="text" name="settingnew[mail][esmtp][$id][auth_password]" value="$smtp[auth_password]"/></td>
+                    </tr>
+                    <!--{/loop}-->
+                    <tr>
+                      <td colspan="7" align="left"><a href="javascript:;" onclick="addSMTP(this,1)"><i class="glyphicon glyphicon-plus"></i>{lang add_SMTP_server}</a></td>
+                    </tr>
+                  </table>
+                  <div class="table-responsive">
+                    <table id="hidden2" class="table table-hover align-middle" style="margin-bottom:0; <!--{if $setting[mail][mailsend]!=3}-->display:none<!--{/if}-->">
+                      <thead>{lang add_SMTP_server_set}</thead>
+                      <!--{loop $smtps $id $smtp}-->
+                      <tr>
+                        <td>
+                          <label>
+                            <input type="checkbox"  class="form-check-input" name="settingnew[mail][smtp][delete][]" value="$id"/>
+                          </label>
+                        </td>
+                        <td><input class="form-control" type="text" name="settingnew[mail][smtp][$id][server]" value="$smtp[server]"/></td>
+                        <td width="60"><input class="form-control" style="width:50px" type="text" name="settingnew[mail][smtp][$id][port]" value="$smtp[port]"/></td>
+                      </tr>
+                      <!--{/loop}-->
+                      <tr>
+                        <td colspan="7" align="left"><a href="javascript:;" onclick="addSMTP(this,0)"><i class="glyphicon glyphicon-plus"></i>{lang add_SMTP_server}</a></td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang email_header_separator}</label>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" id="maildelimiter1" name="settingnew[mail][maildelimiter]" value="1"<!--{if $setting[mail][maildelimiter]=='1'}--> 
+                    checked<!--{/if}-->>
+                    <label class="form-check-label" for="maildelimiter1">{lang email_header_separator1}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" id="maildelimiter2" name="settingnew[mail][maildelimiter]" value="0"<!--{if $setting[mail][maildelimiter]=='0'}--> 
+                    checked<!--{/if}-->>
+                    <label class="form-check-label" for="maildelimiter2">{lang email_header_separator2}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" id="maildelimiter3" name="settingnew[mail][maildelimiter]" value="2"<!--{if $setting[mail][maildelimiter]=='2'}--> checked<!--{/if}-->>
+                    <label class="form-check-label" for="maildelimiter3">{lang email_header_separator3}</label>
+                  </div>
+                  <span class="form-text "> {lang email_header_separator4}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang recipients_user}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="mailusername1" name="settingnew[mail][mailusername]" value="1" checked>
+                    <label class="form-check-label" for="mailusername1">{lang yes}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="mailusername2" name="settingnew[mail][mailusername]" value="0"<!--{if !$setting[mail][mailusername]}-->  checked<!--{/if}-->>
+                    <label class="form-check-label" for="mailusername2">{lang no}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang shield_email_error}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="sendmail_silent1" name="settingnew[mail][sendmail_silent]" value="1" checked>
+                    <label class="form-check-label" for="sendmail_silent1">{lang yes}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="sendmail_silent2" name="settingnew[mail][sendmail_silent]" value="0"<!--{if !$setting[mail][sendmail_silent]}--> checked 
+                    <!--{/if}-->>
+                    <label class="form-check-label" for="sendmail_silent2">{lang no}</label>
+                  </div>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <script>
+              function addSMTP(obj, p) {
+                  var html = '';
+                  html += '<tr>';
+                  html += ' <td>&nbsp;</td>';
+                  html += ' <td><input class="form-control" style="width:120px;" type="text"  name="newsmtp[server][]" class="txt"></td>';
+                  html += '<td><input class="form-control" style="width:30px" type="text" value="25" name="newsmtp[port][]" class="txt"></td>';
+                  if (p > 0) {
+                      html += ' <td><label><input type="checkbox" class="form-check-input" value="1" name="newsmtp[auth][]"></label></td>';
+                      html += ' <td><input class="form-control" style="width:120px;" type="text"  name="newsmtp[from][]" class="txt"></td>';
+                      html += ' <td ><input class="form-control" style="width:100px;" type="text"  name="newsmtp[auth_username][]" class="txt"></td>';
+                      html += ' <td><input class="form-control" style="width:100px;" type="text"  name="newsmtp[auth_password][]" class="txt"></td>';
+                  }
+                  html += '</tr>';
+                  jQuery(obj).parent().parent().before(html);
+              }
+            </script>
+            <!--文件夹权限设置-->
+            <!--{elseif $operation=='access'}-->
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="access" name="operation">
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang allow_new_user_registration}</label>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="settingnew[regstatus]" class="form-check-input" name="settingnew[regstatus]" value="1" <!--{if $setting[regstatus]>0}-->checked="checked"<!--{/if}-->>
+                    <label class="form-check-label" for="settingnew[regstatus]">{lang open_enrollment}</label>
+                  </div>
+                  <span class="form-text">{lang open_enrollment_text}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="settingnew[reglinkname]">{lang register_link_text}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="settingnew[reglinkname]" value="$setting[reglinkname]">
+                  <span class="form-text">{lang register_link_text_text}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="settingnew[pwlength]">{lang password_min_length}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="settingnew[pwlength]" value="$setting[pwlength]">
+                  <span class="form-text">{lang password_min_length_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang mandatory_password_complexity}</label>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="strongpw1" name="settingnew[strongpw][]" value="1" <!--{if in_array(1,$setting[strongpw])}-->checked="chcked"<!--{/if}-->>
+                    <label class="form-check-label" for="strongpw1">{lang strongpw_1}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="strongpw2" name="settingnew[strongpw][]" value="2" <!--{if in_array(2,$setting[strongpw])}-->checked="chcked"<!--{/if}-->>
+                    <label class="form-check-label" for="strongpw2">{lang strongpw_2}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="strongpw3" name="settingnew[strongpw][]" value="3" <!--{if in_array(3,$setting[strongpw])}-->checked="chcked"<!--{/if}-->>
+                    <label class="form-check-label" for="strongpw3">{lang strongpw_3}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="strongpw4" name="settingnew[strongpw][]" value="4" <!--{if in_array(4,$setting[strongpw])}-->checked="chcked"<!--{/if}-->>
+                    <label class="form-check-label" for="strongpw4">{lang strongpw_4}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">欢迎信息标题</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="settingnew[welcomemsgtitle]" value="$setting[welcomemsgtitle]">
+                  <span class="form-text">系统发送的欢迎信息的标题，不支持 HTML，不超过 75 字节。</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                  <label class="col-sm-2" for="settingnew[welcomemsgtxt]">欢迎信息内容</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" type="texterea" name="settingnew[welcomemsgtxt]" rows="5">$setting[welcomemsgtxt]</textarea> 
+                    <span class="form-text">系统发送的欢迎信息的内容。标题内容均支持变量替换，可以使用如下变量:
+                      <li><code>{username}</code> : 用户名</li>
+                      <li><code>{time}</code> : 发送时间</li>
+                      <li><code>{sitename}</code>: 网站名称（显示在页面底部的联系方式处的名称）</li>
+                      <li><code>{bbname}</code> : 站点名称（显示在浏览器窗口标题等位置的名称）</li>
+                      <li><code>{adminemail}</code> : 管理员 Email</li>
+                      </span>
+                  </div>
+                </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang according_site_terms_service}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="bbrules1" name="settingnew[bbrules]" value="1" <!--{if $setting[bbrules]>0}-->checked<!--{/if}--> onclick="jQuery('#bbrules_more').show()">
+                    <label class="form-check-label" for="bbrules1">{lang yes}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="bbrules2" name="settingnew[bbrules]" value="0" <!--{if $setting[bbrules]<1}-->checked<!--{/if}--> onclick="jQuery('#bbrules_more').hide()">
+                    <label class="form-check-label" for="bbrules2">{lang no}</label>
+                  </div>
+                <span class="form-text">{lang registration_website_terms_service}</span>
+                </div>
+              </div>
+              <div id="bbrules_more" style="<!--{if $setting['bbrules']>0}-->display:block<!--{else}-->display:none<!--{/if}-->">
+                <div class="row mb-3">
+                <label class="col-sm-2">{lang terms_service_content}</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" type="texterea" name="settingnew[bbrulestxt]" rows="5">$setting[bbrulestxt]</textarea> 
+                  <span class="form-text">{lang details_sites_terms_service}</span>
+                </div>
+              </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit"  value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <!--文件夹权限设置--> 
+            <!--{elseif $operation == 'permgroup'}--> 
+            <!--{template lyear:perm_group}-->
+            <!--系统空间设置--> 
+            <!--{elseif $operation == 'space'}--> 
+            <script type="text/javascript">
+                try {
+                    var openarr = $openarr;
+                } catch (e) {
+                }
+                $.getScript('dzz/system/scripts/selorg.js?{VERHASH}', function () {
+                    selorg.openarr = openarr;
+                });
+            </script>
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash"/>
+              <input type="hidden" value="space" name="operation"/>
+              <div class="row mb-3">
+                <label for="systemSpace" class="col-sm-2">{lang setSystemSpace}</label>
+                <div class="col-sm-10">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="systemSpace" placeholder="0" name="settingnew[systemSpace]" value="$setting[systemSpace]">
+                    <span class="input-group-text">M</span>
+                  </div>
+                  <span class="form-text">{lang setSystemSpace_tip}</span>
+                </div>
+              </div>
+              <div id="user_space_set">
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang upload_permissions}</label>
+                  <div class="col-sm-10">
+                    <span class="form-text">{lang upload_permissions_text}</span>
+                  </div>
+                </div>
+                <!--{loop $usergroups $value}-->
+                <div class="row mb-3">
+                  <label class="col-sm-2">$value[grouptitle]</label>
+                  <div class="col-sm-10">
+                    <div class="input-group mb-3">
+                      <span class="input-group-text">{lang default_space}</span>
+                      <input type="text" class="form-control" id="maxspacesize{$value[groupid]}" name="group[{$value[groupid]}][maxspacesize]" value="$value[maxspacesize]">
+                      <span class="input-group-text">M</span>
+                    </div>
+                    <span class="form-text">{lang setting_main_default}</span>
+                  </div>
+                  <label class="col-sm-2"></label>
+                  <div class="col-sm-10">
+                    <div class="input-group mb-3">
+                      <span class="input-group-text">{lang file_size}</span>
+                      <input type="text" class="form-control" id="maxattachsize{$value[groupid]}" name="group[{$value[groupid]}][maxattachsize]" value="$value[maxattachsize]">
+                      <span class="input-group-text">M</span>
+                    </div>
+                    <span class="form-text">{lang setting_main_file_size}</span>
+                  </div>
+                  <label class="col-sm-2"></label>
+                  <div class="col-sm-10">
+                    <div class="input-group mb-3">
+                      <input class="js-tags-input form-control" type="text" id="upload_file_ext" name="group[{$value[groupid]}][attachextensions]" value="$value[attachextensions]">
+                      <span class="form-text">{lang setting_main_file_suffix}</span>
+                    </div>
+                  </div>
+                </div>
+                <!--{/loop}-->
+                <div class="row mb-3">
+                  <label for="orgmemorySpace" class="col-sm-2">{lang space_organization_set}</label>
+                  <div class="col-sm-10">
+                    <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="orgmemorySpace" placeholder="0" name="settingnew[orgmemorySpace]" value="$setting[orgmemorySpace]">
+                    <span class="input-group-text">M</span>
+                    </div>
+                    <span class="form-text">{lang space_organization_set_tip}</span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label for="groupmemorySpace" class="col-sm-2">{lang space_group_set}</label>
+                  <div class="col-sm-10">
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" id="groupmemorySpace" placeholder="0" name="settingnew[groupmemorySpace]" value="$setting[groupmemorySpace]">
+                      <span class="input-group-text">M</span>
+                    </div>
+                    <span class="form-text">{lang space_group_set_tip}</span>
+                  </div>
+                  </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <link rel="stylesheet" type="text/css" href="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css">
+            <script type="text/javascript" src="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.js"></script>
+            <!--{elseif $operation=='smiley'}-->
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="smiley" name="operation">
+              <div class="row mb-3">
+                <label class="col-sm-2" for="settingnewsmthumb">{lang wide_high_expression_images}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="settingnew[smthumb]" value="$setting[smthumb]" id="settingnewsmthumb">
+                  <span class="form-text">{lang wide_high_expression_images_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="settingnewsmcols">{lang expression_list}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="settingnew[smcols]" value="$setting[smcols]" id="settingnewsmcols">
+                  <span class="form-text">{lang expression_list_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="settingnewsmrows">{lang expression_line}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="settingnew[smrows]" value="$setting[smrows]" id="settingnewsmrows">
+                  <span class="form-text">{lang expression_line_state}</span>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input class="btn btn-primary" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <!--{elseif $operation=='datetime'}-->
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="datetime" name="operation">
+              <div class="row mb-3">
+                <label class="col-sm-2" for="settingnewdateformat">{lang default_date_format}</label>
+                <div class="col-sm-10">
+                  <input type="text" name="settingnew[dateformat]" class="form-control" value="$setting[dateformat]" id="settingnewdateformat">
+                  <span class="form-text">{lang default_date_format_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang default_time_format}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="timeformat1" name="settingnew[timeformat]" value="24" $checktimeformat[24]/>
+                    <label class="form-check-label" for="timeformat1">24 {lang hourly}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="timeformat2" name="settingnew[timeformat]" value="12" $checktimeformat[12]/>
+                    <label class="form-check-label" for="timeformat2">12 {lang hourly}</label>
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang human_time_format}</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="dateconvert1" name="settingnew[dateconvert]" value="1" <!--{if $setting[dateconvert]>0}-->checked<!--{/if}-->/>
+                    <label class="form-check-label" for="dateconvert1">{lang yes}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="dateconvert2" name="settingnew[dateconvert]" value="0" <!--{if $setting[dateconvert]<1}-->checked<!--{/if}-->/>
+                    <label class="form-check-label" for="dateconvert2">{lang no}</label>
+                  </div>
+                  <span class="form-text">{lang human_time_format_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang default_time_bad}</label>
+                <div class="col-sm-10">
+                  <select onchange="if(this.value !== '')document.getElementById('settingnew[timeoffset]').value=this.value;" name="global_timeoffset" class="form-select">
+                    <!--{loop $timezones $key $value}--> 
+                    <option value="$key" <!--{if $key==$setting[timeoffset]}-->selected="selected" 
+                    <!--{/if}-->>{eval echo cutstr($value, 40, '..')}
+                    </option>
+                    <!--{/loop}-->
+                  </select>
+                  <span class="form-text">{lang default_time_bad_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2"></label>
+                <div class="col-sm-10">
+                  <input type="text" name="settingnew[timeoffset]" class="form-control" value="$setting[timeoffset]" id="settingnew[timeoffset]">
+                  <span class="form-text">{lang default_time_bad_state}</span>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input class="btn btn-primary" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl>
+            </form>
+            <!--{elseif $operation=='sec'}-->
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang board_message}</label>
+              <div class="col-sm-10">
+                <ul class="form-text">
+                  {lang setting_mainboard_message_state}
+                </ul>
+              </div>
+            </div>
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="sec" name="operation">
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang enable_authentication_code}</label>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" name="settingnew[seccodestatus][1]" <!--{if $seccodestatus[1]>0}-->checked<!--{/if}--> id="seccodestatus1">
+                    <label class="form-check-label" for="seccodestatus1">{lang new_user_register}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" name="settingnew[seccodestatus][2]" <!--{if $seccodestatus[2]>0}-->checked<!--{/if}--> id="seccodestatus2">
+                    <label class="form-check-label" for="seccodestatus2">{lang login_member}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" name="settingnew[seccodestatus][3]" <!--{if $seccodestatus[3]>0}-->checked<!--{/if}--> id="seccodestatus3">
+                    <label class="form-check-label" for="seccodestatus3">{lang edit_password}</label>
+                  </div>
+                  <span class="form-text">{lang edit_password_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang verification_code_type}</label>
+                <div class="col-sm-10">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" id="mailsend1" onclick="document.getElementById('seccodeimageext').style.display = '';document.getElementById('seccodeimagewh').style.display = '';" <!--{if $setting[seccodedata][type]<1}-->checked<!--{/if}--> value="0"  name="settingnew[seccodedata][type]">
+                    <label class="form-check-label" for="mailsend1">{lang verification_code_type1}</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" id="mailsend2" onclick="document.getElementById('seccodeimageext').style.display = 'none';document.getElementById('seccodeimagewh').style.display = 'none';" <!--{if $setting[seccodedata][type]==99}-->checked<!--{/if}--> value="99" name="settingnew[seccodedata][type]">
+                    <label class="form-check-label" for="mailsend2">{lang verification_code_type5}</label>
+                  </div>
+                  <span class="form-text">{lang verification_code_type_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang captcha_preview}</label>
+                <div class="col-sm-10">
+                  <!--{template lyear:seccheck}--> 
+                </div>
+              </div>
+              <div id="seccodeimagewh"<!--{if $setting[seccodedata][type]<3}--> style="display:block"<!--{else}--> style="display:none" <!--{/if}-->>
+                <div class="row mb-3">
+                  <label class="col-sm-2" for="settingnew[seccodedata][width]">{lang captcha_img_width}</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" value="$setting[seccodedata][width]" name="settingnew[seccodedata][width]" id="settingnew[seccodedata][width]">
+                    <span class="form-text">{lang captcha_img_width_state}</span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2" for="settingnew[seccodedata][height]">{lang captcha_img_height}</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" value="$setting[seccodedata][height]" name="settingnew[seccodedata][height]" id="settingnew[seccodedata][height]">
+                    <span class="form-text">{lang captcha_img_height_state}</span>
+                  </div>
+                </div>
+                <div id="seccodeimageext" <!--{if $setting[seccodedata][type]<2}-->style="display:block" 
+                <!--{else}-->style="display:none" 
+                <!--{/if}-->>
+                <div class="row mb-3">
+                  <label class="col-sm-2" for="settingnew[seccodedata][scatter]">{lang images_break_up}</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" value="$setting[seccodedata][scatter]" name="settingnew[seccodedata][scatter]" id="settingnew[seccodedata][scatter]">
+                    <span class="form-text">{lang images_break_up_state}</span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang random_background_graphics}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedatabackground1" <!--{if $setting[seccodedata][background]>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][background]">
+                      <label class="form-check-label" for="seccodedatabackground1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedatabackground2" <!--{if $setting[seccodedata][background]<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][background]">
+                      <label class="form-check-label" for="seccodedatabackground2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                      {lang random_image_background_state}
+                    </ul>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang random_background_graphics}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedataadulterate1" <!--{if $setting[seccodedata][adulterate]>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][adulterate]">
+                      <label class="form-check-label" for="seccodedataadulterate1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedataadulterate2" <!--{if $setting[seccodedata][adulterate]<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][adulterate]">
+                      <label class="form-check-label" for="seccodedataadulterate2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                      {lang random_background_graphics_state}
+                    </ul>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang rabdom_ttf_font}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedatattf1" <!--{if $setting[seccodedata][ttf]>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][ttf]">
+                      <label class="form-check-label" for="seccodedatattf1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedatattf2" <!--{if $setting[seccodedata][ttf]<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][ttf]">
+                      <label class="form-check-label" for="seccodedatattf2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                      {lang rabdom_ttf_font_state}
+                    </ul>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang rabdom_inclination}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedataangle1" <!--{if $setting[seccodedata][angle]>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][angle]">
+                      <label class="form-check-label" for="seccodedataangle1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedataangle2" <!--{if $setting[seccodedata][angle]<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][angle]">
+                      <label class="form-check-label" for="seccodedataangle2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                      {lang rabdom_inclination_state}
+                    </ul>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang rabdom_tortuosity}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedawarping1" <!--{if $setting[seccodedata][warping]>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][warping]">
+                      <label class="form-check-label" for="seccodedawarping1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedawarping2" <!--{if $setting[seccodedata][warping]<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][warping]">
+                      <label class="form-check-label" for="seccodedawarping2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                      {lang rabdom_tortuosity_state}
+                    </ul>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang rabdom_color}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedacolor1" <!--{if $setting[seccodedata][color]>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][color]">
+                      <label class="form-check-label" for="seccodedacolor1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedacolor2" <!--{if $setting[seccodedata][color]<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][color]">
+                      <label class="form-check-label" for="seccodedacolor2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                      {lang rabdom_color_state}
+                    </ul>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang rabdom_size}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedasize1" <!--{if $setting['seccodedata']['size']>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][size]">
+                      <label class="form-check-label" for="seccodedasize1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedasize2" <!--{if $setting['seccodedata']['size']<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][size]">
+                      <label class="form-check-label" for="seccodedasize2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                      {lang rabdom_size_state}
+                    </ul>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang text_shadow}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedashadow1" <!--{if $setting[seccodedata][shadow]>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][shadow]">
+                      <label class="form-check-label" for="seccodedashadow1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedashadow2" <!--{if $setting[seccodedata][shadow]<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][shadow]">
+                      <label class="form-check-label" for="seccodedashadow2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                    {lang text_shadow_state}
+                  </ul>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">{lang gif_animation}</label>
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedashadow1" <!--{if $setting[seccodedata][animator]>0}-->checked<!--{/if}--> value="1" name="settingnew[seccodedata][animator]">
+                      <label class="form-check-label" for="seccodedashadow1">{lang yes}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="seccodedashadow2" <!--{if $setting[seccodedata][animator]<1}-->checked<!--{/if}--> value="0" name="settingnew[seccodedata][animator]">
+                      <label class="form-check-label" for="seccodedashadow2">{lang no}</label>
+                    </div>
+                    <ul class="form-text">
+                      {lang gif_animation_state}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <dl class="mb-3 d-grid">
+              <input class="btn btn-primary" name="settingsubmit" value="{lang save_changes}" type="submit">
+            </dl>
+            </form>
+            <style>
+            .signin-form .has-feedback {
+                position: relative;
+            }
+            .signin-form .has-feedback .form-control {
+                padding-left: 36px;
+            }
+            .signin-form .has-feedback .mdi {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: auto;
+                width: 36px;
+                height: 36px;
+                line-height: 36px;
+                z-index: 4;
+                color: #dcdcdc;
+                display: block;
+                text-align: center;
+                pointer-events: none;
+            }
+            </style>
+            <!--{elseif $operation=='censor'}-->
+            <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+              <input type="hidden" value="{FORMHASH}" name="formhash">
+              <input type="hidden" value="censor" name="operation">
+              <div class="row mb-3">
+                <label class="col-sm-2" for="replace">{lang words_to_replace}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" name="replace" value="$replace" id="replace"/>
+                  <span class="form-text">{lang words_to_replace_state}</span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2" for="badwords">{lang need_words_to_replace}</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" name="badwords" rows="1" style="width:100%" id="badwords"/>$badwords</textarea>
+                  <span class="form-text">{lang need_words_to_replace_state}</span>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input class="btn btn-primary" name="settingsubmit" value="{lang save_changes}" type="submit">
+              </dl> 
+            </form>
+            <!--{/if}--> 
+        </div>
+      </div>
+    </div>
+</main>
+<!--{template lyear:footer_simple}-->

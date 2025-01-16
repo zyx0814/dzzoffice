@@ -13,6 +13,7 @@ $lang = array
     'app_name'=>'通知中心',
     'app_notice'=>'通知',
     'noapp_notice'=>'还没有通知',
+	'noapp_app'=>'还没有应用',
     'lookallapp_notice'=>'查看所有通知',
     'all_app'=>'全部',
     'noappall_notice'=>'没有相关的通知',

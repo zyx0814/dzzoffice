@@ -13,7 +13,7 @@ Hook::listen('email_chk',$_GET);
 $navtitle=lang('myCountCenter');
 Hook::listen('check_login');
 
-$do=trim($_GET['do']) ? trim($_GET['do']):'editpass';
+$do=isset($_GET['do']) ? trim($_GET['do']):'editpass';
 
 $uid=intval($_G['uid']); 
 $seccodecheck = $_G['setting']['seccodestatus'] & 4; 
@@ -22,7 +22,7 @@ $member=C::t('user_profile')->get_userprofile_by_uid($_G['uid']);
 //$openid= C::t('user_qqconnect')->fetch_bindstatus_by_uid($uid);
 
 if($do == 'editpass'){
-
+	$navtitle=lang('password_edit');
     $strongpw = ($_G['setting']['strongpw']) ? json_encode($_G['setting']['strongpw']):'';
     if(isset($_GET['editpass'])){
 
@@ -91,6 +91,7 @@ if($do == 'editpass'){
     }
 
 }elseif($do == 'login'){
+	$navtitle='登录记录';
 	function get_log_files($logdir = '', $action = 'action') {
 		$dir = opendir($logdir);
 		$files = array();
@@ -202,7 +203,7 @@ if($do == 'editpass'){
 	$jj=0;
 	if( $last_secondlog ){
 		for($i=$last_secondlog["start"];$i<$last_secondlog["end"];$i++){
-			if( ($jj)>= ($lpp-$onecountget)  ){//$last_secondlog["start"] ){ 
+			if( ($jj)>= ($lpp-$onecountget)  ){
 				break;
 			}
 			$jj++;
@@ -235,6 +236,7 @@ if($do == 'editpass'){
 	}
 	$multi = multi($count, $lpp, $page, $theurl,'pull-right');
 }elseif($do == 'changeemail'){
+	$navtitle=lang('bindemail_subject');
 
     $emailchange = $member['emailstatus'];
 

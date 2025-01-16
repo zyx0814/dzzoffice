@@ -1,0 +1,106 @@
+<div class="dynconMenu" id="dynconMenu">
+    <div class="just-now" id="just-now"></div>
+    <div class="toadyTime">
+        <!--{template template_dynamic_list}-->
+    </div>
+</div>
+
+<script type="text/javascript" reload="1">
+    //滚动条滚动，头部加阴影
+    $('.right-messagetable').scroll(function () {
+        if ($(this).scrollTop() > 0) {
+            $('.briefMenu').css({'box-shadow': '0px 0px 10px 0px rgba(0,0,0,0.15)'});
+        } else {
+            $('.briefMenu').css({'box-shadow': 'none'});
+        }
+    })
+
+
+    jQuery(document).ready(function (e) {
+        jcLoader().load({
+            type: 'js',
+            ids: 'js_textareaexplander',
+            url: 'static/js/jquery.textareaexplander.js?{VERHASH}'
+        }, function () {
+            jQuery('#leave_message').TextAreaExpander(32, 300);
+        });
+        jcLoader().load({
+            type: 'js',
+            ids: 'js_smilies',
+            url: 'static/js/smilies.js?{VERHASH}'
+        }, function () {
+            smilies_show('leave_message_sml_div', '{$_G[setting][smcols]}', 'leave_message');
+        });
+        _explorer.Scroll();
+        jQuery('#leave_message').off("input.commet propertychange.comment").on("input.comment propertychange.comment", function (e) {
+            var el = jQuery(this);
+            var msg = el.val();
+            var disbutton = el.closest('.comment-area').find('button');
+            if (msg.length <= 0) {
+                disbutton.addClass("disabled");
+                disbutton.css({'color': 'rgba(55,121,255,0.3)'});
+            } else {
+                disbutton.removeClass("disabled");
+                disbutton.css({'color': 'rgba(55,121,255,1)'});
+            }
+        });
+        jQuery('#leave_message').focus(function () {
+            var el = jQuery(this);
+            var msg = el.val();
+            var disbutton = el.closest('.comment-area').find('button');
+            if (msg.length <= 0) {
+                disbutton.addClass("disabled");
+                disbutton.css({'color': 'rgba(55,121,255,0.3)'});
+            } else {
+                disbutton.removeClass("disabled");
+                disbutton.css({'color': 'rgba(55,121,255,1)'});
+            }
+        })
+
+    });
+
+    function comment_file(form) {
+
+        if ($('#leave_message').val().length < 1) {
+            $('#leave_message').focus();
+            return false;
+        }
+        $.post(form.action, jQuery(form).serialize(), function (data) {
+            if (data['success']) {
+                if (data['return']['headerColor']) {
+                    var usericon = ' <span  class="Topcarousel" style="margin-top:8px; background:' + data['return']['headerColor'] + '">' +
+                        ' <span title="$eventval['username']" >' + data['return']['userfirst'] + '</span> </span>';
+                } else {
+
+                    var usericon = '<img src="avatar.php?uid=' + data['return']['uid'] + '" class="img-circle avatar" style="width: 25px;height: 25px;">';
+                }
+                var html = '';
+                html += '<div class="dynameic-comment">';
+                html += '<div class="toadysmalltime">';
+                html += '<span class="dynameic-times">' + data['return']['dateline'] + '</span>';
+                html += '</div>';
+                html += '<div class="toadycon">';
+                html += usericon;
+                html += '<p class="activity-content">'
+                html += '<span class="activity-name">' + data['return']['username'] + '</span>';
+                html += '<span>' + data['return']['msg'] + '</span>';
+                html += '<span class="delete-comment dzz dzz-delete" data-commentid="' + data['return']['commentid'] + '"></span>'
+                html += '</p>';
+                html += '</div> ';
+                html += '</div>';
+                $('#just-now').prepend(html);
+                $('.scroll-y').animate({scrollTop: '0px'}, 200);
+                var Now = $('#just-now').children();
+                if (Now.length < 1) {
+                    $('#just-now').css('margin-bottom', '0px');
+                } else {
+                    $('#just-now').css('margin-bottom', '10px');
+                }
+            }
+            $('#leave_message').val('').trigger('input');
+        }, 'json');
+        return false;
+    }
+
+
+</script>

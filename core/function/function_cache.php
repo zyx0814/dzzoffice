@@ -54,13 +54,13 @@ function updatecache($cachename = '') {
 				try{
 					@include_once DZZ_ROOT.'./dzz/'.$entrys[0].'/cache/cache_'.$entrys[1].'.php';
 					if(function_exists('build_cache_'.$entrys[0].'_'.$entrys[1])) call_user_func('build_cache_'.$entrys[0].'_'.$entrys[1]);
-					elseif(function_exists('build_cache_app_'.$entryr[1]))  call_user_func('build_cache_app_'.$entrys[1]);
+					elseif(function_exists('build_cache_app_'.$entrys[1]))  call_user_func('build_cache_app_'.$entrys[1]);
 				}catch(Exception $e){continue;}
 			}elseif(count($entrys)==3){
 				try{
 					@include_once DZZ_ROOT.'./'.$entrys[0].'/'.$entrys[1].'/cache/cache_'.$entrys[2].'.php';
 					if(function_exists('build_cache_'.$entrys[1].'_'.$entrys[2])) call_user_func('build_cache_'.$entrys[1].'_'.$entrys[2]);
-					elseif(function_exists('build_cache_app_'.$entryr[1]))  call_user_func('build_cache_app_'.$entrys[1]);
+					elseif(function_exists('build_cache_app_'.$entrys[1]))  call_user_func('build_cache_app_'.$entrys[1]);
 				}catch(Exception $e){continue;}
 			} else {//插件缓存
 				 

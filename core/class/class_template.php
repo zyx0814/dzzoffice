@@ -97,21 +97,41 @@ class template {
 	}
     //解析模板路径
     private function parse_tplfile($tplfile, $tpldir = '',$master_template = false,$nomasttplfile = false){
-        if(!$tpldir){
-            if( defined('CURSCRIPT') && defined('CURMODULE') && file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/'.CURMODULE.'/template/'.$tplfile.'.htm')){
-				$tpldir= './'.CURSCRIPT.'/'.CURMODULE.'/template/';
-				if($master_template)$this->tplkey=CURSCRIPT.'_'.str_replace('/','_',CURMODULE);
-			}elseif(defined('CURSCRIPT') && file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/template/'.$tplfile.'.htm')){
-				$tpldir= './'.CURSCRIPT.'/template/';
-				if($master_template)$this->tplkey=CURSCRIPT;
-			}elseif(file_exists (DZZ_ROOT.'./core/template/default/'.$tplfile.'.htm')){
-				$tpldir= './core/template/default/';
-				if($master_template)$this->tplkey='core';
-			}elseif(file_exists (DZZ_ROOT.'./core/template/default/common/'.$tplfile.'.htm')){
-				$tpldir= './core/template/default/common/';
-				if($master_template)$this->tplkey='corecommon';
-		  	}
-        }
+		if ($tpldir) {
+			if (strpos($tpldir, '/') !== false) {
+				$tpldirkey = str_replace('/', '_', $tpldir);
+			}else{
+				$tpldirkey = $tpldir;
+            }
+		}
+		if($tpldir && defined('CURSCRIPT') && defined('CURMODULE') && file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/'.CURMODULE.'/template/'.$tpldir.'/'.$tplfile.'.htm')){
+			$tpldir= './'.CURSCRIPT.'/'.CURMODULE.'/template/'.$tpldir.'/';
+			if($master_template)$this->tplkey=CURSCRIPT.'_'.str_replace('/','_',CURMODULE).'_'.$tpldirkey;
+		}elseif(defined('CURSCRIPT') && defined('CURMODULE') && file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/'.CURMODULE.'/template/'.$tplfile.'.htm')){
+			$tpldir= './'.CURSCRIPT.'/'.CURMODULE.'/template/';
+			if($master_template)$this->tplkey=CURSCRIPT.'_'.str_replace('/','_',CURMODULE);
+		}elseif($tpldir && defined('CURSCRIPT') && file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/template/'.$tpldir.'/'.$tplfile.'.htm')){
+			$tpldir= './'.CURSCRIPT.'/template/'.$tpldir.'/';
+			if($master_template)$this->tplkey=CURSCRIPT.'_'.$tpldirkey;
+		}elseif(defined('CURSCRIPT') && file_exists (DZZ_ROOT.'./'.CURSCRIPT.'/template/'.$tplfile.'.htm')){
+			$tpldir= './'.CURSCRIPT.'/template/';
+			if($master_template)$this->tplkey=CURSCRIPT;
+		}elseif($tpldir && file_exists (DZZ_ROOT.'./core/template/'.$tpldir.'/'.$tplfile.'.htm')){
+			$tpldir= './core/template/'.$tpldir.'/';
+			if($master_template)$this->tplkey='core'.'_'.$tpldirkey;
+		}elseif($tpldir && file_exists (DZZ_ROOT.'./core/template/'.$tpldir.'/common/'.$tplfile.'.htm')){
+			$tpldir= './core/template/'.$tpldir.'/common/';
+			if($master_template)$this->tplkey='corecommon'.'_'.$tpldirkey;
+		}elseif(file_exists (DZZ_ROOT.'./core/template/'.$tplfile.'.htm')){
+			$tpldir= './core/template/';
+			if($master_template)$this->tplkey='core';
+		}elseif(file_exists (DZZ_ROOT.'./core/template/default/'.$tplfile.'.htm')){
+			$tpldir= './core/template/default/';
+			if($master_template)$this->tplkey='core';
+		}elseif(file_exists (DZZ_ROOT.'./core/template/default/common/'.$tplfile.'.htm')){
+			$tpldir= './core/template/default/common/';
+			if($master_template)$this->tplkey='corecommon';
+		}
         $file = $tplfile;
         $tplfile = $tpldir.$tplfile.'.htm';
         $basefile = basename(DZZ_ROOT . $tplfile, '.htm');
@@ -134,7 +154,13 @@ class template {
     }
 	//读取模板内容
 	private function parse_template_include($tpl){
-        $template = $this->parse_tplfile($tpl,'',false,true);
+		global $_G;
+		if(strpos($tpl, ':') !== false) {
+			list($templateid, $tpl) = explode(':', $tpl);
+			$tpldir = $templateid;
+			$tpl = $tpl;
+		}
+        $template = $this->parse_tplfile($tpl,$tpldir,false,true);
         $this->includeTemplate[$template] = filemtime($template);
         if(!is_file($template) || !$fp = fopen($template, 'r')){
             return;
@@ -147,9 +173,7 @@ class template {
 		$template = str_replace('self.$', 'self.＄', $template);
 		$var_regexp = "((?!\\\$[a-zA-Z]+\()(\\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*(\-\>)?[a-zA-Z0-9_\x7f-\xff]*)(\[[a-zA-Z0-9_\-\.\"\'\[\]\$\x7f-\xff]+\])*)";
 		$const_regexp = "([A-Z_\x7f-\xff][A-Z0-9_\x7f-\xff]*)";
-
 		$template = preg_replace("/([\n\r]+)\t+/s", "\\1", $template);
-
 		$template = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}", $template);
 //	    js的lang替换
 		$template = preg_replace_callback("/<script[^>]+?src=\"(.+?)\".*?>[\s\S]*?/is", array($this, 'parse_template_callback_javascript'), $template);
@@ -178,9 +202,7 @@ class template {
         $template = preg_replace_callback("/[\n\r\t]*\{Hook\s+([\w]+)\#(.+?)\#\}[\n\r\t]*/is", array($this, 'parse_template_callback_hook_1'), $template);//钩子解析,传参形式
 		$template = preg_replace_callback("/$var_regexp/s", array($this, 'parse_template_callback_addquote_1'), $template);
 		$template = preg_replace_callback("/\<\?\=\<\?\=$var_regexp\?\>\?\>/s", array($this, 'parse_template_callback_addquote_1'), $template);
-
 		$template = preg_replace_callback("/[\n\r\t]*\{echo\s+(.+?)\}[\n\r\t]*/is", array($this, 'parse_template_callback_stripvtags_echo1'), $template);
-
 		$template = preg_replace_callback("/([\n\r\t]*)\{if\s+(.+?)\}([\n\r\t]*)/is", array($this, 'parse_template_callback_stripvtags_if123'), $template);
 		$template = preg_replace_callback("/([\n\r\t]*)\{elseif\s+(.+?)\}([\n\r\t]*)/is", array($this, 'parse_template_callback_stripvtags_elseif123'), $template);
 		$template = preg_replace("/\{else\}/i", "<? } else { ?>", $template);
@@ -188,13 +210,11 @@ class template {
 		$template = preg_replace_callback("/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\}[\n\r\t]*/is", array($this, 'parse_template_callback_stripvtags_loop12'), $template);
 		$template = preg_replace_callback("/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}[\n\r\t]*/is", array($this, 'parse_template_callback_stripvtags_loop123'), $template);
 		$template = preg_replace("/\{\/loop\}/i", "<? } ?>", $template);
-
 		$template = preg_replace("/\{$const_regexp\}/s", "<?=\\1?>", $template);
 		if (!empty($this -> replacecode)) {
 			$template = str_replace($this -> replacecode['search'], $this -> replacecode['replace'], $template);
 		}
 		$template = preg_replace("/ \?\>[\n\r]*\<\? /s", " ", $template);
-
 		$template = preg_replace_callback("/\"(http)?[\w\.\/:]+\?[^\"]+?&[^\"]+?\"/", array($this, 'parse_template_callback_transamp_0'), $template);
 		$template = preg_replace_callback("/\<script[^\>]*?src=\"(.+?)\"(.*?)\>\s*\<\/script\>/is", array($this, 'parse_template_callback_stripscriptamp_12'), $template);
 		$template = preg_replace_callback("/[\n\r\t]*\{block\s+([a-zA-Z0-9_\[\]]+)\}(.+?)\{\/block\}/is", array($this, 'parse_template_callback_stripblock_12'), $template);
@@ -275,7 +295,7 @@ class template {
 
 
 	function parse_template_callback_hooktags_13($matches) {
-		return $this -> hooktags($matches[1], $matches[3]);
+		return $this->hooktags($matches[1], isset($matches[3]) ? $matches[3] : '');
 	}
 
 	function parse_template_callback_addquote_1($matches) {
@@ -396,10 +416,10 @@ class template {
 		if (!isset($langvar[$var])) {
 			$this -> language['inner'] = lang();
 		}
-		if (isset($langvar[$var])) {
+		if(isset($langvar[$var])) {
 			return $langvar[$var];
 		} else {
-			return $var ;
+			return $var;
 		}
 	}
 //	模版lang替换
@@ -549,7 +569,6 @@ class template {
 		}
 		return;
 	}
-
 	function transamp($str) {
 		$str = str_replace('&', '&amp;', $str);
 		$str = str_replace('&amp;amp;', '&amp;', $str);

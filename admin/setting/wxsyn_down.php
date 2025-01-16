@@ -12,8 +12,8 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 require_once libfile('function/user', '', 'user');
 include_once libfile('function/organization');
 $navtitle = lang('data_synchronization');
-$do = $_GET['do'];
-$op = $_GET['op']?$_GET['op']:' ';
+$do = isset($_GET['do']) ? $_GET['do'] : '';
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 if (submitcheck('synsubmit')) {
 
 }

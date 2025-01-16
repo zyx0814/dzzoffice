@@ -1,0 +1,68 @@
+<!--{if $applist_1}-->
+<!--{if $operation=='app'}-->
+<div class="popover-body">
+    <div id="app_context">
+        <ul class="list-inline app_popup nav nav-stacked nav-pills" id="app_popup">
+        <!--{loop $applist_1 $key $value}-->
+        {eval if($key>11) continue;}
+        <li class="list-inline-item nav-item">
+            <a class="app-popup-li nav-link" href="$value['url']" title="$value[appname]" <!--{if $value['open']}-->target="_blank"<!--{/if}-->>
+            <span class="app-popup-li-appico">
+                <img src="$value[appico]">
+            </span>
+            <span class="app-popup-li-appname">
+                $value[appname]
+            </span>
+            </a></li>
+            <!--{/loop}-->
+        </ul>
+        <ul id="app_popup1" class="list-inline app_popup nav nav-stacked nav-pills" style="display: none;border-top:1px solid #EBEBEB;">
+        <!--{eval for($i=12;$i<count($applist_1);$i++){}-->
+        {eval $value=$applist_1[$i];}
+        <li class="list-inline-item nav-item">
+            <a class="app-popup-li nav-link" href="$value['url']" title="$value[appname]" <!--{if $value['open']}-->target="_blank"<!--{/if}-->>
+            <span class="app-popup-li-appico">
+                <img src="$value[appico]">
+            </span>
+            <span class="app-popup-li-appname">
+                $value[appname]
+            </span>
+            </a>
+        </li>
+        <!--{eval }}-->
+        </ul>
+        <a class="btn btn-primary app-more <!--{if count($applist_1)<=12}-->hide<!--{/if}-->" href="javascript:;">{lang More applications}</a>
+    </div>
+</div>
+  <script type="text/javascript" reload="1">
+  jQuery('#app_context').off().on("mousewheel DOMMouseScroll", function (e) {
+      var delta = (e.originalEvent.wheelDelta && (e.originalEvent.wheelDelta > 0 ? 1 : -1)) ||  // chrome & ie
+                  (e.originalEvent.detail && (e.originalEvent.detail > 0 ? -1 : 1));              // firefox   
+      if(jQuery('#app_popup1').find('li').length){
+          if (delta > 0) {
+              // 向上滚
+              if(jQuery('#app_context').scrollTop() < 150){
+                  jQuery('#app_popup1').hide();
+                      jQuery('#app_context .app-more').removeClass('hide');
+              }
+          } else if (delta < 0) {
+              // 向下滚
+              jQuery('#app_popup1').show();
+              jQuery('#app_context .app-more').addClass('hide');
+          }
+      }
+  
+  });
+  jQuery('#app_context .app-more').off('click.app-more').on('click.app-more',function(){
+      jQuery('#app_popup1').show();
+      jQuery('#app_context .app-more').addClass('hide');
+      return false;
+  }) 
+  </script>
+<!--{eval output();}-->
+<!--{/if}-->
+<!--{else}-->
+<div class="alert alert-primary">
+    {lang noapp_app}
+  </div>
+<!--{/if}-->

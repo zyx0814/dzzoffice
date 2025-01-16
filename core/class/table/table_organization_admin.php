@@ -19,7 +19,7 @@ class table_organization_admin extends dzz_table
 		
 		parent::__construct();
 	}
-	public function insert($uid, $orgid,$admintype = 1) {
+	public function insert($uid, $orgid = false,$admintype = 1,$silent = false) {
 		if(!$uid || !$orgid) return 0;
 		if(!C::t('organization_user')->fetch_num_by_orgid_uid($orgid,$uid)){
             $ret = C::t('organization_user')->insert_by_orgid($orgid,$uid);

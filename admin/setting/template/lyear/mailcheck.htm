@@ -1,0 +1,40 @@
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-body">
+				<ul class="nav nav-pills">
+					<li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=mail">{lang set}</a> </li>
+					<li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&op=mailcheck">{lang setting_mail_check}</a> </li>
+				</ul>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body container">
+				<form id="cpform" action="{MOD_URL}&op=mailcheck" class="form-horizontal" autocomplete="off" method="post" name="cpform" target="mailcheckiframe">
+					<input type="hidden" value="{FORMHASH}" name="formhash">
+					<input type="hidden" value="true" name="mailchecksubmit">
+					<div class="row mb-3">
+						<label class="col-sm-2" for="sitename">{lang setting_mail_check_test_from}</label>
+						<div class="col-sm-10">
+						<input class="form-control" type="text" id="sitename" required nname="test_from" autocomplete="off" value="">
+						</div>
+					</div>
+							<div class="row mb-3">
+						<label class="col-sm-2" for="metakeywords">{lang setting_mail_check_test_to}</label>
+						<div class="col-sm-10">
+						<textarea type="textarea" class="form-control" id="metakeywords" name="test_to" autocomplete="off"></textarea>
+						<span class="form-text">{lang setting_mail_check_test_to_comment}</span>
+						</div>
+					</div>
+					<dl class="mb-3 d-grid">
+						<input class="btn btn-primary btn-round bodyloading" id="submit_mailchecksubmit" name="mailchecksubmit" value="{lang setting_mail_check_submit}" type="submit">
+						<iframe style="display: none" name="mailcheckiframe"> </iframe>
+					</dl>
+				</form>
+			</div>
+		</div>
+	</div>
+</main>
+<!--{template lyear:footer_simple}-->

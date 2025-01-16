@@ -11,7 +11,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 $navtitle=lang('upgrade').' - '.lang('appname');
 include libfile('function/organization');
-$op=$_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 
 //获取所有标签top50；
 //$tags = DB::fetch_all("SELECT * FROM %t WHERE hot>0 ORDER BY HOT DESC limit 50", array('app_tag'),'appid');
@@ -24,7 +24,6 @@ $perpage = 20;
 $gets = array('mod' => 'appmarket', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group);
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $refer = urlencode($theurl . '&page=' . $page);
-
 $order = 'ORDER BY disp';
 $start = ($page - 1) * $perpage;
 $apps = array();

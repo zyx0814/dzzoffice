@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--{template mobile/mobile_header}-->
+    <title>分享详情</title>
+</head>
+<body>
+<!--列表开始-->
+<section class="weui-cells weui-cells__recent viewshare" data-href="$share['sharelink']">
+    <a class="weui-cell weui-cell_access" href="javascript:;">
+        <div class="weui-cell__hd"><img src="$share[img]" class="weui-cell__recentimg"></div>
+        <div class="weui-cell__bd">
+            <h4>$share[title]</h4>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</section>
+<!--列表结束-->
+<!--列表详情开始-->
+<section class="weui-form-preview weui-form-share__detail">
+    <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">到期时间</label>
+            <span class="weui-form-preview__value weui-form-preview__time"> $share['expireday']</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">分享时间</label>
+            <span class="weui-form-preview__value">{eval echo dgmdate($share['dateline'],'Y-m-d');}&nbsp;{eval echo dgmdate($share['dateline'],'H:i');}</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">分享次数</label>
+            <span class="weui-form-preview__value">{if $share[times]}$share[times]{else}无限{/if}</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">下载次数</label>
+            <span class="weui-form-preview__value">$share[downs]</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">查看次数</label>
+            <span class="weui-form-preview__value">$share[views]</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">设置密码</label>
+            <span class="weui-form-preview__value">{if $share['password']}已设置{else}无{/if}</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">分享地址</label>
+            <div class="weui-form-preview__value">
+	                <span class="weui-copy-text">
+	                	$share['sharelink']
+                        <input type="hidden" value="$share['sharelink']" class="copycontet"/>
+	                </span>
+            </div>
+        </div>
+        <button class="weui-form-button weui-btn weui-btn_default copy-text-coontent" data-clipboard-action="copy"
+                 data-clipboard-text="$share['sharelink']" onclick="sharCopy();">
+            复制分享地址
+        </button>
+    </div>
+</section>
+<!--列表详情结束-->
+<!--底部开始-->
+<footer class="weui-cell-footer">
+    <a href="javascript:;" class="weui-footer-item showqrcode" data-qrcode="$share[qrcode]"
+       data-url="$share['sharelink']">
+        <i class="dzz dzz-share"></i>
+        <p>分享</p>
+    </a>
+    <a href="javascript:;" class="weui-footer-item shareedit" data-sid="$share[id]">
+        <i class="dzz dzz-create"></i>
+        <p>编辑</p>
+    </a>
+    <a href="javascript:;" class="weui-footer-item weui-footer-share-link sharedelete" data-sid="$share[id]">
+        <i class="dzz dzz-delete"></i>
+        <p>删除</p>
+    </a>
+</footer>
+<!--底部结束-->
+</body>
+<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+<script type="text/javascript" src="static/clipboard/clipboard.min.js"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/mobile/appevent.js"></script>
+<script type="text/javascript">
+    $.toast.prototype.defaults.duration = 1000;
+    $(document).off('tap.viewshare').on('tap.viewshare', '.viewshare', function () {
+        window.location.href = $(this).data('href');
+    })
+    $(document).off('tap.shareedit').on('tap.shareedit', '.shareedit', function () {
+        var shareid = $(this).data('sid');
+        window.location.href = '{MOD_URL}&op=mobile&do=ajax&operation=share&edit=1&shareid=' + shareid;
+    })
+    //删除
+    $(document).off('tap.sharedelete').on('tap.sharedelete', '.sharedelete', function () {
+        var shareid = $(this).data('sid');
+        $.confirm({
+            title: '确认删除',
+            text: '你确定删除？',
+            onOK: function () {
+                $.post(MOD_URL + '&op=mobile&do=ajax&operation=delshare', {
+                    'id': shareid,
+                    k: Math.random()
+                }, function (data) {
+                    if (data['success']) {
+                        window.location.href = '{MOD_URL}&op=mobile&do=share';
+                    } else {
+                        $.toast('操作失败', "cancel");
+                    }
+                }, 'json')
+            }
+        });
+
+    })
+    $(document).off('tap.showpic').on('tap.showpic', '.showpic', function () {
+        window.location.href = $(this).data('href');
+    })
+
+    //分享页面复制链接
+    function sharCopy() {
+        var clipboard = new Clipboard('.weui-form-button');
+        clipboard.on('success', function () {
+            $.toast("复制成功");
+        });
+        if(!Clipboard.isSupported()){
+            var copytext = $('.weui-form-button').data('clipboard-text');
+            dd.biz.clipboardData.setData({
+                text: copytext, //要复制粘贴板的内容
+                onSuccess : function(result) {
+                    alert(result);
+                    $.toast("复制成功");
+                },
+                onFail : function() {
+                    $.toast("复制失败");
+                }
+            })
+        }
+    }
+    //分享按钮
+    function shareCode() {
+        jQuery.modal({
+            title: "",
+            text: "<button class='shareClose' onclick='closeShare()'><i class='dzz dzz-close '></i></button><p><img class='img-thumbnail qrcodeImg' src='" + MOD_PATH + "/img/mobile/loading.gif' alt=''></p><p class='shareInfo'>长按分享二维码</p>",
+            buttons: [
+                {
+                    text: "复制地址", className: "shareBtn1", onClick: function () {
+                    var client = new Clipboard('.shareBtn1');
+                    client.on('success', function (e) {
+                        jQuery.toptip('复制成功', 'success');
+                        jQuery.closePopup();
+                    })
+                    client.on('error', function (e) {
+                        jQuery.toptip('复制失败', 'error');
+                        jQuery.closePopup();
+                    })
+
+                }
+                },
+            ]
+        });
+        jQuery('.qrcodeImg').attr('src', '{$share[qrcode]}');
+        jQuery('.shareBtn1').attr('data-clipboard-text', '{$share['sharelink']}');//复制文本属性
+    }
+    jQuery(document).on('tap', '.showqrcode', function () {
+        shareCode();
+    });
+    function closeShare() {
+        jQuery.closeModal();
+        jQuery.closePopup();
+    }
+</script>
+<!--{hook footer_tpl}-->
+<!--{eval output();}-->
+</html>
+

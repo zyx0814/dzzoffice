@@ -5,7 +5,7 @@ use \core as C;
 
 class Apprun{
 
-    public  function run(){
+    public function run(){
 
         global $_config;
 

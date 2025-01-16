@@ -1,0 +1,65 @@
+<li class="itemfeed" id="comment_$value[cid]">
+	<a name="comment_$value[cid]"></a>
+	<div class="d-flex lyear-message-item">
+		<a href="user.php?uid=$value[authorid]" class="img-avatar-48" title="$value[author]" hidefocus="true" target="_blank">{eval echo avatar_block($value[authorid],'','img-avatar img-avatar-48');}</a>
+		<div class="flex-grow-1 ms-2">
+			<a href="user.php?uid=$value[authorid]" title="$value[author]" hidefocus="true" target="_blank"><strong>$value[author]</strong></a>
+			<div class="text-muted">$value[dateline] $value[xtllq] <!--{if $_G[adminid]==1}-->$value[ip]<!--{/if}-->
+				<span class="float-end">
+					<!--{if $_G['uid']==$value[authorid] || $_G[adminid]==1}-->
+					<a href="javascript:void(0);" class="dcolor" onclick="feed_delete('$value[cid]','comment_$value[cid]')"><i class="mdi mdi-delete"></i>&nbsp;{lang delete}</a>
+					<!--{/if}-->
+					<!--{if $_G['uid']>0}-->
+					<a href="javascript:void(0);" class="dcolor" onclick="getReplyForm('$value[cid]','0','$_GET[allowattach]','$_GET[allowat]','$_GET[allowsmiley]');"><i class="mdi mdi-reply"></i>&nbsp;{lang reply}</a>
+					<!--{/if}-->
+				</span>
+			</div>
+			<p>$value[message]</p>
+			<!--{if $value[attachs]}-->
+			<div class="row">
+				<!--{loop $value[attachs] $attach}-->
+				<div class="col-xs-12 col-sm-6 col-lg-4">
+					<div class="attachoffer">
+						<div class="ms-2 me-auto  p-2">
+							<div class="fw-bold">
+								<a class="img-avatar-48" hidefocus="true" href="javascript:;"><img src="$attach[img]" data-original="$attach[img]" alt="$attach[title]" class=""></a>$attach[title]<!--{if $attach['filesize']}--><span>($attach['filesize'])</span><!--{/if}-->
+							</div>
+							<div class="p-2">
+								<!--{if $attach[preview]>0}-->
+								<a href="javascript:void(0);" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_attach_preview('$attach[qid]')">{lang preview}</a>
+								<!--{/if}-->
+								<!--{if $attach['type']=='dzzdoc' || $attach['type']=='link'}-->
+								<!--{else}-->
+								<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_downAttach('$attach[qid]')">{lang download}<!--{if $attach[downloads]>0}-->($attach[downloads]{lang degree})<!--{/if}--></a>
+								<a href="javascript:void(0);" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>
+								<!--{/if}-->
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--{/loop}-->
+			</div>
+			<!--{/if}-->
+			<ul class="list-unstyled" id="comment_reply_{$value[cid]}">
+				<!--{if $value[replies]>0}-->
+				<!--{if $value[replies]>5}-->
+				<div class="txt_cfed">
+					<a class="" href="javascript:void(0);" hidefocus="true" cid="$value[cid]" title="">{lang total}<span class="num_cfed">$value[replies]</span>{lang a_reply}<i></i></a>
+				</div>
+				<!--{/if}-->
+				<div id="reply_list_$value[cid]">
+				<!--{loop $value[replys] $value1}-->
+				<!--{template lyear:lyear_reply_item}-->
+				<!--{/loop}-->
+				<script type="text/javascript" reload="1">
+					jQuery('#comment_$value[cid]').find('.txt_cfed a').on('click', function() {
+						ajaxget('{DZZSCRIPT}?mod=comment&op=ajax&do=getreplys&template=1&cid=$value[cid]&allowattach=$_GET[allowattach]&allowat=$_GET[allowat]&allowsmiley=$_GET[allowsmiley]', 'reply_list_$value[cid]', 'reply_list_$value[cid]');
+						return false;
+					});
+				</script>
+				</div>
+				<!--{/if}-->
+			</ul>
+		</div>
+	</div>
+  </li>

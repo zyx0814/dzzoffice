@@ -1,40 +1,41 @@
 <!--{template common/header_ajax}-->
 	
-	<div class="modal-header about-header <!--{if empty($about[sitelogo])}-->about-header-noborder<!--{/if}-->">
+	<div class="modal-header about-header <!--{if empty($about['logo'])}-->about-header-noborder<!--{/if}-->">
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			<span class="dzz dzz-close"></span>
 		</button>
-		<!--{if $about[sitelogo]}-->
+		<!--{if $about['logo']}-->
 		<h4 class="modal-title about-title">
-			<img class="img-sitelogo" src="$about[sitelogo]"><span class="sitename"><b>Dzz</b>Office</span>
-
+			<img class="img-sitelogo" src="$sitelogo"><span class="sitename"><b>Dzz</b>Office</span>
 		</h4>
 		<!--{/if}-->
 	</div>
 <div class="modal-body about-body">
         <p class="logo">
-       	  <img src="$about[logo]" />
+       	  <img src="<!--{if $about['logo']}-->$about['logo']<!--{else}-->$sitelogo<!--{/if}-->" />
 		</p>
    		<p class="name">
    		<!--{if $about['name_zh']}-->
 			<span class="name-zh">$about[name_zh]</span>
    		<!--{/if}-->
    		<!--{if $about['name_en']}-->
-			<span class="name-en"><b>Dzz</b>$about[name_en]</span>
+			<span class="name-en">$about[name_en]</span>
    		<!--{/if}-->
-   		
 		</p>
 		<div class="detail">
 			<!--{if $about['version']}-->
 			<p class="version">
-				<span class="guide">{lang about_current_version}:</span> {lang community_edition} $about[version]
+				<span class="guide">应用版本：</span> $about['version']
 			</p>
 			<!--{/if}-->
+			<p class="version">
+				<span class="guide">Dzz{lang version}：</span> {lang community_edition} $version
+			</p>
 			<p class="license">
-				<span class="guide">{lang license}:</span> <a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_blank">AGPL V3 {lang public_license}</a>
+				<span class="guide">{lang license}：</span> <a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_blank">AGPL V3 {lang public_license}</a>
 		  </p>
 			<p class="support">
-				<span class="guide">{lang service_and_support}:</span> <a href="http://www.dzzoffice.com" target="_blank">www.dzzoffice.com</a>
+				<span class="guide">{lang service_and_support}：</span> <a href="http://www.dzzoffice.com" target="_blank">www.dzzoffice.com</a>
 			</p>
   </div>
 </div>

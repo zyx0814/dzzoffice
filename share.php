@@ -9,12 +9,15 @@
 
 define('APPTYPEID', 200);
 define('DZZSCRIPT', 'index.php');
+define('CURSCRIPT', 'dzz');
 require './core/coreBase.php';
 $dzz = C::app();
 $dzz->init();
-
 if(!$path=dzzdecode(trim($_GET['s']))){
 	exit('Access Denied');
+}
+if (isset($_GET['sid'])) {
+    $sid = dzzdecode(trim($_GET['sid']));
 }
 if($_GET['a']=='down'){
 	IO::download($path,$_GET['filename']);
@@ -80,8 +83,12 @@ if($_GET['a']=='down'){
 			}, $url);
 			//添加path参数；
 			if(strpos($url,'?')!==false  && strpos($url,'path=')===false){
-				$path = $path ? $path : $_GET['s'];
-				$url.='&path=' . dzzencode('preview_' . $path);
+				if ($sid) {
+					$pre .= 'sid:'.$sid.'_';
+				} else {
+					$pre = 'preview_';
+				}
+				$url.='&path=' . dzzencode($pre . $path);
 			}
 			$url = $_G['siteurl'].$url;
 			@header("Location: $url");
@@ -89,7 +96,6 @@ if($_GET['a']=='down'){
 		}
 		
 	}else{//没有可用的打开方式，转入下载；
-		$path=dzzencode('preview_' . $path);
 		IO::download($path);
 		exit();
 	}

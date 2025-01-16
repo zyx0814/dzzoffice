@@ -1,0 +1,29 @@
+<!--{template lyear:header_simple_start}-->
+<link href="{MOD_PATH}/css/passsafe.css?{VERHASH}" rel="stylesheet" media="all">
+<script src="user/scripts/register.js?{VERHASH}"></script>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container main-allnotice">
+	<div class="container-fluid">
+	  <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="nav-link {if $do == 'editpass'}active{/if}" href="{MOD_URL}&op=password">{lang password_edit}</a></li>
+                <li class="nav-item"><a class="nav-link {if $do == 'login'}active{/if}" href="{MOD_URL}&op=password&do=login">登录记录</a></li>
+                <li class="nav-item"><a class="nav-link {if $do == 'changeemail'}active{/if}" href="{MOD_URL}&op=password&do=changeemail">{lang bindemail_subject}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+        <!--{if $do == 'editpass'}-->
+            <!--{template lyear:editpass}-->
+        <!--{elseif $do == 'changeemail'}-->
+            <!--{template lyear:changeemail}-->
+        <!--{elseif $do == 'login'}-->
+            <!--{template lyear:login}-->
+        <!--{/if}-->
+    </div>
+  </div>
+</div>
+</main>
+<!--{template lyear:footer_simple}-->

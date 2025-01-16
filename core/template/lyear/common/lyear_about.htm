@@ -1,0 +1,51 @@
+<!--{template common/header_ajax}-->
+<style>
+  #fwin_about .modal-dialog {
+    max-width: 600px;
+  }
+  p {
+    margin-bottom: 0.25rem;
+  }
+</style>
+<div class="modal-header">
+  <!--{if $about['logo']}-->
+  <h4 class="modal-title">
+    <img class="img-sitelogo" src="$sitelogo"><span class="sitename p-2"><b>$_G['setting']['sitename']</b></span>
+  </h4>
+  <!--{/if}-->
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body text-center">
+  <p class="aboutlogo">
+    <img src="<!--{if $about['logo']}-->$about['logo']<!--{else}-->$sitelogo<!--{/if}-->" />
+  </p>
+  <h4 class="name">
+    <!--{if $about['name_zh']}-->
+    <span class="name-zh">$about['name_zh']</span>
+    <!--{/if}-->
+    <!--{if $about['name_en']}-->
+    <span class="name-en">$about['name_en']</span>
+    <!--{/if}-->
+  </h4>
+  <!--{if $about['version']}-->
+  <p class="license">
+    <span class="text-muted">应用版本：</span> $about['version']
+  </p>
+  <!--{/if}-->
+  <p class="license">
+    <span class="text-muted">Dzz{lang version}：</span>{lang community_edition} $version
+  </p>
+  <p class="support">
+    <span class="text-muted">{lang license}：</span><a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_blank" class="dcolor">AGPL V3 {lang public_license}</a>
+  </p>
+  <p class="support">
+    <span class="text-muted">{lang service_and_support}：</span><a href="http://www.dzzoffice.com" target="_blank" class="dcolor">www.dzzoffice.com</a>
+  </p>
+</div>
+<div class="copyright text-muted text-center">
+  Copyright ©2012-{eval echo dgmdate(TIMESTAMP,'Y');} <a href="http://www.dzzoffice.com" target="_blank" class="dcolor">DzzOffice</a>  All Rights Reserved
+  <!--{if $_G['setting']['sitebeian']}-->
+	<br>$_G[setting][sitebeian]
+  <!--{/if}-->
+</div>
+<!--{template common/footer_ajax}-->

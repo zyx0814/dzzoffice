@@ -57,7 +57,6 @@ _select.init=function(container){
 _select.prototype.DetachEvent=function(e)
 {
 	if(!_select.tach) return;
-	//document.body.style.cursor="url('dzz/images/cur/aero_arrow.cur'),auto";
 	document.onmousemove=_select.onmousemove;
 	document.onmouseup=_select.onmouseup;
 	document.onselectstart=_select.onselectstart;

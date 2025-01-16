@@ -17,7 +17,7 @@ if(!defined('IN_DZZ')) {
 removedir($_G['setting']['attachdir'].'temp/',true);
 
 //清空临时缓存区
-$time=60*60*24*7; //7天 七天没有修改的将被删除；
+$time=60*60*24*1; //1天 1天没有修改的将被删除；
 removedir($_G['setting']['attachdir'].'cache/',true,$time);
 
 

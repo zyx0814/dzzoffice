@@ -11,7 +11,7 @@ if(!defined('IN_DZZ')) {
 }
 global $_G;
 $operation = $_GET['operation'] ? $_GET['operation'] : '';
-
+$template = isset($_GET['template']) ? $_GET['template'] : '';
 if($operation == 'app'){
 	$config = array();
 	if($_G['uid']){
@@ -78,8 +78,11 @@ if($operation == 'app'){
 			array_multisort($arrSort[$sort['field']], constant($sort['direction']), $applist_1);
 		} 
 	}
-	
-	include template('app_ajax');
+	if ($template == '1') {
+		include template('lyear_app_ajax','lyear');
+	} else {
+		include template('app_ajax');
+	}
 	exit();
 }
 

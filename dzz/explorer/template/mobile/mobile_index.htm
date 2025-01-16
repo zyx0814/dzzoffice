@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--{template mobile/mobile_header}-->
+    <title>网盘</title>
+</head>
+<body>
+<!--搜索框开始-->
+<header class="weui-search-bar" id="searchBar">
+    <form class="weui-search-bar__form">
+        <label class="weui-search-index__label" id="Text">
+            <span>全部或部分文件名</span>
+            <i class="weui-icon-search"></i>
+        </label>
+    </form>
+    <!--<a href="javascript:;" class="weui-search-bar__member all_search"><i class="dzz dzz-member"></i></a>-->
+</header>
+<!--搜索框结束-->
+<!--列表开始-->
+<section class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=recent">
+        <div class="weui-cell__hd"><span class="dzz dzz-clock weui-cell__img weui-cell__recent"></span></div>
+        <div class="weui-cell__bd">
+            <h4>最近使用</h4>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</section>
+<section class="weui-cells">
+    <!--{if $myexplorer}-->
+    <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=file&fid={$myexplorer[fid]}">
+        <div class="weui-cell__hd"><span class="dzz dzz-member weui-cell__img weui-cell__explorer"></span></div>
+        <div class="weui-cell__bd">
+            <h4>$myexplorer[name]</h4>
+            <p>
+                <span class="file">文件:</span><i class="file-number">$myexplorer[filenum],</i>
+                <span class="folder">文件夹:</span><i class="folder-number">$myexplorer[foldernum]</i>
+            </p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <!--{/if}-->
+    <!--{if count($myorgs)}-->
+    <!--{loop $myorgs $v}-->
+    <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=file&gid={$v[orgid]}&fid={$v[fid]}">
+        <div class="weui-cell__hd">
+            <!--{if isset($v[icon])}-->
+            <img src=" $v[icon]" class="weui-cell__recentimg"/>
+            <!--{else}-->
+            <!--{eval echo avatar_group($v['orgid'],array($v['orgid']=>array('aid'=>$v['aid'],'orgname'=>$v['orgname'])));}-->
+            <!--{/if}-->
+        </div>
+        <div class="weui-cell__bd">
+            <h4>$v[orgname]</h4>
+            <p>
+                <span class="file">文件:</span><i class="file-number">$v[filenum],</i>
+                <span class="folder">文件夹:</span><i class="folder-number">$v[foldernum]</i>
+            </p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <!--{/loop}-->
+    <!--{/if}-->
+</section>
+<section class="weui-cells">
+    <!--{if $mygroup}-->
+    <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=group">
+        <div class="weui-cell__hd"><span class="dzz dzz-group weui-cell__img weui-cell__group"></span></div>
+        <div class="weui-cell__bd">
+            <h4>群组</h4>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <!--{/if}-->
+    <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=cat">
+        <div class="weui-cell__hd"><span class="dzz dzz-file-type weui-cell__img weui-cell__type"></span></div>
+        <div class="weui-cell__bd">
+            <h4>类型</h4>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</section>
+<section class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=share">
+        <div class="weui-cell__hd"><span class="dzz dzz-share weui-cell__img weui-cell__share"></span></div>
+        <div class="weui-cell__bd">
+            <h4>分享</h4>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=collect">
+        <div class="weui-cell__hd"><span class="dzz dzz-grade weui-cell__img weui-cell__collection"></span></div>
+        <div class="weui-cell__bd">
+            <h4>收藏</h4>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</section>
+<section class="weui-cells">
+    <a class="weui-cell weui-cell_access" href="user.php?mod=profile">
+        <div class="weui-cell__hd"><span class="dzz dzz-person weui-cell__img weui-cell__share"></span></div>
+        <div class="weui-cell__bd">
+            <h4>我的</h4>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+</section>
+<!--{if $clipboarddata[status]}-->
+<footer class="weui-footer">
+    <a href="javascript:;" class="weui-footer-item weui-footer-item-cancel canclepastemenu">
+        <i class="dzz dzz-close "></i>
+        <p>取消</p>
+    </a>
+</footer>
+<!--{/if}-->
+</body>
+<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/mobile/appevent.js"></script>
+<script type="text/javascript">
+    //搜索跳转
+    $(document).off('tap.all_search').on('tap.all_search', '#searchBar', function () {
+        var href ='{MOD_URL}&op=mobile&do=search';
+        window.location.href = href;
+
+    })
+    $(document).off('tap.canclepastemenu').on('tap.canclepastemenu', '.canclepastemenu', function () {
+        var obj = $(this), url = MOD_URL+'&op=dzzcp&do=deletecopy&t=' + new Date().getTime();
+        jQuery.post(url, {k: Math.random()}, function (json) {
+            if (json['success']) {
+                obj.remove();
+                $.toast('取消成功');
+            } else {
+                $.toast('取消失败');
+            }
+        }, 'json')
+
+    })
+
+</script>
+<!--{hook footer_tpl}-->
+<!--{eval output();}-->
+</html>
+

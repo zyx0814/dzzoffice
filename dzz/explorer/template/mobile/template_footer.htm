@@ -1,0 +1,173 @@
+<!--底部开始-->
+    <!--正常状态下的底部开始-->
+    <div class="weui-cell-footer weui-cell-default-footer model_menus" id="nomal_menu">
+        <div class="dropup weui-footer-item uploadnewfile hide">
+            <a href="javascript:;" class="weui-footer-new-folder weui-footer-none">
+                <i class="dzz dzz-create-new-folder"></i>
+                <p>新建</p>
+            </a>
+            <div class="weui-dropup hide new-more">
+                <li class="newfoldermenu">
+                    <a href="javascript:;" class="weui-droup-new new-folder">新建文件夹</a>
+                </li>
+                <li class="newfilemenu">
+                    <a href="javascript:;" class="weui-droup-new">
+                        <input type="file" class="weui-iput explorer_upload_files"  data-onlyimg="0" name="files[]" multiple/>
+                        上传文件</a>
+                </li>
+                <li class="newfilemenu">
+                    <a href="javascript:;" class="weui-droup-new">
+                        <input type="file" class="weui-iput explorer_upload_files" name="files[]" data-onlyimg="1" accept="image/*" multiple/>
+                        相册</a>
+                </li>
+            </div>
+            <div class="background-none"></div>
+        </div>
+        <a href="javascript:;" class="weui-footer-item searchFile">
+            <i class="dzz dzz-search"></i>
+            <p>搜索</p>
+        </a>
+        <a href="javascript:;" class="weui-footer-item" onclick="location.reload();">
+            <i class="dzz dzz-refresh"></i>
+            <p>刷新</p>
+        </a>        
+        <div class="dropup weui-footer-item">
+            <a href="javascript:;" class="weui-footer-sort weui-footer-none">
+                <i class="dzz dzz-sort"></i>
+                <p>排序</p>
+            </a>
+            <div class="weui-dropup hide weui-dropup-right">
+                <li>
+                    <a href="javascript:;" class="weui-droup-new sortfile" data-sort="0">按名称</a>
+                </li>
+                <li>
+                    <a href="javascript:;" class="weui-droup-new sortfile" data-sort="1">按大小</a>
+                </li>
+                <li>
+                    <a href="javascript:;" class="weui-droup-new sortfile" data-sort="3">按时间</a>
+                </li>
+            </div>
+            <div class="background-none"></div>
+        </div>
+        <a href="javascript:;" class="weui-footer-item weui-footer-attr-item hide singlepropetymenu">
+            <i class="dzz dzz-view-list"></i>
+            <p>属性</p>
+        </a>
+      <div class="dropup weui-footer-item weui-footer-more-item hide moremenus">
+            <a href="javascript:;" class="weui-footer-sort weui-footer-none">
+                <i class="dzz dzz-more"></i>
+                <p>更多</p>
+            </a>
+            <div class="weui-dropup hide weui-dropup-right moredo">
+                <li>
+                    <a href="javascript:;" class="weui-droup-new dynamiscmenu">动态</a>
+                </li>
+                <li class="membermenu">
+                    <a href="javascript:;" class="weui-droup-new">人员</a>
+                </li>
+                <li class="propetymenu">
+                    <a href="javascript:;" class="weui-droup-new">属性</a>
+                </li>
+                <li class="commentmenu">
+                    <a href="javascript:;" class="weui-droup-new">评论</a>
+                </li>
+            </div>
+            <div class="background-none"></div>
+        </div>
+    </div>
+    <!--正常状态下的底部结束-->
+    <!--多选状态下的底部开始-->
+    <div class="weui-cell-footer weui-cell-checked-footer hide model_menus" id="select-menu">
+        <a href="javascript:;" class="weui-footer-item weui-footer-item-copy copymenu copyorcut" data-copytype="1">
+            <i class="dzz dzz-copy"></i>
+            <p>复制</p>
+        </a>
+        <a href="javascript:;" class="weui-footer-item cutmenu copyorcut" data-copytype="2">
+            <i class="dzz dzz-copy"></i>
+            <p>移动</p>
+        </a>
+        <a href="javascript:;" class="weui-footer-item weui-footer-cancel-checked">
+            <i class="dzz dzz-check-box-outline-blank "></i>
+            <p>取消选择</p>
+        </a>
+        <a href="javascript:;" class="weui-footer-item weui-footer-all-checked">
+            <i class="dzz dzz-check-box"></i>
+            <p>全选</p>
+        </a>
+        <div class="dropup weui-footer-item moremenus">
+            <a href="javascript:;" class="weui-footer-sort weui-footer-none">
+                <i class="dzz dzz-more"></i>
+                <p>更多</p>
+            </a>
+            <div class="weui-dropup hide weui-dropup-right moredo">
+                <li>
+                    <a href="javascript:;" class="weui-droup-new dynamiscmenu">动态</a>
+                </li>
+                <li class="membermenu">
+                    <a href="javascript:;" class="weui-droup-new">人员</a>
+                </li>
+                <li class="propetymenu">
+                    <a href="javascript:;" class="weui-droup-new">属性</a>
+                </li>
+                <li class="deletemenu">
+                    <a href="javascript:;" class="weui-droup-new">删除</a>
+                </li>
+                <li class="collectmenu">
+                    <a href="javascript:;" class="weui-droup-new">收藏</a>
+                </li>
+                <li class="cancel-collectmenu hide">
+                    <a href="javascript:;" class="weui-droup-new">取消收藏</a>
+                </li>
+                <li class="sharemenu">
+                    <a href="javascript:;" class="weui-droup-new">分享</a>
+                </li>
+                <li class="commentmenu">
+                    <a href="javascript:;" class="weui-droup-new">评论</a>
+                </li>
+                <li class="downloadmenu">
+                    <a href="javascript:;" class="weui-droup-new">下载</a>
+                </li>
+                <li class="renamemenu">
+                    <a href="javascript:;" class="weui-droup-new weui-droup-rename">重命名</a>
+                </li>
+            </div>
+            <div class="background-none"></div>
+        </div>
+    </div>
+    <!--多选状态下的底部结束-->
+    <!--复制状态下的底部开始-->
+    <div class="weui-cell-footer weui-cell-footer-copy hide model_menus" id="copypaste_menu">
+        <div class="dropup weui-footer-item uploadnewfile">
+            <a href="javascript:;" class="weui-footer-new-folder weui-footer-none">
+                <i class="dzz dzz-create-new-folder"></i>
+                <p>新建</p>
+            </a>
+            <div class="weui-dropup hide">
+                <li class="newfoldermenu">
+                    <a href="javascript:;" class="weui-droup-new new-folder">新建文件夹</a>
+                </li>
+                <li class="newfilemenu">
+                    <a href="javascript:;" class="weui-droup-new">
+                        <input type="file" class="weui-iput explorer_upload_files"  data-onlyimg="0" name="files[]" multiple/>
+                        上传文件</a>
+                </li>
+                <li class="newfilemenu">
+                    <a href="javascript:;" class="weui-droup-new">
+                        <input type="file" class="weui-iput explorer_upload_files" name="files[]" data-onlyimg="1" accept="image/*" multiple/>
+                        相册</a>
+                </li>
+            </div>
+            <div class="background-none"></div>
+        </div>
+        <a href="javascript:;" class="weui-footer-item pastemenu">
+            <i class="dzz dzz-search"></i>
+            <p>粘贴</p>
+        </a>
+        <a href="javascript:;" class="weui-footer-item weui-footer-item-cancel canclepastemenu">
+            <i class="dzz dzz-close "></i>
+            <p>取消</p>
+        </a>
+    </div>
+    <!--复制状态下的底部结束-->
+
+<!--底部结束-->

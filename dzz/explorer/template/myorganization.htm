@@ -1,0 +1,77 @@
+<!--地址栏开始-->
+<div class="middle-groupname middle-groupshink">
+	<div class="gainWidth">
+        <ol class="routeMenu">
+        	<li class="public-title"><span class="glyphicon glyphicon-wrench icon-gift"></span>{lang my_department_list}</li>
+        </ol>
+   </div>
+</div>
+<!--地址栏结束-->
+<div class="middlebottomMenu">
+    <div class="middle-padding-left">
+        <div class="middletopMenu recycle-top">
+            <div class="uploadMenu clearfix">
+               <!-- <div class="buildMenu">
+                    <button type="button" class="btn btn-primary">新建</button>
+                </div>-->
+                <ul class="sizeMenu">
+                    <li>{lang all_departments}<span class="glyphicon glyphicon-menu-down"></span></li>
+                    <li>{lang create_time}<span class="glyphicon glyphicon-menu-down"></span></li>
+                </ul>
+
+            </div>
+        </div>
+        <div class="recycle-con">
+            <ul class="btodyMenu clearfix">
+                <li class="td-file-name">
+                    <div class="checkbox-custom checkbox-primary">
+                        <input type="checkbox" id="Allselect"/>
+                        <label></label>
+                    </div>
+                    <span class="samll-name">{lang department_name}</span>
+                </li>
+                <li class="td-file-proprietor">{lang explorer_groupperm_manager}</li>
+                <li class="td-file-size">{lang membership}</li>
+                <li class="td-file-time">{lang create_time}</li>
+            </ul>
+            <div class="recent-con">
+                <ul class="deleteList fileList">
+                    <!--{loop $orgarr $v}-->
+                    <li class="liste">
+                        <ul class="ul-file-li clearfix">
+                            <li class="td-file-name clearfix">
+                                <div class="checkbox-custom checkbox-primary">
+                                    <input type="checkbox" class=" listecheck"/>
+                                    <label></label>
+                                </div>
+                                <div class="fileitemMenu">
+                                    <div class="imgMenu">
+                                        <!--{if isset($v['img'])}-->
+                                        <img src="$v[imgs]" class="folder-img">
+                                        <!--{else}-->
+                                        <img src="{MOD_PATH}/img/txt.png" class="folder-img">
+                                        <!--{/if}-->
+                                    </div>
+                                    <div class="itemMenu clearfix">
+                                        <div class="firstMenu ">
+                                            <div class="filenameMenu">
+                                                $v[orgname]
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="td-file-proprietor">$v[adminer] </li>
+                            <li class="td-file-size">$v[usernum]</li>
+                            <li class="td-file-time">{eval echo dgmdate($v['dateline'],'Y-m-d');}</li>
+                        </ul>
+                    </li>
+                    <!--{/loop}-->
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
