@@ -34,7 +34,7 @@ class table_resources_cat extends dzz_table
         return array('error'=>true,'msg'=>lang('exploder_add_failed'));
     }
 
-    public function update($catid,$setarr){
+    public function update($catid,$setarr, $unbuffered = false, $low_priority = false){
         if(!$catinfo = parent::fetch($catid)) return false;
         if(isset($setarr['tag'])){
             $oldtids = explode(',',$catinfo['tag']);

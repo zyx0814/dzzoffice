@@ -15,6 +15,7 @@ define('NOROBOT', TRUE);
 if($_G['setting']['bbclosed']) {
 	dheader("Location: user.php?mod=login");
 }
+$navtitle=lang('getpassword');
 if($_GET['uid'] && $_GET['id']) {
 
     $dzz_action = 141;

@@ -1,0 +1,36 @@
+<div class="middlecenter scroll-100 scroll-srcollbars">
+    <div class="middle-padding-left height-100">
+     	<!--文件列表开始-->
+       	<div id="filemanage-recent-1"></div>
+    	<!--文件列表结束-->
+   </div>
+</div>           
+<!--右侧菜单-->
+
+<!--头部信息框-->
+<div class="navtopheader">
+</div>
+
+<div id="template_middleicon" style="display:none">
+<!--{template template_file_middleicon}-->
+</div>
+<div id="template_detaillist"  style="display:none">
+<!--{template template_file_detaillist_cat}-->
+</div>
+<div id="template_toolButton" style="display:none">
+<!--{template template_file_toolButton}-->
+</div>
+<div id="template_file" style="display:none">
+<!--{template template_file_navtopfile}-->
+</div>
+<div id="template_nofile_notice" style="display:none">
+    <!--{template noFilePage-recent}-->
+</div>
+<script type="text/javascript">
+   $(document).ready(function(e) {
+        _filemanage.getData(_explorer.appUrl+'&op=recent&do=filelist&sid=recent-1',function(obj){
+			jQuery('span.total').html(obj.total);
+		});
+    });
+ 
+</script>

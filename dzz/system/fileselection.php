@@ -43,8 +43,7 @@ $gets = array(
 $urldefined= '&'. url_implode($gets);
 $allowvisit = array('file','listtree','explorerfile','json','ajax','dzzcp','save');
 //如果是移动端
-$ismobile = helper_browser::ismobile();
-if($ismobile){
+if($_G['ismobile']){
     require MOD_PATH.'/mobilefileselection.php';
 }else{
     if($do){

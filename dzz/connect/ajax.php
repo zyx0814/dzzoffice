@@ -81,13 +81,13 @@ if($_GET['do']=='delete'){
 	$bz=trim($_GET['bz']);
 	$id=intval($_GET['id']);
 	$cloud=DB::fetch_first("select * from %t where bz=%s",array('connect',$bz));
-	$pfid=DB::result_first("select fid from ".DB::table('folder')." where uid='{$_G[uid]}' and flag='desktop'");
+	$pfid=DB::result_first("select fid from ".DB::table('folder')." where uid='{$_G['uid']}' and flag='desktop'");
 	if($bz=='dzz'){
 		
 		$icoarr=array(
 					'uid'=>$_G['uid'],
 					'username'=>$_G['username'],
-					'oid'=>DB::result_first("select fid from ".DB::table('folder')." where flag='home' and uid='{$_G[uid]}'"),
+					'oid'=>DB::result_first("select fid from ".DB::table('folder')." where flag='home' and uid='{$_G['uid']}'"),
 					'name'=>$cloud['name'],
 					'type'=>'folder',
 					'flag'=>'home',
@@ -121,7 +121,7 @@ if($_GET['do']=='delete'){
 		echo  json_encode(array('error'=>lang('object_exist_been_deleted')));
 		exit();
 	}
-	$pfid=DB::result_first("select fid from ".DB::table('folder')." where uid='{$_G[uid]}' and flag='desktop'");
+	$pfid=DB::result_first("select fid from ".DB::table('folder')." where uid='{$_G['uid']}' and flag='desktop'");
 	$icoarr=array(
 					'uid'=>$_G['uid'],
 					'username'=>$_G['username'],

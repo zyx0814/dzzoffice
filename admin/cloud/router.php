@@ -9,7 +9,7 @@
 if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-$navtitle=lang('routing_management');
+$navtitle=lang('dzzpan').' - '.lang('routing_management').' - '.lang('cloud_set');
 if(submitcheck('routersubmit')){
 	$_GET=dhtmlspecialchars($_GET);
 	$delete=$_GET['delete'];

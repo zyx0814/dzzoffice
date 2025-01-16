@@ -1,0 +1,233 @@
+</head>
+<body id="nv_{$_G['basescript']}" class="$bodyClass" data-theme="$_G['cookie']['the_site_theme']" data-sidebarbg="$_G['cookie']['the_sidebar_bg']" data-headerbg="$_G['cookie']['the_header_bg']" data-logobg="$_G['cookie']['the_logo_bg']">
+<div id="append_parent" style="z-index:99999;"></div>
+<div id="ajaxwaitid" style="z-index:99999;"></div>
+<div class="left-drager">
+</div>
+<header class="bs-top-container" style="display: flex;padding-left: 0;">
+  <!--{template lyear:lyear_header_left}-->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse" id="navbarText" style="">
+        <!--{template lyear:lyear_header_search}-->
+        <ul class="navbar-right d-flex align-items-center">
+          <!--{template lyear:lyear_header_right}-->
+          <!--切换主题配色-->
+          <li class="dropdown dropdown-skin">
+            <a data-bs-toggle="dropdown" class="nav-link">
+              <i class="mdi mdi-palette fs-4"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" data-stopPropagation="true">
+            <li class="lyear-skin-title"><p>主题</p></li>
+            <li class="lyear-skin-li clearfix">
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="site_theme" id="site_theme_1" value="default" checked="checked">
+            <label class="form-check-label" for="site_theme_1"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="site_theme" id="site_theme_2" value="translucent-green">
+            <label class="form-check-label" for="site_theme_2"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="site_theme" id="site_theme_3" value="translucent-blue">
+            <label class="form-check-label" for="site_theme_3"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="site_theme" id="site_theme_4" value="translucent-yellow">
+            <label class="form-check-label" for="site_theme_4"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="site_theme" id="site_theme_5" value="translucent-red">
+            <label class="form-check-label" for="site_theme_5"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="site_theme" id="site_theme_6" value="translucent-pink">
+            <label class="form-check-label" for="site_theme_6"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="site_theme" id="site_theme_7" value="translucent-cyan">
+            <label class="form-check-label" for="site_theme_7"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="site_theme" id="site_theme_8" value="dark">
+            <label class="form-check-label" for="site_theme_8"></label>
+            </div>
+            </li>
+            <li class="lyear-skin-title"><p>LOGO</p></li>
+            <li class="lyear-skin-li clearfix">
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="logo_bg" id="logo_bg_1" value="default" checked="checked">
+            <label class="form-check-label" for="logo_bg_1"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="logo_bg" id="logo_bg_2" value="color_2">
+            <label class="form-check-label" for="logo_bg_2"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="logo_bg" id="logo_bg_3" value="color_3">
+            <label class="form-check-label" for="logo_bg_3"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="logo_bg" id="logo_bg_4" value="color_4">
+            <label class="form-check-label" for="logo_bg_4"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="logo_bg" id="logo_bg_5" value="color_5">
+            <label class="form-check-label" for="logo_bg_5"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="logo_bg" id="logo_bg_6" value="color_6">
+            <label class="form-check-label" for="logo_bg_6"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="logo_bg" id="logo_bg_7" value="color_7">
+            <label class="form-check-label" for="logo_bg_7"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="logo_bg" id="logo_bg_8" value="color_8">
+            <label class="form-check-label" for="logo_bg_8"></label>
+            </div>
+            </li>
+            <li class="lyear-skin-title"><p>头部</p></li>
+            <li class="lyear-skin-li clearfix">
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="header_bg" id="header_bg_1" value="default" checked="checked">
+            <label class="form-check-label" for="header_bg_1"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="header_bg" id="header_bg_2" value="color_2">
+            <label class="form-check-label" for="header_bg_2"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="header_bg" id="header_bg_3" value="color_3">
+            <label class="form-check-label" for="header_bg_3"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="header_bg" id="header_bg_4" value="color_4">
+            <label class="form-check-label" for="header_bg_4"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="header_bg" id="header_bg_5" value="color_5">
+            <label class="form-check-label" for="header_bg_5"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="header_bg" id="header_bg_6" value="color_6">
+            <label class="form-check-label" for="header_bg_6"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="header_bg" id="header_bg_7" value="color_7">
+            <label class="form-check-label" for="header_bg_7"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="header_bg" id="header_bg_8" value="color_8">
+            <label class="form-check-label" for="header_bg_8"></label>
+            </div>
+            </li>
+            <li class="lyear-skin-title"><p>侧边栏</p></li>
+            <li class="lyear-skin-li clearfix">
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sidebar_bg" id="sidebar_bg_1" value="default" checked="checked">
+            <label class="form-check-label" for="sidebar_bg_1"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sidebar_bg" id="sidebar_bg_2" value="color_2">
+            <label class="form-check-label" for="sidebar_bg_2"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sidebar_bg" id="sidebar_bg_3" value="color_3">
+            <label class="form-check-label" for="sidebar_bg_3"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sidebar_bg" id="sidebar_bg_4" value="color_4">
+            <label class="form-check-label" for="sidebar_bg_4"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sidebar_bg" id="sidebar_bg_5" value="color_5">
+            <label class="form-check-label" for="sidebar_bg_5"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sidebar_bg" id="sidebar_bg_6" value="color_6">
+            <label class="form-check-label" for="sidebar_bg_6"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sidebar_bg" id="sidebar_bg_7" value="color_7">
+            <label class="form-check-label" for="sidebar_bg_7"></label>
+            </div>
+            <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="sidebar_bg" id="sidebar_bg_8" value="color_8">
+            <label class="form-check-label" for="sidebar_bg_8"></label>
+            </div>
+            </li>
+            </ul>
+          </li>
+          <!--{if !$_G['setting']['bbclosed'] || !$_G['adminid'] ==0}-->
+          <li>
+          <a href="javascript:;" id="desktop_app" data-href="index.php?mod=system&template=1&op=app_ajax&operation=app" class="app_popup_icon nav-link js-popbox" role="button" data-bs-placement="bottom" data-bs-trigger="focus" data-auto-adapt="true" data-bs-toggle="popover"><span class="mdi mdi-apps fs-4"></span></a>
+          </li>
+          <li>
+            <a href="javascript:;" id="dzz_notification" data-href="index.php?mod=system&template=1&op=notification&filter=new" class="animations-box position-relative nav-link navbar-notice js-popbox" role="button" data-bs-placement="bottom" data-bs-trigger="focus" data-auto-adapt="true" data-bs-toggle="popover">
+            <span class="mdi mdi-bell-outline fs-4"></span>
+            <span class="position-absolute translate-middle badge bg-danger rounded-pill d-none">&nbsp;</span>
+            </a>
+          </li>
+          <!--{/if}-->
+          <li>
+            <a href="javascript:;" class="nav-link js-popbox" data-href="user.php?mod=space&template=1&op=navmenu&modname={MOD_NAME}" role="button" data-bs-placement="bottom" data-bs-trigger="focus" data-auto-adapt="true" data-bs-toggle="popover">
+              <!--{if $_G['uid']}-->
+              {eval echo avatar_block($_G['uid']);}
+              <!--{else}-->
+              <span class="Topcarousel img-avatar" style="background:var(--bs-primary)" title="{lang login}">{lang login}</span>
+              <!--{/if}-->
+            </a>
+          </li>
+        </ul>
+        
+      </div>
+    </div>
+  </nav>
+</header>
+<script type="text/javascript">
+jQuery(document).ready(function(e) {
+_header.init('{FORMHASH}');//初始化头部效果
+_notice.getNotificationCount();
+});
+_notice={};
+_notice.flashStep=1;
+_notice.checkurl='index.php?mod=system&op=notification&filter=checknew';
+_notice.normalTitle= document.title;
+_notice.getNotificationCount=function(){
+jQuery.getJSON(_notice.checkurl,function(json){
+var sum=parseInt(json.sum);
+_notice.showTips(sum);
+if(json.timeout>0) window.setTimeout(_notice.getNotificationCount,json.timeout);
+});
+}
+_notice.showTips=function(sum){
+if(sum>0){
+jQuery('#dzz_notification>span.badge').html(sum).removeClass('d-none');
+jQuery('#dzz_notification>span.dzz').hide();
+//_notice.flashTitle();
+}else{
+jQuery('#dzz_notification>span.badge').addClass('d-none');
+jQuery('#dzz_notification>span.dzz').show();
+//_notice.flashTitle(1);
+}
+}
+_notice.flashTitle=function(flag){
+//仅窗口不在焦点时闪烁title，回到焦点时停止闪烁并将title恢复正常
+if(flag ||　CurrentActive){//当前处于焦点
+document.title=_notice.normalTitle;
+_notice.flashTitleRun = false;
+return;//退出循环
+}
+_notice.flashTitleRun = true;
+_notice.flashStep++;
+if (_notice.flashStep==3) {_notice.flashStep=1;}
+if (_notice.flashStep==1) {document.title="【您有新的通知】";}
+if (_notice.flashStep==2) {document.title="【$_G[setting][sitename]】";}
+setTimeout(function(){_notice.flashTitle();},500);  //循环
+}
+</script>

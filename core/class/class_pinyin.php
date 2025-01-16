@@ -46,9 +46,9 @@ class pinyin {
 		$sGBK = iconv('UTF-8', 'GBK', $utf8Data);
 		$aBuf = array();
 		for ($i=0, $iLoop=strlen($sGBK); $i<$iLoop; $i++) {
-			$iChr = ord($sGBK{$i});
+			$iChr = ord($sGBK[$i]);
 			if ($iChr>160)
-				$iChr = ($iChr<<8) + ord($sGBK{++$i}) - 65536;
+				$iChr = ($iChr<<8) + ord($sGBK[++$i]) - 65536;
 			if ('head' === $sRetFormat)
 				$aBuf[] = substr(self::zh2py($iChr),0,1);
 			else

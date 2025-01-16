@@ -43,12 +43,12 @@ EOT;
 	$_G['setting']['mail']['mailsend'] = $_G['setting']['mail']['mailsend'] ? $_G['setting']['mail']['mailsend'] : 1;
 
 	if($_G['setting']['mail']['mailsend'] == 3) {
-		$email_from = empty($from) ? $_G['setting']['adminemail'] : $from;
+		$email_from = empty($from) ? ($_G['setting']['adminemail']?$_G['setting']['adminemail']:$_G['setting']['mail']['from']) : $from;
 	} else {
-		$email_from = $from == '' ? '=?'.CHARSET.'?B?'.base64_encode($_G['setting']['sitename'])."?= <".$_G['setting']['adminemail'].">" : (preg_match('/^(.+?) \<(.+?)\>$/',$from, $mats) ? '=?'.CHARSET.'?B?'.base64_encode($mats[1])."?= <$mats[2]>" : $from);
+		$email_from = $_G['setting']['mail']['from'];
 	}
 
-	$email_to = preg_match('/^(.+?) \<(.+?)\>$/',$toemail, $mats) ? ($mailusername ? '=?'.CHARSET.'?B?'.base64_encode($mats[1])."?= <$mats[2]>" : $mats[2]) : $toemail;
+	$email_to = preg_match('/^(.+?)\s*\<(.+?)\>$/',$toemail, $mats) ? ($mailusername ? '=?'.CHARSET.'?B?'.base64_encode($mats[1])."?= <$mats[2]>" : $mats[2]) : $toemail;
 
 	$email_subject = '=?'.CHARSET.'?B?'.base64_encode(preg_replace("/[\r|\n]/", '', '['.$_G['setting']['sitename'].'] '.$subject)).'?=';
 	
@@ -65,7 +65,7 @@ EOT;
 	} elseif($_G['setting']['mail']['mailsend'] == 2) {
 
 		if(!$fp = fsocketopen($_G['setting']['mail']['server'], $_G['setting']['mail']['port'], $errno, $errstr, 30)) {
-			runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) CONNECT - Unable to connect to the SMTP server", 0);
+			runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) CONNECT - Unable to connect to the SMTP server", 0);
 			return false;
 		}
 		
@@ -73,14 +73,14 @@ EOT;
 
 		$lastmessage = fgets($fp, 512);
 		if(substr($lastmessage, 0, 3) != '220') {
-			runlog('SMTP', "{$_G[setting][mail][server]}:{$_G[setting][mail][port]} CONNECT - $lastmessage", 0);
+			runlog('SMTP', "{$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']} CONNECT - $lastmessage", 0);
 			return false;
 		}
 
 		fputs($fp, ($_G['setting']['mail']['auth'] ? 'EHLO' : 'HELO')." uchome\r\n");
 		$lastmessage = fgets($fp, 512);
 		if(substr($lastmessage, 0, 3) != 220 && substr($lastmessage, 0, 3) != 250) {
-			runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) HELO/EHLO - $lastmessage", 0);
+			runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) HELO/EHLO - $lastmessage", 0);
 			return false;
 		}
 
@@ -95,21 +95,21 @@ EOT;
 			fputs($fp, "AUTH LOGIN\r\n");
 			$lastmessage = fgets($fp, 512);
 			if(substr($lastmessage, 0, 3) != 334) {
-				runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) AUTH LOGIN - $lastmessage", 0);
+				runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) AUTH LOGIN - $lastmessage", 0);
 				return false;
 			}
 
 			fputs($fp, base64_encode($_G['setting']['mail']['auth_username'])."\r\n");
 			$lastmessage = fgets($fp, 512);
 			if(substr($lastmessage, 0, 3) != 334) {
-				runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) USERNAME - $lastmessage", 0);
+				runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) USERNAME - $lastmessage", 0);
 				return false;
 			}
 
 			fputs($fp, base64_encode($_G['setting']['mail']['auth_password'])."\r\n");
 			$lastmessage = fgets($fp, 512);
 			if(substr($lastmessage, 0, 3) != 235) {
-				runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) PASSWORD - $lastmessage", 0);
+				runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['server']}) PASSWORD - $lastmessage", 0);
 				return false;
 			}
 
@@ -122,7 +122,7 @@ EOT;
 			fputs($fp, "MAIL FROM: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $email_from).">\r\n");
 			$lastmessage = fgets($fp, 512);
 			if(substr($lastmessage, 0, 3) != 250) {
-				runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) MAIL FROM - $lastmessage", 0);
+				runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) MAIL FROM - $lastmessage", 0);
 				return false;
 			}
 		}
@@ -132,14 +132,14 @@ EOT;
 		if(substr($lastmessage, 0, 3) != 250) {
 			fputs($fp, "RCPT TO: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $toemail).">\r\n");
 			$lastmessage = fgets($fp, 512);
-			runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) RCPT TO - $lastmessage", 0);
+			runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) RCPT TO - $lastmessage", 0);
 			return false;
 		}
 
 		fputs($fp, "DATA\r\n");
 		$lastmessage = fgets($fp, 512);
 		if(substr($lastmessage, 0, 3) != 354) {
-			runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) DATA - $lastmessage", 0);
+			runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) DATA - $lastmessage", 0);
 			return false;
 		}
 
@@ -157,7 +157,7 @@ EOT;
 		fputs($fp, "$email_message\r\n.\r\n");
 		$lastmessage = fgets($fp, 512);
 		if(substr($lastmessage, 0, 3) != 250) {
-			runlog('SMTP', "({$_G[setting][mail][server]}:{$_G[setting][mail][port]}) END - $lastmessage", 0);
+			runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) END - $lastmessage", 0);
 		}
 		fputs($fp, "QUIT\r\n");
 

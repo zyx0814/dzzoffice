@@ -274,7 +274,7 @@ class BaiduUtils
 		self::$boundary = $boundary = md5('BAIDU-PHP-SDK-V2' . microtime(true));
 		
 		foreach ($params as $key => $value) {
-			if ($value{0} == '@') {
+			if ($value[0] == '@') {
 				$url = ltrim($value, '@');
 				$content = file_get_contents($url);
 				$array = explode('?', basename($url));

@@ -46,8 +46,8 @@
         </script>
         <!--{/if}-->
       </ul>
-      <a hidefocus="true" class="cancel_cpsw" href="javascript:;" onclick="jQuery('#publish_{$cid}').slideUp(500);"> <b><i>{lang cancel}</i></b></a>
-      <button id="publish_submit_{$cid}" class="btn btn-sm btn-primary" type="button"  disabled="disabled" title="{lang reply}(Ctrl+Enter)" href="javascript:void(0);"><b>{lang reply}</b></button>
+      <a hidefocus="true" class="btn btn-outline-secondary" href="javascript:;" onclick="jQuery('#publish_{$cid}').slideUp(500);"> <b>{lang cancel}</b></a>
+      <button id="publish_submit_{$cid}" class="btn btn-primary" type="button"  disabled="disabled" title="{lang reply}(Ctrl+Enter)" href="javascript:void(0);"><b>{lang reply}</b></button>
     </div>
      <div id="attachmentViewBox_{$cid}" class="attachmentContainer clearfix"> </div>
   </form>
@@ -89,7 +89,7 @@
 		});
 		<!--{/if}-->
 		<!--{if $_GET[allowattach]>=2}-->
-		var attachextensions='{eval echo implode('|',$space[attachextensions]);}';
+		var attachextensions='{eval echo implode('|',$space['attachextensions']);}';
 		if(attachextensions=='') attachextensions="\.*$";
 		else attachextensions="(\.|\/)("+(attachextensions)+")$";
 		jQuery('#fileupload_{$cid}').fileupload({

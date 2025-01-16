@@ -2,7 +2,6 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-
 if (!function_exists('sys_get_temp_dir')) {
     function sys_get_temp_dir()
     {
@@ -124,7 +123,11 @@ function url_implode($gets)
 {
     $arr = array();
     foreach ($gets as $key => $value) {
-        if ($value) {
+        if (is_array($value)) {
+            foreach ($value as $value1) {
+                $arr[] = $key . '[]=' . urlencode($value1);
+            }
+        } elseif ($value) {
             $arr[] = $key . '=' . urlencode($value);
         }
     }
@@ -304,8 +307,10 @@ function getuserbyuid($uid, $fetch_archive = 0)
 function chk_submitroule($type)
 {
 
-    if (empty($_GET['formhash']) || $_GET['formhash'] != formhash()) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_GET['formhash']) && $_GET['formhash'] == formhash() && empty($_SERVER['HTTP_X_FLASH_VERSION']) && (empty($_SERVER['HTTP_REFERER']) ||
+            preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST']))) {
 
+    } else {
         showTips(array('error' => '提交方式不合法', 'error_code' => 403), $type, 'common/illegal_operation');
     }
 }
@@ -631,7 +636,7 @@ function random($length, $numeric = 0)
     }
     $max = strlen($seed) - 1;
     for ($i = 0; $i < $length; $i++) {
-        $hash .= $seed{mt_rand(0, $max)};
+        $hash .= $seed[random_int(0, $max)];
     }
     return $hash;
 }
@@ -668,7 +673,7 @@ function avatar($uid, $size = 'middle', $returnsrc = FALSE, $real = FALSE, $stat
  * param:$uid    		需要生成的用户UID;
  * param:$headercolors  传递的用户头像信息数组格式为array('1'=>'#e9308d','2'=>'#e74856'),键为UID，值为颜色值
  */
-function avatar_block($uid=0,$headercolors=array(),$class="Topcarousel"){
+function avatar_block($uid=0,$headercolors=array(),$class="Topcarousel img-avatar"){
 	static $colors=array('#6b69d6','#a966ef','#e9308d','#e74856','#f35b42','#00cc6a','#0078d7','#5290f3','#00b7c3','#0099bc','#018574','#c77c52','#ff8c00','#68768a','#7083cb','#26a255');
    
 	if(!$uid){
@@ -681,7 +686,7 @@ function avatar_block($uid=0,$headercolors=array(),$class="Topcarousel"){
 	}
 	if(empty($user)) return '';
 	if($user['avatarstatus']){//用户已经上传头像
-		return '<img src="avatar.php?uid='.$user['uid'].'" class="img-circle special_avatar_class" title="'.$user['username'].'">';
+		return '<img src="avatar.php?uid='.$user['uid'].'" class="img-circle special_avatar_class img-avatar" title="'.$user['username'].'">';
 	}else{//没有上传头像，使用背景+首字母
 		if($uid){
 			if($headercolors[$uid]) $headerColor=$headercolors[$uid];
@@ -707,7 +712,7 @@ function avatar_group($gid,$groupcolors=array(),$class='iconFirstWord'){
 	if($groupcolors[$gid]){
 		if($groupcolor = $groupcolors[$gid]['aid']){
 			if(preg_match('/^\#.+/',$groupcolor)){
-				return '<span class="iconFirstWord" style="background:'.$groupcolor.';" title="'.$groupcolors[$gid]['orgname'].'">'.strtoupper(new_strsubstr($groupcolors[$gid]['orgname'],1,'')).'</span>';
+				return '<span class="iconFirstWord img-avatar" style="background:'.$groupcolor.';" title="'.$groupcolors[$gid]['orgname'].'">'.strtoupper(new_strsubstr($groupcolors[$gid]['orgname'],1,'')).'</span>';
 			}elseif(preg_match('/^\d+$/',$groupcolor) && $groupcolors > 0){
 				return '<img src="index.php?mod=io&op=thumbnail&width=24&height=24&path='. dzzencode('attach::' . $groupcolor).'" class="img-circle" title="'.$groupcolors[$gid]['orgname'].'">';
 			}
@@ -715,15 +720,15 @@ function avatar_group($gid,$groupcolors=array(),$class='iconFirstWord'){
 			$colorkey = rand(1,15);
 			$groupcolor = $colors[$colorkey];
 			C::t('organization')->update($gid,array('aid'=>$groupcolor));
-			return '<span class="iconFirstWord" style="background:'.$groupcolor.';"  title="'.$groupcolors[$gid]['orgname'].'">'.strtoupper(new_strsubstr($groupcolors[$gid]['orgname'],1,'')).'</span>';
+			return '<span class="iconFirstWord img-avatar" style="background:'.$groupcolor.';"  title="'.$groupcolors[$gid]['orgname'].'">'.strtoupper(new_strsubstr($groupcolors[$gid]['orgname'],1,'')).'</span>';
 		} 
 	}else{
 		 if(!$groupinfo = C::t('organization')->fetch($gid)){
-			return '<span class="dzz dzz-group"></span>';
+			return '<span class="dzz dzz-group mdi mdi-account"></span>';
 		}
 		if($groupinfo['aid']){
 			if(preg_match('/^\#.+/',$groupinfo['aid'])){
-				return '<span class="iconFirstWord" style="background:'.$groupinfo['aid'].';" title="'.$groupinfo['orgname'].'">'.strtoupper(new_strsubstr($groupinfo['orgname'],1,'')).'</span>';
+				return '<span class="iconFirstWord img-avatar" style="background:'.$groupinfo['aid'].';" title="'.$groupinfo['orgname'].'">'.strtoupper(new_strsubstr($groupinfo['orgname'],1,'')).'</span>';
 			}elseif(preg_match('/^\d+$/',$groupinfo['aid']) && $groupinfo['aid'] > 0){
 				return '<img src="index.php?mod=io&op=thumbnail&width=24&height=24&path='. dzzencode('attach::' . $groupinfo['aid']).'" class="img-circle" title="'.$groupinfo['orgname'].'">';
 			}
@@ -732,7 +737,7 @@ function avatar_group($gid,$groupcolors=array(),$class='iconFirstWord'){
 			$colorkey = rand(1,15);
 			$groupcolor = $colors[$colorkey];
 			C::t('organization')->update($gid,array('aid'=>$groupcolor));
-			return '<span class="iconFirstWord" style="background:'.$groupcolor.';" title="'.$groupinfo['orgname'].'">'.strtoupper(new_strsubstr($groupinfo['orgname'],1,'')).'</span>';
+			return '<span class="iconFirstWord img-avatar" style="background:'.$groupcolor.';" title="'.$groupinfo['orgname'].'">'.strtoupper(new_strsubstr($groupinfo['orgname'],1,'')).'</span>';
 		} 
 	}
 }
@@ -852,9 +857,7 @@ function lang($langvar = null, $vars = array(), $default = null, $curpath = '')
     $return = $langvar !== null ? (isset($returnvalue['template'][$langvar]) ? $returnvalue['template'][$langvar] : null) : $returnvalue['template'];
     $return = $return === null ? ($default !== null ? $default : $langvar) : $return;
     $searchs = $replaces = array();
-
     if ($vars && is_array($vars)) {
-
         foreach ($vars as $k => $v) {
             $searchs[] = '{' . $k . '}';
             $replaces[] = $v;
@@ -864,7 +867,6 @@ function lang($langvar = null, $vars = array(), $default = null, $curpath = '')
     if (is_string($return) && strpos($return, '{_G/') !== false) {
         preg_match_all('/\{_G\/(.+?)\}/', $return, $gvar);
         foreach ($gvar[0] as $k => $v) {
-
             $searchs[] = $v;
             $replaces[] = getglobal($gvar[1][$k]);
         }
@@ -882,7 +884,14 @@ function template($file, $tpldir = '', $templateNotMust = false)
 {
     global $_G;
     static $tplrefresh, $timestamp, $targettplname;
-
+    if(!$tpldir && strpos($file, ':') !== false) {
+		list($templateid, $file) = explode(':', $file);
+		$tpldir = $templateid;
+        $file = $file;
+	}
+    if (!$tpldir && isset($_G['setting']['template'])) {
+        $tpldir = $_G['setting']['template'];
+    }
     $file .= !empty($_G['inajax']) && ($file == 'common/header' || $file == 'common/footer') ? '_ajax' : '';
 
     $tplfile = $file;
@@ -1205,7 +1214,6 @@ function aidencode($aid, $type = 0, $tid = 0)
     return rawurlencode(base64_encode($s));
 }
 
-
 function output()
 {
     global $_G;
@@ -1214,7 +1222,7 @@ function output()
     } else {
         define('DZZ_OUTPUTED', 1);
     }
-    if ($_G['config']['rewritestatus']) {
+    if (isset($_G['setting']['rewritestatus'])) {
         $content = ob_get_contents();
         $content = output_replace($content);
         ob_end_clean();
@@ -1226,11 +1234,10 @@ function output()
     }
 }
 
-
 function outputurl( $url="" )
 {
     global $_G;
-    if ($_G['config']['rewritestatus']) {
+    if (isset($_G['setting']['rewritestatus'])) {
         $url = output_replace($url);
     }
     return $url;
@@ -1403,7 +1410,7 @@ function space_merge(&$values, $tablename, $isarchive = false)
 
                 if ($tablename == 'field') {
                     $_G['setting']['privacy'] = empty($_G['setting']['privacy']) ? array() : (is_array($_G['setting']['privacy']) ? $_G['setting']['privacy'] : dunserialize($_G['setting']['privacy']));
-                    $_G[$var]['privacy'] = empty($_G[$var]['privacy']) ? array() : is_array($_G[$var]['privacy']) ? $_G[$var]['privacy'] : dunserialize($_G[$var]['privacy']);
+                    $_G[$var]['privacy'] = empty($_G[$var]['privacy']) ? array() : (is_array($_G[$var]['privacy']) ? $_G[$var]['privacy'] : dunserialize($_G[$var]['privacy']));
                 } elseif ($tablename == 'profile') {
                     if ($_G[$var]['department']) {
                         $_G[$var]['department_tree'] = C::t('organization')->getPathByOrgid(intval($_G[$var]['department']));
@@ -1463,7 +1470,6 @@ function dreferer($default = '')
 
     return strip_tags($_G['referer']);
 }
-
 
 function diconv($str, $in_charset, $out_charset = CHARSET, $ForceTable = FALSE)
 {
@@ -1744,7 +1750,7 @@ $textexts = array('DZZDOC', 'HTM', 'HTML', 'SHTM', 'SHTML', 'HTA', 'HTC', 'XHTML
 $unRunExts = array('htm', 'html', 'js', 'php', 'jsp', 'asp', 'aspx', 'xml', 'htc', 'shtml', 'shtm', 'vbs'); //需要阻止运行的后缀名；
 $docexts = array('DOC', 'DOCX', 'XLS', 'XLSX', 'PPT', 'PPTX', 'ODT', 'ODS', 'ODG', 'RTF', 'ET', 'DPX', 'WPS');
 //echo strtolower(implode(',',$docexts));
-$imageexts = array('JPG', 'JPEG', 'GIF', 'PNG', 'BMP');
+$imageexts = array('JPG', 'JPEG', 'GIF', 'PNG', 'BMP', 'webp');
 $videoexts =
 $idtype2type = array(
     'picid' => 'image',
@@ -2471,7 +2477,7 @@ function curl_redir_exec($ch, $debug = "")
 function ico_png($source, $target, $proxy = '')
 {
     $ext = strtolower(substr(strrchr($source, '.'), 1, 10));
-    $imgexts = array('png', 'jpg', 'jpeg', 'gif');
+    $imgexts = array('png', 'jpg', 'jpeg', 'gif', 'webp');
     if (in_array($ext, $imgexts)) {
         exit($source);
         $data = dzz_file_get_contents($source, 0, $proxy);
@@ -2554,7 +2560,7 @@ function imagetolocal($source, $dir = 'appimg', $target = '')
         $target = '';
     }
     if (!$target) {
-        $imageext = array('jpg', 'jpeg', 'png', 'gif');
+        $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
         $ext = strtolower(substr(strrchr($source, '.'), 1, 10));
         if (!in_array($ext, $imageext)) return false;
         $subdir = $subdir1 = $subdir2 = '';
@@ -2584,7 +2590,7 @@ function image_to_icon($source, $target, $domain)
         return false;
     }
     if (!$target) {
-        $imageext = array('jpg', 'jpeg', 'png', 'gif');
+        $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
         $ext = str_replace("/\?.+?/i", '', strtolower(substr(strrchr($source, '.'), 1, 10)));
         if (!in_array($ext, $imageext)) $ext = 'jpg';
         $subdir = $subdir1 = $subdir2 = '';
@@ -2706,7 +2712,7 @@ function delete_icoid_from_container($icoid, $pfid)
     global $_G;
     $typefid = C::t('folder')->fetch_typefid_by_uid($_G['uid']);
     if ($pfid == $typefid['dock']) {
-        $docklist = DB::result_first("select docklist from " . DB::table('user_field') . " where uid='{$_G[uid]}'");
+        $docklist = DB::result_first("select docklist from " . DB::table('user_field') . " where uid='{$_G['uid']}'");
         $docklist = $docklist ? explode(',', $docklist) : array();
         foreach ($docklist as $key => $value) {
             if ($value == $icoid) {
@@ -2716,7 +2722,7 @@ function delete_icoid_from_container($icoid, $pfid)
         C::t('user_field')->update($_G['uid'], array('docklist' => implode(',', $docklist)));
     } elseif ($pfid == $typefid['desktop']) {
 
-        $icos = DB::result_first("select screenlist from " . DB::table('user_field') . " where uid='{$_G[uid]}'");
+        $icos = DB::result_first("select screenlist from " . DB::table('user_field') . " where uid='{$_G['uid']}'");
         $icos = $icos ? explode(',', $icos) : array();
         foreach ($icos as $key => $value) {
             if ($value == $icoid) {
@@ -2985,7 +2991,7 @@ function save_to_local($source, $target)
 }
 
 
-function uploadtolocal($upload, $dir = 'appimg', $target = '', $exts = array('jpg', 'jpeg', 'png', 'gif'))
+function uploadtolocal($upload, $dir = 'appimg', $target = '', $exts = array('jpg', 'jpeg', 'png', 'gif', 'webp'))
 {
     global $_G;
     if ($target == 'dzz/images/default/icodefault.png' || $target == 'dzz/images/default/widgetdefault.png' || preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $target)) {
@@ -3017,7 +3023,7 @@ function upload_to_icon($upload, $target, $domain='')
     global $_G;
     $source = $upload['tmp_name'];
     if (!$target) {
-        $imageext = array('jpg', 'jpeg', 'png', 'gif');
+        $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
         $ext = strtolower(substr(strrchr($upload['name'], '.'), 1, 10));
         if (!in_array($ext, $imageext)) return false;
         $subdir = $subdir1 = $subdir2 = '';
@@ -3039,7 +3045,7 @@ function upload_to_icon($upload, $target, $domain='')
 function dzz_app_pic_save($FILE, $dir = 'appimg')
 {
     global $_G;
-    $imageext = array('jpg', 'jpeg', 'png', 'gif');
+    $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
     $ext = strtolower(substr(strrchr($FILE['name'], '.'), 1, 10));
     if (!in_array($ext, $imageext)) return '文件格式不允许';
     $subdir = $subdir1 = $subdir2 = '';
@@ -3443,12 +3449,12 @@ function dzz_userconfig_init()
         if ($app['position'] == 1) {
             continue;
         } elseif ($app['position'] == 2) { //桌面
-            $fid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G[uid]}' and flag='desktop'");
+            $fid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G['uid']}' and flag='desktop'");
         } else { //dock条
-            $fid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G[uid]}' and flag='dock'");
+            $fid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G['uid']}' and flag='dock'");
         }
         if (!$fid) continue;
-        if ($rid = DB::result_first("select rid from " . DB::table('resources') . " where uid='{$_G[uid]}' and oid='{$appid}' and type='app'")) {
+        if ($rid = DB::result_first("select rid from " . DB::table('resources') . " where uid='{$_G['uid']}' and oid='{$appid}' and type='app'")) {
             C::t('resources')->update_by_rid($rid, array('pfid' => $fid, 'isdelete' => 0));
             if ($app['position'] == 2) $userconfig['screenlist'][] = $rid;
             else $userconfig['docklist'][] = $rid;

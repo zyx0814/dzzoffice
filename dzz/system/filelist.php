@@ -9,7 +9,7 @@ if(!C::t('folder')->check_home_by_uid($uid)){
     C::t('folder')->fetch_home_by_uid($uid);
 }
 $id = isset($_GET['id']) ? $_GET['id'] : '';
-$do = $_GET['do'] ? $_GET['do'] : '';
+$do = isset($_GET['do']) ? $_GET['do'] : '';
 $ctrlid = isset($_GET['ctrlid']) ? trim($_GET['ctrlid']):'selposition';
 $callback=isset($_GET['callback']) ? trim($_GET['callback']):'callback_selectposition';
 $inwindow = isset($_GET['inwindow']) ? intval($_GET['inwindow']):0;
@@ -18,7 +18,6 @@ $selhome = isset($_GET['selhome']) ? $_GET['selhome']:0;//展示网盘0不展示
 $selorg = isset($_GET['selorg']) ? $_GET['selorg']:0;//展示机构0不展示
 $selgroup = isset($_GET['selgroup']) ? $_GET['$selgroup']:0;//展示群组0不展示
 $range = isset($_GET['range']) ? $_GET['range']:0;//是否限制展示0不限定
-$ismobile=helper_browser::ismobile();
 $data = array();
 $powerarr = perm_binPerm::getPowerArr();
 if ($do == 'get_children') {

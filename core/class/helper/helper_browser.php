@@ -123,6 +123,8 @@ class helper_browser
             return 'iPhone';
         } elseif (preg_match("/ipod/i", $agent) && preg_match("/mac os/i", $agent)) {
             return 'iPod';
+        } elseif (preg_match("/ipad/i", $agent) && preg_match("/mac os/i", $agent)) {
+            return 'iPad';
         } elseif (preg_match("/linux/i", $agent) && preg_match("/Android/i", $agent)) {
             return 'Android';
         }

@@ -105,10 +105,8 @@ function build_cache_setting() {
 	if(in_array($data['reginput']['email'], $reginputbwords) || !preg_match('/^[A-z]\w+?$/', $data['reginput']['email'])) {
 		$data['reginput']['email'] = random(6);
 	}
-
-	$data['verhash']=random(3);
 	
-	$data['output'] = $output;
+	$data['verhash']=random(3);
 	
 	savecache('setting', $data);
 	$_G['setting'] = $data;

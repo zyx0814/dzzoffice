@@ -178,6 +178,4 @@ function _format_postkey($post, &$result, $key = '') {
 		}
 	}
 }
-
-
 ?>

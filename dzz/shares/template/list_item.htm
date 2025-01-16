@@ -1,5 +1,5 @@
 <div class="hide breadcrumb-data">
-	<li class="active" data-href="{DZZSCRIPT}?mod=shares&op=ajax&path=$morepath">$foldername<span>></span></li>
+	<li class="active" data-href="{DZZSCRIPT}?mod=shares&op=ajax&path=$morepath&sid=$_GET['sid']">$foldername<span>></span></li>
 </div>
 <div class="module-list">
 	<!--{loop $list $value}-->
@@ -10,12 +10,11 @@
 				<!--{/if}-->
 				<span class="name-text-wrapper"> <span node-type="name-text"  data-href="$value[shareurl]" class="enabled">$value[name]</span> </span>
 			</div>
-
+			<!--{if $candownload}-->
 			<div class="btns">
-				<a node-type="btn-item" data-key="download" class="dzz dzz-download
-" href="javascript:void(0);"></a>
+				<a node-type="btn-item" data-key="download" class="dzz dzz-download" href="javascript:void(0);"></a>
 			</div>
-
+			<!--{/if}-->
 		</div>
 		<!-- 其他列 -->
 		<div class="col size" style="width: 12%" data-size="$value[size]">$value[fsize]</div>
@@ -24,7 +23,7 @@
 	</div>
 	<!--{/loop}-->
 	<!--{if $nextpage}-->
-	<div class="more text-center clearfix" onclick="getMore(this,'{DZZSCRIPT}?mod=shares&op=ajax&morepath=$morepath&page=$nextpage&rander=list&marker=$marker')" style="padding-top: 10px;padding-bottom: 10px;">{lang upload_more}</div>
+	<div class="more text-center clearfix" onclick="getMore(this,'{DZZSCRIPT}?mod=shares&op=ajax&sid=$_GET['sid']&morepath=$morepath&page=$nextpage&rander=list&marker=$marker')" style="padding-top: 10px;padding-bottom: 10px;">{lang upload_more}</div>
 	<!--{/if}-->
 </div>
 <div class="module-grid">
@@ -74,7 +73,7 @@
 	</div>
 	<!--{/loop}-->
 	<!--{if $nextpage}-->
-	<div class="more text-center pull-left" onclick="getMore(this,'{DZZSCRIPT}?mod=shares&op=ajax&morepath=$morepath&page=$nextpage&rander=grid&marker=$marker')">
+	<div class="more text-center pull-left" onclick="getMore(this,'{DZZSCRIPT}?mod=shares&op=ajax&sid=$_GET['sid']&morepath=$morepath&page=$nextpage&rander=grid&marker=$marker')">
 		<table width="150" height="120" style="table-layout:fixed;">
 			<tbody>
 				<tr>

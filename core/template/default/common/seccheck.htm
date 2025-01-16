@@ -12,9 +12,9 @@
 <input name="sechash" type="hidden" value="$sechash" />
 <!--{if $sectpl}-->
 	<!--{if $seccodecheck}-->
-   			<div class="seccode-wrapper seccode_type_{$_G[setting][seccodedata][type]}">
+   			<div class="seccode-wrapper seccode_type_{$_G['setting']['seccodedata']['type']}">
     			<div class="input-group seccode-input">
-                  <input name="seccodeverify" class="form-control" id="seccodeverify_$sechash" type="text" autocomplete="off" style="{if $_G[setting][seccodedata][type] != 1}ime-mode:disabled;{/if}"  onblur="checksec('code', '$sechash')"  placeholder="{lang seccode}" />
+                  <input name="seccodeverify" class="form-control" id="seccodeverify_$sechash" type="text" autocomplete="off" style="{if $_G['setting']['seccodedata']['type'] != 1}ime-mode:disabled;{/if}"  onblur="checksec('code', '$sechash')"  placeholder="{lang seccode}" />
 					<span class="input-group-addon" id="checkseccodeverify_$sechash"></span>
                 </div> 
                 <div  class="seccode-show" >

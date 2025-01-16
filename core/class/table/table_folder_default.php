@@ -21,7 +21,7 @@ class table_folder_default extends dzz_table
 		$this->_cache_ttl = 0;
 		parent::__construct();
 	}
-	public function fetch_all(){
+	public function fetch_all($ids = null, $force_from_db = false){
 		if(($data=$this->fetch_cache('all'))===false){
 			$data=DB::fetch_all("SELECT * FROM %t WHERE 1 ORDER BY display", array($this->_table));
 		}

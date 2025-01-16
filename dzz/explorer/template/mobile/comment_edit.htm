@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--{template mobile/mobile_header}-->
+		<title>添加评论</title>
+	</head>
+	<body class="comment-body" >
+		<!--编辑评论头部开始-->
+		<header class="weui-share-edit weui-flex weui-comment-edit" style="">
+			<div class="placeholder weui-share-edit-cancel"><a href="javascript:;" class="weui-comment-div-edit-cancel cancle_comment">取消</a></div>
+			<div class="weui-flex__item">添加评论</div>
+			<div class="placeholder weui-comment-edit-keep addcomment">发布</div>
+		</header>
+		<!--编辑评论头部结束-->
+		<!--评论开始-->
+			<section class="weui-cells weui-cells_form weui-comment-edit-textarea" >
+				<div class="weui-cell">
+				    <div class="weui-cell__bd">
+				      <textarea class="weui-textarea" placeholder="请输入文本" id="weui-textarea_notes"></textarea>				      
+				    </div>
+				  </div>
+			</section>
+		<!--评论结束-->
+	</body>
+	<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+	<script type="text/javascript" src="static/js/jquery.textareaexplander.js"></script>
+	<script type="text/javascript" src="{MOD_PATH}/js/mobile/appevent.js"></script>
+	<script type="text/javascript">
+        var rid = '{$rid}',fid = '{$fid}';
+        $(document).off('tap.cancle_comment').on('tap.cancle_comment','.cancle_comment',function(){
+            window.history.go(-1);
+        })
+        $(document).off('tap.addcomment').on('tap.addcomment','.addcomment',function(){
+            var emptypreg = /^\s*$/,msg = $('.weui-textarea').val();
+            if(emptypreg.test(msg)){
+                $.toast('评论内容不能为空!');
+                return false;
+            }else{//添加评论
+                $.post(MOD_URL+'&op=mobile&do=comment&operation=addcomment',{'rid':rid,'fid':fid,'msg':msg,k:Math.random()},function(data){
+                    if(data['success']){
+                        window.location.href = MOD_URL+'&op=mobile&do=comment&rid='+rid+'&fid='+fid;
+                    }
+                },'json')
+            }
+        })
+        jQuery('#weui-textarea_notes').TextAreaExpander(50,9999);
+	</script>
+	<!--{hook footer_tpl}-->
+	<!--{eval output();}-->
+</html>
+

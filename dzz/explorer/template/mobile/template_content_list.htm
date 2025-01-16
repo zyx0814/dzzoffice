@@ -1,0 +1,14 @@
+<section class="weui-cells weui-cells__recent weui-cells__margin_footer js-file-item-tpl">
+    <div class="weui-cell weui-cell_access weui-cell_longpress" href="javascript:;">
+        <div class="weui-cell__hd"><img tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" class="weui-cell__recentimg"></div>
+        <div class="weui-cell__bd">
+            <h4>{name}</h4>
+            <p>{desc}</p>
+        </div>
+        {folderflag}
+        <div class="weui-cells_checkbox hide">
+            <input type="checkbox" class="weui-check" name="checkbox1">
+            <i class="weui-icon-checked"></i>
+        </div>
+    </div>
+</section>

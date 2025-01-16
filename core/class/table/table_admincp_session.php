@@ -20,7 +20,7 @@ class table_admincp_session extends dzz_table
 		parent::__construct();
 	}
 
-	public function fetch($uid, $panel) {
+	public function fetch($uid, $panel = false) {
 		$sql = 'SELECT * FROM %t WHERE uid=%d AND panel=%d';
 		return DB::fetch_first($sql, array($this->_table, $uid, $panel));
 	}
@@ -29,7 +29,7 @@ class table_admincp_session extends dzz_table
 		return DB::fetch_all('SELECT * FROM %t WHERE panel=%d', array($this->_table, $panel), 'uid');
 	}
 
-	public function delete($uid, $panel, $ttl = 3600) {
+	public function delete($uid, $panel = false, $ttl = 3600) {
 
 
 		$sql = 'DELETE FROM %t WHERE (uid=%d AND panel=%d) OR dateline<%d';
@@ -37,7 +37,7 @@ class table_admincp_session extends dzz_table
 
 	}
 
-	public function update($uid, $panel, $data) {
+	public function update($uid, $panel, $data = false, $low_priority = false) {
 		if(!empty($data) && is_array($data)) {
 			DB::update($this->_table, $data, array('uid'=>$uid, 'panel'=>$panel));
 		}

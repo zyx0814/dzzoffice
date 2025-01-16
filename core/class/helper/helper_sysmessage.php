@@ -22,7 +22,7 @@ class helper_sysmessage {
 <meta name="keywords" content="" />
 <meta name="description" content="System Message - DzzOffice" />
 <meta name="generator" content="Dzz! " />
-<meta name="author" content="Dzzfox Dzz Inc." />
+<meta name="author" content="DzzOffice" />
 <meta name="copyright" content="2010-2018 DzzOffice Inc." />
 <meta name="MSSmartTagsPreventParsing" content="True" />
 <meta http-equiv="MSThemeCompatible" content="Yes" />

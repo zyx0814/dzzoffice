@@ -1,0 +1,195 @@
+<div class="leftMenu  clearfix bs-left-container">
+  <div class="leconMenu"> 
+    <!--{if $explorer_setting['left_topcontent']}-->
+    <div class="latelMenu  left-typecore">
+      <p class="recent-use active document-data"  data-href="{MOD_URL}&op=recent" data-hash="recent"><span class="dzz dzz-recent"></span>{lang recently_used}</p>
+    </div>
+    <div class="positionMenu  left-typecore">
+      <h6>{lang position}</h6>
+      <div class="mechsnismMenu" id="position" class="usertree-container list-unstyled" style="padding:5px 0">
+    </div>
+  </div>
+  <div class="typeMenu  left-typecore">
+    <h6><span>{lang type}</span>
+      <!--{if $explorer_setting['allownewcat']}-->
+      <button type="button" class="groupbutton " onclick="showWindow('addsearchcat','{MOD_URL}&op=ajax&operation=addsearchcat','get',0)" ><span class="dzz dzz-add-circle"></span></button>
+      <!--{/if}-->
+    </h6>
+    <div class="typeaMenu  left-typecore" id="catsearchmenu"> 
+      <!--{loop $catsearch $v}-->
+      <p class="pictures document-data" data-href="{MOD_URL}&op=catsearch" id="searchcat_{$v[id]}" data-hash="catsearch&do=searchfile&id=$v[id]" data-args="do_searchfile-id_{$v[id]}"> 
+        <!--{if $v[catname] == lang('pictures')}--> 
+        <span class="dzz dzz-photo"></span> 
+        <!--{elseif $v[catname] == lang('document')}--> 
+        <span class="dzz dzz-file"></span> 
+        <!--{else}--> 
+        <span class="dzz dzz-file-type"></span> 
+        <!--{/if}--> 
+        $v[catname] </p>
+      <!--{/loop}--> 
+    </div>
+  </div>
+  <div class="toolMenu  left-typecore">
+    <h6>工具</h6>
+    <div class="toolaMenu">
+      <p class="dynamics document-data" data-href="{MOD_URL}&op=share" data-hash="share&uid={$uid}"><span class="dzz dzz-share"></span>{lang share}</p>
+      <p class="dynamics document-data" data-href="{MOD_URL}&op=dynamic" data-hash="dynamic"><span class="dzz dzz-dynamic"></span>{lang dynamic}</p>
+      <p class="dynamics document-data" data-href="{MOD_URL}&op=recycle" data-hash="recycle&uid={$uid}"><span class="dzz dzz-delete"></span>{lang explorer_recycle_name}</p>
+      <p class="collection document-data"  data-href="{MOD_URL}&op=collection" data-hash="collection"><span class="dzz dzz-grade"></span>{lang collect}</p>
+    </div>
+  </div>
+  <!--{/if}--> 
+  <!--{if $_G['adminid'] == 1}-->
+  <div class="adminMenu left-typecore">
+    <h6>{lang manage}</h6>
+    <div class="adminiMenu"> 
+      <!--<p class="folder-management document-data" data-href="{MOD_URL}&op=perm" data-hash="perm"><span class="dzz dzz-fold-limit"></span>{lang folder_permissions}</p>-->
+      <p class="folder-management document-data" data-href="{MOD_URL}&op=app" data-hash="app"><span class="dzz dzz-settings"></span>{lang function_management}</p>
+      <!--{if $explorer_setting['grouponperm']}-->
+      <p class="folder-management document-data" data-href="{MOD_URL}&op=groupmanage" data-hash="groupmanage"><span class="dzz dzz-manage-group"></span>{lang groups_management}</p>
+      <!--{/if}--> 
+    </div>
+  </div>
+  <!--{/if}--> 
+  
+</div>
+</div>
+<div id="template_newGroupButton" style="display:none"> 
+  <!--{if $explorer_setting['allownewgroup']}-->
+  <button type="button" class="groupbutton" onclick="showWindow('newGroup','{MOD_URL}&op=ajax&operation=addgroup')"><span class="dzz dzz-add-circle"></span></button>
+  <!--{/if}--> 
+</div>
+<!--上传完成框-->
+<div class="docunment-dialog docunment-dialog-uploader ismin" id="upload_file_tips" style="display:none;">
+  <div class="dialog-header">
+   
+	  <h3 id="upload_header" class="dialog-header-title">
+		  <span id="upload_header_status" class="upload-all-text">{lang updload_prepare}</span>
+		  <span id="upload_header_number_container" class="upload-all-container" style="display: none">
+		  		[
+				<span id="upload_header_completed" class="upload-all-cpmpleted">0</span>
+			    <span class="pipe">/</span>
+				<span id="upload_header_total" class="upload-all-total">0</span>
+				]
+		  </span>
+		  <span id="upload_header_speed" class="upload-all-speed"></span>
+		  <div id="upload_header_progress" class="process" style="position:absolute;left:0;top:0;z-index:-1;height:45px;background-color:#e8f5e9;-webkit-transition:width 0.6s ease in;-o-transition:width 0.6s ease in;transition:width 0.6s ease in;width:0%;"></div>
+	  </h3>
+    <div class="dialog-control"> 
+    	<span class="dzz dzz-max dialog-header-narrow"></span> 
+    	<span class="dzz dzz-close  dialog-header-close"></span> </div>
+  </div>
+  <div class="dialog-body">
+    <div class="upload-list-wrapper">
+      <div class="upload-list-header">
+        <div class="upload-file-name">{lang folder_file_name}</div>
+        <div class="upload-file-size">{lang big_small}</div>
+        <div class="upload-file-path">{lang update_catalogue}</div>
+        <div class="upload-file-status">{lang state}</div>
+        <!--<div class="upload-file-operate">操作</div>--> 
+      </div>
+      <div class="dialog-tips has-error">
+        <div id="dialog_body_text" class="dialog-body-text">{lang update_never_succeeded}</div>
+        <em class="dzz dzz-close  dialog-close"></em> </div>
+      <div class="dialog-uploader-list">
+        <ul class="dialog-filelist-ul" id="uploading_file_list">
+        </ul>
+      </div>
+      <div class="progress-in"></div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="static/tagsinput/jquery.tagsinput.js"></script>
+<link rel="stylesheet" href="static/tagsinput/jquery.tagsinput.css">
+<script type="text/javascript">
+    /*jstree 左侧个人、机构及群组*/
+
+	
+$(document).ready(function(e) {
+    _explorer.jstree=$('#position').jstree({
+        "core": {
+            "multiple": true,
+            "check_callback": true,
+            "themes": {
+                "responsive": false
+            },
+            'data': function (node, cb) {
+                var self = this;
+                $.getJSON(MOD_URL+'&op=grouptree&do=get_children', {'id': node.id}, function (json) {
+                    cb.call(this, json);
+                });
+            }
+        },
+        "types": {
+            "#": {
+                "max_children": -1,
+                "max_depth": -1,
+                "valid_children": -1
+            },
+            "organization": {//部门
+                "icon": "dzz dzz-account-box",
+                "valid_children": ['depart','folder']
+            },
+			 "department": {
+                "icon": "dzz/system/images/department.png",
+                "valid_children": ['depart','folder']
+            },
+			 "group": {//群组
+                 "li_attr":'aaa',
+                "icon": "dzz dzz-group",
+                "valid_children": ['folder']
+            },
+			"home": {//我的网盘
+                "icon": "dzz dzz-mydisk",
+                "valid_children": ['folder']
+            },
+            "folder": {//群组
+                "icon": "dzz dzz-folder",
+                "valid_children": ['folder']
+            },
+        },
+       /* "checkbox": {
+            "keep_selected_style": false
+        },
+        "search": {
+            "show_only_matches": false
+            , "fuzzy": false
+            , "ajax": {'url': 'index.php?mod=system&op=grouptree&do=search', 'dataType': 'json'}
+        },*/
+        "plugins": ['types', 'search','wholerow']
+    });
+
+    $('#position').off('select_node.jstree').on('select_node.jstree', function (e, data) {
+        var inst = $('#position').jstree(true);
+        var node = data.node;
+        var hash = node.li_attr.hashs;
+		var ohash=window.location.hash.replace('#','');
+		if(ohash.replace(/&do=\w+/i,'')== hash){
+		}else{
+			location.hash=hash;
+		}
+        inst.open_node(node);
+        return false;
+    });
+});
+   
+    $('#position').off('open_node.jstree').on('open_node.jstree', function (e, data) {
+		 var node = data.node;
+		if(node.id=='group') jQuery(jQuery('#template_newGroupButton').html()).appendTo('#group');
+	});
+
+    $("#position").off('ready.jstree').on('ready.jstree', function(e) {
+         var inst = $("#position").jstree(true);
+         var hash = location.hash;
+         if(hash) {
+            var hash = (hash.replace(/^#/,''));
+             _explorer.jstree_select(hash);
+        }else{
+			location.hash='#recent';
+		}
+		//增加添加群组按钮
+		jQuery(jQuery('#template_newGroupButton').html()).appendTo('#group');
+     });
+  
+
+</script> 

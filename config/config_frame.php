@@ -10,7 +10,7 @@ $_config['namespacelist'] = array(
     'misc'      => DZZ_ROOT.'misc'
 );
 
-$_config['default_mod'] = 'index';
+$_config['default_mod'] = 'explorer';
 
 $_config['default_op'] = 'index';
 

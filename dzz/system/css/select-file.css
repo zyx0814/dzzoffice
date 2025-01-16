@@ -423,12 +423,6 @@ li{
 	margin-top: 10px;
 	border-bottom: 1px solid #E5E5E5;
 }
-.bs-left-container{
-	background: #FFFFFF;
-}
-.bs-main-container{
-	padding: 0 10px 0 0;
-}
 
 /*列表开始*/
 .filemanage .detail_item_td_div, .DragCopy .detail_item_td_div{

@@ -27,10 +27,10 @@ if (!is_dir('./data/' . $backupdir)) {
 	mkdir('./data/' . $backupdir, 0777);
 }
 $operation = $_GET['operation'] ? $_GET['operation'] : 'export';
-$op = $_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 if ($operation == 'export') {
 
-	$navtitle = lang('database_export') . ' - ' . lang('admin_navtitle');
+	$navtitle = lang('database_export') . ' - ' . lang('appname');
 	if (!submitcheck('exportsubmit', 1)) {
 
 		$shelldisabled = function_exists('shell_exec') ? '' : 'disabled';
@@ -153,13 +153,13 @@ if ($operation == 'export') {
 					unset($sqldump, $zip, $content);
 					$redirecturl = BASESCRIPT . "?mod=system&op=database&operation=export&type=" . rawurlencode($_GET['type']) . "&saveto=server&filename=" . rawurlencode($_GET['filename']) . "&method=multivol&sizelimit=" . rawurlencode($_GET['sizelimit']) . "&volume=" . rawurlencode($volume) . "&tableid=" . rawurlencode($tableid) . "&startfrom=" . rawurlencode($startrow) . "&extendins=" . rawurlencode($_GET['extendins']) . "&sqlcharset=" . rawurlencode($_GET['sqlcharset']) . "&sqlcompat=" . rawurlencode($_GET['sqlcompat']) . "&exportsubmit=yes&usehex={$_GET['usehex']}&usezip={$_GET['usezip']}";
 					$msg = lang('database_export_multivol_redirect', array('volume' => $volume));
-					$msg_type = 'text-success';
+					$msg_type = 'success';
 
 				}
 			} else {
 				$msg = '';
 				$volume--;
-				$filelist = '<ul>';
+				$filelist = '<ol class="list-group list-group-numbered">';
 
 				if ($_GET['usezip'] == 1) {
 					$zip = new zipfile();
@@ -172,7 +172,7 @@ if ($operation == 'export') {
 						fclose($fp);
 						$zip -> addFile($content, basename($filename));
 						$unlinks[] = $filename;
-						$filelist .= "<li><a href=\"$filename\">$filename</a></li>\n";
+						$filelist .= "<li class=\"list-group-item\"><a href=\"$filename\">$filename</a></li>\n";
 					}
 					$fp = fopen($zipfilename, 'w');
 					if (@fwrite($fp, $zip -> file()) !== FALSE) {
@@ -182,7 +182,7 @@ if ($operation == 'export') {
 					} else {
 						C::t('cache') -> insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'], ), false, true);
 						$msg .= lang('database_export_multivol_succeed', array('volume' => $volume, 'filelist' => $filelist));
-						$msg_type = 'text-success';
+						$msg_type = 'success';
 					}
 					unset($sqldump, $zip, $content);
 					fclose($fp);
@@ -190,16 +190,16 @@ if ($operation == 'export') {
 					$filename = $zipfilename;
 					C::t('cache') -> insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'], ), false, true);
 					$msg .= lang('database_export_zip_succeed', array('filename' => $filename));
-					$msg_type = 'text-success';
+					$msg_type = 'success';
 				} else {
 					@touch('./data/' . $backupdir . '/index.htm');
 					for ($i = 1; $i <= $volume; $i++) {
 						$filename = sprintf($_GET['usezip'] == 2 ? $backupfilename . "-%s" . '.zip' : $dumpfile, $i);
-						$filelist .= "<li><a href=\"$filename\">$filename</a></li>\n";
+						$filelist .= "<li class=\"list-group-item\"><a href=\"$filename\">$filename</a></li>\n";
 					}
 					C::t('cache') -> insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'], ), false, true);
 					$msg .= lang('database_export_multivol_succeed', array('volume' => $volume, 'filelist' => $filelist));
-					$msg_type = 'text-success';
+					$msg_type = 'success';
 				}
 			}
 
@@ -247,7 +247,7 @@ if ($operation == 'export') {
 					unset($sqldump, $zip, $content);
 					C::t('cache') -> insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'], ), false, true);
 					$msg = lang('database_export_zip_succeed', array('filename' => $filename));
-					$msg_type = 'text-success';
+					$msg_type = 'success';
 				} else {
 					if (@is_writeable($dumpfile)) {
 						$fp = fopen($dumpfile, 'rb+');
@@ -258,12 +258,12 @@ if ($operation == 'export') {
 					$filename = $backupfilename . '.sql';
 					C::t('cache') -> insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'], ), false, true);
 					$msg = lang('database_export_succeed', array('filename' => $filename));
-					$msg_type = 'text-success';
+					$msg_type = 'success';
 				}
 
 			} else {
 				$msg = lang('database_shell_fail');
-				$msg_type = 'text-error';
+				$msg_type = 'danger';
 
 			}
 
@@ -274,10 +274,10 @@ if ($operation == 'export') {
 } elseif ($operation == 'import') {
 
 	$msg = '';
-	$navtitle = lang('db_recover') . ' - ' . lang('admin_navtitle');
+	$navtitle = lang('db_recover') . ' - ' . lang('appname');
 	if (($re = checkpermission('dbimport')) !== true) {
 		$msg = $re;
-		$msg_type = 'text-error';
+		$msg_type = 'danger';
 		include  template('database');
 		exit();
 	}
@@ -306,7 +306,7 @@ if ($operation == 'export') {
 			$dir -> close();
 		} else {
 			$msg = lang('database_export_dest_invalid');
-			$msg_type = 'text-error';
+			$msg_type = 'danger';
 			include  template('database');
 			exit();
 		}
@@ -365,22 +365,22 @@ if ($operation == 'export') {
 				}
 			}
 			$msg = lang('database_file_delete_succeed');
-			$msg_type = 'text-success';
+			$msg_type = 'success';
 			$redirecturl = dreferer();
 		} else {
 			$msg = lang('database_file_delete_invalid');
-			$msg_type = 'text-error';
+			$msg_type = 'danger';
 			$redirecturl = dreferer();
 		}
 	}
 	include  template('database');
 
 } elseif ($operation == 'runquery') {
-	$navtitle = lang('nav_db_runquery') . ' - ' . lang('admin_navtitle');
+	$navtitle = lang('nav_db_runquery') . ' - ' . lang('appname');
 	$checkperm = checkpermission('runquery', 0);
 	if ($checkperm !== true) {
 		$msg = $checkperm;
-		$msg_type = 'text-error';
+		$msg_type = 'danger';
 		include  template('database');
 		exit();
 	}
@@ -406,11 +406,11 @@ if ($operation == 'export') {
 		}
 		if ($sqlerror) {
 			$msg = lang('database_run_query_invalid', array('sqlerror' => $sqlerror));
-			$msg_type = 'text-error';
+			$msg_type = 'danger';
 			$redirecturl = dreferer();
 		} else {
 			$msg = lang('database_run_query_succeed', array('affected_rows' => $affected_rows));
-			$msg_type = 'text-success';
+			$msg_type = 'success';
 			$redirecturl = dreferer();
 		}
 	}

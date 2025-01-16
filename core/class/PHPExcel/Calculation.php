@@ -2183,7 +2183,7 @@ class PHPExcel_Calculation {
 	 */
 	public static function _unwrapResult($value) {
 		if (is_string($value)) {
-			if ((isset($value{0})) && ($value{0} == '"') && (substr($value,-1) == '"')) {
+			if ((isset($value[0])) && ($value[0] == '"') && (substr($value,-1) == '"')) {
 				return substr($value,1,-1);
 			}
 		//	Convert numeric errors to NaN error
@@ -2291,9 +2291,9 @@ class PHPExcel_Calculation {
 		//	Basic validation that this is indeed a formula
 		//	We return an empty array if not
 		$formula = trim($formula);
-		if ((!isset($formula{0})) || ($formula{0} != '=')) return array();
+		if ((!isset($formula[0])) || ($formula[0] != '=')) return array();
 		$formula = ltrim(substr($formula,1));
-		if (!isset($formula{0})) return array();
+		if (!isset($formula[0])) return array();
 
 		//	Parse the formula and return the token stack
 		return $this->_parseFormula($formula);
@@ -2369,9 +2369,9 @@ class PHPExcel_Calculation {
 		//	Basic validation that this is indeed a formula
 		//	We simply return the cell value if not
 		$formula = trim($formula);
-		if ($formula{0} != '=') return self::_wrapResult($formula);
+		if ($formula[0] != '=') return self::_wrapResult($formula);
 		$formula = ltrim(substr($formula,1));
-		if (!isset($formula{0})) return self::_wrapResult($formula);
+		if (!isset($formula[0])) return self::_wrapResult($formula);
 
 		$pCellParent = ($pCell !== NULL) ? $pCell->getWorksheet() : NULL;
 		$wsTitle = ($pCellParent !== NULL) ? $pCellParent->getTitle() : "\x00Wrk";
@@ -2380,7 +2380,7 @@ class PHPExcel_Calculation {
 			return $cellValue;
 		}
 
-		if (($wsTitle{0} !== "\x00") && ($this->_cyclicReferenceStack->onStack($wsTitle.'!'.$cellID))) {
+		if (($wsTitle[0] !== "\x00") && ($this->_cyclicReferenceStack->onStack($wsTitle.'!'.$cellID))) {
 			if ($this->cyclicFormulaCount <= 0) {
 				return $this->_raiseFormulaError('Cyclic Reference in Formula');
 			} elseif (($this->_cyclicFormulaCount >= $this->cyclicFormulaCount) &&
@@ -2629,7 +2629,7 @@ class PHPExcel_Calculation {
 			} else {
 				if ($value == '') {
 					return 'an empty string';
-				} elseif ($value{0} == '#') {
+				} elseif ($value[0] == '#') {
 					return 'a '.$value.' error';
 				} else {
 					$typeString = 'a string';
@@ -2758,10 +2758,10 @@ class PHPExcel_Calculation {
 		//	Loop through the formula extracting each operator and operand in turn
 		while(TRUE) {
 //echo 'Assessing Expression '.substr($formula, $index),PHP_EOL;
-			$opCharacter = $formula{$index};	//	Get the first character of the value at the current index position
+			$opCharacter = $formula[$index];	//	Get the first character of the value at the current index position
 //echo 'Initial character of expression block is '.$opCharacter,PHP_EOL;
-			if ((isset(self::$_comparisonOperators[$opCharacter])) && (strlen($formula) > $index) && (isset(self::$_comparisonOperators[$formula{$index+1}]))) {
-				$opCharacter .= $formula{++$index};
+			if ((isset(self::$_comparisonOperators[$opCharacter])) && (strlen($formula) > $index) && (isset(self::$_comparisonOperators[$formula[$index+1]]))) {
+				$opCharacter .= $formula[++$index];
 //echo 'Initial character of expression block is comparison operator '.$opCharacter.PHP_EOL;
 			}
 
@@ -3036,11 +3036,11 @@ class PHPExcel_Calculation {
 				}
 			}
 			//	Ignore white space
-			while (($formula{$index} == "\n") || ($formula{$index} == "\r")) {
+			while (($formula[$index] == "\n") || ($formula[$index] == "\r")) {
 				++$index;
 			}
-			if ($formula{$index} == ' ') {
-				while ($formula{$index} == ' ') {
+			if ($formula[$index] == ' ') {
+				while ($formula[$index] == ' ') {
 					++$index;
 				}
 				//	If we're expecting an operator, but only have a space between the previous and next operands (and both are
@@ -3456,7 +3456,7 @@ class PHPExcel_Calculation {
 //					echo 'Token is a PHPExcel constant: '.$excelConstant.'<br />';
 					$stack->push('Constant Value',self::$_ExcelConstants[$excelConstant]);
 					$this->_debugLog->writeDebugLog('Evaluating Constant ', $excelConstant, ' as ', $this->_showTypeDetails(self::$_ExcelConstants[$excelConstant]));
-				} elseif ((is_numeric($token)) || ($token === NULL) || (is_bool($token)) || ($token == '') || ($token{0} == '"') || ($token{0} == '#')) {
+				} elseif ((is_numeric($token)) || ($token === NULL) || (is_bool($token)) || ($token == '') || ($token[0] == '"') || ($token[0] == '#')) {
 //					echo 'Token is a number, boolean, string, null or an Excel error<br />';
 					$stack->push('Value',$token);
 				// if the token is a named range, push the named range name onto the stack
@@ -3498,11 +3498,11 @@ class PHPExcel_Calculation {
 		if (is_string($operand)) {
 			//	We only need special validations for the operand if it is a string
 			//	Start by stripping off the quotation marks we use to identify true excel string values internally
-			if ($operand > '' && $operand{0} == '"') { $operand = self::_unwrapResult($operand); }
+			if ($operand > '' && $operand[0] == '"') { $operand = self::_unwrapResult($operand); }
 			//	If the string is a numeric value, we treat it as a numeric, so no further testing
 			if (!is_numeric($operand)) {
 				//	If not a numeric, test to see if the value is an Excel error, and so can't be used in normal binary operations
-				if ($operand > '' && $operand{0} == '#') {
+				if ($operand > '' && $operand[0] == '#') {
 					$stack->push('Value', $operand);
 					$this->_debugLog->writeDebugLog('Evaluation Result is ', $this->_showTypeDetails($operand));
 					return FALSE;
@@ -3555,8 +3555,8 @@ class PHPExcel_Calculation {
 		}
 
 		//	Simple validate the two operands if they are string values
-		if (is_string($operand1) && $operand1 > '' && $operand1{0} == '"') { $operand1 = self::_unwrapResult($operand1); }
-		if (is_string($operand2) && $operand2 > '' && $operand2{0} == '"') { $operand2 = self::_unwrapResult($operand2); }
+		if (is_string($operand1) && $operand1 > '' && $operand1[0] == '"') { $operand1 = self::_unwrapResult($operand1); }
+		if (is_string($operand2) && $operand2 > '' && $operand2[0] == '"') { $operand2 = self::_unwrapResult($operand2); }
 
 		// Use case insensitive comparaison if not OpenOffice mode
 		if (PHPExcel_Calculation_Functions::getCompatibilityMode() != PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE)

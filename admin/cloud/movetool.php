@@ -9,7 +9,7 @@
 if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-$navtitle=lang('migration_tool');
+$navtitle=lang('dzzpan').' - '.lang('migration_tool').' - '.lang('cloud_set');
 if(submitcheck('movesubmit')){
    $_GET=dhtmlspecialchars($_GET);
    $gets = array(

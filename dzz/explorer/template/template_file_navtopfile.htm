@@ -1,0 +1,62 @@
+<div class="navtoperate">
+	<div class="select-toperate">
+	<div class="select-toperate select-toperate-left selectall-box">
+		<span class="dzz dzz-close  dzz-backing-out"></span>
+        <div class="select-info"></div>
+    </div>
+    <div class="select-toperate select-toperate-center  toolButtons">
+		<div class="shareMenu">
+		</div>
+		<!--回收站开始-->
+		<div class="recycle-option-icon" id="seldeldo" style="display: none;">
+                <button type="button" class="btn" onclick="_filemanage.RecoverFile()">
+                	<span class="dzz dzz-rotate" data-toggle="tooltip" data-placement="bottom" data-original-title="{lang recoverfile}{lang typename_attach}"></span>
+                </button>
+                <button type="button" class="btn" onclick="_filemanage.finallyDelete()">
+                	<span class="dzz dzz-delete" data-toggle="tooltip" data-placement="bottom" data-original-title="{lang completely_cancel}"></span>
+                </button>
+		</div>
+		<!--回收站结束-->
+		<!--分享开始-->
+		<div class="share-option-icon" style="display: none;">
+            <button type="button" class="btn" onclick="_filemanage.cancleshares()">
+            	<span class="dzz dzz-delete" data-toggle="tooltip" data-placement="bottom" data-original-title="{lang cancleshare}"></span>
+            </button>
+            <button type="button" class="btn btnedit" onclick="_filemanage.share()">
+                <span class="dzz dzz-create" data-toggle="tooltip" data-placement="bottom" data-original-title="{lang editshare}"></span>
+            </button>
+		</div>		
+		<!--分享结束-->
+		<!--群组管理开始-->
+		<div class="groupmanage-option-icon" style="display: none;">
+			<div class="groupadmin-toggle managelist">
+                <button type="button" class="btn btn-primary judgemanage closegroup hide"
+                        onclick="close_group()">{lang close_group}
+                </button>
+                <button type="button" class="btn btn-primary judgemanage opengroup hide" onclick="open_group()">
+                    {lang start_group}
+                </button>
+                <button type="button" class="btn btn-primary judgemanage opendiron hide" onclick="open_diron()">
+                    {lang open_shared_directory}
+                </button>
+                <button type="button" class="btn btn-primary judgemanage closediron hide"
+                        onclick="close_diron()">{lang close_shared_directory}
+                </button>
+                <button type="button" class="btn btn-danger" onclick="delete_group()">{lang delete_group}</button>
+            </div>
+		</div>
+		<!--群组管理结束-->
+	</div>
+	<div class="select-toperate select-toperate-right">
+    	<ul class="sizeMenu">
+        <li><a class="icons-thumbnail" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="4"><i class="dzz dzz-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i></a></li>
+        <li><a href="javascript:;" class="toggRight"><i class="dzz dzz-info" data-toggle="tooltip" data-placement="bottom"></i></a></li>
+       </ul>
+	</div>
+	</div>
+</div>
+<script type="text/javascript" reload="1">
+	jQuery(function () {
+	  jQuery('[data-toggle="tooltip"]').tooltip();
+	});
+</script>       

@@ -67,7 +67,7 @@ class table_document_reversion extends dzz_table
 	public function insert_by_parent($arr){
 		return parent::insert($arr,1);
 	}
-	public function insert($arr,$new){
+	public function insert($arr,$new= false,,$replace = false, $silent = false){
 		//先获取最新版本,没有的话新插入
 		$newest=array();
 		if($newest=DB::fetch_first("select * from %t where did=%d order by version DESC limit 1",array($this->_table,$arr['did']))){
@@ -163,7 +163,7 @@ class table_document_reversion extends dzz_table
 			return false;
 		}
 	}
-    public function delete($revid){
+    public function delete($revid, $unbuffered = false){
 		$data=parent::fetch($revid);
 		$attachs=array();
 		if($data['attachs']) $attachs=explode(',',$data['attachs']);

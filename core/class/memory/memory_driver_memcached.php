@@ -13,8 +13,19 @@ class memory_driver_memcached
 		if(!empty($config['server'])) {
 			$this->obj = new Memcached();
 			$connect = $this->connectd($config['server'], $config['port']);
-			$this->enable = $connect ? true : false;
+			$this->enable=$this->checkEnable($connect);
 		}
+	}
+
+	public function checkEnable($connect){
+		if($connect){
+			$this->set('_check_','_check_',10);
+			if($this->get('_check_')=='_check_'){
+				return true;
+			}
+			$this->rm('_check_');
+		}
+		return false;
 	}
 	 public function connectd($host , $port){ 
 		$servers = $this->obj->getServerList(); 
@@ -30,7 +41,7 @@ class memory_driver_memcached
 	}
 
 	public function getMulti($keys) {
-		return $this->obj->get($keys);
+		return $this->obj->getMulti($keys);
 	}
 	public function set($key, $value, $ttl = 0) {
 		return $this->obj->set($key, $value, $ttl);

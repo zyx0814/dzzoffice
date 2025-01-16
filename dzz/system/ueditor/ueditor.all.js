@@ -17,7 +17,19 @@ window.UE = baidu.editor = {
     instants: {},
     I18N: {},
     _customizeUI: {},
-    version: "4.1.0",
+    version: "4.2.0",
+    plus: {
+        fileExt: function (filename) {
+            if (!filename) {
+                return '';
+            }
+            var pcs = filename.split('.');
+            if (pcs.length > 1) {
+                return pcs.pop().toLowerCase();
+            }
+            return '';
+        }
+    },
     constants: {
         STATEFUL: {
             DISABLED: -1,
@@ -15558,70 +15570,102 @@ UE.commands["insertimage"] = {
             range = me.selection.getRange(),
             img = range.getClosedNode();
 
-        if(me.fireEvent('beforeinsertimage', opt) === true){
+        if (me.fireEvent("beforeinsertimage", opt) === true) {
             return;
         }
 
-        if (img && /img/i.test(img.tagName) && (img.className != "edui-faked-video" || img.className.indexOf("edui-upload-video")!=-1) && !img.getAttribute("word_img")) {
+        if (
+            img &&
+            /img/i.test(img.tagName) &&
+            (img.className != "edui-faked-video" ||
+                img.className.indexOf("edui-upload-video") != -1) &&
+            !img.getAttribute("data-word-image")
+        ) {
             var first = opt.shift();
-            var floatStyle = first['floatStyle'];
-            delete first['floatStyle'];
+            var floatStyle = first["floatStyle"];
+            delete first["floatStyle"];
 ////                img.style.border = (first.border||0) +"px solid #000";
 ////                img.style.margin = (first.margin||0) +"px";
 //                img.style.cssText += ';margin:' + (first.margin||0) +"px;" + 'border:' + (first.border||0) +"px solid #000";
             domUtils.setAttributes(img, first);
-            me.execCommand('imagefloat', floatStyle);
+            me.execCommand("imagefloat", floatStyle);
             if (opt.length > 0) {
                 range.setStartAfter(img).setCursor(false, true);
-                me.execCommand('insertimage', opt);
+                me.execCommand("insertimage", opt);
             }
 
         } else {
-            var html = [], str = '', ci;
+            var html = [],
+                str = "",
+                ci;
             ci = opt[0];
             if (opt.length == 1) {
-                str = '<img src="' + ci.src + '" ' + (ci._src ? ' _src="' + ci._src + '" ' : '') +
-                    (ci.width ? 'width="' + ci.width + '" ' : '') +
-                    (ci.height ? ' height="' + ci.height + '" ' : '') +
-                    (ci['floatStyle'] == 'left' || ci['floatStyle'] == 'right' ? ' style="float:' + ci['floatStyle'] + ';"' : '') +
-                    (ci.title && ci.title != "" ? ' title="' + ci.title + '"' : '') +
-                    (ci.border && ci.border != "0" ? ' border="' + ci.border + '"' : '') +
-                    (ci.alt && ci.alt != "" ? ' alt="' + ci.alt + '"' : '') +
+                str =
+                    '<img src="' +
+                    ci.src +
+                    '" ' +
+                    (ci._src ? ' _src="' + ci._src + '" ' : "") +
+                    (ci.width ? 'width="' + ci.width + '" ' : "") +
+                    (ci.height ? ' height="' + ci.height + '" ' : "") +
+                    (ci["floatStyle"] == "left" || ci["floatStyle"] == "right"
+                        ? ' style="float:' + ci["floatStyle"] + ';"'
+                        : "") +
+                    (ci.title && ci.title != "" ? ' title="' + ci.title + '"' : "") +
+                    (ci.border && ci.border != "0" ? ' border="' + ci.border + '"' : "") +
+                    (ci.alt && ci.alt != "" ? ' alt="' + ci.alt + '"' : "") +
 					(ci['class'] && ci['class'] != "" ? ' class="' + ci['class'] + '"' : '') +
 					(ci.path && ci.path != "" ? ' path="' + ci.path + '"' : '') +
 					(ci.apath && ci.apath != "" ? ' apath="' + ci.apath + '"' : '') +
 					(ci.aid && ci.aid != "" ? ' aid="' + ci.aid + '"' : '') +
 					(ci.dsize && ci.dsize != "" ? ' dsize="' + ci.dsize + '"' : '') +
 					(ci.ext && ci.ext != "" ? ' ext="' + ci.ext + '"' : '') +
-                    (ci.hspace && ci.hspace != "0" ? ' hspace = "' + ci.hspace + '"' : '') +
-                    (ci.vspace && ci.vspace != "0" ? ' vspace = "' + ci.vspace + '"' : '') + '/>';
-                if (ci['floatStyle'] == 'center') {
-                    str = '<p style="text-align: center">' + str + '</p>';
-                }
+                    (ci.hspace && ci.hspace != "0"
+                        ? ' hspace = "' + ci.hspace + '"'
+                        : "") +
+                    (ci.vspace && ci.vspace != "0"
+                        ? ' vspace = "' + ci.vspace + '"'
+                        : "") +
+                    "/>";
+                    if (ci["floatStyle"] == "center") {
+                        str = '<p style="text-align: center">' + str + "</p>";
+                    }
                 html.push(str);
 
             } else {
-                for (var i = 0; ci = opt[i++];) {
-                    str = '<p ' + (ci['floatStyle'] == 'center' ? 'style="text-align: center" ' : '') + '><img src="' + ci.src + '" ' +
-                        (ci.width ? 'width="' + ci.width + '" ' : '') + (ci._src ? ' _src="' + ci._src + '" ' : '') +
-                        (ci.height ? ' height="' + ci.height + '" ' : '') +
-						(ci['class'] && ci['class'] != "" ? ' class="' + ci['class'] + '"' : '') +
+                for (var i = 0; (ci = opt[i++]);) {
+                    str =
+                        "<p " +
+                        (ci["floatStyle"] == "center"
+                            ? 'style="text-align: center" '
+                            : "") +
+                        '><img src="' +
+                        ci.src +
+                        '" ' +
+                        (ci.width ? 'width="' + ci.width + '" ' : "") +
+                        (ci._src ? ' _src="' + ci._src + '" ' : "") +
+                        (ci.height ? ' height="' + ci.height + '" ' : "") +
+                        ' style="' +
+                        (ci['class'] && ci['class'] != "" ? ' class="' + ci['class'] + '"' : '') +
 						(ci.path && ci.path != "" ? ' path="' + ci.path + '"' : '') +
 						(ci.apath && ci.apath != "" ? ' apath="' + ci.apath + '"' : '') +
 						(ci.aid && ci.aid != "" ? ' aid="' + ci.aid + '"' : '') +
 						(ci.dsize && ci.dsize != "" ? ' dsize="' + ci.dsize + '"' : '') +
 						(ci.ext && ci.ext != "" ? ' ext="' + ci.ext + '"' : '') +
-                        ' style="' + (ci['floatStyle'] && ci['floatStyle'] != 'center' ? 'float:' + ci['floatStyle'] + ';' : '') +
-                        (ci.border || '') + '" ' +
-                        (ci.title ? ' title="' + ci.title + '"' : '') + ' /></p>';
+                        (ci["floatStyle"] && ci["floatStyle"] != "center"
+                            ? "float:" + ci["floatStyle"] + ";"
+                            : "") +
+                        (ci.border || "") +
+                        '" ' +
+                        (ci.title ? ' title="' + ci.title + '"' : "") +
+                        " /></p>";
                     html.push(str);
                 }
             }
 
-            me.execCommand('insertHtml', html.join(''));
+            me.execCommand("insertHtml", html.join(""));
         }
 
-        me.fireEvent('afterinsertimage', opt)
+        me.fireEvent("afterinsertimage", opt);
     }
 };
 
@@ -15914,8 +15958,8 @@ UE.plugins["font"] = function () {
     me.setOpt({
         fontfamily: [
             {name: "default", val: "default"},
-            {name: "songti", val: "宋体,SimSun"},
-            {name: "yahei", val: "微软雅黑,Microsoft YaHei"},
+            {name: "songti", val: "SimSun"},
+            {name: "yahei", val: "'Microsoft YaHei'"},
             {name: "kaiti", val: "楷体,楷体_GB2312,SimKai"},
             {name: "heiti", val: "黑体,SimHei"},
             {name: "lishu", val: "隶书,SimLi"},
@@ -16025,7 +16069,13 @@ UE.plugins["font"] = function () {
                     next = span.nextSibling;
                 }
             }
-
+            var father = span.parentElement;
+            try {
+                if(father.style.textIndent && span.style.fontSize !== father.style.fontSize){
+                    father.style.fontSize = span.style.fontSize
+                }
+            } catch (error) {
+            }
             mergeWithParent(span);
             if (browser.ie && browser.version > 8) {
                 //拷贝父亲们的特别的属性,这里只做背景颜色的处理
@@ -17058,7 +17108,18 @@ UE.commands["indent"] = {
             value = me.queryCommandState("indent")
                 ? "0em"
                 : me.options.indentValue || "2em";
-        me.execCommand("Paragraph", "p", {style: "text-indent:" + value});
+        // 首行缩进不准确
+        // https://gitee.com/modstart-lib/ueditor-plus/issues/IAW75Z
+        var pN = domUtils.filterNodeList(
+            this.selection.getStartElementPath(),
+            "p h1 h2 h3 h4 h5 h6"
+        )
+        try {
+            me.execCommand("Paragraph", "p", {style: "text-indent:" + value + ';font-size:' + pN.firstChild.style.fontSize});
+        } catch (error) {
+            me.execCommand("Paragraph", "p", {style: "text-indent:" + value});
+        }
+        // me.execCommand("Paragraph", "p", {style: "text-indent:" + value});
     },
     queryCommandState: function () {
         var pN = domUtils.filterNodeList(
@@ -19739,7 +19800,7 @@ UE.plugins["paste"] = function () {
     var txtContent, htmlContent, address;
 
     function getPureHtml(html) {
-        return html.replace(/<(\/?)([\w\-]+)([^>]*)>/gi, function (
+        var result = html.replace(/<(\/?)([\w\-]+)([^>]*)>/gi, function (
             a,
             b,
             tagName,
@@ -19772,9 +19833,12 @@ UE.plugins["paste"] = function () {
             ) {
                 return "";
             } else {
-                return "<" + b + tagName + " " + utils.trim(attrs) + ">";
+                attrs = utils.trim(attrs);
+                return "<" + b + tagName + (attrs? (" " + attrs): '') + ">";
             }
         });
+        result = result.replace(/<\/p >/g, '</p>');
+        return result;
     }
 
     function filter(div) {
@@ -23513,26 +23577,56 @@ UE.plugins["video"] = function () {
      * ```
      */
     me.commands["insertvideo"] = {
-        execCommand: function (cmd, videoObjs, type){
-            videoObjs = utils.isArray(videoObjs)?videoObjs:[videoObjs];
-            var html = [],id = 'tmpVedio', cl;
-            for(var i=0,vi,len = videoObjs.length;i<len;i++){
-                vi = videoObjs[i];
-                cl = (type == 'upload' ? 'edui-upload-video video-js vjs-default-skin':'edui-faked');
-                html.push(creatInsertStr( vi.url, vi.width || 420,  vi.height || 280, id + i, null, cl, 'iframe'));
+        execCommand: function (cmd, videoObjs, type) {
+            videoObjs = utils.isArray(videoObjs) ? videoObjs : [videoObjs];
+
+            if (me.fireEvent("beforeinsertvideo", videoObjs) === true) {
+                return;
             }
-            me.execCommand("inserthtml",html.join(""),true);
+
+            var html = [],
+                id = "tmpVideo",
+                cl;
+            for (var i = 0, vi, len = videoObjs.length; i < len; i++) {
+                vi = videoObjs[i];
+                var videoType = 'iframe';
+                if (vi.url.match(/.mp4$/)) {
+                    videoType = 'video';
+                }
+                cl = videoType == "iframe"
+                    ? "edui-video-iframe"
+                    : "edui-video-video";
+                html.push(
+                    creatInsertStr(
+                        vi.url,
+                        vi.width || 420,
+                        vi.height || 280,
+                        id + i,
+                        null,
+                        cl,
+                        videoType
+                    )
+                );
+            }
+            me.execCommand("inserthtml", html.join(""), true);
             var rng = this.selection.getRange();
-            //for(var i= 0,len=videoObjs.length;i<len;i++){
-//                var img = this.document.getElementById('tmpVedio'+i);
-//                domUtils.removeAttributes(img,'id');
-//                rng.selectNode(img).select();
-//                me.execCommand('imagefloat',videoObjs[i].align)
-//            }
+            // for (var i = 0, len = videoObjs.length; i < len; i++) {
+            //   var img = this.document.getElementById("tmpVideo" + i);
+            //   domUtils.removeAttributes(img, "id");
+            //   rng.selectNode(img).select();
+            //   me.execCommand("imagefloat", videoObjs[i].align);
+            // }
+
+            me.fireEvent("afterinsertvideo", videoObjs);
         },
-        queryCommandState : function(){
+        queryCommandState: function () {
             var img = me.selection.getRange().getClosedNode(),
-                flag = img && (img.className == "edui-faked-video" || img.className.indexOf("edui-upload-video")!=-1);
+                flag =
+                    img &&
+                    (img.className == "edui-video-iframe" ||
+                        img.className.indexOf("edui-video-iframe") != -1 ||
+                        img.className == "edui-video-video" ||
+                        img.className.indexOf("edui-video-video") != -1);
             return flag ? 1 : 0;
         }
     };
@@ -29188,10 +29282,10 @@ UE.plugins["formatmatch"] = function () {
                 text && domUtils.remove(text);
             }
         }
-
         me.undoManger && me.undoManger.save();
-        me.removeListener("mouseup", addList);
-        flag = 0;
+        // 新增：格式化默认使用连续格式模式，支持快速格式化
+        // me.removeListener("mouseup", addList);
+        // flag = 0;
     }
 
     me.commands["formatmatch"] = {
@@ -29986,6 +30080,7 @@ UE.plugin.register("autoupload", function () {
             errorHandler,
             successHandler,
             filetype = /image\/\w+/i.test(file.type) ? "image" : "file",
+            fileExt = UE.plus.fileExt(file.name),
             loadingId = "loading_" + (+new Date()).toString(36);
 
         fieldName = me.getOpt(filetype + "FieldName");
@@ -30100,7 +30195,7 @@ UE.plugin.register("autoupload", function () {
         var imageCompressEnable = me.getOpt('imageCompressEnable'),
             imageMaxSize = me.getOpt('imageMaxSize'),
             imageCompressBorder = me.getOpt('imageCompressBorder');
-        if ('image' === filetype && imageCompressEnable) {
+            if ('image' === filetype && imageCompressEnable && ['jpg', 'jpeg', 'png'].includes(fileExt)) {
             UE.image.compress(file, {
                 maxSizeMB: imageMaxSize / 1024 / 1024,
                 maxWidthOrHeight: imageCompressBorder
@@ -30706,40 +30801,44 @@ UE.plugin.register("simpleupload", function (){
     }
 
     return {
-        bindEvents:{
-            'ready': function() {
+        bindEvents: {
+            ready: function () {
                 //设置loading的样式
-                utils.cssRule('loading',
-                    '.loadingclass{display:inline-block;cursor:default;background: url(\''
-                    + this.options.themePath
-                    + this.options.theme +'/images/loading.gif\') no-repeat center center transparent;border:1px solid #cccccc;margin-right:1px;height: 22px;width: 22px;}\n' +
-                    '.loaderrorclass{display:inline-block;cursor:default;background: url(\''
-                    + this.options.themePath
-                    + this.options.theme +'/images/loaderror.png\') no-repeat center center transparent;border:1px solid #cccccc;margin-right:1px;height: 22px;width: 22px;' +
-                    '}',
-                    this.document);
+                utils.cssRule(
+                    "loading",
+                    ".uep-loading{display:inline-block;cursor:default;background: url('" +
+                    this.options.themePath +
+                    this.options.theme +
+                    "/images/loading.gif') no-repeat center center transparent;border-radius:3px;outline:1px solid #EEE;margin-right:1px;height:22px;width:22px;}\n" +
+                    ".uep-loading-error{display:inline-block;cursor:default;background: url('" +
+                    this.options.themePath +
+                    this.options.theme +
+                    "/images/loaderror.png') no-repeat center center transparent;border-radius:3px;outline:1px solid #EEE;margin-right:1px;height:22px;width:22px;" +
+                    "}",
+                    this.document
+                );
             },
             /* 初始化简单上传按钮 */
-            'simpleuploadbtnready': function(type, container) {
+            simpleuploadbtnready: function (type, container) {
                 containerBtn = container;
                 me.afterConfigReady(initUploadBtn);
             }
         },
-        outputRule: function(root){
-            utils.each(root.getNodesByTagName('img'),function(n){
-                if (/\b(loaderrorclass)|(bloaderrorclass)\b/.test(n.getAttr('class'))) {
+        outputRule: function (root) {
+            utils.each(root.getNodesByTagName("img"), function (n) {
+                if (/\b(uep\-loading\-error)|(bloaderrorclass)\b/.test(n.getAttr("class"))) {
                     n.parentNode.removeChild(n);
                 }
             });
         },
         commands: {
-            'simpleupload': {
+            simpleupload: {
                 queryCommandState: function () {
-                    return isLoaded ? 0:-1;
+                    return isLoaded ? 0 : -1;
                 }
             }
         }
-    }
+    };
 });
 
 
@@ -30896,14 +30995,18 @@ UE.plugin.register("insertfile", function (){
                 "ico":"icon_jpg.gif",
                 "bmp":"icon_jpg.gif"
             };
-        return maps[ext] ? maps[ext]:maps['txt'];
+            return maps[ext] ? maps[ext] : maps["unknown"];
     }
 
     return {
         commands:{
-            'insertfile': {
+            insertfile: {
                 execCommand: function (command, filelist){
                     filelist = utils.isArray(filelist) ? filelist : [filelist];
+
+                    if (me.fireEvent("beforeinsertfile", filelist) === true) {
+                        return;
+                    }
 
                     var i, item, icon, title,
                         html = '',
@@ -30927,10 +31030,11 @@ UE.plugin.register("insertfile", function (){
                     }
                     }
                     me.execCommand('insertHtml', html);
+                    me.fireEvent("afterinsertfile", filelist);
                 }
             }
         }
-    }
+    };
 });
 
 

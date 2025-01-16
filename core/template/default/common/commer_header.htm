@@ -55,7 +55,7 @@ _notice.flashTitle=function(flag){
 	_notice.flashStep++;
 	if (_notice.flashStep==3) {_notice.flashStep=1;}
 	if (_notice.flashStep==1) {document.title="【您有新的通知】";}
-	if (_notice.flashStep==2) {document.title="【　　　　　　】";}
+	if (_notice.flashStep==2) {document.title="【$_G[setting][sitename]】";}
 	setTimeout(function(){_notice.flashTitle();},500);  //循环
 }
 </script>

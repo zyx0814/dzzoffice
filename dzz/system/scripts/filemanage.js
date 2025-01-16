@@ -795,8 +795,6 @@ _filemanage.prototype.tddraging = function () {
 _filemanage.prototype.tddraged = function (e) {
 	this.DetachEvent(e);
 	jQuery('#_blank').hide();
-	//document.getElementById('_blank').style.cursor="url('dzz/images/cur/aero_arrow.cur'),auto";
-	//document.body.style.cursor="url('dzz/images/cur/aero_arrow.cur'),auto";
 	var xx = e.clientX - this.XX;
 	//计算新的各个td的百分比
 	var right_width = _window.windows[this.winid].bodyWidth - jQuery('#jstree_area').width();
@@ -857,11 +855,8 @@ _filemanage.prototype.tddraged = function (e) {
 		this.detailper[i] = Math.floor((all_width[i] / right_width) * 100);
 	}
 	this.showIcos(this.winid);
-	//alert(document.getElementById('tabs_cover').offsetLeft+'========='+document.getElementById('tabs_cover').offsetWidth);
 };
 _filemanage.prototype.DetachEvent = function () {
-
-	//document.body.style.cursor="url('dzz/images/cur/aero_arrow.cur'),auto";
 	document.onmousemove = _filemanage.onmousemove;
 	document.onmouseup = _filemanage.onmouseup;
 	document.onselectstart = _filemanage.onselectstart;

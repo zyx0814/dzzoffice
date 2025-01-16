@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--{template mobile/mobile_header}-->
+    <title>类型</title>
+</head>
+<body>
+<section class="weui-address">
+    <a href="{MOD_URL}" class="weui-index">
+        <span class="dzz dzz-home dzz-index"></span>
+        <i class="dzz dzz-vline dzz-index-vline"></i>
+    </a>
+    <div class="weui-address-container" id="weui_address_scroll">
+        <div class="scroller">
+            <ul class="weui-address-field">
+                <li>
+                    <a href="{$_G['siteurl']}{MOD_URL}&op=mobile&do=cat">类型</a><span class="dzz dzz-chevron-right"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!--列表开始-->
+<section class="weui-cells weui-cells__recent weui-cells__margin_footer">
+    <!--{loop $catsearch $v}-->
+    <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=cat&operation=catcontent&cid={$v[id]}">
+        <div class="weui-cell__hd"><span class="dzz dzz-photo-actual weui-cell__img weui-cell__images"></span></div>
+        <div class="weui-cell__bd">
+            <h4>$v[catname]</h4>
+            <p>$v[catcontain]</p>
+        </div>
+        <div class="weui-cell__ft"></div>
+    </a>
+    <!--{/loop}-->
+</section>
+<!--底部开始-->
+<footer class="weui-cell-footer">
+    <a href="javascript:;" class="weui-footer-item searchFiles">
+        <i class="dzz dzz-search"></i>
+        <p>搜索</p>
+    </a>
+    <a href="javascript:;" class="weui-footer-item" onclick="location.reload();">
+        <i class="dzz dzz-refresh"></i>
+        <p>刷新</p>
+    </a>
+</footer>
+<!--底部结束-->
+</body>
+<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/mobile/appevent.js"></script>
+<script type="text/javascript">
+    $(document).off('tap.search').on('tap.search', '.searchFiles', function () {
+        window.location.href = '{MOD_URL}&op=mobile&do=search';
+    })
+</script>
+<!--{hook footer_tpl}-->
+<!--{eval output();}-->
+</html>

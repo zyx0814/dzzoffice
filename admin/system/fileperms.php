@@ -11,13 +11,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 include_once libfile('function/admin');
 $oparr = array('updatecache', 'database','cron', 'log','fileperms');
-$leftmenu = array();
-$op = $_GET['op'];
-foreach ($oparr as $key => $value) {
-	$leftmenu[$value] = array('title' => lang($value), 'active' => '');
-	if ($value == $op)
-		$leftmenu[$value]['active'] = 'class="nav-link active"';
-}
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 $navtitle = lang('fileperms') . ' - ' . lang('appname');
 $step = max(1, intval($_GET['step']));
 if ($step == 1) {
@@ -51,13 +45,13 @@ if ($step == 1) {
 				continue;
 			} else {
 				if(!dir_writeable($fullentry)) {
-					$result .= '<li class="list-group-item list-group-item-danger">'.(is_dir($fullentry) ? lang('dir') : lang('file')).'./'.$entry.'<span class="badge bg-danger rounded-pill">无法写入</span></li>';
+					$result .= '<li class="list-group-item text-danger d-flex justify-content-between align-items-start"><div class="ms-2 me-auto"><div class="fw-bold">'.(is_dir($fullentry) ? lang('dir') : lang('file')).'./'.$entry.'</div></div><span class="badge bg-danger rounded-pill">无法写入</span></li>';
 				}
 			}
 		}
-		$result .= '<li class="list-group-item list-group-item-success">文件及目录属性全部正确<span class="badge bg-primary rounded-pill">都能写入</span></li>';
+		$result .= '<li class="list-group-item d-flex justify-content-between align-items-start"><div class="ms-2 me-auto"><div class="fw-bold">文件及目录属性全部正确</div></div><span class="badge bg-primary rounded-pill">都能写入</span></li>';
 	} catch (Exception $e) {
-		$result .= "<li class=\"list-group-item list-group-item-danger\">发生错误：".$e->getMessage()."</li>";
+		$result .= "<li class=\"list-group-item text-danger\">发生错误：".$e->getMessage()."</li>";
 	}
 }
 include template('fileperms');

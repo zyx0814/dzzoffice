@@ -1,5 +1,5 @@
 <div class="hide breadcrumb-data">
-    <li class="route" data-href="{DZZSCRIPT}?mod=shares&op=ajax&path=$morepath">
+    <li class="route" data-href="{DZZSCRIPT}?mod=shares&op=ajax&path=$morepath&sid=$_GET['sid']">
         <a href="javascript:;">$foldername</a><span class="dzz dzz-chevron-right"></span>
     </li>
 </div>
@@ -28,8 +28,8 @@
     <div class="weui-cell__bd">
         <h4 >$v[name]</h4>
         <p>
-            <span class="size">$v[fsize]</span><i class="date">{eval echo dgmdate($v[dateline],'Y/m/d');}</i>
-            <span class="date-time">{eval echo dgmdate($v[dateline],'H:i');}</span>
+            <span class="size">$v[fsize]</span><i class="date">{eval echo dgmdate($v['dateline'],'Y/m/d');}</i>
+            <span class="date-time">{eval echo dgmdate($v['dateline'],'H:i');}</span>
         </p>
     </div>
     <div class="weui-cells_checkbox hide">

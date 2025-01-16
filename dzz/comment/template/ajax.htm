@@ -1,12 +1,16 @@
-
 <!--{if $do == 'getcomment'}-->
 	<!--{template common/header_ajax}-->
-   
+	<!--{if $modal}-->
+   <div class="modal-header">
+	<h4 class="modal-title">所有评论列表</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  </div>
+  <div class="modal-body">
+  <!--{/if}-->
     <!--{loop $list $value}-->
-      <!--{template thread_item}-->
+    <!--{template thread_item}-->
     <!--{/loop}-->
-     <!--{if $multi}--><div class="comment-page clearfix">$multi</div><!--{/if}-->	
-    
+    <!--{if $multi}--><div class="comment-page clearfix">$multi</div><!--{/if}-->	
     <script type="text/javascript" reload="1">
 		  jQuery(document)
 			.on('mouseenter','.cmt_fed',function(){
@@ -28,25 +32,42 @@
 					jQuery('img[data-original]').dzzthumb();
 				}); 
 		});
-		
    </script>
-   
+   <!--{if $modal}-->
+</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{lang close}</button>
+	</div>
+	<!--{/if}-->
    <!--{template common/footer_ajax}-->
-<!--{elseif $do == 'getcommentbycid'}-->
-	<!--{if $value['pcid']>0}-->
+   <!--{elseif $do == 'getcommentbycid'}-->
+   <!--{if $modal}-->
+   <!--{template common/header_ajax}-->
+   <div class="modal-header">
+	<h4 class="modal-title">当前评论列表</h4>
+	<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  </div>
+  <div class="modal-body">
+  <!--{/if}-->
+   <!--{if $value['pcid']>0}-->
     {eval $value1=$value}
      <!--{template reply_item}-->
     <!--{else}-->
       <!--{template thread_item}-->
     <!--{/if}-->
-    
+	<!--{if $modal}-->
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{lang close}</button>
+	</div>
+	<!--{template common/footer_ajax}-->
+	<!--{/if}-->
 <!--{elseif $do == 'getreplys'}-->
 	<!--{template common/header_ajax}-->
     <!--{loop $list $value1}-->
       <!--{template reply_item}-->
     <!--{/loop}-->	
     <script type="text/javascript" reload="1">
-		  
 	<!--{if $limit=='0'}-->
 	  jQuery('#comment_{$cid}').find('.txt_cfed a').off('click').addClass('cur')
 	  .on('click',function(){
@@ -73,7 +94,6 @@
 	
    </script>
    <!--{template common/footer_ajax}-->
-
 <!--{elseif $do == 'getReplyForm'}-->
 	<!--{template common/header_ajax}-->
 	<!--{template reply_form}-->

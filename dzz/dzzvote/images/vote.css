@@ -61,10 +61,6 @@
 	box-shadow:inset 0 1px 1px #ffffff;
 	word-break:break-all
 }
-.dzzvote .dzzvote-header{
-	padding:5px 0 15px 0;
-	border-bottom:1px solid #e7e7e7;
-}
 .dzzvote-header-plate{
 
 	-webkit-border-radius: 4px;
@@ -98,32 +94,10 @@
 	line-height: 2;
 	
 }
-
-.dzzvote-header-body{
-	padding-left: 75px;
-	padding-top:3px;
-	
-}
-.dzzvote-subject{
-	margin:0 0  15px 0;
-	font-size:18px;
-	font-weight:700;
-	
-}
-.dzzvote .dzzvote-body{
-	padding:20px 0;
-	border-top:1px solid #FFF;
-	word-break:break-all
-}
-.dzzvote .dzzvote-body .radio,.dzzvote .dzzvote-body .checkbox{
-	margin:0;
-}
-.dzzvote .dzzvote-body .progress{
+.progress{
 	border:1px solid #e7e7e7;
 	background:#FBFBFB;
 	box-shadow:none;
-	
-	
 }
 
 .dzzvote-user{

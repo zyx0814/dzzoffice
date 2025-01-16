@@ -35,10 +35,9 @@ if(submitcheck('avatarsubmit')) {
 $user = C::t('user')->get_user_by_uid($_G['uid']);
 
 if(empty($user['avatarstatus']) && dzz_check_avatar($_G['uid'], 'middle')) {
-
 	C::t('user')->update($_G['uid'], array('avatarstatus'=>'1'));
 }
-
+$navtitle=lang('Modify_the_picture');
 include template("avatar");
 
 function dzz_check_avatar($uid, $size = 'middle', $type = 'virtual') {
@@ -58,7 +57,6 @@ function upBase64($base64Data,$uid){
 	if (!(file_put_contents($temp, $img))) { //移动失败
 		return false;
 	} else { //移动成功,生成3种尺寸头像
-		
 		$home = get_home($uid);
 		if(!is_dir(DZZ_ROOT.'./data/avatar/'.$home)) {
 			set_home($uid, DZZ_ROOT.'./data/avatar/');

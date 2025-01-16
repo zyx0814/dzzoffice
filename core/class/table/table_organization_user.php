@@ -277,7 +277,7 @@ class table_organization_user extends dzz_table
         foreach (DB::fetch_all("select * from %t where orgid=%d", array($this->_table, $orgid)) as $value) {
             if (DB::result_first("select COUNT(*) from %t where orgid=%d and uid=%d", array($this->_table, $org['forgid'], $value['uid']))) {
                 C::t('organization_admin')->delete_by_uid_orgid($value['uid'], $orgid);
-                DB::delete($this->_table, "orgid='{$org[forgid]}' and uid='{$value[uid]}'");
+                DB::delete($this->_table, "orgid='{$org['forgid']}' and uid='{$value['uid']}'");
             } else {
                 $value['orgid'] = $org['forgid'];
                 parent::insert($value);

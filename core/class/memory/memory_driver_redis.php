@@ -20,7 +20,7 @@ class memory_driver_redis
 			} catch (RedisException $e) {
 			    echo $e;
 			}
-			$this->enable = $connect ? true : false;
+			$this->enable = $this->checkEnable($connect);
 			if($this->enable) {
 				if($config['requirepass']) {
 					$this->obj->auth($config['requirepass']);
@@ -30,6 +30,16 @@ class memory_driver_redis
 		}
 	}
 
+	public function checkEnable($connect){
+		if($connect){
+			$this->set('_check_','_check_',10);
+			if($this->get('_check_')=='_check_'){
+				return true;
+			}
+			$this->rm('_check_');
+		}
+		return false;
+	}
 	function &instance() {
 		static $object;
 		if(empty($object)) {

@@ -1,0 +1,120 @@
+	<div class="middlecenter  scroll-100 scroll-srcollbars">
+        <div class="middle-padding-left">
+
+			<div class="middletopMenu  clearfix">
+				<div class="pictures-names">
+					<div class="owm-group clearfix">
+						<div class="form-group file-editcon">
+							<p class="own-label">{lang extension}：</p>
+							<ul class="own-type ext">
+								<!--{loop $cattext $v}-->
+								<li class="search-select"><span class="label label-glitter border-glitter" data-ext="$v">*$v</span><img src="{MOD_PATH}/img/ic-filtrate.png" style="display: none;" class="label-rightimg"></li>
+								<!--{/loop}-->
+							</ul>
+						</div>
+						<div class="form-group file-editcon">
+							<p class="own-label">{lang label}：</p>
+							<ul class="own-type tag">
+								<!--{loop $tagarr $val}-->
+								<li class="search-select"><span class="label label-glitter border-glitter" data-tid="$val[tid]">$val[tagname]</span><img src="{MOD_PATH}/img/ic-filtrate.png" style="display: none;" class="label-rightimg"></li>
+								<!--{/loop}-->
+							</ul>
+						</div>
+
+					</div>
+					<button type="button" class="btn btn-primary share-editbutton" onclick="showWindow('editcatsearch','{MOD_URL}&op=ajax&operation=addsearchcat&id={$catid}','get',0)">
+						<span class="dzz dzz-create"></span>
+						{lang edit}</button>
+				</div>
+			</div>
+
+            <div id="filemanage-cat-$catid"></div>
+        </div>
+	</div>
+    
+
+<!--头部信息框-->
+<div class="navtopheader">
+</div>
+
+<div id="template_middleicon" style="display:none">
+<!--{template template_file_middleicon}-->
+</div>
+<div id="template_detaillist"  style="display:none">
+<!--{template template_file_detaillist_cat}-->
+</div>
+<div id="template_toolButton" style="display:none">
+<!--{template template_file_toolButton}-->
+</div>
+<div id="template_file" style="display:none">
+<!--{template template_file_navtopfile}-->
+</div>
+<div id="template_nofile_notice" style="display:none">
+	<!--{template noFilePage-search}-->
+</div>
+<script type="text/javascript">
+
+	$(document).ready(function(e) {
+		var hash=location.hash;
+		var id=_explorer.getUrlParam(hash,'id');
+        _filemanage.getData(_explorer.appUrl+'&op=catsearch&do=filelist&sid=cat-'+id);
+    });
+	jQuery('.middlecenter').on('resize',function(e){
+	});
+
+var conditioncatsearch = {'ext':[],'tag':[]};
+var hash=location.hash;
+var catid=hash.replace(/(.+?)\&id\=/,'');
+//鼠标滑过
+$(document).on('mouseenter','.own-type .search-select',function(){
+	$(this).addClass('hover');
+});
+$(document).on('mouseleave','.own-type .search-select',function(){
+	$(this).removeClass('hover');
+});
+//点击扩展名
+$(document).off('click.filesearch').on('click.filesearch','.own-type .search-select',function(){
+	$(this).find('.label-rightimg').toggle();
+	var isext=jQuery(this).closest('.own-type').hasClass('ext');
+    var ext = $('span',this).data('ext');
+    if(typeof ext == 'undefined'){
+        var ext = $('span',this).data('tid');
+    }
+    var extpreg = /\.\w+/;
+
+	if($(this).hasClass('fileclick')){
+        if(isext){
+            ext = ext.replace('.','');
+            var index = $.inArray(ext,conditioncatsearch.ext);
+            if(index != -1){
+                conditioncatsearch.ext.splice(index,1);
+            }
+        }else{
+            var index = $.inArray(ext,conditioncatsearch.tag);
+            if(index != -1){
+                conditioncatsearch.tag.splice(index,1);
+            }
+        }
+		$(this).removeClass('fileclick');
+	}else{
+        if(isext){
+            ext = ext.replace('.','');
+            if($.inArray(ext,conditioncatsearch.ext) == -1){
+                conditioncatsearch.ext.push(ext);
+            }
+        }else{
+            if($.inArray(ext,conditioncatsearch.tag) == -1){
+                conditioncatsearch.tag.push(ext);
+            }
+        }
+		$(this).addClass('fileclick');
+	}
+	var filemanage=_filemanage.cons['cat-'+catid];
+
+    filemanage.exts=(conditioncatsearch.ext.length > 0) ? conditioncatsearch.ext.join(','):'';
+
+    filemanage.tags=(conditioncatsearch.tag.length > 0) ? conditioncatsearch.tag.join(','):'';
+
+	_filemanage.cons['cat-'+catid].pageClick();
+})
+</script>

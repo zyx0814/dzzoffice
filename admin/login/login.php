@@ -128,45 +128,47 @@ function html_login_form() {
 	$loginuser = $isguest ? '<input class="form-control" name="admin_email"  type="text" title="" onfocus="if(this.value==\'' . lang('login_email_username') . '\'){this.value=\'\'}"   onblur="if(this.value==\'\'){this.value=\'' . lang('login_email_username') . '\'}"  autocomplete="off" />' : '<div class="username">' . $_G['member']['username'] . '</div><div class="email">' . $_G['member']['email'] . '</div>';
 	$sid = getglobal('sid');
     $avatarstatus=getglobal('avatarstatus','member');
+	$avastar = '';
    if(!$uid){
 	if($_G['setting']['bbclosed']){
 		$sitelogo = 'static/image/common/logo.png';
 	}else{
 		$sitelogo=$_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';
 	}
+	$avastar='<img src="'.$sitelogo.'">';
    }else{
 	   $avastar = avatar_block($uid); 
    }
 	$avastar.='<div class="maintitle">'.$maintitle.'</div>';
 	$extra = BASESCRIPT . '?' . $_SERVER['QUERY_STRING'];
 	$forcesecques = '<option value="0">' . ($_G['config']['admincp']['forcesecques'] ? $lang1['forcesecques'] : $lang1['security_question_0']) . '</option>';
-	echo <<<EOT
+echo <<<EOT
     	
-		<form method="post" name="login" id="loginform" action="$extra" onsubmit="pwmd5('admin_password')">
-            <input type="hidden" name="sid" value="$sid">
-            <div class="loginformContainer">       
-                <div class="avatarContainer">$avastar</div>
-				
-                $loginuser
-                <div id="admin_password_Container">
-						<input  name="admin_password"  id="admin_password"  type="password" class="form-control"  value="" autocomplete="off" placeholder="$lang1[password]" />
+<form method="post" name="login" id="loginform" action="$extra" onsubmit="pwmd5('admin_password')">
+	<input type="hidden" name="sid" value="$sid">
+	<div class="loginformContainer">       
+		<div class="avatarContainer">$avastar</div>
+		
+		$loginuser
+		<div id="admin_password_Container">
+				<input  name="admin_password"  id="admin_password"  type="password" class="form-control"  value="" autocomplete="off" placeholder="$lang1[password]" />
 
-                </div>
-                <input name="submit" value="$lang1[login]" type="submit" class="btn btn-primary"  />
-                <div class="copyright">Powered by <a href="http://www.dzzoffice.com/" target="_blank">DzzOffice</a> &copy; 2012-$year</div>
-             </div>
-             
-		 </form>
-		<script type="text/JavaScript">
-            jQuery(document).ready(function(e) {
-				jQuery('#loginform .form-control:first').focus();
-                if(jQuery('.ie8,.ie9').length){ //ie8模拟placeholder;
-                    jQuery(':input[placeholder]').each(function(){
-                        jQuery(this).placeholder();
-                    });
-                }
-            });
-		</script>
+		</div>
+		<input name="submit" value="$lang1[login]" type="submit" class="btn btn-primary bodyloading"  />
+		<div class="copyright">Powered by <a href="http://www.dzzoffice.com/" target="_blank">DzzOffice</a> &copy; 2012-$year</div>
+		</div>
+		
+	</form>
+<script type="text/JavaScript">
+	jQuery(document).ready(function(e) {
+		jQuery('#loginform .form-control:first').focus();
+		if(jQuery('.ie8,.ie9').length){ //ie8模拟placeholder;
+			jQuery(':input[placeholder]').each(function(){
+				jQuery(this).placeholder();
+			});
+		}
+	});
+</script>
 EOT;
 }
 ?>

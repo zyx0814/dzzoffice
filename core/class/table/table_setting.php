@@ -36,7 +36,7 @@ class table_setting extends dzz_table
 		return $data;
 	}
 
-	public function update($skey, $svalue){
+	public function update($skey, $svalue, $unbuffered = false, $low_priority = false){
 		return DB::insert($this->_table, array($this->_pk => $skey, 'svalue' => is_array($svalue) ? serialize($svalue) : $svalue), false, true);
 	}
 

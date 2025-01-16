@@ -1,0 +1,100 @@
+<section class="weui-cells weui-cells__recent">
+    <a class="weui-cell weui-cell_access" href="javascript:;">
+        <div class="weui-cell__hd">
+            <!--{if $fileinfo['isgroup'] && $fileinfo['gid']}-->
+                {eval echo avatar_group($gid);}
+            <!--{elseif $fileinfo['flag'] == 'home'}-->
+            <i class="dzz dzz-mydisk  right-topicon"></i>
+            <!--{elseif $fileinfo['ismulti']}-->
+            <i class="dzz dzz-copy right-topicon"></i>
+            <!--{elseif $fileinfo['type'] == 'folder'}-->
+            <span class="dzz dzz-folder right-topimg"></span>
+            <!--{else}-->
+            <span class="weui-cell__hd"><img src="$fileinfo[img]" width="36px;" height="36px" class="weui-cell__recentimg"></span>
+            <!--{/if}-->
+        </div>
+        <div class="weui-cell__bd">
+            <h4><!--{if $fileinfo[name]}-->$fileinfo[name]<!--{elseif $fileinfo[fname]}-->$fileinfo[fname]<!--{else}--><!--{/if}--></h4>
+        </div>
+    </a>
+</section>
+<!--列表结束-->
+<!--列表详情开始-->
+<section class="weui-form-preview weui-form-share__detail">
+    <div class="weui-form-preview__bd">
+        <!--{if ($fileinfo['isgroup'] || $fileinfo['pfid'] == 0) && !$fileinfo['ismulti']}-->
+        <div class="weui-form-preview__item weui-attr-progress">
+            <p>已使用{eval echo formatsize($usesize);}(<!--{if $maxspace == 0}-->不限制<!--{elseif $maxspace < 0}-->0<!--{else}-->共{eval echo formatsize($maxspace);}<!--{/if}-->)</p>
+            <div class="weui-progress">
+                <div class="weui-progress__bar">
+                    <div class="weui-progress__inner-bar js_progress" style="width: {$progress}%;"></div>
+                </div>
+            </div>
+        </div>
+        <!--{/if}-->
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang type}</label>
+            <span class="weui-form-preview__value">$fileinfo['type']</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang position}</label>
+            <span class="weui-form-preview__value">$fileinfo[realpath]</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang possesor}</label>
+            <span class="weui-form-preview__value">$fileinfo['username']</span>
+        </div>
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang big_small}</label>
+            <span class="weui-form-preview__value"><!--{if $fileinfo[ffsize]}-->$fileinfo[ffsize]<!--{else}-->$fileinfo[fsize]<!--{/if}--></span>
+        </div>
+        <!--{if $fileinfo[contain]}-->
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang include}</label>
+            <span class="weui-form-preview__value">$fileinfo[contain]</span>
+        </div>
+        <!--{/if}-->
+        <!--{if $fileinfo[opendateline]}-->
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang preceding_open_time}</label>
+            <span class="weui-form-preview__value">$fileinfo[opendateline]</span>
+        </div>
+        <!--{/if}-->
+        <!--{if $fileinfo[editdateline]}-->
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang preceding_edit_time}</label>
+            <span class="weui-form-preview__value">$fileinfo[editdateline]</span>
+        </div>
+        <!--{/if}-->
+        <!--{if $fileinfo[fdateline]}-->
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang create_time}</label>
+            <span class="weui-form-preview__value">$fileinfo[fdateline]</span>
+        </div>
+        <!--{/if}-->
+    </div>
+    <!--{if $perm && $fileinfo['isdelete'] < 1}-->
+    <div class="weui-form-preview__bd weui-form-preview__attr">
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang directory_right}</label>
+            <ul class="weui-form-preview__value">
+                <!--{loop $perms $k $val}-->
+                <li <!--{if $perm & $val[1]}-->style="display:block;padding:5px;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="dzz  {$val[2]}" title="$val[0]"></span></li>
+                <!--{/loop}-->
+            </ul>
+        </div>
+    </div>
+    <!--{elseif !$gid && $file['type'] == 'folder'}-->
+    <div class="weui-form-preview__bd weui-form-preview__attr">
+        <div class="weui-form-preview__item">
+            <label class="weui-form-preview__label">{lang directory_right}</label>
+            <ul class="weui-form-preview__value">
+                <!--{loop $perms $k $val}-->
+                <li style="display:block;padding:5px;"><span class="dzz  {$val[2]}" title="$val[0]"></span></li>
+                <!--{/loop}-->
+            </ul>
+        </div>
+    </div>
+    <!--{/if}-->
+</section>
+<!--列表详情结束-->

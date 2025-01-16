@@ -67,7 +67,7 @@ class ultrax_cache {
 	function get_cache_file_path($key) {
 		static $cache_path = null;
 		if(!isset($cache_path[$key])) {
-			$dir = hexdec($key{0}.$key{1}.$key{2}) % 1000;
+			$dir = hexdec($key[0].$key[1].$key[2]) % 1000;
 			$cache_path[$key] = $this->conf['path'].'/'.$dir.'/'.$key.'.php';
 		}
 		return $cache_path[$key];

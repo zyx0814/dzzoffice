@@ -4,9 +4,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset={CHARSET}" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<title><!--{if !empty($navtitle)}-->$navtitle - <!--{/if}-->$_G[setting][sitename] </title>
-<meta name="keywords" content="{if !empty($_G[setting][metakeywords])}{echo htmlspecialchars($_G[setting][metakeywords])}{/if}" />
-<meta name="description" content="{if !empty($_G[setting][metadescription])}{echo htmlspecialchars($_G[setting][metadescription])} {/if}" />
+<title><!--{if !empty($navtitle)}-->$navtitle - <!--{/if}-->$_G['setting']['sitename'] </title>
+<meta name="keywords" content="{if !empty($_G['setting']['metakeywords'])}{echo htmlspecialchars($_G['setting']['metakeywords'])}{/if}" />
+<meta name="description" content="{if !empty($_G['setting']['metadescription'])}{echo htmlspecialchars($_G['setting']['metadescription'])} {/if}" />
 <meta name="generator" content="DzzOffice" />
 <meta name="author" content="DzzOffice" />
 <meta name="copyright" content="2012-{eval echo dgmdate(TIMESTAMP,'Y-m-d');} www.dzzoffice.com" />
@@ -21,10 +21,6 @@
 <script type="text/javascript" src="static/jquery/jquery.json-2.4.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/header.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/popbox/jquery.popbox.js?{VERHASH}"></script>
-<!--[if lt IE 9]>
-  <script src="static/bootstrap/js/html5shiv.min.js"></script>
-  <script src="static/bootstrap/js/respond.min.js"></script>
-<![endif]-->
  <script type="text/javascript">
 	 if(!!window.ActiveXObject || "ActiveXObject" in window){
 		 try{$.ajaxSetup({ cache: false });}catch(e){}

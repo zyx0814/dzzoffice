@@ -21,7 +21,7 @@ class table_form_setting extends dzz_table
 		parent::__construct();
 	}
 	
-	public function fetch($flag){
+	public function fetch($flag, $force_from_db = false){
 		$data=parent::fetch($flag);
 		
 		if($data['options']) $data['options']=unserialize($data['options']);
@@ -98,7 +98,7 @@ class table_form_setting extends dzz_table
 	}
 
 	/*获取所有表单项*/
-	public function fetch_all($flags=array()){
+	public function fetch_all($flags=array(), $force_from_db = false){
 		$data=array();
 		$sql = 1;
 		$param = array($this->_table);

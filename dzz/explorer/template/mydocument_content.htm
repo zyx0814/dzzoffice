@@ -1,0 +1,91 @@
+<div class="middlecenter scroll-100 scroll-srcollbars" id="selectBoardPosition">
+
+    <div class="middlecenter-body">
+
+		<!--地址栏开始-->
+		<div class="middle-groupname middle-groupshink middlecenter-header">
+			<div class="topNav">
+				<div class="topNav-item topNav-left">
+					<div class="address-wrapper">
+						<div class="goback"> <a href="javascript:history.back();" ><span class="dzz dzz-nav-back "></span><span>返回</span><span class="dzz dzz-vline dzz-address-vline" ></span></a> </div>
+						<div class="address-container">
+							<div class="address-left-arrow">《</div>
+							<div class="address-right-arrow">》</div>
+							<div class="address">
+								<!--{loop $folderpatharr $v}-->
+								<li>
+									<a href="javascript:;" class="routes"
+									   data-type="group-gid_$gid">$v</a>
+									<span class="dzz dzz-chevron-right dzz-address-chevron"></span>
+								</li>
+								<!--{/loop}-->
+							</div>
+							<input type="text" class="form-control bordeInput referer_path" name="referer_path"
+								   value="$folderpathstr" style="display: none;"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<input type="hidden" value="$fid" id="fidinput"/>
+		</div>
+		<!--地址栏结束-->
+
+
+		<!--文件列表开始 -->
+        <div id="filemanage-f-$fid" class="icosContainer">
+
+		</div>
+	</div>
+</div>
+   
+	<!--头部信息框-->
+	<div class="navtopheader">
+	</div>
+
+<div id="template_middleicon" style="display:none">
+<!--{template template_file_middleicon}-->
+</div>
+<div id="template_detaillist"  style="display:none">
+<!--{template template_file_detaillist}-->
+</div>
+<div id="template_toolButton" style="display:none">
+<!--{template template_file_toolButton}-->
+</div>
+<div id="template_file" style="display:none">
+<!--{template template_file_navtopfile}-->
+</div>
+<div id="template_nofile_notice" style="display:none">
+	<!--{template noFilePage_mydocument}-->
+</div>
+<div id="template_group_notice" style="display:none">
+	<!--{template noFilePage_group}-->
+</div>
+
+<script type="text/javascript">
+    jQuery.getScript('{MOD_PATH}/js/uplodfile.js?{VERHASH}');
+    jQuery(document).ready(function(e) {
+        var hash=location.hash;
+        //var fid=_explorer.getUrlParam(hash,'fid');
+        var  fid = $('#fidinput').val();
+		_filemanage.fid=fid;
+		_filemanage.subfix = 'f';
+		_filemanage.winid = 'f_'+fid;
+		
+			//如果有群组提示信息
+        var contenterrormsg = '{$contenterrormsg}';
+	    if(contenterrormsg){
+        	var noticeinfo = '<div class="emptyPage">' +
+				'<img src="'+MOD_PATH+'/img/noFilePage-groupFileForbidden.png"> ' +
+				'<p class="emptyPage-text">'+contenterrormsg+'</p> ' +
+				'</div>';
+            jQuery('#filemanage-f-'+fid).html(noticeinfo);
+            if('{$group['available']}' == 0 || '{$group[diron]}' == 0){
+                jQuery('.new-buildMenu').hide();
+			}
+			_filemanage && _filemanage.setInfoPanel();
+			return false;
+		}
+        _filemanage.getData(_explorer.appUrl+'&op=explorerfile&do=filelist&sid=f-'+fid);
+    });
+	
+</script>

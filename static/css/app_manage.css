@@ -82,9 +82,6 @@
 .resNav .navbar-nav>.open>a, .resNav .navbar-nav>.open>a:focus, .resNav .navbar-nav>.open>a:hover{
 	background-color: #3779ff;
 }
-#nv_adminphp .navbar-inverse .resNav .navbar-nav>.open>a, .resNav .navbar-nav>.open>a:focus, .resNav .navbar-nav>.open>a:hover{
-	background-color: #4664d2;
-}
 .navbar-inverse .navbar-toggle{
 	border:0;
 }
@@ -242,7 +239,6 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 536px;
-    background: #FFF;
     z-index: 5;
 }
 .hide{
@@ -306,7 +302,6 @@
 	padding:0 5px;
 	line-height:20px;
 	font-size: 13px;
-	color: #333333;
 }
 #app_context .app-more{
 	display: block;
@@ -686,9 +681,6 @@ button.input-search-drop {
 	font-size: 18px;
 	color: #71717a;
 	vertical-align: text-bottom;
-}
-.all-notice .left-notice{
-	background:#fbfbfc!important ;
 }
 @media only screen and (min-width:992px ) {
 	.main-allcontent{

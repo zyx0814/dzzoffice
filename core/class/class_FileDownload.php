@@ -20,9 +20,12 @@ class FileDownload{ // class start
   * @param boolean $reload 是否开启断点续传 
   */
   public function download($file, $name='',$file_size=0,$dateline=0, $reload=false){ 
-      if($name==''){ 
-        $name = basename($file); 
-      } 
+    if (is_array($file) && isset($file['error'])) {
+			topshowmessage(lang('file_not_exist1'));
+		}
+    if($name==''){ 
+      $name = basename($file); 
+    } 
 	  if(!$dateline){
 		  $dataline=TIMESTAMP;
 	  }
@@ -35,12 +38,21 @@ class FileDownload{ // class start
 	 if(getglobal('gzipcompress')) @ob_start('ob_gzhandler');
 	  if(!$file_size)   $file_size = filesize($file);
       $ranges = $this->getRange($file_size);
-
-      header('cache-control:public'); 
-	  header('Date: '.gmdate('D, d M Y H:i:s', $dateline).' GMT');
-	  header('Last-Modified: '.gmdate('D, d M Y H:i:s', $dateline).' GMT');
-      header('content-type:application/octet-stream'); 
-      header('content-disposition:attachment; filename='.$name); 
+      $charset = CHARSET;
+      header('cache-control:public');
+      header('Date: '.gmdate('D, d M Y H:i:s', $dateline).' GMT');
+      header('Last-Modified: '.gmdate('D, d M Y H:i:s', $dateline).' GMT');
+      header('content-type:application/octet-stream');
+      if (preg_match("/Firefox/", $_SERVER["HTTP_USER_AGENT"])) {
+          $attachment = 'attachment; filename*='.$charset.'\'\'' . $name;
+      } elseif (!preg_match("/Chrome/", $_SERVER["HTTP_USER_AGENT"]) && preg_match("/Safari/", $_SERVER["HTTP_USER_AGENT"])) {
+          $name = trim($name,'"');
+          $filename = rawurlencode($name); // 注意：rawurlencode与urlencode的区别
+          $attachment = 'attachment; filename*='.$charset.'\'\'' . $filename;
+      } else{
+          $attachment = 'attachment; filename='.$name;
+      }
+      header('content-disposition:'.$attachment);
       if($reload && $ranges!=null){ // 使用续传
         header('HTTP/1.1 206 Partial Content'); 
         header('Accept-Ranges:bytes'); 

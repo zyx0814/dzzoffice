@@ -12,11 +12,11 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 include_once DZZ_ROOT . './data/extdata/exts.php';
 require_once libfile('function/user', '', 'user');
 $grouptitle = array('0' => lang('all'), '-1' => lang('visitors_visible'), '1' => lang('members_available'), '2' => lang('section_administrators_available'), '3' => lang('system_administrators_available'));
-
-$do = trim($_GET['do']);
+$navtitle=lang('编辑应用').' - '.lang('appname');
+$do = isset($_GET['do']) ? $_GET['do'] : '';
 $appid = intval($_GET['appid']);
 $refer = dreferer();
-$op = $_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 if (submitcheck('appsubmit')) {
 	$appurl = addslashes(trim($_GET['appurl']));
 	$appadminurl = addslashes(trim($_GET['appadminurl']));
@@ -136,6 +136,11 @@ if (submitcheck('appsubmit')) {
 	echo "</script>";
 	exit();
 } else {
+	if (!$appid) {
+		$navtitle=lang('add_app').' - '.lang('appname');
+	}else{
+		$navtitle=lang('edit_app').' - '.lang('appname');
+	}
 	include_once libfile('function/organization');
 	$sexts = array();
 	foreach ($exts as $ext) {

@@ -1,0 +1,15 @@
+<ul class="nav-drawer nav-stacked nav-pills">
+    <li class="nav-item">
+        <a class="nav-link <!--{if !isset($fromid) || $fromid == ''}-->active<!--{/if}-->" href="{MOD_URL}&op=notification">
+            <i class="mdi mdi-bell-circle"></i><span>{lang all_app}</span>
+        </a>
+    </li>
+    <!--{loop $searchcats $val}-->
+    <li class="nav-item" data-appid="$val[appid]">
+        <a class="nav-link <!--{if $fromid == $val['appid']}-->active<!--{/if}-->" href="{MOD_URL}&op=notification&appid=$val[appid]">
+            <img src="$val[appico]">
+            <span>$val[appname]</span>
+        </a>
+    </li>
+    <!--{/loop}-->
+</ul>

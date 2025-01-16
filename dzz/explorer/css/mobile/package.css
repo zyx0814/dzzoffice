@@ -1,0 +1,80 @@
+/*字体颜色*/
+
+html,body{
+	background-color:#F2F2F2 ;
+	-webkit-tap-highlight-color:transparent;
+	min-height: 100%;
+	height: auto;
+}
+*{
+	-webkit-touch-callout:none;  
+  -webkit-user-select:none;  
+  -khtml-user-select:none;  
+  -moz-user-select:none;  
+  -ms-user-select:none;  
+  user-select:none; 
+}
+input,textarea {      
+     -webkit-user-select:auto; /*webkit浏览器*/     
+} 
+ul,li,ul li,ol{
+	list-style: none;
+}
+.hide{
+	display: none;
+}
+.background-none{
+	z-index: 2;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+}
+.weui-cell_access{
+	-webkit-user-select: none;/*禁用手机浏览器的用户选择功能 */
+	-moz-user-select: none;
+}
+/*图标颜色*/
+.weui-cell__recent{
+	background-color:#689f38;
+}
+.weui-cell__explorer{
+	background-color:#ff9800;
+}
+.weui-cell__group{
+	background-color:#009688;
+}
+.weui-cell__type{
+	background-color:#673ab7;
+}
+.weui-cell__share{
+	background-color: #03a9f4;
+}
+.weui-cell__collection{
+	background-color:#ffc107;
+}
+.weui-cell__images{
+	background-color: #ef5350;
+}
+.weui-cell__imgshare{
+	background-color:#2196F3 ;
+}
+.weui-cell__search{
+	background-color:#ffc107;
+}
+/*图标颜色结束*/
+/*复选框开始*/
+.weui-cells_checkbox .weui-icon-checked:before{
+	font-size: 0.8rem;
+}
+.weui-cells_checkbox .weui-check:checked+.weui-icon-checked:before{
+	color:#4c8afb;
+}
+/*复选框结束*/
+/*图片放大开始*/
+.weui-photo-browser-modal{
+	z-index: 1000;	
+}
+/*图片放大结束*/

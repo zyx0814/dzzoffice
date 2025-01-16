@@ -10,7 +10,7 @@
 	exit(); 
  }
  //error_reporting(E_ALL);
-
+ Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
   include_once libfile('function/organization'); 
 
   $data=array();

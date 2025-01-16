@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--{template mobile/mobile_header}-->
+		<title>{lang my_groups}</title>
+	</head>
+	<body>
+	<section class="weui-address">
+		<a href="{MOD_URL}" class="weui-index">
+			<span class="dzz dzz-home dzz-index"></span>
+			<i class="dzz dzz-vline dzz-index-vline"></i>
+		</a>
+		<div class="weui-address-container" id="weui_address_scroll">
+			<div class="scroller">
+				<ul class="weui-address-field">
+					<li>
+						<a href="{$_G['siteurl']}{MOD_URL}&op=mobile&do=group">{lang group}</a><span class="dzz dzz-chevron-right"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+		<!--列表开始-->
+		<section class="weui-cells weui-cells__recent weui-cells__margin_footer">
+			<!--{if count($groups) > 0}-->
+			<!--{loop $groups $v}-->
+            <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=file&gid={$v[orgid]}&fid={$v[fid]}">
+                <div class="weui-cell__hd">
+					<!--{if $v['imgs']}-->
+					<img src="$v[img]" class="weui-cell__recentimg">
+					<!--{else}-->
+					<!--{eval echo avatar_group($v['orgid'],array($v['orgid']=>array('aid'=>$v['aid'],'orgname'=>$v['orgname'])));}-->
+					<!--{/if}-->
+				</div>
+                <div class="weui-cell__bd">
+                    <h4>$v[orgname]</h4>
+                    <p>
+                    	<span class="file">{lang typename_attach}:</span><i class="file-number">$v[filenum],</i>
+                    	<span class="folder">{lang type_folder}:</span><i class="folder-number">$v[foldernum]</i>
+                    </p>
+                </div>
+                <div class="weui-cell__ft"></div>
+            </a>
+			<!--{/loop}-->
+			<!--{else}-->
+			<!--{template mobile/template_normal}-->
+			<!--{/if}-->
+		</section>
+<!--无内容提示页-->
+		<!--底部开始-->
+		<footer class="weui-cell-footer">
+				<a href="javascript:;" class="weui-footer-item searchFiles">
+					<i class="dzz dzz-search"></i>
+					<p>{lang search}</p>
+				</a>
+				<a href="javascript:;" class="weui-footer-item" onclick="location.reload();">
+					<i class="dzz dzz-refresh"></i>
+					<p>{lang refresh}</p>
+				</a>
+		</footer>
+		<!--底部结束-->
+	</body>
+	<script type="text/javascript" src="static/jquery_weui/js/jquery-weui.min.js"></script>
+	<script type="text/javascript" src="{MOD_PATH}/js/mobile/appevent.js"></script>
+	<script type="text/javascript" src="{MOD_PATH}/js/mobile/index.js?{VERHASH}"></script>
+	<script type="text/javascript">
+        $(document).off('tap.search').on('tap.search','.searchFiles',function(){
+            window.location.href = '{MOD_URL}&op=mobile&do=search';
+        })
+        //获取id高度
+        $(function(){
+            var h = $(document).outerHeight(true);
+            var h2 = $('.weui-cell-footer').outerHeight(true);
+            $('.weui-cell-search-images').css('height',h-h2);
+            var len=$('.weui-cells__margin_footer').find('.weui-cell-search-images').length;
+            if(len>0){
+                $('.weui-cells__margin_footer').css('margin-bottom','0px');
+            }else{
+                $('.weui-cells__margin_footer').css('margin-bottom','70px');
+            }
+        })
+        var loadding=false;
+		var page='{eval echo $page+1}';
+	        $(window).scroll(function () {
+				if(loadding) return;
+		            var scrollTop = $(this).scrollTop();
+		            var scrollHeight = $(document).height();
+		            var clientHeight = $(this).height();
+		            if (scrollTop + clientHeight >= scrollHeight) {
+						groupmore();
+		            }
+		     });
+    function groupmore(){
+		loadding=true;
+		var url='{MOD_URL}&op=mobile&do=groupmore&page='+page;
+		$.get(url,function(html){
+			page++;
+			if(html!=''){
+				loadding=false;
+				$('.weui-cells.weui-cells__recent.weui-cells__margin_footer').append(html);
+			}
+		});
+	}
+	</script>
+	<!--{hook footer_tpl}-->
+	<!--{eval output();}-->
+</html>

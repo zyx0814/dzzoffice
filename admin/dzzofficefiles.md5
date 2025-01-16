@@ -2535,7 +2535,7 @@ fa2772327f55d8198301fdb8bcfc8158 *static/bootstrap/fonts/glyphicons-halflings-re
 448c34a56d699c29117adc64c43affeb *static/bootstrap/fonts/glyphicons-halflings-regular.woff2
 5a061690c67238c5247c01873479570f *static/bootstrap/js/bootstrap-slider.js
 7d6ce53c150a26ec3a5d8b18e1903415 *static/bootstrap/js/bootstrap-typeahead.js
-6bfd171748f088ad503cb07c080b1f33 *static/bootstrap/js/bootstrap.js
+6bfd171748f088ad503cb07c080b1f33 *static/bootstrap/js/bootstrap.min.js
 36450289b3866f796bb36f95c874516d *static/bootstrap/js/bootstrap.min.js
 6898461f2e5d74eb15d686724b2f541a *static/bootstrap/js/bootstrapSwitch.js
 0ce8f355891c26c28f057e195e97dcd5 *static/bootstrap/js/html5shiv.min.js

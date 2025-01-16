@@ -1,9 +1,8 @@
 
- <div class="modal-header">
-    	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-    	<h4 class="modal-title" id="return_$_GET[handlekey]">{lang edit}</h4>
- </div>
-	
+<div class="modal-header">
+  <h4 class="modal-title" id="return_$_GET[handlekey]">{lang edit}</h4>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
  <div id="publish_edit_{$cid}" class="publishsharewrap">
   <form id="form_edit_{$cid}" name="form_edit_{$cid}" class="form-horizontal" action="{DZZSCRIPT}?mod=comment&op=ajax&do=edit" method="post"  onsubmit="ajaxpost('form_edit_{$cid}','return_publish_edit_{$cid}','return_publish_edit_{$cid}');return false">
     <input type="hidden" name="formhash" value="{FORMHASH}" />
@@ -21,7 +20,7 @@
       </div>
       <div class="textarea_cpsw">
         <div class="wrap_tcpsw">
-          <textarea rows="" id="message_edit_{$cid}" name="message" cols="" onkeyup="check_publish_enable('edit_{$cid}')"  onfocus="jQuery(this).caret('pos',this.value.length);"  class="write_wtcpsw _bb_write_wtcpsw writein" style="overflow: hidden; word-wrap: break-word; resize: horizontal;border:none;box-shadow:none;height:60px">$data[message]</textarea>
+          <textarea rows="" id="message_edit_{$cid}" name="message" cols="" onkeyup="check_publish_enable('edit_{$cid}')" class="write_wtcpsw _bb_write_wtcpsw writein" style="overflow: hidden; word-wrap: break-word; resize: horizontal;border:none;box-shadow:none;height:60px">$data[message]</textarea>
         </div>
         <div id="publish_count_edit_{$cid}" class="count_cpsw"> <span id="num_input_edit_{$cid}" class="num_ccpsw">0</span>/<span class="leng_ccpsw">1000</span> </div>
       </div>
@@ -44,8 +43,8 @@
         </script>
         <!--{/if}-->
       </ul>
-      <a hidefocus="true" class="cancel_cpsw" href="javascript:;" onclick="hideWindow('publish_edit_{$cid}');"> <b><i>{lang cancel}</i></b></a>
-      <button id="publish_submit_edit_{$cid}" class="btn btn-sm btn-primary"  title="{lang reply}(Ctrl+Enter)"><b>{lang save}</b></button>
+      <a hidefocus="true" class="btn btn-outline-secondary" href="javascript:;" onclick="hideWindow('publish_edit_{$cid}');"> <b>{lang cancel}</b></a>
+      <button id="publish_submit_edit_{$cid}" class="btn btn-primary"  title="{lang reply}(Ctrl+Enter)"><b>{lang save}</b></button>
     </div>
     <!--{if $_GET['allowattach'] || $data[attachs]}-->
      <div id="attachmentViewBox_edit_{$cid}" class="attachmentContainer clearfix" style="max-height:250px;padding:10px;overflow:auto;"> 
@@ -108,7 +107,7 @@ function errorhandle_{$_GET[handlekey]}(url, message, values) {
 	hideWindow('{$_GET[handlekey]}');
 }
 <!--{if $_GET[allowattach]>=2}-->
-	var attachextensions='{eval echo implode('|',$space[attachextensions]);}';
+	var attachextensions='{eval echo implode('|',$space['attachextensions']);}';
 	if(attachextensions=='') attachextensions="\.*$";
 	else attachextensions="(\.|\/)("+(attachextensions)+")$";
     jQuery('#fileupload_edit_{$cid}').fileupload({

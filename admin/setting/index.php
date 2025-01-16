@@ -1,4 +1,4 @@
-<?php
+ <?php
 /*
  * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
  * @license     http://www.dzzoffice.com/licenses/license.txt
@@ -30,7 +30,7 @@ if ($setting['thumbsize']) {
 }
 if (!submitcheck('settingsubmit')) {
 	if ($operation == 'basic') {
-		$navtitle = lang('members_verify_base');
+		$navtitle = lang('members_verify_base').' - '.lang('appname');
 		$spacesize = DB::result_first("select maxspacesize from " . DB::table('usergroup_field') . " where groupid='9'");
 		include_once  libfile('function/organization');
 
@@ -70,78 +70,19 @@ if (!submitcheck('settingsubmit')) {
 		}
 	} elseif ($operation == 'upload') {
 		$setting['maxChunkSize'] = round($setting['maxChunkSize'] / (1024 * 1024), 2);
-		$navtitle = lang('upload_set');
+		$navtitle = lang('upload_set').' - '.lang('appname');
 		$setting['unRunExts'] = implode(',', dunserialize($setting['unRunExts']));
 		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
 	} elseif ($operation == 'at') {
-		$navtitle = '@'.lang('sector_set');
+		$navtitle = '@'.lang('sector_set').' - '.lang('appname');
 		$setting['at_range'] = dunserialize($setting['at_range']);
 		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
 	} elseif ($operation == 'access') {
-		$navtitle = lang('register_visit');
-		/*if($setting['welcomemsg'] == 1) {
-		 $welcomemsg[] = '1';
-		 } elseif($setting['welcomemsg'] == 2) {
-		 $welcomemsg[] = '2';
-		 } elseif($setting['welcomemsg'] == 3) {
-		 $welcomemsg[] = '1';
-		 $welcomemsg[] = '2';
-		 } else {
-		 $welcomemsg[] = '0';
-		 }*/
+		$navtitle = lang('loginSet').' - '.lang('appname');
 		$setting['strongpw'] = dunserialize($setting['strongpw']);
-	}elseif($operation == 'space'){//获取空间设置结果
-		/*//处理指定人员
-		if(isset($setting['memoryorgusers'])){
-			$muids=explode(',',$setting['memoryorgusers']);
-		}
-		$orgids=$uids=$sel_org=$sel_user=array();
-		foreach($muids as $value){
-			if(strpos($value,'uid_')!==false){
-				$uids[]=str_replace('uid_','',$value);
-			}else{
-				$orgids[]=$value;
-			}
-		}
-		$open=array();
-		if($orgids){
-			$sel_org=C::t('organization')->fetch_all($orgids);
-
-			foreach($sel_org  as $key=> $value){
-				$orgpath=getPathByOrgid($value['orgid']);
-				$sel_org[$key]['orgpath']=implode('-',array_reverse($orgpath));
-				$arr=(array_keys($orgpath));
-				//print_r($arr);
-				array_pop($arr);
-				if($count=count($arr)){
-					if($open[$arr[$count-1]]){
-						if(count($open[$arr[$count-1]])>$count) $open[$arr[count($arr)-1]]=$arr;
-					}else{
-						$open[$arr[$count-1]]=$arr;
-					}
-				}
-			}
-			if(in_array('other',$orgids)){
-				$sel_org[]=array('orgname'=>'无机构人员','orgid'=>'other','forgid'=>1);
-			}
-		}*/
-
-		/*if($uids){
-			$sel_user=C::t('user')->fetch_all($uids);
-			if($aorgids=C::t('organization_user')->fetch_orgids_by_uid($uids)){
-				foreach($aorgids as $orgid){
-					$arr=getUpOrgidTree($orgid,true);
-					$arr=array_reverse($arr);
-					if($count=count($arr)){
-						if($open[$arr[$count-1]]){
-							if(count($open[$arr[$count-1]])>$count) $open[$arr[count($arr)-1]]=$arr;
-						}else{
-							$open[$arr[$count-1]]=$arr;
-						}
-					}
-				}
-			}
-		}*/
+		$setting['welcomemsgtitle'] = cutstr(trim(dhtmlspecialchars($setting['welcomemsgtitle'])), 75);
+	} elseif($operation == 'space'){//获取空间设置结果
+		$navtitle=lang('spaceSet').' - '.lang('appname');
 		$openarr=json_encode(array('orgids'=>$open));
 		//获取用户组空间设置数据
 		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
@@ -149,17 +90,15 @@ if (!submitcheck('settingsubmit')) {
 	}elseif($operation == 'permgroup'){
 		$perms = get_permsarray();//获取所有权限;
 		$permgroups = C::t('resources_permgroup')->fetch_all();
-
-	}elseif ($operation == 'qqlogin') {
-		$navtitle = lang('register_visit');
-	} elseif ($operation == 'datetime') {
-		$navtitle = lang('time_or_date');
+    $navtitle=lang('permGroupSet').' - '.lang('appname');
+	}elseif ($operation == 'datetime') {
+		$navtitle = lang('time_or_date').' - '.lang('appname');
 		$checktimeformat = array($setting['timeformat'] == 'H:i' ? 24 : 12 => 'checked');
 		$setting['userdateformat'] = dateformat($setting['userdateformat']);
 		$setting['dateformat'] = dateformat($setting['dateformat']);
 		$timezones = lang('setting_timezone');
 	} elseif ($operation == 'sec') {
-		$navtitle = lang('verification_code_set');
+		$navtitle = lang('verification_code_set').' - '.lang('appname');
 		$seccodecheck = /*$secreturn =*/1;
 		$sectpl = '<br /><sec>: <sec><sec>';
 		$checksc = array();
@@ -169,32 +108,31 @@ if (!submitcheck('settingsubmit')) {
 		$seccodestatus[2] = $setting['seccodestatus'] & 2;
 		$seccodestatus[3] = $setting['seccodestatus'] & 4;
 	} elseif ($operation == 'desktop') {
-		$navtitle = lang('desktop_set');
+		$navtitle = lang('desktop_set').' - '.lang('appname');
 	} elseif ($operation == 'loginset') {
-		$navtitle = lang('login_page_set');
+		$navtitle = lang('login_page_set').' - '.lang('appname');
 		if ($setting['loginset'] && !is_array($setting['loginset'])) {
 			$setting['loginset'] = unserialize($setting['loginset']);
 		}
 	} elseif ($operation == 'smiley') {
-		$navtitle = lang('expression_set');
+		$navtitle = lang('expression_set').' - '.lang('appname');
 	} elseif ($operation == 'mail') {
-		$navtitle = lang('mail');
+		$navtitle = lang('mail').' - '.lang('appname');
 		$setting['mail'] = dunserialize($setting['mail']);
-		$passwordmask = $setting['mail']['auth_password'] ? $setting['mail']['auth_password']{0} . '********' . substr($setting['mail']['auth_password'], -2) : '';
+		$passwordmask = $setting['mail']['auth_password'] ? $setting['mail']['auth_password'][0] . '********' . substr($setting['mail']['auth_password'], -2) : '';
 		$smtps = array();
 		foreach ($setting['mail']['smtp'] as $id => $smtp) {
 			$smtp['authcheck'] = $smtp['auth'] ? 'checked' : '';
-			$smtp['auth_password'] = $smtp['auth_password'] ? $smtp['auth_password']{0} . '********' . substr($smtp['auth_password'], -2) : '';
+			$smtp['auth_password'] = $smtp['auth_password'] ? $smtp['auth_password'][0] . '********' . substr($smtp['auth_password'], -2) : '';
 			$smtps[$id] = $smtp;
 		}
 	} elseif ($operation == 'censor') {
-		$navtitle = lang('words_set');
+		$navtitle = lang('words_set').' - '.lang('appname');
 		loadcache('censor');
 		$badwords = $_G['cache']['censor']['words'];
 		$replace = empty($_G['cache']['censor']['replace']) ? '*' : $_G['cache']['censor']['replace'];
 	}
 } else {
-
 	$settingnew = $_GET['settingnew'];
 	if ($operation == 'basic') {
 		$settingnew['bbname'] = $settingnew['sitename'];
@@ -235,11 +173,10 @@ if (!submitcheck('settingsubmit')) {
 		$setting['mail'] = dunserialize($setting['mail']);
 		$oldsmtp = $settingnew['mail']['mailsend'] == 3 ? $settingnew['mail']['smtp'] : $settingnew['mail']['esmtp'];
 		$deletesmtp = $settingnew['mail']['mailsend'] != 1 ? ($settingnew['mail']['mailsend'] == 3 ? $settingnew['mail']['smtp']['delete'] : $settingnew['mail']['esmtp']['delete']) : array();
-
 		$settingnew['mail']['smtp'] = array();
 		foreach ($oldsmtp as $id => $value) {
 			if ((empty($deletesmtp) || !in_array($id, $deletesmtp)) && !empty($value['server']) && !empty($value['port'])) {
-				$passwordmask = $setting['mail']['smtp'][$id]['auth_password'] ? $setting['mail']['smtp'][$id]['auth_password']{0} . '********' . substr($setting['mail']['smtp'][$id]['auth_password'], -2) : '';
+				$passwordmask = $setting['mail']['smtp'][$id]['auth_password'] ? $setting['mail']['smtp'][$id]['auth_password'][0] . '********' . substr($setting['mail']['smtp'][$id]['auth_password'], -2) : '';
 				$value['auth_password'] = $value['auth_password'] == $passwordmask ? $setting['mail']['smtp'][$id]['auth_password'] : $value['auth_password'];
 				$settingnew['mail']['smtp'][] = $value;
 			}
@@ -257,7 +194,6 @@ if (!submitcheck('settingsubmit')) {
 		isset($settingnew['reglinkname']) && empty($settingnew['reglinkname']) && $settingnew['reglinkname'] = lang('register_immediately');
 		$settingnew['pwlength'] = intval($settingnew['pwlength']);
 		$settingnew['regstatus'] = intval($settingnew['regstatus']);
-
 		/*if(in_array('open', $settingnew['regstatus']) && in_array('invite', $settingnew['regstatus'])) {
 		 $settingnew['regstatus'] = 3;
 		 } elseif(in_array('open', $settingnew['regstatus'])) {
@@ -281,9 +217,7 @@ if (!submitcheck('settingsubmit')) {
 		if (empty($settingnew['strongpw'])) {
 			$settingnew['strongpw'] = array();
 		}
-	}elseif($operation == 'space'){//空间设置
-		//include_once libfile('function/cache');
-		//$setting = $_GET['setting'];
+	} elseif($operation == 'space'){//空间设置
 		$group = $_GET['group'];
 		foreach ($group as $key => $value) {
 			C::t('usergroup_field') -> update(intval($key), array('maxspacesize' => intval($value['maxspacesize']), 'maxattachsize' => intval($value['maxattachsize']), 'attachextensions' => trim($value['attachextensions'])));
@@ -316,7 +250,7 @@ if (!submitcheck('settingsubmit')) {
 			}
 
 		}*/
-	}elseif ($operation == 'datetime') {
+	} elseif ($operation == 'datetime') {
 		if (isset($settingnew['timeformat'])) {
 			$settingnew['timeformat'] = $settingnew['timeformat'] == '24' ? 'H:i' : 'h:i A';
 		}
@@ -326,34 +260,28 @@ if (!submitcheck('settingsubmit')) {
 	} elseif ($operation == 'sec') {
 		$settingnew['seccodestatus'] = bindec(intval($settingnew['seccodestatus'][3]) . intval($settingnew['seccodestatus'][2]) . intval($settingnew['seccodestatus'][1]));
 
-	} elseif ($operation == 'qqlogin') {
-		if (empty($settingnew['qq_appid']) || empty($settingnew['qq_appkey'])) {
-			$settingnew['qq_login'] = 0;
-		}
-
 	} elseif ($operation == 'censor') {
 		$data = array('replace' => trim($_GET['replace']), 'words' => $_GET['badwords']);
 		savecache('censor', $data);
 		showmessage('do_success', dreferer());
 	} elseif ($operation == 'loginset') {
 		if ($back = trim($settingnew['loginset']['background'])) {
-			if (strpos($back, '#') === 0) {
-				$settingnew['loginset']['bcolor'] = $back;
-			} else {
-				$arr = explode('.', $back);
-				$ext = array_pop($arr);
-				if ($ext && in_array(strtolower($ext), array('jpg', 'jpeg', 'gif', 'png'))) {
-					$settingnew['loginset']['img'] = $back;
-					$settingnew['loginset']['bcolor'] = '';
+				if (strpos($back, '#') === 0) {
+					$settingnew['loginset']['bcolor'] = $back;
 				} else {
-					$settingnew['loginset']['url'] = $back;
-					$settingnew['loginset']['bcolor'] = '';
+					$arr = explode('.', $back);
+					$ext = array_pop($arr);
+					if ($ext && in_array(strtolower($ext), array('jpg', 'jpeg', 'gif', 'png', 'webp'))) {
+						$settingnew['loginset']['img'] = $back;
+						$settingnew['loginset']['bcolor'] = '';
+					} else {
+						$settingnew['loginset']['url'] = $back;
+						$settingnew['loginset']['bcolor'] = '';
+					}
 				}
+			} else {
+				$settingnew['loginset']['bcolor'] = '';
 			}
-		} else {
-			$settingnew['loginset']['bcolor'] = '';
-		}
-		
 	} elseif ($operation == 'qywechat') {
 		switch($_GET['fbind']) {
 			case 'bind' :
@@ -372,7 +300,6 @@ if (!submitcheck('settingsubmit')) {
 				break;
 		}
 	}
-
 	$updatecache = FALSE;
 	$settings = array();
 	foreach ($settingnew as $key => $val) {
@@ -387,9 +314,11 @@ if (!submitcheck('settingsubmit')) {
 	}
 	if ($settings) {
 		C::t('setting') -> update_batch($settings);
+		if($settings['template']!=$setting['template']) {
+			cleartemplatecache();
+		}
 	}
 	if($operation == 'basic'){
-		
 		if($settingnew['sitelogo'] && $settingnew['sitelogo']!=$setting['sitelogo']){
 			if($setting['sitelogo']) C::t('attachment')->delete_by_aid($setting['sitelogo']);
 			C::t('attachment')->addcopy_by_aid($settingnew['sitelogo'],1);

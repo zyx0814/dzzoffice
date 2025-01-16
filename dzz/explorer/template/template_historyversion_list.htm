@@ -1,0 +1,52 @@
+<!--{loop $versions  $v}-->
+<li class="unameMenu-list version_menu" id="version_{$v[vid]}">
+    <i class="round-drop"></i>
+    <div class="unameMenuicon-icons">
+        <div class="unameMenu-upload">
+            <!--{if !$v['vname']}-->
+            <span class="nameMenu">$v['username']{lang upload_to}</span>
+            <p class="versioninfos">{eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}
+                <!--{if $fileinfo['vid'] == $v['vid']}--><span class="label label-gainsboro">{lang principal_edition}</span>
+                <!--{/if}--></p>
+            <!--{else}-->
+            <span class="nameMenu">$v[vname]</span>
+            <p class="versioninfos"><span class="versioninfo-dateline">{eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}</span>
+                <!--{if $fileinfo['vid'] == $v['vid']}--><span class="label label-gainsboro">{lang principal_edition}</span>
+                <!--{/if}-->
+            </p>
+            <!--{/if}-->
+        </div>
+        <p class="editMenu">{eval echo formatsize($v['size']);}</p>
+        <!--{if $fileinfo['editperm']}-->
+        <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span
+                class="caret"></span></a>
+        <ul class="dropdown-menu dropdown-menu-version">
+            <div class="h3-title">{lang version_information}</div>
+            <li class="listedit-title">
+                <a href="javascript:;" class="view_versions" data-dpath="$fileinfo[dpath]"
+                   data-vid="$v[vid]" onclick="viewversion(this)">
+                    <span class="dzz dzz-visibility"></span>{lang view_version}
+                </a>
+            </li>
+            <li class="listedit-title">
+                <a href="javascript:;" class="primary_versions" data-vid="$v[vid]"
+                <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}-->
+                data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><span
+                    class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a>
+            </li>
+            <li class="listedit-title listedit-edit">
+                <a href="javascript:;" class="edit_versions" data-rid="$fileinfo[rid]"
+                   data-vid="$v[vid]" onclick="editVersionName(this)">
+                    <span class="glyphicon glyphicon-pencil"></span>{lang edit_version_information}
+                </a>
+            </li>
+        </ul>
+        <!--{/if}-->
+    </div>
+</li>
+<!--{/loop}-->
+</ul>
+<!--{if $vnext}-->
+<a href="javascript:;" class="btn_button_more btn btn-link hide"
+   onclick="loadMoreVersion(this,'{$vnext}');" data-rid="{$rid}">{lang upload_more}</a>
+<!--{/if}-->

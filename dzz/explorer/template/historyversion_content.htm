@@ -1,0 +1,91 @@
+<div class="righttop_title  clearfix">
+    <span class="dzz dzz-chevron-left dzz-right-backing" data-rid="$rid" onclick="reback_last(this)"></span>
+    <p class="right_name">{lang history_revision}</p>
+    <div class="toggRight toggright-icon">
+        <span class="dzz dzz-close "></span>
+    </div>
+</div>
+<div class="historyMenu">
+
+    <ul class="unameMenu scroll-y" id="versionmenulist">
+        <!--{loop $versions  $v}-->
+        <li class="unameMenu-list version_menu" id="version_{$v[vid]}">
+            <i class="round-drop"></i>
+            <div class="unameMenuicon-icons">
+                <div class="unameMenu-upload">
+                    <!--{if !$v['vname']}-->
+                    <span class="nameMenu">$v['username']{lang upload_to}</span>
+                    <p class="versioninfos">{eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}
+                        <!--{if $fileinfo['vid'] == $v['vid']}--><span class="label label-gainsboro">{lang principal_edition}</span>
+                        <!--{/if}--></p>
+                    <!--{else}-->
+                    <span class="nameMenu">$v[vname]</span>
+                    <p class="versioninfos"><span class="versioninfo-dateline">{eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}</span>
+                        <!--{if $fileinfo['vid'] == $v['vid']}--><span class="label label-gainsboro">{lang principal_edition}</span>
+                        <!--{/if}-->
+                    </p>
+                    <!--{/if}-->
+                </div>
+                <p class="editMenu">{eval echo formatsize($v['size']);}</p>
+                <!--{if $fileinfo['editperm']}-->
+                <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span
+                        class="caret"></span></a>
+                <ul class="dropdown-menu dropdown-menu-version">
+                    <div class="h3-title">{lang version_information}</div>
+                    <li class="listedit-title">
+                        <a href="javascript:;" class="view_versions" data-dpath="$fileinfo[dpath]"
+                           data-vid="$v[vid]" onclick="viewversion(this)">
+                            <span class="dzz dzz-visibility"></span>{lang view_version}
+                        </a>
+                    </li>
+                    <li class="listedit-title">
+                        <a href="javascript:;" class="primary_versions" data-vid="$v[vid]"
+                        <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}-->
+                        data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><span
+                            class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a>
+                    </li>
+                    <li class="listedit-title listedit-edit">
+                        <a href="javascript:;" class="edit_versions" data-rid="$fileinfo[rid]"
+                           data-vid="$v[vid]" onclick="editVersionName(this)">
+                            <span class="glyphicon glyphicon-pencil"></span>{lang edit_version_information}
+                        </a>
+                    </li>
+                </ul>
+                <!--{/if}-->
+            </div>
+        </li>
+        <!--{/loop}-->
+    </ul>
+    <!--{if $vnext}-->
+    <a href="javascript:;" class="btn_button_more btn btn-link hide"
+       onclick="loadMoreVersion(this,'{$vnext}');" data-rid="{$rid}">{lang upload_more}</a>
+    <!--{/if}-->
+</div>
+
+<script type="text/javascript">
+    function reback_last(obj) {
+        var rid = [$(obj).data('rid')];
+        $.post(MOD_URL + '&op=dynamic&do=getfiledynamic', {'rid': rid}, function (data) {
+            $('#rightMenu').html(data);
+        });
+        _filemanage.infoPanelUrl = rid;
+        return false;
+    }
+    jQuery('#versionmenulist .scroll-y').scroll(function(e) {
+        var clientHeight = jQuery('#versionmenulist .scroll-y').height();
+        var scrollHeight =jQuery('#versionmenulist .scroll-y').get(0).scrollHeight;
+        if(jQuery('#versionmenulist .scroll-y').scrollTop()+clientHeight>scrollHeight-20) 	jQuery('#versionmenulist .btn_button_more').trigger('click');
+        if($(this).scrollTop()>0){
+            $('.righttop_title').css({'box-shadow':'0px 0px 10px 0px rgba(0,0,0,0.15)'});
+        }else{
+            $('.righttop_title').css({'box-shadow':'none'});
+        }
+    })
+    function loadMoreVersion(){
+        var rid = $(obj).data('rid');
+        $.post(MOD_URL + '&op=dynamic&do=loadmoreversion',{'rid':rid,'next':0}, function (html) {
+            jQuery('#versionmenulist .btn_button_more').replaceWith(html);
+            _explorer.Scroll();
+        })
+    }
+</script>

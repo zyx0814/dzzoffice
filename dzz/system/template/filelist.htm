@@ -6,7 +6,7 @@
 <link href="dzz/system/css/select-file.css?{VERHASH}" rel="stylesheet" media="all">
 <script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
 <style>  
-<!--{ if $_GET['nosearch'] > 0}-->
+<!--{if $_GET['nosearch'] > 0}-->
 .orgtree-search {
     display: none;
 }
@@ -23,7 +23,7 @@ body {
      var nouser=parseInt('$_GET[nouser]')>0?1:0;
      var stype='$_GET[stype]'?parseInt('$_GET[stype]'):0;//0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
      var moderator=parseInt('$_GET[moderator]')>0?1:0;*/
-    var ismobile = '$ismobile' ? 1 : 0;
+    var ismobile = '$_G['ismobile']' ? 1 : 0;
 </script>
 <!--{template common/header_simple_end}-->
 <!--内容区开始-->

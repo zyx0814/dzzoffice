@@ -1,0 +1,461 @@
+<!--{template common/header_ajax}-->
+<!--{if $operation == 'addgroupuser'}-->
+<script type="text/javascript" src="{MOD_PATH}/js/selorg.js"></script>
+<script type="text/javascript" reload="1">
+    if ('{$open}') {
+        var openarr = [];
+        openarr['seluser'] = $open;
+    }
+</script>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    <h4 class="modal-title">{lang select_group_member}</h4>
+</div>
+<form onsubmit="return chkadd(this);">
+    <div class="modal-body group-top">
+        <div class="col-md-12 col-sm-12">
+            <div class="custom-from">
+                <div class="input-black input-float">
+                    <label class="control-label input-label">{lang select_will_addmember}</label>
+                    <!--<div class="usertree-search">-->
+                    <!--<a href="javascript:;" class="group-select-search" onclick="selorg.search('seluser',document.getElementById('jstree_search_input'));return false" title="{lang search}"><i class="glyphicon glyphicon-search"></i></a>-->
+                    <div class="input-animate">
+                        <input id="jstree_search_input" type="text" class="form-control"
+                               onblur="selorg.search('seluser',this);"
+                               onkeyup="if(event.keyCode==13){selorg.search('seluser',this);}"/>
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+            <div class="user-select-content">
+                <div class="user-select-content-left">
+                    <p class="user-select-content-title">{lang choose}{lang organization}/{lang department}/{lang member}</p>
+                    <div class="group-content " id="seluser_dropdown_menu" style="overflow:hidden">
+                        <iframe name="seluser_iframe" class="org-sel-box-iframe"
+                                src="index.php?mod=system&op=selorguser&callback=seluser&moderator=1&multiple=1&stype=2"
+                                frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"
+                                allowtransparency="true"></iframe>
+                        <input id="sel_seluser" type="hidden" name="uids"
+                               value="{eval echo implode(',',array_keys($userarr));}"/>
+                    </div>
+                </div>
+                <div class="user-select-content-right">
+                    <div class="selected-member">{lang selected_members}</div>
+                    <div class="group-content" id="group-contents">
+                        <ul class="sele-right-classa" id="seluser">
+                            <!--{loop $userarr $key $value}-->
+                            <li id="seluser_sl_$key" class="right-classa-depart" data-val="$key">
+                                <!--{if $value['avatarstatus'] == 1}-->
+                                <img src="avatar.php?uid={$value['uid']}" class="img-rounded select-mech">
+                                <!--{else}-->
+                                <span class="iconFirstWord" style="background:{$value[headerColor]}">
+			                        <span title="$value['username']">{eval echo new_strsubstr(ucfirst($value['username']),1,'');}</span>
+			                    </span>
+                                <!--{/if}-->
+                                $value['username']
+                                <!--{if ($perm > $value['perm']) || ($_G['adminid'] == 1 && $value['perm'] != 2 && $groupinfo['type'] == 1)}-->
+                                <i class="ti-close dzz dzz-close "></i>
+                                <!--{/if}-->
+                            </li>
+                            <!--{/loop}-->
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <input type="hidden" name="add" value="true"/>
+        <button type="submit" class="btn btn-primary">{lang confirms}</button>
+        <button type="button" class="btn btn-default-outline cancel" data-dismiss="modal" aria-label="Close">{lang
+            cancel}
+        </button>
+
+    </div>
+</form>
+<script type="text/javascript" reload="1">
+    jQuery(document).ready(function (e) {
+        $('.input-black').each(function () {
+            InputAnimate.init($(this));
+        });
+    });
+    var createid = '{$_G['uid']}';
+    $(document).ready(function (e) {
+        $(document).on('mouseenter', '.user-item', function () {
+            $(this).addClass('hover');
+        });
+        $(document).on('mouseleave', '.user-item', function () {
+            $(this).removeClass('hover');
+        });
+        $(document).on('click', '.right-classa-depart .ti-close', function () {
+            selorg.remove('seluser', this);
+        });
+
+    });
+
+
+    /*function jstree_search() {
+        console.log('aaaaa');
+        return false;
+        window.frames['seluser_iframe'].jstree_search($('#jstree_search_input').val());
+    }*/
+
+    function chkadd(form) {
+        var form = $(form);
+        var gid = '{$gid}';
+        $.post(MOD_URL + '&op=group&do=group_ajax&operation=addgroupuser&gid=' + gid, form.serialize(), function (data) {
+            if (data['success']) {
+                if ($('#memberlist').length > 0 && $('#memberlist').data('gid') == gid) {
+                    var html = '';
+                    var usericon = '';
+                    //修改权限菜单
+                    for (var o in data['insertuser']) {
+                        if (data['insertuser'][o]['avatarstatus'] == 1) {
+                            html += '<li class="right-numer-carousel" id="' + data['insertuser'][o]['uid'] + '_delete" >' +
+                                ' <a href="javascript:;" class="js-popboxs member_details_info adduser" data-placement="bottom" data-trigger="focus"' +
+                                ' data-auto-adapt="true"data-toggle="popover" style="display: inline-block;width: 28px;"' +
+                                ' data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid=' + data['insertuser'][o]['uid'] + '"> ' +
+                                '<img src="avatar.php?uid=' + data['insertuser'][o]['uid'] + '" class="img-circle avatar" style="width: 25px;height: 25px;"> </a> </li>';
+                        } else {
+                            html += '<li class="right-numer-carousel" style="background:' + data['insertuser'][o]['headerColor'] + '" id="' + data['insertuser'][o]['uid'] + '_delete">' +
+                                '<a href="javascript:;" class="js-popboxs member_details_info adduser" data-placement="bottom" data-trigger="focus"' +
+                                'data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;"' +
+                                'data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid=' + data['insertuser'][o]['uid'] + '">' +
+                                '<span class="rightcarousel-first">' + data['insertuser'][o]['ufirst'] + '</span><span class="dzz dzz-expand-more dzz-right-first"></span></a></li>';
+                        }
+
+                    }
+                    for (var o in data['delusers']) {
+                        $('#' + o+ '_delete').remove();
+                    }
+                    $('#memberlist').append(html);
+                    $(".adduser").each(function(){
+                        $(this).popbox();
+                    });
+                    hideWindow('adduser');//群组内添加成员
+                } else {
+                    hideWindow('addgroupuser');
+                    showWindow('select_perm', _explorer.appUrl + '&op=ajax&operation=selectperm&fid=$groupinfo[fid]&gid=$gid&new=true', 'get', 0);
+                }
+            } else if (data['error']) {
+                showDialog(data['error']);
+            }
+        }, 'json')
+        return false;
+    }
+</script>
+<!--{elseif $operation == 'groupsetting'}-->
+<!--弹出框关于页面-->
+<div class="setup">
+    <div class="table-con">
+        <div class="setup-con content-form">
+	        <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			        <span class="dzz dzz-close "></span>
+			    </button>
+			    <h4 class="modal-title">{lang about}</h4>
+			</div>	
+            <form class="form-horizontal about-editstaus" onsubmit="return set_submit(this)" id="about-editstaus">
+                <input type="hidden" name="setsubmit" value="true"/>
+                <input type="hidden" name="gid" value="$group[orgid]"/>
+                <div class="modal-body">
+                <div class="about-block">
+                    <div class="about-blockgroup clearfix">
+                        <label class="control-label col-md-2 col-sm-2">Logo</label>
+                        <div class="about-blockhead col-md-10 col-sm-10">
+                            <input type="hidden" value="$group[aid]" name="arr[aid]" class="imgdata"/>
+                            <ul class="group-head col-md-10 col-sm-10">
+                                <li class="head-file">
+                                    <a href="javascript:;">
+                                        {eval echo avatar_group($gid);}
+                                       	<span class="dzz-hide"><img src="{MOD_PATH}/img/ic-imgMoreAdd1.jpg" style="width: 24px;height: 24px;padding: 0px;"></span>
+                                        <input type="file" onclick="upload_bgphoto(this,true)" name="files[]">
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="about-blockgroup clearfix" style="position: relative;">
+
+                        <div class="input-black input-float">
+                            <label class="control-label  col-md-2 col-sm-2">{lang name}</label>
+                            <div class="input-animate col-md-10 col-sm-10">
+                                <input type="text" class="form-control" name="arr[orgname]" value="$group[orgname]">
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="about-blockgroup clearfix">
+                        <div class="input-black input-float">
+                            <label class="control-label col-md-2 col-sm-2">{lang introduce}</label>
+                            <div class="input-animate col-md-10 col-sm-10">
+                                <input type="text" class="form-control" name="arr[desc]" value="$group[desc]">
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="about-block">
+                    <div class="about-blockgroup clearfix">
+                        <label class="control-label control-weight col-md-2" style="padding-top: 4px;">{lang
+                            state}</label>
+                        <div class="about-blockhead col-md-10 js-switch_value">
+                            <input type="checkbox" class="js-switch1 js-switch-sub" data-name="manageon"
+                            <!--{if $group[diron]}--> checked <!--{/if}-->  />
+
+                            <!--{if $group[diron]}-->
+                            <span class="about-checked about-open">
+                                {lang open_start}
+                            </span>
+                            <!--{else}-->
+                            <span class="about-checked about-close">
+                                {lang close}
+                            </span>
+                            <!--{/if}-->
+                            <p class="about-cue">{lang close_group_tips}</p>
+                            <input type="hidden" class="manageon" name="arr[diron]" value="$group[diron]"/>
+                        </div>
+                    </div>
+                  <!--  {if $group[syatemon]}
+                    <div class="about-blockgroup clearfix">
+                        <label class="control-label control-weight col-md-2" style="padding-top: 4px;">{lang
+                            state}</label>
+                        <div class="about-blockhead col-md-10 js-switch_value">
+                            <input type="checkbox" class="js-switch1 js-switch-sub" data-name="manageon"
+                            {if $group[manageon] && $group[syatemon]} checked {/if}  />
+
+                            {if $group[manageon] && $group[syatemon]}
+                            <span class="about-checked about-open">
+                                {lang open_start}
+                            </span>
+                            {else}
+                            <span class="about-checked about-close">
+                                {lang close}
+                            </span>
+                            {/if}
+                            <p class="about-cue">{lang close_group_tips}</p>
+                            <input type="hidden" class="manageon" name="arr[manageon]" value="$group[manageon]"/>
+                        </div>
+                    </div>
+                    {/if}
+                    {if $group['available']}
+                    <div class="about-blockgroup clearfix">
+                        <label class="control-label control-weight col-md-2" style="padding-top: 4px;">{lang
+                            share}</label>
+                        <div class="about-blockhead col-md-10 js-switch_value">
+                            <input type="checkbox" class="js-switch1 js-switch-sub" data-name="diron"
+                            {if $group[diron] && $group['available']}checked{/if} />
+
+                            {if $group[diron] && $group['available']}
+                            <span class="about-checked about-open">
+                                {lang open_start}
+                            </span>
+                            {else}
+                            <span class="about-checked about-close">
+                                {lang close}
+                            </span>
+                            {/if}
+
+                            <p class="about-cue">{lang close_groupdir_tips}</p>
+                            <input type="hidden" class="diron" name="arr[diron]" value="$group[diron]"/>
+                        </div>
+                    </div>
+                    {/if}-->
+                </div>
+                </div>
+                <div class="modal-footer clearfix">
+                    <div class="about-button">
+                        <!--{if ($_G['adminid'] == 1) || ($group['type'] == 1 && $perm > 1)}-->
+                    	<div  class="btn-rdedanger pull-left" onclick="delete_group('{$group[orgid]}')"><span class="dzz dzz-delete"></span><span>{lang delete_group}</span></div>
+                        <!--{/if}-->
+                        <button type="submit" class="btn btn-primary">{lang save}</button>
+                        <button type="button" class="btn btn-default-outline about-cancel" id="about-cancel">{lang
+                            cancel}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" reload="1">
+    //名称初始化
+    jQuery(document).ready(function (e) {
+        $('.input-black').each(function () {
+            InputAnimate.init($(this));
+        });
+    });
+    $('.js-switch-sub').change(function () {
+        var check = $(this).prop('checked');
+        var name = $(this).data('name');
+        var html = '';
+        if (check) {
+            $(this).closest('div.js-switch_value').find('input.' + name).val(1);
+            html = '<span class="about-checked about-open">'+__lang.open_start+'</span>';
+        } else {
+            $(this).closest('div.js-switch_value').find('input.' + name).val(0);
+            html = '<span class="about-checked about-close">'+__lang.close+'</span>'
+        }
+        $(this).closest('div.js-switch_value').find('span.about-checked').replaceWith(html);
+    })
+
+    //点击权限效果
+    $(document).off('click.settingclick').on('click.settingclick', '.edit-power li', function () {
+        if ($(this).find('span').hasClass('read-false')) {
+            $(this).find('span').removeClass('read-false');
+        } else {
+            $(this).find('span').addClass('read-false');
+        }
+    })
+
+    $(document).off('click.settingcancel').on('click.settingcancel', '.about-cancel', function () {
+        hideWindow('groupsetting');
+    });
+    //开关样式
+    $.getScript('{MOD_PATH}/js/switchery.min.js', function () {
+        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch1'));
+        elems.forEach(function (html) {
+            var switchery = new Switchery(html);
+        });
+    });
+
+    function set_submit(form) {
+        var array = $(form).serializeArray();
+        var empty = /^\s*$/;
+        for (var o in array) {
+            if (array[o].name == 'arr[orgname]' && empty.test(array[o].value)) {
+                showDialog(__lang.group_name_must_not_be_empty);
+            }
+            if (array[o].name == 'arr[perm]' && empty.test(array[o].value)) {
+                showDialog(__lang.permission_value_cannot_be_empty);
+            }
+            if (array[o].name == 'arr[aid]' && empty.test(array[o].value) && '$group['type']' == 1) {
+                showDialog(__lang.please_select_group_head);
+            }
+
+        }
+        $.post(MOD_URL + '&op=group&do=group_ajax&operation=groupsetting', $(form).serialize(), function (data) {
+            if (data['success']) {
+                hideWindow('groupsetting');
+                showDialog(__lang.update_data_successful_2seconds_later_the_page_will_be_refreshed_automatically, 'right');
+                setTimeout(function () {
+                    var gid = '{$gid}';
+                    location.reload();
+                }, 2000);
+
+            } else if (data['error']) {
+                showDialog(data['error']);
+            }
+        }, 'json');
+
+        return false;
+    }
+    //头像选择
+    $(document).on('mouseenter.head-portrait', '.head-portrait', function () {
+        $(this).addClass('head-hover');
+
+    })
+    $(document).on('mouseleave.head-portrait', '.head-portrait', function () {
+        $(this).removeClass('head-hover');
+
+    })
+    $(document).off('click.clickcheckbox').on('click.clickcheckbox', '.edit-headinput-checkbox', function () {
+        if ($(this).prop("checked")) {
+            var _this = $(this).closest('.head-portrait').siblings('.head-portrait');
+            _this.find('.headinput-checkbox').prop('checked', false);
+            _this.removeClass('head-border');
+            $(this).parents('.head-portrait').addClass('head-border');
+            var aid = $(this).val();
+            $(this).closest('ul').prev('input.imgdata').val(aid);
+        } else {
+            $(this).parents('.head-portrait').removeClass('head-hover');
+            $(this).parents('.head-portrait').removeClass('head-border');
+            $(this).closest('ul').prev('input.imgdata').val('');
+        }
+
+    })
+    function upload_bgphoto(obj, fact) {
+        'use strict';
+        $(obj).fileupload({
+            url: MOD_URL + '&op=ajax&operation=upload',
+            dataType: 'json',
+            autoUpload: true,
+            maxFileSize: 2000000,// 2 MB
+            maxChunkSize: 2000000,//2M
+            acceptFileTypes: new RegExp("\.([jpe?g|gif|png])$", 'i'),
+            sequentialUploads: true,
+            add: function (e, data) {
+                data.context = $('<div id="main"></div>');
+                if ($('#main div:first').length > 0) $('#main div:first').before(data.context);
+                else {
+                    $('#main').append(data.context);
+                }
+                data.process().done(function () {
+                    data.submit();
+                });
+            },
+            progress: function (e, data) {
+                var index = 0; //data.index,
+                var node = $(data.context.children()[index]);
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                node.find('.progress-bar').css(
+                    'width',
+                    progress + '%'
+                );
+            },
+            done: function (e, data) {
+
+                $.each(data.result.files, function (index, file) {
+                    if (file.error) {
+                        data.context.find('.progress').replaceWith('<span class="text-danger">' + file.error + '</span>');
+                    } else {
+                        if (fact) {
+									var html='<a href="javascript:;"><img src="' + file.data.img + '">'+
+                                        '<span  class="dzz-hide"><img src="{MOD_PATH}/img/ic-imgMoreAdd1.jpg" style="width: 24px;height: 24px;padding: 0px;"><span>'+'<input type="file" onclick="upload_bgphoto(this,true)" name="files[]" value="' + file.data.aid + '">'+'</a>'
+                                    $('.head-file').html(html);
+                                    $('input.imgdata').val(file.data.aid);
+                        } else {
+                            data.context.data('aid', file.data.aid).find('img').attr('src', file.data.img).end().find('.progress-container').hide();
+                            var html = '<div class="col-sm-7 setting-img"><img class="img-rounded" src="' + file.data.img + '"><p class="upload-click">' + __lang.click_upload + '</p> <input type="file" id="exampleInputFile" onclick="upload_bgphoto(this)" name="files[]"><input type="hidden" name="arr[groupback]"  value="' + file.data.aid + '" /></div>';
+                            $('.setting-img').replaceWith(html);
+
+                        }
+
+                    }
+                });
+            }
+        })
+    }
+    ;
+    function editgroupperm(gid, fid) {
+        showWindow('#exampleMultipleOne', MOD_URL + '&op=ajax&operation=selectperm&fid=' + fid + '&gid=' + gid + '&new=false');
+    }
+    function delete_group(gid){
+        var msg ='<span class="delect_text_red">'+__lang.delete_group_tips+'</span>';
+        showDialog(msg,'confirm','<i class="dzz dzz-info dzz-whole-sigh"></i><span class="delect-title-normal">'+__lang.delete_group_confirm+'<span>',function(){
+            var progress='<div class="progress progress-striped active" style="margin:0"><div class="progress-bar" style="width:100%;"></div></div>';
+            //showmessage('<p>'+__lang.deleting_not_please_close+'</p>'+progress,'info',0,1,'right-bottom');
+            jQuery.post(MOD_URL+'&op=group&do=delete_group',{'gid':gid},function(json){
+                    if(json['success']) {
+                        showDialog(__lang.delete_group_success, 'right');
+                        hideWindow('groupsetting');
+                        location.hash = '#recent';
+                        location.reload();
+                    }else{
+                        showDialog(json['error']);
+                    }
+
+            },'json');
+      })
+    }
+
+</script>
+<!--{/if}-->
+<!--{template common/footer_ajax}-->

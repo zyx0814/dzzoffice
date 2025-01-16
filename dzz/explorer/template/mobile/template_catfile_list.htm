@@ -1,0 +1,12 @@
+<!--{loop $data $v}-->
+<a class="weui-cell weui-cell_access weui-cell-images" href="javascript:;">
+    <div class="weui-cell__hd"><img src="$v[img]" class="weui-cell__recentimg"></div>
+    <div class="weui-cell__bd">
+        <h4>$v[name]</h4>
+        <p>
+            <span class="date">$v[monthdate]</span><i class="date-time">$v[hourdate],</i>
+            <span class="size">$v[fsize]</span>
+        </p>
+    </div>
+</a>
+<!--{/loop}-->

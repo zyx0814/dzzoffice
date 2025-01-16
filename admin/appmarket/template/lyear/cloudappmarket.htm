@@ -1,0 +1,388 @@
+<!--{template lyear:header_simple_start}-->
+<link href="{MOD_PATH}/images/market1.css?{VERHASH}" rel="stylesheet" media="all">
+<style>
+.app_upgradelist{
+	margin: auto;
+	position: relative;
+}
+.app_upgradelist .upgrade_progess{
+	position: absolute;
+	bottom:0;
+	left: 0;
+	width:0%;
+	height: 10%;
+}
+.app_upgradelist .appicon img{
+	padding: var(--radius);
+	margin: 0;
+    float: left;
+    max-width: 45px;
+    max-height: 45px;
+}
+.app-info .select-info {
+	display: none;
+	background-color: #FFF;
+	padding: 5px 10px;
+}
+</style>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+	  <div class="card">
+		<header class="card-header">
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>{lang board_message}</strong> 
+					{lang manual_install_tip}
+				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+			</div>
+			<div class="app-info float-start"> <a href="{MOD_URL}" class="dcolor">{lang total}<span class="num">$total</span>{lang ge}{lang app}</a> </div>
+		</header>
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-hover align-middle" id="loopcontent">
+					<thead>
+					<tr>
+						<th>{lang application_name}</th>
+						<th>{lang version}</th>
+						<th>{lang label}</th>
+						<th>{lang big_small}</th>
+						<th>{lang operation}</th>
+					</tr>
+					</thead>
+					<tbody>
+						<!--{loop $list $value}--> 
+					<tr id="app_div_{$value[mid]}" class="app_upgradelist">
+						<td>
+							<a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer"  class="appicon view-detail" title="$value[name]"><img src="$value[coverimg]" style="margin:0;float: left;" /></a>
+							<a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" target="_blank" class="dcolor view-detail" title="$value[name]">$value[name]</a>
+							<div class="appdesc form-text" title="$value['appdesc']">{eval echo $value['desc_short']?$value['desc_short']:lang('none');}</div>
+							<div id="progess_{$value[mid]}">
+								<span id="upgrade_progess_{$value[mid]}" class="progress-bar progress-bar-striped progress-bar-animated upgrade_progess"></span> 
+							</div>
+						</td>
+						<td>$value[version]</td>
+						<td><div class="appdesc form-text">{$value['classid_name']}</div></td>
+						<td>{eval echo formatsize($value['packagesize']);}</td>
+						<td>
+							<!--{if $value[price]>0}-->
+							<button class="btn btn-outline-secondary"  onclick="showBuyInfo(this,'$value[mid]')" data-href="$cloudurl?mod=dzzmarket&op=ajax&do=getBuyInfo&mid=$value[mid]" title="{lang buy_contract}">{lang buy}</button>
+							<!--{else}--> 
+								<!--{if $value[package]}--> 
+									<!--{if $value["local_appinfo"]}-->
+									<button  class="btn btn-round btn-secondary btn-sm" disabled data-mid="$value['mid']" title="{lang installed}">
+									{lang installed}
+									</button>
+									<!--{else}-->
+									<button class="btn btn-round btn-primary btn-sm" style="white-space: inherit;" onclick="start_check_install('{MOD_URL}&op=install_app_ajax&operation=check_install&appid=$value[identifier]','{$value[mid]}','{$value[baseinfo]}');" id="upgrade_info_{$value[mid]}">{lang install_onekey}</button>
+									<!--{/if}--> 
+								<!--{else}--> 
+								<a class="btn btn-round btn-primary btn-sm view-detail" title="$value[name]" href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]" >{lang view_detail}</a> 
+								<!--{/if}--> 
+							<!--{/if}--> 
+						</td>
+					</tr>
+					<!--{/loop}-->
+					</tbody>
+				</table>
+			</div>
+			<!--{if $multi}-->
+			$multi
+			<!--{/if}-->
+		</div>
+	</div>
+</div>
+</main>
+<div class="modal fade">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+		<div class="modal-header">
+			<h4 class="modal-title" id="return_create_newdir"></h4>
+			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+      <div class="modal-body"> </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark" data-bs-dismiss="modal" aria-label="Close">{lang close}</button>
+      </div>
+    </div>
+    <!-- /.modal-content --> 
+  </div>
+  <!-- /.modal-dialog --> 
+</div>
+<!-- /.modal -->
+<script type="text/javascript">
+	jQuery('.view-detail').on('click',function(){
+		showBuyInfo(this,'modal-lg');
+		return false;
+	});
+	var ajaxurl='{$cloudurl}';
+	function showBuyInfo(obj,size){
+		var url=jQuery(obj).data('href');
+		var title=jQuery(obj).attr('title');
+		if(size){
+			jQuery('.modal .modal-dialog').addClass(size);
+		}
+		jQuery.get(url,function(html){
+			html=html.replace(/src=\"index\.php/ig,'src="$cloudurl');
+			jQuery('.modal .modal-body').html(html);
+		});
+		jQuery('.modal .modal-title').html(title);
+		jQuery('.modal').modal('show');
+	}
+	function getNext(url){
+		jQuery.get(url,function(html){
+			var li=jQuery('.appitem-next');
+			li.replaceWith(html);
+		});
+	}
+
+	function start_check_install(url,mid,data){ 
+		jQuery.ajax({
+				type:'post',
+				async: true, 
+				url:url,
+				data:{"baseinfo":data },
+				success:function(json){
+						//jQuery('#install_button_'+mid).html("&nbsp;");  
+						if(json.status==0){
+							jQuery('#upgrade_info_'+mid).show().addClass("btn-warning").html(json.msg); 
+						}else if(json.status==1){ 
+							jQuery('#upgrade_info_'+mid).show().text(json.msg);
+							jQuery('#upgrade_progess_'+mid).show().animate({width:json.percent+"%"},json.second,function(){
+								startinstsallapp(json.url,mid,data);
+							});
+						}else{
+							window.location.reload();
+						}
+				},
+				// 添加错误处理
+				error: function(xhr, status, error) {
+					showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+				}
+		});
+	}
+
+	function startinstsallapp(url,mid,data){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{"baseinfo":data},
+			success:function(json){
+				if(json.status==0){
+					jQuery('#upgrade_info_'+mid).addClass("btn-warning").html(json.msg);
+				}else{
+					jQuery('#upgrade_info_'+mid).text(json.msg);
+					jQuery('#upgrade_progess_'+mid).animate({width:json.percent+"%"},json.second,function(){
+						startgetinstallcrossorpatchfile(json.url,mid,data);
+					});
+				}
+			},
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	}
+
+	function startgetinstallcrossorpatchfile(url,mid,data){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{"baseinfo":data},
+			success:function(json){
+				if(json.status==0){ 
+					jQuery('#upgrade_info_'+mid).addClass("btn-warning").html(json.msg); 
+				}else{
+					jQuery('#upgrade_info_'+mid).text(json.msg);
+					jQuery('#upgrade_progess_'+mid).animate({width:json.percent+"%"},json.second,function(){
+						if(json.step==2){
+							startgetinstallcrossorpatchfile(json.url,mid,data);
+						}else{ 
+							startinstallfile(json.url,mid,data);
+						}
+					}); 
+				}
+			},
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	}
+
+	function startinstallfile(url,mid,data){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{"baseinfo":data},
+			success:function(json){
+				if(json.status==0){ 
+					jQuery('#upgrade_info_'+mid).addClass("btn-warning").html(json.msg); 
+				}else{
+					jQuery('#upgrade_info_'+mid).text(json.msg);
+					jQuery('#upgrade_progess_'+mid).animate({width:json.percent+"%"},json.second,function(){
+						 if(json.step!=5){
+							startinstallfile(json.url,mid,data);
+						}else{ 
+							installover(json.url,mid,data);
+						}
+					}); 
+				}
+			},
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	}
+
+	function installover(url,mid,data){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{"baseinfo":data},
+			success:function(json){ 
+				if(json.status==0){ 
+					jQuery('#upgrade_info_'+mid).addClass("btn-warning").html(json.msg); 
+				}else{
+					jQuery('#upgrade_info_'+mid).text(json.msg);
+					jQuery('#upgrade_progess_'+mid).css("width","100%");
+				}
+			}
+			,
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	}
+
+	function start_check_upgrade(url,mid){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{},
+			success:function(json){
+				jQuery('#upgrade_button_'+mid).html("&nbsp;");  
+				if(json.status==0){
+					jQuery('#upgrade_info_'+mid).show().text(json.msg);  
+				}else{ 
+					jQuery('#upgrade_info_'+mid).show().text(json.msg);
+					jQuery('#upgrade_progess_'+mid).show().animate({width:json.percent+"%"},json.second,function(){
+					startupgrade(json.url,mid);
+					});
+				}
+			},
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	}
+
+	function startupgrade(url,mid){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{},
+			success:function(json){ 
+				if(json.status==0){
+					jQuery('#upgrade_info_'+mid).text(json.msg); 
+				}else{
+					jQuery('#upgrade_info_'+mid).text(json.msg);
+					jQuery('#upgrade_progess_'+mid).animate({width:json.percent+"%"},json.second,function(){
+						startgetcrossorpatchfile(json.url,mid);
+					});
+				}
+			},
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	}
+
+	function startgetcrossorpatchfile(url,mid){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{},
+			success:function(json){
+				if(json.status==0){ 
+					alert( json.msg);
+				}else{
+					jQuery('#upgrade_info_'+mid).text(json.msg);
+					jQuery('#upgrade_progess_'+mid).animate({width:json.percent+"%"},json.second,function(){
+						if(json.step==2){
+							startgetcrossorpatchfile(json.url,mid);
+						}else{
+							startupgradefile(json.url,mid);
+						}
+					}); 
+				}
+			},
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	}
+
+	function startupgradefile(url,mid){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{},
+			success:function(json){ 
+				if(json.status==0){ 
+					alert( json.msg);
+				}else{
+					jQuery('#upgrade_info_'+mid).text(json.msg);
+					jQuery('#upgrade_progess_'+mid).animate({width:json.percent+"%"},json.second,function(){
+						 if(json.step!=5){
+							startupgradefile(json.url,mid);
+						}else{
+							upgradeover(json.url,mid);
+						}
+					}); 
+				}
+			},
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	}
+
+	function upgradeover(url,mid){
+		jQuery.ajax({
+			type:'post',
+			async: true, 
+			url:url,
+			data:{},
+			success:function(json){
+				if(json.status==0){ 
+					alert( json.msg);
+				}else{
+					jQuery('#upgrade_progess_'+mid).animate({width:"100%"},300,function(){
+						jQuery('#upgrade_progess_'+mid).hide().css("width","0");
+						start_check_upgrade(json.url,mid);
+					}); 
+				}
+			},
+			// 添加错误处理
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
+		});
+	} 
+		
+</script> 
+<!--{template lyear:footer_simple}-->

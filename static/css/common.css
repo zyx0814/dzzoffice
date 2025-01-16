@@ -514,8 +514,6 @@ select {
 
 .bs-left-container{
 	width:200px;
-	/*background: #FFF;
-	border-right: 1px solid #DDD;*/
 	position:absolute;
 	top: 0;
 	left:0;
@@ -523,11 +521,7 @@ select {
 	-webkit-overflow-scrolling: touch;
 	z-index:100;
     border-right: 1px solid #e8e8e8;
-	/*border-top:1px solid #FFF;*/
 	background: #fbfbfb;
-  	/* -webkit-box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.1);
-  	-moz-box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.1);
-  	box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.07); */
 }
 .bs-left-container .bs-left-title{
 	padding-left: 30px;
@@ -542,7 +536,7 @@ select {
 }
 .bs-left-container .nav-stacked>li{	
 	list-style: none;
-	margin: 0;
+	margin: 3px;
 }
 .bs-left-container .nav-stacked>li>a{
 	padding: 0 25px;
@@ -558,18 +552,16 @@ select {
 	white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+	border-radius: 5px;
 }
 .bs-left-container .nav-stacked>li>a:hover{
 	background:  rgba(33,33,33,.05);
 	color: #424242;
-	/*border-top: 1px solid #E8E8E8;*/
-	/*border-bottom: 1px solid #E8E8E8;*/
 }
 .bs-left-container .nav-stacked>.active>a{
-    background: #e6edf9;
-   color: #424242;
-   /*border-top: 1px solid #EAEAEA;*/
-	/*border-bottom: 1px solid #EAEAEA;*/
+    background: #3779ff;
+	color: #fff;
+	border-radius: 5px;
 }
 .bs-left-container .nav-stacked>.active>a:hover{
 	background: rgba(33,33,33,.05);
@@ -1285,10 +1277,6 @@ dl>dd{
 	font-size: 1rem;
 	color: rgba(76, 138, 251, 1);
 }
-#nv_adminphp .navbar-inverse{ 
-  background: #4664d2;
-  border-color: #4664d2;
-}
 /*showDialog 关闭按钮*/
 /* showDialog 样式修改 */
 .alert-close {
@@ -1483,3 +1471,10 @@ div.tagsinput{
     animation: dzz-spin 2s infinite linear;
 }
 /*图标旋转*/
+
+.no-result-title {
+    font-size: large;
+    font-weight: 700;
+    text-align: center;
+    padding: 10px 0;
+}

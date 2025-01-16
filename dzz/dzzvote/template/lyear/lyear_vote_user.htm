@@ -1,0 +1,17 @@
+<!--{loop $voteuser $value}-->
+<div class="pull-left pe-2">
+    <a href="user.php?uid=$value['uid']" title="admin" hidefocus="true" target="_blank">{eval echo avatar_block($value['uid']);}</a>
+</div>
+<!--{/loop}-->
+<!--{if $nextpage>0}-->
+<div class="pull-left pe-2">
+	<a href="javascript:;" title="{lang upload_more}" class="btn btn-outline-primary btn-sm" onclick="voteuser_getNext(this,'{$theurl}');return false">{lang upload_more}</a>
+</div>
+<script type="text/javascript">
+	function voteuser_getNext(obj, url) {
+		jQuery.get(url, function(html) {
+			jQuery(obj).parent().replaceWith(html);
+		});
+	}
+</script>
+<!--{/if}-->

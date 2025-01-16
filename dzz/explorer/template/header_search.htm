@@ -1,0 +1,255 @@
+<div class="resSearch">
+    <div class="form-group">
+        <div class="input-search input-search-dark input-search-word">
+            <i class="input-search-icon dzz dzz-search" aria-hidden="true"></i>
+            <input type="text" class="form-control search  form-search" name="filetype" value="" placeholder="{lang search}" id="searchval">
+            <ul class="dropdown-height less_searchcondition">
+                <li>
+                    <a href="javascript:;" data-val="document">{lang type_attach}</a>
+                </li>
+                <li>
+                    <a href="javascript:;" data-val="excel">{lang spreadsheet}</a>
+                </li>
+                <li>
+                    <a href="javascript:;" data-val="ppt">{lang power_point}</a>
+                </li>
+                <li>
+                    <a href="javascript:;" data-val="image">{lang pictures_photos}</a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown">
+                    <a href="javascript:;">{lang search_more_tools}</a>
+                </li>
+            </ul>
+            <span aria-hidden="true" id="emptysearchcondition" class="header-closebutton hide">×</span>
+            <button type="button" class="input-search-drop dzz dzz-arrow-dropdown input-search-width"></button>
+            <div class="dropdown-width" id="dropdown-width">
+                <div class="dropdown-cap">                	
+                    <div class="dropdown-type clearfix" data-type="type">
+                        <p class="typeword col-sm-2 col-md-2">{lang type}</p>
+                        <div class="col-md-10 col-sm-10">
+                        <button type="button" class="typebutton" data-toggle="dropdown"><span class="anytime">{lang unlimited}</span><i class="glyphicon glyphicon-triangle-bottom"></i></button>
+                        <input type="hidden" name="moresearch_filetype" value=""/>
+                        <ul class="dropdown-menu search_type" aria-labelledby="dropdownMenu1">
+                            <li>
+                                <a href="javascript:;" data-val="all">{lang unlimited}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="image">{lang pictures_photos}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="pdf">PDF</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="document">{lang type_attach}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="excel">{lang spreadsheet}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="ppt">{lang power_point}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="video">{lang type_video}</a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:;" data-val="folder">{lang typename_folder}</a>
+                            </li>
+                        </ul>
+                       
+                        </div> 
+                        <button type="button" class="close" aria-label="Close" style="position:absolute"><span aria-hidden="true">&times;</span></button>
+                    </div>
+					
+                    <div class="dropdown-type clearfix" data-type="owner">
+                        <p class="typeword col-sm-2 col-md-2">{lang possesor}</p>
+                        <div class="col-md-10 col-sm-10">
+                        <button type="button" class="typebutton" data-toggle="dropdown"><span class="anytime">{lang unlimited}</span><i class="glyphicon glyphicon-triangle-bottom"></i></button>
+                        <input type="hidden" name="moresearch_user" value=""/>
+                        <ul class="dropdown-menu searchowner" aria-labelledby="dropdownMenu1">
+                            <li>
+                                <a href="javascript:;" data-val="all">{lang unlimited}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="self">{lang mine}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="noself">{lang not_mine}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="user">{lang particular_person}</a>
+
+                            </li>
+                        </ul>
+                       
+                        <div class="typeowner ">
+                            <input class="js-example-basic-multiple js-states name_emile" id="id_label_multiples" multiple="multiple" value="" />
+		                      
+                        </div> 
+                       </div>
+                    </div>
+                    <div class="dropdown-type clearfix" data-type="badge" style="position: relative;overflow: hidden;"  data-fill="false">
+                        <p class="typeword col-sm-2 col-md-2">{lang file_flags}</p>
+                        <div class="col-md-10 col-sm-10 header-seaech-checkbox" >
+                        <div class="checkbox-custom checkbox-primary">
+                            <input type="checkbox" name="flag[]" value="isdelete">
+                            <label>{lang in_recycle_bin}</label>
+                        </div>
+                        <div class="checkbox-custom checkbox-primary">
+                            <input type="checkbox" name="flag[]" value="isstarred">
+                            <label>{lang already_collected}</label>
+                        </div>
+                        </div>
+                    </div>
+                  
+					<div class="dropdown-type clearfix" data-type="position" style="position: relative;overflow: hidden;" id="positionsearch" data-fill="false">
+                        <p class="typeword col-sm-2 col-md-2">{lang position}</p>
+                        <div class="col-md-10 col-sm-10 header-seaech-checkbox" id="header-seaech-checkbox">
+                        <!--<div class="checkbox-custom checkbox-primary">
+                            <input type="checkbox" name="position" value="isdelete">
+                            <label>{lang in_recycle_bin}</label>
+                        </div>
+                        <div class="checkbox-custom checkbox-primary">
+                            <input type="checkbox" name="position" value="isstarred">
+                            <label>{lang already_collected}</label>
+                        </div>-->
+                        </div>
+                    </div>
+                  
+                    <div class="dropdown-hr"></div>
+                    <div class="dropdown-type clearfix" data-type="date">
+                        <p class="typeword col-sm-2 col-md-2">{lang edit_date}</p>
+                        <div class="col-md-10 col-sm-10">
+                        <button type="button" class="typebutton" data-toggle="dropdown"><span class="anytime">{lang any_time}</span><i class="glyphicon glyphicon-triangle-bottom"></i></button>
+                        <input type="hidden" name="moresearch_daterange" value=""/>
+                        <ul class="dropdown-menu searchdate" aria-labelledby="dropdownMenu1">
+                            <li>
+                                <a href="javascript:;" data-val="all">{lang any_time}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="1">{lang today}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="-1">{lang ytoday}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="-7">{lang past_seven_days}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;"  data-val="-30">{lang recent_thirty_days}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="-90">{lang past_ninty_days}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" data-val="datetime">{lang custom}</a>
+                            </li>
+                        </ul>
+                        <div class="typexname typexdate">
+                            <p class="data-time">{lang date_range}：</p>
+                            <input type="text" id="selectStart"  placeholder="{lang start_time}"  name="startdate">
+                            <input type="text" id="selectEnd"   placeholder="{lang finish_time}" name="enddate">
+                        </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-project clearfix" data-type="name">
+                        <p class="typeword col-sm-2 col-md-2">{lang keywords}</p>
+                        <div class="typexname col-md-10 col-sm-10">
+                            <input type="text" value="" id="resourcesname" name="filename" placeholder="{lang enter_keywords_match_file}" searchname/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    	<button type="button" class="btn btn-primary" id="conditionSearchFile">{lang search}</button>
+                        <button type="button" class="btn btn-primary-outline resetting">{lang reset}</button>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="header-toggle">
+	<ul class="sizeMenu pull-right">
+        <li class="listchange">
+        	<a class="icons-thumbnail" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="4" >
+        		<i class="dzz dzz-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i>
+        	</a>
+        </li>
+        <li class="rightswitch">
+        	<a href="javascript:;" class="toggRight">
+        		<i class="dzz dzz-info" data-toggle="tooltip" data-placement="bottom"></i>
+        	</a>
+        </li>
+    </ul>
+	<div class="new-buildMenu">
+                <div class="dropdown newMenu">
+                    <button type="button" class="btn btn-cricular  dropdown-toggle" id="exampleColorDropdown2" data-toggle="dropdown">新建/上传</button>
+                    <ul class="dropdown-menu dropdown-menu-primary" aria-labelledby="exampleGroupDrop1" role="menu">
+                       
+                        <li role="presentation" class="js-newfolder folderPermMust">
+                            <a href="javascript:void(0)" onclick="_filemanage.NewIco('newFolder')" role="menuitem">
+                            	<span class="dzz dzz-folder filee-icon filee-folder"></span>
+                            	<span class="file-text">{lang default_folder_name}</span></a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li class="yunfile-upload js-upload-file"><a href="javascript:;">
+                        	<span class="dzz  dzz-upload filee-icon filee-upload"></span>
+                        	<span class="file-text">{lang uploadfile}</span>
+                            <input type="file" name="files[]" id="wangpan-upload-file" class="wangpan-upload-file" multiple="" data-uploadtype="file"></a>
+                        </li>
+                        <li class="yunfile-upload js-upload-folder"><a href="javascript:;">
+                        	<span class="dzz dzz-folder filee-icon filee-folder"></span>
+                        	<span class="file-text">{lang uploadfolder}</span>
+                            <input type="file" name="files[]" multiple="" webkitdirectory="" value="" id="wangpan-upload-folder" class="wangpan-upload-file" data-uploadtype="folder"></a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li role="presentation">
+                            <a href="javascript:void(0)" onclick="_filemanage.NewIco('newLink')" role="menuitem">
+                            	<span class="dzz dzz-language filee-icon filee-language"></span>
+                            	<span class="file-text">{lang newlink}</span>
+                            </a>
+                        </li>
+                        <!--<li role="presentation">
+                            <a href="javascript:void(0)" onclick="_filemanage.NewIco('newDzzDoc')" role="menuitem">
+                            	<span class="dzz dzz-description filee-icon filee-description"></span>
+                            	<span class="file-text">{lang extname_dzzdoc}</span>
+                            </a>
+                        </li>-->
+                        <li role="presentation">
+                            <a href="javascript:void(0)" onclick="_filemanage.NewIco('newTxt')" role="menuitem">
+                            	<span class="dzz dzz-file filee-icon filee-file"></span>
+                            	<span class="file-text">{lang extname_txt}</span>
+                            </a>
+                        </li>
+                        <li role="separator" class="divider"></li>
+                        <li role="presentation">
+                            <a href="javascript:void(0)" onclick="_filemanage.NewIco('newDoc')" role="menuitem">
+                            	<span class="filee-icon dzz dzz-file-text filee-file-text"></span>
+                            	<span class="file-text">{lang word_document}</span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="javascript:void(0)" onclick="_filemanage.NewIco('newExcel')" role="menuitem">
+                            	<span class="dzz dzz-file-excel filee-icon filee-file-excel"></span>
+                            	<span class="file-text">{lang excel_document}</span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="javascript:void(0)" onclick="_filemanage.NewIco('newPowerPoint')" role="menuitem">
+                            	<span class="dzz dzz-file-ppt filee-icon filee-file-ppt"></span>
+                            	<span class="file-text">{lang ppt_document}</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+</div>
+<script type="text/javascript">
+	$(function () {
+		  $('[data-toggle="tooltip"]').tooltip()
+		})
+</script>
+<script type="text/javascript" src="static/select2/select2.min.js"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/header-search.js"></script>

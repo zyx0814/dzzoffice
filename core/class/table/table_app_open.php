@@ -21,7 +21,7 @@ class table_app_open extends dzz_table
 	}
 	public function setDefault($extid){
 		$data=self::fetch($extid);
-		DB::update($this->_table,array('isdefault'=>0),"ext='{$data[ext]}'");
+		DB::update($this->_table,array('isdefault'=>0),"ext='{$data['ext']}'");
 		$this->clear_cache('ext_all');
 		$this->clear_cache('all');
 		return self::update($extid,array('isdefault'=>1)); 

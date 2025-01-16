@@ -10,11 +10,12 @@
 if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-$op=$_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
+$navtitle = lang('members_verify').' - '.lang('appname');
 if ($_G['adminid'] != 1)
 	showmessage('no_privilege');
 include_once  libfile('function/cache');
-$do = $_GET['do'] ? $_GET['do'] : '';
+$do = isset($_GET['do']) ? $_GET['do'] : '';
 
 if ($do == 'edit') {
 	$vid = $_GET['vid'] < 8 ? intval($_GET['vid']) : 0;
@@ -26,14 +27,14 @@ if ($do == 'edit') {
 			$icon_url = parse_url($verifyarr['icon']);
 			$prefix = !$icon_url['host'] && strpos($verifyarr['icon'], $_G['setting']['attachurl']) === false ? $_G['setting']['attachurl'] : '';
 
-			$verificonhtml = '<label class="radio-inline"><input type="checkbox" class="checkbox" name="deleteicon[' . $vid . ']" value="yes" />'.lang('del1').'</label>&nbsp;<img src="' . $prefix . $verifyarr['icon'] . '?t=' . TIMESTAMP . '"  />';
+			$verificonhtml = '<label class="radio-inline"><input type="checkbox" class="form-check-input" name="deleteicon[' . $vid . ']" value="yes" />'.lang('del1').'</label>&nbsp;<img src="' . $prefix . $verifyarr['icon'] . '?t=' . TIMESTAMP . '"  />';
 		}
 		$unverifyiconhtml = '';
 		if ($verifyarr['unverifyicon']) {
 			$unverifyiconurl = parse_url($verifyarr['unverifyicon']);
 
 			$prefix = !$unverifyiconurl['host'] && strpos($verifyarr['unverifyicon'], $_G['setting']['attachurl']) === false ? $_G['setting']['attachurl'] : '';
-			$unverifyiconhtml = '<label class="radio-inline"><input type="checkbox" class="checkbox" name="delunverifyicon[' . $vid . ']" value="yes" />'.lang('del1').'</label>&nbsp;<img src="' . $prefix . $verifyarr['unverifyicon'] . '?t=' . TIMESTAMP . '" />';
+			$unverifyiconhtml = '<label class="radio-inline"><input type="checkbox" class="form-check-input" name="delunverifyicon[' . $vid . ']" value="yes" />'.lang('del1').'</label>&nbsp;<img src="' . $prefix . $verifyarr['unverifyicon'] . '?t=' . TIMESTAMP . '" />';
 		}
 
 		$fieldarr = C::t('user_profile_setting') -> fetch_all_by_available(1);

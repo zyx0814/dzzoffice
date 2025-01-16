@@ -1,0 +1,82 @@
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+              <ul class="nav nav-pills">
+                  <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&op=edit&bz=dzz"> {lang set}</a> </li>
+                  <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&op=space">{lang space_management}</a> </li>
+                  <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&op=oauth&bz&bz=qiniu">{lang oauth_qinniu_add}</a> </li>
+              </ul>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+              <form  name="aliform" class="form-horizontal" action="{MOD_URL}&op=oauth" method="post" onsubmit="return validate(this)">
+                <input type="hidden" name="qiniusubmit" value="true" />
+                <input type="hidden" name="bz" value="qiniu" />
+                <input type="hidden" name="formhash" value="{FORMHASH}" />
+                <div class="row mb-3">
+                  <label class="col-sm-2" for="access_id">AK</label>
+                  <div class="col-sm-10">
+                    <input type="text" id="access_id" class="form-control"  name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+                    <span class="form-text">{lang oauth_qinniu_storage} AK</span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2" for="access_key">SK</label>
+                  <div class="col-sm-10">
+                    <input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+                    <span class="form-text">{lang oauth_qinniu_storage} SK</span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2">bucket{lang name}</label>
+                  <div class="col-sm-10">
+                    <input type="text" id="bucket" name="bucket" class="form-control" value="" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+                    <span class="form-text">{lang oauth_qinniu_manage_bucket}</span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2" for="hostname">{lang visit_domain_name}</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="hostname" name="hostname" autocomplete="off" value="$ali[hostname]" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" />
+                    <span class="form-text">{lang oauth_qinniu_storage_bucket}</span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2" for="region">{lang storage_region}</label>
+                  <div class="col-sm-10">
+                    <!--{loop $HOSTS $key $value}-->
+                    <label class="radio-inline"><input class="form-check-input" type="radio" <!--{if $key=='huadong'}--> checked="checked"<!--{/if}--> name="region" value="$key" /> $value['title']</label>
+                    <!--{/loop}--> 
+                  </div>
+                </div>
+                <dl class="mb-3 d-grid">
+                  <input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang add}">
+                </dl>
+              </form>
+          </div>
+      </div>
+    </div>
+</main>
+<script type="text/javascript">
+function validate(form){
+	if(jQuery("#access_id").val()==''){
+		jQuery("#access_id").parent().parent().addClass('has-warning');
+		return false;
+	}else if(jQuery("#access_key").val()==''){
+		jQuery("#access_key").parent().parent().addClass('has-warning');
+		return false;
+	}else if(jQuery("#bucket").val()==''){
+		jQuery("#bucket").parent().parent().addClass('has-warning');
+		return false;
+	}else if(jQuery("#hostname").val()==''){
+		jQuery("#hostname").parent().parent().addClass('has-warning');
+		return false;
+	}
+	return true;
+}
+ </script>
+<!--{template lyear:footer_simple}--> 

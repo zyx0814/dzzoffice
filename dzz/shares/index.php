@@ -13,7 +13,7 @@ global $_G;
 $osid = $_GET['sid'];
 $morepath = $osid;
 $sid = dzzdecode($osid);
-$ismobile = helper_browser::ismobile();
+$navtitle='分享文件';
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'adddowns') {
     C::t('shares')->add_downs_by_id($sid);
@@ -36,24 +36,29 @@ if ($do == 'adddowns') {
     if ($share['status'] == -3) {
         showmessage('share_file_deleted');
     }
+    $canview = 1;
+    $candownload = 1;
+    if ($share['perm']) {
+        $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
+        if (isset($perms[3]) && !$_G['uid']) { // 3 表示仅登录访问
+            Hook::listen('check_login');
+        } elseif (isset($perms[2])) { // 2 表示禁用预览权限
+            $canview = 0;
+        }
+        if (isset($perms[1])) {
+            $candownload = 0; // 下载权限被禁用
+        }
+    }
     if ($share['password'] && (dzzdecode($share['password']) != authcode($_G['cookie']['pass_' . $sid]))) {
         if (submitcheck('passwordsubmit')) {
             if ($_GET['password'] != dzzdecode($share['password'])) {
-                if ($ismobile) {
-                    include template('mobile/share_password');
-                } else {
-                    include template('password');
-                }
+                include template('password');
                 exit();
             }
             dsetcookie('pass_' . $sid, authcode($_GET['password'], 'ENCODE'));
         } else {
             $rightpassword = dzzdecode($share['password']);
-            if ($ismobile) {
-                include template('mobile/share_password');
-            } else {
-                include template('password');
-            }
+            include template('password');
             exit();
         }
     }
@@ -88,7 +93,7 @@ if ($do == 'adddowns') {
     }
     $rids = explode(',', $share['filepath']);
     if (count($rids) > 1) {
-        $share['img'] = '/dzz/explorer/img/ic-files.png';
+        $share['img'] = 'dzz/images/extimg/folder.png';
     } else {
         $share['img'] = C::t('resources')->get_icosinfo_by_rid($share['filepath']);
     }
@@ -102,14 +107,14 @@ if ($do == 'adddowns') {
             $shareuser['headerColor'] = $userinfo['svalue'];
         }
         $shareuser['username'] = $userinfo['username'];
-        $shareuser['firstword'] = strtoupper(new_strsubstr($shareuser[username],1,''));
+        $shareuser['firstword'] = strtoupper(new_strsubstr($shareuser['username'],1,''));
     }
     //增加浏览次数
     C::t('shares')->add_views_by_id($sid);
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
-    $perpage = ($ismobile) ? 20 : 20;
+    $perpage = 20;
     $start = ($page - 1) * $perpage;
-    $gets = array('mod' => 'shares', 'sid' => $sid,);
+    $gets = array('mod' => MOD_NAME, 'sid' => $sid,);
     $theurl = BASESCRIPT . "?" . url_implode($gets);
     $ordersql = '';
     $asc = (isset($_GET['asc'])) ? intval($_GET['asc']) : 1;
@@ -147,7 +152,7 @@ if ($do == 'adddowns') {
     $list = array();
     $allrids = '';
     $count = DB::result_first("select count(*) from %t $wheresql $ordersql $limitsql", $params);
-//获取分享数据
+    //获取分享数据
     foreach (DB::fetch_all("select rid from %t $wheresql $ordersql $limitsql", $params) as $v) {
         $fileinfo = getfileinfo($v['rid']);
         if ($fileinfo['type'] == 'folder' && $fileinfo['oid']) {
@@ -156,14 +161,15 @@ if ($do == 'adddowns') {
 			$fileinfo['contaions']= C::t('resources')->get_contains_by_fid($fileinfo['oid']);
             $fileinfo['filenum'] = $fileinfo['contaions']['contain'][0];
             $fileinfo['foldernum'] = $fileinfo['contaions']['contain'][1];
-        }else{
-			$opendata=getOpenUrl($fileinfo,$share);
+        } else {
+            if ($_G['ismobile']) {
+                $opendata=getOpenUrl($fileinfo,$share);
 				$fileinfo['type']=$opendata['type'];
 				$fileinfo['url']=$opendata['url'];
-		}
+            }
+        }
         if ($fileinfo['type'] == 'image') {
             $fileinfo['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=45&height=45&path=' . dzzencode('attach::' . $fileinfo['aid']);
-            $fileinfo['imgpath'] = DZZSCRIPT . '?mod=io&op=thumbnail&path=' . dzzencode('attach::' . $fileinfo['aid']);
         }
 		
         $list[] = $fileinfo;
@@ -180,12 +186,10 @@ if ($do == 'adddowns') {
     } else {
         $nextpage = 0;
     }
-    //echo $nextpage;die;
-    if ($ismobile) {
+    if ($_G['ismobile']) {
         include template('mobile/list');
     } else {
         include template('list');
     }
-
 }
 ?>

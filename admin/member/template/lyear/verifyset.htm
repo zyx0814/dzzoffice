@@ -1,0 +1,67 @@
+<!--{template lyear:header_simple_start}-->
+<style>
+	
+	.form-horizontal .form-control {
+		min-width: 90px;
+		max-width: 250px;
+	}
+	textarea.form-control,select.form-control{
+		border-width:1px 1px 1px 1px;
+	}
+	
+</style>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-body">
+				<div class="alert alert-warning">
+					<ul class="m-0">
+						{lang verifyset_members_verify_text}
+					</ul>
+				</div>
+				<form id="cpform" action="{MOD_URL}&op=verifyset" class="form-horizontal" method="post" name="cpform">
+					<input type="hidden" value="{FORMHASH}" name="formhash">
+					<input type="hidden" value="true" name="verifysubmit">
+					<div class="table-responsive">
+						<table class="table table-hover align-middle">
+							<thead>
+								<th width="60">{lang enable}</th>
+								<th width="120">{lang authentication_code}</th>
+								<th>{lang members_verify_title}</th>
+								<th width="120">{lang edit}</th>
+							</thead>
+							<!--{eval for($i=1;$i<8;$i++){}-->
+							{eval $value=$_G['setting']['verify'][$i]}
+							<tr>
+								<td width="60"><input type="checkbox" class="form-check-input" name="settingnew[verify][$i][available]" <!--{if $value[available]}-->checked="checked"<!--{/if}-->value="1" /></td>
+								<td width="120">verify{$i}</td>
+								<td>
+									<!--{if $value[readonly]}-->
+									$value[title]<input type="hidden" name="settingnew[verify][$i][title]" value="$value[title]" />
+									<!--{else}-->
+									<input type="text" class="form-control" name="settingnew[verify][$i][title]" value="$value[title]">
+									<!--{/if}-->
+									<!--{if $value['icon']}-->
+									<img src="$value[icon]" />
+									<!--{/if}-->
+								</td>
+								<td width="120">
+									<a href="{MOD_URL}&op=verifyset&do=edit&vid=$i" class="btn btn-outline-primary btn-sm" title="{lang edit}"><i class="mdi mdi-pencil"></i></a>
+								</td>
+							</tr>
+							<!--{eval }}-->
+						</table>
+					</div>
+					<dl class="mb-3 d-grid">
+						<input class="btn btn-primary btn-round bodyloading" type="submit" value="{lang save_set}" />
+					</dl>
+				</form>
+			</div>
+		</div>
+	</div>
+</main>
+<script type="text/javascript">
+	var url = '{MOD_URL}';
+</script>
+<!--{template lyear:footer_simple}-->

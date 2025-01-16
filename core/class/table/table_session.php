@@ -60,19 +60,17 @@ class table_session extends dzz_table
 		return DB::result_first("SELECT count(*) FROM ".DB::table($this->_table).$condition);
 
 	}
-
 	public function delete_by_session($session, $onlinehold, $guestspan) {
-		if(!empty($session) && is_array($session)) {
-			$onlinehold = time() - $onlinehold;
-			$guestspan = time() - $guestspan;
-			$session = daddslashes($session);
+		if(empty($session) || !is_array($session)) return;
+		$onlinehold = time() - $onlinehold;
+		$guestspan = time() - $guestspan;
 
-			$condition = " sid='{$session[sid]}' ";
-			$condition .= " OR lastactivity<$onlinehold ";
-			$condition .= " OR (uid='0' AND ".DB::field('ip', $session['ip'])." AND lastactivity>$guestspan) ";
-			$condition .= $session['uid'] ? " OR (uid='{$session['uid']}') " : '';
-			DB::delete('session', $condition);
-		}
+		$session = daddslashes($session);
+		$condition = " sid='{$session['sid']}' ";
+		$condition .= " OR lastactivity<$onlinehold ";
+		$condition .= " OR (uid='0' AND ".DB::field('ip', $session['ip'])." AND lastactivity>$guestspan) ";
+		$condition .= $session['uid'] ? " OR (uid='{$session['uid']}') " : '';
+		DB::delete('session', $condition);
 	}
 	public function fetch_by_uid($uid) {
 		return !empty($uid) ? DB::fetch_first('SELECT * FROM %t WHERE uid=%d', array($this->_table, $uid)) : false;

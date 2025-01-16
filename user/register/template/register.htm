@@ -2,7 +2,7 @@
 <link href="static/css/checkbox.css?{VERHASH}" rel="stylesheet" media="all">
 <link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
 <link href="{MOD_PATH}/images/register.css?{VERHASH}" rel="stylesheet" media="all">
-<script src="user/scripts/register.js?{VARHASH}"></script>
+<script src="user/scripts/register.js?{VERHASH}"></script>
 <style>
 	#popModal .modal-dialog{
 		width:410px;
@@ -68,7 +68,7 @@
 						<!--{/loop}-->
             <!--{/if}--> 
            
-            <!--{if $secqaacheck || $seccodecheck}-->
+            <!--{if isset($secqaacheck) || isset($seccodecheck)}-->
             <div class="form-group"> 
               <!--{template common/seccheck}--> 
             </div>

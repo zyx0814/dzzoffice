@@ -259,6 +259,8 @@ $lang = array(
     'del_adjunct' => '删除附件',
     'choose_from_my_file' => '从我的文件中选择',
     'said_two_sentences' => '我说两句',
+    'comment_success'=>	'评论成功',
+	'comment_failed'=>	'评论失败',
     'colleague' => '同事',
     'publish' => '发表',
     'a_reply' => '条回复',
@@ -468,11 +470,17 @@ $lang = array(
     'power_point' => '演示文稿',
     'pictures_photos' => '图片和照片',
     'pictures' => '图片',
+    'video' => '视频',
     'document' => '文档',
     'all_type' => '全部类型',
     'some_day_after' => '{day}天后',
     'within_a_day' => '1天内',
 	
-	'savetosuccess'=>' 保存成功，文件路径： '
+	'savetosuccess'=>' 保存成功，文件路径： ',
+    'delete_share'=>'删除分享',
+    'affirm_stop_sharing'=>'确定取消分享',
+    'stop_sharing_success'=>'取消分享成功',
+    'share_stop_sharing1'=>'<p class="text-center">取消分享后，该条分享记录将被删除，将无法再访问此分享链接。</p><p class="text-center">你确认要取消分享吗？</p>',
+    'global_appinfo_error'=>'全局应用信息错误！请检查Dzz版本与应用是否匹配。',
 );
 ?>

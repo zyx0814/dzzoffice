@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<root>
+	<item id="Title"><![CDATA[Dzz! Style]]></item>
+	<item id="version"><![CDATA[2.3.1]]></item>
+	<item id="Time"><![CDATA[2018-03-19 16:00]]></item>
+	<item id="From"><![CDATA[乐云网络 (http://www.dzzoffice.com/)]]></item>
+	<item id="Data">
+		<item id="name"><![CDATA[光年模板]]></item>
+		<item id="tplname"><![CDATA[lyear]]></item>
+		<item id="copyright"><![CDATA[Dzz!]]></item>
+		<item id="version"><![CDATA[1.0]]></item>
+	</item>
+</root>

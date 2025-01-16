@@ -26,11 +26,11 @@ class table_syscache extends dzz_table
 		parent::__construct();
 	}
 
-	public function fetch($cachename) {
+	public function fetch($cachename, $force_from_db = false) {
 		$data = $this->fetch_all(array($cachename));
 		return isset($data[$cachename]) ? $data[$cachename] : false;
 	}
-	public function fetch_all($cachenames) {
+	public function fetch_all($cachenames, $force_from_db = false) {
 
 		$data = array();
 		$cachenames = is_array($cachenames) ? $cachenames : array($cachenames);

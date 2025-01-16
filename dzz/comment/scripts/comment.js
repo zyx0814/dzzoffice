@@ -71,9 +71,9 @@ for(var i in arr['attachs']){
    html+='   		<div class="action_mfed clearfix">';
    html+='     			<div class="btn_amfed">';
    html+='      	 		<ul>';
-   //html+='             			<li class="more_bacfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_edit(\''+arr['cid']+'\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\')">'+__lang.edit+'</a></li>';
-   html+='        	 			<li class="more_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="feed_delete(\''+arr['cid']+'\',\'comment_'+arr['cid']+'\')">'+__lang.delete+'</a></li>';
-   html+='         				<li class="reply_bamfed"><a hidefocus="true" href="javascript:void(0);" onclick="getReplyForm(\''+arr['cid']+'\',\'0\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\');">'+__lang.reply+'</a></li>';
+   //html+='             			<li class="more_bacfed"><a class="dcolor" hidefocus="true" class="dcolor" href="javascript:void(0);" onclick="feed_edit(\''+arr['cid']+'\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\')">'+__lang.edit+'</a></li>';
+   html+='        	 			<li class="more_bamfed"><a class="dcolor" hidefocus="true" class="dcolor" href="javascript:void(0);" onclick="feed_delete(\''+arr['cid']+'\',\'comment_'+arr['cid']+'\')">'+__lang.delete+'</a></li>';
+   html+='         				<li class="reply_bamfed"><a class="dcolor" hidefocus="true" class="dcolor" href="javascript:void(0);" onclick="getReplyForm(\''+arr['cid']+'\',\'0\',\''+arr['allowattach']+'\',\''+arr['allowat']+'\',\''+arr['allowsmiley']+'\');">'+__lang.reply+'</a></li>';
    html+='      	 		</ul>';
    html+='     			</div>';
    html+='    		   '+arr['dateline'];
@@ -325,9 +325,9 @@ function feed_attach_saveto(qid){
 	showWindow('saveto','index.php?mod=system&op=filewindow&type=2','get','0',function(fid,data){
 		jQuery.post(url,{fid:fid},function(json){
 			if(json.error){
-				showmessage(json.error,'danger',3000,1);
+				showmessage(json.error,'danger','3000',1);
 			}else{
-				showmessage(__lang.savetosuccess+data.relativepath+json.filename,'success',3000,1);
+				showmessage(__lang.savetosuccess+data.relativepath+json.filename,'success','3000',1);
 			}
 		},'json');
 	});

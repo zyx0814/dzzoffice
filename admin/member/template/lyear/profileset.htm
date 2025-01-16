@@ -1,0 +1,118 @@
+<!--{template lyear:header_simple_start}-->
+<style>
+	.itemContainer {
+		padding: 0 5px 20px;
+	}
+	#table-header th:nth-child(6),#table-header th:nth-child(7){
+		display:none;
+	}
+	.itemContainer td:nth-child(6),.itemContainer td:nth-child(7){
+		display:none;
+	}
+</style>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-body">
+				<div class="itemContainer">
+					<form id="cpform" action="{MOD_URL}&op=profileset" method="post" name="cpform">
+						<input type="hidden" value="{FORMHASH}" name="formhash">
+						<input type="hidden" value="true" name="ordersubmit">
+						<div class="table-responsive">
+							<table id="table-header" class="table table-hover align-middle">
+								<thead>
+								<th width="60">{lang sort}</th>
+								<th width="120">{lang identifier}</th>
+								<th>{lang name}</th>
+								<th width="60">{lang enable}</th>
+								<th width="100">{lang data_show}</th>
+								<th width="60">{lang business_card_show}</th>
+								<th width="60">{lang registration_page_display}</th>
+								<th width="120">{lang operation}</th>
+								</thead>
+								<!--{loop $list $fieldid $value}-->
+								<tr>
+
+									<td width="60"><input type="text" class="form-control" name="displayorder[$fieldid]" value="$value[displayorder]"></td>
+									<td class="fieldid <!--{if !$value[customable]}-->gray<!--{/if}-->" width="120">$fieldid</td>
+									<td>$value[title] </td>
+									<td width="60"><input type="checkbox" class="form-check-input" name="available[$fieldid]" <!--{if $value[available]}-->checked="checked"<!--{/if}-->value="1"></td>
+									<td width="100"><input type="checkbox" class="form-check-input" name="invisible[$fieldid]" <!--{if !$value[invisible]}-->checked="checked"<!--{/if}-->value="1"></td>
+									<td width="60"><input type="checkbox" class="form-check-input" name="showincard[$fieldid]" <!--{if $value[showincard]}-->checked="checked"<!--{/if}-->value="1"></td>
+									<td width="60"><input type="checkbox" class="form-check-input" name="showinregister[$fieldid]" <!--{if $value[showinregister]}-->checked="checked"<!--{/if}-->value="1"></td>
+									<td width="100">
+										<a href="{MOD_URL}&op=profileset&fieldid=$fieldid" class="btn btn-outline-primary btn-sm" title="{lang edit}"><i class="mdi mdi-pencil"></i></a>
+										<!--{if $value['customable']}-->
+										<a href="{MOD_URL}&op=profileset&do=delete&fieldid=$fieldid" onclick="return confirm('{lang profileset_delete}')" class="btn btn-outline-danger btn-sm" title="{lang delete}"><i class="mdi mdi-delete"></i></a>
+										<!--{/if}-->
+									</td>
+								</tr>
+								<!--{/loop}-->
+								<tr>
+									<td colspan="20"><button type="button" class="btn btn-outline-info" onclick="addRow(this)"><i class="glyphicon glyphicon-plus"></i>{lang add_data}</button></td>
+								</tr>
+							</table>
+						</div>
+						<dl class="mb-3 d-grid">
+							<input class="btn btn-primary btn-round bodyloading" type="submit" value="{lang save_set}" />
+						</dl>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<script type="text/javascript">
+	var url = '{MOD_URL}';
+
+	jQuery(document).ready(function(e) {
+		jQuery('input').on('ifChecked', function(e) {
+			jQuery(this).trigger('click');
+		});
+
+		jQuery(document).on('blur', 'input[required]', function() {
+			var self = this;
+			var val = this.value;
+			if(this.value == '') {
+				jQuery(this).addClass('input-error');
+			} else if(jQuery(this).hasClass('fieldid')) {
+				jQuery('.fieldid').not(this).each(function() {
+					if(jQuery(this).is('td') && this.innerHTML == val) {
+						jQuery(self).addClass('input-error');
+						showmessage('{lang identifier_use}', 'danger', 3000, 1);
+						return;
+					} else if(jQuery(this).is('input') && this.value == val) {
+						jQuery(self).addClass('input-error');
+						showmessage('{lang identifier_use}', 'danger', 3000, 1);
+						return;
+					}
+				});
+			} else {
+				jQuery(this).removeClass('input-error');
+			}
+		});
+		jQuery(document).on('change', 'input[required]', function() {
+			if(this.value == '') { jQuery(this).addClass('input-error') } else { jQuery(this).removeClass('input-error'); }
+		});
+	});
+
+	function initHeight() {
+		jQuery('.itemContainer').css('height', document.documentElement.clientHeight-jQuery('.navbar').outerHeight(true)- jQuery('.main-header').outerHeight(true) - jQuery('#table-header').outerHeight(true));
+	}
+
+	function addRow(obj) {
+		var html = '<tr class="add">' +
+			'<td  width="60"><input type="text" class="form-control" name="add[displayorder][]" value="0" ></td>' +
+			'<td  width="120"><input type="text" class="form-control fieldid" name="add[fieldid][]" value="" placeholder="{lang can_not_repeat}" required="true"></td>' +
+			'<td ><input type="text" class="form-control" name="add[title][]" value="" style="max-width:150px;" placeholder="{lang data_name}"></td>' +
+			'<td width="60"><input type="checkbox" class="form-check-input" name="add[available][]" value="1"></td>' +
+			'<td width="60"><input type="checkbox" class="form-check-input" name="add[invisible][]" value="1"></td>' +
+			'<td width="60"><input type="checkbox" class="form-check-input" name="add[showincard][]" value="1"></td>' +
+			'<td width="60"><input type="checkbox" class="form-check-input" name="add[showinregister][]" value="1"></td>' +
+			'<td width="120"><a href="javascript:;" onclick="jQuery(this).parent().parent().remove()"><i class="ibtn glyphicon glyphicon-trash"></i></a></td>';
+		jQuery(html).insertBefore(jQuery(obj).parent().parent());
+
+	}
+</script>
+<!--{template lyear:footer_simple}-->

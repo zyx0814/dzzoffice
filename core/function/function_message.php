@@ -39,31 +39,9 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 		include template('common/showmessage');
 		dexit();
 	}
-
 	define('CACHE_FORBIDDEN', TRUE);
 	$_G['setting']['msgforward'] = @dunserialize($_G['setting']['msgforward']);
 	$handlekey = $leftmsg = '';
-
-	/*if(defined('IN_MOBILE')) {
-		unset($extraparam['showdialog']);
-		unset($extraparam['closetime']);
-		unset($extraparam['extrajs']);
-
-		if(!$url_forward && dreferer() && IN_MOBILE == 1) {
-			$url_forward = $referer = dreferer();
-		}
-		if(!empty($url_forward) && strpos($url_forward, 'mobile') === false) {
-			$url_forward_arr = explode("#", $url_forward);
-			if(strpos($url_forward_arr[0], '?') !== false) {
-				$url_forward_arr[0] = $url_forward_arr[0].'&mobile='.IN_MOBILE;
-			} else {
-				$url_forward_arr[0] = $url_forward_arr[0].'?mobile='.IN_MOBILE;
-			}
-			$url_forward = implode("#", $url_forward_arr);
-		}
-	}*/
-
-
 	if(empty($_G['inajax']) && (!empty($_GET['quickforward']) || $_G['setting']['msgforward']['quick'] && empty($extraparam['clean_msgforward']) && $_G['setting']['msgforward']['messages'] && @in_array($message, $_G['setting']['msgforward']['messages']))) {
 		$param['header'] = true;
 	}
@@ -121,7 +99,6 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 		include template('common/footer_ajax');
 		dexit();
 	}
-
 	$vars = explode(':', $message);
 	if(count($vars) == 2) {
 		$show_message = lang($vars[1], $values,null,$vars[0]);
@@ -214,5 +191,4 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 
 	exit();
 }
-
 ?>

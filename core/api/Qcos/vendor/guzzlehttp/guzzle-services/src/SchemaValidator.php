@@ -212,7 +212,7 @@ class SchemaValidator
         } elseif ($type == 'array' && $valueIsArray && $param->getItems()) {
             foreach ($value as $i => &$item) {
                 // Validate each item in an array against the items attribute of the schema
-                $this->recursiveProcess($param->getItems(), $item, $path . "[{$i}]", $depth + 1);
+                $this->recursiveProcess($param->getItems(), $item, $path . "[[$i]]", $depth + 1);
             }
         }
 

@@ -29,9 +29,8 @@ if( $json["status"]==1){
 	$list = $json["data"]["list"];
 	$total = $json["data"]["total"];
 	$perpage = $json["data"]["perpage"]; 
-	//$perpage =1;
-	$theurl = BASESCRIPT."?mod=".MOD_NAME."&op=cloudappmarket"; 
-	$multi=multi($total, $perpage, $page, $theurl);
+	$theurl = MOD_URL."&op=cloudappmarket"; 
+	$multi=multi($total, $perpage, $page, $theurl,'pull-right');
 }
 //print_r($list);exit;
 $local_applist=DB::fetch_all("select * from %t where 1",array('app_market'));//C::tp_t("app_market")->select();

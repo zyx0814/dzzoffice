@@ -1,0 +1,58 @@
+<div id="searchFile" class="middlecenter scroll-100 scroll-srcollbars">
+    <div class="middle-padding-left">
+        <!--文件列表开始 -->
+        <div id="filemanage-search"></div>
+
+    </div>
+
+</div>
+
+
+<!--头部信息框开始-->
+<div class="navtopheader">
+</div>
+<!--头部信息框结束-->
+<div id="template_middleicon" style="display:none">
+    <!--{template template_file_middleicon}-->
+</div>
+<div id="template_detaillist" style="display:none">
+    <!--{template template_file_detaillist_search}-->
+</div>
+<div id="template_toolButton" style="display:none">
+    <!--{template template_file_toolButton}-->
+</div>
+<div id="template_file" style="display:none">
+    <!--{template template_file_navtopfile}-->
+</div>
+<div id="template_nofile_notice" style="display:none">
+    <!--{template noFilePage-search}-->
+</div>
+
+<script type="text/javascript" reload="1">
+    var searchjsonarr = ['position', 'fid', 'flagval', 'uid'];
+    $(document).ready(function (e) {
+        var hash = location.hash;
+        var id = _explorer.getUrlParam(hash);
+        id = id.replace(/#searchFile/, '&op=searchFile&do=filelist');
+        _filemanage.getData(_explorer.appUrl + id);
+        var searchstr = hash.replace(/#searchFile&sid=search/, '');
+        searchstr = searchstr.replace(/&searchtype=/, '');
+        var searchval = decodeURIComponent(searchstr);
+        searchjson = {
+            'after': 0,
+            'before': 0,
+            'owner': '',
+            'type': 0,
+            'position': [],
+            'keywords': 0,
+            'uid': 0,
+            'fid': [],
+            'flag': [],
+            'flagval': []
+        };
+        setSearchval(searchval);
+    })
+    jQuery('.middlecenter').on('resize', function (e) {
+        console.log('.middlecenter resize');
+    });
+</script>

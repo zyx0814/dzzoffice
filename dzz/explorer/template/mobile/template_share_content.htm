@@ -1,0 +1,16 @@
+<!--{loop $data $v}-->
+<a class="weui-cell weui-cell_access shareinfo" href="{MOD_URL}&op=mobile&do=ajax&operation=share&shareid=$v[id]">
+    <div class="weui-cell__hd"><span class="dzz dzz-share weui-cell__img weui-cell__imgshare"></span></div>
+    <div class="weui-cell__bd">
+        <h4>$v[title]</h4>
+        <p>
+            <span class="file">{lang share_in}</span><i class="file-number">{eval echo dgmdate($v['dateline'],'Y/m/d');}</i>
+            <i class="folder-number">{eval echo dgmdate($v['dateline'],'H:i');}</i>
+        </p>
+    </div>
+    <div class="weui-cell__exprie">
+        <span class="dzz dzz-alarm"></span>
+        <span class="weui-cell__exprie_date"><i class="weui-cell__exprie_time">$v[expireday]</i></span>
+    </div>
+</a>
+<!--{/loop}-->

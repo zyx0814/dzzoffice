@@ -62,7 +62,7 @@ class table_user_profile extends dzz_table
         return $info;
     }
 
-    public function fetch($uid){
+    public function fetch($uid, $force_from_db = false){
         $data=array('uid'=>$uid);
         foreach(DB::fetch_all("select * from %t where uid =%d",array($this->_table,$uid)) as $value) {
             $data[$value['fieldid']]=$value['value'];
@@ -72,7 +72,7 @@ class table_user_profile extends dzz_table
     public function fetch_by_field($uid,$field){ //获取用户某项资料的值
         return DB::result_first("select value from %t where uid=%d and fieldid=%s",array($this->_table,$uid,$field));
     }
-    public function update($uid,$fieldarr){//插入用户资料
+    public function update($uid,$fieldarr, $unbuffered = false, $low_priority = false){//插入用户资料
         foreach($fieldarr as $key=>$value){
 			if(is_array($value)){
 				$setarr=array(  'uid'=>$uid,
@@ -108,7 +108,7 @@ class table_user_profile extends dzz_table
     public function fetch_weixinid($weixinid){
         return DB::fetch_first("select * from %t where `fieldid` = %s and `value` = %s",array($this->_table,'weixinid',$weixinid));
     }
-    public function insert($fieldarr){//插入用户资料
+    public function insert($fieldarr, $return_insert_id = false, $replace = false, $silent = false){//插入用户资料
         $uid=$fieldarr['uid'];
         unset($fieldarr['uid']);
         foreach($fieldarr as $key=>$value){
@@ -128,7 +128,7 @@ class table_user_profile extends dzz_table
        }
        return $privacys;
     }
-    public function delete($uid){
+    public function delete($uid, $unbuffered = false){
         $uid=(array)$uid;
         return DB::delete($this->_table,"uid IN (".dimplode($uid).")");
     }
@@ -140,7 +140,7 @@ class table_user_profile extends dzz_table
         $uids=(array)$uids;
         return DB::delete($this->_table,"uid IN (".dimplode($uids).")");
     }
-    public function fetch_all($uids) {
+    public function fetch_all($uids, $force_from_db = false) {
         $data = array();
         $uids=(array)$uids;
         if(!empty($uids)) {

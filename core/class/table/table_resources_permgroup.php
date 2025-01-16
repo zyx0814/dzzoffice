@@ -12,7 +12,7 @@ class table_resources_permgroup extends dzz_table
 
         parent::__construct();
     }
-    public function insert($setarr){
+    public function insert($setarr, $return_insert_id = false, $replace = false, $silent = false){
         if($setarr['default'] == 1){//删除原有默认值
             if($did = DB::result_first("select `id` from %t where `default` = %d",array($this->_table,1))){
                 parent::update($did,array('default'=>0));
@@ -34,7 +34,7 @@ class table_resources_permgroup extends dzz_table
     public function fetch_by_name($pername){
         return DB::result_first("select count(*) from %t where pername = %s",array($this->_table,$pername));
     }
-    public function fetch_all($off = false){
+    public function fetch_all($off = null, $force_from_db = false){
         $params= array($this->_table);
         $wheresql = '';
         if($off){

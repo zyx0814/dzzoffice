@@ -325,6 +325,24 @@
           <span class="help-block"> {lang setting_main_leave}</span>
       </dl>-->
       <dl>
+        <dt>模板切换:</dt>
+        <dd class="clearfix">
+          <label class="radio-inline"> <input type="radio" name="settingnew[template]" value="" <!--{if !$setting[template]}-->checked<!--{/if}-->>默认模板</label>
+          <label class="radio-inline"> <input type="radio" name="settingnew[template]"  value="lyear" <!--{if $setting[template] == 'lyear'}-->checked<!--{/if}-->>光年模板</label>
+          <span class="help-block">只对当前页面具有多套模板的情况下生效</span>
+          </dd>
+      </dl>
+      <dl>
+        <dt>升级提醒:</dt>
+        <dd class="clearfix">
+          <label class="radio-inline"> <input type="radio" name="settingnew[upgradetis]" value="0" <!--{if !$setting[upgradetis]}-->checked<!--{/if}-->>全部开启</label>
+          <label class="radio-inline"> <input type="radio" name="settingnew[upgradetis]"  value="1" <!--{if $setting[upgradetis] == '1'}-->checked<!--{/if}-->>关闭系统</label>
+          <label class="radio-inline"> <input type="radio" name="settingnew[upgradetis]"  value="2" <!--{if $setting[upgradetis] == '2'}-->checked<!--{/if}-->>关闭插件</label>
+          <label class="radio-inline"> <input type="radio" name="settingnew[upgradetis]"  value="3" <!--{if $setting[upgradetis] == '3'}-->checked<!--{/if}-->>全部关闭</label>
+          <span class="help-block">关闭系统升级提醒后，只能前往系统工具中进行手动检测升级。关闭插件升级提醒后，只能前往应用市场进行手动检测升级。</span>
+          </dd>
+      </dl>
+      <dl>
         <dt>{lang close_terrace}:</dt>
         <dd class="clearfix">
           <label class="radio-inline"> <input type="radio" name="settingnew[bbclosed]" value="1" <!--{if $setting[bbclosed]}-->checked<!--{/if}--> onclick="document.getElementById('bbclosedreason').style.display='block'">{lang yes}</label>
@@ -340,8 +358,7 @@
           </dl>
         </dd>
         <dd>
-          <input class="btn btn-primary" id="submit_editsubmit" name="settingsubmit"
-                                   value="{lang save_changes}" type="submit">
+          <input class="btn btn-primary" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
         </dd>
       </dl>
     </form>
@@ -594,17 +611,13 @@
       <dl>
         <dt>登录：</dt>
         <dd class="clearfix"> <a class="loginset-template" href="admin/setting/images/template1.jpg" target="_blank">
-          <div class="loginset-template-icon<!--{if $setting[loginset][template] == 1}--> loginset-template-icon1<!--{/if}-->"
-                                 data-template="1"> <span class="glyphicon glyphicon-ok"></span> </div>
+          <div class="loginset-template-icon<!--{if $setting[loginset][template] == 1}--> loginset-template-icon1<!--{/if}-->" data-template="1"> <span class="glyphicon glyphicon-ok"></span> </div>
           <img style="width: 100%;" src="admin/setting/images/template1.jpg" alt=""/> </a> <a class="loginset-template" href="admin/setting/images/template2.jpg" target="_blank">
-          <div class="loginset-template-icon<!--{if $setting[loginset][template] == 2}--> loginset-template-icon1<!--{/if}-->"
-                                 data-template="2"> <span class="glyphicon glyphicon-ok"></span> </div>
+          <div class="loginset-template-icon<!--{if $setting[loginset][template] == 2}--> loginset-template-icon1<!--{/if}-->" data-template="2"> <span class="glyphicon glyphicon-ok"></span> </div>
           <img style="width: 100%;" src="admin/setting/images/template2.jpg" alt=""/> </a> <a class="loginset-template" href="admin/setting/images/template3.jpg" target="_blank">
-          <div class="loginset-template-icon<!--{if $setting[loginset][template] == 3}--> loginset-template-icon1<!--{/if}-->"
-                                 data-template="3"> <span class="glyphicon glyphicon-ok"></span> </div>
+          <div class="loginset-template-icon<!--{if $setting[loginset][template] == 3}--> loginset-template-icon1<!--{/if}-->" data-template="3"> <span class="glyphicon glyphicon-ok"></span> </div>
           <img style="width: 100%;" src="admin/setting/images/template3.jpg" alt=""/> </a>
-          <input type="hidden" class="form-control loginset-template-input"
-                               name="settingnew[loginset][template]" value="$setting[loginset][template]"/>
+          <input type="hidden" class="form-control loginset-template-input" name="settingnew[loginset][template]" value="$setting[loginset][template]"/>
         </dd>
         <dd class="clearfix"><span class="help-block">独立登录页登录模版。</span></dd>
       </dl>

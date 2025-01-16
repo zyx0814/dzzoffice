@@ -17,7 +17,7 @@ class table_folder extends dzz_table
         parent::__construct();
     }
 
-    public function update($fid, $data,$applytosub=false)
+    public function update($fid, $data,$applytosub=false, $low_priority = false)
     {
         if (isset($data['perm'])) {
             $perm = intval($data['perm']);
@@ -77,7 +77,7 @@ class table_folder extends dzz_table
         }
     }
 
-    public function insert($data, $appid = 0)
+    public function insert($data, $appid = 0,$replace = false, $silent = false)
     {
         if (empty($data)) {
             return false;
@@ -374,7 +374,7 @@ class table_folder extends dzz_table
     }
 
     //删除目录
-    public function delete($fid)
+    public function delete($fid, $unbuffered = false)
     {
         //删除路径表数据
         C::t('resources_path')->delete_by_fid($fid);
@@ -410,10 +410,10 @@ class table_folder extends dzz_table
 
                 if ($folder['perm'] > 0) {
                     if (perm_binPerm::havePower('read1', $folder['perm'])) {
-                        $where1[] = "uid ='{$_G[uid]}'";
+                        $where1[] = "uid ='{$_G['uid']}'";
                     }
                     if (perm_binPerm::havePower('read2', $folder['perm'])) {
-                        $where1[] = "uid!='{$_G[uid]}'";
+                        $where1[] = "uid!='{$_G['uid']}'";
                     }
                 }
                 if ($where1) $wheresql .= " and (" . implode(' OR ', $where1) . ")";
@@ -487,13 +487,13 @@ class table_folder extends dzz_table
                     if (perm_check::checkperm_Container($folder['fid'], 'read2')) {
                         $where1[] = "1";
                     } elseif (perm_check::checkperm_Container($folder['fid'], 'read1')) {
-                        $where1[] = "uid='{$_G[uid]}'";
+                        $where1[] = "uid='{$_G['uid']}'";
                     }
                 $where1 = array_filter($where1);
                 if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
                 else $temp[] = "0";
             } else {
-                $temp[] = " uid='{$_G[uid]}'";
+                $temp[] = " uid='{$_G['uid']}'";
             }
             $where[] = '(' . implode(' and ', $temp) . ')';
             unset($temp);
@@ -523,14 +523,14 @@ class table_folder extends dzz_table
                     if (perm_binPerm::havePower('read2', $folder['perm'])) {
                         $where1[] = "1";
                     } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
-                        $where1[] = "uid='{$_G[uid]}'";
+                        $where1[] = "uid='{$_G['uid']}'";
                     }
                 }
                 $where1 = array_filter($where1);
                 if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
                 else $temp[] = "0";
             } else {
-                $temp[] = " uid='{$_G[uid]}'";
+                $temp[] = " uid='{$_G['uid']}'";
             }
             $where[] = '(' . implode(' and ', $temp) . ')';
             unset($temp);

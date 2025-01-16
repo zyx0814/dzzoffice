@@ -1,0 +1,19 @@
+<div class="table-responsive">
+	<!--{if $env_str}-->
+	<table class="table table-hover align-middle">
+	  <thead>
+		<tr>
+		  <th>项目</th>
+		  <th>DzzOffice 所需配置</th>
+		  <th>DzzOffice 最佳</th>
+		  <th>当前服务器</th>
+		</tr>
+	  </thead>
+	  <tbody>
+		$env_str
+	  </tbody>
+	</table>
+	<!--{else}-->
+	<div class="alert alert-danger" role="alert">无法检测</div>
+	<!--{/if}-->
+  </div>

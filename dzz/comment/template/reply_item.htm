@@ -84,15 +84,15 @@
 					<ul>
 						<!--{if $_G['uid']==$value1[authorid] || $_G[adminid]==1}-->
 						<!--<li class="more_bacfed">
-							<a hidefocus="true" href="javascript:void(0);" onclick="feed_edit('$value1[cid]','$_GET[allowattach]','$_GET[allowat]','$_GET[allowsmiley]')">{lang edit}</a>
+							<a hidefocus="true" class="dcolor" href="javascript:void(0);" onclick="feed_edit('$value1[cid]','$_GET[allowattach]','$_GET[allowat]','$_GET[allowsmiley]')">{lang edit}</a>
 						</li>-->
 						<li class="more_bacfed">
-							<a hidefocus="true" href="javascript:void(0);" onclick="feed_delete('$value1[cid]','comment_$value1[cid]','$value1[pcid]')">{lang delete}</a>
+							<a hidefocus="true" class="dcolor" href="javascript:void(0);" onclick="feed_delete('$value1[cid]','comment_$value1[cid]','$value1[pcid]')">{lang delete}</a>
 						</li>
 						<!--{/if}-->
 						<!--{if $_G['uid']>0}-->
 						<li class="reply_bacfed">
-							<a hidefocus="true" href="javascript:void(0);" onclick="getReplyForm('$value1[pcid]','$value1[cid]','$_GET[allowattach]','$_GET[allowat]','$_GET[allowsmiley]');">{lang reply}</a>
+							<a hidefocus="true" class="dcolor" href="javascript:void(0);" onclick="getReplyForm('$value1[pcid]','$value1[cid]','$_GET[allowattach]','$_GET[allowat]','$_GET[allowsmiley]');">{lang reply}</a>
 						</li>
 						<!--{/if}-->
 					</ul>

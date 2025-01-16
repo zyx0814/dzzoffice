@@ -1,0 +1,104 @@
+<!--{eval $bodyClass = 'bg-white overflow-x-hidden';}-->
+<!--{template lyear:header_simple}-->
+<script type="text/javascript" src="user/scripts/login.js?{VERHASH}"></script>
+<!--{eval $loginhash = 'L'.random(4);}-->
+<!--{eval $loginimg = $_G['setting']['loginset']['img'];if (!$loginimg) $loginimg = MOD_PATH.'/images/login.jpg';}-->
+<!--背景层-->
+	<div class="row vh-100" style="background:{eval echo $_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#ffffff';};">
+	<!--{if $_G['setting']['loginset']['url']}-->
+	<iframe id="wrapper_frame"  class="col-md-6 col-lg-7 col-xl-8 d-none d-md-block" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+	<!--{else}-->
+	<div class="col-md-6 col-lg-7 col-xl-8 d-none d-md-block" style="<!--{if !$_G['setting']['loginset']['bcolor']}-->background-image: url($loginimg);<!--{/if}-->background-size: cover;">
+	</div>
+	<!--{/if}-->
+	  <div class="col-md-6 col-lg-5 col-xl-4 align-self-center">
+		<div class="p-5">
+		  <div class="text-center">
+			<img alt="light year admin" src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
+			 <!--{if $_G[setting][loginset][title]}-->
+			<h2 class="main-title">$_G[setting][loginset][title]</h2>
+			<!--{/if}--> 
+			<!--{if $_G[setting][loginset][subtitle]}-->
+			<div class="sub-title">$_G[setting][loginset][subtitle]</div>
+			<!--{/if}-->
+			<!--{if $_G[setting][bbclosed]}-->
+			<p class="text-danger">{lang site_closed_please_admin}</p>
+			<!--{/if}-->
+		  </div>
+		<form method="post"  name="login" id="loginform_$loginhash" class="loginForm" role="form" onsubmit="{if $_G['setting']['pwdsafety']}pwmd5('password3_$loginhash');{/if}pwdclear = 1; loginsub('loginform_$loginhash', 'returnmessage_$loginhash');return false;"  action="user.php?mod=login&op=logging&action=login&loginsubmit=yes{if !empty($_GET['handlekey'])}&handlekey=$_GET[handlekey]{/if}{if isset($_GET['frommessage'])}&frommessage{/if}&loginhash=$loginhash">
+			<input type="hidden" name="formhash" value="{FORMHASH}" />
+			<input type="hidden" name="referer" value="{$referer}" />
+			<!--{if $auth}-->
+			<input type="hidden" name="auth" value="$auth" />
+			<!--{else}--> 
+			<div class="mb-3 has-feedback">
+				<span class="mdi mdi-account" aria-hidden="true"></span>
+				<input type="text" class="form-control" id="email_$loginhash" placeholder="{lang email_username}" name="email"  autocomplete="off" required>
+			</div>
+			<div class="mb-3 has-feedback">
+				<span class="mdi mdi-lock" aria-hidden="true"></span>
+				<input type="password" class="form-control" id="password3_$loginhash" placeholder="{lang user_login_password}" name="password" onfocus="this.type='password'" autocomplete="off" required>
+			</div>
+			<!--{/if}-->
+			<!--{if $seccodecheck}-->
+			<div class="mb-3">
+			<!--{template lyear:seccheck}-->
+			</div>
+			<!--{/if}-->
+			<div class="mb-3">
+				<input type="checkbox" class="form-check-input" name="cookietime" id="cookietime_$loginhash" value="2592000" $cookietimecheck>
+				<label class="form-check-label not-user-select" for="cookietime_$loginhash">{lang automatic_login_within_thirtydays}</label>
+				<div class="float-end">
+					<!--{if $_G['setting']['regstatus']>0}--> 
+					<a class="pull-right"  href="user.php?mod=register&referer={eval echo urlencode($referer);}"  <!--{if !empty($_GET['inajax'])}-->onclick="_login.register($referer);return false;"<!--{/if}--> title="$_G['setting']['reglinkname']">$_G['setting']['reglinkname']</a> 
+					<span class="spacer  pull-right">|</span> 
+					<!--{/if}--> 
+					<a class="pull-right" href="user.php?mod=login&op=logging&action=lostpasswd">{lang getpassword}</a>
+				</div>
+			</div>
+			<div class="mb-3 third-wrapper clearfix">
+				<!--{hook third_login}-->
+			</div>
+			<div class="mb-3 d-grid">
+				<button class="btn btn-primary lyearloading" type="submit" name="loginsubmit" value="true">{lang login_empty}</button>
+			</div>
+			<p class="error-msg text-danger text-center" id="returnmessage_$loginhash"></p>
+		  </form>
+		  <p class="text-center text-muted mt-3"><!--{template lyear:copyright}--></p>
+		</div>
+	  </div>
+	</div>
+<!--{if $_G['setting']['pwdsafety']}--> 
+<script type="text/javascript" src="static/js/md5.js?{VERHASH}" reload="1"></script> 
+<!--{/if}--> 
+<script type="text/javascript">
+
+	var pwdclear = 1;
+	function initinput_login() {
+		document.body.focus();
+		<!--{if !$auth}-->
+			if(document.getElementById('loginform_$loginhash')) {
+				document.getElementById('loginform_$loginhash').email.focus();
+			}
+		<!--{/if}-->
+	}
+	
+	function clearpwd(self) {
+		self.type='password';
+		if(pwdclear) {
+			document.getElementById('password3_$loginhash').value = '';
+		}
+		pwdclear = 0;
+	}
+	
+	jQuery(document).ready(function(e) {
+		initinput_login();
+		if(jQuery('.ie8,.ie9').length){ //ie8模拟placeholder;
+			jQuery(':input[placeholder]').each(function(){
+				jQuery(this).placeholder();
+			});
+		}
+	});
+	
+</script> 
+<!--{template lyear:footer_simple}-->

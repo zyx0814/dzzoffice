@@ -8,13 +8,13 @@ selorg.add=function(ctrlid,vals){
 		if(jQuery('#'+ctrlid+'_sl_'+vals[i].orgid).length){
 		 	continue;	
 		}
-		html+='<button id="'+ctrlid+'_sl_'+vals[i].orgid+'" type="button" class="btn btn-simple btn-sorg" data-val="'+vals[i].orgid+'">';
+		html+='<button id="'+ctrlid+'_sl_'+vals[i].orgid+'" type="button" class="btn btn-simple btn-outline-primary btn-sm btn-sorg" data-val="'+vals[i].orgid+'">';
 		
 		if(vals[i].icon){
 			if(pregmatch.test(vals[i].icon)){
 				html+='<span class="'+vals[i].icon+'"></span>';
 			}else{
-				html+='<img src="'+vals[i].icon+'">';
+				html+='<img src="'+vals[i].icon+'" class="img-circle special_avatar_class Topcarousel img-avatar">';
 			}
 		}
 		var iconFirstWord=vals[i].path.match(/<span.+?>.+?<\/span>/i);
@@ -23,7 +23,7 @@ selorg.add=function(ctrlid,vals){
 		}else{
 			html+=vals[i].path;
 		}
-		html+='<a href="javascript:;" class="ibtn dzz dzz-close"  title="'+__lang.delete+'" onclick="selorg.remove(\''+ctrlid+'\',this);"></a>';
+		html+='<a href="javascript:;" class="ibtn dzz dzz-close mdi mdi-close lead"  title="'+__lang.delete+'" onclick="selorg.remove(\''+ctrlid+'\',this);"></a>';
 	}
 	jQuery('#'+ctrlid).append(html);
 	selorg.set(ctrlid);

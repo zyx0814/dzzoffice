@@ -3,7 +3,6 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-
 class GifMerge {
 	var $ver			= '1.1';
 	var $dly			= 50;
@@ -286,7 +285,7 @@ class GifMerge {
 
 	function arrcmp($b, $s, $l) {
 		for($i = 0; $i < $l; $i++) {
-			if($s{$i} != $b{$i}) {
+			if($s[$i] != $b[$i]) {
 				return false;
 			}
 		}

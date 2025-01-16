@@ -39,8 +39,9 @@ input:-webkit-autofill {
 	text-align: center;
 }
 .avatarContainer img {
-	max-width: 128px;
-	max-height: 128px;
+	width: 128px;
+	height: 128px;
+	line-height: 128px;
 }
 .avatarContainer .maintitle{
 	font-size:20px;

@@ -16,7 +16,7 @@ loadcache('profilesetting');
 $vid = intval($_GET['vid']);
 $anchor = in_array($_GET['anchor'], array('authstr', 'refusal', 'pass', 'add')) ? $_GET['anchor'] : 'authstr';
 $current = array($anchor => 1);
-$op=$_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 //判断管理权限
 if ($vid) {
 	if ($vid == 1) {
@@ -37,7 +37,7 @@ if ($anchor != 'pass') {
 	$_GET['orderby'] = 'uid';
 }
 if (!submitcheck('verifysubmit', true)) {
-	$navtitle = $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile');
+	$navtitle = $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile').' - '.lang('appname');
 
 	$thurl = ADMINSCRIPT . '?mod=member&op=verify&anchor=' . $anchor . '&vid=' . $vid;
 	if ($anchor == 'refusal') {
@@ -108,7 +108,8 @@ if (!submitcheck('verifysubmit', true)) {
 			if ($anchor == 'pass') {
 				$value = array_merge($value, $profiles[$uid]);
 			}
-			$value['username'] = '<a href="user.php?&uid=' . $value['uid'] . '" target="_blank"><img src="avatar.php?uid=' . $value['uid'] . '&size=small"><br/><br/>' . $value['username'] . '</a>';
+			$value['username'] = '<a href="user.php?&uid=' . $value['uid'] . '" target="_blank">'.avatar_block($value['uid']).'<br/><br/>' . $value['username'] . '</a>';
+
 			if ($anchor != 'pass') {
 				$fields = $anchor != 'pass' ? dunserialize($value['field']) : $_G['setting']['verify'][$vid]['field'];
 				$value['verifytype'] = $value['verifytype'] ? $_G['setting']['verify'][$value['verifytype']]['title'] : lang('members_verify_profile');
@@ -131,18 +132,18 @@ if (!submitcheck('verifysubmit', true)) {
 
 						$field = profile_show($key, $fields);
 					}
-					$fieldstr .= '<tr>' . ($anchor == 'authstr' ? '<td><input type="checkbox" name="refusal[' . $value['vid'] . '][' . $key . ']" value="' . $key . '" onclick="document.getElementById(\'refusal' . $value['vid'] . '\').click();" /></td>' : '') . '<td>' . $_G['cache']['profilesetting'][$key]['title'] . ':</td><td>' . $field . '</td></tr>';
+					$fieldstr .= '<tr>' . ($anchor == 'authstr' ? '<td><input type="checkbox"  class="form-check-input" name="refusal[' . $value['vid'] . '][' . $key . ']" value="' . $key . '" onclick="document.getElementById(\'refusal' . $value['vid'] . '\').click();" /></td>' : '') . '<td>' . $_G['cache']['profilesetting'][$key]['title'] . ':</td><td>' . $field . '</td></tr>';
 					$i++;
 				}
 				$opstr = "";
 
 				if ($anchor == 'authstr') {
-					$opstr .= "<label class=\"radio-inline\"><input type=\"radio\" name=\"verify[$value[vid]]\" value=\"validate\" onclick=\"mod_setbg($value[vid], 'validate');showreason($value[vid], 0);\">" . lang('validate') . "</label><label class=\"radio-inline\"><input  type=\"radio\" name=\"verify[$value[vid]]\" value=\"refusal\" id=\"refusal$value[vid]\" onclick=\"mod_setbg($value[vid], 'refusal');showreason($value[vid], 1);\">" . lang('refuse') . "</label>";
+					$opstr .= "<div class=\"form-check form-check-inline\"><input type=\"radio\" class=\"form-check-input\" name=\"verify[$value[vid]]\" value=\"validate\" onclick=\"mod_setbg($value[vid], 'validate');showreason($value[vid], 0);\"><label class=\"form-check-label\">" . lang('validate') . "</label></div><div class=\"form-check form-check-inline\"><input type=\"radio\" class=\"form-check-input\" name=\"verify[$value[vid]]\" value=\"refusal\" id=\"refusal$value[vid]\" onclick=\"mod_setbg($value[vid], 'refusal');showreason($value[vid], 1);\"><label class=\"form-check-label\">" . lang('refuse') . "</label></div>";
 				} elseif ($anchor == 'refusal') {
-					$opstr .= "<label class=\"radio-inline\"><input type=\"radio\" name=\"verify[$value[vid]]\" value=\"validate\" onclick=\"mod_setbg($value[vid], 'validate');\">" . lang('validate') . "</label>";
+					$opstr .= "<div class=\"form-check form-check-inline\"><input type=\"radio\" class=\"form-check-input\" name=\"verify[$value[vid]]\" value=\"validate\" onclick=\"mod_setbg($value[vid], 'validate');\"><label class=\"form-check-label\">" . lang('validate') . "</label></div>";
 				}
 
-				$fieldstr .= "</tbody><tr><td colspan=\"5\">$opstr <span id=\"reason_$value[vid]\" style=\"display: none;\" title=\"" . lang('moderate_reasonpm') . "\" ><input type=\"text\" class=\"form-control input-sm\" placeholder=\"" . lang('moderate_reasonpm') . "\" name=\"reason[$value[vid]]\" style=\"margin: 0px;\"></span><input type=\"button\" value=\"" . lang('moderate') . "\" name=\"singleverifysubmit\" class=\"btn btn-default btn-sm ml10\" onclick=\"singleverify($value[vid]);\"></td></tr></table>";
+				$fieldstr .= "</tbody><tr><td colspan=\"5\">$opstr <span id=\"reason_$value[vid]\" style=\"display: none;\" title=\"" . lang('moderate_reasonpm') . "\" ><input type=\"text\" class=\"form-control\" placeholder=\"" . lang('moderate_reasonpm') . "\" name=\"reason[$value[vid]]\" style=\"margin: 0px;\"></span><dl><input type=\"button\" value=\"" . lang('moderate') . "\" name=\"singleverifysubmit\" class=\"btn btn-primary\" onclick=\"singleverify($value[vid]);\"></dl></td></tr></table>";
 				$value['fieldstr'] = $fieldstr;
 				$value['dateline'] = dgmdate($value['dateline'], 'u');
 				$list[$uid] = $value;
@@ -172,7 +173,7 @@ if (!submitcheck('verifysubmit', true)) {
 				}
 				$fieldstr .= "</table>";
 				$value['fieldstr'] = $fieldstr;
-				$opstr = "<ul class=\"list-unstyled\"><li><label class=\"radio-inline\"><input  type=\"radio\" name=\"verify[$value[uid]]\" value=\"export\" onclick=\"mod_setbg($value[uid], 'export');\">".lang('export')."</label></li><li><label class=\"radio-inline\"><input type=\"radio\" name=\"verify[$value[uid]]\" value=\"refusal\" onclick=\"mod_setbg($value[uid], 'refusal');\">" . lang('refuse') . "</label></li></ul>";
+				$opstr = "<ul class=\"list-unstyled\"><li><div class=\"form-check form-check-inline\"><input type=\"radio\" class=\"form-check-input\" name=\"verify[$value[uid]]\" value=\"export\" onclick=\"mod_setbg($value[uid], 'export');\"><label class=\"form-check-label\">".lang('export')."</label></div></li><li><div class=\"form-check form-check-inline\"><input type=\"radio\" class=\"form-check-input\" name=\"verify[$value[uid]]\" value=\"refusal\" onclick=\"mod_setbg($value[uid], 'refusal');\"><label class=\"form-check-label\">" . lang('refuse') . "</label></div></li></ul>";
 				$value['opstr'] = $opstr;
 				$value['dateline'] = dgmdate($value['dateline'], 'u');
 				$list[$uid] = $value;

@@ -1,16 +1,9 @@
 <?php
-
-/**
- *      [Discuz!] (C)2001-2099 Comsenz Inc.
- *      This is NOT a freeware, use is subject to license terms
- *
- *      $Id: lang_template.php 29881 2012-05-02 07:19:30Z liulanbo $
- *
- *      This file is automatically generate
- */
-
+if(!defined('IN_DZZ')) {
+	exit('Access Denied');
+}
 $lang=array (
-	
+  'appname' => '用户中心',
   'username' => '用户名',
   'login_guest' => '没有帐号？<a href="user.php?mod={$_G[setting][regname]}">{$_G[setting][reglinkname]}</a>',
   'faq' => '帮助',

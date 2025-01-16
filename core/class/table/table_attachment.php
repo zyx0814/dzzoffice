@@ -63,6 +63,7 @@ class table_attachment extends dzz_table
 		}*/
 		return (defined('DZZSCRIPT')?DZZSCRIPT:'index.php').'?mod=io&op=thumbnail&width='.$width.'&height='.$height.'&original='.$original.'&path='.dzzencode($path);
 	}
+
 	public function get_total_filesize() {
 		$attachsize = 0;
 		$attachsize = DB::result_first("SELECT SUM(filesize) FROM ".DB::table($this->table));
@@ -111,7 +112,7 @@ class table_attachment extends dzz_table
 			if($filter['oremoteid']<2){
 				$where.="  and remote<2";
 			}else{
-				$where.="  and remote= '{$filter[oremoteid]}'";
+				$where.="  and remote= '{$filter['oremoteid']}'";
 			}
 		}
 		
@@ -120,11 +121,11 @@ class table_attachment extends dzz_table
 		}
 		$filter['sizelt']=intval($filter['sizelt']*1024*1024);
 		if($filter['sizelt']>0){
-			$where.=" and filesize>'$filter[sizelt]'";
+			$where.=" and filesize>'{$filter[sizelt]}'";
 		}
 		$filter['sizegt']=intval($filter['sizegt']*1024*1024);
 		if($filter['sizegt']>0){
-			$where.=" and filesize<'$filter[sizegt]'";
+			$where .= " and filesize < '{$filter['sizegt']}'";
 		}
 		if($filter['exts']){
 			$extarr=explode(',',$filter['exts']);
@@ -133,10 +134,10 @@ class table_attachment extends dzz_table
 			}
 		}
 		if($filter['dateline']){
-			$where.=" and dateline>='{$filter[dateline]}'";
+			$where.=" and dateline>='{$filter['dateline']}'";
 		}
 		if($filter['aid1']){
-			$where.=" and aid>'{$filter[aid1]}'";
+			$where.=" and aid>'{$filter['aid1']}'";
 		}
 		
 		if($filter['ignore']){
@@ -149,7 +150,7 @@ class table_attachment extends dzz_table
 		else  return DB::fetch_first("SELECT  * FROM ".DB::table($this->_table)." WHERE $where order by aid");
 		
 	}
-	public function insert($setarr,$return_insert_id=1){
+	public function insert($setarr,$return_insert_id=1,$replace = false, $silent = false){
 		if($aid=parent::insert($setarr,$return_insert_id)){
 			Hook::listen('table_attachment_insert', $aid);//插入附件表时的挂载点
 			return $aid;

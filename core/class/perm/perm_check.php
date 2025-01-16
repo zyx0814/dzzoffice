@@ -161,13 +161,49 @@ class perm_check{
     //$arr=array('uid','gid','desktop');其中这几项必须
     function checkperm($action,$arr,$bz=''){ //检查某个图标是否有权限;
         global $_G;
+        if($_G['uid']>0 && $_G['adminid']==1) return true; //网站管理员 有权限;
+        if ($arr['sid']) {
+            $share = C::t('shares')->fetch($arr['sid']);
+            if ($share) {
+                if ($share['status'] == -4) exit(lang('shared_links_screened_administrator'));
+                if ($share['status'] == -5) exit(lang('sharefile_isdeleted_or_positionchange'));
+                if ($share['endtime'] && $share['endtime'] < TIMESTAMP) {
+                    exit(lang('share_link_expired'));
+                }
+                if ($share['status'] == -3) {
+                    exit(lang('share_file_deleted'));
+                }
+                if ($share['perm']) {
+                    $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
+                    if (isset($perms[3]) && $_G['uid']<1) { // 3 表示仅登录使用
+                        return false; // 未登录，返回 false
+                    }
+                    if ($action == 'read') {
+                        if (isset($perms[2])) { // 2 表示禁用预览权限
+                            return false; // 预览权限被禁用，返回 false
+                        } else {
+                            return true; // 其他情况，默认允许访问
+                        }
+                    } elseif ($action == 'edit' && isset($perms[4])) {
+                        return true; // 编辑权限
+                    } elseif ($action == 'download' && isset($perms[1])) {
+                        return false; // 下载权限被禁用
+                    }
+                } else {
+                    if ($action == 'download' || $action == 'read') {
+                        return true; // 默认允许下载和预览
+                    }
+                }
+            } else {
+                return false; // 资源不存在
+            }
+        }
         if ($arr['preview'] && ($action=='read') || $action=='copy' || $action=='download') {
             return true;
         }
         if($_G['uid']<1){ //游客没有权限
             return false;
         }
-        if($_G['adminid']==1) return true; //网站管理员 有权限;
         if (!$arr['gid'] && $arr['uid'] !== $_G['uid']) {//我的网盘文件只限于当前用户
             return false;
         }
@@ -209,7 +245,6 @@ class perm_check{
 					if($_G['uid']==$folder['uid']) $action.='1';
 					else $action.='2';
 				}
-			
                 if(!perm_FolderSPerm::isPower($folder['fsperm'],$action)) return false;
                 //默认目录只有管理员有权限改变排列
                 //if($action=='admin' && $_G['adminid']!=1 && $folder['flag']!='folder') return false;

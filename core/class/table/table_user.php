@@ -411,7 +411,7 @@ class table_user extends dzz_table
 
 	
 
-	public function insert($uid, $ip, $groupid, $extdata, $adminid = 0) {
+	public function insert($uid, $ip = false, $groupid = false, $extdata = false, $adminid = 0) {
 		if(($uid = dintval($uid))) {
 			$profile = isset($extdata['profile']) ? $extdata['profile'] : array();
 			//$profile['uid'] = $uid;

@@ -9,6 +9,29 @@
 if (!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
+global $_G;
+if($_GET['sid']){
+    $sid=dzzdecode($_GET['sid']);
+    $share=C::t('shares')->fetch($sid);
+    if (!$share) {
+        showmessage('share_file_iscancled');
+    }
+    $canview=1;
+    $candownload = 1;
+    if ($share['perm']) {
+        $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
+        if (isset($perms[3]) && !$_G['uid']) { // 3 表示仅登录访问
+            Hook::listen('check_login');
+        } elseif (isset($perms[2])) { // 2 表示禁用预览权限
+            $canview = 0;
+        }
+        if (isset($perms[1])) {
+            $candownload = 0; // 下载权限被禁用
+        }
+    }
+} else{
+    showmessage('share_file_iscancled');
+}
 $open = false;
 if(isset($_GET['path'])){//打开文件夹
 	$morepath = $_GET['path'];
@@ -31,8 +54,6 @@ if(isset($_GET['path'])){//打开文件夹
             $rids[] = $v['rid'];
         }
     } else{
-		$sid=dzzdecode($_GET['morepath']);
-		$share=C::t('shares')->fetch($sid);
 		$filepaths = $share['filepath'];
 		$rids  = explode(',',$filepaths);
 	}
@@ -42,11 +63,10 @@ if(isset($_GET['currentfolder']) && $_GET['currentfolder']){
 }else{
     $currentfolder = false;
 }
-$ismobile = helper_browser::ismobile();
 $page = (isset($_GET['page'])) ? intval($_GET['page']):1;
-$perpage = ($ismobile) ? 20:20;
+$perpage = 20;
 $start = ($page - 1) * $perpage;
-$gets = array('mod' => 'shares', 'sid' => $sid, );
+$gets = array('mod' => MOD_NAME, 'sid' => $sid);
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $ordersql = '';
 $asc = (isset($_GET['asc'])) ? intval($_GET['asc']):1;
@@ -99,14 +119,15 @@ if(!empty($rids)){
 				$fileinfo['contaions']= C::t('resources')->get_contains_by_fid($fileinfo['oid']);
                 $fileinfo['filenum'] = $fileinfo['contaions']['contain'][0];
                 $fileinfo['foldernum'] = $fileinfo['contaions']['contain'][1];
-            }else{
-                $opendata=getOpenUrl($fileinfo,$share);
+            } else {
+                if ($_G['ismobile']) {
+                    $opendata=getOpenUrl($fileinfo,$share);
                     $fileinfo['type']=$opendata['type'];
                     $fileinfo['url']=$opendata['url'];
+                }
             }
             if ($fileinfo['type'] == 'image') {
                 $fileinfo['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=45&height=45&path=' . dzzencode('attach::' . $fileinfo['aid']);
-                $fileinfo['imgpath'] =  DZZSCRIPT.'?mod=io&op=thumbnail&path='.dzzencode('attach::' . $fileinfo['aid']);
             }
             $list[] = $fileinfo;
             $allrids .= dzzencode($val['rid']).',';
@@ -124,7 +145,7 @@ if (count($list) >= $perpage) {
 } else {
 	$naxtpage = 0;
 }
-if($ismobile){
+if($_G['ismobile']){
     include template('mobile/list_item');
 }else{
     include template('list_item');

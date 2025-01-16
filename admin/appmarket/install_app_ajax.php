@@ -16,7 +16,7 @@ include_once libfile('function/admin');
 include_once libfile('function/cache');
 include_once libfile('function/appmarket'); 
 $step = intval($_GET['step']);
-$op = $_GET['op'];
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 $step = $step ? $step : 1;
 $operation = $_GET['operation'] ? trim($_GET['operation']) : 'upgrade';
  header('Content-type:text/json');
@@ -380,7 +380,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
             } 
             $importtxt = @implode('', file($importfile)); 
             $apparray = getimportdata('Dzz! app');
-            $filename = $apparray['app']['extra']['installfile']; 
+            $filename = isset($apparray['app']['extra']['installfile']) ? $apparray['app']['extra']['installfile'] : ''; 
             if (!empty($filename) && preg_match('/^[\w\.]+$/', $filename)) {
                 $filename = DZZ_ROOT . './'.$dir.'/' . $appname . '/' . $filename;
                 if (file_exists($filename)) {

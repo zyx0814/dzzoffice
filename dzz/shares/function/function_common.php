@@ -10,40 +10,10 @@
 if ( !defined( 'IN_DZZ' ) ) { //所有的php文件必须加上此句，防止被外部调用
 	exit( 'Access Denied' );
 }
-function checkShare($share){
-	if (!$share) {
-		exit(json_encode(array('msg'=>lang('share_file_iscancled'))));
-	}
-	if ($share['status'] == -4) return array('msg'=>lang('shared_links_screened_administrator'));
-	if ($share['status'] == -5) return array('msg'=>lang('sharefile_isdeleted_or_positionchange'));
-	//判断是否过期
-	if ($share['endtime'] && ($share['endtime']+60*60*24) < TIMESTAMP) {
-		return array('msg'=>lang('share_link_expired'));
-	}
-	if ($share['times'] && $share['times'] <= $share['count']) {
-		return array('msg'=>lang('link_already_reached_max_number'));
-	}
-
-	if ($share['status'] == -3) {
-		return array('msg'=>lang('share_file_deleted'));
-	}
-	if ($share['password'] && (dzzdecode($share['password'],'',0,0) != authcode($_G['cookie']['pass_' . $sid]))) {
-		return array('msg'=>lang('password_share_error'));
-	}
-	return array('msg'=>'success');
-}
 //获取文件的打开方式
 function getOpenUrl($icoarr,$share){
 	$ext=$icoarr['ext'];
-	$dpath=$icoarr['dpath'];//(array('path'=>$icoarr['rid'],'perm'=>$share['perm']));
-	$canedit=0;
-	if($share['perm'] & 64){
-		$canedit=1;
-	}
-	$candownload=0;
-	if($share['perm'] & 256){
-		$candownload=1;
-	}
+	$dpath=$icoarr['dpath'];
 	$extall=C::t('app_open')->fetch_all_ext();
     $exts=array();
     $bzarr=explode(':',$icoarr['rbz']?$icoarr['rbz']:$icoarr['bz']);
@@ -79,9 +49,8 @@ function getOpenUrl($icoarr,$share){
 			}, $url);
 			//添加path参数；
 			if(strpos($url,'?')!==false  && strpos($url,'path=')===false){
-				$url.='&path=' . dzzencode('preview_' . $icoarr['rid']);
+				$url.='&path=' . dzzencode('sid:'.$share['id'].'_' . $icoarr['rid']);
 			}
-			//$url = $_G['siteurl'].$url;
 			return array('type'=>'attach','url'=>$url,'canedit'=>$data['canedit']);
 		}
 		
@@ -92,6 +61,5 @@ function getOpenUrl($icoarr,$share){
 		}else{
 			return array('type'=>'download','url'=>'index.php?mod=shares&op=download&operation=download&sid='.$sid.'&filename='.$icoarr['name'].'&path='.$dpath);
 		}
-		//IO::download($path,$_GET['filename']);
 	}
 }

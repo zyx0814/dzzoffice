@@ -1,0 +1,15 @@
+
+.perm-ok{
+	padding-right: 5px;
+}
+.proper-bottom{
+	position: relative;
+	display: inline-block;
+	padding-right: 20px;
+}
+.proper-set{
+	display: none;
+}
+.properties-list:hover .proper-set{
+	display:inline-block;
+}

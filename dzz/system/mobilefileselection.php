@@ -5,7 +5,7 @@ if (!defined('IN_DZZ')) {
 global $_G;
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 $uid = $_G['uid'];
-include libfile('function/filerouterule');
+include_once libfile('function/filerouterule');
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 $callback_url = isset($_GET['callback_url']) ? $_GET['callback_url'] : '';//回调函数名称
 $allowcreate = isset($_GET['allowcreate']) ? intval($_GET['allowcreate']) : 1;//是否允许新建文件夹

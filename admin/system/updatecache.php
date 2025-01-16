@@ -9,22 +9,10 @@
 if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 	exit('Access Denied');
 }
-
-$oparr = array('updatecache', 'database', /*'security','patch','update',*/
-'cron', 'log');
-$leftmenu = array();
-$op = $_GET['op'];
-foreach ($oparr as $key => $value) {
-	$leftmenu[$value] = array('title' => lang($value), 'active' => '');
-	if ($value == $op)
-		$leftmenu[$value]['active'] = 'class="active"';
-}
-
 include libfile('function/cache');
-
-$navtitle = lang('updatecache') . ' - ' . lang('admin_navtitle');
+$navtitle = lang('updatecache') . ' - ' . lang('appname');
 $step = max(1, intval($_GET['step']));
-
+$op = isset($_GET['op']) ? $_GET['op'] : '';
 if ($step == 1) {
 } elseif ($step == 2) {
 	$type = implode('_', (array)$_GET['type']);

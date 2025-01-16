@@ -20,7 +20,7 @@ class table_iconview extends dzz_table
 		$this->_cache_ttl = 0;*/
 		parent::__construct();
 	}
-	public function fetch_all(){
+	public function fetch_all($ids = null, $force_from_db = false){
 		return DB::fetch_all("select * from %t where 1",array($this->_table),'id');
 	}
 }
