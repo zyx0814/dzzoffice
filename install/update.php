@@ -543,7 +543,6 @@ if($_GET['step'] == 'start') {
 		$configarr['default_mod']='explorer';
 	}
 	@file_put_contents($configfile,"<?php \t\n return ".var_export($configarr,true).";");
-	C::t('setting')->update('bbclosed', 0);
 	if($_GET['from']) {
 		show_msg('<span id="finalmsg">缓存更新中，请稍候 ...</span><iframe src="../misc.php?mod=syscache" style="display:none;" onload="parent.window.location.href=\''.$_GET['from'].'\'"></iframe><iframe src="../misc.php?mod=setunrun" style="display:none;"></iframe>');
 	} else {
