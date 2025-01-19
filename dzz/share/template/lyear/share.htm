@@ -36,10 +36,11 @@
                 <table class="layui-hide" id="table" lay-filter="table"></table>
 				<script type="text/html" id="toolbar">
 					<div class="layui-btn-container">
-						<button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+						<button type="button" class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
 						<button type="button" class="layui-btn layui-btn-danger" lay-event="delete">{lang del_share}</button>
 						<!--{if $_G['adminid']}--><button type="button" class="layui-btn layui-bg-orange" lay-event="forbidden">{lang screen_share}</button>
 						<button type="button" class="layui-btn layui-bg-blue" lay-event="allow">{lang cancel_shielding}</button><!--{/if}-->
+						<button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
 					</div>
 				</script>
 				<script type="text/html" id="barDemo">
@@ -52,6 +53,7 @@
 </main>
 <script src="static/lyear/js/layui/layui.js"></script>
 <script>
+	var type = '';
 	layui.use('table', function(){
 	  var table = layui.table;
 	table.render({
@@ -235,6 +237,14 @@
 						});
 				});
 				break;
+				case 'get':
+				layui.table.reload('table', {
+					where: {type: type}, // 清空搜索参数
+					page: {
+						curr: 1 //重新从第 1 页开始
+					}
+				});
+				break; 
 			};
 		});
 	  //监听工具条
@@ -319,7 +329,7 @@
         $('#keyword').val('');
 		// 刷新表格
 		table.reload('table', {
-		  where: {}, // 清空搜索参数
+		  where: {type: type}, // 清空搜索参数
 		  page: {
 			curr: 1 //重新从第 1 页开始
 		  }
@@ -338,7 +348,7 @@
 		type = $(this).data('type');
 		// 刷新表格并传递 operation 参数
 		table.reload('table', {
-		  where: {type: type },
+		  where: {type: type},
 		  page: {
 			curr: 1 //重新从第 1 页开始
 		  }
