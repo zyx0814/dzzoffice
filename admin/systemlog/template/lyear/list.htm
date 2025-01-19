@@ -32,7 +32,8 @@
 				<table class="layui-hide" id="table" lay-filter="table"></table>
 				<script type="text/html" id="toolbar">
 					<div class="layui-btn-container">
-						<button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+						<button type="button" class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+						<button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
 					</div>
 				</script>
 				  <script type="text/html" id="barDemo">
@@ -44,12 +45,14 @@
 </main>
 <script src="static/lyear/js/layui/layui.js"></script>
 <script>
+	var operation = '{$_GET['operation']}';
 layui.use('table', function(){
   var table = layui.table;
   table.render({
     elem: '#table',
 	url: '{MOD_URL}&do=getinfo',
 	toolbar: '#toolbar',
+	where: {operation: operation},
 	title: '系统日志数据表格',
 	text: {
 		none: '暂无相关数据'
@@ -111,6 +114,14 @@ layui.use('table', function(){
 					btn: ['确定']
 				});
 				break;
+				case 'get':
+				layui.table.reload('table', {
+					where: {operation: operation}, // 清空搜索参数
+					page: {
+					curr: 1 //重新从第 1 页开始
+					}
+				});
+				break; 
 			};
 		});
   //监听工具条
@@ -165,7 +176,7 @@ layui.use('table', function(){
     $('#keyword').val('');
     // 刷新表格
     table.reload('table', {
-      where: {}, // 清空搜索参数
+      where: {operation: operation}, // 清空搜索参数
       page: {
         curr: 1 //重新从第 1 页开始
       }
@@ -178,7 +189,7 @@ layui.use('table', function(){
     // 为当前点击的按钮添加 active 类
     $(this).addClass('active');
     // 获取当前的 type 值
-    operation = $(this).data('operation');
+	operation = $(this).data('operation');
 	$('#keyword').val('');
     // 刷新表格并传递 operation 参数
     table.reload('table', {
