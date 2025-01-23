@@ -43,9 +43,9 @@ EOT;
 	$_G['setting']['mail']['mailsend'] = $_G['setting']['mail']['mailsend'] ? $_G['setting']['mail']['mailsend'] : 1;
 
 	if($_G['setting']['mail']['mailsend'] == 3) {
-		$email_from = empty($from) ? ($_G['setting']['adminemail']?$_G['setting']['adminemail']:$_G['setting']['mail']['from']) : $from;
+		$email_from = empty($from) ? $_G['setting']['adminemail'] : $from;
 	} else {
-		$email_from = $_G['setting']['mail']['from'];
+		$email_from = $from == '' ? '=?'.CHARSET.'?B?'.base64_encode($_G['setting']['sitename'])."?= <".$_G['setting']['adminemail'].">" : (preg_match('/^(.+?) \<(.+?)\>$/',$from, $mats) ? '=?'.CHARSET.'?B?'.base64_encode($mats[1])."?= <$mats[2]>" : $from);
 	}
 
 	$email_to = preg_match('/^(.+?)\s*\<(.+?)\>$/',$toemail, $mats) ? ($mailusername ? '=?'.CHARSET.'?B?'.base64_encode($mats[1])."?= <$mats[2]>" : $mats[2]) : $toemail;
