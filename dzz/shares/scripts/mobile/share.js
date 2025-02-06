@@ -48,7 +48,7 @@ $(document).off('tap.openfolder').on('tap.openfolder', '.folderlist', function (
         select_file(obj);
         return false;
     } else {
-        $.post(MOD_URL + '&op=ajax', {path: dhpath, currentfolder: 0}, function (data) {
+        $.post(MOD_URL + '&op=ajax', {path: dhpath, currentfolder: 0,sid: sid}, function (data) {
             $('#dataContainer').html(data);
             $('#filelist').html($('#dataContainer').find('.module-list').html());
             $($('#dataContainer').find('.breadcrumb-data:first').html()).insertAfter($('.breadcrumb li').last());
