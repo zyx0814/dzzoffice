@@ -90,6 +90,50 @@ if($do == 'filelist'){
         }
     }
     require template('group_list');
+}elseif($do=='folder_maxspacesize'){
+	$orgid=intval($_GET['orgid']);
+	$setspacesize = intval($_GET['maxspacesize']);
+	if(!$org=C::t('organization')->fetch($orgid)){
+		exit(json_encode(array('error'=>'该机构或群组不存在或被删除')));
+	}
+	//暂时只允许系统管理员进行空间相关设置
+	if($_G['adminid'] != 1){
+		exit(json_encode(array('error'=>'没有权限')));
+	}
+	if($setspacesize != 0){
+
+		//获取允许设置的空间值
+		$allowallotspace = C::t('organization')->get_allowallotspacesize_by_orgid($orgid);
+
+		if($allowallotspace < 0) {
+			exit(json_encode(array('error' => '可分配空间不足')));
+		}
+
+		//获取当前已占用空间大小
+		$currentallotspace = C::t('organization')->get_orgallotspace_by_orgid($orgid,0,false);
+		//设置值小于当前下级分配总空间值即：当前设置值 < 下级分配总空间
+		if($setspacesize > 0 && $setspacesize*1024*1024 < $currentallotspace){
+
+			exit(json_encode(array('error'=>'设置空间值不足,小于已分配空间值！','val'=>$org['maxspacesize'])));
+
+		}
+		//上级包含空间限制时，无限制不处理，直接更改设置值
+		if($allowallotspace > 0 && ($setspacesize*1024*1024 > $allowallotspace)){
+
+			exit(json_encode(array('error'=>'总空间不足！','val'=>$org['maxspacesize'])));
+
+		}
+	}
+
+	//设置新的空间值
+	if(C::t('organization')->update($orgid,array('maxspacesize'=>$setspacesize))){
+
+		exit(json_encode(array('msg'=>'success')));
+
+	}else{
+		exit(json_encode(array('error'=>'设置不成功或未更改','val'=>$org['maxspacesize'])));
+	}
+
 }elseif($do == 'groupmanage'){
     $gids = isset($_GET['gid']) ? $_GET['gid']:'';
     if(!$orgs = DB::fetch_all("select * from %t where orgid in(%n)",array('organization',$gids))){

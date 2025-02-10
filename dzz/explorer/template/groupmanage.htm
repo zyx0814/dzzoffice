@@ -67,6 +67,11 @@
                                     <span class="member_header_title">{lang group_file}</span>
                                 </div>
                             </th>-->
+                            <th class="member_header_3" width="10%">
+                                <div class="member_header_td_div">
+                                    <span class="member_header_title">空间</span>
+                                </div>
+                            </th>
                             <th class="member_header member_header_5" width="10%">
                             	<div class="member_header_td_div">
                                     <span class="member_header_title">{lang group}</span>
@@ -81,10 +86,10 @@
                     <table class="table" width="100%" border="0">
                         <tbody id="memberlist">
                         <!--{loop $groups $v}-->
-                        <tr id="group_{$v[orgid]}" class="member_tr Icoblock opengroup" data-gid="$v[orgid]"
+                        <tr id="group_{$v[orgid]}" class="member_tr Icoblock" data-gid="$v[orgid]"
                             data-groupon="$v[syatemon]" data-diron="$v['available']">
                             <td class="member_item_td" valign="middle" width="40%" style="position: relative;">
-                                <div class="member_item_td_div member_item_td_name member_item_td_group">
+                                <div class="member_item_td_div member_item_td_name member_item_td_group opengroup" data-gid="$v[orgid]">
                                     <a href="javascript:;" style="float: left;">
                                             {eval echo avatar_group($v['orgid']);}
                                     </a>
@@ -102,7 +107,13 @@
                                 <span>$v[usernum]</span>
                             </td>
                             <td class="member_item_td" valign="middle" width="20%">
-                                <span>{eval echo dgmdate($v['dateline'],'Y-m-d');}</span>
+                                <span>{eval echo dgmdate($v['dateline']);}</span>
+                            </td>
+                            <td class="member_item_td" valign="middle" width="10%">
+                                <div class="input-group" style="display: flex;">
+                                    <input type="text" class="form-control" id="maxspacesize" name="maxspacesize" value="$v[maxspacesize]" onchange="folder_maxspacesize(this,'$v[orgid]')">
+                                    <span class="input-group-text" id="basic-addon2">M</span>
+                                </div>
                             </td>
                             <td class="member_item_td" valign="middle" width="10%">
                                 <input type="checkbox" class="js-switch sysdiron" value="$v['diron']" data-gid="{$v[orgid]}" <!--{if $v['diron']}-->checked="checked"<!--{/if}-->
@@ -140,6 +151,17 @@
 			InputAnimate.init($(this));			
 		});
     });
+    function folder_maxspacesize(obj,orgid){
+        jQuery.post(MOD_URL+'&op=groupmanage&do=folder_maxspacesize',{'orgid':orgid,'maxspacesize':obj.value,'t':new Date().getTime()},function(json){
+        if(json.error){
+            obj.value=json.val;
+            showmessage(json.error,'danger',3000,1);
+        }else{
+            jQuery('#'+orgid+' a.jstree-clicked').trigger('click');
+            showmessage('空间大小设置成功','success',3000,1);
+        }
+        },'json');
+    }
     //群组共享开启关闭
     $(document).off('change.sysdiron').on('change.sysdiron','#memberlist .sysdiron',function(){
         var obj = $(this);
@@ -151,9 +173,9 @@
             	showmessage('{lang do_successed_wait_update_datas}', 'success', 3000, 1, 'right-bottom');
 //              showDialog('{lang do_successed_wait_update_datas}', 'right');
                 obj.val(diron);
-                /*setTimeout(function () {
+                setTimeout(function () {
                     location.reload();
-                }, 2000);*/
+                }, 2000);
             } else {
             	showmessage(data['error'], 'error', 3000, 1, 'right-bottom');
 //              showDialog(data['error']);
@@ -171,9 +193,9 @@
             	showmessage('{lang do_successed_wait_update_datas}', 'success', 3000, 1, 'right-bottom');
 //            showDialog('{lang do_successed_wait_update_datas}', 'right');
                 obj.val(groupon);
-                /*setTimeout(function () {
+                setTimeout(function () {
                     location.reload();
-                }, 2000);*/
+                }, 2000);
 //             showmessage('{lang do_successed_wait_update_datas}', 'info', 3000, 1, 'right-bottom');
             } else {
             	showmessage(data['error'], 'error', 3000, 1, 'right-bottom');

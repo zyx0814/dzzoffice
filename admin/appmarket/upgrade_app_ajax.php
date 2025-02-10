@@ -328,7 +328,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["second"]=1;
         exit(json_encode($return));
     }
-    elseif($step == 3) { 
+    elseif($step == 3) {
         $return["percent"]=55;
         $return["second"]=300; 
         $return["msg"]= lang('app_upgrade_newversion_ing' ); 
@@ -369,7 +369,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
     elseif($step==4){
         $return["percent"]=80;
         $return["second"]=3000; 
-        $return["msg"]=lang('app_upgrade_newversion_ing' ); 
+        $return["msg"]=lang('app_upgrade_newversion_ing'); 
         $return["step"]=4;
         
         $updatefilelist = $dzz_upgrade->fetch_updatefile_list_bymd5($appinfo);
@@ -399,7 +399,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
                 $paraftp .= '&siteftp[' . $k . ']=' . $v;
             }
         }
-
+        
         if(!$_GET['startupgrade']) {
             if (!$_GET['backfile']) {
                 $linkurl = $theurl . '&step=4&backfile=1&confirm=' . $confirm . $paraftp;
@@ -463,8 +463,8 @@ elseif($operation == 'cross' || $operation == 'patch'){
             $return["msg"]=lang('app_upgrade_file_success', array( 'upgradeurl' => upgradeinformation_app(4))); 
             exit(json_encode($return));
         }
-          
-        if($_GET['dodabase']){ 
+        
+        if($_GET['dodabase']){
             $finish = FALSE;
             $dir = $appinfo['app_path'];
             $appname = $appinfo['identifier'];
@@ -483,11 +483,11 @@ elseif($operation == 'cross' || $operation == 'patch'){
                 }else{
                     @rename($importfile2,$importfile);
                 }
-            }  
+            }
             $importtxt = @implode('', file($importfile));
         
             $apparray = getimportdata('Dzz! app');
-            $filename = $apparray['app']['extra']['upgradefile']; 
+            $filename = $apparray['app']['extra']['upgradefile'];
             if (!empty($filename) && preg_match('/^[\w\.]+$/', $filename)) {
                 $filename = DZZ_ROOT . './'.$dir.'/' . $appname . '/' . $filename;
                 if (file_exists($filename)) {
@@ -526,7 +526,6 @@ elseif($operation == 'cross' || $operation == 'patch'){
             $return["msg"]=lang('app_upgrade_database_success', array( 'upgradeurl' => upgradeinformation_app(5))); 
             exit(json_encode($return));
         }
-        
         $linkurl = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=' . $operation . '&appid=' .$appid. '&step=5&confirm=' . $confirm; 
         
         $return["url"]=$linkurl;
@@ -536,7 +535,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         $return["msg"]=lang('app_upgrade_newversion_will_success'); 
         exit(json_encode($return));
     }
-    elseif($step==5){ 
+    elseif($step==5){
         //删除更新文件列表tmp临时文件
         $srcfile = DZZ_ROOT .$appinfo['app_path'].'/' . $appinfo['identifier'].'/updatelist.tmp';  
         if (file_exists($srcfile)) {
