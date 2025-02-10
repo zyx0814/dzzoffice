@@ -70,7 +70,7 @@
 <script type="text/javascript" src="{MOD_PATH}/scripts/mobile/appevent.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/scripts/mobile/share.js?{VERHASH}"></script>
 <script type="text/javascript">
-var nextpage = '{$nextpage}',morepath = '{$morepath}',is_wxwork = '{$is_wxwork}', u = navigator.userAgent;;
+var nextpage = '{$nextpage}',morepath = '{$morepath}',is_wxwork = '{$is_wxwork}', u = navigator.userAgent,sid = '{$_GET[sid]}';
 $(function(){
     if(!!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) || is_wxwork){
        $('.downfile').addClass('hide');

@@ -13,7 +13,7 @@
 		var opt={	
 			'cookieid':null, //记忆左侧大小和关闭状态的cookie标志符
 			'cookietime':60*60*24*30,
-			'leftHide':700
+			'leftHide':1024
 		}
 	  	options=$.extend(opt,options);
 		var $this=$(this);
@@ -71,9 +71,8 @@
 				$topContainer.css('paddingLeft',document.documentElement.clientWidth<opt.leftHide?0:left);
 				$this.css({'left':left,'cursor':'w-resize'});
 				if(options.cookieid && !nocookie) setcookie(options.cookieid+'_isshow','show',options.cookietime);
-				
 			}else{
-				if($leftContainer.width()<10 || $leftContainer.is(':hidden')){
+				if($leftContainer.width()<64 || $leftContainer.is(':hidden')){
 					dragerClick('show');
 				}else{
 					dragerClick('hide');
@@ -124,7 +123,7 @@
 			leftHide();
 	   };
 		var leftHide=function(){
-			 if(document.documentElement.clientWidth<opt.leftHide){
+			if(document.documentElement.clientWidth<opt.leftHide){
 				dragerClick('hide',true);
 			}else{
 				if(options.cookieid && getcookie(options.cookieid+'_isshow')){
@@ -142,11 +141,14 @@
 		
 		var init=function(){
 			Layout();
+			$this.find('.left-drager-op').off('click').on('click',function(){
+				dragerClick();
+			});
 			jQuery('.lyear-aside-toggler').off('click').on('click',function(){
-				if($leftContainer.width()<10 || $leftContainer.is(':hidden')){
-					dragerClick('hide');
-				}else{
+				if($leftContainer.width()<64 || $leftContainer.is(':hidden')){
 					dragerClick('show');
+				}else{
+					dragerClick('hide');
 				}
 				
 			});
@@ -161,7 +163,7 @@
 					dragerClick('show');
 				}
 			}else{
-				if($leftContainer.width()<10 || $leftContainer.is(':hidden')){
+				if($leftContainer.width()<64 || $leftContainer.is(':hidden')){
 					dragerClick('hide');
 				}else{
 					dragerClick('show');
@@ -176,7 +178,7 @@
 				window.setTimeout(function(){Layout();},100);
 			};
 			leftHide();	
-		};	
+		};
 		init();
 	};
 })(jQuery);

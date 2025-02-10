@@ -29,7 +29,7 @@ if ($operation == 'patch' || $operation == 'cross') {
         $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.reload();" value="' . lang('founder_upgrade_reset') . '" /></p>';
 
         $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" >" . lang('message_return') . "</a>');";
+        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
         $msg .= "</script></p>";
         if (!$_GET['iframe']) {
             include template('upgrade');
@@ -88,7 +88,7 @@ if ($operation == 'patch' || $operation == 'cross') {
         if (!$upgradeinfo) {
             $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_none', array('upgradeurl' => upgradeinformation(-1))) . '</p>';
             $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-            $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" >" . lang('message_return') . "</a>');";
+            $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
             $msg .= "</script></p>";
             if (!$_GET['iframe']) {
                 include template('upgrade');
@@ -107,7 +107,7 @@ if ($operation == 'patch' || $operation == 'cross') {
         if (empty($updatefilelist)) {
             $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_download_upgradelist_error', array('upgradeurl' => upgradeinformation(-2))) . '</p>';
             $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . ($thurl) . '\';", 1000);</script>';
-            $msg .= ' <p style="margin:10px 0"><a href="' . $thurl . '">' . lang('message_redirect') . '</p>';
+            $msg .= ' <p style="margin:10px 0"><a href="' . $thurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</p>';
             if (!$_GET['iframe']) {
                 include template('upgrade');
                 exit();
@@ -137,10 +137,10 @@ if ($operation == 'patch' || $operation == 'cross') {
             $msg = lang('upgrade_download_complete_to_compare', array('upgradeurl' => upgradeinformation(0)));
             if (!$_GET['iframe']) {
                 $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 1000);</script>';
-                $msg .= ' <p><a href="' . $linkurl . '">' . lang('message_redirect') . '</a></p>';
+                $msg .= ' <p><a href="' . $linkurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</a></p>';
             } else {
                 $msg .= '<script type="text/JavaScript">setTimeout("parent.location.href=\'' . $linkurl . '\';", 1000);</script>';
-                $msg .= ' <p><a href="javascript:;" onclick="parent.location.href=\'' . $linkurl . '\';return false;">' . lang('message_redirect') . '</a></p>';
+                $msg .= ' <p><a href="javascript:;" onclick="parent.location.href=\'' . $linkurl . '\';return false;" class=\"btn btn-link\">' . lang('message_redirect') . '</a></p>';
                 include template('upgrade_iframe');
                 exit();
             }
@@ -153,12 +153,12 @@ if ($operation == 'patch' || $operation == 'cross') {
                 if ($downloadstatus == 1) {
                     $linkurl = $theurl . '&step=2&fileseq=' . $fileseq . '&iframe=1';
                     $msg = lang('upgrade_downloading_file', array('file' => $updatefilelist[$fileseq - 1], 'percent' => sprintf("%2d", 100 * $fileseq / count($updatefilelist)) . '%', 'upgradeurl' => upgradeinformation(1))) . '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 50);</script>';
-                    $msg .= ' <p><a href="' . $linkurl . '">' . lang('message_redirect') . '</a></p>';
+                    $msg .= ' <p><a href="' . $linkurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</a></p>';
 
                 } elseif ($downloadstatus == 2) {
                     $linkurl = $theurl . '&step=2&fileseq=' . ($fileseq + 1) . '&iframe=1';
                     $msg = '<p style="margin:10px 0">' . lang('upgrade_downloading_file', array('file' => $updatefilelist[$fileseq - 1], 'percent' => sprintf("%2d", 100 * $fileseq / count($updatefilelist)) . '%', 'upgradeurl' => upgradeinformation(1))) . '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 50);</script></p>';
-                    $msg .= ' <p><a href="' . $linkurl . '">' . lang('message_redirect') . '</a></p>';
+                    $msg .= ' <p><a href="' . $linkurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</a></p>';
                 } else {
                     $linkurl = $theurl . '&step=2&fileseq=' . ($fileseq) . '&iframe=1';
                     $msg = '<p style="margin:10px 0">' . lang('upgrade_redownload', array('file' => $updatefilelist[$fileseq - 1], 'upgradeurl' => upgradeinformation(-3))) . '</p>';
@@ -200,7 +200,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                 $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_set_ftp') . '" />';
                 $msg .= ' &nbsp; <input type="button" class="btn btn-default" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_reset') . '" /></p>';
                 $msg .= "<script type=\"text/javascript\">";
-                $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"lightlink\">" . lang('message_return') . "</a>');";
+                $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
                 $msg .= "</script>";
                 include template('upgrade');
                 exit();
@@ -218,7 +218,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                 $linkurl = $theurl . '&step=4&backfile=1&confirm=' . $confirm . $paraftp;
                 $msg = '<p style="margin:10px 0">' . lang('upgrade_backuping', array('upgradeurl' => upgradeinformation(2))) . '</p>';
                 $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . ($linkurl) . '\';", 1000);</script>';
-                $msg .= ' <p style="margin:10px 0"><a href="' . $linkurl . '">' . lang('message_redirect') . '</p>';
+                $msg .= ' <p style="margin:10px 0"><a href="' . $linkurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</p>';
                 include template('upgrade');
                 exit();
             }
@@ -229,7 +229,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                     if (!$dzz_upgrade -> copy_file($destfile, $backfile, 'file')) {
                         $msg = '<p style="margin:10px 0">' . lang('upgrade_backup_error', array('upgradeurl' => upgradeinformation(-5))) . '</p>';
                         $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" >" . lang('message_return') . "</a>');";
+                        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
                         $msg .= "</script></p>";
                         include template('upgrade');
                         exit();
@@ -238,7 +238,7 @@ if ($operation == 'patch' || $operation == 'cross') {
             }
             $msg = '<p style="margin:10px 0">' . lang('upgrade_backup_complete', array('upgradeurl' => upgradeinformation(3))) . '</p>';
             $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . ($theurl . '&step=4&startupgrade=1&confirm=' . $confirm . $paraftp) . '\';", 1000);</script>';
-            $msg .= ' <p><a href="' . ($theurl . '&step=4&startupgrade=1&confirm=' . $confirm . $paraftp) . '">' . lang('message_redirect') . '</p>';
+            $msg .= ' <p><a href="' . ($theurl . '&step=4&startupgrade=1&confirm=' . $confirm . $paraftp) . '" class=\"btn btn-link\">' . lang('message_redirect') . '</p>';
             include template('upgrade');
             exit();
         }
@@ -258,7 +258,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                     $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_reupload') . '" />';
                     $msg .= '&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_reset_ftp') . '" /></p>';
                     $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                    $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"lightlink\">" . lang('message_return') . "</a>');";
+                    $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
                     $msg .= "</script></p>";
                     include template('upgrade');
                     exit();
@@ -268,7 +268,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                     $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_recopy') . '" />';
                     $msg .= '&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_set_ftp') . '" /></p>';
                     $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                    $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"lightlink\">" . lang('message_return') . "</a>');";
+                    $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
                     $msg .= "</script></p>";
                     include template('upgrade');
                     exit();
@@ -292,7 +292,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                         $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_reupload') . '" />';
                         $msg .= '&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_reset_ftp') . '" /></p>';
                         $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"lightlink\">" . lang('message_return') . "</a>');";
+                        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
                         $msg .= "</script></p>";
                         include template('upgrade');
                         exit();
@@ -302,7 +302,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                         $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_recopy') . '" />';
                         $msg .= '&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_set_ftp') . '" /></p>';
                         $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"lightlink\">" . lang('message_return') . "</a>');";
+                        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
                         $msg .= "</script></p>";
                         include template('upgrade');
                         exit();
@@ -316,7 +316,7 @@ if ($operation == 'patch' || $operation == 'cross') {
             $linkurl = $_G['siteurl'] . 'install/update.php?step=prepare&from=' . rawurlencode($dbreturnurl) . '&frommd5=' . rawurlencode(md5($dbreturnurl . $_G['config']['security']['authkey']));
             $msg = '<p style="margin:10px 0">' . lang('upgrade_file_successful', array('upgradeurl' => upgradeinformation(4))) . '</p>';
             $msg .= '<script type="text/JavaScript">setTimeout(function(){createIframe(\'' . $linkurl . '\');}, 1000);</script>';
-            $msg .= ' <p><a href="javascript:;" onclick="createIframe(\'' . $linkurl . '\');return false">' . lang('message_redirect') . '</p>';
+            $msg .= ' <p><a href="javascript:;" onclick="createIframe(\'' . $linkurl . '\');return false" class=\"btn btn-link\">' . lang('message_redirect') . '</p>';
             include template('upgrade');
             exit();
 
