@@ -172,8 +172,6 @@ class helper_browser
         } elseif (preg_match("/Mac/i", $agent) && preg_match("/Macintosh/i", $agent)) {
             $os = array('Macintosh' => true);
         }
-
-
         return $os;
     }
 }

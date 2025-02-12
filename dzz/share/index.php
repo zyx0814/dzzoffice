@@ -96,6 +96,7 @@ if ($do == 'getinfo') {
     $username = trim($_GET['username']);
     $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 1;
     $uid = intval($_GET['uid']);
+    $uid1=$_G['uid'];
     $order = in_array($_GET['order'], array('title', 'dateline', 'type', 'size', 'count')) ? trim($_GET['order']) : 'dateline';
     $gets = array('mod' => 'share', 'type' => $type, 'keyword' => $keyword, 'order' => $order, 'asc' => $asc, 'uid' => $uid, 'username' => $username);
     $theurl = BASESCRIPT . "?" . url_implode($gets);
@@ -123,8 +124,16 @@ if ($do == 'getinfo') {
       $param[] = $uid;
     } 
     $list = array();
-    if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", $param)) {
-      $list = DB::fetch_all("SELECT * FROM %t WHERE $sql $orderby limit $start,$limit", $param); 
+    if ($_G['adminid']) {
+      if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", $param)) {
+        $list = DB::fetch_all("SELECT * FROM %t WHERE $sql $orderby limit $start,$limit", $param);
+      }
+    }else{
+      if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid =$uid1 and $sql", $param)) {
+        $list = DB::fetch_all("SELECT * FROM %t WHERE uid =$uid1 and $sql $orderby limit $start,$limit", $param);
+      }
+    }
+    if ($count) {
       foreach ($list as $k=> $value) {
         $value['sharelink'] =  C::t('shorturl')->getShortUrl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($value['id']));
         if ($value['dateline'])

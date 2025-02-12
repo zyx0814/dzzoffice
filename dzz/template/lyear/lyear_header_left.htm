@@ -1,5 +1,5 @@
 <div id="logo" class="sidebar-header">
-	<a class="text-white text-truncate lead" href="{$_G[siteurl]}">
+	<a class="text-white text-truncate lead" href="{$_G[siteurl]}" title="">
 	  <img src="<!--{if !$_G['setting']['bbclosed']}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{else}-->static/image/common/logo.png<!--{/if}-->">
 	  <!--{if $global_appinfo['appname']}-->$global_appinfo['appname']<!--{else}-->{lang appname}<!--{/if}-->
 	</a>

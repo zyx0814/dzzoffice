@@ -286,8 +286,14 @@ if ($do == 'delete') {
 			}
 		}
 		$limitsql = 'limit ' . $start . ',' . $perpage;
-		if ($count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('resources') . " WHERE $sql", $param)) {
-			$data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $sql $order $limitsql", $param);
+		if ($_G['adminid']) {
+			$whereClause = $sql;
+		} else {
+			$whereClause = "uid = $uid AND $sql";
+		}
+		$count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('resources') . " WHERE $whereClause", $param);
+		if ($count) {
+			$data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $whereClause $order $limitsql", $param);
 			$multi = multi($count, $perpage, $page, $theurl);
 		}
 		$list = array();

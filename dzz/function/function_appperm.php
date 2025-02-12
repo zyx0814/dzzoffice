@@ -17,9 +17,9 @@ if (CURMODULE) {
 		global $global_appinfo;
         $global_appinfo = $appinfo;
 		if ($_G['adminid']) return;
+		if (!$appinfo['available']) showmessage($appinfo['appname'].' 应用已关闭，请联系管理员。');
 		if ($appinfo['group'] == 0) return;
 		if ($_G['uid']) {
-			if (!$appinfo['available']) showmessage($appinfo['appname'].' 应用已关闭，请联系管理员。');
 			if ($appinfo['group'] == -1) showmessage($appinfo['appname'].' 应用仅限游客访问，请联系管理员。');
 			if ($appinfo['group'] == 3) showmessage($appinfo['appname'].' 应用仅限管理员访问，请联系管理员。');
 			$apps = C::t('app_market')->fetch_all_by_default($_G['uid'],true);
