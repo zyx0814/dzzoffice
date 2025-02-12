@@ -83,7 +83,7 @@ class table_syscache extends dzz_table
 		return $data;
 	}
 
-	public function insert($cachename, $data) {
+	public function insert($cachename, $data= false, $replace = false, $silent = false) {
 		parent::insert(array(
 			'cname' => $cachename,
 			'ctype' => is_array($data) ? 1 : 0,

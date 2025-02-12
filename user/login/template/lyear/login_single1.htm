@@ -14,7 +14,7 @@
 <div class="card card-shadowed p-5 mb-0 mr-2 ml-2" style="width: 420px;">
 	<div class="card-body text-center">
 		<div class="text-center mb-3">
-			<img alt="light year admin" src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
+			<img src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
 		</div>
 		<!--{if $_G[setting][loginset][title]}-->
 		<h2 class="main-title">$_G[setting][loginset][title]</h2>

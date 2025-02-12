@@ -14,7 +14,7 @@
 	  <div class="col-md-6 col-lg-5 col-xl-4 align-self-center">
 		<div class="p-5">
 		  <div class="text-center">
-			<img alt="light year admin" src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
+			<img src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
 			 <!--{if $_G[setting][loginset][title]}-->
 			<h2 class="main-title">$_G[setting][loginset][title]</h2>
 			<!--{/if}--> 
