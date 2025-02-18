@@ -225,7 +225,7 @@
 		jQuery('textarea').TextAreaExpander(33);
 	});
     function set_submit(form) {
-        jQuery.post('$_G[siteurl]'+'admin.php?mod=orguser&op=ajax&do=orginfo',jQuery(form).serialize(), function (data) {
+        jQuery.post('$_G[siteurl]'+'{MOD_URL}&op=ajax&do=orginfo',jQuery(form).serialize(), function (data) {
             if (data['success']) {
 				showmessage('{lang org_update_success}','success',3000,1);
 				setTimeout(location.reload(),30000);
@@ -256,7 +256,7 @@
 	function upload_bgphoto(obj,fact) {
         'use strict';
         jQuery(obj).fileupload({
-            url: 'admin.php?mod=orguser&op=ajax&do=upload',
+            url: '{MOD_URL}&op=ajax&do=upload',
             dataType: 'json',
             autoUpload: true,
             maxFileSize: 2000000,// 2 MB
@@ -300,7 +300,7 @@
 								}
 							})
 							if(!imgsexists){
-								/*jQuery.post('admin.php?mod=orguser&op=ajax&do=getdefaultpic',{aid:file.data.aid},function(data){
+								/*jQuery.post('{MOD_URL}&op=ajax&do=getdefaultpic',{aid:file.data.aid},function(data){
 									if(data['success']){
 										//jQuery('.head-checkbox').removeClass('hover').find('.headinput-checkbox').prop('checked',false);*/
 										var html ='<li class="head-portrait">'+'<img src="'+file.data.img+'"><div class="head-checkbox hover">'+

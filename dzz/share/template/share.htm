@@ -16,7 +16,7 @@
 		<div class="main-header2">
 			<ul class="nav nav-pills clearfix">	
 				<li class="pull-right " style="margin:5px 0;">
-					<form name="search" action="{ADMINSCRIPT}" class="form-inline" method="get">
+					<form name="search" action="{DZZSCRIPT}" class="form-inline" method="get">
 						<input type="hidden" name="mod" value="share" />
 						<input type="hidden" name="type" value="$type" />
 						<input name="username" type="text" value="$username" class="form-control input-sm" style="width:90px ;display:inline-block" placeholder="{lang username}" />&nbsp;<input name="keyword" type="text" class="form-control input-sm" value="$keyword" style="width:90px ;display:inline-block" placeholder="{lang share_title}">
@@ -253,7 +253,7 @@
 		jQuery('.list .item-active').each(function() {
 			sids.push(jQuery(this).data('sid'));
 		});
-		jQuery.post('{ADMINSCRIPT}?mod=share&op=ajax&do=forbidden', { "sids": sids, "flag": 'forbidden' }, function(json) {
+		jQuery.post('{MOD_URL}&op=ajax&do=forbidden', { "sids": sids, "flag": 'forbidden' }, function(json) {
 			if(json.msg == 'success') {
 				showmessage('{lang share_screen_success}', 'success', 2000, 1);
 				jQuery('.list .item-active').each(function() {
@@ -277,7 +277,7 @@
 			if(jQuery(this).data('status') == '-4') sids.push(jQuery(this).data('sid'));
 		});
 		if(sids.length) {
-			jQuery.post('{ADMINSCRIPT}?mod=share&op=ajax&do=forbidden', { "sids": sids, "flag": 'allow' }, function(json) {
+			jQuery.post('{MOD_URL}&op=ajax&do=forbidden', { "sids": sids, "flag": 'allow' }, function(json) {
 				if(json.msg == 'success') {
 					showmessage('{lang cancel_shielding_success}', 'success', 2000, 1);
 					jQuery('.list .item-active').attr('data-status', '0').find('span[node-type=name-tip]').remove();
