@@ -204,7 +204,6 @@ class table_resources_path extends dzz_table
             return false;
         }
 
-
     }
     //转义查询语句当中的path
     public function path_transferred_meaning($path){

@@ -12,7 +12,7 @@
             spinnerColorClass : '',                 // 定义加载动画的颜色，当不使用图片时
             spinnerSize       : 'normal',           // 定义加载动画的大小，当不使用图片时
             spinnerText       : '',                 // 显示的文字
-            zindex            : 9999,               // 遮罩层的z-index值
+            zindex            : 999,               // 遮罩层的z-index值
         };
     
 	    // 融合配置项

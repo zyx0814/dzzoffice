@@ -65,7 +65,7 @@
 						<td>{eval echo formatsize($value['packagesize']);}</td>
 						<td>
 							<!--{if $value[price]>0}-->
-							<button class="btn btn-outline-secondary"  onclick="showBuyInfo(this,'$value[mid]')" data-href="$cloudurl?mod=dzzmarket&op=ajax&do=getBuyInfo&mid=$value[mid]" title="{lang buy_contract}">{lang buy}</button>
+							<button class="btn btn-round btn btn-danger btn-sm"  onclick="showBuyInfo(this,'$value[mid]')" data-href="$cloudurl?mod=dzzmarket&op=ajax&do=getBuyInfo&mid=$value[mid]" title="{lang buy_contract}">{lang buy}</button>
 							<!--{else}--> 
 								<!--{if $value[package]}--> 
 									<!--{if $value["local_appinfo"]}-->

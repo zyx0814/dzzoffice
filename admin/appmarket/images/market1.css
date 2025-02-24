@@ -85,10 +85,9 @@
 	border:1px solid #dee2e6;
 	border-radius:.3rem;
 }
-.price-container .label-success{
+.price-container .label{
 	font-weight:300;
 	border-radius:var(--radius);
-	background-color:rgba(var(--bs-primary-rgb), 1);
 	display: inline-block;
     padding: 0.35em 0.65em;
     font-size: .75em;
@@ -99,6 +98,12 @@
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: 0.25rem;
+}
+.price-container .label-success{
+	background-color:rgba(var(--bs-primary-rgb), 1);
+}
+.price-container .label-danger{
+	background-color:rgba(var(--bs-danger-rgb), 1);
 }
 .document-header .img-container{
 	border-radius:2px 0 0 0;

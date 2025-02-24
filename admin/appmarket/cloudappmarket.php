@@ -50,20 +50,20 @@ if( $list ){
 } 
 include template('cloudappmarket');
 exit;
-function curlcloudappmarket( $url="",$post_data="",  $token="" ){ 
+function curlcloudappmarket( $url="",$post_data="",  $token="" ){
     $curl = curl_init(); 
     curl_setopt($curl, CURLOPT_URL, $url); 
     curl_setopt($curl, CURLOPT_HEADER, 0); 
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1); 
     curl_setopt($curl, CURLOPT_POST, 1); 
     curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
-    $response = curl_exec($curl); 
+    $response = curl_exec($curl);
 	$httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 	$errorno = curl_errno($curl);
 	if ($errorno) {
 		return($errorno);  
 	}
-	return($response); 
+	return($response);
 }
 
 
