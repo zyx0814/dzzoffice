@@ -140,7 +140,7 @@ if($do == 'deleteIco'){//删除文件到回收站
 }elseif($do == 'recoverFile'){//恢复文件
     $arr=array();
     $i=0;
-    $icoids=$_GET['rids'];
+    $icoids = $_GET['rids'];
     $ridarr = array();
     $bz= isset($_GET['bz']) ? trim($_GET['bz']):'';
     foreach($icoids as $icoid){
@@ -154,7 +154,6 @@ if($do == 'deleteIco'){//删除文件到回收站
         }else{
             $return=IO::Recover($icoid);
         }
-
         if(!$return['error']){
             //处理数据
             $arr['sucessicoids'][$return['rid']]=$return['rid'];

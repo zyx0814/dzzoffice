@@ -168,6 +168,7 @@ if ($operation == 'filelist') {
     $folder = C::t('folder')->fetch_folderinfo_by_fid($fid);
     $folder['gid'] = ($gid) ? $gid : 0;
     $folder['ismoderator'] = $perm;
+    $folder['perm'] = perm_check::getPerm($folder['fid']);//获取文件权限
     $folderjson = json_encode(array($fid=>$folder));
     $folderpath = array_filter(explode('/',preg_replace('/dzz:(.+?):/','',$folder['path'])));
     $navtitle = $folderpath[0];

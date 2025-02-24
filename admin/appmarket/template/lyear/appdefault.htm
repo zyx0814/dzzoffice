@@ -41,10 +41,8 @@
 						</thead>
 						<!--{loop $list $value}-->
 						<tr>
-							<td width="40"><input type="text" class="form-control" name="disp[{$value[appid]}]" value="$value[disp]" /></td>
-							<td>
-								<a href="$value[appurl]" class="dcolor"><img src="$value[appico]" />$value[appname]</a>
-							</td>
+							<td><input type="text" class="form-control" name="disp[{$value[appid]}]" value="$value[disp]" style="width: 60px;" /></td>
+							<td><a href="$value[appurl]" class="dcolor"><img src="$value[appico]" />$value[appname]</a></td>
 							<td>
 								<select name="position[{$value[appid]}]" class="form-select">
 									<!--{loop $positionarr $key $value1}-->
@@ -72,11 +70,9 @@
 							</td>
 						</tr>
 						<!--{/loop}-->
-						<tr>
-							<th valign="middle" style="border-bottom:none"><input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang save_set}" /></th>
-							<th colspan="5" style="border-bottom:none"> $multi</th>
-						</tr>
 					</table>
+					<input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang save_set}" />
+					$multi
 				</div>
 			</form>
 			<div class="alert alert-warning alert-dismissible fade show" role="alert">
