@@ -136,10 +136,12 @@ html,body{
             <p class="form-control-static">$_G[username]&nbsp; <!--{if $qqlogin[openid] && $qqlogin[unbind]<1}--><img src="user/images/qq.png" height="16" title="{lang qq_bind}" />&nbsp;&nbsp;<a  href="user.php?mod=profile&action=qq_unbind&openid=$qqlogin[openid]">{lang do_unbind}</a><!--{/if}--></p>
           </div>
         </div>
+        <!--{if $userstatus['lastvisit']}-->
         <div class="form-group">
           <label class="control-label">最近在线时间</label>
            <p class="form-control-static"><!--{eval echo dgmdate($userstatus['lastvisit'])}--></p>
         </div>
+        <!--{/if}-->
 				<div class="form-group">
           <label class="control-label"><!--{if $users[regip]}-->{lang registration_time}<!--{else}-->{lang add_time}<!--{/if}--></label>
            <p class="form-control-static"><!--{eval echo dgmdate($users[regdate])}--></p>

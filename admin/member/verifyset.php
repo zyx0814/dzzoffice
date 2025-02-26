@@ -95,6 +95,7 @@ if ($do == 'edit') {
 		showmessage('members_verify_save_success', ADMINSCRIPT . '?mod=member&op=verifyset', array(), array('alert' => 'right'));
 	}
 	include template('verifyset_edit');
+	exit();
 } else {
 	if (!submitcheck('verifysubmit')) {
 		for ($i = 1; $i < 8; $i++) {

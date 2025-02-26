@@ -213,6 +213,7 @@ if ($do == 'getfolderdynamic') {
     }
     if ($tplmore) {//加载多条动态
         include template('template_dynamic_list');
+        exit();
     } else {//加载单独动态页
         include template('template_more_dynamic');
     }
@@ -235,6 +236,7 @@ if ($do == 'getfolderdynamic') {
     $versions = C::t('resources_version')->fetch_all_by_rid($rid, $limit, false);
     if ($vstart == 0) {//加载多条历史版本
         include template('historyversion_content');
+        exit();
     } else {//加载单独历史版本页
         include template('template_historyversion_list');
     }

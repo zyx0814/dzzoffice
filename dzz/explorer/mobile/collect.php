@@ -110,6 +110,7 @@ if($operation == 'filelist'){
     );
     $return = json_encode($return);
     include template('mobile/filelist');
+    exit();
 }elseif($operation == 'canclecollect'){//取消收藏
     $rids = isset($_GET['rids'])?$_GET['rids']:'';
     $return = C::t('resources_collect')->delete_usercollect_by_rid($rids);

@@ -149,6 +149,7 @@ class io_ftp extends io_api
 
         }else{
             include template('oauth_ftp');
+            exit();
         }
     }
     public function parsePath($path){

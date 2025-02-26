@@ -367,7 +367,8 @@ if($do=='importing'){
 		$open[$arr[$count-1]]=$arr;
 	}
 	$openarr=json_encode(array('orgid'=>$open));
-	include template('import_list');	
+	include template('import_list');
+	exit();
 }else{
 	if(submitcheck('importfilesubmit')){
 		if($_FILES['importfile']['tmp_name']){
@@ -388,6 +389,7 @@ if($do=='importing'){
 	}else{
 		
 		include template('import_guide');
+		exit();
 	}
 }
 function checkprofile($fieldid,&$value){

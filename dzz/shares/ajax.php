@@ -147,6 +147,7 @@ if (count($list) >= $perpage) {
 }
 if($_G['ismobile']){
     include template('mobile/list_item');
+    exit();
 }else{
     include template('list_item');
 }
