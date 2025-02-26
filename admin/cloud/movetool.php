@@ -48,6 +48,7 @@ if(submitcheck('movesubmit')){
 	}
 	$first['fsize']=formatsize($first['filesize']);
 	include template('movetool_run');
+	exit();
 }else{
 	$spaces=array();
 	foreach(C::t('local_storage')->fetch_all_orderby_disp() as $key=>$value){

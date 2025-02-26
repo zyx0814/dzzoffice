@@ -16,6 +16,7 @@ $uid = intval($_G['uid']);
 $verify = C::t('user_verify')->fetch($_G['uid']);//验证信息
 $space = C::t('user_profile')->get_userprofile_by_uid($uid);//用户资料信息
 $userstatus = C::t('user_status')->fetch($uid);//用户状态
+$userstatus['profileprogress'] = $userstatus['profileprogress'] ? $userstatus['profileprogress'] : 0;
 $users = getuserbyuid($uid);
 //$qqlogin = DB::fetch_first("select openid,unbind from %t where uid=%d", array('user_qqconnect', $uid));
 

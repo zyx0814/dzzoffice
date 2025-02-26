@@ -144,6 +144,7 @@ class io_disk extends io_api
 			
 		}else{
 			include template('oauth_disk');
+			exit();
 		}
 	}
 	public function parsePath($path){

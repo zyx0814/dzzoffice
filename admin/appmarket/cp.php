@@ -74,6 +74,7 @@ elseif ($do == 'import') {//导入应用
 	$navtitle=lang('import_type_app').' - '.lang('appname');
 	if (!submitcheck('importsubmit')) {
 		include template('import');
+		exit();
 	} else {
 		$apparray = getimportdata('Dzz! app');
 		if ($apparray['app']['identifier']) {

@@ -206,6 +206,7 @@ function atreplacement($matches) {
 }
 if ($template == '1') {
 	include template('lyear_ajax','lyear');
+	exit();
 } else {
 	include template('ajax');
 }

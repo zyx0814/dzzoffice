@@ -91,7 +91,7 @@ if($operation == 'filelist'){
     $return = json_encode($return);
     $return = str_replace("'","\'",$return);
     include template('mobile/filelist');
-
+    exit();
 }else{
     include template('mobile/recent');
 }

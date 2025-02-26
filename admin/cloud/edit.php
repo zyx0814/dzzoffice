@@ -54,6 +54,7 @@ if($_GET['do']=='usercloud'){
 		}
 		$multi=multi($count, $perpage, $page, $theurl,'pull-right');
 		include template('edit');
+		exit();
 	}
 }elseif($_GET['do']=='getBucket'){
 	$id=$_GET['id'];

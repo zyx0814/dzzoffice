@@ -73,7 +73,7 @@
       <div class="mb-2">
       	<div class="progress progress-relative" style="margin:0">
           <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="$userstatus[profileprogress]" aria-valuemin="0" aria-valuemax="100" style="width: {$userstatus[profileprogress]}%;min-width: 100px;">
-            <span class="sr-only">{lang Information_complete} $userstatus[profileprogress]% </span>
+            <span class="sr-only">{lang Information_complete} {$userstatus[profileprogress]}% </span>
           </div>
         </div>
       </div>
@@ -97,11 +97,13 @@
           <div class="col-sm-10"><strong><code>$_G[username]</code></strong>
           </div>
         </div>
+        <!--{if $userstatus['lastvisit']}-->
         <div class="row mb-3">
           <label class="col-sm-2">最近在线时间</label>
           <div class="col-sm-10"><strong><code><!--{eval echo dgmdate($userstatus['lastvisit'])}--></code></strong>
           </div>
         </div>
+        <!--{/if}-->
 				<div class="row mb-3">
           <label class="col-sm-2"><!--{if $users[regip]}-->{lang registration_time}<!--{else}-->{lang add_time}<!--{/if}--></label>
           <div class="col-sm-10"><strong><code><!--{eval echo dgmdate($users['regdate'])}--></code></strong>

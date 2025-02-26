@@ -216,6 +216,7 @@ class io_ALIOSS extends io_api
 			}
 		}else{
 			include template('oauth_ALIOSS');
+			exit();
 		}
 	}
 	public function getBzByPath($path){

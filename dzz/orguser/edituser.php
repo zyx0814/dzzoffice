@@ -143,7 +143,7 @@ if ($do == 'add') {
 			C::t('organization_user') -> replace_orgid_by_uid($uid, $orgids);
 		//处理上司职位;
 		C::t('organization_upjob') -> insert_by_uid($uid, intval($_GET['upjobid']));
-		Hook::listen('syntoline_user',$uid);//注册绑定到钉钉部门表
+		Hook::listen('syntoline_user',$uid,'add');//注册绑定到钉钉部门表
 		if ($_GET['sendmail']) {
 			$email_password_message = lang('email_password_message', array('sitename' => $_G['setting']['sitename'], 'siteurl' => $_G['siteurl'], 'email' => $_GET['email'], 'password' => $_GET['password']));
 
@@ -166,6 +166,7 @@ if ($do == 'add') {
 		}
 
 		include template('adduser');
+		exit();
 	}
 
 } elseif ($do == 'edit') {
@@ -307,7 +308,7 @@ if ($do == 'add') {
 		//处理上司职位;
 
 		C::t('organization_upjob') -> insert_by_uid($uid, intval($_GET['upjobid']));
-		Hook::listen('syntoline_user',$uid);//注册绑定到钉钉部门表
+		Hook::listen('syntoline_user',$uid,'edit');//注册绑定到钉钉部门表
 		showmessage('edit_user_success', MOD_URL.'#user_' . $uid, array());
 	} else {
 		require_once  libfile('function/organization');
@@ -364,6 +365,7 @@ if ($do == 'add') {
 		}
 
 		include template('edituser');
+		exit();
 	}
 
 } elseif ($do == 'profile') {

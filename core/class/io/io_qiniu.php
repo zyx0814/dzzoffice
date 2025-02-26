@@ -200,6 +200,7 @@ class io_qiniu extends io_api
 			}
 		}else{
 			include template('oauth_qiniu');
+			exit();
 		}
 	}
 	public function getBzByPath($path){

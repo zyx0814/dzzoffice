@@ -295,6 +295,7 @@ class io_Qcos extends io_api
             }
         } else {
             include template('oauth_qcos');
+            exit();
         }
     }
 

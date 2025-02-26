@@ -104,6 +104,7 @@ if ($_GET['do'] == 'imageUpload') {
 	$theurl = DZZSCRIPT . '?mod=dzzvote&op=ajax&do=getvoteuser&template='.$template.'&voteid=' . $voteid . '&page=' . $nextpage;
 	if ($template == '1') {
 		include template('lyear_vote_user','lyear');
+		exit();
 	} else {
 		include template('vote_user');
 	}
@@ -162,6 +163,7 @@ if ($_GET['do'] == 'imageUpload') {
 //error_reporting(E_ALL);
 if ($template == '1') {
 	include template('lyear_vote_ajax','lyear');
+	exit();
 } else {
 	include template('vote_ajax');
 }

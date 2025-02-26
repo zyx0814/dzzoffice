@@ -104,6 +104,27 @@ class table_user_status extends dzz_table
 		}
 		return $data;
 	}
+
+	public function update($uid, $setarr, $data = false, $low_priority = false) {
+		if(!$uid || !is_array($setarr) || !$setarr) {
+			return false;
+		}
+		if(DB::result_first("select COUNT(*) from %t where uid=%d",array('user_status',$uid))){
+			DB::update($this->_table, $setarr, array('uid'=>$uid));
+		}else{
+			$status = array(
+				'uid' => $uid,
+				'regip' => $setarr['regip'] ? $setarr['regip'] : '',
+				'lastip' => $setarr['lastip'] ? $setarr['lastip'] : '',
+				'lastvisit' => $setarr['lastvisit'] ? $setarr['lastvisit'] : TIMESTAMP,
+				'lastactivity' => $setarr['lastactivity'] ? $setarr['lastactivity'] : TIMESTAMP,
+				'lastsendmail' => $setarr['lastsendmail'] ? $setarr['lastsendmail'] : 0,
+				'invisible' => $setarr['invisible'] ? $setarr['invisible'] : 0,
+				'profileprogress' => $setarr['profileprogress'] ? $setarr['profileprogress'] : 0,
+			);
+			DB::insert('user_status',$status,1);
+		}
+	}
 }
 
 ?>

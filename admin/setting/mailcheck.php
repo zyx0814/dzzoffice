@@ -14,6 +14,7 @@ if(!submitcheck('mailchecksubmit')) {
 	$op = isset($_GET['op']) ? $_GET['op'] : '';
 	$navtitle=lang('email_send_test').' - '.lang('appname');
 	include template('mailcheck');
+	exit();
 }else{
 	if(!is_array($_G['setting']['mail'])) {
 		$_G['setting']['mail'] = dunserialize($_G['setting']['mail']);
