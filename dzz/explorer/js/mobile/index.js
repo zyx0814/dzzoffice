@@ -54,21 +54,21 @@ _filemanage.getData = function (callback) {
         }
     })
 }
-//列表加载更多
-var scroll_flag = 1//开启状态
+// 列表加载更多
+var scroll_flag = 1; // 开启状态
 _filemanage.loadMore = function () {
     if (_filemanage.datajson.param.page) {
         _filemanage.getData(function (data) {
             if (scroll_flag == 1) {
-                $(window).off();
+                $(window).off('scroll'); // 只移除 scroll 事件
                 scroll_flag = 0;
                 if (data) {
                     scroll_flag = 1;
-                    $(window).scroll(function () {
+                    $(window).on('scroll', function () {
                         var scrollTop = $(this).scrollTop();
                         var scrollHeight = $(document).height();
                         var clientHeight = $(this).height();
-                        if (scrollTop + clientHeight >= scrollHeight) {
+                        if (scrollTop + clientHeight >= scrollHeight - 50) { // 提前一点触发加载
                             if (_filemanage.datajson.param.page > 0) {
                                 $('#' + _filemanage.contains).append(data);
                                 _filemanage.menuSwitch();
@@ -82,7 +82,6 @@ _filemanage.loadMore = function () {
             }
         });
     }
-
 }
 function is_not_allowdown(){
 	return false;
