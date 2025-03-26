@@ -26,7 +26,7 @@ function attribute2arr($values,$data=array() ){
 			$return = attribute2arr($v["item"]);
 			if($return) $data[$v['@attributes']["id"]]=$return ; 
 		}
-		if(count($v['@attributes'])>1){
+		if (is_array($v['@attributes']) && count($v['@attributes']) > 1) {
             $data[$v['@attributes']["id"]]["_attributes"] = $v['@attributes'];
             unset($data[$v['@attributes']["id"]]["_attributes"]["id"]);
         }

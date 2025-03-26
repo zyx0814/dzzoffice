@@ -167,10 +167,10 @@ function getinvite()
 
     if ($cookiecount == 2 || $_GET['invitecode']) {
         $id = intval($cookies[0]);
-        $code = trim($cookies[1]);
+        $code = isset($cookies[1]) ? trim($cookies[1]) : '';
         if ($_GET['invitecode']) {
             $invite = C::t('user_invite')->fetch_by_code($_GET['invitecode']);
-            $code = trim($_GET['invitecode']);
+            $code = isset($_GET['invitecode']) ? trim($_GET['invitecode']) : '';
         } else {
             $invite = C::t('user_invite')->fetch($id);
         }

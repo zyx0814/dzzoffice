@@ -372,7 +372,7 @@ if ($do == 'upload') {//上传图片文件
 	if (C::t('organization') -> setFolderAvailableByOrgid($orgid, intval($_GET['available']))) {
 		exit(json_encode(array('msg' => 'success')));
 	} else {
-		exit(json_encode(array('error' => lang('unable_set'))));
+		exit(json_encode(array('error' => lang('unable_set').'，如果上级没有开启目录共享，下级无法开启')));
 	}
 } elseif ($do == 'folder_indesk') {
 	$orgid = intval($_GET['orgid']);

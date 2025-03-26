@@ -14,18 +14,18 @@ if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 //卸载程序；
 $applist_midnone=DB::fetch_all("select * from %t where mid=0 ",array('app_market'));
 
-if( $applist_midnone ){
+if($applist_midnone){
 	$dzz_upgrade = new dzz_upgrade_app();
-	foreach( $applist_midnone as $value){
+	foreach($applist_midnone as $value){
 		$url=APP_CHECK_URL."market/app/getmid";//."index.php?mod=dzzmarket&op=index_ajax&operation=getmid";
 		$post_data = array( 
 			"version"=>$value['version'],
 			"identifier"=>$value['identifier'],
 			"app_path"=>$value["app_path"]
 		);
-		$json = $dzz_upgrade->curlcloudappmarket($url,$post_data); 
+		$json = $dzz_upgrade->curlcloudappmarket($url,$post_data);
 		$json = json_decode($json,true);
-		if( $json["status"]==1){
+		if($json["status"]==1){
 			$mid = $json["mid"];
 			DB::update('app_market',array('mid'=>$mid),"appid=".$value["appid"]);
 		}

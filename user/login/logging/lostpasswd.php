@@ -33,7 +33,7 @@ if(isset($_GET['lostpwsubmit'])) {
     }
 
     $idstring = random(6);
-    C::t('user')->update($member['uid'], array('authstr' => "{$_G['timestamp']}\t1\t$idstring"));
+    C::t('user')->update($member['uid'], array('authstr' => "{$_G[timestamp]}\t1\t$idstring"));
     //require_once libfile('function/mail');
     $get_passwd_subject = lang('email', 'get_passwd_subject');
     $get_passwd_message = lang(

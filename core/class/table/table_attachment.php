@@ -119,11 +119,11 @@ class table_attachment extends dzz_table
 		if($filter['aid']){
 			$where.=" and aid='{$filter['aid']}'";
 		}
-		$filter['sizelt']=intval($filter['sizelt']*1024*1024);
+		$filter['sizelt'] = (isset($filter['sizelt']) ? intval($filter['sizelt']) : 0) * 1024 * 1024;
 		if($filter['sizelt']>0){
 			$where.=" and filesize>'{$filter[sizelt]}'";
 		}
-		$filter['sizegt']=intval($filter['sizegt']*1024*1024);
+		$filter['sizelt'] = (isset($filter['sizegt']) ? intval($filter['sizegt']) : 0) * 1024 * 1024;
 		if($filter['sizegt']>0){
 			$where .= " and filesize < '{$filter['sizegt']}'";
 		}

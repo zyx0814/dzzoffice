@@ -69,6 +69,7 @@ class table_app_open extends dzz_table
 	}
 	
 	public function fetch_all_ext(){
+		global $_G;
 		$data = array();
 		if(($data = $this->fetch_cache('all')) === false) {
 			$data = array();
@@ -77,6 +78,7 @@ class table_app_open extends dzz_table
 				if($value['appid']){
 					 if($app=C::t('app_market')->fetch_by_appid($value['appid'],false)){
 						 if($app['available']<1) continue;
+						 if(!$_G['uid'] && $app['group'] > 0) continue;
 						 if(!$value['icon']) $value['icon']=$app['appico'];
 						 if(!$value['name']) $value['name']=$app['appname'];
 						 if(!$value['url'])  $value['url']=$app['appurl'];
@@ -95,19 +97,17 @@ class table_app_open extends dzz_table
 	}
 	public function fetch_all_orderby_ext($uid,$ext_all=array()){
 		$data = array();
+		$appids=array();
 		if($config = C::t('user_field')->fetch($uid)){
 			if($config['applist']){
 				$appids=explode(',',$config['applist']);
-			}else{
-				$appids=array();
 			}
 		}
 		if(!$ext_all) $ext_all=self::fetch_all_ext();
-		foreach($ext_all as $value){
-			if($value['appid'] && !in_array($value['appid'],$appids)){
-				continue;
+		foreach ($ext_all as $value) {
+			if ($uid == 0 || (!$value['appid'] || in_array($value['appid'], $appids))) {
+				$data[$value['ext']][] = $value['extid'];
 			}
-			$data[$value['ext']][]=$value['extid'];
 		}
 		return $data;
 		

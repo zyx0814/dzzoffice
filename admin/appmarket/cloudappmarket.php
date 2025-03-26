@@ -18,7 +18,7 @@ $cloudurl = APP_CHECK_URL."index.php";
 $url=APP_CHECK_URL."market/app/list";//$cloudurl."?mod=dzzmarket&op=index_ajax";
 $type=empty($_GET['type'])?1:intval($_GET['type']);
 $page = empty($_GET['page'])?1:intval($_GET['page']);
-$keyword=trim($_GET['keyword']);
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $classid=intval($_GET['classid']);
 $post_data = array("siteuniqueid"=>$_G["setting"]["siteuniqueid"],"page"=>$page,"type"=>1 );
 $json = curlcloudappmarket($url,$post_data);
