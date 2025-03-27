@@ -16,7 +16,7 @@ $op = isset($_GET['op']) ? $_GET['op'] : '';
 //获取所有标签top50；
 //$tags = DB::fetch_all("SELECT * FROM %t WHERE hot>0 ORDER BY HOT DESC limit 50", array('app_tag'),'appid');
 
-$keyword = trim($_GET['keyword']);
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $tagid = intval($_GET['tagid']);
 $group = intval($_GET['group']);
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);

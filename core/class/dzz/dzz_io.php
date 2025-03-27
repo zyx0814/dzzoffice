@@ -317,7 +317,9 @@ class dzz_io
 	  	$relativePath=self::clean(urldecode($relativePath));
 	 	if($io=self::initIO($path)) {
             $return=$io->uploadStream($file,$name,$path,$relativePath,$content_range);
-            Hook::listen('createafter_addindex',$return['icoarr'][0]);
+            if (isset($return['icoarr']) && is_array($return['icoarr']) && count($return['icoarr']) > 0) {
+				Hook::listen('createafter_addindex', $return['icoarr'][0]);
+			}
             return $return;
 		}
 	 	else return false;

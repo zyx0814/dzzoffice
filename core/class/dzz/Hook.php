@@ -83,7 +83,7 @@ class Hook
 
             if(is_array($name)){
                 foreach($name as $val){
-                    $results[$key] = self::exec($val, $tag, $params, $extra,$break);
+                    $results[$key] = self::exec($val,$break, $tag, $params, $extra);
 
                     if (false === $results[$key] || $break == true) {
                         break;
@@ -97,7 +97,7 @@ class Hook
             }else{
 
 
-                $results[$key] = self::exec($name, $tag, $params, $extra,$break);
+                $results[$key] = self::exec($name,$break, $tag, $params, $extra);
 
                 if (false === $results[$key] || $break == true) {
 
@@ -125,7 +125,8 @@ class Hook
      * @param mixed     $extra 额外参数
      * @return mixed
      */
-    public static function exec($class, $tag = '', &$params = null,$extra = null,&$break)
+        
+    public static function exec($class, &$break, $tag = '', &$params = null, $extra = null)
     {
         if(strpos($class,'|') !== false){//判断是否规定了作用域，并判断作用域确定是否执行钩子
             $rangArr = explode('|',$class);

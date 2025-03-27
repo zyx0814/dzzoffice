@@ -57,7 +57,7 @@ if ($depid && $org = C::t('organization') -> fetch($depid)) {
 }
 
 $position = intval($_GET['position']);
-$keyword = trim($_GET['keyword']);
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;

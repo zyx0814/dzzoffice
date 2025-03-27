@@ -1,12 +1,12 @@
 <div class="itemfeed " id="comment_$value[cid]">
 	<a name="comment_$value[cid]"></a>
 	<div class="left_ifed">
-		<a href="user.php?uid=$value[authorid]" title="$value[author]" hidefocus="true">{eval echo avatar_block($value[authorid]);}</a>
+		<a href="user.php?uid=$value['authorid']" title="$value[author]" hidefocus="true">{eval echo avatar_block($value['authorid']);}</a>
 	</div>
 	<div class="right_ifed">
 		<div class="main_fed">
 			<div class="source_fed">
-				<a href="user.php?uid=$value[authorid]" title="$value[author]" hidefocus="true" class="appuser_sfed skip_mmfed">$value[author]</a><span class="cont_sfed">{lang talk}：</span> </div>
+				<a href="user.php?uid=$value['authorid']" title="$value[author]" hidefocus="true" class="appuser_sfed skip_mmfed">$value[author]</a><span class="cont_sfed">{lang talk}：</span> </div>
 			<div class="master_mfed"> <span class="lquote_mmfed"></span><span class="content_mmfed">$value[message]</span><span class="rquote_mmfed"></span> </div>
 			<div class="attachment_fed">
 				<!--{loop $value[attachs] $attach}-->
@@ -74,7 +74,7 @@
 			<div class="action_mfed clearfix">
 				<div class="btn_amfed">
 					<ul>
-						<!--{if $_G['uid']==$value[authorid] || $_G[adminid]==1}-->
+						<!--{if $_G['uid']==$value['authorid'] || $_G[adminid]==1}-->
 						<li class="more_bamfed">
 							<a hidefocus="true" class="dcolor" href="javascript:void(0);" onclick="feed_delete('$value[cid]','comment_$value[cid]')">{lang delete}</a>
 						</li>
@@ -87,7 +87,7 @@
 						<!--{/if}-->
 					</ul>
 				</div>
-				$value[xtllq] <!--{if $_G[adminid]==1}-->$value[ip]<!--{/if}--> $value[dateline]</div>
+				$value[xtllq] <!--{if $_G[adminid]==1}-->$value[ip]<!--{/if}--> $value['dateline']</div>
 		</div>
 		<div id="comment_reply_{$value[cid]}" class="comment_ifed">
 			<!--{if $value[replies]>0}-->
