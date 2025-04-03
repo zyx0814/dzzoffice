@@ -92,7 +92,7 @@ if ($do == 'getinfo') {
 	exit($jsonReturn);
   } elseif (isset($_G['setting']['template']) && $_G['setting']['template'] == 'lyear') {
   } else {
-    $keyword = trim($_GET['keyword']);
+    $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
     $username = trim($_GET['username']);
     $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 1;
     $uid = intval($_GET['uid']);

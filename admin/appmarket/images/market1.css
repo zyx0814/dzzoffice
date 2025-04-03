@@ -105,6 +105,9 @@
 .price-container .label-danger{
 	background-color:rgba(var(--bs-danger-rgb), 1);
 }
+.price-container .label-default{
+	background-color:rgba(var(--bs-secondary-rgb), 1);
+}
 .document-header .img-container{
 	border-radius:2px 0 0 0;
 	position:absolute;

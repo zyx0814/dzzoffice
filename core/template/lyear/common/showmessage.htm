@@ -30,13 +30,13 @@
 		<!--{else}-->
 		<button class="btn btn-primary" onclick="location.href='$url_forward';return false;">{lang return_to_the_naxt_level}<!--{if $param['timeout']}-->（<span class="num">3</span>s）<!--{/if}--></button>
 		<!--{/if}-->
-		<button class="btn btn-primary" onclick="location.href='$_G['siteurl']';return false;">首页</button>
+		<button class="btn btn-primary" onclick="location.href='/';return false;">首页</button>
 		<!--{elseif $allowreturn}-->
 		<script type="text/javascript">
 			if(history.length > (BROWSER.ie ? 0 : 1)) {
-				document.write('<a class="btn btn-primary" href="javascript:history.back()">返回</a> <a class="btn btn-info" href="$_G['siteurl']">首页</a>');
+				document.write('<a class="btn btn-primary" href="javascript:history.back()">返回</a> <a class="btn btn-info" href="/">首页</a>');
 			} else {
-				document.write('<a class="btn btn-primary" href="$_G['siteurl']">首页</a>');
+				document.write('<a class="btn btn-primary" href="/">首页</a>');
 			}
 		</script>
 		<!--{/if}-->

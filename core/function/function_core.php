@@ -330,8 +330,11 @@ function daddslashes($string, $force = 1)
     return $string;
 }
 
-function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0, $ckey_length = 4)
+function authcode($string = '', $operation = 'DECODE', $key = '', $expiry = 0, $ckey_length = 4)
 {
+    if (!$string) {
+        return '';
+    }
     //$ckey_length = 4;
     $key = md5($key != '' ? $key : getglobal('authkey'));
     $keya = md5(substr($key, 0, 16));

@@ -301,7 +301,7 @@
 			<div class="col">
 				<div class="progress">
 					<!--{if $value[number]}-->
-					{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+					{eval $progressvalue = floor(($value['number']/$votetotal)*100);}
 					<!--{else}-->
 					{eval $progressvalue = '0';}
 					<!--{/if}-->
@@ -319,7 +319,7 @@
 					<a href="$value[url]" target="_blank" target="_blank"><img src="$value[img]" alt="$value['content']"></a>
 					<div class="progress mt-2 mb-2">
 						<!--{if $value[number]}-->
-						{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+						{eval $progressvalue = floor(($value['number']/$votetotal)*100);}
 						<!--{else}-->
 						{eval $progressvalue = '0';}
 						<!--{/if}-->
@@ -360,7 +360,7 @@
 				<div class="col">
 					<div class="progress">
 						<!--{if $value[number]}-->
-						{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+						{eval $progressvalue = floor(($value['number']/$votetotal)*100);}
 						<!--{else}-->
 						{eval $progressvalue = '0';}
 						<!--{/if}-->
@@ -389,7 +389,7 @@
 						<a href="$value[url]" target="_blank" target="_blank"><img src="$value[img]" alt="$value['content']"></a>
 						<div class="progress mt-2 mb-2">
 							<!--{if $value[number]}-->
-							{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+							{eval $progressvalue = floor(($value['number']/$votetotal)*100);}
 							<!--{else}-->
 							{eval $progressvalue = '0';}
 							<!--{/if}-->
@@ -493,7 +493,7 @@
 		<div class="col">
 			<div class="progress">
 				<!--{if $value[number]}-->
-				{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+				{eval $progressvalue = floor(($value['number']/$votetotal)*100);}
 				<!--{else}-->
 				{eval $progressvalue = '0';}
 				<!--{/if}-->
@@ -511,7 +511,7 @@
 			<a href="$value[url]" target="_blank" target="_blank"><img src="$value[img]" alt="$value['content']"></a>
 			<div class="progress mt-2 mb-2">
 				<!--{if $value[number]}-->
-				{eval $progressvalue = floor(($value[number]/$votetotal)*100);}
+				{eval $progressvalue = floor(($value['number']/$votetotal)*100);}
 				<!--{else}-->
 				{eval $progressvalue = '0';}
 				<!--{/if}-->

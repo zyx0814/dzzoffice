@@ -1,14 +1,14 @@
 <li class="itemfeed cmt_fed" id="comment_$value1[cid]">
 	<a name="comment_anchor_$value1[cid]"></a>
 	<div class="d-flex lyear-message-item">
-		<a href="user.php?uid=$value1[authorid]" class="img-avatar-48" title="$value1[author]" hidefocus="true" target="_blank">{eval echo avatar_block($value1[authorid],'','img-avatar img-avatar-48');}</a>
+		<a href="user.php?uid=$value1[authorid]" class="img-avatar-48" title="$value1[author]" hidefocus="true" target="_blank">{eval echo avatar_block($value1['authorid'],'','img-avatar img-avatar-48');}</a>
 		<div class="flex-grow-1 ms-2">
 			<a href="user.php?uid=$value1[authorid]" title="$value1[author]" class="avatar_mcfed" hidefocus="true" target="_blank"><strong>$value1[author]</strong></a>
 			<!--{if $value1['rpost']}-->
 			<span class="text-muted m-1">{lang reply}</span>
 			<a href="user.php?uid=$value1[rpost][authorid]" title="$value1[rpost][author]" class="avatar_mcfed" hidefocus="true" target="_blank"><strong>$value1[rpost][author]</strong></a>
 			<!--{/if}-->
-			<div class="text-muted">$value1[dateline] $value1[xtllq] <!--{if $_G[adminid]==1}-->$value1[ip]<!--{/if}-->
+			<div class="text-muted">$value1['dateline'] $value1[xtllq] <!--{if $_G[adminid]==1}-->$value1[ip]<!--{/if}-->
 				<span class="float-end">
 					<!--{if $_G['uid']==$value1[authorid] || $_G[adminid]==1}-->
 					<a href="javascript:void(0);" class="dcolor" onclick="feed_delete('$value1[cid]','comment_$value1[cid]','$value1[pcid]')"><i class="mdi mdi-delete"></i>&nbsp;{lang delete}</a>

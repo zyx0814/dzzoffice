@@ -549,7 +549,7 @@ elseif($operation == 'cross' || $operation == 'patch'){
         );
            
         $re=C::t('app_market')->update( $appid,$map);
-        updatecache('setting'); 
+        updatecache('setting');
          
         $return["url"] = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=check_upgrade&appid='.$appinfo["appid"];
         $return["percent"]=100;

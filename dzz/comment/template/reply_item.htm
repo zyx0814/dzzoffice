@@ -2,7 +2,7 @@
 	<a name="comment_anchor_$value1[cid]"></a>
 	<div class="item_cfed">
 		<div class="left_icfed">
-			<a href="user.php?uid=$value1[authorid]" title="" hidefocus="true"> {eval echo avatar_block($value[authorid]);} </a>
+			<a href="user.php?uid=$value1[authorid]" title="" hidefocus="true"> {eval echo avatar_block($value['authorid']);} </a>
 		</div>
 		<div class="right_icfed">
 			<div class="master_cfed">
@@ -97,7 +97,7 @@
 						<!--{/if}-->
 					</ul>
 				</div>
-				<span class="time_acfed">$value1[xtllq] <!--{if $_G[adminid]==1}-->$value1[ip]<!--{/if}--> $value1[dateline]</span> </div>
+				<span class="time_acfed">$value1[xtllq] <!--{if $_G[adminid]==1}-->$value1[ip]<!--{/if}--> $value1['dateline']</span> </div>
 		</div>
 	</div>
 </div>
