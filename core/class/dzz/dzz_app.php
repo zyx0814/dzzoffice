@@ -622,6 +622,10 @@ class dzz_app extends dzz_base{
         if(!is_array($this->var['setting'])) {
             $this->var['setting'] =C::t('setting')->fetch_all();
         }
+        //当上传分块大小为 0 或空时，默认为2M
+        if (empty($this->var['setting']['maxChunkSize'])) {
+            $this->var['setting']['maxChunkSize'] = '2097152';
+        }
         define('VERHASH',isset($this->var['setting']['verhash'])?$this->var['setting']['verhash']:random(3));
     }
 
