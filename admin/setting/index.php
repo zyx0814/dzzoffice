@@ -162,6 +162,9 @@ if (!submitcheck('settingsubmit')) {
 			$settingnew['unRunExts'] = array();
 		if (!in_array('php', $settingnew['unRunExts']))
 			$settingnew['unRunExts'][] = 'php';
+		if (empty($settingnew['maxChunkSize']) || $settingnew['maxChunkSize'] < 0) {
+			$settingnew['maxChunkSize'] = 1;
+		}
 		$settingnew['maxChunkSize'] = intval($settingnew['maxChunkSize'] * 1024 * 1024);
 		$group = $_GET['group'];
 		foreach ($group as $key => $value) {
