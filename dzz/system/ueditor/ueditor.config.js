@@ -678,7 +678,7 @@ UEDITOR_CONFIG.mode = {
     mini: [
         ['emotion','bold', 'italic', 'underline', 'strikethrough', '|',
                 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify',
-                'insertorderedlist', 'insertunorderedlist','|','simpleupload','dzzfile'
+                'insertorderedlist', 'insertunorderedlist','|','simpleupload'
         ]
     ],
 	mini_exam: [

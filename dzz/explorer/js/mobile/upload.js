@@ -1,14 +1,18 @@
 
 function fileupload (el,typeallow) {//图片上传
-	if (!typeallow) typeallow = "\.*$";
+    if (!typeallow) {
+        var typeallow = (_filemanage.space.attachextensions.indexOf('|') != -1) ? _filemanage.space.attachextensions.join('|') : _filemanage.space.attachextensions;
+        if (attachextensions) attachextensions = "(\.|\/)(" + (attachextensions.join('|')) + ")$";
+        else typeallow = "\.*$";
+    }
     var self = this;
     obj = $(this);
     el.fileupload({
         url: MOD_URL + '&op=mobile&do=ajax&operation=uploadfiles&container=' + fid,
         dataType: 'json',
         autoUpload: true,
-        maxFileSize: 20000000, // 20MB
-        maxChunkSize: 2000000, //2M
+        maxFileSize: parseInt(_filemanage.space.maxattachsize) > 0 ? parseInt(_filemanage.space.maxattachsize) : null, // 20MB
+        maxChunkSize: parseInt(_filemanage.space.maxChunkSize), //2M
         acceptFileTypes: new RegExp(typeallow, 'i'),
         sequentialUploads: true,        
         add: function (e, data) {

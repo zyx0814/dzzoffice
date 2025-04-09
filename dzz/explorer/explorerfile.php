@@ -132,7 +132,7 @@ if($do == 'filelist'){
                           break;
                   }
                   $folder['perm'] = perm_check::getPerm($folder['fid']);//获取文件权限
-                  $data = C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start);//查询文件信息
+                  $data = C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start,false,false,true);//查询文件信息
                   $folderdata[$folder['fid']] = $folder;//文件夹信息
               }
             }

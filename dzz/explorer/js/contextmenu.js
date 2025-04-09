@@ -203,9 +203,9 @@ _contextmenu.right_ico = function (e, rid) {
                 var temp = item.find('.menu');
                 var subx = el.width() - 1;
                 suby = 0;
-                if (x + el.width() * 2 > Max_x) subx = subx - temp.width() - el.width() - 6;
+                if (x + el.width() * 2 > Max_x) subx = subx - temp.width() - el.width() - 3;
                 if (y + item.position().top + temp.height() > Max_y) suby = suby - temp.height() + item.height() - 5;
-                temp.css({left: subx, top: suby, 'z-index': _contextmenu.zIndex + 2, display: 'block'});
+                temp.css({left: subx-0.01, top: suby, 'z-index': _contextmenu.zIndex + 2, display: 'block'});
                 shadow.css({
                     display: "block",
                     zIndex: _contextmenu.zIndex + 1,
@@ -327,6 +327,7 @@ _contextmenu.right_body = function (e, fid) {
         el.find('.newdoc').remove();
         el.find('.newexcel').remove();
         el.find('.newpowerpoint').remove();
+        el.find('.newpdf').remove();
     }
     if (el.find('.create .menu-item').length < 1) {
         el.find('.create').remove();
@@ -397,9 +398,9 @@ _contextmenu.right_body = function (e, fid) {
                 var temp = item.find('.menu');
                 var subx = el.width() - 1;
                 suby = -5;
-                if (x + el.width() * 2 > Max_x) subx = subx - temp.width() - el.width() - 6;
+                if (x + el.width() * 2 > Max_x) subx = subx - temp.width() - el.width() - 3;
                 if (y + item.position().top + temp.height() > Max_y) suby = suby - temp.height() + item.height();
-                temp.css({left: subx, top: suby, 'z-index': _contextmenu.zIndex + 2, display: 'block'});
+                temp.css({left: subx-0.01, top: suby, 'z-index': _contextmenu.zIndex + 2, display: 'block'});
                 shadow.css({
                     display: "block",
                     zIndex: _contextmenu.zIndex + 1,

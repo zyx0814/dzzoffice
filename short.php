@@ -14,7 +14,10 @@ $dzz->init_setting=false;
 $dzz->init_user=false;
 $dzz->init_misc=false;
 $dzz->init();
-$sid=$_GET['sid'];
+$sid = $_GET['sid'] ? $_GET['sid'] : '';
+if(!$sid){
+	exit('Access Denied');
+}
 $short=C::t('shorturl')->fetch($sid);
 if(!$short){
 	@header('HTTP/1.1 404 Not Found');

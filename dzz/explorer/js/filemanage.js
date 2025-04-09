@@ -1797,7 +1797,6 @@ _filemanage.rename = function (id) {
 	} else {
 		html = "<textarea type='textarea' class='textarea' name='text'  id='input_" + id + "' style=\"width:100%;height:30px;padding:2px;overflow:hidden;margin-top:3px;color:#666666 \">" + filemanage.oldtext + "</textarea>";
 	}
-
 	el.html(html);
 	//jQuery('#content_'+filemanage.winid+' .icoblank[icoid="'+id+'"]').css('z-index',-1);
 	var ele = jQuery('#input_' + id);

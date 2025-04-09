@@ -31,7 +31,7 @@ $attach['filename'] = '"'.(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER
 	$db->close();
 	$chunk = 10 * 1024 * 1024; 
 	if(!$fp = @fopen($attachurl, 'rb')) {
-		exit(lang('attachment_nonexistence'));
+		topshowmessage(lang('attachment_nonexistence'));
 	}
 	dheader('Date: '.gmdate('D, d M Y H:i:s', $attach['dateline']).' GMT');
 	dheader('Last-Modified: '.gmdate('D, d M Y H:i:s', $attach['dateline']).' GMT');

@@ -186,6 +186,9 @@ color: rgba(152, 159, 173, 1);
 .filee-icon.filee-file-text{
 	color: #2196F3;
 }
+.filee-icon.filee-file-pdf{
+	color: #FF0000;
+}
 .yunfile-moreMenu .dropdown-menu>li>a>.dzz,.yunfile-moreMenu .dropdown-menu>li>a>.glyphicon{
 	position:absolute;
 	left:10px;
@@ -1126,5 +1129,3 @@ color: rgba(152, 159, 173, 1);
 	margin-right: 10px;
 }
 /*文件右侧信息详情结束*/
-
-
