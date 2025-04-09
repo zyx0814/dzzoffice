@@ -158,7 +158,7 @@ class table_shares extends dzz_table
         $setarr['pfid'] = $fileinfo['pfid'];
         if(parent::update($id,$setarr)){
             $eventdata = array('username'=>$setarr['username'],'filename'=>$fileinfo['name'],'url'=>getglobal('siteurl').'index.php&mod=shares&sid='.dzzencode($id));
-            if(!C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'],'share_file','share',$eventdata,$fileinfo['gid'],$fileinfo['rid'],$fileinfo['name'])){
+            if(!C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'],'edit_share_file','share',$eventdata,$fileinfo['gid'],$fileinfo['rid'],$fileinfo['name'])){
                 parent::delete($id);
                 return false;
             }else{

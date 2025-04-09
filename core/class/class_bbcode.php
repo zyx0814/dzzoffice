@@ -14,7 +14,7 @@ class bbcode {
 	var $html_s_str = array();
 	var $html_r_str = array();
 
-	function &instance() {
+	public static function &instance() {
 		static $object;
 		if(empty($object)) {
 			$object = new bbcode();
@@ -22,7 +22,7 @@ class bbcode {
 		return $object;
 	}
 
-	function bbcode() {
+	function __construct() {
 	}
 
 	function bbcode2html($message, $parseurl=0) {

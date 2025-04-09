@@ -23,7 +23,7 @@ class table_resources_event extends dzz_table
             'rid' => $rid,
             'event_body' => $event,
             'uid' => getglobal('uid'),
-            'username' => getglobal('username'),
+            'username' => getglobal('username') ? getglobal('username') : getglobal('clientip'),
             'dateline' => time(),
             'body_data' => serialize($eventdata),
             'gid' => $gid,

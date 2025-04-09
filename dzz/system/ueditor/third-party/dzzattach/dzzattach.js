@@ -13,7 +13,7 @@ dzzattach.init=function(root){
 	});
 	jQuery.getJSON(dzzattach.previewurl,function(data){
 		dzzattach.exts=data;	
-		jQuery(root).find('.dzz-image').css({'max-width':'100%','width':'auto','height':'auto'})
+		jQuery(root).find('.dzz-image').css({'max-width':'100%'})
 			.on('click',function(){
 				if(!this.id) this.id='tip_' + Math.random();
 				dzzattach.preview(this.id,'image');

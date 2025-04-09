@@ -864,7 +864,6 @@ $lang = array (
 	'login_succeed_inactive_member' => '欢迎您回来，{usergroup} {username}。您的帐号处于非激活状态，您的功能将受到限制，请尽快激活账号！',
 	'login_question_empty' => '请选择安全提问以及填写正确的答案',
 	'login_question_invalid' => '抱歉，安全提问答案填写错误',
-	'login_invalid' => '登录失败，您还可以尝试 {loginperm} 次',
 	'login_password_invalid' => '抱歉，您输入的密码有误',
 	'register_disable' => '抱歉，目前站点禁止新用户注册',
 	'register_disable_activation' => '抱歉，目前站点禁止激活',
@@ -1514,7 +1513,9 @@ $_G[siteurl]',
 	'file_read_no_privilege'=>'抱歉！您没有该文件的预览权限',
 	'file_download_no_privilege'=>'抱歉！您没有该文件的下载权限',
 	'file_edit_no_privilege'=>'抱歉！您没有该文件的编辑权限',
+	'file_new_no_privilege'=>'抱歉！您没有该目录的新建权限',
 	'file_been_deleted'=>'文件已删除',
+	'system' =>'系统',
 );
 
 ?>

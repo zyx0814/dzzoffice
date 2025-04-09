@@ -516,7 +516,7 @@
 <!--{elseif $operation == 'property'}-->
 <style>
     @media (min-width: 768px ) {
-        #fwin_$ _GET[handlekey] .modal-dialog {
+        #fwin_{$_GET[handlekey]} .modal-dialog {
             width: 516px;
         }
     }
@@ -583,14 +583,6 @@
                 <label class="col-md-4 col-sm-4 col-xs-4">{lang create_time}</label>
                 <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[fdateline]</div>
             </div>
-            <!--{/if}-->
-            <!--{if $propertys['flag']!=='folder'}-->
-            <!--{if $_G[adminid]}-->
-            <div class="file-nature clearfix">
-                <label class="col-md-4 col-sm-4 col-xs-4">直链地址</label>
-                <div class="col-md-8 col-sm-8 col-xs-8 label-text">{eval echo IO::getFileUri($propertys[rid])}</div>
-            </div>
-            <!--{/if}-->
             <!--{/if}-->
         </div>
 
@@ -807,6 +799,10 @@
                 if ('{$shareid}') {
                     _filemanage.getData(_explorer.appUrl + '&op=share&do=filelist&sid=share-list');
                 }
+            } else if(data['error']) {
+                showmessage(data['error'], 'error', 3000, 1, 'right-bottom');
+            } else {
+                showmessage('{lang operation_error}', 'error', 3000, 1, 'right-bottom');
             }
         }, 'json');
         return false;

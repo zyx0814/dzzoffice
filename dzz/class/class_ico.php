@@ -28,7 +28,7 @@
          * @type array(R, G, B) = array(255, 255, 255)
          * @var  public
          **/
-        var $bgcolor = array(255, 255, 255);
+        public $bgcolor = array(255, 255, 255);
 
         /**
          * Ico::bgcolor_transparent
@@ -37,8 +37,9 @@
          * @type boolean = false
          * @var  public
          **/
-        var $bgcolor_transparent = true;
-
+        public $bgcolor_transparent = true;
+        public $formats = array();
+        
         /**
          * Ico::Ico()
          * Class constructor
@@ -46,9 +47,10 @@
          * @param   optional    string   $path   Path to ICO file
          * @return              void
          **/
-        function Ico($path = '',$proxy='') {
-            if (strlen($path) > 0) {
-                $this->LoadFile($path,$proxy);
+        function __construct($path = '', $proxy = '') {
+            $this->formats = array();
+            if (!empty($path)) {
+                $this->LoadFile($path, $proxy);
             }
         }
 

@@ -74,7 +74,7 @@ $lang = array (
 									<li>应用的地址可以带有参数如：{dzzscript}?mod=document&op=textviewer&icoid={icoid}</li>
 									<li>参数：将地址中的参数用"{}"包裹，dzzscript:为主程序（即index.php),adminscript:为后台管理主程序(即admin.php),添加应用时使用此参数可以增加应用的兼容性和移植性</li>
 									<li>dzz_resources表中的字段都可以作为参数带入</li>',
-    'app_delete_confirm'=>'此操作将删除应用：<b>{appname}</b> &nbsp;内所有数据，请慎<br /><br />如果确实需要删除，请在下面输入 DELETE 字样确认删除',
+    'app_delete_confirm'=>'此操作将删除应用：<b>{appname}</b> &nbsp;内所有数据，请慎重操作<br /><br />如果确实需要删除，请在下面输入 DELETE 字样确认删除',
     'app_sure_delete'=>'确定卸载应用',
     'app_not_delete'=>'不卸载',
     'installed'=>'已安装',

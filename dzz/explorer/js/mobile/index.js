@@ -68,7 +68,7 @@ _filemanage.loadMore = function () {
                         var scrollTop = $(this).scrollTop();
                         var scrollHeight = $(document).height();
                         var clientHeight = $(this).height();
-                        if (scrollTop + clientHeight >= scrollHeight - 50) { // 提前一点触发加载
+                        if (scrollTop + clientHeight >= scrollHeight - 70) { // 提前一点触发加载
                             if (_filemanage.datajson.param.page > 0) {
                                 $('#' + _filemanage.contains).append(data);
                                 _filemanage.menuSwitch();
@@ -395,7 +395,7 @@ _filemanage.getNewIcos = function (data) {
         html = '<div class="weui-cell weui-cell_access weui-cell_longpress select-files" href="javascript:;"' +
             ' data-original="index.php?mod=io&op=thumbnail&original=1&path=' + data.dpath + '" data-rid="' + data.rid + '" rid="' + data.rid + '" data-collect="0" data-dpath="' + data.dpath + '" data-url="' + data.url + '"> ' +
             '<div class="weui-cell__hd"><img src="' + data.img + '" class="weui-cell__recentimg"></div> ' +
-            '<div class="weui-cell__bd"> <h4 rid="' + data.rid + '">' + data.name + '</h4> <p> <span class="date">' + data.monthdate + '</span><i class="date-time">' + data.hourdate + ',</i> ' +
+            '<div class="weui-cell__bd"> <h4 rid="' + data.rid + '">' + data.name + '</h4> <p> <span class="date">' + data.fdateline + '</span> ' +
             '<span class="size">' + data.fsize + '</span> </p> </div> <div class="weui-cells_checkbox hide"> <input type="checkbox" class="weui-check" name="checkbox1"> ' +
             '<i class="weui-icon-checked"></i> </div> </div>';
     }

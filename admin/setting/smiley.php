@@ -125,7 +125,7 @@ if (!$operation) {
 		$smilies = '';
 		$list = array();
 		foreach (C::t('smiley')->fetch_all_by_typeid_type($id, 'smiley', $start_limit, $smiliesperpage) as $smiley) {
-			$imgfilter[] = $smiley[url];
+			$imgfilter[] = $smiley['url'];
 			$list[$smileynum] = $smiley;
 			$smileynum++;
 		}
@@ -177,7 +177,7 @@ function update_smiles($smdir, $id, &$imgextarray) {
 	$num = 0;
 	$smilies = $imgfilter = array();
 	foreach (C::t('smiley')->fetch_all_by_typeid_type($id, 'smiley') as $img) {
-		$imgfilter[] = $img[url];
+		$imgfilter[] = $img['url'];
 	}
 	$smiliesdir = dir($smdir);
 	while ($entry = $smiliesdir -> read()) {
