@@ -95,15 +95,15 @@
 		smiliesnum = parseInt(smiliesnum);
 		if(smiliesnum > 1) { 
 			for(var i = 1; i < smiliesnum; i++) {
-				var prefix=trim($(pre + 'prefix').value);
-				var suffix=trim($(pre + 'suffix').value);
+				var prefix=trim($('#prefix')[0].value);
+				var suffix=trim($('#suffix')[0].value);
 				var page=parseInt( '$page'); 
-				var middle=$(pre + 'middle').value==1 ? $(pre + 'url_' + i).value.substr(0,$(pre + 'url_' + i).value.lastIndexOf( '.')) : ($(pre + 'middle').value==2 ? i + page * 10 : ($(pre + 'middle').value==3 ? $(pre + 'code_'+ i).attributes[ 'smileyid'].nodeValue:$(pre + 'title_'+ i).value)); 
+				var middle=$('#middle')[0].value==1 ? $('#url_' + i)[0].value.substr(0,$('#url_' + i)[0].value.lastIndexOf( '.')) : ($('#middle')[0].value==2 ? i + page * 10 : ($('#middle')[0].value==3 ? $('#code_'+ i)[0].attributes[ 'smileyid'].nodeValue:$('#title_'+ i)[0].value)); 
 				if(!prefix || prefix=='{lang prefix}' || !suffix || suffix=='{lang suffix}' ) {
 				 alert( '{lang seeting_smileyedit_prefix}'); 
 				 return; 
 				} 
-				suffix=! suffix || suffix=='{lang suffix}' ? '' : suffix; $(pre + 'code_' + i).value=prefix + middle + suffix; 
+				suffix=! suffix || suffix=='{lang suffix}' ? '' : suffix; $('#code_' + i)[0].value=prefix + middle + suffix; 
 			} 
 		} 
 	}
@@ -111,7 +111,7 @@
 	 	smiliesnum=parseInt(smiliesnum); 
 	 	if(smiliesnum > 1) { 
 	 		for(var i = 1; i < smiliesnum; i++) { 
-	 			$( 'code_' + i).value='{:' + '$id' + '_' + $( 'code_'+ i).attributes[ 'smileyid'].nodeValue + ':}'; 
+	 			$( '#code_' + i)[0].value='{:' + '$id' + '_' + $( '#code_'+ i)[0].attributes[ 'smileyid'].nodeValue + ':}'; 
 	 		} 
 	 	} 
 	 } 
