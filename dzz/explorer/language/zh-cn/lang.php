@@ -67,6 +67,7 @@ $lang = array(
     'rename_msg' => '{username}重命名文件<a href=\'javascript:;\'  onclick="location.hash=\'{hash}\';">{position}</a>{filename}为{newfilename}',
     'share' => '分享',
     'share_file' => '{username}分享了文件(文件夹)>{filename}',
+    'edit_share_file' => '{username}编辑了文件(文件夹)>{filename}的分享设置',
     'cancleshare' => '取消分享',
     'share_not_exists' => '分享不存在',
     'cancle_share' => '{username}取消文件(文件夹){filename}的分享',

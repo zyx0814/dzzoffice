@@ -198,7 +198,7 @@ class perm_check{
                 return false; // 资源不存在
             }
         }
-        if ($arr['preview'] && ($action=='read') || $action=='copy' || $action=='download') {
+        if ($arr['preview'] && ($action=='read' || $action=='copy' || $action=='download')) {
             return true;
         }
         if($_G['uid']<1){ //游客没有权限

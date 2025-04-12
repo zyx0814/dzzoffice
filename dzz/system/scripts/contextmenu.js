@@ -312,6 +312,7 @@ _contextmenu.right_body = function (e, fid) {
         el.find('.newdoc').remove();
         el.find('.newexcel').remove();
         el.find('.newpowerpoint').remove();
+        el.find('.newpdf').remove();
     }
     if (el.find('.create .menu-item').length < 1) {
         el.find('.create').remove();

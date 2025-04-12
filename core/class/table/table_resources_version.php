@@ -282,7 +282,7 @@ class table_resources_version extends dzz_table
                 'name' => $filename,
                 'oldname'=>$fileinfo['name'],
                 'aid' => $versioninfo['aid'],
-                'username' => $_G['username'],
+                'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
                 'uid' => $_G['uid'],
                 'position'=>$path,
                 'hash'=>$hash
@@ -359,7 +359,7 @@ class table_resources_version extends dzz_table
             $eventdata = array(
                 'name' => $vname,
                 'filename'=>$fileinfo['name'],
-                'username' => $_G['username'],
+                'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
                 'oldvname'=>($versioninfo['name']) ? $versioninfo['name']:dgmdate($versioninfo['dateline'],'Y-m-d H:i:s'),
                 'uid' => $_G['uid'],
                 'position'=>$path,
@@ -419,7 +419,7 @@ class table_resources_version extends dzz_table
                 $eventdata = array(
                     'name' => $vname,
                     'filename'=>$fileinfo['name'],
-                    'username' => $_G['username'],
+                    'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
                     'oldvname'=>($fileinfo['name']) ? $fileinfo['name']:dgmdate($fileinfo['dateline'],'Y-m-d H:i:s'),
                     'uid' => $_G['uid'],
                     'position'=>$path,

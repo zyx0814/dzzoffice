@@ -534,7 +534,7 @@ class table_resources extends dzz_table
         return $folderinfo;
     }
 
-    public function fetch_all_by_pfid($pfid, $conditions = array(), $limit = 0, $orderby = '', $order = '', $start = 0, $count = false)
+    public function fetch_all_by_pfid($pfid, $conditions = array(), $limit = 0, $orderby = '', $order = '', $start = 0, $count = false,$sid = false,$isfilter = false)
     {
         global $_G;
         $limitsql = $limit ? DB::limit($start, $limit) : '';
@@ -645,7 +645,15 @@ class table_resources extends dzz_table
             }
         }
         foreach (DB::fetch_all("SELECT rid FROM %t where $wheresql $ordersql $limitsql", $para) as $value) {
-            if ($arr = self::fetch_by_rid($value['rid'])) $data[$value['rid']] = $arr;
+            if ($arr = self::fetch_by_rid($value['rid'],'',false,$sid)) {
+                if ($sid) {
+                    $arr['dpath'] = dzzencode('sid:'.$sid.'_' . $value['rid']);
+                }
+                if ($isfilter && isset($arr['attachment'])) {
+                    unset($arr['attachment']);
+                }
+                $data[$value['rid']] = $arr;
+            }
         }
         return $data;
     }
@@ -745,7 +753,7 @@ class table_resources extends dzz_table
     }
 
     //通过rid获取属性信息
-    public function get_property_by_rid($rids, $contains = true)
+    public function get_property_by_rid($rids, $contains = true,$realpath = '')
     {
         global $_G;
         $uid = $_G['uid'];
@@ -782,7 +790,20 @@ class table_resources extends dzz_table
                 $fileinfo['realpath'] = lang('more_folder_position');
                 $fileinfo['rid'] = implode(',', $tmpinfo['rids']);
             } else {
-                $fileinfo['realpath'] = lang('all_positioned') . preg_replace('/dzz:(.+?):/', '', $tmpinfo['realpath'][0]);
+                if ($realpath) {
+                    // 获取两个路径的开头部分
+                    $prefixLength = strlen($realpath);
+                    if (substr($tmpinfo['realpath'][0], 0, $prefixLength) === $realpath) {
+                        // 去掉相同的开头部分
+                        $newPath = substr($tmpinfo['realpath'][0], $prefixLength);
+                        // 组成新的值，并加上“全部文件”
+                        $fileinfo['realpath'] = '全部文件/' . $newPath;
+                    } else {
+                        $fileinfo['realpath'] = '/';
+                    }
+                } else {
+                    $fileinfo['realpath'] = lang('all_positioned') . preg_replace('/dzz:(.+?):/', '', $tmpinfo['realpath'][0]);
+                }
                 $fileinfo['rid'] = implode(',', $tmpinfo['rids']);
             }
             //判断文件类型是否相同
@@ -835,8 +856,20 @@ class table_resources extends dzz_table
             //文件统计信息
             $filestatis = C::t('resources_statis')->fetch_by_rid($rids[0]);
             //位置信息
-            $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $fileinfo['path']);
-
+            if ($realpath) {
+                // 获取两个路径的开头部分
+                $prefixLength = strlen($realpath);
+                if (substr($fileinfo['path'], 0, $prefixLength) === $realpath) {
+                    // 去掉相同的开头部分
+                    $newPath = substr($fileinfo['path'], $prefixLength);
+                    // 组成新的值，并加上“全部文件”
+                    $fileinfo['realpath'] = '全部文件/' . $newPath;
+                } else {
+                    $fileinfo['realpath'] = '/';
+                }
+            } else {
+                $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $fileinfo['path']);
+            }
 
             //统计信息
             $fileinfo['opendateline'] = ($filestatis['opendateline']) ? dgmdate($filestatis['opendateline'], 'Y-m-d H:i:s') : dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');

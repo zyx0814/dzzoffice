@@ -73,12 +73,12 @@
 	                <table class="table" width="100%" border="0">
 	                    <tbody id="grouplist">
 						<!--{loop $groups $v}-->
-	                    <tr  class="member_tr Icoblock" onclick="openGroup(this)" data-gid="$v[orgid]">
+	                    <tr  class="member_tr Icoblock" onclick="openGroup(this)" data-gid="$v['orgid']">
 	                        
 	                        <td class="member_item_td" valign="middle" width="50%" style="position: relative;">
 	                            <div class="member_item_td_div member_item_td_name">
 	                                <a href="javascript:;" style="float: left;">
-										{eval echo avatar_group($v[orgid]);}
+										{eval echo avatar_group($v['orgid']);}
 	                                </a>
 	                                <a href="javascript:;" id="" class="member_text member_item_name_text IcoText_folder"> $v[orgname]</a>
 	                            </div>

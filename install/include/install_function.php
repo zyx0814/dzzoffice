@@ -241,7 +241,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
 	}
 		show_header();
 		if($env_str){
-			echo "<h2 class=\"title\">".lang('env_check')."</h2>\n";
+			echo "<div class=\"title\">".lang('env_check')."</div>\n";
 			echo "<table class=\"tb\">\n";
 			echo "<tr>\n";
 			echo "\t<th>".lang('project')."</th>\n";
@@ -253,7 +253,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
 			echo "</table>\n";
 		}
 		if($file_str || $dir_str){
-			echo "<h2 class=\"title\">".lang('priv_check')."</h2>\n";
+			echo "<div class=\"title\">".lang('priv_check')."</div>\n";
 			echo "<table class=\"tb\">\n";
 			echo "\t<tr>\n";
 			echo "\t<th class=\"padleft\">".lang('step1_file')."</th>\n";
@@ -470,14 +470,15 @@ function show_header() {
 	}
 </script>
 <style>
-	body { margin: 0; padding: 0; background: #f4f5fa;font-size: 14px; }
-	.container {margin: 40px auto 40px auto;max-width: 920px;border: 1px solid #007bff; border-width: 5px 1px 1px;background: #FFF; border-radius: 12px;box-shadow: 0 5px 10px rgba(0, 0, 0, .15) !important;}
+	body { margin: 0; padding: 0; background: #f4f5fa;font-size: 16px; }
+	.container {margin: 40px auto 40px auto;max-width: 920px;border: 1px solid #007bff; border-width: 5px 1px 1px;background: #FFF; border-radius: 12px;box-shadow: 0 5px 10px rgba(0, 0, 0, .15) !important;color: #35435c;}
 	h1 {font-size: 48px;margin: 0;padding: 10px;color: #fff;padding-left: 10px;border-bottom: 1px solid #ededee;background-color: #007bff;display: flex;align-items: center;align-content: center;flex-wrap: wrap;border-radius: 5px 5px 0 0;}
 	table {width: 100%; margin: 0 0 10px 0; text-align: center; }
 	.current { font-weight: bold; color: #007bff !important; border-bottom-color: #007bff !important; }
 	#footer {text-align: center;color: #6c757d; padding: 10px;border-top: 1px solid rgba(77, 82, 89, 0.1); }
 	a,button {font-size: 16px;color: #007bff;padding:10px;border-radius:5px;border:1px solid #007bff;background-color:transparent;text-decoration:none;transition:color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;font-weight:400;line-height:1.5;text-align:center;}
 	a:hover {color: #fff;background-color: #007bff;}
+	.title{font-size: 20px;margin-bottom: 10px;font-weight: 500;}
 </style>
 </head>
 <div class="container step_$step">
@@ -927,7 +928,7 @@ function show_tips($tip, $title = '', $comment = '', $style = 1) {
 	$title = empty($title) ? lang($tip) : $title;
 	$comment = empty($comment) ? lang($tip.'_comment', FALSE) : $comment;
 	if($style) {
-		echo "<h2 class=\"title\">$title</h2>";
+		echo "<div class=\"title\">$title</div>";
 	}
 	$comment && print($comment);
 	echo "";
@@ -953,10 +954,10 @@ function show_setting($setname, $varname = '', $value = '', $type = 'text|passwo
 		return true;
 	}
 
-	echo "\n".'<div class="row mb-2 padleft"><label class="tbopt'.($error ? ' red' : '').'" align="left">&nbsp;'.(empty($setname) ? '' : lang($setname).':')."</label>";
+	echo "\n".'<div class="row mb-2 padleft"><label class="tbopt'.($error ? ' red' : '').'" for="int_'.$varname.'">&nbsp;'.(empty($setname) ? '' : lang($setname).':')."</label>";
 	if($type == 'text' || $type == 'password') {
 		$value = dhtmlspecialchars($value);
-		echo "<input type=\"$type\" name=\"$varname\" value=\"$value\" size=\"35\" class=\"txt\">";
+		echo "<input type=\"$type\" name=\"$varname\" id=\"int_{$varname}\" value=\"$value\" class=\"txt\">";
 	
 	} elseif($type == 'checkbox') {
 		if(!is_array($varname) && !is_array($value)) {

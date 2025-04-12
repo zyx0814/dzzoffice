@@ -361,8 +361,9 @@ if($method == 'show_license') {
 	@unlink(ROOT_PATH.'./install/update.php');
 	show_header();
 	echo '<iframe src="../misc.php?mod=syscache" style="display:none;"></iframe>';
-	echo '<h2>'.lang('install_successfully').'</h2>';
-	echo '<h3 class="red">'.lang('handwork_del').'"./install/index.php"</h3>';
+	echo '<h2 style="display: flex;align-items: center;justify-content: center;flex-wrap: wrap;"><img src="images/right.png" style="padding-right: 5px;">'.lang('install_successfully').'</h2>';
+	echo '<p style="text-align: left;">请使用管理员账号登录管理后台、并且按照下面的步骤依次配置系统！</p><ol style="text-align: left;font-size: 14px;"><li>系统默认仅预装了少量的应用，更多应用需要到 应用市场 内选择安装；</li><li>进入 系统设置 设置默认首页，平台名称、logo等系统基本设置；</li><li>如果系统只是在内网环境使用，可以在 系统设置 中关闭升级提醒，以免影响用户体验和页面性能。</li><li class="red">'.lang('handwork_del').'"./install/index.php"</li></ol>';
+	echo '<p class="title">接下来您可以：</p>';
 	echo '<a href="'.$bbserver.'index.php?mod=appmanagement" class="btn">进入管理后台</a>';
 	echo '<a href="'.$bbserver.'" class="btn">'.lang('enter_desktop').'</a>';
 	show_footer();

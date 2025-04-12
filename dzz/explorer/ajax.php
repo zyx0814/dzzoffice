@@ -333,6 +333,13 @@ if ($operation == 'upload') {//上传图片文件
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/ppt.pptx');
             break;
+        case 'newpdf':
+            $filename = lang('new_pdf') . '.pdf';
+            if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
+                exit(json_encode(array('error' => lang('privilege'))));
+            }
+            $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/pdf.pdf');
+            break;
     }
 
     if ($arr = IO::upload_by_content($content, $fid, $filename)) {
@@ -708,6 +715,8 @@ if ($operation == 'upload') {//上传图片文件
             if ($id) {
                 if ($ret = C::t('shares')->update_by_id($id, $share)) {
                     showTips(array('success' => true, 'shareurl' => C::t('shorturl')->getShortUrl($_G['siteurl'].'index.php?mod=shares&sid='.dzzencode($ret)), 'shareid' => $ret));
+                }elseif($ret['error']) {
+                    showTips(array('error' => $ret['error']), 'json');
                 } else {
                     showTips(array('error' => lang('create_share_failer') . '！'), 'json');
                 }
@@ -715,6 +724,8 @@ if ($operation == 'upload') {//上传图片文件
                 $ret = C::t('shares')->insert($share);
                 if ($ret['success']) {
                     showTips(array('success' => true, 'shareurl' => C::t('shorturl')->getShortUrl($_G['siteurl'].'index.php?mod=shares&sid='.dzzencode($ret['success'])), 'shareid' => $ret['success']));
+                }elseif($ret['error']) {
+                    showTips(array('error' => $ret['error']), 'json');
                 } else {
                     showTips(array('error' => lang('create_share_failer') . '！'), 'json');
                 }

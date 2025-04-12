@@ -372,9 +372,9 @@ function authcode($string = '', $operation = 'DECODE', $key = '', $expiry = 0, $
     }
 
     if ($operation == 'DECODE') {
-        if ((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) === substr(md5(substr($result, 26) . $keyb), 0, 16)) {
-            return substr($result, 26);
-        } else {
+        if(((int)substr($result, 0, 10) == 0 || (int)substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) === substr(md5(substr($result, 26).$keyb), 0, 16)) {
+			return substr($result, 26);
+		} else {
             return '';
         }
     } else {
@@ -975,6 +975,7 @@ function dgmdate($timestamp, $format = 'dt', $timeoffset = '9999', $uformat = ''
         $lang = lang('date');
     }
     $timeoffset = $timeoffset == 9999 ? $offset : $timeoffset;
+    $timeoffset = intval($timeoffset);
     $timestamp += $timeoffset * 3600;
     $format = empty($format) || $format == 'dt' ? $dtformat : ($format == 'd' ? $dformat : ($format == 't' ? $tformat : $format));
     if ($format == 'u') {
@@ -1018,18 +1019,16 @@ function dgmdate($timestamp, $format = 'dt', $timeoffset = '9999', $uformat = ''
     }
 }
 
-function dmktime($date)
-{
-    if (strpos($date, '-')) {
-        $time = explode('-', $date);
-        return mktime(0, 0, 0, $time[1], $time[2], $time[0]);
-    }
-    return 0;
+function dmktime($date) {
+	if(strpos($date, '-')) {
+		$time = explode('-', $date);
+		return mktime(0, 0, 0, intval($time[1]), intval($time[2]), intval($time[0]));
+	}
+	return 0;
 }
 
-function dnumber($number)
-{
-    return abs($number) > 10000 ? '<span title="' . $number . '">' . intval($number / 10000) . lang('10k') . '</span>' : $number;
+function dnumber($number) {
+	return abs((int)$number) > 10000 ? '<span title="'.$number.'">'.intval($number / 10000).lang('10k').'</span>' : $number;
 }
 
 function savecache($cachename, $data)
@@ -1523,7 +1522,7 @@ function sizecount($size)
     } elseif ($size >= 1024) {
         $size = round($size / 1024 * 100) / 100 . ' KB';
     } else {
-        $size = $size . ' Bytes';
+        $size = intval($size) . ' Bytes';
     }
     return $size;
 }
@@ -1540,10 +1539,9 @@ function writelog($file, $log)
     helper_log::writelog($file, $log);
 }
 
-function getstatus($status, $position)
-{
-    $t = $status & pow(2, $position - 1) ? 1 : 0;
-    return $t;
+function getstatus($status, $position) {
+	$t = (int)$status & pow(2, (int)$position - 1) ? 1 : 0;
+	return $t;
 }
 
 function setstatus($position, $value, $baseon = null)
@@ -1662,7 +1660,7 @@ function getimgthumbname($fileStr, $extend = '.thumb.jpg', $holdOldExt = true)
 function dintval($int, $allowarray = false)
 {
     $ret = intval($int);
-    if ($int == $ret || !$allowarray && is_array($int)) return $ret;
+    if($int == '' || $int == $ret || !$allowarray && is_array($int)) return $ret;
     if ($allowarray && is_array($int)) {
         foreach ($int as &$v) {
             $v = dintval($v, true);
@@ -1697,12 +1695,13 @@ function strhash($string, $operation = 'DECODE', $key = '')
     return base64_encode(gzcompress($string . $vkey));
 }
 
-function dunserialize($data)
-{
-    if (($ret = unserialize($data)) === false) {
-        $ret = unserialize(stripslashes($data));
-    }
-    return $ret;
+function dunserialize($data) {
+	if(is_array($data)) {
+		$ret = $data;
+	} elseif(($ret = unserialize($data)) === false) {
+		$ret = unserialize(stripslashes($data));
+	}
+	return $ret;
 }
 
 function browserversion($type)
@@ -3062,7 +3061,7 @@ function dzz_app_pic_save($FILE, $dir = 'appimg')
     }
     $setarr = array(
         'uid' => $_G['uid'],
-        'username' => $_G['username'],
+        'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
         'dateline' => $_G['timestamp'],
         'aid' => $attach['aid'],
     );

@@ -21,7 +21,7 @@ class Encode_Core {
 	/**
 	* 文件分析方法来检查UNICODE文件，ANSI文件没有文件头，此处不分析
 	*/
-	private function detect_utf_encoding($text) {
+	private static function detect_utf_encoding($text) {
 		$first2 = substr($text, 0, 2);
 		$first3 = substr($text, 0, 3);
 		$first4 = substr($text, 0, 3);
@@ -44,7 +44,7 @@ class Encode_Core {
 	 * @since 2012-03-20
 	 * @return boolean 
 	 */
-	private function is_gb2312($str)  {  
+	private static function is_gb2312($str)  {  
 	    for($i=0; $i<strlen($str); $i++) {  
 	        $v = ord( $str[$i] );  
 	        if( $v > 127) {  
@@ -60,7 +60,7 @@ class Encode_Core {
 	        }  
 	    }  
 	} 
-	private function is_GBK($str){
+	private static function is_GBK($str){
 		$s1 = iconv('gbk','utf-8',$str);
 		$s0 = iconv('utf-8','gbk',$s1);
 		if($s0 == $str){
