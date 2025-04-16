@@ -34,7 +34,6 @@ class UploadHandler
     function __construct($options = null, $initialize = true, $error_messages = null) {
         $this->options = array(
             'script_url' => $this->get_full_url().'/',
-
             'mkdir_mode' => 0755,
             'param_name' => 'files',
             // Set the following option to 'POST', if your server does not support
@@ -308,7 +307,7 @@ class UploadHandler
    }
 
     protected function handle_file_upload($uploaded_file, $name, $size, $relativePath, $type, $error,
-            $index = null, $content_range = null,$bz='',$container) {
+            $index = null, $content_range = null,$bz='',$container,$force = false) {
         $file = new stdClass();
 		$name=rawurldecode($name);
 		$relativePath=rawurldecode($relativePath);
@@ -369,22 +368,26 @@ class UploadHandler
 			$path=str_replace(array('icosContainer_folder_','icosContainer_body_'),'',$container);
 			if(is_numeric($path)){ //传到本地时
 				//判断权限
-				if(!perm_check::checkperm_Container($path,'upload') ) {
+				if(!$force && !perm_check::checkperm_Container($path,'upload') ) {
 					 $file->error =lang('no_upload_permissions');
 					 @unlink($filepath);
 					  return $file;
 				}
 
 				//判断空间大小
-				$gid=DB::result_first("select gid from ".DB::table('folder')." where fid='{$path}'");
-				if(!SpaceSize($file->size,$gid)){
+                if (!$folder = C::t('folder')->fetch($path)){
+                    $file->error = lang('parent_directory_not_exist');
+                    @unlink($filepath);
+                    return $file;
+                }
+				if(!SpaceSize($file->size,$folder['gid'],'',$folder['uid'])){
 					 $file->error = lang('inadequate_capacity_space');
 					 @unlink($filepath);
 					 return $file;
 				 }
 			}
 			try{
-				if($return=IO::uploadStream($filepath,$name,$path,$relativePath,$content_range)){
+				if($return=IO::uploadStream($filepath,$name,$path,$relativePath,$content_range,$force)){
 
 					if(isset($return['error'])){
 							$file->error = $return['error'];
@@ -552,7 +555,8 @@ class UploadHandler
                     $index,
                     $content_range,
 					$_GET['bz'],
-					$_GET['container']
+					$_GET['container'],
+                    $this->options['force']
                 );
             }
         } else {
@@ -574,7 +578,8 @@ class UploadHandler
 					null,
 					$content_range,
 					$_GET['bz'],
-					$_GET['container']
+					$_GET['container'],
+                    $this->options['force']
 				);
 			 
         }

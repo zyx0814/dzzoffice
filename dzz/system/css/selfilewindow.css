@@ -1,85 +1,20 @@
-.modal-content-inner{
-	background-color: #FFFFFF;
-}
-.modal-title{
-	text-align: center;
-	font-size: 20px;
-	color: #404040;
-	font-family: "微软雅黑";
-}
-.modal .modal-header{
-	padding: 10px 0px 20px 0px;
-	margin: 0 25px;
-}
-.modal .modal-footer{
-	border-top:1px solid #e5e5e5;
-	padding: 15px 0px 15px 0px;
-	margin: 0px 25px;
-}
-#seluser_dropdown_menu{
-	/*padding-left: 1.78rem;
-	padding-right: 1.78rem;*/
-}
-.jstree-default .jstree-wholerow{
-	height: 2.14rem;
-}
-.jstree-default .jstree-anchor{
-	line-height: 2.28rem;
-	height: 2.14rem;
-}
-
-.jstree-default .jstree-icon:empty {
-    font-size: 22px;
-    color: rgba(78,85,99,1);
-     border-radius: 50%;
-     margin-top: 3px;
-}
-
-.jstree-default .jstree-node,.jstree-default .jstree-ocl {
-    font-family: 'dzz' !important;
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    background-image: none!important;
-}
-.jstree-default>.jstree-no-dots .jstree-closed>.jstree-ocl:before {
-    content: "\e918";
-}
-.jstree-default>.jstree-no-dots .jstree-open>.jstree-ocl:before {
-    content: "\e916";
-}
-/*.jstree-default .jstree-icon{
-	vertical-align: sub;
-}*/
-.jstree-default .jstree-icon.dzz-folder {
-    color: #f9b743;
-}
-.jstree-default .jstree-wholerow-hovered{
-	background: #e6e8eb;
-}
-.jstree-default .jstree-wholerow-clicked{
-	background:#3779ff;
-}
-.jstree-default .jstree-wholerow-clicked + .jstree-ocl {
-    color: #FFFFFF;
-}
-.jstree-default .jstree-clicked {
-    color: #FFFFFF;
-}
-.jstree-default .jstree-clicked .jstree-icon:empty {
-    color: #FFFFFF;
-}
-.jstree-default .jstree-clicked .dzz-folder:empty {
-    color: #f9b743;
-}
-.button-rightcolor{
-	margin-left:5px;
-	height:24px;
-	width:24px;
-	padding: 0px;
-    vertical-align: sub;
-}
-.button-rightcolor span{
-	font-size: 20px;
-}
+.modal-content-inner{background-color:#FFFFFF}
+.modal-title{text-align:center;font-size:20px;color:#404040;font-family:"微软雅黑"}
+.modal .modal-header{padding:10px 0px 20px 0px;margin:0 25px}
+.modal .modal-footer{border-top:1px solid #e5e5e5;padding:15px 0px 15px 0px;margin:0px 25px}
+#seluser_dropdown_menu{}
+.jstree-default .jstree-wholerow{height:2.14rem}
+.jstree-default .jstree-anchor{line-height:2.28rem;height:2.14rem}
+.jstree-default .jstree-icon:empty{font-size:22px;color:rgba(78,85,99,1);border-radius:50%;margin-top:3px}
+.jstree-default .jstree-node,.jstree-default .jstree-ocl{font-family:'dzz' !important;font-style:normal;font-weight:normal;line-height:1;-webkit-font-smoothing:antialiased;background-image:none!important}
+.jstree-default>.jstree-no-dots .jstree-closed>.jstree-ocl:before{content:"\e918"}
+.jstree-default>.jstree-no-dots .jstree-open>.jstree-ocl:before{content:"\e916"}
+.jstree-default .jstree-icon.dzz-folder{color:#f9b743}
+.jstree-default .jstree-wholerow-hovered{background:#e6e8eb}
+.jstree-default .jstree-wholerow-clicked{background:#3779ff}
+.jstree-default .jstree-wholerow-clicked + .jstree-ocl{color:#FFFFFF}
+.jstree-default .jstree-clicked{color:#FFFFFF}
+.jstree-default .jstree-clicked .jstree-icon:empty{color:#FFFFFF}
+.jstree-default .jstree-clicked .dzz-folder:empty{color:#f9b743}
+.button-rightcolor{margin-left:5px;height:24px;width:24px;padding:0px;vertical-align:sub}
+.button-rightcolor span{font-size:20px}

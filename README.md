@@ -57,10 +57,10 @@
 ### 运行环境
 - 服务器:
     - Windows，Linux，Mac ...
-    - PHP 7.0~8.0
+    - PHP 7.0+
     - 数据库: mysql 5.0+
 - 浏览器适配: 
-    - Chrome 
-    - Firefox
-    - Opera
-    - IE8+
+    - Chrome 60+
+    - Firefox 60+
+    - iOS 12+
+    - IE 10+

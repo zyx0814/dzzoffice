@@ -80,12 +80,13 @@ if (!submitcheck('settingsubmit')) {
 	} elseif ($operation == 'access') {
 		$navtitle = lang('loginSet').' - '.lang('appname');
 		$setting['strongpw'] = dunserialize($setting['strongpw']);
-		$setting['welcomemsgtitle'] = cutstr(trim(dhtmlspecialchars($setting['welcomemsgtitle'])), 75);
+	} elseif ($operation == 'denlu') {
+		$navtitle = lang('loginSet').' - '.lang('appname');
 	} elseif($operation == 'space'){//获取空间设置结果
 		$navtitle=lang('spaceSet').' - '.lang('appname');
 		$openarr=json_encode(array('orgids'=>$open));
 		//获取用户组空间设置数据
-		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
+		$usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
 
 	}elseif($operation == 'permgroup'){
 		$perms = get_permsarray();//获取所有权限;
@@ -193,6 +194,17 @@ if (!submitcheck('settingsubmit')) {
 
 			}
 		}
+	} elseif ($operation == 'denlu') {
+		$settingnew['numberoflogins'] = intval($settingnew['numberoflogins']);
+		if ($settingnew['numberoflogins'] <= 0) {
+			$settingnew['numberoflogins'] = 1;
+		}
+
+		$settingnew['forbiddentime'] = intval($settingnew['forbiddentime']);
+		if ($settingnew['forbiddentime'] <= 0) {
+			$settingnew['forbiddentime'] = 1;
+		}
+		$settingnew['oltimespan'] = intval($settingnew['oltimespan']);
 	} elseif ($operation == 'access') {
 		isset($settingnew['reglinkname']) && empty($settingnew['reglinkname']) && $settingnew['reglinkname'] = lang('register_immediately');
 		$settingnew['pwlength'] = intval($settingnew['pwlength']);
@@ -316,10 +328,7 @@ if (!submitcheck('settingsubmit')) {
 		}
 	}
 	if ($settings) {
-		C::t('setting') -> update_batch($settings);
-		if($settings['template']!=$setting['template']) {
-			cleartemplatecache();
-		}
+		C::t('setting')->update_batch($settings);
 	}
 	if($operation == 'basic'){
 		if($settingnew['sitelogo'] && $settingnew['sitelogo']!=$setting['sitelogo']){

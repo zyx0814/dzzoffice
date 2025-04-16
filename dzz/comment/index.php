@@ -65,8 +65,8 @@ if ($do == 'getinfo') {
 			"xtllq" => $value['xtllq'],
 			"dateline" => dgmdate($value['dateline'], 'Y-n-j H:i:s'),
 			"cid" => $value['cid'],
-			"edittime" => $value['edittime'] ? dgmdate($value['edittime'], 'Y-n-j H:i:s') : null,
-			"edituid" => $user['username'],
+			"edittime" => $value['edittime'] ? dgmdate($value['edittime'], 'Y-n-j H:i:s') : '',
+			"edituid" => $user['username'] ? $user['username'] : '',
 			"message" => $value['message'],
             "fid" => $value['id'],
             "idtype" => $value['idtype']

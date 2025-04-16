@@ -1,89 +1,89 @@
 <!--{if !$_G['inajax']}-->
 <!--{template common/header_common}-->
 <div id="ct" class="text-center " style="position: absolute;top: 30%;width: 100%;text-align: center;">
-<!--{if !$param['login']}-->
-<div class="">
-<!--{else}-->
-<div class="" id="main_succeed" style="max-width:500px;margin:0 auto;display: none">
-	<div class="f_c altw">
-		<div class="alert_right">
-			<h5 id="succeedmessage"></h5>
-			<p id="succeedlocation" class="alert_btnleft"></p>
-			<p class="alert_btnleft"><a id="succeedmessage_href">{lang message_forward}</a></p>
+	<!--{if !$param['login']}-->
+	<div class="">
+	<!--{else}-->
+	<div class="" id="main_succeed" style="max-width:500px;margin:0 auto;display: none">
+		<div class="f_c altw">
+			<div class="alert_right">
+				<h5 id="succeedmessage"></h5>
+				<p id="succeedlocation" class="alert_btnleft"></p>
+				<p class="alert_btnleft"><a id="succeedmessage_href">{lang message_forward}</a></p>
+			</div>
 		</div>
 	</div>
-</div>
-<div class="well" id="main_message">   
-<!--{/if}-->
-<!--{else}-->
-<!--{template common/header_ajax}-->
-<!--{/if}-->
-<!--{if $param['msgtype'] == 1 || $param['msgtype'] == 2 && !$_G['inajax']}-->
-<div class="f_c altw">
-	<div id="messagetext">
-		<img src="<!--{if !$_G['setting']['bbclosed']}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{else}-->static/image/common/logo.png<!--{/if}-->">
-		<h4 class="mb-2 mt-2 text-gray">$show_message</h4>
-		<!--{if $url_forward}-->
-		<!--{if !$param['redirectmsg']}-->
-		<button class="btn btn-success btn-jump" onclick="location.href='$url_forward';return false;">{lang immdeiate_jump}<!--{if $param['timeout']}-->（<span class="num">3</span>s）<!--{/if}--></button>
-		<!--{else}-->
-		<button class="btn btn-primary btn-jump" onclick="location.href='$url_forward';return false;">{lang return_to_the_naxt_level}<!--{if $param['timeout']}-->（<span class="num">3</span>s）<!--{/if}--></button>
-		<!--{/if}-->
-		<button class="btn btn-primary btn-jump" onclick="location.href='/';return false;">首页</button>
-		<!--{elseif $allowreturn}-->
-		<script type="text/javascript">
-			if(history.length > (BROWSER.ie ? 0 : 1)) {
-				document.write('<a class="btn btn-primary btn-jump" href="javascript:history.back()">返回</a> <a class="btn btn-info" href="/">首页</a>');
-			} else {
-				document.write('<a class="btn btn-primary btn-jump" href="/">首页</a>');
-			}
-		</script>
+	<div class="well" id="main_message">   
+	<!--{/if}-->
+	<!--{else}-->
+	<!--{template common/header_ajax}-->
+	<!--{/if}-->
+	<!--{if $param['msgtype'] == 1 || $param['msgtype'] == 2 && !$_G['inajax']}-->
+	<div class="f_c altw">
+		<div id="messagetext">
+			<img src="<!--{if !$_G['setting']['bbclosed']}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{else}-->static/image/common/logo.png<!--{/if}-->">
+			<h4 class="mb-2 mt-2 text-gray">$show_message</h4>
+			<!--{if $url_forward}-->
+			<!--{if !$param['redirectmsg']}-->
+			<button class="btn btn-success btn-jump" onclick="location.href='$url_forward';return false;">{lang immdeiate_jump}<!--{if $param['timeout']}-->（<span class="num">3</span>s）<!--{/if}--></button>
+			<!--{else}-->
+			<button class="btn btn-primary btn-jump" onclick="location.href='$url_forward';return false;">{lang return_to_the_naxt_level}<!--{if $param['timeout']}-->（<span class="num">3</span>s）<!--{/if}--></button>
+			<!--{/if}-->
+			<button class="btn btn-primary btn-jump" onclick="location.href='/';return false;">首页</button>
+			<!--{elseif $allowreturn}-->
+			<script type="text/javascript">
+				if(history.length > (BROWSER.ie ? 0 : 1)) {
+					document.write('<a class="btn btn-primary btn-jump" href="javascript:history.back()">返回</a> <a class="btn btn-info" href="/">首页</a>');
+				} else {
+					document.write('<a class="btn btn-primary btn-jump" href="/">首页</a>');
+				}
+			</script>
+			<!--{/if}-->
+		</div>
+		<!--{if $param['login']}-->
 		<!--{/if}-->
 	</div>
-	<!--{if $param['login']}-->
-	<!--{/if}-->
-</div>
-<script type="text/javascript">
-jQuery(document).ready(function(){
-	function jump(cont){						
-		window.setTimeout(function(){
-			cont--;
-			if(cont>0){
-				$('.num').text(cont);
-				jump(cont);
-			}
-		},1000)
-	}
-	jump(3);
-});
-</script>
-<!--{elseif $param['msgtype'] == 2 && !$_GET['layerindex']}-->
-<div class="modal-header">
-	<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	<h4 class="modal-title">{lang board_message}</h4>
-</div>
-<div class="modal-body">
-	<div class="$alerttype">$show_message</div>
-</div>
-<div class="modal-footer">
-	<!--{if $param['closetime']}-->
-	<span class="btn btn-link text-muted">$param['closetime'] {lang message_closetime}</span>
-	<!--{elseif $param['locationtime']}-->
-	<span class="btn btn-link text-muted">$param['locationtime'] {lang message_locationtime}</span>
-	<!--{/if}-->
-	<!--{if $param[login]}-->
-	<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');showWindow('login', 'user.php?mod=login&action=login');"><strong>{lang login}</strong></button>
-	<!--{if !$_G['setting']['bbclosed']}-->
-	<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');window.open('user.php?mod=rigister');"><em>$_G['setting']['reglinkname']</em></button>
-	<!--{/if}-->
-	<!--{/if}-->
-	<button type="button"  data-dismiss="modal" class="btn btn-default"><strong>{lang close}</strong></button>
-</div>
-<!--{else}-->$show_message<!--{/if}-->
-<!--{if !$_G['inajax']}-->
+	<script type="text/javascript">
+	jQuery(document).ready(function(){
+		function jump(cont){						
+			window.setTimeout(function(){
+				cont--;
+				if(cont>0){
+					$('.num').text(cont);
+					jump(cont);
+				}
+			},1000)
+		}
+		jump(3);
+	});
+	</script>
+	<!--{elseif $param['msgtype'] == 2 && !$_GET['layerindex']}-->
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		<h4 class="modal-title text-truncate">{lang board_message}</h4>
 	</div>
-</div>
-<!--{template common/footer}-->
-<!--{else}-->
-<!--{template common/footer_ajax}-->
-<!--{/if}-->
+	<div class="modal-body">
+		<div class="$alerttype">$show_message</div>
+	</div>
+	<div class="modal-footer">
+		<!--{if $param['closetime']}-->
+		<span class="btn btn-link text-muted">$param['closetime'] {lang message_closetime}</span>
+		<!--{elseif $param['locationtime']}-->
+		<span class="btn btn-link text-muted">$param['locationtime'] {lang message_locationtime}</span>
+		<!--{/if}-->
+		<!--{if $param[login]}-->
+		<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');showWindow('login', 'user.php?mod=login&action=login');"><strong>{lang login}</strong></button>
+		<!--{if !$_G['setting']['bbclosed']}-->
+		<button type="button" class="btn btn-info" onclick="hideWindow('$_GET['handlekey']');window.open('user.php?mod=rigister');"><em>$_G['setting']['reglinkname']</em></button>
+		<!--{/if}-->
+		<!--{/if}-->
+		<button type="button"  data-dismiss="modal" class="btn btn-default"><strong>{lang close}</strong></button>
+	</div>
+	<!--{else}-->$show_message<!--{/if}-->
+	<!--{if !$_G['inajax']}-->
+		</div>
+	</div>
+	<!--{template common/footer}-->
+	<!--{else}-->
+	<!--{template common/footer_ajax}-->
+	<!--{/if}-->

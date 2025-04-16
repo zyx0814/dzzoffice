@@ -1431,10 +1431,6 @@ function hideWindow(k, all, clear) {
 	all = isUndefined(all) ? 1 : all;
 	clear = isUndefined(clear) ? 1 : clear;
 	jQuery('#fwin_' + k).modal('hide').remove();
-	/*hideMenu('fwin_' + k, 'win');
-	if(clear && document.getElementById('fwin_' + k)) {
-		document.getElementById('append_parent').removeChild(document.getElementById('fwin_' + k));
-	}*/
 	if(all) {
 		jQuery('.modal.fwinmask').modal('hide').remove();
 	}

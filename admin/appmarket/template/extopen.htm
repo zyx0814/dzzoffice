@@ -1,6 +1,4 @@
-<!--{template common/header_simple_start}-->
-<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all"> 
-<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<!--{template lyear:header_simple_start}-->
 <style>
 	.app_default_list{
 		padding:0;
@@ -23,84 +21,69 @@
 		border:1px solid transparent;
 	
 	}
-	.app_default_list li a{padding:2px;color:#333}
+	.app_default_list li a{padding:2px;}
 	.app_default_list li.isdefault1 a{color:rgba(76, 137, 251, 1)}
 	.app_default_list li .label-rightimg{margin:auto;display: none;position:absolute;right:3px;top:3px}
-	.app_default_list li.isdefault1 .label-rightimg{display: inline-block;} 
+	.app_default_list li.isdefault1 .label-rightimg{display: inline-block;width: auto} 
 	.app_default_list li.isdefault,.app_default_list li.isdefault1{ 
 		border: 1px solid rgba(76, 137, 251, 1); 
-
+		border-radius: 5px;
 	}
 	.table td img{max-height: 32px;max-width: 32px;}
 	.app_default_list li.ui-state-default{width: 150px;height: 38px;border: 1px solid #e1e1e1;display: block;background:#FFF }
 	
 </style>
-<!--{template common/header_simple_end}-->
-<!--{template common/commer_header}-->
-<div class="bs-container clearfix">
-	<div class="bs-left-container  clearfix">
-		<!--{template left}-->
-	</div>
-	<div class="left-drager"> 
-	</div>	
-	<div class="bs-main-container"> 
-		<div class="main-content clearfix" style="border-top:1px solid #FFF;padding:0;margin-top: 8px;">
-			
-			<table class="table table-hover">
-				<thead>
-					<tr>
-						<th width="100">{lang default}</th> 
-						<th>{lang application_name}</th>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+	  <div class="card">
+		<div class="card-body">
+			<div class="table-responsive">
+				<table class="table table-hover align-middle">
+					<thead>
+						<tr>
+							<th>{lang default}</th> 
+							<th>{lang application_name}</th>
+						</tr>
+					</thead>
+					<!--{loop $list $key $value}-->
+					<tr>  
+						<td>
+							<a class="btn btn-outline-success" href="{MOD_URL}&op=extopen&ext=$key">$key</a>
+						</td>
+						<td>
+							<form name="appform" class="form-horizontal form-horizontal-left" action="{MOD_URL}&op=extopen" method="post">
+							<input type="hidden" name="do" value="setorder" /> 
+							<ul class="app_default_list clearfix">
+							<!--{loop $value $key2 $value2}-->
+								<li class="default_li isdefault{$value2[isdefault]}" title="{lang drag_can_be_sorted}"  onclick="setdefault(this, '{$value2[extid]}' )">
+									<input class="form-control"  name="extid[]" type="hidden" value="{$value2[extid]}" />
+									<img class="default_li_icon" src="$value2[appdata][appico]" /><a  href="javascript:;" title="{lang set_default}">$value2[appdata][appname]</a>
+									<img src="static/image/common/ic-filtrate.png" class="label-rightimg">
+								</li>
+							<!--{/loop}-->
+							</ul>
+							</form>
+						</td>
 					</tr>
-				</thead>
-
-				<!--{loop $list $key $value}-->
-				<tr>  
-					<td width="100" >
-						<a href="{MOD_URL}&op=extopen&ext=$key">$key</a>
-					</td>
-					<td>
-						<form  name="appform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod={MOD_NAME}&op=extopen" method="post">
-						<input type="hidden" name="do" value="setorder" /> 
-						<ul class="app_default_list clearfix">
-						<!--{loop $value $key2 $value2}-->
-							<li class="default_li isdefault{$value2[isdefault]}" title="{lang drag_can_be_sorted}"  onclick="setdefault(this, '{$value2[extid]}' )">
-								<input class="form-control industry-add-one"  name="extid[]" type="hidden" value="{$value2[extid]}" />
-								<img class="default_li_icon" src="$value2[appdata][appico]" /><a  href="javascript:;" title="{lang set_default}">$value2[appdata][appname]</a>
-								<img src="static/image/common/ic-filtrate.png" class="label-rightimg">
-							</li>
-						<!--{/loop}-->
-						</ul>
-						</form>
-					</td>
-
-				</tr>
-				<!--{/loop}-->
-				<thead>
-					<tr>
-						<td colspan="2" align="center" style="border:none">$multi </td>
-					</tr> 
-				</thead>
-			</table>
-		 
-			<div class="tip" style="margin:20px;color:#444;line-height:1.8">
-				<div class="alert alert-warning">
-					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					<h5>
-						<b>{lang board_message}</b>
-					</h5>
-					<ul class="help-block">
-						{lang extopen_board_message_text}
-					</ul>
-				</div>
+					<!--{/loop}-->
+					<thead>
+						<tr>
+							<td colspan="2" align="center" style="border:none">$multi </td>
+						</tr> 
+					</thead>
+				</table>
 			</div>
-		</div>
+			<div class="mt-2 alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>{lang board_message}</strong> {lang extopen_board_message_text}
+				<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+			</div>
 	</div>
 </div>
+</div>
+</main>
 <script type="text/javascript" src="{MOD_PATH}/scripts/jquery-ui.js?{VERHASH}"></script>
 <script type="text/javascript">
-	jQuery('.left-drager').leftDrager_layout();
-	
 	jQuery('.app_default_list li').hover(function(){
 		jQuery(this).addClass("isdefault");
 	},function(){
@@ -147,5 +130,4 @@
 		}
 	}
 </script>
-<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
-<!--{template common/footer_simple}-->
+<!--{template lyear:footer_simple}-->

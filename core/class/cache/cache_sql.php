@@ -6,18 +6,18 @@ if(!defined('IN_DZZ')) {
 
 class ultrax_cache {
 
-	function ultrax_cache($conf) {
+	function __construct($conf) {
 		$this->conf = $conf;
 	}
 
 	function get_cache($key) {
-		static $data = null;
+		static $data = array();
 		if(!isset($data[$key])) {
 			$cache = C::t('cache')->fetch($key);
 			if(!$cache) {
 				return false;
 			}
-			$data[$key] = unserialize($cache['cachevalue']);
+			$data[$key] = dunserialize($cache['cachevalue']);
 			if($cache['life'] && ($cache['dateline'] < time() - $data[$key]['life'])) {
 				return false;
 			}

@@ -105,7 +105,7 @@ zqwwUA80SCnPqXjX/wOMZk7HdkqgsAAAAABJRU5ErkJggg==
 			<item id="havetask"><![CDATA[1]]></item>
 			<item id="hideInMarket"><![CDATA[0]]></item>
 			<item id="feature"><![CDATA[]]></item>
-			<item id="fileext"><![CDATA[pdf,qiniu:doc,qiniu:docx,qiniu:ppt,qiniu:pptx,qiniu:xls,qiniu:xlsx]]></item>
+			<item id="fileext"><![CDATA[pdf,ai]]></item>
 			<item id="group"><![CDATA[0]]></item>
 			<item id="position"><![CDATA[1]]></item>
 			<item id="system"><![CDATA[0]]></item>
@@ -114,7 +114,7 @@ zqwwUA80SCnPqXjX/wOMZk7HdkqgsAAAAABJRU5ErkJggg==
 			<item id="nodup"><![CDATA[0]]></item>
 			<item id="identifier"><![CDATA[pdf]]></item>
 			<item id="app_path"><![CDATA[dzz]]></item>
-			<item id="version"><![CDATA[2.1]]></item>
+			<item id="version"><![CDATA[2.20]]></item>
 			<item id="extra"><![CDATA[
 			]]></item>
 			<item id="mid"><![CDATA[13]]></item>

@@ -14,6 +14,7 @@ Hook::listen('check_login');//检查是否登录，未登录跳转到登录界�
 include_once libfile('function/organization');
 $ids =isset($_GET['ids'])?rawurldecode($_GET['ids']):'';
 $template = isset($_GET['template']) ? $_GET['template'] : '';
+$layer = isset($_GET['layer']) ? $_GET['layer'] : '';
 $zero=$_GET['zero']?urldecode($_GET['zero']):lang('no_institution_users');//无机构用户名称
 $nouser=intval($_GET['nouser']);//不显示用户
 $stype=intval($_GET['stype']); //0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
@@ -31,6 +32,7 @@ $gets = array(
 		'stype'=>$stype,
 		'moderator'=>$moderator,
 		'template'=>$template,
+		'layer'=>$layer,
 		'range'=>$range,
 		'multiple'=>$multiple,
 		'nosearch'=>1,
@@ -103,7 +105,9 @@ if($uids){
 }
 $openarr_length=count($open)?'1':'';
 $openarr=json_encode($open);
-if ($template == '1') {
+if($layer) {
+	include template('layer_selorguser');
+}elseif ($template == '1') {
     include template('lyear_selorguser','lyear');
 } else {
 	if($_G['ismobile']){

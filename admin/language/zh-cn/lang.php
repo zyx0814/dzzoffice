@@ -491,17 +491,6 @@ $lang = array
 	'app_internal_frame'=>'内部窗口',
 	'app_internal_frame_text'=>'<li>默认内部窗口打开，有些应用不适合内部打开时，可以选择在新窗口打开</li>
 								<li>当应用地址为类似dzzjs:时，只能内部打开，这里的设置不起作用</li>',
-	'app_form_parameter'=>'窗体参数',
-	'app_form_parameter_text'=>'<li>此项功能属于高级功能,留空表示使用系统默认，未定义的项目使用默认设置，各个值之间用,号隔开</li>
-						<li>如："class=noborder,titlebutton=fullscreen|refresh|close|max|min,width=500,height=400,left=50%,top=50%,right=0,bottom=0,resize=no,size=no,autorun=yes"</li>
-						<li>left,top,right,bottom:设定窗体的默认位置，如果用户拖动，将以用户拖动的位置为准；left优先于right，top优先于bottom；值可以是整数或百分比值</li>
-						<li>autorun：设置此应用是否自动运行，可用值yes 或者 no ,必须用户安装了此应用才有效</li>
-						<li>closetime：自动关闭时间，可用值 整数 单位秒 ,仅对自动运行的应用才有效；如：closetime=3 三秒后自动关闭</li>
-						<li>class：应用窗体的风格，设置后此窗体的风格将不随着桌面的主题变化（必须保证 ./dzz/styles/window/风格名称/style.css 存在</li>
-						<li>size：应用窗体默认大小，可用值 no：(默认); max:窗体最大化；min：窗体最小化；</li>
-						<li>titlebutton：应用窗体的功能按钮;目前仅支持fullscreen,refresh,close,max,min(注意refresh目前只对同域的应用有效);默认值:titlebutton=close|max|min</li>
-						<li>width 、height：应用窗体的默认打开高度和宽度;默认width=800,height=500;</li>
-						<li>resize:应用窗体改变大小;可用值："no",resize,resize-x,resize-y;默认resize=resize|resize-x|resize-y</li>',
 
 	'app_default_installation_location'=>'默认安装位置，应用将会默认安装到相应的位置',
 	'app_application_library'=>'在应用库中',
@@ -948,37 +937,6 @@ $lang = array
 	'setting_wxsyn_organization'=>'<span class="danger">创建父机构失败，忽略</span>',
 	'setting_wxsyn_synchronization1'=>'不在同步范围，已禁用',
 	'setting_wxsyn_synchronization2'=>'不在同步范围，忽略',
-	// admin/theme/edit.html
-	'theme_edit_theme_name_state'=>'<li>主题名称，好的主题名称便于用户了解主题的特色</li><li>设为默认，游客或未设置主题的用户将默认使用此主题</li>',
-	'theme_edit_version_state'=>'主题版本号',
-	'theme_edit_supplier_state'=>'主题供应商名称',
-	'theme_edit_img_background_state'=>'<li> 留空将使用主题目录下的back.jpg作为背景</li><li> 可以是背景颜色，如:#F7F7F7 或 rgb(0,0,0)</li><li>也可以是背景图片，这里填写背景图的相对地址（相对于站点根目录）或者绝对地址</li>',
-	'theme_edit_web_background'=>'<li> 留空，不使用</li>
-						<li> 还可以利用网址作为背景（通常用于动态背景），可以是相对于站点根目录的相对地址或者绝对地址</li>
-						<li class="text-danger"> 设置了网页背景后，图片背景将不起作用</li>',
-	'theme_edit_background_display_mode'=>'<li>设置背景图片的显示方式,背景为颜色或网址时不起作用</li>',
-	'theme_edit_preference_color_set'=>'<li> 此项设置是否允许用户更换主题各部分的基础色调</li>
-						<li> 对于以颜色为主的主题，可以设置允许，以便用户自定义主题的基础色调</li>
-						<li> 通常的没有经过优化的主题，不建议设置此项</li>
-						<li> 可用值，如:#F7F7F7 或 rgb(0,0,0)</li>',
-	'theme_edit_theme_catalogue_state'=>'<li>注意：此项必填，并且目录名称不能为中文</li>
-						<li>注意：此项值全局唯一：即每个主题必须对应一个主题目录；<br />如发现下拉列表没有可选值，说明“dzz/styles/thame/”下的所有目录所对应的的主题都已经存在；<br />如想添加新主题的话，需要在放到“dzz/styles/thame/”下新建目录，然后在此处选择</li>
-						<li>自定义的主题目录放到“dzz/styles/thame/”下，即可在此调用</li>
-						<li>主题的封面图命名为thumb.jpg放在此目录下</li>
-						<li>此目录下的style.css中的样式将覆盖下面的各个分样式</li>',
-	'theme_edit_common_windon'=>'<li>样式的目录不能为中文</li>
-						<li>自定义的此样式目录放到“dzz/styles/{$key}下，即可在此调用</li>
-						<li>注意：如果不选择，必选在主题目录下的style.css 中定义相关的样式</li>',
-	'theme_edit_board_message_state'=>'<li>将自定义的样式放入"dzz/styles/目录下，这里就可以调用</li>
-						<li>主题目录必选，其他如果不选，必须在主题目录下的style.css中定义相关的css</li>
-						<li>主题目录下的style.css将覆盖其他相同的css</li>',
-	'theme_edit_no_subject_catalog'=>'请选择主题目录，如果没有可选的主题目录，请到dzz/styles/thame/下新建主题目录',
-	'theme_list_no_theme'=>'还没有可以安装的主题，把主题目录上传到dzz/styles/thame/下后，可以在此选择安装', 
-	'theme_thame_set_color_selector'=>'还没有设置偏好色，请点击头上颜色选择器选择颜色添加',
-	'theme_thame_click_add_class'=>'可以点击下面的添加分类按钮来添加分类',
-	'theme_thame_root_directory_location'=>'可以是相对于根目录的相对地址，或网络地址',
-	'set_incomplete_unable_add'=>'设置不完整，无法添加',
-	'theme_edit_already_existed'=>'此主题目录的主题已经存在！',
 //	'nav_logs' => '运行记录',
 	'nav_logs_illegal' => '密码错误',
 	'nav_logs_ban' => '禁止用户',

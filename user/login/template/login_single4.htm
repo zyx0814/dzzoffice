@@ -38,9 +38,9 @@
 		<!--{loop $orgids $val}-->
 			<div class="section-wrap clearfix">
 				
-				<!--{loop $val[users] $k $v}-->		
+				<!--{loop $val['users'] $k $v}-->		
 				<li><a data-uid="40" class="user-a" onClick="$('#login_uid').val('$v[uid]');$('#loginsubmit').removeClass('disabled');$(this).closest('.user-ul').find('li').removeClass('hover');$(this).parent().addClass('hover')">
-					<span class="cavatar">{eval echo avatar_block($v[uid]);}</span>
+					<span class="cavatar">{eval echo avatar_block($v['uid']);}</span>
 					<span class="cusername">
 						<span class="username">$v[username]</span>
 						<span class="orgname">$val[path]</span>

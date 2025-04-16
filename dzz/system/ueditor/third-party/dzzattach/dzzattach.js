@@ -400,7 +400,7 @@ dzzattach.showContent=function(){
 				var el1=jQuery('<img height="'+height+'" width="'+width+'" style="cursor: move; top: '+top+'px; transform: rotate(0deg); left: '+left+'px;" src="'+data.src+'" ws_property="1" onload="jQuery(\'#pre_loading\').fadeOut();jQuery(\'#previewer-photo\').show();" >').appendTo(el);
 				el1.get(0).onmousedown = function(event) {try{dragMenu(el1.get(0), event, 1);}catch(e){}};
 				el1.on('click',function(){return false});
-				jQuery.getScript('static/js/jquery.mousewheel.js',function(data){
+				jQuery.getScript('static/js/jquery.mousewheel.min.js',function(data){
 					el1.on('mousewheel',function(e,delta, deltaX, deltaY){
 						var dy=delta*100;
 						var dx=dy*ratio1;

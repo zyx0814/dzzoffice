@@ -24,7 +24,7 @@
 		<section class="weui-cells weui-cells__recent weui-cells__margin_footer">
 			<!--{if count($groups) > 0}-->
 			<!--{loop $groups $v}-->
-            <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=file&gid={$v[orgid]}&fid={$v[fid]}">
+            <a class="weui-cell weui-cell_access" href="{MOD_URL}&op=mobile&do=file&gid={$v['orgid']}&fid={$v[fid]}">
                 <div class="weui-cell__hd">
 					<!--{if $v['imgs']}-->
 					<img src="$v[img]" class="weui-cell__recentimg">

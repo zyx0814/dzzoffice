@@ -1,6 +1,4 @@
-<!--{template common/header_simple_start}-->
-<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
-<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
+<!--{template lyear:header_simple_start}-->
 <style>
 .thumbnails li {
 	float: left;
@@ -8,13 +6,6 @@
 .thumbnail {
 	border: none;
 	box-shadow: none;
-}
-.progress-title {
-	word-break: break-all;
-	font-weight: normal;
-	max-height: 40px;
-	line-height: 20px;
-	overflow: hidden;
 }
 #upload_progress .back {
 	position: absolute;
@@ -27,73 +18,60 @@
 	padding: 0 5px;
 }
 </style>
-<!--{template common/header_simple_end}-->
-<!--{template common/commer_header}-->
-<div class="bs-container clearfix">
-  <div class="bs-left-container  clearfix"> 
-    <!--{template left}--> 
-  </div>
-  <div class="left-drager">
-  </div>
-  <div class="bs-main-container  clearfix" style="min-width:570px;">
-    <div class="main-header "> 
-      <!--{template right_header}--> 
-    </div>
-    <div class="main-content clearfix" style="padding:20px 20px 10px;border-top:1px solid #FFF">
-      <div class="clearfix" style="margin:0 auto">
-        <p id="operation" class="text-center" style="width:500px;">
-          <button class="btn btn-success start" onclick="moveing_start('start')">{lang starting_migration}</button>
-          &nbsp; &nbsp;
-          <button class="btn btn-danger stop" onclick="moveing_start('stop')" disabled="disabled">{lang stop}</button>
-          &nbsp; &nbsp; </p>
-        <ul class="thumbnails list-unstyled clearfix" style="width:570px;">
-          <li id="source_space" style="width:150px;">
-            <div class="thumbnail"> 
-              <!--{if $sourcedata[bz]=='dzz'}--> 
-              <img src="dzz/images/default/system/home.png" width="100"> 
-              <!--{else}--> 
-              <img src="dzz/images/default/system/$sourcedata[bz].png" width="100"> 
-              <!--{/if}-->
-              <h5 class="text-center" style="line-height:20px;margin-bottom:5px"><a href="javascript:;" title="$sourcedata[name]">$sourcedata[name] </a></h5>
-            </div>
-          </li>
-          <li id="moveinfo">
-            <div id="upload_progress" style="width:200px;overflow:hidden">
-              <h5 class="progress-subject" style="margin-top:5px"></h5>
-              <h5 class="progress-title">$first[attachment]</h5>
-              <div class="progress progress-striped active">
-                <div class="back"><span id="moved">$first[fsize]</span>/<span>$fmovesize</span></div>
-                <div class="progress-bar" style="width:1%;"></div>
-              </div>
-            </div>
-          </li>
-          <li id="target_space" style="width:150px;">
-            <div class="thumbnail"> 
-              <!--{if $targetdata[bz]=='dzz'}--> 
-              <img src="dzz/images/default/system/home.png" width="100"> 
-              <!--{else}--> 
-              <img src="dzz/images/default/system/$targetdata[bz].png" width="100"> 
-              <!--{/if}-->
-              <h5 class="text-center" style="line-height:20px;margin-bottom:5px"><a href="javascript:;" title="$targetdata[name]">$targetdata[name]</a></h5>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="tip" style="margin:10px;">
-        <div class="alert alert-warning">
-          <button type="button" class="close" data-dismiss="alert">&times;</button>
-          <h5>{lang board_message}</h5>
-          <ul>
-            {lang cloud_movetool_board_message_text1}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<!--{template right_header}-->
+		<div class="card">
+			<div class="card-body">
+				<div class="text-center">
+					<p id="operation" class="text-center">
+					<button class="btn btn-outline-primary start" onclick="moveing_start('start')">{lang starting_migration}</button>
+					&nbsp; &nbsp;
+					<button class="btn btn-danger stop" onclick="moveing_start('stop')" disabled="disabled">{lang stop}</button>
+					&nbsp; &nbsp; </p>
+					<ul class="thumbnails list-unstyled clearfix d-flex justify-content-center">
+					<li id="source_space" style="width:150px;">
+						<div class="thumbnail"> 
+						<!--{if $sourcedata[bz]=='dzz'}--> 
+						<img src="dzz/images/default/system/home.png" width="100"> 
+						<!--{else}--> 
+						<img src="dzz/images/default/system/$sourcedata[bz].png" width="100"> 
+						<!--{/if}-->
+						<h5 class="text-center" style="line-height:20px;margin-bottom:5px"><a href="javascript:;" title="$sourcedata[name]">$sourcedata[name] </a></h5>
+						</div>
+					</li>
+					<li id="moveinfo">
+						<div id="upload_progress" style="width:200px;overflow:hidden">
+						<h5 class="progress-subject" style="margin-top:5px"></h5>
+						<h5 class="progress-title">$first[attachment]</h5>
+						<div class="progress">
+							<div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 1%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><div style="display: inline-block;"><span id="moved">$first[fsize]</span>/<span>$fmovesize</span></div></div>
+						  </div>
+						</div>
+					</li>
+					<li id="target_space" style="width:150px;">
+						<div class="thumbnail"> 
+						<!--{if $targetdata[bz]=='dzz'}--> 
+						<img src="dzz/images/default/system/home.png" width="100"> 
+						<!--{else}--> 
+						<img src="dzz/images/default/system/$targetdata[bz].png" width="100"> 
+						<!--{/if}-->
+						<h5 class="text-center" style="line-height:20px;margin-bottom:5px"><a href="javascript:;" title="$targetdata[name]">$targetdata[name]</a></h5>
+						</div>
+					</li>
+					</ul>
+				</div>
+				<div class="alert alert-warning alert-dismissible fade show" role="alert">
+					<h2>{lang board_message}</h5>{lang cloud_movetool_board_message_text1}
+					<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
 <iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
 <script type="text/javascript">
-	jQuery('.left-drager').leftDrager_layout();
 	var runurl = '$runurl';
 	var sizemoved = 0;
 	var totalsize = parseInt('$movesize');
@@ -175,5 +153,4 @@
 		return Math.max(bytes, 0).toFixed(1) + ['kB', 'MB', 'GB', 'TB', 'PB', 'EB'][i];
 	};
 </script> 
-<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
-<!--{template common/footer_simple}-->
+<!--{template lyear:footer_simple}-->

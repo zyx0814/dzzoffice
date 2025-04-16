@@ -15,7 +15,7 @@
     <!--{/if}-->
     <!--{if count($myorgs)}-->
     <!--{loop $myorgs $v}-->
-    <a class="weui-cell weui-cell_access document-data" href="javascript:;" data-hash="#file&gid={$v[orgid]}&fid={$v[fid]}">
+    <a class="weui-cell weui-cell_access document-data" href="javascript:;" data-hash="#file&gid={$v['orgid']}&fid={$v[fid]}">
         <div class="weui-cell__hd">
             <!--{if isset($v[icon])}-->
             <img src=" $v[icon]" class="weui-cell__recentimg"/>

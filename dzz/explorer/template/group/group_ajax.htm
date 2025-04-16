@@ -11,7 +11,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">×</span>
     </button>
-    <h4 class="modal-title">{lang select_group_member}</h4>
+    <h4 class="modal-title text-truncate">{lang select_group_member}</h4>
 </div>
 <form onsubmit="return chkadd(this);">
     <div class="modal-body group-top">
@@ -157,11 +157,11 @@
 			    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 			        <span class="dzz dzz-close "></span>
 			    </button>
-			    <h4 class="modal-title">{lang about}</h4>
+			    <h4 class="modal-title text-truncate">{lang about}</h4>
 			</div>	
             <form class="form-horizontal about-editstaus" onsubmit="return set_submit(this)" id="about-editstaus">
                 <input type="hidden" name="setsubmit" value="true"/>
-                <input type="hidden" name="gid" value="$group[orgid]"/>
+                <input type="hidden" name="gid" value="$group['orgid']"/>
                 <div class="modal-body">
                 <div class="about-block">
                     <div class="about-blockgroup clearfix">
@@ -273,7 +273,7 @@
                 <div class="modal-footer clearfix">
                     <div class="about-button">
                         <!--{if ($_G['adminid'] == 1) || ($group['type'] == 1 && $perm > 1)}-->
-                    	<div  class="btn-rdedanger pull-left" onclick="delete_group('{$group[orgid]}')"><span class="dzz dzz-delete"></span><span>{lang delete_group}</span></div>
+                    	<div  class="btn-rdedanger pull-left" onclick="delete_group('{$group['orgid']}')"><span class="dzz dzz-delete"></span><span>{lang delete_group}</span></div>
                         <!--{/if}-->
                         <button type="submit" class="btn btn-primary">{lang save}</button>
                         <button type="button" class="btn btn-default-outline about-cancel" id="about-cancel">{lang

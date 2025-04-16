@@ -25,12 +25,12 @@ $json = curlcloudappmarket($url,$post_data);
 $json = json_decode($json,true);
 $list=array();
 $total=0;
-if( $json["status"]==1){
+if($json["status"]==1){
 	$list = $json["data"]["list"];
 	$total = $json["data"]["total"];
 	$perpage = $json["data"]["perpage"]; 
 	$theurl = MOD_URL."&op=cloudappmarket"; 
-	$multi=multi($total, $perpage, $page, $theurl,'pull-right');
+	$multi=multi($total, $perpage, $page, $theurl,'justify-content-center');
 }
 //print_r($list);exit;
 $local_applist=DB::fetch_all("select * from %t where 1",array('app_market'));//C::tp_t("app_market")->select();

@@ -91,36 +91,38 @@
 				}
 				var template = '<div class="accordion">';
 				data.forEach(function(item) {
-					template += `<div class="accordion-item">`;
-					template += `<h2 class="accordion-header" id="Open-heading${item.id}">`;
-					template += `<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#Open-collapse${item.id}" aria-expanded="true" aria-controls="Open-collapse${item.id}">`;
-					template += `ID：${item.id}`;
-					template += `</button>`;
-					template += `</h2>`;
-					template += `<div id="Open-collapse${item.id}" class="accordion-collapse collapse show" aria-labelledby="Open-heading${item.id}">`;
-					template += `<div class="accordion-body">`;
-					<!--{if $_G['adminid']}-->template += `<p><strong>评论者:</strong> ${item.authorid}</p>`;<!--{/if}-->
-					template += `<p><strong>评论时间:</strong> ${item.dateline}</p>`;
+					template += '<div class="accordion-item">';
+					template += '<h2 class="accordion-header" id="Open-heading' + item.id + '">';
+					template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.id + '" aria-expanded="true" aria-controls="Open-collapse' + item.id + '">';
+					template += 'ID：' + item.id;
+					template += '</button>';
+					template += '</h2>';
+					template += '<div id="Open-collapse' + item.id + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.id + '">';
+					template += '<div class="accordion-body">';
+					<!--{if $_G['adminid']}-->
+					template += '<p><strong>评论者:</strong> ' + item.authorid + '</p>';
+					<!--{/if}-->
+					template += '<p><strong>评论时间:</strong> ' + item.dateline + '</p>';
 					<!--{if $_G['adminid']}-->
 					if (item.edituid) {
-						template += `<p><strong>{lang 编辑者}:</strong> ${item.edituid}</p>`;
+						template += '<p><strong>{lang 编辑者}:</strong> ' + item.edituid + '</p>';
 					}
 					if (item.edittime) {
-						template += `<p><strong>{lang 编辑时间}:</strong> ${item.edittime}</p>`;
+						template += '<p><strong>{lang 编辑时间}:</strong> ' + item.edittime + '</p>';
 					}
 					<!--{/if}-->
 					if (item.ip) {
-						template += `<p><strong>{lang IP}:</strong> ${item.ip}</p>`;
+						template += '<p><strong>{lang IP}:</strong> ' + item.ip + '</p>';
 					}
 					if (item.xtllq) {
-						template += `<p><strong>{lang Equipment information}:</strong> ${item.xtllq}</p>`;
+						template += '<p><strong>{lang Equipment information}:</strong> ' + item.xtllq + '</p>';
 					}
 					if (item.message) {
-						template += `<p><strong>评论内容:</strong> ${item.message}</p>`;
+						template += '<p><strong>评论内容:</strong> ' + item.message + '</p>';
 					}
-					template += `</div>`;
-					template += `</div>`;
-					template += `</div>`;
+					template += '</div>';
+					template += '</div>';
+					template += '</div>';
 				});
 				template += '</div>';
 				layer.alert(template, {
@@ -223,17 +225,32 @@
 	  });
 		function showDataTemplate(obj) {
 			var data = obj.data;
-			var template = `
-				<div>
-				<!--{if $_G['adminid']}-->${data.authorid ? `<p><strong>评论者:</strong> ${data.authorid}</p>` : ''}<!--{/if}-->
-				${data.dateline ? `<p><strong>评论时间:</strong>${data.dateline}</p>` : ''}
-				<!--{if $_G['adminid']}-->${data.edituid !== undefined ? `<p><strong>编辑者:</strong> ${data.edituid}</p>` : ''}
-				${data.edittime ? `<p><strong>编辑时间:</strong> ${data.edittime}</p>` : ''}<!--{/if}-->
-				${data.ip ? `<p><strong>IP:</strong> ${data.ip}</p>` : ''}
-				${data.xtllq ? `<p><strong>{lang Equipment information}:</strong> ${data.xtllq}</p>` : ''}
-				${data.message ? `<p><strong>评论内容:</strong> ${data.message}</p>` : ''}
-				</div>
-			`;
+			var template = '';
+			<!--{if $_G['adminid']}-->
+			if (data.authorid) {
+				template += '<p><strong>评论者:</strong> ' + data.authorid + '</p>';
+			}
+			<!--{/if}-->
+			if (data.dateline) {
+				template += '<p><strong>评论时间:</strong>' + data.dateline + '</p>';
+			}
+			<!--{if $_G['adminid']}-->
+			if (data.edituid) {
+				template += '<p><strong>编辑者:</strong> ' + data.edituid + '</p>';
+			}
+			if (data.edittime) {
+				template += '<p><strong>编辑时间:</strong>' + data.edittime + '</p>';
+			}
+			<!--{/if}-->
+			if (data.ip) {
+				template += '<p><strong>IP:</strong> ' + data.ip + '</p>';
+			}
+			if (data.xtllq) {
+				template += '<p><strong>{lang Equipment information}:</strong> ' + data.xtllq + '</p>';
+			}
+			if (data.message) {
+				template += '<p><strong>评论内容:</strong> ' + data.message + '</p>';
+			}
 	
 			layer.alert(JSON.stringify(data), {
 				title: '当前行评论详情：',

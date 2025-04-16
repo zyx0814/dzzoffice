@@ -23,7 +23,7 @@ if (!function_exists('sys_get_temp_dir')) {
     }
 }
 
-function getfileinfo($icoid)
+function getfileinfo($icoid,$sid=false)
 {
     if (preg_match('/^dzz:[gu]id_\d+:.+?/i', $icoid)) {
         $dir = dirname($icoid) . '/';
@@ -35,9 +35,9 @@ function getfileinfo($icoid)
         if (!$rid = DB::result_first("select rid from %t where pfid = %d and name = %s", array('resources', $pfid, $filename))) {
             return false;
         }
-        return C::t('resources')->fetch_by_rid($rid);
+        return C::t('resources')->fetch_by_rid($rid,'',false,$sid);
     } elseif (preg_match('/\w{32}/i', $icoid)) {
-        return C::t('resources')->fetch_by_rid($icoid);
+        return C::t('resources')->fetch_by_rid($icoid,'',false,$sid);
     }
 }
 
@@ -892,9 +892,6 @@ function template($file, $tpldir = '', $templateNotMust = false)
 		$tpldir = $templateid;
         $file = $file;
 	}
-    if (!$tpldir && isset($_G['setting']['template'])) {
-        $tpldir = $_G['setting']['template'];
-    }
     $file .= !empty($_G['inajax']) && ($file == 'common/header' || $file == 'common/footer') ? '_ajax' : '';
 
     $tplfile = $file;
@@ -1030,7 +1027,6 @@ function dmktime($date) {
 function dnumber($number) {
 	return abs((int)$number) > 10000 ? '<span title="'.$number.'">'.intval($number / 10000).lang('10k').'</span>' : $number;
 }
-
 function savecache($cachename, $data)
 {
     C::t('syscache')->insert($cachename, $data);
@@ -1338,23 +1334,21 @@ function debug($var = null, $vardump = false)
     exit();
 }
 
-function debuginfo()
-{
-    global $_G;
-    if (getglobal('config/debug')) {
-        $db = &DB::object();
-        $_G['debuginfo'] = array(
-            'time' => number_format((microtime(true) - $_G['starttime']), 6),
-            'queries' => $db->querynum,
-            'memory' => ucwords(C::memory()->type)
-        );
-        if ($db->slaveid) {
-            $_G['debuginfo']['queries'] = 'Total ' . $db->querynum . ', Slave ' . $db->slavequery;
-        }
-        return TRUE;
-    } else {
-        return FALSE;
-    }
+function debuginfo() {
+	global $_G;
+	if (getglobal('config/debug')) {
+		$_G['debuginfo'] = array(
+		    'time' => number_format((microtime(true) - $_G['starttime']), 6),
+		    'queries' => DB::object()->querynum,
+		    'memory' => ucwords(C::memory()->type)
+		    );
+		if(DB::object()->slaveid) {
+			$_G['debuginfo']['queries'] = 'Total '.DB::object()->querynum.', Slave '.DB::object()->slavequery;
+		}
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
 
 function check_seccode($value, $idhash)
@@ -1450,11 +1444,9 @@ function dmkdir($dir, $mode = 0777, $makeindex = TRUE)
 function dreferer($default = '')
 {
     global $_G;
-
     $default = '';
     $_G['referer'] = !empty($_GET['referer']) ? $_GET['referer'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
     $_G['referer'] = substr($_G['referer'], -1) == '?' ? substr($_G['referer'], 0, -1) : $_G['referer'];
-
     if (strpos($_G['referer'], 'user.php?mod=login&op=logging&action=login')) {
         $_G['referer'] = $default;
     }
@@ -1926,10 +1918,8 @@ function getThames()
     if (empty($arr['modules']['taskbar'])) {
         $arr['modules']['taskbar'] = 'default';
     }
-    if (!$arr['backimg']) $arr['backimg'] = 'dzz/styles/thame/' . $arr['folder'] . '/back.jpg';
     $data['system'] = $arr;
     $data['custom'] = array(
-        'custom_backimg' => !empty($thames['custom_backimg']) ? $thames['custom_backimg'] : '',
         'custom_url' => !empty($thames['custom_url']) ? $thames['custom_url'] : '',
         'custom_color' => !empty($thames['custom_color']) ? $thames['custom_color'] : '',
         'custom_btype' => !empty($thames['custom_btype']) ? $thames['custom_btype'] : '',
@@ -1939,7 +1929,6 @@ function getThames()
     $return['data'] = $data;
     $return['thame'] = array(
         'folder' => $arr['folder'],
-        'backimg' => !empty($thames['custom_backimg']) ? $thames['custom_backimg'] : $arr['backimg'],
         'color' => !empty($arr['enable_color']) ? (!empty($thames['custom_color']) ? $thames['custom_color'] : $arr['color']) : '',
         'modules' => $arr['modules'],
     );
@@ -2009,7 +1998,9 @@ function SpaceSize($size, $gid=0, $isupdate = 0, $uid=0)
 
         $spacearr['maxspacesize'] = C::t('organization')->get_usespace_size_by_orgid($gid);
     } else {
-        if (!$space) {
+        if ($uid) {
+            $space = dzzgetspace($uid);
+        } elseif (!$space) {
             $space = dzzgetspace($uid);
         } else {
             $space['usesize'] = DB::result_first("select usesize from %t where uid=%d", array('user_field', $uid));
@@ -3463,7 +3454,7 @@ function dzz_userconfig_init()
         } else {
             $icoarr = array(
                 'uid' => $_G['uid'],
-                'username' => $_G['username'],
+                'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
                 'oid' => $appid,
                 'name' => '',
                 'type' => 'app',

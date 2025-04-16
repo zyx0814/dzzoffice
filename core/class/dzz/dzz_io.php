@@ -10,12 +10,9 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
-
-
-
 class dzz_io
 {
-	protected function initIO($path){
+	protected static function initIO($path){
 		$path=self::clean($path);
 		$bzarr=explode(':',$path);
 		$allowbz=C::t('connect')->fetch_all_bz();//array('baiduPCS','ALIOSS','dzz','JSS','disk');
@@ -37,7 +34,7 @@ class dzz_io
 
 		return new $classname($path);
 	}
-	function MoveToSpace($path,$attach,$ondup='overwrite'){
+	public static function MoveToSpace($path,$attach,$ondup='overwrite'){
 		$path=self::clean($path);
 		if($io=self::initIO($path)){
 			return $io->MoveToSpace($path,$attach,$ondup);
@@ -45,26 +42,26 @@ class dzz_io
 			return false;
 		}
 	}
-	function authorize($bz,$refer=''){
+	public static function authorize($bz,$refer=''){
 		if($io=self::initIO($bz)){
 			$io->authorize($refer);
 		}
 	}
-	function getQuota($bz){
+	public static function getQuota($bz){
 		if($io=self::initIO($bz)){
 			return $io->getQuota($bz);
 		}else{
 			return false;
 		}
 	}
-	function chmod($path,$chmod,$son=0){
+	public static function chmod($path,$chmod,$son=0){
 		if($io=self::initIO($path)){
 			return $io->chmod($path,$chmod,$son);
 		}else{
 			return false;
 		}
 	}
-	function parsePath($path){
+	public static function parsePath($path){
 		$path=self::clean($path);
 		if($io=self::initIO($path)){
 			return $io->parsePath($path);
@@ -72,7 +69,7 @@ class dzz_io
 			return false;
 		}
 	}
-	function output_thumb($file,$mine='image/JPEG'){//根据文件地址，输出图像流
+	public static function output_thumb($file,$mine='image/JPEG'){//根据文件地址，输出图像流
 		global $_G;
 		$last_modified_time = filemtime($file);
 		if($last_modified_time){
@@ -97,14 +94,14 @@ class dzz_io
 		exit();
 	}
 	//获取缩略图
-	function getThumb($path,$width,$height,$original,$returnurl=false,$thumbtype = 1){
+	public static function getThumb($path,$width,$height,$original,$returnurl=false,$thumbtype = 1){
 		$path=self::clean($path);
 		if($io=self::initIO($path)) return $io->getThumb($path,$width,$height,$original,$returnurl,$thumbtype);
 	}
 	/*
 	 *通过icosdata获取folderdata数据	
 	*/
-	function getFolderByIcosdata($icosdata){ 
+	public static function getFolderByIcosdata($icosdata){ 
 		if($io=self::initIO($icosdata['path']))	return $io->getFolderByIcosdata($icosdata);
 		else return false;
 	}
@@ -112,13 +109,13 @@ class dzz_io
 	//$path: 路径
 	//$force==1时不使用api的缓存数据，强制重新获取api数据；
 	//$bz==''是表示获取的是本地；此时path为icoid；
-	function getMeta($path,$force=0){
+	public static function getMeta($path,$force=0){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getMeta($path,$force);
 		else return false;
 	}
 	//重命名文件
-	function rename($path,$newname){ 
+	public static function rename($path,$newname){ 
 		$path=self::clean($path);
 		$newname=self::name_filter($newname);
 		if($io=self::initIO($path)){
@@ -131,7 +128,7 @@ class dzz_io
 	
 	
 	//根据路径获取目录树的数据；
-	function getFolderDatasByPath($path){ 
+	public static function getFolderDatasByPath($path){ 
 		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getFolderDatasByPath($path);
 		else return false;
@@ -140,7 +137,7 @@ class dzz_io
 	
 	//获取文件流；
 	//$path: 路径
-	public function getStream($path,$fop=0){
+	public static function getStream($path,$fop=0){
 		$path=self::clean($path);
 		$io=self::initIO($path);
 		if($io)	return $io->getStream($path,$fop);
@@ -148,7 +145,7 @@ class dzz_io
 	}
 	//获取文件地址；
 	//$path: 路径
-	function getFileUri($path,$fop=0){ 
+	public static function getFileUri($path,$fop=0){ 
 		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getFileUri($path,$fop);
 		else return $path;
@@ -163,7 +160,7 @@ class dzz_io
 	 * @param string $force 读取缓存，大于0：忽略缓存，直接调用api数据，常用于强制刷新时。
 	 * @return icosdatas
 	 */
-	function listFiles($path,$by='time',$order='DESC',$limit='',$force=0){  
+	public static function listFiles($path,$by='time',$order='DESC',$limit='',$force=0){  
 		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->listFiles($path,$by,$order,$limit,$force);
 		else return false;
@@ -175,7 +172,7 @@ class dzz_io
 	//$tbz:目标api；
 	//返回：
 	//$icosdata数组；
-	function CopyTo($opath,$path,$iscopy=0,$force=0){
+	public static function CopyTo($opath,$path,$iscopy=0,$force=0){
 		$path=self::clean($path);
 		$opath=self::clean($opath);
 		if($io=self::initIO($opath)) return $io->CopyTo($opath,$path,$iscopy,$force);
@@ -188,7 +185,7 @@ class dzz_io
 	 * @param string $path 目标位置（可能是同一api内或跨api，这两种情况分开处理）
 	 * @return icosdatas
 	 */
-	public function DeleteByData($data,$force = false){
+	public static function DeleteByData($data,$force = false){
 		$havesubitem=0;
 		if(isset($data['contents'])){
 			foreach($data['contents'] as $key => $value){
@@ -215,7 +212,7 @@ class dzz_io
 	//添加目录
 	//$fname：目录名称;
 	//$path：目录位置路径，如果是本地，$path 为pfid
-	function CreateFolder($path,$fname,$perm=0,$params=array(),$ondup='newcopy',$force=false){
+	public static function CreateFolder($path,$fname,$perm=0,$params=array(),$ondup='newcopy',$force=false){
 		$path=self::clean($path);//11
 		$fname=self::name_filter($fname);
 		if($io=self::initIO($path))	return $io->CreateFolder($path,$fname,$perm,$params,$ondup,$force);
@@ -224,7 +221,7 @@ class dzz_io
 	//添加多层目录
 	//$fid：父级目录id;
 	//$path：目录位置路径，如aaa/bbb/ccc
-	function CreateFolderByPath($path,$fid,$bz='dzz',$params=array()){
+	public static function CreateFolderByPath($path,$fid,$bz='dzz',$params=array()){
 		$path=self::clean($path);
 		if($io=self::initIO($bz))	{
 			return $io->CreateFolderByPath($path,$fid,$params);
@@ -232,7 +229,7 @@ class dzz_io
 		else return false;
 	}
 	/*将文件缓存到本地,并且返回本地的访问地址*/
-	function cacheFile($data){
+	public static function cacheFile($data){
 		global $_G;
 		$subdir = $subdir1 = $subdir2 = '';
 		$subdir1 = date('Ym');
@@ -253,7 +250,7 @@ class dzz_io
 	//获取文件数据
 	//$data：文件的信息数组 
 	//返回我文件data；
-	function getFileContent($path){
+	public static function getFileContent($path){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	return $io->getFileContent($path);
 		else return false;
@@ -261,7 +258,7 @@ class dzz_io
 	//覆盖文件内容
 	//$data：文件的信息数组 
 	//返回我文件data；
-	function setFileContent($path,$data,$force=false,$nocover = true){
+	public static function setFileContent($path,$data,$force=false,$nocover = true){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	{
 		    if($data = $io->setFileContent($path,$data,$force,$nocover)){
@@ -278,7 +275,7 @@ class dzz_io
 	
 	//分片上传文件；
 	//$path: 路径
-	function multiUpload($file,$path,$filename,$attach=array(),$ondup="newcopy"){
+	public static function multiUpload($file,$path,$filename,$attach=array(),$ondup="newcopy"){
 		$path=self::clean($path);
 		$filename=self::name_filter($filename);
 		if($io=self::initIO($path))	return $io->multiUpload($file,$path,$filename,$attach,$ondup);
@@ -289,7 +286,7 @@ class dzz_io
 	//$fileContent：源文件数据;
 	//$container：目标位置;
 	//$bz：api;
-	function upload($fileContent,$path,$filename){
+	public static function upload($fileContent,$path,$filename){
 		$path=self::clean($path);
 		$filename=self::name_filter($filename);
 		if($io=self::initIO($path)){
@@ -300,23 +297,23 @@ class dzz_io
 		else return false;
 	}
 	
-	function upload_by_content($fileContent,$path,$filename,$partinfo=array()){
+	public static function upload_by_content($fileContent,$path,$filename,$partinfo=array(),$force=false){
 		$path=self::clean($path);
 		$filename=self::name_filter($filename);
 		if($io=self::initIO($path)){
-            $return =  $io->upload_by_content($fileContent,$path,$filename,$partinfo);
+            $return =  $io->upload_by_content($fileContent,$path,$filename,$partinfo,$force);
             Hook::listen('createafter_addindex',$return);
             return $return;
 		}
 		else return false;
 	}
 	
-	public function uploadStream($file,$name,$path,$relativePath='',$content_range=''){
+	public static function uploadStream($file,$name,$path,$relativePath='',$content_range='',$force=false){
 	  	$path=self::clean(urldecode($path));
 		$name=self::name_filter(urldecode($name));
 	  	$relativePath=self::clean(urldecode($relativePath));
 	 	if($io=self::initIO($path)) {
-            $return=$io->uploadStream($file,$name,$path,$relativePath,$content_range);
+            $return=$io->uploadStream($file,$name,$path,$relativePath,$content_range,$force);
             if (isset($return['icoarr']) && is_array($return['icoarr']) && count($return['icoarr']) > 0) {
 				Hook::listen('createafter_addindex', $return['icoarr'][0]);
 			}
@@ -325,7 +322,7 @@ class dzz_io
 	 	else return false;
   }
 	
-	function Delete($path,$finaldelete=false,$force=false){
+  public static function Delete($path,$finaldelete=false,$force=false){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	{
 			$return =  $io->Delete($path,$finaldelete,$force);
@@ -335,7 +332,7 @@ class dzz_io
 		else return false;
 	}
 	//恢复文件
-	function Recover($path,$combine=true,$force=false){
+	public static function Recover($path,$combine=true,$force=false){
 		$path=self::clean($path);
 		if($io=self::initIO($path))	{
 			return $io->Recover($path,$combine,$force);
@@ -344,22 +341,21 @@ class dzz_io
 	}
 	
  //获取不重复的目录名称
-  public function getFolderName($fname,$path){
+  public static function getFolderName($fname,$path){
 	  $path=self::clean($path);
 	  $fname=self::name_filter($fname);
 	  if($io=self::initIO($path))	  return $io->getFolderName($fname,$path);
 	  else return false;
   }
-  
  
-  public function download($paths,$filename='',$checkperm = true){
-  		 $paths = (array)$paths;
-		 $paths=self::clean($paths);
-		 if($io=self::initIO($paths[0]))  $io->download($paths,$filename,$checkperm);
-		 else return false;
-	 }
+  public static function download($paths,$filename='',$checkperm = true){
+	$paths = (array)$paths;
+	$paths=self::clean($paths);
+	if($io=self::initIO($paths[0]))  $io->download($paths,$filename,$checkperm);
+	else return false;
+}
 	 
-	public function getCloud($bz){
+	public static function getCloud($bz){
 		$bzarr=explode(':',$bz);
 		$cloud=DB::fetch_first("select * from ".DB::table('connect')." where bz='{$bzarr[0]}'");
 		if($cloud['type']=='pan'){
@@ -379,9 +375,8 @@ class dzz_io
 		$root['cloudtype']=$cloud['type'];
 		return $root;
 	}
-	
 
-	 public function clean($str) {//清除路径
+	 public static function clean($str) {//清除路径
 		if(is_array($str)){
 			foreach($str as $key=> $value){
 				$str[$key]=self::clean_path(str_replace(array( "\n", "\r", '../'), '', $value));
@@ -392,7 +387,7 @@ class dzz_io
 
 		return $str;
 	}
-	private function clean_path($str){
+	private static function clean_path($str){
 		if(preg_match("/\.\.\//",$str)){
 			$str=str_replace('../','',$str);
 			return self::clean_path($str);
@@ -400,10 +395,10 @@ class dzz_io
 			return $str;
 		}
 	}
-	public function name_filter($name){
+	public static function name_filter($name){
 		return str_replace(array('/','\\',':','*','?','<','>','|','"',"\n"),'',$name);
 	}
-	public function saveToAttachment($file_path,$filename,$tospace=1,$width=256,$height=256) {
+	public static function saveToAttachment($file_path,$filename,$tospace=1,$width=256,$height=256) {
         $md5=md5_file($file_path);
 		$filesize=filesize($file_path);
 		if($md5 && $attach=DB::fetch_first("select * from %t where md5=%s and filesize=%d",array('attachment',$md5,$filesize))){
@@ -473,22 +468,22 @@ class dzz_io
 			}
 		}
     }
-	public function getPath($filename,$dir='dzz'){
-			$pathinfo = pathinfo($filename);
-			$ext = $pathinfo['extension']?($pathinfo['extension']):'';
-			if($ext && in_array(strtolower($ext) ,getglobal('setting/unRunExts'))){
-				$ext='dzz';
-			}
-		    $subdir = $subdir1 = $subdir2 = '';
-			$subdir1 = date('Ym');
-			$subdir2 = date('d');
-			$subdir = $subdir1.'/'.$subdir2.'/';
-			$target1=$dir.'/'.$subdir.'index.html';
-			$target=$dir.'/'.$subdir;
-			$target_attach=getglobal('setting/attachdir').$target1;
-			$targetpath = dirname($target_attach);
-			dmkdir($targetpath);
-			return $target.date('His').''.strtolower(random(16)).'.'.$ext;
-	 }
+	public static function getPath($filename,$dir='dzz'){
+		$pathinfo = pathinfo($filename);
+		$ext = $pathinfo['extension']?($pathinfo['extension']):'';
+		if($ext && in_array(strtolower($ext) ,getglobal('setting/unRunExts'))){
+			$ext='dzz';
+		}
+		$subdir = $subdir1 = $subdir2 = '';
+		$subdir1 = date('Ym');
+		$subdir2 = date('d');
+		$subdir = $subdir1.'/'.$subdir2.'/';
+		$target1=$dir.'/'.$subdir.'index.html';
+		$target=$dir.'/'.$subdir;
+		$target_attach=getglobal('setting/attachdir').$target1;
+		$targetpath = dirname($target_attach);
+		dmkdir($targetpath);
+		return $target.date('His').''.strtolower(random(16)).'.'.$ext;
+	}
 }
 ?>

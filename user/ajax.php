@@ -11,7 +11,6 @@ if (!defined('IN_DZZ')) {
 }
 define('NOROBOT', TRUE);
 if ($_GET['action'] == 'checkusername') {
-
 	$username = isset($_GET['username']) ? trim($_GET['username']) : '';
 	$usernamelen = dstrlen($username);
 	if ($usernamelen < 3) {

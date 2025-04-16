@@ -65,7 +65,11 @@ if(!submitcheck('regsubmit', 0, $seccodecheck)) {
     $navtitle = $setting['reglinkname'];
 
     $dreferer = dreferer();
-    include template('register');
+    if ($setting['loginset']['template'] == 3){
+        include template('register3');
+    }else{
+        include template('register');
+    }
     exit();
 }else{
 	

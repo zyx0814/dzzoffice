@@ -1,0 +1,29 @@
+<ul class="nav-drawer nav-stacked nav-pills">
+	<!--{if $_G['adminid']==1 || $_G['member']['grid']==5}-->
+	<li class="nav-item">
+		<a class="nav-link <!--{if $op=='verify' && !$vid}-->active<!--{elseif $op=='profileset' || $op=='verifyset' || $op=='verify'}--><!--{else}-->active<!--{/if}-->" href="{MOD_URL}&op=verify"><i class="mdi mdi-account-search"></i><span>{lang members_verify_profile}</span></a>
+	</li>
+	<!--{/if}-->
+	<!--{if $_G['adminid']==1}-->
+	<li class="nav-item">
+		<a class="nav-link <!--{if $op=='profileset' }-->active<!--{/if}-->" href="{MOD_URL}&op=profileset"><i class="mdi mdi-account-wrench"></i><span>{lang data_set}</span></a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link <!--{if $op=='verifyset' }-->active<!--{/if}-->" href="{MOD_URL}&op=verifyset"><i class="mdi mdi-account-reactivate"></i><span>{lang members_verify}</span></a>
+	</li>
+	<!--{/if}-->
+
+	<!--{loop $_G['setting']['verify'] $key $value}-->
+	<!--{if $value[available]}-->
+	<!--{if $key==1 && ($_G['adminid']==1 || $_G['member']['grid']==4)}-->
+	<li class="nav-item">
+		<a class="nav-link <!--{if $op=='verify' && $vid==$key}-->active<!--{/if}-->" href="{MOD_URL}&op=verify&vid=$key"><i class="mdi mdi-account-plus-outline"></i><span>$value[title]</span></a>
+	</li>
+	<!--{elseif $_G['adminid']==1}-->
+	<li class="nav-item">
+		<a class="nav-link <!--{if $op=='verify' && $vid==$key}-->active<!--{/if}-->" href="{MOD_URL}&op=verify&vid=$key"><i class="mdi mdi-account-plus-outline"></i><span>$value[title]</span></a>
+	</li>
+	<!--{/if}-->
+	<!--{/if}-->
+	<!--{/loop}-->
+</ul>

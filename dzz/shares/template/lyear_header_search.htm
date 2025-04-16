@@ -1,0 +1,81 @@
+<div class="header-toggle">
+    <div class="new-buildMenu">
+        <div class="dropdown newMenu">
+            <button type="button" class="btn btn-cricular  dropdown-toggle" id="exampleColorDropdown2" data-toggle="dropdown">新建/上传</button>
+            <ul class="dropdown-menu dropdown-menu-primary" aria-labelledby="exampleGroupDrop1" role="menu">
+                <li role="presentation" class="js-newfolder folderPermMust">
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newFolder')" role="menuitem">
+                        <span class="mdi mdi-folder filee-icon filee-folder"></span>
+                        <span class="file-text">{lang default_folder_name}</span></a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li class="yunfile-upload js-upload-file"><a href="javascript:;" class="dropdown-item">
+                    <span class="mdi mdi-upload filee-icon filee-upload"></span>
+                    <span class="file-text">{lang uploadfile}</span>
+                    <input type="file" name="files[]" id="wangpan-upload-file" class="wangpan-upload-file" multiple="" data-uploadtype="file"></a>
+                </li>
+                <li class="yunfile-upload js-upload-folder"><a href="javascript:;" class="dropdown-item">
+                    <span class="mdi mdi-folder filee-icon filee-folder"></span>
+                    <span class="file-text">{lang uploadfolder}</span>
+                    <input type="file" name="files[]" multiple="" webkitdirectory="" value="" id="wangpan-upload-folder" class="wangpan-upload-file" data-uploadtype="folder"></a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li role="presentation">
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newLink')" role="menuitem">
+                        <span class="mdi mdi-web filee-icon filee-language"></span>
+                        <span class="file-text">{lang newlink}</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newTxt')" role="menuitem">
+                        <span class="mdi mdi-file filee-icon filee-file"></span>
+                        <span class="file-text">{lang extname_txt}</span>
+                    </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li role="presentation">
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newDoc')" role="menuitem">
+                        <span class="filee-icon mdi mdi-file-word filee-file-text"></span>
+                        <span class="file-text">{lang word_document}</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newExcel')" role="menuitem">
+                        <span class="mdi mdi-file-excel filee-icon filee-file-excel"></span>
+                        <span class="file-text">{lang excel_document}</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newPowerPoint')" role="menuitem">
+                        <span class="mdi mdi-file-compare filee-icon filee-file-ppt"></span>
+                        <span class="file-text">{lang ppt_document}</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newpdf')" role="menuitem">
+                        <span class="mdi mdi-file-pdf-box filee-icon filee-file-pdf"></span>
+                        <span class="file-text">{lang pdf_document}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+	<ul class="sizeMenu">
+        <li class="listchange">
+            <a href="javascript:;" type="button" class="btn allsave single" onclick="allsave()" ><i class="mdi mdi-content-save" data-toggle="tooltip" data-placement="bottom" title="{lang save}"></i></a>
+        </li>
+        <li class="listchange">
+            <a href="javascript:;" type="button" class="btn download downAll single" onclick="_filemanage.downAll('')" ><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i></a>
+        </li>
+        <li class="listchange border-end">
+        	<a class="icons-thumbnail dcolor" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="<!--{if $_G['ismobile']}-->2<!--{else}-->4<!--{/if}-->" >
+        		<i class="mdi mdi-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i>
+        	</a>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+	$(function () {
+		  $('[data-toggle="tooltip"]').tooltip()
+		})
+</script>

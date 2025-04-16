@@ -1,29 +1,69 @@
 <!DOCTYPE html>
-<html dir="ltr" mozdisallowselectionprint moznomarginboxes>
+<html dir="ltr" mozdisallowselectionprint>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="google" content="notranslate">
-    <title>PDF.js viewer</title>
-	<base href="$_G['siteurl']">
-    <link rel="stylesheet" href="./dzz/pdf/web/viewer.css"/>
-    <script src="./dzz/pdf/web/compatibility.js?{VERHASH}"></script>
-
-<!-- This snippet is used in production (included from viewer.html) -->
-<link rel="resource" type="application/l10n" href="./dzz/pdf/web/locale/locale.properties?{VERHASH}"/>
-<script src="./dzz/pdf/web/l10n.js?{VERHASH}"></script>
-<script src="./dzz/pdf/build/pdf.js?{VERHASH}"></script>
-<script src="./dzz/pdf/web/debugger.js?{VERHASH}"></script>
-<script src="./dzz/pdf/web/viewer.js?{VERHASH}"></script>
-<script>
-    var _fileurl='$file';
-    var ALLOWPRINT=parseInt('$perm_print');//允许打印
-	var ALLOWDOWNLOAD=parseInt('$perm_download');//允许下载
-	
-</script>
-</head>
-
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+		<meta name="google" content="notranslate">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><!--{if !empty($navtitle)}-->$navtitle - <!--{/if}-->$_G[setting][sitename]</title>
+    <meta name="keywords" content="{if !empty($_G['setting']['metakeywords'])}{echo htmlspecialchars($_G['setting']['metakeywords'])}{/if}" />
+    <meta name="description" content="{if !empty($_G['setting']['metadescription'])}{echo htmlspecialchars($_G['setting']['metadescription'])} {/if}" />
+    <meta name="generator" content="DzzOffice" />
+    <meta name="author" content="DzzOffice" />
+    <meta name="copyright" content="2012-{eval echo dgmdate(TIMESTAMP,'Y-m-d');} www.dzzoffice.com" />
+    <link rel="stylesheet" href="{MOD_PATH}/web/viewer.css">
+    <script type="text/javascript" src="static/jquery/jquery.min.js?{VERHASH}"></script>
+    <link rel="resource" type="application/l10n" href="{MOD_PATH}/web/locale/locale.properties">
+    <script type="text/javascript">
+			var fileName 	= "{$meta['name']}";
+      var sitename= '$_G[setting][sitename]';
+			var pdfOptions 	= {
+				Download:"{$perm_print}",
+				defaultUrl:"{$meta['url']}",
+				workerSrc:'{MOD_PATH}/build/pdf.worker.js',
+				cMapPacked : true,
+				isEvalSupported:false,
+				imageResourcesPath : '{MOD_PATH}/web/images/',
+				cMapUrl:'{MOD_PATH}/web/cmaps/',
+			};
+      var pdfLoaded = function(){
+        var isLoad = false;
+        PDFViewerApplication.eventBus.on('pagerender',function(){
+          if(isLoad) return;
+          isLoad = true;
+        });	
+      }
+      $(document).ready(function (){
+        $('.print,.download').hide();
+        var checkTimer = setInterval(function(){
+          if(!window.PDFViewerApplication || !PDFViewerApplication.eventBus) return;
+          clearInterval(checkTimer);
+          pdfLoaded();
+          setTimeout(function(){
+            if(pdfOptions.Download == '1'){
+              $('.print,.download').show();
+              return;
+            }
+            PDFViewerApplication.eventBus._listeners['print'] = [];
+            PDFViewerApplication.eventBus._listeners['afterprint'] = [];
+            PDFViewerApplication.eventBus._listeners['beforeprint'] = [];
+            PDFViewerApplication.supportsPrinting = false;
+            PDFViewerApplication.download = function(){};
+            window.print = function(){};
+            $('.print,.download').remove();
+          },500);
+        },50);
+      });
+		</script>
+    <script src="./{MOD_PATH}/build/pdf.js"></script>
+    <script src="{MOD_PATH}/web/viewer.js"></script>
+    <style>
+      html,body {
+        overflow: hidden;
+      }
+    </style>
+    <!--{hook header_tpl}-->
+  </head>
   <body tabindex="1" class="loadingInProgress">
     <div id="outerContainer">
 
@@ -39,6 +79,9 @@
             <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
                <span data-l10n-id="attachments_label">Attachments</span>
             </button>
+            <button id="viewLayers" class="toolbarButton" title="Show Layers (double-click to reset all layers to the default state)" tabindex="5" data-l10n-id="layers">
+               <span data-l10n-id="layers_label">Layers</span>
+            </button>
           </div>
         </div>
         <div id="sidebarContent">
@@ -47,6 +90,8 @@
           <div id="outlineView" class="hidden">
           </div>
           <div id="attachmentsView" class="hidden">
+          </div>
+          <div id="layersView" class="hidden">
           </div>
         </div>
         <div id="sidebarResizer" class="hidden"></div>
@@ -185,7 +230,7 @@
                     <span data-l10n-id="next_label">Next</span>
                   </button>
                 </div>
-                <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page">
+                <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
                 <span id="numPages" class="toolbarLabel"></span>
               </div>
               <div id="toolbarViewerRight">
@@ -193,15 +238,15 @@
                   <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
                 </button>
 
-                <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file" style="display:none">
+                <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
                   <span data-l10n-id="open_file_label">Open</span>
                 </button>
-				
-                <button id="print" class="toolbarButton print hiddenMediumView <!--{if !$perm_print}-->hidden<!--{/if}-->" title="Print" tabindex="33" data-l10n-id="print">
+
+                <button id="print" class="toolbarButton print hiddenMediumView" title="Print" tabindex="33" data-l10n-id="print">
                   <span data-l10n-id="print_label">Print</span>
                 </button>
-				
-                <button id="download" class="toolbarButton download hiddenMediumView <!--{if !$perm_download}-->hidden<!--{/if}-->" title="Download" tabindex="34" data-l10n-id="download">
+
+                <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download">
                   <span data-l10n-id="download_label">Download</span>
                 </button>
                 <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
@@ -283,7 +328,7 @@
             </button>
           </div>
           <div class="clearBoth"></div>
-          <textarea id="errorMoreInfo" hidden='true' readonly></textarea>
+          <textarea id="errorMoreInfo" hidden='true' readonly="readonly"></textarea>
         </div>
       </div> <!-- mainContainer -->
 
@@ -372,7 +417,5 @@
 
     </div> <!-- outerContainer -->
     <div id="printContainer"></div>
-   
   </body>
 </html>
-

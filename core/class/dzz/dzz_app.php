@@ -99,11 +99,7 @@ class dzz_app extends dzz_base{
     private function _init_env() {
 
         error_reporting(E_ERROR);
-        /*if(PHP_VERSION < '5.3.0') {
-            set_magic_quotes_runtime(0);
-        }*/
 
-        define('MAGIC_QUOTES_GPC', function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc());
         define('ICONV_ENABLE', function_exists('iconv'));
         define('MB_ENABLE', function_exists('mb_convert_encoding'));
         define('EXT_OBGZIP', function_exists('ob_gzhandler'));
@@ -127,7 +123,6 @@ class dzz_app extends dzz_base{
         }
 
         define('IS_ROBOT', checkrobot());
-
 
         global $_G;
         $_G = array(
@@ -180,7 +175,6 @@ class dzz_app extends dzz_base{
         }
         $_G['isHTTPS'] = $this->is_HTTPS();//($_SERVER['HTTPS'] && strtolower($_SERVER['HTTPS']) != 'off') ? true : false;
         $_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
-
         $url = parse_url($_G['siteurl']);
         $_G['siteroot'] = isset($url['path']) ? $url['path'] : '';
         $_G['siteport'] = empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443' ? '' : ':'.$_SERVER['SERVER_PORT'];
@@ -236,12 +230,6 @@ class dzz_app extends dzz_base{
     private function _init_input() {
         if (isset($_GET['GLOBALS']) ||isset($_POST['GLOBALS']) ||  isset($_COOKIE['GLOBALS']) || isset($_FILES['GLOBALS'])) {
             system_error('request_tainting');
-        }
-
-        if(MAGIC_QUOTES_GPC) {
-            $_GET = dstripslashes($_GET);
-            $_POST = dstripslashes($_POST);
-            $_COOKIE = dstripslashes($_COOKIE);
         }
 
         $prelength = strlen($this->config['cookie']['cookiepre']);

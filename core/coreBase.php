@@ -18,7 +18,6 @@ define('DIVIDE','op');//路由操作键名
 define('DZZ_CORE_DEBUG', false);
 
 define('DZZ_TABLE_EXTENDABLE', false);
-
 global $_G,$_config;
 
 $_config = array();

@@ -41,7 +41,7 @@ $profiles['usergroup']=array('title'=>lang('usergroup'),'value'=>$usergroup['gro
 $department='';
 foreach(C::t('organization_user')->fetch_orgids_by_uid($uid) as $orgid){
     $orgpath=getPathByOrgid($orgid);
-    $department.='<span class="label label-primary badge rounded-pill bg-primary me-2">'.implode('-',($orgpath)).'</span>';
+    $department.='<span class="label label-primary badge rounded-pill bg-primary me-2 fs-7">'.implode('-',($orgpath)).'</span>';
 }
 if(empty($department)) $department=lang('not_join_agency_department');
 $profiles['department']=array('title'=>lang('category_department'),'value'=>$department);

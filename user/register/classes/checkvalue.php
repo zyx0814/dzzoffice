@@ -41,7 +41,7 @@ class Checkvalue{
         
         //验证邮箱
         $params['email'] = strtolower(trim($params['email']));
-        checkemail($params['email'],$type); 
+        checkemail($params['email'],$type);
 
         //验证密码长度
         if($setting['pwlength']) {

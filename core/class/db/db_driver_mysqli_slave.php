@@ -67,6 +67,9 @@ class db_driver_mysqli_slave extends db_driver_mysqli
 	}
 
 	protected function _master_connect() {
+		if ($this->serverid === null) {
+			$this->serverid = 1;
+		}
 		if(!$this->link[$this->serverid]) {
 			$this->connect($this->serverid);
 		}

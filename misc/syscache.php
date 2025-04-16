@@ -16,5 +16,5 @@ if(!defined('IN_DZZ')) {
 
 require_once libfile('function/cache');
 updatecache();
-
+cleartemplatecache();
 ?>

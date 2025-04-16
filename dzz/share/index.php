@@ -55,11 +55,12 @@ if ($do == 'getinfo') {
   $id = $start + 1;
   $data = array();
   foreach ($list as $value) {
+    $sharelink=C::t('shorturl')->getShortUrl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($value['id']));
       $data[] = [
         "id" => $id++,
         "sid" => $value['id'],
         "username" => '<a href="user.php?uid='.$value['uid'].'" target="_blank">'.$value['username'].'</a>',
-        "title" => $value['title'],
+        "title" => '<a href="'.$sharelink.'" target="_blank">'.$value['title'].'</a>',
         "status" => $sharestatus[$value['status']],
         "type" => getFileTypeName($value['type'], $value['ext']),
         "endtime" => $value['endtime'] ? dgmdate($value['endtime'], 'Y-m-d') : '',
@@ -67,7 +68,7 @@ if ($do == 'getinfo') {
         "dateline" => $value['dateline'] ? dgmdate($value['dateline']) : '',
         "count" => $value['count'] ? $value['count'] : '',
         "downs" => $value['downs'] ? $value['downs'] : '',
-        "sharelink" => C::t('shorturl')->getShortUrl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($value['id'])),
+        "sharelink" => $sharelink,
         "number" => $value['times'] ? $value['count'] .'/'.$value['times'] : '',
       ];
   }
@@ -90,74 +91,7 @@ if ($do == 'getinfo') {
 		exit(json_encode($errorResponse));
 	}
 	exit($jsonReturn);
-  } elseif (isset($_G['setting']['template']) && $_G['setting']['template'] == 'lyear') {
-  } else {
-    $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
-    $username = trim($_GET['username']);
-    $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 1;
-    $uid = intval($_GET['uid']);
-    $uid1=$_G['uid'];
-    $order = in_array($_GET['order'], array('title', 'dateline', 'type', 'size', 'count')) ? trim($_GET['order']) : 'dateline';
-    $gets = array('mod' => 'share', 'type' => $type, 'keyword' => $keyword, 'order' => $order, 'asc' => $asc, 'uid' => $uid, 'username' => $username);
-    $theurl = BASESCRIPT . "?" . url_implode($gets);
-    $orderby = " order by $order " . ($asc ? 'DESC' : '');
-
-    $sql = "1";
-    $param = array('shares');
-    if ($type) {
-      $sql .= " and type=%s";
-      $param[] = $type;
-      $navtitle=$typearr[$type].' - '.lang('appname');
-    }else{
-      $navtitle= lang('appname');
-    }
-    if ($keyword) {
-      $sql .= " and title LIKE %s";
-      $param[] = '%' . $keyword . '%';
-    }
-    if ($username) {
-      $sql .= " and username=%s";
-      $param[] = $username;
-    }
-    if ($uid) {
-      $sql .= " and uid=%d";
-      $param[] = $uid;
-    } 
-    $list = array();
-    if ($_G['adminid']) {
-      if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", $param)) {
-        $list = DB::fetch_all("SELECT * FROM %t WHERE $sql $orderby limit $start,$limit", $param);
-      }
-    }else{
-      if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid =$uid1 and $sql", $param)) {
-        $list = DB::fetch_all("SELECT * FROM %t WHERE uid =$uid1 and $sql $orderby limit $start,$limit", $param);
-      }
-    }
-    if ($count) {
-      foreach ($list as $k=> $value) {
-        $value['sharelink'] =  C::t('shorturl')->getShortUrl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($value['id']));
-        if ($value['dateline'])
-          $value['fdateline'] = dgmdate($value['dateline']);
-        if ($value['password'])
-          $value['password'] = dzzdecode($value['password']);
-        if ($value['endtime'])
-          $value['fendtime'] = dgmdate($value['endtime'], 'Y-m-d');
-        $value['fsize'] = formatsize($value['size']);
-        $value['ftype'] = getFileTypeName($value['type'], $value['ext']);
-        if ($value['type'] == 'folder')
-          $value['img'] = 'dzz/images/extimg/folder.png';
-        if ($value['img'])
-          $value['img'] = str_replace('dzz/images/extimg/', 'dzz/images/extimg_small/', $value['img']);
-        if ($value['type'] == 'image' && $value['status'] == -3)
-          $value['img'] = '';
-        $value['fstatus'] = $sharestatus[$value['status']];
-        if (is_file($_G['setting']['attachdir'] . './qrcode/' . $value['sid'][0] . '/' . $value['sid'] . '.png'))
-          $value['qrcode'] = $_G['setting']['attachurl'] . './qrcode/' . $value['sid'][0] . '/' . $value['sid'] . '.png';
-        $value['shareurl'] = $_G['siteurl'] . 's.php?sid=' . $value['sid'];
-        $list[$k] = $value;
-      }
-      $multi = multi($count, $limit, $page, $theurl, 'pull-right');
-    }
+  }else {
+    include template('share');
   }
-  include template('share');
 ?>

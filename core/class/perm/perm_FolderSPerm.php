@@ -27,7 +27,7 @@
 由于数据库存储是smallint(6),最大支持16位权限；（32位系统最多支持32位，64位系统最多支持64位；
  */ 
 class perm_FolderSPerm{ 
-	public function getPowerarr(){
+	public static function getPowerarr(){
 		 return array(     
 			'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
             'read1' => 2,        //读取自己的文件
@@ -52,11 +52,12 @@ class perm_FolderSPerm{
 						);
 		
 	  } 
- public function getPerm($action){
-	 $powerarr=self::getPowerarr();
-	 return  isset($powerarr[$action])?intval($powerarr[$action]):0;
-  }
-  public function getSumByAction($action=array()){ //$action==all 时返回所有的值相加
+ public static function getPerm($action){
+	$powerarr=self::getPowerarr();
+	return  isset($powerarr[$action])?intval($powerarr[$action]):0;
+}
+
+  public static function getSumByAction($action=array()){ //$action==all 时返回所有的值相加
 	  $i=0;
 	  $powerarr=self::getPowerarr();
 	  if($action=='all'){
@@ -70,13 +71,13 @@ class perm_FolderSPerm{
 	  }
 	  return $i;
   }
-  public function isPower($perm,$action){  
+  public static function isPower($perm,$action){  
     //权限比较时，进行与操作，得到0的话，表示没有权限
 	if(self::getPerm($action)<1) return true;
     if((intval($perm) & self::getPerm($action)) == self::getPerm($action) ) return false;  
     return true;  
   }  
- public function flagPower($flag){ //返回默认目录的权限
+ public static function flagPower($flag){ //返回默认目录的权限
 	  switch($flag){
 		 case 'home':case 'dock':case 'app':case 'organization':
 			return 0;

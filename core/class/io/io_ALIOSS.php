@@ -28,7 +28,7 @@ class io_ALIOSS extends io_api
 		$this->_root=$arr['root'];
 		$this->_rootname=$arr['name'];
 		$this->perm=perm_binPerm::getMyPower();
-		//self::init($path);
+		//$this->init($path);
 	}
 	public function MoveToSpace($path,$attach){
 		global $_G;
@@ -57,12 +57,12 @@ class io_ALIOSS extends io_api
 	public function createFolderByPath($path, $pfid = '',$noperm = false)
 	{
 		$data = array();
-		if(self::makeDir($path)){
-			$data = self::getMeta($path);
+		if($this->makeDir($path)){
+			$data = $this->getMeta($path);
 		}
 		return $data;
 	}
-	public  function makeDir($path){
+	public function makeDir($path){
 		$arr=$this->parsePath($path);
 		$patharr=explode('/',trim($arr['object'],'/'));
 		$folderarr=array();
@@ -81,9 +81,9 @@ class io_ALIOSS extends io_api
 	}
 	protected function _makeDir($path){
 		global $_G;
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		try {
-			$oss=self::init($path);
+			$oss=$this->init($path);
 			if(is_array($oss) && $oss['error']) return $oss;
 			
 			$response=$oss->create_object_dir($arr['bucket'],$arr['object']);
@@ -127,8 +127,8 @@ class io_ALIOSS extends io_api
 		}
 	}
 	public function getBucketALC($path){
-		$arr=self::parsePath($path);
-		$oss=self::init($path,1);
+		$arr=$this->parsePath($path);
+		$oss=$this->init($path,1);
 		if(is_array($oss) && $oss['error']) return $oss;
 		$response=$oss->get_bucket_acl($arr['bucket']);
 		$alc=$response->getBody();
@@ -224,8 +224,8 @@ class io_ALIOSS extends io_api
 		return $bzarr[0].':'.$bzarr[1].':';
 	}
 	public function getFileUri($path){
-		$arr=self::parsePath($path);
-		$oss=self::init($path,1);
+		$arr=$this->parsePath($path);
+		$oss=$this->init($path,1);
 		if(is_array($oss) && $oss['error']) return $oss;
 		if(empty($this->alc)){
 			try{
@@ -267,7 +267,7 @@ class io_ALIOSS extends io_api
         $fileurls=array();
 		Hook::listen('thumbnail',$fileurls,$path);
 		if(!$fileurls){
-			 $fileurls=array('fileurl'=>self::getFileUri($path),'filedir'=>self::getStream($path));
+			 $fileurls=array('fileurl'=>$this->getFileUri($path),'filedir'=>$this->getStream($path));
 		}
 		//非图片类文件的时候，直接获取文件后缀对应的图片
 		if(!$imginfo = @getimagesize($fileurls['filedir'])){
@@ -304,7 +304,7 @@ class io_ALIOSS extends io_api
         $fileurls=array();
 		Hook::listen('thumbnail',$fileurls,$path);
 		if(!$fileurls){
-			 $fileurls=array('fileurl'=>self::getFileUri($path),'filedir'=>self::getStream($path));
+			 $fileurls=array('fileurl'=>$this->getFileUri($path),'filedir'=>$this->getStream($path));
 		}
 		//非图片类文件的时候，直接获取文件后缀对应的图片
 		if(!$imginfo = @getimagesize($fileurls['filedir'])){
@@ -334,9 +334,9 @@ class io_ALIOSS extends io_api
 	}
 	//获取文件流；
 	//$path: 路径
-	function getStream($path){ 
-		$arr=self::parsePath($path);
-		$oss=self::init($path,1);
+	public function getStream($path){ 
+		$arr=$this->parsePath($path);
+		$oss=$this->init($path,1);
 		if(is_array($oss) && $oss['error']) return $oss;
 		if(empty($this->alc)){
 			try{
@@ -371,10 +371,10 @@ class io_ALIOSS extends io_api
 		$filename=$patharr[count($patharr)-1];
 		unset($patharr[count($patharr)-1]);
 		$path1=implode('/',$patharr).'/';
-		$icoarr=self::upload_by_content($data,$path1,$filename,0,'overwrite');
+		$icoarr=$this->upload_by_content($data,$path1,$filename,0,'overwrite');
 		if($icoarr['type']=='image'){
-			  self::deleteThumb($path);
-			  $icoarr['img'].='&t='.TIMESTAMP;
+			$this->deleteThumb($path);
+			$icoarr['img'].='&t='.TIMESTAMP;
 		 }
 		return $icoarr;
 	}
@@ -387,13 +387,13 @@ class io_ALIOSS extends io_api
 		 * @param string $newFileName 新文件名
 		 * @param string $ondup overwrite：目前只支持覆盖。 
 		 * @return string
-		 */
-	function upload_by_content($fileContent,$path,$filename,$ondup='overwrite'){
+	*/
+	public function upload_by_content($fileContent,$path,$filename,$ondup='overwrite'){
 		global $_G;
 		$path.=$filename;
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		try{
-			$oss=self::init($path);
+			$oss=$this->init($path);
 			if(is_array($oss) && $oss['error']) return $oss;
 			$upload_file_options = array(
 				'content' => $fileContent,
@@ -413,7 +413,7 @@ class io_ALIOSS extends io_api
 						'LastModified'=>$response->header['date'],
 						);
 		
-			$icoarr=self::_formatMeta($meta,$arr);
+			$icoarr=$this->_formatMeta($meta,$arr);
 			return $icoarr;
 		}catch(Exception $e){
 			return array('error'=>$e->getMessage());
@@ -435,12 +435,12 @@ class io_ALIOSS extends io_api
 	 * @param string $force 读取缓存，大于0：忽略缓存，直接调用api数据，常用于强制刷新时。
 	 * @return icosdatas
 	 */
-	function listFiles($path,$by='time',$marker='',$limit=100,$force=0){ 
+	public function listFiles($path,$by='time',$marker='',$limit=100,$force=0){ 
 		global $_G,$_GET,$documentexts,$imageexts;
-			$arr=self::parsePath($path);
+			$arr=$this->parsePath($path);
 			
 			$icosdata=array();
-			$oss=self::init($path,1);
+			$oss=$this->init($path,1);
 			if(is_array($oss) && $oss['error']) return $oss;
 			if(!$arr['bucket']){
 				$response=$oss->list_bucket();
@@ -453,7 +453,7 @@ class io_ALIOSS extends io_api
 					$value['isdir']=true;
 					$value['nextMarker']='';
 					$value['IsTruncated']=false;
-					$icoarr=self::_formatMeta($value,$arr);
+					$icoarr=$this->_formatMeta($value,$arr);
 					$icosdata[$icoarr['icoid']]=$icoarr;
 				}
 				//print_r($arr);exit($path);
@@ -467,10 +467,10 @@ class io_ALIOSS extends io_api
 			
 				foreach($icos as $key => $value){
 					if(is_array($value)){
-						$icoarr=self::_formatMeta($value,$arr);
+						$icoarr=$this->_formatMeta($value,$arr);
 						$icosdata[$icoarr['icoid']]=$icoarr;
 					}else{
-						$icoarr=self::_formatMeta($icos,$arr);
+						$icoarr=$this->_formatMeta($icos,$arr);
 						$icosdata[$icoarr['icoid']]=$icoarr;
 						break;
 					}
@@ -482,13 +482,13 @@ class io_ALIOSS extends io_api
 						$value['isdir']=true;
 						$value['Key']=$value['Prefix'];
 						$value['LastModified']='';
-						$icoarr=self::_formatMeta($value,$arr);
-						$icosdata[$icoarr['icoid']]=self::getMeta($icoarr['path']);
+						$icoarr=$this->_formatMeta($value,$arr);
+						$icosdata[$icoarr['icoid']]=$this->getMeta($icoarr['path']);
 					}else{
 						$folders['isdir']=true;
 						$folders['Key']=$folders['Prefix'];
-						$icoarr=self::_formatMeta($folders,$arr);
-						$icosdata[$icoarr['icoid']]=self::getMeta($icoarr['path']);
+						$icoarr=$this->_formatMeta($folders,$arr);
+						$icosdata[$icoarr['icoid']]=$this->getMeta($icoarr['path']);
 						break;
 					}
 				}
@@ -499,7 +499,7 @@ class io_ALIOSS extends io_api
 				$value['nextMarker']=$data['ListBucketResult']['NextMarker'];
 				$value['IsTruncated']=$data['ListBucketResult']['IsTruncated'];
 				
-				$icoarr=self::_formatMeta($value,$arr);
+				$icoarr=$this->_formatMeta($value,$arr);
 				if($icosdata[$icoarr['icoid']]){
 					$icosdata[$icoarr['icoid']]['nextMarker'] =$icoarr['nextMarker'];
 					$icosdata[$icoarr['icoid']]['IsTruncated'] =$icoarr['IsTruncated'];
@@ -522,9 +522,9 @@ class io_ALIOSS extends io_api
 	 * @param string $force 读取缓存，大于0：忽略缓存，直接调用api数据，常用于强制刷新时。
 	 * @return icosdatas
 	 */
-	function listFilesAll(&$oss,$path,$limit='1000',$marker='',$icosdata=array()){ 
+	public function listFilesAll(&$oss,$path,$limit='1000',$marker='',$icosdata=array()){ 
 		//static $icosdata=array();
-			$arr=self::parsePath($path);
+			$arr=$this->parsePath($path);
 				$response=$oss->list_object($arr['bucket'],array('prefix'=>$arr['object'],'marker'=>$marker,'max-keys'=>$limit));
 				$data=$response->getBody();
 				if($data['ListBucketResult']['Contents']) $icos=$data['ListBucketResult']['Contents'];
@@ -533,10 +533,10 @@ class io_ALIOSS extends io_api
 			
 				foreach($icos as $key => $value){
 					if(is_array($value)){
-						$icoarr=self::_formatMeta($value,$arr);
+						$icoarr=$this->_formatMeta($value,$arr);
 						$icosdata[$icoarr['icoid']]=$icoarr;
 					}else{
-						$icoarr=self::_formatMeta($icos,$arr);
+						$icoarr=$this->_formatMeta($icos,$arr);
 						$icosdata[$icoarr['icoid']]=$icoarr;
 						break;
 					}
@@ -548,13 +548,13 @@ class io_ALIOSS extends io_api
 						$value['isdir']=true;
 						$value['Key']=$value['Prefix'];
 						$value['LastModified']='';
-						$icoarr=self::_formatMeta($value,$arr);
-						$icosdata[$icoarr['icoid']]=self::getMeta($icoarr['path']);
+						$icoarr=$this->_formatMeta($value,$arr);
+						$icosdata[$icoarr['icoid']]=$this->getMeta($icoarr['path']);
 					}else{
 						$folders['isdir']=true;
 						$folders['Key']=$folders['Prefix'];
-						$icoarr=self::_formatMeta($folders,$arr);
-						$icosdata[$icoarr['icoid']]=self::getMeta($icoarr['path']);
+						$icoarr=$this->_formatMeta($folders,$arr);
+						$icosdata[$icoarr['icoid']]=$this->getMeta($icoarr['path']);
 						break;
 					}
 				}
@@ -565,7 +565,7 @@ class io_ALIOSS extends io_api
 				$value['nextMarker']=$data['ListBucketResult']['NextMarker'];
 				$value['IsTruncated']=$data['ListBucketResult']['IsTruncated'];
 				
-				$icoarr=self::_formatMeta($value,$arr);
+				$icoarr=$this->_formatMeta($value,$arr);
 				//print_r($icoarr);print_r($data);exit('ddddd');
 				if($icosdata[$icoarr['icoid']]){
 					$icosdata[$icoarr['icoid']]['nextMarker'] =$icoarr['nextMarker'];
@@ -576,7 +576,7 @@ class io_ALIOSS extends io_api
 				
 		//exit($data['ListBucketResult']['IsTruncated']);		
 		if($data['ListBucketResult']['IsTruncated']=='true'){
-			$icosdata=self::listFilesAll($oss,$path,1000,$data['ListBucketResult']['nextMarker'],$icosdata);
+			$icosdata=$this->listFilesAll($oss,$path,1000,$data['ListBucketResult']['nextMarker'],$icosdata);
 			//self::getFolderObjects($path,1000,$data['ListBucketResult']['nextMarker']);
 		}
 		return $icosdata;	
@@ -586,12 +586,12 @@ class io_ALIOSS extends io_api
 	 *返回标准的icosdata
 	 *$force>0 强制刷新，不读取缓存数据；
 	*/
-	function getMeta($path,$force=0){ 
+	public function getMeta($path,$force=0){ 
 		global $_G,$_GET,$documentexts,$imageexts;
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		
 		$icosdata=array();
-		$oss=self::init($path,1);
+		$oss=$this->init($path,1);
 		if(is_array($oss) && $oss['error']) return $oss;
 		if(empty($arr['object']) || empty($arr['bucket'])){
 			$meta=array(
@@ -611,7 +611,7 @@ class io_ALIOSS extends io_api
 			}
 			$return=$response->header;
 			if(!$return['content-length']) {
-				$headers=get_headers(self::getStream($path),1);
+				$headers=get_headers($this->getStream($path),1);
 				$return['content-length']=$headers['Content-Length'];
 			}
 			$meta=array(
@@ -620,11 +620,11 @@ class io_ALIOSS extends io_api
 						'LastModified'=>$return['last-modified'],
 						);
 		}
-		$icosdata=self::_formatMeta($meta,$arr);
+		$icosdata=$this->_formatMeta($meta,$arr);
 		return $icosdata;
 	}
 	//将api获取的meta数据转化为icodata
-	function _formatMeta($meta,$arr){ 
+	public function _formatMeta($meta,$arr){ 
 		global $_G,$documentexts,$imageexts;
 		$icosdata=array();
 		///print_r($meta);print_r($arr);exit($this->bucket);
@@ -744,8 +744,8 @@ class io_ALIOSS extends io_api
 	}
 	//根据路径获取目录树的数据；
 	public function getFolderDatasByPath($path){ 
-		$bzarr=self::parsePath($path); 
-		$oss=self::init($path,1);
+		$bzarr=$this->parsePath($path); 
+		$oss=$this->init($path,1);
 		$spath=$bzarr['object'];
 		
 		if(!$this->bucket && $bzarr['bucket']){
@@ -758,9 +758,9 @@ class io_ALIOSS extends io_api
 		$patharr=explode('/',$spath);
 		$folderarr=array();
 		$path1=$bzarr['bz'].$bzarr['bucket'];
-		if($arr=self::getMeta($path1)){
+		if($arr=$this->getMeta($path1)){
 			if(!isset($arr['error'])) {
-				$folder=self::getFolderByIcosdata($arr);
+				$folder=$this->getFolderByIcosdata($arr);
 				$folderarr[$folder['fid']]=$folder;
 			}
 		}
@@ -769,21 +769,21 @@ class io_ALIOSS extends io_api
 			for($j=0;$j<=$i;$j++){
 				$path1.=$patharr[$j].'/';
 			}
-			if($arr=self::getMeta($path1)){
+			if($arr=$this->getMeta($path1)){
 				if(isset($arr['error'])) continue;
-				$folder=self::getFolderByIcosdata($arr);
+				$folder=$this->getFolderByIcosdata($arr);
 				$folderarr[$folder['fid']]=$folder;
 			}
 		}
 		return $folderarr;
 	}
 	//通过icosdata获取folderdata数据
-	function getFolderByIcosdata($icosdata){
+	public function getFolderByIcosdata($icosdata){
 		global $_GET;
 		$folder=array();
 		//通过path判断是否为bucket
 		$path=$icosdata['path'];
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		if(!$arr['bucket']){ //根目录
 			$fsperm=perm_FolderSPerm::flagPower('ALIOSS_root');
 		}else{
@@ -812,9 +812,9 @@ class io_ALIOSS extends io_api
 		return $folder;
 	}
 	//获得文件内容；
-	function getFileContent($path){
-		$arr=self::parsePath($path);
-		$url=self::getFileUri($path);
+	public function getFileContent($path){
+		$arr=$this->parsePath($path);
+		$url=$this->getFileUri($path);
 		return file_get_contents($url);
 	}
 	//打包下载文件
@@ -824,13 +824,13 @@ class io_ALIOSS extends io_api
 		set_time_limit(0);
 		
 		if(empty($filename)){
-			$meta=self::getMeta($paths[0]);
+			$meta=$this->getMeta($paths[0]);
 			$filename=$meta['name'].(count($paths)>1?lang('wait'):'');
 		}
 		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
 		include_once libfile('class/ZipStream');
 		$zip = new ZipStream($filename.".zip");
-		$data=self::getFolderInfo($paths,'',$zip);
+		$data=$this->getFolderInfo($paths,'',$zip);
 		/*if($data['error']){
 			topshowmessage($data['error']);
 			exit();
@@ -845,23 +845,23 @@ class io_ALIOSS extends io_api
 		try{
 			foreach($paths as $path){
 				$arr=IO::parsePath($path);
-				$oss=self::init($path,1); 
+				$oss=$this->init($path,1); 
 				if(is_array($oss) && $oss['error']) return $oss;
-				$meta=self::getMeta($path);
+				$meta=$this->getMeta($path);
 				switch($meta['type']){
 					case 'folder':
 					     $lposition=$position.$meta['name'].'/';
-						 $contents=self::listFilesAll($oss,$path);
+						 $contents=$this->listFilesAll($oss,$path);
 						 $arr=array();
 						 foreach($contents as $key=>$value){
 							 if($value['path']!=$path){
 								$arr[]=$value['path'];
 							 }
 						 }
-						 if($arr) self::getFolderInfo($arr,$lposition,$zip);
+						 if($arr) $this->getFolderInfo($arr,$lposition,$zip);
 						break;
 					default:
-					 $meta['url']=self::getStream($meta['path']);
+					 $meta['url']=$this->getStream($meta['path']);
 					 $meta['position']=$position.$meta['name'];
 					 //$data[$meta['icoid']]=$meta;
 					 $zip->addLargeFile(@fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
@@ -880,7 +880,7 @@ class io_ALIOSS extends io_api
 		global $_G;
 		$paths=(array)$paths;
 		if(count($paths)>1){
-			self::zipdownload($paths,$filename);
+			$this->zipdownload($paths,$filename);
 			exit();
 		}else{
 			$path=$paths[0];
@@ -889,11 +889,11 @@ class io_ALIOSS extends io_api
 
 		//header("location: $url");
 		try {
-			$url=self::getStream($path);
+			$url=$this->getStream($path);
 			// Download the file
-			$file=self::getMeta($path);
+			$file=$this->getMeta($path);
 			if($file['type']=='folder'){
-				self::zipdownload($path);
+				$this->zipdownload($path);
 				exit();
 			}
 			if(!$fp = @fopen($url, 'rb')) {
@@ -930,13 +930,10 @@ class io_ALIOSS extends io_api
 		}
 	}
 	
-	
-	
-	
 	//获取目录的所有下级和它自己的object
 	public function getFolderObjects(&$oss,$path,$limit='1000',$marker=''){
 		static $objects=array();
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		//echo( $path.'---------');
 		
 		$response=$oss->list_object($arr['bucket'],array('prefix'=>$arr['object'],'marker'=>$marker,'max-keys'=>$limit,'delimiter'=>''));
@@ -967,7 +964,7 @@ class io_ALIOSS extends io_api
 			/*if($objs=self::getFolderObjects($oss,$path,1000,$data['ListBucketResult']['nextMarker'])){
 				$objects=array_merge($objects,$objs);
 			}*/
-			self::getFolderObjects($path,1000,$data['ListBucketResult']['nextMarker']);
+			$this->getFolderObjects($path,1000,$data['ListBucketResult']['nextMarker']);
 		}
 	
 		return $objects;
@@ -982,13 +979,13 @@ class io_ALIOSS extends io_api
 	//
 	public function Delete($path,$force=false){
 		//global $dropbox;
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		try{
-			$oss=self::init($path,$force);
+			$oss=$this->init($path,$force);
 			if(is_array($oss) && $oss['error']) return $oss;
 			//判断删除的对象是否为文件夹
 			if(strrpos($arr['object'],'/')==(strlen($arr['object'])-1)){ //是文件夹
-				$objects=self::getFolderObjects($oss,$path);
+				$objects=$this->getFolderObjects($oss,$path);
 				$response = $oss->delete_objects($arr['bucket'],$objects,array('quiet'=>true));
 			}else{
 				$response = $oss->delete_object($arr['bucket'],$arr['object']);
@@ -1010,12 +1007,12 @@ class io_ALIOSS extends io_api
 	//$bz：api;
 	public function CreateFolder($path,$fname){
 		global $_G;
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		//exit('createrfolder==='.$fname.'===='.$path1.'===='.$bz);
 		//exit($path.$fname.'vvvvvvvvvvv');
 		$return=array();
 		try {
-			$oss=self::init($path);
+			$oss=$this->init($path);
 			if(is_array($oss) && $oss['error']) return $oss;
 			
 			$response=$oss->create_object_dir($arr['bucket'],$arr['object'].$fname);
@@ -1027,9 +1024,9 @@ class io_ALIOSS extends io_api
 						'Size'=>0,
 						'LastModified'=>$response->header['date'],
 						);
-			$icoarr=self::_formatMeta($meta,$arr);
+			$icoarr=$this->_formatMeta($meta,$arr);
 			
-			$folderarr=self::getFolderByIcosdata($icoarr);
+			$folderarr=$this->getFolderByIcosdata($icoarr);
 			$return= array('folderarr'=>$folderarr,'icoarr'=>$icoarr);
 		}catch(Exception $e){
 			//var_dump($e);
@@ -1040,7 +1037,7 @@ class io_ALIOSS extends io_api
 	//获取不重复的目录名称
 	public function getFolderName($name,$path){
 		static $i=0;
-		if(!$this->icosdatas) $this->icosdatas=self::listFiles($path);
+		if(!$this->icosdatas) $this->icosdatas=$this->listFiles($path);
 		$names=array();
 		foreach($icosdatas as $value){
 			$names[]=$value['name'];
@@ -1048,7 +1045,7 @@ class io_ALIOSS extends io_api
 		if(in_array($name,$names)){
 			$name=str_replace('('.$i.')','',$name).'('.($i+1).')';
 			$i+=1;
-			return self::getFolderName($name,$path);
+			return $this->getFolderName($name,$path);
 		}else {
 			return $name;
 		}
@@ -1092,7 +1089,7 @@ class io_ALIOSS extends io_api
 	}
 	public function uploadStream($file,$filename,$path,$relativePath,$content_range){
 		$data=array();
-		$arr=self::getPartInfo($content_range);
+		$arr=$this->getPartInfo($content_range);
 		//echo ($relativePath).'vvvvvvvv';
 		//if($arr['partnum']>1) print_r($arr);
 		if($relativePath && ($arr['iscomplete'])){
@@ -1104,7 +1101,7 @@ class io_ALIOSS extends io_api
 					continue;
 				}
 		//	echo $path1.'---'.$value.'------';
-				$re=self::CreateFolder($path1,$value);
+				$re=$this->CreateFolder($path1,$value);
 				if(isset($re['error'])){
 					return $re;
 				}else{
@@ -1118,7 +1115,7 @@ class io_ALIOSS extends io_api
 		}
 		$path.=$relativePath;
 		if($arr['ispart']){
-			if($re1=self::upload($file,$path,$filename,$arr)){
+			if($re1=$this->upload($file,$path,$filename,$arr)){
 				if($re1['error']){
 					return $re1;
 				}
@@ -1135,7 +1132,7 @@ class io_ALIOSS extends io_api
 				}
 			}
 		}else{
-			$re1=self::upload($file,$path,$filename);
+			$re1=$this->upload($file,$path,$filename);
 			if(empty($re1['error'])){
 				$data['icoarr'][] = $re1;
 				return $data;
@@ -1145,13 +1142,13 @@ class io_ALIOSS extends io_api
 			}
 		}
 	}
-	function upload($file,$path,$filename,$partinfo=array(),$ondup='overwrite'){
+	public function upload($file,$path,$filename,$partinfo=array(),$ondup='overwrite'){
 		global $_G;
 		$path.=$filename;
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 	
 		try{
-			$oss=self::init($path);
+			$oss=$this->init($path);
 			if(is_array($oss) && $oss['error']) return $oss;
 			$upload_file_options = array(
 				'fileUpload' => $file,
@@ -1184,9 +1181,9 @@ class io_ALIOSS extends io_api
 					$data['path']=$path;
 					$data['parts'][$data['partnum']]=array('PartNumber'=>$data['partnum'],'ETag'=>$response->header['etag']);
 					
-					self::saveCache($path,$data);
+					$this->saveCache($path,$data);
 				}else{
-					$cache=self::getCache($path);
+					$cache=$this->getCache($path);
 					$upload_id=$cache['upload_id'];
 					$cache['partnum']+=1;
 					//上传分块
@@ -1203,24 +1200,24 @@ class io_ALIOSS extends io_api
 					
 					$cache['parts'][$partinfo['partnum']]=array('PartNumber'=>$cache['partnum'],'ETag'=>$response->header['etag']);
 					//print_r($cache);exit('dddd');
-					self::saveCache($path,$cache);
+					$this->saveCache($path,$cache);
 				}
 				if($partinfo['iscomplete']){
-					$cache=self::getCache($path);
+					$cache=$this->getCache($path);
 					$response = $oss->complete_multipart_upload($arr['bucket'],$arr['object'], $cache['upload_id'], $cache['parts']);
 					
 					if(!$response->isOk()){
 						return array('error'=>$response->status);
 					}
 					
-					self::deleteCache($path);
+					$this->deleteCache($path);
 					$meta=array(
 								'Key'=>$arr['object'],
 								'Size'=>$cache['filesize'],
 								'LastModified'=>$response->header['date'],
 								);
 				
-					$icoarr=self::_formatMeta($meta,$arr);
+					$icoarr=$this->_formatMeta($meta,$arr);
 					
 					return $icoarr;
 				}else{
@@ -1241,7 +1238,7 @@ class io_ALIOSS extends io_api
 							'LastModified'=>$response->header['date'],
 							);
 			
-				$icoarr=self::_formatMeta($meta,$arr);
+				$icoarr=$this->_formatMeta($meta,$arr);
 				
 				return $icoarr;
 			}
@@ -1251,7 +1248,7 @@ class io_ALIOSS extends io_api
 		
 	}
 	public function rename($path,$name){//重命名
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		//判断是否为目录
 		$patharr=explode('/',$arr['object']);
 		$arr['object1']='';
@@ -1266,7 +1263,7 @@ class io_ALIOSS extends io_api
 			$arr['object1'].=$ext?(preg_replace("/\.\w+$/i",'.'.$ext,$name)):$name;
 		}
 		if($arr['object']!=$arr['object1']){
-			$oss=self::init($path);
+			$oss=$this->init($path);
 			if(is_array($oss) && $oss['error']) return $oss;
 			$response=$oss->copy_object($arr['bucket'],$arr['object'],$arr['bucket'],$arr['object1']);
 			if(!$response->isOk()){
@@ -1274,7 +1271,7 @@ class io_ALIOSS extends io_api
 			}
 			$response = $oss->delete_object($arr['bucket'],$arr['object']);
 		}
-		return self::getMeta($arr['bz'].$arr['bucket'].'/'.$arr['object1']);
+		return $this->getMeta($arr['bz'].$arr['bucket'].'/'.$arr['object1']);
 	}
 	/**
 	 * 移动文件到目标位置
@@ -1285,13 +1282,13 @@ class io_ALIOSS extends io_api
 	public function CopyTo($opath,$path,$iscopy){
 		static $i=0;
 		$i++;
-		$oarr=self::parsePath($opath);
+		$oarr=$this->parsePath($opath);
 		$arr=IO::parsePath($path);
 		
-		$oss=self::init($opath);
+		$oss=$this->init($opath);
 		if(is_array($oss) && $oss['error']) return $oss;
 		try{
-			$data=self::getMeta($opath);
+			$data=$this->getMeta($opath);
 			switch($data['type']){
 				case 'folder'://创建目录
 					//exit($arr['path'].'===='.$data['name']);
@@ -1303,11 +1300,11 @@ class io_ALIOSS extends io_api
 							$data['newdata']=$re['icoarr'];
 							$data['success']=true;
 							//echo $opath.'<br>';
-							 $contents=self::listFilesAll($oss,$opath);
+							 $contents=$this->listFilesAll($oss,$opath);
 							$value=array();
 							 foreach($contents as $key=>$value){
 								if($value['path']!=$opath){
-									$data['contents'][$key]=self::CopyTo($value['path'],$re['folderarr']['path']);
+									$data['contents'][$key]=$this->CopyTo($value['path'],$re['folderarr']['path']);
 								}
 								$value=array();
 							 }
@@ -1320,7 +1317,7 @@ class io_ALIOSS extends io_api
 				
 				default:
 					if($arr['bz']==$oarr['bz']){//同一个api时
-						$arr=self::parsePath($path.$data['name']);
+						$arr=$this->parsePath($path.$data['name']);
 						$response=$oss->copy_object($oarr['bucket'],$oarr['object'],$arr['bucket'],$arr['object']);
 						if(!$response->isOk()){
 							$data['success']=$response->status;
@@ -1330,7 +1327,7 @@ class io_ALIOSS extends io_api
 									'Size'=>$data['size'],
 									'LastModified'=>$response->header['date'],
 									);
-						$data['newdata']=self::_formatMeta($meta,$arr);
+						$data['newdata']=$this->_formatMeta($meta,$arr);
 						
 						$data['success']=true;
 					}else{
@@ -1355,7 +1352,6 @@ class io_ALIOSS extends io_api
 	}
 	public function multiUpload($opath,$path,$filename,$attach=array(),$ondup="newcopy"){
 		global $_G;
-	
 		
 		$partsize=1024*1024*5; //分块大小2M
 		if($attach){
@@ -1383,7 +1379,7 @@ class io_ALIOSS extends io_api
 			}
 			fclose($handle);
 			//exit('upload');
-			return self::upload_by_content($fileContent,$path,$filename);
+			return $this->upload_by_content($fileContent,$path,$filename);
 		}else{ //分片上传		
 
 			$partinfo=array('ispart'=>true,'partnum'=>0,'iscomplete'=>false);
@@ -1400,7 +1396,7 @@ class io_ALIOSS extends io_api
 					if($partinfo['partnum']*$partsize+strlen($fileContent)>=$size) $partinfo['iscomplete']=true;
 					$partinfo['partnum']+=1;
 					file_put_contents($cachefile,$fileContent);
-					$re=self::upload($cachefile,$path,$filename,$partinfo);
+					$re=$this->upload($cachefile,$path,$filename,$partinfo);
 					if($re['error']) return $re;
 					if($partinfo['iscomplete']){
 						 @unlink($cachefile);
@@ -1414,7 +1410,7 @@ class io_ALIOSS extends io_api
 				$partinfo['partnum']+=1;
 				$partinfo['iscomplete']=true;
 				file_put_contents($cachefile,$fileContent);
-				$re=self::upload($cachefile,$path,$filename,$partinfo);
+				$re=$this->upload($cachefile,$path,$filename,$partinfo);
 				if($re['error']) return $re;
 				if($partinfo['iscomplete']){
 					 @unlink($cachefile);

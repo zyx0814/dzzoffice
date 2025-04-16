@@ -1,9 +1,11 @@
+<!--{if !$template}-->
 <!--头部开始-->
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="hide_window()"> <span aria-hidden="true">×</span> </button>
-    <h4 class="modal-title"><!--{if $type == 1}-->另存为<!--{elseif $type == 2}-->选择位置<!--{else}-->选择文件<!--{/if}--></h4>
+    <h4 class="modal-title text-truncate"><!--{if $type == 1}-->另存为<!--{elseif $type == 2}-->选择位置<!--{else}-->选择文件<!--{/if}--></h4>
 </div>
 <!--头部结束-->
+<!--{/if}-->
 <!--内容区开始-->
 <div class="select-fileall clearfix">
     <div class="select-filetop clearfix bs-top-container">
@@ -88,42 +90,6 @@
                 </ul>
             </div>
             <!--{/if}-->
-            	
-                <!--{if !$type}-->
-                <!--<div class="select-display dropdown">
-                    <button type="text" class="form-control" value="" data-toggle="dropdown" id="select-button">
-                        <span class="select-alltype">{lang all_type}</span>
-                        <span class="dzz dzz-arrow-dropdown dzz-select-button"></span>
-                    </button>
-                    <ul class="dropdown-menu select-type">
-                        <li>
-                            <a href="javascript:;" data-val="all">{lang all_type}</a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" data-val="image">{lang pictures_photos}</a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" data-val="pdf">PDF</a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" data-val="document">{lang type_attach}</a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" data-val="excel">{lang spreadsheet}</a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" data-val="ppt">{lang power_point}</a>
-                        </li>
-                        <li>
-                            <a href="javascript:;" data-val="video">{lang type_video}</a>
-                        </li>
-
-                        <li>
-                            <a href="javascript:;" data-val="folder">{lang typename_folder}</a>
-                        </li>
-                    </ul>
-                </div>-->
-                <!--{/if}-->
                 
                 <div class="select-change select-display">
                     <a href="javascript:;" class="icons-thumbnail" onclick="_selectfile.Arrange(this,'')">
@@ -135,25 +101,25 @@
     	<!--地址栏右侧结束-->
     </div>
     <div class="select-filecenter  clearfix">
-        <div class="bs-left-container selectScroll-y clearfix">
+        <div class="bs-left-container <!--{if !$template}-->selectScroll-y<!--{/if}--> clearfix">
             <div class="mechsnismMenu" id="position" class="usertree-container list-unstyled"></div>
         </div>
-        <div class="left-drager selectScroll-y" >
+        <div class="left-drager <!--{if !$template}-->selectScroll-y<!--{/if}-->" >
         </div>
-        <div class="bs-main-container selectScroll-y middlecenter" id="middleconMenu" >
+        <div class="bs-main-container <!--{if !$template}-->selectScroll-y<!--{/if}--> middlecenter" id="middleconMenu" >
 
         </div>
     </div>
 
-    <div class="select-filebottom clearfix " data-selectHeight="45">
-    	    <!--{if $type == 1}-->
+    <div class="select-filebottom bs-footer-container clearfix " data-selectHeight="45">
+    	<!--{if $type == 1}-->
         <div class="input-black input-fixation clearfix">
             <label class="control-label input-label">文件名:</label>
             <div class="input-animate">
                 <input type="text" class="form-control" placeholder="文件名" value="$savefile[name]" name="savenewname" id="savenewname"/>
             </div>
         </div>
-         <!--{/if}-->
+        <!--{/if}-->
         <div class="input-black input-fixation clearfix">
             <label class="control-label input-label ">类型:</label>
             <div class="input-animate ">
@@ -203,7 +169,7 @@
                 },
                 'data': function (node, cb) {
                     var self = this;
-                    $.getJSON('index.php?mod=system&op=fileselection&do=listtree&operation=get_children&range=' + range, {'id': node.id}, function (json) {
+                    $.getJSON('index.php?mod=system&op=fileselection<!--{if $template == '1'}-->&template=1<!--{/if}-->&do=listtree&operation=get_children&range=' + range, {'id': node.id}, function (json) {
                         cb.call(this, json);
                     });
                 }

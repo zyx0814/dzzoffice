@@ -29,7 +29,7 @@ class FileDownload{ // class start
 	  if(!$dateline){
 		  $dataline=TIMESTAMP;
 	  }
-     if(!$fp = fopen($file, 'rb')){
+    if(!$fp = fopen($file, 'rb')){
 		 topshowmessage(lang('file_not_exist1'));
 	 }
 	 $db = DB::object();

@@ -1,0 +1,393 @@
+<!--{template lyear:header_simple_start}-->
+<link rel="stylesheet" href="static/dzzthumb/jquery.dzzthumb.css">
+<link rel="stylesheet" href="{MOD_PATH}/images/style.css" />
+<link rel="stylesheet" href="{MOD_PATH}/images/index.css">
+<!--{template lyear:header_simple_end}-->
+<div class="docunment-dialog docunment-dialog-uploader ismin" id="upload_file_tips" style="display:none;">
+	<div class="dialog-header">
+		<h3 id="upload_header" class="dialog-header-title">
+			<span id="upload_header_status" class="upload-all-text">{lang updload_prepare}</span>
+			<span id="upload_header_number_container" class="upload-all-container" style="display: none">
+					[
+				  <span id="upload_header_completed" class="upload-all-cpmpleted">0</span>
+				  <span class="pipe">/</span>
+				  <span id="upload_header_total" class="upload-all-total">0</span>
+				  ]
+			</span>
+			<span id="upload_header_speed" class="upload-all-speed"></span>
+			<div id="upload_header_progress" class="process" style="position:absolute;left:0;top:0;z-index:-1;height:45px;background-color:#e8f5e9;-webkit-transition:width 0.6s ease in;-o-transition:width 0.6s ease in;transition:width 0.6s ease in;width:0%;"></div>
+		</h3>
+	  <div class="dialog-control"> 
+		  <span class="mdi mdi-fullscreen dialog-header-narrow"></span> 
+		  <span class="mdi mdi-close dialog-header-close"></span> </div>
+	</div>
+	<div class="dialog-body">
+	  <div class="upload-list-wrapper">
+		<div class="upload-list-header">
+		  <div class="upload-file-name">{lang folder_file_name}</div>
+		  <div class="upload-file-size">{lang big_small}</div>
+		  <div class="upload-file-path">{lang update_catalogue}</div>
+		  <div class="upload-file-status">{lang state}</div>
+		</div>
+		<div class="dialog-tips has-error">
+		  <div id="dialog_body_text" class="dialog-body-text">{lang update_never_succeeded}</div>
+		  <em class="mdi mdi-close dialog-close"></em> </div>
+		<div class="dialog-uploader-list">
+		  <ul class="dialog-filelist-ul" id="uploading_file_list">
+		  </ul>
+		</div>
+		<div class="progress-in"></div>
+	  </div>
+	</div>
+</div>
+<main class="bs-main-container">
+	<div class="container-fluid" style="height: 99%;">
+		<div class="card" style="height: 99%;">
+			<div class="card-body" style="height: 99%;">
+				<!--中间内容-->
+				<div id="middleconMenu">
+					<div class="middlecenter scroll-100 scroll-srcollbars" id="selectBoardPosition">
+						<div class="middle-groupname middle-groupshink middlecenter-header">
+							<div class="address-wrapper clearfix">
+								<ol class="breadcrumb address">
+									<li class="homesid dcolor">
+										<a href="javascript:;">刷新页面<span class="mdi mdi-power-on"></span></a>
+									</li>
+								</ol>
+							</div>
+						</div>
+						<!--文件列表开始 -->
+						<div id="filemanage-f-1" class="icosContainer">
+							<div class="emptyPage" id="noticeinfo">
+								<img src="{MOD_PATH}/images/noFilePage-normal.png">
+								<p class="emptyPage-text">目前没有文件或文件夹</p>
+							</div>
+						</div>
+					</div>
+					<!--头部信息框-->
+					<div class="navtopheader">
+					</div>
+					<div id="template_middleicon" style="display:none">
+						<div class="fileMenu middleicon window">
+							<div class="square-fileList js-file-item-tpl clearfix">
+								<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon card"  rid="{rid}" flag="{flag}">
+									<div class="card-body text-truncate text-center toggleGlow">
+										<div class="icoimgContainer">
+											<img class="Icoblock_icon" tsrc="{img}"  title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
+										</div>
+									</div>
+									<div class="card-footer text-truncate text-dark text-center" title="{name}">{name}</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="template_detaillist"  style="display:none">
+						<div class="fileMenu detaillist filemanage">
+							<div class="filemanage-detail-header">
+								<table class="table " width="100%" border="0" style="table-layout:fixed;margin:0">
+									<thead class="detail_header_tr">
+									<tr>
+										<th disp="0" class=" detail_header detail_header_0" width="50%">
+											<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
+											<a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
+												<span class="mdi mdi-chevron-up"></span>
+												<span class="mdi mdi-chevron-down"></span>
+											</a>
+											<div disp="0" class="detail_header_drag"></div>
+										</div>
+										</th>
+										<th disp="1" class=" detail_header detail_header_1 " width="15%">
+											<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
+										<a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
+											<span class="mdi mdi-chevron-up"></span>
+											<span class="mdi mdi-chevron-down"></span>
+										</a>
+											<div disp="1" class="detail_header_drag"></div>
+										</div>
+										</th>
+										<th disp="2" class="detail_header detail_header_2" width="15%">
+										<div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
+											<a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
+												<span class="mdi mdi-chevron-up"></span>
+												<span class="mdi mdi-chevron-down"></span>
+											</a>
+											<div disp="2" class="detail_header_drag" style="float:right"></div>
+										</div>
+										</th>
+										<th disp="3" class=" detail_header detail_header_3 " width="20%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
+											<span class="mdi mdi-chevron-up"></span>
+											<span class="mdi mdi-chevron-down"></span>
+										</a></div></th>
+									</tr>
+									</thead>
+								</table>
+								</div>
+							<div class="paddingright-con  js-list-body">
+									<table class="table table-hover align-middle " width="100%" border="0" style="table-layout:fixed;margin:0">
+									<tbody class="js-file-item-tpl">
+										<tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock" rid="{rid}">
+										<td class="detail_item_td " valign="middle" width="50%" style="overflow:hidden;position:relative">
+											<div class="detail_item_td_div detail_item_td_name toggleGlow" rid="{rid}">
+												<a href="javascript:;" style="float: left;"><img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" /></a>
+												<a id="file_text_{rid}" class="detail_text detail_item_name_text text-dark">{name}</a>
+											</div>
+											<div class="hoverTools">
+												<button type="button" class="btn download" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
+											</div>
+										</td>
+										<td class="detail_item_td detail_item_td_size" valign="middle" width="15%" style="overflow:hidden">
+											<span title="{fsize}">{fsize}</span>
+										</td>
+										<td class="detail_item_td detail_item_td_type" valign="middle" width="15%" style="overflow:hidden">
+											<span title="{ftype}">{ftype}</span>
+										</td>
+										<td class="detail_item_td detail_item_td_type" valign="middle" width="20%" style="overflow:hidden">
+											<span title="{fdateline}">{fdateline}</span>
+										</td>
+										</tr>
+									</tbody>
+									</table>
+								
+							</div>
+						</div>
+					</div>
+					<div id="template_toolButton" style="display:none">
+						<div class="yunfile-btnMenu">
+							<a href="javascript:;" type="button" class="btn open single dcolor" data-placement="bottom" data-auto-adapt="true"  onclick="_filemanage.Open('{rid}')" >
+								<i class="mdi mdi-folder-open" data-toggle="tooltip" data-placement="bottom" title="{lang open}" data-original-title="{lang open}"></i>
+							</a>
+							<a href="javascript:;" type="button" class="btn allsave dcolor" data-placement="bottom" onclick="allsave()">
+								<i class="mdi mdi-content-save" data-toggle="tooltip" data-placement="bottom" title="{lang save}"></i>
+							</a>
+							<a href="javascript:;" type="button" class="btn download single dcolor" onclick="_filemanage.downAttach('{rid}')" >
+								<i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i>
+							</a>
+							<a href="javascript:;" type="button" class="btn downpackage multi dcolor" onclick="_filemanage.downpackage('{rid}')" ><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang downpackage}"></i>
+							</a>
+							<a href="javascript:;" type="button" class="btn property dcolor" onclick="_filemanage.property('{rid}')"><i class="mdi mdi-sort-variant" data-toggle="tooltip" data-placement="bottom" title="{lang property}"></i>
+							</a>
+							<div class="dropdown openwith single" style="display: inline-block;">
+								<a class="btn dropdown-toggle more dcolor" href="javascript:;" type="button" data-toggle="dropdown" role="button" aria-expanded="false" title="打开方式">打开方式</a>
+								<ul class="dropdown-menu"></ul>
+							</div>
+						</div>
+						<script type="text/javascript" reload="1">
+							jQuery(function () {
+							jQuery('[data-toggle="tooltip"]').tooltip();
+							});
+						</script>
+					</div>
+					<div id="template_file" style="display:none">
+						<div class="navtoperate dtheme">
+							<div class="select-toperate">
+							<div class="select-toperate select-toperate-left selectall-box">
+								<span class="mdi mdi-close dzz-backing-out"></span>
+								<div class="select-info"></div>
+							</div>
+							<div class="select-toperate select-toperate-center  toolButtons">
+								<div class="shareMenu">
+								</div>
+							</div>
+							<div class="select-toperate select-toperate-right">
+								<ul class="sizeMenu">
+								<li><a class="icons-thumbnail dcolor" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="<!--{if $_G['ismobile']}-->2<!--{else}-->4<!--{/if}-->"><i class="mdi mdi-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i></a></li>
+							</ul>
+							</div>
+							</div>
+						</div>
+						<script type="text/javascript" reload="1">
+							jQuery(function () {
+							jQuery('[data-toggle="tooltip"]').tooltip();
+							});
+						</script>       
+					</div>
+					<div id="template_nofile_notice" style="display:none">
+						<div class="emptyPage" id="noticeinfo">
+							<img src="{MOD_PATH}/images/noFilePage-normal.png">
+							<p class="emptyPage-text">{lang no_file}</p>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<div id="contextmenu" style="display: none;"> 
+	<div id="right_ico">
+		<div class="menu-item open dcolor" onclick="_filemanage.Open('{rid}');jQuery('#right_contextmenu').hide();">
+			<span class="menu-icon mdi mdi-folder-open"></span>
+			<span class="menu-text">{lang open}</span>
+		</div>
+		<div class="menu-item openwith dcolor">
+			<span class="menu-icon mdi mdi-file-export"></span>
+			<span class="menu-text">{lang openwith}</span>
+			<span class="menu-rightarrow"></span>
+			<div class="menu" style="display: none;">
+			</div>
+		</div>
+		<span class="menu-sep"></span>
+		<div class="menu-item allsave dcolor" onclick="allsave()">
+			<span class="menu-icon mdi mdi-content-save"></span>
+			<span class="menu-text">{lang save}</span>
+		</div>
+	   <div class="menu-item download dcolor" onclick="_filemanage.downAttach('{rid}');jQuery('#right_contextmenu').hide();">
+			   <span class="menu-icon mdi mdi-download"></span>
+			<span class="menu-text">{lang download}</span>
+		</div>
+		<div class="menu-item downpackage dcolor" onclick="_filemanage.downpackage('{rid}');jQuery('#right_contextmenu').hide();">
+			<span class="menu-icon mdi mdi-download"></span>
+			<span class="menu-text">{lang downpackage}</span>
+		</div>
+	   
+		<div class="menu-item property dcolor" onclick="_filemanage.property('{rid}');jQuery('#right_contextmenu').hide();">
+			<span class="menu-icon mdi mdi-sort-variant"></span>
+			<span class="menu-text">{lang property}</span>
+		</div>
+		
+	</div>
+	<div id="right_body">
+	 <div class="menu-item">
+		<span class="menu-icon filee-icon"></span>
+		<span class="menu-text">{lang iconviev}</span>
+		<span class="menu-rightarrow"></span>
+		<div class="menu dtheme" style="display: none;">
+			<div class="menu-item" iconview="2" onclick="_filemanage.Arrange(this,'{filemanageid}','2');">
+				<span view="2" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-iconview"></span>
+				<span class="menu-text">{lang iconview_2}</span>
+			</div>
+			<div class="menu-item" iconview="4" onclick="_filemanage.Arrange(this,'{filemanageid}','4')">
+				<span view="4" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-iconview"></span>
+				<span class="menu-text">{lang iconview_4}</span>
+			</div>		    	
+		</div>
+	 </div>
+	
+	 <div class="menu-item sort">
+		<span class="menu-icon filee-icon"></span>
+		<span class="menu-text">{lang sort}</span>
+		<span class="menu-rightarrow"></span>
+		<div class="menu dtheme" style="display: none;">
+			<div class="menu-item disp0" onclick="_filemanage.Disp(this,'{filemanageid}','0')">
+				<span disp="0" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_0"></span>
+				<span class="menu-text">{lang menu_filemanagedisp_0} <span class="caret"></span></span>
+				
+			</div>
+			<div class="menu-item disp1" onclick="_filemanage.Disp(this,'{filemanageid}','1')">
+				<span disp="1" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_1"></span>
+				<span class="menu-text">{lang menu_filemanagedisp_1} <span class="caret"></span></span>
+			</div>
+			<div class="menu-item disp2" onclick="_filemanage.Disp(this,'{filemanageid}','2')">
+				<span disp="2" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_2"></span>
+				<span class="menu-text">{lang menu_filemanagedisp_2} <span class="caret"></span></span>
+			</div>
+			<div class="menu-item disp3" onclick="_filemanage.Disp(this,'{filemanageid}','3')">
+				<span disp="3" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_3"></span>
+				<span class="menu-text">{lang menu_filemanagedisp_3} <span class="caret"></span></span>
+			</div>
+	   </div>
+	</div>
+	 <span class="menu-sep"></span>
+	
+	<div class="menu-item create">
+		<span class="menu-icon mdi mdi-upload"></span>
+		<span class="menu-text">{lang new_and_upload}</span>
+		<span class="menu-rightarrow"></span>
+		<div class="menu dtheme" style="display: none;">
+			<div class="menu-item newfolder" onclick="_filemanage.NewIco('newFolder');jQuery('#right_contextmenu').hide();">
+				<span class="menu-icon mdi mdi-folder"></span>
+				<span class="menu-text">{lang newfolder}</span>
+			 </div>
+			 <span class="menu-sep"></span>
+			  <div class="menu-item upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);return true;">
+				<span class="menu-icon mdi mdi-upload"></span>
+				<span class="menu-text">{lang uploadfile}</span>
+			 </div>
+			 <div class="menu-item uploadfolder" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);return true;">
+				<span class="menu-icon mdi mdi-folder"></span>
+				<span class="menu-text">{lang uploadfolder}</span>
+			 </div>
+			 <span class="menu-sep"></span>
+			 <div class="menu-item newlink" onclick="_filemanage.NewIco('newLink');jQuery('#right_contextmenu').hide();">
+				<span class="menu-icon mdi mdi-web"></span>
+				<span class="menu-text">{lang newlink}</span>
+			  </div>
+			   <div class="menu-item newtext" onclick="_filemanage.NewIco('newTxt');jQuery('#right_contextmenu').hide();">
+					<span class="menu-icon mdi mdi-file"></span>
+					<span class="menu-text">{lang extname_txt}</span>
+				</div>
+				<span class="menu-sep"></span>
+				<div class="menu-item newdoc" onclick="_filemanage.NewIco('newDoc');jQuery('#right_contextmenu').hide();">
+					<span class="menu-icon mdi mdi-file-word filee-icon filee-file-text"></span>
+					<span class="menu-text">{lang newdoc}</span>
+				</div> 
+				<div class="menu-item newexcel" onclick="_filemanage.NewIco('newExcel');jQuery('#right_contextmenu').hide();">
+					<span class="menu-icon mdi mdi-file-excel filee-icon filee-file-excel"></span>
+					<span class="menu-text">{lang newexcel}</span>
+				</div>
+				<div class="menu-item newpowerpoint" onclick="_filemanage.NewIco('newPowerPoint');jQuery('#right_contextmenu').hide();">
+					<span class="menu-icon mdi mdi-file-compare filee-icon filee-file-ppt"></span>
+					<span class="menu-text">{lang newpowerpoint}</span>
+				</div>
+				<div class="menu-item newpdf" onclick="_filemanage.NewIco('newpdf');jQuery('#right_contextmenu').hide();">
+					<span class="menu-icon mdi mdi-file-pdf-box filee-icon filee-file-pdf"></span>
+					<span class="menu-text">{lang newpdf}</span>
+				</div>
+		 </div>
+	</div>
+	 <span class="menu-sep"></span>
+	 <div class="menu-item property" onclick="window.location.reload();">
+		<span class="menu-icon mdi mdi-autorenew"></span>
+		<span class="menu-text">{lang refresh}</span>
+	</div> 
+	<div class="menu-item property" onClick="_filemanage.property('{fid}',1);jQuery('#right_contextmenu').hide();">
+		<span class="menu-icon mdi mdi-sort-variant"></span>
+		<span class="menu-text">{lang property}</span>
+	 </div> 
+		
+	</div>
+</div>
+<div id="_blank" unselectable="on" onselectstart="return event.srcElement.type== 'text';" style="background: url(&quot;dzz/images/b.gif&quot;); z-index: 10000; width: 100%; height: 100%; margin: 0px; padding: 0px; right: 0px; bottom: 0px; position: absolute; top: 0px; left: 0px; display: none;"></div>
+<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
+<div id="dataContainer" class="hide"></div>
+<script type="text/javascript">
+	var centerrightwidth = 0;
+    var getWidthLable = 0;
+    var newgroupgid = '';
+	var sid = '{$_GET['sid']}';
+	jQuery(document).ready(function(e) {
+		_filemanage.SetMoreButton();
+        _explorer.getConfig(MOD_URL+'&op=json');
+		jQuery(document).on('click', '.breadcrumb li a', function () {
+            var li = jQuery(this).parent();
+            var fids = li.data('fid');
+			var doss ='filelist';
+			if(li.hasClass('homesid')) {
+				location.href = '{MOD_URL}&sid={$_GET['sid']}';
+                return false;
+			}
+            if (li.hasClass('home')) {
+				fids = '';
+				doss = '';
+            }
+			_explorer.getRightContent(fids, doss);
+            li.nextAll('li').remove();
+            li.remove();
+            return false;
+        });
+    });
+</script> 
+<script type="text/javascript" src="{MOD_PATH}/scripts/explorer.js"></script>
+<script type="text/javascript" src="{MOD_PATH}/scripts/filemanage.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/js/imgReady.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
+<!-- The basic File Upload plugin --> 
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included --> 
+<script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script> 
+<!-- The basic File Upload plugin --> 
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script> 
+<script type="text/javascript" src="{MOD_PATH}/scripts/uplodfile.lang.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/layer/layer.js?{VERHASH}"></script>
+<!--{template lyear:footer_simple}-->

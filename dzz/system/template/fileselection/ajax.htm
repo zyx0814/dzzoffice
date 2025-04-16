@@ -6,7 +6,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     	<span class="dzz dzz-close"></span>
     </button>
-    <h4 class="modal-title">{lang newfolder}</h4>
+    <h4 class="modal-title text-truncate">{lang newfolder}</h4>
 </div>
 <form onsubmit=" return chk_create(this);">
     <div class="modal-body group-top">
@@ -64,7 +64,7 @@
     <div class="modal-header email-title">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="dzz dzz-close"></span>
         </button>
-        <h4 class="modal-title"><!--{if $propertys[name]}-->$propertys[name]<!--{/if}-->{lang property}</h4>
+        <h4 class="modal-title text-truncate"><!--{if $propertys[name]}-->$propertys[name]<!--{/if}-->{lang property}</h4>
     </div>
     <div class="modal-body nature-body">
         <!--{if $propertys[name]}-->
@@ -179,7 +179,7 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                 aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">{lang add_url}</h4>
+        <h4 class="modal-title text-truncate">{lang add_url}</h4>
     </div>
     <div class="modal-body">
         <input type="text" class="form-control focus" value="http://" name="link">
@@ -216,7 +216,7 @@
     data-hash="group{$arr[gid]}_file-$arr[oid]" data-args="gid_{$arr[gid]}-do_file-fid_$arr[oid]" data-fid="$arr[oid]"
     id="$arr[rid]" data-rid="$arr[rid]">
     <!--{else}-->
-<li class="liste typefile"  <!--{if $arr[type] == 'link'}-->data-href="$arr[url]" <!--{else}-->data-href="{eval echo dzzencode($arr[path]);}"<!--{/if}-->
+<li class="liste typefile"  <!--{if $arr[type] == 'link'}-->data-href="$arr[url]" <!--{else}-->data-href="{eval echo dzzencode($arr['path']);}"<!--{/if}-->
 data-rid="$arr[rid]" data-ext="$arr[ext]" data-type="$arr[type]"data-name="$arr[name]" id="$arr[rid]">
 <!--{/if}-->
 <ul class="ul-file-li clearfix">
@@ -246,7 +246,7 @@ data-rid="$arr[rid]" data-ext="$arr[ext]" data-type="$arr[type]"data-name="$arr[
     </li>
     <li class="td-file-size"><span>$arr[fsize]</span></li>
     <li class="td-file-proprietor">$arr[username]</li>
-    <li class="td-file-time">{eval echo dgmdate($arr[dateline],'Y-m-d H:i:s')}</li>
+    <li class="td-file-time">{eval echo dgmdate($arr['dateline'],'Y-m-d H:i:s')}</li>
 </ul>
 </li>
 

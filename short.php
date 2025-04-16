@@ -6,7 +6,7 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-require './core/coreBase.php';
+require __DIR__.'/core/coreBase.php';
 define('CURSCRIPT', 'dzz');
 $dzz = C::app();
 $dzz->init_session = false;

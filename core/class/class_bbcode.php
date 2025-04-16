@@ -1,6 +1,7 @@
 <?php
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 
 class bbcode {

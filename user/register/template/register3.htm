@@ -1,0 +1,101 @@
+<!--{eval $bodyClass = 'bg-white overflow-x-hidden overflow-y-auto';}-->
+<!--{template lyear:header_simple}-->
+<script src="user/scripts/register.js?{VERHASH}"></script>
+<!--{eval $loginhash = 'L'.random(4);}-->
+<!--{eval $loginimg = $_G['setting']['loginset']['img'];if (!$loginimg) $loginimg = 'user/login/images/login.jpg';}-->
+<!--背景层-->
+	<div class="row vh-100" style="background:{eval echo $_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#ffffff';};">
+	<!--{if $_G['setting']['loginset']['url']}-->
+	<iframe id="wrapper_frame"  class="col-md-6 col-lg-7 col-xl-8 d-none d-md-block" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+	<!--{else}-->
+	<div class="col-md-6 col-lg-7 col-xl-8 d-none d-md-block" style="<!--{if !$_G['setting']['loginset']['bcolor']}-->background-image: url($loginimg);<!--{/if}-->background-size: cover;">
+	</div>
+	<!--{/if}-->
+  <div class="col-md-6 col-lg-5 col-xl-4 align-self-center">
+		<div class="p-5">
+		  <div class="text-center">
+			<img src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
+			<h2 class="main-title">{lang register_welcome_tip}</h2>
+    </div>
+		<form action="{MOD_URL}" method="post" class="signin-form loginForm" name="registerform" id="registerform" role="form" enctype="multipart/form-data" onsubmit="check_submit(this);return false">
+    <input type="hidden" name="regsubmit" value="yes"/>
+    <input type="hidden" name="formhash" value="{FORMHASH}"/>
+    <input type="hidden" name="referer" value="$referer"/>
+    <input type="hidden" name="handlekey" value="$_GET[handlekey]"/>
+			<!--{if $_GET[action] != 'activation'}-->
+      <div class="mb-3 has-feedback">
+        <span class="mdi mdi-mail" aria-hidden="true"></span>
+        <input type="text" class="form-control" id="email" name="email" autocomplete="off" placeholder="{lang register_email_tips}" required/>
+        <span id="chk_email" class="help-msg text-danger"></span> 
+      </div>
+      <div class="mb-3 has-feedback">
+        <span class="mdi mdi-account" aria-hidden="true"></span>
+        <input type="text" class="form-control" id="username" name="username" autocomplete="off" placeholder="{lang username}" required/>
+        <span id="chk_username" class="help-msg text-danger"></span>
+      </div>
+      <div class="mb-3 has-feedback">
+        <span class="mdi mdi-lock" aria-hidden="true"></span>
+        <input type="password" class="form-control" id="password" name="password" autocomplete="off" placeholder="{lang register_password_tips}" required/>
+        <span id="chk_password" class="help-msg text-danger"></span> 
+      </div>
+      <div class="mb-3 has-feedback">
+        <span class="mdi mdi-lock" aria-hidden="true"></span>
+        <input type="password" class="form-control" id="password2" name="password2" autocomplete="off" placeholder="{lang register_repassword_tips}" required>
+        <span id="chk_password2" class="help-msg text-danger"></span> 
+      </div>
+      <!--{loop $_G['cache']['fields_register'] $field}-->
+        <!--{if $htmls[$field['fieldid']]}-->
+        <div class="mb-3">
+          <label for="$field['fieldid']"><!--{if $field['required']}--><span class="mdi mdi-asterisk text-danger" aria-hidden="true"></span><!--{/if}-->$field[title]</label>
+          $htmls[$field['fieldid']]
+          <!--{if $field['description']}--><span class="help-block"><!--{echo dhtmlspecialchars($field[description])}--></span><!--{/if}-->
+        </div>
+        <!--{/if}-->
+      <!--{/loop}-->
+      <!--{/if}-->
+      <!--{if $seccodecheck}-->
+      <div class="mb-3">
+        <!--{template lyear:seccheck}-->
+        </div>
+      <!--{/if}-->
+      <!--{if $bbrules}-->
+      <div class="mb-3">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" name="agreebbrule" value="$bbrulehash" id="agreebbrule" checked="checked" />
+          <label>{lang agree}</label>
+          <a class="forgot" href="javascript:;" onclick="showWindow('bbrule','{MOD_URL}&op=ajax&do=bbrule')">{lang rulemessage}</a> 
+        </div>
+      </div>
+      <!--{/if}-->
+			<div class="mb-3 d-grid">
+        <button class="btn btn-round btn-primary" type="submit" name="loginsubmit" value="true"><!--{if $_GET[action] == 'activation'}-->{lang activation}<!--{else}-->$_G[setting][reglinkname]<!--{/if}--></button>
+        <a href="user.php?mod=login" class="btn btn-round btn-success mt-1">{lang back_login}</a>
+      </div>
+      <p class="text-danger text-center" id="returnmessage4"></p>
+		  </form>
+		  <p class="text-center text-muted mt-3"><!--{template lyear:copyright}--></p>
+		</div>
+	  </div>
+	</div>
+<script type="text/javascript">
+	var lastusername = '', lastpassword = '', lastemail = '', lastinvitecode = '', stmp = new Array(), modifypwd = false;
+	var ignoreEmail = false;
+	var strongpw = new Array();
+	<!--{if $_G['setting']['strongpw']}-->
+		<!--{loop $_G['setting']['strongpw'] $key $val}-->
+			strongpw[$key] = $val;
+		<!--{/loop}-->
+	<!--{/if}-->
+	var pwlength = <!--{if $_G['setting']['pwlength']}-->$_G['setting']['pwlength']<!--{else}-->0<!--{/if}-->;
+	
+	jQuery(document).ready(function (e) {
+	
+		addFormEvent('registerform',1);
+		if (jQuery('.ie8,.ie9').length) { //ie8模拟placeholder;
+			jQuery(':input[placeholder]').each(function () {
+				jQuery(this).placeholder();
+			});
+		}
+	});
+</script> 
+<!--{template lyear:footer_simple}-->

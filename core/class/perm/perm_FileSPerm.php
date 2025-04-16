@@ -27,7 +27,7 @@
  */ 
 class perm_FileSPerm{  
 
-  public function getPowerarr(){
+  public static function getPowerarr(){
 	 return array(   
 		   'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
             'read1' => 2,        //读取自己的文件
@@ -51,11 +51,11 @@ class perm_FileSPerm{
             'approve' => 524288,//审批
 			);
   } 
-  public function getPerm($action){
+  public static function getPerm($action){
 	 $powerarr=self::getPowerarr();
 	 return  isset($powerarr[$action])?intval($powerarr[$action]):0;
   }
-   public function getSumByAction($action=array()){ //$action==all 时返回所有的值相加
+   public static function getSumByAction($action=array()){ //$action==all 时返回所有的值相加
 	  $i=0;
 	  $powerarr=self::getPowerarr();
 	  if($action=='all'){
@@ -69,21 +69,21 @@ class perm_FileSPerm{
 	  }
 	  return $i;
   }
-  public function isPower($perm,$action){  
+  public static function isPower($perm,$action){  
     //权限比较时，进行与操作，得到0的话，表示没有权限
 	if(self::getPerm($action)<1) return true;
     if((intval($perm) & self::getPerm($action)) == self::getPerm($action) ) return false;  
     return true;  
   }  
  
- public function typePower($type,$ext=''){ //返回类型的权限
+ public static function typePower($type,$ext=''){ //返回类型的权限
  	global $textexts;
 	  switch($type){
 		default:
 			return 0;
 	  }
   }
-  public function flagPower($flag){ //返回默认目录的权限 
+  public static function flagPower($flag){ //返回默认目录的权限 
 	  switch($flag){
 		  case 'home':case 'document': case 'image': case 'video': case 'music': case 'app':case 'desktop':case 'dock':
 			return self::getSumByAction(array('delete1','delete2','share','edit1','edit2','copy1','copy2','download1','download2'));

@@ -37,7 +37,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 <script src="../build/pdf.js"></script>
 
 
-    <script src="viewer.js"></script>
+  <script src="viewer.js"></script>
 
   </head>
 
@@ -56,6 +56,9 @@ See https://github.com/adobe-type-tools/cmap-resources
             <button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
                <span data-l10n-id="attachments_label">Attachments</span>
             </button>
+            <button id="viewLayers" class="toolbarButton" title="Show Layers (double-click to reset all layers to the default state)" tabindex="5" data-l10n-id="layers">
+               <span data-l10n-id="layers_label">Layers</span>
+            </button>
           </div>
         </div>
         <div id="sidebarContent">
@@ -64,6 +67,8 @@ See https://github.com/adobe-type-tools/cmap-resources
           <div id="outlineView" class="hidden">
           </div>
           <div id="attachmentsView" class="hidden">
+          </div>
+          <div id="layersView" class="hidden">
           </div>
         </div>
         <div id="sidebarResizer" class="hidden"></div>
@@ -202,7 +207,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                     <span data-l10n-id="next_label">Next</span>
                   </button>
                 </div>
-                <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page">
+                <input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
                 <span id="numPages" class="toolbarLabel"></span>
               </div>
               <div id="toolbarViewerRight">
@@ -210,7 +215,7 @@ See https://github.com/adobe-type-tools/cmap-resources
                   <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
                 </button>
 
-                <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file" style="display:none">
+                <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
                   <span data-l10n-id="open_file_label">Open</span>
                 </button>
 
@@ -300,7 +305,7 @@ See https://github.com/adobe-type-tools/cmap-resources
             </button>
           </div>
           <div class="clearBoth"></div>
-          <textarea id="errorMoreInfo" hidden='true' readonly></textarea>
+          <textarea id="errorMoreInfo" hidden='true' readonly="readonly"></textarea>
         </div>
       </div> <!-- mainContainer -->
 

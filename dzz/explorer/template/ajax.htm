@@ -5,10 +5,9 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span class="dzz dzz-close "></span>
     </button>
-    <h4 class="modal-title">{lang new_group}</h4>
+    <h4 class="modal-title text-truncate">{lang new_group}</h4>
 </div>
-<form class="form-horizontal" action="{MOD_URL}&op=ajax&operation=addgroup" method="post"
-      onsubmit="return addgroup_submit(this)">
+<form class="form-horizontal" action="{MOD_URL}&op=ajax&operation=addgroup" method="post" onsubmit="return addgroup_submit(this)">
     <input type="hidden" name="arr[aid]" value="" id="defaultcolor"/>
     <div class="modal-body group-top">
         <div class="form-group">
@@ -31,8 +30,7 @@
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-primary">{lang newly_build}</button>
-        <button type="button" class="btn btn-default-outline cancel" data-dismiss="modal" aria-label="Close">{lang
-            cancel}
+        <button type="button" class="btn btn-default-outline cancel" data-dismiss="modal" aria-label="Close">{lang cancel}
         </button>
     </div>
 
@@ -86,7 +84,7 @@
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="dzz dzz-close "></span>
     </button>
-    <h4 class="modal-title" id="myModalLabel">{lang directory_right}</h4>
+    <h4 class="modal-title text-truncate" id="myModalLabel">{lang directory_right}</h4>
 </div>
 <form>
     <div class="modal-body">
@@ -233,7 +231,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span class="dzz dzz-close "></span>
     </button>
-    <h4 class="modal-title" id="myModalLabel">{lang new_type}</h4>
+    <h4 class="modal-title text-truncate" id="myModalLabel">{lang new_type}</h4>
 </div>
 <form action="{MOD_URL}&op=ajax&operation=addsearchcat" method="post" onsubmit="addsearchcat(this);return false;">
     <div class="modal-body group-top">
@@ -374,7 +372,7 @@
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span class="dzz dzz-close "></span>
     </button>
-    <h4 class="modal-title">{lang newfolder}</h4>
+    <h4 class="modal-title text-truncate">{lang newfolder}</h4>
 </div>
 <form onsubmit=" return chk_create(this);">
     <div class="modal-body group-top">
@@ -526,7 +524,7 @@
     <div class="modal-header email-title">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="dzz dzz-close "></span>
         </button>
-        <h4 class="modal-title"><!--{if $propertys[name]}-->$propertys[name]<!--{/if}-->{lang property}</h4>
+        <h4 class="modal-title text-truncate"><!--{if $propertys[name]}-->$propertys[name]<!--{/if}-->{lang property}</h4>
     </div>
     <div class="modal-body nature-body">
         <!--{if $propertys[name]}-->
@@ -535,12 +533,9 @@
                 <label class="control-label input-label">{lang name}</label>
                 <div class="input-animate">
                     <input type="hidden" name="path" value="$propertys[rid]"/>
-                    <input type="text" class="form-control"  <!--{if !$propertys[editperm]}-->readonly="readonly"
-                    <!--{/if}-->name="text"
-                    value="$propertys[name]">
+                    <input type="text" class="form-control" <!--{if !$propertys[editperm]}-->readonly="readonly" <!--{/if}-->name="text" value="$propertys[name]">
                 </div>
             </div>
-
         </div>
         <!--{/if}-->
         <div class="custom-from clearfix">
@@ -641,7 +636,7 @@
     <div class="modal-header email-title">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="dzz dzz-close "></span>
         </button>
-        <h4 class="modal-title">{lang create_share}</h4>
+        <h4 class="modal-title text-truncate">{lang create_share}</h4>
     </div>
     <div class="modal-body">
         <div class="form-group share-click clearfix">
@@ -714,6 +709,12 @@
                         <div class="checkbox-custom checkbox-primary">
                             <input class="form-check-input" type="checkbox" id="edit" name="perm[]" value="4" <!--{if $share['perm']}--><!--{if in_array(4,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
                             <label class="form-check-label" for="edit">允许编辑</label>
+                        </div>
+                    </li>
+                    <li class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="checkbox-custom checkbox-primary">
+                            <input class="form-check-input" type="checkbox" id="create" name="perm[]" value="5" <!--{if $share['perm']}--><!--{if in_array(5,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
+                            <label class="form-check-label" for="create">可读写(上传,新建)</label>
                         </div>
                     </li>
                 </ul>
@@ -847,7 +848,7 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                 aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">{lang add_url}</h4>
+        <h4 class="modal-title text-truncate">{lang add_url}</h4>
     </div>
     <div class="modal-body">
         <input type="text" class="form-control focus" value="http://" name="link">
@@ -882,7 +883,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span class="dzz dzz-close "></span>
         </button>
-        <h4 class="modal-title">{lang edit_version_information}</h4>
+        <h4 class="modal-title text-truncate">{lang edit_version_information}</h4>
     </div>
     <div class="modal-body group-top">
         <div class="col-md-12 col-sm-12 input-float input-black">
@@ -958,7 +959,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span class="dzz dzz-close "></span>
         </button>
-        <h4 class="modal-title">{lang edit_label}</h4>
+        <h4 class="modal-title text-truncate">{lang edit_label}</h4>
     </div>
     <div class="modal-body group-top edit-labeltags">
         <div class="col-md-12 col-sm-12">
@@ -1068,13 +1069,11 @@ data-rid="$arr[rid]" data-ext="$arr[ext]" data-type="$arr['type']"data-name="$ar
     <li class="td-file-time">{eval echo dgmdate($arr['dateline'],'Y-m-d H:i:s')}</li>
 </ul>
 </li>
-
 <!--{else}-->
 <script type="text/javascript" reload="1">
     closeModal('#exampleMultipleOne');
     // showWindow('#exampleMultipleOne', 'index.php?mod=explorer&op=ajax&operation=showtips&msg={$arr[error]}');
     showDialog('{$arr[error]}');
-
 </script>
 <!--{/if}-->
 <!--{/if}-->

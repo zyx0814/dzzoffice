@@ -75,8 +75,8 @@ $lang = array (
 	'orguser_ajax_delete'=>'在机构或部门中的用户，不支持彻底删除，请先从机构或部门中删除后重试',
 	'no_parallelism_jurisdiction'=>'没有对应部门的权限',
 	// admin/orguser/edituser.php	
-	'orguser_edituser_add_user'=>'<div class="well alert-danger">抱歉！您没有在此机构或部门下添加用户的权限！<br><br>可以在左侧选择有权限的部门，再重试添加</div>',
-	'orguser_edituser_add_user1'=>'<div class="well alert-danger">抱歉！您没有此用户的管理权限！<br><br>可以在左侧选择有权限管理的用户，再重试添加</div>',
+	'orguser_edituser_add_user'=>'<div class="well alert alert-danger">抱歉！您没有在此机构或部门下添加用户的权限！<br><br>可以在左侧选择有权限的部门，再重试添加</div>',
+	'orguser_edituser_add_user1'=>'<div class="well alert alert-danger">抱歉！您没有此用户的管理权限！<br><br>可以在左侧选择有权限管理的用户，再重试添加</div>',
 	// admin/orguser/import.php
 	'orguser_import_user'=>'没有权限，只有系统管理员才能导入用户',
 	'orguser_import_user_table'=>'人员信息表上传未成功，请重新上传',
@@ -85,7 +85,7 @@ $lang = array (
 	'orguser_import_tautology'=>'上传信息表未成功，请稍候重试',
 	'orguser_import_user_message_table'=>'请选择人员信息表',
 	// admin/orguser/vidw.php
-	'orguser_vidw_delete'=>'<div class="well alert-danger">抱歉！您没有此部门的管理权限！<br><br>可以在左侧选择有权限管理的部门</div>',
+	'orguser_vidw_delete'=>'<div class="well alert alert-danger">抱歉！您没有此部门的管理权限！<br><br>可以在左侧选择有权限管理的部门</div>',
 	// admin/member/adduser.html
 	'adduser_login_email_text'=>'必填，可用于系统登录，员工关注企业号时，会根据邮箱来匹配。',
 	'adduser_compellation_text'=>'必填，系统中显示，便于同事辨识',

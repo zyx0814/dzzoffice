@@ -2,7 +2,6 @@
 if(!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-
 class core
 {
 	private static $_tables;
@@ -64,6 +63,7 @@ class core
 				self::import('class'.'/'.$type.'/'.$name,$folder);
 			}
 			if($extendable) {
+				
 				self::$_tables[$cname] = new dzz_container();
 				switch (count($p)) {
 					case 0:	self::$_tables[$cname]->obj = new $cname();break;
@@ -120,6 +120,7 @@ class core
 					if(defined('CURMODULE')) $path2=DZZ_ROOT.'/'.CURSCRIPT.'/'.CURMODULE.'/';
 				}
 			}
+			
 		
 			if(strpos($name, '/') !== false) {
 				$pre = basename(dirname($name));

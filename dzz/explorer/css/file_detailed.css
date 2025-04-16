@@ -300,15 +300,7 @@
 	width:auto;
 	min-width:130px;
 }
-.yunfile-moreMenu .dropdown-menu>.dropdown-submenu>a:after{
-	right:15px;
-}
-.yunfile-moreMenu .dropdown-menu>.dropdown-submenu .dropdown-menu{
-	left: calc(-106%);
-	left: -moz-calc(-106%);
-	left: -webkit-calc(-106%);
-}
-.yunfile-moreMenu .dropdown-menu .filee-icon {
+.dropdown-menu .filee-icon {
 	width: 16px;
     height: 16px;
     top: 10px;

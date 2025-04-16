@@ -10,7 +10,6 @@
 if(!defined('IN_DZZ')) {
 	exit('Access Denied');
 }
- 
 include_once DZZ_ROOT . './core/core_version.php';
 require_once  libfile('function/admin');
 include_once libfile('function/cache');

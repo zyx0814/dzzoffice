@@ -81,7 +81,7 @@ if ($do == 'stats') {
 		// 返回JSON数据
 		exit(json_encode($response));
 	}else{
-		include template('stats','lyear');
+		include template('stats');
 		exit();
 	}
 } elseif ($do == 'systemcheck') {
@@ -113,7 +113,7 @@ if ($do == 'stats') {
 		'MySQL数据库持续连接' => array('r' => '不限制', 'b' => '不限制'),
 		'域名' => array('r' => '不限制', 'b' => '不限制'),
 		'服务器端口' => array('r' => '不限制', 'b' => '不限制'),
-		'运行环境' => array('r' => '不限制', 'b' => '不限制'),
+		'运行环境' => array('r' => '不限制', 'b' => 'nginx'),
 		'网站根目录' => array('r' => '不限制', 'b' => '不限制'),
 		'执行时间限制' => array('r' => '不限制', 'b' => '不限制'),
 	);
@@ -176,7 +176,7 @@ if ($do == 'stats') {
 		$env_str .= ($status ? "<td class=\"text-success\"><i class=\"mdi lead mdi-check-circle me-2\"></i>" : "<td class=\"nw text-danger\"><i class=\"mdi lead mdi-close-circle me-2\"></i>").$item['current']."</td>\n";
 		$env_str .= "</tr>\n";
 	}
-	include template('systemcheck','lyear');
+	include template('systemcheck');
 	exit();
 }
 $appdata=DB::fetch_all("select appname,appico,appurl,identifier from %t where `group`=3 and isshow>0 and `available`>0",array('app_market')); 
@@ -189,27 +189,25 @@ foreach($appdata as $k => $v){
 	$v['url']=replace_canshu($v['appurl']);
 	$data[]=$v;
 }
-if (isset($_G['setting']['template']) && $_G['setting']['template'] === 'lyear') {
-	$zaixianrenshu = C::app()->session->count(1);
-	$yonghurenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE uid");
-	$tingyongrenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE status");
-	$wenjiangeshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('attachment') . " WHERE aid");
-	$kongjianshiyong=formatsize(DB::result_first("SELECT SUM(filesize) FROM ".DB::table('attachment')));
-	$version = 'V'.CORE_VERSION;//版本信息
-	$RELEASE = CORE_RELEASE;
-	$currentHour = date('G');
-	if ($currentHour >= 5 && $currentHour < 12) {
-		$greeting = "早上好";
-	} elseif ($currentHour >= 12 && $currentHour < 18) {
-		$greeting = "下午好";
-	} elseif ($currentHour >= 18 || $currentHour < 5) {
-		$greeting = "晚上好";
-	}
-	$userstatus = C::t('user_status')->fetch($_G['uid']);
-	$weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-	$dateI = date('w');
-	$dateInfo = date('Y-n-j H:i') . ' 星期' . $weekdays[$dateI];
+$zaixianrenshu = C::app()->session->count(1);
+$yonghurenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE uid");
+$tingyongrenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE status");
+$wenjiangeshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('attachment') . " WHERE aid");
+$kongjianshiyong=formatsize(DB::result_first("SELECT SUM(filesize) FROM ".DB::table('attachment')));
+$version = 'V'.CORE_VERSION;//版本信息
+$RELEASE = CORE_RELEASE;
+$currentHour = date('G');
+if ($currentHour >= 5 && $currentHour < 12) {
+	$greeting = "早上好";
+} elseif ($currentHour >= 12 && $currentHour < 18) {
+	$greeting = "下午好";
+} elseif ($currentHour >= 18 || $currentHour < 5) {
+	$greeting = "晚上好";
 }
+$userstatus = C::t('user_status')->fetch($_G['uid']);
+$weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+$dateI = date('w');
+$dateInfo = date('Y-n-j H:i') . ' 星期' . $weekdays[$dateI];
 include template('main');
 function phpBuild64(){
 	if(PHP_INT_SIZE === 8) return true;//部分版本,64位会返回4;

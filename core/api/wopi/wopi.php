@@ -251,7 +251,7 @@ class Wopi
 		);
 		return $ret; //LINK SHOW TEST
 	}
-	private function getActionByDiscovery($oosDiscoveryUrl){
+	private static function getActionByDiscovery($oosDiscoveryUrl){
 		$cachefile=getglobal('setting/attachdir').'./cache/'.md5($oosDiscoveryUrl).'.cache';
 		if(file_exists($cachefile)){
 			$sourceXml=file_get_contents($cachefile);

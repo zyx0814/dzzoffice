@@ -82,6 +82,6 @@ $lang = array (
 	'buy'=>'购买',
 	'view_detail'=>'查看详细',
 	'buy_contract'=>'联系购买',
-	'manual_install_tip'=>'注：如不能在线安装，请通过 <a class="num" href="http://www.dzzoffice.com/index.php?mod=dzzmarket" target="_blank">官方应用市场</a> 下载应用安装包手动安装'
+	'manual_install_tip'=>'如不能在线安装或需要选择安装老版本的应用，请通过 <a class="num" href="http://www.dzzoffice.com/index.php?mod=dzzmarket" target="_blank">官方应用市场</a> 下载应用安装包手动安装'
 );
 ?>

@@ -187,8 +187,11 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 	$show_message .= $extra ? '<script type="text/javascript" reload="1">'.$extra.$st.'</script>' : '';
 	$show_message .= $param['extrajs'] ? $param['extrajs'] : '';
 	//print_r($param);exit($show_message);
-	include template('common/showmessage');
-
+	if(defined('template') && template == '1') {
+		include template('common/showmessage','lyear');
+	} else {
+		include template('common/showmessage');
+	}
 	exit();
 }
 ?>

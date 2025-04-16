@@ -1,0 +1,43 @@
+﻿.CONTENT.filemanage{font-size:13px;overflow:hidden;background:#FBFBFB}
+.filemanage .icosContainer{overflow-y:auto;overflow-x:hidden;width:100%;border-top:1px solid #FFF}
+.filemanage-header .nav,.filemanage-bottom .nav{margin:0}
+.nav > li > a:focus{background:none;text-decoration:none}
+.nav-pills .dropdown-menu{border-radius:0;min-width:100px}
+.filemanage-bottom span{padding:0 10px}
+.filemanage .detail_header_asc{display:inline-block;vertical-align:middle;height:4px;width:13px;margin-left:3px;background-repeat:no-repeat;_margin-top:10px}
+.filemanage .detail_header{overflow:visible}
+.filemanage .detail_header:hover,.filemanage .detail_header_hover{background:#F7F7F7;}
+.filemanage .detail_header_td_div{overflow:hidden;line-height:22px;height:22px;overflow:visible;position:relative}
+.filemanage .detail_item_name_icon{max-width:28px;max-height:28px;display:inline;vertical-align:middle;margin-top:-5px}
+*html .filemanage .detail_item_name_icon{width:expression(this.width > 28 && this.width>=this.height ? 28:true);height:expression(this.height > 28 && this.width<=this.height ? 28:true)}
+.filemanage .detail_tr.Icoselected td .text-dark, .filemanage .detail_tr.Icoselected td .detail_item_td_position_span {
+    color: #fff !important;
+}
+.filemanage .detail_item_name_text{margin-left:5px;cursor:default;}
+.filemanage .detail_item_td_div{overflow:hidden;line-height:30px;height:30px;overflow:hidden;float:left}
+.filemanage .detail_tr a:hover{text-decoration:none}
+.filemanage .detail_tr.hover{transition:all 0.2s ease-in 0s}
+.filemanage .detail_tr.Icoselected{transition:all 0.2s ease-in 0s}
+.filemanage .detail_item_name{margin:0 10px;line-height:30px;font-size:12px;height:30px;text-shadow:1px 1px 1px #FFF;font-weight:700;overflow:hidden;word-wrap:nowrap}
+.filemanage .detail_item_name span{cursor:pointer}
+.glow{filter:glow(color=#FF9900,strengh=2);-moz-box-shadow:0px 0px 2px #FF9900;-webkit-box-shadow:0px 0px 2px #FF9900;box-shadow:0px 0px 2px #FF9900;border-radius:5px;-moz-border-radius:2px;-webket-border-radius:2px}
+.Icoblock.iscut{opacity:0.6;filter:alpha(opacity=60)}
+.Icoblock.middleicon{position:relative;float:left;padding:0;z-index:10;overflow:visible;margin:10px}
+.Icoblock.middleicon .icoimgContainer{position:relative;width:50px;height:50px}
+.IcoText{color:#fff;font-weight:700;font-family:Tahoma,'微软雅黑','Simsun';word-break:break-all;text-shadow:1px 1px 1px #000,0px 0px 1px #000,0px 0px 1px #000,0px 0px 1px #000;display:inline-block}
+.IcoText:hover,.IcoText:focus{color:#FFF;text-decoration:none}
+.IcoText_textarea{border:1px solid #6CABE7;font-size:13px;overflow:visible;z-index:99999999}
+.download_icon{background-position:0px -40px}
+.download_icon:hover{background-position:-20px -40px}
+.menu{position:absolute;background:#F7F7F7;margin:0;padding:2px;border:1px solid #ccc;width:150px;z-index:99999}
+.menu-item{position:relative;margin:0;padding:0;height:30px;line-height:30px;font-size:14px;cursor:pointer;border:1px solid #F7F7F7}
+.menu-text{position:absolute;left:30px;top:0px;width:120px;height:30px;overflow:hidden}
+.menu-text .caret{display:none}
+.menu-text .caret.asc{display:inline-block;margin-top:-5px;vertical-align:middle;border-bottom:4px solid;border-right:4px solid transparent;border-left:4px solid transparent;border-top:4px solid transparent}
+.menu-text .caret.desc{display:inline-block;width:0;height:0;margin-left:2px;vertical-align:middle;border-top:4px solid;border-right:4px solid transparent;border-left:4px solid transparent}
+.menu-icon{position:absolute;width:16px;height:16px;left:5px;background-repeat:no-repeat}
+.menu-rightarrow{position:absolute;width:4px;height:7px;top:11px;right:5px;background:url('images/menu_rightarrow.png') no-repeat}
+.menu-sep{position:relative;display:block;height:2px;margin:3px 0px 3px 24px;line-height:2px;font-size:2px;background:url('images/menu_sep.png') repeat-x}
+.menu-active{border:1px solid #7eabcd;background:#fafafa;-moz-border-radius:3px;-webkit-border-radius:3px}
+.menu_active{background:#FFF;-moz-border-radius:3px;-webkit-border-radius:3px;border:1px solid #7eabcd}
+.menu-shadow{position:absolute;background:#ddd;-moz-border-radius:5px;-webkit-border-radius:5px;-moz-box-shadow:2px 2px 3px rgba(0,0,0,0.2);-webkit-box-shadow:2px 2px 3px rgba(0,0,0,0.2);filter:progid:DXImageTransform.Microsoft.Blur(pixelRadius=2,MakeShadow=false,ShadowOpacity=0.2)}

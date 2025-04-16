@@ -37,7 +37,6 @@ if(isset($_GET['lostpwsubmit'])) {
     //require_once libfile('function/mail');
     $get_passwd_subject = lang('email', 'get_passwd_subject');
     $get_passwd_message = lang(
-      
         'get_passwd_message',
         array(
             'username' => $member['username'],
@@ -48,7 +47,6 @@ if(isset($_GET['lostpwsubmit'])) {
             'clientip' => $_G['clientip'],
         )
     );
-
     if(!sendmail("$_GET[username] <$tmp[email]>", $get_passwd_subject, $get_passwd_message)) {
         runlog('sendmail', "$tmp[email] sendmail failed.");
     }
