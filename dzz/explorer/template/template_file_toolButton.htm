@@ -18,8 +18,12 @@
     <a href="javascript:;" type="button" class="btn cut" onclick="_filemanage.cut('{rid}')" ><i
             class="dzz dzz-content-cut" data-toggle="tooltip" data-placement="bottom" title="{lang cut}"></i></a>
     <a href="javascript:;" type="button" class="btn paste" onclick="_filemanage.paste('{fid}')" ><i class="glyphicon glyphicon-paste"    data-toggle="tooltip" data-placement="bottom" title="{lang paste}"></i></a>
-    <a href="javascript:;" type="button" class="btn share" onclick="_filemanage.share('{rid}')" ><i
-            class="dzz dzz-share" data-toggle="tooltip" data-placement="bottom"  title="{lang share}"></i> </a>
+    <a href="javascript:;" type="button" class="btn share" onclick="_filemanage.share('{rid}')" ><i class="dzz dzz-share" data-toggle="tooltip" data-placement="bottom"  title="{lang share}"></i> </a>
+    <div class="dropdown openwith single" style="display: inline-block;">
+        <a href="javascript:;" type="button" class="btn dropdown-toggle more" data-toggle="dropdown"><i class="dzz dzz-export" data-toggle="tooltip" data-placement="bottom"  title="{lang openwith}"></i> </a>
+        <ul class="dropdown-menu"></ul>
+    </div>
+    
     
 </div>
 <div class="yunfile-moreMenu">
@@ -29,10 +33,6 @@
         <ul class="dropdown-menu">
             <li class="open single"><a href="javascript:;" onclick="_filemanage.Open('{rid}')"><i
                     class="dzz dzz-open"></i> {lang open}</a></li>
-            <li class="dropdown-submenu openwith single"><a href="javascript:;"><i
-                    class="dzz dzz-export"></i> {lang openwith}</a>
-                <ul class="dropdown-menu"></ul>
-            </li>
             <li class="rename single"><a href="javascript:;" onclick="_filemanage.rename('{rid}')"><i
                     class="dzz dzz-create"></i> {lang rename}</a></li>
             <li class="copy"><a href="javascript:;" onclick="_filemanage.copy('{rid}')"><i

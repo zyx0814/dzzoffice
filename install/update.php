@@ -104,9 +104,6 @@ if($_GET['step'] == 'start') {
 	if(strcmp($phpversion, '7+') < 0) {
 		show_msg($msg);
 	}
-	if(strcmp($phpversion, '8.0') >=0) {
-		show_msg($msg);
-	}
 	show_msg('<h2>说明：</h1>本升级程序会参照最新的SQL文件，对数据库进行同步升级。<br>
 			请确保网站根目录下 ./install/data/install.sql 文件为最新版本。<br>请在升级之前做好站点全量数据（含数据库、文件）的备份操作，并小心操作。<br><br>
 			<a href="'.$theurl.'?step=prepare'.($_GET['from'] ? '&from='.rawurlencode($_GET['from']).'&frommd5='.rawurlencode($_GET['frommd5']) : '').'">准备完毕，开始升级</a>');
@@ -136,7 +133,7 @@ if($_GET['step'] == 'start') {
 } elseif ($_GET['step'] == 'sql') {
 	$sql = implode('', file($sqlfile));
 	preg_match_all("/CREATE\s+TABLE.+?dzz\_(.+?)\s*\((.+?)\)\s*(ENGINE|TYPE)\s*=\s*(\w+)/is", $sql, $matches);
-	$newtables = empty($matches[1])?array():$matches[1];
+	$newtables = empty($matches[1])?array():str_replace('`', '', $matches[1]);
 	$newsqls = empty($matches[0])?array():$matches[0];
 	if(empty($newtables) || empty($newsqls)) {
 		show_msg('SQL文件内容为空，请确认');
@@ -448,8 +445,8 @@ if($_GET['step'] == 'start') {
 	}
 
 	$sql = implode('', file($sqlfile));
-	preg_match_all("/CREATE\s+TABLE.+?dzz\_(.+?)\s+\((.+?)\)\s*(ENGINE|TYPE)\s*\=/is", $sql, $matches);
-	$newtables = empty($matches[1])?array():$matches[1];
+	preg_match_all("/CREATE\s+TABLE.+?dzz\_(.+?)\s*\((.+?)\)\s*(ENGINE|TYPE)\s*=\s*(\w+)/is", $sql, $matches);
+	$newtables = empty($matches[1])?array():str_replace('`', '', $matches[1]);
 	$newsqls = empty($matches[0])?array():$matches[0];
 	$deltables = array();
 	$delcolumns = array();
@@ -667,7 +664,7 @@ function show_header() {
 	<meta name="author" content="DzzOffice" />
 	<title>DzzOffice 升级程序</title>
 	<style type="text/css">
-	body { margin: 0; padding: 0; background: #f4f5fa;font-size: 14px; }
+	body { margin: 0; padding: 0; background: #f4f5fa;font-size: 16px; }
 	.bodydiv {margin: 40px auto 40px auto; max-width:720px; border: 1px solid #007bff; border-width: 5px 1px 1px; background: #FFF; border-radius: 12px;box-shadow: 0 5px 10px rgba(0, 0, 0, .15) !important;}
 	h1 { font-size: 18px; margin: 0; padding: 10px; color: #495057; padding-left: 10px; border-bottom: 1px solid #ededee;}
 	#menu {width: 100%; margin: 0 0 10px 0; text-align: center; }

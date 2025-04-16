@@ -121,9 +121,11 @@ function logincheck($username)
     global $_G;
 
     $return = 0;
-    $username = trim($username);
+    $numberoflogins = $_G['setting']['numberoflogins'] ? $_G['setting']['numberoflogins'] : 5;
+    $forbiddentime = $_G['setting']['forbiddentime'] ? $_G['setting']['forbiddentime'] : 900;
+    $username = isset($username) ? trim($username) : '';
     $login = C::t('failedlogin')->fetch_ip($_G['clientip'], $username);
-    $return = (!$_G['config']['userlogin']['checkip'] || !$login || (TIMESTAMP - $login['lastupdate'] > 900)) ? 5 : max(0, 5 - $login['count']);
+    $return = (!$_G['config']['userlogin']['checkip'] || !$login || (TIMESTAMP - $login['lastupdate'] > $forbiddentime)) ? $numberoflogins : max(0, $numberoflogins - $login['count']);
 
     if (!$login) {
         C::t('failedlogin')->insert(array(
@@ -252,10 +254,8 @@ function checkemail($email, $type = 'json', $template = '')
 {
 
     global $_G;
-
     $email = strtolower(trim($email));
     if (strlen($email) > 32) {
-        //showmessage('profile_email_illegal');
         showTips(array('error' => lang('profile_email_illegal')), $type, $template);
     }
     if (isset($_G['setting']['regmaildomain'])) {
@@ -275,7 +275,6 @@ function checkemail($email, $type = 'json', $template = '')
 
     $ucresult = uc_user_checkemail($email);
     if ($ucresult == -4) {
-        //showmessage('profile_email_illegal');
         showTips(array('error' => lang('profile_email_illegal')), $type, $template);
     } elseif ($ucresult == -5) {
         //showmessage('profile_email_domain_illegal');

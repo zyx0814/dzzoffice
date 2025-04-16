@@ -15,7 +15,7 @@ class Loginvalchk{
 
         if (!($_G['member_loginperm'] = logincheck($params['email']))) {//登录失败错误次数
 
-            showTips(array('error' => lang('login_strike')), $type);
+            showTips(array('error' => lang('login_strike', array('forbiddentime' => $_G['setting']['forbiddentime'] ? $_G['setting']['forbiddentime'] : 900))), $type);
 
         }
         if ($params['fastloginfield']) {

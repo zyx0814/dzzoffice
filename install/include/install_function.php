@@ -163,10 +163,6 @@ function env_check(&$env_items) {
 		if($item['r'] != 'notset' && strcmp($env_items[$key]['current'], $item['r']) < 0) {
 			$env_items[$key]['status'] = 0;
 		}
-		//判断最高版本
-		if(isset($item['m']) && strcmp($env_items[$key]['current'], $item['m']) >= 0) {
-			$env_items[$key]['status'] = 0;
-		}
 	}
 }
 
@@ -191,9 +187,6 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
 	$error_code = 0;
 	foreach($env_items as $key => $item) {
 		if($key == 'php' && strcmp($item['current'], $item['r']) < 0) {
-			show_msg('php_version_too_low', '当前PHP版本：'.$item['current'], 0);
-		}
-		if($key == 'php' && strcmp($item['current'], $item['m']) >=0) {
 			show_msg('php_version_too_low', '当前PHP版本：'.$item['current'], 0);
 		}
 		$status = 1;

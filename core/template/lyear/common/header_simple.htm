@@ -24,8 +24,12 @@
     <script type="text/javascript">
       var DZZSCRIPT='{DZZSCRIPT}',LANG='{$_G['language']}', STATICURL = 'static/', IMGDIR = '{$_G['setting']['imgdir']}', VERHASH = '{VERHASH}', charset = '{CHARSET}', dzz_uid = '{$_G['uid']}', cookiepre = '{$_G['config']['cookie']['cookiepre']}', cookiedomain = '{$_G[config]['cookie']['cookiedomain']}', cookiepath = '{$_G['config']['cookie']['cookiepath']}',attackevasive = '{$_G['config']['security']['attackevasive']}', disallowfloat = '{$_G['setting']['disallowfloat']}',  REPORTURL = '{$_G['currenturl_encode']}', SITEURL = '{$_G['siteurl']}', JSPATH = '{$_G['setting']['jspath']}',MOD_PATH='{MOD_PATH}',APP_URL='{MOD_URL}',MOD_URL='{MOD_URL}',sitename='{$_G['setting']['sitename']}',ismobile = '{$_G['ismobile']}',data_theme = '{$_G['cookie']['the_site_theme']}';
     </script>
+    <!--[if lt IE 9]>
+        <script src="static/lyear/js/html5.min.js"></script>
+        <script src="static/lyear/js/respond.min.js"></script>
+    <![endif]-->
     <!--{hook header_tpl}-->
   </head>
-  <body id="nv_{$_G['basescript']}" class="$bodyClass"<!--{if !empty($lyeartheme)}--> data-theme="$_G['cookie']['the_site_theme']"<!--{/if}--> style="$bodystyle">
+  <body id="nv_{$_G['basescript']}" class="$bodyClass" style="$bodystyle" <!--{if !empty($lyeartheme)}--> data-theme="$_G['cookie']['the_site_theme']"<!--{/if}-->>
     <div id="append_parent" style="z-index:99999;"></div>
     <div id="ajaxwaitid" style="z-index:99999;"></div>

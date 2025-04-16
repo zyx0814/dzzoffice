@@ -5,7 +5,6 @@ function loginsub(formid,rspaceid){
 
     url = (url)? url:'user.php?mod=login&op=logging&action=login&loginsubmit=yes';
 
-
     var formData = jQuery('#'+formid).serialize();
 
     var type = 'json';
@@ -43,7 +42,6 @@ function lostpass(contid,formid,rspaceid){
 		
         if(json['success']){
           var el=jQuery('#'+contid);
-			console.log(el);
 			var mail='http://mail.'+json['success'].email.split('@')[1];
 			el.find('.Mtitle').html(__lang.password_back_email_sent_successfully);
 			el.find('.Mbody').html(json['success'].msg);
@@ -52,7 +50,6 @@ function lostpass(contid,formid,rspaceid){
 			})
 			el.find('.modal-footer').show();
         }else if(json['error']){
-			
             jQuery('#'+rspaceid).html(json['error']);
 
         }else{

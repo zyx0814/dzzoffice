@@ -17,7 +17,7 @@ if($_GET['action'] == 'checkupgrade') {
 	if($_G['uid'] && $_G['member']['adminid'] == 1) { 
 		$dzz_upgrade_app = new dzz_upgrade_app(); 
 		$dzz_upgrade_app->check_upgrade();
-		dsetcookie('checkappupgrade', 1, 3600);
+		dsetcookie('checkappupgrade', 1, 60*60*24);
 	}
 	exit; 
 } elseif($_GET['action'] == 'upgradenotice') {

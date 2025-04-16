@@ -9,11 +9,11 @@
 </style>
 <div class="modal-header">
   <!--{if $about['logo']}-->
-  <h4 class="modal-title">
+  <h4 class="modal-title text-truncate">
     <img class="img-sitelogo" src="$sitelogo"><span class="sitename p-2"><b>$_G['setting']['sitename']</b></span>
   </h4>
   <!--{/if}-->
-  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body text-center">
   <p class="aboutlogo">
@@ -35,11 +35,11 @@
   <p class="license">
     <span class="text-muted">Dzz{lang version}：</span>{lang community_edition} $version
   </p>
-  <p class="support">
-    <span class="text-muted">{lang license}：</span><a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_blank" class="dcolor">AGPL V3 {lang public_license}</a>
+  <p class="text-muted">
+    <span>{lang license}：</span><a href="http://www.gnu.org/licenses/agpl-3.0.html" target="_blank">AGPL V3 {lang public_license}</a>
   </p>
-  <p class="support">
-    <span class="text-muted">{lang service_and_support}：</span><a href="http://www.dzzoffice.com" target="_blank" class="dcolor">www.dzzoffice.com</a>
+  <p class="text-muted">
+    <span>{lang service_and_support}：</span><a href="http://www.dzzoffice.com" target="_blank">www.dzzoffice.com</a>
   </p>
 </div>
 <div class="copyright text-muted text-center">

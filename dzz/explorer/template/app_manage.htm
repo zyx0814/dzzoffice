@@ -58,7 +58,7 @@
 	                    <div class="clearfix">
 	                        <div id="orgids">
 	                            <!--{loop $sel_org $value}-->
-	                            <button id="orgids_sl_$value[orgid]" type="button"
+	                            <button id="orgids_sl_$value['orgid']" type="button"
 	                                    class="btn btn-simple btn-sorg" data-val="$value['orgid']">
 									{eval echo avatar_group($value['orgid'],null,'iconFirstWord');}
 	                                $value[orgname] <a href="javascript:;"
@@ -143,7 +143,7 @@
 					    <div class="clearfix">
 					        <div id="groupcreateids">
 					            <!--{loop $sel_org1 $value}-->
-					            <button id="groupcreateids_sl_$value[orgid]" type="button" class="btn btn-simple btn-sorg" data-val="$value['orgid']">
+					            <button id="groupcreateids_sl_$value['orgid']" type="button" class="btn btn-simple btn-sorg" data-val="$value['orgid']">
 									{eval echo avatar_group($value['orgid'],null,'iconFirstWord');}
 					                $value[orgname] <a href="javascript:;" class="ibtn dzz dzz-close " title="{lang delete}" onclick="selorg.remove('groupcreateids',this);"></a>
 					            </button>

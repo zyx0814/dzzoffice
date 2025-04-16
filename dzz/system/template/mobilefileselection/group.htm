@@ -23,7 +23,7 @@
     <!--{if $groups}-->
     <!--{loop $groups $v}-->
     <div class="weui-cell weui-cell_access weui-cell_longpress document-data"
-         data-hash="#file&gid={$v[orgid]}&fid={$v[fid]}">
+         data-hash="#file&gid={$v['orgid']}&fid={$v[fid]}">
         <div class="weui-cell__hd">
             <!--{if $v['imgs']}-->
             <img src="$v[img]" class="weui-cell__recentimg">

@@ -134,7 +134,7 @@ if(!isset($_GET['loginsubmit'])) {//是否提交
 
         } else {
 
-            showTips(array('error'=>lang('login_strike')),$type);
+            showTips(array('error'=>lang('login_strike', array('forbiddentime' => $_G['setting']['forbiddentime'] ? $_G['setting']['forbiddentime'] : 900))),$type);
         }
     }
 }

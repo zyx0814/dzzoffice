@@ -42,7 +42,7 @@ class dzz_notification {
 			'redirecturl'=>$redirect,
 			'title'=>$title,
 			'authorid' => $_G['uid'],
-			'author' => $_G['username'],
+			'author' => $_G['username'] ? $_G['username'] : $_G['clientip'],
 			'note' => $notestring,
 			'dateline' => $_G['timestamp'],
 			'from_id' => $notevars['from_id'],

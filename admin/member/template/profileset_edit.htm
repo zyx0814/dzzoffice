@@ -1,224 +1,241 @@
-<!--{template common/header_simple_start}-->
-<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
-<link href="static/icheck/skins/minimal/blue.css?{VERHASH}" rel="stylesheet" media="all">
-<link href="static/select2/select2.css?{VERHASH}" rel="stylesheet" media="all">
-<link href="static/select2/select2-bootstrap.css?{VERHASH}" rel="stylesheet" media="all">
-<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
-<style>
-	html,
-	body {
-		overflow: hidden;
-		background: #FBFBFB;
-		text-shadow: 1px 1px 1px #FFF;
-	}
-	
-	.bs-left-container {
-		width: 150px;
-		top: 0;
-	}
-	
-	.bs-main-container {
-		margin-left: 150px;
-		overflow: auto;
-		padding:0;
-	}
-	
-	.form-horizontal-left .radio-inline {
-		margin: 0;
-	}
-	
-	.form-horizontal-left .form-group .controls {
-		min-width: 250px;
-	}
-	
-	.form-horizontal-left .form-group .controls-adapt {
-		padding-left: 130px;
-	}
-	
-	.form-horizontal-left .form-group label {
-		min-width: 125px;
-	}
-	
-	.form-horizontal-left .control-label {
-		font-weight: 500;
-	}
-	
-	.icheckbox_minimal-blue,
-	.iradio_minimal-blue {
-		margin-left: -20px;
-	}
-	textarea.form-control{
-		border-width:1px 1px 1px 1px;
-	}
-</style>
-<!--{template common/header_simple_end}-->
-<!--{template common/commer_header}-->
-<div class="bs-container clearfix" style="padding-top:0px;">
-	<div class="bs-left-container  clearfix">
-		<!--{template left}-->
-	</div>
-	<div class="left-drager">
-		<div class="left-drager-op">
-			<div class="left-drager-sub"></div>
-		</div>
-	</div>
-	<div class="bs-main-container  clearfix">
-		<div class="main-header">
-			<ul class="nav nav-pills nav-pills-bottomguide">
-				<li <!--{if !$fieldid}-->class="active"<!--{/if}-->>
-					<a href="{MOD_URL}&op=profileset">{lang data_item_list}</a>
-				</li>
-				<!--{if $fieldid}-->
-				<li class="active">
-					<a href="{MOD_URL}&op=profileset&fieldid=$fieldid">{lang data_edit}</a>
-				</li>
-				<!--{/if}-->
-			</ul>
-		</div>
-		<div class="main-content" style="padding:15px 0 0 10px;">
-			<form id="cpform" action="{MOD_URL}&op=profileset" class="form-horizontal form-horizontal-left" method="post" name="cpform">
-				<input type="hidden" value="{FORMHASH}" name="formhash">
-				<input type="hidden" value="true" name="editsubmit">
-				<input type="hidden" value="$fieldid" name="fieldid">
-				<input type="hidden" value="$field[displayorder]" name="displayorder">
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+          <ul class="nav nav-pills">
+            <li class="nav-item">
+              <a class="nav-link <!--{if !$fieldid}-->active<!--{/if}-->" href="{MOD_URL}&op=profileset">{lang data_item_list}</a>
+            </li>
+            <!--{if $fieldid}-->
+            <li class="nav-item">
+              <a class="nav-link active" href="{MOD_URL}&op=profileset&fieldid=$fieldid">{lang data_edit}</a>
+            </li>
+            <!--{/if}-->
+          </ul>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+          <form id="cpform" action="{MOD_URL}&op=profileset" class="form-horizontal" method="post" name="cpform">
+            <input type="hidden" value="{FORMHASH}" name="formhash">
+            <input type="hidden" value="true" name="editsubmit">
+            <input type="hidden" value="$fieldid" name="fieldid">
+            <input type="hidden" value="$field[displayorder]" name="displayorder">
+            <div class="row mb-3">
+              <label class="col-sm-2" for="title">{lang name}</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" value="$field[title]" id="title" name="title" required="required" <!--{if $field[isfixed2]}-->disabled="disabled"
+                <!--{/if}-->/>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2" for="description">{lang introduce}</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" value="$field[description]" id="description" name="description" <!--{if $field[isfixed2]}-->disabled="disabled"
+                <!--{/if}-->/>
+              </div>
+            </div>
+            <!--{if !$field[isfixed2]}-->
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang form_type}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="formtype1" name="formtype" value="text" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='text'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="formtype1">{lang HtmlInputText}</label>
+                </div>
+                <!--{if $fieldid!='realname'}-->
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="formtype2" name="formtype" value="textarea" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='textarea'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="formtype2">{lang HtmlTextArea}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="formtype3" name="formtype" value="radio" onclick="document.getElementById('valuenumber').style.display = 'none';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='radio'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="formtype3">{lang radio}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="formtype4" name="formtype" value="checkbox" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='checkbox'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="formtype4">{lang checkBox}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="formtype5" name="formtype" value="select" onclick="document.getElementById('valuenumber').style.display = 'none';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='select'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="formtype5">{lang combobox}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="formtype6" name="formtype" value="list" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = '';" <!--{if $field[formtype]=='list'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="formtype6">{lang more_choose_list}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="formtype7" name="formtype" value="file" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='file'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="formtype7">{lang upload_image}</label>
+                </div>
+                <!--{/if}-->
+              </div>
+            </div>
+            <div class="row mb-3" id="valuenumber" <!--{if $field[formtype]=='select' || $field[formtype]=='radio' }-->style="display:none"<!--{/if}-->>
+              <label class="col-sm-2" for="size">{lang hawkeye_shellinit}</label>
+              <div class="col-sm-10">
+                <input name="size" id="size" value="$field[size]" type="text" class="form-control">
+                <span class="form-text">{lang profileset_edit_delete}</span>
+              </div>
+            </div>
+            <div class="row mb-3" id="fieldchoices" <!--{if $field[formtype]=='text' || $field[formtype]=='textarea' || $field[formtype]=='file' }-->style="display:none"<!--{/if}-->>
+              <label class="col-sm-2" for="choices">{lang option_values}</label>
+              <div class="col-sm-10">
+                <textarea rows="6" name="choices" id="choices" class="form-control">$field[choices]</textarea>
+                <span class="form-text">{lang profileset_edit_value}:<br>{lang beijing}<br>{lang shanghai}<br></span>
+              </div>
+            </div>
+            <div class="row mb-3" id="fieldvalidate" <!--{if $field[formtype]=='radio' || $field[formtype]=='select' || $field[formtype]=='list' || $field[formtype]=='checkbox' || $field[formtype]=='file' }-->style="display:none"<!--{/if}-->>
+              <label class="col-sm-2" for="validate">{lang regular_verification}</label>
+              <div class="col-sm-10">
+                <input name="validate" id="validate" value="$field[validate]" type="text" class="form-control">
+                <span class="form-text">{lang profileset_edit_edit}</span>
+              </div>
+            </div>
+            <!--{/if}-->
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang members_verify_enable}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="available1" name="available" value="1" <!--{if $field[available]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="available1">{lang enable}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="available2" name="available" value="0" <!--{if !$field[available]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="available2">{lang no_enable}</label>
+                </div>
+              </div>
+            </div>
+            <!--{if !$field['isfixed1']}-->
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang submit_hou}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="unchangeable1" name="unchangeable" value="1" <!--{if $field[unchangeable]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="unchangeable1">{lang no_modification}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="unchangeable2" name="unchangeable" value="0" <!--{if !$field[unchangeable]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="unchangeable2">{lang revisability}</label>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang modification_hou}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="needverify1" name="needverify" value="1" <!--{if $field[needverify]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="needverify1">{lang need_moderate}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="needverify2" name="needverify" value="0" <!--{if !$field[needverify]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="needverify2">{lang no_need_moderate}</label>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang if_required}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="required1" name="required" value="1" <!--{if $field[required]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="required1">{lang required}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="required2" name="required" value="0" <!--{if !$field[required]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="required2">{lang certificate}</label>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang data_page}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="invisible1" name="invisible" value="1" <!--{if $field[invisible]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="invisible1">{lang hide}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="invisible2" name="invisible" value="0" <!--{if !$field[invisible]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="invisible2">{lang show}</label>
+                </div>
+                <span class="form-text">{lang profileset_edit_hide}</span>
+              </div>
+            </div>
+            <!--{/if}-->
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang default_privacy}</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="privacy1" name="privacy" value="-1"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='-1'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="privacy1">{lang secret}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="privacy2" name="privacy" value="0"  <!--{if empty($_G['setting']['privacy']['profile'][$fieldid])}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="privacy2">{lang public}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="privacy3" name="privacy" value="1"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='1'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="privacy3">{lang department_visible}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="privacy4" name="privacy" value="2"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='2'}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="privacy4">{lang institution_visible}</label>
+                </div>
 
-				<div class="form-group">
-					<label class="control-label ">{lang name}：</label>
-					<input type="text" class="form-control" value="$field[title]" name="title" required="required" <!--{if $field[isfixed2]}-->disabled="disabled"
-					<!--{/if}-->/>
-				</div>
-				<div class="form-group">
-					<label class="control-label ">{lang introduce}：</label>
-					<input type="text" class="form-control" value="$field[description]" name="description" <!--{if $field[isfixed2]}-->disabled="disabled"
-					<!--{/if}-->/>
-				</div>
+              </div>
 
-				<!--{if !$field[isfixed2]}-->
-				<div class="form-group">
-					<label class="control-label ">{lang form_type}：</label>
-					<div class="controls-adapt">
-						<label class="radio-inline"><input type="radio" name="formtype" value="text" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='text'}-->checked="checked"<!--{/if}-->>{lang HtmlInputText}</label>
-						<!--{if $fieldid!='realname'}-->
-						<label class="radio-inline"><input type="radio" name="formtype" value="textarea" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = '';" <!--{if $field[formtype]=='textarea'}-->checked="checked"<!--{/if}-->>{lang HtmlTextArea}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="radio" onclick="document.getElementById('valuenumber').style.display = 'none';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='radio'}-->checked="checked"<!--{/if}-->>{lang radio}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="checkbox" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='checkbox'}-->checked="checked"<!--{/if}-->>{lang checkBox}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="select" onclick="document.getElementById('valuenumber').style.display = 'none';document.getElementById('fieldchoices').style.display = '';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='select'}-->checked="checked"<!--{/if}-->>{lang combobox}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="list" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = '';" <!--{if $field[formtype]=='list'}-->checked="checked"<!--{/if}-->>{lang more_choose_list}</label>
-						<label class="radio-inline"><input type="radio" name="formtype" value="file" onclick="document.getElementById('valuenumber').style.display = '';document.getElementById('fieldchoices').style.display = 'none';document.getElementById('fieldvalidate').style.display = 'none';" <!--{if $field[formtype]=='file'}-->checked="checked"<!--{/if}-->>{lang upload_image}</label>
-						<!--{/if}-->
-					</div>
-				</div>
-				<div class="form-group" id="valuenumber" <!--{if $field[formtype]=='select' || $field[formtype]=='radio' }-->style="display:none"<!--{/if}-->>
-					<label class="control-label ">{lang hawkeye_shellinit}：</label>
-					<input name="size" value="$field[size]" type="text" class="form-control">
-					<span class="help-inline">{lang profileset_edit_delete}</span>
-				</div>
-				<div class="form-group" id="fieldchoices" <!--{if $field[formtype]=='text' || $field[formtype]=='textarea' || $field[formtype]=='file' }-->style="display:none"<!--{/if}-->>
-					<label class="control-label ">{lang option_values}：</label>
-					<textarea rows="6" name="choices" id="choices" class="form-control">$field[choices]</textarea>
-					<span class="help-inline">{lang profileset_edit_value}:<br>{lang beijing}<br>{lang shanghai}<br></span>
-				</div>
-				<div class="form-group" id="fieldvalidate" <!--{if $field[formtype]=='radio' || $field[formtype]=='select' || $field[formtype]=='list' || $field[formtype]=='checkbox' || $field[formtype]=='file' }-->style="display:none"<!--{/if}-->>
-					<label class="control-label ">{lang regular_verification}：</label>
-					<input name="validate" value="$field[validate]" type="text" class="form-control">
-					<span class="help-inline">{lang profileset_edit_edit}</span>
-				</div>
-
-				<!--{/if}-->
-				<div class="form-group">
-					<label class="control-label ">{lang members_verify_enable}：</label>
-					<div class="controls">
-						<label class="radio-inline"><input type="radio" name="available" value="1" <!--{if $field[available]}-->checked="checked"<!--{/if}-->>{lang enable}</label>
-						<label class="radio-inline"><input type="radio" name="available" value="0" <!--{if !$field[available]}-->checked="checked"<!--{/if}-->>{lang no_enable}</label>
-					</div>
-				</div>
-
-				<!--{if !$field[ isfixed1]}-->
-				<div class="form-group">
-					<label class="control-label ">{lang submit_hou}：</label>
-					<div class="controls">
-						<label class="radio-inline"><input type="radio" name="unchangeable" value="1" <!--{if $field[unchangeable]}-->checked="checked"<!--{/if}-->>{lang no_modification}</label>
-						<label class="radio-inline"><input type="radio" name="unchangeable" value="0" <!--{if !$field[unchangeable]}-->checked="checked"<!--{/if}-->>{lang revisability}</label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label ">{lang modification_hou}：</label>
-					<div class="controls">
-						<label class="radio-inline"><input type="radio" name="needverify" value="1" <!--{if $field[needverify]}-->checked="checked"<!--{/if}-->>{lang need_moderate}</label>
-						<label class="radio-inline"><input type="radio" name="needverify" value="0" <!--{if !$field[needverify]}-->checked="checked"<!--{/if}-->>{lang no_need_moderate}</label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label ">{lang if_required}：</label>
-					<div class="controls">
-						<label class="radio-inline"><input type="radio" name="required" value="1" <!--{if $field[required]}-->checked="checked"<!--{/if}-->>{lang required}</label>
-						<label class="radio-inline"><input type="radio" name="required" value="0" <!--{if !$field[required]}-->checked="checked"<!--{/if}-->>{lang certificate}</label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label ">{lang data_page}：</label>
-					<div class="controls">
-						<label class="radio-inline"><input type="radio" name="invisible" value="1" <!--{if $field[invisible]}-->checked="checked"<!--{/if}-->>{lang hide}</label>
-						<label class="radio-inline"><input type="radio" name="invisible" value="0" <!--{if !$field[invisible]}-->checked="checked"<!--{/if}-->>{lang show}</label>
-					</div>
-					<span class="help-inline">{lang profileset_edit_hide}</span>
-				</div>
-				<!--{/if}-->
-				<div class="form-group">
-					<label class="control-label ">{lang default_privacy}：</label>
-					<div class="contols-adapt">
-						<label class="radio-inline"><input type="radio" name="privacy" value="-1"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='-1'}-->checked="checked"<!--{/if}-->>{lang secret}</label>
-						<label class="radio-inline"><input type="radio" name="privacy" value="0"  <!--{if empty($_G['setting']['privacy']['profile'][$fieldid])}-->checked="checked"<!--{/if}-->>{lang public}</label>
-						<label class="radio-inline"><input type="radio" name="privacy" value="1"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='1'}-->checked="checked"<!--{/if}-->>{lang department_visible}</label>
-						<label class="radio-inline"><input type="radio" name="privacy" value="2"  <!--{if $_G['setting']['privacy']['profile'][$fieldid]=='2'}-->checked="checked"<!--{/if}-->>{lang institution_visible}</label>
-
-					</div>
-
-				</div>
-				<div class="form-group">
-					<label class="control-label ">{lang business_card}：</label>
-					<div class="controls">
-						<label class="radio-inline"><input type="radio" name="showincard" value="1" <!--{if $field[showincard]}-->checked="checked"<!--{/if}-->>{lang show}</label>
-						<label class="radio-inline"><input type="radio" name="showincard" value="0" <!--{if !$field[showincard]}-->checked="checked"<!--{/if}-->>{lang no_show}</label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label ">{lang registration_page}：</label>
-					<div class="controls">
-						<label class="radio-inline"><input type="radio" name="showinregister" value="1" <!--{if $field[showinregister]}-->checked="checked"<!--{/if}-->>{lang show}</label>
-						<label class="radio-inline"><input type="radio" name="showinregister" value="0" <!--{if !$field[showinregister]}-->checked="checked"<!--{/if}-->>{lang no_show}</label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label ">{lang allow_search}：</label>
-					<div class="controls">
-						<label class="radio-inline"><input type="radio" name="allowsearch" value="1" <!--{if $field[allowsearch]}-->checked="checked"<!--{/if}-->>{lang allow_search}</label>
-						<label class="radio-inline"><input type="radio" name="allowsearch" value="0" <!--{if !$field[allowsearch]}-->checked="checked"<!--{/if}-->>{lang no_allow_search}</label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="control-label "></label>
-					<div class="controls">
-						<input type="submit" class="btn btn-primary btn-width" name="editsubmit" value="{lang save_set}">
-					</div>
-				</div>
-
-			</form>
-		</div>
-	</div>
-</div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang business_card}：</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="showincard1" name="showincard" value="1" <!--{if $field[showincard]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="showincard1">{lang show}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="showincard2" name="showincard" value="0" <!--{if !$field[showincard]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="showincard2">{lang no_show}</label>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang registration_page}：</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="showinregister1" name="showinregister" value="1" <!--{if $field[showinregister]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="showinregister1">{lang show}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="showinregister2" name="showinregister" value="0" <!--{if !$field[showinregister]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="showinregister2">{lang no_show}</label>
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2">{lang allow_search}：</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="allowsearch1" name="allowsearch" value="1" <!--{if $field[allowsearch]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="allowsearch1">{lang allow_search}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="allowsearch2" name="allowsearch" value="0" <!--{if !$field[allowsearch]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="allowsearch2">{lang no_allow_search}</label>
+                </div>
+              </div>
+            </div>
+            <dl class="mb-3 d-grid">
+              <input type="submit" class="btn btn-primary btn-round bodyloading" name="editsubmit" value="{lang save_set}">
+            </dl>
+          </form>
+      </div>
+    </div>
+  </div>
+</main>
 <script type="text/javascript">
-	jQuery('.left-drager').leftDrager_layout();
 	var url = '{MOD_URL}';
 	jQuery(document).ready(function(e) {
-		jQuery('input').iCheck({
-			checkboxClass: 'icheckbox_minimal-blue',
-			radioClass: 'iradio_minimal-blue',
-		});
-		jQuery('input').on('ifChecked', function(e) {
-			jQuery(this).trigger('click');
-		});
-
 		jQuery(document).on('blur', 'input[required]', function() {
 			var self = this;
 			var val = this.value;
@@ -245,8 +262,4 @@
 		});
 	});
 </script>
-<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/icheck/icheck.min.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/select2/select2.min.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/select2/select2_locale_$checkLanguage.js?{VERHASH}"></script>
-<!--{template common/footer_simple}-->
+<!--{template lyear:footer_simple}-->

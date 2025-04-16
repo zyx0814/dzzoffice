@@ -1,41 +1,38 @@
 <!--{if $list}-->
-<style>
-  .main-content {
-    padding-top:0;
-  }
-</style>
-<table class="table table-hover">
-  <thead>
-    <th width="100">操作者</th>
-    <th width="100">用户组</th>
-    <th width="125">IP 地址</th>
-    <th width="135">{lang time}</th>
-    <th>信息</th>
-  </thead>
-    <!--{loop $list $key $log}-->
-    <tr>
-      <td>$log[2]</td>
-      <td>$log[3]</td>
-      <td>$log[4]</td>
-      <td>$log[1]</td>
-      <td>
-        <a href="javascript:;" onclick="togglecplog('{$key}')">{eval echo cutstr($log[5], 200)}</a>
-      </td>
-    </tr>
-    <thead id="cplog_{$key}" style="display:none">
-      <td colspan="10">
-      日志信息：$log[5]
-      <br/>访问页面：$log[6]
-      <br/>来源页面：$log[7]
-      <br/>设备信息：$log[8]</td>
+<div class="table-responsive">
+  <table class="table table-hover">
+    <thead>
+      <th>{lang operator}</th>
+      <th>{lang usergroup}</th>
+      <th>{lang ip}</th>
+      <th>{lang time}</th>
+      <th>{lang info}</th>
     </thead>
-    <!--{/loop}-->
-    <tr>
-      <td colspan="15" style="border-bottom: none;">
-        $multi
-      </td>
-    </tr>
-</table>
+      <!--{loop $list $key $log}-->
+      <tr>
+        <td>$log[2]</td>
+        <td>$log[3]</td>
+        <td>$log[4]</td>
+        <td>$log[1]</td>
+        <td>
+          <a href="javascript:;" onclick="togglecplog('{$key}')">{eval echo cutstr($log['5'], 200)}</a>
+        </td>
+      </tr>
+      <thead id="cplog_{$key}" style="display:none">
+        <td colspan="10">
+        {lang loginfo}：<strong><code>$log[5]</code></strong>
+        <br/>{lang visit}：<strong><code>$log[6]</code></strong>
+        <br/>{lang from}：<strong><code>$log[7]</code></strong>
+        <br/>{lang Equipment information}：<strong><code>$log[8]</code></strong></td>
+      </thead>
+      <!--{/loop}-->
+      <tr>
+        <td colspan="15" style="border-bottom: none;">
+          $multi
+        </td>
+      </tr>
+  </table>
+</div>
 <script type="text/javascript">
   function togglecplog(k) {
     var cplogobj = document.getElementById('cplog_' + k);
@@ -47,5 +44,8 @@
   }
 </script> 
 <!--{else}-->
-<div class="alert alert-success" role="alert">暂无相关内容</div>
+<div style="text-align: center;">
+  <img src="static/image/common/no_list.png"><br>
+  <span class="no-result-title">没有相关的内容…</span>
+</div>
 <!--{/if}--> 

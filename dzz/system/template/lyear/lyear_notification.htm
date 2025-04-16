@@ -1,6 +1,6 @@
 <!--{if $filter=='new'}-->
 <div class="popover-header">
-  <h4 class="modal-title">
+  <h4 class="modal-title text-truncate">
     {lang app_notice}
   </h4>
   <button class="btn-close"></button>
@@ -10,7 +10,7 @@
       <ul class="list-group">
         <!--{loop $list $value}-->
         <li class="list-group-item d-flex justify-content-between align-items-start">
-          <span><a href="user.php?uid=$value[authorid]" target="_blank">{eval echo avatar_block($value[authorid]);}</a></span>
+          <span><a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a></span>
           <div class="ms-2 me-auto">
             <div class="fw-bold">$value[title]</div>
             $value[note]
@@ -20,7 +20,7 @@
         <!--{/loop}-->
       </ul>
       <!--{else}-->
-      <div class="alert alert-primary">
+      <div class="card-body">
         {lang noapp_notice}
       </div>
       <!--{/if}-->

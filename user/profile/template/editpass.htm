@@ -1,38 +1,41 @@
-<form id="pass" name="passform" class="form-horizontal form-horizontal-left" role="form" action="user.php?mod=profile&op=password" method="post" onsubmit="editpass_submit(this);return false">
+<form id="pass" name="passform" class="form-horizontal" role="form" action="{MOD_URL}&op=password" method="post" onsubmit="editpass_submit(this);return false">
 <input type="hidden" name="editpass" value="true" />
 <input type="hidden" name="uid" value="$uid" />
 <input type="hidden" name="formhash" value="{FORMHASH}" />
 	<!--{if $showoldpassword>0}-->
-	<div class="form-group">
-		<label class="control-label" for="password0" required>{lang original_password}</label>
-		<input type="password" name="password0" class="form-control" autocomplete="off" id="password0" placeholder="{lang input_original_password}" data-chk="false">
-		<span id="chk_password0" class="help-msg"> <span id="suc_password0"></span> <kbd  class="p_chk"></kbd> </span>
+	<div class="row mb-3">
+		<label class="col-sm-2" for="password0" required>{lang original_password}</label>
+		<div class="col-sm-10">
+      <input type="password" name="password0" class="form-control" autocomplete="off" id="password0" placeholder="{lang input_original_password}" data-chk="false">
+      <span id="chk_password0" class="help-msg"> <span id="suc_password0"></span> <kbd  class="help-msg"></kbd> </span>
+    </div>
 	</div>
 	<!--{/if}-->
-	<div class="form-group">
-		<label class="control-label" for="password">{lang new_password}</label>
-		<input type="password" name="password" class="form-control" autocomplete="off" id="password" placeholder="" data-chk="false">
-		<span id="chk_password" class="help-msg"> <span id="suc_password"></span> <kbd  class="p_chk"></kbd> </span>
+	<div class="row mb-3">
+		<label class="col-sm-2" for="password">{lang new_password}</label>
+		<div class="col-sm-10">
+      <input type="password" name="password" class="form-control" autocomplete="off" id="password" placeholder="" data-chk="false">
+      <span id="chk_password" class="help-msg"> <span id="suc_password"></span> <kbd  class="help-msg"></kbd> </span>
+    </div>
 	</div>
-	<div class="form-group">
-		<label class="control-label" for="password2">{lang new_password_confirm}</label>
-		<input type="password" id="password2" class="form-control" name="password2" autocomplete="off" placeholder="" data-chk="false">
-		<span id="chk_password2" class="help-msg"> <span id="suc_password2"></span> <kbd  class="p_chk"></kbd> </span>
+	<div class="row mb-3">
+		<label class="col-sm-2" for="password2">{lang new_password_confirm}</label>
+		<div class="col-sm-10">
+      <input type="password" id="password2" class="form-control" name="password2" autocomplete="off" placeholder="" data-chk="false">
+      <span id="chk_password2" class="help-msg"> <span id="suc_password2"></span> <kbd  class="help-msg"></kbd> </span>
+    </div>
 	</div>
 	<!--{if $secqaacheck || $seccodecheck}-->
-	<div class="form-group">
-		<label class="control-label">{lang verification_code}</label>
-		<div class="controls">
-			<!--{template common/seccheck}-->
+	<div class="row mb-3 signin-form">
+		<label class="col-sm-2">{lang verification_code}</label>
+		<div class="col-sm-10">
+			<!--{template lyear:seccheck}-->
 		</div>
 	</div>
 	<!--{/if}-->
-	
-	<div class="form-group">
-		<label class="control-label"></label>
-		<div class="controls"><input type="submit" class="btn btn-primary" value="{lang save_changes}" ></div>
-	</div>
-</form>
+	<dl class="mb-3 d-grid">
+		<input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang save_changes}" >
+	</dl>
 <script type="text/javascript">
     var pwlength = "{$_G['setting']['pwlength']}";
     var strongpw = eval('{$strongpw}');

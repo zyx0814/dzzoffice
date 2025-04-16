@@ -355,7 +355,11 @@ _explorer.getRightContent = function (hash, container) { //处理右侧页面加
     _explorer.rightLoading = 1;
     $('.document-data').removeClass('actives');
     $('[data-hash="' + hash + '"]').addClass('actives');
-    var url = _explorer.appUrl + '&do=file&' + hash;
+    if (template === '1') {
+        var url = _explorer.appUrl + '&template=1&do=file&' + hash;
+    } else {
+        var url = _explorer.appUrl + '&do=file&' + hash;
+    }
     jQuery('#middleconMenu').load(url, function () {
         $(document).trigger('ajaxLoad.middleContent', [hash]);
     });

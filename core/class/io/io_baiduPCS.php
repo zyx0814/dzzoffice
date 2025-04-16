@@ -27,7 +27,7 @@ class io_baiduPCS extends io_api
 		$this->_root=$arr['root'];
 		$this->_rootname=$arr['name'];
 		$this->perm=perm_binPerm::getMyPower();
-		//self::init($path);
+		//$this->init($path);
 		//print_r($arr);
 		
 	}
@@ -61,7 +61,7 @@ class io_baiduPCS extends io_api
 		return false;
 	}
 
-	protected  function makeDir($path){
+	protected function makeDir($path){
 		$bzarr=$this->parsePath($path);
 		
 		$patharr=explode('/',trim(preg_replace("/^".str_replace('/','\/',$this->_root)."/",'',$bzarr['path']),'/'));
@@ -79,9 +79,9 @@ class io_baiduPCS extends io_api
 	}
 	protected function _makeDir($path){
 		global $_G;
-		$bzarr=self::parsePath($path);
+		$bzarr=$this->parsePath($path);
 		try {
-			$pcs=self::init($path);
+			$pcs=$this->init($path);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			$response=$pcs->makeDirectory($bzarr['path']);
 			$result=json_decode($response,true);
@@ -138,7 +138,7 @@ class io_baiduPCS extends io_api
 	//根据路径获取目录树的数据；
 	public function getFolderDatasByPath($path){ 
 	
-		$bzarr=self::parsePath($path);
+		$bzarr=$this->parsePath($path);
 		$spath=$bzarr['path'];
 		
 		if($this->_root){
@@ -156,9 +156,9 @@ class io_baiduPCS extends io_api
 			for($j=0;$j<=$i;$j++){
 				$path1.='/'.$patharr[$j];
 			}
-			if($arr=self::getMeta($path1)){
+			if($arr=$this->getMeta($path1)){
 				if(isset($arr['error'])) continue;
-				$folder=self::getFolderByIcosdata($arr);
+				$folder=$this->getFolderByIcosdata($arr);
 				$folderarr[$folder['fid']]=$folder;
 			}
 		}
@@ -228,17 +228,17 @@ class io_baiduPCS extends io_api
 	}
 	//获取转码文件；
 	//$path: 路径
-	function getM3U8Uri($path,$type='M3U8_854_480'){
-		$bzarr=self::parsePath($path); 
-		$pcs=self::init($path,1);
+	public function getM3U8Uri($path,$type='M3U8_854_480'){
+		$bzarr=$this->parsePath($path); 
+		$pcs=$this->init($path,1);
 		if(is_array($pcs) && $pcs['error']) return $pcs;
 		return $pcs->streaming($bzarr['path'],$type);
 	}
 	//获取文件流；
 	//$path: 路径
-	function getStream($path){
-		$bzarr=self::parsePath($path); 
-		$pcs=self::init($path,1);
+	public function getStream($path){
+		$bzarr=$this->parsePath($path); 
+		$pcs=$this->init($path,1);
 		if(is_array($pcs) && $pcs['error']) return $pcs;
 		try{
 		   return $pcs->getStreamUri($bzarr['path']);
@@ -248,9 +248,9 @@ class io_baiduPCS extends io_api
 	}
 	//获取文件流地址；
 	//$path: 路径
-	function getFileUri($path){
-		$bzarr=self::parsePath($path,1); 
-		$pcs=self::init($path,1);
+	public function getFileUri($path){
+		$bzarr=$this->parsePath($path,1); 
+		$pcs=$this->init($path,1);
 		if(is_array($pcs) && $pcs['error']) return $pcs;
 		try{
 		   return $pcs->getStreamUri($bzarr['path']);
@@ -299,7 +299,7 @@ class io_baiduPCS extends io_api
 				return 0;
 			}
 		}else{
-			 $fileurls=array('fileurl'=>self::getFileUri($path),'filedir'=>self::getStream($path));
+			 $fileurls=array('fileurl'=>$this->getFileUri($path),'filedir'=>$this->getStream($path));
 		}
 		//非图片类文件的时候，直接获取文件后缀对应的图片
 		if(!$imginfo = @getimagesize($fileurls['filedir'])){
@@ -309,8 +309,8 @@ class io_baiduPCS extends io_api
 			return 3;//小于要求尺寸，不需要生成
 		}
 		//获取缩略图
-		$bzarr=self::parsePath($path); 
-		$pcs=self::init($path,1);
+		$bzarr=$this->parsePath($path); 
+		$pcs=$this->init($path,1);
 		if(is_array($pcs) && $pcs['error']) return false;
 		$quality = 80;
 		$result = $pcs->thumbnail($bzarr['path'], $width, $height, $quality);
@@ -351,7 +351,7 @@ class io_baiduPCS extends io_api
 				IO::output_thumb($imgurl);
 			}
 		}else{
-			 $fileurls=array('fileurl'=>self::getFileUri($path),'filedir'=>self::getStream($path));
+			 $fileurls=array('fileurl'=>$this->getFileUri($path),'filedir'=>$this->getStream($path));
 		}
 		//非图片类文件的时候，直接获取文件后缀对应的图片
 		if(!$imginfo = @getimagesize($fileurls['filedir'])){
@@ -365,8 +365,8 @@ class io_baiduPCS extends io_api
           	IO::output_thumb($fileurls['filedir']);
         }
 		//获取缩略图
-		$bzarr=self::parsePath($path); 
-		$pcs=self::init($path,1);
+		$bzarr=$this->parsePath($path); 
+		$pcs=$this->init($path,1);
 		if(is_array($pcs) && $pcs['error']) return $pcs;
 		$result = $pcs->thumbnail($bzarr['path'], $width, $height,80);
 		$targetpath = dirname($_G['setting']['attachurl'].'./'.$target);
@@ -386,10 +386,10 @@ class io_baiduPCS extends io_api
 		$filename=$patharr[count($patharr)-1];
 		unset($patharr[count($patharr)-1]);
 		$path1=implode('/',$patharr);
-		 $icoarr=self::upload($data,$path1,$filename,false,'overwrite');
+		 $icoarr=$this->upload($data,$path1,$filename,false,'overwrite');
 		 if($icoarr['type']=='image'){
-			  self::deleteThumb($path);
-			  $icoarr['img'].='&t='.TIMESTAMP;
+			$this->deleteThumb($path);
+			$icoarr['img'].='&t='.TIMESTAMP;
 		 }
 		 return $icoarr;
 	}
@@ -404,12 +404,12 @@ class io_baiduPCS extends io_api
 		)
 	 */
 	public function getQuota($bz) {
-		$pcs=self::init($bz,1);
+		$pcs=$this->init($bz,1);
 		if(is_array($pcs) && $pcs['error']) return $pcs;
 		return json_decode($pcs->getQuota(),true);
 	}
 	public function rename($path,$name){//重命名
-		$arr=self::parsePath($path);
+		$arr=$this->parsePath($path);
 		$patharr=explode('/',$arr['path']);
 		$arr['path1']='';
 		$ext=strtolower(substr(strrchr($arr['path'], '.'), 1));
@@ -420,7 +420,7 @@ class io_baiduPCS extends io_api
 		$arr['path1'].=$ext?(preg_replace("/\.\w+$/i",'.'.$ext,$name)):$name;
 		
 		if($arr['path']!=$arr['path1']){
-			$pcs=self::init($path);
+			$pcs=$this->init($path);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			$response=$pcs->moveSingle($arr['path'],$arr['path1']);
 			
@@ -429,7 +429,7 @@ class io_baiduPCS extends io_api
 				return array('error'=>$result['error_msg']);
 			}
 		}
-		return self::getMeta($arr['bz'].$arr['path1']);
+		return $this->getMeta($arr['bz'].$arr['path1']);
 	}
 	
 	
@@ -440,13 +440,13 @@ class io_baiduPCS extends io_api
 	 * @return icosdatas
 	 */
 	public function CopyTo($opath,$path,$iscopy){
-		$oarr=self::parsePath($opath);
+		$oarr=$this->parsePath($opath);
 		$arr=IO::parsePath($path);
 	try{
-		$pcs=self::init($opath);
+		$pcs=$this->init($opath);
 		if(is_array($pcs) && $pcs['error']) return $pcs;
 			if($arr['bz']==$oarr['bz'] && !$iscopy){ //同一api内
-			    $data=self::getMeta($opath);
+			    $data=$this->getMeta($opath);
 				$response=$pcs->moveSingle($oarr['path'],$arr['path'].'/'.$data['name']);
 		
 				$result=json_decode($response,true);
@@ -459,11 +459,11 @@ class io_baiduPCS extends io_api
 				//if($meta['error_msg']) return array('error'=>$meta['error_msg']);
 				$meta=$meta['list'][0];
 				
-				$data['newdata']=self::_formatMeta($meta,$arr['bz']);
+				$data['newdata']=$this->_formatMeta($meta,$arr['bz']);
 				$data['success']=true;
 				return $data;
 			}else{
-				$data=self::getMeta($opath);
+				$data=$this->getMeta($opath);
 				switch($data['type']){
 					case 'folder'://创建目录
 						if($re=IO::CreateFolder($path,$data['name'])){
@@ -473,10 +473,10 @@ class io_baiduPCS extends io_api
 								
 								$data['newdata']=$re['icoarr'];
 								$data['success']=true;
-								 $contents=self::listFiles($opath);
+								 $contents=$this->listFiles($opath);
 							//	 print_r($contents);
 								 foreach($contents as $key=>$value){
-									$data['contents'][$key]=self::CopyTo($value['path'],$re['folderarr']['path']);
+									$data['contents'][$key]=$this->CopyTo($value['path'],$re['folderarr']['path']);
 								 }
 							}
 						}
@@ -532,9 +532,9 @@ class io_baiduPCS extends io_api
 				//if(strlen($fileContent)==0) return array('error'=>'文件不存在');
 			}
 			
-			return self::upload($fileContent,$path,$filename,false,$ondup);
+			return $this->upload($fileContent,$path,$filename,false,$ondup);
 		}else{ //分片上传
-			self::deleteCache($path.$filename);
+			$this->deleteCache($path.$filename);
 			if(!$handle=fopen($filepath, 'rb')){
 				return array('error'=>lang('open_file_error'));
 			}
@@ -543,7 +543,7 @@ class io_baiduPCS extends io_api
 			  	$fileContent.= fread($handle, 8192);
 				//if(strlen($fileContent)==0) return array('error'=>'文件不存在');
 				if(strlen($fileContent)>=$partsize){
-					$re=self::upload($fileContent,$path,$filename,true,$ondup);
+					$re=$this->upload($fileContent,$path,$filename,true,$ondup);
 					if($re['error']){
 						 return $re;
 					}
@@ -552,13 +552,13 @@ class io_baiduPCS extends io_api
 			}
 			fclose($handle);
 			if(!empty($fileContent)){
-				$re=self::upload($fileContent,$path,$filename,true,$ondup);
+				$re=$this->upload($fileContent,$path,$filename,true,$ondup);
 				if($re['error']){
 					 return $re;
 				}
 			}
 			//分片上传结束，合并分片文件
-			return self::createSuperFile($path,$filename,$ondup);
+			return $this->createSuperFile($path,$filename,$ondup);
 		}
 	}
 	/**
@@ -570,14 +570,14 @@ class io_baiduPCS extends io_api
 	 * @param string $force 读取缓存，大于0：忽略缓存，直接调用api数据，常用于强制刷新时。
 	 * @return icosdatas
 	 */
-	function listFiles($path,$by='time',$order='desc',$limit='',$force=0){ 
+	public function listFiles($path,$by='time',$order='desc',$limit='',$force=0){ 
 		global $_G,$_GET,$documentexts,$imageexts;
 		
 		try{	
-			$bzarr=self::parsePath($path);
+			$bzarr=$this->parsePath($path);
 			$bz=$bzarr['bz'];
 			$path1=$bzarr['path'];
-			$pcs=self::init($path,1);
+			$pcs=$this->init($path,1);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			
 			$data=array();
@@ -590,7 +590,7 @@ class io_baiduPCS extends io_api
 			}	
 			$icosdata=array();
 			foreach($data as $key => $value){
-				$icoarr=self::_formatMeta($value,$bz);
+				$icoarr=$this->_formatMeta($value,$bz);
 				$icosdata[$icoarr['icoid']]=$icoarr;
 			}
 			return $icosdata;
@@ -603,7 +603,7 @@ class io_baiduPCS extends io_api
 	 *返回标准的icosdata
 	 *$force>0 强制刷新，不读取缓存数据；
 	*/
-	function getMeta($path,$force=0){ 
+	public function getMeta($path,$force=0){ 
 		global $_G,$_GET,$documentexts,$imageexts;
 		$icosdata=array();
 		$bzarr=explode(':',$path);
@@ -611,7 +611,7 @@ class io_baiduPCS extends io_api
 		$data=array();
 		$path1=$bzarr[2];
 		// Get the metadata for the file/folder specified in $path
-		$pcs=self::init($bz,1);
+		$pcs=$this->init($bz,1);
 		if(is_array($pcs) && $pcs['error']) return $pcs;
 		//exit($path1.'==='.$path.'==='.$bz);
 		$meta=$pcs->getMeta($path1);
@@ -622,11 +622,11 @@ class io_baiduPCS extends io_api
 		if($meta['error_msg']) return array('error'=>$meta['error_msg']);
 		$meta=$meta['list'][0];
 		
-		$icosdata=self::_formatMeta($meta,$bz);
+		$icosdata=$this->_formatMeta($meta,$bz);
 		return $icosdata;
 	}
 	//将api获取的meta数据转化为icodata
-	function _formatMeta($meta,$bz){ 
+	public function _formatMeta($meta,$bz){ 
 		global $_G,$documentexts,$imageexts;
 		//判断是否为根目录
 		$root=$bz.$this->_root;
@@ -704,7 +704,7 @@ class io_baiduPCS extends io_api
 		return $icosdata;
 	}
 	//通过icosdata获取folderdata数据
-	function getFolderByIcosdata($icosdata){
+	public function getFolderByIcosdata($icosdata){
 		global $_GET;
 		$folder=array();
 		if($icosdata['type']=='folder'){
@@ -726,12 +726,12 @@ class io_baiduPCS extends io_api
 		return $folder;
 	}
 	//获得文件内容；
-	function getFileContent($path){
+	public function getFileContent($path){
 		$bzarr=explode(':',$path);
 		$bz=$bzarr[0].':'.$bzarr[1].';';
 		$path1=$bzarr[2];
 		try{
-			$pcs=self::init($bz,1);
+			$pcs=$this->init($bz,1);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			return $pcs->download($path1);
 		}catch(Exception $e){
@@ -745,14 +745,14 @@ class io_baiduPCS extends io_api
 		set_time_limit(0);
 		
 		if(empty($filename)){
-			$meta=self::getMeta($paths[0]);
+			$meta=$this->getMeta($paths[0]);
 			$filename=$meta['name'].(count($paths)>1?lang('wait'):'');
 		}
 		$filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
 		include_once libfile('class/ZipStream');
 		
 		$zip = new ZipStream($filename.".zip");
-		$data=self::getFolderInfo($paths,'',$zip);
+		$data=$this->getFolderInfo($paths,'',$zip);
 		//$zip->setComment("$meta[name] " . date('l jS \of F Y h:i:s A'));
 		/*foreach($data as $value){
 			 $zip->addLargeFile(fopen($value['url'],'rb'), $value['position'], $value['dateline']);
@@ -764,22 +764,22 @@ class io_baiduPCS extends io_api
 		try{
 			foreach($paths as $path){
 				$arr=IO::parsePath($path);
-				$pcs=self::init($path,1); 
+				$pcs=$this->init($path,1); 
 				if(is_array($pcs) && $pcs['error']) return $pcs;
-				$meta=self::getMeta($path);
+				$meta=$this->getMeta($path);
 				
 				switch($meta['type']){
 					case 'folder':
 						 $lposition=$position.$meta['name'].'/';
-						 $contents=self::listFiles($path);
+						 $contents=$this->listFiles($path);
 						 $arr=array();
 						 foreach($contents as $key=>$value){
 							$arr[]=$value['path'];
 						 }
-						 if($arr) self::getFolderInfo($arr,$lposition,$zip);
+						 if($arr) $this->getFolderInfo($arr,$lposition,$zip);
 						break;
 					default:
-					$meta['url']=self::getStream($meta['path']);
+					$meta['url']=$this->getStream($meta['path']);
 					$meta['position']=$position.$meta['name'];
 					//$data[$meta['icoid']]=$meta;
 					$zip->addLargeFile(fopen($meta['url'],'rb'), $meta['position'], $meta['dateline']);
@@ -798,18 +798,18 @@ class io_baiduPCS extends io_api
 		global $_G;
 		$paths=(array)$paths;
 		if(count($paths)>1){
-			self::zipdownload($paths,$filename);
+			$this->zipdownload($paths,$filename);
 			exit();
 		}else{
 			$path=$paths[0];
 		}
 		$path=rawurldecode($path);
-		$url=self::getStream($path);
+		$url=$this->getStream($path);
 		try {
 			// Download the file
-			$file=self::getMeta($path);
+			$file=$this->getMeta($path);
 			if($file['type']=='folder'){//目录压缩下载
-				self::zipdownload($path);
+				$this->zipdownload($path);
 				exit();
 			}else{//文件直接跳转到文件源地址；不再通过服务器中转
 				@header("Location: $url");
@@ -847,17 +847,17 @@ class io_baiduPCS extends io_api
 		 * @param string $ondup overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进行重命名，命名规则为“文件名_日期.后缀”。 
 		 * @param boolean $isCreateSuperFile 是否分片上传
 		 * @return string
-		 */
-	function upload_by_content($fileContent,$path,$filename,$isCreateSuperFile=false,$ondup='newcopy'){
-		return self::upload($fileContent,$path,$filename,$isCreateSuperFile,$ondup);
+	*/
+	public function upload_by_content($fileContent,$path,$filename,$isCreateSuperFile=false,$ondup='newcopy'){
+		return $this->upload($fileContent,$path,$filename,$isCreateSuperFile,$ondup);
 	}
-	function upload($fileContent,$path,$filename,$isCreateSuperFile=false,$ondup='newcopy'){
+	public function upload($fileContent,$path,$filename,$isCreateSuperFile=false,$ondup='newcopy'){
 		global $_G;
 		$bzarr=explode(':',($path));
 		$bz=$bzarr[0].':'.$bzarr[1].':';
 		$path=$bzarr[2].'/';
 		try{
-			$pcs=self::init($bz);
+			$pcs=$this->init($bz);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			$response = $pcs->upload($fileContent, $path, $filename,null,$isCreateSuperFile,$ondup);
 			unset($fileContent);
@@ -868,13 +868,13 @@ class io_baiduPCS extends io_api
 			if($isCreateSuperFile===true){
 				$path0=$bz.$path.$filename;
 				if($response['md5']){
-					self::saveCache($path0,$response['md5']);
+					$this->saveCache($path0,$response['md5']);
 					return true;
 				}else{
 					return array('error'=>' part upload error');
 				}
 			}else{
-				$icoarr=self::_formatMeta($response,$bz);
+				$icoarr=$this->_formatMeta($response,$bz);
 				return $icoarr;
 			}
 		}catch(Exception $e){
@@ -882,16 +882,16 @@ class io_baiduPCS extends io_api
 		}
 	}
 	
-	function createSuperFile($path,$filename,$ondup='newcopy'){
+	public function createSuperFile($path,$filename,$ondup='newcopy'){
 		global $_G;
 		$bzarr=explode(':',($path));
 		$bz=$bzarr[0].':'.$bzarr[1].':';
 		$path=$bzarr[2].'/';
 		try{
-			$pcs=self::init($bz);
+			$pcs=$this->init($bz);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			$path0=$bz.$path.$filename;
-			if(!($params=array_values(self::getCache($path0)))){
+			if(!($params=array_values($this->getCache($path0)))){
 				return array('error'=>lang('file_merge_error'));
 			}
 			$response = $pcs->createSuperFile($path, $filename,$params,null,$ondup);
@@ -900,8 +900,8 @@ class io_baiduPCS extends io_api
 				return array('error'=>$response['error_msg']);
 			}
 			
-			self::deleteCache($path0);
-			$icoarr=self::_formatMeta($response,$bz);
+			$this->deleteCache($path0);
+			$icoarr=$this->_formatMeta($response,$bz);
 			return $icoarr;
 		}catch(Exception $e){
 			return array('error'=>$e->getMessage());
@@ -922,7 +922,7 @@ class io_baiduPCS extends io_api
 		$bz=$bzarr[0].':'.$bzarr[1].':';
 		$path1=$bzarr[2];
 		try{
-			$pcs=self::init($bz,$force);
+			$pcs=$this->init($bz,$force);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			$response = $pcs->deleteSingle($path1);
 			$response=json_decode($response,true);
@@ -939,8 +939,8 @@ class io_baiduPCS extends io_api
 	public function createFolderByPath($path, $pfid = '',$noperm = false)
 	{
 		$data = array();
-		if(self::makeDir($path)){
-			$data = self::getMeta($path);
+		if($this->makeDir($path)){
+			$data = $this->getMeta($path);
 		}
 		return $data;
 	}
@@ -958,21 +958,21 @@ class io_baiduPCS extends io_api
 		exit($path);*/
 		$return=array();
 		try {
-			$pcs=self::init($bz);
+			$pcs=$this->init($bz);
 			if(is_array($pcs) && $pcs['error']) return $pcs;
 			
 			$response=$pcs->makeDirectory($path1);
 			
 			$result=json_decode($response,true);
 			if($result['error_code']){
-				$icoarr=self::getMeta($path1);
-				$folderarr=self::getFolderByIcosdata($path1);
+				$icoarr=$this->getMeta($path1);
+				$folderarr=$this->getFolderByIcosdata($path1);
 				return array('error'=>$result['error_msg'],'error_code'=>$result['error_code'],'icoarr'=>$icoarr,'folderarr'=>$folderarr);
 			}
 			$result['isdir']=1;
 			
-			$icoarr=self::_formatMeta($result,$bz);
-			$folderarr=self::getFolderByIcosdata($icoarr);
+			$icoarr=$this->_formatMeta($result,$bz);
+			$folderarr=$this->getFolderByIcosdata($icoarr);
 			$return= array('folderarr'=>$folderarr,'icoarr'=>$icoarr);
 		}catch(Exception $e){
 			//var_dump($e);
@@ -983,7 +983,7 @@ class io_baiduPCS extends io_api
 	//获取不重复的目录名称
 	public function getFolderName($name,$path){
 		static $i=0;
-		if(!$this->icosdatas) $this->icosdatas=self::listFiles($path);
+		if(!$this->icosdatas) $this->icosdatas=$this->listFiles($path);
 		$names=array();
 		foreach($icosdatas as $value){
 			$names[]=$value['name'];
@@ -991,7 +991,7 @@ class io_baiduPCS extends io_api
 		if(in_array($name,$names)){
 			$name=str_replace('('.$i.')','',$name).'('.($i+1).')';
 			$i+=1;
-			return self::getFolderName($name,$path);
+			return $this->getFolderName($name,$path);
 		}else {
 			return $name;
 		}
@@ -1023,7 +1023,7 @@ class io_baiduPCS extends io_api
 	private function saveCache($path,$str){
 		global $_G;
 		$cachekey='baidu_upload_'.md5($path);
-		$cachevalue=self::getCache($path);
+		$cachevalue=$this->getCache($path);
 		$cachevalue[$str]=$str;
 		C::t('cache')->insert(array(
 							'cachekey' => $cachekey,
@@ -1040,7 +1040,7 @@ class io_baiduPCS extends io_api
 		//exit($path.'===='.$filename);
 		
 		//处理目录(没有分片或者最后一个分片时创建目录
-		$arr=self::getPartInfo($content_range);
+		$arr=$this->getPartInfo($content_range);
 		
 		if($relativePath && ($arr['iscomplete'])){
 			$path1=$path;
@@ -1052,7 +1052,7 @@ class io_baiduPCS extends io_api
 				}
 				if($patharr[$key-1]) $path1.='/'.$patharr[$key-1];
 				
-				$re=self::CreateFolder($path1,$value);
+				$re=$this->CreateFolder($path1,$value);
 				
 				if(intval($re['error_code'])==31061){
 					continue;
@@ -1081,12 +1081,12 @@ class io_baiduPCS extends io_api
 		}
 		fclose($handle);
 		if($arr['ispart']){
-			if($re1=self::upload($fileContent,$path,$filename,true)){
+			if($re1=$this->upload($fileContent,$path,$filename,true)){
 				if($re1['error']){
 					return $re1;
 				}
 				if($arr['iscomplete']){
-					$re1=self::createSuperFile($path, $filename);
+					$re1=$this->createSuperFile($path, $filename);
 					if(empty($re1['error'])){
 						$data['icoarr'][] = $re1;
 						return $data;
@@ -1100,7 +1100,7 @@ class io_baiduPCS extends io_api
 			}
 		}else{
 			
-			$re1=self::upload($fileContent,$path,$filename);
+			$re1=$this->upload($fileContent,$path,$filename);
 			
 			if(empty($re1['error'])){
 				$data['icoarr'][] = $re1;

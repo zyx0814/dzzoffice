@@ -1,8 +1,8 @@
 
 <div class="modal-header">
-  <h4 class="modal-title" id="return_$_GET[handlekey]">{lang edit}</h4>
+  <h4 class="modal-title text-truncate" id="return_$_GET[handlekey]">{lang edit}</h4>
   <div class="float-end">
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
     <button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
   </div>
 </div>
@@ -40,8 +40,8 @@
         </script>
         <!--{/if}-->
       </ul>
-      <button id="publish_submit_edit_{$cid}" class="btn btn-outline-primary"  title="{lang reply}(Ctrl+Enter)"><b>{lang save}</b></button>
-      <a hidefocus="true" class="btn btn-outline-secondary" href="javascript:;" onclick="hideWindow('publish_edit_{$cid}');"> <b>{lang cancel}</b></a>
+      <a hidefocus="true" class="btn btn-secondary" href="javascript:;" onclick="hideWindow('publish_edit_{$cid}');"> <b>{lang cancel}</b></a>
+      <button id="publish_submit_edit_{$cid}" class="btn btn-primary"  title="{lang reply}(Ctrl+Enter)"><b>{lang save}</b></button>
     </div>
     <!--{if $_GET['allowattach'] || $data[attachs]}-->
      <div id="attachmentViewBox_edit_{$cid}" class="attachmentContainer clearfix"> 

@@ -9,8 +9,8 @@
 	<a class="guide" href="javascript:;" onclick="show_guide();return false;" title="{lang moderate_explain}"></a>
 </div>
 <div class="classtree-search">
-	<a href="javascript:;" class="search" onclick="jstree_search(jQuery('#jstree_search_input').val());return false" title="{lang search}"><i class="glyphicon glyphicon-search"></i></a>
-	<a href="javascript:;" class="delete" onclick="jstree_search('stop');return false" title="{lang close_search}"><i class="glyphicon glyphicon-remove"></i></a>
+	<a href="javascript:;" class="search" onclick="jstree_search(jQuery('#jstree_search_input').val());return false" title="{lang search}"><i class="mdi mdi-magnify"></i></a>
+	<a href="javascript:;" class="delete" onclick="jstree_search('stop');return false" title="{lang close_search}"><i class="mdi mdi-close"></i></a>
 	<input id="jstree_search_input" type="text" class="form-control" placeholder="{lang enter_search}" onkeyup="if(event.keyCode==13){jstree_search(jQuery('#jstree_search_input').val())}" />
 </div>
 <div id="classtree" class="classtree-container" style="padding:5px 0;overflow:auto;border-top:1px solid #FFF;"></div>
@@ -98,7 +98,7 @@
 							return false;
 						},
 						"label": "{lang creation_equally_section}",
-						"icon": "glyphicon glyphicon-tag",
+						"icon": "mdi mdi-tag",
 						"action": function(data) {
 							var inst = jQuery.jstree.reference(data.reference),
 								obj = inst.get_node(data.reference),
@@ -135,7 +135,7 @@
 							return false;
 						},
 						"label": "{lang creation_bottom_section}",
-						"icon": "glyphicon glyphicon-tags",
+						"icon": "mdi mdi-tag-multiple",
 						"action": function(data) {
 							var inst = jQuery.jstree.reference(data.reference),
 								obj = inst.get_node(data.reference);
@@ -174,7 +174,7 @@
 						
 						"shortcut"			: 113,
 						"shortcut_label"	: 'F2',
-						"icon": "glyphicon glyphicon-leaf",
+						"icon": "mdi mdi-leaf",
 
 						"action": function(data) {
 
@@ -204,7 +204,7 @@
 							return false;
 						},
 						"label": "{lang delete}",
-						"icon": "glyphicon glyphicon-remove",
+						"icon": "mdi mdi-close",
 						"action": function(data) {
 							var inst = jQuery.jstree.reference(data.reference),
 								obj = inst.get_node(data.reference);

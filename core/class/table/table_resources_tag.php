@@ -39,7 +39,7 @@ class table_resources_tag extends dzz_table
 			if($event){
 				//添加动态
 				$uid = $_G['uid'];
-				$username = $_G['username'];
+				$username = $_G['username'] ? $_G['username'] : $_G['clientip'];
 				//查询文件信息
 				if (!$fileinfo = DB::fetch_first("select * from %t where rid = %s", array('resources', $rid))) {
 					return false;
@@ -59,7 +59,7 @@ class table_resources_tag extends dzz_table
     {
         global $_G;
         $uid = $_G['uid'];
-        $username = $_G['username'];
+        $username = $_G['username'] ? $_G['username'] : $_G['clientip'];
         //查询文件信息
         if (!$fileinfo = DB::fetch_first("select * from %t where rid = %s", array('resources', $rid))) {
             return false;

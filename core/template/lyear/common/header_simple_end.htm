@@ -1,5 +1,5 @@
 </head>
-<body id="nv_{$_G['basescript']}" class="$bodyClass" data-theme="$_G['cookie']['the_site_theme']" style="$bodystyle">
+<body id="nv_{$_G['basescript']}" class="$bodyClass" style="$bodystyle" data-theme="$_G['cookie']['the_site_theme']">
 <div id="append_parent" style="z-index:99999;"></div>
 <div id="ajaxwaitid" style="z-index:99999;"></div>
 <aside class="bs-left-container">
@@ -25,7 +25,7 @@
           <span class="lyear-toggler-bar"></span>
           </div>
         </div>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-collapse collapse" id="navbarText" style="">
@@ -39,21 +39,21 @@
             </li>
             <!--{if !$_G['setting']['bbclosed'] || !$_G['adminid'] ==0}-->
             <li>
-            <a href="javascript:;" id="desktop_app" data-href="index.php?mod=system&template=1&op=app_ajax&operation=app" class="app_popup_icon nav-link js-popbox" role="button" data-bs-placement="bottom" data-bs-trigger="focus" data-auto-adapt="true" data-bs-toggle="popover"><span class="mdi mdi-apps fs-4"></span></a>
+            <a href="javascript:;" id="desktop_app" data-href="index.php?mod=system&template=1&op=app_ajax&operation=app" class="app_popup_icon nav-link js-popbox" role="button" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover"><span class="mdi mdi-apps fs-4"></span></a>
             </li>
             <li>
-              <a href="javascript:;" id="dzz_notification" data-href="index.php?mod=system&template=1&op=notification&filter=new" class="animations-box position-relative nav-link navbar-notice js-popbox" role="button" data-bs-placement="bottom" data-bs-trigger="focus" data-auto-adapt="true" data-bs-toggle="popover">
+              <a href="javascript:;" id="dzz_notification" data-href="index.php?mod=system&template=1&op=notification&filter=new" class="animations-box position-relative nav-link navbar-notice js-popbox" role="button" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover">
               <span class="mdi mdi-bell-outline fs-4"></span>
               <span class="position-absolute translate-middle badge bg-danger rounded-pill d-none">&nbsp;</span>
               </a>
             </li>
             <!--{/if}-->
             <li>
-              <a href="javascript:;" class="nav-link js-popbox" data-href="user.php?mod=space&template=1&op=navmenu&modname={MOD_NAME}" role="button" data-bs-placement="bottom" data-bs-trigger="focus" data-auto-adapt="true" data-bs-toggle="popover">
+              <a href="javascript:;" class="nav-link js-popbox user-select-none" data-href="user.php?mod=space&template=1&op=navmenu&modname={MOD_NAME}" role="button" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover">
                 <!--{if $_G['uid']}-->
                 {eval echo avatar_block($_G['uid']);}
                 <!--{else}-->
-                <span class="Topcarousel img-avatar" style="background:var(--bs-primary)" title="{lang login}">{lang login}</span>
+                <span class="Topcarousel img-avatar" style="background:#007bff;background:var(--bs-primary)" title="{lang login}">{lang login}</span>
                 <!--{/if}-->
               </a>
             </li>

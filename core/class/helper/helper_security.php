@@ -5,7 +5,7 @@ if(!defined('IN_DZZ')) {
 
 class helper_security {
 
-	public function removeXSS($val) {
+	public static function removeXSS($val) {
 		$val = preg_replace('/([\x00-\x08][\x0b-\x0c][\x0e-\x20])/', '', $val);
 		$search = 'abcdefghijklmnopqrstuvwxyz';
 		$search.= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -44,7 +44,7 @@ class helper_security {
 		return $val;
 	}
 	
-	public function checkhtml($html) {
+	public static function checkhtml($html) {
 	
 			preg_match_all("/\<([^\<]+)\>/is", $html, $ms);
 	

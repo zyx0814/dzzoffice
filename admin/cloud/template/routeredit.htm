@@ -1,100 +1,84 @@
-<!--{template common/header_simple_start}-->
-<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
-<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
-
-<!--{template common/header_simple_end}-->
-<!--{template common/commer_header}-->
-<div class="bs-container clearfix">
-  <div class="bs-left-container  clearfix"> 
-    <!--{template left}--> 
-  </div>
-  <div class="left-drager">
-    <div class="left-drager-op">
-      <div class="left-drager-sub"></div>
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+    <!--{template right_header}-->
+		<div class="card">
+      <div class="card-body">
+        <form id="cpform" action="{MOD_URL}&op=routeredit" class="form-horizontal" method="post" name="cpform">
+          <input type="hidden" value="{FORMHASH}" name="formhash">
+          <input type="hidden" name="routerid" value="$routerid">
+          <input type="hidden" value="addroutersubmit" name="true">
+          <div class="row mb-3">
+            <label class="col-sm-2" for="name">{lang routing_name}</label>
+            <div class="col-sm-10">
+              <input type="text" name="router[name]" id="name" class="form-control" value="$router[name]">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2" for="priority">{lang priority}</label>
+            <div class="col-sm-10">
+              <input type="text" name="router[priority]" id="priority" class="form-control" value="$router[priority]">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2" for="remoteid">{lang storage_location}</label>
+            <div class="col-sm-10">
+              <select name="router[remoteid]" class="form-select" id="remoteid">
+                <!--{loop $spaces $value}--> 
+                <option value="$value[remoteid]" <!--{if $router[remoteid]==$value[remoteid]}-->selected="selected"<!--{/if}-->> $value[name]
+                  <!--{if $value[available]<1}-->（{lang router_routing_failure}）<!--{/if}-->
+                </option>
+                <!--{/loop}-->
+              </select>
+              <ul class="form-text">
+                <li>{lang cloud_movetool_designator_text}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2" for="exts">{lang file_type}</label>
+            <div class="col-sm-10">
+              <textarea type="textarea" id="exts" class="form-control" name="router[router][exts]" row="6" cols="6">{eval 
+                $exts = is_array($router['router']['exts']) ? $router['router']['exts'] : explode(',', $router['router']['exts']);
+                echo implode(',', $exts);
+            }</textarea>
+              <div class="m-2 p-1">
+              <a href="javascript:;" class="btn btn-primary" onclick="setExts('jpg,jpeg,png,gif')">{lang photograph_class}</a> 
+              <a href="javascript:;" class="btn btn-primary" onclick="setExts('doc,docx,rtf,odt,htm,html,txt')">word{lang type_attach}</a> 
+              <a href="javascript:;" class="btn btn-primary" onclick="setExts('xls,xlsx,ods,sxc,csv,tsv')">excel{lang type_attach}</a> 
+              <a href="javascript:;" class="btn btn-primary" onclick="setExts('ppt,pptx,pps,ppsx,odp,sxi')">ppt{lang type_attach}</a> 
+              <a href="javascript:;" class="btn btn-primary" onclick="setExts('mp4,avi,wmv,mkv,rmvb,rm,asf,mpg,mpeg,mov')">{lang video_typename_attach}</a>
+              <a href="javascript:;" class="btn btn-primary" onclick="setExts('txt,ini,conf,log,bat,sql,js,css,htm,html,xml,asp,aspx,php,jsp,json,py,h,c')">{lang text_class}</a> 
+            </div>
+              <ul class="form-text">
+                {lang cloud_movetool_file_type_text}
+              </ul>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2">{lang file_size}</label>
+            <div class="col-sm-10">
+              <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="{lang typename_attach_gt}" name="router[router][size][lt]" value="">
+                  <div class="input-group-text">M</div>
+                  <input type="text" class="form-control" placeholder="{lang typename_attach_lt}" name="router[router][size][gt]" value="">
+                  <div class="input-group-text">M</div>
+              </div>
+              <ul class="form-text">
+                {lang cloud_movetool_file_size_text}
+              </ul>
+            </div>
+          </div>
+          <dl class="mb-3 d-grid">
+            <input class="btn btn-primary btn-round bodyloading" name="addroutersubmit" value="<!--{if $routerid}-->{lang edit}<!--{else}-->{lang add}<!--{/if}-->" type="submit">
+          </dl>
+        </form>
+      </div>
     </div>
   </div>
-  <div class="bs-main-container  clearfix">
-    <div class="main-header clearfix"> 
-      <ul class="nav nav-pills nav-pills-bottomguide"  >
-        <li> <a href="{BASESCRIPT}?mod=cloud&op=edit&bz=dzz"> {lang set}</a> </li>
-        <li> <a href="{BASESCRIPT}?mod=cloud&op=router">{lang routing_management}</a> </li>
-        <li class="active"> <a href="{BASESCRIPT}?mod=cloud&op=rootedit">{lang add_routing}</a> </li>
-      </ul>
-    </div>
-    <div class="main-content" style="padding:15px;border-top:1px solid #FFF">
-      <form id="cpform" action="{BASESCRIPT}?mod=cloud&op=routeredit" class="form-horizontal form-horizontal-left" method="post" name="cpform">
-        <input type="hidden" value="{FORMHASH}" name="formhash">
-        <input type="hidden" name="routerid" value="$routerid">
-        <input type="hidden" value="addroutersubmit" name="true">
-        <dl>
-          <dt>{lang routing_name}:</dt>
-          <dd class="clearfix">
-            <input type="text" name="router[name]" class="form-control" value="$router[name]">
-          </dd>
-        </dl>
-        <dl>
-          <dt>{lang priority}:</dt>
-          <dd class="clearfix">
-            <input type="text" name="router[priority]" class="form-control" value="$router[priority]">
-          </dd>
-        </dl>
-        <dl>
-          <dt>{lang storage_location}:</dt>
-          <dd class="clearfix">
-            <select name="router[remoteid]" class="form-control">
-              <!--{loop $spaces $value}--> 
-              <option value="$value[remoteid]" <!--{if $router[remoteid]==$value[remoteid]}-->selected="selected"<!--{/if}-->> $value[name]
-								<!--{if $value[available]<1}-->（{lang router_routing_failure}）<!--{/if}-->
-              </option>
-              <!--{/loop}-->
-            </select>
-            <ul class="help-block ">
-              <li>{lang cloud_movetool_designator_text}</li>
-            </ul>
-          </dd>
-        </dl>
-        <dl>
-          <dt>{lang file_type}:</dt>
-          <dd class="clearfix">
-            <textarea type="textarea" id="exts" class="form-control" name="router[router][exts]" row="6" cols="6" style="width:300px;height:60px">{eval echo implode(',',$router[router][exts])}</textarea>
-          </dd>
-          <dd class="clearfix mt10"> 
-          	<a href="javascript:;" onclick="setExts('jpg,jpeg,png,gif')">{lang photograph_class}</a> 
-            &nbsp;&nbsp; <a href="javascript:;" onclick="setExts('doc,docx,rtf,odt,htm,html,txt')">word{lang type_attach}</a> 
-            &nbsp;&nbsp; <a href="javascript:;" onclick="setExts('xls,xlsx,ods,sxc,csv,tsv')">excel{lang type_attach}</a> 
-            &nbsp;&nbsp; <a href="javascript:;" onclick="setExts('ppt,pptx,pps,ppsx,odp,sxi')">ppt{lang type_attach}</a> 
-            &nbsp;&nbsp; <a href="javascript:;" onclick="setExts('mp4,avi,wmv,mkv,rmvb,rm,asf,mpg,mpeg,mov')">{lang video_typename_attach}</a> &nbsp;&nbsp; <a href="javascript:;" onclick="setExts('txt,ini,conf,log,bat,sql,js,css,htm,html,xml,asp,aspx,php,jsp,json,py,h,c')">{lang text_class}</a> 
-          </dd>
-          <dd class="clearfix mt10">
-            <ul class="help-inline ">
-              {lang cloud_movetool_file_type_text}
-            </ul>
-          </dd>
-        </dl>
-        <dl>
-          <dt>{lang file_size}:</dt>
-          <dd class="clearfix ">
-            <div class="input-group pull-left" style="width:100px"> <span class="input-group-addon">{lang typename_attach_lt}</span>
-              <input type="text" class="form-control" name="router[router][size][lt]" style="width:60px;" value="$router[router][size][lt]" />
-              <span class="input-group-addon">M</span> </div>
-            <div class="pull-left ml20 mr20" style="line-height:30px;"> AND</div>
-            <div class="input-group pull-left" style="width:100px"> <span class="input-group-addon">{lang typename_attach_gt}</span>
-              <input type="text" class="form-control" name="router[router][size][gt]" value="$router[router][size][gt]" style="width:60px;" />
-              <span class="input-group-addon">M</span> </div>
-          </dd>
-          <dd class="clearfix ">
-            <ul class="help-block ">
-              {lang cloud_movetool_file_size_text}
-            </ul>
-          </dd>
-        </dl>
-        <input class="btn btn-primary" name="addroutersubmit" value="<!--{if $routerid}-->{lang edit}<!--{else}-->{lang add}<!--{/if}-->" type="submit">
-      </form>
-    </div>
-  </div>
-</div>
+</main> 
 <script type="text/javascript">
-	jQuery('.left-drager').leftDrager_layout();
 	function setExts(str) {
 		var old = trim(document.getElementById('exts').value).replace(/，{1,}/g, ',').replace(/,{1,}/g, ',').replace(/^\,/g, '');
 		var arr = old ? old.split(',') : [];
@@ -107,5 +91,4 @@
 		document.getElementById('exts').value = arr.join(',');
 	}
 </script> 
-<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
-<!--{template common/footer_simple}-->
+<!--{template lyear:footer_simple}-->

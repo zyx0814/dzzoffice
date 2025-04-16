@@ -1,41 +1,29 @@
-<!--{template common/header_simple_start}-->
-<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<!--{template lyear:header_simple_start}-->
 <link href="{MOD_PATH}/css/passsafe.css?{VERHASH}" rel="stylesheet" media="all">
 <script src="user/scripts/register.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
-<style>
-    .main-content{padding-top:30px;}
-</style>
-<!--{template common/header_simple_end}-->
-<!--{template common/commer_header}-->
-<div class="bs-container clearfix">
-    <div class="bs-left-container  clearfix">
-        <!--{template left}-->
-    </div>
-    <div class="left-drager">
-    </div>
-
-    <div class="bs-main-container  clearfix" >
-        <div class="main-header">
-            <ul class="nav nav-pills nav-pills-bottomguide">
-                <li {if $do == 'editpass'}class="active"{/if}><a href="user.php?mod=profile&op=password">{lang password_edit}</a></li>
-                <li {if $do == 'login'}class="active"{/if}"><a href="user.php?mod=profile&op=password&do=login">登录记录</a></li>
-                <li {if $do == 'changeemail'}class="active"{/if}><a href="user.php?mod=profile&op=password&do=changeemail">{lang bindemail_subject}</a></li>
-                <!--<li {if $do == 'bindphone'}class="active"{/if}><a href="">绑定手机</a></li>-->
-               
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container main-allnotice">
+	<div class="container-fluid">
+	  <div class="card">
+        <div class="card-body">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a class="nav-link {if $do == 'editpass'}active{/if}" href="{MOD_URL}&op=password">{lang password_edit}</a></li>
+                <li class="nav-item"><a class="nav-link {if $do == 'login'}active{/if}" href="{MOD_URL}&op=password&do=login">登录记录</a></li>
+                <li class="nav-item"><a class="nav-link {if $do == 'changeemail'}active{/if}" href="{MOD_URL}&op=password&do=changeemail">{lang bindemail_subject}</a></li>
             </ul>
         </div>
-        <div class="main-content">
-            <!--{if $do == 'editpass'}-->
-                <!--{template editpass}-->
-            <!--{elseif $do == 'changeemail'}-->
-                <!--{template changeemail}-->
-            <!--{elseif $do == 'login'}-->
-                <!--{template login}-->
-           <!--{/if}-->
-        </div>
-<script type="text/javascript"  reload="1">
-    jQuery('.left-drager').leftDrager_layout();
-</script>
-<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
-<!--{template common/footer_simple}-->
+    </div>
+    <div class="card">
+        <div class="card-body">
+        <!--{if $do == 'editpass'}-->
+            <!--{template lyear:editpass}-->
+        <!--{elseif $do == 'changeemail'}-->
+            <!--{template lyear:changeemail}-->
+        <!--{elseif $do == 'login'}-->
+            <!--{template lyear:login}-->
+        <!--{/if}-->
+    </div>
+  </div>
+</div>
+</main>
+<!--{template lyear:footer_simple}-->

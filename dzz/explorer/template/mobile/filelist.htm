@@ -1,7 +1,7 @@
 <!--{if $groups}-->
 <!--{loop $groups $v}-->
 <div class="weui-cell weui-cell_access weui-cell_longpress" data-open="href"
-     href="{MOD_URL}&op=mobile&do=file&gid={$v[orgid]}&fid={$v[fid]}">
+     href="{MOD_URL}&op=mobile&do=file&gid={$v['orgid']}&fid={$v[fid]}">
     <div class="weui-cell__hd">
         <!--{if $v['imgs']}-->
         <img src="$v[img]" class="weui-cell__recentimg">

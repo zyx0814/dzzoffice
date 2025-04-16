@@ -6,7 +6,7 @@ if(!defined('IN_DZZ')) {
 
 class ultrax_cache {
 
-	function ultrax_cache($conf) {
+	function __construct($conf) {
 		$this->conf = $conf;
 	}
 
@@ -17,7 +17,6 @@ class ultrax_cache {
 		}
 		return false;
 	}
-
 	function set_cache($key, $value, $life) {
 		global $_G;
 		$data = array($key => array('data' => $value, 'life' => $life));
@@ -45,7 +44,7 @@ class ultrax_cache {
 	}
 
 	function _get_cache($key) {
-		static $data = null;
+		static $data = array();
 		if(!isset($data[$key])) {
 			include $this->get_cache_file_path($key);
 		}
@@ -65,7 +64,7 @@ class ultrax_cache {
 	}
 
 	function get_cache_file_path($key) {
-		static $cache_path = null;
+		static $cache_path = array();
 		if(!isset($cache_path[$key])) {
 			$dir = hexdec($key[0].$key[1].$key[2]) % 1000;
 			$cache_path[$key] = $this->conf['path'].'/'.$dir.'/'.$key.'.php';

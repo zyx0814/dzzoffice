@@ -1,6 +1,6 @@
 <div class="form-group" id="verify-type">
     <label class="control-label" for="chktype" required>验证方式</label>
-    <select name="chktype" id="chktype" class="form-control input-sm " >
+    <select name="chktype" id="chktype" class="form-control input-sm form-select " >
         <!--{if $chkarr['emailstatus'] && $chkarr['email']}-->
         <option value="email">$hideemail 验证</option>
         <!--{/if}-->
@@ -57,7 +57,7 @@
 </div>
 <div class="conTent" id="email_sendmsg" style="display:none;">
     <div class="success">
-        <span class="glyphicon glyphicon-ok"></span>
+        <span class="glyphicon glyphicon-ok mdi mdi-check"></span>
         <span class="msgobj">验证邮件已发送</span>
     </div>
     <div class="theme">

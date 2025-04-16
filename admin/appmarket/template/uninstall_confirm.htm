@@ -1,20 +1,35 @@
-<!--{template common/header_simple_start}-->
-<!--{template common/header_simple_end}-->
-<div class="container" style="padding:30px;">
-  <div class="well" style="overflow:hidden;">
-    <form id="confirm_uninstall_form" name="confirm_uninstall_form" class="form-horizontal-left form-horizontal" action="{MOD_URL}&op=cp&do=uninstall" method="post" >
+<!--{template lyear:header_simple}-->
+<style>
+	body{
+		overflow: auto;
+	}
+</style>
+	<div class="container-fluid">
+    <div class="container">
+      <div class="card border-danger shadow">
+          <form id="confirm_uninstall_form" name="confirm_uninstall_form" class="form-horizontal" action="{MOD_URL}&op=cp&do=uninstall" method="post" >
             <input type="hidden" name="confirmsubmit" value="true" />
             <input type="hidden" name="adminurl" value="$_GET['adminurl']" />
             <input type="hidden" name="appid" value="$appid" />
             <input type="hidden" name="formhash" value="{FORMHASH}" />
-            <p class="text-danger">
-            	{$app_delete_confirm}
-            </p>
-            <p><input id="confirm" type="text" class="form-control" style="max-width:200px;" name="confirm" value="" /></p>
-
-            <button type="button" class="btn btn1 btn-danger" onclick="if(document.getElementById('confirm').value!='DELETE'){document.getElementById('confirm').focus();}else{document.getElementById('confirm_uninstall_form').submit()}">{lang app_sure_delete}</button>
-            &nbsp;&nbsp;&nbsp;<button type="button" class="btn btn1 btn-default" onclick="location.href='{$refer}';return false;">{lang app_not_delete}</button>
-    </form>
-   </div>
-</div>
-<!--{template common/footer_simple}-->
+            <div class="card-header">
+              <div class="card-title"><strong>{$app['appname']}</strong> 卸载确认</div>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>警告</strong> 
+                {$app_delete_confirm}
+              </div>
+                <p><input id="confirm" type="text" class="form-control" name="confirm" value="" /></p>
+            </div>
+            <footer class="card-footer">
+              <div class="example-btn">
+                <button class="btn btn-danger" type="button" onclick="if(document.getElementById('confirm').value!='DELETE'){document.getElementById('confirm').focus();}else{document.getElementById('confirm_uninstall_form').submit()}">{lang app_sure_delete}</button>
+                <button class="btn btn-primary" type="button" onclick="location.href='{$refer}';return false;">{lang app_not_delete}</button>
+              </div>
+            </footer>
+          </form>
+        </div>
+    </div>
+	</div>
+<!--{template lyear:footer_simple}-->

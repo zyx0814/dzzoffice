@@ -65,7 +65,7 @@ class io_ftp extends io_api
             $opath=$obz.'/'.$attach['attachment'];
         }
         //exit($opath.'==='.$fpath.'/'.$filename);
-        if($re=self::multiUpload($opath,$fpath,$filename,$attach,'overwrite')){
+        if($re=$this->multiUpload($opath,$fpath,$filename,$attach,'overwrite')){
             if($re['error']) return $re;
             else{
                 return true;
@@ -74,12 +74,10 @@ class io_ftp extends io_api
         return false;
     }
 
-
-
     //根据路径获取目录树的数据；
     public function getFolderDatasByPath($path){
 
-        $bzarr=self::parsePath($path);
+        $bzarr=$this->parsePath($path);
 
         $spath=preg_replace("/\/+/",'/',$bzarr['path1']);
         if($spath){
@@ -94,9 +92,9 @@ class io_ftp extends io_api
             for($j=0;$j<$i;$j++){
                 if($patharr[$j]) $path1.='/'.$patharr[$j];
             }
-            if($arr=self::getMeta($path1)){
+            if($arr=$this->getMeta($path1)){
                 if(isset($arr['error'])) continue;
-                $folder=self::getFolderByIcosdata($arr);
+                $folder=$this->getFolderByIcosdata($arr);
                 $folderarr[$folder['fid']]=$folder;
             }
         }
@@ -159,7 +157,7 @@ class io_ftp extends io_api
     //更改权限
     public function chmod($path,$chmod=0777,$son=0){
         if($this->error)  return array('error'=>$this->error);
-        $bzarr=self::parsePath($path);
+        $bzarr=$this->parsePath($path);
         $chmod=eval("return({$chmod});");
         if($son){
             return $this->conn->ftp_chmod_son($bzarr['path'],$chmod);
@@ -170,9 +168,9 @@ class io_ftp extends io_api
     }
     //获取文件流；
     //$path: 路径
-    function getStream($path){
+    public function getStream($path){
         global  $_G;
-        $arr=self::parsePath($path);
+        $arr=$this->parsePath($path);
         $filename = basename($path);
         $cachetarget =  $_G['setting']['attachdir'].'cache/'.$filename;
         if(file_exists($cachetarget) && (filectime($cachetarget) > TIMESTAMP - $this->filecachetime)){
@@ -196,7 +194,7 @@ class io_ftp extends io_api
     }
     //获取文件流地址；
     //$path: 路径
-    function getFileUri($path){
+    public function getFileUri($path){
         return getglobal('siteurl').'index.php?mod=io&op=getStream&path='.dzzencode($path);
     }
     public function deleteThumb($path){
@@ -225,7 +223,7 @@ class io_ftp extends io_api
         $fileurls=array();
         Hook::listen('thumbnail',$fileurls,$path);
         if(!$fileurls){
-            $fileurls=array('fileurl'=>self::getFileUri($path),'filedir'=>self::getStream($path));
+            $fileurls=array('fileurl'=>$this->getFileUri($path),'filedir'=>$this->getStream($path));
         }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if(!$imginfo = @getimagesize($fileurls['filedir'])){
@@ -261,7 +259,7 @@ class io_ftp extends io_api
         $fileurls=array();
         Hook::listen('thumbnail',$fileurls,$path);
         if(!$fileurls){
-            $fileurls=array('fileurl'=>self::getFileUri($path),'filedir'=>self::getStream($path));
+            $fileurls=array('fileurl'=>$this->getFileUri($path),'filedir'=>$this->getStream($path));
         }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if(!$imginfo = @getimagesize($fileurls['filedir'])){
@@ -295,7 +293,7 @@ class io_ftp extends io_api
     //@param string $data  文件的新内容
     public function setFileContent($path,$data){
 
-        $bzarr=self::parsepath($path);
+        $bzarr=$this->parsePath($path);
         $temp = tempnam(sys_get_temp_dir(), 'tmpimg_');
         if(!file_put_contents($temp,$data)){
             return array(lang('error_writing_temporary_file'));
@@ -305,7 +303,7 @@ class io_ftp extends io_api
         }else{
             return array('error'=>$this->conn->error());
         }
-        $icoarr=self::getMeta($path);
+        $icoarr=$this->getMeta($path);
         if($icoarr['type']=='image'){
             $icoarr['img'].='&t='.TIMESTAMP;
         }
@@ -319,17 +317,17 @@ class io_ftp extends io_api
      * @return icosdatas
      */
     public function CopyTo($opath,$path,$iscopy){
-        $oarr=self::parsePath($opath);
+        $oarr=$this->parsePath($opath);
         $arr=IO::parsePath($path);
-        $data=self::getMeta($opath);
+        $data=$this->getMeta($opath);
         switch($data['type']){
             case 'folder'://创建目录
                 if($re=IO::CreateFolder($path,$data['name'])){
                     $data['newdata']=$re['icoarr'];
                     $data['success']=true;
-                    $contents=self::listFiles($opath);
+                    $contents=$this->listFiles($opath);
                     foreach($contents as $key=>$value){
-                        $data['contents'][$key]=self::CopyTo($value['path'],$re['folderarr']['path']);
+                        $data['contents'][$key]=$this->CopyTo($value['path'],$re['folderarr']['path']);
                     }
                 }
                 break;
@@ -379,7 +377,7 @@ class io_ftp extends io_api
             }
             fclose($handle);
             //exit('upload');
-            return self::upload_by_content($fileContent,$path,$filename);
+            return $this->upload_by_content($fileContent,$path,$filename);
         }else{ //分片上传
 
             $partinfo=array('ispart'=>true,'partnum'=>0,'iscomplete'=>false);
@@ -395,7 +393,7 @@ class io_ftp extends io_api
                     if($partinfo['partnum']*$partsize+strlen($fileContent)>=$size) $partinfo['iscomplete']=true;
                     $partinfo['partnum']+=1;
                     file_put_contents($cachefile,$fileContent);
-                    $re=self::upload($cachefile,$path,$filename,$partinfo);
+                    $re=$this->upload($cachefile,$path,$filename,$partinfo);
                     if($re['error']) return $re;
                     if($partinfo['iscomplete']){
                         @unlink($cachefile);
@@ -409,7 +407,7 @@ class io_ftp extends io_api
                 $partinfo['partnum']+=1;
                 $partinfo['iscomplete']=true;
                 file_put_contents($cachefile,$fileContent);
-                $re=self::upload($cachefile,$path,$filename,$partinfo);
+                $re=$this->upload($cachefile,$path,$filename,$partinfo);
                 if($re['error']) return $re;
                 if($partinfo['iscomplete']){
                     @unlink($cachefile);
@@ -427,16 +425,16 @@ class io_ftp extends io_api
      * @param string $force 读取缓存，大于0：忽略缓存，直接调用api数据，常用于强制刷新时。
      * @return icosdatas
      */
-    function listFiles($path,$by='time',$order='desc',$limit='',$force=0){
+    public function listFiles($path,$by='time',$order='desc',$limit='',$force=0){
         if($this->error)  return array('error'=>$this->error);
-        $bzarr=self::parsePath($path);
+        $bzarr=$this->parsePath($path);
 
         $data = $this->conn->ftp_list($bzarr['path']);
         //print_r($data);exit(diconv($bzarr['path'],'GBK',CHARSET));
         if($this->conn->error()) return array('error'=>$this->conn->error());
         $icosdata=array();
         foreach($data as $key => $value){
-            $icoarr=self::_formatMeta($value,$bzarr['bz']);
+            $icoarr=$this->_formatMeta($value,$bzarr['bz']);
             $icosdata[$icoarr['icoid']]=$icoarr;
         }
         return $icosdata;
@@ -446,8 +444,8 @@ class io_ftp extends io_api
      *返回标准的icosdata
      *$force>0 强制刷新，不读取缓存数据；
     */
-    function getMeta($path,$force=0){
-        $bzarr=self::parsePath($path);
+    public function getMeta($path,$force=0){
+        $bzarr=$this->parsePath($path);
         $meta=array();
         if($path==$this->_root){
             $meta['path']='';
@@ -471,11 +469,11 @@ class io_ftp extends io_api
 
             }
         }
-        $icosdata=self::_formatMeta($meta,$bzarr['bz']);
+        $icosdata=$this->_formatMeta($meta,$bzarr['bz']);
         return $icosdata;
     }
     //将api获取的meta数据转化为icodata
-    function _formatMeta($meta,$bz){
+    public function _formatMeta($meta,$bz){
         global $_G,$documentexts,$imageexts;
         //判断是否为根目录
         $icosdata=array();
@@ -552,7 +550,7 @@ class io_ftp extends io_api
         return $icosdata;
     }
     //通过icosdata获取folderdata数据
-    function getFolderByIcosdata($icosdata){
+    public function getFolderByIcosdata($icosdata){
         global $_GET;
         $folder=array();
         if($icosdata['type']=='folder'){
@@ -574,8 +572,8 @@ class io_ftp extends io_api
         return $folder;
     }
     //获得文件内容；
-    function getFileContent($path){
-        /*$url=self::getStream($path);
+    public function getFileContent($path){
+        /*$url=$this->getStream($path);
         $config=$this->conn->config;
         if($config['port'] == 22 || $config['ssl'] == 2){
             $sftp = ssh2_sftp($this->conn->connectid);
@@ -583,7 +581,7 @@ class io_ftp extends io_api
         }
         var_dump(file_get_contents($url));
         die;*/
-        $arr=self::parsePath($path);
+        $arr=$this->parsePath($path);
 
         $config=$this->conn->config;
         if($config['ssl']) $scheme='ftps://';
@@ -603,7 +601,7 @@ class io_ftp extends io_api
         set_time_limit(0);
 
         if(empty($filename)){
-            $meta=self::getMeta($paths[0]);
+            $meta=$this->getMeta($paths[0]);
             $filename=$meta['name'].(count($paths)>1?lang('wait'):'');
         }
         $filename=(strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
@@ -611,7 +609,7 @@ class io_ftp extends io_api
 
         $zip = new ZipStream($filename.".zip");
         //$zip->setComment("$meta[name] " . date('l jS \of F Y h:i:s A'));
-        $data=self::getFolderInfo($paths,'',$zip);
+        $data=$this->getFolderInfo($paths,'',$zip);
         /*foreach($data as $value){
              $zip->addLargeFile(fopen($value['url'],'rb'), $value['position'], $value['dateline']);
         }*/
@@ -621,19 +619,19 @@ class io_ftp extends io_api
         static $data=array();
         try{
             foreach($paths as $path){
-                $arr=self::parsePath($path);
+                $arr=$this->parsePath($path);
 
-                $meta=self::getMeta($path);
+                $meta=$this->getMeta($path);
 
                 switch($meta['type']){
                     case 'folder':
                         $lposition=$position.$meta['name'].'/';
-                        $contents=self::listFiles($path);
+                        $contents=$this->listFiles($path);
                         $arr=array();
                         foreach($contents as $key=>$value){
                             $arr[]=$value['path'];
                         }
-                        if($arr) self::getFolderInfo($arr,$lposition,$zip);
+                        if($arr) $this->getFolderInfo($arr,$lposition,$zip);
                         break;
                     default:
                         $config=$this->conn->config;
@@ -645,7 +643,7 @@ class io_ftp extends io_api
                         }else{
                             $url =  $scheme.urlencode($config['username']).':'.urlencode($config['password']).'@'.$config['host'].':'.$config['port'].$arr['path'];
                         }
-                        //$meta['url']=self::getStream($meta['path']);
+                        //$meta['url']=$this->getStream($meta['path']);
                         $meta['url']=$url;
                         $meta['position']=$position.$meta['name'];
                         //$data[$meta['icoid']]=$meta;
@@ -666,7 +664,7 @@ class io_ftp extends io_api
         global $_G;
         $paths=(array)$paths;
         if(count($paths)>1){
-            self::zipdownload($paths,$filename);
+            $this->zipdownload($paths,$filename);
             exit();
         }else{
             $path=$paths[0];
@@ -674,12 +672,12 @@ class io_ftp extends io_api
         $path=rawurldecode($path);
         try {
             // Download the file
-            $file=self::getMeta($path);
+            $file=$this->getMeta($path);
             if($file['type']=='folder'){
-                self::zipdownload($path);
+                $this->zipdownload($path);
                 exit();
             }
-            $arr=self::parsePath($path);
+            $arr=$this->parsePath($path);
             $config=$this->conn->config;
             if($config['ssl']) $scheme='ftps://';
             else $scheme='ftp://';
@@ -689,7 +687,7 @@ class io_ftp extends io_api
             }else{
                 $url =  $scheme.urlencode($config['username']).':'.urlencode($config['password']).'@'.$config['host'].':'.$config['port'].$arr['path'];
             }
-            //$url=self::getStream($path);
+            //$url=$this->getStream($path);
             if(!$fp = @fopen($url, 'rb')) {
                 topshowmessage(lang('file_not_exist1'));
             }
@@ -724,9 +722,8 @@ class io_ftp extends io_api
         }
     }
 
-
     public function rename($path,$name){
-        $arr=self::parsePath($path);
+        $arr=$this->parsePath($path);
         $patharr=explode('/',$arr['path1']);
         $arr['path2']='';
         $pathinfo = pathinfo($arr['path1']);
@@ -743,9 +740,8 @@ class io_ftp extends io_api
                 return array('error'=>$this->conn->error());
             }
         }
-        return self::getMeta($arr['bz'].$arr['path2']);
+        return $this->getMeta($arr['bz'].$arr['path2']);
     }
-
 
     //删除原内容
     //$path: 删除的路径
@@ -756,7 +752,7 @@ class io_ftp extends io_api
     //$force 真实删除，不放入回收站
     public function Delete($path,$force=false){
         //global $dropbox;
-        $bzarr=self::parsePath($path);
+        $bzarr=$this->parsePath($path);
         if($this->error){
             return array('error'=>$this->error);
         }
@@ -794,15 +790,15 @@ class io_ftp extends io_api
     public function CreateFolder($path,$fname){
         global $_G;
         $path=$path.'/'.$fname;
-        $bzarr=self::parsePath($path);
+        $bzarr=$this->parsePath($path);
         $return=array();
         if($this->conn->ftp_mkdir($bzarr['path'])){
             $meta['path']=$bzarr['path1'];
             $meta['name']=substr(strrchr($bzarr['path1'], '/'), 1);
             $meta['type']='folder';
             $meta['size']='-';
-            $icoarr=self::_formatMeta($meta,$bzarr['bz']);
-            $folderarr=self::getFolderByIcosdata($icoarr);
+            $icoarr=$this->_formatMeta($meta,$bzarr['bz']);
+            $folderarr=$this->getFolderByIcosdata($icoarr);
             return array('folderarr'=>$folderarr,'icoarr'=>$icoarr);
         }else{
             return array('error'=>$this->conn->error());
@@ -812,7 +808,7 @@ class io_ftp extends io_api
     //获取不重复的目录名称
     public function getFolderName($name,$path){
         static $i=0;
-        if(!$this->icosdatas) $this->icosdatas=self::listFiles($path);
+        if(!$this->icosdatas) $this->icosdatas=$this->listFiles($path);
         $names=array();
         foreach($this->icosdatas as $value){
             $names[]=$value['name'];
@@ -820,7 +816,7 @@ class io_ftp extends io_api
         if(in_array($name,$names)){
             $name=str_replace('('.$i.')','',$name).'('.($i+1).')';
             $i+=1;
-            return self::getFolderName($name,$path);
+            return $this->getFolderName($name,$path);
         }else {
             return $name;
         }
@@ -873,7 +869,7 @@ class io_ftp extends io_api
         //exit($path.'===='.$filename);
 
         //处理目录(没有分片或者最后一个分片时创建目录
-        $arr=self::getPartInfo($content_range);
+        $arr=$this->getPartInfo($content_range);
 
         if($relativePath && ($arr['iscomplete'])){
             $path1=$path;
@@ -885,7 +881,7 @@ class io_ftp extends io_api
                 }
                 if($patharr[$key-1]) $path1.='/'.$patharr[$key-1];
 
-                $re=self::CreateFolder($path1,$value);
+                $re=$this->CreateFolder($path1,$value);
                 if(isset($re['error'])){
                     return $re;
                 }else{
@@ -900,7 +896,7 @@ class io_ftp extends io_api
         }
         if($relativePath) $path=$path.'/'.trim($relativePath,'/');
         if($arr['ispart']){
-            if($re1=self::upload($file,$path,$filename,$arr)){
+            if($re1=$this->upload($file,$path,$filename,$arr)){
                 if($re1['error']){
                     return $re1;
                 }
@@ -918,12 +914,12 @@ class io_ftp extends io_api
                 }
             }
         }else{
-            $re1=self::upload($file,$path,$filename);
+            $re1=$this->upload($file,$path,$filename);
             if(empty($re1['error'])){
                 /*if($relativePath){
-                    $icoarr=self::getMeta($path);
+                    $icoarr=$this->getMeta($path);
                     $data['icoarr'][]=$icoarr;
-                    $data['folderarr'][]=self::getFolderByIcosdata($icoarr);
+                    $data['folderarr'][]=$this->getFolderByIcosdata($icoarr);
                 }*/
                 $data['icoarr'][] = $re1;
                 return $data;
@@ -933,10 +929,10 @@ class io_ftp extends io_api
             }
         }
     }
-    function upload($file,$path,$filename,$partinfo=array(),$ondup='newcopy'){
+    public function upload($file,$path,$filename,$partinfo=array(),$ondup='newcopy'){
         global $_G;
 
-        $bzarr=self::parsePath($path.'/'.$filename);
+        $bzarr=$this->parsePath($path.'/'.$filename);
 		 if($this->error){
             return array('error'=>$this->error);
         }
@@ -953,9 +949,9 @@ class io_ftp extends io_api
             if($partinfo['partnum']==1){
                 $target='./cache/'.md5($path.'/'.$filename);
                 file_put_contents($_G['setting']['attachdir'].$target,'');
-                self::saveCache(md5($path.'/'.$filename),$target);
+                $this->saveCache(md5($path.'/'.$filename),$target);
             }else{
-                $target=self::getCache(md5($path.'/'.$filename));
+                $target=$this->getCache(md5($path.'/'.$filename));
             }
 
             if(!file_put_contents($_G['setting']['attachdir'].$target,$fileContent,FILE_APPEND)){
@@ -967,18 +963,18 @@ class io_ftp extends io_api
                     return array('error'=>$this->conn->error());
                 }
                 @unlink($_G['setting']['attachdir'].$target);
-                self::deleteCache(md5($path.'/'.$filename));
+                $this->deleteCache(md5($path.'/'.$filename));
             }
         }else{
             if(!$this->conn->upload($file,$bzarr['path'])){
                 return array('error'=>$this->conn->error());
             }
         }
-        return self::getMeta($path.'/'.$filename);
+        return $this->getMeta($path.'/'.$filename);
     }
     public function upload_by_content($content,$path,$filename){
         global $_G;
-        $bzarr=self::parsePath($path.'/'.$filename);
+        $bzarr=$this->parsePath($path.'/'.$filename);
 		 if($this->error){
             return array('error'=>$this->error);
         }
@@ -991,7 +987,7 @@ class io_ftp extends io_api
             return array('error'=>$this->conn->error());
         }
         @unlink($file);
-        return self::getMeta($path.'/'.$filename);
+        return $this->getMeta($path.'/'.$filename);
     }
 }
 ?>

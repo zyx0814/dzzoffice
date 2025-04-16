@@ -27,7 +27,6 @@ if (submitcheck('appsubmit')) {
 }
 //获取所有标签top50；
 $tags = DB::fetch_all("SELECT * FROM %t WHERE hot>0 ORDER BY HOT DESC limit 50", array('app_tag'),'tagid');
-
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $tagid = intval($_GET['tagid']);
 $group = intval($_GET['group']);

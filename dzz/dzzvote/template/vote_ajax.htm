@@ -181,7 +181,7 @@
 		jQuery('#dzzvote_post_{$vote[voteid]}').find('a[href="#dzzvote_post_image_{$vote[voteid]}"]').on('shown.bs.tab', function(e) {
 			jQuery('#dzzvotetype_{$vote[voteid]}').val(2);
 		});
-		jcLoader().load({ type: 'css', ids: 'css_vote,css_datepicker', url: './dzz/dzzvote/images/vote.css?{VERHASH},./dzz/dzzvote/images/datepicker.css?{VERHASH}' });
+		jcLoader().load({ type: 'css', ids: 'css_vote,css_datepicker', url: './dzz/dzzvote/images/vote.css?{VERHASH},./static/js/datepicker/datepicker.css?{VERHASH}' });
 
 		jcLoader().load({ type: "js", ids: 'js_ui_core,js_datepicker,js_dzzvote', url: "static/js/jquery.ui.core.js?{VERHASH},static/js/datepicker/jquery.ui.datepicker.min.js?{VERHASH}" }, function() {
 			jQuery('#dzzvote_post_{$vote[voteid]}').dzzvote({ voteid: '$vote[voteid]' });

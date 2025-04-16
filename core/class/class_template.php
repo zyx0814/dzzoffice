@@ -134,10 +134,13 @@ class template {
 		}
         $file = $tplfile;
         $tplfile = $tpldir.$tplfile.'.htm';
+		$tplfile1 = $file.'.htm';
         $basefile = basename(DZZ_ROOT . $tplfile, '.htm');
         $tplfile == 'common/header' && defined('CURMODULE') && CURMODULE && $file = 'common/header_' . CURMODULE;
         if (is_file(DZZ_ROOT.$tplfile)) {
             $tplfile =DZZ_ROOT.'/'.$tplfile;
+        } elseif (is_file(DZZ_ROOT.$tplfile1)) {
+            $tplfile =DZZ_ROOT.'/'.$tplfile1;
         } elseif (is_file(substr(DZZ_ROOT . $tplfile, 0, -4).'.php')) {
             $tplfile = substr(DZZ_ROOT . $tplfile, 0, -4).'.php';
         } else {

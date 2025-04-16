@@ -13,17 +13,17 @@ if(!defined('IN_DZZ')) {
 
 class io_remote
 {
-	public function getBzByRemoteid($remoteid){ //通过remoteid获取bz,默认返回dzz
+	public static function getBzByRemoteid($remoteid){ //通过remoteid获取bz,默认返回dzz
 		return C::t('local_storage')->getBzByRemoteid($remoteid);
 	}
-	public function getRemoteid($attach){
+	public static function getRemoteid($attach){
 		if($remoteid=C::t('local_router')->getRemoteId($attach)){
 			return $remoteid;
 		}
 		if($remoteid=C::t('local_storage')->getRemoteId()) return $remoteid;
 		return 0; //默认本地磁盘
 	}
-	public function DeleteFromSpace($attach){
+	public static function DeleteFromSpace($attach){
 		global $_G;
 		$bz=self::getBzByRemoteid($attach['remote']);
 		if($bz=='dzz'){
@@ -36,7 +36,7 @@ class io_remote
 		C::t('local_storage')->update_usesize_by_remoteid($attach['remote'],-$attach['filesize']);
 		return true;
 	}
-	public function MoveToSpace($attach,$remoteid=0){ //注意：判断时使用===false;
+	public static function MoveToSpace($attach,$remoteid=0){ //注意：判断时使用===false;
 	   global $_G;
 		if(!$remoteid) $remoteid=self::getRemoteid($attach); //未指定时根据路由获取；
 		$bz=self::getBzByRemoteid($remoteid);
@@ -58,7 +58,7 @@ class io_remote
 		}
 	}
 	//迁移文件
-	public function Migrate($attach,$remoteid){
+	public static function Migrate($attach,$remoteid){
 		global $_G;
 		if(is_numeric($re=self::MoveToSpace($attach,$remoteid))){
 			$remoteid=$re;

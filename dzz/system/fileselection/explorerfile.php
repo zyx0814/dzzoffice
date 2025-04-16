@@ -121,7 +121,7 @@ if ($operation == 'filelist') {
 
                 }
                 $folder['perm'] = perm_check::getPerm($folder['fid']);//获取文件权限
-                foreach (C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start) as $v) {
+                foreach (C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start,false,false,true) as $v) {
                     if ($v['type'] != 'folder' && $permfilter && $v['gid']) {
                         if (filter_permdata($permfilter, $folder['perm'], $v, $uid)) {
                             continue;

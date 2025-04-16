@@ -107,7 +107,7 @@
 </script>
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">×</span> </button>
-  <h4 class="modal-title">{lang user_select_title}</h4>
+  <h4 class="modal-title text-truncate">{lang user_select_title}</h4>
 </div>
 <form onsubmit="return seluser_submit(this);">
   <input type="hidden" name="formhash" value="{FORMHASH}">
@@ -138,7 +138,7 @@
         <div class="group-content" id="group-contents">
           <ul class="sele-right-classa" id="seluser">
             <!--{loop $selects $key $value}-->
-            <li id="seluser_sl_$key" class="right-classa-depart avatar avatar-xs" data-val="$key"> {eval echo avatar_block($value[uid]);}
+            <li id="seluser_sl_$key" class="right-classa-depart avatar avatar-xs" data-val="$key"> {eval echo avatar_block($value['uid']);}
               $value['username'] <i class="ti-close dzz dzz-close"></i> </li>
             <!--{/loop}-->
           </ul>

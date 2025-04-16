@@ -1,107 +1,206 @@
-<!--{template common/header_simple_start}-->
-<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
-<link href="static/select2/select2.css?{VERHASH}" rel="stylesheet" media="all">
-<link href="static/select2/select2-bootstrap.css?{VERHASH}" rel="stylesheet" media="all">
-<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
-<style>
-	input[type="text"] {
-		margin: 0;
-	}
-</style>
-<!--{template common/header_simple_end}-->
-<!--{template common/commer_header}-->
-<div class="bs-container clearfix">
-	<div class="bs-left-container  clearfix">
-		<!--{template left}--> 
-	</div>
-	<div class="left-drager">
-		
-	</div>
-
-	<div class="bs-main-container  clearfix">
-
-		<div class="main-header clearfix" style="border-bottom:1px solid #e1e1e1">
-			
-			<ul class="nav nav-pills  nav-pills-bottomguide">
-				 
-				<!--{loop $systemlog_setting $mark $info}-->
-					<!--{if $info[is_open]==1 }-->
-					<li <!--{if $operation==$mark }-->class="active"<!--{/if}-->>
-						<a hidefocus="true" href="{BASESCRIPT}?mod=systemlog&type=list&operation=$mark">{$info['title']}</a>
-					</li>
-					<!--{/if}-->
-				<!--{/loop}-->  
-			</ul>
+<!--{template lyear:header_simple_start}-->
+<link rel="stylesheet" href="static/lyear/js/layui/css/layui.css">
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-body">
+				<ul class="nav nav-pills">
+					<!--{loop $systemlog_setting $mark $info}-->
+						<!--{if $info[is_open]==1}-->
+						<li class="nav-item">
+							<a href="javascript:;" class="nav-link type-btn <!--{if $operation==$mark}-->active<!--{/if}-->" data-operation="$mark">{$info['title']}</a>
+						</li>
+						<!--{/if}-->
+					<!--{/loop}-->  
+				</ul>
+			</div>
 		</div>
-		  
-		<div class="main-content" style="border-top:1px solid #FFF"> 
-			 
-			<form id="cpform" action="{BASESCRIPT}?mod=systemlog&type=list&operation=$operation" class="form-horizontal form-horizontal-left" method="post" name="cpform">
-				<input type="hidden" value="{FORMHASH}" name="formhash">
-				<input type="hidden" name="lpp" value="20">
-				<table class="table">
-					<thead>
-						<th width="80">{lang operator}</th>
-						<th width="80">{lang usergroup}</th>
-						<th width="120">{lang ip}</th>
-						<th width="120">{lang time}</th>
-						<th>{lang info}</th>
-					</thead>
-					<!--{if $list}-->
-						<!--{loop $list $key $log}-->
-						<tr>
-							<td>$log[2]</td>
-							<td>$log[3]</td>
-							<td>$log[4]</td>
-							<td>$log[1]</td>
-							<td>
-								<a href="javascript:;" onclick="togglecplog('{$key}')">{eval echo cutstr($log[5], 200)}</a>
-							</td>
-						</tr>
-						<thead id="cplog_{$key}" style="display:none">
-							<td colspan="10">
-								{lang loginfo}: $log[5]
-								<br/>{lang visit}: $log[6]
-								<br/>{lang from}: $log[7]
-								<br/>设备信息：$log[8]</td>
-						</thead>
-						<!--{/loop}-->
-						<tr>
-							<td colspan="15">
-								<div class="pull-left input-group" style="width:100px;">
-									<span class="input-group-addon">{lang logs_lpp}</span>
-									<select class="input-sm form-control" style="margin:0;width:60px;" onchange="if(this.options[this.selectedIndex].value != '') {this.form.lpp.value = this.options[this.selectedIndex].value;this.form.submit(); }">
-										<option value="20" $checklpp[20]> 20 </option>
-										<option value="40" $checklpp[40]> 40 </option>
-										<option value="80" $checklpp[80]> 80 </option>
-									</select>
-								</div>
-								$multipage
-							</td>
-						</tr>
-					<!--{else}-->
-						<tr>
-							<td colspan="5">{lang there_no_such_results}</td>
-						</tr>
-					<!--{/if}--> 
-				</table>
-			</form>
-
-			<script type="text/javascript">
-				function togglecplog(k) {
-					var cplogobj = document.getElementById('cplog_' + k);
-					if(cplogobj.style.display == 'none') {
-						cplogobj.style.display = '';
-					} else {
-						cplogobj.style.display = 'none';
-					}
+		<div class="card">
+			<div class="card-body">
+				<div class="card-search mb-2-5">
+					<div class="row">
+					<div class="col-sm-4">
+						<input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="关键词">
+					</div>
+					<div class="col-md-4">
+						<button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
+						<button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+					</div>
+					</div>
+				</div>
+				<table class="layui-hide" id="table" lay-filter="table"></table>
+				<script type="text/html" id="toolbar">
+					<div class="layui-btn-container">
+						<button type="button" class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+						<button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
+					</div>
+				</script>
+				<script type="text/html" id="barDemo">
+					<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看详情</a>
+				</script>
+			</div>
+		</div>
+	</div>
+</main>
+<script src="static/lyear/js/layui/layui.js"></script>
+<script>
+	var operation = '{$_GET['operation']}';
+layui.use('table', function(){
+  var table = layui.table;
+  table.render({
+    elem: '#table',
+	url: '{MOD_URL}&do=getinfo',
+	toolbar: '#toolbar',
+	where: {operation: operation},
+	title: '系统日志数据表格',
+	text: {
+		none: '暂无相关数据'
+	},
+	page: {
+      limit: 20, // 默认显示20行
+      limits: [10, 20, 50, 100, 200, 500, 900] // 可选的行数
+    },
+    cellMinWidth: 80 //全局定义常规单元格的最小宽度
+    ,cols: [[
+	{type:'checkbox', fixed: 'left'},
+      {field:'id', title: 'ID',width:80, fixed: 'left', sort: true}
+      ,{field:'operator', title: '{lang operator}', align: 'center', sort: true}
+      ,{field:'usergroup', title: '{lang usergroup}', align: 'center', sort: true}
+      ,{field:'ip', title: 'IP', align: 'center', sort: true}
+      ,{field:'time', title: '{lang time}', align: 'center', sort: true}
+      ,{field:'loginfo', title: '{lang info}', align: 'center', sort: true},
+      ,{field:'visit', title: '{lang visit}', align: 'right',hide:true, sort: true}
+      ,{field:'from', title: '{lang from}', align: 'right',hide:true, sort: true}
+      ,{field:'info', title: '{lang Equipment information}', align: 'right',hide:true, sort: true}
+	  ,{title: '{lang operation}',fixed: 'right',width:100, align:'center', toolbar: '#barDemo', fixed: 'right'}
+    ]]
+  });
+    //头工具栏事件
+	table.on('toolbar(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var data = checkStatus.data;
+		switch(obj.event){
+			case 'getCheckData':
+				if (data.length === 0) {
+					showmessage("请至少选择一行", 'danger', 3000, 1);
+					return;
 				}
-			</script> 
-		</div>
-	</div>
-</div>
-<script type="text/javascript">
-	jQuery('.left-drager').leftDrager_layout();
+				var template = '<div class="accordion">';
+					data.forEach(function(item) {
+						template += '<div class="accordion-item">';
+						template += '<h2 class="accordion-header" id="Open-heading' + item.id + '">';
+						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.id + '" aria-expanded="true" aria-controls="Open-collapse' + item.id + '">';
+						template += 'ID：' + item.id;
+						template += '</button>';
+						template += '</h2>';
+						template += '<div id="Open-collapse' + item.id + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.id + '">';
+						template += '<div class="accordion-body">';
+						template += '<p><strong>{lang operator}:</strong> ' + item.operator + '</p>';
+						template += '<p><strong>{lang usergroup}:</strong> ' + item.usergroup + '</p>';
+						template += '<p><strong>IP:</strong> ' + item.ip + '</p>';
+						template += '<p><strong>{lang time}:</strong> ' + item.time + '</p>';
+						template += '<p><strong>{lang info}:</strong> ' + item.loginfo + '</p>';
+						template += '<p><strong>{lang visit}:</strong>' + item.visit + '</p>';
+						template += '<p><strong>{lang from}:</strong><a href="' + item.from + '" target="_blank">' + item.from + '</a></p>';
+						template += '<p><strong>{lang Equipment information}:</strong> ' + item.info + '</p>';
+						template += '</div>';
+						template += '</div>';
+						template += '</div>';
+					});
+				template += '</div>';
+				layer.alert(template, {
+					title: '选中的文件数据',
+					btn: ['确定']
+				});
+				break;
+				case 'get':
+				layui.table.reload('table', {
+					where: {operation: operation}, // 清空搜索参数
+					page: {
+					curr: 1 //重新从第 1 页开始
+					}
+				});
+				break; 
+			};
+		});
+  //监听工具条
+  table.on('tool(table)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'detail'){
+		showDataTemplate(obj);
+    }
+  });
+  //触发排序事件 
+table.on('sort(table)', function(obj){
+  layer.msg('排序结果为前端根据当前页数据进行排序');
+});
+  table.on('rowDouble(table)', function(obj){
+	showDataTemplate(obj);
+  });
+  function showDataTemplate(obj) {
+    var data = obj.data;
+    var template = '<div>' +
+        '<p><strong>ID:</strong> ' + data.id + '</p>' +
+        '<p><strong>{lang operator}:</strong> ' + data.operator + '</p>' +
+        '<p><strong>{lang usergroup}:</strong> ' + data.usergroup + '</p>' +
+        '<p><strong>IP:</strong> ' + data.ip + '</p>' +
+        '<p><strong>{lang time}:</strong> ' + data.time + '</p>' +
+        '<p><strong>{lang info}:</strong> ' + data.loginfo + '</p>' +
+        '<p><strong>{lang visit}:</strong> ' + data.visit + '</p>' +
+        '<p><strong>{lang from}:</strong> <a href="' + data.from + '" target="_blank">' + data.from + '</a></p>' +
+        '<p><strong>{lang Equipment information}:</strong> ' + data.info + '</p>' +
+        '</div>';
+
+    layer.alert(template, {
+        title: '当前行日志详情：',
+        content: template,
+    });
+
+    // 标注选中样式
+    obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+}
+	// 搜索按钮功能
+	$(document).on('click', '#search-btn', function() {
+    // 获取搜索关键词
+    var keyword = $('#keyword').val();
+    // 刷新表格并传递搜索参数
+    table.reload('table', {
+      where: { keyword: keyword },
+      page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  });
+   // 重置按钮功能
+   $('#refreshsearch').click(function() {
+    // 清空表单内容
+    $('#keyword').val('');
+    // 刷新表格
+    table.reload('table', {
+      where: {operation: operation}, // 清空搜索参数
+      page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  });
+  // 类型按钮功能
+  $(document).on('click', '.type-btn', function() {
+    // 移除所有 .type-btn 的 active 类
+    $('.type-btn').removeClass('active');
+    // 为当前点击的按钮添加 active 类
+    $(this).addClass('active');
+    // 获取当前的 type 值
+	operation = $(this).data('operation');
+	$('#keyword').val('');
+    // 刷新表格并传递 operation 参数
+    table.reload('table', {
+      where: {operation: operation },
+      page: {
+        curr: 1 //重新从第 1 页开始
+      }
+    });
+  });
+});
 </script>
-<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
-<!--{template common/footer_simple}-->
+<!--{template lyear:footer_simple}-->

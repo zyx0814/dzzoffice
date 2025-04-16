@@ -133,9 +133,7 @@ class db_driver_mysqli
 			$silent = true;
 			$unbuffered = false;
 		}
-
 		$resultmode = $unbuffered ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT;
-
 		if(!($query = $this->curlink->query($sql, $resultmode))) {
 			if(in_array($this->errno(), array(2006, 2013)) && substr($silent, 0, 5) != 'RETRY') {
 				$this->connect();

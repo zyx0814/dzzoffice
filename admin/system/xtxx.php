@@ -125,11 +125,11 @@ function kuozhan(){
   else $func_items = array('mysql_connect',  'file_get_contents', 'xml_parser_create','filesize', 'curl_init','zip_open','ffmpeg','imagick','imagemagick','cURL','date','Exif','Fileinfo','Ftp','GD','gettext','intl','Iconv','json','ldap','Mbstring','Mcrypt','Memcached','MySQLi','SQLite3','OpenSSL','PDO','pdo_mysql','pdo_sqlite','Redis','session','Sockets','Swoole','dom','xml','SimpleXML','libxml','bz2','zip','zlib');
   foreach($func_items as $item) {
     $status = function_exists($item);
-    $func_str .= "<div class=\"col-sm-4 float-start\">$item\n";
+    $func_str .= "<div class=\"gallery-item\">$item\n";
     if($status) {
-      $func_str .= "<span class=\"mdi mdi-check-circle bei dzz dzz-done text-success lead\"></span>\n";
+      $func_str .= "<span class=\"mdi mdi-check-circle text-success\"></span>\n";
     } else {
-      $func_str .= "<span class=\"mdi mdi-close-circle beii dzz dzz-close text-danger lead\"></span>\n";
+      $func_str .= "<span class=\"mdi mdi-close-circle text-danger\"></span>\n";
     }
     $func_str .= "</div>\n";
   }

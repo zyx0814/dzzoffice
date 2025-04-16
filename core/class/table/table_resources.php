@@ -579,23 +579,25 @@ class table_resources extends dzz_table
             foreach ($pfid as $fid) {
                 $temp = array('pfid = %d');
                 $para[] = $fid;
-                if ($folder = C::t('folder')->fetch($fid)) {
-                    $where1 = array();
-                    if ($folder['gid'] > 0) {
-                        $folder['perm'] = perm_check::getPerm($folder['fid']);
-                        if ($folder['perm'] > 0) {
-                            if (perm_binPerm::havePower('read2', $folder['perm'])) {
-                                $where1[] = "1";
-                            } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
-                                $where1[] = "uid='{$_G['uid']}'";
-                            }
+                if (!$sid) {
+                    if ($folder = C::t('folder')->fetch($fid)) {
+                        $where1 = array();
+                        if ($folder['gid'] > 0) {
+                            $folder['perm'] = perm_check::getPerm($folder['fid']);
+                            if ($folder['perm'] > 0) {
+                                if (perm_binPerm::havePower('read2', $folder['perm'])) {
+                                    $where1[] = "1";
+                                } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
+                                    $where1[] = "uid='{$_G['uid']}'";
+                                }
 
+                            }
+                            $where1 = array_filter($where1);
+                            if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
+                            else $temp[] = "0";
+                        } else {
+                            $temp[] = " uid='{$_G['uid']}'";
                         }
-                        $where1 = array_filter($where1);
-                        if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
-                        else $temp[] = "0";
-                    } else {
-                        $temp[] = " uid='{$_G['uid']}'";
                     }
                 }
                 $arr[] = '(' . implode(' and ', $temp) . ')';
@@ -605,22 +607,24 @@ class table_resources extends dzz_table
         } elseif ($pfid) {
             $temp = array('pfid= %d');
             $para[] = $pfid;
-            if ($folder = C::t('folder')->fetch($pfid)) {
-                $where1 = array();
-                if ($folder['gid'] > 0) {
-                    $folder['perm'] = perm_check::getPerm($folder['fid']);
-                    if ($folder['perm'] > 0) {
-                        if (perm_binPerm::havePower('read2', $folder['perm'])) {
-                            $where1[] = "1 = 1";
-                        } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
-                            $where1[] = "uid='{$_G['uid']}'";
+            if (!$sid) {
+                if ($folder = C::t('folder')->fetch($pfid)) {
+                    $where1 = array();
+                    if ($folder['gid'] > 0) {
+                        $folder['perm'] = perm_check::getPerm($folder['fid']);
+                        if ($folder['perm'] > 0) {
+                            if (perm_binPerm::havePower('read2', $folder['perm'])) {
+                                $where1[] = "1 = 1";
+                            } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
+                                $where1[] = "uid='{$_G['uid']}'";
+                            }
                         }
+                        $where1 = array_filter($where1);
+                        if ($where1) $temp[] = "(" . implode(' OR ', $where1) . ")";
+                        else $temp[] = "0";
+                    } else {
+                        $temp[] = " uid='{$_G['uid']}'";
                     }
-                    $where1 = array_filter($where1);
-                    if ($where1) $temp[] = "(" . implode(' OR ', $where1) . ")";
-                    else $temp[] = "0";
-                } else {
-                    $temp[] = " uid='{$_G['uid']}'";
                 }
             }
             $where[] = '(' . implode(' and ', $temp) . ')';
@@ -648,6 +652,21 @@ class table_resources extends dzz_table
             if ($arr = self::fetch_by_rid($value['rid'],'',false,$sid)) {
                 if ($sid) {
                     $arr['dpath'] = dzzencode('sid:'.$sid.'_' . $value['rid']);
+                    if ($isfilter && isset($arr['attachment'])) {
+                        unset($arr['attachment']);
+                    }
+                    if(isset($arr['relativepath'])){
+                        unset($arr['relativepath']);
+                    }
+                    if(isset($arr['relpath'])){
+                        unset($arr['relpath']);
+                    }
+                    if(isset($arr['realpath'])){
+                        unset($arr['realpath']);
+                    }
+                    if(isset($arr['position'])){
+                        unset($arr['position']);
+                    }
                 }
                 if ($isfilter && isset($arr['attachment'])) {
                     unset($arr['attachment']);

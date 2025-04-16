@@ -1,0 +1,185 @@
+<!--{template common/header_ajax}-->
+<!--{if $do == 'newFolder' && $permselect}-->
+<!--{if !isset($arr['error'])}-->
+<!--新建文件夹-->
+<div class="modal-header">
+    <h4 class="modal-title text-truncate">{lang newfolder}</h4>
+    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+</div>
+<form onsubmit=" return chk_create(this);">
+    <input type="hidden" name="sid" value="{$_GET['sid']}">
+    <input type="hidden" name="fid" value="{$fid}">
+    <div class="modal-body group-top">
+        <div class="row mb-3">
+            <label for="foldernamenewFolder" class="col-sm-2 col-form-label">{lang default_folder_name}</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="foldername" id="foldernamenewFolder">
+            </div>
+          </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">{lang create}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
+    </div>
+</form>
+<script type="text/javascript" reload="1">
+    function chk_create(form) {
+        $.post('{MOD_URL}&op=ajax&do=newFolder&createfolder=true', $(form).serialize(), function (data) {
+            if (data.msg == 'success') {
+                _explorer.sourcedata.icos[data.rid] = data;
+                _filemanage.cons['f-1'].CreateIcos(data);
+                var node = jQuery('#u-' + data.pfid + ',#f-' + data.pfid)
+                hideWindow('newFolder');
+            } else {
+                showDialog(data.error);
+            }
+
+        }, 'json');
+        return false;
+    }
+</script>
+<!--{else}-->
+<script>
+    showDialog('{$arr[error]}');
+</script>
+<!--{/if}-->
+<!--{elseif $do == 'property'}-->
+<div class="modal-header">
+    <h4 class="modal-title text-truncate"><!--{if $propertys[name]}-->$propertys[name]<!--{/if}-->{lang property}</h4>
+    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="custom-from clearfix">
+        <div class="row mb-3">
+            <label class="col-sm-2">{lang type}</label>
+            <div class="col-sm-10">$propertys['type']</div>
+        </div>
+        <!--{if $propertys['realpath']}-->
+        <div class="row mb-3">
+            <label class="col-sm-2">{lang position}</label>
+            <div class="col-sm-10">$propertys[realpath]</div>
+        </div>
+        <!--{/if}-->
+        <!--{if $propertys['username']}-->
+        <div class="row mb-3">
+            <label class="col-sm-2">{lang possesor}</label>
+            <div class="col-sm-10">$propertys['username']</div>
+        </div>
+        <!--{/if}-->
+        <!--{if $propertys['contain']}-->
+        <div class="row mb-3">
+            <label class="col-sm-2">{lang include}</label>
+            <div class="col-sm-10">$propertys['contain']</div>
+        </div>
+        <!--{/if}-->
+        <!--{if $propertys['fsize']}-->
+        <div class="row mb-3">
+            <label class="col-sm-2">{lang big_small}</label>
+            <div class="col-sm-10">$propertys['fsize']</div>
+        </div>
+        <!--{/if}-->
+        <!--{if $propertys[editdateline]}-->
+        <div class="row mb-3">
+            <label class="col-sm-2">{lang preceding_edit_time}</label>
+            <div class="col-sm-10">$propertys[editdateline]</div>
+        </div>
+        <!--{/if}-->
+        <!--{if $propertys[opendateline]}-->
+        <div class="row mb-3">
+            <label class="col-sm-2">{lang preceding_open_time}</label>
+            <div class="col-sm-10">$propertys[opendateline]</div>
+        </div>
+        <!--{/if}-->
+        <!--{if $propertys[fdateline]}-->
+        <div class="row mb-3">
+            <label class="col-sm-2">{lang create_time}</label>
+            <div class="col-sm-10">$propertys[fdateline]</div>
+        </div>
+        <!--{/if}-->
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang close}</button>
+</div>
+<!--{elseif $do == 'newLink'}-->
+<!--{if !isset($arr[error])}-->
+<form onsubmit="return false;">
+    <input type="hidden" name="sid" value="{$_GET['sid']}">
+    <input type="hidden" name="fid" value="{$fid}">
+    <div class="modal-header">
+        <h4 class="modal-title text-truncate">{lang add_url}</h4>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <input type="text" class="form-control focus" value="http://" name="link">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="chk_link(this.form)">{lang submit}</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{lang close}</button>
+    </div>
+</form>
+<script type="text/javascript" reload="1">
+    function chk_link(form) {
+        $.post(MOD_URL + '&op=ajax&do=linkadd&createlink=true', $(form).serialize(), function (data) {
+            if (data.msg == 'success') {
+                _explorer.sourcedata.icos[data.rid] = data;
+                _filemanage.cons['f-1'].CreateIcos(data);
+                hideWindow('newLink');
+            } else {
+                showDialog(data.error);
+            }
+        }, 'json')
+    }
+</script>
+<!--{else}-->
+<script>
+    showDialog('{$arr[error]}');
+</script>
+<!--{/if}-->
+<!--{else}-->
+<!--{if !isset($arr[error])}-->
+<!--{if $arr['type'] == 'folder'}-->
+<li class="liste typefolder"
+    data-href="{MOD_URL}&op=group"
+    data-hash="group{$arr[gid]}_file-$arr[oid]" data-args="gid_{$arr[gid]}-do_file-fid_$arr[oid]" data-fid="$arr[oid]"
+    id="$arr[rid]" data-rid="$arr[rid]">
+    <!--{else}-->
+<li class="liste typefile"  <!--{if $arr['type'] == 'link'}-->data-href="$arr[url]" <!--{else}-->data-href="{eval echo dzzencode($arr['path']);}"<!--{/if}-->
+data-rid="$arr[rid]" data-ext="$arr[ext]" data-type="$arr['type']"data-name="$arr[name]" id="$arr[rid]">
+<!--{/if}-->
+<ul class="ul-file-li clearfix">
+    <li class="td-file-name clearfix">
+        <div class="checkbox-custom checkbox-primary">
+            <input type="checkbox" class=" listecheck"/>
+            <label></label>
+        </div>
+        <div class="fileitemMenu">
+            <div class="imgMenu">
+                <img src="{$_G['siteurl']}$arr[img]" style="width: 30px;height: 30px;">
+            </div>
+            <div class="itemMenu clearfix">
+                <div class="firstMenu ">
+                    <div class="filenameMenu">
+                        $arr[name]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+    <li class="td-file-size"><span>$arr[fsize]</span></li>
+    <li class="td-file-proprietor">$arr['username']</li>
+    <li class="td-file-time">{eval echo dgmdate($arr['dateline'],'Y-m-d H:i:s')}</li>
+</ul>
+</li>
+<!--{else}-->
+<script type="text/javascript" reload="1">
+    closeModal('#exampleMultipleOne');
+    showDialog('{$arr[error]}');
+</script>
+<!--{/if}-->
+<!--{/if}-->
+<!--{template common/footer_ajax}-->
+
+
+

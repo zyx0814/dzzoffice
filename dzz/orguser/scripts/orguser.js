@@ -22,7 +22,7 @@ function delDepart(obj){
 }
 var tpml_index=0;
 function addorgsel(){
-	jQuery('#selorg_container').append(' <ul class="nav nav-pills">'+(orgsel_html.replace(/orgid_tpml/ig,'orgid_tpml_'+tpml_index))+'</ul>');
+	jQuery('#selorg_container').append('<div class="btn-group p-2">'+(orgsel_html.replace(/orgid_tpml/ig,'orgid_tpml_'+tpml_index))+'</div>');
 	tpml_index++;
 }
 

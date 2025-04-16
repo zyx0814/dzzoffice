@@ -1,26 +1,28 @@
-<ul class="nav-drawer nav-stacked nav-pills">
-	<li class="nav-item">
-		<a href="javascript:;" class="nav-link" onclick="showWindow('about','user.php?mod=space&template=1&op=about&modname=$_GET[modname]');popbox();"><i class="mdi mdi-information"></i><span>{lang about}</span></a>
-	</li>
-	<!--{if $_G['uid']>0}-->
-	<!--{if !$_G['setting']['bbclosed'] || !$_G['adminid'] ==0}-->
-	<li class="nav-item">
-		<a href="user.php?mod=profile" class="nav-link" target="_blank"><i class="mdi mdi-account-circle"></i><span>{lang userCenter}</span></a>
-	</li>
-	<!--{/if}-->
-	<li class="nav-item">
-		<a href="javascript:;" class="nav-link" onclick="_header.loging_close();popbox();"><i class="mdi mdi-logout"></i><span>{lang logout}</span></a>
-	</li>
-	<!--{else}-->
-	<!--{if !$_G['setting']['bbclosed'] && $_G['setting']['regstatus']}-->
-	<li>
-		<a href="javascript:;" class="nav-link basil" onclick="location.href='$_G[siteurl]user.php?mod=register';return false;">
-		<i class="mdi mdi-account-supervisor-circle"></i><span>{lang register}</span>
-		</a>
-	</li>
-	<!--{/if}-->
-	<li class="nav-item">
-		<a class="nav-link" href="user.php?mod=login"><i class="mdi mdi-login"></i><span>{lang login}</span></a>
-	</li>
-	<!--{/if}-->
-</ul>
+<div class="popover-body">
+	<ul class="nav-stacked nav-pills">
+		<li class="nav-item">
+			<a href="javascript:;" class="nav-link" onclick="showWindow('about','user.php?mod=space&template=1&op=about&modname=$_GET[modname]');popbox();"><i class="mdi mdi-information p-2"></i><span>{lang about}</span></a>
+		</li>
+		<!--{if $_G['uid']>0}-->
+		<!--{if !$_G['setting']['bbclosed'] || !$_G['adminid'] ==0}-->
+		<li class="nav-item">
+			<a href="user.php?mod=profile" class="nav-link" target="_blank"><i class="mdi mdi-account-circle p-2"></i><span>{lang userCenter}</span></a>
+		</li>
+		<!--{/if}-->
+		<li class="nav-item">
+			<a href="javascript:;" class="nav-link" onclick="_header.loging_close();popbox();"><i class="mdi mdi-logout p-2"></i><span>{lang logout}</span></a>
+		</li>
+		<!--{else}-->
+		<!--{if !$_G['setting']['bbclosed'] && $_G['setting']['regstatus']}-->
+		<li>
+			<a href="javascript:;" class="nav-link basil" onclick="location.href='$_G[siteurl]user.php?mod=register';return false;">
+			<i class="mdi mdi-account-supervisor-circle p-2"></i><span>{lang register}</span>
+			</a>
+		</li>
+		<!--{/if}-->
+		<li class="nav-item">
+			<a class="nav-link" href="user.php?mod=login"><i class="mdi mdi-login p-2"></i><span>{lang login}</span></a>
+		</li>
+		<!--{/if}-->
+	</ul>
+</div>

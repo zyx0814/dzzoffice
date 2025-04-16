@@ -98,8 +98,8 @@
     }
 </script>
 <div class="modal-header">
-  <h4 class="modal-title">{lang user_select_title}</h4>
-	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <h4 class="modal-title text-truncate">{lang user_select_title}</h4>
+	<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
 </div>
 <form onsubmit="return seluser_submit(this);">
   <input type="hidden" name="formhash" value="{FORMHASH}">
@@ -129,7 +129,7 @@
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary">{lang confirms}</button>
-    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" aria-label="Close">{lang cancel} </button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">{lang cancel} </button>
   </div>
 </form>
 <script type="text/javascript" reload="1">

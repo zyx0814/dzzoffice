@@ -687,6 +687,7 @@ class dzz_mime{
 			'xbm' => 'image/x-xbitmap',
 			'xpm' => 'image/x-xpixmap',
 			'xwd' => 'image/x-xwindowdump',
+			'webp' => 'image/webp',
 			'mime' => 'message/rfc822',
 			'eml' => 'message/rfc822',
 			'iges' => 'model/iges',
