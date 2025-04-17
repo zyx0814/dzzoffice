@@ -150,10 +150,10 @@ if (!submitcheck('settingsubmit')) {
 		}
 		
 		//设置默认应用
-		if($settingnew["default_mod"] && $settingnew["default_mod"]!=$_GET["old_default_mod"]){ 
-			$configfile = DZZ_ROOT.'data/cache/default_mod.php';  
+		if($settingnew["default_mod"] && $settingnew["default_mod"]!=$_GET["old_default_mod"]){
+			$configfile = DZZ_ROOT.'data/cache/default_mod.php';
 			$configarr = array();
-			$configarr['default_mod' ]=$settingnew["default_mod"];
+			$configarr['default_mod']=$settingnew["default_mod"];
 			@file_put_contents($configfile,"<?php \t\n return ".var_export($configarr,true).";");   
 		}
 	} elseif ($operation == 'upload') {

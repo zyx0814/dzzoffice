@@ -37,11 +37,15 @@ class Config{
                 }
                 if($modvar) define('CURMODULE',str_replace(':', '/', $mod));
             }else{
+                if(CURSCRIPT == 'dzz' && $mod == 'index') {
+                    define('CURMODULE', 'explorer');
+                } else {
+                    define('CURMODULE', $mod);
+                }
                /* if(CURSCRIPT == 'dzz' && $mod == 'index'){
                     define('CURMODULE',CURSCRIPT);
                     $modconfig = DZZ_ROOT.CURMODULE.BS.CONFIG_NAME.BS.CONFIG_NAME.EXT;
                 }else{*/
-                    define('CURMODULE',$mod);
                     $modconfig = DZZ_ROOT.APP_PATH.BS.CURMODULE.BS.CONFIG_NAME.BS.CONFIG_NAME.EXT;
                // }
             }

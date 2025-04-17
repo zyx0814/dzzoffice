@@ -32,7 +32,7 @@
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
 	<div class="container-fluid">
-	  <div class="card">
+	  <div class="card" id="checkloading">
 		<!--{if $list}-->
 		<header class="card-header flex-container">
 			<div class="float-start">
@@ -57,11 +57,10 @@
 					<table class="table table-hover align-middle">
 						<thead>
 						<tr>
-							<th>#</th>
-							<th>{lang application_name}</th>
-							<th>{lang installed}</th>
-							<th>{lang newest}</th>
-							<th>更新内容</th>
+							<th width="20px">#</th>
+							<th width="50%">{lang application_name}</th>
+							<th width="100px">{lang installed}</th>
+							<th width="100px">{lang newest}</th>
 							<th>{lang operation}</th>
 						</tr>
 						</thead>
@@ -78,13 +77,13 @@
 							<td>
 								{eval $appadminurl=replace_canshu($value['appadminurl']?$value['appadminurl']:$value['appurl'])}
 								<a href="$appadminurl" target="_blank" class="appicon"><img src="$value[appico]" style="margin:0" /></a><a class="dcolor" href="$appadminurl" target="_blank">$value[appname]</a>
-								<div class="appdesc form-text" title="$value['appdesc']">
-									{eval echo $value['upgrade_version']['desc_short']?$value['upgrade_version']['desc_short']:lang('none');}
+								{eval $appdesc=$value['upgrade_version']['desc_short']?$value['upgrade_version']['desc_short']:lang('none');}
+								<div class="appdesc form-text" title="$appdesc">
+									$appdesc
 								</div>
 							</td>
 							<td>$value[version]</td>
 							<td>$value[upgrade_version][version]</td>
-							<td>$value[upgrade_version][desc]</td>
 							<td>
 								<a class="btn btn-round btn-primary btn-sm" id="upgrade_info_{$value[appid]}" href="javascript:;" onclick="start_check_upgrade('$value[appid]',1);" title="{lang update_onekey}">{lang update_onekey}</a>
 							</td>
@@ -154,12 +153,13 @@
 		}
 	}
 	function upgrade_check(obj){//强制检测更新，不受一天一次的限制，一般用于刚上传或修改了应用的配置信息，通过这个按钮可以强制刷新出需要更新的应用
-		var loader = $('body').lyearloading({
+		var loader = $('#checkloading').lyearloading({
 						opacity: 0.2,
 						spinnerSize: 'lg',
 						spinnerText: '正在检测新版本中',
 						textColorClass: 'text-info',
-						spinnerColorClass: 'text-info'
+						spinnerColorClass: 'text-info',
+						zindex: 9,
 					});
 		jQuery(obj).button('loading');
 		jQuery.post('{MOD_URL}&op=check_upgrade',function(json){
