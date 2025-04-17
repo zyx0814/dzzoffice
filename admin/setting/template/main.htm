@@ -86,12 +86,12 @@
             <div class="col-sm-10">
               <input type="hidden" name="old_default_mod" class="form-control" value="$setting[default_mod]">
               <select name="settingnew[default_mod]" class="form-select" id="default_mod">
-                <option value="">{lang please_select_default_index}</option> 
+                <option value="index">{lang please_select_default_index}</option> 
                 <!--{loop $applist $value}--> 
-                <option value="$value[identifier]" <!--{if $value[ 'identifier']==$setting[default_mod]}-->selected="selected"  <!--{/if}-->>$value[appname] </option>
+                <option value="$value[identifier]" <!--{if $value['identifier']==$setting[default_mod]}-->selected="selected"<!--{/if}-->>$value[appname]</option>
                 <!--{/loop}-->
               </select>
-              <span class="form-text">{lang default_app_desc} </span>
+              <span class="form-text">{lang default_app_desc}</span>
             </div>
           </div>
           <div class="row mb-3">
