@@ -50,7 +50,8 @@ function fileupload(el,fid) {
             file = data.files[index];
         if (file.error) {
             uploaddone();
-            data.context.find('.upload-item.percent').html('<span class="danger" title="' + file.error + '">' + file.error + '</span>');
+            var err = file.error ? file.error  : __lang.upload_failure;
+            data.context.find('.upload-item.percent').html('<span class="danger" title="' + err + '">' + err + '</span>');
         }
     }).on('fileuploadprogress', function (e, data) {
         var index = data.index;
@@ -77,7 +78,8 @@ function fileupload(el,fid) {
         $.each(data.result.files, function (index, file) {
             if (file.error) {
                 var relativePath = (file.relativePath ? file.relativePath : '');
-                data.context.find('.dialog-info .upload-file-status').html('<span class="danger" title="' + file.error + '">' + file.error + '</span>');
+                var err = file.error ? file.error  : __lang.upload_failure;
+                data.context.find('.dialog-info .upload-file-status').html('<span class="danger" title="' + err + '">' + err + '</span>');
             } else {
                 
                 _upload.tips.find('.dialog-body-text').html(_upload.completed + '/' + _upload.total);
@@ -102,9 +104,23 @@ function fileupload(el,fid) {
         });
 
     }).on('fileuploadfail', function (e, data) {
+        var errorMsg = '上传失败';
+        if (data.jqXHR.responseText) {
+            try {
+                var response = JSON.parse(data.jqXHR.responseText);
+                if (response.files && response.files[0] && response.files[0].error) {
+                    errorMsg = response.files[0].error;
+                }
+            } catch(e) {
+                errorMsg = data.jqXHR.responseText || '上传失败';
+            }
+        }
         $.each(data.files, function (index, file) {
             uploaddone();
-            data.context.find('.upload-item.percent').html('<span class="danger" title="' + file.error + '">' + file.error + '</span>');
+            if (file.error) {
+                errorMsg = file.error;
+            }
+            data.context.find('.upload-item.percent').html('<span class="danger" title="' + errorMsg + '">' + errorMsg + '</span>');
         });
 
     }).on('fileuploaddrop', function (e, data) {

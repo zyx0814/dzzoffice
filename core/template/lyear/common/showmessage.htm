@@ -22,7 +22,7 @@
 <!--{if $param['msgtype'] == 1 || $param['msgtype'] == 2 && !$_G['inajax']}-->
 <div class="f_c altw">
 	<div id="messagetext">
-		<img src="<!--{if !$_G['setting']['bbclosed']}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{else}-->static/image/common/logo.png<!--{/if}-->">
+		<img style="max-width: 200px;max-height: 200px;" src="<!--{if !$_G['setting']['bbclosed']}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{else}-->static/image/common/logo.png<!--{/if}-->">
 		<h4 class="mb-2 mt-2 text-gray">$show_message</h4>
 		<!--{if $url_forward}-->
 		<!--{if !$param['redirectmsg']}-->

@@ -868,10 +868,6 @@ _filemanage.get_template = function (fid, whole, disp, asc) {
 //文件没有可以打开的应用
 _filemanage.Open = function (rid, extid, title) {
 	var openprem = _filemanage.param.open;
-	if (!openprem) {
-		showmessage('分享者禁用了在线预览');
-		return false;
-	}
 	var data = _explorer.sourcedata.icos[rid];
 	var name = data.name;
 	// var ext =data.ext;
@@ -888,6 +884,10 @@ _filemanage.Open = function (rid, extid, title) {
 	obj.id = rid;
 	obj.text = name;
 	obj.dpath = data.dpath;
+	if (obj.type !== 'folder' && !openprem) {
+		showmessage('分享者禁用了在线预览');
+		return false;
+	}
 	if (obj.type === 'link') {
 		window.open(data.url);
 		return;

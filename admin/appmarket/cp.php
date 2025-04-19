@@ -328,7 +328,7 @@ elseif ($do == 'upgrade') {//本地升级应用
 		$finish = TRUE;
 	}
 	if ($finish) {
-		C::t('app_market') -> update($appid, array('version' => $toversion));
+		C::t('app_market')->update($appid, array('version' => $toversion));
 		showmessage('application_upgrade_successful', MOD_URL, array(), array('alert' => 'right'));
 	}
 } 
