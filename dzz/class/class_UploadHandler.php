@@ -388,9 +388,8 @@ class UploadHandler
 			}
 			try{
 				if($return=IO::uploadStream($filepath,$name,$path,$relativePath,$content_range,$force)){
-
 					if(isset($return['error'])){
-							$file->error = $return['error'];
+                        $file->error = $return['error'];
 					}elseif(is_array($return)){
 						$file->data = $return;
 					}
@@ -438,6 +437,9 @@ class UploadHandler
                     $this->header('Range: 0-'.(
                         $files[0]->size-1
                     ));
+                    if (isset($files[0]->error)) {
+                        $this->header('HTTP/1.1 400 Bad Request');
+                    }
                 }
             }
             $this->body($json);
@@ -583,7 +585,6 @@ class UploadHandler
 				);
 			 
         }
-		
         return $this->generate_response(
             array($this->options['param_name'] => $files),
             $print_response
