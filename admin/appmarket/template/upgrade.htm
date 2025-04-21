@@ -50,6 +50,13 @@
 			</div>
 		</header>
 		<div class="card-body">
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>提示信息</strong>
+				<li>升级应用时，请先备份好数据库和插件文件，以免升级过程中出现错误。</li>
+				<li>升级后，需要前往系统工具中清理缓存。</li>
+				<li>因升级会重置应用参数（非用户数据），所以升级后，需要重新配置应用。</li>
+				<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+			</div>
 			<form id="appform" name="appform" class="form-horizontal" action="{MOD_URL}" method="post">
 				<input type="hidden" name="appsubmit" value="true" />
 				<input type="hidden" name="formhash" value="{FORMHASH}" />
