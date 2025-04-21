@@ -1038,14 +1038,13 @@ function save_syscache($cachename, $data)
 }
 
 
-function dimplode($array)
-{
-
+function dimplode($array) {
     if (!empty($array)) {
-
+        if (!is_array($array)) {
+            $array = array($array);
+        }
         $array = array_map('addslashes', $array);
-
-        return "'" . implode("','", is_array($array) ? $array : array($array)) . "'";
+        return "'" . implode("','", $array) . "'";
     } else {
         return 0;
     }
