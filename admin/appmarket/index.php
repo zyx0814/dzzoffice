@@ -42,7 +42,8 @@ $apps = array();
 $string = " 1 ";
 $param=array('app_market');
 if ($keyword) {
-	$string .= " and appname like %s or vendor like %s";
+	$string .= " and appname like %s or vendor like %s or identifier like %s";
+	$param[]='%'.$keyword.'%';
 	$param[]='%'.$keyword.'%';
 	$param[]='%'.$keyword.'%';
 }

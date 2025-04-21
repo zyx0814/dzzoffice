@@ -124,7 +124,9 @@ elseif ($do == 'disable') {//关闭应用
 		$entrydir = DZZ_ROOT . './'.$app['app_path'].'/' . $app['identifier'];
 		$file = $entrydir . '/dzz_app_' . $app['identifier'] . '.xml';
 		if (!file_exists($file)) {
-			$apparray['disablefile'] = $app['extra']['disablefile'];
+			if (is_array($app['extra']) && isset($app['extra']['disablefile'])) {
+				$apparray['disablefile'] = $app['extra']['disablefile'];
+			}
 			$apparray['app']['version'] = $app['version'];
 		} else {
 			$importtxt = @implode('', file($file));

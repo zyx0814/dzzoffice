@@ -56,7 +56,7 @@ class dzz_database {
 		return self::query("$cmd $table SET $sql", null, $silent, !$return_insert_id);
 	}
 
-	public static function update($table, $data, $condition, $unbuffered = false, $low_priority = false) {
+	public static function update($table, $data, $condition = '', $unbuffered = false, $low_priority = false) {
 		$sql = self::implode($data);
 		if(empty($sql)) {
 			return false;
@@ -85,6 +85,9 @@ class dzz_database {
 
 	public static function fetch_first($sql, $arg = array(), $silent = false) {
 		$res = self::query($sql, $arg, $silent, false);
+		if($res === 0){
+			return array();
+		}
 		$ret = self::$db->fetch_array($res);
 		self::$db->free_result($res);
 		return $ret ? $ret : array();

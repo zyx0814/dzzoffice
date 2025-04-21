@@ -458,7 +458,7 @@ $lang = array
 	'system_administrators_available'=>'仅系统管理员可用',
 
 	//admin/app/template/app.html
-	'application_name_suppliers'=>'应用名称或供应商',
+	'application_name_suppliers'=>'可以根据应用名称、供应商、应用标识符搜索',
 	'supplier'=>'供应商',
 	'group_permissions'=>'组权限',
 	'department_available'=>'可用部门',
