@@ -1,5 +1,6 @@
 <div class="table-responsive">
 	<!--{if $env_str}-->
+	<h6>环境检查</h6>
 	<table class="table table-hover align-middle">
 	  <thead>
 		<tr>
@@ -13,6 +14,19 @@
 		$env_str
 	  </tbody>
 	</table>
+	<h6>函数依赖性检查</h6>
+	<table class="table table-hover align-middle">
+		<thead>
+		  <tr>
+			<th>函数名称</th>
+			<th>检查结果</th>
+			<th>建议</th>
+		  </tr>
+		</thead>
+		<tbody>
+			$func_strextra
+		</tbody>
+	  </table>
 	<!--{else}-->
 	<div class="alert alert-danger" role="alert">无法检测</div>
 	<!--{/if}-->

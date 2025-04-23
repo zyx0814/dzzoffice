@@ -26,7 +26,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-3" for="access_id">AK：</label>
 					<div class="col-sm-5">
-						<input type="text" id="access_id" class="form-control" name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+						<input type="text" id="access_id" class="form-control" name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" onfocus="jQuery(this).removeClass('is-invalid');" />
 					</div>
 					<div class="col-sm-4">
 						<span class="help-block">{lang oauth_qinniu_storage} AK</span>
@@ -35,7 +35,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-3" for="access_key">SK：</label>
 					<div class="col-sm-5">
-						<input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+						<input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" onfocus="jQuery(this).removeClass('is-invalid');" />
 					</div>
 					<div class="col-sm-4">
 						<span class="help-inline">{lang oauth_qinniu_storage} SK</span>
@@ -45,7 +45,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-3">bucket{lang name}</label>
 					<div class="col-sm-5">
-						<input type="text" id="bucket" name="bucket" class="form-control" value="" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" />
+						<input type="text" id="bucket" name="bucket" class="form-control" value="" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" onfocus="jQuery(this).removeClass('is-invalid');" />
 					</div>
 					<div class="col-sm-4">
 						<span class="help-inline">{lang oauth_qinniu_manage_bucket}</span>
@@ -54,7 +54,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-3" for="hostname">{lang visit_domain_name}</label>
 					<div class="col-sm-5">
-						<input type="text" class="form-control" id="hostname" name="hostname" autocomplete="off" value="$ali[hostname]" onfocus="jQuery(this).parent().parent().removeClass('has-warning');" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');}" />
+						<input type="text" class="form-control" id="hostname" name="hostname" autocomplete="off" value="$ali[hostname]" onfocus="jQuery(this).removeClass('is-invalid');" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" />
 					</div>
 					<div class="col-sm-4">
 						<span class="help-inline">{lang oauth_qinniu_storage_bucket}</span>
@@ -85,16 +85,16 @@
 	<script type="text/javascript">
 		function validate(form) {
 			if(jQuery("#access_id").val() == '') {
-				jQuery("#access_id").parent().parent().addClass('has-warning');
+				jQuery("#access_id").addClass('is-invalid');
 				return false;
 			} else if(jQuery("#access_key").val() == '') {
-				jQuery("#access_key").parent().parent().addClass('has-warning');
+				jQuery("#access_key").addClass('is-invalid');
 				return false;
 			} else if(jQuery("#bucket").val() == '') {
-				jQuery("#bucket").parent().parent().addClass('has-warning');
+				jQuery("#bucket").addClass('is-invalid');
 				return false;
 			} else if(jQuery("#hostname").val() == '') {
-				jQuery("#hostname").parent().parent().addClass('has-warning');
+				jQuery("#hostname").addClass('is-invalid');
 				return false;
 			}
 			return true;

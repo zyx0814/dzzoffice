@@ -55,8 +55,8 @@ function errormessage(id, msg,passlevel) {
 			jQuery('#suc_' + id).removeClass('p_right');
 		}
 		jQuery('#chk_' + id).find('kbd').html(msg);
-		if(msg && !passlevel) jQuery('#'+id).parent().parent().addClass('has-warning');
-		else jQuery('#'+id).parent().parent().removeClass('has-warning');
+		if(msg && !passlevel) jQuery('#'+id).addClass('is-invalid');
+		else jQuery('#'+id).removeClass('is-invalid');
 	}
 }
 

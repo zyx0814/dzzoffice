@@ -260,6 +260,11 @@ var ignoreEmail = false;
 function account_submit() {
   
   //判断用户名
+  if(jQuery('#email').val() == '') {
+    jQuery('#email').focus();
+    showmessage('{lang login_email_required}', 'danger', 1000, 1);
+    return false;
+  }
   if(jQuery('#username').val() == '') {
     jQuery('#username').focus();
     showmessage('{lang name_will}', 'danger', 1000, 1);
