@@ -93,10 +93,10 @@ if ($do == 'stats') {
 		$func_strextra .= "<tr>\n";
 		$func_strextra .= "<td>$item()</td>\n";
 		if($status) {
-			$func_strextra .= "<td class=\"w\">".lang('supportted')."</td>\n";
+			$func_strextra .= "<td class=\"text-success\"><i class=\"mdi lead mdi-check-circle me-2\"></i>".lang('supportted')."</td>\n";
 			$func_strextra .= "<td>".lang('none')."</td>\n";
 		} else {
-			$func_strextra .= "<td class=\"nw\">".lang('unsupportted')."</td>\n";
+			$func_strextra .= "<td class=\"nw text-danger\"><i class=\"mdi lead mdi-close-circle me-2\"></i>".lang('unsupportted')."</td>\n";
 			$func_strextra .= "<td><font color=\"red\">".lang('advice_'.$item)."</font></td>\n";
 		}
 	}
@@ -135,13 +135,13 @@ if ($do == 'stats') {
 			$env_items[$key]['current'] = 'unknow';
 		}
 		} elseif($key == 'PHP 平台版本') {
-				if (PHP_INT_SIZE === 4) {
-				$env_items[$key]['current'] ='32位';
-				} else if (PHP_INT_SIZE === 8) {
-				$env_items[$key]['current'] ='64位';
-				} else {
-				$env_items[$key]['current'] ='无法确定架构类型';
-				}
+			if (PHP_INT_SIZE === 4) {
+			$env_items[$key]['current'] ='32位';
+			} else if (PHP_INT_SIZE === 8) {
+			$env_items[$key]['current'] ='64位';
+			} else {
+			$env_items[$key]['current'] ='无法确定架构类型';
+			}
 		}elseif($key == 'MySQL数据库持续连接') {
 			$env_items[$key]['current'] = @get_cfg_var("mysql.allow_persistent")?"是 ":"否";
 		} elseif($key == '域名') {
