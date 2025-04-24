@@ -130,7 +130,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
 				$minutenew = explode(',', $_GET['minutenew']);
 				foreach ($minutenew as $key => $val) {
 					$minutenew[$key] = $val = intval($val);
-					if ($val < 0 || $var > 59) {
+					if ($val < 0 || $val > 59) {
 						unset($minutenew[$key]);
 					}
 				}
