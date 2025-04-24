@@ -17,7 +17,7 @@ window.UE = baidu.editor = {
     instants: {},
     I18N: {},
     _customizeUI: {},
-    version: "4.2.0",
+    version: "4.4.0",
     plus: {
         fileExt: function (filename) {
             if (!filename) {
@@ -28,7 +28,7 @@ window.UE = baidu.editor = {
                 return pcs.pop().toLowerCase();
             }
             return '';
-        }
+        },
     },
     constants: {
         STATEFUL: {
@@ -7484,7 +7484,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, "g");
                         me.options.lang +
                         "/" +
                         me.options.lang +
-                        ".js?7a537435",
+                        ".js?58c38108",
                     tag: "script",
                     type: "text/javascript",
                     defer: "defer"
@@ -8002,10 +8002,10 @@ var fillCharReg = new RegExp(domUtils.fillChar, "g");
                 // 其他一些特殊处理
                 var code = e.code
                 // 如视频之类的组建，不能删除
-                if(code){
-                    if(code==='Backspace'){
-                        if(e.target){
-                            if(e.target.tagName === 'VIDEO'){
+                if (code) {
+                    if (code === 'Backspace') {
+                        if (e.target) {
+                            if (e.target.tagName === 'VIDEO') {
                                 e.target.remove()
                             }
                         }
@@ -8976,7 +8976,45 @@ var fillCharReg = new RegExp(domUtils.fillChar, "g");
             } else {
                 return "";
             }
-        }
+        },
+        tipError: function (msg, option) {
+            this.tip(msg, Object.assign({
+                type: 'error',
+            }, option));
+        },
+        tipSuccess: function (msg, option) {
+            this.tip(msg, Object.assign({
+                type: 'success',
+            }, option));
+        },
+        tip: function (msg, option) {
+            var exists = document.getElementById('EditorTipBox');
+            if (exists) {
+                document.body.removeChild(exists);
+            }
+            option = Object.assign({
+                type: 'success',
+                duration: 3000,
+            }, option)
+            var html = [
+                '<div class="editor-tip editor-tip-' + option.type + '" style="opacity:0;position: fixed; top: 10px; left: 50%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); background: #FFF; z-index: 9999; border-radius: 5px; font-size: 13px; line-height: 30px; padding: 0 10px;">',
+                option.type === 'error' ? '<i class="edui-iconfont" style="color:#d31919;margin-right:5px;font-size:16px;vertical-align:top;">&#xe6a7;</i>' : '',
+                option.type === 'success' ? '<i class="edui-iconfont" style="color:#19ba21;margin-right:5px;font-size:16px;vertical-align:top;">&#xe7fc;</i>' : '',
+                msg,
+                '</div>'
+            ].join('');
+            var tip = document.createElement('div');
+            tip.innerHTML = html;
+            tip.id = 'EditorTipBox';
+            document.body.appendChild(tip);
+            var tipBox = tip.querySelector('.editor-tip');
+            var tipBoxWidth = tipBox.offsetWidth;
+            tipBox.style.marginLeft = -tipBoxWidth / 2 + 'px';
+            tipBox.style.opacity = 1;
+            setTimeout(function () {
+                document.body.removeChild(tip);
+            }, option.duration);
+        },
     };
     utils.inherits(Editor, EventBase);
 })();
@@ -9058,7 +9096,7 @@ UE.Editor.defaultOptions = function (editor) {
                             me.fireEvent("serverConfigLoaded");
                             me._serverConfigLoaded = true;
                         } catch (e) {
-                            showErrorMsg(me.getLang("loadconfigFormatError"));
+                            showErrorMsg(me.getLang("loadconfigFormatError")+':'+e);
                         }
                     },
                     onerror: function () {
@@ -19108,7 +19146,7 @@ UE.plugin.register("autosave", function (){
 
         if ( !editor.hasContents() ) {
             //这里不能调用命令来删除， 会造成事件死循环
-            saveKey && me.removePreferences( saveKey );
+            saveKey && me.removePreferences(saveKey);
             return;
         }
 
@@ -30679,140 +30717,154 @@ UE.plugin.register("section", function () {
  * @author Jinqn
  * @date 2014-03-31
  */
-UE.plugin.register("simpleupload", function (){
+UE.plugin.register("simpleupload", function () {
     var me = this,
         isLoaded = false,
         containerBtn;
 
-    function initUploadBtn(){
-        var w = containerBtn.offsetWidth || 20,
-            h = containerBtn.offsetHeight || 20,
-            btnIframe = document.createElement('iframe'),
-            btnStyle = 'display:block;width:' + w + 'px;height:' + h + 'px;overflow:hidden;border:0;margin:0;padding:0;position:absolute;top:0;left:0;filter:alpha(opacity=0);-moz-opacity:0;-khtml-opacity: 0;opacity: 0;cursor:pointer;';
-
-        domUtils.on(btnIframe, 'load', function(){
-
-            var timestrap = (+new Date()).toString(36),
-                wrapper,
-                btnIframeDoc,
-                btnIframeBody;
-
-            btnIframeDoc = (btnIframe.contentDocument || btnIframe.contentWindow.document);
-            btnIframeBody = btnIframeDoc.body;
-            wrapper = btnIframeDoc.createElement('div');
-
-            wrapper.innerHTML = '<form id="edui_form_' + timestrap + '" target="edui_iframe_' + timestrap + '" method="POST" enctype="multipart/form-data" action="' + me.getOpt('serverUrl') + '" ' +
-            'style="' + btnStyle + '">' +
-            '<input id="edui_input_' + timestrap + '" type="file" accept="image/*" name="' + me.options.imageFieldName + '" ' +
-            'style="' + btnStyle + '">' +
-            '</form>' +
-            '<iframe id="edui_iframe_' + timestrap + '" name="edui_iframe_' + timestrap + '" style="display:none;width:0;height:0;border:0;margin:0;padding:0;position:absolute;"></iframe>';
-
-            wrapper.className = 'edui-' + me.options.theme;
-            wrapper.id = me.ui.id + '_iframeupload';
-            btnIframeBody.style.cssText = btnStyle;
-            btnIframeBody.style.width = w + 'px';
-            btnIframeBody.style.height = h + 'px';
-            btnIframeBody.appendChild(wrapper);
-
-            if (btnIframeBody.parentNode) {
-                btnIframeBody.parentNode.style.width = w + 'px';
-                btnIframeBody.parentNode.style.height = w + 'px';
+    function initUploadBtn() {
+        var input = document.createElement("input");
+        input.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;font-size:0;opacity:0;';
+        input.type = 'file';
+        input.accept = me.getOpt('imageAllowFiles').join(',');
+        containerBtn.appendChild(input);
+        domUtils.on(input, 'click', function (e) {
+            var toolbarCallback = me.getOpt("toolbarCallback");
+            if (toolbarCallback) {
+                if (true === toolbarCallback('simpleupload', me)) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            }
+        });
+        domUtils.on(input, 'change', function (e) {
+            var state = me.queryCommandState("simpleupload");
+            if (state === -1) {
+                return;
+            }
+            if (!input.value) {
+                return;
             }
 
-            var form = btnIframeDoc.getElementById('edui_form_' + timestrap);
-            var input = btnIframeDoc.getElementById('edui_input_' + timestrap);
-            var iframe = btnIframeDoc.getElementById('edui_iframe_' + timestrap);
+            var loadingId = UE.dialog.loadingPlaceholder(me);
 
-            domUtils.on(input, 'change', function(){
-                if(!input.value) return;
-                var loadingId = 'loading_' + (+new Date()).toString(36);
-                var params = utils.serializeParam(me.queryCommandValue('serverparam')) || '';
+            if (!me.getOpt("imageActionName")) {
+                UE.dialog.removeLoadingPlaceholder(me, loadingId);
+                UE.dialog.tipError(me, me.getLang("autoupload.errorLoadConfig"));
+                return;
+            }
 
-                var imageActionUrl = me.getActionUrl(me.getOpt('imageActionName'));
-                var allowFiles = me.getOpt('imageAllowFiles');
+            var allowFiles = me.getOpt("imageAllowFiles");
+            var filename = input.value, fileext = filename ? filename.substr(filename.lastIndexOf(".")) : "";
+            if (
+                !fileext ||
+                (allowFiles &&
+                    (allowFiles.join("") + ".").indexOf(fileext.toLowerCase() + ".") === -1)
+            ) {
+                UE.dialog.removeLoadingPlaceholder(me, loadingId);
+                UE.dialog.tipError(me, me.getLang("autoupload.exceedTypeError"));
+                return;
+            }
 
-                me.focus();
-                me.execCommand('inserthtml', '<img class="loadingclass" id="' + loadingId + '" src="' + me.options.themePath + me.options.theme +'/images/spacer.gif" title="' + (me.getLang('simpleupload.loading') || '') + '" >');
+            var successHandler = function (res) {
+                const loader = me.document.getElementById(loadingId);
+                domUtils.removeClasses(loader, "uep-loading");
+                const link = me.options.imageUrlPrefix + res.url;
+                loader.setAttribute("src", link);
+                loader.setAttribute("_src", link);
+                loader.setAttribute("alt", res.original || "");
+                loader.setAttribute('title', res.title || '');
+                loader.setAttribute('class','dzz-image');
+                loader.setAttribute('path','attach::'+res.attach.aid);
+                loader.setAttribute('apath', res.attach.apath);
+                loader.setAttribute('aid', res.attach.aid);
+                loader.setAttribute('ext', res.attach.filetype);
+                loader.setAttribute('dsize', res.attach.filesize);
+                loader.removeAttribute('id');
+                me.fireEvent("contentchange");
+                // 触发上传图片事件
+                me.fireEvent("uploadsuccess", {
+                    res: res,
+                    type: 'image'
+                });
+            };
 
-                function callback(){
-                    try{
-                        var link, json, loader,
-                            body = (iframe.contentDocument || iframe.contentWindow.document).body,
-                            result = body.innerText || body.textContent || '';
-                        json = (new Function("return " + result))();
-                        link = me.options.imageUrlPrefix + json.url;
-                        if(json.state == 'SUCCESS' && json.url) {
-                            loader = me.document.getElementById(loadingId);
-                            loader.setAttribute('src', link);
-                            loader.setAttribute('_src', link);
-                            loader.setAttribute('title', json.title || '');
-                            loader.setAttribute('alt', json.original || '');
-							loader.setAttribute('class','dzz-image');
-							loader.setAttribute('path','attach::'+json.attach.aid);
-							loader.setAttribute('apath', json.attach.apath);
-							loader.setAttribute('aid', json.attach.aid);
-							loader.setAttribute('ext', json.attach.filetype);
-							loader.setAttribute('dsize', json.attach.filesize);
-                            loader.removeAttribute('id');
-                            domUtils.removeClasses(loader, 'loadingclass');
-                        } else {
-                            showErrorLoader && showErrorLoader(json.state);
+            var errorHandler = function (err) {
+                UE.dialog.removeLoadingPlaceholder(me, loadingId);
+                UE.dialog.tipError(me, err);
+            };
+
+            var upload = function (file) {
+                if(me.getOpt('uploadServiceEnable')){
+                    me.getOpt('uploadServiceUpload')('image', file, {
+                        success: function( res ) {
+                            successHandler( res );
+                        },
+                        error: function( err ) {
+                            errorHandler(me.getLang("simpleupload.loadError") + ' : ' + err);
+                        },
+                        progress: function( percent ) {
+
                         }
-                    }catch(er){
-                        showErrorLoader && showErrorLoader(me.getLang('simpleupload.loadError'));
-                    }
-                    form.reset();
-                    domUtils.un(iframe, 'load', callback);
-                }
-                function showErrorLoader(title){
-                    if(loadingId) {
-                        var loader = me.document.getElementById(loadingId);
-                        loader && domUtils.remove(loader);
-                        me.fireEvent('showmessage', {
-                            'id': loadingId,
-                            'content': title,
-                            'type': 'error',
-                            'timeout': 4000
-                        });
-                    }
-                }
-
-                /* 判断后端配置是否没有加载成功 */
-                if (!me.getOpt('imageActionName')) {
-                    errorHandler(me.getLang('autoupload.errorLoadConfig'));
+                    }, {
+                        from: 'upload'
+                    });
                     return;
                 }
-                // 判断文件格式是否错误
-                var filename = input.value,
-                    fileext = filename ? filename.substr(filename.lastIndexOf('.')):'';
-                if (!fileext || (allowFiles && (allowFiles.join('') + '.').indexOf(fileext.toLowerCase() + '.') == -1)) {
-                    showErrorLoader(me.getLang('simpleupload.exceedTypeError'));
-                    return;
-                }
-
-                domUtils.on(iframe, 'load', callback);
-                form.action = utils.formatUrl(imageActionUrl + (imageActionUrl.indexOf('?') == -1 ? '?':'&') + params);
-                form.submit();
-            });
-
-            var stateTimer;
-            me.addListener('selectionchange', function () {
-                clearTimeout(stateTimer);
-                stateTimer = setTimeout(function() {
-                    var state = me.queryCommandState('simpleupload');
-                    if (state == -1) {
-                        input.disabled = 'disabled';
+                const formData = new FormData();
+                formData.append(me.getOpt('imageFieldName'), file, file.name);
+                UE.api.requestAction(me, me.getOpt("imageActionName"), {
+                    data: formData
+                }).then(function (res) {
+                    res = me.getOpt('serverResponsePrepare')( res.data )
+                    if ('SUCCESS' === res.state && res.url) {
+                        successHandler(res)
                     } else {
-                        input.disabled = false;
+                        errorHandler(res.state);
                     }
-                }, 400);
-            });
-            isLoaded = true;
+                    input.value = '';
+                }).catch(function (err) {
+                    errorHandler(err)
+                    input.value = '';
+                });
+            };
+            var file = input.files[0];
+            var fileExt = UE.plus.fileExt(file.name);
+            // console.log('file',file);
+            var imageCompressEnable = me.getOpt('imageCompressEnable'),
+                imageMaxSize = me.getOpt('imageMaxSize'),
+                imageCompressBorder = me.getOpt('imageCompressBorder');
+            if (imageCompressEnable && ['jpg', 'jpeg', 'png'].includes(fileExt)) {
+                UE.image.compress(file, {
+                    maxSizeMB: imageMaxSize / 1024 / 1024,
+                    maxWidthOrHeight: imageCompressBorder
+                }).then(function (compressedFile) {
+                    if (me.options.debug) {
+                        console.log('UEditorPlus.SimpleUpload.CompressImage', (compressedFile.size / file.size * 100).toFixed(2) + '%');
+                    }
+                    upload(compressedFile);
+                }).catch(function (err) {
+                    console.error('UEditorPlus.SimpleUpload.CompressImage.error', err);
+                    upload(file);
+                });
+            } else {
+                upload(file);
+            }
         });
 
-        btnIframe.style.cssText = btnStyle;
-        containerBtn.appendChild(btnIframe);
+        var stateTimer;
+        me.addListener("selectionchange", function () {
+            clearTimeout(stateTimer);
+            stateTimer = setTimeout(function () {
+                var state = me.queryCommandState("simpleupload");
+                if (state === -1) {
+                    input.disabled = "disabled";
+                } else {
+                    input.disabled = false;
+                }
+            }, 400);
+        });
+        isLoaded = true;
     }
 
     return {
@@ -30974,43 +31026,43 @@ UE.plugin.register("serverparam", function () {
 /**
  * 插入附件
  */
-UE.plugin.register("insertfile", function (){
+UE.plugin.register("insertfile", function () {
 
     var me = this;
 
-    function getFileIcon(url){
-        var ext = url.substr(url.lastIndexOf('.') + 1).toLowerCase(),
+    function getFileIcon(url) {
+        var ext = url.substr(url.lastIndexOf(".") + 1).toLowerCase(),
             maps = {
-                "rar":"icon_rar.gif",
-                "zip":"icon_rar.gif",
-                "tar":"icon_rar.gif",
-                "gz":"icon_rar.gif",
-                "bz2":"icon_rar.gif",
-                "doc":"icon_doc.gif",
-                "docx":"icon_doc.gif",
-                "pdf":"icon_pdf.gif",
-                "mp3":"icon_mp3.gif",
-                "xls":"icon_xls.gif",
-                "chm":"icon_chm.gif",
-                "ppt":"icon_ppt.gif",
-                "pptx":"icon_ppt.gif",
-                "avi":"icon_mv.gif",
-                "rmvb":"icon_mv.gif",
-                "wmv":"icon_mv.gif",
-                "flv":"icon_mv.gif",
-                "swf":"icon_mv.gif",
-                "rm":"icon_mv.gif",
-                "exe":"icon_exe.gif",
-                "psd":"icon_psd.gif",
-                "txt":"icon_txt.gif",
-                "jpg":"icon_jpg.gif",
-                "png":"icon_jpg.gif",
-                "jpeg":"icon_jpg.gif",
-                "gif":"icon_jpg.gif",
-                "ico":"icon_jpg.gif",
-                "bmp":"icon_jpg.gif"
+                "ai": "ai.svg",
+                "apk": "apk.svg",
+                "chm": "chm.svg",
+                "css": "css.svg",
+                "doc": "doc.svg",
+                "docx": "docx.svg",
+                "dwg": "dwg.svg",
+                "gif": "gif.svg",
+                "html": "html.svg",
+                "jpeg": "jpeg.svg",
+                "jpg": "jpg.svg",
+                "log": "log.svg",
+                "mp3": "mp3.svg",
+                "mp4": "mp4.svg",
+                "pdf": "pdf.svg",
+                "png": "png.svg",
+                "ppt": "ppt.svg",
+                "pptx": "pptx.svg",
+                "psd": "psd.svg",
+                "rar": "rar.svg",
+                "svg": "svg.svg",
+                "torrent": "torrent.svg",
+                "txt": "txt.svg",
+                "unknown": "unknown.svg",
+                "xls": "xls.svg",
+                "xlsx": "xlsx.svg",
+                "zip": "zip.svg",
+                "bmp": "icon_jpg.gif"
             };
-            return maps[ext] ? maps[ext] : maps["unknown"];
+        return maps[ext] ? maps[ext] : maps["unknown"];
     }
 
     return {
@@ -31044,7 +31096,7 @@ UE.plugin.register("insertfile", function (){
                             '</p>';
                     }
                     }
-                    me.execCommand('insertHtml', html);
+                    me.execCommand("insertHtml", html);
                     me.fireEvent("afterinsertfile", filelist);
                 }
             }
@@ -33927,9 +33979,11 @@ UE.ui = baidu.editor.ui = {};
             // console.log('fitSize.dialog')
             var popBodyEl = this.getDom("body");
             var $foot = popBodyEl.querySelector('.edui-dialog-foot');
-            var heightWithoutBody = 70;
+            var headHeight = 30;
+            var footHeight = 50;
+            var heightWithoutBody = headHeight + footHeight;
             if (!$foot) {
-                heightWithoutBody = 30;
+                heightWithoutBody -= footHeight;
             }
             var size = this.mesureSize();
             var winSize = uiUtils.getViewportRect();
@@ -34468,6 +34522,7 @@ UE.ui = baidu.editor.ui = {};
 
                     if (UI[item]) {
                         this.items[i] = new UI[item](this.editor);
+                        this.items[i]._name = item;
                         this.items[i].className += " edui-short-cut-sub-menu ";
                     }
                 }
@@ -34499,6 +34554,14 @@ UE.ui = baidu.editor.ui = {};
                 offset = {},
                 el = this.getDom(),
                 fixedlayer = uiUtils.getFixedLayer();
+            var shortcutMenuShows = this.editor.options.shortcutMenuShows;
+            for(let item of this.items){
+                if(item._name){
+                    if(item._name in shortcutMenuShows) {
+                        item.uiShow(shortcutMenuShows[item._name]);
+                    }
+                }
+            }
 
             for (let item of this.items) {
                 if ('shouldUiShow' in item) {
@@ -35061,27 +35124,28 @@ UE.ui = baidu.editor.ui = {};
     }
 
     var dialogIframeUrlMap = {
-        anchor: "~/dialogs/anchor/anchor.html?2f10d082",
-        insertimage: "~/dialogs/image/image.html?4bce17a0",
-        link: "~/dialogs/link/link.html?ccbfcf18",
-        spechars: "~/dialogs/spechars/spechars.html?3bbeb696",
-        searchreplace: "~/dialogs/searchreplace/searchreplace.html?2cb782d2",
-        insertvideo: "~/dialogs/video/video.html?7fde01cd",
-        insertaudio: "~/dialogs/audio/audio.html?d264cea1",
-        help: "~/dialogs/help/help.html?05c0c8bf",
-        preview: "~/dialogs/preview/preview.html?5d9a0847",
-        emotion: "~/dialogs/emotion/emotion.html?a7bc0989",
-        wordimage: "~/dialogs/wordimage/wordimage.html?11da452e",
-        formula: "~/dialogs/formula/formula.html?9a5a1511",
-        attachment: "~/dialogs/attachment/attachment.html?d632fa7c",
-        insertframe: "~/dialogs/insertframe/insertframe.html?807119a5",
-        edittip: "~/dialogs/table/edittip.html?fa0ea189",
-        edittable: "~/dialogs/table/edittable.html?134e2f06",
-        edittd: "~/dialogs/table/edittd.html?9fe1a06e",
-        scrawl: "~/dialogs/scrawl/scrawl.html?c8323e43",
-        template: "~/dialogs/template/template.html?3c8090b7",
-        background: "~/dialogs/background/background.html?c2bb8b05",
-        contentimport: "~/dialogs/contentimport/contentimport.html?e298f77b"
+        anchor: "~/dialogs/anchor/anchor.html?eb9739cc",
+        insertimage: "~/dialogs/image/image.html?afbedf05",
+        link: "~/dialogs/link/link.html?fa72bcd7",
+        spechars: "~/dialogs/spechars/spechars.html?3b88f009",
+        searchreplace: "~/dialogs/searchreplace/searchreplace.html?3167e75a",
+        insertvideo: "~/dialogs/video/video.html?c2c9fa02",
+        insertaudio: "~/dialogs/audio/audio.html?47891a09",
+        help: "~/dialogs/help/help.html?4bb38d19",
+        preview: "~/dialogs/preview/preview.html?b533ff4e",
+        emotion: "~/dialogs/emotion/emotion.html?c5e06473",
+        wordimage: "~/dialogs/wordimage/wordimage.html?6c25c600",
+        formula: "~/dialogs/formula/formula.html?a3bc14af",
+        attachment: "~/dialogs/attachment/attachment.html?8cf1bb27",
+        insertframe: "~/dialogs/insertframe/insertframe.html?9353d50c",
+        edittip: "~/dialogs/table/edittip.html?7f922949",
+        edittable: "~/dialogs/table/edittable.html?c2a698ec",
+        edittd: "~/dialogs/table/edittd.html?e110da33",
+        scrawl: "~/dialogs/scrawl/scrawl.html?185f463e",
+        template: "~/dialogs/template/template.html?4ec66ee4",
+        background: "~/dialogs/background/background.html?63701ca2",
+        contentimport: "~/dialogs/contentimport/contentimport.html?96da835f",
+        ai: "~/dialogs/ai/ai.html?86145ec2",
     };
     var dialogBtns = {
         noOk: ["searchreplace", "help", "spechars", "preview"],
@@ -35789,6 +35853,42 @@ UE.ui = baidu.editor.ui = {};
         return ui;
     };
 
+    /** AI智能助手 */
+    editorui['ai'] = function (editor, iframeUrl, title) {
+        iframeUrl = iframeUrl || (editor.options.dialogIframeUrlMap || {})['ai'] || dialogIframeUrlMap['ai'];
+        title = editor.options.labelMap['ai'] || editor.getLang("labelMap.ai") || "";
+
+        var dialog = new editorui.Dialog({
+            iframeUrl: editor.ui.mapUrl(iframeUrl),
+            editor: editor,
+            className: "edui-for-ai",
+            title: title,
+            holdScroll: true,
+            fullscreen: false,
+            closeDialog: editor.getLang("closeDialog")
+        });
+
+        editor.ui._dialogs["aiDialog"] = dialog;
+
+        var ui = new editorui.Button({
+            className: "edui-for-ai",
+            title: title,
+            onclick: function () {
+                if (editor.options.toolbarCallback) {
+                    if (true === editor.options.toolbarCallback('ai', editor)) {
+                        return;
+                    }
+                }
+                dialog.render();
+                dialog.open();
+            },
+            theme: editor.options.theme,
+            disabled: false
+        });
+        editorui.buttons['ai'] = ui;
+        return ui;
+    };
+
     /* 简单上传插件 */
     editorui['simpleupload'] = function (editor) {
         var name = "simpleupload",
@@ -36231,6 +36331,7 @@ UE.ui = baidu.editor.ui = {};
             }
         },
         _initToolbars: function () {
+            var me = this;
             var editor = this.editor;
             var toolbars = this.toolbars || [];
             if (toolbars[0]) {
@@ -36260,12 +36361,14 @@ UE.ui = baidu.editor.ui = {};
                         if (ui) {
                             if (utils.isFunction(ui)) {
                                 toolbarItemUi = new baidu.editor.ui[toolbarItem](editor);
+                                toolbarItemUi._name = toolbarItem
                             } else {
                                 if (ui.id && ui.id !== editor.key) {
                                     continue;
                                 }
                                 var itemUI = ui.execFn.call(editor, editor, toolbarItem);
                                 if (itemUI) {
+                                    itemUI._name = toolbarItem;
                                     if (ui.index === undefined) {
                                         toolbarUi.add(itemUI);
                                         continue;
@@ -36303,6 +36406,25 @@ UE.ui = baidu.editor.ui = {};
                 toolbarUi.add(obj.itemUI, obj.index);
             });
             this.toolbars = toolbarUis;
+            editor.addListener('serverConfigLoaded',function(){
+                me.refreshToolbars();
+            });
+            setTimeout(()=>{
+                this.refreshToolbars();
+            },0);
+        },
+        refreshToolbars: function () {
+            var toolbarShows = this.editor.options.toolbarShows;
+            for (var i = 0; i < this.toolbars.length; i++) {
+                for (var j = 0; j < this.toolbars[i].items.length; j++) {
+                    var item = this.toolbars[i].items[j];
+                    if(item._name){
+                        if(item._name in toolbarShows){
+                            item.uiShow(toolbarShows[item._name]);
+                        }
+                    }
+                }
+            }
         },
         getHtmlTpl: function () {
             return (
@@ -36445,7 +36567,7 @@ UE.ui = baidu.editor.ui = {};
                     "px;height:" +
                     vpRect.height +
                     "px;z-index:" +
-                    (this.getDom().style.zIndex * 1 + 100);
+                    (this.getDom().style.zIndex * 1 + 1000);
                 uiUtils.setViewportOffset(this.getDom(), {
                     left: 0,
                     // top: this.editor.options.topOffset || 0
@@ -36685,7 +36807,7 @@ UE.ui = baidu.editor.ui = {};
         editor.options.editor = editor;
         utils.loadFile(document, {
             href:
-                editor.options.themePath + editor.options.theme + "/css/ueditor.css?69e258a4",
+                editor.options.themePath + editor.options.theme + "/css/ueditor.css?dfa5e8ae",
             tag: "link",
             type: "text/css",
             rel: "stylesheet"

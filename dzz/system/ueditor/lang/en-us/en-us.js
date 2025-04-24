@@ -46,6 +46,7 @@ UE.I18N['en'] = {
         'deletetable': 'DeleteTable',
         'cleardoc': 'Clear',
         'contentimport': 'Content Import',
+        'ai': 'AI',
         'insertparagraphbeforetable': "InsertParagraphBeforeTable",
         'fontfamily': 'FontFamily',
         'fontsize': 'FontSize',
@@ -650,6 +651,9 @@ UE.I18N['en'] = {
         }
     },
     'formula': {
+        'static': {},
+    },
+    'ai': {
         'static': {},
     },
     wordimage: {

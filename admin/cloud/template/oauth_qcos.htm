@@ -20,14 +20,14 @@
                     <div class="row mb-3">
                         <label class="col-sm-2" for="access_id">API SecretId</label>
                         <div class="col-sm-10">
-                            <input type="text" id="access_id" class="form-control" name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');getBucket();}">
+                            <input type="text" id="access_id" class="form-control" name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');getBucket();}">
                             <span class="form-text">{lang oauth_QCOS_ALY_storage}API SecretId</span>
                         </div>
                     </div>
                     <div class="row mb-3">
                     <label class="col-sm-2" for="access_key">API SecretKey</label>
                     <div class="col-sm-10">
-                        <input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('has-warning');}else{jQuery(this).parent().parent().removeClass('has-warning');getBucket();}">
+                        <input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');getBucket();}">
                         <span class="form-text">{lang oauth_QCOS_ALY_storage}API SecretKey</span>
                     </div>
                     </div>
@@ -77,12 +77,12 @@
 
     function setBucketHost() {
         jQuery('#hostname').val('');
-        jQuery("#bucket").parent().parent().removeClass('has-warning');
+        jQuery("#bucket").removeClass('is-invalid');
     }
 
     function selectHostName(obj) {
         jQuery('#hostname').val(jQuery(obj).attr('hostname'));
-        jQuery("#hostname").parent().parent().removeClass('has-warning');
+        jQuery("#hostname").removeClass('is-invalid');
         jQuery('#hostname_dropmenu').html(jQuery(obj).html() + '');
     }
 
@@ -113,19 +113,19 @@
 
     function validate(form) {
         if(jQuery("#access_id").val() == '') {
-            jQuery("#access_id").parent().parent().addClass('has-warning');
+            jQuery("#access_id").addClass('is-invalid');
             return false;
         } else if(jQuery("#access_key").val() == '') {
-            jQuery("#access_key").parent().parent().addClass('has-warning');
+            jQuery("#access_key").addClass('is-invalid');
             return false;
         } else if(jQuery("#bucket").val() == '') {
-            jQuery("#bucket").parent().parent().addClass('has-warning');
+            jQuery("#bucket").addClass('is-invalid');
             return false;
         } else if(jQuery("#hostname").val() == '') {
-            jQuery("#hostname").parent().parent().addClass('has-warning');
+            jQuery("#hostname").addClass('is-invalid');
             return false;
         }else if(jQuery("#region").val() == '') {
-            jQuery("#region").parent().parent().addClass('has-warning');
+            jQuery("#region").addClass('is-invalid');
             return false;
         }
         return true;

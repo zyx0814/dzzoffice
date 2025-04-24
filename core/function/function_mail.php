@@ -10,6 +10,9 @@ function sendmail($toemail, $subject, $message, $from = '') {
 	}
 	$_G['setting']['mail']['server'] = $_G['setting']['mail']['port'] = $_G['setting']['mail']['auth'] = $_G['setting']['mail']['from'] = $_G['setting']['mail']['auth_username'] = $_G['setting']['mail']['auth_password'] = '';
 	if($_G['setting']['mail']['mailsend'] != 1) {
+		if (!isset($_G['setting']['mail']['smtp']) || !is_array($_G['setting']['mail']['smtp'])) {
+			$_G['setting']['mail']['smtp'] = [];
+		}
 		$smtpnum = count($_G['setting']['mail']['smtp']);
 		if($smtpnum) {
 			$rid = rand(0, $smtpnum-1);
