@@ -36,7 +36,7 @@
     line-height: 26px;
     margin: 8px 5px;
     background: #FFF;
-    border: 1px solid #d7d7d7;
+    border: 1px solid #F2F2F2;
     outline: none;
     border-radius: 3px;
     padding: 0 5px;
@@ -61,7 +61,7 @@
     width: 200px;
     height: 21px;
     line-height: 21px;
-    border: 1px solid #d7d7d7;
+    border: 1px solid #F2F2F2;
 }
 
 #searchList {
@@ -93,7 +93,7 @@
     width: 65px;
     height: 23px;
     line-height: 22px;
-    border: 1px solid #d7d7d7;
+    border: 1px solid #F2F2F2;
 }
 
 #audioSearchBtn, #audioSearchReset {
@@ -101,7 +101,7 @@
     height: 25px;
     line-height: 25px;
     background: #eee;
-    border: 1px solid #d7d7d7;
+    border: 1px solid #F2F2F2;
     cursor: pointer;
     padding: 0 5px;
 }
@@ -183,7 +183,7 @@ fieldset input.txt {
     line-height: 21px;
     margin: 8px 5px;
     background: #FFF;
-    border: 1px solid #d7d7d7;
+    border: 1px solid #F2F2F2;
 }
 
 label.url {

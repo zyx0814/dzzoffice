@@ -45,6 +45,7 @@ UE.I18N['zh-cn'] = {
         'deletetable': '删除表格',
         'cleardoc': '清空文档',
         'contentimport': '导入内容',
+        'ai': 'AI智能助手',
         'insertparagraphbeforetable': "表格前插入行",
         'insertcode': '代码语言',
         'fontfamily': '字体',
@@ -733,6 +734,9 @@ UE.I18N['zh-cn'] = {
         }
     },
     'formula': {
+        'static': {},
+    },
+    'ai': {
         'static': {},
     },
     'wordimage': {

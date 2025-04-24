@@ -143,10 +143,15 @@
                 'dzzfile',
                 "|",
                 "contentimport",
+                "ai",
                 "help",                // 帮助
                 "drafts",
             ]
         ]
+        // 动态选项配置，该值可以通过后端配置接口动态返回，动态控制toolbars的功能
+        , toolbarShows:{
+            // "ai": false,
+        }
 
         // 自定义工具栏按钮点击，返回 true 表示已经处理点击，会阻止默认事件
         , toolbarCallback: function (cmd, editor) {
@@ -174,7 +179,7 @@
         // file 文件对象
         // callback 回调函数，需要在上传完成后调用 callback.success、callback.error、callback.progress
         // option 上传配置，其他一些未来扩展配置
-        , uploadServiceUpload: function(type, file, callback, option ) {
+        , uploadServiceUpload: function(type, file, callback, option) {
             console.log('uploadServiceUpload', type, file, callback, option);
             // var i = 0;
             // var call = function(){
@@ -463,32 +468,29 @@
 
         //快捷菜单
         , shortcutMenu: [
+            "ai",           // AI智能
             // "fontfamily",   // 字体
             // "fontsize",     // 字号
-            "bold",         // 加粗
-            "italic",       // 斜体
-            "underline",    // 下划线
-            "strikethrough",// 删除线
-            "fontborder",   // 字符边框
-            "forecolor",    // 字体颜色
-            // "shadowcolor", // 字体阴影
-            "backcolor",   // 背景色
-            "imagenone",
-            "imageleft",
-            "imagecenter",
-            "imageright",
-            "insertimage",
+            "bold",            // 加粗
+            "italic",          // 斜体
+            "underline",       // 下划线
+            "strikethrough",   // 删除线
+            "fontborder",      // 字符边框
+            "forecolor",       // 字体颜色
+            "backcolor",       // 背景色
+            "imagenone",       // 图片默认
+            "imageleft",       // 图片左浮动
+            "imagecenter",     // 图片居中
+            "imageright",      // 图片右浮动
+            "insertimage",     // 插入图片
             "formula",
             // "justifyleft",    // 居左对齐
             // "justifycenter",  // 居中对齐
             // "justifyright",   // 居右对齐
             // "justifyjustify", // 两端对齐
-            // "textindent",  // 首行缩进
             // "rowspacingtop",     // 段前距
             // "rowspacingbottom",  // 段后距
-            // "outpadding",        // 两侧距离
             // "lineheight",           // 行间距
-            // "letterspacing" ,    // 字间距
             // "insertorderedlist",    // 有序列表
             // "insertunorderedlist",  // 无序列表
             // "superscript",    // 上标
@@ -498,6 +500,10 @@
             // "touppercase",    // 字母大写
             // "tolowercase"     // 字母小写
         ]
+        // 动态选项配置，该值可以通过后端配置接口动态返回，动态控制shortcutMenu的功能
+        ,shortcutMenuShows: {
+            // "ai": false,
+        }
 
         // 是否启用元素路径，默认是显示
         , elementPathEnabled: true
@@ -604,6 +610,68 @@
         //allowLinkProtocol 允许的链接地址，有这些前缀的链接地址不会自动添加http
         //, allowLinkProtocols: ['http:', 'https:', '#', '/', 'ftp:', 'mailto:', 'tel:', 'git:', 'svn:']
 
+        // AI智能相关配置
+        , ai: {
+            // 大模型驱动 OpenAi ModStart
+            driver: 'ModStart',
+            // 大模型对接配置
+            driverConfig: {
+                // 模型API地址，留空使用默认
+                url: '',
+                // 大模型平台Key
+                key: '',
+                // 大模型平台模型
+                model: '',
+            },
+            // 自定义接入
+            driverRequest: function (option) {
+                var texts = []
+                var mock = function () {
+                    var text = '需要在dzz/system/ueditor/ueditor.config.js中配置ai才能使用'
+                    texts.push(text)
+                    if (texts.length >= 1) {
+                        // 调用 onFinish 方法表示结束
+                        option.onFinish({code: 0, msg: 'ok', data: {text: texts.join("")}})
+                        return
+                    }
+                    // 调用 onStream 方法模拟流式返回
+                    option.onStream({code: 0, msg: 'ok', data: {text: text}})
+                    setTimeout(mock, 50);
+                };
+                mock();
+            },
+        }
+        , aiFunctions:[
+            {
+                text: '<i class="edui-iconfont edui-icon-translate"></i> 翻译',
+                prompt: "{selectText}\n\n请帮我翻译一下这段内容，并直接返回优化后的结果。\n注意：你应该先判断一下这句话是中文还是英文，如果是中文，请给我返回英文，如果是英文，请给我返回中文内容，只需要返回内容即可，不需要告知我是中文还是英文。",
+                enable: function (param) {
+                    return !!param.selectText
+                }
+            },
+            {
+                text: '<i class="edui-iconfont edui-icon-continue-write"></i> 续写',
+                prompt: "{selectText}\n\n请帮我续写一下这段内容，并直接返回续写后的结果。",
+                enable: function (param) {
+                    return !!param.selectText
+                }
+            },
+            {
+                text: '<i class="edui-iconfont edui-icon-text-shrink"></i> 简化内容',
+                prompt: "{selectText}\n\n请帮我简化一下这段内容，并直接返回简化后的结果。",
+                enable: function (param) {
+                    return !!param.selectText
+                }
+            },
+            {
+                text: '<i class="edui-iconfont edui-icon-text-extend"></i> 丰富内容',
+                prompt: "{selectText}\n\n请帮我丰富一下这段内容，并直接返回丰富后的结果。",
+                enable: function (param) {
+                    return !!param.selectText
+                }
+            }
+        ]
+
         //默认过滤规则相关配置项目
         //,disabledTableInTable:true  //禁止表格嵌套
         // 允许进入编辑器的 div 标签自动变成 p 标签
@@ -694,14 +762,14 @@ UEDITOR_CONFIG.mode = {
         ]
     ],
     simple: [
-        ["fullscreen","source","|","undo","redo",'drafts',"|","bold","italic","underline","fontborder","strikethrough","superscript","subscript","removeformat","formatmatch","autotypeset","blockquote","pasteplain","|","forecolor","backcolor","insertorderedlist","insertunorderedlist","selectall","cleardoc","|","rowspacingtop","rowspacingbottom","lineheight","|","customstyle","paragraph","fontfamily","fontsize","|","directionalityltr","directionalityrtl","indent","|","justifyleft", "justifycenter","justifyright","justifyjustify","|","touppercase","tolowercase","|","link","unlink","anchor","|","imagenone","imageleft","imagecenter","imageright","|","simpleupload","insertimage","emotion","scrawl","insertvideo","attachment",'map',"insertframe","insertcode","pagebreak","template","background","formula","|","horizontal","date","time","spechars","wordimage","|","inserttable","deletetable","insertparagraphbeforetable","insertrow","deleterow","insertcol","deletecol","mergecells","mergeright","mergedown","splittocells","splittorows","splittocols","|","print","preview","searchreplace","|","dzzfile","contentimport","help",
+        ["fullscreen","source","|","undo","redo",'drafts',"|","bold","italic","underline","fontborder","strikethrough","superscript","subscript","removeformat","formatmatch","autotypeset","blockquote","pasteplain","|","forecolor","backcolor","insertorderedlist","insertunorderedlist","selectall","cleardoc","|","rowspacingtop","rowspacingbottom","lineheight","|","customstyle","paragraph","fontfamily","fontsize","|","directionalityltr","directionalityrtl","indent","|","justifyleft", "justifycenter","justifyright","justifyjustify","|","touppercase","tolowercase","|","link","unlink","anchor","|","imagenone","imageleft","imagecenter","imageright","|","simpleupload","insertimage","emotion","scrawl","insertvideo","attachment",'map',"insertframe","insertcode","pagebreak","template","background","formula","|","horizontal","date","time","spechars","wordimage","|","inserttable","deletetable","insertparagraphbeforetable","insertrow","deleterow","insertcol","deletecol","mergecells","mergeright","mergedown","splittocells","splittorows","splittocols","|","print","preview","searchreplace","|","dzzfile","contentimport","ai","help",
         ]
     ],
 	simple_source: [
-        ["fullscreen","source","|","undo","redo",'drafts',"|","bold","italic","underline","fontborder","strikethrough","superscript","subscript","removeformat","formatmatch","autotypeset","blockquote","pasteplain","|","forecolor","backcolor","insertorderedlist","insertunorderedlist","selectall","cleardoc","|","rowspacingtop","rowspacingbottom","lineheight","|","customstyle","paragraph","fontfamily","fontsize","|","directionalityltr","directionalityrtl","indent","|","justifyleft", "justifycenter","justifyright","justifyjustify","|","touppercase","tolowercase","|","link","unlink","anchor","|","imagenone","imageleft","imagecenter","imageright","|","simpleupload","insertimage","emotion","scrawl","insertvideo","attachment",'map',"insertframe","insertcode","pagebreak","template","background","formula","|","horizontal","date","time","spechars","wordimage","|","inserttable","deletetable","insertparagraphbeforetable","insertrow","deleterow","insertcol","deletecol","mergecells","mergeright","mergedown","splittocells","splittorows","splittocols","|","print","preview","searchreplace","|","dzzfile","contentimport","help",
+        ["fullscreen","source","|","undo","redo",'drafts',"|","bold","italic","underline","fontborder","strikethrough","superscript","subscript","removeformat","formatmatch","autotypeset","blockquote","pasteplain","|","forecolor","backcolor","insertorderedlist","insertunorderedlist","selectall","cleardoc","|","rowspacingtop","rowspacingbottom","lineheight","|","customstyle","paragraph","fontfamily","fontsize","|","directionalityltr","directionalityrtl","indent","|","justifyleft", "justifycenter","justifyright","justifyjustify","|","touppercase","tolowercase","|","link","unlink","anchor","|","imagenone","imageleft","imagecenter","imageright","|","simpleupload","insertimage","emotion","scrawl","insertvideo","attachment",'map',"insertframe","insertcode","pagebreak","template","background","formula","|","horizontal","date","time","spechars","wordimage","|","inserttable","deletetable","insertparagraphbeforetable","insertrow","deleterow","insertcol","deletecol","mergecells","mergeright","mergedown","splittocells","splittorows","splittocols","|","print","preview","searchreplace","|","dzzfile","contentimport","ai","help",
         ]
     ],
     full:[[
-            "fullscreen","source","|","undo","redo",'drafts',"|","bold","italic","underline","fontborder","strikethrough","superscript","subscript","removeformat","formatmatch","autotypeset","blockquote","pasteplain","|","forecolor","backcolor","insertorderedlist","insertunorderedlist","selectall","cleardoc","|","rowspacingtop","rowspacingbottom","lineheight","|","customstyle","paragraph","fontfamily","fontsize","|","directionalityltr","directionalityrtl","indent","|","justifyleft", "justifycenter","justifyright","justifyjustify","|","touppercase","tolowercase","|","link","unlink","anchor","|","imagenone","imageleft","imagecenter","imageright","|","simpleupload","insertimage","emotion","scrawl","insertvideo","attachment",'map',"insertframe","insertcode","pagebreak","template","background","formula","|","horizontal","date","time","spechars","wordimage","|","inserttable","deletetable","insertparagraphbeforetable","insertrow","deleterow","insertcol","deletecol","mergecells","mergeright","mergedown","splittocells","splittorows","splittocols","|","print","preview","searchreplace","|","dzzfile","contentimport","help",
+            "fullscreen","source","|","undo","redo",'drafts',"|","bold","italic","underline","fontborder","strikethrough","superscript","subscript","removeformat","formatmatch","autotypeset","blockquote","pasteplain","|","forecolor","backcolor","insertorderedlist","insertunorderedlist","selectall","cleardoc","|","rowspacingtop","rowspacingbottom","lineheight","|","customstyle","paragraph","fontfamily","fontsize","|","directionalityltr","directionalityrtl","indent","|","justifyleft", "justifycenter","justifyright","justifyjustify","|","touppercase","tolowercase","|","link","unlink","anchor","|","imagenone","imageleft","imagecenter","imageright","|","simpleupload","insertimage","emotion","scrawl","insertvideo","attachment",'map',"insertframe","insertcode","pagebreak","template","background","formula","|","horizontal","date","time","spechars","wordimage","|","inserttable","deletetable","insertparagraphbeforetable","insertrow","deleterow","insertcol","deletecol","mergecells","mergeright","mergedown","splittocells","splittorows","splittocols","|","print","preview","searchreplace","|","dzzfile","contentimport","ai","help",
         ]],
 };

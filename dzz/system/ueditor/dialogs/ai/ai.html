@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <link rel="stylesheet" href="./../../themes/default/dialog.css?4c61d0c1">
+    <script type="text/javascript" src="../internal.js?df5a6b9e"></script>
+    <style type="text/css">
+        [v-cloak] {
+            display: none;
+        }
+
+        .wrapper {
+            width: 620px;
+            padding: 10px;
+            height: 399px;
+            box-sizing: border-box;
+            overflow: hidden;
+            position: relative;
+            font-size: 13px;
+        }
+        .wrapper .input::placeholder{
+            color:#999;
+        }
+
+        .ai-operate {
+            display: block;
+            min-width: 8em;
+            text-align: center;
+            text-decoration: none;
+            line-height: 30px;
+            background: var(--edui-color-border);
+            color: #111;
+            border-radius: 15px;
+            padding: 0 10px;
+            margin: 5px 5px 0 0;
+        }
+
+        .ai-operate:hover {
+            box-shadow: 0 0 5px rgba(0, 0, 0, .1);
+        }
+
+        .btn.primary:hover {
+            box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+        }
+
+        .close:hover {
+            color: red !important;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper" id="app" v-cloak>
+
+    <div>
+        <div v-if="selectText"
+             style="line-height:30px;padding:0 10px;border-radius:5px;margin-bottom:10px;display:inline-flex;align-items:center;">
+            <div style="margin-right:5px;">
+                <i class="edui-iconfont edui-icon-outline" style="font-size:18px;"></i>
+            </div>
+            <div style="text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:550px;">
+                {{ selectText }}
+            </div>
+        </div>
+        <div class="flex" style="padding: 5px; border-radius: 30px; box-shadow: 0 0 10px #CCC;">
+            <div class="flex-grow">
+                <input type="text" v-model="inputText"
+                       class="input"
+                       style="width:540px;border-color:transparent;font-size:14px;"
+                       placeholder="告诉 AI 下一步应该如何？比如：帮我翻译成英语"/>
+            </div>
+            <div class="flex-shrink-0" style="width:32px;padding-right:5px;">
+                <a href="javascript:;" class="btn primary"
+                   @click="doSubmit"
+                   style="width:30px;text-align:center;padding:0;border-radius:50%;">
+                    <i v-if="loading" class="edui-iconfont edui-icon-refresh"
+                       style="display:inline-block;animation:spin 2s linear infinite;"></i>
+                    <i v-else class="edui-iconfont edui-icon-right-direction"></i>
+                </a>
+            </div>
+        </div>
+        <div v-if="resultHtml || resultError"
+             style="border-top:1px solid #F2F2F2;margin-top:10px;padding-top:10px;">
+            <div v-if="resultError"
+                 style="color:red;background:rgba(255,0,0,0.1);margin-bottom:10px;padding:10px;border-radius:10px;">
+                {{ resultError }}
+            </div>
+            <div class="flex flex-items-center" style="height:30px;">
+                <div class="flex-grow">
+                    <i class="edui-iconfont edui-icon-robot" style="font-size:16px;"></i>
+                    以下为生成的结果
+                </div>
+                <div>
+                    <a v-if="!loading" @click="doInsert" href="javascript:;" class="btn sm">
+                        <i class="edui-iconfont edui-icon-page-break"></i>
+                        插入
+                    </a>
+                    <a v-if="!loading&&selectText" @click="doReplace" href="javascript:;" class="btn sm">
+                        <i class="edui-iconfont edui-icon-eraser"></i>
+                        替换
+                    </a>
+                </div>
+            </div>
+            <div
+                style="margin-top:10px;background:rgba(0,0,0,0.03);padding:10px;border-radius:10px;overflow:auto;"
+                :style="{height:resultHeight}"
+            >
+                <div class="ub-html" v-html="resultHtml"></div>
+            </div>
+        </div>
+        <div v-else
+             style="border-top:1px solid #F2F2F2;margin-top:10px;padding-top:10px;">
+            <div v-if="functions.length" style="color:#999;">
+                <i class="edui-iconfont edui-icon-bell" style="font-size:16px;"></i>
+                提示：您可以在上面输入文字生成内容 或 选择下方的操作
+            </div>
+            <div v-else style="color:#999;">
+                <i class="edui-iconfont edui-icon-bell" style="font-size:16px;"></i>
+                提示：您可以在上面输入文字生成内容
+            </div>
+            <div style="padding-top:10px;display:flex;">
+                <a href="javascript:;" v-for="f in functions"
+                   @click="doSubmitFunction(f)"
+                   class="ai-operate">
+                    <span v-html="f.text"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="../../third-party/vue.js?1f65e021"></script>
+<script src="../../third-party/showdown.js?d5372104"></script>
+<script src="../../third-party/jquery-1.10.2.js?628072e7"></script>
+<script type="text/javascript" src="../../third-party/clipboard/clipboard.js?555edf0a"></script>
+<script type="text/javascript" src="./ai.js?eb799e7f"></script>
+</body>
+</html>
