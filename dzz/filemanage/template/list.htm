@@ -2,8 +2,9 @@
 <link rel="stylesheet" href="static/lyear/js/layui/css/layui.css">
 <style>
 	.icon {
-		width: 30px;
-		height: 30px;
+		width: 24px;
+		height: 24px;
+		margin-right: 5px;
 	}
 	.iconFirstWord {
 		width: 18px;
@@ -149,6 +150,7 @@
 						if (item.copys) {
 							template += '<p><strong>引用:</strong> ' + item.copys + '</p>';
 						}
+						<!--{/if}-->
 						if (item.isdelete !== undefined) {
 							template += '<p><strong>是否在回收站:</strong> ' + item.isdelete + '</p>';
 						}
@@ -161,7 +163,6 @@
 						if (item.edits) {
 							template += '<p><strong>修改次数:</strong> ' + item.edits + '</p>';
 						}
-						<!--{/if}-->
 						template += '</div>';
 						template += '</div>';
 						template += '</div>';
@@ -292,15 +293,15 @@
 			'<p><strong>{lang file_size}:</strong> ' + data.size + '</p>' +
 			'<p><strong>{lang file_type}:</strong> ' + data.type + '</p>' +
 			'<p><strong>{lang file_location}:</strong> ' + data.relpath + '</p>' +
-			'<p><strong>{lang add_time}:</strong> ' + data.dateline + '</p>'
-			<!--{if $_G['adminid']}--> +
+			'<p><strong>{lang add_time}:</strong> ' + data.dateline + '</p>' +
+			<!--{if $_G['adminid']}-->
 			(data.FileUri ? '<p><strong>直链地址:</strong> <a href="' + data.FileUri + '" target="_blank">' + data.FileUri + '</a></p>' : '') +
 			(data.copys ? '<p><strong>引用:</strong> ' + data.copys + '</p>' : '') +
+			<!--{/if}-->
 			(data.isdelete !== undefined ? '<p><strong>是否在回收站:</strong> ' + data.isdelete + '</p>' : '') +
 			(data.downs ? '<p><strong>下载次数:</strong> ' + data.downs + '</p>' : '') +
 			(data.views ? '<p><strong>{lang view_count}:</strong> ' + data.views + '</p>' : '') +
-			(data.edits ? '<p><strong>修改次数:</strong> ' + data.edits + '</p>' : '')
-			<!--{/if}-->;
+			(data.edits ? '<p><strong>修改次数:</strong> ' + data.edits + '</p>' : '');
 	
 			layer.alert(JSON.stringify(data), {
 				title: data.name + ' 详情：',
