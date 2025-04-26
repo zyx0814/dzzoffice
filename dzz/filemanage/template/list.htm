@@ -2,8 +2,9 @@
 <link rel="stylesheet" href="static/lyear/js/layui/css/layui.css">
 <style>
 	.icon {
-		width: 30px;
-		height: 30px;
+		width: 24px;
+		height: 24px;
+		margin-right: 5px;
 	}
 	.iconFirstWord {
 		width: 18px;
@@ -46,7 +47,7 @@
 								<input id="sel_orgid_{$org['orgid']}" type="hidden" name="orgid"  value="$org['orgid']" onchange="selDepart(this)" />
 								<button type="button" id="orgid_{$org['orgid']}_Menu" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> $org[depart]  </button>
 								<div id="orgid_$orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_{$org['orgid']}_Menu">
-								<iframe name="orgid_{$org['orgid']}_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid_{$org['orgid']}&nouser=1&range=0&stype=1&zero={eval echo urlencode('{lang unselect_a_organization_or_department}');}" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+								<iframe name="orgid_{$org['orgid']}_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid_{$org['orgid']}&nouser=1&range=0&zero={eval echo urlencode('{lang unselect_a_organization_or_department}');}" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
 								</div>
 							</div>
 						  </div>
@@ -149,6 +150,7 @@
 						if (item.copys) {
 							template += '<p><strong>引用:</strong> ' + item.copys + '</p>';
 						}
+						<!--{/if}-->
 						if (item.isdelete !== undefined) {
 							template += '<p><strong>是否在回收站:</strong> ' + item.isdelete + '</p>';
 						}
@@ -161,7 +163,6 @@
 						if (item.edits) {
 							template += '<p><strong>修改次数:</strong> ' + item.edits + '</p>';
 						}
-						<!--{/if}-->
 						template += '</div>';
 						template += '</div>';
 						template += '</div>';
@@ -292,15 +293,15 @@
 			'<p><strong>{lang file_size}:</strong> ' + data.size + '</p>' +
 			'<p><strong>{lang file_type}:</strong> ' + data.type + '</p>' +
 			'<p><strong>{lang file_location}:</strong> ' + data.relpath + '</p>' +
-			'<p><strong>{lang add_time}:</strong> ' + data.dateline + '</p>'
-			<!--{if $_G['adminid']}--> +
+			'<p><strong>{lang add_time}:</strong> ' + data.dateline + '</p>' +
+			<!--{if $_G['adminid']}-->
 			(data.FileUri ? '<p><strong>直链地址:</strong> <a href="' + data.FileUri + '" target="_blank">' + data.FileUri + '</a></p>' : '') +
 			(data.copys ? '<p><strong>引用:</strong> ' + data.copys + '</p>' : '') +
+			<!--{/if}-->
 			(data.isdelete !== undefined ? '<p><strong>是否在回收站:</strong> ' + data.isdelete + '</p>' : '') +
 			(data.downs ? '<p><strong>下载次数:</strong> ' + data.downs + '</p>' : '') +
 			(data.views ? '<p><strong>{lang view_count}:</strong> ' + data.views + '</p>' : '') +
-			(data.edits ? '<p><strong>修改次数:</strong> ' + data.edits + '</p>' : '')
-			<!--{/if}-->;
+			(data.edits ? '<p><strong>修改次数:</strong> ' + data.edits + '</p>' : '');
 	
 			layer.alert(JSON.stringify(data), {
 				title: data.name + ' 详情：',

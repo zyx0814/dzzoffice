@@ -762,3 +762,15 @@ button.input-search-drop{-webkit-appearance:none;padding:0;cursor:pointer;backgr
 .dzz-noticeicon{border-radius:50%;font-size:18px;vertical-align:text-bottom}
 .u-bottom .img-emotion{width:24px;height:24px}
 .img-emotion{max-width:24px;max-height:24px}
+@-webkit-keyframes ball-beat{50%{opacity:0.2;-webkit-transform:scale(0.75);-ms-transform:scale(0.75);transform:scale(0.75)}
+100%{opacity:1;-webkit-transform:scale(1);-ms-transform:scale(1);transform:scale(1)}
+}@-ms-keyframes ball-beat{50%{opacity:0.2;-ms-transform:scale(0.75);transform:scale(0.75)}
+100%{opacity:1;-ms-transform:scale(1);transform:scale(1)}
+}@-moz-keyframes ballbeat{50%{opacity:0.2;-moz-transform:scale(0.75);transform:scale(0.75)}
+100%{opacity:1;-moz-transform:scale(1);transform:scale(1)}
+}@keyframes ball-beat{50%{opacity:0.2;-webkit-transform:scale(0.75);-ms-transform:scale(0.75);-moz-transform:scale(0.75);transform:scale(0.75)}
+100%{opacity:1;-webkit-transform:scale(1);transform:scale(1)}
+}.loader{text-align:center}
+.ball-beat{display:inline-block}
+.ball-beat > div{background-color:#bdbdbd;width:15px;height:15px;border-radius:100%;margin:2px;-webkit-animation-fill-mode:both;animation-fill-mode:both;display:inline-block;-webkit-animation:ball-beat 0.7s 0s infinite linear;-moz-animation:ball-beat 0.7s 0s infinite linear;-ms-animation:ball-beat 0.7s 0s infinite linear;animation:ball-beat 0.7s 0s infinite linear}
+.ball-beat > div:nth-child(2n-1){-webkit-animation-delay:0.35s !important;-moz-animation-delay:0.35s !important;-ms-animation-delay:0.35s !important;animation-delay:0.35s !important}

@@ -878,8 +878,6 @@ class dzz_mode extends dzz_base
             foreach ($data as $key=>$val){
                 if(!in_array($key,$fields)) {
                     unset($data[$key]);
-                }elseif(get_magic_quotes_gpc() && is_string($val)){
-                    $data[$key] =   stripslashes($val);
                 }
             }
         } 

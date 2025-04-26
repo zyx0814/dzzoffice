@@ -134,7 +134,7 @@ if ($do == 'delete') {
 		} else {
 			$isdelete = '否';
 		}
-		if($data['type']!=='folder'){
+		if($_G['adminid'] && $data['type']!=='folder'){
 			$copys = $data['copys'];
 			$FileUri = IO::getFileUri($data['path'])?:'';
 		} else {
@@ -154,7 +154,7 @@ if ($do == 'delete') {
 			"relpath" => $data['relpath'],
 			"dateline" => $data['fdateline'],
 			"isdelete" => $isdelete?:'',
-			"copys" => $copys?:'',
+			"copys" => $copys,
 			"FileUri" => $FileUri,
 			"downs" => $filestatis['downs']?:'',
 			"views" => $filestatis['views']?:'',
