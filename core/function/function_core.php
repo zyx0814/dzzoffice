@@ -2326,7 +2326,7 @@ function dzzgetspace($uid)
                 if ($spaceon == 'appoint' && $memorySpace != 0) {
 
                     $usersarr = explode(',', $setting['memoryorgusers']);
-                    $uesrs = array();
+                    $users = array();
                     foreach ($usersarr as $v) {
                         //群组id
                         if (preg_match('/\d+/', $v)) {
@@ -3184,7 +3184,7 @@ function get_resources_some_setting()
             $groupcreateon = isset($setting['explorer_mermorygroupsetting']) ? $setting['explorer_mermorygroupsetting'] : '';
             if ($groupcreateon == 'appoint') {//指定用户时
                 $usersarr = explode(',', $setting['explorer_memorygroupusers']);
-                $uesrs = array();
+                $users = array();
                 foreach ($usersarr as $v) {
                     //群组id
                     if (preg_match('/^\d+$/', $v)) {
