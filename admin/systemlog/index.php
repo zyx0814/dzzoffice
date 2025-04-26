@@ -97,6 +97,15 @@ if ($do == 'getinfo') {
 			$logs=array_merge($logs,$logs2);
 		}
 		if($logs) {
+			if (!function_exists('mb_check_encoding') || !function_exists('mb_convert_encoding')) {
+				$errorResponse = [
+					"code" => 1,
+					"msg" => "mb_check_encoding或mb_convert_encoding函数不存在，请检查PHP配置或升级PHP版本。",
+					"count" => 0,
+					"data" => [],
+				];
+				exit(json_encode($errorResponse));
+			}
 			$usergroup = array(); 
 			foreach(C::t('usergroup')->range() as $group) {
 				$usergroup[$group['groupid']] = $group['grouptitle'];

@@ -2485,6 +2485,7 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .panel-danger>.panel-footer+.panel-collapse>.panel-body{border-bottom-color:#ebccd1}
 .img-avatar{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;position:relative;display:inline-block;background-color:#f9fafb;-webkit-border-radius:50%;border-radius:50%;vertical-align:middle;text-align:center;width:38px;height:38px;line-height:38px;max-width:inherit;color:#fff;visibility:visible;border:2px solid #fff;box-shadow:0 2px 5px 0 rgb(0 0 0 / 10%);-webkit-box-shadow:0 2px 5px 0 rgb(0 0 0 / 10%);-webkit-transition:.15s linear;transition:.15s linear;cursor:pointer;order:2px solid #fff}
 .img-avatar img{-webkit-border-radius:50%;border-radius:50%;vertical-align:bottom}
+.img-avatar-24,.img-avatar-24 span,.img-avatar-24 img{width:24px;height:24px;line-height:20px;font-size:14px}
 .img-avatar-36,.img-avatar-36 span,.img-avatar-36 img{width:36px;height:36px;line-height:36px;font-size:18px}
 .img-avatar-48,.img-avatar-48 span,.img-avatar-48 img{width:48px;height:48px;line-height:48px;font-size:24px}
 .img-avatar-64,.img-avatar-64 span,.img-avatar-64 img{width:64px;height:64px;line-height:64px;font-size:36px}
