@@ -11,7 +11,7 @@
         <!--{loop $list $value}-->
         <li class="list-group-item d-flex justify-content-between align-items-start">
           <span><a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a></span>
-          <div class="ms-2 me-auto">
+          <div class="ms-2 me-auto text-break">
             <div class="fw-bold">$value[title]</div>
             $value[note]
             <div><small class="text-muted">$value['dateline']</small></div>

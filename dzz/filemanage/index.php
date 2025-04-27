@@ -11,6 +11,15 @@ if (!defined('IN_DZZ')) {
 }
 $navtitle = lang('appname');
 $uid=$_G['uid'];
+if(!$uid) {
+	$errorResponse = [
+		"code" => 1,
+		"msg" => lang('no_login_operation'),
+		"count" => 0,
+		"data" => [],
+	];
+	exit(json_encode($errorResponse));
+}
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $orgid = isset($_GET['orgid']) ? intval($_GET['orgid']) : '';
 $typearr = array('image' => lang('photo'),
@@ -32,6 +41,10 @@ if ($do == 'delete') {
 	$failedicoids = [];
 
 	foreach ($icoids as $icoid) {
+		if(!$_G['adminid']) {
+			$ruid = DB::result_first("select uid from %t where rid=%s", array('resources', $icoid));
+			if($ruid !== $uid) exit(json_encode(['msg' => '该文件不存在或您没有权限']));
+		}
 		try {
 			$return = IO::Delete($icoid, true);
 			if (!$return['error']) {

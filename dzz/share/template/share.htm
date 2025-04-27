@@ -166,14 +166,12 @@
 					jQuery.post('{MOD_URL}&op=ajax&do=delete', {'sids': sids},function(json){
 						layer.close(loading);
 						layer.close(index);
-						for(var o in json.msg){
-							if(json.msg[o]['success']){
-								showmessage('删除成功', 'success', '3000', 1);
-							} else if(json.msg[o]['error']){
-								showmessage(json.msg[o]['error'], 'danger', '3000', 1);
-							} else {
-								showmessage('{lang error}', 'danger', '3000', 1);
-							}
+						if(json.success){
+							showmessage('删除成功', 'success', '3000', 1);
+						} else if(json.error){
+							showmessage(json.error, 'danger', '3000', 1);
+						} else {
+							showmessage('{lang error}', 'danger', '3000', 1);
 						}
 						table.reload('table');
 					},'json').fail(function() {
@@ -197,10 +195,10 @@
 					jQuery.post('{MOD_URL}&op=ajax&do=forbidden', {'sids': sids, "flag": 'forbidden'},function(json){
 						layer.close(loading);
 						layer.close(index);
-						if(json.msg == 'success'){
-							showmessage('删除成功', 'success', '3000', 1);
+						if(json.msg){
+							showmessage(json.msg, 'success', '3000', 1);
 						} else if(json.error){
-								showmessage(json.error, 'danger', '3000', 1);
+							showmessage(json.error, 'danger', '3000', 1);
 						} else {
 							showmessage('{lang shielding_failure}', 'danger', '3000', 1);
 						}
@@ -226,8 +224,8 @@
 					jQuery.post('{MOD_URL}&op=ajax&do=forbidden', {'sids': sids, "flag": 'allow'},function(json){
 						layer.close(loading);
 						layer.close(index);
-						if(json.msg == 'success'){
-							showmessage('删除成功', 'success', '3000', 1);
+						if(json.msg){
+							showmessage(json.msg, 'success', '3000', 1);
 						} else if(json.error){
 								showmessage(json.error, 'danger', '3000', 1);
 						} else {
