@@ -241,7 +241,9 @@ class dzz_app extends dzz_base{
 
 
         if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST)) {
-            $_GET = array_merge($_GET, $_POST);
+            foreach($_POST as $k => $v) {
+				$_GET[$k] = $v;
+			}
         }
 
         if(isset($_GET['page'])) {
@@ -374,7 +376,7 @@ class dzz_app extends dzz_base{
 
         static $check = array('"', '>', '<', '\'', 'CONTENT-TRANSFER-ENCODING');
 
-        if($_SERVER['REQUEST_METHOD'] == 'GET' ) {
+        if($_SERVER['REQUEST_METHOD'] == 'GET') {
             $temp = $_SERVER['REQUEST_URI'];
         } elseif(empty ($_GET['formhash'])) {
             $temp = $_SERVER['REQUEST_URI'].file_get_contents('php://input');

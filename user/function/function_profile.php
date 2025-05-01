@@ -60,7 +60,7 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 	$field['unchangeable'] = !$ignoreunchangable && $field['unchangeable'] ? 1 : 0;
 	if($fieldid == 'birthday') {
 		if($field['unchangeable'] && !empty($space[$fieldid])) {
-			return '<p class="form-control-static profile profile-'.$fieldid.'">'.$space['birthyear'].'-'.$space['birthmonth'].'-'.$space['birthday'].'</p><input type="hidden" name="birthyear" value="'.$space['birthyear'].'" />			<input type="hidden" name="birthmonth" value="'.$space['birthmonth'].'" /><input type="hidden" name="birthday" value="'.$space['birthday'].'" />';
+			return '<p class="form-control-static profile profile-'.$fieldid.'">'.$space['birthyear'].'-'.$space['birthmonth'].'-'.$space['birthday'].'</p><input type="hidden" name="birthyear" value="'.$space['birthyear'].'" /><input type="hidden" name="birthmonth" value="'.$space['birthmonth'].'" /><input type="hidden" name="birthday" value="'.$space['birthday'].'" />';
 		}
 		$birthyeayhtml = '';
 		$nowy = dgmdate($_G['timestamp'], 'Y');
@@ -89,19 +89,19 @@ function profile_setting($fieldid, $space=array(), $showstatus=false, $ignoreunc
 			$birthdayhtml .= "<option value=\"$i\"$selectstr>$i</option>";
 		}
 		$html = '<div class="input-group mb-3 profile-group-birthday">'
-					.'<select name="birthyear" id="birthyear"  onchange="showbirthday();" class="form-select form-control input-sm pull-left profile profile-birthyear"  style="width:80px;margin-right:5px;">'
-					.'<option value="">'.lang('year').'</option>'
-					.$birthyeayhtml
-					.'</select>'
-					.'<select name="birthmonth" id="birthmonth"  onchange="showbirthday();"  class="form-select form-control input-sm pull-left profile profile-birthmonth"    style="width:60px;margin-right:5px;">'
-					.'<option value="">'.lang('month').'</option>'
-					.$birthmonthhtml
-					.'</select>'
-					.'<select name="birthday" id="birthday" class="form-select form-control input-sm pull-left profile profile-birthday"    style="width:60px">'
-					.'<option value="">'.lang('day').'</option>'
-					.$birthdayhtml
-					.'</select>'
-				.'</div>';
+			.'<select name="birthyear" id="birthyear" onchange="showbirthday();" class="form-select form-control input-sm pull-left profile profile-birthyear"  style="width:80px;margin-right:5px;">'
+			.'<option value="">'.lang('year').'</option>'
+			.$birthyeayhtml
+			.'</select>'
+			.'<select name="birthmonth" id="birthmonth" onchange="showbirthday();" class="form-select form-control input-sm pull-left profile profile-birthmonth" style="width:60px;margin-right:5px;">'
+			.'<option value="">'.lang('month').'</option>'
+			.$birthmonthhtml
+			.'</select>'
+			.'<select name="birthday" id="birthday" class="form-select form-control input-sm pull-left profile profile-birthday" style="width:60px">'
+			.'<option value="">'.lang('day').'</option>'
+			.$birthdayhtml
+			.'</select>'
+		.'</div>';
 				
 	} elseif($fieldid=='gender') {
 		$space[$fieldid] = isset($space[$fieldid]) ? $space[$fieldid]:'';

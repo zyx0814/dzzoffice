@@ -495,7 +495,7 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 			el.find('.openwith').remove();
 		} else if (subdata.length > 1) {
 			for (var i = 0; i < subdata.length; i++) {
-				info += '			<li><a class="dropdown-item" onClick="_filemanage.Open(\'' + data.rid + '\',\'' + subdata[i].extid + '\')" href="javascript:;"><img class="filee-icon" src="' + subdata[i].icon + '">' + subdata[i].name + '</a></li>';
+				info += '<li><a class="dropdown-item" onClick="_filemanage.Open(\'' + data.rid + '\',\'' + subdata[i].extid + '\')" href="javascript:;"><img class="filee-icon" src="' + subdata[i].icon + '"><span class="file-text">' + subdata[i].name + '</span></a></li>';
 			}
 			el.find('.openwith').find('ul.dropdown-menu').html(info);
 		}

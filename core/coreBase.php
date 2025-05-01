@@ -18,6 +18,11 @@ define('DIVIDE','op');//路由操作键名
 define('DZZ_CORE_DEBUG', false);
 
 define('DZZ_TABLE_EXTENDABLE', false);
+
+if (PHP_VERSION_ID < 70000) {
+    exit('PHP version must be 7.0 or higher, current version: ' . PHP_VERSION);
+}
+
 global $_G,$_config;
 
 $_config = array();

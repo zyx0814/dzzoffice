@@ -58,7 +58,7 @@
             </span>
           </div>
         </div>
-        <div class="row mb-3">
+        <div class="row mb-1">
           <label for="password2" class="col-sm-2">{lang new_password_confirm}</label>
           <div class="col-sm-10">
             <input type="text" class="form-control" id="password2" name="password2" autocomplete="off" placeholder="{lang register_repassword_tips}">
@@ -285,10 +285,4 @@
 			return false;
 		});
 	});
-
-	function randomPass() {
-		var pass = (Math.round(Math.random() * 100000000));
-		jQuery('#password').val(pass).trigger('blur');
-		jQuery('#password2').val(pass).trigger('blur');
-	}
 </script>

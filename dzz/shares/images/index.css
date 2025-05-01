@@ -1,11 +1,11 @@
 ul,ul li,li{list-style:none;padding:0;margin:0}
 html{height:100%}
 body{width:100%;height:100%;overflow-y:hidden;font-family:"微软雅黑";min-width:768px}
+.nodropdown .dropdown-toggle::after{content:none;}
 .da-avatar .img-avatar{width:64px;height:64px;line-height:64px;font-size:32px}
 a i{opacity:1;_filter:Alpha(opacity=100)}
 input[type="text"]::-ms-clear{display:none!important}
 .sizeMenu li{float:left}
-.dropdown-menu>li>a{position:relative}
 .uploadMenu{position:relative;line-height:34px}
 .sharechtitle{float:left;line-height:24px;color:rgba(152,159,173,1)}
 .recyle-option-left{line-height:34px}
@@ -82,16 +82,16 @@ to{opacity:1}
 .menu-active{background:#F2F2F2;border:none}
 .menu-active>span{color:#4C89FB}
 .menu-icon{left:15px;font-size:16px;background-image:none}
-.dropdown-menu .file-text{padding-left:1.3rem}
+.dropdown-menu .file-text{padding-left:10px;padding-right:10px;}
 .menu-text,.file-text{left:45px;height:36px;width:140px}
 .menu-sep{margin:5px 0px;background:none;border-top:1px solid #EEEEEE}
 .menu-rightarrow{top:15px}
 .header-toggle{flex:1 0 auto;padding-left:2.42rem;display:flex;justify-content:flex-end}
 .navtopheader{position:fixed;top:0;left:0;width:100%;height:64px;z-index:1009;display:none}
 .navtoperate{background-color:#FFFFFF;box-shadow:0px 0px 15px 0px rgba(0,0,0,0.15)}
-.select-toperate{display:-webkit-flex;display:flex}
-.select-toperate-left{-webkit-flex:1 0 auto;flex:1 0 auto;-webkit-box-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start}
-.select-toperate-center{-webkit-flex:1 0 auto;flex:1 0 auto;vertical-align:middle;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:end;-webkit-justify-content:flex-end;justify-content:flex-end}
+.select-toperate{display:-webkit-flex;display:flex;flex-wrap:wrap;}
+.select-toperate-left{-webkit-flex: 1 0 auto;flex: 1 0 auto;-webkit-box-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start}
+.select-toperate-center{vertical-align:middle;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:end;-webkit-justify-content:flex-end;justify-content:flex-end}
 .select-toperate-right{-webkit-flex:0 auto;flex:0 auto;-webkit-justify-content:flex-end;justify-content:flex-end;vertical-align:middle;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:end}
 .selectall-box{padding-left:5px;width:auto;display:inline-block;line-height:64px}
 .selectall-box .dzz-backing-out{font-size:24px;cursor:pointer;display:inline-block;vertical-align:sub}
@@ -113,7 +113,6 @@ to{opacity:1}
 .new-buildMenu .newMenu{display:inline-block;margin-right:5px}
 .btn-cricular{border-radius:500px;color:#FFFFFF;background:none}
 .btn-cricular:hover,.btn-cricular:focus{color:#FFFFFF;background-color:rgba(0,0,0,0.2);box-shadow:none}
-.filemanage-detail-header{position:relative}
 .filemanage .detail_header_asc{vertical-align:text-top}
 .filemanage .detail_header_asc_1 span,.filemanage .detail_header_asc_0 span{display:none}
 .filemanage .detail_header_asc_1 .mdi-chevron-up{display:inline-block;}
@@ -121,11 +120,12 @@ to{opacity:1}
 .table>tbody>tr>td,.table>tfoot>tr>td,.table>thead>tr>td{padding:0.85rem}
 .table>thead>tr>th,.table>tfoot>tr>th,.table>tbody>tr>th{padding:1.42rem  0.85rem}
 .filemanage .detail_tr.Icoselected{background:#3779ff}
-.middleicon .Icoselected {box-shadow: 0 0 0 2px var(--bs-primary),0 10px 20px 0 rgba(0,0,0,0.1);}
+.middleicon .Icoselected {box-shadow: 0 0 0 2px #007bff,0 10px 20px 0 rgba(0,0,0,0.1);box-shadow: 0 0 0 2px var(--bs-primary),0 10px 20px 0 rgba(0,0,0,0.1);}
 .filemanage .detail_tr.Icoselected td{border-bottom:1px solid transparent;color:#FFFFFF;box-shadow:none}
 .filemanage .detail_tr.Icoselected td .detail_item_td_position_span{color:#FFFFFF}
 .filemanage .detail_tr.Icoselected td .detail_item_name_text input{color:#666666}
 .filemanage .detail_tr.Icoselected td .hoverTools .btn{color:#FFFFFF}
+.filemanage .detail_tr.Icoselected td .hoverTools .btn:hover{color:#000000}
 .filemanage .detail_text{text-shadow:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:inherit;max-width:-webkit-calc(100% - 60px);max-width:-moz-calc(100% - 60px);max-width:calc(100% - 60px);display:inline-block;float:left;word-break:break-all;}
 .member_item_td_select,.detail_item_td_select{padding-top:2px}
 .hoverTools{display:none;top:8px;right:8px;float:right}
@@ -138,22 +138,20 @@ to{opacity:1}
 .filemanage .detail_item_td_name,.filemanage td,.filemanage th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .yunfile-btnMenu .btn,.recycle-option-icon .btn,.share-option-icon .btn{padding:0px;font-size:14px;background:none;border:0;box-shadow:none}
 .yunfile-btnMenu .btn i,.recycle-option-icon .btn span,.share-option-icon .btn span{font-size:22px;vertical-align:top;padding:5px 9px;display:inline-block}
-.hoverTools .btn,.member_hoverTools .btn{color:rgba(78,85,99,0.65);font-size:18px;padding:0px 7px;background:none;border:0;box-shadow:none}
-.hoverTools .btn:hover,.member_hoverTools .btn:hover{color:rgba(78,85,99,1)}
+.hoverTools .btn,.member_hoverTools .btn{font-size:18px;padding:0px 7px;background:none;border:0;box-shadow:none}
 .recycle-option-icon .btn:hover,.share-option-icon .btn:hover{box-shadow:none;color:#666666;opacity:1}
 .mousehover{display:none}
 .shareMenu .btn:focus{border:none;outline:none;outline-offset:0}
 .recycle-option-icon button,.share-option-icon button{color:#666666;opacity:0.65}
 .yunfile-btnMenu{display:inline-block}
-.dropdown-menu .filee-icon{width:16px;height:16px;top:10px;margin-right:5px}
+.dropdown-menu .filee-icon{width:16px;height:16px;font-size:16px}
 .dropdown-menu >ul li:hover,.dropdown-menu > ul li > a:focus{background-color:#f3f3f3}
 .filemanage-header{position:relative;min-height:39px}
 .selectall-box a{position:absolute;z-index:10}
 .selectall-box .select-info{font-size:1.28rem;display:inline-block}
 .filemanage-header .select-info{display:block}
 .Icoblock.middleicon{width:180px;height:180px;margin:0.71rem 1.14rem 0.71rem 0.28rem}
-.fileMenu.middleicon{padding-top:0.71rem}
-.card .hover{background-color:#F2F2F2;}
+.hover.Icoblock.middleicon{background-color:#F2F2F2;}
 .Icoselected .tr_item_name{background-color:#3779ff}
 .Icoblock.middleicon .icoimgContainer{width:auto;height:auto;max-height:142px}
 .bs-left-container-close .da-avatar{display:none}

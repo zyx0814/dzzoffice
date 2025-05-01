@@ -9,13 +9,13 @@
   </div>
   <div class="card-body">
     <div class="row mb-3">
-      <label class="col-sm-2" for="$key">{lang orgname}</label>
+      <label class="col-sm-2" for="orgname">{lang orgname}</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" id="orgname" data-oldname="$org[orgname]" value="$org[orgname]" placeholder="{lang orgname_placeholder}" onchange="set_org_orgname('$org['orgid']',this)">
       </div>
     </div>
     <div class="row mb-3">
-      <label class="col-sm-2" for="$key">Logo</label>
+      <label class="col-sm-2">Logo</label>
       <div class="col-sm-10">
         <ul class="group-head">
           <li class="head-portrait">$org['avatar']</li>
@@ -29,23 +29,23 @@
       </div>
     </div>
     <div class="row mb-3">
-        <label class="col-sm-2" for="$key">{lang org_description}</label>
+        <label class="col-sm-2" for="arrdesc">{lang org_description}</label>
         <div class="col-sm-10">
-          <textarea class="form-control" name="arr[desc]" rows="1" placeholder="{lang org_description_placeholder}" onchange="set_org_desc('$org['orgid']',this.value)">$org[desc]</textarea>
+          <textarea class="form-control" id="arrdesc" name="arr[desc]" rows="1" placeholder="{lang org_description_placeholder}" onchange="set_org_desc('$org['orgid']',this.value)">$org[desc]</textarea>
         </div>
     </div>
     <!--{if $folder_available}-->
     <!--原共享目录设置：diron,此处暂时用来控制应用内是否开启共享目录，如网盘群组开关不开启，表示网盘内不显示该目录-->
     <div class="row mb-3">
-      <label for="userspace" class="col-sm-2">{lang shared_directory_set}</label>
+      <label class="col-sm-2">{lang shared_directory_set}</label>
         <div class="col-sm-10">
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" id="folder_available_1" name="fid" value="1" <!--{if $org[diron]>0}-->checked="checked"<!--{/if}--> onclick="folder_available(1,'$orgid');"  />
-          <label class="form-check-label" for="inlineRadio1">{lang enable}</label>
+          <label class="form-check-label" for="folder_available_1">{lang enable}</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" id="folder_available_0" name="fid"  value="0" <!--{if $org[diron]<1}-->checked="checked"<!--{/if}--> onclick="folder_available(0,'$orgid');" />
-          <label class="form-check-label" for="inlineRadio2">{lang no_enable}</label>
+          <label class="form-check-label" for="folder_available_0">{lang no_enable}</label>
         </div>
         <!--{if $org['forgid']<1}-->
         <small class="form-text">{lang detail_org_explorerapp_enable}</small>
@@ -57,11 +57,11 @@
     <!--{/if}-->
     <!--{if $_G['adminid']==1 || $topmoderator}-->
     <div class="row mb-3">
-    <label for="userspace" class="col-sm-2">{lang org_space_assign}</label>
+    <label for="maxspacesize" class="col-sm-2">{lang org_space_assign}</label>
       <div class="col-sm-10">
         <div class="input-group mb-3">
-        <input type="text" class="form-control" id="maxspacesize"  name="maxspacesize" value="$org['maxspacesize']" onchange="folder_maxspacesize(this,'$orgid')">
-        <span class="input-group-text" id="basic-addon2">M</span>
+        <input type="text" class="form-control" id="maxspacesize" name="maxspacesize" value="$org['maxspacesize']" onchange="folder_maxspacesize(this,'$orgid')">
+        <span class="input-group-text">M</span>
         </div>
         <ul class="form-text">
         <li>{lang org_space_assign_tip}:<span class="text-danger">{eval echo ($allowallotspace == 0) ? lang('no_limit'):formatsize($allowallotspace);}</span>
@@ -71,7 +71,7 @@
     </div>
     <!--{/if}-->
     <div class="row mb-3">
-      <label class="col-sm-2" for="$key"><!--{if $org[forgid]>0}-->{lang space_use_department}<!--{else}-->{lang space_use_org}<!--{/if}--></label>
+      <label class="col-sm-2"><!--{if $org[forgid]>0}-->{lang space_use_department}<!--{else}-->{lang space_use_org}<!--{/if}--></label>
       <div class="col-sm-10">
         <div class="progress" style="height: 1rem;">
           <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {eval echo round(100*($org['usesize']/($org['maxspacesize']?$org['maxspacesize']*1024*1024:($org['usesize']+1024*1024*1024))))}%;min-width: 100px;" aria-valuenow="{eval echo round(100*($org['usesize']/($org['maxspacesize']?$org['maxspacesize']*1024*1024:($org['usesize']+1024*1024*1024))))}" aria-valuemin="0" aria-valuemax="100">{eval echo formatsize($org['usesize'])}/{eval if($org['maxallotspacesize'] == -1) echo formatsize($org['usesize']);else echo ($org['maxallotspacesize'] == 0)?lang('no_limit'):formatsize($org['maxallotspacesize'])}</div>
@@ -82,7 +82,7 @@
       </div>
     </div>
     <div class="row mb-3">
-    <label class="col-sm-2" for="$key">{lang position_management}</label>
+    <label class="col-sm-2">{lang position_management}</label>
     <div class="col-sm-10 clearfix jobs">
       <!--{loop $jobs $value}-->
       <div id="job_$value[jobid]" orgid="$value['orgid']" class="job-item-edit float-start pe-2">
@@ -112,7 +112,7 @@
 
     </div>
     <div class="row mb-3">
-    <label class="col-sm-2" for="$key"><!--{if $org['forgid']<1}-->{lang organization}<!--{else}-->{lang department}<!--{/if}--> {lang administrator}</label>
+    <label class="col-sm-2"><!--{if $org['forgid']<1}-->{lang organization}<!--{else}-->{lang department}<!--{/if}--> {lang administrator}</label>
     <div class="col-sm-10">
       <ul id="moderators_container_$orgid" class="moderators-container list-unstyled clearfix">
         <!--{if $pmoderator}-->

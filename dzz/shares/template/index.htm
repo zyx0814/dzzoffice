@@ -68,62 +68,58 @@
 					<div class="navtopheader">
 					</div>
 					<div id="template_middleicon" style="display:none">
-						<div class="fileMenu middleicon window">
+						<div class="middleicon window">
 							<div class="square-fileList js-file-item-tpl clearfix">
-								<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon card"  rid="{rid}" flag="{flag}">
-									<div class="card-body text-truncate text-center toggleGlow">
+								<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon card border toggleGlow"  rid="{rid}" flag="{flag}">
+									<div class="card-body text-truncate text-center">
 										<div class="icoimgContainer">
-											<img class="Icoblock_icon" tsrc="{img}"  title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
+											<img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
 										</div>
 									</div>
-									<div class="card-footer text-truncate text-dark text-center" title="{name}">{name}</div>
+									<div class="m-2 text-truncate text-dark text-center" title="{name}">{name}</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div id="template_detaillist"  style="display:none">
-						<div class="fileMenu detaillist filemanage">
-							<div class="filemanage-detail-header">
-								<table class="table " width="100%" border="0" style="table-layout:fixed;margin:0">
+					<div id="template_detaillist" style="display:none">
+						<div class="detaillist filemanage">
+							<div class="paddingright-con js-list-body">
+								<table class="table table-hover align-middle ">
 									<thead class="detail_header_tr">
-									<tr>
-										<th disp="0" class=" detail_header detail_header_0" width="50%">
-											<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
-											<a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
+										<tr>
+											<th disp="0" class=" detail_header detail_header_0" width="50%">
+												<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
+												<a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
+													<span class="mdi mdi-chevron-up"></span>
+													<span class="mdi mdi-chevron-down"></span>
+												</a>
+												<div disp="0" class="detail_header_drag"></div>
+											</div>
+											</th>
+											<th disp="1" class=" detail_header detail_header_1 " width="15%">
+												<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
+											<a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
 												<span class="mdi mdi-chevron-up"></span>
 												<span class="mdi mdi-chevron-down"></span>
 											</a>
-											<div disp="0" class="detail_header_drag"></div>
-										</div>
-										</th>
-										<th disp="1" class=" detail_header detail_header_1 " width="15%">
-											<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
-										<a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
-											<span class="mdi mdi-chevron-up"></span>
-											<span class="mdi mdi-chevron-down"></span>
-										</a>
-											<div disp="1" class="detail_header_drag"></div>
-										</div>
-										</th>
-										<th disp="2" class="detail_header detail_header_2" width="15%">
-										<div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
-											<a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
+												<div disp="1" class="detail_header_drag"></div>
+											</div>
+											</th>
+											<th disp="2" class="detail_header detail_header_2" width="15%">
+											<div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
+												<a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
+													<span class="mdi mdi-chevron-up"></span>
+													<span class="mdi mdi-chevron-down"></span>
+												</a>
+												<div disp="2" class="detail_header_drag" style="float:right"></div>
+											</div>
+											</th>
+											<th disp="3" class=" detail_header detail_header_3 " width="20%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
 												<span class="mdi mdi-chevron-up"></span>
 												<span class="mdi mdi-chevron-down"></span>
-											</a>
-											<div disp="2" class="detail_header_drag" style="float:right"></div>
-										</div>
-										</th>
-										<th disp="3" class=" detail_header detail_header_3 " width="20%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
-											<span class="mdi mdi-chevron-up"></span>
-											<span class="mdi mdi-chevron-down"></span>
-										</a></div></th>
-									</tr>
+											</a></div></th>
+										</tr>
 									</thead>
-								</table>
-								</div>
-							<div class="paddingright-con  js-list-body">
-									<table class="table table-hover align-middle " width="100%" border="0" style="table-layout:fixed;margin:0">
 									<tbody class="js-file-item-tpl">
 										<tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock" rid="{rid}">
 										<td class="detail_item_td " valign="middle" width="50%" style="overflow:hidden;position:relative">
@@ -132,7 +128,7 @@
 												<a id="file_text_{rid}" class="detail_text detail_item_name_text text-dark">{name}</a>
 											</div>
 											<div class="hoverTools">
-												<button type="button" class="btn download" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
+												<button type="button" class="btn download dcolor" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
 											</div>
 										</td>
 										<td class="detail_item_td detail_item_td_size" valign="middle" width="15%" style="overflow:hidden">
@@ -146,8 +142,7 @@
 										</td>
 										</tr>
 									</tbody>
-									</table>
-								
+								</table>
 							</div>
 						</div>
 					</div>
@@ -164,12 +159,12 @@
 							</a>
 							<a href="javascript:;" type="button" class="btn downpackage multi dcolor" onclick="_filemanage.downpackage('{rid}')" ><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang downpackage}"></i>
 							</a>
-							<a href="javascript:;" type="button" class="btn property dcolor" onclick="_filemanage.property('{rid}')"><i class="mdi mdi-sort-variant" data-toggle="tooltip" data-placement="bottom" title="{lang property}"></i>
-							</a>
-							<div class="dropdown openwith single" style="display: inline-block;">
-								<a class="btn dropdown-toggle more dcolor" href="javascript:;" type="button" data-toggle="dropdown" role="button" aria-expanded="false" title="打开方式">打开方式</a>
+							<div class="dropdown openwith single nodropdown" style="display: inline-block;">
+								<a href="javascript:;" type="button" class="btn dropdown-toggle more dcolor" data-toggle="dropdown"><i class="mdi mdi mdi-open-in-new" data-toggle="tooltip" data-placement="bottom"  title="{lang openwith}"></i> </a>
 								<ul class="dropdown-menu"></ul>
 							</div>
+							<a href="javascript:;" type="button" class="btn property dcolor" onclick="_filemanage.property('{rid}')"><i class="mdi mdi-sort-variant" data-toggle="tooltip" data-placement="bottom" title="{lang property}"></i>
+							</a>
 						</div>
 						<script type="text/javascript" reload="1">
 							jQuery(function () {

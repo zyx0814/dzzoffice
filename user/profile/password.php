@@ -41,7 +41,9 @@ if($do == 'editpass'){
 				showTips(array('error'=>lang('password_error')), $type);
 			}
 		}  
-
+		if($_GET['password'] != addslashes($_GET['password'])) {
+			showTips(array('error'=>lang('profile_passwd_illegal')), $type);
+		}
         if($_GET['password'] && $_G['setting']['pwlength']) {
             if(strlen($_GET['password']) < $_G['setting']['pwlength']) {
 
