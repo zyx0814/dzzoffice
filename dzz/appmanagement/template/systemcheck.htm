@@ -27,6 +27,15 @@
 			$func_strextra
 		</tbody>
 	  </table>
+	<h5>PHP扩展信息<a href="{MOD_URL}&do=phpinfo" target="_blank" class="ms-2 btn btn-outline-primary btn-sm">PHP详情</a></h5>
+	<span class="badge badge-outline-yellow">此处显示的扩展并不表示都需要开启或关闭，根据自己的需要来决定。</span>
+	<div class="gallery-grid">
+		$func_str
+	</div>
+	<h5><span class="badge bg-primary rounded-pill">已加载的扩展：</span></h5>
+	<div class="card-footer">
+		$extensions
+	</div>
 	<!--{else}-->
 	<div class="alert alert-danger" role="alert">无法检测</div>
 	<!--{/if}-->

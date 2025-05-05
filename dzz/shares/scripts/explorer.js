@@ -307,7 +307,7 @@ _contextmenu.right_ico = function (e, rid) {
     var y = e.clientY;
     var obj = _explorer.sourcedata.icos[rid];
     if (!document.getElementById('right_contextmenu')) {
-        var el = jQuery('<div id="right_contextmenu" class="menu dtheme"></div>').appendTo(document.body);
+        var el = jQuery('<div id="right_contextmenu" class="menu dropdown-menu"></div>').appendTo(document.body);
     } else {
         var el = jQuery(document.getElementById('right_contextmenu'));
     }
@@ -382,11 +382,11 @@ _contextmenu.right_ico = function (e, rid) {
     } else if (subdata.length > 1) {
         var html = '<span class="menu-icon" ></span><span class="menu-text">' + __lang.method_open + '</span><span class="menu-rightarrow"></span>';
 
-        html += '<div class=" menu dtheme " style="display:none">';
+        html += '<div class=" menu dropdown-menu " style="display:none">';
         for (var i = 0; i < subdata.length; i++) {
-            html += '<div class="menu-item dcolor" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;">';
+            html += '<div class="menu-item dropdown-item" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;">';
             if (subdata[i].icon) {
-                html += '<span class="menu-icon" style="background:none"><img width="100%" height="100%" src=' + subdata[i].icon + '></span>';
+                html += '<span class="menu-icon"><img width="100%" height="100%" src=' + subdata[i].icon + '></span>';
             }
             html += '<span class="menu-text">' + subdata[i].name + '</span>';
             html += '</div>';
@@ -498,7 +498,7 @@ _contextmenu.right_body = function (e, fid) {
     html = html.replace(/\{fid\}/g, fid);
     html = html.replace(/\{filemanageid\}/g, _filemanage.winid);
     if (!document.getElementById('right_contextmenu')) {
-        var el = jQuery('<div id="right_contextmenu" class="menu dtheme"></div>').appendTo(document.body);
+        var el = jQuery('<div id="right_contextmenu" class="menu dropdown-menu"></div>').appendTo(document.body);
     } else {
         var el = jQuery(document.getElementById('right_contextmenu'));
     }

@@ -17,11 +17,11 @@
     background: rgba(77, 82, 89, 0.05);
     content: '';
     right: -15px;
-}
-.card-banner:not(.bg-white) [class*=col] .card:before {
-    background: rgba(255, 255, 255, 0.175);
-}
-@media screen and (max-width: 576px) {
+  }
+  .card-banner:not(.bg-white) [class*=col] .card:before {
+      background: rgba(255, 255, 255, 0.175);
+  }
+  @media screen and (max-width: 576px) {
     .card-banner [class*=col-] .card:before {
         width: calc(100% - 30px)!important;
         right: 15px!important;
@@ -30,7 +30,10 @@
     .card-banner [class*=col-]:first-child .card:before{
         display:none!important
     }
-}
+  }
+  .gallery-grid .gallery-item {
+    padding-bottom: 5px;
+  }
 </style>
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
@@ -175,9 +178,9 @@ $('#userstats').click(function() {
         shadeClose: true,
         id:'layeruserstats',
         shade: false,
-        maxmin: true, // 开启最大化最小化按钮
+        maxmin: true,
         area: ['50%', '70%'],
-        content: '{MOD_URL}&do=stats', // iframe的url
+        content: '{MOD_URL}&do=stats',
     });
 });
 </script>

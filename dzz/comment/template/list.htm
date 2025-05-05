@@ -126,7 +126,7 @@
 				});
 				template += '</div>';
 				layer.alert(template, {
-					title: '选中的文件数据',
+					title: '选中的评论列表',
 					btn: ['确定']
 				});
 				break;
@@ -253,7 +253,7 @@
 			}
 	
 			layer.alert(JSON.stringify(data), {
-				title: '当前行评论详情：',
+				title: 'ID <strong>' + data.id + '</strong> 详情：',
 				content: template,
 			});
 	

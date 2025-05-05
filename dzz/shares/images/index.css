@@ -77,13 +77,11 @@ input[type="text"]::-ms-clear{display:none!important}
 to{opacity:1}
 }@keyframes fadeMenu{0%{opacity:0;height:0}
 to{opacity:1}
-}.menu{border-radius:5px;box-shadow:0px 4px 13px 0px rgba(62,62,62,0.28);background:#fff;width:190px;padding:5px 0px;border:1px solid #D8D8D8;margin-left:2px}
+}.menu{box-shadow:0px 4px 13px 0px rgba(62,62,62,0.28);}
 .menu-item{height:36px;line-height:36px;border:none}
-.menu-active{background:#F2F2F2;border:none}
-.menu-active>span{color:#4C89FB}
 .menu-icon{left:15px;font-size:16px;background-image:none}
-.dropdown-menu .file-text{padding-left:10px;padding-right:10px;}
-.menu-text,.file-text{left:45px;height:36px;width:140px}
+.dropdown-menu .file-text{padding-left:8px;padding-right:16px;}
+.menu-text,.file-text{left:45px;height:36px;width:112px;text-overflow: ellipsis;white-space: nowrap;}
 .menu-sep{margin:5px 0px;background:none;border-top:1px solid #EEEEEE}
 .menu-rightarrow{top:15px}
 .header-toggle{flex:1 0 auto;padding-left:2.42rem;display:flex;justify-content:flex-end}
@@ -144,7 +142,7 @@ to{opacity:1}
 .shareMenu .btn:focus{border:none;outline:none;outline-offset:0}
 .recycle-option-icon button,.share-option-icon button{color:#666666;opacity:0.65}
 .yunfile-btnMenu{display:inline-block}
-.dropdown-menu .filee-icon{width:16px;height:16px;font-size:16px}
+.dropdown-menu .filee-icon{width:24px;height:24px;font-size:16px}
 .dropdown-menu >ul li:hover,.dropdown-menu > ul li > a:focus{background-color:#f3f3f3}
 .filemanage-header{position:relative;min-height:39px}
 .selectall-box a{position:absolute;z-index:10}

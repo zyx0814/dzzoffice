@@ -108,6 +108,12 @@
 		  ,{field:'type', title: '{lang file_type}', align: 'center', sort: true}
 		  ,{field:'relpath', title: '{lang file_location}', align: 'left'}
 		  ,{field:'dateline', title: '{lang add_time}', align: 'center', sort: true}
+		  ,{field:'FileUri', title: '文件地址', hide:true}
+		  ,{field:'md5', title: 'MD5', hide:true}
+		  ,{field:'copys', title: '引用数', align: 'center',hide:true}
+		  ,{field:'downloads', title: '下载次数', align: 'center',hide:true}
+		  ,{field:'views', title: '{lang view_count}', align: 'center',hide:true}
+		  ,{field:'edits', title: '{lang edit_times}', align: 'center',hide:true}
 		  ,{title: '{lang operation}',width:240, align:'center', toolbar: '#barDemo', fixed: 'right'}
 		]],
 		initSort: {
@@ -145,10 +151,13 @@
 						template += '<p><strong>{lang add_time}:</strong> ' + item.dateline + '</p>';
 						<!--{if $_G['adminid']}-->
 						if (item.FileUri) {
-							template += '<p><strong>直链地址:</strong> <a href="' + item.FileUri + '" target="_blank">' + item.FileUri + '</a></p>';
+							template += '<p><strong>文件地址:</strong> <a href="' + item.FileUri + '" target="_blank">' + item.FileUri + '</a></p>';
 						}
 						if (item.copys) {
-							template += '<p><strong>引用:</strong> ' + item.copys + '</p>';
+							template += '<p><strong>引用数:</strong> ' + item.copys + '</p>';
+						}
+						if (item.md5) {
+							template += '<p><strong>MD5:</strong> ' + item.md5 + '</p>';
 						}
 						<!--{/if}-->
 						if (item.isdelete !== undefined) {
@@ -161,7 +170,7 @@
 							template += '<p><strong>{lang view_count}:</strong> ' + item.views + '</p>';
 						}
 						if (item.edits) {
-							template += '<p><strong>修改次数:</strong> ' + item.edits + '</p>';
+							template += '<p><strong>{lang edit_times}:</strong> ' + item.edits + '</p>';
 						}
 						template += '</div>';
 						template += '</div>';
@@ -295,13 +304,14 @@
 			'<p><strong>{lang file_location}:</strong> ' + data.relpath + '</p>' +
 			'<p><strong>{lang add_time}:</strong> ' + data.dateline + '</p>' +
 			<!--{if $_G['adminid']}-->
-			(data.FileUri ? '<p><strong>直链地址:</strong> <a href="' + data.FileUri + '" target="_blank">' + data.FileUri + '</a></p>' : '') +
-			(data.copys ? '<p><strong>引用:</strong> ' + data.copys + '</p>' : '') +
+			(data.FileUri ? '<p><strong>文件地址:</strong> <a href="' + data.FileUri + '" target="_blank">' + data.FileUri + '</a></p>' : '') +
+			(data.copys ? '<p><strong>引用数:</strong> ' + data.copys + '</p>' : '') +
+			(data.md5 ? '<p><strong>MD5:</strong> ' + data.md5 + '</p>' : '') +
 			<!--{/if}-->
 			(data.isdelete !== undefined ? '<p><strong>是否在回收站:</strong> ' + data.isdelete + '</p>' : '') +
 			(data.downs ? '<p><strong>下载次数:</strong> ' + data.downs + '</p>' : '') +
 			(data.views ? '<p><strong>{lang view_count}:</strong> ' + data.views + '</p>' : '') +
-			(data.edits ? '<p><strong>修改次数:</strong> ' + data.edits + '</p>' : '');
+			(data.edits ? '<p><strong>{lang edit_times}:</strong> ' + data.edits + '</p>' : '');
 	
 			layer.alert(JSON.stringify(data), {
 				title: data.name + ' 详情：',

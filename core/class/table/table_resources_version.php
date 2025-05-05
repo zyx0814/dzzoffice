@@ -76,7 +76,7 @@ class table_resources_version extends dzz_table
        //$this->store_cache($cachekey,$versions);
        return $versions;
    }
-  public function delete_by_vid($vid,$rid=''){
+  public function delete_by_vid($vid,$rid='',$event=false){
        $vid = intval($vid);
 	   if(!$vinfo = parent::fetch($vid)) return false;
 	   if(empty($rid)) $rid=$vinfo['rid'];
@@ -91,6 +91,13 @@ class table_resources_version extends dzz_table
 		   if($vinfo['aid']) C::t('attachment')->delete_by_aid($vinfo['aid']);
            SpaceSize(-$vinfo['size'],$datainfo['gid'],1,$datainfo['uid']);
            C::t('resources_attr')->delete_by_rvid($rid,$vid);
+           if($event){
+            $position = C::t('resources_path')->fetch_pathby_pfid($datainfo['pfid']);
+            $position = preg_replace('/dzz:(.+?):/', '', $position);
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($datainfo['pfid'], $datainfo['gid']);
+            $eventdata = array('username' => $_G['username'], 'position' => $position, 'filename' => $datainfo['name'], 'version'=>$vid, 'hash' => $hash);
+            C::t('resources_event')->addevent_by_pfid($datainfo['pfid'], 'delete_version', 'delversion', $eventdata, $datainfo['gid'], $rid, $datainfo['name']);
+           }
            $this->clear_cache($cachekey);
 		   if($nvid){//如果删除的是主版本，需要重新设置文件其他版本为主版本
 			   self::set_primary_version_by_vid($nvid,true);
@@ -334,15 +341,28 @@ class table_resources_version extends dzz_table
     }
 
     //根据版本id修改版本名称
-    public function update_versionname_by_vid($vid,$vname){
+    public function update_versionname_by_vid($vid,$vname,$vdesc=''){
         global $_G;
         if(!$versioninfo = parent::fetch($vid)){
             return array('error'=>lang('file_not_exist'));
         }
         $cachekey = 'resourcesversiondata_'.$versioninfo['rid'];
-        if(DB::result_first("select count(*) from %t where vname = %s and rid = %s",array($this->_table,$vname,$versioninfo['rid'])) > 0 ){
-            return array('error'=>lang('explorer_name_repeat'));
+        $eventdesc = $eventname = '';
+        $sertarr = array();
+        if($versioninfo['vname'] != $vname) {
+            if(DB::result_first("select count(*) from %t where vname = %s and rid = %s",array($this->_table,$vname,$versioninfo['rid'])) > 0 ){
+                return array('error'=>lang('explorer_name_repeat'));
+            }
+            $sertarr['vname'] = $vname;
+            $eventname = 'edit_versionname';
+            $sertarr['dateline'] = TIMESTAMP;
         }
+        if($versioninfo['vdesc'] != $vdesc) {
+            $sertarr['vdesc'] = $vdesc;
+            $eventdesc = 'edit_versiondesc';
+            $sertarr['dateline'] = TIMESTAMP;
+        }
+        
         //文件基本信息
         $fileinfo = C::t('resources')->fetch_info_by_rid($versioninfo['rid']);
 
@@ -350,28 +370,40 @@ class table_resources_version extends dzz_table
         if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
             return array('error'=>lang('no_privilege'));
         }
-        $sertarr = array('vname'=>$vname,'dateline'=>TIMESTAMP);
+        if(empty($sertarr)){
+            return array('error'=>lang('explorer_do_failed'));
+        }
         if(parent::update($vid,$sertarr)){
             $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
             $path = preg_replace('/dzz:(.+?):/','',$path);
-            $event = 'edit_versionname';
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'],$fileinfo['gid']);
-            $eventdata = array(
-                'name' => $vname,
-                'filename'=>$fileinfo['name'],
-                'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-                'oldvname'=>($versioninfo['name']) ? $versioninfo['name']:dgmdate($versioninfo['dateline'],'Y-m-d H:i:s'),
-                'uid' => $_G['uid'],
-                'position'=>$path,
-                'hash'=>$hash
-            );
             $statis = array(
                 'edits'=>1,
                 'uid'=>$_G['uid'],
                 'editdateline'=>TIMESTAMP
             );
             C::t('resources_statis')->add_statis_by_rid($versioninfo['rid'],$statis);
-            C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], $event, 'editversionname', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
+            if($eventname) {
+                $eventdata = array(
+                    'name' => $vname,
+                    'filename'=>$fileinfo['name'],
+                    'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
+                    'uid' => $_G['uid'],
+                    'position'=>$path,
+                    'hash'=>$hash
+                );
+                C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], $eventname, 'editversionname', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
+            }
+            if($eventdesc) {
+                $eventdata1 = array(
+                    'filename'=>$fileinfo['name'],
+                    'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
+                    'uid' => $_G['uid'],
+                    'position'=>$path,
+                    'hash'=>$hash
+                );
+                C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], $eventdesc, 'editversiondesc', $eventdata1, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
+            }
             $this->clear_cache($cachekey);
             $this->clear_cache($versioninfo['rid']);
             return array('vid'=>$vid,'primaryvid'=>$fileinfo['vid'],'fdateline'=>dgmdate($versioninfo['dateline'],'Y-m-d H:i:s'));
@@ -381,7 +413,7 @@ class table_resources_version extends dzz_table
     }
 
     //根据rid修改版本名称,因版本表无数据,需先将主表数据放入版本表，然后更新主表和属性表
-    public function update_versionname_by_rid($rid,$vname){
+    public function update_versionname_by_rid($rid,$vname,$vdesc=''){
         global $_G;
         if(!$fileinfo = C::t('resources')->fetch_info_by_rid($rid)){
             return array('error'=>lang('file_not_exist'));
@@ -397,6 +429,7 @@ class table_resources_version extends dzz_table
             'uid'=>$fileinfo['uid'],
             'username'=>$fileinfo['username'],
             'vname'=>$vname,
+            'vdesc'=>$vdesc,
             'size'=>$fileinfo['size'],
             'ext'=>$fileinfo['ext'],
             'type'=>$fileinfo['type'],
@@ -410,7 +443,6 @@ class table_resources_version extends dzz_table
             //更新主表数据
             //DB::update('resources',array('vid'=>$vid),array('rid'=>$rid))
             if(C::t('resources')->update_by_rid($rid,array('vid'=>$vid))){
-
                 $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
                 $path = preg_replace('/dzz:(.+?):/','',$path);
                 $event = 'edit_versionname';
@@ -420,11 +452,20 @@ class table_resources_version extends dzz_table
                     'name' => $vname,
                     'filename'=>$fileinfo['name'],
                     'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-                    'oldvname'=>($fileinfo['name']) ? $fileinfo['name']:dgmdate($fileinfo['dateline'],'Y-m-d H:i:s'),
                     'uid' => $_G['uid'],
                     'position'=>$path,
                     'hash'=>$hash
                 );
+                if($vdesc) {
+                    $eventdata1 = array(
+                        'filename'=>$fileinfo['name'],
+                        'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
+                        'uid' => $_G['uid'],
+                        'position'=>$path,
+                        'hash'=>$hash
+                    );
+                    C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'edit_versiondesc', 'editversiondesc', $eventdata1, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
+                }
                 $statis = array(
                     'edits'=>1,
                     'uid'=>$_G['uid'],

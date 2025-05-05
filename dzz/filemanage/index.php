@@ -164,6 +164,7 @@ if ($do == 'delete') {
 			"type" => $data['ftype'],
 			"ftype" => $data['type'],
 			"oid" => $data['oid'],
+			"md5" => $data['md5'],
 			"relpath" => $data['relpath'],
 			"dateline" => $data['fdateline'],
 			"isdelete" => $isdelete?:'',

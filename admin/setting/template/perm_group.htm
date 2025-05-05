@@ -1,5 +1,4 @@
 <link rel="stylesheet" href="{MOD_PATH}/images/lsetting.css?{VERHASH}">
-<link rel="stylesheet" href="static/dzzicon/icon.css?{VERHASH}">
 <style type="text/css">
 	.view-eidt{
 		padding-right: 5px;
@@ -121,7 +120,7 @@
     <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
     <div class="fs-6 gallery-grid">
       <!--{loop $perms $k $val}-->
-      <div class="gallery-item"><span class="text-primary {$val[2]}"></span>$val[0]</div>
+      <div class="gallery-item"><span class="{$val[2]} text-primary pe-1"></span>$val[0]</div>
       <!--{/loop}-->
     </div>
   </div>

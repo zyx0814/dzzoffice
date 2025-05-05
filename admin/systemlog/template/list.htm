@@ -55,7 +55,7 @@ layui.use('table', function(){
 	where: {operation: operation},
 	title: '系统日志数据表格',
 	text: {
-		none: '暂无相关数据'
+		none: '暂无相关日志'
 	},
 	page: {
       limit: 20, // 默认显示20行
@@ -110,7 +110,7 @@ layui.use('table', function(){
 					});
 				template += '</div>';
 				layer.alert(template, {
-					title: '选中的文件数据',
+					title: '选中的日志信息',
 					btn: ['确定']
 				});
 				break;
@@ -141,7 +141,6 @@ table.on('sort(table)', function(obj){
   function showDataTemplate(obj) {
     var data = obj.data;
     var template = '<div>' +
-        '<p><strong>ID:</strong> ' + data.id + '</p>' +
         '<p><strong>{lang operator}:</strong> ' + data.operator + '</p>' +
         '<p><strong>{lang usergroup}:</strong> ' + data.usergroup + '</p>' +
         '<p><strong>IP:</strong> ' + data.ip + '</p>' +
@@ -153,7 +152,7 @@ table.on('sort(table)', function(obj){
         '</div>';
 
     layer.alert(template, {
-        title: '当前行日志详情：',
+        title: 'ID <strong>' + data.id + '</strong> 详情：',
         content: template,
     });
 

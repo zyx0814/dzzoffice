@@ -174,8 +174,27 @@ if ($do == 'stats') {
 		$env_str .= ($status ? "<td class=\"text-success\"><i class=\"mdi lead mdi-check-circle me-2\"></i>" : "<td class=\"nw text-danger\"><i class=\"mdi lead mdi-close-circle me-2\"></i>").$item['current']."</td>\n";
 		$env_str .= "</tr>\n";
 	}
+	$func_str = '';
+	$func_items = array('file_get_contents', 'xml_parser_create','filesize', 'curl_init','zip_open','ffmpeg','imagick','imagemagick','cURL','date','Exif','Fileinfo','Ftp','GD','gettext','intl','Iconv','json','ldap','Mbstring','Mcrypt','Memcached','MySQLi','SQLite3','OpenSSL','PDO','pdo_mysql','pdo_sqlite','Redis','session','Sockets','Swoole','dom','xml','SimpleXML','libxml','bz2','zip','zlib');
+	foreach($func_items as $item) {
+		$status = function_exists($item);
+		$func_str .= "<div class=\"gallery-item\">$item\n";
+		if($status) {
+		$func_str .= "<span class=\"mdi mdi-check-circle text-success\"></span>\n";
+		} else {
+		$func_str .= "<span class=\"mdi mdi-close-circle text-danger\"></span>\n";
+		}
+		$func_str .= "</div>\n";
+	}
+	$loaded_extensions = get_loaded_extensions();
+	$extensions = '';
+	foreach ($loaded_extensions as $key => $value) {
+		$extensions .= '<span class="badge badge-outline-primary rounded-pill m-1">'.$value . '</span>';
+	}
 	include template('systemcheck');
 	exit();
+} elseif ($do == 'phpinfo'){
+	exit(phpinfo());
 }
 $appdata=DB::fetch_all("select appname,appico,appurl,identifier from %t where `group`=3 and isshow>0 and `available`>0",array('app_market')); 
 $data=array();
@@ -217,87 +236,85 @@ function phpBuild64(){
 	return true;
 }
 function getData($time,$starttime,$endtime){
-	
 	$endtime=strtotime($endtime);
 	$data=array('total'=>array(),
-				'add'=>array(),
-				'total_d'=>array(),
-				'add_d'=>array(),
-				);
+		'add'=>array(),
+		'total_d'=>array(),
+		'add_d'=>array(),
+	);
 	switch($time){
-			case 'month':
-				$stamp=strtotime($starttime);
-				$arr=getdate($stamp);
-				$key=$arr['year'].'-'.$arr['mon'];
+		case 'month':
+			$stamp=strtotime($starttime);
+			$arr=getdate($stamp);
+			$key=$arr['year'].'-'.$arr['mon'];
+			$low=strtotime($key);
+			$up=strtotime('+1 month',$low);
+			$ltotal=$data['total'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d",array('user',$up));
+			$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
+			$ltotal+=$data['add'][$key];
+			while($up<=$endtime){
+				$key=dgmdate($up,'Y-m');
 				$low=strtotime($key);
 				$up=strtotime('+1 month',$low);
-				$ltotal=$data['total'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d",array('user',$up));
 				$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
 				$ltotal+=$data['add'][$key];
-				while($up<=$endtime){
-					$key=dgmdate($up,'Y-m');
-					$low=strtotime($key);
-					$up=strtotime('+1 month',$low);
-					$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
-					$ltotal+=$data['add'][$key];
-					$data['total'][$key]=$ltotal;
-				}
-				break;
-			case 'week':
-				$stamp=strtotime($starttime);
-				$arr=getdate($stamp);
-				$low=strtotime('+'.(1-$arr['wday']).' day',$stamp);
+				$data['total'][$key]=$ltotal;
+			}
+			break;
+		case 'week':
+			$stamp=strtotime($starttime);
+			$arr=getdate($stamp);
+			$low=strtotime('+'.(1-$arr['wday']).' day',$stamp);
+			$up=strtotime('+1 week',$low);
+			$key=dgmdate($low,'m-d').'~'.dgmdate($up-60*60*24,'m-d');
+			$ltotal=$data['total'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d",array('user',$up));
+			$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
+			$ltotal+=$data['add'][$key];
+			while($up<$endtime){
+				$low=$up;
 				$up=strtotime('+1 week',$low);
 				$key=dgmdate($low,'m-d').'~'.dgmdate($up-60*60*24,'m-d');
-				$ltotal=$data['total'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d",array('user',$up));
 				$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
 				$ltotal+=$data['add'][$key];
-				while($up<$endtime){
-					$low=$up;
-					$up=strtotime('+1 week',$low);
-					$key=dgmdate($low,'m-d').'~'.dgmdate($up-60*60*24,'m-d');
-					$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
-					$ltotal+=$data['add'][$key];
-					$data['total'][$key]=$ltotal;
-				}
-				break;
-			case 'day':
-				$low=strtotime($starttime);//strtotime('+'.(1-$arr['hours']).' day',$stamp);
-				$up=$low+24*60*60;
+				$data['total'][$key]=$ltotal;
+			}
+			break;
+		case 'day':
+			$low=strtotime($starttime);//strtotime('+'.(1-$arr['hours']).' day',$stamp);
+			$up=$low+24*60*60;
+			$key=dgmdate($low,'Y-m-d');
+			$ltotal=$data['total'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d",array('user',$up));
+			$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
+			$ltotal+=$data['add'][$key];
+			while($up<=$endtime){
+				$low=$up;
+				$up=strtotime('+1 day',$low);
 				$key=dgmdate($low,'Y-m-d');
-				$ltotal=$data['total'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d",array('user',$up));
 				$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
 				$ltotal+=$data['add'][$key];
-				while($up<=$endtime){
-					$low=$up;
-					$up=strtotime('+1 day',$low);
-					$key=dgmdate($low,'Y-m-d');
-					$data['add'][$key]=DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d",array('user',$up,$low));
-					$ltotal+=$data['add'][$key];
-					$data['total'][$key]=$ltotal;
-				}
-				break;
-			case 'all':
-				$min=DB::result_first("select min(regdate) from %t where regdate>0",array('user'));
-				$min-=60;
-				$max=TIMESTAMP+60*60*8;
-				$days=($max-$min)/(60*60*24);
-				if($days<20){
-					$time='day';
-					$starttime=gmdate('Y-m-d',$min);
-					$endtime=gmdate('Y-m-d',$max);
-				}elseif($days<70){
-					$time='week';
-					$starttime=gmdate('Y-m-d',$min);
-					$endtime=gmdate('Y-m-d',$max);
-				}else{
-					$time='month';
-					$starttime=gmdate('Y-m',$min);
-					$endtime=gmdate('Y-m',$max);
-				}
-				$data=getData($time,$starttime,$endtime);
-				break;
-		}
-		
+				$data['total'][$key]=$ltotal;
+			}
+			break;
+		case 'all':
+			$min=DB::result_first("select min(regdate) from %t where regdate>0",array('user'));
+			$min-=60;
+			$max=TIMESTAMP+60*60*8;
+			$days=($max-$min)/(60*60*24);
+			if($days<20){
+				$time='day';
+				$starttime=gmdate('Y-m-d',$min);
+				$endtime=gmdate('Y-m-d',$max);
+			}elseif($days<70){
+				$time='week';
+				$starttime=gmdate('Y-m-d',$min);
+				$endtime=gmdate('Y-m-d',$max);
+			}else{
+				$time='month';
+				$starttime=gmdate('Y-m',$min);
+				$endtime=gmdate('Y-m',$max);
+			}
+			$data=getData($time,$starttime,$endtime);
+			break;
+	}
 	return $data;
 }

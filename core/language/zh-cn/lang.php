@@ -1510,6 +1510,7 @@ $_G[siteurl]',
 	'file_new_no_privilege'=>'抱歉！您没有该目录的新建权限',
 	'file_been_deleted'=>'文件已删除',
 	'system' =>'系统',
+	'edit_times' =>'修改次数',
 );
 
 ?>
