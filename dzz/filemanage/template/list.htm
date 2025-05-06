@@ -2,8 +2,8 @@
 <link rel="stylesheet" href="static/lyear/js/layui/css/layui.css">
 <style>
 	.icon {
-		width: 24px;
-		height: 24px;
+		width: 20px;
+		height: 20px;
 		margin-right: 5px;
 	}
 	.iconFirstWord {
@@ -92,12 +92,12 @@
 		},
 		page: {
 		  limit: 20, // 默认显示20行
-		  limits: [10, 20, 50, 100, 200, 500, 900] // 可选的行数
+		  limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
 		},
 		cellMinWidth: 80 //全局定义常规单元格的最小宽度
 		,cols: [[
 		{type:'checkbox', fixed: 'left'}
-		  ,{field:'id', title: 'ID',width:80, fixed: 'left'}
+		  ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
 		  <!--{if $_G['adminid']}-->,{field:'username', title: '{lang possessor}', sort: true, align: 'center',templet: function(d) {
           return d.username;
         }}<!--{/if}-->
@@ -124,7 +124,7 @@
 	  //头工具栏事件
 	table.on('toolbar(table)', function(obj){
 		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
-		var data = checkStatus.data;
+		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
 				if (data.length === 0) {
@@ -134,14 +134,14 @@
 				var template = '<div class="accordion">';
 					data.forEach(function(item) {
 						template += '<div class="accordion-item">';
-						template += '<h2 class="accordion-header" id="Open-heading' + item.id + '">';
-						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.id + '" aria-expanded="true" aria-controls="Open-collapse' + item.id + '">';
+						template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
 						template += '{lang filename}：' + item.name;
 						template += '</button>';
 						template += '</h2>';
-						template += '<div id="Open-collapse' + item.id + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.id + '">';
+						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
 						template += '<div class="accordion-body">';
-						template += '<p><strong>ID:</strong> ' + item.id + '</p>';
+						template += '<p><strong>ID:</strong> ' + item.LAY_NUM + '</p>';
 						<!--{if $_G['adminid']}-->
 						template += '<p><strong>{lang possessor}:</strong> ' + item.username + '</p>';
 						<!--{/if}-->
@@ -178,8 +178,7 @@
 					});
 				template += '</div>';
 				layer.alert(template, {
-					title: '选中的文件数据',
-					btn: ['确定']
+					title: '选中的文件数据'
 				});
 				break;
 				case 'delete':
@@ -201,7 +200,7 @@
 							layer.close(index);
 							if(json['msg']=='success'){
 								showmessage('删除成功', 'success', '3000', 1);
-								table.reload('table');
+								table.reloadData('table');
 							}else if(json['msg']){
 								showmessage(json['msg'], 'danger', '3000', 1);
 							} else {
@@ -216,10 +215,10 @@
 					});
 				break;
 				case 'get':
-				layui.table.reload('table', {
-					where: {type: type}, // 清空搜索参数
+				table.reloadData('table', {
+					where: {type: type},
 					page: {
-						curr: 1 //重新从第 1 页开始
+						curr: 1
 					}
 				});
 				break; 
@@ -227,13 +226,13 @@
 		});
 	  //监听工具条
 	  table.on('tool(table)', function(obj){
-		var data = obj.data;
+		var data = obj.dataCache;
 		if(obj.event === 'detail'){
 			showDataTemplate(obj);
 		} else if(obj.event === 'view'){
 			if (obj.data.ftype == 'folder') {
 				// 刷新表格并传递搜索参数
-				table.reload('table', {
+				table.reloadData('table', {
 					where: { pfid: obj.data.oid},
 					page: {
 						curr: 1
@@ -280,7 +279,7 @@
 	  });
 	  //触发排序事件 
 	table.on('sort(table)', function(obj){
-		table.reload('table', {
+		table.reloadData('table', {
 			initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
 			,where: {
 				field: obj.field //排序字段
@@ -290,11 +289,12 @@
 	});
 	  table.on('rowDouble(table)', function(obj){
 		showDataTemplate(obj);
+		console.log(obj);
 	  });
 		function showDataTemplate(obj) {
-			var data = obj.data;
+			var data = obj.dataCache;
 			var template =
-			'<p><strong>ID:</strong> ' + data.id + '</p>' +
+			'<p><strong>ID:</strong> ' + data.LAY_NUM+ '</p>' +
 			'<p><strong>{lang filename}:</strong> ' + data.name + '</p>' +
 			<!--{if $_G['adminid']}-->
 			'<p><strong>{lang possessor}:</strong> ' + data.username + '</p>' + 
@@ -313,20 +313,18 @@
 			(data.views ? '<p><strong>{lang view_count}:</strong> ' + data.views + '</p>' : '') +
 			(data.edits ? '<p><strong>{lang edit_times}:</strong> ' + data.edits + '</p>' : '');
 	
-			layer.alert(JSON.stringify(data), {
-				title: data.name + ' 详情：',
-				content: template,
+			layer.alert(template, {
+				title: data.name + ' 详情：'
 			});
-	
-		// 标注选中样式
-		obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+			// 标注选中样式
+			obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
 		}
 		// 搜索按钮功能
 		$(document).on('click', '#search-btn', function() {
 		// 获取搜索关键词
 		var keyword = $('#keyword').val();
 		// 刷新表格并传递搜索参数
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: { keyword: keyword,orgid:$('#sel_orgid_{$org['orgid']}').val() },
 		  page: {
 			curr: 1 //重新从第 1 页开始
@@ -335,7 +333,7 @@
 	  });
 	  var pfid = '';
 		$(document).on('click', '.fid-btn', function() {
-			table.reload('table', {
+			table.reloadData('table', {
 				where: {pfid:pfid}, // 清空搜索参数
 				page: {
 					curr: 1 //重新从第 1 页开始
@@ -350,7 +348,7 @@
 		// 重置按钮内容
 		$('#orgid_{$org['orgid']}_Menu').text('$org[depart]');
 		// 刷新表格
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: {type: type}, // 清空搜索参数
 		  page: {
 			curr: 1 //重新从第 1 页开始
@@ -368,7 +366,7 @@
 		type = $(this).data('type');
 		$('#keyword').val('');
 		// 刷新表格并传递 operation 参数
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: {type: type},
 		  page: {
 			curr: 1 //重新从第 1 页开始

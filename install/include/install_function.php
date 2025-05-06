@@ -301,6 +301,8 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
 			echo $func_str.$func_strextra;
 			echo "</table>\n";
 		}
+		echo "<h2 class=\"title\">其他检查</h2>\n";
+		echo "<p class=\"tb\">数据库需使用MYSQL5.0~8.0之间的版本，其他版本可能不能正常使用。</p>\n";
 	show_next_step(2,$error_code);
 	show_footer();
 }

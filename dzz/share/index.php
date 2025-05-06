@@ -52,12 +52,10 @@ if ($do == 'getinfo') {
     }
   }
   $sharestatus = array('-5'=>lang('sharefile_isdeleted_or_positionchange'),'-4' => '<span class="layui-badge">'.lang('been_blocked').'</span>', '-3' => '<span class="layui-badge">'.lang('file_been_deleted').'</span>', '-2' => '<span class="layui-badge layui-bg-gray">'.lang('degree_exhaust').'</span>', '-1' => '<span class="layui-badge layui-bg-gray">'.lang('logs_invite_status_4').'</span>', '0' => '<span class="layui-badge layui-bg-blue">'.lang('founder_upgrade_normal').'</span>');
-  $id = $start + 1;
   $data = array();
   foreach ($list as $value) {
     $sharelink=C::t('shorturl')->getShortUrl(getglobal('siteurl').'index.php?mod=shares&sid='.dzzencode($value['id']));
       $data[] = [
-        "id" => $id++,
         "sid" => $value['id'],
         "username" => '<a href="user.php?uid='.$value['uid'].'" target="_blank">'.$value['username'].'</a>',
         "title" => '<a href="'.$sharelink.'" target="_blank">'.$value['title'].'</a>',

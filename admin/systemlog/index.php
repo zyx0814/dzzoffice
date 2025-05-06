@@ -111,7 +111,6 @@ if ($do == 'getinfo') {
 				$usergroup[$group['groupid']] = $group['grouptitle'];
 			}
 			$list=array();
-			$id = $start + 1;
 			foreach($logs as $logrow) {
 				$log = explode("\t", $logrow); 
 				if(empty($log[1])) {
@@ -125,7 +124,6 @@ if ($do == 'getinfo') {
 					$loginfo = mb_convert_encoding($log[5], 'UTF-8', 'auto');
 				}
 				$list[] = [
-					"id" => $id++,
 					"operator" => $log[2] ? $log[2] : "",
 					"usergroup" => $log[3] ? $log[3] : "",
 					"ip" => $log[4] ? $log[4] : "",

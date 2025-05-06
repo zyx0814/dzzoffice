@@ -132,7 +132,6 @@ if ($do == 'delete') {
 		$data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $whereClause $order $limitsql", $param);
 	}
 	$list = array();
-	$id = $start + 1;
 	foreach ($data as $value) {
 		if (!$data = C::t('resources')->fetch_by_rid($value['rid'])) {
 			continue;
@@ -155,7 +154,6 @@ if ($do == 'delete') {
 			$FileUri = '';
 		}
 		$list[] = [
-			"id" => $id++,
 			"username" => '<a href="user.php?uid='.$data['uid'].'" target="_blank">'.$data['username'].'</a>',
 			"rid" => $data['rid'],
 			"name" => '<img class="icon" src="'.$data['img'].'">'.$data['name'],
