@@ -1413,12 +1413,6 @@ function fetchOffset(obj, mode) {
 	return {'left' : left_offset, 'top' : top_offset};
 }
 
-
-
-
-
-
-
 function showError(msg) {
 	var p = /<script[^\>]*?>([^\x00]*?)<\/script>/ig;
 	msg = msg.replace(p, '');
@@ -1594,7 +1588,6 @@ function simulateSelect(selectId, widthvalue) {
 	};
 }
 
-
 function ctrlEnter(event, btnId, onlyEnter) {
 	if(isUndefined(onlyEnter)) onlyEnter = 0;
 	if((event.ctrlKey || onlyEnter) && event.keyCode == 13) {
@@ -1603,8 +1596,6 @@ function ctrlEnter(event, btnId, onlyEnter) {
 	}
 	return true;
 }
-
-
 
 function updatestring(str1, str2, clear) {
 	str2 = '_' + str2 + '_';
@@ -1633,12 +1624,6 @@ function setCopy(text, msg){
 	}
 }
 
-
-
-
-
-
-
 var secST = new Array();
 
 function strLenCalc(obj, checklen, maxlen) {
@@ -1654,7 +1639,6 @@ function strLenCalc(obj, checklen, maxlen) {
 		obj.value = mb_cutstr(v, maxlen, 0);
 	}
 }
-
 
 if(BROWSER.ie && BROWSER.ie<11) {
 	try{document.documentElement.addBehavior("#default#userdata");}catch(e){}
@@ -1710,7 +1694,6 @@ function checksec(type, idhash, showmsg, recall) {
 	});
 }
 
-
 function showdistrict(container, elems, totallevel, changelevel, containertype) {
 	var getdid = function(elem) {
 		var op = elem.options[elem.selectedIndex];
@@ -1754,8 +1737,6 @@ function showbirthday(){
 	}
 	el.value = birthday;
 }
-
-
 
 var tipTimer=[];
 function showTip(ctrlobj,pos,msg) {

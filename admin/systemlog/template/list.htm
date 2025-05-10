@@ -55,16 +55,16 @@ layui.use('table', function(){
 	where: {operation: operation},
 	title: '系统日志数据表格',
 	text: {
-		none: '暂无相关数据'
+		none: '暂无相关日志'
 	},
 	page: {
       limit: 20, // 默认显示20行
-      limits: [10, 20, 50, 100, 200, 500, 900] // 可选的行数
+      limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
     },
     cellMinWidth: 80 //全局定义常规单元格的最小宽度
     ,cols: [[
-	{type:'checkbox', fixed: 'left'},
-      {field:'id', title: 'ID',width:80, fixed: 'left', sort: true}
+	{type:'checkbox', fixed: 'left'}
+	,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
       ,{field:'operator', title: '{lang operator}', align: 'center', sort: true}
       ,{field:'usergroup', title: '{lang usergroup}', align: 'center', sort: true}
       ,{field:'ip', title: 'IP', align: 'center', sort: true}
@@ -79,7 +79,7 @@ layui.use('table', function(){
     //头工具栏事件
 	table.on('toolbar(table)', function(obj){
 		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
-		var data = checkStatus.data;
+		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
 				if (data.length === 0) {
@@ -89,12 +89,12 @@ layui.use('table', function(){
 				var template = '<div class="accordion">';
 					data.forEach(function(item) {
 						template += '<div class="accordion-item">';
-						template += '<h2 class="accordion-header" id="Open-heading' + item.id + '">';
-						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.id + '" aria-expanded="true" aria-controls="Open-collapse' + item.id + '">';
-						template += 'ID：' + item.id;
+						template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+						template += 'ID：' + item.LAY_NUM;
 						template += '</button>';
 						template += '</h2>';
-						template += '<div id="Open-collapse' + item.id + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.id + '">';
+						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
 						template += '<div class="accordion-body">';
 						template += '<p><strong>{lang operator}:</strong> ' + item.operator + '</p>';
 						template += '<p><strong>{lang usergroup}:</strong> ' + item.usergroup + '</p>';
@@ -110,12 +110,11 @@ layui.use('table', function(){
 					});
 				template += '</div>';
 				layer.alert(template, {
-					title: '选中的文件数据',
-					btn: ['确定']
+					title: '选中的日志信息'
 				});
 				break;
 				case 'get':
-				layui.table.reload('table', {
+				table.reloadData('table', {
 					where: {operation: operation}, // 清空搜索参数
 					page: {
 					curr: 1 //重新从第 1 页开始
@@ -126,7 +125,6 @@ layui.use('table', function(){
 		});
   //监听工具条
   table.on('tool(table)', function(obj){
-    var data = obj.data;
     if(obj.event === 'detail'){
 		showDataTemplate(obj);
     }
@@ -139,9 +137,8 @@ table.on('sort(table)', function(obj){
 	showDataTemplate(obj);
   });
   function showDataTemplate(obj) {
-    var data = obj.data;
+    var data = obj.dataCache;
     var template = '<div>' +
-        '<p><strong>ID:</strong> ' + data.id + '</p>' +
         '<p><strong>{lang operator}:</strong> ' + data.operator + '</p>' +
         '<p><strong>{lang usergroup}:</strong> ' + data.usergroup + '</p>' +
         '<p><strong>IP:</strong> ' + data.ip + '</p>' +
@@ -153,8 +150,7 @@ table.on('sort(table)', function(obj){
         '</div>';
 
     layer.alert(template, {
-        title: '当前行日志详情：',
-        content: template,
+        title: 'ID <strong>' + data.LAY_NUM + '</strong> 详情：'
     });
 
     // 标注选中样式
@@ -165,7 +161,7 @@ table.on('sort(table)', function(obj){
     // 获取搜索关键词
     var keyword = $('#keyword').val();
     // 刷新表格并传递搜索参数
-    table.reload('table', {
+    table.reloadData('table', {
       where: { keyword: keyword },
       page: {
         curr: 1 //重新从第 1 页开始
@@ -177,7 +173,7 @@ table.on('sort(table)', function(obj){
     // 清空表单内容
     $('#keyword').val('');
     // 刷新表格
-    table.reload('table', {
+    table.reloadData('table', {
       where: {operation: operation}, // 清空搜索参数
       page: {
         curr: 1 //重新从第 1 页开始
@@ -194,7 +190,7 @@ table.on('sort(table)', function(obj){
 	operation = $(this).data('operation');
 	$('#keyword').val('');
     // 刷新表格并传递 operation 参数
-    table.reload('table', {
+    table.reloadData('table', {
       where: {operation: operation },
       page: {
         curr: 1 //重新从第 1 页开始

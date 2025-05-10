@@ -11,12 +11,14 @@ if(!defined('IN_DZZ')||!$_GET['path']) {
 $path=dzzdecode($_GET['path']);
 $meta=IO::getMeta($path);
 if(!$meta) showmessage(lang('file_not_exist'));
-if(!perm_check::checkperm('download',$meta)){
-	$perm_download=0;
-	$perm_print=0;
-}else{
-	$perm_download=1;
-	$perm_print=1;
+$perm_download=1;
+$perm_print=1;
+if($meta['rid']) {
+	if(!perm_check::checkperm('read', $meta)) showmessage(lang('file_read_no_privilege'),dreferer());
+	if(!perm_check::checkperm('download',$meta)){
+		$perm_download=0;
+		$perm_print=0;
+	}
 }
 $navtitle = $meta['name'];
 include template('viewer');

@@ -55,11 +55,9 @@ if ($do == 'getinfo') {
 		$data = DB::fetch_all("SELECT * FROM " . DB::table('comment') . " WHERE $whereClause $order $limitsql", $param);
 	}
     $list = array();
-    $id = $start + 1;
     foreach ($data as $value) {
         $user=getuserbyuid($value['edituid']);
         $list[] = [
-			"id" => $id++,
 			"authorid" => $value['author'],
 			"ip" => $value['ip'],
 			"xtllq" => $value['xtllq'],

@@ -1543,7 +1543,7 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .text-dark{--bs-text-opacity:1;color:#212529;color:rgba(33,37,41,var(--bs-text-opacity)) !important}
 .text-black{--bs-text-opacity:1;color:#000000;color:rgba(0,0,0,var(--bs-text-opacity)) !important}
 .text-white{--bs-text-opacity:1;color:#ffffff;color:rgba(255,255,255,var(--bs-text-opacity)) !important}
-.text-body{--bs-text-opacity:1;color:rgba(73,80,87,1);color:rgba(73,80,87,var(--bs-text-opacity)) !important}
+.text-body{--bs-text-opacity:1;color:#495057;color:rgba(73,80,87,var(--bs-text-opacity)) !important}
 .text-muted{--bs-text-opacity:1;color:#6c757d !important}
 .text-black-50{--bs-text-opacity:1;color:rgba(0,0,0,.5) !important}
 .text-white-50{--bs-text-opacity:1;color:rgba(255,255,255,.5) !important}
@@ -2532,3 +2532,4 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .has-feedback.row .mdi{left:15px}
 .flex-container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .notify{border-color:#ededee;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:8px;width:350px;max-width:400px;font-size:.875rem;pointer-events:auto;background-color:#fff;background-clip:padding-box;border:0 solid #d3d4d3}
+.is-block{display:block}

@@ -67,12 +67,12 @@
 	},
 	page: {
 		limit: 20, // 默认显示20行
-		limits: [10, 20, 50, 100, 200, 500, 900] // 可选的行数
+		limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
 	},
 	cellMinWidth: 80 //全局定义常规单元格的最小宽度
 	,cols: [[
 	{type:'checkbox', fixed: 'left'}
-		,{field:'id', title: 'ID',width:80, fixed: 'left'}
+	,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
 		,{field:'title', title: '{lang sharing_file}', align: 'center', sort: true,templet: function(d) {
 			return d.title;
 		}}
@@ -97,7 +97,7 @@
 	//头工具栏事件
 	table.on('toolbar(table)', function(obj){
 		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
-		var data = checkStatus.data;
+		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
 				if (data.length === 0) {
@@ -108,14 +108,14 @@
 				var template = '<div class="accordion">';
 					data.forEach(function(item) {
 						template += '<div class="accordion-item">';
-						template += '<h2 class="accordion-header" id="Open-heading' + item.id + '">';
-						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.id + '" aria-expanded="true" aria-controls="Open-collapse' + item.id + '">';
+						template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
 						template += '{lang sharing_file}：' + item.title;
 						template += '</button>';
 						template += '</h2>';
-						template += '<div id="Open-collapse' + item.id + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.id + '">';
+						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
 						template += '<div class="accordion-body">';
-						template += '<p><strong>ID:</strong> ' + item.id + '</p>';
+						template += '<p><strong>ID:</strong> ' + item.LAY_NUM + '</p>';
 						template += '<p><strong>{lang sharing_file}:</strong> ' + item.title + '</p>';
 						template += '<p><strong>{lang share_time}:</strong> ' + item.dateline + '</p>';
 						<!--{if $_G['adminid']}-->
@@ -148,8 +148,7 @@
 					});
 				template += '</div>';
 				layer.alert(template, {
-					title: '选中的文件数据',
-					btn: ['确定']
+					title: '选中的分享信息'
 				});
 				break;
 				case 'delete':
@@ -166,16 +165,14 @@
 					jQuery.post('{MOD_URL}&op=ajax&do=delete', {'sids': sids},function(json){
 						layer.close(loading);
 						layer.close(index);
-						for(var o in json.msg){
-							if(json.msg[o]['success']){
-								showmessage('删除成功', 'success', '3000', 1);
-							} else if(json.msg[o]['error']){
-								showmessage(json.msg[o]['error'], 'danger', '3000', 1);
-							} else {
-								showmessage('{lang error}', 'danger', '3000', 1);
-							}
+						if(json.success){
+							showmessage('删除成功', 'success', '3000', 1);
+						} else if(json.error){
+							showmessage(json.error, 'danger', '3000', 1);
+						} else {
+							showmessage('{lang error}', 'danger', '3000', 1);
 						}
-						table.reload('table');
+						table.reloadData('table');
 					},'json').fail(function() {
 							layer.close(loading);
 							layer.close(index);
@@ -197,14 +194,14 @@
 					jQuery.post('{MOD_URL}&op=ajax&do=forbidden', {'sids': sids, "flag": 'forbidden'},function(json){
 						layer.close(loading);
 						layer.close(index);
-						if(json.msg == 'success'){
-							showmessage('删除成功', 'success', '3000', 1);
+						if(json.msg){
+							showmessage(json.msg, 'success', '3000', 1);
 						} else if(json.error){
-								showmessage(json.error, 'danger', '3000', 1);
+							showmessage(json.error, 'danger', '3000', 1);
 						} else {
 							showmessage('{lang shielding_failure}', 'danger', '3000', 1);
 						}
-						table.reload('table');
+						table.reloadData('table');
 					},'json').fail(function() {
 							layer.close(loading);
 							layer.close(index);
@@ -226,14 +223,14 @@
 					jQuery.post('{MOD_URL}&op=ajax&do=forbidden', {'sids': sids, "flag": 'allow'},function(json){
 						layer.close(loading);
 						layer.close(index);
-						if(json.msg == 'success'){
-							showmessage('删除成功', 'success', '3000', 1);
+						if(json.msg){
+							showmessage(json.msg, 'success', '3000', 1);
 						} else if(json.error){
 								showmessage(json.error, 'danger', '3000', 1);
 						} else {
 							showmessage('{lang cancel_shielding_failure}', 'danger', '3000', 1);
 						}
-						table.reload('table');
+						table.reloadData('table');
 					},'json').fail(function() {
 							layer.close(loading);
 							layer.close(index);
@@ -242,7 +239,7 @@
 				});
 				break;
 				case 'get':
-				layui.table.reload('table', {
+				table.reloadData('table', {
 					where: {type: type}, // 清空搜索参数
 					page: {
 						curr: 1 //重新从第 1 页开始
@@ -253,7 +250,7 @@
 		});
 	  //监听工具条
 	  table.on('tool(table)', function(obj){
-		var data = obj.data;
+		var data = obj.dataCache;
 		if(obj.event === 'detail'){
 			showDataTemplate(obj);
 		} else if(obj.event === 'copy'){
@@ -262,7 +259,7 @@
 	  });
 	  //触发排序事件 
 	table.on('sort(table)', function(obj){
-		table.reload('table', {
+		table.reloadData('table', {
 			initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
 			,where: {
 				field: obj.field //排序字段
@@ -274,9 +271,9 @@
 		showDataTemplate(obj);
 	  });
 		function showDataTemplate(obj) {
-			var data = obj.data;
+			var data = obj.dataCache;
 			var template =
-			'<p><strong>ID:</strong> ' + data.id + '</p>' +
+			'<p><strong>ID:</strong> ' + data.LAY_NUM + '</p>' +
 			'<p><strong>{lang sharing_file}:</strong> ' + data.title + '</p>' +
 			'<p><strong>{lang share_time}:</strong> ' + data.dateline + '</p>' +
 			<!--{if $_G['adminid']}-->
@@ -290,9 +287,8 @@
 			(data.status ? '<p><strong>状态:</strong> ' + data.status + '</p>' : '') +
 			(data.number ? '<p><strong>{lang limited_number}:</strong> ' + data.number + '</p>' : '');
 	
-			layer.alert(JSON.stringify(data), {
-				title: data.title+' 详情：',
-				content: template,
+			layer.alert(template, {
+				title: data.title+' 详情：'
 			});
 	
 		// 标注选中样式
@@ -318,7 +314,7 @@
 		var keyword = $('#keyword').val();
 		var username = $('#username').val();
 		// 刷新表格并传递搜索参数
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: { keyword: keyword,username:username},
 		  page: {
 			curr: 1 //重新从第 1 页开始
@@ -331,7 +327,7 @@
         $('#username').val('');
         $('#keyword').val('');
 		// 刷新表格
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: {type: type}, // 清空搜索参数
 		  page: {
 			curr: 1 //重新从第 1 页开始
@@ -350,7 +346,7 @@
 		operation = $(this).data('operation');
 		type = $(this).data('type');
 		// 刷新表格并传递 operation 参数
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: {type: type},
 		  page: {
 			curr: 1 //重新从第 1 页开始

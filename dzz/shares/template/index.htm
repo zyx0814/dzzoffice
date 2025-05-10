@@ -68,62 +68,58 @@
 					<div class="navtopheader">
 					</div>
 					<div id="template_middleicon" style="display:none">
-						<div class="fileMenu middleicon window">
+						<div class="middleicon window">
 							<div class="square-fileList js-file-item-tpl clearfix">
-								<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon card"  rid="{rid}" flag="{flag}">
-									<div class="card-body text-truncate text-center toggleGlow">
+								<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon card border toggleGlow"  rid="{rid}" flag="{flag}">
+									<div class="card-body text-truncate text-center">
 										<div class="icoimgContainer">
-											<img class="Icoblock_icon" tsrc="{img}"  title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
+											<img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
 										</div>
 									</div>
-									<div class="card-footer text-truncate text-dark text-center" title="{name}">{name}</div>
+									<div class="m-2 text-truncate text-dark text-center" title="{name}">{name}</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div id="template_detaillist"  style="display:none">
-						<div class="fileMenu detaillist filemanage">
-							<div class="filemanage-detail-header">
-								<table class="table " width="100%" border="0" style="table-layout:fixed;margin:0">
+					<div id="template_detaillist" style="display:none">
+						<div class="detaillist filemanage">
+							<div class="paddingright-con js-list-body">
+								<table class="table table-hover align-middle ">
 									<thead class="detail_header_tr">
-									<tr>
-										<th disp="0" class=" detail_header detail_header_0" width="50%">
-											<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
-											<a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
+										<tr>
+											<th disp="0" class=" detail_header detail_header_0" width="50%">
+												<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
+												<a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
+													<span class="mdi mdi-chevron-up"></span>
+													<span class="mdi mdi-chevron-down"></span>
+												</a>
+												<div disp="0" class="detail_header_drag"></div>
+											</div>
+											</th>
+											<th disp="1" class=" detail_header detail_header_1 " width="15%">
+												<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
+											<a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
 												<span class="mdi mdi-chevron-up"></span>
 												<span class="mdi mdi-chevron-down"></span>
 											</a>
-											<div disp="0" class="detail_header_drag"></div>
-										</div>
-										</th>
-										<th disp="1" class=" detail_header detail_header_1 " width="15%">
-											<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
-										<a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
-											<span class="mdi mdi-chevron-up"></span>
-											<span class="mdi mdi-chevron-down"></span>
-										</a>
-											<div disp="1" class="detail_header_drag"></div>
-										</div>
-										</th>
-										<th disp="2" class="detail_header detail_header_2" width="15%">
-										<div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
-											<a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
+												<div disp="1" class="detail_header_drag"></div>
+											</div>
+											</th>
+											<th disp="2" class="detail_header detail_header_2" width="15%">
+											<div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
+												<a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
+													<span class="mdi mdi-chevron-up"></span>
+													<span class="mdi mdi-chevron-down"></span>
+												</a>
+												<div disp="2" class="detail_header_drag" style="float:right"></div>
+											</div>
+											</th>
+											<th disp="3" class=" detail_header detail_header_3 " width="20%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
 												<span class="mdi mdi-chevron-up"></span>
 												<span class="mdi mdi-chevron-down"></span>
-											</a>
-											<div disp="2" class="detail_header_drag" style="float:right"></div>
-										</div>
-										</th>
-										<th disp="3" class=" detail_header detail_header_3 " width="20%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
-											<span class="mdi mdi-chevron-up"></span>
-											<span class="mdi mdi-chevron-down"></span>
-										</a></div></th>
-									</tr>
+											</a></div></th>
+										</tr>
 									</thead>
-								</table>
-								</div>
-							<div class="paddingright-con  js-list-body">
-									<table class="table table-hover align-middle " width="100%" border="0" style="table-layout:fixed;margin:0">
 									<tbody class="js-file-item-tpl">
 										<tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock" rid="{rid}">
 										<td class="detail_item_td " valign="middle" width="50%" style="overflow:hidden;position:relative">
@@ -132,7 +128,7 @@
 												<a id="file_text_{rid}" class="detail_text detail_item_name_text text-dark">{name}</a>
 											</div>
 											<div class="hoverTools">
-												<button type="button" class="btn download" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
+												<button type="button" class="btn download dcolor" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
 											</div>
 										</td>
 										<td class="detail_item_td detail_item_td_size" valign="middle" width="15%" style="overflow:hidden">
@@ -146,8 +142,7 @@
 										</td>
 										</tr>
 									</tbody>
-									</table>
-								
+								</table>
 							</div>
 						</div>
 					</div>
@@ -164,12 +159,12 @@
 							</a>
 							<a href="javascript:;" type="button" class="btn downpackage multi dcolor" onclick="_filemanage.downpackage('{rid}')" ><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang downpackage}"></i>
 							</a>
-							<a href="javascript:;" type="button" class="btn property dcolor" onclick="_filemanage.property('{rid}')"><i class="mdi mdi-sort-variant" data-toggle="tooltip" data-placement="bottom" title="{lang property}"></i>
-							</a>
-							<div class="dropdown openwith single" style="display: inline-block;">
-								<a class="btn dropdown-toggle more dcolor" href="javascript:;" type="button" data-toggle="dropdown" role="button" aria-expanded="false" title="打开方式">打开方式</a>
+							<div class="dropdown openwith single nodropdown" style="display: inline-block;">
+								<a href="javascript:;" type="button" class="btn dropdown-toggle more dcolor" data-toggle="dropdown"><i class="mdi mdi mdi-open-in-new" data-toggle="tooltip" data-placement="bottom"  title="{lang openwith}"></i> </a>
 								<ul class="dropdown-menu"></ul>
 							</div>
+							<a href="javascript:;" type="button" class="btn property dcolor" onclick="_filemanage.property('{rid}')"><i class="mdi mdi-sort-variant" data-toggle="tooltip" data-placement="bottom" title="{lang property}"></i>
+							</a>
 						</div>
 						<script type="text/javascript" reload="1">
 							jQuery(function () {
@@ -214,73 +209,73 @@
 </main>
 <div id="contextmenu" style="display: none;"> 
 	<div id="right_ico">
-		<div class="menu-item open dcolor" onclick="_filemanage.Open('{rid}');jQuery('#right_contextmenu').hide();">
+		<div class="menu-item dropdown-item open" onclick="_filemanage.Open('{rid}');jQuery('#right_contextmenu').hide();">
 			<span class="menu-icon mdi mdi-folder-open"></span>
 			<span class="menu-text">{lang open}</span>
 		</div>
-		<div class="menu-item openwith dcolor">
+		<div class="menu-item dropdown-item openwith">
 			<span class="menu-icon mdi mdi-file-export"></span>
 			<span class="menu-text">{lang openwith}</span>
 			<span class="menu-rightarrow"></span>
-			<div class="menu" style="display: none;">
+			<div class="menu dropdown-menu" style="display: none;">
 			</div>
 		</div>
 		<span class="menu-sep"></span>
-		<div class="menu-item allsave dcolor" onclick="allsave()">
+		<div class="menu-item dropdown-item allsave" onclick="allsave()">
 			<span class="menu-icon mdi mdi-content-save"></span>
 			<span class="menu-text">{lang save}</span>
 		</div>
-	   <div class="menu-item download dcolor" onclick="_filemanage.downAttach('{rid}');jQuery('#right_contextmenu').hide();">
+	   <div class="menu-item dropdown-item download" onclick="_filemanage.downAttach('{rid}');jQuery('#right_contextmenu').hide();">
 			   <span class="menu-icon mdi mdi-download"></span>
 			<span class="menu-text">{lang download}</span>
 		</div>
-		<div class="menu-item downpackage dcolor" onclick="_filemanage.downpackage('{rid}');jQuery('#right_contextmenu').hide();">
+		<div class="menu-item dropdown-item downpackage" onclick="_filemanage.downpackage('{rid}');jQuery('#right_contextmenu').hide();">
 			<span class="menu-icon mdi mdi-download"></span>
 			<span class="menu-text">{lang downpackage}</span>
 		</div>
 	   
-		<div class="menu-item property dcolor" onclick="_filemanage.property('{rid}');jQuery('#right_contextmenu').hide();">
+		<div class="menu-item dropdown-item property" onclick="_filemanage.property('{rid}');jQuery('#right_contextmenu').hide();">
 			<span class="menu-icon mdi mdi-sort-variant"></span>
 			<span class="menu-text">{lang property}</span>
 		</div>
 		
 	</div>
 	<div id="right_body">
-	 <div class="menu-item">
+	 <div class="menu-item dropdown-item">
 		<span class="menu-icon filee-icon"></span>
 		<span class="menu-text">{lang iconviev}</span>
 		<span class="menu-rightarrow"></span>
-		<div class="menu dtheme" style="display: none;">
-			<div class="menu-item" iconview="2" onclick="_filemanage.Arrange(this,'{filemanageid}','2');">
+		<div class="menu dropdown-menu" style="display: none;">
+			<div class="menu-item dropdown-item" iconview="2" onclick="_filemanage.Arrange(this,'{filemanageid}','2');">
 				<span view="2" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-iconview"></span>
 				<span class="menu-text">{lang iconview_2}</span>
 			</div>
-			<div class="menu-item" iconview="4" onclick="_filemanage.Arrange(this,'{filemanageid}','4')">
+			<div class="menu-item dropdown-item" iconview="4" onclick="_filemanage.Arrange(this,'{filemanageid}','4')">
 				<span view="4" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-iconview"></span>
 				<span class="menu-text">{lang iconview_4}</span>
 			</div>		    	
 		</div>
 	 </div>
 	
-	 <div class="menu-item sort">
+	 <div class="menu-item dropdown-item sort">
 		<span class="menu-icon filee-icon"></span>
 		<span class="menu-text">{lang sort}</span>
 		<span class="menu-rightarrow"></span>
-		<div class="menu dtheme" style="display: none;">
-			<div class="menu-item disp0" onclick="_filemanage.Disp(this,'{filemanageid}','0')">
+		<div class="menu dropdown-menu" style="display: none;">
+			<div class="menu-item dropdown-item disp0" onclick="_filemanage.Disp(this,'{filemanageid}','0')">
 				<span disp="0" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_0"></span>
 				<span class="menu-text">{lang menu_filemanagedisp_0} <span class="caret"></span></span>
 				
 			</div>
-			<div class="menu-item disp1" onclick="_filemanage.Disp(this,'{filemanageid}','1')">
+			<div class="menu-item dropdown-item disp1" onclick="_filemanage.Disp(this,'{filemanageid}','1')">
 				<span disp="1" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_1"></span>
 				<span class="menu-text">{lang menu_filemanagedisp_1} <span class="caret"></span></span>
 			</div>
-			<div class="menu-item disp2" onclick="_filemanage.Disp(this,'{filemanageid}','2')">
+			<div class="menu-item dropdown-item disp2" onclick="_filemanage.Disp(this,'{filemanageid}','2')">
 				<span disp="2" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_2"></span>
 				<span class="menu-text">{lang menu_filemanagedisp_2} <span class="caret"></span></span>
 			</div>
-			<div class="menu-item disp3" onclick="_filemanage.Disp(this,'{filemanageid}','3')">
+			<div class="menu-item dropdown-item disp3" onclick="_filemanage.Disp(this,'{filemanageid}','3')">
 				<span disp="3" class="menu-icon mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_3"></span>
 				<span class="menu-text">{lang menu_filemanagedisp_3} <span class="caret"></span></span>
 			</div>
@@ -288,58 +283,58 @@
 	</div>
 	 <span class="menu-sep"></span>
 	
-	<div class="menu-item create">
+	<div class="menu-item dropdown-item create">
 		<span class="menu-icon mdi mdi-upload"></span>
 		<span class="menu-text">{lang new_and_upload}</span>
 		<span class="menu-rightarrow"></span>
-		<div class="menu dtheme" style="display: none;">
-			<div class="menu-item newfolder" onclick="_filemanage.NewIco('newFolder');jQuery('#right_contextmenu').hide();">
+		<div class="menu dropdown-menu" style="display: none;">
+			<div class="menu-item dropdown-item newfolder" onclick="_filemanage.NewIco('newFolder');jQuery('#right_contextmenu').hide();">
 				<span class="menu-icon mdi mdi-folder"></span>
 				<span class="menu-text">{lang newfolder}</span>
 			 </div>
 			 <span class="menu-sep"></span>
-			  <div class="menu-item upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);return true;">
+			  <div class="menu-item dropdown-item upload" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);return true;">
 				<span class="menu-icon mdi mdi-upload"></span>
 				<span class="menu-text">{lang uploadfile}</span>
 			 </div>
-			 <div class="menu-item uploadfolder" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);return true;">
+			 <div class="menu-item dropdown-item uploadfolder" style="overflow:hidden" onClick="jQuery('#right_contextmenu').css('z-index',-99999999);return true;">
 				<span class="menu-icon mdi mdi-folder"></span>
 				<span class="menu-text">{lang uploadfolder}</span>
 			 </div>
 			 <span class="menu-sep"></span>
-			 <div class="menu-item newlink" onclick="_filemanage.NewIco('newLink');jQuery('#right_contextmenu').hide();">
+			 <div class="menu-item dropdown-item newlink" onclick="_filemanage.NewIco('newLink');jQuery('#right_contextmenu').hide();">
 				<span class="menu-icon mdi mdi-web"></span>
 				<span class="menu-text">{lang newlink}</span>
 			  </div>
-			   <div class="menu-item newtext" onclick="_filemanage.NewIco('newTxt');jQuery('#right_contextmenu').hide();">
+			   <div class="menu-item dropdown-item newtext" onclick="_filemanage.NewIco('newTxt');jQuery('#right_contextmenu').hide();">
 					<span class="menu-icon mdi mdi-file"></span>
 					<span class="menu-text">{lang extname_txt}</span>
 				</div>
 				<span class="menu-sep"></span>
-				<div class="menu-item newdoc" onclick="_filemanage.NewIco('newDoc');jQuery('#right_contextmenu').hide();">
+				<div class="menu-item dropdown-item newdoc" onclick="_filemanage.NewIco('newDoc');jQuery('#right_contextmenu').hide();">
 					<span class="menu-icon mdi mdi-file-word filee-icon filee-file-text"></span>
 					<span class="menu-text">{lang newdoc}</span>
 				</div> 
-				<div class="menu-item newexcel" onclick="_filemanage.NewIco('newExcel');jQuery('#right_contextmenu').hide();">
+				<div class="menu-item dropdown-item newexcel" onclick="_filemanage.NewIco('newExcel');jQuery('#right_contextmenu').hide();">
 					<span class="menu-icon mdi mdi-file-excel filee-icon filee-file-excel"></span>
 					<span class="menu-text">{lang newexcel}</span>
 				</div>
-				<div class="menu-item newpowerpoint" onclick="_filemanage.NewIco('newPowerPoint');jQuery('#right_contextmenu').hide();">
+				<div class="menu-item dropdown-item newpowerpoint" onclick="_filemanage.NewIco('newPowerPoint');jQuery('#right_contextmenu').hide();">
 					<span class="menu-icon mdi mdi-file-compare filee-icon filee-file-ppt"></span>
 					<span class="menu-text">{lang newpowerpoint}</span>
 				</div>
-				<div class="menu-item newpdf" onclick="_filemanage.NewIco('newpdf');jQuery('#right_contextmenu').hide();">
+				<div class="menu-item dropdown-item newpdf" onclick="_filemanage.NewIco('newpdf');jQuery('#right_contextmenu').hide();">
 					<span class="menu-icon mdi mdi-file-pdf-box filee-icon filee-file-pdf"></span>
 					<span class="menu-text">{lang newpdf}</span>
 				</div>
 		 </div>
 	</div>
 	 <span class="menu-sep"></span>
-	 <div class="menu-item property" onclick="window.location.reload();">
+	 <div class="menu-item dropdown-item property" onclick="window.location.reload();">
 		<span class="menu-icon mdi mdi-autorenew"></span>
 		<span class="menu-text">{lang refresh}</span>
 	</div> 
-	<div class="menu-item property" onClick="_filemanage.property('{fid}',1);jQuery('#right_contextmenu').hide();">
+	<div class="menu-item dropdown-item property" onClick="_filemanage.property('{fid}',1);jQuery('#right_contextmenu').hide();">
 		<span class="menu-icon mdi mdi-sort-variant"></span>
 		<span class="menu-text">{lang property}</span>
 	 </div> 

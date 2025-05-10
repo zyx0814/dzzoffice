@@ -867,7 +867,7 @@ $lang = array (
 	'register_activation_message' => '抱歉，您输入的用户名 "{username}" 已存在，请登录站点激活此帐号',
 	'profile_password_tooshort' => '密码太短了，至少要{pwlength}个字符',
 	'profile_required_info_invalid' => '抱歉，您尚未填写必填项目或必填项目格式不正确',
-	'profile_passwd_illegal'=>'请填写密码',
+	'profile_passwd_illegal'=>'抱歉，密码为空或包含非法字符',
 	'register_email_verify' => '<p>感谢您注册 {sitename}</p><p>系统给您发送了一封激活邮件，快去登录邮箱激活账号吧</p><p><a href="index.php?open=password">重新接收验证邮件</a></p>',
 	'register_manual_verify' => '<p>感谢您的注册，站点开启了人工验证注册用户，请等待审核</p>',
 	'register_succeed' => '<p>感谢您注册 {sitename}，现在将以 {usergroup} 身份登录站点</p><p><a href="index.php?open=profile">现在去完善资料</a></p>',
@@ -1510,6 +1510,7 @@ $_G[siteurl]',
 	'file_new_no_privilege'=>'抱歉！您没有该目录的新建权限',
 	'file_been_deleted'=>'文件已删除',
 	'system' =>'系统',
+	'edit_times' =>'修改次数',
 );
 
 ?>

@@ -1,5 +1,4 @@
 <link rel="stylesheet" href="{MOD_PATH}/images/lsetting.css?{VERHASH}">
-<link rel="stylesheet" href="static/dzzicon/icon.css?{VERHASH}">
 <style type="text/css">
 	.view-eidt{
 		padding-right: 5px;
@@ -47,11 +46,11 @@
                   <label class="col-sm-2">{lang choose_permission}</label>
                   <div class="col-sm-10 gallery-grid">
                     <!--{loop $perms $k $val}-->
-                  <div class="form-check form-check-inline gallery-item">
-                    <input class="form-check-input" type="checkbox" name="perms[]" id="$val[2]" value="$val[1]">
-                    <label class="form-check-label" for="$val[2]"><span class="{$val[2]} view-eidt perm_chk" data-perm="$val[1]"></span><span>$val[0]</span></label>
-                  </div>
-                  <!--{/loop}-->
+                    <div class="form-check form-check-inline gallery-item">
+                      <input class="form-check-input" type="checkbox" name="perms[]" id="$val[2]" value="$val[1]">
+                      <label class="form-check-label" for="$val[2]"><span class="{$val[2]} view-eidt perm_chk" data-perm="$val[1]"></span><span>$val[0]</span></label>
+                    </div>
+                    <!--{/loop}-->
                   </div>
                 </div>
               </div>
@@ -121,7 +120,7 @@
     <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
     <div class="fs-6 gallery-grid">
       <!--{loop $perms $k $val}-->
-      <div class="gallery-item"><span class="text-primary {$val[2]}"></span>$val[0]</div>
+      <div class="gallery-item"><span class="{$val[2]} text-primary pe-1"></span>$val[0]</div>
       <!--{/loop}-->
     </div>
   </div>

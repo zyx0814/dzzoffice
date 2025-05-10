@@ -276,9 +276,14 @@ if ($do == 'add') {
 					showmessage('profile_password_tooshort', '', array('pwlength' => $_G['setting']['pwlength']));
 				}
 			}
-
+		
 			if ($_GET['password'] !== $_GET['password2']) {
 				showmessage('profile_passwd_notmatch');
+			}
+		
+			// 添加密码的合法性校验
+			if ($_GET['password'] != addslashes($_GET['password'])) {
+				showmessage('profile_passwd_illegal');
 			}
 		}
 		$password = $_GET['password'];

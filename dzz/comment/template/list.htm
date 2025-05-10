@@ -59,12 +59,12 @@
 		},
 		page: {
 		  limit: 20, // 默认显示20行
-		  limits: [10, 20, 50, 100, 200, 500, 900] // 可选的行数
+		  limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
 		},
 		cellMinWidth: 80 //全局定义常规单元格的最小宽度
 		,cols: [[
 		{type:'checkbox', fixed: 'left'}
-		  ,{field:'id', title: 'ID',width:80, fixed: 'left'}
+		,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
 		  ,{field:'dateline', title: '评论时间', align: 'center', sort: true}
 		  <!--{if $_G['adminid']}-->,{field:'authorid', title: '评论者', align: 'center', sort: true}
 		  ,{field:'edituid', title: '编辑者', align: 'center', sort: true}
@@ -82,7 +82,7 @@
 	  //头工具栏事件
 	table.on('toolbar(table)', function(obj){
 		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
-		var data = checkStatus.data;
+		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
 				if (data.length === 0) {
@@ -92,12 +92,12 @@
 				var template = '<div class="accordion">';
 				data.forEach(function(item) {
 					template += '<div class="accordion-item">';
-					template += '<h2 class="accordion-header" id="Open-heading' + item.id + '">';
-					template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.id + '" aria-expanded="true" aria-controls="Open-collapse' + item.id + '">';
-					template += 'ID：' + item.id;
+					template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+					template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+					template += 'ID：' + item.LAY_NUM;
 					template += '</button>';
 					template += '</h2>';
-					template += '<div id="Open-collapse' + item.id + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.id + '">';
+					template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
 					template += '<div class="accordion-body">';
 					<!--{if $_G['adminid']}-->
 					template += '<p><strong>评论者:</strong> ' + item.authorid + '</p>';
@@ -126,8 +126,7 @@
 				});
 				template += '</div>';
 				layer.alert(template, {
-					title: '选中的文件数据',
-					btn: ['确定']
+					title: '选中的评论列表'
 				});
 				break;
 				case 'delete':
@@ -149,7 +148,7 @@
 							layer.close(index);
 							if(json['msg']=='success'){
 								showmessage('删除成功', 'success', '3000', 1);
-								table.reload('table');
+								table.reloadData('table');
 								return false;
 							}else if(json['msg']){
 								showmessage(json['msg'], 'danger', '3000', 1);
@@ -165,7 +164,7 @@
 					});
 				break;
 				case 'get':
-					layui.table.reload('table', {
+					table.reloadData('table', {
 						where: {type: type}, // 清空搜索参数
 						page: {
 							curr: 1 //重新从第 1 页开始
@@ -176,7 +175,7 @@
 		});
 	  //监听工具条
 	  table.on('tool(table)', function(obj){
-		var data = obj.data;
+		var data = obj.dataCache;
 		if(obj.event === 'edit'){
 			showWindow('publish_edit_'+data.cid,'{MOD_URL}&op=ajax&do=edit&template=1&cid='+data.cid+'&allowattach=3&allowat=1&allowsmiley=1','get',0,'',1);
 		} else if(obj.event === 'del'){
@@ -212,7 +211,7 @@
 	  });
 	    //触发排序事件 
 	table.on('sort(table)', function(obj){
-			table.reload('table', {
+			table.reloadData('table', {
 				initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
 				,where: {
 					field: obj.field //排序字段
@@ -224,7 +223,7 @@
 		showDataTemplate(obj);
 	  });
 		function showDataTemplate(obj) {
-			var data = obj.data;
+			var data = obj.dataCache;
 			var template = '';
 			<!--{if $_G['adminid']}-->
 			if (data.authorid) {
@@ -252,9 +251,8 @@
 				template += '<p><strong>评论内容:</strong> ' + data.message + '</p>';
 			}
 	
-			layer.alert(JSON.stringify(data), {
-				title: '当前行评论详情：',
-				content: template,
+			layer.alert(template, {
+				title: 'ID <strong>' + data.LAY_NUM + '</strong> 详情：'
 			});
 	
 		// 标注选中样式
@@ -265,7 +263,7 @@
 		// 获取搜索关键词
 		var keyword = $('#keyword').val();
 		// 刷新表格并传递搜索参数
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: { keyword: keyword},
 		  page: {
 			curr: 1 //重新从第 1 页开始
@@ -276,7 +274,7 @@
 	   $('#refreshsearch').click(function() {
         $('#keyword').val('');
 		// 刷新表格
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: {type: type}, // 清空搜索参数
 		  page: {
 			curr: 1 //重新从第 1 页开始
@@ -294,7 +292,7 @@
 		operation = $(this).data('operation');
 		type = $(this).data('type');
 		// 刷新表格并传递 operation 参数
-		table.reload('table', {
+		table.reloadData('table', {
 		  where: {type: type},
 		  page: {
 			curr: 1 //重新从第 1 页开始

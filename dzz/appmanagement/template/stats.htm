@@ -18,10 +18,10 @@
 	<div class="card-body">
 		<!--{if $time!='all'}-->
 		<div class="mb-3">
-			<div class="input-group" data-provide="datepicker">
-			  <span class="input-group-text">从</span>
+			<div class="input-daterange input-group" id="datepicker">
+			  <label class="input-group-text" for="datepicker_start">从</label>
 			  <input type="text" class="form-control" id="datepicker_start" value="$starttime">
-			  <span class="input-group-text">至</span>
+			  <label class="input-group-text" for="datepicker_end">至</label>
 			  <input type="text" class="form-control" id="datepicker_end" value="$endtime">
 			</div>
 		  </div>
@@ -49,35 +49,21 @@
 			}
 		});
 		getdatebytime();
-		jQuery('#datepicker_start').datepicker({
-			showWeek:true,
-				selectWeek:true,
-				todayBtn:true,//今日按钮
-				autoclose:true,//选中自动关闭
-				todayHighlight:true,//今天日期高亮显示
-				language: 'zh_CN',
-				<!--{if $time=='month'}-->
-				format: 'yyyy-mm',
-				viewMode: "months", 
-				minViewMode: "months",
-				<!--{/if}-->
-			}).on('changeDate', function(e) {
-				getdatebytime();
-		});
-		jQuery('#datepicker_end').datepicker({
-				showWeek:true,
-				selectWeek:true,
-				todayBtn:true,//今日按钮
-				autoclose:true,//选中自动关闭
-				todayHighlight:true,//今天日期高亮显示
-				language: 'zh_CN',
-				<!--{if $time=='month'}-->
-				format: 'yyyy-mm',
-				viewMode: "months", 
-				minViewMode: "months",
-				<!--{/if}-->
-			}).on('changeDate', function(e) {
-				getdatebytime();
+		$('.input-daterange').datepicker({
+			autoclose:true,
+			todayHighlight:true,
+			clearBtn:true,
+			endDate: new Date(),
+			language: 'zh_CN',
+			zIndex:'50',
+			<!--{if $time=='month'}-->
+			format: 'yyyy-mm',
+			minViewMode: 1,
+			<!--{/if}-->
+			todayBtn: "linked",
+			calendarWeeks: true,
+		}).on('changeDate', function(e) {
+			getdatebytime();
 		});
 	});
 	function getdatebytime(){

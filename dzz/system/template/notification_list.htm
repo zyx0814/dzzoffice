@@ -24,8 +24,8 @@
 					<a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a>
 					<div class="flex-grow-1 ms-2">
 						<!--{if $value[title]}--><strong>$value[title]</strong><!--{/if}-->
-					  	<!--{if $value[note]}--><div class="me-auto">$value[note]</div><!--{/if}-->
-					  	<!--{if $value[redirecturl]}--><div class="text-muted">来源地址：<a href="$value[redirecturl]" target="_blank" class="dcolor">$value[redirecturl]</a></div><!--{/if}-->
+					  	<!--{if $value[note]}--><div class="me-auto text-break">$value[note]</div><!--{/if}-->
+					  	<!--{if $value[redirecturl]}--><div class="text-muted text-break">来源地址：<a href="$value[redirecturl]" target="_blank" class="dcolor">$value[redirecturl]</a></div><!--{/if}-->
 					  	<!--{if $value['dateline']}--><small class="text-muted">$value['dateline']</small><!--{/if}-->
 					</div>
 					<!--{if !$img}--><span class="badge rounded-pill"><img src="$value[appico]" class="img-avatar-48"></span><!--{/if}-->

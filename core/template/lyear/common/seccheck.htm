@@ -17,7 +17,7 @@
 		  <span class="form-control-feedback" aria-hidden="true" id="checkseccodeverify_$sechash"></span>
 		  <input type="text" name="seccodeverify" class="form-control"  id="seccodeverify_$sechash" autocomplete="off" style="{if $_G['setting']['seccodedata']['type'] != 1}ime-mode:disabled;{/if}"  onblur="checksec('code', '$sechash')"  placeholder="{lang seccode}">
 		</div>
-		<div class="col-5 text-right" id="basic-addon2" style="display: flex;align-items: center;flex-wrap: wrap;">
+		<div class="col-5 text-right" style="display: flex;align-items: center;flex-wrap: wrap;">
 			{$sectplcode[2]}
 			<span id="seccode_$sechash"></span>
 			<a tabindex="-1" href="javascript:;" onclick="updateseccode('$sechash');doane(event);" class="seccode-refresh-guide"><span class="dzz dzz-refresh"></span></a>

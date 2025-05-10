@@ -11,6 +11,15 @@ if (!defined('IN_DZZ')) {
 }
 $navtitle = lang('appname');
 $uid=$_G['uid'];
+if(!$uid) {
+	$errorResponse = [
+		"code" => 1,
+		"msg" => lang('no_login_operation'),
+		"count" => 0,
+		"data" => [],
+	];
+	exit(json_encode($errorResponse));
+}
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $orgid = isset($_GET['orgid']) ? intval($_GET['orgid']) : '';
 $typearr = array('image' => lang('photo'),
@@ -32,6 +41,10 @@ if ($do == 'delete') {
 	$failedicoids = [];
 
 	foreach ($icoids as $icoid) {
+		if(!$_G['adminid']) {
+			$ruid = DB::result_first("select uid from %t where rid=%s", array('resources', $icoid));
+			if($ruid !== $uid) exit(json_encode(['msg' => '该文件不存在或您没有权限']));
+		}
 		try {
 			$return = IO::Delete($icoid, true);
 			if (!$return['error']) {
@@ -119,7 +132,6 @@ if ($do == 'delete') {
 		$data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $whereClause $order $limitsql", $param);
 	}
 	$list = array();
-	$id = $start + 1;
 	foreach ($data as $value) {
 		if (!$data = C::t('resources')->fetch_by_rid($value['rid'])) {
 			continue;
@@ -142,7 +154,6 @@ if ($do == 'delete') {
 			$FileUri = '';
 		}
 		$list[] = [
-			"id" => $id++,
 			"username" => '<a href="user.php?uid='.$data['uid'].'" target="_blank">'.$data['username'].'</a>',
 			"rid" => $data['rid'],
 			"name" => '<img class="icon" src="'.$data['img'].'">'.$data['name'],
@@ -151,6 +162,7 @@ if ($do == 'delete') {
 			"type" => $data['ftype'],
 			"ftype" => $data['type'],
 			"oid" => $data['oid'],
+			"md5" => $data['md5'],
 			"relpath" => $data['relpath'],
 			"dateline" => $data['fdateline'],
 			"isdelete" => $isdelete?:'',
