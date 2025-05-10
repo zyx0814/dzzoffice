@@ -185,6 +185,7 @@ if ($do == 'delete') {
 			}
 		}
 	}
+	header('Content-Type: application/json');
 	$return = [
 		"code"=> 0,
 		"msg"=> "",

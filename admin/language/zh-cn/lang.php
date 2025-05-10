@@ -88,6 +88,7 @@ $lang = array
 	'qq_longin_set'=>'QQ登录设置',
 	'sector_set'=>'部门设置',
 	'upload_set'=>'上传设置',
+	'upload_download_set'=>'上传/下载设置',
 	'expression'=>'表情',
 	'expression_code'=>'表情代码',
 	'expression_describing'=>'表情描述',
@@ -765,9 +766,11 @@ $lang = array
 							<li>出于安全考虑，通常php,asp,jsp等可以被利用后缀名都需要在此处设置来禁止运行。</li>
 							<li>此处设置的后缀文件，系统将通过特殊处理，防止其运行，提高系统的安全性。</li>',
 	'upload_block_size'=>'上传分块大小',
-	'upload_block_size_text'=>'<li>此处设置分块时每块的大小，当上传文件大于此值时 上传程序会分块来上传</li>
-							<li>分块太大或太小都会影响上传的性能,请根据服务器设置来调整此参数</li>
-							<li>分块大小必须小于php.ini中设置的post_max_size和upload_max_filesize的大小</li>',
+	'upload_block_size_text'=>'<li>此处设置分块时每块的大小，当上传文件大于此值时 上传程序会分块来上传，推荐5M。</li>
+					<li>分块太大或太小都会影响上传的性能,请根据服务器设置来调整此参数</li>
+					<li>分块大小必须小于php.ini中设置的post_max_size和upload_max_filesize的大小</li>
+					<li>分块大小必须小于nginx中设置的client_max_body_size的大小</li>
+                    <li>不能设置为0，否则会影响全站的上传功能，无法上传文件或文件受损</li>',
 	'upload_permissions'=>'用户上传权限设置',
 	'upload_permissions_text'=>'注： 用户私有云(我的云中用户添加的云)不做限制，所以此处的设置的”默认空间“对用户私有云不起作用。',
 	'setting_main_default'=>'用户的默认空间大小，单位M。0或不填 不限制； -1: 无空间',

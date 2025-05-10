@@ -61,11 +61,8 @@ if(!isset($_GET['loginsubmit'])) {//是否提交
     $type = isset($_GET['returnType']) ?  $_GET['returnType']: 'json';//返回值方式
 
     Hook::listen('login_valchk',$_GET);//验证登录输入值及登录失败次数
-
-
     //验证码开启，检测验证码
     if($seccodecheck && !check_seccode( $_GET['seccodeverify'],$_GET['sechash'])){
-
         showTips(array('error'=>lang('submit_seccode_invalid')), $type);
     }
 

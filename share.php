@@ -13,7 +13,7 @@ define('CURSCRIPT', 'dzz');
 require './core/coreBase.php';
 $dzz = C::app();
 $dzz->init();
-$s = isset($_GET['s']) ? trim($_GET['s']) : '';
+$s = trim($_GET['s'] ?? '');
 if(!$path=dzzdecode($s)){
 	exit('Access Denied');
 }

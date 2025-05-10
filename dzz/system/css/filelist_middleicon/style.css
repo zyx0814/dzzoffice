@@ -56,7 +56,7 @@
 .icoimgContainer_user{}
 .icoimgContainer_link{}
 .icoimgContainer_attach{}
-.icoimgContainer_shortcut .icoimgCover_up{background-image:url(images/shortcut.png);background-repeat:no-repeat;background-size:100%}
+.icoimgContainer_shortcut .icoimgCover_up{background-image:url(/dzz/images/default/shortcut.png);background-repeat:no-repeat;background-size:100%}
 .icoimgContainer .icoimgCover_up{}
 .icoimgContainer .icoimgCover_down{}
 .icoimgContainer_image .icoimgCover_up{}

@@ -6,7 +6,7 @@ var dzzApi = {
             if(!callback){layer.msg('没有回调',{icon:'error',skin:'bg-danger',offset:'t'});return;}
             if(!title)title='选择位置';
             layer.open({
-                type:2,title:title,shadeClose:false,shade: 0.3,maxmin:true,area:['70%','70%'],id:'layerdzzfile',
+                type:2,title:title,shadeClose:false,shade: 0.3,maxmin:true,area:window.innerWidth < 768 ? ['100%','100%'] : ['50%', '70%'],id:'layerdzzfile',
                 content:'index.php?mod=system&op=fileselection&template=1&type=2&perm=write&allowcreate=1',
                 btn:['确定','取消'],
                 yes:function(index,layero){
@@ -23,7 +23,7 @@ var dzzApi = {
             if(!openexts){openexts={attach:["全部文件",[""],"selected"]};}
             var exts=JSON.stringify(openexts);exts=exts.replace(/\"/g,'&quot;');exts=exts.replace(/\(/g,'|');exts=exts.replace(/\)/g,'$');exts=encodeURIComponent(exts);
             layer.open({
-                type:2,title:title,shadeClose:false,shade: 0.3,maxmin:true,area:['70%','70%'],id:'layerdzzfile',
+                type:2,title:title,shadeClose:false,shade: 0.3,maxmin:true,area:window.innerWidth < 768 ? ['100%','100%'] : ['50%', '70%'],id:'layerdzzfile',
                 content:'index.php?mod=system&op=fileselection&template=1&perm=read&mulitype=0&exttype='+exts,
                 btn:['确定','取消'],
                 yes:function(index,layero){
@@ -42,7 +42,7 @@ var dzzApi = {
             var openexts = {attach: [fileExtension ? fileExtension + "文件" : "文件", [fileExtension || ""], "selected"]};
             var exts=JSON.stringify(openexts);exts=exts.replace(/\"/g,'&quot;');exts=exts.replace(/\(/g,'|');exts=exts.replace(/\)/g,'$');exts=encodeURIComponent(exts);
             layer.open({
-                type:2,title:'文件保存到',shadeClose:false,shade: 0.3,maxmin:true,area:['70%','70%'],id:'layerdzzfile',
+                type:2,title:'文件保存到',shadeClose:false,shade: 0.3,maxmin:true,area:window.innerWidth < 768 ? ['100%','100%'] : ['50%', '70%'],id:'layerdzzfile',
                 content:'index.php?mod=system&op=fileselection&template=1&type=1&perm=write&mulitype=0&filename='+filename+'&exttype='+exts,
                 btn:['确定','取消'],
                 yes:function(index,layero){

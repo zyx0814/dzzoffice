@@ -18,9 +18,11 @@ function loginsub(formid,rspaceid){
         }else if(json['error']){
             showmessage(json['error'],"danger",3000,1);
             jQuery('#'+rspaceid).html(json['error']);
+            $('.seccode-refresh-guide').trigger('click');
         }else{
             showmessage(__lang.system_busy,"danger",3000,1);
             jQuery('#'+rspaceid).html(__lang.system_busy);
+            $('.seccode-refresh-guide').trigger('click');
         }
     },'json')
     .fail(function (jqXHR, textStatus, errorThrown) {

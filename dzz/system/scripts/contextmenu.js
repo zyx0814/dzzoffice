@@ -385,7 +385,6 @@ _contextmenu.right_body = function (e, fid) {
                 suby = -5;
                 if (x + el.width() * 2 > Max_x) subx = subx - temp.width() - el.width() - 6;
                 if (y + item.position().top + temp.height() > Max_y) suby = suby - temp.height() + item.height();
-                console.log(temp);
                 temp.css({left: subx, top: suby, 'z-index': _contextmenu.zIndex + 2, display: 'block'});
                 shadow.css({
                     display: "block",
