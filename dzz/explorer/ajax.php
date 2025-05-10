@@ -457,14 +457,19 @@ if ($operation == 'upload') {//上传图片文件
         } else {
             $eventdata = array('msg' => $msg);
             if ($insert = C::t('resources_event')->addevent_by_pfid($file['pfid'], 'add_comment', 'addcomment', $eventdata, $file['gid'], $rid, $file['name'], 1)) {
+                $headerColor = C::t('user_setting')->fetch_by_skey('headerColor');
                 $return = array(
                     'username' => getglobal('username'),
                     'uid' => getglobal('uid'),
                     'dateline' => dgmdate(TIMESTAMP, 'H:i'),
                     'msg' => dzzcode($message),
                     'commentid' => $insert,
-                    'avatar' => avatar_block($_G['uid'])
+                    'avatarstatus' => getglobal('avatarstatus', 'member')
                 );
+                if (!$return['avatarstatus'] && $headerColor) {
+                    $return['headerColor'] = $headerColor;
+                    $return['userfirst'] = new_strsubstr(ucfirst($return['username']), 1, '');
+                }
                 if ($file['uid'] != getglobal('uid')) {
                     $notevars = array(
                         'from_id' => $appid,
@@ -513,14 +518,20 @@ if ($operation == 'upload') {//上传图片文件
             $rid = C::t('resources')->fetch_rid_by_fid($fid);
             $eventdata = array('msg' => $msg);
             if ($insert = C::t('resources_event')->addevent_by_pfid($fid, 'add_comment', 'addcomment', $eventdata, $folder['gid'], ($rid) ? $rid : '', $folder['fname'], 1)) {
+                $headerColor = C::t('user_setting')->fetch_by_skey('headerColor');
                 $return = array(
                     'username' => getglobal('username'),
                     'uid' => getglobal('uid'),
                     'dateline' => dgmdate(TIMESTAMP, 'H:i'),
                     'msg' => dzzcode($message),
                     'commentid' => $insert,
-                    'avatar' => avatar_block($_G['uid'])
+                    'avatarstatus' => getglobal('avatarstatus', 'member')
                 );
+
+                if (!$return['avatarstatus'] && $headerColor) {
+                    $return['headerColor'] = $headerColor;
+                    $return['userfirst'] = new_strsubstr(ucfirst($return['username']), 1, '');
+                }
                 if ($folder['uid'] != getglobal('uid')) {
                     $notevars = array(
                         'from_id' => $appid,
