@@ -160,7 +160,7 @@ function getItemTpl(file) {
     var html =
         '<div class="process" style="position:absolute;z-index:-1;height:100%;background-color:#e8f5e9;-webkit-transition:width 0.6s ease;-o-transition:width 0.6s ease;transition:width 0.6s ease;width:0%;"></div> <div class="dialog-info"> <div class="upload-file-name">' +
         '<div class="dialog-file-icon" align="center">'+imgicon+'</div> <span class="name-text">' + file.name + '</span> ' +
-        '</div> <div class="upload-file-size">' + (file.size ? formatSize(file.size) : '') + '</div> <div class="upload-file-path">' +
+        '</div> <div class="upload-file-size">' + (file.size ? formatSize(file.size) : '0B') + '</div> <div class="upload-file-path">' +
         '<a title="" class="" href="javascript:;">' + relativePath + '</a> </div> <div class="upload-file-status"> <span class="uploading"><em class="precent"></em><em class="speed">排队中</em>' +
         '</span> <span class="success"><em></em><i></i></span> </div> <div class="upload-file-operate"> ' +
         '<em class="operate-pause"></em> <em class="operate-continue"></em> <em class="operate-retry"></em> <em class="operate-remove"></em> ' +

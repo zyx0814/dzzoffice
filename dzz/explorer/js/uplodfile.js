@@ -28,13 +28,12 @@ function fileupload(el, fid) {
         url: MOD_URL + '&op=ajax&operation=uploads&container=' + fid,
         dataType: 'json',
         autoUpload: true,
-        limitConcurrentUploads:limitConcurrentUploads,
         maxChunkSize: parseInt(_explorer.space.maxChunkSize), //2M
         dropZone: el.attr('id') == 'wangpan-upload-folder' ? null : $('#middleconMenu'),
         pasteZone: el.attr('id') == 'wangpan-upload-folder' ? null : $('#middleconMenu'),
         maxFileSize: maxfileSize, // 5 MB
         acceptFileTypes: new RegExp(attachextensions, 'i'),
-        sequentialUploads: false
+        sequentialUploads: true,
 	}).on('fileuploadadd', function (e, data) {
 		_upload.tips.show();
 		if(_upload.maxli && _upload.datas.length>=_upload.maxli){

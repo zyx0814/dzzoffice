@@ -106,12 +106,7 @@ _filemanage.getData = function (url, callback) {
 						jQuery(this).html('<a href="javascript:;">' + jQuery(this).html() + '</a>');
 					});
 					jQuery('#dataContainer').empty();
-					jQuery('.breadcrumb li:not(:last)').each(function () {
-						jQuery(this).removeClass('active');
-						jQuery(this).html('<a href="javascript:;">' + jQuery(this).html() + '</a>');
-					});
 				}
-			
 				if(_explorer.fid) {
 					if(json.folderid !== _explorer.fids){
 						updateBreadcrumb(false);
@@ -195,7 +190,7 @@ _filemanage.Arrange = function (obj, id, view) {
 	}
 	filemanage.view = view;
 	filemanage.showIcos();
-	jQuery('#right_contextmenu .menu-icon-iconview').each(function () {
+	jQuery('span .menu-icon-iconview').each(function () {
 		if (jQuery(this).attr('view') * 1 === view * 1) {
 			jQuery(this).removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
 		} else {
@@ -218,13 +213,13 @@ _filemanage.Disp = function (obj, id, disp) {
 	} else {
 		filemanage.pageClick(1);
 	}
-	jQuery('#right_contextmenu .menu-icon-disp').each(function () {
+	jQuery('span .menu-icon-disp').each(function () {
 		if (jQuery(this).attr('disp') * 1 === disp * 1) {
 			jQuery(this).removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
-			jQuery(this).next().find('.caret').removeClass('asc').removeClass('desc').addClass(filemanage.asc > 0 ? 'asc' : 'desc');
+			jQuery(this).nextAll('.caret').first().removeClass('asc').removeClass('desc').addClass(filemanage.asc > 0 ? 'asc' : 'desc');
 		} else {
 			jQuery(this).addClass('mdi-checkbox-blank-outline').removeClass('mdi-checkbox-marked');
-			jQuery(this).next().find('.caret').removeClass('asc').removeClass('desc');
+			jQuery(this).nextAll('.caret').first().removeClass('asc').removeClass('desc');
 		}
 	});
 };
@@ -411,14 +406,19 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		dfire('click');
 		return false;
 	});
-	//设置邮件菜单
+	//设置右键菜单
 	el.on('contextmenu', function (e) {
 		e = e ? e : window.event;
 		var tag = e.srcElement ? e.srcElement : e.target;
 		if (/input|textarea/i.test(tag.tagName)) {
 			return true;
 		}
-		_contextmenu.right_ico(e, jQuery(this).attr('rid'));
+		var options = {
+			content: contextmenuico(jQuery(this).attr('rid')),
+			show: true,
+		}
+		layui.dropdown.reloadData('right_ico',options);
+		layui.dropdown.open('right_ico');
 		return false;
 	});
 	//检测已选中
@@ -440,7 +440,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		jQuery('#' + containerid).find('.emptyPage').remove();
 	}
 };
-
 
 _filemanage.prototype.setToolButton = function () { //设置工具栏
 	var rids = _filemanage.selectall.icos;
@@ -561,7 +560,142 @@ _filemanage.prototype.appendIcos = function (data) {
 	}, 1);
 	this.pageloadding = false;
 };
+function contextmenuico(rid) {
+	if (!rid) {
+		return '';
+	}
+	var obj = _explorer.sourcedata.icos[rid];
+    var html = document.getElementById('right_ico').innerHTML;
+	if(!html) {
+		return '';
+	}
+    html = html.replace(/\{rid\}/g, rid);
+    if (_filemanage.selectall.icos.length == 1 && obj.type == 'folder') {
+        html = html.replace(/\{fid\}/g, obj.fid);
+    } else {
+        html = html.replace(/\{fid\}/g, obj.pfid);
+    }
+	var el = $(html);
+	if (!el.length) return '';
+	var obj = _explorer.sourcedata.icos[rid];
+    if (obj.type == 'shortcut' || obj.type == 'storage' || obj.type == 'pan' || _explorer.myuid < 1) {
+        el.find('.shortcut').remove();
+    }
+    var downloadprem = 0; // 默认值
+    if (_filemanage && _filemanage.param && _filemanage.param.download) {
+        downloadprem = _filemanage.param.download;
+    }
+    //下载权限
+    if (!downloadprem) {
+        el.find('.download').remove();
+        el.find('.allsave').remove();
+        jQuery('.downAll').hide();
+        jQuery('.allsave').hide();
+        el.find('.downpackage').remove();
+    } else {
+        jQuery('.allsave').show();
+        jQuery('.downAll').show();
+    }
 
+    //多选时的情况
+    if (_filemanage.selectall.icos.length > 1 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
+		el.find('.menu-item:not(.allsave,.downpackage,.property)').remove();
+        var pd = 1;
+        if (!downloadprem) {
+            pd = 0;
+        }
+        if (!pd) {
+            jQuery('.allsave').hide();
+            el.find('.allsave').remove();
+            el.find('.downpackage').remove();
+        }
+        el.find('.download').remove();
+    } else {
+        el.find('.downpackage').remove();
+    }
+    if (!el.find('.menu-item').length) {
+        el.hide();
+        return;
+    }
+    //判断打开方式
+    var subdata = getExtOpen(obj.type == 'shortcut' ? obj.tdata : obj);
+    if (subdata === true) {
+        el.find('.openwith').remove();
+    } else if (subdata === false) {
+        el.find('.openwith').remove();
+        el.find('.open').remove();
+    } else if (subdata.length == 1) {
+        el.find('.openwith').remove();
+    } else if (subdata.length > 1) {
+        var html = '';
+		for (var i = 0; i < subdata.length; i++) {
+			html += '<li class="menu-item" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;" title="' + subdata[i].name + '"><div class="layui-menu-body-title">';
+			if (subdata[i].icon) {
+				html += '<span class="pe-2"><img width="24px" height="24px" src=' + subdata[i].icon + '></span>';
+			}
+			html += subdata[i].name;
+			html += '</div></li>';
+		}
+		el.find('.openwithdata').html(html);
+    } else {
+        el.find('.openwith').remove();
+    }
+
+    //去除多余的分割线
+    el.find('.layui-menu-item-divider').each(function () {
+		if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
+	});
+	return el[0] ? el[0].outerHTML : '';
+}
+function contextmenubody(fid) {
+	var html = document.getElementById('right_body').innerHTML;
+	if(!html) {
+		return '';
+	}
+	html = html.replace(/\{fid\}/g, fid);
+    html = html.replace(/\{filemanageid\}/g, _filemanage.winid);
+	var filemanage = _filemanage.cons[_filemanage.winid];
+	var el = $(html);
+	if (!el.length) return '';
+    //设置当前容器的相关菜单选项的图标
+    el.find('span.menu-icon-iconview[view=' + filemanage.view + ']').removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
+    //设置排序
+   	el.find('.menu-icon-disp').each(function () {
+		if (jQuery(this).attr('disp') == filemanage.disp) {
+			jQuery(this).removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
+			jQuery(this).nextAll('.caret').first().removeClass('mdi-menu-up').removeClass('mdi-menu-down').addClass(filemanage.asc > 0 ? 'mdi-menu-up' : 'mdi-menu-down');
+		} else {
+			jQuery(this).addClass('mdi-checkbox-blank-outline').removeClass('mdi-checkbox-marked');
+			jQuery(this).nextAll('.caret').first().removeClass('mdi-menu-up').removeClass('mdi-menu-down');
+		}
+	});
+    if (!fid) {
+        el.find('.property').remove();
+    }
+    var create = 0; // 默认值
+    if (_filemanage && _filemanage.param && _filemanage.param.create) {
+        create = _filemanage.param.create;
+    }
+    if (!create) {
+        el.find('.create').remove();
+		el.find('.upload').remove();
+        el.find('.uploadfolder').remove();
+    }
+    //设置默认桌面
+
+    //检测新建和上传是否都没有
+    if (el.find('.create .menu-item').length < 1) {
+		el.find('.create').remove();
+	}
+    if (el.find('.menu-item').length < 1) {
+        el.hide();
+        return;
+    }
+	el.find('.layui-menu-item-divider').each(function () {
+		if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
+	});
+	return el[0] ? el[0].outerHTML : '';
+}
 _filemanage.prototype.createIcosContainer = function () {
 	var self = this;
 	var containerid = 'filemanage-' + this.id;
@@ -583,7 +717,12 @@ _filemanage.prototype.createIcosContainer = function () {
 			if (/input|textarea/i.test(tag.tagName)) {
 				return true;
 			}
-			_contextmenu.right_body(e, self.fid);
+			var options = {
+				content: contextmenubody(self.fid),
+				show: true
+			}
+			layui.dropdown.reloadData('right_ico',options);
+			layui.dropdown.open('right_ico');
 			return false;
 		})
 		.on('click', function (e) {
