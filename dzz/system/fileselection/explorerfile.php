@@ -23,7 +23,7 @@ if ($operation == 'filelist') {
     $bz = empty($_GET['bz']) ? '' : urldecode($_GET['bz']);
     $marker = empty($_GET['marker']) ? '' : trim($_GET['marker']);
     $data = array();
-    $permfilter = isset($_GET['permfilter']) ? trim($_GET['permfilter']) : 'read';
+    $permfilter = isset($_GET['permfilter']) ? trim($_GET['permfilter']) : 'read1,read2';
     if ($bz) {//云盘查询
         $asc = intval($_GET['asc']);
         list($prex, $id) = explode('-', $sid);
