@@ -571,7 +571,7 @@ function get_special_tables_array($tablename) {
 	$query = DB::query("SHOW TABLES LIKE '{$tablename}\_%'");
 	$dbo = DB::object();
 	$tables_array = array();
-	while($row = $dbo->fetch_array($query, $dbo->drivertype == 'mysqli' ? MYSQLI_NUM : MYSQL_NUM)) {
+	while($row = $dbo->fetch_array($query, MYSQLI_NUM)) {
 		if(preg_match("/^{$tablename}_(\\d+)$/i", $row[0])) {
 			$prefix_len = strlen($dbo->tablepre);
 			$row[0] = substr($row[0], $prefix_len);

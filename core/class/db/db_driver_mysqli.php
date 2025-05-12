@@ -82,11 +82,11 @@ class db_driver_mysqli
 			$halt && $this->halt('notconnect', $this->errno());
 		} else {
 			$this->curlink = $link;
-			if($this->version() > '4.1') {
-				$link->set_charset($dbcharset ? $dbcharset : $this->config[1]['dbcharset']);
-				$serverset = $this->version() > '5.0.1' ? 'sql_mode=\'\'' : '';
-				$serverset && $link->query("SET $serverset");
-			}
+			$link->options(MYSQLI_OPT_LOCAL_INFILE, false);
+			$link->set_charset($dbcharset ? $dbcharset : $this->config[1]['dbcharset']);
+			$serverset = 'sql_mode=\'\',';
+			$serverset .= 'character_set_client=binary';
+			$serverset && $link->query("SET $serverset");
 		}
 		return $link;
 	}

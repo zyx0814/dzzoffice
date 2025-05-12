@@ -63,11 +63,7 @@ class Tpdb {
      */
     public function factory($db_config='') {
 		//$db = DB::object();
-		if( function_exists('mysqli_connect') ){
-			$db= new Tpsqli( $db_config ); 
-		}else{
-			$db= new Tpsql( $db_config ); 
-		} 
+        $db= new Tpsqli( $db_config ); 
 		return $db; 
         /*// 读取数据库配置
         $db_config = $this->parseConfig($db_config);

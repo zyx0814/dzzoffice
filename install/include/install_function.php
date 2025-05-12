@@ -52,28 +52,21 @@ EOT;
 }
 
 function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
-	if(!function_exists('mysql_connect') && !function_exists('mysqli_connect')) {
-		show_msg('undefine_func', 'mysql_connect | mysqli_connect', 0);
+	if(!function_exists('mysqli_connect')) {
+		show_msg('undefine_func', 'mysqli_connect', 0);
 	}
-	$mysqlmode = function_exists('mysqli_connect') ? 'mysqli' : 'mysql';
-	if($mysqlmode=='mysqli'){
-		//兼容支持域名直接带有端口的情况
-		if(strpos($dbhost,':')!==false){
-			list($dbhost,$port)=explode(':',$dbhost);
-			
-		}elseif(strpos($dbhost,'.sock')!==false){//地址直接是socket地址
-			$unix_socket=$dbhost;
-			$dbhost='localhost';
-		}
-		if(empty($port)) $port='3306';
-		$link =  new mysqli($dbhost, $dbuser, $dbpw, '', $port, $unix_socket);
-		$errno =  $link->connect_errno;
-		$error =  $link->connect_error;
-	}else{
-		$link = @mysql_connect($dbhost, $dbuser, $dbpw);
-		$errno = mysql_errno();
-		$error = mysql_error();
+	//兼容支持域名直接带有端口的情况
+	if(strpos($dbhost,':')!==false){
+		list($dbhost,$port)=explode(':',$dbhost);
+		
+	}elseif(strpos($dbhost,'.sock')!==false){//地址直接是socket地址
+		$unix_socket=$dbhost;
+		$dbhost='localhost';
 	}
+	if(empty($port)) $port='3306';
+	$link =  new mysqli($dbhost, $dbuser, $dbpw, '', $port, $unix_socket);
+	$errno =  $link->connect_errno;
+	$error =  $link->connect_error;
 	if($errno) {
 		if($errno == 1045) {
 			show_msg('database_errno_1045', $error, 0);
@@ -83,11 +76,11 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
 			show_msg('database_connect_error', $error, 0);
 		}
 	} else {
-		if($query = (($mysqlmode == 'mysql') ? @mysql_query("SHOW databases") : $link->query("SHOW databases"))) {
+		if($query = $link->query("SHOW databases")) {
 			if(!$query) {
 				return false;
 			}
-			while($row = (($mysqlmode == 'mysql') ? mysql_fetch_row($query) : $query->fetch_row())) {
+			while($row = $query->fetch_row()) {
 				if($dbname==$row[0]) {
 					return false;
 				}
@@ -302,7 +295,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
 			echo "</table>\n";
 		}
 		echo "<h2 class=\"title\">其他检查</h2>\n";
-		echo "<p class=\"tb\">数据库需使用MYSQL5.0~8.0之间的版本，其他版本可能不能正常使用。</p>\n";
+		echo "<p class=\"tb\">数据库需使用MYSQL5.5.3~8.0之间的版本，其他版本可能不能正常使用。</p>\n";
 	show_next_step(2,$error_code);
 	show_footer();
 }
