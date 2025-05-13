@@ -102,6 +102,9 @@ if($do == 'filelist'){
                     if(!$perm  && !C::t('organization')->ismember($gid,$uid,false)) {
                         $mqx='1';
                     }
+                    if(!$folder['fid']) {
+                        $mqx='1';
+                    }
                 }
                 if (!$mqx) {
                   $folder['disp'] = $disp = intval($_GET['disp']) ? intval($_GET['disp']) : intval($folder['disp']);//文件排序

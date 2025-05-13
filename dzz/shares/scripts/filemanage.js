@@ -77,7 +77,7 @@ _filemanage.getData = function (url, callback) {
 			  });
 			return false;
 		} else if (json.error){
-			jQuery('#filemanage-f-1').html('<div class="emptyPage" id="noticeinfo"><img src="'+MOD_PATH+'/images/noFilePage-normal.png"><p class="emptyPage-text">'+json.error+'</p></div>');
+			jQuery('#filemanage-f-1').html('<div class="emptyPage" id="noticeinfo"><img src="static/image/common/no_list.png"><p class="emptyPage-text">'+json.error+'</p></div>');
 			showmessage(json.error, 'danger', 3000, 1);
 			jQuery('.allsave,.downAll,.new-buildMenu,.icons-thumbnail').hide();
 			return false;
