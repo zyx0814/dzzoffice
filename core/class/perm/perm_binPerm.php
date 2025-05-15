@@ -88,7 +88,7 @@ class perm_binPerm
             'download1' => 'dzz dzz-download mdi mdi-download',
             'download2' => 'dzz dzz-all-download mdi mdi-download-multiple',
             'copy1' => 'dzz dzz-copy mdi mdi-file-multiple',
-            'copy2' => 'dzz dzz-all-copy mdi mdi-file-table-box-multiple',
+            'copy2' => 'dzz dzz-all-copy mdi mdi-folder-multiple-plus',
             'upload' => 'dzz dzz-upload mdi mdi-upload',
             //'newtype' => lang('new_other_types_files'),
             'folder' => 'dzz dzz-folder mdi mdi-folder',

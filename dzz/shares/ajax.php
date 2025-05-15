@@ -11,6 +11,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 global $_G;
+define('template','1');
 $uid = $_G['uid'];
 $do = empty($_GET['do'])?'':$_GET['do'];
 $sid = $_GET['sid'] ? $_GET['sid'] : '';

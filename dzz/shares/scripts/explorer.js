@@ -182,13 +182,9 @@ _explorer.image_resize = function (img, width, height) {
 			if ((w / h) > 1) {
 				realw = (w > width) ? parseInt(width) : w;
 				realh = (w > width) ? parseInt(height) : (realw * h / w);
-				img.style.width = realw + 'px';
-				img.style.height = realh + 'px';
 			} else {
 				realh = (h > height) ? parseInt(height) : h;
 				realw = (h > height) ? parseInt(width) : (realh * w / h);
-				img.style.width = realw + 'px';
-				img.style.height = 'auto';
 			}
 			if (realw < 32 && realh < 32) {
 				jQuery(img).addClass('image_tosmall').css({
@@ -269,400 +265,46 @@ function passwordsubmit() {
 	}, 'json');
 }
 function allsave() {
-	dzzApi.fileselect('',function(fid) {
-		var rids = [];
-		if (_filemanage.selectall.icos.length > 0) {
-			for (var i = 0; i < _filemanage.selectall.icos.length; i++) {
-				var ico = _explorer.sourcedata.icos[_filemanage.selectall.icos[i]];
-				rids.push(ico.dpath);
+	try {
+		title='选择位置';
+		layer.open({
+			type:2,title:title,shadeClose:false,shade: 0.3,maxmin:true,area:window.innerWidth < 768 ? ['100%','100%'] : ['50%', '70%'],id:'layerdzzfile',
+			content:'index.php?mod=system&op=fileselection&template=1&type=2&perm=write&allowcreate=1',
+			btn:['确定','取消'],
+			yes:function(index,layero){
+				var iframeWin=window[layero.find('iframe')[0]['name']];iframeWin.submitdata();
+			},
+			success:function(layero, index){
+				window.showWindow_callback=function(data){
+					var rids = [];
+					if (_filemanage.selectall.icos.length > 0) {
+						for (var i = 0; i < _filemanage.selectall.icos.length; i++) {
+							var ico = _explorer.sourcedata.icos[_filemanage.selectall.icos[i]];
+							rids.push(ico.dpath);
+						}
+					} else {
+						for (var key in _explorer.sourcedata.icos) {
+							if (_explorer.sourcedata.icos.hasOwnProperty(key)) {
+								rids.push(_explorer.sourcedata.icos[key].dpath);
+							}
+						}
+					}
+					var rids = rids.join(',');
+					$.post(MOD_URL+'&op=save', {'fid': data,'sid':sid, 'dzzrids': rids}, function (data) {
+						if (data.error) {
+							showmessage(data.error, 'danger', 5000, 1);
+							return false;
+						}
+						if (data.success) {
+							showmessage(data.success, 'success', 3000, 1);
+						}
+					}, 'json');
+					return;
+				};
 			}
-		} else {
-			for (var key in _explorer.sourcedata.icos) {
-				if (_explorer.sourcedata.icos.hasOwnProperty(key)) {
-					rids.push(_explorer.sourcedata.icos[key].dpath);
-				}
-			}
-		}
-		var rids = rids.join(',');
-		$.post(MOD_URL+'&op=save', {'fid': fid,'sid':sid, 'dzzrids': rids}, function (data) {
-			if (data.error) {
-				showmessage(data.error, 'danger', 5000, 1);
-				return false;
-			}
-			if (data.success) {
-				showmessage(data.success, 'success', 3000, 1);
-			}
-		}, 'json');
-	})
+		});
+	} catch (e) {layer.msg(__lang.operation_error, {icon:'error',skin:'bg-danger',offset:'t'});}
 }
-_contextmenu = {}//定义一个空对象
-_contextmenu.zIndex = 9999999;//设置堆叠顺序
-_contextmenu.right_ico = function (e, rid) {
-    e = e ? e : window.event;
-    var obj = e.srcElement ? e.srcElement : e.target;
-    if (/input|textarea/i.test(obj.tagName)) {
-        return true;
-    }
-    var x = e.clientX;
-    var y = e.clientY;
-    var obj = _explorer.sourcedata.icos[rid];
-    if (!document.getElementById('right_contextmenu')) {
-        var el = jQuery('<div id="right_contextmenu" class="menu dropdown-menu"></div>').appendTo(document.body);
-    } else {
-        var el = jQuery(document.getElementById('right_contextmenu'));
-    }
-    //如果是系统桌面，且用户不是管理员则不出现右键菜单
-    rid = rid + '';
-    var html = document.getElementById('right_ico').innerHTML;
-    html = html.replace(/\{XX\}/g, x);
-    html = html.replace(/\{YY\}/g, y);
-    html = html.replace(/\{rid\}/g, rid);
-    if (_filemanage.selectall.icos.length == 1 && obj.type == 'folder') {//单选中目录时，粘贴到此目录内部
-        html = html.replace(/\{fid\}/g, obj.fid);
-    } else {
-        html = html.replace(/\{fid\}/g, obj.pfid);
-    }
-    el.html(html);
-    if (obj.type == 'shortcut' || obj.type == 'storage' || obj.type == 'pan' || _explorer.myuid < 1) {
-        el.find('.shortcut').remove();
-    }
-    var downloadprem = 0; // 默认值
-    if (_filemanage && _filemanage.param && _filemanage.param.download) {
-        downloadprem = _filemanage.param.download;
-    }
-    //下载权限
-    if (!downloadprem) {
-        el.find('.download').remove();
-        el.find('.allsave').remove();
-        jQuery('.downAll').hide();
-        jQuery('.allsave').hide();
-        el.find('.downpackage').remove();
-    } else {
-        jQuery('.allsave').show();
-        jQuery('.downAll').show();
-    }
-
-    //多选时的情况
-    if (_filemanage.selectall.icos.length > 1 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
-        if(obj.isdelete == 1){
-            el.find('.menu-item:not(.recover,.finallydelete)').remove();
-        }else{
-            el.find('.menu-item:not(.cut,.copy,.restore,.allsave,.downpackage,.property)').remove();
-        }
-        var pd = 1;
-        if (!downloadprem) {
-            pd = 0;
-        }
-        if (!pd) {
-            jQuery('.allsave').hide();
-            el.find('.allsave').remove();
-            el.find('.downpackage').remove();
-        }
-        el.find('.download').remove();
-    } else {
-        el.find('.downpackage').remove();
-    }
-
-
-    el.find('.recover').remove();
-    if (!el.find('.menu-item').length) {
-        el.hide();
-        return;
-    }
-    //判断打开方式
-
-    var subdata = getExtOpen(obj.type == 'shortcut' ? obj.tdata : obj);
-    if (subdata === true) {
-        el.find('.openwith').remove();
-    } else if (subdata === false) {
-        el.find('.openwith').remove();
-        el.find('.open').remove();
-    } else if (subdata.length == 1) {
-        el.find('.openwith').remove();
-    } else if (subdata.length > 1) {
-        var html = '<span class="menu-icon" ></span><span class="menu-text">' + __lang.method_open + '</span><span class="menu-rightarrow"></span>';
-
-        html += '<div class=" menu dropdown-menu " style="display:none">';
-        for (var i = 0; i < subdata.length; i++) {
-            html += '<div class="menu-item dropdown-item" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;">';
-            if (subdata[i].icon) {
-                html += '<span class="menu-icon"><img width="100%" height="100%" src=' + subdata[i].icon + '></span>';
-            }
-            html += '<span class="menu-text">' + subdata[i].name + '</span>';
-            html += '</div>';
-        }
-
-        html += '</div>';
-        el.find('.openwith').html(html);
-    } else {
-        el.find('.openwith').remove();
-    }
-
-
-    //去除多余的分割线
-    el.find('.menu-sep').each(function () {
-        if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
-    });
-
-    //el.addClass(_window.className);
-	var Max_x = document.documentElement.clientWidth;
-    var Max_y = document.documentElement.clientHeight;
-    el.css({'z-index': _contextmenu.zIndex + 1,'max-height':Max_y});
-    el.show();
-
-    el.find('>div').each(function () {
-        var item = jQuery(this);
-        var subitem = item.find('.menu');
-        if (subitem.length) {
-            var shadow = item.find('.menu-shadow');
-            item.on('mouseover', function () {
-                if (_contextmenu.ppp) _contextmenu.ppp.hide();
-                if (_contextmenu.kkk) _contextmenu.kkk.hide();
-                if (_contextmenu.last) _contextmenu.last.removeClass('menu-active');
-                _contextmenu.kkk = shadow;
-                _contextmenu.last = item;
-                _contextmenu.ppp = subitem;
-                item.addClass('menu-active');
-                var temp = item.find('.menu');
-                var subx = el.width() - 1;
-                suby = 0;
-                if (x + el.width() * 2 > Max_x) subx = subx - temp.width() - el.width() - 3;
-                if (y + item.position().top + temp.height() > Max_y) suby = suby - temp.height() + item.height() - 5;
-                temp.css({left: subx-0.01, top: suby, 'z-index': _contextmenu.zIndex + 2, display: 'block'});
-                shadow.css({
-                    display: "block",
-                    zIndex: _contextmenu.zIndex + 1,
-                    left: subx,
-                    top: suby,
-                    width: temp.outerWidth(),
-                    height: temp.outerHeight()
-                });
-                subitem.find('.menu-item').on('mouseover', function () {
-                    jQuery(this).addClass('menu-active');
-                });
-                subitem.find('.menu-item').on('mouseout', function () {
-                    jQuery(this).removeClass('menu-active');
-                    return false;
-                });
-
-                return false;
-            });
-            item.on('mouseout', function () {
-                item.removeClass('menu-active');
-                shadow.hide();
-                subitem.hide();//alert('dddddd');
-                return false;
-            });
-
-        } else {
-            item.on('mouseover', function () {
-                if (_contextmenu.last) _contextmenu.last.removeClass('menu-active');
-                if (_contextmenu.ppp) _contextmenu.ppp.hide();
-                if (_contextmenu.kkk) _contextmenu.kkk.hide();
-                jQuery(this).addClass('menu-active');
-                return false;
-            });
-            item.on('mouseout', function () {
-                jQuery(this).removeClass('menu-active');
-            });
-        }
-    });
-    //alert(el.width()+'===='+el.height());
-    if (x + el.width() > Max_x) x = x - el.width();
-    if (y + el.height() > Max_y) y = y - el.height();
-	if (y < 0) y = 0;
-	el.css({left: x, top: y});
-
-    jQuery(document).on('mousedown.right_contextmenu', function (e) {
-        e = e ? e : window.event;
-        var obj = e.srcElement ? e.srcElement : e.target;
-        if (jQuery(obj).closest('#right_contextmenu').length < 1) {
-            el.hide();
-            el.empty();
-            jQuery(document).off('.right_contextmenu');
-            _contextmenu.kkk = null;
-            _contextmenu.ppp = null;
-            _contextmenu.last = null;
-        }
-    });
-};
-_contextmenu.right_body = function (e, fid) {
-    e = e ? e : window.event;
-    var obj = e.srcElement ? e.srcElement : e.target;
-    if (/input|textarea/i.test(obj.tagName)) {
-        return true;
-    }
-    var x = e.clientX;
-    var y = e.clientY;
-    var html = document.getElementById('right_body').innerHTML;
-    html = html.replace(/\{fid\}/g, fid);
-    html = html.replace(/\{filemanageid\}/g, _filemanage.winid);
-    if (!document.getElementById('right_contextmenu')) {
-        var el = jQuery('<div id="right_contextmenu" class="menu dropdown-menu"></div>').appendTo(document.body);
-    } else {
-        var el = jQuery(document.getElementById('right_contextmenu'));
-    }
-    el.html(html);
-    var filemanage = _filemanage.cons[_filemanage.winid];
-    //设置当前容器的相关菜单选项的图标
-    el.find('span.menu-icon-iconview[view=' + filemanage.view + ']').removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
-    //el.find('span.menu-icon-disp[disp='+filemanage.disp+']').removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
-    //设置排序
-    el.find('.menu-icon-disp').each(function () {
-        if (jQuery(this).attr('disp') == filemanage.disp) {
-            jQuery(this).removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
-            jQuery(this).next().find('.caret').removeClass('asc').removeClass('desc').addClass(filemanage.asc > 0 ? 'asc' : 'desc');
-        } else {
-            jQuery(this).addClass('mdi-checkbox-blank-outline').removeClass('mdi-checkbox-marked');
-            jQuery(this).next().find('.caret').removeClass('asc').removeClass('desc');
-        }
-    });
-    if (!fid) {
-        el.find('.property').remove();
-        el.find('.sort .disp2').remove();
-        el.find('.sort .disp3').remove();
-    }
-    var create = 0; // 默认值
-    if (_filemanage && _filemanage.param && _filemanage.param.create) {
-        create = _filemanage.param.create;
-    }
-    if (!create) {
-        el.find('.create').remove();
-    }
-     
-    if (create) {
-        if (BROWSER.ie) {
-            jQuery('<input id="right_uploadfile_' + fid + '" name="files[]" tabIndex="-1" style="position: absolute;outline:none; filter: alpha(opacity=0); PADDING-BOTTOM: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; font-family: Arial; font-size: 180px;height:30px;width:200px;top: 0px; cursor: pointer; right: 0px; padding-top: 0px; opacity: 0;direction:ltr;background-image:none" type="file" multiple="multiple" >').appendTo(el.find('.upload'));
-            fileupload(jQuery('#right_uploadfile_' + fid),fid);
-
-            jQuery('<input id="right_uploadfolder_' + fid + '" name="files[]" tabIndex="-1" style="position: absolute;outline:none; filter: alpha(opacity=0); PADDING-BOTTOM: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; font-family: Arial; font-size: 180px;height:30px;width:200px;top: 0px; cursor: pointer; right: 0px; padding-top: 0px; opacity: 0;direction:ltr;background-image:none" type="file" multiple="multiple" >').appendTo(el.find('.uploadfolder'));
-            fileupload(jQuery('#right_uploadfolder_' + fid),fid);
-
-        } else {
-			if( el.find('.upload').length>0){
-				el.find('.upload').get(0).onclick = function () {
-					jQuery('.js-upload-file input').trigger('click');
-					el.hide();
-				}
-			}
-			if( el.find('.uploadfolder').length>0){
-				el.find('.uploadfolder').get(0).onclick = function () {
-					jQuery('.js-upload-folder input').trigger('click');
-					el.hide();
-				}
-			}
-        }
-    } else {
-        el.find('.upload').remove();
-        el.find('.uploadfolder').remove();
-    }
-    //设置默认桌面
-
-    //检测新建和上传是否都没有
-    if (el.find('.create .menu>.menu-item').length < 1) {
-        el.find('.create').remove();
-    }
-    if (el.find('.menu-item').length < 1) {
-        el.hide();
-        return;
-    }
-    el.find('.menu-sep').each(function () {
-        if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
-    });
-
- 	var Max_x = document.documentElement.clientWidth;
-    var Max_y = document.documentElement.clientHeight;
-    el.css({'z-index': _contextmenu.zIndex + 1,'max-height':Max_y});
-    el.show();
-   
-    el.find('>div').each(function () {
-        var item = jQuery(this);
-        var subitem = item.find('.menu');
-        if (subitem.length) {
-            var shadow = item.find('.menu-shadow');
-            item.on('mouseover', function () {
-                if (_contextmenu.ppp) _contextmenu.ppp.hide();
-                if (_contextmenu.kkk) _contextmenu.kkk.hide();
-                if (_contextmenu.last) _contextmenu.last.removeClass('menu-active');
-                _contextmenu.kkk = shadow;
-                _contextmenu.last = item;
-                _contextmenu.ppp = subitem;
-                item.addClass('menu-active');
-                var temp = item.find('.menu');
-                var subx = el.width() - 1;
-                suby = -5;
-                if (x + el.width() * 2 > Max_x) subx = subx - temp.width() - el.width() - 3;
-                if (y + item.position().top + temp.height() > Max_y) suby = suby - temp.height() + item.height();
-                temp.css({left: subx-0.01, top: suby, 'z-index': _contextmenu.zIndex + 2, display: 'block'});
-                shadow.css({
-                    display: "block",
-                    zIndex: _contextmenu.zIndex + 1,
-                    left: subx,
-                    top: suby,
-                    width: temp.outerWidth(),
-                    height: temp.outerHeight()
-                });
-                subitem.find('.menu-item').on('mouseover', function () {
-                    jQuery(this).addClass('menu-active');
-
-                });
-                subitem.find('.menu-item').on('mouseout', function () {
-                    jQuery(this).removeClass('menu-active');
-                    return false;
-
-                });
-
-                return false;
-            });
-            item.on('mouseout', function () {
-                item.removeClass('menu-active');
-                shadow.hide();
-                subitem.hide();//alert('dddddd');
-                return false;
-            });
-
-        } else {
-            item.on('mouseover', function () {
-                if (_contextmenu.last) _contextmenu.last.removeClass('menu-active');
-                if (_contextmenu.ppp) _contextmenu.ppp.hide();
-                if (_contextmenu.kkk) _contextmenu.kkk.hide();
-                jQuery(this).addClass('menu-active');
-                return false;
-            });
-            item.on('mouseout', function () {
-                jQuery(this).removeClass('menu-active');
-            });
-        }
-    });
-    //alert(el.width()+'===='+el.height());
-    if (x + el.width() > Max_x) x = x - el.width();
-    if (y + el.height() > Max_y) y = y - el.height();
-	if (y < 0) y = 0;
-    el.css({left: x, top: y});
-
-    jQuery('#shadow').css({
-        display: "block",
-        zIndex: _contextmenu.zIndex,
-        left: x,
-        top: y,
-        width: el.outerWidth(),
-        height: el.outerHeight()
-    });
-
-    jQuery(document).on('mousedown.right_contextmenu', function (e) {
-        //var obj = event.srcElement ? event.srcElement : event.target;
-        e = e ? e : window.event;
-        var obj = e.srcElement ? e.srcElement : e.target;
-        if (jQuery(obj).closest('#right_contextmenu').length < 1) {
-            el.hide();
-            jQuery('#shadow').hide();
-            jQuery(document).off('.right_contextmenu');
-            _contextmenu.kkk = null;
-            _contextmenu.ppp = null;
-            _contextmenu.last = null;
-        }
-    });
-};
 function _select(container)
 {
 	this.id=this.name=container;

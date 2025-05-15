@@ -413,10 +413,10 @@ class dzz_app extends dzz_base{
 
     private function _init_db() {
         if($this->init_db) {
-            $driver = function_exists('mysqli_connect') ? 'db_driver_mysqli' : 'db_driver_mysql';
-            if(getglobal('config/db/slave')) {
-                $driver = function_exists('mysqli_connect') ? 'db_driver_mysqli_slave' : 'db_driver_mysql_slave';
-            }
+            $driver = 'db_driver_mysqli';
+			if(getglobal('config/db/slave')) {
+				$driver = 'db_driver_mysqli_slave';
+			}
             DB::init($driver, $this->config['db']);
         }
     }

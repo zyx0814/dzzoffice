@@ -60,11 +60,7 @@ class DB extends dzz_database {}
 
 class Tpdb extends \core\dzz\Tpdb{}
 
-if( function_exists('mysqli_connect') ){
-    class Tpsqli extends \core\dzz\Tpsqli{}
-}else{
-    class Tpsql extends \core\dzz\Tpsql{}
-}
+class Tpsqli extends \core\dzz\Tpsqli{}
 
 class IO extends dzz_io {}
 

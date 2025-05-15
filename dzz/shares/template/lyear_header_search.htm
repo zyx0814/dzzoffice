@@ -1,14 +1,14 @@
 <div class="header-toggle">
     <div class="new-buildMenu">
         <div class="dropdown newMenu">
-            <button type="button" class="btn btn-cricular  dropdown-toggle" id="exampleColorDropdown2" data-toggle="dropdown">新建/上传</button>
-            <ul class="dropdown-menu dropdown-menu-primary" aria-labelledby="exampleGroupDrop1" role="menu">
+            <button type="button" class="btn btn-cricular dropdown-toggle" data-toggle="dropdown">新建/上传</button>
+            <ul class="dropdown-menu dropdown-menu-primary" role="menu">
                 <li role="presentation" class="js-newfolder folderPermMust">
                     <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newFolder')" role="menuitem">
                         <span class="mdi mdi-folder filee-icon filee-folder"></span>
                         <span class="file-text">{lang default_folder_name}</span></a>
                 </li>
-                <li role="separator" class="divider"></li>
+                <li role="separator" class="dropdown-divider"></li>
                 <li class="yunfile-upload js-upload-file"><a href="javascript:;" class="dropdown-item">
                     <span class="mdi mdi-upload filee-icon filee-upload"></span>
                     <span class="file-text">{lang uploadfile}</span>
@@ -19,7 +19,7 @@
                     <span class="file-text">{lang uploadfolder}</span>
                     <input type="file" name="files[]" multiple="" webkitdirectory="" value="" id="wangpan-upload-folder" class="wangpan-upload-file" data-uploadtype="folder"></a>
                 </li>
-                <li role="separator" class="divider"></li>
+                <li role="separator" class="dropdown-divider"></li>
                 <li role="presentation">
                     <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newLink')" role="menuitem">
                         <span class="mdi mdi-web filee-icon filee-language"></span>
@@ -32,7 +32,7 @@
                         <span class="file-text">{lang extname_txt}</span>
                     </a>
                 </li>
-                <li role="separator" class="divider"></li>
+                <li role="separator" class="dropdown-divider"></li>
                 <li role="presentation">
                     <a href="javascript:void(0)" class="dropdown-item" onclick="_filemanage.NewIco('newDoc')" role="menuitem">
                         <span class="filee-icon mdi mdi-file-word filee-file-text"></span>

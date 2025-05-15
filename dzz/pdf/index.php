@@ -1,6 +1,6 @@
 <?php
 /**
-* 当前版本: 2.7.570 2021/1/25
+* 当前版本: 2.5.207 2020/06/01
 * 版本更新: https://github.com/mozilla/pdf.js/releases
 * 搜索:	var userOptions = Object.create(null);
 * 添加:	userOptions =  window.pdfOptions || userOptions;
@@ -8,7 +8,9 @@
 if(!defined('IN_DZZ')||!$_GET['path']) {
 	exit('Access Denied');
 }
-$path=dzzdecode($_GET['path']);
+if (!$path = dzzdecode($_GET['path'])) {
+	showmessage('parameter_error',dreferer());
+}
 $meta=IO::getMeta($path);
 if(!$meta) showmessage(lang('file_not_exist'));
 $perm_download=1;
@@ -20,6 +22,7 @@ if($meta['rid']) {
 		$perm_print=0;
 	}
 }
+$file=$_G['siteurl'].'index.php?mod=io&op=getStream&path='.$_GET['path'].'&filename='.$meta['name'];
 $navtitle = $meta['name'];
 include template('viewer');
 exit();

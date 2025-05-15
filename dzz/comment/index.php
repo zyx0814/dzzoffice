@@ -70,6 +70,7 @@ if ($do == 'getinfo') {
             "idtype" => $value['idtype']
 		];
     }
+    header('Content-Type: application/json');
     $return = [
 		"code"=> 0,
 		"msg"=> "",

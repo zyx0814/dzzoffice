@@ -9,7 +9,7 @@
 if(!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$template = isset($_GET['template']) ? $_GET['template'] : '';
+$template = $_GET['template'] ?? '';
 if ($template == '1') {
     include template('lyear_navmenu','lyear');
 } else {

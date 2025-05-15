@@ -85,55 +85,54 @@ if ($operation == 'filelist') {
             $arr = array();
             //查询当前文件夹信息
             if ($folder = C::t('folder')->fetch_by_fid($id)) {
+                if($folder['fid']) {
+                    $folder['disp'] = $disp = intval($_GET['disp']) ? intval($_GET['disp']) : intval($folder['disp']);//文件排序
+                    $folder['iconview'] = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($folder['iconview']));//排列方式
+                    $conditions = array();
+                    $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
+                    $exts = isset($_GET['exts']) ? trim($_GET['exts']) : '';
+                    if ($exts) {
+                        $extsarr = explode(',', $exts);
+                        $conditions['ext'] = array($extsarr, 'in', 'and');
+                    }
 
-                $folder['disp'] = $disp = intval($_GET['disp']) ? intval($_GET['disp']) : intval($folder['disp']);//文件排序
+                    if ($keyword) {
+                        $conditions['name'] = array($keyword, 'like', 'and');
+                    }
+                    $conditions['mustdition'] = "or (flag = 'folder')";
+                    $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 1;
 
-                $folder['iconview'] = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($folder['iconview']));//排列方式
-                $conditions = array();
-                $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
-                $exts = isset($_GET['exts']) ? trim($_GET['exts']) : '';
-                if ($exts) {
-                    $extsarr = explode(',', $exts);
-                    $conditions['ext'] = array($extsarr, 'in', 'and');
-                }
+                    $order = $asc > 0 ? 'ASC' : "DESC";
 
-                if ($keyword) {
-                    $conditions['name'] = array($keyword, 'like', 'and');
-                }
-                $conditions['mustdition'] = "or (flag = 'folder')";
-                $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 1;
+                    switch ($disp) {
+                        case 0:
+                            $orderby = 'name';
+                            break;
+                        case 1:
+                            $orderby = 'size';
+                            break;
+                        case 2:
+                            $orderby = array('type', 'ext');
+                            break;
+                        case 3:
+                            $orderby = 'dateline';
+                            break;
 
-                $order = $asc > 0 ? 'ASC' : "DESC";
-
-                switch ($disp) {
-                    case 0:
-                        $orderby = 'name';
-                        break;
-                    case 1:
-                        $orderby = 'size';
-                        break;
-                    case 2:
-                        $orderby = array('type', 'ext');
-                        break;
-                    case 3:
-                        $orderby = 'dateline';
-                        break;
-
-                }
-                $folder['perm'] = perm_check::getPerm($folder['fid']);//获取文件权限
-                foreach (C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start,false,false,true) as $v) {
-                    if ($v['type'] != 'folder' && $permfilter && $v['gid']) {
-                        if (filter_permdata($permfilter, $folder['perm'], $v, $uid)) {
-                            continue;
+                    }
+                    $folder['perm'] = perm_check::getPerm($folder['fid']);//获取文件权限
+                    foreach (C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start,false,false,true) as $v) {
+                        if ($v['type'] != 'folder' && $permfilter && $v['gid']) {
+                            if (filter_permdata($permfilter, $folder['perm'], $v, $uid)) {
+                                continue;
+                            }
                         }
+                        if ($v['type'] == 'image') {
+                            $v['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=100&height=90&path=' . dzzencode('attach::' . $v['aid']);
+                        }
+                        $data[$v['rid']] = $v;
                     }
-                    if ($v['type'] == 'image') {
-                        $v['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=100&height=90&path=' . dzzencode('attach::' . $v['aid']);
-                    }
-                    $data[$v['rid']] = $v;
+                    $folderdata[$folder['fid']] = $folder;//文件夹信息
                 }
-                $folderdata[$folder['fid']] = $folder;//文件夹信息
-
             }
         }
     }

@@ -814,6 +814,12 @@ if ($operation == 'upload') {//上传图片文件
             $rids[] = dzzdecode($v);
         }
         $propertys = C::t('resources')->get_property_by_rid($rids);
+        if (!$propertys['ismulti']) {
+            $attrdata = C::t('resources_attr')->fetch_by_rid($propertys['rid'], $propertys['vid']);
+            if ($_G['adminid'] && $attrdata['aid']) {
+                $attachment = IO::getFileUri('attach::'.$attrdata['aid']);
+            }
+        }
     }
     if ($propertys['error']) {
         $error = $propertys['error'];
@@ -822,6 +828,36 @@ if ($operation == 'upload') {//上传图片文件
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
     $versioninfo = C::t('resources_version')->get_versioninfo_by_rid_vid($rid, $vid);
+} elseif ($operation == 'infoversion') {
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
+    $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
+    
+    $versioninfo = C::t('resources_version')->get_versioninfo_by_rid_vid($rid, $vid);
+    if($versioninfo['rid']) {
+        $propertys = C::t('resources')->get_property_by_rid($versioninfo['rid']);
+    } else {
+        $error = lang('file_not_exist');
+    }
+    if ($versioninfo['aid']) {
+        $attachment = IO::getFileUri('attach::'.$versioninfo['aid']);
+    }
+} elseif ($operation == 'deletethisversion') {
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
+    $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
+    if(!$rid || !$vid) {
+        exit(json_encode(array('error'=>'access denied')));
+    }
+    $fileinfo = C::t('resources')->get_property_by_rid($rid);
+    if($fileinfo['editperm']) {
+        if(C::t('resources_version')->delete_by_vid($vid, $rid,true)) {
+            exit(json_encode(array('msg'=>'success')));
+        } else {
+            exit(json_encode(array('error'=>'该版本不存在或最后一个不能删除')));
+        }
+    } else {
+        exit(json_encode(array('error'=>lang('no_privilege'))));
+    }
+    
 } elseif ($operation == 'addIndex') {//索引文件
     global $_G;
     $indexarr = array(

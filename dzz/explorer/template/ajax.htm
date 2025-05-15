@@ -579,6 +579,30 @@
                 <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[fdateline]</div>
             </div>
             <!--{/if}-->
+            <!--{if $propertys[downs]}-->
+            <div class="file-nature clearfix">
+                <label class="col-md-4 col-sm-4 col-xs-4">{lang download_times}</label>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[downs]</div>
+            </div>
+            <!--{/if}-->
+            <!--{if $propertys[views]}-->
+            <div class="file-nature clearfix">
+                <label class="col-md-4 col-sm-4 col-xs-4">{lang view_count}</label>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[views]</div>
+            </div>
+            <!--{/if}-->
+            <!--{if $propertys[edits]}-->
+            <div class="file-nature clearfix">
+                <label class="col-md-4 col-sm-4 col-xs-4">{lang edit_times}</label>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[edits]</div>
+            </div>
+            <!--{/if}-->
+            <!--{if $attachment}-->
+            <div class="file-nature clearfix">
+                <label class="col-md-4 col-sm-4 col-xs-4">文件地址</label>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text"><a href="$attachment" target="_blank">$attachment</a></div>
+            </div>
+            <!--{/if}-->
         </div>
 
     </div>
@@ -601,6 +625,10 @@
         var path = $(form).find('input[name="path"]').val();
         var ico = _explorer.sourcedata.icos[path];
         filemanage = _filemanage.cons[_filemanage.winid];
+        if (text == ico.name) {
+            hideWindow('property');
+            return false;
+        }
         jQuery.ajax({
             type: 'post',
             url: _explorer.appUrl + '&op=dzzcp&do=rename',
@@ -608,6 +636,7 @@
             dataType: "json",
             success: function (json) {
                 if (json.rid) {
+                    showmessage('已重命名为：'+json.name, 'success', 3000, 1);
                     _explorer.sourcedata.icos[json.rid].name = json.name;
                     filemanage.data[json.rid].name = json.name;
                     filemanage.CreateIcos(_explorer.sourcedata.icos[json.rid], true);
@@ -796,7 +825,11 @@
                 $(form).find('.delshare').removeClass('hide');
                 $('#shareid').val(data['shareid']);
                 $('#delshare').val(1);
-                showmessage('{lang share_creation_success}', 'success', 3000, 1, 'right-bottom');
+                <!--{if $share['id']}-->
+                showmessage('分享编辑成功', 'success', 3000, 1);
+                <!--{else}-->
+                showmessage('{lang share_creation_success}', 'success', 3000, 1);
+                <!--{/if}-->
                 if ('{$shareid}') {
                     _filemanage.getData(_explorer.appUrl + '&op=share&do=filelist&sid=share-list');
                 }

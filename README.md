@@ -58,7 +58,7 @@
 - 服务器:
     - Windows，Linux，Mac ...
     - PHP 7.0+
-    - 数据库: mysql 5.0+
+    - 数据库: mysql 5.5.3+
 - 浏览器适配: 
     - Chrome 60+
     - Firefox 60+

@@ -24,11 +24,7 @@ define('APP_DIRNAME','dzz');//应用目录名
 
 require ROOT_PATH.'./core/core_version.php';
 require ROOT_PATH.'./install/include/install_var.php';
-if(function_exists('mysqli_connect')) {
-	require ROOT_PATH.'./install/include/install_mysqli.php';
-} else {
-	require ROOT_PATH.'./install/include/install_mysql.php';
-}
+require ROOT_PATH.'./install/include/install_mysqli.php';
 require ROOT_PATH.'./install/include/install_function.php';
 require ROOT_PATH.'./install/language/zh-cn/lang.php';
 
@@ -149,29 +145,20 @@ if($method == 'show_license') {
 		if(empty($dbname)) {
 			show_msg('dbname_invalid', $dbname, 0);
 		} else {
-			$mysqlmode = function_exists("mysqli_connect") ? 'mysqli' :  'mysql';
-			if($mysqlmode=='mysqli'){
-				//兼容支持域名直接带有端口的情况
-				if(strpos($dbhost,':')!==false){
-					list($dbhost1,$port)=explode(':',$dbhost);
-
-				}elseif(strpos($dbhost,'.sock')!==false){//地址直接是socket地址
-					$unix_socket=$dbhost;
-					$dbhost1='localhost';
-				}else{
-					$dbhost1=$dbhost;
-				}
-				if(empty($port)) $port='3306';
-				$link =  new mysqli($dbhost1, $dbuser, $dbpw, '', $port, $unix_socket);
-				$errno =  $link->connect_errno;
-				$error =  $link->connect_error;
-			}else{
+			//兼容支持域名直接带有端口的情况
+			if(strpos($dbhost,':')!==false){
 				list($dbhost1,$port)=explode(':',$dbhost);
-				if(empty($port)) $port='3306';
-				$link = @mysql_connect($dbhost, $dbuser, $dbpw);
-				$errno = mysql_errno();
-				$error = mysql_error();
+
+			}elseif(strpos($dbhost,'.sock')!==false){//地址直接是socket地址
+				$unix_socket=$dbhost;
+				$dbhost1='localhost';
+			}else{
+				$dbhost1=$dbhost;
 			}
+			if(empty($port)) $port='3306';
+			$link =  new mysqli($dbhost1, $dbuser, $dbpw, '', $port, $unix_socket);
+			$errno =  $link->connect_errno;
+			$error =  $link->connect_error;
 			if($errno) {
 				if($errno == 1045) {
 					show_msg('database_errno_1045', $error, 0);
@@ -181,29 +168,11 @@ if($method == 'show_license') {
 					show_msg('database_connect_error', $error, 0);
 				}
 			}
-			$mysql_version = ($mysqlmode == 'mysqli') ? $link->server_info : mysql_get_server_info() ;
-			if($mysql_version > '4.1') {
-				if($mysqlmode == 'mysqli') {
-					$link->query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET ".DBCHARSET);
-				} else {
-					mysql_query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET ".DBCHARSET, $link);
-				}
-			} else {
-				if($mysqlmode == 'mysqli') {
-					$link->query("CREATE DATABASE IF NOT EXISTS `$dbname`");
-				} else {
-					mysql_query("CREATE DATABASE IF NOT EXISTS `$dbname`", $link);
-				}
+			$link->query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET ".DBCHARSET);
+			if($link->errno) {
+				show_msg('database_errno_1044', $link->error, 0);
 			}
-
-			if(($mysqlmode == 'mysqli') ?  $link->errno : mysql_errno($link)) {
-				show_msg('database_errno_1044', ($mysqlmode == 'mysqli') ? $link->error: mysql_error($link) , 0,0);
-			}
-			if($mysqlmode == 'mysqli') {
-				$link->close();
-			} else {
-				mysql_close($link);
-			}
+			$link->close();
 		}
 
 		if(strpos($tablepre, '.') !== false || intval($tablepre[0])) {

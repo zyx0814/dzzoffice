@@ -11,10 +11,17 @@ _upload.filelist = $('.fileList');
 _upload.fid = null;
 _upload.maxli=10;//设置为0时，不缓存添加数据功能
 _upload.datas=[];
-var attachextensions = (_explorer.space.attachextensions.indexOf('|') != -1) ? _explorer.space.attachextensions.join('|') : _explorer.space.attachextensions;
-if (attachextensions) attachextensions = "(\.|\/)(" + (attachextensions.join('|')) + ")$";
-else attachextensions = "\.*$";
-var maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
+var attachextensions = '';
+var maxfileSize = null;
+if (_explorer.space && _explorer.space.attachextensions) {
+    attachextensions = (_explorer.space.attachextensions.indexOf('|') != -1) ? _explorer.space.attachextensions.join('|') : _explorer.space.attachextensions;
+    attachextensions = "(\.|\/)(" + attachextensions + ")$";
+} else {
+    attachextensions = "\.*$";
+}
+if (_explorer.space && _explorer.space.maxattachsize) {
+    maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
+}
 function fileupload(el, fid) {
     el.off();
     el.fileupload({
@@ -26,7 +33,7 @@ function fileupload(el, fid) {
         pasteZone: el.attr('id') == 'wangpan-upload-folder' ? null : $('#middleconMenu'),
         maxFileSize: maxfileSize, // 5 MB
         acceptFileTypes: new RegExp(attachextensions, 'i'),
-        sequentialUploads: true
+        sequentialUploads: true,
 	}).on('fileuploadadd', function (e, data) {
 		_upload.tips.show();
 		if(_upload.maxli && _upload.datas.length>=_upload.maxli){

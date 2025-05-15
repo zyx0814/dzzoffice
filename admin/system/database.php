@@ -13,7 +13,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 error_reporting(E_ERROR);
 
 $db = &DB::object();
-$tabletype = $db -> version() > '4.1' ? 'Engine' : 'Type';
+$tabletype = 'Engine';
 $tablepre = $_G['config']['db'][1]['tablepre'];
 $dbcharset = $_G['config']['db'][1]['dbcharset'];
 $backupdir = C::t('setting') -> fetch('backupdir');
@@ -87,16 +87,14 @@ if ($operation == 'export') {
 		$idstring = '# Identify: ' . base64_encode($_G['timestamp']."," . $_G['setting']['version'] . "," .$_GET['type']."," .$_GET['method']."," .$volume."," .$tablepre."," .$dbcharset) . "\n";
 
 		$dumpcharset = $_GET['sqlcharset'] ? $_GET['sqlcharset'] : str_replace('-', '', $_G['charset']);
-		$setnames = ($_GET['sqlcharset'] && $db -> version() > '4.1' && (!$_GET['sqlcompat'] || $_GET['sqlcompat'] == 'MYSQL41')) ? "SET NAMES '$dumpcharset';\n\n" : '';
-		if ($db -> version() > '4.1') {
-			if ($_GET['sqlcharset']) {
-				DB::query('SET NAMES %s', array($_GET['sqlcharset']));
-			}
-			if ($_GET['sqlcompat'] == 'MYSQL40') {
-				DB::query("SET SQL_MODE='MYSQL40'");
-			} elseif ($_GET['sqlcompat'] == 'MYSQL41') {
-				DB::query("SET SQL_MODE=''");
-			}
+		$setnames = ($_GET['sqlcharset'] && (!$_GET['sqlcompat'] || $_GET['sqlcompat'] == 'MYSQL41')) ? "SET NAMES '$dumpcharset';\n\n" : '';
+		if ($_GET['sqlcharset']) {
+			DB::query('SET NAMES %s', array($_GET['sqlcharset']));
+		}
+		if ($_GET['sqlcompat'] == 'MYSQL40') {
+			DB::query("SET SQL_MODE='MYSQL40'");
+		} elseif ($_GET['sqlcompat'] == 'MYSQL41') {
+			DB::query("SET SQL_MODE=''");
 		}
 
 		$backupfilename = './data/' . $backupdir . '/' . str_replace(array('/', '\\', '.', "'"), '', $_GET['filename']);
@@ -226,7 +224,7 @@ if ($operation == 'export') {
 			
 
 			$mysqlbin = $mysql_base == '/' ? '' : addslashes($mysql_base) . 'bin/';
-			@shell_exec($mysqlbin . 'mysqldump --force --quick ' . ($db -> version() > '4.1' ? '--skip-opt --create-options' : '-all') . ' --add-drop-table' . ($_GET['extendins'] == 1 ? ' --extended-insert' : '') . '' . ($db -> version() > '4.1' && $_GET['sqlcompat'] == 'MYSQL40' ? ' --compatible=mysql40' : '') . ' --host="' . $dbhost . ($dbport ? (is_numeric($dbport) ? ' --port=' . $dbport : ' --socket="' . $dbport . '"') : '') . '" --user="' . $dbuser . '" --password="' . $dbpw . '" "' . $dbname . '" ' . $tablesstr . ' > ' . $dumpfile);
+			@shell_exec($mysqlbin.'mysqldump --force --quick --skip-opt --create-options --add-drop-table'.($_GET['extendins'] == 1 ? ' --extended-insert' : '').''.($_GET['sqlcompat'] == 'MYSQL40' ? ' --compatible=mysql40' : '').' --host="'.$dbhost.'"'.($dbport ? (is_numeric($dbport) ? ' --port='.$dbport : ' --socket="'.$dbport.'"') : '').' --user="'.$dbuser.'" --password="'.$dbpw.'" "'.$dbname.'" '.$tablesstr.' > '.$dumpfile);
           
 			if (@file_exists($dumpfile)) {
 
@@ -394,7 +392,7 @@ if ($operation == 'export') {
 		$affected_rows = 0;
 		foreach ($sqlquery as $sql) {
 			if (trim($sql) != '') {
-				$sql = !empty($_GET['createcompatible']) ? syntablestruct(trim($sql), $db -> version() > '4.1', $dbcharset) : $sql;
+				$sql = !empty($_GET['createcompatible']) ? syntablestruct(trim($sql), true, $dbcharset) : $sql;
 
 				DB::query($sql, 'SILENT');
 				if ($sqlerror = DB::error()) {
@@ -490,21 +488,18 @@ function sqldumptablestruct($table) {
 	}
 	$tabledump .= $create[1];
 
-	if ($_GET['sqlcompat'] == 'MYSQL41' && $db -> version() < '4.1') {
-		$tabledump = preg_replace("/TYPE\=(.+)/", "ENGINE=\\1 DEFAULT CHARSET=" . $dumpcharset, $tabledump);
-	}
-	if ($db -> version() > '4.1' && $_GET['sqlcharset']) {
-		$tabledump = preg_replace("/(DEFAULT)*\s*CHARSET=.+/", "DEFAULT CHARSET=" . $_GET['sqlcharset'], $tabledump);
+	if($_GET['sqlcharset']) {
+		$tabledump = preg_replace("/(DEFAULT)*\s*CHARSET=.+/", "DEFAULT CHARSET=".$_GET['sqlcharset'], $tabledump);
 	}
 
 	$tablestatus = DB::fetch_first("SHOW TABLE STATUS LIKE '$table'");
-	$tabledump .= ($tablestatus['Auto_increment'] ? (" AUTO_INCREMENT=".$tablestatus['Auto_increment']) : ''). ";\n\n";
-	if ($_GET['sqlcompat'] == 'MYSQL40' && $db -> version() >= '4.1' && $db -> version() < '5.1') {
-		if ($tablestatus['Auto_increment'] <> '') {
+	$tabledump .= ($tablestatus['Auto_increment'] ? " AUTO_INCREMENT={$tablestatus['Auto_increment']}" : '').";\n\n";
+	if($_GET['sqlcompat'] == 'MYSQL40') {
+		if($tablestatus['Auto_increment'] <> '') {
 			$temppos = strpos($tabledump, ',');
-			$tabledump = substr($tabledump, 0, $temppos) . ' auto_increment' . substr($tabledump, $temppos);
+			$tabledump = substr($tabledump, 0, $temppos).' auto_increment'.substr($tabledump, $temppos);
 		}
-		if ($tablestatus['Engine'] == 'MEMORY') {
+		if($tablestatus['Engine'] == 'MEMORY') {
 			$tabledump = str_replace('TYPE=MEMORY', 'TYPE=HEAP', $tabledump);
 		}
 	}

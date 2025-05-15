@@ -31,7 +31,6 @@ if($_G['uid']) {
 }
 $seccodecheck = $setting['seccodestatus'] & 1;
 
-
 //判断是否提交
 if(!submitcheck('regsubmit', 0, $seccodecheck)) {
 

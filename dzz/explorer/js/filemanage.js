@@ -1790,7 +1790,8 @@ _filemanage.rename = function (id) {
 	el.css('overflow', 'visible');
 	el.closest('td').addClass('renaming');
 	jQuery('#Icoblock_middleicon_' + id).find('.IcoText_div').css('overflow', 'visible');
-	filemanage.oldtext = el.html();
+	var filename = el.html();
+	filemanage.oldtext = filename.replace(/\.[^\.]*$/, '');
 	var html = '';
 	if (filemanage.view > 3) {
 		html = "<input type='text' class='form-control' name='text'  id='input_" + id + "' style=\"width:" + (el.closest('td').width() - 110) + "px;height:30px;padding:2px; \" value=\"" + filemanage.oldtext + "\">";
@@ -1816,19 +1817,17 @@ _filemanage.rename = function (id) {
 			var text = ele.val() || "";
             var emptymatch = /^\s*$/;
             if(emptymatch.test(text)){
-                showDialog(__lang.name_is_must,'error','',function(){
-                    el.html(filemanage.oldtext);
-                    el.css('overflow', 'hidden');
-                    el.closest('td').removeClass('renaming');
-                    jQuery('#Icoblock_middleicon_' + id).find('.IcoText_div').css('overflow', 'hidden');
-				});
+				el.html(filename);
+				el.css('overflow', 'hidden');
+				el.closest('td').removeClass('renaming');
+				jQuery('#Icoblock_middleicon_' + id).find('.IcoText_div').css('overflow', 'hidden');
                 return false;
             }
 			text = text.replace("\n", '');
 			if (filemanage.oldtext !== text) {
 				_filemanage.Rename(id, text);
 			} else {
-				el.html(filemanage.oldtext);
+				el.html(filename);
 				el.css('overflow', 'hidden');
 				el.closest('td').removeClass('renaming');
 				jQuery('#Icoblock_middleicon_' + id).find('.IcoText_div').css('overflow', 'hidden');

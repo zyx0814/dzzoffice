@@ -15,17 +15,17 @@
         <!--{elseif $operation=='basic'}-->
         <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
         <!--{elseif $operation=='at'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
         <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
         <!--{elseif $operation=='upload'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=upload">{lang upload_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
         <!--{elseif $operation=='loginset'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=denlu">{lang basicSet}</a></li>
@@ -45,7 +45,7 @@
         <!--{elseif $operation=='datetime'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
         <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
         <!--{elseif $operation=='sec'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=denlu">{lang basicSet}</a></li>
@@ -367,10 +367,16 @@
                 </div>
                 <ul class="form-text">
                     {lang upload_block_size_text}
-                    <li>不能设置为0，否则会影响全站的上传功能，无法上传文件或文件受损</li>
                   </ul>
               </div>
             </div>
+            <!-- <div class="row mb-3 border-bottom pb-2">
+              <label for="limitConcurrentUploads" class="col-sm-2">上传并发线程</label>
+              <div class="col-sm-10">
+                  <input type="text" class="form-control" id="limitConcurrentUploads" required name="settingnew[limitConcurrentUploads]" value="$setting['limitConcurrentUploads']">
+                <span class="form-text">推荐=10;文件或分片同时上传数</span>
+              </div>
+            </div> -->
             <div class="row mb-3">
               <label class="col-sm-2">{lang file_more_version_set}</label>
               <div class="col-sm-10">

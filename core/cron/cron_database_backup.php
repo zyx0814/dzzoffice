@@ -18,7 +18,7 @@ if(!function_exists('mysql_escape_string')){
 }
 global $db;
 $db = & DB::object();
-$tabletype = $db->version() > '4.1' ? 'Engine' : 'Type';
+$tabletype = 'Engine';
 $tablepre = $_G['config']['db'][1]['tablepre'];
 $dbcharset = $_G['config']['db'][1]['dbcharset'];
 $backupdir = C::t('setting')->fetch('backupdir');

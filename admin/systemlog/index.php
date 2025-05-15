@@ -136,6 +136,7 @@ if ($do == 'getinfo') {
 			}
 		}
 	}
+	header('Content-Type: application/json');
 	$return = [
 		"code"=> 0,
 		"msg"=> "",

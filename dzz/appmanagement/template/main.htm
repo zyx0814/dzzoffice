@@ -179,7 +179,7 @@ $('#userstats').click(function() {
         id:'layeruserstats',
         shade: false,
         maxmin: true,
-        area: ['50%', '70%'],
+        area: window.innerWidth < 768 ? ['100%','100%'] : ['50%', '70%'],
         content: '{MOD_URL}&do=stats',
     });
 });

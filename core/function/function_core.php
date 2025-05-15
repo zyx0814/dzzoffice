@@ -2305,67 +2305,19 @@ function dzzgetspace($uid)
         $config['perm'] = ($config['perm'] < 1) ? $usergroup['perm'] : $config['perm'];
         $config['attachextensions'] = ($config['attachextensions'] < 0) ? $usergroup['attachextensions'] : $config['attachextensions'];
         $config['maxattachsize'] = ($config['maxattachsize'] < 0) ? $usergroup['maxattachsize'] * 1024 * 1024 : $config['maxattachsize'] * 1024 * 1024;
-
-       /* //如果用户存储功能未开启,用户空间大小为-1
-        if (isset($setting['usermemoryOn']) && !$setting['usermemoryOn']) {
-
-            $config['maxspacesize'] = -1;
-
-        } else {*/
-            //判断是否有用户独享空间设置
-            if ($config['userspace'] > 0 || $config['userspace'] == -1) {
-                $config['maxspacesize'] = ($config['userspace'] > 0) ? $config['userspace'] * 1024 * 1024 : $config['userspace'];
-
-            } elseif ($config['userspace'] == 0) {//如果未设置用户空间
-
-               /* //判断是否为指定用户开启用户存储
-                $spaceon = isset($setting['mermoryusersetting']) ? $setting['mermoryusersetting'] : '';
-                $memorySpace = isset($setting['memorySpace']) ? $setting['memorySpace'] : '';
-
-                //指定用户时,并指定用户空间
-                if ($spaceon == 'appoint' && $memorySpace != 0) {
-
-                    $usersarr = explode(',', $setting['memoryorgusers']);
-                    $users = array();
-                    foreach ($usersarr as $v) {
-                        //群组id
-                        if (preg_match('/\d+/', $v)) {
-                            foreach (C::t('organization_user')->fetch_user_byorgid($v) as $val) {
-                                $users[] = $val['uid'];
-                            }
-                        } elseif ($v == 'other') {
-                            foreach (C::t('user')->fetch_uid_by_groupid(9) as $val) {
-                                $users[] = $val['uid'];
-                            }
-                        } elseif (preg_match('/uid_\d+/', $v)) {
-                            $users[] = preg_replace('/uid_/', '');
-                        }
-
-                    }
-                    $users = array_unique($users);
-                    //判断用户是否在指定用户中
-                    if (in_array($uid, $users)) {
-                        $config['maxspacesize'] = ($memorySpace > 0) ? $memorySpace * 1024 * 1024 : $memorySpace;
-                    }else{
-                        $config['maxspacesize'] = -1;
-                    }
-                } else {*///如果未指定开启存储用户或设置指定用户空间为0
-                    //用户组空间(去掉额外空间和购买空间)
-                    if ($usergroup['maxspacesize'] == 0) {
-                        $config['maxspacesize'] = 0;
-                    } elseif ($usergroup['maxspacesize'] < 0) {
-                        /*if(($config['addsize']+$config['buysize'])>0){
-                                $config['maxspacesize']=($config['addsize']+$config['buysize'])*1024*1024;
-                            }else{*/
-                        $config['maxspacesize'] = -1;
-                        //}
-                    } else {
-                        //$config['maxspacesize']=($usergroup['maxspacesize']+$config['addsize']+$config['buysize'])*1024*1024;
-                        $config['maxspacesize'] = $usergroup['maxspacesize'] * 1024 * 1024;
-                    }
-               // }
+        //判断是否有用户独享空间设置
+        if ($config['userspace'] > 0 || $config['userspace'] == -1) {
+            $config['maxspacesize'] = ($config['userspace'] > 0) ? $config['userspace'] * 1024 * 1024 : $config['userspace'];
+        } elseif ($config['userspace'] == 0) {//如果未设置用户空间
+            //用户组空间(去掉额外空间和购买空间)
+            if ($usergroup['maxspacesize'] == 0) {
+                $config['maxspacesize'] = 0;
+            } elseif ($usergroup['maxspacesize'] < 0) {
+                $config['maxspacesize'] = -1;
+            } else {
+                $config['maxspacesize'] = $usergroup['maxspacesize'] * 1024 * 1024;
             }
-       // }
+        }
         $space = array_merge($space, $config);
     }
     $space['fusesize'] = formatsize($space['usesize']);
@@ -2382,7 +2334,6 @@ function dzzgetspace($uid)
     $space['typefid'] = C::t('folder')->fetch_typefid_by_uid($uid);
     $space['maxChunkSize'] = $_G['setting']['maxChunkSize'];
     return $space;
-
 }
 
 function microtime_float()
@@ -3126,10 +3077,10 @@ function get_resources_some_setting()
     } else {
         //用户存储开启
         if ($setting['explorer_usermemoryOn'] == 1) {
-            $spaceon = isset($setting['explorer_mermoryusersetting']) ? $setting['explorer_mermoryusersetting'] : '';
+            $spaceon = $setting['explorer_mermoryusersetting'] ?? '';
             if ($spaceon == 'appoint') {//指定用户时
                 $usersarr = explode(',', $setting['explorer_memoryorgusers']);
-                $uesrs = array();
+                $users = array();
                 foreach ($usersarr as $v) {
                     //群组id
                     if (preg_match('/^\d+$/', $v)) {
@@ -3137,8 +3088,9 @@ function get_resources_some_setting()
                             $users[] = $val['uid'];
                         }
                     } elseif ($v == 'other') {
-                        foreach (C::t('user')->fetch_uid_by_groupid(9) as $val) {
-                            $users[] = $val['uid'];
+                        $otherUsers = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
+                        if(!$otherUsers) {
+                            $users[] = $_G['uid'];
                         }
                     } elseif (preg_match('/^uid_\d+$/', $v)) {
                         $users[] = preg_replace('/uid_/', '',$v);
@@ -3192,8 +3144,9 @@ function get_resources_some_setting()
                             $users[] = $val['uid'];
                         }
                     } elseif ($v == 'other') {
-                        foreach (C::t('user')->fetch_uid_by_groupid(9) as $val) {
-                            $users[] = $val['uid'];
+                        $otherUsers = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
+                        if(!$otherUsers) {
+                            $users[] = $_G['uid'];
                         }
                     } elseif (preg_match('/^uid_\d+$/', $v)) {
                         $users[] = preg_replace('/uid_/', '',$v);

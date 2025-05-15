@@ -70,6 +70,7 @@ if ($do == 'getinfo') {
         "number" => $value['times'] ? $value['count'] .'/'.$value['times'] : '',
       ];
   }
+  header('Content-Type: application/json');
 	$return = [
 		"code"=> 0,
 		"msg"=> "",

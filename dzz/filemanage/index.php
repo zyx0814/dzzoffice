@@ -146,12 +146,13 @@ if ($do == 'delete') {
 		} else {
 			$isdelete = '否';
 		}
-		if($_G['adminid'] && $data['type']!=='folder'){
+		if ($_G['adminid']) {
 			$copys = $data['copys'];
-			$FileUri = IO::getFileUri($data['path'])?:'';
-		} else {
-			$copys = '';
-			$FileUri = '';
+			if($data['aid']) {
+				$FileUri = IO::getFileUri('attach::'.$data['aid']);
+			} else {
+				$FileUri = '';
+			}
 		}
 		$list[] = [
 			"username" => '<a href="user.php?uid='.$data['uid'].'" target="_blank">'.$data['username'].'</a>',
@@ -185,6 +186,7 @@ if ($do == 'delete') {
 			}
 		}
 	}
+	header('Content-Type: application/json');
 	$return = [
 		"code"=> 0,
 		"msg"=> "",

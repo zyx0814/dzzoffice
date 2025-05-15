@@ -14,7 +14,7 @@ $dzz->init_setting=false;
 $dzz->init_user=false;
 $dzz->init_misc=false;
 $dzz->init();
-$sid = $_GET['sid'] ? $_GET['sid'] : '';
+$sid = $_GET['sid'] ?? '';
 if(!$sid){
 	exit('Access Denied');
 }

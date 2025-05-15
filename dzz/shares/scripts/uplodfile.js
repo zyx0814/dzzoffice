@@ -64,7 +64,7 @@ function fileupload(el, fid) {
         if (file.error) {
             _upload.uploaddone('error');
             var err = file.error ? file.error  : __lang.upload_failure;
-                data.context.find('.upload-file-status').html('<span class="danger" title="' + err + '">' + err + '</span>');
+                data.context.find('.upload-file-status').html('<span class="text-danger" title="' + err + '">' + err + '</span>');
         }
     }).on('fileuploadprogress', function (e, data) {
         var index = data.index;
@@ -84,13 +84,13 @@ function fileupload(el, fid) {
         data.context.find('.upload-cancel').hide();
         var process_bar = data.context.find('.process').css('width', '100%');
         if (process_bar) {
-            data.context.find('.process').css('background-color', '#fff');
+            data.context.find('.process').css('background-color', '');
         }
         $.each(data.result.files, function (index, file) {
             if (file.error) {
                 var relativePath = (file.relativePath ? file.relativePath : '');
                 var err = file.error ? file.error  : __lang.upload_failure;
-                data.context.find('.dialog-info .upload-file-status').html('<span class="danger" title="' + err + '">' + err + '</span>');
+                data.context.find('.dialog-info .upload-file-status').html('<span class="text-danger" title="' + err + '">' + err + '</span>');
 				 _upload.uploaddone('error');
             } else {
 				 _upload.uploaddone();
@@ -146,7 +146,7 @@ function fileupload(el, fid) {
                 errorMsg = file.error;
             }
             data.context.find('.upload-file-status').html(
-                '<span class="danger" title="' + errorMsg + '">' + errorMsg + '</span>'
+                '<span class="text-danger" title="' + errorMsg + '">' + errorMsg + '</span>'
             );
             _upload.uploaddone('error');
         });
@@ -179,7 +179,7 @@ function fileupload(el, fid) {
     var html =
         '<div class="process" style="position:absolute;z-index:-1;height:100%;background-color:#e8f5e9;-webkit-transition:width 0.6s ease;-o-transition:width 0.6s ease;transition:width 0.6s ease;width:0%;"></div> <div class="dialog-info"> <div class="upload-file-name">' +
         '<div class="dialog-file-icon" align="center">' + imgicon + '</div> <span class="name-text">' + file.name + '</span> ' +
-        '</div> <div class="upload-file-size">' + (file.size ? formatSize(file.size) : '') + '</div> <div class="upload-file-path">' +
+        '</div> <div class="upload-file-size">' + (file.size ? formatSize(file.size) : '0B') + '</div> <div class="upload-file-path">' +
         '<a title="" class="" href="javascript:;">' + relativePath + '</a> </div> <div class="upload-file-status"> <span class="uploading"><em class="precent"></em><em class="speed">'+uploadtips+'</em>' +
         '</span> <span class="success"><em></em><i></i></span> </div> <div class="upload-file-operate"> ' +
         '<em class="operate-pause"></em> <em class="operate-continue"></em> <em class="operate-retry"></em> <em class="operate-remove"></em> ' +

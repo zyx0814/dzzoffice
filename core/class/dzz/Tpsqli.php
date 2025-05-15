@@ -38,9 +38,7 @@ class Tpsqli extends Tpdb{
             // 设置数据库编码
             $this->linkID[$linkNum]->query("SET NAMES '".C('DB_CHARSET')."'");
             //设置 sql_model
-            if($dbVersion >'5.0.1'){
-                $this->linkID[$linkNum]->query("SET sql_mode=''");
-            }
+            $this->linkID[$linkNum]->query("SET sql_mode=''");
             // 标记连接成功
             $this->connected    =   true;
             //注销数据库安全信息

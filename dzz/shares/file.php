@@ -115,6 +115,9 @@ if($do == 'filelist'){
         if (!$folder) {
             exit(json_encode(array('error' => '文件夹不存在')));
         }
+        if(!$folder['fid']) {
+            exit(json_encode(array('error' => '文件夹不存在')));
+        }
         $fiddata = C::t('resources_path')->fetch_folder_containfid_by_pfid($share['pfid']);
         if (!empty($fiddata)) {
             // 排除第一个元素

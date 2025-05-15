@@ -9,7 +9,7 @@
 if(!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$template = isset($_GET['template']) ? $_GET['template'] : '';
+$template = $_GET['template'] ?? '';
 $about=array();
 $identify = filter_var($_GET['modname'], FILTER_SANITIZE_STRING);
 $appConfig = DZZ_ROOT . './dzz/' . $identify . '/config/config.php';
