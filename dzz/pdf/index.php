@@ -8,7 +8,9 @@
 if(!defined('IN_DZZ')||!$_GET['path']) {
 	exit('Access Denied');
 }
-$path=dzzdecode($_GET['path']);
+if (!$path = dzzdecode($_GET['path'])) {
+	showmessage('parameter_error',dreferer());
+}
 $meta=IO::getMeta($path);
 if(!$meta) showmessage(lang('file_not_exist'));
 $perm_download=1;
