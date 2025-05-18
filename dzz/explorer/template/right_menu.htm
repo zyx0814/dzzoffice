@@ -60,7 +60,7 @@
                         <!--{/if}-->
                         <!--{if $fileinfo[edits]}-->
                         <p class="attribute-position">
-                            <span class="attribute-width">修改次数</span>
+                            <span class="attribute-width">{lang edit_times}</span>
                             <span class="detailed_contenter">$fileinfo[edits]</span>
                         </p>
                         <!--{/if}-->
@@ -132,7 +132,11 @@
                             <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span
                                     class="caret"></span></a>
                             <ul class="dropdown-menu dropdown-menu-version">
-                                <div class="h3-title">{lang version_information}</div>
+                                <li class="listedit-title">
+                                    <a href="javascript:;" class="view_versions" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="infoversion(this)">
+                                        <span class="dzz dzz-info-outline"></span>{lang version_information}
+                                    </a>
+                                </li>
                                 <li class="listedit-title">
                                     <a href="javascript:;" class="view_versions" data-dpath="$fileinfo[dpath]"
                                        data-vid="$v[vid]" onclick="viewversion(this)">
@@ -140,18 +144,27 @@
                                     </a>
                                 </li>
                                 <!--{if $fileinfo['editperm']}-->
+                                <!--{if $v[vid]}-->
                                 <li class="listedit-title">
                                     <a href="javascript:;" class="primary_versions" data-vid="$v[vid]"
                                     <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}-->
                                     data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><span
                                         class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a>
                                 </li>
+                                <!--{/if}-->
                                 <li class="listedit-title listedit-edit">
                                     <a href="javascript:;" class="edit_versions" data-rid="$fileinfo[rid]"
                                        data-vid="$v[vid]" onclick="editVersionName(this)">
                                         <span class="glyphicon glyphicon-pencil"></span>{lang edit_version_information}
                                     </a>
                                 </li>
+                                <!--{if $v[vid]}-->
+                                <li class="listedit-title listedit-edit">
+                                    <a href="javascript:;" class="delete_versions" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="deletethisversion(this)">
+                                        <span class="dzz dzz-delete"></span>{lang delete_this_version}
+                                    </a>
+                                </li>
+                                <!--{/if}-->
                                 <!--{/if}-->
                             </ul>
                         </div>
@@ -170,13 +183,18 @@
                             <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span
                                     class="caret"></span></a>
                             <ul class="dropdown-menu dropdown-menu-version">
-                                <div class="h3-title">{lang version_information}</div>
+                                <li class="listedit-title">
+                                    <a href="javascript:;" class="view_versions" data-rid="$fileinfo[rid]" data-vid="$fileinfo[vid]" onclick="infoversion(this)">
+                                        <span class="dzz dzz-info-outline"></span>{lang version_information}
+                                    </a>
+                                </li>
                                 <li class="listedit-title">
                                     <a href="javascript:;" class="view_versions" data-path="$fileinfo[dpath]"
                                        data-vid="$fileinfo[vid]" onclick="viewversion(this)">
                                         <span class="dzz dzz-visibility"></span>{lang view_version}
                                     </a>
                                 </li>
+                                <!--{if $v[vid]}-->
                                 <li class="listedit-title">
                                     <a href="javascript:;" class="primary_version" data-rid="$fileinfo[rid]"
                                        data-vid="$fileinfo[vid]" data-primary="yes" onclick="primaryVersion(this)">
@@ -184,12 +202,20 @@
                                         sign_principal_edition}
                                     </a>
                                 </li>
+                                 <!--{/if}-->
                                 <li class="listedit-title listedit-edit">
                                     <a href="javascript:;" data-rid="$fileinfo[rid]" class="edit_versions"
                                        data-vid="$fileinfo[vid]" onclick="editVersionName(this)">
                                         <span class="glyphicon glyphicon-pencil"></span>{lang edit_version_information}
                                     </a>
                                 </li>
+                                <!--{if $v[vid]}-->
+                                <li class="listedit-title listedit-edit">
+                                    <a href="javascript:;" class="delete_versions" data-rid="$fileinfo[rid]" data-vid="$fileinfo[vid]" onclick="deletethisversion(this)">
+                                        <span class="dzz dzz-delete"></span>{lang delete_this_version}
+                                    </a>
+                                </li>
+                                <!--{/if}-->
                             </ul>
 
                         </div>
@@ -213,7 +239,6 @@
         <!--动态结束-->
 
     </div>
-</div>
 <!--右侧中间部分结束-->
 <!--右侧底部评论开始-->
 <!--{if $fileinfo['isdelete'] < 1}-->
@@ -298,6 +323,19 @@
         }, 'json');
 
     };
+     function infoversion(obj) {
+        var rid = $(obj).data('rid');
+        var vid = $(obj).data('vid');
+        var querystr = '';
+        if (rid) {
+            querystr += '&rid=' + rid;
+        }
+        if (vid) {
+            querystr += '&vid=' + vid;
+        }
+        showWindow('infoversion', MOD_URL + '&op=ajax&operation=infoversion' + querystr, 'get', 0);
+        return false;
+    };
 
     function editVersionName(obj) {
         var rid = $(obj).data('rid');
@@ -310,6 +348,24 @@
             querystr += '&vid=' + vid;
         }
         showWindow('editfileversion', MOD_URL + '&op=ajax&operation=editFileVersionInfo' + querystr, 'get', 0);
+        return false;
+    };
+    function deletethisversion(obj) {
+        var rid = $(obj).data('rid');
+        var vid = $(obj).data('vid');
+        if (!vid) {
+            return false;
+        }
+        showDialog('删除后将无法找回，确认要进行该操作吗?', 'confirm', '删除该版本', function () {
+            $.post(MOD_URL+'&op=ajax&operation=deletethisversion', {'rid':rid,'vid': vid}, function (json) {
+                if(json.msg=='success'){
+                    showmessage('删除成功','success',3000,1);
+                    $(obj).closest('.version_menu').remove();
+                }else{
+                    showmessage(json.error,'danger',3000,1);
+                }
+            },'json');
+        })
         return false;
     };
     //右侧上传版本结束
@@ -396,7 +452,8 @@
                             '<p class="versioninfos">' + versiontdata['fdateline'] + '<span class="label label-gainsboro">{lang principal_edition}</span></p> ' +
                             '</div> <p class="editMenu">' + versiontdata['size'] + '</p> <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>' +
                             '<ul class="dropdown-menu dropdown-menu-version"> ' +
-                            '<div class="h3-title" >{lang version_information}</div> ' + '<li class="listedit-title">' + '<a href="javascript:;" class="view_version" data-dpath="' + versiontdata['dpath'] + '" data-vid="' + versiontdata['vid'] + '" onclick="viewversion(this)"><span class="dzz dzz-visibility"></span>' + __lang.view_version + '</a></li>' +
+                            '<li class="listedit-title"><a href="javascript:;" class="primary_version"' +
+                            'data-vid="' + versiontdata['vid'] + ' data-rid="' + rid + '" onclick="infoversion(this)"><span class="dzz dzz-info-outline"></span>{lang version_information}</a></li> ' + '<li class="listedit-title">' + '<a href="javascript:;" class="view_version" data-dpath="' + versiontdata['dpath'] + '" data-vid="' + versiontdata['vid'] + '" onclick="viewversion(this)"><span class="dzz dzz-visibility"></span>' + __lang.view_version + '</a></li>' +
                             '<li class="listedit-title"><a href="javascript:;" class="primary_version"' +
                             'data-vid="' + versiontdata['vid'] + '" data-pramiry="yes"><span class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a></li> ' +
                             '<li class="listedit-title listedit-edit"><a href="javascript:;"  data-vid="' + versiontdata['vid'] + ' data-rid="' + rid + ' onclick="editVersionName(this)"><span class="glyphicon glyphicon-pencil" ></span>{lang edit_version_information}</a></li> ' +
@@ -410,6 +467,7 @@
                             $('#version_0').find('.primary_versions').data('vid', versiontdata.olddatavid);
                             $('#version_0').find('.view_versions').data('vid', versiontdata.olddatavid);
                             $('#version_0').find('.edit_versions').data('vid', versiontdata.olddatavid);
+                            $('#version_0').find('.delete_versions').data('vid', versiontdata.olddatavid);
                             $('#version_0').attr('id', 'version_' + versiontdata.olddatavid);
                         }
                         $('#versionmenulist').prepend(html);

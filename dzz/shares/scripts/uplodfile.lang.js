@@ -10,3 +10,4 @@ __lang.file_too_large;
 __lang.finish;
 __lang.already_cancel;
 __lang.completed;
+__lang.update_finish;

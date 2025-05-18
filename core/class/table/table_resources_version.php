@@ -29,7 +29,6 @@ class table_resources_version extends dzz_table
    public function fetch_all_by_rid($rid,$limit = '',$count = false){
        $rid = trim($rid);
        $versions = array();
-       $resources = C::t('resources')->fetch_info_by_rid($rid);
        $limitsql = '';
        if($limit){
            $limitarr = explode('-',$limit);
@@ -47,6 +46,7 @@ class table_resources_version extends dzz_table
        if($count){
            return DB::result_first("select count(*) from %t where rid = %s",array($this->_table,$rid));
        }
+       $resources = C::t('resources')->fetch_info_by_rid($rid);
        if($resources['vid'] == 0){
            $attrdata = C::t('resources_attr')->fetch_by_rid($rid,0);
             $filedata = array(

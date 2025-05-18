@@ -4,7 +4,6 @@ if(!defined('IN_DZZ')) {
 }
 global $_G;
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-
 $do = empty($_GET['do'])?'':trim($_GET['do']);
 $uid =$_G['uid'];
 $refer=dreferer();
@@ -21,6 +20,4 @@ if($do == 'addopenrecord'){//增加打开记录
     }else{
         exit(json_encode(array('mgs'=>'error')));
     }
-}elseif ($do == 'addeditrecord'){
-
 }

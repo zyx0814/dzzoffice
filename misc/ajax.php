@@ -25,4 +25,3 @@ if($_GET['op']=='getDepartment'){
 	exit();
 
 }
-?>

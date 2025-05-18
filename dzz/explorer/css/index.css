@@ -453,19 +453,9 @@ color: rgba(152, 159, 173, 1);
 .dropdown-menu-version>li>a{
 	padding: 8px 8px 8px 22px;
 }
-.unameMenu-list .h3-title{
-	padding: 10px 20px;
-	color: #999;
-	text-align: center;
-	border-bottom: 1px solid #ddd;
-	margin-bottom:5px;
-}
 
 .unameMenu-list .listedit-title span{
 	padding-right: 5px;
-}
-.unameMenu-list .listedit-title a{
-	color: #999;
 }
 
 .right-messagetable .project_table{

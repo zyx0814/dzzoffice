@@ -9,11 +9,11 @@
 error_reporting(0);
 define('SITEURL', strtolower(($_SERVER['HTTPS'] == 'on' ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/'))));
 
-$uid = isset($_GET['uid']) ? $_GET['uid'] : 0;
-$size = isset($_GET['size']) ? $_GET['size'] : '';
-$random = isset($_GET['random']) ? $_GET['random'] : '';
-$type = isset($_GET['type']) ? $_GET['type'] : '';
-$check = isset($_GET['check_file_exists']) ? $_GET['check_file_exists'] : '';
+$uid = $_GET['uid'] ?? 0;
+$size = $_GET['size'] ?? '';
+$random = $_GET['random'] ?? '';
+$type = $_GET['type'] ?? '';
+$check = $_GET['check_file_exists'] ?? '';
 
 $avatar = './data/avatar/'.get_avatar($uid, $size, $type);
 if(file_exists(dirname(__FILE__).'/'.$avatar)) {
@@ -52,4 +52,4 @@ function get_avatar($uid, $size = 'middle', $type = '') {
 	return $dir1.'/'.$dir2.'/'.$dir3.'/'.substr($uid, -2).$typeadd."_avatar_$size.jpg";
 }
 
-?>
+

@@ -20,7 +20,7 @@ margin-top:0px ;
 	<!--{else}-->
 	<span class="dzz dzz-folder right-topimg"></span>
 	<!--{/if}-->
-    <p class="right-imgname"><span><!--{if $fileinfo[name]}-->$fileinfo[name]<!--{elseif $fileinfo[fname]}-->$fileinfo[fname]<!--{else}--><!--{/if}--></span>
+    <p class="right-imgname"><span><!--{if $fileinfo['ismulti']}-->{lang more_select}<!--{else}--><!--{if $fileinfo[name]}-->$fileinfo[name]<!--{elseif $fileinfo[fname]}-->$fileinfo[fname]<!--{else}--><!--{/if}--><!--{/if}--></span>
     </p>
     <a href="javascript:;" class="toggRight toggright-icon">
  	 <span class="dzz dzz-close "></span>

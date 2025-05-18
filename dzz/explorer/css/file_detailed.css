@@ -557,7 +557,7 @@
 .right-numer-carousel .Topcarousel{
 	width: 28px;
 	height: 28px;
-	line-height:28px;
+	line-height:24px;
 	margin-top: 0px;
 }
 .right-numer-carousel a img{
@@ -2005,10 +2005,5 @@ float: left;
 }
 .form_app_manage{
 	padding-top: 1.21rem;
-}
-@media only screen and (max-width:768px ) {
-.app-label{
-	padding-top: 7px;
-	}
 }
 /*功能管理结束*/

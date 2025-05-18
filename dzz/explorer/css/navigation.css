@@ -664,12 +664,7 @@ div.tagsinput{
 .iconFirstWord{
 	width: 24px;
 	height: 24px;
-	border-radius: 50%;
-	display: inline-block;
-	line-height: 24px;
-    text-align: center;
-    margin-right: 2px;
-    color: #FFFFFF;
+	line-height: 20px;
 }
 /*jstree结束*/
 /*右键开始*/

@@ -1,4 +1,5 @@
-<!--{loop $versions  $v}-->
+<ul class="unameMenu">
+<!--{loop $versions $v}-->
 <li class="unameMenu-list version_menu" id="version_{$v[vid]}">
     <i class="round-drop"></i>
     <div class="unameMenuicon-icons">
@@ -21,25 +22,38 @@
         <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span
                 class="caret"></span></a>
         <ul class="dropdown-menu dropdown-menu-version">
-            <div class="h3-title">{lang version_information}</div>
+            <li class="listedit-title">
+                <a href="javascript:;" class="view_versions" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="infoversion(this)">
+                    <span class="dzz dzz-info-outline"></span>{lang version_information}
+                </a>
+            </li>
             <li class="listedit-title">
                 <a href="javascript:;" class="view_versions" data-dpath="$fileinfo[dpath]"
                    data-vid="$v[vid]" onclick="viewversion(this)">
                     <span class="dzz dzz-visibility"></span>{lang view_version}
                 </a>
             </li>
+            <!--{if $v[vid]}-->
             <li class="listedit-title">
                 <a href="javascript:;" class="primary_versions" data-vid="$v[vid]"
                 <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}-->
                 data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><span
                     class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a>
             </li>
+            <!--{/if}-->
             <li class="listedit-title listedit-edit">
                 <a href="javascript:;" class="edit_versions" data-rid="$fileinfo[rid]"
                    data-vid="$v[vid]" onclick="editVersionName(this)">
                     <span class="glyphicon glyphicon-pencil"></span>{lang edit_version_information}
                 </a>
             </li>
+            <!--{if $v[vid]}-->
+            <li class="listedit-title listedit-edit">
+                <a href="javascript:;" class="delete_versions" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="deletethisversion(this)">
+                    <span class="dzz dzz-delete"></span>{lang delete_this_version}
+                </a>
+            </li>
+            <!--{/if}-->
         </ul>
         <!--{/if}-->
     </div>

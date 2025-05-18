@@ -816,7 +816,7 @@ if ($operation == 'upload') {//上传图片文件
         $propertys = C::t('resources')->get_property_by_rid($rids);
         if (!$propertys['ismulti']) {
             $attrdata = C::t('resources_attr')->fetch_by_rid($propertys['rid'], $propertys['vid']);
-            if ($_G['adminid'] && $attrdata['aid']) {
+            if ($attrdata['aid']) {
                 $attachment = IO::getFileUri('attach::'.$attrdata['aid']);
             }
         }
