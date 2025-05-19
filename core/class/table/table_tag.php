@@ -38,7 +38,10 @@ class table_tag extends dzz_table
         if($hot>0){
             DB::query("update %t set hot=hot+%d where tid IN(%n)",array($this->_table,$hot,$tid));
         }else{
-            DB::query("update %t set hot=hot-%d where tid IN(%n)",array($this->_table,abs($hot),$tid));
+            if(!$tidinfo = parent::fetch($tid)) return false;
+            if($tidinfo['hot'] > 0) {
+                DB::query("update %t set hot=hot-%d where tid IN(%n)",array($this->_table,abs($hot),$tid));
+            }
         }
     }
 

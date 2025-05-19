@@ -218,32 +218,30 @@ if ($do == 'getfolderdynamic') {
         include template('template_more_dynamic');
     }
     exit();
-} elseif
-($do == 'loadmoreversion'
-) {
+} elseif($do == 'loadmoreversion') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $fileinfo = C::t('resources')->get_property_by_rid($rid);
     $fileinfo['dpath'] = dzzencode($rid);
-    $vnext = (isset($_GET['next']) && $_GET['next']) ? intval($_GET['next']) : 1;
+    $vstart = isset($_GET['next']) ? intval($_GET['next']) : 0;
     $vlimit = 20;
-    $vstart = ($vnext - 1) * $vlimit;
     $limit = ($vstart) ? $vstart . '-' . $vlimit : $vlimit;
     $vnext = false;
     $vnextstart = $vstart + $vlimit;
-    if (C::t('resources_version')->fetch_all_by_rid($rid, $limit, true) > $vnextstart) {
+
+    // 判断是否有更多数据
+    $total = C::t('resources_version')->fetch_all_by_rid($rid, '', true);
+    if ($total > $vnextstart) {
         $vnext = $vnextstart;
     }
     $versions = C::t('resources_version')->fetch_all_by_rid($rid, $limit, false);
-    if ($vstart == 0) {//加载多条历史版本
-        include template('historyversion_content');
+    if ($vstart) {//加载多条历史版本
+        include template('template_historyversion_list');
         exit();
     } else {//加载单独历史版本页
-        include template('template_historyversion_list');
+        include template('historyversion_content');
     }
     exit();
-} elseif
-($do == 'filelist'
-) {
+} elseif($do == 'filelist') {
     $limit = isset($_GET['perpage']) ? intval($_GET['perpage']) : 50;//默认每页条数
     $page = empty($_GET['page']) ? 0 : intval($_GET['page']);//页码数
     $start = $page;//开始条数

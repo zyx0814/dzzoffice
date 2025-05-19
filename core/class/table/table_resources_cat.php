@@ -38,6 +38,8 @@ class table_resources_cat extends dzz_table
         if(!$catinfo = parent::fetch($catid)) return false;
         if(isset($setarr['tag'])){
             $oldtids = explode(',',$catinfo['tag']);
+            $oldtids = array_filter($oldtids);
+            $newtids = array();
             $setarr['tag'] = array_filter(explode(',',$setarr['tag']));
             if(!empty($setarr['tag'])){
                 //将标签放入标签表，如果有并且为该应用下，则自动增加使用数
@@ -51,7 +53,12 @@ class table_resources_cat extends dzz_table
             }else{
               $setarr['tag'] = '';
             }
-            C::t('tag')->addhot_by_tid($oldtids,-1);
+            if (!empty($newtids)) {
+                C::t('tag')->addhot_by_tid($newtids, 1);
+            }
+             if (!empty($oldtids)) {
+                C::t('tag')->addhot_by_tid($oldtids, -1);
+            }
         }
         return parent::update($catid,$setarr);
     }

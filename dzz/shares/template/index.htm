@@ -3,47 +3,10 @@
 <link rel="stylesheet" href="static/lyear/js/layui/css/layui.css">
 <link rel="stylesheet" href="{MOD_PATH}/images/index.css">
 <!--{template lyear:header_simple_end}-->
-<div class="docunment-dialog docunment-dialog-uploader ismin dtheme" id="upload_file_tips" style="display:none;">
-	<div class="dialog-header">
-		<h3 id="upload_header" class="dialog-header-title">
-			<span id="upload_header_status" class="upload-all-text">{lang updload_prepare}</span>
-			<span id="upload_header_number_container" class="upload-all-container" style="display: none">
-					[
-				  <span id="upload_header_completed" class="upload-all-cpmpleted">0</span>
-				  <span class="pipe">/</span>
-				  <span id="upload_header_total" class="upload-all-total">0</span>
-				  ]
-			</span>
-			<span id="upload_header_speed" class="upload-all-speed"></span>
-			<div id="upload_header_progress" class="process" style="position:absolute;left:0;top:0;z-index:-1;height:45px;background-color:#e8f5e9;-webkit-transition:width 0.6s ease in;-o-transition:width 0.6s ease in;transition:width 0.6s ease in;width:0%;"></div>
-		</h3>
-	  <div class="dialog-control"> 
-		  <span class="mdi mdi-fullscreen dialog-header-narrow"></span> 
-		  <span class="mdi mdi-close dialog-header-close"></span> </div>
-	</div>
-	<div class="dialog-body">
-	  <div class="upload-list-wrapper">
-		<div class="upload-list-header">
-		  <div class="upload-file-name">{lang folder_file_name}</div>
-		  <div class="upload-file-size">{lang big_small}</div>
-		  <div class="upload-file-path">{lang update_catalogue}</div>
-		  <div class="upload-file-status">{lang state}</div>
-		</div>
-		<div class="dialog-tips has-error">
-		  <div id="dialog_body_text" class="dialog-body-text">{lang update_never_succeeded}</div>
-		  <em class="mdi mdi-close dialog-close"></em> </div>
-		<div class="dialog-uploader-list">
-		  <ul class="dialog-filelist-ul" id="uploading_file_list">
-		  </ul>
-		</div>
-		<div class="progress-in"></div>
-	  </div>
-	</div>
-</div>
 <main class="bs-main-container">
 	<div class="container-fluid" style="height: 99%;">
-		<div class="card" style="height: 99%;">
-			<div class="card-body" style="height: 99%;">
+		<div class="card middleconMenu">
+			<div class="card-body">
 				<!--中间内容-->
 				<div id="middleconMenu">
 					<div class="middlecenter scroll-100 scroll-srcollbars" id="selectBoardPosition">
@@ -69,22 +32,15 @@
 					</div>
 					<div id="template_middleicon" style="display:none">
 						<div class="middleicon window">
-							<div class="square-fileList js-file-item-tpl clearfix">
-								<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon toggleGlow"  rid="{rid}" flag="{flag}">
-									<div class="text-truncate text-center">
-										<div class="icoimgContainer">
-											<img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
-										</div>
-										<div class="tr_item tr-item-name">
-											<a href="javascript:;" id="file_text_{rid}" class="text-dark" title="{name}">{name}</a>
-										</div>
-										<div class="tr_item">
-											<a href="javascript:;" class="text-muted" title="{lang edit_date}：{fdateline}">{fdateline}</a>
-										</div>
-										<div class="tr_item">
-											<a href="javascript:;" class="text-muted" title="{lang big_small}：{fsize}">{fsize}</a>
-										</div>
+							<div class="square-fileList js-file-item-tpl clearfix list-view">
+								<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon" rid="{rid}" flag="{flag}">
+									<div class="toggleGlow card file-item">
+										<div class="icoimgContainer icoimgContainer_{type}"><img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" /></div>
+										<div class="editable-name text-center" id="file_text_{rid}" title="{name}">{name}</div>
+										<div class="text-muted small text-center mt-1" title="{lang big_small}：{fsize}">{fsize}</div>
+										<div class="text-muted small text-center" title="{lang edit_date}：{fdateline}">{fdateline}</div>
 									</div>
+									<div class="icoblank_rightbottom mdi fs-5" ></div>
 								</div>
 							</div>
 						</div>
@@ -95,7 +51,8 @@
 								<table class="table table-hover align-middle " style="table-layout:fixed;">
 									<thead class="detail_header_tr">
 										<tr>
-											<th disp="0" class=" detail_header detail_header_0" width="50%">
+											<th width="30px"></th>
+											<th disp="0" class=" detail_header detail_header_0" width="100%">
 												<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
 												<a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
 													<span class="mdi mdi-chevron-up"></span>
@@ -104,7 +61,7 @@
 												<div disp="0" class="detail_header_drag"></div>
 											</div>
 											</th>
-											<th disp="1" class=" detail_header detail_header_1 file_item_2" width="15%">
+											<th disp="1" class=" detail_header detail_header_1 file-item-hide" width="15%">
 												<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
 											<a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
 												<span class="mdi mdi-chevron-up"></span>
@@ -113,7 +70,7 @@
 												<div disp="1" class="detail_header_drag"></div>
 											</div>
 											</th>
-											<th disp="2" class="detail_header detail_header_2 file_item_2" width="15%">
+											<th disp="2" class="detail_header detail_header_2 file-item-hide" width="15%">
 											<div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
 												<a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
 													<span class="mdi mdi-chevron-up"></span>
@@ -122,36 +79,38 @@
 												<div disp="2" class="detail_header_drag" style="float:right"></div>
 											</div>
 											</th>
-											<th disp="3" class=" detail_header detail_header_3 file_item_2" width="20%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
+											<th disp="3" class=" detail_header detail_header_3 file-item-hide" width="20%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
 												<span class="mdi mdi-chevron-up"></span>
 												<span class="mdi mdi-chevron-down"></span>
 											</a></div></th>
 										</tr>
 									</thead>
 									<tbody class="js-file-item-tpl">
-										<tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock" rid="{rid}">
-										<td class="detail_item_td " valign="middle" width="50%" style="overflow:hidden;position:relative">
-											<div class="detail_item_td_name toggleGlow" rid="{rid}">
-												<a href="javascript:;" style="float: left;"><img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" /></a>
-												<div class="detail_text detail_item_name_text text-dark">{name}
-													<div class="file_item_1 text-body text-muted">
-													{fdateline} {fsize}
+										<tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock toggleGlow" rid="{rid}">
+											<td class="detail_item_td " valign="middle" width="30px" style="overflow:hidden;"><a class="selectbox mdi mdi-checkbox-blank-outline text-body fs-5" rid="{rid}" title="{lang choose}"></a></td>
+											<td class="detail_item_td " valign="middle" width="50%" style="overflow:hidden;position:relative">
+												<div class="file-info-col" rid="{rid}">
+													<div class="thumbnail">
+														<img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
+													</div>
+													<div class="file-name-wrapper">
+													<div class="filename"><span class="editable-name detail_text detail_item_name_text" id="file_text_{rid}">{name}</span></div>
+														<div class="small file-item-block text-truncate">{fdateline} {fsize}</div>
 													</div>
 												</div>
-											</div>
-											<div class="hoverTools">
-												<button type="button" class="btn download dcolor" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
-											</div>
-										</td>
-										<td class="detail_item_td detail_item_td_size file_item_2" valign="middle" width="15%" style="overflow:hidden">
-											<span title="{fsize}">{fsize}</span>
-										</td>
-										<td class="detail_item_td detail_item_td_type file_item_2" valign="middle" width="15%" style="overflow:hidden">
-											<span title="{ftype}">{ftype}</span>
-										</td>
-										<td class="detail_item_td detail_item_td_type file_item_2" valign="middle" width="20%" style="overflow:hidden">
-											<span title="{fdateline}">{fdateline}</span>
-										</td>
+												<div class="hoverTools">
+													<button type="button" class="btn download dcolor" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
+												</div>
+											</td>
+											<td class="detail_item_td detail_item_td_size file-item-hide" valign="middle" width="15%" style="overflow:hidden">
+												<span title="{fsize}">{fsize}</span>
+											</td>
+											<td class="detail_item_td detail_item_td_type file-item-hide" valign="middle" width="15%" style="overflow:hidden">
+												<span title="{ftype}">{ftype}</span>
+											</td>
+											<td class="detail_item_td detail_item_td_type file-item-hide" valign="middle" width="20%" style="overflow:hidden">
+												<span title="{fdateline}">{fdateline}</span>
+											</td>
 										</tr>
 									</tbody>
 								</table>
@@ -188,10 +147,10 @@
 						<div class="navtoperate dtheme">
 							<div class="select-toperate">
 							<div class="select-toperate select-toperate-left selectall-box">
-								<span class="mdi mdi-close dzz-backing-out"></span>
-								<div class="select-info"></div>
+								<span class="mdi mdi-close dcolor fs-5"></span>
+								<div class="select-info fs-5"></div>
 							</div>
-							<div class="select-toperate select-toperate-center  toolButtons">
+							<div class="select-toperate select-toperate-center toolButtons">
 								<div class="shareMenu">
 								</div>
 							</div>
@@ -221,47 +180,47 @@
 </main>
 <div id="contextmenu" style="display: none;"> 
 	<div id="right_ico">
-		<ul class="layui-menu layui-dropdown-menu">
+		<ul class="layui-menu layui-dropdown-menu dropdown-menu show border">
 			<li class="layui-menu-item-parent menu-item open" onclick="_filemanage.Open('{rid}');">
-				<div class="layui-menu-body-title"><i class="mdi mdi-folder-open pe-2"></i>{lang open}</div>
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-folder-open pe-2"></i>{lang open}</div>
 			</li>
 			<li class="layui-menu-item-parent menu-item openwith">
-				<div class="layui-menu-body-title"><i class="mdi mdi-open-in-new pe-2"></i>{lang openwith}<i class="layui-icon layui-icon-right"></i></div>
-				<div class="layui-panel layui-menu-body-panel border">
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-open-in-new pe-2"></i>{lang openwith}<i class="layui-icon layui-icon-right"></i></div>
+				<div class="layui-panel layui-menu-body-panel dropdown-menu border">
 					<ul class="openwithdata">
 					</ul>
 				</div>
 			</li>
 			<li class="layui-menu-item-divider">
-				<div class="layui-menu-body-title"></div>
+				<div class="layui-menu-body-title dropdown-item"></div>
 			</li>
 			<li class="layui-menu-item-parent menu-item allsave" onclick="allsave();">
-				<div class="layui-menu-body-title"><i class="mdi mdi-content-save pe-2"></i>{lang save}</div>
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-content-save pe-2"></i>{lang save}</div>
 			</li>
 			<li class="layui-menu-item-parent menu-item download" onclick="_filemanage.downAttach('{rid}');">
-				<div class="layui-menu-body-title"><i class="mdi mdi-download pe-2"></i>{lang download}</div>
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-download pe-2"></i>{lang download}</div>
 			</li>
 			<li class="layui-menu-item-parent menu-item downpackage" onclick="_filemanage.downpackage('{rid}');">
-				<div class="layui-menu-body-title"><i class="mdi mdi-download pe-2"></i>{lang downpackage}</div>
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-download pe-2"></i>{lang downpackage}</div>
 			</li>
 			<li class="layui-menu-item-parent menu-item property" onclick="_filemanage.property('{rid}');">
-				<div class="layui-menu-body-title"><i class="mdi mdi-sort-variant pe-2"></i>{lang property}</div>
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-sort-variant pe-2"></i>{lang property}</div>
 			</li>
 		</ul>
 	</div>
 	<div id="right_body">
-		<ul class="layui-menu layui-dropdown-menu">
+		<ul class="layui-menu layui-dropdown-menu dropdown-menu show border">
 			<li class="layui-menu-item-parent menu-item">
-				<div class="layui-menu-body-title"><i class="mdi mdi-view-split-vertical pe-2"></i>{lang iconviev}<i class="layui-icon layui-icon-right"></i></div>
-				<div class="layui-panel layui-menu-body-panel border">
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-view-split-vertical pe-2"></i>{lang iconviev}<i class="layui-icon layui-icon-right"></i></div>
+				<div class="layui-panel layui-menu-body-panel dropdown-menu border">
 					<ul>
 						<li class="menu-item" iconview="2" onclick="_filemanage.Arrange(this,'{filemanageid}','2');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span view="2" class="mdi mdi-checkbox-blank-outline menu-icon-iconview pe-2"></span>{lang iconview_2}
 							</div>
 						</li>
 						<li class="menu-item" iconview="4" onclick="_filemanage.Arrange(this,'{filemanageid}','4');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span view="4" class="mdi mdi-checkbox-blank-outline menu-icon-iconview pe-2"></span>{lang iconview_4}
 							</div>
 						</li>
@@ -269,26 +228,26 @@
 				</div>
 			</li>
 			<li class="layui-menu-item-parent menu-item">
-				<div class="layui-menu-body-title"><i class="mdi mdi-sort pe-2"></i>{lang sort}<i class="layui-icon layui-icon-right"></i></div>
-				<div class="layui-panel layui-menu-body-panel sort border">
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-sort pe-2"></i>{lang sort}<i class="layui-icon layui-icon-right"></i></div>
+				<div class="layui-panel layui-menu-body-panel sort dropdown-menu border">
 					<ul>
 						<li class="menu-item disp0" onclick="_filemanage.Disp(this,'{filemanageid}','0')">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span disp="0" class="mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_0 pe-2"></span>{lang menu_filemanagedisp_0} <span class="caret mdi"></span>
 							</div>
 						</li>
 						<li class="menu-item disp1" onclick="_filemanage.Disp(this,'{filemanageid}','1')">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span disp="1" class="mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_1 pe-2"></span>{lang menu_filemanagedisp_1} <span class="caret mdi"></span>
 							</div>
 						</li>
 						<li class="menu-item disp2" onclick="_filemanage.Disp(this,'{filemanageid}','2')">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span disp="2" class="mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_2 pe-2"></span>{lang menu_filemanagedisp_2} <span class="caret mdi"></span>
 							</div>
 						</li>
 						<li class="menu-item disp3" onclick="_filemanage.Disp(this,'{filemanageid}','3')">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span disp="3" class="mdi mdi-checkbox-blank-outline menu-icon-disp menu_icon_disp_3 pe-2"></span>{lang menu_filemanagedisp_3} <span class="caret mdi"></span>
 							</div>
 						</li>
@@ -296,60 +255,60 @@
 				</div>
 			</li>
 			<li class="layui-menu-item-divider">
-				<div class="layui-menu-body-title"></div>
+				<div class="layui-menu-body-title dropdown-item"></div>
 			</li>
 			<li class="layui-menu-item-parent menu-item create">
-				<div class="layui-menu-body-title"><i class="mdi mdi-upload pe-2"></i>{lang new_and_upload}<i class="layui-icon layui-icon-right"></i></div>
-				<div class="layui-panel layui-menu-body-panel border">
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-upload pe-2"></i>{lang new_and_upload}<i class="layui-icon layui-icon-right"></i></div>
+				<div class="layui-panel layui-menu-body-panel dropdown-menu border">
 					<ul>
 						<li  class="menu-item newfolder" onclick="_filemanage.NewIco('newFolder');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-folder pe-2"></span>{lang newfolder}
 							</div>
 						</li>
 						<li class="layui-menu-item-divider">
-							<div class="layui-menu-body-title"></div>
+							<div class="layui-menu-body-title dropdown-item"></div>
 						</li>
 						<li class="menu-item upload" onclick="jQuery('.js-upload-file input').trigger('click');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-upload pe-2"></span>{lang uploadfile}
 							</div>
 						</li>
 						<li class="menu-item uploadfolder" onclick="jQuery('.js-upload-folder input').trigger('click');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-folder pe-2"></span>{lang uploadfolder}
 							</div>
 						</li>
 						<li class="layui-menu-item-divider">
-							<div class="layui-menu-body-title"></div>
+							<div class="layui-menu-body-title dropdown-item"></div>
 						</li>
 						<li class="menu-item newlink" onclick="_filemanage.NewIco('newLink');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-web pe-2"></span>{lang newlink}
 							</div>
 						</li>
 						<li class="menu-item newtext" onclick="_filemanage.NewIco('newTxt');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-file pe-2"></span>{lang extname_txt}
 							</div>
 						</li>
 						<li class="menu-item newdoc" onclick="_filemanage.NewIco('newDoc');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-file-word filee-icon filee-file-text pe-2"></span>{lang newdoc}
 							</div>
 						</li>
 						<li class="menu-item newexcel" onclick="_filemanage.NewIco('newexcel');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-file-excel filee-icon filee-file-excel pe-2"></span>{lang newexcel}
 							</div>
 						</li>
 						<li class="menu-item newpowerpoint" onclick="_filemanage.NewIco('newPowerPoint');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-file-compare filee-icon filee-file-ppt pe-2"></span>{lang newpowerpoint}
 							</div>
 						</li>
 						<li class="menu-item newpdf" onclick="_filemanage.NewIco('newpdf');">
-							<div class="layui-menu-body-title">
+							<div class="layui-menu-body-title dropdown-item">
 								<span class="mdi mdi-file-pdf-box filee-icon filee-file-pdf pe-2"></span>{lang newpdf}
 							</div>
 						</li>
@@ -357,13 +316,13 @@
 				</div>
 			</li>
 			<li class="layui-menu-item-divider">
-				<div class="layui-menu-body-title"></div>
+				<div class="layui-menu-body-title dropdown-item"></div>
 			</li>
 			<li class="menu-item property" onclick="window.location.reload();">
-				<div class="layui-menu-body-title"><span class="mdi mdi-sync pe-2"></span>{lang refresh}</div>
+				<div class="layui-menu-body-title dropdown-item"><span class="mdi mdi-sync pe-2"></span>{lang refresh}</div>
 			</li>
 			<li class="menu-item property" onclick="_filemanage.property('{fid}',1);">
-				<div class="layui-menu-body-title"><span class="mdi mdi-sort-variant pe-2"></span>{lang property}</div>
+				<div class="layui-menu-body-title dropdown-item"><span class="mdi mdi-sort-variant pe-2"></span>{lang property}</div>
 			</li>
 		</ul>
 	</div>
@@ -384,7 +343,7 @@
 				trigger: 'manual',
 				id: 'right_ico',
 				content: '',
-				className:'border'
+				className:'lyear-dropdown'
 			});
 		});
 		_filemanage.SetMoreButton();

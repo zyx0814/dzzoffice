@@ -315,7 +315,7 @@ if($method == 'show_license') {
 		if($runqueryerror){
 			showjsmessage('<span class="red">'.lang('error_quit_msg').'</span>');
 			exit();
-		};
+		}
 		showjsmessage(lang('system_data_installation_successful'));
 		show_footer();
 	}

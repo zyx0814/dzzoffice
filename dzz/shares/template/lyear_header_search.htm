@@ -1,4 +1,17 @@
 <div class="header-toggle">
+    <ul class="sizeMenu">
+        <li class="listchange">
+            <a href="javascript:;" type="button" class="btn allsave single" onclick="allsave()" ><i class="mdi mdi-content-save" data-toggle="tooltip" data-placement="bottom" title="{lang save}"></i></a>
+        </li>
+        <li class="listchange">
+            <a href="javascript:;" type="button" class="btn download downAll single" onclick="_filemanage.downAll('')" ><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i></a>
+        </li>
+        <li class="listchange">
+        	<a class="icons-thumbnail dcolor" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="<!--{if $_G['ismobile']}-->2<!--{else}-->4<!--{/if}-->" >
+        		<i class="mdi mdi-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i>
+        	</a>
+        </li>
+    </ul>
     <div class="new-buildMenu">
         <div class="dropdown newMenu">
             <button type="button" class="btn btn-cricular dropdown-toggle" data-toggle="dropdown">新建/上传</button>
@@ -60,19 +73,6 @@
             </ul>
         </div>
     </div>
-	<ul class="sizeMenu">
-        <li class="listchange">
-            <a href="javascript:;" type="button" class="btn allsave single" onclick="allsave()" ><i class="mdi mdi-content-save" data-toggle="tooltip" data-placement="bottom" title="{lang save}"></i></a>
-        </li>
-        <li class="listchange">
-            <a href="javascript:;" type="button" class="btn download downAll single" onclick="_filemanage.downAll('')" ><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i></a>
-        </li>
-        <li class="listchange border-end">
-        	<a class="icons-thumbnail dcolor" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="<!--{if $_G['ismobile']}-->2<!--{else}-->4<!--{/if}-->" >
-        		<i class="mdi mdi-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i>
-        	</a>
-        </li>
-    </ul>
 </div>
 <script type="text/javascript">
 	$(function () {

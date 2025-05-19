@@ -5,7 +5,7 @@ if(!defined('IN_DZZ')) {
 }
 
 require_once libfile('function/seccode');
-$action = isset($_GET['action']) ? $_GET['action'] : '';
+$action = $_GET['action'] ?? '';
 if($action == 'update') {
 
 	$message = '';
@@ -65,7 +65,7 @@ if($action == 'update') {
 
 } else {
 	$refererhost = parse_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
-	$refererhost['host'] = (isset($refererhost['host']) ? $refererhost['host'] : '').(!empty($refererhost['port']) ? (':'.$refererhost['port']) : '');
+	$refererhost['host'] = ($refererhost['host'] ?? '').(!empty($refererhost['port']) ? (':'.$refererhost['port']) : '');
 	if(($_G['setting']['seccodedata']['type'] < 2 && ($refererhost['host'] != $_SERVER['HTTP_HOST'])) || !$_G['setting']['seccodestatus'] || (($_G['setting']['seccodedata']['type'] == 2 && !extension_loaded('ming') && $_POST['fromFlash'] != 1 || $_G['setting']['seccodedata']['type'] == 3 && $_GET['fromFlash'] != 1))) {
 		exit('Access Denied');
 	}

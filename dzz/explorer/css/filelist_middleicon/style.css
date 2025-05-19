@@ -261,7 +261,7 @@
 .icoimgContainer_attach{}
 
 .icoimgContainer_shortcut .icoimgCover_up{ /*通用图标遮罩层前景层*/
-	background-image:url(images/shortcut.png);
+	background-image:url(/dzz/images/default/shortcut.png);
 	background-repeat: no-repeat ;
 	background-size:100%;
 }

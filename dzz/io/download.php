@@ -13,7 +13,7 @@ if(!defined('IN_DZZ')) {
 }
 define('NOROBOT', TRUE);
 $path = empty($_GET['icoid'])?trim($_GET['path']):$_GET['icoid'];
-$filename = isset($_GET['filename']) ? $_GET['filename'] : '';
+$filename = $_GET['filename'] ?? '';
 $checkperm = isset($_GET['checkperm']) ? 0 : 1;
 $patharr=explode(',',$path);
 $paths=array();
@@ -29,4 +29,4 @@ if($paths){
 	exit('path error!');
 }
 
-?>
+

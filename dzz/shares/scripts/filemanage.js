@@ -394,6 +394,16 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 			//self.createBottom();
 			return false;
 		});
+		el.find('.selectbox').on('click', function () {
+			var flag = true;
+			var ell = jQuery(this).closest('.Icoblock');
+			var rid = ell.attr('rid');
+			if (ell.hasClass('Icoselected')) {
+				flag = false;
+			}
+			_select.SelectedStyle('filemanage-' + self.id, rid, flag, true);
+			return false;
+		});
 
 	}
 	el.on('dblclick', function (e) {
@@ -629,7 +639,7 @@ function contextmenuico(rid) {
     } else if (subdata.length > 1) {
         var html = '';
 		for (var i = 0; i < subdata.length; i++) {
-			html += '<li class="menu-item" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;" title="' + subdata[i].name + '"><div class="layui-menu-body-title">';
+			html += '<li class="menu-item" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;" title="' + subdata[i].name + '"><div class="layui-menu-body-title dropdown-item">';
 			if (subdata[i].icon) {
 				html += '<span class="pe-2"><img width="24px" height="24px" src=' + subdata[i].icon + '></span>';
 			}
@@ -767,7 +777,7 @@ _filemanage.prototype.createIcosContainer = function () {
 			self.selectInfo();
 			return false;
 		});
-	jQuery(document).off('click.cselect').on('click.cselect', '.dzz-backing-out', function () {
+	jQuery(document).off('click.cselect').on('click.cselect', '.mdi-close', function () {
 		jQuery('.navtopheader').css('display', 'none');
 		el.find('.Icoblock').removeClass('Icoselected');
 		_filemanage.selectall.icos = [];

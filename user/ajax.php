@@ -118,4 +118,4 @@ if ($_GET['action'] == 'checkusername') {
 	exit();
 }
 showTips(array('msg'=>'success'),$type,$template);
-?>
+

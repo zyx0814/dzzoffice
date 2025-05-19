@@ -20,7 +20,7 @@ margin-top:0px ;
 	<!--{else}-->
 	<span class="dzz dzz-folder right-topimg"></span>
 	<!--{/if}-->
-    <p class="right-imgname"><span><!--{if $fileinfo[name]}-->$fileinfo[name]<!--{elseif $fileinfo[fname]}-->$fileinfo[fname]<!--{else}--><!--{/if}--></span>
+    <p class="right-imgname"><span><!--{if $fileinfo['ismulti']}-->{lang more_select}<!--{else}--><!--{if $fileinfo[name]}-->$fileinfo[name]<!--{elseif $fileinfo[fname]}-->$fileinfo[fname]<!--{else}--><!--{/if}--><!--{/if}--></span>
     </p>
     <a href="javascript:;" class="toggRight toggright-icon">
  	 <span class="dzz dzz-close "></span>
@@ -181,14 +181,12 @@ margin-top:0px ;
     <!--关于结束-->
     </div>
     <!--文件夹详情结束-->
-    
     <!--文件夹动态开始-->
    <div id="filerightdynamic">
     <!--{template fileright_dynamic}-->
    </div>
-    
     <!--文件夹动态结束-->
-	</div>
+</div>
 <!--{if $fid || $rid}-->	
 <div class="comment-area">
     <div class="messageMenu"> 

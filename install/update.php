@@ -585,7 +585,7 @@ function get_special_table_by_num($tablename, $num) {
 	$tables_array = get_special_tables_array($tablename);
 
 	$num --;
-	return isset($tables_array[$num]) ? $tables_array[$num] : FALSE;
+	return $tables_array[$num] ?? FALSE;
 }
 
 function getcolumn($creatsql) {

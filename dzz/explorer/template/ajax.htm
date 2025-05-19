@@ -508,23 +508,17 @@
 </script>
 <!--{else}-->
 <script>
+    hideWindow('newFolder');
     showDialog('{$arr[error]}');
 </script>
 <!--{/if}-->
 <!--{elseif $operation == 'property'}-->
-<style>
-    @media (min-width: 768px ) {
-        #fwin_{$_GET[handlekey]} .modal-dialog {
-            width: 516px;
-        }
-    }
-</style>
 <!--{if !$error}-->
 <form onsubmit="return editsvae(this);">
     <div class="modal-header email-title">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="dzz dzz-close "></span>
         </button>
-        <h4 class="modal-title text-truncate"><!--{if $propertys[name]}-->$propertys[name]<!--{/if}-->{lang property}</h4>
+        <h4 class="modal-title text-truncate"><!--{if $propertys['ismulti']}-->{lang more_select}<!--{else}--><!--{if $propertys[name]}-->$propertys[name]<!--{/if}--> {lang property}<!--{/if}--></h4>
     </div>
     <div class="modal-body nature-body">
         <!--{if $propertys[name]}-->
@@ -538,7 +532,7 @@
             </div>
         </div>
         <!--{/if}-->
-        <div class="custom-from clearfix">
+        <div class="clearfix">
             <div class="file-nature clearfix">
                 <label class="col-md-4 col-sm-4 col-xs-4">{lang type}</label>
                 <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys['type']</div>
@@ -655,6 +649,7 @@
 </script>
 <!--{else}-->
 <script type="text/javascript" reload="1">
+    hideWindow('property');
     showDialog('{$error}');
 </script>
 <!--{/if}-->
@@ -825,11 +820,7 @@
                 $(form).find('.delshare').removeClass('hide');
                 $('#shareid').val(data['shareid']);
                 $('#delshare').val(1);
-                <!--{if $share['id']}-->
-                showmessage('分享编辑成功', 'success', 3000, 1);
-                <!--{else}-->
-                showmessage('{lang share_creation_success}', 'success', 3000, 1);
-                <!--{/if}-->
+                showmessage('{lang share_creation_success}', 'success', 3000, 1, 'right-bottom');
                 if ('{$shareid}') {
                     _filemanage.getData(_explorer.appUrl + '&op=share&do=filelist&sid=share-list');
                 }
@@ -876,7 +867,7 @@
     <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">{lang confirms}</button>
 </div>
 <!--{elseif $operation == 'newLink'}-->
-<!--{if !isset($arr[error])}-->
+<!--{if !isset($arr['error'])}-->
 <form onsubmit="return false;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -906,7 +897,101 @@
 </script>
 <!--{else}-->
 <script>
-    showDialog('{$arr[error]}');
+    hideWindow('newLink');
+    showDialog('{$arr['error']}');
+</script>
+<!--{/if}-->
+<!--{elseif $operation == 'infoversion'}-->
+<!--{if !$error}-->
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span class="dzz dzz-close "></span>
+    </button>
+    <h4 class="modal-title text-truncate">$propertys[name] {lang version_information}</h4>
+</div>
+<div class="modal-body">
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang name}</label>
+        <div class="col-sm-9">$propertys[name] <span class="badge badge-primary"><!--{if $propertys['vid'] == $versioninfo['vid']}-->{lang principal_edition}<!--{else}-->V$versioninfo['vid']<!--{/if}--></span></div>
+    </div>
+    <!--{if $versioninfo[vname]}-->
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang version_name}</label>
+        <div class="col-sm-9">$versioninfo[vname]</div>
+    </div>
+    <!--{/if}-->
+    <!--{if $versioninfo[vdesc]}-->
+    <div class="row mb-1">
+        <label class="col-sm-3">{lang version_desc}</label>
+        <div class="col-sm-9">$versioninfo[vdesc]</div>
+    </div>
+    <!--{/if}-->
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang type}</label>
+        <div class="col-sm-9">$propertys['type']</div>
+    </div>
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang position}</label>
+        <div class="col-sm-9">$propertys[realpath]</div>
+    </div>
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang possesor}</label>
+        <div class="col-sm-9">$propertys['username']</div>
+    </div>
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang big_small}</label>
+        <div class="col-sm-9">$propertys['fsize']</div>
+    </div>
+    <!--{if $propertys[editdateline]}-->
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang preceding_edit_time}</label>
+        <div class="col-sm-9">$propertys[editdateline]</div>
+    </div>
+    <!--{/if}-->
+    <!--{if $propertys[opendateline]}-->
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang preceding_open_time}</label>
+        <div class="col-sm-9">$propertys[opendateline]</div>
+    </div>
+    <!--{/if}-->
+    <!--{if $propertys[fdateline]}-->
+    <div class="row mb-1"> 
+        <label class="col-sm-3">{lang create_time}</label>
+        <div class="col-sm-9">$propertys[fdateline]</div>
+    </div>
+    <!--{/if}-->
+    <!--{if $propertys[downs]}-->
+    <div class="row mb-1">
+        <label class="col-sm-3">{lang download_times}</label>
+        <div class="col-sm-9">$propertys[downs]</div>
+    </div>
+    <!--{/if}-->
+    <!--{if $propertys[views]}-->
+    <div class="row mb-1">
+        <label class="col-sm-3">{lang view_count}</label>
+        <div class="col-sm-9">$propertys[views]</div>
+    </div>
+    <!--{/if}-->
+    <!--{if $propertys[edits]}-->
+    <div class="row mb-1">
+        <label class="col-sm-3">{lang edit_times}</label>
+        <div class="col-sm-9">$propertys[edits]</div>
+    </div>
+    <!--{/if}-->
+    <!--{if $attachment}-->
+    <div class="row mb-1">
+        <label class="col-sm-3">文件地址</label>
+        <div class="col-sm-9 text-break"><a href="$attachment" target="_blank">$attachment</a></div>
+    </div>
+    <!--{/if}-->
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default-outline" data-dismiss="modal">{lang close}</button>
+</div>
+<!--{else}-->
+<script type="text/javascript" reload="1">
+    hideWindow('infoversion');
+    showDialog('{$error}');
 </script>
 <!--{/if}-->
 <!--{elseif $operation == 'editFileVersionInfo'}-->

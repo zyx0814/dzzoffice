@@ -469,32 +469,34 @@ class io_disk extends io_api
 		}else{
 			$pfid=md5(str_replace(strrchr($meta['path'], '/'), '',$bz.$meta['path']));
 		}
+		$rid = md5($bz.$meta['path']);
 		if($meta['type']=='folder'){
 			$icoarr=array(
-				  'icoid'=>md5(($bz.$meta['path'])),
-				  'path'=>$bz.$meta['path'],
-				  'dpath'=>dzzencode($bz.$meta['path']),
-				  'bz'=>($bz),
-				  'gid'=>0,
-				  'name'=>$meta['name'],
-				  'username'=>$_G['username'],
-				  'uid'=>$_G['uid'],
-				  'oid'=>md5(($bz.$meta['path'])),
-				  'img'=>'dzz/images/default/system/folder.png',
-				  'type'=>'folder',
-				  'ext'=>'',
-				  'pfid'=>$pfid,
-				  'size'=>'-',
-				  'dateline'=>intval($meta['mtime']),
-				  'flag'=>$meta['flag']?$meta['flag']:'',
-				  'mod'=>$meta['mod']
-				 );
+				'icoid'=>$rid,
+				'rid' => $rid,
+				'path'=>$bz.$meta['path'],
+				'dpath'=>dzzencode($bz.$meta['path']),
+				'bz'=>($bz),
+				'gid'=>0,
+				'name'=>$meta['name'],
+				'username'=>$_G['username'],
+				'uid'=>$_G['uid'],
+				'oid'=>$rid,
+				'img'=>'dzz/images/default/system/folder.png',
+				'type'=>'folder',
+				'ext'=>'',
+				'pfid'=>$pfid,
+				'size'=>'-',
+				'dateline'=>intval($meta['mtime']),
+				'flag'=>$meta['flag']?$meta['flag']:'',
+				'mod'=>$meta['mod']
+			);
 				 
-				$icoarr['fsize']='-';
-				$icoarr['ftype']=getFileTypeName($icoarr['type'],$icoarr['ext']);
-				if(!$icoarr['dateline']) $icoarr['fdateline']='-';
-				else $icoarr['fdateline']=dgmdate($icoarr['dateline']);
-				$icosdata=$icoarr;
+			$icoarr['fsize']='-';
+			$icoarr['ftype']=getFileTypeName($icoarr['type'],$icoarr['ext']);
+			if(!$icoarr['dateline']) $icoarr['fdateline']='-';
+			else $icoarr['fdateline']=dgmdate($icoarr['dateline']);
+			$icosdata=$icoarr;
 			
 		}else{
 			$pathinfo = pathinfo($meta['path']);
@@ -509,26 +511,28 @@ class io_disk extends io_api
 				$img=geticonfromext($ext,$type);
 				$url=$_G['siteurl'].DZZSCRIPT.'?mod=io&op=getStream&path='.dzzencode($bz.$meta['path']);
 			}
+
 			$icoarr=array(
-						  'icoid'=>md5(($bz.$meta['path'])),
-						  'path'=>($bz.$meta['path']), 
-						  'dpath'=>dzzencode($bz.$meta['path']),
-						  'bz'=>($bz),
-						  'gid'=>0,
-						  'name'=>$meta['name'],
-						  'username'=>$_G['username'],
-						  'uid'=>$_G['uid'],
-						  'oid'=>md5(($bz.$meta['path'])),
-						  'img'=>$img,
-						  'url'=>$url,
-						  'type'=>$type,
-						  'ext'=>strtolower($ext),
-						  'pfid'=>$pfid,
-						  'size'=>$meta['size'],
-						  'dateline'=>intval($meta['mtime']),
-						  'flag'=>'',
-						  'mod'=>$meta['mod']
-						  );
+				'icoid'=>$rid,
+				'rid'=>$rid,
+				'path'=>($bz.$meta['path']), 
+				'dpath'=>dzzencode($bz.$meta['path']),
+				'bz'=>($bz),
+				'gid'=>0,
+				'name'=>$meta['name'],
+				'username'=>$_G['username'],
+				'uid'=>$_G['uid'],
+				'oid'=>$rid,
+				'img'=>$img,
+				'url'=>$url,
+				'type'=>$type,
+				'ext'=>strtolower($ext),
+				'pfid'=>$pfid,
+				'size'=>$meta['size'],
+				'dateline'=>intval($meta['mtime']),
+				'flag'=>'',
+				'mod'=>$meta['mod']
+			);
 					  
 			$icoarr['fsize']=formatsize($icoarr['size']);
 			$icoarr['ftype']=getFileTypeName($icoarr['type'],$icoarr['ext']);
