@@ -109,7 +109,7 @@ _explorer.loading = function (container, flag) { //右侧加载效果
 	if (flag === 'hide') {
 		container.find('.rightLoading').remove();
 	} else {
-		container.append('<div class="rightLoading"></div>');
+		container.append('<div class="rightLoading emptyPage"><div class="spinner-border" role="status"><span class="visually-hidden">加载中...</span></div></div>');
 	}
 };
 _explorer.getRightContent = function (fid,dos) { //处理右侧页面加载
