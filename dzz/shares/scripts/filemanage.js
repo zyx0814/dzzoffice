@@ -394,6 +394,16 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 			//self.createBottom();
 			return false;
 		});
+		el.find('.selectbox').on('click', function () {
+			var flag = true;
+			var ell = jQuery(this).closest('.Icoblock');
+			var rid = ell.attr('rid');
+			if (ell.hasClass('Icoselected')) {
+				flag = false;
+			}
+			_select.SelectedStyle('filemanage-' + self.id, rid, flag, true);
+			return false;
+		});
 
 	}
 	el.on('dblclick', function (e) {

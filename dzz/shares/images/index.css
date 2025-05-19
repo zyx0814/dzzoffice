@@ -80,15 +80,14 @@ to{opacity:1}
 .filemanage .detail_header_td_div{overflow:hidden;position:relative;white-space:nowrap;text-overflow:ellipsis}
 .filemanage .detail_item_td_name,.filemanage td,.filemanage th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .selectall-box{padding-left:5px;width:auto;display:inline-block;line-height:64px}
-.selectall-box .mdi-close{font-size:24px;cursor:pointer;display:inline-block;vertical-align:sub}
+.selectall-box .mdi-close{cursor:pointer;display:inline-block}
 .selectall-box a{position:absolute;z-index:10}
-.selectall-box .select-info{font-size:1.28rem;display:inline-block}
+.selectall-box .select-info{display:inline-block}
 .yunfile-upload{position:relative}
 .yunfile-btnMenu .btn{padding:0px;font-size:14px;background:none;border:0;box-shadow:none}
 .yunfile-btnMenu{display:inline-block}
 .yunfile-btnMenu .btn i{font-size:22px;vertical-align:top;padding:5px 9px;display:inline-block}
 .new-buildMenu{float:right;display:none}
-.new-buildMenu .dropdown-menu{width:190px}
 .new-buildMenu .newMenu{display:inline-block;margin-right:5px}
 .new-buildMenu .dropdown-menu li:hover .filee-folder,.new-buildMenu .dropdown-menu li:hover .filee-upload,.new-buildMenu .dropdown-menu li:hover .filee-file,.new-buildMenu .dropdown-menu li:hover .filee-language{color:#4E5563}
 .filee-icon{width:24px;height:24px;font-size:16px}
@@ -99,9 +98,15 @@ to{opacity:1}
 .dropdown-menu>li>a{position:relative}
 .Icoselected .file-item{border-color:#007bff;background-color:#e3f2fd}
 [data-theme='dark'] .Icoselected .file-item{background-color:rgba(255,255,255,0.075)}
+.icoblank_rightbottom{display:none;position:absolute;left:3px;top:3px;color:#2196F3}
+.icoblank_rightbottom::before{content:"\F0131"}
+.Icoselected .icoblank_rightbottom::before{content:"\F0132"}
+.Icoselected .icoblank_rightbottom,.hover .icoblank_rightbottom,.hover .icoblank_leftbottom{display:block}
+.Icoselected .mdi-checkbox-blank-outline::before{content:"\F0132"}
+.middleicon{-webkit-user-select:none !important;-moz-user-select:none !important;user-select:none !important}
 .middleicon .card{padding:5px;margin-bottom:0}
 .middleicon .tr_item{position:relative;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.Icoblock.middleicon{position:relative;float:left;width:150px;height:200px;margin:5px;text-align:center;cursor:pointer}
+.Icoblock.middleicon{position:relative;float:left;width:150px;height:205px;margin:5px;text-align:center;cursor:pointer}
 .Icoblock.middleicon .Icoblock_icon{max-width:100%;max-height:100%;overflow:hidden}
 .Icoblock.middleicon .icoimgContainer{position:relative;width:140px;height:120px;line-height:120px}
 .bs-left-container-close .da-avatar{display:none}
