@@ -508,17 +508,11 @@
 </script>
 <!--{else}-->
 <script>
+    hideWindow('newFolder');
     showDialog('{$arr[error]}');
 </script>
 <!--{/if}-->
 <!--{elseif $operation == 'property'}-->
-<style>
-    @media (min-width: 768px ) {
-        #fwin_{$_GET[handlekey]} .modal-dialog {
-            width: 516px;
-        }
-    }
-</style>
 <!--{if !$error}-->
 <form onsubmit="return editsvae(this);">
     <div class="modal-header email-title">
@@ -655,6 +649,7 @@
 </script>
 <!--{else}-->
 <script type="text/javascript" reload="1">
+    hideWindow('property');
     showDialog('{$error}');
 </script>
 <!--{/if}-->
@@ -872,7 +867,7 @@
     <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">{lang confirms}</button>
 </div>
 <!--{elseif $operation == 'newLink'}-->
-<!--{if !isset($arr[error])}-->
+<!--{if !isset($arr['error'])}-->
 <form onsubmit="return false;">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -902,7 +897,8 @@
 </script>
 <!--{else}-->
 <script>
-    showDialog('{$arr[error]}');
+    hideWindow('newLink');
+    showDialog('{$arr['error']}');
 </script>
 <!--{/if}-->
 <!--{elseif $operation == 'infoversion'}-->
@@ -994,6 +990,7 @@
 </div>
 <!--{else}-->
 <script type="text/javascript" reload="1">
+    hideWindow('infoversion');
     showDialog('{$error}');
 </script>
 <!--{/if}-->

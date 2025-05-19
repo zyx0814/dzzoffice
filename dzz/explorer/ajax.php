@@ -200,8 +200,6 @@ if ($operation == 'upload') {//上传图片文件
     } else {
         $permselect = true;
     }
-
-
 } elseif ($operation == 'newLink') {//新建连接
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {

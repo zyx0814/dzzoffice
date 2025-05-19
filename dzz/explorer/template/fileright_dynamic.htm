@@ -4,7 +4,6 @@
         <!--{template template_dynamic_list}-->
     </div>
 </div>
-
 <script type="text/javascript" reload="1">
     //滚动条滚动，头部加阴影
     $('.right-messagetable').scroll(function () {
@@ -14,7 +13,6 @@
             $('.briefMenu').css({'box-shadow': 'none'});
         }
     })
-
 
     jQuery(document).ready(function (e) {
         jcLoader().load({
@@ -60,7 +58,6 @@
     });
 
     function comment_file(form) {
-
         if ($('#leave_message').val().length < 1) {
             $('#leave_message').focus();
             return false;
@@ -101,6 +98,4 @@
         }, 'json');
         return false;
     }
-
-
 </script>

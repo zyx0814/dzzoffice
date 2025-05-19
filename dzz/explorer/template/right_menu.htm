@@ -133,7 +133,7 @@
                                     class="caret"></span></a>
                             <ul class="dropdown-menu dropdown-menu-version">
                                 <li class="listedit-title">
-                                    <a href="javascript:;" class="view_versions" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="infoversion(this)">
+                                    <a href="javascript:;" class="view_versions" data-rid="$v[rid]" data-vid="$v[vid]" onclick="infoversion(this)">
                                         <span class="dzz dzz-info-outline"></span>{lang version_information}
                                     </a>
                                 </li>
@@ -237,7 +237,6 @@
             <!--{template fileright_dynamic}-->
         </div>
         <!--动态结束-->
-
     </div>
 <!--右侧中间部分结束-->
 <!--右侧底部评论开始-->
@@ -253,18 +252,14 @@
                               class="form-control comment-input"></textarea>
                 <div class="comment-file">
                     <ul class="list_acpsw">
-                        <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml"
-                                                      onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span
-                                class="dzz dzz-smile"></span></a>
+                        <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span class="dzz dzz-smile"></span></a>
                         </li>
-
                     </ul>
                 </div>
 
             </div>
             <div class="activity-handler clearfix">
-                <button type="submit" class="dzz dzz-send pull-right disabled input-search-drop dzz-submit-send"
-                        style="color:rgba(55,121,255,0.3);"></button>
+                <button type="submit" class="dzz dzz-send pull-right disabled input-search-drop dzz-submit-send" style="color:rgba(55,121,255,0.3);"></button>
             </div>
         </form>
     </div>
@@ -453,10 +448,10 @@
                             '</div> <p class="editMenu">' + versiontdata['size'] + '</p> <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>' +
                             '<ul class="dropdown-menu dropdown-menu-version"> ' +
                             '<li class="listedit-title"><a href="javascript:;" class="primary_version"' +
-                            'data-vid="' + versiontdata['vid'] + ' data-rid="' + rid + '" onclick="infoversion(this)"><span class="dzz dzz-info-outline"></span>{lang version_information}</a></li> ' + '<li class="listedit-title">' + '<a href="javascript:;" class="view_version" data-dpath="' + versiontdata['dpath'] + '" data-vid="' + versiontdata['vid'] + '" onclick="viewversion(this)"><span class="dzz dzz-visibility"></span>' + __lang.view_version + '</a></li>' +
+                            'data-vid="' + versiontdata['vid'] + '" data-rid="' + rid + '" onclick="infoversion(this)"><span class="dzz dzz-info-outline"></span>{lang version_information}</a></li> ' + '<li class="listedit-title">' + '<a href="javascript:;" class="view_version" data-dpath="' + versiontdata['dpath'] + '" data-vid="' + versiontdata['vid'] + '" onclick="viewversion(this)"><span class="dzz dzz-visibility"></span>' + __lang.view_version + '</a></li>' +
                             '<li class="listedit-title"><a href="javascript:;" class="primary_version"' +
                             'data-vid="' + versiontdata['vid'] + '" data-pramiry="yes"><span class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a></li> ' +
-                            '<li class="listedit-title listedit-edit"><a href="javascript:;"  data-vid="' + versiontdata['vid'] + ' data-rid="' + rid + ' onclick="editVersionName(this)"><span class="glyphicon glyphicon-pencil" ></span>{lang edit_version_information}</a></li> ' +
+                            '<li class="listedit-title listedit-edit"><a href="javascript:;"  data-vid="' + versiontdata['vid'] + '" data-rid="' + rid + '" onclick="editVersionName(this)"><span class="glyphicon glyphicon-pencil" ></span>{lang edit_version_information}</a></li> ' +
                             '</ul> </div> <div class="editMenu-input clearfix"> ' +
                             '</div> </div> </li>';
                         $('.version_menu').each(function () {
