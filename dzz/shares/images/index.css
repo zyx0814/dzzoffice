@@ -1,7 +1,7 @@
 .hide{display:none}
 .da-avatar .img-avatar{width:64px;height:64px;line-height:64px;font-size:32px}
 ul,ul li,li{list-style:none;padding:0;margin:0}
-.middleconMenu{height:100%;overflow:hidden;padding:5px}
+.middleconMenu{height:100%;overflow:hidden}
 .middletopMenu .row{margin:0}
 .nodropdown .dropdown-toggle::after{content:none}
 .wangpan-upload{position:relative;display:inline-block}
