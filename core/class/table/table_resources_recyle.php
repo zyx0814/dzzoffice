@@ -268,7 +268,7 @@ class table_resources_recyle extends dzz_table
                     'filename' => $result['name'],
                     'hash' => $hash
                 );
-                if (C::t('resources_event')->addevent_by_pfid($result['pfid'], 'recover_file', 'recover', $eventdata, $result['gid'], $rid, $result['name'])) {
+                if (C::t('resources_event')->addevent_by_pfid($result['pfid'], 'recover_file', 'recoverfile', $eventdata, $result['gid'], $rid, $result['name'])) {
                     $idarr[] = $id;
                 } else {
                     DB::update($this->_table, array('isdelete' => 1, 'deldateline' => $result['deldateline']), array('rid' => $rid));
