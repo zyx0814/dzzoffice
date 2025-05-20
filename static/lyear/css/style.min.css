@@ -386,7 +386,6 @@ img{max-width:100%}
 .text-yellow{--bs-text-opacity:1;color:rgba(252,197,37,1);color:rgba(252,197,37,var(--bs-text-opacity)) !important}
 .text-cyan{--bs-text-opacity:1;color:rgba(87,199,212,1);color:rgba(87,199,212,var(--bs-text-opacity)) !important}
 .text-brown{--bs-text-opacity:1;color:rgba(141,102,88,1);color:rgba(141,102,88,var(--bs-text-opacity)) !important}
-.text-muted{--bs-text-opacity:1;color:#6c757d;color:rgba(108,117,125,var(--bs-text-opacity)) !important}
 .list-group-item{color:#495057;border-color:#ededee}
 .list-group-item.active{border-color:#007bff;border-color:var(--bs-primary);background-color:#007bff;background-color:var(--bs-primary)}
 .page-link{margin-right:6px;border-radius:5px !important;color:#6c757d;white-space:nowrap}

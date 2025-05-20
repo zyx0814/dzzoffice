@@ -1544,7 +1544,7 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .text-black{--bs-text-opacity:1;color:#000000;color:rgba(0,0,0,var(--bs-text-opacity)) !important}
 .text-white{--bs-text-opacity:1;color:#ffffff;color:rgba(255,255,255,var(--bs-text-opacity)) !important}
 .text-body{--bs-text-opacity:1;color:#495057;color:rgba(73,80,87,var(--bs-text-opacity)) !important}
-.text-muted{--bs-text-opacity:1;color:#6c757d !important}
+.text-muted{--bs-text-opacity:1;color:#6c757d;color:rgba(108,117,125,var(--bs-text-opacity)) !important}
 .text-black-50{--bs-text-opacity:1;color:rgba(0,0,0,.5) !important}
 .text-white-50{--bs-text-opacity:1;color:rgba(255,255,255,.5) !important}
 .text-reset{--bs-text-opacity:1;color:inherit !important}

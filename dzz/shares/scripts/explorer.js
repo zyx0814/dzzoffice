@@ -303,7 +303,7 @@ function allsave() {
 				};
 			}
 		});
-	} catch (e) {layer.msg('<p class="text-danger">' + __lang.operation_error + '</p>', {offset:'10px'});}
+	} catch (e) {showmessage(__lang.operation_error, 'danger', 3000, 1);}
 }
 function _select(container)
 {
