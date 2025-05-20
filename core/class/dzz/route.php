@@ -21,9 +21,7 @@ class Route{
         define('OP_NAME',$op);
         if(empty($mod)){
             if($_G['uid']<1 && !defined('ALLOWGUEST') && $_G['setting']['loginset']['available']){
-
                 @header("Location: user.php?mod=login".($_GET['referer']?'&referer='.$_GET['referer']:''));
-
                 exit();
             }
            $return =  require DZZ_ROOT.'./'.CURSCRIPT.'/'.$op.EXT;

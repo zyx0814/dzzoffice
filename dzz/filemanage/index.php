@@ -91,35 +91,34 @@ if ($do == 'delete') {
 	$foldername = array();
 	$param = array();
 	if ($keyword) {
-			$sql .= ' and (name like %s OR username=%s)';
-			$param[] = '%' . $keyword . '%';
-			$param[] = $keyword;
+		$sql .= ' and (name like %s OR username=%s)';
+		$param[] = '%' . $keyword . '%';
+		$param[] = $keyword;
 	}
 	if ($type) {
-			$sql .= ' and type=%s';
-			$param[] = $type;
+		$sql .= ' and type=%s';
+		$param[] = $type;
 	}
 	if ($pfid) {
-			$sql .= ' and (pfid = %d)';
-			$param[] = $pfid;
-			$pathkey = DB::result_first("select pathkey from %t where fid = %d", array('resources_path', $pfid));
-			$patharr = explode('-', str_replace('_', '', $pathkey));
-			unset($patharr[0]);
-			foreach (DB::fetch_all("select fname,fid from %t where fid in(%n)", array('folder', $patharr)) as $v) {
-				
-					$foldername[] = array('fid' => $v['fid'], 'fname' => $v['fname']);
-			}
+		$sql .= ' and (pfid = %d)';
+		$param[] = $pfid;
+		$pathkey = DB::result_first("select pathkey from %t where fid = %d", array('resources_path', $pfid));
+		$patharr = explode('-', str_replace('_', '', $pathkey));
+		unset($patharr[0]);
+		foreach (DB::fetch_all("select fname,fid from %t where fid in(%n)", array('folder', $patharr)) as $v) {
+			$foldername[] = array('fid' => $v['fid'], 'fname' => $v['fname']);
+		}
 	} else {
-			if ($orgid) {
-				if ($org = C::t('organization')->fetch($orgid)) {
-						$fids = array($org['fid']);
-						foreach (DB::fetch_all("select fid from %t where pfid=%d", array('folder', $org['fid'])) as $value) {
-								$fids[] = $value['fid'];
-						}
-						$sql .= ' and  pfid IN(%n)';
-						$param[] = $fids;
+		if ($orgid) {
+			if ($org = C::t('organization')->fetch($orgid)) {
+				$fids = array($org['fid']);
+				foreach (DB::fetch_all("select fid from %t where pfid=%d", array('folder', $org['fid'])) as $value) {
+						$fids[] = $value['fid'];
 				}
+				$sql .= ' and  pfid IN(%n)';
+				$param[] = $fids;
 			}
+		}
 	}
 	$limitsql = 'limit ' . $start . ',' . $limit;
 	if ($_G['adminid']) {

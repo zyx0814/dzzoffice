@@ -68,6 +68,7 @@ _filemanage.viewstyle = ['middleicon','detaillist'];
 _filemanage.getData = function (url, callback) {
 	_filemanage.selectall.icos = [];
 	jQuery.getJSON(url, function (json) {
+		_explorer.loading($('#middleconMenu'),'hide');
 		jQuery('.navtopheader').css('display', 'none');
 		jQuery('.tooltip').html('');
 		if (json.error == 'no_login') {
@@ -1288,7 +1289,7 @@ _filemanage.downpackage = function () {
 		}
 	}
 	if (errors) {
-		showmessage('<p>' + __lang.error_file_not_download + '</p><ul>' + errors + '</ul>', 'danger', 5000, 1);
+		layer.msg('<p>' + __lang.error_file_not_download + '</p><ul>' + errors + '</ul>', {offset:'10px'});
 		return false;
 	}
 	var path = encodeURIComponent(dpaths.join(','));

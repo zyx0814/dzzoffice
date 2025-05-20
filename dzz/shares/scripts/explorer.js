@@ -303,7 +303,7 @@ function allsave() {
 				};
 			}
 		});
-	} catch (e) {layer.msg(__lang.operation_error, {icon:'error',skin:'bg-danger',offset:'t'});}
+	} catch (e) {layer.msg('<p class="text-danger">' + __lang.operation_error + '</p>', {offset:'10px'});}
 }
 function _select(container)
 {

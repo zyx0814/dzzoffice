@@ -27,40 +27,40 @@ class Config{
             $_config = array_merge($_config,$app_config);
         }
         $mod = isset($param[MOULD]) ? $param[MOULD]:$_config['default_mod'];
+        if(empty($mod)){
+            $mod = 'index';
+        }
 		
-        if(!empty($mod)){
-            if(strpos(strtolower($mod),':')!==false) {
-                $patharr = explode(':', $mod);
-                $modvar = true;
-                foreach ($patharr as $path) {
-                    if (!preg_match("/\w+/i", $path)) $modvar = false;
-                }
-                if($modvar) define('CURMODULE',str_replace(':', '/', $mod));
-            }else{
-                if(CURSCRIPT == 'dzz' && $mod == 'index') {
-                    define('CURMODULE', 'explorer');
-                } else {
-                    define('CURMODULE', $mod);
-                }
-               /* if(CURSCRIPT == 'dzz' && $mod == 'index'){
-                    define('CURMODULE',CURSCRIPT);
-                    $modconfig = DZZ_ROOT.CURMODULE.BS.CONFIG_NAME.BS.CONFIG_NAME.EXT;
-                }else{*/
-                    $modconfig = DZZ_ROOT.APP_PATH.BS.CURMODULE.BS.CONFIG_NAME.BS.CONFIG_NAME.EXT;
-               // }
+        if(strpos(strtolower($mod),':')!==false) {
+            $patharr = explode(':', $mod);
+            $modvar = true;
+            foreach ($patharr as $path) {
+                if (!preg_match("/\w+/i", $path)) $modvar = false;
             }
-            if(@file_exists($modconfig)){
-                //模块配置
-                $mod_config = require_once $modconfig;
-                if(isset($mod_config['db']) ){
-                    unset($mod_config['db']);
-                }
-                //配置合并
-                if(is_array($mod_config)){
-                    $_config = array_merge($_config,$mod_config);
-                }
+            if($modvar) define('CURMODULE',str_replace(':', '/', $mod));
+        }else{
+            if(CURSCRIPT == 'dzz' && $mod == 'index') {
+                define('CURMODULE', 'explorer');
+            } else {
+                define('CURMODULE', $mod);
             }
-
+            /* if(CURSCRIPT == 'dzz' && $mod == 'index'){
+                define('CURMODULE',CURSCRIPT);
+                $modconfig = DZZ_ROOT.CURMODULE.BS.CONFIG_NAME.BS.CONFIG_NAME.EXT;
+            }else{*/
+                $modconfig = DZZ_ROOT.APP_PATH.BS.CURMODULE.BS.CONFIG_NAME.BS.CONFIG_NAME.EXT;
+            // }
+        }
+        if(@file_exists($modconfig)){
+            //模块配置
+            $mod_config = require_once $modconfig;
+            if(isset($mod_config['db']) ){
+                unset($mod_config['db']);
+            }
+            //配置合并
+            if(is_array($mod_config)){
+                $_config = array_merge($_config,$mod_config);
+            }
         }
     }
 }

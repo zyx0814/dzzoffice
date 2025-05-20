@@ -278,7 +278,12 @@ if ($do == 'getfolderdynamic') {
     $condition = array();
     if (!empty($_GET['doevent'])) {
         $eventdo = trim($_GET['doevent']);
-        $condition['do'] = $eventdo;
+        if($eventdo == 'recover' || $eventdo == 'recoverfile') {
+            $condition['do'] = 'recover';
+            $condition['do'] = 'recoverfile';
+        } else {
+            $condition['do'] = $eventdo;
+        }
     }
     if (!empty($_GET['doobj'])) {
         $obj = trim($_GET['doobj']);
