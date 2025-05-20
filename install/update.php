@@ -252,188 +252,69 @@ if($_GET['step'] == 'start') {
 	show_msg("[ $i / $count_i ] ".$msg, $next);
 
 } elseif ($_GET['step'] == 'data') {
-	if(!$_GET['dp']){
-		//新增两个配置项
-		 C::t('setting')->update('fileVersion', '1');
-		 C::t('setting')->update('fileVersionNumber', '50');
-		
-		//添加云设置和管理应用
-		if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{adminscript}?mod=cloud'))){
-			
-		 C::t('app_market')->insert(array('appname'=>'云设置和管理',
-		 								  'appico'=>'appico/201712/21/171106u1dk40digrrr79ed.png',
-		 								  'appurl'=>'{adminscript}?mod=cloud',
-										  'appdesc'=>'设置和管理第三方云盘、云存储等',
-										  'dateline'=>TIMESTAMP,
-										  'disp'=>5,
-										  'vendor'=>'乐云网络',
-										  'group'=>3,
-										  'system'=>2,
-										  'notdelete'=>1,
-										  'position'=>0,
-										  'app_path'=>'admin',
-										  'identifier'=>'cloud',
-										  'version'=>'2.0',
-										  'available'=>1),0,1);
+	//添加网盘应用
+	if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{dzzscript}?mod=explorer'))){
+		C::t('app_market')->insert(array('appname'=>'网盘',
+			'appico'=>'appico/202411/02/170040bgapsjg4pt4nuee4.png',
+			'appurl'=>'{dzzscript}?mod=explorer',
+			'appdesc'=>'企业、团队文件集中管理。主要体现的功能是支持企业部门的组织架构建立共享目录，也支持组的方式灵活建立共享目录。支持文件标签，多版本，评论，详细的目录权限等协作功能',
+			'dateline'=>TIMESTAMP,
+			'disp'=>14,
+			'vendor'=>'乐云网络',
+			'group'=>1,
+			'system'=>0,
+			'notdelete'=>1,
+			'position'=>1,
+			'mid'=>'27',
+			'app_path'=>'dzz',
+			'identifier'=>'explorer',
+			'version'=>'2.05',
+			'available'=>1),0,1);
 		}
-		//添加用户资料管理应用
-		if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{adminscript}?mod=member'))){
-			
-		 C::t('app_market')->insert(array('appname'=>'用户资料管理',
-		 								  'appico'=>'appico/201712/21/103805dczcm89b0gi8i9gc.png',
-		 								  'appurl'=>'{adminscript}?mod=member',
-										  'appdesc'=>'用户资料项配置，资料审核，认证等',
-										  'dateline'=>TIMESTAMP,
-										  'disp'=>10,
-										  'vendor'=>'乐云网络',
-										  'group'=>3,
-										  'system'=>2,
-										  'notdelete'=>1,
-										  'position'=>0,
-										  'app_path'=>'admin',
-										  'identifier'=>'member',
-										  'version'=>'2.0',
-										  'available'=>1),0,1);
+	//添加图片预览应用
+	if(!DB::result_first("select COUNT(*) from %t where identifier=%s",array('app_market','OpenPicWin'))){
+		C::t('app_market')->insert(array('mid' => '25','appname' => '图片预览','appico' => 'appico/202411/02/184008xbuvo0sh8y1xey8f.png','appdesc' => '简易的图片浏览器','appurl' => "dzzjs:OpenPicWin('{icoid}')",'appadminurl' => '','noticeurl' => '','dateline' => '0','disp' => '101','vendor' => '乐云网络','haveflash' => '0','isshow' => '0','havetask' => '1','hideInMarket' => '0','feature' => '','fileext' => 'image','group' => '0','orgid' => '0','position' => '1','system' => '0','notdelete' => '1','open' => '0','nodup' => '0','identifier' => 'OpenPicWin','app_path' => 'dzz/link','available' => '1','version' => '2.1'));
+		$OpenPicWin=C::t('app_market')->fetch_by_identifier('OpenPicWin','dzz/link');
+		if($OpenPicWin['appid']){
+			C::t('app_open')->insert_by_exts($OpenPicWin['appid'], 'image');
 		}
-		//添加网盘应用
-		if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{dzzscript}?mod=explorer'))){
-			C::t('app_market')->insert(array('appname'=>'网盘',
-											  'appico'=>'appico/202411/02/170040bgapsjg4pt4nuee4.png',
-											  'appurl'=>'{dzzscript}?mod=explorer',
-											 'appdesc'=>'企业、团队文件集中管理。主要体现的功能是支持企业部门的组织架构建立共享目录，也支持组的方式灵活建立共享目录。支持文件标签，多版本，评论，详细的目录权限等协作功能',
-											 'dateline'=>TIMESTAMP,
-											 'disp'=>14,
-											 'vendor'=>'乐云网络',
-											 'group'=>1,
-											 'system'=>0,
-											 'notdelete'=>1,
-											 'position'=>1,
-											 'mid'=>'27',
-											 'app_path'=>'dzz',
-											 'identifier'=>'explorer',
-											 'version'=>'2.05',
-											 'available'=>1),0,1);
-		   }
-		//添加图片预览应用
-		if(!DB::result_first("select COUNT(*) from %t where identifier=%s",array('app_market','OpenPicWin'))){
-			C::t('app_market')->insert(array('mid' => '25','appname' => '图片预览','appico' => 'appico/202411/02/184008xbuvo0sh8y1xey8f.png','appdesc' => '简易的图片浏览器','appurl' => "dzzjs:OpenPicWin('{icoid}')",'appadminurl' => '','noticeurl' => '','dateline' => '0','disp' => '101','vendor' => '乐云网络','haveflash' => '0','isshow' => '0','havetask' => '1','hideInMarket' => '0','feature' => '','fileext' => 'image','group' => '0','orgid' => '0','position' => '1','system' => '0','notdelete' => '1','open' => '0','nodup' => '0','identifier' => 'OpenPicWin','app_path' => 'dzz/link','available' => '1','version' => '2.1'));
-			$OpenPicWin=C::t('app_market')->fetch_by_identifier('OpenPicWin','dzz/link');
-			if($OpenPicWin['appid']){
-				C::t('app_open')->insert_by_exts($OpenPicWin['appid'], 'image');
-			}
+	}
+	//添加DPlayer应用
+	if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{dzzscript}?mod=DPlayer'))){
+		C::t('app_market')->insert(array('mid' => '41','appname' => 'DPlayer','appico' => 'appico/202411/02/184037v0by6dzb1wwobdy3.png','appdesc' => 'DPlayer，支持MP3,mp4,flv,wav等格式','appurl' => '{dzzscript}?mod=DPlayer','appadminurl' => '','noticeurl' => '','dateline' => '0','disp' => '0','vendor' => '小胡（gitee.com/xiaohu2024)','haveflash' => '0','isshow' => '0','havetask' => '1','hideInMarket' => '0','feature' => '','fileext' => 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne','group' => '0','orgid' => '0','position' => '1','system' => '0','notdelete' => '1','open' => '1','nodup' => '0','identifier' => 'DPlayer','app_path' => 'dzz','available' => '1','version' => '1.2'),1,1);
+		$DPlayer=C::t('app_market')->fetch_by_identifier('DPlayer');
+		if($DPlayer['appid']){
+			C::t('app_open')->insert_by_exts($DPlayer['appid'], 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne');
 		}
-		//添加DPlayer应用
-		if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{dzzscript}?mod=DPlayer'))){
-			C::t('app_market')->insert(array('mid' => '41','appname' => 'DPlayer','appico' => 'appico/202411/02/184037v0by6dzb1wwobdy3.png','appdesc' => 'DPlayer，支持MP3,mp4,flv,wav等格式','appurl' => '{dzzscript}?mod=DPlayer','appadminurl' => '','noticeurl' => '','dateline' => '0','disp' => '0','vendor' => '小胡（gitee.com/xiaohu2024)','haveflash' => '0','isshow' => '0','havetask' => '1','hideInMarket' => '0','feature' => '','fileext' => 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne','group' => '0','orgid' => '0','position' => '1','system' => '0','notdelete' => '1','open' => '1','nodup' => '0','identifier' => 'DPlayer','app_path' => 'dzz','available' => '1','version' => '1.2'),1,1);
-			$DPlayer=C::t('app_market')->fetch_by_identifier('DPlayer');
-			if($DPlayer['appid']){
-				C::t('app_open')->insert_by_exts($DPlayer['appid'], 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne');
-			}
+	}
+	//添加PDF阅读器应用
+	if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{dzzscript}?mod=pdf'))){
+		C::t('app_market')->insert(array('mid' => '13','appname' => 'PDF阅读器','appico' => 'appico/202411/02/170328nz056he0mixeezpo.png','appdesc' => '通过HTML5的方式来实现pdf在线预览','appurl' => 'index.php?mod=pdf','appadminurl' => '','noticeurl' => '','dateline' => '0','disp' => '110','vendor' => 'PDS.JS','haveflash' => '0','isshow' => '0','havetask' => '1','hideInMarket' => '0','feature' => '','fileext' => 'pdf,ai','group' => '0','orgid' => '0','position' => '1','system' => '0','notdelete' => '1','open' => '0','nodup' => '0','identifier' => 'pdf','app_path' => 'dzz','available' => '1','version' => '2.1'),1,1);
+		$pdf=C::t('app_market')->fetch_by_identifier('pdf');
+		if($pdf['appid']){
+			C::t('app_open')->insert_by_exts($pdf['appid'], 'pdf,ai');
 		}
-		//添加PDF阅读器应用
-		if(!DB::result_first("select COUNT(*) from %t where appurl=%s",array('app_market','{dzzscript}?mod=pdf'))){
-			C::t('app_market')->insert(array('mid' => '13','appname' => 'PDF阅读器','appico' => 'appico/202411/02/170328nz056he0mixeezpo.png','appdesc' => '通过HTML5的方式来实现pdf在线预览','appurl' => 'index.php?mod=pdf','appadminurl' => '','noticeurl' => '','dateline' => '0','disp' => '110','vendor' => 'PDS.JS','haveflash' => '0','isshow' => '0','havetask' => '1','hideInMarket' => '0','feature' => '','fileext' => 'pdf,ai','group' => '0','orgid' => '0','position' => '1','system' => '0','notdelete' => '1','open' => '0','nodup' => '0','identifier' => 'pdf','app_path' => 'dzz','available' => '1','version' => '2.1'),1,1);
-			$pdf=C::t('app_market')->fetch_by_identifier('pdf');
-			if($pdf['appid']){
-				C::t('app_open')->insert_by_exts($pdf['appid'], 'pdf,ai');
-			}
-		}
-		//修改应用
-		$appurl = "{adminscript}?mod=filemanage";
-		$filemanageappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
-		if ($filemanageappid) {
-			C::t('app_market')->update($filemanageappid, array('appurl' => "{dzzscript}?mod=filemanage", 'group' => 1,'open'=>1,'app_path'=>'dzz','position'=>1));
-		}
-		$appurl = "{adminscript}?mod=orguser";
-		$orguserappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
-		if ($orguserappid) {
-			C::t('app_market')->update($orguserappid, array('appurl' => "{dzzscript}?mod=orguser", 'group' => 1,'open'=>1,'app_path'=>'dzz','position'=>1));
-		}
-		$appurl = "{adminscript}?mod=share";
-		$shareappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
-		if ($shareappid) {
-			C::t('app_market')->update($shareappid, array('appurl' => "{dzzscript}?mod=share", 'group' => 1,'open'=>1,'app_path'=>'dzz','position'=>1));
-		}
-		$appurl = "{dzzscript}?mod=comment";
-		$commentappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
-		if ($commentappid) {
-			C::t('app_market')->update($commentappid, array('group' => 1,'open'=>1,'position'=>1));
-		}
-		//处理更新之后群组开关问题
-		DB::update('organization',array('manageon'=>1,'available'=>1,'syatemon'=>1),"1");
-		show_msg("基本设置修改完成", "$theurl?step=data&dp=1");
-	
-	}elseif($_GET['dp']==1){ //转换机构和部门数据
-	
-		$i = empty($_GET['i'])?0:intval($_GET['i']);
-		$count_i = DB::result_first("select COUNT(*) from %t where 1 ",array('organization'));
-		if($i>=$count_i) {
-			show_msg('部门数据升级完成，进入下一步操作', $theurl.'?step=data&dp=2');
-		}
-		if($orgid=DB::result_first("select orgid from %t where 1 order by orgid limit $i,1 ",array('organization'))){
-			C::t('organization')->setPathkeyByOrgid($orgid,1);
-		}
-		$i++;
-		$msg='部门数据转换完成';
-		$next=$theurl.'?step=data&dp=1&i='.$i;
-		show_msg("[ $i / $count_i ] ".$msg, $next);
-	
-	}elseif($_GET['dp']==2){ //修复目录gid
-		$i = empty($_GET['i'])?0:intval($_GET['i']);
-		
-		$count_i = DB::result_first("select COUNT(*) from %t where gid>0 ",array('folder'));
-		if($i>=$count_i) {
-			show_msg('开始修复继承权限...', $theurl.'?step=data&dp=3');
-		}
-		$arr=DB::fetch_first("select fid,pfid,gid,fname from %t where gid>0  order by fid limit $i,1",array('folder'));
-		$gid=C::t('folder')->fetch_gid_by_fid($arr['fid']);
-		
-		if($gid!=$arr['gid']){
-			C::t('folder')->update($arr['fid'],array('gid'=>$gid));
-			DB::query("update %t set gid=%d where pfid=%d ",array('resources',$gid,$arr['fid']));
-		}
-		$i++;
-		$msg='部门文件夹修复完成';
-		$next=$theurl.'?step=data&dp=2&i='.$i;
-		show_msg("[ $i / $count_i ] ".$msg, $next);
-	}elseif($_GET['dp']==3){ //更新继承权限和路径
-		$i = empty($_GET['i'])?0:intval($_GET['i']);
-		
-		$count_i = DB::result_first("select COUNT(*) from %t",array('folder'));
-		if($i>=$count_i) {
-			show_msg('开始修复回收站...', $theurl.'?step=data&dp=4');
-		}
-		$arr=DB::fetch_first("select fid from %t order by fid limit $i,1",array('folder'));
-		$pdata = C::t('folder')->create_pathinfo_by_fid($arr['fid']);
-		if($pdata){
-			if(!DB::result_first("select count(*) from %t where fid = %d",array('resources_path',$arr['fid']))){
-				$pdata['fid'] = $arr['fid'];
-				DB::insert('resources_path',$pdata);
-			}else{
-				DB::update('resources_path',$pdata,array('fid'=>$arr['fid']));
-			}
-		}
-		$perm_inherit=perm_check::getPerm1($arr['fid']);
-		DB::update('folder',array('perm_inherit'=>$perm_inherit),"fid='{$arr['fid']}'");
-		$i++;
-		$msg='继承权限修复';
-		$next=$theurl.'?step=data&dp=3&i='.$i;
-		show_msg("[ $i / $count_i ] ".$msg, $next);
-	}elseif($_GET['dp']==4){ //修改回收站相关
-		//回收站数据处理
-		$rids = $delfids = $delrids = array();
-		foreach(DB::fetch_all("select rid from %t where isdelete>0",array('resources')) as $v){
-			 $delrids[] = $v['rid'];
-			 if($v['type'] == 'folder' && $v['oid']){
-				$delfids[] = $v['oid'];
-			}
-		}
-		//更改resources表数据
-		if(count($delrids) > 0) DB::update("resources",array('pfid'=>-1),'rid in('.dimplode($delrids).')');
-		//更改folder表数据
-		if(count($delfids) > 0) DB::update("folder",array('pfid'=>-1),'fid in('.dimplode($delfids).')');
-		//清除回收站中的无用数据
-		DB::delete('resources_recyle','rid not in('.dimplode($delrids).')');
+	}
+	//修改应用
+	$appurl = "{adminscript}?mod=filemanage";
+	$filemanageappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
+	if ($filemanageappid) {
+		C::t('app_market')->update($filemanageappid, array('appurl' => "{dzzscript}?mod=filemanage", 'group' => 1,'open'=>1,'app_path'=>'dzz','position'=>1));
+	}
+	$appurl = "{adminscript}?mod=orguser";
+	$orguserappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
+	if ($orguserappid) {
+		C::t('app_market')->update($orguserappid, array('appurl' => "{dzzscript}?mod=orguser", 'group' => 1,'open'=>1,'app_path'=>'dzz','position'=>1));
+	}
+	$appurl = "{adminscript}?mod=share";
+	$shareappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
+	if ($shareappid) {
+		C::t('app_market')->update($shareappid, array('appurl' => "{dzzscript}?mod=share", 'group' => 1,'open'=>1,'app_path'=>'dzz','position'=>1));
+	}
+	$appurl = "{dzzscript}?mod=comment";
+	$commentappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
+	if ($commentappid) {
+		C::t('app_market')->update($commentappid, array('group' => 1,'open'=>1,'position'=>1));
 	}
 	show_msg("数据升级结束", "$theurl?step=delete");
 }elseif ($_GET['step'] == 'delete') {
