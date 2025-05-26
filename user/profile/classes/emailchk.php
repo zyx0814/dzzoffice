@@ -1,12 +1,12 @@
 <?php
-namespace   user\profile\classes;
+
+namespace user\profile\classes;
 
 use \core as C;
 
-class Emailchk{
+class Emailchk {
 
-    public function run(&$params)
-    {
+    public function run(&$params) {
 
         $bindstatus = 0;
         $id = isset($params['id']) ? $params['id'] : '';

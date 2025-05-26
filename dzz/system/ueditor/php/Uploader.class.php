@@ -7,8 +7,7 @@
  * Time: 上午11: 32
  * UEditor编辑器通用上传类
  */
-class Uploader
-{
+class Uploader {
     private $fileField; //文件域名
     private $file; //文件上传对象
     private $base64; //文件上传对象
@@ -48,14 +47,13 @@ class Uploader
      * @param array $config 配置项
      * @param bool $base64 是否解析base64编码，可省略。若开启，则$fileField代表的是base64编码的字符串表单名
      */
-    public function __construct($fileField, $config, $type = "upload")
-    {
+    public function __construct($fileField, $config, $type = "upload") {
         $this->fileField = $fileField;
         $this->config = $config;
         $this->type = $type;
         if ($type == "remote") {
             $this->saveRemote();
-        } else if($type == "base64") {
+        } else if ($type == "base64") {
             $this->upBase64();
         } else {
             $this->upFile();
@@ -68,8 +66,7 @@ class Uploader
      * 上传文件的主处理方法
      * @return mixed
      */
-    private function upFile()
-    {
+    private function upFile() {
         $file = $this->file = $_FILES[$this->fileField];
         if (!$file) {
             $this->stateInfo = $this->getStateInfo("ERROR_FILE_NOT_FOUND");
@@ -127,8 +124,7 @@ class Uploader
      * 处理base64编码的图片上传
      * @return mixed
      */
-    private function upBase64()
-    {
+    private function upBase64() {
         $base64Data = $_POST[$this->fileField];
         $img = base64_decode($base64Data);
 
@@ -168,8 +164,7 @@ class Uploader
      * 拉取远程图片
      * @return mixed
      */
-    private function saveRemote()
-    {
+    private function saveRemote() {
         $imgUrl = htmlspecialchars($this->fileField);
         $imgUrl = str_replace("&amp;", "&", $imgUrl);
 
@@ -203,7 +198,7 @@ class Uploader
         ob_end_clean();
         preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
 
-        $this->oriName = $m ? $m[1]:"";
+        $this->oriName = $m ? $m[1] : "";
         $this->fileSize = strlen($img);
         $this->fileType = $this->getFileExt();
         $this->fullName = $this->getFullName();
@@ -240,8 +235,7 @@ class Uploader
      * @param $errCode
      * @return string
      */
-    private function getStateInfo($errCode)
-    {
+    private function getStateInfo($errCode) {
         return !$this->stateMap[$errCode] ? $this->stateMap["ERROR_UNKNOWN"] : $this->stateMap[$errCode];
     }
 
@@ -249,8 +243,7 @@ class Uploader
      * 获取文件扩展名
      * @return string
      */
-    private function getFileExt()
-    {
+    private function getFileExt() {
         return strtolower(strrchr($this->oriName, '.'));
     }
 
@@ -258,8 +251,7 @@ class Uploader
      * 重命名文件
      * @return string
      */
-    private function getFullName()
-    {
+    private function getFullName() {
         //替换日期事件
         $t = time();
         $d = explode('-', date("Y-y-m-d-H-i-s"));
@@ -292,7 +284,7 @@ class Uploader
      * 获取文件名
      * @return string
      */
-    private function getFileName () {
+    private function getFileName() {
         return substr($this->filePath, strrpos($this->filePath, '/') + 1);
     }
 
@@ -300,8 +292,7 @@ class Uploader
      * 获取文件完整路径
      * @return string
      */
-    private function getFilePath()
-    {
+    private function getFilePath() {
         $fullname = $this->fullName;
         $rootPath = $_SERVER['DOCUMENT_ROOT'];
 
@@ -316,8 +307,7 @@ class Uploader
      * 文件类型检测
      * @return bool
      */
-    private function checkType()
-    {
+    private function checkType() {
         return in_array($this->getFileExt(), $this->config["allowFiles"]);
     }
 
@@ -325,8 +315,7 @@ class Uploader
      * 文件大小检测
      * @return bool
      */
-    private function  checkSize()
-    {
+    private function checkSize() {
         return $this->fileSize <= ($this->config["maxSize"]);
     }
 
@@ -334,8 +323,7 @@ class Uploader
      * 获取当前上传成功文件的各项信息
      * @return array
      */
-    public function getFileInfo()
-    {
+    public function getFileInfo() {
         return array(
             "state" => $this->stateInfo,
             "url" => $this->fullName,

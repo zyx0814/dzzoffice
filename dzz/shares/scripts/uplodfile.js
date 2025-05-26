@@ -21,7 +21,11 @@ if (_explorer.space && _explorer.space.maxattachsize) {
     maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
 }
 function fileupload(el, fid) {
-    fid = _explorer.sourcedata.folder[1].fid;
+    if (_explorer.sourcedata.folder[1].bz) {
+		fid = _explorer.sourcedata.folder[1].path;
+	} else {
+		fid = _explorer.sourcedata.folder[1].fid;
+	}
     el.off();
     el.fileupload({
         url: MOD_URL + '&op=ajax&do=uploads&container=' + fid+'&sid='+sid,
@@ -84,7 +88,6 @@ function fileupload(el, fid) {
         _upload.uploadprogress(_upload.bitrate + '/s', progre + '%');
 		
     }).on('fileuploaddone', function (e, data) {
-       
         data.context.find('.upload-progress-mask').css('width', '0%');
         data.context.find('.upload-cancel').hide();
         var process_bar = data.context.find('.process').css('width', '100%');
@@ -142,6 +145,8 @@ function fileupload(el, fid) {
                 var response = JSON.parse(data.jqXHR.responseText);
                 if (response.files && response.files[0] && response.files[0].error) {
                     errorMsg = response.files[0].error;
+                } else if (data.jqXHR.responseText) {
+                    errorMsg = data.jqXHR.responseText;
                 }
             } catch(e) {
                 errorMsg = data.jqXHR.responseText || '上传失败';

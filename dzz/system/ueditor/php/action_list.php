@@ -30,7 +30,7 @@ $start = isset($_GET['start']) ? htmlspecialchars($_GET['start']) : 0;
 $end = $start + $size;
 
 /* 获取文件列表 */
-$path = $_SERVER['DOCUMENT_ROOT'] . (substr($path, 0, 1) == "/" ? "":"/") . $path;
+$path = $_SERVER['DOCUMENT_ROOT'] . (substr($path, 0, 1) == "/" ? "" : "/") . $path;
 $files = getfiles($path, $allowFiles);
 if (!count($files)) {
     return json_encode(array(
@@ -43,7 +43,7 @@ if (!count($files)) {
 
 /* 获取指定范围的列表 */
 $len = count($files);
-for ($i = min($end, $len) - 1, $list = array(); $i < $len && $i >= 0 && $i >= $start; $i--){
+for ($i = min($end, $len) - 1, $list = array(); $i < $len && $i >= 0 && $i >= $start; $i--) {
     $list[] = $files[$i];
 }
 //倒序
@@ -68,10 +68,9 @@ return $result;
  * @param array $files
  * @return array
  */
-function getfiles($path, $allowFiles, &$files = array())
-{
+function getfiles($path, $allowFiles, &$files = array()) {
     if (!is_dir($path)) return null;
-    if(substr($path, strlen($path) - 1) != '/') $path .= '/';
+    if (substr($path, strlen($path) - 1) != '/') $path .= '/';
     $handle = opendir($path);
     while (false !== ($file = readdir($handle))) {
         if ($file != '.' && $file != '..') {
@@ -79,10 +78,10 @@ function getfiles($path, $allowFiles, &$files = array())
             if (is_dir($path2)) {
                 getfiles($path2, $allowFiles, $files);
             } else {
-                if (preg_match("/\.(".$allowFiles.")$/i", $file)) {
+                if (preg_match("/\.(" . $allowFiles . ")$/i", $file)) {
                     $files[] = array(
-                        'url'=> substr($path2, strlen($_SERVER['DOCUMENT_ROOT'])),
-                        'mtime'=> filemtime($path2)
+                        'url' => substr($path2, strlen($_SERVER['DOCUMENT_ROOT'])),
+                        'mtime' => filemtime($path2)
                     );
                 }
             }

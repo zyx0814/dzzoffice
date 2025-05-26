@@ -161,13 +161,13 @@ if (count($data) + count($groups) >= $perpage) {
     $next = $page + 1;
 }
 $createFolderPerm = false;
-if($gid){
+if ($gid) {
     if ($folder['ismoderator']) {
         $createFolderPerm = true;
     } else {
-        $$createFolderPerm = perm_binPerm::havePower('folder', $folder['perm_inherit']) ? true:false;
+        $$createFolderPerm = perm_binPerm::havePower('folder', $folder['perm_inherit']) ? true : false;
     }
-}else{
+} else {
     $createFolderPerm = true;
 }
 
@@ -184,7 +184,7 @@ $return = array('fid' => $fid, 'data' => $data ? $data : array(), 'param' => arr
     'datatotal' => (count($data) + count($groups) + $datastart),
     'groupnext' => $gropunext,
     'localsearch' => $bz ? 1 : 0,
-    'createFolderPerm'=>$createFolderPerm
+    'createFolderPerm' => $createFolderPerm
 )
 );
 $params = json_encode($return['param']);

@@ -18,14 +18,14 @@ $exttype = isset($_GET['exttype']) ? trim($_GET['exttype']) : '';//类型范围
 
 $mulitype = isset($_GET['mulitype']) ? intval($_GET['mulitype']) : 0;//0，不允许多选；1，允许多选
 $token = isset($_GET['token']) ? trim($_GET['token']) : '';//调用地方传递参数，将原样返回给回调函数;
-$formhash = isset($_GET['formhash']) ? $_GET['formhash']:'';
-$filename = isset($_GET['filename']) ? trim($_GET['filename']):'';
-$deferer  = dreferer();
-if($exttype){
-    $exttype = str_replace(array('&quot;','|','$'),array('"','(',')'),$exttype);
+$formhash = isset($_GET['formhash']) ? $_GET['formhash'] : '';
+$filename = isset($_GET['filename']) ? trim($_GET['filename']) : '';
+$deferer = dreferer();
+if ($exttype) {
+    $exttype = str_replace(array('&quot;', '|', '$'), array('"', '(', ')'), $exttype);
     $exttype = json_decode($exttype);
 }
-if($jsondetoken = json_decode($token)){
+if ($jsondetoken = json_decode($token)) {
     $token = $jsondetoken;
 }
 $gets = array(
@@ -35,13 +35,13 @@ $gets = array(
     'defaultselect' => $defaultselect,
     'mulitype' => $mulitype,
     'exttype' => $exttype,
-    'callback_url'=>$callback_url,
-    'token'=>$token,
-    'formhash'=>$formhash,
-    'filename'=>$filename
+    'callback_url' => $callback_url,
+    'token' => $token,
+    'formhash' => $formhash,
+    'filename' => $filename
 );
 $json = json_encode($gets);
-$allowvisit = array('file','searchfile', 'json', 'ajax', 'search', 'save','home','group');
+$allowvisit = array('file', 'searchfile', 'json', 'ajax', 'search', 'save', 'home', 'group');
 if ($do) {
     if (!in_array($do, $allowvisit)) {
         showmessage(lang('access_denied'), dreferer());

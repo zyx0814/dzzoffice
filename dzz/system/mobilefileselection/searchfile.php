@@ -7,7 +7,7 @@ global $_G;
 $uid = $_G['uid'];
 $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
 $perpage = isset($_GET['perpage']) ? intval($_GET['perpage']) : 10;//默认每页条数
-$datatotal = isset($_GET['datatotal']) ? intval($_GET['datatotal']):0;
+$datatotal = isset($_GET['datatotal']) ? intval($_GET['datatotal']) : 0;
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
 $start = ($page - 1) * $perpage;//开始条数
 $total = 0;//总条数
@@ -75,10 +75,10 @@ if ($keyword && !preg_match('/^\s*$/', $keyword)) {
 }
 //类型筛选
 if ($exts) {
-    if($exts == 'folder'){
+    if ($exts == 'folder') {
         $wheresql .= ' and r.type = %s';
         $param[] = 'folder';
-    }else{
+    } else {
         $extarr = explode(',', $exts);
         $wheresql .= ' and r.ext in(%n)';
         $param[] = $extarr;
@@ -163,7 +163,7 @@ $return = array(
         'keyword' => $keyword,
         'fid' => $fid,
         'localsearch' => $bz ? 1 : 0,
-        'exts'=>$exts
+        'exts' => $exts
     ),
 );
 $params = json_encode($return['param']);

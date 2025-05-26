@@ -5,10 +5,10 @@
  * Date: 14-04-09
  * Time: 上午10:17
  */
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
-include DZZ_ROOT."./dzz/attach/Uploader.class.php";
+include DZZ_ROOT . "./dzz/attach/Uploader.class.php";
 
 /* 上传配置 */
 $base64 = "upload";
@@ -19,7 +19,7 @@ switch (htmlspecialchars($_GET['action'])) {
             "maxSize" => $CONFIG['imageMaxSize'],
             "allowFiles" => $CONFIG['imageAllowFiles']
         );
-		 $fieldName = $markdown?'editormd-image-file':$CONFIG['imageFieldName'];
+        $fieldName = $markdown ? 'editormd-image-file' : $CONFIG['imageFieldName'];
         break;
     case 'uploadscrawl':
         $config = array(

@@ -4,13 +4,11 @@ if (!defined('IN_DZZ')) {
 }
 
 //这里定义一个类brower来判断浏览器种类和操作系统平台
-class helper_browser
-{
+class helper_browser {
     //判断返回的字符串提取对应的字符做出判断
     //A function to determine what browser and version we are using.
 
-    static function getBrowser($useragent = null)
-    {
+    static function getBrowser($useragent = null) {
         // check for most popular browsers first
         // unfortunately, that's IE. We also ignore Opera and Netscape 8
         // because they sometimes send msie agent
@@ -98,8 +96,7 @@ class helper_browser
     }
 
     //判断是否为企业微信
-    static function is_wxwork()
-    {
+    static function is_wxwork() {
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'wxwork') !== false) {
             return true;
         } else {
@@ -107,19 +104,15 @@ class helper_browser
         }
     }
 
-    static function ismobile()
-    {
+    static function ismobile() {
         $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
         if (preg_match("/WindowsWechat/i", $agent)) {
             return false;//return 'WindowsWechat';pc微信客户端打开pc版
-        }
-        elseif (preg_match("/macintosh/i", $agent) && preg_match("/MicroMessenger/i", $agent)) {
-             return false;//苹果电脑系统pc端
-        }
-        elseif (preg_match("/MicroMessenger/i", $agent)) {
+        } elseif (preg_match("/macintosh/i", $agent) && preg_match("/MicroMessenger/i", $agent)) {
+            return false;//苹果电脑系统pc端
+        } elseif (preg_match("/MicroMessenger/i", $agent)) {
             return 'wechat';
-        }
-        elseif (preg_match("/iphone/i", $agent) && preg_match("/mac os/i", $agent)) {
+        } elseif (preg_match("/iphone/i", $agent) && preg_match("/mac os/i", $agent)) {
             return 'iPhone';
         } elseif (preg_match("/ipod/i", $agent) && preg_match("/mac os/i", $agent)) {
             return 'iPod';
@@ -134,10 +127,9 @@ class helper_browser
     //A function to determine the platform we are on.
     //判断平台的种类
 
-    static function getplatform()
-    {
+    static function getplatform() {
         $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-        $os = array();;
+        $os = array();
 
         if (preg_match("/win/i", $agent) && preg_match('/nt 5.1/', $agent)) {
             $os = array('Windows' => 'XP');

@@ -7,15 +7,15 @@
  * @author      zyx(zyx@dzz.cc)
  */
 ignore_user_abort(1);
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 
-$setarr=array('ip'=>$_G['clientip'],
-			  'agent'=>$_SERVER['HTTP_USER_AGENT'],
-			  'os'=>$_SERVER['OS'],
-			  'dateline'=>$_G['timestamp']
-			  );
-DB::insert('count_down',$setarr);
+$setarr = array('ip' => $_G['clientip'],
+    'agent' => $_SERVER['HTTP_USER_AGENT'],
+    'os' => $_SERVER['OS'],
+    'dateline' => $_G['timestamp']
+);
+DB::insert('count_down', $setarr);
 exit();
 ?>

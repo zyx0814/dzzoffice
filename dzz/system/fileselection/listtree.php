@@ -10,7 +10,7 @@ if (!C::t('folder')->check_home_by_uid($uid)) {
 }
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 $operation = $_GET['operation'] ? $_GET['operation'] : '';
-$range = isset($_GET['range']) ? trim($_GET['range']):'';//指定范围
+$range = isset($_GET['range']) ? trim($_GET['range']) : '';//指定范围
 $data = array();
 $powerarr = perm_binPerm::getPowerArr();
 if ($operation == 'get_children') {
@@ -22,7 +22,7 @@ if ($operation == 'get_children') {
                 'id' => 'g_' . $v['orgid'],
                 'type' => 'group',
                 'children' => $children,
-                'li_attr' => array('hashs'=>'group&gid='.$v['orgid'])
+                'li_attr' => array('hashs' => 'group&gid=' . $v['orgid'])
             );
             if (intval($v['aid']) == 0) {
                 $arr['text'] = avatar_group($v['orgid'], array($v['orgid'] => array('aid' => $v['aid'], 'orgname' => $v['orgname']))) . $v['orgname'];
@@ -126,18 +126,18 @@ if ($operation == 'get_children') {
                 'type' => 'folder',
                 'children' => $children,
                 'li_attr' => array(
-                    'hashs'=>'home&do=file&fid='.$v['oid']
+                    'hashs' => 'home&do=file&fid=' . $v['oid']
                 )
             );
         }
         exit(json_encode($data));
     } else {
         $selrangearr = array();
-        if($range){
-            $selrangearr = explode(',',$range);
+        if ($range) {
+            $selrangearr = explode(',', $range);
         }
-        $rangeval = (count($selrangearr) > 0) ? true:false;
-        if (!$rangeval || ($rangeval && in_array('home',$selrangearr))) {
+        $rangeval = (count($selrangearr) > 0) ? true : false;
+        if (!$rangeval || ($rangeval && in_array('home', $selrangearr))) {
             $folders = C::t('folder')->fetch_home_by_uid();
             $fid = $folders['fid'];
             $children = (C::t('resources')->fetch_folder_num_by_pfid($fid) > 0) ? true : false;
@@ -146,10 +146,10 @@ if ($operation == 'get_children') {
                 'text' => lang('explorer_user_root_dirname'),
                 'type' => 'home',
                 'children' => $children,
-                'li_attr' => array('hashs' => "home&fid=$fid",'flag'=>'home')
+                'li_attr' => array('hashs' => "home&fid=$fid", 'flag' => 'home')
             );
         }
-        if (!$rangeval|| ($rangeval && in_array('org',$selrangearr))) {
+        if (!$rangeval || ($rangeval && in_array('org', $selrangearr))) {
             $orgs = C::t('organization')->fetch_all_orggroup($uid);
             foreach ($orgs['org'] as $v) {
                 if (count(C::t('organization')->fetch_org_by_uidorgid($uid, $v['orgid'])) > 0 || C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) {
@@ -175,7 +175,7 @@ if ($operation == 'get_children') {
                 }
             }
         }
-        if ($explorer_setting['grouponperm'] &&  (!$rangeval|| ($rangeval && in_array('group',$selrangearr)))) {
+        if ($explorer_setting['grouponperm'] && (!$rangeval || ($rangeval && in_array('group', $selrangearr)))) {
             $groups = C::t('organization')->fetch_group_by_uid($uid);
             $children = (count($groups) > 0) ? true : false;
             $data[] = array(

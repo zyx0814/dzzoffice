@@ -6,8 +6,8 @@
  * Time: 16:50
  */
 return array(
-    'allow_robot'=>false,
-    'default_op' =>'logging',
-    'default_action'=>'login',
-    'action_name'=>'action'
+    'allow_robot' => false,
+    'default_op' => 'logging',
+    'default_action' => 'login',
+    'action_name' => 'action'
 );

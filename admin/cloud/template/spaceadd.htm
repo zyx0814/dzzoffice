@@ -1,35 +1,4 @@
 <!--{template lyear:header_simple_start}-->
-<style>
-.menu{ width:100px;}
-.menu-text{width:70px;}
-.thumbnails>li img{
-	cursor:pointer;
-}
-.thumbnails>li.Selected  .thumbnail {
-	background:#F7F7F7;
-	
-}
-.thumbnails .thumbnail{
-	position:relative;
-}
-.thumbnails>li .selectbox{
-	position:absolute;
-	width:16px;
-	height:16px;
-	right:0px;
-	top:0px;
-	background:url(checkbox.png) no-repeat;
-	display:none;
-}
-
-.thumbnails>li.hover .selectbox {
-	display:block;
-}
-.thumbnails>li.Selected .selectbox{
-	background:url(selected_folder.png) no-repeat;
-	display:block;
-}
-</style>
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
 	<div class="container-fluid">
@@ -38,58 +7,21 @@
 			<div class="card-body">
 				<!--{loop $list $key $value}-->
 				<h4>$value[header]</h4>
-				<ul class="thumbnails list-unstyled clearfix p-1">
+				<div class="d-flex p-1">
 				<!--{loop $value[list] $value1}-->
-				<li bz="$value1[bz]" data_type="$key" class="text-center float-start p-2 hbg">
-					<div class="thumbnail"> <img src="dzz/images/default/system/$value1[bz].png" width="100" />
-					<h5>$value1[name]</h5>
+				<a class="card list-group-item-action m-1 text-center border" style="width:140px;" href="{MOD_URL}&bz=$value1[bz]&op=oauth">
+					<div class="card-body">
+						<img src="dzz/images/default/system/$value1[bz].png" class="card-img-top" style="width: 100px;" alt="$value1[name]">
 					</div>
-				</li>
+					<div class="card-footer">
+					$value1[name]
+					</div>
+				</a>
 				<!--{/loop}-->
-				</ul>
+				</div>
 				<!--{/loop}--> 
 			</div>
 		</div>
 	</div>
-</main> 
-<script type="text/javascript">
-	function connect_start(bz, type) { //开始云连接
-		switch(type) {
-			case 'pan':
-				url = '{MOD_URL}&bz=' + bz + '&op=oauth';
-				window.location.href = url;
-				break;
-			case 'storage':
-				url = '{MOD_URL}&bz=' + bz + '&op=oauth';
-				window.location.href = url;
-				break;
-			case 'ftp':
-				url = '{MOD_URL}&bz=' + bz + '&op=oauth';
-				window.location.href = url;
-				break;
-			case 'disk':
-				url = '{MOD_URL}&bz=' + bz + '&op=oauth';
-				window.location.href = url;
-				break;
-			default:
-			   url = '{MOD_URL}&bz=' + bz + '&op=oauth';
-				window.location.href = url;
-				break;
-		}
-	}
-	jQuery(document).ready(function(e) {
-		jQuery('.thumbnails li').mouseenter(function() {
-			jQuery(this).addClass('hover');
-		}).mouseleave(function() {
-			jQuery(this).removeClass('hover');
-		}).click(function() {
-			var bz = jQuery(this).attr('bz');
-			var type = jQuery(this).attr('data_type');
-			connect_start(bz, type);
-		});
-		jQuery(document).mousedown(function() {
-			jQuery('.thumbnails li').removeClass('Selected');
-		});
-	});
-</script> 
+</main>
 <!--{template lyear:footer_simple}-->

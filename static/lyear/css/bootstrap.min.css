@@ -2404,6 +2404,7 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .iconFirstWord{width:24px;height:24px;border-radius:50%;display:inline-block;line-height:24px;text-align:center;margin-right:2px;color:#FFFFFF}
 .dcolor{color:#495057}
 .dcolor:hover{color:#007bff;color:var(--bs-primary)}
+.color-danger:hover{color:#dc3545;color:rgba(244,66,54,1)}
 .text-muted .dcolor{color:#6c757d;color:rgba(108,117,125,1)}
 .text-muted .dcolor:hover{color:#007bff !important;color:var(--bs-primary) !important}
 .img-sitelogo{max-height:32px}

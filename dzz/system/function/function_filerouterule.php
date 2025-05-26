@@ -6,15 +6,15 @@
  * Time: 16:44
  */
 
-function filerouteParse($path){
+function filerouteParse($path) {
     $prefix = '';
-    if(preg_match('/\|/',$path)){
-        $patharr = explode('|',$path);
+    if (preg_match('/\|/', $path)) {
+        $patharr = explode('|', $path);
         $prefix = trim($patharr[0]);
         $path = trim($patharr[1]);
     }
-    if(substr($path,-1) !== '/'){
-        $path = $path.'/';
+    if (substr($path, -1) !== '/') {
+        $path = $path . '/';
     }
     if ($prefix) {
         switch ($prefix) {
@@ -45,16 +45,15 @@ function filerouteParse($path){
             }
         }
     }
-    if(isset($arr['gid']) && $arr['gid']){
-        $arr['hash'] = 'group&do=file&gid='.$arr['gid'].(isset($arr['fid']) ? '&fid='.$arr['fid']:'');
-    }elseif(isset($arr['fid']) && $arr['fid']){
-        $arr['hash'] = 'home&do=file&fid='.$arr['fid'];
-    }else{
+    if (isset($arr['gid']) && $arr['gid']) {
+        $arr['hash'] = 'group&do=file&gid=' . $arr['gid'] . (isset($arr['fid']) ? '&fid=' . $arr['fid'] : '');
+    } elseif (isset($arr['fid']) && $arr['fid']) {
+        $arr['hash'] = 'home&do=file&fid=' . $arr['fid'];
+    } else {
         $arr['hash'] = '';
     }
     return $arr;
 
 }
-function get_default_select(){
 
-}
+function get_default_select() {}

@@ -53,7 +53,7 @@ if ($operation == 'upload') {//上传图片文件
     );
     $upload_handler = new UploadHandler($options);
     exit();
-}elseif ($operation == 'newFolder') {//新建文件夹
+} elseif ($operation == 'newFolder') {//新建文件夹
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     $folderinfo = C::t('folder')->fetch($fid);
     /*if ($folderinfo['gid'] && C::t('organization_admin')->chk_memberperm($folderinfo['gid'])) {
@@ -62,7 +62,7 @@ if ($operation == 'upload') {//上传图片文件
     $perm = 0;
     $name = !empty($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
     $fid = intval($_GET['fid']);
-    $fname = io_dzz::name_filter(getstr($name, 80));
+    $fname = IO::name_filter(getstr($name, 80));
     if ($arr = IO::CreateFolder($fid, $fname, $perm)) {
         if ($arr['error']) {
         } else {
@@ -75,10 +75,10 @@ if ($operation == 'upload') {//上传图片文件
         $arr['error'] = lang('failure_newfolder');
     }
     exit(json_encode($arr));
-   // }
+    // }
 
 
-}elseif ($operation == 'linkadd') {
+} elseif ($operation == 'linkadd') {
     if (isset($_GET['createlink']) && $_GET['createlink']) {
         $link = isset($_GET['link']) ? trim($_GET['link']) : '';
         $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
@@ -141,7 +141,7 @@ if ($operation == 'upload') {//上传图片文件
         }
     }
     exit(json_encode($arr));
-}elseif ($operation == 'dzzdocument' || $operation == 'txt') {//新建文档
+} elseif ($operation == 'dzzdocument' || $operation == 'txt') {//新建文档
     if ($operation == 'dzzdocument') {
         $ext = 'dzzdoc';
     } else {
@@ -163,7 +163,7 @@ if ($operation == 'upload') {//上传图片文件
 } elseif ($operation == 'newIco') {//新建文件
     $type = trim($_GET['type']);
     $fid = trim($_GET['fid']);
-    $filename = isset($_GET['filename']) ? trim($_GET['filename']):'';
+    $filename = isset($_GET['filename']) ? trim($_GET['filename']) : '';
     $bz = getBzByPath($fid);
     switch ($type) {
         case 'newTxt':
@@ -214,13 +214,13 @@ if ($operation == 'upload') {//上传图片文件
             }
             $content = ' ';
     }
-    if($filename){
+    if ($filename) {
         $arr = IO::upload_by_content($content, $fid, $filename);
         if ($arr['error']) {
         } else {
             $arr['msg'] = 'success';
         }
-    }else{
+    } else {
         $arr = array();
         $arr['error'] = lang('new_failure');
     }
@@ -247,19 +247,19 @@ if ($operation == 'upload') {//上传图片文件
     } else {
         exit(json_encode(array('error' => true, 'json')));
     }
-}elseif ($operation == 'property') {//属性
+} elseif ($operation == 'property') {//属性
     $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
     $fid = 0;
-    if(preg_match('/fid_/',$paths)){
-        $fid = intval(preg_replace('/fid_/','',$paths));
+    if (preg_match('/fid_/', $paths)) {
+        $fid = intval(preg_replace('/fid_/', '', $paths));
     }
-    if($fid){
-        if($rid = C::t('resources')->fetch_rid_by_fid($fid)){
+    if ($fid) {
+        if ($rid = C::t('resources')->fetch_rid_by_fid($fid)) {
             $propertys = C::t('resources')->get_property_by_rid($rid);
-        }else{
+        } else {
             $propertys = C::t('resources')->get_property_by_fid($fid);
         }
-    }else{
+    } else {
         $patharr = explode(',', $paths);
         $rids = array();
         foreach ($patharr as $v) {
@@ -267,7 +267,7 @@ if ($operation == 'upload') {//上传图片文件
         }
         $propertys = C::t('resources')->get_property_by_rid($rids);
     }
-    if($propertys['error']){
+    if ($propertys['error']) {
         $error = $propertys['error'];
     }
 }

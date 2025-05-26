@@ -7,15 +7,15 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 
 $lang = array
 (
-	
-	'appname'=>'用户资料管理'	
-	
+
+    'appname' => '用户资料管理'
+
 );
 
 

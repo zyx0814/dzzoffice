@@ -7,7 +7,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$do = isset($_GET['do']) ? trim($_GET['do']):'';
+$do = isset($_GET['do']) ? trim($_GET['do']) : '';
 header('Content-Type: application/json; charset=utf-8');
 if (!$path = dzzdecode($_GET['path'])) {
     exit(json_encode(array('error' => 'access denied')));

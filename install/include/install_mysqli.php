@@ -7,146 +7,146 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_LEYUN')) {
-	exit('Access Denied');
+if (!defined('IN_LEYUN')) {
+    exit('Access Denied');
 }
 
 class dbstuff {
-	var $querynum = 0;
-	var $link;
-	var $histories;
-	var $time;
-	var $tablepre;
+    var $querynum = 0;
+    var $link;
+    var $histories;
+    var $time;
+    var $tablepre;
 
-	function connect($dbhost, $dbuser, $dbpw, $dbname = '', $dbcharset, $pconnect = 0, $tablepre='', $time = 0) {
-		$this->time = $time;
-		$this->tablepre = $tablepre;
-		mysqli_report(MYSQLI_REPORT_OFF);
-		$this->link = new mysqli();
-		//兼容支持域名直接带有端口的情况
-		if(strpos($dbhost,':')!==false){
-			list($dbhost,$port)=explode(':',$dbhost);
-			
-		}elseif(strpos($dbhost,'.sock')!==false){//地址直接是socket地址
-			$unix_socket=$dbhost;
-			$dbhost='localhost';
-		}
-		if(empty($port)) $port='3306';
-		
-		if(!$this->link->real_connect($dbhost, $dbuser, $dbpw, $dbname, $port, $unix_socket, MYSQLI_CLIENT_COMPRESS)) {
-			$this->halt('Can not connect to MySQL server');
-		}
+    function connect($dbhost, $dbuser, $dbpw, $dbname = '', $dbcharset, $pconnect = 0, $tablepre = '', $time = 0) {
+        $this->time = $time;
+        $this->tablepre = $tablepre;
+        mysqli_report(MYSQLI_REPORT_OFF);
+        $this->link = new mysqli();
+        //兼容支持域名直接带有端口的情况
+        if (strpos($dbhost, ':') !== false) {
+            list($dbhost, $port) = explode(':', $dbhost);
 
-		if ($this->version() < '5.5.3') {
-			$this->halt('MySQL version must be 5.5.3 or greater');
-		}
+        } elseif (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
+            $unix_socket = $dbhost;
+            $dbhost = 'localhost';
+        }
+        if (empty($port)) $port = '3306';
 
-		if($dbcharset) {
-			$this->link->set_charset($dbcharset);
-		}
+        if (!$this->link->real_connect($dbhost, $dbuser, $dbpw, $dbname, $port, $unix_socket, MYSQLI_CLIENT_COMPRESS)) {
+            $this->halt('Can not connect to MySQL server');
+        }
 
-		$this->link->query("SET sql_mode=''");
-		$this->link->query("SET character_set_client=binary");
+        if ($this->version() < '5.5.3') {
+            $this->halt('MySQL version must be 5.5.3 or greater');
+        }
 
-	}
+        if ($dbcharset) {
+            $this->link->set_charset($dbcharset);
+        }
 
-	function fetch_array($query, $result_type = MYSQLI_ASSOC) {
-		return $query ? $query->fetch_array($result_type) : null;
-	}
+        $this->link->query("SET sql_mode=''");
+        $this->link->query("SET character_set_client=binary");
 
-	function result_first($sql, &$data) {
-		$query = $this->query($sql);
-		$data = $this->result($query, 0);
-	}
+    }
 
-	function fetch_first($sql, &$arr) {
-		$query = $this->query($sql);
-		$arr = $this->fetch_array($query);
-	}
+    function fetch_array($query, $result_type = MYSQLI_ASSOC) {
+        return $query ? $query->fetch_array($result_type) : null;
+    }
 
-	function fetch_all($sql, &$arr) {
-		$query = $this->query($sql);
-		while($data = $this->fetch_array($query)) {
-			$arr[] = $data;
-		}
-	}
+    function result_first($sql, &$data) {
+        $query = $this->query($sql);
+        $data = $this->result($query, 0);
+    }
 
-	function cache_gc() {
-		$this->query("DELETE FROM {$this->tablepre}sqlcaches WHERE expiry<$this->time");
-	}
+    function fetch_first($sql, &$arr) {
+        $query = $this->query($sql);
+        $arr = $this->fetch_array($query);
+    }
 
-	function query($sql, $type = '', $cachetime = FALSE) {
-		$resultmode = $type == 'UNBUFFERED' ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT;
-		if(!($query = $this->link->query($sql, $resultmode)) && $type != 'SILENT') {
-			$this->halt('SQL:', $sql);
-		}
-		$this->querynum++;
-		$this->histories[] = $sql;
-		return $query;
-	}
+    function fetch_all($sql, &$arr) {
+        $query = $this->query($sql);
+        while ($data = $this->fetch_array($query)) {
+            $arr[] = $data;
+        }
+    }
 
-	function affected_rows() {
-		return $this->link->affected_rows;
-	}
+    function cache_gc() {
+        $this->query("DELETE FROM {$this->tablepre}sqlcaches WHERE expiry<$this->time");
+    }
 
-	function error() {
-		return (($this->link) ? $this->link->error : mysqli_error());
-	}
+    function query($sql, $type = '', $cachetime = FALSE) {
+        $resultmode = $type == 'UNBUFFERED' ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT;
+        if (!($query = $this->link->query($sql, $resultmode)) && $type != 'SILENT') {
+            $this->halt('SQL:', $sql);
+        }
+        $this->querynum++;
+        $this->histories[] = $sql;
+        return $query;
+    }
 
-	function errno() {
-		return intval(($this->link) ? $this->link->errno : mysqli_errno());
-	}
+    function affected_rows() {
+        return $this->link->affected_rows;
+    }
 
-	function result($query, $row) {
-		if(!$query || $query->num_rows == 0) {
-			return null;
-		}
-		$query->data_seek($row);
-		$assocs = $query->fetch_row();
-		return $assocs[0];
-	}
+    function error() {
+        return (($this->link) ? $this->link->error : mysqli_error());
+    }
 
-	function num_rows($query) {
-		$query = $query ? $query->num_rows : 0;
-		return $query;
-	}
+    function errno() {
+        return intval(($this->link) ? $this->link->errno : mysqli_errno());
+    }
 
-	function num_fields($query) {
-		return $query ? $query->field_count : 0;
-	}
+    function result($query, $row) {
+        if (!$query || $query->num_rows == 0) {
+            return null;
+        }
+        $query->data_seek($row);
+        $assocs = $query->fetch_row();
+        return $assocs[0];
+    }
 
-	function free_result($query) {
-		return $query ? $query->free() : false;
-	}
+    function num_rows($query) {
+        $query = $query ? $query->num_rows : 0;
+        return $query;
+    }
 
-	function insert_id() {
-		return ($id = $this->link->insert_id) >= 0 ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
-	}
+    function num_fields($query) {
+        return $query ? $query->field_count : 0;
+    }
 
-	function fetch_row($query) {
-		$query = $query ? $query->fetch_row() : null;
-		return $query;
-	}
+    function free_result($query) {
+        return $query ? $query->free() : false;
+    }
 
-	function fetch_fields($query) {
-		return $query ? $query->fetch_field() : null;
-	}
+    function insert_id() {
+        return ($id = $this->link->insert_id) >= 0 ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
+    }
 
-	function version() {
-		return $this->link->server_info;
-	}
+    function fetch_row($query) {
+        $query = $query ? $query->fetch_row() : null;
+        return $query;
+    }
 
-	function escape_string($str) {
-		return $this->link->escape_string($str);
-	}
+    function fetch_fields($query) {
+        return $query ? $query->fetch_field() : null;
+    }
 
-	function close() {
-		return $this->link->close();
-	}
+    function version() {
+        return $this->link->server_info;
+    }
 
-	function halt($message = '', $sql = '') {
-		show_error('run_sql_error', $message.$sql.'<br /> Error:'.$this->error().'<br />Errno:'.$this->errno(), 0);
-	}
+    function escape_string($str) {
+        return $this->link->escape_string($str);
+    }
+
+    function close() {
+        return $this->link->close();
+    }
+
+    function halt($message = '', $sql = '') {
+        show_error('run_sql_error', $message . $sql . '<br /> Error:' . $this->error() . '<br />Errno:' . $this->errno(), 0);
+    }
 }
 
 ?>

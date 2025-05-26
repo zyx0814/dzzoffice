@@ -1,175 +1,176 @@
 <?php
 
-class memory_driver_redis
-{
-	var $enable;
-	var $obj;
+class memory_driver_redis {
+    var $enable;
+    var $obj;
 
-	function init($config) {
-		if(!empty($config['server'])) {
-			try {
-				$this->obj = new Redis();
-				if($config['pconnect']) {
-					$connect = @$this->obj->pconnect($config['server'], $config['port']);
-				} else {
-					$connect = @$this->obj->connect($config['server'], $config['port']);
-				}
-                if($config['password']){
+    function init($config) {
+        if (!empty($config['server'])) {
+            try {
+                $this->obj = new Redis();
+                if ($config['pconnect']) {
+                    $connect = @$this->obj->pconnect($config['server'], $config['port']);
+                } else {
+                    $connect = @$this->obj->connect($config['server'], $config['port']);
+                }
+                if ($config['password']) {
                     @$this->obj->auth($config['password']);
                 }
-			} catch (RedisException $e) {
-			    echo $e;
-			}
-			$this->enable = $this->checkEnable($connect);
-			if($this->enable) {
-				if($config['requirepass']) {
-					$this->obj->auth($config['requirepass']);
-				}
-				@$this->obj->setOption(Redis::OPT_SERIALIZER, $config['serializer']);
-			}
-		}
-	}
+            } catch (RedisException $e) {
+                echo $e;
+            }
+            $this->enable = $this->checkEnable($connect);
+            if ($this->enable) {
+                if ($config['requirepass']) {
+                    $this->obj->auth($config['requirepass']);
+                }
+                @$this->obj->setOption(Redis::OPT_SERIALIZER, $config['serializer']);
+            }
+        }
+    }
 
-	public function checkEnable($connect){
-		if($connect){
-			$this->set('_check_','_check_',10);
-			if($this->get('_check_')=='_check_'){
-				return true;
-			}
-			$this->rm('_check_');
-		}
-		return false;
-	}
-	function &instance() {
-		static $object;
-		if(empty($object)) {
-			$object = new memory_driver_redis();
-			$object->init(getglobal('config/memory/redis'));
-		}
-		return $object;
-	}
+    public function checkEnable($connect) {
+        if ($connect) {
+            $this->set('_check_', '_check_', 10);
+            if ($this->get('_check_') == '_check_') {
+                return true;
+            }
+            $this->rm('_check_');
+        }
+        return false;
+    }
 
-	function get($key) {
-		if(is_array($key)) {
-			return $this->getMulti($key);
-		}
-		return $this->obj->get($key);
-	}
+    function &instance() {
+        static $object;
+        if (empty($object)) {
+            $object = new memory_driver_redis();
+            $object->init(getglobal('config/memory/redis'));
+        }
+        return $object;
+    }
 
-	function getMulti($keys) {
-		$result = $this->obj->getMultiple($keys);
-		$newresult = array();
-		$index = 0;
-		foreach($keys as $key) {
-			if($result[$index] !== false) {
-				$newresult[$key] = $result[$index];
-			}
-			$index++;
-		}
-		unset($result);
-		return $newresult;
-	}
+    function get($key) {
+        if (is_array($key)) {
+            return $this->getMulti($key);
+        }
+        return $this->obj->get($key);
+    }
 
-	function select($db=0) {
-		return $this->obj->select($db);
-	}
+    function getMulti($keys) {
+        $result = $this->obj->getMultiple($keys);
+        $newresult = array();
+        $index = 0;
+        foreach ($keys as $key) {
+            if ($result[$index] !== false) {
+                $newresult[$key] = $result[$index];
+            }
+            $index++;
+        }
+        unset($result);
+        return $newresult;
+    }
 
-	function set($key, $value, $ttl = 0) {
-		if($ttl) {
-			return $this->obj->setex($key, $ttl, $value);
-		} else {
-			return $this->obj->set($key, $value);
-		}
-	}
+    function select($db = 0) {
+        return $this->obj->select($db);
+    }
 
-	function rm($key) {
-		return $this->obj->delete($key);
-	}
+    function set($key, $value, $ttl = 0) {
+        if ($ttl) {
+            return $this->obj->setex($key, $ttl, $value);
+        } else {
+            return $this->obj->set($key, $value);
+        }
+    }
 
-	function setMulti($arr, $ttl=0) {
-		if(!is_array($arr)) {
-			return FALSE;
-		}
-		foreach($arr as $key => $v) {
-			$this->set($key, $v, $ttl);
-		}
-		return TRUE;
-	}
+    function rm($key) {
+        return $this->obj->delete($key);
+    }
 
-	function inc($key, $step = 1) {
-		return $this->obj->incr($key, $step);
-	}
+    function setMulti($arr, $ttl = 0) {
+        if (!is_array($arr)) {
+            return FALSE;
+        }
+        foreach ($arr as $key => $v) {
+            $this->set($key, $v, $ttl);
+        }
+        return TRUE;
+    }
 
-	function dec($key, $step = 1) {
-		return $this->obj->decr($key, $step);
-	}
+    function inc($key, $step = 1) {
+        return $this->obj->incr($key, $step);
+    }
 
-	function getSet($key, $value) {
-		return $this->obj->getSet($key, $value);
-	}
+    function dec($key, $step = 1) {
+        return $this->obj->decr($key, $step);
+    }
 
-	function sADD($key, $value) {
-		return $this->obj->sADD($key, $value);
-	}
+    function getSet($key, $value) {
+        return $this->obj->getSet($key, $value);
+    }
 
-	function sRemove($key, $value) {
-		return $this->obj->sRemove($key, $value);
-	}
+    function sADD($key, $value) {
+        return $this->obj->sADD($key, $value);
+    }
 
-	function sMembers($key) {
-		return $this->obj->sMembers($key);
-	}
+    function sRemove($key, $value) {
+        return $this->obj->sRemove($key, $value);
+    }
 
-	function sIsMember($key, $member) {
-		return $this->obj->sismember($key, $member);
-	}
+    function sMembers($key) {
+        return $this->obj->sMembers($key);
+    }
 
-	function keys($key) {
-		return $this->obj->keys($key);
-	}
+    function sIsMember($key, $member) {
+        return $this->obj->sismember($key, $member);
+    }
 
-	function expire($key, $second){
-		return $this->obj->expire($key, $second);
-	}
+    function keys($key) {
+        return $this->obj->keys($key);
+    }
 
-	function sCard($key) {
-		return $this->obj->sCard($key);
-	}
+    function expire($key, $second) {
+        return $this->obj->expire($key, $second);
+    }
 
-	function hSet($key, $field, $value) {
-		return $this->obj->hSet($key, $field, $value);
-	}
+    function sCard($key) {
+        return $this->obj->sCard($key);
+    }
 
-	function hDel($key, $field) {
-		return $this->obj->hDel($key, $field);
-	}
+    function hSet($key, $field, $value) {
+        return $this->obj->hSet($key, $field, $value);
+    }
 
-	function hLen($key) {
-		return $this->obj->hLen($key);
-	}
+    function hDel($key, $field) {
+        return $this->obj->hDel($key, $field);
+    }
 
-	function hVals($key) {
-		return $this->obj->hVals($key);
-	}
+    function hLen($key) {
+        return $this->obj->hLen($key);
+    }
 
-	function hIncrBy($key, $field, $incr){
-		return $this->obj->hIncrBy($key, $field, $incr);
-	}
+    function hVals($key) {
+        return $this->obj->hVals($key);
+    }
 
-	function hGetAll($key) {
-		return $this->obj->hGetAll($key);
-	}
+    function hIncrBy($key, $field, $incr) {
+        return $this->obj->hIncrBy($key, $field, $incr);
+    }
 
-	function sort($key, $opt) {
-		return $this->obj->sort($key, $opt);
-	}
+    function hGetAll($key) {
+        return $this->obj->hGetAll($key);
+    }
 
-	function exists($key) {
-		return $this->obj->exists($key);
-	}
+    function sort($key, $opt) {
+        return $this->obj->sort($key, $opt);
+    }
 
-	function clear() {
-		return $this->obj->flushAll();
-	}
+    function exists($key) {
+        return $this->obj->exists($key);
+    }
+
+    function clear() {
+        return $this->obj->flushAll();
+    }
 }
+
 ?>

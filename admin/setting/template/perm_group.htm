@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="{MOD_PATH}/images/lsetting.css?{VERHASH}">
 <style type="text/css">
 	.view-eidt{
 		padding-right: 5px;
@@ -153,7 +152,7 @@
                         '</td>' +
                         '<td>' +
                         '<span class="mdi mdi-pencil lead dcolor" onclick="editpermgroup('+data['success']['id']+')" style="cursor:pointer;"></span> ' +
-                        '<span class="mdi mdi-delete lead dcolor" onclick="delete_perm(this,'+data['success']['id']+')"></span><div class="proper-delhover">'+defaultstr+'</div>' +
+                        '<span class="mdi mdi-delete lead color-danger" onclick="delete_perm(this,'+data['success']['id']+')"></span><div class="proper-delhover">'+defaultstr+'</div>' +
                         '</td>' +
                         '</tr>';
                 var elem = jQuery(html).appendTo('.properties-con').find('.js-switch');

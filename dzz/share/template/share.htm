@@ -62,6 +62,8 @@
 	title: '分享管理数据表格',
 	toolbar: '#toolbar',
 	autoSort: false,
+	even:true,
+	cellMinWidth:120,
 	text: {
 		none: '暂无相关数据'
 	},
@@ -69,24 +71,25 @@
 		limit: 20, // 默认显示20行
 		limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
 	},
-	cellMinWidth: 80 //全局定义常规单元格的最小宽度
-	,cols: [[
+	cols: [[
 	{type:'checkbox', fixed: 'left'}
 	,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-		,{field:'title', title: '{lang sharing_file}', align: 'center', sort: true,templet: function(d) {
+		,{field:'title', title: '{lang share_typename_attach}', sort: true,templet: function(d) {
 			return d.title;
 		}}
-		,{field:'dateline', title: '{lang share_time}', align: 'center', sort: true}
-		,{field:'count', title: '{lang view_count}', align: 'center', sort: true}
-		,{field:'downs', title: '下载次数', align: 'center', sort: true}
-		,{field:'password', title: '{lang extract_password}', align: 'center', sort: true}
-		,{field:'type', title: '{lang file_type}', align: 'center', sort: true}
+		,{field:'status', title: '状态', align: 'center', sort: true,templet: function(d) {
+			return d.status;
+		}}
+		,{field:'dateline', title: '{lang share_time}', align: 'center', sort: true,templet:function(d){return d.dateline}}
+		,{field:'endtime', title: '{lang failure_time}', align: 'center', sort: true}
 		<!--{if $_G['adminid']}-->,{field:'username', title: '{lang share_user}', align: 'center', sort: true,templet: function(d) {
 		return d.username;
 	}}<!--{/if}-->
-	,{field:'status', title: '状态', align: 'center', sort: true,templet: function(d) {
-		return d.status;
-	}}
+		,{field:'count', title: '{lang view_count}', align: 'center', sort: true,templet:function(d){return d.count+'{lang degree}'}}
+		,{field:'downs', title: '{lang download_times}', align: 'center', sort: true,templet:function(d){return d.downs+'{lang degree}'}}
+		,{field:'password', title: '{lang extract_password}', align: 'center', sort: true}
+		,{field:'type', title: '{lang file_type}', align: 'center', sort: true}
+		,{field:'times', title: '{lang limited_number}', align: 'center', sort: true}
 		,{title: '{lang operation}',width:150, align:'center', toolbar: '#barDemo', fixed: 'right'}
 	]],
 	initSort: {
@@ -110,38 +113,25 @@
 						template += '<div class="accordion-item">';
 						template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
 						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
-						template += '{lang sharing_file}：' + item.title;
+						template += '{lang share_typename_attach}：' + item.title;
 						template += '</button>';
 						template += '</h2>';
 						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
 						template += '<div class="accordion-body">';
 						template += '<p><strong>ID:</strong> ' + item.LAY_NUM + '</p>';
-						template += '<p><strong>{lang sharing_file}:</strong> ' + item.title + '</p>';
+						template += '<p><strong>{lang share_typename_attach}:</strong> ' + item.title + '</p>';
+						template += '<p><strong>状态:</strong> ' + item.status + '</p>';
 						template += '<p><strong>{lang share_time}:</strong> ' + item.dateline + '</p>';
 						<!--{if $_G['adminid']}-->
 						template += '<p><strong>{lang share_user}:</strong> ' + item.username + '</p>';
 						<!--{/if}-->
-						if (item.sharelink) {
 							template += '<p><strong>{lang link}:</strong> <a href="' + item.sharelink + '" target="_blank">' + item.sharelink + '</a></p>';
-						}
-						if (item.password) {
 							template += '<p><strong>{lang extract_password}:</strong> ' + item.password + '</p>';
-						}
-						if (item.endtime) {
-							template += '<p><strong>{lang expiration_time}:</strong> ' + item.endtime + '</p>';
-						}
-						if (item.count) {
+							template += '<p><strong>{lang failure_time}:</strong> ' + item.endtime + '</p>';
 							template += '<p><strong>{lang view_count}:</strong> ' + item.count + '{lang degree}</p>';
-						}
-						if (item.downs) {
-							template += '<p><strong>下载次数:</strong> ' + item.downs + '{lang degree}</p>';
-						}
-						if (item.status) {
-							template += '<p><strong>状态:</strong> ' + item.status + '</p>';
-						}
-						if (item.number) {
-							template += '<p><strong>{lang limited_number}:</strong> ' + item.number + '</p>';
-						}
+							template += '<p><strong>{lang download_times}:</strong> ' + item.downs + '{lang degree}</p>';
+						template += '<p><strong>{lang limited_number}:</strong> ' + item.times + '</p>';
+						template += '<p><strong>{lang file_type}:</strong> ' + item.type + '</p>';
 						template += '</div>';
 						template += '</div>';
 						template += '</div>';
@@ -273,22 +263,21 @@
 		function showDataTemplate(obj) {
 			var data = obj.dataCache;
 			var template =
-			'<p><strong>ID:</strong> ' + data.LAY_NUM + '</p>' +
-			'<p><strong>{lang sharing_file}:</strong> ' + data.title + '</p>' +
+			'<p><strong>{lang share_typename_attach}:</strong> ' + data.title + '</p>' +
+			'<p><strong>状态:</strong> ' + data.status + '</p>' +
 			'<p><strong>{lang share_time}:</strong> ' + data.dateline + '</p>' +
+			'<p><strong>{lang failure_time}:</strong> ' + data.endtime + '</p>' +
 			<!--{if $_G['adminid']}-->
-			(data.username ? '<p><strong>{lang share_user}:</strong> ' + data.username + '</p>' : '') + 
+			'<p><strong>{lang share_user}:</strong> ' + data.username + '</p>' + 
 			<!--{/if}-->
-			(data.sharelink ? '<p><strong>{lang link}:</strong> <a href="' + data.sharelink + '">' + data.sharelink + '</a></p>' : '') +
-			(data.password ? '<p><strong>{lang extract_password}:</strong> ' + data.password + '</p>' : '') +
-			(data.endtime ? '<p><strong>{lang expiration_time}:</strong> ' + data.endtime + '</p>' : '') +
-			(data.count ? '<p><strong>{lang view_count}:</strong> ' + data.count + '{lang degree}</p>' : '') +
-			(data.downs ? '<p><strong>下载次数:</strong> ' + data.downs + '{lang degree}</p>' : '') +
-			(data.status ? '<p><strong>状态:</strong> ' + data.status + '</p>' : '') +
-			(data.number ? '<p><strong>{lang limited_number}:</strong> ' + data.number + '</p>' : '');
+			'<p><strong>{lang link}:</strong> <a href="' + data.sharelink + '">' + data.sharelink + '</a></p>' +
+			'<p><strong>{lang extract_password}:</strong> ' + data.password + '</p>' +
+			'<p><strong>{lang view_count}:</strong> ' + data.count + '{lang degree}</p>' +
+			'<p><strong>{lang download_times}:</strong> ' + data.downs + '{lang degree}</p>' +
+			'<p><strong>{lang file_type}:</strong> ' + data.type + '</p><p><strong>{lang limited_number}:</strong> ' + data.times + '</p>';
 	
 			layer.alert(template, {
-				title: data.title+' 详情：'
+				title: '<strong>ID：'+data.LAY_NUM+'</strong>详情：'
 			});
 	
 		// 标注选中样式
@@ -298,7 +287,7 @@
 			// 创建临时的 input 元素用于复制链接
 			var tempInput = document.createElement("input");
 			document.body.appendChild(tempInput);
-			var copyText = data.title + "\n " + data.sharelink;
+			var copyText = data.name + "\n " + data.sharelink;
 			if (data.password) {
 				copyText += " \n密码: " + data.password;
 			}

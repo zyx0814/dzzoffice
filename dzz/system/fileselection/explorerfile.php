@@ -85,7 +85,7 @@ if ($operation == 'filelist') {
             $arr = array();
             //查询当前文件夹信息
             if ($folder = C::t('folder')->fetch_by_fid($id)) {
-                if($folder['fid']) {
+                if ($folder['fid']) {
                     $folder['disp'] = $disp = intval($_GET['disp']) ? intval($_GET['disp']) : intval($folder['disp']);//文件排序
                     $folder['iconview'] = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($folder['iconview']));//排列方式
                     $conditions = array();
@@ -120,7 +120,7 @@ if ($operation == 'filelist') {
 
                     }
                     $folder['perm'] = perm_check::getPerm($folder['fid']);//获取文件权限
-                    foreach (C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start,false,false,true) as $v) {
+                    foreach (C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start, false, false, true) as $v) {
                         if ($v['type'] != 'folder' && $permfilter && $v['gid']) {
                             if (filter_permdata($permfilter, $folder['perm'], $v, $uid)) {
                                 continue;
@@ -165,7 +165,7 @@ if ($operation == 'filelist') {
     );
     exit(json_encode($return));
 }
-function filter_permdata($permfilter, $perm, $data, $uid){
+function filter_permdata($permfilter, $perm, $data, $uid) {
     $powerarr = perm_binPerm::getPowerArr();
     $specialperm = array('read', 'edit', 'delete', 'download', 'copy');
     $noperm = false;

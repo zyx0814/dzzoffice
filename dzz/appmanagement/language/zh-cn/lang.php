@@ -1,6 +1,6 @@
 <?php
-$lang = array (
-    'appname'=>'管理', 
+$lang = array(
+    'appname' => '管理',
     'supportted' => '支持',
     'unsupportted' => '不支持',
     'php_version_too_low' => 'php版本太低啦，请先升级php到5.3以上，建议使用php5.4及以上',

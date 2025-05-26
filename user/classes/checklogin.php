@@ -1,8 +1,9 @@
 <?php
-namespace  user\classes;
 
-class Checklogin{
-    public function run(){
+namespace user\classes;
+
+class Checklogin {
+    public function run() {
 
 
         global $_G;

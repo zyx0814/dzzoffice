@@ -6,27 +6,27 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-	
 
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 define('NOROBOT', TRUE);
-$path = empty($_GET['icoid'])?trim($_GET['path']):$_GET['icoid'];
+$path = empty($_GET['icoid']) ? trim($_GET['path']) : $_GET['icoid'];
 $filename = $_GET['filename'] ?? '';
 $checkperm = isset($_GET['checkperm']) ? 0 : 1;
-$patharr=explode(',',$path);
-$paths=array();
-foreach($patharr as $path){
-	if($path=dzzdecode($path)){
-		$paths[]=$path;
-	}
+$patharr = explode(',', $path);
+$paths = array();
+foreach ($patharr as $path) {
+    if ($path = dzzdecode($path)) {
+        $paths[] = $path;
+    }
 }
-if($paths){
-	IO::download($paths,$filename,$checkperm);
-	exit();
-}else{
-	exit('path error!');
+if ($paths) {
+    IO::download($paths, $filename, $checkperm);
+    exit();
+} else {
+    exit('path error!');
 }
 
 

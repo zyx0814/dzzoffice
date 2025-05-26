@@ -61,7 +61,7 @@ foreach (DB::fetch_all("select pathkey from %t where `type` = %d", array('organi
         $orgdatas[$val['pathkey']] = $val;
         $orgdatas[$val['pathkey']]['user_count'] = 0;
         $orgdatas[$val['pathkey']]['user_select'] = 0;
-        if(in_array($val['orgid'],$selectorgids)) $orgdatas[$val['pathkey']]['selected'] = true;
+        if (in_array($val['orgid'], $selectorgids)) $orgdatas[$val['pathkey']]['selected'] = true;
         $orgids[] = $val['orgid'];
         $orgnames[$val['orgid']] = $val['orgname'];
     }
@@ -75,8 +75,8 @@ if ($keyword) {
     $param[] = '%' . $keyword . '%';
 }
 $selectuserinfo = array();
-$selectnum = ($stype == 1) ? count($selectorgids): count($selectuids);
-if(!$nouser) {
+$selectnum = ($stype == 1) ? count($selectorgids) : count($selectuids);
+if (!$nouser) {
     $data = DB::fetch_all("select ou.orgid,o.pathkey,u.uid,u.username,u.avatarstatus,s.svalue from %t ou left join %t o on o.orgid=ou.orgid
         left join %t u on ou.uid=u.uid left join %t s on u.uid=s.uid and s.skey=%s where $wheresql", $param);
     //获取机构和部门下的用户
@@ -88,7 +88,7 @@ if(!$nouser) {
             $v['firstword'] = strtoupper(new_strsubstr($v['username'], 1, ''));
         }
         if ($orgdatas[$v['pathkey']]) {
-            if(in_array($v['uid'],$selectuids) || in_array($v['orgid'],$selectorgids)){
+            if (in_array($v['uid'], $selectuids) || in_array($v['orgid'], $selectorgids)) {
                 $v['selected'] = true;
                 $selectuserinfo[] = $v;
                 $orgdatas[$v['pathkey']]['user_select'] += 1;

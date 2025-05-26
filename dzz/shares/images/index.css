@@ -16,6 +16,7 @@ ul,ul li,li{list-style:none;padding:0;margin:0}
 .setting-img img{width:100%;height:100%}
 .upload-click{position:absolute;top:0;bottom:0;width:100%;color:#fff;line-height:150px;text-align:center;font-size:18px;letter-spacing:2px}
 #exampleInputFile{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;opacity:0}
+.middlecenter .middlecenter-body{height:100%;}
 #middleconMenu{position:relative;height:100%}
 #middleconMenu .middlecenter{margin-right:0;-webkit-transition:margin 300ms cubic-bezier(0.4,0.0,0.2,1);transition:margin 300ms cubic-bezier(0.4,0.0,0.2,1);will-change:margin;position:relative}
 .scroll-100{height:100%;overflow:auto;position:relative}
@@ -50,6 +51,7 @@ to{opacity:1}
 .renaming .hoverTools{display:none}
 .hoverTools .btn,.member_hoverTools .btn{font-size:18px;padding:0;background:none;border:0;box-shadow:none}
 .shareMenu .btn:focus{border:none;outline:none;outline-offset:0}
+.icosContainer{height:100%}
 .CONTENT.filemanage{font-size:13px;overflow:hidden;background:#FBFBFB}
 .filemanage .icosContainer{overflow-y:auto;overflow-x:hidden;width:100%;border-top:1px solid #FFF}
 .filemanage .icosContainer_inner{min-height:100%}
@@ -96,7 +98,7 @@ to{opacity:1}
 .filee-icon.filee-file-text{color:#2196F3}
 .filee-icon.filee-file-pdf{color:#FF0000}
 .dropdown-menu>li>a{position:relative}
-.icoblank_rightbottom{display:none;position:absolute;right:3px;top:0px;color:#bdbdbd;}
+.icoblank_rightbottom{display:none;position:absolute;right:3px;top:0px;color:#b9b9b9;}
 .icoblank_rightbottom::before{content:"\F0131"}
 .middleicon{-webkit-user-select:none !important;-moz-user-select:none !important;user-select:none !important}
 .middleicon .card{padding:5px;margin-bottom:0}
@@ -112,8 +114,7 @@ to{opacity:1}
 .file-item-hide{display:none}
 .file-item-block{display:block}
 }.file-item{border-radius:0;overflow:hidden;box-shadow:none;transition:all 0.3s ease;border:2px solid transparent;cursor:pointer}
-.file-item:hover{background-color:#f2f2f2;}
-[data-theme='dark'] .file-item:hover{background-color:#41464b;background-color:rgba(255,255,255,0.075)}
+.file-item:hover{background-color: rgba(0, 0, 0, 0.1);}
 .file-item:hover .icoblank_rightbottom{display:block}
 .Icoselected .icoblank_rightbottom::before{content:"\F0132"}
 .Icoselected .mdi-checkbox-blank-outline::before{content:"\F0132"}

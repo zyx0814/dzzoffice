@@ -1,121 +1,134 @@
 <!--{template lyear:header_simple_start}-->
 <style>
-.loginset-template{
-	width: 100px;
-	height: 100px;
-	overflow: hidden;
-	float: left;
-	margin-right: 10px;
-	display: block;
-	position: relative;
-}
-.loginset-template .loginset-template-icon{
-    width: 20px;
-    height: 20px;
-    border: 1px solid #AAB479;
-    position: absolute;
-    right: 1px;
-    top: 1px;
-    color: #DD4B39;
-    font-size: 15px;
-    display: none;
-}
-.loginset-template:hover  .loginset-template-icon{
-	display: block;
-}
-.loginset-template:hover  .loginset-template-icon>span{
-	display: none;
-}
-.loginset-template .loginset-template-icon1{
-    display: block!important;
-}
-.loginset-template .loginset-template-icon1>span{
-    display: block!important;
-}
-#cpform{
-	margin-top: 15px;
-}
+    .loginset-template {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        float: left;
+        margin-right: 10px;
+        display: block;
+        position: relative;
+    }
+
+    .loginset-template .loginset-template-icon {
+        width: 20px;
+        height: 20px;
+        border: 1px solid #AAB479;
+        position: absolute;
+        right: 1px;
+        top: 1px;
+        color: #DD4B39;
+        font-size: 15px;
+        display: none;
+    }
+
+    .loginset-template:hover .loginset-template-icon {
+        display: block;
+    }
+
+    .loginset-template:hover .loginset-template-icon > span {
+        display: none;
+    }
+
+    .loginset-template .loginset-template-icon1 {
+        display: block !important;
+    }
+
+    .loginset-template .loginset-template-icon1 > span {
+        display: block !important;
+    }
+
+    #cpform {
+        margin-top: 15px;
+    }
 </style>
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
-	<div class="container-fluid">
-		<div class="card">
-      <div class="card-body">
-        <form id="cpform" action="{MOD_URL}&op=admin" method="post" name="cpform">
-          <input type="hidden" value="{FORMHASH}" name="formhash">
-          <input type="hidden" value="basic" name="operation">
-          <div class="row mb-3">
-            <label for="systemlog_open" class="col-sm-2">{lang logswitch}</label>
-            <div class="col-sm-10">
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="qq_bind1" name="systemlog_open" value="1"<!--{if $_G[setting][systemlog_open]==1}-->checked<!--{/if}-->  onclick="document.getElementById('hidden1').style.display='block';">
-                <label class="form-check-label" for="qq_bind1">{lang enable}</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="qq_bind2" name="systemlog_open" value="0"<!--{if $_G[setting][systemlog_open]==0}-->checked<!--{/if}--> onclick="document.getElementById('hidden1').style.display='none';">
-                <label class="form-check-label" for="qq_bind2">{lang forbidden}</label>
-              </div>
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <form id="cpform" action="{MOD_URL}&op=admin" method="post" name="cpform">
+                    <input type="hidden" value="{FORMHASH}" name="formhash">
+                    <input type="hidden" value="basic" name="operation">
+                    <div class="row mb-3">
+                        <label for="systemlog_open" class="col-sm-2">{lang logswitch}</label>
+                        <div class="col-sm-10">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="qq_bind1" name="systemlog_open" value="1"<!--{if $_G[setting][systemlog_open]==1}-->checked<!--{/if}--> onclick="document.getElementById('hidden1').style.display='block';">
+                                <label class="form-check-label" for="qq_bind1">{lang enable}</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" id="qq_bind2" name="systemlog_open" value="0"<!--{if $_G[setting][systemlog_open]==0}-->checked<!--{/if}--> onclick="document.getElementById('hidden1').style.display='none';">
+                                <label class="form-check-label" for="qq_bind2">{lang forbidden}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3" id="hidden1">
+                        <label class="col-sm-2">{lang logtype}</label>
+                        <div class="table-responsive">
+                            <table id="systemlogtable" class="table table-hover align-middle" style="<!--{if $_G[setting][systemlog_open]==0}-->display:none<!--{/if}-->">
+                                <thead>
+                                <tr>
+                                    <th>{lang logtypename}</th>
+                                    <th>{lang logflag}</th>
+                                    <th>{lang logswitch}</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                                </thead>
+                                {eval $i=0;}
+                                <!--{loop $systemlog_setting $mark $info}-->
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="settingnew[issystem][$i]" value="$info[issystem]"/>
+                                        <input class="form-control"<!--{if $info[issystem]==1}-->readonly="readonly"<!--{/if}--> type="text" name="settingnew[title][$i]" value="$info[title]" />
+                                    </td>
+                                    <td>
+                                        <input class="form-control" style="width:100px;" <!--{if $info[issystem]==1}-->readonly="readonly"<!--{/if}--> type="text" name="settingnew[mark][$i]" value="$mark" />
+                                    </td>
+                                    <td>
+                                        <input type="checkbox" class="form-check-input" name="settingnew[is_open][$i]" value="1" <!--{if $info[is_open]==1}-->checked<!--{/if}--> />
+                                    </td>
+                                    <td>
+                                        <!--{if $info[issystem]!=1}-->
+                                        <a href="javascript:;" class="btn btn-outline-danger btn-sm" onclick="deletesystem(this);"><span class="mdi mdi-delete"></span></a>
+                                        <!--{/if}-->
+                                    </td>
+                                </tr>
+                                {eval $i++;}
+                                <!--{/loop}-->
+                                <tr>
+                                    <td colspan="4" align="left">
+                                        <a class="btn btn-outline-primary" href="javascript:;" onclick="addsystemtype(this);"><i class="mdi mdi-plus"></i>{lang add}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <dl class="mb-3 d-grid">
+                        <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
+                    </dl>
+                </form>
             </div>
-          </div>
-          <div class="row mb-3" id="hidden1">
-            <label class="col-sm-2">{lang logtype}</label>
-            <div class="table-responsive">
-              <table id="systemlogtable" class="table table-hover align-middle" style="<!--{if $_G[setting][systemlog_open]==0}-->display:none<!--{/if}-->">
-                <thead>
-                <tr>
-                  <th>{lang logtypename}</th>
-                  <th>{lang logflag}</th>
-                  <th>{lang logswitch}</th>
-                  <th>&nbsp;</th>
-                </tr>
-                </thead>
-                {eval $i=0;}
-                <!--{loop $systemlog_setting $mark $info}--> 
-                <tr> 
-                <td>
-                  <input type="hidden" name="settingnew[issystem][$i]" value="$info[issystem]" />
-                  <input class="form-control"<!--{if $info[issystem]==1}-->readonly="readonly"<!--{/if}--> type="text" name="settingnew[title][$i]" value="$info[title]" />
-                </td>
-                <td><input class="form-control" style="width:100px;" <!--{if $info[issystem]==1}-->readonly="readonly"<!--{/if}--> type="text" name="settingnew[mark][$i]" value="$mark" /></td>
-                <td><input type="checkbox" class="form-check-input" name="settingnew[is_open][$i]" value="1" <!--{if $info[is_open]==1}-->checked<!--{/if}-->  /></td>
-                <td>
-                  <!--{if $info[issystem]!=1}-->
-                  <a href="javascript:;" class="btn btn-outline-danger btn-sm" onclick="deletesystem(this);"><span class="mdi mdi-delete"></span></a>
-                  <!--{/if}--> 
-                </td>
-                </tr>
-                {eval $i++;}
-                <!--{/loop}--> 
-                <tr>
-                <td colspan="4" align="left"><a class="btn btn-outline-primary" href="javascript:;" onclick="addsystemtype(this);"><i class="mdi mdi-plus"></i>{lang add}</a></td>
-                </tr>
-              </table>
-            </div>
-          </div>
-          <dl class="mb-3 d-grid">
-            <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
-          </dl>
-        </form> 
-      </div>
+        </div>
     </div>
-	</div>
 </main>
 <script type="text/javascript">
-	jQuery(document).ready(function(e) {
-		jQuery('input').on('ifChecked', function(e) {
-			jQuery(this).trigger('click');
-		});
-	});
-	function addsystemtype( obj ){
-		var num=jQuery("#systemlogtable").find("tr").length-1; 
-		var html='<tr><td><input  type="hidden" name="settingnew[issystem]['+num+']" value="0" /><input class="form-control" type="text" name="settingnew[title]['+num+']" value="" /></td><td><input class="form-control" style="width:100px;" type="text" name="settingnew[mark]['+num+']" value="" /></td><td><input type="checkbox"  class="form-check-input" name="settingnew[is_open]['+num+']" value="1" checked /></td><td><a class="btn btn-outline-danger btn-sm" onclick="deletesystem(this);"  href="javascript:;"><span class="mdi mdi-delete"></span></a></td></tr>';
-		jQuery(obj).parents("tr").before(html);
-		return false;
-	}
-	
-	function deletesystem( obj ){
-		jQuery(obj).parents("tr").remove();
-		return false;
-	}
+    jQuery(document).ready(function (e) {
+        jQuery('input').on('ifChecked', function (e) {
+            jQuery(this).trigger('click');
+        });
+    });
+
+    function addsystemtype(obj) {
+        var num = jQuery("#systemlogtable").find("tr").length - 1;
+        var html = '<tr><td><input  type="hidden" name="settingnew[issystem][' + num + ']" value="0" /><input class="form-control" type="text" name="settingnew[title][' + num + ']" value="" /></td><td><input class="form-control" style="width:100px;" type="text" name="settingnew[mark][' + num + ']" value="" /></td><td><input type="checkbox"  class="form-check-input" name="settingnew[is_open][' + num + ']" value="1" checked /></td><td><a class="btn btn-outline-danger btn-sm" onclick="deletesystem(this);"  href="javascript:;"><span class="mdi mdi-delete"></span></a></td></tr>';
+        jQuery(obj).parents("tr").before(html);
+        return false;
+    }
+
+    function deletesystem(obj) {
+        jQuery(obj).parents("tr").remove();
+        return false;
+    }
 </script>
 <!--{template lyear:footer_simple}-->

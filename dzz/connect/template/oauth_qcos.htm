@@ -1,0 +1,130 @@
+<!--{template lyear:header_simple}-->
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-body">
+        <ul class="nav nav-pills">
+          <li class="nav-item"><a class="nav-link" href="{MOD_URL}"> {lang my_clouds}</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&op=addcloud">{lang add_clouds}</a> </li>
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&op=oauth&bz=QCOS">{lang oauth_QCOS_add_ALY}</a> </li>
+        </ul>
+    </div>
+  </div>
+    <div class="card">
+        <div class="card-body">
+            <form name="aliform" class="form-horizontal" action="{MOD_URL}&op=oauth" method="post" onsubmit="return validate(this)">
+                <input type="hidden" name="alisubmit" value="true" />
+                <input type="hidden" name="bz" id="bz" value="QCOS" />
+                <input type="hidden" name="formhash" value="{FORMHASH}" />
+                <div class="row mb-3">
+                    <label class="col-sm-2" for="access_id">API SecretId</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="access_id" class="form-control" name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');getBucket();}">
+                        <span class="form-text">{lang oauth_QCOS_ALY_storage}API SecretId</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                <label class="col-sm-2" for="access_key">API SecretKey</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');getBucket();}">
+                    <span class="form-text">{lang oauth_QCOS_ALY_storage}API SecretKey</span>
+                </div>
+                </div>
+                <div class="row mb-3">
+                <label class="col-sm-2" for="region">{lang oauth_QCOS_region}</label>
+                                        <div class="col-sm-10">
+                    <select id="region" name="region" class="form-select">
+                        <option value="ap-beijing" >北京</option>
+                        <option value="ap-beijing-fsi" >北京金融</option>
+                        <option value="ap-nanjing" >南京</option>
+                        <option value="ap-chengdu" >成都</option>
+                        <option value="ap-guangzhou" >广州</option>
+                        <option value="ap-shanghai" >上海</option>
+                        <option value="ap-shanghai-fsi" >上海金融</option>
+                        <option value="ap-chongqing" >重庆</option>
+                        <option value="ap-hongkong" >香港</option>
+                        <option value="ap-qingyuan" >清远</option>
+                        <option value="ap-shenzhen-fsi" >深圳金融</option>
+                    </select>
+                    <span class="form-text">{lang oauth_QCOS_region_tip}</span>
+                </div>
+                </div>
+                <div class="row mb-3">
+                <label class="col-sm-2"><a href="javascript:;" onclick="getBucket()">{lang oauth_QCOS_click_gain}</a></label>
+                <div class="col-sm-10">
+                    <select id="bucket" name="bucket" class="form-select" onchange="setBucketHost()">
+                    </select>
+                    <span class="form-text">{lang oauth_QCOS_bucket}</span>
+                </div>
+                </div>
+                <div class="row mb-3">
+                <label class="col-sm-2" for="schema">{lang oauth_QCOS_agree}</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="schema" name="schema" autocomplete="off" value="{if $ali[agree]}$ali[agree]{else}http{/if}">
+                    <span class="form-text">{lang oauth_QCOS_agree_tip}</span>
+                </div>
+                </div>
+                <dl class="mb-3 d-grid">
+                    <input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang add}">
+                </dl>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function setBucketHost() {
+        jQuery('#hostname').val('');
+        jQuery("#bucket").removeClass('is-invalid');
+    }
+
+    function selectHostName(obj) {
+        jQuery('#hostname').val(jQuery(obj).attr('hostname'));
+        jQuery("#hostname").removeClass('is-invalid');
+        jQuery('#hostname_dropmenu').html(jQuery(obj).html() + '');
+    }
+
+    function getBucket() {
+        var id = jQuery("#access_id").val();
+        var key = jQuery("#access_key").val();
+        var region = jQuery("#region").val();
+        var bz = jQuery("#bz").val();
+        if(id == '' || key == '' || region == '') {
+            return;
+        }
+        jQuery.getJSON('{MOD_URL}&op=oauth&do=getBucket', { id: id, key: key,region:region,bz:bz }, function(json) {
+            if(json.error){
+                showmessage(json.error,'error','3000',1);
+            }else{
+                if(json.length > 0) {
+                    var html = '';
+                    for(var i in json) {
+                        html += '<option value="' + json[i] + '" >' + json[i] + '</option>';
+                    }
+                    jQuery('#bucket').html(html);
+                }
+            }
+
+        });
+
+    }
+
+    function validate(form) {
+        if(jQuery("#access_id").val() == '') {
+            jQuery("#access_id").addClass('is-invalid');
+            return false;
+        } else if(jQuery("#access_key").val() == '') {
+            jQuery("#access_key").addClass('is-invalid');
+            return false;
+        } else if(jQuery("#bucket").val() == '') {
+            jQuery("#bucket").addClass('is-invalid');
+            return false;
+        } else if(jQuery("#hostname").val() == '') {
+            jQuery("#hostname").addClass('is-invalid');
+            return false;
+        }else if(jQuery("#region").val() == '') {
+            jQuery("#region").addClass('is-invalid');
+            return false;
+        }
+        return true;
+    }
+</script>
+<!--{template lyear:footer}-->

@@ -5,19 +5,19 @@ if (!defined('IN_DZZ')) {
 global $_G;
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 $uid = $_G['uid'];
-if(!C::t('folder')->check_home_by_uid($uid)){
+if (!C::t('folder')->check_home_by_uid($uid)) {
     C::t('folder')->fetch_home_by_uid($uid);
 }
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 $do = isset($_GET['do']) ? $_GET['do'] : '';
-$ctrlid = isset($_GET['ctrlid']) ? trim($_GET['ctrlid']):'selposition';
-$callback=isset($_GET['callback']) ? trim($_GET['callback']):'callback_selectposition';
-$inwindow = isset($_GET['inwindow']) ? intval($_GET['inwindow']):0;
-$allowcreate = isset($_GET['allowcreate']) ? $_GET['allowcreate']:0;
-$selhome = isset($_GET['selhome']) ? $_GET['selhome']:0;//展示网盘0不展示
-$selorg = isset($_GET['selorg']) ? $_GET['selorg']:0;//展示机构0不展示
-$selgroup = isset($_GET['selgroup']) ? $_GET['$selgroup']:0;//展示群组0不展示
-$range = isset($_GET['range']) ? $_GET['range']:0;//是否限制展示0不限定
+$ctrlid = isset($_GET['ctrlid']) ? trim($_GET['ctrlid']) : 'selposition';
+$callback = isset($_GET['callback']) ? trim($_GET['callback']) : 'callback_selectposition';
+$inwindow = isset($_GET['inwindow']) ? intval($_GET['inwindow']) : 0;
+$allowcreate = isset($_GET['allowcreate']) ? $_GET['allowcreate'] : 0;
+$selhome = isset($_GET['selhome']) ? $_GET['selhome'] : 0;//展示网盘0不展示
+$selorg = isset($_GET['selorg']) ? $_GET['selorg'] : 0;//展示机构0不展示
+$selgroup = isset($_GET['selgroup']) ? $_GET['$selgroup'] : 0;//展示群组0不展示
+$range = isset($_GET['range']) ? $_GET['range'] : 0;//是否限制展示0不限定
 $data = array();
 $powerarr = perm_binPerm::getPowerArr();
 if ($do == 'get_children') {
@@ -30,7 +30,7 @@ if ($do == 'get_children') {
                 'id' => 'g_' . $v['orgid'],
                 'type' => 'group',
                 'children' => $children,
-                'li_attr' => array('fid'=>$v['fid'],'gid'=>$v['orgid'])
+                'li_attr' => array('fid' => $v['fid'], 'gid' => $v['orgid'])
             );
             if (intval($v['aid']) == 0) {
                 $arr['text'] = '<span class="iconFirstWord" style="background:' . $v['aid'] . ';">' . strtoupper(new_strsubstr($v['orgname'], 1, '')) . '</span>' . $v['orgname'];
@@ -54,7 +54,7 @@ if ($do == 'get_children') {
                     'text' => $val['fname'],
                     'type' => 'folder',
                     'children' => $children,
-                    'li_attr' =>array('fid'=>$val['fid'],'gid'=>$val['orgid'])
+                    'li_attr' => array('fid' => $val['fid'], 'gid' => $val['orgid'])
                 );
             }
         }
@@ -71,7 +71,7 @@ if ($do == 'get_children') {
                     'text' => $val['fname'],
                     'type' => 'folder',
                     'children' => $children,
-                    'li_attr' =>array('fid'=>$val['fid'],'gid'=>$val['orgid'])
+                    'li_attr' => array('fid' => $val['fid'], 'gid' => $val['orgid'])
                 );
                 if ($val['flag'] == 'app') {
                     $appid = C::t("folder_attr")->fetch_by_skey_fid($val['fid'], 'appid');
@@ -93,7 +93,7 @@ if ($do == 'get_children') {
                     'id' => 'gid_' . $val['orgid'],
                     'type' => 'department',
                     'children' => $children,
-                    'li_attr' => array('fid'=>$val['fid'],'gid'=>$val['orgid'])
+                    'li_attr' => array('fid' => $val['fid'], 'gid' => $val['orgid'])
                 );
                 if (intval($val['aid']) == 0) {
                     $arr['text'] = '<span class="iconFirstWord" style="background:' . $val['aid'] . ';">' . strtoupper(new_strsubstr($val['orgname'], 1, '')) . '</span>' . $val['orgname'];
@@ -108,7 +108,7 @@ if ($do == 'get_children') {
         exit(json_encode($data));
     } elseif (preg_match('/f_\d+/', $id)) {
         $fid = intval(str_replace('f_', '', $id));
-        $params = array('folder',$fid,$powerarr['upload']);
+        $params = array('folder', $fid, $powerarr['upload']);
         //foreach (DB::fetch_all("select fid,fname from %t where pfid = %d and perm_inherit & %d",$params) as $val){
         foreach (C::t('folder')->fetch_folder_by_pfid($fid) as $val) {
             $children = (C::t('resources')->fetch_folder_num_by_pfid($val['fid']) > 0) ? true : false;
@@ -117,7 +117,7 @@ if ($do == 'get_children') {
                 'text' => $val['fname'],
                 'type' => 'folder',
                 'children' => $children,
-                'li_attr' => array('fid'=>$val['fid'])
+                'li_attr' => array('fid' => $val['fid'])
             );
         }
         exit(json_encode($data));
@@ -130,7 +130,7 @@ if ($do == 'get_children') {
                 'text' => $v['name'],
                 'type' => 'folder',
                 'children' => $children,
-                'li_attr' => array('fid'=>$v['oid'])
+                'li_attr' => array('fid' => $v['oid'])
             );
         }
     } else {
@@ -144,7 +144,7 @@ if ($do == 'get_children') {
                 'text' => lang('explorer_user_root_dirname'),
                 'type' => 'home',
                 'children' => $children,
-                'li_attr' => array('fid'=>$fid)
+                'li_attr' => array('fid' => $fid)
             );
         }
         if ($explorer_setting['orgonperm'] && (!$range || ($range && $selorg))) {
@@ -160,7 +160,7 @@ if ($do == 'get_children') {
                         'id' => 'gid_' . $v['orgid'],
                         'type' => ($v['pfid'] > 0 ? 'department' : 'organization'),
                         'children' => $children,
-                        'li_attr' => array('fid'=>$v['fid'],'gid'=>$v['gid'])
+                        'li_attr' => array('fid' => $v['fid'], 'gid' => $v['gid'])
                     );
                     if (intval($v['aid']) == 0) {
                         $arr['text'] = '<span class="iconFirstWord" style="background:' . $v['aid'] . ';">' . strtoupper(new_strsubstr($v['orgname'], 1, '')) . '</span>' . $v['orgname'];
@@ -238,8 +238,8 @@ if ($do == 'get_children') {
     }
     $arr = array_unique($arr);
     exit(json_encode($arr));
-}elseif($do == 'creatnewfolder'){
-    $fid = isset($_GET['fid']) ? intval($_GET['fid']):'';
+} elseif ($do == 'creatnewfolder') {
+    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     $fname = isset($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
     if ($arr = IO::CreateFolder($fid, $fname, $perm)) {
         if ($arr['error']) {
@@ -253,35 +253,35 @@ if ($do == 'get_children') {
         $arr['error'] = lang('failure_newfolder');
     }
     exit(json_encode($arr));
-}elseif($do == 'rename'){
-    $rid = isset($_GET['rid']) ? trim($_GET['rid']):'';
-    $text=str_replace('...','',getstr(io_dzz::name_filter($_GET['fname']),80));
-    $ret=IO::rename($rid,$text);
+} elseif ($do == 'rename') {
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
+    $text = str_replace('...', '', getstr(IO::name_filter($_GET['fname']), 80));
+    $ret = IO::rename($rid, $text);
     exit(json_encode($ret));
-}elseif ($do == 'getfoldername'){
-    $fid = isset($_GET['fid']) ? trim($_GET['fid']):'';
-    if(perm_check::checkperm_Container($fid,'folder')){
+} elseif ($do == 'getfoldername') {
+    $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
+    if (perm_check::checkperm_Container($fid, 'folder')) {
         $fname = isset($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
-        $newname = IO::getFolderName($fname,$fid);
-        exit(json_encode(array('success'=>true,'fname'=>$newname)));
-    }else{
-        exit(json_encode(array('error'=>lang('no_privilege'))));
+        $newname = IO::getFolderName($fname, $fid);
+        exit(json_encode(array('success' => true, 'fname' => $newname)));
+    } else {
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
-}elseif($do == 'checkupload'){
-    $fid = isset($_GET['fid']) ? trim($_GET['fid']):'';
-    if(perm_check::checkperm_Container($fid,'upload')){
-        exit(json_encode(array('perm'=>true)));
-    }else{
-        exit(json_encode(array('perm'=>false)));
+} elseif ($do == 'checkupload') {
+    $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
+    if (perm_check::checkperm_Container($fid, 'upload')) {
+        exit(json_encode(array('perm' => true)));
+    } else {
+        exit(json_encode(array('perm' => false)));
     }
-}elseif($do == 'geffolderinfo'){
-    $fid = isset($_GET['fid']) ? intval($_GET['fid']):'';
-    if(!perm_check::checkperm_Container($fid,'read')){
-        exit(json_encode(array('error'=>lang('no_privilege'))));
+} elseif ($do == 'geffolderinfo') {
+    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
+    if (!perm_check::checkperm_Container($fid, 'read')) {
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     $data = C::t('folder')->fetch_by_fid($fid);
     exit(json_encode($data));
-}elseif($do == 'savefile'){
+} elseif ($do == 'savefile') {
 
 }
 
