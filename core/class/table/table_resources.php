@@ -923,10 +923,9 @@ class table_resources extends dzz_table
                     $fileinfo['fsize'] = formatsize($contaions['size']);
                     $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
                     $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
-                } elseif ($fileinfo['ext']) {
-                    $fileinfo['fsize'] = formatsize($fileinfo['size']);
                 } else {
                     $fileinfo['fsize'] = formatsize($fileinfo['size']);
+                    $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($fileinfo['size']), 'size' => $fileinfo['size']));
                 }
 
             }

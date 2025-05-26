@@ -7,8 +7,8 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
+    exit('Access Denied');
 }
 
 $sql = <<<EOF

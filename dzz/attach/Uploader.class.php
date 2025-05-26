@@ -7,11 +7,11 @@
  * Time: 上午11: 32
  * UEditor编辑器通用上传类
  */
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
-class Uploader
-{
+
+class Uploader {
     private $fileField; //文件域名
     private $file; //文件上传对象
     private $base64; //文件上传对象
@@ -51,14 +51,13 @@ class Uploader
      * @param array $config 配置项
      * @param bool $base64 是否解析base64编码，可省略。若开启，则$fileField代表的是base64编码的字符串表单名
      */
-    public function __construct($fileField, $config, $type = "upload")
-    {
+    public function __construct($fileField, $config, $type = "upload") {
         $this->fileField = $fileField;
         $this->config = $config;
         $this->type = $type;
         if ($type == "remote") {
             $this->saveRemote();
-        } else if($type == "base64") {
+        } else if ($type == "base64") {
             $this->upBase64();
         } else {
             $this->upFile();
@@ -71,8 +70,7 @@ class Uploader
      * 上传文件的主处理方法
      * @return mixed
      */
-    private function upFile()
-    {
+    private function upFile() {
         $file = $this->file = $_FILES[$this->fileField];
         if (!$file) {
             $this->stateInfo = $this->getStateInfo("ERROR_FILE_NOT_FOUND");
@@ -116,19 +114,18 @@ class Uploader
         }*/
 
         //移动文件
-       
-		$this->attach=$this->save($file['tmp_name'],$this->fileName);
-		if($this->attach) $this->stateInfo = $this->stateMap[0];
-		else $this->stateInfo=$this->stateMap["ERROR_FILE_MOVE"];
-        
+
+        $this->attach = $this->save($file['tmp_name'], $this->fileName);
+        if ($this->attach) $this->stateInfo = $this->stateMap[0];
+        else $this->stateInfo = $this->stateMap["ERROR_FILE_MOVE"];
+
     }
 
     /**
      * 处理base64编码的图片上传
      * @return mixed
      */
-    private function upBase64()
-    {
+    private function upBase64() {
         $base64Data = $_POST[$this->fileField];
         $img = base64_decode($base64Data);
 
@@ -143,15 +140,15 @@ class Uploader
             return;
         }
 
-       $temp=getglobal('setting/attachdir').'cache/'.random(5);
+        $temp = getglobal('setting/attachdir') . 'cache/' . random(5);
 
-      //移动文件
+        //移动文件
         if (!(file_put_contents($temp, $img))) { //移动失败
             $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
         } else { //移动成功
-            $this->attach=$this->save($temp,$this->fileName);
-			if($this->attach) $this->stateInfo = $this->stateMap[0];
-			else $this->stateInfo=$this->stateMap["ERROR_FILE_MOVE"];
+            $this->attach = $this->save($temp, $this->fileName);
+            if ($this->attach) $this->stateInfo = $this->stateMap[0];
+            else $this->stateInfo = $this->stateMap["ERROR_FILE_MOVE"];
         }
 
 
@@ -161,8 +158,7 @@ class Uploader
      * 拉取远程图片
      * @return mixed
      */
-    private function saveRemote()
-    {
+    private function saveRemote() {
         $imgUrl = htmlspecialchars($this->fileField);
         $imgUrl = str_replace("&amp;", "&", $imgUrl);
 
@@ -172,16 +168,16 @@ class Uploader
             return;
         }
         //获取请求头并检测死链
-        $heads = get_headers($imgUrl,1);
+        $heads = get_headers($imgUrl, 1);
         if (!(stristr($heads[0], "200") && stristr($heads[0], "OK"))) {
             $this->stateInfo = $this->getStateInfo("ERROR_DEAD_LINK");
             return;
         }
-		
-       //格式验证(扩展名验证和Content-Type验证)
-        $fileType = strtolower(preg_replace("/image\//i",'',$heads['Content-Type']));
-		
-        if (!in_array('.'.$fileType, $this->config['allowFiles'])) {
+
+        //格式验证(扩展名验证和Content-Type验证)
+        $fileType = strtolower(preg_replace("/image\//i", '', $heads['Content-Type']));
+
+        if (!in_array('.' . $fileType, $this->config['allowFiles'])) {
             $this->stateInfo = $this->getStateInfo("ERROR_HTTP_CONTENTTYPE");
             return;
         }
@@ -198,12 +194,12 @@ class Uploader
         ob_end_clean();
         preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
 
-        $this->oriName = $m ? $m[1]:"remoteImage". $fileType;
+        $this->oriName = $m ? $m[1] : "remoteImage" . $fileType;
         $this->fileSize = strlen($img);
         $this->fileType = $fileType;
-      
+
         $this->fileName = $this->getFileName();
-       
+
 
         //检查文件大小是否超出限制
         if (!$this->checkSize()) {
@@ -211,14 +207,14 @@ class Uploader
             return;
         }
 
-        $temp=getglobal('setting/attachdir').'cache/'.random(5);
+        $temp = getglobal('setting/attachdir') . 'cache/' . random(5);
         //移动文件
         if (!(file_put_contents($temp, $img))) { //移动失败
             $this->stateInfo = $this->getStateInfo("ERROR_WRITE_CONTENT");
         } else { //移动成功
-            $this->attach=$this->save($temp,$this->fileName);
-			if($this->attach) $this->stateInfo = $this->stateMap[0];
-			else $this->stateInfo=$this->stateMap["ERROR_FILE_MOVE"];
+            $this->attach = $this->save($temp, $this->fileName);
+            if ($this->attach) $this->stateInfo = $this->stateMap[0];
+            else $this->stateInfo = $this->stateMap["ERROR_FILE_MOVE"];
         }
 
     }
@@ -228,8 +224,7 @@ class Uploader
      * @param $errCode
      * @return string
      */
-    private function getStateInfo($errCode)
-    {
+    private function getStateInfo($errCode) {
         return !$this->stateMap[$errCode] ? $this->stateMap["ERROR_UNKNOWN"] : $this->stateMap[$errCode];
     }
 
@@ -237,8 +232,7 @@ class Uploader
      * 获取文件扩展名
      * @return string
      */
-    private function getFileExt()
-    {
+    private function getFileExt() {
         return strtolower(strrchr($this->oriName, '.'));
     }
 
@@ -246,52 +240,50 @@ class Uploader
      * 重命名文件
      * @return string
      */
-   /* private function getFullName()
-    {
-        //替换日期事件
-        $t = time();
-        $d = explode('-', date("Y-y-m-d-H-i-s"));
-        $format = $this->config["pathFormat"];
-        $format = str_replace("{yyyy}", $d[0], $format);
-        $format = str_replace("{yy}", $d[1], $format);
-        $format = str_replace("{mm}", $d[2], $format);
-        $format = str_replace("{dd}", $d[3], $format);
-        $format = str_replace("{hh}", $d[4], $format);
-        $format = str_replace("{ii}", $d[5], $format);
-        $format = str_replace("{ss}", $d[6], $format);
-        $format = str_replace("{time}", $t, $format);
+    /* private function getFullName()
+     {
+         //替换日期事件
+         $t = time();
+         $d = explode('-', date("Y-y-m-d-H-i-s"));
+         $format = $this->config["pathFormat"];
+         $format = str_replace("{yyyy}", $d[0], $format);
+         $format = str_replace("{yy}", $d[1], $format);
+         $format = str_replace("{mm}", $d[2], $format);
+         $format = str_replace("{dd}", $d[3], $format);
+         $format = str_replace("{hh}", $d[4], $format);
+         $format = str_replace("{ii}", $d[5], $format);
+         $format = str_replace("{ss}", $d[6], $format);
+         $format = str_replace("{time}", $t, $format);
 
-        //过滤文件名的非法自负,并替换文件名
-        $oriName = substr($this->oriName, 0, strrpos($this->oriName, '.'));
-        $oriName = preg_replace("/[\|\?\"\<\>\/\*\\\\]+/", '', $oriName);
-        $format = str_replace("{filename}", $oriName, $format);
+         //过滤文件名的非法自负,并替换文件名
+         $oriName = substr($this->oriName, 0, strrpos($this->oriName, '.'));
+         $oriName = preg_replace("/[\|\?\"\<\>\/\*\\\\]+/", '', $oriName);
+         $format = str_replace("{filename}", $oriName, $format);
 
-        //替换随机字符串
-        $randNum = rand(1, 10000000000) . rand(1, 10000000000);
-        if (preg_match("/\{rand\:([\d]*)\}/i", $format, $matches)) {
-            $format = preg_replace("/\{rand\:[\d]*\}/i", substr($randNum, 0, $matches[1]), $format);
-        }
+         //替换随机字符串
+         $randNum = rand(1, 10000000000) . rand(1, 10000000000);
+         if (preg_match("/\{rand\:([\d]*)\}/i", $format, $matches)) {
+             $format = preg_replace("/\{rand\:[\d]*\}/i", substr($randNum, 0, $matches[1]), $format);
+         }
 
-        $ext = $this->getFileExt();
-        return $format . $ext;
-    }*/
+         $ext = $this->getFileExt();
+         return $format . $ext;
+     }*/
 
     /**
      * 获取文件名
      * @return string
      */
-    private function getFileName () {
+    private function getFileName() {
         return $this->oriName;
     }
 
-   
 
     /**
      * 文件类型检测
      * @return bool
      */
-    private function checkType()
-    {
+    private function checkType() {
         return in_array($this->getFileExt(), $this->config["allowFiles"]);
     }
 
@@ -299,8 +291,7 @@ class Uploader
      * 文件大小检测
      * @return bool
      */
-    private function  checkSize()
-    {
+    private function checkSize() {
         return $this->fileSize <= ($this->config["maxSize"]);
     }
 
@@ -308,8 +299,7 @@ class Uploader
      * 获取当前上传成功文件的各项信息
      * @return array
      */
-    public function getFileInfo()
-    {
+    public function getFileInfo() {
         return array(
             "state" => $this->stateInfo,
             "url" => $this->attach['url'],
@@ -317,101 +307,103 @@ class Uploader
             "original" => $this->oriName,
             "type" => $this->fileType,
             "size" => $this->fileSize,
-			"attach"=>$this->attach
+            "attach" => $this->attach
         );
     }
-	public function getPath($filename,$dir='dzz'){
-		global $_G;
-			$ext = strtolower(trim($this->fileType,'.'));
-			if($ext && in_array($ext ,getglobal('setting/unRunExts'))){
-				$ext='dzz';
-			}
-		    $subdir = $subdir1 = $subdir2 = '';
-			$subdir1 = date('Ym');
-			$subdir2 = date('d');
-			$subdir = $subdir1.'/'.$subdir2.'/';
-			$target1=$dir.'/'.$subdir.'index.html';
-			$target=$dir.'/'.$subdir;
-			$target_attach=getglobal('setting/attachdir').$target1;
-			$targetpath = dirname($target_attach);
-			dmkdir($targetpath);
-			return $target.date('His').''.strtolower(random(16)).'.'.$ext;
-	 }
-	public function save($file_path,$filename) {
-	 global $_G;
-	 	
-        $md5=md5_file($file_path);
-		$filesize=filesize($file_path);
-		if($md5 && $attach=DB::fetch_first("select * from %t where md5=%s and filesize=%d",array('attachment',$md5,$filesize))){
-			$attach['filename']=$filename;
-			$attach['filetype']=trim($this->fileType,'.');
-			if(in_array(strtolower($attach['filetype']),array('png','jpeg','jpg','gif','bmp'))){
-				$attach['url']=C::t('attachment')->getThumbByAid($attach,0,0,1);
-				$attach['img']=C::t('attachment')->getThumbByAid($attach,256,256);
-				$attach['isimage']=1;
-			}else{
-				$attach['img']=geticonfromext($attach['filetype']);
-				$attach['url']=(DZZSCRIPT?DZZSCRIPT:'index.php').'?mod=io&op=getStream&path='.dzzencode('attach::'.$attach['aid']);
-				$attach['isimage']=0;
-			}
-			$attach['dpath']=$attach['apath']=dzzencode('attach::'.$attach['aid']);
-			$attach['filesize']=formatsize($attach['filesize']);
-			@unlink($file_path);
-			return $attach;
-		}else{
-			$target=self::getPath($filename);
-			
-			$ext = strtolower(trim($this->fileType,'.'));
-			if($ext && in_array($ext ,getglobal('setting/unRunExts'))){
-				$unrun=1;
-			}else{
-				$unrun=0;
-			}
-			$filepath=$_G['setting']['attachdir'].$target;
-			$handle=fopen($file_path, 'r');
-			$handle1=fopen($filepath,'w');
-			while (!feof($handle)) {
-			   fwrite($handle1,fread($handle, 8192));
-			}
-			fclose($handle);
-			fclose($handle1);
-			@unlink($file_path);
-			
-			$filesize=filesize($filepath);
-			$remote=0;
-			
-        	$attach=array(
-			
-				'filesize'=>$filesize,
-				'attachment'=>$target,
-				'filetype'=>strtolower($ext),
-				'filename' =>$filename,
-				'remote'=>$remote,
-				'copys' => 0,
-				'md5'=>$md5,
-				'unrun'=>$unrun,
-				'dateline' => $_G['timestamp'],
-			);
-			
-			if($attach['aid']=C::t('attachment')->insert($attach,1)){
-				C::t('local_storage')->update_usesize_by_remoteid($attach['remote'],$attach['filesize']);
-				dfsockopen(getglobal('siteurl').'misc.php?mod=movetospace&aid='.$attach['aid'].'&remoteid=0',0, '', '', FALSE, '',1);
-				if(in_array(strtolower($attach['filetype']),array('png','jpeg','jpg','gif','bmp'))){
-					$attach['url']=C::t('attachment')->getThumbByAid($attach,0,0,1);
-					$attach['img']=C::t('attachment')->getThumbByAid($attach,256,256);
-					$attach['isimage']=1;
-				}else{
-					$attach['img']=geticonfromext($attach['filetype']);
-					$attach['url']=(DZZSCRIPT?DZZSCRIPT:'index.php').'?mod=io&op=getStream&path='.dzzencode('attach::'.$attach['aid']);
-					$attach['isimage']=0;
-				}
-				$attach['dpath']=$attach['apath']=dzzencode('attach::'.$attach['aid']);
-				$attach['filesize']=formatsize($attach['filesize']);
-				return $attach;
-			}else{
-				return false;
-			}
-		}
+
+    public function getPath($filename, $dir = 'dzz') {
+        global $_G;
+        $ext = strtolower(trim($this->fileType, '.'));
+        if ($ext && in_array($ext, getglobal('setting/unRunExts'))) {
+            $ext = 'dzz';
+        }
+        $subdir = $subdir1 = $subdir2 = '';
+        $subdir1 = date('Ym');
+        $subdir2 = date('d');
+        $subdir = $subdir1 . '/' . $subdir2 . '/';
+        $target1 = $dir . '/' . $subdir . 'index.html';
+        $target = $dir . '/' . $subdir;
+        $target_attach = getglobal('setting/attachdir') . $target1;
+        $targetpath = dirname($target_attach);
+        dmkdir($targetpath);
+        return $target . date('His') . '' . strtolower(random(16)) . '.' . $ext;
+    }
+
+    public function save($file_path, $filename) {
+        global $_G;
+
+        $md5 = md5_file($file_path);
+        $filesize = filesize($file_path);
+        if ($md5 && $attach = DB::fetch_first("select * from %t where md5=%s and filesize=%d", array('attachment', $md5, $filesize))) {
+            $attach['filename'] = $filename;
+            $attach['filetype'] = trim($this->fileType, '.');
+            if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
+                $attach['url'] = C::t('attachment')->getThumbByAid($attach, 0, 0, 1);
+                $attach['img'] = C::t('attachment')->getThumbByAid($attach, 256, 256);
+                $attach['isimage'] = 1;
+            } else {
+                $attach['img'] = geticonfromext($attach['filetype']);
+                $attach['url'] = (DZZSCRIPT ? DZZSCRIPT : 'index.php') . '?mod=io&op=getStream&path=' . dzzencode('attach::' . $attach['aid']);
+                $attach['isimage'] = 0;
+            }
+            $attach['dpath'] = $attach['apath'] = dzzencode('attach::' . $attach['aid']);
+            $attach['filesize'] = formatsize($attach['filesize']);
+            @unlink($file_path);
+            return $attach;
+        } else {
+            $target = self::getPath($filename);
+
+            $ext = strtolower(trim($this->fileType, '.'));
+            if ($ext && in_array($ext, getglobal('setting/unRunExts'))) {
+                $unrun = 1;
+            } else {
+                $unrun = 0;
+            }
+            $filepath = $_G['setting']['attachdir'] . $target;
+            $handle = fopen($file_path, 'r');
+            $handle1 = fopen($filepath, 'w');
+            while (!feof($handle)) {
+                fwrite($handle1, fread($handle, 8192));
+            }
+            fclose($handle);
+            fclose($handle1);
+            @unlink($file_path);
+
+            $filesize = filesize($filepath);
+            $remote = 0;
+
+            $attach = array(
+
+                'filesize' => $filesize,
+                'attachment' => $target,
+                'filetype' => strtolower($ext),
+                'filename' => $filename,
+                'remote' => $remote,
+                'copys' => 0,
+                'md5' => $md5,
+                'unrun' => $unrun,
+                'dateline' => $_G['timestamp'],
+            );
+
+            if ($attach['aid'] = C::t('attachment')->insert($attach, 1)) {
+                C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
+                dfsockopen(getglobal('siteurl') . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1);
+                if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
+                    $attach['url'] = C::t('attachment')->getThumbByAid($attach, 0, 0, 1);
+                    $attach['img'] = C::t('attachment')->getThumbByAid($attach, 256, 256);
+                    $attach['isimage'] = 1;
+                } else {
+                    $attach['img'] = geticonfromext($attach['filetype']);
+                    $attach['url'] = (DZZSCRIPT ? DZZSCRIPT : 'index.php') . '?mod=io&op=getStream&path=' . dzzencode('attach::' . $attach['aid']);
+                    $attach['isimage'] = 0;
+                }
+                $attach['dpath'] = $attach['apath'] = dzzencode('attach::' . $attach['aid']);
+                $attach['filesize'] = formatsize($attach['filesize']);
+                return $attach;
+            } else {
+                return false;
+            }
+        }
     }
 
 }

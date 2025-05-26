@@ -13,7 +13,8 @@
         <div class="row mb-3">
             <label for="foldernamenewFolder" class="col-sm-2 col-form-label">{lang default_folder_name}</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" name="foldername" id="foldernamenewFolder">
+                <input type="text" class="form-control" name="foldername" id="foldernamenewFolder" value="$name">
+                <input type="hidden" name="bz" value="$bz"/>
             </div>
           </div>
     </div>
@@ -49,10 +50,12 @@
     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
-    <div class="row mb-1">
+    <!--{if $propertys['type']}-->
+    <div class="row mb-1"> 
         <label class="col-sm-2">{lang type}</label>
         <div class="col-sm-10">$propertys['type']</div>
     </div>
+    <!--{/if}-->
     <!--{if $propertys['realpath']}-->
     <div class="row mb-1">
         <label class="col-sm-2">{lang position}</label>
@@ -71,10 +74,10 @@
         <div class="col-sm-10">$propertys['contain']</div>
     </div>
     <!--{/if}-->
-    <!--{if $propertys['fsize']}-->
+    <!--{if $propertys['ffsize']}-->
     <div class="row mb-1">
         <label class="col-sm-2">{lang big_small}</label>
-        <div class="col-sm-10">$propertys['fsize']</div>
+        <div class="col-sm-10">$propertys['ffsize']</div>
     </div>
     <!--{/if}-->
     <!--{if $propertys[editdateline]}-->
@@ -177,6 +180,3 @@ data-rid="$arr[rid]" data-ext="$arr[ext]" data-type="$arr['type']"data-name="$ar
 <!--{/if}-->
 <!--{/if}-->
 <!--{template common/footer_ajax}-->
-
-
-

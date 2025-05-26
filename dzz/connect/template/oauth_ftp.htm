@@ -1,85 +1,90 @@
-<!--{template common/header_simple_start}-->
-<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
-<link href="dzz/connect/images/connect.css?{VERHASH}" rel="stylesheet" media="all">
-
-<!--{template common/header_simple_end}-->
-<div class="container" style="height:100%">
-	<div class="main-header clearfix">
-		<ul class="nav nav-pills nav-pills-bottomguide">
-			<li>
-				<a href="{BASESCRIPT}?mod=connect">{lang my_clouds}</a>
-			</li>
-			<li>
-				<a href="{BASESCRIPT}?mod=connect&op=addcloud">{lang add_clouds}</a>
-			</li>
-			<li class="active">
-				<a href="{BASESCRIPT}?mod=connect&op=oauth&bz=ftp">{lang add}FTP</a>
-			</li>
-		</ul>
-	</div>
-	<div class="main-content clearfix">
-		<div class="container" style="padding:15px;">
-			<form name="aliform" class="form-horizontal form-horizontal-left" action="{BASESCRIPT}?mod=connect&op=oauth" method="post" onsubmit="return validate(this)">
-				<input type="hidden" name="ftpsubmit" value="true" />
-				<input type="hidden" name="bz" value="ftp" />
-				<input type="hidden" name="formhash" value="{FORMHASH}" />
-				<div class="form-group">
-					<label class="control-label">{lang site_name}</label>
-					<input type="text" class="form-control required" name="config[cloudname]" value="">
-
-				</div>
-				<div class="form-group">
-					<label class="control-label">IP{lang site}</label>
-					<input type="text" class="form-control required" name="config[host]" value="" placeholder="{lang host_IP_address}">
-
-				</div>
-				<div class="form-group">
-					<label class="control-label">{lang port}</label>
-					<input type="text" class="form-control required" name="config[port]" value="21" placeholder="{lang port}">
-					<span class="help-inline"></span>
-				</div>
-				<div class="form-group">
-					<label class="control-label">{lang username}</label>
-					<input type="text" class="form-control required" name="config[username]" value="" placeholder="{lang FTP_account_user_name}">
-
-				</div>
-				<div class="form-group">
-					<label class="control-label">{lang password}</label>
-					<input type="password" class="form-control required" name="config[password]" value="" placeholder="{lang FTP_account_user_password}">
-
-				</div>
-				<div class="form-group">
-					<label class="control-label">{lang encode}</label>
-					<select class="form-control" name="config[charset]">
-						<option value="GBK">GBK</option>
-						<option value="UTF-8" selected="selected">UTF-8</option>
-						<option value="BIG5">BIG5</option>
-					</select>
-					<span class="help-inline">{lang oauth_ftp_encode_set}</span>
-
-				</div>
-				<!--{if function_exists('ssh2_connect')}-->
-				<div class="form-group">
-					<label class="control-label"></label>
-					<label class="radio-inline"><input type="radio"  name="config[ssl]" checked="checked" value="0" onclick="$('pasv').style.display='block'">{lang way_FTP_connection}</label>
-
-					<label class="radio-inline"><input type="radio"  name="config[ssl]"  value="2" onclick="$('pasv').style.display='none'">{lang use_ssh2_sftp}</label>
-				</div>
-				<!--{/if}-->
-				<div id="pasv" class="form-group">
-					<label class="control-label"></label>
-					<label class="checkbox-inline"><input type="checkbox"  name="config[pasv]" checked="checked" value="1" >{lang use_Passive_Mode}</label>
-					<label class="checkbox-inline"><input type="checkbox"  name="config[ssl]"  value="1" >{lang enable_secure_link}</label>
-
-				</div>
-
-				<div class="form-group">
-					<label class="control-label"></label>
-					<input type="submit" class="btn btn-primary" style="padding:6px 25px" value="{lang add}">
-				</div>
-			</form>
-		</div>
-	</div>
+<!--{template lyear:header_simple}-->
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-body">
+        <ul class="nav nav-pills">
+          <li class="nav-item"><a class="nav-link" href="{MOD_URL}"> {lang my_clouds}</a></li>
+          <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&op=addcloud">{lang add_clouds}</a> </li>
+          <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&op=oauth&bz=ftp">{lang add}FTP</a> </li>
+        </ul>
+    </div>
+  </div>
+  <div class="card">
+          <div class="card-body">
+            <form name="aliform" class="form-horizontal" action="{MOD_URL}&op=oauth" method="post" onsubmit="return validate(this)">
+              <input type="hidden" name="ftpsubmit" value="true" />
+              <input type="hidden" name="bz" value="ftp" />
+              <input type="hidden" name="formhash" value="{FORMHASH}" />
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang site_name}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control required" name="config[cloudname]" value="">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang IP_address}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control required" name="config[host]" value="" placeholder="{lang host_IP_address}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang port}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control required" name="config[port]" value="21" placeholder="{lang port}">
+                  <span class="form-text"></span>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang username}</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control required" name="config[username]" value="" placeholder="{lang FTP_account_user_name}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang password}</label>
+                <div class="col-sm-10">
+                  <input type="password" class="form-control required" name="config[password]" value="" placeholder="{lang FTP_account_user_password}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">{lang FTP_encode}</label>
+                <div class="col-sm-10">
+                  <select class="form-select" name="config[charset]">
+                    <option value="GBK" selected="selected">GBK</option>
+                    <option value="UTF-8">UTF-8</option>
+                    <option value="BIG5">BIG5</option>
+                  </select>
+                  <span class="form-text">{lang oauth_ftp_encode_set}</span>
+                </div>
+            </div>
+              <!--{if function_exists('ssh2_connect')}-->
+              <div class="row mb-3">
+                <label class="col-sm-2"></label>
+                <div class="col-sm-10">
+                  <label class="radio-inline"><input type="radio"   class="form-check-input" name="config[ssl]" checked="checked" value="0" onclick="$('#pasv').show();">{lang way_FTP_connection}</label>
+                  <label class="radio-inline"><input type="radio"   class="form-check-input" name="config[ssl]"  value="2" onclick="$('#pasv').hide();">{lang use_ssh2_sftp}</label>
+                </div>
+              </div>
+              <!--{/if}-->
+              <div id="pasv" class="row mb-3">
+                <label class="col-sm-2"></label>
+                <div class="col-sm-10">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="config[pasv]" name="config[pasv]" checked="checked" value="1">
+                    <label class="form-check-label" for="config[pasv]">{lang use_Passive_Mode}</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="config[ssl]" name="config[ssl]"  value="1">
+                    <label class="form-check-label" for="config[ssl]">{lang enable_secure_link}</label>
+                  </div>
+                </div>
+              </div>
+              <dl class="mb-3 d-grid">
+                <input type="submit" class="btn btn-primary btn-round bodyloading"  value="{lang add}">
+              </dl>
+            </form>
+          </div>
+      </div>
 </div>
 <script type="text/javascript">
 	function validate(form) {
@@ -98,6 +103,4 @@
 		}
 	}
 </script>
-<script src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
-
-<!--{template common/footer_simple}-->
+<!--{template lyear:footer}-->

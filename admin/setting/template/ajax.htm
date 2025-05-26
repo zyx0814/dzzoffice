@@ -72,7 +72,7 @@
                       '</td>' +
                       '<td>' +
                       '<span class="mdi mdi-pencil lead dcolor" onclick="editpermgroup('+data['success']['id']+')" style="cursor:pointer;"></span> ' +
-                      '<span class="mdi mdi-delete lead dcolor" onclick="delete_perm(this,'+data['success']['id']+')"></span>'+defaultstr+' ' +
+                      '<span class="mdi mdi-delete lead color-danger" onclick="delete_perm(this,'+data['success']['id']+')"></span>'+defaultstr+' ' +
                       '</td>' +
                       '</tr>';
                 jQuery('#perm_' + data['success']['id']).replaceWith(html);

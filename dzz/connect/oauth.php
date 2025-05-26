@@ -7,7 +7,10 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-$bz=$_GET['bz'];
+$bz = $_GET['bz'];
+if (!$bz) {
+    showmessage('Access Denied', dreferer());
+}
 IO::authorize($bz);
 exit();
 ?>

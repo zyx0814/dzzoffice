@@ -10,11 +10,11 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-if($_GET['do']=='bbrule'){
-	$setting = $_G['setting'];
-	$bbrules = $_G['setting']['bbrules'];
-	$bbrulestxt = $_G['setting']['bbrulestxt'];
-	$bbrulestxt = nl2br("\n$bbrulestxt\n\n");
-	include template('register_bbrule');
-	exit();
+if ($_GET['do'] == 'bbrule') {
+    $setting = $_G['setting'];
+    $bbrules = $_G['setting']['bbrules'];
+    $bbrulestxt = $_G['setting']['bbrulestxt'];
+    $bbrulestxt = nl2br("\n$bbrulestxt\n\n");
+    include template('register_bbrule');
+    exit();
 }

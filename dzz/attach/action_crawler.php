@@ -5,11 +5,11 @@
  * Date: 14-04-14
  * Time: 下午19:18
  */
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 set_time_limit(0);
-include DZZ_ROOT."./dzz/attach/Uploader.class.php";
+include DZZ_ROOT . "./dzz/attach/Uploader.class.php";
 
 /* 上传配置 */
 $config = array(
@@ -37,12 +37,12 @@ foreach ($source as $imgUrl) {
         "title" => htmlspecialchars($info["title"]),
         "original" => htmlspecialchars($info["original"]),
         "source" => htmlspecialchars($imgUrl),
-		'attach'=>$info['attach']
+        'attach' => $info['attach']
     ));
 }
 
 /* 返回抓取数据 */
 return json_encode(array(
-    'state'=> count($list) ? 'SUCCESS':'ERROR',
-    'list'=> $list
+    'state' => count($list) ? 'SUCCESS' : 'ERROR',
+    'list' => $list
 ));

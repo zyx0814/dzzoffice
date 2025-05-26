@@ -11,4 +11,4 @@ define('CURSCRIPT', 'dzz');
 define('ADMINSCRIPT', 'admin.php');
 define('DZZSCRIPT', basename(__FILE__));
 define('BASESCRIPT', basename(__FILE__));
-require __DIR__.'/core/dzzstart.php';
+require __DIR__ . '/core/dzzstart.php';

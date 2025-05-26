@@ -8,14 +8,15 @@
  * @author      zyx(zyx@dzz.cc)
  */
 if (!defined('IN_DZZ')) {
-	exit('Access Denied');
+    exit('Access Denied');
 }
 
 $qid = intval($_GET['qid']);
-$attach = C::t('comment_attach') -> fetch_by_qid($qid);
+$attach = C::t('comment_attach')->fetch_by_qid($qid);
 if (!$attach) {
-	topshowmessage(lang('attachment_nonexistence'));
-}$attach['filename'] = $attach['title'];
+    topshowmessage(lang('attachment_nonexistence'));
+}
+$attach['filename'] = $attach['title'];
 $pfid = $_GET['fid'];
 $icoarr = io_dzz::uploadToattachment($attach, $pfid);
 exit(json_encode($icoarr));

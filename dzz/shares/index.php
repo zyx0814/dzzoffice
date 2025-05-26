@@ -9,6 +9,6 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$navtitle='分享文件';
+$navtitle = '分享文件';
 include template('index');
 ?>

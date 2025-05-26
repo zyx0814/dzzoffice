@@ -8,15 +8,15 @@
  */
 ignore_user_abort(true);
 @set_time_limit(0);
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
-$remoteid=intval($_GET['remoteid']);
-$aid=intval($_GET['aid']);
-if($attach=C::t('attachment')->fetch($aid)){
-	
-	$re=io_remote::Migrate($attach,$remoteid);
-	if($re['error']) exit($re['error']);
+$remoteid = intval($_GET['remoteid']);
+$aid = intval($_GET['aid']);
+if ($attach = C::t('attachment')->fetch($aid)) {
+
+    $re = io_remote::Migrate($attach, $remoteid);
+    if ($re['error']) exit($re['error']);
 }
 exit('success');
 ?>

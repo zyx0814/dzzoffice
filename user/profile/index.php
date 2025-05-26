@@ -11,7 +11,7 @@ if (!defined('IN_DZZ')) {
 }
 
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-$navtitle=lang('myCountCenter');
+$navtitle = lang('myCountCenter');
 $uid = intval($_G['uid']);
 $verify = C::t('user_verify')->fetch($_G['uid']);//验证信息
 $space = C::t('user_profile')->get_userprofile_by_uid($uid);//用户资料信息
@@ -62,11 +62,11 @@ if (submitcheck('profilesubmit')) {
         if ($field && !$field['available']) {
             continue;
         } elseif ($key == 'timeoffset') {
-			if ($value >= -12 && $value <= 12 || $value == 9999) {
+            if ($value >= -12 && $value <= 12 || $value == 9999) {
                 C::t('user')->update($_G['uid'], array('timeoffset' => intval($value)));
             }
-		} elseif ($key == 'language') {
-			$langList = $_G['config']['output']['language_list'];
+        } elseif ($key == 'language') {
+            $langList = $_G['config']['output']['language_list'];
             if (isset($langList[$value])) {
                 C::t('user')->update($_G['uid'], array('language' => ($value)));
             }
@@ -84,8 +84,8 @@ if (submitcheck('profilesubmit')) {
         }
         if (empty($field)) {
             continue;
-		}elseif($field['unchangeable'] && !empty($space[$key])){
-			continue;
+        } elseif ($field['unchangeable'] && !empty($space[$key])) {
+            continue;
         } elseif (profile_check($key, $value, $space)) {
             $setarr[$key] = dhtmlspecialchars(trim($value));
         } else {
@@ -182,11 +182,11 @@ if (submitcheck('profilesubmit')) {
         $setarr['zodiac'] = get_zodiac($_POST['birthyear']);
     }
     //资料展示权限
-    $privacys = isset($_POST['privacy']) ? $_POST['privacy']:array();
+    $privacys = isset($_POST['privacy']) ? $_POST['privacy'] : array();
     $setarrs = array();
-    foreach($setarr as $k=>$v){
+    foreach ($setarr as $k => $v) {
         $setarrs[$k]['value'] = $v;
-        $setarrs[$k]['privacy'] = isset($privacys[$k]) ? $privacys[$k]:'' ;
+        $setarrs[$k]['privacy'] = isset($privacys[$k]) ? $privacys[$k] : '';
     }
 
     if ($setarrs) {
@@ -217,7 +217,7 @@ if (submitcheck('profilesubmit')) {
         if (!(C::t('user_verify')->count_by_uid($_G['uid']))) {
             C::t('user_verify')->insert(array('uid' => $_G['uid']));
         }
-	
+
         if ($_G['setting']['verify'][$vid]['available']) {
             //发送通知管理员有资料需要审核
             $appid = C::t('app_market')->fetch_appid_by_mod('{adminscript}?mod=member', 1);
@@ -248,7 +248,7 @@ if (submitcheck('profilesubmit')) {
 } elseif (isset($_GET['action']) && $_GET['action'] == 'qq_unbind') {//取消绑定，根据类型判断取消绑定内容
     C::t('user_qqconnect')->delete($_GET['openid']);
     showmessage('qq_unbind_success', dreferer(), array(), array('alert' => 'right'));
-   //Hook::listen('unbind_qq');
+    //Hook::listen('unbind_qq');
 } else {
     $vid = !empty($_GET['vid']) ? intval($_GET['vid']) : 0;
     $privacy = C::t('user_profile')->fetch_privacy_by_uid($uid);
@@ -306,16 +306,14 @@ if (submitcheck('profilesubmit')) {
     include template('profile');
 }
 
-function profile_showerror($key, $extrainfo='')
-{
+function profile_showerror($key, $extrainfo = '') {
     echo '<script>';
     echo 'parent.show_error("' . $key . '", "' . $extrainfo . '");';
     echo '</script>';
     exit();
 }
 
-function profile_showsuccess($message = '')
-{
+function profile_showsuccess($message = '') {
     echo '<script type="text/javascript">';
     echo "parent.show_success('$message');";
     echo '</script>';

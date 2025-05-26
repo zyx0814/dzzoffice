@@ -8,7 +8,7 @@
  */
 
 //php 权限控制类
-	
+
 /*权限表说明:
 位   描述       	权限值  描述
 1    delete			1       不允许删除；
@@ -24,12 +24,13 @@
 
 有新的权限在这里添加 
 由于数据库存储是smallint(6),最大支持16位权限；（32位系统最多支持32位，64位系统最多支持64位；
- */ 
-class perm_FileSPerm{  
+ */
 
-  public static function getPowerarr(){
-	 return array(   
-		   'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
+class perm_FileSPerm {
+
+    public static function getPowerarr() {
+        return array(
+            'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
             'read1' => 2,        //读取自己的文件
             'read2' => 4,        //读取所有文件
             'delete1' => 8,        //删除自己的文件
@@ -46,52 +47,64 @@ class perm_FileSPerm{
             //'link' => 16384,    //新建网址
             //'dzzdoc' => 32768,    //新建dzz文档
             //'video' => 65536,    //新建视频
-           // 'shortcut' => 131072,    //快捷方式
+            // 'shortcut' => 131072,    //快捷方式
             'share' => 262144,    //分享
             'approve' => 524288,//审批
-			);
-  } 
-  public static function getPerm($action){
-	 $powerarr=self::getPowerarr();
-	 return  isset($powerarr[$action])?intval($powerarr[$action]):0;
-  }
-   public static function getSumByAction($action=array()){ //$action==all 时返回所有的值相加
-	  $i=0;
-	  $powerarr=self::getPowerarr();
-	  if($action=='all'){
-		  foreach($powerarr as $key=> $val){
-				  $i+=$val;
-		  }
-	  }else{
-		 foreach($action as $val){
-			 $i+=intval($powerarr[$val]);
-		 }
-	  }
-	  return $i;
-  }
-  public static function isPower($perm,$action){  
-    //权限比较时，进行与操作，得到0的话，表示没有权限
-	if(self::getPerm($action)<1) return true;
-    if((intval($perm) & self::getPerm($action)) == self::getPerm($action) ) return false;  
-    return true;  
-  }  
- 
- public static function typePower($type,$ext=''){ //返回类型的权限
- 	global $textexts;
-	  switch($type){
-		default:
-			return 0;
-	  }
-  }
-  public static function flagPower($flag){ //返回默认目录的权限 
-	  switch($flag){
-		  case 'home':case 'document': case 'image': case 'video': case 'music': case 'app':case 'desktop':case 'dock':
-			return self::getSumByAction(array('delete1','delete2','share','edit1','edit2','copy1','copy2','download1','download2'));
-		case 'recycle':
-			return self::getSumByAction(array('delete1','delete2','share','edit1','edit2','copy1','copy2','folder','upload','download1','download2'));
-		default:
-			return 0;
-	  }
-  }
-}  
+        );
+    }
+
+    public static function getPerm($action) {
+        $powerarr = self::getPowerarr();
+        return isset($powerarr[$action]) ? intval($powerarr[$action]) : 0;
+    }
+
+    public static function getSumByAction($action = array()) { //$action==all 时返回所有的值相加
+        $i = 0;
+        $powerarr = self::getPowerarr();
+        if ($action == 'all') {
+            foreach ($powerarr as $key => $val) {
+                $i += $val;
+            }
+        } else {
+            foreach ($action as $val) {
+                $i += intval($powerarr[$val]);
+            }
+        }
+        return $i;
+    }
+
+    public static function isPower($perm, $action) {
+        //权限比较时，进行与操作，得到0的话，表示没有权限
+        if (self::getPerm($action) < 1) return true;
+        if ((intval($perm) & self::getPerm($action)) == self::getPerm($action)) return false;
+        return true;
+    }
+
+    public static function typePower($type, $ext = '') { //返回类型的权限
+        global $textexts;
+        switch ($type) {
+            default:
+                return 0;
+        }
+    }
+
+    public static function flagPower($flag) { //返回默认目录的权限
+        switch ($flag) {
+            case 'home':
+            case 'document':
+            case 'image':
+            case 'video':
+            case 'music':
+            case 'app':
+            case 'desktop':
+            case 'dock':
+                return self::getSumByAction(array('delete1', 'delete2', 'share', 'edit1', 'edit2', 'copy1', 'copy2', 'download1', 'download2'));
+            case 'recycle':
+                return self::getSumByAction(array('delete1', 'delete2', 'share', 'edit1', 'edit2', 'copy1', 'copy2', 'folder', 'upload', 'download1', 'download2'));
+            default:
+                return 0;
+        }
+    }
+}
+
 ?>

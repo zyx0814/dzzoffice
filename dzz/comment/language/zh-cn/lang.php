@@ -1,6 +1,6 @@
 <?php
-$lang = array (
-	'appname'=>'评论管理',
+$lang = array(
+    'appname' => '评论管理',
 );
 
 ?>

@@ -6,10 +6,11 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
-function test(){
-	return lang('title1');
+function test() {
+    return lang('title1');
 }
+
 ?>

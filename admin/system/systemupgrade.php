@@ -49,15 +49,15 @@ if ($operation == 'patch' || $operation == 'cross') {
 
     if ($_GET['ungetfrom']) {
         if (md5($_GET['ungetfrom'] . $_G['config']['security']['authkey']) == $_GET['ungetfrommd5']) {
-            $dbreturnurl = $_G['siteurl'] . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5'; 
-            $url = outputurl(  $_G['siteurl'] . 'install/update.php?step=prepare&from=' . rawurlencode($dbreturnurl) . '&frommd5=' . rawurlencode(md5($dbreturnurl . $_G['config']['security']['authkey'])) );
+            $dbreturnurl = $_G['siteurl'] . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5';
+            $url = outputurl($_G['siteurl'] . 'install/update.php?step=prepare&from=' . rawurlencode($dbreturnurl) . '&frommd5=' . rawurlencode(md5($dbreturnurl . $_G['config']['security']['authkey'])));
             dheader('Location: ' . $url);
         } else {
             showmessage('upgrade_param_error');
         }
     }
 
-    $upgrade_step = C::t('cache') -> fetch('upgrade_step');
+    $upgrade_step = C::t('cache')->fetch('upgrade_step');
     $upgrade_step = dunserialize($upgrade_step['cachevalue']);
     $upgrade_step['step'] = $step;
     $upgrade_step['operation'] = $operation;
@@ -65,11 +65,11 @@ if ($operation == 'patch' || $operation == 'cross') {
     //$upgrade_step['release'] = $release;
     $upgrade_step['charset'] = $charset;
     $upgrade_step['locale'] = $locale;
-    C::t('cache') -> insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize($upgrade_step), 'dateline' => $_G['timestamp'], ), false, true);
+    C::t('cache')->insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize($upgrade_step), 'dateline' => $_G['timestamp'],), false, true);
 
-    $upgrade_run = C::t('cache') -> fetch('upgrade_run');
+    $upgrade_run = C::t('cache')->fetch('upgrade_run');
     if (!$upgrade_run) {
-        C::t('cache') -> insert(array('cachekey' => 'upgrade_run', 'cachevalue' => serialize($_G['setting']['upgrade']), 'dateline' => $_G['timestamp'], ), false, true);
+        C::t('cache')->insert(array('cachekey' => 'upgrade_run', 'cachevalue' => serialize($_G['setting']['upgrade']), 'dateline' => $_G['timestamp'],), false, true);
         $upgrade_run = $_G['setting']['upgrade'];
     } else {
         $upgrade_run = dunserialize($upgrade_run['cachevalue']);
@@ -79,8 +79,8 @@ if ($operation == 'patch' || $operation == 'cross') {
 
         foreach ($upgrade_run as $type => $list) {
             if ($type == $operation && $version == $list['latestversion']) {
-                $dzz_upgrade -> locale = $locale;
-                $dzz_upgrade -> charset = $charset;
+                $dzz_upgrade->locale = $locale;
+                $dzz_upgrade->charset = $charset;
                 $upgradeinfo = $list;
                 break;
             }
@@ -99,10 +99,10 @@ if ($operation == 'patch' || $operation == 'cross') {
             }
         }
 
-        $updatefilelist = $dzz_upgrade -> fetch_updatefile_list($upgradeinfo);
+        $updatefilelist = $dzz_upgrade->fetch_updatefile_list($upgradeinfo);
         $updatemd5filelist = $updatefilelist['md5'];
         $updatefilelist = $updatefilelist['file'];
-        $theurl = $_G['siteurl'].ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&locale=' . $locale . '&charset=' . $charset;
+        $theurl = $_G['siteurl'] . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&locale=' . $locale . '&charset=' . $charset;
 
         if (empty($updatefilelist)) {
             $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_download_upgradelist_error', array('upgradeurl' => upgradeinformation(-2))) . '</p>';
@@ -128,9 +128,9 @@ if ($operation == 'patch' || $operation == 'cross') {
         $fileseq = $fileseq ? $fileseq : 1;
         if ($fileseq > count($updatefilelist)) {
             if ($upgradeinfo['isupdatedb']) {
-                $dzz_upgrade -> download_file($upgradeinfo, 'install/data/install.sql');
-                $dzz_upgrade -> download_file($upgradeinfo, 'install/data/install_data.sql');
-                $dzz_upgrade -> download_file($upgradeinfo, 'update.php', 'update');
+                $dzz_upgrade->download_file($upgradeinfo, 'install/data/install.sql');
+                $dzz_upgrade->download_file($upgradeinfo, 'install/data/install_data.sql');
+                $dzz_upgrade->download_file($upgradeinfo, 'update.php', 'update');
             }
             $linkurl = $theurl . '&step=3';
             $downloadstatus = 3;
@@ -149,7 +149,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                 $linkurl = $theurl . '&step=2&fileseq=' . $fileseq . '&iframe=1';
                 $msg = '<iframe id="downiframe" marginheight="0" marginwidth="0" allowtransparency="true" frameborder="0"  src="' . $linkurl . '" style="width:100%;height:100%;"></iframe>';
             } else {
-                $downloadstatus = $dzz_upgrade -> download_file($upgradeinfo, $updatefilelist[$fileseq - 1], 'upload', $updatemd5filelist[$fileseq - 1]);
+                $downloadstatus = $dzz_upgrade->download_file($upgradeinfo, $updatefilelist[$fileseq - 1], 'upload', $updatemd5filelist[$fileseq - 1]);
                 if ($downloadstatus == 1) {
                     $linkurl = $theurl . '&step=2&fileseq=' . $fileseq . '&iframe=1';
                     $msg = lang('upgrade_downloading_file', array('file' => $updatefilelist[$fileseq - 1], 'percent' => sprintf("%2d", 100 * $fileseq / count($updatefilelist)) . '%', 'upgradeurl' => upgradeinformation(1))) . '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 50);</script>';
@@ -162,14 +162,14 @@ if ($operation == 'patch' || $operation == 'cross') {
                 } else {
                     $linkurl = $theurl . '&step=2&fileseq=' . ($fileseq) . '&iframe=1';
                     $msg = '<p style="margin:10px 0">' . lang('upgrade_redownload', array('file' => $updatefilelist[$fileseq - 1], 'upgradeurl' => upgradeinformation(-3))) . '</p>';
-                    $msg .= '<p style="margin:10px 0;"><input type="button" class="btn btn-success"  value="'.lang('founder_upgrade_reset').'" onclick="location.href=\'' . $linkurl . '\'" />';
+                    $msg .= '<p style="margin:10px 0;"><input type="button" class="btn btn-success"  value="' . lang('founder_upgrade_reset') . '" onclick="location.href=\'' . $linkurl . '\'" />';
                 }
                 include template('upgrade_iframe');
                 exit();
             }
         }
-    } elseif ($step == 3) { 
-        list($modifylist, $showlist, $ignorelist,$newlist) = $dzz_upgrade -> compare_basefile($upgradeinfo, $updatefilelist,$updatemd5filelist);
+    } elseif ($step == 3) {
+        list($modifylist, $showlist, $ignorelist, $newlist) = $dzz_upgrade->compare_basefile($upgradeinfo, $updatefilelist, $updatemd5filelist);
         if (empty($modifylist) && empty($showlist) && empty($ignorelist) && empty($newlist)) {
             $msg = lang('filecheck_nofound_md5file', array('upgradeurl' => upgradeinformation(-4)));
         }
@@ -191,7 +191,7 @@ if ($operation == 'patch' || $operation == 'cross') {
             } else {
                 $checkupdatefilelist = $updatefilelist;
             }
-            if ($dzz_upgrade -> check_folder_perm($checkupdatefilelist)) {
+            if ($dzz_upgrade->check_folder_perm($checkupdatefilelist)) {
                 $confirm = 'file';
             } else {
                 $linkurl = $theurl . '&step=4';
@@ -226,7 +226,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                 $destfile = DZZ_ROOT . $updatefile;
                 $backfile = DZZ_ROOT . './data/back/dzzoffice' . CORE_VERSION . '/' . $updatefile;
                 if (is_file($destfile)) {
-                    if (!$dzz_upgrade -> copy_file($destfile, $backfile, 'file')) {
+                    if (!$dzz_upgrade->copy_file($destfile, $backfile, 'file')) {
                         $msg = '<p style="margin:10px 0">' . lang('upgrade_backup_error', array('upgradeurl' => upgradeinformation(-5))) . '</p>';
                         $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
                         $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
@@ -252,7 +252,7 @@ if ($operation == 'patch' || $operation == 'cross') {
             } else {
                 $destfile = DZZ_ROOT . $updatefile;
             }
-            if (!$dzz_upgrade -> copy_file($srcfile, $destfile, $confirm)) {
+            if (!$dzz_upgrade->copy_file($srcfile, $destfile, $confirm)) {
                 if ($confirm == 'ftp') {
                     $msg = '<p style="margin:10px 0">' . lang('upgrade_ftp_upload_error', array('file' => $updatefile, 'upgradeurl' => upgradeinformation(-6))) . '</p>';
                     $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_reupload') . '" />';
@@ -286,7 +286,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                 } else {
                     $destfile = DZZ_ROOT . $dbupdatefile;
                 }
-                if (!$dzz_upgrade -> copy_file($srcfile, $destfile, $confirm)) {
+                if (!$dzz_upgrade->copy_file($srcfile, $destfile, $confirm)) {
                     if ($confirm == 'ftp') {
                         $msg = '<p style="margin:10px 0">' . lang('upgrade_ftp_upload_error', array('file' => $updatefile, 'upgradeurl' => upgradeinformation(-6))) . '</p>';
                         $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_reupload') . '" />';
@@ -311,7 +311,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                 }
             }
             $upgrade_step['step'] = 'dbupdate';
-            C::t('cache') -> insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize($upgrade_step), 'dateline' => $_G['timestamp'], ), false, true);
+            C::t('cache')->insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize($upgrade_step), 'dateline' => $_G['timestamp'],), false, true);
             $dbreturnurl = $_G['siteurl'] . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5';
             $linkurl = $_G['siteurl'] . 'install/update.php?step=prepare&from=' . rawurlencode($dbreturnurl) . '&frommd5=' . rawurlencode(md5($dbreturnurl . $_G['config']['security']['authkey']));
             $msg = '<p style="margin:10px 0">' . lang('upgrade_file_successful', array('upgradeurl' => upgradeinformation(4))) . '</p>';
@@ -321,36 +321,35 @@ if ($operation == 'patch' || $operation == 'cross') {
             exit();
 
         }
-        
-        $url = outputurl( $_G['siteurl'].MOD_URL.'&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5' );
+
+        $url = outputurl($_G['siteurl'] . MOD_URL . '&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5');
         dheader('Location: ' . $url);
 
     } elseif ($step == 5) {
         $file = DZZ_ROOT . './data/update/dzzoffice' . $version . '/updatelist.tmp';
         @unlink($file);
         @unlink(DZZ_ROOT . './install/update.php');
-        C::t('cache') -> delete('upgrade_step');
-        C::t('cache') -> delete('upgrade_run');
-        C::t('setting') -> update('upgrade', '');
+        C::t('cache')->delete('upgrade_step');
+        C::t('cache')->delete('upgrade_run');
+        C::t('setting')->update('upgrade', '');
         updatecache('setting');
         $old_update_dir = './data/update/';
         $new_update_dir = './data/update' . md5('update' . $_G['config']['security']['authkey']) . '/';
         $old_back_dir = './data/back/';
         $new_back_dir = './data/back' . md5('back' . $_G['config']['security']['authkey']) . '/';
-        $dzz_upgrade -> copy_dir(DZZ_ROOT . $old_update_dir, DZZ_ROOT . $new_update_dir);
-        $dzz_upgrade -> copy_dir(DZZ_ROOT . $old_back_dir, DZZ_ROOT . $new_back_dir);
-        $dzz_upgrade -> rmdirs(DZZ_ROOT . $old_update_dir);
-        $dzz_upgrade -> rmdirs(DZZ_ROOT . $old_back_dir);
+        $dzz_upgrade->copy_dir(DZZ_ROOT . $old_update_dir, DZZ_ROOT . $new_update_dir);
+        $dzz_upgrade->copy_dir(DZZ_ROOT . $old_back_dir, DZZ_ROOT . $new_back_dir);
+        $dzz_upgrade->rmdirs(DZZ_ROOT . $old_update_dir);
+        $dzz_upgrade->rmdirs(DZZ_ROOT . $old_back_dir);
 
         $msg = lang('upgrade_successful', array('version' => $version, 'save_update_dir' => $new_update_dir, 'save_back_dir' => $new_back_dir, 'upgradeurl' => upgradeinformation(0)));
 
     }
 
-}
-elseif ($operation == 'check') {
+} elseif ($operation == 'check') {
     $msg = '';
     if (!intval($_GET['rechecking'])) {
-        $upgrade_step = C::t('cache') -> fetch('upgrade_step');
+        $upgrade_step = C::t('cache')->fetch('upgrade_step');
         if (!empty($upgrade_step['cachevalue'])) {
             $upgrade_step['cachevalue'] = dunserialize($upgrade_step['cachevalue']);
             if (!empty($upgrade_step['cachevalue']['step'])) {
@@ -370,24 +369,23 @@ elseif ($operation == 'check') {
             }
         }
     } else {
-        C::t('cache') -> delete('upgrade_step');
+        C::t('cache')->delete('upgrade_step');
     }
 
     if (!intval($_GET['checking']) || $msg) {
 
 
     } else {
-        $dzz_upgrade -> check_upgrade();
-        $url = outputurl( $_G['siteurl'].MOD_URL.'&op=systemupgrade&operation=showupgrade' );
+        $dzz_upgrade->check_upgrade();
+        $url = outputurl($_G['siteurl'] . MOD_URL . '&op=systemupgrade&operation=showupgrade');
         dheader('Location: ' . $url);
     }
 
-}
-elseif ($operation == 'showupgrade') {
+} elseif ($operation == 'showupgrade') {
 
     if ($_G['setting']['upgrade']) {
 
-        C::t('cache') -> insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize(array('curversion' => $dzz_upgrade -> versionpath())), 'dateline' => $_G['timestamp'], ), false, true);
+        C::t('cache')->insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize(array('curversion' => $dzz_upgrade->versionpath())), 'dateline' => $_G['timestamp'],), false, true);
 
         $upgraderow = $patchrow = array();
         $charset = str_replace('-', '', strtoupper($_G['config']['output']['charset']));
@@ -403,7 +401,7 @@ elseif ($operation == 'showupgrade') {
                 $locale = 'SC';
             } elseif ($_G['config']['output']['language'] == 'zh-tw' || $_G['config']['output']['language'] == 'zh_tw') {
                 $locale = 'TC';
-            }else{
+            } else {
                 $locale = 'SC';
             }
         }
@@ -431,21 +429,20 @@ elseif ($operation == 'showupgrade') {
         $msg = lang('upgrade_latest_version');
     }
 
-}
-elseif ($operation == 'recheck') {
-    $upgrade_step = C::t('cache') -> fetch('upgrade_step');
+} elseif ($operation == 'recheck') {
+    $upgrade_step = C::t('cache')->fetch('upgrade_step');
     $upgrade_step = dunserialize($upgrade_step['cachevalue']);
     $file = DZZ_ROOT . './data/update/DzzOffice' . $upgrade_step['version'] . '/updatelist.tmp';
     @unlink($file);
     @unlink(DZZ_ROOT . './install/update.php');
-    C::t('cache') -> delete('upgrade_step');
-    C::t('cache') -> delete('upgrade_run');
-    C::t('setting') -> update('upgrade', '');
+    C::t('cache')->delete('upgrade_step');
+    C::t('cache')->delete('upgrade_run');
+    C::t('setting')->update('upgrade', '');
     updatecache('setting');
     $old_update_dir = './data/update/';
-    $dzz_upgrade -> rmdirs(DZZ_ROOT . $old_update_dir);
-    
-    $url = outputurl($_G['siteurl'].MOD_URL.'&op=systemupgrade' );
+    $dzz_upgrade->rmdirs(DZZ_ROOT . $old_update_dir);
+
+    $url = outputurl($_G['siteurl'] . MOD_URL . '&op=systemupgrade');
     dheader('Location: ' . $url);
 }
 include template('upgrade');

@@ -96,21 +96,21 @@ _explorer.getConfig = function (url, callback) {
 _explorer.initEvents = function () { //初始化页面事件
 	_explorer.getRightContent('','');
 	//右侧加载完成事件
-	$(document).off('ajaxLoad.middleContent').on('ajaxLoad.middleContent', function () {
-		_explorer.Scroll($('.scroll-y'));
-		_explorer.setHeight($('.height-100'));
-		if ($('.scroll-100').length) {
-			_explorer.scroll_100 = new PerfectScrollbar('.scroll-100');
-		}
-	});
+	_explorer.Scroll($('.scroll-y'));
+	_explorer.setHeight($('.height-100'));
+	if ($('.scroll-100').length) {
+		_explorer.scroll_100 = new PerfectScrollbar('.scroll-100');
+	}
 };
 
 _explorer.loading = function (container, flag) { //右侧加载效果
-	if (flag === 'hide') {
-		container.find('.rightLoading').remove();
-	} else {
-		container.append('<div class="rightLoading emptyPage"><div class="spinner-border" role="status"><span class="visually-hidden">加载中...</span></div></div>');
-	}
+	container.lyearloading({
+		opacity           : 0,
+		spinnerSize       : 'lg',
+		textColorClass    : 'text-info',
+		spinnerColorClass : 'text-info',
+		spinnerText       : '加载中...',
+	});
 };
 _explorer.getRightContent = function (fid,dos) { //处理右侧页面加载
 	if(fid && _explorer.fid == fid) {
@@ -118,10 +118,14 @@ _explorer.getRightContent = function (fid,dos) { //处理右侧页面加载
 	}
 	_explorer.fid = fid;
 	var container = $('#middleconMenu');
+	var path = '';
+	if(_explorer.sourcedata.icos[fid]) {
+		path = '&bz='+_explorer.sourcedata.icos[fid].dpath;
+	}
 	_explorer.loading(container);
 	_explorer.rightLoading = 1;
 	var view = $('.icons-thumbnail').attr('iconview') || '2';
-	_filemanage.getData(_explorer.appUrl+'&op=file&do='+dos+'&view='+view+'&sid='+sid+'&fid=f-'+fid);
+	_filemanage.getData(_explorer.appUrl+'&op=file&do='+dos+'&view='+view+'&sid='+sid+'&fid=f-'+fid+path);
 	jQuery('.listchange').show();
 };
 
@@ -294,16 +298,19 @@ function allsave() {
 						if (data.error) {
 							showmessage(data.error, 'danger', 5000, 1);
 							return false;
-						}
-						if (data.success) {
+						} else if (data.success) {
 							showmessage(data.success, 'success', 3000, 1);
+						} else {
+							showmessage('系统异常', 'danger', 3000, 1);
 						}
-					}, 'json');
+					}, 'json').fail(function(jqxhr, textStatus) {
+						showmessage('系统异常', 'danger', 3000, 1);
+					});
 					return;
 				};
 			}
 		});
-	} catch (e) {layer.msg(__lang.operation_error, {icon:'error',skin:'bg-danger',offset:'t'});}
+	} catch (e) {showmessage(__lang.operation_error, 'danger', 3000, 1);}
 }
 function _select(container)
 {

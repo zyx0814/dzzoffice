@@ -54,6 +54,8 @@
 		title: '评论管理数据表格',
 		toolbar: '#toolbar',
 		autoSort: false,
+		even:true,
+		cellMinWidth:120,
 		text: {
 			none: '暂无相关数据'
 		},
@@ -61,8 +63,7 @@
 		  limit: 20, // 默认显示20行
 		  limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
 		},
-		cellMinWidth: 80 //全局定义常规单元格的最小宽度
-		,cols: [[
+		cols: [[
 		{type:'checkbox', fixed: 'left'}
 		,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
 		  ,{field:'dateline', title: '评论时间', align: 'center', sort: true}
@@ -158,7 +159,7 @@
 							},'json')
 							.fail(function() {
 								layer.close(loading);
-							layer.close(index);
+								layer.close(index);
 								showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
 					});
 					});

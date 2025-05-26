@@ -11,10 +11,9 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-function uc_user_login($username, $password, $isuid, $checkques = '', $questionid = '', $answer = '', $ip = '')
-{
+function uc_user_login($username, $password, $isuid, $checkques = '', $questionid = '', $answer = '', $ip = '') {
     //应用登录挂载点
-    $hookdata = array($username, $password, $isuid, $checkques, $questionid,$answer, $ip);
+    $hookdata = array($username, $password, $isuid, $checkques, $questionid, $answer, $ip);
     \Hook::listen('applogin', $hookdata);
     list($username, $password, $isuid, $checkques, $questionid, $answer, $ip) = $hookdata;
 
@@ -43,8 +42,7 @@ function uc_user_login($username, $password, $isuid, $checkques = '', $questioni
 
 }
 
-function userlogin($username, $password, $questionid = '', $answer = '', $loginfield = 'auto', $ip = '')
-{
+function userlogin($username, $password, $questionid = '', $answer = '', $loginfield = 'auto', $ip = '') {
     $return = array();
 
     if ($loginfield == 'uid' && getglobal('setting/uidlogin')) {
@@ -95,8 +93,7 @@ function userlogin($username, $password, $questionid = '', $answer = '', $loginf
     return $return;
 }
 
-function setloginstatus($member, $cookietime = 0)
-{
+function setloginstatus($member, $cookietime = 0) {
     global $_G;
     $_G['uid'] = intval($member['uid']);
     $_G['username'] = $member['username'];
@@ -116,8 +113,7 @@ function setloginstatus($member, $cookietime = 0)
     dsetcookie('pmnum');
 }
 
-function logincheck($username)
-{
+function logincheck($username) {
     global $_G;
 
     $return = 0;
@@ -146,8 +142,7 @@ function logincheck($username)
     return $return;
 }
 
-function loginfailed($username)
-{
+function loginfailed($username) {
     global $_G;
 
     if (function_exists('uc_user_logincheck')) {
@@ -156,8 +151,7 @@ function loginfailed($username)
     C::t('failedlogin')->update_failed($_G['clientip'], $username);
 }
 
-function getinvite()
-{
+function getinvite() {
     global $_G;
 
     if ($_G['setting']['regstatus'] == 1) return array();
@@ -194,8 +188,7 @@ function getinvite()
     return $result;
 }
 
-function replacesitevar($string, $replaces = array())
-{
+function replacesitevar($string, $replaces = array()) {
     global $_G;
     $sitevars = array(
         '{sitename}' => $_G['setting']['sitename'],
@@ -209,8 +202,7 @@ function replacesitevar($string, $replaces = array())
     return str_replace(array_keys($replaces), array_values($replaces), $string);
 }
 
-function clearcookies()
-{
+function clearcookies() {
     global $_G;
     foreach ($_G['cookie'] as $k => $v) {
         if ($k != 'widthauto') {
@@ -222,8 +214,7 @@ function clearcookies()
 }
 
 
-function checkfollowfeed()
-{
+function checkfollowfeed() {
     global $_G;
 
     if ($_G['uid']) {
@@ -250,8 +241,7 @@ function checkfollowfeed()
     dsetcookie('checkfollow', 1, 30);
 }
 
-function checkemail($email, $type = 'json', $template = '')
-{
+function checkemail($email, $type = 'json', $template = '') {
 
     global $_G;
     $email = strtolower(trim($email));
@@ -288,8 +278,7 @@ function checkemail($email, $type = 'json', $template = '')
     return true;
 }
 
-function uc_user_checkemail($email)
-{
+function uc_user_checkemail($email) {
     global $_G;
     if (!isemail($email)) {
         return -4;
@@ -302,13 +291,11 @@ function uc_user_checkemail($email)
     }
 }
 
-function is($email)
-{
+function is($email) {
     return strlen($email) > 6 && preg_match("/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/", $email);
 }
 
-function check_emailaccess($email)
-{
+function check_emailaccess($email) {
     global $_G;
     $accessemail = isset($_G['setting']['accessemail']) ? $_G['setting']['accessemail'] : '';
     $censoremail = isset($_G['setting']['censoremail']) ? $_G['setting']['censoremail'] : '';
@@ -325,14 +312,12 @@ function check_emailaccess($email)
     }
 }
 
-function check_emailexists($email)
-{
+function check_emailexists($email) {
     $email = C::t('user')->fetch_by_email($email);
     return $email;
 }
 
-function uc_user_checkname($username)
-{
+function uc_user_checkname($username) {
     $username = addslashes(trim(stripslashes($username)));
     if (!check_username($username)) {
         return -1;
@@ -344,8 +329,7 @@ function uc_user_checkname($username)
     return 1;
 }
 
-function uc_user_checkusername($username)
-{
+function uc_user_checkusername($username) {
     $username = addslashes(trim(stripslashes($username)));
     if (!check_username($username)) {
         return -7;
@@ -353,8 +337,7 @@ function uc_user_checkusername($username)
     return 1;
 }
 
-function check_username($username)
-{
+function check_username($username) {
     $guestexp = '^Guest';
     $len = dstrlen($username);
     if ($len < 3 || preg_match("/^c:\\con\\con|[%,\*\"\<\>\&]|$guestexp/is", $username)) {
@@ -364,19 +347,16 @@ function check_username($username)
     }
 }
 
-function check_usernamecensor($username)
-{
+function check_usernamecensor($username) {
     global $_G;
     return true;
 }
 
-function check_usernameexists($username)
-{
+function check_usernameexists($username) {
     return C::t('user')->fetch_by_username($username);
 }
 
-function user_register($userArr, $addorg = 1)
-{
+function user_register($userArr, $addorg = 1) {
 
     if (empty($userArr)) return;
 
@@ -400,8 +380,7 @@ function user_register($userArr, $addorg = 1)
 
 }
 
-function uc_user_register($username, $password, $email, $nickname, $questionid = '', $answer = '', $regip = '', $addorg = 1)
-{
+function uc_user_register($username, $password, $email, $nickname, $questionid = '', $answer = '', $regip = '', $addorg = 1) {
 
 
     if ($nickname && ($status = uc_user_checkname($nickname)) < 0) {
@@ -422,8 +401,7 @@ function uc_user_register($username, $password, $email, $nickname, $questionid =
     return $uid;
 }
 
-function uc_add_user($username, $password, $email, $nickname = '', $uid = 0, $questionid = '', $answer = '', $regip = '')
-{
+function uc_add_user($username, $password, $email, $nickname = '', $uid = 0, $questionid = '', $answer = '', $regip = '') {
     global $_G;
     $salt = substr(uniqid(rand()), -6);
     $setarr = array(
@@ -440,8 +418,7 @@ function uc_add_user($username, $password, $email, $nickname = '', $uid = 0, $qu
     return $setarr;
 }
 
-function avatar_by_image($imageurl, $uid)
-{
+function avatar_by_image($imageurl, $uid) {
     @set_time_limit(0);
 
     $home = get_home($uid);
@@ -480,8 +457,7 @@ function avatar_by_image($imageurl, $uid)
     return $success;
 }
 
-function get_home($uid)
-{
+function get_home($uid) {
     $uid = sprintf("%09d", $uid);
     $dir1 = substr($uid, 0, 3);
     $dir2 = substr($uid, 3, 2);
@@ -489,8 +465,7 @@ function get_home($uid)
     return $dir1 . '/' . $dir2 . '/' . $dir3;
 }
 
-function set_home($uid, $dir = '.')
-{
+function set_home($uid, $dir = '.') {
     $uid = sprintf("%09d", $uid);
     $dir1 = substr($uid, 0, 3);
     $dir2 = substr($uid, 3, 2);
@@ -500,8 +475,7 @@ function set_home($uid, $dir = '.')
     !is_dir($dir . '/' . $dir1 . '/' . $dir2 . '/' . $dir3) && mkdir($dir . '/' . $dir1 . '/' . $dir2 . '/' . $dir3, 0777);
 }
 
-function get_avatar($uid, $size = 'big', $type = '')
-{
+function get_avatar($uid, $size = 'big', $type = '') {
     $size = in_array($size, array('big', 'middle', 'small')) ? $size : 'big';
     $uid = abs(intval($uid));
     $uid = sprintf("%09d", $uid);

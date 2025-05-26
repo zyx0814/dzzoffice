@@ -1,13 +1,13 @@
 <?php
-namespace   user\login\classes;
 
-class Loginvalchk{
+namespace user\login\classes;
 
-    public function run(&$params)
-    {
+class Loginvalchk {
+
+    public function run(&$params) {
         global $_G;
 
-        $type = isset($_GET['returnType']) ? $_GET['returnType']:'json';
+        $type = isset($_GET['returnType']) ? $_GET['returnType'] : 'json';
 
         //验证提交是否合法，阻止外部非法提交
 
@@ -29,7 +29,7 @@ class Loginvalchk{
 
         if (!$params['password'] || $params['password'] != addslashes($params['password'])) {//密码验证
 
-            showTips(array('error' => lang('profile_passwd_illegal')),$type);
+            showTips(array('error' => lang('profile_passwd_illegal')), $type);
 
         }
 

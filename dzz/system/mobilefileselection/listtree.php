@@ -4,6 +4,6 @@ if (!defined('IN_DZZ')) {
 }
 echo 'aaaa';
 die;
-global  $_G;
+global $_G;
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 $uid = $_G['uid'];

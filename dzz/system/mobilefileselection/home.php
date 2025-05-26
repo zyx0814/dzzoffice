@@ -14,10 +14,10 @@ if ($explorer_setting['useronperm']) {
 if ($explorer_setting['orgonperm']) {
     $orgs = C::t('organization')->fetch_all_orggroup($uid);
     foreach ($orgs['org'] as $v) {
-        if(intval($v['aid'])){
-            $v['icon']='index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $v['aid']);
+        if (intval($v['aid'])) {
+            $v['icon'] = 'index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $v['aid']);
         }
-        $contains =  C::t('resources')->get_contains_by_fid($v['fid']);
+        $contains = C::t('resources')->get_contains_by_fid($v['fid']);
         $v['filenum'] = $contains['contain'][0];
         $v['foldernum'] = $contains['contain'][1];
         $myorgs[] = $v;

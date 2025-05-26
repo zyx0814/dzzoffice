@@ -13,8 +13,7 @@
  *由于数据库存储是smallint(10),最大支持32位权限；(32位系统最多支持32位，64位系统最多支持64位；)
 */
 
-class perm_binPerm
-{
+class perm_binPerm {
     protected $powe;  //权限存贮变量,十进制整数
     protected $powerarr;
 
@@ -23,8 +22,7 @@ class perm_binPerm
         $this->powerarr = self::getPowerArr();
     }
 
-    public static function getPowerArr()
-    {
+    public static function getPowerArr() {
         return array(
             'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
             'read1' => 2,        //读取自己的文件
@@ -43,17 +41,16 @@ class perm_binPerm
             //'link' => 16384,    //新建网址
             //'dzzdoc' => 32768,    //新建dzz文档
             //'video' => 65536,    //新建视频
-           // 'shortcut' => 131072,    //快捷方式
+            // 'shortcut' => 131072,    //快捷方式
             'share' => 262144,    //分享
             'approve' => 524288,//审批
 
         );
     }
 
-    public static function getPowerTitle()
-    {
+    public static function getPowerTitle() {
         return array(
-            'flag'  => lang('flag_purview_setting'),
+            'flag' => lang('flag_purview_setting'),
             'read1' => lang('read_my_file'),
             'read2' => lang('read_my_file1'),
             'delete1' => lang('delete_my_file'),
@@ -75,10 +72,11 @@ class perm_binPerm
             'approve' => lang('approve'),
         );
     }
+
     //获取权限对应图标
-    public static function getPowerIcos(){
+    public static function getPowerIcos() {
         return array(
-            'flag'  => '',
+            'flag' => '',
             'read1' => 'dzz dzz-visibility mdi mdi-eye',
             'read2' => 'dzz dzz-all-check mdi mdi-eye-plus',
             'delete1' => 'dzz dzz-delete mdi mdi-delete',
@@ -101,16 +99,14 @@ class perm_binPerm
         );
     }
 
-    public static function getMyPower()
-    {//获取用户桌面默认的权限
+    public static function getMyPower() {//获取用户桌面默认的权限
         return self::getSumByAction(array('read1', 'read2', 'delete1', 'edit1', 'download1', 'download2', 'copy1', 'copy2', 'upload', 'newtype', 'folder', 'link', 'dzzdoc', 'video', 'shortcut', 'share'));
     }
 
-    public static function groupPowerPack()
-    {
+    public static function groupPowerPack() {
         $data = array('read' => array('title' => lang('read_only'), 'flag' => 'read', 'permitem' => array('read1', 'read2'), 'tip' => lang('read_only_state')),
             'only-download' => array('title' => lang('upload_only'), 'flag' => 'only-download', 'permitem' => array('read1', 'read2', 'download1', 'download2', 'copy1', 'copy2'), 'tip' => lang('upload_only_state')),
-            'read-write1' => array('title' => lang('read_write') . '1', 'flag' => 'read-write1', 'permitem' => array('read1', 'read2', 'delete1', 'edit1', 'download1', 'copy1', 'upload','folder'), 'tip' => lang('read_write_state')),
+            'read-write1' => array('title' => lang('read_write') . '1', 'flag' => 'read-write1', 'permitem' => array('read1', 'read2', 'delete1', 'edit1', 'download1', 'copy1', 'upload', 'folder'), 'tip' => lang('read_write_state')),
             'read-write2' => array('title' => lang('read_write') . '2', 'flag' => 'read-write2', 'permitem' => array('read1', 'read2', 'delete1', 'edit1', 'edit2', 'download1', 'download2', 'copy1', 'copy2', 'upload', 'folder'), 'tip' => lang('read_write_state1')),
             'read-write3' => array('title' => lang('read_write') . '3', 'flag' => 'read-write3', 'permitem' => array('read1', 'read2', 'edit1', 'edit2', 'download1', 'download2', 'copy1', 'copy2', 'upload', 'folder'), 'tip' => lang('read_write_state2')),
             'only-write1' => array('title' => lang('write_only'), 'flag' => 'only-write1', 'permitem' => array('read1', 'upload', 'folder'), 'tip' => lang('write_only_state')),
@@ -122,40 +118,34 @@ class perm_binPerm
         return $data;
     }
 
-    public function addPower($action)
-    {
+    public function addPower($action) {
 
         //利用逻辑或添加权限
         if (isset($this->powerarr[$action])) return $this->power = $this->power | intval($this->powerarr[$action]);
     }
 
-    public function mergePower($perm)
-    { //合成权限，使用于系统权限和用户权限合成
+    public function mergePower($perm) { //合成权限，使用于系统权限和用户权限合成
         return $this->power = intval($this->power & intval($perm));
     }
 
-    public function delPower($action)
-    {
+    public function delPower($action) {
         //删除权限，先将预删除的权限取反，再进行与操作
         if (isset($this->powerarr[$action])) return $this->power = $this->power & ~intval($this->powerarr[$action]);
     }
 
-    public function isPower($action)
-    {
+    public function isPower($action) {
         //权限比较时，进行与操作，得到0的话，表示没有权限
         if (!$this->powerarr[$action]) return 0;
         return $this->power & intval($this->powerarr[$action]);
     }
 
-    public function returnPower()
-    {
+    public function returnPower() {
         //为了减少存贮位数，返回也可以转化为十六进制
         return $this->power;
     }
 
 
-    public static function havePower($action, $perm)
-    {
+    public static function havePower($action, $perm) {
         //权限比较时，进行与操作，得到0的话，表示没有权限
         $perm = intval($perm);
         $powerarr = self::getPowerArr();
@@ -164,8 +154,7 @@ class perm_binPerm
         return $perm & intval($powerarr[$action]);
     }
 
-    public static function getSumByAction($action = array())
-    { //$action==all 时返回所有的值相加
+    public static function getSumByAction($action = array()) { //$action==all 时返回所有的值相加
         $i = 0;
         $powerarr = self::getPowerArr();
         if ($action == 'all') {
@@ -185,14 +174,12 @@ class perm_binPerm
         return $i;
     }
 
-    public static function getGroupPower($type)
-    { //权限包
+    public static function getGroupPower($type) { //权限包
         $data = self::groupPowerPack();
         return $data[$type]['power'];
     }
 
-    public static function getGroupTitleByPower($power)
-    {
+    public static function getGroupTitleByPower($power) {
         $data = self::groupPowerPack();
         foreach ($data as $key => $value) {
             if ($value['power'] == $power) return $value;

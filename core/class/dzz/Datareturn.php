@@ -1,15 +1,14 @@
 <?php
+
 namespace core\dzz;
 
-class Datareturn
-{
+class Datareturn {
 
     private static $returnData = '';
 
     private static $template = '';
 
-    public static function data_return($type = 'json', $data = '', $template = '')
-    {
+    public static function data_return($type = 'json', $data = '', $template = '') {
         self::$returnData = $data;
 
         self::$template = $template;
@@ -41,20 +40,17 @@ class Datareturn
         exit;
     }
 
-    private static function Array_return()
-    {
+    private static function Array_return() {
         return self::$returnData;
     }
 
-    private static function json_return()
-    {
+    private static function json_return() {
 
         echo json_encode(self::$returnData);
         exit;
     }
 
-    private static function html_return()
-    {
+    private static function html_return() {
 
         extract(self::$returnData);
 
@@ -63,11 +59,10 @@ class Datareturn
         exit();
     }
 
-    private static function string_return()
-    {
-        if(isset(self::$returnData['error'])){
+    private static function string_return() {
+        if (isset(self::$returnData['error'])) {
             echo self::$returnData['error'];
-        }else{
+        } else {
             echo self::$returnData;
         }
         exit;
