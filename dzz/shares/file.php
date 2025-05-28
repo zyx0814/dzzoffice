@@ -121,6 +121,13 @@ if ($do == 'filelist') {
             if ($folder['error']) {
                 exit(json_encode(array('error' => $folder['error'])));
             }
+            $bzinfo=IO::getCloud($folder['bz']);
+            if (!$bzinfo) {
+                exit(json_encode(array('error' => lang('cloud_no_info'))));
+            }
+            if($bzinfo['available']<1) {
+                exit(json_encode(array('error' => lang('cloud_no_available'))));
+            }
             if ($folder['type'] == 'folder') {
                 $limit = $start . '-' . ($start + $perpage);
                 $bzid = explode(':', $filepaths);
@@ -197,8 +204,20 @@ if ($do == 'filelist') {
         $ignore = 0;
         $folder = IO::getMeta('sid:' . $sid . '_' .$filepaths,0,$sid);
         if ($folder['error']) {
+            if ($folder['delete']) {
+                DB::update('shares', array('status' => '-3'), array('id' => $sid));
+                exit(json_encode(array('error' => lang('share_file_deleted'))));
+            }
             exit(json_encode(array('error' => $folder['error'])));
-        } elseif ($folder['type'] == 'folder') {
+        }
+        $bzinfo=IO::getCloud($folder['bz']);
+        if (!$bzinfo) {
+            exit(json_encode(array('error' => lang('cloud_no_info'))));
+        }
+        if($bzinfo['available']<1) {
+            exit(json_encode(array('error' => lang('cloud_no_available'))));
+        }
+        if ($folder['type'] == 'folder') {
             $limit = $start . '-' . ($start + $perpage);
             $bzid = explode(':', $folder['bz']);
             if (strpos($bzid[0], 'ALIOSS') === 0 || strpos($bzid[0], 'JSS') === 0 || strpos($bzid[0], 'qiniu') === 0) {

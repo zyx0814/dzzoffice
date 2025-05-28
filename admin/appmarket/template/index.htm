@@ -59,21 +59,7 @@
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
 	<div class="container-fluid">
-		<div class="card">
-			<div class="card-body">
-				<ul class="nav nav-pills">
-				<li class="nav-item">
-					<a class="nav-link active" href="{MOD_URL}">{lang installed}</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{MOD_URL}&op=edit&do=add">{lang add_app}</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{MOD_URL}&op=cp&do=import">{lang import_type_app}</a>
-				</li>
-				</ul>
-			</div>
-		</div>
+	<!--{template right_header}-->
 	  <div class="card">
 		<header class="card-header flex-container">
 			<a href="{MOD_URL}" class="dcolor">{lang total}<span class="num">$count</span>{lang ge}{lang app}</a>
@@ -121,14 +107,9 @@
 						<tr> 
 							<td>
 								<a href="$value[appurl]" target="_blank" class="appicon" style="float: left;padding-right: 5px;"><img src="$value[appico]" style="margin:0" /></a>
-								<!--{if $value[appadminurl]}-->
-								<a href="$value[appadminurl]" target="_blank" class="dcolor">$value[appname]</a>
-								<!--{else}-->
-								<a href="$value[appurl]" target="_blank" class="dcolor">$value[appname]</a>
-								<!--{/if}--> 
+								<a href="<!--{if $value[appadminurl]}-->$value[appadminurl]<!--{else}-->$value[appurl]<!--{/if}--> " target="_blank" class="dcolor">$value[appname]</a>
 								<small class="text-muted" title="{lang version}">$value[version]</small>    
 								<div class="appdesc form-text" title="$value['appdesc']"> {eval echo $value['appdesc']?$value['appdesc']:lang('none');}</div>
-								<!-- </div> -->
 							</td>
 							<td>$value[vendor]</td>
 							<td>

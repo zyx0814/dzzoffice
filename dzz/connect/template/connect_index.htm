@@ -6,17 +6,25 @@
 </style>
 <div class="container-fluid">
 	<!--{template right_header}-->
-	<div class="d-flex p-1">
-		<!--{loop $data $value}-->
-		<a class="card list-group-item-action m-1 text-center border" style="width:140px;" href="{DZZSCRIPT}?mod=explorer#cloud&bz=$value[hashbz]" target="_parent" title="$value[cloudname]">
-			<div class="card-body">
-				<img src="$value[img]" class="card-img-top" style="width: 100px;" alt="$value[cloudname]">
+	<div class="card">
+		<div class="card-body">
+			<div class="d-flex flex-wrap p-1">
+				<a class="card list-group-item-action m-1 text-center border" style="width:140px;" href="{DZZSCRIPT}?mod=explorer" target="_top" title="{lang dzzpan}">
+					<div class="card-body">
+						<img src="dzz/images/default/system/home.png" class="card-img-top" style="width: 100px;" alt="{lang dzzpan}">
+					</div>
+					<div class="card-footer text-truncate">{lang dzzpan}</div>
+				</a>
+				<!--{loop $data $value}-->
+				<a class="card list-group-item-action m-1 text-center border" style="width:140px;" href="{DZZSCRIPT}?mod=explorer#cloud&bz=$value[hashbz]" target="_top" title="$value[cloudname]" onclick="top.layer.closeAll('iframe');">
+					<div class="card-body">
+						<img src="$value[img]" class="card-img-top" style="width: 100px;" alt="$value[cloudname]">
+					</div>
+					<div class="card-footer text-truncate">$value[cloudname]</div>
+				</a>
+				<!--{/loop}-->
 			</div>
-			<div class="card-footer text-truncate">
-			$value[cloudname]
-			</div>
-		</a>
-		<!--{/loop}-->
+		</div>
 	</div>
 </div>
 <!--{template lyear:footer}-->

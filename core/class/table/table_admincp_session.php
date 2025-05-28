@@ -6,42 +6,41 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 
-class table_admincp_session extends dzz_table
-{
-	public function __construct() {
+class table_admincp_session extends dzz_table {
+    public function __construct() {
 
-		$this->_table = 'admincp_session';
-		$this->_pk    = 'uid';
+        $this->_table = 'admincp_session';
+        $this->_pk = 'uid';
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	public function fetch($uid, $panel = false) {
-		$sql = 'SELECT * FROM %t WHERE uid=%d AND panel=%d';
-		return DB::fetch_first($sql, array($this->_table, $uid, $panel));
-	}
+    public function fetch($uid, $panel = false) {
+        $sql = 'SELECT * FROM %t WHERE uid=%d AND panel=%d';
+        return DB::fetch_first($sql, array($this->_table, $uid, $panel));
+    }
 
-	public function fetch_all_by_panel($panel) {
-		return DB::fetch_all('SELECT * FROM %t WHERE panel=%d', array($this->_table, $panel), 'uid');
-	}
+    public function fetch_all_by_panel($panel) {
+        return DB::fetch_all('SELECT * FROM %t WHERE panel=%d', array($this->_table, $panel), 'uid');
+    }
 
-	public function delete($uid, $panel = false, $ttl = 3600) {
+    public function delete($uid, $panel = false, $ttl = 3600) {
 
 
-		$sql = 'DELETE FROM %t WHERE (uid=%d AND panel=%d) OR dateline<%d';
-		DB::query($sql, array($this->_table, $uid, $panel, TIMESTAMP-intval($ttl)));
+        $sql = 'DELETE FROM %t WHERE (uid=%d AND panel=%d) OR dateline<%d';
+        DB::query($sql, array($this->_table, $uid, $panel, TIMESTAMP - intval($ttl)));
 
-	}
+    }
 
-	public function update($uid, $panel, $data = false, $low_priority = false) {
-		if(!empty($data) && is_array($data)) {
-			DB::update($this->_table, $data, array('uid'=>$uid, 'panel'=>$panel));
-		}
-	}
+    public function update($uid, $panel, $data = false, $low_priority = false) {
+        if (!empty($data) && is_array($data)) {
+            DB::update($this->_table, $data, array('uid' => $uid, 'panel' => $panel));
+        }
+    }
 
 }
 

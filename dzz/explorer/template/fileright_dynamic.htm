@@ -1,9 +1,13 @@
 <div class="dynconMenu" id="dynconMenu">
-    <div class="just-now" id="just-now"></div>
-    <div class="toadyTime">
+    <div class="right-card-header">
+        <div class="title">{lang dynamic}</div>
+    </div>
+    <div class="right-card-body">
+        <ul class="lyear-timeline lyear-timeline-left just-now" id="just-now"></ul>
         <!--{template template_dynamic_list}-->
     </div>
 </div>
+
 <script type="text/javascript" reload="1">
     //滚动条滚动，头部加阴影
     $('.right-messagetable').scroll(function () {
@@ -15,20 +19,7 @@
     })
 
     jQuery(document).ready(function (e) {
-        jcLoader().load({
-            type: 'js',
-            ids: 'js_textareaexplander',
-            url: 'static/js/jquery.textareaexplander.js?{VERHASH}'
-        }, function () {
-            jQuery('#leave_message').TextAreaExpander(32, 300);
-        });
-        jcLoader().load({
-            type: 'js',
-            ids: 'js_smilies',
-            url: 'static/js/smilies.js?{VERHASH}'
-        }, function () {
-            smilies_show('leave_message_sml_div', '{$_G[setting][smcols]}', 'leave_message');
-        });
+        smilies_show('leave_message_sml_div', '{$_G[setting][smcols]}', 'leave_message');
         _explorer.Scroll();
         jQuery('#leave_message').off("input.commet propertychange.comment").on("input.comment propertychange.comment", function (e) {
             var el = jQuery(this);
@@ -64,38 +55,27 @@
         }
         $.post(form.action, jQuery(form).serialize(), function (data) {
             if (data['success']) {
-                if (data['return']['headerColor']) {
-                    var usericon = ' <span  class="Topcarousel" style="margin-top:8px; background:' + data['return']['headerColor'] + '">' +
-                        ' <span title="$eventval['username']" >' + data['return']['userfirst'] + '</span> </span>';
-                } else {
-
-                    var usericon = '<img src="avatar.php?uid=' + data['return']['uid'] + '" class="img-circle avatar" style="width: 25px;height: 25px;">';
-                }
                 var html = '';
-                html += '<div class="dynameic-comment">';
-                html += '<div class="toadysmalltime">';
-                html += '<span class="dynameic-times">' + data['return']['dateline'] + '</span>';
+                html += '<li class="lyear-timeline-item dynameic-commen">';
+                html += '<div class="lyear-timeline-item-dot">';
+                html += '<span><a href="user.php?uid=' + data['return']['uid'] + '" title="' + data['return']['username'] + '"  target="_blank">' + data['return']['avatar'] + '</a></span>';
                 html += '</div>';
-                html += '<div class="toadycon">';
-                html += usericon;
-                html += '<p class="activity-content">'
-                html += '<span class="activity-name">' + data['return']['username'] + '</span>';
-                html += '<span>发表了评论：' + data['return']['msg'] + '</span>';
-                html += '<span class="delete-comment dzz dzz-delete" data-commentid="' + data['return']['commentid'] + '"></span>'
+                html += '<div class="lyear-timeline-item-content">';
+                html += '<p class="mb-1 text-break" title="' + data['return']['username'] + '">';
+                html += '<strong>' + data['return']['username'] + '</strong>';
                 html += '</p>';
+                html += '<p class="mb-0 text-break">发表了评论：' + data['return']['msg'];
+                html += '<span class="delete-comment color-danger mdi mdi-delete" data-commentid="' + data['return']['commentid'] + '"></span>'
+                html += '</p>';
+                html += '<p><time class="mb-3">'+data['return']['dateline']+ '</time></p>';
                 html += '</div> ';
-                html += '</div>';
+                html += '</li>';
                 $('#just-now').prepend(html);
                 $('.scroll-y').animate({scrollTop: '0px'}, 200);
-                var Now = $('#just-now').children();
-                if (Now.length < 1) {
-                    $('#just-now').css('margin-bottom', '0px');
-                } else {
-                    $('#just-now').css('margin-bottom', '10px');
-                }
             }
             $('#leave_message').val('').trigger('input');
         }, 'json');
         return false;
     }
+
 </script>

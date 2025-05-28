@@ -277,7 +277,10 @@ class io_qiniu extends io_api {
         } else {
             $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
         }
-
+        if (!is_string($fileurls['filedir'])) {
+            header("HTTP/1.1 304 Not Modified");
+            exit;
+        }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
             $imgurl = geticonfromext($data['ext'], $data['type']);

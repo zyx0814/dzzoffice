@@ -9,7 +9,6 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-
 function dzzunzip($filename, $path, $md5file) {
     if (file_exists($filename)) {//压缩包存在
         //打开压缩包
@@ -50,5 +49,4 @@ function dzzunzip($filename, $path, $md5file) {
         zip_close($resource);
     }
 }
-
 ?>

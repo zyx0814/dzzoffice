@@ -23,11 +23,11 @@
               <tr>
                 <td width="40"><input type="text" class="form-control" name="disp[{$value[remoteid]}]" value="$value[disp]" style="width:45px;" /></td>
                 <td><input type="text" class="form-control"   name="name[{$value[remoteid]}]" value="$value[name]"  /></td>
-                <td><input type="radio" class="form-check-input" name="isdefault" value="$value[remoteid]" <!--{if $value[isdefault]>0}-->checked<!--{/if}--> ></td>
+                <td><input type="radio" class="form-check-input" name="isdefault" value="$value[remoteid]" <!--{if $value[isdefault]>0}-->checked<!--{/if}--> <!--{if $value[available]<1}-->disabled="disabled"<!--{/if}-->></td>
                 <td><div id="spaceinfo_{$value[remoteid]}"> <span class="spacesize" style="padding:0 5px">$value[fusesize]&nbsp;/&nbsp;$value[ftotalsize]</span> <span class="spacecheck" style="padding:0 5px"><a href="javascript:;" title="{lang to_obtain}" onclick="checkspace(this,'$value[remoteid]')"><i class="mdi mdi-refresh"></i></a></span> 
                     <!--{if $value[available]<1}--> 
                     <span class="text-danger">{lang space_storage_failure}</span> 
-                    <!--{/if}--> 
+                    <!--{/if}-->
                   </div></td>
                 <td><a id="delete_{$value[remoteid]}" <!--{if $value[bz]=='dzz' || $value['usesize']>0}-->style="display:none"<!--{/if}-->class="btn btn-outline-danger btn-sm" href="{MOD_URL}&op=space&do=delete&remoteid=$value[remoteid]" onclick="if(confirm('{lang space_del_storage}')){return true;}else{return false}" title="{lang delete}"><i class="mdi mdi-delete"></i></a></td>
               </tr>

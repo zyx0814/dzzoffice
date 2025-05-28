@@ -1,69 +1,52 @@
-<!--{template common/header_simple_start}-->
-<link rel="stylesheet" href="static/select2/select2.css">
-<link rel="stylesheet" href="static/perfect-scrollbar/css/perfect-scrollbar.css?{VERHASH}">
-<link rel="stylesheet" href="static/js/datepicker/datepicker.css?{VERHASH}">
-<link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
-<link rel="stylesheet" href="static/css/smilies.css">
-<link rel="stylesheet" href="static/css/checkbox.css">
-<link rel="stylesheet" href="static/tagsinput/jquery.tagsinput.css">
-<link rel="stylesheet" href="static/dzzthumb/jquery.dzzthumb.css">
-<link rel="stylesheet" href="static/css/common.css">
-<link rel="stylesheet" href="{MOD_PATH}/css/index.css">
-<link rel="stylesheet" href="{MOD_PATH}/css/filelist_middleicon/style.css" />
-<link rel="stylesheet" href="{MOD_PATH}/css/filelist_detaillist/style.css" />
-<link rel="stylesheet" href="{MOD_PATH}/css/rightmenu/style.css" />
-<link rel="stylesheet" href="{MOD_PATH}/css/file_detailed.css">
-<link rel="stylesheet" href="{MOD_PATH}/css/navigation.css">
-<link rel="stylesheet" href="{MOD_PATH}/css/headersearch.css">
-<link rel="stylesheet" href="{MOD_PATH}/css/single.css">
-
-<script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
-<style type="text/css">
-.bs-main-container {
-	padding: 0;
-}
-</style>
-<!--{template common/header_simple_end}-->
-    <!--固定的头部-->
-    <!--{template common/commer_header}-->
-
-    <!--第二部分-->
-<div class="below bs-container"> 
-  
-  <!--左侧菜单--> 
-  <!--{template left}-->
-  <div class="left-drager"></div>
-  <!--中间内容-->
-  <div id="middleconMenu" class="bs-main-container"></div>
-  <!--右侧菜单-->
-	<div class="rightMenu" id="rightMenu">
-		<div class="nothing_message">
-			<div class="nothing_allimg">
-				<img src="dzz/explorer/img/noFilePage-FileChoice.png">
-				<p>{lang choose_file_examine_information}</p>
-			</div>
-		</div>
-	</div>
+<!--{template lyear:header_simple_start}-->
+<link href="static/lyear/js/jstree/style.min.css?{VERHASH}" rel="stylesheet" media="all">
+<link rel="stylesheet" href="static/css/smilies.css?{VERHASH}">
+<link rel="stylesheet" type="text/css" href="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker3.min.css?{VERHASH}">
+<link rel="stylesheet" type="text/css" href="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css?{VERHASH}">
+<link rel="stylesheet" href="static/lyear/js/select2/select2.min.css?{VERHASH}">
+<link rel="stylesheet" href="static/dzzthumb/jquery.dzzthumb.css?{VERHASH}">
+<link rel="stylesheet" href="{MOD_PATH}/images/index.css?{VERHASH}">
+<link rel="stylesheet" href="static/lyear/js/layui/css/layui.css">
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+    <div class="card middleconMenu" id="middleconMenu">
+    </div>
+</main>
+<!--右侧菜单-->
+<div class="rightMenu dtheme border-start" id="rightMenu">
+    <div class="nothing_message">
+        <div class="nothing_allimg">
+            <img src="dzz/explorer/images/noFilePage-FileChoice.png">
+            <p>{lang choose_file_examine_information}</p>
+        </div>
+    </div>
 </div>
-
-
 <div id="contextmenu" style="display: none;"> 
   <!--{template right_contextmenu}--> 
+</div>
+<!--头部信息框-->
+<div class="navtopheader">
 </div>
 <div id="_blank" unselectable="on" onselectstart="return event.srcElement.type== 'text';" style="background: url(&quot;dzz/images/b.gif&quot;); z-index: 10000; width: 100%; height: 100%; margin: 0px; padding: 0px; right: 0px; bottom: 0px; position: absolute; top: 0px; left: 0px; display: none;"></div>
 <iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
 <script type="text/javascript">
 	//语言兼容
-	
-	jQuery('.left-drager').leftDrager_layout(function(){
-		try{_filemanage.SetMoreButton();}catch(e){}
-	},{'cookieid':'explorer_index'});
 	var centerrightwidth = 0;
     var getWidthLable = 0;
     var newgroupgid = '';
+    var limitConcurrentUploads = '{$_G['setting']['limitConcurrentUploads']}';
 	jQuery(document).ready(function(e) {
+        layui.use(function(){
+            var dropdown = layui.dropdown;
+            dropdown.render({
+                elem: document,
+                trigger: 'manual',
+                id: 'right_ico',
+                content: '',
+                className:'lyear-dropdown'
+            });
+        });
         _explorer.getConfig(MOD_URL+'&op=json');
-		new PerfectScrollbar('.bs-left-container');
     });
     function adduser_group(ids,data){
         var formdata={};
@@ -78,37 +61,31 @@
                 showWindow('select_perm', _explorer.appUrl + '&op=ajax&operation=selectperm&fid='+data['fid']+'&gid='+newgroupgid+'&new=true', 'get', 0);
             }else{
                 hideWindow('adduser');
-                showDialog(__lang.explorer_do_failed);
+                layer.alert(__lang.explorer_do_failed, {skin:'lyear-skin-danger'});
             }
 
         },'json')
     }
 </script> 
-<script type="text/javascript" src="{MOD_PATH}/js/explorer.js"></script>
-<script type="text/javascript" src="{MOD_PATH}/js/_perm.js"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/explorer.js?{VERHASH}"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/_perm.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/filemanage.js?{VERHASH}"></script>
-<script type="text/javascript" src="{MOD_PATH}/js/contextmenu.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/_select.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/_hotkey.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/js/input_field.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/imgReady.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/smilies.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/js/datepicker/jquery.ui.core.min.js"></script>
-<script type="text/javascript" src="static/js/datepicker/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="static/js/datepicker/jquery.datepicker-zh-CN.js"></script>
-<script type="text/javascript" src="static/js/jstree.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/select2/select2.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/jstree/jstree.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/tagsinput/jquery.tagsinput.js?{VERHASH}"></script>
+<script src="static/tagsinput/jquery.tagsinput.js?{VERHASH}"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/header-search.js?{VERHASH}"></script>
+<script src="static/lyear/js/layui/layui.js"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
 <!-- The basic File Upload plugin --> 
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included --> 
-<script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script> 
-<script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script> 
-<!-- The basic File Upload plugin --> 
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script> 
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script> 
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script> 
-<script type="text/javascript" src="static/perfect-scrollbar/js/perfect-scrollbar.min.js?{VERHASH}"></script> 
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/uplodfile.lang.js?{VERHASH}"></script>
-<!-- The basic File Upload plugin --> 
-<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script> 
-<!--{template common/footer}-->
+<!--{template lyear:footer_simple}-->

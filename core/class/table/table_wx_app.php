@@ -7,19 +7,19 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 
-class table_wx_app extends dzz_table
-{
-	public function __construct() {
+class table_wx_app extends dzz_table {
+    public function __construct() {
 
-		$this->_table = 'wx_app';
-		$this->_pk    = 'appid';
+        $this->_table = 'wx_app';
+        $this->_pk = 'appid';
 
-		parent::__construct();
-	}
-	
+        parent::__construct();
+    }
+
 }
+
 ?>

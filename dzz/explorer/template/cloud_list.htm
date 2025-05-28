@@ -1,0 +1,145 @@
+<div class="p-2">
+    <table class="layui-hide" id="cloudtable" lay-filter="cloudtable"></table>
+</div>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+		<button type="button"  class="layui-btn" lay-event="add">添加云</button>
+    </div>
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+	layui.use('table', function(){
+	  var table = layui.table,form = layui.form;
+	  table.render({
+		elem: '#cloudtable',
+		toolbar: '#toolbar',
+		title: '网络挂载数据表格',
+        even:true,
+        cellMinWidth:120,
+        height: function(){
+            var otherHeight = $('.middleconMenu').outerHeight();
+            var MenuHeight = $('.p-2').outerHeight();
+            return otherHeight-MenuHeight-15;
+        },
+		text: {
+			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">没有相关的数据</p></div>'
+		},
+		cols: [[
+            {type:'checkbox', fixed: 'left'}
+            ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
+            ,{field:'name', title: '{lang name}',edit: 'text', templet: function(d) {return d.name;}}
+		  ,{field:'cloudname', title: '所属云存储',style:'cursor:pointer;', templet: function(d) {return d.cloudname;}}
+		  ,{field:'dateline', title: '{lang create_date}',style:'cursor:pointer;', align: 'center', templet: function(d) {return d.dateline;}}
+		  ,{field:'username', title: '{lang username}',style:'cursor:pointer;', align: 'center',hide:true}
+		  ,{field:'attachdir', title: '{lang position}',style:'cursor:pointer;',hide:true}
+		  ,{field:'bz', title: '{lang type}',style:'cursor:pointer;', align: 'center',hide:true}
+          ,{title: '{lang operation}',align:'center', toolbar: '#barDemo',style:'cursor:pointer;', fixed: 'right'}
+		]],
+		data: {$return},
+        done: function(){
+        },
+	  });
+	  //头工具栏事件
+	table.on('toolbar(cloudtable)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var data = checkStatus.dataCache;
+		switch(obj.event){
+            case 'getCheckData':
+                if (data.length === 0) {
+                    showmessage("请至少选择一行", 'danger', 3000, 1);
+                    return;
+                }
+                var template = '<div class="accordion">';
+                    data.forEach(function(item) {
+                        template += '<div class="accordion-item">';
+                        template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+                        template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+                        template += 'ID：' + item.LAY_NUM;
+                        template += '</button>';
+                        template += '</h2>';
+                        template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
+                        template += '<div class="accordion-body">';
+                        template += '<p><strong>{lang name}:</strong> ' + item.name + '</p>';
+                        template += '<p><strong>所属云存储:</strong> ' + item.cloudname + '</p>';
+                        template += '<p><strong>{lang username}:</strong> ' + item.username + '</p>';
+                        template += '<p><strong>{lang create_date}:</strong> ' + item.dateline + '</p>';
+                        template += '<p><strong>{lang position}:</strong> ' + item.attachdir + '</p>';
+                        template += '<p><strong>{lang type}:</strong> ' + item.bz + '</p>';
+                    template += '</div>';
+                    template += '</div>';
+                    template += '</div>';
+                });
+                template += '</div>';
+                layer.alert(template, {
+                    title: '选中的记录'
+                });
+            break;
+			case 'add':
+				layer.open({
+					type: 2,
+					title: '添加云盘',
+					shadeClose: true,
+					id:'addcloud',
+					shade: false,
+					maxmin: true,
+					area: window.innerWidth < 768 ? ['100%','100%'] : ['80%', '80%'],
+					content: '{DZZSCRIPT}?mod=connect&op=addcloud',
+				});
+			break;
+        };
+    });
+    table.on('edit(cloudtable)', function(obj){
+		var data = obj.dataCache;
+        jQuery.post('{DZZSCRIPT}?mod=connect&op=ajax&do=rename', {'bz': data.bz,id:data.id,name:data.name},function(json){
+        if(json['msg']){
+            showmessage('重命名成功', 'success', '3000', 1);
+        } else {
+            if(json['error']){
+                showmessage(json['error'], 'danger', '3000', 1);
+            } else {
+                showmessage('{lang error}', 'danger', '3000', 1);
+            }
+        }
+        },'json')
+        .fail(function() {
+            showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+        });
+    });
+    //监听工具条
+	table.on('tool(cloudtable)', function(obj){
+        var data = obj.dataCache;
+        if(obj.event === 'view'){
+            var hash = "#cloud&bz=" + data.hashbz;
+            window.location.hash = hash;
+        } else if(obj.event === 'del'){
+            layer.confirm('您确定要删除 '+data.name + ' 吗？删除后将不可恢复！', {skin:'lyear-skin-danger'}, function(index){
+                layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
+                $.post('{DZZSCRIPT}?mod=connect&op=ajax&do=delete',{'bz': data.bz,id:data.id},function(data){
+					if(data['msg']){
+						obj.del();
+						layer.msg('删除成功', {offset:'10px'});
+					} else {
+						if(data['error']){
+							layer.msg(data['error'], {offset:'10px'});
+						} else {
+							layer.msg('{lang error}', {offset:'10px'});
+						}
+					}
+                },'json').fail(function() {
+                    layer.msg('服务器发生错误，请稍后再试', {offset:'10px'});
+                });
+            });
+        }
+    });
+	// 行单击事件
+	table.on('row(cloudtable)', function(obj) {
+		var dataCache = obj.dataCache;
+		var hash = "#cloud&bz="+dataCache.hashbz;
+		window.location.hash = hash;
+	});
+});
+</script>

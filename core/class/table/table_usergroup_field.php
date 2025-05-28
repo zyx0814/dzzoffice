@@ -7,23 +7,22 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 
-class table_usergroup_field extends dzz_table
-{
-	public function __construct() {
+class table_usergroup_field extends dzz_table {
+    public function __construct() {
 
-		$this->_table = 'usergroup_field';
-		$this->_pk    = 'groupid';
+        $this->_table = 'usergroup_field';
+        $this->_pk = 'groupid';
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	public function fetch_all($ids = null, $force_from_db = false) {
-		return DB::fetch_all("SELECT * FROM %t where 1", array($this->_table),$this->_pk);
-	}
+    public function fetch_all($ids = null, $force_from_db = false) {
+        return DB::fetch_all("SELECT * FROM %t where 1", array($this->_table), $this->_pk);
+    }
 
 }
 

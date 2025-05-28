@@ -1,42 +1,32 @@
-	<div class="middlecenter  scroll-100 scroll-srcollbars">
-        <div class="middle-padding-left">
-
-			<div class="middletopMenu  clearfix">
-				<div class="pictures-names">
-					<div class="owm-group clearfix">
-						<div class="form-group file-editcon">
-							<p class="own-label">{lang extension}：</p>
-							<ul class="own-type ext">
-								<!--{loop $cattext $v}-->
-								<li class="search-select"><span class="label label-glitter border-glitter" data-ext="$v">*$v</span><img src="{MOD_PATH}/img/ic-filtrate.png" style="display: none;" class="label-rightimg"></li>
-								<!--{/loop}-->
-							</ul>
-						</div>
-						<div class="form-group file-editcon">
-							<p class="own-label">{lang label}：</p>
-							<ul class="own-type tag">
-								<!--{loop $tagarr $val}-->
-								<li class="search-select"><span class="label label-glitter border-glitter" data-tid="$val[tid]">$val[tagname]</span><img src="{MOD_PATH}/img/ic-filtrate.png" style="display: none;" class="label-rightimg"></li>
-								<!--{/loop}-->
-							</ul>
-						</div>
-
-					</div>
-					<button type="button" class="btn btn-primary share-editbutton" onclick="showWindow('editcatsearch','{MOD_URL}&op=ajax&operation=addsearchcat&id={$catid}','get',0)">
-						<span class="dzz dzz-create"></span>
-						{lang edit}</button>
+<div class="middlecenter scroll-100 scroll-srcollbars">
+	<div class="middletopMenu clearfix">
+		<div class="pictures-names">
+			<div class="owm-group clearfix">
+				<div class="form-group file-editcon">
+					<strong class="own-label">{lang extension}：</strong>
+					<ul class="own-type ext">
+						<!--{loop $cattext $v}-->
+						<li class="search-select"><span class="btn btn-outline-info btn-sm" data-ext="$v">*$v</span><i style="display: none;" class="label-rightimg mdi mdi-check-circle text-primary fs-5"></i></li>
+						<!--{/loop}-->
+					</ul>
 				</div>
+				<div class="form-group file-editcon">
+					<strong class="own-label">{lang label}：</strong>
+					<ul class="own-type tag">
+						<!--{loop $tagarr $val}-->
+						<li class="search-select"><span class="btn btn-outline-info btn-sm" data-tid="$val[tid]">$val[tagname]</span><i style="display: none;" class="label-rightimg mdi mdi-checkbox-marked-circle text-primary fs-5"></i></li>
+						<!--{/loop}-->
+					</ul>
+				</div>
+
 			</div>
-
-            <div id="filemanage-cat-$catid"></div>
-        </div>
+			<button type="button" class="btn btn-primary share-editbutton" onclick="showWindow('editcatsearch','{MOD_URL}&op=ajax&operation=addsearchcat&id={$catid}','get',0)">
+				<span class="mdi mdi-pencil"></span>
+				{lang edit}</button>
+		</div>
 	</div>
-    
-
-<!--头部信息框-->
-<div class="navtopheader">
+	<div id="filemanage-cat-$catid"></div>
 </div>
-
 <div id="template_middleicon" style="display:none">
 <!--{template template_file_middleicon}-->
 </div>

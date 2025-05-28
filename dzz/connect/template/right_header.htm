@@ -1,6 +1,10 @@
 <div class="card">
   <div class="card-body">
     <ul class="nav nav-pills">
+      <!--{if $_G['adminid']}-->
+      <li class="nav-item"><a class="nav-link" href="{ADMINSCRIPT}?mod=cloud" target="_top"> {lang set}</a>
+      </li>
+      <!--{/if}-->
       <li class="nav-item"><a class="nav-link <!--{if !$_GET[op]}-->active<!--{/if}-->" href="{MOD_URL}"> {lang my_clouds}</a>
       </li>
       <li class="nav-item"><a class="nav-link <!--{if $_GET[op]=='addcloud'}-->active<!--{/if}-->" href="{MOD_URL}&op=addcloud">{lang add_clouds}</a>

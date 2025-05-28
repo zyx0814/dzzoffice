@@ -1,75 +1,58 @@
-<div class="righttop_title  clearfix">
-    <span class="dzz dzz-chevron-left dzz-right-backing" data-rid="$rid" onclick="reback_last(this)"></span>
-    <p class="right_name">{lang history_revision}</p>
-    <div class="toggRight toggright-icon">
-        <span class="dzz dzz-close "></span>
+<div class="briefMenu modal-header border-bottom clearfix">
+    <div class="modal-title text-truncate fs-6">
+        <button type="button" class="mdi mdi-chevron-left mdi-right-backing dcolor" data-rid="$rid" onclick="reback_last(this)"></button>
+        <span class="right-imgname text-truncate">{lang history_revision}</span>
     </div>
+    <button type="button" class="toggRight btn-close"></button>
 </div>
-<div class="historyMenu versionmenulist scroll-y">
-    <ul class="unameMenu" id="versionmenulist">
-        <!--{loop $versions  $v}-->
-        <li class="unameMenu-list version_menu" id="version_{$v[vid]}">
-            <i class="round-drop"></i>
-            <div class="unameMenuicon-icons">
-                <div class="unameMenu-upload">
-                    <!--{if !$v['vname']}-->
-                    <span class="nameMenu">$v['username']{lang upload_to}</span>
-                    <p class="versioninfos">{eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}
-                        <!--{if $fileinfo['vid'] == $v['vid']}--><span class="label label-gainsboro">{lang principal_edition}</span>
-                        <!--{/if}--></p>
-                    <!--{else}-->
-                    <span class="nameMenu">$v[vname]</span>
-                    <p class="versioninfos"><span class="versioninfo-dateline">{eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}</span>
-                        <!--{if $fileinfo['vid'] == $v['vid']}--><span class="label label-gainsboro">{lang principal_edition}</span>
-                        <!--{/if}-->
-                    </p>
-                    <!--{/if}-->
-                </div>
-                <p class="editMenu">{eval echo formatsize($v['size']);}</p>
-                <!--{if $fileinfo['editperm']}-->
-                <a href="javascript:;" class="group-editMenu dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
-                <ul class="dropdown-menu dropdown-menu-version">
-                    <li class="listedit-title">
-                        <a href="javascript:;" class="view_versions" data-rid="$v[rid]" data-vid="$v[vid]" onclick="infoversion(this)">
-                            <span class="dzz dzz-info-outline"></span>{lang version_information}
-                        </a>
-                    </li>
-                    <li class="listedit-title">
-                        <a href="javascript:;" class="view_versions" data-dpath="$fileinfo[dpath]"
-                           data-vid="$v[vid]" onclick="viewversion(this)">
-                            <span class="dzz dzz-visibility"></span>{lang view_version}
-                        </a>
-                    </li>
-                    <!--{if $v[vid]}-->
-                    <li class="listedit-title">
-                        <a href="javascript:;" class="primary_versions" data-vid="$v[vid]"
-                        <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}-->
-                        data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><span
-                            class="glyphicon glyphicon-screenshot"></span>{lang sign_principal_edition}</a>
-                    </li>
-                    <!--{/if}-->
-                    <li class="listedit-title listedit-edit">
-                        <a href="javascript:;" class="edit_versions" data-rid="$fileinfo[rid]"
-                           data-vid="$v[vid]" onclick="editVersionName(this)">
-                            <span class="glyphicon glyphicon-pencil"></span>{lang edit_version_information}
-                        </a>
-                    </li>
-                    <!--{if $v[vid]}-->
-                    <li class="listedit-title listedit-edit">
-                        <a href="javascript:;" class="delete_versions" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="deletethisversion(this)">
-                            <span class="dzz dzz-delete"></span>{lang delete_this_version}
-                        </a>
-                    </li>
-                    <!--{/if}-->
-                </ul>
-                <!--{/if}-->
+<div class="historyMenu versionmenulist scroll-y border-bottom">
+    <ul class="list-group list-group-flush">
+        <!--{loop $versions $v}-->
+        <li class="list-group-item d-flex justify-content-between align-items-start version_menu" id="version_{$v[vid]}">
+            <div class="unameMenu-upload">
+              <div class="fw-bold text-truncate"><!--{if !$v['vname']}-->$v['username']<!--{else}-->$v[vname]<!--{/if}--></div>
+              <!--{if $v['vdesc']}--><span class="form-text text-truncate">$v['vdesc']</span><!--{/if}-->
+              <div class="versioninfos">
+                  {eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}
+                  <!--{if $fileinfo['vid'] == $v['vid']}--><span class="badge badge-outline-primary">{lang principal_edition}</span><!--{/if}-->
+              </div>
             </div>
+            <span class="editMenu">{eval echo formatsize($v['size']);}</span>
+            <a href="javascript:;" class="group-editMenu dropdown-toggle fs-5" data-toggle="dropdown"></a>
+            <ul class="dropdown-menu dropdown-menu-version">
+                <li><a class="dropdown-item" href="javascript:;" data-rid="$v[rid]" data-vid="$v[vid]" onclick="infoversion(this)"><i class="mdi mdi-information-variant"></i><span class="file-text">{lang version_information}</span></a></li>
+                <li>
+                    <a href="javascript:;" class="view_versions dropdown-item" data-dpath="$fileinfo[dpath]" data-vid="$v[vid]" onclick="viewversion(this)">
+                        <i class="mdi mdi-eye"></i><span class="file-text">{lang view_version}</span>
+                    </a>
+                </li>
+                <!--{if $fileinfo['editperm']}-->
+                <!--{if $v[vid]}-->
+                <li>
+                    <a href="javascript:;" class="primary_versions dropdown-item" data-vid="$v[vid]" <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}--> data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><i class="mdi mdi-flare"></i><span class="file-text">{lang sign_principal_edition}</span></a>
+                </li>
+                <!--{/if}-->
+                <li>
+                    <a href="javascript:;" class="edit_versions dropdown-item" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="editVersionName(this)">
+                        <i class="mdi mdi-pencil"></i><span class="file-text">{lang edit_version_information}</span>
+                    </a>
+                </li>
+                <!--{if $v[vid]}-->
+                <li>
+                    <a href="javascript:;" class="delete_versions dropdown-item" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="deletethisversion(this)">
+                        <i class="mdi mdi-delete"></i><span class="file-text">{lang delete_this_version}</span>
+                    </a>
+                </li>
+                <!--{/if}-->
+                <!--{/if}-->
+            </ul>
         </li>
         <!--{/loop}-->
     </ul>
     <!--{if $vnext}-->
-    <a href="javascript:;" class="btn_button_more btn btn-link hide"
-       onclick="loadMoreVersion(this,'{$vnext}');" data-rid="{$rid}">{lang upload_more}</a>
+    <div class="mb-1 d-grid btn_button_more">
+        <a href="javascript:;" class="btn btn-link btn-sm text-end" onclick="loadMoreVersion(this,'{$vnext}');" data-rid="{$rid}">{lang upload_more}</a>
+    </div>
     <!--{/if}-->
 </div>
 
@@ -85,11 +68,11 @@
     jQuery('.versionmenulist.scroll-y').scroll(function(e) {
         var clientHeight = jQuery('.versionmenulist.scroll-y').height();
         var scrollHeight =jQuery('.versionmenulist.scroll-y').get(0).scrollHeight;
-        if(jQuery('.versionmenulist.scroll-y').scrollTop()+clientHeight>scrollHeight-20) jQuery('.versionmenulist .btn_button_more').trigger('click');
+        if(jQuery('.versionmenulist.scroll-y').scrollTop()+clientHeight>scrollHeight-20) jQuery('.btn_button_more a').trigger('click');
         if($(this).scrollTop()>0){
-            $('.righttop_title').css({'box-shadow':'0px 0px 10px 0px rgba(0,0,0,0.15)'});
+            $('.briefMenu').css({'box-shadow':'0px 0px 10px 0px rgba(0,0,0,0.15)'});
         }else{
-            $('.righttop_title').css({'box-shadow':'none'});
+            $('.briefMenu').css({'box-shadow':'none'});
         }
     })
     function loadMoreVersion(obj,next){

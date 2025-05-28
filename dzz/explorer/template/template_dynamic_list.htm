@@ -1,100 +1,34 @@
-{if !isset($tplmore)}
 <!--{if $events}-->
-{eval $today=strtotime(dgmdate(TIMESTAMP,'Y-m-d'))}
-{eval $timearr=array();}
+<ul class="lyear-timeline lyear-timeline-left">
 <!--{loop $events $eventval}-->
-{eval $t=strtotime(dgmdate($eventval['dateline'],'Y-m-d'));}
-<!--{if $t==$today && !in_array($t,$timearr)}-->
-<p class="toadytitle">{lang today}</p>
-{eval $timearr[]=$t;}
-<!--{elseif $t==$today-24*60*60 && !in_array($t,$timearr)}-->
-<p class="toadytitle">{lang ytoday}</p>
-{eval $timearr[]=$t;}
-<!--{elseif $t==$today-24*60*60*2 && !in_array($t,$timearr)}-->
-<p class="toadytitle">{lang bytoday}</p>
-{eval $timearr[]=$t;}
-<!--{elseif $t<$today-24*60*60*2 && !in_array($t,$timearr)}-->
-<p class="toadytitle">{eval echo dgmdate($t,'Y-m-d');}</p>
-{eval $timearr[]=$t;}
-<!--{/if}-->
-<!--{if $eventval['type'] == 0}-->
-<div class="dynameic-comment">
-    <div class="toadysmalltime"><span>{eval echo dgmdate($eventval['dateline'],'H:i');}</span></div>
-    <div class="toadycon">
-        <div class="toadycon-img">{eval echo avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}
-        </div>
-        <p class="activity-content"><span class="activity-name">$eventval['username']</span>
-            <span>{$eventval[details]}</span></p>
+<li class="lyear-timeline-item dynameic-comment">
+    <div class="lyear-timeline-item-dot">
+      <span><a href="user.php?uid=$eventval['uid']" title="$eventval['username']" target="_blank">{eval echo avatar_block($eventval['uid']);}</a></span>
     </div>
-</div>
-<!--{elseif $eventval['type'] == 1 }-->
-<div class="dynameic-comment">
-    <div class="toadysmalltime"><span>{eval echo dgmdate($eventval['dateline'],'H:i');}</span></div>
-    <div class="toadycon">
-        <div class="toadycon-img">{eval echo avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}
-        </div>
-        <p class="activity-content"><span class="activity-name">$eventval['username']</span>
-            <span>{$eventval[details]}</span>
-            <span class="delete-comment dzz dzz-delete" data-commentid="$eventval[id]"></span></p>
+    <div class="lyear-timeline-item-content">
+      <p class="mb-1 text-break" title="$eventval['username']"><strong>$eventval['username']</strong></p>
+      <p class="mb-1 text-break">{$eventval[details]}</p>
+      <p class="mb-0"><time class="mb-3">{eval echo dgmdate($eventval['dateline'], 'u');}</time><!--{if $eventval['type'] == 1}--><span class="delete-comment color-danger mdi mdi-delete" data-commentid="$eventval[id]"></span><!--{/if}--></p>
     </div>
-</div>
-<!--{/if}-->
+</li>
 <!--{/loop}-->
+</ul>
 <!--{if $next}-->
-<a href="javascript:;"
-   class="{if !isset($tplmore)}btn_dynamic_more {else}btn_dynamic_more_less{/if}btn-link btn-block {if isset($tplmore)} hide {/if}"
-   onclick="load_dynamic(this,'{eval echo ($next-3)}','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$_GET['fid']',0);">{lang
-    upload_more}</a>
-<!--{/if}-->
+<div class="d-grid">
+    {if !isset($tplmore)}
+    <a href="javascript:;" class="btn btn-link btn-sm text-end {if !isset($tplmore)}btn_dynamic_more {else}btn_dynamic_more_less{/if} {if isset($tplmore)} hide {/if}" onclick="load_dynamic(this,'{eval echo ($next-3)}','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$_GET['fid']',0);">{lang upload_more}</a>
+    <!--{else}-->
+    <a href="javascript:;" class="btn btn-link btn-sm text-end btn_dynamic_more_less {if isset($tplmore)} hide {/if}" onclick="load_dynamic(this,$next,'{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);">{lang upload_more}</a>
+    <!--{/if}-->
+</div>
 <!--{/if}-->
 <!--{else}-->
-<!--{if $events}-->
-{eval $today=strtotime(dgmdate(TIMESTAMP,'Y-m-d'))}
-{eval $timearr=array();}
-<!--{loop $events $eventval}-->
-{eval $t=strtotime(dgmdate($eventval['dateline'],'Y-m-d'));}
-<!--{if $t==$today && !in_array($t,$timearr)}-->
-<p class="toadytitle">{lang today}</p>
-{eval $timearr[]=$t;}
-<!--{elseif $t==$today-24*60*60 && !in_array($t,$timearr)}-->
-<p class="toadytitle">{lang ytoday}</p>
-{eval $timearr[]=$t;}
-<!--{elseif $t==$today-24*60*60*2 && !in_array($t,$timearr)}-->
-<p class="toadytitle">{lang bytoday}</p>
-{eval $timearr[]=$t;}
-<!--{elseif $t<$today-24*60*60*2 && !in_array($t,$timearr)}-->
-<p class="toadytitle">{eval echo dgmdate($t,'Y-m-d');}</p>
-{eval $timearr[]=$t;}
-<!--{/if}-->
-
-<!--{if $eventval['type'] == 0}-->
-<div class="dynameic-comment">
-    <div class="toadysmalltime"><span>{eval echo dgmdate($eventval['dateline'],'H:i');}</span></div>
-    <div class="toadycon">
-        <div class="toadycon-img">{eval echo avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}
-        </div>
-        <p class="activity-content"><span class="activity-name">$eventval['username']</span>
-            <span>{$eventval[details]}</span></p>
+<div class="scroll-y">
+	<div class="emptyPage">
+    	<img src="{MOD_PATH}/images/noFilePage-dynamic.png">
+    	<p class="emptyPage-text">{lang no_dynamisc}</p>
     </div>
 </div>
-<!--{elseif $eventval['type'] == 1 }-->
-<div class="dynameic-comment">
-    <div class="toadysmalltime"><span>{eval echo dgmdate($eventval['dateline'],'H:i');}</span></div>
-    <div class="toadycon">
-        <div class="toadycon-img">{eval echo avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}
-        </div>
-        <p class="activity-content"><span class="activity-name">$eventval['username']</span>
-            <span>{$eventval[details]}</span>
-            <span class="delete-comment dzz dzz-delete" data-commentid="$eventval[id]"></span></p>
-    </div>
-</div>
-<!--{/if}-->
-<!--{/loop}-->
-<!--{if $next}-->
-<a href="javascript:;" class="btn_dynamic_more_less btn-link btn-block {if isset($tplmore)} hide {/if}"
-   onclick="load_dynamic(this,$next,'{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}',$pfid,1);">{lang upload_more}</a>
-<!--{/if}-->
-<!--{/if}-->
 <!--{/if}-->
 <script type="text/javascript" src="static/atwho/js/jquery.atwho.js"></script>
 <script type="text/javascript" src="static/atwho/js/jquery.caret.js"></script>
@@ -117,7 +51,7 @@
         
         var adddynamisc = '';
         if (tplmore) adddynamisc = '&adddynamisc=1';
-        jQuery.get(DZZSCRIPT + '?mod={MOD_NAME}&op=dynamic&do=loadmoredynamic&gid=' + gid + adddynamisc, queryObj, function (html) {
+        jQuery.get('{MOD_URL}&op=dynamic&do=loadmoredynamic&gid=' + gid + adddynamisc, queryObj, function (html) {
             if (tplmore) {
                 jQuery(obj).replaceWith(html);
             } else {
@@ -200,30 +134,22 @@
         }
 
     })
-/*    jQuery('#leave_message').on('keydown',function(){
-       var obj = $(this);
-        if(obj.val().indexOf('@') == 0)
-        textarea.caret('pos',textarea.val().length);
-        //textarea.focus().atwho('run');
-        //return false;
-    });*/
     jQuery(document).off('click.commentdelete').on('click.commentdelete','.delete-comment',function(){
         var obj = $(this);
         var commentid = obj.data('commentid');
-        var msg = '<span class="delect_text_red">'+__lang.delete_filenorecover_confirm+'</span>';
-        var title = '<span class="delect-title-normal">'+__lang.delete_comment_confirm+'<span>';
         if(typeof commentid == 'undefined' || commentid < 0){
-            showDialog("{lang delete_error}");
+            layer.alert('{lang delete_error}', {skin:'lyear-skin-danger'});
         }
-        showDialog(msg,'confirm',title,function(){
-            $.post('{MOD_URL}&op=dynamic&do=deletecomment',{'id':commentid},function(data){
-                if(data['success']){
-                    obj.parents('.dynameic-comment').html('');
-                }else if(data['error']){
-                    showDialog(data['error']);
-                }
-            },'json');
-        })
-
+        layer.confirm(__lang.delete_filenorecover_confirm, {title:__lang.delete_comment_confirm,skin:'lyear-skin-danger'}, function(index){
+		$.post('{MOD_URL}&op=dynamic&do=deletecomment',{'id':commentid},function(data){
+            layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
+            if(data['success']){
+                layer.msg(__lang.delete_success, {offset:'10px'});
+                obj.parents('.dynameic-comment').html('');
+            }else if(data['error']){
+                layer.alert(data['error'], {skin:'lyear-skin-danger'});
+            }
+        },'json');
+	});
     })
 </script>

@@ -7,24 +7,23 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 
-class table_process extends dzz_table
-{
-	public function __construct() {
+class table_process extends dzz_table {
+    public function __construct() {
 
-		$this->_table = 'process';
-		$this->_pk    = 'processid';
+        $this->_table = 'process';
+        $this->_pk = 'processid';
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	public function delete_process($name, $time) {
-		$name = addslashes($name);
-		return DB::delete('process', "processid='$name' OR expiry<".intval($time));
-	}
+    public function delete_process($name, $time) {
+        $name = addslashes($name);
+        return DB::delete('process', "processid='$name' OR expiry<" . intval($time));
+    }
 }
 
 ?>

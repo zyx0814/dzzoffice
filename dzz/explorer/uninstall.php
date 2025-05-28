@@ -7,12 +7,12 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
+    exit('Access Denied');
 }
 
 //卸载网盘程序；
-		
+
 $sql = <<<EOF
 
 DROP TABLE IF EXISTS `dzz_resources_cat`;

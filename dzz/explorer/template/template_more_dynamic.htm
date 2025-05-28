@@ -1,79 +1,54 @@
 <div class="rightBorder" id="rightinfo_content">
-<div class="righttop_title  clearfix">
-	<span class="dzz dzz-chevron-left dzz-right-backing"  data-rid="$ridval" onclick="reback_last(this)"></span>
-	<p class="right_name">动态</p>
-	<div class="toggRight toggright-icon">
-	 	 <span class="dzz dzz-close "></span>
-	</div>
+<div class="briefMenu modal-header border-bottom clearfix">
+    <div class="modal-title text-truncate fs-6">
+        <button type="button" class="mdi mdi-chevron-left mdi-right-backing dcolor" data-rid="$ridval" onclick="reback_last(this)"></button>
+        <span class="right-imgname text-truncate">{lang dynamic}</span>
+    </div>
+    <button type="button" class="toggRight btn-close"></button>
 </div>
-<div class="dynconMenu  scroll-y" id="dynconMenu" data-subtractor="{eval echo ($pfid || $rid)?53:0}">
-<div class="just-now" id="just-now"></div>
-<div class="toadyTime">
+<div class="dynconMenu p-2 scroll-y" id="dynconMenu" data-subtractor="{eval echo ($pfid || $rid)?53:0}">
+<ul class="lyear-timeline lyear-timeline-left just-now" id="just-now"></ul>
 <!--{if $events}-->
-{eval $today=strtotime(dgmdate(TIMESTAMP,'Y-m-d'))} 
-        {eval $timearr=array();} 
-<!--{loop $events $eventval}--> 
-    {eval $t=strtotime(dgmdate($eventval['dateline'],'Y-m-d'));} 
-    <!--{if $t==$today && !in_array($t,$timearr)}-->
-        <p class="toadytitle">{lang today}</p>
-        {eval $timearr[]=$t;} 
-    <!--{elseif $t==$today-24*60*60 && !in_array($t,$timearr)}-->
-        <p class="toadytitle">{lang ytoday}</p>
-        {eval $timearr[]=$t;} 
-    <!--{elseif $t==$today-24*60*60*2 && !in_array($t,$timearr)}-->
-        <p class="toadytitle">{lang bytoday}</p>
-        {eval $timearr[]=$t;} 
-    <!--{elseif $t<$today-24*60*60*2 && !in_array($t,$timearr)}-->
-        <p class="toadytitle">{eval echo dgmdate($t,'Y-m-d');}</p>
-        {eval $timearr[]=$t;} 
-    <!--{/if}--> 
-    <!--{if $eventval['type'] == 0}-->
-    <div class="dynameic-comment">
-      <div class="toadysmalltime"> <span class="dynameic-times">{eval echo dgmdate($eventval['dateline'],'H:i');}</span> </div>
-      <div class="toadycon">
-          <div class="toadycon-img">{eval echo avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}</div>
-        <p class="activity-content"><span class="activity-name">$eventval['username']</span> <span>{$eventval[details]}</span></p>
-      </div>
+<ul class="lyear-timeline lyear-timeline-left">
+<!--{loop $events $eventval}-->
+<li class="lyear-timeline-item dynameic-comment">
+    <div class="lyear-timeline-item-dot">
+      <span><a href="user.php?uid=$eventval['uid']" title="$eventval['username']" target="_blank">{eval echo avatar_block($eventval['uid']);}</a></span>
     </div>
-    <!--{elseif $eventval['type'] == 1 }-->
-    <div class="dynameic-comment">
-      <div class="toadysmalltime"> <span class="dynameic-times">{eval echo dgmdate($eventval['dateline'],'H:i');}</span> </div>
-      <div class="toadycon">
-         <div class="toadycon-img">{eval echo avatar_block($eventval['uid'],array($eventval['uid']=>$eventval['headerColor']));}</div>
-        <p class="activity-content"><span class="activity-name">$eventval['username']</span> <span>{$eventval[details]}</span>
-            <span class="delete-comment dzz dzz-delete" data-commentid="$eventval[id]"></span></p>
-      </div>
+    <div class="lyear-timeline-item-content">
+      <p class="mb-1 text-break" title="$eventval['username']"><strong>$eventval['username']</strong></p>
+      <p class="mb-1 text-break">{$eventval[details]}</p>
+      <p class="mb-0">
+        <time class="mb-3">{eval echo dgmdate($eventval['dateline'], 'u');}</time>
+        <!--{if $eventval['type'] == 1}--><span class="delete-comment color-danger mdi mdi-delete" data-commentid="$eventval[id]"></span><!--{/if}-->
+       </p>
     </div>
-    <!--{/if}--> 
- 
+</li>
 <!--{/loop}--> 
+</ul>
 <!--{if $next}-->
-<a href="javascript:;" class="btn_dynamic_more_less btn-link btn-block hide" onclick="load_dynamic(this,'$next','{eval echo implode(',',$rids);}',$pfid,1);"></a>
-<!--<a href="javascript:;" class="btn_dynamic_more btn btn-link btn-block">{lang upload_more}</a>-->
+<a href="javascript:;" class="btn_dynamic_more_less btn-link btn-block hide" onclick="load_dynamic(this,'$next','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);"></a>
 <!--{/if}-->
 <!--{/if}-->
-</div>
 </div>
 <!--右侧底部评论开始-->
 <!--{if $pfid || $rid}-->
-<div class="comment-area">
+<div class="comment-area dtheme">
     <div class="messageMenu"> 
 	    <form action="{MOD_URL}&op=ajax&operation=comment" method="post" onsubmit="return comment_file(this)" id="commentid">
 	        <input type="hidden" name="rid" value="$rid" />
 	        <input type="hidden" name="fid" value="$pfid" />
 	    	<div class="discuss-content">
-	            <textarea type="text" id="leave_message" name="msg" rows="1"  placeholder="{lang input_comments}" class="form-control comment-input" ></textarea>
+	            <textarea type="text" id="leave_message" name="msg" rows="1"  placeholder="{lang input_comments}" class="form-control"></textarea>
 	            <div class="comment-file">
 	                <ul class="list_acpsw">
-	                    <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span class="dzz dzz-smile"></span></a>
+	                    <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span class="mdi mdi-emoticon-excited-outline"></span></a>
 	                    </li>
-	                    
 	                </ul>
 	            </div>
-	             
 	        </div>
 	        <div class="activity-handler clearfix">		            
-	             <button type="submit" class="dzz dzz-send pull-right disabled input-search-drop dzz-submit-send" style="color:rgba(55,121,255,0.3);"></button>
+	             <button type="submit" class="mdi mdi-send pull-right disabled input-search-drop" style="color:rgba(55,121,255,0.3);"></button>
 	        </div>
 	    </form>
     </div>
@@ -83,40 +58,40 @@
 </div>
 <script type="text/javascript">
 jcLoader().load({  
-				type:'js', 
-				ids:'js_textareaexplander', 
-				url:'static/js/jquery.textareaexplander.js?{VERHASH}'  
-			},function(){
-			  jQuery('#leave_message').TextAreaExpander(32,300);
-		});
+        type:'js', 
+        ids:'js_textareaexplander', 
+        url:'static/js/jquery.textareaexplander.js?{VERHASH}'  
+    },function(){
+        jQuery('#leave_message').TextAreaExpander(32,300);
+});
  jQuery('.dynconMenu.scroll-y').scroll(function(e) {
 	var clientHeight = jQuery('.dynconMenu.scroll-y').height();
 	var scrollHeight =jQuery('.dynconMenu.scroll-y').get(0).scrollHeight;
   	if(jQuery('.dynconMenu.scroll-y').scrollTop()+clientHeight>scrollHeight-20) 	jQuery('.btn_dynamic_more_less').trigger('click');
 	if($(this).scrollTop()>0){
-		$('.righttop_title').css({'box-shadow':'0px 0px 10px 0px rgba(0,0,0,0.15)'});
+		$('.briefMenu').css({'box-shadow':'0px 0px 10px 0px rgba(0,0,0,0.15)'});
 	}else{
-		$('.righttop_title').css({'box-shadow':'none'});
+		$('.briefMenu').css({'box-shadow':'none'});
 	}
 })
 
 jQuery(document).off('click.commentdelete').on('click.commentdelete','.delete-comment',function(){
 	var obj = $(this);
     var commentid = obj.data('commentid');
-    var msg = '<span class="delect_text_red">'+__lang.delete_filenorecover_confirm+'</span>';
-    var title = '<span class="delect-title-normal">'+__lang.delete_comment_confirm+'<span>';
     if(typeof commentid == 'undefined' || commentid < 0){
-        showDialog("{lang delete_error}");
-    }   
-	showDialog(msg,'confirm',title,function(){
-    	$.post('{MOD_URL}&op=dynamic&do=deletecomment',{'id':commentid},function(data){
+        layer.alert('{lang delete_error}', {skin:'lyear-skin-danger'});
+    }
+    layer.confirm(__lang.delete_filenorecover_confirm, {title:__lang.delete_comment_confirm,skin:'lyear-skin-danger'}, function(index){
+		layer.msg(__lang.recovering_not_please_close, {offset:'10px',time:0});
+		$.post('{MOD_URL}&op=dynamic&do=deletecomment',{'id':commentid},function(data){
         if(data['success']){
             obj.parents('.dynameic-comment').html('');
+            layer.msg('删除成功', {offset:'10px'});
         }else if(data['error']){
-            showDialog(data['error']);
+            layer.alert(data['error'], {skin:'lyear-skin-danger'});
         }
     },'json');
-    })
+	});
     
 })
 jQuery(function(){
@@ -185,7 +160,4 @@ function reback_last(obj){
     _filemanage.infoPanelUrl=rid;
   return false;
 }
-
-
-
 </script>

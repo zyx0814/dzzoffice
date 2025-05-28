@@ -1,317 +1,284 @@
-        <div class="padding-left-1  scroll-y">
-            <div class="middletopMenu groupmanage-paddingbottom clearfix">
-            	<div class="groupmanage-header-top clearfix">
-                	 <div class="public-allgroup">                	 		
-                	 		<div class="dropdown">
-		                        <button type="text" class="form-control" value="{lang all_groups}"
-		                                data-toggle="dropdown"  readonly="readonly" id="grouptext">
-		                                <span class="dropdown_text">{lang all_groups}</span>
-		                                <i class="dzz dzz-arrow-dropdown input-icon"></i>
-		                        </button>
-		                        <ul class="dropdown-menu group-dropdownbutton" id="searchgrouplist">
-		                            <li><a href="javascript:;" data-val="0">{lang all_groups}</a></li>
-		                            <li><a href="javascript:;" data-val="1">{lang already_close}</a></li>
-		                            <li><a href="javascript:;" data-val="2">{lang already_start}</a></li>
-		                         <!--   <li><a href="javascript:;" data-val="dir_1">{lang closed_share}</a></li>
-		                            <li><a href="javascript:;" data-val="dir_2">{lang opened_share}</a></li>-->
-		                        </ul>	                    		
-                	 		</div>
-                	 </div>
-
-                    <div class="groupmanage-time">
-                    	<div class="group-time-animate ">	                        
-	                            <input type="text" id="groupDate" class="form-control"
-	                                    placeholder="{lang start_time}"/>	                        
-                        </div>
-                        <label class="group-time-animate-label"><span class="dzz dzz-vline"></span></label>                         
-                        <div class="group-time-animate">
-                            <input type="text" id="groupDate1" class="form-control"
-                                    placeholder="{lang finish_time}"/>
-                        </div>
-                    </div>
-            	</div>
-            	<!--<div class="groupmanage-text clearfix"><span class="dzz dzz-info"></span>"群文件"和"群组"的开启,是"总系统管理员"开启"群管理员"对该项设置的权限,并非直接开启"群文件"或"群组".</div>-->
+<div class="p-2">
+    <div class="middletopMenu">
+        <div class="row justify-content-end">
+            <div class="col-sm-4">
+                <select name="field_type" id="groupon" class="form-select">
+                    <option value="0" selected="selected">{lang all_groups}</option>
+                    <option value="1">{lang already_close}</option>
+                    <option value="2">{lang already_start}</option>
+                </select>
             </div>
-            <!--文件夹列表开始-->
-            <div class="group-filemember" id="group-filemember">
-                <div class="group-filemember-header">
-                    <table class="table" width="100%" border="0">
-                        <thead>
-                        <tr>
-                            <th class="member_header member_header_0" width="40%">
-                                <div class="member_header_td_div">
-                                    <span class="member_header_title">{lang group_name}</span>
-                                    <a class="detail_header_icon" data-val="0" style="display: inline-block;"><span
-                                            class="dzz dzz-expand-more"></span></a>
-                                </div>
-                            </th>
-                            <th class="member_header_1" width="10%">
-                                <div class="member_header_td_div">
-                                    <span class="member_header_type">{lang explorer_groupperm_manager}</span>
-                                </div>
-                            </th>
-                            <th class="member_header_2" width="10%">
-                                <div class="member_header_td_div">
-                                    <span class="member_header_title">{lang membership}</span>
-                                </div>
-                            </th>
-                            <th class="member_header member_header_3" width="20%">
-                                <div class="member_header_td_div">
-                                    <span class="member_header_title">{lang create_date}</span>
-                                    <a class="detail_header_icon" data-val="1"><span
-                                            class="dzz dzz-expand-more"></span></a>
-                                </div>
-                            </th>
-                           <!-- <th class="member_header member_header_4" width="10%">
-                                <div class="member_header_td_div">
-                                    <span class="member_header_title">{lang group_file}</span>
-                                </div>
-                            </th>-->
-                            <th class="member_header_3" width="10%">
-                                <div class="member_header_td_div">
-                                    <span class="member_header_title">空间</span>
-                                </div>
-                            </th>
-                            <th class="member_header member_header_5" width="10%">
-                            	<div class="member_header_td_div">
-                                    <span class="member_header_title">{lang group}</span>
-                                </div>
-                            </th>
-                        </tr>
-                        </thead>
-                    </table>
-                </div>
-
-                <div class="recent-con">
-                    <table class="table" width="100%" border="0">
-                        <tbody id="memberlist">
-                        <!--{loop $groups $v}-->
-                        <tr id="group_{$v['orgid']}" class="member_tr Icoblock" data-gid="$v['orgid']"
-                            data-groupon="$v[syatemon]" data-diron="$v['available']">
-                            <td class="member_item_td" valign="middle" width="40%" style="position: relative;">
-                                <div class="member_item_td_div member_item_td_name member_item_td_group opengroup" data-gid="$v['orgid']">
-                                    <a href="javascript:;" style="float: left;">
-                                            {eval echo avatar_group($v['orgid']);}
-                                    </a>
-                                    <a href="javascript:;" class="member_text member_item_name_text IcoText_folder">$v[orgname]</a>
-                                </div>
-                            	<div class="member_hoverTools">
-                            		<button type="button" class="btn" >
-                            		<span class="dzz dzz-delete delete_group" data-gid="$v['orgid']"></span></button>
-                            	</div>
-                            </td>
-                            <td class="member_item_td" valign="middle" width="10%">
-                                <span> $v[creater]</span>
-                            </td>
-                            <td class="member_item_td" valign="middle" width="10%">
-                                <span>$v[usernum]</span>
-                            </td>
-                            <td class="member_item_td" valign="middle" width="20%">
-                                <span>{eval echo dgmdate($v['dateline']);}</span>
-                            </td>
-                            <td class="member_item_td" valign="middle" width="10%">
-                                <div class="input-group" style="display: flex;">
-                                    <input type="text" class="form-control" style="z-index:1" id="maxspacesize" name="maxspacesize" value="$v['maxspacesize']" onchange="folder_maxspacesize(this,'$v['orgid']')">
-                                    <span class="input-group-text" id="basic-addon2">M</span>
-                                </div>
-                            </td>
-                            <td class="member_item_td" valign="middle" width="10%">
-                                <input type="checkbox" class="js-switch sysdiron" value="$v['diron']" data-gid="{$v['orgid']}" <!--{if $v['diron']}-->checked="checked"<!--{/if}-->
-                                       name="available" />
-                            </td>
-                         <!--   <td class="member_item_td" valign="middle" width="10%">
-                                <input type="checkbox" class="js-switch systemon"  data-gid="{$v['orgid']}"
-                                       name="syatemon" value="$v['manageon']" &lt;!&ndash;{if $v['manageon']}&ndash;&gt;checked="checked"&lt;!&ndash;{/if}&ndash;&gt;/>
-                            </td>-->
-                        </tr>
-                        <!--{/loop}-->
-                        <!--{if $groupsnumber == 0}-->
-                        <tr class="emptyshare">
-                            <td colspan="6" style="border: none;">
-                                <!--{template noFilePage-group}-->
-                            </td>
-                        </tr>
-                        <!--{/if}-->
-                        </tbody>
-                    </table>
+            <div class="col-sm-6">
+                <div class="input-daterange input-group" id="datepicker">
+                    <label class="input-group-text" for="selectDate">从</label>
+                    <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
+                    <label class="input-group-text" for="selectDate1">至</label>
+                    <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
                 </div>
             </div>
-            <!--文件夹列表结束-->        
         </div>
-<script type="text/javascript" reload="1">
-	//开关样式
-    $.getScript('{MOD_PATH}/js/switchery.min.js', function () {
-        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-        elems.forEach(function (html) {
-            var switchery = new Switchery(html);
+    </div>
+    <table class="layui-hide" id="table" lay-filter="table"></table>
+</div>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+        <button type="button" class="layui-btn layui-btn-danger" lay-event="delete">{lang delete}</button>
+        <button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
+    </div>
+</script>
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" name="diron" value="{{d.orgid}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="sexDemo" {{ d.diron == 1 ? 'checked' : '' }}>
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script>
+    var search_data = {
+        'startdate': '',
+        'enddate': '',
+        'groupon':'',
+        'sort':'dateline',
+		'order':'desc'
+    };
+    $('.input-daterange').datepicker({
+        autoclose:true,
+        todayHighlight:true,
+        clearBtn:true,
+        language: 'zh_CN',
+        todayBtn: "linked",
+		calendarWeeks: true,
+        zIndexOffset: 120
+    });
+	layui.use('table', function(){
+	  var table = layui.table,form = layui.form;
+	  table.render({
+		elem: '#table',
+		url: '{MOD_URL}&op=groupmanage&do=filelist',
+		toolbar: '#toolbar',
+		title: '群组管理数据表格',
+        even:true,
+        cellMinWidth:120,
+        height: function(){
+            var otherHeight = $('.middleconMenu').outerHeight();
+            var MenuHeight = $('.p-2').outerHeight();
+            var middletopMenu = $('.middletopMenu').outerHeight();
+            return otherHeight-MenuHeight-middletopMenu-15;
+        },
+		text: {
+			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">{lang not_group}</p></div>'
+		},
+		page: {
+		  limit: 50, // 默认显示20行
+		  limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
+		}
+		,cols: [[
+            {type:'checkbox', fixed: 'left'}
+            ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
+            ,{field:'orgname', title: '{lang group_name}', sort: true, templet: function(d) {return d.orgname;}}
+		  ,{field:'creater', title: '{lang explorer_groupperm_manager}', align: 'center', sort: true}
+		  ,{field:'usernum', title: '{lang membership}', align: 'center', sort: true}
+		  ,{field:'dateline', title: '{lang create_date}', align: 'left',sort: true}
+          ,{field:'maxspacesize', title: '空间大小(M)<i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="点击对应的单元格支持编辑，单位为M" style="margin-left: 5px;"></i>', align: 'center',sort: true,edit: 'text'}
+          ,{field:'diron', title: '状态',templet: '#switchTpl',align: 'center',sort: true, unresize: true}
+          ,{title: '{lang operation}',align:'center', toolbar: '#barDemo', fixed: 'right'}
+		]],
+		initSort: {
+			field: 'dateline', // 默认排序字段
+			type: 'desc' // 默认排序方式
+		},
+        done: function(){
+            $('#selectDate,#selectDate1,#groupon').change(function () {
+                executedynamisc_search();
+            })
+        },
+	  });
+	  //头工具栏事件
+	table.on('toolbar(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var data = checkStatus.dataCache;
+		switch(obj.event){
+            case 'getCheckData':
+                if (data.length === 0) {
+                    showmessage("请至少选择一行", 'danger', 3000, 1);
+                    return;
+                }
+                var template = '<div class="accordion">';
+                    data.forEach(function(item) {
+                        template += '<div class="accordion-item">';
+                        template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+                        template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+                        template += 'ID：' + item.LAY_NUM;
+                        template += '</button>';
+                        template += '</h2>';
+                        template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
+                        template += '<div class="accordion-body">';
+                        template += '<p><strong>{lang group_name}:</strong> ' + item.orgname + '</p>';
+                        template += '<p><strong>{lang explorer_groupperm_manager}:</strong> ' + item.creater + '</p>';
+                        template += '<p><strong>{lang membership}:</strong> ' + item.usernum + '</p>';
+                        template += '<p><strong>{lang create_date}:</strong> ' + item.dateline + '</p>';
+                        template += '<p><strong>空间大小:</strong> ' + item.maxspacesize + 'M</p>';
+                        template += '<p><strong>状态:</strong> ' + (item.diron == 1 ? '开启' : '关闭') + '</p>';
+                    template += '</div>';
+                    template += '</div>';
+                    template += '</div>';
+                });
+                template += '</div>';
+                layer.alert(template, {
+                    title: '选中的记录'
+                });
+            break;
+            case 'delete':
+				if (data.length === 0) {
+					showmessage("请至少选择一行", 'danger', 3000, 1);
+					return;
+				}
+                var orgid = new Array();
+				$.each(data,function(i) {
+					orgid.push(this.orgid);
+				});
+                layer.confirm(__lang.finally_delete_file_confirm+',已选择：'+data.length+'个群组', {title:__lang.delete_group_confirm,skin:'lyear-skin-danger'}, function(index){
+                    layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
+                    $.post(MOD_URL+'&op=groupmanage&do=delgroup',{'gid':orgid},function(data){
+                        var msg = '';
+                        for(var i in data.msg){
+                            if(data.msg[i]=='success'){
+                                msg += data.name[i]+__lang.delete_group_success_after_second;
+                            }else{
+                                msg += '<p class="text-danger">' + data.msg[i] + '</p>';
+                            }
+                        }
+                        layer.msg(msg);
+                        table.reloadData('table');
+                        return false;
+                    },'json').fail(function() {
+                        layer.msg('服务器发生错误，请稍后再试');
+                    });
+                });
+			break;
+            case 'get':
+            table.reloadData('table', {
+                where: search_data, // 清空搜索参数
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            break; 
+        };
+    });
+    table.on('edit(table)', function(obj){
+        jQuery.post('{MOD_URL}&op=groupmanage&do=folder_maxspacesize', {'orgid': obj.data.orgid,maxspacesize:obj.data.maxspacesize},function(json){
+        if(json['success']){
+            showmessage('空间大小设置成功', 'success', '3000', 1);
+        } else {
+            if(json['error']){
+                showmessage(json['error'], 'danger', '3000', 1);
+            } else {
+                showmessage('{lang error}', 'danger', '3000', 1);
+            }
+        }
+        },'json')
+        .fail(function() {
+            showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
         });
     });
-    jQuery(document).ready(function (e) {
-        $('.input-black').each(function() {			
-			InputAnimate.init($(this));			
-		});
-    });
-    function folder_maxspacesize(obj,orgid){
-        jQuery.post(MOD_URL+'&op=groupmanage&do=folder_maxspacesize',{'orgid':orgid,'maxspacesize':obj.value,'t':new Date().getTime()},function(json){
-        if(json.error){
-            obj.value=json.val;
-            showmessage(json.error,'danger',3000,1);
-        }else{
-            jQuery('#'+orgid+' a.jstree-clicked').trigger('click');
-            showmessage('空间大小设置成功','success',3000,1);
-        }
-        },'json');
-    }
-    //群组共享开启关闭
-    $(document).off('change.sysdiron').on('change.sysdiron','#memberlist .sysdiron',function(){
-        var obj = $(this);
-        var available = obj.val();
-        var diron = (available == 1) ? 0:1;
-        var gid = $(this).data('gid');
-        $.post(MOD_URL+'&op=groupmanage&do=groupmanage', {'gid': gid, 'diron': diron},function(data){
-            if (data.success) {
-            	showmessage('{lang do_successed_wait_update_datas}', 'success', 3000, 1, 'right-bottom');
-//              showDialog('{lang do_successed_wait_update_datas}', 'right');
-                obj.val(diron);
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
-            } else {
-            	showmessage(data['error'], 'error', 3000, 1, 'right-bottom');
-//              showDialog(data['error']);
-            }
-        },'json')
-    })
-    //群组开启关闭
-    $(document).off('change.systemon').on('change.systemon','#memberlist .systemon',function(){
-        var obj = $(this);
-        var systemon = obj.val();
-        var groupon = (systemon == 1) ? 0:1;
-        var gid = obj.data('gid');
-        $.post(MOD_URL+'&op=groupmanage&do=groupmanage', {'gid': gid, 'groupon': groupon},function(data){
-            if (data.success) {
-            	showmessage('{lang do_successed_wait_update_datas}', 'success', 3000, 1, 'right-bottom');
-//            showDialog('{lang do_successed_wait_update_datas}', 'right');
-                obj.val(groupon);
-                setTimeout(function () {
-                    location.reload();
-                }, 2000);
-//             showmessage('{lang do_successed_wait_update_datas}', 'info', 3000, 1, 'right-bottom');
-            } else {
-            	showmessage(data['error'], 'error', 3000, 1, 'right-bottom');
-//              showDialog(data['error']);
-            }
-        },'json')
-    })
-  /*  function openGroup(obj) {
-        var gid = $(obj).data('gid');
-        var hash = "#group&gid=" + gid;
-        location.hash = hash;
-    }*/
-    $(document).off('click.opengroup').on('click.opengroup','.opengroup',function(){
-        var gid = $(this).data('gid');
-        var hash = "#group&gid=" + gid;
-        location.hash = hash;
-    })
-    var searchGroupData = {'disp': 0, 'asc': 0, 'groupon': 0, 'after': 0, 'before': 0, 'page': 0, 'diron': 0};
-    $("#groupDate,#groupDate1").datepicker({ //添加日期选择功能
-        numberOfMonths: 1, //显示几个月
-        showButtonPanel: false, //是否显示按钮面板
-        dateFormat: 'yy-mm-dd', //日期格式
-        clearText: "{lang clear}", //清除日期的按钮名称
-        closeText: "{lang close}", //关闭选择框的按钮名称
-        yearSuffix: '{lang year}', //年的后缀
-        showMonthAfterYear: true, //是否把月放在年的后面
-        constrainInput: true,
-        maxDate: new Date(),
-        setDate: 'date',
-
-    });
-    $('#groupDate').change(function () {
-        searchGroupData.after = $(this).val();
-        searchGroup();
-    })
-    $('#groupDate1').change(function () {
-        searchGroupData.before = $(this).val();
-        searchGroup();
-    })
-    //全部群组切换
-    $(document).off('click.searchgroup').on('click.searchgroup', '#searchgrouplist li', function () {
-        var val = $('a', this).data('val');
-        var text = $('a', this).text();
-        var valperg = /dir_\d+/;
-        var numpreg = /\d+/;
-        if (valperg.test(val)) {
-            val = parseInt(val.replace(/dir_/, ''));
-            searchGroupData.diron = val;
-            searchGroupData.groupon = 0;
-        } else if (numpreg.test(val)) {
-            searchGroupData.groupon = val;
-            searchGroupData.diron = 0;
+    form.on('switch(sexDemo)', function(obj) {
+		var diron = obj.elem.checked ? 1 : 0;
+        jQuery.post('{MOD_URL}&op=groupmanage&do=groupmanage', {'gid': this.value,'diron':diron},function(json){
+        if(json['success']){
+            showmessage('{lang do_success}', 'success', '3000', 1);
+            return;
         } else {
-            searchGroupData.diron = 0;
-            searchGroupData.groupon = 0;
+            if(json['error']){
+                showmessage(json['error'], 'danger', '3000', 1);
+            } else {
+                showmessage('{lang error}', 'danger', '3000', 1);
+            }
+            obj.elem.checked = !obj.elem.checked;
+            form.render('checkbox');
         }
-        $('#grouptext span').html(text);
-        searchGroup();
-    })
-    function searchGroup() {
-        $.post(MOD_URL+'&op=groupmanage&do=filelist', searchGroupData, function (data) {
-            $('#memberlist').html(data);
-            $.getScript('{MOD_PATH}/js/switchery.min.js', function () {
-                var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-                elems.forEach(function (html) {
-                    var switchery = new Switchery(html);
+        },'json')
+        .fail(function() {
+            showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+            obj.elem.checked = !obj.elem.checked;
+            form.render('checkbox');
+        });
+    });
+    //监听工具条
+	table.on('tool(table)', function(obj){
+        var data = obj.dataCache;
+        if(obj.event === 'view'){
+            var hash = "#group&gid=" + data.orgid;
+            location.hash = hash;
+        } else if(obj.event === 'del'){
+            layer.confirm(__lang.finally_delete_file_confirm, {title:__lang.delete_group_confirm,skin:'lyear-skin-danger'}, function(index){
+                layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
+                $.post(MOD_URL+'&op=groupmanage&do=delgroup',{'gid':data.orgid},function(data){
+                    var msg = '';
+                    if(data.error) msg = data.error;
+                    for(var i in data.msg){
+                        if(data.msg[i]=='success'){
+                            obj.del();
+                            msg += data.name[i]+__lang.delete_group_success_after_second;
+                        }else{
+                            msg += '<p class="text-danger">' + data.msg[i] + '</p>';
+                        }
+                    }
+                    layer.msg(msg, {offset:'10px'});
+                    return false;
+                },'json').fail(function() {
+                    layer.msg('服务器发生错误，请稍后再试', {offset:'10px'});
                 });
             });
-        })
-    }
-    $(document).off('click.groupmanaclick').on('click.groupmanaclick', '.group-filemember-header .member_header', function () {
-        $(this).closest('.group-filemember-header tr').children('.group-filemember-header .member_header').find('.detail_header_icon').hide();
-        $(this).find('.detail_header_icon').css('display', 'inline-block');
-        if ($(this).find('.dzz ').hasClass('dzz-expand-more')) {
-            $(this).find('.dzz ').removeClass('dzz-expand-more').addClass('dzz-expand-less');
-            searchGroupData.asc = 1;
-        } else {
-            $(this).find('.dzz').addClass('dzz-expand-more').removeClass('dzz-expand-less');
-            searchGroupData.asc = 0;
         }
-        var dispval = $(this).find('.detail_header_icon').data('val');
-        searchGroupData.disp = dispval;
-        searchGroup();
-    })
-
-    //鼠标滑入效果
-    $(document).on('mouseenter', '.group-filemember tr', function () {
-        $(this).addClass('hover');
-        $(this).find('.member_hoverTools').show();
-    })
-    //鼠标滑出效果
-    $(document).on('mouseleave', '.group-filemember tr', function () {
-        $(this).removeClass('hover');
-        $(this).find('.member_hoverTools').hide();
-    })
-    $(document).off('click.deletegroup').on('click.deletegroup','.delete_group',function(e){
-        var gid = $(this).data('gid');
-        var msg ='<span class="delect_text_red">'+__lang.finally_delete_file_confirm +'</span>';
-        var title ='<span class="delect-title-normal">'+__lang.delete_group_confirms+'</span>' ;
-        showDialog(msg,'confirm',title,function () {
-            $.post(MOD_URL+'&op=groupmanage&do=delgroup',{'gid':gid},function(data){
-                for(var i in data.msg){
-                    if(data.msg[i]=='success'){
-                        $('#group_'+i).remove();
-                        showDialog(data.name[i]+__lang.delete_group_success_after_second,'right');
-                        setTimeout(function () {
-                            location.reload();
-                        }, 2000);
-
-                    }else{
-                        showmessage(data.msg[i],'error',3000,1,'right-bottom');
-                    }
-                }
-                return false;
-            },'json')
+    });
+    //触发排序事件 
+	table.on('sort(table)', function(obj){
+        if(obj.field == 'usernum' ||  obj.field == 'maxspacesize' || obj.field == 'creater') {
+            layer.msg('该排序为前端排序');
+        } else {
+            search_data.sort = obj.field;
+            search_data.order = obj.type;
+            table.reloadData('table', {
+                initSort: obj,
+                where: search_data
+            });
+        }
+	});
+    table.on('rowDouble(table)', function(obj){
+        showDataTemplate(obj);
+    });
+    function executedynamisc_search() {
+        search_data.groupon = $('#groupon').val();
+        search_data.startdate = $('#selectDate').val();
+        search_data.enddate = $('#selectDate1').val();
+        table.reloadData('table', {
+            initSort: {
+                field: search_data.sort,
+                type: search_data.order
+            },
+		  where: search_data,
+		  page: {
+			curr: 1
+		  }
+		});
+    }
+    function showDataTemplate(obj) {
+        var data = obj.dataCache;
+        var template =
+        '<p><strong>{lang group_name}:</strong> ' + data.orgname + '</p>' +
+        '<p><strong>{lang explorer_groupperm_manager}:</strong> ' + data.creater + '</p>' +
+        '<p><strong>{lang membership}:</strong> ' + data.usernum + '</p>' +
+        '<p><strong>{lang create_date}:</strong> ' + data.dateline + '</p>' +
+        '<p><strong>空间大小:</strong> ' + data.maxspacesize + 'M</p>' +
+        '<p><strong>状态:</strong> ' + (data.diron == 1 ? '开启' : '关闭') + '</p>'
+        layer.alert(template, {
+            title: 'ID <strong>' + data.LAY_NUM + '</strong> 详情：'
         });
-        return false;
-    })
+
+    // 标注选中样式
+    obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+    }
+});
 </script>

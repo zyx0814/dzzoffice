@@ -2,94 +2,90 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 global $_G;
 $uid = $_G['uid'];
-$do = isset($_GET['do']) ? trim($_GET['do']):'';
-if($do == 'delshare'){
-    $shareid = explode(',',trim($_GET['shareid']));
+$do = isset($_GET['do']) ? trim($_GET['do']) : '';
+if ($do == 'delshare') {
+    if (!$_G['uid']) {
+        exit(json_encode(array('error' => lang('not_login'))));
+    }
+    $shareid = explode(',', trim($_GET['shareid']));
     $return = array();
-    foreach($shareid as $v){
+    foreach ($shareid as $v) {
         $result = C::t('shares')->delete_by_id($v);
-        if($result['success']){
-            $return['msg'][$v]=$result;
-        }elseif ($result['error']){
+        if ($result['success']) {
+            $return['msg'][$v] = $result;
+        } elseif ($result['error']) {
             $return['msg'][$v] = $result['error'];
         }
     }
     exit(json_encode($return));
-}elseif($do == 'filelist'){
-    //分页
-    $sid = $_GET['sid'];
-    $perpage=isset($_GET['perpage'])?intval($_GET['perpage']):100;//默认每页条数
-    $page = empty($_GET['page'])?1:intval($_GET['page']);//页码数
-    $start = ($page - 1)*$perpage;//开始条数
-    $limitsql = "limit $start,$perpage";
-    $disp = isset($_GET['disp']) ? intval($_GET['disp']):3;
-
-    $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
-    $asc = intval($_GET['asc']);
-
-    $order = $asc > 0 ? 'ASC' : "DESC";
-    switch ($disp) {
-        case 0:
-            $orderby = 'title';
-            break;
-        case 1:
-            $orderby = 'downs';
-            break;
-        case 2:
-            $orderby = 'views';
-            break;
-        case 3:
-             $orderby = 'dateline';
-             break;
-        case 4:
-            $orderby = 'endtime';
-            break;
-
+} elseif ($do == 'filelist') {
+    if (!$_G['uid']) {
+        $errorResponse = [
+            "code" => 1,
+            "msg" => lang('no_login_operation'),
+            "count" => 0,
+            "data" => [],
+        ];
+        exit(json_encode($errorResponse));
     }
-    $ordersql='';
-    if(is_array($orderby)){
-        foreach($orderby as $key=>$value){
-            $orderby[$key]=$value.' '.$order;
+    $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
+    $field = isset($_GET['sort']) ? $_GET['sort'] : 'dateline';
+    $limit = empty($_GET['limit']) ? 50 : $_GET['limit'];
+    $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
+    $start = ($page - 1) * $limit;
+    $validfields = ['title','downs','count','dateline','endtime'];
+    $validSortOrders = ['asc', 'desc'];
+    if (in_array($field, $validfields) && in_array($order, $validSortOrders)) {
+        $order = " ORDER BY $field $order";
+    } else {
+        $order = ' ORDER BY dateline DESC';
+    }
+    $limitsql = "limit $start,$limit";
+    $list = array();
+    $count = C::t('shares')->fetch_all_share_file($limitsql, $order,true);
+    if ($count) {
+        $sharestatus = array('-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>', '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>', '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>', '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>', '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>');
+        $shareinfo = C::t('shares')->fetch_all_share_file($limitsql, $order);
+        foreach ($shareinfo as $v) {
+            $list[] = [
+                "name" => $v['name'],
+                "shareid" => $v['id'],
+                "title" => '<a href="' . $v['sharelink'] . '" target="_blank"><img class="w-32 pe-2" src="'.$v['img'].'" title="'.$v['title'].'">' . $v['title'] . '</a>',
+                "img" => $v['img'],
+                "count" => $v['count'] ?? 0,
+                "downs" => $v['downs'] ?? 0,
+                "dateline" => $v['fdateline'],
+                "status" => $sharestatus[$v['status']],
+                "sharelink" => $v['sharelink'],
+                "password" => $v['password']? $v['password'] : '',
+                "endtime" => $v['expireday'],
+                "qrcode" => $v['qrcode'],
+                "times" => $v['times'] ? $v['count'] . '/' . $v['times'] : lang('no_limit'),
+            ];
         }
-        $ordersql=' ORDER BY '.implode(',',$orderby);
-    }elseif($orderby){
-        $ordersql=' ORDER BY '.$orderby.' '.$order;
     }
-    $data = C::t('shares')->fetch_all_share_file($limitsql,$ordersql);
-    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 3;//文件排序
-    $iconview=4;//排列方式
-    if(count($data) >= $perpage){
-        $total = $start + $perpage*2 -1;
-    }else{
-        $total = $start + count($data);
+    header('Content-Type: application/json');
+    $return = [
+        "code" => 0,
+        "msg" => "",
+        "count" => $count ? $count : 0,
+        "data" => $list ? $list : [],
+    ];
+    $jsonReturn = json_encode($return);
+    if ($jsonReturn === false) {
+        $errorMessage = json_last_error_msg();
+        $errorResponse = [
+            "code" => 1,
+            "msg" => "JSON 编码失败，请刷新重试: " . $errorMessage,
+            "count" => 0,
+            "data" => [],
+        ];
+        exit(json_encode($errorResponse));
     }
-    if(!$json_data=json_encode($data)) $data=array();
-    if(!$json_data=json_encode($folderdata)) $folderdata=array();
-    //返回数据
-    $return=array(
-        'sid'=>$sid,
-        'total'=>$total,
-        'data'=>$data?$data:array(),
-        'folderdata'=>$folderdata?$folderdata:array(),
-        'param'=>array(
-            'disp'=>$disp,
-            'view'=>$iconview,
-            'page'=>$page,
-            'perpage'=>$perpage,
-            'bz'=>$bz,
-            'total'=>$total,
-            'asc'=>$asc,
-            'keyword'=>$keyword,
-            'tags'=>$tags,
-            'exts'=>$exts,
-            'localsearch'=>$bz?1:0,
-            'fid'=>'',
-        )
-    );
-    exit(json_encode($return));
-}else{
+    exit($jsonReturn);
+} else {
+    Hook::listen('check_login');
     require template('share_content');
 }

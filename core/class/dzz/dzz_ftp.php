@@ -224,7 +224,9 @@ class dzz_ftp {
     }
 
     function ftp_close() {
-        return @ftp_close($this->connectid);
+         if (is_resource($this->connectid)) {
+            return @ftp_close($this->connectid);
+        }
     }
 
     function ftp_rename($path, $newpath) {

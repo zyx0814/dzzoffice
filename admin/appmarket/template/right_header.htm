@@ -1,0 +1,26 @@
+<div class="card">
+  <div class="card-body">
+    <ul class="nav nav-pills">
+    <li class="nav-item">
+      <a class="nav-link <!--{if !$do && !$op}-->active<!--{/if}-->" href="{MOD_URL}">{lang installed}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <!--{if $do == 'available'}-->active<!--{/if}-->" href="{MOD_URL}&do=available">{lang already_close}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <!--{if $do == 'notinstall'}-->active<!--{/if}-->" href="{MOD_URL}&do=notinstall">{lang uninstalled}</a>	
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <!--{if $op == 'edit' && !$appid}-->active<!--{/if}-->" href="{MOD_URL}&op=edit&do=add">{lang add_app}</a>	
+    </li>
+    <!--{if $op == 'edit' && $appid}-->
+    <li class="nav-item">
+      <a class="nav-link active" href="{MOD_URL}&op=edit&do=edit&appid=$appid">{lang edit_app}</a>
+    </li>
+    <!--{/if}-->
+    <li class="nav-item">
+      <a class="nav-link <!--{if $do =='import'}-->active<!--{/if}-->" href="{MOD_URL}&op=cp&do=import">{lang import_type_app}</a>
+    </li>
+    </ul>
+  </div>
+</div>
