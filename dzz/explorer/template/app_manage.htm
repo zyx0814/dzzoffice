@@ -16,8 +16,10 @@
     <form class="form-horizontal middletopMenu" action="{MOD_URL}&op=app&do=updatesetting" onsubmit="return submitsetting(this);">
 		<div class="row mb-1">
 			<label class="col-sm-2" for="usermemory">{lang start_person_dir}</label>
-			<div class="col-sm-10 form-switch">
-				<input type="checkbox" class="form-check-input" id="usermemory" name="setting[explorer_usermemoryOn]" <!--{if $setting['explorer_usermemoryOn']==1 || !isset($setting['explorer_organizationOn'])}-->checked<!--{/if}--> />
+			<div class="col-sm-10">
+				<div class="form-check form-switch">
+					<input type="checkbox" class="form-check-input" id="usermemory" name="setting[explorer_usermemoryOn]" <!--{if $setting['explorer_usermemoryOn']==1 || !isset($setting['explorer_organizationOn'])}-->checked<!--{/if}--> />
+				</div>
 			</div>
 		</div>
 		<div class="row mb-3">

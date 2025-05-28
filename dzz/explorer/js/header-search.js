@@ -28,6 +28,7 @@ jQuery(document).ready(function(e) {
 		placeholder: "点击或输入开始添加同事",
 		separator: ",",
 		multiple:true,
+        width: '100%',
 		ajax: {
             url: MOD_URL+'&op=search_condition&do=getuser',
             dataType: 'json',
