@@ -336,7 +336,7 @@ to{opacity:1}
 .middleicon .card{padding:5px;margin-bottom:0}
 .middleicon .tr_item{position:relative;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .Icoblock.iscut{opacity:0.6;filter:alpha(opacity=60)}
-.Icoblock.middleicon{position:relative;float:left;width:150px;height:185px;margin:5px;text-align:center}
+.Icoblock.middleicon{position:relative;float:left;width:150px;height:155px;margin:5px;text-align:center}
 .Icoblock.middleicon .Icoblock_icon{max-width:95%;max-height:95%;overflow:hidden}
 .Icoblock.middleicon .icoimgContainer{position:relative;width:135px;height:120px;line-height:120px}
 #memberlist .Icoblock *{box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box}
@@ -355,14 +355,14 @@ to{opacity:1}
 [data-theme='dark'] .file-item{border:1px solid rgba(255,255,255,0.25)}
 .file-item:hover{background-color:#f2f2f2}
 [data-theme='dark'] .file-item:hover{background-color:rgba(0,0,0,.1)}
-.file-item:hover .icoblank_rightbottom{display:block}
+.hover .icoblank_rightbottom{display:block}
 .Icoselected .icoblank_rightbottom::before{content:"\F0132"}
 .Icoselected .mdi-checkbox-blank-outline::before{content:"\F0132"}
 .Icoselected .icoblank_rightbottom,.file-item:hover .icoblank_rightbottom{display:block}
 .Icoselected .file-item,[data-theme='dark'] .Icoselected .file-item{border:1px solid #007bff;border:1px solid var(--bs-primary);background-color:#e3f2fd;border-color:var(--bs-primary);background-color:rgba(var(--bs-primary-rgb),0.1);outline:1px solid #007bff}
 .Icoselected .icoblank_rightbottom{color:#2196F3;color:var(--bs-primary)}
 .editable-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;outline:none;font-weight:600}
-.editable-name .form-control{padding:2px}
+.editable-name .form-control{padding:0}
 .thumbnail img,.thumbnail svg{width:32px;height:auto;vertical-align:middle}
 .glow{filter:glow(color=#007bff,strengh=2);-moz-box-shadow:0px 0px 2px #007bff;-webkit-box-shadow:0px 0px 2px #007bff;box-shadow:0px 0px 2px #007bff;box-shadow:0px 0px 2px var(--bs-primary)}
 .file-info-col{display:flex;gap:2px;align-items:center}
