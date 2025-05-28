@@ -129,7 +129,7 @@ class table_attachment extends dzz_table {
         if ($filter['sizelt'] > 0) {
             $where .= " and filesize>'{$filter[sizelt]}'";
         }
-        $filter['sizelt'] = (isset($filter['sizegt']) ? intval($filter['sizegt']) : 0) * 1024 * 1024;
+        $filter['sizegt'] = (isset($filter['sizegt']) ? intval($filter['sizegt']) : 0) * 1024 * 1024;
         if ($filter['sizegt'] > 0) {
             $where .= " and filesize < '{$filter['sizegt']}'";
         }
