@@ -242,6 +242,7 @@ class dzz_database {
         }
 
         switch ($glue) {
+            case '>=':
             case '=':
                 return $field . $glue . self::quote($val);
                 break;
@@ -258,7 +259,6 @@ class dzz_database {
             case '<':
             case '<>':
             case '<=':
-            case '>=':
                 return $field . $glue . self::quote($val);
                 break;
 

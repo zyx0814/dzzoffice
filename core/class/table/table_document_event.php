@@ -32,10 +32,8 @@ class table_document_event extends dzz_table {
                 case 'create':
                     $value['faction'] = lang('create_document');
                     break;
-                case 'reversion':
-                    $value['faction'] = lang('edit_document');
-                    break;
                 case 'edit':
+                case 'reversion':
                     $value['faction'] = lang('edit_document');
                     break;
                 case 'delete':

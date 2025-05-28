@@ -49,7 +49,6 @@ class dzz_ftp {
                 $this->config['username'] = dzz_ftp::clear($this->config['username']);
                 $this->config['password'] = authcode($this->config['password'], 'DECODE', md5(getglobal('config/security/authkey')));
                 $this->config['timeout'] = intval($this->config['timeout']);
-                $this->config['charset'] = ($this->config['charset']);
                 $this->enabled = true;
             }
         }

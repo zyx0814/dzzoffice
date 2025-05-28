@@ -256,13 +256,10 @@ class table_resources extends dzz_table {
             case 'link':
                 C::t('collect')->delete_by_cid($oid);
                 return 1;
-            case 'app':
-                return 1;
             case 'user':
-                return 1;
             case 'pan':
-                return 1;
             case 'storage':
+            case 'app':
                 return 1;
             default :
                 if (!$resource['vid']) {

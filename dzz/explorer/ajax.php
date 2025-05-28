@@ -846,6 +846,7 @@ if ($operation == 'upload') {//上传图片文件
                             $size += intval($contains['size']);
                             $contents[0] += $contains['contain'][0];
                             $contents[1] += $contains['contain'][1] + 1;
+                            break;
                         default:
                             $size += $icoarr['size'];
                             $contents[0] += 1;

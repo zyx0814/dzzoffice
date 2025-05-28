@@ -110,7 +110,7 @@ function getDepartmentOption_admin($orgid, $url = '', $all = false, $i = 0, $tre
 
 
         $html .= '<a href="' . ($url ? ($url . '&depid=' . $org['orgid']) : 'javascript:;') . '" tabindex="-1" role="menuitem" _orgid="' . $org['orgid'] . '" ' . (!$url ? ($ismoderator ? 'onclick="selDepart(this)"' : '') : '') . ' data-text="' . implode(' - ', $tree) . '">' . $org['orgname'] . '</a>';
-        $html + '</li>';
+        $html .= '</li>';
     }
 
     $i++;

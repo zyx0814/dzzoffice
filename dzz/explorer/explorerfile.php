@@ -91,7 +91,6 @@ if ($do == 'filelist') {
             }
             $data[$key] = $value;
         }
-        $bz = ($bz);
     } else {
         list($prex, $id) = explode('-', $sid);
         if ($prex == 'f') {

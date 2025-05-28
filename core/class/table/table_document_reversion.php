@@ -69,8 +69,7 @@ class table_document_reversion extends dzz_table {
     public function insert_by_parent($arr) {
         return parent::insert($arr, 1);
     }
-
-    public function insert($arr, $new = false, , $replace = false, $silent = false) {
+    public function insert($arr, $new = false, $replace = false, $silent = false) {
         //先获取最新版本,没有的话新插入
         $newest = array();
         if ($newest = DB::fetch_first("select * from %t where did=%d order by version DESC limit 1", array($this->_table, $arr['did']))) {
