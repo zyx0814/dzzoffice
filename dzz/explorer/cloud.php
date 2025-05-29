@@ -47,7 +47,7 @@ if ($bz && $bz !== 'dzz') {
                 $data[] = [
                     'id' => $value1['id'],
                     'cloudname' => '<img class="w-32 pe-2" src="dzz/images/default/system/'.$value['bz'].'.png" title="'.$value1['cloudname'].'">'.$value['name'],
-                    'name' => $value1['cloudname'],
+                    'name' => $value1['cloudname'] ? $value1['cloudname'] : $value['name'],
                     'dateline' => dgmdate($value1['dateline'], 'Y-m-d H:i:s'),
                     'hashbz' => $cloudid,
                     'attachdir' => $value1['attachdir'],

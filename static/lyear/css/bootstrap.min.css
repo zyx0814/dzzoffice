@@ -712,7 +712,7 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .dropstart .dropdown-toggle::before{display:inline-block;margin-right:.255em;vertical-align:.255em;content:"";border-top:.3em solid transparent;border-right:.3em solid;border-bottom:.3em solid transparent}
 .dropstart .dropdown-toggle:empty::after{margin-left:0}
 .dropstart .dropdown-toggle::before{vertical-align:0}
-.dropdown-divider{height:0;margin:.5rem 0;overflow:hidden;border-top:1px solid rgba(0,0,0,.15)}
+.dropdown-divider,.divider{height:0;margin:.5rem 0;overflow:hidden;border-top:1px solid rgba(0,0,0,.15)}
 .dropdown-menu[x-placement^=bottom],.dropdown-menu[x-placement^=left],.dropdown-menu[x-placement^=right],.dropdown-menu[x-placement^=top]{right:auto;bottom:auto}
 .dropdown-item{display:block;width:100%;padding:.25rem 1rem;clear:both;font-weight:400;color:#212529;text-align:inherit;text-decoration:none;white-space:nowrap;background-color:transparent;border:0}
 .dropdown-item:focus,.dropdown-item:hover{color:#1e2125;background-color:#e9ecef}

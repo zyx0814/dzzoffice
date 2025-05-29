@@ -317,7 +317,6 @@ class io_dzz extends io_api {
             header("HTTP/1.1 304 Not Modified");
             exit;
         }
-
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
             $imgurl = geticonfromext($data['ext'], $data['type']);
@@ -361,7 +360,7 @@ class io_dzz extends io_api {
     //@param string $message  文件的新内容
     public function setFileContent($rid, $fileContent, $force = false, $nocover = true) {
         global $_G;
-        if (!$icoarr = C::t('resources')->fetch_by_rid($rid, '', $this->$staticpreview, $this->$staticsharesid)) {
+        if (!$icoarr = C::t('resources')->fetch_by_rid($rid, '', $this->preview, $this->sharesid)) {
             return array('error' => lang('file_not_exist'));
         }
         if ($icoarr['isdelete']) {
@@ -537,9 +536,9 @@ class io_dzz extends io_api {
             if (!$rid = DB::result_first("select rid from %t where pfid = %d and name = %s", array('resources', $pfid, $filename))) {
                 return false;
             }
-            return C::t('resources')->fetch_by_rid($rid, '', $this->$staticpreview, $this->$staticsharesid);
+            return C::t('resources')->fetch_by_rid($rid, '', $this->preview, $this->sharesid);
         } elseif (preg_match('/\w{32}/i', $icoid)) {
-            return C::t('resources')->fetch_by_rid($icoid, '', $this->$staticpreview, $this->$staticsharesid);
+            return C::t('resources')->fetch_by_rid($icoid, '', $this->preview, $this->sharesid);
         } else {
             return false;//C::t('resources')->fetch_by_icoid($icoid);
         }
@@ -2049,7 +2048,7 @@ class io_dzz extends io_api {
                     $data['success'] = true;
                     $data['moved'] = true;
                 } else {
-                    $re = $this->FileCopy($rid, $pfid, true, $force, $this->$staticpreview, $this->$staticsharesid);
+                    $re = $this->FileCopy($rid, $pfid, true, $force, $this->preview, $this->sharesid);
                     if ($re['error']) {
                         $data['error'] = $re['error'];
                         return $data;

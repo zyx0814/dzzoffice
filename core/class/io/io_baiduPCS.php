@@ -683,7 +683,7 @@ class io_baiduPCS extends io_api {
                 'dpath' => $dpath,
                 'bz' => ($bz),
                 'gid' => 0,
-                'name' => substr(strrchr($meta['path'], '/'), 1),
+                'name' => $meta['path'] ? substr(strrchr($meta['path'], '/'), 1) : '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -702,7 +702,8 @@ class io_baiduPCS extends io_api {
             }
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icosdata = $icoarr;
 
         } else {
@@ -725,7 +726,7 @@ class io_baiduPCS extends io_api {
                 'dpath' => $dpath,
                 'bz' => ($bz),
                 'gid' => 0,
-                'name' => substr(strrchr($meta['path'], '/'), 1),
+                'name' => $meta['path'] ? substr(strrchr($meta['path'], '/'), 1) : '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -742,7 +743,8 @@ class io_baiduPCS extends io_api {
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icosdata = $icoarr;
         }
 

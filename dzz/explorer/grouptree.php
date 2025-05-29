@@ -151,7 +151,7 @@ if ($do == 'get_children') {
                     
                     $data[] = [
                         'id' => "bz_{$value['bz']}_{$value1['id']}_",
-                        'text' => $value1['cloudname'],
+                        'text' => $value1['cloudname'] ? $value1['cloudname'] : $value['name'],
                         'icon' => "dzz/images/default/system/{$value['bz']}.png",
                         'type' => 'folder',
                         'children' => false,

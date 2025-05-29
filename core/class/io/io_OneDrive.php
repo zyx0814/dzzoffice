@@ -568,7 +568,7 @@ class io_OneDrive extends io_api {
                 'dpath' => dzzencode($path),
                 'bz' => ($bz),
                 'gid' => 0,
-                'name' => $meta['name'],
+                'name' => $meta['name'] ? $meta['name'] : '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -578,7 +578,7 @@ class io_OneDrive extends io_api {
                 'ppath' => str_replace(strrchr($path, '/'), '', $path),
                 'pfid' => md5(str_replace(strrchr($path, '/'), '', $path)),
                 'size' => 0,
-                'dateline' => strtotime($meta['lastModifiedDateTime']),
+                'dateline' => $meta['lastModifiedDateTime'] ? strtotime($meta['lastModifiedDateTime']) : '',
                 'flag' => '',
                 'childCount' => $meta['folder']['childCount']
             );
@@ -593,7 +593,8 @@ class io_OneDrive extends io_api {
 				echo (str_replace(strrchr($path, '/'), '',$path));*/
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icosdata = $icoarr;
 
         } else {
@@ -617,7 +618,7 @@ class io_OneDrive extends io_api {
                 'dpath' => dzzencode($path),
                 'bz' => ($bz),
                 'gid' => 0,
-                'name' => $meta['name'],
+                'name' => $meta['name'] ? $meta['name'] : '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -628,14 +629,15 @@ class io_OneDrive extends io_api {
                 'ppath' => str_replace(strrchr($path, '/'), '', $path),
                 'pfid' => md5(str_replace(strrchr($path, '/'), '', $path)),
                 'size' => $meta['size'],
-                'dateline' => strtotime($meta['lastModifiedDateTime']),
+                'dateline' => $meta['lastModifiedDateTime'] ? strtotime($meta['lastModifiedDateTime']) : '',
                 'flag' => ''
             );
 
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icosdata = $icoarr;
         }
 

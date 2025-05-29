@@ -142,7 +142,7 @@
 		</div>
 		<div class="right-card-body">
 			<div class="row mb-1">
-				<label class="col-sm-3">{lang identification}</label>
+				<label class="col-sm-3">logo</label>
 				<div class="col-sm-9">
 					{eval echo avatar_group($gid);}
 				</div>
@@ -234,15 +234,15 @@ function seluser_group(ids,data) {
                     if (data['insertuser'][o]['avatarstatus'] == 1) {
                       	html+= '<li class="right-numer-carousel" id="' + data['insertuser'][o]['uid'] + '_delete" >';
                         html+= '<a href="javascript:;" class="js-popbox member_details_info adduser" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover"  data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid='+data['insertuser'][o]['uid']+'" style="display: inline-block;width:28px;">'; 
-						 html+= '<img src="avatar.php?uid=' + data['insertuser'][o]['uid'] + '" class="img-circle img-avatar" style="width: 28px;height: 27px;">';
+						 html+= '<img src="avatar.php?uid=' + data['insertuser'][o]['uid'] + '" class="img-circle img-avatar" style="width: 28px;">';
                         html+= '</a>';
                         html+= '</li>';
                     } else {
-                        html+= '<li class="right-numer-carousel" style="background:' + data['insertuser'][o]['headerColor'] + '" id="' + data['insertuser'][o]['uid'] + '_delete">';
+                        html+= '<li class="right-numer-carousel" id="' + data['insertuser'][o]['uid'] + '_delete">';
                         html+= '<a href="javascript:;" class="js-popbox member_details_info adduser" data-placement="bottom" data-trigger="focus"' +
-                            'data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;height: 27px;"' +
+                            'data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;"' +
                             'data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid=' + data['insertuser'][o]['uid'] + '">';
-                        html+= '<span class="rightcarousel-first">' + data['insertuser'][o]['ufirst'] + '</span>';
+                        html+= '<span class="Topcarousel img-avatar" style="background:' + data['insertuser'][o]['headerColor'] + '">' + data['insertuser'][o]['ufirst'] + '</span>';
                         html+='</a>';
                         html+='</li>';
                     }

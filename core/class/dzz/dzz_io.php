@@ -13,6 +13,13 @@ if (!defined('IN_DZZ')) {
 
 class dzz_io {
     protected static function initIO($path) {
+        if (strpos($path, 'preview_') === 0) {
+            $preview = true;
+            $path = preg_replace('/^preview_/', '', $path);
+        } else {
+            $preview = false;
+        }
+
         if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
             $sharesid = $matches[1];
             $sharepath = 'sid:' . $sharesid . '_';
@@ -20,12 +27,6 @@ class dzz_io {
         } else {
             $sharesid = '';
             $sharepath = '';
-        }
-        if (strpos($path, 'preview_') === 0) {
-            $preview = true;
-            $path = preg_replace('/^preview_/', '', $path);
-        } else {
-            $preview = false;
         }
         $path = self::clean($path);
         $bzarr = explode(':', $path);
@@ -461,6 +462,9 @@ class dzz_io {
                 $str[$key] = self::clean_path(str_replace(array("\n", "\r", '../'), '', $value));
             }
         } else {
+            if (strpos($str, 'preview_') === 0) {
+                $str = preg_replace('/^preview_/', '', $str);
+            }
             if (preg_match('/^sid:([^\_]+)_/', $str)) {
                 $str = preg_replace('/^sid:[^\_]+_/', '', $str);
             }
