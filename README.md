@@ -55,15 +55,12 @@
 8. 系统设置 -> 打开站点。
 
 ### 运行环境
-- 服务器:
-    - Windows，Linux，Mac ...
-    - PHP 7.0+
-    - 数据库: mysql 5.5.3+
-- 浏览器适配: 
-    - Chrome 60+
-    - Firefox 60+
-    - iOS 12+
-    - IE 10+
+为了确保 DzzOffice 能够正常运行，请确保你的服务器满足以下环境要求：
+- 操作系统：Linux、Windows、Mac OS
+- PHP 7.0+（推荐 PHP 7.4）
+- Web 服务器：Apache、Nginx（推荐 Nginx）
+- MySQL 版本：>= 5.5.3 且 <= 8.0
+- 客户端浏览器: 推荐使用 `Chrome 60+`、`Firefox 60+`、`iOS 12+`、`IE 10+`
 
 ### 友情提示
 - 请随时关注更新动态，您可进行手动修补，让自己的站点时刻保持最安全的状态!
