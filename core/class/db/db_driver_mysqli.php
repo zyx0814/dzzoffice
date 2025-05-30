@@ -76,6 +76,7 @@ class db_driver_mysqli {
     }
 
     function _dbconnect($dbhost, $dbuser, $dbpw, $dbcharset, $dbname, $pconnect, $port = '3306', $unix_socket = '', $halt = true) {
+        mysqli_report(MYSQLI_REPORT_OFF);
         $link = new mysqli();
         if (!$link->real_connect($dbhost, $dbuser, $dbpw, $dbname, $port, $unix_socket)) {
             $halt && $this->halt('notconnect', $this->errno());
@@ -108,7 +109,6 @@ class db_driver_mysqli {
     }
 
     function fetch_array($query, $result_type = MYSQLI_ASSOC) {
-        if ($result_type == 'MYSQL_ASSOC') $result_type = MYSQLI_ASSOC;
         return $query ? $query->fetch_array($result_type) : null;
     }
 
@@ -136,7 +136,7 @@ class db_driver_mysqli {
         if (!($query = $this->curlink->query($sql, $resultmode))) {
             if (in_array($this->errno(), array(2006, 2013)) && substr($silent, 0, 5) != 'RETRY') {
                 $this->connect();
-                return $this->curlink->query($sql, 'RETRY' . $silent);
+                return $this->query($sql, 'RETRY' . $silent);
             }
             if (!$silent) {
                 $this->halt($this->error(), $this->errno(), $sql);
@@ -156,11 +156,11 @@ class db_driver_mysqli {
     }
 
     function error() {
-        return (($this->curlink) ? $this->curlink->error : mysqli_error());
+        return $this->curlink->error;
     }
 
     function errno() {
-        return intval(($this->curlink) ? $this->curlink->errno : mysqli_errno());
+        return $this->curlink->errno;
     }
 
     function result($query, $row = 0) {

@@ -2,19 +2,19 @@
 	<div class="middletopMenu clearfix">
 		<div class="pictures-names">
 			<div class="owm-group clearfix">
-				<div class="form-group file-editcon">
+				<div class="file-editcon">
 					<strong class="own-label">{lang extension}：</strong>
 					<ul class="own-type ext">
 						<!--{loop $cattext $v}-->
-						<li class="search-select"><span class="btn btn-outline-info btn-sm" data-ext="$v">*$v</span><i style="display: none;" class="label-rightimg mdi mdi-check-circle text-primary fs-5"></i></li>
+						<li class="list-chose"><span class="badge badge-outline-default" data-ext="$v">*$v</span></li>
 						<!--{/loop}-->
 					</ul>
 				</div>
-				<div class="form-group file-editcon">
+				<div class="file-editcon">
 					<strong class="own-label">{lang label}：</strong>
 					<ul class="own-type tag">
 						<!--{loop $tagarr $val}-->
-						<li class="search-select"><span class="btn btn-outline-info btn-sm" data-tid="$val[tid]">$val[tagname]</span><i style="display: none;" class="label-rightimg mdi mdi-checkbox-marked-circle text-primary fs-5"></i></li>
+						<li class="list-chose"><span class="badge badge-outline-default" data-tid="$val[tid]">$val[tagname]</span></li>
 						<!--{/loop}-->
 					</ul>
 				</div>
@@ -43,7 +43,6 @@
 	<!--{template noFilePage-search}-->
 </div>
 <script type="text/javascript">
-
 	$(document).ready(function(e) {
 		var hash=location.hash;
 		var id=_explorer.getUrlParam(hash,'id');
@@ -55,16 +54,9 @@
 var conditioncatsearch = {'ext':[],'tag':[]};
 var hash=location.hash;
 var catid=hash.replace(/(.+?)\&id\=/,'');
-//鼠标滑过
-$(document).on('mouseenter','.own-type .search-select',function(){
-	$(this).addClass('hover');
-});
-$(document).on('mouseleave','.own-type .search-select',function(){
-	$(this).removeClass('hover');
-});
 //点击扩展名
-$(document).off('click.filesearch').on('click.filesearch','.own-type .search-select',function(){
-	$(this).find('.label-rightimg').toggle();
+$(document).off('click.filesearch').on('click.filesearch','.own-type .list-chose',function(){
+	$('span.badge', this).toggleClass('active');
 	var isext=jQuery(this).closest('.own-type').hasClass('ext');
     var ext = $('span',this).data('ext');
     if(typeof ext == 'undefined'){

@@ -87,7 +87,6 @@ _explorer.toggleRight = function () {
 		$('.middleconMenu').removeClass('m-right-300');
 		$('.rightMenu').removeClass('is-block');
 		$('.toggRight').parent('li').removeClass('background-toggle').find('.mdi').attr("data-original-title", "开启右侧信息");
-		
 	} else {
 		$('.middleconMenu').addClass('m-right-300');
 		$('.rightMenu').addClass('is-block');

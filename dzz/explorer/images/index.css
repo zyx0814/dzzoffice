@@ -209,11 +209,9 @@ button:focus{outline:none}
 .sele-right-classa li:hover .ti-close{display:block}
 .pictures-names{overflow:hidden;border-bottom:1px dashed rgba(221,221,221,1)}
 .owm-group{float:left;max-width:80%;margin-bottom:10px}
-.owm-group .form-group{margin-bottom:0}
 .owm-group .own-label{position:absolute;top:0px;width:60px;text-align:right}
 .owm-group .own-type{display:inline-block;padding-left:70px}
-.owm-group .own-type li{float:left;padding:2px 0px;margin-right:10px;vertical-align:middle;cursor:pointer;position:relative;margin-bottom:5px}
-.own-type li .label-rightimg{position:absolute;top:-8px;right:-5px}
+.owm-group .own-type li{float:left;margin-right:10px;vertical-align:middle;cursor:pointer;position:relative;}
 .docunment-allfile{float:left;padding-left:10px;padding-top:5px;color:rgba(152,159,173,1)}
 .share-editbutton{float:right;margin-top:15px}
 .file-editcon{overflow:hidden;position:relative}
