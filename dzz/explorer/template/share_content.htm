@@ -1,6 +1,4 @@
-<div class="p-2">
-    <table class="layui-hide" id="table" lay-filter="table"></table>
-</div>
+<table class="layui-hide" id="table" lay-filter="table"></table>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
         <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
@@ -28,8 +26,7 @@
         even:true,
         height: function(){
             var otherHeight = $('.middleconMenu').outerHeight();
-            var MenuHeight = $('.p-2').outerHeight();
-            return otherHeight-MenuHeight-15;
+            return otherHeight;
         },
 		text: {
 			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">{lang no_share_file}</p></div>'

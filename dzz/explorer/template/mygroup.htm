@@ -1,26 +1,24 @@
-<div class="p-2">
-    <div class="middletopMenu">
-        <div class="row justify-content-end">
-            <div class="col-sm-4">
-                <select name="search" id="mygroupsearch" class="form-select">
-                    <option value="all" selected="selected">{lang all}</option>
-                    <option value="my">{lang my_create}</option>
-                    <option value="manage">{lang my_manage}</option>
-                    <option value="partake">{lang my_involved}</option>
-                </select>
-            </div>
-            <div class="col-sm-6">
-                <div class="input-daterange input-group" id="datepicker">
-                    <label class="input-group-text" for="selectDate">从</label>
-                    <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
-                    <label class="input-group-text" for="selectDate1">至</label>
-                    <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
-                </div>
+<div class="middletopMenu">
+    <div class="row justify-content-end">
+        <div class="col-sm-4">
+            <select name="search" id="mygroupsearch" class="form-select">
+                <option value="all" selected="selected">{lang all}</option>
+                <option value="my">{lang my_create}</option>
+                <option value="manage">{lang my_manage}</option>
+                <option value="partake">{lang my_involved}</option>
+            </select>
+        </div>
+        <div class="col-sm-6">
+            <div class="input-daterange input-group" id="datepicker">
+                <label class="input-group-text" for="selectDate">从</label>
+                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
+                <label class="input-group-text" for="selectDate1">至</label>
+                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
             </div>
         </div>
     </div>
-    <table class="layui-hide" id="mygroup" lay-filter="mygroup"></table>
 </div>
+<table class="layui-hide" id="mygroup" lay-filter="mygroup"></table>
 <script type="text/html" id="toolbar">
 	<div class="layui-btn-container">
 		<button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
@@ -59,8 +57,8 @@
         cellMinWidth:120,
         height: function(){
             var otherHeight = $('.middleconMenu').outerHeight();
-            var MenuHeight = $('.p-2').outerHeight();
-            return otherHeight-MenuHeight-25;
+            var MenuHeight = $('.middletopMenu').outerHeight();
+            return otherHeight-MenuHeight;
         },
 		text: {
 			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">{lang not_group}</p></div>'

@@ -76,7 +76,6 @@ _filemanage.apicacheTimer = {};
 _filemanage.infoPanelUrl = '';
 _filemanage.viewstyle = ['bigicon', 'middleicon', 'middlelist', 'smalllist', 'detaillist'];
 _filemanage.getData = function (url, callback) {
-	loading.destroy();
 	var l = $('#middleconMenu').lyearloading({
         opacity           : 0,
 		spinnerSize       : 'lg',

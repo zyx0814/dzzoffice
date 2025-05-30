@@ -1,6 +1,4 @@
-<div class="p-2">
-    <table class="layui-hide" id="cloudtable" lay-filter="cloudtable"></table>
-</div>
+<table class="layui-hide" id="cloudtable" lay-filter="cloudtable"></table>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
         <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
@@ -22,8 +20,7 @@
         cellMinWidth:120,
         height: function(){
             var otherHeight = $('.middleconMenu').outerHeight();
-            var MenuHeight = $('.p-2').outerHeight();
-            return otherHeight-MenuHeight-15;
+            return otherHeight;
         },
 		text: {
 			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">没有相关的数据</p></div>'

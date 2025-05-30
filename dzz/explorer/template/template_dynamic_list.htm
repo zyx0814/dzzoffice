@@ -14,13 +14,13 @@
 <!--{/loop}-->
 </ul>
 <!--{if $next}-->
-<div class="d-grid">
-    {if !isset($tplmore)}
-    <a href="javascript:;" class="btn btn-link btn-sm text-end {if !isset($tplmore)}btn_dynamic_more {else}btn_dynamic_more_less{/if} {if isset($tplmore)} hide {/if}" onclick="load_dynamic(this,'{eval echo ($next-3)}','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$_GET['fid']',0);">{lang upload_more}</a>
-    <!--{else}-->
-    <a href="javascript:;" class="btn btn-link btn-sm text-end btn_dynamic_more_less {if isset($tplmore)} hide {/if}" onclick="load_dynamic(this,$next,'{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);">{lang upload_more}</a>
-    <!--{/if}-->
+{if !isset($tplmore)}
+<div class="mb-1 d-grid">
+<a href="javascript:;" class="btn btn-link btn-sm text-end {if !isset($tplmore)}btn_dynamic_more {else}btn_dynamic_more_less{/if} {if isset($tplmore)} hide {/if}" onclick="load_dynamic(this,'{eval echo ($next-3)}','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$_GET['fid']',0);">{lang upload_more}</a>
 </div>
+<!--{else}-->
+<a href="javascript:;" class="btn btn-link btn-sm text-end btn_dynamic_more_less {if isset($tplmore)} hide {/if}" onclick="load_dynamic(this,$next,'{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);">{lang upload_more}</a>
+<!--{/if}-->
 <!--{/if}-->
 <!--{else}-->
 <div class="scroll-y">

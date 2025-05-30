@@ -62,11 +62,8 @@
 
     <div class="modal-footer">
         <input type="hidden" name="add" value="true"/>
+        <button type="button" class="btn btn-secondary cancel" data-dismiss="modal" aria-label="Close">{lang cancel}</button>
         <button type="submit" class="btn btn-primary">{lang confirms}</button>
-        <button type="button" class="btn btn-secondary cancel" data-dismiss="modal" aria-label="Close">{lang
-            cancel}
-        </button>
-
     </div>
 </form>
 <script type="text/javascript" reload="1">
@@ -189,8 +186,7 @@
                         <button type="button" class="btn btn-danger" onclick="delete_group('{$group['orgid']}')"><span class="mdi mdi-delete"></span>{lang delete_group}</button>
                         <!--{/if}-->
                         <button type="submit" class="btn btn-primary">{lang save}</button>
-                        <button type="button" class="btn btn-secondary about-cancel" id="about-cancel">{lang cancel}
-                        </button>
+                        <button type="button" class="btn btn-secondary about-cancel" id="about-cancel">{lang cancel}</button>
                     </div>
                 </div>
             </form>

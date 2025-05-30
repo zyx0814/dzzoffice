@@ -374,13 +374,21 @@ _explorer.getRightContent = function (hash, container) { //处理右侧页面加
 		spinnerColorClass : 'text-info',
 		spinnerText       : '加载中...',
 	});
+	if(window.innerWidth < 1024) {
+		_explorer.infoPanelOpened = 0;
+	}
 	$('.document-data').removeClass('active');
 	$('[data-hash="' + hash + '"]').addClass('active');
 	var url = _explorer.appUrl + '&op=' + hash;
-	jQuery('#middleconMenu').load(url, function () {
-		$(document).trigger('ajaxLoad.middleContent', [hash]);
+	jQuery('#middleconMenu').load(url, function (response, status, xhr) {
+		loading.destroy();
+		if (status === "error") {
+			console.error("加载失败：", xhr.status, xhr.statusText);
+			$('#middleconMenu').html('<div class="emptyPage" id="noticeinfo"><img src="static/image/common/no_list.png"><div class="emptyPage-text text-danger">加载内容失败，请刷新重试。</div></div>');
+		} else {
+			$(document).trigger('ajaxLoad.middleContent', [hash]);
+		}
 	});
-
 };
 _explorer.topMenu = function (hash, fid) {
 	var shownewbuild = false;

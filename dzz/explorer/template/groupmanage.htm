@@ -1,25 +1,23 @@
-<div class="p-2">
-    <div class="middletopMenu">
-        <div class="row justify-content-end">
-            <div class="col-sm-4">
-                <select name="field_type" id="groupon" class="form-select">
-                    <option value="0" selected="selected">{lang all_groups}</option>
-                    <option value="1">{lang already_close}</option>
-                    <option value="2">{lang already_start}</option>
-                </select>
-            </div>
-            <div class="col-sm-6">
-                <div class="input-daterange input-group" id="datepicker">
-                    <label class="input-group-text" for="selectDate">从</label>
-                    <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
-                    <label class="input-group-text" for="selectDate1">至</label>
-                    <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
-                </div>
+<div class="middletopMenu">
+    <div class="row justify-content-end">
+        <div class="col-sm-4">
+            <select name="field_type" id="groupon" class="form-select">
+                <option value="0" selected="selected">{lang all_groups}</option>
+                <option value="1">{lang already_close}</option>
+                <option value="2">{lang already_start}</option>
+            </select>
+        </div>
+        <div class="col-sm-6">
+            <div class="input-daterange input-group" id="datepicker">
+                <label class="input-group-text" for="selectDate">从</label>
+                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
+                <label class="input-group-text" for="selectDate1">至</label>
+                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
             </div>
         </div>
     </div>
-    <table class="layui-hide" id="table" lay-filter="table"></table>
 </div>
+<table class="layui-hide" id="table" lay-filter="table"></table>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
         <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
@@ -62,9 +60,8 @@
         cellMinWidth:120,
         height: function(){
             var otherHeight = $('.middleconMenu').outerHeight();
-            var MenuHeight = $('.p-2').outerHeight();
             var middletopMenu = $('.middletopMenu').outerHeight();
-            return otherHeight-MenuHeight-middletopMenu-15;
+            return otherHeight-middletopMenu;
         },
 		text: {
 			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">{lang not_group}</p></div>'

@@ -27,14 +27,12 @@
         </div>
     </div>
     <div class="modal-footer">
+        <button type="button" class="btn btn-secondary cancel" data-dismiss="modal" aria-label="Close">{lang cancel}</button>
         <button type="submit" class="btn btn-primary">{lang newly_build}</button>
-        <button type="button" class="btn btn-secondary cancel" data-dismiss="modal" aria-label="Close">{lang cancel}
-        </button>
     </div>
 
 </form>
 <script type="text/javascript" reload="1">
-
     //index添加群组弹出框头像
     jQuery(document).ready(function (e) {
         var colors = ['#6b69d6', '#a966ef', '#e9308d', '#e74856', '#f35b42', '#00cc6a', '#0078d7', '#5290f3', '#00b7c3', '#0099bc', '#018574', '#c77c52', '#ff8c00', '#68768a', '#7083cb', '#26a255'];
@@ -232,12 +230,12 @@
         <button type="button" class="btn btn-danger" disabled=""><span class="mdi mdi-delete"></span>{lang system_preinstall_not_allow_delete}</button>
         <!--{/if}-->
         <input type="hidden" name="editcatsearch" value="$cat[id]"/>
-        <button type="button" class="btn btn-primary" onclick="editsearchcat(this.form)">{lang save}</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
+        <button type="button" class="btn btn-primary" onclick="editsearchcat(this.form)">{lang save}</button>
         <!--{else}-->
         <input type="hidden" name="addcatsearch" value="true"/>
-        <button type="button" class="btn btn-primary" onclick="addsearchcat(this.form)">{lang create}</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
+        <button type="button" class="btn btn-primary" onclick="addsearchcat(this.form)">{lang create}</button>
         <!--{/if}-->
     </div>
 </form>
@@ -373,8 +371,8 @@
         <!--{/if}-->
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">{lang create}</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
+        <button type="submit" class="btn btn-primary">{lang create}</button>
     </div>
 </form>
 <script type="text/javascript" reload="1">
@@ -548,7 +546,7 @@
         <!--{if $attachment}-->
         <div class="row mb-1">
             <label class="col-sm-3">文件地址</label>
-            <div class="col-sm-9 text-break"><a href="$attachment" target="_blank">$attachment</a></div>
+            <div class="col-sm-9 text-break"><!--{if is_array($attachment) && $attachment['error']}--><span class="text-danger">$attachment['error']</span><!--{else}--><a href="$attachment" target="_blank">$attachment</a><!--{/if}--></div>
         </div>
         <!--{/if}-->
     </div>
@@ -813,8 +811,8 @@
         <input type="text" class="form-control focus" value="http://" name="link">
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="chk_link(this.form)">{lang submit}</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang close}</button>
+        <button type="button" class="btn btn-primary" onclick="chk_link(this.form)">{lang submit}</button>
     </div>
 </form>
 <script type="text/javascript" reload="1">
@@ -951,8 +949,8 @@
     <div class="modal-footer">
         <input type="hidden" name="rid" value="$rid"/>
         <input type="hidden" name="vid" value="$vid"/>
-        <button type="submit" class="btn btn-primary saveversioninfo">{lang save}</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
+        <button type="submit" class="btn btn-primary saveversioninfo">{lang save}</button>
     </div>
 </form>
 <script type="text/javascript" reload="1">
@@ -1033,9 +1031,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">{lang save}</button>
-
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
+        <button type="submit" class="btn btn-primary">{lang save}</button>
     </div>
 </form>
 <script type="text/javascript" reload="1">

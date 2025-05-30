@@ -1,42 +1,40 @@
-<div class="p-2">
-    <div class="middletopMenu clearfix">
-        <div class="row justify-content-end">
-            <div class="input-group mb-3">
-                <label class="input-group-text" for="username">{lang username}</label>
-                <input type="text" class="form-control" id="username" placeholder="{lang username}">
-                <label class="input-group-text" for="operation">{lang operation}</label>
-                <select name="field_type" id="operation" class="form-select">
-                    <option value="" selected="selected">{lang all}</option>
-                    <!--{loop $operation_type $value}-->
-                    <option value="$value[0]">$value[1]</option>
-                    <!--{/loop}-->
-                </select>
-                <label class="input-group-text" for="object">{lang object}</label>
-                <input type="text" class="form-control" id="object" placeholder="{lang object}">
-            </div>
-            <div class="col-sm-4 mb-3">
-                <select class="form-control" id="dynamic_id_label_multiple" multiple="multiple">
-                    {loop $users $v}
-                    <option value="$v['uid']">$v['username']</option>
-                    {/loop}
-                </select>
-            </div>
-            <div class="col-sm-6 mb-3">
-                <div class="input-daterange input-group" id="datepicker">
-                    <label class="input-group-text" for="selectDate">从</label>
-                    <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
-                    <label class="input-group-text" for="selectDate1">至</label>
-                    <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
-                </div>
-            </div>
-            <div class="col-md-2 mb-3">
-                <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
-                <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+<div class="middletopMenu clearfix">
+    <div class="row justify-content-end">
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="username">{lang username}</label>
+            <input type="text" class="form-control" id="username" placeholder="{lang username}">
+            <label class="input-group-text" for="operation">{lang operation}</label>
+            <select name="field_type" id="operation" class="form-select">
+                <option value="" selected="selected">{lang all}</option>
+                <!--{loop $operation_type $value}-->
+                <option value="$value[0]">$value[1]</option>
+                <!--{/loop}-->
+            </select>
+            <label class="input-group-text" for="object">{lang object}</label>
+            <input type="text" class="form-control" id="object" placeholder="{lang object}">
+        </div>
+        <div class="col-sm-4 mb-3">
+            <select class="form-control" id="dynamic_id_label_multiple" multiple="multiple">
+                {loop $users $v}
+                <option value="$v['uid']">$v['username']</option>
+                {/loop}
+            </select>
+        </div>
+        <div class="col-sm-6 mb-3">
+            <div class="input-daterange input-group" id="datepicker">
+                <label class="input-group-text" for="selectDate">从</label>
+                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
+                <label class="input-group-text" for="selectDate1">至</label>
+                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
             </div>
         </div>
+        <div class="col-md-2 mb-3">
+            <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
+            <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+        </div>
     </div>
-    <table class="layui-hide" id="table" lay-filter="table"></table>
 </div>
+<table class="layui-hide" id="table" lay-filter="table"></table>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
         <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
@@ -80,10 +78,9 @@
         even:true,
         cellMinWidth:120,
         height: function(){
-            var otherHeight = $('.bs-main-container').outerHeight();
-            var MenuHeight = $('.p-2').outerHeight();
+            var otherHeight = $('.middleconMenu').outerHeight();
             var middletopMenu = $('.middletopMenu').outerHeight();
-            return otherHeight-MenuHeight-middletopMenu-25;
+            return otherHeight-middletopMenu;
         },
 		text: {
 			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">{lang no_dynamisc}</p></div>'

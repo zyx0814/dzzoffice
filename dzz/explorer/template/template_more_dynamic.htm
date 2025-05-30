@@ -27,7 +27,7 @@
 <!--{/loop}--> 
 </ul>
 <!--{if $next}-->
-<a href="javascript:;" class="btn_dynamic_more_less btn-link btn-block hide" onclick="load_dynamic(this,'$next','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);"></a>
+<a href="javascript:;" class="btn_dynamic_more_less btn-link text-end" onclick="load_dynamic(this,'$next','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);">{lang upload_more}</a>
 <!--{/if}-->
 <!--{/if}-->
 </div>
@@ -64,16 +64,18 @@ jcLoader().load({
     },function(){
         jQuery('#leave_message').TextAreaExpander(32,300);
 });
- jQuery('.dynconMenu.scroll-y').scroll(function(e) {
-	var clientHeight = jQuery('.dynconMenu.scroll-y').height();
-	var scrollHeight =jQuery('.dynconMenu.scroll-y').get(0).scrollHeight;
-  	if(jQuery('.dynconMenu.scroll-y').scrollTop()+clientHeight>scrollHeight-20) 	jQuery('.btn_dynamic_more_less').trigger('click');
-	if($(this).scrollTop()>0){
-		$('.briefMenu').css({'box-shadow':'0px 0px 10px 0px rgba(0,0,0,0.15)'});
-	}else{
-		$('.briefMenu').css({'box-shadow':'none'});
-	}
-})
+jQuery(document).ready(function(e) {
+    jQuery('.dynconMenu.scroll-y').scroll(function(e) {
+        var clientHeight = jQuery('.dynconMenu.scroll-y').height();
+        var scrollHeight =jQuery('.dynconMenu.scroll-y').get(0).scrollHeight;
+        if(jQuery('.dynconMenu.scroll-y').scrollTop()+clientHeight>scrollHeight-20) 	jQuery('.btn_dynamic_more_less').trigger('click');
+        if($(this).scrollTop()>0){
+            $('.briefMenu').css({'box-shadow':'0px 0px 10px 0px rgba(0,0,0,0.15)'});
+        }else{
+            $('.briefMenu').css({'box-shadow':'none'});
+        }
+    })
+});
 
 jQuery(document).off('click.commentdelete').on('click.commentdelete','.delete-comment',function(){
 	var obj = $(this);
