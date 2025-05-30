@@ -115,8 +115,8 @@
         <!--{/if}-->
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="chk_create(this.form)">{lang affirm}</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
+        <button type="button" class="btn btn-primary" onclick="chk_create(this.form)">{lang affirm}</button>
     </div>
 </form>
 <script type="text/javascript" reload="1">
@@ -287,7 +287,7 @@
                     '<span class="mdi mdi-file-cabinet"></span>' + dataform[0]['value'] + '</a></li>';
                 $('#searchcat_' + catid).replaceWith(html);
                 hideWindow('editcatsearch');
-                layer.alert('{lang update_successfully}');
+                showmessage('{lang update_successfully}','success',3000,1);
                 setTimeout(function () {
                     location.reload();
                 }, 2000);

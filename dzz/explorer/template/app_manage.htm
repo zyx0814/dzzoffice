@@ -237,7 +237,7 @@ function checks(){
     	if(!recylenum) return false;
         $.post(form.action, jQuery(form).serialize(), function (data) {
             if (data['success']) {
-				layer.alert('{lang page_automatically_updated_after_three_seconds}');
+				layer.alert(data['msg']+'{lang page_automatically_updated_after_three_seconds}');
                 setTimeout(function () {
                     location.reload();
                 }, 3000)
@@ -247,6 +247,4 @@ function checks(){
         }, 'json')
         return false;
     }
-
-
 </script>
