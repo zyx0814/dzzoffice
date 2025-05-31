@@ -459,6 +459,12 @@ class dzz_io {
     public static function clean($str) {//清除路径
         if (is_array($str)) {
             foreach ($str as $key => $value) {
+                if (strpos($value, 'preview_') === 0) {
+                    $value = preg_replace('/^preview_/', '', $value);
+                }
+                if (preg_match('/^sid:([^\_]+)_/', $value)) {
+                    $value = preg_replace('/^sid:[^\_]+_/', '', $value);
+                }
                 $str[$key] = self::clean_path(str_replace(array("\n", "\r", '../'), '', $value));
             }
         } else {

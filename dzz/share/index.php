@@ -67,7 +67,7 @@ if ($do == 'getinfo') {
         if($value['pfid'] == -1) {
             $img = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($value['filepath']);
         } elseif (count($rids) > 1) {
-            $img = '/dzz/explorer/img/ic-files.png';
+            $img = '/dzz/explorer/images/ic-files.png';
         } else {
             $img = C::t('resources')->get_icosinfo_by_rid($value['filepath']);
         }

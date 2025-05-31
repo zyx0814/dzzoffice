@@ -28,5 +28,3 @@ if ($paths) {
 } else {
     exit('path error!');
 }
-
-

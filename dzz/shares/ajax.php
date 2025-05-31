@@ -336,6 +336,10 @@ if ($do == 'uploads') {//上传新文件(指新建)
             $patharr = explode(',', $paths);
             $rids = array();
             foreach ($patharr as $v) {
+                $path = dzzdecode($v);
+                if ($path && preg_match('/^sid:([^\_]+)_/', $path)) {
+                    $v = preg_replace('/^sid:[^\_]+_/', '', $path);
+                }
                 $rids[] = $v;
             }
             $path = C::t('resources_path')->fetch_pathby_pfid($share['pfid'], true);
