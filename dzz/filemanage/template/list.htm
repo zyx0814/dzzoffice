@@ -152,7 +152,7 @@
 						template += '<p><strong>{lang add_time}:</strong> ' + item.dateline + '</p>';
 						<!--{if $_G['adminid']}-->
 						if (item.FileUri) {
-							template += '<p><strong>文件地址:</strong> <a href="' + item.FileUri + '" target="_blank">' + item.FileUri + '</a></p>';
+							template += '<p><strong>文件地址:</strong> ' + item.FileUri + '</p>';
 						}
 						if (item.copys) {
 							template += '<p><strong>引用数:</strong> ' + item.copys + '</p>';
@@ -234,7 +234,7 @@
 			if (obj.data.ftype == 'folder') {
 				// 刷新表格并传递搜索参数
 				table.reloadData('table', {
-					where: { pfid: obj.data.oid},
+					where: {pfid: obj.data.oid},
 					page: {
 						curr: 1
 					},
@@ -305,7 +305,7 @@
 			'<p><strong>{lang file_location}:</strong> ' + data.relpath + '</p>' +
 			'<p><strong>{lang add_time}:</strong> ' + data.dateline + '</p>' +
 			<!--{if $_G['adminid']}-->
-			(data.FileUri ? '<p><strong>文件地址:</strong> <a href="' + data.FileUri + '" target="_blank">' + data.FileUri + '</a></p>' : '') +
+			(data.FileUri ? '<p><strong>文件地址:</strong> ' + data.FileUri + '</p>' : '') +
 			(data.copys ? '<p><strong>引用数:</strong> ' + data.copys + '</p>' : '') +
 			(data.md5 ? '<p><strong>MD5:</strong> ' + data.md5 + '</p>' : '') +
 			<!--{/if}-->

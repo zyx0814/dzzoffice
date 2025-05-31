@@ -13,10 +13,8 @@ if (!defined('IN_DZZ')) {
 @set_time_limit(0);
 @ini_set('max_execution_time', 0);
 
-class io_dzz extends io_api
-{
-    public static function listFiles($rid, $by = 'name', $asc = 'DESC', $limit = 0, $force = 0)
-    {
+class io_dzz extends io_api {
+    public function listFiles($rid, $by = 'name', $asc = 'DESC', $limit = 0, $force = 0) {
         $data = array();
         $icoarr = C::t('resources_path')->fetch($rid);
         switch ($by) {
@@ -45,8 +43,7 @@ class io_dzz extends io_api
      * 获取空间配额信息
      * @return string
      */
-    public static function MoveToSpace($path, $attach = array())
-    {
+    public function MoveToSpace($path, $attach = array()) {
         global $_G;
         $obz = io_remote::getBzByRemoteid($attach['remote']);
 
@@ -73,8 +70,7 @@ class io_dzz extends io_api
 
     }
 
-    public static function rename($rid, $text)
-    {
+    public function rename($rid, $text) {
         //查找当前目录下是否有同名文件
         $icoarr = C::t('resources')->fetch_info_by_rid($rid);
         $ext = '';
@@ -97,7 +93,7 @@ class io_dzz extends io_api
             $text = $tname . $ext . '.' . $icoarr['ext'];
         }
         /*$name=preg_replace("/\(\d+\)/i",'',$tname).'('.($i+1).')'.$ext;*/
-        if ($icoarr['name'] != $text && ($ricoid = io_dzz::getRepeatIDByName($text, $icoarr['pfid'], ($icoarr['type'] == 'folder') ? true : false))) {//如果目录下有同名文件
+        if ($icoarr['name'] != $text && ($ricoid = $this->getRepeatIDByName($text, $icoarr['pfid'], ($icoarr['type'] == 'folder') ? true : false))) {//如果目录下有同名文件
             return array('error' => lang('filename_already_exists'));
         }
         if (!$arr = C::t('resources')->rename_by_rid($rid, $text)) {
@@ -107,14 +103,12 @@ class io_dzz extends io_api
         return $icoarr;
     }
 
-    public static function parsePath($path)
-    {
+    public function parsePath($path) {
         return $path;
     }
 
     //根据路径获取目录树的数据；
-    public static function getFolderDatasByPath($fid)
-    {
+    public function getFolderDatasByPath($fid) {
         $fidarr = getTopFid($fid);
         $folderarr = array();
         foreach ($fidarr as $fid) {
@@ -124,22 +118,11 @@ class io_dzz extends io_api
     }
 
     //获取文件流地址
-    public static function getStream($path, $fop = '')
-    {
+    public function getStream($path, $fop = '') {
         global $_G;//123
-        if (strpos($path, 'preview_') === 0) {
-            $path = preg_replace('/^preview_/', '', $path);
-        }
-        // 检查是否以 'sid:' 开头并以 '_' 结尾
-        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
-            // 提取 sid 后面的值
-            $sid = $matches[1];
-            // 去掉 sid 及其值
-            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
-        }
         if (strpos($path, 'attach::') === 0) {
             $attach = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
-			Hook::listen('io_dzz_getstream_attach',$attach);//挂载点
+            Hook::listen('io_dzz_getstream_attach', $attach);//挂载点
             $bz = io_remote::getBzByRemoteid($attach['remote']);
             if ($bz == 'dzz') {
                 return $_G['setting']['attachdir'] . $attach['attachment'];
@@ -155,7 +138,7 @@ class io_dzz extends io_api
         } elseif (preg_match('/\w{32}/i', $path)) {
             $icoid = trim($path);
             $icoarr = C::t('resources')->fetch_by_rid($path);
-			Hook::listen('io_dzz_getstream_attach',$icoarr);//挂载点
+            Hook::listen('io_dzz_getstream_attach', $icoarr);//挂载点
             $bz = io_remote::getBzByRemoteid($icoarr['remote']);
             if ($bz == 'dzz') {
                 if ($icoarr['type'] == 'video' || $icoarr['type'] == 'dzzdoc' || $icoarr['type'] == 'link') {
@@ -176,13 +159,13 @@ class io_dzz extends io_api
                 return false;
             }
             $icoarr = C::t('resources')->fetch_by_rid($rid);
-			Hook::listen('io_dzz_getstream_attach',$icoarr);//挂载点
+            Hook::listen('io_dzz_getstream_attach', $icoarr);//挂载点
             $bz = io_remote::getBzByRemoteid($icoarr['remote']);
             if ($bz == 'dzz') {
                 if ($icoarr['type'] == 'video' || $icoarr['type'] == 'dzzdoc' || $icoarr['type'] == 'link') {
                     return $icoarr['url'];
                 }
-				
+
                 return $_G['setting']['attachdir'] . $icoarr['attachment'];
             } else {
                 return IO::getStream($bz . '/' . $icoarr['attachment'], $fop);
@@ -194,27 +177,18 @@ class io_dzz extends io_api
     }
 
     //获取文件的真实地址
-    public static function getFileUri($path, $fop = '')
-    {
+    public function getFileUri($path, $fop = '') {
         global $_G;
-        if (strpos($path, 'preview_') === 0) {
-            $path = preg_replace('/^preview_/', '', $path);
-        }
-        // 检查是否以 'sid:' 开头并以 '_' 结尾
-        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
-            // 去掉 sid 及其值
-            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
-        }
         if (strpos($path, 'attach::') === 0) {
             $attach = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
-			Hook::listen('io_dzz_getstream_attach',$attach);//挂载点
-			$bz = io_remote::getBzByRemoteid($attach['remote']);
+            Hook::listen('io_dzz_getstream_attach', $attach);//挂载点
+            $bz = io_remote::getBzByRemoteid($attach['remote']);
             if ($bz == 'dzz') {
                 return $_G['siteurl'] . $_G['setting']['attachurl'] . $attach['attachment'];
             } else {
                 return IO::getFileUri($bz . '/' . $attach['attachment'], $fop);
             }
-            
+
         } elseif (strpos($path, 'dzz::') === 0) {
             if (strpos($path, './') !== false) return '';
             return $_G['siteurl'] . $_G['setting']['attachurl'] . preg_replace("/^dzz::/", '', $path);
@@ -226,7 +200,7 @@ class io_dzz extends io_api
             if ($icoarr['aid']) {
                 $attachment = C::t('attachment')->fetch($icoarr['aid']);
                 $icoarr['remote'] = $attachment['remote'];
-				Hook::listen('io_dzz_getstream_attach',$icoarr);//挂载点
+                Hook::listen('io_dzz_getstream_attach', $icoarr);//挂载点
                 $bz = io_remote::getBzByRemoteid($icoarr['remote']);
                 if ($bz == 'dzz') {
                     if ($icoarr['type'] == 'video' || $icoarr['type'] == 'dzzdoc' || $icoarr['type'] == 'link') {
@@ -247,9 +221,8 @@ class io_dzz extends io_api
     }
 
     //获取文件内容
-    public static function getFileContent($path)
-    {
-        $url = self::getStream($path);
+    public function getFileContent($path) {
+        $url = $this->getStream($path);
         if (is_array($url) && isset($url['error'])) {
             @header('HTTP/1.1 403 Not Found');
             @header('Status: 403 Not Found');
@@ -258,38 +231,36 @@ class io_dzz extends io_api
         return file_get_contents($url);
     }
 
-    public static function deleteThumb($path, $width = 0, $height = 0)
-    {
+    public function deleteThumb($path, $width = 0, $height = 0) {
         global $_G;
         $data = IO::getMeta($path);
         $imgcachePath = './imgcache/';
         $cachepath = str_replace('//', '/', str_replace(':', '/', $data['attachment']));
 
         foreach ($_G['setting']['thumbsize'] as $value) {
-			$target = $imgcachePath . ($cachepath) . '.' . $value['width'] . '_' . $value['height'] . '_1.jpeg';
-			$target1 = $imgcachePath . ($cachepath) . '.' . $value['width'] . '_' . $value['height'] . '_2.jpeg';
-			@unlink($_G['setting']['attachdir'].$target);
-			@unlink($_G['setting']['attachdir'].$target1);
+            $target = $imgcachePath . ($cachepath) . '.' . $value['width'] . '_' . $value['height'] . '_1.jpeg';
+            $target1 = $imgcachePath . ($cachepath) . '.' . $value['width'] . '_' . $value['height'] . '_2.jpeg';
+            @unlink($_G['setting']['attachdir'] . $target);
+            @unlink($_G['setting']['attachdir'] . $target1);
         }
     }
 
-    public static function createThumb($path, $size, $width = 0, $height = 0, $thumbtype = 1)
-    {
+    public function createThumb($path, $size, $width = 0, $height = 0, $thumbtype = 1) {
         global $_G;
         if (!$data = IO::getMeta($path)) return false;
         $imgcachePath = 'imgcache/';
         $cachepath = str_replace('//', '/', str_replace(':', '/', $data['attachment'] ? $data['attachment'] : $data['path']));
-       $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_'.$thumbtype.'.jpeg';
+        $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_' . $thumbtype . '.jpeg';
         if (@getimagesize($_G['setting']['attachdir'] . './' . $target)) {
             return 2;//已经存在缩略图
         }
         $fileurls = array();
         Hook::listen('thumbnail', $fileurls, $path);//生成缩略图绝对和相对地址；
         if (!$fileurls) {
-            $fileurls = array('fileurl' => self::getFileUri($path), 'filedir' => self::getStream($path));
+            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
         }
         $filepath = $fileurls['filedir'];
-      
+
         if (intval($width) < 1) $width = $_G['setting']['thumbsize'][$size]['width'];
         if (intval($height) < 1) $height = $_G['setting']['thumbsize'][$size]['height'];
 
@@ -309,7 +280,7 @@ class io_dzz extends io_api
         $image = new image();
         //Thumb($source, $target, $thumbwidth, $thumbheight, $thumbtype = 1, $nosuffix = 0)
         //Cropper($source, $target, $dstwidth, $dstheight, $srcx = 0, $srcy = 0, $srcwidth = 0, $srcheight = 0)
-        if ($thumb = $image->Thumb($filepath, $target, $width, $height, $thumbtype) ) {
+        if ($thumb = $image->Thumb($filepath, $target, $width, $height, $thumbtype)) {
             return 1;//生成缩略图成功
         } else {
             return 0;//生成缩略图失败
@@ -317,8 +288,7 @@ class io_dzz extends io_api
     }
 
     //获取缩略图
-    public static function getThumb($path, $width = 0, $height = 0, $original = false, $returnurl = false, $thumbtype = 1)
-    {
+    public function getThumb($path, $width = 0, $height = 0, $original = false, $returnurl = false, $thumbtype = 1) {
         global $_G;
         //$path:可能的值 icoid,'dzz::dzz/201401/02/wrwsdfsdfasdsf.txt'等dzzPath格式；
         if (!$data = IO::getMeta($path)) return false;
@@ -331,7 +301,7 @@ class io_dzz extends io_api
         } else {
             $targetext = '.jpeg';
         }
-        $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_'.$thumbtype.$targetext;
+        $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_' . $thumbtype . $targetext;
         if (!$original && $enable_cache && @getimagesize($_G['setting']['attachdir'] . './' . $target)) {
             if ($returnurl) return $_G['setting']['attachurl'] . '/' . $target;
             $file = $_G['setting']['attachdir'] . './' . $target;
@@ -341,9 +311,12 @@ class io_dzz extends io_api
         $fileurls = array();
         Hook::listen('thumbnail', $fileurls, $path);//调用挂载点程序生成缩略图绝对和相对地址；
         if (!$fileurls) {
-            $fileurls = array('fileurl' => self::getFileUri($path), 'filedir' => self::getStream($path));
+            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
         }
-        
+        if (!is_string($fileurls['filedir'])) {
+            header("HTTP/1.1 304 Not Modified");
+            exit;
+        }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
             $imgurl = geticonfromext($data['ext'], $data['type']);
@@ -385,20 +358,9 @@ class io_dzz extends io_api
     }
     //@param number $rid  文件的rid
     //@param string $message  文件的新内容
-    public static function setFileContent($rid, $fileContent, $force = false, $nocover = true)
-    {
+    public function setFileContent($rid, $fileContent, $force = false, $nocover = true) {
         global $_G;
-        if (strpos($rid, 'preview_') === 0) {
-            $rid = preg_replace('/^preview_/', '', $rid);
-        }
-       // 检查是否以 'sid:' 开头并以 '_' 结尾
-       if (preg_match('/^sid:([^\_]+)_/', $rid, $matches)) {
-            // 提取 sid 后面的值
-            $sid = $matches[1];
-            // 去掉 sid 及其值
-            $rid = preg_replace('/^sid:[^\_]+_/', '', $rid);
-        }
-        if (!$icoarr = C::t('resources')->fetch_by_rid($rid,'',$preview,$sid)) {
+        if (!$icoarr = C::t('resources')->fetch_by_rid($rid, '', $this->preview, $this->sharesid)) {
             return array('error' => lang('file_not_exist'));
         }
         if ($icoarr['isdelete']) {
@@ -407,7 +369,7 @@ class io_dzz extends io_api
         if ($icoarr['type'] != 'document' && $icoarr['type'] != 'attach' && $icoarr['type'] != 'image') {
             return array('error' => lang('no_privilege'));
         }
-        if (!$folder = C::t('folder')->fetch($icoarr['pfid'])){
+        if (!$folder = C::t('folder')->fetch($icoarr['pfid'])) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         $gid = $folder['gid'];
@@ -440,12 +402,12 @@ class io_dzz extends io_api
             }
         }
         if ($covertype) {
-            if($covertype == 2){
+            if ($covertype == 2) {
                 $vinfo = DB::fetch_first("select min(dateline),vid from %t where rid = %s ", array('resources_version', $icoarr['rid']));
                 C::t('resources_version')->delete_by_vid($vinfo['vid'], $icoarr['rid']);
             }
             $setarr = array(
-                'uid' => $_G['uid'] ? $_G['uid'] :$folder['uid'],
+                'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
                 'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
                 'name' => $icoarr['name'],
                 'aid' => $attach['aid'],
@@ -453,9 +415,9 @@ class io_dzz extends io_api
                 'ext' => $attach['filetype'],
                 'dateline' => TIMESTAMP
             );
-            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr,$force,$editperm);
-            if($return['error']){
-                return array('error'=>$return['error']);
+            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr, $force, $editperm);
+            if ($return['error']) {
+                return array('error' => $return['error']);
             }
         } else {
             //计算用户新的空间大小
@@ -499,8 +461,7 @@ class io_dzz extends io_api
     //@param number $fid  目录id
     //@param bool $isfolder  查找同名目录
     //return icoid  返回icoid
-    public static function getRepeatIDByName($filename, $fid, $isfolder = false)
-    {
+    public function getRepeatIDByName($filename, $fid, $isfolder = false) {
 
         $sql = "pfid=%d and name=%s and isdelete<1";
         if ($isfolder) $sql .= " and type='folder'";
@@ -511,19 +472,7 @@ class io_dzz extends io_api
     }
 
     //获取icosdata
-    public static function getMeta($icoid)
-    {
-        if (strpos($icoid, 'preview_') === 0) {
-            $icoid = preg_replace('/^preview_/', '', $icoid);
-            $preview = true;
-        }
-        // 检查是否以 'sid:' 开头并以 '_' 结尾
-        if (preg_match('/^sid:([^\_]+)_/', $icoid, $matches)) {
-            // 提取 sid 后面的值
-            $sid = $matches[1];
-            // 去掉 sid 及其值
-            $icoid = preg_replace('/^sid:[^\_]+_/', '', $icoid);
-        }
+    public function getMeta($icoid) {
         if (strpos($icoid, 'dzz::') === 0) {
             $attachment = preg_replace('/^dzz::/i', '', $icoid);
             $name = array_pop(explode('/', $icoid));
@@ -537,8 +486,8 @@ class io_dzz extends io_api
                 'md5' => md5_file(getglobal('setting/attachdir') . $attachment),
                 'attachment' => $attachment,
                 'dpath' => dzzencode($icoid),
-				'sperm' => perm_FileSPerm::typePower('attachment'),
-				'bz'=>''
+                'sperm' => perm_FileSPerm::typePower('attachment'),
+                'bz' => ''
             );
 
         } elseif (strpos($icoid, 'attach::') === 0) {
@@ -556,15 +505,15 @@ class io_dzz extends io_api
                     'url' => getAttachUrl($attach),
                     'md5' => $attach['md5'],
                     'bz' => '',
-					'sperm' => perm_FileSPerm::typePower('attachment')
+                    'sperm' => perm_FileSPerm::typePower('attachment')
                 );
             } else {
-                $path = $bz.'/'.$attach['attachment'];
-                return  IO::getMeta($path);
+                $path = $bz . '/' . $attach['attachment'];
+                return IO::getMeta($path);
             }
 
         } elseif (strpos($icoid, 'TMP::') === 0) {
-            $file = self::getStream($icoid);
+            $file = $this->getStream($icoid);
             $attachment = preg_replace('/^TMP::/i', '', $icoid);
             $pathinfo = pathinfo($file);
             return array('icoid' => md5($icoid),
@@ -587,16 +536,15 @@ class io_dzz extends io_api
             if (!$rid = DB::result_first("select rid from %t where pfid = %d and name = %s", array('resources', $pfid, $filename))) {
                 return false;
             }
-            return C::t('resources')->fetch_by_rid($rid,'',$preview,$sid);
+            return C::t('resources')->fetch_by_rid($rid, '', $this->preview, $this->sharesid);
         } elseif (preg_match('/\w{32}/i', $icoid)) {
-            return C::t('resources')->fetch_by_rid($icoid,'',$preview,$sid);
+            return C::t('resources')->fetch_by_rid($icoid, '', $this->preview, $this->sharesid);
         } else {
             return false;//C::t('resources')->fetch_by_icoid($icoid);
         }
     }
 
-    public static function getFolderByIcosdata($data)
-    {
+    public function getFolderByIcosdata($data) {
         if ($data['type'] == 'folder') {
             return C::t('folder')->fetch_by_fid($data['oid']);
         }
@@ -604,13 +552,12 @@ class io_dzz extends io_api
     }
 
     //打包下载文件
-    public static function zipdownload($paths, $filename = '',$checkperm = true)
-    {
+    public function zipdownload($paths, $filename = '', $checkperm = true) {
         global $_G;
         $paths = (array)$paths;
         set_time_limit(0);
         if (empty($filename)) {
-            $meta = self::getMeta($paths[0]);
+            $meta = $this->getMeta($paths[0]);
 
             $filename = $meta['name'] . (count($paths) > 1 ? lang('wait') : '');
         }
@@ -645,33 +592,32 @@ class io_dzz extends io_api
 
 
         $filename = (strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
-        //$data=self::getFolderInfo($path);
+        //$data=$this->getFolderInfo($path);
         if (!class_exists('ZipArchive')) {
             topshowmessage('请先安装 PHP Zip 扩展');
         }
         include_once libfile('class/ZipStream');
         $zip = new ZipStream($filename . ".zip");
-        $data = self::getFolderInfo($paths, '', $zip,$checkperm);
+        $data = $this->getFolderInfo($paths, '', $zip, $checkperm);
 
         $zip->finalize();
     }
 
-    public static function getFolderInfo($paths, $position = '', &$zip,$checkperm = true)
-    {
-        static $data = array();
+    public function getFolderInfo($paths, $position = '', &$zip, $checkperm = true) {
+        $data = array();
         try {
             foreach ($paths as $path) {
-                $meta = self::getMeta($path);
+                $meta = $this->getMeta($path);
                 if (is_array($meta) && isset($meta['error'])) {
-                    writelog('errorlog',$meta['error']);
+                    writelog('errorlog', $meta['error']);
                     continue;
                 }
                 switch ($meta['type']) {
                     case 'folder':
                         $lposition = $position . $meta['name'] . '/';
-                        $contents = C::t('resources')->fetch_by_pfid($meta['oid'],'',$checkperm);
+                        $contents = C::t('resources')->fetch_by_pfid($meta['oid'], '', $checkperm);
                         foreach ($contents as $key => $value) {
-                            self::getFolderInfo(array($value['rid']), $lposition, $zip);
+                            $this->getFolderInfo(array($value['rid']), $lposition, $zip);
                         }
                         break;
                     case 'discuss':
@@ -687,10 +633,10 @@ class io_dzz extends io_api
                     default:
                         $metaurl = IO::getStream($meta['path']);
                         if (is_array($metaurl) && isset($metaurl['error'])) {
-                            writelog('errorlog',$metaurl['error']);
+                            writelog('errorlog', $metaurl['error']);
                             continue;
                         }
-                        $meta['position'] = $position . ($meta['ext']?(preg_replace("/\.".$meta['ext']."$/i",'',$meta['name']).'.'.$meta['ext']):$meta['name']);
+                        $meta['position'] = $position . ($meta['ext'] ? (preg_replace("/\." . $meta['ext'] . "$/i", '', $meta['name']) . '.' . $meta['ext']) : $meta['name']);
                         /*$data[$meta['icoid']]=$meta;*/
                         $zip->addLargeFile(fopen($metaurl, 'rb'), $meta['position'], $meta['dateline']);
                 }
@@ -703,26 +649,17 @@ class io_dzz extends io_api
     }
 
     //下载
-    public static function download($paths, $filename = '',$checkperm = true)
-    {
+    public function download($paths, $filename = '', $checkperm = true) {
         global $_G;
         $paths = (array)$paths;
         if (count($paths) > 1) {
-            self::zipdownload($paths, $filename,$checkperm);
+            $this->zipdownload($paths, $filename, $checkperm);
             exit();
         } else {
             $path = $paths[0];
         }
         @set_time_limit(0);
         $attachexists = FALSE;
-        if (strpos($path, 'preview_') === 0) {
-            $path = preg_replace('/^preview_/', '', $path);
-        }
-        // 检查是否以 'sid:' 开头并以 '_' 结尾
-        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
-            // 去掉 sid 及其值
-            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
-        }
         if (strpos($path, 'attach::') === 0) {
             $attachment = C::t('attachment')->fetch(intval(str_replace('attach::', '', $path)));
             $attachment['name'] = $filename ? $filename : $attachment['filename'];
@@ -743,7 +680,7 @@ class io_dzz extends io_api
             if (!$icoarr['rid']) {
                 topshowmessage(lang('attachment_nonexistence'));
             } elseif ($icoarr['type'] == 'folder') {
-                self::zipdownload($path,$filename,$checkperm);
+                $this->zipdownload($path, $filename, $checkperm);
                 exit();
             }
             if (!$icoarr['aid']) {
@@ -791,7 +728,7 @@ class io_dzz extends io_api
             if (!$icoarr['rid']) {
                 topshowmessage(lang('attachment_nonexistence'));
             } elseif ($icoarr['type'] == 'folder') {
-                self::zipdownload($path, $filename,$checkperm);
+                $this->zipdownload($path, $filename, $checkperm);
                 exit();
             }
             if (!$icoarr['aid']) {
@@ -830,22 +767,13 @@ class io_dzz extends io_api
         exit();
     }
 
-   //删除
+    //删除
     //当文件在回收站时，彻底删除；
     //finaldelete 真实删除，不放入回收站
-	//$force 强制删除，不受权限控制
-    public static function Delete($path,$finaldelete=false, $force = false)
-    {
+    //$force 强制删除，不受权限控制
+    public function Delete($path, $finaldelete = false, $force = false) {
 
         global $_G;
-        if (strpos($path, 'preview_') === 0) {
-            $path = preg_replace('/^preview_/', '', $path);
-        }
-        // 检查是否以 'sid:' 开头并以 '_' 结尾
-        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
-            // 去掉 sid 及其值
-            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
-        }
         if (strpos($path, 'dzz::') === 0) {
             if (strpos($path, './') !== false) return false;
             @unlink($_G['setting']['attachdir'] . preg_replace('/^dzz::/i', '', $path));
@@ -871,10 +799,10 @@ class io_dzz extends io_api
             }
 
             if ($rid = DB::result_first("select rid from %t where pfid = %d and name = %s and isdelete < 1", array('resources', $pfid, $filename))) {
-				$icoarr=C::t('resources')->fetch_by_rid($rid);
-            }else{
-				 return array('rid' => $icoarr['rid'], 'error' => lang('file_longer_exists'));
-			}
+                $icoarr = C::t('resources')->fetch_by_rid($rid);
+            } else {
+                return array('rid' => $icoarr['rid'], 'error' => lang('file_longer_exists'));
+            }
 
             if ($force || perm_check::checkperm('delete', $icoarr)) {
                 if ($finaldelete) {//强制彻底删除
@@ -882,7 +810,7 @@ class io_dzz extends io_api
                 } elseif ($icoarr['isdelete'] > 0) {//删除状态彻底删除
                     C::t('resources')->delete_by_rid($path, true);
                 } else {//非删除状态删除到回收站
-                    $return = C::t('resources')->recyle_by_rid($icoarr['rid'],$force);
+                    $return = C::t('resources')->recyle_by_rid($icoarr['rid'], $force);
                     if ($return['error']) {
                         return $return;
                     }
@@ -890,36 +818,36 @@ class io_dzz extends io_api
             } else {
                 return array('rid' => $icoarr['rid'], 'error' => lang('no_privilege'));
             }
-			
+
             return array('rid' => $icoarr['rid'], 'name' => $icoarr['name']);
         } elseif (preg_match('/\w{32}/i', $path)) {//rid删除
             try {
                 if (!$icoarr = C::t('resources')->fetch_by_rid($path)) {
                     return array('rid' => $path, 'error' => lang('file_longer_exists'));
                 }
-				//当文件在回收站时，补全文件的原pfid(通过回收站表)
-				if($icoarr['pfid']=='-1' && ($recycle=C::t('resources_recyle')->fetch_by_rid($path))){
-					$icoarr['pfid']=$recycle['pfid'];
-				}
-				//文件大小统计改到 resources表中处理
-               /* $size = 0;
-                if ($icoarr['type'] == 'folder') {
-                    $contains = C::t('resources')->get_contains_by_fid($icoarr['oid'], true);
-                    $size = $contains['size'];
-                } else {
-                    if ($icoarr['vid'] > 0) {
-                        $size = DB::result_first("select sum(size) from %t where rid = %s", array('resources_version', $icoarr['rid']));
-                    } else {
-                        $size = $icoarr['size'];
-                    }
-                }*/
+                //当文件在回收站时，补全文件的原pfid(通过回收站表)
+                if ($icoarr['pfid'] == '-1' && ($recycle = C::t('resources_recyle')->fetch_by_rid($path))) {
+                    $icoarr['pfid'] = $recycle['pfid'];
+                }
+                //文件大小统计改到 resources表中处理
+                /* $size = 0;
+                 if ($icoarr['type'] == 'folder') {
+                     $contains = C::t('resources')->get_contains_by_fid($icoarr['oid'], true);
+                     $size = $contains['size'];
+                 } else {
+                     if ($icoarr['vid'] > 0) {
+                         $size = DB::result_first("select sum(size) from %t where rid = %s", array('resources_version', $icoarr['rid']));
+                     } else {
+                         $size = $icoarr['size'];
+                     }
+                 }*/
                 if ($force || perm_check::checkperm('delete', $icoarr)) {
                     if ($finaldelete) {//强制彻底删除
                         C::t('resources')->delete_by_rid($path, true);
                     } elseif ($icoarr['isdelete'] > 0) {//删除状态彻底删除
                         C::t('resources')->delete_by_rid($path, true);
                     } else {//非删除状态删除到回收站
-                        $return = C::t('resources')->recyle_by_rid($icoarr['rid'],$force);
+                        $return = C::t('resources')->recyle_by_rid($icoarr['rid'], $force);
                         if ($return['error']) {
                             return $return;
                         }
@@ -927,7 +855,7 @@ class io_dzz extends io_api
                 } else {
                     return array('rid' => $icoarr['rid'], 'error' => lang('no_privilege'));
                 }
-				//文件大小统计改到 resources表中处理
+                //文件大小统计改到 resources表中处理
                 /*if ($size > 0 && !$icoarr['isdelete']) {
                     SpaceSize(-$size, $icoarr['gid'], true);
                 }*/
@@ -939,81 +867,48 @@ class io_dzz extends io_api
     }
 
     //检查名称是否重复
-    public static function check_name_repeat($name, $pfid)
-    {
+    public function check_name_repeat($name, $pfid) {
         return DB::result_first("select rid from " . DB::table('resources') . " where name='{$name}' and  pfid='{$pfid}'");
     }
 
-    //过滤文件名称
-    public static function name_filter($name)
-    {
-        return str_replace(array('/', '\\', ':', '*', '?', '<', '>', '|', '"', "\n"), '', $name);
-    }
-
     //获取不重复的目录名称
-    public static function getFolderName($name, $pfid)
-    {
-        static $i = 0;
-        $name = self::name_filter($name);
+    public function getFolderName($name, $pfid) {
+        $i = 0;
+        $name = IO::name_filter($name);
         //echo("select COUNT(*) from ".DB::table('folder')." where fname='{$name}' and  pfid='{$pfid}'");
         if (DB::result_first("select COUNT(*) from %t where fname=%s and  pfid=%d and isdelete<1", array('folder', $name, $pfid))) {
             $name = preg_replace("/\(\d+\)/i", '', $name) . '(' . ($i + 1) . ')';
             $i += 1;
-            return self::getFolderName($name, $pfid);
+            return $this->getFolderName($name, $pfid);
         } else {
             return $name;
         }
     }
-
-    //获取不重复的文件名称
-    public static function getFileName($name, $pfid)
-    {
-        static $i = 0;
-        $name = self::name_filter($name);
-        //echo("select COUNT(*) from ".DB::table('folder')." where fname='{$name}' and  pfid='{$pfid}'");
-        if (DB::result_first("select COUNT(*) from %t where type!='folder' and name=%s and isdelete<1 and pfid=%d", array('resources', $name, $pfid))) {
-            $ext = '';
-            $namearr = explode('.', $name);
-            if (count($namearr) > 1) {
-                $ext = $namearr[count($namearr) - 1];
-                unset($namearr[count($namearr) - 1]);
-                $ext = $ext ? ('.' . $ext) : '';
-            }
-            $tname = implode('.', $namearr);
-            $name = preg_replace("/\(\d+\)/i", '', $tname) . '(' . ($i + 1) . ')' . $ext;
-            $i += 1;
-            return self::getFileName($name, $pfid);
-        } else {
-            return $name;
-        }
-    }
-
 
     //根据文件名创建顶级目录
-    public static function createTopFolderByFname($fname, $perm = 0, $params = array(), $ondup = 'newcopy')
-    {
+    public function createTopFolderByFname($fname, $perm = 0, $params = array(), $ondup = 'newcopy') {
         global $_G;
         if (!$_G['uid']) {
             return array('error' => lang('no_privilege'));
         }
-        $folderparams = array('innav', 'fsperm', 'disp', 'iconview', 'display', 'flag', 'default','perm');
+        $folderparams = array('innav', 'fsperm', 'disp', 'iconview', 'display', 'flag', 'default', 'perm');
         $data = array();
         if (($ondup == 'overwrite') && ($folder = C::t('folder')->fetch_topby_fname($fname))) {//如果目录下有同名目录
             $data['folderarr'] = $folder;
             return $data;
-        } else $fname = self::getFolderName($fname, 0); //重命名
-		$flag=$params['flag']?$params['flag']:'folder';
-		if($flag!=='folder') $folder_set=C::t('folder_flag')->fetch($flag);
+        } else $fname = $this->getFolderName($fname, 0); //重命名
+        $flag = $params['flag'] ? $params['flag'] : 'folder';
+        if ($flag !== 'folder') $folder_set = C::t('folder_flag')->fetch($flag);
         $top = array(
             'pfid' => 0,
             'uid' => $_G['uid'],
             'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-            'perm' => $perm?$perm:($folder_set['perm']?$folder_set['perm']:0),
-			'fsperm' =>$folder_set['fsperm']?$folder_set['fsperm']:0,
+            'perm' => $perm ? $perm : ($folder_set['perm'] ? $folder_set['perm'] : 0),
+            'fsperm' => $folder_set['fsperm'] ? $folder_set['fsperm'] : 0,
             'fname' => $fname,
             'flag' => $flag,
-			'disp' => $folder_set['disp']?$folder_set['disp']:0,
-            'iconview' => $folder_set['iconview']?$folder_set['iconview']:4,
+            'disp' => $folder_set['disp'] ? $folder_set['disp'] : 0,
+            'iconview' => $folder_set['iconview'] ? $folder_set['iconview'] : 4,
             'innav' => 0,
             'isdelete' => 0
         );
@@ -1038,51 +933,50 @@ class io_dzz extends io_api
             if ($folderattr) {
                 C::t('folder_attr')->insert_data_by_fid($topfid, $folderattr);
             }
-            
+
         }
         $data['folderarr'] = C::t('folder')->fetch_by_fid($topfid);
         return $data;
     }
 
     //创建目录
-    public static function CreateFolder($pfid, $fname, $perm = 0, $params = array(), $ondup = 'newcopy',$force=false)
-    {
+    public function CreateFolder($pfid, $fname, $perm = 0, $params = array(), $ondup = 'newcopy', $force = false) {
         global $_G, $_GET;
-        $folderparams = array('innav', 'fsperm', 'disp', 'iconview', 'display', 'flag', 'default','perm');
+        $folderparams = array('innav', 'fsperm', 'disp', 'iconview', 'display', 'flag', 'default', 'perm');
         if ($pfid == 0) {
-            return self::createTopFolderByFname($fname, $perm, $params, $ondup);
+            return $this->createTopFolderByFname($fname, $perm, $params, $ondup);
         }
-        $fname = self::name_filter($fname);
+        $fname = IO::name_filter($fname);
 
-        if (!$folder = C::t('folder')->fetch($pfid)){//DB::fetch_first("select fid,pfid,iconview,disp,gid,perm_inherit from %t where fid=%d", array('folder', $pfid))) {
+        if (!$folder = C::t('folder')->fetch($pfid)) {//DB::fetch_first("select fid,pfid,iconview,disp,gid,perm_inherit from %t where fid=%d", array('folder', $pfid))) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         if (!$force && !perm_check::checkperm_Container($pfid, 'folder')) {
             return array('error' => lang('no_privilege'));
         }
-        if (($ondup == 'overwrite') && ($rid = self::getRepeatIDByName($fname, $pfid, true))) {//如果目录下有同名目录
+        if (($ondup == 'overwrite') && ($rid = $this->getRepeatIDByName($fname, $pfid, true))) {//如果目录下有同名目录
             $data = array();
             $data['icoarr'] = C::t('resources')->fetch_by_rid($rid);
-            $data['folderarr'] = self::getFolderByIcosdata($data['icoarr']);
+            $data['folderarr'] = $this->getFolderByIcosdata($data['icoarr']);
             return $data;
-        } else $fname = self::getFolderName($fname, $pfid); //重命名
-       
-		$path = C::t('resources_path')->fetch_pathby_pfid($folder['fid']);
-		//如果flag!=='folder'，使用此flag的默认设置
-		$flag=$params['flag']?$params['flag']:'folder';
-		if($flag!=='folder') $folder_set=C::t('folder_flag')->fetch($flag);
+        } else $fname = $this->getFolderName($fname, $pfid); //重命名
+
+        $path = C::t('resources_path')->fetch_pathby_pfid($folder['fid']);
+        //如果flag!=='folder'，使用此flag的默认设置
+        $flag = $params['flag'] ? $params['flag'] : 'folder';
+        if ($flag !== 'folder') $folder_set = C::t('folder_flag')->fetch($flag);
         $setarr = array('fname' => $fname,
             'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
             'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
             'pfid' => $folder['fid'],
-            'disp' => $folder_set['disp']?$folder_set['disp']:$folder['disp'],
-            'iconview' => $folder_set['iconview']?$folder_set['iconview']:$folder['iconview'],
-            'perm' => $perm?$perm:($folder_set['perm']?$folder_set['perm']:0),
-            'fsperm' =>$folder_set['fsperm']?$folder_set['fsperm']:0,
-            'flag' =>$flag,
+            'disp' => $folder_set['disp'] ? $folder_set['disp'] : $folder['disp'],
+            'iconview' => $folder_set['iconview'] ? $folder_set['iconview'] : $folder['iconview'],
+            'perm' => $perm ? $perm : ($folder_set['perm'] ? $folder_set['perm'] : 0),
+            'fsperm' => $folder_set['fsperm'] ? $folder_set['fsperm'] : 0,
+            'flag' => $flag,
             'dateline' => $_G['timestamp'],
             'gid' => $folder['gid'],
-          
+
         );
         $folderattr = array();
         foreach ($params as $k => $v) {
@@ -1094,6 +988,7 @@ class io_dzz extends io_api
         }
         //$appid = $params['appid'] ? $params['appid']:0;
         if ($setarr['fid'] = C::t('folder')->insert($setarr)) {
+            $setarr['path'] = $setarr['fid'];
             $setarr['perm'] = perm_check::getPerm($setarr['fid']);
             $setarr['perm1'] = perm_check::getPerm1($setarr['fid']);
 
@@ -1124,11 +1019,11 @@ class io_dzz extends io_api
                 $setarr1['dpath'] = dzzencode($setarr1['rid']);
                 $setarr1['bz'] = '';
                 //addtoconfig($setarr1);
-              /*  $setarr1['fsize'] = formatsize($setarr1['size']);
-                $setarr1['img'] = 'dzz/images/extimg/folder.png';
-                $setarr1['ftype'] = getFileTypeName($setarr1['type'], $setarr1['ext']);
-                $setarr1['fdateline'] = dgmdate($setarr1['dateline']);
-                $setarr1['sperm'] = perm_FileSPerm::typePower($setarr1['type'], $setarr1['ext']);*/
+                /*  $setarr1['fsize'] = formatsize($setarr1['size']);
+                  $setarr1['img'] = 'dzz/images/extimg/folder.png';
+                  $setarr1['ftype'] = getFileTypeName($setarr1['type'], $setarr1['ext']);
+                  $setarr1['fdateline'] = dgmdate($setarr1['dateline']);
+                  $setarr1['sperm'] = perm_FileSPerm::typePower($setarr1['type'], $setarr1['ext']);*/
                 if ($fid = $setarr1['pfid']) {
                     $event = 'creat_folder';
                     $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
@@ -1146,33 +1041,14 @@ class io_dzz extends io_api
                 }
                 return array('icoarr' => C::t('resources')->fetch_by_rid($setarr1['rid']), 'folderarr' => $setarr);
             } else {
-                C::t('folder')->delete_by_fid($setarr['fid'],true);
+                C::t('folder')->delete_by_fid($setarr['fid'], true);
                 return array('error' => lang('data_error'));
             }
         }
         return false;
     }
 
-    public static function getPath($ext, $dir = 'dzz')
-    {
-        global $_G;
-        if ($ext && in_array(trim($ext, '.'), $_G['setting']['unRunExts'])) {
-            $ext = '.dzz';
-        }
-        $subdir = $subdir1 = $subdir2 = '';
-        $subdir1 = date('Ym');
-        $subdir2 = date('d');
-        $subdir = $subdir1 . '/' . $subdir2 . '/';
-        $target1 = $dir . '/' . $subdir . 'index.html';
-        $target = $dir . '/' . $subdir;
-        $target_attach = $_G['setting']['attachdir'] . $target1;
-        $targetpath = dirname($target_attach);
-        dmkdir($targetpath);
-        return $target . date('His') . '' . strtolower(random(16)) . $ext;
-    }
-
-    public static function save($target, $filename = '')
-    {
+    public function save($target, $filename = '') {
         global $_G;
         $filepath = $_G['setting']['attachdir'] . $target;
         $md5 = md5_file($filepath);
@@ -1200,7 +1076,6 @@ class io_dzz extends io_api
             $remote = 0;
 
             $attach = array(
-
                 'filesize' => $filesize,
                 'attachment' => $target,
                 'filetype' => strtolower($ext),
@@ -1217,10 +1092,10 @@ class io_dzz extends io_api
                 if ($_G['setting']['thumb_active'] && $remoteid < 2 && in_array($attach['filetype'], array('jpg', 'jpeg', 'png'))) {//主动模式生成缩略图
                     try {
                         foreach ($_G['setting']['thumbsize'] as $key => $value) {
-                            self::createThumb('dzz::' . $attach['attachment'], $key);
+                            $this->createThumb('dzz::' . $attach['attachment'], $key);
                         }
-                        /*self::createThumb('dzz::'.$attach['attachment'],256,256);
-						self::createThumb('dzz::'.$attach['attachment'],1440,900);*/
+                        /*$this->createThumb('dzz::'.$attach['attachment'],256,256);
+						$this->createThumb('dzz::'.$attach['attachment'],1440,900);*/
                     } catch (Exception $e) {
                     }
                 }
@@ -1234,18 +1109,17 @@ class io_dzz extends io_api
         }
     }
 
-    public static function uploadToattachment($attach, $fid,$force=false)
-    {
+    public static function uploadToattachment($attach, $fid, $force = false) {
         global $_G, $documentexts, $space, $docexts;
         if (!$force && !perm_check::checkperm_Container($fid, 'upload')) {
             return array('error' => lang('no_privilege'));
         }
-        if (!$folder = C::t('folder')->fetch($fid)){
+        if (!$folder = C::t('folder')->fetch($fid)) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         $gid = $folder['gid'];
 
-        $attach['filename'] = self::getFileName($attach['filename'], $fid);
+        $attach['filename'] = IO::getFileName($attach['filename'], $fid);
 
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
 
@@ -1322,16 +1196,14 @@ class io_dzz extends io_api
                     'title' => $attach['filename'],
                     'desc' => '',
                     'aid' => $attach['aid'],
-
                 );
 
                 if (C::t('resources_attr')->insert_attr($icoarr['rid'], $icoarr['vid'], $sourcedata)) {
-
                     $icoarr = array_merge($sourcedata, $attach, $icoarr);
                     $icoarr['img'] = geticonfromext($icoarr['ext'], $icoarr['type']);
                     $icoarr['url'] = DZZSCRIPT . '?mod=io&op=getStream&path=' . dzzencode($icoarr['rid']);
                     $icoarr['bz'] = '';
-                    $icoarr['rbz'] = io_remote::getBzByRemoteid($attach['remote']);;
+                    $icoarr['rbz'] = io_remote::getBzByRemoteid($attach['remote']);
                     $icoarr['relativepath'] = $path . $icoarr['name'];
                     $icoarr['path'] = $icoarr['rid'];
                     $icoarr['dpath'] = dzzencode($icoarr['rid']);
@@ -1354,7 +1226,6 @@ class io_dzz extends io_api
                     return array('error' => lang('data_error'));
                 }
             }
-
         } else {//附件
             $icoarr = array(
                 'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
@@ -1368,7 +1239,6 @@ class io_dzz extends io_api
                 'gid' => intval($gid),
                 'ext' => $attach['filetype'],
                 'size' => $attach['filesize']
-
             );
 
             if ($icoarr['rid'] = C::t('resources')->insert_data($icoarr)) {
@@ -1376,7 +1246,6 @@ class io_dzz extends io_api
                     'title' => $attach['filename'],
                     'desc' => '',
                     'aid' => $attach['aid'],
-
                 );
                 C::t('attachment')->update($attach['aid'], array('copys' => $attach['copys'] + 1));
                 if (C::t('resources_attr')->insert_attr($icoarr['rid'], $icoarr['vid'], $sourcedata)) {
@@ -1384,7 +1253,7 @@ class io_dzz extends io_api
                     $icoarr['img'] = geticonfromext($icoarr['ext'], $icoarr['type']);
                     $icoarr['url'] = DZZSCRIPT . '?mod=io&op=getStream&path=' . dzzencode($icoarr['rid']);
                     $icoarr['bz'] = '';
-                    $icoarr['rbz'] = io_remote::getBzByRemoteid($attach['remote']);;
+                    $icoarr['rbz'] = io_remote::getBzByRemoteid($attach['remote']);
                     $icoarr['relativepath'] = $path . $icoarr['name'];
                     $icoarr['path'] = $icoarr['rid'];
                     $icoarr['dpath'] = dzzencode($icoarr['rid']);
@@ -1407,13 +1276,13 @@ class io_dzz extends io_api
                     return array('error' => lang('data_error'));
                 }
             }
-
         }
 
         if ($icoarr['rid']) {
-            if ($icoarr['size']) SpaceSize($icoarr['size'], $gid, true,$folder['uid']);
+            if ($icoarr['size']) SpaceSize($icoarr['size'], $gid, true, $folder['uid']);
             //addtoconfig($icoarr);
             $icoarr['fsize'] = formatsize($icoarr['size']);
+            $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
             $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icoarr['sperm'] = perm_FileSPerm::typePower($icoarr['type'], $icoarr['ext']);
@@ -1421,11 +1290,9 @@ class io_dzz extends io_api
         } else {
             return array('error' => lang('data_error'));
         }
-
     }
 
-    public static function createFolderByPath($path, $pfid, $params = array())
-    {
+    public function CreateFolderByPath($path, $pfid, $params = array()) {
         $data = array('pfid' => $pfid);
         if (!$path) {
             $data['pfid'] = $pfid;
@@ -1438,7 +1305,7 @@ class io_dzz extends io_api
                 if ($fid = DB::result_first("select fid from %t where pfid=%d and isdelete<1 and fname=%s", array('folder', $pfid, $fname))) {
                     $pfid = $data['pfid'] = $fid;
                 } else {
-                    if ($re = self::CreateFolder($data['pfid'], $fname, 0, $params, 'overwrite')) {
+                    if ($re = $this->CreateFolder($data['pfid'], $fname, 0, $params, 'overwrite')) {
                         $data['icoarr'][] = $re['icoarr'];
                         $data['folderarr'][] = $re['folderarr'];
                         $pfid = $data['pfid'] = $re['folderarr']['fid'];
@@ -1452,8 +1319,7 @@ class io_dzz extends io_api
         return $data;
     }
 
-    private static function getCache($path)
-    {
+    private function getCache($path) {
         $cachekey = 'dzz_upload_' . md5($path);
         if ($cache = C::t('cache')->fetch($cachekey)) {
             return $cache['cachevalue'];
@@ -1462,8 +1328,7 @@ class io_dzz extends io_api
         }
     }
 
-    private static function saveCache($path, $str)
-    {
+    private function saveCache($path, $str) {
         global $_G;
         $cachekey = 'dzz_upload_' . md5($path);
         C::t('cache')->insert(array(
@@ -1473,14 +1338,12 @@ class io_dzz extends io_api
         ), false, true);
     }
 
-    private static function deleteCache($path)
-    {
+    private function deleteCache($path) {
         $cachekey = 'dzz_upload_' . md5($path);
         C::t('cache')->delete($cachekey);
     }
 
-    private static function getPartInfo($content_range)
-    {
+    private function getPartInfo($content_range) {
         $arr = array();
         if (!$content_range) {
             $arr['ispart'] = false;
@@ -1500,37 +1363,36 @@ class io_dzz extends io_api
         return $arr;
     }
 
-    public static function uploadStream($file, $filename, $pfid, $relativePath = '', $content_range = array(), $force=false)
-    {
+    public function uploadStream($file, $filename, $pfid, $relativePath = '', $content_range = array(), $force = false) {
         $data = array();
         $params = array();
         //处理目录(没有分片或者最后一个分片时创建目录
-        $arr = self::getPartInfo($content_range);
+        $arr = $this->getPartInfo($content_range);
         $data['pfid'] = intval($pfid);
         if ($relativePath && $arr['iscomplete']) {
-            $data = self::createFolderByPath($relativePath, $pfid, $params);
+            $data = $this->CreateFolderByPath($relativePath, $pfid, $params);
             if (isset($data['error'])) {
                 return array('error' => $data['error']);
             }
         }
-		if(substr($filename,-7)=='.folder'){
-			$data = self::createFolderByPath($relativePath?$relativePath:substr($filename,0,-7), $pfid, $params);
-			if (isset($data['error'])) {
+        if (substr($filename, -7) == '.folder') {
+            $data = $this->CreateFolderByPath($relativePath ? $relativePath : substr($filename, 0, -7), $pfid, $params);
+            if (isset($data['error'])) {
                 return array('error' => $data['error']);
             }
-			
-			if(empty($data['folderarr'])){
-				$data['folderarr']=array();
-				$data['folderarr'][]=C::t('folder')->fetch_by_fid($data['pfid']);
-			}
-			if(empty($data['icoarr'])){
-				$data['icoarr']=array();
-				if($rid=DB::result_first("select rid from %t where type='folder' and oid=%d",array('resources',$data['pfid']))){
-					$data['icoarr'][]=C::t('resources')->fetch_by_rid($rid);
-				}
-			}
-			return $data;
-		}
+
+            if (empty($data['folderarr'])) {
+                $data['folderarr'] = array();
+                $data['folderarr'][] = C::t('folder')->fetch_by_fid($data['pfid']);
+            }
+            if (empty($data['icoarr'])) {
+                $data['icoarr'] = array();
+                if ($rid = DB::result_first("select rid from %t where type='folder' and oid=%d", array('resources', $data['pfid']))) {
+                    $data['icoarr'][] = C::t('resources')->fetch_by_rid($rid);
+                }
+            }
+            return $data;
+        }
         $arr['flag'] = $pfid . '_' . $relativePath;
 
         //获取文件内容
@@ -1543,7 +1405,7 @@ class io_dzz extends io_api
         }
         fclose($handle);
         if ($arr['ispart']) {
-            $re = self::upload($fileContent, $data['pfid'], $filename, $arr,'newcopy',$force);
+            $re = $this->upload($fileContent, $data['pfid'], $filename, $arr, 'newcopy', $force);
             if ($arr['iscomplete']) {
                 if (empty($re['error'])) {
                     $data['icoarr'][] = $re;
@@ -1556,13 +1418,13 @@ class io_dzz extends io_api
                 return true;
             }
         } else {
-            $re = self::upload($fileContent, $data['pfid'], $filename,array(),'newcopy',$force);
+            $re = $this->upload($fileContent, $data['pfid'], $filename, array(), 'newcopy', $force);
             if (empty($re['error'])) {
-                if($re['type'] == 'image' && $re['aid']){
-                    $re['imgpath'] = DZZSCRIPT.'?mod=io&op=thumbnail&path='.dzzencode('attach::' . $re['aid']);
+                if ($re['type'] == 'image' && $re['aid']) {
+                    $re['imgpath'] = DZZSCRIPT . '?mod=io&op=thumbnail&path=' . dzzencode('attach::' . $re['aid']);
                 }
-                $re['monthdate'] = dgmdate($re['dateline'],'m-d');
-                $re['hourdate'] = dgmdate($re['dateline'],'H:i');
+                $re['monthdate'] = dgmdate($re['dateline'], 'm-d');
+                $re['hourdate'] = dgmdate($re['dateline'], 'H:i');
                 $re['pfid'] = $data['pfid'];
                 $re['colect'] = 0;
                 $data['icoarr'][] = $re;
@@ -1574,9 +1436,8 @@ class io_dzz extends io_api
         }
     }
 
-    public static function upload_by_content($fileContent, $path, $filename,$partinfo=array(),$force=false)
-    {
-        return self::upload($fileContent, $path, $filename,$partinfo,'newcopy',$force);
+    public function upload_by_content($fileContent, $path, $filename, $partinfo = array(), $force = false) {
+        return $this->upload($fileContent, $path, $filename, $partinfo, 'newcopy', $force);
     }
 
     /**
@@ -1589,25 +1450,24 @@ class io_dzz extends io_api
      * @param boolean $isCreateSuperFile 是否分片上传
      * @return string
      */
-    public static function upload($fileContent, $fid, $filename, $partinfo = array(), $ondup = 'newcopy',$force=false)
-    {
+    public function upload($fileContent, $fid, $filename, $partinfo = array(), $ondup = 'newcopy', $force = false) {
         global $_G;
-        $filename = self::name_filter($filename);
-        if (($ondup == 'overwrite') && ($rid = self::getRepeatIDByName($filename, $fid))) {//如果目录下有同名文件
-            return self::overwriteUpload($fileContent, $rid, $filename, $partinfo,$force);//覆盖
-        } else $nfilename = self::getFileName($filename, $fid); //重命名
+        $filename = IO::name_filter($filename);
+        if (($ondup == 'overwrite') && ($rid = $this->getRepeatIDByName($filename, $fid))) {//如果目录下有同名文件
+            return $this->overwriteUpload($fileContent, $rid, $filename, $partinfo, $force);//覆盖
+        } else $nfilename = IO::getFileName($filename, $fid); //重命名
         if ($partinfo['ispart']) {
             if ($partinfo['partnum'] == 1) {
-                if ($target = self::getCache($partinfo['flag'] . '_' . md5($filename))) {
+                if ($target = $this->getCache($partinfo['flag'] . '_' . md5($filename))) {
                     file_put_contents($_G['setting']['attachdir'] . $target, '');
                 } else {
                     $pathinfo = pathinfo($filename);
                     $ext = strtolower($pathinfo['extension']);
-                    $target = self::getPath($ext ? ('.' . $ext) : '', 'dzz');
-                    self::saveCache($partinfo['flag'] . '_' . md5($filename), $target);
+                    $target = IO::getPath($ext ? ('.' . $ext) : '', 'dzz');
+                    $this->saveCache($partinfo['flag'] . '_' . md5($filename), $target);
                 }
             } else {
-                $target = self::getCache($partinfo['flag'] . '_' . md5($filename));
+                $target = $this->getCache($partinfo['flag'] . '_' . md5($filename));
             }
             if (!file_put_contents(
                 $_G['setting']['attachdir'] . $target,
@@ -1620,32 +1480,32 @@ class io_dzz extends io_api
 
             if (!$partinfo['iscomplete']) return true;
             else {
-                self::deleteCache($partinfo['flag'] . '_' . md5($filename));
+                $this->deleteCache($partinfo['flag'] . '_' . md5($filename));
 
             }
         } else {
             $pathinfo = pathinfo($filename);
             $ext = strtolower($pathinfo['extension']);
-            $target = self::getPath($ext ? ('.' . $ext) : '', 'dzz');
+            $target = IO::getPath($ext ? ('.' . $ext) : '', 'dzz');
             if (!empty($fileContent) && !file_put_contents($_G['setting']['attachdir'] . $target, $fileContent)) {
                 return array('error' => lang('cache_file_error'));
             }
         }
 
         //判断空间大小
-        if (!$folder = C::t('folder')->fetch($fid)){
+        if (!$folder = C::t('folder')->fetch($fid)) {
             return array('error' => lang('parent_directory_not_exist'));
         }
-        if (!SpaceSize(filesize($_G['setting']['attachdir'] . $target), $folder['gid'],'',$folder['uid'])) {
+        if (!SpaceSize(filesize($_G['setting']['attachdir'] . $target), $folder['gid'], '', $folder['uid'])) {
             @unlink($_G['setting']['attachdir'] . $target);
             return array('error' => lang('inadequate_capacity_space'));
         }
 
-        if ($attach = self::save($target, $nfilename)) {
+        if ($attach = $this->save($target, $nfilename)) {
             if ($attach['error']) {
                 return array('error' => $attach['error']);
             } else {
-                return self::uploadToattachment($attach, $fid,$force);
+                return io_dzz::uploadToattachment($attach, $fid, $force);
             }
         } else {
             return array('error' => 'Could not save uploaded file. The upload was cancelled, or server error encountered');
@@ -1653,8 +1513,7 @@ class io_dzz extends io_api
 
     }
 
-    public static function overwriteUpload($fileContent, $rid, $filename, $partinfo = array(),$force=false)
-    {
+    public function overwriteUpload($fileContent, $rid, $filename, $partinfo = array(), $force = false) {
         global $_G, $space;
 
         if (!$fileContent) {
@@ -1663,7 +1522,7 @@ class io_dzz extends io_api
         if (!$icoarr = C::t('resources')->fetch_by_rid($rid)) {
             return array('error' => lang('file_not_exist1'));
         }
-        if (!$folder = C::t('folder')->fetch($icoarr['pfid'])){
+        if (!$folder = C::t('folder')->fetch($icoarr['pfid'])) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         $gid = $folder['gid'];
@@ -1691,7 +1550,7 @@ class io_dzz extends io_api
         }
 
 
-        if (!$attach = self::save($target, $icoarr['name'])) {
+        if (!$attach = $this->save($target, $icoarr['name'])) {
             return array('error' => lang('file_save_exist'));
         }
         //计算用户新的空间大小
@@ -1699,10 +1558,10 @@ class io_dzz extends io_api
 
         //重新计算用户空间
         if ($csize) {
-            if (!SpaceSize($csize, $gid,'',$folder['uid'])) {
+            if (!SpaceSize($csize, $gid, '', $folder['uid'])) {
                 return array('error' => lang('inadequate_capacity_space'));
             }
-            SpaceSize($csize, $gid, 1,$folder['uid']);
+            SpaceSize($csize, $gid, 1, $folder['uid']);
         }
         $oldaid = $icoarr['aid'];
         //更新附件数量
@@ -1722,8 +1581,7 @@ class io_dzz extends io_api
     }
 
     //判断附件是否已经存在，返回附件数组
-    public static function dzz_imagetoattach($link, $gid)
-    {
+    public static function dzz_imagetoattach($link, $gid) {
         global $_G;
 
         $md5 = md5_file($link);
@@ -1766,11 +1624,10 @@ class io_dzz extends io_api
         return false;
     }
 
-    public static function linktoimage($link, $pfid)
-    {
+    public static function linktoimage($link, $pfid) {
         global $_G, $space;
         $fid = $pfid;
-        if (!$folder = C::t('folder')->fetch($pfid)){
+        if (!$folder = C::t('folder')->fetch($pfid)) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         $gid = $folder['gid'];
@@ -1796,17 +1653,17 @@ class io_dzz extends io_api
             $attach = C::t('attachment')->fetch($data['aid']);
         }
         //判断空间大小
-        if (!SpaceSize($attach['filesize'], $gid,'',$folder['uid'])) {
+        if (!SpaceSize($attach['filesize'], $gid, '', $folder['uid'])) {
             return array('error' => lang('inadequate_capacity_space'));
         }
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $path = $path . '/' . self::getFileName(strtolower(substr(strrchr($link, '/'), 1, 50)), $fid) . '.' . $attach['filetype'];
+        $path = $path . '/' . IO::getFileName(strtolower(substr(strrchr($link, '/'), 1, 50)), $fid) . '.' . $attach['filetype'];
         $attachment = $_G['setting']['attachdir'] . './' . $attach['attachment'];
         $imginfo = @getimagesize($attachment);
         $icoarr = array(
             'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
             'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-            'name' => self::getFileName(strtolower(substr(strrchr($link, '/'), 1, 50)), $fid),
+            'name' => IO::getFileName(strtolower(substr(strrchr($link, '/'), 1, 50)), $fid),
             'flag' => '',
             'type' => 'image',
             'vid' => 0,
@@ -1833,12 +1690,12 @@ class io_dzz extends io_api
                 $icoarr['url'] = DZZSCRIPT . '?mod=io&op=thumbnail&&size=large&path=' . rawurlencode($icoarr['aid']);
                 $icoarr['bz'] = '';
                 $icoarr['aid'] = $sourceattr['aid'];
-                $data['rbz'] = io_remote::getBzByRemoteid($icoarr['remote']);
+                $icoarr['rbz'] = io_remote::getBzByRemoteid($icoarr['remote']);
                 $icoarr['relativepath'] = $path;
                 $icoarr['path'] = $icoarr['rid'];
                 $icoarr['dpath'] = dzzencode($icoarr['rid']);
                 $icoarr['apath'] = dzzencode('attach::' . $icoarr['aid']);
-                if ($icoarr['size']) SpaceSize($icoarr['size'], $gid, true,$folder['uid']);
+                if ($icoarr['size']) SpaceSize($icoarr['size'], $gid, true, $folder['uid']);
                 //addtoconfig($icoarr);
                 $icoarr['fsize'] = formatsize($icoarr['size']);
                 $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
@@ -1869,12 +1726,11 @@ class io_dzz extends io_api
         }
     }
 
-    public static function linktomusic($link, $pfid)
-    {
+    public static function linktomusic($link, $pfid) {
         global $_G;
         @set_time_limit(60);
         $fid = $pfid;
-        if (!$folder = C::t('folder')->fetch($pfid)){
+        if (!$folder = C::t('folder')->fetch($pfid)) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         $gid = $folder['gid'];
@@ -1893,11 +1749,11 @@ class io_dzz extends io_api
             C::t('collect')->addcopy_by_cid($cmusic['id']);
         }
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $path = $path . '/' . self::getFileName($data['title'], $fid);
+        $path = $path . '/' . IO::getFileName($data['title'], $fid);
         $icoarr = array(
             'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
             'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-            'name' => self::getFileName($data['title'], $fid),
+            'name' => IO::getFileName($data['title'], $fid),
             'flag' => '',
             'type' => 'music',
             'pfid' => $fid,
@@ -1953,12 +1809,11 @@ class io_dzz extends io_api
         }
     }
 
-    public static function linktovideo($link, $pfid)
-    {
+    public static function linktovideo($link, $pfid) {
         global $_G;
         @set_time_limit(60);
         $fid = $pfid;
-        if (!$folder = C::t('folder')->fetch($pfid)){
+        if (!$folder = C::t('folder')->fetch($pfid)) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         $gid = $folder['gid'];
@@ -2007,11 +1862,11 @@ class io_dzz extends io_api
         }
         $data = ($usedata) ? $usedata : $data;
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $path = $path . '/' . self::getFileName($data['title'], $fid) . '.swf';
+        $path = $path . '/' . IO::getFileName($data['title'], $fid) . '.swf';
         $icoarr = array(
             'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
             'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-            'name' => self::getFileName($data['title'], $fid),
+            'name' => IO::getFileName($data['title'], $fid),
             'type' => 'video',
             'oid' => $cvideo['cid'],
             'dateline' => $_G['timestamp'],
@@ -2066,11 +1921,10 @@ class io_dzz extends io_api
         }
     }
 
-    public static function linktourl($link, $pfid)
-    {
+    public static function linktourl($link, $pfid) {
         global $_G;
         $fid = $pfid;
-        if (!$folder = C::t('folder')->fetch($pfid)){
+        if (!$folder = C::t('folder')->fetch($pfid)) {
             return array('error' => lang('parent_directory_not_exist'));
         }
         $gid = $folder['gid'];
@@ -2104,7 +1958,7 @@ class io_dzz extends io_api
             C::t('collect')->addcopy_by_cid($clink['id']);
         }
         $parseurl = parse_url($link);
-        $clink['title'] = self::getFileName($data['title'] ? $data['title'] : $parseurl['host'], $fid);
+        $clink['title'] = IO::getFileName($data['title'] ? $data['title'] : $parseurl['host'], $fid);
         $icondata = getUrlIcon($link);
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
         $path = $path . '/' . $data['title'] . '.' . $data['ext'];
@@ -2176,39 +2030,29 @@ class io_dzz extends io_api
      * @param string $path 目标位置（可能是同一api内或跨api，这两种情况分开处理）
      * @return icosdatas
      */
-    public static function CopyTo($rid, $pfid, $iscopy = 0,$force=0)
-    {
-		
+    public function CopyTo($rid, $pfid, $iscopy = 0, $force = 0) {
         try {
-            if (strpos($rid, 'preview_') === 0) {
-                $rid = preg_replace('/^preview_/', '', $rid);
-                $preview = true;
-            }
-            // 检查是否以 'sid:' 开头并以 '_' 结尾
-            if (preg_match('/^sid:([^\_]+)_/', $rid, $matches)) {
-                // 提取 sid 后面的值
-                $sid = $matches[1];
-                // 去掉 sid 及其值
-                $rid = preg_replace('/^sid:[^\_]+_/', '', $rid);
-            }
             $data = C::t('resources')->fetch_by_rid($rid);
-			
+
             if (is_numeric($pfid)) {//如果目标位置也是本地
-				
-				if($data['type']=='folder'){//判断上级目录不能移动到下级目录中
-					$pfids=C::t('folder')->fetch_path_by_fid($pfid);
-					if(in_array($data['oid'],$pfids)){
-						$data['success']= lang('forbid_folder_to_sub_folder');
-						return $data;
-					}
-				}
+                if ($data['type'] == 'folder') {//判断上级目录不能移动到下级目录中
+                    $pfids = C::t('folder')->fetch_path_by_fid($pfid);
+                    if (in_array($data['oid'], $pfids)) {
+                        $data['success'] = lang('forbid_folder_to_sub_folder');
+                        return $data;
+                    }
+                }
                 if (!$iscopy) {
-                    $re = self::FileMove($rid, $pfid, true,$force);
+                    $re = $this->FileMove($rid, $pfid, true, $force);
                     $data['newdata'] = $re['icoarr'];
                     $data['success'] = true;
                     $data['moved'] = true;
                 } else {
-                    $re = self::FileCopy($rid, $pfid, true,$force,$preview,$sid);
+                    $re = $this->FileCopy($rid, $pfid, true, $force, $this->preview, $this->sharesid);
+                    if ($re['error']) {
+                        $data['error'] = $re['error'];
+                        return $data;
+                    }
                     $data['newdata'] = $re['icoarr'];
                     $data['success'] = true;
                 }
@@ -2221,12 +2065,11 @@ class io_dzz extends io_api
                             if (isset($re['error']) && intval($re['error_code']) != 31061) {
                                 $data['success'] = $re['error'];
                             } else {
-
                                 $data['newdata'] = $re['icoarr'];
                                 $data['success'] = true;
                                 $contents = C::t('resources')->fetch_by_pfid($data['oid']);
                                 foreach ($contents as $key => $value) {
-                                    $data['contents'][$key] = self::CopyTo($value['rid'], $re['folderarr']['path'], $iscopy);
+                                    $data['contents'][$key] = $this->CopyTo($value['rid'], $re['folderarr']['path'], $iscopy);
                                 }
                             }
                         }
@@ -2259,8 +2102,7 @@ class io_dzz extends io_api
         return $data;
     }
 
-    public static function RecovercreateFolderByPath($path, $pfid, $params = array())
-    {
+    public function RecovercreateFolderByPath($path, $pfid, $params = array()) {
         $data = array('pfid' => $pfid);
         if (!$path) {
             $data['pfid'] = $pfid;
@@ -2280,19 +2122,19 @@ class io_dzz extends io_api
                 ) {
                     if ($finfo['isdelete'] > 0) {
                         if ($finfo['rid']) {
-                            if ($ricoid = self::getRepeatIDByName($fname, $pfid, true)) {
-                                $newname = self::getFolderName($fname, $pfid);
-                                self::rename($finfo['rid'], $newname);
+                            if ($ricoid = $this->getRepeatIDByName($fname, $pfid, true)) {
+                                $newname = $this->getFolderName($fname, $pfid);
+                                $this->rename($finfo['rid'], $newname);
                             }
                             //DB::update('resources', array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid), array('rid' => $finfo['rid']));
-                            C::t('resources')->update_by_rid($finfo['rid'],array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid));
+                            C::t('resources')->update_by_rid($finfo['rid'], array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid));
                         }
                         //DB::update('folder', array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid), array('fid' => $finfo['fid']));
-                        C::t('folder')->update($finfo['fid'],array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid));
+                        C::t('folder')->update($finfo['fid'], array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid));
                     }
                     $pfid = $data['pfid'] = $finfo['fid'];
                 } else {
-                    if ($re = self::CreateFolder($data['pfid'], $fname, 0, $params, 'overwrite')) {
+                    if ($re = $this->CreateFolder($data['pfid'], $fname, 0, $params, 'overwrite')) {
                         $data['icoarr'][] = $re['icoarr'];
                         $data['folderarr'][] = $re['folderarr'];
                         $pfid = $data['pfid'] = $re['folderarr']['fid'];
@@ -2307,8 +2149,7 @@ class io_dzz extends io_api
     }
 
     //恢复文件
-    public static function Recover($rid, $combine = true,$force=false)
-    {
+    public function Recover($rid, $combine = true, $force = false) {
         global $_G;
         //判断文件是否存在
         if (!$icoarr = C::t('resources')->fetch_info_by_rid($rid)) {
@@ -2323,7 +2164,7 @@ class io_dzz extends io_api
             }
             if ($dirinfo['path']) {
                 //若目录被删除恢复或创建目录
-                if (!$folderinfo = self::createFolderByPath($dirinfo['path'], $dirinfo['pfid'])) {
+                if (!$folderinfo = $this->CreateFolderByPath($dirinfo['path'], $dirinfo['pfid'])) {
                     return array('rid' => $rid, 'error' => lang('file_longer_exists'));
                 }
             }
@@ -2353,7 +2194,7 @@ class io_dzz extends io_api
                 if (!SpaceSize($contains['size'], $gid)) {
                     return array('error' => lang('inadequate_capacity_space'));
                 }
-                if ($combine && $ricoid = self::getRepeatIDByName($icoarr['name'], $icoarr['pfid'], true)) {
+                if ($combine && $ricoid = $this->getRepeatIDByName($icoarr['name'], $icoarr['pfid'], true)) {
                     $rinfo = C::t('resources')->fetch_info_by_rid($ricoid);
                     //目录下所有删除文件rid
                     $rids = array();
@@ -2366,7 +2207,7 @@ class io_dzz extends io_api
                         }
                     }
                     // DB::update('resources', array('pfid' => $rinfo['oid']), 'rid in(' . dimplode($rids) . ')');
-                    if (count($rids) > 0) C::t('resources')->update_by_rid($rids,array('pfid' => $rinfo['oid']));
+                    if (count($rids) > 0) C::t('resources')->update_by_rid($rids, array('pfid' => $rinfo['oid']));
                     //DB::update('folder', array('pfid' => $rinfo['oid']), 'fid in(' . dimplode($fids) . ')');
                     if (count($fids) > 0) C::t('folder')->update($fids, array('pfid' => $rinfo['oid']));
                     //更改当前目录下所有下级文件路径
@@ -2378,24 +2219,24 @@ class io_dzz extends io_api
                     DB::update('shares', array('pfid' => $rinfo['oid']), array('pfid' => $icoarr['oid']));
 
                     foreach ($rids as $v) {
-                        self::Recover($v, $combine,$force);
+                        $this->Recover($v, $combine, $force);
                     }
-                    self::delete($icoarr['rid']);
+                    $this->delete($icoarr['rid']);
                     //删除回收站数据
                     C::t('resources_recyle')->delete_by_rid($icoarr['rid']);
                 } else {
                     //判断目录中是否存在同名文件夹，如果有则将当前目录改名
-                    if ($ricoid = self::getRepeatIDByName($icoarr['name'], $icoarr['pfid'], true)) {
-                        $newname = self::getFolderName($icoarr['name'], $icoarr['pfid']);
-                        self::rename($icoarr['rid'], $newname);
+                    if ($ricoid = $this->getRepeatIDByName($icoarr['name'], $icoarr['pfid'], true)) {
+                        $newname = $this->getFolderName($icoarr['name'], $icoarr['pfid']);
+                        $this->rename($icoarr['rid'], $newname);
                     }
                     //如果当前文件夹是删除状态则恢复当前文件夹
                     if ($icoarr['isdelete'] > 0) {
                         $recoverarr = array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $icoarr['pfid']);
                         //恢复文件夹表数据和resources表数据
                         //if (DB::update('folder', $recoverarr, 'fid =' . $icoarr['oid']) && DB::update('resources', $recoverarr, "rid ='{$rid}'")) {
-                        if( C::t('resources')->update_by_rid($rid,$recoverarr)){
-							C::t('folder')->update($icoarr['oid'],$recoverarr);
+                        if (C::t('resources')->update_by_rid($rid, $recoverarr)) {
+                            C::t('folder')->update($icoarr['oid'], $recoverarr);
                             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
                             //添加事件
                             $eventdata1 = array('username' => $_G['username'], 'position' => $path, 'filename' => $icoarr['name'], 'hash' => $hash);
@@ -2410,9 +2251,9 @@ class io_dzz extends io_api
                         $rids[] = $v['rid'];
                     }
                     foreach ($rids as $v) {
-                        self::Recover($v, $combine,$force);
+                        $this->Recover($v, $combine, $force);
                     }
-						
+
                     if ($newpfid) {
                         C::t('resources_path')->update_pathdata_by_fid($icoarr['oid'], $newpfid);
                     }
@@ -2425,8 +2266,8 @@ class io_dzz extends io_api
                 }
                 $recoverarr = array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $icoarr['pfid']);
                 //如果目录下有同名文件,则恢复时生成新的文件名
-                if ($ricoid = self::getRepeatIDByName($icoarr['name'], $icoarr['pfid'], false)) {
-                    $recoverarr['name'] = self::getFileName($icoarr['name'], $icoarr['pfid']);
+                if ($ricoid = $this->getRepeatIDByName($icoarr['name'], $icoarr['pfid'], false)) {
+                    $recoverarr['name'] = IO::getFileName($icoarr['name'], $icoarr['pfid']);
                 }
                 $totalsize = 0;
                 if ($icoarr['vid'] > 0) {
@@ -2441,7 +2282,7 @@ class io_dzz extends io_api
 
                 //恢复文件
                 //if (DB::update('resources', $recoverarr, array('rid' => $rid))) {
-                if(C::t('resources')->update_by_rid($rid,$recoverarr)){
+                if (C::t('resources')->update_by_rid($rid, $recoverarr)) {
                     //删除回收站收据
                     C::t('resources_recyle')->delete_by_rid($icoarr['rid']);
                     //添加事件
@@ -2468,8 +2309,7 @@ class io_dzz extends io_api
     }
 
     //本地文件移动到本地其它区域
-    public static function FileMove($rid, $pfid, $first = true,$force)
-    {
+    public function FileMove($rid, $pfid, $first = true, $force) {
         global $_G, $_GET;
         @set_time_limit(0);
         @ini_set("memory_limit", "512M");
@@ -2489,26 +2329,26 @@ class io_dzz extends io_api
 
             if ($icoarr['pfid'] != $tfolder['fid']) {
                 //判断有无删除权限
-				if(!$force){
-					if($icoarr['type'] == 'folder'){
-						$return = C::t('resources')->check_folder_perm($icoarr,'delete');
-						if($return['error']){
-							return  array('error' => $return['error']);
-						}
-					}else{
-						if (!perm_check::checkperm('delete', $icoarr)) {
-							return array('error' => lang('privilege'));
-						}
-					}
+                if (!$force) {
+                    if ($icoarr['type'] == 'folder') {
+                        $return = C::t('resources')->check_folder_perm($icoarr, 'delete');
+                        if ($return['error']) {
+                            return array('error' => $return['error']);
+                        }
+                    } else {
+                        if (!perm_check::checkperm('delete', $icoarr)) {
+                            return array('error' => lang('privilege'));
+                        }
+                    }
 
-					//判断有无新建权限,如果是文件夹判断是否有文件件新建权限
-					if ($icoarr['type'] == 'folder' && !perm_check::checkperm_Container($pfid, 'folder')) {
-						return array('error' => lang('privilege'));
-					} elseif (!perm_check::checkperm_Container($pfid, 'upload')) {
-						return array('error' => lang('privilege'));
-					}
-				}
-            }else{
+                    //判断有无新建权限,如果是文件夹判断是否有文件件新建权限
+                    if ($icoarr['type'] == 'folder' && !perm_check::checkperm_Container($pfid, 'folder')) {
+                        return array('error' => lang('privilege'));
+                    } elseif (!perm_check::checkperm_Container($pfid, 'upload')) {
+                        return array('error' => lang('privilege'));
+                    }
+                }
+            } else {
                 $return['icoarr'] = $icoarr;
                 $return['icoarr']['monthdate'] = dgmdate($return['icoarr']['dateline'], 'm-d');
                 $return['icoarr']['hourdate'] = dgmdate($return['icoarr']['dateline'], 'H:i');
@@ -2530,7 +2370,6 @@ class io_dzz extends io_api
             if ($icoarr['type'] == 'folder') {
                 $contains = C::t('resources')->get_contains_by_fid($icoarr['oid'], true);
                 if ($ogid != $gid && $contains['size'] && !SpaceSize($contains['size'], $gid)) {
-
                     return array('error' => lang('inadequate_capacity_space'));
                 }
 
@@ -2541,7 +2380,7 @@ class io_dzz extends io_api
                     //移动源文件夹数据到目标目录同名文件夹
                     foreach (C::t('resources')->fetch_basicinfo_by_pfid($icoarr['oid']) as $value) {
                         try {
-                            self::FileMove($value['rid'], $currentfid, false, false);
+                            $this->FileMove($value['rid'], $currentfid, false, false);
                             unset($value);
                             unset($folder);
                         } catch (Exception $e) {
@@ -2569,7 +2408,7 @@ class io_dzz extends io_api
                 } else {
                     //查询源文件夹数据
                     if ($folder = C::t('folder')->fetch($icoarr['oid'])) {
-                        if ($icoarr['type'] == 'folder') $icoarr['name'] = self::getFolderName($icoarr['name'], $tfolder['fid']);
+                        if ($icoarr['type'] == 'folder') $icoarr['name'] = $this->getFolderName($icoarr['name'], $tfolder['fid']);
                         $folder['uid'] = $_G['uid'];
                         $folder['username'] = $_G['username'];
                         $folder['gid'] = $gid;
@@ -2589,20 +2428,19 @@ class io_dzz extends io_api
                         //修改文件夹表数据和resources表数据
                         // DB::update('resources', array('oid' => $folder['fid'], 'pfid' => $pfid, 'gid' => $gid, 'uid' => $_G['uid'], 'username' => $_G['username']), array('rid' => $rid)
                         if (C::t('folder')->update($folder['fid'], $folder) &&
-                           C::t('resources')->update_by_rid($rid,array('oid' => $folder['fid'], 'pfid' => $pfid, 'gid' => $gid, 'uid' => $_G['uid'], 'username' => $_G['username']))
+                            C::t('resources')->update_by_rid($rid, array('oid' => $folder['fid'], 'pfid' => $pfid, 'gid' => $gid, 'uid' => $_G['uid'], 'username' => $_G['username']))
                         ) {
-
                             //更改文件夹路径
                             C::t('resources_path')->update_pathdata_by_fid($folder['fid'], $pfid);
                             if ($fids) {
                                 //修改资源表数据
                                 //DB::update('resources', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
-                                C::t('resources')->update_by_pfids($fids,$folderinfo);
+                                C::t('resources')->update_by_pfids($fids, $folderinfo);
                                 //更改动态表数据
                                 DB::update('resources_event', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
                                 //更改folder表数据
-                               // DB::update('folder', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
-                                C::t('folder')->update_by_pfids($fids,$folderinfo);
+                                // DB::update('folder', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
+                                C::t('folder')->update_by_pfids($fids, $folderinfo);
                             }
                             if ($contains['size'] > 0) {
                                 SpaceSize(-$contains['size'], $ogid, 1);
@@ -2643,8 +2481,7 @@ class io_dzz extends io_api
                 }
                 //如果不是文件夹判断文件名重复
                 if ($icoarr['pfid'] != $tfolder['fid'] || $icoarr['isdelete'] > 0) {
-
-                    $icoarr['name'] = self::getFileName($icoarr['name'], $tfolder['fid']);
+                    $icoarr['name'] = IO::getFileName($icoarr['name'], $tfolder['fid']);
                 }
                 $icoarr['gid'] = $gid;
                 $icoarr['uid'] = $_G['uid'];
@@ -2653,7 +2490,7 @@ class io_dzz extends io_api
                 $icoarr['isdelete'] = 0;
 
                 if (C::t('resources')->update_by_rid($icoarr['rid'], $icoarr)) {
-                    Hook::listen('movefile_after',$icoarr['rid']);
+                    Hook::listen('movefile_after', $icoarr['rid']);
                     //更改文件动态归属位置
                     C::t('resources_event')->update_position_by_rid($icoarr['rid'], $icoarr['pfid'], $icoarr['gid']);
                     //修改分享表状态
@@ -2692,36 +2529,34 @@ class io_dzz extends io_api
     }
 
     //本地文件复制到本地其它区域
-    public static function FileCopy($rid, $pfid, $first = true,$force=false,$preview = false,$sid = false)
-    {
+    public function FileCopy($rid, $pfid, $first = true, $force = false, $preview = false, $sid = false) {
         global $_G, $_GET;
         if (!$tfolder = DB::fetch_first("select * from " . DB::table('folder') . " where fid='{$pfid}'")) {
             return array('error' => lang('target_location_not_exist'));
         }
-        if ($icoarr = C::t('resources')->fetch_by_rid($rid,'',$preview,$sid)) {
-
+        if ($icoarr = C::t('resources')->fetch_by_rid($rid, '', $preview, $sid)) {
             unset($icoarr['rid']);
             //判断当前文件有没有拷贝权限；
-			if(!$force){
-				if($icoarr['type'] == 'folder'){
-					$permcheck = C::t('resources')->check_folder_perm($icoarr,'copy');
-					if($permcheck['error']){
-						return array('error'=>$permcheck['error']);
-					}
-				}else{
-					if (!perm_check::checkperm('copy', $icoarr)) {
-						return array('error' => lang('privilege'));
-					}
-				}
+            if (!$force) {
+                if ($icoarr['type'] == 'folder') {
+                    $permcheck = C::t('resources')->check_folder_perm($icoarr, 'copy');
+                    if ($permcheck['error']) {
+                        return array('error' => $permcheck['error']);
+                    }
+                } else {
+                    if (!perm_check::checkperm('copy', $icoarr)) {
+                        return array('error' => lang('privilege'));
+                    }
+                }
 
-				//判断当前目录有无添加权限
-				if (!perm_check::checkperm_Container($pfid, 'upload')) {
-					return array('error' => lang('privilege'));
-				}
-			}
+                //判断当前目录有无添加权限
+                if (!perm_check::checkperm_Container($pfid, 'upload')) {
+                    return array('error' => lang('privilege'));
+                }
+            }
             $success = 0;
             $gid = DB::result_first("select gid from " . DB::table('folder') . " where fid='{$pfid}'");
-            $targetpatharr = C::t('resources_path')->fetch_pathby_pfid($pfid,true);//目标路径
+            $targetpatharr = C::t('resources_path')->fetch_pathby_pfid($pfid, true);//目标路径
             $targetpath = $targetpatharr['path'];
 
             if ($icoarr['type'] == 'folder') {
@@ -2730,39 +2565,31 @@ class io_dzz extends io_api
                     return array('error' => lang('inadequate_capacity_space'));
                 }
                 if ($icoarr['pfid'] == $pfid) {//判断源文件位置和目标位置是否相同,如果相同则生成副本
-
                     $icoarr['name'] = $icoarr['name'] . '-副本';
-
-                    if ($ricoid = self::getRepeatIDByName($icoarr['name'], $pfid, ($icoarr['type'] == 'folder') ? true : false)) {//如果目录下有同名文件
-
-                        $icoarr['name'] = self::getFolderName($icoarr['name'], $pfid);
-
+                    if ($ricoid = $this->getRepeatIDByName($icoarr['name'], $pfid, ($icoarr['type'] == 'folder') ? true : false)) {//如果目录下有同名文件
+                        $icoarr['name'] = $this->getFolderName($icoarr['name'], $pfid);
                     }
                 }
                 //查询原文件夹是否存在
                 if ($folder = C::t('folder')->fetch($icoarr['oid'])) {
-
                     //如果目标目录中有同名文件夹，并且源文件位置和目标位置不在同一目录，则将源文件夹中文件放入该目录下
-                    if ($icoarr['pfid'] != $pfid && $currentinfo = DB::fetch_first("select oid,rid from %t where pfid = %d and `name` = %s and `type` = %s and isdelete < 1",
-                            array('resources', $tfolder['fid'], $icoarr['name'], 'folder'))
-                    ) {
+                    if ($icoarr['pfid'] != $pfid && $currentinfo = DB::fetch_first("select oid,rid from %t where pfid = %d and `name` = %s and `type` = %s and isdelete < 1", array('resources', $tfolder['fid'], $icoarr['name'], 'folder'))) {
                         $currentfid = $currentinfo['oid'];
                         //复制源文件夹数据到目标目录同名文件夹
                         foreach (C::t('resources')->fetch_by_pfid($icoarr['oid']) as $value) {
                             try {
-                                self::FileCopy($value['rid'], $currentfid, false,$preview,$sid);
+                                $this->FileCopy($value['rid'], $currentfid, false, $preview, $sid);
                             } catch (Exception $e) {
                             }
                         }
                         $data = C::t('resources')->fetch_by_rid($currentinfo['rid']);
                         $return['folderarr'] = $data;
                         $icoarr['rid'] = $data['rid'];
-
                     } else {//如果目标目录中不存在同名文件夹或者存在同名文件夹而源文件位置和目标位置在同一目录，执行创建
-                        if ($data = self::createFolderByPath($icoarr['name'], $pfid)) {//根据文件夹名字和当前文件夹路径创建文件夹
+                        if ($data = $this->CreateFolderByPath($icoarr['name'], $pfid)) {//根据文件夹名字和当前文件夹路径创建文件夹
                             foreach (C::t('resources')->fetch_by_pfid($folder['fid']) as $value) {//查询原文件夹中文件
                                 try {
-                                    self::FileCopy($value['rid'], $data['pfid'], false,$sid,$sid);//复制原文件夹中文件到新文件夹
+                                    $this->FileCopy($value['rid'], $data['pfid'], false, $preview, $sid);//复制原文件夹中文件到新文件夹
                                 } catch (Exception $e) {
                                 }
                             }
@@ -2794,9 +2621,9 @@ class io_dzz extends io_api
                     $icoarr['name'] = $tname . '-副本' . $ext;
                 }
 
-                if ($ricoid = self::getRepeatIDByName($icoarr['name'], $pfid, ($icoarr['type'] == 'folder') ? true : false)) {//如果目录下有同名文件
+                if ($ricoid = $this->getRepeatIDByName($icoarr['name'], $pfid, ($icoarr['type'] == 'folder') ? true : false)) {//如果目录下有同名文件
 
-                    $icoarr['name'] = self::getFileName($icoarr['name'], $pfid);
+                    $icoarr['name'] = IO::getFileName($icoarr['name'], $pfid);
 
                 }
                 $setarr = array(
@@ -2857,7 +2684,7 @@ class io_dzz extends io_api
                     $return['icoarr'] = C::t('resources')->fetch_by_rid($icoarr['rid']);
                     $return['icoarr']['monthdate'] = dgmdate($return['icoarr']['dateline'], 'm-d');
                     $return['icoarr']['hourdate'] = dgmdate($return['icoarr']['dateline'], 'H:i');
-                    Hook::listen('createafter_addindex',$return['icoarr']);
+                    Hook::listen('createafter_addindex', $return['icoarr']);
                     return $return;
                 }
 
@@ -2871,11 +2698,10 @@ class io_dzz extends io_api
     /*
 		表单上传文件保存到attachment表，返回attach数组
 	*/
-    public static function UploadSave($FILE)
-    {
+    public static function UploadSave($FILE) {
         global $_G;
         $ext = strtolower(substr(strrchr($FILE['name'], '.'), 1));
-        $target = self::getPath($ext ? ('.' . $ext) : '', 'dzz');
+        $target = IO::getPath($ext ? ('.' . $ext) : '', 'dzz');
         if ($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])) {
             $unrun = 1;
         } else {
@@ -2918,8 +2744,7 @@ class io_dzz extends io_api
     }
 
 
-    public static function multiUpload($opath, $path, $filename, $attach = array(), $ondup = "newcopy")
-    {
+    public function multiUpload($opath, $path, $filename, $attach = array(), $ondup = "newcopy") {
         /*
         * 分块上传文件
         * param $file:文件路径（可以是url路径，需要服务器开启allow_url_fopen);
@@ -2932,15 +2757,7 @@ class io_dzz extends io_api
         }
         //判断大小
         //判断空间大小
-        $filename = self::name_filter($filename);
-        if (strpos($path, 'preview_') === 0) {
-            $path = preg_replace('/^preview_/', '', $path);
-        }
-        // 检查是否以 'sid:' 开头并以 '_' 结尾
-        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
-            // 去掉 sid 及其值
-            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
-        }
+        $filename = IO::name_filter($filename);
         if (strpos($path, 'dzz::') === false && strpos($path, 'TMP::') === false) {
             $gid = DB::result_first("select gid from %t where fid=%d", array('folder', $path));
             if (!SpaceSize($size, $gid)) {
@@ -2951,7 +2768,7 @@ class io_dzz extends io_api
             return array('error' => lang('open_file_error'));
         }
         if (strpos($path, 'dzz::') !== false || strpos($path, 'TMP::') !== false) {
-            $file = self::getStream($path . '/' . $filename);
+            $file = $this->getStream($path . '/' . $filename);
             while (!feof($handle)) {
                 $fileContent = fread($handle, 8192);
                 file_put_contents($file, $fileContent, FILE_APPEND);
@@ -2962,7 +2779,7 @@ class io_dzz extends io_api
         } else {
             $pathinfo = pathinfo($filename);
             $ext = strtolower($pathinfo['extension']);
-            $target = self::getPath($ext ? ('.' . $ext) : '', 'dzz');
+            $target = IO::getPath($ext ? ('.' . $ext) : '', 'dzz');
             $file = getglobal('setting/attachdir') . '/' . $target;
             while (!feof($handle)) {
                 $fileContent = fread($handle, 8192);
@@ -2972,14 +2789,14 @@ class io_dzz extends io_api
             fclose($handle);
         }
 
-        $nfilename = self::getFileName($filename, $path); //重命名
+        $nfilename = IO::getFileName($filename, $path); //重命名
 
-        if ($attach = self::save($target, $nfilename)) {
+        if ($attach = $this->save($target, $nfilename)) {
             //return array('error'=>json_encode($attach));
             if ($attach['error']) {
                 return array('error' => $attach['error']);
             } else {
-                return self::uploadToattachment($attach, $path);
+                return io_dzz::uploadToattachment($attach, $path);
             }
         } else {
             return array('error' => 'failure');
@@ -2987,10 +2804,9 @@ class io_dzz extends io_api
 
     }
 
-    public static function shenpiCreateFile($fid, $path, $attach)
-    {
-        $data = self::createFolderByPath($path, $fid);;
-        return self::uploadToattachment($attach, $data['pfid']);
+    public function shenpiCreateFile($fid, $path, $attach) {
+        $data = $this->CreateFolderByPath($path, $fid);
+        return io_dzz::uploadToattachment($attach, $data['pfid']);
     }
 }
 

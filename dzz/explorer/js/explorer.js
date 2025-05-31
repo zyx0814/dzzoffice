@@ -27,6 +27,8 @@ _explorer = function (json) {
 _explorer.infoPanel_hide = 0; //标识右侧面板不能开启
 _explorer.appUrl = MOD_URL;
 _explorer.hash = '';
+_explorer.bz = '';
+var loading = 0;
 _explorer.getConfig = function (url, callback) {
 	$.getJSON(url + '&t=' + new Date().getTime(), function (json) {
 		new _explorer(json);
@@ -82,18 +84,13 @@ _explorer.infoPanel = function () {
 };
 _explorer.toggleRight = function () {
 	if (!_explorer.infoPanelOpened || _explorer.infoPanel_hide) {
-		$('.bs-main-container').css({
-			'margin-right': '0px'
-		});
-		$('.rightMenu').css('right', '-320px');
-		$('.toggRight').parent('li').removeClass('background-toggle').find('.dzz').attr("data-original-title", "开启右侧信息");
-		
+		$('.middleconMenu').removeClass('m-right-300');
+		$('.rightMenu').removeClass('is-block');
+		$('.toggRight').parent('li').removeClass('background-toggle').find('.mdi').attr("data-original-title", "开启右侧信息");
 	} else {
-		$('.bs-main-container').css({
-			'margin-right': '300px'
-		});
-		$('.rightMenu').css('right', '0');
-		$('.toggRight').parent('li').addClass('background-toggle').find('.dzz').attr("data-original-title", "关闭右侧信息");
+		$('.middleconMenu').addClass('m-right-300');
+		$('.rightMenu').addClass('is-block');
+		$('.toggRight').parent('li').addClass('background-toggle').find('.mdi').attr("data-original-title", "关闭右侧信息");
 
 	}
 };
@@ -208,6 +205,27 @@ _explorer.topNav_init = function () {
 			prefix = textarr[0];
 			text = textarr[1];
 		}
+		var hash = location.hash;
+		if (hash.indexOf('cloud') != -1) {
+			var bz = _explorer.getUrlParam(hash, 'bz');
+			var li = $(this).closest('li');
+			var siblings = li.prevAll();
+			if (siblings.length === 0) {
+				hash = '#cloud&bz='+bz;
+			} else {
+				siblings.not(':last').find('a').each(function () {
+					path += $(this).text() + '/';
+				});
+				path += text;
+				if (path.charAt(path.length - 1) !== '/') {
+					path = path + '/';
+				}
+				path = path.substring(0, path.length - 1);
+				hash = '#cloud&bz='+bz+'&path=' +bz+path;
+			}
+			location.hash = hash;
+			return false;
+		}
 
 		$(this).closest('li').prevAll().find('a').each(function () {
 			path += $(this).text() + '/';
@@ -285,6 +303,10 @@ _explorer.topNav_init = function () {
 	});
 };
 _explorer.routerule = function (path, prefix) {
+	if (location.hash.indexOf('cloud') != -1) {
+		layer.msg('网络挂载不支持手动输入地址进行切换', {offset:'10px'});
+		return false;
+	}
 	var queryobj = {
 		'name': path
 	};
@@ -319,7 +341,6 @@ _explorer.routerule = function (path, prefix) {
 	return false;
 };
 _explorer.hashHandler = function () { //处理页面hash变化
-
 	var hash = location.hash;
 	hash = hash.replace(/^#/i, '');
 	_explorer.jstree_select(hash);
@@ -339,13 +360,6 @@ _explorer.hashHandler = function () { //处理页面hash变化
 	return false;
 };
 
-_explorer.loading = function (container, flag) { //右侧加载效果
-	if (flag === 'hide') {
-		container.find('.rightLoading').remove();
-	} else {
-		container.append('<div class="rightLoading"></div>');
-	}
-};
 _explorer.getRightContent = function (hash, container) { //处理右侧页面加载
 	var searchpreg = /#searchFile/;
 	if (!searchpreg.test(hash)) {
@@ -353,23 +367,37 @@ _explorer.getRightContent = function (hash, container) { //处理右侧页面加
 			resetting_condition();
 		} catch (e) {}
 	}
-	_explorer.loading(container);
-	_explorer.rightLoading = 1;
-	$('.document-data').removeClass('actives');
-	$('[data-hash="' + hash + '"]').addClass('actives');
-	var url = _explorer.appUrl + '&op=' + hash;
-	jQuery('#middleconMenu').load(url, function () {
-		$(document).trigger('ajaxLoad.middleContent', [hash]);
+	loading=$('#middleconMenu').lyearloading({
+		opacity           : 0,
+		spinnerSize       : 'lg',
+		textColorClass    : 'text-info',
+		spinnerColorClass : 'text-info',
+		spinnerText       : '加载中...',
 	});
-
+	if(window.innerWidth < 1024) {
+		_explorer.infoPanelOpened = 0;
+	}
+	$('.document-data').removeClass('active');
+	$('[data-hash="' + hash + '"]').addClass('active');
+	var url = _explorer.appUrl + '&op=' + hash;
+	jQuery('#middleconMenu').load(url, function (response, status, xhr) {
+		loading.destroy();
+		if (status === "error") {
+			console.error("加载失败：", xhr.status, xhr.statusText);
+			$('#middleconMenu').html('<div class="emptyPage" id="noticeinfo"><img src="static/image/common/no_list.png"><div class="emptyPage-text text-danger">加载内容失败，请刷新重试。</div></div>');
+		} else {
+			$(document).trigger('ajaxLoad.middleContent', [hash]);
+		}
+	});
 };
 _explorer.topMenu = function (hash, fid) {
 	var shownewbuild = false;
 	if (hash) {
 		//根据hash值判断是否显示在头部
 		if (hash == 'groupmanage' || hash == 'app' || hash == 'dynamic' || hash == 'mygroup' || hash.indexOf('share') == 0 || hash.indexOf('recycle') == 0) {
+			jQuery('.navtopheader').css('display', 'none');
 			jQuery('.rightswitch').hide();
-			if(hash.indexOf('recycle') == 0){
+			if(hash.indexOf('recycle') == 0 || hash.indexOf('cloud') == 0){
 				jQuery('.listchange').show();
 			}else{
 				jQuery('.listchange').hide();
@@ -378,7 +406,11 @@ _explorer.topMenu = function (hash, fid) {
 		} else {
 			jQuery('.listchange').show();
 			jQuery('.rightswitch').show();
-			_explorer.infoPanel_hide = 0;
+			if (hash == 'cloud') {
+				_explorer.infoPanel_hide = 1;
+			} else {
+				_explorer.infoPanel_hide = 0;
+			}
 		}
 		_explorer.toggleRight();
 		if (hash.indexOf('home') == 0 || (hash.indexOf('group') == 0 && hash.indexOf('groupmanage') == -1)) { //判断hash隐藏或显示新建上传
@@ -430,6 +462,23 @@ _explorer.jstree_select = function (hash) {
 		_explorer.open_node_by_id(fid, gid);
 	} else if (op === 'home') {
 		_explorer.open_node_by_id(fid);
+	} else if (op === 'cloud') {
+		var inst = $('#position').jstree(true);
+		var bz = _explorer.getUrlParam(hash, 'bz');
+		if (bz) {
+			bz = bz.replace(/:/g, '_');
+			var node = inst.get_node('#bz_' + bz);
+			if (node) {
+				inst.select_node('#bz_' + bz);
+			} else {
+				node = inst.get_node('#cloud');
+				inst.open_node(node, function (node) {
+					inst.select_node('#bz_' + bz);
+				});
+			}
+		} else {
+			inst.select_node('#cloud');
+		}
 	} else if (op === 'mygroup') {
 		$('#position').jstree(true).select_node('#group');
 	} else {
@@ -438,13 +487,15 @@ _explorer.jstree_select = function (hash) {
 		}
 	}
 };
-_explorer.open_node_by_id = function (fid, gid) {
+_explorer.open_node_by_id = function (fid, gid,bz) {
 	var inst = $('#position').jstree(true);
 	var node = null;
 	if (fid) {
 		node = inst.get_node('#f_' + fid) || inst.get_node('#u_' + fid);
 	} else if (gid) {
 		node = inst.get_node('#g_' + gid) || inst.get_node('#gid_' + gid);
+	} else if (bz) {
+		node = inst.get_node('#bz_' + bz);
 	} else {
 		inst.deselect_all();
 		return;
@@ -462,7 +513,8 @@ _explorer.open_node_by_id = function (fid, gid) {
 	} else {
 		$.post(_explorer.appUrl + '&op=grouptree&do=getParentsArr', {
 			'fid': fid,
-			'gid': gid
+			'gid': gid,
+			'bz': bz
 		}, function (data) {
 			var node = inst.get_node('#' + data[0]);
 			_explorer.open_node_bg(inst, node, data);
@@ -470,7 +522,6 @@ _explorer.open_node_by_id = function (fid, gid) {
 	}
 };
 _explorer.open_node_bg = function (inst, node, arr) {
-
 	inst.open_node(node, function (node) {
 		var i = jQuery.inArray(node.id, arr);
 		if (i < arr.length && i > -1 && document.getElementById(arr[i + 1])) {
@@ -569,29 +620,18 @@ _explorer.image_resize = function (img, width, height) {
 			if ((w / h) > 1) {
 				realw = (w > width) ? parseInt(width) : w;
 				realh = (w > width) ? parseInt(height) : (realw * h / w);
-				img.style.width = realw + 'px';
-				img.style.height = realh + 'px';
 			} else {
 				realh = (h > height) ? parseInt(height) : h;
 				realw = (h > height) ? parseInt(width) : (realh * w / h);
-				img.style.width = realw + 'px';
-				img.style.height = 'auto';
 			}
 			if (realw < 32 && realh < 32) {
 				jQuery(img).addClass('image_tosmall').css({
 					padding: ((height - realh) / 2 - 1) + 'px ' + ((width - realw) / 2 - 1) + 'px'
 				});
 			}
-			try {
-				/*img.style.width=realw+'px';
-				img.style.height='auto'  */
-			} catch (e) {
-
-			}
 		}
 		jQuery(img).show();
 	});
-
 };
 _explorer.icoimgError = function (img, width, height) {
 	width = !width ? jQuery(img).parent().width() : width;
@@ -667,6 +707,7 @@ function dfire(e) {
 }
 //增加统计数
 function addstatis(rid) {
+	if (_explorer.hash.indexOf('cloud') != -1) return;
 	var remsg = false;
 	$.ajax({
 		type: 'post',

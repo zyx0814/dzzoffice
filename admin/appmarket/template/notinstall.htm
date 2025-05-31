@@ -1,0 +1,50 @@
+<!--{template lyear:header_simple_start}-->
+<link href="{MOD_PATH}/images/market.css?{VERHASH}" rel="stylesheet" media="all"> 
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+	<!--{template right_header}-->
+	  <div class="card">
+		<div class="card-body">
+			<!--{if $list}-->
+			<div class="table-responsive">
+				<table class="table table-hover align-middle">
+					<thead> 
+						<th >{lang application_name}</th>
+						<th >{lang group_permissions}</th>
+						<th >{lang version}</th>
+						<th >{lang dir}(dzz目录下)</th>
+						<th>{lang supplier}</th>
+						<th >{lang operation}</th>
+					</thead>
+					<!--{loop $list $value}-->
+					<tr> 
+						<td>
+							<a href="$value[appurl]" target="_blank" class="appicon" style="float: left;padding-right: 5px;"><img src="$value[appico]" style="margin:0" /></a>
+							<!--{if $value[appadminurl]}-->
+							<a href="$value[appadminurl]" target="_blank" class="dcolor">$value[appname]</a>
+							<!--{else}-->
+							<a href="$value[appurl]" target="_blank" class="dcolor">$value[appname]</a>
+							<!--{/if}--> 
+							<small class="text-muted" title="{lang version}">$value[version]</small>    
+							<div class="appdesc form-text" title="$value['appdesc']"> {eval echo $value['appdesc']?$value['appdesc']:lang('none');}</div>
+						</td>
+						<td>$value[grouptitle]</td>
+						<td>$value[version]</td>
+						<td>$value[identifier]</td>
+						<td>$value[vendor]</td>
+						<td>
+							<a class="btn btn-primary" href="{MOD_URL}&op=cp&do=install&app_path=dzz&app_name=$value[identifier]">{lang install}</a>
+						</td>
+					</tr>
+					<!--{/loop}-->
+				</table>
+			</div>
+			<!--{else}-->
+			<div class="alert alert-info">{lang list_notinstall_application}</div>
+			<!--{/if}-->
+		</div>
+	</div>
+</div>
+</main>
+<!--{template lyear:footer_simple}-->

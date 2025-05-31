@@ -80,7 +80,10 @@ class dzz_database {
         return self::$db->insert_id();
     }
 
-    public static function fetch($resourceid, $type = 'MYSQL_ASSOC') {
+    public static function fetch($resourceid, $type = null) {
+        if (!isset($type)) {
+			$type = constant('MYSQLI_ASSOC');
+		}
         return self::$db->fetch_array($resourceid, $type);
     }
 
@@ -242,6 +245,7 @@ class dzz_database {
         }
 
         switch ($glue) {
+            case '>=':
             case '=':
                 return $field . $glue . self::quote($val);
                 break;
@@ -258,7 +262,6 @@ class dzz_database {
             case '<':
             case '<>':
             case '<=':
-            case '>=':
                 return $field . $glue . self::quote($val);
                 break;
 

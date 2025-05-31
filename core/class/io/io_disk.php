@@ -120,7 +120,8 @@ class io_disk extends io_api {
             $config = $_GET['config'];
             $config['bz'] = 'disk';
             $uid = defined('IN_ADMIN') ? 0 : $_G['uid'];
-            if ($ret = $this->checkdisk($config)) {
+            $ret = $this->checkdisk($config);
+            if (is_array($ret) && isset($ret['error'])) {
                 if (defined('IN_ADMIN')) {
                     if ($ret['error']) showmessage($ret['error'], BASESCRIPT . '?mod=cloud&op=space');
                 } else {
@@ -250,6 +251,10 @@ class io_disk extends io_api {
         Hook::listen('thumbnail', $fileurls, $path);//调用挂载点程序生成缩略图绝对和相对地址；
         if (!$fileurls) {
             $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
+        }
+        if (!is_string($fileurls['filedir'])) {
+            header("HTTP/1.1 304 Not Modified");
+            exit;
         }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
@@ -468,6 +473,9 @@ class io_disk extends io_api {
             }
 
             $file = $this->attachdir . $bzarr['path'];
+            if (!file_exists($file)) {
+                return array('error' => lang('file_not_exist'),'delete' => 1);
+            }
             if (is_dir($file)) {
                 $meta['type'] = 'folder';
                 $meta['size'] = 0;

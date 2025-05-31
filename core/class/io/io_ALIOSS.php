@@ -321,6 +321,10 @@ class io_ALIOSS extends io_api {
         if (!$fileurls) {
             $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
         }
+        if (!is_string($fileurls['filedir'])) {
+            header("HTTP/1.1 304 Not Modified");
+            exit;
+        }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
             $imgurl = geticonfromext($data['ext'], $data['type']);
@@ -715,7 +719,7 @@ class io_ALIOSS extends io_api {
                 'dpath' => dzzencode($arr['bz'] . $arr['bucket'] . $meta['Key']),
                 'bz' => ($arr['bz']),
                 'gid' => 0,
-                'name' => $name,
+                'name' => $name ?? '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -725,7 +729,7 @@ class io_ALIOSS extends io_api {
                 'pfid' => $pfid,
                 'ppath' => $arr['bz'] . $pf,
                 'size' => 0,
-                'dateline' => strtotime($meta['LastModified']),
+                'dateline' => $meta['LastModified'] ? strtotime($meta['LastModified']) : '',
                 'flag' => $flag,
                 'nextMarker' => $meta['nextMarker'],
                 'IsTruncated' => $meta['IsTruncated'],
@@ -733,7 +737,8 @@ class io_ALIOSS extends io_api {
 
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icosdata = $icoarr;
             /*print_r($icosdata);
 			exit($meta['Key']);*/
@@ -764,7 +769,7 @@ class io_ALIOSS extends io_api {
                 'dpath' => dzzencode($arr['bz'] . $arr['bucket'] . $meta['Key']),
                 'bz' => ($arr['bz']),
                 'gid' => 0,
-                'name' => $name,
+                'name' => $name ?? '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -775,13 +780,14 @@ class io_ALIOSS extends io_api {
                 'pfid' => md5($arr['bz'] . $arr['bucket'] . $pf),
                 'ppath' => $arr['bz'] . $arr['bucket'] . $pf,
                 'size' => $meta['Size'],
-                'dateline' => strtotime($meta['LastModified']),
+                'dateline' => $meta['LastModified'] ? strtotime($meta['LastModified']) : '',
                 'flag' => ''
             );
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icosdata = $icoarr;
         }
 
@@ -843,8 +849,8 @@ class io_ALIOSS extends io_api {
                 'uid' => $icosdata['uid'],
                 'pfid' => $icosdata['pfid'],
                 'ppath' => $icosdata['ppath'],
-                'iconview' => $_GET['iconview'] ? intval($_GET['iconview']) : 0,
-                'disp' => $_GET['disp'] ? intval($_GET['disp']) : 0,
+                'iconview' => $_GET['iconview'] ? intval($_GET['iconview']) : 1,
+                'disp' => $_GET['disp'] ? intval($_GET['disp']) : 1,
                 'perm' => $this->perm,
                 'hash' => $icosdata['hash'],
                 'bz' => $icosdata['bz'],

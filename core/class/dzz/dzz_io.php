@@ -13,6 +13,21 @@ if (!defined('IN_DZZ')) {
 
 class dzz_io {
     protected static function initIO($path) {
+        if (strpos($path, 'preview_') === 0) {
+            $preview = true;
+            $path = preg_replace('/^preview_/', '', $path);
+        } else {
+            $preview = false;
+        }
+
+        if (preg_match('/^sid:([^\_]+)_/', $path, $matches)) {
+            $sharesid = $matches[1];
+            $sharepath = 'sid:' . $sharesid . '_';
+            $path = preg_replace('/^sid:[^\_]+_/', '', $path);
+        } else {
+            $sharesid = '';
+            $sharepath = '';
+        }
         $path = self::clean($path);
         $bzarr = explode(':', $path);
         $allowbz = C::t('connect')->fetch_all_bz();//array('baiduPCS','ALIOSS','dzz','JSS','disk');
@@ -31,7 +46,9 @@ class dzz_io {
         } else {
             return false;
         }
-        return new $classname($path);
+        $instance = new $classname($path);
+        $instance->setinfo($sharesid,$sharepath,$preview);
+        return $instance;
     }
 
     public static function MoveToSpace($path, $attach, $ondup = 'overwrite') {
@@ -435,6 +452,7 @@ class dzz_io {
         }
         $root['cloudtype'] = $cloud['type'];
         $root['name'] = $cloud['name'];
+        $root['available'] = $cloud['available'];
         return $root;
     }
 
@@ -444,6 +462,12 @@ class dzz_io {
                 $str[$key] = self::clean_path(str_replace(array("\n", "\r", '../'), '', $value));
             }
         } else {
+            if (strpos($str, 'preview_') === 0) {
+                $str = preg_replace('/^preview_/', '', $str);
+            }
+            if (preg_match('/^sid:([^\_]+)_/', $str)) {
+                $str = preg_replace('/^sid:[^\_]+_/', '', $str);
+            }
             $str = self::clean_path(str_replace(array("\n", "\r", '../'), '', $str));
         }
 

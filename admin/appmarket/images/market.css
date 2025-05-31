@@ -54,3 +54,13 @@ span.num{color:#4A89FD;font-weight:700;padding:0 2px;margin:0}
 .card-image{border-top-left-radius:12px;border-top-right-radius:12px;overflow:hidden;display:flex;justify-content:center;position:relative;align-items:center;width:100%}
 .card-image img{height:120px;max-width:120px}
 .card-market .card-title{display:flex;align-items:center;justify-content:space-between;font-weight:600}
+.app-name-wrapper .appicon{position:absolute;left:0;top:2px}
+.app-name-wrapper .appicon img{max-width:45px;max-height:45px;margin:0}
+.app-name-wrapper .appname a{color:#000;font-weight:500;font-size:14px}
+.app-name-wrapper .appdesc{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;cursor:default}
+.group-td-wrapper{max-width:120px;white-space:normal;overflow:hidden;text-overflow:ellipsis}
+.group-td-wrapper>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.group-td-wrapper>span>img{margin:0;vertical-align:text-bottom}
+.tag-td-wrapper{max-width:120px;white-space:normal;overflow:hidden;text-overflow:ellipsis}
+.tag-td-wrapper a{display:inline-block;padding:0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.table td img{max-width:45px;max-height:45px}

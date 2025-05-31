@@ -1,0 +1,58 @@
+<div class="middlecenter scroll-100 scroll-srcollbars">
+    <div class="middlecenter-body">
+		<!--地址栏开始-->
+		<div class="middle-groupname middle-groupshink middlecenter-header">
+			<div class="topNav">
+				<div class="topNav-item topNav-left">
+					<div class="address-wrapper">
+						<div class="goback"> <a href="javascript:history.back();" class="dcolor"><span class="mdi mdi-arrow-left-bold "></span><span>返回</span><span class="mdi mdi-power-on"></span></a> </div>
+						<div class="address-container">
+							<div class="address-left-arrow">《</div>
+							<div class="address-right-arrow">》</div>
+							<div class="address">
+								<!--{loop $folderpatharr $v}-->
+								<li>
+									<a href="javascript:;" class="routes dcolor">$v</a>
+									<span class="mdi mdi-chevron-right"></span>
+								</li>
+								<!--{/loop}-->
+							</div>
+							<input type="text" class="form-control bordeInput referer_path" name="referer_path" value="$folderpathstr" style="display: none;"/>
+						</div>
+					</div>
+				</div>
+			</div>
+			<input type="hidden" value="{$root['rid']}" id="fidinput"/>
+		</div>
+		<!--地址栏结束-->
+		<!--文件列表开始 -->
+        <div id="filemanage-f-{$root['rid']}" class="icosContainer">
+		</div>
+	</div>
+</div>
+<div id="template_middleicon" style="display:none">
+<!--{template template_file_middleicon}-->
+</div>
+<div id="template_detaillist"  style="display:none">
+<!--{template template_file_detaillist}-->
+</div>
+<div id="template_toolButton" style="display:none">
+<!--{template template_file_toolButton}-->
+</div>
+<div id="template_file" style="display:none">
+<!--{template template_file_navtopfile}-->
+</div>
+<div id="template_nofile_notice" style="display:none">
+	<!--{template noFilePage_mydocument}-->
+</div>
+
+<script type="text/javascript">
+    jQuery.getScript('{MOD_PATH}/js/uplodfile.js?{VERHASH}');
+    jQuery(document).ready(function(e) {
+        var hash=location.hash;
+        var fid = $('#fidinput').val();
+		var path=_explorer.getUrlParam(hash,'path');
+		if(!path) path='';
+        _filemanage.getData(_explorer.appUrl+'&op=explorerfile&do=filelist&sid=f-'+fid+'&bz={$bz}&path='+path);
+    });
+</script>

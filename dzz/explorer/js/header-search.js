@@ -28,26 +28,27 @@ jQuery(document).ready(function(e) {
 		placeholder: "点击或输入开始添加同事",
 		separator: ",",
 		multiple:true,
+        width: '100%',
 		ajax: {
-				url: MOD_URL+'&op=search_condition&do=getuser',
-				dataType: 'json',
-				quietMillis: 250,
-				data: function(term, page) { // page is the one-based page number tracked by Select2
-					return {
-						q: term, //search term
-						page: page // page number
-					};
-				},
-				results: function(data, page) {
-					var more = (page * 30) < data.total_count; // whether or not there are more results available
-
-					// notice we return the value of more so Select2 knows if more results can be loaded
-					return {
-						results: data.items,
-						more: more
-					};
-				}
-			}
+            url: MOD_URL+'&op=search_condition&do=getuser',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page || 1
+                };
+            },
+            processResults: function(data, page) {
+                var more = (page * 30) < data.total_count;
+                return {
+                    results: data.items,
+                    pagination: {
+                        more: more
+                    }
+                };
+            }
+        }
 	}).on('change', function (e) {
 		$(this).val();
 		if (typeof e.added != 'undefined') {
@@ -74,19 +75,14 @@ jQuery(document).ready(function(e) {
 	});
 	//特定的人结束
 	//特定的日期
-	jQuery("#selectStart,#selectEnd").datepicker({ //添加日期选择功能
-		numberOfMonths: 1, //显示几个月
-		showButtonPanel: false, //是否显示按钮面板
-		dateFormat: 'yy-mm-dd', //日期格式
-		clearText: "清除", //清除日期的按钮名称
-		closeText: "关闭", //关闭选择框的按钮名称
-		yearSuffix: '年', //年的后缀
-		showMonthAfterYear: true, //是否把月放在年的后面
-		constrainInput: true,
-		maxDate: new Date(),
-		setDate: 'date',
-	
-	});
+    $('#selectStart').datepicker({
+        autoclose:true,
+        todayHighlight:true,
+        clearBtn:true,
+        language: 'zh_CN',
+        todayBtn: "linked",
+		calendarWeeks: true,
+    });
 });
 jQuery('#searchval').on('keyup',function (event) {//回车搜索
 	if (event.which !="") { e = event.which; }
@@ -123,26 +119,6 @@ $(document).on('click', '#emptysearchcondition', function () {
 	resetting_condition();
 	$('#searchval').val('').focus();
 })
-/*//重新设置input值和样式
-function setSearchInputStyle(){
-    var hascondition = ishascondition();
-    if (!hascondition) {
-        $('#emptysearchcondition').addClass('hide');
-    }
-}*/
-
-//头部搜索鼠标悬停开始
-$(document).on('mouseover', '.dropdown-height li', function () {
-    $(this).find('a').addClass('aHover');
-    $(this).siblings().find('a').removeClass('aHover');
-});
-//头部搜索鼠标悬停结束
-//默认单条件搜索关闭框
-/*jQuery(document).click(function (event) {//关闭搜索内容
-    if (jQuery(event.target).attr('id') != 'searchval') {
-        jQuery('.dropdown-height').hide();
-    }
-});*/
 
 //搜索js，默认单条件搜索
 $('.less_searchcondition li').click(function (e) {
@@ -165,7 +141,6 @@ var emptypreg = /^\s*$/i;
 function show_more_search_condition(e) {
 
     var positionfill = jQuery('#positionsearch').data('fill');
-   // var userfill = jQuery('#id_label_multiples').data('filluser');
     if (!positionfill) {
         jQuery.post(MOD_URL+'&op=search_condition', {'requestfile': true}, function (data) {
             if (data) {
@@ -173,8 +148,8 @@ function show_more_search_condition(e) {
                 for (var o in data) {
                     var typeinfo = '';
                     if(data[o]['type'])  typeinfo = '('+data[o]['type']+')';
-                    html += '<div class="checkbox-custom checkbox-primary "> ' +
-                        '<input type="checkbox" name="position[]" value="' + data[o]['pfid'] + '"> <label>' + data[o]['pname'] +typeinfo+ '</label> </div>';
+                    html += '<div class="form-check form-check-inline"> ' +
+                        '<input type="checkbox" class="form-check-input" id="position'+data[o]['pfid']+'" name="position[]" value="' + data[o]['pfid'] + '"> <label for="position'+data[o]['pfid']+'">' + data[o]['pname'] +typeinfo+ '</label> </div>';
                 }
                 jQuery('#header-seaech-checkbox').append(html);
                 jQuery('#positionsearch').data('fill', true);
@@ -188,24 +163,6 @@ function show_more_search_condition(e) {
             }
         }, 'json')
     }
-
-    /*if (!userfill) {
-        jQuery.post("{MOD_URL}&op=search_condition", {'requestuser': true}, function (data) {
-            if (data) {
-                var html = '';
-                for (var o in data) {
-                    html += '<option value="' + data[o]['uid'] + '">' + data[o]['username'] + '</option>';
-                }
-                jQuery('#id_label_multiples').html(html);
-                jQuery('#id_label_multiples').data('filluser', true);
-                if (searchjson['userselect'] != 'undefined') {
-                    jQuery('.searchowner').parents('.dropdown-type').find('.typeowner,.name_emile').show();
-                    $('#id_label_multiples').select2('data', searchjson['userselect']);
-                }
-
-            }
-        }, 'json')
-    }*/
     if (positionfill && searchjson['fid'] != false && searchjson['fid'].length) {
         var fids = searchjson['fid'];
         for (var f in fids) {
@@ -313,7 +270,7 @@ jQuery('.input-search-width').click(function (event) {//搜索框三角点击
 function dropdown_off(){
 	jQuery('.input-search').addClass('focus');
 	jQuery(document).off('mousedown.headersearch').on('mousedown.headersearch',function(e) {//关闭搜索内容
-		if(jQuery(event.target).closest('.input-search,.ui-datepicker').length<1){
+		if(jQuery(event.target).closest('.input-search,.datepicker').length<1){
 			jQuery('.dropdown-width').hide();
 			jQuery('.dropdown-height').hide();
 			jQuery('#searchval').trigger('blur');
@@ -370,7 +327,7 @@ jQuery('.dropdown-type .searchowner li').click(function () {
         jQuery(this).closest('.dropdown-type').find('.anytime').text(text);
     } else {
         jQuery(this).parents('.dropdown-type').find('.typeowner').hide();
-        $('#id_label_multiples').select2('data', '');
+        $('#id_label_multiples').val(null).trigger('change');
         usernamearr = [];
         searchjson['owner'] = val;
         searchjson['uid'] = val;
@@ -454,7 +411,7 @@ jQuery(document).on('change', '.header-seaech-checkbox .checkbox-primary input[n
     searchConditionChange();
 })
 //位置
-jQuery(document).on('change', '#header-seaech-checkbox .checkbox-primary input[name="position[]"]', function () {
+jQuery(document).on('change', '#header-seaech-checkbox .form-check input[name="position[]"]', function () {
     var obj = jQuery(this);
     var numpreg = /^\d+$/;
     var pname = obj.next('label').text();
@@ -638,10 +595,8 @@ function resetting_condition() {
         obj.find('.typexdate').hide();
         obj.find('.typeowner').hide();
     });
-    $('.checkbox-custom').find('input:checkbox').prop('checked', false);
-  	//$('#searchval').val('').attr('placeholder', '');
-  	 $('#emptysearchcondition').addClass('hide');
-    $('#id_label_multiples').select2('data', '');
+  	$('#emptysearchcondition').addClass('hide');
+    $('#id_label_multiples').val(null).trigger('change');
     $('#selectStart').val('');
     $('#selectEnd').val('');
     $('#resourcesname').val('');
@@ -659,8 +614,6 @@ function resetting_condition() {
     };
 	$('#searchval').val('');
 }
-
-
 
 //设置搜索框的值
 function setSearchCondition() {

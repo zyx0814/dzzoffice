@@ -1604,6 +1604,8 @@ $_G[siteurl]',
     'domain_name' => '域名',
     'visit_domain_name' => '访问域名',
     'import_domain_name' => '输入域名',
+    'cloud_no_available' => '云盘已关闭',
+    'cloud_no_info' => '云盘信息不存在',
 );
 
 ?>

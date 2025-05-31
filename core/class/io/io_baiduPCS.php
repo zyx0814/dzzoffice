@@ -365,6 +365,10 @@ class io_baiduPCS extends io_api {
         } else {
             $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
         }
+        if (!is_string($fileurls['filedir'])) {
+            header("HTTP/1.1 304 Not Modified");
+            exit;
+        }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
             $imgurl = geticonfromext($data['ext'], $data['type']);
@@ -679,7 +683,7 @@ class io_baiduPCS extends io_api {
                 'dpath' => $dpath,
                 'bz' => ($bz),
                 'gid' => 0,
-                'name' => substr(strrchr($meta['path'], '/'), 1),
+                'name' => $meta['path'] ? substr(strrchr($meta['path'], '/'), 1) : '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -698,7 +702,8 @@ class io_baiduPCS extends io_api {
             }
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icosdata = $icoarr;
 
         } else {
@@ -721,7 +726,7 @@ class io_baiduPCS extends io_api {
                 'dpath' => $dpath,
                 'bz' => ($bz),
                 'gid' => 0,
-                'name' => substr(strrchr($meta['path'], '/'), 1),
+                'name' => $meta['path'] ? substr(strrchr($meta['path'], '/'), 1) : '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -738,7 +743,8 @@ class io_baiduPCS extends io_api {
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
             $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
             $icosdata = $icoarr;
         }
 

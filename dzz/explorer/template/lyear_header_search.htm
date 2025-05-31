@@ -1,0 +1,241 @@
+<div class="resSearch">
+    <div class="input-search">
+        <i class="input-search-icon mdi mdi-magnify" aria-hidden="true"></i>
+        <input type="text" class="form-control search  form-search" name="filetype" value="" placeholder="{lang search}" id="searchval">
+        <ul class="dropdown-height dropdown-menu less_searchcondition">
+            <li>
+                <a class="dropdown-item" href="javascript:;" data-val="document">{lang type_attach}</a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="javascript:;" data-val="excel">{lang spreadsheet}</a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="javascript:;" data-val="ppt">{lang power_point}</a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="javascript:;" data-val="image">{lang pictures_photos}</a>
+            </li>
+            <li role="separator" class="dropdown-divider"></li>
+            <li class="dropdown">
+                <a class="dropdown-item" href="javascript:;">{lang search_more_tools}</a>
+            </li>
+        </ul>
+        <span aria-hidden="true" id="emptysearchcondition" class="header-closebutton hide">×</span>
+        <button type="button" class="input-search-drop mdi mdi-menu-down input-search-width"></button>
+        <div class="dropdown-width dtheme" id="dropdown-width">
+            <div class="p-2">                	
+                <div class="dropdown-type row mb-3 clearfix" data-type="type">
+                    <label class="col-sm-2">{lang type}</label>
+                    <div class="col-sm-10 position-relative">
+                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown"><span class="anytime">{lang unlimited}</span></button>
+                    <input type="hidden" name="moresearch_filetype" value=""/>
+                    <ul class="dropdown-menu search_type" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="all">{lang unlimited}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="image">{lang pictures_photos}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="pdf">PDF</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="document">{lang type_attach}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="excel">{lang spreadsheet}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="ppt">{lang power_point}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="video">{lang type_video}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="folder">{lang typename_folder}</a>
+                        </li>
+                    </ul>
+                    
+                    </div> 
+                    <button type="button" class="close btn-close" aria-label="Close" style="position:absolute;right:10px;"></button>
+                </div>
+                
+                <div class="dropdown-type row mb-3 clearfix" data-type="owner">
+                    <label class="col-sm-2">{lang possesor}</label>
+                    <div class="col-sm-10 position-relative">
+                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle mb-1" data-toggle="dropdown"><span class="anytime">{lang unlimited}</span></button>
+                    <input type="hidden" name="moresearch_user" value=""/>
+                    <ul class="dropdown-menu searchowner" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="all">{lang unlimited}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="self">{lang mine}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="noself">{lang not_mine}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="user">{lang particular_person}</a>
+                        </li>
+                    </ul>
+                    <div class="typeowner ">
+                        <select class="form-control name_emile" id="id_label_multiples" multiple="multiple">
+                        </select>
+                    </div> 
+                    </div>
+                </div>
+                <div class="dropdown-type row mb-3 clearfix" data-type="badge" data-fill="false">
+                    <label class="col-sm-2">{lang file_flags}</label>
+                    <div class="col-sm-10 header-seaech-checkbox">
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="flag[]" value="isdelete" id="isdelete1">
+                            <label class="form-check-label" for="isdelete1">{lang in_recycle_bin}</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="flag[]" value="isstarred" id="isdelete2">
+                            <label class="form-check-label" for="isdelete2">{lang already_collected}</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dropdown-type row mb-3 clearfix" data-type="position" id="positionsearch" data-fill="false">
+                    <label class="col-sm-2">{lang position}</label>
+                    <div class="col-sm-10 header-seaech-checkbox" id="header-seaech-checkbox">
+                    </div>
+                </div>
+                
+                <div class="border-bottom mb-3"></div>
+                <div class="dropdown-type row mb-3 clearfix" data-type="date">
+                    <label class="col-sm-2">{lang edit_date}</label>
+                    <div class="col-sm-10 position-relative">
+                    <button type="button" class="btn btn-outline-primary btn-sm dropdown-toggle mb-1" data-toggle="dropdown"><span class="anytime">{lang any_time}</span></button>
+                    <input type="hidden" name="moresearch_daterange" value=""/>
+                    <ul class="dropdown-menu searchdate" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="all">{lang any_time}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="1">{lang today}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="-1">{lang ytoday}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="-7">{lang past_seven_days}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;"  data-val="-30">{lang recent_thirty_days}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="-90">{lang past_ninty_days}</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="javascript:;" data-val="datetime">{lang custom}</a>
+                        </li>
+                    </ul>
+                    <div class="typexdate">
+                        <div class="input-daterange input-group" id="selectStart">
+                            <label class="input-group-text" for="selectDate">从</label>
+                            <input type="text" id="selectStart" class="form-control" placeholder="{lang start_time}" name="startdate">
+                            <label class="input-group-text" for="selectDate1">至</label>
+                            <input type="text" id="selectEnd" class="form-control" placeholder="{lang finish_time}" name="enddate">
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="row mb-3 clearfix" data-type="name">
+                    <label class="col-sm-2">{lang keywords}</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" value="" id="resourcesname" name="filename" placeholder="{lang enter_keywords_match_file}" searchname/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-w-xs btn-primary" id="conditionSearchFile">{lang search}</button>
+                    <button type="button" class="btn btn-w-xs btn-outline-primary resetting">{lang reset}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="header-toggle">
+	<ul class="sizeMenu pull-right">
+        <li class="listchange">
+        	<a class="icons-thumbnail dcolor" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="4" >
+        		<i class="mdi mdi-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i>
+        	</a>
+        </li>
+        <li class="rightswitch">
+        	<a href="javascript:;" class="toggRight dcolor">
+        		<i class="mdi mdi-information" data-toggle="tooltip" data-placement="bottom"></i>
+        	</a>
+        </li>
+    </ul>
+	<div class="new-buildMenu">
+        <div class="dropdown newMenu">
+            <button type="button" class="btn btn-cricular dropdown-toggle" data-toggle="dropdown">新建/上传</button>
+            <ul class="dropdown-menu" role="menu">
+                <li role="presentation" class="js-newfolder folderPermMust">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="_filemanage.NewIco('newFolder')" role="menuitem">
+                        <span class="mdi mdi-folder filee-icon filee-folder"></span>
+                        <span class="file-text">{lang default_folder_name}</span></a>
+                </li>
+                <li role="separator" class="dropdown-divider"></li>
+                <li class="yunfile-upload js-upload-file"><a class="dropdown-item" href="javascript:;">
+                    <span class="mdi mdi-upload filee-icon filee-upload"></span>
+                    <span class="file-text">{lang uploadfile}</span>
+                    <input type="file" name="files[]" id="wangpan-upload-file" class="wangpan-upload-file" multiple="" data-uploadtype="file"></a>
+                </li>
+                <li class="yunfile-upload js-upload-folder"><a class="dropdown-item" href="javascript:;">
+                    <span class="mdi mdi-folder filee-icon filee-folder"></span>
+                    <span class="file-text">{lang uploadfolder}</span>
+                    <input type="file" name="files[]" multiple="" webkitdirectory="" value="" id="wangpan-upload-folder" class="wangpan-upload-file" data-uploadtype="folder"></a>
+                </li>
+                <li role="separator" class="dropdown-divider"></li>
+                <li role="presentation">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="_filemanage.NewIco('newLink')" role="menuitem">
+                        <span class="mdi mdi-web filee-icon filee-language"></span>
+                        <span class="file-text">{lang newlink}</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="_filemanage.NewIco('newTxt')" role="menuitem">
+                        <span class="mdi mdi-file filee-icon filee-file"></span>
+                        <span class="file-text">{lang extname_txt}</span>
+                    </a>
+                </li>
+                <li role="separator" class="dropdown-divider"></li>
+                <li role="presentation">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="_filemanage.NewIco('newDoc')" role="menuitem">
+                        <span class="filee-icon mdi mdi-file-word filee-file-text"></span>
+                        <span class="file-text">{lang word_document}</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="_filemanage.NewIco('newExcel')" role="menuitem">
+                        <span class="mdi mdi-file-excel filee-icon filee-file-excel"></span>
+                        <span class="file-text">{lang excel_document}</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="_filemanage.NewIco('newPowerPoint')" role="menuitem">
+                        <span class="mdi mdi-file-compare filee-icon filee-file-ppt"></span>
+                        <span class="file-text">{lang ppt_document}</span>
+                    </a>
+                </li>
+                <li role="presentation">
+                    <a class="dropdown-item" href="javascript:void(0)" onclick="_filemanage.NewIco('newpdf')" role="menuitem">
+                        <span class="mdi mdi-file-pdf-box filee-icon filee-file-pdf"></span>
+                        <span class="file-text">{lang pdf_document}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+	$(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>

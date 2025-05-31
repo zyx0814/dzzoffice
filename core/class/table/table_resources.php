@@ -3,12 +3,10 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-class table_resources extends dzz_table
-{
+class table_resources extends dzz_table {
     public $noperm = false;
 
-    public function __construct()
-    {
+    public function __construct() {
 
         $this->_table = 'resources';
         $this->_pk = 'rid';
@@ -18,8 +16,7 @@ class table_resources extends dzz_table
         parent::__construct();
     }
 
-    public function insert_data($data, $rid = '')
-    {
+    public function insert_data($data, $rid = '') {
         $data['rid'] = ($rid) ? $rid : self::create_id();
         if (parent::insert($data)) {
             return $data['rid'];
@@ -28,8 +25,7 @@ class table_resources extends dzz_table
     }
 
     //生成主键rid
-    public function create_id()
-    {
+    public function create_id() {
         $microtime = microtime();
         list($msec, $sec) = explode(' ', $microtime);
         $msec = $msec * 1000000;
@@ -50,8 +46,7 @@ class table_resources extends dzz_table
           $path = implode('/', $path);
           return $path;
       }*/
-    public function update_by_pfids($pfids, $setarr)
-    {
+    public function update_by_pfids($pfids, $setarr) {
         if (!is_array($pfids)) $pfids = (array)$pfids;
         $rids = array();
         foreach (DB::fetch_all("select rid from %t where pfid in(%n)", array('resources', $pfids)) as $v) {
@@ -60,8 +55,7 @@ class table_resources extends dzz_table
         return self::update_by_rid($rids, $setarr);
     }
 
-    public function rename_by_rid($rid, $newname)
-    {
+    public function rename_by_rid($rid, $newname) {
         global $_G;
         $uid = $_G['uid'];
         if (!$infoarr = $this->fetch_info_by_rid($rid)) {
@@ -110,8 +104,7 @@ class table_resources extends dzz_table
     }
 
     //查询文件表基础信息 $notisdelete是否是已删除
-    public function fetch_info_by_rid($rid, $notisdelete = false)
-    {
+    public function fetch_info_by_rid($rid, $notisdelete = false) {
         if (!$data = parent::fetch($rid)) return false;
         if ($notisdelete) {
             if ($data['isdelete'] > 0) return false;
@@ -120,8 +113,7 @@ class table_resources extends dzz_table
     }
 
     //检查目录权限 如删除,复制,剪切
-    public function check_folder_perm($icoarr, $action, $isdelete = false)
-    {
+    public function check_folder_perm($icoarr, $action, $isdelete = false) {
         global $_G;
         if ($action == 'cut') $action = 'delete';
         //获取文件夹fid集合
@@ -161,7 +153,7 @@ class table_resources extends dzz_table
                 foreach ($resources as $v) {
                     if (!perm_check::checkperm($action, $v)) {
                         $arr = self::fetch_by_rid($v['rid']);
-                        return array('error' => lang('has_no_privilege_file').' '.$arr['name']);
+                        return array('error' => lang('has_no_privilege_file') . ' ' . $arr['name']);
                     }
                 }
             }
@@ -170,8 +162,7 @@ class table_resources extends dzz_table
     }
 
     //删除文件(移动文件到回收站)
-    public function recyle_by_rid($rid)
-    {
+    public function recyle_by_rid($rid) {
         global $_G;
         $uid = $_G['uid'];
         $rid = trim($rid);
@@ -256,8 +247,7 @@ class table_resources extends dzz_table
     /*返回1，正常删除，需删除附属表数据，返回2，非删除状态内容，只删除回收站表数据，返回3删除失败
      *$force=>是否彻底删除(即是否强制删除非删除状态文件)
      *  */
-    public function deletesourcedata($resource, $force = false)
-    {
+    public function deletesourcedata($resource, $force = false) {
         $type = $resource['type'];
         $oid = $resource['oid'];
         switch ($type) {
@@ -266,13 +256,10 @@ class table_resources extends dzz_table
             case 'link':
                 C::t('collect')->delete_by_cid($oid);
                 return 1;
-            case 'app':
-                return 1;
             case 'user':
-                return 1;
             case 'pan':
-                return 1;
             case 'storage':
+            case 'app':
                 return 1;
             default :
                 if (!$resource['vid']) {
@@ -282,8 +269,7 @@ class table_resources extends dzz_table
         }
     }
 
-    public function delete_by_rid($rid, $force = false)
-    { //删除图标
+    public function delete_by_rid($rid, $force = false) { //删除图标
         global $_G;
         $cachekey = 'resourcesdata_' . $rid;
         $data = self::getsourcedata($rid);
@@ -308,8 +294,8 @@ class table_resources extends dzz_table
             C::t('resources_statis')->delete_by_rid($rid);
             //删除resources表数据
             if (parent::delete($rid)) {
-				//处理删除后空间大小
-				 if (!$data['vid'] && $data['size']) {//更新空间大小
+                //处理删除后空间大小
+                if (!$data['vid'] && $data['size']) {//更新空间大小
                     SpaceSize(-$data['size'], $data['gid'], true, $data['uid']);
                 }
                 //记录删除事件
@@ -332,8 +318,7 @@ class table_resources extends dzz_table
 
     }
 
-    public function getsourcedata($rid)
-    {
+    public function getsourcedata($rid) {
         //查询索引表数据
         $resourcedata = array();
         if (!$resourcedata = self::fetch($rid)) {
@@ -376,8 +361,7 @@ class table_resources extends dzz_table
         return $resourcedata;
     }
 
-    public function fetch_by_rid($rid, $force_from_db = false,$preview = false,$sid = false)
-    { //返回一条数据同时加载资源表数据
+    public function fetch_by_rid($rid, $force_from_db = false, $preview = false, $sid = false) { //返回一条数据同时加载资源表数据
         global $_G;
         $cachekey = 'resourcesdata_' . $rid;
         if ($data = $this->fetch_cache($cachekey)) {
@@ -392,7 +376,7 @@ class table_resources extends dzz_table
             $data['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode('attach::' . $data['aid']);
             $data['url'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=large&path=' . dzzencode('attach::' . $data['aid']);
         } elseif ($data['type'] == 'attach' || $data['type'] == 'document') {
-            $data['img'] =  isset($data['img']) ? $data['img'] :geticonfromext($data['ext'], $data['type']);
+            $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
             $data['url'] = DZZSCRIPT . '?mod=io&op=getStream&path=' . dzzencode('attach::' . $data['aid']);
         } elseif ($data['type'] == 'shortcut') {
             $data['ttype'] = $data['tdata']['type'];
@@ -408,7 +392,7 @@ class table_resources extends dzz_table
             $data['fsize'] = 0;//formatsize($contaions['size']);
             // $data['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
             // $data['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
-            $data['img'] = $data['img']?$data['img']:'dzz/images/default/system/'.$data['flag'].'.png';
+            $data['img'] = $data['img'] ? $data['img'] : 'dzz/images/default/system/' . $data['flag'] . '.png';
         } else {
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         }
@@ -480,8 +464,7 @@ class table_resources extends dzz_table
        }*/
 
     //查询目录文件数,$getversion =>是否获取版本数据
-    public function get_contains_by_fid($fid, $getversion = true)
-    {
+    public function get_contains_by_fid($fid, $getversion = true) {
         $contains = array('size' => 0, 'contain' => array(0, 0));
         $pfids = C::t('resources_path')->fetch_folder_containfid_by_pfid($fid);
 
@@ -509,8 +492,7 @@ class table_resources extends dzz_table
     }
 
     //查询文件对应的rid
-    public function fetch_rid_by_fid($fid)
-    {
+    public function fetch_rid_by_fid($fid) {
         return DB::result_first("select rid from %t where oid = %d and `type` = 'folder' ", array($this->_table, $fid));
     }
 
@@ -521,8 +503,7 @@ class table_resources extends dzz_table
       }*/
 
     //获取文件夹基本信息
-    public function get_folderinfo_by_fid($fid)
-    {
+    public function get_folderinfo_by_fid($fid) {
         if (!$folderinfo = C::t('folder')->fetch($fid)) return false;
         /*$contaions = self::get_contains_by_fid($fid, true);
         $folderinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
@@ -534,8 +515,7 @@ class table_resources extends dzz_table
         return $folderinfo;
     }
 
-    public function fetch_all_by_pfid($pfid, $conditions = array(), $limit = 0, $orderby = '', $order = '', $start = 0, $count = false,$sid = false,$isfilter = false)
-    {
+    public function fetch_all_by_pfid($pfid, $conditions = array(), $limit = 0, $orderby = '', $order = '', $start = 0, $count = false, $sid = false, $isfilter = false) {
         global $_G;
         $limitsql = $limit ? DB::limit($start, $limit) : '';
         $data = array();
@@ -560,8 +540,8 @@ class table_resources extends dzz_table
                     $relative = isset($v[1]) ? $v[1] : '=';
                     $connect = isset($v[2]) ? $v[2] : 'and';
                     if ($relative == 'in') {
-                        $wheresql .= $connect . "  `" . $k . "` " . $relative . " (" . dimplode($v[0]) . ") ";  
-					}elseif ($relative == 'not in') {
+                        $wheresql .= $connect . "  `" . $k . "` " . $relative . " (" . dimplode($v[0]) . ") ";
+                    } elseif ($relative == 'not in') {
                         $wheresql .= $connect . "  `" . $k . "` " . $relative . " (" . dimplode($v[0]) . ") ";
                     } elseif ($relative == 'stringsql') {
                         $wheresql .= $connect . " " . $v[0] . " ";
@@ -641,30 +621,30 @@ class table_resources extends dzz_table
             $ordersql = ' ORDER BY ' . implode(',', $orderby);
         } elseif ($orderby) {
             if ($orderby == 'name') {
-                $ordersql = " ORDER BY convert(name,UNSIGNED) ".$order .
-				",SUBSTRING_INDEX(name,'-',1) " . $order . ",convert(replace(replace(SUBSTRING_INDEX(name,'-',2),SUBSTRING_INDEX(name,'-',1),''),'-','') , UNSIGNED) " . $order .
-				",convert(replace(replace(SUBSTRING_INDEX(name,'-',3),SUBSTRING_INDEX(name,'-',2),''),'-','') , UNSIGNED) " . $order;
+                $ordersql = " ORDER BY convert(name,UNSIGNED) " . $order .
+                    ",SUBSTRING_INDEX(name,'-',1) " . $order . ",convert(replace(replace(SUBSTRING_INDEX(name,'-',2),SUBSTRING_INDEX(name,'-',1),''),'-','') , UNSIGNED) " . $order .
+                    ",convert(replace(replace(SUBSTRING_INDEX(name,'-',3),SUBSTRING_INDEX(name,'-',2),''),'-','') , UNSIGNED) " . $order;
             } else {
                 $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
             }
         }
         foreach (DB::fetch_all("SELECT rid FROM %t where $wheresql $ordersql $limitsql", $para) as $value) {
-            if ($arr = self::fetch_by_rid($value['rid'],'',false,$sid)) {
+            if ($arr = self::fetch_by_rid($value['rid'], '', false, $sid)) {
                 if ($sid) {
-                    $arr['dpath'] = dzzencode('sid:'.$sid.'_' . $value['rid']);
+                    $arr['dpath'] = dzzencode('sid:' . $sid . '_' . $value['rid']);
                     if ($isfilter && isset($arr['attachment'])) {
                         unset($arr['attachment']);
                     }
-                    if(isset($arr['relativepath'])){
+                    if (isset($arr['relativepath'])) {
                         unset($arr['relativepath']);
                     }
-                    if(isset($arr['relpath'])){
+                    if (isset($arr['relpath'])) {
                         unset($arr['relpath']);
                     }
-                    if(isset($arr['realpath'])){
+                    if (isset($arr['realpath'])) {
                         unset($arr['realpath']);
                     }
-                    if(isset($arr['position'])){
+                    if (isset($arr['position'])) {
                         unset($arr['position']);
                     }
                 }
@@ -687,15 +667,13 @@ class table_resources extends dzz_table
     }*/
 
     //查询目录下所有文件基本信息
-    public function fetch_basicinfo_by_pfid($pfid)
-    {
+    public function fetch_basicinfo_by_pfid($pfid) {
         $pfid = intval($pfid);
         return DB::fetch_all("select * from %t where pfid = %d", array($this->_table, $pfid));
     }
 
     //查询目录下的文件信息
-    public function fetch_by_pfid($pfid, $uid = '', $checkperm = true)
-    {
+    public function fetch_by_pfid($pfid, $uid = '', $checkperm = true) {
         $currentuid = getglobal('uid');
         $pfid = intval($pfid);
         $where = " pfid = %d";
@@ -747,8 +725,7 @@ class table_resources extends dzz_table
     }
 
     //通过rid更新数据
-    public function update_by_rid($rid, $setarr)
-    {
+    public function update_by_rid($rid, $setarr) {
         if (!is_array($rid)) $rid = (array)$rid;
         if (parent::update($rid, $setarr)) {
             foreach ($rid as $v) {
@@ -760,20 +737,17 @@ class table_resources extends dzz_table
     }
 
     //查询某目录下的所有文件夹
-    public function fetch_folder_by_pfid($fid, $numselect = false)
-    {
+    public function fetch_folder_by_pfid($fid, $numselect = false) {
 
         return DB::fetch_all("select * from %t where pfid = %d and `type` = %s and isdelete < 1 ", array($this->_table, $fid, 'folder'));
     }
 
-    public function fetch_folder_num_by_pfid($fid)
-    {
+    public function fetch_folder_num_by_pfid($fid) {
         return DB::result_first("select count(*) from %t where pfid = %d and `type` = %s and deldateline < 1", array($this->_table, $fid, 'folder'));
     }
 
     //通过rid获取属性信息
-    public function get_property_by_rid($rids, $contains = true,$realpath = '')
-    {
+    public function get_property_by_rid($rids, $contains = true, $realpath = '') {
         global $_G;
         $uid = $_G['uid'];
         $wheresql = " where r.rid in(%n) ";
@@ -861,7 +835,7 @@ class table_resources extends dzz_table
                 $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($tmpinfo['contains']['size']), 'size' => $tmpinfo['contains']['size']));
                 $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $tmpinfo['contains']['contain'][0], 'foldernum' => $tmpinfo['contains']['contain'][1]));
             }
-			 $fileinfo['img'] = self::get_icosinfo_by_rid($fileinfo['rid']);
+            $fileinfo['img'] = self::get_icosinfo_by_rid($fileinfo['rid']);
 
             unset($tmpinfo);
         } else {//单个文件信息
@@ -935,8 +909,7 @@ class table_resources extends dzz_table
         return $fileinfo;
     }
 
-    public function get_containsdata_by_rid($rids)
-    {
+    public function get_containsdata_by_rid($rids) {
         $fileinfo = array();
         if (!is_array($rids)) $rids = (array)$rids;
         if (count($rids) > 1) {
@@ -964,7 +937,7 @@ class table_resources extends dzz_table
             $fileinfo['fsize'] = formatsize($tmpinfo['contains']['size']);
             $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($tmpinfo['contains']['size']), 'size' => $tmpinfo['contains']['size']));
             $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $tmpinfo['contains']['contain'][0], 'foldernum' => $tmpinfo['contains']['contain'][1]));
-        }else{
+        } else {
             $fileinfo = $this->fetch($rids[0]);
             //文件类型和大小信息
             if ($fileinfo['type'] == 'folder') {
@@ -975,19 +948,20 @@ class table_resources extends dzz_table
                 $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
             } elseif ($fileinfo['ext']) {
                 $fileinfo['fsize'] = formatsize($fileinfo['size']);
-                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => 1, 'foldernum' =>0));
+                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => 1, 'foldernum' => 0));
             } else {
                 $fileinfo['fsize'] = formatsize($fileinfo['size']);
-                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => 1, 'foldernum' =>0));
+                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => 1, 'foldernum' => 0));
             }
         }
         return $fileinfo;
 
 
-}
-    public function get_containsdata_by_fid($fid){
+    }
+
+    public function get_containsdata_by_fid($fid) {
         $fileinfo = array();
-        if($fid){
+        if ($fid) {
             $contaions = self::get_contains_by_fid($fid, true);
             $fileinfo['fsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
             $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
@@ -996,85 +970,81 @@ class table_resources extends dzz_table
     }
 
 //根据fid获取属性信息
-public function get_property_by_fid($fid, $contains = true)
-{
-    global $_G;
-    $uid = $_G['uid'];
-    $fileinfo = array();
-    $param = array('folder', 'resources_path', $fid);
-    $folders = DB::fetch_first("select f.*,p.path from %t f left join %t p on f.fid = p.fid  where f.fid = %d ", $param);
-    if (!$folders) {
-        return array('error' => lang('no_privilege'));
-    }
-    $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $folders['path']);
-    $fileinfo['name'] = $folders['fname'];
-    $fileinfo['username'] = $folders['username'];
-    if ($folders['gid'] > 0 && $folders['pfid'] == 0) {
-        $fileinfo['type'] = lang('org_or_group');
-    } else {
-        $fileinfo['type'] = lang('type_folder');
-    }
-    if ($contains) {
-        $contaions = self::get_contains_by_fid($fid, true);
-        $fileinfo['fsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-        $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
-    }
+    public function get_property_by_fid($fid, $contains = true) {
+        global $_G;
+        $uid = $_G['uid'];
+        $fileinfo = array();
+        $param = array('folder', 'resources_path', $fid);
+        $folders = DB::fetch_first("select f.*,p.path from %t f left join %t p on f.fid = p.fid  where f.fid = %d ", $param);
+        if (!$folders) {
+            return array('error' => lang('no_privilege'));
+        }
+        $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $folders['path']);
+        $fileinfo['name'] = $folders['fname'];
+        $fileinfo['username'] = $folders['username'];
+        if ($folders['gid'] > 0 && $folders['pfid'] == 0) {
+            $fileinfo['type'] = lang('org_or_group');
+        } else {
+            $fileinfo['type'] = lang('type_folder');
+        }
+        if ($contains) {
+            $contaions = self::get_contains_by_fid($fid, true);
+            $fileinfo['fsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
+            $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+        }
 
-    //编辑权限信息
-    if ($folders['gid'] > 0) {
-        $powerarr = perm_binPerm::getPowerArr();
-        if (!($uid == $folders['uid'] && $folders['perm_inherit'] & $powerarr['edit1']) && !($folders['perm_inherit'] & $powerarr['edit2'])) {
-            $fileinfo['editperm'] = 0;
+        //编辑权限信息
+        if ($folders['gid'] > 0) {
+            $powerarr = perm_binPerm::getPowerArr();
+            if (!($uid == $folders['uid'] && $folders['perm_inherit'] & $powerarr['edit1']) && !($folders['perm_inherit'] & $powerarr['edit2'])) {
+                $fileinfo['editperm'] = 0;
+            } else {
+                $fileinfo['editperm'] = 1;
+            }
         } else {
             $fileinfo['editperm'] = 1;
         }
-    } else {
-        $fileinfo['editperm'] = 1;
+        $statis = C::t('resources_statis')->fetch_by_fid($fid);
+        $fileinfo['opendateline'] = ($statis['opendateline']) ? dgmdate($statis['opendateline'], 'Y-m-d H:i:s') : '';
+        $fileinfo['editdateline'] = ($statis['editdateline']) ? dgmdate($statis['editdateline'], 'Y-m-d H:i:s') : '';
+        $fileinfo['fdateline'] = ($folders['dateline']) ? dgmdate($folders['dateline'], 'Y-m-d H:i:s') : '';
+        return $fileinfo;
+
     }
-    $statis = C::t('resources_statis')->fetch_by_fid($fid);
-    $fileinfo['opendateline'] = ($statis['opendateline']) ? dgmdate($statis['opendateline'], 'Y-m-d H:i:s') : '';
-    $fileinfo['editdateline'] = ($statis['editdateline']) ? dgmdate($statis['editdateline'], 'Y-m-d H:i:s') : '';
-    $fileinfo['fdateline'] = ($folders['dateline']) ? dgmdate($folders['dateline'], 'Y-m-d H:i:s') : '';
-    return $fileinfo;
 
-}
+    public
+    function get_icosinfo_by_rid($rid) {
+        $resourcedata = parent::fetch($rid);
+        $attrdata = C::t('resources_attr')->fetch_by_rid($rid, $resourcedata['vid']);
+        $data = array_merge($resourcedata, $attrdata);
+        if ($data['type'] == 'image') {
+            $data['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode('attach::' . $data['aid']);
+        } elseif ($data['type'] == 'attach' || $data['type'] == 'document') {
+            $data['img'] = geticonfromext($data['ext'], $data['type']);
+        } elseif ($data['type'] == 'shortcut') {
+            $data['img'] = isset($data['tdata']['img']) ? $data['tdata']['img'] : geticonfromext($data['tdata']['ext'], $data['tdata']['type']);
+        } elseif ($data['type'] == 'dzzdoc') {
 
-public
-function get_icosinfo_by_rid($rid)
-{
-    $resourcedata = parent::fetch($rid);
-    $attrdata = C::t('resources_attr')->fetch_by_rid($rid, $resourcedata['vid']);
-    $data = array_merge($resourcedata, $attrdata);
-    if ($data['type'] == 'image') {
-        $data['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode('attach::' . $data['aid']);
-    } elseif ($data['type'] == 'attach' || $data['type'] == 'document') {
-        $data['img'] = geticonfromext($data['ext'], $data['type']);
-    } elseif ($data['type'] == 'shortcut') {
-        $data['img'] = isset($data['tdata']['img']) ? $data['tdata']['img'] : geticonfromext($data['tdata']['ext'], $data['tdata']['type']);
-    } elseif ($data['type'] == 'dzzdoc') {
-
-        $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
-    } elseif ($data['type'] == 'folder') {
-       $data['img'] = $data['img']?$data['img']:'dzz/images/default/system/'.$data['flag'].'.png';
-    } else {
-        $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
+            $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
+        } elseif ($data['type'] == 'folder') {
+            $data['img'] = $data['img'] ? $data['img'] : 'dzz/images/default/system/' . $data['flag'] . '.png';
+        } else {
+            $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
+        }
+        $img = $data['img'];
+        unset($data);
+        return $img;
     }
-    $img = $data['img'];
-    unset($data);
-    return $img;
-}
 
 //文件名获取文件信息
-public
-function get_resources_by_pfid_name($pfid, $name)
-{
-    return DB::fetch_first("select * from %t where pfid=%d and name = %s and `type` = 'folder' ", array($this->_table, $pfid, $name));
-}
+    public
+    function get_resources_by_pfid_name($pfid, $name) {
+        return DB::fetch_first("select * from %t where pfid=%d and name = %s and `type` = 'folder' ", array($this->_table, $pfid, $name));
+    }
 
 //文件id获取文件信息
-public
-function get_resources_info_by_fid($fid)
-{
-    return DB::fetch_first("select * from %t where oid = %d and `type` = 'folder' ", array($this->_table, $fid));
-}
+    public
+    function get_resources_info_by_fid($fid) {
+        return DB::fetch_first("select * from %t where oid = %d and `type` = 'folder' ", array($this->_table, $fid));
+    }
 }

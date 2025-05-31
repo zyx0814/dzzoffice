@@ -2,21 +2,7 @@
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
 	<div class="container-fluid">
-		<div class="card">
-			<div class="card-body">
-				<ul class="nav nav-pills">
-				<li class="nav-item">
-					<a class="nav-link" href="{MOD_URL}">{lang installed}</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{MOD_URL}&op=edit&do=add">{lang add_app}</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" href="{MOD_URL}&op=cp&do=import">{lang import_type_app}</a>
-				</li>
-				</ul>
-			</div>
-		</div>
+	<!--{template right_header}-->
 	<div class="card">
 		<div class="card-body">
 			<form id="importform" name="importform" class="form-horizontal" action="{MOD_URL}&op=cp&do=import" method="post" enctype="multipart/form-data">

@@ -78,7 +78,6 @@ if ($operation == 'filelist') {
             $userdata[$value['uid']] = $value['username'];
             $data[$key] = $value;
         }
-        $bz = ($bz);
     } else {
         list($prex, $id) = explode('-', $sid);
         if ($prex == 'f') {

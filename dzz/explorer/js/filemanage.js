@@ -70,20 +70,31 @@ _filemanage.onmousemove = null;
 _filemanage.onmouseup = null;
 _filemanage.onselectstart = 1;
 _filemanage.stack_data = {};
+_filemanage.rid = '';
 _filemanage.showicosTimer = {};
 _filemanage.apicacheTimer = {};
 _filemanage.infoPanelUrl = '';
 _filemanage.viewstyle = ['bigicon', 'middleicon', 'middlelist', 'smalllist', 'detaillist'];
 _filemanage.getData = function (url, callback) {
+	var l = $('#middleconMenu').lyearloading({
+        opacity           : 0,
+		spinnerSize       : 'lg',
+		textColorClass    : 'text-info',
+		spinnerColorClass : 'text-info',
+		spinnerText       : '处理中...',
+    });
 	jQuery.getJSON(url, function (json) {
+		l.destroy();
 		if (json.error) {
-			alert(json.error);
+			jQuery('#middleconMenu').html('<div class="emptyPage" id="noticeinfo"><img src="static/image/common/no_list.png"><p class="emptyPage-text">'+json.error+'</p></div>');
+			layer.alert(json.error, {skin:'lyear-skin-danger'});
 			return false;
 		} else {
 			for (var id in json.data) {
 				_explorer.sourcedata.icos[id] = json.data[id];
 			}
 			for (var fid in json.folderdata) {
+				_filemanage.rid = fid;
 				_explorer.sourcedata.folder[fid] = json.folderdata[fid];
 			}
 			_explorer.topMenu(location.hash.replace('#',''),_filemanage.fid);
@@ -108,13 +119,17 @@ _filemanage.getData = function (url, callback) {
 			}
 			obj.url = url;
 			//修改初始化时的排列方式指示
-			jQuery('.sizeMenu .icons-thumbnail').attr('iconview', obj.view).find('.dzz').removeClass('dzz-view-module').removeClass('dzz-view-list').addClass(obj.view === 2 ? 'dzz-view-list':'dzz-view-module');
-            jQuery('.sizeMenu .icons-thumbnail').attr('iconview', obj.view).find('.dzz').attr('data-original-title',obj.view === 2 ? __lang.deltail_lsit : __lang.medium_icons);
+			jQuery('.sizeMenu .icons-thumbnail').attr('iconview', obj.view).find('.mdi').removeClass('mdi-view-module').removeClass('mdi-view-list').addClass(obj.view === 2 ? 'mdi-view-list':'mdi-view-module');
+            jQuery('.sizeMenu .icons-thumbnail').attr('iconview', obj.view).find('.mdi').attr('data-original-title',obj.view === 2 ? __lang.deltail_lsit : __lang.medium_icons);
 			jQuery('.sizeMenu .icons-thumbnail').attr('folderid', obj.id);
 			if (typeof (callback) === 'function') {
 				callback(obj);
 			}
 		}
+	}).fail(function(jqxhr, textStatus, error) {
+		l.destroy();
+		jQuery('#middleconMenu').html(jqxhr.responseText);
+		return false;
 	});
 };
 _filemanage.glow = function (el) {
@@ -137,8 +152,8 @@ _filemanage.Arrange = function (obj, id, view) {
 	} else {
 		view = view * 1;
 	}
-	jQuery('.sizeMenu .icons-thumbnail').attr('iconview', view).find('.dzz').removeClass('dzz-view-module').removeClass('dzz-view-list').addClass(view === 2 ?  'dzz-view-list':'dzz-view-module');
-    jQuery('.sizeMenu .icons-thumbnail').attr('iconview', view).find('.dzz').attr('data-original-title',view === 2 ? __lang.deltail_lsit : __lang.medium_icons);
+	jQuery('.sizeMenu .icons-thumbnail').attr('iconview', view).find('.mdi').removeClass('mdi-view-module').removeClass('mdi-view-list').addClass(view === 2 ?  'mdi-view-list':'mdi-view-module');
+    jQuery('.sizeMenu .icons-thumbnail').attr('iconview', view).find('.mdi').attr('data-original-title',view === 2 ? __lang.deltail_lsit : __lang.medium_icons);
 	if (filemanage.subfix === 'f') {
 		var fid = _filemanage.fid;
 		if (fid > 0 && _explorer.Permission_Container('admin', fid)) {
@@ -165,20 +180,23 @@ _filemanage.Arrange = function (obj, id, view) {
 	}
 	filemanage.view = view;
 	filemanage.showIcos();
-	//var classend=jQuery('#filemanage_view'+winid).attr('class').replace(/filemanage_view\d+_/i,'');
-	//jQuery('#filemanage_view'+winid).attr('class','filemanage_view'+view+'_'+classend);
-	jQuery('#right_contextmenu .menu-icon-iconview').each(function () {
+	jQuery('span .menu-icon-iconview').each(function () {
 		if (jQuery(this).attr('view') * 1 === view * 1) {
-			jQuery(this).removeClass('dzz-check-box-outline-blank').addClass('dzz-check-box');
+			jQuery(this).removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
 		} else {
-			jQuery(this).addClass('dzz-check-box-outline-blank').removeClass('dzz-check-box');
+			jQuery(this).addClass('mdi-checkbox-blank-outline').removeClass('mdi-checkbox-marked');
 		}
 	});
 };
 _filemanage.Disp = function (obj, id, disp) {
 	var filemanage = _filemanage.cons[id];
 	if (filemanage.subfix === 'f') {
-		var fid = filemanage.fid;
+		if (_explorer.hash.indexOf('cloud') != -1) {
+			var fid = _filemanage.rid;
+		} else {
+			var fid = filemanage.fid;
+		}
+		
 		if (fid > 0 && _explorer.Permission_Container('admin', fid)) {
 			jQuery.post(_filemanage.saveurl + '&do=folder', {
 				fid: fid,
@@ -201,13 +219,13 @@ _filemanage.Disp = function (obj, id, disp) {
 	} else {
 		filemanage.pageClick(1);
 	}
-	jQuery('#right_contextmenu .menu-icon-disp').each(function () {
+	jQuery('span .menu-icon-disp').each(function () {
 		if (jQuery(this).attr('disp') * 1 === disp * 1) {
-			jQuery(this).removeClass('dzz-check-box-outline-blank').addClass('dzz-check-box');
-			jQuery(this).next().find('.caret').removeClass('asc').removeClass('desc').addClass(filemanage.asc > 0 ? 'asc' : 'desc');
+			jQuery(this).removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
+			jQuery(this).nextAll('.caret').first().removeClass('asc').removeClass('desc').addClass(filemanage.asc > 0 ? 'asc' : 'desc');
 		} else {
-			jQuery(this).addClass('dzz-check-box-outline-blank').removeClass('dzz-check-box');
-			jQuery(this).next().find('.caret').removeClass('asc').removeClass('desc');
+			jQuery(this).addClass('mdi-checkbox-blank-outline').removeClass('mdi-checkbox-marked');
+			jQuery(this).nextAll('.caret').first().removeClass('asc').removeClass('desc');
 		}
 	});
 };
@@ -226,8 +244,6 @@ _filemanage.searchsubmit = function (sid) {
 	}
 };
 
-
-
 /*
 view: 图标排列方式：0:大图标，1：中图标，2：中图标列表，3小图标列表,4:详细
 disp：图标排列顺序：0：原始顺序:按名称；1：按大小；2：按类型；3：按时间
@@ -235,7 +251,6 @@ asc :升序或降序：0：升序；1：降序
 */
 
 _filemanage.setInfoPanel = function () {
-
 	var rids = _filemanage.selectall.icos;
 	if (_explorer.infoRequest){
 		_explorer.infoRequest.abort();
@@ -244,12 +259,22 @@ _filemanage.setInfoPanel = function () {
 	if (!_explorer.infoPanelOpened || _explorer.infoPanel_hide) {
 		return; //右侧面板没有打开的话，不加载文件详细信息
 	}
+	var bz = _explorer.getUrlParam(location.hash, 'bz');
+	if (bz && _explorer.hash.indexOf('cloud') != -1) {
+		if(_explorer.bz == bz) {
+			return;
+		} else {
+			_explorer.bz = bz;
+		}
+	} else {
+		_explorer.bz = '';
+	}
 	if (rids.length < 1) {
 		var fid = _filemanage.fid || $('#fidinput').val();
 		if (!fid) {
 			var data = '<div class="nothing_message">'
 			+'<div class="nothing_allimg">'
-			+'<img src="dzz/explorer/img/noFilePage-FileChoice.png">'
+			+'<img src="'+MOD_PATH+'/images/noFilePage-FileChoice.png">'
 			+'<p>'+__lang.choose_file_examine_information+'</p>'
 			+'</div>'
 			+'</div>';
@@ -260,7 +285,8 @@ _filemanage.setInfoPanel = function () {
 		}
 		if (_filemanage.infoPanelUrl !== fid) {
 			_explorer.infoRequest = $.post(MOD_URL + '&op=dynamic&do=getfolderdynamic', {
-				'fid': fid
+				'fid': fid,
+				'bz': bz
 			}, function (data) {
 				$('#rightMenu').html(data);
 				_filemanage.infoPanelUrl = fid;
@@ -333,7 +359,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	html = html.replace(/\{username\}/g, data.username);
 	html = html.replace(/\{replynum\}/g, data.replynum ? data.replynum : '0');
 
-
 	html = html.replace(/\{zIndex\}/g, 10);
 	html = html.replace(/\{error\}/g, data.error);
 	html = html.replace(/\{size\}/g, ((data.type === 'folder' || data.type === 'app' || data.type === 'shortcut') ? '' : data.fsize));
@@ -341,7 +366,7 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	html = html.replace(/\{type\}/g, data.type);
 	html = html.replace(/\{ftype\}/g, data.ftype);
 	html = html.replace(/\{dateline\}/g, data.dateline);
-	html = html.replace(/\{fdateline\}/g, data.fdateline);
+	html = html.replace(/\{fdateline\}/g, data.fdateline?data.fdateline:'');
 	html = html.replace(/\{flag\}/g, data.flag);
 	html = html.replace(/\{position\}/g, data.relpath);
 	html = html.replace(/\{dpath\}/g, data.dpath);
@@ -367,9 +392,9 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	}
 	//收藏
 	if(data.collect){
-		var collectstatus = '<a href="javascript:;" class="dzz-colllection-item" ><i class="dzz dzz-star" title=""></i></a>';
+		var collectstatus = '<span class="colllection-item" ><i class="mdi mdi-star" title=""></i></span>';
 	}else{
-		var collectstatus = '<a href="javascript:;" class="dzz-colllection-item hide"><i class="dzz dzz-star" title=""></i></a>';
+		var collectstatus = '<span class="colllection-item hide"><i class="mdi mdi-star" title=""></i></span>';
 	}
 	html = html.replace(/\{collectstatus\}/g,collectstatus);
     html = html.replace(/\{sharestatus\}/g,sharestatus);
@@ -379,6 +404,8 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	var position_hash = '';
 	if (data.gid > 0) {
 		position_hash = data.pfid > 0 ? '#group&do=file&gid=' + data.gid + '&fid=' + data.pfid : '#group&gid=' + data.gid;
+	}else if (data.bz && data.bz !== 'dzz') {
+		position_hash = '#cloud&bz=' + data.bz + '&path=' + data.path;
 	} else {
 		position_hash = '#home&do=file&fid=' + data.pfid;
 	}
@@ -420,14 +447,12 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 			jQuery(this).removeClass('hover');
 
 		});
-
 		//处理多选框
 		//if(!_filemanage.fid || _explorer.Permission_Container('multiselect',this.fid)){
 		el.find('.icoblank_rightbottom').on('click', function () {
 			var flag = true;
-			var ell = jQuery(this).parent();
-			var rid = ell.attr('rid');
-			if (ell.hasClass('Icoselected')) {
+			var rid = el.attr('rid');
+			if (el.hasClass('Icoselected')) {
 				flag = false;
 			}
 			_select.SelectedStyle('filemanage-' + self.id, rid, flag, true);
@@ -451,9 +476,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 			//self.createBottom();
 			return false;
 		});
-		/*}else{
-			//el.find('.icoblank_rightbottom').remove();
-		}*/
 
         if (this.total == 0 && jQuery('#' + containerid).find('.emptyPage').length == 0) {
             jQuery(jQuery('#template_nofile_notice').html()).appendTo(jQuery('#' + containerid));
@@ -462,8 +484,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
         }
 
 	} else { //详细列表时
-
-
 		el.bind('mouseenter', function () {
 			jQuery(this).addClass('hover');
 			//return false;
@@ -492,8 +512,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 			//self.createBottom();
 			return false;
 		});
-		//if(_filemanage.fid<1 || _explorer.Permission_Container('multiselect',this.fid)){
-
 		el.find('.selectbox').on('click', function () {
 			var flag = true;
 			var ell = jQuery(this).closest('.Icoblock');
@@ -504,10 +522,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 			_select.SelectedStyle('filemanage-' + self.id, rid, flag, true);
 			return false;
 		});
-		/*}else{
-			//el.find('.detail_item_td_select').parent().remove();
-		}*/
-
 	}
 	el.on('dblclick', function (e) {
 		if(!_filemanage.fid && (_filemanage.winid == 'recycle-list' || _filemanage.winid == 'share-list')) return true;
@@ -519,14 +533,17 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		dfire('click');
 		return false;
 	});
-	//设置邮件菜单
 	el.on('contextmenu', function (e) {
 		e = e ? e : window.event;
 		var tag = e.srcElement ? e.srcElement : e.target;
 		if (/input|textarea/i.test(tag.tagName)) {
 			return true;
 		}
-		_contextmenu.right_ico(e, jQuery(this).attr('rid'));
+		var options = {
+			content: contextmenuico(jQuery(this).attr('rid'))
+		}
+		layui.dropdown.reloadData('right_ico',options);
+		layui.dropdown.open('right_ico');
 		return false;
 	});
 	//检测已选中
@@ -613,7 +630,7 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 		}
 	}
 	if (collects === rids.length) { //区别是已收藏时，菜单显示取消收藏
-		el.find('.collect a').html('<i class="glyphicon glyphicon-heart"></i> 取消收藏');
+		el.find('.collect a').html('<i class="mdi mdi-star-minus"></i><span class="file-text">取消收藏</span>');
 	}
 	//打开方式
 	if (rids.length === 1) {
@@ -630,7 +647,7 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 			el.find('.openwith').remove();
 		} else if (subdata.length > 1) {
 			for (i = 0; i < subdata.length; i++) {
-				info += '			<li><a onClick="_filemanage.Open(\'' + data.rid + '\',\'' + subdata[i].extid + '\')" href="javascript:;"><img class="filee-icon" src="' + subdata[i].icon + '">' + subdata[i].name + '</a></li>';
+				info += '<li><a class="dropdown-item" onClick="_filemanage.Open(\'' + data.rid + '\',\'' + subdata[i].extid + '\')" href="javascript:;"><img class="filee-icon" src="' + subdata[i].icon + '"><span class="file-text">' + subdata[i].name + '</span></a></li>';
 			}
 			el.find('.openwith').find('ul.dropdown-menu').html(info);
 		}
@@ -639,29 +656,31 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 	if (_filemanage.winid.indexOf('collect') != -1 || _filemanage.winid.indexOf('recent') != -1 || _filemanage.winid.indexOf('search') != -1) {
 		el.find('.cut,.delete,.rename').remove();
 	}
+	if (_explorer.hash.indexOf('cloud') != -1) {
+		el.find('.collect').remove();
+	}
 	_filemanage.SetMoreButton();
 };
 
 _filemanage.SetMoreButton = function () {
 	var el = $('.navtopheader .toolButtons');
-	if (!el.length) {
-		return;
-	}
-	var width = el.width() - el.find('.yunfile-moreMenu').outerWidth(true);
-	if (width <= 0) {
-		return;
-	}
+	if (!el.length) return;
+	var moreMenu = el.find('.yunfile-moreMenu');
+	var width = el.width() - moreMenu.outerWidth(true);
+	if (width <= 0) return;
 	var yunfileButton = el.find('.yunfile-btnMenu');
-	yunfileButton.find('button').hide();
-	el.find('.yunfile-moreMenu>.dropdown-menu>li').show();
-	//已经显示的在更多内不在显示
-	yunfileButton.children().each(function () {
-		var el1 = jQuery(this);
-		jQuery(this).show();
-		//		if(yunfileButton.width()>(width-15)){
-		//			el1.hide();
-		//			return;
-		//		}
+	yunfileButton.children().hide();
+
+	var totalWidth = 0;
+	yunfileButton.children().each(function() {
+		var el1 = $(this);
+		el1.show();
+		var btnWidth = el1.outerWidth(true);
+		if (totalWidth + btnWidth > (width - 20)) {
+			el1.hide();
+		} else {
+			totalWidth += btnWidth;
+		}
 	});
 
 	yunfileButton.children().each(function () {
@@ -726,14 +745,13 @@ _filemanage.SetMoreButton = function () {
 			} else {
 				el.find('.yunfile-moreMenu .collect').hide();
 			}
+		} else if(el1.hasClass('paste')){
+			if(el1.is(':hidden')){
+				el.find('.yunfile-moreMenu .paste').show();
+			}else{
+				el.find('.yunfile-moreMenu .paste').hide();
+			}
 		}
-		/*else if(el1.hasClass('paste')){
-					if(el1.is(':hidden')){
-						el.find('.yunfile-moreMenu .paste').show();
-					}else{
-						el.find('.yunfile-moreMenu .paste').hide();
-					}
-				}*/
 	});
 };
 
@@ -791,7 +809,239 @@ _filemanage.prototype.appendIcos = function (data) {
 	}, 1);
 	this.pageloadding = false;
 };
+function contextmenuico(rid) {
+	if (!rid) {
+		return '';
+	}
+	var obj = _explorer.sourcedata.icos[rid];
+    var html = document.getElementById('right_ico').innerHTML;
+	if(!html) {
+		return '';
+	}
+    html = html.replace(/\{rid\}/g, rid);
+    if (_filemanage.selectall.icos.length == 1 && obj.type == 'folder') {
+        html = html.replace(/\{fid\}/g, obj.fid);
+    } else {
+        html = html.replace(/\{fid\}/g, obj.pfid);
+    }
+	var el = $(html);
+	if (!el.length) return '';
+	var obj = _explorer.sourcedata.icos[rid];
+	if (obj.type == 'shortcut' || obj.type == 'storage' || obj.type == 'pan' || _explorer.myuid < 1) {
+		el.find('.shortcut').remove();
+	}
+	//判断copy
+	if (!_explorer.Permission('copy', obj)) {
+		el.find('.copy').remove();
+	}
+	//判断粘贴
+	if (!_explorer.Permission('upload', obj) || _explorer.cut.icos.length < 1 || _filemanage.fid < 1) {
+		el.find('.paste').remove();
+	}
 
+	//分享权限
+	if (!_explorer.Permission('share', obj)) {
+		el.find('.share').remove();
+	}
+
+	//重命名权限
+	if (!_explorer.Permission('rename', obj)) {
+		el.find('.rename').remove();
+	}
+
+	//下载权限
+	if (!_explorer.Permission('download', obj)) {
+		el.find('.download').remove();
+		el.find('.downpackage').remove();
+	}
+	//ftp的chmod权限
+	if (!_explorer.Permission('chmod', obj)) {
+		el.find('.chmod').remove();
+	}
+	//删除权限
+	if (!_explorer.Permission('delete', obj)) {
+		el.find('.cut').remove();
+		el.find('.delete').remove();
+	}
+	//不允许删除的情况
+	if (obj.notdelete > 0 && obj.type == 'app') {
+		el.find('.delete').remove();
+		el.find('.cut').remove();
+		el.find('.copy').remove();
+	}
+	//多选时的情况
+	var collects = 0;
+	if (_filemanage.selectall.icos.length > 1 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
+		if(obj.isdelete == 1){
+			el.find('.menu-item:not(.recover,.finallydelete)').remove();
+		}else{
+			el.find('.menu-item:not(.delete,.cut,.copy,.restore,.downpackage,.property,.collect,.paste,.share)').remove();
+		}
+		var pd = 1;
+		for (var i = 0; i < _filemanage.selectall.icos.length; i++) {
+			var ico = _explorer.sourcedata.icos[_filemanage.selectall.icos[i]];
+			if (ico.collect) collects += 1;
+			if (!_explorer.Permission('download', ico)) {
+				pd = 0;
+				break;
+			}
+		}
+		if (!pd) {
+			el.find('.downpackage').remove();
+		}
+		el.find('.download').remove();
+		if (collects == _filemanage.selectall.icos.length) {//区别是已收藏时，菜单显示取消收藏
+			el.find('.collect .layui-menu-item-text').html(__lang.cancel_collection);
+			el.find('.collect i').removeClass('mdi-star').addClass('mdi-star-minus');
+		}
+	} else {
+		if (obj.collect) {
+			el.find('.collect .layui-menu-item-text').html(__lang.cancel_collection);
+			el.find('.collect i').removeClass('mdi-star').addClass('mdi-star-minus');
+		}
+		el.find('.downpackage').remove();
+	}
+
+	if (obj.isdelete == 1) {
+		el.find('.menu-item:not(.recover,.finallydelete)').remove();
+	} else {
+		el.find('.finallydelete').remove();
+		el.find('.recover').remove();
+	}
+	if(_filemanage.winid.indexOf('collect') != -1){
+		el.find('.cut').remove();
+		el.find('.copy').remove();
+		el.find('.paste').remove();
+	}
+	//分享处理
+	if(_filemanage.winid.indexOf('share') != -1){
+		el.find('.menu-item:not(.editshare)').remove();
+	}else{
+		el.find('.editshare').remove();
+	}
+	//如果在收藏,搜索和最近使用页面去掉删去和剪切和重命名
+	if(_filemanage.winid.indexOf('collect') != -1 || _filemanage.winid.indexOf('recent') != -1 || _filemanage.winid.indexOf('search') != -1){
+		el.find('.cut,.delete,.rename').remove();
+	}
+	if (_explorer.hash.indexOf('cloud') != -1) {
+		el.find('.collect').remove();
+	}
+	if (!el.find('.menu-item').length) {
+		el.hide();
+		return;
+	}
+		//判断打开方式
+	var subdata = getExtOpen(obj.type == 'shortcut' ? obj.tdata : obj);
+	if (subdata === true) {
+		el.find('.openwith').remove();
+	} else if (subdata === false) {
+		el.find('.openwith').remove();
+		el.find('.open').remove();
+	} else if (subdata.length == 1) {
+		el.find('.openwith').remove();
+	} else if (subdata.length > 1) {
+		var html = '';
+		for (var i = 0; i < subdata.length; i++) {
+			html += '<li class="menu-item" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;" title="' + subdata[i].name + '"><div class="layui-menu-body-title dropdown-item">';
+			if (subdata[i].icon) {
+				html += '<span class="pe-2"><img width="24px" height="24px" src=' + subdata[i].icon + '></span>';
+			}
+			html += subdata[i].name;
+			html += '</div></li>';
+		}
+		el.find('.openwithdata').html(html);
+	} else {
+		el.find('.openwith').remove();
+	}
+	el.find('.layui-menu-item-divider').each(function () {
+		if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
+	});
+	return el[0] ? el[0].outerHTML : '';
+}
+function contextmenubody(fid) {
+	var html = document.getElementById('right_body').innerHTML;
+	if(!html) {
+		return '';
+	}
+    html = html.replace(/\{fid\}/g, fid);
+    html = html.replace(/\{filemanageid\}/g, _filemanage.winid);
+	var filemanage = _filemanage.cons[_filemanage.winid];
+	var el = $(html);
+	if (!el.length) return '';
+	//设置当前容器的相关菜单选项的图标
+	el.find('span.menu-icon-iconview[view=' + filemanage.view + ']').removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
+	//设置排序
+	el.find('.menu-icon-disp').each(function () {
+		if (jQuery(this).attr('disp') == filemanage.disp) {
+			jQuery(this).removeClass('mdi-checkbox-blank-outline').addClass('mdi-checkbox-marked');
+			jQuery(this).nextAll('.caret').first().removeClass('mdi-menu-up').removeClass('mdi-menu-down').addClass(filemanage.asc > 0 ? 'mdi-menu-up' : 'mdi-menu-down');
+		} else {
+			jQuery(this).addClass('mdi-checkbox-blank-outline').removeClass('mdi-checkbox-marked');
+			jQuery(this).nextAll('.caret').first().removeClass('mdi-menu-up').removeClass('mdi-menu-down');
+		}
+	});
+	if (!fid) {
+		el.find('.property').remove();
+		el.find('.paste').remove();
+	if(_filemanage.winid != 'recycle-list'){
+		el.find('.recoverall').remove();
+		el.find('.deleteall').remove();
+	}else{
+		el.find('.sort .disp2').remove();
+		el.find('.sort .disp3').remove();
+	}
+	}else{
+		el.find('.recoverall').remove();
+		el.find('.deleteall').remove();
+	}
+	if (!_explorer.Permission_Container('folder', fid)) {
+		el.find('.newfolder').remove();
+		el.find('.uploadfolder').remove();
+	}
+	if (!_explorer.Permission_Container('link', fid)) {
+		el.find('.newlink').remove();
+	}
+	if (!_explorer.Permission_Container('dzzdoc', fid)) {
+		el.find('.newdzzdoc').remove();
+	}
+	if (!_explorer.Permission_Container('upload', fid)) {
+		el.find('.upload').remove();
+		el.find('.paste').remove();
+	}
+	if (!_explorer.Permission_Container('newtype', fid)) {
+		el.find('.newtext').remove();
+		el.find('.newdoc').remove();
+		el.find('.newexcel').remove();
+		el.find('.newpowerpoint').remove();
+		el.find('.newpdf').remove();
+	}
+	if (_explorer.cut.icos.length < 1) el.find('.paste').remove();
+	
+	if (!_explorer.Permission_Container('upload', fid)) {
+		el.find('.upload').remove();
+		el.find('.uploadfolder').remove();
+	}
+	//设置默认桌面
+
+	//检测新建和上传是否都没有
+	if (el.find('.create .menu-item').length < 1) {
+		el.find('.create').remove();
+	}
+	if(_filemanage.winid == 'share-list'){
+		return '';
+	}
+	if (el.find('.menu-item').length < 1) {
+		el.hide();
+		return;
+	}
+	if (_explorer.hash.indexOf('cloud') != -1) {
+		el.find('.newlink').remove();
+	}
+	el.find('.layui-menu-item-divider').each(function () {
+		if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
+	});
+	return el[0] ? el[0].outerHTML : '';
+}
 _filemanage.prototype.createIcosContainer = function () {
 	var self = this;
 	var containerid = 'filemanage-' + this.id;
@@ -807,14 +1057,18 @@ _filemanage.prototype.createIcosContainer = function () {
 	_explorer.Scroll($('.scroll-y'));
 	var el = jQuery(div);
 	el.find('.js-file-item-tpl').empty();
-	jQuery('.middlecenter,.middle-recycle,.share-content')
+	jQuery('.middlecenter,.middle-recycle')
 		.on('contextmenu', function (e) {
 			e = e ? e : window.event;
 			var tag = e.srcElement ? e.srcElement : e.target;
 			if (/input|textarea/i.test(tag.tagName)) {
 				return true;
 			}
-			_contextmenu.right_body(e, self.fid);
+			var options = {
+				content: contextmenubody(self.fid)
+			}
+			layui.dropdown.reloadData('right_ico',options);
+			layui.dropdown.open('right_ico');
 			return false;
 		})
 		.on('click', function (e) {
@@ -859,7 +1113,7 @@ _filemanage.prototype.createIcosContainer = function () {
 			self.selectInfo();
 			return false;
 		});
-	jQuery(document).off('click.cselect').on('click.cselect', '.dzz-backing-out', function () {
+	jQuery(document).off('click.cselect').on('click.cselect', '.mdi-close', function () {
 		var hash = location.hash;
 		if (hash.indexOf('share') != -1) {
 			jQuery('.deatisinfo').each(function () {
@@ -882,9 +1136,6 @@ _filemanage.prototype.createIcosContainer = function () {
 			if (disp * 1 === self.disp * 1) {
 				if (self.asc > 0) {
 					self.asc = 0;
-					//						 if(self.asc=0){
-					//						 	jQuery(this).find('span').addClass('dzz-expand-more').removeClass('dzz-expand-less');
-					//						 }
 				} else {
 					self.asc = 1;
 				}
@@ -894,6 +1145,9 @@ _filemanage.prototype.createIcosContainer = function () {
 			}
 			self.disp = disp;
 			if (self.fid) {
+				if (_explorer.hash.indexOf('cloud') != -1) {
+					self.fid = _filemanage.rid;
+				}
 				_explorer.sourcedata.folder[self.fid].disp = disp;
 			}
 			if (self.bz.indexOf('ALIOSS') === 0 || self.bz.indexOf('JSS') === 0) {
@@ -961,30 +1215,18 @@ _filemanage.prototype._selectInfo = function () {
 		jQuery('.selectall-box').addClass('Icoselected');
 		jQuery('.selectall-box .select-info').html('已选中<span class="num">' + sum + '</span>个文件');
 		jQuery('.docunment-allfile').hide();
-		if (!_explorer.infoPanelOpened || _explorer.infoPanel_hide) {
-		$('.bs-main-container').css({
-			'margin-right': '0px'
-		});
-		$('.rightMenu').css('right', '-320px');
-		$('.toggRight').parent('li').removeClass('background-toggle').find('.dzz').attr("data-original-title", "开启右侧信息");
-	} else {
-		$('.bs-main-container').css({
-			'margin-right': '300px'
-		});
-		$('.rightMenu').css('right', '0');
-		$('.toggRight').parent('li').addClass('background-toggle').find('.dzz').attr("data-original-title", "关闭右侧信息");
-	}
+		_explorer.toggleRight();
 		if (sum >= total) { //全部选中
 			jQuery('.selectall-box').addClass('Icoselected');
 		}
+		if (hash.indexOf('recycle') != -1) {
+			jQuery('.select-toperate-right .toggRight').hide();
+		}
 		if (hash.indexOf('recycle') != -1 || hash.indexOf('isdelete') != -1) {
 			jQuery('.recycle-option-icon').show();
-			// jQuery('.select-toperate-right .toggRight').hide();
 		}
 		if (hash.indexOf('share') != -1) {
-			jQuery('.share-option-icon').show();
 			jQuery('.select-toperate-right').hide();
-			jQuery('.select-toperate-right').show();
 			if (sum == 1) {
 				var shareinfo = _filemanage.selectall.icos[0];
 				jQuery('.deatisinfo').each(function () {
@@ -1004,7 +1246,6 @@ _filemanage.prototype._selectInfo = function () {
 				jQuery('.deatisinfo').each(function () {
 					jQuery(this).addClass('hide');
 				});
-				jQuery('.share-option-icon').find('.btnedit').hide();
 			}
 		}
 	} else { //没有选中
@@ -1017,7 +1258,6 @@ _filemanage.prototype._selectInfo = function () {
 			jQuery('.recycle-option-icon').hide();
 		}
 		if (hash.indexOf('share') != -1) {
-			jQuery('.share-option-icon').hide();
 			jQuery('.deatisinfo').each(function () {
 				jQuery(this).addClass('hide');
 			});
@@ -1071,7 +1311,12 @@ _filemanage.prototype.pageClick = function (page) {
 		.replace(/&marker\=\w*(&|$)/, '&')
 		.replace(/&t\=\d+/, '');
 	url = url.replace(/&+$/ig, '');
-	_filemanage.getData(url + '&exts=' + this.exts + '&tags=' + this.tags + '&disp=' + this.disp + '&fids=' + this.fids + '&gid=' + this.gid + '&before=' + this.before + '&after=' + this.after + '&asc=' + this.asc + '&iconview=' + this.view + '&keyword=' + encodeURI(keyword) + '&page=' + page + '&marker=' + (this.fid ? _explorer.sourcedata.folder[this.fid].nextMarker : '') + '&t=' + new Date().getTime(), function () {
+	if (_explorer.hash.indexOf('cloud') != -1) {
+		var marker = '';
+	} else {
+		var marker = this.fid ? _explorer.sourcedata.folder[this.fid].nextMarker : '';
+	}
+	_filemanage.getData(url + '&exts=' + this.exts + '&tags=' + this.tags + '&disp=' + this.disp + '&fids=' + this.fids + '&gid=' + this.gid + '&before=' + this.before + '&after=' + this.after + '&asc=' + this.asc + '&iconview=' + this.view + '&keyword=' + encodeURI(keyword) + '&page=' + page + '&marker=' + marker + '&t=' + new Date().getTime(), function () {
 		self.PageInfo();
 	});
 };
@@ -1089,8 +1334,6 @@ _filemanage.stack_run = function (winid) {
 		_filemanage.showicosTimer[winid] = window.setTimeout(function () {
 			_filemanage.stack_run(winid);
 		}, 1);
-	} else {
-		jQuery(document).trigger('showIcos_done');
 	}
 };
 _filemanage.prototype.tddrager_start = function (e) {
@@ -1181,9 +1424,6 @@ _filemanage.prototype.DetachEvent = function () {
 	document.onmousemove = _filemanage.onmousemove;
 	document.onmouseup = _filemanage.onmouseup;
 	document.onselectstart = _filemanage.onselectstart;
-
-
-
 };
 _filemanage.prototype.AttachEvent = function (e) {
 	_filemanage.onmousemove = document.onmousemove;
@@ -1358,7 +1598,9 @@ _filemanage.Open = function (rid, extid, title) {
 		var fid = data.oid;
 		if (data.gid > 0) {
 			hash = '#group&do=file&gid=' + data.gid + (fid > 0 ? '&fid=' + fid : '');
-		} else {
+		}else if (data.bz && data.bz !== 'dzz') {
+			hash = '#cloud&bz=' + data.bz + '&path=' + data.path;
+		}  else {
 			hash = '#home&do=file&fid=' + fid;
 		}
         addstatis(rid);
@@ -1397,7 +1639,7 @@ _filemanage.Open = function (rid, extid, title) {
 			}
 		}
 	} else {
-		showDialog('文件没有可以打开的应用');
+		layer.alert('文件没有可以打开的应用');
 	}
 };
 
@@ -1554,14 +1796,14 @@ _filemanage.collect = function (rid) {
 			'collect': collect
 		}, function (json) {
 			if (json.error) {
-				showDialog(json.error, 'notice');
+				layer.alert(json.error, {skin:'lyear-skin-danger'});
 			} else {
 				var msg = '';
 				if (collect === 0) {					
 					if (_filemanage.subfix === 'collect') {//收藏页面中
 						for (var key in json.msg) {
 							if (json.msg[key] === 'success') {
-								msg += '<p class="text-success">' + _explorer.sourcedata.icos[key].name + __lang.cancle_collect_success + '</p>';
+								msg += '' + _explorer.sourcedata.icos[key].name + __lang.cancle_collect_success + '</p>';
 								_filemanage.removerid(key);
 								
 								total--;
@@ -1576,8 +1818,8 @@ _filemanage.collect = function (rid) {
 						for (var i in json.msg) {
 							if (json.msg[i] === 'success') {
 								_explorer.sourcedata.icos[rid].collect = 0;
-								msg += '<p class="text-success">' + _explorer.sourcedata.icos[i].name + __lang.cancle_collect_success + '</p>';
-								jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.dzz-colllection-item').addClass('hide');
+								msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.cancle_collect_success + '</p>';
+								jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.colllection-item').addClass('hide');
 							} else {
 								msg += '<p class="text-danger">' + _explorer.sourcedata.icos[i].name + json.msg[i].error + '</p>';
 							}
@@ -1587,15 +1829,15 @@ _filemanage.collect = function (rid) {
 					
 					for (var i in json.msg) {
 						if (json.msg[i] === 'success') {							
-							msg += '<p class="text-success">' + _explorer.sourcedata.icos[i].name + __lang.collect_success + '</p>';
+							msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.collect_success + '</p>';
 							_explorer.sourcedata.icos[rid].collect = 1;
-							jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.dzz-colllection-item').removeClass('hide');
+							jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.colllection-item').removeClass('hide');
 						} else {
 							msg += '<p class="text-danger">' + _explorer.sourcedata.icos[i].name + json.msg[i].error + '</p>';
 						}
 					}
 				}
-				showmessage(msg, 'success', 3000, 1, 'right-bottom');
+				layer.msg(msg);
 				//console.log('收藏成功时处理');
 			}
 		}, 'json');
@@ -1604,6 +1846,10 @@ _filemanage.collect = function (rid) {
 };
 _filemanage.property = function (rid, isfolder) {
 	var path = '';
+	var bz = '';
+	if (_explorer.hash.indexOf('cloud') != -1) {
+		bz = '1';
+	}
 	if (isfolder) {
 		var folder = _explorer.sourcedata.folder[rid];
 		path = encodeURIComponent('fid_' + folder.path);
@@ -1621,11 +1867,15 @@ _filemanage.property = function (rid, isfolder) {
 		}
 		path = encodeURIComponent(dpaths.join(','));
 	}
-	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&paths=' + path);
+	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&bz='+bz+'&paths=' + path);
 };
 _filemanage.share = function (rid, rids) {
 	if (!rid) {
 		rid = _filemanage.selectall.icos[0];
+	}
+	var bz = '';
+	if (_explorer.hash.indexOf('cloud') != -1) {
+		bz = '&bz='+1;
 	}
 	var dpaths = [];
 	var path = '';
@@ -1643,12 +1893,17 @@ _filemanage.share = function (rid, rids) {
 		} else {
 			ico = _explorer.sourcedata.icos[rid];
 			dpaths = [ico.dpath];
-
 		}
 		path = encodeURIComponent(dpaths.join(','));
 	}
+	if (_explorer.hash.indexOf('cloud') != -1) {
+		if (dpaths.length > 1){
+			layer.alert('网络挂载文件不支持分享多个。', {skin:'lyear-skin-danger'});
+			return;
+		}
+	}
 	if (dpaths.length > 0) {
-		showWindow('share', _explorer.appUrl + '&op=ajax&operation=share&paths=' + path, 'get', 0);
+		showWindow('share', _explorer.appUrl + '&op=ajax&operation=share&paths=' + path+bz, 'get', 0);
 	}
 };
 
@@ -1699,12 +1954,12 @@ _filemanage.downpackage = function () {
 		}
 	}
 	if (errors) {
-		showmessage('<p>' + __lang.error_file_not_download + '</p><ul>' + errors + '</ul>', 'danger', 5000, 1);
+		layer.msg('<p>' + __lang.error_file_not_download + '</p><ul>' + errors + '</ul>', {offset:'10px'});
 		return false;
 	}
 	var path = encodeURIComponent(dpaths.join(','));
 	if (path.length > 2048) {
-		showmessage(__lang.choose_file_many, 'danger', 3000, 1);
+		layer.msg(__lang.choose_file_many, {offset:'10px'});
 		return false;
 	}
 	var url = DZZSCRIPT + '?mod=io&op=download&path=' + path + '&t=' + new Date().getTime();
@@ -1724,29 +1979,36 @@ _filemanage.NewIco = function (type, fid) {
 	if (!fid) {
 		fid = _filemanage.fid;
 	}
+	var bz ='';
+	if (_explorer.hash.indexOf('cloud') != -1) {
+		bz = _explorer.sourcedata.folder[fid];
+		bz = bz.path;
+	}
 
 	if (type === 'newFolder') {
-		showWindow('newFolder', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid);
+		showWindow('newFolder', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid+'&bz='+bz);
 	} else if (type === 'newLink') {
 		showWindow('newLink', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid);
 	} else {
 		$.post(_explorer.appUrl + '&op=ajax&operation=newIco&type=' + type, {
-			'fid': fid
+			'fid': fid,
+			'bz': bz
 		}, function (data) {
 			if (data.msg === 'success') {
 				_explorer.sourcedata.icos[data.rid] = data;
 				_filemanage.cons['f-' + fid].CreateIcos(data);
                 _filemanage.addIndex(data);
 				_filemanage.rename(data.rid);
+				layer.msg('已创建：'+data.name, {offset:'10px'});
             } else {
-				showDialog(data.error);
+				layer.alert(data.error, {skin:'lyear-skin-danger'});
 			}
 		}, 'json');
 	}
 };
 //增加索引
 _filemanage.addIndex = function(data){
-	console.log(data);
+	if(data.bz) return;
 	if(data.filetype != 'folder' && data.filetype != 'link'){
         $.post(MOD_URL+'&op=ajax&operation=addIndex',{
             'aid':data.aid,
@@ -1787,19 +2049,11 @@ _filemanage.rename = function (id) {
 	var filemanage = _filemanage.cons[_filemanage.winid];
 
 	var el = jQuery('#file_text_' + id);
-	el.css('overflow', 'visible');
 	el.closest('td').addClass('renaming');
-	jQuery('#Icoblock_middleicon_' + id).find('.IcoText_div').css('overflow', 'visible');
 	var filename = el.html();
-	filemanage.oldtext = filename.replace(/\.[^\.]*$/, '');
 	var html = '';
-	if (filemanage.view > 3) {
-		html = "<input type='text' class='form-control' name='text'  id='input_" + id + "' style=\"width:" + (el.closest('td').width() - 110) + "px;height:30px;padding:2px; \" value=\"" + filemanage.oldtext + "\">";
-	} else {
-		html = "<textarea type='textarea' class='textarea' name='text'  id='input_" + id + "' style=\"width:100%;height:30px;padding:2px;overflow:hidden;margin-top:3px;color:#666666 \">" + filemanage.oldtext + "</textarea>";
-	}
+	html = "<input type='text' class='form-control' name='text' id='input_" + id + "' value=\"" + filename + "\">";
 	el.html(html);
-	//jQuery('#content_'+filemanage.winid+' .icoblank[icoid="'+id+'"]').css('z-index',-1);
 	var ele = jQuery('#input_' + id);
 	ele.select();
 	ele.on('keyup', function (e) {
@@ -1820,17 +2074,15 @@ _filemanage.rename = function (id) {
 				el.html(filename);
 				el.css('overflow', 'hidden');
 				el.closest('td').removeClass('renaming');
-				jQuery('#Icoblock_middleicon_' + id).find('.IcoText_div').css('overflow', 'hidden');
-                return false;
+				return false;
             }
 			text = text.replace("\n", '');
-			if (filemanage.oldtext !== text) {
+			if (filename !== text) {
 				_filemanage.Rename(id, text);
 			} else {
 				el.html(filename);
 				el.css('overflow', 'hidden');
 				el.closest('td').removeClass('renaming');
-				jQuery('#Icoblock_middleicon_' + id).find('.IcoText_div').css('overflow', 'hidden');
 			}
 			//jQuery('#content_'+filemanage.winid+' .icoblank[icoid="'+id+'"]').css('z-index',10);
 		}
@@ -1841,6 +2093,7 @@ _filemanage.rename = function (id) {
 _filemanage.Rename = function (rid, text) {
 	var ico = _explorer.sourcedata.icos[rid];
 	var filemanage = _filemanage.cons[_filemanage.winid];
+	layer.msg('正在操作中，请不要关闭浏览器或刷新页面', {offset:'10px',time:0});
 	jQuery.ajax({
 		type: 'post',
 		url: _explorer.appUrl + '&op=dzzcp&do=rename',
@@ -1851,25 +2104,30 @@ _filemanage.Rename = function (rid, text) {
 		},
 		dataType: "json",
 		success: function (json) {
+			if(json.bz){
+				json.rid = rid;
+			}
 			if (json.rid) {
 				_explorer.sourcedata.icos[json.rid].name = json.name;
 				filemanage.data[json.rid].name = json.name;
 				filemanage.CreateIcos(_explorer.sourcedata.icos[json.rid], true);
 				var updatedatas = {'arr[rid]':json.rid,'arr[name]':json.name,'arr[vid]':json.vid,'type':json.type};
                 _filemanage.updateIndex(updatedatas);
+				layer.msg('已重命名为：'+json.name, {offset:'10px'});
 			} else {
-				jQuery('#file_text_' + rid).html(filemanage.oldtext);
+				jQuery('#file_text_' + rid).html(filename);
 				if (json.error) {
-					showmessage(json.error, 'danger', 3000, 1);
+					layer.msg(json.error, {offset:'10px'});
 				}
 			}
 		},
 		error: function () {
-			jQuery('#file_text_' + rid).html(filemanage.oldtext);
+			jQuery('#file_text_' + rid).html(filename);
 			if (json.error) {
-				showmessage(json.error, 'danger', 3000, 1);
+				layer.msg(json.error, {offset:'10px'});
+			} else {
+				layer.msg(__lang.js_network_error, {offset:'10px'});
 			}
-			showmessage(__lang.js_network_error, 'danger', 3000, 1);
 		}
 	});
 };
@@ -1920,30 +2178,27 @@ _filemanage.finallyDelete = function (rid, noconfirm, title) {
 		//}
 	}
 	var url = _explorer.appUrl + '&op=dzzcp&do=finallydelete&t=' + new Date().getTime();
-	var msg = '<span class="delect_text_red">' + __lang.finally_delete_file_confirm + '</span>';
-	showDialog(msg, 'confirm', '<span class="delect-title-normal">确定要删除文件？<span>', function () {
-		var progress = '<div class="progress progress-striped active" style="margin:0"><div class="progress-bar" style="width:100%;"></div></div>';
-		showmessage('<p>' + __lang.deleting_not_please_close + '</p>' + progress, 'success', 0, 1, 'right-bottom');
+	layer.confirm(__lang.finally_delete_file_confirm, {title:'确定要删除文件？',skin:'lyear-skin-danger'}, function(index){
+		layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
 		jQuery.post(url, data, function (json) {
 			var rids = [];
+			var msg = '';
 			for (var i in json.msg) {
 				if (json.msg[i] === 'success') {
-					showmessage(_explorer.sourcedata.icos[i].name + __lang.delete_success, 'success', 1000, 1, 'right-bottom');
+					msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.delete_success + '</p>';
 					//_filemanage.removerid(i);
 					rids.push(i);
 					total--;
 					_filemanage.showTemplatenoFile(containid, total);
-
 				} else {
-					showmessage(json.msg[i], 'error', 3000, 1, 'right-bottom');
+					msg += '<p class="text-danger">' + json.msg[i] + '</p>';
 				}
 			}
+			layer.msg(msg, {offset:'10px'});
             _filemanage.deleteIndex(rids);
             _filemanage.removeridmore(rids);
 		}, 'json');
-	})
-
-
+	});
 };
 //清空回收站
 _filemanage.deleteAll = function () {
@@ -1951,34 +2206,31 @@ _filemanage.deleteAll = function () {
 		var containid = 'filemanage-' + _filemanage.winid;
 		var total = filemanage.total;
 		var url = _explorer.appUrl + '&op=dzzcp&do=emptyallrecycle&k=' + new Date().getTime();
-		var msg = '<span class="delect_text_red">' + __lang.finally_delete_file_confirm + '</span>';
-		showDialog(msg, 'confirm', '<i class="dzz dzz-info dzz-whole-sigh"></i><span class="delect-title-normal">您确定删除回收站所有文件吗？删除之后不可恢复<span>', function () {
-			var progress = '<div class="progress progress-striped active" style="margin:0"><div class="progress-bar" style="width:100%;"></div></div>';
-			showmessage('<p>' + __lang.deleting_not_please_close + '</p>' + progress, 'success', 0, 1, 'right-bottom');
+		layer.confirm(__lang.finally_delete_file_confirm, {title:'您确定删除回收站所有文件吗？删除之后不可恢复',skin:'lyear-skin-danger'}, function(index){
+			layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
 			$.getJSON(url, function (data) {
 				if(data.error){
-                    showmessage(data.error, 'error', 3000, 1, 'right-bottom');
-                    return false;
+					layer.alert(data.error, {skin:'lyear-skin-danger'});
+					return false;
 				}
 				var rids = [];
+				var msg = '';
 				for (var i in data.msg) {
 					if (data.msg[i] == 'success') {
-						showmessage(data.name[i] + __lang.delete_success, 'success', 1000, 1, 'right-bottom');
+						msg += '<p>' + data.name[i] + __lang.delete_success + '</p>';
 						//_filemanage.removerid(i);
 						rids.push(i);
 						total--;
-
 					} else {
-						showmessage(data.msg[i], 'error', 3000, 1, 'right-bottom');
+						msg += '<p class="text-danger">' + data.msg[i] + '</p>';
 					}
 				}
+				layer.msg(msg, {offset:'10px'});
 				_filemanage.showTemplatenoFile(containid, total);
-                _filemanage.deleteIndex(rids);
-                _filemanage.removeridmore(rids);
-
-
+				_filemanage.deleteIndex(rids);
+				_filemanage.removeridmore(rids);
 			});
-		})
+		});
 	}
 	//还原所有文件
 _filemanage.recoverAll = function () {
@@ -1986,31 +2238,31 @@ _filemanage.recoverAll = function () {
 	var containid = 'filemanage-' + _filemanage.winid;
 	var total = filemanage.total;
 	var url = _explorer.appUrl + '&op=dzzcp&do=recoverAll&k=' + new Date().getTime();
-	var msg = '<span class="delect_text_red">' + __lang.recover_file_confirm + '</span>';
-	showDialog(msg, 'confirm', '<i class="dzz dzz-info dzz-whole-sigh"></i><span class="delect-title-normal">您确定恢复所有文件到原位置吗？<span>', function () {
-		var progress = '<div class="progress progress-striped active" style="margin:0"><div class="progress-bar" style="width:100%;"></div></div>';
-		showmessage('<p>' + __lang.recovering_not_please_close + '</p>' + progress, 'success', 0, 1, 'right-bottom');
+	layer.confirm(__lang.recover_file_confirm, {title:'您确定恢复所有文件到原位置吗？',skin:'lyear-skin-warning'}, function(index){
+		layer.msg(__lang.recovering_not_please_close, {offset:'10px',time:0});
 		$.getJSON(url, function (data) {
             if(data.error){
-                showmessage(data.error, 'error', 3000, 1, 'right-bottom');
+				layer.alert(data.error, {skin:'lyear-skin-danger'});
                 return false;
             }
 			var rids = [];
+			var msg = '';
 			for (var i in data.msg) {
 				if (data.msg[i] == 'success') {
-					showmessage(data.name[i] + __lang.recover_success, 'success', 1000, 1, 'right-bottom');
+					msg += '<p>' + data.name[i] + __lang.recover_success + '</p>';
 					//_filemanage.removerid(i);
 					rids.push(i);
 					total--;
 					_filemanage.showTemplatenoFile(containid, total);
 
 				} else {
-					showmessage(data.msg[i], 'error', 3000, 1, 'right-bottom');
+					msg += '<p class="text-danger">' + data.msg[i] + '</p>';
 				}
 			}
+			layer.msg(msg, {offset:'10px'});
             _filemanage.removeridmore(rids);
 		});
-	})
+	});
 }
 
 _filemanage.RecoverFile = function (rid, noconfirm) {
@@ -2048,74 +2300,33 @@ _filemanage.RecoverFile = function (rid, noconfirm) {
 		//}
 	}
 	var url = _explorer.appUrl + '&op=dzzcp&do=recoverFile&t=' + new Date().getTime();
-
-	var progress = '<div class="progress progress-striped active" style="margin:0"><div class="progress-bar" style="width:100%;"></div></div>';
-	showmessage('<p>' + __lang.recovering_not_please_close + '</p>' + progress, 'success', 0, 1, 'right-bottom');
+	layer.msg(__lang.recovering_not_please_close, {offset:'10px',time:0});
 	jQuery.post(url, data, function (json) {
 		var rids = [];
+		var msg = '';
 		for (var i in json.msg) {
 			if (json.msg[i] === 'success') {
-				showmessage(_explorer.sourcedata.icos[i].name + __lang.recover_success, 'success', 1000, 1, 'right-bottom');
+				msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.recover_success + '</p>';
 				//_filemanage.removerid(i);
 				rids.push(i);
 				_filemanage.showTemplatenoFile(containid, total);
 
 			} else {
-				showmessage(json.msg[i], 'error', 3000, 1, 'right-bottom');
+				msg += '<p class="text-danger">' + json.msg[i] + '</p>';
 			}
 		}
+		layer.msg(msg, {offset:'10px'});
         _filemanage.removeridmore(rids);
 
 	}, 'json');
 };
 
 _filemanage.showTemplatenoFile = function (containid, total) {
-		if (total < 1 && jQuery('#' + containid).find('.emptyPage').length == 0) {
-			jQuery(jQuery('#template_nofile_notice').html()).appendTo(jQuery('#' + containid));
-		} else {
-			jQuery('#' + containid).find('.emptyPage').remove();
-		}
-	}
-	//取消分享
-_filemanage.cancleshares = function (rid, noconfirm) {
-	var filemanage = _filemanage.cons[_filemanage.winid];
-	var containid = 'filemanage-' + _filemanage.winid;
-	var total = filemanage.total;
-	if (!rid) {
-		rid = _filemanage.selectall.icos[0];
-	}
-	var msg = '<span class="delect_text_red">' + __lang.delete_share_sure + '</span>';
-	var title = '<span class="delect-title-normal">' + '确定要删除分享？' + '</span>';
-	if (_filemanage.selectall.icos.length > 1 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
-		var questryshareid = _filemanage.selectall.icos.join(',');
+	if (total < 1 && jQuery('#' + containid).find('.emptyPage').length == 0) {
+		jQuery(jQuery('#template_nofile_notice').html()).appendTo(jQuery('#' + containid));
 	} else {
-		var questryshareid = rid;
+		jQuery('#' + containid).find('.emptyPage').remove();
 	}
-	showDialog(msg, 'confirm', title, function () {
-		jQuery.getJSON(MOD_URL + '&op=share&do=delshare&shareid=' + questryshareid, function (data) {
-			var error_name = '';
-			if (data['msg']) {
-				var datareturn = data['msg'];
-				for (var o in datareturn) {
-					if (datareturn[o]['success']) {
-						var shareid = parseInt(o);
-						jQuery('#shareinfo_' + shareid).remove();
-						_filemanage.removerid(o);
-						total--;
-
-					} else {
-						error_name += $('#' + shareid + '_title').text() + ',';
-					}
-				}
-				_filemanage.showTemplatenoFile(containid, total);
-				if (error_name != '') {
-					error_name = error_name.substr(0, error_name.length - 1);
-					showDetail(error_name + '{lang fail_cancel_share}');
-				}
-			}
-		});
-	})
-	return false;
 }
 _filemanage.delIco = function (rid, noconfirm) {
 	var filemanage = _filemanage.cons[_filemanage.winid];
@@ -2130,33 +2341,33 @@ _filemanage.delIco = function (rid, noconfirm) {
         var finallydelete = false;
 		if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 			if (_explorer.sourcedata.icos[_filemanage.selectall.icos[0]].isdelete > 0 || (_explorer.sourcedata.icos[_filemanage.selectall.icos[0]].bz && _explorer.sourcedata.icos[_filemanage.selectall.icos[0]].bz)) {
-				Confirm((finallydelete) ?__lang.js_finallydelete_selectall:__lang.js_delete_selectall, function () {
+				layer.confirm((finallydelete) ?__lang.js_finallydelete_selectall:__lang.js_delete_selectall, {title:__lang.confirm_message,skin:'lyear-skin-danger'}, function(index){
 					_filemanage.delIco(rid, 1);
 				});
 			} else {
-				Confirm((finallydelete) ? __lang.js_finallydelete_selectall_recycle : __lang.js_delete_selectall_recycle, function () {
+				layer.confirm((finallydelete) ? __lang.js_finallydelete_selectall_recycle : __lang.js_delete_selectall_recycle, {title:__lang.confirm_message,skin:'lyear-skin-danger'}, function(index){
 					_filemanage.delIco(rid, 1);
 				});
 			}
 			return;
 		} else if (_explorer.sourcedata.icos[rid].type === 'folder' && _explorer.sourcedata.folder[_explorer.sourcedata.icos[rid].oid] && _explorer.sourcedata.folder[_explorer.sourcedata.icos[rid].oid].iconum) {
 			if (_explorer.sourcedata.icos[rid].isdelete > 0 || (_explorer.sourcedata.icos[rid].bz && _explorer.sourcedata.icos[rid].bz)) {
-				Confirm((finallydelete) ? __lang.js_finallydelete_folder.replace('{name}', _explorer.sourcedata.icos[rid].name):__lang.js_delete_folder.replace('{name}', _explorer.sourcedata.icos[rid].name), function () {
+				layer.confirm((finallydelete) ? __lang.js_finallydelete_folder.replace('{name}', _explorer.sourcedata.icos[rid].name):__lang.js_delete_folder.replace('{name}', _explorer.sourcedata.icos[rid].name), {title:__lang.confirm_message,skin:'lyear-skin-danger'}, function(index){
 					_filemanage.delIco(rid, 1);
 				});
 			} else {
-				Confirm((finallydelete) ? __lang.js_finallydelete_folder_recycle.replace('{name}', _explorer.sourcedata.icos[rid].name):__lang.js_delete_folder_recycle.replace('{name}', _explorer.sourcedata.icos[rid].name), function () {
+				layer.confirm((finallydelete) ? __lang.js_finallydelete_folder_recycle.replace('{name}', _explorer.sourcedata.icos[rid].name):__lang.js_delete_folder_recycle.replace('{name}', _explorer.sourcedata.icos[rid].name), {title:__lang.confirm_message,skin:'lyear-skin-danger'}, function(index){
 					_filemanage.delIco(rid, 1);
 				});
 			}
 			return;
 		} else {
 			if (_explorer.sourcedata.icos[rid].isdelete > 0 || (_explorer.sourcedata.icos[rid].bz && _explorer.sourcedata.icos[rid].bz)) {
-				Confirm((finallydelete) ? __lang.js_finallydelete_confirm.replace('{name}', _explorer.sourcedata.icos[rid].name) : __lang.js_delete_confirm.replace('{name}', _explorer.sourcedata.icos[rid].name), function () {
+				layer.confirm((finallydelete) ? __lang.js_finallydelete_confirm.replace('{name}', _explorer.sourcedata.icos[rid].name) : __lang.js_delete_confirm.replace('{name}', _explorer.sourcedata.icos[rid].name), {title:__lang.confirm_message,skin:'lyear-skin-danger'}, function(index){
 					_filemanage.delIco(rid, 1);
 				});
 			} else {
-				Confirm((finallydelete) ? __lang.js_finallydelete_confirm_recycle.replace('{name}', _explorer.sourcedata.icos[rid].name): __lang.js_delete_confirm_recycle.replace('{name}', _explorer.sourcedata.icos[rid].name), function () {
+				layer.confirm((finallydelete) ? __lang.js_finallydelete_confirm_recycle.replace('{name}', _explorer.sourcedata.icos[rid].name): __lang.js_delete_confirm_recycle.replace('{name}', _explorer.sourcedata.icos[rid].name), {title:__lang.confirm_message,skin:'lyear-skin-danger'}, function(index){
 					_filemanage.delIco(rid, 1);
 				});
 			}
@@ -2197,24 +2408,23 @@ _filemanage.delIco = function (rid, noconfirm) {
 		}
 	}
 	var url = _explorer.appUrl + '&op=dzzcp&do=deleteIco&t=' + new Date().getTime();
-	var progress = '<div class="progress progress-striped active" style="margin:0"><div class="progress-bar" style="width:100%;"></div></div>';
-	showmessage('<p>' + __lang.deleting_not_please_close + '</p>' + progress, 'success', 0, 1, 'right-bottom');
+	layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
 	jQuery.post(url, data, function (json) {
 		var rids = [];
+		var msg = '';
 		for (var i in json.msg) {
 			if (json.msg[i] === 'success') {
-				showmessage(_explorer.sourcedata.icos[i].name + __lang.delete_success, 'success', 1000, 1, 'right-bottom');
+				msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.delete_success + '</p>';
 				//_filemanage.removerid(i);
 				rids.push(i);
 				total--;
 				_filemanage.showTemplatenoFile(containid, total);
-
 			} else {
-				showmessage(json.msg[i], 'error', 3000, 1, 'right-bottom');
+				msg += '<p class="text-danger">' + json.msg[i] + '</p>';
 			}
 		}
+		layer.msg(msg, {offset:'10px'});
         _filemanage.removeridmore(rids);
-
 	}, 'json');
 };
 _filemanage.removeridmore = function(rids){
@@ -2289,14 +2499,17 @@ _filemanage.copy = function (rid) {
 	}
 	var icosdata = _explorer.sourcedata.icos[rid];
 	var path = [];
+	var bzrid = [];
 	var data = {};
 	if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
-		if (icosdata.bz && icosdata.bz) {
+		if (icosdata.bz) {
 			for (var i in _filemanage.selectall.icos) {
 				path.push(_explorer.sourcedata.icos[_filemanage.selectall.icos[i]].dpath);
+				bzrid.push(_explorer.sourcedata.icos[_filemanage.selectall.icos[i]].rid);
 			}
 			data = {
 				rids: path,
+				rid: bzrid,
 				'bz': icosdata.bz
 			};
 		} else {
@@ -2308,9 +2521,10 @@ _filemanage.copy = function (rid) {
 			};
 		}
 	} else {
-		if (icosdata.bz && icosdata.bz) {
+		if (icosdata.bz) {
 			data = {
 				rids: [icosdata.dpath],
+				rid: [rid],
 				'bz': icosdata.bz
 			};
 		} else {
@@ -2322,7 +2536,6 @@ _filemanage.copy = function (rid) {
 	//复制类型值为1，剪切类型值为2
 	data.copytype = 1;
 	var url = _explorer.appUrl + '&op=dzzcp&do=copyfile&t=' + new Date().getTime();
-	//var progress='<div class="progress progress-striped active" style="margin:0"><div class="progress-bar" style="width:100%;"></div></div>';
 	jQuery.post(url, data, function (json) {
 		if (json.msg === 'success') {
 			var filenames = '';
@@ -2333,9 +2546,9 @@ _filemanage.copy = function (rid) {
 				filenames += _explorer.sourcedata.icos[json.rid[o]].name + ',';
 			}
 			filenames = filenames.substr(0, filenames.length - 1);
-			showmessage(filenames + __lang.copy_success, 'success', 1000, 1, 'right-bottom');
+			layer.msg(filenames + __lang.copy_success, {offset:'10px'});
 		} else {
-			showmessage(json.msg, 'error', 3000, 1, 'right-bottom');
+			layer.msg(json.msg, {offset:'10px'});
 		}
 
 
@@ -2351,14 +2564,17 @@ _filemanage.cut = function (rid) {
 	}
 	var icosdata = _explorer.sourcedata.icos[rid];
 	var path = [];
+	var bzrid = [];
 	var data = {};
 	if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 		if (icosdata.bz && icosdata.bz) {
 			for (var i in _filemanage.selectall.icos) {
 				path.push(_explorer.sourcedata.icos[_filemanage.selectall.icos[i]].dpath);
+				bzrid.push(_explorer.sourcedata.icos[_filemanage.selectall.icos[i]].rid);
 			}
 			data = {
 				rids: path,
+				rid: bzrid,
 				'bz': icosdata.bz
 			};
 		} else {
@@ -2373,6 +2589,7 @@ _filemanage.cut = function (rid) {
 		if (icosdata.bz && icosdata.bz) {
 			data = {
 				rids: [icosdata.dpath],
+				rid: [rid],
 				'bz': icosdata.bz
 			};
 		} else {
@@ -2384,7 +2601,6 @@ _filemanage.cut = function (rid) {
 	//复制类型值为1，剪切类型值为2
 	data.copytype = 2;
 	var url = _explorer.appUrl + '&op=dzzcp&do=copyfile';
-	// var progress='<div class="progress progress-striped active" style="margin:0"><div class="progress-bar" style="width:100%;"></div></div>'
 	jQuery.post(url, data, function (json) {
 		if (json.msg === 'success') {
 			var filenames = '';
@@ -2399,9 +2615,9 @@ _filemanage.cut = function (rid) {
 			}
 			_filemanage.showTemplatenoFile(containid, total);
 			filenames = filenames.substr(0, filenames.length - 1);
-			showmessage(filenames + __lang.cut_success, 'success', 1000, 1, 'right-bottom');
+			layer.msg(filenames + __lang.cut_success, {offset:'10px'});
 		} else {
-			showmessage(json.msg, 'error', 3000, 1, 'right-bottom');
+			layer.msg(json.msg, {offset:'10px'});
 		}
 
 	}, 'json');
@@ -2419,12 +2635,12 @@ _filemanage.paste = function (fid) {
 	var url = _explorer.appUrl + '&op=dzzcp&do=paste';
 	var i = 0;
 	var node = null;
+	layer.msg('正在粘贴，请不要关闭浏览器或刷新页面', {offset:'10px',time:0});
 	jQuery.post(url, data, function (json) {
 		if(json.error){
-			showmessage(json.error,'danger',3000,1);
+			layer.alert(json.error, {skin:'lyear-skin-danger'});
 		}else{
 			if (fid === _filemanage.fid) {
-			
 				if (json.folderarr) {
 					for (i = 0; i < json.folderarr.length; i++) {
 						_explorer.sourcedata.folder[json.folderarr[i].fid] = json.folderarr[i];
@@ -2437,7 +2653,7 @@ _filemanage.paste = function (fid) {
 					var filemanage = _filemanage.cons['f-' + fid];
 					var addIndex = (json['copytype']) ? true:false;
 					for (i = 0; i < json.icoarr.length; i++) {
-						if (json.icoarr[i].pfid === filemanage.fid) {
+						if (json.icoarr[i].pfid == filemanage.fid) {
 							_explorer.sourcedata.icos[json.icoarr[i].rid] = json.icoarr[i];
 							filemanage.CreateIcos(json.icoarr[i]);
 							if(addIndex){
@@ -2445,9 +2661,12 @@ _filemanage.paste = function (fid) {
 							}
 						}
 					}
+					layer.msg('粘贴成功', {offset:'10px'});
+				} else {
+					layer.msg('粘贴成功', {offset:'10px'});
 				}
 			} else {
-				showmessage('粘贴成功', 'success', 3000, 1);
+				layer.msg('粘贴成功', {offset:'10px'});
 			}
 		}
 		

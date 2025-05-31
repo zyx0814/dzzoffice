@@ -231,7 +231,6 @@ if ($do == 'editpass') {
             continue;
         }
         $log[1] = dgmdate($log[1], 'y-n-j H:i:s');
-        $log[2] = $log[2];
         $log[2] = ($log[2] != $_G['member']['username'] ? "<b>$log[2]</b>" : $log[2]);
         $log[3] = $usergroup[$log[3]];
 

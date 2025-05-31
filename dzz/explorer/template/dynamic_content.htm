@@ -1,278 +1,287 @@
-<div class="padding-left-1 scroll-y">
-        <div class="middletopMenu recycle-top clearfix">               
-                <div class="form-control-group clearfix">
-                    <div class="group-input">
-                        <select class="js-example-basic-multiple js-states" id="id_label_multiple"
-                                multiple="multiple">
-                            {loop $users $v}
-                            <option value="$v['uid']">$v['username']</option>
-                            {/loop}
-                        </select>
-                    </div>
-                </div>
-				 <div class="group-time form-control-group">
-                    <div class="group-time-animate input-black input-float">
-    					<div class="input-animate">
-					    	<input type="text"  class="form-control selectDate" id="selectDate"  placeholder="{lang create_time}">	
-					    </div>						                             
-                   </div>
-                    <label>{lang reach}</label>
-                    <div class="group-time-animate input-black input-float">
-                    	<div class="input-animate">
-					    	<input type="text" id="selectDate1"  class="form-control selectDate"  placeholder="{lang create_time}">	
-					    </div>
-                    </div>
-                </div>
-
+<div class="middletopMenu clearfix">
+    <div class="row justify-content-end">
+        <div class="input-group mb-3">
+            <label class="input-group-text" for="username">{lang username}</label>
+            <input type="text" class="form-control" id="username" placeholder="{lang username}">
+            <label class="input-group-text" for="operation">{lang operation}</label>
+            <select name="field_type" id="operation" class="form-select">
+                <option value="" selected="selected">{lang all}</option>
+                <!--{loop $operation_type $value}-->
+                <option value="$value[0]">$value[1]</option>
+                <!--{/loop}-->
+            </select>
+            <label class="input-group-text" for="object">{lang object}</label>
+            <input type="text" class="form-control" id="object" placeholder="{lang object}">
         </div>
-        <div class="group-tableword"><em class="scree-term">{lang additional_screening_conditions}：</em></div>
-        <!--文件列表开始-->
-        <div class="group-filemember " id="group-filemember">
-            <div class="group-filemember-header">
-                <table class="table" width="100%" border="0">
-                    <thead>
-                    <tr>
-                        <th class="member_header_0" width="20%">
-                            <div class="member_header_td_div">
-                                <span class="member_header_title">{lang time}</span>
-                                <a class="detail_header_icon" data-val="0"><span
-                                        class="dzz dzz-expand-more"></span></a>
-                            </div>
-                        </th>
-                        <th class="member_header_1" width="20%">
-                            <div class="member_header_td_div">
-                                <span class="member_header_type">{lang operator}</span>
-                                <a class="detail_header_icon" data-val="1"><span
-                                        class="dzz dzz-expand-more"></span></a>
-                            </div>
-                        </th>
-                        <th class="member_header_2" width="20%">
-                            <div class="member_header_td_div">
-                                <span class="member_header_type">{lang operation}</span>
-                                <a class="detail_header_icon" data-val="2"><span
-                                        class="dzz dzz-expand-more"></span></a>
-                            </div>
-                        </th>
-                        <th class="member_header_2" width="20%">
-                            <div class="member_header_td_div">
-                                <span class="member_header_type">{lang object}</span>
-                                <a class="detail_header_icon" data-val="3"><span
-                                        class="dzz dzz-expand-more"></span></a>
-                            </div>
-                        </th>
-                        <th class="member_header_2" width="20%">
-                            <div class="member_header_td_div">
-                                <span class="member_header_type">{lang details}</span>
-                                <a class="detail_header_icon" data-val="4"><span
-                                        class="dzz dzz-expand-more"></span></a>
-                            </div>
-                        </th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-
-            <div class="recent-con">
-                <table class="table" width="100%" border="0">
-                    <tbody id="event_list">
-                    <!--{if $events}-->
-                    <!--{loop $events $val}-->
-                    <tr id="" class="member_tr Icoblock" data-uid="$val['uid']">
-                        <td class="member_item_td" valign="middle" width="20%" style="position: relative;">
-                            <span>{eval echo dgmdate($val['dateline'],'Y-m-d H:i:s');}</span>
-                        </td>
-                        <td class="member_item_td" valign="middle" width="20%">
-                            <span>$val['username']</span>
-                        </td>
-                        <td class="member_item_td  member_header_color" valign="middle" width="20%">
-                            <span onclick="search_do(this)" data-val="$val['do']">$val[do_lang]</span>
-                        </td>
-                        <td class="member_item_td  member_header_color" valign="middle" width="20%">
-                            <span onclick="search_obj(this)" data-val="$val[do_obj]"><!--{if $val[do_obj]}-->$val[do_obj]
-                                <!--{/if}--></span>
-                        </td>
-                        <td class="member_item_td" valign="middle" width="20%">
-                            <span>$val[details]</span>
-                        </td>
-                    </tr>
-                    <!--{/loop}-->
-                    <!--{/if}-->
-                    <!--{if $eventnumbers == 0}-->
-                    <tr class="emptyshare">
-                        <td colspan="6" style="border: none;">
-                            <!--{template noFilePage-dynamic}-->
-                        </td>
-                    </tr>
-                    <!--{/if}-->
-                    <tr>
-                        <td style="border: none;">
-                        <!--{if $next}-->
-                        <a href="javascript:;" class="btn_button_more btn btn-link btn-block"
-                               onclick="loading(this,'{$next}');">{lang upload_more}</a>
-                        <!--{/if}-->
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
+        <div class="col-sm-4 mb-3">
+            <select class="form-control" id="dynamic_id_label_multiple" multiple="multiple">
+                {loop $users $v}
+                <option value="$v['uid']">$v['username']</option>
+                {/loop}
+            </select>
+        </div>
+        <div class="col-sm-6 mb-3">
+            <div class="input-daterange input-group" id="datepicker">
+                <label class="input-group-text" for="selectDate">从</label>
+                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
+                <label class="input-group-text" for="selectDate1">至</label>
+                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
             </div>
         </div>
-        <!--文件列表结束-->
-
+        <div class="col-md-2 mb-3">
+            <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
+            <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+        </div>
     </div>
-
-
-<script type="text/javascript">
-    jQuery(document).ready(function (e) {
-        $('.input-black').each(function() {			
-			InputAnimate.init($(this));			
-		});
-    });
-
-    //自动加载内容
-    jQuery('.scroll-y').scroll(function (e) {
-        var clientHeight = jQuery('.scroll-y').height();
-        var scrollHeight = jQuery('#group-filemember').outerHeight(true);
-        var scrollTop = jQuery('.scroll-y').scrollTop();
-        if (scrollTop + clientHeight > scrollHeight - 60) {
-            $('.btn_button_more').trigger('click');
-        }
-    })
+</div>
+<table class="layui-hide" id="table" lay-filter="table"></table>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+        <button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
+    </div>
+</script>
+<script type="text/html" id="search_do">
+    <a href="javascript:;" lay-event="search_do">{{d.do_lang}}</a>
+</script>
+<script type="text/html" id="search_obj">
+    <a href="javascript:;" lay-event="search_obj">{{d.do_obj}}</a>
+</script>
+<script>
     var search_data = {
         'doobj': '',
         'doevent': '',
         'uids': '',
         'startdate': '',
         'enddate': '',
-        'disp': '',
-        'asc': '',
-        'page': 0
+        'username':'',
+        'sort':'dateline',
+		'order':'desc'
     };
-    function loading(obj, next) {
-        search_data.page = next;
-        $.post(MOD_URL+'&op=dynamic&do=filelist', search_data, function (data) {
-            $(obj).closest('tr').replaceWith(data);
-        })
-
-    }
-    //添加上下图标
-    $(document).off('click.dynamiscdisp').on('click.dynamiscdisp','.group-filemember-header th',function () {
-        $(this).closest('.group-filemember-header tr').children('.group-filemember-header th').find('.detail_header_icon').hide();
-        $(this).find('.detail_header_icon').css('display', 'inline-block');
-        if ($(this).find('.dzz').hasClass('dzz-expand-more')) {
-            $(this).find('.dzz').removeClass('dzz-expand-more').addClass('dzz-expand-less');
-            search_data.asc = 1;
-        } else {
-            $(this).find('.dzz').addClass('dzz-expand-more').removeClass('dzz-expand-less');
-            search_data.asc = 0;
-        }
-        var dispval = $(this).find('.detail_header_icon').data('val');
-        search_data.disp = dispval;
-
-        executedynamisc_search();
-
-    })
-
-    $("#selectDate,#selectDate1").datepicker({ //添加日期选择功能
-        numberOfMonths: 1, //显示几个月
-        showButtonPanel: false, //是否显示按钮面板
-        dateFormat: 'yy-mm-dd', //日期格式
-        clearText: "{lang clear}", //清除日期的按钮名称
-        closeText: "{lang close}", //关闭选择框的按钮名称
-        yearSuffix: '{lang year}', //年的后缀
-        showMonthAfterYear: true, //是否把月放在年的后面
-        constrainInput: true,
-        maxDate: new Date(),
-        setDate: 'date',
-
+    $('.input-daterange').datepicker({
+        autoclose:true,
+        todayHighlight:true,
+        clearBtn:true,
+        language: 'zh_CN',
+        todayBtn: "linked",
+		calendarWeeks: true,
+        zIndexOffset: 120
     });
-    function search_do(obj) {
-        var doval = $(obj).data('val');
-        var dotext = $(obj).html();
-        search_data.doevent = doval;
-        search_data.page = 0;
-        $.post(MOD_URL+'&op=dynamic&do=filelist', search_data, function (data) {
-            $('#event_list').html(data);
-            jQuery('.scroll-y').scrollTop(0);
-            $('.group-tableword').show();
-            if($('.group-tableword .docondition').length > 0){
-                $('.group-tableword .docondition').remove();
+	layui.use('table', function(){
+	  var table = layui.table;
+	  table.render({
+		elem: '#table',
+		url: '{MOD_URL}&op=dynamic&do=filelist',
+		toolbar: '#toolbar',
+		title: '动态数据表格',
+		autoSort: false,
+        even:true,
+        cellMinWidth:120,
+        height: function(){
+            var otherHeight = $('.middleconMenu').outerHeight();
+            var middletopMenu = $('.middletopMenu').outerHeight();
+            return otherHeight-middletopMenu;
+        },
+		text: {
+			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">{lang no_dynamisc}</p></div>'
+		},
+		page: {
+		  limit: 50, // 默认显示20行
+		  limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
+		}
+		,cols: [[
+            {type:'checkbox', fixed: 'left'}
+            ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
+            ,{field:'dateline', title: '{lang time}', sort: true, align: 'center'}
+            ,{field:'username', title: '{lang username}', align: 'center', sort: true,templet: function(d) {return d.username;}}
+		  ,{field:'do', title: '{lang operation}', align: 'center', sort: true, templet: '#search_do'}
+		  ,{field:'do_obj', title: '{lang object}', align: 'center', sort: true, templet: '#search_obj'}
+		  ,{field:'body_data', title: '{lang details}', align: 'left',sort: true,templet: function(d) {return d.body_data;}}
+		]],
+		initSort: {
+			field: 'dateline', // 默认排序字段
+			type: 'desc' // 默认排序方式
+		}
+	  });
+	  //头工具栏事件
+	table.on('toolbar(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var data = checkStatus.dataCache;
+		switch(obj.event){
+            case 'getCheckData':
+                if (data.length === 0) {
+                    showmessage("请至少选择一行", 'danger', 3000, 1);
+                    return;
+                }
+                var template = '<div class="accordion">';
+                    data.forEach(function(item) {
+                        template += '<div class="accordion-item">';
+                        template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+                        template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+                        template += 'ID：' + item.LAY_NUM;
+                        template += '</button>';
+                        template += '</h2>';
+                        template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
+                        template += '<div class="accordion-body">';
+                        template += '<p><strong>{lang time}:</strong> ' + item.dateline + '</p>';
+                        template += '<p><strong>{lang username}:</strong> ' + item.username + '</p>';
+                        template += '<p><strong>{lang operation}:</strong> ' + item.do_lang + '</p>';
+                        template += '<p><strong>{lang object}:</strong> ' + item.do_obj + '</p>';
+                    if (item.body_data) {
+                        template += '<p><strong>{lang details}:</strong> ' + item.body_data + '</p>';
+                    }
+                    template += '</div>';
+                    template += '</div>';
+                    template += '</div>';
+                });
+                template += '</div>';
+                layer.alert(template, {
+                    title: '选中的记录'
+                });
+            break;
+            case 'get':
+            table.reloadData('table', {
+                where: search_data, // 清空搜索参数
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            break; 
+        };
+    });
+    //监听工具条
+	  table.on('tool(table)', function(obj){
+		var data = obj.dataCache;
+		if(obj.event === 'search_do'){
+            $('#operation').val(data.do).trigger('change');
+            return false;
+		} else if(obj.event === 'search_obj'){
+			var doval = data.do_obj;
+            var objtext = data.do_obj;
+            search_data.doobj = doval;
+            $('#object').val(objtext);
+            table.reloadData('table', {
+            where: search_data,
+            page: {
+                curr: 1
             }
-            $('.group-tableword').append('<span class="label  label-text docondition">{lang operation}：' + dotext + '<i class="dzz dzz-close  group-closeicon" onclick="empty_do(this)" data-val="' + doval + '"></i></span>');
-        })
-    }
-    function search_obj(obj) {
-        var doval = $(obj).data('val');
-        var objtext = $(obj).html();
-        search_data.doobj = doval;
-        search_data.page = 0;
-        $.post(MOD_URL+'&op=dynamic&do=filelist', search_data, function (data) {
-            $('#event_list').html(data);
-            jQuery('.scroll-y').scrollTop(0);
-            $('.group-tableword').show();
-            if($('.group-tableword .objcondition').length > 0){
-                $('.group-tableword .objcondition').remove();
+            });
+		}
+	  });
+    //触发排序事件 
+	table.on('sort(table)', function(obj){
+        search_data.sort = obj.field;
+		search_data.order = obj.type;
+		table.reloadData('table', {
+			initSort: obj,
+            where: search_data
+		});
+	});
+	  table.on('rowDouble(table)', function(obj){
+		showDataTemplate(obj);
+	  });
+      $("#dynamic_id_label_multiple").select2({
+        placeholder: '{lang screening_of_operators}',
+		separator: ",",
+		multiple:true,
+		ajax: {
+            url: MOD_URL+'&op=search_condition&do=getuser',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page || 1
+                };
+            },
+            processResults: function(data, page) {
+                var more = (page * 30) < data.total_count;
+                return {
+                    results: data.items,
+                    pagination: {
+                        more: more
+                    }
+                };
             }
-            $('.group-tableword').append('<span class="label label-text objcondition">' + objtext + '<i class="dzz dzz-close  group-closeicon" onclick="empty_do(this)" data-val="' + doval + '"></i></span>');
-        })
-    }
-    function empty_do(obj) {
-        var val = $(obj).data('val');
-        for (var o in search_data) {
-            if (search_data[o] == val) {
+        }
+        }).on('change', function () {
+            search_data.uids = $(this).val();
+            executedynamisc_search();
+        });
+        // 搜索按钮功能
+		$(document).on('click', '#search-btn', function() {
+            search_data.doobj = $('#object').val();
+            search_data.username = $('#username').val();
+            executedynamisc_search();
+        });
+        $('#refreshsearch').click(function() {
+            $('#operation').val('');
+            $('#object').val('');
+		    $('#username').val('');
+            for (var o in search_data) {
                 search_data[o] = '';
             }
-        }
-        search_data.page = 0;
-        $.post(MOD_URL+'&op=dynamic&do=filelist', search_data, function (data) {
-            $('#event_list').html(data);
-            jQuery('.scroll-y').scrollTop(0);
-            $(obj).parents('span').remove();
-            if ($('.group-tableword').find('span').length < 1) {
-                $('.group-tableword').hide();
-            }
-        })
-    }
-	$.getScript('static/select2/select2.min.js',function(){
-		$("#id_label_multiple").select2({
-			placeholder: __lang.screening_of_operators,
-		}).on('change', function () {
-			search_data.uids = $(this).val();
             executedynamisc_search();
-		})
-	});
-    $('#selectDate').change(function () {
-        search_data.startdate = $('#selectDate').val();
-        search_data.enddate = $('#selectDate1').val();
-        if (search_data.startdate && search_data.enddate) {
-            var start = new Date(search_data.startdate);
-            var end = new Date(search_data.enddate);
-            if (start.getTime() > end.getTime()) {
-                showDialog('{lang select_correct_time_interval}');
-                return false;
+        });
+        $('#operation').on('change', function () {
+            search_data.doevent = $(this).val();
+            executedynamisc_search();
+        });
+        $('#selectDate').change(function () {
+            search_data.startdate = $('#selectDate').val();
+            search_data.enddate = $('#selectDate1').val();
+            if (search_data.startdate && search_data.enddate) {
+                var start = new Date(search_data.startdate);
+                var end = new Date(search_data.enddate);
+                if (start.getTime() > end.getTime()) {
+                    layer.alert('{lang select_correct_time_interval}', {skin:'lyear-skin-danger'});
+                    return false;
+                }
             }
-        }
-        search_data.page = 0;
-        executedynamisc_search();
-    })
-    $('#selectDate1').change(function () {
-        search_data.startdate = $('#selectDate').val();
-        search_data.enddate = $('#selectDate1').val();
-        if (search_data.startdate && search_data.enddate) {
-            var start = new Date(search_data.startdate);
-            var end = new Date(search_data.enddate);
-            if (start.getTime() > end.getTime()) {
-                showDialog('{lang select_correct_time_interval}');
-                return false;
-            }
-        }
-        search_data.page = 0;
-        executedynamisc_search();
-    })
-    function executedynamisc_search() {
-        $.post(MOD_URL+'&op=dynamic&do=filelist', search_data, function (data) {
-            $('#event_list').html(data);
-            jQuery('.scroll-y').scrollTop(0);
+            search_data.page = 0;
+            executedynamisc_search();
         })
+        $('#selectDate1').change(function () {
+            search_data.startdate = $('#selectDate').val();
+            search_data.enddate = $('#selectDate1').val();
+            if (search_data.startdate && search_data.enddate) {
+                var start = new Date(search_data.startdate);
+                var end = new Date(search_data.enddate);
+                if (start.getTime() > end.getTime()) {
+                    layer.alert('{lang select_correct_time_interval}', {skin:'lyear-skin-danger'});
+                    return false;
+                }
+            }
+            search_data.page = 0;
+            executedynamisc_search();
+        });
+      function executedynamisc_search() {
+        table.reloadData('table', {
+            initSort: {
+                field: search_data.sort,
+                type: search_data.order
+            },
+		  where: search_data,
+		  page: {
+			curr: 1
+		  }
+		});
+        jQuery('.scroll-y').scrollTop(0);
     }
+		function showDataTemplate(obj) {
+			var data = obj.dataCache;
+			var template =
+			'<p><strong>{lang time}:</strong> ' + data.dateline + '</p>' +
+			'<p><strong>{lang username}:</strong> ' + data.username + '</p>' + 
+			'<p><strong>{lang operation}:</strong> ' + data.do_lang + '</p>' +
+			'<p><strong>{lang object}:</strong> ' + data.do_obj + '</p>' +
+			(data.body_data ? '<p><strong>{lang details}:</strong> '+data.body_data+'</p>' : '');
+			layer.alert(template, {
+				title: 'ID <strong>' + data.LAY_NUM + '</strong> 详情：'
+			});
+	
+		// 标注选中样式
+		obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+		}
+	});
 </script>

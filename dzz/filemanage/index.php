@@ -149,6 +149,11 @@ if ($do == 'delete') {
             $copys = $data['copys'];
             if ($data['aid']) {
                 $FileUri = IO::getStream('attach::' . $data['aid']);
+                if(is_array($FileUri) && $FileUri['error']) {
+                    $FileUri = '<span class="text-danger">'.$FileUri['error'].'</span>';
+                } else {
+                    $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
+                }
             } else {
                 $FileUri = '';
             }

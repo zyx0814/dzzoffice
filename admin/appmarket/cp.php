@@ -76,37 +76,7 @@ if ($do == 'export') {//应用导出
         exit();
     } else {
         $apparray = getimportdata('Dzz! app');
-        if ($apparray['app']['identifier']) {
-            if (empty($apparray['app']['app_path'])) $apparray['app']['app_path'] = 'dzz';
-            if (!is_dir(DZZ_ROOT . './' . $apparray['app']['app_path'] . '/' . $apparray['app']['identifier'])) {
-                showmessage(lang('list_cp_Application_directory_exist', array('app_path' => $app['app_path'], 'identifier' => $app['identifier'])));
-            }
-            if ($apparray['version'] && empty($_GET['ignoreversion']) && (version_compare($apparray['version'], $_G['setting']['version']) > 0)) {
-                showmessage(lang('application_import_version_invalid'), '', array('cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version']));
-            }
-            $extra = $apparray['app']['extra'];
-            $filename = isset($extra['installfile']) ? $extra['installfile'] : '';
-            if (!empty($filename) && preg_match('/^[\w\.]+$/', $filename)) {
-                $filename = DZZ_ROOT . './' . $apparray['app']['app_path'] . '/' . $apparray['app']['identifier'] . '/' . $filename;
-                if (file_exists($filename)) {
-                    @include_once $filename;
-                } else {
-                    $finish = TRUE;
-                }
-            } else {
-                $finish = TRUE;
-            }
-            if ($finish) {
-                if ($app = importByarray($apparray, 1)) {
-                    cron_create($app);
-                }
-
-                showmessage(lang('application_import_successful'), MOD_URL, array(), array('alert' => 'right'));
-            }
-        } else {
-            $app = importByarray($apparray, 0);
-            showmessage('application_import_successful', MOD_URL, array(), array('alert' => 'right'));
-        }
+        installapp($apparray);
     }
 } elseif ($do == 'disable') {//关闭应用
     $appid = intval($_GET['appid']);
@@ -206,33 +176,13 @@ if ($do == 'export') {//应用导出
     $xmlfile = 'dzz_app_' . $appname . '.xml';
     $importfile = DZZ_ROOT . './' . $dir . '/' . $appname . '/' . $xmlfile;
     if (!file_exists($importfile)) {
-        showmessage('list_cp_Application_allocation' . '：' . $xmlfile, $_GET['refer']);
+        showmessage(lang('list_cp_Application_allocation') . '：' . $xmlfile, $_GET['refer']);
     }
 
     $importtxt = @implode('', file($importfile));
 
     $apparray = getimportdata('Dzz! app');
-    if (empty($apparray['app']['app_path'])) $apparray['app']['app_path'] = $dir;
-    $filename = $apparray['app']['extra']['installfile'];
-
-    $request_uri = MOD_URL;
-    if (!empty($filename) && preg_match('/^[\w\.]+$/', $filename)) {
-        $filename = DZZ_ROOT . './' . $dir . '/' . $appname . '/' . $filename;
-        if (file_exists($filename)) {
-            @include_once $filename;
-        } else {
-            $finish = TRUE;
-        }
-    } else {
-        $finish = TRUE;
-    }
-    if ($finish) {
-        if ($app = importByarray($apparray, 1)) {
-            cron_create($app);
-        }
-        writelog('otherlog', "安装应用 " . $apparray['app']['appname']);
-        showmessage('application_install_successful', MOD_URL, array(), array('alert' => 'right'));
-    }
+    installapp($apparray);
 
 } elseif ($do == 'uninstall') {//卸载应用
     $appid = intval($_GET['appid']);
@@ -325,6 +275,40 @@ if ($do == 'export') {//应用导出
     if ($finish) {
         C::t('app_market')->update($appid, array('version' => $toversion));
         showmessage('application_upgrade_successful', MOD_URL, array(), array('alert' => 'right'));
+    }
+}
+function installapp($apparray){
+    global $_G;
+    if ($apparray['app']['identifier']) {
+        if (empty($apparray['app']['app_path'])) $apparray['app']['app_path'] = 'dzz';
+        if (!is_dir(DZZ_ROOT . './' . $apparray['app']['app_path'] . '/' . $apparray['app']['identifier'])) {
+            showmessage(lang('list_cp_Application_directory_exist', array('app_path' => $apparray['app']['app_path'], 'identifier' => $apparray['app']['identifier'])));
+        }
+        if ($apparray['version'] && empty($_GET['ignoreversion']) && (version_compare($apparray['version'], $_G['setting']['version']) > 0)) {
+            showmessage(lang('application_import_version_invalid'), '', array('cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version']));
+        }
+        $extra = $apparray['app']['extra'];
+        $filename = isset($extra['installfile']) ? $extra['installfile'] : '';
+        if (!empty($filename) && preg_match('/^[\w\.]+$/', $filename)) {
+            $filename = DZZ_ROOT . './' . $apparray['app']['app_path'] . '/' . $apparray['app']['identifier'] . '/' . $filename;
+            if (file_exists($filename)) {
+                @include_once $filename;
+            } else {
+                $finish = TRUE;
+            }
+        } else {
+            $finish = TRUE;
+        }
+        if ($finish) {
+            if ($app = importByarray($apparray, 1)) {
+                cron_create($app);
+            }
+
+            showmessage(lang('application_import_successful'), MOD_URL, array(), array('alert' => 'right'));
+        }
+    } else {
+        $app = importByarray($apparray, 0);
+        showmessage('application_import_successful', MOD_URL, array(), array('alert' => 'right'));
     }
 }
 ?>

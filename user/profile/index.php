@@ -294,7 +294,7 @@ if (submitcheck('profilesubmit')) {
     }
     $htmls = $settings = array();
     foreach ($allowitems as $fieldid) {
-        if (!in_array($fieldid, array('timeoffset'))) {
+        if ($fieldid != 'timeoffset') {
             $html = profile_setting($fieldid, $space, $vid ? false : true);
             if ($html) {
                 $settings[$fieldid] = $_G['cache']['profilesetting'][$fieldid];

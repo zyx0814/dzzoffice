@@ -6,13 +6,19 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 //所有api都继承此类 
 //此类集合所有api通用的函数
-abstract class io_api
-{
-	
+abstract class io_api {
+    protected $sharesid = '';
+    protected $sharepath = '';
+    protected $preview = false;
+    public function setinfo($sharesid='',$sharepath='',$preview=false) {
+        $this->sharesid = $sharesid;
+        $this->sharepath = $sharepath;
+        $this->preview = $preview;
+    }
 }
 ?>

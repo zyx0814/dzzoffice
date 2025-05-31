@@ -16,6 +16,7 @@ $db = &DB::object();
 $tabletype = 'Engine';
 $tablepre = $_G['config']['db'][1]['tablepre'];
 $dbcharset = $_G['config']['db'][1]['dbcharset'];
+$excepttables = array($tablepre.'admincp_session', $tablepre.'failedlogin', $tablepre.'session');
 $backupdir = C::t('setting')->fetch('backupdir');
 if (!$backupdir) {
     $backupdir = random(6);
@@ -418,9 +419,8 @@ if ($operation == 'export') {
 function createtable($sql, $dbcharset) {
     $type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
     $type = in_array($type, array('MYISAM', 'HEAP')) ? $type : 'MYISAM';
-    return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) . (mysql_get_server_info() > '4.1' ? " ENGINE=$type DEFAULT CHARSET=$dbcharset" : " TYPE=$type");
+    return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) . " ENGINE=$type DEFAULT CHARSET=$dbcharset";
 }
-
 function fetchtablelist($tablepre = '') {
     global $db;
     $arr = explode('.', $tablepre);
@@ -508,7 +508,6 @@ function sqldumptablestruct($table) {
 
 function sqldumptable($table, $startfrom = 0, $currsize = 0) {
     global $_G, $db, $startrow, $dumpcharset, $complete, $excepttables;
-
     $offset = 300;
     $tabledump = '';
     $tablefields = array();
@@ -644,7 +643,11 @@ function checkpermission($action, $break = 1) {
     if (!isset($_G['config']['admincp'])) {
         return lang('db_config_admincp');
     } elseif (!$_G['config']['admincp'][$action]) {
-        return lang('db_not_allow_config_admincp');
+        if($action=='runquery') {
+            return lang('db_config_admincp');
+        } else {
+            return lang('db_not_allow_config_admincp');
+        }
     } else {
         return true;
     }

@@ -1,235 +1,210 @@
-<style>
-.popbox.popbox-bottom{
-margin-top:0px ;	
-}
-</style>
 <div class="rightBorder" id="rightinfo_content">
 <div id="more_dynameic" style="display: none;">
-	<!--template template_more_dynameic-->
+	<!--{template template_more_dynameic}-->
+</div>	
+<div class="briefMenu modal-header dtheme border-bottom clearfix">
+	<div class="modal-title">
+		<!--{if $fileinfo['isgroup'] && $fileinfo['gid']}-->
+		<a href="javascript:;" class="right-topbackground">
+			{eval echo avatar_group($gid);}
+		</a>
+		<!--{elseif $fileinfo['flag'] == 'home'}-->
+		<i class="mdi mdi-account-box right-topicon"></i>
+		<!--{elseif $fileinfo['ismulti']}-->
+		<i class="mdi mdi-file-multiple right-topicon"></i>
+		<!--{elseif $bz && $fileinfo['bz']}-->
+		<img src="dzz/images/default/system/{$fileinfo['bz']}.png">
+		<!--{else}-->
+		<img src="dzz/images/default/system/folder.png">
+		<!--{/if}-->
+		<span class="text-truncate fs-6 ps-1"><!--{if $fileinfo['ismulti']}-->{lang more_select}<!--{else}--><!--{if $fileinfo[name]}-->$fileinfo[name]<!--{elseif $fileinfo[fname]}-->$fileinfo[fname]<!--{else}--><!--{/if}--><!--{/if}--></span>
+		<button type="button" class="toggRight btn-close"></button>
+	</div>
 </div>
-		
-<div class="briefMenu clearfix">
-	<!--{if $fileinfo['isgroup'] && $fileinfo['gid']}-->
-	<a href="javascript:;" class="right-topbackground">
-		{eval echo avatar_group($gid);}
-	</a>
-	<!--{elseif $fileinfo['flag'] == 'home'}-->
-	<i class="dzz dzz-mydisk  right-topicon"></i>
-	<!--{elseif $fileinfo['ismulti']}-->
-	<i class="dzz dzz-copy right-topicon"></i>
-	<!--{else}-->
-	<span class="dzz dzz-folder right-topimg"></span>
-	<!--{/if}-->
-    <p class="right-imgname"><span><!--{if $fileinfo['ismulti']}-->{lang more_select}<!--{else}--><!--{if $fileinfo[name]}-->$fileinfo[name]<!--{elseif $fileinfo[fname]}-->$fileinfo[fname]<!--{else}--><!--{/if}--><!--{/if}--></span>
-    </p>
-    <a href="javascript:;" class="toggRight toggright-icon">
- 	 <span class="dzz dzz-close "></span>
- 	</a>
-</div>
-<div class="right-messagetable  scroll-y" data-subtractor="{eval echo ($fid || $rid)?53:0}">
+<div class="right-messagetable scroll-y" data-subtractor="{eval echo ($fid || $rid)?53:0}">
+	<!--{if !$bz}-->
 	<!--根文件进度条开始-->
 	<!--{if ($fileinfo['isgroup'] || $fileinfo['pfid'] == 0) && !$fileinfo['ismulti']}-->
-    <div class="right-progress">
-		<p>
-			已使用{eval echo formatsize($usesize);}(<!--{if $maxspace == 0}-->不限制<!--{elseif $maxspace < 0}-->0<!--{else}-->共{eval echo formatsize($maxspace);}<!--{/if}-->)
-		</p>
+    <div class="right-progress m-2">
+		<p class="mb-0">已使用{eval echo formatsize($usesize);}(<!--{if $maxspace == 0}-->不限制<!--{elseif $maxspace < 0}-->0<!--{else}-->共{eval echo formatsize($maxspace);}<!--{/if}-->)</p>
 	    <div class="progress">
 		  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$progress}%;">
 		  </div>
 		</div>
 	</div>
 	<!--{/if}-->
+	<!--{/if}-->
 	<!--根文件进度条结束-->
     <!--文件夹详情开始-->
-    <div class="right_projectmain">
-    <div class="information">
-    	<div class="ensemble-left">
-        <!--<p class="in-basicp">{lang basic_message}</p>-->
-        	<p class="attribute-position">
-	 			<span class="attribute-width">{lang type}</span>
-	 			<span class="detailed_contenter">
-					$fileinfo['type']
-				</span>
-	 		</p> 
-			<!--{if $fileinfo[realpath]}-->
-            <p class="in-position">
-            	<span class="attribute-width">{lang position}</span>
-            	<span class="detailed_contenter">$fileinfo[realpath]</span>
-			</p>
-			<!--{/if}-->
-			<!--{if $fileinfo['username']}-->
-            <p class="attribute-position">
-            	<span class="attribute-width">{lang possesor}</span>
-            	<span class="detailed_contenter">$fileinfo['username']</span>
-            </p>
-			<!--{/if}-->
-			<!--{if $fileinfo[editdateline]}-->
-            <p class="attribute-position">
-            	<span class="attribute-width">{lang preceding_edit_time}</span>
-            	<span class="detailed_contenter">$fileinfo[editdateline]</span>
-            </p>
-			<!--{/if}-->
-			<!--{if $fileinfo[opendateline]}-->
-            <p class="attribute-position">
-            	<span class="attribute-width">{lang preceding_open_time}</span>
-            	<span class="detailed_contenter">$fileinfo[opendateline]</span>
-            </p>
-			<!--{/if}-->
-            <p class="in-position">
-            	<span class="attribute-width">{lang big_small}</span>
-            	<span class="detailed_contenter">$fileinfo[ffsize]</span></p>
-			<!--{if $fileinfo[contain]}-->
-            <p class="in-position">
-            	<span class="attribute-width">{lang include}</span>
-            	<span class="detailed_contenter">$fileinfo[contain]</span></p>
-			<!--{/if}-->
-            <!--{if $fileinfo[fdateline]}-->
-            <p class="in-position">
-            	<span class="attribute-width">{lang create_time}</span>
-            	<span class="detailed_contenter">$fileinfo[fdateline]</span>
-            </p>
-			<!--{/if}-->
-       </div>
+    <div class="p-2 border-bottom">
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang type}</label>
+			<div class="col-sm-8">$fileinfo['type']</div>
+		</div>
+		<!--{if $fileinfo[realpath]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang position}</label>
+			<div class="col-sm-8 text-break">$fileinfo[realpath]</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $fileinfo['username']}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang possesor}</label>
+			<div class="col-sm-8">$fileinfo['username']</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $fileinfo[editdateline]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang preceding_edit_time}</label>
+			<div class="col-sm-8">$fileinfo[editdateline]</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $fileinfo[opendateline]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang preceding_open_time}</label>
+			<div class="col-sm-8">$fileinfo[opendateline]</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $fileinfo[ffsize]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang big_small}</label>
+			<div class="col-sm-8">$fileinfo[ffsize]</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $fileinfo[contain]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang include}</label>
+			<div class="col-sm-8">$fileinfo[contain]</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $fileinfo[fdateline]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang create_time}</label>
+			<div class="col-sm-8">$fileinfo[fdateline]</div>
+		</div>
+		<!--{/if}-->
     </div>
-
 	<!--{if $perm && $fileinfo['isdelete'] < 1}-->
-	<div class="file-poewr">
-		<div class="ensemble-left">
-		<div class="poewr-top clearfix">
-			<span class="contents-poewr">{lang directory_right}</span>
-			<!--{if isset($usergroupperm) && $usergroupperm > 0}--><a class="conpile-poewr" type="button" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="dzz dzz-create"></span></a><!--{/if}-->
+	<div class="p-2 border-bottom">
+		<div class="right-card-header">
+			<div class="title">{lang directory_right}</div>
+			<!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
 		</div>
-		<ul class="proper-show  proper-poewr">
-			<!--{loop $perms $k $val}-->
-			<li <!--{if $perm & $val[1]}-->style="display:block;padding:5px;"<!--{else}-->style="display:none;"<!--{/if}-->><span  class="{$val[2]}" title="$val[0]"></span></li>
-			<!--{/loop}-->
-		</ul>
+		<div class="right-card-body">
+			<ul class="proper-show  proper-poewr">
+				<!--{loop $perms $k $val}-->
+				<li <!--{if $perm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span  class="{$val[2]}" title="$val[0]"></span></li>
+				<!--{/loop}-->
+			</ul>
 		</div>
+		
 	</div>
 	<!--{/if}-->
     <!--成员开始-->
 	<!--{if $fileinfo['isgroup']}-->
-    <div class="right-numer">
-    	<div class="right-paddingnumer">
-    		<div class="right-numertop">
-    			<p class="numer-title">{lang member}</p>
-				<!--{if $usergroupperm >= 1 && $org['type']}-->
-    			<button type="button" class="groupbutton" onclick="select_group_user();return false;"><span class="dzz dzz-add-circle"></span></button>
-    			<!--{/if}-->
-			</div>
-    		<ul class="right-numerbottom clearfix" id="memberlist" data-gid="{$gid}">
-
+    <div class="p-2 border-bottom">
+		<div class="right-card-header">
+			<div class="title">{lang member}</div>
+			<!--{if $usergroupperm >= 1 && $org['type']}-->
+			<button type="button" class="groupbutton dcolor" onclick="select_group_user();return false;"><span class="mdi mdi-plus-circle"></span></button>
+			<!--{/if}-->
+		</div>
+		<div class="right-card-body">
+			<ul class="right-numerbottom clearfix" id="memberlist" data-gid="{$gid}">
 				<!--{loop $members $v}-->
-    			<li class="right-numer-carousel" id="{$v['uid']}_delete" >
-					<a href="javascript:;" class="js-popboxs member_details_info" data-placement="bottom" data-trigger="focus" data-auto-adapt="true"
-					   data-toggle="popover" style="display: inline-block;width: 28px;" data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid={$v['uid']}">
+				<li class="right-numer-carousel" id="{$v['uid']}_delete" >
+					<a href="javascript:;" class="js-popbox member_details_info" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;" data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid={$v['uid']}">
 					{eval echo avatar_block($v['uid'],array($v['uid']=>$v['headerColor']));}
 					<!--{if $v['perm'] > 1  && $org['type'] == 1 }-->
-						<span class="dzz-right-first creator"><img src="{MOD_PATH}/img/ic-creator.png"></span>
+					<span class="right-first creator"><img src="{MOD_PATH}/images/ic-creator.png"></span>
 					<!--{elseif $v['perm'] > 0}-->
-						<span class="dzz-right-first"><img src="{MOD_PATH}/img/ic-manager.png"></span>
-						<!--<span class="dzz-right-first"><img src="{MOD_PATH}/img/ic-systemManager.png"></span>-->
+					<span class="right-first"><img src="{MOD_PATH}/images/ic-manager.png"></span>
 					<!--{/if}-->
 					</a>					
-    			</li>
+				</li>
 				<!--{/loop}-->
-    		</ul>
-    	</div>
+			</ul>
+		</div>
+		
     </div>
 	<!--{/if}-->
     <!--成员结束-->
     <!--关于开始-->
 	<!--{if $org}-->
-    <div class="right-about clearfix">
-    	<div class="right-about-conter  clearfix">
-    		<div class="right-about-header clearfix">
-    			<p class="right-about-title">{lang about}</p>
-				<!--{if $usergroupperm >= 1 && $org['type']}-->
-    			<button type="button" class="groupbutton" onclick="showWindow('groupsetting','{MOD_URL}&op=group&do=group_ajax&operation=groupsetting&gid=$gid')">
-    				<span class="dzz dzz-create"></span>
-    			</button>
-				<!--{/if}-->
-    		</div>
-    		<div class="right-about-bottom clearfix">
-    			<p>
-	    			<span class="right-about-name">{lang identification}</span>
-					<a href="javascript:;" class="right-about-name-icon">
-						{eval echo avatar_group($gid);}
-					</a>
-    			</p>
-    			<p>
-    				<span class="right-about-name">{lang name}</span>
-    				<span>$org[orgname]</span>
-    			</p>
-    			<p>
-    				<span class="right-about-name">{lang status}</span>
-    				<span class="right-about-name-switch">
-    					<input type="checkbox" class="js-switch" readonly name="syatemon" data-switchery="true" data-name="manageon" <!--{if $org[diron] && $org[diron]}--> checked <!--{/if}-->>
-    				</span>
-    			</p>
-    			<!--<p>
-    				<span class="right-about-name">{lang share}</span>
-    				<span class="right-about-name-switch">
-    					<input type="checkbox" class="js-switch" readonly name="diron" data-switchery="true" data-name="diron" &lt;!&ndash;{if $org[diron] && $org['available']}&ndash;&gt;checked&lt;!&ndash;{/if}&ndash;&gt;>
-    				</span>
-    			</p>-->
-    		</div>
-    		
-    	</div>
-    </div>
+	<div class="p-2 border-bottom">
+		<div class="right-card-header">
+			<div class="title">{lang about}</div>
+			<!--{if $usergroupperm >= 1 && $org['type']}-->
+			<button type="button" class="groupbutton dcolor" onclick="showWindow('groupsetting','{MOD_URL}&op=group&do=group_ajax&operation=groupsetting&gid=$gid')">
+				<span class="mdi mdi-pencil"></span>
+			</button>
+			<!--{/if}-->
+		</div>
+		<div class="right-card-body">
+			<div class="row mb-1">
+				<label class="col-sm-3">logo</label>
+				<div class="col-sm-9">
+					{eval echo avatar_group($gid);}
+				</div>
+			</div>
+			<div class="row mb-1">
+				<label class="col-sm-3">{lang name}</label>
+				<div class="col-sm-9">
+					$org[orgname]
+				</div>
+			</div>
+			<div class="d-flex">
+				<label class="col-sm-3">{lang status}</label>
+				<div class="col-sm-9">
+					<div class="form-check form-switch">
+						<input type="checkbox" class="form-check-input" disabled="" readonly name="syatemon" data-name="manageon" <!--{if $org[diron] && $org[diron]}--> checked <!--{/if}-->>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!--{/if}-->
     <!--关于结束-->
-    </div>
     <!--文件夹详情结束-->
     <!--文件夹动态开始-->
-   <div id="filerightdynamic">
+   <div class="m-2" id="filerightdynamic">
     <!--{template fileright_dynamic}-->
    </div>
     <!--文件夹动态结束-->
 </div>
-<!--{if $fid || $rid}-->	
-<div class="comment-area">
+<!--{if $fid || $rid || !$bz}-->	
+<div class="comment-area dtheme">
     <div class="messageMenu"> 
 	    <form action="{MOD_URL}&op=ajax&operation=comment" method="post" onsubmit="return comment_file(this)" id="commentid">
 	        <input type="hidden" name="rid" value="$rid" />
 	        <input type="hidden" name="fid" value="$fid" />
 	    	<div class="discuss-content">
-	            <textarea type="text" id="leave_message" name="msg" rows="1" placeholder="{lang input_comments}" class="form-control comment-input" ></textarea>
+	            <textarea type="text" id="leave_message" name="msg" rows="1" placeholder="{lang input_comments}" class="form-control"></textarea>
 	            <div class="comment-file">
 	                <ul class="list_acpsw">
-	                    <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span class="dzz dzz-smile"></span></a>
+	                    <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span class="mdi mdi-emoticon-excited-outline"></span></a>
 	                    </li>
-	                    
 	                </ul>
 	            </div>
 	             
 	        </div>
 	        <div class="activity-handler clearfix">
-	            
-	             <button type="submit" class="dzz dzz-send pull-right disabled input-search-drop dzz-submit-send" style="color:rgba(55,121,255,0.3);"></button>
+	             <button type="submit" class="mdi mdi-send pull-right disabled input-search-drop" style="color:rgba(55,121,255,0.3);"></button>
 	        </div>
 	    </form>
     </div>
 </div>
 <!--{/if}-->
 </div>
-<!--<div id="old_rightinfo" class="hide"></div>-->
 <script>
 var userids = '';
 $(document).ready(function(){
     userids = '{$userstr}';
-	//开关样式
-    $.getScript('{MOD_PATH}/js/switchery.min.js', function () {
-        var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
-        elems.forEach(function (html) {
-            var switchery = new Switchery(html);
-        });
-    });
 });
-jQuery(".right-numerbottom  .js-popboxs").each(function(){
-		jQuery(this).popbox();		
+jQuery(".right-numerbottom .js-popbox").each(function(){
+		jQuery(this).popbox();
 });
-jQuery(document).on('click','.dzz-right-backing',function(){
+jQuery(document).on('click','.mdi-right-backing',function(){
 	jQuery('.rightbasic').show();
 	jQuery('#more_dynameic').hide();
 })
@@ -237,7 +212,7 @@ function editgroupperm(gid,fid){
 	showWindow('select_perm', MOD_URL+'&op=ajax&operation=selectperm&fid='+fid+'&gid='+gid+'&new=0','get','0');
 }
 function select_group_user(){
-	var userhref = 'index.php?mod=system&op=selorguser&callback=seluser_group&stype=2&multiple=1&ids='+userids;
+	var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=seluser_group&stype=2&multiple=1&ids='+userids;
     showWindow('adduser',userhref,'get','0')
 }
 function seluser_group(ids,data) {
@@ -258,16 +233,16 @@ function seluser_group(ids,data) {
                 for (var o in data['insertuser']) {
                     if (data['insertuser'][o]['avatarstatus'] == 1) {
                       	html+= '<li class="right-numer-carousel" id="' + data['insertuser'][o]['uid'] + '_delete" >';
-                        html+= '<a href="javascript:;" class="js-popboxs member_details_info adduser" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover"  data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid='+data['insertuser'][o]['uid']+'" style="display: inline-block;width:28px;">'; 
-						 html+= '<img src="avatar.php?uid=' + data['insertuser'][o]['uid'] + '" class="img-circle avatar" style="width: 28px;height: 27px;">';
+                        html+= '<a href="javascript:;" class="js-popbox member_details_info adduser" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover"  data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid='+data['insertuser'][o]['uid']+'" style="display: inline-block;width:28px;">'; 
+						 html+= '<img src="avatar.php?uid=' + data['insertuser'][o]['uid'] + '" class="img-circle img-avatar" style="width: 28px;">';
                         html+= '</a>';
                         html+= '</li>';
                     } else {
-                        html+= '<li class="right-numer-carousel" style="background:' + data['insertuser'][o]['headerColor'] + '" id="' + data['insertuser'][o]['uid'] + '_delete">';
-                        html+= '<a href="javascript:;" class="js-popboxs member_details_info adduser" data-placement="bottom" data-trigger="focus"' +
-                            'data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;height: 27px;"' +
+                        html+= '<li class="right-numer-carousel" id="' + data['insertuser'][o]['uid'] + '_delete">';
+                        html+= '<a href="javascript:;" class="js-popbox member_details_info adduser" data-placement="bottom" data-trigger="focus"' +
+                            'data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;"' +
                             'data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid=' + data['insertuser'][o]['uid'] + '">';
-                        html+= '<span class="rightcarousel-first">' + data['insertuser'][o]['ufirst'] + '</span>';
+                        html+= '<span class="Topcarousel img-avatar" style="background:' + data['insertuser'][o]['headerColor'] + '">' + data['insertuser'][o]['ufirst'] + '</span>';
                         html+='</a>';
                         html+='</li>';
                     }
@@ -294,7 +269,7 @@ function seluser_group(ids,data) {
                 showWindow('select_perm', _explorer.appUrl + '&op=ajax&operation=selectperm&fid=$groupinfo[fid]&gid=$gid&new=true', 'get', 0);
             }
         } else if (data['error']) {
-            showDialog(data['error']);
+			layer.alert(data['error'], {skin:'lyear-skin-danger'});
         }
     }, 'json')
     return false;

@@ -6,18 +6,28 @@
 </style>
 <div class="container-fluid">
 	<!--{template right_header}-->
-	<!--{loop $cloud $key $value}-->
-	<h4>$value[header]</h4>
-	<div class="d-flex p-1">
-	<!--{loop $value[list] $value1}-->
-	<a class="card list-group-item-action m-1 text-center border" style="width:140px;" href="{MOD_URL}&bz=$value1[bz]&op=oauth">
+	<div class="card">
 		<div class="card-body">
-			<img src="dzz/images/default/system/$value1[bz].png" class="card-img-top" style="width: 100px;" alt="$value1[name]">
+			<!--{if $cloud}-->
+			<!--{loop $cloud $key $value}-->
+			<h4>$value[header]</h4>
+			<div class="d-flex flex-wrap p-1">
+			<!--{loop $value[list] $value1}-->
+			<a class="card list-group-item-action m-1 text-center border" style="width:140px;" href="{MOD_URL}&bz=$value1[bz]&op=oauth">
+				<div class="card-body">
+					<img src="dzz/images/default/system/$value1[bz].png" class="card-img-top" style="width: 100px;" alt="$value1[name]">
+				</div>
+				<div class="card-footer text-truncate">$value1[name]</div>
+			</a>
+			<!--{/loop}-->
+			</div>
+			<!--{/loop}-->
+			<!--{else}-->
+			<div class="alert alert-warning">
+				<i class="fa fa-exclamation-circle"></i> 暂无云服务
+			</div>
+			<!--{/if}-->
 		</div>
-		<div class="card-footer">$value1[name]</div>
-	</a>
-	<!--{/loop}-->
 	</div>
-	<!--{/loop}-->
 </div>
-<!--{template lyear:footer_simple}-->
+<!--{template lyear:footer}-->

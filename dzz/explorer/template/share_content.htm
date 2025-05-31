@@ -1,57 +1,269 @@
-<div class="middle-padding-left share-content scroll-y scroll-srcollbars" id="selectBoardPosition">
-
-    <!--文件列表开始-->
-   <div id="filemanage-share-list"></div>
-    <!--文件列表结束-->
-
-</div>
-<!--头部信息框-->
-<div class="navtopheader">
-</div>
-<div id="template_detaillist"  style="display:none">
-    <!--{template template_file_share}-->
-</div>
-<div id="template_file" style="display:none">
-    <!--{template template_file_navtopfile}-->
-</div>
-<div id="template_toolButton" style="display:none">
-    <!--{template template_file_toolButton}-->
-</div>
-<table id="template_nofile_notice" style="display:none">
-    <tbody id="emptyshareHtml">
-    <tr class="emptyshare">
-        <td colspan="6" style="border: none;">
-            <!--{template noFilePage-share}-->
-        </td>
-    </tr>
-    </tbody>
-</table>
-<script type="text/javascript">
-	jQuery.getScript('static/clipboard/clipboard.min.js?{VERHASH}');
-    $(document).ready(function(e) {
-        var hash=location.hash;
-        _filemanage.getData(_explorer.appUrl+'&op=share&do=filelist&sid=share-list');
-        $('.input-black').each(function() {
-            InputAnimate.init($(this));
-        });
+<table class="layui-hide" id="table" lay-filter="table"></table>
+<script type="text/html" id="toolbar">
+    <div class="layui-btn-container">
+        <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
+        <button type="button" class="layui-btn layui-btn-danger" lay-event="delete">{lang delete}</button>
+        <button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
+    </div>
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
+</script>
+<script>
+    var search_data = {
+        'sort':'dateline',
+		'order':'desc'
+    };
+	layui.use('table', function(){
+	  var table = layui.table,form = layui.form;
+      var dropdown = layui.dropdown;
+	  table.render({
+		elem: '#table',
+		url: '{MOD_URL}&op=share&do=filelist',
+		toolbar: '#toolbar',
+		title: '分享数据表格',
+        even:true,
+        height: function(){
+            var otherHeight = $('.middleconMenu').outerHeight();
+            return otherHeight;
+        },
+		text: {
+			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">{lang no_share_file}</p></div>'
+		},
+		page: {
+		  limit: 50, // 默认显示20行
+		  limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
+		}
+		,cols: [[
+            {type:'checkbox', fixed: 'left'}
+            ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
+            ,{field:'title', title: '{lang share_typename_attach}',minWidth:120, sort: true, templet: function(d) {return d.title;}}
+            ,{field:'status', title: '状态', align: 'center',width:120, sort: true,templet: function(d) {return d.status;}}
+            ,{field:'dateline', title: '{lang share_time}',width:180, align: 'center',sort: true}
+            ,{field:'endtime', title: '{lang failure_time}',width:120,align: 'center', sort: true}
+		  ,{field:'count', title: '{lang view_count}',width:120, align: 'center', sort: true,templet:function(d){return d.count+'{lang degree}'}}
+		  ,{field:'downs', title: '{lang download_times}',width:120, align: 'center', sort: true,templet:function(d){return d.downs+'{lang degree}'}}
+          ,{field:'other', title: '{lang other}',minWidth:120,templet:function(d){return (d.password ? '{lang extract_password}：<span class="layui-badge-rim">' + d.password +'</span>': '{lang share_type}：<span class="layui-badge-rim">{lang open_links}</span>')+'，{lang limited_number}：<span class="layui-badge-rim">'+d.times+'</span>'}}
+          ,{title: '{lang operation}',width:140,align:'center', toolbar: '#barDemo', fixed: 'right'}
+		]],
+		initSort: {
+			field: 'dateline', // 默认排序字段
+			type: 'desc' // 默认排序方式
+		},
+        done: function(){
+        },
+	  });
+	  //头工具栏事件
+	table.on('toolbar(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var data = checkStatus.dataCache;
+		switch(obj.event){
+            case 'getCheckData':
+                if (data.length === 0) {
+                    showmessage("请至少选择一行", 'danger', 3000, 1);
+                    return;
+                }
+                var template = '<div class="accordion">';
+                    data.forEach(function(item) {
+                        template += '<div class="accordion-item">';
+                        template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+                        template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+                        template += '{lang share_typename_attach}：' + item.title;
+                        template += '</button>';
+                        template += '</h2>';
+                        template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
+                        template += '<div class="accordion-body">';
+                        template += '<p><strong>ID:</strong> ' + item.LAY_NUM + '</p>';
+						template += '<p><strong>{lang share_typename_attach}:</strong> ' + item.title + '</p>';
+						template += '<p><strong>状态:</strong> ' + item.status + '</p>';
+						template += '<p><strong>{lang share_time}:</strong> ' + item.dateline + '</p>';
+                        template += '<p><strong>{lang link}:</strong> <a href="' + item.sharelink + '" target="_blank">' + item.sharelink + '</a></p>';
+                        template += (item.password ? '<p><strong>{lang extract_password}：</strong>' + item.password + '</p>' : '<p><strong>{lang share_type}：</strong>{lang open_links}</p>');
+                        template += '<p><strong>{lang failure_time}:</strong> ' + item.endtime + '</p>';
+                        template += '<p><strong>{lang view_count}:</strong> ' + item.count + '{lang degree}</p>';
+                        template += '<p><strong>{lang download_times}:</strong> ' + item.downs + '{lang degree}</p>';
+						template += '<p><strong>{lang limited_number}:</strong> ' + item.times + '</p>';
+                    template += '</div>';
+                    template += '</div>';
+                    template += '</div>';
+                });
+                template += '</div>';
+                layer.alert(template, {
+                    title: '选中的记录'
+                });
+            break;
+            case 'delete':
+				if (data.length === 0) {
+					showmessage("请至少选择一行", 'danger', 3000, 1);
+					return;
+				}
+                var shareid = "";
+                $.each(data,function(i) {
+                    shareid +=  this.shareid;
+                    if (i < data.length - 1) {
+                        shareid += ",";
+                    }
+                });
+                layer.confirm(__lang.delete_share_sure, {title:'已选择：'+data.length+'个',skin:'lyear-skin-danger'}, function(index){
+                    layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
+                    $.post(MOD_URL+'&op=share&do=delshare',{'shareid':shareid},function(data){
+                        var error_name = '';
+                        var msg = '';
+                        if (data['msg']) {
+                            var datareturn = data['msg'];
+                            for (var o in datareturn) {
+                                if (datareturn[o]['success']) {
+                                    msg +=datareturn[o]['sharetitle'];
+                                } else {
+                                    error_name += 1;
+                                }
+                            }
+                            layer.msg(msg+__lang.explorer_do_succeed, {offset:'10px'});
+                            tablereload();
+                            if (error_name) {
+                                layer.alert(__lang.fail_cancel_share, {skin:'lyear-skin-danger'});
+                            }
+                        }
+                    },'json').fail(function() {
+                        layer.msg('服务器发生错误，请稍后再试');
+                    });
+                });
+			break;
+            case 'get':
+            tablereload();
+            break; 
+        };
     });
-	jQuery(document).on('showIcos_done',function(){
-		jQuery('.js_copy').each(function(){
-			var clipboard = new Clipboard(this);
-				clipboard.on('success', function(e) {
-					jQuery(e.trigger).find('.copy-success').removeClass('hide');
-					window.setTimeout(function(){jQuery(e.trigger).find('.copy-success').addClass('hide');},1000);
-				});
-				clipboard.on('error', function(e) {
-				});
-		});
-		 //鼠标滑过弹出二维码
-		$('.deatisinfo .share-copyaress .input-group-addoncode').off('mouseenter.hoverqurcode').on('mouseenter.hoverqurcode', function () {
-			$(this).parent().find('.input-group-addonhover').show();
-		})
-		$(document).off('mouseleave.leavequrcode').on('mouseleave.leavequrcode', '.deatisinfo .share-copyaress .input-group-addoncode', function () {
-			$(this).parent().find('.input-group-addonhover').hide();
-		})
-
+    //监听工具条
+	table.on('tool(table)', function(obj){
+        var data = obj.dataCache;
+        if(obj.event === 'view'){
+			window.open(data.sharelink);
+            return false;
+        } else if(obj.event === 'more'){
+            // 更多 - 下拉菜单
+            dropdown.render({
+                elem: this,
+                show: true,
+                data: [{
+                id: 'edit',
+                templet: '<a class="dropdown-item" href="javascript:;"><i class="mdi mdi-pencil pe-2"></i>{lang editshare}</a>'
+                },{
+                id: 'link',
+                templet: '<a class="dropdown-item" href="javascript:;"><i class="mdi mdi-file-document-outline pe-2"></i>复制链接</a>'
+                },{
+                id: 'info',
+                templet: '<a class="dropdown-item" href="javascript:;"><i class="mdi mdi-file-document-multiple pe-2"></i>复制信息</a>'
+                },{
+                id: 'qrcode',
+                templet: '<a class="dropdown-item" href="javascript:;"><i class="mdi mdi-qrcode pe-2"></i>{lang scan_code}</a>'
+                },{
+                id: 'del',
+                templet: '<a class="dropdown-item" href="javascript:;"><i class="mdi mdi-delete pe-2"></i>{lang cancleshare}</a>'
+                }],
+                click: function(menudata){
+                if(menudata.id === 'link'){
+                    var tempInput = document.createElement("input");
+                    document.body.appendChild(tempInput);
+                    tempInput.value = data.sharelink;
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                    layer.msg('已复制链接');
+                    return false;
+                } else if(menudata.id === 'info'){
+                    var password = data.password;
+                    var tempInput = document.createElement("input");
+                    document.body.appendChild(tempInput);
+                    var copyText = "" + data.name + "\n 链接：" + data.sharelink;
+                    if (password) {
+                        copyText += " \n提取码: " + password;
+                    }
+                    tempInput.value = copyText;
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                    layer.msg('已复制信息');
+                    return false;
+                } else if(menudata.id === 'del'){
+                    layer.confirm('真的删除要 '+ data.name +' 么？'+__lang.delete_share_sure, {title:'确定要删除分享？',skin:'lyear-skin-danger'}, function(index){
+                        layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
+                        $.post(MOD_URL+'&op=share&do=delshare',{'shareid':data.shareid},function(data){
+                            var error_name = '';
+                            if (data['msg']) {
+                                var datareturn = data['msg'];
+                                for (var o in datareturn) {
+                                    if (datareturn[o]['success']) {
+                                        obj.del();
+                                    } else {
+                                        error_name += 1;
+                                    }
+                                }
+                                layer.msg(__lang.explorer_do_succeed, {offset:'10px'});
+                                if (error_name) {
+                                    layer.alert(__lang.fail_cancel_share, {skin:'lyear-skin-danger'});
+                                }
+                            }
+                        },'json').fail(function() {
+                            layer.msg('服务器发生错误，请稍后再试');
+                        });
+                    });
+                } else if(menudata.id === 'qrcode'){
+                    layer.photos({
+                        photos: {
+                        "title": data.name,
+                        "start": 0,
+                        "data": [
+                            {
+                            "alt": data.name,
+                            "pid": 1,
+                            "src": data.qrcode,
+                            }
+                        ]
+                        }
+                    });
+                } else if(menudata.id === 'edit'){
+                    showWindow('share', MOD_URL + '&op=ajax&operation=share&table=1&paths=' + data.shareid, 'get', 0);
+                }
+            },
+            id: 'dropdown-table-tool',
+        });
+        }
+    });
+    //触发排序事件 
+	table.on('sort(table)', function(obj){
+        search_data.sort = obj.field;
+        search_data.order = obj.type;
+        table.reloadData('table', {
+            initSort: obj,
+            where: search_data
+        });
 	});
+    table.on('rowDouble(table)', function(obj){
+        showDataTemplate(obj);
+    });
+    function showDataTemplate(obj) {
+        var data = obj.dataCache;
+        var template =
+        '<p><strong>{lang share_typename_attach}：</strong>' + data.title + '</p>' +
+        '<p><strong>状态：</strong>' + data.status + '</p>' +
+        '<p><strong>{lang share_time}：</strong>' + data.dateline + '</p>' +
+        '<p><strong>{lang failure_time}：</strong>' + data.endtime + '</p>' +
+        '<p><strong>{lang link}：</strong><a href="' + data.sharelink + '">' + data.sharelink + '</a></p>' +
+        (data.password ? '<p><strong>{lang extract_password}：</strong>' + data.password + '</p>' : '<p><strong>{lang share_type}：</strong>{lang open_links}</p>')+
+        '<p><strong>{lang view_count}：</strong>' + data.count + '{lang degree}</p>' +
+        '<p><strong>{lang download_times}：</strong>' + data.downs + '{lang degree}</p>'+
+        '<p><strong>{lang limited_number}：</strong>' + data.times + '</p>'
+        layer.alert(template, {
+            title: '<strong>ID：'+data.LAY_NUM+'</strong>详情：'
+        });
+
+    // 标注选中样式
+    obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+    }
+});
+function tablereload(){
+    layui.table.reloadData('table');
+}
 </script>

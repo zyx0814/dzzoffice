@@ -3,14 +3,44 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 include_once libfile('function/code');
+$do = isset($_GET['do']) ? trim($_GET['do']) : '';
+$uid = $_G['uid'];
+if ($do == 'filelist' && !$uid) {
+    $errorResponse = [
+        "code" => 1,
+        "msg" => lang('no_login_operation'),
+        "count" => 0,
+        "data" => [],
+    ];
+    exit(json_encode($errorResponse));
+}
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 global $_G;
-$uid = $_G['uid'];
-$do = isset($_GET['do']) ? trim($_GET['do']) : '';
 
 //获取文件夹右侧信息
 if ($do == 'getfolderdynamic') {
     //接收文件夹id数据
+    $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
+    $fileinfo = array();
+    if($bz && $bz !== 'dzz') {
+        $fileinfo=IO::getCloud($bz);
+        $fileinfo['fname'] = $fileinfo['cloudname'];
+        $fileinfo['type'] = $fileinfo['cloudtype'].'('.$fileinfo['name'].')';
+        $fileinfo['realpath'] = $fileinfo['attachdir'];
+        if ($fileinfo['uid']) {
+            $user = getuserbyuid($fileinfo['uid']);
+            if($user['uid']) {
+                $fileinfo['username'] =  $user['username'];
+            } else {
+                $fileinfo['username'] = '该用户已不存在！';
+            }
+        } else {
+            $fileinfo['username'] = '系统盘';
+        }
+        $fileinfo['fdateline'] = ($fileinfo['dateline']) ? dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s') : '';;
+        include template('right_folder_menu');
+        exit();
+    }
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
     $gid = 0;
@@ -35,7 +65,7 @@ if ($do == 'getfolderdynamic') {
     } elseif ($fid) {//如果获取到文件夹id
         //文件夹信息
         $fileinfo = C::t('resources')->get_folderinfo_by_fid($fid);
-        if(!$fileinfo['gid'] && ($fileinfo['uid'] !== $_G['uid'])){
+        if (!$fileinfo['gid'] && ($fileinfo['uid'] !== $_G['uid'])) {
             return;
         }
         $gid = $fileinfo['gid'];
@@ -174,10 +204,7 @@ if ($do == 'getfolderdynamic') {
         include template('right_folder_menu');
         exit();
     }
-} elseif
-($do == 'loadmoredynamic'
-) {//加载更多处理
-    $next = false;
+} elseif ($do == 'loadmoredynamic') {//加载更多处理
     $ridval = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $start = isset($_GET['next']) ? intval($_GET['next']) : 0;
     $tplmore = isset($_GET['adddynamisc']) ? $_GET['adddynamisc'] : 0;//判断是否为单独页动态1不是
@@ -216,9 +243,10 @@ if ($do == 'getfolderdynamic') {
         exit();
     } else {//加载单独动态页
         include template('template_more_dynamic');
+        exit();
     }
     exit();
-} elseif($do == 'loadmoreversion') {
+} elseif ($do == 'loadmoreversion') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $fileinfo = C::t('resources')->get_property_by_rid($rid);
     $fileinfo['dpath'] = dzzencode($rid);
@@ -241,44 +269,24 @@ if ($do == 'getfolderdynamic') {
         include template('historyversion_content');
     }
     exit();
-} elseif($do == 'filelist') {
-    $limit = isset($_GET['perpage']) ? intval($_GET['perpage']) : 50;//默认每页条数
-    $page = empty($_GET['page']) ? 0 : intval($_GET['page']);//页码数
-    $start = $page;//开始条数
-    $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 0;
-    $disp = (isset($_GET['disp'])) ? intval($_GET['disp']) : 0;
-    $order = $asc > 0 ? 'ASC' : "DESC";
-
-    switch ($disp) {
-        case 0:
-            $orderby = 'e.dateline';
-            break;
-        case 1:
-            $orderby = 'e.username';
-            break;
-        case 2:
-            $orderby = 'e.do';
-            break;
-        case 3:
-            $orderby = 'e.do_obj';
-            break;
-        case 4:
-            $orderby = 'e.body_data';
-            break;
+} elseif ($do == 'filelist') {
+    $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
+    $field = isset($_GET['sort']) ? $_GET['sort'] : 'dateline';
+    $limit = empty($_GET['limit']) ? 50 : $_GET['limit'];
+    $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+    $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
+    $start = ($page - 1) * $limit;
+    $validfields = ['body_data', 'do_obj', 'do', 'username', 'dateline'];
+    $validSortOrders = ['asc', 'desc'];
+    if (in_array($field, $validfields) && in_array($order, $validSortOrders)) {
+        $order = " ORDER BY e.$field $order";
+    } else {
+        $order = ' ORDER BY e.dateline DESC';
     }
-    if (is_array($orderby)) {
-        foreach ($orderby as $key => $value) {
-            $orderby[$key] = $value . ' ' . $order;
-        }
-        $ordersql = ' ORDER BY ' . implode(',', $orderby);
-    } elseif ($orderby) {
-        $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
-    }
-    $array = array('resources_event');
     $condition = array();
     if (!empty($_GET['doevent'])) {
         $eventdo = trim($_GET['doevent']);
-        if($eventdo == 'recover' || $eventdo == 'recoverfile') {
+        if ($eventdo == 'recover' || $eventdo == 'recoverfile') {
             $condition['do'] = 'recover';
             $condition['do'] = 'recoverfile';
         } else {
@@ -287,38 +295,63 @@ if ($do == 'getfolderdynamic') {
     }
     if (!empty($_GET['doobj'])) {
         $obj = trim($_GET['doobj']);
-        $condition['do_obj'] = $obj;
+        $condition['do_obj'] = array($obj, 'like', 'and');
     }
-//开始时间
+    //开始时间
     if (!empty($_GET['startdate']) && $_GET['startdate']) {
         $startdate = strtotime($_GET['startdate']);
         $condition[] = array(' e.dateline > ' . $startdate, 'stringsql', 'and');
     }
 
-//结束时间
+    //结束时间
     if (!empty($_GET['enddate']) && $_GET['enddate']) {//结束时间+1天
         $enddate = strtotime($_GET['enddate']) + 86400;
         $condition[] = array(' e.dateline <' . $enddate, 'stringsql', 'and');
+    }
+    if (!empty($_GET['username'])) {
+        $username = trim($_GET['username']);
+        $condition['username'] = array($username, 'like', 'and');
     }
     if (!empty($_GET['uids'])) {
         $uids = $_GET['uids'];
         $condition['uidval'] = array($uids, 'nowhere');
     }
-
     $events = array();
-    $next = false;
-    $nextstart = $start + $limit;
-    if (C::t('resources_event')->fetch_all_event($start, $limit, $condition, $ordersql, true) > $nextstart) {
-        $next = $nextstart;
+    $count = C::t('resources_event')->fetch_all_event($start, $limit, $condition, $order, true);
+    if ($count) {
+        $events = C::t('resources_event')->fetch_all_event($start, $limit, $condition, $order);
     }
-
-    $events = C::t('resources_event')->fetch_all_event($start, $limit, $condition, $ordersql);
-    $eventnumbers = count($events);
-    include template('group/dynamic_list');
-    exit();
-} elseif
-($do == 'deletecomment'
-) {
+    $list = array();
+    foreach ($events as $data) {
+        $list[] = [
+            "username" => '<a href="user.php?uid=' . $data['uid'] . '" target="_blank">' . $data['username'] . '</a>',
+            "do_lang" => $data['do_lang'],
+            "do_obj" => $data['do_obj'],
+            "body_data" => $data['details'],
+            "do" => $data['do'],
+            "dateline" => dgmdate($data['dateline'], 'Y-m-d H:i:s'),
+        ];
+    }
+    header('Content-Type: application/json');
+    $return = [
+        "code" => 0,
+        "msg" => "",
+        "count" => $count ? $count : 0,
+        "data" => $list ? $list : [],
+    ];
+    $jsonReturn = json_encode($return);
+    if ($jsonReturn === false) {
+        $errorMessage = json_last_error_msg();
+        $errorResponse = [
+            "code" => 1,
+            "msg" => "JSON 编码失败，请刷新重试: " . $errorMessage,
+            "count" => 0,
+            "data" => [],
+        ];
+        exit(json_encode($errorResponse));
+    }
+    exit($jsonReturn);
+} elseif ($do == 'deletecomment') {
     $id = $_GET['id'];
     $return = C::t('resources_event')->delete_comment_by_id($id);
     if ($return['error']) {
@@ -326,48 +359,33 @@ if ($do == 'getfolderdynamic') {
     } else {
         exit(json_encode(array('success' => true)));
     }
-} else {
-    $limit = isset($_GET['perpage']) ? intval($_GET['perpage']) : 50;//默认每页条数
-    $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
-    $start = ($page - 1) * $perpage;//开始条数
-    $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 0;
-    $disp = (isset($_GET['disp'])) ? intval($_GET['disp']) : 0;
-    $order = $asc > 0 ? 'ASC' : "DESC";
-
-    switch ($disp) {
-        case 0:
-            $orderby = 'e.dateline';
-            break;
-        case 1:
-            $orderby = 'e.username';
-            break;
-        case 2:
-            $orderby = 'e.do';
-            break;
-        case 3:
-            $orderby = 'e.do_obj';
-            break;
-        case 4:
-            $orderby = 'e.body_data';
-            break;
-    }
-    if (is_array($orderby)) {
-        foreach ($orderby as $key => $value) {
-            $orderby[$key] = $value . ' ' . $order;
-        }
-        $ordersql = ' ORDER BY ' . implode(',', $orderby);
-    } elseif ($orderby) {
-        $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
-    }
-    $users = C::t('user')->fetch_all_user();
-    $next = false;
-    $nextstart = $start + $limit;
-    if (C::t('resources_event')->fetch_all_event($start, $limit, '', $ordersql, true) > $nextstart) {
-
-        $next = $nextstart;
-    }
-    $events = C::t('resources_event')->fetch_all_event($start, $limit, '', $ordersql);
-    $eventnumbers = count($events);
-
 }
+$operation_type = array(
+    array('addtag', lang('addtag')),
+    array('edit', lang('edit')),
+    array('down', lang('down')),
+    array('create', lang('create')),
+    array('recoverfile', lang('recoverfile')),
+    array('movedfolder', lang('movedfolder')),
+    array('movefile', lang('movefile')),
+    array('update_groupname', lang('update_groupname')),
+    array('update_setting', lang('update_setting')),
+    array('delfolder', lang('delfolder')),
+    array('delfile', lang('delfile')),
+    array('deleteuser', lang('deleteuser')),
+    array('deltag', lang('deltag')),
+    array('delversion', lang('delversion')),
+    array('finallydelete', lang('finallydelete')),
+    array('updatevesion', lang('updatevesion')),
+    array('setprimaryversion', lang('setprimaryversion')),
+    array('editversionname', lang('editversionname')),
+    array('editversiondesc', lang('editversiondesc')),
+    array('rename', lang('rename')),
+    array('share', lang('share')),
+    array('cancleshare', lang('cancleshare')),
+    array('addcomment', lang('addcomment')),
+    array('adduser', lang('adduser')),
+    array('setperm', lang('setperm')),
+    array('update_perm', lang('update_perm'))
+);
 require template('dynamic_content');

@@ -23,7 +23,7 @@ while ($value = DB::fetch($query)) {
         foreach ($subQuery as $value1) {
             $cloudid = "{$value['bz']}:{$value1['id']}:";
             $data[] = [
-                'cloudname' => $value1['cloudname'],
+                'cloudname' => $value1['cloudname'] ? $value1['cloudname'] : $value['name'],
                 'img' => 'dzz/images/default/system/'.$value['bz'].'.png',
                 'hashbz' => $cloudid,
             ];

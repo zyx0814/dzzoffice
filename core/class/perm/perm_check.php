@@ -198,11 +198,11 @@ class perm_check {
                     return empty($share['perm']) && in_array($action, ['download', 'read', 'copy']);
             }
         }
-        if ($arr['bz'] && $arr['bz'] !== 'dzz') {
-            if ($arr['uid'] !== $_G['uid']) return false;
-        }
         if ($_G['uid'] < 1) { //游客没有权限
             return false;
+        }
+        if ($arr['bz'] && $arr['bz'] !== 'dzz') {
+            if ($arr['uid'] !== $_G['uid']) return false;
         }
         if (!$arr['gid'] && $arr['uid'] !== $_G['uid']) {//我的网盘文件只限于当前用户
             return false;

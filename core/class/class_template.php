@@ -161,7 +161,6 @@ class template {
 		if(strpos($tpl, ':') !== false) {
 			list($templateid, $tpl) = explode(':', $tpl);
 			$tpldir = $templateid;
-			$tpl = $tpl;
 		}
         $template = $this->parse_tplfile($tpl,$tpldir,false,true);
         $this->includeTemplate[$template] = filemtime($template);

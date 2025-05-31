@@ -391,10 +391,9 @@ _select.Paste=function(pfid,XX,YY){
 		var data={"obz":'',"tbz":tbz,"sourcetype":"icoid","icoid":paths.join(','),"ticoid":0,"container":'icosContainer_folder_'+path,iscut:_config.cut.iscut>0?1:2};
 	}
 	var container=_config.getContainerByFid(pfid);
-	
-	var progress='<div class="progress progress-striped active" style="margin:0"><div class="bar" style="width:100%;"></div></div>'
+
 	//alert(_config.saveurl+'&do=move&gid='+_config.gid+'&'+jQuery.param(data));
-	showmessage('<p>'+__lang.file_drag_processing+'</p>'+progress,'success',0,1,'right-bottom');
+	layer.msg(__lang.file_drag_processing, {offset:'10px',time:0});
 	jQuery.getJSON(_config.saveurl+'&do=move&'+jQuery.param(data),function(json){
 		if(json.msg=='success'){
 			 _config.cut.icos=[];
@@ -407,10 +406,10 @@ _select.Paste=function(pfid,XX,YY){
 					
 				}
 				if(json.iscopy>0){
-					showmessage(__lang.file_copy_success,'success',3000,1,'right-bottom')
+					layer.msg(__lang.file_copy_success, {offset:'10px'});
 					
 				}else{
-					showmessage(__lang.crop_files_success,'success',3000,1,'right-bottom')
+					layer.msg(__lang.crop_files_success, {offset:'10px'});
 				   _select.remove(_config.cut.osuccessicos);
 				  
 				}	
@@ -422,12 +421,15 @@ _select.Paste=function(pfid,XX,YY){
 				}
 				_ico.appendIcoids(_config.cut.successicos);
 				if(json.error){
-					showmessage(__lang.operate_files_error,'error',3000,1,'right-bottom');
+					layer.alert(__lang.operate_files_error, {skin:'lyear-skin-danger'});
 				}
 				
 		}else{
-			showmessage(__lang.operate_files_error,'error',3000,1,'right-bottom');
+			layer.alert(__lang.operate_files_error, {skin:'lyear-skin-danger'});
 		}
+	}).fail(function(jqxhr, textStatus, error) {
+		jQuery('#middleconMenu').html(jqxhr.responseText);
+		return false;
 	});
 };
 _select.remove=function(icos){//移除原来的icoid

@@ -301,6 +301,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
                             $size += intval($contains['size']);
                             $contents[0] += $contains['contain'][0];
                             $contents[1] += $contains['contain'][1] + 1;
+                            break;
                         default:
                             $size += $icoarr['size'];
                             $contents[0] += 1;

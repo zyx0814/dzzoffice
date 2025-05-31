@@ -7,124 +7,123 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-if(!defined('IN_DZZ')) {
-	exit('Access Denied');
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
 }
 
-class table_user_status extends dzz_table
-{
-	public function __construct() {
+class table_user_status extends dzz_table {
+    public function __construct() {
 
-		$this->_table = 'user_status';
-		$this->_pk    = 'uid';
-		$this->_pre_cache_key = 'user_status_';
+        $this->_table = 'user_status';
+        $this->_pk = 'uid';
+        $this->_pre_cache_key = 'user_status_';
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	public function increase($uids, $setarr) {
-		$uids = array_map('intval', (array)$uids);
-		$sql = array();
-		$allowkey = array('buyercredit', 'sellercredit', 'favtimes', 'sharetimes');
-		foreach($setarr as $key => $value) {
-			if(($value = intval($value)) && in_array($key, $allowkey)) {
-				$sql[] = "`$key`=`$key`+'$value'";
-			}
-		}
-		if(!empty($sql)){
-			DB::query("UPDATE ".DB::table($this->_table)." SET ".implode(',', $sql)." WHERE uid IN (".dimplode($uids).")", 'UNBUFFERED');
-			$this->increase_cache($uids, $setarr);
-		}
-	}
+    public function increase($uids, $setarr) {
+        $uids = array_map('intval', (array)$uids);
+        $sql = array();
+        $allowkey = array('buyercredit', 'sellercredit', 'favtimes', 'sharetimes');
+        foreach ($setarr as $key => $value) {
+            if (($value = intval($value)) && in_array($key, $allowkey)) {
+                $sql[] = "`$key`=`$key`+'$value'";
+            }
+        }
+        if (!empty($sql)) {
+            DB::query("UPDATE " . DB::table($this->_table) . " SET " . implode(',', $sql) . " WHERE uid IN (" . dimplode($uids) . ")", 'UNBUFFERED');
+            $this->increase_cache($uids, $setarr);
+        }
+    }
 
-	public function count_by_ip($ips) {
-		return !empty($ips) ? DB::result_first('SELECT COUNT(*) FROM %t WHERE regip IN(%n) OR lastip IN (%n)', array($this->_table, $ips, $ips)) : 0;
-	}
+    public function count_by_ip($ips) {
+        return !empty($ips) ? DB::result_first('SELECT COUNT(*) FROM %t WHERE regip IN(%n) OR lastip IN (%n)', array($this->_table, $ips, $ips)) : 0;
+    }
 
-	public function fetch_all_by_ip($ips, $start, $limit) {
-		$data = array();
-		if(!empty($ips) && $limit) {
-			$data = DB::fetch_all('SELECT * FROM %t WHERE regip IN(%n) OR lastip IN (%n) LIMIT %d, %d', array($this->_table, $ips, $ips, $start, $limit), 'uid');
-		}
-		return $data;
-	}
+    public function fetch_all_by_ip($ips, $start, $limit) {
+        $data = array();
+        if (!empty($ips) && $limit) {
+            $data = DB::fetch_all('SELECT * FROM %t WHERE regip IN(%n) OR lastip IN (%n) LIMIT %d, %d', array($this->_table, $ips, $ips, $start, $limit), 'uid');
+        }
+        return $data;
+    }
 
-	public function fetch_all_orderby_lastpost($uids, $start, $limit) {
-		$uids = dintval($uids, true);
-		if($uids) {
-			return DB::fetch_all('SELECT * FROM %t WHERE uid IN(%n) ORDER BY lastpost DESC '.DB::limit($start, $limit), array($this->_table, $uids), $this->_pk);
-		}
-		return array();
-	}
+    public function fetch_all_orderby_lastpost($uids, $start, $limit) {
+        $uids = dintval($uids, true);
+        if ($uids) {
+            return DB::fetch_all('SELECT * FROM %t WHERE uid IN(%n) ORDER BY lastpost DESC ' . DB::limit($start, $limit), array($this->_table, $uids), $this->_pk);
+        }
+        return array();
+    }
 
-	public function count_by_lastactivity_invisible($timestamp, $invisible = 0) {
-		$addsql = '';
-		if($invisible === 1) {
-			$addsql = ' AND invisible = 1';
-		} elseif($invisible === 2) {
-			$addsql = ' AND invisible = 0';
-		}
-		return $timestamp ? DB::result_first('SELECT COUNT(*) FROM %t WHERE lastactivity >= %d'.$addsql, array($this->_table, $timestamp)) : 0;
-	}
+    public function count_by_lastactivity_invisible($timestamp, $invisible = 0) {
+        $addsql = '';
+        if ($invisible === 1) {
+            $addsql = ' AND invisible = 1';
+        } elseif ($invisible === 2) {
+            $addsql = ' AND invisible = 0';
+        }
+        return $timestamp ? DB::result_first('SELECT COUNT(*) FROM %t WHERE lastactivity >= %d' . $addsql, array($this->_table, $timestamp)) : 0;
+    }
 
 
-	public function fetch_all_by_lastactivity_invisible($timestamp, $invisible = 0, $start = 0, $limit = 0) {
-		$data = array();
-		if($timestamp) {
-			$addsql = '';
-			if($invisible === 1) {
-				$addsql = ' AND invisible = 1';
-			} elseif($invisible === 2) {
-				$addsql = ' AND invisible = 0';
-			}
-			$data = DB::fetch_all('SELECT * FROM %t WHERE lastactivity >= %d'.$addsql.' ORDER BY lastactivity DESC'.DB::limit($start, $limit), array($this->_table, $timestamp), $this->_pk);
-		}
-		return $data;
-	}
+    public function fetch_all_by_lastactivity_invisible($timestamp, $invisible = 0, $start = 0, $limit = 0) {
+        $data = array();
+        if ($timestamp) {
+            $addsql = '';
+            if ($invisible === 1) {
+                $addsql = ' AND invisible = 1';
+            } elseif ($invisible === 2) {
+                $addsql = ' AND invisible = 0';
+            }
+            $data = DB::fetch_all('SELECT * FROM %t WHERE lastactivity >= %d' . $addsql . ' ORDER BY lastactivity DESC' . DB::limit($start, $limit), array($this->_table, $timestamp), $this->_pk);
+        }
+        return $data;
+    }
 
-	public function fetch_all_onlines($uids, $lastactivity, $start = 0, $limit = 0) {
-		$data = array();
-		$uids = dintval($uids, true);
-		if(!empty($uids)) {
-			$ppp = ($ppp = getglobal('ppp')) ? $ppp + 30 : 100;
-			if(count($uids) > $ppp) {
-				$uids = array_slice($uids, 0, $ppp);
-			}
-			$length = $limit ? $limit : $start;
-			$i = 0;
-			foreach($this->fetch_all($uids) as $uid => $member) {
-				if($member['lastactivity'] >= $lastactivity) {
-					$data[$uid] = $member;
-					if($length && $i >= $length) {
-						break;
-					}
-					$i++;
-				}
-			}
-		}
-		return $data;
-	}
+    public function fetch_all_onlines($uids, $lastactivity, $start = 0, $limit = 0) {
+        $data = array();
+        $uids = dintval($uids, true);
+        if (!empty($uids)) {
+            $ppp = ($ppp = getglobal('ppp')) ? $ppp + 30 : 100;
+            if (count($uids) > $ppp) {
+                $uids = array_slice($uids, 0, $ppp);
+            }
+            $length = $limit ? $limit : $start;
+            $i = 0;
+            foreach ($this->fetch_all($uids) as $uid => $member) {
+                if ($member['lastactivity'] >= $lastactivity) {
+                    $data[$uid] = $member;
+                    if ($length && $i >= $length) {
+                        break;
+                    }
+                    $i++;
+                }
+            }
+        }
+        return $data;
+    }
 
-	public function update($uid, $setarr, $data = false, $low_priority = false) {
-		if(!$uid || !is_array($setarr) || !$setarr) {
-			return false;
-		}
-		if(DB::result_first("select COUNT(*) from %t where uid=%d",array('user_status',$uid))){
-			DB::update($this->_table, $setarr, array('uid'=>$uid));
-		}else{
-			$status = array(
-				'uid' => $uid,
-				'regip' => $setarr['regip'] ? $setarr['regip'] : '',
-				'lastip' => $setarr['lastip'] ? $setarr['lastip'] : '',
-				'lastvisit' => $setarr['lastvisit'] ? $setarr['lastvisit'] : TIMESTAMP,
-				'lastactivity' => $setarr['lastactivity'] ? $setarr['lastactivity'] : TIMESTAMP,
-				'lastsendmail' => $setarr['lastsendmail'] ? $setarr['lastsendmail'] : 0,
-				'invisible' => $setarr['invisible'] ? $setarr['invisible'] : 0,
-				'profileprogress' => $setarr['profileprogress'] ? $setarr['profileprogress'] : 0,
-			);
-			DB::insert('user_status',$status,1);
-		}
-	}
+    public function update($uid, $setarr, $data = false, $low_priority = false) {
+        if (!$uid || !is_array($setarr) || !$setarr) {
+            return false;
+        }
+        if (DB::result_first("select COUNT(*) from %t where uid=%d", array('user_status', $uid))) {
+            DB::update($this->_table, $setarr, array('uid' => $uid));
+        } else {
+            $status = array(
+                'uid' => $uid,
+                'regip' => $setarr['regip'] ? $setarr['regip'] : '',
+                'lastip' => $setarr['lastip'] ? $setarr['lastip'] : '',
+                'lastvisit' => $setarr['lastvisit'] ? $setarr['lastvisit'] : TIMESTAMP,
+                'lastactivity' => $setarr['lastactivity'] ? $setarr['lastactivity'] : TIMESTAMP,
+                'lastsendmail' => $setarr['lastsendmail'] ? $setarr['lastsendmail'] : 0,
+                'invisible' => $setarr['invisible'] ? $setarr['invisible'] : 0,
+                'profileprogress' => $setarr['profileprogress'] ? $setarr['profileprogress'] : 0,
+            );
+            DB::insert('user_status', $status, 1);
+        }
+    }
 }
 
 ?>

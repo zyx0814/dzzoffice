@@ -2023,9 +2023,8 @@ function getContainerByFid($pfid) {
             return 'icosContainer_body_' . $pfid;
         case 'dock':
             return '_dock';
-        case 'folder':
-            return 'icosContainer_folder_' . $pfid;
         case 'organization':
+        case 'folder':
             return 'icosContainer_folder_' . $pfid;
         default:
             return '';
