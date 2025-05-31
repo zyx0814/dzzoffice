@@ -2391,15 +2391,8 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .fwinmask{background:#FFF;box-shadow:1px 3px 15px rgba(0,0,0,0.8),inset 0 0 10px #FFF;border:1px solid #CCC;border-radius:5px;min-width:320px;max-width:600px}
 .debug_iframe{display:none}
 .table td img{max-width:32px;max-height:32px;margin-right:10px}
-::-webkit-scrollbar-button{display:none}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-corner{display:none}
-::-webkit-resizer{display:none}
-::-webkit-scrollbar{width:6px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{border-radius:5px;cursor:pointer;-webkit-box-shadow:inset 0 0 3px rgba(0,0,0,0);background-color:#007bff;background-color:var(--bs-primary)}
 .button_add_content{bottom:25px;position:fixed;right:24px;height:56px;width:56px;z-index:10}
-.button_add_content a{position:absolute;display:block;font-size:40px;border-radius:50%;border:none;cursor:pointer;height:56px;line-height:56px;text-align:center;webkit-transition-duration:0.25s;-webkit-transition-duration:0.25s;-moz-transition-duration:0.25s;-o-transition-duration:0.25s;transition-duration:0.25s;-webkit-transition-property:background-color,-webkit-box-shadow;width:56px;z-index:2;transition-property:background-color,box-shadow;box-shadow:0px 2px 10px rgba(0,0,0,.3),0px 0px 1px rgba(0,0,0,.1),inset 0px 1px 0px rgba(255,255,255,.25),inset 0px -1px 0px rgba(0,0,0,.15);font-family:Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.button_add_content a{position:absolute;display:block;font-size:40px;border-radius:50%;border:none;cursor:pointer;height:56px;line-height:56px;text-align:center;-webkit-transition-duration:0.25s;-webkit-transition-duration:0.25s;-moz-transition-duration:0.25s;-o-transition-duration:0.25s;transition-duration:0.25s;-webkit-transition-property:background-color,-webkit-box-shadow;width:56px;z-index:2;transition-property:background-color,box-shadow;box-shadow:0px 2px 10px rgba(0,0,0,.3),0px 0px 1px rgba(0,0,0,.1),inset 0px 1px 0px rgba(255,255,255,.25),inset 0px -1px 0px rgba(0,0,0,.15);font-family:Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 .button_add_content a:hover{background:#4395FC;color:#fff;webkit-box-shadow:0px 5px 5px rgba(0,0,0,.2),0px 10px 14px rgba(0,0,0,.1),inset 0px 1px 0px rgba(255,255,255,.25),inset 0px -1px 0px rgba(0,0,0,.10);-moz-box-shadow:0px 5px 5px rgba(0,0,0,.2),0px 10px 14px rgba(0,0,0,.1),inset 0px 1px 0px rgba(255,255,255,.25),inset 0px -1px 0px rgba(0,0,0,.10);box-shadow:0px 5px 5px rgba(0,0,0,.2),0px 10px 14px rgba(0,0,0,.1),inset 0px 1px 0px rgba(255,255,255,.25),inset 0px -1px 0px rgba(0,0,0,.10)}
 .iconFirstWord{width:24px;height:24px;border-radius:50%;display:inline-block;line-height:24px;text-align:center;margin-right:2px;color:#FFFFFF}
 .dcolor{color:#495057}

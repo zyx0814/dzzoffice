@@ -88,7 +88,7 @@ function profile_setting($fieldid, $space = array(), $showstatus = false, $ignor
             $selectstr = ($i == $space['birthday']) ? ' selected' : '';
             $birthdayhtml .= "<option value=\"$i\"$selectstr>$i</option>";
         }
-        $html = '<div class="input-group mb-3 profile-group-birthday">'
+        $html = '<div class="input-group profile-group-birthday">'
             . '<select name="birthyear" id="birthyear" onchange="showbirthday();" class="form-select form-control input-sm pull-left profile profile-birthyear"  style="width:80px;margin-right:5px;">'
             . '<option value="">' . lang('year') . '</option>'
             . $birthyeayhtml
