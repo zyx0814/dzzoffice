@@ -115,10 +115,10 @@
         <!--{if $value[available]}-->
         <div class="row mb-3" id="th_$key">
           <label class="col-sm-2" for="$key">$value[title]<!--{if $value[required]}--><span class="rq" title="{lang required}">*</span><!--{/if}--></label>
-					<div class="col-md-4 col-form-label">
+					<div class="col-md-4">
             $htmls[$key]
           </div>
-					<div class="col-md-4 col-form-label">
+					<div class="col-md-4">
             <!--{if $vid || $key=='department'}-->
             <input type="hidden" name="privacy[$key]" value="$privacy[$key]" />
             <!--{else}-->
@@ -135,7 +135,7 @@
         <!--{if in_array('timeoffset', $allowitems)}-->
           <div class="row mb-3">
               <label class="col-sm-2" for="timeoffset">{lang time_zone}</label>
-              <div class="col-md-4 col-form-label">
+              <div class="col-md-4">
                   <!--{eval $timeoffset = array({lang timezone});}-->
                   <select name="timeoffset" class="form-select" id="timeoffset">
                       <!--{loop $timeoffset $key $desc}-->

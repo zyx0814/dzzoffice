@@ -244,7 +244,7 @@ class table_shares extends dzz_table {
             if($val['pfid'] == -1) {
                 $val['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($val['filepath']);
             } elseif (count($rids) > 1) {
-                $val['img'] = '/dzz/explorer/img/ic-files.png';
+                $val['img'] = '/dzz/explorer/images/ic-files.png';
             } else {
                 $val['img'] = C::t('resources')->get_icosinfo_by_rid($val['filepath']);
             }
