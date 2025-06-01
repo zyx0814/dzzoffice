@@ -1,4 +1,3 @@
-
 function loginsub(formid,rspaceid){
 
     var url = jQuery('#'+formid).attr('action');

@@ -534,16 +534,11 @@
                     <input id="sel_orgid" type="hidden" name="settingnew[loginset][orgid]" value="$setting[loginset][orgid]"/>
                     <button type="button" id="orgid_Menu" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">$orgid</button>
                     <div id="orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_Menu">
-                      <iframe name="orgid_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"  allowtransparency="true"></iframe>
+                      <iframe name="orgid_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
                     </div>
                   </div>
-                  <span class="form-text">
-                      设置登录页面可选的用户范围：仅显示所选机构的有效用户（不含子机构），
-                      系统管理员和已停用账号不会显示。用户选择后可直接登录系统。
-                  </span>
-                  <div class="alert alert-warning mt-2">
-                     安全提示：请谨慎设置此选项，仅将必要的用户暴露在登录页面选择列表中，避免敏感账户被公开可见。建议选择非关键部门或普通用户组。
-                  </div>
+                  <span class="form-text"> 设置登录页面可选的用户范围：仅显示所选机构的有效用户（不含子机构），系统管理员和已停用账号不会显示。用户选择后可直接登录系统。为了性能考虑，最多只显示1000个用户。</span>
+                  <div class="alert alert-warning mt-2">安全提示：请谨慎设置此选项，仅将必要的用户暴露在登录页面选择列表中，避免敏感账户被公开可见。建议选择非关键部门或普通用户组。</div>
                 </div>
               </div>
             </div>

@@ -373,7 +373,6 @@ function user_register($userArr, $addorg = 1) {
 
     //默认机构
     if ($addorg && is_array($uid)) {
-
         Hook::listen('addorg', $uid['uid']);
     }
     return $uid;
