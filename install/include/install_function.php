@@ -136,9 +136,9 @@ function env_check(&$env_items) {
         } elseif ($key == 'php_bit') {
             $env_items[$key]['current'] = phpBuild64() ? 64 : 32;
         } elseif ($key == 'attachmentupload') {
-            $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknow';
+            $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknown';
         } elseif ($key == 'allow_url_fopen') {
-            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ? ini_get('allow_url_fopen') : 'unknow';
+            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ? ini_get('allow_url_fopen') : 'unknown';
         } elseif ($key == 'gdversion') {
             $tmp = function_exists('gd_info') ? gd_info() : array();
             $env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
@@ -147,7 +147,7 @@ function env_check(&$env_items) {
             if (function_exists('disk_free_space')) {
                 $env_items[$key]['current'] = floor(disk_free_space(ROOT_PATH) / (1024 * 1024)) . 'M';
             } else {
-                $env_items[$key]['current'] = 'unknow';
+                $env_items[$key]['current'] = 'unknown';
             }
         } elseif (isset($item['c'])) {
             $env_items[$key]['current'] = constant($item['c']);

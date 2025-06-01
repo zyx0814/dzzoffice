@@ -68,6 +68,7 @@ $lang = array(
     'advice_pfsockopen' => '该函数需要 php.ini 中 allow_url_fopen 选项开启。请联系服务商，确定开启了此项功能',
     'advice_stream_socket_client' => '是否 PHP 配置中禁止了 stream_socket_client 函数',
     'advice_curl_init' => '是否 PHP 配置中禁止了 curl_init 函数',
+    'advice_zip_open' => '是否 PHP 配置中禁止了 zip_open 函数。必须安装 Zip 扩展才能使用。',
     'tips_siteinfo' => '请填写站点信息',
     'sitename' => '站点名称',
     'siteurl' => '站点 URL',

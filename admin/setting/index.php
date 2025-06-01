@@ -115,6 +115,14 @@ if (!submitcheck('settingsubmit')) {
         $navtitle = lang('login_page_set') . ' - ' . lang('appname');
         if ($setting['loginset'] && !is_array($setting['loginset'])) {
             $setting['loginset'] = unserialize($setting['loginset']);
+                if ($setting['loginset']['orgid']) {
+                $patharr = getPathByOrgid($setting['loginset']['orgid']);
+                $orgid = implode(' - ', ($patharr));
+            }
+            if (empty($orgid)) {
+                $orgid = '不显示任何机构';
+                $setting['loginset']['orgid'] = 'other';
+            }
         }
     } elseif ($operation == 'smiley') {
         $navtitle = lang('expression_set') . ' - ' . lang('appname');

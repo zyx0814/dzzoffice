@@ -105,7 +105,9 @@ if ($do == 'stats') {
         '操作系统' => array('c' => 'PHP_OS', 'r' => '不限制', 'b' => 'Linux'),
         'PHP 版本' => array('c' => 'PHP_VERSION', 'r' => '7+', 'b' => 'php7+'),
         'PHP 平台版本' => array('c' => 'PHP_INT_SIZE', 'r' => '32位(32位不支持2G以上文件上传下载)', 'b' => '64位'),
-        '附件上传' => array('r' => '不限制', 'b' => '50M'),
+        '最大上传大小' => array('r' => '不限制', 'b' => '50M'),
+        '最大post大小' => array('r' => '不限制', 'b' => '50M'),
+        '最大内存限制' => array('r' => '不限制', 'b' => '128M'),
         'GD 库' => array('r' => '1.0', 'b' => '2.0'),
         '磁盘空间' => array('r' => '50M', 'b' => '10G以上'),
         'MySQL数据库持续连接' => array('r' => '不限制', 'b' => '不限制'),
@@ -120,10 +122,14 @@ if ($do == 'stats') {
             $env_items[$key]['current'] = PHP_VERSION;
         } elseif ($key == 'PHP 平台版本') {
             $env_items[$key]['current'] = phpBuild64() ? 64 : 32;
-        } elseif ($key == '附件上传') {
-            $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknow';
+        } elseif ($key == '最大上传大小') {
+            $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknownn';
+        } elseif ($key == '最大内存限制') {
+            $env_items[$key]['current'] = ini_get('memory_limit') ?? 'unknown';
+        } elseif ($key == '最大post大小') {
+            $env_items[$key]['current'] = ini_get('post_max_size') ?? 'unknown';
         } elseif ($key == 'allow_url_fopen') {
-            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ? ini_get('allow_url_fopen') : 'unknow';
+            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ? ini_get('allow_url_fopen') : 'unknown';
         } elseif ($key == 'GD 库') {
             $tmp = function_exists('gd_info') ? gd_info() : array();
             $env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
@@ -132,7 +138,7 @@ if ($do == 'stats') {
             if (function_exists('disk_free_space')) {
                 $env_items[$key]['current'] = floor(disk_free_space(ROOT_PATH) / (1024 * 1024)) . 'M';
             } else {
-                $env_items[$key]['current'] = 'unknow';
+                $env_items[$key]['current'] = 'unknown';
             }
         } elseif ($key == 'PHP 平台版本') {
             if (PHP_INT_SIZE === 4) {
@@ -185,12 +191,8 @@ if ($do == 'stats') {
         }
         $func_str .= "</div>\n";
     }
-    $loaded_extensions = get_loaded_extensions();
-    $extensions = '';
-    foreach ($loaded_extensions as $key => $value) {
-        $extensions .= '<span class="badge badge-outline-primary rounded-pill m-1">' . $value . '</span>';
-    }
     include template('systemcheck');
+    
     exit();
 } elseif ($do == 'phpinfo') {
     exit(phpinfo());
