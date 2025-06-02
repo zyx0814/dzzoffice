@@ -18,6 +18,7 @@ $lang = array(
     'advice_mysql' => '请检查 mysql 模块是否正确加载',
     'advice_fopen' => '该函数需要 php.ini 中 allow_url_fopen 选项开启。请联系空间商，确定开启了此项功能',
     'advice_xml' => '该函数需要 PHP 支持 XML。请联系空间商，确定开启了此项功能',
+    'advice_zip_open' => '是否 PHP 配置中禁止了 zip_open 函数。必须安装 Zip 扩展才能使用。',
 );
 
 ?>

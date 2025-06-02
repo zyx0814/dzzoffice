@@ -1678,7 +1678,7 @@ $idtype2type = array(
 );
 function get_os($agent = '') {
     if (!$agent) $agent = $_SERVER['HTTP_USER_AGENT'];
-    $os = 'unknow';
+    $os = 'unknown';
     if (stristr($agent, 'iPad')) {
         $os = "iPad";
     } elseif (preg_match('/Android (([0-9_.]{1,3})+)/i', $agent, $version)) {

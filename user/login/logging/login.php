@@ -56,7 +56,33 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
     $_G['sso_referer'] = $referer;
 
     $navtitle = lang('title_login');
-    include template('login_single' . ($_GET['template'] ? $_GET['template'] : (isset($setting['loginset']['template']) ? $setting['loginset']['template'] : 1)));
+    $templateId = isset($_GET['template']) ? $_GET['template'] : (isset($setting['loginset']['template']) ? $setting['loginset']['template'] : 1);
+    if ($templateId == 4) {
+        if (isset($_GET['template']) && $_GET['template'] == 4) {
+            $templateId = 1;
+        }
+
+        if ($setting['loginset']['template'] == 4) {
+            $templateId = 4;
+            $data = array();
+            if($setting['loginset']['orgid'] && $setting['loginset']['orgid'] !== 'other') {
+                $orgid = $setting['loginset']['orgid'];
+                $param = array('organization_user', 'organization_job', 'user');
+                $sql = "ou.orgid = %d AND u.adminid != 1 AND u.status = 0";
+                
+                $users = DB::fetch_all("SELECT u.uid,u.username,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, array($orgid)));
+                foreach ($users as $user) {
+                    $data[] = array(
+                        'uid' => $user['uid'],
+                        'username' => $user['username'],
+                        'jobname' => $user['jobname'] ?: '无职位'
+                    );
+                }
+            }
+            
+        }
+    }
+    include template('login_single' . $templateId);
 } else {
     $type = isset($_GET['returnType']) ? $_GET['returnType'] : 'json';//返回值方式
 
@@ -70,12 +96,10 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
     $result = userlogin($_GET['email'], $_GET['password'], $_GET['questionid'], $_GET['answer'], 'auto', $_G['clientip']);
 
     if ($result['status'] == -2) {
-
+        $errorlog = "用户" . ($result['ucresult']['email'] ? $result['ucresult']['email'] : $_GET['email']) . "尝试登录失败，该用户已停用。";
+        writelog('loginlog', $errorlog);
         showTips(array('error' => lang('user_stopped_please_admin')), $type);
-
-
     } elseif ($_G['setting']['bbclosed'] > 0 && $result['member']['adminid'] != 1) {
-
         showTips(array('error' => lang('site_closed_please_admin')), $type);
     }
 
@@ -102,11 +126,9 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
             'groupid' => $_G['groupid'],
             'syn' => 0
         );
-        $loginmessage = /*$_G['groupid'] == 8 ? 'login_succeed_inactive_member' :*/
-            'login_succeed';
+        $loginmessage = /*$_G['groupid'] == 8 ? 'login_succeed_inactive_member' :*/'login_succeed';
 
-        $location = /*$_G['groupid'] == 8 ? 'user.php?mod=profile' :*/
-            dreferer();//待修改
+        $location = /*$_G['groupid'] == 8 ? 'user.php?mod=profile' :*/dreferer();//待修改
 
         $href = str_replace("'", "\'", $location);
         $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);

@@ -1,42 +1,130 @@
-<div class="table-responsive">
-	<!--{if $env_str}-->
-	<h6>环境检查</h6>
-	<table class="table table-hover align-middle">
-	  <thead>
-		<tr>
-		  <th>项目</th>
-		  <th>DzzOffice 所需配置</th>
-		  <th>DzzOffice 最佳</th>
-		  <th>当前服务器</th>
-		</tr>
-	  </thead>
-	  <tbody>
-		$env_str
-	  </tbody>
-	</table>
-	<h6>函数依赖性检查</h6>
-	<table class="table table-hover align-middle">
-		<thead>
-		  <tr>
-			<th>函数名称</th>
-			<th>检查结果</th>
-			<th>建议</th>
-		  </tr>
-		</thead>
-		<tbody>
-			$func_strextra
-		</tbody>
-	  </table>
-	<h5>PHP扩展信息<a href="{MOD_URL}&do=phpinfo" target="_blank" class="ms-2 btn btn-outline-primary btn-sm">PHP详情</a></h5>
-	<span class="badge badge-outline-yellow">此处显示的扩展并不表示都需要开启或关闭，根据自己的需要来决定。</span>
-	<div class="gallery-grid">
-		$func_str
+<div class="accordion" id="accordionPanelsStayOpenExample">
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-headingOne">
+			<button class="accordion-button" type="button" data-toggle="collapse" data-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">环境检查</button>
+		</h2>
+		<div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+			<div class="accordion-body">
+				<!--{if $env_str}-->
+				<div class="table-responsive">
+					<table class="table table-hover table-striped align-middle">
+						<thead>
+							<tr>
+							<th>项目</th>
+							<th>DzzOffice 所需配置</th>
+							<th>DzzOffice 最佳</th>
+							<th>当前服务器</th>
+							</tr>
+						</thead>
+						<tbody>
+							$env_str
+						</tbody>
+					</table>
+				</div>
+				<!--{else}-->
+				<div class="alert alert-danger" role="alert">无法检测</div>
+				<!--{/if}-->
+			</div>
+		</div>
 	</div>
-	<h5><span class="badge bg-primary rounded-pill">已加载的扩展：</span></h5>
-	<div class="card-footer">
-		$extensions
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-strextra">
+			<button class="accordion-button" type="button" data-toggle="collapse" data-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseTwo">函数依赖性检查</button>
+		</h2>
+		<div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-strextra">
+			<div class="accordion-body">
+			<!--{if $func_strextra}-->
+			<div class="table-responsive">
+				<table class="table table-hover table-striped align-middle">
+					<thead>
+					<tr>
+						<th>函数名称</th>
+						<th>检查结果</th>
+						<th>建议</th>
+					</tr>
+					</thead>
+					<tbody>
+						$func_strextra
+					</tbody>
+				</table>
+			</div>
+			<!--{else}-->
+			<div class="alert alert-danger" role="alert">无法检测</div>
+			<!--{/if}-->
+			</div>
+		</div>
 	</div>
-	<!--{else}-->
-	<div class="alert alert-danger" role="alert">无法检测</div>
-	<!--{/if}-->
-  </div>
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-funcstr">
+			<button class="accordion-button" type="button" data-toggle="collapse" data-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">PHP扩展信息</button>
+		</h2>
+		<div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-funcstr">
+			<div class="accordion-body">
+				<div class="mb-3 d-grid"><a href="{MOD_URL}&do=phpinfo" target="_blank" class="btn btn-outline-primary">PHP详情</a></div>
+				<!--{if $func_str}-->
+				<div class="alert alert-primary">此处显示的扩展并不表示都需要开启或关闭，根据自己的需要来决定。</div>
+				<div class="gallery-grid">
+					$func_str
+				</div>
+				<!--{else}-->
+				<div class="alert alert-danger" role="alert">无法检测</div>
+				<!--{/if}-->
+			</div>
+		</div>
+	</div>
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="panelsStayOpen-headingThree">
+			<button class="accordion-button" type="button" data-toggle="collapse" data-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">其他信息</button>
+		</h2>
+		<div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingThree">
+			<div class="accordion-body">
+				<table class="table table-hover align-middle table-striped table-bordered">
+					<tr>
+						<th>服务器软件</th>
+						<td><!--{eval echo $_SERVER['SERVER_SOFTWARE'];}--></td>
+					</tr>
+					<tr>
+						<th>域名</th>
+						<td><!--{eval echo $_SERVER['HTTP_HOST'];}--></td>
+					</tr>
+					<tr>
+						<th>通信协议</th>
+						<td><!--{eval echo $_SERVER['SERVER_PROTOCOL'];}--></td>
+					</tr>
+					<tr>
+						<th>PHP部署方式</th>
+						<td><!--{eval echo php_sapi_name();}--></td>
+					</tr>
+					<tr>
+						<th>PHP开启报错</th>
+						<td><!--{if ini_get('display_errors')}-->已开启<!--{else}-->已关闭<!--{/if}--></td>
+					</tr>
+					<tr>
+						<th>PHP脚本所有者</th>
+						<td><!--{eval echo get_current_user();}--></td>
+					</tr>
+					<tr>
+						<th>禁用的函数</th>
+						<td class="text-break"><!--{eval echo ini_get('disable_functions') ?: '无';}--></td>
+					</tr>
+					<tr>
+						<th>curl版本</th>
+						<td><!--{eval echo curl_version()['version'];}--></td>
+					</tr>
+					<tr>
+						<th>php.ini文件</th>
+						<td><!--{eval echo php_ini_loaded_file();}--></td>
+					</tr>
+					<tr>
+						<th>php安装目录</th>
+						<td><!--{eval echo PHP_BINDIR;}--></td>
+					</tr>
+					<tr>
+						<th>已加载的扩展</th>
+						<td><!--{eval echo implode('，', get_loaded_extensions());}--></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

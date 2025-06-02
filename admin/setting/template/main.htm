@@ -424,11 +424,16 @@
           <style>
             .loginset-template {
               width: 100px;
+              height: 70px;
               overflow: hidden;
               float: left;
               margin-right: 10px;
               display: block;
               position: relative;
+            }
+            .loginset-template img{
+              width: 100%;
+              height: 100%;
             }
             .loginset-template .loginset-template-icon {
               width: 20px;
@@ -438,8 +443,9 @@
               right: 1px;
               top: 1px;
               color: #DD4B39;
-              font-size: 15px;
+              font-size: 20px;
               display: none;
+              line-height: 20px;
             }
             .loginset-template:hover .loginset-template-icon {
               display: block;
@@ -501,9 +507,39 @@
                     </div>
                     <img style="width: 100%;" src="admin/setting/images/template3.jpg" alt=""/>
                   </a>
+                  <a class="loginset-template" href="admin/setting/images/template4.jpg" target="_blank">
+                    <div class="loginset-template-icon<!--{if $setting[loginset][template] == 4}--> loginset-template-icon1<!--{/if}-->" data-template="4">
+                        <span class="mdi mdi-check-bold"></span>
+                    </div>
+                    <img style="width: 100%;" src="admin/setting/images/template4.jpg" alt=""/>
+                  </a>
                   <input type="hidden" class="form-control loginset-template-input" name="settingnew[loginset][template]" value="$setting[loginset][template]"/>
                 </div>
                 <span class="form-text">{lang Independent login page login template; Parameters will be synchronized to login (including administrator login), registration, password retrieval, and home application.}</span>
+              </div>
+            </div>
+            <div id="template4-content" class="<!--{if $setting[loginset][template] !== '4'}--> hide <!--{/if}-->">
+              <div class="row mb-3">
+                <label for="loginsetother" class="col-sm-2">显示其他登录方式</label>
+                <div class="col-sm-10">
+                  <div class="form-check form-switch">
+                    <input type="checkbox" name="settingnew[loginset][other]" id="loginsetother" class="form-check-input" <!--{if $setting[loginset][other]}-->checked="checked"<!--{/if}-->> 
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2">显示登录的用户机构</label>
+                <div class="col-sm-10">
+                  <div class="dropdown">
+                    <input id="sel_orgid" type="hidden" name="settingnew[loginset][orgid]" value="$setting[loginset][orgid]"/>
+                    <button type="button" id="orgid_Menu" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">$orgid</button>
+                    <div id="orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_Menu">
+                      <iframe name="orgid_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+                    </div>
+                  </div>
+                  <span class="form-text"> 设置登录页面可选的用户范围：仅显示所选机构的有效用户（不含子机构），系统管理员和已停用账号不会显示。用户选择后可直接登录系统。为了性能考虑，最多只显示1000个用户。</span>
+                  <div class="alert alert-warning mt-2">安全提示：请谨慎设置此选项，仅将必要的用户暴露在登录页面选择列表中，避免敏感账户被公开可见。建议选择非关键部门或普通用户组。</div>
+                </div>
               </div>
             </div>
             <dl class="mb-3 d-grid">
@@ -511,11 +547,23 @@
             </dl>
           </form>
           <script type="text/javascript">
-              jQuery(document).on('click', '.loginset-template-icon', function () {
-                  jQuery(this).addClass('loginset-template-icon1').closest('.loginset-template').siblings().find('.loginset-template-icon').removeClass('loginset-template-icon1');
-                  jQuery('.loginset-template-input').val(jQuery(this).data('template'));
-                  return false;
-              })
+            var selorg={};
+            selorg.add = function (ctrlid, vals) {
+                if (vals[0].orgid == 'other') vals[0].path = '不显示任何机构';
+                jQuery('#' + ctrlid + '_Menu').html(vals[0].path + ' ');
+                jQuery('#sel_' + ctrlid).val(vals[0].orgid);
+            }
+            jQuery(document).on('click', '.loginset-template-icon', function () {
+                var selectedTemplate = jQuery(this).data('template');
+                jQuery(this).addClass('loginset-template-icon1').closest('.loginset-template').siblings().find('.loginset-template-icon').removeClass('loginset-template-icon1');
+                jQuery('.loginset-template-input').val(selectedTemplate);
+                if (selectedTemplate == 4) {
+                  jQuery('#template4-content').removeClass('hide');
+                } else {
+                  jQuery('#template4-content').addClass('hide');
+                }
+                return false;
+            });
           </script> 
           <!--{elseif $operation=='mail'}-->
           <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
