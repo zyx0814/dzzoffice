@@ -43,7 +43,12 @@
                 trigger: 'manual',
                 id: 'right_ico',
                 content: '',
-                className:'lyear-dropdown'
+                className:'lyear-dropdown',
+                click: function(data, othis, event){
+                    if (othis.hasClass('has-submenu')) {
+                        return false;
+                    }
+                }
             });
         });
         _explorer.getConfig(MOD_URL+'&op=json');
