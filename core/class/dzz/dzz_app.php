@@ -476,7 +476,6 @@ class dzz_app extends dzz_base {
             }
 
             if (!empty($user) && $user['password'] == $dzz_pw && ($user['status'] < 1 || $user['uid'] == 1)) {//加上判断用户是否被停用
-
                 $this->var['member'] = $user;
             } else {
                 $user = array();
