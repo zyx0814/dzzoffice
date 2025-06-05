@@ -21,44 +21,42 @@
 				{lang manual_install_tip}
 			</div>
 		<!--{if $list}-->
-		<div class="row mb-3 justify-content-center">
+		<div class="d-flex flex-wrap mb-3 justify-content-center">
 			<!--{loop $list $value}-->
-			<div class="col col-3 col-sm-auto p-2">
-				<div class="card card-market" style="width:18rem;">
-					<div class="card-image color-block-{$value[cover_color]}">
-						<div id="progess_{$value[mid]}">
-							<div class="progress-bar upgrade_progess" role="progressbar" id="upgrade_progess_{$value[mid]}"></div>
-						  </div>
-						<a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" class="view-detail" title="$value[name]"><img src="$value[coverimg]" alt="$value[name]" /></a>
-					</div>
-					<div class="card-body">
-						<h5 class="card-title"><a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" target="_blank" class="dcolor view-detail text-truncate" title="$value[name]">$value[name]</a><span class="badge rounded-pill bg-success" title="最新版本：$value[version]">V&nbsp;$value[version]</span></h5>
-					 	<p class="card-text text-truncate">{eval echo $value['desc_short']?$value['desc_short']:lang('none');}</p>
-					</div>
-					<ul class="list-group list-group-flush">
-						<li class="list-group-item"><i class="mdi mdi-tag"></i> 应用分类：{$value['classid_name']}</li>
-						<li class="list-group-item"><i class="mdi mdi-account"></i> 开发者：$value[vendor]</li>
-						<li class="list-group-item"><i class="mdi mdi-download"></i> {lang big_small}：{eval echo formatsize($value['packagesize']);}</li>
-					</ul>
-					<div class="card-body d-grid">
-						<!--{if $value[price]>0}-->
-						<button class="btn btn-round btn-danger btn-sm"  onclick="showBuyInfo(this,'$value[mid]')" data-href="$cloudurl?mod=dzzmarket&op=ajax&do=getBuyInfo&mid=$value[mid]" title="{lang buy_contract}">{lang buy}</button>
-						<!--{else}-->
-							<!--{if $value[package]}--> 
-								<!--{if $value["local_appinfo"]}-->
-								<button class="btn btn-round btn-secondary btn-sm" disabled data-mid="$value['mid']" title="{lang installed}">
-								{lang installed}
-								</button>
-								<!--{else}-->
-								<button class="btn btn-round btn-primary btn-sm" style="white-space: inherit;" onclick="start_check_install('{MOD_URL}&op=install_app_ajax&operation=check_install&appid=$value[identifier]','{$value[mid]}','{$value[baseinfo]}');" id="upgrade_info_{$value[mid]}">{lang install_onekey}</button>
-								<!--{/if}--> 
-							<!--{else}--> 
-							<a class="btn btn-round btn-primary btn-sm view-detail" title="$value[name]" href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]" >{lang view_detail}</a> 
-							<!--{/if}-->
+			<div class="card card-market m-2" style="width:18rem;">
+				<div class="card-image color-block-{$value[cover_color]}">
+					<div id="progess_{$value[mid]}">
+						<div class="progress-bar upgrade_progess" role="progressbar" id="upgrade_progess_{$value[mid]}"></div>
+						</div>
+					<a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" class="view-detail" title="$value[name]"><img src="$value[coverimg]" alt="$value[name]" /></a>
+				</div>
+				<div class="card-body">
+					<h5 class="card-title"><a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" target="_blank" class="dcolor view-detail text-truncate" title="$value[name]">$value[name]</a><span class="badge rounded-pill bg-success" title="最新版本：$value[version]">V&nbsp;$value[version]</span></h5>
+					<p class="card-text text-truncate">{eval echo $value['desc_short']?$value['desc_short']:lang('none');}</p>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><i class="mdi mdi-tag"></i> 应用分类：{$value['classid_name']}</li>
+					<li class="list-group-item"><i class="mdi mdi-account"></i> 开发者：$value[vendor]</li>
+					<li class="list-group-item"><i class="mdi mdi-download"></i> {lang big_small}：{eval echo formatsize($value['packagesize']);}</li>
+				</ul>
+				<div class="card-body d-grid">
+					<!--{if $value[price]>0}-->
+					<button class="btn btn-round btn-danger btn-sm"  onclick="showBuyInfo(this,'$value[mid]')" data-href="$cloudurl?mod=dzzmarket&op=ajax&do=getBuyInfo&mid=$value[mid]" title="{lang buy_contract}">{lang buy}</button>
+					<!--{else}-->
+						<!--{if $value[package]}--> 
+							<!--{if $value["local_appinfo"]}-->
+							<button class="btn btn-round btn-secondary btn-sm" disabled data-mid="$value['mid']" title="{lang installed}">
+							{lang installed}
+							</button>
+							<!--{else}-->
+							<button class="btn btn-round btn-primary btn-sm" style="white-space: inherit;" onclick="start_check_install('{MOD_URL}&op=install_app_ajax&operation=check_install&appid=$value[identifier]','{$value[mid]}','{$value[baseinfo]}');" id="upgrade_info_{$value[mid]}">{lang install_onekey}</button>
+							<!--{/if}--> 
+						<!--{else}--> 
+						<a class="btn btn-round btn-primary btn-sm view-detail" title="$value[name]" href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]" >{lang view_detail}</a> 
 						<!--{/if}-->
-					  <a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" class="view-detail btn btn-link" title="$value[name]">查看详情</a>
-					</div>
-				  </div>
+					<!--{/if}-->
+					<a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" class="view-detail btn btn-link" title="$value[name]">查看详情</a>
+				</div>
 			</div>
 			<!--{/loop}-->
 		</div>

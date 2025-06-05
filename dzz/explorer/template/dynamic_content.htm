@@ -157,9 +157,8 @@
             return false;
 		} else if(obj.event === 'search_obj'){
 			var doval = data.do_obj;
-            var objtext = data.do_obj;
             search_data.doobj = doval;
-            $('#object').val(objtext);
+            $('#object').val(doval);
             table.reloadData('table', {
             where: search_data,
             page: {

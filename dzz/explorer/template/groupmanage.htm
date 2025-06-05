@@ -21,7 +21,6 @@
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
         <button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
-        <button type="button" class="layui-btn layui-btn-danger" lay-event="delete">{lang delete}</button>
         <button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
     </div>
 </script>
@@ -233,7 +232,7 @@
     //触发排序事件 
 	table.on('sort(table)', function(obj){
         if(obj.field == 'usernum' ||  obj.field == 'maxspacesize' || obj.field == 'creater') {
-            layer.msg('该排序为前端排序');
+            layer.msg('该排序为前端排序', {offset:'10px'});
         } else {
             search_data.sort = obj.field;
             search_data.order = obj.type;

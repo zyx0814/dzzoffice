@@ -16,7 +16,7 @@ INSERT INTO `dzz_app_market` (`appid`,`mid`, `appname`, `appico`, `appdesc`, `ap
 (13, 37, '用户资料管理', 'appico/201712/21/103805dczcm89b0gi8i9gc.png', '管理用户资料、资料审核、认证等', '{adminscript}?mod=member', '', '', 1378615073, 13, '乐云网络', 0, 1, 1, 0, '', '', 3, 0, 0, 2, 1, 0, 0, 'member', 'admin', 1, '2.0', '', 20171115, ''),
 (14, 27, '网盘', 'appico/202411/02/170040bgapsjg4pt4nuee4.png', '企业、团队文件集中管理。主要体现的功能是支持企业部门的组织架构建立共享目录，也支持组的方式灵活建立共享目录。支持文件标签，多版本，评论，详细的目录权限等协作功能', '{dzzscript}?mod=explorer', '', '', 0, 0, '乐云网络', 0, 1, 1, 0, '', '', 1, 0, 1, 0, 1, 0, 0, 'explorer', 'dzz', 1, '2.05', '', 0, ''),
 (15, 25, '图片预览', 'appico/202411/02/184008xbuvo0sh8y1xey8f.png', '简易的图片浏览器', 'dzzjs:OpenPicWin(''{icoid}'')', '', '', 0, 101, '乐云网络', 0, 0, 1, 0, '', 'image', 0, 0, 1, 0, 1, 0, 0, 'OpenPicWin', 'dzz/link', 1, '2.1', '', 0, ''),
-(16, 41, 'DPlayer', 'appico/202411/02/184037v0by6dzb1wwobdy3.png', 'DPlayer，支持MP3,mp4,flv,wav等格式', '{dzzscript}?mod=DPlayer', '', '', 0, 0, '小胡（gitee.com/xiaohu2024)', 0, 0, 1, 0, '', 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne', 0, 0, 1, 0, 1, 1, 0, 'DPlayer', 'dzz', 1, '1.2', '', 0, ''),
+(16, 41, 'DPlayer', 'appico/202411/02/184037v0by6dzb1wwobdy3.png', 'DPlayer，支持MP3,mp4,flv,wav等格式', '{dzzscript}?mod=DPlayer', '', '', 0, 0, '小胡(gitee.com/xiaohu2024)', 0, 0, 1, 0, '', 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne', 0, 0, 1, 0, 1, 1, 0, 'DPlayer', 'dzz', 1, '1.2', '', 0, ''),
 (17, 13, 'PDF阅读器', 'appico/202411/02/170328nz056he0mixeezpo.png', '通过HTML5的方式来实现pdf在线预览', 'index.php?mod=pdf', '', '', 0, 17, 'PDS.JS', 0, 0, 1, 0, '', 'pdf,ai,qiniu:doc,qiniu:docx,qiniu:ppt,qiniu:pptx,qiniu:xls,qiniu:xlsx', 0, 0, 1, 0, 1, 0, 0, 'pdf', 'dzz', 1, '2.1', '', 0, '');
 
 --
