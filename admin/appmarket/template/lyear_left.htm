@@ -1,6 +1,6 @@
 <ul class="nav-drawer nav-stacked nav-pills">
 	<li class="nav-item">
-		<a class="nav-link <!--{if $op=='index' || $op=='cp' || $op=='edit'}-->active<!--{/if}-->" href="{MOD_URL}"><i class="mdi mdi-clipboard-file"></i><span>{lang appmarketedit}</span></a>
+		<a class="nav-link <!--{if !$op || $op=='cp' || $op=='edit'}-->active<!--{/if}-->" href="{MOD_URL}"><i class="mdi mdi-clipboard-file"></i><span>{lang appmarketedit}</span></a>
 	</li>
     <li class="nav-item">
 		<a class="nav-link <!--{if $op=='upgrade_app' || $op=='appupgrade'}-->active<!--{/if}-->" href="{MOD_URL}&op=appupgrade&refer=$refer"><i class="mdi mdi-shopping-music"></i><span>{lang upgrade} <span id="update_app_num" class="badge bg-danger <!--{if ($upsum=get_update_app_num())<1}-->hide<!--{/if}-->">$upsum</span></span></a>
