@@ -153,5 +153,11 @@ if ($_GET['do'] == 'saveIndex') {
         }
     }
     $servertime = time() * 1000;
+    if($_G['setting']['indexquotes']) {
+        $indexquotes = explode("\r\n", $_G['setting']['indexquotes']);
+    } else {
+        $indexquotes = '时间就像海绵里的水，只要愿挤，总还是有的。—— 鲁迅';
+    }
+    $indexquotes = json_encode($indexquotes);
     include template('main');
 }

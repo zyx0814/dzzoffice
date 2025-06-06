@@ -401,7 +401,7 @@
 		}
 		
 		// 名言警句库
-		var quotes = [<!--{if $_G['setting']['indexquotes']}-->$_G['setting']['indexquotes']<!--{else}-->"时间就像海绵里的水，只要愿挤，总还是有的。—— 鲁迅","成功的秘诀在于对目标的执着追求。—— 班杰明·迪斯雷利","人生在勤，不索何获。—— 张衡"<!--{/if}-->];
+		var quotes = JSON.parse('$indexquotes');
 		
 		// 更新名言警句
 		function updateQuote() {
