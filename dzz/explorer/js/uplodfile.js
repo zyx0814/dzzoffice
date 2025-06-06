@@ -13,9 +13,8 @@ var attachextensions = '';
 var maxfileSize = null;
 if (_explorer.space && _explorer.space.attachextensions) {
     attachextensions = (_explorer.space.attachextensions.indexOf('|') != -1) ? _explorer.space.attachextensions.join('|') : _explorer.space.attachextensions;
-    attachextensions = "(\.|\/)(" + attachextensions + ")$";
-} else {
-    attachextensions = "\.*$";
+    if (attachextensions) attachextensions = "(\.|\/)(" + (attachextensions.join('|')) + ")$";
+    else attachextensions = "\.*$";
 }
 if (_explorer.space && _explorer.space.maxattachsize) {
     maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
