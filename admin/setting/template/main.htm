@@ -251,6 +251,20 @@
               <span class="form-text">用于在默认首页页面显示的名言警句库。格式：可以填写多行也可以填写一行，填写多行时，每次随机显示其中的某一条。</span>
             </div>
           </div>
+          <div class="row mb-3">
+              <label for="indexprogress" class="col-sm-2">显示时间进度条</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="indexprogress1" name="settingnew[indexprogress]" value="1" <!--{if $setting[indexprogress]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="indexprogress1">是</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="indexprogress2" name="settingnew[indexprogress]" value="0" <!--{if !$setting[indexprogress]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="indexprogress2">否</label>
+                </div>
+              <span class="form-text">默认首页时间进度条默认是否显示</span>
+              </div>
+          </div>
           <dl class="mb-3 d-grid">
             <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
           </dl>

@@ -61,29 +61,25 @@
 			</div>
 		</div>
 		<div class="card">
-			<header class="card-header"><div class="card-title">
-				<div class="d-flex flex-wrap justify-between align-items-center fw-bold fs-2">
-					<span id="current-date"></span>
-					<span class="ps-2" id="weekday"></span>
-					<div class="ps-2 text-primary">
-						<span id="time">00:00:00</span>
+			<header class="card-header d-flex justify-content-between align-items-center">
+				<div class="card-title">
+					<div class="d-flex flex-wrap justify-between align-items-center fw-bold fs-2">
+						<span id="current-date"></span>
+						<span class="ps-2" id="weekday"></span>
+						<div class="ps-2 text-primary">
+							<span id="time">00:00:00</span>
+						</div>
 					</div>
 				</div>
-			</div></header>
-			<div class="card-body">
-				<!-- 功能按钮 -->
-				<div class="d-flex flex-wrap justify-center gap-4">
-					<button id="format-24h" class="btn btn-primary">
-						<i class="mdi mdi-clock-time-eight-outline me-2"></i>24小时制
-					</button>
-					<button id="format-12h" class="btn btn-outline-secondary">
-						<i class="mdi mdi-clock-time-six-outline me-2"></i>12小时制
-					</button>
-					<button id="show-seconds" class="btn btn-success">
-						<i class="mdi mdi-av-timer me-2"></i>显示秒
-					</button>
-				</div>
-				<div class="mt-2 mb-1">
+				<ul class="card-actions">
+					<li><a href="#!" id="format-24h" class="dcolor" title="24小时制"><i class="mdi mdi-clock-time-eight-outline"></i></a></li>
+					<li><a href="#!" id="format-12h" class="dcolor" title="12小时制"><i class="mdi mdi-clock-time-six-outline"></i></a></li>
+					<li><a href="#!" id="show-seconds" class="dcolor" title="显示秒"><i class="mdi mdi-av-timer"></i></a></li>
+					<li><a href="#!" class="card-btn-slide dcolor <!--{if !$_G['setting']['indexprogress']}-->rotate-180<!--{/if}-->"><i class="mdi mdi-chevron-up"></i></a></li>
+				</ul>
+			</header>
+			<div class="card-body" <!--{if !$_G['setting']['indexprogress']}-->style="display: none;"<!--{/if}-->>
+				<div class="mb-1">
 					<div class="text-muted">
 						今日已经过去<span class="text-primary" id="day-hours">0</span>小时
 					</div>
@@ -442,26 +438,26 @@
 		// 按钮事件处理
 		$('#format-24h').click(function() {
 			use24HourFormat = true;
-			$(this).removeClass('btn-outline-secondary').addClass('btn-primary');
-			$('#format-12h').removeClass('btn-primary').addClass('btn-outline-secondary');
+			$(this).addClass('text-primary');
+			$('#format-12h').removeClass('text-primary');
 			updateTime();
 		});
 		
 		$('#format-12h').click(function() {
 			use24HourFormat = false;
-			$(this).removeClass('btn-outline-secondary').addClass('btn-primary');
-			$('#format-24h').removeClass('btn-primary').addClass('btn-outline-secondary');
+			$(this).addClass('text-primary');
+			$('#format-24h').removeClass('text-primary');
 			updateTime();
 		});
 		
 		$('#show-seconds').click(function() {
 			showSeconds = !showSeconds;
 			if (showSeconds) {
-				$(this).html('<i class="mdi mdi-av-timer me-2"></i> 显示秒');
-				$(this).removeClass('btn-outline-success').addClass('btn-success');
+				$(this).html('<i class="mdi mdi-av-timer"></i>');
+				$(this).attr('title', '显示秒');
 			} else {
-				$(this).html('<i class="mdi mdi-camera-timer me-2"></i> 不显示秒');
-				$(this).removeClass('btn-success').addClass('btn-outline-success');
+				$(this).html('<i class="mdi mdi-camera-timer"></i>');
+				$(this).attr('title', '不显示秒');
 			}
 			updateTime();
 		});
