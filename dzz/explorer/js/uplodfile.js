@@ -30,13 +30,12 @@ function fileupload(el, fid) {
         url: MOD_URL + '&op=ajax&operation=uploads&container=' + uploadfid,
         dataType: 'json',
         autoUpload: true,
-        limitConcurrentUploads:limitConcurrentUploads,
         maxChunkSize: parseInt(_explorer.space.maxChunkSize), //2M
         dropZone: el.attr('id') == 'wangpan-upload-folder' ? null : $('#middleconMenu'),
         pasteZone: el.attr('id') == 'wangpan-upload-folder' ? null : $('#middleconMenu'),
         maxFileSize: maxfileSize, // 5 MB
         acceptFileTypes: new RegExp(attachextensions, 'i'),
-        sequentialUploads: false
+        sequentialUploads: true
 	}).on('fileuploadadd', function (e, data) {
         layerupload();
 		if(_upload.maxli && _upload.datas.length>=_upload.maxli){

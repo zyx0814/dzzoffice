@@ -329,10 +329,9 @@
         maxChunkSize: parseInt(_explorer.space.maxChunkSize), //2M
         dropZone: '.historyMenu',
         pasteZone: '.historyMenu',
-        limitConcurrentUploads:limitConcurrentUploads,
         maxFileSize: parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null, // 5 MB
         acceptFileTypes: new RegExp(attachextensions, 'i'),
-        sequentialUploads: false
+        sequentialUploads: true
     }).on('fileuploadadd', function (e, data) {
         layerupload();
         data.context = $('<li class="dialog-file-list"></li>').appendTo($('.dialog-filelist-ul'));
