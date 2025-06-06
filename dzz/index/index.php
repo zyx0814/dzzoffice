@@ -86,7 +86,7 @@ if ($_GET['do'] == 'saveIndex') {
                 }
             }
         }
-        $space = getuserbyuid($_G['uid']);
+        $space = C::t('user_profile')->get_user_info_by_uid($_G['uid']);
         $space['fusesize'] = formatsize($space['usesize']);
         if ($space['maxspacesize'] > 0) {
             $space['fmaxspacesize'] = formatsize($space['maxspacesize']);
