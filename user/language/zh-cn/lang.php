@@ -3,7 +3,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $lang = array(
-    'appname' => '用户中心',
+    'appname' => '个人中心',
     'username' => '用户名',
     'login_guest' => '没有帐号？<a href="user.php?mod={$_G[setting][regname]}">{$_G[setting][reglinkname]}</a>',
     'faq' => '帮助',
