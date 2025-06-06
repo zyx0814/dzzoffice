@@ -9,44 +9,7 @@ if ($do == 'saveIndex') {
     $ret = C::t('user_setting')->insert(array('index_simple_appids' => $appids));
     exit(json_encode(array('success' => $ret)));
 } elseif ($do == 'statis') {
-    $recents = $filedata = array();
-    $explorer_setting = get_resources_some_setting();
-    $param = array('resources_statis', $_G['uid']);
-    $wheresql = " where uid = %d and rid != '' ";
-    $orderby = ' order by opendateline desc, editdateline desc, edits desc, views desc';
-    $limitsql = ' limit ' . 20;
-    $recents = DB::fetch_all("select * from %t $wheresql $orderby $limitsql", $param);
-    foreach ($recents as $v) {
-        if ($val = C::t('resources')->fetch_info_by_rid($v['rid'])) {
-            if (!$explorer_setting['useronperm'] && $val['gid'] == 0) {
-                continue;
-            }
-            if (!$explorer_setting['grouponperm'] && $val['gid'] > 0) {
-                if (DB::result_first("select `type` from %t where orgid = %d", array('organization', $val['gid'])) == 1) {
-                    continue;
-                }
-            }
-            if (!$explorer_setting['orgonperm'] && $val['gid'] > 0) {
-                if (DB::result_first("select `type` from %t where orgid = %d", array('organization', $val['gid'])) == 0) {
-                    continue;
-                }
-            }
-            if ($val['isdelete'] == 0) {
-                $val['opendateline'] = dgmdate($v['opendateline'], 'u');
-                $val['img'] = geticonfromext($val['ext'], $val['type']);
-                if ($val['gid']) {
-                    $val['url'] = '#group&gid='.$val['gid'].'&fid='.$val['oid'];
-                } else {
-                    if ($val['oid']) {
-                        $val['url'] = '#home&fid='.$val['oid'];
-                    } else {
-                        $val['url'] = '#home&fid='.$val['pfid'];
-                    }
-                }
-                $filedata[] = $val;
-            }
-        }
-    }
+    $filedata = get_statis();
     include template('statis');
     exit();
 } else {
@@ -147,5 +110,48 @@ if ($do == 'saveIndex') {
         }
     }
     $servertime = time() * 1000;
+    $filedata = get_statis();
     include template('main');
+}
+function get_statis() {
+    global $_G;
+    $recents = $filedata = array();
+    $explorer_setting = get_resources_some_setting();
+    $param = array('resources_statis', $_G['uid']);
+    $wheresql = " where uid = %d and fid = 0 and rid != '' ";
+    $orderby = ' order by opendateline desc, editdateline desc, edits desc, views desc';
+    $limitsql = ' limit ' . 5;
+    $recents = DB::fetch_all("select * from %t $wheresql $orderby $limitsql", $param);
+    foreach ($recents as $v) {
+        if ($val = C::t('resources')->fetch_info_by_rid($v['rid'])) {
+            if (!$explorer_setting['useronperm'] && $val['gid'] == 0) {
+                continue;
+            }
+            if (!$explorer_setting['grouponperm'] && $val['gid'] > 0) {
+                if (DB::result_first("select `type` from %t where orgid = %d", array('organization', $val['gid'])) == 1) {
+                    continue;
+                }
+            }
+            if (!$explorer_setting['orgonperm'] && $val['gid'] > 0) {
+                if (DB::result_first("select `type` from %t where orgid = %d", array('organization', $val['gid'])) == 0) {
+                    continue;
+                }
+            }
+            if ($val['isdelete'] == 0) {
+                $val['opendateline'] = dgmdate($v['opendateline'], 'u');
+                $val['img'] = geticonfromext($val['ext'], $val['type']);
+                if ($val['gid']) {
+                    $val['url'] = '#group&gid='.$val['gid'].'&fid='.$val['oid'];
+                } else {
+                    if ($val['oid']) {
+                        $val['url'] = '#home&fid='.$val['oid'];
+                    } else {
+                        $val['url'] = '#home&fid='.$val['pfid'];
+                    }
+                }
+                $filedata[] = $val;
+            }
+        }
+    }
+    return $filedata;
 }

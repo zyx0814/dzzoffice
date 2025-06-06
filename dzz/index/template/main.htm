@@ -3,22 +3,6 @@
 	.card:hover {
 		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 	}
-	.progress {
-		align-items: center;
-		background-color:transparent
-	}
-	.progress-inner {
-		height: 10px;
-		flex: 1;
-		margin-right: 5px;
-		background-color: #e9ecef;
-		border-radius: 5px;
-	}
-	.progress-bar {
-		transition: width 0.5s ease;
-		height: 100%;
-		border-radius: 5px;
-	} 
 	.recent-item {
 		display: flex;
 		align-items: center;
@@ -55,77 +39,12 @@
 		<div class="card bg-primary text-white d-flex flex-wrap justify-content-between">
 			<div class="card-body">
 				<div class="display-4 fs-4 fw-bold mb-1">{$_G['username']}，<span id="greeting">早上好！</span></div>
-				<p class="text-gray-600">欢迎回到你的个人首页。登录时间：<!--{eval echo dgmdate($userstatus['lastvisit'])}-->。空间使用情况：$space['fusesize']/$space['fmaxspacesize']</p>
-			</div>
-		</div>
-		<div class="card">
-			<header class="card-header d-flex justify-content-between align-items-center">
-				<div class="card-title">
-					<div class="d-flex flex-wrap justify-between align-items-center">
-						<span id="current-date"></span>
-						<span class="ps-2" id="weekday"></span>
-						<div class="ps-2 text-primary">
-							<span id="time">00:00:00</span>
-						</div>
-					</div>
-				</div>
-				<ul class="card-actions flex-wrap">
-					<li><a href="javascript:;" id="format-24h" class="dcolor" title="24小时制"><i class="mdi mdi-clock-time-eight-outline"></i></a></li>
-					<li><a href="javascript:;" id="format-12h" class="dcolor" title="12小时制"><i class="mdi mdi-clock-time-six-outline"></i></a></li>
-					<li><a href="javascript:;" id="show-seconds" class="dcolor" title="显示秒"><i class="mdi mdi-av-timer"></i></a></li>
-					<li><a href="javascript:;" class="card-btn-slide dcolor rotate-180"><i class="mdi mdi-chevron-up"></i></a></li>
-				</ul>
-			</header>
-			<div class="card-body" style="display: none;">
-				<div class="mb-1">
-					<div class="text-muted">
-						今日已经过去<span class="text-primary" id="day-hours">0</span>小时
-					</div>
-					<div class="progress">
-						<div class="progress-inner">
-							<div class="progress-bar progress-bar-striped progress-bar-animated" id="day-progress-bar" style="width: 0%"></div>
-						</div>
-						<div class="text-muted" id="day-progress-text">0%</div>
-					</div>
-				</div>
-				<div class="mb-1">
-					<div class="text-muted">
-						本周已经过去<span class="text-primary" id="week-days">0</span>天
-					</div>
-					<div class="progress">
-						<div class="progress-inner">
-							<div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" id="week-progress-bar" style="width: 0%"></div>
-						</div>
-						<div class="text-muted" id="week-progress-text">0%</div>
-					</div>
-				</div>
-				<div class="mb-1">
-					<div class="text-muted">
-						本月已经过去<span class="text-primary" id="month-days">0</span>天
-					</div>
-					<div class="progress">
-						<div class="progress-inner">
-							<div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" id="month-progress-bar" style="width: 0%"></div>
-						</div>
-						<div class="text-muted" id="month-progress-text">0%</div>
-					</div>
-				</div>
-				<div class="mb-1">
-					<div class="text-muted">
-						今年已经过去<span class="text-primary" id="year-months">0</span>个月
-					</div>
-					<div class="progress">
-						<div class="progress-inner">
-							<div class="progress-bar progress-bar-striped bg-success progress-bar-animated" id="year-progress-bar" style="width: 0%"></div>
-						</div>
-						<div class="text-muted" id="year-progress-text">0%</div>
-					</div>
-				</div>
+				<p>您于<!--{eval echo dgmdate($userstatus['lastvisit'])}-->登录。当前时间：<span id="current-date"></span><span class="ps-2" id="weekday"></span><span class="ps-2" id="time">00:00:00</span>。空间使用情况：$space['fusesize']/$space['fmaxspacesize']</p>
 			</div>
 		</div>
 		<div class="card" id="statis">
 			<header class="card-header d-flex justify-content-between">
-				<div class="card-title"><i class="mdi mdi-file-clock-outline me-2"></i>最近访问</div>
+				<div class="card-title"><i class="mdi mdi-file-clock-outline me-2"></i>最近使用文件</div>
 				<ul class="card-actions">
 				<li><a href="javascript:;" class="dcolor card-btn-close"><i class="mdi mdi-close"></i></a></li>
 				<li><a href="javascript:;" class="dcolor card-btn-slide"><i class="mdi mdi-chevron-up"></i></a></li>
@@ -134,7 +53,21 @@
 				</ul>
 			</header>
 			<div class="card-body">
-				<a href="{MOD_URL}&do=statis" class="btn btn-primary card-btn-reload d-grid">点击查看</a>
+				<!--{if $filedata}-->
+				<!--{loop $filedata $key $value}-->
+				<a href="{DZZSCRIPT}?mod=explorer{$value['url']}" class="recent-item dcolor">
+					<img src="$value['img']" class="recent-img" title="$value['name']"/>
+					<div>
+						<div class="fw-bold">$value['name']</div>
+						<div class="text-muted">$value['opendateline']</div>
+					</div>
+				</a>
+				<!--{/loop}-->
+				<!--{else}-->
+				<div class="text-center">
+					<img src="static/image/common/no_list.png" /><br>
+				</div>
+				<!--{/if}-->
 			</div>
 		</div>
 		<!--{if $applist_1}-->
@@ -259,7 +192,6 @@
 	$(document).ready(function() {
 		// 时间格式和显示选项
 		var showSeconds = true;
-		var use24HourFormat = true;
 		
 		// 更新问候语
 		function updateGreeting() {
@@ -304,13 +236,6 @@
 			var seconds = now.getSeconds();
 			var ampm = '';
 			
-			// 12小时制转换
-			if (!use24HourFormat) {
-				ampm = hours >= 12 ? '下午' : '上午';
-				hours = hours % 12;
-				hours = hours ? hours : 12; // 0 应显示为 12
-			}
-			
 			// 补零
 			hours = hours.toString().padStart(2, '0');
 			minutes = minutes.toString().padStart(2, '0');
@@ -321,56 +246,9 @@
 			if (showSeconds) {
 				timeString += ':' + seconds;
 			}
-			if (!use24HourFormat) {
-				timeString += ' ' + ampm;
-			}
 			
 			// 应用到DOM
 			$('#time').text(timeString);
-		}
-		
-		// 计算并更新进度
-		function updateProgress() {
-			var now = getServerTime();
-			
-			// 日进度
-			var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-			var nextDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-			var dayProgress = ((now - startOfDay) / (nextDay - startOfDay)) * 100;
-			var dayHours = Math.floor(dayProgress * 24 / 100);
-			
-			$('#day-hours').text(dayHours);
-			$('#day-progress-bar').css('width', dayProgress + '%');
-			$('#day-progress-text').text(Math.round(dayProgress) + '%');
-			
-			// 周进度
-			var dayOfWeek = now.getDay() || 7; // 0为周日，转换为7
-			var weekProgress = (dayOfWeek - 1 + dayProgress / 100) / 7 * 100;
-			
-			$('#week-days').text(dayOfWeek - 1);
-			$('#week-progress-bar').css('width', weekProgress + '%');
-			$('#week-progress-text').text(Math.round(weekProgress) + '%');
-			
-			// 月进度
-			var startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-			var nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-			var monthProgress = ((now - startOfMonth) / (nextMonth - startOfMonth)) * 100;
-			var daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-			var daysPassed = now.getDate() - 1 + dayProgress / 100;
-			
-			$('#month-days').text(Math.floor(daysPassed));
-			$('#month-progress-bar').css('width', monthProgress + '%');
-			$('#month-progress-text').text(Math.round(monthProgress) + '%');
-			
-			// 年进度
-			var startOfYear = new Date(now.getFullYear(), 0, 1);
-			var endOfYear = new Date(now.getFullYear() + 1, 0, 1);
-			var yearProgress = ((now - startOfYear) / (endOfYear - startOfYear)) * 100;
-			var monthsPassed = now.getMonth() + (now.getDate() / daysInMonth);
-			
-			$('#year-months').text(Math.floor(monthsPassed));
-			$('#year-progress-bar').css('width', yearProgress + '%');
-			$('#year-progress-text').text(Math.round(yearProgress) + '%');
 		}
 		
 		// 初始化所有显示
@@ -378,7 +256,6 @@
 			updateGreeting();
 			updateDate();
 			updateTime();
-			updateProgress();
 		}
 		
 		// 每秒更新时间
@@ -389,7 +266,6 @@
 		// 每分钟更新日期和进度
 		setInterval(function() {
 			updateDate();
-			updateProgress();
 		}, 60000);
 		
 		// 每小时更新问候语
@@ -397,33 +273,6 @@
 		
 		// 初始化显示
 		initializeDisplay();
-		
-		// 按钮事件处理
-		$('#format-24h').click(function() {
-			use24HourFormat = true;
-			$(this).addClass('text-primary');
-			$('#format-12h').removeClass('text-primary');
-			updateTime();
-		});
-		
-		$('#format-12h').click(function() {
-			use24HourFormat = false;
-			$(this).addClass('text-primary');
-			$('#format-24h').removeClass('text-primary');
-			updateTime();
-		});
-		
-		$('#show-seconds').click(function() {
-			showSeconds = !showSeconds;
-			if (showSeconds) {
-				$(this).html('<i class="mdi mdi-av-timer"></i>');
-				$(this).attr('title', '显示秒');
-			} else {
-				$(this).html('<i class="mdi mdi-camera-timer"></i>');
-				$(this).attr('title', '不显示秒');
-			}
-			updateTime();
-		});
 	});
 </script>
 <!--{template lyear:footer_simple}-->
