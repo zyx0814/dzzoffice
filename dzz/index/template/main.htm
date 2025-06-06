@@ -1,0 +1,470 @@
+<!--{template lyear:header_simple_start}-->
+<style>
+	.card:hover {
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+	}
+	.btn {
+		transition: all 0.2s ease;
+	}
+	.btn:hover {
+		transform: translateY(-1px);
+	}
+	.progress {
+		align-items: center;
+		background-color:transparent
+	}
+	.progress-inner {
+		height: 10px;
+		flex: 1;
+		margin-right: 5px;
+		background-color: #e9ecef;
+		border-radius: 5px;
+	}
+	.progress-bar {
+		transition: width 0.5s ease;
+		height: 100%;
+		border-radius: 5px;
+	} 
+	.recent-item {
+		display: flex;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		border-bottom: 1px solid #e9ecef;
+	}
+	.recent-item:last-child {
+		border-bottom: none;
+	}
+	.recent-img {
+		margin-right: 1rem;
+		width: 32px;
+		text-align: center;
+	}
+    </style>
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+        <!-- 头部区域 -->
+        <header class="mb-8">
+            <div class="card bg-primary text-white d-flex flex-wrap justify-content-between">
+                <div class="card-body">
+                    <div class="display-4 fs-4 fw-bold mb-1">{$_G['username']}，<span id="greeting">早上好！</span></div>
+                    <p class="text-gray-600">欢迎回到你的个人首页。登录时间：<!--{eval echo dgmdate($userstatus['lastvisit'])}--></p>
+                </div>
+            </div>
+        </header>
+		<!-- 名言警句卡片 -->
+		<div class="card">
+			<div class="card-body text-center">
+				<i class="mdi mdi-format-quote-open fw-light"></i>
+				<span id="quote-text">时间就像海绵里的水，只要愿挤，总还是有的。</span>
+				<i class="mdi mdi-format-quote-close fw-light"></i>
+			</div>
+		</div>
+		<div class="card">
+			<header class="card-header"><div class="card-title">
+				<div class="d-flex flex-wrap justify-between align-items-center fw-bold fs-2">
+					<span id="current-date"></span>
+					<span class="ps-2" id="weekday"></span>
+					<div class="ps-2 text-primary">
+						<span id="time">00:00:00</span>
+					</div>
+				</div>
+			</div></header>
+			<div class="card-body">
+				<!-- 功能按钮 -->
+				<div class="d-flex flex-wrap justify-center gap-4">
+					<button id="format-24h" class="btn btn-primary">
+						<i class="mdi mdi-clock-time-eight-outline me-2"></i>24小时制
+					</button>
+					<button id="format-12h" class="btn btn-outline-secondary">
+						<i class="mdi mdi-clock-time-six-outline me-2"></i>12小时制
+					</button>
+					<button id="show-seconds" class="btn btn-success">
+						<i class="mdi mdi-av-timer me-2"></i>显示秒
+					</button>
+				</div>
+				<div class="mt-2 mb-1">
+					<div class="text-muted">
+						今日已经过去<span class="text-primary" id="day-hours">0</span>小时
+					</div>
+					<div class="progress">
+						<div class="progress-inner">
+							<div class="progress-bar progress-bar-striped progress-bar-animated" id="day-progress-bar" style="width: 0%"></div>
+						</div>
+						<div class="text-muted" id="day-progress-text">0%</div>
+					</div>
+				</div>
+				<div class="mb-1">
+					<div class="text-muted">
+						本周已经过去<span class="text-primary" id="week-days">0</span>天
+					</div>
+					<div class="progress">
+						<div class="progress-inner">
+							<div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" id="week-progress-bar" style="width: 0%"></div>
+						</div>
+						<div class="text-muted" id="week-progress-text">0%</div>
+					</div>
+				</div>
+				<div class="mb-1">
+					<div class="text-muted">
+						本月已经过去<span class="text-primary" id="month-days">0</span>天
+					</div>
+					<div class="progress">
+						<div class="progress-inner">
+							<div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" id="month-progress-bar" style="width: 0%"></div>
+						</div>
+						<div class="text-muted" id="month-progress-text">0%</div>
+					</div>
+				</div>
+				<div class="mb-1">
+					<div class="text-muted">
+						今年已经过去<span class="text-primary" id="year-months">0</span>个月
+					</div>
+					<div class="progress">
+						<div class="progress-inner">
+							<div class="progress-bar progress-bar-striped bg-success progress-bar-animated" id="year-progress-bar" style="width: 0%"></div>
+						</div>
+						<div class="text-muted" id="year-progress-text">0%</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="d-flex justify-content-between">
+				<span class="avatar-md rounded-circle avatar-box text-white bg-yellow">
+					<i class="mdi mdi-cloud-outline fs-4"></i>
+				</span>
+				<span class="fs-4 text-truncate">$space['fusesize']/$space['fmaxspacesize']</span>
+				</div>
+				<div class="text-right">空间使用</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-6">
+                <div class="card">
+					<header class="card-header"><div class="card-title"><i class="mdi mdi-file-clock-outline me-2"></i>最近访问文件</div></header>
+                    <div class="card-body">
+						<!--{if $filedata}-->
+						<!--{loop $filedata $key $value}-->
+                        <a href="{DZZSCRIPT}?mod=explorer{$value['url']}" class="recent-item dcolor">
+							<img src="$value['img']" class="recent-img" title="$value['name']"/>
+                            <div>
+                                <div class="fw-bold">$value['name']</div>
+                                <div class="text-muted">$value['opendateline']</div>
+                            </div>
+                        </a>
+						<!--{/loop}-->
+						<!--{else}-->
+						<div class="text-center">
+							<img src="static/image/common/no_list.png" /><br>
+						</div>
+						<!--{/if}-->
+                    </div>
+                </div>
+			</div>
+			<div class="col-lg-6">
+                <div class="card">
+					<header class="card-header"><div class="card-title"><i class="mdi mdi-folder-clock-outline me-2"></i>最近访问文件夹</div></header>
+                    <div class="card-body">
+						<!--{if $folderdata}-->
+						<!--{loop $folderdata $key $value}-->
+                        <a href="{DZZSCRIPT}?mod=explorer{$value['url']}" class="recent-item dcolor">
+							<img src="$value['img']" class="recent-img" title="$value['name']"/>
+                            <div>
+                                <div class="fw-bold">$value['name']</div>
+                                <div class="text-muted">$value['opendateline']</div>
+                            </div>
+                        </a>
+						<!--{/loop}-->
+						<!--{else}-->
+						<div class="text-center">
+							<img src="static/image/common/no_list.png" /><br>
+						</div>
+						<!--{/if}-->
+                    </div>
+                </div>
+			</div>
+
+		</div>
+	</div>
+</div>
+</main>
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery('.ui-sortable').sortable({
+			placeholder: "border",
+			items: "li.popup-index-li",
+			stop: function(event, ui) {
+				var appids=[];
+				jQuery('.popup-index-li').each(function(){
+					appids.push(jQuery(this).data('appid'));
+				});
+				jQuery.post('{MOD_URL}&do=saveIndex',{"appids":appids});
+			}
+		});
+	});
+</script>
+<script type="text/javascript" src="static/jquery/jquery-ui.js?{VERHASH}"></script>
+<script>
+	// 服务器时间初始化
+	var serverTimestamp = '$servertime'; 
+	
+	// 客户端加载时间
+	var clientTimestampAtLoad = Date.now();
+	
+	// 计算时间偏移量
+	var timeOffset = serverTimestamp - clientTimestampAtLoad;
+	
+	// 获取当前服务器时间
+	function getServerTime() {
+		return new Date(Date.now() + timeOffset);
+	}
+	// 为IE添加String.prototype.padStart的polyfill
+	if (!String.prototype.padStart) {
+		String.prototype.padStart = function padStart(targetLength, padString) {
+			targetLength = targetLength >> 0; //floor if number or convert non-number to 0;
+			padString = String(typeof padString !== 'undefined' ? padString : ' ');
+			if (this.length >= targetLength) {
+				return String(this);
+			} else {
+				targetLength = targetLength - this.length;
+				if (targetLength > padString.length) {
+					padString += padString.repeat(targetLength / padString.length); //append to original to ensure we are longer than needed
+				}
+				return padString.slice(0, targetLength) + String(this);
+			}
+		};
+	}
+
+	// 为IE添加Array.from的polyfill
+	if (!Array.from) {
+		Array.from = (function() {
+			var toStr = Object.prototype.toString;
+			var isCallable = function(fn) {
+				return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
+			};
+			var toInteger = function(value) {
+				var number = Number(value);
+				if (isNaN(number)) { return 0; }
+				if (number === 0 || !isFinite(number)) { return number; }
+				return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
+			};
+			var maxSafeInteger = Math.pow(2, 53) - 1;
+			var toLength = function(value) {
+				var len = toInteger(value);
+				return Math.min(Math.max(len, 0), maxSafeInteger);
+			};
+
+			return function from(arrayLike, mapFn, thisArg) {
+				var C = this;
+				var items = Object(arrayLike);
+				if (arrayLike == null) {
+					throw new TypeError('Array.from requires an array-like object - not null or undefined');
+				}
+				var map = isCallable(mapFn) ? mapFn : void undefined;
+				var T = thisArg;
+				var len = toLength(items.length);
+				var A = isCallable(C) ? Object(new C(len)) : new Array(len);
+				var k = 0;
+				var kValue;
+				while (k < len) {
+					kValue = items[k];
+					if (map) {
+						A[k] = typeof T === 'undefined' ? map(kValue, k) : map.call(T, kValue, k);
+					} else {
+						A[k] = kValue;
+					}
+					k += 1;
+				}
+				A.length = len;
+				return A;
+			};
+		}());
+	}
+
+	$(document).ready(function() {
+		// 时间格式和显示选项
+		var showSeconds = true;
+		var use24HourFormat = true;
+		
+		// 更新问候语
+		function updateGreeting() {
+			var now = getServerTime();
+			var hour = now.getHours();
+			var greeting = '';
+			
+			if (hour < 6) {
+				greeting = '凌晨好！';
+			} else if (hour < 9) {
+				greeting = '早上好！';
+			} else if (hour < 12) {
+				greeting = '上午好！';
+			} else if (hour < 14) {
+				greeting = '中午好！';
+			} else if (hour < 18) {
+				greeting = '下午好！';
+			} else if (hour < 22) {
+				greeting = '晚上好！';
+			} else {
+				greeting = '夜深了！';
+			}
+			
+			$('#greeting').text(greeting);
+		}
+		
+		// 更新日期显示
+		function updateDate() {
+			var now = getServerTime();
+			var options = {year: 'numeric', month: 'long', day: 'numeric' };
+			var dateString = now.toLocaleDateString('zh-CN', options);
+			var weekday = now.toLocaleDateString('zh-CN', { weekday: 'long' });
+			$('#current-date').text(dateString);
+			$('#weekday').text(weekday);
+		}
+		
+		// 更新时间显示
+		function updateTime() {
+			var now = getServerTime();
+			var hours = now.getHours();
+			var minutes = now.getMinutes();
+			var seconds = now.getSeconds();
+			var ampm = '';
+			
+			// 12小时制转换
+			if (!use24HourFormat) {
+				ampm = hours >= 12 ? '下午' : '上午';
+				hours = hours % 12;
+				hours = hours ? hours : 12; // 0 应显示为 12
+			}
+			
+			// 补零
+			hours = hours.toString().padStart(2, '0');
+			minutes = minutes.toString().padStart(2, '0');
+			seconds = seconds.toString().padStart(2, '0');
+			
+			// 构建时间字符串
+			var timeString = hours + ':' + minutes;
+			if (showSeconds) {
+				timeString += ':' + seconds;
+			}
+			if (!use24HourFormat) {
+				timeString += ' ' + ampm;
+			}
+			
+			// 应用到DOM
+			$('#time').text(timeString);
+		}
+		
+		// 计算并更新进度
+		function updateProgress() {
+			var now = getServerTime();
+			
+			// 日进度
+			var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+			var nextDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+			var dayProgress = ((now - startOfDay) / (nextDay - startOfDay)) * 100;
+			var dayHours = Math.floor(dayProgress * 24 / 100);
+			
+			$('#day-hours').text(dayHours);
+			$('#day-progress-bar').css('width', dayProgress + '%');
+			$('#day-progress-text').text(Math.round(dayProgress) + '%');
+			
+			// 周进度
+			var dayOfWeek = now.getDay() || 7; // 0为周日，转换为7
+			var weekProgress = (dayOfWeek - 1 + dayProgress / 100) / 7 * 100;
+			
+			$('#week-days').text(dayOfWeek - 1);
+			$('#week-progress-bar').css('width', weekProgress + '%');
+			$('#week-progress-text').text(Math.round(weekProgress) + '%');
+			
+			// 月进度
+			var startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+			var nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+			var monthProgress = ((now - startOfMonth) / (nextMonth - startOfMonth)) * 100;
+			var daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+			var daysPassed = now.getDate() - 1 + dayProgress / 100;
+			
+			$('#month-days').text(Math.floor(daysPassed));
+			$('#month-progress-bar').css('width', monthProgress + '%');
+			$('#month-progress-text').text(Math.round(monthProgress) + '%');
+			
+			// 年进度
+			var startOfYear = new Date(now.getFullYear(), 0, 1);
+			var endOfYear = new Date(now.getFullYear() + 1, 0, 1);
+			var yearProgress = ((now - startOfYear) / (endOfYear - startOfYear)) * 100;
+			var monthsPassed = now.getMonth() + (now.getDate() / daysInMonth);
+			
+			$('#year-months').text(Math.floor(monthsPassed));
+			$('#year-progress-bar').css('width', yearProgress + '%');
+			$('#year-progress-text').text(Math.round(yearProgress) + '%');
+		}
+		
+		// 名言警句库
+		var quotes = [<!--{if $_G['setting']['indexquotes']}-->$_G['setting']['indexquotes']<!--{else}-->"时间就像海绵里的水，只要愿挤，总还是有的。—— 鲁迅","成功的秘诀在于对目标的执着追求。—— 班杰明·迪斯雷利","人生在勤，不索何获。—— 张衡"<!--{/if}-->];
+		
+		// 更新名言警句
+		function updateQuote() {
+			var randomIndex = Math.floor(Math.random() * quotes.length);
+			var quote = quotes[randomIndex];
+			$('#quote-text').text(quote);
+		}
+		
+		// 初始化所有显示
+		function initializeDisplay() {
+			updateGreeting();
+			updateDate();
+			updateTime();
+			updateProgress();
+			updateQuote();
+		}
+		
+		// 每秒更新时间
+		setInterval(function() {
+			updateTime();
+		}, 1000);
+		
+		// 每分钟更新日期和进度
+		setInterval(function() {
+			updateDate();
+			updateProgress();
+		}, 60000);
+		
+		// 每小时更新问候语
+		setInterval(updateGreeting, 3600000);
+		
+		// 每30分钟更新名言警句
+		setInterval(updateQuote, 1800000);
+		
+		// 初始化显示
+		initializeDisplay();
+		
+		// 按钮事件处理
+		$('#format-24h').click(function() {
+			use24HourFormat = true;
+			$(this).removeClass('btn-outline-secondary').addClass('btn-primary');
+			$('#format-12h').removeClass('btn-primary').addClass('btn-outline-secondary');
+			updateTime();
+		});
+		
+		$('#format-12h').click(function() {
+			use24HourFormat = false;
+			$(this).removeClass('btn-outline-secondary').addClass('btn-primary');
+			$('#format-24h').removeClass('btn-primary').addClass('btn-outline-secondary');
+			updateTime();
+		});
+		
+		$('#show-seconds').click(function() {
+			showSeconds = !showSeconds;
+			if (showSeconds) {
+				$(this).html('<i class="mdi mdi-av-timer me-2"></i> 显示秒');
+				$(this).removeClass('btn-outline-success').addClass('btn-success');
+			} else {
+				$(this).html('<i class="mdi mdi-camera-timer me-2"></i> 不显示秒');
+				$(this).removeClass('btn-success').addClass('btn-outline-success');
+			}
+			updateTime();
+		});
+	});
+</script>
+<!--{template lyear:footer_simple}-->

@@ -235,8 +235,6 @@ INSERT INTO `dzz_setting` VALUES('systemlog_setting','a:7:{s:8:"errorlog";a:3:{s
 
 INSERT INTO `dzz_setting` VALUES('fileVersion', '1');
 INSERT INTO `dzz_setting` VALUES('fileVersionNumber', '50');
-
-INSERT INTO `dzz_setting` VALUES('default_mod', 'explorer');
 --
 -- 转存表中的数据 `dzz_imagetype`
 --

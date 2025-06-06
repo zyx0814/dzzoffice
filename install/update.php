@@ -413,14 +413,12 @@ if ($_GET['step'] == 'start') {
     dir_clear(DZZ_ROOT . './data/template');
     dir_clear(DZZ_ROOT . './data/cache');
     savecache('setting', '');
-    $configfile = DZZ_ROOT . 'data/cache/default_mod.php';
-    $configarr = array();
     if ($_G['setting']['default_mod']) {
+        $configfile = DZZ_ROOT . 'data/cache/default_mod.php';
+        $configarr = array();
         $configarr['default_mod'] = $_G['setting']['default_mod'];
-    } else {
-        $configarr['default_mod'] = 'explorer';
+        @file_put_contents($configfile, "<?php \t\n return " . var_export($configarr, true) . ";");
     }
-    @file_put_contents($configfile, "<?php \t\n return " . var_export($configarr, true) . ";");
     C::t('setting')->update('bbclosed', 0);
     if ($_GET['from']) {
         show_msg('<span id="finalmsg">缓存更新中，请稍候 ...</span><iframe src="../misc.php?mod=syscache" style="display:none;" onload="parent.window.location.href=\'' . $_GET['from'] . '\'"></iframe><iframe src="../misc.php?mod=setunrun" style="display:none;"></iframe>');
