@@ -3,12 +3,6 @@
 	.card:hover {
 		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 	}
-	.btn {
-		transition: all 0.2s ease;
-	}
-	.btn:hover {
-		transform: translateY(-1px);
-	}
 	.progress {
 		align-items: center;
 		background-color:transparent
@@ -39,13 +33,24 @@
 		width: 32px;
 		text-align: center;
 	}
+	.ui-sortable-helper{
+		width: 18rem;
+		border:1px solid transparent;
+		opacity: 0.6;
+	}
+	.ui-state-default{
+		width: 18rem;
+		display: inline-block;
+		border:1px solid #e1e1e1;
+		border-radius: 12px;
+	}
 	.card-market{-webkit-box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1);-moz-box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1);box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1)}
 	.card-market:hover,.card-market:focus-within{box-shadow:0 0 0 2px #007bff,0 10px 20px 0 rgba(0,0,0,0.1);box-shadow:0 0 0 2px var(--bs-primary),0 10px 20px 0 rgba(0,0,0,0.1);transform:translatey(-5px)}
 	.card-image{border-radius:10px;overflow:hidden;display:flex;justify-content:center;position:relative;align-items:center;width:100%}
 	.card-image img{height:64px;width: 64px;}
-    </style>
-<!--{template lyear:header_simple_end}-->
-<main class="bs-main-container">
+</style>
+<!--{template lyear:header_simple_noleft_end}-->
+<main class="bs-main-container" style="padding-left: 0;">
 	<div class="container-fluid">
 		<div class="card bg-primary text-white d-flex flex-wrap justify-content-between">
 			<div class="card-body">
@@ -65,10 +70,10 @@
 					</div>
 				</div>
 				<ul class="card-actions flex-wrap">
-					<li><a href="#!" id="format-24h" class="dcolor" title="24小时制"><i class="mdi mdi-clock-time-eight-outline"></i></a></li>
-					<li><a href="#!" id="format-12h" class="dcolor" title="12小时制"><i class="mdi mdi-clock-time-six-outline"></i></a></li>
-					<li><a href="#!" id="show-seconds" class="dcolor" title="显示秒"><i class="mdi mdi-av-timer"></i></a></li>
-					<li><a href="#!" class="card-btn-slide dcolor rotate-180"><i class="mdi mdi-chevron-up"></i></a></li>
+					<li><a href="javascript:;" id="format-24h" class="dcolor" title="24小时制"><i class="mdi mdi-clock-time-eight-outline"></i></a></li>
+					<li><a href="javascript:;" id="format-12h" class="dcolor" title="12小时制"><i class="mdi mdi-clock-time-six-outline"></i></a></li>
+					<li><a href="javascript:;" id="show-seconds" class="dcolor" title="显示秒"><i class="mdi mdi-av-timer"></i></a></li>
+					<li><a href="javascript:;" class="card-btn-slide dcolor rotate-180"><i class="mdi mdi-chevron-up"></i></a></li>
 				</ul>
 			</header>
 			<div class="card-body" style="display: none;">
@@ -122,9 +127,9 @@
 			<header class="card-header d-flex justify-content-between">
 				<div class="card-title"><i class="mdi mdi-file-clock-outline me-2"></i>最近访问</div>
 				<ul class="card-actions">
-				<li><a href="#!" class="dcolor card-btn-close"><i class="mdi mdi-close"></i></a></li>
-				<li><a href="#!" class="dcolor card-btn-slide"><i class="mdi mdi-chevron-up"></i></a></li>
-				<li><a href="#!" class="dcolor card-btn-fullscreen"><i class="mdi mdi-fullscreen"></i></a></li>
+				<li><a href="javascript:;" class="dcolor card-btn-close"><i class="mdi mdi-close"></i></a></li>
+				<li><a href="javascript:;" class="dcolor card-btn-slide"><i class="mdi mdi-chevron-up"></i></a></li>
+				<li><a href="javascript:;" class="dcolor card-btn-fullscreen"><i class="mdi mdi-fullscreen"></i></a></li>
 				<li><a href="{MOD_URL}&do=statis" class="dcolor card-btn-reload"><i class="mdi mdi-refresh"></i></a></li>
 				</ul>
 			</header>
@@ -152,14 +157,17 @@
 			<!--{/loop}-->
 		</div>
 		<!--{/if}-->
+		<footer class="text-center text-muted m-3">
+			<!--{template lyear:copyright}-->
+		</footer>
 	</div>
 </div>
 </main>
 <script type="text/javascript">
 	jQuery(document).ready(function(){
 		jQuery('.ui-sortable').sortable({
-			placeholder: "border",
-			items: "li.popup-index-li",
+			placeholder: "ui-state-default",
+			items: "div.popup-index-li",
 			stop: function(event, ui) {
 				var appids=[];
 				jQuery('.popup-index-li').each(function(){
