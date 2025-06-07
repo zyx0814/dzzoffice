@@ -27,10 +27,7 @@ class Config {
             }
             $_config = array_merge($_config, $app_config);
         }
-        $mod = isset($param[MOULD]) ? $param[MOULD] : $_config['default_mod'];
-        if (empty($mod)) {
-            $mod = 'index';
-        }
+        $mod = !empty($param[MOULD]) ? $param[MOULD] : $_config['default_mod'];
 
         if (strpos(strtolower($mod), ':') !== false) {
             $patharr = explode(':', $mod);
@@ -40,11 +37,7 @@ class Config {
             }
             if ($modvar) define('CURMODULE', str_replace(':', '/', $mod));
         } else {
-            if (CURSCRIPT == 'dzz' && $mod == 'index') {
-                define('CURMODULE', 'explorer');
-            } else {
-                define('CURMODULE', $mod);
-            }
+            define('CURMODULE', $mod);
             /* if(CURSCRIPT == 'dzz' && $mod == 'index'){
                 define('CURMODULE',CURSCRIPT);
                 $modconfig = DZZ_ROOT.CURMODULE.BS.CONFIG_NAME.BS.CONFIG_NAME.EXT;

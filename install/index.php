@@ -303,11 +303,6 @@ if ($method == 'show_license') {
         dir_clear(ROOT_PATH . './data/template');
         dir_clear(ROOT_PATH . './data/cache');
 
-        $defalutmodfile = DZZ_ROOT . 'data/cache/default_mod.php';
-        $defalutmodarr = array();
-        $defalutmodarr['default_mod'] = 'explorer';
-        @file_put_contents($defalutmodfile, "<?php \t\n return " . var_export($defalutmodarr, true) . ";");
-
         foreach ($serialize_sql_setting as $k => $v) {
             $v = addslashes(serialize($v));
             $db->query("REPLACE INTO {$tablepre}setting VALUES ('$k', '$v')");

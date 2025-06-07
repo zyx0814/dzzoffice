@@ -222,15 +222,17 @@
             <label class="col-sm-2">{lang application_introduce_img}</label>
             <div class="col-sm-10">
               <!--{if $piclist}-->
-              <ul id="pic_container" class="thumbnails list-unstyled ml20">
+              <ul id="pic_container" class="list-inline row lyear-uploads-pic image-body">
                 <!--{loop $piclist $key $value}-->
-                <li class="wd120" style="margin:10px;width:90px;" id="pic_{$value[picid]}">
-                  <div class="thumbnail text-center" style="margin-bottom:10px;">
-                    <img data_src="$value[pic]" src="$value[pic]" />
+                <li class="image-item col-6 col-sm-3 col-md-2 list-images-item shadow p-2 mb-3 me-2 rounded" id="pic_{$value[picid]}">
+                  <div class="thumbnail mb-3 text-center">
+                    <img data_src="$value[pic]" src="$value[pic]" style="width: 100px;height: 70px;"/>
                   </div>
-                  <p class="text-center">
-                    <a class="btn btn-primary" href="javascript:;" onclick="delete_pic(this,{$value[picid]})">{lang delete}</a>
-                  </p>
+                  <div class="d-grid">
+                    <a href="javascript:;" class="btn btn-outline-danger btn-sm" onclick="delete_pic(this,{$value[picid]})">
+                      <i class="mdi mdi-delete"></i>
+                    </a>
+                  </div>
                 </li>
                 <!--{/loop}-->
               </ul>

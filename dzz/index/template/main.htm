@@ -1,0 +1,231 @@
+<!--{template lyear:header_simple_start}-->
+<style>
+	.bs-top-container,.sidebar-header {
+		background-color: #fff;
+	}
+	.navbar-right .nav-link {
+		color:#495057
+	}
+	.recent-item {
+		display: flex;
+		align-items: center;
+		padding: 0.75rem 1rem;
+		border-bottom: 1px solid #e9ecef;
+	}
+	.recent-item:last-child {
+		border-bottom: none;
+	}
+	.recent-img {
+		margin-right: 1rem;
+		width: 32px;
+		text-align: center;
+	}
+	.ui-sortable-helper{
+		width: 18rem;
+		border:1px solid transparent;
+		opacity: 0.6;
+	}
+	.ui-state-default{
+		width: 18rem;
+		display: inline-block;
+		border:1px solid #e1e1e1;
+		border-radius: 12px;
+	}
+	.card-market{-webkit-box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1);-moz-box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1);box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1)}
+	.card-market:hover,.card-market:focus-within{box-shadow:0 0 0 2px #007bff,0 10px 20px 0 rgba(0,0,0,0.1);box-shadow:0 0 0 2px var(--bs-primary),0 10px 20px 0 rgba(0,0,0,0.1);transform:translatey(-5px)}
+	.card-image{border-radius:10px;overflow:hidden;display:flex;justify-content:center;position:relative;align-items:center;width:100%}
+	.card-image img{height:64px;width: 64px;}
+</style>
+<!--{template lyear:header_simple_noleft_end}-->
+<main class="bs-main-container" style="padding-left: 0;">
+	<div class="container-fluid">
+		<div class="card d-flex flex-wrap justify-content-between">
+			<div class="card-body">
+				<div class="display-4 fs-4 fw-bold mb-1">{$_G['username']}，<span id="greeting">早上好！</span></div>
+				<p>您于<!--{eval echo dgmdate($userstatus['lastvisit'])}-->登录。当前时间：<span id="current-date"></span><span class="ps-2" id="weekday"></span><span class="ps-2" id="time">00:00:00</span>。空间使用情况：$space['fusesize']/$space['fmaxspacesize']</p>
+			</div>
+		</div>
+		<!--{if $filedata}-->
+		<div class="card" id="statis">
+			<header class="card-header d-flex justify-content-between">
+				<div class="card-title"><i class="mdi mdi-file-clock-outline me-2"></i>最近使用文件</div>
+				<ul class="card-actions">
+				<li><a href="javascript:;" class="dcolor card-btn-close"><i class="mdi mdi-close"></i></a></li>
+				<li><a href="javascript:;" class="dcolor card-btn-slide"><i class="mdi mdi-chevron-up"></i></a></li>
+				<li><a href="javascript:;" class="dcolor card-btn-fullscreen"><i class="mdi mdi-fullscreen"></i></a></li>
+				<li><a href="{MOD_URL}&do=statis" class="dcolor card-btn-reload"><i class="mdi mdi-refresh"></i></a></li>
+				</ul>
+			</header>
+			<div class="card-body">
+				<!--{loop $filedata $key $value}-->
+				<a href="{DZZSCRIPT}?mod=explorer{$value['url']}" class="recent-item dcolor">
+					<img src="$value['img']" class="recent-img" title="$value['name']"/>
+					<div>
+						<div class="fw-bold">$value['name']</div>
+						<div class="text-muted">$value['opendateline']</div>
+					</div>
+				</a>
+				<!--{/loop}-->
+			</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $applist_1}-->
+		<div class="d-flex flex-wrap justify-content-center mb-3 ui-sortable">
+			<!--{loop $applist_1 $key $value}-->
+			<div class="popup-index-li" data-appid="$value[appid]" style="width:18rem;">
+				<a class="card card-market m-2" href="$value[url]" <!--{if $value['open']}-->target="_blank"<!--{/if}--> title="$value[appname]">
+					<div class="card-body text-truncate text-center">
+						<div class="card-image">
+							<img src="$value[appico]" alt="$value[appname]"/>
+						</div>
+						<span class="fs-4 text-dark">$value[appname]</span>
+					</div>
+					{eval $appdesc=$value['appdesc']?$value['appdesc']:lang('none');}
+					<div class="card-footer text-truncate text-body" title="$appdesc">
+						$appdesc
+					</div>
+				</a>
+			</div>
+			<!--{/loop}-->
+		</div>
+		<!--{/if}-->
+		<footer class="text-center text-muted m-3 mt-5">
+			<!--{template lyear:copyright}-->
+		</footer>
+	</div>
+</div>
+</main>
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery('.ui-sortable').sortable({
+			placeholder: "ui-state-default",
+			items: "div.popup-index-li",
+			stop: function(event, ui) {
+				var appids=[];
+				jQuery('.popup-index-li').each(function(){
+					appids.push(jQuery(this).data('appid'));
+				});
+				jQuery.post('{MOD_URL}&do=saveIndex',{"appids":appids});
+			}
+		});
+	});
+</script>
+<script type="text/javascript" src="static/jquery/jquery-ui.js?{VERHASH}"></script>
+<script>
+	// 服务器时间初始化
+	var serverTimestamp = '$servertime'; 
+	
+	// 客户端加载时间
+	var clientTimestampAtLoad = Date.now();
+	
+	// 计算时间偏移量
+	var timeOffset = serverTimestamp - clientTimestampAtLoad;
+	
+	// 获取当前服务器时间
+	function getServerTime() {
+		return new Date(Date.now() + timeOffset);
+	}
+	// 为IE添加String.prototype.padStart的polyfill
+	if (!String.prototype.padStart) {
+		String.prototype.padStart = function padStart(targetLength, padString) {
+			targetLength = targetLength >> 0; //floor if number or convert non-number to 0;
+			padString = String(typeof padString !== 'undefined' ? padString : ' ');
+			if (this.length >= targetLength) {
+				return String(this);
+			} else {
+				targetLength = targetLength - this.length;
+				if (targetLength > padString.length) {
+					padString += padString.repeat(targetLength / padString.length); //append to original to ensure we are longer than needed
+				}
+				return padString.slice(0, targetLength) + String(this);
+			}
+		};
+	}
+
+	$(document).ready(function() {
+		// 时间格式和显示选项
+		var showSeconds = true;
+		
+		// 更新问候语
+		function updateGreeting() {
+			var now = getServerTime();
+			var hour = now.getHours();
+			var greeting = '';
+			
+			if (hour < 6) {
+				greeting = '凌晨好！';
+			} else if (hour < 9) {
+				greeting = '早上好！';
+			} else if (hour < 12) {
+				greeting = '上午好！';
+			} else if (hour < 14) {
+				greeting = '中午好！';
+			} else if (hour < 18) {
+				greeting = '下午好！';
+			} else if (hour < 22) {
+				greeting = '晚上好！';
+			} else {
+				greeting = '夜深了！';
+			}
+			
+			$('#greeting').text(greeting);
+		}
+		
+		// 更新日期显示
+		function updateDate() {
+			var now = getServerTime();
+			var options = {year: 'numeric', month: 'long', day: 'numeric' };
+			var dateString = now.toLocaleDateString('zh-CN', options);
+			var weekday = now.toLocaleDateString('zh-CN', { weekday: 'long' });
+			$('#current-date').text(dateString);
+			$('#weekday').text(weekday);
+		}
+		
+		// 更新时间显示
+		function updateTime() {
+			var now = getServerTime();
+			var hours = now.getHours();
+			var minutes = now.getMinutes();
+			var seconds = now.getSeconds();
+			var ampm = '';
+			
+			// 补零
+			hours = hours.toString().padStart(2, '0');
+			minutes = minutes.toString().padStart(2, '0');
+			seconds = seconds.toString().padStart(2, '0');
+			
+			// 构建时间字符串
+			var timeString = hours + ':' + minutes;
+			if (showSeconds) {
+				timeString += ':' + seconds;
+			}
+			
+			// 应用到DOM
+			$('#time').text(timeString);
+		}
+		
+		// 初始化所有显示
+		function initializeDisplay() {
+			updateGreeting();
+			updateDate();
+			updateTime();
+		}
+		
+		// 每秒更新时间
+		setInterval(function() {
+			updateTime();
+		}, 1000);
+		
+		// 每分钟更新日期和进度
+		setInterval(function() {
+			updateDate();
+		}, 60000);
+		
+		// 每小时更新问候语
+		setInterval(updateGreeting, 3600000);
+		
+		// 初始化显示
+		initializeDisplay();
+	});
+</script>
+<!--{template lyear:footer_simple}-->

@@ -1,0 +1,177 @@
+<!--{template lyear:header_simple}-->
+<style>
+	html,body{
+		overflow: auto;
+	}
+	.img-avatar {
+		width: 30px;
+		height: 30px;
+		line-height: 28px;
+	}
+</style>
+<link rel="stylesheet" href="static/lyear/js/layui/css/layui.css?{VERHASH}">
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<strong>暂不支持强制下线用户！</strong>
+<button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+</div>
+<table class="layui-hide" id="table" lay-filter="table"></table>
+<script type="text/html" id="toolbar">
+	<div class="layui-btn-container">
+		<button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+		<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+		<button class="layui-btn layui-btn-sm layui-btn-primary" id="dropdownButton"><span id="ismembertext">全部用户</span><i class="layui-icon layui-icon-down layui-font-12"></i></button>
+	</div>
+</script>
+<script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
+<script>
+	var search_data = {
+		'ismember': ''
+	};
+	layui.use(['table', 'dropdown'], function(){
+	  var table = layui.table;
+	  var dropdown = layui.dropdown;
+	  table.render({
+		elem: '#table',
+		url: '{MOD_URL}&do=onlineinfo',
+		toolbar: '#toolbar',
+		title: '在线用户数据表格',
+		autoSort: false,
+		even:true,
+		cellMinWidth:120,
+		text: {
+			none: '暂无相关数据'
+		},
+		page: {
+		  limit: 20,
+		  limits: [10, 20, 50, 100, 200, 500, 1000,2000]
+		},
+		cols: [[
+		{type:'checkbox', fixed: 'left'}
+		  ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
+		  ,{field:'uid', title: '{lang username}', sort: true,templet: function(d) {return d.uid;}}
+		  ,{field:'groupid', title: '{lang usergroup}', align: 'center', sort: true}
+		  ,{field:'sid', title: 'sid', align: 'center', sort: true}
+		  ,{field:'ip', title: 'IP', align: 'left', sort: true}
+		  ,{field:'lastactivity', title: '最后活动时间', align: 'center', sort: true,templet: function(d) {return d.lastactivity;}}
+		  ,{field:'lastolupdate', title: '在线时间最后更新', sort: true,templet: function(d) {return d.lastolupdate;}}
+		]],
+		done: function(){
+			dropdown.render({
+				elem: '#dropdownButton',
+				data: [{
+				id: '0',
+				title: '全部用户'
+				},{
+				id: '1',
+				title: '仅登录用户'
+				},{
+				id: '2',
+				title: '仅未登录用户'
+			}],
+			click: function(obj){
+				switch(obj.id){
+					case '0':
+					search_data.ismember = '';
+					jQuery('#ismembertext').text('全部用户');
+					break;
+					case '1':
+					search_data.ismember = 1;
+					jQuery('#ismembertext').text('仅登录用户');
+					break;
+					case '2':
+					search_data.ismember = 2;
+					jQuery('#ismembertext').text('仅未登录用户');
+					break;
+				}
+				table.reloadData('table', {
+					where: search_data,
+					page: {
+						curr: 1
+					}
+				});
+			}
+		});
+	  
+		},
+		initSort: {
+			field: 'lastactivity', // 默认排序字段
+			type: 'desc' // 默认排序方式
+		}
+	  });
+	  //头工具栏事件
+	table.on('toolbar(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var data = checkStatus.dataCache;
+		switch(obj.event){
+			case 'getCheckData':
+				if (data.length === 0) {
+					showmessage("请至少选择一行", 'danger', 3000, 1);
+					return;
+				}
+				var template = '<div class="accordion">';
+					data.forEach(function(item) {
+						template += '<div class="accordion-item">';
+						template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+						template += 'ID：' + item.LAY_NUM;
+						template += '</button>';
+						template += '</h2>';
+						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
+						template += '<div class="accordion-body">';
+						template += '<p><strong>{lang username}:</strong> ' + item.uid + '</p>';
+						template += '<p><strong>{lang usergroup}:</strong> ' + item.groupid + '</p>';
+						template += '<p><strong>sid:</strong> ' + item.sid + '</p>';
+						template += '<p><strong>IP:</strong> ' + item.ip + '</p>';
+						template += '<p><strong>最后活动时间:</strong> ' + item.lastactivity + '</p>';
+						template += '<p><strong>在线时间最后更新:</strong> ' + item.lastolupdate + '</p>';
+						template += '</div>';
+						template += '</div>';
+						template += '</div>';
+					});
+				template += '</div>';
+				layer.alert(template, {
+					title: '选中的在线用户数据'
+				});
+				break;
+				case 'get':
+				table.reloadData('table', {
+					where: search_data,
+					page: {
+						curr: 1
+					}
+				});
+				break; 
+			};
+		});
+	  //触发排序事件 
+	table.on('sort(table)', function(obj){
+		table.reloadData('table', {
+			initSort: obj
+			,where: {
+				field: obj.field
+				,order: obj.type
+			}
+		});
+	});
+	table.on('rowDouble(table)', function(obj){
+		showDataTemplate(obj);
+	});
+		function showDataTemplate(obj) {
+			var data = obj.dataCache;
+			var template =
+			'<p><strong>{lang username}:</strong> ' + data.uid + '</p>' +
+			'<p><strong>{lang usergroup}:</strong> ' + data.groupid + '</p>' +
+			'<p><strong>sid:</strong> ' + data.sid + '</p>' +
+			'<p><strong>IP:</strong> ' + data.ip + '</p>' +
+			'<p><strong>最后活动时间:</strong> ' + data.lastactivity + '</p>' +
+			'<p><strong>在线时间最后更新:</strong> ' + data.lastolupdate + '</p>';
+
+			layer.alert(template, {
+				title:' ID ' + data.LAY_NUM + ' 详情：'
+			});
+			// 标注选中样式
+			obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+		}
+	});
+</script>
+<!--{template lyear:footer}-->

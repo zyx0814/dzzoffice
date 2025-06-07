@@ -281,7 +281,7 @@ if ($_GET['step'] == 'start') {
     }
     //添加DPlayer应用
     if (!DB::result_first("select COUNT(*) from %t where appurl=%s", array('app_market', '{dzzscript}?mod=DPlayer'))) {
-        C::t('app_market')->insert(array('mid' => '41', 'appname' => 'DPlayer', 'appico' => 'appico/202411/02/184037v0by6dzb1wwobdy3.png', 'appdesc' => 'DPlayer，支持MP3,mp4,flv,wav等格式', 'appurl' => '{dzzscript}?mod=DPlayer', 'appadminurl' => '', 'noticeurl' => '', 'dateline' => '0', 'disp' => '0', 'vendor' => '小胡（gitee.com/xiaohu2024)', 'haveflash' => '0', 'isshow' => '0', 'havetask' => '1', 'hideInMarket' => '0', 'feature' => '', 'fileext' => 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne', 'group' => '0', 'orgid' => '0', 'position' => '1', 'system' => '0', 'notdelete' => '1', 'open' => '1', 'nodup' => '0', 'identifier' => 'DPlayer', 'app_path' => 'dzz', 'available' => '1', 'version' => '1.2'), 1, 1);
+        C::t('app_market')->insert(array('mid' => '41', 'appname' => 'DPlayer', 'appico' => 'appico/202411/02/184037v0by6dzb1wwobdy3.png', 'appdesc' => 'DPlayer，支持MP3,mp4,flv,wav等格式', 'appurl' => '{dzzscript}?mod=DPlayer', 'appadminurl' => '', 'noticeurl' => '', 'dateline' => '0', 'disp' => '0', 'vendor' => '小胡(gitee.com/xiaohu2024)', 'haveflash' => '0', 'isshow' => '0', 'havetask' => '1', 'hideInMarket' => '0', 'feature' => '', 'fileext' => 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne', 'group' => '0', 'orgid' => '0', 'position' => '1', 'system' => '0', 'notdelete' => '1', 'open' => '1', 'nodup' => '0', 'identifier' => 'DPlayer', 'app_path' => 'dzz', 'available' => '1', 'version' => '1.2'), 1, 1);
         $DPlayer = C::t('app_market')->fetch_by_identifier('DPlayer');
         if ($DPlayer['appid']) {
             C::t('app_open')->insert_by_exts($DPlayer['appid'], 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne');
@@ -413,14 +413,12 @@ if ($_GET['step'] == 'start') {
     dir_clear(DZZ_ROOT . './data/template');
     dir_clear(DZZ_ROOT . './data/cache');
     savecache('setting', '');
-    $configfile = DZZ_ROOT . 'data/cache/default_mod.php';
-    $configarr = array();
     if ($_G['setting']['default_mod']) {
+        $configfile = DZZ_ROOT . 'data/cache/default_mod.php';
+        $configarr = array();
         $configarr['default_mod'] = $_G['setting']['default_mod'];
-    } else {
-        $configarr['default_mod'] = 'explorer';
+        @file_put_contents($configfile, "<?php \t\n return " . var_export($configarr, true) . ";");
     }
-    @file_put_contents($configfile, "<?php \t\n return " . var_export($configarr, true) . ";");
     C::t('setting')->update('bbclosed', 0);
     if ($_GET['from']) {
         show_msg('<span id="finalmsg">缓存更新中，请稍候 ...</span><iframe src="../misc.php?mod=syscache" style="display:none;" onload="parent.window.location.href=\'' . $_GET['from'] . '\'"></iframe><iframe src="../misc.php?mod=setunrun" style="display:none;"></iframe>');

@@ -12,9 +12,6 @@ class Route {
     public static function dzzRoute(&$params, $extra = null, &$break) {
         global $_G, $_config;
         $mod = !empty($params[MOULD]) ? $params[MOULD] : $_config['default_mod'];
-        if (CURSCRIPT == 'dzz' && $mod == 'index') {
-            $mod = 'explorer';
-        }
         $op = !empty($params[DIVIDE]) ? $params[DIVIDE] : $_config['default_op'];
         define('MOD_PATH', CURSCRIPT . '/' . CURMODULE);
         define('MOD_NAME', CURMODULE);

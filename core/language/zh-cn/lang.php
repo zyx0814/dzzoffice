@@ -489,6 +489,7 @@ $lang = array(
     'menu_information_not_more_than_64_words' => '菜单KEY值，用于消息接口推送，不超过64个字。',
     'set_value_interface_function_effect' => '设置的值必须在接口函数中设置相应的处理才会有效果。',
     // core/template/wx_appinfo.html
+    'application' => '应用中心',
     'application_message' => '应用信息',
     'application_menu' => '应用菜单',
     'access_method_login_application' => '获取方法：［登录企业号后台］－［应用中心］－［选择需要绑定的应用］－［复制应用ID］',
@@ -1606,6 +1607,7 @@ $_G[siteurl]',
     'import_domain_name' => '输入域名',
     'cloud_no_available' => '云盘已关闭',
     'cloud_no_info' => '云盘信息不存在',
+    'panel_notice_title' => '通知中心',
 );
 
 ?>

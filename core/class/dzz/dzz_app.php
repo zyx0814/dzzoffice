@@ -421,6 +421,7 @@ class dzz_app extends dzz_base {
             if (getglobal('config/db/slave')) {
                 $driver = 'db_driver_mysqli_slave';
             }
+            $this->var['mysql_driver'] = $driver;
             DB::init($driver, $this->config['db']);
         }
     }
@@ -476,7 +477,6 @@ class dzz_app extends dzz_base {
             }
 
             if (!empty($user) && $user['password'] == $dzz_pw && ($user['status'] < 1 || $user['uid'] == 1)) {//加上判断用户是否被停用
-
                 $this->var['member'] = $user;
             } else {
                 $user = array();

@@ -9,41 +9,9 @@ if ($do == 'filelist') {
     $sid = htmlspecialchars($_GET['sid']);
     $limit = isset($_GET['perpage']) ? intval($_GET['perpage']) : 20;//默认每页条数
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
-    $start = ($page - 1) * $perpage;//开始条数
-    $limitsql = "limit $start,$limit";
-    $perpage = 25;
-    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 4;
-
-    $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
-
+    $start = ($page - 1) * $limit;//开始条数
+    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 0;
     $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 1;
-
-    $order = $asc > 0 ? 'ASC' : "DESC";
-
-    switch ($disp) {
-        case 0:
-            $orderby = 'filename';
-            break;
-        case 1:
-            $orderby = 'size';
-            break;
-        case 2:
-            $orderby = 'type';
-            break;
-        case 3:
-            $orderby = 'dateline';
-            break;
-
-    }
-    $ordersql = '';
-    if (is_array($orderby)) {
-        foreach ($orderby as $key => $value) {
-            $orderby[$key] = $value . ' ' . $order;
-        }
-        $ordersql = ' ORDER BY ' . implode(',', $orderby);
-    } elseif ($orderby) {
-        $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
-    }
     //最近使用文件
     $explorer_setting = get_resources_some_setting();
     $recents = C::t('resources_statis')->fetch_recent_files_by_uid();
@@ -78,13 +46,12 @@ if ($do == 'filelist') {
         if ($folder = C::t('folder')->fetch_by_fid($fid)) $folderdata[$fid] = $folder;
     }
 
-    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 0;//文件排序
     $iconview = isset($_GET['iconview']) ? intval($_GET['iconview']) : 4;//排列方式
     if ($data === null) {
         $data = array();
     }
-    if (count($data) >= $perpage) {
-        $total = $start + $perpage * 2 - 1;
+    if (count($data) >= $limit) {
+        $total = $start + $limit * 2 - 1;
     } else {
         $total = $start + count($data);
     }
@@ -101,11 +68,11 @@ if ($do == 'filelist') {
             'disp' => $disp,
             'view' => $iconview,
             'page' => $page,
-            'perpage' => $perpage,
+            'perpage' => $limit,
             'bz' => $bz,
             'total' => $total,
             'asc' => $asc,
-            'keyword' => $keyword,
+            'keyword' => '',
             'tags' => '',
             'exts' => '',
             'localsearch' => $bz ? 1 : 0

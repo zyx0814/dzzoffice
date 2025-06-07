@@ -131,12 +131,10 @@ class table_resources_statis extends dzz_table {
         $data = array();
         $param = array($this->_table, $uid);
         $wheresql = " where uid = %d and fid = 0 and rid != '' ";
-
         $orderby = ' order by edits desc,views desc,editdateline desc,opendateline desc';
         $limitsql = ' limit ' . $limit;
         $files = DB::fetch_all("select * from %t $wheresql $orderby $limitsql", $param);
         return $files;
-
     }
 
     public function fetch_recent_files_by_uid($limit = 100) {

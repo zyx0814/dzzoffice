@@ -54,7 +54,7 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-primary">
                 <i class="mdi mdi-account-check fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate">$zaixianrenshu</span>
+              <span class="fs-4 text-truncate"><a href="javascript:;" id="online" class="dcolor">点击查看</a></span>
             </div>
             <div class="text-end">当前在线数</div>
           </div>
@@ -80,7 +80,7 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-danger">
                 <i class="mdi mdi-account-lock-outline fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate">$tingyongrenshu</span>
+              <span class="fs-4 text-truncate"><a href="{DZZSCRIPT}?mod=orguser" class="dcolor">$tingyongrenshu</a></span>
             </div>
             <div class="text-end">停用人数</div>
           </div>
@@ -108,7 +108,7 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-purple">
                 <i class="mdi mdi-file-chart fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate">$wenjiangeshu</span>
+              <span class="fs-4 text-truncate"><a href="{DZZSCRIPT}?mod=filemanage" class="dcolor">$wenjiangeshu</a></span>
             </div>
             <div class="text-end">文件个数</div>
           </div>
@@ -121,7 +121,7 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-yellow">
                 <i class="mdi mdi-cloud-outline fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate">$kongjianshiyong</span>
+              <span class="fs-4 text-truncate"><a href="{DZZSCRIPT}?mod=filemanage" class="dcolor">$kongjianshiyong</a></span>
             </div>
             <div class="text-end">空间使用</div>
           </div>
@@ -134,7 +134,7 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-info">
                 <i class="mdi mdi-alpha-c-circle-outline fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate">$version</span>
+              <span class="fs-4 text-truncate"><a href="{ADMINSCRIPT}?mod=system&op=systemupgrade" class="dcolor">$version</a></span>
             </div>
             <div class="text-end">Dzz版本</div>
           </div>
@@ -147,7 +147,7 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-cyan">
                 <i class="mdi mdi-clock-time-eight-outline fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate">$RELEASE</span>
+              <span class="fs-4 text-truncate"><a href="{ADMINSCRIPT}?mod=system&op=systemupgrade" class="dcolor">$RELEASE</a></span>
             </div>
             <div class="text-end">版本更新日期</div>
           </div>
@@ -158,10 +158,10 @@
       <header class="card-header d-flex justify-content-between">
         <div class="card-title">服务器信息</div>
         <ul class="card-actions">
-          <li><a href="#!" class="card-btn-close"><i class="mdi mdi-close"></i></a></li>
-          <li><a href="#!" class="card-btn-slide"><i class="mdi mdi-chevron-up"></i></a></li>
-          <li><a href="#!" class="card-btn-fullscreen"><i class="mdi mdi-fullscreen"></i></a></li>
-          <li><a href="{MOD_URL}&do=systemcheck" class="card-btn-reload"><i class="mdi mdi-refresh"></i></a></li>
+          <li><a href="#!" class="dcolor card-btn-close"><i class="mdi mdi-close"></i></a></li>
+          <li><a href="#!" class="dcolor card-btn-slide"><i class="mdi mdi-chevron-up"></i></a></li>
+          <li><a href="#!" class="dcolor card-btn-fullscreen"><i class="mdi mdi-fullscreen"></i></a></li>
+          <li><a href="{MOD_URL}&do=systemcheck" class="dcolor card-btn-reload"><i class="mdi mdi-refresh"></i></a></li>
         </ul>
       </header>
       <div class="card-body">
@@ -171,6 +171,18 @@
   </div>
 </main>
 <script>
+  $('#online').click(function() {
+    layer.open({
+        type: 2,
+        title: '在线用户',
+        shadeClose: true,
+        id:'layeronline',
+        shade: false,
+        maxmin: true,
+        area: window.innerWidth < 768 ? ['100%','100%'] : ['70%', '70%'],
+        content: '{MOD_URL}&do=online',
+    });
+});
 $('#userstats').click(function() {
     layer.open({
         type: 2,
@@ -179,7 +191,7 @@ $('#userstats').click(function() {
         id:'layeruserstats',
         shade: false,
         maxmin: true,
-        area: window.innerWidth < 768 ? ['100%','100%'] : ['50%', '70%'],
+        area: window.innerWidth < 768 ? ['100%','100%'] : ['70%', '70%'],
         content: '{MOD_URL}&do=stats',
     });
 });

@@ -1,7 +1,7 @@
 <ul class="nav-drawer nav-stacked nav-pills">
     <li class="nav-item"><a class="nav-link <!--{if !$_GET['op']=='index' && !$vid}-->active<!--{/if}-->" href="{MOD_URL}"><i class="mdi mdi-account-cog"></i><span>{lang basic_information}</span></a></li>
 	    <li class="nav-item"><a class="nav-link <!--{if $_GET['op']=='password'}-->active<!--{/if}-->" href="{MOD_URL}&op=password"><i class="mdi mdi-account-lock"></i><span>{lang password_and_security}</span></a></li>
-		<li class="nav-item"><a href="user.php" target="_blank"><i class="mdi mdi-account-eye"></i><span>{lang Personal data display}</span></a></li>
+		<li class="nav-item"><a class="nav-link" href="user.php" target="_blank"><i class="mdi mdi-account-eye"></i><span>{lang Personal data display}</span></a></li>
 		<!--{loop $_G[setting][verify] $key $value}-->
 	  	<!--{if $value[available] && (empty($value[groupid]) || ($value[groupid] && in_array($_G[groupid],$value[groupid])))}-->
 		<li class="nav-item">

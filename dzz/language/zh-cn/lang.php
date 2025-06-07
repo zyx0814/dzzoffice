@@ -199,7 +199,6 @@ $lang = array(
     'panel_mystatus' => '更改在线状态',
     'panel_home_title' => '我的中心',
     'panel_friend_title' => '好友中心',
-    'panel_notice_title' => '通知中心',
     'panel_xiezuo_title' => '协作中心',
     'status_online' => '我在线上',
     'status_hidden' => '隐身',

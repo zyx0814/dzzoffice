@@ -31,7 +31,7 @@ if (CURMODULE) {
         } elseif ($appinfo['group'] == -1) {
             return;
         } else {
-            showmessage('该应用需要登录才能访问，即将为您跳转至登录页面。', 'user.php?mod=login');
+            Hook::listen('check_login');
         }
     }
 }

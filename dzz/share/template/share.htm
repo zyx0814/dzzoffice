@@ -1,5 +1,5 @@
 <!--{template lyear:header_simple_start}-->
-<link rel="stylesheet" href="static/lyear/js/layui/css/layui.css">
+<link rel="stylesheet" href="static/lyear/js/layui/css/layui.css?{VERHASH}">
 <style>
 	.icon {
 		width: 30px;
@@ -36,11 +36,11 @@
                 <table class="layui-hide" id="table" lay-filter="table"></table>
 				<script type="text/html" id="toolbar">
 					<div class="layui-btn-container">
-						<button type="button" class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
-						<button type="button" class="layui-btn layui-btn-danger" lay-event="delete">{lang del_share}</button>
-						<!--{if $_G['adminid']}--><button type="button" class="layui-btn layui-bg-orange" lay-event="forbidden">{lang screen_share}</button>
-						<button type="button" class="layui-btn" lay-event="allow">{lang cancel_shielding}</button><!--{/if}-->
-						<button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
+						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+						<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">{lang del_share}</button>
+						<!--{if $_G['adminid']}--><button type="button" class="layui-btn layui-bg-orange layui-btn-sm" lay-event="forbidden">{lang screen_share}</button>
+						<button type="button" class="layui-btn layui-btn-sm" lay-event="allow">{lang cancel_shielding}</button><!--{/if}-->
+						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
 					</div>
 				</script>
 				<script type="text/html" id="barDemo">
@@ -51,7 +51,7 @@
 		</div>
 	</div>
 </main>
-<script src="static/lyear/js/layui/layui.js"></script>
+<script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script>
 	var type = '';
 	layui.use('table', function(){
@@ -68,8 +68,8 @@
 		none: '暂无相关数据'
 	},
 	page: {
-		limit: 20, // 默认显示20行
-		limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
+		limit: 20,
+		limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000]
 	},
 	cols: [[
 	{type:'checkbox', fixed: 'left'}
@@ -77,7 +77,7 @@
 		,{field:'title', title: '{lang share_typename_attach}', sort: true,templet: function(d) {
 			return d.title;
 		}}
-		,{field:'status', title: '状态', align: 'center', sort: true,templet: function(d) {
+		,{field:'status', title: '{lang status}', align: 'center', sort: true,templet: function(d) {
 			return d.status;
 		}}
 		,{field:'dateline', title: '{lang share_time}', align: 'center', sort: true,templet:function(d){return d.dateline}}
@@ -250,10 +250,10 @@
 	  //触发排序事件 
 	table.on('sort(table)', function(obj){
 		table.reloadData('table', {
-			initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+			initSort: obj
 			,where: {
-				field: obj.field //排序字段
-				,order: obj.type //排序方式
+				field: obj.field
+				,order: obj.type
 			}
 		});
 	});
