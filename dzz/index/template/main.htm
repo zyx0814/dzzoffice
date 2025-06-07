@@ -1,7 +1,10 @@
 <!--{template lyear:header_simple_start}-->
 <style>
-	.card:hover {
-		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+	.bs-top-container,.sidebar-header {
+		background-color: #fff;
+	}
+	.navbar-right .nav-link {
+		color:#495057
 	}
 	.recent-item {
 		display: flex;
@@ -36,12 +39,13 @@
 <!--{template lyear:header_simple_noleft_end}-->
 <main class="bs-main-container" style="padding-left: 0;">
 	<div class="container-fluid">
-		<div class="card bg-primary text-white d-flex flex-wrap justify-content-between">
+		<div class="card d-flex flex-wrap justify-content-between">
 			<div class="card-body">
 				<div class="display-4 fs-4 fw-bold mb-1">{$_G['username']}，<span id="greeting">早上好！</span></div>
 				<p>您于<!--{eval echo dgmdate($userstatus['lastvisit'])}-->登录。当前时间：<span id="current-date"></span><span class="ps-2" id="weekday"></span><span class="ps-2" id="time">00:00:00</span>。空间使用情况：$space['fusesize']/$space['fmaxspacesize']</p>
 			</div>
 		</div>
+		<!--{if $filedata}-->
 		<div class="card" id="statis">
 			<header class="card-header d-flex justify-content-between">
 				<div class="card-title"><i class="mdi mdi-file-clock-outline me-2"></i>最近使用文件</div>
@@ -53,7 +57,6 @@
 				</ul>
 			</header>
 			<div class="card-body">
-				<!--{if $filedata}-->
 				<!--{loop $filedata $key $value}-->
 				<a href="{DZZSCRIPT}?mod=explorer{$value['url']}" class="recent-item dcolor">
 					<img src="$value['img']" class="recent-img" title="$value['name']"/>
@@ -63,13 +66,9 @@
 					</div>
 				</a>
 				<!--{/loop}-->
-				<!--{else}-->
-				<div class="text-center">
-					<img src="static/image/common/no_list.png" /><br>
-				</div>
-				<!--{/if}-->
 			</div>
 		</div>
+		<!--{/if}-->
 		<!--{if $applist_1}-->
 		<div class="d-flex flex-wrap justify-content-center mb-3 ui-sortable">
 			<!--{loop $applist_1 $key $value}-->
@@ -90,7 +89,7 @@
 			<!--{/loop}-->
 		</div>
 		<!--{/if}-->
-		<footer class="text-center text-muted m-3">
+		<footer class="text-center text-muted m-3 mt-5">
 			<!--{template lyear:copyright}-->
 		</footer>
 	</div>
