@@ -448,7 +448,6 @@ class dzz_app extends dzz_base {
             if ($this->session->isnew) {
                 if (ipbanned($this->var['clientip'])) {
                     $this->session->set('groupid', 6);
-                    $this->session->set('username', $this->var['username']);
                 }
             }
 
