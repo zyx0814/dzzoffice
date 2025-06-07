@@ -54,7 +54,7 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-primary">
                 <i class="mdi mdi-account-check fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate">$zaixianrenshu</span>
+              <span class="fs-4 text-truncate"><a href="javascript:;" id="online" class="dcolor">点击查看</a></span>
             </div>
             <div class="text-end">当前在线数</div>
           </div>
@@ -171,6 +171,18 @@
   </div>
 </main>
 <script>
+  $('#online').click(function() {
+    layer.open({
+        type: 2,
+        title: '在线用户',
+        shadeClose: true,
+        id:'layeronline',
+        shade: false,
+        maxmin: true,
+        area: window.innerWidth < 768 ? ['100%','100%'] : ['70%', '70%'],
+        content: '{MOD_URL}&do=online',
+    });
+});
 $('#userstats').click(function() {
     layer.open({
         type: 2,
@@ -179,7 +191,7 @@ $('#userstats').click(function() {
         id:'layeruserstats',
         shade: false,
         maxmin: true,
-        area: window.innerWidth < 768 ? ['100%','100%'] : ['50%', '70%'],
+        area: window.innerWidth < 768 ? ['100%','100%'] : ['70%', '70%'],
         content: '{MOD_URL}&do=stats',
     });
 });

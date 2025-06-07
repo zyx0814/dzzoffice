@@ -192,10 +192,77 @@ if ($do == 'stats') {
         $func_str .= "</div>\n";
     }
     include template('systemcheck');
-    
     exit();
 } elseif ($do == 'phpinfo') {
     exit(phpinfo());
+} elseif ($do == 'online') {
+    $bodyClass = 'bg-body';
+    include template('online');
+    exit();
+} elseif ($do == 'onlineinfo') {
+    $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
+    $ismember = isset($_GET['ismember']) ? trim($_GET['ismember']) : '';
+    $field = isset($_GET['field']) ? $_GET['field'] : 'lastactivity';
+    $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
+    $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
+    $start = ($page - 1) * $limit;
+    $validfields = ['sid','uid', 'groupid','ip','lastactivity','lastolupdate'];
+    $validSortOrders = ['asc', 'desc'];
+    if (in_array($field, $validfields) && in_array($order, $validSortOrders)) {
+        $order = "ORDER BY $field $order";
+    } else {
+        $order = 'ORDER BY lastactivity DESC';
+    }
+	$onlinedata = $list = array();
+    $sql = '1';
+    if ($ismember == 1) {
+        $sql .= ' and uid > 0';
+    } elseif ($ismember == 2) {
+        $sql .= ' and uid = 0';
+    }
+    $param = array('session');
+    $limitsql = 'limit ' . $start . ',' . $limit;
+    if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql ", $param)) {
+       $onlinedata = DB::fetch_all("SELECT * FROM %t WHERE $sql $order $limitsql", $param);
+    }
+    if ($onlinedata) {
+        $usergroup = array();
+        foreach (C::t('usergroup')->range() as $group) {
+            $usergroup[$group['groupid']] = $group['grouptitle'];
+        }
+        foreach ($onlinedata as $value) {
+            if(!$value['username']) {
+                $value['username'] = lang('anonymous');
+            }
+            $list[] = [
+                "uid" => $value['uid'] ? '<a href="'.USERSCRIPT.'?uid='.$value['uid'].'" target="_blank">'.avatar_block($value['uid']).$value['username'].'</a>' : '游客',
+                "groupid" => $usergroup[$value['groupid']],
+                "sid" => $value['sid'],
+                "ip" => $value['ip'],
+                "lastactivity" => $value['lastactivity'] ? dgmdate($value['lastactivity'],'u') : '',
+                "lastolupdate" => $value['lastolupdate'] ? dgmdate($value['lastolupdate'],'u') : ''
+            ];
+        }
+    }
+    header('Content-Type: application/json');
+    $return = [
+        "code" => 0,
+        "msg" => "",
+        "count" => $count ? $count : 0,
+        "data" => $list ? $list : []
+    ];
+    $jsonReturn = json_encode($return);
+    if ($jsonReturn === false) {
+        $errorMessage = json_last_error_msg();
+        $errorResponse = [
+            "code" => 1,
+            "msg" => "JSON 编码失败，请刷新重试: " . $errorMessage,
+            "count" => 0,
+            "data" => [],
+        ];
+        exit(json_encode($errorResponse));
+    }
+    exit($jsonReturn);
 }
 $appdata = DB::fetch_all("select appname,appico,appurl,identifier from %t where `group`=3 and isshow>0 and `available`>0", array('app_market'));
 $data = array();
@@ -207,7 +274,6 @@ foreach ($appdata as $k => $v) {
     $v['url'] = replace_canshu($v['appurl']);
     $data[] = $v;
 }
-$zaixianrenshu = C::app()->session->count(1);
 $yonghurenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE uid");
 $tingyongrenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE status");
 $wenjiangeshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('attachment') . " WHERE aid");

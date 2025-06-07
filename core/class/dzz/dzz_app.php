@@ -421,6 +421,7 @@ class dzz_app extends dzz_base {
             if (getglobal('config/db/slave')) {
                 $driver = 'db_driver_mysqli_slave';
             }
+            $this->var['mysql_driver'] = $driver;
             DB::init($driver, $this->config['db']);
         }
     }

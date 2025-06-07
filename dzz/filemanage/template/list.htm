@@ -61,9 +61,9 @@
                 <table class="layui-hide" id="table" lay-filter="table"></table>
 				<script type="text/html" id="toolbar">
 					<div class="layui-btn-container">
-						<button type="button"  class="layui-btn layui-btn-normal" lay-event="getCheckData">获取选中行数据</button>
-						<button type="button" class="layui-btn layui-btn-danger" lay-event="delete">{lang delete}</button>
-						<button type="button" class="layui-btn layui-btn-normal" lay-event="get">刷新</button>
+						<button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+						<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">{lang delete}</button>
+						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
 					</div>
 				</script>
 				<script type="text/html" id="barDemo">
@@ -281,16 +281,15 @@
 	  //触发排序事件 
 	table.on('sort(table)', function(obj){
 		table.reloadData('table', {
-			initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
+			initSort: obj
 			,where: {
-				field: obj.field //排序字段
-				,order: obj.type //排序方式
+				field: obj.field
+				,order: obj.type
 			}
 		});
 	});
 	  table.on('rowDouble(table)', function(obj){
 		showDataTemplate(obj);
-		console.log(obj);
 	  });
 		function showDataTemplate(obj) {
 			var data = obj.dataCache;

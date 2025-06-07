@@ -56,9 +56,9 @@
 	</div>
 	<div class="accordion-item">
 		<h2 class="accordion-header" id="panelsStayOpen-funcstr">
-			<button class="accordion-button" type="button" data-toggle="collapse" data-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">PHP扩展信息</button>
+			<button class="accordion-button" type="button" data-toggle="collapse" data-target="#panelsStayOpen-funcstr" aria-expanded="false" aria-controls="panelsStayOpen-funcstr">PHP扩展信息</button>
 		</h2>
-		<div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-funcstr">
+		<div id="panelsStayOpen-funcstr" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-funcstr">
 			<div class="accordion-body">
 				<div class="mb-3 d-grid"><a href="{MOD_URL}&do=phpinfo" target="_blank" class="btn btn-outline-primary">PHP详情</a></div>
 				<!--{if $func_str}-->
@@ -80,8 +80,16 @@
 			<div class="accordion-body">
 				<table class="table table-hover align-middle table-striped table-bordered">
 					<tr>
+						<th>服务器系统环境</th>
+						<td><!--{eval echo PHP_OS.' / '.php_uname();}--></td>
+					</tr>
+					<tr>
 						<th>服务器软件</th>
 						<td><!--{eval echo $_SERVER['SERVER_SOFTWARE'];}--></td>
+					</tr>
+					<tr>
+						<th>服务器数据库</th>
+						<td>MySQL <!--{eval echo helper_dbtool::dbversion();}-->，{$_G['mysql_driver']}</td>
 					</tr>
 					<tr>
 						<th>域名</th>
