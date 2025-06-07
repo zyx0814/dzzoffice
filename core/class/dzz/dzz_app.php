@@ -443,7 +443,15 @@ class dzz_app extends dzz_base {
             if ($this->session->isnew) {
                 if (ipbanned($this->var['clientip'])) {
                     $this->session->set('groupid', 6);
+                    $this->session->set('username', $this->var['username']);
+                } else if ($this->var['uid']) {
+                    $this->session->set('username', $this->var['username']);
+                    $this->session->set('groupid', $this->var['groupid']);
                 }
+            } else if ($this->var['uid']) {
+                // 非新session也更新用户信息
+                $this->session->set('username', $this->var['username']);
+                $this->session->set('groupid', $this->var['groupid']);
             }
 
             if ($this->session->get('groupid') == 6) {
