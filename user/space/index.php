@@ -10,21 +10,16 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $navtitle = "用户资料";
+Hook::listen('check_login');
 $uid = intval($_GET['uid'] ? $_GET['uid'] : $_G['uid']);
-if (!$uid) {
-    Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-}
 include_once libfile('function/profile');
 include_once libfile('function/organization');
 $users = getuserbyuid($uid);
 $userstatus = C::t('user_status')->fetch($uid);//用户状态
 $space = C::t('user_profile')->get_user_info_by_uid($uid);
-$privacy = $space['privacy']['profile'] ? $space['privacy']['profile'] : array();
-
 $space['regdate'] = dgmdate($space['regdate']);
-
+$privacy = $space['privacy']['profile'] ? $space['privacy']['profile'] : array();
 if ($space['lastvisit']) $profiles['lastvisit'] = array('title' => lang('last_visit'), 'value' => dgmdate($space['lastvisit']));
-
 if ($users['regip']) {
     $profiles['regdate'] = array('title' => lang('registration_time'), 'value' => $space['regdate']);
 } else {

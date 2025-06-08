@@ -421,18 +421,22 @@ function profile_privacy_check($uid, $privacy) {
     global $_G;
     $privacy = intval($privacy);
     if (!$_G['uid']) return false; //游客不允许查看
-    if ($_G['uid'] == $uid) $_G[$var] = true;//自己允许查看
     $var = 'privacy_' . $uid . '_' . $_G['uid'] . '_' . $privacy;
     if (isset($_G[$var])) return $_G[$var];
+    // 自己查看自己的资料
+    if ($_G['uid'] == $uid) {
+        $_G[$var] = true;
+        return true; // 直接返回，跳过后续检查
+    }
 
     switch ($privacy) {
-        case '-1': //隐私
+        case -1: //隐私
             $_G[$var] = false;
             break;
-        case '0': //公开
+        case 0: //公开
             $_G[$var] = true;
             break;
-        case '1': //本部门,不包括下级部门
+        case 1: //本部门,不包括下级部门
             include_once libfile('function/organization');
             $orgids = $vorgids = array();
             //查看资料用户所在的部门
@@ -465,7 +469,8 @@ function profile_privacy_check($uid, $privacy) {
             }
             if (array_intersect($vtops, $tops)) $_G[$var] = true;
             break;
-
+        default:
+            $_G[$var] = false; // 未知隐私设置默认拒绝
 
     }
     return $_G[$var];
