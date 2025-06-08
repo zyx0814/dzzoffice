@@ -4,6 +4,9 @@
 		border-bottom: 1px solid rgba(77, 82, 89, 0.05);
 		margin-bottom: 10px;
 	}
+	.lyear-message-item {
+		width: calc(100% - 50px);
+	}
 </style>
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container main-allnotice">
@@ -19,17 +22,17 @@
 		<div class="card-body">
 			<ul class="list-unstyled lyear-message-list">
 				<!--{loop $list $value}-->
-				<li>
-				  <div class="d-flex flex-wrap lyear-message-item">
+				<li class="d-flex flex-wrap">
+				  <div class="d-flex lyear-message-item">
 					<a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a>
-					<div class="flex-grow-1 ms-2">
+					<div class="flex-grow-1 ms-2 pe-2">
 						<!--{if $value[title]}--><strong>$value[title]</strong><!--{/if}-->
 					  	<!--{if $value[note]}--><div class="me-auto text-break">$value[note]</div><!--{/if}-->
 					  	<!--{if $value[redirecturl]}--><div class="text-muted text-break">来源地址：<a href="$value[redirecturl]" target="_blank" class="dcolor">$value[redirecturl]</a></div><!--{/if}-->
 					  	<!--{if $value['dateline']}--><small class="text-muted">$value['dateline']</small><!--{/if}-->
 					</div>
-					<!--{if !$img}--><span class="badge rounded-pill"><img src="$value[appico]" class="img-avatar-48"></span><!--{/if}-->
 				  </div>
+				  <!--{if !$img}--><img src="$value[appico]" class="img-avatar-36"><!--{/if}-->
 				</li>
 				<!--{/loop}-->
 			  </ul>
