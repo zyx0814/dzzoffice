@@ -440,6 +440,11 @@ class dzz_app extends dzz_base {
                 dsetcookie('sid', $this->var['sid'], 86400);
             }
 
+            if ($this->var['uid']) {
+                $this->session->set('username', $this->var['username']);
+                $this->session->set('groupid', $this->var['groupid']);
+            }
+
             if ($this->session->isnew) {
                 if (ipbanned($this->var['clientip'])) {
                     $this->session->set('groupid', 6);

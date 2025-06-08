@@ -77,7 +77,6 @@ class dzz_session {
 
     public function update() {
         if ($this->sid !== null) {
-
             if ($this->isnew) {
                 $this->delete();
                 $this->table->insert($this->var, false, false, true);
@@ -178,7 +177,6 @@ class dzz_session {
                     C::app()->session->set($k, $v);
                 }
             }
-
 
             C::app()->session->update();
 

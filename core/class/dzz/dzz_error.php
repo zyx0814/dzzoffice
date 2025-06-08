@@ -189,68 +189,68 @@ class dzz_error {
         $host = $_SERVER['HTTP_HOST'];
         $title = $type == 'db' ? 'Database' : 'System';
         echo <<<EOT
-            <!DOCTYPE html>
-            <html>
-            <head>
-            	<title>$host - $title Error</title>
-            	<meta charset="{$_G['config']['output']['charset']}" />
-            	<meta name="renderer" content="webkit" />
-            	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-            	<meta name="ROBOTS" content="NOINDEX,NOFOLLOW,NOARCHIVE" />
-            	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-            	<style type="text/css">
-            	<!--
-            	body { background-color: white; color: black; font: 9pt/11pt verdana, arial, sans-serif;}
-            	#container { max-width: 1024px; margin: auto; }
-            	#message   { max-width: 1024px; color: black; }
-            
-            	.red  {color: red;}
-            	a:link     { font: 9pt/11pt verdana, arial, sans-serif; color: red; }
-            	a:visited  { font: 9pt/11pt verdana, arial, sans-serif; color: #4e4e4e; }
-            	h1 { color: #FF0000; font: 18pt "Verdana"; margin-bottom: 0.5em;}
-            	.bg1{ background-color: #FFFFCC;}
-            	.bg2{ background-color: #EEEEEE;}
-            	.table {background: #AAAAAA; font: 11pt Menlo,Consolas,"Lucida Console"}
-            	.table tbody{word-break: break-all;}
-            	.info {
-            	    background: none repeat scroll 0 0 #F3F3F3;
-            	    border: 0px solid #aaaaaa;
-            	    border-radius: 10px 10px 10px 10px;
-            	    color: #000000;
-            	    font-size: 11pt;
-            	    line-height: 160%;
-            	    margin-bottom: 1em;
-            	    padding: 1em;
-            	}
-            
-            	.help {
-            	    background: #F3F3F3;
-            	    border-radius: 10px 10px 10px 10px;
-            	    font: 12px verdana, arial, sans-serif;
-            	    text-align: center;
-            	    line-height: 160%;
-            	    padding: 1em;
-            		margin: 1em 0;
-            	}
-            
-            	.sql {
-            	    background: none repeat scroll 0 0 #FFFFCC;
-            	    border: 1px solid #aaaaaa;
-            	    color: #000000;
-            	    font: arial, sans-serif;
-            	    font-size: 9pt;
-            	    line-height: 160%;
-            	    margin-top: 1em;
-            	    padding: 4px;
-            	}
-            	-->
-            	</style>
-            </head>
-            <body>
-            <div id="container">
-            <h1>Dzz! $title Error</h1>
-            
-            EOT;
+<!DOCTYPE html>
+<html>
+<head>
+    <title>$host - $title Error</title>
+    <meta charset="{$_G['config']['output']['charset']}" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="ROBOTS" content="NOINDEX,NOFOLLOW,NOARCHIVE" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+    <!--
+    body { background-color: white; color: black; font: 9pt/11pt verdana, arial, sans-serif;}
+    #container { max-width: 1024px; margin: auto; }
+    #message   { max-width: 1024px; color: black; }
+
+    .red  {color: red;}
+    a:link     { font: 9pt/11pt verdana, arial, sans-serif; color: red; }
+    a:visited  { font: 9pt/11pt verdana, arial, sans-serif; color: #4e4e4e; }
+    h1 { color: #FF0000; font: 18pt "Verdana"; margin-bottom: 0.5em;}
+    .bg1{ background-color: #FFFFCC;}
+    .bg2{ background-color: #EEEEEE;}
+    .table {background: #AAAAAA; font: 11pt Menlo,Consolas,"Lucida Console"}
+    .table tbody{word-break: break-all;}
+    .info {
+        background: none repeat scroll 0 0 #F3F3F3;
+        border: 0px solid #aaaaaa;
+        border-radius: 10px 10px 10px 10px;
+        color: #000000;
+        font-size: 11pt;
+        line-height: 160%;
+        margin-bottom: 1em;
+        padding: 1em;
+    }
+
+    .help {
+        background: #F3F3F3;
+        border-radius: 10px 10px 10px 10px;
+        font: 12px verdana, arial, sans-serif;
+        text-align: center;
+        line-height: 160%;
+        padding: 1em;
+        margin: 1em 0;
+    }
+
+    .sql {
+        background: none repeat scroll 0 0 #FFFFCC;
+        border: 1px solid #aaaaaa;
+        color: #000000;
+        font: arial, sans-serif;
+        font-size: 9pt;
+        line-height: 160%;
+        margin-top: 1em;
+        padding: 4px;
+    }
+    -->
+    </style>
+</head>
+<body>
+<div id="container">
+<h1>Dzz! $title Error</h1>
+
+EOT;
         if (defined('CORE_VERSION')) {
             $VERSION = CORE_VERSION;
         } else {
@@ -285,11 +285,11 @@ class dzz_error {
 
         $endmsg = lang('error_end_message', array('host' => $host));
         echo <<<EOT
-            <div class="help">$endmsg</div>
-            </div>
-            </body>
-            </html>
-            EOT;
+<div class="help">$endmsg</div>
+</div>
+</body>
+</html>
+EOT;
     }
 
     public static function clear($message) {
