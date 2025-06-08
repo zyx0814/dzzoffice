@@ -22,9 +22,7 @@ if (!$uid)
 if (empty($do) && $uid)
     $do = 'edit';
 if ($do == 'add') {
-
     if (submitcheck('accountadd')) {
-
         //处理用户部门和职位
         $orgids = array();
         foreach ($_GET['orgids'] as $key => $orgid) {
@@ -171,7 +169,6 @@ if ($do == 'add') {
 
 } elseif ($do == 'edit') {
     if (submitcheck('accountedit')) {
-
         //判断是否对此用户有管理权限
         $uperm = false;
         if ($_G['adminid'] != 1) {
