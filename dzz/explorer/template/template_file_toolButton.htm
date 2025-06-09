@@ -1,17 +1,18 @@
 <div class="yunfile-btnMenu">
     <a href="javascript:;" type="button" class="btn open single dcolor" data-placement="bottom" data-auto-adapt="true" onclick="_filemanage.Open('{rid}')"><i class="mdi mdi-folder-open" data-toggle="tooltip" data-placement="bottom" title="{lang open}" data-original-title="{lang open}"></i> </a>
+    <div class="dropdown openwith single nodropdown" style="display: inline-block;">
+        <a href="javascript:;" type="button" class="btn dropdown-toggle more dcolor" data-toggle="dropdown"><i class="mdi mdi-open-in-new" data-toggle="tooltip" data-placement="bottom" title="{lang openwith}"></i> </a>
+        <ul class="dropdown-menu"></ul>
+    </div>
     <a href="javascript:;" type="button" class="btn download single dcolor" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i></a>
     <a href="javascript:;" type="button" class="btn downpackage multi dcolor" onclick="_filemanage.downpackage('{rid}')"><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang downpackage}"></i></a>
     <a href="javascript:;" type="button" class="btn rename single dcolor" onclick="_filemanage.rename('{rid}')"><i class="mdi mdi-pencil" data-toggle="tooltip" data-placement="bottom" title="{lang rename}"></i></a>
     <a href="javascript:;" type="button" class="btn delete dcolor" onclick="_filemanage.delIco('{rid}')"><i class="mdi mdi-delete" data-toggle="tooltip" data-placement="bottom" title="{lang delete}"></i></a>
     <a href="javascript:;" type="button" class="btn copy dcolor" onclick="_filemanage.copy('{rid}')"><i class="mdi mdi-file-multiple"  data-toggle="tooltip" data-placement="bottom" title="{lang copy}"></i></a>
+    <a href="javascript:;" type="button" class="btn copy clone dcolor" onclick="_filemanage.copy('{rid}','{fid}')"><i class="mdi mdi-file-document-multiple" data-toggle="tooltip" data-placement="bottom" title="{lang clone}"></i></a>
     <a href="javascript:;" type="button" class="btn cut dcolor" onclick="_filemanage.cut('{rid}')"><i class="mdi mdi-content-cut" data-toggle="tooltip" data-placement="bottom" title="{lang cut}"></i></a>
     <a href="javascript:;" type="button" class="btn paste dcolor" onclick="_filemanage.paste('{fid}')"><i class="mdi mdi-clipboard-file" data-toggle="tooltip" data-placement="bottom" title="{lang paste}"></i></a>
     <a href="javascript:;" type="button" class="btn share dcolor" onclick="_filemanage.share('{rid}')"><i class="mdi mdi-share-variant" data-toggle="tooltip" data-placement="bottom" title="{lang share}"></i> </a>
-    <div class="dropdown openwith single nodropdown" style="display: inline-block;">
-        <a href="javascript:;" type="button" class="btn dropdown-toggle more dcolor" data-toggle="dropdown"><i class="mdi mdi-open-in-new" data-toggle="tooltip" data-placement="bottom" title="{lang openwith}"></i> </a>
-        <ul class="dropdown-menu"></ul>
-    </div> 
 </div>
 <div class="yunfile-moreMenu">
     <div class="dropdown nodropdown">
@@ -20,6 +21,7 @@
             <li class="open single"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.Open('{rid}')"><i class="mdi mdi-folder-open"></i><span class="file-text">{lang open}</span></a></li>
             <li class="rename single"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.rename('{rid}')"><i class="mdi mdi-pencil"></i><span class="file-text">{lang rename}</span></a></li>
             <li class="copy"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.copy('{rid}')"><i class="mdi mdi-file-multiple"></i><span class="file-text">{lang copy}</span></a></li>
+            <li class="copy clone"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.copy('{rid}','{fid}')"><i class="mdi mdi-file-document-multiple"></i><span class="file-text">{lang clone}</span></a></li>
             <li class="cut"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.cut('{rid}')"><i class="mdi mdi-content-cut"></i><span class="file-text">{lang cut}</span></a></li>
             <li class="paste"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.paste('{fid}')"><i class="mdi mdi-clipboard-file"></i><span class="file-text">{lang paste}</span></a></li>
             <li class="download single"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download"></i><span class="file-text">{lang download}</span></a></li>

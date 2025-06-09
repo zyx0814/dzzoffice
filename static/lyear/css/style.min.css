@@ -771,7 +771,7 @@ body[data-theme='dark'],body[data-theme='dark'] .jconfirm .jconfirm-box,[data-th
 .form-search::-moz-placeholder{color:RGBA(255,255,255,.7)}
 .form-search:-ms-input-placeholder{color:RGBA(255,255,255,.7)}
 .input-search .form-search{background:rgba(0,0,0,0.1);border:1px solid transparent;height:48px;color:rgba(255,255,255,0.7)}
-.input-search .form-search:hover{-webkit-transition-duration:.1s;-o-transition-duration:.1s;transition-duration:.1s;border-color:#007bff;border-color:var(--bs-primary);outline:0;box-shadow:1px 1px 10px rgba(#0096FF);box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));border-width:1px;background:rgba(0,0,0,0.3);-webkit-box-shadow:1px 1px 10px #0096FF;-webkit-box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));-moz-box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));-o-box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));-ms-box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));-webkit-transition:all .25s linear;-moz-transition:all .25s linear;-ms-transition:all .25s linear;-o-transition:all .25s linear;transition:all .25s linear}
+.input-search .form-search:hover{-webkit-transition-duration:.1s;-o-transition-duration:.1s;transition-duration:.1s;border-color:#007bff;border-color:var(--bs-primary);outline:0;box-shadow:1px 1px 10px #0096FF;box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));border-width:1px;background:rgba(0,0,0,0.3);-webkit-box-shadow:1px 1px 10px #0096FF;-webkit-box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));-moz-box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));-o-box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));-ms-box-shadow:1px 1px 10px rgba(var(--bs-primary-hover));-webkit-transition:all .25s linear;-moz-transition:all .25s linear;-ms-transition:all .25s linear;-o-transition:all .25s linear;transition:all .25s linear}
 .input-search.focus .form-search{background-color:#fff;color:#333;background:#FFF}
 .input-search.focus .form-search::-webkit-input-placeholder{color:#999}
 .input-search.focus .form-search:-moz-placeholder{color:#999}
@@ -785,7 +785,6 @@ button.input-search-drop{-webkit-appearance:none;padding:0;cursor:pointer;backgr
 .input-search .input-search-drop{right:10px}
 .input-search .input-search-icon,.input-search .input-search-drop,.header-closebutton{opacity:0.5}
 .input-search .input-search-icon+.form-control{padding-left:43.5px;padding-right:40px}
-.input-search .form-control{-webkit-box-shadow:none;box-shadow:none}
 .input-search .input-search-icon,.input-search .header-closebutton{opacity:0.5}
 .input-search.focus .input-search-icon,.input-search.focus .header-closebutton{color:#666}
 .input-search.focus .input-search-icon,.input-search.focus .header-closebutton{opacity:0.8}

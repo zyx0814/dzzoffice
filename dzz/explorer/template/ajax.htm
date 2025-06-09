@@ -549,6 +549,12 @@
             <div class="col-sm-9 text-break"><!--{if is_array($attachment) && $attachment['error']}--><span class="text-danger">$attachment['error']</span><!--{else}--><a href="$attachment" target="_blank">$attachment</a><!--{/if}--></div>
         </div>
         <!--{/if}-->
+        <!--{if $attrdata['desc']}-->
+        <div class="row mb-1">
+            <label class="col-sm-3">描述说明</label>
+            <div class="col-sm-9 text-break">$attrdata['desc']</div>
+        </div>
+        <!--{/if}-->
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang close}</button>
