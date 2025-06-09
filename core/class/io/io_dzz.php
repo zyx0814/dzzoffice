@@ -2649,7 +2649,9 @@ class io_dzz extends io_api {
                     );
                     if ($icoarr['oid']) {
                         $collect = C::t('collect')->fetch($icoarr['oid']);
-                        if($collect['ourl']) $sourceattrdata['url'] = $collect['ourl'];
+                        if($collect['ourl'] && $icoarr['type'] == 'link') {
+                            $sourceattrdata['url'] = $collect['ourl'];
+                        }
                     }
                     if (C::t('resources_attr')->insert_attr($icoarr['rid'], $setarr['vid'], $sourceattrdata)) {//插入属性表
                         if ($icoarr['aid']) {
