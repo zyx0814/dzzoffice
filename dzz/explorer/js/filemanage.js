@@ -272,15 +272,23 @@ _filemanage.setInfoPanel = function () {
 	if (rids.length < 1) {
 		var fid = _filemanage.fid || $('#fidinput').val();
 		if (!fid) {
-			var data = '<div class="briefMenu modal-header clearfix"><div class="modal-title"><button type="button" class="toggRight btn-close"></button></div></div><div class="nothing_message">'
-			+'<div class="nothing_allimg">'
-			+'<img src="'+MOD_PATH+'/images/noFilePage-FileChoice.png">'
-			+'<p>'+__lang.choose_file_examine_information+'</p>'
-			+'</div>'
-			+'</div>';
+			if(_explorer.hash.indexOf('recent') != -1) {
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-clock-time-four text-info right-topicon"></i><span class="text-truncate fs-6 ps-1">'+__lang.recently_used+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row mb-1"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">最近修改、打开的文件,只显示前25条记录。</div></div></div>';
+			} else if (_explorer.hash.indexOf('collection') != -1) {
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-star right-topicon text-yellow"></i><span class="text-truncate fs-6 ps-1">'+__lang.collect+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row mb-1"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">文件添加收藏后可以实现快速访问。</div></div></div>';
+			} else if (_explorer.hash.indexOf('catsearch') != -1) {
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-file-document-outline right-topicon text-primary"></i><span class="text-truncate fs-6 ps-1">'+__lang.type+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row mb-1"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">按类型对文件进行分类。</div></div></div>';
+			} else {
+				var data = '<div class="briefMenu modal-header clearfix"><div class="modal-title"><button type="button" class="toggRight btn-close"></button></div></div>';
+			}
+			data += '<div class="nothing_message">'
+				+'<div class="nothing_allimg">'
+				+'<img src="'+MOD_PATH+'/images/noFilePage-FileChoice.png">'
+				+'<p>'+__lang.choose_file_examine_information+'</p>'
+				+'</div>'
+				+'</div>';
 			$('#rightMenu').html(data);
 			_filemanage.infoPanelUrl = '';
-
 			return false;
 		}
 		if (_filemanage.infoPanelUrl !== fid) {
