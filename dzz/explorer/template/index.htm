@@ -1,8 +1,6 @@
 <!--{template lyear:header_simple_start}-->
 <link href="static/lyear/js/jstree/style.min.css?{VERHASH}" rel="stylesheet" media="all">
-<link rel="stylesheet" href="static/css/smilies.css?{VERHASH}">
 <link rel="stylesheet" type="text/css" href="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker3.min.css?{VERHASH}">
-<link rel="stylesheet" type="text/css" href="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css?{VERHASH}">
 <link rel="stylesheet" href="static/lyear/js/select2/select2.min.css?{VERHASH}">
 <link rel="stylesheet" href="static/dzzthumb/jquery.dzzthumb.css?{VERHASH}">
 <link rel="stylesheet" href="{MOD_PATH}/images/index.css?{VERHASH}">
@@ -56,6 +54,36 @@
             });
         });
         _explorer.getConfig(MOD_URL+'&op=json');
+        jcLoader().load({
+				type:'css', 
+				ids:'css_lyear_comment.css', 
+				url:'dzz/comment/images/lyear_comment.css?{VERHASH}'  
+			},function(){
+				jcLoader().load({
+					type:'js', 
+					ids:'js_lyear_comment', 
+					url:'dzz/comment/scripts/lyear_comment.js?{VERHASH}'  
+				},function(){
+            });
+		});
+        jcLoader().load({
+				type:'css', 
+				ids:'css_smilies.css', 
+				url:'static/css/smilies.css?{VERHASH}'  
+			},function(){
+				jcLoader().load({
+					type:'js', 
+					ids:'js_smilies', 
+					url:'static/js/smilies.js?{VERHASH}'  
+				},function(){
+            });
+		});
+        jcLoader().load({
+				type:'css', 
+				ids:'css_tagsinput.css', 
+				url:'static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css?{VERHASH}'  
+			},function(){
+		});
     });
     function adduser_group(ids,data){
         var formdata={};
@@ -82,9 +110,8 @@
 <script type="text/javascript" src="{MOD_PATH}/js/_select.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/_hotkey.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/imgReady.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/js/smilies.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/select2/select2.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/jstree/jstree.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
 <script src="static/tagsinput/jquery.tagsinput.js?{VERHASH}"></script>

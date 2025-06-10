@@ -3,7 +3,7 @@
 	<div class="d-flex lyear-message-item">
 		<a href="user.php?uid=$value['authorid']" class="img-avatar-48" title="$value[author]" hidefocus="true" target="_blank">{eval echo avatar_block($value['authorid'],'','img-avatar img-avatar-48');}</a>
 		<div class="flex-grow-1 ms-2">
-			<a href="user.php?uid=$value['authorid']" title="$value[author]" hidefocus="true" target="_blank"><strong>$value[author]</strong></a>
+			<a href="user.php?uid=$value['authorid']" title="$value[author]" class="text-break" hidefocus="true" target="_blank"><strong>$value[author]</strong></a>
 			<div class="text-muted">$value['dateline'] $value[xtllq] <!--{if $_G[adminid]==1}-->$value[ip]<!--{/if}-->
 				<span class="float-end">
 					<!--{if $_G['uid']==$value['authorid'] || $_G[adminid]==1}-->

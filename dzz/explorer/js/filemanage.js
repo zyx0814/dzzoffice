@@ -460,8 +460,9 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		//if(!_filemanage.fid || _explorer.Permission_Container('multiselect',this.fid)){
 		el.find('.icoblank_rightbottom').on('click', function () {
 			var flag = true;
+			var ell = jQuery(this).parent();
 			var rid = el.attr('rid');
-			if (el.hasClass('Icoselected')) {
+			if (ell.hasClass('Icoselected')) {
 				flag = false;
 			}
 			_select.SelectedStyle('filemanage-' + self.id, rid, flag, true);
@@ -631,7 +632,6 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 		}
 		//判断粘贴权限及是否有粘贴项
 		if (!_explorer.Permission('upload', data) || _explorer.cut.icos.length < 1 || _filemanage.fid < 1) {
-
 			el.find('.paste').remove();
 		}
 		if (data.collect) {
@@ -1916,8 +1916,6 @@ _filemanage.share = function (rid, rids) {
 		showWindow('share', _explorer.appUrl + '&op=ajax&operation=share&paths=' + path+bz, 'get', 0);
 	}
 };
-
-
 _filemanage.downAttach = function (id) {
 	//if(_explorer.Permission('download','',id)) {
 	if (!id) {
