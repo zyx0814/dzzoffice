@@ -55,8 +55,8 @@ if ($do == 'getfolderdynamic') {
         $fileinfo = C::t('resources')->get_property_by_rid($rid);
         //权限信息
         $perm = C::t('folder')->fetch_perm_by_fid($fileinfo['pfid']);//获取文件夹权限
-        $total = C::t('resources_event')->fetch_by_rid($rid, $start, $limit, true);
         //动态信息
+        $total = C::t('resources_event')->fetch_by_rid($rid, $start, $limit, true);
         if ($total > $nextstart) {
             $next = $nextstart;
         }
@@ -106,8 +106,8 @@ if ($do == 'getfolderdynamic') {
         $fileinfo['editdateline'] = ($statis['editdateline']) ? dgmdate($statis['editdateline'], 'Y-m-d H:i:s') : '';
         $fileinfo['fdateline'] = ($foldeinfo['dateline']) ? dgmdate($foldeinfo['dateline'], 'Y-m-d H:i:s') : '';
         $fileinfo['fid'] = $fid;
-        //权限数据
         $perm = C::t('folder')->fetch_perm_by_fid($fid);//获取文件夹权限
+        //动态信息
         $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true);
         //动态信息
         if ($total > $nextstart) {
@@ -223,14 +223,14 @@ if ($do == 'getfolderdynamic') {
     } else {
         $rids = isset($_GET['rid']) ? $_GET['rid'] : '';
         if (!is_array($rids)) $rids = explode(',', $rids);
-        $ridnum = count($rids);
-        if ($ridnum == 1) {//如果只有一个选中项，判断是否是文件夹
-            $rid = $rids[0];
-            $file = C::t('resources')->fetch_info_by_rid($rid);
-            if ($file['type'] == 'folder') {
-                $pfid = $file['oid'];
-            }
-        }
+        // $ridnum = count($rids);
+        // if ($ridnum == 1) {//如果只有一个选中项，判断是否是文件夹
+        //     $rid = $rids[0];
+        //     $file = C::t('resources')->fetch_info_by_rid($rid);
+        //     if ($file['type'] == 'folder') {
+        //         $pfid = $file['oid'];
+        //     }
+        // }
     }
     $next = false;
     $nextstart = $start + $limit;
@@ -274,9 +274,6 @@ if ($do == 'getfolderdynamic') {
     $total = C::t('resources_version')->fetch_all_by_rid($rid, '', true);
     if ($total > $vnextstart) {
         $vnext = $vnextstart;
-    }
-    if (!$total) {
-        $total =1;
     }
     $versions = C::t('resources_version')->fetch_all_by_rid($rid, $limit, false);
     if ($vstart) {//加载多条历史版本
@@ -348,7 +345,6 @@ if ($do == 'getfolderdynamic') {
             ];
         }
     }
-    
     header('Content-Type: application/json');
     $return = [
         "code" => 0,

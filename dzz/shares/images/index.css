@@ -31,7 +31,7 @@ to{opacity:1}
 .navtoperate{background-color:#FFFFFF;box-shadow:0px 0px 15px 0px rgba(0,0,0,0.15)}
 .select-toperate{display:-webkit-flex;display:flex;flex-wrap:wrap}
 .select-toperate-left{-webkit-flex:1 0 auto;flex:1 0 auto;-webkit-box-pack:start;-webkit-justify-content:flex-start;justify-content:flex-start}
-.select-toperate-center{vertical-align:middle;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:end;-webkit-justify-content:flex-end;justify-content:flex-end}
+.select-toperate-center{-webkit-flex:1 0 auto;flex:1 0 auto;vertical-align:middle;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:end;-webkit-justify-content:flex-end;justify-content:flex-end}
 .emptyPage{text-align:center;position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%)}
 .emptyPage .emptyPage-text{font-size:16px;color:#AAAAAA;cursor:default}
 .header-toggle .sizeMenu li a{color:#FFFFFF}
@@ -79,7 +79,7 @@ to{opacity:1}
 .filemanage .detail_header_asc_0 .mdi-chevron-down{display:inline-block;color:#3779ff}
 .filemanage .detail_text{text-shadow:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:inherit;display:inline-block;float:left;word-break:break-all}
 .filemanage .detail_header_td_div{overflow:hidden;position:relative;white-space:nowrap;text-overflow:ellipsis}
-.filemanage .detail_item_td_name,.filemanage td,.filemanage th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.filemanage .detail_item_td_name,.filemanage td,.filemanage th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:32px;line-height:32px}
 .selectall-box{padding-left:5px;width:auto;display:inline-block;line-height:64px}
 .selectall-box .mdi-close{cursor:pointer;display:inline-block}
 .selectall-box a{position:absolute;z-index:10}
@@ -97,12 +97,12 @@ to{opacity:1}
 .filee-icon.filee-file-text{color:#2196F3}
 .filee-icon.filee-file-pdf{color:#FF0000}
 .dropdown-menu>li>a{position:relative}
-.icoblank_rightbottom{display:none;position:absolute;right:3px;top:0px;color:#b9b9b9;}
+.icoblank_rightbottom{display:none;position:absolute;right:3px;top:0px;color:#b9b9b9}
 .icoblank_rightbottom::before{content:"\F0131"}
 .middleicon{-webkit-user-select:none !important;-moz-user-select:none !important;user-select:none !important}
 .middleicon .card{padding:5px;margin-bottom:0}
 .middleicon .tr_item{position:relative;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.Icoblock.middleicon{position:relative;float:left;width:150px;height:185px;margin:5px;text-align:center}
+.Icoblock.middleicon{position:relative;float:left;width:150px;height:155px;margin:5px;text-align:center}
 .Icoblock.middleicon .Icoblock_icon{max-width:95%;max-height:95%;overflow:hidden}
 .Icoblock.middleicon .icoimgContainer{position:relative;width:135px;height:120px;line-height:120px}
 [data-theme='dark'] .Icoblock.middleicon .text-muted{color:#fff !important;color:rgba(255,255,255,.85) !important}
@@ -113,7 +113,7 @@ to{opacity:1}
 .file-item-hide{display:none}
 .file-item-block{display:block}
 }
-.file-item{border-radius:0;overflow:hidden;box-shadow:none;transition:all 0.3s ease;border:2px solid transparent;cursor:pointer;border: 1px solid #EEEEEE;}
+.file-item{border-radius:0;overflow:hidden;box-shadow:none;transition:all 0.3s ease;border:2px solid transparent;cursor:pointer;border: 1px solid #EEEEEE}
 [data-theme='dark'] .file-item{border: 1px solid rgba(255,255,255,0.25)}
 .file-item:hover{background-color: #f2f2f2}
 [data-theme='dark'] .file-item:hover{background-color: rgba(0,0,0,.1)}
@@ -146,4 +146,4 @@ to{opacity:1}
 .upload-list-wrapper .upload-file-status{float:left;width:19%}
 .upload-list-wrapper .upload-file-operate{float:left;width:10%}
 .upload-list-header div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:5px;font-weight:bold}
-.selectbox{color:#b9b9b9;}
+.selectbox{color:#b9b9b9}

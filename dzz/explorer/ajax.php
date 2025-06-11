@@ -99,7 +99,6 @@ if ($operation == 'upload') {//上传图片文件
     $permgroups = C::t('resources_permgroup')->fetch_all();
 
     $perms = get_permsarray();//获取所有权限
-
     //设置权限
     if (isset($_GET['permsubmit']) && $_GET['permsubmit']) {
         $perms = isset($_GET['selectperm']) ? $_GET['selectperm'] : array();

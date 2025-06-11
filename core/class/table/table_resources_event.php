@@ -194,34 +194,22 @@ class table_resources_event extends dzz_table {
     public function fetch_by_pfid_rid($fid, $counts = false, $start = 0, $limit = 0, $rid = '', $type = false) {
         //查询文件夹所有下级
         $fids = C::t('resources_path')->get_child_fids($fid);
+        $conditions = [];
+        $params = [$this->_table, $fids];
+        $conditions[] = "pfid IN (%n)";
 
         if ($type) {
-            $type = $type - 1;
-            $wheresql = " where (pfid in(%n) and `type` = " . $type . ")";
-        } else {
-            $wheresql = " where (pfid in(%n) and `type` = 0)";
+            $typeValue = $type - 1;
+            $conditions[] = "`type` = " . $typeValue;
         }
-        $wheresql = " where (pfid in(%n) and `type` = 0)";
-        $params = array($this->_table, $fids);
 
         if ($rid) {
-            if ($type) {
-                $type = $type - 1;
-                $wheresql .= " or ((rid = %s and  `type` = 1) or `type` = 0)";
-            } else {
-                $wheresql .= " or ((rid = %s and  `type` = 1) or `type` = 0)";
-            }
-
+            $conditions[] = "rid = %s";
             $params[] = $rid;
-        } else {
-            if ($type) {
-                $type = $type - 1;
-                $wheresql .= " or ((rid = %s and  `type` = 1) or `type` = 0)";
-            } else {
-                $wheresql .= " or (pfid = %d and `type` = 1 and rid = '')";
-            }
-            $params[] = $fid;
         }
+
+        $wheresql = $conditions ? " WHERE " . implode(" AND ", $conditions) : "";
+
         if ($counts) {
             return DB::result_first("select count(*) from %t $wheresql", $params);
         }

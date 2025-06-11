@@ -51,7 +51,6 @@ class perm_FolderSPerm {
             'share' => 262144,    //分享
             'approve' => 524288,//审批
         );
-
     }
 
     public static function getPerm($action) {

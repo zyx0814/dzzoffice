@@ -2,7 +2,7 @@
 <div class="briefMenu modal-header border-bottom clearfix">
     <div class="modal-title text-truncate fs-6">
         <button type="button" class="mdi mdi-chevron-left mdi-right-backing dcolor" data-rid="$ridval" onclick="reback_last(this)"></button>
-        <span class="right-imgname text-truncate">{lang dynamic}</span>
+        <span class="right-imgname text-truncate">{lang dynamic}<span class="text-muted">（{$total}条记录）</span></span>
     </div>
     <button type="button" class="toggRight btn-close"></button>
 </div>
@@ -27,7 +27,9 @@
 <!--{/loop}--> 
 </ul>
 <!--{if $next}-->
-<a href="javascript:;" class="btn_dynamic_more_less btn-link text-end" onclick="load_dynamic(this,'$next','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);">{lang upload_more}</a>
+<div class="mb-1 d-grid">
+    <a href="javascript:;" class="btn_dynamic_more_less btn-link" onclick="load_dynamic(this,'$next','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);">{lang upload_more}</a>
+</div>
 <!--{/if}-->
 <!--{/if}-->
 </div>

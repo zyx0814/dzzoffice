@@ -1,7 +1,7 @@
 <div class="briefMenu modal-header border-bottom clearfix">
     <div class="modal-title text-truncate fs-6">
         <button type="button" class="mdi mdi-chevron-left mdi-right-backing dcolor" data-rid="$rid" onclick="reback_last(this)"></button>
-        <span class="right-imgname text-truncate">{lang history_revision}</span>
+        <span class="right-imgname text-truncate">{lang history_revision}<span class="text-muted">（{$total}条记录）</span></span>
     </div>
     <button type="button" class="toggRight btn-close"></button>
 </div>
@@ -48,12 +48,12 @@
             </ul>
         </li>
         <!--{/loop}-->
+        <!--{if $vnext}-->
+        <li class="mb-1 d-grid btn_button_more">
+            <a href="javascript:;" class="btn btn-link btn-sm text-end" onclick="loadMoreVersion(this,'{$vnext}');" data-rid="{$rid}">{lang upload_more}</a>
+        </li>
+        <!--{/if}-->
     </ul>
-    <!--{if $vnext}-->
-    <div class="mb-1 d-grid btn_button_more">
-        <a href="javascript:;" class="btn btn-link btn-sm text-end" onclick="loadMoreVersion(this,'{$vnext}');" data-rid="{$rid}">{lang upload_more}</a>
-    </div>
-    <!--{/if}-->
 </div>
 
 <script type="text/javascript">

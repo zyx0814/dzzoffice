@@ -79,7 +79,6 @@ if ($do == 'deleteIco') {//删除文件到回收站
     exit(json_encode($ret));
 
 } elseif ($do == 'paste') {//粘贴复制或者剪切的文件
-
     $copyinfo = C::t('resources_clipboard')->fetch_by_uid();
     //复制文件rid
     $icoids = explode(',', $copyinfo['files']);

@@ -71,6 +71,12 @@
 				ids:'css_tagsinput.css', 
 				url:'static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css?{VERHASH}'  
 			},function(){
+                jcLoader().load({
+					type:'js', 
+					ids:'js_tagsinput', 
+					url:'static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.js?{VERHASH}'  
+				},function(){
+            });
 		});
     });
     function adduser_group(ids,data){
@@ -98,11 +104,10 @@
 <script type="text/javascript" src="{MOD_PATH}/js/_select.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/_hotkey.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/imgReady.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/lyear/js/select2/select2.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/select2/select2.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/jstree/jstree.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
-<script src="static/tagsinput/jquery.tagsinput.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/header-search.js?{VERHASH}"></script>
 <script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
