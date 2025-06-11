@@ -272,15 +272,23 @@ _filemanage.setInfoPanel = function () {
 	if (rids.length < 1) {
 		var fid = _filemanage.fid || $('#fidinput').val();
 		if (!fid) {
-			var data = '<div class="nothing_message">'
-			+'<div class="nothing_allimg">'
-			+'<img src="'+MOD_PATH+'/images/noFilePage-FileChoice.png">'
-			+'<p>'+__lang.choose_file_examine_information+'</p>'
-			+'</div>'
-			+'</div>';
+			if(_explorer.hash.indexOf('recent') != -1) {
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-clock-time-four text-info right-topicon"></i><span class="text-truncate fs-6 ps-1">'+__lang.recently_used+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">最近修改、打开的文件,只显示前25条记录。</div></div></div>';
+			} else if (_explorer.hash.indexOf('collection') != -1) {
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-star right-topicon text-yellow"></i><span class="text-truncate fs-6 ps-1">'+__lang.collect+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">文件添加收藏后可以实现快速访问。</div></div></div>';
+			} else if (_explorer.hash.indexOf('catsearch') != -1) {
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-file-document-outline right-topicon text-primary"></i><span class="text-truncate fs-6 ps-1">'+__lang.type+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">按类型对文件进行分类。</div></div></div>';
+			} else {
+				var data = '<div class="briefMenu modal-header clearfix"><div class="modal-title"><button type="button" class="toggRight btn-close"></button></div></div>';
+			}
+			data += '<div class="nothing_message">'
+				+'<div class="nothing_allimg">'
+				+'<img src="'+MOD_PATH+'/images/noFilePage-FileChoice.png">'
+				+'<p>'+__lang.choose_file_examine_information+'</p>'
+				+'</div>'
+				+'</div>';
 			$('#rightMenu').html(data);
 			_filemanage.infoPanelUrl = '';
-
 			return false;
 		}
 		if (_filemanage.infoPanelUrl !== fid) {
@@ -367,6 +375,7 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	html = html.replace(/\{ftype\}/g, data.ftype);
 	html = html.replace(/\{dateline\}/g, data.dateline);
 	html = html.replace(/\{fdateline\}/g, data.fdateline?data.fdateline:'');
+	html = html.replace(/\{ffdateline\}/g, data.ffdateline?data.ffdateline:'');
 	html = html.replace(/\{flag\}/g, data.flag);
 	html = html.replace(/\{position\}/g, data.relpath);
 	html = html.replace(/\{dpath\}/g, data.dpath);
@@ -392,9 +401,9 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	}
 	//收藏
 	if(data.collect){
-		var collectstatus = '<span class="colllection-item" ><i class="mdi mdi-star" title=""></i></span>';
+		var collectstatus = '<span class="colllection-item" ><i class="mdi mdi-star text-yellow" title=""></i></span>';
 	}else{
-		var collectstatus = '<span class="colllection-item hide"><i class="mdi mdi-star" title=""></i></span>';
+		var collectstatus = '<span class="colllection-item hide"><i class="mdi mdi-star text-yellow" title=""></i></span>';
 	}
 	html = html.replace(/\{collectstatus\}/g,collectstatus);
     html = html.replace(/\{sharestatus\}/g,sharestatus);
@@ -451,8 +460,9 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		//if(!_filemanage.fid || _explorer.Permission_Container('multiselect',this.fid)){
 		el.find('.icoblank_rightbottom').on('click', function () {
 			var flag = true;
+			var ell = jQuery(this).parent();
 			var rid = el.attr('rid');
-			if (el.hasClass('Icoselected')) {
+			if (ell.hasClass('Icoselected')) {
 				flag = false;
 			}
 			_select.SelectedStyle('filemanage-' + self.id, rid, flag, true);
@@ -622,7 +632,6 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 		}
 		//判断粘贴权限及是否有粘贴项
 		if (!_explorer.Permission('upload', data) || _explorer.cut.icos.length < 1 || _filemanage.fid < 1) {
-
 			el.find('.paste').remove();
 		}
 		if (data.collect) {
@@ -658,6 +667,7 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 	}
 	if (_explorer.hash.indexOf('cloud') != -1) {
 		el.find('.collect').remove();
+		el.find('.clone').remove();
 	}
 	_filemanage.SetMoreButton();
 };
@@ -665,18 +675,17 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 _filemanage.SetMoreButton = function () {
 	var el = $('.navtopheader .toolButtons');
 	if (!el.length) return;
-	var moreMenu = el.find('.yunfile-moreMenu');
-	var width = el.width() - moreMenu.outerWidth(true);
+	var width = el.width() - el.find('.yunfile-moreMenu').outerWidth(true);
 	if (width <= 0) return;
 	var yunfileButton = el.find('.yunfile-btnMenu');
 	yunfileButton.children().hide();
 
-	var totalWidth = 0;
+	var totalWidth = 80;
 	yunfileButton.children().each(function() {
 		var el1 = $(this);
 		el1.show();
 		var btnWidth = el1.outerWidth(true);
-		if (totalWidth + btnWidth > (width - 20)) {
+		if (totalWidth + btnWidth > (width - 80)) {
 			el1.hide();
 		} else {
 			totalWidth += btnWidth;
@@ -925,6 +934,7 @@ function contextmenuico(rid) {
 	}
 	if (_explorer.hash.indexOf('cloud') != -1) {
 		el.find('.collect').remove();
+		el.find('.clone').remove();
 	}
 	if (!el.find('.menu-item').length) {
 		el.hide();
@@ -1647,7 +1657,7 @@ _filemanage.Open = function (rid, extid, title) {
 
 function getExtOpen(data, isdefault) {
 
-	if (data.type === 'folder' || data.type === 'user' || data.type === 'app' || data.type === 'pan' || data.type === 'storage' || data.type === 'disk') {
+	if (data.type === 'folder' || data.type === 'user' || data.type === 'app' || data.type === 'pan' || data.type === 'storage' || data.type === 'disk' || data.type === 'link') {
 		return true;
 	}
 	var openarr = [];
@@ -1906,8 +1916,6 @@ _filemanage.share = function (rid, rids) {
 		showWindow('share', _explorer.appUrl + '&op=ajax&operation=share&paths=' + path+bz, 'get', 0);
 	}
 };
-
-
 _filemanage.downAttach = function (id) {
 	//if(_explorer.Permission('download','',id)) {
 	if (!id) {
@@ -2052,7 +2060,11 @@ _filemanage.rename = function (id) {
 	el.closest('td').addClass('renaming');
 	var filename = el.html();
 	var html = '';
-	html = "<input type='text' class='form-control' name='text' id='input_" + id + "' value=\"" + filename + "\">";
+	if (filemanage.view > 3) {
+		html = "<input type='text' class='form-control' name='text' id='input_" + id + "' style=\"width:" + (el.closest('td').width() - 110) + "px;padding:2px; \" value=\"" + filename + "\">";
+	} else {
+		html = "<input type='textarea' class='form-control' name='text' id='input_" + id + "' value=\"" + filename + "\">";
+	}
 	el.html(html);
 	var ele = jQuery('#input_' + id);
 	ele.select();
@@ -2493,7 +2505,7 @@ _filemanage.removerid = function (rid) {
 
 };
 //文件复制
-_filemanage.copy = function (rid) {
+_filemanage.copy = function (rid,fid) {
 	if (!rid) {
 		rid = _filemanage.selectall.icos[0];
 	}
@@ -2547,11 +2559,10 @@ _filemanage.copy = function (rid) {
 			}
 			filenames = filenames.substr(0, filenames.length - 1);
 			layer.msg(filenames + __lang.copy_success, {offset:'10px'});
+			if(fid) {_filemanage.paste(fid);}
 		} else {
 			layer.msg(json.msg, {offset:'10px'});
 		}
-
-
 	}, 'json');
 };
 //文件剪切
@@ -2627,6 +2638,9 @@ _filemanage.paste = function (fid) {
 	var folder = _explorer.sourcedata.folder[fid];
 	if (!folder) {
 		return false;
+	}
+	if(folder.bz) {
+		folder.fid = folder.path;
 	}
 	var data = {
 		'tpath': folder.fid,

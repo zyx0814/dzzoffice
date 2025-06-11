@@ -3,7 +3,7 @@
 	<div class="d-flex lyear-message-item">
 		<a href="user.php?uid=$value1[authorid]" class="img-avatar-48" title="$value1[author]" hidefocus="true" target="_blank">{eval echo avatar_block($value1['authorid'],'','img-avatar img-avatar-48');}</a>
 		<div class="flex-grow-1 ms-2">
-			<a href="user.php?uid=$value1[authorid]" title="$value1[author]" class="avatar_mcfed" hidefocus="true" target="_blank"><strong>$value1[author]</strong></a>
+			<a href="user.php?uid=$value1[authorid]" title="$value1[author]" class="avatar_mcfed text-break" hidefocus="true" target="_blank"><strong>$value1[author]</strong></a>
 			<!--{if $value1['rpost']}-->
 			<span class="text-muted m-1">{lang reply}</span>
 			<a href="user.php?uid=$value1[rpost][authorid]" title="$value1[rpost][author]" class="avatar_mcfed" hidefocus="true" target="_blank"><strong>$value1[rpost][author]</strong></a>

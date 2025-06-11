@@ -249,7 +249,7 @@ _filemanage.setInfoPanel = function () {
 		if (!fid) {
 			var data = '<div class="nothing_message">'
 			+'<div class="nothing_allimg">'
-			+'<img src="dzz/explorer/img/noFilePage-FileChoice.png">'
+			+'<img src="dzz/explorer/images/noFilePage-FileChoice.png">'
 			+'<p>'+__lang.choose_file_examine_information+'</p>'
 			+'</div>'
 			+'</div>';

@@ -777,6 +777,7 @@ $lang = array(
     'gender' => '性别',
     'age' => '岁',
     'comment' => '评论',
+    'discuss' => '讨论',
     'reply' => '回复',
     'from' => '来自',
     'admininfo_password2_invalid' => '两次密码不一致，请检查',

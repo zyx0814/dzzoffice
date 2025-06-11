@@ -345,8 +345,9 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		});
 		el.find('.icoblank_rightbottom').on('click', function () {
 			var flag = true;
+			var ell = jQuery(this).parent();
 			var rid = el.attr('rid');
-			if (el.hasClass('Icoselected')) {
+			if (ell.hasClass('Icoselected')) {
 				flag = false;
 			}
 			_select.SelectedStyle('filemanage-' + self.id, rid, flag, true);

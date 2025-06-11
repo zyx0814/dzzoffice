@@ -9,9 +9,9 @@
 			{eval echo avatar_group($gid);}
 		</a>
 		<!--{elseif $fileinfo['flag'] == 'home'}-->
-		<i class="mdi mdi-account-box right-topicon"></i>
+		<i class="mdi mdi-account-box text-primary right-topicon"></i>
 		<!--{elseif $fileinfo['ismulti']}-->
-		<i class="mdi mdi-file-multiple right-topicon"></i>
+		<i class="mdi mdi-file-multiple text-primary right-topicon"></i>
 		<!--{elseif $bz && $fileinfo['bz']}-->
 		<img src="dzz/images/default/system/{$fileinfo['bz']}.png">
 		<!--{else}-->
@@ -21,7 +21,7 @@
 		<button type="button" class="toggRight btn-close"></button>
 	</div>
 </div>
-<div class="right-messagetable scroll-y" data-subtractor="{eval echo ($fid || $rid)?53:0}">
+<div class="right-messagetable scroll-y" data-subtractor="{eval echo ($fid || $rid)?54:0}">
 	<!--{if !$bz}-->
 	<!--根文件进度条开始-->
 	<!--{if ($fileinfo['isgroup'] || $fileinfo['pfid'] == 0) && !$fileinfo['ismulti']}-->
@@ -104,7 +104,7 @@
 	<!--{if $fileinfo['isgroup']}-->
     <div class="p-2 border-bottom">
 		<div class="right-card-header">
-			<div class="title">{lang member}</div>
+			<div class="title">{lang member}<i class="ms-1 mdi mdi-information-outline" data-toggle="tooltip" data-placement="right" title="机构部门的成员权限需要前往机构用户中设置"></i></div>
 			<!--{if $usergroupperm >= 1 && $org['type']}-->
 			<button type="button" class="groupbutton dcolor" onclick="select_group_user();return false;"><span class="mdi mdi-plus-circle"></span></button>
 			<!--{/if}-->
@@ -133,7 +133,7 @@
 	<!--{if $org}-->
 	<div class="p-2 border-bottom">
 		<div class="right-card-header">
-			<div class="title">{lang about}</div>
+			<div class="title">{lang about}<i class="ms-1 mdi mdi-information-outline" data-toggle="tooltip" data-placement="right" title="机构部门的信息需要前往机构用户中设置"></i></div>
 			<!--{if $usergroupperm >= 1 && $org['type']}-->
 			<button type="button" class="groupbutton dcolor" onclick="showWindow('groupsetting','{MOD_URL}&op=group&do=group_ajax&operation=groupsetting&gid=$gid')">
 				<span class="mdi mdi-pencil"></span>
@@ -172,6 +172,7 @@
    </div>
     <!--文件夹动态结束-->
 </div>
+<!--{if !$fileinfo['ismulti']}-->
 <!--{if $fid || $rid || !$bz}-->	
 <div class="comment-area dtheme">
     <div class="messageMenu"> 
@@ -195,9 +196,13 @@
     </div>
 </div>
 <!--{/if}-->
+<!--{/if}-->
 </div>
 <script>
 var userids = '';
+$(function () {
+	$('[data-toggle="tooltip"]').tooltip()
+})
 $(document).ready(function(){
     userids = '{$userstr}';
 });
@@ -205,7 +210,6 @@ jQuery(".right-numerbottom .js-popbox").each(function(){
 		jQuery(this).popbox();
 });
 jQuery(document).on('click','.mdi-right-backing',function(){
-	jQuery('.rightbasic').show();
 	jQuery('#more_dynameic').hide();
 })
 function editgroupperm(gid,fid){

@@ -454,7 +454,7 @@
 <!--{elseif $operation == 'property'}-->
 <!--{if !$error}-->
     <div class="modal-header">
-        <h4 class="modal-title text-truncate"><!--{if $propertys['ismulti']}-->{lang more_select}<!--{else}--><!--{if $propertys[name]}-->$propertys[name]<!--{/if}--> {lang property}<!--{/if}--></h4>
+        <h4 class="modal-title text-truncate"><!--{if $propertys['ismulti']}--><i class="mdi mdi-file-multiple text-primary"></i> {lang more_select}<!--{else}--><!--{if $propertys[name]}-->$propertys[name]<!--{/if}--> {lang property}<!--{/if}--></h4>
         <div class="float-end">
             <button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
             <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
@@ -547,6 +547,12 @@
         <div class="row mb-1">
             <label class="col-sm-3">文件地址</label>
             <div class="col-sm-9 text-break"><!--{if is_array($attachment) && $attachment['error']}--><span class="text-danger">$attachment['error']</span><!--{else}--><a href="$attachment" target="_blank">$attachment</a><!--{/if}--></div>
+        </div>
+        <!--{/if}-->
+        <!--{if $attrdata['desc']}-->
+        <div class="row mb-1">
+            <label class="col-sm-3">描述说明</label>
+            <div class="col-sm-9 text-break">$attrdata['desc']</div>
         </div>
         <!--{/if}-->
     </div>

@@ -54,14 +54,16 @@ if ($do == 'getfolderdynamic') {
         //文件夹属性信息
         $fileinfo = C::t('resources')->get_property_by_rid($rid);
         //权限信息
-        $userperm = perm_check::getPerm($fileinfo['pfid']);//获取用户权限
         $perm = C::t('folder')->fetch_perm_by_fid($fileinfo['pfid']);//获取文件夹权限
         //动态信息
-        if (C::t('resources_event')->fetch_by_rid($rid, $start, $limit, true) > $nextstart) {
+        $total = C::t('resources_event')->fetch_by_rid($rid, $start, $limit, true);
+        if ($total > $nextstart) {
             $next = $nextstart;
         }
+        if ($total) {
+            $events = C::t('resources_event')->fetch_by_rid($rid, $start, $limit);
+        }
         $gid = $fileinfo['gid'];
-        $events = C::t('resources_event')->fetch_by_rid($rid, $start, $limit);
     } elseif ($fid) {//如果获取到文件夹id
         //文件夹信息
         $fileinfo = C::t('resources')->get_folderinfo_by_fid($fid);
@@ -104,14 +106,16 @@ if ($do == 'getfolderdynamic') {
         $fileinfo['editdateline'] = ($statis['editdateline']) ? dgmdate($statis['editdateline'], 'Y-m-d H:i:s') : '';
         $fileinfo['fdateline'] = ($foldeinfo['dateline']) ? dgmdate($foldeinfo['dateline'], 'Y-m-d H:i:s') : '';
         $fileinfo['fid'] = $fid;
-        //权限数据
-        $userperm = perm_check::getPerm($fid);//获取用户权限
         $perm = C::t('folder')->fetch_perm_by_fid($fid);//获取文件夹权限
         //动态信息
-        if (C::t('resources_event')->fetch_by_pfid_rid($fid, true) > $nextstart) {
+        $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true);
+        //动态信息
+        if ($total > $nextstart) {
             $next = $nextstart;
         }
-        $events = C::t('resources_event')->fetch_by_pfid_rid($fid, '', $start, $limit, '');
+        if($total) {
+            $events = C::t('resources_event')->fetch_by_pfid_rid($fid, '', $start, $limit, '');
+        }
     }
     $usergroupperm = C::t('organization_admin')->chk_memberperm($gid, $uid);
     $fileinfo['type'] = '文件夹';
@@ -130,10 +134,13 @@ if ($do == 'getfolderdynamic') {
     $limit = 3;
     $next = false;
     $nextstart = $start + $limit;
-    if (C::t('resources_event')->fetch_by_rid($rids, $start, $limit, true) > $nextstart) {
+    $total = C::t('resources_event')->fetch_by_rid($rids, $start, $limit, true);
+    if ($total > $nextstart) {
         $next = $nextstart;
     }
-    $events = C::t('resources_event')->fetch_by_rid($rids, $start, $limit);
+    if($total) {
+        $events = C::t('resources_event')->fetch_by_rid($rids, $start, $limit);
+    }
     //文件信息数据请求
     if ($ridnum == 1) {//如果只有一个选中项，判断是否是文件夹
         $rid = $rids[0];
@@ -177,7 +184,8 @@ if ($do == 'getfolderdynamic') {
             $vlimit = 3;
             $vnext = false;
             $vnextstart = $vstart + $vlimit;
-            if (C::t('resources_version')->fetch_all_by_rid($rid, $vlimit, true) > $vnextstart) {
+            $total = C::t('resources_version')->fetch_all_by_rid($rid, $vlimit, true);
+            if ($total > $vnextstart) {
                 $vnext = $vnextstart;
             }
             $versions = C::t('resources_version')->fetch_all_by_rid($rid, $vlimit, false);
@@ -215,28 +223,34 @@ if ($do == 'getfolderdynamic') {
     } else {
         $rids = isset($_GET['rid']) ? $_GET['rid'] : '';
         if (!is_array($rids)) $rids = explode(',', $rids);
-        $ridnum = count($rids);
-        if ($ridnum == 1) {//如果只有一个选中项，判断是否是文件夹
-            $rid = $rids[0];
-            $file = C::t('resources')->fetch_info_by_rid($rid);
-            if ($file['type'] == 'folder') {
-                $pfid = $file['oid'];
-            }
-        }
+        // $ridnum = count($rids);
+        // if ($ridnum == 1) {//如果只有一个选中项，判断是否是文件夹
+        //     $rid = $rids[0];
+        //     $file = C::t('resources')->fetch_info_by_rid($rid);
+        //     if ($file['type'] == 'folder') {
+        //         $pfid = $file['oid'];
+        //     }
+        // }
     }
     $next = false;
     $nextstart = $start + $limit;
     if ($pfid) {
         //查询文件夹所有下级
-        if (C::t('resources_event')->fetch_by_pfid_rid($pfid, true, $start, $limit) > $nextstart) {
+        $total = C::t('resources_event')->fetch_by_pfid_rid($pfid, true, $start, $limit);
+        if ($total) {
+            $events = C::t('resources_event')->fetch_by_pfid_rid($pfid, false, $start, $limit);
+        }
+        if ($total > $nextstart) {
             $next = $nextstart;
         }
-        $events = C::t('resources_event')->fetch_by_pfid_rid($pfid, false, $start, $limit);
     } else {
-        if (C::t('resources_event')->fetch_by_rid($rids, $start, $limit, true) > $nextstart) {
+        $total = C::t('resources_event')->fetch_by_rid($rids, $start, $limit, true);
+        if ($total) {
+            $events = C::t('resources_event')->fetch_by_rid($rids, $start, $limit);
+        }
+        if ($total > $nextstart) {
             $next = $nextstart;
         }
-        $events = C::t('resources_event')->fetch_by_rid($rids, $start, $limit);
     }
     if ($tplmore) {//加载多条动态
         include template('template_dynamic_list');
@@ -316,21 +330,20 @@ if ($do == 'getfolderdynamic') {
         $uids = $_GET['uids'];
         $condition['uidval'] = array($uids, 'nowhere');
     }
-    $events = array();
+    $events = $list = array();
     $count = C::t('resources_event')->fetch_all_event($start, $limit, $condition, $order, true);
     if ($count) {
         $events = C::t('resources_event')->fetch_all_event($start, $limit, $condition, $order);
-    }
-    $list = array();
-    foreach ($events as $data) {
-        $list[] = [
-            "username" => '<a href="user.php?uid=' . $data['uid'] . '" target="_blank">' . $data['username'] . '</a>',
-            "do_lang" => $data['do_lang'],
-            "do_obj" => $data['do_obj'],
-            "body_data" => $data['details'],
-            "do" => $data['do'],
-            "dateline" => dgmdate($data['dateline'], 'Y-m-d H:i:s'),
-        ];
+        foreach ($events as $data) {
+            $list[] = [
+                "username" => '<a href="user.php?uid=' . $data['uid'] . '" target="_blank">' . $data['username'] . '</a>',
+                "do_lang" => $data['do_lang'],
+                "do_obj" => $data['do_obj'],
+                "body_data" => $data['details'],
+                "do" => $data['do'],
+                "dateline" => dgmdate($data['dateline'], 'Y-m-d H:i:s'),
+            ];
+        }
     }
     header('Content-Type: application/json');
     $return = [

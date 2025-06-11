@@ -2647,14 +2647,19 @@ class io_dzz extends io_api {
                         'aid' => isset($icoarr['aid']) ? $icoarr['aid'] : '',
                         'img' => $icoarr['img'],
                     );
+                    if ($icoarr['oid']) {
+                        $collect = C::t('collect')->fetch($icoarr['oid']);
+                        if($collect['ourl'] && $icoarr['type'] == 'link') {
+                            $sourceattrdata['url'] = $collect['ourl'];
+                        }
+                    }
                     if (C::t('resources_attr')->insert_attr($icoarr['rid'], $setarr['vid'], $sourceattrdata)) {//插入属性表
                         if ($icoarr['aid']) {
                             $attach = C::t('attachment')->fetch($icoarr['aid']);
                             C::t('attachment')->update($icoarr['aid'], array('copys' => $attach['copys'] + 1));//增加使用数
                         }
                         if ($icoarr['oid']) {
-                            $attach = C::t('collect')->fetch($icoarr['oid']);
-                            C::t('collect')->update($icoarr['oid'], array('copys' => $attach['copys'] + 1));//增加使用数
+                            C::t('collect')->update($icoarr['oid'], array('copys' => $collect['copys'] + 1));//增加使用数
                         }
                         $icoarr['path'] = $targetpath . $setarr['name'];
                         $event = 'creat_file';

@@ -155,7 +155,7 @@ $lang = array(
 
     'explorer_comment_at_title' => '提到(@)我的评论',
     'explorer_comment_at' => '{author}在文件(文件夹):<a href="{url}">{fname}</a>的评论中提到我<b>{comment}</b>',
-    'explorer_comment_at_wx' => '{author}在群组:{fname}的评论中提到我<b>{comment}</b>',
+    'explorer_comment_at_wx' => '{author}在文件(文件夹):{fname}的评论中提到我<b>{comment}</b>',
     'explorer_comment_at_redirecturl' => '{url}',
 
     //发表评论，通知群组作者
@@ -166,7 +166,7 @@ $lang = array(
 
     //回复评论，通知被回复者
     'explorer_comment_reply_title' => '回复了我的评论',
-    'explorer_comment_reply' => '{author}在群组:<a href="{url}">{fname}</a>中回复了我的评论<b>{comment}</b>',
+    'explorer_comment_reply' => '{author}在文件(文件夹):<a href="{url}">{fname}</a>中回复了我的评论<b>{comment}</b>',
     'explorer_comment_reply_wx' => '{author}在文件(文件夹):{fname}中回复了我的评论<b>{comment}</b>',
     'explorer_comment_reply_redirecturl' => '{url}',
 
@@ -443,4 +443,5 @@ $lang = array(
     'delete_version' => "删除了<a href='javascript:;' onclick=\"location.hash='{hash}';\">{position}</a>{filename}的历史版本[V{version}]",
     'edit_versiondesc' => '更改了<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}的版本描述',
     'editversiondesc' => '修改版本描述',
+    'clone' => '创建副本',
 );

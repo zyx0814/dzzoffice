@@ -41,28 +41,9 @@ if ($do == 'saveIndex') {
         }
     }
     $userstatus = C::t('user_status')->fetch($_G['uid']);
-    $space = C::t('user_profile')->get_user_info_by_uid($_G['uid']);
-    $space['fusesize'] = formatsize($space['usesize']);
+    $space = dzzgetspace($_G['uid']);
     if (!$_G['cache']['usergroups']) loadcache('usergroups');
     $usergroup = $_G['cache']['usergroups'][$space['groupid']];
-    if ($usergroup['maxspacesize'] == 0) {
-        $space['maxspacesize'] = 0;
-    } elseif ($usergroup['maxspacesize'] < 0) {
-        if (($space['addsize'] + $space['buysize']) > 0) {
-            $space['maxspacesize'] = ($space['addsize'] + $space['buysize']) * 1024 * 1024;
-        } else {
-            $space['maxspacesize'] = -1;
-        }
-    } else {
-        $space['maxspacesize'] = ($usergroup['maxspacesize'] + $space['addsize'] + $space['buysize']) * 1024 * 1024;
-    }
-    if ($space['maxspacesize'] > 0) {
-        $space['fmaxspacesize'] = formatsize($space['maxspacesize']);
-    } elseif ($space['maxspacesize'] == 0) {
-        $space['fmaxspacesize'] = lang('no_limit');
-    } else {
-        $space['fmaxspacesize'] = lang('unallocated_space');
-    }
     //获取已安装应用
     $app = C::t('app_market')->fetch_all_by_appid($applist);
     $applist_1 = array();
@@ -119,7 +100,7 @@ function get_statis() {
     $explorer_setting = get_resources_some_setting();
     $param = array('resources_statis', $_G['uid']);
     $wheresql = " where uid = %d and fid = 0 and rid != '' ";
-    $orderby = ' order by opendateline desc, editdateline desc, edits desc, views desc';
+    $orderby = ' order by opendateline desc, editdateline desc';
     $limitsql = ' limit ' . 5;
     $recents = DB::fetch_all("select * from %t $wheresql $orderby $limitsql", $param);
     foreach ($recents as $v) {
