@@ -812,7 +812,7 @@ class table_resources extends dzz_table {
                 if (count(array_unique($tmpinfo['type'])) > 1) {
                     $fileinfo['type'] = lang('more_file_type');
                 } else {
-                    $fileinfo['type'] = lang('louis_vuitton') . $tmpinfo['type'][0] . lang('typename_attach');
+                    $fileinfo['type'] = lang('louis_vuitton') . lang($tmpinfo['type'][0]) . lang('typename_attach');
                 }
             }
 
