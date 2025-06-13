@@ -399,19 +399,15 @@ _select.Paste=function(pfid,XX,YY){
 			 _config.cut.icos=[];
 				_config.cut.successicos=[];
 				_config.cut.osuccessicos=[];
-				
 				for(var ico in json.successicos){
 					_config.cut.successicos.push(json.successicos[ico]);
 					_config.cut.osuccessicos.push(ico);
-					
 				}
 				if(json.iscopy>0){
-					layer.msg(__lang.file_copy_success, {offset:'10px'});
-					
+					layer.msg(__lang.file_copy_success, {offset:'10px'});	
 				}else{
 					layer.msg(__lang.crop_files_success, {offset:'10px'});
 				   _select.remove(_config.cut.osuccessicos);
-				  
 				}	
 				for(var i in json.icoarr){
 					_config.sourcedata.icos[json.icoarr[i].icoid]=json.icoarr[i];

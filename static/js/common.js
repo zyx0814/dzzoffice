@@ -2119,7 +2119,7 @@ function showmessage(msg,type,timeout,haveclose,position,callback,maxwidth,maxhe
 		el=jQuery('#message_tip_box');
 	} 
 	var el1=jQuery('#message_tip_alert');
-	 el.attr('sytle','').attr('class','message_tip_box position-'+position);
+	 el.attr('style','').attr('class','message_tip_box position-'+position);
 	 el.css({'height':'auto','max-height':maxheight,width:maxwidth,margin:'0,auto','overflow':'hidden'});
 	
 	//设置消息框的类型（不同类型背景颜色不同）；

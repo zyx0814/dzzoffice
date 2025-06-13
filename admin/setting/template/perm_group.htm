@@ -205,7 +205,7 @@
     function delete_perm(obj, pid) {
       var msg ='{lang delete_permission_group_sure}';
       if(msg){	
-        showDialog( msg, 'confirm','', function(){		
+        showDialog( msg, 'confirm','', function(){
           jQuery.post(MOD_URL+'&op=permgroup&do=deleteperm', {'id': pid}, function (data) {
                 if (data['success']) {
                     jQuery(obj).parents('.properties-list').remove();

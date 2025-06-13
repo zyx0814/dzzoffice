@@ -304,7 +304,7 @@ _explorer.topNav_init = function () {
 };
 _explorer.routerule = function (path, prefix) {
 	if (location.hash.indexOf('cloud') != -1) {
-		layer.msg('网络挂载不支持手动输入地址进行切换', {offset:'10px'});
+		showmessage('网络挂载不支持手动输入地址进行切换','error',3000,1);
 		return false;
 	}
 	var queryobj = {
