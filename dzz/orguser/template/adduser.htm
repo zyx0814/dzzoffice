@@ -285,4 +285,9 @@
 			return false;
 		});
 	});
+  function randomPass() {
+		var pass = (Math.round(Math.random() * 100000000));
+		jQuery('#password').val(pass).trigger('blur');
+		jQuery('#password2').val(pass).trigger('blur');
+	}
 </script>

@@ -134,4 +134,3 @@ if (!submitcheck('regsubmit', 0, $seccodecheck)) {
     showTips(array('success' => array('message' => $messageText, 'url_forward' => $url_forward)), $type);
 
 }
-
