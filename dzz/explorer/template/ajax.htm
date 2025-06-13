@@ -263,7 +263,7 @@
                     '<i class="mdi mdi-file-cabinet"></i><span>' + dataform[0]['value'] + '</span></a></li>';
                 $('.typeaMenu').append(html);
                 hideWindow('addsearchcat');
-                layer.msg('{lang explorer_add_succeed}');
+                showmessage('{lang explorer_add_succeed}','success',3000,1);
                 location.hash = '#catsearch&do=searchfile&id=' + data['insertid'];
             } else {
                 hideWindow('addsearchcat');
@@ -581,11 +581,7 @@
                 }
             },
             error: function () {
-                if (json.error) {
-                    layer.msg(json.error, {offset:'10px'});
-                } else {
-                    layer.msg(__lang.js_network_error, {offset:'10px'});
-                }
+                layer.msg(__lang.js_network_error, {offset:'10px'});
             }
         });
         return false;
@@ -957,7 +953,7 @@
 <script type="text/javascript" reload="1">
     function limitTextarea(textarea, maxLength) {
         if (textarea.value.length > maxLength) {
-            layer.msg('限制120字以内！');
+            showmessage('限制120字以内！','error',3000,1);
             textarea.value = textarea.value.substring(0, maxLength);
         }
     }

@@ -4,7 +4,7 @@
     <a href="javascript:;" class="nav-link active document-data" data-href="{MOD_URL}&op=recent" data-hash="recent"><i class="mdi mdi-clock-time-four"></i><span>{lang recently_used}</span></a>
   </li>
   <li class="border-bottom"></li>
-  <li><span class="dropdown-item-text text-body">{lang position}</span></li>
+  <li><span class="dropdown-item-text text-muted fw-bold">{lang position}</span></li>
 </ul>
 <div class="positionMenu"><div id="position" class="mechsnismMenu list-unstyled" style="padding:5px 0"></div>
 </div>
@@ -12,7 +12,7 @@
 <ul class="nav-drawer nav-stacked nav-pills typeaMenu">
   <li class="border-bottom"></li>
   <li>
-    <span class="dropdown-item-text text-body">{lang type}</span>
+    <span class="dropdown-item-text text-muted fw-bold">{lang type}</span>
     <!--{if $explorer_setting['allownewcat']}-->
     <button type="button" class="groupbutton dcolor" onclick="showWindow('addsearchcat','{MOD_URL}&op=ajax&operation=addsearchcat','get',0)" ><span class="mdi mdi-plus-circle"></span></button>
     <!--{/if}-->
@@ -33,7 +33,7 @@
 </ul>
 <li class="border-bottom"></li>
 <ul class="nav-drawer nav-stacked nav-pills">
-  <li><span class="dropdown-item-text text-body">工具</span></li>
+  <li><span class="dropdown-item-text text-muted fw-bold">工具</span></li>
   <li class="nav-item">
     <a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=share" data-hash="share&uid={$uid}"><i class="mdi mdi-share-variant"></i><span>{lang share}</span></a>
   </li>
@@ -48,7 +48,7 @@
   </li>
   <!--{if $_G['adminid'] == 1}-->
   <li class="border-bottom"></li>
-  <li><span class="dropdown-item-text text-body">{lang manage}</span></li>
+  <li><span class="dropdown-item-text text-muted fw-bold">{lang manage}</span></li>
   <li class="nav-item">
     <a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=app" data-hash="app"><i class="mdi mdi-cog"></i><span>{lang function_management}</span></a>
   </li>

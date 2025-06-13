@@ -73,7 +73,7 @@
                 $('#just-now').prepend(html);
                 $('.scroll-y').animate({scrollTop: '0px'}, 200);
             } else {
-                layer.msg('评论失败', {offset:'10px'});
+                showmessage('评论失败','error',3000,1);
             }
             $('#leave_message').val('').trigger('input');
         }, 'json');

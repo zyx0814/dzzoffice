@@ -2525,7 +2525,7 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .signin-form .has-feedback .mdi{position:absolute;top:0;left:0;right:auto;width:36px;height:36px;line-height:36px;z-index:4;color:#dcdcdc;display:block;text-align:center;pointer-events:none}
 .has-feedback.row .mdi{left:15px}
 .flex-container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
-.notify{border-color:#ededee;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:8px;width:350px;max-width:400px;font-size:.875rem;pointer-events:auto;background-color:#fff;background-clip:padding-box;border:0 solid #d3d4d3}
+.notify{border-color:#ededee;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:8px;width:350px;max-width:400px;font-size:.875rem;pointer-events:auto;margin:10px;background-color:#fff;background-clip:padding-box;border:0 solid #d3d4d3}
 .is-block{display:block}
 .webuploader-element-invisible{position:absolute !important;clip:rect(1px,1px,1px,1px)}
 .webuploader-pick{position:relative;display:inline-block;line-height:1.5;cursor:pointer;background:#007bff;border:1px solid #007bff;color:#fff;text-align:center;border-radius:0.125rem;overflow:hidden;padding:0.4695rem 0.75rem}

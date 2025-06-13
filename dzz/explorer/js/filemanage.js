@@ -1967,7 +1967,7 @@ _filemanage.downpackage = function () {
 	}
 	var path = encodeURIComponent(dpaths.join(','));
 	if (path.length > 2048) {
-		layer.msg(__lang.choose_file_many, {offset:'10px'});
+		showmessage(__lang.choose_file_many, 'danger', 3000, 1);
 		return false;
 	}
 	var url = DZZSCRIPT + '?mod=io&op=download&path=' + path + '&t=' + new Date().getTime();
@@ -2135,11 +2135,7 @@ _filemanage.Rename = function (rid, text) {
 		},
 		error: function () {
 			jQuery('#file_text_' + rid).html(filename);
-			if (json.error) {
-				layer.msg(json.error, {offset:'10px'});
-			} else {
-				layer.msg(__lang.js_network_error, {offset:'10px'});
-			}
+			layer.msg(__lang.js_network_error, {offset:'10px'});
 		}
 	});
 };
@@ -2683,7 +2679,5 @@ _filemanage.paste = function (fid) {
 				layer.msg('粘贴成功', {offset:'10px'});
 			}
 		}
-		
 	}, 'json');
-
 };

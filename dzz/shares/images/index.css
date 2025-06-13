@@ -79,7 +79,7 @@ to{opacity:1}
 .filemanage .detail_header_asc_0 .mdi-chevron-down{display:inline-block;color:#3779ff}
 .filemanage .detail_text{text-shadow:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:inherit;display:inline-block;float:left;word-break:break-all}
 .filemanage .detail_header_td_div{overflow:hidden;position:relative;white-space:nowrap;text-overflow:ellipsis}
-.filemanage .detail_item_td_name,.filemanage td,.filemanage th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:32px;line-height:32px}
+.filemanage td,.filemanage th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:32px;line-height:32px}
 .selectall-box{padding-left:5px;width:auto;display:inline-block;line-height:64px}
 .selectall-box .mdi-close{cursor:pointer;display:inline-block}
 .selectall-box a{position:absolute;z-index:10}
@@ -112,6 +112,7 @@ to{opacity:1}
 @media ((max-width:1024px)){.bs-left-container-close .bs-left-container .da-avatar{display:block}
 .file-item-hide{display:none}
 .file-item-block{display:block}
+.filemanage td,.filemanage th{height:auto;line-height:1.72}
 }
 .file-item{border-radius:0;overflow:hidden;box-shadow:none;transition:all 0.3s ease;border:2px solid transparent;cursor:pointer;border: 1px solid #EEEEEE}
 [data-theme='dark'] .file-item{border: 1px solid rgba(255,255,255,0.25)}
@@ -147,3 +148,4 @@ to{opacity:1}
 .upload-list-wrapper .upload-file-operate{float:left;width:10%}
 .upload-list-header div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:5px;font-weight:bold}
 .selectbox{color:#b9b9b9}
+.layui-menu li, .layui-menu-body-title, .layui-menu-body-title a{color: #444;}
