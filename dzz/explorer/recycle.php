@@ -113,7 +113,7 @@ if ($do == 'filelist') {
             'disp' => $disp,
             'view' => $iconview,
             'page' => $page,
-            'perpage' => $perpage,
+            'perpage' => $limit,
             'bz' => $bz,
             'total' => $total,
             'asc' => $asc,

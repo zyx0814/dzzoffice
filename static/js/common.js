@@ -2130,18 +2130,18 @@ function showmessage(msg,type,timeout,haveclose,position,callback,maxwidth,maxhe
 	}else{
 		jQuery('#message_tip_alert').attr('class','alert');
 	}*/	
-	if(jQuery.inArray(type,types)<0) type='';
+	if(jQuery.inArray(type,types)<0) type='info';
 	if(type) {
 		jQuery('#message_tip_alert').attr('class',' alert alert-'+type);
 		if(type == 'info'){
-		var spantype ='<span class="dzz dzz-info-outline spantype" style="color:#3d91ea;"></span>'	;
-			}else if(type == 'success'){
-				var spantype ='<span class="dzz dzz-notification-success spantype" style="color:#48c874;"></span>';	
-			}else if(type == 'danger'){
-				var spantype ='<span class="dzz dzz-clear spantype" style="color:#f04836;"></span>';
-			}else if(type == 'warning'){
-				var spantype ='<span class="dzz dzz-error spantype" style="color:#fdc318;"></span>';
-			}
+			var spantype ='<span class="dzz dzz-info-outline spantype" style="color:#3d91ea;"></span>'	;
+		}else if(type == 'success'){
+			var spantype ='<span class="dzz dzz-notification-success spantype" style="color:#48c874;"></span>';	
+		}else if(type == 'danger'){
+			var spantype ='<span class="dzz dzz-clear spantype" style="color:#f04836;"></span>';
+		}else if(type == 'warning'){
+			var spantype ='<span class="dzz dzz-error spantype" style="color:#fdc318;"></span>';
+		}
 	}
 	else  {
 		jQuery('#message_tip_alert').attr('class','alert alert-warning');}
@@ -2207,7 +2207,7 @@ function showmessage(msg,type,timeout,haveclose,position,callback,maxwidth,maxhe
 			} 
 			//增加关闭事件
 			el1.find('button.close').off('click').on('click',function(){
-				el.animate({left:-width},delay,function(){
+				el.animate({right:-width},delay,function(){
 					el.remove();
 				});
 				if(typeof(callback)=='function') callback();//关闭时触发回调函数；

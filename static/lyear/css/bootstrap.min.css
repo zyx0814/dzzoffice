@@ -714,13 +714,13 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .dropstart .dropdown-toggle::before{vertical-align:0}
 .dropdown-divider,.divider{height:0;margin:.5rem 0;overflow:hidden;border-top:1px solid rgba(0,0,0,.15)}
 .dropdown-menu[x-placement^=bottom],.dropdown-menu[x-placement^=left],.dropdown-menu[x-placement^=right],.dropdown-menu[x-placement^=top]{right:auto;bottom:auto}
-.dropdown-item{display:block;width:100%;padding:.25rem 1rem;clear:both;font-weight:400;color:#212529;text-align:inherit;text-decoration:none;white-space:nowrap;background-color:transparent;border:0}
+.dropdown-item{display:block;width:100%;padding:.25rem 1rem;clear:both;font-weight:400;color:#374151;text-align:inherit;text-decoration:none;white-space:nowrap;background-color:transparent;border:0}
 .dropdown-item:focus,.dropdown-item:hover{color:#1e2125;background-color:#e9ecef}
 .dropdown-item.active,.dropdown-item:active{color:#fff;text-decoration:none;background-color:#0d6efd}
 .dropdown-item.disabled,.dropdown-item:disabled{color:#adb5bd;pointer-events:none;background-color:transparent}
 .dropdown-menu.show{display:block}
 .dropdown-header{display:block;padding:.5rem 1rem;margin-bottom:0;font-size:.875rem;color:#6c757d;white-space:nowrap}
-.dropdown-item-text{display:block;padding:.25rem 1rem;color:#212529}
+.dropdown-item-text{display:block;padding:.25rem 1rem;color:#374151}
 .dropdown-menu-dark{color:#dee2e6;background-color:#343a40;border-color:rgba(0,0,0,.15)}
 .dropdown-menu-dark .dropdown-item{color:#dee2e6}
 .dropdown-menu-dark .dropdown-item:focus,.dropdown-menu-dark .dropdown-item:hover{color:#fff;background-color:rgba(255,255,255,.15)}
@@ -2526,6 +2526,9 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 .has-feedback.row .mdi{left:15px}
 .flex-container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .notify{border-color:#ededee;box-shadow:0 0 10px 4px rgba(0,0,0,.1);border-radius:8px;width:350px;max-width:400px;font-size:.875rem;pointer-events:auto;margin:10px;background-color:#fff;background-clip:padding-box;border:0 solid #d3d4d3}
+.notify .notify-body{display:flex;align-items:center;margin-right:20px;}
+.notify .close{color:#666;position:absolute;right:0;opacity:0.5;}
+.notify .close:hover{opacity:1}
 .is-block{display:block}
 .webuploader-element-invisible{position:absolute !important;clip:rect(1px,1px,1px,1px)}
 .webuploader-pick{position:relative;display:inline-block;line-height:1.5;cursor:pointer;background:#007bff;border:1px solid #007bff;color:#fff;text-align:center;border-radius:0.125rem;overflow:hidden;padding:0.4695rem 0.75rem}

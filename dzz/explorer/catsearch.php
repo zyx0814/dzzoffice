@@ -151,18 +151,13 @@ if ($do == 'delsearchcat') {//删除搜索类型
 
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : intval($cats['disp']);//文件排序
     $iconview = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($cats['iconview']));//排列方式
-    if (count($data) >= $perpage) {
-        $total = $start + $perpage * 2 - 1;
-    } else {
-        $total = $start + count($data);
-    }
+    $total = $total ? $total : 0;
     if (!$json_data = json_encode($data)) $data = array();
     if (!$json_data = json_encode($folderdata)) $folderdata = array();
     //返回数据
     $return = array(
         'sid' => $sid,
         'total' => $total,
-
         'data' => $data ? $data : array(),
         'folderdata' => $folderdata ? $folderdata : array(),
         'param' => array(

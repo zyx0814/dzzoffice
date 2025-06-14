@@ -242,7 +242,7 @@ ul,ul li,li{list-style:none;padding:0;margin:0}
 .upload-click{position:absolute;top:0;bottom:0;width:100%;color:#fff;line-height:150px;text-align:center;font-size:18px;letter-spacing:2px}
 #exampleInputFile{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;opacity:0}
 .middlecenter .middlecenter-header{position:absolute;left:1.78rem;top:10px;right:1.78rem;height:30px}
-.middlecenter .middlecenter-body{margin-top:50px;height:-webkit-calc(100% - 50px);height:-moz-calc(100% - 50px);height:calc(100% - 50px)}
+.middlecenter .middlecenter-body{margin-top:50px;}
 #middleconMenu{position:relative;height:100%}
 #middleconMenu .middlecenter{margin-right:0;padding:10px;-webkit-transition:margin 300ms cubic-bezier(0.4,0.0,0.2,1);transition:margin 300ms cubic-bezier(0.4,0.0,0.2,1);will-change:margin;position:relative}
 .scroll-100{height:100%;overflow:auto;position:relative}

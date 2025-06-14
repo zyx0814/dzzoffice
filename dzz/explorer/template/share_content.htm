@@ -126,7 +126,7 @@
                             }
                         }
                     },'json').fail(function() {
-                        layer.msg('服务器发生错误，请稍后再试');
+                        layer.msg('服务器发生错误，请稍后再试', {offset:'10px'});
                     });
                 });
 			break;
@@ -206,7 +206,7 @@
                                 }
                             }
                         },'json').fail(function() {
-                            layer.msg('服务器发生错误，请稍后再试');
+                            layer.msg('服务器发生错误，请稍后再试', {offset:'10px'});
                         });
                     });
                 } else if(menudata.id === 'qrcode'){
