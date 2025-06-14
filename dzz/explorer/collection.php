@@ -9,7 +9,7 @@ if ($do == 'filelist') {
     $sid = htmlspecialchars($_GET['sid']);
     $limit = isset($_GET['perpage']) ? intval($_GET['perpage']) : 20;//默认每页条数
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
-    $start = ($page - 1) * $perpage;//开始条数
+    $start = ($page - 1) * $limit;//开始条数
     $limitsql = "limit $start,$limit";
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 4;
 
@@ -43,6 +43,7 @@ if ($do == 'filelist') {
     } elseif ($orderby) {
         $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
     }
+    $count = DB::result_first("select count(*) from %t where uid = %d $ordersql ", array('resources_collect', $_G['uid']));
     $collects = C::t('resources_collect')->fetch_by_uid($limitsql, $ordersql);
     $explorer_setting = get_resources_some_setting();
     $data = array();
@@ -81,7 +82,7 @@ if ($do == 'filelist') {
 
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 0;//文件排序
     $iconview = isset($_GET['iconview']) ? intval($_GET['iconview']) : 4;//排列方式
-    $total = $start + count($data);//总条数
+    $total = $count ? $count : 0;//总条数
     if (!$json_data = json_encode($data)) $data = array();
     if (!$json_data = json_encode($foldedata)) $folderdata = array();
     //返回数据
@@ -95,7 +96,7 @@ if ($do == 'filelist') {
             'disp' => $disp,
             'view' => $iconview,
             'page' => $page,
-            'perpage' => $perpage,
+            'perpage' => $limit,
             'bz' => $bz,
             'total' => $total,
             'asc' => $asc,

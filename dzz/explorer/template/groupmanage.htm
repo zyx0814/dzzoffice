@@ -145,11 +145,11 @@
                                 msg += '<p class="text-danger">' + data.msg[i] + '</p>';
                             }
                         }
-                        layer.msg(msg);
+                        layer.msg(msg, {offset:'10px'});
                         table.reloadData('table');
                         return false;
                     },'json').fail(function() {
-                        layer.msg('服务器发生错误，请稍后再试');
+                        layer.msg('服务器发生错误，请稍后再试', {offset:'10px'});
                     });
                 });
 			break;

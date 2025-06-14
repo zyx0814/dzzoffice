@@ -258,7 +258,7 @@
         var dataform = $(form).serializeArray();
         $.post(form.action, formdata, function (data) {
             if (data['success']) {
-                var html = ' <li class="nav-item"><a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=catsearch" id="searchcat_' + data['insertid'] + '" ' +
+                var html = '<li class="nav-item"><a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=catsearch" id="searchcat_' + data['insertid'] + '" ' +
                     'data-hash="catsearch&do=searchfile&id=' + data['insertid'] + '" data-args="do_searchfile-id_' + data['insertid'] + '"> ' +
                     '<i class="mdi mdi-file-cabinet"></i><span>' + dataform[0]['value'] + '</span></a></li>';
                 $('.typeaMenu').append(html);
@@ -277,9 +277,9 @@
         var catid = '$cat[id]';
         $.post(form.action, formdata, function (data) {
             if (data['success']) {
-                var html = ' <li class="nav-item"><a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=catsearch" id="searchcat_' + catid + '" ' +
+                var html = '<a href="javascript:;" class="nav-link document-data active" data-href="{MOD_URL}&op=catsearch" id="searchcat_' + catid + '" ' +
                     'data-hash="catsearch" data-args="do_searchfile-id_' + catid + '"> ' +
-                    '<span class="mdi mdi-file-cabinet"></span>' + dataform[0]['value'] + '</a></li>';
+                    '<i class="mdi mdi-file-cabinet"></i><span>' + dataform[0]['value'] + '</span></a>';
                 $('#searchcat_' + catid).replaceWith(html);
                 hideWindow('editcatsearch');
                 showmessage('{lang update_successfully}','success',3000,1);

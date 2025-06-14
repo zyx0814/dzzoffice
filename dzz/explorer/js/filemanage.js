@@ -15,7 +15,7 @@ function _filemanage(id, data, param) {
 	//alert('filemangeid='+id);
 	this.bz = param.bz || ''; //标志是那个api的数据
 
-	this.perpage = param.perpage;
+	this.perpage = param.perpage || _filemanage.perpage; // 使用全局默认值
 	this.totalpage = Math.ceil(this.total / this.perpage);
 	this.totalpage = this.totalpage < 1 ? 1 : this.totalpage;
 	this.id = id;
@@ -1847,7 +1847,7 @@ _filemanage.collect = function (rid) {
 						}
 					}
 				}
-				layer.msg(msg);
+				layer.msg(msg, {offset:'10px'});
 				//console.log('收藏成功时处理');
 			}
 		}, 'json');

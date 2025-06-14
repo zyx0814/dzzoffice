@@ -43,9 +43,9 @@ function showmessage(msg,type,timeout,haveclose,position,callback,maxwidth,maxhe
     } else if (type == 'warning') {
         spantype = '<span class="me-2 lead mdi mdi-alert-octagram text-warning"></span>';
     }
-    var messageContent = '<div class="d-flex align-items-center p-2">'+spantype+'<span id="message_tip_alert" class="notify-body text-break">'+msg+'</span>';
+    var messageContent = '<div class="d-flex p-2">'+spantype+'<span id="message_tip_alert" class="notify-body text-break">'+msg+'</span>';
     if(haveclose){
-		messageContent +='<button type="button" class="btn-close me-2 m-auto close"></button>';
+		messageContent +='<a class="me-2 lead close dcolor" href="javascript:;"><i class="mdi mdi-close"></i></a>';
 	}
     messageContent +='</div>';
 	el.html(messageContent);
@@ -83,7 +83,7 @@ function showmessage(msg,type,timeout,haveclose,position,callback,maxwidth,maxhe
         }, timeout);
     }
     // 绑定关闭事件
-    el.find('button.close').on('click', function() {
+    el.find('a.close').on('click', function() {
         closeMessage(position, delay, callback);
     });
 	if(!timeout && typeof(callback)=='function'){//没有设置时间时立即触发

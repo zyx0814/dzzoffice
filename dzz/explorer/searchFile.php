@@ -305,11 +305,7 @@ if ($do == 'filelist') {
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : intval($usersettings['disp']);//文件排序
     if (!isset($usersettings['iconview'])) $usersettings['iconview'] = 4;
     $iconview = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($usersettings['iconview']));//排列方式
-    if (count($data) >= $perpage) {
-        $total = $start + $perpage * 2 - 1;
-    } else {
-        $total = $start + count($data);
-    }
+    $total = $total ?  $total : 0;
     if (!$json_data = json_encode($data)) $data = array();
     if (!$json_data = json_encode($folderdata)) $folderdata = array();
 //返回数据
