@@ -1016,12 +1016,6 @@ _filemanage.property = function (rid, isfolder) {
 	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&paths=' + path);
 };
 
-
-
-
-
-
-
 _filemanage.NewIco = function (type, fid) {
 	if (!fid && !_filemanage.fid) {
 		return;
@@ -1045,7 +1039,9 @@ _filemanage.NewIco = function (type, fid) {
 			} else {
 				showDialog(data.error);
 			}
-		}, 'json');
+		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	}
 };
 _filemanage.rename = function (id) {
@@ -1257,5 +1253,7 @@ _filemanage.delIco = function (rid, noconfirm) {
 		}
         _filemanage.removeridmore(rids);
 
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 };

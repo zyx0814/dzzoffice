@@ -25,6 +25,15 @@ class table_cron extends dzz_table {
         return DB::fetch_first('SELECT * FROM ' . DB::table($this->_table) . " WHERE available>'0' AND nextrun<='$timestamp' ORDER BY nextrun LIMIT 1");
     }
 
+    public function fetch_all_nextruncronid($timestamp){
+        $timestamp = intval($timestamp);
+        $cronid = array();
+        foreach(DB::fetch_all ('SELECT cronid FROM '.DB::table($this->_table)." WHERE available>'0' AND nextrun<='$timestamp' ORDER BY nextrun") as $v){
+            $cronid[] = $v['cronid'];
+		}
+		return $cronid;
+	}
+
     public function fetch_nextcron() {
         return DB::fetch_first('SELECT * FROM ' . DB::table($this->_table) . " WHERE available>'0' ORDER BY nextrun LIMIT 1");
     }

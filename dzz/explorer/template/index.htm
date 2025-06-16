@@ -98,7 +98,9 @@
                 layer.alert(__lang.explorer_do_failed, {skin:'lyear-skin-danger'});
             }
 
-        },'json')
+        },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
 </script> 
 <script type="text/javascript" src="{MOD_PATH}/js/explorer.js?{VERHASH}"></script>

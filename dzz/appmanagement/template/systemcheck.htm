@@ -55,24 +55,6 @@
 		</div>
 	</div>
 	<div class="accordion-item">
-		<h2 class="accordion-header" id="panelsStayOpen-funcstr">
-			<button class="accordion-button" type="button" data-toggle="collapse" data-target="#panelsStayOpen-funcstr" aria-expanded="false" aria-controls="panelsStayOpen-funcstr">PHP扩展信息</button>
-		</h2>
-		<div id="panelsStayOpen-funcstr" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-funcstr">
-			<div class="accordion-body">
-				<div class="mb-3 d-grid"><a href="{MOD_URL}&do=phpinfo" target="_blank" class="btn btn-outline-primary">PHP详情</a></div>
-				<!--{if $func_str}-->
-				<div class="alert alert-primary">此处显示的扩展并不表示都需要开启或关闭，根据自己的需要来决定。</div>
-				<div class="gallery-grid">
-					$func_str
-				</div>
-				<!--{else}-->
-				<div class="alert alert-danger" role="alert">无法检测</div>
-				<!--{/if}-->
-			</div>
-		</div>
-	</div>
-	<div class="accordion-item">
 		<h2 class="accordion-header" id="panelsStayOpen-headingThree">
 			<button class="accordion-button" type="button" data-toggle="collapse" data-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">其他信息</button>
 		</h2>
@@ -98,6 +80,10 @@
 					<tr>
 						<th>通信协议</th>
 						<td><!--{eval echo $_SERVER['SERVER_PROTOCOL'];}--></td>
+					</tr>
+					<tr>
+						<th>PHP扩展信息</th>
+						<td><div class="d-grid"><a href="{MOD_URL}&do=phpinfo" target="_blank" class="btn btn-primary">点击查看</a></div></td>
 					</tr>
 					<tr>
 						<th>PHP部署方式</th>

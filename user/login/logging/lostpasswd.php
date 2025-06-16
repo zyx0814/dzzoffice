@@ -26,14 +26,8 @@ if (isset($_GET['lostpwsubmit'])) {
         showTips(array('error' => lang('administrator_account_not_allowed_find')), $type);
     }
 
-
-    if ($member['username'] != $_GET['username']) {
-
-        showTips(array('error' => lang('apology_account_data_mismatching')), $type);
-    }
-
     $idstring = random(6);
-    C::t('user')->update($member['uid'], array('authstr' => "{$_G[timestamp]}\t1\t$idstring"));
+    C::t('user')->update($member['uid'], array('authstr' => "{$_G['timestamp']}\t1\t$idstring"));
     //require_once libfile('function/mail');
     $get_passwd_subject = lang('email', 'get_passwd_subject');
     $get_passwd_message = lang(
@@ -49,10 +43,10 @@ if (isset($_GET['lostpwsubmit'])) {
     );
     if (!sendmail("$_GET[username] <$tmp[email]>", $get_passwd_subject, $get_passwd_message)) {
         runlog('sendmail', "$tmp[email] sendmail failed.");
+        showTips(array('error'=>"Failed to send email to  \"$tmp[email]\", please contact the administrator"),$type);
     }
     showTips(array('success' => array('msg' => lang('password_has_been_sent_email', array('email' => $_GET['email'])) . lang('please_tree_edit_password'), 'url' => $_G['siteurl'], 'email' => $_GET['email']), $type));
 
 } else {
-
     include template('lostpasswd');
 }

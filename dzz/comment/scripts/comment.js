@@ -329,7 +329,9 @@ function feed_attach_saveto(qid){
 			}else{
 				showmessage(__lang.savetosuccess+data.relativepath+json.filename,'success','3000',1);
 			}
-		},'json');
+		},'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	});
 	
 	

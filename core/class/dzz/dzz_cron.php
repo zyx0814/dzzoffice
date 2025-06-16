@@ -5,6 +5,12 @@ if (!defined('IN_DZZ')) {
 }
 
 class dzz_cron {
+    public static function runcron(){
+        $crons = C::t('cron')->fetch_all_nextruncronid(TIMESTAMP);
+        foreach($crons as $v){
+            self::run($v);
+        }
+    }
     public static function run($cronid = 0) {
         global $_G;
         $cron = $cronid ? C::t('cron')->fetch($cronid) : C::t('cron')->fetch_nextrun(TIMESTAMP);

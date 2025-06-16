@@ -167,13 +167,13 @@
 	}
 	function upgrade_check(obj){//强制检测更新，不受一天一次的限制，一般用于刚上传或修改了应用的配置信息，通过这个按钮可以强制刷新出需要更新的应用
 		var loader = $('#checkloading').lyearloading({
-						opacity: 0.2,
-						spinnerSize: 'lg',
-						spinnerText: '正在检测新版本中',
-						textColorClass: 'text-info',
-						spinnerColorClass: 'text-info',
-						zindex: 9,
-					});
+					opacity: 0.2,
+					spinnerSize: 'lg',
+					spinnerText: '正在检测新版本中',
+					textColorClass: 'text-info',
+					spinnerColorClass: 'text-info',
+					zindex: 9,
+				});
 		jQuery(obj).button('loading');
 		jQuery.post('{MOD_URL}&op=check_upgrade',function(json){
 			var oldsum=parseInt(jQuery('#update_app_num').text()); 

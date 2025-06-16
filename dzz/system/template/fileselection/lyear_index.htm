@@ -85,7 +85,9 @@
                             parent.layer.close(index);
                             return;
                         }
-                    }, 'json');
+                    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                    });
 				});
             } else {//未选择文件上传文件返回
                 var filename = $('#savenewname').val();
@@ -109,7 +111,9 @@
                         parent.layer.close(index);
                         return;
                     }
-                }, 'json');
+                }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                    showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                });
             }
             return false;
         } else if (type == 2) {//选择位置时

@@ -115,7 +115,9 @@
 										setTimeout(function() { inst.edit(new_node); }, 0);
 									});
 								}
-							}, 'json');
+							}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+								showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+							});
 						}
 					},
 
@@ -150,7 +152,9 @@
 											setTimeout(function() { inst.edit(new_node); }, 0);
 										});
 									}
-								}, 'json');
+								}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+									showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+								});
 							});
 							
 						}
@@ -278,7 +282,9 @@
 										}
 									}
 
-								}, 'json');
+								}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+									showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+								});
 								});
 							
 						}
@@ -365,7 +371,9 @@
 							window.location.reload();
 						});
 					}
-				}, 'json');
+				}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+					showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+				});
 			}
 		});
 		jQuery("#classtree").on('copy_node.jstree', function(e, data) {
@@ -388,7 +396,9 @@
 			if(needsave) {
 				jQuery.post('{MOD_URL}&op=ajax&do=move&t=' + new Date().getTime(), post, function(json) {
 
-				}, 'json');
+				}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+					showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+				});
 			}
 		});
 		jQuery("#classtree").on('open_node.jstree', function(e, data) {
@@ -412,7 +422,9 @@
 					jQuery('#orgname').val(data.text).data('oldname',data.text);
 					inst.refresh();
 				}
-			}, 'json');
+			}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+				showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+			});
 		});
 		// jQuery("#classtree").on('create_node.jstree',function(e,data){});
 

@@ -980,7 +980,7 @@ $lang = array(
 </p>
 您只需在提交请求后的三天内，通过点击下面的链接重置您的密码：<br />
 
-<a href="{siteurl}user.php?mod=login&op=logging&action=getpasswd&amp;uid={uid}&amp;id={idstring}" target="_blank">{siteurl}user.php?mod=getpasswd&amp;uid={uid}&amp;id={idstring}</a>
+<a href="{siteurl}user.php?mod=login&op=logging&action=getpasswd&amp;uid={uid}&amp;id={idstring}" target="_blank">{siteurl}user.php?mod=login&op=logging&action=getpasswd&amp;uid={uid}&amp;id={idstring}</a>
 <br />
 (如果上面不是链接形式，请将该地址手工粘贴到浏览器地址栏再访问)</p>
 

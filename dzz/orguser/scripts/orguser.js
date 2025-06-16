@@ -230,7 +230,9 @@ function jstree_create_organization(){
 					setTimeout(function () { inst.edit(new_node); },0);
 				});
 			}
-		},'json');
+		},'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 }
 function jstree_create_dir(){
 	var inst = jQuery("#classtree").jstree(true),obj;
@@ -258,7 +260,9 @@ function jstree_create_dir(){
 				setTimeout(function () { inst.edit(new_node); },0);
 			});
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 	
 }
 function jstree_create_user(flag){
@@ -343,7 +347,9 @@ function job_save(jobid,orgid){
 			el.find('.edit').addClass('hide');
 			el.find('.job-edit-control input').val(json.name);
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function job_show_add_editor(orgid,obj){
 	var el=jQuery(obj);
@@ -371,7 +377,9 @@ function job_del(jobid,orgid){
 		}else if(json.jobid>0){
 			el.remove();
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 
 function job_add(orgid){
@@ -389,7 +397,9 @@ function job_add(orgid){
 		}else{
 			showmessage(json.error,'danger',3000,1);
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function appendjob(json){
 	var html='';
@@ -431,7 +441,9 @@ function moderator_add(orgid,uid){
 		else{
 			appendModerator(json);
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function appendModerator(json){
 	var html='';
@@ -458,7 +470,9 @@ function moderator_del(id,orgid,obj){
 			jQuery(obj).parent().remove();
 		}
 		
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 
 function folder_available(available,orgid){
@@ -474,7 +488,9 @@ function folder_available(available,orgid){
 				//jQuery('#indesk').hide();
 			}
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function group_on(on,orgid){
 	jQuery.post(ajaxurl+'do=group_on',{'orgid':orgid,'available':on,'t':new Date().getTime()},function(json){
@@ -487,17 +503,23 @@ function group_on(on,orgid){
 				showmessage(__lang.group_close_successful,'success',3000,1);
 			}
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function folder_indesk(indesk,orgid){
 	jQuery.post(ajaxurl+'do=folder_indesk',{'orgid':orgid,'indesk':indesk,'t':new Date().getTime()},function(json){
 		if(json.error) showmessage(json.error,'danger',3000,1);
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function set_org_logo(orgid,aid){
 	jQuery.post(ajaxurl+'do=set_org_logo',{'orgid':orgid,'aid':aid},function(json){
 		if(json.error) showmessage(json.error,'danger',3000,1);
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 /*function set_org_bgphoto(orgid,aid){
 	jQuery.post(ajaxurl+'&do=set_org_bgphoto',{'orgid':orgid,'aid':aid},function(json){
@@ -517,14 +539,18 @@ function set_org_orgname(orgid,obj){
 			 var node=jQuery("#classtree").jstree(true).get_node('#'+orgid);
 			 jQuery("#classtree").jstree('refresh',node);
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function set_org_desc(orgid,desc){
 	jQuery.post(ajaxurl+'do=set_org_desc',{'orgid':orgid,'desc':desc},function(json){
 		if(json.error){
 			showmessage(json.error,'danger',3000,1);
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function folder_maxspacesize(obj,orgid){
 	jQuery.post(ajaxurl+'do=folder_maxspacesize',{'orgid':orgid,'maxspacesize':obj.value,'t':new Date().getTime()},function(json){
@@ -535,5 +561,7 @@ function folder_maxspacesize(obj,orgid){
 			jQuery('#'+orgid+' a.jstree-clicked').trigger('click');
 			 showmessage('空间大小设置成功','success',3000,1);
 		}
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }

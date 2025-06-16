@@ -208,7 +208,9 @@
                             inst.deselect_node(node);
                             $('#' + ctrlid).val('');
                         }
-                    }, 'json')
+                    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                    });
                 }else{
                     $('#' + ctrlid).val(fid);
                 }
@@ -258,7 +260,9 @@
             }, function (data) {
                 var node = inst.get_node('#' + data[0]);
                 open_node_bg(inst, node, data);
-            }, 'json');
+            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            });
         }
     }
     function open_node_bg(inst, node, arr) {
@@ -322,7 +326,9 @@
 //                    showDialog(data['error']);
                     showmessage(data['error'], "danger", 2000, 1);
                 }
-            }, 'json');
+            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            });
             return false;
         }
     }
@@ -356,7 +362,9 @@
             } else {
                 showmessage(data['error'], "danger", 2000, 1);
             }
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
     function canclecreate(obj, node) {
@@ -378,7 +386,9 @@
                     opened.{$callback}(fid, data);
                 }
                 hide_window();
-            }, 'json')
+            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            });
         }
         return false;
     }

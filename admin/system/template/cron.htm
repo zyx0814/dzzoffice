@@ -102,6 +102,8 @@
 					<h5>{lang board_message}</h5>
 					<ul class="form-text">
 						{lang misc_cron_tips}
+						<li class="text-danger">计划任务默认通过用户访问触发。缺点是影响用户访问体验；计划任务执行不及时。可以修改config.php文件，设置参数 {eval echo '$_config[\'remote\'][\'on\']=1; $_config[\'remote\'][\'cron\']=1;';} 停止这种触发方式。</li>
+						<li class="text-danger">建议通过系统计划任务来触发计划任务的执行，具体操作方式为定时访问指定域名下的 cron.php 文件。例如，可配置系统计划任务，使其定期访问 http://127.0.0.1/cron.php 地址，以此实现计划任务的自动触发。</li>
 					</ul>
 				</div>
 				<form id="cpform" action="{MOD_URL}&op=cron" class="form-horizontal" method="post" name="cpform">

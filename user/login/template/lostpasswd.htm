@@ -20,13 +20,10 @@
                 <input type="hidden" name="formhash" value="{FORMHASH}" />
                 <input type="hidden" name="lostpwsubmit" value="true" />
                 <input type="hidden" name="handlekey" value="lostpw_$loginhash" />
+                <p class="text-muted">请输入账户的注册邮箱地址，我们将发送重设密码链接至该邮箱。</p>
                 <div class="mb-3 has-feedback">
                     <span class="mdi mdi-mail" aria-hidden="true"></span>
                     <input type="text" class="form-control" name="email" id="lostpw_email"  value=""  placeholder="{lang fill_your_login_email}" required/>
-                </div>
-                <div class="mb-3 has-feedback">
-                    <span class="mdi mdi-lock" aria-hidden="true"></span>
-                    <input type="text" class="form-control"  name="username" id="lostpw_username"  value=""  placeholder="{lang names_fill_registration}"  required/>
                 </div>
                 <p class="error-msg text-danger text-center" id="returnmessage3_$loginhash"></p>
                 <div class="mb-3 d-grid">
@@ -56,8 +53,8 @@
                         spinnerText       : '后台处理中，请稍后...',
                     });
                     jQuery.post(url+'&returnType='+type,formData,function(json){
+                        loader.destroy();
                         if(json['success']){
-                            loader.destroy();
                         var el=jQuery('#'+contid);
                             var mail='http://mail.'+json['success'].email.split('@')[1];
                             el.find('.Mtitle').html(__lang.password_back_email_sent_successfully);
@@ -68,12 +65,13 @@
                             el.find('.modal-footer').show();
                         }else if(json['error']){
                             jQuery('#'+rspaceid).html(json['error']);
-                            loader.destroy();
                         }else{
-                            loader.destroy();
                             jQuery('#'+rspaceid).html(__lang.system_busy);
                         }
-                    },'json');
+                    },'json').fail(function (jqXHR, textStatus, errorThrown) {
+                        loader.destroy();
+                        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                    });
                 }
             </script>
         </div>

@@ -337,7 +337,9 @@ _explorer.routerule = function (path, prefix) {
 			}
 			location.hash = hash;
 		}
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 	return false;
 };
 _explorer.hashHandler = function () { //处理页面hash变化
@@ -518,7 +520,9 @@ _explorer.open_node_by_id = function (fid, gid,bz) {
 		}, function (data) {
 			var node = inst.get_node('#' + data[0]);
 			_explorer.open_node_bg(inst, node, data);
-		}, 'json');
+		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	}
 };
 _explorer.open_node_bg = function (inst, node, arr) {
@@ -550,7 +554,9 @@ _explorer.open_node_bg = function (inst, node, arr) {
 						}
 
 					}
-				},'json')
+				},'json').fail(function (jqXHR, textStatus, errorThrown) {
+					showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+				});
 				return false;
 			} else{
 				inst.deselect_all();
@@ -721,6 +727,9 @@ function addstatis(rid) {
 			if (data.msg === 'success') {
 				remsg = true;
 			}
+		},
+		error: function(xhr, status, error) {
+			showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
 		}
 	});
 	return remsg;
