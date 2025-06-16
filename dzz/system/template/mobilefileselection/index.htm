@@ -73,7 +73,9 @@
                     } else if (data.error) {
                         $.toast(data.error);
                     }
-                }, 'json')
+                }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                    showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                });
             }
         } else {
             var rids = _filemanage.selector;
@@ -95,7 +97,9 @@
                                     $.toast("操作成功");
                                     window.location.href = '{$deferer}';
                                 }
-                            }, 'json');
+                            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                            });
                         },
                         onCanel: function () {
                             $('#weui-prompt-input').val('');
@@ -127,7 +131,9 @@
                                     $.toast("操作成功");
                                     window.location.href = '{$deferer}';
                                 }
-                            }, 'json');
+                            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                            });
 
                         },
                         onCancel: function () {

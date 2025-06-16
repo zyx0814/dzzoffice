@@ -1850,7 +1850,9 @@ _filemanage.collect = function (rid) {
 				layer.msg(msg, {offset:'10px'});
 				//console.log('收藏成功时处理');
 			}
-		}, 'json');
+		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	}
 	return;
 };
@@ -2011,7 +2013,9 @@ _filemanage.NewIco = function (type, fid) {
             } else {
 				layer.alert(data.error, {skin:'lyear-skin-danger'});
 			}
-		}, 'json');
+		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	}
 };
 //增加索引
@@ -2035,7 +2039,9 @@ _filemanage.addIndex = function(data){
             }else{
                 alert(json.error);
             }
-        },'json')
+        },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	}
 }
 _filemanage.updateIndex = function(data){
@@ -2046,7 +2052,9 @@ _filemanage.updateIndex = function(data){
             }else{
                 alert(json.error);
             }
-        },'json')
+        },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
 }
 _filemanage.rename = function (id) {
@@ -2148,7 +2156,9 @@ _filemanage.deleteIndex=function(rids){
         }else{
             alert(json.error);
         }
-    },'json')
+    },'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 //回收站删除时弹出框
 _filemanage.finallyDelete = function (rid, noconfirm, title) {
@@ -2205,7 +2215,9 @@ _filemanage.finallyDelete = function (rid, noconfirm, title) {
 			layer.msg(msg, {offset:'10px'});
             _filemanage.deleteIndex(rids);
             _filemanage.removeridmore(rids);
-		}, 'json');
+		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	});
 };
 //清空回收站
@@ -2326,7 +2338,9 @@ _filemanage.RecoverFile = function (rid, noconfirm) {
 		layer.msg(msg, {offset:'10px'});
         _filemanage.removeridmore(rids);
 
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 };
 
 _filemanage.showTemplatenoFile = function (containid, total) {
@@ -2433,7 +2447,9 @@ _filemanage.delIco = function (rid, noconfirm) {
 		}
 		layer.msg(msg, {offset:'10px'});
         _filemanage.removeridmore(rids);
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 };
 _filemanage.removeridmore = function(rids){
 	if(rids.length > 1){
@@ -2559,7 +2575,9 @@ _filemanage.copy = function (rid,fid) {
 		} else {
 			layer.msg(json.msg, {offset:'10px'});
 		}
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 };
 //文件剪切
 _filemanage.cut = function (rid) {
@@ -2627,12 +2645,15 @@ _filemanage.cut = function (rid) {
 			layer.msg(json.msg, {offset:'10px'});
 		}
 
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 };
 //粘贴
 _filemanage.paste = function (fid) {
 	var folder = _explorer.sourcedata.folder[fid];
 	if (!folder) {
+		showmessage(__lang.folder_not_exist,'danger',3000,1,'center');
 		return false;
 	}
 	if(folder.bz) {
@@ -2645,9 +2666,11 @@ _filemanage.paste = function (fid) {
 	var url = _explorer.appUrl + '&op=dzzcp&do=paste';
 	var i = 0;
 	var node = null;
-	layer.msg('正在粘贴，请不要关闭浏览器或刷新页面', {offset:'10px',time:0});
+	layer.msg('正在粘贴，请不要关闭浏览器或刷新页面，也不要进行其他操作。', {offset:'10px',time:0});
 	jQuery.post(url, data, function (json) {
-		if(json.error){
+		if(!json){
+			layer.alert(__lang.paste_failure, {skin:'lyear-skin-danger'});
+		}else if(json.error){
 			layer.alert(json.error, {skin:'lyear-skin-danger'});
 		}else{
 			if (fid === _filemanage.fid) {
@@ -2675,9 +2698,11 @@ _filemanage.paste = function (fid) {
 				} else {
 					layer.msg('粘贴成功', {offset:'10px'});
 				}
-			} else {
-				layer.msg('粘贴成功', {offset:'10px'});
+				_explorer.cut.icos=[];
 			}
+			layer.msg('粘贴成功', {offset:'10px'});
 		}
-	}, 'json');
+	}, 'json').fail(function(jqXHR,statusText){
+		layer.alert(__lang.paste_failure, {skin:'lyear-skin-danger'});
+	});
 };

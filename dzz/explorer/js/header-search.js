@@ -161,7 +161,9 @@ function show_more_search_condition(e) {
 
                 }
             }
-        }, 'json')
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
     if (positionfill && searchjson['fid'] != false && searchjson['fid'].length) {
         var fids = searchjson['fid'];
@@ -551,7 +553,9 @@ function createQueryStr(json){
             searchjson = json;
             searchConditionChange();
             /*execute_search();*/
-        },'json');
+        },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }else{
         searchjson = json;
         searchConditionChange();
@@ -696,7 +700,9 @@ function setSearchval(searchval) {
         }
         //设置搜索框值
         setSearchCondition();
-    }, 'json');
+    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+    });
 
 }
 function unique(arr) {

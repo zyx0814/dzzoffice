@@ -428,7 +428,9 @@ function menu_publish(obj){
 			showmessage(json.error,'danger',3000,1);
 		}
 		button.button('reset');
-	},'json');
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function setEventkey(obj,type){
 	var el=jQuery(obj);

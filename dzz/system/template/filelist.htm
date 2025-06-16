@@ -193,7 +193,9 @@ $('#position').off('select_node.jstree').on('select_node.jstree', function (e, d
                 inst.deselect_node(node);
                 $('#' + ctrlid).val('');
             }
-        },'json')
+        },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }else{
         inst.deselect_node(node);
         $('#' + ctrlid).val('');
@@ -254,7 +256,9 @@ function createNewFolder() {
 //                    showDialog(data['error']);
                 showmessage(data['error'],"danger",2000,1);
             }
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
 }
@@ -285,7 +289,9 @@ function realcreate(obj, node,parentnode) {
         }else {
             showmessage(data['error'],"danger",2000,1);
         }
-    },'json');
+    },'json').fail(function (jqXHR, textStatus, errorThrown) {
+        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+    });
     return false;
 }
 function canclecreate(obj, node) {
@@ -309,7 +315,9 @@ function submitdata(){
             }
 			
             hide_window();
-        },'json')
+        },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
     return false;
 }

@@ -146,6 +146,7 @@
             dropdown.render({
                 elem: this,
                 show: true,
+                className:'lyear-dropdown dropdown-menu show border',
                 data: [{
                 id: 'edit',
                 templet: '<a class="dropdown-item" href="javascript:;"><i class="mdi mdi-pencil pe-2"></i>{lang editshare}</a>'
@@ -171,7 +172,7 @@
                     document.execCommand("copy");
                     document.body.removeChild(tempInput);
                     layer.msg('已复制链接');
-                    return false;
+                    return true;
                 } else if(menudata.id === 'info'){
                     var password = data.password;
                     var tempInput = document.createElement("input");
@@ -185,7 +186,7 @@
                     document.execCommand("copy");
                     document.body.removeChild(tempInput);
                     layer.msg('已复制信息');
-                    return false;
+                    return true;
                 } else if(menudata.id === 'del'){
                     layer.confirm('真的删除要 '+ data.name +' 么？'+__lang.delete_share_sure, {title:'确定要删除分享？',skin:'lyear-skin-danger'}, function(index){
                         layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});

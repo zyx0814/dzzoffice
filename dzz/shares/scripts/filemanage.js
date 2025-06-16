@@ -1268,7 +1268,9 @@ _filemanage.downAttach = function (id) {
 			showmessage(json['error'], 'danger', 5000, 1);
 			return false;
 		}
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 	return false;
 };
 _filemanage.downAll = function () {
@@ -1291,7 +1293,9 @@ _filemanage.downAll = function () {
 			showmessage(json['error'], 'danger', 5000, 1);
 			return false;
 		}
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 	return false;
 };
 
@@ -1328,7 +1332,9 @@ _filemanage.downpackage = function () {
 			showmessage(json['error'], 'danger', 5000, 1);
 			return false;
 		}
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 	return false;
 };
 
@@ -1360,7 +1366,9 @@ _filemanage.NewIco = function (type, fid) {
             } else {
 				showmessage(data.error, 'danger', 5000, 1);
 			}
-		}, 'json');
+		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	}
 };
 //增加索引
@@ -1384,7 +1392,9 @@ _filemanage.addIndex = function(data){
             }else{
                 alert(json.error);
             }
-        },'json')
+        },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
 	}
 }
 _filemanage.showTemplatenoFile = function (containid, total) {

@@ -119,7 +119,9 @@ $_config['memory']['wincache'] = 1;						// 启动对 wincache 的支持
 // 服务器相关设置
 $_config['server']['id']		= 1;			// 服务器编号，多webserver的时候，用于标识当前服务器的ID
 
-
+//计划任务设置
+$_config['remote']['on']=0; //1：设定计划任务由外部触发；0：通过用户访问触发
+$_config['remote']['cron']=0; //1：设定计划任务由外部触发；0：通过用户访问触发
 //  CONFIG CACHE
 $_config['cache']['type'] 			= 'sql';	// 缓存类型 file=文件缓存, sql=数据库缓存
 

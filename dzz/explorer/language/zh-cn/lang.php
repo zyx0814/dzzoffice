@@ -444,4 +444,5 @@ $lang = array(
     'edit_versiondesc' => '更改了<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}的版本描述',
     'editversiondesc' => '修改版本描述',
     'clone' => '创建副本',
+    'paste_failure' => '粘贴失败，请重新复制尝试再次粘贴！',
 );

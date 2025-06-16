@@ -1251,7 +1251,9 @@ _selectfile.NewIco = function (type, fid) {
                     skin: 'lyear-skin-danger'
                 });
 		  	}
-		  },'json');
+		  },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     } else if (type === 'newLink') {
         showWindow('newLink', _explorer.appUrl + '&do=ajax&operation=' + type + '&template=1&fid=' + fid);
     } else {
@@ -1267,7 +1269,9 @@ _selectfile.NewIco = function (type, fid) {
                     skin: 'lyear-skin-danger'
                 });
             }
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
 };
 _selectfile.glow = function (el) {
@@ -1401,9 +1405,9 @@ _selectfile.copy = function (rid) {
         } else {
             parent.layer.msg(json.msg, {icon: 'error',skin: 'bg-danger',offset:'t'});
         }
-
-
-    }, 'json');
+    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+    });
 };
 //文件剪切
 _selectfile.cut = function (rid) {
@@ -1466,7 +1470,9 @@ _selectfile.cut = function (rid) {
             parent.layer.msg(json.msg, {icon: 'error',skin: 'bg-danger',offset:'t'});
         }
 
-    }, 'json');
+    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+    });
 };
 //粘贴
 _selectfile.paste = function (fid) {
@@ -1503,7 +1509,9 @@ _selectfile.paste = function (fid) {
         } else {
             parent.layer.msg('粘贴成功', {icon: 'success',skin: 'bg-primary',offset:'t'});
         }
-    }, 'json');
+    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+    });
 
 };
 _selectfile.delIco = function (rid, noconfirm) {
@@ -1600,7 +1608,9 @@ _selectfile.delIco = function (rid, noconfirm) {
         }
         _selectfile.removeridmore(rids);
 
-    }, 'json');
+    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+    });
 };
 _selectfile.removerid = function (rid) {
     var data = _explorer.sourcedata.icos[rid];

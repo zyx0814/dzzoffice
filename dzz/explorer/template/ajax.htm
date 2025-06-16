@@ -62,7 +62,9 @@
             } else if (data['error']) {
                 $('#' + data['pos'] + '_error').html(data['msg']);
             }
-        }, 'json')
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
 </script>
@@ -181,7 +183,9 @@
                 }
             }
 
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
 </script>
 <!--{elseif $operation == 'addsearchcat'}-->
@@ -269,7 +273,9 @@
                 hideWindow('addsearchcat');
                 layer.alert(data['msg'], {skin:'lyear-skin-danger'});
             }
-        }, 'json')
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
     function editsearchcat(form) {
         var formdata = $(form).serialize();
@@ -292,7 +298,9 @@
                 layer.alert(__lang.save_failed, {skin:'lyear-skin-danger'});
             }
             return false;
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
     function delete_searchcat(id, msg, title) {
@@ -308,7 +316,9 @@
                     hideWindow('editcatsearch');
                     layer.alert('{lang delete_error}！', {skin:'lyear-skin-danger'});
                 }
-            }, 'json')
+            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            });
         });
     }
 </script>
@@ -436,7 +446,9 @@
                 layer.alert(data.error, {skin:'lyear-skin-danger'});
             }
 
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
 </script>
@@ -598,7 +610,7 @@
 <!--创建分享-->
 <form action="{MOD_URL}&op=ajax&operation=share" method="post" onSubmit="return subshare(this);">
     <div class="modal-header">
-        <h4 class="modal-title text-truncate">{lang create_share}</h4>
+        <h4 class="modal-title text-truncate"><!--{if $share['id']}-->{lang edit_share}<!--{else}-->{lang create_share}<!--{/if}--></h4>
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
@@ -760,7 +772,9 @@
             } else {
                 layer.msg('{lang operation_error}', {offset:'10px'});
             }
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
     function removeshare(form) {
@@ -776,7 +790,9 @@
                 } else {
                     layer.msg('删除失败', {offset:'10px'});
                 }
-            }, 'json')
+            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            });
         });
     }
     function randomPass() {
@@ -822,7 +838,9 @@
             } else {
                 layer.alert(data.error, {skin:'lyear-skin-danger'});
             }
-        }, 'json')
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
 </script>
 <!--{else}-->
@@ -1003,7 +1021,9 @@
             } else {
                 layer.alert(data['error'], {skin:'lyear-skin-danger'});
             }
-        }, 'json')
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     })
 </script>
@@ -1070,7 +1090,9 @@
             } else {
                 layer.alert(data['error'], {skin:'lyear-skin-danger'});
             }
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
 </script>

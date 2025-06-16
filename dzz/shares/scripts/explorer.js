@@ -266,7 +266,9 @@ function passwordsubmit() {
 			showmessage('系统异常', 'danger', 5000, 1);
 			return false;
 		}
-	}, 'json');
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
 }
 function allsave() {
 	try {

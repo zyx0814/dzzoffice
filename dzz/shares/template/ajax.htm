@@ -35,7 +35,9 @@
                 showDialog(data.error);
             }
 
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
 </script>
@@ -135,7 +137,9 @@
             } else {
                 showDialog(data.error);
             }
-        }, 'json')
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
 </script>
 <!--{else}-->

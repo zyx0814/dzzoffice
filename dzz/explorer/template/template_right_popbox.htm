@@ -104,7 +104,9 @@
 			}else {
                 showDetail(data['error']);
             }
-	   },'json')
+	   },'json').fail(function (jqXHR, textStatus, errorThrown) {
+			showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		});
 	})
 
     jQuery(document).off('click.removeuser').on('click.removeuser','.right_popbox_header .removeuser',function(){
@@ -138,7 +140,9 @@
                  }
 
                  return false;
-             }, 'json');
+             }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+				showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+			});
 		});
 	})
 </script>

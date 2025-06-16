@@ -179,18 +179,6 @@ if ($do == 'stats') {
         $env_str .= ($status ? "<td class=\"text-success\"><i class=\"mdi lead mdi-check-circle me-2\"></i>" : "<td class=\"nw text-danger\"><i class=\"mdi lead mdi-close-circle me-2\"></i>") . $item['current'] . "</td>\n";
         $env_str .= "</tr>\n";
     }
-    $func_str = '';
-    $func_items = array('file_get_contents', 'xml_parser_create', 'filesize', 'curl_init', 'zip_open', 'ffmpeg', 'imagick', 'imagemagick', 'cURL', 'date', 'Exif', 'Fileinfo', 'Ftp', 'GD', 'gettext', 'intl', 'Iconv', 'json', 'ldap', 'Mbstring', 'Mcrypt', 'Memcached', 'MySQLi', 'SQLite3', 'OpenSSL', 'PDO', 'pdo_mysql', 'pdo_sqlite', 'Redis', 'session', 'Sockets', 'Swoole', 'dom', 'xml', 'SimpleXML', 'libxml', 'bz2', 'zip', 'zlib');
-    foreach ($func_items as $item) {
-        $status = function_exists($item);
-        $func_str .= "<div class=\"gallery-item\">$item\n";
-        if ($status) {
-            $func_str .= "<span class=\"mdi mdi-check-circle text-success\"></span>\n";
-        } else {
-            $func_str .= "<span class=\"mdi mdi-close-circle text-danger\"></span>\n";
-        }
-        $func_str .= "</div>\n";
-    }
     include template('systemcheck');
     exit();
 } elseif ($do == 'phpinfo') {

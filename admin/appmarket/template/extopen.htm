@@ -95,9 +95,9 @@
 		placeholder: "ui-state-default", 
 		update: function(event, ui) { 
 			var form = jQuery(this).parent();
-			jQuery.post(form.action, jQuery(form).serialize(), function(json) { 
+			jQuery.post(form.action, jQuery(form).serialize(), function(json) {
 				if(json.status==1){
-					showmessage( json.info,'success',1000,1); 
+					showmessage(json.info,'success',1000,1); 
 				} else{
 					showmessage(json.info,'error',1000,1);
 				}
@@ -121,7 +121,10 @@
 				} else{
 					showmessage(json.info,'error',1000,1);
 				}
-			} 
+			},
+			error: function(xhr, status, error) {
+				showmessage('Request failed:' + status +' ' +error, 'error', 3000, 1);
+			}
 		}); 
 	}
 	function check_default(obj) {

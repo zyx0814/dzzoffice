@@ -77,7 +77,9 @@
 							}
                             hide_window();
                         }
-                    }, 'json');
+                    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                    });
                 });
             } else {//未选择文件创建文件返回
                 var filename = $('#savenewname').val();
@@ -105,7 +107,9 @@
                         }
                         hide_window();
                     }
-                }, 'json');
+                }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                    showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                });
             }
         } else if (type == 2) {//选择位置时
             var fid = _selectfile.fid;

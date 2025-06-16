@@ -164,7 +164,9 @@
                 showDialog(data['error']);
                 return false;
             }
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
         return false;
     }
     function edit_perm(obj, pid) {
@@ -183,7 +185,9 @@
             } else {
                 showmessage('操作失败,请刷新重试','error','3000',1);
             }
-        }, 'json')
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
     function setDefault(obj, pid) {
         jQuery.post(MOD_URL+'&op=permgroup&do=setdefault', {'id': pid}, function (data) {
@@ -200,7 +204,9 @@
             } else {
                 showmessage('设置失败,请刷新重试','error','3000',1);
             }
-        }, 'json');
+        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        });
     }
     function delete_perm(obj, pid) {
       var msg ='{lang delete_permission_group_sure}';
@@ -213,7 +219,9 @@
                 } else {
                 showmessage('删除失败,请刷新重试','error','3000',1);
             }
-            }, 'json')
+            }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            });
         });
       }
       return false;
