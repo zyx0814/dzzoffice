@@ -75,7 +75,7 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
                     $data[] = array(
                         'uid' => $user['uid'],
                         'username' => $user['username'],
-                        'jobname' => $user['jobname'] ?: '无职位'
+                        'jobname' => $user['jobname'] ?: '成员'
                     );
                 }
             }

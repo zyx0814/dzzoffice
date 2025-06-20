@@ -12,41 +12,39 @@
 <main class="bs-main-container main-allnotice">
 	<div class="container-fluid">
 	  <div class="card">
-		<!--{if $list}-->
 		<div class="card-header">
 			<div class="card-title lead">
 				<!--{if $img}--><img src="$img" class="img-avatar-36"><!--{else}--><span class="mdi mdi-bell-circle"></span><!--{/if}--><strong class="p-2">{$tongzhileixing}($count)</strong>
 			</div>
 		</div>
-		<!--{/if}-->
-		<div class="card-body">
-			<ul class="list-unstyled lyear-message-list">
-				<!--{loop $list $value}-->
-				<li class="d-flex flex-wrap">
-				  <div class="d-flex lyear-message-item">
-					<a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a>
-					<div class="flex-grow-1 ms-2 pe-2">
-						<!--{if $value[title]}--><strong>$value[title]</strong><!--{/if}-->
-					  	<!--{if $value[note]}--><div class="me-auto text-break">$value[note]</div><!--{/if}-->
-					  	<!--{if $value[redirecturl]}--><div class="text-muted text-break">来源地址：<a href="$value[redirecturl]" target="_blank" class="dcolor">$value[redirecturl]</a></div><!--{/if}-->
-					  	<!--{if $value['dateline']}--><small class="text-muted">$value['dateline']</small><!--{/if}-->
-					</div>
-				  </div>
-				  <!--{if !$img}--><img src="$value[appico]" class="img-avatar-36"><!--{/if}-->
-				</li>
-				<!--{/loop}-->
-			  </ul>
-			<!--{if $list}-->
-			<div class="row p-2">
-				{$multi}
-			</div>
-			<!--{else}-->
-			<div class="text-center">
-				<img src="static/image/common/no_list.png" /><br>
-				<span class="lead">{lang noappall_notice}…</span>
-			</div>
-			<!--{/if}-->
+		<!--{if $list}-->
+		<ul class="list-group list-group-flush">
+			<!--{loop $list $value}-->
+			<li class="d-flex flex-wrap list-group-item">
+				<div class="d-flex lyear-message-item">
+				<a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a>
+				<div class="flex-grow-1 ms-2 pe-2">
+					<!--{if $value[title]}--><strong>$value[title]</strong><!--{/if}-->
+					<!--{if $value[note]}--><div class="me-auto text-break">$value[note]</div><!--{/if}-->
+					<!--{if $value[redirecturl]}--><div class="text-muted text-break">来源地址：<a href="$value[redirecturl]" target="_blank" class="dcolor">$value[redirecturl]</a></div><!--{/if}-->
+					<!--{if $value['dateline']}--><small class="text-muted">$value['dateline']</small><!--{/if}-->
+				</div>
+				</div>
+				<!--{if !$img}--><img src="$value[appico]" class="img-avatar-36"><!--{/if}-->
+			</li>
+			<!--{/loop}-->
+		</ul>
+		<!--{if $multi}-->
+		<div class="p-3">
+			{$multi}
 		</div>
+		<!--{/if}-->
+		<!--{else}-->
+		<div class="card-body text-center">
+			<img src="static/image/common/no_list.png" /><br>
+			<span class="lead">{lang noappall_notice}…</span>
+		</div>
+		<!--{/if}-->
 	</div>
 </div>
 </main>

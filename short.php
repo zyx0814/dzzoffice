@@ -8,6 +8,7 @@
  */
 require __DIR__ . '/core/coreBase.php';
 define('CURSCRIPT', 'dzz');
+define('APPTYPEID', 0);
 $dzz = C::app();
 $dzz->init_session = false;
 $dzz->init_setting = false;
