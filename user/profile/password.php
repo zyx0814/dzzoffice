@@ -254,8 +254,9 @@ if ($do == 'editpass') {
         $idstring = random(6);
 
         $type = $_GET['returnType'];
+        $siteurl = $_G['siteurl'];
 
-        $confirmurl = C::t('shorturl')->getShortUrl("{$_G[siteurl]}user.php?mod=profile&op=password&do=changeemail&uid={$_G[uid]}&id=$idstring&email={$bindemail}");
+        $confirmurl = C::t('shorturl')->getShortUrl("user.php?mod=profile&op=password&do=changeemail&uid={$uid}&id=$idstring&email={$bindemail}");
 
         $email_bind_message = lang('bindemail_message', array(
             'username' => $_G['member']['username'],

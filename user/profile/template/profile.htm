@@ -111,6 +111,13 @@
           <div class="col-sm-10"><strong><code>$space['email']</code></strong>
           </div>
         </div>
+        <!--{if $users['phone']}-->
+        <div class="row mb-3">
+          <label class="col-sm-2">手机号码</label>
+          <div class="col-sm-10"><strong><code><!--{eval $phone=$users['phone'];if(strlen($phone) === 11)$phone = substr($phone, 0, 3) . '******' . substr($phone, 9);echo $phone}--></code></strong>
+          </div>
+        </div>
+        <!--{/if}-->
         <!--{loop $settings $key $value}--> 
         <!--{if $value[available]}-->
         <div class="row mb-3" id="th_$key">

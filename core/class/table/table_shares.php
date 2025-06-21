@@ -221,7 +221,7 @@ class table_shares extends dzz_table {
         }
         $sharestatus = array('-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => lang('been_blocked'), '-3' => lang('file_been_deleted'), '-2' => lang('degree_exhaust'), '-1' => lang('logs_invite_status_4'), '0' => lang('founder_upgrade_normal'));
         foreach (DB::fetch_all("select * from %t where $wheresql $ordersql $limitsql", $params) as $val) {
-            $val['sharelink'] = C::t('shorturl')->getShortUrl(getglobal('siteurl') . 'index.php?mod=shares&sid=' . dzzencode($val['id']));
+            $val['sharelink'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($val['id']));
             $val['fdateline'] = dgmdate($val['dateline'], 'Y-m-d H:i:s');
             $val['password'] = ($val['password']) ? dzzdecode($val['password']) : '';
             $sid = dzzencode($val['id']);

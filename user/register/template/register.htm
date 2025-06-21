@@ -67,10 +67,14 @@
       </div>
     </div>
     <!--{/if}-->
-    <div class="mb-3 d-grid">
-      <button class="btn btn-round btn-primary" type="submit" name="loginsubmit" value="true"><!--{if $_GET[action] == 'activation'}-->{lang activation}<!--{else}-->$_G[setting][reglinkname]<!--{/if}--></button>
-			<a href="user.php?mod=login" class="btn btn-round btn-success mt-1">{lang back_login}</a>
-    </div>
+    <ul class="nav nav-pills nav-fill">
+      <li class="nav-item m-1">
+        <a href="user.php?mod=login" class="btn btn-round btn-success w-100">{lang back_login}</a>
+      </li>
+      <li class="nav-item m-1">
+        <button class="btn btn-round btn-primary w-100" type="submit" name="loginsubmit" value="true"><!--{if $_GET[action] == 'activation'}-->{lang activation}<!--{else}-->$_G[setting][reglinkname]<!--{/if}--></button>
+      </li>
+    </ul>
     <p class="text-danger text-center" id="returnmessage4"></p>
   </form>    
   <p class="text-center text-muted mb-0"><!--{template lyear:copyright}--></p>

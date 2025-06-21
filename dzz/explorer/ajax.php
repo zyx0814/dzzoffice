@@ -709,7 +709,7 @@ if ($operation == 'upload') {//上传图片文件
             
             if ($id) {
                 if ($ret = C::t('shares')->update_by_id($id, $share,$bz)) {
-                    showTips(array('success' => true, 'shareurl' => C::t('shorturl')->getShortUrl($_G['siteurl'] . 'index.php?mod=shares&sid=' . dzzencode($ret)), 'shareid' => $ret));
+                    showTips(array('success' => true, 'shareurl' => C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($ret)), 'shareid' => $ret));
                 } elseif ($ret['error']) {
                     showTips(array('error' => $ret['error']), 'json');
                 } else {
@@ -723,7 +723,7 @@ if ($operation == 'upload') {//上传图片文件
                 }
                 $ret = C::t('shares')->insert($share,$bz);
                 if ($ret['success']) {
-                    showTips(array('success' => true, 'shareurl' => C::t('shorturl')->getShortUrl($_G['siteurl'] . 'index.php?mod=shares&sid=' . dzzencode($ret['success'])), 'shareid' => $ret['success']));
+                    showTips(array('success' => true, 'shareurl' => C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($ret['success'])), 'shareid' => $ret['success']));
                 } elseif ($ret['error']) {
                     showTips(array('error' => $ret['error']), 'json');
                 } else {
@@ -734,7 +734,7 @@ if ($operation == 'upload') {//上传图片文件
     } else {
         if ($shareid) {
             if ($share = C::t('shares')->fetch($shareid)) {
-                $share['shareurl'] = C::t('shorturl')->getShortUrl($_G['siteurl'] . 'index.php?mod=shares&sid=' . dzzencode($share['id']));
+                $share['shareurl'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($share['id']));
                 if ($share['password']) $share['password'] = dzzdecode($share['password']);
                 if ($share['status'] >= -2) {
                     if ($share['endtime'] && $share['endtime'] < TIMESTAMP) $share['status'] = -1;
@@ -753,7 +753,7 @@ if ($operation == 'upload') {//上传图片文件
             }
         } else {
             if ($share = C::t('shares')->fetch_by_path($files)) {
-                $share['shareurl'] = C::t('shorturl')->getShortUrl($_G['siteurl'] . 'index.php?mod=shares&sid=' . dzzencode($share['id']));
+                $share['shareurl'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($share['id']));
                 if ($share['password']) $share['password'] = dzzdecode($share['password']);
                 if ($share['status'] >= -2) {
                     if ($share['endtime'] && $share['endtime'] < TIMESTAMP) $share['status'] = -1;

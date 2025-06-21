@@ -54,7 +54,7 @@ if ($do == 'getinfo') {
     $sharestatus = array('-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>', '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>', '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>', '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>', '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>');
     $data = array();
     foreach ($list as $value) {
-        $sharelink = C::t('shorturl')->getShortUrl(getglobal('siteurl') . 'index.php?mod=shares&sid=' . dzzencode($value['id']));
+        $sharelink = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($value['id']));
         if ($value['endtime']) {
             $timediff = ($value['endtime'] - $value['dateline']);
             $days = 0;
