@@ -2,175 +2,182 @@
 <link rel="stylesheet" href="static/dzzthumb/jquery.dzzthumb.css?{VERHASH}">
 <link rel="stylesheet" href="static/lyear/js/layui/css/layui.css?{VERHASH}">
 <link rel="stylesheet" href="{MOD_PATH}/images/index.css?{VERHASH}">
-<!--{template lyear:header_simple_end}-->
-<main class="bs-main-container">
-	<div class="container-fluid" style="height: 99%;">
-		<div class="card middleconMenu">
-			<div class="card-body" id="middleconMenu">
-				<div class="middlecenter scroll-100 scroll-srcollbars">
-					<div class="middlecenter-body">
-						<div class="middle-groupname middle-groupshink middlecenter-header">
-							<div class="address-wrapper clearfix">
-								<ol class="breadcrumb address">
-									<li class="homesid dcolor">
-										<a href="javascript:;">刷新页面<span class="mdi mdi-power-on"></span></a>
-									</li>
-								</ol>
-							</div>
+<!--{template lyear:header_simple_noleft_end}-->
+<main class="bs-main-container" style="padding-left: 0;">
+	<div class="card middleconMenu">
+		<div class="card-header">
+			<div class="share-item">
+				<span class="file-icon"></span>
+				<div class="share-desc">
+				<div class="share-title text-body mb-1">暂无</div>
+				<div class="share-meta text-muted"><span id="sharefdateline">暂无</span> 失效时间：<span class="me-1" id="expireday">暂无</span> <i class="me-1 mdi mdi-eye"></i><span class="me-1" id="shareviews">0</span> <i class="me-1 mdi mdi-download"></i><span id="sharedowns">0</span></div>
+				</div>
+			</div>
+		</div>
+		<div id="middleconMenu">
+			<div class="middlecenter scroll-100 scroll-srcollbars">
+				<div class="middlecenter-body">
+					<div class="middle-groupname middle-groupshink middlecenter-header">
+						<div class="address-wrapper clearfix">
+							<ol class="breadcrumb address">
+								<li class="homesid dcolor">
+									<a href="javascript:;">刷新页面<span class="mdi mdi-power-on"></span></a>
+								</li>
+							</ol>
 						</div>
-						<!--文件列表开始 -->
-						<div id="filemanage-f-1" class="icosContainer">
-							<div class="emptyPage" id="noticeinfo">
-								<img src="static/image/common/no_list.png">
-								<p class="emptyPage-text">{lang no_file}</p>
-							</div>
+					</div>
+					<!--文件列表开始 -->
+					<div id="filemanage-f-1" class="icosContainer">
+						<div class="emptyPage" id="noticeinfo">
+							<img src="static/image/common/no_list.png">
+							<p class="emptyPage-text">{lang no_file}</p>
 						</div>
 					</div>
 				</div>
-				<!--头部信息框-->
-				<div class="navtopheader">
-				</div>
-				<div id="template_middleicon" style="display:none">
-					<div class="middleicon window">
-						<div class="square-fileList js-file-item-tpl clearfix list-view">
-							<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon" rid="{rid}" flag="{flag}">
-								<div class="toggleGlow card file-item">
-									<div class="icoimgContainer icoimgContainer_{type}"><img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" /></div>
-									<div class="editable-name text-center" id="file_text_{rid}" title="{name}">{name}</div>
-								</div>
-								<a href="javascript:;" class="icoblank_rightbottom mdi fs-5"></a>
+			</div>
+			<!--头部信息框-->
+			<div class="navtopheader">
+			</div>
+			<div id="template_middleicon" style="display:none">
+				<div class="middleicon window">
+					<div class="square-fileList js-file-item-tpl clearfix list-view">
+						<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon" rid="{rid}" flag="{flag}">
+							<div class="toggleGlow card file-item">
+								<div class="icoimgContainer icoimgContainer_{type}"><img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" /></div>
+								<div class="editable-name text-center" id="file_text_{rid}" title="{name}">{name}</div>
 							</div>
+							<a href="javascript:;" class="icoblank_rightbottom mdi fs-5"></a>
 						</div>
 					</div>
 				</div>
-				<div id="template_detaillist" style="display:none">
-					<div class="detaillist filemanage">
-						<div class="paddingright-con js-list-body">
-							<table class="table table-hover table-striped align-middle " style="table-layout:fixed;">
-								<thead class="detail_header_tr">
-									<tr>
-										<th width="30px"></th>
-										<th disp="0" class=" detail_header detail_header_0" width="100%">
-											<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
-											<a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
-												<span class="mdi mdi-chevron-up"></span>
-												<span class="mdi mdi-chevron-down"></span>
-											</a>
-											<div disp="0" class="detail_header_drag"></div>
-										</div>
-										</th>
-										<th disp="1" class=" detail_header detail_header_1 file-item-hide" width="15%">
-											<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
-										<a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
+			</div>
+			<div id="template_detaillist" style="display:none">
+				<div class="detaillist filemanage">
+					<div class="paddingright-con js-list-body">
+						<table class="table table-hover table-striped align-middle " style="table-layout:fixed;">
+							<thead class="detail_header_tr">
+								<tr>
+									<th width="30px"></th>
+									<th disp="0" class=" detail_header detail_header_0" width="100%">
+										<div class="detail_header_td_div"><span class="detail_header_title">{lang filename}</span>
+										<a class="detail_header_asc detail_header_asc_{asc_0}" style="display:{show_0};">
 											<span class="mdi mdi-chevron-up"></span>
 											<span class="mdi mdi-chevron-down"></span>
 										</a>
-											<div disp="1" class="detail_header_drag"></div>
-										</div>
-										</th>
-										<th disp="2" class="detail_header detail_header_2 file-item-hide" width="15%">
-										<div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
-											<a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
-												<span class="mdi mdi-chevron-up"></span>
-												<span class="mdi mdi-chevron-down"></span>
-											</a>
-											<div disp="2" class="detail_header_drag" style="float:right"></div>
-										</div>
-										</th>
-										<th disp="3" class=" detail_header detail_header_3 file-item-hide" width="30%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
+										<div disp="0" class="detail_header_drag"></div>
+									</div>
+									</th>
+									<th disp="1" class=" detail_header detail_header_1 file-item-hide" width="15%">
+										<div class="detail_header_td_div"><span class="detail_header_title">{lang big_small}</span>
+									<a class="detail_header_asc detail_header_asc_{asc_1}" style="display:{show_1};">
+										<span class="mdi mdi-chevron-up"></span>
+										<span class="mdi mdi-chevron-down"></span>
+									</a>
+										<div disp="1" class="detail_header_drag"></div>
+									</div>
+									</th>
+									<th disp="2" class="detail_header detail_header_2 file-item-hide" width="15%">
+									<div class="detail_header_td_div"><span class="detail_header_title">{lang type}</span>
+										<a class="detail_header_asc detail_header_asc_{asc_2}" style="display:{show_2};">
 											<span class="mdi mdi-chevron-up"></span>
 											<span class="mdi mdi-chevron-down"></span>
-										</a></div></th>
-									</tr>
-								</thead>
-								<tbody class="js-file-item-tpl">
-									<tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock" rid="{rid}">
-										<td class="detail_item_td " valign="middle" width="30px" style="overflow:hidden;padding:0;padding-left:0.5rem;"><a class="selectbox mdi mdi-checkbox-blank-outline fs-5" rid="{rid}" title="{lang choose}"></a></td>
-										<td class="detail_item_td " valign="middle" width="50%" style="overflow:hidden;position:relative">
-											<div class="file-info-col toggleGlow" rid="{rid}">
-												<div class="thumbnail">
-													<img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
-												</div>
-												<div class="file-name-wrapper">
-												<div class="filename"><span class="editable-name detail_text detail_item_name_text" id="file_text_{rid}">{name}</span></div>
-													<div class="text-muted small file-item-block text-truncate">{fdateline} {fsize}</div>
-												</div>
+										</a>
+										<div disp="2" class="detail_header_drag" style="float:right"></div>
+									</div>
+									</th>
+									<th disp="3" class=" detail_header detail_header_3 file-item-hide" width="30%"><div class="detail_header_td_div"><span class="detail_header_title">{lang edit_date}</span><a class="detail_header_asc detail_header_asc_{asc_3}" style="display:{show_3};">
+										<span class="mdi mdi-chevron-up"></span>
+										<span class="mdi mdi-chevron-down"></span>
+									</a></div></th>
+								</tr>
+							</thead>
+							<tbody class="js-file-item-tpl">
+								<tr id="Icoblock_detail_{rid}" class="detail_tr Icoblock" rid="{rid}">
+									<td class="detail_item_td " valign="middle" width="30px" style="overflow:hidden;padding:0;padding-left:0.5rem;"><a class="selectbox mdi mdi-checkbox-blank-outline fs-5" rid="{rid}" title="{lang choose}"></a></td>
+									<td class="detail_item_td " valign="middle" width="50%" style="overflow:hidden;position:relative">
+										<div class="file-info-col toggleGlow" rid="{rid}">
+											<div class="thumbnail">
+												<img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
 											</div>
-											<div class="hoverTools">
-												<button type="button" class="btn download dcolor" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
+											<div class="file-name-wrapper">
+											<div class="filename"><span class="editable-name detail_text detail_item_name_text" id="file_text_{rid}">{name}</span></div>
+												<div class="text-muted small file-item-block text-truncate">{fdateline} {fsize}</div>
 											</div>
-										</td>
-										<td class="detail_item_td detail_item_td_size file-item-hide" valign="middle" width="15%" style="overflow:hidden">
-											<span title="{fsize}">{fsize}</span>
-										</td>
-										<td class="detail_item_td detail_item_td_type file-item-hide" valign="middle" width="15%" style="overflow:hidden">
-											<span title="{ftype}">{ftype}</span>
-										</td>
-										<td class="detail_item_td detail_item_td_type file-item-hide" valign="middle" width="30%" style="overflow:hidden">
-											<span title="{fdateline}">{fdateline}</span>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
+										</div>
+										<div class="hoverTools">
+											<button type="button" class="btn download dcolor" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download" title="{lang download}"></i></button>
+										</div>
+									</td>
+									<td class="detail_item_td detail_item_td_size file-item-hide" valign="middle" width="15%" style="overflow:hidden">
+										<span title="{fsize}">{fsize}</span>
+									</td>
+									<td class="detail_item_td detail_item_td_type file-item-hide" valign="middle" width="15%" style="overflow:hidden">
+										<span title="{ftype}">{ftype}</span>
+									</td>
+									<td class="detail_item_td detail_item_td_type file-item-hide" valign="middle" width="30%" style="overflow:hidden">
+										<span title="{fdateline}">{fdateline}</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
-				<div id="template_toolButton" style="display:none">
-					<div class="yunfile-btnMenu">
-						<a href="javascript:;" type="button" class="btn open single dcolor" data-placement="bottom" data-auto-adapt="true"  onclick="_filemanage.Open('{rid}')" >
-							<i class="mdi mdi-folder-open" data-toggle="tooltip" data-placement="bottom" title="{lang open}" data-original-title="{lang open}"></i>
-						</a>
-						<a href="javascript:;" type="button" class="btn allsave dcolor" data-placement="bottom" onclick="allsave()">
-							<i class="mdi mdi-content-save" data-toggle="tooltip" data-placement="bottom" title="{lang save}"></i>
-						</a>
-						<a href="javascript:;" type="button" class="btn download single dcolor" onclick="_filemanage.downAttach('{rid}')" >
-							<i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i>
-						</a>
-						<a href="javascript:;" type="button" class="btn downpackage multi dcolor" onclick="_filemanage.downpackage('{rid}')" ><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang downpackage}"></i>
-						</a>
-						<div class="dropdown openwith single nodropdown" style="display: inline-block;">
-							<a href="javascript:;" type="button" class="btn dropdown-toggle more dcolor" data-toggle="dropdown"><i class="mdi mdi mdi-open-in-new" data-toggle="tooltip" data-placement="bottom"  title="{lang openwith}"></i> </a>
-							<ul class="dropdown-menu"></ul>
-						</div>
-						<a href="javascript:;" type="button" class="btn property dcolor" onclick="_filemanage.property('{rid}')"><i class="mdi mdi-sort-variant" data-toggle="tooltip" data-placement="bottom" title="{lang property}"></i>
-						</a>
+			</div>
+			<div id="template_toolButton" style="display:none">
+				<div class="yunfile-btnMenu">
+					<a href="javascript:;" type="button" class="btn open single dcolor" data-placement="bottom" data-auto-adapt="true"  onclick="_filemanage.Open('{rid}')" >
+						<i class="mdi mdi-folder-open" data-toggle="tooltip" data-placement="bottom" title="{lang open}" data-original-title="{lang open}"></i>
+					</a>
+					<a href="javascript:;" type="button" class="btn allsave dcolor" data-placement="bottom" onclick="allsave()">
+						<i class="mdi mdi-content-save" data-toggle="tooltip" data-placement="bottom" title="{lang save}"></i>
+					</a>
+					<a href="javascript:;" type="button" class="btn download single dcolor" onclick="_filemanage.downAttach('{rid}')" >
+						<i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i>
+					</a>
+					<a href="javascript:;" type="button" class="btn downpackage multi dcolor" onclick="_filemanage.downpackage('{rid}')" ><i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang downpackage}"></i>
+					</a>
+					<div class="dropdown openwith single nodropdown" style="display: inline-block;">
+						<a href="javascript:;" type="button" class="btn dropdown-toggle more dcolor" data-toggle="dropdown"><i class="mdi mdi mdi-open-in-new" data-toggle="tooltip" data-placement="bottom"  title="{lang openwith}"></i> </a>
+						<ul class="dropdown-menu"></ul>
 					</div>
-					<script type="text/javascript" reload="1">
-						jQuery(function () {
-						jQuery('[data-toggle="tooltip"]').tooltip();
-						});
-					</script>
+					<a href="javascript:;" type="button" class="btn property dcolor" onclick="_filemanage.property('{rid}')"><i class="mdi mdi-sort-variant" data-toggle="tooltip" data-placement="bottom" title="{lang property}"></i>
+					</a>
 				</div>
-				<div id="template_file" style="display:none">
-					<div class="navtoperate dtheme">
-						<div class="select-toperate">
-						<div class="select-toperate select-toperate-left selectall-box">
-							<span class="mdi mdi-close dcolor fs-5"></span>
-							<div class="select-info fs-5"></div>
-						</div>
-						<div class="select-toperate select-toperate-center toolButtons">
-							<div class="shareMenu">
-							</div>
-						</div>
-						<div class="select-toperate select-toperate-right">
-							<ul class="sizeMenu">
-							<li><a class="icons-thumbnail dcolor" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="<!--{if $_G['ismobile']}-->2<!--{else}-->4<!--{/if}-->"><i class="mdi mdi-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i></a></li>
-						</ul>
-						</div>
+				<script type="text/javascript" reload="1">
+					jQuery(function () {
+					jQuery('[data-toggle="tooltip"]').tooltip();
+					});
+				</script>
+			</div>
+			<div id="template_file" style="display:none">
+				<div class="navtoperate dtheme">
+					<div class="select-toperate">
+					<div class="select-toperate select-toperate-left selectall-box">
+						<span class="mdi mdi-close dcolor fs-5"></span>
+						<div class="select-info fs-5"></div>
+					</div>
+					<div class="select-toperate select-toperate-center toolButtons">
+						<div class="shareMenu">
 						</div>
 					</div>
-					<script type="text/javascript" reload="1">
-						jQuery(function () {
-						jQuery('[data-toggle="tooltip"]').tooltip();
-						});
-					</script>       
+					<div class="select-toperate select-toperate-right">
+						<ul class="sizeMenu">
+						<li><a class="icons-thumbnail dcolor" href="javascript:;" onclick="_filemanage.Arrange(this,'')" iconview="<!--{if $_G['ismobile']}-->2<!--{else}-->4<!--{/if}-->"><i class="mdi mdi-view-list" data-toggle="tooltip" data-placement="bottom" title="iconview"></i></a></li>
+					</ul>
+					</div>
+					</div>
 				</div>
-				<div id="template_nofile_notice" style="display:none">
-					<div class="emptyPage" id="noticeinfo">
-						<img src="static/image/common/no_list.png">
-						<p class="emptyPage-text">{lang no_file}</p>
-					</div>	
-				</div>
+				<script type="text/javascript" reload="1">
+					jQuery(function () {
+					jQuery('[data-toggle="tooltip"]').tooltip();
+					});
+				</script>       
+			</div>
+			<div id="template_nofile_notice" style="display:none">
+				<div class="emptyPage" id="noticeinfo">
+					<img src="static/image/common/no_list.png">
+					<p class="emptyPage-text">{lang no_file}</p>
+				</div>	
 			</div>
 		</div>
 	</div>
