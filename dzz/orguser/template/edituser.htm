@@ -27,9 +27,8 @@
         <input type="text" class="form-control" id="email" name="email" autocomplete="off" value="$user[email]" onblur="checkemail(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <p id="emailmore" style="height:1px;margin:0;">&nbsp;</p>
         <span id="chk_email" class="form-text">
-          <span id="suc_email"></span><kbd class="help-msg"></kbd> 
+          <span id="suc_email"></span><span class="help-msg"></span> {lang required_used_login_system}
         </span>
-        <small class="form-text">{lang required_used_login_system}</small>
       </div>
     </div>
     <div class="row mb-3">
@@ -37,9 +36,8 @@
       <div class="col-sm-10">
         <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" autocomplete="off" value="$user[username]" onblur="checknick(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_username" class="form-text">
-          <span id="suc_username"></span><kbd class="help-msg"></kbd> 
+          <span id="suc_username"></span><span class="help-msg"></span> {lang login_username_tips}
         </span>
-        <small class="form-text">{lang login_username_tips}</small>
       </div>
     </div>
     <!--{if $user[regip]}-->
@@ -67,14 +65,14 @@
       <label for="phone" class="col-sm-2">{lang phone_number}</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" placeholder="{lang weixin_phone_number}" id="phone" name="phone" autocomplete="off" value="$user[phone]" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
-        <small id="chk_phone" class="form-text">{lang adduser_phone_number_text}</small>
+        <span id="chk_phone" class="form-text">{lang adduser_phone_number_text}</span>
       </div>
     </div>
     <div class="row mb-3">
       <label for="weixinid" class="col-sm-2">{lang weixin}</label>
       <div class="col-sm-10">
         <input type="text" class="form-control" placeholder="{lang user_weixin}" id="weixinid" name="weixinid" autocomplete="off" value="$user[weixinid]" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
-        <small id="chk_weixinid" class="form-text">{lang edituser_weixin_text}</small>
+        <span id="chk_weixinid" class="form-text">{lang edituser_weixin_text}</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -83,7 +81,7 @@
         <input type="text" class="form-control" name="password" autocomplete="off" id="password" placeholder="{lang space_not_change_password}" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_password" class="form-text">
           <span id="suc_password"></span>
-        <kbd id="chk_password" class="help-msg"></kbd>
+          <span id="chk_password" class="help-msg"></span>
         </span>
       </div>
     </div>
@@ -93,7 +91,7 @@
         <input type="text" class="form-control" id="password2" name="password2" autocomplete="off" placeholder="{lang space_not_change_password}" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_password2" class="form-text">
           <span id="suc_password2"></span>
-        <kbd id="chk_password2" class="help-msg"></kbd>
+          <span id="chk_password2" class="help-msg"></span>
         </span>
       </div>
     </div>
@@ -129,7 +127,7 @@
           <!--{/if}-->
           <!--{/loop}-->
         </select>
-        <small class="form-text">{lang adduser_usergroup_text}</small>
+        <span class="form-text">{lang adduser_usergroup_text}</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -206,14 +204,14 @@
       <div class="col-sm-10">
         <div id="upjob">
             <div class="btn-group me-2">
-                <div class="btn-group">
+                <div class="btn-group org">
                   <button type="button" id="uporgid_Menu" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">$upjob[depart]</button>
                   <input id="sel_uporgid" type="hidden" name="uporgid" value="$upjob['orgid']" onchange="selDepart(this)" />
                   <div id="uporgid_dropdown_menu" class="dropdown-menu org-sel-box" style="width: 300px;height: 300px;" role="menu" aria-labelledby="uporgid_Menu">
                     <iframe name="uporgid_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=uporgid&nouser=1&stype=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
                   </div>
                 </div>
-                <div class="btn-group">
+                <div class="btn-group job">
                     <input type="hidden" name="upjobid" value="$upjob[jobid]">
                     <!--{if $upjob}-->
                     <button data-toggle="dropdown" role="button" _jobid="$upjob[jobid]" class="dropdown-toggle btn btn-primary jobid"><span>$upjob[name]</span></button>
@@ -262,23 +260,26 @@ function account_submit() {
   //判断用户名
   if(jQuery('#email').val() == '') {
     jQuery('#email').focus();
+    jQuery('#email').addClass('is-invalid');
     showmessage('{lang login_email_required}', 'danger', 1000, 1);
     return false;
   }
   if(jQuery('#username').val() == '') {
     jQuery('#username').focus();
+    jQuery('#username').addClass('is-invalid');
     showmessage('{lang name_will}', 'danger', 1000, 1);
     return false;
   }
 
   
   if((jQuery('#password').val() != '' || jQuery('#password2').val() != '') && jQuery('#password').val() != jQuery('#password2').val()){
+    jQuery('#password').addClass('is-invalid');
     jQuery('#password').focus();
     return false;
   } 
   
   var flag = 0;
-  jQuery('#accountform kbd').each(function(){
+  jQuery('#accountform span').each(function(){
     var self=jQuery(this);
     if(self.hasClass('help-msg') && self.html() != '') {
       flag=1;
@@ -291,12 +292,14 @@ function account_submit() {
   var phone = jQuery('#phone').val();
   if(phone != '' && phone.match(/^\d+$/) == null) {
     jQuery('#phone').focus();
+    jQuery('#phone').addClass('is-invalid');
     showmessage('{lang phone_number_illegal}', 'danger', 1000, 1);
     return false;
   }
   var weixinid = jQuery('#weixinid').val();
   if(weixinid != '' && weixinid.match(/^[a-zA-Z\d_]{5,}$/) == null) {
     jQuery('#weixinid').focus();
+    jQuery('#weixinid').addClass('is-invalid');
     showmessage('{lang weixin_illegal}', 'danger', 1000, 1);
     return false;
   }

@@ -31,20 +31,6 @@ $lang = array(
     'detail_org_administrator' => '<strong class="float-start" style="margin-left:-45px;">注：</strong>
   <li>机构管理员权限：设置本机构下所有部门管理员，管理本机构中所有人员，管理本机构所有共享目录。</li>
   <li>部门管理员权限：设置本部门下所有子部门管理员，管理本部门中所有人员，管理本部门所有共享目录。</li>',
-    'Select organization to set organization information' => '选中机构为设置机构信息',
-    'Select department to set department information' => '选中部门为设置部门信息',
-    'Select personnel to set personnel information' => '选中人员为设置人员信息',
-    'Personnel, departments and institutions can directly drag and move to change positions. Move refers to changing the Department to which the person belongs, and changing the superior organization or department of the Department.' => '人员、部门、机构可直接拖拽移动更换位置。移动是更换人员所属部门、和更换部门上级机构或上级部门。',
-    'Hold' => '按住',
-    'Key to move personnel or departments to copy. It is used to join personnel to multiple departments at the same time.' => '键移动人员或部门为复制。用于将人员同时加入多个部门。',
-    'Key can be used for multiple selections, and release after multiple selections' => '键可多选，多选后松开',
-    'Key movement is batch movement. Do not loosen' => '键移动为批量移动。 不松开',
-    'Right click departments, institutions and personnel to open the right-click menu. There are corresponding more operations in the menu.' => '在部门、机构、人员上点鼠标右键可出现右键菜单。菜单中有对应的更多操作。',
-    'Delete user description' => '删除用户说明',
-    'Deleting users from all institutions or departments is only removing users from their own institutions or departments. Users can no longer have all the use rights of their own institutions or departments. It is not deleting users from the system.' => '所有机构、部门中删除用户，只是从本机构，或部门中移除，用户将不能再拥有本机构或部门的所有使用权限，不是将用户从系统中删除。',
-    'When the system administrator deletes the user from the "list of non institutional users", the user will be completely deleted in the system, and all system data and saved files of the user will be deleted. Please use it cautiously by the administrator, and delete it after confirming that the member is to be deleted.' => '系统管理员在“未加入机构用户列表”中删除用户，用户会在系统中彻底删除，并且删除用户所有系统数据及保存文件。请管理员谨慎使用，确定成员要删除后再删除。',
-    'Key to move to batch copy.' => '键移动为批量复制。',
-    'Organization management instructions' => '组织管理说明',
     'inport_guide_download' => '下载人员信息导入模板',
     'inport_guide_template' => '模板的项目会根据用户资料项的多少自动生成',
     'inport_guide_user' => '根据模板编辑需要人员信息表。',
@@ -166,8 +152,9 @@ $lang = array(
 		<li><img src="dzz/system/images/department.png" />&nbsp;选中部门为设置部门信息</li>
 		<li><img src="dzz/system/images/user.png" />&nbsp;选中人员为设置人员信息</li>
 		<li>人员、部门、机构可直接拖拽移动更换位置。移动是更换人员所属部门、和更换部门上级机构或上级部门。</li>
-		<li>按住 <img src="{MOD_PATH}/images/ctrl.png"> 键移动人员或部门为复制。用于将人员同时加入多个部门。</li>
-		<li>按住 <img src="{MOD_PATH}/images/ctrl.png"> 键可多选，多选后松开 <img src="{MOD_PATH}/images/ctrl.png"> 键移动为批量移动。 不松开 <img src="{MOD_PATH}/images/ctrl.png"> 键移动为批量复制。</li>
+		<li>按住<code>ctrl</code>键移动人员或部门为复制。用于将人员同时加入多个部门。</li>
+		<li>按住<code>ctrl</code>键可多选，多选后松开<code>ctrl</code>键移动为批量移动。 不松开<code>ctrl</code>键移动为批量复制。</li>
+    <li>按住<code>shift</code>键可以批量选择。</li>
 		<li>在部门、机构、人员上点鼠标右键可出现右键菜单。菜单中有对应的更多操作。</li>
 	</ul>
 	<div class="alert alert-warning" style="color:#444;text-shadow:1px 1px 1px #FFF;margin-top:30px;">

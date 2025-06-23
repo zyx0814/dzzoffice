@@ -19,9 +19,8 @@
             <input type="text" class="form-control" id="email" name="email" autocomplete="off" value="$user[email]" onblur="checkemail(this.id);">
             <p id="emailmore" style="height:1px;margin:0;">&nbsp;</p>
             <span id="chk_email" class="form-text">
-              <span id="suc_email"></span><kbd class="help-msg"></kbd> 
+              <span id="suc_email"></span><span class="help-msg"></span> {lang adduser_login_email_text}
             </span>
-            <small class="form-text">{lang adduser_login_email_text}</small>
           </div>
         </div>
         <div class="row mb-3">
@@ -29,23 +28,22 @@
           <div class="col-sm-10">
             <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" autocomplete="off" value="$user[username]" onblur="checknick(this.id);">
             <span id="chk_username" class="form-text">
-              <span id="suc_username"></span><kbd class="help-msg"></kbd> 
+              <span id="suc_username"></span><span class="help-msg"></span> {lang login_username_tips}
             </span>
-            <small class="form-text">{lang login_username_tips}</small>
           </div>
         </div>
         <div class="row mb-3">
           <label for="phone" class="col-sm-2">{lang phone_number}</label>
           <div class="col-sm-10">
             <input type="text" class="form-control" placeholder="{lang weixin_phone_number}" id="phone" name="phone" autocomplete="off" value="$user[phone]">
-            <small id="chk_phone" class="form-text">{lang adduser_phone_number_text}</small>
+            <span id="chk_phone" class="form-text">{lang adduser_phone_number_text}</span>
           </div>
         </div>
         <div class="row mb-3">
           <label for="weixinid" class="col-sm-2">{lang weixin}</label>
           <div class="col-sm-10">
             <input type="text" class="form-control" placeholder="{lang user_weixin}" id="weixinid" name="weixinid" autocomplete="off" value="$user[weixinid]">
-            <small id="chk_weixinid" class="form-text">{lang edituser_weixin_text}</small>
+            <span id="chk_weixinid" class="form-text">{lang edituser_weixin_text}</span>
           </div>
         </div>
         <div class="row mb-3">
@@ -54,7 +52,7 @@
             <input type="text" class="form-control" name="password" autocomplete="off" id="password" placeholder="{lang register_password_tips}">
             <span id="chk_password" class="form-text">
               <span id="suc_password"></span>
-            <kbd id="chk_password" class="help-msg"></kbd>
+            <span id="chk_password" class="help-msg"></span>
             </span>
           </div>
         </div>
@@ -64,7 +62,7 @@
             <input type="text" class="form-control" id="password2" name="password2" autocomplete="off" placeholder="{lang register_repassword_tips}">
             <span id="chk_password2" class="form-text">
               <span id="suc_password2"></span>
-            <kbd id="chk_password2" class="help-msg"></kbd>
+            <span id="chk_password2" class="help-msg"></span>
             </span>
           </div>
         </div>
@@ -78,7 +76,7 @@
           <label class="col-sm-2" for="status">{lang disable_user}</label>
           <div class="col-sm-10">
             <input type="checkbox" class="form-check-input" name="status" id="status" <!--{if $_G['adminid']!=1 || !$perm}-->disabled="disabled"<!--{/if}--> value="1" <!--{if $user[status]}-->checked<!--{/if}-->>
-            <small class="form-text">{lang adduser_disable_user_text}</small>
+            <span class="form-text">{lang adduser_disable_user_text}</span>
           </div>
         </div>
         <div class="row mb-3">
@@ -91,7 +89,7 @@
               <!--{/if}-->
               <!--{/loop}-->
             </select>
-            <small class="form-text">{lang adduser_usergroup_text}</small>
+            <span class="form-text">{lang adduser_usergroup_text}</span>
           </div>
         </div>
         <div class="row mb-3">
@@ -215,33 +213,38 @@
 		//判断用户名
 		if(jQuery('#email').val() == '') {
 			jQuery('#email').focus();
+      jQuery('#email').addClass('is-invalid');
 			showmessage('{lang login_email_required}', 'danger', 1000, 1);
 			return false;
 		}
 		if(jQuery('#username').val() == '') {
 			jQuery('#username').focus();
+      jQuery('#username').addClass('is-invalid');
 			showmessage('{lang name_will}', 'danger', 1000, 1);
 			return false;
 		}
 
 		if(jQuery('#password').val() == '') {
 			jQuery('#password').focus();
+      jQuery('#password').addClass('is-invalid');
 			showmessage('{lang none_write_login_password}', 'danger', 1000, 1);
 			return false;
 		}
 		if(jQuery('#password2').val() == '') {
 			showmessage('{lang none_write_affirm_password}', 'danger', 1000, 1);
 			jQuery('#password2').focus();
+      jQuery('#password2').addClass('is-invalid');
 			return false;
 		}
 		if(jQuery('#password').val() != jQuery('#password2').val()) {
 			showmessage('{lang profile_passwd_notmatch}', 'danger', 1000, 1);
 			jQuery('#password').focus();
+      jQuery('#password').addClass('is-invalid');
 			return false;
 		}
 	
 		var flag = 0;
-		jQuery('#accountform kbd').each(function(){
+		jQuery('#accountform span').each(function(){
 			var self=jQuery(this);
 			if(self.hasClass('help-msg') && self.html() != '') {
 				flag=1;
@@ -252,12 +255,14 @@
 		//判定微信号和手机
 		var phone = jQuery('#phone').val();
 		if(phone != '' && phone.match(/^\d+$/) == null) {
+      jQuery('#phone').addClass('is-invalid');
 			jQuery('#phone').focus();
 			showmessage('{lang phone_number_illegal}', 'danger', 1000, 1);
 			return false;
 		}
 		var weixinid = jQuery('#weixinid').val();
 		if(weixinid != '' && weixinid.match(/^[a-zA-Z\d_]{5,}$/) == null) {
+      jQuery('#weixinid').addClass('is-invalid');
 			jQuery('#weixinid').focus();
 			showmessage('{lang weixin_illegal}', 'danger', 1000, 1);
 			return false;

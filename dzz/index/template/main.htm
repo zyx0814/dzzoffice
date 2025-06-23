@@ -42,7 +42,20 @@
 		<div class="card d-flex flex-wrap justify-content-between">
 			<div class="card-body">
 				<div class="display-4 fs-4 fw-bold mb-1">{$_G['username']}，<span id="greeting">早上好！</span></div>
-				<p>您于<!--{eval echo dgmdate($userstatus['lastvisit'])}-->登录。当前时间：<span id="current-date"></span><span class="ps-2" id="weekday"></span><span class="ps-2" id="time">00:00:00</span>。空间使用情况：$space['fusesize']/$space['fmaxspacesize']</p>
+				<p>您于<!--{eval echo dgmdate($userstatus['lastvisit'])}-->登录。当前时间：<span id="current-date"></span><span class="ps-2" id="weekday"></span><span class="ps-2" id="time">00:00:00</span>。</p>
+			</div>
+		</div>
+		<div class="row card-banner bg-white">
+			<div class="card mb-0 shadow-none">
+				<div class="card-body">
+					<div class="d-flex justify-content-between">
+					<span class="avatar-md rounded-circle avatar-box text-white bg-yellow">
+						<i class="mdi mdi-cloud-outline fs-4"></i>
+					</span>
+					<span class="fs-4 text-truncate">$space['fusesize']/$space['fmaxspacesize']</span>
+					</div>
+					<div class="text-end">空间使用</div>
+				</div>
 			</div>
 		</div>
 		<!--{if $filedata}-->
