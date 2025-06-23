@@ -67,9 +67,8 @@
 		calendarWeeks: true,
         zIndexOffset: 120
     });
-	layui.use('table', function(){
-	  var table = layui.table;
-	  table.render({
+	jQuery(document).ready(function(e) {
+	  layui.table.render({
 		elem: '#table',
 		url: '{MOD_URL}&op=dynamic&do=filelist',
 		toolbar: '#toolbar',
@@ -104,8 +103,8 @@
 		}
 	  });
 	  //头工具栏事件
-	table.on('toolbar(table)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+	layui.table.on('toolbar(table)', function(obj){
+		var checkStatus = layui.table.checkStatus(obj.config.id); //获取选中行状态
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -140,7 +139,7 @@
                 });
             break;
             case 'get':
-            table.reloadData('table', {
+            layui.table.reloadData('table', {
                 where: search_data, // 清空搜索参数
                 page: {
                     curr: 1 //重新从第 1 页开始
@@ -150,7 +149,7 @@
         };
     });
     //监听工具条
-	  table.on('tool(table)', function(obj){
+	  layui.table.on('tool(table)', function(obj){
 		var data = obj.dataCache;
 		if(obj.event === 'search_do'){
             $('#operation').val(data.do).trigger('change');
@@ -159,7 +158,7 @@
 			var doval = data.do_obj;
             search_data.doobj = doval;
             $('#object').val(doval);
-            table.reloadData('table', {
+            layui.table.reloadData('table', {
             where: search_data,
             page: {
                 curr: 1
@@ -168,15 +167,15 @@
 		}
 	  });
     //触发排序事件 
-	table.on('sort(table)', function(obj){
+	layui.table.on('sort(table)', function(obj){
         search_data.sort = obj.field;
 		search_data.order = obj.type;
-		table.reloadData('table', {
+		layui.table.reloadData('table', {
 			initSort: obj,
             where: search_data
 		});
 	});
-	  table.on('rowDouble(table)', function(obj){
+	  layui.table.on('rowDouble(table)', function(obj){
 		showDataTemplate(obj);
 	  });
       $("#dynamic_id_label_multiple").select2({
@@ -255,7 +254,7 @@
             executedynamisc_search();
         });
       function executedynamisc_search() {
-        table.reloadData('table', {
+        layui.table.reloadData('table', {
             initSort: {
                 field: search_data.sort,
                 type: search_data.order

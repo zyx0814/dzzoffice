@@ -10,9 +10,8 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script>
-	layui.use('table', function(){
-	  var table = layui.table,form = layui.form;
-	  table.render({
+	jQuery(document).ready(function(e) {
+	  layui.table.render({
 		elem: '#cloudtable',
 		toolbar: '#toolbar',
 		title: '网络挂载数据表格',
@@ -41,8 +40,8 @@
         },
 	  });
 	  //头工具栏事件
-	table.on('toolbar(cloudtable)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+	layui.table.on('toolbar(cloudtable)', function(obj){
+		var checkStatus = layui.table.checkStatus(obj.config.id); //获取选中行状态
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -89,7 +88,7 @@
 			break;
         };
     });
-    table.on('edit(cloudtable)', function(obj){
+    layui.table.on('edit(cloudtable)', function(obj){
 		var data = obj.dataCache;
         jQuery.post('{DZZSCRIPT}?mod=connect&op=ajax&do=rename', {'bz': data.bz,id:data.id,name:data.name},function(json){
         if(json['msg']){
@@ -107,7 +106,7 @@
         });
     });
     //监听工具条
-	table.on('tool(cloudtable)', function(obj){
+	layui.table.on('tool(cloudtable)', function(obj){
         var data = obj.dataCache;
         if(obj.event === 'view'){
             var hash = "#cloud&bz=" + data.hashbz;
@@ -133,7 +132,7 @@
         }
     });
 	// 行单击事件
-	table.on('row(cloudtable)', function(obj) {
+	layui.table.on('row(cloudtable)', function(obj) {
 		var dataCache = obj.dataCache;
 		var hash = "#cloud&bz="+dataCache.hashbz;
 		window.location.hash = hash;

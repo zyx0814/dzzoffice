@@ -48,9 +48,8 @@
 		calendarWeeks: true,
         zIndexOffset: 120
     });
-	layui.use('table', function(){
-	  var table = layui.table,form = layui.form;
-	  table.render({
+	jQuery(document).ready(function(e) {
+	  layui.table.render({
 		elem: '#table',
 		url: '{MOD_URL}&op=groupmanage&do=filelist',
 		toolbar: '#toolbar',
@@ -91,8 +90,8 @@
         },
 	  });
 	  //头工具栏事件
-	table.on('toolbar(table)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+	layui.table.on('toolbar(table)', function(obj){
+		var checkStatus = layui.table.checkStatus(obj.config.id); //获取选中行状态
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -146,7 +145,7 @@
                             }
                         }
                         layer.msg(msg, {offset:'10px'});
-                        table.reloadData('table');
+                        layui.table.reloadData('table');
                         return false;
                     },'json').fail(function() {
                         layer.msg('服务器发生错误，请稍后再试', {offset:'10px'});
@@ -154,7 +153,7 @@
                 });
 			break;
             case 'get':
-            table.reloadData('table', {
+            layui.table.reloadData('table', {
                 where: search_data, // 清空搜索参数
                 page: {
                     curr: 1 //重新从第 1 页开始
@@ -163,7 +162,7 @@
             break; 
         };
     });
-    table.on('edit(table)', function(obj){
+    layui.table.on('edit(table)', function(obj){
         jQuery.post('{MOD_URL}&op=groupmanage&do=folder_maxspacesize', {'orgid': obj.data.orgid,maxspacesize:obj.data.maxspacesize},function(json){
         if(json['success']){
             showmessage('空间大小设置成功', 'success', '3000', 1);
@@ -179,7 +178,7 @@
             showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
         });
     });
-    form.on('switch(sexDemo)', function(obj) {
+    layui.form.on('switch(sexDemo)', function(obj) {
 		var diron = obj.elem.checked ? 1 : 0;
         jQuery.post('{MOD_URL}&op=groupmanage&do=groupmanage', {'gid': this.value,'diron':diron},function(json){
         if(json['success']){
@@ -192,17 +191,17 @@
                 showmessage('{lang error}', 'danger', '3000', 1);
             }
             obj.elem.checked = !obj.elem.checked;
-            form.render('checkbox');
+            layui.form.render('checkbox');
         }
         },'json')
         .fail(function() {
             showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
             obj.elem.checked = !obj.elem.checked;
-            form.render('checkbox');
+            layui.form.render('checkbox');
         });
     });
     //监听工具条
-	table.on('tool(table)', function(obj){
+	layui.table.on('tool(table)', function(obj){
         var data = obj.dataCache;
         if(obj.event === 'view'){
             var hash = "#group&gid=" + data.orgid;
@@ -230,26 +229,26 @@
         }
     });
     //触发排序事件 
-	table.on('sort(table)', function(obj){
+	layui.table.on('sort(table)', function(obj){
         if(obj.field == 'usernum' ||  obj.field == 'maxspacesize' || obj.field == 'creater') {
             layer.msg('该排序为前端排序', {offset:'10px'});
         } else {
             search_data.sort = obj.field;
             search_data.order = obj.type;
-            table.reloadData('table', {
+            layui.table.reloadData('table', {
                 initSort: obj,
                 where: search_data
             });
         }
 	});
-    table.on('rowDouble(table)', function(obj){
+    layui.table.on('rowDouble(table)', function(obj){
         showDataTemplate(obj);
     });
     function executedynamisc_search() {
         search_data.groupon = $('#groupon').val();
         search_data.startdate = $('#selectDate').val();
         search_data.enddate = $('#selectDate1').val();
-        table.reloadData('table', {
+        layui.table.reloadData('table', {
             initSort: {
                 field: search_data.sort,
                 type: search_data.order

@@ -35,9 +35,6 @@
 					</div>
 				</div>
 			</div>
-			<!--头部信息框-->
-			<div class="navtopheader">
-			</div>
 			<div id="template_middleicon" style="display:none">
 				<div class="middleicon window">
 					<div class="square-fileList js-file-item-tpl clearfix list-view">
@@ -182,13 +179,16 @@
 		</div>
 	</div>
 </main>
+<!--头部信息框-->
+<div class="navtopheader">
+</div>
 <div id="contextmenu" style="display: none;"> 
 	<div id="right_ico">
-		<ul class="layui-menu layui-dropdown-menu dropdown-menu show border">
+		<ul class="layui-menu layui-dropdown-menu dropdown-menu show border user-select-none">
 			<li class="layui-menu-item-parent menu-item open" onclick="_filemanage.Open('{rid}');">
 				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-folder-open pe-2"></i>{lang open}</div>
 			</li>
-			<li class="layui-menu-item-parent menu-item openwith">
+			<li class="layui-menu-item-parent menu-item openwith has-submenu">
 				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-open-in-new pe-2"></i>{lang openwith}<i class="layui-icon layui-icon-right"></i></div>
 				<div class="layui-panel layui-menu-body-panel dropdown-menu border">
 					<ul class="openwithdata">
@@ -213,8 +213,8 @@
 		</ul>
 	</div>
 	<div id="right_body">
-		<ul class="layui-menu layui-dropdown-menu dropdown-menu show border">
-			<li class="layui-menu-item-parent menu-item">
+		<ul class="layui-menu layui-dropdown-menu dropdown-menu show border user-select-none">
+			<li class="layui-menu-item-parent menu-item has-submenu">
 				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-view-split-vertical pe-2"></i>{lang iconviev}<i class="layui-icon layui-icon-right"></i></div>
 				<div class="layui-panel layui-menu-body-panel dropdown-menu border">
 					<ul>
@@ -231,7 +231,7 @@
 					</ul>
 				</div>
 			</li>
-			<li class="layui-menu-item-parent menu-item">
+			<li class="layui-menu-item-parent menu-item has-submenu">
 				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-sort pe-2"></i>{lang sort}<i class="layui-icon layui-icon-right"></i></div>
 				<div class="layui-panel layui-menu-body-panel sort dropdown-menu border">
 					<ul>
@@ -261,7 +261,7 @@
 			<li class="layui-menu-item-divider">
 				<div class="layui-menu-body-title dropdown-item"></div>
 			</li>
-			<li class="layui-menu-item-parent menu-item create">
+			<li class="layui-menu-item-parent menu-item create has-submenu">
 				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-upload pe-2"></i>{lang new_and_upload}<i class="layui-icon layui-icon-right"></i></div>
 				<div class="layui-panel layui-menu-body-panel dropdown-menu border">
 					<ul>
@@ -347,7 +347,12 @@
 				trigger: 'manual',
 				id: 'right_ico',
 				content: '',
-				className:'lyear-dropdown'
+				className:'lyear-dropdown',
+				click: function(data, othis, event){
+                    if (othis.hasClass('has-submenu')) {
+                        return false;
+                    }
+                }
 			});
 		});
 		_filemanage.SetMoreButton();
