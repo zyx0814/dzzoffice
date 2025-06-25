@@ -11,12 +11,20 @@ if (!defined('IN_DZZ')) {
 }
 require_once libfile('function/organization');
 require_once DZZ_ROOT . './core/class/class_PHPExcel.php';
-if ($_G['adminid'] != 1) showmessage('system_administrator_export', dreferer());
 $h0 = array('username' => lang('compellation'), 'email' => lang('email'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'));
 $h1 = getProfileForImport();
 $h0 = array_merge($h0, $h1);
 $orgid = intval($_GET['orgid']);
 $navtitle = lang('export_user') . ' - ' . lang('appname');
+if($_G['adminid']==1) {
+
+}elseif($orgid) {
+	if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
+        showmessage('system_administrator_export',dreferer());
+    }
+} else {
+	showmessage('system_administrator_export',dreferer());
+}
 if (!submitcheck('exportsubmit')) {
     $orgpath = C::t('organization')->getPathByOrgid($orgid);
     if (empty($orgpath)) $orgpath = lang('please_select_range_export');

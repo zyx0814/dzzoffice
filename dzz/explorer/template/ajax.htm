@@ -57,7 +57,7 @@
                     $('#group_menu').append(html);
                 }
                 hideWindow('newGroup');
-                var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=adduser_group&stype=2&moderator=0&multiple=1&ids={$_G['uid']}';
+                var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=adduser_group&stype=2&moderator=0&onlymyorg=1&multiple=1&ids={$_G['uid']}';
                 showWindow('adduser', userhref, 'get', '0')
             } else if (data['error']) {
                 $('#' + data['pos'] + '_error').html(data['msg']);

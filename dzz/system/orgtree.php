@@ -21,6 +21,7 @@ if ($_GET['do'] == 'orgtree') {
     $nouser = intval($_GET['nouser']);//不显示用户
     $stype = intval($_GET['stype']);  //0:可以选择部门群组和用户；1：仅选择部门群组：2：仅选择用户
     $moderator = intval($_GET['moderator']);//是否仅可以选择我管理的群组或部门
+    $onlymyorg = intval($_GET['onlymyorg']);//是否只显示我所在的部门
     $range = intval($_GET['range']);//0：所有部门和群组；1：仅部门；2：仅群组
     $showjob = intval($_GET['showjob']); //是否显示职位
     //判断用户有没有操作权限
@@ -37,8 +38,10 @@ if ($_GET['do'] == 'orgtree') {
     $data = array();
     if ($_GET['id'] == '#') {
         if ($_G['adminid'] != 1 && $moderator) $topids = C::t('organization_admin')->fetch_toporgids_by_uid($_G['uid']);
+        if ($_G['adminid'] != 1 && $onlymyorg) $isorgdis = C::t('organization_user')->fetch_org_by_uid($_G['uid']);
         foreach (C::t('organization')->fetch_all_by_forgid($id, false, -1) as $value) {
             if ($_G['adminid'] != 1 && $moderator && !in_array($value['orgid'], $topids)) continue;
+            if ($_G['adminid'] != 1 && $isorgdis && !in_array($value['orgid'], $isorgdis)) continue;
             if ($value['type'] == '1' && $range == 1) {
                 continue;
             } elseif ($value['type'] == '0' && $range == 2) {
@@ -85,7 +88,9 @@ if ($_GET['do'] == 'orgtree') {
                 getuserIcon($uids, $datas, $data);
             }
         } else {
+            if ($_G['adminid'] != 1 && $onlymyorg) $isorgdis = C::t('organization_user')->fetch_org_by_uid($_G['uid']);
             foreach (C::t('organization')->fetch_all_by_forgid($id) as $value) {
+                if ($_G['adminid'] != 1 && $isorgdis && !in_array($value['orgid'], $isorgdis)) continue;
                 if (!$moderator || C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'], $_G['uid'])) {
                     $orgdisable = '';
                     $orgtype = 'organization';

@@ -118,6 +118,7 @@ var showjob=parseInt('$_GET[showjob]')>0?1:0;
 var stype='$_GET[stype]'?parseInt('$_GET[stype]'):0;//0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
 var range='$_GET[range]'?parseInt('$_GET[range]'):0;//0:机构和用户；1：仅机构和部门：2：仅群组
 var moderator=parseInt('$_GET[moderator]')>0?1:0;
+var onlymyorg=parseInt('$_GET[onlymyorg]')>0?1:0;
 var callback_url = '{$callback_url}';
 var ismobile='$_G['ismobile']'?1:0;
 </script>
@@ -150,7 +151,7 @@ jQuery(document).ready(function(e) {
 			"themes" : { "responsive":false},
 			'data':function(node,cb){
 				var self=this;
-				jQuery.post(DZZSCRIPT+'?mod=system&op=orgtree&do=orgtree',{'id':node.id,'nouser':nouser,'moderator':moderator,'zero':'$zero','stype':stype,'range':range,'showjob':showjob},function(json){
+				jQuery.post(DZZSCRIPT+'?mod=system&op=orgtree&do=orgtree',{'id':node.id,'nouser':nouser,'moderator':moderator,'onlymyorg':onlymyorg,'zero':'$zero','stype':stype,'range':range,'showjob':showjob},function(json){
 					cb.call(this,json);
 				},'json').fail(function (jqXHR, textStatus, errorThrown) {
 					showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);

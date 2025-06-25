@@ -438,6 +438,7 @@ hr.dropdown-divider,hr.divider{background-color:#ededee;border-top-color:#ededee
 .card-actions>li.dropdown{line-height:26px}
 .card-fullscreen{position:fixed;top:0;left:0;right:0;bottom:0;margin-bottom:0 !important;z-index:998;border-radius:0}
 .card-fullscreen .card-btn-fullscreen{color:#007bff;color:var(--bs-primary)}
+.card-square{border-radius:0;margin-bottom:0}
 .nav-link{color:#007bff;color:var(--bs-primary)}
 .nav-link:hover,.nav-link:focus{color:#007bff;color:var(--bs-primary)}
 .nav-pills .nav-link{border-radius:5px;color:inherit}

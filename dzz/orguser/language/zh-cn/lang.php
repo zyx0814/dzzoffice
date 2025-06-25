@@ -47,7 +47,7 @@ $lang = array(
 <li>8、若需导入的人员较多，建议先做一个少量人员的测试表，测试无误后，再使用增量方式导入所有用户。</li>',
     'import_list_organization' => '选择要导入到的机构，如果不导入任何机构，会根据用户信息表中的所属部门来生成新的机构和部门，没有则会直接导入到"无机构人员"下',
     'import_list_password' => '默认用户密码，当登录密码项未设置时，会使用此处设置的密码作为新导入的用户的密码',
-    'import_list_coverage' => '增量导入方式：新导入的用户信息智能的增加到原有用户信息中；覆盖导入：新导入的信息覆盖原有用户的信息,建议使用增量方式。',
+    'import_list_coverage' => '增量导入方式：新导入的用户信息智能的增加到原有用户信息中；覆盖导入：新导入的信息覆盖原有用户的信息,建议使用增量方式。覆盖导入只支持系统管理员使用',
     'import_list_text' => '<li>用户名和邮箱项目为必填项</li>
       <li>点击下面的导入项的内容，可以临时编辑，编辑部门时注意，部门每行是上下级的关系，上一行为下一行的上级部门</li>
       <li>不需要导入的项目，可以点击右侧的"X"删除掉</li>
@@ -64,7 +64,7 @@ $lang = array(
     'orguser_edituser_add_user' => '<div class="well alert alert-danger">抱歉！您没有在此机构或部门下添加用户的权限！<br><br>可以在左侧选择有权限的部门，再重试添加</div>',
     'orguser_edituser_add_user1' => '<div class="well alert alert-danger">抱歉！您没有此用户的管理权限！<br><br>可以在左侧选择有权限管理的用户，再重试添加</div>',
     // admin/orguser/import.php
-    'orguser_import_user' => '没有权限，只有系统管理员才能导入用户',
+    'orguser_import_user' => '没有权限，只有系统与机构部门管理员才能导入用户',
     'orguser_import_user_table' => '人员信息表上传未成功，请重新上传',
     'orguser_import_xls_xlsx' => '只允许导入xls,xlsx类型的文件',
     'orguser_import_user_message' => '人员信息表上传成功，正在调转到导入页面',
@@ -157,7 +157,7 @@ $lang = array(
     <li>按住<code>shift</code>键可以批量选择。</li>
 		<li>在部门、机构、人员上点鼠标右键可出现右键菜单。菜单中有对应的更多操作。</li>
 	</ul>
-	<div class="alert alert-warning" style="color:#444;text-shadow:1px 1px 1px #FFF;margin-top:30px;">
+	<div class="alert alert-warning">
 		<h4><strong>删除用户说明：</strong></h4>
 		<ul>
 			<li>所有机构、部门中删除用户，只是从本机构，或部门中移除，用户将不能再拥有本机构或部门的所有使用权限，不是将用户从系统中删除。</li>

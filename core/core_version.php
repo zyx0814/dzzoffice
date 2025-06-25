@@ -11,7 +11,7 @@ if (!defined('IN_DZZ')) {
 }
 
 if (!defined('CORE_VERSION')) {
-    define('CORE_VERSION', '2.3.4');
-    define('CORE_RELEASE', '20250528');
-    define('CORE_FIXBUG', '23400000');
+    define('CORE_VERSION', '2.3.5');
+    define('CORE_RELEASE', '20250625');
+    define('CORE_FIXBUG', '23500000');
 }

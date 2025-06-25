@@ -175,16 +175,24 @@ class table_organization_user extends dzz_table {
         return $uids;
     }
 
-    public function fetch_user_not_in_orgid($limit = 10000) {
-        $limitsql = '';
-        if ($limit) $limitsql = "limit $limit";
+    public function fetch_user_not_in_orgid($limit = 10000, $count = false) {
         //获取属于机构和部门的用户
-        $uids_org = array();
-        foreach (DB::fetch_all("SELECT u.uid from %t u LEFT JOIN %t o ON u.orgid=o.orgid where o.type='0'", array($this->_table, 'organization')) as $value) {
-            $uids_org[$value['uid']] = $value['uid'];
+        $uids_org = DB::fetch_all("SELECT DISTINCT u.uid FROM %t u INNER JOIN %t o ON u.orgid = o.orgid WHERE o.type = '0'", array($this->_table, 'organization'));
+        $uids_org = array_column($uids_org, 'uid');
+        $limitsql = $limit ? " LIMIT $limit" : "";
+        // 获取非机构用户列表
+        $users = DB::fetch_all("SELECT username, uid, email, groupid FROM %t WHERE uid NOT IN(%n) ORDER BY username $limitsql", array('user', $uids_org), 'uid');
+        if ($count) {
+            $total = count($users);
+            if ($limit && $total == $limit) {
+                $total = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid NOT IN(%n)", array('user', $uids_org));
+            }
+            return [
+                'list' => $users,
+                'count' => $total
+            ];
         }
-        //获取不属于所有机构和部门的用户
-        return DB::fetch_all("select username,uid,email,groupid from %t where uid NOT IN(%n) order by username $limitsql ", array('user', $uids_org), 'uid');
+        return $users;
     }
 
     public function fetch_user_by_orgid($orgids, $limit = 0, $count = false) {
@@ -192,8 +200,8 @@ class table_organization_user extends dzz_table {
         $limitsql = '';
         if ($limit) $limitsql = "limit $limit";
 
-        if ($count) return DB::result_first("select COUNT(*) %t where orgid IN(%n)", array($this->_table, $orgids));
-        return DB::fetch_all("select o.* ,u.username,u.email,u.groupid from " . DB::table('organization_user') . " o LEFT JOIN " . DB::table('user') . " u ON o.uid=u.uid where o.orgid IN(" . dimplode($orgids) . ") order by dateline DESC $limitsql ");
+        if ($count) return DB::result_first("select COUNT(*) FROM %t where orgid IN(%n)", array($this->_table, $orgids));
+        return DB::fetch_all("select o.* ,u.username,u.email,u.groupid,u.phone,u.weixinid from " . DB::table('organization_user') . " o LEFT JOIN " . DB::table('user') . " u ON o.uid=u.uid where o.orgid IN(" . dimplode($orgids) . ") order by dateline DESC $limitsql ");
     }
 
     public function fetch_orgids_by_uid($uids, $orgtype = 0) {
