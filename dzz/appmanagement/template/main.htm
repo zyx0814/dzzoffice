@@ -1,36 +1,5 @@
 <!--{template lyear:header_simple_start}-->
 <style>
-  .card-banner {
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-bottom: 1rem;
-    border-radius: var(--border-radius-mini);
-    padding: 15px 0px;
-    -webkit-box-shadow: 0 0 4px rgba(var(--bs-dark-rgb), 0.075);
-    -moz-box-shadow: 0 0 4px rgba(var(--bs-dark-rgb), 0.075);
-    box-shadow: 0 0 4px rgba(var(--bs-dark-rgb), 0.075);
-  }
-  .card-banner [class*=col] .card:before {
-    position: absolute;
-    height: calc(100%);
-    width: 1px;
-    background: rgba(77, 82, 89, 0.05);
-    content: '';
-    right: -15px;
-  }
-  .card-banner:not(.bg-white) [class*=col] .card:before {
-      background: rgba(255, 255, 255, 0.175);
-  }
-  @media screen and (max-width: 576px) {
-    .card-banner [class*=col-] .card:before {
-        width: calc(100% - 30px)!important;
-        right: 15px!important;
-        height: 1px!important;
-    }
-    .card-banner [class*=col-]:first-child .card:before{
-        display:none!important
-    }
-  }
   .gallery-grid .gallery-item {
     padding-bottom: 5px;
   }

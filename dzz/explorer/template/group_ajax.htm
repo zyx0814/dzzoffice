@@ -81,13 +81,6 @@
 
     });
 
-
-    /*function jstree_search() {
-        console.log('aaaaa');
-        return false;
-        window.frames['seluser_iframe'].jstree_search($('#jstree_search_input').val());
-    }*/
-
     function chkadd(form) {
         var form = $(form);
         var gid = '{$gid}';
@@ -197,10 +190,7 @@
 </div>
 <script type="text/javascript" reload="1">
    jQuery(document).ready(function(e) {
-        layui.use(function(){
-            var form = layui.form;
-            form.render();
-        });
+        layui.form.render();
     });
     //点击权限效果
     $(document).off('click.settingclick').on('click.settingclick', '.edit-power li', function () {

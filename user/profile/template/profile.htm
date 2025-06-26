@@ -47,8 +47,6 @@
 </style>
 <script type="text/javascript" src="static/js/jquery.textareaexplander.js?{VERHASH}"></script>
 <link rel="stylesheet" type="text/css" href="static/lyear/js/cropper/cropper.min.css">
-<!--日期选择器css-->
-<link rel="stylesheet" type="text/css" href="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker3.min.css?{VERHASH}">
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
 	<div class="container-fluid">
@@ -111,6 +109,13 @@
           <div class="col-sm-10"><strong><code>$space['email']</code></strong>
           </div>
         </div>
+        <!--{if $users['phone']}-->
+        <div class="row mb-3">
+          <label class="col-sm-2">手机号码</label>
+          <div class="col-sm-10"><strong><code><!--{eval $phone=$users['phone'];if(strlen($phone) === 11)$phone = substr($phone, 0, 3) . '******' . substr($phone, 9);echo $phone}--></code></strong>
+          </div>
+        </div>
+        <!--{/if}-->
         <!--{loop $settings $key $value}--> 
         <!--{if $value[available]}-->
         <div class="row mb-3" id="th_$key">
@@ -235,6 +240,4 @@ function clearErrorInfo() {
 </script>
 <script type="text/javascript" src="static/lyear/js/cropper/cropper.min.js"></script>
 <script type="text/javascript" src="{MOD_PATH}/scripts/cropper.js"></script>
-<!--日期选择器js-->
-<script type="text/javascript" src="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker.min.js?{VERHASH}"></script>
 <!--{template lyear:footer_simple}--> 

@@ -135,12 +135,12 @@ _filemanage.getData = function (url, callback) {
 			if (!shareinfo && json.share) {
 				shareinfo = json.share;
 				jQuery('#expireday').html(shareinfo.expireday);
-				jQuery('.sharetitle').html(shareinfo.title);
+				jQuery('.share-title').html(shareinfo.title);
 				jQuery('#sharefdateline').html(shareinfo.fdateline);
-				jQuery('.shareusername').html(shareinfo.username);
+				jQuery('.shareusername').html(shareinfo.username+'的分享');
 				jQuery('#shareviews').html(shareinfo.views);
 				jQuery('#sharedowns').html(shareinfo.downs);
-				jQuery('#shareavatar').html(shareinfo.avatar);
+				jQuery('.file-icon').html('<img src="'+shareinfo.img+'">');
 			}
 			if (json.param.page > 1) {
 				obj = _filemanage.cons[json.fid];

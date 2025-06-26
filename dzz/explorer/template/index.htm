@@ -41,8 +41,10 @@
     var getWidthLable = 0;
     var newgroupgid = '';
 	jQuery(document).ready(function(e) {
-        layui.use(function(){
+        layui.use(['dropdown', 'form', 'table'],function(){
             var dropdown = layui.dropdown;
+            var form = layui.form;
+            var table = layui.table;
             dropdown.render({
                 elem: document,
                 trigger: 'manual',
@@ -114,7 +116,7 @@
 <script type="text/javascript" src="static/lyear/js/jstree/jstree.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/header-search.js?{VERHASH}"></script>
-<script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
 <!-- The basic File Upload plugin --> 

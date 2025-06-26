@@ -9,13 +9,20 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
+$do = isset($_GET['do']) ? trim($_GET['do']) : '';
+$isadmin = true;
 if ($_G['adminid'] != 1) {
-    if (!C::t('organization_admin')->fetch_orgids_by_uid($_G['uid'])) showmessage('orguser_import_user', dreferer());
+    $isadmin = false;
+    if (!C::t('organization_admin')->fetch_orgids_by_uid($_G['uid'])) {
+        if($do == 'importing') exit(json_encode(array('error' => lang('orguser_import_user'))));
+        showmessage('orguser_import_user', dreferer());
+    }
 }
 require_once libfile('function/organization');
-$do = trim($_GET['do']);
 $navtitle = lang('user_import') . ' - ' . lang('appname');
 if ($do == 'importing') {
+    $orgid = intval($_GET['orgid']);
+    if(!$orgid && !$isadmin) exit(json_encode(array('error' => '机构部门管理员需要选择导入机构才能导入')));
     //判断邮箱是否存在
     require_once libfile('function/user', '', 'user');
     $email = trim($_GET['email']);
@@ -31,6 +38,7 @@ if ($do == 'importing') {
 
     $isappend = intval($_GET['append']);
     $sendmail = intval($_GET['sendmail']);
+    if(!$isadmin) $isappend = 1;
     /*
     if($sendmail){ //随机密码时重新设置密码为随机数；
         $_GET['password']=random(8);
@@ -227,8 +235,6 @@ if ($do == 'importing') {
         C::t('user_status')->insert($status, false, true);
     }
     //处理部门和职位
-    $orgid = intval($_GET['orgid']);
-
     $_GET['orgname'] = !empty($_GET['orgname']) ? explode('/', $_GET['orgname']) : array();
     $_GET['job'] = !empty($_GET['job']) ? explode('/', $_GET['job']) : array();
 

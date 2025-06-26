@@ -45,9 +45,8 @@
 		calendarWeeks: true,
         zIndexOffset: 120
     });
-	layui.use('table', function(){
-	  var table = layui.table;
-	  table.render({
+	jQuery(document).ready(function(e) {
+	  layui.table.render({
 		elem: '#mygroup',
 		url: '{MOD_URL}&op=mygroup&do=filelist',
 		toolbar: '#toolbar',
@@ -87,8 +86,8 @@
         },
 	  });
 	  //头工具栏事件
-	table.on('toolbar(mygroup)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+	layui.table.on('toolbar(mygroup)', function(obj){
+		var checkStatus = layui.table.checkStatus(obj.config.id); //获取选中行状态
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -120,7 +119,7 @@
                 });
             break;
             case 'get':
-            table.reloadData('mygroup', {
+            layui.table.reloadData('mygroup', {
                 where: search_data, // 清空搜索参数
                 page: {
                     curr: 1 //重新从第 1 页开始
@@ -130,7 +129,7 @@
         };
     });
     //监听工具条
-	table.on('tool(mygroup)', function(obj){
+	layui.table.on('tool(mygroup)', function(obj){
         var data = obj.dataCache;
         if(obj.event === 'view'){
             var hash = "#group&gid=" + data.orgid;
@@ -138,19 +137,19 @@
         }
     });
 	// 行单击事件
-	table.on('row(mygroup)', function(obj) {
+	layui.table.on('row(mygroup)', function(obj) {
 		var dataCache = obj.dataCache;
 		var hash = "#group&gid="+dataCache.orgid;
 		window.location.hash = hash;
 	});
     //触发排序事件 
-	table.on('sort(mygroup)', function(obj){
+	layui.table.on('sort(mygroup)', function(obj){
 		if(obj.field == 'usernum' || obj.field == 'creater') {
             layer.msg('该排序为前端排序', {offset:'10px'});
         } else {
             search_data.sort = obj.field;
             search_data.order = obj.type;
-            table.reloadData('mygroup', {
+            layui.table.reloadData('mygroup', {
                 initSort: obj,
                 where: search_data
             });
@@ -160,7 +159,7 @@
         search_data.search = $('#mygroupsearch').val();
         search_data.startdate = $('#selectDate').val();
         search_data.enddate = $('#selectDate1').val();
-        table.reloadData('mygroup', {
+        layui.table.reloadData('mygroup', {
 		initSort: {
 			field: search_data.sort,
 			type: search_data.order

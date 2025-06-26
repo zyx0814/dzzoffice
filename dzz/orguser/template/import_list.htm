@@ -30,46 +30,47 @@
 	<div class="card">
 		<div class="card-body">
 			<div class="row mb-3">
-					<label class="col-sm-2" for="pswdefault">{lang import_organization}</label>
-					<div class="col-sm-10">
-						<div class="controls">
-							<div class="dropdown">
-									<input id="sel_orgid"  type="hidden" name="orgid"  value="$orgid" />
-									<button type="button" id="orgid_Menu" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-										$orgpath 
-									</button>
-									<div id="orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_Menu">
-											<iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid&nouser=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
-									</div>
-								</div>
+				<label class="col-sm-2" for="pswdefault">{lang import_organization}</label>
+				<div class="col-sm-10">
+					<div class="controls">
+						<div class="dropdown">
+							<input id="sel_orgid"  type="hidden" name="orgid"  value="$orgid" />
+							<button type="button" id="orgid_Menu" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">$orgpath</button>
+							<div id="orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_Menu">
+								<iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid&moderator=1&stype=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+							</div>
 						</div>
-						<span class="form-text">{lang import_list_organization}</span>
 					</div>
+					<span class="form-text"><!--{if !$isadmin}--><span class="text-danger">机构部门管理员必须要选择导入机构才能导入！</span><!--{/if}-->{lang import_list_organization}</span>
+				</div>
 			</div>
 			<div class="row mb-3" id="pass_default">
-					<label class="col-sm-2" for="pswdefault">{lang default_password}</label>
-					<div class="col-sm-10">
-						<input id="pswdefault" type="text" class="form-control" value="111" name="pswdefault">
-						<span class="form-text">{lang import_list_password}</span>
-					</div>
+				<label class="col-sm-2" for="pswdefault">{lang default_password}</label>
+				<div class="col-sm-10">
+					<input id="pswdefault" type="text" class="form-control" value="111" name="pswdefault">
+					<span class="form-text">{lang import_list_password}</span>
+				</div>
 			</div>
 			<div class="row mb-3" id="pass_default">
-					<label class="col-sm-2">{lang import_way}</label>
-					<div class="col-sm-10">
+				<label class="col-sm-2">{lang import_way}</label>
+				<div class="col-sm-10">
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="append"  name="append" value="1" checked="checked">
+						<input class="form-check-input" type="radio" id="append1" name="append" value="1" checked="checked">
 						<label class="form-check-label" for="append1">{lang bulking}</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="append2" name="append" value="0">
+						<input class="form-check-input" type="radio" id="append2" name="append" value="0" <!--{if !$isadmin}-->disabled<!--{/if}-->>
 						<label class="form-check-label" for="append2">{lang coverage}</label>
 					</div>
 					<span class="form-text">{lang import_list_coverage}</span>
 				</div>
 			</div>
-			<ul class="form-text" style="line-height:1.8em">
-				{lang import_list_text}
-			</ul>
+			<div class="alert alert-warning">
+				<strong>导入用户说明：</strong>
+				<ul>
+					{lang import_list_text}
+				</ul>
+			</div>
 		<div class="table-responsive" style="padding:0;">
 			<table class="table table-hover" style="border-bottom:1px solid #DDD;">
 			<thead>

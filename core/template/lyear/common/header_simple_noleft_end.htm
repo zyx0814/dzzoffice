@@ -2,16 +2,18 @@
 <body id="nv_{$_G['basescript']}" class="$bodyClass" style="$bodystyle" data-theme="$_G['cookie']['the_site_theme']" data-sidebarbg="$_G['cookie']['the_sidebar_bg']" data-headerbg="$_G['cookie']['the_header_bg']" data-logobg="$_G['cookie']['the_logo_bg']">
 <div id="append_parent" style="z-index:99999;"></div>
 <div id="ajaxwaitid" style="z-index:99999;"></div>
-<header class="bs-top-container" style="display: flex;padding-left: 0;">
-  <!--{template lyear:lyear_header_left}-->
+<header class="bs-top-container" style="padding-left: 0;">
   <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
+      <div class="navbar-left">
+        <!--{template lyear:lyear_header_left}-->
+      </div>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
       </button>
       <div class="navbar-collapse collapse" id="navbarText" style="">
         <!--{template lyear:lyear_header_search}-->
-        <ul class="navbar-right d-flex align-items-center">
+        <ul class="navbar-right d-flex align-items-center justify-content-end">
           <!--{template lyear:lyear_header_right}-->
           <!--切换主题配色-->
           <li class="dropdown dropdown-skin">

@@ -50,15 +50,15 @@ if ($do == 'chkpass') {
 
     $idstring = random(6);
 
-    $confirmurl = C::t('shorturl')->getShortUrl("{$_G[siteurl]}user.php?mod=profile&op=password&do=changeemail&uid={$_G[uid]}&email={$verifyemail}&idchk=$idstring");
+    $confirmurl = C::t('shorturl')->getShortUrl("user.php?mod=profile&op=password&do=changeemail&uid={$uid}&email={$verifyemail}&idchk=$idstring");
 
-    $email_bind_message = lang('email', 'varifyemail_message', array(
+    $email_bind_message = lang('varifyemail_message', array(
         'username' => $_G['member']['username'],
         'sitename' => $_G['setting']['sitename'],
         'siteurl' => $_G['siteurl'],
         'url' => $confirmurl
     ));
-    if (!sendmail("$member[username] <$verifyemail>", lang('email', 'varifyemail_subject'), $email_bind_message)) {
+    if (!sendmail("$member[username] <$verifyemail>", lang('varifyemail_subject'), $email_bind_message)) {
 
         runlog('sendmail', "$verifyemail sendmail failed.");
 

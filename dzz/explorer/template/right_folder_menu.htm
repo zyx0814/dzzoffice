@@ -216,7 +216,7 @@ function editgroupperm(gid,fid){
 	showWindow('select_perm', MOD_URL+'&op=ajax&operation=selectperm&fid='+fid+'&gid='+gid+'&new=0','get','0');
 }
 function select_group_user(){
-	var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=seluser_group&stype=2&multiple=1&ids='+userids;
+	var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=seluser_group&stype=2&onlymyorg=1&multiple=1&ids='+userids;
     showWindow('adduser',userhref,'get','0')
 }
 function seluser_group(ids,data) {

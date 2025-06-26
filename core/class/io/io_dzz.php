@@ -871,6 +871,12 @@ class io_dzz extends io_api {
         return DB::result_first("select rid from " . DB::table('resources') . " where name='{$name}' and  pfid='{$pfid}'");
     }
 
+    //过滤文件名称
+    public function name_filter($name)
+    {
+        return str_replace(array('/', '\\', ':', '*', '?', '<', '>', '|', '"', "\n"), '', $name);
+    }
+
     //获取不重复的目录名称
     public function getFolderName($name, $pfid) {
         $i = 0;

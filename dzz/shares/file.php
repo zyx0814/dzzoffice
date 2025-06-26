@@ -31,8 +31,8 @@ if ($share['times'] && $share['times'] <= $share['count']) {
 if ($share['status'] == -3) {
     exit(json_encode(array('error' => lang('share_file_deleted'))));
 }
-$avatar = avatar_block($share['uid']);
 if ($share['password'] && (dzzdecode($share['password']) != authcode($_G['cookie']['pass_' . $sid]))) {
+    $avatar = avatar_block($share['uid']);
     $return = array(
         'password' => array(
             'avatar' => $avatar,
@@ -294,6 +294,13 @@ if ($do == 'filelist') {
             }
         }
     }
+    if($share['pfid'] == -1) {
+        $share['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($share['filepath']);
+    } elseif (count($rids) > 1) {
+        $share['img'] = '/dzz/explorer/img/ic-files.png';
+    } else {
+        $share['img'] = C::t('resources')->get_icosinfo_by_rid($share['filepath']);
+    }
     C::t('shares')->add_views_by_id($sid);
 }
 if (count($data) >= $perpage) {
@@ -328,7 +335,7 @@ $return = array(
         'username' => $share['username'],
         'views' => $share['views'] ? $share['views'] : '1',
         'downs' => $share['downs'],
-        'avatar' => $avatar,
+        'img' => $share['img'],
     ),
     'param' => array(
         'disp' => $disp,

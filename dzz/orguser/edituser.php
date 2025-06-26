@@ -332,8 +332,7 @@ if ($do == 'add') {
                     break;
                 }
             }
-            if (!$uperm)
-                exit(lang('orguser_edituser_add_user1'));
+            if (!$uperm) exit(lang('orguser_edituser_add_user1'));
         }
         //获取系统可分配空间大小
         $allowallotspace = C::t('organization')->get_system_allowallot_space();
