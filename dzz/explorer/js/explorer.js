@@ -28,7 +28,7 @@ _explorer.infoPanel_hide = 0; //标识右侧面板不能开启
 _explorer.appUrl = MOD_URL;
 _explorer.hash = '';
 _explorer.bz = '';
-var loading = 0;
+var loading = '';
 _explorer.getConfig = function (url, callback) {
 	$.getJSON(url + '&t=' + new Date().getTime(), function (json) {
 		new _explorer(json);
