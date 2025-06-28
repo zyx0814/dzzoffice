@@ -170,7 +170,7 @@
 		jQuery('.moderators-container .user-item').each(function(){
 			ids.push(jQuery(this).attr('uid'));
 		});
-		showWindow('moderators','index.php?mod=system&op=selorguser&stype=2&multiple=1&template=1&callback=callback_moderators&token=$orgid&ids='+ids.join(','),'get',0,'',1)
+		showWindow('moderators','index.php?mod=system&op=selorguser&stype=2&multiple=1&template=1&range=1&callback=callback_moderators&token=$orgid&ids='+ids.join(','),'get',0,'',1)
 		
 	});
     jQuery(document).on('click','.headinput-checkbox',function(){
