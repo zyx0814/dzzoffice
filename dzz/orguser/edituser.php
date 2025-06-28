@@ -188,19 +188,22 @@ if ($do == 'add') {
 
         $orgids = array();
         foreach ($_GET['orgids'] as $key => $orgid) {
-            if ($orgid)
-                $orgids[$orgid] = intval($_GET['jobids'][$key]);
+            if ($orgid) $orgids[$orgid] = intval($_GET['jobids'][$key]);
         }
 
         $user = C::t('user')->fetch_by_uid($uid);
         if ($user['groupid'] < $_G['groupid'] || (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member']))) {
             //处理用户部门和职位
-            C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
+            if($orgids) {
+                C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
+            } else {
+                C::t('organization_user')->delete_by_uid($uid);
+            }
 
             //处理上司职位;
             C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
 
-            showmessage('edit_user_success', MOD_URL . '#user_' . $uid, array());
+            showmessage('edit_user_success', MOD_URL . '#user_' . $uid);
         }
         //禁用创始人验证
         $status = intval($_GET['status']) ? 1 : 0;
@@ -255,9 +258,9 @@ if ($do == 'add') {
         //邮箱验证部分
         $email = strtolower(trim($_GET['email']));
         if (!isemail($email)) {
-            showmessage('profile_email_illegal', '', array(), array('handle' => false));
+            showmessage('profile_email_illegal');
         } elseif (!check_emailaccess($email)) {
-            showmessage('profile_email_domain_illegal', '', array(), array('handle' => false));
+            showmessage('profile_email_domain_illegal');
         }
         if ($email != strtolower($user['email'])) {
             //邮箱不能重复
@@ -305,13 +308,16 @@ if ($do == 'add') {
         }
         //处理用户部门和职位
 
-        if ($orgids)
+        if ($orgids) {
             C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
+        } else {
+            C::t('organization_user')->delete_by_uid($uid);
+        }
         //处理上司职位;
 
         C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
         Hook::listen('syntoline_user', $uid, 'edit');//注册绑定到钉钉部门表
-        showmessage('edit_user_success', MOD_URL . '#user_' . $uid, array());
+        showmessage('edit_user_success', MOD_URL . '#user_' . $uid);
     } else {
         require_once libfile('function/organization');
 
@@ -412,7 +418,7 @@ if ($do == 'add') {
             $setarr['uid'] = $uid;
             C::t('user_profile')->insert($setarr);
         }
-        showmessage('subscriber_data_alter_success', MOD_URL . '#user_' . $uid . '_profile', array());
+        showmessage('subscriber_data_alter_success', MOD_URL . '#user_' . $uid . '_profile');
     } else {
         $allowitems = array();
         foreach ($_G['cache']['profilesetting'] as $key => $value) {
