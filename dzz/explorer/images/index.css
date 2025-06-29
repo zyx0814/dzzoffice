@@ -60,7 +60,7 @@
 .icoimgContainer_link .image_tosmall{background:url('link_small_bg.png') no-repeat center center;background-size:contain}
 .caret{font-size:14px}
 .detail_header_icon span{font-size:16px;color:rgba(155,155,155,1)}
-.resSearch{width:80%;text-align:center}
+.resSearch{width:50%;text-align:center}
 .resSearch .form-group{margin-bottom:0;padding-top:0}
 .form-search::-webkit-input-placeholder{color:RGBA(255,255,255,.7)}
 .form-search:-moz-placeholder{color:RGBA(255,255,255,.7)}
@@ -350,6 +350,7 @@ to{opacity:1}
 .file-item-block{display:block}
 .filemanage td,.filemanage th{height:auto;line-height:1.72}
 .icosContainer{padding-left:0;padding-right:0}
+.resSearch{width:100%;}
 }.file-item{border-radius:0;overflow:hidden;box-shadow:none;transition:all 0.3s ease;border:2px solid transparent;cursor:pointer;border:1px solid #EEEEEE}
 [data-theme='dark'] .file-item{border:1px solid rgba(255,255,255,0.25)}
 .file-item:hover{background-color:#f2f2f2}
