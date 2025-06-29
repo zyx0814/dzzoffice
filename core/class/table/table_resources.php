@@ -989,7 +989,9 @@ class table_resources extends dzz_table {
         }
         if ($contains) {
             $contaions = self::get_contains_by_fid($fid, true);
-            $fileinfo['fsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
+            $fsize = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
+            $fileinfo['fsize'] = $fsize;
+            $fileinfo['ffsize'] = $fsize;
             $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
         }
 

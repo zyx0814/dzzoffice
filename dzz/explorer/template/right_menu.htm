@@ -33,6 +33,12 @@
                     <div class="col-sm-8 text-break">$fileinfo[ffsize]</div>
                 </div>
                 <!--{/if}-->
+                <!--{if $fileinfo[fdateline]}-->
+                <div class="row mb-1">
+                    <label class="col-sm-4">{lang create_time}</label>
+                    <div class="col-sm-8 text-break">$fileinfo[fdateline]</div>
+                </div>
+                <!--{/if}-->
                 <!--{if $fileinfo[editdateline]}-->
                 <div class="row mb-1">
                     <label class="col-sm-4">{lang preceding_edit_time}</label>
@@ -43,12 +49,6 @@
                 <div class="row mb-1">
                     <label class="col-sm-4">{lang preceding_open_time}</label>
                     <div class="col-sm-8 text-break">$fileinfo[opendateline]</div>
-                </div>
-                <!--{/if}-->
-                <!--{if $fileinfo[fdateline]}-->
-                <div class="row mb-1">
-                    <label class="col-sm-4">{lang create_time}</label>
-                    <div class="col-sm-8 text-break">$fileinfo[fdateline]</div>
                 </div>
                 <!--{/if}-->
                 <!--{if $fileinfo[downs]}-->
