@@ -26,7 +26,7 @@
                     <p class="user-select-content-title">{lang choose}{lang organization}/{lang department}/{lang member}</p>
                     <div class="group-content " id="seluser_dropdown_menu">
                         <iframe name="seluser_iframe" class="org-sel-box-iframe"
-                                src="index.php?mod=system&op=selorguser&template=1&callback=seluser&moderator=1&multiple=1&stype=2&range=1&onlymyorg=1"
+                                src="index.php?mod=system&op=selorguser&template=1&callback=seluser&moderator=1&multiple=1&stype=2&range=1&onlymyorg=<!--{if $_G['setting']['explorer_mermoryonlymyorg'] == '1'}-->0<!--{else}-->1<!--{/if}-->"
                                 frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"
                                 allowtransparency="true"></iframe>
                         <input id="sel_seluser" type="hidden" name="uids"

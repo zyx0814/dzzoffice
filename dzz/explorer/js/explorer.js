@@ -13,11 +13,9 @@ _explorer = function (json) {
 	_explorer.formhash = json.formhash; //FORMHASH
 	_explorer.extopen = json.extopen || {}; //打开方式信息
 	_explorer.sourcedata = json.sourcedata || []; //所有文件信息
-	//_explorer.applist=json.applist || [];
 	_explorer.thame = json.thame || {};
 	_explorer.infoPanelOpened = json.infoPanelOpened || 0;
 	_explorer.infoRequest = 0;
-	_explorer.deletefinally = json.deletefinally || 0;
 	_explorer.cut = json.cut || {
 		iscut: 0,
 		icos: []

@@ -376,5 +376,3 @@ if ($do == 'filelist') {
     exit(json_encode(array('fids' => $fids, 'uids' => $uids)));
 }
 require template('searchFile');
-
-
