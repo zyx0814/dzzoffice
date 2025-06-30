@@ -11,7 +11,7 @@
     <!--右侧头部结束-->
     <input type="hidden" value="$fileinfo[rid]" id="fileridinput"/>
     <!--右侧中间部分开始-->
-    <div class="right-messagetable scroll-y" data-subtractor="{eval echo ($pfid || $rid)?58:0}">
+    <div class="right-messagetable scroll-y" <!--{if $commentperm}-->data-subtractor="{eval echo ($pfid || $rid)?58:0}"<!--{/if}-->>
         <!--文件详情开始-->
             <!--属性开始-->
             <div class="p-2 border-bottom">
@@ -198,6 +198,7 @@
     </div>
 <!--右侧中间部分结束-->
 <!--右侧底部评论开始-->
+<!--{if $commentperm}-->
 <!--{if $fileinfo['isdelete'] < 1}-->
 <div class="comment-area dtheme">
     <div class="messageMenu">
@@ -220,6 +221,7 @@
         </form>
     </div>
 </div>
+<!--{/if}-->
 <!--{/if}-->
 <!--右侧底部评论结束-->
 </div>

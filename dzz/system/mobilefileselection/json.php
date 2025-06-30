@@ -46,7 +46,7 @@ $data['sourcedata'] = array(
 );
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
 
-$data['myspace'] = $data['space'] = $space;
+$data['space'] = $space;
 $thame = getThames();
 $data['thame'] = $thame['data'];
 $data['mulitype'] = $mulitype;

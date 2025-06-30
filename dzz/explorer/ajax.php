@@ -457,8 +457,11 @@ if ($operation == 'upload') {//上传图片文件
     $appid = C::t('app_market')->fetch_appid_by_mod('{dzzscript}?mod=' . MOD_NAME, 1);
     if ($rid) {
         if (!$file = C::t('resources')->fetch_info_by_rid($rid)) {
-            exit(json_encode(array('error' => true)));
+            exit(json_encode(array('error' => '未查询到该文件信息')));
         } else {
+            if (!perm_check::checkperm_Container($file['oid'], 'comment')) {
+                exit(json_encode(array('error' => lang('file_comment_no_privilege'))));
+            }
             $eventdata = array('msg' => $msg);
             if ($insert = C::t('resources_event')->addevent_by_pfid($file['pfid'], 'add_comment', 'addcomment', $eventdata, $file['gid'], $rid, $file['name'], 1)) {
                 $return = array(
@@ -512,8 +515,11 @@ if ($operation == 'upload') {//上传图片文件
         }
     } else {
         if (!$folder = C::t('folder')->fetch($fid)) {
-            exit(json_encode(array('error' => true)));
+            exit(json_encode(array('error' => '没有查询到该文件夹信息')));
         } else {
+            if (!perm_check::checkperm_Container($fid, 'comment')) {
+                exit(json_encode(array('error' => lang('folder_comment_no_privilege'))));
+            }
             $rid = C::t('resources')->fetch_rid_by_fid($fid);
             $eventdata = array('msg' => $msg);
             if ($insert = C::t('resources_event')->addevent_by_pfid($fid, 'add_comment', 'addcomment', $eventdata, $folder['gid'], ($rid) ? $rid : '', $folder['fname'], 1)) {

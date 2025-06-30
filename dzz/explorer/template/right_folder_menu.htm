@@ -21,7 +21,7 @@
 		<button type="button" class="toggRight btn-close"></button>
 	</div>
 </div>
-<div class="right-messagetable scroll-y" data-subtractor="{eval echo ($fid || $rid)?54:0}">
+<div class="right-messagetable scroll-y" <!--{if $commentperm}-->data-subtractor="{eval echo ($fid || $rid)?54:0}"<!--{/if}-->>
 	<!--{if !$bz}-->
 	<!--根文件进度条开始-->
 	<!--{if ($fileinfo['isgroup'] || $fileinfo['pfid'] == 0) && !$fileinfo['ismulti']}-->
@@ -91,9 +91,9 @@
 			<!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
 		</div>
 		<div class="right-card-body">
-			<ul class="proper-show  proper-poewr">
+			<ul class="proper-show proper-poewr">
 				<!--{loop $perms $k $val}-->
-				<li <!--{if $perm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span  class="{$val[2]}" title="$val[0]"></span></li>
+				<li <!--{if $perm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
 				<!--{/loop}-->
 			</ul>
 		</div>
@@ -172,6 +172,7 @@
    </div>
     <!--文件夹动态结束-->
 </div>
+<!--{if $commentperm}-->
 <!--{if !$fileinfo['ismulti']}-->
 <!--{if $fid || $rid || !$bz}-->	
 <div class="comment-area dtheme">
@@ -195,6 +196,7 @@
 	    </form>
     </div>
 </div>
+<!--{/if}-->
 <!--{/if}-->
 <!--{/if}-->
 </div>

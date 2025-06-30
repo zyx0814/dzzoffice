@@ -193,6 +193,8 @@ class perm_check {
                 case 'download':
                 case 'copy':
                     return !isset($perms[1]); // 权限1：禁用下载/复制
+                case 'comment':
+                    return isset($perms[6]); // 6：禁用评论
                 default:
                     // 无权限配置时默认放行下载/读取/复制
                     return empty($share['perm']) && in_array($action, ['download', 'read', 'copy']);

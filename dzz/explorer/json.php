@@ -77,7 +77,7 @@ $data['sourcedata'] = array(
 );
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
 
-$data['myspace'] = $data['space'] = $space;
+$data['space'] = $space;
 $thame = getThames();
 $data['thame'] = $thame['data'];
 $infoPanelOpened = C::t('user_setting')->fetch_by_skey('infoPanelOpened');
