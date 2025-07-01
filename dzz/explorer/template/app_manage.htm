@@ -29,7 +29,7 @@
 					<div class="function-radio clearfix">
 						<div class="form-check form-check-inline">
 							<input type="radio" class="form-check-input" value="all" id="allsetting" name="setting[explorer_mermoryusersetting]" <!--{if !isset($setting['explorer_mermoryusersetting']) || $setting['explorer_mermoryusersetting'] == 'all'}-->checked<!--{/if}--> >
-							<label class="form-check-label" for="allsetting"><span>{lang all_personnel}</span></label>
+							<label class="form-check-label" for="allsetting">{lang all_personnel}</label>
 						</div>
 						<span class="form-text">{lang organizational_structure_generate_personal_storage}</span>
 					</div>
@@ -38,7 +38,7 @@
 							<input type="radio" id="inputRadiosUnchecked" class="form-check-input" name="setting[explorer_mermoryusersetting]" value="appoint"
 							<!--{if $setting['explorer_mermoryusersetting']=='appoint'}-->checked
 							<!--{/if}--> >
-							<label class="form-check-label" for="inputRadiosUnchecked"><span>{lang designated_personnel_or_department_personnel}</span></label>
+							<label class="form-check-label" for="inputRadiosUnchecked">{lang designated_personnel_or_department_personnel}</label>
 						</div>
 					</div>
 					<span class="form-text">{lang storage_designated_personnel_or_department_personnel}</span>
@@ -63,7 +63,7 @@
 					<div class="dropdown">
 						<a href="javascript:;" class="dropdown-toggle btn btn-primary" id="orgids_Menu" data-toggle="dropdown">{lang select_departments_or_users}<span class="caret"></span></a>
 						<div id="orgids_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgids_Menu">
-							<iframe name="orgids_iframe" class="org-sel-box-iframe" src="{DZZSCRIPT}?mod=system&op=orgtree&template=1&ctrlid=orgids&multiple=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+							<iframe name="orgids_iframe" class="org-sel-box-iframe" src="{DZZSCRIPT}?mod=system&op=orgtree&template=1&ctrlid=orgids&multiple=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
 						</div>
 					</div>
 				</div>
@@ -100,14 +100,14 @@
 					<div class="function-radio clearfix">
 						<div class="form-check form-check-inline">
 							<input type="radio" class="form-check-input" id="explorer_mermorygroupsetting1" value="all" name="setting[explorer_mermorygroupsetting]"<!--{if !isset($setting['explorer_mermorygroupsetting']) || $setting['explorer_mermorygroupsetting'] == 'all'}-->checked<!--{/if}--> >
-							<label class="form-check-label" for="explorer_mermorygroupsetting1"><span>{lang all_personnel}</span></label>
+							<label class="form-check-label" for="explorer_mermorygroupsetting1">{lang all_personnel}</label>
 						</div>
 						<span class="form-text">{lang allow_allcreate_group}。</span>
 					</div>
 					<div class="function-radio clearfix">
 						<div class="form-check form-check-inline">
 							<input type="radio" class="form-check-input" id="explorer_mermorygroupsetting2" name="setting[explorer_mermorygroupsetting]" value="appoint"<!--{if $setting['explorer_mermorygroupsetting']=='appoint'}-->checked<!--{/if}--> >
-							<label class="form-check-label" for="explorer_mermorygroupsetting2"><span>{lang designated_personnel_or_department_personnel}</span></label>
+							<label class="form-check-label" for="explorer_mermorygroupsetting2">{lang designated_personnel_or_department_personnel}</label>
 						</div>
 						<span class="form-text">{lang allow_appointcreate_group}</span>
 					</div>
@@ -134,12 +134,27 @@
 							<span class="caret"></span></a>
 						<div  class="dropdown-menu org-sel-box" role="menu" aria-labelledby="groupcreateids_Menu">
 							<iframe name="groupcreateids_iframe" class="org-sel-box-iframe"
-									src="{DZZSCRIPT}?mod=system&op=orgtree&ctrlid=groupcreateids&template=1&multiple=1"
+									src="{DZZSCRIPT}?mod=system&op=orgtree&ctrlid=groupcreateids&template=1&multiple=1&range=1"
 									frameborder="0" marginheight="0" marginwidth="0" width="100%"
 									height="100%" allowtransparency="true"></iframe>
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="row mb-3">
+			<label class="col-sm-2">群组成员选择</label>
+			<div class="col-sm-10">
+				<div class="form-check form-check-inline">
+					<input type="radio" class="form-check-input" id="explorer_mermoryonlymyorg1" value="1" name="setting[explorer_mermoryonlymyorg]"<!--{if $setting['explorer_mermoryonlymyorg'] == '1'}-->checked<!--{/if}--> >
+					<label class="form-check-label" for="explorer_mermoryonlymyorg1">所有机构部门</label>
+				</div>
+				<span class="form-text">可以选择全站所有成员</span>
+				<div class="form-check form-check-inline">
+					<input type="radio" class="form-check-input" id="explorer_mermoryonlymyorg2" value="0" name="setting[explorer_mermoryonlymyorg]"<!--{if !$setting['explorer_mermoryonlymyorg']}-->checked<!--{/if}--> >
+					<label class="form-check-label" for="explorer_mermoryonlymyorg2">本机构部门</label>
+				</div>
+				<span class="form-text">仅可以选择用户所在部门成员或可管理的部门成员</span>
 			</div>
 		</div>
 		<div class="row mb-3">

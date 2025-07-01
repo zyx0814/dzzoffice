@@ -108,8 +108,9 @@ if ($do == 'upload') {//上传图片文件
             $data[] = $arr;
 
         }
-
-        $data[] = array('id' => 'other', 'text' => lang('no_institution_users'), 'state' => array('disabled' => $disable), "type" => 'group', 'children' => true);
+        if($_G['adminid'] == 1) {
+            $data[] = array('id' => 'other', 'text' => lang('no_institution_users'), 'state' => array('disabled' => $disable), "type" => 'group', 'children' => true);
+        }
     } else {
         //获取用户列表
 

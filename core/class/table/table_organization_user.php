@@ -255,7 +255,6 @@ class table_organization_user extends dzz_table {
         return DB::fetch_all("select * from %t where uid IN(%n) ", array($this->_table, $uids));
     }
 
-
     public function move_to_forgid_by_orgid($forgid, $orgid) {//移动用户到上级部门
         if (!$org = C::t('organization')->fetch($forgid)) return false;
         if (!$org['forgid']) {
@@ -414,4 +413,3 @@ class table_organization_user extends dzz_table {
     }
 
 }
-

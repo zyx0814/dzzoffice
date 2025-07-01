@@ -2549,3 +2549,4 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 @media screen and (max-width:576px){.card-banner [class*=col-] .card:before{width:calc(100% - 30px)!important;right:15px!important;height:1px!important}
 .card-banner [class*=col-]:first-child .card:before{display:none!important}
 }
+ul.form-text,ul.help-block{margin-bottom:0;}

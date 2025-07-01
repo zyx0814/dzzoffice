@@ -44,6 +44,7 @@ class perm_binPerm {
             // 'shortcut' => 131072,    //快捷方式
             'share' => 262144,    //分享
             'approve' => 524288,//审批
+            'comment' => 1048576,    //评论
         );
     }
 
@@ -69,6 +70,7 @@ class perm_binPerm {
             //'shortcut' => lang('typename_shortcut'),
             'share' => lang('share'),
             'approve' => lang('approve'),
+            'comment' => lang('comment'),
         );
     }
 
@@ -95,6 +97,7 @@ class perm_binPerm {
             //'shortcut' => lang('typename_shortcut'),
             'share' => 'dzz dzz-share mdi mdi-share-variant',
             'approve' => 'dzz dzz-check-box mdi mdi-checkbox-marked',
+            'comment' => 'dzz dzz-comment mdi mdi-comment',
         );
     }
 

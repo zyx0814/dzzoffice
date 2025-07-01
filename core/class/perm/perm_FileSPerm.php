@@ -50,6 +50,7 @@ class perm_FileSPerm {
             // 'shortcut' => 131072,    //快捷方式
             'share' => 262144,    //分享
             'approve' => 524288,//审批
+            'comment' => 1048576,//评论
         );
     }
 

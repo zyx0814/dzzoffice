@@ -120,6 +120,10 @@ if ($do == 'getfolderdynamic') {
     $usergroupperm = C::t('organization_admin')->chk_memberperm($gid, $uid);
     $fileinfo['type'] = '文件夹';
     $perms = get_permsarray();//获取所有权限
+    $commentperm = true;
+    if (!perm_check::checkperm_Container($fid, 'comment')) {
+        $commentperm = false;
+    }
     include template('right_folder_menu');
     exit();
 } elseif ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
@@ -177,6 +181,10 @@ if ($do == 'getfolderdynamic') {
             $perm = C::t('folder')->fetch_perm_by_fid($file['oid']);//获取文件夹权限
             $fileinfo['fid'] = $file['oid'];
             $perms = get_permsarray();//获取所有权限
+            $commentperm = true;
+            if (!perm_check::checkperm_Container($file['oid'], 'comment')) {
+                $commentperm = false;
+            }
             include template('right_folder_menu');
             exit();
         } else {
@@ -201,6 +209,10 @@ if ($do == 'getfolderdynamic') {
             $editperm = true;
             if (!perm_check::checkperm_Container($pfid, 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($pfid, 'edit1'))) {
                 $editperm = false;
+            }
+            $commentperm = true;
+            if (!perm_check::checkperm_Container($pfid, 'comment')) {
+                $commentperm = false;
             }
             $tags = C::t('resources_tag')->fetch_tag_by_rid($rid);
             $explorer_setting = get_resources_some_setting();

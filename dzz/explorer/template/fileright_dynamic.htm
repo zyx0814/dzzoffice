@@ -72,6 +72,9 @@
                 html += '</li>';
                 $('#just-now').prepend(html);
                 $('.scroll-y').animate({scrollTop: '0px'}, 200);
+                showmessage('评论成功','success',3000,1);
+            } else if(data['error']) {
+                showmessage(data['error'],'error',3000,1);
             } else {
                 showmessage('评论失败','error',3000,1);
             }

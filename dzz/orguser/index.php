@@ -25,6 +25,7 @@ if ($_G['adminid'] != 1) {
             $orgtree[$arr[$count - 1]] = $arr;
         }
     }
+    if(!$orgtree) showmessage('只有系统管理员与机构部门管理员才有权限访问');
 }
 $orgtree = json_encode($orgtree);
 include template('main');

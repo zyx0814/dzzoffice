@@ -57,7 +57,7 @@
                     $('#group_menu').append(html);
                 }
                 hideWindow('newGroup');
-                var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=adduser_group&stype=2&moderator=0&onlymyorg=1&multiple=1&ids={$_G['uid']}';
+                var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=adduser_group&stype=2&moderator=0&range=1&onlymyorg=<!--{if $_G['setting']['explorer_mermoryonlymyorg'] == '1'}-->0<!--{else}-->1<!--{/if}-->&multiple=1&ids={$_G['uid']}';
                 showWindow('adduser', userhref, 'get', '0')
             } else if (data['error']) {
                 $('#' + data['pos'] + '_error').html(data['msg']);
@@ -648,29 +648,36 @@
                 <span class="form-text">{lang leave_blank_to_indicate_the_password_not_set}</span>
             </div>
         </div>
-        <div class="row mb-3">
+        <div class="row mb-1">
             <label class="col-sm-2">分享权限</label>
-            <div class="col-sm-10 gallery-grid">
-                <div class="gallery-item">
-                    <input class="form-check-input" type="checkbox" id="download" name="perm[]" value="1" <!--{if $share['perm']}--><!--{if in_array(1,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
-                    <label class="form-check-label" for="download">禁用下载</label>
+            <div class="col-sm-10">
+                <div class="gallery-grid">
+                    <div class="gallery-item">
+                        <input class="form-check-input" type="checkbox" id="sharedownload" name="perm[]" value="1" <!--{if $share['perm']}--><!--{if in_array(1,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
+                        <label class="form-check-label" for="sharedownload">禁用下载</label>
+                    </div>
+                    <div class="gallery-item">
+                        <input class="form-check-input" type="checkbox" id="shareview" name="perm[]" value="2" <!--{if $share['perm']}--><!--{if in_array(2,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
+                        <label class="form-check-label" for="shareview">禁用预览</label>
+                    </div>
+                    <div class="gallery-item">
+                        <input class="form-check-input" type="checkbox" id="sharelogin" name="perm[]" value="3" <!--{if $share['perm']}--><!--{if in_array(3,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
+                        <label class="form-check-label" for="sharelogin">仅登录使用</label>
+                    </div>
+                    <div class="gallery-item">
+                        <input class="form-check-input" type="checkbox" id="shareedit" name="perm[]" value="4" <!--{if $share['perm']}--><!--{if in_array(4,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
+                        <label class="form-check-label" for="shareedit">允许编辑</label>
+                    </div>
+                    <div class="gallery-item">
+                        <input class="form-check-input" type="checkbox" id="sharecreate" name="perm[]" value="5" <!--{if $share['perm']}--><!--{if in_array(5,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
+                        <label class="form-check-label" for="sharecreate">可读写(上传,新建)</label>
+                    </div>
+                    <div class="gallery-item">
+                        <input class="form-check-input" type="checkbox" id="sharecomment" name="perm[]" value="6" <!--{if $share['perm']}--><!--{if in_array(6,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
+                        <label class="form-check-label" for="sharecomment">{lang comment}</label>
+                    </div>
                 </div>
-                <div class="gallery-item">
-                    <input class="form-check-input" type="checkbox" id="view" name="perm[]" value="2" <!--{if $share['perm']}--><!--{if in_array(2,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
-                    <label class="form-check-label" for="view">禁用预览</label>
-                </div>
-                <div class="gallery-item">
-                    <input class="form-check-input" type="checkbox" id="login" name="perm[]" value="3" <!--{if $share['perm']}--><!--{if in_array(3,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
-                    <label class="form-check-label" for="login">仅登录使用</label>
-                </div>
-                <div class="gallery-item">
-                    <input class="form-check-input" type="checkbox" id="edit" name="perm[]" value="4" <!--{if $share['perm']}--><!--{if in_array(4,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
-                    <label class="form-check-label" for="edit">允许编辑</label>
-                </div>
-                <div class="gallery-item">
-                    <input class="form-check-input" type="checkbox" id="create" name="perm[]" value="5" <!--{if $share['perm']}--><!--{if in_array(5,$share['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->>
-                    <label class="form-check-label" for="create">可读写(上传,新建)</label>
-                </div>
+                <span class="form-text">具体权限的有效性取决于相关应用场景的实际使用情况。</span>
             </div>
           </div>
         <div class="row mb-1" id="sharurldiv" <!--{if !$share[shareurl]}-->style="display:none;"<!--{/if}-->>

@@ -402,6 +402,7 @@ img{max-width:100%}
 .bs-popover-bottom>.popover-arrow::before,.bs-popover-auto[data-popper-placement^=bottom]>.popover-arrow::before{border-bottom-color:#ededee}
 .bs-popover-start>.popover-arrow::before,.bs-popover-auto[data-popper-placement^=left]>.popover-arrow::before{border-left-color:#ededee}
 .popover-header{background-color:#fcfdfe;border-bottom-color:#ededee}
+.popover-header .btn-close{width:2px;height:2px;}
 .bs-popover-bottom .popover-header::before,.bs-popover-auto[data-popper-placement^=bottom] .popover-header::before{border-bottom-color:#fcfdfe}
 .popover-body{color:#495057}
 .dropdown-item,.dropdown-header,.dropdown-item-text{padding:8px 15px}

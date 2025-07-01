@@ -10,37 +10,11 @@ if (!defined('IN_DZZ')) {
 }
 global $_G;
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-
-$do = empty($_GET['do']) ? '' : trim($_GET['do']);
 $uid = $_G['uid'];
 $space = dzzgetspace($uid);
 $space['self'] = intval($space['self']);
-$refer = dreferer();
 $data = array();
-@include DZZ_ROOT . './core/core_version.php';
-$arr = array();
-$data = array();
-$data['version'] = CORE_VERSION;
-$data['release'] = CORE_RELEASE;
-$explorer_setting = get_resources_some_setting();
-$data['deletefinally'] = 0;
-if ($explorer_setting['finallydelete'] === 0) {
-    $data['deletefinally'] = 1;
-}
 $data['myuid'] = $uid;
-if ($_G['setting']['upgrade']) $space['upgrade'] = 1;
-else $space['upgrade'] = 0;
-
-
-//图标排列方式
-if ($_G['setting']['dzz_iconview']) {
-    $iconview = $_G['setting']['iconview'];
-} else {
-    $iconview = C::t('iconview')->fetch_all();
-}
-
-$data['iconview'] = $iconview;
-
 $config = array();
 if (!$config = C::t('user_field')->fetch($_G['uid'])) {
     $config = dzz_userconfig_init();
@@ -62,26 +36,12 @@ if ($applist_n = array_keys(C::t('app_market')->fetch_all_by_notdelete($_G['uid'
 //应用数据
 $appdata = array();
 $appdata = C::t('app_market')->fetch_all_by_appid($applist);
-//$arr['appdata']=microtime(true);
-$applist_1 = array();
-foreach ($appdata as $value) {
-    if ($value['isshow'] < 1) continue;
-    if ($value['available'] < 1) continue;
-    if ($value['system'] == 2) continue;
-    $applist_1[] = $value['appid'];
-}
-
-
-$data['applist'] = array_values($applist_1);
 //获取系统桌面设置信息
 $icosdata = array();
-$data['noticebanlist'] = $config['noticebanlist'] ? explode(',', $config['noticebanlist']) : array();
 //获取打开方式
 $data['extopen']['all'] = C::t('app_open')->fetch_all_ext();
 $data['extopen']['ext'] = C::t('app_open')->fetch_all_orderby_ext($_G['uid'], $data['extopen']['all']);
 $data['extopen']['user'] = C::t('app_open_default')->fetch_all_by_uid($_G['uid']);
-//获取用户的默认打开方式
-$data['extopen']['userdefault'] = C::t('app_open_default')->fetch_all_by_uid($_G['uid']);
 //目录数据
 $folderdata = array();
 $data['cut'] = array();
@@ -117,7 +77,7 @@ $data['sourcedata'] = array(
 );
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
 
-$data['myspace'] = $data['space'] = $space;
+$data['space'] = $space;
 $thame = getThames();
 $data['thame'] = $thame['data'];
 $infoPanelOpened = C::t('user_setting')->fetch_by_skey('infoPanelOpened');

@@ -21,7 +21,7 @@
 		<button type="button" class="toggRight btn-close"></button>
 	</div>
 </div>
-<div class="right-messagetable scroll-y" data-subtractor="{eval echo ($fid || $rid)?54:0}">
+<div class="right-messagetable scroll-y" <!--{if $commentperm}-->data-subtractor="{eval echo ($fid || $rid)?54:0}"<!--{/if}-->>
 	<!--{if !$bz}-->
 	<!--根文件进度条开始-->
 	<!--{if ($fileinfo['isgroup'] || $fileinfo['pfid'] == 0) && !$fileinfo['ismulti']}-->
@@ -53,6 +53,24 @@
 			<div class="col-sm-8 text-break">$fileinfo['username']</div>
 		</div>
 		<!--{/if}-->
+		<!--{if $fileinfo[contain]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang include}</label>
+			<div class="col-sm-8 text-break">$fileinfo[contain]</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $fileinfo[ffsize]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang big_small}</label>
+			<div class="col-sm-8 text-break">$fileinfo[ffsize]</div>
+		</div>
+		<!--{/if}-->
+		<!--{if $fileinfo[fdateline]}-->
+		<div class="row mb-1">
+			<label class="col-sm-4">{lang create_time}</label>
+			<div class="col-sm-8 text-break">$fileinfo[fdateline]</div>
+		</div>
+		<!--{/if}-->
 		<!--{if $fileinfo[editdateline]}-->
 		<div class="row mb-1">
 			<label class="col-sm-4">{lang preceding_edit_time}</label>
@@ -65,24 +83,6 @@
 			<div class="col-sm-8 text-break">$fileinfo[opendateline]</div>
 		</div>
 		<!--{/if}-->
-		<!--{if $fileinfo[ffsize]}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang big_small}</label>
-			<div class="col-sm-8 text-break">$fileinfo[ffsize]</div>
-		</div>
-		<!--{/if}-->
-		<!--{if $fileinfo[contain]}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang include}</label>
-			<div class="col-sm-8 text-break">$fileinfo[contain]</div>
-		</div>
-		<!--{/if}-->
-		<!--{if $fileinfo[fdateline]}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang create_time}</label>
-			<div class="col-sm-8 text-break">$fileinfo[fdateline]</div>
-		</div>
-		<!--{/if}-->
     </div>
 	<!--{if $perm && $fileinfo['isdelete'] < 1}-->
 	<div class="p-2 border-bottom">
@@ -91,9 +91,9 @@
 			<!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
 		</div>
 		<div class="right-card-body">
-			<ul class="proper-show  proper-poewr">
+			<ul class="proper-show proper-poewr">
 				<!--{loop $perms $k $val}-->
-				<li <!--{if $perm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span  class="{$val[2]}" title="$val[0]"></span></li>
+				<li <!--{if $perm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
 				<!--{/loop}-->
 			</ul>
 		</div>
@@ -172,6 +172,7 @@
    </div>
     <!--文件夹动态结束-->
 </div>
+<!--{if $commentperm}-->
 <!--{if !$fileinfo['ismulti']}-->
 <!--{if $fid || $rid || !$bz}-->	
 <div class="comment-area dtheme">
@@ -197,6 +198,7 @@
 </div>
 <!--{/if}-->
 <!--{/if}-->
+<!--{/if}-->
 </div>
 <script>
 var userids = '';
@@ -216,7 +218,7 @@ function editgroupperm(gid,fid){
 	showWindow('select_perm', MOD_URL+'&op=ajax&operation=selectperm&fid='+fid+'&gid='+gid+'&new=0','get','0');
 }
 function select_group_user(){
-	var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=seluser_group&stype=2&onlymyorg=1&multiple=1&ids='+userids;
+	var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=seluser_group&stype=2&range=1&onlymyorg=<!--{if $_G['setting']['explorer_mermoryonlymyorg'] == '1'}-->0<!--{else}-->1<!--{/if}-->&multiple=1&ids='+userids;
     showWindow('adduser',userhref,'get','0')
 }
 function seluser_group(ids,data) {
