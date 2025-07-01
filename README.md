@@ -1,7 +1,19 @@
-﻿# dzzoffice
+﻿<div align="center">
+<img src="./static/image/common/logo.png" width="120px" alt="DzzOffice" />
 
-### 官方网站:http://dzzoffice.com
-### 演示地址:http://demo.dzzoffice.com
+# DzzOffice
+<h4 align="center">多云存储 • 在线文档管理 • 协同办公 • 100%开源</h4>
+<p align="center">
+  <a href="http://dzzoffice.com" target="_blank">官网</a> •
+  <a href="http://dzzoffice.com" target="_blank">下载</a> •
+  <a href="http://demo.dzzoffice.com" target="_blank">演示</a>  • 
+  <a href="./UPDATE.md" target="_blank">更新日志</a>
+</p>
+<p align="center">
+  <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/stargazers"><img src="https://gitee.com/zyx0814/dzzoffice/badge/star.svg?theme=dark" alt='gitee star'/></a>
+  <a target="_blank" href="https://github.com/zyx0814/dzzoffice/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zyx0814/dzzoffice?style=social"></a>
+</p>
+</div>
 
 ### DzzOffice 介绍：
 
@@ -56,10 +68,10 @@
 
 ### 运行环境
 为了确保 DzzOffice 能够正常运行，请确保你的服务器满足以下环境要求：
-- 操作系统：Linux、Windows、Mac OS
-- PHP 7.0+（推荐 PHP 7.4）
+- 操作系统：Linux、Windows、Mac OS（推荐Linux）
+- PHP：7.0+（推荐 PHP 7.4）
 - Web 服务器：Apache、Nginx（推荐 Nginx）
-- MySQL 版本：>= 5.5.3 且 <= 8.0
+- MySQL 版本：>= 5.5.3 且 <= 8.0（推荐 NMySQL 5.7）
 - 客户端浏览器: 推荐使用 `Chrome 60+`、`Firefox 60+`、`iOS 12+`、`IE 10+`
 
 ### 友情提示
