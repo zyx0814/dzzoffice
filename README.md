@@ -36,6 +36,8 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 
 此外，DzzOffice 还集成了大量开源工具，如在线压缩/解压、多格式媒体文件预览、文档在线编辑等，充分展现了开源程序的多样化利用价值。同时，通过接入各类 web 应用，平台功能可实现无限扩展，能全面满足企业搭建高效便捷协同办公平台、个人获取完善云存储与协作工具的核心需求。
 
+除开源版本外，DzzOffice 还提供商业版解决方案，以满足企业更专业化、定制化的办公需求，详情可参考[官方商业版页面](http://www.dzzoffice.com/business.html)。
+
 更多应用可前往[DzzOffice 应用市场](http://www.dzzoffice.com/index.php?mod=dzzmarket)获取。
 
 ## DzzOffice 在线更新方法
