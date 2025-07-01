@@ -1,5 +1,5 @@
 ﻿<div align="center">
-<img src="./static/image/common/logo.png" width="120px" alt="DzzOffice" />
+<img src="./static/image/common/logo.png" width="128px" alt="DzzOffice" />
 
 # DzzOffice
 <h4 align="center">多云存储 • 在线文档管理 • 协同办公 • 100%开源</h4>
@@ -15,7 +15,7 @@
 </p>
 </div>
 
-### DzzOffice 介绍：
+## DzzOffice 介绍：
 
    Dzzoffice是一套开源办公套件，适用于企业、团队搭建自己的 类似“Google企业应用套件”、“微软Office365”的企业协同办公平台。套件由多个工具组成，包含但不限于如：
 
@@ -47,7 +47,9 @@
 
 除了以上自己开发了一些工具，套件里还集成了大量的其他开源工具，如网盘里用到的在线压缩、解压，各类媒体文件预览，各类文档预览与编辑的支持，是各类开源程序的综合利用。
 
-### DzzOffice 在线更新方法
+> 更多应用可前往[DzzOffice应用市场](http://www.dzzoffice.com/index.php?mod=dzzmarket)获取。
+
+## DzzOffice 在线更新方法
 
 1. 进入您原来的系统，关闭您的站点。进行数据备份；
 2. 备份文件（如果有程序文件或风格文件的改动）；
@@ -55,7 +57,7 @@
 4. 系统工具 -> 更新系统缓存；
 5. 系统设置 -> 打开站点。
 
-### DzzOffice 离线更新方法（仅支持从V2.01版本升级）
+## DzzOffice 离线更新方法（仅支持从V2.01版本升级）
 
 1. 进入您原来的系统，关闭您的站点。进行数据备份；
 2. 备份文件（如果有程序文件或风格文件的改动）；
@@ -66,7 +68,7 @@
 7. 管理员登录后，系统工具 -> 更新系统缓存。
 8. 系统设置 -> 打开站点。
 
-### 运行环境
+## 运行环境
 为了确保 DzzOffice 能够正常运行，请确保你的服务器满足以下环境要求：
 - 操作系统：Linux、Windows、Mac OS（推荐Linux）
 - PHP：7.0+（推荐 PHP 7.4）
@@ -74,6 +76,16 @@
 - MySQL 版本：>= 5.5.3 且 <= 8.0（推荐 NMySQL 5.7）
 - 客户端浏览器: 推荐使用 `Chrome 60+`、`Firefox 60+`、`iOS 12+`、`IE 10+`
 
-### 友情提示
+## 社区与贡献
+
+- 我们衷心感谢您的参与和支持！您的每一份贡献都将为 DzzOffice 的完善和提升增添一份力量。欢迎通过 GitHub 提交 Issue（反馈问题 / 建议）或 PR（代码贡献），让我们携手学习、共同进步，一起打造更加完善的 DzzOffice。
+- 官网 [dzzoffice.com](http://dzzoffice.com) 可获取 QQ 交流群
+- 关注 [GitHub 仓库](https://github.com/zyx0814/dzzoffice/) 了解最新动态
+
+## 开源协议
+
+* 本项目遵循 [AGPL-3.0](http://www.dzzoffice.com/licenses/license.txt) 开源许可协议
+
+## 友情提示
 - 请随时关注更新动态，您可进行手动修补，让自己的站点时刻保持最安全的状态!
 - V2.0 bata版本需先升级到V2.01版本，才能升级后续版本。
