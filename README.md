@@ -60,7 +60,7 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 8. 系统设置 -> 打开站点。
 
 ## 运行环境
-为了确保 DzzOffice 能够正常运行，请确保你的服务器满足以下环境要求：
+为了确保 DzzOffice 能够正常运行，请确保您的运行环境满足以下要求：
 - 操作系统：Linux、Windows、Mac OS（推荐Linux）
 - PHP：7.0+（推荐 PHP 7.4）
 - Web 服务器：Apache、Nginx（推荐 Nginx）
