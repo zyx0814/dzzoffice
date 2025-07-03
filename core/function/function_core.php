@@ -374,28 +374,72 @@ function urlsafe_b64decode($string) {
     return base64_decode($data);
 }
 
-//key的格式以|隔开，参数支持全局函数，如地址为 index.php?mod=io&op=getStream&path=***&key=uid|setting/authkey|username
-//这种格式，加密时，需要把|分割的每个参数都带上，dzzencode($string,'1|'.getglobal('setting/authkey').'|管理员',$expiry);
-//如果解密时，|隔开的部分使用getglobal函数获取不到值，将会使用原值，如index.php?mod=io&op=getStream&path=***&key=xxxxx|ppppp
-//解密时的key会使用原值 xxxxx|ppppp ;
+/**
+ * 字符串加密函数
+ * 
+ * @param string $string 要加密的原始字符串
+ * @param string $key 加密密钥（可选），两种形式：
+ *                   - 空值：使用系统默认密钥（setting/authkey）
+ *                   - 非空：格式为用|分隔的字符串，支持动态变量：
+ *                     - 格式示例：'uid|setting/authkey|username'
+ *                     - 加密时需要将|分割的每个参数替换为实际值：
+ *                       `'1|'.getglobal('setting/authkey').'|管理员'`
+ *                     - 示例URL参数：
+ *                       index.php?mod=io&op=getStream&path=***&key=uid|setting/authkey|username
+ * @param int $expiry 有效期（秒，可选），0表示永久有效
+ * @param int $ckey_length 动态密钥长度（可选）
+ * @return string 返回URL安全的Base64编码加密字符串
+ * 
+ * @example 
+ * // 基础用法（使用系统默认密钥）
+ * dzzencode('raw_string');
+ * 
+ * // 带自定义密钥
+ * dzzencode('raw_string', 'uid|setting/authkey');
+ * 
+ * // 带有效期
+ * dzzencode('raw_string', '', 3600); // 1小时内有效
+ * 
+ * // 密钥动态解析过程：
+ * // 1. 分割：explode('|', 'uid|setting/authkey') → ['uid', 'setting/authkey']
+ * // 2. 替换：通过getglobal()获取实际值 → ['1', 'secret_key']
+ * // 3. 合并：implode → '1|secret_key'
+ * // 4. 最终密钥：md5('1|secret_key')
+ */
 function dzzencode($string, $key = '', $expiry = 0, $ckey_length = 0) {
     $key = md5($key != '' ? $key : getglobal('setting/authkey'));
     return urlsafe_b64encode(authcode($string, 'ENCODE', $key, $expiry, $ckey_length));
 }
 
+/**
+ * 字符串解密函数
+ * 
+ * @param string $string 要解密的字符串
+ * @param string $key 解密密钥（可选），处理逻辑同dzzencode()
+ * @param int $ckey_length 动态密钥长度（可选）
+ * @return string 返回原始字符串
+ * 
+ * @example
+ * // 基础用法（使用加密时的默认密钥）
+ * dzzdecode($encryptedString);
+ * 
+ * // 带自定义密钥解密
+ * dzzdecode($encryptedString, 'uid|setting/authkey');
+ */
 function dzzdecode($string, $key = '', $ckey_length = 0) {
     if ($key) {
         $tarr = explode('|', $key);
-        foreach ($tarr as $key => $v) {
-            if (getglobal($v)) $tarr[$key] = getglobal($v);
+        foreach ($tarr as $idx => $val) {
+            if ($gval = getglobal($val)) $tarr[$idx] = $gval;
         }
         $key = implode('|', $tarr);
     }
-    $key = md5($key != '' ? $key : getglobal('setting/authkey'));
-    if (!$ret = authcode(urlsafe_b64decode($string), 'DECODE', $key, 0, $ckey_length)) {
-        $ret = authcode(urlsafe_b64decode($string), 'DECODE', $key, 0, 4);
+    $authkey = md5($key ?: getglobal('setting/authkey'));
+    $decoded = urlsafe_b64decode($string);
+    if (!($str = authcode($decoded, 'DECODE', $authkey, 0, $ckey_length))) {
+        $str = authcode($decoded, 'DECODE', $authkey, 0, 4);
     }
-    return $ret;
+    return $str;
 }
 
 function fsocketopen($hostname, $port = 80, &$errno, &$errstr, $timeout = 15) {
