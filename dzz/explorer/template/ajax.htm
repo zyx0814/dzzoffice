@@ -553,7 +553,7 @@
         <!--{if $attachment}-->
         <div class="row mb-1">
             <label class="col-sm-3">文件地址</label>
-            <div class="col-sm-9 text-break"><!--{if is_array($attachment) && $attachment['error']}--><span class="text-danger">$attachment['error']</span><!--{else}--><a href="$attachment" target="_blank">$attachment</a><!--{/if}--></div>
+            <div class="col-sm-9 text-break"><!--{if is_array($attachment) && $attachment['error']}--><span class="text-danger">$attachment['error']</span><!--{else}-->$attachment<!--{/if}--></div>
         </div>
         <!--{/if}-->
         <!--{if $attrdata['desc']}-->

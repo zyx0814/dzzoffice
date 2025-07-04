@@ -41,7 +41,7 @@ if ($_GET['do'] == 'orgtree') {
         if ($_G['adminid'] != 1 && $onlymyorg) $isorgdis = C::t('organization_user')->fetch_org_by_uid($_G['uid']);
         foreach (C::t('organization')->fetch_all_by_forgid($id, false, -1) as $value) {
             if ($_G['adminid'] != 1 && $moderator && !in_array($value['orgid'], $topids)) continue;
-            if ($_G['adminid'] != 1 && $isorgdis && !in_array($value['orgid'], $isorgdis)) continue;
+            if ($_G['adminid'] != 1 && $onlymyorg && !in_array($value['orgid'], $isorgdis)) continue;
             if ($value['type'] == '1' && $range == 1) {
                 continue;
             } elseif ($value['type'] == '0' && $range == 2) {
@@ -70,7 +70,7 @@ if ($_GET['do'] == 'orgtree') {
             }
             $data[] = $arr;
         }
-        if ($stype != 1 && $range < 1) {
+        if ($stype != 1 && $range < 1 || $stype == 2 && $onlymyorg == 1) {
             $data[] = array('id' => 'other', 'text' => $zero, 'state' => array('disabled' => $disable), "type" => ($type == "disabled") ? $type : 'default', 'children' => true);
         }
 
@@ -90,7 +90,7 @@ if ($_GET['do'] == 'orgtree') {
         } else {
             if ($_G['adminid'] != 1 && $onlymyorg) $isorgdis = C::t('organization_user')->fetch_org_by_uid($_G['uid']);
             foreach (C::t('organization')->fetch_all_by_forgid($id) as $value) {
-                if ($_G['adminid'] != 1 && $isorgdis && !in_array($value['orgid'], $isorgdis)) continue;
+                if ($_G['adminid'] != 1 && $onlymyorg && !in_array($value['orgid'], $isorgdis)) continue;
                 if (!$moderator || C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'], $_G['uid'])) {
                     $orgdisable = '';
                     $orgtype = 'organization';
