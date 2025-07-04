@@ -69,7 +69,7 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 
 ## 社区与贡献
 
-- 我们衷心感谢您的参与和支持！您的每一份贡献都将为 DzzOffice 的完善和提升增添一份力量。欢迎通过 GitHub 提交 Issue（反馈问题 / 建议）或 PR（代码贡献），让我们携手学习、共同进步，一起打造更加完善的 DzzOffice。
+- 我们衷心感谢您的参与和支持！您的每一份贡献都将为 DzzOffice 的完善和提升增添一份力量。欢迎通过 GitHub、Gitee 提交 Issue（反馈问题/建议），也可以通过[GitHub 仓库](https://github.com/zyx0814/dzzoffice/)提交 PR（代码贡献），让我们携手学习、共同进步，一起打造更加完善的 DzzOffice。
 - 官网 [dzzoffice.com](http://dzzoffice.com) 可获取 QQ 交流群
 - 关注 [GitHub 仓库](https://github.com/zyx0814/dzzoffice/) 了解最新动态
 

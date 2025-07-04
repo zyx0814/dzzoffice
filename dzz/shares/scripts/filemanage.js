@@ -79,10 +79,8 @@ _filemanage.getData = function (url, callback) {
 		jQuery('.navtopheader').css('display', 'none');
 		jQuery('.tooltip').html('');
 		if (json.error == 'no_login') {
-			showDialog('该分享文件需要登录才能查看，是否需要跳转到登录界面', 'confirm','未登录提醒', function(){
-				location.href = 'user.php?mod=login';
-				return false;
-			  });
+			jQuery('#filemanage-f-1').html('<div class="emptyPage" id="noticeinfo"><img src="static/image/common/noFilePage-fail.png"><p class="emptyPage-text">该分享文件需要登录才能查看，请先进行登录</p><a class="btn btn-primary" href="user.php?mod=login"><i class="mdi mdi-login p-2"></i><span>登录</span></a></div>');
+			jQuery('.allsave,.downAll,.new-buildMenu,.icons-thumbnail').hide();
 			return false;
 		} else if (json.error){
 			jQuery('#filemanage-f-1').html('<div class="emptyPage" id="noticeinfo"><img src="static/image/common/no_list.png"><p class="emptyPage-text">'+json.error+'</p></div>');
@@ -880,7 +878,7 @@ _filemanage.prototype._selectInfo = function () {
 		jQuery('.navtopheader').css('display', 'block');
 		jQuery('.navtopheader').html(html);
 		jQuery('.selectall-box').addClass('Icoselected');
-		jQuery('.selectall-box .select-info').html('已选中<span class="num">' + sum + '</span>个文件');
+		jQuery('.selectall-box .select-info').html('<span class="num">' + sum + '</span>个选中');
 		jQuery('.docunment-allfile').hide();
 		if (sum >= total) { //全部选中
 			jQuery('.selectall-box').addClass('Icoselected');
@@ -1050,7 +1048,7 @@ _filemanage.Open = function (rid, extid, title) {
 	obj.text = name;
 	obj.dpath = data.dpath;
 	if (obj.type !== 'folder' && !openprem) {
-		showmessage('分享者禁用了在线预览');
+		showmessage('分享者禁用了在线预览', 'info', 0, 1);
 		return false;
 	}
 	if (obj.type === 'link') {
