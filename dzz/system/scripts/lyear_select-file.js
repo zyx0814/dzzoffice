@@ -667,7 +667,7 @@ _selectfile.prototype._selectInfo = function () {
         jQuery('.navtopheader').css('display', 'block');
         jQuery('.navtopheader').html(html);
         jQuery('.selectall-box').addClass('Icoselected');
-        jQuery('.selectall-box .select-info').html('已选中<span class="num">' + sum + '</span>个文件');
+        jQuery('.selectall-box .select-info').html('<span class="num">' + sum + '</span>个选中');
         jQuery('.docunment-allfile').hide();
         if (sum >= total) { //全部选中
             jQuery('.selectall-box').addClass('Icoselected');
