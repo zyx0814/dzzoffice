@@ -21,20 +21,26 @@
 		text-align: center;
 	}
 	.ui-sortable-helper{
-		width: 18rem;
 		border:1px solid transparent;
 		opacity: 0.6;
 	}
 	.ui-state-default{
-		width: 18rem;
 		display: inline-block;
-		border:1px solid #e1e1e1;
-		border-radius: 12px;
 	}
-	.card-market{-webkit-box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1);-moz-box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1);box-shadow:0 0 0 1px rgba(0,0,0,0.05),0 10px 20px 0 rgba(0,0,0,0.1)}
-	.card-market:hover,.card-market:focus-within{box-shadow:0 0 0 2px #007bff,0 10px 20px 0 rgba(0,0,0,0.1);box-shadow:0 0 0 2px var(--bs-primary),0 10px 20px 0 rgba(0,0,0,0.1);transform:translatey(-5px)}
-	.card-image{border-radius:10px;overflow:hidden;display:flex;justify-content:center;position:relative;align-items:center;width:100%}
-	.card-image img{height:64px;width: 64px;}
+	.app-card:hover {
+		box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+		box-shadow: 0 0 0 2px #007bff, 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+		box-shadow: 0 0 0 2px var(--bs-primary), 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+		box-shadow: 0px 0px 15px rgba(0, 0, 0, .15);
+	}
+	.app-icon {
+		width: 64px;
+		height: 64px;
+		margin: 0 auto 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
 </style>
 <!--{template lyear:header_simple_noleft_end}-->
 <main class="bs-main-container" style="padding-left: 0;">
@@ -83,20 +89,14 @@
 		</div>
 		<!--{/if}-->
 		<!--{if $applist_1}-->
-		<div class="d-flex flex-wrap justify-content-center mb-3 ui-sortable">
+		<div class="row ui-sortable">
 			<!--{loop $applist_1 $key $value}-->
-			<div class="popup-index-li" data-appid="$value[appid]" style="width:18rem;">
-				<a class="card card-market m-2" href="$value[url]" <!--{if $value['open']}-->target="_blank"<!--{/if}--> title="$value[appname]">
-					<div class="card-body text-truncate text-center">
-						<div class="card-image">
-							<img src="$value[appico]" alt="$value[appname]"/>
-						</div>
-						<span class="fs-4 text-dark">$value[appname]</span>
-					</div>
-					{eval $appdesc=$value['appdesc']?$value['appdesc']:lang('none');}
-					<div class="card-footer text-truncate text-body" title="$appdesc">
-						$appdesc
-					</div>
+			<div class="col-md-3 col-sm-3 col-lg-2 popup-index-li" data-appid="$value[appid]">
+				<a <!--{if $value['open']}-->target="_blank"<!--{/if}--> href="$value[url]" title="$value[appname]" class="card app-card border">
+				<div class="card-body text-center">
+					<img src="$value[appico]" class="app-icon">
+					<div class="card-title text-body text-truncate">$value[appname]</div>
+				</div>
 				</a>
 			</div>
 			<!--{/loop}-->
@@ -111,7 +111,7 @@
 <script type="text/javascript">
 	jQuery(document).ready(function(){
 		jQuery('.ui-sortable').sortable({
-			placeholder: "ui-state-default",
+			placeholder: "ui-state-default col-md-3 col-sm-3 col-lg-2 card app-card border",
 			items: "div.popup-index-li",
 			stop: function(event, ui) {
 				var appids=[];

@@ -15,7 +15,6 @@ $lang = array(
     'cancel_shielding_success' => '取消屏蔽成功',
     'cancel_shielding_failure' => '取消屏蔽失败',
     'affirm_cancel_shielding' => '确定取消屏蔽',
-    'share_time' => '分享时间',
     'private_share' => '私密分享',
     'expiration_time' => '到期时间',
     'extract_password' => '提取密码',
