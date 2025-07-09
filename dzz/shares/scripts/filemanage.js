@@ -14,7 +14,7 @@ function _filemanage(id, data, param) {
 	//alert('filemangeid='+id);
 	this.bz = param.bz || ''; //标志是那个api的数据
 
-	this.perpage = param.perpage;
+	this.perpage = param.perpage || _filemanage.perpage;
 	this.totalpage = Math.ceil(this.total / this.perpage);
 	this.totalpage = this.totalpage < 1 ? 1 : this.totalpage;
 	this.id = id;
@@ -157,6 +157,7 @@ _filemanage.getData = function (url, callback) {
 				}
 				obj.showIcos();
 			}
+			jQuery('#sharepage').html('共' + obj.totalpage + '页(' + obj.total + '条记录),' + obj.perpage + '条/页');
 			obj.url = url;
 			//修改初始化时的排列方式指示
 			jQuery('.sizeMenu .icons-thumbnail').attr('iconview', obj.view).find('.mdi').removeClass('mdi-view-module').removeClass('mdi-view-list').addClass(obj.view === 2 ? 'mdi-view-list':'mdi-view-module');

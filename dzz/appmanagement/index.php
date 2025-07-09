@@ -252,14 +252,18 @@ if ($do == 'stats') {
     }
     exit($jsonReturn);
 }
-$appdata = DB::fetch_all("select appname,appico,appurl,identifier from %t where `group`=3 and isshow>0 and `available`>0", array('app_market'));
+$appdata = DB::fetch_all("select appid,appname,appico,appurl,identifier,appadminurl from %t where ((`group`=3 and isshow>0) OR appadminurl!='')  and `available`>0 order by appid",array('app_market'));
 $data = array();
 foreach ($appdata as $k => $v) {
     if ($v["identifier"] == "appmanagement") continue;
     if ($v['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $v['appico'])) {
         $v['appico'] = $_G['setting']['attachurl'] . $v['appico'];
     }
-    $v['url'] = replace_canshu($v['appurl']);
+    if($v['group'] == 3) {
+        $v['url'] = replace_canshu($v['appurl']);
+    } else {
+        $v['url']=$v['appadminurl']?replace_canshu($v['appadminurl']):replace_canshu($v['appurl']);
+    }
     $data[] = $v;
 }
 $yonghurenshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE uid");
@@ -268,18 +272,6 @@ $wenjiangeshu = DB::result_first("SELECT COUNT(*) FROM " . DB::table('attachment
 $kongjianshiyong = formatsize(DB::result_first("SELECT SUM(filesize) FROM " . DB::table('attachment')));
 $version = 'V' . CORE_VERSION;//版本信息
 $RELEASE = CORE_RELEASE;
-$currentHour = date('G');
-if ($currentHour >= 5 && $currentHour < 12) {
-    $greeting = "早上好";
-} elseif ($currentHour >= 12 && $currentHour < 18) {
-    $greeting = "下午好";
-} elseif ($currentHour >= 18 || $currentHour < 5) {
-    $greeting = "晚上好";
-}
-$userstatus = C::t('user_status')->fetch($_G['uid']);
-$weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-$dateI = date('w');
-$dateInfo = date('Y-n-j H:i') . ' 星期' . $weekdays[$dateI];
 include template('main');
 function phpBuild64() {
     if (PHP_INT_SIZE === 8) return true;//部分版本,64位会返回4;

@@ -13,6 +13,7 @@ if (!$path = dzzdecode($_GET['path'])) {
 }
 $meta = IO::getMeta($path);
 if (!$meta) showmessage(lang('file_not_exist'));
+if($meta['error']) showmessage($meta['error']);
 $perm_download = 1;
 $perm_print = 1;
 if ($meta['rid']) {

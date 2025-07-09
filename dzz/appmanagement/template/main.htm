@@ -3,18 +3,24 @@
   .gallery-grid .gallery-item {
     padding-bottom: 5px;
   }
+  .app-card:hover {
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0 0 2px #007bff, 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0 2px var(--bs-primary), 0 10px 20px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, .15);
+  }
+  .app-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
-<!--{template lyear:header_simple_end}-->
-<main class="bs-main-container">
+<!--{template lyear:header_simple_noleft_end}-->
+<main class="bs-main-container" style="padding-left: 0;">
 	<div class="container-fluid">
-    <div class="card bg-primary text-white">
-      <div class="card-body">
-        <div class="d-flex justify-content-between">
-          <span class="fs-4">{$_G['username']}，{$greeting}</span>
-        </div>
-        <div>登录时间：<!--{eval echo dgmdate($userstatus['lastvisit'])}-->，当前时间：{$dateInfo}</div>
-      </div>
-    </div>
     <div class="row card-banner bg-white">
       <div class="col-sm-6 col-md-6 col-lg-3">
         <div class="card mb-0 shadow-none">
@@ -68,8 +74,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="row card-banner bg-white">
       <div class="col-sm-6 col-md-6 col-lg-3">
         <div class="card mb-0 shadow-none">
           <div class="card-body">
@@ -136,6 +140,18 @@
       <div class="card-body">
         <a href="{MOD_URL}&do=systemcheck" class="btn btn-primary card-btn-reload d-grid">点击查看</a>
       </div>
+    </div>
+    <div class="row">
+      <!--{loop $data $value}-->
+      <div class="col-md-3 col-sm-3 col-lg-2">
+        <a <!--{if $value['open']}-->target="_blank"<!--{/if}--> href="$value[url]" title="$value[appname]" class="card app-card border">
+          <div class="card-body text-center">
+              <img src="$value[appico]" class="app-icon">
+              <div class="card-title text-body text-truncate">$value[appname]</div>
+          </div>
+        </a>
+      </div>
+      <!--{/loop}-->
     </div>
   </div>
 </main>

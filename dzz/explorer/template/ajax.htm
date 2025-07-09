@@ -691,6 +691,30 @@
                 </div>
             </div>
         </div>
+        <!--{if $share['id']}-->
+        <div class="row mt-3 mb-1">
+            <label class="col-sm-2">分享统计</label>
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div title="{lang view_count}">
+                            <i class="mdi mdi-eye-outline me-2"></i>$share[views]
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div title="{lang download_times}">
+                            <i class="mdi mdi-download-outline me-2"></i>$share[downs]
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div title="{lang share_time}">
+                            <i class="mdi mdi-clock-outline me-2"></i>{eval echo dgmdate($share['dateline'], 'u')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--{/if}-->
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-danger pull-left <!--{if !$share[shareurl]}--> hide <!--{/if}--> delshare" onclick="removeshare(this.form)">{lang delete_share}
