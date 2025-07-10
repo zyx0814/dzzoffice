@@ -71,12 +71,13 @@
 		,cols: [[
             {type:'checkbox', fixed: 'left'}
             ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-            ,{field:'orgname', title: '{lang group_name}', sort: true, templet: function(d) {return d.orgname;}}
+            ,{field:'orgname', title: '{lang group_name}<i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="点击查看群组后，右侧信息栏支持编辑群组名称、描述等信息" style="margin-left: 5px;"></i>', sort: true, templet: function(d) {return d.orgname;}}
 		  ,{field:'creater', title: '{lang explorer_groupperm_manager}', align: 'center', sort: true}
 		  ,{field:'usernum', title: '{lang membership}', align: 'center', sort: true}
-		  ,{field:'dateline', title: '{lang create_date}', align: 'left',sort: true}
-          ,{field:'maxspacesize', title: '空间大小(M)<i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="点击对应的单元格支持编辑，单位为M" style="margin-left: 5px;"></i>', align: 'center',sort: true,edit: 'text'}
+		  ,{field:'dateline', title: '{lang create_date}', align: 'center',sort: true}
+          ,{field:'maxspacesize', title: '空间大小(M)<i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="点击对应的单元格支持编辑，单位为M" style="margin-left: 5px;"></i>', align: 'center',sort: true,edit: 'text',width:150}
           ,{field:'diron', title: '状态',templet: '#switchTpl',align: 'center',sort: true, unresize: true}
+          ,{field:'desc', title: '{lang introduce}',hide:true}
           ,{title: '{lang operation}',align:'center', toolbar: '#barDemo', fixed: 'right'}
 		]],
 		initSort: {
@@ -110,6 +111,7 @@
                         template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
                         template += '<div class="accordion-body">';
                         template += '<p><strong>{lang group_name}:</strong> ' + item.orgname + '</p>';
+                        template += '<p><strong>{lang introduce}:</strong> ' + item.desc + '</p>';
                         template += '<p><strong>{lang explorer_groupperm_manager}:</strong> ' + item.creater + '</p>';
                         template += '<p><strong>{lang membership}:</strong> ' + item.usernum + '</p>';
                         template += '<p><strong>{lang create_date}:</strong> ' + item.dateline + '</p>';
@@ -263,6 +265,7 @@
         var data = obj.dataCache;
         var template =
         '<p><strong>{lang group_name}:</strong> ' + data.orgname + '</p>' +
+        '<p><strong>{lang introduce}:</strong> ' + data.desc + '</p>' +
         '<p><strong>{lang explorer_groupperm_manager}:</strong> ' + data.creater + '</p>' +
         '<p><strong>{lang membership}:</strong> ' + data.usernum + '</p>' +
         '<p><strong>{lang create_date}:</strong> ' + data.dateline + '</p>' +
