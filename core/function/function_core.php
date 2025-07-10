@@ -1009,7 +1009,7 @@ function dgmdate($timestamp, $format = 'dt', $timeoffset = '9999', $uformat = ''
                 $return = '<span  title="' . $s . '">' . $return . '</span>';
             }
         } else {
-            $return = gmdate('Y-m-d', $timestamp) . '&nbsp;<span class="hidden-xs" title="' . $s . '">' . gmdate('H:s', $timestamp) . '</span>';
+            $return = gmdate('Y-m-d', $timestamp) . '&nbsp;<span class="hidden-xs" title="' . $s . '">' . gmdate('H:i', $timestamp) . '</span>';
         }
         return $return;
     } else {
