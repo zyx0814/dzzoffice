@@ -68,7 +68,7 @@ class table_resources extends dzz_table {
         }
         $fid = $infoarr['pfid'];
         if (!perm_check::checkperm_Container($infoarr['pfid'], 'edit2') && !($_G['uid'] == $infoarr['uid'] && perm_check::checkperm_Container($infoarr['pfid'], 'edit1'))) {
-            return array('error' => true);
+            return array('error' => lang('no_privilege'));
         }
         $setarr = array(
             'isdelete' => 1,
@@ -100,7 +100,7 @@ class table_resources extends dzz_table {
             $this->clear_cache($rid);
             return array('newname' => $newname);
         }
-        return array('error' => true);
+        return array('error' => lang('rechristen_error'));
     }
 
     //查询文件表基础信息 $notisdelete是否是已删除
