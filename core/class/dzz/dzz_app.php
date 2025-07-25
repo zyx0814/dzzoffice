@@ -176,10 +176,21 @@ class dzz_app extends dzz_base {
             $sitepath = preg_replace("/\/archiver/i", '', $sitepath);
         }
         $_G['isHTTPS'] = $this->is_HTTPS();//($_SERVER['HTTPS'] && strtolower($_SERVER['HTTPS']) != 'off') ? true : false;
-        $_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
+        $port = (!empty($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] !='80') ? ':'.$_SERVER['SERVER_PORT']:'';
+        if ($_G['isHTTPS'] && $port == ':443') {$port = '';} // 忽略https 443端口;
+        $host = $_SERVER['SERVER_NAME'].$port;
+        if (isset($_SERVER['HTTP_HOST'])){$host = $_SERVER['HTTP_HOST'];}
+        if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {//proxy
+            $hosts = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
+            $host = trim($hosts[0]);
+        } else if (isset($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
+            $host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+        }
+        $_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.trim($host,'/').$sitepath.'/');
+
         $url = parse_url($_G['siteurl']);
         $_G['siteroot'] = isset($url['path']) ? $url['path'] : '';
-        $_G['siteport'] = empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443' ? '' : ':'.$_SERVER['SERVER_PORT'];
+        $_G['siteport'] = $port;
 
         if (defined('SUB_DIR')) {
             $_G['siteurl'] = str_replace(SUB_DIR, '/', $_G['siteurl']);
