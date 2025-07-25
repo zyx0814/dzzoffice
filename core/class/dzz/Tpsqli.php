@@ -32,7 +32,7 @@ class Tpsqli extends Tpdb {
         $this->linkID[$linkNum] = DB::linknum();
         if (!isset($this->linkID[$linkNum])) {
             if (empty($config)) $config = $this->config;
-            $this->linkID[$linkNum] = new mysqli($config['hostname'], $config['username'], $config['password'], $config['database'], $config['hostport'] ? intval($config['hostport']) : 3306);
+            $this->linkID[$linkNum] = new \mysqli($config['hostname'], $config['username'], $config['password'], $config['database'], $config['hostport'] ? intval($config['hostport']) : 3306);
             if (mysqli_connect_errno()) {
                 echo "数据库连接错误";
                 exit;//E(mysqli_connect_error());

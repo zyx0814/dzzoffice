@@ -341,9 +341,12 @@ if ($do == 'uploads') {//上传新文件(指新建)
                 }
                 $rids[] = $v;
             }
-            $path = C::t('resources_path')->fetch_pathby_pfid($share['pfid'], true);
-            if ($path['path']) {
-                $first_path = $path['path'];
+            $first_path = '';
+            if (!$_G['adminid'] && $share['uid'] !== $_G['uid']) {
+                $path = C::t('resources_path')->fetch_pathby_pfid($share['pfid'], true);
+                if ($path['path']) {
+                    $first_path = $path['path'];
+                }
             }
             $propertys = C::t('resources')->get_property_by_rid($rids, true, $first_path);
         }
