@@ -9,6 +9,9 @@ class helper_page {
 
     public static function multi($num, $perpage, $curpage, $mpurl, $classname = '', $maxpages = 0, $page = 5, $autogoto = FALSE, $simple = FALSE, $jsfunc = FALSE) {
         global $_G;
+        $num = max(0, intval($num));
+        $perpage = max(1, intval($perpage));
+        $curpage = max(1, intval($curpage));
         $ajaxtarget = !empty($_GET['ajaxtarget']) ? " ajaxtarget=\"" . dhtmlspecialchars($_GET['ajaxtarget']) . "\" " : '';
 
         $a_name = '';

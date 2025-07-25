@@ -1,8 +1,6 @@
 <?php
 $lang = array(
     'appname' => '管理',
-    'supportted' => '支持',
-    'unsupportted' => '不支持',
     'php_version_too_low' => 'php版本太低啦，请先升级php到5.3以上，建议使用php5.4及以上',
     'step_env_check_desc' => '环境以及文件目录权限检查',
     'advice_mysql_connect' => '请检查 mysql 模块是否正确加载',
