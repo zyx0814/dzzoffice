@@ -179,12 +179,10 @@ class dzz_app extends dzz_base {
         if(strpos($_SERVER['HTTP_HOST'],':')!==false){
             list($host,$siteport) = explode(':',$_SERVER['HTTP_HOST']);
             $_G['siteport']=':'.intval($siteport);
-            $host=$_SERVER['HTTP_HOST'];
         }else{
             $_G['siteport'] = (empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443' || $_SERVER['HTTP_X_FORWARDED_PORT'] == '443')? '' : ':'.$_SERVER['SERVER_PORT'];
-            $host=preg_replace("/:\d+$/",'',$_SERVER['HTTP_HOST']).$_G['siteport'];
         }
-        $_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.$host.$sitepath.'/');
+        $_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath.'/');
         $url = parse_url($_G['siteurl']);
         $_G['siteroot'] = isset($url['path']) ? $url['path'] : '';
 
