@@ -69,14 +69,20 @@ class table_resources_meta extends dzz_table {
         }, $data);
     }
 
-    public function fetch_by_key($rid, $key) {
+    public function fetch_by_key($rid, $key,$isval = false) {
         $cachekey = $this->_pre_cache_key.'data_'.$rid.'_'.$key;
         if ($returndata = $this->fetch_cache($cachekey)) {
+            if ($isval) {
+                return $returndata['value'];
+            }
             return $returndata;
         }
         $returndata = DB::fetch_first("SELECT * FROM %t WHERE rid = %s AND `key` = %s", array($this->_table, $rid, $key));
         if ($returndata) {
             $this->store_cache($cachekey, $returndata);
+            if ($isval) {
+                return $returndata['value'];
+            }
         }
         return $returndata;
     }
