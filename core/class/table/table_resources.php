@@ -278,6 +278,8 @@ class table_resources extends dzz_table {
         if ($status == 1) {
             //刪除属性表数据
             C::t('resources_attr')->delete_by_rid($rid);
+            //删除元数据表数据
+            C::t('resources_meta')->delete_by_rid($rid);
             //删除事件表数据
             C::t('resources_event')->delete_by_rid($rid);
             //删除标签表数据
