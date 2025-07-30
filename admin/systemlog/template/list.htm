@@ -21,7 +21,7 @@
                 <div class="card-search mb-2-5">
                     <div class="row">
                         <div class="col-sm-4">
-                            <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="关键词">
+                            <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="关键词" value="$_GET['keyword']">
                         </div>
                         <div class="col-md-4">
                             <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
@@ -45,16 +45,15 @@
 </main>
 <script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script>
-    var operation = '{$_GET['
-    operation
-    ']}';
+    var operation = '{$_GET['operation']}';
+    var keyword = $('#keyword').val();
     layui.use('table', function () {
         var table = layui.table;
         table.render({
             elem: '#table',
             url: '{MOD_URL}&do=getinfo',
             toolbar: '#toolbar',
-            where: {operation: operation},
+            where: {operation: operation,keyword: keyword},
             title: '系统日志数据表格',
             even:true,
             cellMinWidth:120,
@@ -164,11 +163,10 @@
 
         // 搜索按钮功能
         $(document).on('click', '#search-btn', function () {
-            // 获取搜索关键词
-            var keyword = $('#keyword').val();
             // 刷新表格并传递搜索参数
+            keyword = $('#keyword').val();
             table.reloadData('table', {
-                where: {keyword: keyword},
+                where: {operation: operation,keyword: keyword},
                 page: {
                     curr: 1 //重新从第 1 页开始
                 }
