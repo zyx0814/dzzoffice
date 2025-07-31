@@ -36,8 +36,10 @@ if ($do == 'saveIndex') {
                     $newappids[] = $appid;
                 }
             }
-            if ($newappids) C::t('app_user')->insert_by_uid($_G['uid'], $newappids);
-            C::t('user_field')->update($_G['uid'], array('applist' => implode(',', $applist)));
+            if ($newappids) {
+                C::t('app_user')->insert_by_uid($_G['uid'], $newappids);
+                C::t('user_field')->update($_G['uid'], array('applist' => implode(',', $applist)));
+            }
         }
     }
     $userstatus = C::t('user_status')->fetch($_G['uid']);
