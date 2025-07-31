@@ -117,7 +117,7 @@
                     break;
                 case 'get':
                     table.reloadData('table', {
-                        where: {operation: operation}, // 清空搜索参数
+                        where: {operation: operation,keyword:$('#keyword').val()}, // 清空搜索参数
                         page: {
                             curr: 1 //重新从第 1 页开始
                         }
