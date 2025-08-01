@@ -71,6 +71,7 @@ if ($do == 'filelist') {
                     "creater" => C::t('organization_admin')->fetch_group_creater($v['orgid']),
                     "maxspacesize" => $v['maxspacesize'],
                     "diron" => $v['diron'] ? 1 : 0,
+                    "desc" => $v['desc'],
                     "dateline" => dgmdate($v['dateline'], 'Y-m-d H:i:s'),
                 ];
             }

@@ -41,50 +41,55 @@ if ($ext == 'dzz' || ($ext && in_array($ext, $_G['setting']['unRunExts']))) {//�
 @header('Content-Disposition: inline; filename="' . $filename . '"');
 @header('cache-control:public');
 @header('Content-Type: ' . $mime);
-
-// 获取文件大小
-$filesize = filesize($url);
-$start = 0;
-$end = $filesize - 1;
-$length = $filesize;
-
-// 检查是否收到 Range 请求
-$isRangeRequest = false;
-if (isset($_SERVER['HTTP_RANGE'])) {
-    // 解析 Range 头，例如 "bytes=0-999"
-    if (preg_match('/bytes=(\d+)-(\d+)?/', $_SERVER['HTTP_RANGE'], $matches)) {
-        $start = intval($matches[1]);
-        $end = isset($matches[2]) ? intval($matches[2]) : $filesize - 1;
-        $length = $end - $start + 1;
-
-        // 返回 206 Partial Content 状态码
-        header('HTTP/1.1 206 Partial Content');
-        header("Content-Range: bytes $start-$end/$filesize");
-        $isRangeRequest = true;
-    }
-}
-
 @header('Accept-Ranges: bytes');
-@header('Content-Length: ' . $length);
+if (is_file($url)) {
+    $start = 0;
+    $total = filesize($url);
+    if (isset($_SERVER['HTTP_RANGE'])) {
+        $range = str_replace('=', '-', $_SERVER['HTTP_RANGE']);
+        $range = explode('-', $range);
+        if (isset($range[2]) && intval($range[2]) > 0) {
+            $end = trim($range[2]);
+        } else {
+            $end = $total - 1;
+        }
+        $start = trim($range[1]);
+        $size = $end - $start + 1;
 
-$fp = @fopen($url, 'rb');
-if ($fp) {
+        header('HTTP/1.1 206 Partial Content');
+        header('Content-Length:' . $size);
+        header('Content-Range: bytes ' . $start . '-' . $end . '/' . $total);
+
+    } else {
+        $size = $end = $total;
+        header('HTTP/1.1 200 OK');
+        header('Content-Length:' . $size);
+        header('Content-Range: bytes 0-' . ($total - 1) . '/' . $total);
+    }
+    $fp = @fopen($url, 'rb');
+    if (!$fp) {
+        @header('HTTP/1.1 404 Not Found');
+        @header('Status: 404 Not Found');
+        exit('Access Denied');
+    } else {
+        @ob_end_clean();
+        if (getglobal('gzipcompress')) @ob_start('ob_gzhandler');
+        fseek($fp, $start, 0);
+        $cur = $start;
+
+        while (!feof($fp) && $cur <= $end && (connection_status() == 0)) {
+            print fread($fp, min(1024 * 16, ($end - $cur) + 1));
+            $cur += 1024 * 16;
+        }
+
+        fclose($fp);
+        exit();
+    }
+} else {
     @ob_end_clean();
     if (getglobal('gzipcompress')) @ob_start('ob_gzhandler');
-
-    fseek($fp, $start);
-
-    $bufferSize = 8192; // 8KB缓冲区
-    $remaining = $length;
-
-    while (!feof($fp) && $remaining > 0) {
-        $readSize = min($bufferSize, $remaining);
-        echo fread($fp, $readSize);
-        $remaining -= $readSize;
-        @flush();
-        @ob_flush();
-    }
-
-    fclose($fp);
+    @readfile($url);
+    @flush();
+    @ob_flush();
+    exit();
 }
-exit();

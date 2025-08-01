@@ -138,22 +138,33 @@
         <!--{/if}-->
         <!--{/loop}--> 
         <!--{if in_array('timeoffset', $allowitems)}-->
-          <div class="row mb-3">
-              <label class="col-sm-2" for="timeoffset">{lang time_zone}</label>
-              <div class="col-md-4">
-                  <!--{eval $timeoffset = array({lang timezone});}-->
-                  <select name="timeoffset" class="form-select" id="timeoffset">
-                      <!--{loop $timeoffset $key $desc}-->
-                      <option value="$key" {if $key==$space[timeoffset]} selected="selected" {/if}>$desc</option>
-                      <!--{/loop}-->
-                  </select>
-                  <p class="mt10">{lang current_time} :
-                      <!--{date($_G['timestamp'])}-->
-                  </p>
-                  <p class="gray form-text">{lang time_zone_state}</p>
-              </div>
-          </div>
-          <!--{/if}-->
+        <div class="row mb-3">
+            <label class="col-sm-2" for="timeoffset">{lang time_zone}</label>
+            <div class="col-md-4">
+                <!--{eval $timeoffset = array({lang timezone});}-->
+                <select name="timeoffset" class="form-select" id="timeoffset">
+                    <!--{loop $timeoffset $key $desc}-->
+                    <option value="$key" {if $key==$space[timeoffset]} selected="selected" {/if}>$desc</option>
+                    <!--{/loop}-->
+                </select>
+                <p class="mt10">{lang current_time} :
+                    <!--{date($_G['timestamp'])}-->
+                </p>
+                <span class="gray form-text">{lang time_zone_state}</span>
+            </div>
+        </div>
+        <!--{/if}-->
+        <div class="row mb-3">
+            <label class="col-sm-2" for="language">{lang language}</label>
+            <div class="col-md-4">
+                <select name="language" class="form-select" id="language">
+                    <option value="" <!--{if $space[language] == ''}-->selected="selected"<!--{/if}-->>{lang language_auto}</option>
+                    <!--{loop $langList $key $value}-->
+                    <option value="$key" <!--{if $space[language] == $key}-->selected="selected"<!--{/if}--> /> $value</option>
+                    <!--{/loop}-->
+                </select>
+            </div>
+        </div>
         <!--{if !$vid || $showbtn}-->
         <dl class="mb-3 d-grid">
              <input type="submit" class="btn btn-primary btn-round bodyloading" <!--{if $vid}-->value="{lang submit_audit}"<!--{else}-->value="{lang save}"<!--{/if}-->>

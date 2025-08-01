@@ -39,7 +39,9 @@ class table_user extends dzz_table {
         }
         $setarr = array(
             'username' => addslashes($userArr['username']),
+            'nickname'=>addslashes($userArr['nickname']),
             'email' => isset($userArr['email']) ? $userArr['email'] : '',
+            'phone' => isset($userArr['phone']) ? $userArr['phone'] : '',
             'salt' => $salt,
             'password' => md5(md5($userArr['password']) . $salt),
             'regdate' => TIMESTAMP,

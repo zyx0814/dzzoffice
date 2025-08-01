@@ -187,8 +187,10 @@ class dzz_app extends dzz_base {
             $host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
         }
         $_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.trim($host,'/').$sitepath.'/');
+
         $url = parse_url($_G['siteurl']);
         $_G['siteroot'] = isset($url['path']) ? $url['path'] : '';
+        $_G['siteport'] = $port;
 
         if (defined('SUB_DIR')) {
             $_G['siteurl'] = str_replace(SUB_DIR, '/', $_G['siteurl']);
@@ -611,7 +613,6 @@ class dzz_app extends dzz_base {
     }
 
     private function _init_setting() {
-        global $_G;
         if ($this->init_setting) {
             if (empty($this->var['setting'])) {
                 $this->cachelist[] = 'setting';

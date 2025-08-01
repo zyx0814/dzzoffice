@@ -860,6 +860,20 @@ CREATE TABLE `dzz_resources_event` (
   KEY `dateline` (`dateline`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件事件表';
 
+DROP TABLE IF EXISTS `dzz_resources_meta`;
+CREATE TABLE `dzz_resources_meta` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `rid` char(32) NOT NULL DEFAULT '' COMMENT '文件唯一标识',
+  `key` varchar(255) NOT NULL COMMENT '存储key',
+  `value` text NOT NULL COMMENT '对应值',
+  `dateline` int(11) unsigned NOT NULL COMMENT '创建时间',
+  `editdateline` int(11) unsigned NOT NULL COMMENT '最后修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `rid_key` (`rid`,`key`(200)),
+  KEY `rid` (`rid`),
+  KEY `key` (`key`(200))
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件扩展表';
+
 DROP TABLE IF EXISTS `dzz_resources_path`;
 CREATE TABLE `dzz_resources_path` (
   `fid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '文件夹id',

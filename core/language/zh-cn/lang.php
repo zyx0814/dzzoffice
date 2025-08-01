@@ -1610,6 +1610,10 @@ $_G[siteurl]',
     'cloud_no_available' => '云盘已关闭',
     'cloud_no_info' => '云盘信息不存在',
     'panel_notice_title' => '通知中心',
+    'supportted' => '支持',
+    'unsupportted' => '不支持',
+    'am' => '上午',
+    'pm' => '下午',
 );
 
 ?>

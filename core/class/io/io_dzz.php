@@ -99,6 +99,7 @@ class io_dzz extends io_api {
         if (!$arr = C::t('resources')->rename_by_rid($rid, $text)) {
             return array('error' => 'Not modified!');
         }
+        if($arr['error']) return array('error' => $arr['error']);
         $icoarr['name'] = $text;
         return $icoarr;
     }

@@ -315,13 +315,13 @@
             layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
             $.post(MOD_URL+'&op=ajax&operation=deletethisversion', {'rid':rid,'vid': vid}, function (json) {
                 if(json.msg=='success'){
-                    layer.msg(__lang.delete_success, {offset:'10px',time:0});
+                    layer.msg(__lang.delete_success, {offset:'10px'});
                     $(obj).closest('.version_menu').remove();
                 }else{
                     layer.alert(json.error, {skin:'lyear-skin-danger'});
                 }
             },'json').fail(function (jqXHR, textStatus, errorThrown) {
-                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                layer.msg('操作失败，请稍后再试: ' + textStatus, {offset:'10px'});
             });
         });
         return false;
