@@ -1013,7 +1013,7 @@ class io_ftp extends io_api {
                 $target = $this->getCache(md5($path . '/' . $filename));
             }
 
-            if (!file_put_contents($_G['setting']['attachdir'] . $target, $fileContent, FILE_APPEND)) {
+            if (file_put_contents($_G['setting']['attachdir'] . $target, $fileContent, FILE_APPEND) === false) {
                 return array('error' => lang('cache_file_error1'));
             }
             if (!$partinfo['iscomplete']) return true;

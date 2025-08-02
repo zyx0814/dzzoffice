@@ -2512,14 +2512,14 @@ function getTxtAttachByMd5($message, $filename_title, $ext) {
 
     if (is_resource($message)) {
         while (!feof($message)) {
-            if (!file_put_contents($_G['setting']['attachdir'] . $target . $filename . '.' . ($unrun ? 'dzz' : $ext), fread($message, 8192), FILE_APPEND)) {
+            if (file_put_contents($_G['setting']['attachdir'] . $target . $filename . '.' . ($unrun ? 'dzz' : $ext), fread($message, 8192), FILE_APPEND) === false) {
                 return false;
             }
         }
         fclose($message);
     } else {
         if ($message == '') $message = ' ';
-        if (!file_put_contents($_G['setting']['attachdir'] . $target . $filename . '.' . ($unrun ? 'dzz' : $ext), $message)) {
+        if (file_put_contents($_G['setting']['attachdir'] . $target . $filename . '.' . ($unrun ? 'dzz' : $ext), $message) === false) {
             return false;
         }
     }
