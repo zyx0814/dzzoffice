@@ -742,6 +742,10 @@
         getUEBasePath: getUEBasePath
     };
 })();
+/**
+ * 百度编辑器工具栏模式
+ * 包括mini, simple, full
+ */
 UEDITOR_CONFIG.mode = {
     mini: [
         ['emotion','bold', 'italic', 'underline', 'strikethrough', '|',

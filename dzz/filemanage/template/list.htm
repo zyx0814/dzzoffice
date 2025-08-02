@@ -26,11 +26,11 @@
 	<div class="container-fluid">
 		<div class="card">
 			<div class="card-body">
-				<div class="btn-group" id="breadcrumb"><a href="javascript:;" class="btn btn-primary fid-btn">{lang all_typename_attach}</a></div>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-body">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb" id="breadcrumb">
+						<li class="breadcrumb-item"><a href="javascript:;" class="fid-btn" data-fid="">{lang all_typename_attach}</a></li>
+					</ol>
+				</nav>
 				<div class="card-search mb-2-5">
 					  <div class="row">
 						<div class="col-md-4">
@@ -79,6 +79,7 @@
 <script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script>
 	var type = '';
+	var pfid = '';
 	layui.use('table', function(){
 	  var table = layui.table;
 	  table.render({
@@ -120,6 +121,11 @@
 		initSort: {
 			field: 'dateline', // 默认排序字段
 			type: 'desc' // 默认排序方式
+		},
+		done: function(res, curr, count) {
+			if(res.breadcrumb) {
+				$('#breadcrumb').html(res.breadcrumb);
+			}
 		}
 	  });
 	  //头工具栏事件
@@ -217,7 +223,7 @@
 				break;
 				case 'get':
 				table.reloadData('table', {
-					where: {type: type},
+					where: {type: type,keyword:$('#keyword').val(),orgid:$('#sel_orgid_{$org['orgid']}').val(),pfid: pfid},
 					page: {
 						curr: 1
 					}
@@ -233,15 +239,11 @@
 		} else if(obj.event === 'view'){
 			if (obj.data.ftype == 'folder') {
 				// 刷新表格并传递搜索参数
+				pfid = obj.data.oid;
 				table.reloadData('table', {
-					where: {pfid: obj.data.oid},
+					where: {type: type,pfid: pfid},
 					page: {
 						curr: 1
-					},
-					done: function(res, curr, count) {
-						if(res.breadcrumb) {
-							$('#breadcrumb').html(res.breadcrumb);
-						}
 					}
 				});
 			} else {
@@ -321,20 +323,20 @@
 		}
 		// 搜索按钮功能
 		$(document).on('click', '#search-btn', function() {
-		// 获取搜索关键词
-		var keyword = $('#keyword').val();
-		// 刷新表格并传递搜索参数
-		table.reloadData('table', {
-		  where: { keyword: keyword,orgid:$('#sel_orgid_{$org['orgid']}').val() },
-		  page: {
-			curr: 1 //重新从第 1 页开始
-		  }
-		});
-	  });
-	  var pfid = '';
-		$(document).on('click', '.fid-btn', function() {
+			// 获取搜索关键词
+			var keyword = $('#keyword').val();
+			// 刷新表格并传递搜索参数
 			table.reloadData('table', {
-				where: {pfid:pfid}, // 清空搜索参数
+				where: { keyword: keyword,orgid:$('#sel_orgid_{$org['orgid']}').val()},
+				page: {
+					curr: 1 //重新从第 1 页开始
+				}
+			});
+		});
+		$(document).on('click', '.fid-btn', function() {
+			var fid = $(this).data('fid');
+			table.reloadData('table', {
+				where: {type: type,pfid:fid}, // 清空搜索参数
 				page: {
 					curr: 1 //重新从第 1 页开始
 				}
@@ -362,10 +364,10 @@
 		// 为当前点击的按钮添加 active 类
 		$(this).addClass('active');
 		// 获取当前的 type 值
-		operation = $(this).data('operation');
 		type = $(this).data('type');
 		$('#keyword').val('');
-		// 刷新表格并传递 operation 参数
+		$('#sel_orgid_{$org['orgid']}').val('');
+		$('#orgid_{$org['orgid']}_Menu').text('$org[depart]');
 		table.reloadData('table', {
 		  where: {type: type},
 		  page: {

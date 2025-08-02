@@ -45,6 +45,7 @@ if ($_GET['from']) {
         }
         $time = $_G['timestamp'];
         dheader('Location: ' . $_G['siteurl'] . basename($refererarr['path']) . '?action=upgrade&operation=' . $operation . '&version=' . $version . '&release=' . $release . '&ungetfrom=' . $time . '&ungetfrommd5=' . md5($time . $_G['config']['security']['authkey']));
+        exit();
     }
 }
 if (empty($_GET['step'])) $_GET['step'] = 'start';
@@ -403,7 +404,6 @@ if ($_GET['step'] == 'start') {
 
 
 } elseif ($_GET['step'] == 'cache') {
-
     if (@$fp = fopen($lockfile, 'w')) {
         fwrite($fp, ' ');
         fclose($fp);

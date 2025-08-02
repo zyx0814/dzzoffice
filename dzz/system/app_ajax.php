@@ -39,8 +39,10 @@ if ($operation == 'app') {
                         $newappids[] = $appid;
                     }
                 }
-                if ($newappids) C::t('app_user')->insert_by_uid($_G['uid'], $newappids);
-                C::t('user_field')->update($_G['uid'], array('applist' => implode(',', $applist)));
+                if ($newappids) {
+                    C::t('app_user')->insert_by_uid($_G['uid'], $newappids);
+                    C::t('user_field')->update($_G['uid'], array('applist' => implode(',', $applist)));
+                }
             }
         }
 

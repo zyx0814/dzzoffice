@@ -58,8 +58,18 @@ class Systemlog {
                 } else {
                     $username = $_G['username'];
                 }
+                $source_type = 'unknown';
+                if (php_sapi_name() === 'cli') {
+                    $source_type = 'CLI'; // 命令行执行（如计划任务）
+                } elseif (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                    $source_type = 'AJAX'; // AJAX异步请求
+                } elseif (!empty($_G['inajax'])) {
+                    $source_type = 'DZZ_AJAX'; // 系统内AJAX
+                } else {
+                    $source_type = 'Web'; // 普通Web请求
+                }
                 foreach ($log as $tmp) {
-                    $tmp = implode("\t", clearlogstring(array($_G['timestamp'], $username, $_G['groupid'], $_G['clientip'], $tmp, $cur_url, $from_url, $_SERVER['HTTP_USER_AGENT'], "uid=" . $_G['uid'])));
+                    $tmp = implode("\t", clearlogstring(array($_G['timestamp'], $username, $_G['groupid'], $_G['clientip'], $tmp, $cur_url, $from_url, $_SERVER['HTTP_USER_AGENT'] ?? 'none', "uid=" . $_G['uid'], $source_type)));
                     fwrite($fp, "<?PHP exit;?>\t" . str_replace(array('<?', '?>'), '', $tmp) . "\n");
                 }
                 fclose($fp);

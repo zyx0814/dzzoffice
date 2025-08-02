@@ -547,13 +547,13 @@ class image {
 			} elseif($this->param['watermarktype'][$type] == 'text') {
 				if(($this->param['watermarktext']['shadowx'][$type] || $this->param['watermarktext']['shadowy'][$type]) && $this->param['watermarktext']['shadowcolor'][$type]) {
 					$shadowcolorrgb = explode(',', $this->param['watermarktext']['shadowcolor'][$type]);
-					$shadowcolor = imagecolorallocate($dst_photo, $shadowcolorrgb[0], $shadowcolorrgb[1], $shadowcolorrgb[2]);
-					imagettftext($dst_photo, $this->param['watermarktext']['size'][$type], $this->param['watermarktext']['angle'][$type], $x + $ax + $this->param['watermarktext']['shadowx'][$type], $y + $ay + $this->param['watermarktext']['shadowy'][$type], $shadowcolor, $this->param['watermarktext']['fontpath'][$type], $watermarktextcvt);
+					$shadowcolor = imagecolorallocate($dst_photo, intval($shadowcolorrgb[0]), intval($shadowcolorrgb[1]), intval($shadowcolorrgb[2]));
+					imagettftext($dst_photo, floatval($this->param['watermarktext']['size'][$type]), $this->param['watermarktext']['angle'][$type], $x + $ax + $this->param['watermarktext']['shadowx'][$type], $y + $ay + $this->param['watermarktext']['shadowy'][$type], $shadowcolor, $this->param['watermarktext']['fontpath'][$type], $watermarktextcvt);
 				}
 
 				$colorrgb = explode(',', $this->param['watermarktext']['color'][$type]);
-				$color = imagecolorallocate($dst_photo, $colorrgb[0], $colorrgb[1], $colorrgb[2]);
-				imagettftext($dst_photo, $this->param['watermarktext']['size'][$type], $this->param['watermarktext']['angle'][$type], $x + $ax, $y + $ay, $color, $this->param['watermarktext']['fontpath'][$type], $watermarktextcvt);
+				$color = imagecolorallocate($dst_photo, intval($colorrgb[0]), intval($colorrgb[1]), intval($colorrgb[2]));
+				imagettftext($dst_photo, floatval($this->param['watermarktext']['size'][$type]), $this->param['watermarktext']['angle'][$type], $x + $ax, $y + $ay, $color, $this->param['watermarktext']['fontpath'][$type], $watermarktextcvt);
 			} else {
 				imageAlphaBlending($watermark_logo, true);
 				imageCopyMerge($dst_photo, $watermark_logo, $x, $y, 0, 0, $logo_w, $logo_h, $this->param['watermarktrans'][$type]);

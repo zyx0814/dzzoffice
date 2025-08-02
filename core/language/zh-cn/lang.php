@@ -1488,6 +1488,7 @@ $_G[siteurl]',
     'loginfo' => '日志信息',
     'visit' => '访问页面',
     'from' => '来源页面',
+    'source_type' => '操作类型',
     'Equipment information' => '设备信息',
     'ip' => 'IP 地址',
 
