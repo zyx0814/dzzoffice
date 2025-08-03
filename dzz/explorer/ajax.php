@@ -186,6 +186,7 @@ if ($operation == 'upload') {//上传图片文件
                 $perm += 1;
             }
         }
+        if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
         if ($arr = IO::CreateFolder($fid, $fname, $perm)) {
             if ($arr['error']) {
             } else {

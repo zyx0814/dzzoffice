@@ -813,6 +813,9 @@ class io_disk extends io_api {
     //$container：目标容器
     //$bz：api;
     public function CreateFolder($path, $fname) {
+        if (!$fname) {
+            return array('error' => lang('directory_name_can_not_empty'));
+        }
         global $_G;
         $fname = IO::name_filter($fname);
         $path = $path . '/' . $fname;

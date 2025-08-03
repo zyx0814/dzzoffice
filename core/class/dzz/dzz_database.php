@@ -52,9 +52,13 @@ class dzz_database {
 
         $cmd = $replace ? 'REPLACE INTO' : 'INSERT INTO';
 
-        $table = self::table($table);
+        $sql = "$cmd " . self::table($table) . " SET $sql";
+        // $exclude_tables = array('session','admincp_session','cache');
+        // if(!in_array($table, $exclude_tables)) {
+        //     writelog('updatelog', $sql);
+        // }
         $silent = $silent ? 'SILENT' : '';
-        return self::query("$cmd $table SET $sql", null, $silent, !$return_insert_id);
+        return self::query($sql, null, $silent, !$return_insert_id);
     }
 
     public static function update($table, $data, $condition = '', $unbuffered = false, $low_priority = false) {
@@ -63,7 +67,6 @@ class dzz_database {
             return false;
         }
         $cmd = "UPDATE " . ($low_priority ? 'LOW_PRIORITY' : '');
-        $table = self::table($table);
         $where = '';
         if (empty($condition)) {
             $where = '1';
@@ -72,7 +75,8 @@ class dzz_database {
         } else {
             $where = $condition;
         }
-        $res = self::query("$cmd $table SET $sql WHERE $where", $unbuffered ? 'UNBUFFERED' : '');
+        $sql = "$cmd " . self::table($table) . " SET $sql WHERE $where";
+        $res = self::query($sql, $unbuffered ? 'UNBUFFERED' : '');
         return $res;
     }
 

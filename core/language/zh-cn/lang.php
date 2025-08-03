@@ -1615,6 +1615,8 @@ $_G[siteurl]',
     'unsupportted' => '不支持',
     'am' => '上午',
     'pm' => '下午',
+    'directory_name_can_not_empty' => '目录名称不能为空',
+    'no_target_folderID' => '没有目标文件夹ID',
 );
 
 ?>

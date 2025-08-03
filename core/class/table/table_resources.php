@@ -367,6 +367,8 @@ class table_resources extends dzz_table {
         global $_G;
         $cachekey = 'resourcesdata_' . $rid;
         if ($data = $this->fetch_cache($cachekey)) {
+            $data['preview'] = $preview;
+            $data['sid'] = $sid;
             return $data;
         }
         $data = array();

@@ -55,7 +55,8 @@ if ($operation == 'upload') {//上传图片文件
     exit();
 } elseif ($operation == 'newFolder') {//新建文件夹
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
-    $folderinfo = C::t('folder')->fetch($fid);
+    if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
+    //$folderinfo = C::t('folder')->fetch($fid);
     /*if ($folderinfo['gid'] && C::t('organization_admin')->chk_memberperm($folderinfo['gid'])) {
         $inheritperm = DB::result_first("select perm from %t where fid = %d",array('folder',$fid));
     }*/

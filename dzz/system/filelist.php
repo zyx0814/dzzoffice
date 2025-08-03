@@ -240,6 +240,7 @@ if ($do == 'get_children') {
     exit(json_encode($arr));
 } elseif ($do == 'creatnewfolder') {
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
+    if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
     $fname = isset($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
     if ($arr = IO::CreateFolder($fid, $fname, $perm)) {
         if ($arr['error']) {

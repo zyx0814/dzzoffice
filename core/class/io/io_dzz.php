@@ -518,7 +518,6 @@ class io_dzz extends io_api {
             $attachment = preg_replace('/^TMP::/i', '', $icoid);
             $pathinfo = pathinfo($file);
             return array('icoid' => md5($icoid),
-
                 'name' => $pathinfo['basename'],
                 'ext' => $pathinfo['extension'],
                 'size' => filesize($file),
@@ -526,7 +525,6 @@ class io_dzz extends io_api {
                 'dpath' => dzzencode($icoid),
                 'url' => '',
                 'bz' => ''
-
             );
         } elseif (preg_match('/^dzz:[gu]id_\d+:.+?/i', $icoid)) {
             $dir = dirname($icoid) . '/';
@@ -942,6 +940,9 @@ class io_dzz extends io_api {
 
     //创建目录
     public function CreateFolder($pfid, $fname, $perm = 0, $params = array(), $ondup = 'newcopy', $force = false) {
+        if (!$fname) {
+            return array('error' => lang('directory_name_can_not_empty'));
+        }
         global $_G, $_GET;
         $folderparams = array('innav', 'fsperm', 'disp', 'iconview', 'display', 'flag', 'default', 'perm');
         if ($pfid == 0) {

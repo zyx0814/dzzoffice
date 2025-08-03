@@ -105,6 +105,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
         if ($bz) {
             $fid = $bz;
         }
+        if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
         $fname = IO::name_filter(getstr($name, 80));
         if ($arr = IO::CreateFolder($fid, $fname, 0, array(), 'newcopy', true)) {
             if ($arr['error']) {
