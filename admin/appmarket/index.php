@@ -99,7 +99,7 @@ if ($do == 'notinstall') {
     $group = intval($_GET['group']);
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
     $perpage = 20;
-    $gets = array('mod' => 'appmarket', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group);
+    $gets = array('mod' => 'appmarket', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group,'do' => $do);
     $theurl = BASESCRIPT . "?" . url_implode($gets);
     $refer = urlencode($theurl . '&page=' . $page);
 
@@ -116,6 +116,8 @@ if ($do == 'notinstall') {
     }
     if ($do == 'available') {
         $string .= " and available<1";
+    } elseif ($do == 'enable') {
+        $string .= " and available>0";
     }
     if ($tagid) {
         $appids = C::t('app_relative')->fetch_appids_by_tagid($tagid);
