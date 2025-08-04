@@ -46,10 +46,7 @@ class dzz_admincp {
         $this->sessionlimit = TIMESTAMP - $this->sessionlife;
 
         $this->check_cpaccess();
-        if ($_GET['mod'] != "systemlog") {
-            $this->writecplog();
-        }
-
+        $this->writecplog();
     }
 
     function writecplog() {
