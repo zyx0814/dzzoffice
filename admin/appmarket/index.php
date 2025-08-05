@@ -160,7 +160,6 @@ function processAppXml($xmlContent, $identifier, &$list, $identifiers) {
         $value = $apparray['app'] ?? [];
         
         if (!empty($value['appname'])) {
-            // 使用PHP内置函数替代dhtmlspecialchars
             $value['appurl'] = replace_canshu($value['appurl']);
             $value['appadminurl'] = replace_canshu($value['appadminurl']);
             $value['appname'] = dhtmlspecialchars($value['appname']);

@@ -298,7 +298,7 @@ if ($do == 'deleteIco') {//删除文件到回收站
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $vname = isset($_GET['vname']) ? getstr($_GET['vname']) : '';
     if (!$vname) exit(json_encode(array('error' => lang('explorer_do_failed'))));
-    $vdesc = isset($_GET['vdesc']) ? substr(trim($_GET['vdesc']), 0, 120) : '';
+    $vdesc = isset($_GET['vdesc']) ? dhtmlspecialchars(substr(trim($_GET['vdesc']), 0, 120)) : '';
     $return = array();
     if ($vid) {
         $return = C::t('resources_version')->update_versionname_by_vid($vid, $vname, $vdesc);

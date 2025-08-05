@@ -591,7 +591,7 @@ if ($operation == 'upload') {//上传图片文件
     }
     if (isset($_GET['editcatsearch'])) {
         $id = $_GET['editcatsearch'];
-        $arr = $_GET['arr'];
+        $arr = dhtmlspecialchars($_GET['arr']);
         if (!$arr['catname'] || preg_match('/^\s*$/', $arr['catname'])) {
             exit(json_encode(array('error' => true, 'msg' => lang('name_is_must'))));
         }
