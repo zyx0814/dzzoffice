@@ -14,7 +14,7 @@
   <li>
     <span class="dropdown-item-text text-muted fw-bold">{lang type}</span>
     <!--{if $explorer_setting['allownewcat']}-->
-    <button type="button" class="groupbutton dcolor" onclick="showWindow('addsearchcat','{MOD_URL}&op=ajax&operation=addsearchcat','get',0)" ><span class="mdi mdi-plus-circle"></span></button>
+    <button type="button" class="groupbutton dcolor" title="添加类型" onclick="showWindow('addsearchcat','{MOD_URL}&op=ajax&operation=addsearchcat','get',0)" ><span class="mdi mdi-plus-circle"></span></button>
     <!--{/if}-->
 </li>
   <!--{loop $catsearch $v}-->
@@ -61,12 +61,12 @@
 </ul>
 <div id="template_newGroupButton" style="display:none"> 
   <!--{if $explorer_setting['allownewgroup']}-->
-  <button type="button" class="groupbutton dcolor" onclick="showWindow('newGroup','{MOD_URL}&op=ajax&operation=addgroup')"><span class="mdi mdi-plus-circle"></span></button>
+  <button type="button" class="groupbutton dcolor" title="添加群组" onclick="showWindow('newGroup','{MOD_URL}&op=ajax&operation=addgroup')"><span class="mdi mdi-plus-circle"></span></button>
   <!--{/if}--> 
 </div>
 <div id="template_newcloudButton" style="display:none"> 
   <!--{if $_G['adminid'] == 1}-->
-  <a type="button" class="groupbutton dcolor" href="{ADMINSCRIPT}?mod=cloud&op=spaceadd" target="_blank"><span class="mdi mdi-plus-circle"></span></a>
+  <a type="button" class="groupbutton dcolor" title="添加系统的网络挂载" href="{ADMINSCRIPT}?mod=cloud&op=spaceadd" target="_blank"><span class="mdi mdi-plus-circle"></span></a>
   <!--{/if}--> 
 </div>
 <script type="text/javascript">

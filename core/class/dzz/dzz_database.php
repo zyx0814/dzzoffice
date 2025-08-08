@@ -9,6 +9,7 @@ class dzz_database {
     public static $db;
 
     public static $driver;
+    protected static $excludeTables = ['session', 'admincp_session', 'cache'];
 
     public static function init($driver, $config) {
         self::$driver = $driver;
@@ -43,6 +44,7 @@ class dzz_database {
         }
         $limit = dintval($limit);
         $sql = "DELETE FROM " . self::table($table) . " WHERE $where " . ($limit > 0 ? "LIMIT $limit" : '');
+        self::logsql($table, $sql, 'deletelog');
         return self::query($sql, ($unbuffered ? 'UNBUFFERED' : ''));
     }
 
@@ -53,10 +55,7 @@ class dzz_database {
         $cmd = $replace ? 'REPLACE INTO' : 'INSERT INTO';
 
         $sql = "$cmd " . self::table($table) . " SET $sql";
-        // $exclude_tables = array('session','admincp_session','cache');
-        // if(!in_array($table, $exclude_tables)) {
-        //     writelog('updatelog', $sql);
-        // }
+        self::logsql($table, $sql, 'updatelog');
         $silent = $silent ? 'SILENT' : '';
         return self::query($sql, null, $silent, !$return_insert_id);
     }
@@ -76,6 +75,7 @@ class dzz_database {
             $where = $condition;
         }
         $sql = "$cmd " . self::table($table) . " SET $sql WHERE $where";
+        self::logsql($table, $sql, 'updatelog');
         $res = self::query($sql, $unbuffered ? 'UNBUFFERED' : '');
         return $res;
     }
@@ -102,7 +102,6 @@ class dzz_database {
     }
 
     public static function fetch_all($sql, $arg = array(), $keyfield = '', $silent = false) {
-
         $data = array();
         $query = self::query($sql, $arg, $silent, false);
         while ($row = self::$db->fetch_array($query)) {
@@ -179,7 +178,6 @@ class dzz_database {
     }
 
     public static function quote($str, $noarray = false) {
-
         if (is_string($str))
             return '\'' . addcslashes($str, "\n\r\\'\"\032") . '\'';
 
@@ -342,6 +340,42 @@ class dzz_database {
             $ret .= substr($sql, $i);
         }
         return $ret;
+    }
+
+    protected static function logsql($table, $sql, $type) {
+        // 检查排除表
+        if (in_array($table, self::$excludeTables)) {
+            return;
+        }
+        static $config = null;
+        if ($config === null) {
+            global $_config;
+            $config = $_config['sqllog'] ?? 0;
+        }
+        
+        // 检查是否启用日志
+        if (empty($config)) {
+            return;
+        }
+
+        if ($config == 2) {
+            $backtrace = debug_backtrace();
+            krsort($backtrace);
+            $call_chain = [];
+            foreach ($backtrace as $error) {
+                $file = str_replace(DZZ_ROOT, '', $error['file']);
+                $func = isset($error['class']) ? $error['class'] : '';
+                $func .= isset($error['type']) ? $error['type'] : '';
+                $func .= isset($error['function']) ? $error['function'] : '';
+                $line = sprintf('%04d', $error['line']);
+                $call_chain[] = "[file: {$file}]#{$func}:{$line}";
+            }
+
+            $sql .= ' 调用链：';
+            $sql .= implode(' -> ', $call_chain);
+        }
+        writelog($type, $sql);
+        return;
     }
 
 }
