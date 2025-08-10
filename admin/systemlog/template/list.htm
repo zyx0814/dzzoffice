@@ -75,7 +75,6 @@
                 , {field: 'visit', title: '{lang visit}', align: 'right', hide: true, sort: true}
                 , {field: 'from', title: '{lang from}', align: 'right', hide: true, sort: true}
                 , {field: 'info', title: '{lang Equipment information}', align: 'right', hide: true, sort: true}
-                , {field: 'source_type', title: '{lang source_type}', align: 'right', hide: true, sort: true}
                 , {title: '{lang operation}', fixed: 'right', width: 100, align: 'center', toolbar: '#barDemo', fixed: 'right'}
             ]]
         });
@@ -106,7 +105,6 @@
                         template += '<p><strong>{lang info}:</strong> ' + item.loginfo + '</p>';
                         template += '<p><strong>{lang visit}:</strong>' + item.visit + '</p>';
                         template += '<p><strong>{lang from}:</strong><a href="' + item.from + '" target="_blank">' + item.from + '</a></p>';
-                        template += '<p><strong>{lang source_type}:</strong> ' + item.source_type + '</p>';
                         template += '<p><strong>{lang Equipment information}:</strong> ' + item.info + '</p>';
                         template += '</div>';
                         template += '</div>';
@@ -152,7 +150,6 @@
                 '<p><strong>{lang info}:</strong> ' + data.loginfo + '</p>' +
                 '<p><strong>{lang visit}:</strong> ' + data.visit + '</p>' +
                 '<p><strong>{lang from}:</strong> <a href="' + data.from + '" target="_blank">' + data.from + '</a></p>' +
-                '<p><strong>{lang source_type}:</strong> ' + data.source_type + '</p>' +
                 '<p><strong>{lang Equipment information}:</strong> ' + data.info + '</p>' +
                 '</div>';
 

@@ -132,7 +132,6 @@ if ($do == 'getinfo') {
                     "visit" => $log[6] ? $log[6] : "",
                     "from" => $log[7] ? $log[7] : "",
                     "info" => $log[8] ? $log[8] : "",
-                    "source_type" => $log[10] ? $log[10] : "",
                 ];
             }
         }
