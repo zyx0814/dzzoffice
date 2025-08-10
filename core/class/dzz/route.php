@@ -50,8 +50,7 @@ class Route {
                 if (@!file_exists(DZZ_ROOT . ($modfile = './' . CURSCRIPT . '/' . $mod . '/' . $op . EXT)) && @!file_exists(DZZ_ROOT . ($modfile = './' . CURSCRIPT . '/' . $mod . '/' . $mod . EXT))) {
                     //兼容老版
                     if (@!file_exists($modfile = './' . CURSCRIPT . '/' . $mod . EXT)) {
-
-                        showmessage(lang('file_nonexistence', array('modfile' => htmlspecialchars($modfile))));
+                        showmessage(lang('page_not_found'));
                     }
 
                 }

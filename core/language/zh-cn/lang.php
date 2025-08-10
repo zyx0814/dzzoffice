@@ -1619,6 +1619,7 @@ $_G[siteurl]',
     'pm' => '下午',
     'directory_name_can_not_empty' => '目录名称不能为空',
     'no_target_folderID' => '没有目标文件夹ID',
+    'page_not_found' => '很抱歉，但是那个页面看起来已经不存在了。',
 );
 
 ?>

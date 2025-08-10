@@ -102,45 +102,42 @@ if ($do == 'stats') {
     }
     $env_items = array
     (
-        '操作系统' => array('c' => 'PHP_OS', 'r' => '不限制', 'b' => 'Linux'),
-        'PHP 版本' => array('c' => 'PHP_VERSION', 'r' => '7+', 'b' => 'php7+'),
-        'PHP 平台版本' => array('c' => 'PHP_INT_SIZE', 'r' => '32位(32位不支持2G以上文件上传下载)', 'b' => '64位'),
-        '最大上传大小' => array('r' => '不限制', 'b' => '50M'),
-        '最大post大小' => array('r' => '不限制', 'b' => '50M'),
-        '最大内存限制' => array('r' => '不限制', 'b' => '128M'),
-        'GD 库' => array('r' => '1.0', 'b' => '2.0'),
-        '磁盘空间' => array('r' => '50M', 'b' => '10G以上'),
-        'MySQL数据库持续连接' => array('r' => '不限制', 'b' => '不限制'),
-        '域名' => array('r' => '不限制', 'b' => '不限制'),
-        '服务器端口' => array('r' => '不限制', 'b' => '不限制'),
-        '运行环境' => array('r' => '不限制', 'b' => 'nginx'),
-        '网站根目录' => array('r' => '不限制', 'b' => '不限制'),
-        '执行时间限制' => array('r' => '不限制', 'b' => '不限制'),
+        'systemOS' => array('c' => 'PHP_OS', 'r' => '不限制', 'b' => 'Linux'),
+        'php_version' => array('c' => 'PHP_VERSION', 'r' => '7+', 'b' => 'php7.4'),
+        'php_os_version' => array('c' => 'PHP_INT_SIZE', 'r' => '32位(32位不支持2G以上文件上传下载)', 'b' => '64位'),
+        'max_upload_size' => array('r' => '不限制', 'b' => '50M'),
+        'post_max_size' => array('r' => '不限制', 'b' => '50M'),
+        'memory_limit' => array('r' => '不限制', 'b' => '128M'),
+        'gd_version' => array('r' => '1.0', 'b' => '2.0'),
+        'disk_space' => array('r' => '50M', 'b' => '10G以上'),
+        'mysql_allow_persistent' => array('r' => '不限制', 'b' => '不限制'),
+        'SERVER_SOFTWARE' => array('r' => '不限制', 'b' => 'nginx'),
+        'max_execution_time' => array('r' => '不限制', 'b' => '不限制'),
     );
     foreach ($env_items as $key => $item) {
-        if ($key == 'PHP 版本') {
+        if ($key == 'php_version') {
             $env_items[$key]['current'] = PHP_VERSION;
-        } elseif ($key == 'PHP 平台版本') {
+        } elseif ($key == 'php_os_version') {
             $env_items[$key]['current'] = phpBuild64() ? 64 : 32;
-        } elseif ($key == '最大上传大小') {
+        } elseif ($key == 'max_upload_size') {
             $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknownn';
-        } elseif ($key == '最大内存限制') {
+        } elseif ($key == 'memory_limit') {
             $env_items[$key]['current'] = ini_get('memory_limit') ?? 'unknown';
-        } elseif ($key == '最大post大小') {
+        } elseif ($key == 'post_max_size') {
             $env_items[$key]['current'] = ini_get('post_max_size') ?? 'unknown';
         } elseif ($key == 'allow_url_fopen') {
             $env_items[$key]['current'] = @ini_get('allow_url_fopen') ? ini_get('allow_url_fopen') : 'unknown';
-        } elseif ($key == 'GD 库') {
+        } elseif ($key == 'gd_version') {
             $tmp = function_exists('gd_info') ? gd_info() : array();
             $env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
             unset($tmp);
-        } elseif ($key == '磁盘空间') {
+        } elseif ($key == 'disk_space') {
             if (function_exists('disk_free_space')) {
                 $env_items[$key]['current'] = floor(disk_free_space(ROOT_PATH) / (1024 * 1024)) . 'M';
             } else {
                 $env_items[$key]['current'] = 'unknown';
             }
-        } elseif ($key == 'PHP 平台版本') {
+        } elseif ($key == 'php_os_version') {
             if (PHP_INT_SIZE === 4) {
                 $env_items[$key]['current'] = '32位';
             } else if (PHP_INT_SIZE === 8) {
@@ -148,17 +145,11 @@ if ($do == 'stats') {
             } else {
                 $env_items[$key]['current'] = '无法确定架构类型';
             }
-        } elseif ($key == 'MySQL数据库持续连接') {
+        } elseif ($key == 'mysql_allow_persistent') {
             $env_items[$key]['current'] = @get_cfg_var("mysql.allow_persistent") ? "是 " : "否";
-        } elseif ($key == '域名') {
-            $env_items[$key]['current'] = GetHostByName($_SERVER['SERVER_NAME']);
-        } elseif ($key == '服务器端口') {
-            $env_items[$key]['current'] = $_SERVER['SERVER_PORT'];
-        } elseif ($key == '运行环境') {
+        } elseif ($key == 'SERVER_SOFTWARE') {
             $env_items[$key]['current'] = $_SERVER["SERVER_SOFTWARE"];
-        } elseif ($key == '网站根目录') {
-            $env_items[$key]['current'] = $_SERVER["DOCUMENT_ROOT"];
-        } elseif ($key == '执行时间限制') {
+        } elseif ($key == 'max_execution_time') {
             $env_items[$key]['current'] = ini_get('max_execution_time') . '秒';
         } elseif (isset($item['c'])) {
             $env_items[$key]['current'] = constant($item['c']);
@@ -173,9 +164,9 @@ if ($do == 'stats') {
     foreach ($env_items as $key => $item) {
         $status = 1;
         $env_str .= "<tr>\n";
-        $env_str .= "<td>$key</td>\n";
-        $env_str .= "<td>$item[r]</td>\n";
-        $env_str .= "<td>$item[b]</td>\n";
+        $env_str .= "<td>" . lang($key) . "</td>\n";
+        $env_str .= "<td>" . lang($item['r']) . "</td>\n";
+        $env_str .= "<td>" . lang($item['b']) . "</td>\n";
         $env_str .= ($status ? "<td class=\"text-success\"><i class=\"mdi lead mdi-check-circle me-2\"></i>" : "<td class=\"nw text-danger\"><i class=\"mdi lead mdi-close-circle me-2\"></i>") . $item['current'] . "</td>\n";
         $env_str .= "</tr>\n";
     }

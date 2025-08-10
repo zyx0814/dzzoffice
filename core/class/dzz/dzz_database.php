@@ -368,7 +368,7 @@ class dzz_database {
                 $func .= isset($error['type']) ? $error['type'] : '';
                 $func .= isset($error['function']) ? $error['function'] : '';
                 $line = sprintf('%04d', $error['line']);
-                $call_chain[] = "[file: {$file}]#{$func}:{$line}";
+                $call_chain[] = "[file: {$file}] {$func}:{$line}";
             }
 
             $sql .= ' 调用链：';
