@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  dzzoffice:
+    build: docker
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data:/var/www/html/data
+      - ./config:/var/www/html/config
+    restart: always
+    
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: dzzoffice
+      MYSQL_DATABASE: dzzoffice
+      MYSQL_USER: dzzoffice
+      MYSQL_PASSWORD: dzzoffice
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  mysql_data:
