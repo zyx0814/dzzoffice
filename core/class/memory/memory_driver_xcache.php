@@ -5,8 +5,15 @@ if (!defined('IN_DZZ')) {
 }
 
 class memory_driver_xcache {
+    public $cacheName = 'XCache';
+	public $enable;
+    public function env() {
+		return function_exists('xcache_get');
+	}
 
-    public function init($config) {}
+    public function init($config) {
+        $this->enable = $this->env();
+    }
 
     public function get($key) {
         return xcache_get($key);

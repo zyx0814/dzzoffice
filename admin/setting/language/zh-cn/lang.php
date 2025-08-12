@@ -30,7 +30,8 @@ $lang = array
     'Independent login page login template; Parameters will be synchronized to login (including administrator login), registration, password retrieval, and home application.' => '独立登录页登录模板;参数会同步到登录(含管理员登录)、注册、找回密码。',
     'After the user selects tourist login, it will jump to the home page' => '用户选择游客登录后会跳转至首页',
     'default_app_desc' => '进入系统后的默认首页',
-    'please_select_default_index' => '默认首页'
+    'please_select_default_index' => '默认首页',
+    'setting_main_logo' => '仅支持上传2M以内的图片,支持jpg、jpeg、png、gif格式的图片',
 );
 
 

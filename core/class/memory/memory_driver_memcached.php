@@ -5,10 +5,18 @@ if (!defined('IN_DZZ')) {
 }
 
 class memory_driver_memcached {
+    public $cacheName = 'MemCached';
     public $enable;
     public $obj;
 
+    public function env() {
+		return extension_loaded('memcached');
+	}
     public function init($config) {
+        if (!$this->env()) {
+			$this->enable = false;
+			return;
+		}
         if (!empty($config['server'])) {
             $this->obj = new Memcached();
             $connect = $this->connectd($config['server'], $config['port']);
