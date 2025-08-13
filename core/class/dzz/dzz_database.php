@@ -9,7 +9,7 @@ class dzz_database {
     public static $db;
 
     public static $driver;
-    protected static $excludeTables = ['session', 'admincp_session', 'cache'];
+    protected static $excludeTables = ['session', 'admincp_session', 'cache', 'syscache'];
 
     public static function init($driver, $config) {
         self::$driver = $driver;

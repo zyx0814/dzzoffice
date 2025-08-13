@@ -5,8 +5,7 @@ if (!defined('IN_DZZ')) {
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'saveIndex') {
     $appids = implode(',', $_GET['appids']);
-    C::t('user_setting')->update_by_skey('index_simple_appids', $appids);
-    $ret = C::t('user_setting')->insert(array('index_simple_appids' => $appids));
+    $ret = C::t('user_setting')->update_by_skey('index_simple_appids', $appids);
     exit(json_encode(array('success' => $ret)));
 } elseif ($do == 'statis') {
     $filedata = get_statis();
