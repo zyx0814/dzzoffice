@@ -71,15 +71,37 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 7. 管理员登录后，系统工具 -> 更新系统缓存。
 8. 系统设置 -> 打开站点。
 
-## 社区与贡献
-
-- 我们衷心感谢您的参与和支持！您的每一份贡献都将为 DzzOffice 的完善和提升增添一份力量。欢迎通过 GitHub、Gitee 提交 Issue（反馈问题/建议），也可以通过[GitHub 仓库](https://github.com/zyx0814/dzzoffice/)提交 PR（代码贡献），让我们携手学习、共同进步，一起打造更加完善的 DzzOffice。
-- 官网 [dzzoffice.com](http://dzzoffice.com) 可获取 QQ 交流群
-- 关注 [GitHub 仓库](https://github.com/zyx0814/dzzoffice/) 了解最新动态
-
 ## 开源协议
 
 * 本项目遵循 [AGPL-3.0](http://www.dzzoffice.com/licenses/license.txt) 开源许可协议
+
+## 参与贡献
+
+感谢您对 DzzOffice 的支持！每一个贡献都是项目进步的重要力量。我们欢迎通过以下方式参与共建：
+
+### 如何参与？
+#### 1. 反馈问题或建议
+   - 通过 [GitHub](https://github.com/zyx0814/dzzoffice/) 或 [Gitee](https://gitee.com/zyx0814/dzzoffice/) 提交 Issue
+
+#### 2. 代码贡献（PR流程）
+   1. **Fork 仓库**  
+      ➥ 访问 [GitHub 仓库](https://github.com/zyx0814/dzzoffice/) 点击 "Fork" 创建个人副本
+   2. **本地修改**  
+      ➥ 在您的 Fork 仓库中进行代码修改并提交
+   3. **发起 PR**  
+      ➥ 新建 Pull Request 向我们提交合并请求
+
+#### 3. 关注动态
+   - 关注 [GitHub 仓库](https://github.com/zyx0814/dzzoffice/) 了解最新动态。
+
+让我们携手学习、共同进步，一起打造更加完善的 DzzOffice。
+
+## QQ 交流群
+**DzzOffice 交流群1：**[240726](https://qm.qq.com/q/gPvj9eNCAo "240726")
+
+**DzzOffice 交流群2：**[245384](https://qm.qq.com/q/lwXQmUiI5G "245384")
+
+**DzzOffice 交流群3：**[162934210](https://qm.qq.com/q/eHn2SHMiUS "162934210")
 
 ## 友情提示
 - 请随时关注更新动态，您可进行手动修补，让自己的站点时刻保持最安全的状态!
