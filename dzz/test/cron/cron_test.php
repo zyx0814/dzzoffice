@@ -6,8 +6,8 @@
 //hour:0            设置哪一小时执行本任务，留空为不限制
 //minute:0,30       设置哪些分钟执行本任务，至多可以设置 12 个分钟值，多个值之间用半角逗号 "," 隔开，留空为不限制
 
-if (!defined('IN_DZZ')) {
-    exit('Access Denied');
+if(!defined('IN_DZZ')) {
+	exit('Access Denied');
 }
 
 //您的计划任务脚本内容

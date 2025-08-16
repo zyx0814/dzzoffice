@@ -7,9 +7,9 @@
  * @author      qchlian(3580164@qq.com)
  */
 
-class Chareset {
+class Chareset{
     // 自动转换字符集 支持数组转换
-    public function autocharset($string, $from = 'gbk', $to = 'utf-8') {
+    public function autocharset($string, $from='gbk', $to='utf-8') {
         $from = strtoupper($from) == 'UTF8' ? 'utf-8' : $from;
         $to = strtoupper($to) == 'UTF8' ? 'utf-8' : $to;
         if (strtoupper($from) === strtoupper($to) || empty($string) || (is_scalar($string) && !is_string($string))) {
@@ -32,10 +32,10 @@ class Chareset {
                     unset($string[$key]);
             }
             return $string;
-        } else {
+        }
+        else {
             return $string;
         }
     }
 }
-
 ?>
