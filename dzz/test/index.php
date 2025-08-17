@@ -55,7 +55,6 @@ if($_GET['path']) {//判断是否以打开文件的方式访问
 }else{
 	include template('index');
 }
-//调用./template/test.htm模板；
-/*//调用./template/sub/demo.htm 模板,按下面的方式；
-include template('sub/demo');
-/*
+//include template('test'); 调用./template/test.htm 模板
+//如果需要调用其他目录下的模板文件，可以使用如下方式
+//include template('test/test1'); 调用./template/test/test1.htm 模板
