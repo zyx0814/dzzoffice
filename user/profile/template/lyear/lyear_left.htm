@@ -10,9 +10,3 @@
 	<!--{/if}-->
 	<!--{/loop}-->
 </ul>
-<!--{if $_G['setting']['bbclosed']}-->
-{eval $closedreason=$_G['setting']['closedreason']?$_G['setting']['closedreason']:'网站升级中....';}
-<script type="text/javascript">
-	showmessage('{$closedreason}','',0,1);
-</script>
-<!--{/if}-->

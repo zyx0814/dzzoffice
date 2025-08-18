@@ -1,0 +1,72 @@
+<!--{template lyear:header_common}-->
+<style>
+    body {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        background-color: #f8f9fa;
+    }
+    
+    .card {
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .status-icon {
+        font-size: 3rem;
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+    
+    .reason-container {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .action-buttons {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .btn {
+        flex: 1;
+        padding: 0.75rem;
+        font-weight: 500;
+    }
+</style>
+<div class="card shadow">
+    <div class="card-body text-center">
+        <div class="status-icon">
+            <img style="max-width: 100px;max-height: 100px;" src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
+        </div>
+        <h2>站点关闭中</h2>
+        <!--{if $_G['setting']['closedreason']}-->
+        <div class="reason-container">
+            <h5 class="mb-2 text-start">关闭原因</h5>
+            <p class="text-start mb-0">$_G['setting']['closedreason']</p>
+        </div>
+        <!--{/if}-->
+        <p class="text-muted">您可以选择等待站点重新开启，或先退出账号</p>
+        <div class="action-buttons">
+            <button id="waitBtn" class="btn btn-outline-primary">刷新</button>
+            <button id="logoutBtn" class="btn btn-danger">退出账号</button>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('waitBtn').addEventListener('click', function() {
+        location.reload();
+    });
+    
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        if(confirm(__lang.js_exit)) {
+            window.location.href = 'user.php?mod=login&op=logging&action=logout&formhash={FORMHASH}';
+        }
+    });
+</script>
+<!--{template lyear:footer}-->

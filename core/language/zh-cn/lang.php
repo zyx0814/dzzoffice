@@ -827,7 +827,7 @@ $lang = array(
     'login_clearcookie' => '登录痕迹已清除',
     'login_succeed' => '欢迎您回来，{usergroup} {username}，现在将转入登录前页面',
     'login_strike' => '密码错误次数过多，请 {forbiddentime} 秒后重新登录',
-    'logout_succeed' => '您已退出站点，现在将以游客身份转入退出前页面，请稍候…… <br /><a href="user.php?mod=clearcookies&formhash={formhash}">[ 清除痕迹 ]</a>',
+    'logout_succeed' => '您已退出站点，现在将以游客身份转入退出前页面，请稍候……',
     'register_activation_invalid' => '抱歉，激活失败，请重新登录验证需要激活的用户',
     'profile_nickname_tooshort' => '抱歉，您输入的用户名小于 3 个字符，请输入一个较长的用户名',
     'profile_nickname_toolong' => '抱歉，您输入的用户名大于于 30 个字符，请输入一个较短的用户名',
