@@ -669,6 +669,10 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 			for (i = 0; i < subdata.length; i++) {
 				info += '<li><a class="dropdown-item" onClick="_filemanage.Open(\'' + data.rid + '\',\'' + subdata[i].extid + '\')" href="javascript:;"><img class="filee-icon" src="' + subdata[i].icon + '"><span class="file-text">' + subdata[i].name + '</span></a></li>';
 			}
+			//增加选择默认
+			info +='<li><hr class="dropdown-divider"></li>';
+			info +='<li><a class="dropdown-item" onClick="_filemanage.setOpenDefault(\''+data.rid+'\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;" href="javascript:;"><i class="mdi mdi-cog pe-2"></i>'+__lang.set_default_open+'</a>';
+			info +='</li>';
 			el.find('.openwith').find('ul.dropdown-menu').html(info);
 		}
 	}
@@ -970,6 +974,11 @@ function contextmenuico(rid) {
 			html += subdata[i].name;
 			html += '</div></li>';
 		}
+		//增加选择默认
+		html +='<li class="layui-menu-item-divider"><div class="layui-menu-body-title dropdown-item"></div></li>';
+		html +='<li class="layui-menu-item-parent menu-item" onClick="_filemanage.setOpenDefault(\''+rid+'\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;">';
+		html +='<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-cog pe-2"></i>'+__lang.set_default_open+'</div>';
+		html +='</li>';
 		el.find('.openwithdata').html(html);
 	} else {
 		el.find('.openwith').remove();
@@ -2715,4 +2724,27 @@ _filemanage.paste = function (fid) {
 	}, 'json').fail(function(jqXHR,statusText){
 		layer.alert(__lang.paste_failure, {skin:'lyear-skin-danger'});
 	});
+};
+_filemanage.setOpenDefault = function(rid) {
+    var icosdata = _explorer.sourcedata.icos[rid],t;
+    var subdata = getExtOpen(icosdata),e = getExtOpen(icosdata, !0),
+    html = '<ul  class="extopen nav-drawer nav-stacked nav-pills">',
+    extdata = _explorer.extopen.all[e];
+	for (html += '<li class="nav-item"><a class="extopen-item nav-link active" href="javascript:;" icoid="' + rid + '" extid="' + extdata.extid + '" onclick="jQuery(this).addClass(\'active\').closest(\'.nav-item\').parent().find(\'.nav-link\').not(this).removeClass(\'active\');"><img class="icon_32_32" src="' + extdata.icon + '">' + extdata.name + "</a></li>", t = 0; t < subdata.length; t++) {
+		if (e == subdata[t].extid) continue;
+		html += '<li class="nav-item"><a class="extopen-item nav-link" href="javascript:;" icoid="' + rid + '" extid="' + subdata[t].extid + '" onclick="jQuery(this).addClass(\'active\').closest(\'.nav-item\').parent().find(\'.nav-link\').not(this).removeClass(\'active\');"><img class="icon_32_32" src="' + subdata[t].icon + '">' + subdata[t].name + "</a></li>"
+	}
+    html += "</ul>",
+    html += '<label class="col-sm-12"><input type="checkbox" class="form-check-input" id="extopen_setDefault" checked="checked" value="1">  ' + __lang.always_choose_open_app + "</label>",
+    showDialog(html, "message", __lang.choose_open_file_app, _filemanage.setOpenDefaultOK, 1)
+};
+_filemanage.setOpenDefaultOK = function() {
+    var t = jQuery(".extopen-item.active"),n = t.attr("extid"),i = t.attr("icoid");
+    jQuery("#extopen_setDefault").prop("checked") > 0 && jQuery.post(_explorer.appUrl + "&op=ajax&operation=setExtopenDefault", {
+        extid: n
+    },
+    function() {
+        _explorer.extopen.user[_explorer.extopen.all[n].ext] = n
+    }),
+    _filemanage.Open(i, n)
 };

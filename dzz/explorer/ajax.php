@@ -992,5 +992,14 @@ if ($operation == 'upload') {//上传图片文件
     }
     Hook::listen('solrdel', $ids);
     exit(json_encode(array('success' => true)));
+} elseif ($operation == 'setExtopenDefault') {
+    $extid=$_GET['extid'];
+    if(!$extid) exit(json_encode(array('error' => '缺少参数')));
+	if($extdata=C::t('app_open')->fetch($extid)){
+		C::t('app_open_default')->insert_default_by_uid($_G['uid'],$extid,$extdata['ext']);
+	} else {
+		exit(json_encode(array('error' => '参数错误')));
+	}
+    exit(json_encode(array('success' => true)));
 }
 include template('ajax');
