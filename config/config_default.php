@@ -110,10 +110,10 @@ $_config['memory']['memcached']['port'] = 11211;		// memcached 服务器端口
 $_config['memory']['memcached']['pconnect'] = 1;		// memcached 是否长久连接
 $_config['memory']['memcached']['timeout'] = 1;			// memcached 服务器连接超时
 
-$_config['memory']['apc'] = 1;							// 启动对 apc 的支持
-$_config['memory']['xcache'] = 1;						// 启动对 xcache 的支持
+$_config['memory']['apc'] = 0;							// 启动对 apc 的支持
+$_config['memory']['xcache'] = 0;						// 启动对 xcache 的支持
 $_config['memory']['eaccelerator'] = 0;					// 启动对 eaccelerator 的支持
-$_config['memory']['wincache'] = 1;						// 启动对 wincache 的支持
+$_config['memory']['wincache'] = 0;						// 启动对 wincache 的支持
 
 
 // 服务器相关设置

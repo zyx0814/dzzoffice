@@ -299,14 +299,18 @@ _filemanage.setInfoPanel = function () {
 				$('#rightMenu').html(data);
 				var folderInfo = document.getElementById('folderinfo');
 				if (folderInfo) {
-					var filemanage = _filemanage.cons[_filemanage.winid];
-					var infoText = '<div class="row mb-1">' +
-                   '<label class="col-sm-4">分页信息</label>' +
-                   '<div class="col-sm-8 text-break">' +
-                     '共' + filemanage.totalpage + '页(' + filemanage.total + '条记录),' + filemanage.perpage + '条/页' +
-                   '</div>' +
-                 '</div>';
-					folderInfo.innerHTML += infoText;
+					if (_filemanage && _filemanage.cons && _filemanage.winid) {
+						var filemanage = _filemanage.cons[_filemanage.winid];
+						if (filemanage) {
+							var infoText = '<div class="row mb-1">' +
+									'<label class="col-sm-4">分页信息</label>' +
+									'<div class="col-sm-8 text-break">' +
+										'共' + filemanage.totalpage + '页(' + filemanage.total + '条记录),' + filemanage.perpage + '条/页' +
+									'</div>' +
+									'</div>';
+							folderInfo.innerHTML += infoText;
+						}
+					}
 				}
 				_filemanage.infoPanelUrl = fid;
 			});

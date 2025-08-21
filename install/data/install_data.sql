@@ -98,7 +98,8 @@ INSERT INTO `dzz_cron` VALUES(4, 0, 'system', '每周清理缓存缩略图', 'cr
 INSERT INTO `dzz_cron` VALUES(5, 0, 'system', '每月清除未用附件', 'cron_clean_copys0_attachment_by_month.php', 1395388548,0, -1, -1, -1, '5	10	15	20	25	30	35	40	45	50	55');
 INSERT INTO `dzz_cron` VALUES(6, 0, 'system', '定时备份数据库', 'cron_database_backup.php', 1460797274, 1460840400, 0, -1, 5, '0');
 INSERT INTO `dzz_cron` VALUES(7, 0, 'system', '定时迁移本地文件到存储位置', 'cron_movetospace_attachment.php', 1536458668, 1536459000, -1, -1, -1, '0	10	20	30	40	50');
-INSERT INTO `dzz_cron` VALUES(8,1,'app','回收站自动删除任务','dzz:explorer:cron_explorer_recycle.php',1746603582,1746604800,-1,-1,-1,'0');
+INSERT INTO `dzz_cron` VALUES(8,1,'system','限时操作清理','cron_threadexpiry_hourly.php',1755674400,1756069200,-1,-1,-1,'0');
+INSERT INTO `dzz_cron` VALUES(9,1,'app','回收站自动删除任务','dzz:explorer:cron_explorer_recycle.php',1746603582,1746604800,-1,-1,-1,'0');
 
 --
 -- 转存表中的数据 `dzz_folder_default`
