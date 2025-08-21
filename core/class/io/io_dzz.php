@@ -628,7 +628,7 @@ class io_dzz extends io_api {
                         break;
                     default:
                         $metaurl = IO::getStream($meta['path']);
-                        if (is_array($metaurl) && isset($metaurl['error'])) continue;
+                        if (is_array($metaurl) && isset($metaurl['error'])) continue 2;
                         $meta['position'] = $position . ($meta['ext'] ? (preg_replace("/\." . $meta['ext'] . "$/i", '', $meta['name']) . '.' . $meta['ext']) : $meta['name']);
                         /*$data[$meta['icoid']]=$meta;*/
                         $zip->addLargeFile(fopen($metaurl, 'rb'), $meta['position'], $meta['dateline']);

@@ -90,22 +90,22 @@
         var sech = form.sechash.value ? form.sechash.value:'';
         var url = 'user.php?mod=profile&op=safeverify&do=chkpass&returnType=json';
         jQuery.post(url,{chkpassword:val,chkcodeverify:chkcode,seccodeverify:seccode,sechash:sech},function(json){
-                if(json['success']){
-                    jQuery('#chk_chkpassword .help-msg').html('');
-                    verifyresult = true;
-                    if(verifyresult){
-                        safeverifystep(1);
-                    }
-                }else if(json['error']){
-                    if(json['codeerror']){
-                        showmessage(json['error'],'danger',1000,1)
-                    }else{
-                        jQuery('#chk_chkpassword .help-msg').html(json['error']);
-                        if(json['errornum'] > 2 && jQuery("#codeverify").is(":hidden")){
-                            jQuery('#codeverify').show();
-                        }
+            if(json['success']){
+                jQuery('#chk_chkpassword .help-msg').html('');
+                verifyresult = true;
+                if(verifyresult){
+                    safeverifystep(1);
+                }
+            }else if(json['error']){
+                if(json['codeerror']){
+                    showmessage(json['error'],'danger',1000,1)
+                }else{
+                    jQuery('#chk_chkpassword .help-msg').html(json['error']);
+                    if(json['errornum'] > 2 && jQuery("#codeverify").is(":hidden")){
+                        jQuery('#codeverify').show();
                     }
                 }
+            }
         },'json').fail(function (jqXHR, textStatus, errorThrown) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
         });

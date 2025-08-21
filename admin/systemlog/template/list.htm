@@ -71,7 +71,7 @@
                 , {field: 'usergroup', title: '{lang usergroup}', align: 'center', sort: true}
                 , {field: 'ip', title: 'IP', align: 'center', sort: true}
                 , {field: 'time', title: '{lang time}', align: 'center', sort: true}
-                , {field: 'loginfo', title: '{lang info}', align: 'center', sort: true},
+                , {field: 'loginfo', title: '{lang info}', align: 'center', sort: true,templet: function(d) {return d.loginfo;}},
                 , {field: 'visit', title: '{lang visit}', align: 'right', hide: true, sort: true}
                 , {field: 'from', title: '{lang from}', align: 'right', hide: true, sort: true}
                 , {field: 'info', title: '{lang Equipment information}', align: 'right', hide: true, sort: true}

@@ -18,6 +18,12 @@ if ($do == 'deleteIco') {//删除文件到回收站
     $icoids = $_GET['rids'];
     $ridarr = array();
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
+    $deletefinally = 0;
+    if (isset($_G['setting']['explorer_finallydelete'])) {
+        if (intval($_G['setting']['explorer_finallydelete']) === 0) {
+            $deletefinally = 1;
+        }
+    }
     foreach ($icoids as $icoid) {
         $icoid = dzzdecode($icoid);
         if (empty($icoid)) {
@@ -26,7 +32,7 @@ if ($do == 'deleteIco') {//删除文件到回收站
         if (strpos($icoid, '../') !== false) {
             $arr['msg'][$return['rid']] = lang('illegal_calls');
         } else {
-            $return = IO::Delete($icoid);
+            $return = IO::Delete($icoid,$deletefinally);
             if (!$return['error']) {
                 //处理数据
                 $arr['sucessicoids'][$return['rid']] = $return['rid'];

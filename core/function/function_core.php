@@ -1335,12 +1335,20 @@ function debuginfo() {
     }
 }
 
-function check_seccode($value, $idhash) {
-    return helper_form::check_seccode($value, $idhash);
+function check_seccode($value, $idhash, $verifyonly = false) {
+    return helper_form::check_seccode($value, $idhash, $verifyonly);
 }
 
 function check_secqaa($value, $idhash) {
     return helper_form::check_secqaa($value, $idhash);
+}
+
+function make_seccode($seccode) {
+	return helper_form::make_seccode($seccode);
+}
+
+function make_secqaa() {
+	return helper_form::make_secqaa();
 }
 
 function showmessage($message, $url_forward = '', $values = array(), $extraparam = array(), $custom = 0) {

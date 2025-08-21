@@ -2379,7 +2379,8 @@ _filemanage.delIco = function (rid, noconfirm) {
 	}
 	var icosdata = _explorer.sourcedata.icos[rid];
 	if (!noconfirm) {
-        var finallydelete = false;
+        var finallydelete = (_explorer.deletefinally == 1) ? true:false;
+        //var finallydelete = false;
 		if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 			if (_explorer.sourcedata.icos[_filemanage.selectall.icos[0]].isdelete > 0 || (_explorer.sourcedata.icos[_filemanage.selectall.icos[0]].bz && _explorer.sourcedata.icos[_filemanage.selectall.icos[0]].bz)) {
 				layer.confirm((finallydelete) ?__lang.js_finallydelete_selectall:__lang.js_delete_selectall, {title:__lang.confirm_message,skin:'lyear-skin-danger'}, function(index){

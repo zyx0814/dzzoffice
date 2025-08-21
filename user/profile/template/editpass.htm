@@ -52,8 +52,7 @@
     }
 	checkPwdComplexity(document.getElementById('password'),document.getElementById('password2'));
    
-    function editpass_submit(form){
-       
+    function editpass_submit(form){  
        var error=0;
 		jQuery(form).find('.help-msg').each(function(){
 			if(!jQuery(this).hasClass('chk_right')){
@@ -62,7 +61,10 @@
 				return false;
 			}
 		});
-		if(error) return false;
+		if(error) {
+            showmessage('请先检查表单内容是否正确','error',2000,1);
+            return false;
+        }
         var formdata = jQuery(form).serialize();
         var url = jQuery(form).attr('action');
         jQuery.post(url+'&returnType=json',formdata,function(data){
