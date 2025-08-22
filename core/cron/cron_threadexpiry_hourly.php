@@ -11,5 +11,5 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-C::t('seccheck')->delete_expiration();
+C::t('seccheck')->truncate();
 ?>

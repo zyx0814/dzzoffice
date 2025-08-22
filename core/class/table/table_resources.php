@@ -336,6 +336,7 @@ class table_resources extends dzz_table {
         //查询文件路径
         if ($path = C::t('resources_path')->fetch_pathby_pfid($resourcedata['pfid'])) {
             $resourcedata['path'] = ($resourcedata['type'] == 'folder') ? $path . $resourcedata['name'] . '/' : $path . $resourcedata['name'];
+            $resourcedata['relpath'] = dirname(preg_replace('/dzz:(.+?):/', '', $resourcedata['path'])) . '/';
         }
         $vdata = array();
         if ($resourcedata['vid'] > 0) {
