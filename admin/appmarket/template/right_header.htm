@@ -5,6 +5,9 @@
       <a class="nav-link <!--{if !$do && !$op}-->active<!--{/if}-->" href="{MOD_URL}">{lang installed}</a>
     </li>
     <li class="nav-item">
+      <a class="nav-link <!--{if $do == 'enable'}-->active<!--{/if}-->" href="{MOD_URL}&do=enable">{lang already_enable}</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link <!--{if $do == 'available'}-->active<!--{/if}-->" href="{MOD_URL}&do=available">{lang already_close}</a>
     </li>
     <li class="nav-item">

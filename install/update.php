@@ -45,6 +45,7 @@ if ($_GET['from']) {
         }
         $time = $_G['timestamp'];
         dheader('Location: ' . $_G['siteurl'] . basename($refererarr['path']) . '?action=upgrade&operation=' . $operation . '&version=' . $version . '&release=' . $release . '&ungetfrom=' . $time . '&ungetfrommd5=' . md5($time . $_G['config']['security']['authkey']));
+        exit();
     }
 }
 if (empty($_GET['step'])) $_GET['step'] = 'start';
@@ -316,6 +317,38 @@ if ($_GET['step'] == 'start') {
     if ($commentappid) {
         C::t('app_market')->update($commentappid, array('group' => 1, 'open' => 1, 'position' => 1));
     }
+    //更新计划任务
+    $cornarr = [
+        [
+            'available' => 1,
+            'type' => 'system',
+            'name' => '限时操作清理',
+            'filename' => 'cron_threadexpiry_hourly.php',
+            'lastrun' => 1755674400,
+            'nextrun' => 1756069200,
+            'weekday' => -1,
+            'day' => -1,
+            'hour' => -1,
+            'minute' => '0',
+        ],
+        [
+            'available' => 1,
+            'type' => 'app',
+            'name' => '回收站自动删除任务',
+            'filename' => 'cron_explorer_recycle.php',
+            'lastrun' => 1755741850,
+            'nextrun' => 1755745200,
+            'weekday' => -1,
+            'day' => -1,
+            'hour' => -1,
+            'minute' => '0',
+        ]
+    ];
+    foreach ($cornarr as $v) {
+        if (!DB::result_first("select cronid from %t where filename = %s", array('cron', $v['filename']))) {
+            DB::insert('cron', $v);
+        }
+    }
     show_msg("数据升级结束", "$theurl?step=delete");
 } elseif ($_GET['step'] == 'delete') {
     $oldtables = array();
@@ -403,7 +436,6 @@ if ($_GET['step'] == 'start') {
 
 
 } elseif ($_GET['step'] == 'cache') {
-
     if (@$fp = fopen($lockfile, 'w')) {
         fwrite($fp, ' ');
         fclose($fp);

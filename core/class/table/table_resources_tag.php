@@ -42,9 +42,10 @@ class table_resources_tag extends dzz_table {
                     return false;
                 } else {
                     $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
-                    $path = preg_replace('/dzz:(.+?):/', '', $path . $fileinfo['name']);
+                    $path = preg_replace('/dzz:(.+?):/', '', $path);
                 }
-                $eventdata = array('username' => $username, 'filename' => $fileinfo['name'], 'tagname' => implode(',', $deltagnames), 'position' => $path);
+                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
+                $eventdata = array('username' => $username, 'filename' => $fileinfo['name'], 'tagname' => implode(',', $deltagnames), 'position' => $path, 'hash' => $hash);
                 C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'del_tags', 'deltag', $eventdata, $fileinfo['gid'], $rid, $fileinfo['name']);
             }
         }
@@ -61,7 +62,7 @@ class table_resources_tag extends dzz_table {
             return false;
         } else {
             $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
-            $path = preg_replace('/dzz:(.+?):/', '', $path . $fileinfo['name']);
+            $path = preg_replace('/dzz:(.+?):/', '', $path);
         }
         //获取文件原有标签数据
         $return = DB::fetch_all("select rt.tid,t.tagname from %t rt left join %t t on rt.tid = t.tid where rt.rid = %s", array($this->_table, 'tag', $rid));
@@ -88,8 +89,9 @@ class table_resources_tag extends dzz_table {
             DB::query("delete from %t where rid = %s and tid in(%n)", array($this->_table, $rid, $deltids));
             //减少使用数
             C::t('tag')->addhot_by_tid($deltids, -1);
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
             //添加动态
-            $eventdata = array('username' => $username, 'filename' => $fileinfo['name'], 'tagname' => implode(',', $deltagnames), 'position' => $path);
+            $eventdata = array('username' => $username, 'filename' => $fileinfo['name'], 'tagname' => implode(',', $deltagnames), 'position' => $path, 'hash' => $hash);
             C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'del_tags', 'deltag', $eventdata, $fileinfo['gid'], $rid, $fileinfo['name']);
         }
         //获取需要添加的标签

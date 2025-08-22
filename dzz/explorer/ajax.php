@@ -186,6 +186,7 @@ if ($operation == 'upload') {//上传图片文件
                 $perm += 1;
             }
         }
+        if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
         if ($arr = IO::CreateFolder($fid, $fname, $perm)) {
             if ($arr['error']) {
             } else {
@@ -590,7 +591,7 @@ if ($operation == 'upload') {//上传图片文件
     }
     if (isset($_GET['editcatsearch'])) {
         $id = $_GET['editcatsearch'];
-        $arr = $_GET['arr'];
+        $arr = dhtmlspecialchars($_GET['arr']);
         if (!$arr['catname'] || preg_match('/^\s*$/', $arr['catname'])) {
             exit(json_encode(array('error' => true, 'msg' => lang('name_is_must'))));
         }
@@ -990,6 +991,15 @@ if ($operation == 'upload') {//上传图片文件
         $ids[] = $v . '_' . '0';
     }
     Hook::listen('solrdel', $ids);
+    exit(json_encode(array('success' => true)));
+} elseif ($operation == 'setExtopenDefault') {
+    $extid=$_GET['extid'];
+    if(!$extid) exit(json_encode(array('error' => '缺少参数')));
+	if($extdata=C::t('app_open')->fetch($extid)){
+		C::t('app_open_default')->insert_default_by_uid($_G['uid'],$extid,$extdata['ext']);
+	} else {
+		exit(json_encode(array('error' => '参数错误')));
+	}
     exit(json_encode(array('success' => true)));
 }
 include template('ajax');

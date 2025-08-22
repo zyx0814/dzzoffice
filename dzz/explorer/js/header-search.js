@@ -604,6 +604,7 @@ function resetting_condition() {
     $('#selectStart').val('');
     $('#selectEnd').val('');
     $('#resourcesname').val('');
+    $('.header-seaech-checkbox').find('input').prop('checked', false);
     searchjson = {
         'after': 0,
         'before': 0,

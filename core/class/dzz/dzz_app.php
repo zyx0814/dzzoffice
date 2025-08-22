@@ -592,13 +592,7 @@ class dzz_app extends dzz_base {
             if ($this->var['member']['adminid'] == 1) { //系统管理员允许访问
             } elseif (in_array(CURSCRIPT, array('admin', 'user', 'api')) || defined('ALLOWGUEST') && ALLOWGUEST) {
             } else {
-                $closedreason = C::t('setting')->fetch('closedreason');
-                $closedreason = str_replace(':', '&#58;', $closedreason);
-                if ($this->var['uid']) {
-                    dheader("Location: user.php?mod=profile");
-                } else {
-                    dheader("Location: user.php?mod=login");
-                }
+                dheader("Location: user.php?mod=login");
             }
         }
         if (isset($this->var['setting']['nocacheheaders']) && $this->var['setting']['nocacheheaders']) {

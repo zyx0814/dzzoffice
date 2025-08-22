@@ -59,7 +59,7 @@ class Systemlog {
                     $username = $_G['username'];
                 }
                 foreach ($log as $tmp) {
-                    $tmp = implode("\t", clearlogstring(array($_G['timestamp'], $username, $_G['groupid'], $_G['clientip'], $tmp, $cur_url, $from_url, $_SERVER['HTTP_USER_AGENT'], "uid=" . $_G['uid'])));
+                    $tmp = implode("\t", clearlogstring(array($_G['timestamp'], $username, $_G['groupid'], $_G['clientip'], $tmp, $cur_url, $from_url, $_SERVER['HTTP_USER_AGENT'] ?? 'none', "uid=" . $_G['uid'])));
                     fwrite($fp, "<?PHP exit;?>\t" . str_replace(array('<?', '?>'), '', $tmp) . "\n");
                 }
                 fclose($fp);

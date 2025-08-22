@@ -1,0 +1,23 @@
+<!--{template common/header_simple_start}-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link rel='stylesheet' type="text/css" href="{MOD_PATH}/images/test.css?{VERHASH}"/><!-- {MOD_PATH}表示当前模块的目录 -->
+<!--模板的header区域，需要在头部的js或css可以写在这里-->
+<!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
+<!--模板body区域,直接加入自己的模板代码即可，body标签已经存在-->
+<div class="container" style="padding:50px;">
+	<div style="text-align: center;">
+		<span class="no-result-title">您当前已打开文件，下面是文件信息</span>
+		  <ul class="list-group">
+			<li class="list-group-item active" aria-current="true">文件名：$meta['name']</li>
+			<li class="list-group-item">文件地址：$src</li>
+			<li class="list-group-item">文件流地址:$file</li>
+			<li class="list-group-item">修改时间:{eval echo dgmdate($meta['dateline'])}</li>
+			<li class="list-group-item">文件大小:{eval echo formatsize($meta['size'])}</li>
+			<li class="list-group-item">类型:$meta['ext']</li>
+			<li class="list-group-item">创建时间:$meta['fdateline']</li>
+		  </ul>
+	  </div>
+</div>
+<script type="text/javascript" src="{MOD_PATH}/scripts/test.js?{VERHASH}"></script><!-- {MOD_PATH}表示当前模块的目录 -->
+<!--{template common/footer_simple}-->

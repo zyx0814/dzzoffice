@@ -115,8 +115,8 @@ TkSuQmCC
 			<item id="open"><![CDATA[0]]></item>
 			<item id="nodup"><![CDATA[0]]></item>
 			<item id="identifier"><![CDATA[test]]></item>
-			<item id="version"><![CDATA[1.0]]></item>
 			<item id="app_path"><![CDATA[dzz]]></item>
+			<item id="version"><![CDATA[1.0]]></item>
 			<item id="extra">
 				<item id="installfile"><![CDATA[install.php]]></item>
 				<item id="uninstallfile"><![CDATA[uninstall.php]]></item>
@@ -128,6 +128,6 @@ TkSuQmCC
 		<item id="hooks">
 			<item id="testone_diaoyong"><![CDATA[dzz\test\classes\testone]]></item>
 		</item>
-		<item id="version"><![CDATA[1.0]]></item>
+		<item id="version"><![CDATA[2.0]]></item>
 	</item>
 </root>

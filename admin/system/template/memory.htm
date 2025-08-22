@@ -1,0 +1,41 @@
+<!--{template lyear:header_simple_start}-->
+<!--{template lyear:header_simple_end}-->
+<main class="bs-main-container">
+	<div class="container-fluid">
+		<div class="card">
+			<div class="card-body">
+				<div class="alert alert-info">
+					内存优化主要用于缓存通用数据及会话（session），以加快系统访问速度。以下是常见的缓存方式及相关说明：
+					<ul class="form-text">
+						<li>File（文件缓存）：将数据直接写入缓存文件，适用于测试或小规模使用场景。</li>
+						<li>APC：PHP的内存缓存系统，主要用于加速PHP脚本执行。</li>
+						<li>Memcache：高性能分布式内存对象缓存系统，适用于高并发读取场景。</li>
+						<li>Memcached：高性能分布式内存对象缓存系统，适用于高并发读取场景。</li>
+						<li>Redis：开源内存数据结构存储系统，支持多种数据类型，适用于需要持久化和高性能的场景，推荐使用。</li>
+						<li>Wincache：专为Windows环境设计的PHP缓存扩展，功能类似APC。</li>
+						<li>XCache：PHP的内存缓存系统，功能类似APC。</li>
+					</ul>
+					相关设置说明：<br>
+					优化系统会依据当前服务器环境，依次选用合适的缓存方式<br>
+					内存接口的主要设置位于 \config\config.php 配置文件中，可通过编辑该文件进行高级设置。
+				</div>
+				<a class="btn btn-primary d-grid mb-1" href="{MOD_URL}&op=memory&do=clear">内存清理<!--{if $do=='clear'}--> (清理完毕)<!--{/if}--></a>
+				<div class="table-responsive">
+					<table class="table table-hover table-striped table-bordered align-middle">
+						<thead>
+							<tr>
+							<th>内存接口</th>
+							<th>PHP 扩展环境</th>
+							<th>Config 设置</th>
+							</tr>
+						</thead>
+						<tbody>
+							$env_str
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+<!--{template lyear:footer_simple}-->

@@ -9,7 +9,16 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 global $_G;
+$setting = isset($_G['setting']) ? $_G['setting'] : '';
+
+if (empty($setting)) {
+    $setting = C::t('setting')->fetch_all(array(), true);
+}
 if ($_G['uid'] > 0) {
+    if ($_G['setting']['bbclosed']) {
+        include template('site_close');
+        exit();
+    }
     $param = array(
         'username' => $_G['username'],
         'usergroup' => $_G['group']['grouptitle'],
@@ -27,12 +36,6 @@ if ($_G['uid'] > 0) {
     $messageText = lang($loginmessage, $param);
     writelog('loginlog', '登录成功');
     showmessage($messageText, $href);
-}
-
-$setting = isset($_G['setting']) ? $_G['setting'] : '';
-
-if (empty($setting)) {
-    $setting = C::t('setting')->fetch_all(array(), true);
 }
 $_G['allow_loginmod'] = $setting['allow_loginmod'] = unserialize($setting['allow_loginmod']);
 //Hook::listen('login_check');//检查登录状态

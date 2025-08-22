@@ -155,8 +155,10 @@ function check_submit(form){
 			return false;
 		}
 	});
-	if(error) return false;
-	
+	if(error) {
+		showmessage('请先检查表单内容是否正确','error',2000,1);
+		return false;
+	}
 	var url = jQuery(form).attr('action');
 
 	url = (url)? url:'user.php?mod=register';

@@ -4,10 +4,8 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-require_once libfile('function/seccode');
 $action = $_GET['action'] ?? '';
 if ($action == 'update') {
-
     $message = '';
     if ($_G['setting']['seccodestatus']) {
         $rand = random(5, 1);
@@ -58,11 +56,9 @@ if ($action == 'update') {
     include template('common/footer_ajax');
 
 } elseif ($action == 'check') {
-
     include template('common/header_ajax');
-    echo check_seccode($_GET['secverify'], $_GET['idhash']) ? 'succeed' : 'invalid';
+    echo check_seccode($_GET['secverify'], $_GET['idhash'], true) ? 'succeed' : 'invalid';
     include template('common/footer_ajax');
-
 } else {
     $refererhost = parse_url(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
     $refererhost['host'] = ($refererhost['host'] ?? '') . (!empty($refererhost['port']) ? (':' . $refererhost['port']) : '');

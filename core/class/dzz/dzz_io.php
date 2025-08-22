@@ -457,6 +457,7 @@ class dzz_io {
     }
 
     public static function clean($str) {//清除路径
+        if (!$str) return '';
         if (is_array($str)) {
             foreach ($str as $key => $value) {
                 if (strpos($value, 'preview_') === 0) {

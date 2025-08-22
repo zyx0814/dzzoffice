@@ -224,13 +224,15 @@ class table_resources_version extends dzz_table {
                 //记录事件
                 $path = C::t('resources_path')->fetch_pathby_pfid($resources['pfid']);
                 $path = preg_replace('/dzz:(.+?):/', '', $path);
+                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($resources['pfid'], $resources['gid']);
                 $event = 'update_version';
                 $eventdata = array(
                     'title' => $resources['name'],
                     'aid' => $setarr['aid'],
                     'username' => $setarr['username'],
                     'uid' => $setarr['uid'],
-                    'position' => $path
+                    'position' => $path,
+                    'hash' => $hash,
                 );
                 C::t('resources_event')->addevent_by_pfid($resources['pfid'], $event, 'updatevesion', $eventdata, $resources['gid'], $rid, $resources['name']);
                 //增加统计数据

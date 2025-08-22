@@ -5,8 +5,15 @@ if (!defined('IN_DZZ')) {
 }
 
 class memory_driver_apc {
+    public $cacheName = 'APC';
+	public $enable;
+    public function env() {
+		return function_exists('apc_cache_info') && @apc_cache_info();
+	}
 
-    public function init($config) {}
+    public function init($config) {
+        $this->enable = $this->env();
+    }
 
     public function get($key) {
         return apc_fetch($key);

@@ -5,8 +5,15 @@ if (!defined('IN_DZZ')) {
 }
 
 class memory_driver_wincache {
+    public $cacheName = 'WinCache';
+    public $enable;
+    public function env() {
+		return function_exists('wincache_ucache_meminfo') && wincache_ucache_meminfo();
+	}
 
-    public function init($config) {}
+    public function init($config) {
+        $this->enable = $this->env();
+    }
 
     public function get($key) {
         return wincache_ucache_get($key);

@@ -17,6 +17,17 @@ $lang = array(
     'advice_fopen' => '该函数需要 php.ini 中 allow_url_fopen 选项开启。请联系空间商，确定开启了此项功能',
     'advice_xml' => '该函数需要 PHP 支持 XML。请联系空间商，确定开启了此项功能',
     'advice_zip_open' => '是否 PHP 配置中禁止了 zip_open 函数。必须安装 Zip 扩展才能使用。',
+    'php_version' => 'PHP 版本',
+    'php_os_version' => 'PHP 平台版本',
+    'systemOS' => '操作系统',
+    'max_upload_size' => '最大上传大小',
+    'gd_version' => 'GD 库',
+    'max_execution_time' => 'PHP执行超时时间',
+    'memory_limit' => 'PHP内存限制',
+    'post_max_size' => 'POST提交限制',
+    'disk_space' => '磁盘空间',
+    'mysql_allow_persistent' => 'MySQL 持久连接',
+    'SERVER_SOFTWARE' => '运行环境',
 );
 
 ?>

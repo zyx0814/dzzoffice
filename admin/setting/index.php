@@ -145,6 +145,7 @@ if (!submitcheck('settingsubmit')) {
 } else {
     $settingnew = $_GET['settingnew'];
     if ($operation == 'basic') {
+        $settingnew['sitename'] = dhtmlspecialchars($settingnew['sitename']);
         $settingnew['bbname'] = $settingnew['sitename'];
         foreach ($settingnew['thumbsize'] as $key => $value) {
             $value['width'] = intval($value['width']);
@@ -289,6 +290,8 @@ if (!submitcheck('settingsubmit')) {
         savecache('censor', $data);
         showmessage('do_success', dreferer());
     } elseif ($operation == 'loginset') {
+        $settingnew['loginset']['title'] = dhtmlspecialchars($settingnew['loginset']['title']);
+        $settingnew['loginset']['subtitle'] = dhtmlspecialchars($settingnew['loginset']['subtitle']);
         if ($back = trim($settingnew['loginset']['background'])) {
             if (strpos($back, '#') === 0) {
                 $settingnew['loginset']['bcolor'] = $back;

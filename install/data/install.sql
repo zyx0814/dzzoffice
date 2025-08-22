@@ -955,6 +955,19 @@ CREATE TABLE `dzz_resources_version` (
   PRIMARY KEY (`vid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件版本表';
 
+DROP TABLE IF EXISTS `dzz_seccheck`;
+CREATE TABLE `dzz_seccheck` (
+  `ssid` int(10) NOT NULL AUTO_INCREMENT,
+  `dateline` int(10) NOT NULL,
+  `code` char(6) NOT NULL,
+  `succeed` tinyint(1) NOT NULL,
+  `verified` tinyint(1) NOT NULL,
+  PRIMARY KEY (`ssid`),
+  KEY dateline (`dateline`),
+  KEY succeed (`succeed`),
+  KEY verified (`verified`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='安全验证表';
+
 DROP TABLE IF EXISTS `dzz_session`;
 CREATE TABLE `dzz_session` (
   `sid` char(6) NOT NULL DEFAULT '' COMMENT '会话ID',

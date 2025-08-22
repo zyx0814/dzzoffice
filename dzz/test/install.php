@@ -7,8 +7,8 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
-    exit('Access Denied');
+if(!defined('IN_DZZ') || !defined('IN_ADMIN')) {//所有的php文件必须加上此句，防止被外部和非管理员调用
+	exit('Access Denied');
 }
 
 $sql = <<<EOF

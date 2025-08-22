@@ -230,7 +230,7 @@
 				break;
 				case 'get':
 				table.reloadData('table', {
-					where: {type: type}, // 清空搜索参数
+					where: {type: type,keyword:$('#keyword').val(),username:$('#username').val()}, // 清空搜索参数
 					page: {
 						curr: 1 //重新从第 1 页开始
 					}
