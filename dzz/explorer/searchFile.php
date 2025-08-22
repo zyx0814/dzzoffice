@@ -6,10 +6,10 @@ Hook::listen('check_login');//检查是否登录，未登录跳转到登录界�
 global $_G;
 $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
-$usersettings = C::t('user_setting')->fetch_all_user_setting();
-$explorer_setting = get_resources_some_setting();
 if ($do == 'filelist') {
     include libfile('function/use');
+    $usersettings = C::t('user_setting')->fetch_all_user_setting();
+    $explorer_setting = get_resources_some_setting();
     $searchtype = isset($_GET['searchtype']) ? trim($_GET['searchtype']) : '';
     $searchtypearr = explode('&', $searchtype);
     $searcharr = array();
@@ -67,7 +67,7 @@ if ($do == 'filelist') {
     $conditions = array();
     //文件位置标志条件 [isdelete,isstarred]
     $param = array('resources', 'folder');
-    if (!empty($searcharr['flagval']) && $searcharr['flagval']) {
+    if (!empty($searcharr['flagval'])) {
         $conditions['flag'] = explode(',', $searcharr['flagval']);
         if (in_array('isdelete', $conditions['flag'])) {
             $wheresql .= " and r.pfid = '-1'";
@@ -87,8 +87,8 @@ if ($do == 'filelist') {
     }
     $orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门
     $or = array();
-//文件名条件
-    if (!empty($searcharr['keywords']) && $searcharr['keywords'] && !preg_match('/^\s*$/', $searcharr['keywords'])) {
+    //文件名条件
+    if (!empty($searcharr['keywords']) && !preg_match('/^\s*$/', $searcharr['keywords'])) {
         $conditions['keywords'] = trim($searcharr['keywords']);
         $kewordsarr = explode(',', $conditions['keywords']);
 
@@ -109,10 +109,9 @@ if ($do == 'filelist') {
         } else {
             $wheresql .= " and (" . implode(' or ', $keywordsqlarr) . ")";
         }
-
     }
-//文件类型条件 如document
-    if (!empty($searcharr['type']) && $searcharr['type']) {
+    //文件类型条件 如document
+    if (!empty($searcharr['type'])) {
         $conditions['type'] = trim($searcharr['type']);
         if ($conditions['type'] == 'folder') {
             $wheresql .= " and r.type = %s and r.flag not in(%n)";
@@ -129,41 +128,39 @@ if ($do == 'filelist') {
         $param[] = 'app';
 
     }
-
-//开始时间
-    if (!empty($searcharr['after']) && $searcharr['after']) {
+    //开始时间
+    if (!empty($searcharr['after'])) {
         $conditions['after'] = strtotime($searcharr['after']);
         $wheresql .= " and r.dateline > %d";
         $param[] = $conditions['after'];
     }
-
-//结束时间
-    if (!empty($searcharr['before']) && $searcharr['before']) {
+    //结束时间
+    if (!empty($searcharr['before'])) {
         $conditions['before'] = strtotime($_GET['before']);
         $wheresql .= " and r.dateline < %d";
         $param[] = $conditions['before'];
     }
-    $explorer_setting = get_resources_some_setting();
     $permsql = ' 1 ';
-//文件位置条件 [1,2,3]
-    if (!empty($searcharr['fid']) && $searcharr['fid']) {
+    //文件位置条件 [1,2,3]
+    if (!empty($searcharr['fid'])) {
         $conditions['fid'] = $searcharr['fid'];
         $condition['fid'] = explode(',', $conditions['fid']);
-        $fids = $condition['fid'];
+        $fids = array();
         $gids = array();
-        foreach (DB::fetch_all("select gid,fid from %t where fid in(%n)", array('folder', $fids)) as $v) {
+
+        foreach (DB::fetch_all("select gid,fid from %t where fid in(%n)", array('folder', $condition['fid'])) as $v) {
             if ($v['gid'] > 0) {
                 $gids[] = $v['gid'];
-                $index = array_search($v['fid'], $fids);
-                unset($fids[$index]);
+            } else {
+                $fids[] = $v['fid'];
             }
         }
         $groupsql = '';
         if ($gids) {
-            $orgs = array();
+            $orgs = $gids;//保留原始机构ID
             foreach ($gids as $v) {
                 foreach (C::t('organization')->get_all_contaionchild_orgid($v, $uid) as $val) {
-                    $orgs[] = $val;
+                    $orgs[] = $val;// 追加子部门
                 }
             }
             foreach (DB::fetch_all('select orgid,diron from %t where orgid in(%n)', array('organization', $orgs)) as $v) {
@@ -194,25 +191,23 @@ if ($do == 'filelist') {
             }
         }
         $fidsql = '';
-
-        if (count($fids)) {
+        if (!empty($fids)) {
             $fidsql = " (r.gid=0 and r.uid = %d)";
             $param[] = $uid;
         }
-        if ($groupsql) {
-            if ($fidsql) {
-                $permsql .= ' and (' . $groupsql . ' or ' . $fidsql . ')';
-            } else {
-                $permsql .= ' and (' . $groupsql . ')';
-            }
+
+        if ($fidsql && $groupsql) {
+            $permsql .= ' and (' . $groupsql . ' or ' . $fidsql . ')';
         } elseif ($fidsql) {
             $permsql .= ' and ' . $fidsql;
+        } elseif ($groupsql) {
+            $permsql .= ' and ' . $groupsql;
         }
         $condition['uid'] = 2;
     }
 
-//所有者条件 如self,[1,2,3]
-    if (!empty($searcharr['uid']) && $searcharr['uid']) {
+    //所有者条件 如self,[1,2,3]
+    if (!empty($searcharr['uid'])) {
         $conditions['uid'] = $searcharr['uid'];
         //我的
         if ($conditions['uid'] == 'self' && $explorer_setting['useronperm']) {
@@ -232,7 +227,7 @@ if ($do == 'filelist') {
         }
     }
 
-//如果没有文件fid限制或者需要限制群组id ($condition['uid'] == 2表示只需要用户限制)
+    //如果没有文件fid限制或者需要限制群组id ($condition['uid'] == 2表示只需要用户限制)
     if ($condition['uid'] != 2) {
         //如果筛选条件没有用户限制
         if (!isset($condition['uid']) && !$condition['uid'] && $explorer_setting['useronperm']) {
@@ -273,7 +268,6 @@ if ($do == 'filelist') {
         }
     }
 
-
     $wheresql .= ' and  (' . $permsql . ')';
     $data = array();
     $foldersids = $folderdata = array();
@@ -285,21 +279,18 @@ if ($do == 'filelist') {
         $countsql = 'SELECT COUNT(*) FROM %t r LEFT JOIN %t f ON r.pfid=f.fid';
         $sql = 'SELECT r.rid  FROM %t r LEFT JOIN %t f ON r.pfid=f.fid';
     }
-    //如果搜索条件为空，不执行搜索
-    if (!empty($conditions)) {
-        if ($total = DB::result_first("$countsql $wheresql", $param)) {
-            foreach (DB::fetch_all("$sql $wheresql $ordersql $limitsql", $param) as $value) {
-                if ($arr = C::t('resources')->fetch_by_rid($value['rid'])) {
-                    if ($arr['isdelete']) $arr['relpath'] = lang('explorer_recycle_name');
-                    $data[$arr['rid']] = $arr;
-                    $folderids[$value['pfid']] = $arr['pfid'];
-                    if ($arr['type'] == 'folder') $folderids[$arr['oid']] = $arr['oid'];
-                }
+    if ($total = DB::result_first("$countsql $wheresql", $param)) {
+        foreach (DB::fetch_all("$sql $wheresql $ordersql $limitsql", $param) as $value) {
+            if ($arr = C::t('resources')->fetch_by_rid($value['rid'])) {
+                if ($arr['isdelete']) $arr['relpath'] = lang('explorer_recycle_name');
+                $data[$arr['rid']] = $arr;
+                $folderids[$value['pfid']] = $arr['pfid'];
+                if ($arr['type'] == 'folder') $folderids[$arr['oid']] = $arr['oid'];
             }
-            //获取目录信息
-            foreach ($folderids as $fid) {
-                if ($folder = C::t('folder')->fetch_by_fid($fid)) $folderdata[$fid] = $folder;
-            }
+        }
+        //获取目录信息
+        foreach ($folderids as $fid) {
+            if ($folder = C::t('folder')->fetch_by_fid($fid)) $folderdata[$fid] = $folder;
         }
     }
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : intval($usersettings['disp']);//文件排序
@@ -308,7 +299,7 @@ if ($do == 'filelist') {
     $total = $total ?  $total : 0;
     if (!$json_data = json_encode($data)) $data = array();
     if (!$json_data = json_encode($folderdata)) $folderdata = array();
-//返回数据
+    //返回数据
     $return = array(
         'sid' => $sid,
         'total' => $total,

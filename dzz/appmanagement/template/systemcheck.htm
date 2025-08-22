@@ -33,24 +33,20 @@
 		</h2>
 		<div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-strextra">
 			<div class="accordion-body">
-			<!--{if $func_strextra}-->
-			<div class="table-responsive">
-				<table class="table table-hover table-striped table-bordered align-middle">
-					<thead>
-					<tr>
-						<th>函数名称</th>
-						<th>检查结果</th>
-						<th>建议</th>
-					</tr>
-					</thead>
-					<tbody>
-						$func_strextra
-					</tbody>
-				</table>
-			</div>
-			<!--{else}-->
-			<div class="alert alert-danger" role="alert">无法检测</div>
-			<!--{/if}-->
+				<div class="table-responsive">
+					<table class="table table-hover table-striped table-bordered align-middle">
+						<thead>
+						<tr>
+							<th>函数名称</th>
+							<th>检查结果</th>
+							<th>建议</th>
+						</tr>
+						</thead>
+						<tbody>
+							$func_strextra
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -60,64 +56,70 @@
 		</h2>
 		<div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingThree">
 			<div class="accordion-body">
-				<table class="table table-hover align-middle table-striped table-bordered table-bordered">
-					<tr>
-						<th>服务器系统环境</th>
-						<td><!--{eval echo PHP_OS.' / '.php_uname();}--></td>
-					</tr>
-					<tr>
-						<th>服务器软件</th>
-						<td><!--{eval echo $_SERVER['SERVER_SOFTWARE'];}--></td>
-					</tr>
-					<tr>
-						<th>服务器数据库</th>
-						<td>MySQL <!--{eval echo helper_dbtool::dbversion();}-->，{$_G['mysql_driver']}</td>
-					</tr>
-					<tr>
-						<th>域名</th>
-						<td><!--{eval echo $_SERVER['HTTP_HOST'];}--></td>
-					</tr>
-					<tr>
-						<th>通信协议</th>
-						<td><!--{eval echo $_SERVER['SERVER_PROTOCOL'];}--></td>
-					</tr>
-					<tr>
-						<th>PHP扩展信息</th>
-						<td><div class="d-grid"><a href="{MOD_URL}&do=phpinfo" target="_blank" class="btn btn-primary">点击查看</a></div></td>
-					</tr>
-					<tr>
-						<th>PHP部署方式</th>
-						<td><!--{eval echo php_sapi_name();}--></td>
-					</tr>
-					<tr>
-						<th>PHP开启报错</th>
-						<td><!--{if ini_get('display_errors')}-->已开启<!--{else}-->已关闭<!--{/if}--></td>
-					</tr>
-					<tr>
-						<th>PHP脚本所有者</th>
-						<td><!--{eval echo get_current_user();}--></td>
-					</tr>
-					<tr>
-						<th>禁用的函数</th>
-						<td class="text-break"><!--{eval echo ini_get('disable_functions') ?: '无';}--></td>
-					</tr>
-					<tr>
-						<th>curl版本</th>
-						<td><!--{eval echo curl_version()['version'];}--></td>
-					</tr>
-					<tr>
-						<th>php.ini文件</th>
-						<td><!--{eval echo php_ini_loaded_file();}--></td>
-					</tr>
-					<tr>
-						<th>php安装目录</th>
-						<td><!--{eval echo PHP_BINDIR;}--></td>
-					</tr>
-					<tr>
-						<th>已加载的扩展</th>
-						<td><!--{eval echo implode('，', get_loaded_extensions());}--></td>
-					</tr>
-				</table>
+				<div class="table-responsive">
+					<table class="table table-hover align-middle table-striped table-bordered table-bordered">
+						<tr>
+							<th>服务器系统环境</th>
+							<td><!--{eval echo PHP_OS.' / '.php_uname();}--></td>
+						</tr>
+						<tr>
+							<th>服务器数据库</th>
+							<td>MySQL <!--{eval echo helper_dbtool::dbversion();}-->，{$_G['mysql_driver']}</td>
+						</tr>
+						<tr>
+							<th>域名</th>
+							<td><!--{eval echo $_SERVER['HTTP_HOST'];}--></td>
+						</tr>
+						<tr>
+							<th>服务器端口</th>
+							<td><!--{eval echo $_SERVER['SERVER_PORT'];}--></td>
+						</tr>
+						<tr>
+							<th>通信协议</th>
+							<td><!--{eval echo $_SERVER['SERVER_PROTOCOL'];}--></td>
+						</tr>
+						<tr>
+							<th>PHP扩展信息</th>
+							<td><div class="d-grid"><a href="{MOD_URL}&do=phpinfo" target="_blank" class="btn btn-primary">点击查看</a></div></td>
+						</tr>
+						<tr>
+							<th>PHP部署方式</th>
+							<td><!--{eval echo php_sapi_name();}--></td>
+						</tr>
+						<tr>
+							<th>PHP开启报错</th>
+							<td><!--{if ini_get('display_errors')}-->已开启<!--{else}-->已关闭<!--{/if}--></td>
+						</tr>
+						<tr>
+							<th>PHP脚本所有者</th>
+							<td><!--{eval echo get_current_user();}--></td>
+						</tr>
+						<tr>
+							<th>php安装目录</th>
+							<td><!--{eval echo PHP_BINDIR;}--></td>
+						</tr>
+						<tr>
+							<th>php.ini文件</th>
+							<td><!--{eval echo php_ini_loaded_file();}--></td>
+						</tr>
+						<tr>
+							<th>curl版本</th>
+							<td><!--{eval echo curl_version()['version'];}--></td>
+						</tr>
+						<tr>
+							<th>网站根目录</th>
+							<td><!--{eval echo $_SERVER["DOCUMENT_ROOT"];}--></td>
+						</tr>
+						<tr>
+							<th>禁用的函数</th>
+							<td class="text-break"><!--{eval echo ini_get('disable_functions') ?: '无';}--></td>
+						</tr>
+						<tr>
+							<th>已加载的扩展</th>
+							<td><!--{eval echo implode('，', get_loaded_extensions());}--></td>
+						</tr>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -5,8 +5,7 @@ if (!defined('IN_DZZ')) {
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'saveIndex') {
     $appids = implode(',', $_GET['appids']);
-    C::t('user_setting')->update_by_skey('index_simple_appids', $appids);
-    $ret = C::t('user_setting')->insert(array('index_simple_appids' => $appids));
+    $ret = C::t('user_setting')->update_by_skey('index_simple_appids', $appids);
     exit(json_encode(array('success' => $ret)));
 } elseif ($do == 'statis') {
     $filedata = get_statis();
@@ -36,8 +35,10 @@ if ($do == 'saveIndex') {
                     $newappids[] = $appid;
                 }
             }
-            if ($newappids) C::t('app_user')->insert_by_uid($_G['uid'], $newappids);
-            C::t('user_field')->update($_G['uid'], array('applist' => implode(',', $applist)));
+            if ($newappids) {
+                C::t('app_user')->insert_by_uid($_G['uid'], $newappids);
+                C::t('user_field')->update($_G['uid'], array('applist' => implode(',', $applist)));
+            }
         }
     }
     $userstatus = C::t('user_status')->fetch($_G['uid']);

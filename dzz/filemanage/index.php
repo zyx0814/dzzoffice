@@ -152,7 +152,11 @@ if ($do == 'delete') {
                 if(is_array($FileUri) && $FileUri['error']) {
                     $FileUri = '<span class="text-danger">'.$FileUri['error'].'</span>';
                 } else {
-                    $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
+                    if ($data['attachment']) {
+                        $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
+                    } else {
+                        $FileUri = '<span class="text-danger">数据库中没有查到aid为：'.$data['aid'].'的记录</span>';
+                    }
                 }
             } else {
                 $FileUri = '';
@@ -178,15 +182,16 @@ if ($do == 'delete') {
             "edits" => $filestatis['edits'],
         ];
     }
-    $breadcrumb = '<a href="javascript:;" class="btn btn-primary fid-btn" data-fid="">' . lang('all_typename_attach') . '</a>';
+    $typearrname = $typearr[$type] ? $typearr[$type] : lang('all_typename_attach');
+    $breadcrumb = '<li class="breadcrumb-item"><a href="javascript:;" class="fid-btn" data-fid="">' . $typearrname . '</a></li>';
     if (!empty($foldername)) {
         $i = 0;
         foreach ($foldername as $v) {
             $i++;
             if ($i == count($foldername)) {
-                $breadcrumb .= '<a href="javascript:;" class="btn btn-outline-primary fid-btn" data-fid="' . $v['fid'] . '">' . $v['fname'] . '</a>';
+                $breadcrumb .= '<li class="breadcrumb-item active" aria-current="page">' . $v['fname'] . '</li>';
             } else {
-                $breadcrumb .= '<a href="javascript:;" class="btn btn-primary fid-btn" data-fid="' . $v['fid'] . '">' . $v['fname'] . '</a>';
+                $breadcrumb .= '<li class="breadcrumb-item"><a href="javascript:;" class="fid-btn" data-fid="' . $v['fid'] . '">' . $v['fname'] . '</a></li>';
             }
         }
     }

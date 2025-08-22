@@ -471,16 +471,12 @@ function dhtmlspecialchars($string, $flags = null) {
                 $string = preg_replace('/&amp;((#(\d{3,5}|x[a-fA-F0-9]{4}));)/', '&\\1', $string);
             }
         } else {
-            if (PHP_VERSION < '5.4.0') {
-                $string = htmlspecialchars($string, $flags);
+            if (strtolower(CHARSET) == 'utf-8') {
+                $charset = 'UTF-8';
             } else {
-                if (strtolower(CHARSET) == 'utf-8') {
-                    $charset = 'UTF-8';
-                } else {
-                    $charset = 'ISO-8859-1';
-                }
-                $string = htmlspecialchars($string, $flags, $charset);
+                $charset = 'ISO-8859-1';
             }
+            $string = htmlspecialchars($string, $flags, $charset);
         }
     }
     return $string;
@@ -1339,12 +1335,20 @@ function debuginfo() {
     }
 }
 
-function check_seccode($value, $idhash) {
-    return helper_form::check_seccode($value, $idhash);
+function check_seccode($value, $idhash, $verifyonly = false) {
+    return helper_form::check_seccode($value, $idhash, $verifyonly);
 }
 
 function check_secqaa($value, $idhash) {
     return helper_form::check_secqaa($value, $idhash);
+}
+
+function make_seccode($seccode) {
+	return helper_form::make_seccode($seccode);
+}
+
+function make_secqaa() {
+	return helper_form::make_secqaa();
 }
 
 function showmessage($message, $url_forward = '', $values = array(), $extraparam = array(), $custom = 0) {
@@ -2512,14 +2516,14 @@ function getTxtAttachByMd5($message, $filename_title, $ext) {
 
     if (is_resource($message)) {
         while (!feof($message)) {
-            if (!file_put_contents($_G['setting']['attachdir'] . $target . $filename . '.' . ($unrun ? 'dzz' : $ext), fread($message, 8192), FILE_APPEND)) {
+            if (file_put_contents($_G['setting']['attachdir'] . $target . $filename . '.' . ($unrun ? 'dzz' : $ext), fread($message, 8192), FILE_APPEND) === false) {
                 return false;
             }
         }
         fclose($message);
     } else {
         if ($message == '') $message = ' ';
-        if (!file_put_contents($_G['setting']['attachdir'] . $target . $filename . '.' . ($unrun ? 'dzz' : $ext), $message)) {
+        if (file_put_contents($_G['setting']['attachdir'] . $target . $filename . '.' . ($unrun ? 'dzz' : $ext), $message) === false) {
             return false;
         }
     }

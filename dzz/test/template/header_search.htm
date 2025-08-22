@@ -1,0 +1,34 @@
+<!--{if OP_NAME == 'index' || OP_NAME == 'archive' || OP_NAME == 'delete'}-->
+<div class="input-search">
+ <form name="search" action="{MOD_URL}" method="get" class="search_top">
+    <input type="hidden" name="mod" value="{MOD_NAME}" />
+    <input type="hidden" name="op" value="{OP_NAME}" />
+    <input type="hidden" name="do" value="" />
+    <i class="input-search-icon glyphicon glyphicon-search" aria-hidden="true" onclick="this.form.submit()"></i>
+    
+    <input class="form-control search form-search" name="keyword"  type="text" value="$keyword" placeholder="{lang name}" id='searchval'/>
+    <span aria-hidden="true" id="emptysearchcondition" class="header-closebutton">×</span>
+				
+ </form>
+</div>
+<script type="text/javascript">
+
+jQuery('#searchval').focus(function (e) {//头部搜索框变颜色
+    jQuery(this).closest('.input-search').addClass('focus');
+	if(this.value!='') jQuery('#emptysearchcondition').show();
+});
+jQuery('#searchval').blur(function (e) {//失去焦点时
+	 jQuery(this).closest('.input-search').removeClass('focus');
+	 if(this.value=='') jQuery('#emptysearchcondition').hide();
+});
+jQuery('#searchval').keyup(function (e) {//失去焦点时
+	if(this.value!='') jQuery('#emptysearchcondition').show();
+});
+jQuery('#emptysearchcondition').on('click',function(){
+	jQuery('#searchval').val('');
+	jQuery('#searchval').closest('form').submit();
+	jQuery('#emptysearchcondition').hide();
+	return false;
+});
+</script>
+<!--{/if}-->

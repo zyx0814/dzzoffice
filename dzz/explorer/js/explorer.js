@@ -16,6 +16,7 @@ _explorer = function (json) {
 	_explorer.thame = json.thame || {};
 	_explorer.infoPanelOpened = json.infoPanelOpened || 0;
 	_explorer.infoRequest = 0;
+	_explorer.deletefinally = json.deletefinally || 0;
 	_explorer.cut = json.cut || {
 		iscut: 0,
 		icos: []

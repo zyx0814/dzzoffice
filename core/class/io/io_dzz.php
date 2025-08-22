@@ -518,7 +518,6 @@ class io_dzz extends io_api {
             $attachment = preg_replace('/^TMP::/i', '', $icoid);
             $pathinfo = pathinfo($file);
             return array('icoid' => md5($icoid),
-
                 'name' => $pathinfo['basename'],
                 'ext' => $pathinfo['extension'],
                 'size' => filesize($file),
@@ -526,7 +525,6 @@ class io_dzz extends io_api {
                 'dpath' => dzzencode($icoid),
                 'url' => '',
                 'bz' => ''
-
             );
         } elseif (preg_match('/^dzz:[gu]id_\d+:.+?/i', $icoid)) {
             $dir = dirname($icoid) . '/';
@@ -609,10 +607,7 @@ class io_dzz extends io_api {
         try {
             foreach ($paths as $path) {
                 $meta = $this->getMeta($path);
-                if (is_array($meta) && isset($meta['error'])) {
-                    writelog('errorlog', $meta['error']);
-                    continue;
-                }
+                if (is_array($meta) && isset($meta['error'])) continue;
                 switch ($meta['type']) {
                     case 'folder':
                         $lposition = $position . $meta['name'] . '/';
@@ -633,10 +628,7 @@ class io_dzz extends io_api {
                         break;
                     default:
                         $metaurl = IO::getStream($meta['path']);
-                        if (is_array($metaurl) && isset($metaurl['error'])) {
-                            writelog('errorlog', $metaurl['error']);
-                            continue;
-                        }
+                        if (is_array($metaurl) && isset($metaurl['error'])) continue 2;
                         $meta['position'] = $position . ($meta['ext'] ? (preg_replace("/\." . $meta['ext'] . "$/i", '', $meta['name']) . '.' . $meta['ext']) : $meta['name']);
                         /*$data[$meta['icoid']]=$meta;*/
                         $zip->addLargeFile(fopen($metaurl, 'rb'), $meta['position'], $meta['dateline']);
@@ -948,6 +940,9 @@ class io_dzz extends io_api {
 
     //创建目录
     public function CreateFolder($pfid, $fname, $perm = 0, $params = array(), $ondup = 'newcopy', $force = false) {
+        if (!$fname) {
+            return array('error' => lang('directory_name_can_not_empty'));
+        }
         global $_G, $_GET;
         $folderparams = array('innav', 'fsperm', 'disp', 'iconview', 'display', 'flag', 'default', 'perm');
         if ($pfid == 0) {
@@ -1476,12 +1471,7 @@ class io_dzz extends io_api {
             } else {
                 $target = $this->getCache($partinfo['flag'] . '_' . md5($filename));
             }
-            if (!file_put_contents(
-                $_G['setting']['attachdir'] . $target,
-                $fileContent,
-                FILE_APPEND
-            )
-            ) {
+            if (file_put_contents($_G['setting']['attachdir'] . $target,$fileContent,FILE_APPEND) === false) {
                 return array('error' => lang('cache_file_error'));
             }
 
@@ -1494,7 +1484,7 @@ class io_dzz extends io_api {
             $pathinfo = pathinfo($filename);
             $ext = strtolower($pathinfo['extension']);
             $target = IO::getPath($ext ? ('.' . $ext) : '', 'dzz');
-            if (!empty($fileContent) && !file_put_contents($_G['setting']['attachdir'] . $target, $fileContent)) {
+            if (file_put_contents($_G['setting']['attachdir'] . $target, $fileContent) === false) {
                 return array('error' => lang('cache_file_error'));
             }
         }

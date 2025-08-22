@@ -26,10 +26,8 @@ if (submitcheck('appsubmit')) {
     $_GET['feature'] = getstr($_GET['feature']);
     $_GET['taginput'] = str_replace(array(',', "'", '，'), '', trim($_GET['taginput']));
     $_GET['fileextinput'] = trim($_GET['fileextinput']);
-    if (!empty($_GET['fileextinput']))
-        $_GET['fileext'][] = $_GET['fileextinput'];
-    if (!empty($_GET['taginput']))
-        $_GET['tag'][] = $_GET['taginput'];
+    if (!empty($_GET['fileextinput'])) $_GET['fileext'][] = $_GET['fileextinput'];
+    if (!empty($_GET['taginput'])) $_GET['tag'][] = $_GET['taginput'];
     $setarr = array(
         'appname' => getstr($_GET['appname'], 80, 0, 0, 0, -1),
         'appurl' => trim($_GET['appurl']),
@@ -91,9 +89,7 @@ if (submitcheck('appsubmit')) {
     $picids = $_GET['picids'];
     //删除已有图片
     $delete_picids = $_GET['delete_pics'];
-    if ($delete_picids)
-        app_pic_delete($delete_picids);
-
+    if ($delete_picids) app_pic_delete($delete_picids);
     if ($appid) {
         C::t('app_market')->update($appid, $setarr);
     } else {
@@ -104,18 +100,17 @@ if (submitcheck('appsubmit')) {
         $appid = C::t('app_market')->insert($setarr, 1);
     }
     //处理标签
-    C::t('app_tag')->addtags($_GET['tag'], $appid);
+    C::t('app_tag')->addtags(dhtmlspecialchars($_GET['tag']), $appid);
     //更新上传图片的id
-    if ($picids)
-        C::t('app_pic')->update($picids, array('appid' => $appid));
-    C::t('app_open')->insert_by_exts($appid, $_GET['fileext']);
+    if ($picids) C::t('app_pic')->update($picids, array('appid' => $appid));
+    C::t('app_open')->insert_by_exts($appid, dhtmlspecialchars($_GET['fileext']));
 
     //处理组织机构
-    if ($setarr['group'] != 1)
+    if ($setarr['group'] != 1) {
         $orgids = array();
-    //只有用户可用时才设置部门
-    else
+    } else {//只有用户可用时才设置部门
         $orgids = $_GET['orgids'] ? explode(',', $_GET['orgids']) : array();
+    }
     C::t('app_organization')->replace_orgids_by_appid($appid, $orgids);
 
     showmessage('do_success', $_GET['refer']);

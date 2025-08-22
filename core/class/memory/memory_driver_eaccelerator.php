@@ -5,8 +5,15 @@ if (!defined('IN_DZZ')) {
 }
 
 class memory_driver_eaccelerator {
+    public $cacheName = 'eAccelerator';
+	public $enable;
+    public function env() {
+		return function_exists('eaccelerator_get');
+	}
 
-    public function init($config) {}
+    public function init($config) {
+        $this->enable = $this->env();
+    }
 
     public function get($key) {
         return eaccelerator_get($key);

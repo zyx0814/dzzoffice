@@ -1670,7 +1670,7 @@ function checksec(type, idhash, showmsg, recall) {
 	var x = new Ajax('XML', 'checksec' + type + 'verify_' + idhash);
 	x.loading = '';
 	document.getElementById('checksec' + type + 'verify_' + idhash).innerHTML = '<span class="dzz dzz-autorenew dzz-spin"></span>';
-	x.get('misc.php?mod=sec' + type + '&action=check&inajax=1&&idhash=' + idhash + '&secverify=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(secverify) : secverify), function(s){
+	x.get('misc.php?mod=sec' + type + '&action=check&inajax=1&idhash=' + idhash + '&secverify=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(secverify) : secverify), function(s){
 		var obj = document.getElementById('checksec' + type + 'verify_' + idhash);
 		if(obj){
 			obj.style.display = '';

@@ -105,7 +105,7 @@ function fileupload(el,fid) {
 
     }).on('fileuploadfail', function (e, data) {
         var errorMsg = '上传失败';
-        if (data.jqXHR.responseText) {
+        if (data.jqXHR && data.jqXHR.responseText) {
             try {
                 var response = JSON.parse(data.jqXHR.responseText);
                 if (response.files && response.files[0] && response.files[0].error) {

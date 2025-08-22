@@ -5,10 +5,18 @@ if (!defined('IN_DZZ')) {
 }
 
 class memory_driver_memcache {
+    public $cacheName = 'MemCache';
     public $enable;
     public $obj;
+    public function env() {
+		return extension_loaded('memcache');
+	}
 
     public function init($config) {
+        if (!$this->env()) {
+			$this->enable = false;
+			return;
+		}
         if (!empty($config['server'])) {
 
             $this->obj = new Memcache;

@@ -271,7 +271,11 @@
                 location.hash = '#catsearch&do=searchfile&id=' + data['insertid'];
             } else {
                 hideWindow('addsearchcat');
-                layer.alert(data['msg'], {skin:'lyear-skin-danger'});
+                if(data['msg']) {
+                    layer.alert(data['msg'], {skin:'lyear-skin-danger'});
+                } else {
+                    layer.alert(__lang.save_failed, {skin:'lyear-skin-danger'});
+                }
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
@@ -295,7 +299,11 @@
                 return false;
             } else {
                 hideWindow('editcatsearch');
-                layer.alert(__lang.save_failed, {skin:'lyear-skin-danger'});
+                if(data['msg']) {
+                    layer.alert(data['msg'], {skin:'lyear-skin-danger'});
+                } else {
+                    layer.alert(__lang.save_failed, {skin:'lyear-skin-danger'});
+                }
             }
             return false;
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {

@@ -639,9 +639,9 @@ $lang = array
     'dzzmarket_edit_pull' => '拖放安装包到此',
     // admin/dzzmarket/edit_type.html
     'edit_type_application' => '选择您要创建的应用类型',
-    'edit_type_dzzoffice' => '为dzzoffice提供各种功能的应用',
-    'edit_type_dzzoffice1' => '为dzzoffice提供各种主题和风格',
-    'edit_type_dzzoffice2' => '为dzzoffice提供各种扩展和功能增强',
+    'edit_type_dzzoffice' => '为DzzOffice提供各种功能的应用',
+    'edit_type_dzzoffice1' => '为DzzOffice提供各种主题和风格',
+    'edit_type_dzzoffice2' => '为DzzOffice提供各种扩展和功能增强',
     // admin/function/function_admin.php
     'function_admin_error' => '数据类型错误，只能导入应用数据',
     // admin/icon/main.html

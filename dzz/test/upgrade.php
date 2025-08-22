@@ -6,5 +6,7 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-
-$finish = true;
+if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {//所有的php文件必须加上此句，防止被外部和非管理员调用
+	exit('Access Denied');
+}
+$finish = true;//结束时必须加入此句，告诉应用升级程序已经完成自定义的升级流程

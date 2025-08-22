@@ -98,7 +98,8 @@ INSERT INTO `dzz_cron` VALUES(4, 0, 'system', '每周清理缓存缩略图', 'cr
 INSERT INTO `dzz_cron` VALUES(5, 0, 'system', '每月清除未用附件', 'cron_clean_copys0_attachment_by_month.php', 1395388548,0, -1, -1, -1, '5	10	15	20	25	30	35	40	45	50	55');
 INSERT INTO `dzz_cron` VALUES(6, 0, 'system', '定时备份数据库', 'cron_database_backup.php', 1460797274, 1460840400, 0, -1, 5, '0');
 INSERT INTO `dzz_cron` VALUES(7, 0, 'system', '定时迁移本地文件到存储位置', 'cron_movetospace_attachment.php', 1536458668, 1536459000, -1, -1, -1, '0	10	20	30	40	50');
-INSERT INTO `dzz_cron` VALUES(8,1,'app','回收站自动删除任务','dzz:explorer:cron_explorer_recycle.php',1746603582,1746604800,-1,-1,-1,'0');
+INSERT INTO `dzz_cron` VALUES(8,1,'system','限时操作清理','cron_threadexpiry_hourly.php',1755674400,1756069200,-1,-1,-1,'0');
+INSERT INTO `dzz_cron` VALUES(9,1,'app','回收站自动删除任务','dzz:explorer:cron_explorer_recycle.php',1746603582,1746604800,-1,-1,-1,'0');
 
 --
 -- 转存表中的数据 `dzz_folder_default`
@@ -194,7 +195,7 @@ INSERT INTO `dzz_setting` VALUES('bbrules', '0');
 INSERT INTO `dzz_setting` VALUES('bbrulesforce', '0');
 INSERT INTO `dzz_setting` VALUES('bbrulestxt', '');
 INSERT INTO `dzz_setting` VALUES('seccodedata', 'a:13:{s:4:"type";s:1:"0";s:5:"width";s:3:"150";s:6:"height";s:2:"34";s:7:"scatter";s:1:"0";s:10:"background";s:1:"1";s:10:"adulterate";s:1:"1";s:3:"ttf";s:1:"1";s:5:"angle";s:1:"0";s:7:"warping";s:1:"0";s:5:"color";s:1:"1";s:4:"size";s:1:"0";s:6:"shadow";s:1:"1";s:8:"animator";s:1:"1";}');
-INSERT INTO `dzz_setting` VALUES('bbname', 'dzzoffice');
+INSERT INTO `dzz_setting` VALUES('bbname', 'DzzOffice');
 INSERT INTO `dzz_setting` VALUES('pwlength', '0');
 INSERT INTO `dzz_setting` VALUES('strongpw', 'a:0:{}');
 INSERT INTO `dzz_setting` VALUES('pwdsafety', '0');
@@ -212,7 +213,7 @@ INSERT INTO `dzz_setting` VALUES('boardlicensed', '0');
 INSERT INTO `dzz_setting` VALUES('leavealert', '0');
 INSERT INTO `dzz_setting` VALUES('bbclosed', '0');
 INSERT INTO `dzz_setting` VALUES('closedreason', '网站升级中....');
-INSERT INTO `dzz_setting` VALUES('sitename', 'dzzoffice');
+INSERT INTO `dzz_setting` VALUES('sitename', 'DzzOffice');
 INSERT INTO `dzz_setting` VALUES('dateconvert', '1');
 
 INSERT INTO `dzz_setting` VALUES('smcols', '8');

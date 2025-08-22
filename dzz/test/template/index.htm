@@ -1,7 +1,9 @@
 <!--{template common/header_simple_start}-->
-<!--<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">-->
+<link href="static/css/common.css?{VERHASH}" rel="stylesheet" media="all">
+<link rel='stylesheet' type="text/css" href="{MOD_PATH}/images/test.css?{VERHASH}"/><!-- {MOD_PATH}表示当前模块的目录 -->
 <!--模板的header区域，需要在头部的js或css可以写在这里-->
 <!--{template common/header_simple_end}-->
+<!--{template common/commer_header}-->
 <!--模板body区域,直接加入自己的模板代码即可，body标签已经存在-->
 <div class="container" style="padding:50px;">
 	<div class="well">
@@ -13,7 +15,6 @@
 		<br>
 		<!--{hook test_diaoyong}-->
 	</div>
-	
-	 
 </div>
+<script type="text/javascript" src="{MOD_PATH}/scripts/test.js?{VERHASH}"></script><!-- {MOD_PATH}表示当前模块的目录 -->
 <!--{template common/footer_simple}-->

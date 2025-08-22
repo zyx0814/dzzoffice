@@ -1,10 +1,18 @@
 <?php
 
 class memory_driver_redis {
+    public $cacheName = 'Redis';
     var $enable;
     var $obj;
+    public function env() {
+		return extension_loaded('redis');
+	}
 
     function init($config) {
+        if(!$this->env()) {
+			$this->enable = false;
+			return;
+		}
         if (!empty($config['server'])) {
             try {
                 $this->obj = new Redis();

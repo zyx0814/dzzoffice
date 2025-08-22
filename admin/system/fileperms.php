@@ -10,7 +10,6 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
     exit('Access Denied');
 }
 include_once libfile('function/admin');
-$oparr = array('updatecache', 'database', 'cron', 'log', 'fileperms');
 $op = isset($_GET['op']) ? $_GET['op'] : '';
 $navtitle = lang('fileperms') . ' - ' . lang('appname');
 $step = max(1, intval($_GET['step']));
