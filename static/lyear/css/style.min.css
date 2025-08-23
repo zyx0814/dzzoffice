@@ -592,6 +592,7 @@ li.lyear-skin-li .form-check:first-child .form-check-input:checked+label::after{
 .bs-left-container{-webkit-box-shadow:none;-moz-webkit-box-shadow:none;box-shadow:none}
 .bs-left-container.lyear-aside-open{transform:translateX(0)}
 .lyear-mask-modal{background-color:rgba(33,37,41,0.5);height:100%;left:0;opacity:1;top:0;visibility:visible;width:100%;z-index:120;position:fixed;-webkit-transition:visibility 0 linear 0.4s,opacity 0.4s cubic-bezier(0.4,0,0.2,1);transition:visibility 0 linear 0.4s,opacity 0.4s cubic-bezier(0.4,0,0.2,1);-webkit-transform:translateZ(0);transform:translateZ(0)}
+.header-mask-modal{background-color:rgba(33,37,41,0.5);height:100%;left:0;opacity:1;top:0;visibility:visible;width:100%;z-index:110;position:fixed;-webkit-transition:visibility 0 linear 0.4s,opacity 0.4s cubic-bezier(0.4,0,0.2,1);transition:visibility 0 linear 0.4s,opacity 0.4s cubic-bezier(0.4,0,0.2,1);-webkit-transform:translateZ(0);transform:translateZ(0)}
 .bs-left-container-close .bs-left-container{width:240px !important;width:var(--sidebar-width) !important}
 .bs-left-container-close .bs-top-container,.bs-left-container-close .bs-main-container{padding-left:0px !important}
 }@media (min-width:1024px){.bs-left-container-close .nav-drawer>li>a{padding:0;height:48px}

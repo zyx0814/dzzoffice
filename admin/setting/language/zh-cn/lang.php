@@ -32,6 +32,7 @@ $lang = array
     'default_app_desc' => '进入系统后的默认首页',
     'please_select_default_index' => '默认首页',
     'setting_main_logo' => '仅支持上传2M以内的图片,支持jpg、jpeg、png、gif格式的图片',
+    'notification_set'=>'通知设置',
 );
 
 
