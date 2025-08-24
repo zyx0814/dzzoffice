@@ -919,7 +919,7 @@ if ($operation == 'upload') {//上传图片文件
     } else {
         $error = lang('file_not_exist');
     }
-    if ($versioninfo['aid']) {
+    if ($_G['adminid'] && $versioninfo['aid']) {
         $attachment = IO::getFileUri('attach::' . $versioninfo['aid']);
     }
 } elseif ($operation == 'deletethisversion') {
