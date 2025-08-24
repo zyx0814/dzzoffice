@@ -24,6 +24,17 @@
 				<!--{else}-->
 				<div class="alert alert-danger" role="alert">无法检测</div>
 				<!--{/if}-->
+				<div class="alert alert-info" role="alert">
+					<strong>1. PHP 层面超时（脚本自身管控）</strong><br>
+					- PHP 最大请求时间（max_input_time）：处理大文件上传、大量表单数据时需关注（管控数据接收阶段）<br>
+					- PHP 最大执行时间（max_execution_time）：处理复杂计算、数据库操作等耗时任务时需关注（管控代码执行阶段）<br>
+					<br>
+					<strong>2. Nginx 层面超时（请求全链路管控）</strong><br>
+					- client_body_timeout：需 ≥ max_input_time（避免接收大文件时 Nginx 先断开）<br>
+					- fastcgi_read_timeout：需 ≥ max_execution_time（避免长耗时任务时 Nginx 先超时）<br>
+					<small>提示：仅配置 PHP 可能出现 408/504 错误，需确保 Nginx 与 PHP 超时时间匹配</small><br>
+					详细的DzzOffice 优化教程请前往DzzOffice 官网获取更多优化建议。
+				</div>
 			</div>
 		</div>
 	</div>
