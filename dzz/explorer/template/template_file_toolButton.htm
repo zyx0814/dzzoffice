@@ -20,6 +20,7 @@
         <a href="javascript:;" type="button" class="btn dropdown-toggle more dcolor" data-toggle="dropdown"><i class="mdi mdi-dots-vertical" data-toggle="tooltip" data-placement="bottom"  title="{lang more}"></i></a>
         <ul class="dropdown-menu">
             <li class="open single"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.Open('{rid}')"><i class="mdi mdi-folder-open"></i><span class="file-text">{lang open}</span></a></li>
+            <li class="openwith single"><a href="javascript:;" class="dropdown-item" onclick="_filemanage.setOpenDefault('{rid}')"><i class="mdi mdi-open-in-new"></i><span class="file-text">{lang set_default_open}</span></a></li>
             <li class="rename single"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.rename('{rid}')"><i class="mdi mdi-pencil"></i><span class="file-text">{lang rename}</span></a></li>
             <li class="copy"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.copy('{rid}')"><i class="mdi mdi-file-multiple"></i><span class="file-text">{lang copy}</span></a></li>
             <li class="copy clone"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.copy('{rid}','{fid}')"><i class="mdi mdi-file-document-multiple"></i><span class="file-text">{lang clone}</span></a></li>

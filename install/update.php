@@ -269,7 +269,7 @@ if ($_GET['step'] == 'start') {
             'mid' => '27',
             'app_path' => 'dzz',
             'identifier' => 'explorer',
-            'version' => '2.05',
+            'version' => '2.07',
             'available' => 1), 0, 1);
     }
     //添加图片预览应用

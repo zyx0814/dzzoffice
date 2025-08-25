@@ -699,12 +699,12 @@ _filemanage.SetMoreButton = function () {
 	var yunfileButton = el.find('.yunfile-btnMenu');
 	yunfileButton.children().hide();
 
-	var totalWidth = 80;
+	var totalWidth = 40;
 	yunfileButton.children().each(function() {
 		var el1 = $(this);
 		el1.show();
 		var btnWidth = el1.outerWidth(true);
-		if (totalWidth + btnWidth > (width - 80)) {
+		if (totalWidth + btnWidth > (width - 40)) {
 			el1.hide();
 		} else {
 			totalWidth += btnWidth;
@@ -730,12 +730,6 @@ _filemanage.SetMoreButton = function () {
 				el.find('.yunfile-moreMenu .rename').show();
 			} else {
 				el.find('.yunfile-moreMenu .rename').hide();
-			}
-		} else if (el1.hasClass('paste')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .paste').show();
-			} else {
-				el.find('.yunfile-moreMenu .paste').hide();
 			}
 		} else if (el1.hasClass('cut')) {
 			if (el1.is(':hidden')) {
@@ -778,6 +772,12 @@ _filemanage.SetMoreButton = function () {
 				el.find('.yunfile-moreMenu .paste').show();
 			}else{
 				el.find('.yunfile-moreMenu .paste').hide();
+			}
+		} else if(el1.hasClass('openwith')){
+			if(el1.is(':hidden')){
+				el.find('.yunfile-moreMenu .openwith').show();
+			}else{
+				el.find('.yunfile-moreMenu .openwith').hide();
 			}
 		}
 	});
