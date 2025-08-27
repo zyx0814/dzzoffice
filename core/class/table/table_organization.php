@@ -452,7 +452,7 @@ class table_organization extends dzz_table {
             //添加对应动态
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $setarr['orgid']);
             $eventdata = array('groupname' => $setarr['orgname'], 'uid' => getglobal('uid'), 'username' => getglobal('username'), 'hash' => $hash);
-            C::t('resources_event')->addevent_by_pfid($fid, 'create_group', 'create', $eventdata, $setarr['orgid']);
+            C::t('resources_event')->addevent_by_pfid($fid, 'create_group', 'create', $eventdata, $setarr['orgid'], '', $setarr['orgname']);//记录事件
             self::setPathkeyByOrgid($setarr['orgid']);
             if ($setarr['type'] == '0') {
                 //更新disp
