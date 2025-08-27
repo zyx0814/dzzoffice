@@ -510,9 +510,9 @@ class table_resources extends dzz_table {
     //获取文件夹基本信息
     public function get_folderinfo_by_fid($fid) {
         if (!$folderinfo = C::t('folder')->fetch($fid)) return false;
-        /*$contaions = self::get_contains_by_fid($fid, true);
+        $contaions = self::get_contains_by_fid($fid, true);
         $folderinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-        $folderinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));*/
+        $folderinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
         $folderinfo['position'] = preg_replace('/dzz:(.+?):/', '', $path);
         $folderinfo['fdateline'] = dgmdate($folderinfo['dateline'], 'Y-m-d H:i:s');

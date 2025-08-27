@@ -1660,7 +1660,6 @@ _filemanage.Open = function (rid, extid, title) {
 				jQuery('.Icoblock[rid=' + rid + '] img[data-original]').trigger('click');
 				return;
 			} else if (extdata_url.indexOf('dzzjs:') === 0) {
-				
 				eval((extdata_url.replace('dzzjs:','')));
 				addstatis(rid);
 				return;

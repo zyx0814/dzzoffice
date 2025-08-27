@@ -143,6 +143,7 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
 
     } else {//登录失败记录日志 
         //写入日志
+        $password = preg_replace("/^(.{".round(strlen($_GET['password']) / 4)."})(.+?)(.{".round(strlen($_GET['password']) / 6)."})$/s", "\\1***\\3", $_GET['password']);
         $errorlog = "用户" . ($result['ucresult']['email'] ? $result['ucresult']['email'] : $_GET['email']) . "尝试登录[" . $password . "]错误";
         writelog('loginlog', $errorlog);
 
