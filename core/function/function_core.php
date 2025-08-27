@@ -616,7 +616,7 @@ function dstrpos($string, $arr, $returnvalue = false) {
 }
 
 function isemail($email) {
-    return strlen($email) > 6 && strlen($email) <= 32 && preg_match("/^([A-Za-z0-9\-_.+]+)@([A-Za-z0-9\-]+[.][A-Za-z0-9\-.]+)$/", $email);
+    return strlen($email) > 6 && strlen($email) <= 40 && preg_match("/^([A-Za-z0-9\-_.+]+)@([A-Za-z0-9\-]+[.][A-Za-z0-9\-.]+)$/", $email);
 }
 
 function isphone($phone) {
