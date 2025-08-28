@@ -3,10 +3,10 @@ function feed_publish(arr,tid,targetid){
 	
 var html=''
 	html+='<div id="comment_'+arr['cid']+'" class="itemfeed" feed-id="'+arr['cid']+'" style="display:none">';
-  	html+='	<div class="left_ifed"> <a href="user.php?uid='+arr['authorid']+'" title="'+arr['author']+'" hidefocus="true">'+arr['avatar']+'</a> </div>';
+  	html+='	<div class="left_ifed"> <a href="user.php?uid='+arr['authorid']+'" title="'+arr['author']+'" hidefocus="true" target="_blank">'+arr['avatar']+'</a> </div>';
   	html+='	<div class="right_ifed">';
     html+=' 	<div class="main_fed">';
-    html+='  		 <div class="source_fed"> <a href="user.php?uid='+arr['authorid']+'" title="'+arr['author']+'" hidefocus="true" class="appuser_sfed skip_mmfed">'+arr['author']+'</a><span class="cont_sfed">'+__lang.talk+'：</span> </div>';
+    html+='  		 <div class="source_fed"> <a href="user.php?uid='+arr['authorid']+'" title="'+arr['author']+'" target="_blank" hidefocus="true" class="appuser_sfed skip_mmfed">'+arr['author']+'</a><span class="cont_sfed">'+__lang.talk+'：</span> </div>';
     html+='  		<div class="master_mfed"> <span class="lquote_mmfed"></span><span class="content_mmfed">'+arr['message']+'</span><span class="rquote_mmfed"></span> </div>';
 	html+='	   <div class="attachment_fed">';
 for(var i in arr['attachs']){
@@ -112,9 +112,9 @@ function feed_reply(arr){
  var html='';
 	 html+='<div id="comment_'+arr['cid']+'" class="cmt_fed">';
      html+='   <div class="item_cfed">';
-     html+='     <div class="left_icfed"> <a href="user.php?uid='+arr['authorid']+'" title="" hidefocus="true"> '+arr['avatar']+' </a> </div>';
+     html+='     <div class="left_icfed"> <a href="user.php?uid='+arr['authorid']+'" title="" hidefocus="true" target="_blank"> '+arr['avatar']+' </a> </div>';
      html+='     <div class="right_icfed">';
-     html+='       <div class="master_cfed"> <a href="user.php?uid='+arr['authorid']+'" title="" class="avatar_mcfed skip_cmfed" hidefocus="true">'+arr['author']+'</a> ';
+     html+='       <div class="master_cfed"> <a href="user.php?uid='+arr['authorid']+'" title="" class="avatar_mcfed skip_cmfed" hidefocus="true" target="_blank">'+arr['author']+'</a> ';
 	 if(arr['rpost']){
 		html+='<span class="amal_fed">'+__lang.reply+'</span>  <a href="user.php?uid='+arr['rpost']['authorid']+'" title="" class="avatar_mcfed skip_cmfed" hidefocus="true" target="_blank">'+arr['rpost']['author']+'</a>'; 
 	 }

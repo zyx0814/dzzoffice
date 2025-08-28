@@ -875,11 +875,6 @@ function check_env() {
         $quit = true;
     }
 
-    if (PHP_VERSION < '4.3') {
-        $errors[] = 'php_version_430';
-        $quit = true;
-    }
-
     if (!file_exists(ROOT_PATH . './config/config.php')) {
         $errors[] = lang('config_nonexistence');
         $quit = true;

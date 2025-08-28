@@ -26,7 +26,8 @@ if ($filter == 'new') {//列出所有新通知
     }
 } elseif ($filter == 'checknew') {//检查有没有新通知
     $num = DB::result_first("select COUNT(*) from %t where new>0 and uid=%d", array('notification', $_G['uid']));
-    exit(json_encode(array('sum' => $num, 'timeout' => 60 * 1000)));
+    $notificationrefresh = $_G['setting']['notification'] ? $_G['setting']['notification'] : 60;
+    exit(json_encode(array('sum' => $num, 'timeout' => $notificationrefresh * 1000)));
 } else {
     Hook::listen('check_login');
     $list = array();

@@ -450,8 +450,9 @@ class table_organization extends dzz_table {
                 C::t('organization_admin')->insert($uid, $setarr['orgid'], 2);
             }
             //添加对应动态
-            $eventdata = array('groupname' => $setarr['orgname'], 'uid' => getglobal('uid'), 'username' => getglobal('username'));
-            C::t('resources_event')->addevent_by_pfid($fid, 'create_group', 'create', $eventdata, $setarr['orgid']);
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $setarr['orgid']);
+            $eventdata = array('groupname' => $setarr['orgname'], 'uid' => getglobal('uid'), 'username' => getglobal('username'), 'hash' => $hash);
+            C::t('resources_event')->addevent_by_pfid($fid, 'create_group', 'create', $eventdata, $setarr['orgid'], '', $setarr['orgname']);//记录事件
             self::setPathkeyByOrgid($setarr['orgid']);
             if ($setarr['type'] == '0') {
                 //更新disp
