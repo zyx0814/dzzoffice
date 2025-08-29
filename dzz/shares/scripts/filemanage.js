@@ -342,7 +342,7 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 			jQuery(this).removeClass('hover');
 
 		});
-		el.find('.icoblank_rightbottom').on('click', function () {
+		el.find('.icoblank_righttop').on('click', function () {
 			var flag = true;
 			var ell = jQuery(this).parent();
 			var rid = el.attr('rid');

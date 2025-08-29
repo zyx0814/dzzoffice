@@ -73,6 +73,7 @@ if ($do == 'getfolderdynamic') {
         $gid = $fileinfo['gid'];
         if ($fileinfo['isgroup']) {
             $org = C::t('organization')->fetch($gid);
+            if (!$org) return;
             //获取已使用空间
             $usesize = C::t('organization')->get_orgallotspace_by_orgid($gid, 0, false);
             //获取总空间
@@ -123,6 +124,16 @@ if ($do == 'getfolderdynamic') {
     $commentperm = true;
     if (!perm_check::checkperm_Container($fid, 'comment')) {
         $commentperm = false;
+    }
+    $folderrid = C::t('resources')->fetch_rid_by_fid($fid);
+    if($folderrid) {
+        $fileinfo['rid'] = $folderrid;
+        $filemeta = C::t('resources_meta')->fetch_by_key($folderrid,'desc', true);
+        if($filemeta) $fileinfo['desc'] = $filemeta;
+        $editperm = true;
+        if (!perm_check::checkperm_Container($fid, 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fid, 'edit1'))) {
+            $editperm = false;
+        }
     }
     include template('right_folder_menu');
     exit();
@@ -185,6 +196,12 @@ if ($do == 'getfolderdynamic') {
             if (!perm_check::checkperm_Container($file['oid'], 'comment')) {
                 $commentperm = false;
             }
+            $filemeta = C::t('resources_meta')->fetch_by_key($rid,'desc', true);
+            if($filemeta) $fileinfo['desc'] = $filemeta;
+            $editperm = true;
+            if (!perm_check::checkperm_Container($file['oid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($file['oid'], 'edit1'))) {
+                $editperm = false;
+            }
             include template('right_folder_menu');
             exit();
         } else {
@@ -214,6 +231,8 @@ if ($do == 'getfolderdynamic') {
             if (!perm_check::checkperm_Container($pfid, 'comment')) {
                 $commentperm = false;
             }
+            $filemeta = C::t('resources_meta')->fetch_by_key($rid,'desc', true);
+            if($filemeta) $fileinfo['desc'] = $filemeta;
             $tags = C::t('resources_tag')->fetch_tag_by_rid($rid);
             $explorer_setting = get_resources_some_setting();
             include template('right_menu');

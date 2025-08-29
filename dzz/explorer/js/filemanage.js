@@ -409,14 +409,14 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	html = html.replace(/\{qrcode\}/g, data.qrcode);
 	html = html.replace(/\{password\}/g, data.password);
 	html = html.replace(/\{count\}/g, data.count);
-	if(data.status < 0){
-     var sharestatus = '<span  style="color: red;">('+data.fstatus+')</span>';
-	}else{
-        sharestatus = '';
+	if(data.shareid > 0) {
+		var sharestatus = '<span class="share-item" ><i class="mdi mdi-share text-success" title="已分享"></i></span>';
+	} else {
+		var sharestatus = '<span class="share-item hide"><i class="mdi mdi-share text-success" title=""></i></span>';
 	}
 	//收藏
 	if(data.collect){
-		var collectstatus = '<span class="colllection-item" ><i class="mdi mdi-star text-yellow" title=""></i></span>';
+		var collectstatus = '<span class="colllection-item" ><i class="mdi mdi-star text-yellow" title="已收藏"></i></span>';
 	}else{
 		var collectstatus = '<span class="colllection-item hide"><i class="mdi mdi-star text-yellow" title=""></i></span>';
 	}
@@ -473,7 +473,7 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		});
 		//处理多选框
 		//if(!_filemanage.fid || _explorer.Permission_Container('multiselect',this.fid)){
-		el.find('.icoblank_rightbottom').on('click', function () {
+		el.find('.icoblank_righttop').on('click', function () {
 			var flag = true;
 			var ell = jQuery(this).parent();
 			var rid = el.attr('rid');
@@ -1902,7 +1902,7 @@ _filemanage.property = function (rid, isfolder) {
 		}
 		path = encodeURIComponent(dpaths.join(','));
 	}
-	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&bz='+bz+'&paths=' + path);
+	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&bz='+bz+'&paths=' + path, 'get', 0);
 };
 _filemanage.share = function (rid, rids) {
 	if (!rid) {
@@ -2019,9 +2019,9 @@ _filemanage.NewIco = function (type, fid) {
 	}
 
 	if (type === 'newFolder') {
-		showWindow('newFolder', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid+'&bz='+bz);
+		showWindow('newFolder', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid+'&bz='+bz, 'get', 0);
 	} else if (type === 'newLink') {
-		showWindow('newLink', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid);
+		showWindow('newLink', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid, 'get', 0);
 	} else {
 		$.post(_explorer.appUrl + '&op=ajax&operation=newIco&type=' + type, {
 			'fid': fid,
