@@ -446,4 +446,6 @@ $lang = array(
     'editversiondesc' => '修改版本描述',
     'clone' => '创建副本',
     'paste_failure' => '粘贴失败，请重新复制尝试再次粘贴！',
+    'file_desc' => '描述说明',
+    'file_desc_placeholder' => '添加文档描述...',
 );

@@ -146,6 +146,13 @@ class table_shares extends dzz_table {
         return false;
     }
 
+    public function fetch_by_shareid($rid) {
+        if ($info = DB::fetch_first("select id from %t where filepath = %s", array($this->_table, $rid))) {
+            return $info['id'];
+        }
+        return false;
+    }
+
     public function update_by_id($id, $setarr,$bz='') {
         if (empty($setarr)) return false;
         if (!$id) return false;
