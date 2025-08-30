@@ -36,54 +36,68 @@
 	<!--{/if}-->
 	<!--根文件进度条结束-->
     <!--文件夹详情开始-->
-    <div class="p-2 border-bottom" id="folderinfo">
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang type}</label>
-			<div class="col-sm-8">$fileinfo['type']</div>
+    <div class="p-2 border-bottom">
+		<div id="folderinfo">
+			<div class="row mb-1">
+				<label class="col-sm-4">{lang type}</label>
+				<div class="col-sm-8">$fileinfo['type']</div>
+			</div>
+			<!--{if $fileinfo[realpath]}-->
+			<div class="row mb-1">
+				<label class="col-sm-4">{lang position}</label>
+				<div class="col-sm-8 text-break">$fileinfo[realpath]</div>
+			</div>
+			<!--{/if}-->
+			<!--{if $fileinfo['username']}-->
+			<div class="row mb-1">
+				<label class="col-sm-4">{lang possesor}</label>
+				<div class="col-sm-8 text-break">$fileinfo['username']</div>
+			</div>
+			<!--{/if}-->
+			<!--{if $fileinfo[contain]}-->
+			<div class="row mb-1">
+				<label class="col-sm-4">{lang include}</label>
+				<div class="col-sm-8 text-break">$fileinfo[contain]</div>
+			</div>
+			<!--{/if}-->
+			<!--{if $fileinfo[ffsize]}-->
+			<div class="row mb-1">
+				<label class="col-sm-4">{lang big_small}</label>
+				<div class="col-sm-8 text-break">$fileinfo[ffsize]</div>
+			</div>
+			<!--{/if}-->
+			<!--{if $fileinfo[fdateline]}-->
+			<div class="row mb-1">
+				<label class="col-sm-4">{lang create_time}</label>
+				<div class="col-sm-8 text-break">$fileinfo[fdateline]</div>
+			</div>
+			<!--{/if}-->
+			<!--{if $fileinfo[editdateline]}-->
+			<div class="row mb-1">
+				<label class="col-sm-4">{lang preceding_edit_time}</label>
+				<div class="col-sm-8 text-break">$fileinfo[editdateline]</div>
+			</div>
+			<!--{/if}-->
+			<!--{if $fileinfo[opendateline]}-->
+			<div class="row mb-1">
+				<label class="col-sm-4">{lang preceding_open_time}</label>
+				<div class="col-sm-8 text-break">$fileinfo[opendateline]</div>
+			</div>
+			<!--{/if}-->
 		</div>
-		<!--{if $fileinfo[realpath]}-->
+		<!--{if $fileinfo['rid'] && !$fileinfo['ismulti']}-->
 		<div class="row mb-1">
-			<label class="col-sm-4">{lang position}</label>
-			<div class="col-sm-8 text-break">$fileinfo[realpath]</div>
+			<label class="col-sm-4">{lang file_desc}</label>
+			<textarea name="desc" class="form-control form-control_desc" <!--{if !$editperm}-->disabled="disabled"<!--{/if}--> placeholder="{lang file_desc_placeholder}">$fileinfo['desc']</textarea>
+			<script type="text/javascript">
+			jQuery('.form-control_desc').change(function(){
+				var desc = jQuery.trim(jQuery(this).val());
+				riddesc('{$fileinfo['rid']}',desc);
+			});
+			</script>
 		</div>
 		<!--{/if}-->
-		<!--{if $fileinfo['username']}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang possesor}</label>
-			<div class="col-sm-8 text-break">$fileinfo['username']</div>
-		</div>
-		<!--{/if}-->
-		<!--{if $fileinfo[contain]}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang include}</label>
-			<div class="col-sm-8 text-break">$fileinfo[contain]</div>
-		</div>
-		<!--{/if}-->
-		<!--{if $fileinfo[ffsize]}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang big_small}</label>
-			<div class="col-sm-8 text-break">$fileinfo[ffsize]</div>
-		</div>
-		<!--{/if}-->
-		<!--{if $fileinfo[fdateline]}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang create_time}</label>
-			<div class="col-sm-8 text-break">$fileinfo[fdateline]</div>
-		</div>
-		<!--{/if}-->
-		<!--{if $fileinfo[editdateline]}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang preceding_edit_time}</label>
-			<div class="col-sm-8 text-break">$fileinfo[editdateline]</div>
-		</div>
-		<!--{/if}-->
-		<!--{if $fileinfo[opendateline]}-->
-		<div class="row mb-1">
-			<label class="col-sm-4">{lang preceding_open_time}</label>
-			<div class="col-sm-8 text-break">$fileinfo[opendateline]</div>
-		</div>
-		<!--{/if}-->
-    </div>
+	</div>
 	<!--{if $perm && $fileinfo['isdelete'] < 1}-->
 	<div class="p-2 border-bottom">
 		<div class="right-card-header">
@@ -97,7 +111,6 @@
 				<!--{/loop}-->
 			</ul>
 		</div>
-		
 	</div>
 	<!--{/if}-->
     <!--成员开始-->
@@ -153,12 +166,14 @@
 					$org[orgname]
 				</div>
 			</div>
+			<!--{if $org[desc]}-->
 			<div class="row mb-1">
 				<label class="col-sm-3">{lang introduce}</label>
 				<div class="col-sm-9">
 					$org[desc]
 				</div>
 			</div>
+			<!--{/if}-->
 			<div class="d-flex">
 				<label class="col-sm-3">{lang status}</label>
 				<div class="col-sm-9">

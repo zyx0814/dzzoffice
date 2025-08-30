@@ -17,16 +17,25 @@
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
         <!--{elseif $operation=='at'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
         <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
         <!--{elseif $operation=='upload'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
         <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
+        <!--{elseif $operation=='notification'}-->
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
         <!--{elseif $operation=='loginset'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=denlu">{lang basicSet}</a></li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
@@ -47,6 +56,7 @@
         <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
         <!--{elseif $operation=='sec'}-->
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=denlu">{lang basicSet}</a></li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
@@ -344,6 +354,55 @@
                 <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
             </dl>
           </form>
+          <!--{elseif $operation=='notification'}-->
+          <form id="cpform" action="{MOD_URL}" class="form-horizontal-left" method="post" name="cpform">
+            <input type="hidden" value="{FORMHASH}" name="formhash">
+            <input type="hidden" value="notification" name="operation">
+            <div class="row mb-3">
+              <label for="notificationrefresh" class="col-sm-2">通知刷新时间间隔</label>
+              <div class="col-sm-10">
+                <div class="input-group mb-3">
+                  <input type="text" id="notificationrefresh" class="form-control" required name="settingnew[notificationrefresh]" value="$setting[notificationrefresh]" />
+                  <span class="input-group-text">秒</span>
+                </div>
+                <ul class="help-block">
+                  <li>间隔越短接收新消息越快，同时对服务器的性能要求越高，不建议配置差的服务器将间隔调太小。</li>
+                  <li>如：间隔时间为1，表示每一秒请求服务器查看是否有新消息，相当于每个一秒就会访问服务器。</li>
+                </ul>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2">通知消息重复接收与计数</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="notificationrepetition1" name="settingnew[notificationrepetition]" value="1" <!--{if $setting[notificationrepetition]}--> checked="checked" <!--{/if}-->>
+                  <label class="form-check-label" for="notificationrepetition1">{lang enable}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="notificationrepetition2" name="settingnew[notificationrepetition]" value="0" <!--{if !$setting[notificationrepetition]}-->checked="checked"<!--{/if}-->>
+                  <label class="form-check-label" for="notificationrepetition2">{lang close}</label>
+                </div>
+                <ul class="help-block">
+                  <li>关闭（推荐）：同一应用、同一用户、同一类型的通知（如同一篇文章的多次评论通知），不会生成新消息，而是自动覆盖原消息并累计次数（例：原“1条评论”更新为“3条评论”），同时刷新消息时间。</li>
+                  <li>开启：所有通知均生成独立新消息，不与历史同类型消息合并（例：同一篇文章的3次评论会生成3条独立通知），不累计次数。</li>
+                </ul>
+              </div>
+            </div>
+            <dl class="mb-3 d-grid">
+              <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit"  value="{lang save_changes}" type="submit">
+            </dl>
+          </form>
+          <script type="text/javascript" src="static/lyear/js/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+          <script type="text/javascript">
+          $(document).ready(function(){
+              // 初始化数值
+              $("#notificationrefresh").TouchSpin({
+                  min: 1,
+                  initval: 60,
+                  max:99999999,
+              });
+          });
+          </script>
           <!--{elseif $operation=='upload'}-->
           <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
             <input type="hidden" value="{FORMHASH}" name="formhash">

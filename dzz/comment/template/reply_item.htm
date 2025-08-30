@@ -2,11 +2,11 @@
 	<a name="comment_anchor_$value1[cid]"></a>
 	<div class="item_cfed">
 		<div class="left_icfed">
-			<a href="user.php?uid=$value1[authorid]" title="" hidefocus="true"> {eval echo avatar_block($value['authorid']);} </a>
+			<a href="user.php?uid=$value1[authorid]" title="" hidefocus="true" target="_blank"> {eval echo avatar_block($value['authorid']);} </a>
 		</div>
 		<div class="right_icfed">
 			<div class="master_cfed">
-				<a href="user.php?uid=$value1[authorid]" title="" class="avatar_mcfed skip_cmfed" hidefocus="true">$value1[author]</a>
+				<a href="user.php?uid=$value1[authorid]" title="" class="avatar_mcfed skip_cmfed" hidefocus="true" target="_blank">$value1[author]</a>
 				<!--{if $value1['rpost']}-->
 				<span class="amal_fed">{lang reply}</span>
 				<a href="user.php?uid=$value1[rpost][authorid]" title="" class="avatar_mcfed skip_cmfed" hidefocus="true" target="_blank">$value1[rpost][author]</a>

@@ -3,22 +3,14 @@
 	.bs-top-container,.sidebar-header {
 		background-color: #fff;
 	}
-	.navbar-right .nav-link {
-		color:#495057
+	.navbar-right .nav-link{
+		color: inherit;
 	}
-	.recent-item {
-		display: flex;
-		align-items: center;
-		padding: 0.75rem 1rem;
-		border-bottom: 1px solid #e9ecef;
+	.sidebar-header a{
+		color: inherit !important;
 	}
-	.recent-item:last-child {
-		border-bottom: none;
-	}
-	.recent-img {
-		margin-right: 1rem;
-		width: 32px;
-		text-align: center;
+	.bs-main-container{
+		padding-left:0;
 	}
 	.ui-sortable-helper{
 		border:1px solid transparent;
@@ -27,12 +19,7 @@
 	.ui-state-default{
 		display: inline-block;
 	}
-	.app-card:hover {
-		box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
-		box-shadow: 0 0 0 2px #007bff, 0 10px 20px 0 rgba(0, 0, 0, 0.1);
-		box-shadow: 0 0 0 2px var(--bs-primary), 0 10px 20px 0 rgba(0, 0, 0, 0.1);
-		box-shadow: 0px 0px 15px rgba(0, 0, 0, .15);
-	}
+	.card-market:hover,.card-market:focus-within{box-shadow:0px 0px 12px rgba(0, 0, 0, 0.12);transform:translatey(-5px)}
 	.app-icon {
 		width: 64px;
 		height: 64px;
@@ -64,35 +51,11 @@
 				</div>
 			</div>
 		</div>
-		<!--{if $filedata}-->
-		<div class="card" id="statis">
-			<header class="card-header d-flex justify-content-between">
-				<div class="card-title"><i class="mdi mdi-file-clock-outline me-2"></i>最近使用文件</div>
-				<ul class="card-actions">
-				<li><a href="javascript:;" class="dcolor card-btn-close"><i class="mdi mdi-close"></i></a></li>
-				<li><a href="javascript:;" class="dcolor card-btn-slide"><i class="mdi mdi-chevron-up"></i></a></li>
-				<li><a href="javascript:;" class="dcolor card-btn-fullscreen"><i class="mdi mdi-fullscreen"></i></a></li>
-				<li><a href="{MOD_URL}&do=statis" class="dcolor card-btn-reload"><i class="mdi mdi-refresh"></i></a></li>
-				</ul>
-			</header>
-			<div class="card-body">
-				<!--{loop $filedata $key $value}-->
-				<a href="{DZZSCRIPT}?mod=explorer{$value['url']}" class="recent-item dcolor">
-					<img src="$value['img']" class="recent-img" title="$value['name']"/>
-					<div>
-						<div class="fw-bold">$value['name']</div>
-						<div class="text-muted">$value['opendateline']</div>
-					</div>
-				</a>
-				<!--{/loop}-->
-			</div>
-		</div>
-		<!--{/if}-->
 		<!--{if $applist_1}-->
 		<div class="row ui-sortable">
 			<!--{loop $applist_1 $key $value}-->
-			<div class="col-md-3 col-sm-3 col-lg-2 popup-index-li" data-appid="$value[appid]">
-				<a <!--{if $value['open']}-->target="_blank"<!--{/if}--> href="$value[url]" title="$value[appname]" class="card app-card border">
+			<div class="popup-index-li col-xxl-2 col-xl-3 col-lg-3 col-md-4 col-sm-6 col-12" data-appid="$value[appid]">
+				<a <!--{if $value['open']}-->target="_blank"<!--{/if}--> href="$value[url]" title="$value[appname]" class="card card-market border m-2">
 				<div class="card-body text-center">
 					<img src="$value[appico]" class="app-icon">
 					<div class="card-title text-body text-truncate">$value[appname]</div>
@@ -111,7 +74,7 @@
 <script type="text/javascript">
 	jQuery(document).ready(function(){
 		jQuery('.ui-sortable').sortable({
-			placeholder: "ui-state-default col-md-3 col-sm-3 col-lg-2 card app-card border",
+			placeholder: "ui-state-default col-xxl-2 col-xl-3 col-lg-3 col-md-4 col-sm-6 col-12 border card",
 			items: "div.popup-index-li",
 			stop: function(event, ui) {
 				var appids=[];

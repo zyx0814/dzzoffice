@@ -510,9 +510,9 @@ class table_resources extends dzz_table {
     //获取文件夹基本信息
     public function get_folderinfo_by_fid($fid) {
         if (!$folderinfo = C::t('folder')->fetch($fid)) return false;
-        /*$contaions = self::get_contains_by_fid($fid, true);
+        $contaions = self::get_contains_by_fid($fid, true);
         $folderinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-        $folderinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));*/
+        $folderinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
         $folderinfo['position'] = preg_replace('/dzz:(.+?):/', '', $path);
         $folderinfo['fdateline'] = dgmdate($folderinfo['dateline'], 'Y-m-d H:i:s');
@@ -633,8 +633,18 @@ class table_resources extends dzz_table {
                 $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
             }
         }
+        $metaTable = C::t('resources_meta');
+        $sharestable = C::t('shares');
         foreach (DB::fetch_all("SELECT rid FROM %t where $wheresql $ordersql $limitsql", $para) as $value) {
             if ($arr = self::fetch_by_rid($value['rid'], '', false, $sid)) {
+                $metaData = $metaTable->fetch_by_rid($value['rid'], true);
+                if (!empty($metaData)) {
+                    $arr['meta'] = $metaData;
+                }
+                $sharesdata = $sharestable->fetch_by_shareid($value['rid']);
+                if (!empty($sharesdata)) {
+                    $arr['shareid'] = $sharesdata;
+                }
                 if ($sid) {
                     $arr['dpath'] = dzzencode('sid:' . $sid . '_' . $value['rid']);
                     if ($isfilter && isset($arr['attachment'])) {

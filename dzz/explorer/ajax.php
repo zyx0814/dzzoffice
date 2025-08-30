@@ -117,7 +117,9 @@ if ($operation == 'upload') {//上传图片文件
             if (!$new) {
                 //增加群组事件
                 if ($orginfo && !$inherit) {
-                    $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'folder' => $orginfo['orgname']);
+                    $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $gid);
+                    $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'folder' => $orginfo['orgname'], 'hash' => $hash);
+
                     C::t('resources_event')->addevent_by_pfid($fid, 'set_group_perm', 'setperm', $eventdata, $gid, '', $orginfo['orgname']);
                 } else {//增加文件夹事件
                     $rid = C::t('resources')->fetch_rid_by_fid($fid);
@@ -463,7 +465,10 @@ if ($operation == 'upload') {//上传图片文件
             if (!perm_check::checkperm_Container($file['oid'], 'comment')) {
                 exit(json_encode(array('error' => lang('file_comment_no_privilege'))));
             }
-            $eventdata = array('msg' => $msg);
+            $path = C::t('resources_path')->fetch_pathby_pfid($file['pfid']);
+            $path = preg_replace('/dzz:(.+?):/', '', $path);
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($file['pfid'], $file['gid']);
+            $eventdata = array('position' => $path, 'hash' => $hash, 'msg' => $msg,'title' => $file['name']);
             if ($insert = C::t('resources_event')->addevent_by_pfid($file['pfid'], 'add_comment', 'addcomment', $eventdata, $file['gid'], $rid, $file['name'], 1)) {
                 $return = array(
                     'username' => getglobal('username'),
@@ -522,7 +527,10 @@ if ($operation == 'upload') {//上传图片文件
                 exit(json_encode(array('error' => lang('folder_comment_no_privilege'))));
             }
             $rid = C::t('resources')->fetch_rid_by_fid($fid);
-            $eventdata = array('msg' => $msg);
+            $path = C::t('resources_path')->fetch_pathby_pfid($fid);
+            $path = preg_replace('/dzz:(.+?):/', '', $path);
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $folder['gid']);
+            $eventdata = array('position' => $path, 'hash' => $hash, 'msg' => $msg,'title' => '');
             if ($insert = C::t('resources_event')->addevent_by_pfid($fid, 'add_comment', 'addcomment', $eventdata, $folder['gid'], ($rid) ? $rid : '', $folder['fname'], 1)) {
                 $return = array(
                     'username' => getglobal('username'),
@@ -919,7 +927,7 @@ if ($operation == 'upload') {//上传图片文件
     } else {
         $error = lang('file_not_exist');
     }
-    if ($versioninfo['aid']) {
+    if ($_G['adminid'] && $versioninfo['aid']) {
         $attachment = IO::getFileUri('attach::' . $versioninfo['aid']);
     }
 } elseif ($operation == 'deletethisversion') {

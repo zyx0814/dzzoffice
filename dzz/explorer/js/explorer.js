@@ -733,3 +733,21 @@ function addstatis(rid) {
 	});
 	return remsg;
 }
+function riddesc(rid,desc) {
+	if (!rid) return;
+	var data = {
+		'desc':desc,
+		'rid':rid
+	};
+	jQuery.post(_explorer.appUrl + '&op=dzzcp&do=riddesc', data, function (json) {
+		if(json.success){
+			return true;
+		} else if(json.error){
+			showmessage(json.error, 'danger', 3000, 1);
+		} else {
+			showmessage('操作失败，请稍后再试', 'danger', 3000, 1);
+		}
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+	});
+}

@@ -207,7 +207,7 @@ function parseurl($url, $text, $scheme) {
 }
 
 function parseat($uid, $text, $idtype = 'uid') {
-    if ($idtype == 'uid') return '<a href="user.php?uid=' . $uid . '">' . $text . '</a>';
+    if ($idtype == 'uid') return '<a href="user.php?uid=' . $uid . '" target="_blank">' . $text . '</a>';
     elseif ($idtype == 'gid') {
         return '<a href="javascript:;">' . $text . '</a>';
     }

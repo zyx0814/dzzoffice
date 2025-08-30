@@ -168,7 +168,8 @@ if ($do == 'delete_group') {
                     }
                 }
                 //增加事件
-                $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'orgname' => $group['orgname'], 'delusers' => implode(',', $delusers));
+                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($group['fid'], $gid);
+                $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'orgname' => $group['orgname'], 'delusers' => implode(',', $delusers), 'hash' => $hash);
                 C::t('resources_event')->addevent_by_pfid($group['fid'], 'delete_group_user', 'deleteuser', $eventdata, $gid, '', $group['orgname']);
             }
             //新添加用户
@@ -205,7 +206,8 @@ if ($do == 'delete_group') {
                 }
                 $insertuserdata = C::t('resources_event')->result_events_has_avatarstatusinfo($insertuser, $insertuserdata);
                 //增加事件
-                $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'orgname' => $group['orgname'], 'insertusers' => implode(',', $insertusername));
+                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($group['fid'], $gid);
+                $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'orgname' => $group['orgname'], 'insertusers' => implode(',', $insertusername), 'hash' => $hash);
                 C::t('resources_event')->addevent_by_pfid($group['fid'], 'add_group_user', 'adduser', $eventdata, $gid, '', $group['orgname']);
             }
             if ($type == 1) {
@@ -337,11 +339,13 @@ if ($do == 'delete_group') {
 
                 }
             }
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($group['fid'], $gid);
             if ($perm == 2) {
-                $body_data = array('username' => getglobal('username'), 'oldusername' => $return['olduser']['username'], 'groupname' => $group['orgname'], 'newusername' => $return['member']);
+                $body_data = array('username' => getglobal('username'), 'oldusername' => $return['olduser']['username'], 'groupname' => $group['orgname'], 'newusername' => $return['member'], 'hash' => $hash);
                 $event_body = 'change_creater';
             } else {
-                $body_data = array('username' => getglobal('username'), 'groupname' => $group['orgname'], 'permname' => $permtitle[$perm], 'member' => $return['member']);
+                $body_data = array('username' => getglobal('username'), 'groupname' => $group['orgname'], 'permname' => $permtitle[$perm], 'member' => $return['member'], 'hash' => $hash);
+
                 $event_body = 'update_member_perm';
             }
             C::t('resources_event')->addevent_by_pfid($group['fid'], $event_body, 'update_perm', $body_data, $gid, '', $group['orgname']);//记录事件
@@ -375,7 +379,8 @@ if ($do == 'delete_group') {
                 $deluserarr[] = $v['username'];
             }
             //增加事件
-            $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'orgname' => $group['orgname'], 'delusers' => implode(',', $deluserarr));
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($group['fid'], $gid);
+            $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'orgname' => $group['orgname'], 'delusers' => implode(',', $deluserarr), 'hash' => $hash);
             C::t('resources_event')->addevent_by_pfid($group['fid'], 'delete_group_user', 'deleteuser', $eventdata, $gid, '', $group['orgname']);
         }
 

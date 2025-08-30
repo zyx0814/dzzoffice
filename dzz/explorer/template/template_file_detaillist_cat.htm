@@ -1,6 +1,6 @@
 
 <div class="detaillist filemanage">
-    <table class="table table-hover table-striped align-middle" style="table-layout:fixed;">
+    <table class="table table-hover table-striped align-middle user-select-none" style="table-layout:fixed;">
       <thead class="file-item-hide">
         <tr>
           <th width="30px"></th>
@@ -45,7 +45,7 @@
                  <img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))"  data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
               </div>
               <div class="file-name-wrapper">
-                <div class="filename"><span class="editable-name detail_text" id="file_text_{rid}">{name}</span>{collectstatus}</div>
+                <div class="filename"><span class="editable-name detail_text" id="file_text_{rid}">{name}</span>{collectstatus} {sharestatus}</div>
                   <div class="text-muted small file-item-block w-100 text-truncate"><!--{if $displayTime}-->{ffdateline}<!--{else}-->{fdateline}<!--{/if}--> {fsize}</div>
               </div>
             </div>

@@ -22,11 +22,11 @@ $lang = array(
     'systemOS' => '操作系统',
     'max_upload_size' => '最大上传大小',
     'gd_version' => 'GD 库',
-    'max_execution_time' => 'PHP执行超时时间',
+    'max_execution_time' => 'PHP最大执行时间',
+    'max_input_time' => 'PHP最大请求时间',
     'memory_limit' => 'PHP内存限制',
     'post_max_size' => 'POST提交限制',
     'disk_space' => '磁盘空间',
-    'mysql_allow_persistent' => 'MySQL 持久连接',
     'SERVER_SOFTWARE' => '运行环境',
 );
 

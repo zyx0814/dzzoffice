@@ -245,7 +245,7 @@ function checkemail($email, $type = 'json', $template = '') {
 
     global $_G;
     $email = strtolower(trim($email));
-    if (strlen($email) > 32) {
+    if (strlen($email) > 40) {
         showTips(array('error' => lang('profile_email_illegal')), $type, $template);
     }
     if (isset($_G['setting']['regmaildomain'])) {

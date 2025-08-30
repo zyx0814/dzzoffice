@@ -110,9 +110,9 @@ if ($do == 'stats') {
         'memory_limit' => array('r' => '不限制', 'b' => '128M'),
         'gd_version' => array('r' => '1.0', 'b' => '2.0'),
         'disk_space' => array('r' => '50M', 'b' => '10G以上'),
-        'mysql_allow_persistent' => array('r' => '不限制', 'b' => '不限制'),
         'SERVER_SOFTWARE' => array('r' => '不限制', 'b' => 'nginx'),
         'max_execution_time' => array('r' => '不限制', 'b' => '不限制'),
+        'max_input_time' => array('r' => '不限制', 'b' => '不限制'),
     );
     foreach ($env_items as $key => $item) {
         if ($key == 'php_version') {
@@ -145,12 +145,12 @@ if ($do == 'stats') {
             } else {
                 $env_items[$key]['current'] = '无法确定架构类型';
             }
-        } elseif ($key == 'mysql_allow_persistent') {
-            $env_items[$key]['current'] = @get_cfg_var("mysql.allow_persistent") ? "是 " : "否";
         } elseif ($key == 'SERVER_SOFTWARE') {
             $env_items[$key]['current'] = $_SERVER["SERVER_SOFTWARE"];
         } elseif ($key == 'max_execution_time') {
             $env_items[$key]['current'] = ini_get('max_execution_time') . '秒';
+        } elseif ($key == 'max_input_time') {
+            $env_items[$key]['current'] = ini_get('max_input_time') . '秒';
         } elseif (isset($item['c'])) {
             $env_items[$key]['current'] = constant($item['c']);
         }

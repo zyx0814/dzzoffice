@@ -1222,7 +1222,7 @@ class io_dzz extends io_api {
                         'position' => $path,
                         'hash' => $hash
                     );
-                    C::t('resources_event')->addevent_by_pfid($fid, $event, 'create', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name'], $icoarr['name']);
+                    C::t('resources_event')->addevent_by_pfid($fid, $event, 'create', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name']);
                 } else {
                     C::t('resources')->delete_by_rid($icoarr['rid']);
                     return array('error' => lang('data_error'));
@@ -1272,7 +1272,7 @@ class io_dzz extends io_api {
                         'position' => $path,
                         'hash' => $hash
                     );
-                    C::t('resources_event')->addevent_by_pfid($fid, $event, 'create', $eventdata, $icoarr['gid'], $icoarr['rid']);
+                    C::t('resources_event')->addevent_by_pfid($fid, $event, 'create', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name']);
                 } else {
                     C::t('resources')->delete_by_rid($icoarr['rid']);
                     return array('error' => lang('data_error'));
