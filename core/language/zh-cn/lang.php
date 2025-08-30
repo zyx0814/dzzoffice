@@ -175,6 +175,7 @@ $lang = array(
     'file_size' => '文件大小',
     'cancel' => '取消',
     'share' => '分享',
+    'shared'  => '已分享',
     'cancel_share' => '取消分享',
     'create_share_failer' => '创建分享失败',
     'already_cancel' => '已取消',
@@ -1619,6 +1620,7 @@ $_G[siteurl]',
     'directory_name_can_not_empty' => '目录名称不能为空',
     'no_target_folderID' => '没有目标文件夹ID',
     'page_not_found' => '很抱歉，但是那个页面看起来已经不存在了。',
+    'is_encrypted' => '已加密',
 );
 
 ?>

@@ -346,42 +346,45 @@
     var getWidthLable = 0;
     var newgroupgid = '';
 	var sid = '{$_GET['sid']}';
+	var layuiModules = {
+        dropdown: null
+    };
 	jQuery(document).ready(function(e) {
 		layui.use(function(){
-		  var dropdown = layui.dropdown;
-			dropdown.render({
+		  layuiModules.dropdown = layui.dropdown;
+			layuiModules.dropdown.render({
 				elem: document,
 				trigger: 'manual',
 				id: 'right_ico',
 				content: '',
 				className:'lyear-dropdown',
 				click: function(data, othis, event){
-                    if (othis.hasClass('has-submenu')) {
-                        return false;
-                    }
-                }
+					if (othis.hasClass('has-submenu')) {
+						return false;
+					}
+				}
 			});
 		});
 		_filemanage.SetMoreButton();
-        _explorer.getConfig(MOD_URL+'&op=json');
+		_explorer.getConfig(MOD_URL+'&op=json');
 		jQuery(document).on('click', '.breadcrumb li a', function () {
-            var li = jQuery(this).parent();
-            var fids = li.data('fid');
+			var li = jQuery(this).parent();
+			var fids = li.data('fid');
 			var doss ='filelist';
 			if(li.hasClass('homesid')) {
 				location.href = '{MOD_URL}&sid={$_GET['sid']}';
-                return false;
+				return false;
 			}
-            if (li.hasClass('home')) {
+			if (li.hasClass('home')) {
 				fids = '';
 				doss = '';
-            }
+			}
 			_explorer.getRightContent(fids, doss);
-            li.nextAll('li').remove();
-            li.remove();
-            return false;
-        });
-    });
+			li.nextAll('li').remove();
+			li.remove();
+			return false;
+		});
+	});
 </script> 
 <script type="text/javascript" src="{MOD_PATH}/scripts/explorer.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/scripts/filemanage.js?{VERHASH}"></script>

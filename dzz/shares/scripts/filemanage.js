@@ -439,8 +439,8 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 			content: contextmenuico(jQuery(this).attr('rid')),
 			show: true,
 		}
-		layui.dropdown.reloadData('right_ico',options);
-		layui.dropdown.open('right_ico');
+		layuiModules.dropdown.reloadData('right_ico',options);
+		layuiModules.dropdown.open('right_ico');
 		return false;
 	});
 	//检测已选中
@@ -746,8 +746,8 @@ _filemanage.prototype.createIcosContainer = function () {
 				content: contextmenubody(self.fid),
 				show: true
 			}
-			layui.dropdown.reloadData('right_ico',options);
-			layui.dropdown.open('right_ico');
+			layuiModules.dropdown.reloadData('right_ico',options);
+			layuiModules.dropdown.open('right_ico');
 			return false;
 		})
 		.on('click', function (e) {

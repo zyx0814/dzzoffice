@@ -751,3 +751,121 @@ function riddesc(rid,desc) {
 		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
 	});
 }
+
+function initDateRangePicker(options) {
+    var defaults = {
+        startId: 'selectDate',
+        endId: 'selectDate1',
+        maxDate: '',
+        format: 'yyyy-MM-dd HH:mm',
+        type: 'datetime',
+        errorMsg: {
+            endTime: __lang.time_error_endtime,
+            startTime: __lang.time_error_starttime
+        }
+    };
+
+    var config = {};
+    for (var key in defaults) {
+        if (options && options.hasOwnProperty(key)) {
+            config[key] = options[key];
+        } else {
+            config[key] = defaults[key];
+        }
+    }
+    // 解析日期时间字符串为配置对象
+    function parseDateTimeToConfig(datetimeStr) {
+        if (!datetimeStr) {
+            return [];
+        }
+        
+        var parts = datetimeStr.split(' ');
+        var datePart = parts[0];
+        var timePart = parts[1] || '00:00:00';
+        
+        // 解析日期部分
+        var dateParts = datePart.split('-').map(Number);
+        // 解析时间部分
+        var timeParts = timePart.split(':').map(Number);
+        
+        return {
+            year: dateParts[0],
+            month: dateParts[1] - 1,
+            date: dateParts[2],
+            hours: timeParts[0],
+            minutes: timeParts[1],
+            seconds: timeParts[2]
+        };
+    }
+
+    // 初始化开始日期选择器
+    var startDate = layuiModules.laydate.render({
+        elem: '#' + config.startId,
+        type: config.type,
+        format: config.format,
+        calendar: true,
+        max: config.maxDate,
+        done: function(value, date) {
+            if (value && date.year) {
+                // 设置结束日期最小值
+                endDate.config.min = {
+                    year: date.year,
+                    month: date.month - 1,
+                    date: date.date,
+                    hours: date.hours,
+                    minutes: date.minutes,
+                    seconds: date.seconds
+                };
+
+                // 验证结束日期
+                var endVal = $(config.endId).val();
+                if (endVal && new Date(value) > new Date(endVal)) {
+                    layer.msg(config.errorMsg.endTime, { offset: '10px' });
+					$(config.endId).val('');
+                }
+            } else {
+                // 清空时恢复最大日期限制
+                endDate.config.min = parseDateTimeToConfig('0000-01-01 00:00:00');
+            }
+        }
+    });
+
+    // 初始化结束日期选择器
+    var endDate = layuiModules.laydate.render({
+        elem: '#' + config.endId,
+        type: config.type,
+        format: config.format,
+        calendar: true,
+        max: config.maxDate,
+        done: function(value, date) {
+            if (value && date.year) {
+                // 设置开始日期最大值
+                startDate.config.max = {
+                    year: date.year,
+                    month: date.month - 1,
+                    date: date.date,
+                    hours: date.hours,
+                    minutes: date.minutes,
+                    seconds: date.seconds
+                };
+
+                // 验证开始日期
+                var startVal = $(config.startId).val();
+                if (startVal && new Date(startVal) > new Date(value)) {
+                    layer.msg(config.errorMsg.startTime, { offset: '10px' });
+					$(config.startId).val('');
+                }
+            } else {
+                // 清空时恢复最大日期限制
+                startDate.config.max = parseDateTimeToConfig(config.maxDate);
+            }
+        }
+    });
+
+    // 返回实例，方便后续操作
+    return {
+        startDate: startDate,
+        endDate: endDate,
+        parseDateTimeToConfig: parseDateTimeToConfig
+    };
+}

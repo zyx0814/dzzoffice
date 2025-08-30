@@ -47,10 +47,15 @@ class table_shares extends dzz_table {
         if ($insert = parent::insert($setarr, 1)) {
             if($bz) return array('success' => $insert);
             //$share['qrcode'] = self::getQRcodeBySid($insert);
+            $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
+            $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
             $eventdata = array(
                 'username' => $setarr['username'],
                 'filename' => $fileinfo['name'],
-                'url' => getglobal('siteurl') . 'index.php?mod=shares&sid=' . dzzencode($insert)
+                'url' => getglobal('siteurl') . 'index.php?mod=shares&sid=' . dzzencode($insert),
+                'position' => $path,
+                'hash' => $hash,
             );
             if (!C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'share_file', 'share', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name'])) {
                 parent::delete($insert);
@@ -176,7 +181,10 @@ class table_shares extends dzz_table {
         $setarr['username'] = getglobal('username');
         if (parent::update($id, $setarr)) {
             if($bz) return $id;
-            $eventdata = array('username' => $setarr['username'], 'filename' => $fileinfo['name'], 'url' => getglobal('siteurl') . 'index.php&mod=shares&sid=' . dzzencode($id));
+            $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
+            $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
+            $eventdata = array('username' => $setarr['username'], 'filename' => $fileinfo['name'], 'url' => getglobal('siteurl') . 'index.php&mod=shares&sid=' . dzzencode($id), 'position' => $path, 'hash' => $hash);
             if (!C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'edit_share_file', 'share', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name'])) {
                 parent::delete($id);
                 return array('error' => lang('file_not_exist'));
@@ -237,16 +245,7 @@ class table_shares extends dzz_table {
             } else {
                 $val['qrcode'] = self::getQRcodeBySid($sid);
             }
-            if ($val['endtime']) {
-                $timediff = ($val['endtime'] - $val['dateline']);
-                $days = 0;
-                if ($timediff > 0) {
-                    $days = ceil($timediff / 86400);
-                }
-                $val['expireday'] = ($days > 0) ? $days . '天后' : '已过期';
-            } else {
-                $val['expireday'] = '永久有效';
-            }
+            $val['expireday'] = getexpiretext($val['endtime']);
             $rids = explode(',', $val['filepath']);
             if($val['pfid'] == -1) {
                 $val['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($val['filepath']);

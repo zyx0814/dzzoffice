@@ -3,7 +3,7 @@
 	<!--选择项开始-->
     <div class="middletopMenu clearfix ">
 		<div class="row justify-content-end">
-			<div class="col-sm-4">
+			<div class="col-sm-4 mb-3">
 				<div class="dropdown float-end">
 					<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
 						<span id="search_data_text">{lang all}</span>
@@ -16,17 +16,21 @@
 						<!--{loop $manageorg $v}-->
 						<li><a class="dropdown-item" href="javascript:;" data-val="g_$v['orgid']">$v['orgname']</a></li>
 						<!--{/loop}-->
-					</ul>                    		
+					</ul>
 				</div>
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-6 mb-3">
 				<div class="input-daterange input-group" id="datepicker">
-					<label class="input-group-text" for="selectTime01">从</label>
-					<input type="text" id="selectTime01" class="form-control" placeholder="{lang start_time}"/>
-					<label class="input-group-text" for="selectTime02">至</label>
-					<input type="text" id="selectTime02" class="form-control" placeholder="{lang finish_time}"/>
+					<label class="input-group-text" for="selectDate">从</label>
+					<input type="text" id="selectDate" class="form-control" placeholder="{lang start_time}"/>
+					<label class="input-group-text" for="selectDate1">至</label>
+					<input type="text" id="selectDate1" class="form-control" placeholder="{lang finish_time}"/>
 				</div>
 			</div>
+			<div class="col-md-2 mb-3">
+            <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
+            <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+        </div>
 		</div>
     </div>
     <!--选择项结束-->
@@ -66,16 +70,18 @@
 		todayBtn: "linked",
 		calendarWeeks: true,
     });
-
-	//时间筛选项值发生变化时
-	$('#selectTime01').change(function(){
-		searchrecyclejson.after = $(this).val();
+   $('#search-btn').click(function () {
 		searchRecycledata();
 	})
-    $('#selectTime02').change(function(){
-        searchrecyclejson.before = $(this).val();
-        searchRecycledata();
-    })
+	$('#refreshsearch').click(function() {
+		$('#selectDate').val('');
+		$('#selectDate1').val('');
+		$('#search_data_text').text('{lang all}');
+		searchrecyclejson.gid = 0;
+    	searchrecyclejson.fid = 0;
+		searchRecycledata();
+	});
+
 	//位置筛选项发生改变时
 	$(document).off('click.recycleposition').on('click.recycleposition','#position_menulist li',function(){
 		var val = $('a',this).data('val');
@@ -97,6 +103,8 @@
 	})
 	//执行筛选
 	function searchRecycledata(){
+		searchrecyclejson.after = $('#selectDate').val();
+		searchrecyclejson.before = $('#selectDate1').val();
         var filemanage=_filemanage.cons['recycle-list'];
         filemanage.gid=(searchrecyclejson.gid > 0) ? searchrecyclejson.gid:'';
 

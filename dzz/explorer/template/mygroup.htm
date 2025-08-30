@@ -1,6 +1,6 @@
 <div class="middletopMenu">
     <div class="row justify-content-end">
-        <div class="col-sm-4">
+        <div class="col-sm-4 mb-3">
             <select name="search" id="mygroupsearch" class="form-select">
                 <option value="all" selected="selected">{lang all}</option>
                 <option value="my">{lang my_create}</option>
@@ -8,13 +8,17 @@
                 <option value="partake">{lang my_involved}</option>
             </select>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6 mb-3">
             <div class="input-daterange input-group" id="datepicker">
                 <label class="input-group-text" for="selectDate">从</label>
-                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
+                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang start_time}">
                 <label class="input-group-text" for="selectDate1">至</label>
-                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
+                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang finish_time}">
             </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
+            <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
         </div>
     </div>
 </div>
@@ -45,8 +49,9 @@
 		calendarWeeks: true,
         zIndexOffset: 120
     });
+    
 	jQuery(document).ready(function(e) {
-	  layui.table.render({
+	  layuiModules.table.render({
 		elem: '#mygroup',
 		url: '{MOD_URL}&op=mygroup&do=filelist',
 		toolbar: '#toolbar',
@@ -80,14 +85,23 @@
 			type: 'desc' // 默认排序方式
 		},
         done: function(){
-            $('#selectDate,#selectDate1,#mygroupsearch').change(function () {
+            $('#search-btn').click(function () {
+                executedynamisc_search();
+            })
+            $('#refreshsearch').click(function() {
+                $('#selectDate').val('');
+                $('#selectDate1').val('');
+                $('#mygroupsearch').val('all');
+                for (var o in search_data) {
+                    search_data[o] = '';
+                }
                 executedynamisc_search();
             })
         },
 	  });
 	  //头工具栏事件
-	layui.table.on('toolbar(mygroup)', function(obj){
-		var checkStatus = layui.table.checkStatus(obj.config.id); //获取选中行状态
+	layuiModules.table.on('toolbar(mygroup)', function(obj){
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id); //获取选中行状态
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -119,7 +133,7 @@
                 });
             break;
             case 'get':
-            layui.table.reloadData('mygroup', {
+            layuiModules.table.reloadData('mygroup', {
                 where: search_data, // 清空搜索参数
                 page: {
                     curr: 1 //重新从第 1 页开始
@@ -129,7 +143,7 @@
         };
     });
     //监听工具条
-	layui.table.on('tool(mygroup)', function(obj){
+	layuiModules.table.on('tool(mygroup)', function(obj){
         var data = obj.dataCache;
         if(obj.event === 'view'){
             var hash = "#group&gid=" + data.orgid;
@@ -137,19 +151,19 @@
         }
     });
 	// 行单击事件
-	layui.table.on('row(mygroup)', function(obj) {
+	layuiModules.table.on('row(mygroup)', function(obj) {
 		var dataCache = obj.dataCache;
 		var hash = "#group&gid="+dataCache.orgid;
 		window.location.hash = hash;
 	});
     //触发排序事件 
-	layui.table.on('sort(mygroup)', function(obj){
+	layuiModules.table.on('sort(mygroup)', function(obj){
 		if(obj.field == 'usernum' || obj.field == 'creater') {
             layer.msg('该排序为前端排序', {offset:'10px'});
         } else {
             search_data.sort = obj.field;
             search_data.order = obj.type;
-            layui.table.reloadData('mygroup', {
+            layuiModules.table.reloadData('mygroup', {
                 initSort: obj,
                 where: search_data
             });
@@ -159,7 +173,7 @@
         search_data.search = $('#mygroupsearch').val();
         search_data.startdate = $('#selectDate').val();
         search_data.enddate = $('#selectDate1').val();
-        layui.table.reloadData('mygroup', {
+        layuiModules.table.reloadData('mygroup', {
 		initSort: {
 			field: search_data.sort,
 			type: search_data.order

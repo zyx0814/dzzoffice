@@ -1,19 +1,23 @@
 <div class="middletopMenu">
     <div class="row justify-content-end">
-        <div class="col-sm-4">
+        <div class="col-sm-4 mb-3">
             <select name="field_type" id="groupon" class="form-select">
                 <option value="0" selected="selected">{lang all_groups}</option>
                 <option value="1">{lang already_close}</option>
                 <option value="2">{lang already_start}</option>
             </select>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6 mb-3">
             <div class="input-daterange input-group" id="datepicker">
                 <label class="input-group-text" for="selectDate">从</label>
-                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
+                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang start_time}">
                 <label class="input-group-text" for="selectDate1">至</label>
-                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
+                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang finish_time}">
             </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
+            <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
         </div>
     </div>
 </div>
@@ -48,8 +52,9 @@
 		calendarWeeks: true,
         zIndexOffset: 120
     });
+
 	jQuery(document).ready(function(e) {
-	  layui.table.render({
+	  layuiModules.table.render({
 		elem: '#table',
 		url: '{MOD_URL}&op=groupmanage&do=filelist',
 		toolbar: '#toolbar',
@@ -85,14 +90,23 @@
 			type: 'desc' // 默认排序方式
 		},
         done: function(){
-            $('#selectDate,#selectDate1,#groupon').change(function () {
+            $('#search-btn').click(function () {
                 executedynamisc_search();
             })
+            $('#refreshsearch').click(function() {
+                $('#selectDate').val('');
+                $('#selectDate1').val('');
+                $('#groupon').val('0');
+                for (var o in search_data) {
+                    search_data[o] = '';
+                }
+                executedynamisc_search();
+            });
         },
 	  });
 	  //头工具栏事件
-	layui.table.on('toolbar(table)', function(obj){
-		var checkStatus = layui.table.checkStatus(obj.config.id); //获取选中行状态
+	layuiModules.table.on('toolbar(table)', function(obj){
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id); //获取选中行状态
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -147,7 +161,7 @@
                             }
                         }
                         layer.msg(msg, {offset:'10px'});
-                        layui.table.reloadData('table');
+                        layuiModules.table.reloadData('table');
                         return false;
                     },'json').fail(function() {
                         layer.msg('服务器发生错误，请稍后再试', {offset:'10px'});
@@ -155,7 +169,7 @@
                 });
 			break;
             case 'get':
-            layui.table.reloadData('table', {
+            layuiModules.table.reloadData('table', {
                 where: search_data, // 清空搜索参数
                 page: {
                     curr: 1 //重新从第 1 页开始
@@ -164,7 +178,7 @@
             break; 
         };
     });
-    layui.table.on('edit(table)', function(obj){
+    layuiModules.table.on('edit(table)', function(obj){
         jQuery.post('{MOD_URL}&op=groupmanage&do=folder_maxspacesize', {'orgid': obj.data.orgid,maxspacesize:obj.data.maxspacesize},function(json){
         if(json['success']){
             showmessage('空间大小设置成功', 'success', '3000', 1);
@@ -180,7 +194,7 @@
             showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
         });
     });
-    layui.form.on('switch(sexDemo)', function(obj) {
+    layuiModules.form.on('switch(sexDemo)', function(obj) {
 		var diron = obj.elem.checked ? 1 : 0;
         jQuery.post('{MOD_URL}&op=groupmanage&do=groupmanage', {'gid': this.value,'diron':diron},function(json){
         if(json['success']){
@@ -193,17 +207,17 @@
                 showmessage('{lang error}', 'danger', '3000', 1);
             }
             obj.elem.checked = !obj.elem.checked;
-            layui.form.render('checkbox');
+            layuiModules.form.render('checkbox');
         }
         },'json')
         .fail(function() {
             showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
             obj.elem.checked = !obj.elem.checked;
-            layui.form.render('checkbox');
+            layuiModules.form.render('checkbox');
         });
     });
     //监听工具条
-	layui.table.on('tool(table)', function(obj){
+	layuiModules.table.on('tool(table)', function(obj){
         var data = obj.dataCache;
         if(obj.event === 'view'){
             var hash = "#group&gid=" + data.orgid;
@@ -231,26 +245,26 @@
         }
     });
     //触发排序事件 
-	layui.table.on('sort(table)', function(obj){
+	layuiModules.table.on('sort(table)', function(obj){
         if(obj.field == 'usernum' ||  obj.field == 'maxspacesize' || obj.field == 'creater') {
             layer.msg('该排序为前端排序', {offset:'10px'});
         } else {
             search_data.sort = obj.field;
             search_data.order = obj.type;
-            layui.table.reloadData('table', {
+            layuiModules.table.reloadData('table', {
                 initSort: obj,
                 where: search_data
             });
         }
 	});
-    layui.table.on('rowDouble(table)', function(obj){
+    layuiModules.table.on('rowDouble(table)', function(obj){
         showDataTemplate(obj);
     });
     function executedynamisc_search() {
         search_data.groupon = $('#groupon').val();
         search_data.startdate = $('#selectDate').val();
         search_data.enddate = $('#selectDate1').val();
-        layui.table.reloadData('table', {
+        layuiModules.table.reloadData('table', {
             initSort: {
                 field: search_data.sort,
                 type: search_data.order

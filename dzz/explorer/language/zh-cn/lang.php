@@ -66,8 +66,8 @@ $lang = array(
     'rename_file' => '重命名文件<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}为{newfilename}',
     'rename_msg' => '重命名文件<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}为{newfilename}',
     'share' => '分享',
-    'share_file' => '分享了文件(文件夹)>{filename}',
-    'edit_share_file' => '编辑了文件(文件夹)>{filename}的分享设置',
+    'share_file' => '分享了<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}',
+    'edit_share_file' => '编辑了<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}的分享设置',
     'share_not_exists' => '分享不存在',
     'cancle_share' => '取消文件(文件夹){filename}的分享',
     'share_notallow_from_different_zone' => '分享文件不允许源自不同位置',
@@ -448,4 +448,6 @@ $lang = array(
     'paste_failure' => '粘贴失败，请重新复制尝试再次粘贴！',
     'file_desc' => '描述说明',
     'file_desc_placeholder' => '添加文档描述...',
+    'time_error_endtime' => '结束时间不能早于开始时间',
+    'time_error_starttime' => '开始时间不能晚于结束时间',
 );

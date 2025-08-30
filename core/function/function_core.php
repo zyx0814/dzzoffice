@@ -3405,3 +3405,41 @@ function sms($tplsign, $to, $params = array('expire' => 15, 'codelength' => 6)) 
     return $result[0];
 
 }
+
+/**
+ * 计算过期时间文本
+ * @param int $endtime 结束时间戳
+ * @return string 过期时间描述（如：3天后、2小时后、5分钟后、即将过期、已过期、永久有效）
+ */
+function getexpiretext($endtime = 0) {
+    if (empty($endtime)) {
+        return '永久有效';
+    }
+    
+    $timediff = $endtime - TIMESTAMP;
+    
+    if ($timediff <= 0) {
+        return '已过期';
+    }
+    
+    // 计算天、时、分、秒
+    $days = floor($timediff / 86400);
+    if ($days > 90) {
+        return date('Y-m-d H:i', $endtime);
+    }
+    $remaining = $timediff % 86400;
+    $hours = floor($remaining / 3600);
+    $remaining %= 3600;
+    $minutes = floor($remaining / 60);
+    $seconds = $remaining % 60;
+    
+    if ($days > 0) {
+        return $days . '天后';
+    } elseif ($hours > 0) {
+        return $hours . '小时后';
+    } elseif ($minutes > 0) {
+        return $minutes . '分钟后';
+    } else {
+        return '即将过期';
+    }
+}

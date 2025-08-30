@@ -713,7 +713,7 @@ if ($operation == 'upload') {//上传图片文件
             $share = $_GET['share'];
             $share['filepath'] = trim($_GET['rid']);
             $share['title'] = getstr($share['title']);
-            if ($share['endtime']) $share['endtime'] = strtotime($share['endtime']) + 24 * 60 * 60;
+            if ($share['endtime']) $share['endtime'] = strtotime($share['endtime']);
             if ($share['password']) $share['password'] = dzzencode($share['password']);
             $share['times'] = intval($share['times']);
             $perm = isset($_GET['perm']) ? $_GET['perm'] : [];
@@ -756,7 +756,11 @@ if ($operation == 'upload') {//上传图片文件
                     elseif ($share['times'] && $share['times'] <= $share['count']) $share['status'] = -2;
                     else $share['status'] = 0;
                 }
-                if ($share['endtime']) $share['endtime'] = dgmdate($share['endtime'], 'Y-m-d');
+                if ($share['endtime']) {
+                    $share['endtime'] = dgmdate($share['endtime'], 'Y-m-d H:i');
+                } else {
+                    $share['endtime'] = '';
+                }
                 if (!$share['times']) {
                     $share['times'] = '';
                 }
@@ -775,7 +779,11 @@ if ($operation == 'upload') {//上传图片文件
                     elseif ($share['times'] && $share['times'] <= $share['count']) $share['status'] = -2;
                     else $share['status'] = 0;
                 }
-                if ($share['endtime']) $share['endtime'] = dgmdate($share['endtime'], 'Y-m-d');
+                if ($share['endtime']) {
+                    $share['endtime'] = dgmdate($share['endtime'], 'Y-m-d H:i');
+                } else {
+                    $share['endtime'] = '';
+                }
                 if (!$share['times']) {
                     $share['times'] = '';
                 }
