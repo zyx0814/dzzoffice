@@ -16,7 +16,7 @@
 		'order':'desc'
     };
 	jQuery(document).ready(function(e) {
-	  layui.table.render({
+	  layuiModules.table.render({
 		elem: '#table',
 		url: '{MOD_URL}&op=share&do=filelist',
 		toolbar: '#toolbar',
@@ -53,8 +53,8 @@
         },
 	  });
 	  //头工具栏事件
-	layui.table.on('toolbar(table)', function(obj){
-		var checkStatus = layui.table.checkStatus(obj.config.id); //获取选中行状态
+	layuiModules.table.on('toolbar(table)', function(obj){
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id); //获取选中行状态
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -134,14 +134,14 @@
         };
     });
     //监听工具条
-	layui.table.on('tool(table)', function(obj){
+	layuiModules.table.on('tool(table)', function(obj){
         var data = obj.dataCache;
         if(obj.event === 'view'){
 			window.open(data.sharelink);
             return false;
         } else if(obj.event === 'more'){
             // 更多 - 下拉菜单
-            layui.dropdown.render({
+            layuiModules.dropdown.render({
                 elem: this,
                 show: true,
                 className:'lyear-dropdown dropdown-menu show border',
@@ -231,15 +231,15 @@
         }
     });
     //触发排序事件 
-	layui.table.on('sort(table)', function(obj){
+	layuiModules.table.on('sort(table)', function(obj){
         search_data.sort = obj.field;
         search_data.order = obj.type;
-        layui.table.reloadData('table', {
+        layuiModules.table.reloadData('table', {
             initSort: obj,
             where: search_data
         });
 	});
-    layui.table.on('rowDouble(table)', function(obj){
+    layuiModules.table.on('rowDouble(table)', function(obj){
         showDataTemplate(obj);
     });
     function showDataTemplate(obj) {
@@ -263,6 +263,6 @@
     }
 });
 function tablereload(){
-    layui.table.reloadData('table');
+    layuiModules.table.reloadData('table');
 }
 </script>

@@ -419,7 +419,7 @@ class table_resources extends dzz_table {
         $data['sid'] = $sid;
         $data['collect'] = C::t('resources_collect')->fetch_by_rid($rid);
         if ($data['remote'] > 1) $data['rbz'] = io_remote::getBzByRemoteid($data['remote']);
-
+        $data['shareid'] = C::t('shares')->fetch_by_shareid($rid);
         //增加安全相关的路径
         $data['dpath'] = dzzencode($data['path']);
         $data['apath'] = $data['aid'] ? dzzencode('attach::' . $data['aid']) : $data['dpath'];
@@ -633,18 +633,10 @@ class table_resources extends dzz_table {
                 $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
             }
         }
-        $metaTable = C::t('resources_meta');
         $sharestable = C::t('shares');
         foreach (DB::fetch_all("SELECT rid FROM %t where $wheresql $ordersql $limitsql", $para) as $value) {
             if ($arr = self::fetch_by_rid($value['rid'], '', false, $sid)) {
-                $metaData = $metaTable->fetch_by_rid($value['rid'], true);
-                if (!empty($metaData)) {
-                    $arr['meta'] = $metaData;
-                }
-                $sharesdata = $sharestable->fetch_by_shareid($value['rid']);
-                if (!empty($sharesdata)) {
-                    $arr['shareid'] = $sharesdata;
-                }
+                $arr['shareid'] = $sharestable->fetch_by_shareid($value['rid']);
                 if ($sid) {
                     $arr['dpath'] = dzzencode('sid:' . $sid . '_' . $value['rid']);
                     if ($isfilter && isset($arr['attachment'])) {

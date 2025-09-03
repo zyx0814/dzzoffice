@@ -69,7 +69,6 @@ if ($do == 'delete_group') {
 
     //统计打开次数,如果当前文件夹在resources表无数据，则记录其文件夹id对应数据
     if ($rid = C::t('resources')->fetch_rid_by_fid($fid)) {
-        $rid = C::t('resources')->fetch_rid_by_fid($fid);
         $setarr = array(
             'uid' => $uid,
             'views' => 1,

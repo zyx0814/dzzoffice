@@ -635,7 +635,10 @@
         <div class="row mb-3">
             <label class="col-sm-2" for="selecttime">{lang expiration_time}</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" placeholder="{lang expiration_time}" name="share[endtime]" id="selecttime" value="<!--{if $share['endtime']}-->$share['endtime']<!--{/if}-->" value="{eval echo ($share['endtime'] && $share['endtime']!= 0)?$share['endtime']:''}"/>
+                <div class="has-feedback">
+                    <span class="mdi mdi-calendar-month" aria-hidden="true"></span>
+                    <input type="text" class="form-control" placeholder="{lang expiration_time}" name="share[endtime]" id="selecttime" value="{$share['endtime']}"/>
+                </div>
                 <span class="form-text">{lang left_blank_or_0_time_unlimited}</span>
             </div>
         </div>
@@ -741,14 +744,12 @@
     jQuery(document).ready(function (e) {
         jQuery('[data-toggle="tooltip"]').tooltip();
     });
-    $("#selecttime").datepicker({ //添加日期选择功能
-        startDate: new Date(),
-        autoclose:true,
-        todayHighlight:true,
-        clearBtn:true,
-        language: 'zh_CN',
-        todayBtn: "linked",
-		calendarWeeks: true,
+    layuiModules.laydate.render({
+        elem: '#selecttime',
+        type: 'datetime',
+        format: 'yyyy-MM-dd HH:mm',
+        calendar: true,
+        min: '{eval echo date("Y-m-d H:i:s", TIMESTAMP);}'
     });
     function copyShareIink() {
         var sharelink = $('#shareurl').val();

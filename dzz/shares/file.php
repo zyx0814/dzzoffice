@@ -67,16 +67,7 @@ if ($share['perm']) {
     }
 }
 $fdateline = dgmdate($share['dateline'], 'Y-m-d');
-if ($share['endtime']) {
-    $timediff = ($share['endtime'] - $share['dateline']);
-    $days = 0;
-    if ($timediff > 0) {
-        $days = ceil($timediff / 86400);
-    }
-    $expireday = ($days > 0) ? $days . '天后' : '已过期';
-} else {
-    $expireday = '永久有效';
-}
+$expireday = getexpiretext($share['endtime']);
 $perpage = isset($_GET['perpage']) ? intval($_GET['perpage']) : 100;//默认每页条数
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
 $start = ($page - 1) * $perpage;//开始条数

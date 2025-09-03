@@ -409,16 +409,17 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	html = html.replace(/\{qrcode\}/g, data.qrcode);
 	html = html.replace(/\{password\}/g, data.password);
 	html = html.replace(/\{count\}/g, data.count);
+	//分享状态
 	if(data.shareid > 0) {
-		var sharestatus = '<span class="share-item" ><i class="mdi mdi-share text-success" title="已分享"></i></span>';
+		var sharestatus = '<span class="share-item" ><i class="mdi mdi-share-circle text-success" title="'+__lang.shared+'"></i></span>';
 	} else {
-		var sharestatus = '<span class="share-item hide"><i class="mdi mdi-share text-success" title=""></i></span>';
+		var sharestatus = '<span class="share-item hide"><i class="mdi mdi-share-circle text-success" title="'+__lang.shared+'"></i></span>';
 	}
 	//收藏
 	if(data.collect){
-		var collectstatus = '<span class="colllection-item" ><i class="mdi mdi-star text-yellow" title="已收藏"></i></span>';
+		var collectstatus = '<span class="colllection-item" ><i class="mdi mdi-star-circle text-yellow" title="'+__lang.already_collected+'"></i></span>';
 	}else{
-		var collectstatus = '<span class="colllection-item hide"><i class="mdi mdi-star text-yellow" title=""></i></span>';
+		var collectstatus = '<span class="colllection-item hide"><i class="mdi mdi-star-circle text-yellow" title="'+__lang.already_collected+'"></i></span>';
 	}
 	html = html.replace(/\{collectstatus\}/g,collectstatus);
     html = html.replace(/\{sharestatus\}/g,sharestatus);
@@ -567,8 +568,8 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		var options = {
 			content: contextmenuico(jQuery(this).attr('rid'))
 		}
-		layui.dropdown.reloadData('right_ico',options);
-		layui.dropdown.open('right_ico');
+		layuiModules.dropdown.reloadData('right_ico',options);
+		layuiModules.dropdown.open('right_ico');
 		return false;
 	});
 	//检测已选中
@@ -1101,8 +1102,8 @@ _filemanage.prototype.createIcosContainer = function () {
 			var options = {
 				content: contextmenubody(self.fid)
 			}
-			layui.dropdown.reloadData('right_ico',options);
-			layui.dropdown.open('right_ico');
+			layuiModules.dropdown.reloadData('right_ico',options);
+			layuiModules.dropdown.open('right_ico');
 			return false;
 		})
 		.on('click', function (e) {

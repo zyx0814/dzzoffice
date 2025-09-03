@@ -105,6 +105,7 @@ button:focus{outline:none}
 .jstree-anchor .img-avatar{width:24px;height:24px;line-height:20px;font-size:14px}
 .middle-groupname{position:relative}
 .middle-groupshink{height:30px}
+.middle-recycle{height: 100%;}
 .topNav{height:30px}
 .topNav,.topNav .topNav-item{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex}
 .topNav .topNav-left{-webkit-box-sizing:border-box;-webkit-flex:1 0;flex:1 0 auto}

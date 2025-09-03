@@ -41,12 +41,19 @@
 	var centerrightwidth = 0;
     var getWidthLable = 0;
     var newgroupgid = '';
+    var layuiModules = {
+        dropdown: null,
+        form: null,
+        table: null,
+        laydate: null,
+    };
 	jQuery(document).ready(function(e) {
         layui.use(['dropdown', 'form', 'table'],function(){
-            var dropdown = layui.dropdown;
-            var form = layui.form;
-            var table = layui.table;
-            dropdown.render({
+            layuiModules.dropdown = layui.dropdown;
+            layuiModules.form = layui.form;
+            layuiModules.table = layui.table;
+            layuiModules.laydate = layui.laydate;
+            layuiModules.dropdown.render({
                 elem: document,
                 trigger: 'manual',
                 id: 'right_ico',
@@ -116,8 +123,8 @@
 <script type="text/javascript" src="static/lyear/js/select2/select2.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/jstree/jstree.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
-<script type="text/javascript" src="{MOD_PATH}/js/header-search.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/header-search.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
 <!-- The basic File Upload plugin --> 

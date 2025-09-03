@@ -55,14 +55,7 @@ if ($do == 'getinfo') {
     $data = array();
     foreach ($list as $value) {
         $sharelink = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($value['id']));
-        if ($value['endtime']) {
-            $timediff = ($value['endtime'] - $value['dateline']);
-            $days = 0;
-            if ($timediff > 0) {
-                $days = ceil($timediff / 86400);
-            }
-            $value['expireday'] = ($days > 0) ? $days . '天后' : '已过期';
-        }
+        $value['expireday'] = getexpiretext($value['endtime']);
         $rids = explode(',', $value['filepath']);
         if($value['pfid'] == -1) {
             $img = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($value['filepath']);

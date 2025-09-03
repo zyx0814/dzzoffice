@@ -23,9 +23,9 @@
         <div class="col-sm-6 mb-3">
             <div class="input-daterange input-group" id="datepicker">
                 <label class="input-group-text" for="selectDate">从</label>
-                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang create_time}">
+                <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang start_time}">
                 <label class="input-group-text" for="selectDate1">至</label>
-                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang create_time}">
+                <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang finish_time}">
             </div>
         </div>
         <div class="col-md-2 mb-3">
@@ -68,7 +68,7 @@
         zIndexOffset: 120
     });
 	jQuery(document).ready(function(e) {
-	  layui.table.render({
+	  layuiModules.table.render({
 		elem: '#table',
 		url: '{MOD_URL}&op=dynamic&do=filelist',
 		toolbar: '#toolbar',
@@ -103,8 +103,8 @@
 		}
 	  });
 	  //头工具栏事件
-	layui.table.on('toolbar(table)', function(obj){
-		var checkStatus = layui.table.checkStatus(obj.config.id); //获取选中行状态
+	layuiModules.table.on('toolbar(table)', function(obj){
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id); //获取选中行状态
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -139,7 +139,7 @@
                 });
             break;
             case 'get':
-            layui.table.reloadData('table', {
+            layuiModules.table.reloadData('table', {
                 where: search_data, // 清空搜索参数
                 page: {
                     curr: 1 //重新从第 1 页开始
@@ -149,7 +149,7 @@
         };
     });
     //监听工具条
-	  layui.table.on('tool(table)', function(obj){
+	  layuiModules.table.on('tool(table)', function(obj){
 		var data = obj.dataCache;
 		if(obj.event === 'search_do'){
             $('#operation').val(data.do).trigger('change');
@@ -158,7 +158,7 @@
 			var doval = data.do_obj;
             search_data.doobj = doval;
             $('#object').val(doval);
-            layui.table.reloadData('table', {
+            layuiModules.table.reloadData('table', {
             where: search_data,
             page: {
                 curr: 1
@@ -167,15 +167,15 @@
 		}
 	  });
     //触发排序事件 
-	layui.table.on('sort(table)', function(obj){
+	layuiModules.table.on('sort(table)', function(obj){
         search_data.sort = obj.field;
 		search_data.order = obj.type;
-		layui.table.reloadData('table', {
+		layuiModules.table.reloadData('table', {
 			initSort: obj,
             where: search_data
 		});
 	});
-	  layui.table.on('rowDouble(table)', function(obj){
+	  layuiModules.table.on('rowDouble(table)', function(obj){
 		showDataTemplate(obj);
 	  });
       $("#dynamic_id_label_multiple").select2({
@@ -204,7 +204,6 @@
         }
         }).on('change', function () {
             search_data.uids = $(this).val();
-            executedynamisc_search();
         });
         // 搜索按钮功能
 		$(document).on('click', '#search-btn', function() {
@@ -216,6 +215,9 @@
             $('#operation').val('');
             $('#object').val('');
 		    $('#username').val('');
+            $('#selectDate').val('');
+            $('#selectDate1').val('');
+            $('#dynamic_id_label_multiple').val(null).trigger('change');
             for (var o in search_data) {
                 search_data[o] = '';
             }
@@ -225,36 +227,10 @@
             search_data.doevent = $(this).val();
             executedynamisc_search();
         });
-        $('#selectDate').change(function () {
-            search_data.startdate = $('#selectDate').val();
-            search_data.enddate = $('#selectDate1').val();
-            if (search_data.startdate && search_data.enddate) {
-                var start = new Date(search_data.startdate);
-                var end = new Date(search_data.enddate);
-                if (start.getTime() > end.getTime()) {
-                    layer.alert('{lang select_correct_time_interval}', {skin:'lyear-skin-danger'});
-                    return false;
-                }
-            }
-            search_data.page = 0;
-            executedynamisc_search();
-        })
-        $('#selectDate1').change(function () {
-            search_data.startdate = $('#selectDate').val();
-            search_data.enddate = $('#selectDate1').val();
-            if (search_data.startdate && search_data.enddate) {
-                var start = new Date(search_data.startdate);
-                var end = new Date(search_data.enddate);
-                if (start.getTime() > end.getTime()) {
-                    layer.alert('{lang select_correct_time_interval}', {skin:'lyear-skin-danger'});
-                    return false;
-                }
-            }
-            search_data.page = 0;
-            executedynamisc_search();
-        });
       function executedynamisc_search() {
-        layui.table.reloadData('table', {
+        search_data.startdate = $('#selectDate').val();
+        search_data.enddate = $('#selectDate1').val();
+        layuiModules.table.reloadData('table', {
             initSort: {
                 field: search_data.sort,
                 type: search_data.order
