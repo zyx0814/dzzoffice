@@ -110,7 +110,7 @@
 		  ,{field:'type', title: '{lang file_type}', align: 'center', sort: true}
 		  ,{field:'relpath', title: '{lang file_location}', align: 'left'}
 		  ,{field:'dateline', title: '{lang add_time}', align: 'center', sort: true}
-		  ,{field:'FileUri', title: '文件地址', hide:true}
+		  ,{field:'FileUri', title: '文件地址', hide:true,templet:function(d){return d.FileUri}}
 		  ,{field:'md5', title: 'MD5', hide:true}
 		  ,{field:'copys', title: '引用数', align: 'center',hide:true}
 		  ,{field:'downloads', title: '{lang download_times}', align: 'center',hide:true}

@@ -483,10 +483,5 @@ $lang = array(
     'share_stop_sharing1' => '<p class="text-center">取消分享后，该条分享记录将被删除，将无法再访问此分享链接。</p><p class="text-center">你确认要取消分享吗？</p>',
     'global_appinfo_error' => '全局应用信息错误！请检查Dzz版本与应用是否匹配。',
     'no_match_file' => '没有符合条件的文件',
-    'no_group' => '对不起，该群组不存在',
-    'no_group_by_system' => '对不起，该群组已被系统封禁，请与系统管理员联系',
-    'group_no_file_by_manage' => '群组文件已被关闭，请和群组管理员联系',
-    'group_no_file_by_system' => '群组文件被系统禁用，如有需要，请和系统管理员联系',
-    'group_no_file_please_open' => '群组文件已被关闭，如需开启，请打开右侧信息栏开启',
 );
 ?>

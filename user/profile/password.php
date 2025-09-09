@@ -189,7 +189,7 @@ if ($do == 'editpass') {
     $logs = file($logdir . $lastlog["file"]);
     $logs = array_reverse($logs);
     foreach ($logs as $key => $value) {
-        if (!empty($keyword) && strpos($value, $keyword) === FALSE) {
+        if (strpos($value, $keyword) === false) {
             unset($logs[$key]);
         }
     }
