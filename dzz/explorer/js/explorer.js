@@ -27,7 +27,7 @@ _explorer.infoPanel_hide = 0; //标识右侧面板不能开启
 _explorer.appUrl = MOD_URL;
 _explorer.hash = '';
 _explorer.bz = '';
-var loading = '';
+_explorer.loadhtml = '<div class="nothing_message"><div class="nothing_allimg"><i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop" style="font-size:30px;"></i></div>';
 _explorer.getConfig = function (url, callback) {
 	$.getJSON(url + '&t=' + new Date().getTime(), function (json) {
 		new _explorer(json);
@@ -368,13 +368,7 @@ _explorer.getRightContent = function (hash, container) { //处理右侧页面加
 			resetting_condition();
 		} catch (e) {}
 	}
-	loading=$('#middleconMenu').lyearloading({
-		opacity           : 0,
-		spinnerSize       : 'lg',
-		textColorClass    : 'text-info',
-		spinnerColorClass : 'text-info',
-		spinnerText       : '加载中...',
-	});
+	$('#middleconMenu').html(_explorer.loadhtml);
 	if(window.innerWidth < 1024) {
 		_explorer.infoPanelOpened = 0;
 	}
@@ -382,7 +376,6 @@ _explorer.getRightContent = function (hash, container) { //处理右侧页面加
 	$('[data-hash="' + hash + '"]').addClass('active');
 	var url = _explorer.appUrl + '&op=' + hash;
 	jQuery('#middleconMenu').load(url, function (response, status, xhr) {
-		loading.destroy();
 		if (status === "error") {
 			console.error("加载失败：", xhr.status, xhr.statusText);
 			$('#middleconMenu').html('<div class="emptyPage" id="noticeinfo"><img src="static/image/common/no_list.png"><div class="emptyPage-text text-danger">加载内容失败，请刷新重试。</div></div>');

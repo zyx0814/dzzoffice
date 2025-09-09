@@ -306,7 +306,7 @@ function preg_replace(search, replace, str, regswitch) {
 }
 
 function htmlspecialchars(str) {
-	return preg_replace(['&', '<', '>', '"'], ['&', '<', '>', '"'], str);
+	return preg_replace(['&', '<', '>', '"'], ['&amp;', '&lt;', '&gt;', '&quot;'], str);
 }
 
 function display(id) {
@@ -1651,7 +1651,6 @@ function updateseccode(idhash, play) {
 			if(secST['code_' + idhash]) {
 				clearTimeout(secST['code_' + idhash]);
 			}
-			document.getElementById('checkseccodeverify_' + idhash).innerHTML = '';
 			ajaxget('misc.php?mod=seccode&action=update&idhash=' + idhash, 'seccode_' + idhash, null, '', '', function() {
 				secST['code_' + idhash] = setTimeout(function() {document.getElementById('seccode_' + idhash).innerHTML = '<span class="btn btn-link" onclick="updateseccode(\''+idhash+'\')">'+__lang.refresh_verification_code+'</span>';}, 180000);
 			});
@@ -1659,39 +1658,6 @@ function updateseccode(idhash, play) {
 	} else {
 		eval('window.document.seccodeplayer_' + idhash + '.SetVariable("isPlay", "1")');
 	}
-}
-
-function checksec(type, idhash, showmsg, recall) {
-	var showmsg = !showmsg ? 0 : showmsg;
-	var secverify = document.getElementById('sec' + type + 'verify_' + idhash).value;
-	if(!secverify) {
-		return;
-	}
-	var x = new Ajax('XML', 'checksec' + type + 'verify_' + idhash);
-	x.loading = '';
-	document.getElementById('checksec' + type + 'verify_' + idhash).innerHTML = '<span class="dzz dzz-autorenew dzz-spin"></span>';
-	x.get('misc.php?mod=sec' + type + '&action=check&inajax=1&idhash=' + idhash + '&secverify=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(secverify) : secverify), function(s){
-		var obj = document.getElementById('checksec' + type + 'verify_' + idhash);
-		if(obj){
-			obj.style.display = '';
-			if(s.substr(0, 7) == 'succeed') {
-				obj.innerHTML = '<span class="dzz dzz-done"></span>';
-				jQuery(obj).closest('.seccode-wrapper').find('.help-msg').addClass('chk_right');
-				if(showmsg) {
-					recall(1);
-				}
-			} else {
-				jQuery(obj).closest('.seccode-wrapper').find('.help-msg').removeClass('chk_right');
-				obj.innerHTML = '<span class="dzz dzz-close"></span>';
-				if(showmsg) {
-					if(type == 'code') {
-						showError(__lang.verification_error_reset);
-					}
-					recall(0);
-				}
-			}
-		}
-	});
 }
 
 function showdistrict(container, elems, totallevel, changelevel, containertype) {

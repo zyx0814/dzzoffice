@@ -41,6 +41,7 @@ _explorer = function (json) {
     _explorer.defaultfilename = json.defaultfilename || '';
     _explorer.thame = json.thame || {};
     _explorer.infoRequest = 0;
+    _explorer.deletefinally = json.deletefinally || 0;
     _explorer.cut = json.cut || {
             iscut: 0,
             icos: []
@@ -48,6 +49,7 @@ _explorer = function (json) {
 };
 _explorer.appUrl = 'index.php?mod=system&op=fileselection';
 _explorer.hash = '';
+_explorer.loadhtml = '<div class="nothing_message"><div class="emptyPage"><img src="static/image/common/loading.svg" alt="" /></div></div>';
 _explorer.getConfig = function (url, callback) {
     $.getJSON(url + '&t=' + new Date().getTime(), function (json) {
         new _explorer(json);
@@ -120,7 +122,7 @@ _explorer.set_address = function (path) {
     var patharr = pathstr.split('\\');
     var address_html = '';
     for (var o in patharr) {
-        address_html += ' <li class="routes"> <a href="javascript:;">' + patharr[o] + '</a> <span class="dzz dzz-chevron-right"></span></li>';
+        address_html += ' <li class="routes"> <a href="javascript:;">' + htmlspecialchars(patharr[o]) + '</a> <span class="dzz dzz-chevron-right"></span></li>';
     }
     $('.select-address div.address-field').html(address_html);
 }
@@ -342,16 +344,8 @@ _explorer.hashHandler = function () { //处理页面hash变化
     return false;
 };
 
-_explorer.loading = function (container, flag) { //右侧加载效果
-    if (flag === 'hide') {
-        container.find('.rightLoading').remove();
-    } else {
-        container.append('<div class="rightLoading"></div>');
-    }
-};
 _explorer.getRightContent = function (hash, container) { //处理右侧页面加载
-    _explorer.loading(container);
-    _explorer.rightLoading = 1;
+    $('#middleconMenu').html(_explorer.loadhtml);
     $('.document-data').removeClass('actives');
     $('[data-hash="' + hash + '"]').addClass('actives');
     if (template === '1') {

@@ -8,7 +8,6 @@ $uid = $_G['uid'];
 $id = isset($_GET['id']) ? $_GET['id'] : '';
 $do = $_GET['do'] ? $_GET['do'] : 'get_children';
 $data = array();
-$colors = array('#6b69d6', '#a966ef', '#e9308d', '#e74856', '#f35b42', '#00cc6a', '#0078d7', '#5290f3', '#00b7c3', '#0099bc', '#018574', '#c77c52', '#ff8c00', '#68768a', '#7083cb', '#26a255');
 if ($do == 'get_children') {
     if ($id == 'group') {
         $groupinfo = C::t('organization')->fetch_group_by_uid($uid, true);

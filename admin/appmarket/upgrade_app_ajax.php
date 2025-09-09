@@ -56,7 +56,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         if (file_exists($file)) {
             $importtxt = @implode('', file($file));
             $apparray = getimportdata('Dzz! app');
-            if ($apparray["app"]["version"] != $appinfo["version"]) {
+            if (version_compare($apparray["app"]["version"], $appinfo["version"]) > 0) {
                 $return["url"] = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=localupgrade&appid=' . $appid;
             } else {
                 $return["status"] = 0;

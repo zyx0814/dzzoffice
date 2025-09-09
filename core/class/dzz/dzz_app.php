@@ -144,12 +144,10 @@ class dzz_app extends dzz_base {
             'authkey' => '',
             'timenow' => array(),
 
-
             'PHP_SELF' => '',
             'siteurl' => '',
             'siteroot' => '',
             'siteport' => '',
-
 
             'config' => array(),
             'setting' => array(),
@@ -162,8 +160,6 @@ class dzz_app extends dzz_base {
             'lang' => array(),
 
             'rssauth' => '',
-
-
         );
 
         $_G['PHP_SELF'] = dhtmlspecialchars($this->_get_script_url());
@@ -489,13 +485,12 @@ class dzz_app extends dzz_base {
                 $user = getuserbyuid($dzz_uid, 1);
             }
 
-            if (!empty($user) && $user['password'] == $dzz_pw && ($user['status'] < 1 || $user['uid'] == 1)) {//加上判断用户是否被停用
+            if (!empty($user) && $user['password'] == $dzz_pw && ($user['status'] < 1 || $user['uid'] == 1)) {//加上判断用户是否被禁用
                 $this->var['member'] = $user;
             } else {
                 $user = array();
                 $this->_init_guest();
             }
-
 
             $this->cachelist[] = 'usergroup_' . $this->var['member']['groupid'];
 

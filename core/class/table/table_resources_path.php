@@ -152,6 +152,7 @@ class table_resources_path extends dzz_table {
 
     //修改名称时文件夹路径调整
     public function update_path_by_fid($fid, $name) {
+        if(!$fid || !$name) return false;
         global $_G;
         $_G['neworgname'] = $name;
         $path = $this->fetch_pathby_pfid($fid);

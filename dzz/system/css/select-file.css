@@ -107,3 +107,5 @@ li{list-style:none}
 .typestyle button{text-align:left}
 .typedropup{width:100%}
 .select-filebottom .input-black .input-label{text-align:right;min-width:63px}
+.emptyPage{text-align:center;position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%)}
+.emptyPage .emptyPage-text{font-size:16px;color:#AAAAAA;cursor:default}

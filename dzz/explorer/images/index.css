@@ -80,8 +80,7 @@ button.input-search-drop{-webkit-appearance:none;padding:0;cursor:pointer;backgr
 .input-search .input-search-icon+.form-control{padding-left:53.5px}
 .input-search-drop:focus{border:none;outline:none}
 button:focus{outline:none}
-.dropdown-height,.dropdown-width{width:100%;margin-top:2px}
-.dropdown-height,.dropdown-width{position:absolute;top:100%;left:0;z-index:1050;width:100%;display:none;float:left;min-width:160px;text-align:left;list-style:none;background-color:#fff;-webkit-background-clip:padding-box;background-clip:padding-box;border-top:1px solid #e7e7e7;margin-top:0;-webkit-box-shadow:0 5px 8px rgba(0,0,0,.2);box-shadow:0 5px 8px rgba(0,0,0,.2);-webkit-transition:.25s;-o-transition:.25s;transition:.25s;border-radius:0}
+.dropdown-height,.dropdown-width{width:100%;margin-top:2px;position:absolute;top:100%;left:0;z-index:1050;width:100%;display:none;float:left;min-width:160px;text-align:left;list-style:none;background-color:#fff;-webkit-background-clip:padding-box;background-clip:padding-box;border-top:1px solid #e7e7e7;margin-top:0;-webkit-box-shadow:0 5px 8px rgba(0,0,0,.2);box-shadow:0 5px 8px rgba(0,0,0,.2);-webkit-transition:.25s;-o-transition:.25s;transition:.25s;border-radius:0}
 .input-search .input-search-drop{position:absolute;top:50%;z-index:1;width:36px;line-height:46px;display:inline-block;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);-o-transform:translateY(-50%);transform:translateY(-50%)}
 .header-closebutton{position:absolute;top:0px;right:44px;display:inline-block;width:36px;font-size:26px;color:rgba(255,255,255,1);line-height:44px;cursor:pointer}
 .input-search .input-search-drop{right:15px;font-size:30px}

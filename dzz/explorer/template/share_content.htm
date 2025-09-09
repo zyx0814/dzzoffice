@@ -1,9 +1,9 @@
 <table class="layui-hide" id="table" lay-filter="table"></table>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
-        <button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-        <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">{lang delete}</button>
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+        <button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-sm layui-btn-disabled" id="deletebtn" lay-event="delete" disabled>{lang delete}</button>
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
     </div>
 </script>
 <script type="text/html" id="barDemo">
@@ -43,18 +43,33 @@
 		  ,{field:'count', title: '{lang view_count}',width:120, align: 'center', sort: true,templet:function(d){return d.count+'{lang degree}'}}
 		  ,{field:'downs', title: '{lang download_times}',width:120, align: 'center', sort: true,templet:function(d){return d.downs+'{lang degree}'}}
           ,{field:'other', title: '{lang other}',minWidth:120,templet:function(d){return (d.password ? '{lang extract_password}：<span class="layui-badge-rim">' + d.password +'</span>': '{lang share_type}：<span class="layui-badge-rim">{lang open_links}</span>')+'，{lang limited_number}：<span class="layui-badge-rim">'+d.times+'</span>'}}
-          ,{title: '{lang operation}',width:140,align:'center', toolbar: '#barDemo', fixed: 'right'}
+          ,{title: '{lang operation}',width:140,align:'center', toolbar: '#barDemo'}
 		]],
 		initSort: {
-			field: 'dateline', // 默认排序字段
-			type: 'desc' // 默认排序方式
-		},
-        done: function(){
-        },
+			field: 'dateline',
+			type: 'desc'
+		}
 	  });
-	  //头工具栏事件
+      layuiModules.table.on('checkbox(table)', function(obj){
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id);
+		var isChecked = checkStatus.data.length > 0;
+		var buttonIds = ['getCheckDataBtn', 'deletebtn'];
+		buttonIds.forEach(function(btnId) {
+			var btn = document.getElementById(btnId);
+			if (btn) {
+				if (isChecked) {
+					btn.removeAttribute('disabled');
+					btn.classList.remove('layui-btn-disabled');
+				} else {
+					btn.setAttribute('disabled', 'disabled');
+					btn.classList.add('layui-btn-disabled');
+				}
+			}
+		});
+	});
+    //头工具栏事件
 	layuiModules.table.on('toolbar(table)', function(obj){
-		var checkStatus = layuiModules.table.checkStatus(obj.config.id); //获取选中行状态
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':

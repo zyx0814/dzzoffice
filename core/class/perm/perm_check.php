@@ -222,7 +222,7 @@ class perm_check {
             //首先判断ico的超级权限；
             if (!perm_FileSPerm::isPower($arr['sperm'], $action)) return false;
 
-            if ($folder = C::t('folder')->fetch_by_fid($arr['pfid'])) {
+            if ($folder = C::t('folder')->fetch_fsperm_by_fid($arr['pfid'])) {
                 //首先判断目录的超级权限；
                 if (!perm_FolderSPerm::isPower($folder['fsperm'], $action)) return false;
             }

@@ -10,17 +10,18 @@ $fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
 $gid = isset($_GET['gid']) ? intval($_GET['gid']) : 0;
 $perm = 0;
 if ($gid) {
-    //获取网盘系统设置值
-    $explorer_setting = get_resources_some_setting();
+    //获取群组基本信息
+    if (!$group = C::t('organization')->fetch($gid)) {
+        showmessage(lang('no_group'), dreferer());
+    }
     if ($group['type'] == 1 && !$explorer_setting['grouponperm']) {
         showmessage(lang('no_privilege'), dreferer());
     }
     if ($group['type'] == 0 && !$explorer_setting['orgonperm']) {
         showmessage(lang('no_privilege'), dreferer());
     }
-    //获取群组基本信息
-    if (!$group = C::t('organization')->fetch($gid)) {
-        showmessage(lang('no_group'), dreferer());
+    if (!$group['syatemon']) {
+        showmessage(lang('no_group_by_system'), dreferer());
     }
     //获取成员权限
     $perm = C::t('organization_admin')->chk_memberperm($gid, $uid);
@@ -31,10 +32,6 @@ if ($gid) {
     //判断是否有权限访问群组，如果不是管理员权限(主要针对系统管理员和上级管理员),并且非成员,不能访问
     if (!$perm && !C::t('organization')->ismember($gid, $uid, false)) {
         showmessage(lang('no_privilege'), dreferer());
-    }
-
-    if (!$group['syatemon']) {
-        showmessage(lang('no_group_by_system'), dreferer());
     }
     if (!$group['manageon'] && $perm < 1) {
         showmessage(lang('no_privilege'), dreferer());

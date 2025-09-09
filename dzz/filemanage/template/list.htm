@@ -47,7 +47,7 @@
 								<input id="sel_orgid_{$org['orgid']}" type="hidden" name="orgid"  value="$org['orgid']" onchange="selDepart(this)" />
 								<button type="button" id="orgid_{$org['orgid']}_Menu" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> $org[depart]  </button>
 								<div id="orgid_$orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_{$org['orgid']}_Menu">
-								<iframe name="orgid_{$org['orgid']}_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid_{$org['orgid']}&nouser=1&stype=1&zero={eval echo urlencode('{lang unselect_a_organization_or_department}');}" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+								<iframe name="orgid_{$org['orgid']}_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid_{$org['orgid']}&nouser=1&range=1&zero={eval echo urlencode('{lang unselect_a_organization_or_department}');}" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
 								</div>
 							</div>
 						  </div>
@@ -61,9 +61,9 @@
                 <table class="layui-hide" id="table" lay-filter="table"></table>
 				<script type="text/html" id="toolbar">
 					<div class="layui-btn-container">
-						<button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-						<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">{lang delete}</button>
-						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+						<button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+						<button type="button" class="layui-btn layui-btn-danger layui-btn-sm layui-btn-disabled" id="deletebtn" lay-event="delete" disabled>{lang delete}</button>
+						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
 					</div>
 				</script>
 				<script type="text/html" id="barDemo">
@@ -116,11 +116,11 @@
 		  ,{field:'downloads', title: '{lang download_times}', align: 'center',hide:true}
 		  ,{field:'views', title: '{lang view_count}', align: 'center',hide:true}
 		  ,{field:'edits', title: '{lang edit_times}', align: 'center',hide:true}
-		  ,{title: '{lang operation}',width:240, align:'center', toolbar: '#barDemo', fixed: 'right'}
+		  ,{title: '{lang operation}',width:240, align:'center', toolbar: '#barDemo'}
 		]],
 		initSort: {
-			field: 'dateline', // 默认排序字段
-			type: 'desc' // 默认排序方式
+			field: 'dateline',
+			type: 'desc'
 		},
 		done: function(res, curr, count) {
 			if(res.breadcrumb) {
@@ -128,9 +128,26 @@
 			}
 		}
 	  });
-	  //头工具栏事件
+	 table.on('checkbox(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id);
+		var isChecked = checkStatus.data.length > 0;
+		var buttonIds = ['getCheckDataBtn', 'deletebtn'];
+		buttonIds.forEach(function(btnId) {
+			var btn = document.getElementById(btnId);
+			if (btn) {
+				if (isChecked) {
+					btn.removeAttribute('disabled');
+					btn.classList.remove('layui-btn-disabled');
+				} else {
+					btn.setAttribute('disabled', 'disabled');
+					btn.classList.add('layui-btn-disabled');
+				}
+			}
+		});
+	});
+	//头工具栏事件
 	table.on('toolbar(table)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var checkStatus = table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
@@ -238,7 +255,6 @@
 			showDataTemplate(obj);
 		} else if(obj.event === 'view'){
 			if (obj.data.ftype == 'folder') {
-				// 刷新表格并传递搜索参数
 				pfid = obj.data.oid;
 				table.reloadData('table', {
 					where: {type: type,pfid: pfid},
@@ -325,7 +341,6 @@
 		$(document).on('click', '#search-btn', function() {
 			// 获取搜索关键词
 			var keyword = $('#keyword').val();
-			// 刷新表格并传递搜索参数
 			table.reloadData('table', {
 				where: { keyword: keyword,orgid:$('#sel_orgid_{$org['orgid']}').val()},
 				page: {
@@ -349,7 +364,6 @@
         $('#keyword').val('');
 		// 重置按钮内容
 		$('#orgid_{$org['orgid']}_Menu').text('$org[depart]');
-		// 刷新表格
 		table.reloadData('table', {
 		  where: {type: type}, // 清空搜索参数
 		  page: {

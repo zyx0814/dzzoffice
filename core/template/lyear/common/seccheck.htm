@@ -14,8 +14,8 @@
 	<!--{if $seccodecheck}-->
 	<div class="has-feedback row seccode-wrapper seccode_type_{$_G['setting']['seccodedata']['type']}">
 		<div class="col-7">
-		  <span class="form-control-feedback" aria-hidden="true" id="checkseccodeverify_$sechash"></span>
-		  <input type="text" name="seccodeverify" class="form-control"  id="seccodeverify_$sechash" autocomplete="off" style="{if $_G['setting']['seccodedata']['type'] != 1}ime-mode:disabled;{/if}"  onblur="checksec('code', '$sechash')"  placeholder="{lang seccode}">
+		 <span class="mdi mdi-check-all"></span>
+		  <input type="text" name="seccodeverify" class="form-control"  id="seccodeverify_$sechash" autocomplete="off" style="{if $_G['setting']['seccodedata']['type'] != 1}ime-mode:disabled;{/if}" placeholder="{lang seccode}">
 		</div>
 		<div class="col-5 text-right" style="display: flex;align-items: center;flex-wrap: wrap;">
 			{$sectplcode[2]}
@@ -23,7 +23,6 @@
 			<a tabindex="-1" href="javascript:;" onclick="updateseccode('$sechash');doane(event);" class="seccode-refresh-guide"><span class="dzz dzz-refresh"></span></a>
 			<!--{if $secshow}--><script type="text/javascript" reload="1">updateseccode('$sechash');</script><!--{/if}-->
 			$sectplcode[3]</span>
-		<span class="help-msg"></span>
 		</div>
 	  </div>	
 	<!--{/if}-->

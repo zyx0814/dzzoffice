@@ -167,6 +167,7 @@ class table_organization_admin extends dzz_table {
         if ($_G['adminid'] == 1) return true;
         if ($up) $orgids = C::t('organization')->fetch_parent_by_orgid($orgid);
         else $orgids = array($orgid);
+        if (empty($orgids)) return false;
         return DB::result_first("select COUNT(*) from %t where orgid IN (%n) and uid=%d ", array($this->_table, $orgids, $uid));
     }
 
