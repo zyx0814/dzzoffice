@@ -1114,50 +1114,87 @@ function Alert(e, t, n, a, i) {
 function Confirm(e, t) {
 	showDialog(e, "confirm", __lang.confirm_message, t, 1)
 }
-function showWindow(e, t, n, a, i, o) {
-	n = isUndefined(n) ? "get": n,
-	a = isUndefined(a) ? 1 : a;
-	var r = "fwin_" + e,
-	c = document.getElementById(r),
-	s = null;
-	if (disallowfloat && -1 != disallowfloat.indexOf(e)) return BROWSER.ie && (t += ( - 1 != t.indexOf("?") ? "&": "?") + "referer=" + escape(location.href)),
-	location.href = t,
-	void doane();
-	var d = function() {
-		"get" == n ? (c.url = t, t += (t.search(/\?/) > 0 ? "&": "?") + "infloat=yes&handlekey=" + e, t += -1 == a ? "&t=" + +new Date: "", BROWSER.ie && t.indexOf("referer=") < 0 && (t = t + "&referer=" + encodeURIComponent(location)), ajaxget(t, "fwin_content_" + e, null, "", "",
-		function() {
-			l(),
-			u()
-		})) : "post" == n && (c.act = document.getElementById(t).action, ajaxpost(t, "fwin_content_" + e, "", "", "",
-		function() {
-			l(),
-			u()
-		})),
-		6 != parseInt(BROWSER.ie) && (s = setTimeout(function() {
-			showDialog("正在为您加载中...", "info", '<img src="' + IMGDIR + '/loading.gif"> ' + __lang.please_wait)
-		},
-		500)),
-		"html" == n && (document.getElementById("fwin_content_" + e).innerHTML = t, l(), u())
-	},
-	l = function() {
-		clearTimeout(s)
-	},
-	u = function() {
-		hideMenu("fwin_dialog", "dialog"),
-		jQuery(c).modal("show")
-	};
-	if (c)"get" == n && (t != c.url || 1 != a) || "post" == n && document.getElementById(t).action != c.act || "html" == n && 1 != a ? d() : u();
-	else {
-		var m = '<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">\t<div class="modal-content" id="fwin_content_' + e + '">\t</div></div>'; (c = document.createElement("div")).id = r,
-		c.className = " modal fade ",
-		o && (c.setAttribute("data-backdrop", "static"), c.setAttribute("data-keyboard", "false")),
-		c.style.display = "none",
-		document.body.appendChild(c),
-		c.innerHTML = m,
-		"html" == n ? (document.getElementById("fwin_content_" + e).innerHTML = t, l(), u()) : d()
+function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) {
+	mode = isUndefined(mode) ? 'get' : mode;
+	cache = isUndefined(cache) ? 1 : cache;
+	var menuid = 'fwin_' + k;
+	var menuObj = document.getElementById(menuid);
+	var loadingst = null;
+	// 不允许浮动窗口时直接跳转
+	if(disallowfloat && disallowfloat.indexOf(k) != -1) {
+		if(BROWSER.ie) url += (url.indexOf('?') != -1 ?  '&' : '?') + 'referer=' + escape(location.href);
+		location.href = url;
+		doane();
+		return;
 	}
-	"function" == typeof i && (window.showWindow_callback = i),
-	doane()
+	var fetchContent = function() {
+		if(mode == 'get') {
+			menuObj.url = url;
+			url += (url.search(/\?/) > 0 ? '&' : '?') + 'infloat=yes&handlekey=' + k;
+			url += cache == -1 ? '&t='+(+ new Date()) : '';
+			if(BROWSER.ie &&  url.indexOf('referer=') < 0) {
+				url = url + '&referer=' + encodeURIComponent(location);
+			}
+			ajaxget(url, 'fwin_content_' + k, null, '', '', function() {initMenu();show();});
+		} else if(mode == 'post') {
+			menuObj.act = document.getElementById(url).action;
+			ajaxpost(url, 'fwin_content_' + k, '', '', '', function() {initMenu();show();});
+		}
+		if(parseInt(BROWSER.ie) != 6) {
+			loadingst = setTimeout(function() {showDialog('正在为您加载中...', 'info', '<img src="' + IMGDIR + '/loading.gif"> '+__lang.please_wait)}, 500);
+		}
+		if(mode == 'html'){
+			document.getElementById('fwin_content_' + k).innerHTML = url;
+			initMenu();
+			show();
+		}
+	};
+	var initMenu = function() {
+		clearTimeout(loadingst);
+	};
+	var show = function() {
+		hideMenu('fwin_dialog', 'dialog');
+		jQuery(menuObj).modal('show');
+	};
+	// 当cache=0或需要刷新时，先销毁再创建
+    if (menuObj && (
+        (mode == 'get' && (url != menuObj.url || cache != 1)) || 
+        (mode == 'post' && document.getElementById(url).action != menuObj.act) || 
+        (mode == 'html' && cache != 1)
+    )) {
+		jQuery(menuObj).off().modal('hide').remove();
+        menuObj = null;
+    }
+	if(!menuObj) {
+		var html='<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">'
+				 +'	<div class="modal-content" id="fwin_content_'+k+'">'
+				 +'	</div>'
+				 +'</div>';
+				 
+		menuObj = document.createElement('div');
+		menuObj.id = menuid;
+		menuObj.className = '  modal fade ';
+		if(disablebacktohide){
+			menuObj.setAttribute('data-backdrop','static');
+			menuObj.setAttribute('data-keyboard','false');
+		} 
+		menuObj.style.display = 'none';
+		document.body.appendChild(menuObj);
+		
+		menuObj.innerHTML =  html;
+		if(mode == 'html') {
+			document.getElementById('fwin_content_' + k).innerHTML = url;
+			initMenu();
+			show();
+		} else {
+			fetchContent();
+		}
+	} else {
+		show();
+	}
+
+	if(typeof showWindow_callback == 'function') window.showWindow_callback=showWindow_callback;
+	doane();
 }
 var _header = {
 	init: function(e) {

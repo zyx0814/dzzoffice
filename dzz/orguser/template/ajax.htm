@@ -32,7 +32,7 @@
 </div>
 <script type="text/javascript" reload="1">
   function account_submit() {
-    showmessage('{lang In_the_save}','','3000',0);
+    showmessage('{lang In_the_save}','',0,0);
     var formData = $('.cpform').serialize();
     jQuery.post('{MOD_URL}&op=ajax&do=set&ajaxdata=json',formData, function (data) {
       if (data['success']) {

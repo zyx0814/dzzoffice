@@ -35,13 +35,12 @@ if ($this->core->var['inajax']) {
     ajaxshowfooter();
 }
 
-if ($this->cpaccess == -3) {
+if($this->cpaccess == -2 || $this->cpaccess == -3) {
     html_login_header(false);
 } else {
     html_login_header();
 }
-
-if ($this->cpaccess == -3) {
+if($this->cpaccess == -2 || $this->cpaccess == -3) {
     echo '<div class="alert alert-danger" role="alert">' . lang('login_cp_noaccess') . '</div>';
 
 } elseif ($this->cpaccess == -1) {
@@ -130,7 +129,7 @@ function html_login_form() {
     $forcesecques = '<option value="0">' . ($_G['config']['admincp']['forcesecques'] ? $lang1['forcesecques'] : $lang1['security_question_0']) . '</option>';
     echo <<<EOT
 <div class="card card-shadowed p-5 mb-0 mr-2 ml-2" style="width: 380px;">
-<form method="post" name="login" id="loginform" class="signin-form loginForm" action="$extra" onsubmit="pwmd5('admin_password')">
+<form method="post" autocomplete="off" name="login" id="loginform" class="signin-form loginForm" action="$extra" onsubmit="pwmd5('admin_password')">
 	<input type="hidden" name="sid" value="$sid">
 		<div class="card-body text-center">
 			<div class="text-center mb-3 img-avatar-128 w-100">$avastar</div>

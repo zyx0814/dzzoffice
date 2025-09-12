@@ -1985,10 +1985,8 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 	cache = isUndefined(cache) ? 1 : cache;
 	var menuid = 'fwin_' + k;
 	var menuObj = document.getElementById(menuid);
-	var drag = null;
 	var loadingst = null;
-	var hidedom = '';
-
+	// 不允许浮动窗口时直接跳转
 	if(disallowfloat && disallowfloat.indexOf(k) != -1) {
 		if(BROWSER.ie) url += (url.indexOf('?') != -1 ?  '&' : '?') + 'referer=' + escape(location.href);
 		location.href = url;
@@ -2010,7 +2008,7 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 			ajaxpost(url, 'fwin_content_' + k, '', '', '', function() {initMenu();show();});
 		}
 		if(parseInt(BROWSER.ie) != 6) {
-			loadingst = setTimeout(function() {showDialog('', 'info', '<img src="' + IMGDIR + '/loading.gif"> '+__lang.please_wait)}, 500);
+			loadingst = setTimeout(function() {showDialog('正在为您加载中...', 'info', '<img src="' + IMGDIR + '/loading.gif"> '+__lang.please_wait)}, 500);
 		}
 		if(mode == 'html'){
 			document.getElementById('fwin_content_' + k).innerHTML = url;
@@ -2025,6 +2023,15 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		hideMenu('fwin_dialog', 'dialog');
 		jQuery(menuObj).modal('show');
 	};
+	// 当cache=0或需要刷新时，先销毁再创建
+    if (menuObj && (
+        (mode == 'get' && (url != menuObj.url || cache != 1)) || 
+        (mode == 'post' && document.getElementById(url).action != menuObj.act) || 
+        (mode == 'html' && cache != 1)
+    )) {
+        jQuery(menuObj).off().modal('hide').remove();
+        menuObj = null;
+    }
 	if(!menuObj) {
 		var html='<div class="modal-dialog modal-center">'
 				 +'	<div class="modal-content" >'
@@ -2039,7 +2046,6 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		if(disablebacktohide){
 			menuObj.setAttribute('data-backdrop','static');
 			menuObj.setAttribute('data-keyboard','false');
-			
 		} 
 		menuObj.style.display = 'none';
 		document.body.appendChild(menuObj);
@@ -2052,8 +2058,6 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		} else {
 			fetchContent();
 		}
-	} else if((mode == 'get' && (url != menuObj.url || cache != 1)) || (mode == 'post' && document.getElementById(url).action != menuObj.act) || (mode == 'html' &&  cache != 1)) {
-		fetchContent();
 	} else {
 		show();
 	}

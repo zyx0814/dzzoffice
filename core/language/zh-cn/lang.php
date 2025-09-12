@@ -1633,6 +1633,10 @@ $_G[siteurl]',
     'space_usage' => '空间使用',
     'user_info' => '用户信息',
     'remove' => '移除',
+    'lock' => '锁定',
+    'property_info' => '属性信息',
+    'action_failed' => '操作失败',
+    'delete_failed_refresh' => '删除失败,请刷新重试',
 );
 
 ?>

@@ -1006,6 +1006,8 @@ $lang = array
     'choose_permission' => '权限选择',
     'set_default_permission_group' => '设为默认权限组',
     'system_default' => '系统默认',
+    'system_config' => '系统配置',
+    'user_config' => '用户配置',
     'default_permission' => '默认权限',
     'inheritperm' => '继承上级权限',
     'set_default' => '设为默认',
@@ -1017,6 +1019,8 @@ $lang = array
     'jurisdiction' => '权限',
     'folder_permission_name' => '文件夹权限名称',
     'edit_folder_permissions' => '编辑文件夹权限',
+    'edit_usergroup_permissions' => '编辑用户组权限',
+    'add_usergroup_permissions' => '添加用户组权限',
 
     'file_multiple_version_features' => '文件多版本设置',
     'allow_number_uploaded_versions' => '最大版本数量',
@@ -1029,8 +1033,5 @@ $lang = array
     'space_organization_set_tip' => '设置机构默认空间大小，如果留空或为0则共享系统所有空间，为-1则没有存储空间',
     'space_group_set' => '群组存储空间设置',
     'space_group_set_tip' => '设置群组默认空间大小，如果留空或为0则共享系统所有空间，为-1则没有存储空间'
-
 );
-
-
 ?>

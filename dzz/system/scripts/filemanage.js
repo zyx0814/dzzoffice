@@ -1014,7 +1014,7 @@ _filemanage.property = function (rid, isfolder) {
 		}
 		path = encodeURIComponent(dpaths.join(','));
 	}
-	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&paths=' + path);
+	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&paths=' + path,'get',0);
 };
 
 _filemanage.NewIco = function (type, fid) {
@@ -1026,9 +1026,9 @@ _filemanage.NewIco = function (type, fid) {
 	}
 
 	if (type === 'newFolder') {
-		showWindow('newFolder', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid);
+		showWindow('newFolder', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid,'get',0);
 	} else if (type === 'newLink') {
-		showWindow('newLink', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid);
+		showWindow('newLink', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid,'get',0);
 	} else {
 		$.post(_explorer.appUrl + '&op=ajax&operation=newIco&type=' + type, {
 			'fid': fid

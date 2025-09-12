@@ -896,7 +896,7 @@ function contextmenuico(rid) {
 		if(obj.isdelete == 1){
 			el.find('.menu-item:not(.recover,.finallydelete)').remove();
 		}else{
-			el.find('.menu-item:not(.delete,.cut,.copy,.restore,.downpackage,.property,.collect,.paste,.share)').remove();
+			el.find('.menu-item:not(.delete,.cut,.copy,.restore,.downpackage,.property,.collect,.paste,.share,.more-action)').remove();
 		}
 		var pd = 1;
 		for (var i = 0; i < _filemanage.selectall.icos.length; i++) {
@@ -933,12 +933,6 @@ function contextmenuico(rid) {
 		el.find('.cut').remove();
 		el.find('.copy').remove();
 		el.find('.paste').remove();
-	}
-	//分享处理
-	if(_filemanage.winid.indexOf('share') != -1){
-		el.find('.menu-item:not(.editshare)').remove();
-	}else{
-		el.find('.editshare').remove();
 	}
 	//如果在收藏,搜索和最近使用页面去掉删去和剪切和重命名
 	if(_filemanage.winid.indexOf('collect') != -1 || _filemanage.winid.indexOf('recent') != -1 || _filemanage.winid.indexOf('search') != -1){
@@ -983,6 +977,16 @@ function contextmenuico(rid) {
 	el.find('.layui-menu-item-divider').each(function () {
 		if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
 	});
+	el.find('.more-action').each(function () {
+		if (jQuery(this).find('.dropdown-menu > ul').find('.menu-item').length === 0) {
+			jQuery(this).remove();
+		}
+	});
+	el.find('.layui-menu-item-divider').each(function () {
+        if (jQuery(this).next().hasClass('layui-menu-item-divider')) {
+            jQuery(this).remove();
+        }
+    });
 	return el[0] ? el[0].outerHTML : '';
 }
 function contextmenubody(fid) {

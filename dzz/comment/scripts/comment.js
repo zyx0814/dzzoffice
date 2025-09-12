@@ -251,7 +251,7 @@ function getReplyForm(tid,pid,allowattach,allowat,allowsmiley){
 }
 
 function feed_edit(cid,allowattach,allowat,allowsmiley){
-	showWindow('publish_edit_'+cid,DZZSCRIPT+'?mod=comment&op=ajax&do=edit&cid='+cid+'&allowattach='+allowattach+'&allowat='+allowat+'&allowsmiley='+allowsmiley);
+	showWindow('publish_edit_'+cid,DZZSCRIPT+'?mod=comment&op=ajax&do=edit&cid='+cid+'&allowattach='+allowattach+'&allowat='+allowat+'&allowsmiley='+allowsmiley,'get',0);
 }
 function feed_edit_finish(cid,allowattach,allowat,allowsmiley){
 	jQuery.get(DZZSCRIPT+'?mod=comment&op=ajax&do=getcommentbycid&cid='+cid+'&allowattach='+allowattach+'&allowat='+allowat+'&allowsmiley='+allowsmiley,function(html){

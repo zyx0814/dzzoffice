@@ -316,7 +316,7 @@
     }
     ;
     function editgroupperm(gid, fid) {
-        showWindow('#exampleMultipleOne', MOD_URL + '&op=ajax&operation=selectperm&fid=' + fid + '&gid=' + gid + '&new=false');
+        showWindow('#exampleMultipleOne', MOD_URL + '&op=ajax&operation=selectperm&fid=' + fid + '&gid=' + gid + '&new=false','get',0);
     }
     function delete_group(gid){
         layer.confirm(__lang.delete_group_tips, {title:__lang.delete_group_confirm,skin:'lyear-skin-danger'}, function(index){

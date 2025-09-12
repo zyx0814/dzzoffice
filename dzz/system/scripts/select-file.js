@@ -1228,7 +1228,7 @@ _selectfile.property = function (rid, isfolder) {
         }
         path = encodeURIComponent(dpaths.join(','));
     }
-    showWindow('property', _explorer.appUrl + '&do=ajax&operation=property&paths=' + path);
+    showWindow('property', _explorer.appUrl + '&do=ajax&operation=property&paths=' + path,'get',0);
 };
 _selectfile.NewIco = function (type, fid) {
     if (!fid && !_selectfile.fid) {
@@ -1251,7 +1251,7 @@ _selectfile.NewIco = function (type, fid) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
         });
     } else if (type === 'newLink') {
-        showWindow('newLink', _explorer.appUrl + '&do=ajax&operation=' + type + '&fid=' + fid);
+        showWindow('newLink', _explorer.appUrl + '&do=ajax&operation=' + type + '&fid=' + fid,'get',0);
     } else {
         $.post(_explorer.appUrl + '&do=ajax&operation=newIco&type=' + type, {
             'fid': fid
