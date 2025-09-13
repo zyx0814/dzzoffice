@@ -125,7 +125,7 @@ var ismobile='$_G['ismobile']'?1:0;
 <!--{template common/header_simple_end}-->
 <div id="orgtree" class="orgtree-container" style=""></div>
 <!--{if intval($_GET['nosearch'])<1}-->
-<div  class="orgtree-search">
+<div class="orgtree-search">
         <a href="javascript:;" class="search" onclick="jstree_search();return false" title="{lang search}"><i class="dzz dzz-search"></i></a>
         <a href="javascript:;" class="delete" onclick="jstree_search('stop');return false" title="{lang close_search}"><i class="dzz dzz-close"></i></a>
         <input id="jstree_search_input" type="text" placeholder="{lang search_department_user}" class="form-control" onkeyup="if(event.keyCode==13){jstree_search()}"  />

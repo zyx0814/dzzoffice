@@ -42,7 +42,6 @@ $lang = array(
     'extension' => '扩展名',
     'add_url' => '添加网址',
     'no_file' => '还没有分享的文件或文件夹',
-    'refresh' => '刷新',
     'medium_icons' => '中等图标',
     'deltail_lsit' => '详细列表',
 );

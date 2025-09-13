@@ -318,7 +318,6 @@ $lang = array(
     'copyright' => '版权',
     'start' => '开始',
     'start_search' => '开始搜索',
-    'space_usage' => '空间使用',
     'no_disturbing' => '免打扰',
     'no_disturbing1' => '免打扰模式',
     'notify_filter_settings' => '通知过滤设置',
@@ -483,5 +482,6 @@ $lang = array(
     'stop_sharing_success' => '取消分享成功',
     'share_stop_sharing1' => '<p class="text-center">取消分享后，该条分享记录将被删除，将无法再访问此分享链接。</p><p class="text-center">你确认要取消分享吗？</p>',
     'global_appinfo_error' => '全局应用信息错误！请检查Dzz版本与应用是否匹配。',
+    'no_match_file' => '没有符合条件的文件',
 );
 ?>

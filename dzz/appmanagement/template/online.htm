@@ -14,13 +14,14 @@
 <strong>提示信息</strong>
 <li>暂不支持强制下线用户！</li>
 <li>最后活动时间为每10分钟更新一次，在此期间活动不会更新。</li>
+<li>当前更新用户在线时间的时间频率为：<!--{if $_G['setting']['oltimespan']}-->$_G['setting']['oltimespan']分钟/次<!--{else}-->不记录用户在线时间<!--{/if}--></li>
 <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
 </div>
 <table class="layui-hide" id="table" lay-filter="table"></table>
 <script type="text/html" id="toolbar">
 	<div class="layui-btn-container">
-		<button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-		<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+		<button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+		<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
 		<button class="layui-btn layui-btn-sm layui-btn-primary" id="dropdownButton"><span id="ismembertext">全部用户</span><i class="layui-icon layui-icon-down layui-font-12"></i></button>
 	</div>
 </script>
@@ -96,13 +97,25 @@
 	  
 		},
 		initSort: {
-			field: 'lastactivity', // 默认排序字段
-			type: 'desc' // 默认排序方式
+			field: 'lastactivity',
+			type: 'desc'
 		}
 	  });
-	  //头工具栏事件
+	  table.on('checkbox(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id);
+		var checkedCount = checkStatus.data.length;
+		var getCheckDataBtn = document.getElementById('getCheckDataBtn');
+		if(checkedCount > 0) {
+			getCheckDataBtn.removeAttribute('disabled');
+			getCheckDataBtn.classList.remove('layui-btn-disabled');
+		} else {
+			getCheckDataBtn.setAttribute('disabled', 'disabled');
+			getCheckDataBtn.classList.add('layui-btn-disabled');
+		}
+	});
+	//头工具栏事件
 	table.on('toolbar(table)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var checkStatus = table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':

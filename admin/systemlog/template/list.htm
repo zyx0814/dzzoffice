@@ -32,8 +32,8 @@
                 <table class="layui-hide" id="table" lay-filter="table"></table>
                 <script type="text/html" id="toolbar">
                     <div class="layui-btn-container">
-                        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-                        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+                        <button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+                        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
                     </div>
                 </script>
                 <script type="text/html" id="barDemo">
@@ -75,12 +75,24 @@
                 , {field: 'visit', title: '{lang visit}', align: 'right', hide: true, sort: true}
                 , {field: 'from', title: '{lang from}', align: 'right', hide: true, sort: true}
                 , {field: 'info', title: '{lang Equipment information}', align: 'right', hide: true, sort: true}
-                , {title: '{lang operation}', fixed: 'right', width: 100, align: 'center', toolbar: '#barDemo', fixed: 'right'}
+                , {title: '{lang operation}', width: 100, align: 'center', toolbar: '#barDemo'}
             ]]
+        });
+        table.on('checkbox(table)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            var checkedCount = checkStatus.data.length;
+            var getCheckDataBtn = document.getElementById('getCheckDataBtn');
+            if(checkedCount > 0) {
+                getCheckDataBtn.removeAttribute('disabled');
+                getCheckDataBtn.classList.remove('layui-btn-disabled');
+            } else {
+                getCheckDataBtn.setAttribute('disabled', 'disabled');
+                getCheckDataBtn.classList.add('layui-btn-disabled');
+            }
         });
         //头工具栏事件
         table.on('toolbar(table)', function (obj) {
-            var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+            var checkStatus = table.checkStatus(obj.config.id);
             var data = checkStatus.dataCache;
             switch (obj.event) {
                 case 'getCheckData':
@@ -163,7 +175,6 @@
 
         // 搜索按钮功能
         $(document).on('click', '#search-btn', function () {
-            // 刷新表格并传递搜索参数
             keyword = $('#keyword').val();
             table.reloadData('table', {
                 where: {operation: operation,keyword: keyword},
@@ -174,9 +185,7 @@
         });
         // 重置按钮功能
         $('#refreshsearch').click(function () {
-            // 清空表单内容
             $('#keyword').val('');
-            // 刷新表格
             table.reloadData('table', {
                 where: {operation: operation}, // 清空搜索参数
                 page: {
@@ -193,7 +202,6 @@
             // 获取当前的 type 值
             operation = $(this).data('operation');
             $('#keyword').val('');
-            // 刷新表格并传递 operation 参数
             table.reloadData('table', {
                 where: {operation: operation},
                 page: {

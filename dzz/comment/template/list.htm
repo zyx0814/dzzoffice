@@ -28,9 +28,9 @@
 				<table class="layui-hide" id="table" lay-filter="table"></table>
 				<script type="text/html" id="toolbar">
 					<div class="layui-btn-container">
-						<button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-						<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">{lang delete}</button>
-						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+						<button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+						<button type="button" class="layui-btn layui-btn-danger layui-btn-sm layui-btn-disabled" id="deletebtn" lay-event="delete" disabled>{lang delete}</button>
+						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
 					</div>
 				</script>
 				<script type="text/html" id="barDemo">
@@ -73,16 +73,33 @@
 		  ,{field:'ip', title: 'IP', align: 'center', sort: true}
 		  ,{field:'xtllq', title: '{lang Equipment information}', align: 'center', sort: true}
 		  ,{field:'message', title: '评论内容', align: 'center', sort: true}
-		  ,{title: '{lang operation}',width:200, align:'center', toolbar: '#barDemo', fixed: 'right'}
+		  ,{title: '{lang operation}',width:200, align:'center', toolbar: '#barDemo'}
 		]],
 		initSort: {
-			field: 'dateline', // 默认排序字段
-			type: 'desc' // 默认排序方式
+			field: 'dateline',
+			type: 'desc'
 		}
 	  });
-	  //头工具栏事件
+	  table.on('checkbox(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id);
+		var isChecked = checkStatus.data.length > 0;
+		var buttonIds = ['getCheckDataBtn', 'deletebtn', 'forbiddenbtn', 'allowbtn'];
+		buttonIds.forEach(function(btnId) {
+			var btn = document.getElementById(btnId);
+			if (btn) {
+				if (isChecked) {
+					btn.removeAttribute('disabled');
+					btn.classList.remove('layui-btn-disabled');
+				} else {
+					btn.setAttribute('disabled', 'disabled');
+					btn.classList.add('layui-btn-disabled');
+				}
+			}
+		});
+	});
+	//头工具栏事件
 	table.on('toolbar(table)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var checkStatus = table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
@@ -142,7 +159,7 @@
 							postData += ",";
 						}
 					});
-					layer.confirm('你确定要删除'+data.length+'条评论吗(如果有回复评论也将一同删除)？', function(index){
+					layer.confirm('你确定要删除'+data.length+'条评论吗(如果有回复评论也将一同删除)？',{skin:'lyear-skin-danger'}, function(index){
 						var loading = layer.load(0, { shade:  [0.1, '#000'] });
 						jQuery.post('{MOD_URL}&do=delete', {'cid': postData},function(json){
 							layer.close(loading);
@@ -263,7 +280,6 @@
 		$(document).on('click', '#search-btn', function() {
 		// 获取搜索关键词
 		var keyword = $('#keyword').val();
-		// 刷新表格并传递搜索参数
 		table.reloadData('table', {
 		  where: { keyword: keyword},
 		  page: {
@@ -274,7 +290,6 @@
 	   // 重置按钮功能
 	   $('#refreshsearch').click(function() {
         $('#keyword').val('');
-		// 刷新表格
 		table.reloadData('table', {
 		  where: {type: type}, // 清空搜索参数
 		  page: {
@@ -292,7 +307,6 @@
 		// 获取当前的 type 值
 		operation = $(this).data('operation');
 		type = $(this).data('type');
-		// 刷新表格并传递 operation 参数
 		table.reloadData('table', {
 		  where: {type: type},
 		  page: {

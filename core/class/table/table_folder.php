@@ -79,6 +79,9 @@ class table_folder extends dzz_table {
         if (empty($data)) {
             return false;
         }
+        if (!$data['fname']) {
+            return array('error' => lang('folder_name_can_not_empty'));
+        }
         if ($path['fid'] = parent::insert($data, 1)) {
             $perm_inherit = perm_check::getPerm1($path['fid']);
             parent::update($path['fid'], array('perm_inherit' => $perm_inherit));
@@ -254,6 +257,7 @@ class table_folder extends dzz_table {
 
     //更改文件夹名称
     public function rename_by_fid($fid, $name) {
+        if (!$fid || !$name) return false;
         if (!$folder = parent::fetch($fid)) return false;
         //如果文件夹有对应的rid
         if ($rid = C::t('resources')->fetch_rid_by_fid($fid)) {
@@ -280,7 +284,6 @@ class table_folder extends dzz_table {
                 return false;
             }
         }
-
     }
 
     //查询组织id
@@ -308,7 +311,7 @@ class table_folder extends dzz_table {
     }
 
     /*
-            此函数不会删除 $fid对应的 rid数据，正常调用是作为C::t('resources')->deletesourcedata()的内部调用；
+         此函数不会删除 $fid对应的 rid数据，正常调用是作为C::t('resources')->deletesourcedata()的内部调用；
          如果单独调用，请注意这个fid应该没有对应的rid；
          我的网盘 应用主目录 群组和部门主目录 都是没有对应的rid的特殊目录；
      */
@@ -443,6 +446,19 @@ class table_folder extends dzz_table {
         } else {
             return $perms['perm_inherit'];
         }
+    }
+
+    public function fetch_fsperm_by_fid($fid) {
+        $data = array();
+        if($perm = DB::fetch_first("select fsperm from %t where fid = %d", array($this->_table, $fid))) {
+            $data = $perm;
+        } else {
+            return false;
+        }
+        if ($attr = C::t('folder_attr')->fetch_by_skey_fid($fid, 'fsperm')) {
+            $data['fsperm'] = $attr; 
+        }
+        return $data;
     }
 
     public function fetch_folder_by_pfid($pfid, $field = array()) {//查询群组目录及文件夹基本信息

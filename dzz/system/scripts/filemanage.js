@@ -75,6 +75,7 @@ _filemanage.apicacheTimer = {};
 _filemanage.infoPanelUrl = '';
 _filemanage.viewstyle = ['bigicon', 'middleicon', 'middlelist', 'smalllist', 'detaillist'];
 _filemanage.getData = function (url, callback) {
+	jQuery('.loadingmiddlecon').html(_explorer.loadhtml);
 	jQuery.getJSON(url, function (json) {
 		if (json.error) {
 			alert(json.error);
@@ -1013,7 +1014,7 @@ _filemanage.property = function (rid, isfolder) {
 		}
 		path = encodeURIComponent(dpaths.join(','));
 	}
-	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&paths=' + path);
+	showWindow('property', _explorer.appUrl + '&op=ajax&operation=property&paths=' + path,'get',0);
 };
 
 _filemanage.NewIco = function (type, fid) {
@@ -1025,9 +1026,9 @@ _filemanage.NewIco = function (type, fid) {
 	}
 
 	if (type === 'newFolder') {
-		showWindow('newFolder', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid);
+		showWindow('newFolder', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid,'get',0);
 	} else if (type === 'newLink') {
-		showWindow('newLink', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid);
+		showWindow('newLink', _explorer.appUrl + '&op=ajax&operation=' + type + '&fid=' + fid,'get',0);
 	} else {
 		$.post(_explorer.appUrl + '&op=ajax&operation=newIco&type=' + type, {
 			'fid': fid
@@ -1164,7 +1165,8 @@ _filemanage.delIco = function (rid, noconfirm) {
 	}
 	var icosdata = _explorer.sourcedata.icos[rid];
 	if (!noconfirm) {
-        var finallydelete = false;
+		var finallydelete = (_explorer.deletefinally == 1) ? true:false;
+        //var finallydelete = false;
 		if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 			if (_explorer.sourcedata.icos[_filemanage.selectall.icos[0]].isdelete > 0 || (_explorer.sourcedata.icos[_filemanage.selectall.icos[0]].bz && _explorer.sourcedata.icos[_filemanage.selectall.icos[0]].bz)) {
 				Confirm((finallydelete) ?__lang.js_finallydelete_selectall:__lang.js_delete_selectall, function () {

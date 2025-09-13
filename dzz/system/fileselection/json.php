@@ -19,6 +19,12 @@ $config = array();
 if (!$config = C::t('user_field')->fetch($_G['uid'])) {
     $config = dzz_userconfig_init();
 }
+$data['deletefinally'] = 0;
+if (isset($_G['setting']['explorer_finallydelete'])) {
+    if (intval($_G['setting']['explorer_finallydelete']) === 0) {
+        $data['deletefinally'] = 1;
+    }
+}
 $applist = $config['applist'] ? explode(',', $config['applist']) : array();
 if ($applist_n = array_keys(C::t('app_market')->fetch_all_by_notdelete($_G['uid']))) {
     $newappids = array();

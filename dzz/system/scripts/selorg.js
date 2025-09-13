@@ -23,7 +23,7 @@ selorg.add=function(ctrlid,vals){
 		}else{
 			html+=vals[i].path;
 		}
-		html+='<a href="javascript:;" class="ibtn dzz dzz-close mdi mdi-close lead"  title="'+__lang.delete+'" onclick="selorg.remove(\''+ctrlid+'\',this);"></a>';
+		html+='<a href="javascript:;" class="ibtn dzz dzz-close mdi mdi-close-circle lead" title="'+__lang.delete+'" onclick="selorg.remove(\''+ctrlid+'\',this);"></a>';
 	}
 	jQuery('#'+ctrlid).append(html);
 	selorg.set(ctrlid);

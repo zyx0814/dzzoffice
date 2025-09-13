@@ -36,11 +36,13 @@
                 <table class="layui-hide" id="table" lay-filter="table"></table>
 				<script type="text/html" id="toolbar">
 					<div class="layui-btn-container">
-						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-						<button type="button" class="layui-btn layui-btn-danger layui-btn-sm" lay-event="delete">{lang del_share}</button>
-						<!--{if $_G['adminid']}--><button type="button" class="layui-btn layui-bg-orange layui-btn-sm" lay-event="forbidden">{lang screen_share}</button>
-						<button type="button" class="layui-btn layui-btn-sm" lay-event="allow">{lang cancel_shielding}</button><!--{/if}-->
-						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+						<button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+						<div class="layui-btn-group me-2">
+							<button type="button" class="layui-btn layui-btn-danger layui-btn-sm layui-btn-sm layui-btn-disabled" id="deletebtn" lay-event="delete" disabled>{lang del_share}</button>
+							<!--{if $_G['adminid']}--><button type="button" id="forbiddenbtn" class="layui-btn layui-bg-orange layui-btn-sm layui-btn-sm layui-btn-disabled" lay-event="forbidden" disabled>{lang screen_share}</button>
+							<button type="button" class="layui-btn layui-btn-sm layui-btn-sm layui-btn-disabled" id="allowbtn" lay-event="allow" disabled>{lang cancel_shielding}</button><!--{/if}-->
+						</div>
+						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
 					</div>
 				</script>
 				<script type="text/html" id="barDemo">
@@ -72,8 +74,8 @@
 		limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000]
 	},
 	cols: [[
-	{type:'checkbox', fixed: 'left'}
-	,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
+		{type:'checkbox', fixed: 'left'}
+		,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
 		,{field:'title', title: '{lang share_typename_attach}', sort: true,templet: function(d) {
 			return d.title;
 		}}
@@ -90,16 +92,33 @@
 		,{field:'password', title: '{lang extract_password}', align: 'center', sort: true}
 		,{field:'type', title: '{lang file_type}', align: 'center', sort: true}
 		,{field:'times', title: '{lang limited_number}', align: 'center', sort: true}
-		,{title: '{lang operation}',width:150, align:'center', toolbar: '#barDemo', fixed: 'right'}
+		,{title: '{lang operation}',width:150, align:'center', toolbar: '#barDemo'}
 	]],
 	initSort: {
-		field: 'dateline', // 默认排序字段
-		type: 'desc' // 默认排序方式
+		field: 'dateline',
+		type: 'desc'
 	}
+	});
+	table.on('checkbox(table)', function(obj){
+		var checkStatus = table.checkStatus(obj.config.id);
+		var isChecked = checkStatus.data.length > 0;
+		var buttonIds = ['getCheckDataBtn', 'deletebtn', 'forbiddenbtn', 'allowbtn'];
+		buttonIds.forEach(function(btnId) {
+			var btn = document.getElementById(btnId);
+			if (btn) {
+				if (isChecked) {
+					btn.removeAttribute('disabled');
+					btn.classList.remove('layui-btn-disabled');
+				} else {
+					btn.setAttribute('disabled', 'disabled');
+					btn.classList.add('layui-btn-disabled');
+				}
+			}
+		});
 	});
 	//头工具栏事件
 	table.on('toolbar(table)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id); //获取选中行状态
+		var checkStatus = table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
@@ -302,7 +321,6 @@
 		// 获取搜索关键词
 		var keyword = $('#keyword').val();
 		var username = $('#username').val();
-		// 刷新表格并传递搜索参数
 		table.reloadData('table', {
 		  where: { keyword: keyword,username:username},
 		  page: {
@@ -315,7 +333,6 @@
 		// 清空表单内容
         $('#username').val('');
         $('#keyword').val('');
-		// 刷新表格
 		table.reloadData('table', {
 		  where: {type: type}, // 清空搜索参数
 		  page: {
@@ -334,7 +351,6 @@
 		// 获取当前的 type 值
 		operation = $(this).data('operation');
 		type = $(this).data('type');
-		// 刷新表格并传递 operation 参数
 		table.reloadData('table', {
 		  where: {type: type},
 		  page: {

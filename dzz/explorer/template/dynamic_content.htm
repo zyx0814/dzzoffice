@@ -37,8 +37,8 @@
 <table class="layui-hide" id="table" lay-filter="table"></table>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
-        <button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+        <button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
     </div>
 </script>
 <script type="text/html" id="search_do">
@@ -98,13 +98,25 @@
 		  ,{field:'body_data', title: '{lang details}', align: 'left',sort: true,templet: function(d) {return d.body_data;}}
 		]],
 		initSort: {
-			field: 'dateline', // 默认排序字段
-			type: 'desc' // 默认排序方式
+			field: 'dateline',
+			type: 'desc'
 		}
 	  });
-	  //头工具栏事件
+      layuiModules.table.on('checkbox(table)', function(obj){
+        var checkStatus = layuiModules.table.checkStatus(obj.config.id);
+        var checkedCount = checkStatus.data.length;
+        var getCheckDataBtn = document.getElementById('getCheckDataBtn');
+        if(checkedCount > 0) {
+            getCheckDataBtn.removeAttribute('disabled');
+            getCheckDataBtn.classList.remove('layui-btn-disabled');
+        } else {
+            getCheckDataBtn.setAttribute('disabled', 'disabled');
+            getCheckDataBtn.classList.add('layui-btn-disabled');
+        }
+    });
+    //头工具栏事件
 	layuiModules.table.on('toolbar(table)', function(obj){
-		var checkStatus = layuiModules.table.checkStatus(obj.config.id); //获取选中行状态
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':

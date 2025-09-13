@@ -37,7 +37,7 @@
 							<input id="sel_orgid"  type="hidden" name="orgid"  value="$orgid" />
 							<button type="button" id="orgid_Menu" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">$orgpath</button>
 							<div id="orgid_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_Menu">
-								<iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid&moderator=1&stype=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
+								<iframe name="orgids_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid&moderator=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>
 							</div>
 						</div>
 					</div>
@@ -59,10 +59,10 @@
 						<label class="form-check-label" for="append1">{lang bulking}</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="append2" name="append" value="0" <!--{if !$isadmin}-->disabled<!--{/if}-->>
+						<input class="form-check-input" type="radio" id="append2" name="append" value="0" <!--{if $isadmin < 1}-->disabled<!--{/if}-->>
 						<label class="form-check-label" for="append2">{lang coverage}</label>
 					</div>
-					<span class="form-text">{lang import_list_coverage}</span>
+					<span class="form-text">{lang import_list_coverage}<!--{if $isadmin < 1}--><span class="text-danger">覆盖导入只支持系统管理员使用</span><!--{/if}--></span>
 				</div>
 			</div>
 			<div class="alert alert-warning">

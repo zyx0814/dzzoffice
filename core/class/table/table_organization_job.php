@@ -34,14 +34,15 @@ class table_organization_job extends dzz_table {
         return $data;
     }
 
-    function insert_job_by_name($orgid = 0, $name = "") {
+    function insert_job_by_name($orgid = 0, $name = "", $opuid = 0) {
         if (!$orgid || !$name) return 0;
         if (!$jobid = DB::result_first("select jobid from %t where orgid = %d and  name=%s", array('organization_job', $orgid, $name))) {
             $data = array(
                 "orgid" => $orgid,
                 'name' => $name,
                 'jobid' => 0,
-                'dateline' => TIMESTAMP
+                'dateline' => TIMESTAMP,
+                'opuid' => $opuid,
             );
             if ($jobid = DB::insert('organization_job', $data, 1)) {//插入版本数据
                 return $jobid;

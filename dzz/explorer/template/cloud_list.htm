@@ -1,13 +1,13 @@
 <table class="layui-hide" id="cloudtable" lay-filter="cloudtable"></table>
 <script type="text/html" id="toolbar">
     <div class="layui-btn-container">
-        <button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+        <button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
 		<button type="button"  class="layui-btn layui-btn-sm" lay-event="add">添加云</button>
     </div>
 </script>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="view">查看</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">{lang delete}</a>
 </script>
 <script>
 	jQuery(document).ready(function(e) {
@@ -33,15 +33,25 @@
 		  ,{field:'username', title: '{lang username}',style:'cursor:pointer;', align: 'center'}
 		  ,{field:'attachdir', title: '{lang position}',style:'cursor:pointer;'}
 		  ,{field:'bz', title: '{lang type}',style:'cursor:pointer;', align: 'center',hide:true}
-          ,{title: '{lang operation}',align:'center', toolbar: '#barDemo',style:'cursor:pointer;', fixed: 'right'}
+          ,{title: '{lang operation}',align:'center', toolbar: '#barDemo',style:'cursor:pointer;'}
 		]],
-		data: {$return},
-        done: function(){
-        },
+		data: {$return}
 	  });
 	  //头工具栏事件
+      layuiModules.table.on('checkbox(cloudtable)', function(obj){
+        var checkStatus = layuiModules.table.checkStatus(obj.config.id);
+        var checkedCount = checkStatus.data.length;
+        var getCheckDataBtn = document.getElementById('getCheckDataBtn');
+        if(checkedCount > 0) {
+            getCheckDataBtn.removeAttribute('disabled');
+            getCheckDataBtn.classList.remove('layui-btn-disabled');
+        } else {
+            getCheckDataBtn.setAttribute('disabled', 'disabled');
+            getCheckDataBtn.classList.add('layui-btn-disabled');
+        }
+    });
 	layuiModules.table.on('toolbar(cloudtable)', function(obj){
-		var checkStatus = layuiModules.table.checkStatus(obj.config.id); //获取选中行状态
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':

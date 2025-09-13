@@ -306,7 +306,7 @@ function preg_replace(search, replace, str, regswitch) {
 }
 
 function htmlspecialchars(str) {
-	return preg_replace(['&', '<', '>', '"'], ['&', '<', '>', '"'], str);
+	return preg_replace(['&', '<', '>', '"'], ['&amp;', '&lt;', '&gt;', '&quot;'], str);
 }
 
 function display(id) {
@@ -1651,7 +1651,6 @@ function updateseccode(idhash, play) {
 			if(secST['code_' + idhash]) {
 				clearTimeout(secST['code_' + idhash]);
 			}
-			document.getElementById('checkseccodeverify_' + idhash).innerHTML = '';
 			ajaxget('misc.php?mod=seccode&action=update&idhash=' + idhash, 'seccode_' + idhash, null, '', '', function() {
 				secST['code_' + idhash] = setTimeout(function() {document.getElementById('seccode_' + idhash).innerHTML = '<span class="btn btn-link" onclick="updateseccode(\''+idhash+'\')">'+__lang.refresh_verification_code+'</span>';}, 180000);
 			});
@@ -1659,39 +1658,6 @@ function updateseccode(idhash, play) {
 	} else {
 		eval('window.document.seccodeplayer_' + idhash + '.SetVariable("isPlay", "1")');
 	}
-}
-
-function checksec(type, idhash, showmsg, recall) {
-	var showmsg = !showmsg ? 0 : showmsg;
-	var secverify = document.getElementById('sec' + type + 'verify_' + idhash).value;
-	if(!secverify) {
-		return;
-	}
-	var x = new Ajax('XML', 'checksec' + type + 'verify_' + idhash);
-	x.loading = '';
-	document.getElementById('checksec' + type + 'verify_' + idhash).innerHTML = '<span class="dzz dzz-autorenew dzz-spin"></span>';
-	x.get('misc.php?mod=sec' + type + '&action=check&inajax=1&idhash=' + idhash + '&secverify=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(secverify) : secverify), function(s){
-		var obj = document.getElementById('checksec' + type + 'verify_' + idhash);
-		if(obj){
-			obj.style.display = '';
-			if(s.substr(0, 7) == 'succeed') {
-				obj.innerHTML = '<span class="dzz dzz-done"></span>';
-				jQuery(obj).closest('.seccode-wrapper').find('.help-msg').addClass('chk_right');
-				if(showmsg) {
-					recall(1);
-				}
-			} else {
-				jQuery(obj).closest('.seccode-wrapper').find('.help-msg').removeClass('chk_right');
-				obj.innerHTML = '<span class="dzz dzz-close"></span>';
-				if(showmsg) {
-					if(type == 'code') {
-						showError(__lang.verification_error_reset);
-					}
-					recall(0);
-				}
-			}
-		}
-	});
 }
 
 function showdistrict(container, elems, totallevel, changelevel, containertype) {
@@ -2019,10 +1985,8 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 	cache = isUndefined(cache) ? 1 : cache;
 	var menuid = 'fwin_' + k;
 	var menuObj = document.getElementById(menuid);
-	var drag = null;
 	var loadingst = null;
-	var hidedom = '';
-
+	// 不允许浮动窗口时直接跳转
 	if(disallowfloat && disallowfloat.indexOf(k) != -1) {
 		if(BROWSER.ie) url += (url.indexOf('?') != -1 ?  '&' : '?') + 'referer=' + escape(location.href);
 		location.href = url;
@@ -2044,7 +2008,7 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 			ajaxpost(url, 'fwin_content_' + k, '', '', '', function() {initMenu();show();});
 		}
 		if(parseInt(BROWSER.ie) != 6) {
-			loadingst = setTimeout(function() {showDialog('', 'info', '<img src="' + IMGDIR + '/loading.gif"> '+__lang.please_wait)}, 500);
+			loadingst = setTimeout(function() {showDialog('正在为您加载中...', 'info', '<img src="' + IMGDIR + '/loading.gif"> '+__lang.please_wait)}, 500);
 		}
 		if(mode == 'html'){
 			document.getElementById('fwin_content_' + k).innerHTML = url;
@@ -2059,6 +2023,15 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		hideMenu('fwin_dialog', 'dialog');
 		jQuery(menuObj).modal('show');
 	};
+	// 当cache=0或需要刷新时，先销毁再创建
+    if (menuObj && (
+        (mode == 'get' && (url != menuObj.url || cache != 1)) || 
+        (mode == 'post' && document.getElementById(url).action != menuObj.act) || 
+        (mode == 'html' && cache != 1)
+    )) {
+        jQuery(menuObj).off().modal('hide').remove();
+        menuObj = null;
+    }
 	if(!menuObj) {
 		var html='<div class="modal-dialog modal-center">'
 				 +'	<div class="modal-content" >'
@@ -2073,7 +2046,6 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		if(disablebacktohide){
 			menuObj.setAttribute('data-backdrop','static');
 			menuObj.setAttribute('data-keyboard','false');
-			
 		} 
 		menuObj.style.display = 'none';
 		document.body.appendChild(menuObj);
@@ -2086,8 +2058,6 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		} else {
 			fetchContent();
 		}
-	} else if((mode == 'get' && (url != menuObj.url || cache != 1)) || (mode == 'post' && document.getElementById(url).action != menuObj.act) || (mode == 'html' &&  cache != 1)) {
-		fetchContent();
 	} else {
 		show();
 	}

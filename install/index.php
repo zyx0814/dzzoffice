@@ -31,7 +31,7 @@ require ROOT_PATH . './install/language/zh-cn/lang.php';
 $view_off = getgpc('view_off');
 define('VIEW_OFF', $view_off ? TRUE : FALSE);
 
-$allow_method = array('show_license', 'env_check', 'db_init', 'ext_info', 'install_check', 'tablepre_check');
+$allow_method = array('show_license', 'env_check', 'db_init', 'ext_info', 'install_check', 'tablepre_check', 'phpinfo');
 $step = intval(getgpc('step', 'R')) ? intval(getgpc('step', 'R')) : 0;
 $method = getgpc('method');
 
@@ -63,6 +63,8 @@ if ($method == 'show_license') {
 
     show_license();
 
+} elseif ($method == 'phpinfo') {
+    exit(phpinfo());
 } elseif ($method == 'env_check') {
 
     VIEW_OFF && function_check($func_items);

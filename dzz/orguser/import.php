@@ -10,19 +10,20 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
-$isadmin = true;
+$isadmin = 2;
 if ($_G['adminid'] != 1) {
-    $isadmin = false;
+    $isadmin = 0;
     if (!C::t('organization_admin')->fetch_orgids_by_uid($_G['uid'])) {
         if($do == 'importing') exit(json_encode(array('error' => lang('orguser_import_user'))));
         showmessage('orguser_import_user', dreferer());
     }
+    if($_G['setting']['org_import_user']) $isadmin=1;//允许机构部门管理员使用覆盖方式导入
 }
 require_once libfile('function/organization');
 $navtitle = lang('user_import') . ' - ' . lang('appname');
 if ($do == 'importing') {
     $orgid = intval($_GET['orgid']);
-    if(!$orgid && !$isadmin) exit(json_encode(array('error' => '机构部门管理员需要选择导入机构才能导入')));
+    if(!$orgid && $_G['adminid'] != 1) exit(json_encode(array('error' => '机构部门管理员需要选择导入机构才能导入')));
     //判断邮箱是否存在
     require_once libfile('function/user', '', 'user');
     $email = trim($_GET['email']);
@@ -38,7 +39,7 @@ if ($do == 'importing') {
 
     $isappend = intval($_GET['append']);
     $sendmail = intval($_GET['sendmail']);
-    if(!$isadmin) $isappend = 1;
+    if($isadmin < 1) $isappend = 1;
     /*
     if($sendmail){ //随机密码时重新设置密码为随机数；
         $_GET['password']=random(8);

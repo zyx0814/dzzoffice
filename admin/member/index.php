@@ -21,7 +21,6 @@ if ($_G['member']['grid'] == '4') {
         $_GET['vid'] = 1;
         require MOD_PATH . './admin/member/verify.php';
         exit();
-
     } else {
         showmessage('contact_administrator');
     }

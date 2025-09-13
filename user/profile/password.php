@@ -31,7 +31,6 @@ if ($do == 'editpass') {
 
         //验证码
         if (!check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
-
             showTips(array('error' => lang('submit_seccode_invalid')), $type);
         }
         //验证原密码
@@ -74,22 +73,20 @@ if ($do == 'editpass') {
         }
 
         if ($_GET['password'] && $_GET['password'] !== $_GET['password2']) {
-
             showTips(array('error' => lang('profile_passwd_notmatch')), $type);
         }
         $setarr = array();
 
         if ($_GET['password']) {
-
             $password = preg_match('/^\w{32}$/', $_GET['password']) ? $_GET['password'] : md5($_GET['password']);
-
             $password = md5($password . $member['salt']);
         }
-
         if ($password && C::t('user')->update_password($_G['uid'], $password)) {
             showTips(array('success' => lang('update_password_success')), $type);
             exit();
         }
+        showTips(array('error' => lang('update_password_failed')), $type);
+        exit();
     }
 
 } elseif ($do == 'login') {
@@ -192,7 +189,7 @@ if ($do == 'editpass') {
     $logs = file($logdir . $lastlog["file"]);
     $logs = array_reverse($logs);
     foreach ($logs as $key => $value) {
-        if (!empty($keyword) && strpos($value, $keyword) === FALSE) {
+        if (strpos($value, $keyword) === false) {
             unset($logs[$key]);
         }
     }

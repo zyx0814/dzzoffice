@@ -13,8 +13,8 @@ if(isset($_GET['uid'])){
         exit(json_encode(array('error'=>'管理员禁止登陆')));
 	}
     if ($user['status'] > 0) {
-        writelog('loginlog', '用户ID：'.$_GET['uid'].' 使用登录模板4登录失败,此用户已停用');
-        exit(json_encode(array('error'=>'此用户已停用，请联系管理员')));
+        writelog('loginlog', '用户ID：'.$_GET['uid'].' 使用登录模板4登录失败,此用户已禁用');
+        exit(json_encode(array('error'=>'此用户已禁用，请联系管理员')));
     }
     $orgid = $_G['setting']['loginset']['orgid'];
     // 检查用户是否属于指定机构

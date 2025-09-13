@@ -217,6 +217,9 @@ if ($do == 'upload') {//上传图片文件
     exit(json_encode($setarr));
 } elseif ($do == 'rename') {
     $orgid = intval($_GET['orgid']);
+    if (!$_GET['text']) {
+        exit(json_encode(array('msg' => lang('name_cannot_empty'))));
+    }
     if (!$ismoderator = C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
         exit(json_encode(array('error' => lang('privilege'))));
     }
@@ -389,8 +392,13 @@ if ($do == 'upload') {//上传图片文件
     }
 } elseif ($do == 'set_org_orgname') {
     $orgid = intval($_GET['orgid']);
-    $orgname = getstr($_GET['orgname'], 255);
-
+    if(!$orgid) {
+        exit(json_encode(array('error' => lang('privilege'))));
+    }
+    $orgname = isset($_GET['orgname']) ? trim($_GET['orgname']) : '';
+    if(!$orgname) {
+        exit(json_encode(array('error' => lang('name_cannot_empty'))));
+    }
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
         exit(json_encode(array('error' => lang('privilege'))));
     }
@@ -401,6 +409,9 @@ if ($do == 'upload') {//上传图片文件
     }
 } elseif ($do == 'set_org_logo') {
     $orgid = intval($_GET['orgid']);
+    if(!$orgid) {
+        exit(json_encode(array('error' => lang('privilege'))));
+    }
     $img = intval(($_GET['aid']));
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
         exit(json_encode(array('error' => lang('privilege'))));
@@ -413,6 +424,9 @@ if ($do == 'upload') {//上传图片文件
 
 } elseif ($do == 'set_org_desc') {
     $orgid = intval($_GET['orgid']);
+    if(!$orgid) {
+        exit(json_encode(array('error' => lang('privilege'))));
+    }
     $desc = getstr($_GET['desc']);
 
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
@@ -434,8 +448,10 @@ if ($do == 'upload') {//上传图片文件
     }
 } elseif ($do == 'orginfo') {
     $array = isset($_GET['arr']) ? $_GET['arr'] : '';
+    if(!$orgid) {
+        exit(json_encode(array('error' => lang('privilege'))));
+    }
     if (!empty($array)) {
-        $orgid = intval($array['orgid']);
         if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
             exit(json_encode(array('error' => lang('privilege'))));
         }
@@ -516,6 +532,19 @@ if ($do == 'upload') {//上传图片文件
 
 } elseif ($do == 'guide') {
     include template('guide');
+} elseif ($do == 'set') {
+    if ($_G['adminid'] != 1) {
+        showmessage('privilege');
+    }
+    if (submitcheck('confirmsubmit')) {
+        include_once libfile('function/cache');
+        $org_import_user = intval($_GET['org_import_user']);
+        C::t('setting')->update('org_import_user', $org_import_user);
+        updatecache('setting');
+        exit(json_encode(array('success' => true)));
+    } else {
+        include template('ajax');
+    }
 }
 exit();
 ?>

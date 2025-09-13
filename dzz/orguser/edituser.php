@@ -12,8 +12,7 @@ if (!defined('IN_DZZ')) {
 require_once libfile('function/user', '', 'user');
 require_once libfile('function/mail');
 require_once libfile('function/organization');
-if (!$_G['cache']['usergroups'])
-    loadcache('usergroups');
+if (!$_G['cache']['usergroups']) loadcache('usergroups');
 
 $do = trim($_GET['do']);
 $uid = intval($_GET['uid']);
@@ -32,8 +31,7 @@ if ($do == 'add') {
                 $orgids[$orgid] = intval($_GET['jobids'][$key]);
             }
         }
-        if (!$orgids && $_G['adminid'] != 1)
-            showmessage('no_parallelism_jurisdiction');
+        if (!$orgids && $_G['adminid'] != 1) showmessage('no_parallelism_jurisdiction');
         //用户名验证
         $username = trim($_GET['username']);
         if ($username) {
@@ -123,11 +121,14 @@ if ($do == 'add') {
         //插入用户状态表
         $status = array('uid' => $uid, 'regip' => '', 'lastip' => '', 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP, 'lastsendmail' => 0);
         C::t('user_status')->insert($status, false, true);
-        //处理管理员
-        C::t('user')->setAdministror($uid, intval($_GET['groupid']));
+        if($_G[ 'adminid'] == 1) {
+            //处理管理员
+            C::t('user')->setAdministror($uid, intval($_GET['groupid']));
+        }
+        $status = intval($_GET['status']) ? 1 : 0;
+        if ($status == 1) $user_extra['status'] = $status;
         //加入额外信息
-        if ($user_extra)
-            C::t('user')->update($uid, $user_extra);
+        if ($user_extra) C::t('user')->update($uid, $user_extra);
 
         //处理额外空间
         $addsize = intval($_GET['addsize']);
@@ -137,8 +138,7 @@ if ($do == 'add') {
             C::t('user_field')->insert(array('uid' => $uid, 'addsize' => $addsize, 'perm' => 0, 'iconview' => $_G['setting']['desktop_default']['iconview'] ? $_G['setting']['desktop_default']['iconview'] : 2, 'taskbar' => $_G['setting']['desktop_default']['taskbar'] ? $_G['setting']['desktop_default']['taskbar'] : 'bottom', 'iconposition' => intval($_G['setting']['desktop_default']['iconposition']), 'direction' => intval($_G['setting']['desktop_default']['direction']),));
         }
 
-        if ($orgids)
-            C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
+        if ($orgids) C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
         //处理上司职位;
         C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
         Hook::listen('syntoline_user', $uid, 'add');//注册绑定到钉钉部门表
@@ -155,7 +155,7 @@ if ($do == 'add') {
     } else {
         $orgid = intval($_GET['orgid']);
         if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-            exit(lang('orguser_edituser_add_user'));
+            showmessage(lang('orguser_edituser_add_user'));
         }
         if ($org = C::t('organization')->fetch($orgid)) {
             $org['jobs'] = C::t('organization_job')->fetch_all_by_orgid($org['orgid']);
@@ -179,8 +179,7 @@ if ($do == 'add') {
                         break;
                     }
                 }
-                if (!$uperm)
-                    showmessage('privilege');
+                if (!$uperm) showmessage('privilege');
             } else {
                 showmessage('privilege');
             }
@@ -295,9 +294,10 @@ if ($do == 'add') {
             $setarr = array('username' => $username, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid, 'status' => intval($_GET['status']));
         }
         C::t('user')->update($uid, $setarr);
-
-        //处理管理员
-        C::t('user')->setAdministror($uid, intval($_GET['groupid']));
+        if($_G[ 'adminid'] == 1) {
+            //处理管理员
+            C::t('user')->setAdministror($uid, intval($_GET['groupid']));
+        }
         //处理额外空间和用户空间
         //$addsize = intval($_GET['addsize']);
         $userspace = intval($_GET['userspace']);
@@ -338,7 +338,7 @@ if ($do == 'add') {
                     break;
                 }
             }
-            if (!$uperm) exit(lang('orguser_edituser_add_user1'));
+            if (!$uperm) showmessage('orguser_edituser_add_user1');
         }
         //获取系统可分配空间大小
         $allowallotspace = C::t('organization')->get_system_allowallot_space();
@@ -387,8 +387,7 @@ if ($do == 'add') {
                 }
             }
         }
-        if (!$uperm)
-            exit(lang('orguser_edituser_add_user1'));
+        if (!$uperm) showmessage('orguser_edituser_add_user1');
     }
     include_once libfile('function/profile', '', 'user');
     $space = getuserbyuid($uid);

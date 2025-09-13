@@ -23,6 +23,7 @@ class Checkvalue {
         if ($setting['bbrules'] && $bbrulehash != $_POST['agreebbrule']) {
             showTips(array('error' => lang('register_rules_agree')), $type);
         }
+        $seccodecheck = $_G['setting']['seccodestatus'] & 1;
 
         //验证码
         if ($secqaacheck || $seccodecheck) {

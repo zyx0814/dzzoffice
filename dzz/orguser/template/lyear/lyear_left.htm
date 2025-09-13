@@ -23,6 +23,7 @@
 	<a class="newdoc" href="javascript:;" onclick="jstree_create_user();return false;" title="{lang add_user}"></a>
 	<a class="import " href="{MOD_URL}&op=import" title="{lang import_user}"></a>
 	<a class="guide" href="javascript:;" onclick="show_guide();return false;" title="{lang moderate_explain}"></a>
+	<!--{if $_G[ 'adminid']==1}--><a class="set" href="javascript:;" onclick="showWindow('set','{MOD_URL}&op=ajax&do=set','get',0);return false;" title="{lang set}"></a><!--{/if}-->
 </div>
 <div id="classtree" class="classtree-container" style="padding:5px 0;overflow:hidden;border-top:1px solid #FFF;"></div>
 <script type="text/javascript">

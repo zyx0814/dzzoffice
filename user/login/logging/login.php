@@ -72,13 +72,19 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
                 $orgid = $setting['loginset']['orgid'];
                 $param = array('organization_user', 'organization_job', 'user');
                 $sql = "ou.orgid = %d AND u.adminid != 1 AND u.status = 0";
-                
-                $users = DB::fetch_all("SELECT u.uid,u.username,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, array($orgid)));
+                if (!$_G['cache']['usergroups']) loadcache('usergroups');
+                $users = DB::fetch_all("SELECT u.uid,u.username,u.groupid,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, array($orgid)));
                 foreach ($users as $user) {
+                    $jobname = $user['jobname'];
+                    if(!$jobname) {
+                        $usergroup = $_G['cache']['usergroups'][$user['groupid']] ?? array();
+                        $jobname = $usergroup['grouptitle'] ?? '成员';
+                    }
+                    
                     $data[] = array(
                         'uid' => $user['uid'],
                         'username' => $user['username'],
-                        'jobname' => $user['jobname'] ?: '成员'
+                        'jobname' => $jobname
                     );
                 }
             }
@@ -99,7 +105,7 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
     $result = userlogin($_GET['email'], $_GET['password'], $_GET['questionid'], $_GET['answer'], 'auto', $_G['clientip']);
 
     if ($result['status'] == -2) {
-        $errorlog = "用户" . ($result['ucresult']['email'] ? $result['ucresult']['email'] : $_GET['email']) . "尝试登录失败，该用户已停用。";
+        $errorlog = "用户" . ($result['ucresult']['email'] ? $result['ucresult']['email'] : $_GET['email']) . "尝试登录失败，该用户已禁用。";
         writelog('loginlog', $errorlog);
         showTips(array('error' => lang('user_stopped_please_admin')), $type);
     } elseif ($_G['setting']['bbclosed'] > 0 && $result['member']['adminid'] != 1) {
