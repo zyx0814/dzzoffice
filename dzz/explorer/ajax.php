@@ -110,7 +110,7 @@ if ($operation == 'upload') {//上传图片文件
             $perm += 1;
         }
         if ($perm == $groupperm) exit(json_encode(array('success' => true)));
-        if (!$inherit && !$perm) exit(json_encode(array('error' => true)));
+        if (!$inherit && !$perm) exit(json_encode(array('error' => '顶级目录权限不允许为空')));
         $fid = intval($_GET['fid']);
         if (C::t('folder')->update($fid, array('perm' => $perm))) {
             //如果是编辑权限，增加相关事件

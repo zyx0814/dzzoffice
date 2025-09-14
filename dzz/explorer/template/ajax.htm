@@ -97,8 +97,8 @@
                     <div class="row g-0" id="select_perm">
                         <!--{loop $perms $k $v}-->
                         <div class="form-check col-sm-6">
-                            <input type="checkbox" class="form-check-input" value="$v[1]" name="selectperm[]" id="$v[1]" <!--{if $v[1] & $groupperm}-->checked="checked" <!--{/if}-->>
-                            <label class="form-check-label fs-6" for="$v[1]">
+                            <input type="checkbox" class="form-check-input" value="$v[1]" name="selectperm[]" id="perm$v[1]" <!--{if $v[1] & $groupperm}-->checked="checked" <!--{/if}-->>
+                            <label class="form-check-label fs-6" for="perm$v[1]">
                                 <div class="all-yourself">
                                     <span class="{$v[2]} view-eidt text-primary pe-1" data-perm="$v[1]"></span><span>$v[0]</span>
                                 </div>
@@ -181,8 +181,11 @@
                 } else {
                     hideWindow('select_perm');
                 }
+            }  else if(data['error']) {
+                showmessage(data['error'], 'error', 3000, 1);
+            } else {
+                showmessage('{lang do_failed}', 'error', 3000, 1);
             }
-
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
         });
@@ -369,8 +372,8 @@
                     <div class="row g-0" id="select_perm">
                         <!--{loop $perms $k $v}-->
                         <div class="form-check col-sm-6">
-                            <input type="checkbox" class="form-check-input" {if $inheritperm & $v[1]} checked="checked" {/if}value="$v[1]" name="selectperm[]" id="new_{$v[1]}">
-                            <label class="form-check-label fs-6" for="new_{$v[1]}">
+                            <input type="checkbox" class="form-check-input" {if $inheritperm & $v[1]} checked="checked" {/if}value="$v[1]" name="selectperm[]" id="newperm_{$v[1]}">
+                            <label class="form-check-label fs-6" for="newperm_{$v[1]}">
                                 <div class="all-yourself">
                                     <span class="{$v[2]} view-eidt text-primary pe-1" data-perm="$v[1]"></span>$v[0]
                                 </div>
@@ -450,8 +453,10 @@
                 <!--{/if}-->
                 layer.msg('已创建：'+data.name, {offset:'10px'});
                 hideWindow('newFolder');
-            } else {
+            } else if (data.error) {
                 layer.alert(data.error, {skin:'lyear-skin-danger'});
+            }else {
+                layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
             }
 
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
@@ -894,8 +899,10 @@
                 _explorer.sourcedata.icos[data.rid] = data;
                 _filemanage.cons['f-' + '{$fid}'].CreateIcos(data);
                 hideWindow('newLink');
-            } else {
+            } else if (data.error) {
                 layer.alert(data.error, {skin:'lyear-skin-danger'});
+            } else {
+                layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
@@ -1077,8 +1084,10 @@
                 }
                 obj.data('vid', data['vid']);
                 hideWindow('editfileversion');
-            } else {
+            } else if (data['error']) {
                 layer.alert(data['error'], {skin:'lyear-skin-danger'});
+            } else {
+                layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
@@ -1146,8 +1155,10 @@
                 }
 
                 hideWindow('$_GET[handlekey]');
-            } else {
+            } else if(data['error']) {
                 layer.alert(data['error'], {skin:'lyear-skin-danger'});
+            } else {
+                layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);

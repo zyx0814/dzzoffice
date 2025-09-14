@@ -541,7 +541,7 @@ hr.dropdown-divider,hr.divider{background-color:#ededee;border-top-color:#ededee
 .sidebar-main{-webkit-transform:translateZ(0);transform:translateZ(0)}
 .nav-drawer{list-style:none;padding:0px;margin:0px}
 .nav-drawer>li{position:relative;display:block}
-.nav-drawer li a{position:relative;display:block;padding-right:24px;padding:10px 15px 10px 52.99999px;font-weight:500;white-space:nowrap}
+.nav-drawer li a{position:relative;display:block;padding-right:24px;padding:10px 15px 10px 52.99999px;color:inherit;font-weight:500;white-space:nowrap}
 .nav-drawer>li>a{border-right:3px solid transparent;padding-top:12px;padding-bottom:12px}
 .nav-drawer>li>a>span{white-space:nowrap;padding:5px}
 .nav-drawer>.active>a{background-color:rgba(33,37,41,.0125);border-color:#007bff;border-color:var(--bs-primary)}

@@ -152,7 +152,7 @@ if ($method == 'show_license') {
                 list($dbhost1, $port) = explode(':', $dbhost);
 
             } elseif (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
-                $unix_socket = $dbhost;
+                $unix_socket = $dbhost1;
                 $dbhost1 = 'localhost';
             } else {
                 $dbhost1 = $dbhost;
@@ -204,14 +204,13 @@ if ($method == 'show_license') {
 
         save_config_file(ROOT_PATH . CONFIG, $_config, $default_config);
         $runqueryerror = 0;
-        $db = new dbstuff;
-
-        $db->connect($dbhost, $dbuser, $dbpw, $dbname, DBCHARSET);
-
         if (!VIEW_OFF) {
             show_header();
             show_install();
         }
+        $db = new dbstuff;
+
+        $db->connect($dbhost, $dbuser, $dbpw, $dbname, DBCHARSET);
         for ($i = 0; $i < 5; $i++) {
             showjsmessage(lang('begin_establish_data_tables'));
         }
@@ -311,15 +310,13 @@ if ($method == 'show_license') {
         }
         if ($runqueryerror) {
             showjsmessage('<span class="red">' . lang('error_quit_msg') . '</span>');
+            show_footer();
             exit();
         }
         showjsmessage(lang('system_data_installation_successful'));
         show_footer();
     }
     show_form($form_db_init_items, $error_msg);
-
-} elseif ($method == 'admin_init') {
-
 
 } elseif ($method == 'ext_info') {
     @touch($lockfile);

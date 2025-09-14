@@ -19,23 +19,14 @@ if ($_G['uid'] > 0) {
         include template('site_close');
         exit();
     }
-    $param = array(
-        'username' => $_G['username'],
-        'usergroup' => $_G['group']['grouptitle'],
-        'uid' => $_G['uid'],
-        'groupid' => $_G['groupid'],
-        'syn' => 0
-    );
-    $loginmessage = 'login_succeed';
 
     $location = dreferer();//待修改
 
     $href = str_replace("'", "\'", $location);
     $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
 
-    $messageText = lang($loginmessage, $param);
     writelog('loginlog', '登录成功');
-    showmessage($messageText, $href);
+    showmessage('login_succeed_no_redirect', $href);
 }
 $_G['allow_loginmod'] = $setting['allow_loginmod'] = unserialize($setting['allow_loginmod']);
 //Hook::listen('login_check');//检查登录状态
@@ -127,24 +118,13 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
         //邀请登录
         //Hook::listen('inviate');
 
-        //登录成功提示信息
-        $param = array(
-            'username' => $result['ucresult']['username'],
-            'usergroup' => $_G['group']['grouptitle'],
-            'uid' => $_G['member']['uid'],
-            'groupid' => $_G['groupid'],
-            'syn' => 0
-        );
-        $loginmessage = /*$_G['groupid'] == 8 ? 'login_succeed_inactive_member' :*/'login_succeed';
-
-        $location = /*$_G['groupid'] == 8 ? 'user.php?mod=profile' :*/dreferer();//待修改
+        $location = dreferer();//待修改
 
         $href = str_replace("'", "\'", $location);
         $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
 
-        $messageText = lang($loginmessage, $param);
         writelog('loginlog', '登录成功');
-        showTips(array('success' => array('message' => $messageText, 'url_forward' => $href)), $type);
+        showTips(array('success' => array('message' => lang('login_succeed_no_redirect'), 'url_forward' => $href)), $type);
 
 
     } else {//登录失败记录日志 

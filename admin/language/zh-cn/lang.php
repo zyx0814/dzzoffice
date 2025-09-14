@@ -999,8 +999,6 @@ $lang = array
     'volume_classification_success' => '此分卷备份全部导入成功！<br />',
     'support_upload_pictures_extensions' => '对不起，不支持上传此类扩展名的图片',
     'upload_await' => '上传中，请等待',
-    'folder_permissions' => '文件夹权限',
-    'folder_property_group_permission' => '文件夹属性用于部门、群组中创建文件夹的权限',
     'new_permissions' => '新建权限',
     'add_folder_permission_group' => '添加文件夹权限组',
     'choose_permission' => '权限选择',
@@ -1017,8 +1015,6 @@ $lang = array
     'set_default_permission_succeeded' => '默认权限设置成功',
     'delete_permission_group_sure' => '您确定要删除该权限组吗？删除之后不可恢复',
     'jurisdiction' => '权限',
-    'folder_permission_name' => '文件夹权限名称',
-    'edit_folder_permissions' => '编辑文件夹权限',
     'edit_usergroup_permissions' => '编辑用户组权限',
     'add_usergroup_permissions' => '添加用户组权限',
 

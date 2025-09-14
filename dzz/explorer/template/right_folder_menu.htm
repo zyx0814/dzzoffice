@@ -98,18 +98,28 @@
 		</div>
 		<!--{/if}-->
 	</div>
-	<!--{if $perm && $fileinfo['isdelete'] < 1}-->
+	<!--{if $myperm && $fileinfo['isdelete'] < 1}-->
 	<div class="p-2 border-bottom">
 		<div class="right-card-header">
-			<div class="title">{lang directory_right}</div>
-			<!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
+			<div class="title">{lang my_permission}</div>
 		</div>
 		<div class="right-card-body">
 			<ul class="proper-show proper-poewr">
 				<!--{loop $perms $k $val}-->
-				<li <!--{if $perm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
+				<li <!--{if $myperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
 				<!--{/loop}-->
 			</ul>
+			<!--{if $folderperm}-->
+			<div class="right-card-header">
+				<div class="title">一般协作成员权限</div>
+				<button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button>
+			</div>
+			<ul class="proper-show proper-poewr">
+				<!--{loop $perms $k $val}-->
+				<li <!--{if $folderperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
+				<!--{/loop}-->
+			</ul>
+			<!--{/if}-->
 		</div>
 	</div>
 	<!--{/if}-->

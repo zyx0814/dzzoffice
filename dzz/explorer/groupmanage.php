@@ -189,10 +189,6 @@ if ($do == 'filelist') {
     }
     exit(json_encode($arr));
 } else {
-    Hook::listen('check_login');
-    if($_G['adminid'] != 1) {
-        showmessage('no_privilege', dreferer());
-    }
     require template('groupmanage');
 }
 function prem() {

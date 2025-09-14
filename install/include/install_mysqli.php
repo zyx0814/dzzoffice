@@ -36,10 +36,9 @@ class dbstuff {
         if (!$this->link->real_connect($dbhost, $dbuser, $dbpw, $dbname, $port, $unix_socket, MYSQLI_CLIENT_COMPRESS)) {
             $this->halt('Can not connect to MySQL server');
         }
-
-        if ($this->version() < '5.5.3') {
-            $this->halt('MySQL version must be 5.5.3 or greater');
-        }
+        if (version_compare($this->version(), '5.5.3', '<')) {
+			$this->halt('MySQL version must be 5.5.3 or greater');
+		}
 
         if ($dbcharset) {
             $this->link->set_charset($dbcharset);
@@ -90,12 +89,12 @@ class dbstuff {
     }
 
     function error() {
-        return (($this->link) ? $this->link->error : mysqli_error());
-    }
+		return $this->link->error;
+	}
 
-    function errno() {
-        return intval(($this->link) ? $this->link->errno : mysqli_errno());
-    }
+	function errno() {
+		return $this->link->errno;
+	}
 
     function result($query, $row) {
         if (!$query || $query->num_rows == 0) {

@@ -41,15 +41,21 @@ function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
             }
         }
     }
-    $back = lang('to_back');
-    echo <<<EOT
-		<div class="red">
-			<h3>$title</h3>
-			<ul>$comment</ul>
-			<a href="#" class="btn" onclick="history.back();return false">$back</a>
-		</div>
-EOT;
-    show_footer($quit);
+    if($step > 0) {
+        echo "<div class=\"red\"><h3>$title</h3><ul>$comment</ul>";
+    } else {
+        echo "<div class=\"main\"><div class=\"red\"><h3>$title</h3><ul>$comment</ul>";
+    }
+
+    if($quit) {
+        echo '<br /><span class="red">'.lang('error_quit_msg').'</span><br /><br /><br />';
+    }
+
+    echo '<input type="button" class="btn" onclick="history.back()" value="'.lang('click_to_back').'" />';
+
+    echo '</div>';
+
+    $quit && show_footer();
 }
 
 function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
@@ -65,10 +71,11 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
         $dbhost = 'localhost';
     }
     if (empty($port)) $port = '3306';
-    $link = new mysqli($dbhost, $dbuser, $dbpw, '', $port, $unix_socket);
-    $errno = $link->connect_errno;
-    $error = $link->connect_error;
-    if ($errno) {
+    mysqli_report(MYSQLI_REPORT_OFF);
+    $link = @new mysqli($dbhost, $dbuser, $dbpw, '', $port, $unix_socket);
+    if ($link->connect_errno) {
+        $errno = $link->connect_errno;
+        $error = $link->connect_error;
         if ($errno == 1045) {
             show_msg('database_errno_1045', $error, 0);
         } elseif ($errno == 2003 || $errno == 2002) {
@@ -76,6 +83,7 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
         } else {
             show_msg('database_connect_error', $error, 0);
         }
+        return false;
     } else {
         if ($query = $link->query("SHOW databases")) {
             if (!$query) {
@@ -297,7 +305,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
         echo "</table>\n";
     }
     echo "<h2 class=\"title\">其他检查</h2>\n";
-    echo "<p class=\"tb\">数据库需使用MYSQL5.5.3~8.0之间的版本，其他版本可能不能正常使用。</p>\n";
+    echo "<p class=\"tb\">数据库需使用MYSQL5.5.3及以上版本，其他版本可能不能正常使用。</p>\n";
     show_next_step(2, $error_code);
     show_footer();
 }
@@ -447,6 +455,9 @@ function show_header() {
 <!DOCTYPE>
 <html>
 <head>
+<meta charset="$charset" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=$charset" />
 <title>$title</title>
 <link rel="stylesheet" href="images/style.css" type="text/css" media="all" />
@@ -475,11 +486,17 @@ function show_header() {
 	.title{font-size: 20px;margin-bottom: 10px;font-weight: 500;}
 </style>
 </head>
+<body>
 <div class="container step_$step">
 <h1><img src="images/logo.png">DzzOffice 安装程序</h1>
 <div style="padding: 10px; text-align: center;">
 EOT;
     $step > 0 && show_step($step);
+    echo "\r\n";
+	echo str_repeat('  ', 1024 * 4);
+	echo "\r\n";
+	flush();
+	ob_flush();
 }
 
 function show_footer($quit = true) {
@@ -507,8 +524,6 @@ function loginit($logfile) {
 function showjsmessage($message) {
     if (VIEW_OFF) return;
     echo '<script type="text/javascript">showmessage(\'' . addslashes($message) . '\');</script>' . "\r\n";
-    flush();
-    ob_flush();
 }
 
 function random($length) {
@@ -611,7 +626,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
         $result .= chr(ord($string[$i]) ^ ($box[($box[$a] + $box[$j]) % 256]));
     }
     if ($operation == 'DECODE') {
-        if ((substr($result, 0, 10) == 0 || substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) === substr(md5(substr($result, 26) . $keyb), 0, 16)) {
+        if(((int)substr($result, 0, 10) == 0 || (int)substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) === substr(md5(substr($result, 26).$keyb), 0, 16)) {
             return substr($result, 26);
         } else {
             return '';
@@ -918,7 +933,7 @@ function show_error($type, $errors = '', $quit = false) {
     if ($step > 0) {
         echo "<div class=\"desc\"><b>$title</b><ul>$comment</ul>";
     } else {
-        echo "</div><div class=\"main\" style=\"margin-top: -123px;\"><b>$title</b><ul style=\"line-height: 200%; margin-left: 30px;\">$comment</ul>";
+        echo "<div class=\"main\" style=\"margin-top: -123px;\"><b>$title</b><ul style=\"line-height: 200%; margin-left: 30px;\">$comment</ul>";
     }
 
     if ($quit) {
@@ -927,7 +942,7 @@ function show_error($type, $errors = '', $quit = false) {
 
     echo '</div>';
     $runqueryerror++;
-    show_footer($quit);
+    $quit && show_footer($quit);
 }
 
 function show_tips($tip, $title = '', $comment = '', $style = 1) {
