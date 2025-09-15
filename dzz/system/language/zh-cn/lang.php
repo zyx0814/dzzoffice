@@ -77,7 +77,6 @@ $lang = array
     'uploadfile' => '上传文件',
     'uploadfolder' => '上传文件夹',
     'newly_build' => '新建',
-    'refresh' => '刷新',
     'rename' => '重命名',
     'edit_date' => '修改时间',
 );

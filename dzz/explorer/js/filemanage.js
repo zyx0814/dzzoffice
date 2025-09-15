@@ -76,15 +76,8 @@ _filemanage.apicacheTimer = {};
 _filemanage.infoPanelUrl = '';
 _filemanage.viewstyle = ['bigicon', 'middleicon', 'middlelist', 'smalllist', 'detaillist'];
 _filemanage.getData = function (url, callback) {
-	var l = $('#middleconMenu').lyearloading({
-        opacity           : 0,
-		spinnerSize       : 'lg',
-		textColorClass    : 'text-info',
-		spinnerColorClass : 'text-info',
-		spinnerText       : '处理中...',
-    });
+	jQuery('.loadingmiddlecon').html(_explorer.loadhtml);
 	jQuery.getJSON(url, function (json) {
-		l.destroy();
 		if (json.error) {
 			jQuery('#middleconMenu').html('<div class="emptyPage" id="noticeinfo"><img src="static/image/common/no_list.png"><p class="emptyPage-text">'+json.error+'</p></div>');
 			layer.alert(json.error, {skin:'lyear-skin-danger'});
@@ -127,7 +120,6 @@ _filemanage.getData = function (url, callback) {
 			}
 		}
 	}).fail(function(jqxhr, textStatus, error) {
-		l.destroy();
 		jQuery('#middleconMenu').html(jqxhr.responseText);
 		return false;
 	});
@@ -904,7 +896,7 @@ function contextmenuico(rid) {
 		if(obj.isdelete == 1){
 			el.find('.menu-item:not(.recover,.finallydelete)').remove();
 		}else{
-			el.find('.menu-item:not(.delete,.cut,.copy,.restore,.downpackage,.property,.collect,.paste,.share)').remove();
+			el.find('.menu-item:not(.delete,.cut,.copy,.restore,.downpackage,.property,.collect,.paste,.share,.more-action)').remove();
 		}
 		var pd = 1;
 		for (var i = 0; i < _filemanage.selectall.icos.length; i++) {
@@ -941,12 +933,6 @@ function contextmenuico(rid) {
 		el.find('.cut').remove();
 		el.find('.copy').remove();
 		el.find('.paste').remove();
-	}
-	//分享处理
-	if(_filemanage.winid.indexOf('share') != -1){
-		el.find('.menu-item:not(.editshare)').remove();
-	}else{
-		el.find('.editshare').remove();
 	}
 	//如果在收藏,搜索和最近使用页面去掉删去和剪切和重命名
 	if(_filemanage.winid.indexOf('collect') != -1 || _filemanage.winid.indexOf('recent') != -1 || _filemanage.winid.indexOf('search') != -1){
@@ -991,6 +977,16 @@ function contextmenuico(rid) {
 	el.find('.layui-menu-item-divider').each(function () {
 		if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
 	});
+	el.find('.more-action').each(function () {
+		if (jQuery(this).find('.dropdown-menu > ul').find('.menu-item').length === 0) {
+			jQuery(this).remove();
+		}
+	});
+	el.find('.layui-menu-item-divider').each(function () {
+        if (jQuery(this).next().hasClass('layui-menu-item-divider')) {
+            jQuery(this).remove();
+        }
+    });
 	return el[0] ? el[0].outerHTML : '';
 }
 function contextmenubody(fid) {
@@ -1875,7 +1871,7 @@ _filemanage.collect = function (rid) {
 				//console.log('收藏成功时处理');
 			}
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+			layer.msg('操作失败，请稍后再试: ' + textStatus, {offset:'10px'});
         });
 	}
 	return;
@@ -2038,7 +2034,7 @@ _filemanage.NewIco = function (type, fid) {
 				layer.alert(data.error, {skin:'lyear-skin-danger'});
 			}
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+			layer.msg('操作失败，请稍后再试: ' + textStatus, {offset:'10px'});
         });
 	}
 };
@@ -2240,7 +2236,7 @@ _filemanage.finallyDelete = function (rid, noconfirm, title) {
             _filemanage.deleteIndex(rids);
             _filemanage.removeridmore(rids);
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+			layer.msg('操作失败，请稍后再试: ' + textStatus, {offset:'10px'});
         });
 	});
 };
@@ -2363,7 +2359,7 @@ _filemanage.RecoverFile = function (rid, noconfirm) {
         _filemanage.removeridmore(rids);
 
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		layer.msg('操作失败，请稍后再试: ' + textStatus, {offset:'10px'});
 	});
 };
 
@@ -2472,7 +2468,7 @@ _filemanage.delIco = function (rid, noconfirm) {
 		layer.msg(msg, {offset:'10px'});
         _filemanage.removeridmore(rids);
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		layer.msg('操作失败，请稍后再试: ' + textStatus, {offset:'10px'});
 	});
 };
 _filemanage.removeridmore = function(rids){
@@ -2600,7 +2596,7 @@ _filemanage.copy = function (rid,fid) {
 			layer.msg(json.msg, {offset:'10px'});
 		}
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		layer.msg('操作失败，请稍后再试: ' + textStatus, {offset:'10px'});
 	});
 };
 //文件剪切
@@ -2670,7 +2666,7 @@ _filemanage.cut = function (rid) {
 		}
 
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		layer.msg('操作失败，请稍后再试: ' + textStatus, {offset:'10px'});
 	});
 };
 //粘贴

@@ -170,7 +170,7 @@
                         <div class="col-sm-10">
                             <div class="layui-form">
                                 <input type="checkbox" name="arr[diron]" title="{lang open_start}|{lang close}" lay-skin="switch" <!--{if $group[diron]}-->checked<!--{/if}-->>
-                              </div>
+                            </div>
                         <span class="form-text">{lang close_group_tips}</span>
                         </div>
                     </div>
@@ -316,7 +316,7 @@
     }
     ;
     function editgroupperm(gid, fid) {
-        showWindow('#exampleMultipleOne', MOD_URL + '&op=ajax&operation=selectperm&fid=' + fid + '&gid=' + gid + '&new=false');
+        showWindow('#exampleMultipleOne', MOD_URL + '&op=ajax&operation=selectperm&fid=' + fid + '&gid=' + gid + '&new=false','get',0);
     }
     function delete_group(gid){
         layer.confirm(__lang.delete_group_tips, {title:__lang.delete_group_confirm,skin:'lyear-skin-danger'}, function(index){

@@ -70,7 +70,7 @@ if ($_GET['do'] == 'orgtree') {
             }
             $data[] = $arr;
         }
-        if ($stype != 1 && $range < 1 || $stype == 2 && $onlymyorg == 1) {
+        if ($stype != 1 && $range < 2 || $stype == 2 && $onlymyorg == 1) {
             $data[] = array('id' => 'other', 'text' => $zero, 'state' => array('disabled' => $disable), "type" => ($type == "disabled") ? $type : 'default', 'children' => true);
         }
 

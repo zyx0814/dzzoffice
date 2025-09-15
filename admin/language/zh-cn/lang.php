@@ -36,7 +36,6 @@ $lang = array
     'user_name' => '用户用户名',
     'user_name_email' => '用户名或邮箱',
     'avatar' => '头像',
-    'space_usage' => '空间使用',
     'data_item_list' => '资料项列表',
     'data_edit' => '资料项编辑',
     'identifier' => '标识符',
@@ -247,7 +246,6 @@ $lang = array
     'select' => '请选择',
     'option' => '选项',
     'coding' => '编码',
-    'detail' => '详情',
     'display_order' => '显示顺序',
     'order' => '顺序',
     'available' => '可用',
@@ -333,7 +331,7 @@ $lang = array
     'db_import_confirm' => '导入和当前 Dzz! 版本不一致的数据极有可能产生无法解决的故障，您确定继续吗？',
     'db_import_confirm_sql' => '您确定导入该备份吗？',
     'db_import_confirm_zip' => '您确定解压该备份吗？',
-    'db_import_tips' => '<li>本功能在恢复备份数据的同时，将全部覆盖原有数据，请确定恢复前已将程序关闭，恢复全部完成后可以将程序重新开放。</li><li>恢复数据前请在 Dzz!  安装文件目录下tool文件夹内找到 restore.php 文件，然后将 restore.php 文件上传到程序文件夹data目录下。<b>为了您站点的安全，成功恢复数据后请务必及时删除 restore.php 文件。</b></li><li>您可以在数据备份记录处查看站点的备份文件的详细信息，删除过期的备份,并导入需要的备份。</li>',
+    'db_import_tips' => '<li>本功能在恢复备份数据的同时，将全部覆盖原有数据，请确定恢复前已将程序关闭，恢复全部完成后可以将程序重新开放。</li><li>恢复数据前请先下载 <a href="http://down.dzzoffice.com/restore.zip" target="_blank">restore.php</a> 文件，然后将 restore.php 文件上传到程序文件夹data目录下。<b>为了您站点的安全，成功恢复数据后请务必及时删除 restore.php 文件。</b></li><li>您可以在数据备份记录处查看站点的备份文件的详细信息，删除过期的备份,并导入需要的备份。</li>',
     'do_import_option' => '<ul><li>您可以在本页面数据备份记录处导入备份恢复数据，也可以通过在浏览器中执行 <a href="{restore_url}" target="_blank">{restore_url}</a> 恢复数据</li></ul>',
     'db_import_from_server' => '从服务器(填写文件名或 URL)',
     'db_import_from_local' => '从本地文件',
@@ -343,8 +341,8 @@ $lang = array
     'db_recover' => '恢复数据库',
     'db_runquery_tips' => '<li>出于安全考虑，Dzz! 后台默认情况下禁止 SQL 语句直接执行，只能使用常用 SQL 当中的内容，<br />如果您想自己随意书写 SQL 升级语句，需要将 config/config.php 当中的 $_config[admincp][runquery] 设置修改为 1。</li>',
     'db_runquery_sql' => 'Dzz! 数据库升级 - 请将数据库升级语句粘贴在下面',
-    'db_config_admincp' => 'config文件未设置相关此操作的权限，请检查config.php文件中相关admincp以及$_config[\'admincp\'][\'runquery\']的设置',
-    'db_not_allow_config_admincp' => 'config文件设置不允许此操作，请检查config.php文件中admincp以及$_config[\'admincp\'][\'dbimport\']的设置',
+    'db_config_admincp' => 'config文件未设置相关此操作的权限，请检查config/config.php文件中相关admincp以及$_config[\'admincp\'][\'runquery\']的设置',
+    'db_not_allow_config_admincp' => 'config文件设置不允许此操作，请检查config/config.php文件中admincp以及$_config[\'admincp\'][\'dbimport\']的设置',
     'db_runquery_denied' => '对不起，此项功能已经被禁止，如果需要开启，请修改 config/config.php 中的相关配置',
     'db_runquery_comment' => '注意: 为确保升级成功，请不要修改 SQL 语句的任何部分',
     'db_runquery_select' => '现有方案',
@@ -450,7 +448,7 @@ $lang = array
 
     'visitors_visible' => '仅游客可用',
     'members_available' => '成员可用',
-    'section_administrators_available' => '部门管理员可用',
+    'section_administrators_available' => '机构和部门管理员可用',
     'system_administrators_available' => '仅系统管理员可用',
 
     //admin/app/template/app.html
@@ -1001,13 +999,13 @@ $lang = array
     'volume_classification_success' => '此分卷备份全部导入成功！<br />',
     'support_upload_pictures_extensions' => '对不起，不支持上传此类扩展名的图片',
     'upload_await' => '上传中，请等待',
-    'folder_permissions' => '文件夹权限',
-    'folder_property_group_permission' => '文件夹属性用于部门、群组中创建文件夹的权限',
     'new_permissions' => '新建权限',
     'add_folder_permission_group' => '添加文件夹权限组',
     'choose_permission' => '权限选择',
     'set_default_permission_group' => '设为默认权限组',
     'system_default' => '系统默认',
+    'system_config' => '系统配置',
+    'user_config' => '用户配置',
     'default_permission' => '默认权限',
     'inheritperm' => '继承上级权限',
     'set_default' => '设为默认',
@@ -1017,8 +1015,8 @@ $lang = array
     'set_default_permission_succeeded' => '默认权限设置成功',
     'delete_permission_group_sure' => '您确定要删除该权限组吗？删除之后不可恢复',
     'jurisdiction' => '权限',
-    'folder_permission_name' => '文件夹权限名称',
-    'edit_folder_permissions' => '编辑文件夹权限',
+    'edit_usergroup_permissions' => '编辑用户组权限',
+    'add_usergroup_permissions' => '添加用户组权限',
 
     'file_multiple_version_features' => '文件多版本设置',
     'allow_number_uploaded_versions' => '最大版本数量',
@@ -1031,8 +1029,5 @@ $lang = array
     'space_organization_set_tip' => '设置机构默认空间大小，如果留空或为0则共享系统所有空间，为-1则没有存储空间',
     'space_group_set' => '群组存储空间设置',
     'space_group_set_tip' => '设置群组默认空间大小，如果留空或为0则共享系统所有空间，为-1则没有存储空间'
-
 );
-
-
 ?>

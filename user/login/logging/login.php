@@ -19,23 +19,14 @@ if ($_G['uid'] > 0) {
         include template('site_close');
         exit();
     }
-    $param = array(
-        'username' => $_G['username'],
-        'usergroup' => $_G['group']['grouptitle'],
-        'uid' => $_G['uid'],
-        'groupid' => $_G['groupid'],
-        'syn' => 0
-    );
-    $loginmessage = 'login_succeed';
 
     $location = dreferer();//待修改
 
     $href = str_replace("'", "\'", $location);
     $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
 
-    $messageText = lang($loginmessage, $param);
     writelog('loginlog', '登录成功');
-    showmessage($messageText, $href);
+    showmessage('login_succeed_no_redirect', $href);
 }
 $_G['allow_loginmod'] = $setting['allow_loginmod'] = unserialize($setting['allow_loginmod']);
 //Hook::listen('login_check');//检查登录状态
@@ -72,13 +63,19 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
                 $orgid = $setting['loginset']['orgid'];
                 $param = array('organization_user', 'organization_job', 'user');
                 $sql = "ou.orgid = %d AND u.adminid != 1 AND u.status = 0";
-                
-                $users = DB::fetch_all("SELECT u.uid,u.username,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, array($orgid)));
+                if (!$_G['cache']['usergroups']) loadcache('usergroups');
+                $users = DB::fetch_all("SELECT u.uid,u.username,u.groupid,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, array($orgid)));
                 foreach ($users as $user) {
+                    $jobname = $user['jobname'];
+                    if(!$jobname) {
+                        $usergroup = $_G['cache']['usergroups'][$user['groupid']] ?? array();
+                        $jobname = $usergroup['grouptitle'] ?? '成员';
+                    }
+                    
                     $data[] = array(
                         'uid' => $user['uid'],
                         'username' => $user['username'],
-                        'jobname' => $user['jobname'] ?: '成员'
+                        'jobname' => $jobname
                     );
                 }
             }
@@ -99,7 +96,7 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
     $result = userlogin($_GET['email'], $_GET['password'], $_GET['questionid'], $_GET['answer'], 'auto', $_G['clientip']);
 
     if ($result['status'] == -2) {
-        $errorlog = "用户" . ($result['ucresult']['email'] ? $result['ucresult']['email'] : $_GET['email']) . "尝试登录失败，该用户已停用。";
+        $errorlog = "用户" . ($result['ucresult']['email'] ? $result['ucresult']['email'] : $_GET['email']) . "尝试登录失败，该用户已禁用。";
         writelog('loginlog', $errorlog);
         showTips(array('error' => lang('user_stopped_please_admin')), $type);
     } elseif ($_G['setting']['bbclosed'] > 0 && $result['member']['adminid'] != 1) {
@@ -121,24 +118,13 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
         //邀请登录
         //Hook::listen('inviate');
 
-        //登录成功提示信息
-        $param = array(
-            'username' => $result['ucresult']['username'],
-            'usergroup' => $_G['group']['grouptitle'],
-            'uid' => $_G['member']['uid'],
-            'groupid' => $_G['groupid'],
-            'syn' => 0
-        );
-        $loginmessage = /*$_G['groupid'] == 8 ? 'login_succeed_inactive_member' :*/'login_succeed';
-
-        $location = /*$_G['groupid'] == 8 ? 'user.php?mod=profile' :*/dreferer();//待修改
+        $location = dreferer();//待修改
 
         $href = str_replace("'", "\'", $location);
         $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
 
-        $messageText = lang($loginmessage, $param);
         writelog('loginlog', '登录成功');
-        showTips(array('success' => array('message' => $messageText, 'url_forward' => $href)), $type);
+        showTips(array('success' => array('message' => lang('login_succeed_no_redirect'), 'url_forward' => $href)), $type);
 
 
     } else {//登录失败记录日志 

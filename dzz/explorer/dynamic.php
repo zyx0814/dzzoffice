@@ -54,7 +54,7 @@ if ($do == 'getfolderdynamic') {
         //文件夹属性信息
         $fileinfo = C::t('resources')->get_property_by_rid($rid);
         //权限信息
-        $perm = C::t('folder')->fetch_perm_by_fid($fileinfo['pfid']);//获取文件夹权限
+        $myperm = perm_check::getPerm($fileinfo['pfid']);
         //动态信息
         $total = C::t('resources_event')->fetch_by_rid($rid, $start, $limit, true);
         if ($total > $nextstart) {
@@ -64,6 +64,7 @@ if ($do == 'getfolderdynamic') {
             $events = C::t('resources_event')->fetch_by_rid($rid, $start, $limit);
         }
         $gid = $fileinfo['gid'];
+        $permfid = $fileinfo['pfid'];
     } elseif ($fid) {//如果获取到文件夹id
         //文件夹信息
         $fileinfo = C::t('resources')->get_folderinfo_by_fid($fid);
@@ -107,7 +108,8 @@ if ($do == 'getfolderdynamic') {
         $fileinfo['editdateline'] = ($statis['editdateline']) ? dgmdate($statis['editdateline'], 'Y-m-d H:i:s') : '';
         $fileinfo['fdateline'] = ($foldeinfo['dateline']) ? dgmdate($foldeinfo['dateline'], 'Y-m-d H:i:s') : '';
         $fileinfo['fid'] = $fid;
-        $perm = C::t('folder')->fetch_perm_by_fid($fid);//获取文件夹权限
+        $myperm = perm_check::getPerm($fid);
+        $permfid = $fid;
         //动态信息
         $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true);
         //动态信息
@@ -119,6 +121,9 @@ if ($do == 'getfolderdynamic') {
         }
     }
     $usergroupperm = C::t('organization_admin')->chk_memberperm($gid, $uid);
+    if(isset($usergroupperm) && $usergroupperm > 0) {
+        $folderperm = C::t('folder')->fetch_perm_by_fid($permfid);//获取文件夹权限
+    }
     $fileinfo['type'] = '文件夹';
     $perms = get_permsarray();//获取所有权限
     $commentperm = true;
@@ -188,8 +193,11 @@ if ($do == 'getfolderdynamic') {
                 $members = C::t('resources_event')->result_events_has_avatarstatusinfo($userids, $members);
             }
             $usergroupperm = C::t('organization_admin')->chk_memberperm($gid, $uid);//获取用户权限
+            if(isset($usergroupperm) && $usergroupperm > 0) {
+                $folderperm = C::t('folder')->fetch_perm_by_fid($file['oid']);//获取文件夹权限
+            }
             $progress = set_space_progress($usesize, $maxspace);
-            $perm = C::t('folder')->fetch_perm_by_fid($file['oid']);//获取文件夹权限
+            $myperm = perm_check::getPerm($file['oid']);
             $fileinfo['fid'] = $file['oid'];
             $perms = get_permsarray();//获取所有权限
             $commentperm = true;

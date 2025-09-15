@@ -1,10 +1,14 @@
 <!--{eval $bodyClass ='center-vh overflow-y-auto';}-->
 <!--{template lyear:header_simple}-->
 <style>
+	.recharge-amount {
+		display: flex;
+		flex-wrap: wrap;
+	}
 .recharge-amount li {
-    width: 150px;
+    width: 140px;
     cursor: pointer;
-    margin: 0px 5px 10px;
+    margin: 0px 0px 5px;
     padding: 3px;
     color: #4d5259;
     text-align: center;
@@ -70,7 +74,7 @@
     <iframe id="wrapper_frame" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" style="z-index:2;position:absolute;width:100%;height:100%;background:url(dzz/images/b.gif);"></iframe>
     <!--{/if}-->
 </div>
-<div class="card card-shadowed p-2 mb-0 mr-2 ml-2" style="max-width: 600px;">
+<div class="card card-shadowed p-2 mb-0 mr-2 ml-2" style="max-width: 648px;">
 	<div class="card-body text-center" style="padding: 1rem;">
 		<div class="text-center mb-3">
 			<img src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
@@ -89,7 +93,7 @@
 			<input type="hidden" name="formhash" value="{FORMHASH}" />
 			<input type="hidden" name="referer" value="{$referer}" />
 			<input type="hidden" id="login_uid" name="uid" value="" />
-			<ul class="list-inline recharge-amount d-flex flex-wrap">
+			<ul class="list-inline recharge-amount">
 				<!--{loop $data $v}-->
 				<li class="list-inline-item" data-uid="$v['uid']" title="$v[username]">
 					<div class="d-flex align-items-center">

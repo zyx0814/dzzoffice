@@ -6,7 +6,7 @@
       <span><a href="user.php?uid=$eventval['uid']" title="$eventval['username']" target="_blank">{eval echo avatar_block($eventval['uid']);}</a></span>
     </div>
     <div class="lyear-timeline-item-content">
-      <p class="mb-1 text-break" title="$eventval['username']"><strong>$eventval['username']</strong></p>
+      <p class="mb-1 text-break" title="$eventval['username']"><strong><!--{if $eventval['uid'] == $_G['uid']}-->{lang my_self}<!--{else}-->$eventval['username']<!--{/if}--></strong></p>
       <p class="mb-1 text-break">{$eventval[details]}</p>
       <p class="mb-0"><time class="mb-3">{eval echo dgmdate($eventval['dateline'], 'u');}</time><!--{if $eventval['type'] == 1}--><span class="delete-comment color-danger mdi mdi-delete" data-commentid="$eventval[id]"></span><!--{/if}--></p>
     </div>

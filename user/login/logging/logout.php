@@ -16,7 +16,6 @@ if ($_GET['formhash'] != $_G['formhash']) {
 //应用退出登录挂载点
 Hook::listen('applogout');
 clearcookies();
-
 $_G['groupid'] = $_G['member']['groupid'] = 7;
 
 $_G['uid'] = $_G['member']['uid'] = 0;

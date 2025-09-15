@@ -1,11 +1,14 @@
 <input type="hidden" value="$fid" id="fidinput"/>
 <input type="hidden" value="$folderpathstr" id="folderstr"/>
-<div id="filemanage-f-$fid" class="icosContainer"></div>
+<div id="filemanage-f-$fid" class="icosContainer loadingmiddlecon"></div>
 <div id="template_middleicon" style="display:none">
     <!--{template fileselection/template_file_middleicon}-->
 </div>
 <div id="template_detaillist" style="display:none">
     <!--{template fileselection/template_file_detaillist}-->
+</div>
+<div id="template_nofile_notice" style="display:none">
+	<!--{template fileselection/noFilePage-search}-->
 </div>
 <script type="text/javascript">
     //请求fid

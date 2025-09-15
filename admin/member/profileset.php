@@ -39,8 +39,6 @@ if ($do == 'delete') {
     //$field['customable'] = preg_match('/^field[1-8]$/i', $fieldid);
     $field['validate'] = $field['validate'] ? $field['validate'] : ($profilevalidate[$fieldid] ? $profilevalidate[$fieldid] : '');
     if (!submitcheck('editsubmit')) {
-
-        $checkLanguage = checkLanguage();
         include template('profileset_edit');
         exit();
     } else {

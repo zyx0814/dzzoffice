@@ -1230,7 +1230,7 @@ _selectfile.property = function (rid, isfolder) {
         }
         path = encodeURIComponent(dpaths.join(','));
     }
-    showWindow('property', _explorer.appUrl + '&do=ajax&operation=property&template=1&paths=' + path);
+    showWindow('property', _explorer.appUrl + '&do=ajax&operation=property&template=1&paths=' + path,'get',0);
 };
 _selectfile.NewIco = function (type, fid) {
     if (!fid && !_selectfile.fid) {
@@ -1255,7 +1255,7 @@ _selectfile.NewIco = function (type, fid) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
         });
     } else if (type === 'newLink') {
-        showWindow('newLink', _explorer.appUrl + '&do=ajax&operation=' + type + '&template=1&fid=' + fid);
+        showWindow('newLink', _explorer.appUrl + '&do=ajax&operation=' + type + '&template=1&fid=' + fid,'get',0);
     } else {
         $.post(_explorer.appUrl + '&do=ajax&operation=newIco&template=1&type=' + type, {
             'fid': fid
@@ -1523,7 +1523,8 @@ _selectfile.delIco = function (rid, noconfirm) {
     }
     var icosdata = _explorer.sourcedata.icos[rid];
     if (!noconfirm) {
-        var finallydelete = false;
+        var finallydelete = (_explorer.deletefinally == 1) ? true:false;
+        //var finallydelete = false;
         if (_selectfile.selectall.icos.length > 0 && jQuery.inArray(rid, _selectfile.selectall.icos) > -1) {
             if (_explorer.sourcedata.icos[_selectfile.selectall.icos[0]].isdelete > 0 || (_explorer.sourcedata.icos[_selectfile.selectall.icos[0]].bz && _explorer.sourcedata.icos[_selectfile.selectall.icos[0]].bz)) {
                 parent.layer.confirm((finallydelete) ? __lang.js_finallydelete_selectall : __lang.js_delete_selectall, {skin:'lyear-skin-danger'}, function(){

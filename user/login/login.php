@@ -13,8 +13,8 @@ if(isset($_GET['uid'])){
         exit(json_encode(array('error'=>'管理员禁止登陆')));
 	}
     if ($user['status'] > 0) {
-        writelog('loginlog', '用户ID：'.$_GET['uid'].' 使用登录模板4登录失败,此用户已停用');
-        exit(json_encode(array('error'=>'此用户已停用，请联系管理员')));
+        writelog('loginlog', '用户ID：'.$_GET['uid'].' 使用登录模板4登录失败,此用户已禁用');
+        exit(json_encode(array('error'=>'此用户已禁用，请联系管理员')));
     }
     $orgid = $_G['setting']['loginset']['orgid'];
     // 检查用户是否属于指定机构
@@ -39,24 +39,14 @@ if(isset($_GET['uid'])){
     }
     //记录登录
     C::t('user_status')->update($_G['uid'], array('lastip' => $_G['clientip'], 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP));
-    //登录成功提示信息
-    $param = array(
-        'username' => $_G['username'],
-        'usergroup' => $_G['group']['grouptitle'],
-        'uid' => $_G['member']['uid'],
-        'groupid' => $_G['groupid'],
-        'syn' => 0
-    );
-    $loginmessage = /*$_G['groupid'] == 8 ? 'login_succeed_inactive_member' :*/'login_succeed';
 
     $location = /*$_G['groupid'] == 8 ? 'user.php?mod=profile' :*/dreferer();//待修改
 
     $href = str_replace("'", "\'", $location);
     $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
 
-    $messageText = lang($loginmessage, $param);
     writelog('loginlog', '登录成功');
-    showTips(array('success' => array('message' => $messageText, 'url_forward' => $href)), 'json');
+    showTips(array('success' => array('message' => lang('login_succeed_no_redirect'), 'url_forward' => $href)), 'json');
 	exit();
 }
 showmessage('Access Denied',$_GET['referer']?$_GET['referer']:$_G['siteurl']);

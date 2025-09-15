@@ -65,7 +65,7 @@ class dzz_upgrade_app {
                     if (file_exists($file)) {
                         $importtxt = @implode('', file($file));
                         $apparray = getimportdata('Dzz! app', 0, 0, $importtxt);
-                        if ($apparray["app"]["version"] > $v["version"]) {
+                        if (version_compare($apparray["app"]["version"], $v["version"]) > 0) {
                             unset($apparray["app"]['appico']);//ico base64太长暂时屏蔽应用icon更新
                             $savedata = array("upgrade_version" => serialize($apparray["app"]), "check_upgrade_time" => $today);
 

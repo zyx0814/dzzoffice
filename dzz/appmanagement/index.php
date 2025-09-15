@@ -86,7 +86,7 @@ if ($do == 'stats') {
     }
 } elseif ($do == 'systemcheck') {
     define('ROOT_PATH', dirname(__FILE__));
-    $filesock_items = array('fsockopen', 'pfsockopen', 'stream_socket_client', 'mysqli_connect', 'file_get_contents', 'xml_parser_create', 'filesize', 'curl_init', 'zip_open', 'mb_check_encoding', 'mb_convert_encoding');
+    $filesock_items = array('fsockopen', 'pfsockopen', 'stream_socket_client', 'mysqli_connect', 'file_get_contents', 'xml_parser_create', 'json_encode', 'filesize', 'curl_init', 'zip_open', 'mb_check_encoding', 'mb_convert_encoding');
     $func_strextra = '';
     foreach ($filesock_items as $item) {
         $status = function_exists($item);

@@ -4,25 +4,15 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 define('NOROBOT', TRUE);
-$returntype = isset($_GET['returnType']) ? $_GET['returnType'] : 'json';//返回值方式
-
-$checkLanguage = $_G['language'];
-if (file_exists(DZZ_ROOT . './admin/language/' . $checkLanguage . '/' . 'lang.php')) {
-    include DZZ_ROOT . './admin/language/' . $checkLanguage . '/' . 'lang.php';
-    $_G['lang']['template'] = array_merge($_G['lang']['template'], $lang);
-}
-//判断管理员登录
-//Hook::listen('adminlogin'); 
-//后台管理页面 
 if (submitcheck('settingsubmit')) {
     if ($_G['adminid'] != 1) {
-        showmessage(lang('no_privilege'), $returntype);
+        showmessage(lang('no_privilege'));
     }
     $settingnew = $_GET["settingnew"];
     $data = array();
     foreach ($settingnew["mark"] as $k => $v) {
         if (isset($data[$v])) {
-            showmessage("日志标记 " . $v . " 重复", $returntype);
+            showmessage("日志标记 " . $v . " 重复");
         }
         $data[$v] = array(
             "title" => $settingnew["title"][$k],

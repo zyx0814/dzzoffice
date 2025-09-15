@@ -6,11 +6,6 @@ $returntype = isset($_GET['returnType']) ? $_GET['returnType'] : 'json';//返回
 $navtitle = lang('appname');
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $operation = isset($_GET['operation']) ? $_GET['operation'] : 'cplog';
-$checkLanguage = $_G['language'];
-if (file_exists(DZZ_ROOT . './admin/language/' . $checkLanguage . '/' . 'lang.php')) {
-    include DZZ_ROOT . './admin/language/' . $checkLanguage . '/' . 'lang.php';
-    $_G['lang']['template'] = array_merge($_G['lang']['template'], $lang);
-}
 $systemlog_setting = unserialize($_G["setting"]["systemlog_setting"]);
 if ($do == 'getinfo') {
     $operationarr = array_keys($systemlog_setting);

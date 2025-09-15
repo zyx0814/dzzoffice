@@ -7,6 +7,7 @@ $lang = array(
     'advice_gethostbyname' => '是否 PHP 配置中禁止了 gethostbyname 函数。请联系空间商，确定开启了此项功能',
     'advice_file_get_contents' => '该函数需要 php.ini 中 allow_url_fopen 选项开启。请联系空间商，确定开启了此项功能',
     'advice_xml_parser_create' => '该函数需要 PHP 支持 XML。请联系空间商，确定开启了此项功能',
+    'advice_json_encode' => '该函数需要 PHP 支持 JSON。请联系服务商，确定开启了此项功能',
     'advice_mb_check_encoding' => '该函数需要 PHP 支持 mbstring 扩展。请联系服务商，确定开启了此项功能',
     'advice_mb_convert_encoding' => '该函数需要 PHP 支持 mbstring 扩展。请联系服务商，确定开启了此项功能',
     'advice_fsockopen' => '该函数需要 php.ini 中 allow_url_fopen 选项开启。请联系空间商，确定开启了此项功能',

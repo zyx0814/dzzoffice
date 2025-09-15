@@ -39,7 +39,6 @@ function uc_user_login($username, $password, $isuid, $checkques = '', $questioni
     }
     $merge = 0;
     return array($status, $user['username'], $password, $user['email'], $merge);
-
 }
 
 function userlogin($username, $password, $questionid = '', $answer = '', $loginfield = 'auto', $ip = '') {
@@ -209,6 +208,7 @@ function clearcookies() {
             dsetcookie($k);
         }
     }
+    writelog('loginlog', lang('logout'));
     $_G['uid'] = $_G['adminid'] = 0;
     $_G['username'] = $_G['member']['password'] = '';
 }

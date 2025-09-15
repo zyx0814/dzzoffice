@@ -1,5 +1,6 @@
 .red{color:#dc3545}
 .container{margin:50px auto}
+.main{padding:10px;}
 input,select,button{line-height:1.5;padding:5px 10px;border:1px solid #ced4da;border-radius:5px;font-size:16px;font-weight:400;background-color:#fff;background-clip:padding-box;-webkit-appearance:none;-moz-appearance:none;appearance:none;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out}
 input:hover,select:hover,button:hover{color:#212529;border-color:#007bff;box-shadow:0 0 0 1px rgba(13,110,253,.25);outline:0;-webkit-transition:all .25s linear;-moz-transition:all .25s linear;-ms-transition:all .25s linear;-o-transition:all .25s linear;transition:all .25s linear}
 input:focus,select:focus,button:focus{outline:none;color:#212529;background-color:#fff;border-color:#86b7fe;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)}

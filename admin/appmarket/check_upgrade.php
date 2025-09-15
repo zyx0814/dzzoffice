@@ -50,7 +50,7 @@ if ($applist) {
             if (file_exists($file)) {
                 $importtxt = @implode('', file($file));
                 $apparray = getimportdata('Dzz! app', 0, 0, $importtxt);
-                if ($apparray["app"]["version"] > $v["version"]) {
+                if (version_compare($apparray["app"]["version"], $v["version"]) > 0) {
                     $num++;
                     $savedata = array(
                         "upgrade_version" => serialize($apparray["app"]),

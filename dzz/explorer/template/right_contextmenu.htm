@@ -25,41 +25,45 @@
         <li class="layui-menu-item-parent menu-item collect" onclick="_filemanage.collect('{rid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-star pe-2"></i><span class="layui-menu-item-text">{lang collect}</span></div>
         </li>
-        <li class="layui-menu-item-parent menu-item property" onclick="_filemanage.property('{rid}');">
-            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-sort-variant pe-2"></i>{lang property}</div>
-        </li>
         <li class="layui-menu-item-divider">
             <div class="layui-menu-body-title dropdown-item"></div>
-        </li>
-        <li class="layui-menu-item-parent menu-item rename" onclick="_filemanage.rename('{rid}');">
-            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-pencil pe-2"></i>{lang rename}</div>
-        </li>
-        <li class="layui-menu-item-parent menu-item cut" onclick="_filemanage.cut('{rid}');">
-            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-content-cut pe-2"></i>{lang cut}</div>
         </li>
         <li class="layui-menu-item-parent menu-item copy" onclick="_filemanage.copy('{rid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-file-multiple pe-2"></i>{lang copy}</div>
         </li>
+        <li class="layui-menu-item-parent menu-item cut" onclick="_filemanage.cut('{rid}');">
+            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-content-cut pe-2"></i>{lang cut}</div>
+        </li>
         <li class="layui-menu-item-parent menu-item paste" onclick="_filemanage.paste('{fid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-clipboard-file pe-2"></i>{lang paste}</div>
         </li>
-        <li class="layui-menu-item-parent menu-item copy clone" onclick="_filemanage.copy('{rid}','{fid}');">
-            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-file-document-multiple pe-2"></i>{lang clone}</div>
-        </li>
-        <li class="layui-menu-item-divider">
-            <div class="layui-menu-body-title dropdown-item"></div>
-        </li>
-        <li class="layui-menu-item-parent menu-item editshare" onclick="_filemanage.share('{rid}');">
-            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-pencil pe-2"></i>{lang editshare}</div>
+        <li class="layui-menu-item-parent menu-item rename" onclick="_filemanage.rename('{rid}');">
+            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-pencil pe-2"></i>{lang rename}</div>
         </li>
         <li class="layui-menu-item-parent menu-item delete" onclick="_filemanage.delIco('{rid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-delete pe-2"></i>{lang delete}</div>
+        </li>
+        <li class="layui-menu-item-parent menu-item has-submenu more-action">
+            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-dots-vertical pe-2"></i>{lang more}<i class="layui-icon layui-icon-right"></i></div>
+            <div class="layui-panel layui-menu-body-panel dropdown-menu border">
+                <ul>
+                    <li class="menu-item copy clone" onclick="_filemanage.copy('{rid}','{fid}');">
+                        <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-file-document-multiple pe-2"></i>{lang clone}</div>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li class="layui-menu-item-divider">
+            <div class="layui-menu-body-title dropdown-item"></div>
         </li>
         <li class="layui-menu-item-parent menu-item recover" onclick="_filemanage.RecoverFile('{rid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-rotate-left pe-2"></i>{lang recoverfile}</div>
         </li>
         <li class="layui-menu-item-parent menu-item finallydelete" onclick="_filemanage.finallyDelete('{rid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-delete pe-2"></i>{lang completely_cancel}</div>
+        </li>
+        <li class="layui-menu-item-parent menu-item property" onclick="_filemanage.property('{rid}');">
+            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-sort-variant pe-2"></i>{lang property}</div>
         </li>
     </ul>    
 </div>

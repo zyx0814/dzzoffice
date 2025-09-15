@@ -239,7 +239,7 @@ EOF;
             ' <s>' . (count($_ENV['analysis']['function']) - 1) . (' in ' . number_format(($_ENV['analysis']['function']['sum'] / 1000), 6) . 's') . '</s>' : '') .
         '<td valign=top>' .
         '<b style="float:left;width:1em;height:5em">服务器</b>' .
-        '<em>环境:</em> ' . PHP_OS . ', ' . $_SERVER['SERVER_SOFTWARE'] . ' MySQL/' . DB::object()->version() . '(' . (DB::$driver) . ')<br />' .
+        '<em>环境:</em> ' . PHP_OS . ', PHP/' . PHP_VERSION . ', ' . $_SERVER['SERVER_SOFTWARE'] . ' MySQL/' . DB::object()->version() . '(' . (DB::$driver) . ')<br />' .
         $m .
         '<em>SQL:</em> ' .
         '<a id="__debug_1" href="#debugbar" onclick="switchTab(\'__debug\', 1, ' . $max . ')">[SQL列表]</a>' .

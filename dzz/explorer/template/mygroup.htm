@@ -25,8 +25,8 @@
 <table class="layui-hide" id="mygroup" lay-filter="mygroup"></table>
 <script type="text/html" id="toolbar">
 	<div class="layui-btn-container">
-		<button type="button"  class="layui-btn layui-btn-normal layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
-		<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">刷新</button>
+        <button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+		<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
 	</div>
 </script>
 <script type="text/html" id="barDemo">
@@ -78,11 +78,11 @@
 		  ,{field:'creater', title: '{lang explorer_groupperm_manager}',style:'cursor:pointer;', align: 'center', sort: true}
 		  ,{field:'usernum', title: '{lang membership}',style:'cursor:pointer;', align: 'center', sort: true}
 		  ,{field:'dateline', title: '{lang create_date}',style:'cursor:pointer;', align: 'left',sort: true}
-          ,{title: '{lang operation}',width:40,align:'center',style:'cursor:pointer;', toolbar: '#barDemo', fixed: 'right'}
+          ,{title: '{lang operation}',width:40,align:'center',style:'cursor:pointer;', toolbar: '#barDemo'}
 		]],
 		initSort: {
-			field: 'dateline', // 默认排序字段
-			type: 'desc' // 默认排序方式
+			field: 'dateline',
+			type: 'desc'
 		},
         done: function(){
             $('#search-btn').click(function () {
@@ -99,9 +99,21 @@
             })
         },
 	  });
-	  //头工具栏事件
+      layuiModules.table.on('checkbox(mygroup)', function(obj){
+        var checkStatus = layuiModules.table.checkStatus(obj.config.id);
+        var checkedCount = checkStatus.data.length;
+        var getCheckDataBtn = document.getElementById('getCheckDataBtn');
+        if(checkedCount > 0) {
+            getCheckDataBtn.removeAttribute('disabled');
+            getCheckDataBtn.classList.remove('layui-btn-disabled');
+        } else {
+            getCheckDataBtn.setAttribute('disabled', 'disabled');
+            getCheckDataBtn.classList.add('layui-btn-disabled');
+        }
+    });
+    //头工具栏事件
 	layuiModules.table.on('toolbar(mygroup)', function(obj){
-		var checkStatus = layuiModules.table.checkStatus(obj.config.id); //获取选中行状态
+		var checkStatus = layuiModules.table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
             case 'getCheckData':
@@ -159,7 +171,7 @@
     //触发排序事件 
 	layuiModules.table.on('sort(mygroup)', function(obj){
 		if(obj.field == 'usernum' || obj.field == 'creater') {
-            layer.msg('该排序为前端排序', {offset:'10px'});
+            layer.msg('该排序结果为前端根据当前页数据进行排序', {offset:'10px'});
         } else {
             search_data.sort = obj.field;
             search_data.order = obj.type;
