@@ -72,6 +72,7 @@ if (!submitcheck('settingsubmit')) {
         $setting['maxChunkSize'] = round($setting['maxChunkSize'] / (1024 * 1024), 2);
         $navtitle = lang('upload_download_set') . ' - ' . lang('appname');
         $setting['unRunExts'] = implode(',', dunserialize($setting['unRunExts']));
+        $usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid DESC", array('usergroup_field', 'usergroup'));
     } elseif ($operation == 'notification') {
         $navtitle = lang('notification_set') . ' - ' . lang('appname');
     } elseif ($operation == 'at') {
