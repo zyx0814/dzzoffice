@@ -15,7 +15,7 @@
 		<a class="nav-link <!--{if $operation=='smiley' || $op=='smiley' }-->active<!--{/if}-->" href="{MOD_URL}&operation=smiley"><i class="mdi mdi-sticker-emoji"></i><span>{lang expression_manage}</span></a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link <!--{if $operation=='permgroup'}-->active<!--{/if}-->" href="{MOD_URL}&operation=permgroup"><i class="mdi mdi-account-supervisor"></i><span>{lang permGroupSet}</span></a>
+		<a class="nav-link <!--{if $operation=='permgroup' || $operation=='usergroup'}-->active<!--{/if}-->" href="{MOD_URL}&operation=permgroup"><i class="mdi mdi-account-supervisor"></i><span>{lang permGroupSet}</span></a>
 	</li>
 	<li class="nav-item">
 		<a class="nav-link <!--{if $operation=='censor' }-->active<!--{/if}-->" href="{MOD_URL}&operation=censor"><i class="mdi mdi-percent"></i><span>{lang words_management}</span></a>

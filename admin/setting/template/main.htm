@@ -2,7 +2,7 @@
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
   <div class="container-fluid">
-    <!--{if $operation !== 'permgroup' && $operation !=='censor' && $operation!=='space'}-->
+    <!--{if $operation !=='censor' && $operation!=='space'}-->
     <div class="card">
       <div class="card-body">
         <ul class="nav nav-pills">
@@ -62,6 +62,12 @@
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
         <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=sec">{lang verification_code_set}</a> </li>
         <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=loginset">{lang login_page_set}</a> </li>
+        <!--{elseif $operation=='permgroup'}-->
+        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=permgroup">{lang folder_perm_group}</a></li>
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=usergroup">{lang usergroup_perm}</a> </li>
+        <!--{elseif $operation=='usergroup'}-->
+        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=permgroup">{lang folder_perm_group}</a></li>
+        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=usergroup">{lang usergroup_perm}</a> </li>
         <!--{/if}-->
         </ul>
       </div>
@@ -909,17 +915,73 @@
           <!--文件夹权限设置--> 
           <!--{elseif $operation == 'permgroup'}--> 
           <!--{template lyear:perm_group}-->
+          <!--{elseif $operation == 'usergroup'}-->
+          <style type="text/css">
+            .view-eidt{
+              padding-right: 5px;
+              color: #3779ff;
+            }
+            .gallery-grid .gallery-item {
+              padding-bottom: 5px;
+            }
+          </style>
+          <button type="button" class="btn btn-primary btn-round" onclick="editusergroup(0)"><i class="mdi mdi-plus-circle-outline"></i> {lang add_new}</button>
+          <div class="table-responsive">
+              <table id="usergrouptable" class="table table-hover align-middle">
+                  <thead>
+                  <tr>
+                      <th>{lang GroupID}</th>
+                      <th>{lang name}</th>
+                      <th>{lang type}</th>
+                      <th>{lang operation}</th>
+                  </tr>
+                  </thead>
+                  {eval $i=0;}
+                  <!--{loop $usergroups $group}-->
+                  <tr class="usergroup-list">
+                    <td>{$group['groupid']}</td>
+                    <td>{$group['grouptitle']}</td>
+                    <td class="lead">
+                        <!--{if $group['type']=='system'}--><span class="badge bg-primary">{lang system_config}</span><!--{/if}-->
+                    </td>
+                      <td>
+                          <!--{if $group['type'] !=='system'}-->
+                          <a href="javascript:;" class="btn btn-outline-danger btn-sm" onclick="deleteusergroup(this,'$group['groupid']')"><span class="mdi mdi-delete"></span></a>
+                          <!--{/if}-->
+                          <a href="javascript:;" class="btn btn-outline-primary btn-sm" onclick="editusergroup('{$group['groupid']}')"><span class="mdi mdi-pencil"></span></a>
+                      </td>
+                  </tr>
+                  {eval $i++;}
+                  <!--{/loop}-->
+              </table>
+          </div>
+          <script type="text/javascript">
+              function editusergroup(groupid) {
+                showWindow('editusergroup', MOD_URL+'&op=ajax&operation=editusergroup&groupid=' + groupid,'get',0);
+              }
+              function deleteusergroup(obj, groupid) {
+                var msg ='{lang delete_permission_group_sure}';
+                showDialog(msg, 'confirm','', function(){
+                  jQuery.post(MOD_URL+'&op=ajax&operation=deleteusergroup&ajaxdata=json', {'groupid': groupid}, function (data) {
+                      if (data['success']) {
+                          jQuery(obj).parents('.usergroup-list').remove();
+                          showmessage('{lang permission_group_delete_success}','success','3000',1);
+                      } else if(data['message']) {
+                        showmessage(data['message'], 'error', 0, 1);
+                      } else {
+                        showmessage('{lang delete_failed_refresh}','error','3000',1);
+                      }
+                  }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                      showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                  });
+                });
+                return false;
+              }
+          </script>
+          <link rel="stylesheet" type="text/css" href="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css?{VERHASH}">
+          <script type="text/javascript" src="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.js?{VERHASH}"></script>
           <!--系统空间设置--> 
           <!--{elseif $operation == 'space'}--> 
-          <script type="text/javascript">
-              try {
-                  var openarr = $openarr;
-              } catch (e) {
-              }
-              $.getScript('dzz/system/scripts/selorg.js?{VERHASH}', function () {
-                  selorg.openarr = openarr;
-              });
-          </script>
           <div class="alert alert-warning alert-dismissible fade show" role="alert">
             此处的参数修改后需要到系统工具中清理缓存才能生效。
           </div>
@@ -943,35 +1005,6 @@
                   <span class="form-text">{lang upload_permissions_text}</span>
                 </div>
               </div>
-              <!--{loop $usergroups $value}-->
-              <div class="row mb-3 border-bottom pt-2">
-                <label class="col-sm-2">$value[grouptitle]</label>
-                <div class="col-sm-10 mb-1">
-                  <div class="input-group">
-                    <label class="input-group-text" for="maxspacesize{$value[groupid]}">{lang default_space}</label>
-                    <input type="text" class="form-control" id="maxspacesize{$value[groupid]}" name="group[{$value[groupid]}][maxspacesize]" value="$value[maxspacesize]">
-                    <span class="input-group-text">M</span>
-                  </div>
-                  <span class="form-text">{lang setting_main_default}</span>
-                </div>
-                <label class="col-sm-2"></label>
-                <div class="col-sm-10 mb-1">
-                  <div class="input-group">
-                    <label class="input-group-text" for="maxattachsize{$value[groupid]}">{lang file_size}</label>
-                    <input type="text" class="form-control" id="maxattachsize{$value[groupid]}" name="group[{$value[groupid]}][maxattachsize]" value="$value[maxattachsize]">
-                    <span class="input-group-text">M</span>
-                  </div>
-                  <span class="form-text">{lang setting_main_file_size}</span>
-                </div>
-                <label class="col-sm-2"></label>
-                <div class="col-sm-10 mb-1">
-                  <div class="input-group">
-                    <input class="js-tags-input form-control" type="text" id="upload_file_ext" name="group[{$value[groupid]}][attachextensions]" value="$value[attachextensions]">
-                    <span class="form-text">{lang setting_main_file_suffix}</span>
-                  </div>
-                </div>
-              </div>
-              <!--{/loop}-->
               <div class="row mb-3">
                 <label for="orgmemorySpace" class="col-sm-2">{lang space_organization_set}</label>
                 <div class="col-sm-10">
