@@ -2,11 +2,8 @@
 <!--{if $operation == 'editpermgroup'}-->
 <form onsubmit="return false;">
     <div class="modal-header">
-        <h4 class="modal-title text-truncate">{lang edit_folder_permissions}</h4>
-        <div class="float-end">
-            <button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
-            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-        </div>
+      <h4 class="modal-title text-truncate">{lang edit_folder_permissions}</h4>
+      <button type="button" class="btn-close" data-dismiss="modal"></button>
     </div>
     <div class="modal-body">
         <div class="mb-3">
@@ -69,7 +66,7 @@
                 var html ='<tr class="properties-list lead" id="perm_'+data['success']['id']+'"> ' +
                       '<td>' +
                       '<img src="dzz/images/extimg/folder.png"><h6 class="d-inline-flex">'+data['success']['pername']+'</h6></td>'+
-                      '<td></td><td><ul class="nav nav-pills text-primary">' +permstr+'</ul></td>' +
+                      '<td><ul class="nav nav-pills text-primary">' +permstr+'</ul></td>' +
                       '<td>' +
                       '<div class="form-check form-switch"><input type="checkbox" onchange="edit_perm(this,'+data['success']['id']+')" class="form-check-input" checked="checked"/></div>' +
                       '</td>' +
@@ -84,127 +81,6 @@
                 showmessage('权限组编辑成功','success','3000',1);
             } else {
                 showDialog(data['error']);
-            }
-        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
-        });
-    }
-</script>
-<!--{elseif $operation == 'editusergroup'}-->
-<div class="modal-header">
-    <h4 class="modal-title text-truncate"><!--{if $groupid}-->{lang edit_usergroup_permissions}<!--{else}-->{lang add_usergroup_permissions}<!--{/if}--></h4>
-    <div class="float-end">
-    <button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
-    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-</div>
-</div>
-<div class="modal-body">
-    <form onsubmit="return false;" id="editusergroup" class="form-horizontal">
-        <input type="hidden" name="groupid" value="$groupid"/>
-        <input type="hidden" name="submit" value="true"/>
-        <div class="row mb-3">
-            <label class="col-sm-2" for="grouptitle">{lang name} <span class="text-danger">*</span></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="grouptitle" name="grouptitle" value="$group['grouptitle']">
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label class="col-sm-2" for="maxspacesize">{lang default_space}</label>
-            <div class="col-sm-10">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="maxspacesize" name="group[maxspacesize]" value="$group[maxspacesize]">
-                    <span class="input-group-text">M</span>
-                </div>
-                <span class="form-text">{lang setting_main_default}</span>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label class="col-sm-2" for="maxattachsize">{lang file_size}</label>
-            <div class="col-sm-10">
-                <div class="input-group">
-                    <input type="text" class="form-control" id="maxattachsize" name="group[maxattachsize]" value="$group[maxattachsize]">
-                    <span class="input-group-text">M</span>
-                </div>
-                <span class="form-text">{lang setting_main_file_size}</span>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label class="col-sm-2" for="upload_file_ext">{lang file_upload_limit}</label>
-            <div class="col-sm-10">
-                <div class="input-group">
-                    <input class="js-tags-input form-control" type="text" id="upload_file_ext" name="group[attachextensions]" value="$group[attachextensions]">
-                </div>
-                <span class="form-text">{lang setting_main_file_suffix}</span>
-            </div>
-        </div>
-        <!--{if $isperm}-->
-        <div class="alert alert-warning">
-            <strong>提示</strong>
-            系统管理员不受权限控制。
-        </div>
-        <!--{/if}-->
-        <div class="row mb-3">
-            <label class="col-sm-2">{lang folder_permissions}</label>
-            <div class="col-sm-10 gallery-grid">
-                <!--{loop $perms $k $val}-->
-                <div class="form-check form-check-inline gallery-item">
-                    <input class="form-check-input" type="checkbox" name="perms[]" value="$val[1]" id="inputval$val[1]" <!--{if $isadminperm}--> checked="checked"<!--{elseif $group[perm] & $val[1]}--> checked="checked" <!--{/if}--> <!--{if $isedit}-->disabled<!--{/if}-->>
-                    <label class="form-check-label" for="inputval$val[1]"><span class="{$val[2]} view-eidt" data-perm="$val[1]"></span><span>$val[0]</span></label>
-                </div>
-                <!--{/loop}-->
-            </div>
-        </div>
-        <div class="row mb-3">
-            <label class="col-sm-2">{lang folder_permission_range}</label>
-            <div class="col-sm-10 gallery-grid">
-                <!--{loop $controlperms $k $val}-->
-                <div class="form-check form-check-inline gallery-item">
-                    <input class="form-check-input" type="checkbox" name="perms[]" value="$val[1]" id="inputval$val[1]" <!--{if $isadminperm}--> checked="checked" disabled <!--{elseif $group[perm] & $val[1]}--> checked="checked" <!--{/if}-->>
-                    <label class="form-check-label" for="inputval$val[1]"><span class="{$val[2]} view-eidt" data-perm="$val[1]"></span><span>$val[0]</span></label>
-                </div>
-                <!--{/loop}-->
-            </div>
-        </div>
-        <div class="alert alert-warning">
-            <strong>提示：</strong>
-            <ul class="list-group list-group-numbered">
-            <li>文件夹权限优先级：用户组配置的文件夹权限将作为基础权限值参与权限合成，其优先级高于用户个人设置的文件夹权限及其他非用户组权限。</li>
-            <li>权限生效范围规则：
-                <ul class="list-unstyled mt-1 ms-3">
-                    <li>• 机构部门群组文件夹：机构部门群组文件夹<b>默认应用用户组权限</b>，不可取消（确保团队权限统一）。</li>
-                    <li>• 	个人网盘文件夹：个人网盘文件夹是否受控制，可通过“个人网盘”开关自主选择（勾选则生效，未勾选则仅保留个人默认权限）。</li>
-                </ul>
-            </li>
-            <li>操作提示：若您发现实际权限与预期不符，可能是用户组权限与其他权限通过合成逻辑产生的结果。</li>
-            </ul>
-        </div>
-    </form>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
-    <button type="button" class="btn btn-primary" onclick="usergroupedit()">{lang confirms}</button>
-</div>
-<script type="text/javascript" reload="1">
-    jQuery(document).ready(function() {
-        $('.js-tags-input').tagsInput({
-			height: '100%',
-			width: '100%',
-			defaultText: $('.js-tags-input').attr("placeholder"),
-			removeWithBackspace: true,
-			delimiter: [',']
-		});
-    });
-    function usergroupedit(form) {
-        jQuery.post(MOD_URL+'&op=ajax&operation=editusergroup&ajaxdata=json', $('#editusergroup').serialize(), function (data) {
-            if (data['success']) {
-                hideWindow('editusergroup');
-                showmessage('操作成功，3秒钟之后刷新页面...','success',3000,1,'top',function(){
-                    window.location.reload();
-                });
-            } else if(data['message']) {
-                showmessage(data['message'], 'error', 0, 1);
-            } else {
-                showmessage('{lang do_failed}', 'error', 3000, 1);
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
             showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);

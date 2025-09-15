@@ -17,7 +17,7 @@ $lang = array
     'spaceSet' => '空间设置',
     'loginSet' => '登录设置',
     'basicSet' => '基本设置',
-    'permGroupSet' => '权限设置',
+    'permGroupSet' => '权限包设置',
     'sitelogo' => '平台LOGO',
     'default_app' => '默认首页',
     'Login template' => '登录模板',
@@ -33,10 +33,6 @@ $lang = array
     'please_select_default_index' => '默认首页',
     'setting_main_logo' => '仅支持上传2M以内的图片,支持jpg、jpeg、png、gif格式的图片',
     'notification_set'=>'通知设置',
-    'folder_perm_group' => '文件夹权限包',
-    'usergroup_perm' => '用户组权限',
-    'permission_group_delete_success' => '权限组删除成功',
-    'file_upload_limit' => '文件上传限制'
 );
 
 
