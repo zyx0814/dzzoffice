@@ -122,7 +122,7 @@
                 layer.alert(data['error'], {skin:'lyear-skin-danger'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
         return false;
     }
@@ -233,7 +233,7 @@
                 layer.alert(data['error'], {skin:'lyear-skin-danger'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
 
         return false;
@@ -332,7 +332,7 @@
                     }
 
             },'json').fail(function (jqXHR, textStatus, errorThrown) {
-                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                showmessage('{lang do_failed}', 'error', 3000, 1);
             });
         });
     }

@@ -337,7 +337,7 @@ _explorer.routerule = function (path, prefix) {
 			location.hash = hash;
 		}
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 	return false;
 };
@@ -513,7 +513,7 @@ _explorer.open_node_by_id = function (fid, gid,bz) {
 			var node = inst.get_node('#' + data[0]);
 			_explorer.open_node_bg(inst, node, data);
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage(__lang.do_failed, 'error', 3000, 1);
         });
 	}
 };
@@ -547,7 +547,7 @@ _explorer.open_node_bg = function (inst, node, arr) {
 
 					}
 				},'json').fail(function (jqXHR, textStatus, errorThrown) {
-					showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+					showmessage(__lang.do_failed, 'error', 3000, 1);
 				});
 				return false;
 			} else{
@@ -738,9 +738,9 @@ function riddesc(rid,desc) {
 		} else if(json.error){
 			showmessage(json.error, 'danger', 3000, 1);
 		} else {
-			showmessage('操作失败，请稍后再试', 'danger', 3000, 1);
+			showmessage(__lang.do_failed, 'danger', 3000, 1);
 		}
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }

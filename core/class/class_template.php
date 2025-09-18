@@ -227,7 +227,7 @@ class template {
 	}
 
 	function parse_template_callback_javascript($matches) {
-        return $this -> loadjstemplate($matches);
+        return $this->loadjstemplate($matches);
 	}
 
     function parse_template_callback_hook($matches){
@@ -384,7 +384,7 @@ class template {
 			if(!file_exists($jscachefile)){
 				 for($i=0;$i<count($match[1]);$i++){
 		            $var1 = $match[1][$i];
-		            $content1 = $this -> return_js_varvalue($var1);
+		            $content1 = $this->return_js_varvalue($var1);
 		            $jslangcontent[] = '__lang.'.$var1.'='.$content1.';';
 		        }	
 				$jslangcontent = array_unique($jslangcontent);
@@ -428,7 +428,7 @@ class template {
 	function languagevar1($var) {
 		$langvar = lang();
 		if (!isset($langvar[$var])) {
-	 		return '!'.$var.'!';
+	 		return "'".$var."'";
 		}
 		$jsonencode = json_encode($langvar[$var]);
 		if(is_array($langvar[$var])){

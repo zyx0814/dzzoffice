@@ -1252,7 +1252,7 @@ _selectfile.NewIco = function (type, fid) {
                 });
 		  	}
 		  },'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage(__lang.do_failed, 'error', 3000, 1);
         });
     } else if (type === 'newLink') {
         showWindow('newLink', _explorer.appUrl + '&do=ajax&operation=' + type + '&template=1&fid=' + fid,'get',0);
@@ -1270,7 +1270,7 @@ _selectfile.NewIco = function (type, fid) {
                 });
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage(__lang.do_failed, 'error', 3000, 1);
         });
     }
 };
@@ -1406,7 +1406,7 @@ _selectfile.copy = function (rid) {
             parent.layer.msg(json.msg, {icon: 'error',skin: 'bg-danger',offset:'t'});
         }
     }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        showmessage(__lang.do_failed, 'error', 3000, 1);
     });
 };
 //文件剪切
@@ -1471,7 +1471,7 @@ _selectfile.cut = function (rid) {
         }
 
     }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        showmessage(__lang.do_failed, 'error', 3000, 1);
     });
 };
 //粘贴
@@ -1510,7 +1510,7 @@ _selectfile.paste = function (fid) {
             parent.layer.msg('粘贴成功', {icon: 'success',skin: 'bg-primary',offset:'t'});
         }
     }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        showmessage(__lang.do_failed, 'error', 3000, 1);
     });
 
 };
@@ -1609,7 +1609,7 @@ _selectfile.delIco = function (rid, noconfirm) {
         _selectfile.removeridmore(rids);
 
     }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        showmessage(__lang.do_failed, 'error', 3000, 1);
     });
 };
 _selectfile.removerid = function (rid) {

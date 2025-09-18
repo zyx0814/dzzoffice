@@ -10,6 +10,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $template = $_GET['template'] ?? '';
+$langList = $_G['config']['output']['language_list'];
 if ($template == '1') {
     include template('lyear_navmenu', 'lyear');
 } else {

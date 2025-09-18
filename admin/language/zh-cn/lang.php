@@ -278,7 +278,6 @@ $lang = array
     'according_usergroup' => '按用户组',
     'usernum' => '用户数：',
     'admingroup' => '管理组',
-    'guest' => '游客',
     'forum' => '版块',
     'square' => '论坛',
     'uid' => '用户 ID',

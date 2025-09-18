@@ -1,14 +1,27 @@
+<style>
+	.nodropdown .dropdown-toggle::before{content:none}
+</style>
 <div class="popover-body">
 	<ul class="nav-stacked nav-pills">
-		<li class="nav-item">
-			<a href="javascript:;" class="nav-link" onclick="showWindow('about','user.php?mod=space&template=1&op=about&modname=$_GET[modname]');popbox();"><i class="mdi mdi-information p-2"></i><span>{lang about}</span></a>
-		</li>
 		<!--{if $_G['uid']>0}-->
 		<!--{if !$_G['setting']['bbclosed'] || !$_G['adminid'] ==0}-->
 		<li class="nav-item">
 			<a href="user.php?mod=profile" class="nav-link" target="_blank"><i class="mdi mdi-account-circle p-2"></i><span>{lang myCountCenter}</span></a>
 		</li>
 		<!--{/if}-->
+		<li class="nav-item">
+			<a href="user.php?mod=profile&op=password" class="nav-link" target="_blank"><i class="mdi mdi-account-lock p-2"></i><span>{lang password_and_security}</span></a>
+		</li>
+		<li class="nav-item dropdown nodropdown dropstart">
+			<a href="javascript:;" type="button" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="mdi mdi-chevron-left p-2"></i>{lang Select_the_language}</a>
+			<ul class="dropdown-menu">
+				<!--{loop $langList $key $value}-->
+				<li class="nav-item">
+					<a href="javascript:;" class="dropdown-item <!--{if $_G['member']['language'] == $key}-->active<!--{/if}--> langset-item" data-lang="$key">$value</a>
+				</li>
+			<!--{/loop}-->
+			</ul>
+        </li>
 		<li class="nav-item">
 			<a href="javascript:;" class="nav-link" onclick="_header.loging_close();popbox();"><i class="mdi mdi-logout p-2"></i><span>{lang logout}</span></a>
 		</li>
@@ -24,5 +37,16 @@
 			<a class="nav-link" href="user.php?mod=login"><i class="mdi mdi-login p-2"></i><span>{lang login}</span></a>
 		</li>
 		<!--{/if}-->
+		<li class="nav-item">
+			<a href="javascript:;" class="nav-link" onclick="showWindow('about','user.php?mod=space&template=1&op=about&modname=$_GET[modname]');popbox();"><i class="mdi mdi-information p-2"></i><span>{lang about}</span></a>
+		</li>
 	</ul>
 </div>
+<script type="text/javascript">
+jQuery('.langset-item').on('click',function(){
+	jQuery.post('user.php?mod=space&op=lang',{"lang":jQuery(this).data('lang')},function(json){
+		if(json.msg=='success') window.location.reload();
+		},'json');	
+	return false;
+ });
+</script>

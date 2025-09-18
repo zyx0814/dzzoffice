@@ -13,15 +13,15 @@
 					  <div class="row">
 						<div class="col-md-4">
 						  <div class="row">
-							<label class="col-sm-4 col-form-label">内容</label>
+							<label class="col-sm-4 col-form-label">{lang content}</label>
 							<div class="col-sm-8">
 							  <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="{lang please_enter_comment}">
 							</div>
 						  </div>
 						</div>
 						<div class="col-md-4">
-						  <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
-						  <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+						  <button type="submit" class="btn btn-primary me-1" id="search-btn">{lang search}</button>
+						  <button type="reset" class="btn btn-default" id="refreshsearch">{lang reset}</button>
 						</div>
 					  </div>
 				  </div>
@@ -34,8 +34,8 @@
 					</div>
 				</script>
 				<script type="text/html" id="barDemo">
-					<a class="btn btn-sm btn-primary me-1" title="{lang view}当前评论" lay-event="view"><i class="mdi mdi-magnify-expand"></i></a>
-					<a class="btn btn-sm btn-outline-info me-1 " title="{lang view}所有评论" lay-event="viewid"><i class="mdi mdi-comment-text-multiple"></i></a>
+					<a class="btn btn-sm btn-primary me-1" title="{lang view}{lang current_comments}" lay-event="view"><i class="mdi mdi-magnify-expand"></i></a>
+					<a class="btn btn-sm btn-outline-info me-1 " title="{lang view}{lang all_comments}" lay-event="viewid"><i class="mdi mdi-comment-text-multiple"></i></a>
 					<a class="btn btn-sm btn-outline-primary me-1" title="{lang edit}" lay-event="edit"><i class="mdi mdi-pencil"></i></a>
 					<a class="btn btn-sm btn-outline-danger" title="{lang delete}" lay-event="del"><i class="mdi mdi-delete"></i></a>
 				</script>
@@ -57,7 +57,7 @@
 		even:true,
 		cellMinWidth:120,
 		text: {
-			none: '暂无相关数据'
+			none: '{lang no_related_data}'
 		},
 		page: {
 		  limit: 20,
@@ -66,13 +66,13 @@
 		cols: [[
 		{type:'checkbox', fixed: 'left'}
 		,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-		  ,{field:'dateline', title: '评论时间', align: 'center', sort: true}
-		  <!--{if $_G['adminid']}-->,{field:'authorid', title: '评论者', align: 'center', sort: true}
-		  ,{field:'edituid', title: '编辑者', align: 'center', sort: true}
-		  ,{field:'edittime', title: '编辑时间', align: 'center', sort: true}<!--{/if}-->
+		  ,{field:'dateline', title: '{lang comment_time}', align: 'center', sort: true}
+		  <!--{if $_G['adminid']}-->,{field:'authorid', title: '{lang commenter}', align: 'center', sort: true}
+		  ,{field:'edituid', title: '{lang editor}', align: 'center', sort: true}
+		  ,{field:'edittime', title: '{lang edit_time}', align: 'center', sort: true}<!--{/if}-->
 		  ,{field:'ip', title: 'IP', align: 'center', sort: true}
 		  ,{field:'xtllq', title: '{lang Equipment information}', align: 'center', sort: true}
-		  ,{field:'message', title: '评论内容', align: 'center', sort: true}
+		  ,{field:'message', title: '{lang comment_content}', align: 'center', sort: true}
 		  ,{title: '{lang operation}',width:200, align:'center', toolbar: '#barDemo'}
 		]],
 		initSort: {
@@ -97,14 +97,13 @@
 			}
 		});
 	});
-	//头工具栏事件
 	table.on('toolbar(table)', function(obj){
 		var checkStatus = table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
 				if (data.length === 0) {
-					showmessage("请至少选择一行", 'danger', 3000, 1);
+					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
 					return;
 				}
 				var template = '<div class="accordion">';
@@ -118,15 +117,15 @@
 					template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
 					template += '<div class="accordion-body">';
 					<!--{if $_G['adminid']}-->
-					template += '<p><strong>评论者:</strong> ' + item.authorid + '</p>';
+					template += '<p><strong>{lang commenter}:</strong> ' + item.authorid + '</p>';
 					<!--{/if}-->
-					template += '<p><strong>评论时间:</strong> ' + item.dateline + '</p>';
+					template += '<p><strong>{lang comment_time}:</strong> ' + item.dateline + '</p>';
 					<!--{if $_G['adminid']}-->
 					if (item.edituid) {
-						template += '<p><strong>{lang 编辑者}:</strong> ' + item.edituid + '</p>';
+						template += '<p><strong>{lang editor}:</strong> ' + item.edituid + '</p>';
 					}
 					if (item.edittime) {
-						template += '<p><strong>{lang 编辑时间}:</strong> ' + item.edittime + '</p>';
+						template += '<p><strong>{lang edit_time}:</strong> ' + item.edittime + '</p>';
 					}
 					<!--{/if}-->
 					if (item.ip) {
@@ -136,7 +135,7 @@
 						template += '<p><strong>{lang Equipment information}:</strong> ' + item.xtllq + '</p>';
 					}
 					if (item.message) {
-						template += '<p><strong>评论内容:</strong> ' + item.message + '</p>';
+						template += '<p><strong>{lang comment_content}:</strong> ' + item.message + '</p>';
 					}
 					template += '</div>';
 					template += '</div>';
@@ -149,7 +148,7 @@
 				break;
 				case 'delete':
 					if (data.length === 0) {
-						showmessage("请至少选择一行", 'danger', 3000, 1);
+						showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
 						return;
 					}
 					var postData = "";
@@ -165,7 +164,7 @@
 							layer.close(loading);
 							layer.close(index);
 							if(json['msg']=='success'){
-								showmessage('删除成功', 'success', '3000', 1);
+								showmessage('{lang delete_success}', 'success', '3000', 1);
 								table.reloadData('table');
 								return false;
 							}else if(json['msg']){
@@ -177,21 +176,20 @@
 							.fail(function() {
 								layer.close(loading);
 								layer.close(index);
-								showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+								showmessage('{lang do_failed}', 'danger',3000,1);
 					});
 					});
 				break;
 				case 'get':
 					table.reloadData('table', {
-						where: {type: type,keyword:$('#keyword').val()}, // 清空搜索参数
+						where: {type: type,keyword:$('#keyword').val()},
 						page: {
-							curr: 1 //重新从第 1 页开始
+							curr: 1
 						}
 					});
 				break; 
 			};
 		});
-	  //监听工具条
 	  table.on('tool(table)', function(obj){
 		var data = obj.dataCache;
 		if(obj.event === 'edit'){
@@ -208,7 +206,7 @@
 						layer.close(index);
 						layer.close(loading);
 						if (res.msg == 'success') {
-							showmessage('删除成功', 'success',3000,1);
+							showmessage('{lang delete_success}', 'success',3000,1);
 							obj.del();
 						} else {
 							showmessage(res.msg, 'danger',3000,1);
@@ -217,7 +215,7 @@
 					error: function () {
 						layer.close(index);
 						layer.close(loading);
-						showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+						showmessage('{lang do_failed}', 'danger',3000,1);
 					}
 				});
 			});
@@ -227,7 +225,6 @@
 			showWindow('publish_view_'+data.fid,'{MOD_URL}&op=ajax&do=getcomment&template=1&modal=1&idtype='+data.idtype+'&id='+data.fid+'&allowattach=3&allowat=1&allowsmiley=1','get',0,'',1);
 		}
 	  });
-	    //触发排序事件 
 	table.on('sort(table)', function(obj){
 			table.reloadData('table', {
 				initSort: obj
@@ -245,18 +242,18 @@
 			var template = '';
 			<!--{if $_G['adminid']}-->
 			if (data.authorid) {
-				template += '<p><strong>评论者:</strong> ' + data.authorid + '</p>';
+				template += '<p><strong>{lang commenter}:</strong> ' + data.authorid + '</p>';
 			}
 			<!--{/if}-->
 			if (data.dateline) {
-				template += '<p><strong>评论时间:</strong>' + data.dateline + '</p>';
+				template += '<p><strong>{lang comment_time}:</strong>' + data.dateline + '</p>';
 			}
 			<!--{if $_G['adminid']}-->
 			if (data.edituid) {
-				template += '<p><strong>编辑者:</strong> ' + data.edituid + '</p>';
+				template += '<p><strong>{lang editor}:</strong> ' + data.edituid + '</p>';
 			}
 			if (data.edittime) {
-				template += '<p><strong>编辑时间:</strong>' + data.edittime + '</p>';
+				template += '<p><strong>{lang edit_time}:</strong>' + data.edittime + '</p>';
 			}
 			<!--{/if}-->
 			if (data.ip) {
@@ -266,51 +263,42 @@
 				template += '<p><strong>{lang Equipment information}:</strong> ' + data.xtllq + '</p>';
 			}
 			if (data.message) {
-				template += '<p><strong>评论内容:</strong> ' + data.message + '</p>';
+				template += '<p><strong>{lang comment_content}:</strong> ' + data.message + '</p>';
 			}
 	
 			layer.alert(template, {
-				title: 'ID <strong>' + data.LAY_NUM + '</strong> 详情：'
+				title: 'ID <strong>' + data.LAY_NUM + '</strong> {lang detail}：'
 			});
-	
-		// 标注选中样式
 		obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
 		}
-		// 搜索按钮功能
 		$(document).on('click', '#search-btn', function() {
-		// 获取搜索关键词
 		var keyword = $('#keyword').val();
 		table.reloadData('table', {
 		  where: { keyword: keyword},
 		  page: {
-			curr: 1 //重新从第 1 页开始
+			curr: 1
 		  }
 		});
 	  });
-	   // 重置按钮功能
 	   $('#refreshsearch').click(function() {
         $('#keyword').val('');
 		table.reloadData('table', {
-		  where: {type: type}, // 清空搜索参数
+		  where: {type: type},
 		  page: {
-			curr: 1 //重新从第 1 页开始
+			curr: 1
 		  }
 		});
 	  });
-	  // 类型按钮功能
 	  $(document).on('click', '.type-btn', function() {
-		// 移除所有 .type-btn 的 active 类
 		$('.type-btn').removeClass('active');
-		// 为当前点击的按钮添加 active 类
 		$(this).addClass('active');
 		$('#keyword').val('');
-		// 获取当前的 type 值
 		operation = $(this).data('operation');
 		type = $(this).data('type');
 		table.reloadData('table', {
 		  where: {type: type},
 		  page: {
-			curr: 1 //重新从第 1 页开始
+			curr: 1
 		  }
 		});
 	  });

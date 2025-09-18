@@ -8,7 +8,7 @@
         <div class="card-body">
             <ul class="nav nav-pills">
                 <li class="nav-item"><a class="nav-link {if $do == 'editpass'}active{/if}" href="{MOD_URL}&op=password">{lang password_edit}</a></li>
-                <li class="nav-item"><a class="nav-link {if $do == 'login'}active{/if}" href="{MOD_URL}&op=password&do=login">登录记录</a></li>
+                <li class="nav-item"><a class="nav-link {if $do == 'login'}active{/if}" href="{MOD_URL}&op=password&do=login">{lang login_log}</a></li>
                 <li class="nav-item"><a class="nav-link {if $do == 'changeemail'}active{/if}" href="{MOD_URL}&op=password&do=changeemail"><!--{if $_G['member']['emailstatus']}-->{lang change_user_email}<!--{else}-->{lang bindemail_subject}<!--{/if}--></a></li>
             </ul>
         </div>

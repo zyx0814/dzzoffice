@@ -28,8 +28,8 @@
 							  </div>
 						</div>
 						<div class="col-md-4">
-						  <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
-						  <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+						  <button type="submit" class="btn btn-primary me-1" id="search-btn">{lang search}</button>
+						  <button type="reset" class="btn btn-default" id="refreshsearch">{lang reset}</button>
 						</div>
 					  </div>
 				  </div>
@@ -67,7 +67,7 @@
 	even:true,
 	cellMinWidth:120,
 	text: {
-		none: '暂无相关数据'
+		none: '{lang no_related_data}'
 	},
 	page: {
 		limit: 20,
@@ -123,7 +123,7 @@
 		switch(obj.event){
 			case 'getCheckData':
 				if (data.length === 0) {
-					showmessage("请至少选择一行", 'danger', 3000, 1);
+					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
 					return;
 				}
 				// 创建模板字符串
@@ -162,7 +162,7 @@
 				break;
 				case 'delete':
 				if (data.length === 0) {
-					showmessage("请至少选择一行", 'danger', 3000, 1);
+					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
 					return;
 				}
 				var sids = new Array();
@@ -185,13 +185,13 @@
 					},'json').fail(function() {
 							layer.close(loading);
 							layer.close(index);
-							showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+							showmessage('{lang do_failed}', 'danger',3000,1);
 						});
 				});
 				break;
 				case 'forbidden':
 				if (data.length === 0) {
-					showmessage("请至少选择一行", 'danger', 3000, 1);
+					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
 					return;
 				}
 				var sids = new Array();
@@ -214,13 +214,13 @@
 					},'json').fail(function() {
 							layer.close(loading);
 							layer.close(index);
-							showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+							showmessage('{lang do_failed}', 'danger',3000,1);
 						});
 				});
 				break;
 				case 'allow':
 				if (data.length === 0) {
-					showmessage("请至少选择一行", 'danger', 3000, 1);
+					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
 					return;
 				}
 				var sids = new Array();
@@ -243,7 +243,7 @@
 					},'json').fail(function() {
 							layer.close(loading);
 							layer.close(index);
-							showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+							showmessage('{lang do_failed}', 'danger',3000,1);
 						});
 				});
 				break;
@@ -296,7 +296,7 @@
 			'<p><strong>{lang file_type}:</strong> ' + data.type + '</p><p><strong>{lang limited_number}:</strong> ' + data.times + '</p>';
 	
 			layer.alert(template, {
-				title: '<strong>ID：'+data.LAY_NUM+'</strong>详情：'
+				title: '<strong>ID：'+data.LAY_NUM+'</strong> {lang detail：'
 			});
 	
 		// 标注选中样式

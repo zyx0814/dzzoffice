@@ -30,7 +30,6 @@ $lang = array(
     'there_no_deadline' => '无截止时间',
     'voting_ended' => '投票已结束',
     'day' => '天',
-    'sec' => '秒',
 );
 
 ?>

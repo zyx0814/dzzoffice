@@ -302,7 +302,6 @@ $lang = array(
     'anticlockwise' => '逆时针',
     'overturn' => '翻转',
     'autoplay' => '自动播放',
-    'sec' => '秒',
     'save_original_image_computer' => '保存原图到电脑',
     'download_original_image' => '下载原图',
     'i_see' => '我知道了',
@@ -460,6 +459,12 @@ $lang = array(
     'create_time' => '创建时间',
     'include' => '包含',
     'default_folder_name' => '新建文件夹',
+    'downpackage' => '打包下载',
+    'iconview_2' => '中等图标',
+    'iconview_4' => '详细列表',
+    'upload' => '上传',
+    'uploadfile' => '上传文件',
+    'uploadfolder' => '上传文件夹',
     'new_and_upload' => '新建/上传',
     'word_document' => 'Word 文档',
     'excel_document' => 'Excel 工作表',
@@ -483,5 +488,6 @@ $lang = array(
     'share_stop_sharing1' => '<p class="text-center">取消分享后，该条分享记录将被删除，将无法再访问此分享链接。</p><p class="text-center">你确认要取消分享吗？</p>',
     'global_appinfo_error' => '全局应用信息错误！请检查Dzz版本与应用是否匹配。',
     'no_match_file' => '没有符合条件的文件',
+    'tool' => '工具',
 );
 ?>

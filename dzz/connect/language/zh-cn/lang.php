@@ -14,6 +14,7 @@ $lang = array(
     'object_exist_been_deleted' => '对象不存在或已被删除',
     'added_desktop' => '添加到桌面失败',
     'object_exist_been_deleted' => '对象不存在或已被删除',
+    'no_cloud_service' => '暂无云服务',
 );
 
 ?>

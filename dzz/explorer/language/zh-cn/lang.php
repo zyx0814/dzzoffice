@@ -1,7 +1,6 @@
 <?php
 $lang = array(
     'appname' => '网盘',
-    'keywords' => '关键词',
     'enter_keywords_match_file' => '请输入关键词，多个关键词用逗号分割',
     'explorer_groupperm_cooperative' => '协作成员',
     'explorer_groupperm_manager' => '管理员',
@@ -82,13 +81,6 @@ $lang = array(
     'update_version' => '更新了<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{title}的版本',
     'updatevesion' => '更新版本',
     'collect' => '收藏',
-    'downpackage' => '打包下载',
-    'iconview_2' => '中等图标',
-    'iconview_4' => '详细列表',
-    'upload' => '上传',
-    'uploadfile' => '上传文件',
-    'uploadfolder' => '上传文件夹',
-    'new_and_upload' => '新建/上传',
     'collect_failer' => '加入收藏失败',
     'collect_success' => '加入收藏成功',
     'cancle_collect_success' => '取消收藏成功',
@@ -439,4 +431,5 @@ $lang = array(
     'file_desc_placeholder' => '添加文档描述...',
     'time_error_endtime' => '结束时间不能早于开始时间',
     'time_error_starttime' => '开始时间不能晚于结束时间',
+    'add_cat' => '添加类型',
 );

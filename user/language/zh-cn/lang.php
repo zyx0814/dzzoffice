@@ -176,5 +176,6 @@ $lang = array(
         <p>邮件可能会进入推广邮件或垃圾邮件中，请注意查收。</p>',
     'sending_wait' => '发送中，请稍后...',
     'myCountCenter' => '个人中心',
-    'register_welcome_tip' => '欢迎注册'
+    'register_welcome_tip' => '欢迎注册',
+    'login_log' => '登录记录',
 );

@@ -63,7 +63,7 @@
                 $('#' + data['pos'] + '_error').html(data['msg']);
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
         return false;
     }
@@ -187,7 +187,7 @@
                 showmessage('{lang do_failed}', 'error', 3000, 1);
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
     }
 </script>
@@ -281,7 +281,7 @@
                 }
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
     }
     function editsearchcat(form) {
@@ -310,7 +310,7 @@
             }
             return false;
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
         return false;
     }
@@ -328,7 +328,7 @@
                     layer.alert('{lang delete_error}！', {skin:'lyear-skin-danger'});
                 }
             }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                showmessage('{lang do_failed}', 'error', 3000, 1);
             });
         });
     }
@@ -460,7 +460,7 @@
             }
 
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
         return false;
     }
@@ -827,7 +827,7 @@
                 layer.msg('{lang operation_error}', {offset:'10px'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
         return false;
     }
@@ -855,7 +855,7 @@
                     layer.msg('删除失败', {offset:'10px'});
                 }
             }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                showmessage('{lang do_failed}', 'error', 3000, 1);
             });
         });
     }
@@ -905,7 +905,7 @@
                 layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
     }
 </script>
@@ -1090,7 +1090,7 @@
                 layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
         return false;
     })
@@ -1161,7 +1161,7 @@
                 layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage('{lang do_failed}', 'error', 3000, 1);
         });
         return false;
     }

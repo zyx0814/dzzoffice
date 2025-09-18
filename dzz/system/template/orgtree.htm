@@ -154,7 +154,7 @@ jQuery(document).ready(function(e) {
 				jQuery.post(DZZSCRIPT+'?mod=system&op=orgtree&do=orgtree',{'id':node.id,'nouser':nouser,'moderator':moderator,'onlymyorg':onlymyorg,'zero':'$zero','stype':stype,'range':range,'showjob':showjob},function(json){
 					cb.call(this,json);
 				},'json').fail(function (jqXHR, textStatus, errorThrown) {
-					showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+					showmessage('{lang do_failed}', 'error', 3000, 1);
 				});
 			}
 		  },

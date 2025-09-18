@@ -9,8 +9,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$navtitle = lang('后台管理');
-//管理权限进入
+$navtitle = lang('appname');
 Hook::listen('adminlogin');
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'stats') {
@@ -57,20 +56,19 @@ if ($do == 'stats') {
     }
     if ($operation == 'getdata') {
         $data = getData($time, $starttime, $endtime);
-        // 构建返回的数据
         $response = [
             'success' => true,
             'labels' => array_keys($data['total']),
             'datasets' => [
                 [
-                    'label' => "用户总数",
+                    'label' => lang('user_total'),
                     'backgroundColor' => "#33cabb",
                     'borderColor' => "#33cabb",
                     'fill' => false,
                     'data' => array_values($data['total'])
                 ],
                 [
-                    'label' => '新增用户',
+                    'label' => lang('add_users'),
                     'fill' => false,
                     'backgroundColor' => "#fa8734",
                     'borderColor' => "#fa8734",
@@ -78,7 +76,6 @@ if ($do == 'stats') {
                 ]
             ]
         ];
-        // 返回JSON数据
         exit(json_encode($response));
     } else {
         include template('stats');
@@ -148,9 +145,9 @@ if ($do == 'stats') {
         } elseif ($key == 'SERVER_SOFTWARE') {
             $env_items[$key]['current'] = $_SERVER["SERVER_SOFTWARE"];
         } elseif ($key == 'max_execution_time') {
-            $env_items[$key]['current'] = ini_get('max_execution_time') . '秒';
+            $env_items[$key]['current'] = ini_get('max_execution_time') . lang('sec');
         } elseif ($key == 'max_input_time') {
-            $env_items[$key]['current'] = ini_get('max_input_time') . '秒';
+            $env_items[$key]['current'] = ini_get('max_input_time') . lang('sec');
         } elseif (isset($item['c'])) {
             $env_items[$key]['current'] = constant($item['c']);
         }
@@ -214,7 +211,7 @@ if ($do == 'stats') {
                 $value['username'] = lang('anonymous');
             }
             $list[] = [
-                "uid" => $value['uid'] ? '<a href="'.USERSCRIPT.'?uid='.$value['uid'].'" target="_blank">'.avatar_block($value['uid']).$value['username'].'</a>' : '游客',
+                "uid" => $value['uid'] ? '<a href="'.USERSCRIPT.'?uid='.$value['uid'].'" target="_blank">'.avatar_block($value['uid']).$value['username'].'</a>' : lang('guest'),
                 "groupid" => $usergroup[$value['groupid']],
                 "sid" => $value['sid'],
                 "ip" => $value['ip'],

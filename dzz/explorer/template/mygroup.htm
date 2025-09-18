@@ -10,15 +10,15 @@
         </div>
         <div class="col-sm-6 mb-3">
             <div class="input-daterange input-group" id="datepicker">
-                <label class="input-group-text" for="selectDate">从</label>
+                <label class="input-group-text" for="selectDate">{lang to}</label>
                 <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang start_time}">
-                <label class="input-group-text" for="selectDate1">至</label>
+                <label class="input-group-text" for="selectDate1">{lang to_date}</label>
                 <input type="text" class="form-control selectDate" id="selectDate1" placeholder="{lang finish_time}">
             </div>
         </div>
         <div class="col-md-2 mb-3">
-            <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
-            <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+            <button type="submit" class="btn btn-primary me-1" id="search-btn">{lang search}</button>
+            <button type="reset" class="btn btn-default" id="refreshsearch">{lang reset}</button>
         </div>
     </div>
 </div>
@@ -118,7 +118,7 @@
 		switch(obj.event){
             case 'getCheckData':
                 if (data.length === 0) {
-                    showmessage("请至少选择一行", 'danger', 3000, 1);
+                    showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
                     return;
                 }
                 var template = '<div class="accordion">';
@@ -148,7 +148,7 @@
             layuiModules.table.reloadData('mygroup', {
                 where: search_data, // 清空搜索参数
                 page: {
-                    curr: 1 //重新从第 1 页开始
+                    curr: 1 //重新{lang to}第 1 页开始
                 }
             });
             break; 

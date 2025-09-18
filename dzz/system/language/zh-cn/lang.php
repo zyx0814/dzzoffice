@@ -79,5 +79,6 @@ $lang = array
     'newly_build' => '新建',
     'rename' => '重命名',
     'edit_date' => '修改时间',
+    'all_notice' => '全部通知',
 );
 ?>

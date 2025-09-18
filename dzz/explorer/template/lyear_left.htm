@@ -14,7 +14,7 @@
   <li>
     <span class="dropdown-item-text text-muted fw-bold">{lang type}</span>
     <!--{if $explorer_setting['allownewcat']}-->
-    <button type="button" class="groupbutton dcolor" title="添加类型" onclick="showWindow('addsearchcat','{MOD_URL}&op=ajax&operation=addsearchcat','get',0)" ><span class="mdi mdi-plus-circle"></span></button>
+    <button type="button" class="groupbutton dcolor" title="{lang add_cat}" onclick="showWindow('addsearchcat','{MOD_URL}&op=ajax&operation=addsearchcat','get',0)" ><span class="mdi mdi-plus-circle"></span></button>
     <!--{/if}-->
 </li>
   <!--{loop $catsearch $v}-->
@@ -33,7 +33,7 @@
 </ul>
 <li class="border-bottom"></li>
 <ul class="nav-drawer nav-stacked nav-pills">
-  <li><span class="dropdown-item-text text-muted fw-bold">工具</span></li>
+  <li><span class="dropdown-item-text text-muted fw-bold">{lang tool}</span></li>
   <li class="nav-item">
     <a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=share" data-hash="share&uid={$uid}"><i class="mdi mdi-share-variant"></i><span>{lang share}</span></a>
   </li>

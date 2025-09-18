@@ -149,15 +149,15 @@
             <li>{lang drag_can_be_sorted}</li>
         </ul>
         <div class="custom_menu_mainList_wrap">
-        <!--{loop $menu[button] $key $value}-->
+        <!--{loop $menu['button'] $key $value}-->
        	  <div class="custom_cmname_list_wrap">
-            <div class="custom_menu_list cm_name js_li clearfix" data-id="$key" data-name="$value[name]" data-type="$value[type]" <!--{if $value[type]=='click'}--> data-key="$value[key]"<!--{elseif $value[type]=='view'}-->data-url="$value[url]"<!--{/if}-->>
+            <div class="custom_menu_list cm_name js_li clearfix" data-id="$key" data-name="$value[name]" data-type="$value[type]" <!--{if $value[type]=='click'}--> data-key="$value[key]"<!--{elseif $value['type']=='view'}-->data-url="$value[url]"<!--{/if}-->>
                 <a class="icon icon_remove pull-right js_menu_remove hover_visible" href="javascript:;"></a>
                 <span class="icon icon_arrow_down"></span><span class="custom_menu_name">$value[name]</span>
                 
-                <!--{if $value[type] && $value[type]=='view'}-->
+                <!--{if $value['type'] && $value['type']=='view'}-->
                 <a class=" pull-right js_link" href="javascript:;" title="{lang skip_links}" onclick="setEventkey(this,'link');return false"><span class="icon icon_link_gray"></span></a>
-                <!--{elseif $value[type]}-->
+                <!--{elseif $value['type']}-->
                 <a class=" pull-right js_click " href="javascript:;" title="{lang menu}KEY" onclick="setEventkey(this,'click');return false"><span class="icon icon_click_gray"></span></a>
                 
                 <!--{/if}-->
@@ -167,7 +167,7 @@
                 <span class="custom_menu_notice ">{lang level_1_menu_name_limit_beyond_truncation}</span>
             </div> 
             <div class="custom_menu_list_wrap" data-id="$key">
-             <!--{loop $value[sub_button] $key1 $value1}-->
+             <!--{loop $value['sub_button'] $key1 $value1}-->
              	<div class="custom_menu_list cm_subname js_li clearfix" data-id="{$key}_{$key1}" data-name="$value1[name]" data-type="$value1[type]" <!--{if $value1[type]=='click'}--> data-key="$value1[key]"<!--{elseif $value1[type]=='view'}-->data-url="$value1[url]"<!--{/if}-->>
                     <a class="icon icon_remove pull-right js_menu_remove hover_visible" href="javascript:;"></a>
                    <span class="custom_menu_subName">$value1[name]</span>
@@ -429,7 +429,7 @@ function menu_publish(obj){
 		}
 		button.button('reset');
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage('{lang do_failed}', 'error', 3000, 1);
 	});
 }
 function setEventkey(obj,type){

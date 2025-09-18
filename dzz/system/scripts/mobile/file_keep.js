@@ -292,7 +292,7 @@ jQuery(document).off('tap.docreate').on('tap.docreate', '.new-folder', function 
                     $.toast("操作成功");
                 }
             }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-                showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+                showmessage(__lang.do_failed, 'error', 3000, 1);
             });
 
         },

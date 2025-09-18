@@ -2,13 +2,6 @@
 $lang = array(
     'appname' => '分享',
     'create' => '创建',
-    'downpackage' => '打包下载',
-    'iconview_2' => '中等图标',
-    'iconview_4' => '详细列表',
-    'upload' => '上传',
-    'uploadfile' => '上传文件',
-    'uploadfolder' => '上传文件夹',
-    'new_and_upload' => '新建/上传',
     'down' => '下载',
     'edit' => '编辑',
     'choose' => '选择',

@@ -267,7 +267,7 @@ function passwordsubmit() {
 			return false;
 		}
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
 function allsave() {

@@ -4,24 +4,23 @@
 		overflow: auto;
 	}
 </style>
-<!--日期选择器css-->
 <link rel="stylesheet" type="text/css" href="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker3.min.css">
 <div class="card" style="border-radius: 0;margin-bottom:0;">
 	<div class="card-header">
 		<ul class="nav nav-pills">
-			<li class="nav-item"><a class="nav-link <!--{if $time=='all'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=all">概览</a></li>
-			<li class="nav-item"><a class="nav-link <!--{if $time=='month'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=month">月线</a></li>
-			<li class="nav-item"><a class="nav-link <!--{if $time=='week'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=week">周线</a></li>
-			<li class="nav-item"><a class="nav-link <!--{if $time=='day'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=day">日线</a></li>
+			<li class="nav-item"><a class="nav-link <!--{if $time=='all'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=all">{lang overview}</a></li>
+			<li class="nav-item"><a class="nav-link <!--{if $time=='month'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=month">{lang MonthyChart}</a></li>
+			<li class="nav-item"><a class="nav-link <!--{if $time=='week'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=week">{lang contour}</a></li>
+			<li class="nav-item"><a class="nav-link <!--{if $time=='day'}-->active<!--{/if}-->" href="{MOD_URL}&do=stats&time=day">{lang date_line}</a></li>
 		  </ul>
 	</div>
 	<div class="card-body">
 		<!--{if $time!='all'}-->
 		<div class="mb-3">
 			<div class="input-daterange input-group" id="datepicker">
-			  <label class="input-group-text" for="datepicker_start">从</label>
+			  <label class="input-group-text" for="datepicker_start">{lang to}</label>
 			  <input type="text" class="form-control" id="datepicker_start" value="$starttime">
-			  <label class="input-group-text" for="datepicker_end">至</label>
+			  <label class="input-group-text" for="datepicker_end">{lang to_date}</label>
 			  <input type="text" class="form-control" id="datepicker_end" value="$endtime">
 			</div>
 		  </div>
@@ -43,7 +42,7 @@
 					},
 					title: {
 					display: true,
-					text: '用户增长统计'
+					text: '{lang user_growth_statistics}'
 					},
 				}
 			}
@@ -88,11 +87,10 @@
 		}
 		},'json')
 		.fail(function() {
-			showmessage('操作异常', 'danger', '3000', 1);
+			showmessage('{lang do_failed}', 'danger', '3000', 1);
 		});
 	}
 </script>
-<!--日期选择器js-->
 <script type="text/javascript" src="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="static/lyear/js/chart.min.js"></script>
 <!--{template lyear:footer}-->

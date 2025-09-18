@@ -21,11 +21,11 @@
                 <div class="card-search mb-2-5">
                     <div class="row">
                         <div class="col-sm-4">
-                            <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="关键词" value="$_GET['keyword']">
+                            <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="{lang keywords}" value="$_GET['keyword']">
                         </div>
                         <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary me-1" id="search-btn">搜索</button>
-                            <button type="reset" class="btn btn-default" id="refreshsearch">重置</button>
+                            <button type="submit" class="btn btn-primary me-1" id="search-btn">{lang search}</button>
+                            <button type="reset" class="btn btn-default" id="refreshsearch">{lang reset}</button>
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                     </div>
                 </script>
                 <script type="text/html" id="barDemo">
-                    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看详情</a>
+                    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">{lang examine_details}</a>
                 </script>
             </div>
         </div>
@@ -97,7 +97,7 @@
             switch (obj.event) {
                 case 'getCheckData':
                     if (data.length === 0) {
-                        showmessage("请至少选择一行", 'danger', 3000, 1);
+                        showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
                         return;
                     }
                     var template = '<div class="accordion">';
@@ -166,7 +166,7 @@
                 '</div>';
 
             layer.alert(template, {
-                title: 'ID <strong>' + data.LAY_NUM + '</strong> 详情：'
+                title: 'ID <strong>' + data.LAY_NUM + '</strong> {lang detail}：'
             });
 
             // 标注选中样式

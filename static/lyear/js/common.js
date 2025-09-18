@@ -6,6 +6,20 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
+var _header = {
+	init: function(e) {
+		_header.formhash = e
+	},
+	loging_close: function() {
+		showDialog('<span style="font-size:1.28rem">'+__lang.js_exit+'</span>', "confirm", "",
+		function() {
+			jQuery.get("user.php?mod=login&op=logging&action=logout&formhash=" + _header.formhash + "&t=" + (new Date).getTime(),
+			function(e) {
+				window.location.reload()
+			})
+		})
+	}
+}
 var BROWSER = {},
 USERAGENT = navigator.userAgent.toLowerCase();
 BROWSER.ie11 ? (BROWSER.ie = 11, BROWSER.rv = 11) : BROWSER.rv = 0,
@@ -1081,7 +1095,7 @@ function showDialog(msg, mode, t, func, cover, funccancel, leftmsg, confirmtxt, 
 	BROWSER.ie || (hidedom = '<style type="text/css">object{visibility:hidden;}</style>');
 	var shadow = "",
 	s = "";
-	if (t ? (s = hidedom + shadow + '<div class="modal-header"><h4 class="modal-title text-truncate">', s += t, s += '</h4><button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="hideMenu(\'fwin_dialog\', \'dialog\')" ></button></div>') : (s = hidedom + shadow + '<div class="modal-header"><h4 class="modal-title text-truncate">', s += "提示信息", s += '</h4><button id="fwin_dialog_close" type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="hideMenu(\'fwin_dialog\', \'dialog\')" ></button></div>'), -1 !== mode.indexOf("alert_icon_")) {
+	if (t ? (s = hidedom + shadow + '<div class="modal-header"><h4 class="modal-title text-truncate">', s += t, s += '</h4><button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="hideMenu(\'fwin_dialog\', \'dialog\')" ></button></div>') : (s = hidedom + shadow + '<div class="modal-header"><h4 class="modal-title text-truncate">', s += __lang.board_message, s += '</h4><button id="fwin_dialog_close" type="button" class="btn-close" data-dismiss="modal" aria-label="Close" onclick="hideMenu(\'fwin_dialog\', \'dialog\')" ></button></div>'), -1 !== mode.indexOf("alert_icon_")) {
 		var icon = decodeURIComponent(mode.replace("alert_icon_", ""));
 		s += icon ? '<div class="modal-body"><div class="alert_icon"><img class="alert_icon_img" src="' + icon + '"><p>' + msg + "</p></div></div>": '<div class="modal-body"><div class="alert_info"><p>' + msg + "</p></div></div>",
 		s += '<div class="modal-footer">' + (leftmsg ? '<span class=" muted pull-left">' + leftmsg + "</span>": "") + (showconfirm ? '<button id="fwin_dialog_submit" value="true" class="btn btn-primary"><strong>' + confirmtxt + "</strong></button>": ""),
@@ -1196,20 +1210,6 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 	if(typeof showWindow_callback == 'function') window.showWindow_callback=showWindow_callback;
 	doane();
 }
-var _header = {
-	init: function(e) {
-		_header.formhash = e
-	},
-	loging_close: function() {
-		showDialog('<span style="font-size:1.28rem">您确定要注销登录？</span>', "confirm", "",
-		function() {
-			jQuery.get("user.php?mod=login&op=logging&action=logout&formhash=" + _header.formhash + "&t=" + (new Date).getTime(),
-			function(e) {
-				window.location.reload()
-			})
-		})
-	}
-},
 jcLoader = function() {
 	var e = document;
 	return {

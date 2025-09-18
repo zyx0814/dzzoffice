@@ -29,9 +29,9 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-primary">
                 <i class="mdi mdi-account-check fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate"><a href="javascript:;" id="online" class="dcolor">点击查看</a></span>
+              <span class="fs-4 text-truncate"><a href="javascript:;" id="online" class="dcolor">{lang click_to_view}</a></span>
             </div>
-            <div class="text-end">当前在线数</div>
+            <div class="text-end">{lang online_num}</div>
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
               </span>
               <span class="fs-4 text-truncate"><a href="{DZZSCRIPT}?mod=orguser" class="dcolor">$yonghurenshu</a></span>
             </div>
-            <div class="text-end">用户总数</div>
+            <div class="text-end">{lang user_total}</div>
           </div>
         </div>
       </div>
@@ -57,7 +57,7 @@
               </span>
               <span class="fs-4 text-truncate"><a href="{DZZSCRIPT}?mod=orguser" class="dcolor">$tingyongrenshu</a></span>
             </div>
-            <div class="text-end">禁用人数</div>
+            <div class="text-end">{lang user_disable}</div>
           </div>
         </div>
       </div>
@@ -68,9 +68,9 @@
               <span class="avatar-md rounded-circle avatar-box text-white bg-warning">
                 <i class="mdi mdi-account-arrow-up fs-4"></i>
               </span>
-              <span class="fs-4 text-truncate"><a href="javascript:;" id="userstats" class="dcolor">点击查看</a></span>
+              <span class="fs-4 text-truncate"><a href="javascript:;" id="userstats" class="dcolor">{lang click_to_view}</a></span>
             </div>
-            <div class="text-end">用户增长统计</div>
+            <div class="text-end">{lang user_growth_statistics}</div>
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@
               </span>
               <span class="fs-4 text-truncate"><a href="{DZZSCRIPT}?mod=filemanage" class="dcolor">$wenjiangeshu</a></span>
             </div>
-            <div class="text-end">文件个数</div>
+            <div class="text-end">{lang file_num}</div>
           </div>
         </div>
       </div>
@@ -96,7 +96,7 @@
               </span>
               <span class="fs-4 text-truncate"><a href="{DZZSCRIPT}?mod=filemanage" class="dcolor">$kongjianshiyong</a></span>
             </div>
-            <div class="text-end">空间使用</div>
+            <div class="text-end">{lang space_usage}</div>
           </div>
         </div>
       </div>
@@ -109,7 +109,7 @@
               </span>
               <span class="fs-4 text-truncate"><a href="{ADMINSCRIPT}?mod=system&op=systemupgrade" class="dcolor">$version</a></span>
             </div>
-            <div class="text-end">Dzz版本</div>
+            <div class="text-end">Dzz {lang version}</div>
           </div>
         </div>
       </div>
@@ -122,14 +122,14 @@
               </span>
               <span class="fs-4 text-truncate"><a href="{ADMINSCRIPT}?mod=system&op=systemupgrade" class="dcolor">$RELEASE</a></span>
             </div>
-            <div class="text-end">版本更新日期</div>
+            <div class="text-end">{lang version_date}</div>
           </div>
         </div>
       </div>
     </div>
     <div class="card">
       <header class="card-header d-flex justify-content-between">
-        <div class="card-title">服务器信息</div>
+        <div class="card-title">{lang server_info}</div>
         <ul class="card-actions">
           <li><a href="#!" class="dcolor card-btn-close"><i class="mdi mdi-close"></i></a></li>
           <li><a href="#!" class="dcolor card-btn-slide"><i class="mdi mdi-chevron-up"></i></a></li>
@@ -138,7 +138,7 @@
         </ul>
       </header>
       <div class="card-body">
-        <a href="{MOD_URL}&do=systemcheck" class="btn btn-primary card-btn-reload d-grid">点击查看</a>
+        <a href="{MOD_URL}&do=systemcheck" class="btn btn-primary card-btn-reload d-grid">{lang click_to_view}</a>
       </div>
     </div>
     <div class="row">
@@ -159,7 +159,7 @@
   $('#online').click(function() {
     layer.open({
         type: 2,
-        title: '在线用户',
+        title: '{lang online_user}',
         shadeClose: true,
         id:'layeronline',
         shade: false,
@@ -171,7 +171,7 @@
 $('#userstats').click(function() {
     layer.open({
         type: 2,
-        title: '用户增长统计',
+        title: '{lang user_growth_statistics}',
         shadeClose: true,
         id:'layeruserstats',
         shade: false,

@@ -1041,7 +1041,7 @@ _filemanage.NewIco = function (type, fid) {
 				showDialog(data.error);
 			}
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+            showmessage(__lang.do_failed, 'error', 3000, 1);
         });
 	}
 };
@@ -1255,6 +1255,6 @@ _filemanage.delIco = function (rid, noconfirm) {
         _filemanage.removeridmore(rids);
 
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 };

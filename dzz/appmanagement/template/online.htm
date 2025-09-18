@@ -11,7 +11,7 @@
 </style>
 <link rel="stylesheet" href="static/lyear/js/layui/css/layui.css?{VERHASH}">
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-<strong>提示信息</strong>
+<strong>{lanhg board_message}</strong>
 <li>暂不支持强制下线用户！</li>
 <li>最后活动时间为每10分钟更新一次，在此期间活动不会更新。</li>
 <li>当前更新用户在线时间的时间频率为：<!--{if $_G['setting']['oltimespan']}-->$_G['setting']['oltimespan']分钟/次<!--{else}-->不记录用户在线时间<!--{/if}--></li>
@@ -42,7 +42,7 @@
 		even:true,
 		cellMinWidth:120,
 		text: {
-			none: '暂无相关数据'
+			none: '{lang no_related_data}'
 		},
 		page: {
 		  limit: 20,
@@ -55,35 +55,35 @@
 		  ,{field:'groupid', title: '{lang usergroup}', align: 'center', sort: true}
 		  ,{field:'sid', title: 'sid', align: 'center', sort: true}
 		  ,{field:'ip', title: 'IP', align: 'left', sort: true}
-		  ,{field:'lastactivity', title: '最后活动时间', align: 'center', sort: true,templet: function(d) {return d.lastactivity;}}
-		  ,{field:'lastolupdate', title: '在线时间最后更新', sort: true,templet: function(d) {return d.lastolupdate;}}
+		  ,{field:'lastactivity', title: '{lang last_activity_time}', align: 'center', sort: true,templet: function(d) {return d.lastactivity;}}
+		  ,{field:'lastolupdate', title: '{lang online_time_update_time}', sort: true,templet: function(d) {return d.lastolupdate;}}
 		]],
 		done: function(){
 			dropdown.render({
 				elem: '#dropdownButton',
 				data: [{
 				id: '0',
-				title: '全部用户'
+				title: '{lang all_username}'
 				},{
 				id: '1',
-				title: '仅登录用户'
+				title: '{lang login_user}'
 				},{
 				id: '2',
-				title: '仅未登录用户'
+				title: '{lang logout_user}'
 			}],
 			click: function(obj){
 				switch(obj.id){
 					case '0':
 					search_data.ismember = '';
-					jQuery('#ismembertext').text('全部用户');
+					jQuery('#ismembertext').text('{lang all_username}');
 					break;
 					case '1':
 					search_data.ismember = 1;
-					jQuery('#ismembertext').text('仅登录用户');
+					jQuery('#ismembertext').text('{lang login_user}');
 					break;
 					case '2':
 					search_data.ismember = 2;
-					jQuery('#ismembertext').text('仅未登录用户');
+					jQuery('#ismembertext').text('{lang logout_user}');
 					break;
 				}
 				table.reloadData('table', {
@@ -113,14 +113,13 @@
 			getCheckDataBtn.classList.add('layui-btn-disabled');
 		}
 	});
-	//头工具栏事件
 	table.on('toolbar(table)', function(obj){
 		var checkStatus = table.checkStatus(obj.config.id);
 		var data = checkStatus.dataCache;
 		switch(obj.event){
 			case 'getCheckData':
 				if (data.length === 0) {
-					showmessage("请至少选择一行", 'danger', 3000, 1);
+					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
 					return;
 				}
 				var template = '<div class="accordion">';
@@ -137,15 +136,15 @@
 						template += '<p><strong>{lang usergroup}:</strong> ' + item.groupid + '</p>';
 						template += '<p><strong>sid:</strong> ' + item.sid + '</p>';
 						template += '<p><strong>IP:</strong> ' + item.ip + '</p>';
-						template += '<p><strong>最后活动时间:</strong> ' + item.lastactivity + '</p>';
-						template += '<p><strong>在线时间最后更新:</strong> ' + item.lastolupdate + '</p>';
+						template += '<p><strong>{lang last_activity_time}:</strong> ' + item.lastactivity + '</p>';
+						template += '<p><strong>{lang online_time_update_time}:</strong> ' + item.lastolupdate + '</p>';
 						template += '</div>';
 						template += '</div>';
 						template += '</div>';
 					});
 				template += '</div>';
 				layer.alert(template, {
-					title: '选中的在线用户数据'
+					title: '{lang online_user_data}'
 				});
 				break;
 				case 'get':
@@ -158,7 +157,6 @@
 				break; 
 			};
 		});
-	  //触发排序事件 
 	table.on('sort(table)', function(obj){
 		table.reloadData('table', {
 			initSort: obj
@@ -178,13 +176,12 @@
 			'<p><strong>{lang usergroup}:</strong> ' + data.groupid + '</p>' +
 			'<p><strong>sid:</strong> ' + data.sid + '</p>' +
 			'<p><strong>IP:</strong> ' + data.ip + '</p>' +
-			'<p><strong>最后活动时间:</strong> ' + data.lastactivity + '</p>' +
-			'<p><strong>在线时间最后更新:</strong> ' + data.lastolupdate + '</p>';
+			'<p><strong>{lang last_activity_time}:</strong> ' + data.lastactivity + '</p>' +
+			'<p><strong>{lang online_time_update_time}:</strong> ' + data.lastolupdate + '</p>';
 
 			layer.alert(template, {
-				title:' ID ' + data.LAY_NUM + ' 详情：'
+				title:' ID ' + data.LAY_NUM + ' {lang detail}：'
 			});
-			// 标注选中样式
 			obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
 		}
 	});

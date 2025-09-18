@@ -66,16 +66,16 @@ if ($filter == 'new') {//列出所有新通知
         $appid = $fromid - 1;
         $searchsql .= " and n.from_id = {$appid}";
         if(!$searchcats[$fromid]['appname']) {
-            $tongzhileixing = '未知通知';
-            $navtitle = '未知通知' . ' - ' . lang('panel_notice_title');
+            $tongzhileixing = lang('app_notice');
+            $navtitle = $tongzhileixing . ' - ' . lang('panel_notice_title');
         } else {
             $navtitle = $searchcats[$fromid]['appname'] . ' - ' . lang('panel_notice_title');
             $img = $searchcats[$fromid]['appico'];
             $tongzhileixing = $searchcats[$fromid]['appname'];
         }
     } else {
-        $tongzhileixing = '全部通知';
-        $navtitle = '全部通知' . ' - ' . lang('panel_notice_title');
+        $tongzhileixing = lang('all_notice');
+        $navtitle = $tongzhileixing . ' - ' . lang('panel_notice_title');
     }
     $params = array('notification', 'user', 'app_market', $_G['uid']);
     $countparam = array('notification', $_G['uid']);

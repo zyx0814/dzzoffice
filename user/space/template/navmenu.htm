@@ -1,12 +1,55 @@
-<div class="popbox-body" style="padding:15px 18px;min-width:120px;">
+<style>
+	li.langset{
+		position: relative;
+	}
+	li.langset>ul.langlist{
+		position: absolute;
+		right:100%;
+		top:15px;
+		width:150px;
+		margin-right:0;
+		display: none;
+		text-align: left;
+		background-color: #FFF;
+		-webkit-background-clip: padding-box;
+		-moz-background-clip: padding;
+		border: 1px solid #d6dadc;
+		border-bottom-color: #c4c9cc;
+		*border: 1px solid #e1e1e1;
+		font-size: 14px;
+		-webkit-box-shadow: 0 5px 10px rgba(0,0,0,.15);
+		box-shadow: 0 5px 10px rgba(0,0,0,.15);
+		background-clip: padding-box;
+		outline: none;
+		border-radius: 3px;
+	}
+	li.langset:hover ul.langlist{
+		display:block;
+	}
+</style>
+<div class="popbox-body" style="padding:15px 18px;min-width:120px;overflow: visible;">
 	<ul class="popbox-menu u-bottom list-unstyled">
-		<li>
-			<a href="javascript:;" onclick="showWindow('about','user.php?mod=space&op=about&modname=$_GET[modname]');">{lang about}</a>
-		</li>
 		<!--{if $_G['uid']>0}-->
 		<li>
 			<a href="user.php?mod=profile" target="_blank">{lang myCountCenter}</a>
 		</li>
+		<li>
+			<a href="user.php?mod=profile&op=password" target="_blank">{lang password_and_security}</a>
+		</li>
+		<li class="langset">
+          <a href="javascript:;">
+            <span class="dzz dzz-arrow-dropleft"></span>{lang Select_the_language}
+          </a>
+          <ul class="langlist popbox-menu u-bottom list-unstyled">
+          <!--{loop $langList $key $value}-->
+            <li>
+              <a href="javascript:;" class="langset-item" data-lang="$key">
+                <!--{if $_G['member']['language'] == $key}--><span class="dzz dzz-done"></span><!--{/if}-->$value
+              </a>
+            </li>
+          <!--{/loop}-->
+          </ul>
+        </li>
 		<li>
 			<a href="javascript:;" onclick="_header.loging_close();">{lang logout}</a>
 		</li>
@@ -15,5 +58,16 @@
 			<a href="user.php?mod=login">{lang login}</a>
 		</li>
 		<!--{/if}-->
+		<li>
+			<a href="javascript:;" onclick="showWindow('about','user.php?mod=space&op=about&modname=$_GET[modname]');">{lang about}</a>
+		</li>
 	</ul>
 </div>
+<script type="text/javascript">
+jQuery('.langset-item').on('click',function(){
+	jQuery.post('user.php?mod=space&op=lang',{"lang":jQuery(this).data('lang')},function(json){
+		if(json.msg=='success') window.location.reload();
+		},'json');	
+	return false;
+ });
+</script>

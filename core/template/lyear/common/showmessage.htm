@@ -34,7 +34,7 @@
 		<!--{elseif $allowreturn}-->
 		<script type="text/javascript">
 			if(history.length > (BROWSER.ie ? 0 : 1)) {
-				document.write('<a class="btn btn-primary" href="javascript:history.back()">返回</a> <a class="btn btn-info" href="/">首页</a>');
+				document.write('<a class="btn btn-primary" href="javascript:history.back()">{lang goback}</a> <a class="btn btn-info" href="/">首页</a>');
 			} else {
 				document.write('<a class="btn btn-primary" href="/">首页</a>');
 			}
