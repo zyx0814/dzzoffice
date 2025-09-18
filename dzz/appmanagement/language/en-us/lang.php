@@ -31,6 +31,7 @@ $lang = array(
     'SERVER_SOFTWARE' => 'Running Environment',
     'online_user' => 'Online Users',
     'user_growth_statistics' => 'User Growth Statistics',
+    'click_to_view' => 'Click to View',
     'file_num' => 'File Number',
     'version_date' => 'Release Date',
     'server_info' => 'Server Information',

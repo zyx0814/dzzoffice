@@ -6,20 +6,6 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-var _header = {
-	init: function(e) {
-		_header.formhash = e
-	},
-	loging_close: function() {
-		showDialog('<span style="font-size:1.28rem">'+__lang.js_exit+'</span>', "confirm", "",
-		function() {
-			jQuery.get("user.php?mod=login&op=logging&action=logout&formhash=" + _header.formhash + "&t=" + (new Date).getTime(),
-			function(e) {
-				window.location.reload()
-			})
-		})
-	}
-}
 var BROWSER = {},
 USERAGENT = navigator.userAgent.toLowerCase();
 BROWSER.ie11 ? (BROWSER.ie = 11, BROWSER.rv = 11) : BROWSER.rv = 0,

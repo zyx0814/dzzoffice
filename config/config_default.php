@@ -134,6 +134,7 @@ $_config['output']['tplrefresh'] 		= 1;		// 模板自动刷新开关 0=关闭, 1
 
 $_config['output']['language'] 			= 'zh-cn';	// 页面语言 zh-cn/zh-tw
 $_config['output']['language_list']['zh-cn']='简体中文';	// 页面语言 zh-CN/en-US
+$_config['output']['language_list']['en-us']='English';
 
 $_config['output']['staticurl'] 		= 'static/';	// 站点静态文件路径，“/”结尾
 $_config['output']['ajaxvalidate']		= 0;		// 是否严格验证 Ajax 页面的真实性 0=关闭，1=打开
