@@ -178,4 +178,5 @@ $lang = array(
     'myCountCenter' => '个人中心',
     'register_welcome_tip' => '欢迎注册',
     'login_log' => '登录记录',
+    'register_ctrl' => '抱歉，您的 IP 地址在 {regctrl} 小时内无法注册',
 );

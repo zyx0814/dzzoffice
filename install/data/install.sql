@@ -760,6 +760,14 @@ CREATE TABLE `dzz_process` (
   KEY `expiry` (`expiry`)
 ) ENGINE=MEMORY DEFAULT CHARSET=utf8 COMMENT='进程表';
 
+DROP TABLE IF EXISTS `dzz_regip`;
+CREATE TABLE `dzz_regip` (
+  `ip` varchar(45) NOT NULL DEFAULT '',
+  `dateline` int(10) unsigned NOT NULL DEFAULT '0',
+  `count` smallint(6) NOT NULL DEFAULT '0',
+  KEY ip (ip)
+) ENGINE=MEMORY DEFAULT CHARSET=utf8 COMMENT='注册IP表';
+
 DROP TABLE IF EXISTS `dzz_resources`;
 CREATE TABLE `dzz_resources` (
   `rid` char(32) NOT NULL COMMENT '文件唯一标识',

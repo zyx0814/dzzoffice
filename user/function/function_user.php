@@ -191,11 +191,14 @@ function replacesitevar($string, $replaces = array()) {
     global $_G;
     $sitevars = array(
         '{sitename}' => $_G['setting']['sitename'],
-
+        '{version}' => CORE_VERSION,
+        '{years}' => date("Y"),
+        '{clientip}' => $_G['clientip'],
         '{time}' => dgmdate(TIMESTAMP, 'Y-n-j H:i'),
         '{adminemail}' => $_G['setting']['adminemail'],
         '{username}' => $_G['member']['username'],
-        '{myname}' => $_G['member']['username']
+        '{myname}' => $_G['member']['username'],
+        '{bbname}' => $_G['setting']['bbname'],
     );
     $replaces = array_merge($sitevars, $replaces);
     return str_replace(array_keys($replaces), array_values($replaces), $string);
@@ -234,7 +237,7 @@ function checkfollowfeed() {
         if (!empty($uids)) {
             $count = C::t('home_follow_feed')->count_by_uid_dateline($uids, $lastcheckfeed);
             if ($count) {
-                notification_add($_G['uid'], 'follow', 'member_follow', array('count' => $count, 'from_id' => $_G['uid'], 'from_idtype' => 'follow'), 1);
+                dzz_notification::notification_add($_G['uid'], 'follow', 'member_follow', array('count' => $count, 'from_id' => $_G['uid'], 'from_idtype' => 'follow'), 1);
             }
         }
     }

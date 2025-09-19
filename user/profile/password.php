@@ -132,6 +132,7 @@ if ($do == 'editpass') {
     $checklpp = array();
     $checklpp[$lpp] = 'selected="selected"';
     $keyword = "uid=" . $_G['uid'];
+    $pattern = '/\b' . preg_quote($keyword, '/') . '\b/';
     $extrainput = '';
     $operation = "loginlog";
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
@@ -189,7 +190,7 @@ if ($do == 'editpass') {
     $logs = file($logdir . $lastlog["file"]);
     $logs = array_reverse($logs);
     foreach ($logs as $key => $value) {
-        if (strpos($value, $keyword) === false) {
+        if (!preg_match($pattern, $value)) {
             unset($logs[$key]);
         }
     }

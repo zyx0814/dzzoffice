@@ -40,21 +40,23 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 
 更多应用可前往[DzzOffice 应用市场](http://www.dzzoffice.com/index.php?mod=dzzmarket)获取。
 
-## 运行环境
-为了确保 DzzOffice 能够正常运行，请确保您的运行环境满足以下要求：
-- 操作系统：Linux、Windows、Mac OS（推荐Linux）
-- PHP：7.0+（推荐 PHP 7.4）
-- Web 服务器：Apache、Nginx（推荐 Nginx）
-- MySQL 版本：5.5.3+ （推荐 MySQL 5.7）
-- 客户端浏览器: 推荐使用 Chrome 60+、Firefox 60+、iOS 12+、IE 10+
-
 ## 安装部署
+
+### 软件环境要求
+1. **操作系统**：支持Linux、Windows、Mac OS，推荐使用Linux。
+2. **数据库**：支持MySQL 5.5.3+（推荐MySQL 5.7+或MySQL 8.0+）、MariaDB 10.2+。
+3. **Web服务器软件**：支持Apache 2.4+、Nginx 1.18+（推荐）、Zeus、IIS等，使用Nginx时需搭配php-fpm。
+4. **PHP运行环境**：支持PHP 7.0+（推荐PHP 7.4或PHP 8.0+）。
+5. **客户端浏览器**：推荐使用Chrome 60+、Firefox 60+、iOS 12+、IE 10+。
+6. **离线部署说明**：DzzOffice完全支持离线部署，但部分插件（如“永中office预览”）的正常使用有赖于公网提供的服务，使用此类插件时需连接外网。
 
 ### 通用安装
 1. 下载最新版安装包，将解压后的所有文件上传到服务器的 Web 根目录（如 /var/www/html 或面板创建的网站目录）；也可直接上传 zip 安装包后通过服务器工具在线解压。
 2. 在浏览器上访问站点域名，程序会自动跳转到安装页面，按照提示安装即可。
 
-### Docker 部署: https://github.com/zyx0814/dzzoffice-docker
+### Docker 部署
+
+镜像地址：https://github.com/zyx0814/dzzoffice-docker
 
 ## DzzOffice 在线更新方法
 

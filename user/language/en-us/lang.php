@@ -176,4 +176,5 @@ $lang = array(
     'myCountCenter' => 'Personal Center',
     'register_welcome_tip' => 'Welcome to register',
     'login_log' => 'Login Log',
+    'register_ctrl' => 'Sorry, your IP address cannot be registered within {regctrl} hours',
 );

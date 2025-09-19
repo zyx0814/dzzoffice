@@ -116,6 +116,55 @@ if (!submitcheck('regsubmit')) {
         'password' => $result['password'],
         'groupid' => $result['groupid'],
     ), 0);
+    $welcomemsg = & $setting['welcomemsg'];
+    $welcomemsgtitle = & $setting['welcomemsgtitle'];
+    $welcomemsgtxt = & $setting['welcomemsgtxt'];
+    $email = $result['email'];
+    $username = $result['username'];
+    if($welcomemsg && !empty($welcomemsgtxt)) {
+        $welcomemsgtitle = replacesitevar($welcomemsgtitle);
+        $welcomemsgtxt = replacesitevar($welcomemsgtxt);
+        if($welcomemsg == 1) {
+            $welcomemsgtxt = nl2br(str_replace(':', '&#58;', $welcomemsgtxt));
+            $notevars = array(
+                'from_id' => 0,
+                'from_idtype' => 'welcomemsg',
+                'url' => '',
+                'author' => $_G['username'],
+                'authorid' => $_G['uid'],
+                'note_title' => $welcomemsgtitle,
+                'note_message' => $welcomemsgtxt
+            );
+            $action = 'register_welcomemsg';
+            $type = 'register_welcomemsg_' . $result['uid'];
+
+            dzz_notification::notification_add($result['uid'], $type, $action, $notevars);
+        } elseif($welcomemsg == 2) {
+            if (!sendmail_cron("$username <$email>", $welcomemsgtitle, $welcomemsgtxt)) {
+                runlog('sendmail', "$email sendmail failed.");
+                return false;
+            }
+        } elseif($welcomemsg == 3) {
+            if (!sendmail_cron("$username <$email>", $welcomemsgtitle, $welcomemsgtxt)) {
+                runlog('sendmail', "$email sendmail failed.");
+                return false;
+            }
+            $welcomemsgtxt = nl2br(str_replace(':', '&#58;', $welcomemsgtxt));
+            $notevars = array(
+                'from_id' => 0,
+                'from_idtype' => 'welcomemsg',
+                'url' => '',
+                'author' => $_G['username'],
+                'authorid' => $_G['uid'],
+                'note_title' => $welcomemsgtitle,
+                'note_message' => $welcomemsgtxt
+            );
+            $action = 'register_welcomemsg';
+            $type = 'register_welcomemsg_' . $result['uid'];
+
+            dzz_notification::notification_add($result['uid'], $type, $action, $notevars);
+        }
+    }
 
     //设置显示提示文字
     $param = daddslashes(array('sitename' => $setting['sitename'], 'username' => $result['username'], 'usergroup' => $_G['cache']['usergroups'][$result['groupid']]['grouptitle'], 'uid' => $result['uid']));
