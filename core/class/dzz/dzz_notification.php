@@ -21,13 +21,27 @@ class dzz_notification {
         if (!($tospace = getuserbyuid($touid))) {
             return false;
         }
-
-        $notestring = lang($note, $notevars, '', $langfolder);
-        $notestring_wx = lang($note . '_wx', $notevars, '', $langfolder);
-        $redirect = lang($note . '_redirecturl', $notevars, '', $langfolder);
-
-
-        $title = lang($note . '_title', $notevars, '', $langfolder);
+        
+        if($notevars['note_title']) {
+            $title = $notevars['note_title'];
+        } else {
+            $title = lang($note . '_title', $notevars, '', $langfolder);
+        }
+        if($notevars['note_message']) {
+            $notestring = $notevars['note_message'];
+        } else {
+            $notestring = lang($note, $notevars, '', $langfolder);
+        }
+        if($notevars['note_wx']) {
+            $notestring_wx = $notevars['note_wx'];
+        } else {
+            $notestring_wx = lang($note . '_wx', $notevars, '', $langfolder);
+        }
+        if($notevars['note_url']) {
+            $redirect = $notevars['note_url'];
+        } else {
+            $redirect = lang($note . '_redirecturl', $notevars, '', $langfolder);
+        }
         $oldnote = array();
         if(!$_G['setting']['notificationrepetition']) {
             $oldnote = C::t('notification')->fetch_by_fromid_uid_type($notevars['from_id'], $notevars['from_idtype'], $touid, $type);

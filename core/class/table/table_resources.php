@@ -581,7 +581,7 @@ class table_resources extends dzz_table {
                             if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
                             else $temp[] = "0";
                         } else {
-                            $temp[] = " uid='{$_G['uid']}'";
+                            //$temp[] = " uid='{$_G['uid']}'";
                         }
                     }
                 }
@@ -608,7 +608,7 @@ class table_resources extends dzz_table {
                         if ($where1) $temp[] = "(" . implode(' OR ', $where1) . ")";
                         else $temp[] = "0";
                     } else {
-                        $temp[] = " uid='{$_G['uid']}'";
+                        //$temp[] = " uid='{$_G['uid']}'";
                     }
                 }
             }

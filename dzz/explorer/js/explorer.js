@@ -335,6 +335,10 @@ _explorer.routerule = function (path, prefix) {
 				hash = 'home&do=file&fid=' + data.success['fid'];
 			}
 			location.hash = hash;
+		} else if (data.error) {
+			showmessage('没有找到该路径', 'info', 3000, 1);
+		} else {
+			showmessage(__lang.do_failed, 'error', 3000, 1);
 		}
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
 		showmessage(__lang.do_failed, 'error', 3000, 1);

@@ -15,6 +15,9 @@ if (!$explorer_setting['useronperm']) {
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 $fid = isset($_GET['fid']) ? intval($_GET['fid']) : $folder['fid'];
 if ($folderinfo = C::t('folder')->fetch_folderinfo_by_fid($fid)) {
+    if (!$folderinfo['gid'] && ($folderinfo['uid'] !== $_G['uid'])) {
+        showmessage(lang('no_privilege'), dreferer());
+    }
     $folderpatharr = getpath($folderinfo['path']);
     $folderpathstr = implode('\\', $folderpatharr);
     //统计打开次数
