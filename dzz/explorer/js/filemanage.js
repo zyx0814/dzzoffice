@@ -1803,7 +1803,7 @@ _filemanage.collect = function (rid) {
 	var collect = 1;
 	var ico = null;
 	var i = 0;
-//	console.log(_filemanage.selectall.icos.length);
+	//	console.log(_filemanage.selectall.icos.length);
 	if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 		for (i = 0; i < _filemanage.selectall.icos.length; i++) {
 			ico = _explorer.sourcedata.icos[_filemanage.selectall.icos[i]];
@@ -1824,7 +1824,6 @@ _filemanage.collect = function (rid) {
 		dpaths = [ico.dpath];
 	}
 	//var path=encodeURIComponent(dpaths.join(','));
-//	console.log(dpaths.length);
 	if (dpaths.length) {
 		$.post(_explorer.appUrl + '&op=ajax&operation=collect', {
 			"paths": dpaths,
@@ -1873,7 +1872,6 @@ _filemanage.collect = function (rid) {
 					}
 				}
 				layer.msg(msg, {offset:'10px'});
-				//console.log('收藏成功时处理');
 			}
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
 			layer.msg(__lang.do_failed, {offset:'10px'});
@@ -2756,5 +2754,5 @@ _filemanage.setOpenDefaultOK = function() {
 };
 _filemanage.browserOpen = function(rid) {
 	var icosdata = _explorer.sourcedata.icos[rid],t;
-	window.open(SITEURL + 'index.php?mod=io&op=fileOut&path=' + icosdata.dpath + '&filename=' + icosdata.filename);
+	window.open(SITEURL + 'index.php?mod=io&op=fileOut&path=' + icosdata.dpath + '&filename=' + icosdata.name);
 };
