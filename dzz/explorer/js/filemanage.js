@@ -658,20 +658,22 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 		if (subdata === true) {
 			el.find('.openwith').remove();
 		} else if (subdata === false) {
-			el.find('.openwith').remove();
 			el.find('.open').remove();
-		} else if (subdata.length === 1) {
-			el.find('.openwith').remove();
-		} else if (subdata.length > 1) {
+		} else if (subdata.length > 0) {
 			for (i = 0; i < subdata.length; i++) {
 				info += '<li><a class="dropdown-item" onClick="_filemanage.Open(\'' + data.rid + '\',\'' + subdata[i].extid + '\')" href="javascript:;"><img class="filee-icon" src="' + subdata[i].icon + '"><span class="file-text">' + subdata[i].name + '</span></a></li>';
 			}
 			//增加选择默认
 			info +='<li><hr class="dropdown-divider"></li>';
-			info +='<li><a class="dropdown-item" onClick="_filemanage.setOpenDefault(\''+data.rid+'\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;" href="javascript:;"><i class="mdi mdi-cog pe-2"></i>'+__lang.set_default_open+'</a>';
+			info +='<li><a class="dropdown-item" onClick="_filemanage.setOpenDefault(\''+data.rid+'\');" href="javascript:;"><i class="mdi mdi-cog pe-2"></i>'+__lang.set_default_open+'</a>';
 			info +='</li>';
-			el.find('.openwith').find('ul.dropdown-menu').html(info);
 		}
+		info +='<li class="browserOpen"><a class="dropdown-item" onClick="_filemanage.browserOpen(\''+data.rid+'\');" href="javascript:;"><i class="mdi mdi-web pe-2"></i>'+__lang.open_browser+'</a></li>';
+		el.find('.openwith').find('ul.dropdown-menu').html(info);
+	}
+	if (!_explorer.Permission('download', data)) {
+		el.find('.browserOpen').remove();
+		if(subdata === false) el.find('.openwith').remove();
 	}
 	//如果在收藏，搜索和最近使用页面去掉删去和剪切和重命名
 	if (_filemanage.winid.indexOf('collect') != -1 || _filemanage.winid.indexOf('recent') != -1 || _filemanage.winid.indexOf('search') != -1) {
@@ -946,19 +948,16 @@ function contextmenuico(rid) {
 		el.hide();
 		return;
 	}
-		//判断打开方式
+	//判断打开方式
+	var html = '';
 	var subdata = getExtOpen(obj.type == 'shortcut' ? obj.tdata : obj);
 	if (subdata === true) {
 		el.find('.openwith').remove();
 	} else if (subdata === false) {
-		el.find('.openwith').remove();
 		el.find('.open').remove();
-	} else if (subdata.length == 1) {
-		el.find('.openwith').remove();
-	} else if (subdata.length > 1) {
-		var html = '';
+	} else if (subdata.length > 0) {
 		for (var i = 0; i < subdata.length; i++) {
-			html += '<li class="menu-item" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;" title="' + subdata[i].name + '"><div class="layui-menu-body-title dropdown-item">';
+			html += '<li class="menu-item" onClick="_filemanage.Open(\'' + rid + '\',\'' + subdata[i].extid + '\');" title="' + subdata[i].name + '"><div class="layui-menu-body-title dropdown-item">';
 			if (subdata[i].icon) {
 				html += '<span class="pe-2"><img width="24px" height="24px" src=' + subdata[i].icon + '></span>';
 			}
@@ -967,12 +966,18 @@ function contextmenuico(rid) {
 		}
 		//增加选择默认
 		html +='<li class="layui-menu-item-divider"><div class="layui-menu-body-title dropdown-item"></div></li>';
-		html +='<li class="layui-menu-item-parent menu-item" onClick="_filemanage.setOpenDefault(\''+rid+'\');jQuery(\'#right_contextmenu\').hide();jQuery(\'#shadow\').hide();return false;">';
+		html +='<li class="layui-menu-item-parent menu-item" onClick="_filemanage.setOpenDefault(\''+rid+'\');">';
 		html +='<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-cog pe-2"></i>'+__lang.set_default_open+'</div>';
 		html +='</li>';
-		el.find('.openwithdata').html(html);
-	} else {
-		el.find('.openwith').remove();
+	}
+	
+	html +='<li class="layui-menu-item-parent menu-item browserOpen" onClick="_filemanage.browserOpen(\''+rid+'\');">';
+	html +='<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-web pe-2"></i>'+__lang.open_browser+'</div>';
+	html +='</li>';
+	el.find('.openwithdata').html(html);
+	if (!_explorer.Permission('download', obj)) {
+		el.find('.browserOpen').remove();
+		if(subdata === false) el.find('.openwith').remove();
 	}
 	el.find('.layui-menu-item-divider').each(function () {
 		if (!jQuery(this).next().first().hasClass('menu-item') || !jQuery(this).prev().first().hasClass('menu-item')) jQuery(this).remove();
@@ -2748,4 +2753,8 @@ _filemanage.setOpenDefaultOK = function() {
         _explorer.extopen.user[_explorer.extopen.all[n].ext] = n
     }),
     _filemanage.Open(i, n)
+};
+_filemanage.browserOpen = function(rid) {
+	var icosdata = _explorer.sourcedata.icos[rid],t;
+	window.open(SITEURL + 'index.php?mod=io&op=fileOut&path=' + icosdata.dpath + '&filename=' + icosdata.filename);
 };

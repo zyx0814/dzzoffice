@@ -303,6 +303,7 @@ if (submitcheck('profilesubmit')) {
         }
     }
     $langList = $_G['config']['output']['language_list'];
+    $my_info = (intval($_G['group']['perm']) & perm_binPerm::getPowerArr()['my_info']) ? true : false;
     include template('profile');
 }
 

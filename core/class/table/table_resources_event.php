@@ -186,7 +186,6 @@ class table_resources_event extends dzz_table {
             $events[] = $v;
         }
         $events = self::result_events_has_avatarstatusinfo($uids, $events);
-
         return $events;
     }
 

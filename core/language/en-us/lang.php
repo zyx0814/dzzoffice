@@ -1611,6 +1611,7 @@ $lang = array(
     'my_permission' => 'My Permissions',
     'no_permission' => 'You do not have relevant permissions',
     'my_disk' => 'Personal Cloud Disk',
+    'my_info' => 'Configuration changes (setting profile picture/changing password, etc.)',
     'org_group' => 'Organization Group',
     'folder_permissions' => 'Folder Permissions',
     'folder_permission_range' => 'Folder Permission Scope',

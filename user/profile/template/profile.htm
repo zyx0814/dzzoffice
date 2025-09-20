@@ -78,8 +78,8 @@
         <img src="avatar.php?uid=$_G['uid']" alt="{$_G['username']}" class="cropimage avatar-xl rounded-circle me-3">
         <div class="flex-grow-1">
           <input type="hidden" class="form-control image-src" name="picurl_two" id="picurl_two" value="avatar.php?uid=$_G['uid']" />
-          <button class="btn btn-outline-primary trigger-btn" type="button">修改头像</button>
-          <p class="mt-1 mb-0">选择一张你喜欢的图片，裁剪后会自动生成200x200大小，上传图片大小不能超过2M。</p>
+          <button class="btn btn-outline-primary trigger-btn" type="button" <!--{if $my_info}-->disabled<!--{/if}-->>修改头像</button>
+          <p class="mt-1 mb-0">选择一张您喜欢的图片，裁剪后会自动生成200x200大小，上传图片大小不能超过2M。</p>
         </div>
       </div>
       <form id="accountform" name="accountform" class="row gx-3 gy-2 align-items-center" action="{MOD_URL}" method="post" enctype="multipart/form-data" target="frame_profile" onsubmit="clearErrorInfo();">

@@ -463,37 +463,47 @@ class table_folder extends dzz_table {
 
     public function fetch_folder_by_pfid($pfid, $field = array()) {//查询群组目录及文件夹基本信息
         global $_G;
-        $fielddata = '*';
-        if (!empty($field)) {
-            $fielddata = implode(',', $field);
-        }
+        $fielddata = !empty($field) ? implode(',', $field) : '*';
         $pfid = intval($pfid);
         $infoarr = array();
-        if ($folder = C::t('folder')->fetch($pfid)) {
-            $where1 = array();
-            if (!$this->noperm && $folder['gid'] > 0) {
-                if (perm_check::checkperm_Container($folder['fid'], 'read2')) {
-                    $where1[] = "1";
-                } elseif (perm_check::checkperm_Container($folder['fid'], 'read1')) {
-                    $where1[] = "uid='{$_G['uid']}'";
-                }
-                $where1 = array_filter($where1);
-                if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
-                else $temp[] = "0";
-            } else {
-                $temp[] = " uid='{$_G['uid']}'";
-            }
-            $where[] = '(' . implode(' and ', $temp) . ')';
-            unset($temp);
+        $temp = array();
+        $where = array();
+        $folder = C::t('folder')->fetch_folderinfo_by_fid($pfid);
+        if (!$folder) {
+            return $infoarr;
         }
-        $wheresql = "where  pfid = %d and flag != %s and ";
-        if ($where) $wheresql .= implode(' AND ', $where);
-        else return false;
-        $infoarr = DB::fetch_all("select $fielddata from %t $wheresql and isdelete < 1 order by 
-		convert(fname,UNSIGNED)" .
-            ",SUBSTRING_INDEX(fname,'-',1)" .
-            ",convert(replace(replace(SUBSTRING_INDEX(fname,'-',2),SUBSTRING_INDEX(fname,'-',1),''),'-','') , UNSIGNED) " .
-            ",convert(replace(replace(SUBSTRING_INDEX(fname,'-',3),SUBSTRING_INDEX(fname,'-',2),''),'-','') , UNSIGNED) ", array($this->_table, $pfid, 'organization'));
+        if (!$this->noperm && $folder['gid'] > 0) {
+            $where1 = array();
+            if (perm_check::checkperm_Container($folder['fid'], 'read2')) {
+                $where1[] = "1";
+            } elseif (perm_check::checkperm_Container($folder['fid'], 'read1')) {
+                $where1[] = "uid='{$_G['uid']}'";
+            }
+            $where1 = array_filter($where1);
+            $temp[] = !empty($where1) ? "(" . implode(' OR ', $where1) . ")" : "0";
+        } else {
+            if (empty($_G['uid']) || !preg_match('/^dzz:uid_(\d+):/', $folder['path'], $matches) || $matches[1] != $_G['uid']) {
+                $temp[] = "0";
+            } else {
+                $temp[] = "1";
+            }
+        }
+        if (!empty($temp)) {
+            $where[] = '(' . implode(' and ', $temp) . ')';
+        } else {
+            return $infoarr;
+        }
+        $wheresql = "WHERE pfid = %d AND flag != %s";
+        $wheresql .= " AND " . implode(' AND ', $where);
+        $wheresql .= " AND isdelete < 1";
+        $infoarr = DB::fetch_all(
+            "SELECT $fielddata FROM %t $wheresql ORDER BY 
+            convert(fname,UNSIGNED),
+            SUBSTRING_INDEX(fname,'-',1),
+            convert(replace(replace(SUBSTRING_INDEX(fname,'-',2),SUBSTRING_INDEX(fname,'-',1),''),'-',''), UNSIGNED),
+            convert(replace(replace(SUBSTRING_INDEX(fname,'-',3),SUBSTRING_INDEX(fname,'-',2),''),'-',''), UNSIGNED)",
+            array($this->_table, $pfid, 'organization')
+        );
         return $infoarr;
     }
 
@@ -502,26 +512,31 @@ class table_folder extends dzz_table {
         global $_G;
         $pfid = intval($pfid);
         $infoarr = array();
-        if ($folder = C::t('folder')->fetch($pfid)) {
-            $where1 = array();
-            if (!$this->noperm && $folder['gid'] > 0) {
-                $folder['perm'] = perm_check::getPerm($folder['fid']);
-                if ($folder['perm'] > 0) {
-                    if (perm_binPerm::havePower('read2', $folder['perm'])) {
-                        $where1[] = "1";
-                    } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
-                        $where1[] = "uid='{$_G['uid']}'";
-                    }
-                }
-                $where1 = array_filter($where1);
-                if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
-                else $temp[] = "0";
-            } else {
-                $temp[] = " uid='{$_G['uid']}'";
-            }
-            $where[] = '(' . implode(' and ', $temp) . ')';
-            unset($temp);
+        $folder = C::t('folder')->fetch_folderinfo_by_fid($pfid);
+        if (!$folder) {
+            return $infoarr;
         }
+        $where1 = array();
+        if (!$this->noperm && $folder['gid'] > 0) {
+            $folder['perm'] = perm_check::getPerm($folder['fid']);
+            if ($folder['perm'] > 0) {
+                if (perm_binPerm::havePower('read2', $folder['perm'])) {
+                    $where1[] = "1";
+                } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
+                    $where1[] = "uid='{$_G['uid']}'";
+                }
+            }
+            $where1 = array_filter($where1);
+            if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
+            else $temp[] = "0";
+        } else {
+            if (empty($_G['uid']) || !preg_match('/^dzz:uid_(\d+):/', $folder['path'], $matches) || $matches[1] != $_G['uid']) {
+                $temp[] = "0";
+            } else {
+                $temp[] = "1";
+            }
+        }
+        $where[] = '(' . implode(' and ', $temp) . ')';
         $wheresql = "where  pfid = %d and ";
         if ($where) $wheresql .= implode(' AND ', $where);
         else return false;

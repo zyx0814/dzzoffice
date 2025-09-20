@@ -516,7 +516,6 @@ class table_organization extends dzz_table {
                 }
                 unset($setarr['orgname']);
             }
-
         }
 
         if (isset($setarr['perm']) && $setarr['perm']) {

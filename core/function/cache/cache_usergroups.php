@@ -18,8 +18,6 @@ function build_cache_usergroups() {
     savecache('usergroups', $data);
 
     build_cache_usergroups_single();
-
-
 }
 
 function build_cache_usergroups_single() {

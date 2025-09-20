@@ -43,8 +43,10 @@ class perm_binPerm {
             //'video' => 65536,    //新建视频
             // 'shortcut' => 131072,    //快捷方式
             'share' => 262144,    //分享
-            'approve' => 524288,//审批
-            'comment' => 1048576,    //评论
+            'approve' => 524288, //审批
+            'comment' => 1048576, //评论
+            'my_disk' => 2097152, //个人网盘
+            'my_info' => 4194304, //个人头像
         );
     }
 
@@ -71,6 +73,8 @@ class perm_binPerm {
             'share' => lang('share'),
             'approve' => lang('approve'),
             'comment' => lang('comment'),
+            'my_disk' => lang('my_disk'),
+            'my_info' => lang('my_info'),
         );
     }
 
@@ -98,6 +102,36 @@ class perm_binPerm {
             'share' => 'dzz dzz-share mdi mdi-share-variant',
             'approve' => 'dzz dzz-check-box mdi mdi-checkbox-marked',
             'comment' => 'dzz dzz-comment mdi mdi-comment',
+            'my_disk' => 'dzz dzz-mydisk mdi mdi-account-box',
+            'my_info' => 'dzz dzz-avatar mdi mdi-account-circle',
+        );
+    }
+
+    /**
+     * 新增：权限类型映射（区分文件夹操作权限/控制类权限）
+     * @return array 键：权限键名，值：权限类型（folder=文件夹操作，control=控制类）
+     */
+    public static function getPowerType() {
+        return array(
+            'read1' => 'folder',
+            'read2' => 'folder',
+            'delete1' => 'folder',
+            'delete2' => 'folder',
+            'edit1' => 'folder',
+            'edit2' => 'folder',
+            'download1' => 'folder',
+            'download2' => 'folder',
+            'copy1' => 'folder',
+            'copy2' => 'folder',
+            'upload' => 'folder',
+            'folder' => 'folder',
+            'share' => 'folder',
+            'approve' => 'folder',
+            'comment' => 'folder',
+
+            'flag' => '',
+            'my_disk' => 'control', // 对个人网盘生效
+            'my_info' => 'user',
         );
     }
 

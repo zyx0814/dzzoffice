@@ -170,7 +170,7 @@ cropImage.prototype = {
                     _this.stopCropper();
                     jQuery('.cropimage').attr('src', base64Data);
                 } else if(data.error) {
-                    showmessage(data.error, 'danger', 3, 1);
+                    showmessage(data.error, 'danger', 3000, 1);
                 } else {
                     showmessage('上传失败', 'danger', 3000, 1);
                 }

@@ -12,20 +12,17 @@ if (!defined('IN_DZZ')) {
 Hook::listen('email_chk', $_GET);
 $navtitle = lang('myCountCenter');
 Hook::listen('check_login');
-
+$type = isset($_GET['returnType']) ? $_GET['returnType'] : 'json';
 $do = isset($_GET['do']) ? trim($_GET['do']) : 'editpass';
-
 $uid = intval($_G['uid']);
 $seccodecheck = $_G['setting']['seccodestatus'] & 4;
-$hook_qqbind_arr = array("uid" => $uid);
 $member = C::t('user_profile')->get_userprofile_by_uid($_G['uid']);
-//$openid= C::t('user_qqconnect')->fetch_bindstatus_by_uid($uid);
-
+$my_info = (intval($_G['group']['perm']) & perm_binPerm::getPowerArr()['my_info']) ? true : false;
 if ($do == 'editpass') {
     $navtitle = lang('password_edit');
     $strongpw = ($_G['setting']['strongpw']) ? json_encode($_G['setting']['strongpw']) : '';
     if (isset($_GET['editpass'])) {
-
+        if ($my_info) showTips(array('error' => lang('no_modify_password')), $type);
         //验证提交是否合法，阻止外部非法提交
         chk_submitroule($type);
 
@@ -237,12 +234,12 @@ if ($do == 'editpass') {
     $multi = multi($count, $lpp, $page, $theurl, 'pull-right');
 } elseif ($do == 'changeemail') {
     $navtitle = lang('bindemail_subject');
-
     $emailchange = $member['emailstatus'];
 
     $bindemail = isset($_GET['newemail']) ? $_GET['newemail'] : '';
 
     if (!empty($bindemail)) {
+        if ($my_info) showTips(array('error' => lang('no_modify_group')), $type);
 
         if (C::t('user')->chk_email_by_uid($bindemail, $uid)) {
 
@@ -275,34 +272,6 @@ if ($do == 'editpass') {
 
         }
 
-    }
-} elseif ($do == 'bindqq') {//绑定qq
-
-    @session_start();
-
-    if ($_G['setting']['qq_login'] != '1') {
-
-        showTips(array('lang' => lang('qq_login_closed'), 'referer' => $_G['siteurl']), 'html');
-    }
-
-    require_once DZZ_ROOT . "./user/api_qqlogin/qqConnectAPI.php";
-
-    $inurl = $_SERVER["HTTP_REFERER"]; //来路
-
-    $_SESSION['bindqq'] = true;
-
-    $_SESSION['bind_ref'] = $inurl;
-
-    $qc = new QC();
-
-    $qc->qq_login();
-
-} elseif ($do == 'unbindqq') {//取消qq绑定
-
-    if (C::t('user_qqconnect')->delete($_GET['openid'])) {
-        showmessage(lang('qq_unbind_success'), dreferer(), array(), array('alert' => 'right'));
-    } else {
-        showmessage(lang('qq_unbind_failed'), dreferer(), array(), array('alert' => 'right'));
     }
 }
 //三方登录未设置密码时不需要输入原密码

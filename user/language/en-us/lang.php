@@ -177,4 +177,6 @@ $lang = array(
     'register_welcome_tip' => 'Welcome to register',
     'login_log' => 'Login Log',
     'register_ctrl' => 'Sorry, your IP address cannot be registered within {regctrl} hours',
+    'no_modify_password' => 'Your user group is not allowed to modify your password. ',
+    'no_modify_group' => 'The function is not supported in your user group. ',
 );

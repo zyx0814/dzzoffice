@@ -134,9 +134,12 @@ class table_user extends dzz_table {
             parent::update($uid, array('adminid' => 1, 'groupid' => 1));
         } else {
             if (empty($groupid)) $groupid = 9;
-            /*if(C::t('organization_admin')->fetch_orgids_by_uid($uid)){
-                $groupid=2;
-            }*/
+            //因为用户组权限开放，所有这里就不强制设为机构管理员了，以免用户组权限被覆盖
+            // if(C::t('organization_admin')->fetch_orgids_by_uid($uid)){
+            //     $groupid=2;
+            // } elseif($groupid == 2) {
+            //     $groupid=9;
+            // }
             parent::update($uid, array('adminid' => 0, 'groupid' => $groupid));
         }
     }

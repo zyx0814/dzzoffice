@@ -179,4 +179,6 @@ $lang = array(
     'register_welcome_tip' => '欢迎注册',
     'login_log' => '登录记录',
     'register_ctrl' => '抱歉，您的 IP 地址在 {regctrl} 小时内无法注册',
+    'no_modify_password' => '您所在的用户组不允许修改密码。',
+    'no_modify_group' => '您所在的用户组不支持该功能。',
 );

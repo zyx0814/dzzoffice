@@ -63,26 +63,29 @@ if ($do == 'delete_group') {
 } elseif ($do == 'file') {
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if (!$fid) $fid = $group['fid'];
-    $folderinfo = C::t('folder')->fetch_folderinfo_by_fid($fid);
-    $folderpatharr = getpath($folderinfo['path']);
-    $folderpathstr = implode('\\', $folderpatharr);
-
-    //统计打开次数,如果当前文件夹在resources表无数据，则记录其文件夹id对应数据
-    if ($rid = C::t('resources')->fetch_rid_by_fid($fid)) {
-        $setarr = array(
-            'uid' => $uid,
-            'views' => 1,
-            'opendateline' => TIMESTAMP,
-            'fid' => $fid
-        );
-        C::t('resources_statis')->add_statis_by_rid($rid, $setarr);
-    } else {
-        $setarr = array(
-            'uid' => $uid,
-            'views' => 1,
-            'opendateline' => TIMESTAMP,
-        );
-        C::t('resources_statis')->add_statis_by_fid($fid, $setarr);
+    if ($folderinfo = C::t('folder')->fetch_folderinfo_by_fid($fid)) {
+        if (!$folderinfo['gid'] && (empty($_G['uid']) || !preg_match('/^dzz:uid_(\d+):/', $folderinfo['path'], $matches) || $matches[1] != $_G['uid'])) {
+            showmessage(lang('no_privilege'), dreferer());
+        }
+        $folderpatharr = getpath($folderinfo['path']);
+        $folderpathstr = implode('\\', $folderpatharr);
+        //统计打开次数,如果当前文件夹在resources表无数据，则记录其文件夹id对应数据
+        if ($rid = C::t('resources')->fetch_rid_by_fid($fid)) {
+            $setarr = array(
+                'uid' => $uid,
+                'views' => 1,
+                'opendateline' => TIMESTAMP,
+                'fid' => $fid
+            );
+            C::t('resources_statis')->add_statis_by_rid($rid, $setarr);
+        } else {
+            $setarr = array(
+                'uid' => $uid,
+                'views' => 1,
+                'opendateline' => TIMESTAMP,
+            );
+            C::t('resources_statis')->add_statis_by_fid($fid, $setarr);
+        }
     }
 } elseif ($do == 'group_ajax') {
     $operation = isset($_GET['operation']) ? trim($_GET['operation']) : '';

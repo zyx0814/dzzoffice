@@ -68,7 +68,7 @@ if ($do == 'getfolderdynamic') {
     } elseif ($fid) {//如果获取到文件夹id
         //文件夹信息
         $fileinfo = C::t('resources')->get_folderinfo_by_fid($fid);
-        if (!$fileinfo['gid'] && ($fileinfo['uid'] !== $_G['uid'])) {
+        if (!$fileinfo['gid'] && (empty($_G['uid']) || !preg_match('/^dzz:uid_(\d+):/', $fileinfo['path'], $matches) || $matches[1] != $_G['uid'])) {
             return;
         }
         $gid = $fileinfo['gid'];

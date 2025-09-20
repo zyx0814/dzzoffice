@@ -83,7 +83,7 @@ class table_organization_admin extends dzz_table {
     }
 
     public function update_groupid_by_uid($uid) {
-        return true;
+        return true;//用户组开放，这里就不强制改变用户组了
         $user = getuserbyuid($uid);
         if ($user['groupid'] == 1) return;
         //判断当前用户是否仍为机构和部门管理员
@@ -118,7 +118,6 @@ class table_organization_admin extends dzz_table {
     }
 
     public function delete_by_uid_orgid($uid, $orgid) {
-
         if ($return = DB::delete($this->_table, "uid='{$uid}' and orgid='{$orgid}'")) {
             self::update_groupid_by_uid($uid);
             return $return;

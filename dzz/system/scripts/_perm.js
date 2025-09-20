@@ -74,31 +74,6 @@ _explorer.FileSPower=function(power,action){//判断有无权限;
     return true; 
 }
 
-_explorer.getFidByContainer=function(container){
-	if(container.indexOf('icosContainer_body_')!==-1){
-		return _explorer.space.typefid['desktop'];
-	}else if(container=='taskbar_dock'){
-		return _explorer.space.typefid['dock'];
-	}else if(container=='_dock'){
-		return _explorer.space.typefid['dock'];
-	}else if(container.indexOf('icosContainer_folder_')!==-1){
-		return container.replace('icosContainer_folder_','');
-	}
-}
-_explorer.getContainerByFid=function(fid){
-	var type='';
-	for(var i in _explorer.space.typefid){
-		if(fid==_explorer.space.typefid[i]) type=i;
-	}
-	var container='';
-	if(type=='dock') container='_dock';
-	else if(type=='desktop') container='icosContainer_body_'+_layout.fid;
-	else{
-		container='icosContainer_folder_'+fid;
-	}
-	return container;
-}
-
 _explorer.Permission_Container=function(action,fid){
 	//预处理些权限
 	//首先判断超级权限
@@ -170,7 +145,6 @@ _explorer.Permission=function(action,data){
 		if(data.bz && data.bz.split(':')[0]=='ftp') return true;
 		else return false;
 	}else if(action=='rename'){ //重命名
-		if(fid==_explorer.space.typefid['dock']) return false;
 		if(data.type=='folder' && data.bz && (data.bz.split(':')[0]=='ALIOSS' || data.bz.split(':')[0]=='qiniu')) return false;
 		action='delete';
 		

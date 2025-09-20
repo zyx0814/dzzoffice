@@ -8,6 +8,7 @@ if ($_G['setting']['bbclosed']) {
     dheader("Location: user.php?mod=login");
 }
 global $_G;
+$navtitle = lang('lostpassword');
 if (isset($_GET['lostpwsubmit'])) {
     $_GET['email'] = strtolower(trim($_GET['email']));
     $type = $_GET['returnType'];

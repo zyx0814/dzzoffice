@@ -170,4 +170,25 @@ function clearHooksCache() {
     @unlink(DZZ_ROOT . './data/cache/tags.php');
 }
 
+function clearpermcache() {
+    $cacheDir = DZZ_ROOT . '/data/cache/perm/';
+    if (!is_dir($cacheDir)) {
+        return true;
+    }
+
+    $dirHandle = @dir($cacheDir);
+    if (!$dirHandle) {
+        return false;
+    }
+    
+    while (($entry = $dirHandle->read()) !== false) {
+        if (preg_match('/\.php$/', $entry)) {
+            $filePath = $cacheDir . $entry;
+            @unlink($filePath);
+        }
+    }
+    
+    $dirHandle->close();
+    return true;
+}
 ?>

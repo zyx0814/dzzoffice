@@ -13,16 +13,16 @@ if (!defined('IN_DZZ')) {
 Hook::listen('check_login');
 
 if (submitcheck('avatarsubmit')) {
-
+    $my_info = (intval($_G['group']['perm']) & perm_binPerm::getPowerArr()['my_info']) ? true : false;
+    if ($my_info) exit(json_encode(array('error' => '您所在的用户组没有权限修改头像！')));
     if ($_GET['imagedata']) $success = upbase64($_GET['imagedata'], $_G['uid']);
     if ($_GET['aid']) IO::delete('attach::' . intval($_GET['aid']));
-    if ($success) exit(json_encode(array('msg' => 'success')));
-    else exit(json_encode(array('error' => '头像保存错误，请稍候重试')));
-
-    showmessage('do_success', 'user.php?mod=profile&op=avatar');
-
+    if ($success) {
+        exit(json_encode(array('msg' => 'success')));
+    } else {
+        exit(json_encode(array('error' => '头像保存错误，请稍候重试')));
+    }
 } elseif ($_GET['do'] == 'imageupload') {
-
     include libfile('class/uploadhandler');
     $options = array('accept_file_types' => '/\.(gif|jpe?g|png)$/i',
         'upload_dir' => $_G['setting']['attachdir'] . 'cache/',
@@ -31,24 +31,6 @@ if (submitcheck('avatarsubmit')) {
     );
     $upload_handler = new uploadhandler($options);
     exit();
-}
-$user = C::t('user')->get_user_by_uid($_G['uid']);
-
-if (empty($user['avatarstatus']) && dzz_check_avatar($_G['uid'], 'middle')) {
-    C::t('user')->update($_G['uid'], array('avatarstatus' => '1'));
-}
-$navtitle = lang('Modify_the_picture');
-include template("avatar");
-
-function dzz_check_avatar($uid, $size = 'middle', $type = 'virtual') {
-    global $_G;
-    $url = $_G['siteurl'] . "avatar.php?uid=$uid&size=$size&type=$type&check_file_exists=1";
-    $res = dfsockopen($url, 500000, '', '', TRUE, '', 20);
-    if ($res == 1) {
-        return 1;
-    } else {
-        return 0;
-    }
 }
 
 function upBase64($base64Data, $uid) {

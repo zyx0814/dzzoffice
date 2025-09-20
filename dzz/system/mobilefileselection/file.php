@@ -89,7 +89,11 @@ switch ($disp) {
         break;
 
 }
-$folder = C::t('folder')->fetch_folderinfo_by_fid($fid);
+if ($folder = C::t('folder')->fetch_folderinfo_by_fid($fid)) {
+    if (!$folder['gid'] && (empty($_G['uid']) || !preg_match('/^dzz:uid_(\d+):/', $folder['path'], $matches) || $matches[1] != $_G['uid'])) {
+        showmessage(lang('no_privilege'), dreferer());
+    }
+}
 $folder['gid'] = ($gid) ? $gid : 0;
 $folder['ismoderator'] = $perm;
 $folderjson = json_encode(array($fid => $folder));

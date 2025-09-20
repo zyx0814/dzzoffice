@@ -449,7 +449,6 @@ _explorer.topMenu = function (hash, fid) {
 
 //通过hash值来设置左侧树的选择指示
 _explorer.jstree_select = function (hash) {
-	//if(!_explorer.jstree) return;
 	if (!hash) {
 		hash = location.hash.replace('#', '');
 	}

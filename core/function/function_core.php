@@ -2268,9 +2268,8 @@ function dzzgetspace($uid) {
         $space['fmaxspacesize'] = '未分配空间';
     }
     $space['attachextensions'] = str_replace(' ', '', $space['attachextensions']);
-    $typefid = array();
 
-    $space['typefid'] = C::t('folder')->fetch_typefid_by_uid($uid);
+    //$space['typefid'] = C::t('folder')->fetch_typefid_by_uid($uid);
     $space['maxChunkSize'] = $_G['setting']['maxChunkSize'];
     return $space;
 }
@@ -2579,30 +2578,30 @@ function checkCopy($icoid = 0, $sourcetype = '', $iscut = 0, $obz, $tbz) {
     return $copy;
 }
 
-function delete_icoid_from_container($icoid, $pfid) {
-    global $_G;
-    $typefid = C::t('folder')->fetch_typefid_by_uid($_G['uid']);
-    if ($pfid == $typefid['dock']) {
-        $docklist = DB::result_first("select docklist from " . DB::table('user_field') . " where uid='{$_G['uid']}'");
-        $docklist = $docklist ? explode(',', $docklist) : array();
-        foreach ($docklist as $key => $value) {
-            if ($value == $icoid) {
-                unset($docklist[$key]);
-            }
-        }
-        C::t('user_field')->update($_G['uid'], array('docklist' => implode(',', $docklist)));
-    } elseif ($pfid == $typefid['desktop']) {
+// function delete_icoid_from_container($icoid, $pfid) {
+//     global $_G;
+//     $typefid = C::t('folder')->fetch_typefid_by_uid($_G['uid']);
+//     if ($pfid == $typefid['dock']) {
+//         $docklist = DB::result_first("select docklist from " . DB::table('user_field') . " where uid='{$_G['uid']}'");
+//         $docklist = $docklist ? explode(',', $docklist) : array();
+//         foreach ($docklist as $key => $value) {
+//             if ($value == $icoid) {
+//                 unset($docklist[$key]);
+//             }
+//         }
+//         C::t('user_field')->update($_G['uid'], array('docklist' => implode(',', $docklist)));
+//     } elseif ($pfid == $typefid['desktop']) {
 
-        $icos = DB::result_first("select screenlist from " . DB::table('user_field') . " where uid='{$_G['uid']}'");
-        $icos = $icos ? explode(',', $icos) : array();
-        foreach ($icos as $key => $value) {
-            if ($value == $icoid) {
-                unset($icos[$key]);
-            }
-        }
-        C::t('user_field')->update($_G['uid'], array('screenlist' => implode(',', $icos)));
-    }
-}
+//         $icos = DB::result_first("select screenlist from " . DB::table('user_field') . " where uid='{$_G['uid']}'");
+//         $icos = $icos ? explode(',', $icos) : array();
+//         foreach ($icos as $key => $value) {
+//             if ($value == $icoid) {
+//                 unset($icos[$key]);
+//             }
+//         }
+//         C::t('user_field')->update($_G['uid'], array('screenlist' => implode(',', $icos)));
+//     }
+// }
 
 function dzz_update_source($type, $oid, $data, $istype = false) {
     $idtypearr = array('lid', 'vid', 'mid', 'qid', 'picid', 'did', 'fid');
@@ -2929,9 +2928,22 @@ function dzz_app_pic_save($FILE, $dir = 'appimg') {
     return false;
 }
 
-function get_permsarray() {
-    $perms = array_merge_recursive(perm_binPerm::getPowerTitle(), perm_binPerm::getPowerArr(), perm_binPerm::getPowerIcos());//获取所有权限
-    unset($perms['flag']);
+/**
+ * @param string $type 目标权限类型，默认'folder'（文件夹权限），可选'control'（控制类权限）
+ * @return array 对应类型的权限列表（结构：[标题, 数值, 图标]）
+ */
+function get_permsarray($type = 'folder') {
+    $titles = perm_binPerm::getPowerTitle();
+    $powers = perm_binPerm::getPowerArr();
+    $icos = perm_binPerm::getPowerIcos();
+    $types = perm_binPerm::getPowerType();
+    $perms = array();
+    foreach ($titles as $key => $title) {
+        if (!isset($types[$key]) || $types[$key] != $type) {
+            continue;
+        }
+        $perms[$key] = array($title,$powers[$key],$icos[$key]);
+    }
     return $perms;
 }
 
@@ -3256,7 +3268,7 @@ function success($info = "", $data = array(), $ajax = true) {
 function error($info = "", $data = array(), $ajax = true) {
     $return = array(
         'status' => 0,
-        'info' => $info ? $info : "操作失败",
+        'info' => $info ? $info : lang('do_failed'),
         'data' => $data
     );
     if ($ajax) {
@@ -3442,4 +3454,39 @@ function getexpiretext($endtime = 0) {
     } else {
         return '即将过期';
     }
+}
+
+function getonlinemember($uids) {
+	global $_G;
+	if ($uids && is_array($uids) && empty($_G['ols'])) {
+		$_G['ols'] = array();
+		foreach(C::app()->session->fetch_all_by_uid($uids) as $value) {
+			if(!$value['invisible']) {
+				$_G['ols'][$value['uid']] = $value['lastactivity'];
+			}
+		}
+	}
+}
+/**
+ * 记录用户状态变更日志
+ * 
+ * @param int $uid 用户ID
+ * @param int|null $oldStatus 旧状态值（可选，为null时不记录旧状态）
+ * @param int $newStatus 新状态值
+ * @param string $logType 日志类型
+ * @return void
+ */
+function logStatusChange($uid, $oldStatus = null, $newStatus, $logType = 'otherlog') {
+    $newStatusText = $newStatus == 1 ? '启用' : '禁用';
+    
+    if ($oldStatus !== null) {
+        if ($oldStatus == $newStatus) {
+            return;
+        }
+        $oldStatusText = $oldStatus == 1 ? '启用' : '禁用';
+        $logContent = "用户UID：{$uid}，状态变更：从{$oldStatusText}改为{$newStatusText}";
+    } else {
+        $logContent = "用户UID：{$uid}，状态变更为：{$newStatusText}";
+    }
+    writelog($logType, $logContent);
 }

@@ -380,7 +380,6 @@ _select.Paste=function(pfid,XX,YY){
 		}
 		var data={"obz":'',"tbz":tbz,"sourcetype":"icoid","icoid":paths.join(','),"ticoid":0,"container":'icosContainer_folder_'+path,iscut:_config.cut.iscut>0?1:2};
 	}
-	var container=_config.getContainerByFid(pfid);
 	
 	var progress='<div class="progress progress-striped active" style="margin:0"><div class="bar" style="width:100%;"></div></div>'
 	//alert(_config.saveurl+'&do=move&gid='+_config.gid+'&'+jQuery.param(data));

@@ -317,19 +317,23 @@ _explorer.routerule = function (path, prefix) {
             if (!isNaN(parseInt(data.success['gid']))) {
                 hash = 'group&gid=' + data.success['gid'] + (data.success['fid'] ? '&fid=' + data.success['fid'] : '');
             } else {
-                hash = 'home&fid=' + data.success['fid'];
+                hash = 'home&do=file&fid=' + data.success['fid'];
             }
             location.hash = hash;
-        }
+        } else if (data.error) {
+			showmessage('没有找到该路径', 'info', 3000, 1);
+		} else {
+			showmessage(__lang.do_failed, 'error', 3000, 1);
+		}
     }, 'json');
     return false;
 };
 _explorer.hashHandler = function () { //处理页面hash变化
     var hash = location.hash;
     hash = hash.replace(/^#/i, '');
+    _explorer.jstree_select(hash);
     if (!hash) {
-        hash = _explorer.defaultselect;
-        _explorer.jstree_select(hash);
+        return false;
     }
     if (hash === _explorer.hash) {
         return false;

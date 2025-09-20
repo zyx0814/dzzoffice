@@ -23,6 +23,9 @@ class perm_check {
 
     public static function getPerm($fid, $bz = '', $i = 0) {
         global $_G;
+        if (!$_G['uid']) return 0;//如果不是登录用户，返回false;
+        // 超级管理员直接拥有全部权限
+        if ($_G['adminid'] == 1) return perm_binPerm::getGroupPower('all');
         if (isset($_G['gperm'])) return intval($_G['gperm']);//可以通过这个参数直接使用此权限值不去查询权限
 
         $i++;
@@ -30,46 +33,47 @@ class perm_check {
             return perm_binPerm::getGroupPower('read');
         }
 
-        if ($folder = C::t('folder')->fetch($fid)) {
-            $perm = intval($folder['perm']);
-            $power = new perm_binPerm($perm);
-            if ($folder['gid']) {
-                if (C::t('organization_admin')->chk_memberperm($folder['gid'], $_G['uid'])) return (perm_binPerm::getGroupPower('all'));
-
-                if ($power->isPower('flag')) {//不继承，使用此权限
-                    if ($_G['setting']['allowshare']) {
-                        $perm = $power->delPower('share');
-                    }
-                    $power1 = new perm_binPerm($perm);
-                    return $power1->power;//mergePower(self::getuserPerm());
-                } else { //继承上级，查找上级
-                    if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
-                        //return self::getPerm($folder['pfid'],$bz,$i);
-                        $perm = self::getPerm($folder['pfid'], $bz, $i);
-                        $power1 = new perm_binPerm($perm);
-                        return $power1->power;//mergePower(self::getuserPerm());
-                    } else {   //其他的情况使用
-                        return perm_binPerm::getGroupPower('read');
-                    }
-                }
-            } else {
-                if ($folder['uid'] == $_G['uid'] || $_G['adminid'] == 1) return perm_binPerm::getGroupPower('all');
-                if ($power->isPower('flag')) {//不继承，使用此权限
-                    if ($_G['setting']['allowshare']) {
-                        $perm = $power->delPower('share');
-                    }
-                    $power1 = new perm_binPerm($perm);
-                    return $power1->mergePower(self::getuserPerm());
-                } else { //继承上级，查找上级
-                    if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
-                        return self::getPerm($folder['pfid'], $bz, $i);
-                    } else {   //其他的情况使用
-                        return self::getuserPerm();
-                    }
-                }
-            }
-        } else {
+        //查不到文件夹信息，返回默认只读权限
+        $folder = C::t('folder')->fetch_folderinfo_by_fid($fid);
+        if (!$folder) {
             return perm_binPerm::getGroupPower('read');
+        }
+
+        $perm = intval($folder['perm']);
+        $power = new perm_binPerm($perm);
+        //机构/部门/群组文件夹
+        if ($folder['gid']) {
+            // 机构管理员直接拥有全部权限
+            if (C::t('organization_admin')->chk_memberperm($folder['gid'], $_G['uid'])) return (perm_binPerm::getGroupPower('all'));
+            // 权限不继承上级（flag标识）：处理分享权限后，合并用户基础权限
+            if ($power->isPower('flag')) {
+                if ($_G['setting']['allowshare']) {
+                    $perm = $power->delPower('share');
+                }
+                $power1 = new perm_binPerm($perm);
+                return $power1->mergePower(self::getuserPerm());//$power1->power;
+            }
+            // 权限继承上级：递归查上级文件夹权限，合并用户基础权限
+            if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
+                //return self::getPerm($folder['pfid'],$bz,$i);
+                $perm = self::getPerm($folder['pfid'], $bz, $i);
+                $power1 = new perm_binPerm($perm);
+                return $power1->mergePower(self::getuserPerm());//$power1->power;
+            }
+            // 无上级/异常场景，返回默认只读权限
+            return perm_binPerm::getGroupPower('read');
+        }
+        //判断是否是自己的网盘（路径归属校验）
+        $isOwnDisk = preg_match('/^dzz:uid_(\d+):/', $folder['path'], $matches) && $matches[1] == $_G['uid'];
+        if (!$isOwnDisk) {
+            return 0; // 不是自己的网盘：无权限
+        }
+        // 检查用户组权限是否对个人网盘生效
+        $my_disk = (intval($_G['group']['perm']) & perm_binPerm::getPowerArr()['my_disk']) ? true : false;
+        if ($my_disk) {
+            return self::getuserPerm();
+        } else { 
+            return perm_binPerm::getGroupPower('all');
         }
     }
 
@@ -80,50 +84,44 @@ class perm_check {
         if ($i > 20) { //防死循环，如果循环20次以上，直接退出；
             return perm_binPerm::getGroupPower('all');
         }
-        if ($folder = C::t('folder')->fetch($fid)) {
-            $perm = ($newperm) ? intval($newperm) : intval($folder['perm']);
-            if ($folder['gid']) {
-                $power = new perm_binPerm($perm);
-                if ($power->isPower('flag')) {//不继承，使用此权限
-                    return $perm;
-                } else { //继承上级，查找上级
-                    if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
-                        return self::getPerm1($folder['pfid'], $bz, $i, $newperm);
-                    } else {   //其他的情况使用
-                        return perm_binPerm::getGroupPower('read');
-
-                    }
-                }
-            } else {
-                $power = new perm_binPerm($perm);
-                if ($power->isPower('flag')) {//不继承，使用此权限
-                    if ($_G['setting']['allowshare']) {
-                        $perm = $power->delPower('share');
-                    }
-                    $power1 = new perm_binPerm($perm);
-                    return $power1->mergePower(self::getuserPerm());
-                } else { //继承上级，查找上级
-                    if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
-                        return self::getPerm1($folder['pfid'], $bz, $i);
-                    } else {   //其他的情况使用
-                        return self::getuserPerm();
-                    }
+        $folder = C::t('folder')->fetch($fid);
+        if (!$folder) {
+            return perm_binPerm::getGroupPower('read');
+        }
+        $perm = ($newperm) ? intval($newperm) : intval($folder['perm']);
+        if ($folder['gid']) {
+            $power = new perm_binPerm($perm);
+            if ($power->isPower('flag')) {//不继承，使用此权限
+                return $perm;
+            } else { //继承上级，查找上级
+                if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
+                    return self::getPerm1($folder['pfid'], $bz, $i, $newperm);
+                } else {   //其他的情况使用
+                    return perm_binPerm::getGroupPower('read');
                 }
             }
         } else {
-            return perm_binPerm::getGroupPower('read');
+            $power = new perm_binPerm($perm);
+            if ($power->isPower('flag')) {//不继承，使用此权限
+                if ($_G['setting']['allowshare']) {
+                    $perm = $power->delPower('share');
+                }
+                $power1 = new perm_binPerm($perm);
+                return $power1->mergePower(self::getuserPerm());
+            } else { //继承上级，查找上级
+                if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
+                    return self::getPerm1($folder['pfid'], $bz, $i);
+                } else {   //其他的情况使用
+                    return self::getuserPerm();
+                }
+            }
         }
     }
 
     public static function userPerm($fid, $action) { //判断容器有没有指定的权限
         global $_G;
-        if ($_G['adminid'] == 1) { //是管理员
-            return true;
-        }
-
-        if (!$_G['uid']) { //如果不是登录用户，返回false;
-            return false;
-        }
+        if (!$_G['uid']) return false;//如果不是登录用户，返回false;
+        if ($_G['adminid'] == 1) return true;//是管理员，返回true
 
         //if($action=='download' || $action=='saveto' || $action=='copy' ) return true;
         $perm = self::getPerm($fid);
@@ -138,7 +136,6 @@ class perm_check {
 
     public static function groupPerm($fid, $action, $gid) { //判断容器有没有指定的权限
         global $_G;
-
         $ismoderator = C::t('organization_admin')->chk_memberperm($gid, $_G['uid']);
         if ($action == 'admin' && !$ismoderator) return false;
         if ($ismoderator) { //是部门管理员或上级部门管理员
@@ -147,7 +144,6 @@ class perm_check {
         //不是部门成员或下级部门成员没有权限
         if (!C::t('organization')->ismember($gid, $_G['uid'], false)) return false;
         //if($action=='download' || $action=='saveto' || $action=='copy' ) return true;
-
         $perm = self::getPerm($fid);
         //exit($perm.'====='.$fid.'======='.$gid.'===='.$action);
         if ($perm > 0) {
@@ -203,11 +199,8 @@ class perm_check {
         if ($_G['uid'] < 1) { //游客没有权限
             return false;
         }
-        if ($arr['bz'] && $arr['bz'] !== 'dzz') {
+        if ($arr['bz'] && $arr['bz'] !== 'dzz') {//网络挂载的文件只限于用户自己
             if ($arr['uid'] !== $_G['uid']) return false;
-        }
-        if (!$arr['gid'] && $arr['uid'] !== $_G['uid']) {//我的网盘文件只限于当前用户
-            return false;
         }
         if (($bz && $bz != 'dzz') || ($arr['bz'] && $arr['bz'] != 'dzz')) {
             return self::checkperm_Container($arr['pfid'], $action, $bz ? $bz : $arr['bz']);
@@ -226,6 +219,7 @@ class perm_check {
                 //首先判断目录的超级权限；
                 if (!perm_FolderSPerm::isPower($folder['fsperm'], $action)) return false;
             }
+            
             return self::checkperm_Container($arr['pfid'], $action, $bz);
         }
     }
@@ -234,6 +228,9 @@ class perm_check {
         global $_G;
         if ($_G['uid'] < 1) { //游客没有权限
             return false;
+        }
+        if ($_G['adminid'] == 1) { //是管理员
+            return true;
         }
         if ($bz) {
             if (!perm_FolderSPerm::isPower(perm_FolderSPerm::flagPower($bz), $action)) return false;
@@ -253,7 +250,6 @@ class perm_check {
                 //if($action=='admin' && $_G['adminid']!=1 && $folder['flag']!='folder') return false;
             }
             if ($_G['adminid'] == 1) return true; //网址管理员 有权限;
-
             if ($folder['gid']) {
                 return self::groupPerm($pfid, $action, $folder['gid']);
             } else {

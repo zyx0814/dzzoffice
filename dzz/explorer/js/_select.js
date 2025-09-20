@@ -390,7 +390,6 @@ _select.Paste=function(pfid,XX,YY){
 		}
 		var data={"obz":'',"tbz":tbz,"sourcetype":"icoid","icoid":paths.join(','),"ticoid":0,"container":'icosContainer_folder_'+path,iscut:_config.cut.iscut>0?1:2};
 	}
-	var container=_config.getContainerByFid(pfid);
 
 	//alert(_config.saveurl+'&do=move&gid='+_config.gid+'&'+jQuery.param(data));
 	layer.msg(__lang.file_drag_processing, {offset:'10px',time:0});

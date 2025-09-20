@@ -514,7 +514,8 @@ class table_resources extends dzz_table {
         $folderinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
         $folderinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $folderinfo['position'] = preg_replace('/dzz:(.+?):/', '', $path);
+        $folderinfo['path'] = $path;
+        $folderinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $path);
         $folderinfo['fdateline'] = dgmdate($folderinfo['dateline'], 'Y-m-d H:i:s');
         $folderinfo['isgroup'] = ($folderinfo['flag'] == 'organization') ? true : false;
         return $folderinfo;
@@ -565,7 +566,7 @@ class table_resources extends dzz_table {
                 $temp = array('pfid = %d');
                 $para[] = $fid;
                 if (!$sid) {
-                    if ($folder = C::t('folder')->fetch($fid)) {
+                    if ($folder = C::t('folder')->fetch_folderinfo_by_fid($fid)) {
                         $where1 = array();
                         if ($folder['gid'] > 0) {
                             $folder['perm'] = perm_check::getPerm($folder['fid']);
@@ -575,13 +576,14 @@ class table_resources extends dzz_table {
                                 } elseif (perm_binPerm::havePower('read1', $folder['perm'])) {
                                     $where1[] = "uid='{$_G['uid']}'";
                                 }
-
                             }
                             $where1 = array_filter($where1);
                             if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
                             else $temp[] = "0";
                         } else {
-                            //$temp[] = " uid='{$_G['uid']}'";
+                            if (empty($_G['uid']) || !preg_match('/^dzz:uid_(\d+):/', $folder['path'], $matches) || $matches[1] != $_G['uid']) {
+                                $temp[] = "0";
+                            }
                         }
                     }
                 }
@@ -593,7 +595,7 @@ class table_resources extends dzz_table {
             $temp = array('pfid= %d');
             $para[] = $pfid;
             if (!$sid) {
-                if ($folder = C::t('folder')->fetch($pfid)) {
+                if ($folder = C::t('folder')->fetch_folderinfo_by_fid($pfid)) {
                     $where1 = array();
                     if ($folder['gid'] > 0) {
                         $folder['perm'] = perm_check::getPerm($folder['fid']);
@@ -608,7 +610,9 @@ class table_resources extends dzz_table {
                         if ($where1) $temp[] = "(" . implode(' OR ', $where1) . ")";
                         else $temp[] = "0";
                     } else {
-                        //$temp[] = " uid='{$_G['uid']}'";
+                        if (empty($_G['uid']) || !preg_match('/^dzz:uid_(\d+):/', $folder['path'], $matches) || $matches[1] != $_G['uid']) {
+                            $temp[] = "0";
+                        }
                     }
                 }
             }
@@ -745,7 +749,6 @@ class table_resources extends dzz_table {
 
     //查询某目录下的所有文件夹
     public function fetch_folder_by_pfid($fid, $numselect = false) {
-
         return DB::fetch_all("select * from %t where pfid = %d and `type` = %s and isdelete < 1 ", array($this->_table, $fid, 'folder'));
     }
 

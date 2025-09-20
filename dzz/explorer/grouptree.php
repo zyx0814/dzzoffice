@@ -115,16 +115,16 @@ if ($do == 'get_children') {
 
     } elseif (preg_match('/u_\d+/', $id)) {
         $fid = intval(str_replace('u_', '', $id));
-        foreach (C::t('resources')->fetch_folder_by_pfid($fid, array('fname', 'fid')) as $v) {
-            $children = (C::t('resources')->fetch_folder_num_by_pfid($v['oid']) > 0) ? true : false;
+        foreach (C::t('folder')->fetch_folder_by_pfid($fid, array('fname', 'fid')) as $v) {
+            $children = (C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) ? true : false;
             $data[] = array(
-                'id' => 'u_' . $v['oid'],
-                'text' => $v['name'],
+                'id' => 'u_' . $v['fid'],
+                'text' => $v['fname'],
                 'type' => 'folder',
                 'children' => $children,
                 'li_attr' => array(
                     'href' => MOD_URL . '&op=home',
-                    'hashs' => 'home&do=file&fid=' . $v['oid']
+                    'hashs' => 'home&do=file&fid=' . $v['fid']
                 )
             );
         }

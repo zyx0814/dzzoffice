@@ -421,4 +421,5 @@ $lang = array(
     'time_error_endtime' => 'End time before start time',
     'time_error_starttime' => 'Start time after end time',
     'add_cat' => 'Add Type',
+    'open_browser' => 'Open Browser',
 );

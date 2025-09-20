@@ -40,7 +40,11 @@ if ($gid) {
     }
     if (!$fid) $fid = $group['fid'];
 }
-$folderinfo = C::t('folder')->fetch_folderinfo_by_fid($fid);
-$patharr = getpath($folderinfo['path']);
-$folderpathstr = implode('\\', $patharr);
+if ($folderinfo = C::t('folder')->fetch_folderinfo_by_fid($fid)) {
+    if (!$folderinfo['gid'] && (empty($_G['uid']) || !preg_match('/^dzz:uid_(\d+):/', $folderinfo['path'], $matches) || $matches[1] != $_G['uid'])) {
+        showmessage(lang('no_privilege'), dreferer());
+    }
+    $patharr = getpath($folderinfo['path']);
+    $folderpathstr = implode('\\', $patharr);
+}
 require template('fileselection/content');

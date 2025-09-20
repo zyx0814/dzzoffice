@@ -16,9 +16,21 @@
     <div class="card">
         <div class="card-body">
         <!--{if $do == 'editpass'}-->
-            <!--{template lyear:editpass}-->
+        <!--{if $my_info}-->
+        <div class="alert alert-warning">
+            {lang no_modify_password}
+        </div>
+        <!--{else}-->
+        <!--{template lyear:editpass}-->
+        <!--{/if}-->
         <!--{elseif $do == 'changeemail'}-->
-            <!--{template lyear:changeemail}-->
+        <!--{if $my_info}-->
+        <div class="alert alert-warning">
+            {lang no_modify_group}
+        </div>
+        <!--{else}-->
+        <!--{template lyear:changeemail}-->
+        <!--{/if}-->
         <!--{elseif $do == 'login'}-->
             <!--{template lyear:login}-->
         <!--{/if}-->

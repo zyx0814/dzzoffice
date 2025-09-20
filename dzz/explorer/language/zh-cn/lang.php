@@ -432,4 +432,5 @@ $lang = array(
     'time_error_endtime' => '结束时间不能早于开始时间',
     'time_error_starttime' => '开始时间不能晚于结束时间',
     'add_cat' => '添加类型',
+    'open_browser' => '浏览器打开',
 );
