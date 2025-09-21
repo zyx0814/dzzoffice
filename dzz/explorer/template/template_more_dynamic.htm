@@ -11,7 +11,7 @@
 <!--{if $events}-->
 <ul class="lyear-timeline lyear-timeline-left">
 <!--{loop $events $eventval}-->
-<li class="lyear-timeline-item dynameic-comment">
+<li class="lyear-timeline-item dynameic-comment comment_$eventval[id]">
     <div class="lyear-timeline-item-dot">
       <span><a href="user.php?uid=$eventval['uid']" title="$eventval['username']" target="_blank">{eval echo avatar_block($eventval['uid']);}</a></span>
     </div>
@@ -20,7 +20,7 @@
       <p class="mb-1 text-break">{$eventval[details]}</p>
       <p class="mb-0">
         <time class="mb-3">{eval echo dgmdate($eventval['dateline'], 'u');}</time>
-        <!--{if $eventval['type'] == 1}--><span class="delete-comment color-danger mdi mdi-delete" data-commentid="$eventval[id]"></span><!--{/if}-->
+        <!--{if $eventval['type'] == 1}--><span class="delete-comment color-danger mdi mdi-delete" onclick="commentdelete($eventval[id])"></span><!--{/if}-->
        </p>
     </div>
 </li>
@@ -79,27 +79,6 @@ jQuery(document).ready(function(e) {
     })
 });
 
-jQuery(document).off('click.commentdelete').on('click.commentdelete','.delete-comment',function(){
-	var obj = $(this);
-    var commentid = obj.data('commentid');
-    if(typeof commentid == 'undefined' || commentid < 0){
-        layer.alert('{lang delete_error}', {skin:'lyear-skin-danger'});
-    }
-    layer.confirm(__lang.delete_filenorecover_confirm, {title:__lang.delete_comment_confirm,skin:'lyear-skin-danger'}, function(index){
-		layer.msg(__lang.recovering_not_please_close, {offset:'10px',time:0});
-		$.post('{MOD_URL}&op=dynamic&do=deletecomment',{'id':commentid},function(data){
-        if(data['success']){
-            obj.parents('.dynameic-comment').html('');
-            layer.msg('删除成功', {offset:'10px'});
-        }else if(data['error']){
-            layer.alert(data['error'], {skin:'lyear-skin-danger'});
-        }
-    },'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('{lang do_failed}', 'error', 3000, 1);
-        });
-	});
-    
-})
 jQuery(function(){
     if (gid && jQuery('#commentid').length > 0) {
         commentfid = jQuery('#commentid').find('input[name=fid]').val();
@@ -116,7 +95,6 @@ jQuery(function(){
             data: '{DZZSCRIPT}?mod=explorer&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,
             callbacks: {
                 remote_filter: function (query, render_view) {
-                    console.log(query);
                     var thisVal = query,
                         self = jQuery(this);
                     if (!self.data('active') && thisVal.length >= 1) {

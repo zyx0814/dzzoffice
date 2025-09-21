@@ -895,6 +895,7 @@ class table_resources extends dzz_table {
             //文件图标信息
             $fileinfo['img'] = self::get_icosinfo_by_rid($fileinfo['rid']);
             if ($fileinfo['type'] == 'folder') {
+                $fileinfo['isfolder'] = true;
                 if ($currentfolder = C::t('folder')->fetch($fileinfo['oid'])) {
                     $fileinfo['isgroup'] = ($currentfolder['flag'] == 'organization') ? true : false;
                 }
@@ -907,6 +908,7 @@ class table_resources extends dzz_table {
                     $fileinfo['fsize'] = formatsize($contaions['size']);
                     $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
                     $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+                } elseif($fileinfo['type'] == 'link') {
                 } else {
                     $fileinfo['fsize'] = formatsize($fileinfo['size']);
                     $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($fileinfo['size']), 'size' => $fileinfo['size']));
@@ -978,8 +980,7 @@ class table_resources extends dzz_table {
         }
         return $fileinfo;
     }
-
-//根据fid获取属性信息
+    //根据fid获取属性信息
     public function get_property_by_fid($fid, $contains = true) {
         global $_G;
         $uid = $_G['uid'];
@@ -1024,8 +1025,7 @@ class table_resources extends dzz_table {
 
     }
 
-    public
-    function get_icosinfo_by_rid($rid) {
+    public function get_icosinfo_by_rid($rid) {
         $resourcedata = parent::fetch($rid);
         $attrdata = C::t('resources_attr')->fetch_by_rid($rid, $resourcedata['vid']);
         $data = array_merge($resourcedata, $attrdata);
@@ -1047,16 +1047,12 @@ class table_resources extends dzz_table {
         unset($data);
         return $img;
     }
-
-//文件名获取文件信息
-    public
-    function get_resources_by_pfid_name($pfid, $name) {
+    //文件名获取文件信息
+    public function get_resources_by_pfid_name($pfid, $name) {
         return DB::fetch_first("select * from %t where pfid=%d and name = %s and `type` = 'folder' ", array($this->_table, $pfid, $name));
     }
-
-//文件id获取文件信息
-    public
-    function get_resources_info_by_fid($fid) {
+    //文件id获取文件信息
+    public function get_resources_info_by_fid($fid) {
         return DB::fetch_first("select * from %t where oid = %d and `type` = 'folder' ", array($this->_table, $fid));
     }
 }

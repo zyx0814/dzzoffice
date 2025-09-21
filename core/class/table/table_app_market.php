@@ -117,14 +117,25 @@ class table_app_market extends dzz_table {
     }
 
     public function fetch_all_by_notdelete($uid = 0) { //取得所有默认不能删除的应用
-        if ($uid && $space = getuserbyuid($uid)) {
-            if ($space['groupid'] == 1) {//系统管理员
+        global $_G;
+        if ($_G['uid'] == $uid) {
+            $groupid = $_G['groupid'];
+        } else {
+            $space = getuserbyuid($uid);
+            if($space) {
+                $groupid = $space['groupid'];
+            } else {
+                $uid = 0;
+            }
+        }
+        if ($uid) {
+            if ($groupid == 1) {//系统管理员
                 $l = " `group` = '1'";
                 if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
                     $l .= " and appid  NOT IN (" . dimplode($notappids) . ") ";
                 }
                 $sql = "`position`>0 and (`group`='0' OR `group`=2 OR `group`=3 OR (" . $l . ")) ";
-            } elseif ($space['groupid'] == 2) {
+            } elseif ($groupid == 2) {
                 $l = " (`group` = '1')";
                 if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
                     $l .= " and appid  NOT IN (" . dimplode($notappids) . ") ";
@@ -145,14 +156,25 @@ class table_app_market extends dzz_table {
     }
 
     public function fetch_all_by_default($uid = 0, $appid = false) { // 取得所有默认的应用
-        if ($uid && $space = getuserbyuid($uid)) {
-            if ($space['groupid'] == 1) { // 系统管理员
+        global $_G;
+        if ($_G['uid'] == $uid) {
+            $groupid = $_G['groupid'];
+        } else {
+            $space = getuserbyuid($uid);
+            if($space) {
+                $groupid = $space['groupid'];
+            } else {
+                $uid = 0;
+            }
+        }
+        if ($uid) {
+            if ($groupid == 1) { // 系统管理员
                 $l = "`group` = '1'";
                 if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
                     $l .= " and appid NOT IN (" . dimplode($notappids) . ") ";
                 }
                 $sql = "`position` > 0 and (`group` = '0' OR `group` = '2' OR `group` = '3' OR (" . $l . "))";
-            } elseif ($space['groupid'] == 2) {
+            } elseif ($groupid == 2) {
                 $l = " (`group` = '1')";
                 if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
                     $l .= " and appid NOT IN (" . dimplode($notappids) . ") ";

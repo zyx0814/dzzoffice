@@ -108,7 +108,7 @@ function fileupload(el, fid) {
 				
                 if (file.data.folderarr) {
                     for (var i = 0; i < file.data.folderarr.length; i++) {
-                        _explorer.sourcedata.folder[file.data.folderarr[i].fid] = file.data.folderarr[i];
+                        _explorer.sourcedata.folder[1] = file.data.folderarr[i];
                     }
                 }
                 if (file.data.icoarr) {

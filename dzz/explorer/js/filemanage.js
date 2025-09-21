@@ -687,13 +687,12 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 };
 
 _filemanage.SetMoreButton = function () {
-	var el = $('.navtopheader .toolButtons');
+	var el = $('.navtopheader .select-toperate');
 	if (!el.length) return;
 	var width = el.width() - el.find('.yunfile-moreMenu').outerWidth(true);
 	if (width <= 0) return;
 	var yunfileButton = el.find('.yunfile-btnMenu');
 	yunfileButton.children().hide();
-
 	var totalWidth = 40;
 	yunfileButton.children().each(function() {
 		var el1 = $(this);
@@ -706,77 +705,27 @@ _filemanage.SetMoreButton = function () {
 		}
 	});
 
+	var classNames = [
+		'open', 'copy', 'rename', 'cut', 'download', 
+		'downpackage', 'delete', 'share', 'collect', 
+		'paste', 'openwith', 'history', 'dynamic'
+	];
+	
 	yunfileButton.children().each(function () {
 		var el1 = jQuery(this);
-		if (el1.hasClass('open')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu li.open').show();
-			} else {
-				el.find('.yunfile-moreMenu li.open').hide();
+		classNames.forEach(function(className) {
+			if (el1.hasClass(className)) {
+				var target = el.find(`.yunfile-moreMenu .${className}`);
+				if (el1.is(':hidden')) {
+					target.show();
+				} else {
+					target.hide();
+				}
 			}
-		} else if (el1.hasClass('copy')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .copy').show();
-			} else {
-				el.find('.yunfile-moreMenu .copy').hide();
-			}
-		} else if (el1.hasClass('rename')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .rename').show();
-			} else {
-				el.find('.yunfile-moreMenu .rename').hide();
-			}
-		} else if (el1.hasClass('cut')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .cut').show();
-			} else {
-				el.find('.yunfile-moreMenu .cut').hide();
-			}
-		} else if (el1.hasClass('download')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .download').show();
-			} else {
-				el.find('.yunfile-moreMenu .download').hide();
-			}
-		} else if (el1.hasClass('downpackage')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .downpackage').show();
-			} else {
-				el.find('.yunfile-moreMenu .downpackage').hide();
-			}
-		} else if (el1.hasClass('delete')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .delete').show();
-			} else {
-				el.find('.yunfile-moreMenu .delete').hide();
-			}
-		} else if (el1.hasClass('share')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .share').show();
-			} else {
-				el.find('.yunfile-moreMenu .share').hide();
-			}
-		} else if (el1.hasClass('collect')) {
-			if (el1.is(':hidden')) {
-				el.find('.yunfile-moreMenu .collect').show();
-			} else {
-				el.find('.yunfile-moreMenu .collect').hide();
-			}
-		} else if(el1.hasClass('paste')){
-			if(el1.is(':hidden')){
-				el.find('.yunfile-moreMenu .paste').show();
-			}else{
-				el.find('.yunfile-moreMenu .paste').hide();
-			}
-		} else if(el1.hasClass('openwith')){
-			if(el1.is(':hidden')){
-				el.find('.yunfile-moreMenu .openwith').show();
-			}else{
-				el.find('.yunfile-moreMenu .openwith').hide();
-			}
-		}
+		});
 	});
 };
+
 
 _filemanage.prototype.showIcos = function (ext) {
 	//排序数据
@@ -2753,6 +2702,14 @@ _filemanage.setOpenDefaultOK = function() {
     _filemanage.Open(i, n)
 };
 _filemanage.browserOpen = function(rid) {
-	var icosdata = _explorer.sourcedata.icos[rid],t;
+	var icosdata = _explorer.sourcedata.icos[rid];
 	window.open(SITEURL + 'index.php?mod=io&op=fileOut&path=' + icosdata.dpath + '&filename=' + icosdata.name);
+};
+_filemanage.history = function(rid) {
+	var icosdata = _explorer.sourcedata.icos[rid];
+	showWindow('property', _explorer.appUrl + '&op=ajax&operation=history&paths=' + icosdata.dpath, 'get', 0);
+};
+_filemanage.dynamic = function(rid) {
+	var icosdata = _explorer.sourcedata.icos[rid];
+	showWindow('property', _explorer.appUrl + '&op=ajax&operation=dynamic&paths=' + icosdata.dpath, 'get', 0);
 };

@@ -102,7 +102,7 @@
         $.post(url, formdata, function (data) {
             if(data['success']){
                 hideWindow('adduser');
-                showWindow('select_perm', _explorer.appUrl + '&op=ajax&operation=selectperm&fid='+data['fid']+'&gid='+newgroupgid+'&new=true', 'get', 0);
+                showWindow('property', _explorer.appUrl + '&op=ajax&operation=selectperm&fid='+data['fid']+'&gid='+newgroupgid+'&new=true', 'get', 0);
             }else{
                 hideWindow('adduser');
                 layer.alert(__lang.explorer_do_failed, {skin:'lyear-skin-danger'});

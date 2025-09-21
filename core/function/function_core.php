@@ -2030,51 +2030,6 @@ function getTopFid($fid, $i = 0, $arr = array()) {
     return $arr;
 }
 
-function getGidByContainer($container) {
-    global $_G;
-    if (strpos($container, 'icosContainer_folder_') !== false) {
-        $fid = intval(str_replace('icosContainer_folder_', '', $container));
-        if ($fid > 0) return DB::result_first("select gid from " . DB::table('folder') . " where fid='{$fid}'");
-        else return 0;
-    } else {
-        return 0;
-    }
-}
-
-function getFidByContainer($container) {
-    global $_G;
-    if (strpos($container, 'icosContainer_body_') !== false) {
-        $fid = intval(str_replace('icosContainer_folder_', '', $container));
-        return DB::result_first("select fid from " . DB::table('folder') . " where flag='desktop' and uid='" . $_G['uid'] . "'");
-    } elseif (strpos($container, 'icosContainer_folder_') !== false) {
-        $fid = intval(str_replace('icosContainer_folder_', '', $container));
-        return DB::result_first("select fid from " . DB::table('folder') . " where fid='{$fid}'");
-    } elseif (strpos($container, '_dock_') !== false) {
-        return DB::result_first("select fid from " . DB::table('folder') . " where flag='dock' and uid='" . $_G['uid'] . "'");
-    } elseif ($container == '_dock') {
-        return DB::result_first("select fid from " . DB::table('folder') . " where flag='dock' and uid='" . $_G['uid'] . "'");
-    } else {
-        return false;
-    }
-}
-
-function getContainerByFid($pfid) {
-    global $_G;
-    $folder = C::t('folder')->fetch($pfid);
-    switch ($folder['flag']) {
-        case 'desktop':
-            return 'icosContainer_body_' . $pfid;
-        case 'dock':
-            return '_dock';
-        case 'organization':
-        case 'folder':
-            return 'icosContainer_folder_' . $pfid;
-        default:
-            return '';
-    }
-}
-
-
 /*function replace_remote($icoarr){
 	global $_G;
 	switch($icoarr['type']){

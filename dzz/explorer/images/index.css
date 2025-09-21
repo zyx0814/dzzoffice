@@ -2,7 +2,7 @@
 .bs-main-container .card{transition:none;margin-bottom:0;border-radius:0}
 .gallery-grid .gallery-item{padding-bottom:5px}
 .list-group-item{background-color:transparent}
-.rightBorder .lyear-timeline-item-dot::before{z-index:0;content:none}
+.lyear-timeline-item-dot::before{z-index:0;content:none}
 .lyear-timeline-date{padding:10px 0}
 .lyear-timeline-item-content{padding-left:5px}
 .version_menu .editMenu{display:block}
@@ -393,3 +393,4 @@ to{opacity:1}
 [data-sidebarbg*='color_'] .positionMenu .jstree-default .jstree-anchor,body[data-theme='dark'] .positionMenu .jstree-default .jstree-anchor{color:rgba(255,255,255,.85)}
 body[data-theme='dark'] .positionMenu .jstree-default .jstree-wholerow-hovered{background:rgba(255,255,255,.35)}
 .conpile-poewr{color:rgba(78,85,99,0.65)}
+.wh-32{width:32px;height:32px;line-height:32px;}

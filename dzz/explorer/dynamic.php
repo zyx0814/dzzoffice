@@ -301,7 +301,7 @@ if ($do == 'getfolderdynamic') {
     exit();
 } elseif ($do == 'loadmoreversion') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
-    $fileinfo = C::t('resources')->get_property_by_rid($rid);
+    $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
     $fileinfo['dpath'] = dzzencode($rid);
     $vstart = isset($_GET['next']) ? intval($_GET['next']) : 0;
     $vlimit = 20;

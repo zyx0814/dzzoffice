@@ -747,3 +747,116 @@ function riddesc(rid,desc) {
 		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
+
+function infoversion(obj) {
+	var rid = $(obj).data('rid');
+	var vid = $(obj).data('vid');
+	var querystr = '';
+	if (rid) {
+		querystr += '&rid=' + rid;
+	}
+	if (vid) {
+		querystr += '&vid=' + vid;
+	}
+	showWindow('property', MOD_URL + '&op=ajax&operation=infoversion' + querystr, 'get', 0);
+	return false;
+};
+function deletethisversion(obj) {
+	var rid = $(obj).data('rid');
+	var vid = $(obj).data('vid');
+	if (!vid) {
+		return false;
+	}
+	layer.confirm('删除后将无法找回，确认要进行该操作吗?', {skin:'lyear-skin-danger',title:'删除该版本'}, function(index){
+		layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
+		$.post(MOD_URL+'&op=ajax&operation=deletethisversion', {'rid':rid,'vid': vid}, function (json) {
+			if(json.msg=='success'){
+				layer.msg(__lang.delete_success, {offset:'10px'});
+				$('.version_' + vid).remove();
+			}else{
+				layer.alert(json.error, {skin:'lyear-skin-danger'});
+			}
+		},'json').fail(function (jqXHR, textStatus, errorThrown) {
+			layer.msg(__lang.do_failed, {offset:'10px'});
+		});
+	});
+	return false;
+};
+
+function editVersionName(obj) {
+	var rid = $(obj).data('rid');
+	var vid = $(obj).data('vid');
+	var querystr = '';
+	if (rid) {
+		querystr += '&rid=' + rid;
+	}
+	if (vid) {
+		querystr += '&vid=' + vid;
+	}
+	showWindow('property', MOD_URL + '&op=ajax&operation=editFileVersionInfo' + querystr, 'get', 0);
+	return false;
+};
+
+function viewversion(obj) {
+	var path = $(obj).data('dpath');
+	var viewhref = 'share.php?a=view&s=' + path;
+	var vid = $(obj).data('vid');
+	if (vid) {
+		viewhref += '&vid=' + vid;
+	}
+	window.open(viewhref);
+}
+
+function primaryVersion(obj) {
+	var el = $(obj);
+	var vid = el.data('vid');
+	var primaryVersion = el.data('primary');
+	//如果当前版本已经是主版本或者只有当前版本
+	if (typeof vid == 'undefined' || !vid || primaryVersion == 'yes') {
+		showmessage('当前版本已经是主版本了','info',3000,1);
+		return false;
+	}
+	$.post(MOD_URL+'&op=dzzcp&do=setpramiryversion', {'vid': vid}, function (data) {
+		if (data['success']) {
+			var datas = data['data'];
+			$('.version_menu').each(function () {
+				$(this).find('.badge-outline-primary').remove().end().find('.dropdown-menu-version .primary_versions').data('primary', 'no');
+			})
+			$('.version_' + vid).find('div.versioninfos').append('<span class="badge badge-outline-primary">'+__lang.principal_edition+'</span>').end().find('.dropdown-menu-version .pramiry_version').data('primary', 'yes');
+			;
+			var src = datas.img;
+			var rid = el.data('rid');
+			$('#rightfileinfo-' + rid).find('img').attr('src', src);
+			$('#rightfileinfo-' + rid).find('span.right-imgname').html(datas.name);
+			_explorer.sourcedata.icos[datas.rid] = datas;
+			datas.vid = 0;
+			_filemanage.addIndex(datas);
+			_filemanage.cons['f-' + datas.pfid].CreateIcos(datas, true);
+
+		} else {
+			layer.alert(data['msg'], {skin:'lyear-skin-danger'});
+		}
+	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage(__lang.do_failed, 'error', 3000, 1);
+	});
+};
+
+function commentdelete(id) {
+    var commentid = id;
+    if(typeof commentid == 'undefined' || commentid < 0){
+        layer.alert('{lang delete_error}', {skin:'lyear-skin-danger'});
+    }
+    layer.confirm(__lang.delete_filenorecover_confirm, {title:__lang.delete_comment_confirm,skin:'lyear-skin-danger'}, function(index){
+		layer.msg(__lang.recovering_not_please_close, {offset:'10px',time:0});
+		$.post(MOD_URL+'&op=dynamic&do=deletecomment',{'id':commentid},function(data){
+        if(data['success']){
+			$('.comment_' + id).remove();
+            layer.msg('删除成功', {offset:'10px'});
+        }else if(data['error']){
+            layer.alert(data['error'], {skin:'lyear-skin-danger'});
+        }
+    },'json').fail(function (jqXHR, textStatus, errorThrown) {
+            showmessage('{lang do_failed}', 'error', 3000, 1);
+        });
+	});
+}

@@ -198,6 +198,7 @@
                 _explorer.sourcedata.icos[data.rid] = data;
                 _selectfile.cons['f-' + '{$fid}'].CreateIcos(data);
                 hideWindow('newLink');
+                showmessage('{lang add_success}', 'success', 3000, 1);
             } else {
                 showDialog(data.error);
             }

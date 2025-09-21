@@ -13,8 +13,8 @@ if ($bz && $bz !== 'dzz') {
     }
     if ($path) {
         $root = IO::getMeta($path);
-        if ($propertys['error']) {
-            showmessage($propertys['error'], dreferer());
+        if ($root['error']) {
+            showmessage($root['error'], dreferer());
         }
         $folderpatharr = getpath($root['relativepath']);
         $folderpathstr = implode('\\', $folderpatharr);

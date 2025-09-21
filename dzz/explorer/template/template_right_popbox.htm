@@ -81,7 +81,6 @@
 			if(data['success']){
 			    var permicocontainer = jQuery('#'+currentUid+'_delete').find('a');
                 var permiconum = permicocontainer.find('.right-first').length;
-                console.log(permiconum);
 			    if(perm > 1  && orgtype == 1){
                     permicocontainer.closest('#memberlist').find('li a span.creator').remove();
                     var html = '<span class="right-first creator"><img src="{MOD_PATH}/images/ic-creator.png"></span>';

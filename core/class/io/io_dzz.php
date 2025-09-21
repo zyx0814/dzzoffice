@@ -1294,7 +1294,7 @@ class io_dzz extends io_api {
         }
     }
 
-    public function CreateFolderByPath($path, $pfid, $params = array()) {
+    public function CreateFolderByPath($path, $pfid, $params = array(),$force = false) {
         $data = array('pfid' => $pfid);
         if (!$path) {
             $data['pfid'] = $pfid;
@@ -1307,7 +1307,8 @@ class io_dzz extends io_api {
                 if ($fid = DB::result_first("select fid from %t where pfid=%d and isdelete<1 and fname=%s", array('folder', $pfid, $fname))) {
                     $pfid = $data['pfid'] = $fid;
                 } else {
-                    if ($re = $this->CreateFolder($data['pfid'], $fname, 0, $params, 'overwrite')) {
+                    if ($re = $this->CreateFolder($data['pfid'], $fname, 0, $params, 'overwrite',$force)) {
+                        if($re['error']) return $re;
                         $data['icoarr'][] = $re['icoarr'];
                         $data['folderarr'][] = $re['folderarr'];
                         $pfid = $data['pfid'] = $re['folderarr']['fid'];
@@ -1372,13 +1373,13 @@ class io_dzz extends io_api {
         $arr = $this->getPartInfo($content_range);
         $data['pfid'] = intval($pfid);
         if ($relativePath && $arr['iscomplete']) {
-            $data = $this->CreateFolderByPath($relativePath, $pfid, $params);
+            $data = $this->CreateFolderByPath($relativePath, $pfid, $params,$force);
             if (isset($data['error'])) {
                 return array('error' => $data['error']);
             }
         }
         if (substr($filename, -7) == '.folder') {
-            $data = $this->CreateFolderByPath($relativePath ? $relativePath : substr($filename, 0, -7), $pfid, $params);
+            $data = $this->CreateFolderByPath($relativePath ? $relativePath : substr($filename, 0, -7), $pfid, $params,$force);
             if (isset($data['error'])) {
                 return array('error' => $data['error']);
             }
@@ -2132,6 +2133,7 @@ class io_dzz extends io_api {
                     $pfid = $data['pfid'] = $finfo['fid'];
                 } else {
                     if ($re = $this->CreateFolder($data['pfid'], $fname, 0, $params, 'overwrite')) {
+                        if($re['error']) return $re;
                         $data['icoarr'][] = $re['icoarr'];
                         $data['folderarr'][] = $re['folderarr'];
                         $pfid = $data['pfid'] = $re['folderarr']['fid'];

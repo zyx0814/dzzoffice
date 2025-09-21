@@ -613,8 +613,3 @@ _select.SelectedStyle=function(container,rid,flag,multi){
 
 	if(_filemanage.cons[filemanageid]) _filemanage.cons[filemanageid].selectInfo();
 };
-_select.remove=function(icos){//移除原来的icoid
-	for(var i=0;i<icos.length;i++){
-		_ico.removeIcoid(icos[i]);
-	}
-}

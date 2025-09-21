@@ -19,7 +19,6 @@ if (!$sid) {
 }
 $sid = dzzdecode($sid);
 $share = C::t('shares')->fetch($sid);
-header('content-type:json;charset=UTF-8');
 if (!$share || empty($share['filepath'])) exit(json_encode(array('error' => lang('share_file_iscancled'))));
 if ($share['status'] == -4) exit(json_encode(array('error' => lang('shared_links_screened_administrator'))));
 if ($share['status'] == -5) exit(json_encode(array('error' => lang('sharefile_isdeleted_or_positionchange'))));

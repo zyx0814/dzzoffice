@@ -16,7 +16,6 @@ $op = isset($_GET['op']) ? $_GET['op'] : '';
 if ($step == 1) {
 } elseif ($step == 2) {
     $type = implode('_', (array)$_GET['type']);
-
 } elseif ($step == 3) {
     $type = explode('_', $_GET['type']);
     if (in_array('data', $type)) {
@@ -24,6 +23,9 @@ if ($step == 1) {
     }
     if (in_array('tpl', $type) && $_G['config']['output']['tplrefresh']) {
         cleartemplatecache();
+    }
+    if (in_array('perm',$type)) {
+        clearpermcache();
     }
 }
 include template('updatecache');

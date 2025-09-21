@@ -1037,6 +1037,7 @@ _filemanage.NewIco = function (type, fid) {
 				_explorer.sourcedata.icos[data.rid] = data;
 				_filemanage.cons['f-' + fid].CreateIcos(data);
 				_filemanage.rename(data.rid);
+				showmessage('已创建：'+data.name, 'success', 3000, 1);
 			} else {
 				showDialog(data.error);
 			}

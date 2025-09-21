@@ -134,6 +134,7 @@
                 _explorer.sourcedata.icos[data.rid] = data;
                 _filemanage.cons['f-1'].CreateIcos(data);
                 hideWindow('newLink');
+                showmessage('{lang add_success}', 'success', 3000, 1);
             } else {
                 showDialog(data.error);
             }

@@ -246,7 +246,7 @@ jQuery(document).on('click','.mdi-right-backing',function(){
 	jQuery('#more_dynameic').hide();
 })
 function editgroupperm(gid,fid){
-	showWindow('select_perm', MOD_URL+'&op=ajax&operation=selectperm&fid='+fid+'&gid='+gid+'&new=0','get','0');
+	showWindow('property', MOD_URL+'&op=ajax&operation=selectperm&fid='+fid+'&gid='+gid+'&new=0','get','0');
 }
 function select_group_user(){
 	var userhref = 'index.php?mod=system&op=selorguser&template=1&callback=seluser_group&stype=2&range=1&onlymyorg=<!--{if $_G['setting']['explorer_mermoryonlymyorg'] == '1'}-->0<!--{else}-->1<!--{/if}-->&multiple=1&ids='+userids;
@@ -303,7 +303,7 @@ function seluser_group(ids,data) {
                 hideWindow('adduser');//群组内添加成员
             } else {
                 hideWindow('adduser');
-                showWindow('select_perm', _explorer.appUrl + '&op=ajax&operation=selectperm&fid=$groupinfo[fid]&gid=$gid&new=true', 'get', 0);
+                showWindow('property', _explorer.appUrl + '&op=ajax&operation=selectperm&fid=$groupinfo[fid]&gid=$gid&new=true', 'get', 0);
             }
         } else if (data['error']) {
 			layer.alert(data['error'], {skin:'lyear-skin-danger'});

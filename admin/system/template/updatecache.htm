@@ -29,12 +29,16 @@
 						<input name="formhash" value="{VERHASH}" type="hidden">
 						<div class="m-2">
 							<div class="form-check form-check-inline">
-								<input name="type[]" value="data" checked class="form-check-input" type="checkbox">
-								<label class="form-check-label" for="inlineRadio3">{lang tools_updatecache_data}</label>
+								<input name="type[]" value="data" checked id="datacache" class="form-check-input" type="checkbox">
+								<label class="form-check-label" for="datacache">{lang tools_updatecache_data}</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input name="type[]" value="tpl" id="tplcache" checked class="form-check-input" type="checkbox">
-								<label class="form-check-label" for="inlineRadio3">{lang tools_updatecache_tpl}</label>
+								<input name="type[]" value="tpl" checked id="tplcache" class="form-check-input" type="checkbox">
+								<label class="form-check-label" for="tplcache">{lang tools_updatecache_tpl}</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input name="type[]" value="perm" checked id="permcache" class="form-check-input" type="checkbox">
+								<label class="form-check-label" for="permcache">权限判断缓存</label>
 							</div>
 						</div>
 						<dl class="mb-3 d-grid">
@@ -49,11 +53,11 @@
 					</div>
 				</div>
 				<dl class="mb-3 d-grid">
-					<a href="{MOD_URL}&op=updatecache&step=3&type=data_tpl" class="btn btn-primary">{lang message_redirect}</a>
+					<a href="{MOD_URL}&op=updatecache&step=3&type={$type}" class="btn btn-primary">{lang message_redirect}</a>
 				</dl>
 				<script type="text/javascript">
 					jQuery('.progress-bar').animate({ width: '100%' }, 2000, function() {
-						window.location.href = '{MOD_URL}&op=updatecache&step=3&type=data_tpl';
+						window.location.href = '{MOD_URL}&op=updatecache&step=3&type={$type}';
 					});
 				</script>
 				<!--{elseif $step==3}-->

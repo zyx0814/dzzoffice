@@ -116,7 +116,7 @@
                     hideWindow('adduser');//群组内添加成员
                 } else {
                     hideWindow('addgroupuser');
-                    showWindow('select_perm', _explorer.appUrl + '&op=ajax&operation=selectperm&fid=$groupinfo[fid]&gid=$gid&new=true', 'get', 0);
+                    showWindow('property', _explorer.appUrl + '&op=ajax&operation=selectperm&fid=$groupinfo[fid]&gid=$gid&new=true', 'get', 0);
                 }
             } else if (data['error']) {
                 layer.alert(data['error'], {skin:'lyear-skin-danger'});
@@ -316,7 +316,7 @@
     }
     ;
     function editgroupperm(gid, fid) {
-        showWindow('#exampleMultipleOne', MOD_URL + '&op=ajax&operation=selectperm&fid=' + fid + '&gid=' + gid + '&new=false','get',0);
+        showWindow('property', MOD_URL + '&op=ajax&operation=selectperm&fid=' + fid + '&gid=' + gid + '&new=false','get',0);
     }
     function delete_group(gid){
         layer.confirm(__lang.delete_group_tips, {title:__lang.delete_group_confirm,skin:'lyear-skin-danger'}, function(index){

@@ -13,24 +13,8 @@ $uid = $_G['uid'];
 $space = dzzgetspace($uid);
 $space['self'] = intval($space['self']);
 $data = array();
-$config = array();
-if (!$config = C::t('user_field')->fetch($_G['uid'])) {
-    $config = dzz_userconfig_init();
-}
-$applist = $config['applist'] ? explode(',', $config['applist']) : array();
-if ($applist_n = array_keys(C::t('app_market')->fetch_all_by_notdelete($_G['uid']))) {
-    $newappids = array();
-    foreach ($applist_n as $appid) {
-        if (!in_array($appid, $applist)) {
-            $applist[] = $appid;
-            $newappids[] = $appid;
-        }
-    }
-    if ($newappids) {
-        C::t('app_user')->insert_by_uid($_G['uid'], $newappids);
-        C::t('user_field')->update($_G['uid'], array('applist' => implode(',', $applist)));
-    }
-}
+$applist = C::t('app_market')->fetch_all_by_default($_G['uid'],true);
+
 //应用数据
 $appdata = array();
 $appdata = C::t('app_market')->fetch_all_by_appid($applist);

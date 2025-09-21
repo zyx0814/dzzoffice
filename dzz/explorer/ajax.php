@@ -920,7 +920,6 @@ if ($operation == 'upload') {//上传图片文件
             $error = $propertys['error'];
         }
     }
-
 } elseif ($operation == 'editFileVersionInfo') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
@@ -1017,5 +1016,75 @@ if ($operation == 'upload') {//上传图片文件
 		exit(json_encode(array('error' => '参数错误')));
 	}
     exit(json_encode(array('success' => true)));
+} elseif ($operation == 'history') {
+    $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
+    $rid = dzzdecode($paths);
+    $propertys = C::t('resources')->get_property_by_rid($rid,false);
+    if ($propertys['error']) {
+        $error = $propertys['error'];
+    } else {
+        $fileinfo = $propertys;
+        $fileinfo['dpath'] = $paths;
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+        $vlimit = 20;
+        $limit = ($page) ? $page . '-' . $vlimit : $vlimit;
+        $gets = array('op' => 'ajax', 'operation' => 'history', 'paths' => $paths,'page' => $page);
+        $theurl = MOD_URL . "&" . url_implode($gets);
+        $total = C::t('resources_version')->fetch_all_by_rid($rid, '', true);
+        if($total) {
+            $multi = multi($total, $vlimit, $page, $theurl, 'pull-right');
+            $versions = C::t('resources_version')->fetch_all_by_rid($rid, $limit, false);
+        }
+    }
+} elseif ($operation == 'dynamic') {
+    $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
+    $rid = dzzdecode($paths);
+    $propertys = C::t('resources')->get_property_by_rid($rid,false);
+    if ($propertys['error']) {
+        $error = $propertys['error'];
+    } else {
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+        $limit = 15;
+        if (!preg_match('/\w{32}/', $rid)) {
+            $pfid = intval($rid);
+        }
+        if ($pfid) {
+            $total = C::t('resources_event')->fetch_by_pfid_rid($pfid, true, $page, $limit);
+            if ($total) {
+                $events = C::t('resources_event')->fetch_by_pfid_rid($pfid, false, $page, $limit);
+            }
+        } else {
+            $total = C::t('resources_event')->fetch_by_rid($rid, $page, $limit, true);
+            if ($total) {
+                $events = C::t('resources_event')->fetch_by_rid($rid, $page, $limit);
+            }
+        }
+        if($total) {
+            $gets = array('op' => 'ajax', 'operation' => 'dynamic', 'paths' => $paths,'page' => $page);
+            $theurl = MOD_URL . "&" . url_implode($gets);
+            $multi = multi($total, $limit, $page, $theurl, 'pull-right');
+        }
+    }
+} elseif ($operation == 'perm') {
+    $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
+    $rid = dzzdecode($paths);
+    $propertys = C::t('resources')->get_property_by_rid($rid,false);
+    if ($propertys['error']) {
+        $error = $propertys['error'];
+    } else {
+        if($propertys['oid']) {
+            $fid = $propertys['oid'];
+        } else {
+            $fid = $propertys['pfid'];
+        }
+        if($fid) {
+            $usergroupperm = C::t('organization_admin')->chk_memberperm($propertys['gid'], $_G['uid']);
+            if(isset($usergroupperm) && $usergroupperm > 0) {
+                $folderperm = C::t('folder')->fetch_perm_by_fid($fid);
+            }
+            $myperm = perm_check::getPerm($fid);
+            $perms = get_permsarray();
+        }
+    }
 }
 include template('ajax');

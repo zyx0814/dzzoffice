@@ -1362,6 +1362,7 @@ _filemanage.NewIco = function (type, fid) {
 				_explorer.sourcedata.icos[data.rid] = data;
 				_filemanage.cons['f-1'].CreateIcos(data);
                 _filemanage.addIndex(data);
+				showmessage('已创建：'+data.name, 'success', 3000, 1);
             } else {
 				showmessage(data.error, 'danger', 5000, 1);
 			}

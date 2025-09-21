@@ -1,14 +1,14 @@
 <!--{if $events}-->
 <ul class="lyear-timeline lyear-timeline-left">
 <!--{loop $events $eventval}-->
-<li class="lyear-timeline-item dynameic-comment">
+<li class="lyear-timeline-item dynameic-comment comment_$eventval[id]">
     <div class="lyear-timeline-item-dot">
       <span><a href="user.php?uid=$eventval['uid']" title="$eventval['username']" target="_blank">{eval echo avatar_block($eventval['uid']);}</a></span>
     </div>
     <div class="lyear-timeline-item-content">
       <p class="mb-1 text-break" title="$eventval['username']"><strong><!--{if $eventval['uid'] == $_G['uid']}-->{lang my_self}<!--{else}-->$eventval['username']<!--{/if}--></strong></p>
       <p class="mb-1 text-break">{$eventval[details]}</p>
-      <p class="mb-0"><time class="mb-3">{eval echo dgmdate($eventval['dateline'], 'u');}</time><!--{if $eventval['type'] == 1}--><span class="delete-comment color-danger mdi mdi-delete" data-commentid="$eventval[id]"></span><!--{/if}--></p>
+      <p class="mb-0"><time class="mb-3">{eval echo dgmdate($eventval['dateline'], 'u');}</time><!--{if $eventval['type'] == 1}--><span class="delete-comment color-danger mdi mdi-delete" onclick="commentdelete($eventval[id])"></span><!--{/if}--></p>
     </div>
 </li>
 <!--{/loop}-->
@@ -100,7 +100,6 @@
                 data: '{DZZSCRIPT}?mod=explorer&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,
                 callbacks: {
                     remote_filter: function (query, render_view) {
-//                        console.log(query);
                         var thisVal = query,
                             self = jQuery(this);
                         if (!self.data('active') && thisVal.length >= 1) {
@@ -132,25 +131,5 @@
             });
         }
 
-    })
-    jQuery(document).off('click.commentdelete').on('click.commentdelete','.delete-comment',function(){
-        var obj = $(this);
-        var commentid = obj.data('commentid');
-        if(typeof commentid == 'undefined' || commentid < 0){
-            layer.alert('{lang delete_error}', {skin:'lyear-skin-danger'});
-        }
-        layer.confirm(__lang.delete_filenorecover_confirm, {title:__lang.delete_comment_confirm,skin:'lyear-skin-danger'}, function(index){
-		$.post('{MOD_URL}&op=dynamic&do=deletecomment',{'id':commentid},function(data){
-            layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
-            if(data['success']){
-                layer.msg(__lang.delete_success, {offset:'10px'});
-                obj.parents('.dynameic-comment').html('');
-            }else if(data['error']){
-                layer.alert(data['error'], {skin:'lyear-skin-danger'});
-            }
-        },'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('{lang do_failed}', 'error', 3000, 1);
-        });
-	});
     })
 </script>
