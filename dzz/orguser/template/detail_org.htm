@@ -165,7 +165,7 @@
         
         return false;
     }
-	jQuery(document).on('click','.moderators-acceptor',function(){
+	jQuery(document).off('click.moderators').on('click.moderators', '.moderators-acceptor', function(){
 		var ids=[];
 		jQuery('.moderators-container .user-item').each(function(){
 			ids.push(jQuery(this).attr('uid'));
