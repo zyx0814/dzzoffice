@@ -2023,15 +2023,6 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		hideMenu('fwin_dialog', 'dialog');
 		jQuery(menuObj).modal('show');
 	};
-	// 当cache=0或需要刷新时，先销毁再创建
-    if (menuObj && (
-        (mode == 'get' && (url != menuObj.url || cache != 1)) || 
-        (mode == 'post' && document.getElementById(url).action != menuObj.act) || 
-        (mode == 'html' && cache != 1)
-    )) {
-        jQuery(menuObj).off().modal('hide').remove();
-        menuObj = null;
-    }
 	if(!menuObj) {
 		var html='<div class="modal-dialog modal-center">'
 				 +'	<div class="modal-content" >'
@@ -2058,6 +2049,8 @@ function showWindow(k, url, mode, cache, showWindow_callback,disablebacktohide) 
 		} else {
 			fetchContent();
 		}
+	} else if((mode == 'get' && (url != menuObj.url || cache != 1)) || (mode == 'post' && document.getElementById(url).action != menuObj.act) || (mode == 'html' &&  cache != 1)) {
+		fetchContent();
 	} else {
 		show();
 	}
