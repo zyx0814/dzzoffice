@@ -1,26 +1,19 @@
 <ul class="right_popbox_header">
-	<li class="rightdropdown_top d-flex">
-		<div class="float-start">
-			{eval echo avatar_block($userinfos['uid']);}
-		</div>
-		
-		<div class="rightdropdown_title">
-			<span class="rightdropdown_name">$userinfos['username']</span>
-			<div class="numer_admin">
-				<i class="mdi mdi-account-tie text-danger"></i>
-				<span class="rightdropdown_admin permgrouptextspan">
-					<!--{if $userinfos['perm'] == 0}-->
-						{lang explorer_groupperm_cooperative}
-					<!--{elseif $userinfos['perm'] == 1}-->
-						{lang explorer_groupperm_manager}
-					<!--{elseif $userinfos['perm'] == 2}-->
-						{lang explorer_groupperm_creater}
-					<!--{/if}-->
-				</span>
-			</div>
+	<li class="popbox_li numer_admin d-flex">
+		<div class="dropdown-item-text">
+			<i class="mdi mdi-account-tie text-danger"></i>
+			<span class="rightdropdown_admin permgrouptextspan">
+				<!--{if $userinfos['perm'] == 0}-->
+					{lang explorer_groupperm_cooperative}
+				<!--{elseif $userinfos['perm'] == 1}-->
+					{lang explorer_groupperm_manager}
+				<!--{elseif $userinfos['perm'] == 2}-->
+					{lang explorer_groupperm_creater}
+				<!--{/if}-->
+			</span>
 		</div>
 	</li>
-	<!--{if $perm >1 && $userinfos['perm'] != 2 && $group['type']}-->
+	<!--{if $perm >1 && $userinfos['perm'] != 2}-->
 	<li class="popbox_li doperm dropend">
 		<a class="dropdown-item dropdown-toggle" href="javascript:;" data-toggle="dropdown" aria-expanded="false">{lang perm_edit}</a>
 		<ul class="right_popbox_header popbox-header-twomenu dropdown-menu">
@@ -32,7 +25,7 @@
 				</a>
 			</li >
 			<!--{/if}-->
-			<li class="popbox_li permedit"  data-perm="1">
+			<li class="popbox_li permedit" data-perm="1">
 				<a class="dropdown-item" href="javascript:;">
 				<!--{if $userinfos['perm'] == 1}-->
 					<span class="mdi mdi-check mdi-fit mdi-color"></span>
@@ -43,7 +36,7 @@
 				<!--{/if}-->
 				</a>
 			</li>
-			<li class="popbox_li permedit"  data-perm="0">
+			<li class="popbox_li permedit" data-perm="0">
 				<a class="dropdown-item" href="javascript:;">
 					<!--{if $userinfos['perm'] == 0}-->
 					<span class="mdi mdi-check mdi-fit mdi-color"></span>
@@ -79,27 +72,21 @@
        var text = obj.find('.popbox-text').text();
        jQuery.post(MOD_URL+'&op=group&do=right_popbox&operation=setmemberperm&gid='+gid,{'guid':currentUid,'perm':perm},function(data){
 			if(data['success']){
-			    var permicocontainer = jQuery('#'+currentUid+'_delete').find('a');
-                var permiconum = permicocontainer.find('.right-first').length;
 			    if(perm > 1  && orgtype == 1){
-                    permicocontainer.closest('#memberlist').find('li a span.creator').remove();
-                    var html = '<span class="right-first creator"><img src="{MOD_PATH}/images/ic-creator.png"></span>';
+                    var html = '{lang explorer_groupperm_creater}';
 				}else if(perm > 0){
-                    var html = '<span class="right-first"><img src="{MOD_PATH}/images/ic-manager.png"></span>';
+                    var html = '{lang explorer_groupperm_manager}';
 				}else{
-				    var html = '';
+				    var html = '{lang explorer_groupperm_cooperative}';
 				}
-                if(permiconum > 0){
-                    permicocontainer.find('.right-first').replaceWith(html);
-                }else{
-                    permicocontainer.append(html);
-                }
-                var dzzFit=obj.find('.mdi-fit');                           
+				jQuery('.'+currentUid+'_delete .perm-name').html(html);
+                var dzzFit=obj.find('.mdi-fit');                 
                 dzzFit.addClass('mdi-color').closest('.popbox_li').siblings().find('.mdi-fit').removeClass('mdi-color');
                 if(dzzFit.hasClass('mdi-color')){
                     obj.find('.popbox-text').css({'color':'#4c89fb'}).closest('.popbox_li').siblings().find('.popbox-text').css({'color':'#333'});
-                    obj.closest('.doperm').siblings('.rightdropdown_top').find('.permgrouptextspan').text(text);
+                    obj.closest('.doperm').siblings('.numer_admin').find('.permgrouptextspan').text(text);
                 }
+				showmessage(data['success'],'success',3000,1);
 			}else {
                 showDetail(data['error']);
             }
@@ -126,10 +113,10 @@
                          useridsarr.splice(index,1);
                          userids = useridsarr.join(',');
                          if (data['uids'][o] == currentdouid) {
-                             jQuery('#' + data['uids'][o] + '_delete').remove();
+                             jQuery('.' + data['uids'][o] + '_delete').remove();
                              location.hash = "#recent";
                          } else {
-                             jQuery('#' + data['uids'][o] + '_delete').remove();
+                             jQuery('.' + data['uids'][o] + '_delete').remove();
                          }
                          jQuery('.member_details_info').popbox('close');
                      }

@@ -91,6 +91,16 @@
 				},function(){
             });
 		});
+        jcLoader().load({
+            type:'js', 
+            ids:'js_atwho.js', 
+            url:'static/atwho/js/jquery.atwho.js?{VERHASH}'  
+        });
+        jcLoader().load({
+            type:'js', 
+            ids:'js_caret.js', 
+            url:'static/atwho/js/jquery.caret.js?{VERHASH}'  
+        });
     });
     function adduser_group(ids,data){
         var formdata={};
@@ -102,7 +112,7 @@
         $.post(url, formdata, function (data) {
             if(data['success']){
                 hideWindow('adduser');
-                showWindow('property', _explorer.appUrl + '&op=ajax&operation=selectperm&fid='+data['fid']+'&gid='+newgroupgid+'&new=true', 'get', 0);
+                showWindow('property', _explorer.appUrl + '&op=ajax&do=selectperm&fid='+data['fid']+'&gid='+newgroupgid+'&new=true', 'get', 0);
             }else{
                 hideWindow('adduser');
                 layer.alert(__lang.explorer_do_failed, {skin:'lyear-skin-danger'});
@@ -112,7 +122,7 @@
             showmessage('{lang do_failed}', 'error', 3000, 1);
         });
     }
-</script> 
+</script>
 <script type="text/javascript" src="{MOD_PATH}/js/explorer.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/_perm.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/filemanage.js?{VERHASH}"></script>

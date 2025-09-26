@@ -15,7 +15,7 @@ class Logincheck {
 
             if ($setting['bbclosed'] > 0 && $setting['adminid'] != 1) {//判断站点是否关闭，并且登录用户是否是管理员
 
-                showmessage(lang('site_closed_please_admin'));
+                showmessage('site_closed_please_admin');
 
             } else {
 

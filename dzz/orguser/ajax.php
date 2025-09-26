@@ -534,7 +534,7 @@ if ($do == 'upload') {//上传图片文件
     include template('guide');
 } elseif ($do == 'set') {
     if ($_G['adminid'] != 1) {
-        showmessage('privilege');
+        showmessage('privilege',MOD_URL);
     }
     if (submitcheck('confirmsubmit')) {
         include_once libfile('function/cache');

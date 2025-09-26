@@ -99,19 +99,18 @@ if ($do == 'filelist') {
             if ($folder = C::t('folder')->fetch_by_fid($id)) {
                 if ($folder['gid']) {
                     $uid = $_G['uid'];
-                    $gid = $folder['gid'];
                     //群组信息
-                    if (!$group = C::t('organization')->fetch($gid)) {
+                    if (!$group = C::t('organization')->fetch($folder['gid'])) {
                         $mqx = '1';
                     }
                     //获取群组成员权限
-                    $perm = C::t('organization_admin')->chk_memberperm($gid, $uid);
+                    $perm = C::t('organization_admin')->chk_memberperm($folder['gid'], $uid);
                     //判断群组是否开启，如果未开启(共享目录)并且不是管理员不能访问
                     if (!$group['diron'] && !$perm) {
                         $mqx = '1';
                     }
                     //判断是否有权限访问群组，如果不是管理员权限(主要针对系统管理员和上级管理员),并且非成员
-                    if (!$perm && !C::t('organization')->ismember($gid, $uid, false)) {
+                    if (!$perm && !C::t('organization')->ismember($folder['gid'], $uid, false)) {
                         $mqx = '1';
                     }
                 }

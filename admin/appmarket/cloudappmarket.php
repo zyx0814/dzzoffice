@@ -19,8 +19,14 @@ $url = APP_CHECK_URL . "market/app/list";//$cloudurl."?mod=dzzmarket&op=index_aj
 $type = empty($_GET['type']) ? 1 : intval($_GET['type']);
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+$nettype = isset($_GET['nettype']) ? intval($_GET['nettype']) : '';;
+$orderid = isset($_GET['order']) ? trim($_GET['order']) : '';
+$orderarr = ['updatetime', 'price', 'downloads', 'replys', 'views', 'dateline'];
+$order = in_array($orderid, $orderarr) ? $orderid : 'disp';
 $classid = intval($_GET['classid']);
-$post_data = array("siteuniqueid" => $_G["setting"]["siteuniqueid"], "page" => $page, "type" => 1);
+$price = intval($_GET['price']);
+$nettypetitle = array('1' => '内网', '2' => '外网');
+$post_data = array("siteuniqueid" => $_G["setting"]["siteuniqueid"], "page" => $page, "type" => 1, "classid" => $classid, "price" => $price,"nettype" => $nettype,"order" => $order);
 $json = curlcloudappmarket($url, $post_data);
 $json = json_decode($json, true);
 $list = array();
@@ -29,12 +35,14 @@ if ($json["status"] == 1) {
     $list = $json["data"]["list"];
     $total = $json["data"]["total"];
     $perpage = $json["data"]["perpage"];
-    $theurl = MOD_URL . "&op=cloudappmarket";
+    $gets = array('op' => 'cloudappmarket', 'type' => $type, 'classid' => $classid, 'price' => $price,'nettype' => $nettype,'order' => $order);
+    $theurl = MOD_URL . "&" . url_implode($gets);
     $multi = multi($total, $perpage, $page, $theurl, 'justify-content-center');
+} else {
+    $error = '在线获取应用列表失败，请尝试前往官网下载';
 }
-//print_r($list);exit;
-$local_applist = DB::fetch_all("select * from %t where 1", array('app_market'));//C::tp_t("app_market")->select();
 if ($list) {
+    $local_applist = DB::fetch_all("select * from %t where 1", array('app_market'));
     foreach ($list as $k => $v) {
         $list[$k]["local_appinfo"] = array();
         $list[$k]["baseinfo"] = base64_encode(serialize($v));
@@ -62,11 +70,11 @@ function curlcloudappmarket($url = "", $post_data = "", $token = "") {
     $response = curl_exec($curl);
     $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     $errorno = curl_errno($curl);
+    $finalUrl = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
+    curl_close($curl);
     if ($errorno) {
         return ($errorno);
     }
     return ($response);
 }
-
-
 ?>

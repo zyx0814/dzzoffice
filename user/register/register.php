@@ -19,7 +19,7 @@ if ($_G['uid']) {
     }
     showmessage('login_succeed', $url_forward ? $url_forward : './', array('username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['uid']), array());
 } elseif ($setting['bbclosed']) {
-    showmessage(lang('site_closed_please_admin'));
+    showmessage('site_closed_please_admin');
 } elseif (!$setting['regclosed']) {
     if ($_GET['action'] == 'activation' || $_GET['activationauth']) {
         if (!$setting['ucactivation'] && !$setting['closedallowactivation']) {
@@ -70,11 +70,10 @@ if (!submitcheck('regsubmit')) {
     }
     exit();
 } else {
-
+    $type = isset($_GET['returnType']) ? $_GET['returnType'] : '';
     Hook::listen('check_val', $_GET);//用户数据验证钩子,用户注册资料信息提交验证
     $result = $_GET;
     Hook::listen('register_common', $result);//用户注册钩子
-    $type = isset($_GET['returnType']) ? $_GET['returnType'] : '';
 
     //获取ip
     $ip = $_G['clientip'];

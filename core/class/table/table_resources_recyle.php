@@ -26,7 +26,6 @@ class table_resources_recyle extends dzz_table {
         $path = C::t('resources_path')->fetch_pathby_pfid($arr['pfid']);
         $arr['pathinfo'] = $path;
         if ($cid = parent::insert($arr)) {
-
             if ($path) $path = preg_replace('/dzz:(.+?):/', '', $path);
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($setarr['pfid'], $setarr['gid']);
             $eventdata = array('username' => $arr['username'], 'filename' => $arr['filename'], 'position' => ($path) ? $path : '', 'hash' => $hash);

@@ -146,7 +146,7 @@ class io_qiniu extends io_api {
             if (!$access_id || !$access_key) {
                 showmessage('please input qiniu AK and SK', dreferer());
             }
-            if (!$bucket || !$hostname) showmessage(lang('set_bucket_name_region'), dreferer());
+            if (!$bucket || !$hostname) showmessage('set_bucket_name_region', dreferer());
             Qiniu_setKeys($access_id, $access_key);
             if (!isset($HOSTS[$region])) $region = 'huadong';
             Qiniu_UploadHost($HOSTS[$region]['up_http']);

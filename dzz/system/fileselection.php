@@ -46,7 +46,7 @@ $allowvisit = array('file', 'listtree', 'explorerfile', 'json', 'ajax', 'dzzcp',
 if ($template == '1') {
     if ($do) {
         if (!in_array($do, $allowvisit)) {
-            showmessage(lang('access_denied'), dreferer());
+            showmessage('access_denied', dreferer());
         } else {
             require MOD_PATH . '/fileselection/' . $do . '.php';
         }
@@ -61,7 +61,7 @@ if ($template == '1') {
     } else {
         if ($do) {
             if (!in_array($do, $allowvisit)) {
-                showmessage(lang('access_denied'), dreferer());
+                showmessage('access_denied', dreferer());
             } else {
                 require MOD_PATH . '/fileselection/' . $do . '.php';
             }

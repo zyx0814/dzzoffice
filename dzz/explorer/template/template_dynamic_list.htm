@@ -1,93 +1,58 @@
-<!--{if $events}-->
-<ul class="lyear-timeline lyear-timeline-left">
-<!--{loop $events $eventval}-->
-<li class="lyear-timeline-item dynameic-comment comment_$eventval[id]">
-    <div class="lyear-timeline-item-dot">
-      <span><a href="user.php?uid=$eventval['uid']" title="$eventval['username']" target="_blank">{eval echo avatar_block($eventval['uid']);}</a></span>
-    </div>
-    <div class="lyear-timeline-item-content">
-      <p class="mb-1 text-break" title="$eventval['username']"><strong><!--{if $eventval['uid'] == $_G['uid']}-->{lang my_self}<!--{else}-->$eventval['username']<!--{/if}--></strong></p>
-      <p class="mb-1 text-break">{$eventval[details]}</p>
-      <p class="mb-0"><time class="mb-3">{eval echo dgmdate($eventval['dateline'], 'u');}</time><!--{if $eventval['type'] == 1}--><span class="delete-comment color-danger mdi mdi-delete" onclick="commentdelete($eventval[id])"></span><!--{/if}--></p>
-    </div>
-</li>
-<!--{/loop}-->
-</ul>
-<!--{if $next}-->
-{if !isset($tplmore)}
-<div class="mb-1 d-grid">
-<a href="javascript:;" class="btn btn-link btn-sm text-end {if !isset($tplmore)}btn_dynamic_more {else}btn_dynamic_more_less{/if} {if isset($tplmore)} hide {/if}" onclick="load_dynamic(this,'{eval echo ($next-3)}','{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$_GET['fid']',0);">{lang upload_more}</a>
-</div>
-<!--{else}-->
-<a href="javascript:;" class="btn btn-link btn-sm text-end btn_dynamic_more_less {if isset($tplmore)} hide {/if}" onclick="load_dynamic(this,$next,'{eval if(!is_array($rids)) $rids = (array)$rids;echo implode(',',$rids);}','$pfid',1);">{lang upload_more}</a>
-<!--{/if}-->
-<!--{/if}-->
-<!--{else}-->
-<div class="scroll-y">
-	<div class="emptyPage">
-    	<img src="{MOD_PATH}/images/noFilePage-dynamic.png">
-    	<p class="emptyPage-text">{lang no_dynamisc}</p>
+<!--{if $do == 'comment'}-->
+<!--{if $commentperm && $fileinfo['editperm']}-->
+<div class="comment-area dtheme">
+    <div class="messageMenu"> 
+	    <form action="{MOD_URL}&op=ajax&do=commentajax" method="post" onsubmit="return comment_file(this)" id="commentid{$commentid}">
+	        <input type="hidden" name="rid" value="$fileinfo['rid']" />
+            <input type="hidden" name="fid" value="$fileinfo['fid']" />
+	    	<div class="discuss-content">
+	            <textarea type="text" id="leave_message{$commentid}" name="msg" rows="1" placeholder="{lang input_comments}" class="form-control leave_message"></textarea>
+	            <div class="comment-file">
+	                <ul class="list_acpsw">
+	                    <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_message{$commentid}sml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span class="mdi mdi-emoticon-excited-outline"></span></a>
+	                    </li>
+	                </ul>
+	            </div>
+	        </div>
+	        <div class="activity-handler clearfix">
+	             <button type="submit" class="mdi mdi-send pull-right disabled input-search-drop" style="color:rgba(55,121,255,0.3);"></button>
+	        </div>
+	    </form>
     </div>
 </div>
-<!--{/if}-->
-<script type="text/javascript" src="static/atwho/js/jquery.atwho.js"></script>
-<script type="text/javascript" src="static/atwho/js/jquery.caret.js"></script>
-<script type="text/javascript">
-    var gid = '{$gid}';
-    var commentfid = '';
-    var commentrid='';
-    jQuery(document).on('click', '.btn_dynamic_more', function () {
-        jQuery('#more_dynameic').show();
-    });
-
-    function load_dynamic(obj, next, rid, fid, tplmore) {
-        var queryObj = {'next': next};
-        if (rid) {
-            queryObj.rid = rid;
-        } else {
-            queryObj.rid = fid;
-        }
-        
-        var adddynamisc = '';
-        if (tplmore) adddynamisc = '&adddynamisc=1';
-        jQuery.get('{MOD_URL}&op=dynamic&do=loadmoredynamic&gid=' + gid + adddynamisc, queryObj, function (html) {
-            if (tplmore) {
-                jQuery(obj).replaceWith(html);
+<script type="text/javascript" reload="1">
+    jQuery(document).ready(function (e) {
+        smilies_show('leave_message{$commentid}_sml_div', '{$_G[setting][smcols]}', 'leave_message{$commentid}');
+        jQuery('#leave_message{$commentid}').off("input.commet propertychange.comment").on("input.comment propertychange.comment", function (e) {
+            var el = jQuery(this);
+            var msg = el.val();
+            var disbutton = el.closest('.comment-area').find('button');
+            if (msg.length <= 0) {
+                disbutton.addClass("disabled");
+                disbutton.css({'color': 'rgba(55,121,255,0.3)'});
             } else {
-                jQuery('#rightinfo_content').replaceWith(html);
+                disbutton.removeClass("disabled");
+                disbutton.css({'color': 'rgba(55,121,255,1)'});
             }
-            _explorer.Scroll();
-            jQuery('#leave_message').off("input.commet propertychange.comment").on("input.comment propertychange.comment", function (e) {
-                var el = jQuery(this);
-                var msg = el.val();
-                var disbutton = el.closest('.comment-area').find('button');
-                if (msg.length <= 0) {
-                    disbutton.addClass("disabled");
-                    disbutton.css({'color': 'rgba(55,121,255,0.3)'});
-                } else {
-                    disbutton.removeClass("disabled");
-                    disbutton.css({'color': 'rgba(55,121,255,1)'});
-                }
-            });
-            jQuery('#leave_message').focus(function () {
-                var el = jQuery(this);
-                var msg = el.val();
-                var disbutton = el.closest('.comment-area').find('button');
-                if (msg.length <= 0) {
-                    disbutton.addClass("disabled");
-                    disbutton.css({'color': 'rgba(55,121,255,0.3)'});
-                } else {
-                    disbutton.removeClass("disabled");
-                    disbutton.css({'color': 'rgba(55,121,255,1)'});
-                }
-            })
-
         });
-    }
-   jQuery(function(){
-        if (gid > 0 && jQuery('#commentid').length > 0) {
-            commentfid = jQuery('#commentid').find('input[name=fid]').val();
-            commentrid = jQuery('#commentid').find('input[name=rid]').val();
+        jQuery('#leave_message{$commentid}').focus(function () {
+            var el = jQuery(this);
+            var msg = el.val();
+            var disbutton = el.closest('.comment-area').find('button');
+            if (msg.length <= 0) {
+                disbutton.addClass("disabled");
+                disbutton.css({'color': 'rgba(55,121,255,0.3)'});
+            } else {
+                disbutton.removeClass("disabled");
+                disbutton.css({'color': 'rgba(55,121,255,1)'});
+            }
+        })
+        var gid = '{$fileinfo['gid']}';
+        var commentfid = '';
+        var commentrid='';
+        if (gid > 0 && jQuery('#commentid{$commentid}').length > 0) {
+            commentfid = jQuery('#commentid{$commentid}').find('input[name=fid]').val();
+            commentrid = jQuery('#commentid{$commentid}').find('input[name=rid]').val();
             var cachequeryMentions = [], itemsMentions;
             var querystr = '';
             if(commentfid){
@@ -95,9 +60,9 @@
             }else{
                 querystr = '&rid='+commentrid;
             }
-            jQuery('#leave_message').atwho({
+            jQuery('#leave_message{$commentid}').atwho({
                 at: "@",
-                data: '{DZZSCRIPT}?mod=explorer&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,
+                data: '{MOD_URL}&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,
                 callbacks: {
                     remote_filter: function (query, render_view) {
                         var thisVal = query,
@@ -111,7 +76,7 @@
                                 if (self.xhr) {
                                     self.xhr.abort();
                                 }
-                                self.xhr = jQuery.getJSON('{DZZSCRIPT}?mod=explorer&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,{
+                                self.xhr = jQuery.getJSON('{MOD_URL}&op=group&do=group_ajax&operation=getAtData&gid=' + gid+querystr,{
                                     term: thisVal
                                 }, function (data) {
                                     cachequeryMentions[thisVal] = data
@@ -130,6 +95,45 @@
                 display_timeout: 300
             });
         }
-
-    })
+    });
 </script>
+<ul class="lyear-timeline lyear-timeline-left just-now" style="margin-top: 55px;"></ul>
+<!--{/if}-->
+<!--{if $addinfo}-->
+<div class="alert alert-warning">$addinfo</div>
+<!--{/if}-->
+<!--{/if}-->
+<!--{if $events}-->
+<ul class="lyear-timeline lyear-timeline-left">
+<!--{loop $events $eventval}-->
+<li class="lyear-timeline-item dynameic-comment comment_$eventval[id]">
+    <div class="lyear-timeline-item-dot">
+      <span><a href="user.php?uid=$eventval['uid']" title="$eventval['username']" target="_blank">{eval echo avatar_block($eventval['uid']);}</a></span>
+    </div>
+    <div class="lyear-timeline-item-content">
+      <p class="mb-1 text-break" title="$eventval['username']"><strong><!--{if $eventval['uid'] == $_G['uid']}-->{lang my_self}<!--{else}-->$eventval['username']<!--{/if}--></strong></p>
+      <p class="mb-1 text-break">{$eventval[details]}</p>
+      <p class="mb-0"><time class="mb-3">{eval echo dgmdate($eventval['dateline'], 'u');}</time><!--{if $eventval['type'] == 1 && $fileinfo['editperm']}--><span class="delete-comment color-danger mdi mdi-delete" onclick="commentdelete($eventval[id])"></span><!--{/if}--></p>
+    </div>
+</li>
+<!--{/loop}-->
+</ul>
+<!--{if $next}-->
+<div class="mb-1 d-grid">
+    <a href="javascript:;" class="btn btn-link btn-sm text-end" onclick="jQuery('.dynamic-tab').click();">{lang upload_more}</a>
+</div>
+<!--{/if}-->
+$multi
+<!--{else}-->
+<!--{if $property || $do == 'getfiledynamic'}-->
+<div class="text-center">
+    <img src="{MOD_PATH}/images/noFilePage-dynamic.png">
+    <p class="text-muted fs-5">$info</p>
+</div>
+<!--{else}-->
+<div class="emptyPage">
+    <img src="{MOD_PATH}/images/noFilePage-dynamic.png">
+    <p class="text-muted fs-5">$info</p>
+</div>
+<!--{/if}-->
+<!--{/if}-->

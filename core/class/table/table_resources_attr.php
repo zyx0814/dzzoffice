@@ -75,6 +75,24 @@ class table_resources_attr extends dzz_table {
         return $returndata;
     }
 
+    public function fetch_by_key($rid, $vid = 0, $key, $isval = false) {
+        $cachekey = $this->_pre_cache_key.'data_'.$rid.'_'.$vid.'_'.$key;
+        if ($returndata = $this->fetch_cache($cachekey)) {
+            if ($isval) {
+                return $returndata['sval'];
+            }
+            return $returndata;
+        }
+        $returndata = DB::fetch_first("SELECT * FROM %t WHERE rid = %s AND vid = %d AND skey = %s", array($this->_table, $rid, $vid, $key));
+        if ($returndata) {
+            $this->store_cache($cachekey, $returndata);
+            if ($isval) {
+                return $returndata['sval'];
+            }
+        }
+        return $returndata;
+    }
+
     public function insert_attr($rid, $vid = 0, $attrs = array()) {
         $i = 0;
         foreach ($attrs as $k => $v) {

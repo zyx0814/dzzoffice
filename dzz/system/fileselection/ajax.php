@@ -90,66 +90,26 @@ if ($operation == 'upload') {//上传图片文件
         if (!preg_match("/^(http|ftp|https|mms)\:\/\/.{4,300}$/i", ($link))) {
             $arr['error'] = lang('invalid_format_url');
         } else {
-
-            $ext = strtolower(substr(strrchr($link, '.'), 1, 10));
-            $isimage = in_array(strtoupper($ext), $imageexts) ? 1 : 0;
-            $ismusic = 0;
-
-            //是图片时处理
-            if ($isimage) {
-                if (!perm_check::checkperm_Container($fid, 'upload')) {
-                    $arr['error'] = lang('target_not_accept_image');
-                }
-                if ($data = io_dzz::linktoimage($link, $fid)) {
-                    if ($data['error']) $arr['error'] = $data['error'];
-                    else {
+            if (!perm_check::checkperm_Container($fid, 'upload')) {
+                $arr['error'] = lang('target_not_accept_link');
+            } else {
+                if ($data = io_dzz::linktourl($link, $fid)) {
+                    if ($data['error']) {
+                        $arr['error'] = $data['error'];
+                    } else {
                         $arr = $data;
                         $arr['msg'] = 'success';
                     }
-                }
-
-            } else {
-                //试图作为视频处理
-                if ($data = io_dzz::linktovideo($link, $fid)) {
-                    if (!perm_check::checkperm_Container($fid, 'upload')) {
-                        $arr['error'] = lang('target_not_accept_video');
-                    } else {
-                        if ($data['error']) $arr['error'] = $data['error'];
-                        else {
-                            $arr = $data;
-                            $arr['msg'] = 'success';
-                        }
-                    }
-                }
-                //作为网址处理
-                if (!perm_check::checkperm_Container($fid, 'upload')) {
-                    $arr['error'] = lang('target_not_accept_link');
                 } else {
-                    if ($data = io_dzz::linktourl($link, $fid)) {
-                        if ($data['error']) {
-                            $arr['error'] = $data['error'];
-                        } else {
-                            $arr = $data;
-                            $arr['msg'] = 'success';
-                        }
-                    } else {
-                        $arr['error'] = lang('network_error');
-                    }
+                    $arr['error'] = lang('network_error');
                 }
-
             }
-
         }
     }
     exit(json_encode($arr));
-} elseif ($operation == 'dzzdocument' || $operation == 'txt') {//新建文档
-    if ($operation == 'dzzdocument') {
-        $ext = 'dzzdoc';
-    } else {
-        $ext = 'txt';
-    }
-    $name = lang('new_' . $ext);
-    $filename = $name . '.' . $ext;
+} elseif ($operation == 'txt') {//新建文档
+    $name = lang('new_txt');
+    $filename = $name . '.txt';
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if ($arr = IO::upload_by_content(' ', $fid, $filename)) {
         if ($arr['error']) {

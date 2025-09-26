@@ -269,7 +269,7 @@ if ($do == 'deleteIco') {//删除文件到回收站
     $rid = isset($_GET['rid']) ? $_GET['rid'] : '';
     $setarr = array(
         'uid' => $uid,
-        'username' => getglobal('username'),
+        'username' => $_G['username'],
         'name' => getstr($_GET['name']),
         'aid' => intval($_GET['aid']),
         'size' => intval($_GET['size']),
@@ -281,7 +281,7 @@ if ($do == 'deleteIco') {//删除文件到回收站
         exit(json_encode(array('error' => $return['error'])));
     } else {
         $statisdata = array(
-            'uid' => getglobal('uid'),
+            'uid' => $_G['uid'],
             'edits' => 1,
             'editdateline' => TIMESTAMP
         );

@@ -157,22 +157,23 @@ class table_resources_event extends dzz_table {
                 $fids[] = $v['oid'];
             }
         }
-        $wheresql = " where rid in(%n) ";
+        $wheresql = " where (rid in(%n)";
         $params = array($this->_table, $rids);
         if (count($fids) > 0) {
-            $wheresql .= " or (pfid in(%n))";
+            $wheresql .= " or pfid in(%n)";
             $params[] = $fids;
         }
+        $wheresql .= ")";
         if ($type) {
-            $type = $type - 1;
-            $wheresql .= ' and `type` = ' . $type;
+            $typeVal = $type - 1;
+            $wheresql .= " and `type` = %d";
+            $params[] = $typeVal;
         }
         if ($count) {
             return DB::result_first("select count(*) from %t $wheresql", $params);
         }
         $limitsql = $limit ? DB::limit($start, $limit) : '';
         $events = array();
-        $uids = array();
         include_once libfile('function/use');
         foreach (DB::fetch_all("select * from %t $wheresql order by dateline desc $limitsql", $params) as $v) {
             $v['body_data'] = unserialize($v['body_data']);
@@ -182,10 +183,8 @@ class table_resources_event extends dzz_table {
             $v['do_lang'] = lang($v['do']);
             $v['details'] = lang($v['event_body'], $v['body_data']);
             $v['fdate'] = dgmdate($v['dateline'], 'u');
-            $uids[] = $v['uid'];
             $events[] = $v;
         }
-        $events = self::result_events_has_avatarstatusinfo($uids, $events);
         return $events;
     }
 
@@ -214,7 +213,6 @@ class table_resources_event extends dzz_table {
         }
         $limitsql = $limit ? DB::limit($start, $limit) : '';
         $events = array();
-        $uids = array();
         include_once libfile('function/use');
         foreach (DB::fetch_all("select * from %t $wheresql order by dateline desc $limitsql", $params) as $v) {
             $v['body_data'] = unserialize($v['body_data']);
@@ -224,10 +222,8 @@ class table_resources_event extends dzz_table {
             $v['do_lang'] = lang($v['do']);
             $v['details'] = lang($v['event_body'], $v['body_data']);
             $v['fdate'] = dgmdate($v['dateline'], 'u');
-            $uids[] = $v['uid'];
             $events[] = $v;
         }
-        $events = self::result_events_has_avatarstatusinfo($uids, $events);
         return $events;
     }
 
@@ -366,7 +362,6 @@ class table_resources_event extends dzz_table {
         if ($count) {
             return DB::result_first("select count(*) from %t e left join %t f on e.pfid = f.fid where  $wheresql  $ordersql", $params);
         }
-        $uids = array();
         $events = array();
         foreach (DB::fetch_all("select e.* from %t e left join %t f on e.pfid = f.fid where  $wheresql  $ordersql  $limitsql", $params) as $v) {
             $v['body_data'] = unserialize($v['body_data']);
@@ -374,10 +369,8 @@ class table_resources_event extends dzz_table {
             $v['do_lang'] = lang($v['do']);
             $v['details'] = lang($v['event_body'], $v['body_data']);
             $v['fdate'] = dgmdate($v['dateline'], 'u');
-            $uids[] = $v['uid'];
             $events[] = $v;
         }
-        $events = self::result_events_has_avatarstatusinfo($uids, $events);
         return $events;
 
     }

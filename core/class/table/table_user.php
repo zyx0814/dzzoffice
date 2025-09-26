@@ -361,6 +361,11 @@ class table_user extends dzz_table {
         return $user;
     }
 
+    public function fetch_by_username_uid($uid, $fetch_archive = 0) {
+        $user = DB::fetch_first('SELECT username FROM %t WHERE uid=%d', array($this->_table, $uid));
+        return $user['username'];
+    }
+
     public function fetch_all_by_email($emails, $fetch_archive = 1) {
         $users = array();
         if (!empty($emails)) {

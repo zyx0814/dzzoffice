@@ -1,133 +1,5 @@
 <!--{template common/header_ajax}-->
-<!--{if $operation == 'addgroupuser'}-->
-<script type="text/javascript" src="{MOD_PATH}/js/selorg.js"></script>
-<script type="text/javascript" reload="1">
-    if ('{$open}') {
-        var openarr = [];
-        openarr['seluser'] = $open;
-    }
-</script>
-<div class="modal-header">
-    <h4 class="modal-title text-truncate">{lang select_group_member}</h4>
-    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-</div>
-<form onsubmit="return chkadd(this);">
-    <div class="modal-body">
-        <div class="row mb-1"> 
-            <label class="col-sm-2">{lang select_will_addmember}</label>
-            <div class="col-sm-10">
-                <input id="jstree_search_input" type="text" class="form-control"
-                        onblur="selorg.search('seluser',this);"
-                        onkeyup="if(event.keyCode==13){selorg.search('seluser',this);}"/>
-                <!--</div>-->
-            </div>
-            <div class="user-select-content">
-                <div class="user-select-content-left">
-                    <p class="user-select-content-title">{lang choose}{lang organization}/{lang department}/{lang member}</p>
-                    <div class="group-content " id="seluser_dropdown_menu">
-                        <iframe name="seluser_iframe" class="org-sel-box-iframe"
-                                src="index.php?mod=system&op=selorguser&template=1&callback=seluser&moderator=1&multiple=1&stype=2&range=1&onlymyorg=<!--{if $_G['setting']['explorer_mermoryonlymyorg'] == '1'}-->0<!--{else}-->1<!--{/if}-->"
-                                frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"
-                                allowtransparency="true"></iframe>
-                        <input id="sel_seluser" type="hidden" name="uids"
-                               value="{eval echo implode(',',array_keys($userarr));}"/>
-                    </div>
-                </div>
-                <div class="user-select-content-right">
-                    <div class="selected-member">{lang selected_members}</div>
-                    <div class="group-content" id="group-contents">
-                        <ul class="sele-right-classa" id="seluser">
-                            <!--{loop $userarr $key $value}-->
-                            <li id="seluser_sl_$key" class="right-classa-depart" data-val="$key">
-                                <!--{if $value['avatarstatus'] == 1}-->
-                                <img src="avatar.php?uid={$value['uid']}" class="img-rounded select-mech">
-                                <!--{else}-->
-                                <span class="iconFirstWord" style="background:{$value[headerColor]}">
-			                        <span title="$value['username']">{eval echo new_strsubstr(ucfirst($value['username']),1,'');}</span>
-			                    </span>
-                                <!--{/if}-->
-                                $value['username']
-                                <!--{if ($perm > $value['perm']) || ($_G['adminid'] == 1 && $value['perm'] != 2 && $groupinfo['type'] == 1)}-->
-                                <i class="ti-close mdi mdi-close "></i>
-                                <!--{/if}-->
-                            </li>
-                            <!--{/loop}-->
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-footer">
-        <input type="hidden" name="add" value="true"/>
-        <button type="button" class="btn btn-secondary cancel" data-dismiss="modal" aria-label="Close">{lang cancel}</button>
-        <button type="submit" class="btn btn-primary">{lang confirms}</button>
-    </div>
-</form>
-<script type="text/javascript" reload="1">
-    var createid = '{$_G['uid']}';
-    $(document).ready(function (e) {
-        $(document).on('mouseenter', '.user-item', function () {
-            $(this).addClass('hover');
-        });
-        $(document).on('mouseleave', '.user-item', function () {
-            $(this).removeClass('hover');
-        });
-        $(document).on('click', '.right-classa-depart .ti-close', function () {
-            selorg.remove('seluser', this);
-        });
-
-    });
-
-    function chkadd(form) {
-        var form = $(form);
-        var gid = '{$gid}';
-        $.post(MOD_URL + '&op=group&do=group_ajax&operation=addgroupuser&gid=' + gid, form.serialize(), function (data) {
-            if (data['success']) {
-                if ($('#memberlist').length > 0 && $('#memberlist').data('gid') == gid) {
-                    var html = '';
-                    var usericon = '';
-                    //修改权限菜单
-                    for (var o in data['insertuser']) {
-                        if (data['insertuser'][o]['avatarstatus'] == 1) {
-                            html += '<li class="right-numer-carousel" id="' + data['insertuser'][o]['uid'] + '_delete" >' +
-                                ' <a href="javascript:;" class="js-popbox member_details_info adduser" data-placement="bottom" data-trigger="focus"' +
-                                ' data-auto-adapt="true"data-toggle="popover" style="display: inline-block;width: 28px;"' +
-                                ' data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid=' + data['insertuser'][o]['uid'] + '"> ' +
-                                '<img src="avatar.php?uid=' + data['insertuser'][o]['uid'] + '" class="img-circle img-avatar" style="width: 25px;height: 25px;"> </a> </li>';
-                        } else {
-                            html += '<li class="right-numer-carousel" style="background:' + data['insertuser'][o]['headerColor'] + '" id="' + data['insertuser'][o]['uid'] + '_delete">' +
-                                '<a href="javascript:;" class="js-popbox member_details_info adduser" data-placement="bottom" data-trigger="focus"' +
-                                'data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;"' +
-                                'data-href="{MOD_URL}&op=group&do=right_popbox&gid=$gid&uid=' + data['insertuser'][o]['uid'] + '">' +
-                                '<span class="rightcarousel-first">' + data['insertuser'][o]['ufirst'] + '</span><span class="mdi mdi-chevron-down right-first"></span></a></li>';
-                        }
-
-                    }
-                    for (var o in data['delusers']) {
-                        $('#' + o+ '_delete').remove();
-                    }
-                    $('#memberlist').append(html);
-                    $(".adduser").each(function(){
-                        $(this).popbox();
-                    });
-                    hideWindow('adduser');//群组内添加成员
-                } else {
-                    hideWindow('addgroupuser');
-                    showWindow('property', _explorer.appUrl + '&op=ajax&operation=selectperm&fid=$groupinfo[fid]&gid=$gid&new=true', 'get', 0);
-                }
-            } else if (data['error']) {
-                layer.alert(data['error'], {skin:'lyear-skin-danger'});
-            }
-        }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('{lang do_failed}', 'error', 3000, 1);
-        });
-        return false;
-    }
-</script>
-<!--{elseif $operation == 'groupsetting'}-->
+<!--{if $operation == 'groupsetting'}-->
 <!--弹出框关于页面-->
 <div class="setup">
     <div class="table-con">
@@ -265,7 +137,7 @@
     function upload_bgphoto(obj, fact) {
         'use strict';
         $(obj).fileupload({
-            url: MOD_URL + '&op=ajax&operation=upload',
+            url: MOD_URL + '&op=ajax&do=upload',
             dataType: 'json',
             autoUpload: true,
             maxFileSize: 2000000,// 2 MB
@@ -315,9 +187,6 @@
         })
     }
     ;
-    function editgroupperm(gid, fid) {
-        showWindow('property', MOD_URL + '&op=ajax&operation=selectperm&fid=' + fid + '&gid=' + gid + '&new=false','get',0);
-    }
     function delete_group(gid){
         layer.confirm(__lang.delete_group_tips, {title:__lang.delete_group_confirm,skin:'lyear-skin-danger'}, function(index){
             layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});

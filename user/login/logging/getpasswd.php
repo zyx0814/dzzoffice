@@ -24,7 +24,7 @@ if ($_GET['uid'] && $_GET['id']) {
     list($dateline, $operation, $idstring) = explode("\t", $member['authstr']);
 
     if ($dateline < TIMESTAMP - 86400 * 3 || $operation != 1 || $idstring != $_GET['id']) {
-        showmessage(lang('getpasswd_illegal'), NULL);
+        showmessage('getpasswd_illegal');
     }
 
     if (!submitcheck('getpwsubmit') || $_GET['newpasswd1'] != $_GET['newpasswd2']) {
@@ -33,7 +33,7 @@ if ($_GET['uid'] && $_GET['id']) {
         include template('getpasswd');
     } else {
         if ($_GET['newpasswd1'] != addslashes($_GET['newpasswd1'])) {
-            showmessage(lang('profile_passwd_illegal'));
+            showmessage('profile_passwd_illegal');
         }
         if ($_G['setting']['pwlength']) {
             if (strlen($_GET['newpasswd1']) < $_G['setting']['pwlength']) {
@@ -55,7 +55,7 @@ if ($_GET['uid'] && $_GET['id']) {
                 $strongpw_str[] = lang('strongpw_4');
             }
             if ($strongpw_str) {
-                showmessage(lang('password_weak') . implode(',', $strongpw_str));
+                showmessage('password_weak' . implode(',', $strongpw_str));
             }
         }
         $salt = substr(uniqid(rand()), -6);
@@ -63,9 +63,9 @@ if ($_GET['uid'] && $_GET['id']) {
         $password = md5(md5($_GET['newpasswd1']) . $salt);
 
         C::t('user')->update($_GET['uid'], array('password' => $password, 'authstr' => '', 'salt' => $salt));
-        showmessage(lang('getpasswd_succeed'), 'index.php', array());
+        showmessage('getpasswd_succeed', 'index.php', array());
     }
 
 } else {
-    showmessage(lang('parameters_error'));
+    showmessage('parameters_error');
 }

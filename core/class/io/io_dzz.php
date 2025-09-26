@@ -1622,305 +1622,9 @@ class io_dzz extends io_api {
         return false;
     }
 
-    public static function linktoimage($link, $pfid) {
-        global $_G, $space;
-        $fid = $pfid;
-        if (!$folder = C::t('folder')->fetch($pfid)) {
-            return array('error' => lang('parent_directory_not_exist'));
-        }
-        $gid = $folder['gid'];
-        if (!$cimage = DB::fetch_first("select * from " . DB::table('collect') . " where ourl='{$link}' and type = 'img'")) {
-            if ($attach = self::dzz_imagetoattach($link, $gid)) {
-                if ($attach['error']) return $attach;
-                $data = array('type' => 'img', 'aid' => $attach['aid'], 'title' => '', 'desc' => '');
-                $cimage = array(
-                    'ourl' => $link,
-                    'data' => serialize($data),
-                    'copys' => 0,
-                    'type' => 'img',
-                    'dateline' => $_G['timestamp']
-                );
-                $cimage['cid'] = DB::insert('collect', ($cimage), 1);
-
-            } else {
-                return array('error' => lang('image_to_local_error'));
-            }
-        } else {
-            $data = unserialize($cimage['data']);
-            C::t('attachment')->addcopy_by_aid($data['aid']);
-            $attach = C::t('attachment')->fetch($data['aid']);
-        }
-        //判断空间大小
-        if (!SpaceSize($attach['filesize'], $gid, '', $folder['uid'])) {
-            return array('error' => lang('inadequate_capacity_space'));
-        }
-        $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $path = $path . '/' . IO::getFileName(strtolower(substr(strrchr($link, '/'), 1, 50)), $fid) . '.' . $attach['filetype'];
-        $attachment = $_G['setting']['attachdir'] . './' . $attach['attachment'];
-        $imginfo = @getimagesize($attachment);
-        $icoarr = array(
-            'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
-            'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-            'name' => IO::getFileName(strtolower(substr(strrchr($link, '/'), 1, 50)), $fid),
-            'flag' => '',
-            'type' => 'image',
-            'vid' => 0,
-            'dateline' => $_G['timestamp'],
-            'pfid' => $fid,
-            'oid' => $cimage['cid'],
-            'gid' => $gid,
-            'ext' => $attach['filetype'],
-            'size' => $attach['filesize'],
-        );
-        if ($icoarr['rid'] = C::t('resources')->insert_data($icoarr)) {
-            $sourceattr = array(
-                'title' => $attach['filename'],
-                'postip' => $_G['clientip'],
-                'desc' => $data['desc'],
-                'aid' => $data['aid'],
-                'width' => $imginfo[0],
-                'height' => $imginfo[1],
-            );
-            if (C::t('resources_attr')->insert_attr($icoarr['rid'], $icoarr['vid'], $sourceattr)) {
-                C::t('collect')->update($cimage['cid'], array('copys' => $cimage['copys'] + 1));
-                $icoarr = array_merge($sourceattr, $icoarr);
-                $icoarr['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&&size=small&path=' . rawurlencode($icoarr['aid']);
-                $icoarr['url'] = DZZSCRIPT . '?mod=io&op=thumbnail&&size=large&path=' . rawurlencode($icoarr['aid']);
-                $icoarr['bz'] = '';
-                $icoarr['aid'] = $sourceattr['aid'];
-                $icoarr['rbz'] = io_remote::getBzByRemoteid($icoarr['remote']);
-                $icoarr['relativepath'] = $path;
-                $icoarr['path'] = $icoarr['rid'];
-                $icoarr['dpath'] = dzzencode($icoarr['rid']);
-                $icoarr['apath'] = dzzencode('attach::' . $icoarr['aid']);
-                if ($icoarr['size']) SpaceSize($icoarr['size'], $gid, true, $folder['uid']);
-                //addtoconfig($icoarr);
-                $icoarr['fsize'] = formatsize($icoarr['size']);
-                $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-                $icoarr['fdateline'] = $icoarr['dateline'];
-                $event = 'creat_file';
-                $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
-                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $icoarr['gid']);
-                $eventdata = array(
-                    'name' => $icoarr['fname'],
-                    'fid' => $icoarr['oid'],
-                    'username' => $icoarr['username'],
-                    'uid' => $icoarr['uid'],
-                    'path' => $icoarr['path'],
-                    'position' => $path,
-                    'hash' => $hash
-                );
-                C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], $event, 'create', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name']);
-            } else {
-                C::t('resources')->delete_by_rid($icoarr['rid']);
-                return array('error' => lang('linktoimage_error'));
-            }
-
-        }
-        if ($icoarr['rid']) {
-            return $icoarr;
-        } else {
-            return array('error' => lang('linktoimage_error'));
-        }
-    }
-
-    public static function linktomusic($link, $pfid) {
+    public static function linktourl($link, $pfid,$name = '') {
         global $_G;
         @set_time_limit(60);
-        $fid = $pfid;
-        if (!$folder = C::t('folder')->fetch($pfid)) {
-            return array('error' => lang('parent_directory_not_exist'));
-        }
-        $gid = $folder['gid'];
-        if (!$cmusic = DB::fetch_first("select * from " . DB::table('collect') . " where ourl='{$link}' and type = 'music'")) {
-            $data = array('type' => 'music', 'url' => $link, 'img' => '', 'desc' => '', 'title' => strtolower(substr(strrchr($link, '/'), 1, 50)));
-            $cmusic = array(
-                'ourl' => $link,
-                'data' => serialize($data),
-                'copys' => 0,
-                'type' => 'music',
-                'dateline' => $_G['timestamp']
-            );
-            $cmusic['cid'] = DB::insert('collect', ($cmusic), 1);
-        } else {
-            $data = unserialize($cmusic['data']);
-            C::t('collect')->addcopy_by_cid($cmusic['id']);
-        }
-        $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $path = $path . '/' . IO::getFileName($data['title'], $fid);
-        $icoarr = array(
-            'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
-            'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-            'name' => IO::getFileName($data['title'], $fid),
-            'flag' => '',
-            'type' => 'music',
-            'pfid' => $fid,
-            'oid' => $cmusic['cid'],
-            'vid' => 0,
-            'dateline' => $_G['timestamp'],
-            'gid' => $gid,
-            'ext' => '',
-            'size' => 0
-        );
-        if ($icoarr['rid'] = C::t('resources')->insert_data($icoarr)) {
-            $sourcedata = array(
-                'img' => $data['img'],
-                'desc' => $data['desc'],
-                'title' => $data['title'],
-            );
-            $sourcedata['icon'] = $sourcedata['icon'] ? $sourcedata['icon'] : geticonfromext('', 'music');
-            if (C::t('resources_attr')->insert_attr($icoarr['rid'], $icoarr['vid'], $sourcedata)) {
-                C::t('collect')->update($cmusic['cid'], array('copys' => $cmusic['copys'] + 1));
-                $icoarr['url'] = $sourcedata['url'];
-                $icoarr['img'] = $sourcedata['icon'];
-                $icoarr['bz'] = '';
-                $icoarr['relativepath'] = $path;
-                $icoarr['path'] = $icoarr['rid'];
-                $icoarr['dpath'] = dzzencode($icoarr['rid']);
-                //addtoconfig($icoarr);
-                $icoarr['fsize'] = formatsize($icoarr['size']);
-                $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-                $icoarr['fdateline'] = $icoarr['dateline'];
-                $event = 'creat_file';
-                $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
-                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
-                $eventdata = array(
-                    'name' => $icoarr['fname'],
-                    'fid' => $icoarr['oid'],
-                    'username' => $icoarr['username'],
-                    'uid' => $icoarr['uid'],
-                    'path' => $icoarr['path'],
-                    'position' => $path,
-                    'hash' => $hash
-                );
-                C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], $event, 'create', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name']);
-            } else {
-                C::t('resources')->delete_by_rid($icoarr['rid']);
-                return array('error' => lang('linktomusic_error'));
-            }
-        }
-
-        if ($icoarr['rid']) {
-            return $icoarr;
-        } else {
-            return array('error' => lang('linktomusic_error'));
-        }
-    }
-
-    public static function linktovideo($link, $pfid) {
-        global $_G;
-        @set_time_limit(60);
-        $fid = $pfid;
-        if (!$folder = C::t('folder')->fetch($pfid)) {
-            return array('error' => lang('parent_directory_not_exist'));
-        }
-        $gid = $folder['gid'];
-        if (!$cvideo = DB::fetch_first("select * from " . DB::table('collect') . " where ourl='{$link}' and  type = 'video'")) {
-            $arr = array();
-            require_once libfile('function/code');
-            if (!$arr = parseflv($link)) {
-                return false;
-            }
-            //采集标题和描述
-            if (!$arr['title'] || !$arr['description']) {
-                require_once dzz_libfile('class/caiji');
-                $caiji = new caiji($link);
-                $arr['title'] = $caiji->getTitle();
-                $arr['description'] = $caiji->getDescription();
-            }
-
-            $data = array(
-                'type' => 'video',
-                'url' => $arr['url'],
-                'img' => $arr['img'],
-                'desc' => $arr['description'],
-                'title' => $arr['title'],
-            );
-            $cvideo = array(
-                'ourl' => $link,
-                'data' => serialize($data),
-                'copys' => 0,
-                'type' => 'video',
-                'dateline' => $_G['timestamp']
-            );
-            $cvideo['cid'] = DB::insert('collect', ($cvideo), 1);
-        } else {
-            $data = unserialize($cvideo['data']);
-            C::t('collect')->addcopy_by_cid($cvideo['id']);
-        }
-        //如果原先的标题和描述没采集到，重新采集
-        if (!$data['title'] || !$data['desc']) {
-            require_once dzz_libfile('class/caiji');
-            $caiji = new caiji($link);
-            $data['title'] = $caiji->getTitle();
-            $data['desc'] = $caiji->getDescription();
-            $usedata = $data;
-            $data = serialize($data);
-            C::t('collect')->update($cvideo['cid'], array('data' => $data));
-        }
-        $data = ($usedata) ? $usedata : $data;
-        $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $path = $path . '/' . IO::getFileName($data['title'], $fid) . '.swf';
-        $icoarr = array(
-            'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
-            'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-            'name' => IO::getFileName($data['title'], $fid),
-            'type' => 'video',
-            'oid' => $cvideo['cid'],
-            'dateline' => $_G['timestamp'],
-            'pfid' => $fid,
-            'vid' => 0,
-            'gid' => $gid,
-            'ext' => 'swf',
-            'flag' => '',
-            'size' => 0
-        );
-        if ($icoarr['rid'] = C::t('resources')->insert_data($icoarr)) {
-            $sourcedata = array(
-                'url' => $data['url'],
-                'img' => $data['img'],
-                'desc' => $data['desc'],
-                'title' => $data['title'],
-            );
-            if (C::t('resources_attr')->insert_attr($icoarr['rid'], $icoarr['vid'], $sourcedata)) {
-                C::t('collect')->update($cvideo['cid'], array('copys' => $cvideo['copys'] + 1));
-                $icoarr['url'] = $sourcedata['url'];
-                $icoarr['img'] = $sourcedata['icon'];
-                $icoarr['bz'] = '';
-                $icoarr['relativepath'] = $path;
-                $icoarr['path'] = $icoarr['rid'];
-                $icoarr['dpath'] = dzzencode($icoarr['rid']);
-                //addtoconfig($icoarr);
-                $icoarr['fsize'] = formatsize($icoarr['size']);
-                $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-                $icoarr['fdateline'] = $icoarr['dateline'];
-                $event = 'creat_file';
-                $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
-                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
-                $eventdata = array(
-                    'name' => $icoarr['fname'],
-                    'fid' => $icoarr['oid'],
-                    'username' => $icoarr['username'],
-                    'uid' => $icoarr['uid'],
-                    'path' => $icoarr['path'],
-                    'position' => $path,
-                    'hash' => $hash
-                );
-                C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], $event, 'create', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name']);
-            } else {
-                C::t('resources')->delete_by_rid($icoarr['rid']);
-                return array('error' => lang('linktovideo_error'));
-            }
-        }
-        if ($icoarr['rid']) {
-            return $icoarr;
-        } else {
-            return array('error' => lang('linktovideo_error'));
-        }
-    }
-
-    public static function linktourl($link, $pfid) {
-        global $_G;
         $fid = $pfid;
         if (!$folder = C::t('folder')->fetch($pfid)) {
             return array('error' => lang('parent_directory_not_exist'));
@@ -1931,7 +1635,7 @@ class io_dzz extends io_api {
             $arr = array();
             require_once dzz_libfile('class/caiji');
             $caiji = new caiji($link);
-            $arr['title'] = $caiji->getTitle();
+            $arr['title'] = $name ? $name : $caiji->getTitle();
             $arr['desc'] = $caiji->getDescription();
             $arr['url'] = $link;
             $arr['type'] = 'url';
@@ -1956,10 +1660,12 @@ class io_dzz extends io_api {
             C::t('collect')->addcopy_by_cid($clink['id']);
         }
         $parseurl = parse_url($link);
+        if($name) {
+            $data['title'] = $name;
+        }
         $clink['title'] = IO::getFileName($data['title'] ? $data['title'] : $parseurl['host'], $fid);
         $icondata = getUrlIcon($link);
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $path = $path . '/' . $data['title'] . '.' . $data['ext'];
         $icoarr = array(
             'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
             'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
@@ -1988,7 +1694,7 @@ class io_dzz extends io_api {
                 $icoarr['url'] = $sourcedata['url'];
                 $icoarr['img'] = $sourcedata['img'];
                 $icoarr['bz'] = '';
-                $icoarr['relativepath'] = $path;
+                $icoarr['relativepath'] = $path . '/' . $data['title'] . '.' . $data['ext'];
                 $icoarr['path'] = $icoarr['rid'];
                 $icoarr['dpath'] = dzzencode($icoarr['rid']);
 
@@ -2000,7 +1706,7 @@ class io_dzz extends io_api {
                 $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
                 $eventdata = array(
-                    'title' => $icoarr['fname'],
+                    'title' => $icoarr['name'],
                     'fid' => $icoarr['oid'],
                     'username' => $icoarr['username'],
                     'uid' => $icoarr['uid'],
@@ -2287,15 +1993,17 @@ class io_dzz extends io_api {
                     //添加事件
                     $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
                     $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
+                    $username = getglobal('username');
                     $eventdata = array(
-                        'username' => getglobal('username'),
+                        'username' => $username,
                         'filename' => $icoarr['name'],
                         'position' => $path,
                         'hash' => $hash
                     );
                     C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], 'recover_file', 'recoverfile', $eventdata, $icoarr['gid'], $rid, $icoarr['name']);
+                    $uid = getglobal('uid');
                     $statisdata = array(
-                        'uid' => getglobal('uid'),
+                        'uid' => $uid,
                         'edits' => 1,
                         'editdateline' => TIMESTAMP
                     );

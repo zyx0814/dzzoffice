@@ -324,7 +324,7 @@ _explorer.routerule = function (path, prefix) {
 		}
 	}
 
-	$.post(_explorer.appUrl + '&op=ajax&operation=getfid', queryobj, function (data) {
+	$.post(_explorer.appUrl + '&op=ajax&do=getfid', queryobj, function (data) {
 		if (data.success) {
 			var hash = '';
 			if (!isNaN(parseInt(data.success['gid']))) {
@@ -392,7 +392,7 @@ _explorer.topMenu = function (hash, fid) {
 	var shownewbuild = false;
 	if (hash) {
 		//根据hash值判断是否显示在头部
-		if (hash == 'groupmanage' || hash == 'app' || hash == 'dynamic' || hash == 'mygroup' || hash.indexOf('share') == 0 || hash.indexOf('recycle') == 0) {
+		if (hash == 'groupmanage' || hash == 'app' || hash == 'dynamic' || hash == 'mygroup' || hash.indexOf('share') == 0) {
 			jQuery('.navtopheader').css('display', 'none');
 			jQuery('.rightswitch').hide();
 			if(hash.indexOf('recycle') == 0 || hash.indexOf('cloud') == 0){
@@ -436,7 +436,7 @@ _explorer.topMenu = function (hash, fid) {
 			jQuery('.new-buildMenu').find('li.folderPermMust').show();
 			uploadperm = true;
 		}
-		if (folderperm  || uploadperm) { //如果没有文件夹权限和文件权限，隐藏新建上传菜单
+		if (folderperm || uploadperm) { //如果没有文件夹权限和文件权限，隐藏新建上传菜单
 			jQuery('.new-buildMenu').show();
 		}else{
 			jQuery('.new-buildMenu').hide();
@@ -737,7 +737,7 @@ function riddesc(rid,desc) {
 	};
 	jQuery.post(_explorer.appUrl + '&op=dzzcp&do=riddesc', data, function (json) {
 		if(json.success){
-			return true;
+			_filemanage.prototype._selectInfo();
 		} else if(json.error){
 			showmessage(json.error, 'danger', 3000, 1);
 		} else {
@@ -758,7 +758,7 @@ function infoversion(obj) {
 	if (vid) {
 		querystr += '&vid=' + vid;
 	}
-	showWindow('property', MOD_URL + '&op=ajax&operation=infoversion' + querystr, 'get', 0);
+	showWindow('property', MOD_URL + '&op=ajax&do=infoversion' + querystr, 'get', 0);
 	return false;
 };
 function deletethisversion(obj) {
@@ -769,7 +769,7 @@ function deletethisversion(obj) {
 	}
 	layer.confirm('删除后将无法找回，确认要进行该操作吗?', {skin:'lyear-skin-danger',title:'删除该版本'}, function(index){
 		layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
-		$.post(MOD_URL+'&op=ajax&operation=deletethisversion', {'rid':rid,'vid': vid}, function (json) {
+		$.post(MOD_URL+'&op=ajax&do=deletethisversion', {'rid':rid,'vid': vid}, function (json) {
 			if(json.msg=='success'){
 				layer.msg(__lang.delete_success, {offset:'10px'});
 				$('.version_' + vid).remove();
@@ -793,7 +793,7 @@ function editVersionName(obj) {
 	if (vid) {
 		querystr += '&vid=' + vid;
 	}
-	showWindow('property', MOD_URL + '&op=ajax&operation=editFileVersionInfo' + querystr, 'get', 0);
+	showWindow('property', MOD_URL + '&op=ajax&do=editFileVersionInfo' + querystr, 'get', 0);
 	return false;
 };
 
@@ -824,15 +824,11 @@ function primaryVersion(obj) {
 			})
 			$('.version_' + vid).find('div.versioninfos').append('<span class="badge badge-outline-primary">'+__lang.principal_edition+'</span>').end().find('.dropdown-menu-version .pramiry_version').data('primary', 'yes');
 			;
-			var src = datas.img;
-			var rid = el.data('rid');
-			$('#rightfileinfo-' + rid).find('img').attr('src', src);
-			$('#rightfileinfo-' + rid).find('span.right-imgname').html(datas.name);
 			_explorer.sourcedata.icos[datas.rid] = datas;
 			datas.vid = 0;
 			_filemanage.addIndex(datas);
 			_filemanage.cons['f-' + datas.pfid].CreateIcos(datas, true);
-
+			_filemanage.prototype._selectInfo();
 		} else {
 			layer.alert(data['msg'], {skin:'lyear-skin-danger'});
 		}
@@ -859,4 +855,227 @@ function commentdelete(id) {
             showmessage('{lang do_failed}', 'error', 3000, 1);
         });
 	});
+}
+function comment_file(form) {
+    var form = $(form);
+    var commentArea = form.closest('.comment-area');
+    var textarea = commentArea.find('.leave_message');
+    
+    if (textarea.val().length < 1) {
+        textarea.focus();
+        return false;
+    }
+    
+    $.post(form.attr('action'), form.serialize(), function (data) {
+        if (data['success']) {
+			if ($('.comment-tab').hasClass('active')) {
+				jQuery('.comment-tab').click();
+			}
+			if ($('.property-comment-tab').hasClass('active')) {
+				var rid = $('.property-comment-tab').data('rid');
+				var fid = $('.property-comment-tab').data('fid');
+				ajaxget(MOD_URL+'&op=ajax&do=comment&property=1&rid='+rid+'&fid='+fid, 'fwin_content_property');
+			}
+            showmessage('评论成功','success',3000,1);
+        } else if(data['error']) {
+            showmessage(data['error'],'error',3000,1);
+        } else {
+            showmessage('评论失败','error',3000,1);
+        }
+        textarea.val('').trigger('input');
+    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+        showmessage(__lang.do_failed, 'error', 3000, 1);
+    });
+    
+    return false;
+}
+
+function rightinfo(obj) {
+	if (!_explorer.infoPanelOpened || _explorer.infoPanel_hide) {
+		return;
+	}
+	var el = $(obj);
+	var rid = el.data('rid');
+	var fid = el.data('fid');
+	var item = el.data('item');
+	jQuery('.tab-content').scrollTop(0);
+	jQuery('.right-tab-'+item).html('<div class="emptyPage"><i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop" style="font-size:30px;"></i></div>');
+	switch(item){
+		case 'perm':
+			ajaxget(MOD_URL+'&op=ajax&do=perm&fid='+fid,'perm-tab','perm-tab')
+		break;
+		case 'comment':
+		    ajaxget(MOD_URL+'&op=ajax&do=comment&rid='+rid+'&fid='+fid,'comment-tab','comment-tab')
+		break;
+		case 'dynamic':
+			ajaxget(MOD_URL+'&op=ajax&do=dynamic&rid='+rid+'&fid='+fid,'dynamic-tab','dynamic-tab')
+		break;
+		case 'version':
+			ajaxget(MOD_URL+'&op=ajax&do=version&rid='+rid,'version-tab','version-tab')
+		break;
+	}
+}
+
+function editgroupperm(gid,fid){
+	showWindow('property', MOD_URL+'&op=ajax&do=selectperm&fid='+fid+'&gid='+gid+'&new=0','get','0');
+}
+
+function historyupload(obj,rid) {
+	var el = $(obj);
+	el.off();
+	el.fileupload({
+        url: MOD_URL + '&op=ajax&do=uploadfiles',
+        dataType: 'json',
+        autoUpload: true,
+        maxChunkSize: parseInt(_explorer.space.maxChunkSize), //2M
+        dropZone: '.historyMenu',
+        pasteZone: '.historyMenu',
+        maxFileSize: parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null, // 5 MB
+        acceptFileTypes: new RegExp(attachextensions, 'i'),
+        sequentialUploads: true
+    }).on('fileuploadadd', function (e, data) {
+        layerupload();
+        data.context = $('<li class="dialog-file-list"></li>').appendTo($('.dialog-filelist-ul'));
+        $.each(data.files, function (index, file) {
+            $(getItemTpl(file)).appendTo(data.context);
+           _upload.total++;
+            $('#upload_header_status').html(__lang.upload_processing);
+            $('#upload_header_number_container').show();
+            $('#upload_header_total').html(_upload.total);
+        });
+    }).on('fileuploadsubmit', function (e, data) {
+        data.context.find('.upload-cancel').off('click').on('click', function () {
+            data.abort();
+            data.files = '';
+            uploaddone();
+            $(this).parents('.dialog-info').find('.upload-cancel').hide();
+            $(this).parents('.dialog-info').find('.upload-file-status').html('<span class="cancel show_uploading_status"><em></em><i>' + __lang.already_cancel + '</i></span>');
+        });
+        $.each(data.files, function (index, file) {
+            file.relativePath = (file.relativePath) ? file.relativePath + file.name : '';
+            var relativePath = (file.webkitRelativePath ? file.webkitRelativePath : file.relativePath);
+            data.formData = {relativePath: relativePath};
+            return;
+        });
+    }).on('fileuploadprocessalways', function (e, data) {
+        var index = data.index,
+            file = data.files[index];
+        if (file.error) {
+            uploaddone('error');
+            var err = file.error ? file.error  : __lang.upload_failure;
+            data.context.find('.upload-file-status').html('<span class="text-danger" title="' + err + '">' + err + '</span>');
+        }
+    }).on('fileuploadprogress', function (e, data) {
+        var index = data.index;
+        _upload.bitrate = formatSize(data.bitrate / 8);
+        var progre = parseInt(data.loaded / data.total * 100, 10);
+        data.context.find('.upload-file-status .speed').html(_upload.bitrate + '/s');
+        data.context.find('.upload-file-status .precent').html(progre + '%');
+    }).on('fileuploadprogressall', function (e, data) {
+        _upload.bitrate = formatSize(data.bitrate / 8);
+        var progre = parseInt(data.loaded / data.total * 100, 10);
+        uploadprogress(_upload.bitrate + '/s', progre + '%');
+        _upload.el.find('.panel-heading .upload-progress-mask').css('width', progre + '%');
+    }).on('fileuploaddone', function (e, data) {
+        uploaddone();
+        data.context.find('.upload-progress-mask').css('width', '0%');
+        data.context.find('.upload-cancel').hide();
+        $.each(data.result.files, function (index, file) {
+            if (file.error) {
+                var err = file.error ? file.error  : __lang.upload_failure;
+                data.context.find('.dialog-info .upload-file-status').html('<span class="text-danger" title="' + err + '">' + err + '</span>');
+            } else {
+                var filedata = file.data;
+                //_upload.tips.find('.dialog-body-text').html(_upload.completed + '/' + _upload.total);
+                data.context.find('.upload-file-status .precent').html(__lang.update_finish);
+                data.context.addClass('success').find('.upload-file-status .speed').html('');
+                data.context.find('.upload-file-operate').html('');
+				data.context.find('.process').css('display', 'none');
+                $.post(MOD_URL+'&op=dzzcp&do=uploadnewVersion', {
+                    'rid': rid,
+                    'aid': filedata.aid,
+                    'name': filedata.filename,
+                    'ext': filedata.filetype,
+                    'size': filedata.filesize,
+                }, function (data) {
+                    if (data['success']) {
+                        var resourcesdata = data['filedata'];
+                        $('.detailsimage').attr('src', SITEURL + resourcesdata['img']);
+                        $('.right-imgname').html(resourcesdata['name']).attr('title', resourcesdata['name']);
+                        _explorer.sourcedata.icos[data['filedata'].rid] = data['filedata'];
+                        _filemanage.cons['f-' + data['filedata'].pfid].CreateIcos(data['filedata'], true);
+                        resourcesdata.vid = 0;
+                        _filemanage.addIndex(resourcesdata);
+						if ($('.version-tab').hasClass('active')) {
+							jQuery('.version-tab').click();
+						}
+						if ($('.index-tab').hasClass('active')) {
+							_filemanage.prototype._selectInfo();
+						}
+						if ($('.property-version-tab').hasClass('active')) {
+							var rid = $('.property-version-tab').data('rid');
+							ajaxget(MOD_URL+'&op=ajax&do=version&property=1&rid='+rid, 'fwin_content_property');
+						}
+                    } else if (data['error']) {
+                        layer.alert(data['error'], {skin:'lyear-skin-danger'});
+                    }
+                }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+                    showmessage('{lang do_failed}', 'error', 3000, 1);
+                });
+            }
+        });
+
+    }).on('fileuploadfail', function (e, data) {
+        $.each(data.files, function (index, file) {
+            uploaddone();
+            data.context.find('.upload-item.percent').html('<span class="text-danger" title="' + file.error + '">' + file.error + '</span>');
+        });
+
+    });
+}
+function getItemTpl(file) {
+	var relativePath = (file.webkitRelativePath ? file.webkitRelativePath : (file.relativePath ? file.relativePath : file.name));
+	var filearr = file.name.split('.');
+	var ext = filearr.pop();
+	var imgicon = '<img src="dzz/images/extimg/' + ext + '.png" onerror="replace_img(this)" style="width:24px;height:24px;position:absolute;left:0;"/>';
+	var html =
+		'<div class="process" style="position:absolute;z-index:-1;height:100%;background-color:#e8f5e9;-webkit-transition:width 0.6s ease;-o-transition:width 0.6s ease;transition:width 0.6s ease;width:0%;"></div> <div class="dialog-info"> <div class="upload-file-name">' +
+		'<div class="dialog-file-icon" align="center">' + imgicon + '</div> <span class="name-text">' + file.name + '</span> ' +
+		'</div> <div class="upload-file-size">' + (file.size ? formatSize(file.size) : '') + '</div> <div class="upload-file-path">' +
+		'<a title="" class="" href="javascript:;">' + relativePath + '</a> </div> <div class="upload-file-status"> <span class="uploading"><em class="precent"></em><em class="speed">排队中</em>' +
+		'</span> <span class="success"><em></em><i></i></span> </div> <div class="upload-file-operate"> ' +
+		'<em class="operate-pause"></em> <em class="operate-continue"></em> <em class="operate-retry"></em> <em class="operate-remove"></em> ' +
+		'<a class="error-link upload-cancel" href="javascript:void(0);">取消</a> </div> </div>';
+	return html;
+}
+function uploaddone(flag) {
+	_upload.completed++;
+	_upload.completed++;
+	if(flag == 'error') _upload.errored++;
+	else _upload.succeed++;
+	if (_upload.completed >= _upload.total) {
+		$('#upload_header_status').html(__lang.upload_finish);
+		$('#upload_header_completed').html(_upload.succeed);
+		$('#upload_header_total').html(_upload.total);
+		$('#upload_header_progress').css('width', 0);
+		if (_upload.speedTimer) window.clearTimeout(_upload.speedTimer);
+		_upload.speedTimer = window.setTimeout(function () {
+			$('#upload_header_speed').hide();
+			//_upload.el.find('li.success').remove();
+		}, 3000);
+	} else {
+		$('#upload_header_completed').html(_upload.succeed);
+	}
+	var li=$('.dialog-filelist-ul').find('li.success');
+	if(_upload.maxli && li.length>=_upload.maxli){
+		//li.remove();
+	}
+}
+
+function uploadprogress(speed, per) {
+	_upload.el.find('.upload-speed').show().find('.upload-speed-value').html(speed);
+	if (_upload.speedTimer) window.clearTimeout(_upload.speedTimer);
+	_upload.speedTimer = window.setTimeout(function () {
+		_upload.el.find('.upload-speed').hide();
+	}, 2000);
 }

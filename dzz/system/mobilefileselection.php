@@ -44,7 +44,7 @@ $json = json_encode($gets);
 $allowvisit = array('file', 'searchfile', 'json', 'ajax', 'search', 'save', 'home', 'group');
 if ($do) {
     if (!in_array($do, $allowvisit)) {
-        showmessage(lang('access_denied'), dreferer());
+        showmessage('access_denied', dreferer());
     } else {
         require MOD_PATH . '/mobilefileselection/' . $do . '.php';
     }

@@ -184,7 +184,7 @@
 
 4. **统一文件系统接口**
 - 现在的文件操作接口统一整合为`IO`类通用方法，强制要求所有文件系统操作通过`IO`类调用（示例：`IO::getStream($path)`）。开发者需检查并替换所有旧文件操作接口为`IO`类方法，删除非保留的旧接口调用。
-- 保留的特殊接口：`io_dzz::uploadToattachment`、`io_dzz::UploadSave`、`io_dzz::linktoimage`、`io_dzz::linktovideo`、`io_dzz::linktour1`。
+- 保留的特殊接口：`io_dzz::uploadToattachment`、`io_dzz::UploadSave`、`io_dzz::linktoimage`、`io_dzz::linktovideo`、`io_dzz::linktourl`。
 
 ### **用户体验改进**
 1. **界面交互**  

@@ -12,12 +12,12 @@ if (!$path = dzzdecode($_GET['path'])) {
     showmessage('parameter_error', dreferer());
 }
 $meta = IO::getMeta($path);
-if (!$meta) showmessage(lang('file_not_exist'));
+if (!$meta) showmessage('file_not_exist');
 if($meta['error']) showmessage($meta['error']);
 $perm_download = 1;
 $perm_print = 1;
 if ($meta['rid']) {
-    if (!perm_check::checkperm('read', $meta)) showmessage(lang('file_read_no_privilege'), dreferer());
+    if (!perm_check::checkperm('read', $meta)) showmessage('file_read_no_privilege', dreferer());
     if (!perm_check::checkperm('download', $meta)) {
         $perm_download = 0;
         $perm_print = 0;

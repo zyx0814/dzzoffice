@@ -85,16 +85,22 @@
         <div class="custom-from clearfix">
             <div class="file-nature clearfix">
                 <label class="col-md-4 col-sm-4 col-xs-4">{lang type}</label>
-                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[type]</div>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[ftype]</div>
             </div>
             <div class="file-nature clearfix">
                 <label class="col-md-4 col-sm-4 col-xs-4">{lang position}</label>
                 <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[realpath]</div>
             </div>
             <div class="file-nature clearfix">
-                <label class="col-md-4 col-sm-4 col-xs-4">{lang possesor}</label>
+                <label class="col-md-4 col-sm-4 col-xs-4">{lang creator}</label>
                 <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[username]</div>
             </div>
+            <!--{if $propertys['editusername']}-->
+            <div class="file-nature clearfix">
+                <label class="col-md-4 col-sm-4 col-xs-4">{lang editor}</label>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[username]</div>
+            </div>
+            <!--{/if}-->
             <!--{if $propertys['contain']}-->
             <div class="file-nature clearfix">
                 <label class="col-md-4 col-sm-4 col-xs-4">{lang include}</label>
@@ -105,27 +111,31 @@
                 <label class="col-md-4 col-sm-4 col-xs-4">{lang big_small}</label>
                 <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys['fsize']</div>
             </div>
-            <!--{if $propertys[editdateline]}-->
-            <div class="file-nature clearfix">
-                <label class="col-md-4 col-sm-4 col-xs-4">{lang preceding_edit_time}</label>
-                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[editdateline]</div>
-            </div>
-            <!--{/if}-->
-            <!--{if $propertys[opendateline]}-->
-            <div class="file-nature clearfix">
-                <label class="col-md-4 col-sm-4 col-xs-4">{lang preceding_open_time}</label>
-                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[opendateline]</div>
-            </div>
-            <!--{/if}-->
             <!--{if $propertys[fdateline]}-->
             <div class="file-nature clearfix">
                 <label class="col-md-4 col-sm-4 col-xs-4">{lang create_time}</label>
                 <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[fdateline]</div>
             </div>
             <!--{/if}-->
-
+            <!--{if $propertys[editdateline]}-->
+            <div class="file-nature clearfix">
+                <label class="col-md-4 col-sm-4 col-xs-4">{lang edit_time}</label>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[editdateline]</div>
+            </div>
+            <!--{/if}-->
+            <!--{if $propertys[opendateline]}-->
+            <div class="file-nature clearfix">
+                <label class="col-md-4 col-sm-4 col-xs-4">{lang last_visit}</label>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text">$propertys[opendateline]</div>
+            </div>
+            <!--{/if}-->
+            <!--{if $propertys[url]}-->
+            <div class="file-nature clearfix">
+                <label class="col-md-4 col-sm-4 col-xs-4">{lang typename_shortcut}</label>
+                <div class="col-md-8 col-sm-8 col-xs-8 label-text"><a href="$propertys[url]" target="_blank">$propertys[url]</a></div>
+            </div>
+        <!--{/if}-->
         </div>
-
     </div>
     <div class="modal-footer">
         <!--{if $propertys[editperm] && $propertys[name]}-->

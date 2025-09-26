@@ -319,9 +319,9 @@ if ($do == 'importing') {
     }
 
     if (!in_array('username', $h)) {
-        showmessage('lack_required_fields_name');
+        showmessage('lack_required_fields_name',MOD_URL);
     } elseif (!in_array('email', $h) && !in_array('username', $h)) {
-        showmessage('lack_required_fields_name_email');
+        showmessage('lack_required_fields_name_email',MOD_URL);
     }
     if (!in_array('email', $h)) {
         $h = array_merge(array('_' => 'email'), $h);

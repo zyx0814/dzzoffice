@@ -26,12 +26,12 @@ class Register {
 
                 if (!$setting['ucactivation'] && !$setting['closedallowactivation']) {
 
-                    showmessage(lang('register_disable_activation'));
+                    showmessage('register_disable_activation');
                 }
 
             } elseif (!$setting['regstatus']) {
 
-                showmessage(!$setting['regclosemessage'] ? lang('register_disable') : str_replace(array("\r", "\n"), '', $setting['regclosemessage']));
+                showmessage(!$setting['regclosemessage'] ? 'register_disable' : str_replace(array("\r", "\n"), '', $setting['regclosemessage']));
             }
         }
     }

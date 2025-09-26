@@ -100,7 +100,7 @@
 		cols: [[
 		{type:'checkbox', fixed: 'left'}
 		  ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-		  <!--{if $_G['adminid']}-->,{field:'username', title: '{lang possessor}', sort: true, align: 'center',templet: function(d) {
+		  <!--{if $_G['adminid']}-->,{field:'username', title: '{lang creator}', sort: true, align: 'center',templet: function(d) {
           return d.username;
         }}<!--{/if}-->
 		  ,{field:'name', title: '{lang filename}', sort: true,templet: function(d) {
@@ -167,7 +167,7 @@
 						template += '<div class="accordion-body">';
 						template += '<p><strong>ID:</strong> ' + item.LAY_NUM + '</p>';
 						<!--{if $_G['adminid']}-->
-						template += '<p><strong>{lang possessor}:</strong> ' + item.username + '</p>';
+						template += '<p><strong>{lang creator}:</strong> ' + item.username + '</p>';
 						<!--{/if}-->
 						template += '<p><strong>{lang file_size}:</strong> ' + item.size + '</p>';
 						template += '<p><strong>{lang file_type}:</strong> ' + item.type + '</p>';
@@ -315,7 +315,7 @@
 			'<p><strong>ID:</strong> ' + data.LAY_NUM+ '</p>' +
 			'<p><strong>{lang filename}:</strong> ' + data.name + '</p>' +
 			<!--{if $_G['adminid']}-->
-			'<p><strong>{lang possessor}:</strong> ' + data.username + '</p>' + 
+			'<p><strong>{lang creator}:</strong> ' + data.username + '</p>' + 
 			<!--{/if}-->
 			'<p><strong>{lang file_size}:</strong> ' + data.size + '</p>' +
 			'<p><strong>{lang file_type}:</strong> ' + data.type + '</p>' +

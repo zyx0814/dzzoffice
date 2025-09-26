@@ -12,8 +12,8 @@ if (!defined('IN_DZZ')) {
 }
 global $_G;
 $uid = $_G['uid'];
-$operation = isset($_GET['operation']) ? trim($_GET['operation']) : '';
-if ($operation == 'upload') {//上传图片文件
+$do = isset($_GET['do']) ? trim($_GET['do']) : '';
+if ($do == 'upload') {//上传图片文件
     include libfile('class/uploadhandler');
     $options = array('accept_file_types' => '/\.(gif|jpe?g|png)$/i',
         'upload_dir' => $_G['setting']['attachdir'] . 'cache/',
@@ -21,7 +21,7 @@ if ($operation == 'upload') {//上传图片文件
         'thumbnail' => array('max-width' => 40, 'max-height' => 40));
     $upload_handler = new uploadhandler($options);
     exit();
-} elseif ($operation == 'uploads') {//上传新文件(指新建)
+} elseif ($do == 'uploads') {//上传新文件(指新建)
     $container = trim($_GET['container']);
     $space = dzzgetspace($uid);
     $space['self'] = intval($space['self']);
@@ -39,7 +39,7 @@ if ($operation == 'upload') {//上传图片文件
     );
     $upload_handler = new UploadHandler($options);
     exit();
-} elseif ($operation == 'uploadfiles') {//上传文件(单纯的上传)
+} elseif ($do == 'uploadfiles') {//上传文件(单纯的上传)
     $space = dzzgetspace($uid);
     $space['self'] = intval($space['self']);
     require_once libfile('class/uploadhandler', '', 'core');
@@ -54,22 +54,7 @@ if ($operation == 'upload') {//上传图片文件
     );
     $upload_handler = new UploadHandler($options);
     exit();
-} elseif ($operation == 'app') {
-    $applist = $_GET['data'];
-    //获取已安装应用
-    $app = C::t('app_market')->fetch_all_by_appid($applist);
-    $applist_1 = array();
-    foreach ($app as $key => $value) {
-        if ($value['isshow'] < 1) continue;
-        if ($value['available'] < 1) continue;
-        if ($value['system'] == 2) continue;
-        $applist_1[$key] = $value;
-
-    }
-
-    exit(json_encode($applist_1));
-
-} elseif ($operation == 'selectperm') {
+} elseif ($do == 'selectperm') {
 
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     $gid = isset($_GET['gid']) ? intval($_GET['gid']) : '';
@@ -118,7 +103,7 @@ if ($operation == 'upload') {//上传图片文件
                 //增加群组事件
                 if ($orginfo && !$inherit) {
                     $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $gid);
-                    $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'folder' => $orginfo['orgname'], 'hash' => $hash);
+                    $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'folder' => $orginfo['orgname'], 'hash' => $hash);
 
                     C::t('resources_event')->addevent_by_pfid($fid, 'set_group_perm', 'setperm', $eventdata, $gid, '', $orginfo['orgname']);
                 } else {//增加文件夹事件
@@ -126,7 +111,7 @@ if ($operation == 'upload') {//上传图片文件
                     $path = C::t('resources_path')->fetch_pathby_pfid($fid);
                     $realpath = preg_replace('/dzz:(.+?):/', '', $path);
                     $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $gid);
-                    $eventdata = array('username' => getglobal('username'), 'uid' => getglobal('uid'), 'position' => $realpath, 'hash' => $hash);
+                    $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'position' => $realpath, 'hash' => $hash);
                     C::t('resources_event')->addevent_by_pfid($fid, 'set_folder_perm', 'setperm', $eventdata, $gid, $rid, $folderinfo['fname']);
                 }
             }
@@ -136,7 +121,7 @@ if ($operation == 'upload') {//上传图片文件
         }
 
     }
-} elseif ($operation == 'addgroup') {//添加群组
+} elseif ($do == 'addgroup') {//添加群组
     if (isset($_GET['arr'])) {
         $arr = $_GET['arr'];
         $groupname = isset($arr['orgname']) ? getstr($arr['orgname']) : '';
@@ -163,7 +148,7 @@ if ($operation == 'upload') {//上传图片文件
         }
     }
 
-} elseif ($operation == 'newFolder') {//新建文件夹
+} elseif ($do == 'newFolder') {//新建文件夹
     $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     $folderinfo = C::t('folder')->fetch($fid);
@@ -207,14 +192,15 @@ if ($operation == 'upload') {//上传图片文件
     }
 
 
-} elseif ($operation == 'newLink') {//新建连接
+} elseif ($do == 'newLink') {//新建连接
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
         $arr = array('error' => lang('no_privilege'));
     }
-} elseif ($operation == 'linkadd') {
+} elseif ($do == 'linkadd') {
     if (isset($_GET['createlink']) && $_GET['createlink']) {
         $link = isset($_GET['link']) ? trim($_GET['link']) : '';
+        $name = isset($_GET['name']) ? trim($_GET['name']) : '';
         $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
         //检查网址合法性
         if (!preg_match("/^(http|ftp|https|mms)\:\/\/.{5,300}$/i", ($link))) {
@@ -223,68 +209,27 @@ if ($operation == 'upload') {//上传图片文件
         if (!preg_match("/^(http|ftp|https|mms)\:\/\/.{4,300}$/i", ($link))) {
             $arr['error'] = lang('invalid_format_url');
         } else {
-
-            $ext = strtolower(substr(strrchr($link, '.'), 1, 10));
-            $isimage = in_array(strtoupper($ext), $imageexts) ? 1 : 0;
-            $ismusic = 0;
-
-            //是图片时处理
-            if ($isimage) {
-                if (!perm_check::checkperm_Container($fid, 'upload')) {
-                    $arr['error'] = lang('target_not_accept_image');
-                }
-                if ($data = io_dzz::linktoimage($link, $fid)) {
-                    if ($data['error']) $arr['error'] = $data['error'];
-                    else {
+            if (!perm_check::checkperm_Container($fid, 'upload')) {
+                $arr['error'] = lang('target_not_accept_link');
+            } else {
+                if ($data = io_dzz::linktourl($link, $fid,$name)) {
+                    if ($data['error']) {
+                        $arr['error'] = $data['error'];
+                    } else {
                         $arr = $data;
                         $arr['msg'] = 'success';
                     }
-                }
-
-            } else {
-                //试图作为视频处理
-                if ($data = io_dzz::linktovideo($link, $fid)) {
-                    if (!perm_check::checkperm_Container($fid, 'upload')) {
-                        $arr['error'] = lang('target_not_accept_video');
-                    } else {
-                        if ($data['error']) $arr['error'] = $data['error'];
-                        else {
-                            $arr = $data;
-                            $arr['msg'] = 'success';
-                        }
-                    }
-                }
-                //作为网址处理
-                if (!perm_check::checkperm_Container($fid, 'upload')) {
-                    $arr['error'] = lang('target_not_accept_link');
                 } else {
-                    if ($data = io_dzz::linktourl($link, $fid)) {
-                        if ($data['error']) {
-                            $arr['error'] = $data['error'];
-                        } else {
-                            $arr = $data;
-                            $arr['msg'] = 'success';
-                        }
-                    } else {
-                        $arr['error'] = lang('network_error');
-                    }
+                    $arr['error'] = lang('network_error');
                 }
-
             }
-
         }
     }
     exit(json_encode($arr));
-} elseif ($operation == 'showtips') {
+} elseif ($do == 'showtips') {
     $msgtext = isset($_GET['msg']) ? trim($_GET['msg']) : lang('system_unknow_error');
-} elseif ($operation == 'dzzdocument' || $operation == 'txt') {//新建文档
-    if ($operation == 'dzzdocument') {
-        $ext = 'dzzdoc';
-    } else {
-        $ext = 'txt';
-    }
-    $name = lang('new_' . $ext);
-    $filename = $name . '.' . $ext;
+} elseif ($do == 'txt') {//新建文档
+    $filename = lang('new_txt') . '.txt';
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if ($arr = IO::upload_by_content(' ', $fid, $filename)) {
         if ($arr['error']) {
@@ -296,7 +241,7 @@ if ($operation == 'upload') {//上传图片文件
         $arr = array();
         $arr['error'] = lang('failure_newfolder');
     }
-} elseif ($operation == 'newIco') {//新建文件
+} elseif ($do == 'newIco') {//新建文件
     $type = trim($_GET['type']);
     $bzpath = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     $fid = intval($_GET['fid']);
@@ -359,7 +304,7 @@ if ($operation == 'upload') {//上传图片文件
         $arr['error'] = lang('new_failure');
     }
     exit(json_encode($arr));
-} elseif ($operation == 'getfid') {//获取路径对应目录
+} elseif ($do == 'getfid') {//获取路径对应目录
     $path = isset($_GET['name']) ? trim($_GET['name']) : '';
     $prefix = isset($_GET['prefix']) ? trim($_GET['prefix']) : '';
     $arr = array();
@@ -381,14 +326,14 @@ if ($operation == 'upload') {//上传图片文件
     } else {
         exit(json_encode(array('error' => true, 'json')));
     }
-} elseif ($operation == 'uploadfile') {//上传文件获取相关文件信息
+} elseif ($do == 'uploadfile') {//上传文件获取相关文件信息
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     if ($rid) {
         $arr = C::t('resources')->fetch_by_rid($rid);
     } else {
         $arr = array('error' => lang('system_busy'));
     }
-} elseif ($operation == 'getfolder') {//获取文件夹信息
+} elseif ($do == 'getfolder') {//获取文件夹信息
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if ($fid) {
         $arr = C::t('resources')->fetch_by_oid($fid);
@@ -396,7 +341,7 @@ if ($operation == 'upload') {//上传图片文件
         $arr = array('error' => lang('system_busy'));
     }
 
-} elseif ($operation == 'collect') {//收藏与取消收藏
+} elseif ($do == 'collect') {//收藏与取消收藏
     $paths = $_GET['paths'];
     //collect参数为1为收藏,否则为取消收藏,未接收到此参数，默认为收藏
     $collect = isset($_GET['collect']) ? $_GET['collect'] : 1;
@@ -411,10 +356,10 @@ if ($operation == 'upload') {//上传图片文件
         $return = C::t('resources_collect')->delete_usercollect_by_rid($rids);
         exit(json_encode($return));
     }
-} elseif ($operation == 'tag') {
+} elseif ($do == 'tag') {
     $rid = isset($_GET['rid']) ? $_GET['rid'] : '';
     if (!$fileinfo = C::t('resources')->fetch_info_by_rid($rid)) {
-        showTips(array('error' => true), 'json');
+        showmessage('no_relevant_content',MOD_URL);
     }
     $tags = C::t('resources_tag')->fetch_tag_by_rid($rid);
     if (isset($_GET['addtag']) && $_GET['addtag']) {
@@ -436,7 +381,7 @@ if ($operation == 'upload') {//上传图片文件
             C::t('resources_statis')->add_statis_by_rid($rid, $statisarr);
             showTips(array('success' => true, 'tagsadd' => $insert['add'], 'tagsdel' => $insert['del']), 'json');
         } else {
-            showTips(array('error' => true), 'json');
+            showmessage('add_unsuccess',MOD_URL);
         }
     } else {
         $tagarr = array();
@@ -448,144 +393,65 @@ if ($operation == 'upload') {//上传图片文件
         $tagstr = htmlspecialchars(json_encode($tagarr));
         $tagval = implode(',', $tagval);
     }
-} elseif ($operation == 'comment') {
-    include_once libfile('function/code');
-    include_once libfile('function/use');
+} elseif ($do == 'commentajax') {
     $fid = intval($_GET['fid']);
     $rid = trim($_GET['rid']);
+    if ($rid) {
+        $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
+    } elseif($fid) {
+        $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
+    }
+    if($fileinfo['error']) exit(json_encode(array('error' => $fileinfo['error'])));
+    if (!$fileinfo['editperm']) exit(json_encode(array('error' => lang('file_comment_no_privilege'))));
+    include_once libfile('function/code');
+    include_once libfile('function/use');
     $msg = isset($_GET['msg']) ? censor($_GET['msg']) : '';
     //获得提醒用户
     $at_users = array();
     $message = preg_replace_callback("/@\[(.+?):(.+?)\]/i", "atreplacement", $msg);
     $appid = C::t('app_market')->fetch_appid_by_mod('{dzzscript}?mod=' . MOD_NAME, 1);
-    if ($rid) {
-        if (!$file = C::t('resources')->fetch_info_by_rid($rid)) {
-            exit(json_encode(array('error' => '未查询到该文件信息')));
-        } else {
-            if (!perm_check::checkperm_Container($file['oid'], 'comment')) {
-                exit(json_encode(array('error' => lang('file_comment_no_privilege'))));
-            }
-            $path = C::t('resources_path')->fetch_pathby_pfid($file['pfid']);
-            $path = preg_replace('/dzz:(.+?):/', '', $path);
-            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($file['pfid'], $file['gid']);
-            $eventdata = array('position' => $path, 'hash' => $hash, 'msg' => $msg,'title' => $file['name']);
-            if ($insert = C::t('resources_event')->addevent_by_pfid($file['pfid'], 'add_comment', 'addcomment', $eventdata, $file['gid'], $rid, $file['name'], 1)) {
-                $return = array(
-                    'username' => getglobal('username'),
-                    'uid' => getglobal('uid'),
-                    'dateline' => dgmdate(TIMESTAMP, 'u'),
-                    'msg' => dzzcode($message),
-                    'commentid' => $insert,
-                    'avatar' => avatar_block($_G['uid'])
-                );
-                if ($file['uid'] != getglobal('uid')) {
+    $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['fid'], $fileinfo['gid']);
+    $eventdata = array('position' => $fileinfo['realpath'], 'hash' => $hash, 'msg' => $msg,'title' => $fileinfo['rid'] ? $fileinfo['name'] : '');
+    if ($insert = C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'add_comment', 'addcomment', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name'], 1)) {
+        if ($fileinfo['uid'] != $_G['uid']) {
+            $notevars = array(
+                'from_id' => $appid,
+                'from_idtype' => 'app',
+                'url' => ($fileinfo['gid'] > 0) ? $_G['siteurl'] . MOD_URL . '#group&do=file&gid=' . $fileinfo['gid'] . '&fid=' . $fileinfo['fid'] : $_G['siteurl'] . MOD_URL . '#home&do=file&fid=' . $fileinfo['fid'],
+                'author' => $_G['username'],
+                'authorid' => $_G['uid'],
+                'dataline' => dgmdate(TIMESTAMP),
+                'fname' => getstr($fileinfo['name'], 31),
+                'comment' => ($message) ? getstr(dzzcode($message)) : '',
+            );
+            $action = 'explorer_comment_mydoc';
+            $type = 'explorer_comment_mydoc_' . $fileinfo['fid'];
+            dzz_notification::notification_add($fileinfo['uid'], $type, $action, $notevars, 1, 'dzz/explorer');
+        }
+        if ($at_users) {//提醒相关人员
+            foreach ($at_users as $uid) {
+                if ($uid != $_G['uid']) {
+                    //发送通知
                     $notevars = array(
                         'from_id' => $appid,
                         'from_idtype' => 'app',
-                        'url' => ($file['gid'] > 0) ? $_G['siteurl'] . MOD_URL . '#group&do=file&gid=' . $file['gid'] . '&fid=' . $file['pfid'] : $_G['siteurl'] . MOD_URL . '#home&do=file&fid=' . $file['pfid'],
-                        'author' => getglobal('username'),
-                        'authorid' => getglobal('uid'),
+                        'url' => ($fileinfo['gid'] > 0) ? $_G['siteurl'] . MOD_URL . '#group&do=file&gid=' . $fileinfo['gid'] . '&fid=' . $fileinfo['fid'] : $_G['siteurl'] . MOD_URL . '#home&do=file&fid=' . $fileinfo['fid'],
+                        'author' => $_G['username'],
+                        'authorid' => $_G['uid'],
                         'dataline' => dgmdate(TIMESTAMP),
-                        'fname' => getstr($file['name'], 31),
-                        'comment' => ($message) ? getstr(dzzcode($message)) : '',
+                        'fname' => getstr($fileinfo['name'], 31),
+                        'comment' => ($message) ? getstr($message) : '',
+
                     );
-                    $action = 'explorer_comment_mydoc';
-                    $type = 'explorer_comment_mydoc_' . $file['pfid'];
-                    dzz_notification::notification_add($file['uid'], $type, $action, $notevars, 1, 'dzz/explorer');
+                    $action = 'explorer_comment_at';
+                    $type = 'explorer_comment_at' . $fileinfo['fid'];
+                    dzz_notification::notification_add($uid, $type, $action, $notevars, 0, MOD_PATH);
                 }
-                if ($at_users) {//提醒相关人员
-                    foreach ($at_users as $uid) {
-                        if ($uid != getglobal('uid')) {
-                            //发送通知
-                            $notevars = array(
-                                'from_id' => $appid,
-                                'from_idtype' => 'app',
-                                'url' => ($file['gid'] > 0) ? $_G['siteurl'] . MOD_URL . '#group&do=file&gid=' . $file['gid'] . '&fid=' . $file['pfid'] : $_G['siteurl'] . MOD_URL . '#home&do=file&fid=' . $file['pfid'],
-                                'author' => getglobal('username'),
-                                'authorid' => getglobal('uid'),
-                                'dataline' => dgmdate(TIMESTAMP),
-                                'fname' => getstr($file['name'], 31),
-                                'comment' => ($message) ? getstr($message) : '',
-
-                            );
-                            $action = 'explorer_comment_at';
-                            $type = 'explorer_comment_at' . $file['pfid'];
-                            dzz_notification::notification_add($uid, $type, $action, $notevars, 0, MOD_PATH);
-                        }
-                    }
-                }
-
-                showTips(array('success' => true, 'return' => $return, 'json'));
-            }
-
-        }
-    } else {
-        if (!$folder = C::t('folder')->fetch($fid)) {
-            exit(json_encode(array('error' => '没有查询到该文件夹信息')));
-        } else {
-            if (!perm_check::checkperm_Container($fid, 'comment')) {
-                exit(json_encode(array('error' => lang('folder_comment_no_privilege'))));
-            }
-            $rid = C::t('resources')->fetch_rid_by_fid($fid);
-            $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-            $path = preg_replace('/dzz:(.+?):/', '', $path);
-            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $folder['gid']);
-            $eventdata = array('position' => $path, 'hash' => $hash, 'msg' => $msg,'title' => '');
-            if ($insert = C::t('resources_event')->addevent_by_pfid($fid, 'add_comment', 'addcomment', $eventdata, $folder['gid'], ($rid) ? $rid : '', $folder['fname'], 1)) {
-                $return = array(
-                    'username' => getglobal('username'),
-                    'uid' => getglobal('uid'),
-                    'dateline' => dgmdate(TIMESTAMP, 'u'),
-                    'msg' => dzzcode($message),
-                    'commentid' => $insert,
-                    'avatar' => avatar_block($_G['uid'])
-                );
-                if ($folder['uid'] != getglobal('uid')) {
-                    $notevars = array(
-                        'from_id' => $appid,
-                        'from_idtype' => 'app',
-                        'url' => ($folder['gid'] > 0) ? $_G['siteurl'] . MOD_URL . '#group&do=file&gid=' . $folder['gid'] . '&fid=' . $folder['fid'] : $_G['siteurl'] . MOD_URL . '#home&do=file&fid=' . $folder['fid'],
-                        'author' => getglobal('username'),
-                        'authorid' => getglobal('uid'),
-                        'dataline' => dgmdate(TIMESTAMP),
-                        'fname' => getstr($folder['fname'], 31),
-                        'comment' => ($message) ? getstr(dzzcode($message)) : '',
-                    );
-                    $action = 'explorer_comment_mydoc';
-                    $type = 'explorer_comment_mydoc_' . $fid;
-
-                    dzz_notification::notification_add($folder['uid'], $type, $action, $notevars, 0, 'dzz/explorer');
-                }
-                if ($at_users) {//提醒相关人员
-                    foreach ($at_users as $uid) {
-                        if ($uid != getglobal('uid')) {
-                            //发送通知
-                            $notevars = array(
-                                'from_id' => $appid,
-                                'from_idtype' => 'app',
-                                'url' => ($folder['gid'] > 0) ? $_G['siteurl'] . MOD_URL . '#group&do=file&gid=' . $folder['gid'] . '&fid=' . $folder['fid'] : $_G['siteurl'] . MOD_URL . '#home&do=file&fid=' . $folder['fid'],
-                                'author' => getglobal('username'),
-                                'authorid' => getglobal('uid'),
-                                'dataline' => dgmdate(TIMESTAMP),
-                                'fname' => getstr($folder['fname'], 31),
-                                'comment' => ($message) ? getstr($message) : '',
-
-                            );
-                            $action = 'explorer_comment_at';
-                            $type = 'explorer_comment_at_' . $fid;
-
-                            dzz_notification::notification_add($uid, $type, $action, $notevars, 0, MOD_PATH);
-                        }
-                    }
-                }
-
-                showTips(array('success' => true, 'return' => $return, 'json'));
             }
         }
-
+        showTips(array('success' => true, 'json'));
     }
-
-} elseif ($operation == 'addsearchcat') {//增加类型筛选
+} elseif ($do == 'addsearchcat') {//增加类型筛选
     $id = isset($_GET['id']) ? intval($_GET['id']) : '';
     if ($id) {
         $cat = C::t('resources_cat')->fetch_by_id($id);
@@ -669,7 +535,7 @@ if ($operation == 'upload') {//上传图片文件
         }
     }
 
-} elseif ($operation == 'delsearchcat') {//删除筛选类型
+} elseif ($do == 'delsearchcat') {//删除筛选类型
     $catid = isset($_GET['id']) ? intval($_GET['id']) : '';
     if ($_GET['delcat']) {
         if (C::t('resources_cat')->del_by_id($catid)) {
@@ -682,7 +548,7 @@ if ($operation == 'upload') {//上传图片文件
         exit(json_encode(array('error' => true)));
     }
 
-} elseif ($operation == 'share') {//分享
+} elseif ($do == 'share') {//分享
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     $table = isset($_GET['table']) ? trim($_GET['table']) : '';
     if (isset($_GET['paths'])) {
@@ -829,26 +695,23 @@ if ($operation == 'upload') {//上传图片文件
             }
         }
     }
-} elseif ($operation == 'property') {//属性
+} elseif ($do == 'property') {//属性
     $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
-    $fid = 0;
-    if (preg_match('/fid_/', $paths)) {
-        $fid = preg_replace('/fid_/', '', $paths);
-    }
+    $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
+    $fileinfo = array();
     if ($bz) {
         if ($fid) {
-            $propertys = IO::getMeta($fid);
-            if ($propertys['error']) {
-                showmessage($propertys['error']);
+            $fileinfo = IO::getMeta($fid);
+            if ($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+            if (!$_G['adminid'] &&  $fileinfo['uid'] != $_G['uid']) {
+                showmessage('no_privilege',MOD_URL);
             }
-            if (!$_G['adminid'] &&  $propertys['uid'] != $_G['uid']) {
-                showmessage(lang('no_privilege'));
-            }
-            $contains = IO::getContains($propertys['path']);
-            $propertys['type'] = lang('type_folder');
-            $propertys['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-            $propertys['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
+            $contains = IO::getContains($fileinfo['path']);
+            $fileinfo['ftype'] = lang('type_folder');
+            $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
+            $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
         } elseif (strpos($paths, ',') !== false) {
             $patharr = explode(',', $paths);
             $rids = array();
@@ -860,7 +723,7 @@ if ($operation == 'upload') {//上传图片文件
             foreach ($rids as $icoid) {
                 if (!$icoarr = IO::getMeta($icoid)) continue;
                 if ($icoarr['error']) {
-                    showmessage($icoarr['error']);
+                    showmessage($icoarr['error'],MOD_URL);
                 } else {
                     switch ($icoarr['type']) {
                         case 'folder':
@@ -876,74 +739,92 @@ if ($operation == 'upload') {//上传图片文件
                     }
                 }
             }
-            $propertys['ffsize'] = lang('property_info_size', array('fsize' => formatsize($size), 'size' => $size));
-            $propertys['contain'] = lang('property_info_contain', array('filenum' => $contents[0], 'foldernum' => $contents[1]));
+            $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($size), 'size' => $size));
+            $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contents[0], 'foldernum' => $contents[1]));
         } else {
             $paths = dzzdecode($paths);
-            $propertys = IO::getMeta($paths);
-            if ($propertys['error']) {
-                showmessage($propertys['error']);
+            $fileinfo = IO::getMeta($paths);
+            if ($fileinfo['error']) showmessage($fileinfo['error']);
+            if (!$_G['adminid'] &&  $fileinfo['uid'] != $_G['uid']) {
+                showmessage('no_privilege',MOD_URL);
             }
-            if (!$_G['adminid'] &&  $propertys['uid'] != $_G['uid']) {
-                showmessage(lang('no_privilege'));
-            }
-            if ($propertys['type'] == 'folder') {
-                $contains = IO::getContains($propertys['path']);
-                $propertys['type'] = lang('type_folder');
-                $propertys['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-                $propertys['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
+            if ($fileinfo['type'] == 'folder') {
+                $contains = IO::getContains($fileinfo['path']);
+                $fileinfo['ftype'] = lang('type_folder');
+                $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
+                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
             }
         }
-        $propertys['type'] = $propertys['ftype'];
     } else {
-        if (intval($fid)) {
-            if ($rid = C::t('resources')->fetch_rid_by_fid($fid)) {
-                $propertys = C::t('resources')->get_property_by_rid($rid);
-            } else {
-                $propertys = C::t('resources')->get_property_by_fid($fid);
-            }
-        } else {
+        if ($rid) {
+            $fileinfo = C::t('resources')->get_property_by_rid($rid);
+        } elseif ($fid) {
+            $fileinfo = C::t('resources')->get_property_by_fid($fid);
+        } elseif($paths) {
             $patharr = explode(',', $paths);
             $rids = array();
             foreach ($patharr as $v) {
                 $rids[] = dzzdecode($v);
             }
-            $propertys = C::t('resources')->get_property_by_rid($rids);
-            if (!$propertys['ismulti']) {
-                $attrdata = C::t('resources_attr')->fetch_by_rid($propertys['rid'], $propertys['vid']);
-                if ($_G['adminid'] && $attrdata['aid']) {
-                    $attachment = IO::getStream('attach::' . $attrdata['aid']);
+            $fileinfo = C::t('resources')->get_property_by_rid($rids);
+        }
+        if ($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+        if ($fileinfo['isgroup']) {
+            $org = C::t('organization')->fetch($fileinfo['gid']);
+            if ($org) {
+                //获取已使用空间
+                $usesize = C::t('organization')->get_orgallotspace_by_orgid($fileinfo['gid'], 0, false);
+                //获取总空间
+                if ($org['maxspacesize'] == 0) {
+                    $maxspace = 0;
+                } else {
+                    if ($org['maxspacesize'] == -1) {
+                        $maxspace = -1;
+                    } else {
+                        $maxspace = $org['maxspacesize'] * 1024 * 1024;
+                    }
                 }
             }
+            $progress = set_space_progress($usesize, $maxspace);
+        } elseif ($fileinfo['pfid'] == 0) {
+            $spaceinfo = dzzgetspace($uid);
+            $maxspace = $spaceinfo['maxspacesize'];
+            $usesize = $spaceinfo['usesize'];
+            $progress = set_space_progress($usesize, $maxspace);
         }
-        if ($propertys['error']) {
-            $error = $propertys['error'];
+        if (!$fileinfo['ismulti'] && $fileinfo['rid']) {
+            $tags = C::t('resources_tag')->fetch_tag_by_rid($fileinfo['rid']);
+            $filemeta = C::t('resources_meta')->fetch_by_key($fileinfo['rid'],'desc', true);
+            if($filemeta) $fileinfo['desc'] = $filemeta;
+            $attrdata = C::t('resources_attr')->fetch_by_rid($fileinfo['rid'], $fileinfo['vid']);
+            if ($_G['adminid'] && $attrdata['aid']) {
+                $attachment = IO::getStream('attach::' . $attrdata['aid']);
+            }
         }
     }
-} elseif ($operation == 'editFileVersionInfo') {
+} elseif ($do == 'editFileVersionInfo') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
     $versioninfo = C::t('resources_version')->get_versioninfo_by_rid_vid($rid, $vid);
-} elseif ($operation == 'infoversion') {
+} elseif ($do == 'infoversion') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
 
     $versioninfo = C::t('resources_version')->get_versioninfo_by_rid_vid($rid, $vid);
     if ($versioninfo['rid']) {
-        $propertys = C::t('resources')->get_property_by_rid($versioninfo['rid']);
-    } else {
-        $error = lang('file_not_exist');
+        $fileinfo = C::t('resources')->get_property_by_rid($versioninfo['rid']);
+        if ($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
     }
     if ($_G['adminid'] && $versioninfo['aid']) {
         $attachment = IO::getFileUri('attach::' . $versioninfo['aid']);
     }
-} elseif ($operation == 'deletethisversion') {
+} elseif ($do == 'deletethisversion') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
     if (!$rid || !$vid) {
         exit(json_encode(array('error' => 'access denied')));
     }
-    $fileinfo = C::t('resources')->get_property_by_rid($rid);
+    $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
     if ($fileinfo['editperm']) {
         if (C::t('resources_version')->delete_by_vid($vid, $rid, true)) {
             exit(json_encode(array('msg' => 'success')));
@@ -954,7 +835,7 @@ if ($operation == 'upload') {//上传图片文件
         exit(json_encode(array('error' => lang('no_privilege'))));
     }
 
-} elseif ($operation == 'addIndex') {//索引文件
+} elseif ($do == 'addIndex') {//索引文件
     global $_G;
     $indexarr = array(
         'id' => $_GET['rid'] . '_' . intval($_GET['vid']),
@@ -985,7 +866,7 @@ if ($operation == 'upload') {//上传图片文件
     } else {
         exit(json_encode(array('success' => true)));
     }
-} elseif ($operation == 'updateIndex') {
+} elseif ($do == 'updateIndex') {
     $arr = isset($_GET['arr']) ? $_GET['arr'] : '';
     if (empty($arr)) {
         exit(json_encode(array('error' => '缺少数据')));
@@ -999,7 +880,7 @@ if ($operation == 'upload') {//上传图片文件
     } else {
         exit(json_encode(array('success' => true)));
     }
-} elseif ($operation == 'deleteIndex') {
+} elseif ($do == 'deleteIndex') {
     $rids = $_GET['rids'];
     $ids = array();
     foreach ($rids as $v) {
@@ -1007,7 +888,7 @@ if ($operation == 'upload') {//上传图片文件
     }
     Hook::listen('solrdel', $ids);
     exit(json_encode(array('success' => true)));
-} elseif ($operation == 'setExtopenDefault') {
+} elseif ($do == 'setExtopenDefault') {
     $extid=$_GET['extid'];
     if(!$extid) exit(json_encode(array('error' => '缺少参数')));
 	if($extdata=C::t('app_open')->fetch($extid)){
@@ -1016,75 +897,134 @@ if ($operation == 'upload') {//上传图片文件
 		exit(json_encode(array('error' => '参数错误')));
 	}
     exit(json_encode(array('success' => true)));
-} elseif ($operation == 'history') {
-    $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
-    $rid = dzzdecode($paths);
-    $propertys = C::t('resources')->get_property_by_rid($rid,false);
-    if ($propertys['error']) {
-        $error = $propertys['error'];
-    } else {
-        $fileinfo = $propertys;
-        $fileinfo['dpath'] = $paths;
-        $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-        $vlimit = 20;
-        $limit = ($page) ? $page . '-' . $vlimit : $vlimit;
-        $gets = array('op' => 'ajax', 'operation' => 'history', 'paths' => $paths,'page' => $page);
+} elseif ($do == 'version') {
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
+    $property = isset($_GET['property']) ? intval($_GET['property']) : 0;
+    $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
+    if ($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+    $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+    $vlimit = 20;
+    $limit = ($page) ? $page . '-' . $vlimit : $vlimit;
+    $gets = array('op' => 'ajax', 'do' => 'version', 'rid' => $rid,'page' => $page,'property' => $property);
+    $theurl = MOD_URL . "&" . url_implode($gets);
+    $total = C::t('resources_version')->fetch_all_by_rid($rid, '', true);
+    if($total) {
+        $multi = multi($total, $vlimit, $page, $theurl, 'pull-right');
+        $versions = C::t('resources_version')->fetch_all_by_rid($rid, $limit, false);
+    }
+    if(!$property) {
+        include template('historyversion_content');
+        exit();
+    }
+} elseif ($do == 'dynamic') {
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
+    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
+    $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+    $property = isset($_GET['property']) ? intval($_GET['property']) : 0;
+    $limit = 20;
+    if ($rid) {
+        $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
+        if($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+        $total = C::t('resources_event')->fetch_by_rid($rid, $page, $limit, true, 1);
+        if ($total) {
+            $events = C::t('resources_event')->fetch_by_rid($rid, $page, $limit, false, 1);
+        }
+    } elseif($fid) {
+        $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
+        if($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+        $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true, $page, $limit, '', 1);
+        if ($total) {
+            $events = C::t('resources_event')->fetch_by_pfid_rid($fid, false, $page, $limit, '', 1);
+        }
+    }
+    if ($total) {
+        $gets = array('op' => 'ajax', 'do' => 'dynamic', 'rid' => $rid, 'fid' =>$fid,'page' => $page,'property' => $property);
         $theurl = MOD_URL . "&" . url_implode($gets);
-        $total = C::t('resources_version')->fetch_all_by_rid($rid, '', true);
-        if($total) {
-            $multi = multi($total, $vlimit, $page, $theurl, 'pull-right');
-            $versions = C::t('resources_version')->fetch_all_by_rid($rid, $limit, false);
-        }
-    }
-} elseif ($operation == 'dynamic') {
-    $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
-    $rid = dzzdecode($paths);
-    $propertys = C::t('resources')->get_property_by_rid($rid,false);
-    if ($propertys['error']) {
-        $error = $propertys['error'];
+        $multi = multi($total, $limit, $page, $theurl);
     } else {
-        $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
-        $limit = 15;
-        if (!preg_match('/\w{32}/', $rid)) {
-            $pfid = intval($rid);
-        }
-        if ($pfid) {
-            $total = C::t('resources_event')->fetch_by_pfid_rid($pfid, true, $page, $limit);
+        $info = lang('no_dynamisc');
+    }
+    if(!$property) {
+        include template('template_more_dynamic');
+        exit();
+    }
+} elseif ($do == 'comment') {
+    $property = isset($_GET['property']) ? intval($_GET['property']) : 0;
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
+    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
+    $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
+    $limit = 20;
+    $commentperm = false;
+    if ($rid) {
+        $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
+        if($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+        if (perm_check::checkperm_Container($fileinfo['fid'], 'comment')) {
+            $commentperm = true;
+            $total = C::t('resources_event')->fetch_by_rid($rid, $page, $limit, true,2);
             if ($total) {
-                $events = C::t('resources_event')->fetch_by_pfid_rid($pfid, false, $page, $limit);
-            }
-        } else {
-            $total = C::t('resources_event')->fetch_by_rid($rid, $page, $limit, true);
-            if ($total) {
-                $events = C::t('resources_event')->fetch_by_rid($rid, $page, $limit);
+                $events = C::t('resources_event')->fetch_by_rid($rid, $page, $limit,false, 2);
             }
         }
-        if($total) {
-            $gets = array('op' => 'ajax', 'operation' => 'dynamic', 'paths' => $paths,'page' => $page);
-            $theurl = MOD_URL . "&" . url_implode($gets);
-            $multi = multi($total, $limit, $page, $theurl, 'pull-right');
+    } elseif($fid) {
+        $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
+        if($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+        if (perm_check::checkperm_Container($fid, 'comment')) {
+            $commentperm = true;
+            $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true, $page, $limit, '', 2);
+            if ($total) {
+                $events = C::t('resources_event')->fetch_by_pfid_rid($fid, false, $page, $limit, '', 2);
+            }
         }
     }
-} elseif ($operation == 'perm') {
-    $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
-    $rid = dzzdecode($paths);
-    $propertys = C::t('resources')->get_property_by_rid($rid,false);
-    if ($propertys['error']) {
-        $error = $propertys['error'];
+    if ($total) {
+        $gets = array('op' => 'ajax', 'do' => 'comment', 'rid' => $rid, 'fid' =>$fid,'page' => $page,'property' => $property);
+        $theurl = MOD_URL . "&" . url_implode($gets);
+        $multi = multi($total, $limit, $page, $theurl);
     } else {
-        if($propertys['oid']) {
-            $fid = $propertys['oid'];
-        } else {
-            $fid = $propertys['pfid'];
-        }
-        if($fid) {
-            $usergroupperm = C::t('organization_admin')->chk_memberperm($propertys['gid'], $_G['uid']);
+        $info = lang('no_cmment');
+    }
+    if($commentperm) {//有查看评论权限
+        if(!$fileinfo['editperm']) $addinfo = lang('no_comment_perm_file');//有查看评论权限但无发布权限
+    } else {//无查看评论权限
+        $info = lang('no_comment_perm');
+    }
+    $commentid = 2;
+    if(!$property) {
+        $commentid = 1;
+        include template('template_more_dynamic');
+        exit();
+    }
+} elseif ($do == 'perm') {
+    $property = isset($_GET['property']) ? intval($_GET['property']) : 0;
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
+    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
+    if ($rid) {
+        $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
+    } elseif ($fid) {
+        $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
+    }
+    if($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+    if($fileinfo['gid']) {
+        $org = C::t('organization')->fetch($fileinfo['gid']);
+        if($org) {
+            $members = C::t('organization_user')->fetch_user_byorgid($fileinfo['gid'],'', false);
+            //处理成员头像函数
+            $userids = array();
+            foreach ($members as $k => $v) {
+                $userids[] = $v['uid'];
+            }
+            $userstr = implode(',', $userids);
+            $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);
             if(isset($usergroupperm) && $usergroupperm > 0) {
                 $folderperm = C::t('folder')->fetch_perm_by_fid($fid);
             }
-            $myperm = perm_check::getPerm($fid);
-            $perms = get_permsarray();
         }
+    }
+    $myperm = perm_check::getPerm($fid);
+    $perms = get_permsarray();
+    if(!$property) {
+        include template('template_perm');
+        exit();
     }
 }
 include template('ajax');

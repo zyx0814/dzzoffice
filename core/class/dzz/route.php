@@ -29,7 +29,7 @@ class Route {
 
                 foreach ($patharr as $path) {
 
-                    if (!preg_match("/^\w+$/i", $path)) showmessage(lang('undefined_action'));
+                    if (!preg_match("/^\w+$/i", $path)) showmessage('undefined_action');
 
                 }
                 $modfile = './' . CURSCRIPT . '/' . str_replace(':', '/', $mod) . '/' . ($op ? $op : 'index') . EXT;
@@ -50,7 +50,7 @@ class Route {
                 if (@!file_exists(DZZ_ROOT . ($modfile = './' . CURSCRIPT . '/' . $mod . '/' . $op . EXT)) && @!file_exists(DZZ_ROOT . ($modfile = './' . CURSCRIPT . '/' . $mod . '/' . $mod . EXT))) {
                     //兼容老版
                     if (@!file_exists($modfile = './' . CURSCRIPT . '/' . $mod . EXT)) {
-                        showmessage(lang('page_not_found'), dreferer());
+                        showmessage('page_not_found', dreferer());
                     }
 
                 }

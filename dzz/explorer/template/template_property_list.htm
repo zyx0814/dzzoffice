@@ -1,0 +1,131 @@
+<!--根文件进度条开始-->
+<!--{if ($fileinfo['isgroup'] || $fileinfo['pfid'] == 0) && !$fileinfo['ismulti'] && !$bz}-->
+<div class="right-progress mb-2">
+    <p class="mb-0">已使用{eval echo formatsize($usesize);}(<!--{if $maxspace == 0}-->不限制<!--{elseif $maxspace < 0}-->0<!--{else}-->共{eval echo formatsize($maxspace);}<!--{/if}-->)</p>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$progress}%;">
+        </div>
+    </div>
+</div>
+<!--{/if}-->
+<!--根文件进度条结束-->
+<!--文件详情开始-->
+<!--{if $fileinfo['ftype']}-->
+<div class="row mb-1"> 
+    <label class="col-sm-3">{lang type}</label>
+    <div class="col-sm-9">$fileinfo['ftype']</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo[realpath]}-->
+<div class="row mb-1"> 
+    <label class="col-sm-3">{lang position}</label>
+    <div class="col-sm-9">$fileinfo[realpath]</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo['uid'] && $fileinfo['username']}-->
+<div class="row mb-1">
+    <label class="col-sm-3">{lang creator}</label>
+    <div class="col-sm-9 text-break"><span class="img-avatar-24">{eval echo avatar_block($fileinfo['uid']);}</span>$fileinfo['username']</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo['editusername'] && $fileinfo['edituid']}-->
+<div class="row mb-1">
+    <label class="col-sm-3">{lang editor}</label>
+    <div class="col-sm-9 text-break"><span class="img-avatar-24">{eval echo avatar_block($fileinfo['edituid']);}</span>$fileinfo['editusername']</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo['contain']}-->
+<div class="row mb-1"> 
+    <label class="col-sm-3">{lang include}</label>
+    <div class="col-sm-9">$fileinfo['contain']</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo['ffsize']}-->
+<div class="row mb-1"> 
+    <label class="col-sm-3">{lang big_small}</label>
+    <div class="col-sm-9">$fileinfo['ffsize']</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo[fdateline]}-->
+<div class="row mb-1"> 
+    <label class="col-sm-3">{lang create_time}</label>
+    <div class="col-sm-9">$fileinfo[fdateline]</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo[editdateline]}-->
+<div class="row mb-1"> 
+    <label class="col-sm-3">{lang edit_time}</label>
+    <div class="col-sm-9">$fileinfo[editdateline]</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo[opendateline]}-->
+<div class="row mb-1"> 
+    <label class="col-sm-3">{lang last_visit}</label>
+    <div class="col-sm-9">$fileinfo[opendateline]</div>
+</div>
+<!--{/if}-->
+<!--{if !$bz && $fileinfo[url]}-->
+<div class="row mb-1">
+    <label class="col-sm-3">{lang typename_shortcut}</label>
+    <div class="col-sm-9 text-break"><a href="$fileinfo[url]" target="_blank">$fileinfo[url]</a></div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo[downs]}-->
+<div class="row mb-1">
+    <label class="col-sm-3">{lang download_times}</label>
+    <div class="col-sm-9">$fileinfo[downs]</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo[views]}-->
+<div class="row mb-1">
+    <label class="col-sm-3">{lang view_count}</label>
+    <div class="col-sm-9">$fileinfo[views]</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo[edits]}-->
+<div class="row mb-1">
+    <label class="col-sm-3">{lang edit_times}</label>
+    <div class="col-sm-9">$fileinfo[edits]</div>
+</div>
+<!--{/if}-->
+<div id="folderinfo"></div>
+<!--{if $attachment}-->
+<div class="row mb-1">
+    <label class="col-sm-3">文件地址</label>
+    <div class="col-sm-9 text-break"><!--{if is_array($attachment) && $attachment['error']}--><span class="text-danger">$attachment['error']</span><!--{else}-->$attachment<!--{/if}--></div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo['rid'] && !$bz && !$fileinfo['ismulti']}-->
+<div class="row mb-1">
+    <label class="col-sm-3">{lang file_desc}</label>
+    <div class="col-sm-9">
+        <textarea name="desc" class="form-control form-control_desc" <!--{if !$fileinfo['editperm']}-->disabled="disabled"<!--{/if}--> placeholder="{lang file_desc_placeholder}">$fileinfo['desc']</textarea>
+    </div>
+    <script type="text/javascript">
+    jQuery('.form-control_desc').change(function(){
+        var desc = jQuery.trim(jQuery(this).val());
+        riddesc('{$fileinfo['rid']}',desc);
+    });
+    </script>
+</div>
+<!--文件详情结束-->
+<!--标签开始-->
+<div class="border-top p-1">
+    <div class="right-card-header">
+        <div class="title">{lang label}</div>
+        <button type="button" class="dcolor conpile-poewr" onclick="showWindow('property','{MOD_URL}&op=ajax&do=tag&rid={$fileinfo['rid']}','get',0)">
+            <span class="mdi mdi-pencil fs-6"></span>
+        </button>
+    </div>
+    <div class="right-card-body" id="taglist-{$fileinfo['rid']}">
+        <!--{if $tags}-->
+        <!--{loop $tags $v}-->
+        <span class="layui-badge-rim m-1" daat-tid="$v[tid]" id="{$fileinfo['rid']}-{$v[tid]}">$v[tagname]</span>
+        <!--{/loop}-->
+        <!--{else}-->
+        {lang no_labels_set}
+        <!--{/if}-->
+    </div>
+</div>
+<!--标签结束-->
+<!--{/if}-->

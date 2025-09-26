@@ -11,7 +11,7 @@ if (!defined('IN_DZZ')) {
 global $_G;
 
 if ($_GET['formhash'] != $_G['formhash']) {
-    showmessage(lang('operation_error'), dreferer(), array('formhash' => FORMHASH));
+    showmessage('operation_error', dreferer(), array('formhash' => FORMHASH));
 }
 //应用退出登录挂载点
 Hook::listen('applogout');
@@ -22,4 +22,4 @@ $_G['uid'] = $_G['member']['uid'] = 0;
 
 $_G['username'] = $_G['member']['username'] = $_G['member']['password'] = '';
 
-showmessage(lang('logout_succeed'), dreferer(), array('formhash' => FORMHASH));
+showmessage('logout_succeed', dreferer(), array('formhash' => FORMHASH));

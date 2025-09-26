@@ -931,6 +931,7 @@ CREATE TABLE `dzz_resources_statis` (
   `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
   `opendateline` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '打开时间',
   `editdateline` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+  `edituid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '编辑者UID',
   PRIMARY KEY (`id`),
   KEY `rid` (`rid`),
   KEY `fid` (`fid`),

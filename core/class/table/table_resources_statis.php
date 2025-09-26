@@ -16,6 +16,7 @@ class table_resources_statis extends dzz_table {
         global $_G;
         $uid = $_G['uid'];
         $fid = intval($fid);
+        if (!$fid) return false;
         if (!DB::result_first("select count(*) from %t where fid = %d", array($this->_table, $fid))) {
             $fileinfo = C::t('folder')->fetch($fid);
             $insertarr = array('editdateline' => $fileinfo['dateline'], 'pfid' => $fileinfo['pfid'], 'uid' => $uid, 'opendateline' => $fileinfo['dateline'], 'fid' => $fid);
@@ -50,7 +51,7 @@ class table_resources_statis extends dzz_table {
         global $_G;
         $uid = $_G['uid'];
         if (!is_array($rids)) $rids = (array)$rids;
-
+        if(!$rids) return false;
         $statis = array();
         $statisrid = array();
         //查询rid数组,判断当前$rids数组是否在数据库已经有数据

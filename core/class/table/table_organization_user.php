@@ -302,10 +302,12 @@ class table_organization_user extends dzz_table {
             $params[] = $uid;
         }
         $userinfo = array();
-        foreach (DB::fetch_all("select o.*,u.username,u.email from %t o left join %t u on o.uid = u.uid where o.orgid = %d $where", $params) as $v) {
+        foreach (DB::fetch_all("select o.*,u.username,u.email,u.adminid from %t o left join %t u on o.uid = u.uid where o.orgid = %d $where", $params) as $v) {
             $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", array('organization_admin', $orgid, $v['uid']));
-            if (!$admintype) {
-                $v['perm'] = 0;
+            if($admintype) {
+                $v['perm'] = $admintype;
+            } elseif ($v['adminid'] == 1) {
+                $v['perm'] = 1;
             } else {
                 $v['perm'] = $admintype;
             }
@@ -357,7 +359,7 @@ class table_organization_user extends dzz_table {
                     return array('success' => lang('change_creater_succeed'), 'perm' => $perm, 'olduid' => $olduser['uid'], 'olduser' => $olduser, 'member' => $result['username']);
                 }
             } elseif (C::t('organization_admin')->update_perm($uid, $gid, $perm)) {//设置管理员
-                return array('success' => true, 'perm' => $perm, 'member' => $result['username']);
+                return array('success' => lang('do_success'), 'perm' => $perm, 'member' => $result['username']);
             }
         }
         return array('error' => lang('explorer_do_failed'));

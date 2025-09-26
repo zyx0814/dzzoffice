@@ -3,7 +3,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 if (!$_G['uid']) {
-    showmessage(lang('no_privilege'), dreferer());
+    showmessage('no_privilege', dreferer());
 }
 $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
 if ($bz && $bz !== 'dzz') {

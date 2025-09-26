@@ -8,6 +8,19 @@
 	width:0%;
 	height: 10%;
 }
+.list-chose li{margin-bottom:10px;margin-top:10px}
+.list-chose li:last-child{margin-bottom:0px}
+.list-chose li span.title{font-weight:700}
+.list-chose li a{color:#4d5259;margin:0px 5px;padding:3px 5px;white-space:nowrap;border-radius:15px}
+.list-chose li a:hover,.list-chose li a.active{background-color:#4c89fb;color:#fff}
+.multi-chosen .mdi-close{display:none}
+.multi-chosen a.active .mdi-close{display:inherit}
+.list-chose li.positions{position:relative;height:30px;overflow:hidden}
+.list-chose li a.more{position:absolute;cursor:pointer;padding:0px;top:0px;right:0px}
+.list-chose li a.more:after{font-family:"Material Design Icons";content:"\f35d";font-size:18px;-webkit-transition:-webkit-transform 0.25s linear;transition:-webkit-transform 0.25s linear;transition:transform 0.25s linear;transition:transform 0.25s linear,-webkit-transform 0.25s linear}
+.list-chose li.positions.on{height:auto}
+.list-chose li.positions.on a.more:after{-webkit-transform:rotate(180deg);transform:rotate(180deg)}
+.list-chose li a.more:hover{color:#4d5259;background-color:transparent}
 </style>
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
@@ -20,6 +33,28 @@
 			<div class="alert alert-warning" role="alert">
 				{lang manual_install_tip}
 			</div>
+			<ul class="list-unstyled list-chose">
+				<li class="multi-chosen">
+					<span class="title">应用价格：</span>
+					<a href="javascript:;" data-search-name="price" data-search-id="-1" class="active">不限</a>
+					<a href="javascript:;" data-search-name="price" data-search-id="1">收费</a>
+					<a href="javascript:;" data-search-name="price" data-search-id="2">免费</a>
+				</li>
+				<li class="multi-chosen">
+					<span class="title">网络类别：</span>
+					<a href="javascript:;" data-search-name="nettype" data-search-id="-1" class="active">不限</a>
+					<a href="javascript:;" data-search-name="nettype" data-search-id="1">内网</a>
+					<a href="javascript:;" data-search-name="nettype" data-search-id="2">外网</a>
+				</li>
+				<li class="multi-chosen">
+					<span class="title">应用排序：</span>
+					<a href="javascript:;" data-search-name="order" data-search-id="-1" class="active">默认</a>
+					<a href="javascript:;" data-search-name="order" data-search-id="updatetime">更新时间</a>
+					<a href="javascript:;" data-search-name="order" data-search-id="dateline">发布时间</a>
+					<a href="javascript:;" data-search-name="order" data-search-id="downloads">下载量</a>
+					<a href="javascript:;" data-search-name="order" data-search-id="views">访问量</a>
+				</li>
+			</ul>
 		<!--{if $list}-->
 		<div class="d-flex flex-wrap mb-3 justify-content-center">
 			<!--{loop $list $value}-->
@@ -36,9 +71,21 @@
 				</div>
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><i class="mdi mdi-tag"></i> 应用分类：{$value['classid_name']}</li>
-					<li class="list-group-item"><i class="mdi mdi-account"></i> 开发者：$value[vendor]</li>
-					<li class="list-group-item"><i class="mdi mdi-download"></i> {lang big_small}：{eval echo formatsize($value['packagesize']);}</li>
+					<!--{if $_GET[order] == 'updatetime'}-->
+					<li class="list-group-item"><i class="mdi mdi-update"></i> 更新时间：<!--{eval echo dgmdate($value['updatetime'], 'u');}--></li>
+					<!--{elseif $_GET[order] == 'dateline'}-->
+					<li class="list-group-item"><i class="mdi mdi-update"></i> 上线时间：$value['dateline']</li>
+					<!--{/if}-->
+					<li class="list-group-item"><i class="mdi mdi-package-down"></i> {lang big_small}：{eval echo formatsize($value['packagesize']);}</li>
 				</ul>
+				<div class="card-footer">
+					<div class="card-meta">
+						<span title="访问量"><i class="mdi mdi-eye"></i>&nbsp;$value[views]</span>
+						<span class="mdi mdi-power-on" title="下载量"><i class="mdi mdi-download"></i>&nbsp;$value[downloads]</span>
+						<span class="mdi mdi-power-on" title="开发者"><i class="mdi mdi-account"></i>&nbsp;$value[vendor]</span>
+						
+					</div>
+				</div>
 				<div class="card-body d-grid">
 					<!--{if $value[price]>0}-->
 					<button class="btn btn-round btn-danger btn-sm"  onclick="showBuyInfo(this,'$value[mid]')" data-href="$cloudurl?mod=dzzmarket&op=ajax&do=getBuyInfo&mid=$value[mid]" title="{lang buy_contract}">{lang buy}</button>
@@ -60,6 +107,8 @@
 			</div>
 			<!--{/loop}-->
 		</div>
+		<!--{elseif $error}-->
+		<div class="alert alert-danger">$error</div>
 		<!--{else}-->
 		<div class="text-center">
 			<img src="static/image/common/no_list.png" /><br>
@@ -91,6 +140,57 @@
 </div>
 <!-- /.modal -->
 <script type="text/javascript">
+	jQuery(document).ready(function(e) {
+		$(document).on('click', 'li.positions .more', function() {
+			$(this).parent('li').toggleClass('on');
+		});
+		var queryConfig = new Array();
+		var host      = window.location.host;
+		var pathname  = window.location.pathname;
+		var protocol  = document.location.protocol;
+		var queryStr  = location.search.substr(1);
+		queryStr = queryStr.split('&');
+		for (let i = 0; i < queryStr.length; i++) {
+			let q = queryStr[i].split('=')
+			if (q.length === 2) {
+				queryConfig[q[0]] = q[1];
+			}
+			$('li.multi-chosen a').each(function() {
+				if ($(this).data('search-name') == q[0] && $(this).data('search-id') == q[1]) {
+					$(this).addClass('active').siblings().removeClass('active');
+				}
+			});
+		}
+	
+		$(document).on('click', 'li a i.mdi-close', function() {
+			var name = $(this).parent('a').data('search-name');
+			delete queryConfig[name];
+			var urlStr = assemblyURL(queryConfig);
+			window.location.href = urlStr;
+		});
+		
+		$(document).on('click', 'li.multi-chosen a:not(.more)', function(ev) {
+			if(ev.target!=this) return false;
+			var name = $(this).data('search-name');
+			var id = $(this).data('search-id');
+			queryConfig[name] = id;
+			var urlStr = assemblyURL(queryConfig);
+			window.location.href = urlStr;
+		});
+		
+		// 组装url地址
+		function assemblyURL(queryConfig) {
+			var _str = "";
+			for(var o in queryConfig){
+				if(queryConfig[o] != -1 && o !== 'page'){ // 排除 page 参数
+					_str += o + "=" + queryConfig[o] + "&";
+				}
+			}
+			var query_str = _str.substring(0, _str.length-1);
+			
+			return protocol + '//' + host + pathname + '?' + query_str;
+		}
+	});
 	jQuery('.view-detail').on('click',function(){
 		showBuyInfo(this,'modal-lg');
 		return false;

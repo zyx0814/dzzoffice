@@ -122,21 +122,22 @@ if ($do == 'uploads') {//上传新文件(指新建)
     }
 } elseif ($do == 'newLink') {//新建连接
     if (!$create) {
-        showmessage(lang('no_privilege'));
+        showmessage('no_privilege');
     }
     $validatefid = validatefid($share, $fid);
     if (!$validatefid) {
-        showmessage(lang('no_privilege'));
+        showmessage('no_privilege');
     }
 } elseif ($do == 'linkadd') {
     if (!$create) {
-        showmessage(lang('no_privilege'));
+        showmessage('no_privilege');
     }
     $validatefid = validatefid($share, $fid);
     if (!$validatefid) {
-        showmessage(lang('no_privilege'));
+        showmessage('no_privilege');
     }
     if (isset($_GET['createlink']) && $_GET['createlink']) {
+        $name = isset($_GET['name']) ? trim($_GET['name']) : '';
         $link = isset($_GET['link']) ? trim($_GET['link']) : '';
         //检查网址合法性
         if (!preg_match("/^(http|ftp|https|mms)\:\/\/.{5,300}$/i", ($link))) {
@@ -149,39 +150,16 @@ if ($do == 'uploads') {//上传新文件(指新建)
             $ext = strtolower(substr(strrchr($link, '.'), 1, 10));
             $isimage = in_array(strtoupper($ext), $imageexts) ? 1 : 0;
             $ismusic = 0;
-
-            //是图片时处理
-            if ($isimage) {
-                if ($data = io_dzz::linktoimage($link, $fid)) {
-                    if ($data['error']) $arr['error'] = $data['error'];
-                    else {
-                        $arr = $data;
-                        $arr['msg'] = 'success';
-                    }
-                }
-
-            } else {
-                //试图作为视频处理
-                if ($data = io_dzz::linktovideo($link, $fid)) {
-                    if ($data['error']) $arr['error'] = $data['error'];
-                    else {
-                        $arr = $data;
-                        $arr['msg'] = 'success';
-                    }
-                }
-                if ($data = io_dzz::linktourl($link, $fid)) {
-                    if ($data['error']) {
-                        $arr['error'] = $data['error'];
-                    } else {
-                        $arr = $data;
-                        $arr['msg'] = 'success';
-                    }
+            if ($data = io_dzz::linktourl($link, $fid,$name)) {
+                if ($data['error']) {
+                    $arr['error'] = $data['error'];
                 } else {
-                    $arr['error'] = lang('network_error');
+                    $arr = $data;
+                    $arr['msg'] = 'success';
                 }
-
+            } else {
+                $arr['error'] = lang('network_error');
             }
-
         }
     }
     exit(json_encode($arr));
@@ -275,10 +253,10 @@ if ($do == 'uploads') {//上传新文件(指新建)
                 showmessage($propertys['error']);
             }
             if (!$_G['adminid'] &&  $propertys['uid'] != $_G['uid']) {
-                showmessage(lang('no_privilege'));
+                showmessage('no_privilege');
             }
             $contains = IO::getContains($propertys['path']);
-            $propertys['type'] = lang('type_folder');
+            $propertys['ftype'] = lang('type_folder');
             $propertys['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
             $propertys['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
         } elseif (strpos($paths, ',') !== false) {
@@ -317,19 +295,18 @@ if ($do == 'uploads') {//上传新文件(指新建)
                 showmessage($propertys['error']);
             }
             if (!$_G['adminid'] &&  $propertys['uid'] != $_G['uid']) {
-                showmessage(lang('no_privilege'));
+                showmessage('no_privilege');
             }
             if ($propertys['type'] == 'folder') {
                 $contains = IO::getContains($propertys['path']);
-                $propertys['type'] = lang('type_folder');
+                $propertys['ftype'] = lang('type_folder');
                 $propertys['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
                 $propertys['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
             }
         }
-        $propertys['type'] = $propertys['ftype'];
     }else {
         if ($fid) {
-            $propertys['type'] = '分享文件';
+            $propertys['ftype'] = '分享文件';
             $propertys['username'] = $share['username'];
         } else {
             $patharr = explode(',', $paths);

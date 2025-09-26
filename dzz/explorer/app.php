@@ -7,7 +7,7 @@ Hook::listen('check_login');//检查是否登录，未登录跳转到登录界�
 global $_G;
 $uid = $_G['uid'];
 if ($_G['adminid'] != 1) {
-    showmessage(lang('no_privilage'));
+    showmessage('no_privilage',MOD_URL);
 }
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'updatesetting') {//更新设置

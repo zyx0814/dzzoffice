@@ -88,7 +88,7 @@ class table_resources extends dzz_table {
             $cachkey = 'resourcesdata_' . $rid;
             $this->clear_cache($cachkey);
             $statisdata = array(
-                'uid' => getglobal('uid'),
+                'uid' => $_G['uid'],
                 'edits' => 1,
                 'editdateline' => TIMESTAMP
             );
@@ -508,13 +508,14 @@ class table_resources extends dzz_table {
       }*/
 
     //获取文件夹基本信息
-    public function get_folderinfo_by_fid($fid) {
+    public function get_folderinfo_by_fid($fid, $contain = true) {
         if (!$folderinfo = C::t('folder')->fetch($fid)) return false;
-        $contaions = self::get_contains_by_fid($fid, true);
-        $folderinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-        $folderinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+        if($contain) {
+            $contaions = self::get_contains_by_fid($fid, true);
+            $folderinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
+            $folderinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+        }
         $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $folderinfo['path'] = $path;
         $folderinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $path);
         $folderinfo['fdateline'] = dgmdate($folderinfo['dateline'], 'Y-m-d H:i:s');
         $folderinfo['isgroup'] = ($folderinfo['flag'] == 'organization') ? true : false;
@@ -812,17 +813,17 @@ class table_resources extends dzz_table {
             //判断文件类型是否相同
             $judgesecond = false;
             if (count(array_unique($tmpinfo['ext'])) > 1) {
-                $fileinfo['type'] = lang('more_file_type');
+                $fileinfo['ftype'] = lang('more_file_type');
                 $judgesecond = true;
 
             } else {
-                $fileinfo['type'] = lang('louis_vuitton') . $tmpinfo['ext'][0] . lang('type_of_file');
+                $fileinfo['ftype'] = lang('louis_vuitton') . $tmpinfo['ext'][0] . lang('type_of_file');
             }
             if (in_array('', $tmpinfo['ext']) || $judgesecond) {
                 if (count(array_unique($tmpinfo['type'])) > 1) {
-                    $fileinfo['type'] = lang('more_file_type');
+                    $fileinfo['ftype'] = lang('more_file_type');
                 } else {
-                    $fileinfo['type'] = lang('louis_vuitton') . lang($tmpinfo['type'][0]) . lang('typename_attach');
+                    $fileinfo['ftype'] = lang('louis_vuitton') . lang($tmpinfo['type'][0]) . lang('typename_attach');
                 }
             }
 
@@ -845,19 +846,16 @@ class table_resources extends dzz_table {
                 $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($tmpinfo['contains']['size']), 'size' => $tmpinfo['contains']['size']));
                 $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $tmpinfo['contains']['contain'][0], 'foldernum' => $tmpinfo['contains']['contain'][1]));
             }
-            $fileinfo['img'] = self::get_icosinfo_by_rid($fileinfo['rid']);
+            $fileinfo['img'] = '/dzz/explorer/images/ic-files.png';
 
             unset($tmpinfo);
         } else {//单个文件信息
             //文件基本信息
             $fileinfo = DB::fetch_first("select r.*,f.perm_inherit,p.path from %t r 
             left join %t f on r.pfid = f.fid left join %t p on r.pfid = p.fid $wheresql", $param);
-
             if (!$fileinfo) {
                 return array('error' => lang('no_privilege'));
             }
-            //文件统计信息
-            $filestatis = C::t('resources_statis')->fetch_by_rid($rids[0]);
             //位置信息
             if ($realpath) {
                 // 获取两个路径的开头部分
@@ -873,16 +871,6 @@ class table_resources extends dzz_table {
             } else {
                 $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $fileinfo['path']);
             }
-
-            //统计信息
-            $fileinfo['opendateline'] = ($filestatis['opendateline']) ? dgmdate($filestatis['opendateline'], 'Y-m-d H:i:s') : dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
-            $fileinfo['editdateline'] = ($filestatis['editdateline']) ? dgmdate($filestatis['editdateline'], 'Y-m-d H:i:s') : dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
-            $fileinfo['fdateline'] = dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
-            if ($_G['adminid']) {
-                $fileinfo['downs'] = $filestatis['downs'];
-                $fileinfo['views'] = $filestatis['views'];
-                $fileinfo['edits'] = $filestatis['edits'];
-            }
             //编辑权限信息
             $fileinfo['editperm'] = 1;
             if ($fileinfo['gid'] > 0) {
@@ -893,12 +881,15 @@ class table_resources extends dzz_table {
             }
 
             //文件图标信息
-            $fileinfo['img'] = self::get_icosinfo_by_rid($fileinfo['rid']);
+            $fileinfo['dpath'] = dzzencode($fileinfo['rid']);
             if ($fileinfo['type'] == 'folder') {
                 $fileinfo['isfolder'] = true;
-                if ($currentfolder = C::t('folder')->fetch($fileinfo['oid'])) {
-                    $fileinfo['isgroup'] = ($currentfolder['flag'] == 'organization') ? true : false;
-                }
+                $fileinfo['isgroup'] = ($fileinfo['flag'] == 'organization') ? true : false;
+                $fileinfo['img'] = 'dzz/images/default/system/' . $fileinfo['flag'] . '.png';
+            } elseif ($fileinfo['type'] == 'image') {
+                $fileinfo['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . $fileinfo['dpath'];
+            } else {
+                $fileinfo['img'] = geticonfromext($fileinfo['ext'], $fileinfo['type']);
             }
             if ($contains) {
                 //文件大小信息
@@ -909,15 +900,40 @@ class table_resources extends dzz_table {
                     $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
                     $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
                 } elseif($fileinfo['type'] == 'link') {
+                    $fileinfo['url'] = C::t('resources_attr')->fetch_by_key($fileinfo['rid'], $fileinfo['vid'],'url',true);
                 } else {
                     $fileinfo['fsize'] = formatsize($fileinfo['size']);
                     $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($fileinfo['size']), 'size' => $fileinfo['size']));
                 }
-
+                //文件统计信息
+                $filestatis = C::t('resources_statis')->fetch_by_rid($rids[0]);
+                $fileinfo['opendateline'] = ($filestatis['opendateline']) ? dgmdate($filestatis['opendateline'], 'Y-m-d H:i:s') : dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
+                $fileinfo['editdateline'] = ($filestatis['editdateline']) ? dgmdate($filestatis['editdateline'], 'Y-m-d H:i:s') : dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
+                if ($_G['adminid']) {
+                    $fileinfo['downs'] = $filestatis['downs'];
+                    $fileinfo['views'] = $filestatis['views'];
+                    $fileinfo['edits'] = $filestatis['edits'];
+                }
+                if($filestatis['edituid']) {
+                    $fileinfo['edituid'] = $filestatis['edituid'];
+                    $fileinfo['editusername'] = c::t('user')->fetch_by_username_uid($filestatis['edituid']);
+                }
             }
-            $fileinfo['type'] = getFileTypeName($fileinfo['type'], $fileinfo['ext']);
+            $fileinfo['fdateline'] = dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
+            $fileinfo['ftype'] = getFileTypeName($fileinfo['type'], $fileinfo['ext']);
+            if(!$fileinfo['fid']) {
+                if($fileinfo['oid']) {
+                    $fileinfo['fid'] = $fileinfo['oid'];
+                } else {
+                    $fileinfo['fid'] = $fileinfo['pfid'];
+                }
+            }
+            if ($fileinfo['isdelete'] && $fileinfo['pfid'] == -1 && $fileinfo['rid']) {
+                $pathrecord = DB::result_first("select pathinfo from %t where rid = %s", array('resources_recyle', $fileinfo['rid']));
+                $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $pathrecord);
+            }
+            Hook::listen('filter_resource_rid', $fileinfo);//数据过滤挂载点
         }
-
         return $fileinfo;
     }
 
@@ -986,17 +1002,16 @@ class table_resources extends dzz_table {
         $uid = $_G['uid'];
         $fileinfo = array();
         $param = array('folder', 'resources_path', $fid);
-        $folders = DB::fetch_first("select f.*,p.path from %t f left join %t p on f.fid = p.fid  where f.fid = %d ", $param);
-        if (!$folders) {
+        $fileinfo = DB::fetch_first("select f.*,p.path from %t f left join %t p on f.fid = p.fid  where f.fid = %d ", $param);
+        if (!$fileinfo) {
             return array('error' => lang('no_privilege'));
         }
-        $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $folders['path']);
-        $fileinfo['name'] = $folders['fname'];
-        $fileinfo['username'] = $folders['username'];
-        if ($folders['gid'] > 0 && $folders['pfid'] == 0) {
-            $fileinfo['type'] = lang('org_or_group');
+        $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $fileinfo['path']);
+        $fileinfo['name'] = $fileinfo['fname'];
+        if ($fileinfo['gid'] > 0 && $fileinfo['pfid'] == 0) {
+            $fileinfo['ftype'] = lang('org_or_group');
         } else {
-            $fileinfo['type'] = lang('type_folder');
+            $fileinfo['ftype'] = lang('type_folder');
         }
         if ($contains) {
             $contaions = self::get_contains_by_fid($fid, true);
@@ -1004,25 +1019,20 @@ class table_resources extends dzz_table {
             $fileinfo['fsize'] = $fsize;
             $fileinfo['ffsize'] = $fsize;
             $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+            $statis = C::t('resources_statis')->fetch_by_fid($fid);
+            $fileinfo['opendateline'] = ($statis['opendateline']) ? dgmdate($statis['opendateline'], 'Y-m-d H:i:s') : '';
+            $fileinfo['editdateline'] = ($statis['editdateline']) ? dgmdate($statis['editdateline'], 'Y-m-d H:i:s') : '';
         }
 
         //编辑权限信息
-        if ($folders['gid'] > 0) {
-            $powerarr = perm_binPerm::getPowerArr();
-            if (!($uid == $folders['uid'] && $folders['perm_inherit'] & $powerarr['edit1']) && !($folders['perm_inherit'] & $powerarr['edit2'])) {
-                $fileinfo['editperm'] = 0;
-            } else {
-                $fileinfo['editperm'] = 1;
-            }
-        } else {
+        $fileinfo['editperm'] = 0;
+        if (perm_check::checkperm_Container($fid, 'edit')) {
             $fileinfo['editperm'] = 1;
         }
-        $statis = C::t('resources_statis')->fetch_by_fid($fid);
-        $fileinfo['opendateline'] = ($statis['opendateline']) ? dgmdate($statis['opendateline'], 'Y-m-d H:i:s') : '';
-        $fileinfo['editdateline'] = ($statis['editdateline']) ? dgmdate($statis['editdateline'], 'Y-m-d H:i:s') : '';
-        $fileinfo['fdateline'] = ($folders['dateline']) ? dgmdate($folders['dateline'], 'Y-m-d H:i:s') : '';
+        $fileinfo['isfolder'] = true;
+        $fileinfo['fdateline'] = ($fileinfo['dateline']) ? dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s') : '';
+        $fileinfo['isgroup'] = ($fileinfo['flag'] == 'organization') ? true : false;
         return $fileinfo;
-
     }
 
     public function get_icosinfo_by_rid($rid) {
@@ -1036,7 +1046,6 @@ class table_resources extends dzz_table {
         } elseif ($data['type'] == 'shortcut') {
             $data['img'] = isset($data['tdata']['img']) ? $data['tdata']['img'] : geticonfromext($data['tdata']['ext'], $data['tdata']['type']);
         } elseif ($data['type'] == 'dzzdoc') {
-
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         } elseif ($data['type'] == 'folder') {
             $data['img'] = $data['img'] ? $data['img'] : 'dzz/images/default/system/' . $data['flag'] . '.png';

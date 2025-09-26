@@ -1,437 +1,260 @@
-<!--右侧文件开始-->
 <div class="rightBorder" id="rightinfo_content">
-    <!--右侧头部开始-->
-    <div class="briefMenu modal-header dtheme border-bottom clearfix" id="rightfileinfo-{$fileinfo[rid]}">
+    <div class="briefMenu modal-header dtheme border-bottom clearfix">
         <div class="modal-title">
-            <img src="$fileinfo[img]" class="detailsimage">
-            <span class="right-imgname text-truncate fs-6 ps-1" title="$fileinfo[name]">$fileinfo[name]</span>
+            <!--{if $fileinfo['isgroup'] && $fileinfo['gid']}-->
+            <a href="javascript:;" class="right-topbackground">
+                {eval echo avatar_group($fileinfo['gid']);}
+            </a>
+            <!--{elseif $fileinfo['flag'] == 'home'}-->
+            <i class="mdi mdi-account-box text-primary right-topicon"></i>
+            <!--{elseif $fileinfo['ismulti']}-->
+            <i class="mdi mdi-file-multiple text-primary right-topicon"></i>
+            <!--{elseif $bz && $fileinfo['bz']}-->
+            <img src="dzz/images/default/system/{$fileinfo['bz']}.png">
+            <!--{elseif $fileinfo[img]}-->
+            <img src="$fileinfo[img]">
+            <!--{else}-->
+            <img src="dzz/images/default/system/folder.png">
+            <!--{/if}-->
+            <span class="text-truncate fs-6 ps-1" title="$fileinfo[name]">
+                <!--{if $fileinfo['ismulti']}-->
+                {lang more_select}
+                <!--{elseif $fileinfo[name]}-->$fileinfo[name]
+                <!--{elseif $fileinfo[fname]}-->$fileinfo[fname]
+                <!--{/if}-->
+            </span>
             <button type="button" class="toggRight btn-close"></button>
         </div>
     </div>
-    <!--右侧头部结束-->
-    <input type="hidden" value="$fileinfo[rid]" id="fileridinput"/>
-    <!--右侧中间部分开始-->
-    <div class="right-messagetable scroll-y" <!--{if $commentperm}-->data-subtractor="{eval echo ($pfid || $rid)?58:0}"<!--{/if}-->>
-        <!--文件详情开始-->
-        <!--属性开始-->
-        <div class="p-2 border-bottom">
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang type}</label>
-                <div class="col-sm-8">$fileinfo['type']</div>
-            </div>
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang position}</label>
-                <div class="col-sm-8 text-break">$fileinfo[realpath]</div>
-            </div>
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang possessor}</label>
-                <div class="col-sm-8 text-break">$fileinfo['username']</div>
-            </div>
-            <!--{if $fileinfo[ffsize]}-->
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang big_small}</label>
-                <div class="col-sm-8 text-break">$fileinfo[ffsize]</div>
-            </div>
-            <!--{/if}-->
-            <!--{if $fileinfo[fdateline]}-->
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang create_time}</label>
-                <div class="col-sm-8 text-break">$fileinfo[fdateline]</div>
-            </div>
-            <!--{/if}-->
-            <!--{if $fileinfo[editdateline]}-->
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang preceding_edit_time}</label>
-                <div class="col-sm-8 text-break">$fileinfo[editdateline]</div>
-            </div>
-            <!--{/if}-->
-            <!--{if $fileinfo[opendateline]}-->
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang preceding_open_time}</label>
-                <div class="col-sm-8 text-break">$fileinfo[opendateline]</div>
-            </div>
-            <!--{/if}-->
-            <!--{if $fileinfo[downs]}-->
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang download_times}</label>
-                <div class="col-sm-8">$fileinfo[downs]</div>
-            </div>
-            <!--{/if}-->
-            <!--{if $fileinfo[views]}-->
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang view_count}</label>
-                <div class="col-sm-8">$fileinfo[views]</div>
-            </div>
-            <!--{/if}-->
-            <!--{if $fileinfo[edits]}-->
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang edit_times}</label>
-                <div class="col-sm-8">$fileinfo[edits]</div>
-            </div>
-            <!--{/if}-->
-            <div class="row mb-1">
-                <label class="col-sm-4">{lang file_desc}</label>
-			    <textarea name="desc" class="form-control form-control_desc" <!--{if !$editperm}-->disabled="disabled"<!--{/if}--> placeholder="{lang file_desc_placeholder}">$fileinfo['desc']</textarea>
-                <script type="text/javascript">
-                jQuery('.form-control_desc').change(function(){
-                    var desc = jQuery.trim(jQuery(this).val());
-                    riddesc('{$fileinfo['rid']}',desc);
-                });
-                </script>
-            </div>
-        </div>
-        <!--属性结束-->
-        <!--标签开始-->
-        <div class="p-2 border-bottom">
-            <div class="right-card-header">
-                <div class="title">{lang label}</div>
-                <button type="button" class="dcolor conpile-poewr" onclick="showWindow('addTag','{MOD_URL}&op=ajax&operation=tag&rid=$rid','get',0)">
-                    <span class="mdi mdi-pencil fs-6"></span>
-                </button>
-            </div>
-            <div class="right-card-body" id="taglist-{$rid}">
-                <!--{if $tags}-->
-                <!--{loop $tags $v}-->
-                <span class="layui-badge-rim m-1" daat-tid="$v[tid]" id="{$rid}-{$v[tid]}">$v[tagname]</span>
-                <!--{/loop}-->
-                <!--{else}-->
-                {lang no_labels_set}
-                <!--{/if}-->
-            </div>
-        </div>
-        <!--标签结束-->
-        <!--{if $fileinfo['isdelete'] < 1}-->
-        <!--历史版本开始-->
-        <div class="historyMenu border-bottom">
-            <div class="right-card-header p-2">
-                <div class="title">{lang history_revision}</div>
-                <!--{if $editperm && $explorer_setting['fileVersion'] && ($explorer_setting['fileVersionNumber'] == 0 || $explorer_setting['fileVersionNumber'] > $versionnums )}-->
-                <div class="upload">
-                    <button type="button" class="dcolor conpile-poewr" title="{lang upload_update}">
-                        <span class="mdi mdi-file-upload fs-6"></span>
-                        <input type="file" name="files[]" class="version_upload_file"/>
-                    </button>
+    <div class="tab-content scroll-y" id="myTabContent" data-subtractor="49">
+        <div class="tab-pane p-2 fade show active" id="index" role="tabpanel" aria-labelledby="index-tab">
+            <!--{template template_property_list}-->
+            <!--{if $perms}-->
+            <div class="border-top p-1">
+                <div class="right-card-header">
+                    <div class="title">{lang my_permission}</div>
                 </div>
-                <!--{/if}-->
-            </div>
-            <div class="right-card-body">
-                <ul class="list-group list-group-flush" id="versionmenulist">
-                    <!--{if $versions}-->
-                    <!--{loop $versions $v}-->
-                    <li class="list-group-item d-flex justify-content-between align-items-start version_menu version_{$v[vid]}">
-                        <div class="unameMenu-upload">
-                            <div class="fw-bold text-truncate"><!--{if !$v['vname']}-->$v['username']<!--{else}-->$v[vname]<!--{/if}--></div>
-                            <!--{if $v['vdesc']}--><span class="form-text text-truncate">$v['vdesc']</span><!--{/if}-->
-                            <div class="versioninfos">
-                                {eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}
-                                <!--{if $fileinfo['vid'] == $v['vid']}--><span class="badge badge-outline-primary">{lang principal_edition}</span><!--{/if}-->
-                            </div>
-                        </div>
-                        <span class="editMenu">{eval echo formatsize($v['size']);}</span>
-                        <a href="javascript:;" class="group-editMenu dropdown-toggle fs-5" data-toggle="dropdown"></a>
-                        <ul class="dropdown-menu dropdown-menu-version">
-                            <li><a class="dropdown-item" href="javascript:;" data-rid="$v[rid]" data-vid="$v[vid]" onclick="infoversion(this)"><i class="mdi mdi-information-variant"></i><span class="file-text">{lang version_information}</span></a></li>
-                            <li>
-                                <a href="javascript:;" class="view_versions dropdown-item" data-dpath="$fileinfo[dpath]" data-vid="$v[vid]" onclick="viewversion(this)">
-                                    <i class="mdi mdi-eye"></i><span class="file-text">{lang view_version}</span>
-                                </a>
-                            </li>
-                            <!--{if $fileinfo['editperm']}-->
-                            <!--{if $v[vid]}-->
-                            <li>
-                                <a href="javascript:;" class="primary_versions dropdown-item" data-rid="$fileinfo[rid]" data-vid="$v[vid]" <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}--> data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><i class="mdi mdi-flare"></i><span class="file-text">{lang sign_principal_edition}</span></a>
-                            </li>
-                            <!--{/if}-->
-                            <li>
-                                <a href="javascript:;" class="edit_versions dropdown-item" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="editVersionName(this)">
-                                    <i class="mdi mdi-pencil"></i><span class="file-text">{lang edit_version_information}</span>
-                                </a>
-                            </li>
-                            <!--{if $v[vid]}-->
-                            <li>
-                                <a href="javascript:;" class="delete_versions dropdown-item" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="deletethisversion(this)">
-                                    <i class="mdi mdi-delete"></i><span class="file-text">{lang delete_this_version}</span>
-                                </a>
-                            </li>
-                            <!--{/if}-->
-                            <!--{/if}-->
-                        </ul>
-                    </li>
-                    <!--{/loop}-->
-                    <!--{else}-->
-                    <li class="list-group-item d-flex justify-content-between align-items-start version_menu">
-                        <div class="unameMenu-upload">
-                            <div class="fw-bold text-truncate">$fileinfo['username']</div>
-                            <div class="versioninfos">
-                                {eval echo dgmdate($fileinfo['dateline'],'Y-m-d H:i:s');}
-                                <span class="badge badge-outline-primary">{lang principal_edition}</span>
-                            </div>
-                        </div>
-                        <a href="javascript:;" class="group-editMenu dropdown-toggle fs-5" data-toggle="dropdown"></a>
-                        <ul class="dropdown-menu dropdown-menu-version">
-                            <li><a class="dropdown-item" href="javascript:;" data-rid="$fileinfo[rid]" data-vid="$fileinfo[vid]" onclick="infoversion(this)"><i class="mdi mdi-information-variant"></i><span class="file-text">{lang version_information}</span></a></li>
-                            <li>
-                                <a href="javascript:;" class="view_versions dropdown-item" data-path="$fileinfo[dpath]" data-vid="$fileinfo[vid]" onclick="viewversion(this)">
-                                    <i class="mdi mdi-eye"></i><span class="file-text">{lang view_version}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" class="primary_version dropdown-item" data-rid="$fileinfo[rid]" data-vid="$fileinfo[vid]" data-primary="yes" onclick="primaryVersion(this)">
-                                    <i class="mdi mdi-flare"></i><span class="file-text">{lang sign_principal_edition}</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;" data-rid="$fileinfo[rid]" class="edit_versions dropdown-item" data-vid="$fileinfo[vid]" onclick="editVersionName(this)">
-                                    <i class="mdi mdi-pencil"></i><span class="file-text">{lang edit_version_information}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!--{/if}-->
-                </ul>
-                <!--{if $vnext}-->
-                <div class="mb-1 d-grid">
-                    <a href="javascript:;" class="btn btn-link btn-sm text-end btn_button_more" onclick="loadingMoreVersion(this,0);" data-rid="{$rid}">{lang upload_more}</a>
-                </div>
-                <!--{/if}-->
-            </div>
-        </div>
-        <!--{/if}-->
-        <!--历史版本结束-->
-        <!--文件详情结束-->
-        <!--动态开始-->
-        <div class="m-2" id="filerightdynamic">
-            <!--{template fileright_dynamic}-->
-        </div>
-        <!--动态结束-->
-    </div>
-<!--右侧中间部分结束-->
-<!--右侧底部评论开始-->
-<!--{if $commentperm}-->
-<!--{if $fileinfo['isdelete'] < 1}-->
-<div class="comment-area dtheme">
-    <div class="messageMenu">
-        <form action="{MOD_URL}&op=ajax&operation=comment" method="post" onsubmit="return comment_file(this)" id="commentid">
-            <input type="hidden" name="rid" value="$rid"/>
-            <input type="hidden" name="fid" value="$fid"/>
-            <div class="discuss-content">
-                <textarea type="text" id="leave_message" name="msg" rows="1" placeholder="{lang input_comments}" class="form-control"></textarea>
-                <div class="comment-file">
-                    <ul class="list_acpsw">
-                        <li class="emotion_lacpsw"><a href="javascript:;" class="item_lacpsw" id="leave_messagesml" onclick="showMenu({'ctrlid':this.id,'evt':'click','layer':2});return false;"><span class="mdi mdi-emoticon-excited-outline"></span></a>
-                        </li>
+                <div class="right-card-body">
+                    <!--{if $myperm}-->
+                    <ul class="proper-show proper-poewr">
+                        <!--{loop $perms $k $val}-->
+                        <li <!--{if $myperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
+                        <!--{/loop}-->
                     </ul>
+                    <!--{else}-->
+                    <div class="text-center">
+                        <img src="static/image/common/no_list.png">
+                        <p>{lang no_permission}</p>
+                    </div>
+                    <!--{/if}-->
+                    <!--{if $folderperm}-->
+                    <div class="right-card-header">
+                        <div class="title">一般协作成员权限</div>
+                        <button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button>
+                    </div>
+                    <ul class="proper-show proper-poewr">
+                        <!--{loop $perms $k $val}-->
+                        <li <!--{if $folderperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
+                        <!--{/loop}-->
+                    </ul>
+                    <!--{/if}-->
                 </div>
-
             </div>
-            <div class="activity-handler clearfix">
-                <button type="submit" class="mdi mdi-send pull-right disabled input-search-drop" style="color:rgba(55,121,255,0.3);"></button>
+            <!--{/if}-->
+            <!--关于开始-->
+            <!--{if $org}-->
+            <div class="border-top p-1">
+                <div class="right-card-header">
+                    <div class="title">{lang about}<!--{if $org[type]== '1'}-->{lang group}<!--{else}--><!--{if $org[forgid]>0}-->{lang department}<!--{else}-->{lang organization}<!--{/if}--><!--{/if}--></div>
+                    <!--{if $usergroupperm >= 1 && $org['type']}-->
+                    <button type="button" class="groupbutton dcolor" onclick="showWindow('groupsetting','{MOD_URL}&op=group&do=group_ajax&operation=groupsetting&gid=$fileinfo['gid']','get',0)">
+                        <span class="mdi mdi-cog"></span>
+                    </button>
+                    <!--{/if}-->
+                </div>
+                <div class="right-card-body">
+                    <!--{if $org[desc]}-->
+                    <div class="row mb-1">
+                        <label class="col-sm-3">{lang introduce}</label>
+                        <div class="col-sm-9">
+                            $org[desc]
+                        </div>
+                    </div>
+                    <!--{/if}-->
+                    <div class="d-flex">
+                        <label class="col-sm-3">{lang status}</label>
+                        <div class="col-sm-9">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" class="form-check-input" disabled="" readonly name="syatemon" data-name="manageon" <!--{if $org[diron] && $org[diron]}--> checked <!--{/if}-->>
+                            </div>
+                            <span class="form-text">{lang close_group_tips}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
+            <!--{/if}-->
+            <!--关于结束-->
+            <!--{if !$fileinfo['ismulti'] && !$bz && !$fileinfo[isfolder]}-->
+            <!--历史版本开始-->
+            <div class="historyMenu border-top p-1">
+                <div class="right-card-header">
+                    <div class="title">{lang history_revision}</div>
+                    <!--{if $fileinfo['editperm'] && $_G['setting']['fileVersion'] && ($_G['setting']['fileVersionNumber'] == 0 || $_G['setting']['fileVersionNumber'] > $versionnums )}-->
+                    <div class="upload">
+                        <button type="button" class="dcolor conpile-poewr" title="{lang upload_update}">
+                            <span class="mdi mdi-file-upload fs-6"></span>
+                            <input type="file" name="files[]" class="version_upload_file" onclick="historyupload(this,'{$fileinfo['rid']}')"/>
+                        </button>
+                    </div>
+                    <!--{/if}-->
+                </div>
+                <div class="right-card-body">
+                    <ul class="list-group list-group-flush" id="versionmenulist">
+                        <!--{if $versions}-->
+                        <!--{loop $versions $v}-->
+                        <li class="list-group-item d-flex justify-content-between align-items-start version_menu version_{$v[vid]}">
+                            <div class="unameMenu-upload">
+                                <div class="fw-bold text-truncate"><!--{if !$v['vname']}-->$v['username']<!--{else}-->$v[vname]<!--{/if}--></div>
+                                <!--{if $v['vdesc']}--><span class="form-text text-truncate">$v['vdesc']</span><!--{/if}-->
+                                <div class="versioninfos">
+                                    {eval echo dgmdate($v['dateline'],'Y-m-d H:i:s');}
+                                    <!--{if $fileinfo['vid'] == $v['vid']}--><span class="badge badge-outline-primary">{lang principal_edition}</span><!--{/if}-->
+                                </div>
+                            </div>
+                            <span class="editMenu">{eval echo formatsize($v['size']);}</span>
+                            <a href="javascript:;" class="group-editMenu dropdown-toggle fs-5" data-toggle="dropdown"></a>
+                            <ul class="dropdown-menu dropdown-menu-version">
+                                <li><a class="dropdown-item" href="javascript:;" data-rid="$v[rid]" data-vid="$v[vid]" onclick="infoversion(this)"><i class="mdi mdi-information-variant"></i><span class="file-text">{lang version_information}</span></a></li>
+                                <li>
+                                    <a href="javascript:;" class="view_versions dropdown-item" data-dpath="$fileinfo[dpath]" data-vid="$v[vid]" onclick="viewversion(this)">
+                                        <i class="mdi mdi-eye"></i><span class="file-text">{lang view_version}</span>
+                                    </a>
+                                </li>
+                                <!--{if $fileinfo['editperm']}-->
+                                <!--{if $v[vid]}-->
+                                <li>
+                                    <a href="javascript:;" class="primary_versions dropdown-item" data-rid="$fileinfo[rid]" data-vid="$v[vid]" <!--{if $fileinfo['vid'] == $v['vid']}-->data-primary="yes"<!--{else}--> data-primary="no"<!--{/if}--> onclick="primaryVersion(this)"><i class="mdi mdi-flare"></i><span class="file-text">{lang sign_principal_edition}</span></a>
+                                </li>
+                                <!--{/if}-->
+                                <li>
+                                    <a href="javascript:;" class="edit_versions dropdown-item" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="editVersionName(this)">
+                                        <i class="mdi mdi-pencil"></i><span class="file-text">{lang edit_version_information}</span>
+                                    </a>
+                                </li>
+                                <!--{if $v[vid]}-->
+                                <li>
+                                    <a href="javascript:;" class="delete_versions dropdown-item" data-rid="$fileinfo[rid]" data-vid="$v[vid]" onclick="deletethisversion(this)">
+                                        <i class="mdi mdi-delete"></i><span class="file-text">{lang delete_this_version}</span>
+                                    </a>
+                                </li>
+                                <!--{/if}-->
+                                <!--{/if}-->
+                            </ul>
+                        </li>
+                        <!--{/loop}-->
+                        <!--{else}-->
+                        <li class="list-group-item d-flex justify-content-between align-items-start version_menu version_0">
+                            <div class="unameMenu-upload">
+                                <div class="fw-bold text-truncate">$fileinfo['username']</div>
+                                <div class="versioninfos">
+                                    {eval echo dgmdate($fileinfo['dateline'],'Y-m-d H:i:s');}
+                                    <span class="badge badge-outline-primary">{lang principal_edition}</span>
+                                </div>
+                            </div>
+                            <a href="javascript:;" class="group-editMenu dropdown-toggle fs-5" data-toggle="dropdown"></a>
+                            <ul class="dropdown-menu dropdown-menu-version">
+                                <li><a class="dropdown-item" href="javascript:;" data-rid="$fileinfo[rid]" data-vid="$fileinfo[vid]" onclick="infoversion(this)"><i class="mdi mdi-information-variant"></i><span class="file-text">{lang version_information}</span></a></li>
+                                <li>
+                                    <a href="javascript:;" class="view_versions dropdown-item" data-dpath="$fileinfo[dpath]" data-vid="$fileinfo[vid]" onclick="viewversion(this)">
+                                        <i class="mdi mdi-eye"></i><span class="file-text">{lang view_version}</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" class="primary_version dropdown-item" data-rid="$fileinfo[rid]" data-vid="$fileinfo[vid]" data-primary="yes" onclick="primaryVersion(this)">
+                                        <i class="mdi mdi-flare"></i><span class="file-text">{lang sign_principal_edition}</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" data-rid="$fileinfo[rid]" class="edit_versions dropdown-item" data-vid="$fileinfo[vid]" onclick="editVersionName(this)">
+                                        <i class="mdi mdi-pencil"></i><span class="file-text">{lang edit_version_information}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--{/if}-->
+                    </ul>
+                    <!--{if $vnext}-->
+                    <div class="mb-1 d-grid">
+                        <a href="javascript:;" class="btn btn-link btn-sm text-end" onclick="jQuery('.version-tab').click();">{lang upload_more}</a>
+                    </div>
+                    <!--{/if}-->
+                </div>
+            </div>
+            <!--历史版本结束-->
+            <!--{/if}-->
+            <!--{if !$fileinfo['ismulti']}-->
+            <!--动态开始-->
+            <div class="border-top p-1">
+                <div class="right-card-header">
+                    <div class="title">{lang dynamic}</div>
+                </div>
+                <div class="right-card-body">
+                    <!--{template template_dynamic_list}-->
+                </div>
+            </div>
+            <!--动态结束-->
+            <!--{/if}-->
+        </div>
+        <div class="tab-pane right-tab-perm fade" id="perm-tab" role="tabpanel" aria-labelledby="perm-tab">
+        </div>
+        <div class="tab-pane right-tab-version fade" id="version-tab" role="tabpanel" aria-labelledby="version-tab">
+        </div>
+        <div class="tab-pane right-tab-comment fade" id="comment-tab" role="tabpanel" aria-labelledby="comment-tab">
+        </div>
+        <div class="tab-pane right-tab-dynamic fade" id="dynamic-tab" role="tabpanel" aria-labelledby="dynamic-tab">
+        </div>
     </div>
+    <!--{if !$bz && !$fileinfo['ismulti']}-->
+    <div class="right-nav-bottom dtheme border-top">
+        <ul class="nav nav-tabs nav-fill mb-0" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link index-tab active" id="index-tab" data-toggle="tab" href="#index" role="tab" aria-controls="index" data-item="index" aria-selected="true" onclick="rightinfo(this)">
+                    <i class="mdi mdi-information"></i>
+                    <span>{lang property}</span>
+                </a>
+            </li>
+            <!--{if $fileinfo[fid] !== '-1'}-->
+            <li class="nav-item">
+                <a class="nav-link perm-tab" id="perm-tab" data-toggle="tab" href="#perm-tab" role="tab" aria-controls="perm" data-item="perm" data-rid="$fileinfo[rid]" data-fid="$fileinfo[fid]" aria-selected="false" onclick="rightinfo(this)">
+                    <i class="mdi mdi-lock"></i>
+                    <span>{lang jurisdiction}</span>
+                </a>
+            </li>
+            <!--{/if}-->
+            <!--{if !$fileinfo[isfolder]}-->
+            <li class="nav-item">
+                <a class="nav-link version-tab" id="version-tab" data-toggle="tab" href="#version-tab" role="tab" aria-controls="version" data-item="version" data-rid="$fileinfo[rid]" data-fid="$fileinfo[fid]" aria-selected="false" onclick="rightinfo(this)">
+                    <i class="mdi mdi-file-clock"></i>
+                    <span>{lang version}</span>
+                </a>
+            </li>
+            <!--{/if}-->
+            <li class="nav-item">
+                <a class="nav-link comment-tab" id="comment-tab" data-toggle="tab" href="#comment-tab" role="tab" aria-controls="comment" data-item="comment" data-rid="$fileinfo[rid]" data-fid="$fileinfo[fid]" aria-selected="false" onclick="rightinfo(this)">
+                    <i class="mdi mdi-comment"></i>
+                    <span>{lang comment}</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link dynamic-tab" id="dynamic-tab" data-toggle="tab" href="#dynamic-tab" role="tab" aria-controls="dynamic" data-item="dynamic" data-rid="$fileinfo[rid]" data-fid="$fileinfo[fid]" aria-selected="false" onclick="rightinfo(this)">
+                    <i class="mdi mdi-comment-multiple"></i>
+                    <span>{lang dynamic}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!--{/if}-->
 </div>
-<!--{/if}-->
-<!--{/if}-->
-<!--右侧底部评论结束-->
-</div>
-<!--右侧文件结束-->
-<div id="old_rightinfo" class="hide"></div>
-<script type="text/javascript" src="{MOD_PATH}/js/uplodfile.js?{VERHASH}"></script>
 <script type="text/javascript" reload="1">
-    //滚动条滚动，头部加阴影
-    $('.right-messagetable').scroll(function () {
-        if ($(this).scrollTop() > 0) {
-            $('.briefMenu').css({'box-shadow': '0px 0px 10px 0px rgba(0,0,0,0.15)'});
-        } else {
-            $('.briefMenu').css({'box-shadow': 'none'});
-        }
-    })
-    $('.dynconMenu').scroll(function () {
-        if ($(this).scrollTop() > 0) {
-            $('.briefMenu').css({'box-shadow': '0px 0px 10px 0px rgba(0,0,0,0.15)'});
-        } else {
-            $('.briefMenu').css({'box-shadow': 'none'});
-        }
-    });
-
-    //右侧上传版本结束
-    var rid = $('#fileridinput').val();
-    $('.version_upload_file').fileupload({
-        url: MOD_URL + '&op=ajax&operation=uploadfiles',
-        dataType: 'json',
-        autoUpload: true,
-        maxChunkSize: parseInt(_explorer.space.maxChunkSize), //2M
-        dropZone: '.historyMenu',
-        pasteZone: '.historyMenu',
-        maxFileSize: parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null, // 5 MB
-        acceptFileTypes: new RegExp(attachextensions, 'i'),
-        sequentialUploads: true
-    }).on('fileuploadadd', function (e, data) {
-        layerupload();
-        data.context = $('<li class="dialog-file-list"></li>').appendTo($('.dialog-filelist-ul'));
-        $.each(data.files, function (index, file) {
-            $(getItemTpl(file)).appendTo(data.context);
-           _upload.total++;
-            $('#upload_header_status').html(__lang.upload_processing);
-            $('#upload_header_number_container').show();
-            $('#upload_header_total').html(_upload.total);
-        });
-    }).on('fileuploadsubmit', function (e, data) {
-        data.context.find('.upload-cancel').off('click').on('click', function () {
-            data.abort();
-            data.files = '';
-            uploaddone();
-            $(this).parents('.dialog-info').find('.upload-cancel').hide();
-            $(this).parents('.dialog-info').find('.upload-file-status').html('<span class="cancel show_uploading_status"><em></em><i>' + __lang.already_cancel + '</i></span>');
-        });
-        $.each(data.files, function (index, file) {
-            file.relativePath = (file.relativePath) ? file.relativePath + file.name : '';
-            var relativePath = (file.webkitRelativePath ? file.webkitRelativePath : file.relativePath);
-            data.formData = {relativePath: relativePath};
-            return;
-        });
-    }).on('fileuploadprocessalways', function (e, data) {
-        var index = data.index,
-            file = data.files[index];
-        if (file.error) {
-            uploaddone('error');
-            var err = file.error ? file.error  : __lang.upload_failure;
-            data.context.find('.upload-file-status').html('<span class="text-danger" title="' + err + '">' + err + '</span>');
-        }
-    }).on('fileuploadprogress', function (e, data) {
-        var index = data.index;
-        _upload.bitrate = formatSize(data.bitrate / 8);
-        var progre = parseInt(data.loaded / data.total * 100, 10);
-        data.context.find('.upload-file-status .speed').html(_upload.bitrate + '/s');
-        data.context.find('.upload-file-status .precent').html(progre + '%');
-    }).on('fileuploadprogressall', function (e, data) {
-        _upload.bitrate = formatSize(data.bitrate / 8);
-        var progre = parseInt(data.loaded / data.total * 100, 10);
-        uploadprogress(_upload.bitrate + '/s', progre + '%');
-        _upload.el.find('.panel-heading .upload-progress-mask').css('width', progre + '%');
-    }).on('fileuploaddone', function (e, data) {
-        uploaddone();
-        data.context.find('.upload-progress-mask').css('width', '0%');
-        data.context.find('.upload-cancel').hide();
-        $.each(data.result.files, function (index, file) {
-            if (file.error) {
-                var err = file.error ? file.error  : __lang.upload_failure;
-                data.context.find('.dialog-info .upload-file-status').html('<span class="text-danger" title="' + err + '">' + err + '</span>');
-            } else {
-                var filedata = file.data;
-                //_upload.tips.find('.dialog-body-text').html(_upload.completed + '/' + _upload.total);
-                data.context.find('.upload-file-status .precent').html(__lang.update_finish);
-                data.context.addClass('success').find('.upload-file-status .speed').html('');
-                data.context.find('.upload-file-operate').html('');
-				data.context.find('.process').css('display', 'none');
-                $.post('{MOD_URL}&op=dzzcp&do=uploadnewVersion', {
-                    'rid': rid,
-                    'aid': filedata.aid,
-                    'name': filedata.filename,
-                    'ext': filedata.filetype,
-                    'size': filedata.filesize,
-                }, function (data) {
-                    if (data['success']) {
-                        var resourcesdata = data['filedata'];
-                        var versiontdata = data['data'];
-                        // _filemanage.updateIndex(updatedata);
-                        var html = '<li class="list-group-item d-flex justify-content-between align-items-start version_menu" id="version_' + versiontdata['vid'] + '"> ' +
-                            '<div class="unameMenu-upload"> ' +
-                            '<span class="fw-bold text-truncate">' + versiontdata['username'] + '</span> ' +
-                            '<div class="versioninfos">' + versiontdata['fdateline'] + '<span class="badge badge-outline-primary">{lang principal_edition}</span></div> ' +
-                            '</div> <span class="editMenu">' + versiontdata['size'] + '</span> <a href="javascript:;" class="group-editMenu dropdown-toggle fs-5" data-toggle="dropdown"></a>' +
-                            '<ul class="dropdown-menu dropdown-menu-version"> ' +
-                            '<li><a class="dropdown-item" href="javascript:;" data-vid="' + versiontdata['vid'] + '" data-rid="' + rid + '" onclick="infoversion(this)"><i class="mdi mdi-information-variant"></i><span class="file-text">{lang version_information}</span></a></li><li><a href="javascript:;" class="view_version dropdown-item" data-dpath="' + versiontdata['dpath'] + '" data-vid="' + versiontdata['vid'] + '" onclick="viewversion(this)"><span class="mdi mdi-eye"></span>' + __lang.view_version + '</a></li>' +
-                            '<li><a href="javascript:;" class="primary_version dropdown-item"' +
-                            'data-vid="' + versiontdata['vid'] + '" data-pramiry="yes"><span class="mdi mdi-flare"></span>{lang sign_principal_edition}</a></li> ' +
-                            '<li><a href="javascript:;" class="dropdown-item"  data-vid="' + versiontdata['vid'] + ' data-rid="' + rid + '" onclick="editVersionName(this)"><span class="mdi mdi-pencil" ></span>{lang edit_version_information}</a></li> ' +
-                            '</ul> </div></li>';
-                        $('.version_menu').each(function () {
-                            $(this).find('div.versioninfos .badge-outline-primary').remove().end().find('.dropdown-menu-version .primary_version').data('primary', 'no');
-                            ;
-                        })
-                        if (typeof versiontdata.olddatavid != 'undefined' && versiontdata.olddatavid) {
-                            $('.version_0').find('.primary_versions').data('vid', versiontdata.olddatavid);
-                            $('.version_0').find('.view_versions').data('vid', versiontdata.olddatavid);
-                            $('.version_0').find('.edit_versions').data('vid', versiontdata.olddatavid);
-                            $('.version_0').find('.delete_versions').data('vid', versiontdata.olddatavid);
-                            $('.version_0').first().removeClass('version_0').addClass('version_' + versiontdata.olddatavid);
-                        }
-                        $('#versionmenulist').prepend(html);
-
-                        $('.detailsimage').attr('src', '{$_G['siteurl']}' + resourcesdata['img']);
-                        $('.right-imgname').html(resourcesdata['name']).attr('title', resourcesdata['name']);
-                        _explorer.sourcedata.icos[data['filedata'].rid] = data['filedata'];
-                        _filemanage.cons['f-' + data['filedata'].pfid].CreateIcos(data['filedata'], true);
-                        resourcesdata.vid = 0;
-                        _filemanage.addIndex(resourcesdata);
-                    } else if (data['error']) {
-                        layer.alert(data['error'], {skin:'lyear-skin-danger'});
-                    }
-                }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-                    showmessage('{lang do_failed}', 'error', 3000, 1);
-                });
-            }
-        });
-
-    }).on('fileuploadfail', function (e, data) {
-        $.each(data.files, function (index, file) {
-            uploaddone();
-            data.context.find('.upload-item.percent').html('<span class="text-danger" title="' + file.error + '">' + file.error + '</span>');
-        });
-
-    });
-    function getItemTpl(file) {
-        var relativePath = (file.webkitRelativePath ? file.webkitRelativePath : (file.relativePath ? file.relativePath : file.name));
-        var filearr = file.name.split('.');
-        var ext = filearr.pop();
-        var imgicon = '<img src="dzz/images/extimg/' + ext + '.png" onerror="replace_img(this)" style="width:24px;height:24px;position:absolute;left:0;"/>';
-        var html =
-            '<div class="process" style="position:absolute;z-index:-1;height:100%;background-color:#e8f5e9;-webkit-transition:width 0.6s ease;-o-transition:width 0.6s ease;transition:width 0.6s ease;width:0%;"></div> <div class="dialog-info"> <div class="upload-file-name">' +
-            '<div class="dialog-file-icon" align="center">' + imgicon + '</div> <span class="name-text">' + file.name + '</span> ' +
-            '</div> <div class="upload-file-size">' + (file.size ? formatSize(file.size) : '') + '</div> <div class="upload-file-path">' +
-            '<a title="" class="" href="javascript:;">' + relativePath + '</a> </div> <div class="upload-file-status"> <span class="uploading"><em class="precent"></em><em class="speed">排队中</em>' +
-            '</span> <span class="success"><em></em><i></i></span> </div> <div class="upload-file-operate"> ' +
-            '<em class="operate-pause"></em> <em class="operate-continue"></em> <em class="operate-retry"></em> <em class="operate-remove"></em> ' +
-            '<a class="error-link upload-cancel" href="javascript:void(0);">取消</a> </div> </div>';
-        return html;
-    }
-    function uploaddone(flag) {
-        _upload.completed++;
-        _upload.completed++;
-        if(flag == 'error') _upload.errored++;
-        else _upload.succeed++;
-        if (_upload.completed >= _upload.total) {
-            $('#upload_header_status').html(__lang.upload_finish);
-            $('#upload_header_completed').html(_upload.succeed);
-            $('#upload_header_total').html(_upload.total);
-            $('#upload_header_progress').css('width', 0);
-            if (_upload.speedTimer) window.clearTimeout(_upload.speedTimer);
-            _upload.speedTimer = window.setTimeout(function () {
-                $('#upload_header_speed').hide();
-                //_upload.el.find('li.success').remove();
-            }, 3000);
-        } else {
-            $('#upload_header_completed').html(_upload.succeed);
-        }
-        var li=$('.dialog-filelist-ul').find('li.success');
-        if(_upload.maxli && li.length>=_upload.maxli){
-            //li.remove();
-        }
-    }
-
-    function uploadprogress(speed, per) {
-        _upload.el.find('.upload-speed').show().find('.upload-speed-value').html(speed);
-        if (_upload.speedTimer) window.clearTimeout(_upload.speedTimer);
-        _upload.speedTimer = window.setTimeout(function () {
-            _upload.el.find('.upload-speed').hide();
-        }, 2000);
-    }
-    function loadingMoreVersion(obj) {
-        var rid = $(obj).data('rid');
-        $.post(MOD_URL + '&op=dynamic&do=loadmoreversion', {'rid': rid, 'next': 0}, function (html) {
-            jQuery('#rightinfo_content').replaceWith(html);
-            _explorer.Scroll();
-        })
-    }
+    _explorer.Scroll();
 </script>

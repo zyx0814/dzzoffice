@@ -258,7 +258,7 @@ if ($do == 'export') {//应用导出
     $importtxt = @implode('', file($file));
     $apparray = getimportdata('Dzz! app', 0, 0, $importtxt);
     if ($apparray['version'] && empty($_GET['ignoreversion']) && (version_compare($apparray['version'], $_G['setting']['version']) > 0)) {
-        showmessage(lang('application_upgrade_version_invalid'), '', array('cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version'], 'url' => MOD_URL . '&op=cp&do=upgrade&ignoreversion=1&appid=' . $appid));
+        showmessage('application_upgrade_version_invalid', '', array('cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version'], 'url' => MOD_URL . '&op=cp&do=upgrade&ignoreversion=1&appid=' . $appid));
     }
     $filename = $apparray['app']['extra']['upgradefile'];
     $toversion = $apparray['app']['version'];
@@ -285,7 +285,7 @@ function installapp($apparray){
             showmessage(lang('list_cp_Application_directory_exist', array('app_path' => $apparray['app']['app_path'], 'identifier' => $apparray['app']['identifier'])));
         }
         if ($apparray['version'] && empty($_GET['ignoreversion']) && (version_compare($apparray['version'], $_G['setting']['version']) > 0)) {
-            showmessage(lang('application_import_version_invalid'), '', array('cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version']));
+            showmessage('application_import_version_invalid', '', array('cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version']));
         }
         $extra = $apparray['app']['extra'];
         $filename = isset($extra['installfile']) ? $extra['installfile'] : '';
@@ -304,7 +304,7 @@ function installapp($apparray){
                 cron_create($app);
             }
 
-            showmessage(lang('application_import_successful'), MOD_URL, array(), array('alert' => 'right'));
+            showmessage('application_import_successful', MOD_URL, array(), array('alert' => 'right'));
         }
     } else {
         $app = importByarray($apparray, 0);

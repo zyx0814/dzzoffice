@@ -27,7 +27,7 @@ function fileupload(el, fid) {
         uploadfid = fid;
     }
     el.fileupload({
-        url: MOD_URL + '&op=ajax&operation=uploads&container=' + uploadfid,
+        url: MOD_URL + '&op=ajax&do=uploads&container=' + uploadfid,
         dataType: 'json',
         autoUpload: true,
         maxChunkSize: parseInt(_explorer.space.maxChunkSize), //2M
@@ -126,7 +126,7 @@ function fileupload(el, fid) {
                             }catch(e){}
                         }
                         if(file.data.icoarr[i].type != 'folder'){
-                            /*$.post(MOD_URL+'&op=ajax&operation=addIndex',{
+                            /*$.post(MOD_URL+'&op=ajax&do=addIndex',{
                                 'aid':file.data.icoarr[i].aid,
                                 'rid':file.data.icoarr[i].rid,
                                 'username':file.data.icoarr[i].username,

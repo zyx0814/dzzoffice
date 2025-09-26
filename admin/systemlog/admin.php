@@ -6,7 +6,7 @@ if (!defined('IN_DZZ')) {
 define('NOROBOT', TRUE);
 if (submitcheck('settingsubmit')) {
     if ($_G['adminid'] != 1) {
-        showmessage(lang('no_privilege'));
+        showmessage('no_privilege');
     }
     $settingnew = $_GET["settingnew"];
     $data = array();

@@ -27,13 +27,13 @@ if ($_GET['a'] == 'down') {
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
     if ($vid) {
         if (!$icoarr = C::t('resources_version')->fetch_version_by_rid_vid($path, $vid)) {
-            showmessage(lang('attachment_nonexistence'));
+            showmessage('attachment_nonexistence');
         } else {
             $path = dzzdecode($icoarr['icoid']);
         }
     } else {
         if (!$icoarr = IO::getMeta($path)) {
-            showmessage(lang('attachment_nonexistence'));
+            showmessage('attachment_nonexistence');
         }
         $icoarr['icoid'] = $_GET['s'];
     }

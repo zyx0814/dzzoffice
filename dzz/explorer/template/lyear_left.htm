@@ -14,7 +14,7 @@
   <li>
     <span class="dropdown-item-text text-muted fw-bold">{lang type}</span>
     <!--{if $explorer_setting['allownewcat']}-->
-    <button type="button" class="groupbutton dcolor" title="{lang add_cat}" onclick="showWindow('addsearchcat','{MOD_URL}&op=ajax&operation=addsearchcat','get',0)" ><span class="mdi mdi-plus-circle"></span></button>
+    <button type="button" class="groupbutton dcolor" title="{lang add_cat}" onclick="showWindow('addsearchcat','{MOD_URL}&op=ajax&do=addsearchcat','get',0)" ><span class="mdi mdi-plus-circle"></span></button>
     <!--{/if}-->
 </li>
   <!--{loop $catsearch $v}-->
@@ -61,7 +61,7 @@
 </ul>
 <div id="template_newGroupButton" style="display:none"> 
   <!--{if $explorer_setting['allownewgroup']}-->
-  <button type="button" class="groupbutton dcolor" title="添加群组" onclick="showWindow('newGroup','{MOD_URL}&op=ajax&operation=addgroup')"><span class="mdi mdi-plus-circle"></span></button>
+  <button type="button" class="groupbutton dcolor" title="添加群组" onclick="showWindow('newGroup','{MOD_URL}&op=ajax&do=addgroup')"><span class="mdi mdi-plus-circle"></span></button>
   <!--{/if}--> 
 </div>
 <div id="template_newcloudButton" style="display:none"> 
@@ -143,14 +143,14 @@ $(document).ready(function(e) {
 	});
 
     $("#position").off('ready.jstree').on('ready.jstree', function(e) {
-         var inst = $("#position").jstree(true);
-         var hash = location.hash;
-         if(hash) {
-            var hash = (hash.replace(/^#/,''));
-             _explorer.jstree_select(hash);
-        }else{
-			location.hash='#recent';
-		}
+      var inst = $("#position").jstree(true);
+      var hash = location.hash;
+      if(hash) {
+        var hash = (hash.replace(/^#/,''));
+          _explorer.jstree_select(hash);
+      }else{
+        location.hash='#recent';
+      }
 		//增加添加群组按钮
 		jQuery(jQuery('#template_newGroupButton').html()).appendTo('#group');
     jQuery(jQuery('#template_newcloudButton').html()).appendTo('#cloud');
