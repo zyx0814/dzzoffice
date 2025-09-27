@@ -35,20 +35,14 @@
 		  ,{field:'bz', title: '{lang type}',style:'cursor:pointer;', align: 'center',hide:true}
           ,{title: '{lang operation}',align:'center', toolbar: '#barDemo',style:'cursor:pointer;'}
 		]],
-		data: {$return}
+		data: {$return},
+        done: function(){
+			checkStatusBtn(this.id);
+        }
 	  });
 	  //头工具栏事件
       layuiModules.table.on('checkbox(cloudtable)', function(obj){
-        var checkStatus = layuiModules.table.checkStatus(obj.config.id);
-        var checkedCount = checkStatus.data.length;
-        var getCheckDataBtn = document.getElementById('getCheckDataBtn');
-        if(checkedCount > 0) {
-            getCheckDataBtn.removeAttribute('disabled');
-            getCheckDataBtn.classList.remove('layui-btn-disabled');
-        } else {
-            getCheckDataBtn.setAttribute('disabled', 'disabled');
-            getCheckDataBtn.classList.add('layui-btn-disabled');
-        }
+        checkStatusBtn(obj.config.id);
     });
 	layuiModules.table.on('toolbar(cloudtable)', function(obj){
 		var checkStatus = layuiModules.table.checkStatus(obj.config.id);

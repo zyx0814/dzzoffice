@@ -1526,10 +1526,10 @@ class io_dzz extends io_api {
         $gid = $folder['gid'];
         if (in_array($icoarr['type'], array('folder', 'link', 'video', 'dzzdoc'))) {
             if (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload')) {
-                return array('error' => lang('privilege'));
+                return array('error' => lang('no_privilege'));
             }
         } elseif (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload')) {
-            return array('error' => lang('privilege'));
+            return array('error' => lang('no_privilege'));
         }
         $target = $icoarr['attachment'];
         if ($partinfo['ispart']) {
@@ -2044,15 +2044,15 @@ class io_dzz extends io_api {
                         }
                     } else {
                         if (!perm_check::checkperm('delete', $icoarr)) {
-                            return array('error' => lang('privilege'));
+                            return array('error' => lang('no_privilege'));
                         }
                     }
 
                     //判断有无新建权限,如果是文件夹判断是否有文件件新建权限
                     if ($icoarr['type'] == 'folder' && !perm_check::checkperm_Container($pfid, 'folder')) {
-                        return array('error' => lang('privilege'));
+                        return array('error' => lang('no_privilege'));
                     } elseif (!perm_check::checkperm_Container($pfid, 'upload')) {
-                        return array('error' => lang('privilege'));
+                        return array('error' => lang('no_privilege'));
                     }
                 }
             } else {
@@ -2252,13 +2252,13 @@ class io_dzz extends io_api {
                     }
                 } else {
                     if (!perm_check::checkperm('copy', $icoarr)) {
-                        return array('error' => lang('privilege'));
+                        return array('error' => lang('no_privilege'));
                     }
                 }
 
                 //判断当前目录有无添加权限
                 if (!perm_check::checkperm_Container($pfid, 'upload')) {
-                    return array('error' => lang('privilege'));
+                    return array('error' => lang('no_privilege'));
                 }
             }
             $success = 0;

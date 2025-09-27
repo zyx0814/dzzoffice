@@ -95,7 +95,7 @@ if ($do == 'getinfo') {
     foreach ($cids as $cid) {
         $data = C::t('comment')->fetch($cid);
         if ($_G['adminid'] != 1 && $_G['uid'] != $data['authorid']) {
-            exit(json_encode(array('msg' => lang('privilege'))));
+            exit(json_encode(array('msg' => lang('no_privilege'))));
         }
         C::t('comment')->delete_by_cid($cid);
     }

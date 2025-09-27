@@ -198,7 +198,6 @@ $lang = array
     'migration_tool' => '迁移工具',
     'tips' => '技巧提示',
     'use_default' => '- 使用默认 -',
-    'unknown' => '未知',
     'already_existed' => '已经存在',
     'all_audit' => '全部审核',
     'developer_list' => '开发者列表',

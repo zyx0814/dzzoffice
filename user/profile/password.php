@@ -17,7 +17,12 @@ $do = isset($_GET['do']) ? trim($_GET['do']) : 'editpass';
 $uid = intval($_G['uid']);
 $seccodecheck = $_G['setting']['seccodestatus'] & 4;
 $member = C::t('user_profile')->get_userprofile_by_uid($_G['uid']);
-$my_info = (intval($_G['group']['perm']) & perm_binPerm::getPowerArr()['my_info']) ? true : false;
+if($_G['adminid'] == 1) {
+    $my_info = false;
+} else {
+    $my_info = perm_check::checkuserperm('my_info');
+}
+
 if ($do == 'editpass') {
     $navtitle = lang('password_edit');
     $strongpw = ($_G['setting']['strongpw']) ? json_encode($_G['setting']['strongpw']) : '';

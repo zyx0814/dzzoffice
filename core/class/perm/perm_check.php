@@ -12,7 +12,6 @@ class perm_check {
     public static function getuserPerm() {
         global $_G;
         $perm = DB::result_first("select perm from %t where uid=%d", array('user_field', $_G['uid']));
-        $groupperm = $_G['group']['perm'];
         if ($perm < 1) $perm = intval($_G['group']['perm']);
         if ($_G['setting']['allowshare']) {
             $power = new perm_binPerm($perm);
@@ -38,7 +37,6 @@ class perm_check {
         if (!$folder) {
             return perm_binPerm::getGroupPower('read');
         }
-
         $perm = intval($folder['perm']);
         $power = new perm_binPerm($perm);
         //机构/部门/群组文件夹
@@ -155,6 +153,21 @@ class perm_check {
         return false;
     }
 
+    public static function checkuserperm($action) {
+        global $_G;
+        if (empty($_G['uid'])) {
+            return false;
+        }
+        if ($_G['adminid'] == 1) return true;
+        $perm = intval($_G['group']['perm']);
+        if ($perm > 0) {
+            $power = new perm_binPerm($perm);
+            return $power->isPower($action);
+        } else {
+            return false;
+        }
+    }
+
     //$arr=array('uid','gid','desktop');其中这几项必须
     public static function checkperm($action, $arr, $bz = '') { //检查某个图标是否有权限;
         global $_G;
@@ -213,9 +226,9 @@ class perm_check {
                 else $action .= '2';
             }
             //首先判断ico的超级权限；
-            if (!perm_FileSPerm::isPower($arr['sperm'], $action)) return false;
+            if ($arr['sperm'] && !perm_FileSPerm::isPower($arr['sperm'], $action)) return false;
 
-            if ($folder = C::t('folder')->fetch_fsperm_by_fid($arr['pfid'])) {
+            if ($arr['pfid'] && $folder = C::t('folder')->fetch_fsperm_by_fid($arr['pfid'])) {
                 //首先判断目录的超级权限；
                 if (!perm_FolderSPerm::isPower($folder['fsperm'], $action)) return false;
             }
@@ -235,7 +248,8 @@ class perm_check {
         if ($bz) {
             if (!perm_FolderSPerm::isPower(perm_FolderSPerm::flagPower($bz), $action)) return false;
             return true;
-        } else {
+        }
+        if ($pfid) {
             if ($folder = C::t('folder')->fetch($pfid)) {
                 //首先判断目录的超级权限；
                 if ($action == 'rename') {
@@ -245,16 +259,14 @@ class perm_check {
                     if ($_G['uid'] == $folder['uid']) $action .= '1';
                     else $action .= '2';
                 }
-                if (!perm_FolderSPerm::isPower($folder['fsperm'], $action)) return false;
+                if ($folder['fsperm'] && !perm_FolderSPerm::isPower($folder['fsperm'], $action)) return false;
                 //默认目录只有管理员有权限改变排列
                 //if($action=='admin' && $_G['adminid']!=1 && $folder['flag']!='folder') return false;
-            }
-            if ($_G['adminid'] == 1) return true; //网址管理员 有权限;
-            if ($folder['gid']) {
-                return self::groupPerm($pfid, $action, $folder['gid']);
-            } else {
-                return self::userPerm($pfid, $action);
+                if ($folder && $folder['gid']) {
+                    return self::groupPerm($pfid, $action, $folder['gid']);
+                }
             }
         }
+        return self::userPerm($pfid, $action);
     }
 }

@@ -1079,3 +1079,20 @@ function uploadprogress(speed, per) {
 		_upload.el.find('.upload-speed').hide();
 	}, 2000);
 }
+function checkStatusBtn(id) {
+	var checkStatus = layuiModules.table.checkStatus(id);
+	var isChecked = checkStatus.data.length > 0;
+	var buttonIds = ['getCheckDataBtn', 'deletebtn'];
+	buttonIds.forEach(function(btnId) {
+		var btn = document.getElementById(btnId);
+		if (btn) {
+			if (isChecked) {
+				btn.removeAttribute('disabled');
+				btn.classList.remove('layui-btn-disabled');
+			} else {
+				btn.setAttribute('disabled', 'disabled');
+				btn.classList.add('layui-btn-disabled');
+			}
+		}
+	});
+}

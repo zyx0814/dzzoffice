@@ -758,7 +758,7 @@ class table_resources extends dzz_table {
     }
 
     //通过rid获取属性信息
-    public function get_property_by_rid($rids, $contains = true, $realpath = '') {
+    public function get_property_by_rid($rids, $contains = true, $realpath = '',$checkperm = true) {
         global $_G;
         $uid = $_G['uid'];
         $wheresql = " where r.rid in(%n) ";
@@ -854,6 +854,9 @@ class table_resources extends dzz_table {
             $fileinfo = DB::fetch_first("select r.*,f.perm_inherit,p.path from %t r 
             left join %t f on r.pfid = f.fid left join %t p on r.pfid = p.fid $wheresql", $param);
             if (!$fileinfo) {
+                return array('error' => lang('no_privilege'));
+            }
+            if ($checkperm && !perm_check::checkperm('read', $fileinfo)) {
                 return array('error' => lang('no_privilege'));
             }
             //位置信息
@@ -983,8 +986,6 @@ class table_resources extends dzz_table {
             }
         }
         return $fileinfo;
-
-
     }
 
     public function get_containsdata_by_fid($fid) {
@@ -1005,6 +1006,9 @@ class table_resources extends dzz_table {
         $fileinfo = DB::fetch_first("select f.*,p.path from %t f left join %t p on f.fid = p.fid  where f.fid = %d ", $param);
         if (!$fileinfo) {
             return array('error' => lang('no_privilege'));
+        }
+        if (!perm_check::checkperm_Container($fid, 'read')) {
+            return array('error' => lang('folder_read_no_privilege'));
         }
         $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $fileinfo['path']);
         $fileinfo['name'] = $fileinfo['fname'];

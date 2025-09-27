@@ -1,0 +1,168 @@
+<?php
+$lang = array(
+    'appname' => 'Organization Users',
+  'explorer_gropuperm' => array(
+      'Collaborative Members',
+      'Administrators',
+      'Founders'
+  ),
+  'orgname' => 'Organization Name',
+  'orgname_placeholder' => 'Enter organization (group) name',
+  'change' => 'Change',
+  'org_description' => 'Description',
+  'org_description_placeholder' => 'Enter a brief description of the organization (group)',
+  'org_space_assign' => 'Allocate Storage Space',
+  'org_space_assign_tip' => 'Maximum available storage space that can be allocated currently',
+  'org_space_assign_tips' => ' <li>Unit: MB. Leave blank or enter 0 for no limit; enter -1 for no storage space</li><li>Limit the total storage space available for the entire organization or department (including all subordinate departments). The sum of storage space used by all departments under the organization cannot exceed this limit</li><li>Storage space allocated to a department can only be drawn from the available space of its parent department. Once allocated, the remaining space of the parent department will decrease accordingly, regardless of whether the allocated space is actually used up</li>',
+  'space_use_department' => 'Department Storage Usage',
+  'space_use_org' => 'Total Organization Storage Usage',
+  'space_use_org_tips' => '<li>Limit the total storage space available for the entire organization or department (including all subordinate departments)</li><li>Storage space allocated to subordinate departments will be drawn from the available space of the parent department</li>',
+  'org_update_success' => 'Organization information updated successfully',
+  'org_img_uploaded_tip' => 'This image has already been uploaded. Simply check the box to select it',
+  'clicktoupload' => 'Click to Upload',
+  // admin/orguser/detail_org.html
+  'export_excl' => 'Export all users of this department to an Excel file',
+  'detail_org_no_enable' => 'If disabled, shared directories cannot be used in all subordinate departments; if enabled, shared directories will be displayed in the enterprise drive',
+  'detail_org_explorerapp_enable' => 'If enabled, the directory of this organization or department can be used in applications such as the drive',
+  'detail_org_enable' => 'If enabled, the shared directory of this department will be displayed under the organization in the enterprise drive',
+  'detail_org_creation' => 'After creating a shortcut, all members of the department will have the corresponding shortcut on their desktop by default',
+  'group_org_no_enable' => 'If enabled, the organization group option will be displayed in the file explorer',
+  'group_org_enable' => 'If disabled, the organization group option will not be displayed in the file explorer',
+  'detail_org_administrator' => '<strong class="float-start" style="margin-left:-45px;">Note:</strong>
+    <li>Organization Administrator Permissions: Set administrators for all departments under this organization, manage all personnel in this organization, and manage all shared directories of this organization</li>
+    <li>Department Administrator Permissions: Set administrators for all subordinate departments under this department, manage all personnel in this department, and manage all shared directories of this department</li>',
+  'inport_guide_download' => 'Download user information import template',
+  'inport_guide_template' => 'The items in the template will be automatically generated based on the number of user profile items',
+  'inport_guide_user' => 'Edit the user information table according to the template',
+  'inport_guide_step' => 'Step 3: Select Excel file',
+  'inport_guide_layout' => 'Select the edited user information table. Supported formats: .xls, .xlsx',
+  'inport_guide_notice' => 'Notes for editing user information table',
+  'inport_guide_notice_text' => '<li>1. Edit the user information to be imported according to the template fields. If you already have a profile information table, simply rename the relevant field names in your existing table to match those provided in the "Template". As long as the names match, the position of the fields will not affect the result</li>
+  <li>2. The "Username" field in the template is required; other fields can be filled in as needed</li>
+  <li>3. The information in the "Email" and "Username" fields must be unique and cannot be duplicated. If the email is left blank, the system will randomly generate an email address during import</li>
+  <li class="danger">4. Creating multi-level departments: Method 1: Add multiple "Department" columns in the table, where columns from left to right represent Level 1 Department, Level 2 Department, Level 3 Department, etc. The system will create departments, subordinate departments, and lower-level departments in order from left to right. Method 2: Use a single column in the table, and separate superior and subordinate departments with "/" (e.g.: Primary School/First Grade/Class 1)</li>
+  <li>5. Users can only be imported by organization. Multiple organizations need to be imported in batches</li>
+  <li>6. The "Login Password" field in the table can be left blank. Administrators can set a unified password for users in bulk during import. After logging in with the unified password, users can change it themselves</li>
+  <li>7. There are two import methods on the import interface: "Incremental" and "Overwrite". Incremental method: When encountering the same user, only the missing field information of the user will be added, and the original information will remain unchanged. (Example: User A already exists in the system with password 123. User A is also in the batch import table, and a unified password abc is set during import. After import, the passwords of other users will be abc, while the original password of User A will remain 123.) Overwrite import: The original user information in the system will be completely replaced with the information in the table</li>
+  <li>8. If there are many users to import, it is recommended to first create a test table with a small number of users. After the test is successful, import all users using the incremental method</li>',
+  'import_list_organization' => 'Select the organization to import into. If no organization is selected, new organizations and departments will be created based on the "Department" field in the user information table. If there is no department information, users will be directly imported into "Unorganized Users"',
+  'import_list_password' => 'Default user password. If the login password field is not set, the password set here will be used as the password for newly imported users',
+  'import_list_coverage' => 'Incremental import method: Newly imported user information is intelligently added to the original user information; Overwrite import: Newly imported information overwrites the original user information. It is recommended to use the incremental method',
+  'import_list_text' => '<li>The "Username" and "Email" fields are required</li>
+        <li>Click the content of the import items below to edit them temporarily. When editing departments, note that each row of departments has a superior-subordinate relationship, where the previous row is the superior department of the next row</li>
+        <li>Items that do not need to be imported can be deleted by clicking the "X" on the right</li>
+        <li>Click the "Import" button to import the current item. Click the "Import All" button to import all items in order. You can click again to stop during the process</li>',
+  // admin/orguser/tree.html
+  'orguser_tree_delete' => 'Are you sure you want to permanently delete the selected users (all data and files of the users will be completely deleted)?',
+  'orguser_tree_permission_delete' => 'This operation only removes the user from the department. After removal, you may lose the permission to operate this user. Are you sure you want to continue the removal?',
+  'orguser_tree_batch_delete' => 'Batch deletion is not supported for organizations or departments',
+  'orguser_tree_all_delete' => 'Before deleting a department, you must first delete all its subordinate departments and delete the files in the shared directory. Are you sure you want to delete this department?',
+  // admin/orguser/ajax.php
+  'orguser_ajax_delete' => 'Permanent deletion is not supported for users in organizations or departments. Please first remove the user from the organization or department and try again',
+  'no_parallelism_jurisdiction' => 'No permission for the corresponding department',
+  // admin/orguser/edituser.php
+  'orguser_edituser_add_user' => '<div class="well alert alert-danger">Sorry! You do not have permission to add users under this organization or department!<br><br>You can select a department with permission on the left and try adding again</div>',
+  'orguser_edituser_add_user1' => '<div class="well alert alert-danger">Sorry! You do not have permission to manage this user!<br><br>You can select a user that you have permission to manage on the left and try adding again</div>',
+  // admin/orguser/import.php
+  'orguser_import_user' => 'No permission. Only system administrators and organization/department administrators can import users',
+  'orguser_import_user_table' => 'Failed to upload the user information table. Please upload again',
+  'orguser_import_xls_xlsx' => 'Only .xls and .xlsx file types are allowed for import',
+  'orguser_import_user_message' => 'User information table uploaded successfully. Redirecting to the import page...',
+  'orguser_import_tautology' => 'Failed to upload the information table. Please try again later',
+  'orguser_import_user_message_table' => 'Please select a user information table',
+  // admin/orguser/vidw.php
+  'orguser_vidw_delete' => '<div class="well alert alert-danger">Sorry! You do not have permission to manage this department!<br><br>You can select a department that you have permission to manage on the left</div>',
+  // admin/member/adduser.html
+  'adduser_login_email_text' => 'Required. Can be used for system login. When employees follow the enterprise WeChat account, they will be matched based on the email',
+  'adduser_compellation_text' => 'Required. Displayed in the system for easy identification by colleagues',
+  'adduser_phone_number_text' => 'Optional. The mobile phone number bound to WeChat. When employees follow the enterprise WeChat account, they will be matched based on the mobile phone number bound to their WeChat',
+  'adduser_weixin_text' => 'Optional. Employee\'s WeChat ID. When employees follow the enterprise WeChat account, they will be matched based on their WeChat ID',
+  'adduser_exceptional_space_text' => 'Unit: MB. Additional storage space for the user (Total user storage = Default storage + Additional storage)',
+  'adduser_disable_user_text' => 'After disabling, the user will not be able to log in to the system. Please operate with caution',
+  'adduser_usergroup_text' => 'After setting as a system administrator, the user will have system management permissions. Please operate with caution!',
+  // admin/member/edituser.html
+  'edituser_login_email_text' => 'Optional. Can be used for system login. When employees follow the enterprise WeChat account, they will be matched based on their email',
+  'edituser_weixin_text' => 'Optional. Employee\'s WeChat ID. When employees follow the enterprise WeChat account, they will be matched based on their WeChat ID. If they have already followed, this item cannot be modified',
+  'supervisor_position' => 'Supervisor\'s Position',
+  'send_password_user_mailbox' => 'Send password to user\'s email',
+  'login_email_required' => 'Login email is required',
+  'name_will' => 'Username is required',
+  'none_write_login_password' => 'Login password has not been filled in yet',
+  'none_write_affirm_password' => 'Confirmation password has not been filled in yet',
+  'phone_number' => 'Mobile Phone Number',
+  'phone_number_illegal' => 'Illegal mobile phone number',
+  'weixin_phone_number' => 'Mobile Phone Number Bound to WeChat',
+  'weixin_illegal' => 'Illegal WeChat ID',
+  'user_weixin' => 'Employee\'s WeChat ID',
+  'weixin_exist' => 'WeChat ID already exists',
+  'random_password' => 'Generate Random Password',
+  'exceptional_space' => 'Additional Storage Space',
+  'set_system_administrator' => 'Set as System Administrator',
+  'add_a_item' => 'Add an Item',
+  'add_user' => 'Add User',
+  'add_user_success' => 'User added successfully',
+  'edit_user_success' => 'User information modified successfully',
+  'email_registered_retry' => 'Email has already been registered. Please change the email and try again',
+  'export_user' => 'Export Users',
+  'shared_directory_set' => 'Shared Directory Settings',
+  'group_on_set' => 'Group Function Settings',
+  'shared_directory_desktop_shortcut' => 'Shared Directory Desktop Shortcut',
+  'position_management' => 'Position Management',
+  'add_position' => 'Add Position',
+  'position_name' => 'Position Name',
+  'organization_department' => 'Organization Department',
+  'share_enable_successful' => 'Shared directory enabled successfully!',
+  'share_close_successful' => 'Shared directory disabled successfully!',
+  'group_on_successful' => 'Group function enabled successfully!',
+  'group_close_successful' => 'Group function disabled successfully!',
+  'login_username_placeholder' => 'Login Username',
+  'login_username_text' => 'Required. Can be used for system login',
+  'required_used_login_system' => 'Required. Can be used for system login',
+  'space_not_change_password' => 'Leave blank to not modify the password',
+  'export_range_user' => 'Select export range. All users within this range will be exported',
+  'export_data' => 'Export Data Items',
+  'import_nbsp' => 'Im&nbsp;port',
+  'creation_agency' => 'Create New Organization',
+  'creation_bottom_section' => 'Create Subordinate Department',
+  'creation_equally_section' => 'Create Peer Department',
+  'please_select_same_type_node' => 'Please select nodes of the same type',
+  'please_select_same_section_node' => 'Please select nodes of the same department',
+  'add_administrator_unsuccess' => 'Failed to add administrator',
+  'no_open_Shared_directory' => 'Shared directory is not enabled, cannot set',
+  'please_select_range_export' => 'Please select export range',
+  'please_select_project_export' => 'Please select export items',
+  'user_information_table' => 'User Information Table',
+  'bulk_import_user_template' => 'Bulk Import User Template',
+  'name_email_empty' => 'Username and email cannot be empty',
+  'lack_required_fields_name' => 'Missing required field "Username"',
+  'lack_required_fields_name_email' => 'Missing required fields "Username" or "Email"',
+  'bulking' => 'Incremental',
+  'coverage' => 'Overwrite',
+  'user_phone_illegal' => 'User\'s mobile phone number is illegal',
+  'user_phone_exist' => 'Mobile phone number already exists',
+  'user_phone_registered' => 'User\'s mobile phone number has already been registered',
+  'weixin_registered' => 'This WeChat ID has already been registered',
+  'user_registered_retry' => 'This username has already been registered. Please change the username and try again',
+  'import_user' => 'Import Users',
+  'orguser_guide_text' => '<h4><strong>Organization Management Usage Instructions</strong></h4>
+    <ul class="">
+      <li><img src="dzz/system/images/organization.png" />&nbsp;Select an organization to set organization information</li>
+      <li><img src="dzz/system/images/department.png" />&nbsp;Select a department to set department information</li>
+      <li><img src="dzz/system/images/user.png" />&nbsp;Select a user to set user information</li>
+      <li>Personnel, departments, and organizations can be directly dragged and moved to change positions. Moving is used to change the department to which a user belongs, and to change the parent organization or parent department of a department</li>
+      <li>Hold down the <code>ctrl</code> key while moving a user or department to copy. Used to add a user to multiple departments at the same time</li>
+      <li>Hold down the <code>ctrl</code> key to select multiple items. After selecting multiple items, release the <code>ctrl</code> key and move to perform bulk moving. Do not release the <code>ctrl</code> key while moving to perform bulk copying</li>
+      <li>Hold down the <code>shift</code> key to select multiple items in bulk</li>
+      <li>Right-click on a department, organization, or user to bring up the right-click menu. The menu contains additional corresponding operations</li>
+    </ul>
+    <div class="alert alert-warning">
+      <h4><strong>User Deletion Instructions:</strong></h4>
+      <ul class="mb-0">
+        <li>Deleting a user from all organizations or departments only removes the user from the organization or department. The user will no longer have all usage permissions of the organization or department, but the user will not be deleted from the system</li>
+        <li>When a user has no affiliated organization or department, they will appear in the "Unorganized Users List". Only system administrators can manage the "Unorganized Users List"</li>
+        <li style="color:red">When a system administrator deletes a user from the "Unorganized Users List", the user will be completely deleted from the system, and all system data and saved files of the user will be deleted. Administrators please use this function with caution and only delete users after confirming that they need to be removed</li>
+      </ul>
+    </div>',
+  'group_permission_guide_text' => 'User Group Permissions and Operation Rules Instructions',
+);
+?>

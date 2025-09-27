@@ -1,54 +1,620 @@
 <!--{template lyear:header_simple_start}-->
-<link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
+<link href="static/lyear/js/jstree/style.min.css?{VERHASH}" rel="stylesheet" media="all">
+<link rel="stylesheet" href="static/lyear/js/layui/css/layui.css?{VERHASH}">
 <link href="{MOD_PATH}/images/orguser.css?{VERHASH}" rel="stylesheet" media="all">
 <script src="{MOD_PATH}/scripts/orguser.js?{VERHASH}"></script>
-<script type="text/javascript">
-	var selorg={};
-	<!--{if $openarr}-->
-	selorg.openarr=$openarr;
-	<!--{/if}-->
-	selorg.add=function(ctrlid,vals){
-		if(vals[0].orgid=='other') vals[0].path='{lang please_select_a_organization_or_department}';
-		jQuery('#'+ctrlid+'_Menu').html(vals[0].path+' ');
-		jQuery('#sel_'+ctrlid).val(vals[0].orgid).trigger('change');
-	}
-</script>
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
-	<div class="container-fluid">
-		<div id="orguser_container" class="orguser-container">
+	<div class="card card-square" style="height: 100%;">
+		<div class="card-header">
+			<div class="card-title flex-container">
+			<strong class="float-start title_orgname">{lang no_institution_users}</strong>
+			<div class="card-title-end">
+				<div class="layui-btn-group">
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-sm orgedit" onclick="orgedit();"><i class="layui-icon mdi mdi-cog"></i> {lang set}</button>
+					<button type="button" class="layui-btn layui-btn-sm" onclick="adduser()"><i class="layui-icon layui-icon-friends"></i> {lang add_user}</button>
+					<button type="button" class="layui-btn layui-btn-sm layui-bg-orange" onclick="exportuser();" title="{lang export_excl}"><i class="layui-icon mdi mdi-tray-arrow-down"></i> {lang export}</button>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="card-body" style="padding: 0;">
+			<table class="layui-hide" id="table" lay-filter="table"></table>
+			<script type="text/html" id="toolbar">
+				<div class="layui-btn-container">
+					<button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
+					<button class="layui-btn layui-btn-sm layui-btn-disabled" id="dropdownButton" disabled>批量操作 <i class="layui-icon layui-icon-down layui-font-12"></i></button>
+					<button type="button" class="layui-btn layui-btn-danger layui-btn-sm layui-btn-disabled" id="deletebtn" lay-event="delete" disabled>{lang delete}</button>
+					<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
+				</div>
+			</script>
+			<script type="text/html" id="switchTpl">
+				<input type="checkbox" name="status" value="{{d.uid}}" lay-skin="switch" lay-text="{lang normal}|{lang forbidden}" lay-filter="sexDemo" {{ d.status == 1 ? '' : 'checked' }}>
+			</script>
+			<script type="text/html" id="usernameTpl">
+				<span class="img-avatar-36 {{ d.online ? 'user-status-info' : 'user-status-secondary' }}"
+				title="{{ d.online ? '在线' : '离线' }}">
+				{{- d.avatar }}
+				</span>
+				<a lay-event="edit" class="ms-1" href="javascript:void(0);">
+				{{ d.username }}
+				</a>
+			</script>
+			<script type="text/html" id="selectTpl">
+				{{#  var isNotSuperAdmin = adminid != 1; }}
+				<select name="city" lay-filter="selectTpl" lay-append-to="body" {{#  if(isNotSuperAdmin){ }}disabled="disabled"{{#  } }}>
+					<option value="0">{lang unknown}</option>
+					 {{#
+						layui.each(usergroups, function(groupid, group){ }}
+							<option value="{{= groupid }}" 
+								{{#
+								if(d.groupid == groupid){ }}selected="selected"{{#  } }}>
+								{{= group.grouptitle }}
+							</option>
+						{{#  }); }}
+				</select> 
+			</script>
+			<script type="text/html" id="barDemo">
+				<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">{lang detail}</a>
+			</script>
 		</div>
 	</div>
 </main>
-</div>
-
 <script type="text/javascript">
-	var currentHash = '';
+	var orgid = '{$orgid}';
+	var adminid = '{$_G['adminid']}';
+	var usergroups = {<!--{loop $_G['cache']['usergroups'] $groupid $group}--><!--{if !in_array($groupid ,array('3','4','5','6','7','8'))}-->{$groupid}:{grouptitle: '{$group['grouptitle']}'},<!--{/if}--><!--{/loop}-->};
+	var searchjson = {
+		'status': 0,
+		'username': '',
+		'uid': '',
+		'sort': '',
+		'order': '',
+		'groupid': ''
+	};
+	var layuiModules = {
+        dropdown: null,
+        form: null,
+        table: null
+    };
+	function orgedit(id) {
+		if(!id) id = orgid;
+		showWindow('orgedit',MOD_URL+'&op=view&do=orgedit&orgid='+id,'get',0)
+	}
+	function exportuser(id) {
+		if(!id) id = orgid;
+		showWindow('exportuser',MOD_URL+'&op=export&orgid='+id,'get',0)
+	}
+	function adduser(id) {
+		if(!id) id = orgid;
+		showWindow('edit_user',MOD_URL+'&op=edituser&orgid='+id,'get',0)
+	}
+	function usergroupname(groupid) {
+		return usergroups[groupid] ? usergroups[groupid].grouptitle : '{lang unknown}';
+	}
+	function tablereload(){
+		layuiModules.table.reloadData('table');
+	}
+	function groupsetinfo() {
+		layer.open({
+			type: 1,
+			title: '{lang group_permission_guide_text}',
+			maxmin: true,
+			content: '<ul class="list-group list-group-numbered"><li class="list-group-item"><strong>用户组唯一规则：</strong>每个用户仅支持设置一个用户组，不可同时归属多个用户组（用户组间为互斥关系，需明确单一身份）。</li><li class="list-group-item"><strong>用户组设置权限归属：</strong>仅限「管理员」拥有用户组配置权限（包括用户组分配、调整、移除等操作），其他用户组无此权限。</li> <li class="list-group-item"><strong>机构和部门管理员管理规则：</strong><ul class="list-unstyled mt-1"><li>• 权限范围：仅负责管理所属机构/部门相关事务，包括：<ul class="list-unstyled ms-3 mt-1"><li>▸ 管理所属机构/部门内的成员（添加、编辑、调整权限等）</li><li>▸ 管理所属机构/部门的所有共享目录（创建、修改访问权限、删除共享目录等）</li><li>▸ 采用「层级管理制」——由上一级机构和部门管理员，负责设置下一级机构和部门管理员</li></ul></li></ul></li><li class="list-group-item text-danger"><strong>管理员权限风险警示：</strong>「管理员」拥有系统全局权限，且是唯一可设置用户组的角色；分配「管理员」权限时需严格审核，避免权限滥用导致数据安全或系统管理风险。</li></ul>'
+		})
+	}
 	jQuery(document).ready(function(e) {
-		jQuery(document).on('mouseenter', '.moderators-container .user-item', function() {
-			jQuery(this).addClass('hover');
-		});
-		jQuery(document).on('mouseleave', '.moderators-container .user-item', function() {
-			jQuery(this).removeClass('hover');
-		});
 		var hash = window.location.hash.replace('#', '');
 		if(hash) {
 			var hasharr = hash.split('_');
-			showDetail(hasharr[1], hasharr[0], hasharr[2], hasharr[3]);
-		} else {
-			show_guide();
+			orgid = hasharr[1];
+		}
+		layui.use(['dropdown', 'form', 'table'],function(){
+            layuiModules.dropdown = layui.dropdown;
+            layuiModules.form = layui.form;
+            layuiModules.table = layui.table;
+			layuiModules.table.render({
+				elem: '#table',
+				url: '{MOD_URL}&op=view&do=userlist&orgid='+orgid,
+				toolbar: '#toolbar',
+				title: '机构部门用户列表数据表格',
+				even:true,
+				cellMinWidth:120,
+				height: function(){
+					var otherHeight = $('.card-square').outerHeight();
+					var middletopMenu = $('.bs-top-container').outerHeight();
+					return otherHeight-middletopMenu+8;
+				},
+				text: {
+					none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">没有相关的数据</p></div>'
+				},
+				page: {
+					limit: 20,
+					limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000]
+				},
+				css: [
+				'.layui-table-cell{height: 50px; line-height: 40px;}',
+				'.layui-table-cell select{height: 36px; padding: 0 5px;}'
+				].join(''),
+				cols: [[
+					{type:'checkbox', fixed: 'left'}
+					,{field:'uid', title: 'UID',sort: true, maxWidth:80}
+					,{field:'username', title: '{lang username}',sort: true, templet: '#usernameTpl',exportTemplet: function(d){ return d.username;}}
+					,{field:'department', title: '{lang is_department}', sort: true, templet: function(d) {return d.department;}}
+					,{field:'email', title: '{lang email}', sort: true}
+					,{field:'status', title: '{lang user_status}',maxWidth:110,align: 'center', sort: true, templet: '#switchTpl',exportTemplet: function(d){ return d.status==1 ? '禁用' : '正常';}}
+					,{field: 'groupid', title: '{lang usergroup}',align: 'center', sort: true,templet: '#selectTpl',exportTemplet: function(d){ return usergroupname(d.groupid);}}
+					,{title: '{lang operation}',align:'center', toolbar: '#barDemo'}
+				]],
+				initSort: {
+					field: 'uid',
+					type: 'asc'
+				},
+				done: function(res, curr, count) {
+					checkStatusBtn();
+					$('.title_orgname').html(res.orgname);
+					orgid = res.orgid;
+					adminid = res.adminid;
+					if(res.orgid) {
+						$('.orgedit').show();
+					} else {
+						$('.orgedit').hide();
+					}
+					var id = this.id;
+					layuiModules.dropdown.render({
+						elem: '#dropdownButton',
+						data: getMenuData(),
+						click: function(obj){
+							var checkStatus = layuiModules.table.checkStatus(id);
+							var data = checkStatus.dataCache;
+							if (data.length === 0) {
+								showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
+								return;
+							}
+							switch(obj.id){
+								case 'usergroup':
+									var optionHtml = '';
+									for (var groupId in usergroups) {
+										if (usergroups.hasOwnProperty(groupId)) {
+											var group = usergroups[groupId];
+											optionHtml += '<option value="' + groupId + '">' + group.grouptitle + '</option>';
+										}
+									}
+									layer.open({
+										type: 1,
+										title: '批量设置用户组',
+										shadeClose: true,
+										maxmin: true,
+										btn: ['确认', '取消'],
+										content: '<form class="layui-form layui-padding-3" lay-filter="test">'
+										+ '<select name="group" lay-filter="groupFilter" lay-append-to="body" lay-append-position="fixed">'
+										+ optionHtml
+										+ '</select>'
+										+ '</form>',
+										success: function (layero) {
+											layuiModules.form.render(layero.find('.layui-form select'));
+										},
+										yes: function(index, layero) {
+											var data = checkStatus.dataCache;
+											var groupid = layero.find('select[name="group"]').val();
+											var uids = [];
+											for(var i in data) {
+												uids.push(data[i].uid);
+											}
+											var data = {'uids': uids,'groupid': groupid};
+											jQuery.post('{MOD_URL}&op=ajax&do=usergroupid', data,function(json){
+												if(json['success']){
+													showmessage('{lang set_success}', 'success', '3000', 1);
+													layer.close(index);
+													layuiModules.table.reloadData('table');
+												}else if(json['error']){
+													showmessage(json['error'], 'danger', '3000', 1);
+												} else {
+													showmessage('{lang error}', 'danger', '3000', 1);
+												}
+											},'json')
+											.fail(function() {
+												showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+											});
+										}
+									});
+								break;
+								case 'remove':
+									if(!orgid) {
+										showmessage("请先选择一个机构或部门", 'danger', 3000, 1);
+										return;
+									}
+									var uids = [];
+									for(var i in data) {
+										uids.push(data[i].uid);
+									}
+									var deldata = {'type': 'user', 'uids': uids,'forgid': orgid};
+									layer.confirm('{lang orguser_tree_permission_delete}', {title:'{lang remove}('+data.length+')个用户', skin:'lyear-skin-danger'}, function(index){
+										layer.msg(__lang.please_wait, {offset:'10px',time:0});
+										jQuery.post('{MOD_URL}&op=ajax&do=remove', deldata, function(json) {
+											if(json.success) {
+												layer.msg('{lang remove_success}',{offset:'10px'});
+												layuiModules.table.reloadData('table');
+											} else if(json.msg) {
+												layer.alert(json.msg,{skin:'lyear-skin-danger'});
+											} else {
+												layer.msg('{lang remove_unsuccess}',{offset:'10px'});
+											}
+										}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+											layer.msg('{lang do_failed}',{offset:'10px'});
+										});
+									});
+								break;
+								case 'move':
+									if(!orgid) {
+										showmessage("请先选择一个机构或部门", 'danger', 3000, 1);
+										return;
+									}
+									showWindow('edit_user','{DZZSCRIPT}?mod=system&op=selorguser&type=1&range=1&stype=1&callback=moveuser&template=1&moderator=1','get',0);
+								break;
+								case 'insert':
+									showWindow('edit_user','{DZZSCRIPT}?mod=system&op=selorguser&type=1&range=1&stype=1&multiple=1&callback=insertorg&template=1&moderator=1','get',0);
+								break;
+							}
+						},
+						ready: function(elemPanel, elem) {
+							layuiModules.dropdown.reloadData(getMenuData());
+						},
+					});
+				}
+			});
+			layuiModules.table.on('checkbox(table)', function(obj){
+				checkStatusBtn();
+			});
+			layuiModules.form.on('switch(select)', function(obj) {
+				var status= obj.elem.checked ? 0 : 1;
+				jQuery.post('{MOD_URL}&op=ajax&do=userstatus', {'uid': this.value,'status':status},function(json){
+					if(json['success']){
+						showmessage('{lang set_success}', 'success', '3000', 1);
+					}else if(json['error']){
+						showmessage(json['error'], 'danger', '3000', 1);
+						obj.elem.checked = !obj.elem.checked;
+					} else {
+						showmessage('{lang error}', 'danger', '3000', 1);
+						obj.elem.checked = !obj.elem.checked;
+					}
+					},'json')
+				.fail(function() {
+					showmessage('{lang do_failed}', 'danger',3000,1);
+					obj.elem.checked = !obj.elem.checked;
+				});
+			});
+			layuiModules.form.on('select(selectTpl)', function(obj){
+				var value = obj.value;
+				var index = $(obj.elem).closest('tr').data('index');
+				var data = layuiModules.table.cache['table'][index] || {};
+				jQuery.post('{MOD_URL}&op=ajax&do=usergroupid', {'uids': data.uid,'groupid':value},function(json){
+					if(json['success']){
+						data.groupid = value;
+						showmessage('{lang set_success}', 'success', '3000', 1);
+					}else if(json['error']){
+						showmessage(json['error'], 'danger', '3000', 1);
+						layuiModules.table.updateRow('table', {index: index,data: {groupid: data.groupid}});
+					} else {
+						showmessage('{lang error}', 'danger', '3000', 1);
+						layuiModules.table.updateRow('table', {index: index,data: {groupid: data.groupid}});
+					}
+					},'json')
+				.fail(function() {
+					showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+					layuiModules.table.updateRow('table', {index: index,data: {groupid: data.groupid}});
+				});
+			});
+			layuiModules.form.on('switch(sexDemo)', function(obj) {
+				var status= obj.elem.checked ? 0 : 1;
+				jQuery.post('{MOD_URL}&op=ajax&do=userstatus', {'uid': this.value,'status':status},function(json){
+					if(json['success']){
+						showmessage('{lang set_success}', 'success', '3000', 1);
+					}else if(json['error']){
+						showmessage(json['error'], 'danger', '3000', 1);
+						obj.elem.checked = !obj.elem.checked;
+					} else {
+						showmessage('{lang error}', 'danger', '3000', 1);
+						obj.elem.checked = !obj.elem.checked;
+					}
+					},'json')
+				.fail(function() {
+					showmessage('{lang do_failed}', 'danger',3000,1);
+					obj.elem.checked = !obj.elem.checked;
+				});
+			});
+			//头工具栏事件
+			layuiModules.table.on('toolbar(table)', function(obj){
+				var checkStatus = layuiModules.table.checkStatus(obj.config.id);
+				var data = checkStatus.dataCache;
+				switch(obj.event){
+				case 'getCheckData':
+					if (data.length === 0) {
+						showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
+						return;
+					}
+					var template = '<div class="accordion">';
+					var userStatus;
+					data.forEach (function (item) {
+						if (item.status == 1) {
+							userStatus = '<span class="text-danger">禁用</span>';
+						} else {
+							userStatus = '<span class="text-success">正常</span>';
+						}
+						template += '<div class="accordion-item">';
+						template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+						template += 'UID：' + item.uid;
+						template += '</button>';
+						template += '</h2>';
+						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
+						template += '<div class="accordion-body">';
+						template += '<p><strong>{lang username}：</strong><span class="img-avatar-36 me-1 '+(item.online ? 'user-status-info' : 'user-status-secondary') +'" title="' + (item.online ? '在线' : '离线') + '">' + item.avatar + '</span>' + item.username + '</p>';
+						template += '<p><strong>{lang is_department}:</strong> ' + item.department + '</p>';
+						template += '<p><strong>{lang email}:</strong> ' + item.email + '</p>';
+						template += '<p><strong>{lang user_status}:</strong> ' + userStatus + '</p>';
+						template += '<p><strong>{lang usergroup}:</strong> ' + usergroupname(item.groupid) + '</p>';
+						template += '</div>';
+						template += '</div>';
+						template += '</div>';
+					});
+					template += '</div>';
+					layer.alert(template, {
+						title: '选中的记录'
+					});
+				break;
+				case 'delete':
+					if (data.length === 0) {
+						showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
+						return;
+					}
+					var uids = [];
+					for(var i in data) {
+						uids.push(data[i].uid);
+					}
+					layer.confirm('{lang orguser_tree_delete}', {title:'{lang delete}('+data.length+')个用户', skin:'lyear-skin-danger'}, function(index){
+						layer.msg(__lang.please_wait, {offset:'10px',time:0});
+						jQuery.post('{MOD_URL}&op=ajax&do=delete&type=user', {'uids': uids}, function(json) {
+							if(json.success) {
+								layer.msg('{lang delete_success}',{offset:'10px'});
+								layuiModules.table.reloadData('table');
+							} else if(json.error) {
+								layer.alert(json.error,{skin:'lyear-skin-danger'});
+							} else {
+								layer.msg('{lang delete_unsuccess}',{offset:'10px'});
+							}
+						}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+							layer.msg('{lang do_failed}',{offset:'10px'});
+						});
+					});
+				break;
+				case 'get':
+				tablereload();
+				break; 
+			};
+		});
+			//监听工具条
+			layuiModules.table.on('tool(table)', function(obj){
+				var data = obj.dataCache;
+				if(obj.event === 'edit'){
+					showWindow('edit_user',MOD_URL+'&op=edituser&uid='+data.uid,'get',0)
+					return;
+				}
+			});
+			//触发排序事件
+			layuiModules.table.on('sort(table)', function (obj) {
+				if(obj.field == 'department') {
+					layer.msg('该排序结果为前端根据当前页数据进行排序', {offset:'10px'});
+				} else {
+					searchjson.sort = obj.field;
+					searchjson.order = obj.type;
+					searchjson.orgid = orgid;
+					layuiModules.table.reloadData('table', {
+						initSort: obj,
+						where: searchjson
+					});
+				}
+			});
+			layuiModules.table.on('rowDouble(table)', function(obj){
+				showDataTemplate(obj);
+			});
+			function showDataTemplate(obj) {
+				var data = obj.dataCache;
+				var template =
+				'<p><strong>{lang username}：</strong><span class="img-avatar-36 me-1 '+(data.online ? 'user-status-info' : 'user-status-secondary') +'" title="' + (data.online ? '在线' : '离线') + '">' + data.avatar + '</span>' + data.username + '</p>' +
+				'<p><strong>{lang is_department}：</strong>' + data.department + '</p>' +
+				'<p><strong>{lang email}：</strong>' + data.email + '</p>' +
+				'<p><strong>{lang user_status}：</strong>' + (data.status==1 ? '<span class="text-danger">禁用</span>' : '<span class="text-success">正常</span>') + '</p>' +
+				'<p><strong>{lang usergroup}：</strong>' + usergroupname(data.groupid) + '</p>'
+				layer.alert(template, {
+					title: '<strong>UID：'+data.uid+'</strong> {alng detail}：'
+				});
+
+			// 标注选中样式
+			obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+			}
+        });
+		$('#user-status').change(function () {
+			var status = $('#user-status').val();
+			searchjson['status'] = status;
+			searchConditionChange();
+		})
+		$('#user-usergroup').change(function () {
+			var groupid = $('#user-usergroup').val();
+			searchjson['groupid'] = groupid;
+			searchConditionChange();
+		})
+		$('#user-uid').change(function () {
+			var uid = $('#user-uid').val();
+			searchjson['uid'] = uid;
+			searchConditionChange();
+		})
+		$('#user-email').change(function () {
+			var email = $('#user-email').val();
+			searchjson['email'] = email;
+			searchConditionChange();
+		})
+		$('#user-name').change(function () {
+			var username = $('#user-name').val();
+			searchjson['username'] = username;
+			searchConditionChange();
+		})
+
+		//判断搜索条件是否为空
+		function ishascondition() {
+			for (var o in searchjson) {
+				if (searchjson[o] != false) {
+					$('#emptysearchcondition').removeClass('hide');
+					return true;
+				}
+			}
+			return false;
+		}
+		jQuery('#searchval').on('keyup',function (event) {//回车搜索
+			if (event.which !="") { e = event.which; }
+			else if (event.charCode != "") { e = event.charCode; }
+			else if (event.keyCode != "") { e = event.keyCode; }
+			
+			if(e==13){
+				parseSearchInputVal(jQuery(this).val());
+				execute_search();
+			}
+		});
+		jQuery('#searchval').focus(function (e) {//头部搜索框变颜色
+			var hascondition = ishascondition();
+			var placeval=$(this).val();
+			jQuery(this).parent().addClass('focus');
+			jQuery('.dropdown-width').show();
+			dropdown_off();
+		});
+
+
+		jQuery('#searchval').blur(function (e) {//失去焦点时
+			var hascondition = ishascondition();
+			if (!hascondition) {
+				$('#emptysearchcondition').addClass('hide');
+			}
+		})
+
+		//清空搜索框
+		$(document).on('click', '#emptysearchcondition', function () {
+			$(this).addClass('hide');
+			resetting_condition();
+			$('#searchval').val('').focus();
+			searchjson['orgid'] = 0;
+			layuiModules.table.reloadData('table', {
+				where: searchjson
+			});
+		})
+
+		var emptypreg = /^\s*$/i;
+
+		jQuery('.input-search-width').click(function (event) {//搜索框三角点击
+			if (jQuery('.dropdown-width').is(":hidden")) {
+				jQuery('.dropdown-width').show();
+				dropdown_off();
+			} else {
+				jQuery('.dropdown-width').hide();
+			}
+			event.stopPropagation();
+		});
+		function dropdown_off(){
+			jQuery('.input-search').addClass('focus');
+			jQuery(document).off('mousedown.headersearch').on('mousedown.headersearch',function(e) {//关闭搜索内容
+				if(jQuery(event.target).closest('.input-search,.datepicker').length<1){
+					jQuery('.dropdown-width').hide();
+					jQuery('#searchval').trigger('blur');
+					jQuery('.input-search').removeClass('focus');
+					jQuery(document).off('mousedown.headersearch')
+				}
+			});
+		}
+
+		jQuery('.dropdown-width .close').click(function () {//关闭搜索内容
+			jQuery('.dropdown-width').hide();
+		});
+
+		//设置筛选框的值
+		function searchConditionChange() {
+			ishascondition();
+			var searcharr = [];
+			for (var o in searchjson) {
+				if (searchjson[o] != false && o != 'issearch') {
+					searcharr.unshift(o + ':' + searchjson[o] + ' ');
+				}
+			}
+			var searchval = searcharr.join(' ');
+			$('#searchval').val(searchval);
+		}
+
+
+		//多条件搜索提交
+		jQuery('#conditionSearchFile').click(function () {
+			jQuery('.dropdown-width').hide();
+			execute_search();
+		});
+		//点击搜索图标搜索
+		$(document).on('click', '.input-search-icon', function () {
+			var val = $('#searchval').val();
+			if (emptypreg.test(val)) {
+				return false;
+			}
+			parseSearchInputVal(val);
+			execute_search();
+			
+		});
+		//输入框值发生改变
+		jQuery('#searchval').change(function(){
+			var val = $(this).val();
+			parseSearchInputVal(val);
+		});
+		//点击重置搜索条件
+		$(document).on('click', '.resetting', function () {
+			resetting_condition();
+			searchjson['orgid'] = 0;
+			layuiModules.table.reloadData('table', {
+				where: searchjson
+			});
+		});
+		//处理输入框值
+		function parseSearchInputVal(val){
+			var emptyprge = /\s+/;
+			var questryjson = {'status': 0, 'username': '','uid': ''};
+			val = val.split(emptyprge);
+			var splitstr = /\s*:\s*/;
+			for(var o in val){
+				if(splitstr.test(val[o])){
+					var arr =  val[o].split(splitstr);
+					if(typeof questryjson[arr[0]] != 'undefined'){
+						questryjson[arr[0]] = arr[1];
+					}
+				}else{
+					questryjson['username'] += val[o]+' ';
+				}
+
+			}
+			searchjson = questryjson;
+		}
+
+		//执行搜索
+		function execute_search() {
+			searchConditionChange();
+			$('#user-name').val(searchjson.username);
+			searchjson['issearch'] = 1;
+			layuiModules.table.reloadData('table', {
+				where: searchjson,
+				page: {
+					curr: 1
+				}
+			});
 		}
 	});
 	window.onhashchange = function() { //调转到指定的页面
-		var hash = window.location.hash.replace('#', '');
-		if(hash && hash != currentHash) {
-			var hasharr = hash.split('_');
-			showDetail(hasharr[1], hasharr[0], hasharr[2], hasharr[3]);
-		}
+		hashHandler();
 	}
 </script>
-<script type="text/javascript" src="static/js/jstree.min.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/js/jquery.textareaexplander.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/jstree/jstree.min.js?{VERHASH}"></script>
+<script type="text/javascript" src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
 <!-- The basic File Upload plugin -->

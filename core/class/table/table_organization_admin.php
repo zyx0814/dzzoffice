@@ -162,8 +162,8 @@ class table_organization_admin extends dzz_table {
 
     public function ismoderator_by_uid_orgid($orgid, $uid, $up = 1) {
         global $_G;
-        include_once libfile('function/organization');
         if ($_G['adminid'] == 1) return true;
+        include_once libfile('function/organization');
         if ($up) $orgids = C::t('organization')->fetch_parent_by_orgid($orgid);
         else $orgids = array($orgid);
         if (empty($orgids)) return false;

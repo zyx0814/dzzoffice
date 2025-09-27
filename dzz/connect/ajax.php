@@ -71,14 +71,14 @@ if ($_GET['do'] == 'delete') {
             echo json_encode(array('msg' => 'success'));
             exit();
         } else {
-            echo json_encode(array('error' => lang('privilege')));
+            echo json_encode(array('error' => lang('no_privilege')));
             exit();
         }
     } else {
         $cloud = DB::fetch_first("select * from %t where bz=%s", array('connect', $bz));
         if ($mycloud = C::t($cloud['dname'])->fetch($id)) {
             if ($mycloud['uid'] != $_G['uid'] && $_G['adminid'] != 1) {
-                echo json_encode(array('error' => lang('privilege')));
+                echo json_encode(array('error' => lang('no_privilege')));
                 exit();
             } elseif (C::t($cloud['dname'])->update($id, array('cloudname' => $name))) {
                 echo json_encode(array('msg' => 'success'));

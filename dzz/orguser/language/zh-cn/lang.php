@@ -53,16 +53,16 @@ $lang = array(
       <li>不需要导入的项目，可以点击右侧的"X"删除掉</li>
       <li>点击导入按钮，导入当前项目，全部导入按钮，按顺序导入所有项，中途可以再次点击停止</li>',
     // admin/orguser/tree.html
-    'orguser_tree_delete' => '您确定要彻底删除此用户(用户的所有数据和文件都会彻底删除）吗？',
-    'orguser_tree_permission_delete' => '此处删除，仅从部门中移除此用户，移除后您可能没有操作此用户的权限，您确定要移除此用户吗？',
+    'orguser_tree_delete' => '您确定要彻底删除所选用户（用户的所有数据和文件都会彻底删除）吗？',
+    'orguser_tree_permission_delete' => '此操作仅从部门移除此用户，移除后您可能失去操作该用户的权限，您确定要继续移除吗？',
     'orguser_tree_batch_delete' => '机构或部门不支持批量删除',
     'orguser_tree_all_delete' => '删除部门前，必须先删除此部门的所有下级部门，并且删除共享目录中的文件，您确定要删除此部门吗？',
     // admin/orguser/ajax.php
     'orguser_ajax_delete' => '在机构或部门中的用户，不支持彻底删除，请先从机构或部门中删除后重试',
     'no_parallelism_jurisdiction' => '没有对应部门的权限',
     // admin/orguser/edituser.php
-    'orguser_edituser_add_user' => '<div class="well alert alert-danger">抱歉！您没有在此机构或部门下添加用户的权限！<br><br>可以在左侧选择有权限的部门，再重试添加</div>',
-    'orguser_edituser_add_user1' => '<div class="well alert alert-danger">抱歉！您没有此用户的管理权限！<br><br>可以在左侧选择有权限管理的用户，再重试添加</div>',
+    'orguser_edituser_add_user' => '<div class="well alert alert-danger">抱歉！您没有在此机构或部门下添加用户的权限！<br><br>可以在左侧选择有权限的部门，再重试操作</div>',
+    'orguser_edituser_add_user1' => '<div class="well alert alert-danger">抱歉！您没有此用户的管理权限！<br><br>可以在左侧选择有权限管理的用户，再重试操作</div>',
     // admin/orguser/import.php
     'orguser_import_user' => '没有权限，只有系统与机构部门管理员才能导入用户',
     'orguser_import_user_table' => '人员信息表上传未成功，请重新上传',
@@ -78,8 +78,8 @@ $lang = array(
     'adduser_phone_number_text' => '选填，微信绑定的手机号码，员工关注企业号时，会根据员工微信绑定的手机来匹配。',
     'adduser_weixin_text' => '选填，员工微信号，员工关注企业号时，会根据员工的微信号来匹配。',
     'adduser_exceptional_space_text' => '单位M，额外增加用户存储空间（用户的总空间=默认空间+额外空间）',
-    'adduser_disable_user_text' => '用户停用后，该用户将不能登录系统，请谨慎操作',
-    'adduser_usergroup_text' => '设置用户为系统管理员后，此用户将拥有系统管理权限，请慎重！',
+    'adduser_disable_user_text' => '禁用后，该用户将不能登录系统，请谨慎操作',
+    'adduser_usergroup_text' => '设置为系统管理员后，该用户将拥有系统管理权限，请慎重！',
     // admin/member/edituser.html
     'edituser_login_email_text' => '选填，可用于系统登录，员工关注企业号时，会根据员工的邮箱来匹配。',
     'edituser_weixin_text' => '选填，员工微信号，员工关注企业号时，会根据员工的微信号来匹配。如果已经关注，此项不能修改。',
@@ -97,8 +97,6 @@ $lang = array(
     'weixin_exist' => '微信号已经存在',
     'random_password' => '生成随机密码',
     'exceptional_space' => '额外空间',
-    'disable_user' => '停用此用户',
-    'block_up' => '停用',
     'set_system_administrator' => '设为系统管理员',
     'add_a_item' => '增加一项',
     'add_user' => '添加用户',
@@ -165,11 +163,6 @@ $lang = array(
 			<li style="color:red">系统管理员在“未加入机构用户列表”中删除用户，用户会在系统中彻底删除，并且删除用户所有系统数据及保存文件。请管理员谨慎使用，确定成员要删除后再删除。</li>
 		</ul>
 	</div>',
-    'no_institution_users' => '无机构用户',
-    'usergroup' => '用户组',
-    'save_changes' => '保存更改',
-    'department' => '部门',
-    'organization' => '机构',
-    'compellation' => '用户名',
+  'group_permission_guide_text' => '用户组权限与操作规则说明',
 );
 ?>

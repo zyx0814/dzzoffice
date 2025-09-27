@@ -96,17 +96,15 @@ if ($operation == 'editpermgroup') {//编辑权限组
             'maxattachsize' => intval($groupfield['maxattachsize']),
             'attachextensions' => trim($groupfield['attachextensions'])
         );
-        if(!in_array($group['groupid'],array('1','2'))) {
-            $selperms = isset($_GET['perms']) ? $_GET['perms'] : '';
-            $groupperm = 0;
-            if (!empty($selperms)) {
-                foreach ($selperms as $v) {
-                    $groupperm += $v;
-                }
-                $groupperm += 1;
+        $selperms = isset($_GET['perms']) ? $_GET['perms'] : '';
+        $groupperm = 0;
+        if (!empty($selperms)) {
+            foreach ($selperms as $v) {
+                $groupperm += $v;
             }
-            $setarr['perm'] = $groupperm;
+            $groupperm += 1;
         }
+        $setarr['perm'] = $groupperm;
         if ($groupid > 0) {
             $editgid = C::t('usergroup')->update($groupid, $data);
             $usergroup = C::t('usergroup_field')->update($groupid, $setarr);

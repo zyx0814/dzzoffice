@@ -1,47 +1,47 @@
-<div class="card">
-  <div class="card-body">
-    <ul class="nav nav-pills">
-      <li class="nav-item text-break">
-        <strong class="nav-link">$space[username]</strong>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{MOD_URL}&op=edituser&uid=$uid#user_{$user['uid']}_" onclick="jQuery('#orguser_container').load(this.href);return false;">{lang basic_message}</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link active" href="{MOD_URL}&op=edituser&do=profile&uid=$uid" onclick="jQuery('#orguser_container').load(this.href);return false;">{lang details_information}</a>
-      </li>
-    </ul>
+<!--{template common/header_ajax}-->
+<div class="modal-header">
+  <h4 class="modal-title text-truncate">{lang user_info}</h4>
+  <div class="float-end">
+    <button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
+    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
   </div>
 </div>
-<div class="card">
-  <div class="card-body">
-      <div id="return_edituserprofile"></div>
-      <form id="accountform" name="accountform" class="form-horizontal form-horizontal-left" action="{MOD_URL}&op=edituser&do=profile" method="post" onsubmit="account_submit();return false">
-        <input type="hidden" name="profilesubmit" value="true" />
-        <input type="hidden" name="uid" value="$uid" />
-        <input type="hidden" name="handlekey" value="edituserprofile" />
-        <input type="hidden" name="formhash" value="{FORMHASH}" />
-        <!--{loop $settings $key $value}-->
-        <!--{if $value[available]}-->
-        <div class="row mb-3">
-          <label class="col-sm-2" for="$key">$value[title]</label>
-          <div class="col-sm-10">
-            $htmls[$key]
-          </div>
-        </div>
-        <!--{/if}-->
-        <!--{/loop}-->
-        <dl class="mb-3 d-grid">
-          <input type="submit" class="btn btn-primary btn-round bodyloading" value="{lang save_changes}">
-        </dl>
-      </form>
-  </div>
+<ul class="nav nav-tabs mb-0">
+    <li class="nav-item">
+      <a class="nav-link" href="{MOD_URL}&op=edituser&uid=$uid" ajaxtarget="fwin_content_edit_user">{lang basic_message}</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="{MOD_URL}&op=edituser&do=profile&uid=$uid" ajaxtarget="fwin_content_edit_user">{lang details_information}</a>
+    </li>
+</ul>
+<div class="modal-body">
+  <div id="return_edituserprofile"></div>
+  <form id="accountform" name="accountform" class="form-horizontal form-horizontal-left" action="{MOD_URL}&op=edituser&do=profile" method="post" onsubmit="account_submit();return false">
+    <input type="hidden" name="profilesubmit" value="true" />
+    <input type="hidden" name="uid" value="$uid" />
+    <input type="hidden" name="handlekey" value="edituserprofile" />
+    <input type="hidden" name="formhash" value="{FORMHASH}" />
+    <!--{loop $settings $key $value}-->
+    <!--{if $value[available]}-->
+    <div class="row mb-3">
+      <label class="col-sm-2" for="$key">$value[title]</label>
+      <div class="col-sm-10">
+        $htmls[$key]
+      </div>
+    </div>
+    <!--{/if}-->
+    <!--{/loop}-->
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">{lang close}</button>
+  <button type="button" class="btn btn-primary" id="adduser_submit" onclick="account_submit()">{lang save_changes}</button>
 </div>
 <script type="text/javascript" reload="1">
-	currentHash = 'user_{$space['uid']}_profile';
-	location.hash = '#user_{$space['uid']}_profile';
 	function account_submit() {
+    showmessage('{lang In_the_save}','','3000',0);
 		ajaxpost('accountform', 'ajaxwaitid', 'return_edituserprofile');
+    layuiModules.table.reloadData('table');
 		return false;
 	}
 
@@ -49,3 +49,4 @@
 		showmessage(message, 'success', 3000, 1);
 	};
 </script>
+<!--{template common/footer_ajax}-->

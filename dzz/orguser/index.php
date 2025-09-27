@@ -11,6 +11,7 @@ if (!defined('IN_DZZ')) {
 }
 Hook::listen('check_login');
 $navtitle = lang('appname');
+$orgid = 'other';
 $orgtree = array();
 if ($_G['adminid'] != 1) {
     //获取用户的有权限的部门树
@@ -25,8 +26,12 @@ if ($_G['adminid'] != 1) {
             $orgtree[$arr[$count - 1]] = $arr;
         }
     }
-    if(!$orgtree) showmessage('只有系统管理员与机构部门管理员才有权限访问');
+    if (!$orgids) {
+        showmessage('no_parallelism_jurisdiction', dreferer());
+    }
+    $orgid = reset($orgids);
 }
 $orgtree = json_encode($orgtree);
+if (!$_G['cache']['usergroups']) loadcache('usergroups');
 include template('main');
 ?>

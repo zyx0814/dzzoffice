@@ -13,6 +13,7 @@ require_once libfile('function/user', '', 'user');
 require_once libfile('function/mail');
 require_once libfile('function/organization');
 if (!$_G['cache']['usergroups']) loadcache('usergroups');
+
 $do = trim($_GET['do']);
 $uid = intval($_GET['uid']);
 if (!$uid)
@@ -30,35 +31,33 @@ if ($do == 'add') {
                 $orgids[$orgid] = intval($_GET['jobids'][$key]);
             }
         }
-        if (!$orgids && $_G['adminid'] != 1) showmessage('no_parallelism_jurisdiction',MOD_URL);
+        if (!$orgids && $_G['adminid'] != 1) showmessage('no_parallelism_jurisdiction');
         //用户名验证
         $username = trim($_GET['username']);
         if ($username) {
             $usernamelen = dstrlen($_GET['username']);
             if ($usernamelen < 3) {
-                showmessage('profile_username_tooshort',MOD_URL);
+                showmessage('profile_username_tooshort');
             } elseif ($usernamelen > 30) {
-                showmessage('profile_username_toolong',MOD_URL);
+                showmessage('profile_username_toolong');
             }
             if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
-                showmessage('profile_username_protect',MOD_URL);
+                showmessage('profile_username_protect');
             }
             //如果输入用户名，检查用户名不能重复
-
             if (C::t('user')->fetch_by_username($username)) {
-                showmessage('user_registered_retry',MOD_URL);
+                showmessage('user_registered_retry');
             }
-
         }
         $user_extra = array();
         //如果输入手机号码，检查手机号码不能重复
         $phone = trim($_GET['phone']);
         if ($phone) {
             if (!preg_match("/^\d+$/", $phone)) {
-                showmessage('user_phone_illegal',MOD_URL);
+                showmessage('user_phone_illegal');
             }
             if (C::t('user')->fetch_by_phone($phone)) {
-                showmessage('user_phone_registered',MOD_URL);
+                showmessage('user_phone_registered');
             }
             $user_extra['phone'] = $phone;
         }
@@ -66,14 +65,13 @@ if ($do == 'add') {
         $weixinid = trim($_GET['weixinid']);
         if ($weixinid) {
             if (!preg_match("/^[a-zA-Z\d_]{5,}$/i", $weixinid)) {
-                showmessage('weixin_illegal',MOD_URL);
+                showmessage('weixin_illegal');
             }
             if (C::t('user')->fetch_by_weixinid($weixinid)) {
-                showmessage('weixin_registered',MOD_URL);
+                showmessage('weixin_registered');
             }
             $user_extra['weixinid'] = $weixinid;
         }
-
 
         //邮箱验证部分
         $email = strtolower(trim($_GET['email']));
@@ -87,7 +85,7 @@ if ($do == 'add') {
         }
 
         if (!$_GET['password'] || $_GET['password'] != addslashes($_GET['password'])) {
-            showmessage('profile_passwd_illegal',MOD_URL);
+            showmessage('profile_passwd_illegal');
         }
         $password = $_GET['password'];
 
@@ -100,21 +98,21 @@ if ($do == 'add') {
         }
         if ($uid <= 0) {
             if ($uid == -1) {
-                showmessage('profile_username_illegal',MOD_URL);
+                showmessage('profile_username_illegal');
             } elseif ($uid == -2) {
-                showmessage('profile_username_protect',MOD_URL);
+                showmessage('profile_username_protect');
             } elseif ($uid == -3) {
-                showmessage('profile_username_duplicate',MOD_URL);
+                showmessage('profile_username_duplicate');
             } elseif ($uid == -4) {
-                showmessage('profile_email_illegal',MOD_URL);
+                showmessage('profile_email_illegal');
             } elseif ($uid == -5) {
-                showmessage('profile_email_domain_illegal',MOD_URL);
+                showmessage('profile_email_domain_illegal');
             } elseif ($uid == -6) {
-                showmessage('profile_email_duplicate',MOD_URL);
+                showmessage('profile_email_duplicate');
             } elseif ($uid == -7) {
-                showmessage('profile_username_illegal',MOD_URL);
+                showmessage('profile_username_illegal');
             } else {
-                showmessage('undefined_action',MOD_URL);
+                showmessage('undefined_action');
             }
         }
         //插入用户状态表
@@ -149,12 +147,12 @@ if ($do == 'add') {
             }
         }
 
-        showmessage('add_user_success', MOD_URL . '#user_' . $uid, array('uid' => $uid, 'orgids' => $orgids));
+        showmessage('add_user_success', MOD_URL, array('uid' => $uid, 'orgids' => $orgids));
 
     } else {
         $orgid = intval($_GET['orgid']);
         if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-            showmessage('orguser_edituser_add_user',MOD_URL);
+            showmessage('orguser_edituser_add_user');
         }
         if ($org = C::t('organization')->fetch($orgid)) {
             $org['jobs'] = C::t('organization_job')->fetch_all_by_orgid($org['orgid']);
@@ -178,9 +176,9 @@ if ($do == 'add') {
                         break;
                     }
                 }
-                if (!$uperm) showmessage('privilege',MOD_URL);
+                if (!$uperm) showmessage('no_privilege');
             } else {
-                showmessage('privilege',MOD_URL);
+                showmessage('no_privilege');
             }
         }
 
@@ -192,21 +190,17 @@ if ($do == 'add') {
         $user = C::t('user')->fetch_by_uid($uid);
         if ($user['groupid'] < $_G['groupid'] || (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member']))) {
             //处理用户部门和职位
-            if($orgids) {
-                C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
-            } else {
-                C::t('organization_user')->delete_by_uid($uid);
-            }
+            C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
 
             //处理上司职位;
             C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
 
-            showmessage('edit_user_success', MOD_URL . '#user_' . $uid);
+            showmessage('edit_user_success', MOD_URL);
         }
         //禁用创始人验证
         $status = intval($_GET['status']) ? 1 : 0;
         if ($status == 1 && C::t('user')->checkfounder($user)) {
-            showmessage('创始人账号不能禁用',MOD_URL);
+            showmessage('is_root_user');
         }
 
         //用户名验证
@@ -214,20 +208,20 @@ if ($do == 'add') {
 
         $usernamelen = dstrlen($_GET['username']);
         if ($usernamelen < 3) {
-            showmessage('profile_username_tooshort',MOD_URL);
+            showmessage('profile_username_tooshort');
         } elseif ($usernamelen > 30) {
-            showmessage('profile_username_toolong',MOD_URL);
+            showmessage('profile_username_toolong');
         } elseif (!check_username(addslashes(trim(stripslashes($username))))) {
-            showmessage('profile_username_illegal',MOD_URL);
+            showmessage('profile_username_illegal');
         }
 
         //如果输入用户名，检查用户名不能重复
         if ($username != $user['username']) {
             if (C::t('user')->fetch_by_username($username)) {
-                showmessage('user_registered_retry',MOD_URL);
+                showmessage('user_registered_retry');
             }
             if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
-                showmessage('profile_username_protect',MOD_URL);
+                showmessage('profile_username_protect');
             }
         }
 
@@ -236,37 +230,37 @@ if ($do == 'add') {
         $phone = trim($_GET['phone']);
         if ($phone) {
             if (!preg_match("/^\d+$/", $phone)) {
-                showmessage('user_phone_illegal',MOD_URL);
+                showmessage('user_phone_illegal');
             }
             if ($phone != $user['phone'] && C::t('user')->fetch_by_phone($phone)) {
-                showmessage('user_phone_registered',MOD_URL);
+                showmessage('user_phone_registered');
             }
         }
         //如果输入微信号，检查微信号不能重复
         $weixinid = trim($_GET['weixinid']);
         if ($weixinid) {
             if (!preg_match("/^[a-zA-Z\d_]{5,}$/i", $weixinid)) {
-                showmessage('weixin_illegal',MOD_URL);
+                showmessage('weixin_illegal');
             }
             if ($weixinid != $user['weixinid'] && C::t('user')->fetch_by_weixinid($weixinid)) {
-                showmessage('weixin_registered',MOD_URL);
+                showmessage('weixin_registered');
             }
         }
 
         //邮箱验证部分
         $email = strtolower(trim($_GET['email']));
         if (!isemail($email)) {
-            showmessage('profile_email_illegal',MOD_URL);
+            showmessage('profile_email_illegal', '', array(), array('handle' => false));
         } elseif (!check_emailaccess($email)) {
-            showmessage('profile_email_domain_illegal',MOD_URL);
+            showmessage('profile_email_domain_illegal', '', array(), array('handle' => false));
         }
         if ($email != strtolower($user['email'])) {
             //邮箱不能重复
             if (C::t('user')->fetch_by_email($email)) {
-                showmessage('email_registered_retry',MOD_URL);
+                showmessage('email_registered_retry');
             }
         }
-
+        $setarr = array('username' => $username, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid, 'status' => intval($_GET['status']));
         //密码验证部分
         if ($_GET['password']) {
             if ($_G['setting']['pwlength']) {
@@ -276,23 +270,23 @@ if ($do == 'add') {
             }
 
             if ($_GET['password'] !== $_GET['password2']) {
-                showmessage('profile_passwd_notmatch',MOD_URL);
+                showmessage('profile_passwd_notmatch');
             }
 
             // 添加密码的合法性校验
             if ($_GET['password'] != addslashes($_GET['password'])) {
-                showmessage('profile_passwd_illegal',MOD_URL);
+                showmessage('profile_passwd_illegal');
             }
-        }
-        $password = $_GET['password'];
-        if ($password) {
             $salt = substr(uniqid(rand()), -6);
-            $setarr = array('salt' => $salt, 'password' => md5(md5($password) . $salt), 'username' => $username, 'phone' => $phone, 'weixinid' => $weixinid, 'secques' => '', 'email' => $email, 'status' => intval($_GET['status']));
-
-        } else {
-            $setarr = array('username' => $username, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid, 'status' => intval($_GET['status']));
+            $setarr['salt'] = $salt;
+            $setarr['password'] = md5(md5($_GET['password']) . $salt);
+            $setarr['secques'] = '';
         }
+    
         C::t('user')->update($uid, $setarr);
+        if ($setarr['status'] != $user['status']) {
+            logStatusChange($uid, $user['status'], $setarr['status']);
+        }
         if($_G[ 'adminid'] == 1) {
             //处理管理员
             C::t('user')->setAdministror($uid, intval($_GET['groupid']));
@@ -306,20 +300,13 @@ if ($do == 'add') {
             C::t('user_field')->insert(array('uid' => $uid, 'userspace' => $userspace, 'perm' => 0, 'iconview' => $_G['setting']['desktop_default']['iconview'] ? $_G['setting']['desktop_default']['iconview'] : 2, 'taskbar' => $_G['setting']['desktop_default']['taskbar'] ? $_G['setting']['desktop_default']['taskbar'] : 'bottom', 'iconposition' => intval($_G['setting']['desktop_default']['iconposition']), 'direction' => intval($_G['setting']['desktop_default']['direction']),));
         }
         //处理用户部门和职位
-
-        if ($orgids) {
-            C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
-        } else {
-            C::t('organization_user')->delete_by_uid($uid);
-        }
+        if ($orgids) C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
         //处理上司职位;
-
         C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
         Hook::listen('syntoline_user', $uid, 'edit');//注册绑定到钉钉部门表
-        showmessage('edit_user_success', MOD_URL . '#user_' . $uid);
+        showmessage('edit_user_success', MOD_URL);
     } else {
         require_once libfile('function/organization');
-
         $user = C::t('user')->fetch_by_uid($uid);
         $userfield = C::t('user_field')->fetch($uid);
 
@@ -337,7 +324,7 @@ if ($do == 'add') {
                     break;
                 }
             }
-            if (!$uperm) showmessage('orguser_edituser_add_user1',MOD_URL);
+            if (!$uperm) showmessage('orguser_edituser_add_user1');
         }
         //获取系统可分配空间大小
         $allowallotspace = C::t('organization')->get_system_allowallot_space();
@@ -369,7 +356,6 @@ if ($do == 'add') {
         if ($user['groupid'] < $_G['groupid'] || (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member']))) {
             $perm = 0;
         }
-
         include template('edituser');
         exit();
     }
@@ -386,7 +372,7 @@ if ($do == 'add') {
                 }
             }
         }
-        if (!$uperm) showmessage('orguser_edituser_add_user1',MOD_URL);
+        if (!$uperm) showmessage('orguser_edituser_add_user1');
     }
     include_once libfile('function/profile', '', 'user');
     $space = getuserbyuid($uid);
@@ -416,7 +402,7 @@ if ($do == 'add') {
             $setarr['uid'] = $uid;
             C::t('user_profile')->insert($setarr);
         }
-        showmessage('subscriber_data_alter_success', MOD_URL . '#user_' . $uid . '_profile');
+        showmessage('subscriber_data_alter_success', MOD_URL);
     } else {
         $allowitems = array();
         foreach ($_G['cache']['profilesetting'] as $key => $value) {

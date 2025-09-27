@@ -1,25 +1,57 @@
  <!--{if empty($_GET[op])}-->
- <div class="input-search">
- <form name="search" action="{MOD_URL}"  onsubmit="return false">
-    <i class="input-search-icon mdi mdi-magnify" aria-hidden="true" onclick="jstree_search(jQuery('#searchval').val())"></i>
-    <input type="text"  class="form-control search  form-search"  value="" placeholder="{lang search}" id="searchval" onkeyup="if(this.value!=''){jQuery('#emptysearchcondition').show();}if(event.keyCode==13){jstree_search(jQuery('#searchval').val())}">
-    <span aria-hidden="true" id="emptysearchcondition" class="header-closebutton mdi mdi-close"></span>
- </form>
+<div class="input-search">
+    <i class="input-search-icon mdi mdi-magnify" aria-hidden="true"></i>
+    <input type="text" class="form-control search  form-search" name="filetype" value="" placeholder="{lang search}" id="searchval">
+    <span aria-hidden="true" id="emptysearchcondition" class="header-closebutton hide">×</span>
+    <button type="button" class="input-search-drop mdi mdi-menu-down input-search-width"></button>
+    <div class="dropdown-width dtheme" id="dropdown-width">
+        <div class="p-2">        
+            <div class="row mb-3">
+                <label for="user-name" class="col-sm-2">{lang username}</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" value="" id="user-name" name="username"/>
+                </div>
+                <button type="button" class="close btn-close" aria-label="Close" style="position:absolute;right:10px;"></button>
+            </div>
+            <div class="row mb-3">
+                <label for="user-uid" class="col-sm-2">用户UID</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" value="" id="user-uid" name="uid"/>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="user-email" class="col-sm-2">邮箱</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" value="" id="user-email" name="email"/>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="user-status" class="col-sm-2">{lang user_status}</label>
+                <div class="col-sm-8">
+                    <select class="form-select" id="user-status">
+                        <option value="0">正常</option>
+                        <option value="1">禁用</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="user-usergroup" class="col-sm-2">{lang usergroup}</label>
+                <div class="col-sm-8">
+                    <select class="form-select" id="user-usergroup">
+                        <option value="0">{lang all}</option>
+                        <!--{loop $_G['cache']['usergroups'] $groupid $group}-->
+                        <!--{if !in_array($groupid ,array('3','4','5','6','7','8'))}-->
+                        <option value="{$groupid}">{$group['grouptitle']}</option>
+                        <!--{/if}-->
+                        <!--{/loop}-->
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-w-xs btn-primary" id="conditionSearchFile">{lang search}</button>
+                <button type="button" class="btn btn-w-xs btn-outline-primary resetting">{lang reset}</button>
+            </div>
+        </div>
+    </div>
 </div>
-
-<script type="text/javascript">
-jQuery('#searchval').focus(function (e) {//头部搜索框变颜色
-    jQuery(this).closest('.input-search').addClass('focus');
-	if(this.value!='') jQuery('#emptysearchcondition').show();
-});
-jQuery('#searchval').blur(function (e) {//失去焦点时
-	 jQuery(this).closest('.input-search').removeClass('focus');
-	 if(this.value=='') jQuery('#emptysearchcondition').hide();
-});
-jQuery('#emptysearchcondition').on('click',function(){
-	jstree_search('stop');
-	jQuery('#emptysearchcondition').hide();
-	return false;
-});
-</script>
 <!--{/if}-->

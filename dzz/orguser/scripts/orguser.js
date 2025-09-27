@@ -12,11 +12,6 @@ function checkAdminLogin(str){
 		return false;
 	}
 }
-function show_guide(){
-	jQuery('#orguser_container').load(ajaxurl+'do=guide',function(){
-		location.hash='';
-	});
-}
 function delDepart(obj){
 	jQuery(obj).parent().parent().remove();
 }
@@ -203,36 +198,23 @@ function checkpassword(id1, id2) {
 		
 	}
 }
-function jstree_search(val){
-	console.log(val);
-	if(val=='stop'){
-		jQuery('#jstree_search_input').val('');
-		jQuery('#searchval').val('');
-		jQuery('.classtree-search').slideUp(500);
-		jQuery("#classtree").jstree(true).search();
-	}else{
-		if(val==''){
-			jQuery('#jstree_search_input').val('');
-			jQuery('#searchval').val('');
-			jQuery('.classtree-search').slideUp(500);
-		}
-		jQuery("#classtree").jstree(true).search(val);
-	}
-}
 function jstree_create_organization(){
 	var inst = jQuery("#classtree").jstree(true);
-		jQuery.post(ajaxurl+'do=create',{'forgid':0,'t':new Date().getTime()},function(json){
-			if(!json || json.error){
-				showmessage(json.error,'danger',3000,1);
-			}else if(json.orgid>0){
-				var arr={"id":json.orgid,"text":json.orgname,"type":"organization","icon":'dzz/system/images/organization.png'}
-				inst.create_node(inst.get_node('#'), arr, "first", function (new_node) {
-					setTimeout(function () { inst.edit(new_node); },0);
-				});
-			}
-		},'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
-        });
+	jQuery.post(ajaxurl+'do=create',{'forgid':0,'t':new Date().getTime()},function(json){
+		if(json.error){
+			showmessage(json.error,'danger',3000,1);
+		}else if(json.orgid>0){
+			showmessage(__lang.creation_success,'success',3000,1);
+			var arr={"id":json.orgid,"text":json.orgname,"type":"organization","icon":'dzz/system/images/organization.png'}
+			inst.create_node(inst.get_node('#'), arr, "first", function (new_node) {
+				setTimeout(function () { inst.edit(new_node); },0);
+			});
+		} else {
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
+		}
+	},'json').fail(function (jqXHR, textStatus, errorThrown) {
+		showmessage(__lang.do_failed, 'error', 3000, 1);
+	});
 }
 function jstree_create_dir(){
 	var inst = jQuery("#classtree").jstree(true),obj;
@@ -242,10 +224,6 @@ function jstree_create_dir(){
 	}else{
 		showmessage(__lang.please_select_one_organization_department,'danger',1000,1);
 		return;
-	}
-	if(obj.type=='user'){
-		showmessage(__lang.please_select_one_organization_department,'danger',1000,1);
-		 return true;
 	}
 	if(inst.is_disabled(obj)){
 		return true;
@@ -259,51 +237,38 @@ function jstree_create_dir(){
 			inst.create_node(obj, arr, "first", function (new_node) {
 				setTimeout(function () { inst.edit(new_node); },0);
 			});
+		} else {
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 	
-}
-function jstree_create_user(flag){
-	var inst = jQuery("#classtree").jstree(true),obj;
-	if(inst.get_selected(true).length>0){
-		obj=inst.get_selected(true);
-		obj=obj[0];
-	}else{
-		if(flag) flag=0;
-		obj=inst.get_node('#');
-	}
-	if(obj.type=='user'){
-		obj=inst.get_node(obj.parent);
-	}
-	if(inst.is_disabled(obj)){
-		return true;
-	}
-	showDetail(0,'user',null,obj.id);
 }
 
-function showDetail(id,idtype,ajaxdo,orgid){
+function showDetail(id,idtype){
+	if(!idtype) idtype='organization';
 	var hash=idtype+'_'+id;
-	var urladd=''
-	if(ajaxdo){
-		hash+='_'+ajaxdo;
-		urladd+='&do='+ajaxdo
-	}
-	if(orgid){
-		hash+='_'+orgid;
-		urladd+='&orgid='+orgid
-	}
-	currentHash=hash;
 	location.hash=hash;
-	//console..log(hash);
-	urladd+='&t='+new Date().getTime()
-	
-	jQuery('#orguser_container').load(baseurl+'op=view&id='+id+'&idtype='+idtype+urladd,function(html){
-		if(checkAdminLogin(html)){
-			location.reload();
+	resetting_condition();
+	layuiModules.table.reloadData('table', {
+		where: {'orgid': id},
+		page: {
+			curr: 1
 		}
 	});
+}
+
+//重置函数
+function resetting_condition() {
+	$('#emptysearchcondition').addClass('hide');
+	searchjson = {};
+	$('#searchval').val('');
+	$('#user-name').val('');
+	$('#user-uid').val('');
+	$('#user-email').val('');
+	$('#user-status').val(0);
+	$('#user-usergroup').val(0);
 }
 
 function open_node_dg(inst,node,arr){ //自动打开有权限的目录树
@@ -346,9 +311,11 @@ function job_save(jobid,orgid){
 			el.find(' .job-name').html(json.name).removeClass('hide');
 			el.find('.edit').addClass('hide');
 			el.find('.job-edit-control input').val(json.name);
+		} else {
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
 function job_show_add_editor(orgid,obj){
@@ -376,9 +343,12 @@ function job_del(jobid,orgid){
 			showmessage(json.error,'danger',3000,1);
 		}else if(json.jobid>0){
 			el.remove();
+			showmessage(__lang.delete_success,'success',3000,1);
+		} else {
+			showmessage(__lang.delete_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
 
@@ -390,15 +360,17 @@ function job_add(orgid){
 		return;
 	}
 	jQuery.post(ajaxurl+'do=jobadd',{'name':name,'orgid':orgid,'t':new Date().getTime()},function(json){
-		
 		if(json.jobid>0){
 			appendjob(json);
 			newjob.find('.new-job-text').val('').focus();
-		}else{
+			showmessage(__lang.add_success,'success',3000,1);
+		}else if(json.error){
 			showmessage(json.error,'danger',3000,1);
+		} else {
+			showmessage(__lang.add_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
 function appendjob(json){
@@ -410,76 +382,47 @@ function appendjob(json){
     html+='            <input type="text" class="form-control" style="width:100px" value="'+json.name+'" onkeyup="if(event.keyCode==13){job_save(\''+json.name+'\',\''+json.orgid+'\')}">';
     html+='        </div>';
     html+='        <button onclick="job_save(\''+json.name+'\',\''+json.orgid+'\')" data-loading-text="'+__lang.save+'" class="btn btn-success job-save">'+__lang.save+'</button>';
-    html+='        <button class="btn btn-outline-danger" onclick="job_del(\''+json.name+'\',\''+json.orgid+'\')">'+__lang.delete+'</button>';
+    html+='        <button class="btn btn-outline-danger" onclick="job_del(\''+json.jobid+'\',\''+json.orgid+'\')">'+__lang.delete+'</button>';
     html+='    </div> ';
     html+='</div>';
 	jQuery('.jobs .new-job').before(html);
 }
-function callback_moderators(ids,data,orgid){
-	console.log(ids);console.log(orgid);
-	//删除不在选择列表内的用户
-	jQuery('.moderators-container .user-item').each(function(){
-		var uid=jQuery(this).attr('uid');
-		if(jQuery.inArray(uid,ids)===-1){
-			jQuery(this).find('.delete').trigger('click');
-		}
-	});
-	for(var i=0;i<ids.length;i++){
-		moderator_add(orgid,ids[i]);
-	}
-	
-}
-function moderator_add(orgid,uid){
-	if(jQuery('#moderators_container_'+orgid+' .user-item[uid='+uid+']').length){
-		jQuery('#moderators_container_'+orgid+' .user-item[uid='+uid+']').insertAfter(jQuery('#moderators_container_'+orgid+' .moderators-acceptor'));
-		jQuery('#moderators_container_'+orgid+' .moderators-acceptor').removeClass('hover');
-		return;
-	}
-	jQuery('#moderators_container_'+orgid+' .moderators-acceptor').removeClass('hover');
-	jQuery.post(ajaxurl+'do=moderator_add',{'orgid':orgid,'uid':uid,'t':new Date().getTime()},function(json){
-		if(json.error) showmessage(json.error,'danger',3000,1);
-		else{
-			appendModerator(json);
+function set_org_orgname(id,obj){
+	var oldname=jQuery(obj).data('oldname');
+	jQuery.post(ajaxurl+'do=set_org_orgname',{'orgid':id,'orgname':obj.value},function(json){
+		if(json.success){
+			jQuery(obj).data('oldname',obj.value);
+			if(id == orgid) jQuery('.title_orgname').html(obj.value);
+			var node=jQuery("#classtree").jstree(true).get_node('#'+id);
+			jQuery("#classtree").jstree('refresh',node);
+			showmessage(__lang.org_update_success,'success',3000,1);
+		} else if(json.error){
+			obj.value=oldname;
+			showmessage(json.error,'danger',3000,1);
+		} else{
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
-function appendModerator(json){
-	var html='';
-	html+='<li class="user-item float-start" uid="'+json.uid+'"> ';
-	html+='			<a href="javascript:;" class="delete" onclick="moderator_del(\''+json.id+'\',\''+json.orgid+'\',this);return false"><i style="color:#d2322d;font-size:16px" class="mdi mdi-delete dzz dzz-delete"></i></a>';
-	html+='			<div class="avatar-cover"></div>';
-	html+='			<div class="user-item-avatar">'; 
-	html+='				<div class="avatar-face">';
-	html+='					'+json.avatar; 
-	html+='				</div>';
-	html+='			</div>';
-	html+='			<p class="text-center" style="height:20px;margin:5px 0;line-height:25px;overflow:hidden;"> '+json.username+'</p>';
-	html+='	   </li>';
-	jQuery('#moderators_container_'+json.orgid+' .moderators-acceptor').after(html);
-	var inst = jQuery("#classtree").jstree(true);
-	
-	var node= inst.get_node('#'+json.orgid);
-	inst.refresh_node(node);
-}
-function moderator_del(id,orgid,obj){
-	jQuery.post(ajaxurl+'do=moderator_del',{'orgid':orgid,'id':id,'t':new Date().getTime()},function(json){
-		if(json.error) showmessage(json.error,'danger',3000,1);
-		else{
-			jQuery(obj).parent().remove();
+function set_org_desc(orgid,desc){
+	jQuery.post(ajaxurl+'do=set_org_desc',{'orgid':orgid,'desc':desc},function(json){
+		if(json.success){
+			showmessage(__lang.org_update_success,'success',3000,1);
+		} else if(json.error){
+			showmessage(json.error,'danger',3000,1);
+		} else{
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
 		}
-		
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
 
 function folder_available(available,orgid){
 	jQuery.post(ajaxurl+'do=folder_available',{'orgid':orgid,'available':available,'t':new Date().getTime()},function(json){
-		if(json.error){
-			 showmessage(json.error,'danger',3000,1);
-		}else{
+		if(json.success){
 			if(available){
 				 showmessage(__lang.share_enable_successful,'success',3000,1);
 				 //jQuery('#indesk').show();
@@ -487,81 +430,168 @@ function folder_available(available,orgid){
 				showmessage(__lang.share_close_successful,'success',3000,1);
 				//jQuery('#indesk').hide();
 			}
+		} else if(json.error){
+			 showmessage(json.error,'danger',3000,1);
+		}else{
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
 function group_on(on,orgid){
 	jQuery.post(ajaxurl+'do=group_on',{'orgid':orgid,'available':on,'t':new Date().getTime()},function(json){
-		if(json.error){
-			showmessage(json.error,'danger',3000,1);
-		}else{
+		if(json.success){
 			if(on){
 				showmessage(__lang.group_on_successful,'success',3000,1);
 			}else{
 				showmessage(__lang.group_close_successful,'success',3000,1);
 			}
+		} else if(json.error){
+			showmessage(json.error,'danger',3000,1);
+		}else{
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
 function folder_indesk(indesk,orgid){
 	jQuery.post(ajaxurl+'do=folder_indesk',{'orgid':orgid,'indesk':indesk,'t':new Date().getTime()},function(json){
-		if(json.error) showmessage(json.error,'danger',3000,1);
+		if(json.success){
+			showmessage(__lang.org_update_success,'success',3000,1);
+		}else if(json.error) {
+			showmessage(json.error,'danger',3000,1);
+		} else{
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
+		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
 function set_org_logo(orgid,aid){
 	jQuery.post(ajaxurl+'do=set_org_logo',{'orgid':orgid,'aid':aid},function(json){
-		if(json.error) showmessage(json.error,'danger',3000,1);
-	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
-	});
-}
-/*function set_org_bgphoto(orgid,aid){
-	jQuery.post(ajaxurl+'&do=set_org_bgphoto',{'orgid':orgid,'aid':aid},function(json){
-		if(json.error) showmessage(json.error,'danger',3000,1);
-	},'json');
-}*/
-function set_org_orgname(orgid,obj){
-	var oldname=jQuery(obj).data('oldname');
-	console.log(oldname);
-	jQuery.post(ajaxurl+'do=set_org_orgname',{'orgid':orgid,'orgname':obj.value},function(json){
-		if(json.error){
-			obj.value=oldname;
+		if(json.success){
+			showmessage(__lang.org_update_success,'success',3000,1);
+		}else if(json.error) {
 			showmessage(json.error,'danger',3000,1);
-		}else{
-			 jQuery(obj).data('oldname',obj.value);
-			 jQuery('#title_orgname').html(obj.value);
-			 var node=jQuery("#classtree").jstree(true).get_node('#'+orgid);
-			 jQuery("#classtree").jstree('refresh',node);
+		} else{
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
-function set_org_desc(orgid,desc){
-	jQuery.post(ajaxurl+'do=set_org_desc',{'orgid':orgid,'desc':desc},function(json){
-		if(json.error){
-			showmessage(json.error,'danger',3000,1);
-		}
-	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
-	});
-}
+
 function folder_maxspacesize(obj,orgid){
 	jQuery.post(ajaxurl+'do=folder_maxspacesize',{'orgid':orgid,'maxspacesize':obj.value,'t':new Date().getTime()},function(json){
-		if(json.error){
-			 obj.value=json.val;
-			 showmessage(json.error,'danger',3000,1);
+		if(json.success) {
+			ajaxget(MOD_URL+'&op=view&do=orgedit&orgid='+orgid, 'fwin_content_orgedit');
+			showmessage('空间大小设置成功','success',3000,1);
+		} else if(json.error){
+			obj.value=json.val;
+			showmessage(json.error,'danger',3000,1);
 		}else{
-			jQuery('#'+orgid+' a.jstree-clicked').trigger('click');
-			 showmessage('空间大小设置成功','success',3000,1);
+			showmessage(__lang.set_unsuccess,'danger',3000,1);
 		}
 	},'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+		showmessage(__lang.do_failed, 'error', 3000, 1);
 	});
 }
+function insertorg(ids, data) {
+	var orgids = ids.map(function(id) {
+        return id.replace(/\D/g, '');
+    });
+	if(!orgids) showmessage('需要先选择部门','danger',3000,1);
+	var checkStatus = layuiModules.table.checkStatus('table');
+	var data = checkStatus.dataCache;
+	var uids = [];
+	for(var i in data) {
+		uids.push(data[i].uid);
+	}
+	var data = {'uids': uids,'orgids': orgids};
+	jQuery.post(MOD_URL+'&op=ajax&do=insert', data,function(json){
+		if(json['success']){
+			showmessage(__lang.add_success, 'success', '3000', 1);
+			layuiModules.table.reloadData('table');
+		}else if(json['error']){
+			showmessage(json['error'], 'danger', '3000', 1);
+		} else {
+			showmessage(__lang.add_unsuccess, 'danger', '3000', 1);
+		}
+	},'json')
+	.fail(function() {
+		showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+	});
+	return;
+}
+function moveuser(ids, data) {
+	var orgids = ids.map(function(id) {
+        return id.replace(/\D/g, '');
+    });
+	if (orgids.length > 1) {
+		showmessage('请选择一个目标部门', 'danger', 3000, 1);
+		return;
+	} else if (orgids.length === 0) {
+		showmessage('需要先选择目标部门', 'danger', 3000, 1);
+		return;
+	}
+	if(!orgid) showmessage('没有选择原部门','danger',3000,1);
+	var checkStatus = layuiModules.table.checkStatus('table');
+	var data = checkStatus.dataCache;
+	var uids = [];
+	for(var i in data) {
+		uids.push(data[i].uid);
+	}
+	var data = {'uids': uids,'orgid': orgids[0],'forgid': orgid};
+	jQuery.post(MOD_URL+'&op=ajax&do=move&type=user', data,function(json){
+		if(json['success']){
+			showmessage(__lang.move_success, 'success', '3000', 1);
+			layuiModules.table.reloadData('table');
+		}else if(json['error']){
+			showmessage(json['error'], 'danger', '3000', 1);
+		} else {
+			showmessage(__lang.move_unsuccess, 'danger', '3000', 1);
+		}
+	},'json')
+	.fail(function() {
+		showmessage('服务器发生错误，请稍后再试', 'danger',3000,1);
+	});
+	return;
+}
+function checkStatusBtn() {
+	var checkStatus = layuiModules.table.checkStatus('table');
+	var isChecked = checkStatus.data.length > 0;
+	var buttonIds = ['getCheckDataBtn', 'deletebtn', 'dropdownButton'];
+	buttonIds.forEach(function(btnId) {
+		var btn = document.getElementById(btnId);
+		if (btn) {
+			if (isChecked) {
+				btn.removeAttribute('disabled');
+				btn.classList.remove('layui-btn-disabled');
+			} else {
+				btn.setAttribute('disabled', 'disabled');
+				btn.classList.add('layui-btn-disabled');
+			}
+		}
+	});
+	if(adminid != 1) {
+		var btn = document.getElementById('deletebtn');
+		btn.setAttribute('disabled', 'disabled');
+		btn.classList.add('layui-btn-disabled');
+	}
+}
+function getMenuData() {
+    var baseMenu = [
+      {id: 'insert', title: '添加到部门'}
+    ];
+	if(orgid) {
+		baseMenu.push({id: 'remove', title: '从部门移除'});
+		baseMenu.push({id: 'move', title: '移动到部门'});
+	}
+	if(adminid == 1) {
+		baseMenu.push({id: 'usergroup', title: '设置用户组'});
+	}
+    
+    return baseMenu;
+  }

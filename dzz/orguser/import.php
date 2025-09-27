@@ -303,7 +303,7 @@ if ($do == 'importing') {
     $objPHPExcel = $objReader->load($inputFileName);
     $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
     //获取导入数据的字段
-    $h0 = array('username' => lang('compellation'), 'email' => lang('email'), 'nickname' => lang('username'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'), 'password' => lang('user_login_password'));
+    $h0 = array('username' => lang('username'), 'email' => lang('email'), 'nickname' => lang('username'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'), 'password' => lang('user_login_password'));
     $h1 = getProfileForImport();
     $h0 = array_merge($h0, $h1);
     //获取可导入的用户资料
@@ -319,9 +319,9 @@ if ($do == 'importing') {
     }
 
     if (!in_array('username', $h)) {
-        showmessage('lack_required_fields_name',MOD_URL);
+        showmessage('lack_required_fields_name');
     } elseif (!in_array('email', $h) && !in_array('username', $h)) {
-        showmessage('lack_required_fields_name_email',MOD_URL);
+        showmessage('lack_required_fields_name_email');
     }
     if (!in_array('email', $h)) {
         $h = array_merge(array('_' => 'email'), $h);
@@ -394,7 +394,6 @@ if ($do == 'importing') {
             showmessage('orguser_import_user_message_table', dreferer());
         }
     } else {
-
         include template('import_guide');
         exit();
     }

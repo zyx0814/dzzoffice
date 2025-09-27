@@ -48,24 +48,13 @@
 		initSort: {
 			field: 'dateline',
 			type: 'desc'
-		}
+		},
+        done: function(){
+            checkStatusBtn(this.id);
+        }
 	  });
       layuiModules.table.on('checkbox(table)', function(obj){
-		var checkStatus = layuiModules.table.checkStatus(obj.config.id);
-		var isChecked = checkStatus.data.length > 0;
-		var buttonIds = ['getCheckDataBtn', 'deletebtn'];
-		buttonIds.forEach(function(btnId) {
-			var btn = document.getElementById(btnId);
-			if (btn) {
-				if (isChecked) {
-					btn.removeAttribute('disabled');
-					btn.classList.remove('layui-btn-disabled');
-				} else {
-					btn.setAttribute('disabled', 'disabled');
-					btn.classList.add('layui-btn-disabled');
-				}
-			}
-		});
+        checkStatusBtn(obj.config.id);
 	});
     //头工具栏事件
 	layuiModules.table.on('toolbar(table)', function(obj){

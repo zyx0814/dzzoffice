@@ -1,8 +1,7 @@
 <?php
 return array(
     'allow_robot' => false,
-    'template' => 1,
-    'about' => array('name_en' => '机构用户',
-        'version' => 'V2.01'),
+    'allow_view' => 1,
     'libfile' => 'function/appperm',
+    'template' => 1
 );

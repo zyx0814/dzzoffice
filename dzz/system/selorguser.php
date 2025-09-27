@@ -13,6 +13,7 @@ if (!defined('IN_DZZ')) {
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
 include_once libfile('function/organization');
 $ids = isset($_GET['ids']) ? rawurldecode($_GET['ids']) : '';
+$type = isset($_GET['type']) ? $_GET['type'] : '';
 $template = isset($_GET['template']) ? $_GET['template'] : '';
 $layer = isset($_GET['layer']) ? $_GET['layer'] : '';
 $zero = $_GET['zero'] ? urldecode($_GET['zero']) : lang('no_institution_users');//无机构用户名称

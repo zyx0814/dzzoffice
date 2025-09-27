@@ -10,36 +10,6 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 include_once libfile('function/organization');
-function getuserIcon($uids, $datas, &$data) {
-    $uids = array_unique($uids);
-    $avatars = array();
-    foreach (DB::fetch_all('select u.avatarstatus,u.uid,s.svalue from %t u left join %t s on u.uid=s.uid and s.skey=%s where u.uid in(%n)', array('user', 'user_setting', 'headerColor', $uids)) as $v) {
-        if ($v['avatarstatus'] == 1) {
-            $avatars[$v['uid']]['avatarstatus'] = 1;
-        } else {
-            $avatars[$v['uid']]['avatarstatus'] = 0;
-            $avatars[$v['uid']]['headerColor'] = $v['svalue'];
-        }
-    }
-    $userarr = array();
-    $data1 = array();
-    foreach ($datas as $v) {
-        $uid = $v['li_attr']['uid'];
-        $avatarstatus = $avatars[$uid]['avatarstatus'];
-        if ($avatars[$v['li_attr']['uid']]['avatarstatus']) {
-            $v['icon'] = 'avatar.php?uid=' . $v['li_attr']['uid'];
-        } elseif ($avatars[$uid]['headerColor']) {
-            $headercolor = $avatars[$uid]['headerColor'];
-            $v['icon'] = false;
-            $v['text'] = '<span class="iconFirstWord" style="background:' . $headercolor . ';">' . strtoupper(new_strsubstr($v['text'], 1, '')) . '</span>' . $v['text'];
-
-        } else {
-            $v['icon'] = false;
-            $v['text'] = avatar_block($uid, array(), 'iconFirstWord') . $v['text'];
-        }
-        $data[] = $v;
-    }
-}
 
 $do = trim($_GET['do']);
 $orgid = intval($_GET['orgid']);
@@ -51,33 +21,22 @@ if ($do == 'upload') {//上传图片文件
         'thumbnail' => array('max-width' => 40, 'max-height' => 40));
     $upload_handler = new uploadhandler($options);
     exit();
-} /*elseif ($do == 'getdefaultpic') {//获取群组默认图片，上传图片保存
-    $imgs = C::t('resources_grouppic')->fetch_user_pic();
-    if (isset($_GET['aid'])) {
-        $aid = intval($_GET['aid']);
-        if ($_G['adminid'] == 1) $dafault = 1;
-        else $default = 0;
-        if (C::t('resources_grouppic')->insert_data($aid, $default)) {
-            showTips(array('success' => true), 'json');
-        } else {
-            showTips(array('error' => true), 'json');
-        }
-    }
-}*/ elseif ($do == 'getchildren') {
-
+} elseif ($do == 'getchildren') {
     $id = intval($_GET['id']);
     $list = array();
     $limit = 0;
     $html = '';
 
     //判断用户有没有操作权限
-    $ismoderator = C::t('organization_admin')->ismoderator_by_uid_orgid($id, $_G['uid']);
-    if ($ismoderator) {
-        $disable = '';
-        $type = 'user';
-    } else {
-        $disable = '"disabled":true,';
-        $type = "disabled";
+    if($id) {
+        $ismoderator = C::t('organization_admin')->ismoderator_by_uid_orgid($id, $_G['uid']);
+        if ($ismoderator) {
+            $disable = '';
+            $type = 'user';
+        } else {
+            $disable = '"disabled":true,';
+            $type = "disabled";
+        }
     }
     if ($id) {
         $icon = 'dzz/system/images/department.png';
@@ -108,26 +67,11 @@ if ($do == 'upload') {//上传图片文件
             $data[] = $arr;
 
         }
-        if($_G['adminid'] == 1) {
-            $data[] = array('id' => 'other', 'text' => lang('no_institution_users'), 'state' => array('disabled' => $disable), "type" => 'group', 'children' => true);
-        }
+
+        if ($_G['adminid'] == 1) $data[] = array('id' => 'other', 'text' => lang('no_institution_users'), 'state' => array('disabled' => $disable), "type" => 'group');
     } else {
         //获取用户列表
-
-        if (!$id) {
-
-            if ($ismoderator) {
-                $uids = array();
-                $datas = array();
-                foreach (C::t('organization_user')->fetch_user_not_in_orgid($limit) as $value) {
-                    if (!$value['uid']) continue;
-                    $uids[] = $value['uid'];
-                    $datas[] = array('id' => 'uid_' . $value['uid'], 'text' => $value['username'] . '<em class="hide">' . $value['email'] . '</em>', 'icon' => 'dzz/system/images/user.png', 'state' => array('disabled' => $disable), "type" => $type, 'li_attr' => array('uid' => $value['uid']));
-                }
-                getuserIcon($uids, $datas, $data);
-            }
-
-        } else {
+        if ($id) {
             foreach (C::t('organization')->fetch_all_by_forgid($id) as $value) {
                 if (C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'], $_G['uid'])) {
                     $orgdisable = '';
@@ -146,50 +90,11 @@ if ($do == 'upload') {//上传图片文件
                 }
                 $data[] = $arr;
             }
-            if ($ismoderator) {
-                $uids = array();
-                $datas = array();
-                foreach (C::t('organization_user')->fetch_user_by_orgid($id, $limit) as $value) {
-                    if (!$value['uid']) continue;
-                    $uids[] = $value['uid'];
-                    $datas[] = array('id' => 'orgid_' . $value['orgid'] . '_uid_' . $value['uid'], 'text' => $value['username'] . '<em class="hide">' . $value['email'] . '</em>', 'icon' => 'dzz/system/images/user.png', 'state' => array('disabled' => $disable), "type" => $type, 'li_attr' => array('uid' => $value['uid']));
-                }
-                getuserIcon($uids, $datas, $data);
-            }
         }
 
     }
 
     exit(json_encode($data));
-} elseif ($do == 'search') {//jstree搜索接口
-    $str = trim($_GET['str']);
-    $str = '%' . $str . '%';
-    $sql = "username LIKE %s";
-    //搜索用户
-    $data = array('other');
-    $uids = array();
-    foreach (DB::fetch_all("select * from %t where $sql ", array('user', $str)) as $value) {
-        $uids[] = $value['uid'];
-        $data['uid_' . $value['uid']] = 'uid_' . $value['uid'];
-    }
-    $orgids = array();
-    foreach ($orgusers = C::t('organization_user')->fetch_all_by_uid($uids) as $value) {
-        $data['uid_' . $value['uid']] = 'orgid_' . $value['orgid'] . '_uid_' . $value['uid'];
-        $orgids[] = $value['orgid'];
-    }
-
-    foreach ($orgids as $orgid) {
-        $uporgids = C::t('organization')->fetch_parent_by_orgid($orgid);
-        foreach ($uporgids as $value) {
-            $data[$value] = $value;
-        }
-    }
-    $temp = array();
-    foreach ($data as $value) {
-        $temp[] = $value;
-    }
-    exit(json_encode($temp));
-
 } elseif ($do == 'getjobs') {
     $orgid = intval($_GET['orgid']);
     $jobs = C::t('organization_job')->fetch_all_by_orgid($orgid);
@@ -203,7 +108,7 @@ if ($do == 'upload') {//上传图片文件
     $borgid = intval($_GET['orgid']);
     //放在此部门后面
     if (!$ismoderator = C::t('organization_admin')->ismoderator_by_uid_orgid($forgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     /*默认新建机构和部门开始群组manageon群组管理员开启 syatemon系统管理员开启 available 系统管理员开启共享目录,保留diron(群组管理员开启目录)控制是否开启目录显示在前台*/
     $setarr = array('forgid' => intval($_GET['forgid']), 'orgname' => lang('new_department'), 'fid' => 0, 'disp' => intval($_GET['disp']), 'indesk' => 0, 'dateline' => TIMESTAMP, 'available' => 1, 'syatemon' => 1, 'manageon' => 1, 'maxspacesize' => getglobal('orgmemorySpace', 'setting'));
@@ -221,86 +126,127 @@ if ($do == 'upload') {//上传图片文件
         exit(json_encode(array('msg' => lang('name_cannot_empty'))));
     }
     if (!$ismoderator = C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
-    if (C::t('organization')->update_by_orgid($orgid, array('orgname' => getstr($_GET['text'])))) {
-        exit(json_encode(array('msg' => 'success')));
+    if (C::t('organization')->update_by_orgid($orgid, array('orgname' => $_GET['text']))) {
+        exit(json_encode(array('success' => true)));
     } else {
         exit(json_encode(array('msg' => lang('rechristen_error'))));
     }
 } elseif ($do == 'delete') {
-
+    $forgid = intval($_GET['forgid']);
     if ($_GET['type'] == 'user') {//删除用户
-        $forgid = intval($_GET['forgid']);
-        $uids = $_GET['uids'];
-        $realdelete = intval($_GET['realdelete']);
-        if ($realdelete) {
-            if ($_G['adminid'] != 1)
-                exit(json_encode(array('error' => lang('privilege'))));
-            //判断用户是否在部门中，在部门中的用户不彻底删除
-            if (C::t('organization_user')->fetch_orgids_by_uid($uids)) {
-                exit(json_encode(array('error' => lang('orguser_ajax_delete'))));
-            }
-            foreach ($uids as $uid) {
-                //删除用户
-                C::t('user')->delete_by_uid($uid);
-            }
-            exit(json_encode(array('msg' => 'success')));
-        } else {
-            //检测权限
-            if (!$ismoderator = C::t('organization_admin')->chk_memberperm($forgid, $_G['uid'])) {
-                exit(json_encode(array('error' => lang('privilege'))));
-            }
-            if (C::t('organization_user')->delete_by_uid_orgid($uids, $forgid)) {
-                exit(json_encode(array('msg' => 'success')));
-            } else {
-                exit(json_encode(array('msg' => lang('delete_error'))));
-            }
+        if ($_G['adminid'] != 1) exit(json_encode(array('error' => '删除用户只限系统管理员操作')));
+        $uids = (array)$_GET['uids'];
+        $uids = array_filter(array_map('intval', $uids));
+        if (empty($uids)) {
+            exit(json_encode(['error' => '请选择正确的用户']));
         }
-
+        foreach ($uids as $uid) {
+            C::t('user')->delete_by_uid($uid);
+        }
+        exit(json_encode(array('success' => true)));
     } else {
         $orgid = ($_GET['orgid']);
-        $forgid = intval($_GET['forgid']);
         if (!$ismoderator = C::t('organization_admin')->ismoderator_by_uid_orgid($forgid, $_G['uid'])) {
-            exit(json_encode(array('error' => loang('privilege'))));
+            exit(json_encode(array('error' => loang('no_privilege'))));
         }
         if ($return = C::t('organization')->delete_by_orgid($orgid)) {//删除部门，部门的用户移动到上级部门去;
             if ($return['error']) {
                 exit(json_encode($return));
             }
-            exit(json_encode(array('msg' => 'success')));
+            exit(json_encode(array('success' => true)));
         } else {
             exit(json_encode(array('msg' => lang('delete_error'))));
         }
     }
+}  elseif ($do == 'remove') {
+    $forgid = intval($_GET['forgid']);
+    $uids = (array)$_GET['uids'];
+    if ($forgid) {
+        if($_G['adminid'] != 1) {
+            if (!$ismoderator = C::t('organization_admin')->chk_memberperm($forgid, $_G['uid'])) {
+                exit(json_encode(array('error' => lang('no_privilege'))));
+            }
+        }
+        if (C::t('organization_user')->delete_by_uid_orgid($uids, $forgid)) {
+            exit(json_encode(array('success' => true)));
+        } else {
+            exit(json_encode(array('msg' => '移除失败，用户不存在或您没有权限移除此用户。<br>如果您移除的用户是机构部门管理员，需要上一级机构部门管理员才能移除此用户')));
+        }
+    } else {
+        exit(json_encode(array('error' => '请选择部门')));
+    }
+} elseif ($do == 'insert') {
+    $uids = (array)$_GET['uids'];
+    $orgids = (array)$_GET['orgids'];
+    $uids = array_filter(array_map('intval', $uids));
+    $orgids = array_filter(array_map('intval', $orgids));
+    if (empty($orgids)) {
+        exit(json_encode(['error' => '请选择正确的部门']));
+    }
+    if (empty($uids)) {
+        exit(json_encode(['error' => '请选择正确的用户']));
+    }
+    if($_G['adminid'] != 1) {
+        $orgAdminModel = C::t('organization_admin');
+        foreach ($orgids as $orgid) {
+            if (!$orgAdminModel->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
+                exit(json_encode(['error' => lang('no_privilege')]));
+            }
+        }
+    }
+    foreach ($uids as $uid) {
+        foreach ($orgids as $orgid) {
+            C::t('organization_user')->insert_by_orgid($orgid, $uid);
+        }
+    }
+    exit(json_encode(array('success' => true)));
 } elseif ($do == 'move') {
-
     if ($_GET['type'] == 'user') {//移动用户
         $orgid = intval($_GET['orgid']);
         $forgid = intval($_GET['forgid']);
-        if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-            exit(json_encode(array('error' => lang('privilege'))));
+        $uids = (array)$_GET['uids'];
+        $uids = array_filter(array_map('intval', $uids));
+        if (empty($uids)) {
+            exit(json_encode(['error' => '请选择正确的用户']));
         }
-        if (!C::t('organization_admin')->ismoderator_by_uid_orgid($forgid, $_G['uid'])) {
-            exit(json_encode(array('error' => lang('privilege'))));
+        if(!$orgid) {
+            exit(json_encode(['error' => '请选择正确的目标部门']));
+        }
+        if(!$forgid) {
+            exit(json_encode(['error' => '请选择正确的原部门']));
+        }
+        if($_G['adminid'] != 1) {
+            if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
+                exit(json_encode(array('error' => '您没有目标部门的管理权限')));
+            }
+            if (!C::t('organization_admin')->ismoderator_by_uid_orgid($forgid, $_G['uid'])) {
+                exit(json_encode(array('error' => '您没有原部门的管理权限')));
+            }
         }
         $copy = intval($_GET['copy']);
-
-        $uid = intval($_GET['uid']);
-        if (C::t('organization_user')->move_to_by_uid_orgid($uid, $forgid, $orgid, $copy)) {
-            exit(json_encode(array('msg' => 'success')));
-        } else {
-            exit(json_encode(array('error' => lang('movement_error'))));
+        foreach ($uids as $uid) {
+            if (C::t('organization_user')->move_to_by_uid_orgid($uid, $forgid, $orgid, $copy)) {
+            } else {
+                exit(json_encode(array('error' => lang('movement_error'))));
+            }
         }
+        exit(json_encode(array('success' => true)));
     } else {
         $orgid = intval($_GET['orgid']);
         $disp = intval($_GET['position']);
         $forgid = intval($_GET['forgid']);
-        if (!C::t('organization_admin')->ismoderator_by_uid_orgid($forgid, $_G['uid'])) {
-            exit(json_encode(array('error' => lang('privilege'))));
+        if (empty($forgid) || empty($orgid)) {
+            exit(json_encode(['error' => '请先选择部门']));
+        }
+        if($_G['adminid'] != 1) {
+            if (!C::t('organization_admin')->ismoderator_by_uid_orgid($forgid, $_G['uid'])) {
+                exit(json_encode(array('error' => lang('no_privilege'))));
+            }
         }
         if (C::t('organization')->setDispByOrgid($orgid, $disp, $forgid)) {//移动部门;
-            exit(json_encode(array('msg' => 'success')));
+            exit(json_encode(array('success' => true)));
         } else {
             exit(json_encode(array('msg' => lang('delete_error'))));
         }
@@ -308,8 +254,10 @@ if ($do == 'upload') {//上传图片文件
 } elseif ($do == 'jobedit') {
     $jobid = intval($_GET['jobid']);
     $orgid = intval($_GET['orgid']);
-    if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+    if($_G['adminid'] != 1) {
+        if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
+            exit(json_encode(array('error' => lang('no_privilege'))));
+        }
     }
     $name = str_replace('...', '', getstr($_GET['name'], 30));
     if (C::t('organization_job')->update($jobid, array('name' => $name))) {
@@ -320,8 +268,10 @@ if ($do == 'upload') {//上传图片文件
 } elseif ($do == 'jobdel') {
     $jobid = intval($_GET['jobid']);
     $orgid = intval($_GET['orgid']);
-    if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+    if($_G['adminid'] != 1) {
+        if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
+            exit(json_encode(array('error' => lang('no_privilege'))));
+        }
     }
     if (C::t('organization_job')->delete($jobid)) {
         exit(json_encode(array('jobid' => $jobid)));
@@ -330,162 +280,139 @@ if ($do == 'upload') {//上传图片文件
     }
 } elseif ($do == 'jobadd') {
     $orgid = intval($_GET['orgid']);
-    if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+    if($_G['adminid'] != 1) {
+        if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
+            exit(json_encode(array('error' => lang('no_privilege'))));
+        }
     }
-    $setarr = array('orgid' => $orgid, 'name' => str_replace('...', '', getstr($_GET['name'], 30)), 'dateline' => TIMESTAMP, 'opuid' => $_G['uid']);
-    if ($setarr['jobid'] = C::t('organization_job')->insert($setarr)) {
+    $name = str_replace('...', '', getstr($_GET['name'], 30));
+    $setarr = array('orgid' => $orgid, 'name' => $name, 'dateline' => TIMESTAMP, 'opuid' => $_G['uid']);
+    $setarr['jobid'] = C::t('organization_job')->insert_job_by_name($orgid, $name, $_G['uid']);
+    if ($setarr['jobid']) {
         exit(json_encode($setarr));
     } else {
         exit(json_encode(array('error' => lang('add_unsuccess'))));
     }
-} elseif ($do == 'moderator_add') {
-    $orgid = intval($_GET['orgid']);
-    $org = C::t('organization')->fetch($orgid);
-    $perm = C::t('organization_admin')->chk_memberperm($orgid, $_G['uid']);
-    if ($perm < 2) {
-        exit(json_encode(array('error' => lang('privilege'))));
-    }
-    $setarr = array('orgid' => $orgid, 'uid' => intval($_GET['uid']), 'dateline' => TIMESTAMP, 'opuid' => $_G['uid']);
-    if ($setarr['id'] = C::t('organization_admin')->insert(intval($_GET['uid']), $orgid)) {
-        $user = getuserbyuid($setarr['uid']);
-        $setarr['username'] = $user['username'];
-        $setarr['avatar'] = avatar_block($setarr['uid']);
-        exit(json_encode($setarr));
-    } else {
-        exit(json_encode(array('error' => lang('add_administrator_unsuccess'))));
-    }
-} elseif ($do == 'moderator_del') {
-    $orgid = intval($_GET['orgid']);
-    $org = C::t('organization_admin')->fetch($orgid);
-    //获取当前操作用户权限,系统管理员，上级部门管理员和群组创建人均返回2
-    $perm = C::t('organization_admin')->chk_memberperm($orgid, $_G['uid']);
-    if ($perm < 2) {
-        exit(json_encode(array('error' => lang('privilege'))));
-    }
-    if (C::t('organization_admin')->delete_by_id(intval($_GET['id']))) {
-        exit(json_encode(array('msg' => 'success')));
-    } else {
-        exit(json_encode(array('error' => lang('add_administrator_unsuccess'))));
-    }
 } elseif ($do == 'folder_available') {
     $orgid = intval($_GET['orgid']);
-
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     if (C::t('organization')->setFolderAvailableByOrgid($orgid, intval($_GET['available']))) {
-        exit(json_encode(array('msg' => 'success')));
+        exit(json_encode(array('success' => true)));
     } else {
         exit(json_encode(array('error' => lang('unable_set') . '，如果上级没有开启目录共享，下级无法开启')));
     }
 } elseif ($do == 'folder_indesk') {
     $orgid = intval($_GET['orgid']);
-
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     if (C::t('organization')->setIndeskByOrgid($orgid, intval($_GET['indesk']))) {
-        exit(json_encode(array('msg' => 'success')));
+        exit(json_encode(array('success' => true)));
     } else {
         exit(json_encode(array('error' => lang('no_open_Shared_directory'))));
     }
 } elseif ($do == 'set_org_orgname') {
     $orgid = intval($_GET['orgid']);
     if(!$orgid) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     $orgname = isset($_GET['orgname']) ? trim($_GET['orgname']) : '';
     if(!$orgname) {
         exit(json_encode(array('error' => lang('name_cannot_empty'))));
     }
+
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     if (C::t('organization')->update_by_orgid($orgid, array('orgname' => $orgname))) {
-        exit(json_encode(array('msg' => 'success')));
+        exit(json_encode(array('success' => true)));
     } else {
         exit(json_encode(array('error' => lang('rechristen_error'))));
     }
 } elseif ($do == 'set_org_logo') {
     $orgid = intval($_GET['orgid']);
     if(!$orgid) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     $img = intval(($_GET['aid']));
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     if (C::t('organization')->update_by_orgid($orgid, array('aid' => $img))) {
-        exit(json_encode(array('msg' => 'success')));
+        exit(json_encode(array('success' => true)));
     } else {
         exit(json_encode(array('error' => lang('rechristen_error'))));
     }
-
 } elseif ($do == 'set_org_desc') {
     $orgid = intval($_GET['orgid']);
     if(!$orgid) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     $desc = getstr($_GET['desc']);
 
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     if (C::t('organization')->update_by_orgid($orgid, array('desc' => $desc))) {
-        exit(json_encode(array('msg' => 'success')));
+        exit(json_encode(array('success' => true)));
     } else {
         exit(json_encode(array('error' => lang('rechristen_error'))));
     }
 } elseif ($do == 'group_on') {
     if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     if (C::t('organization')->setgroupByOrgid($orgid, intval($_GET['available']))) {
-        exit(json_encode(array('msg' => 'success')));
+        exit(json_encode(array('success' => true)));
     } else {
         exit(json_encode(array('error' => lang('unable_set'))));
     }
 } elseif ($do == 'orginfo') {
-    $array = isset($_GET['arr']) ? $_GET['arr'] : '';
+    $orgid = intval($_GET['orgid']);
     if(!$orgid) {
-        exit(json_encode(array('error' => lang('privilege'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
-    if (!empty($array)) {
-        if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-            exit(json_encode(array('error' => lang('privilege'))));
-        }
-        if (!$org = C::t('organization')->fetch($orgid)) {
-            exit(json_encode(array('error' => lang('organization_not_exists'))));
-        }
-        $setarr = array(
-            'desc' => getstr($array['desc']),
-            'groupback' => isset($array['groupback']) ? intval($array['groupback']) : 0,
-            'aid' => isset($array['aid']) ? intval($array['aid']) : 0,
-            //'orgname'=>getstr($array['orgname']);
-        );
-        if (C::t('organization')->update($orgid, $setarr)) {
-            $addaids = array();
-            $delaids = array();
-            if (!empty($array['aid']) && $array['aid'] != $org['aid']) {
-                $addaids[] = $array['aid'];
-                $delaids[] = $org['aid'];
+    $adminModel = C::t('organization_admin');
+    if (!$adminModel->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
+        exit(json_encode(array('error' => lang('no_privilege'))));
+    }
+    $uids = array();
+    $uid_arr = explode(',', $_GET['uids']);
+    foreach ($uid_arr as $value) {
+       if (strpos($value, 'uid_') == 0) {
+            $pure_uid = intval(str_replace('uid_', '', $value));
+            if ($pure_uid > 0) {
+                $uids[] = $pure_uid;
             }
-            if (!empty($array['groupback']) && $array['groupback'] != $org['groupback']) {
-                $addaids[] = $array['groupback'];
-                $delaids[] = $org['groupback'];
-            }
-            if (!empty($addaids)) {
-                C::t('attachment')->addcopy_by_aid($addaids);
-            }
-            if (!empty($delaids)) {
-                C::t('attachment')->addcopy_by_aid($delaids, -1);
-            }
-            exit(json_encode(array('success' => true)));
-        } else {
-            exit(json_encode(array('error' => lang('edit_error'))));
         }
     }
+    $frontend_uids = array_unique($uids);
+    $existing_uids = $adminModel->fetch_uids_by_orgid($orgid);
+    $add_uids = array_diff($frontend_uids, $existing_uids); // 需要新增的UID
+    $delete_uids = array_filter(array_diff($existing_uids, $frontend_uids)); // 需要删除的UID
+    if (!empty($add_uids)) {
+        $add_count = 0;
+        foreach ($add_uids as $uid) {
+            if ($setarr['id'] = $adminModel->insert($uid, $orgid)) {
+                $add_count++;
+            } else {
+                exit(json_encode(array('error' => lang('add_administrator_unsuccess'))));
+            }
+        }
+    }
+    if (!empty($delete_uids)) {
+        $delete_count = 0;
+        foreach ($delete_uids as $uid) {
+            if (C::t('organization_admin')->delete_by_uid_orgid($uid, $orgid)) {
+                $delete_count++;
+            } else {
+                exit(json_encode(array('error' => lang('add_administrator_unsuccess'))));
+            }
+        }
+    }
+    exit(json_encode(array('success' => true)));
 } elseif ($do == 'folder_maxspacesize') {
     $orgid = intval($_GET['orgid']);
     $setspacesize = intval($_GET['maxspacesize']);
@@ -497,10 +424,8 @@ if ($do == 'upload') {//上传图片文件
         exit(json_encode(array('error' => '没有权限')));
     }
     if ($setspacesize != 0) {
-
         //获取允许设置的空间值
         $allowallotspace = C::t('organization')->get_allowallotspacesize_by_orgid($orgid);
-
         if ($allowallotspace < 0) {
             exit(json_encode(array('error' => '可分配空间不足')));
         }
@@ -509,32 +434,58 @@ if ($do == 'upload') {//上传图片文件
         $currentallotspace = C::t('organization')->get_orgallotspace_by_orgid($orgid, 0, false);
         //设置值小于当前下级分配总空间值即：当前设置值 < 下级分配总空间
         if ($setspacesize > 0 && $setspacesize * 1024 * 1024 < $currentallotspace) {
-
             exit(json_encode(array('error' => '设置空间值不足,小于已分配空间值！', 'val' => $org['maxspacesize'])));
-
         }
         //上级包含空间限制时，无限制不处理，直接更改设置值
         if ($allowallotspace > 0 && ($setspacesize * 1024 * 1024 > $allowallotspace)) {
-
             exit(json_encode(array('error' => '总空间不足！', 'val' => $org['maxspacesize'])));
-
         }
     }
-
     //设置新的空间值
     if (C::t('organization')->update($orgid, array('maxspacesize' => $setspacesize))) {
-
-        exit(json_encode(array('msg' => 'success')));
-
+        exit(json_encode(array('success' => true)));
     } else {
         exit(json_encode(array('error' => '设置不成功或未更改', 'val' => $org['maxspacesize'])));
     }
-
 } elseif ($do == 'guide') {
     include template('guide');
+} elseif ($do == 'userstatus') { 
+    $uid = intval($_GET['uid']);
+    if (!$uid) {
+        exit(json_encode(array('error' => '用户不存在')));
+    }
+    $uperm = false;
+    if ($_G['adminid'] != 1) {
+        if ($orgids_uid = C::t('organization_user')->fetch_orgids_by_uid($uid)) {
+            foreach ($orgids_uid as $orgid) {
+                if (C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
+                    $uperm = true;
+                    break;
+                }
+            }
+            if (!$uperm) exit(json_encode(array('error' => lang('no_privilege'))));
+        } else {
+            exit(json_encode(array('error' => lang('no_privilege'))));
+        }
+    }
+    //禁用创始人验证
+    $status = intval($_GET['status']) ? 1 : 0;
+    $user = C::t('user')->fetch_by_uid($uid);
+    if ($status == 1 && C::t('user')->checkfounder($user)) {
+        exit(json_encode(array('error' => lang('is_root_user'))));
+    }
+    $setarr = array('status' => intval($_GET['status']));
+    if(C::t('user')->update($uid, $setarr)) {
+        if ($setarr['status'] != $user['status']) {
+            logStatusChange($uid, $user['status'], $setarr['status']);
+        }
+        exit(json_encode(array('success' => true)));
+    } else {
+        exit(json_encode(array('error' => lang('do_failed'))));
+    }
 } elseif ($do == 'set') {
     if ($_G['adminid'] != 1) {
-        showmessage('privilege',MOD_URL);
+        showmessage('no_privilege');
     }
     if (submitcheck('confirmsubmit')) {
         include_once libfile('function/cache');
@@ -545,6 +496,32 @@ if ($do == 'upload') {//上传图片文件
     } else {
         include template('ajax');
     }
+} elseif ($do == 'getParentsArr') {
+    $gid = intval($_GET['gid']);
+    $ret = array();
+    if ($gid) {
+        foreach (C::t('organization')->fetch_parent_by_orgid($gid) as $orgid) {
+            $arr[] = $orgid;
+        }
+    }
+    $arr = array_unique($arr);
+    exit(json_encode($arr));
+} elseif ($do == 'usergroupid') {
+    $uids = is_array($_GET['uids']) ? $_GET['uids'] : explode(',', $_GET['uids']);
+    if (!$uids) {
+        exit(json_encode(array('error' => '用户不存在')));
+    }
+    if($_G['adminid'] != 1) {
+        exit(json_encode(array('error' => lang('no_privilege'))));
+    }
+    $groupid = intval($_GET['groupid']);
+    if (!$groupid) {
+        exit(json_encode(array('error' => '用户组不存在')));
+    }
+    foreach ($uids as $v) {
+        C::t('user')->setAdministror($v, $groupid);
+    }
+    exit(json_encode(array('success' => true)));
 }
 exit();
 ?>

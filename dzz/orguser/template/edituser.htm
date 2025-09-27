@@ -1,20 +1,28 @@
-<div class="card">
-  <div class="card-body">
-  <ul class="nav nav-pills">
-    <li class="nav-item text-break">
-      <strong class="nav-link">$user[username]</strong>
+<!--{template common/header_ajax}-->
+<script type="text/javascript" reload="1">
+	var selorg={};
+	selorg.add=function(ctrlid,vals){
+		if(vals[0].orgid=='other') vals[0].path='{lang please_select_a_organization_or_department}';
+		jQuery('#'+ctrlid+'_Menu').html(vals[0].path+' ');
+		jQuery('#sel_'+ctrlid).val(vals[0].orgid).trigger('change');
+	}
+</script>
+<div class="modal-header">
+  <h4 class="modal-title text-truncate">{lang user_info}</h4>
+  <div class="float-end">
+    <button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
+    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+  </div>
+</div>
+<ul class="nav nav-tabs mb-0">
+    <li class="nav-item">
+      <a class="nav-link active" href="{MOD_URL}&op=edituser&uid=$user['uid']" ajaxtarget="fwin_content_edit_user">{lang basic_message}</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link active" href="{MOD_URL}&op=edituser&uid=$user['uid']#user_{$user['uid']}_" onclick="jQuery('#orguser_container').load(this.href);return false;">{lang basic_message}</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{MOD_URL}&op=edituser&do=profile&uid=$user['uid']#user_{$user['uid']}_profile" onclick="jQuery('#orguser_container').load(this.href);return false;">{lang details_information}</a>
+      <a class="nav-link" href="{MOD_URL}&op=edituser&do=profile&uid=$user['uid']" ajaxtarget="fwin_content_edit_user">{lang details_information}</a>
     </li>
   </ul>
-</div>
-</div>
-<div class="card">
-<div class="card-body">
+<div class="modal-body">
   <div id="return_edituser" style="display:none"></div>
   <form id="accountform" name="accountform" class="lyear-search-right" action="{MOD_URL}&op=edituser" method="post" onsubmit="account_submit();return false">
     <input type="hidden" name="accountedit" value="true" />
@@ -22,7 +30,7 @@
     <input type="hidden" name="handlekey" value="edituser" />
     <input type="hidden" name="formhash" value="{FORMHASH}" />
     <div class="row mb-3">
-      <label for="email" class="col-sm-2">{lang login_email}</label>
+      <label for="email" class="col-sm-2">{lang login_email} <span class="text-danger">*</span></label>
       <div class="col-sm-10">
         <input type="text" class="form-control" id="email" name="email" autocomplete="off" value="$user[email]" onblur="checkemail(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <p id="emailmore" style="height:1px;margin:0;">&nbsp;</p>
@@ -32,7 +40,7 @@
       </div>
     </div>
     <div class="row mb-3">
-      <label for="username" class="col-sm-2">{lang username}</label>
+      <label for="username" class="col-sm-2">{lang username} <span class="text-danger">*</span></label>
       <div class="col-sm-10">
         <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" autocomplete="off" value="$user[username]" onblur="checknick(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_username" class="form-text">
@@ -109,12 +117,17 @@
       </div>
     </div>
     <div class="row mb-3">
-      <label class="col-sm-2" for="status">{lang disable_user}</label>
+      <label class="col-sm-2">{lang user_status}</label>
       <div class="col-sm-10">
         <div class="form-check form-check-inline">
-          <input type="checkbox" class="form-check-input" name="status" id="status" value="1" <!--{if $user[status]}-->checked<!--{/if}--> <!--{if $_G['adminid']!=1 || !$perm}-->disabled="disabled"<!--{/if}-->>
-          <label class="form-text">{lang adduser_disable_user_text}</label>
+          <input class="form-check-input" type="radio" id="status1" name="status" <!--{if !$user[status]}-->checked="checked"<!--{/if}--> value="0">
+          <label class="form-check-label" for="status1">{lang normal}</label>
         </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" id="status2" name="status" <!--{if $user[status]}-->checked="checked"<!--{/if}--> value="1">
+          <label class="form-check-label" for="status2">{lang forbidden}</label>
+        </div>
+        <span class="form-text">{lang adduser_disable_user_text}</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -122,12 +135,12 @@
       <div class="col-sm-10">
         <select class="form-select" name="groupid" id="groupid" <!--{if $_G[ 'adminid']!=1}--> disabled="disabled"<!--{/if}-->>
           <!--{loop $_G['cache']['usergroups'] $groupid $group}-->
-          <!--{{if !in_array($groupid ,array('2','3','4','5','6','7','8'))}-->
-          <option<!--{if $user[ 'groupid']==$groupid}--> selected="selected"<!--{/if}--> value="$groupid">$group['grouptitle']</option>
+          <!--{if !in_array($groupid ,array('3','4','5','6','7','8'))}-->
+          <option <!--{if $user['groupid']==$groupid}-->selected="selected"<!--{/if}--> value="$groupid" <!--{if $groupid == 2}-->disabled<!--{/if}-->>$group['grouptitle']</option>
           <!--{/if}-->
           <!--{/loop}-->
         </select>
-        <span class="form-text">{lang adduser_usergroup_text}</span>
+        <a class="btn btn-link" href="javascript:;" onclick="groupsetinfo();return false;">{lang group_permission_guide_text}</a>
       </div>
     </div>
     <div class="row mb-3">
@@ -141,7 +154,7 @@
                   <button type="button" id="orgid_{$orgid}_Menu" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false" <!--{if !$value[ 'ismoderator']}-->disabled<!--{/if}-->>$value['depart']</button>
                   <input id="sel_orgid_{$orgid}" type="hidden" name="orgids[]" value="$orgid" onchange="selDepart(this)" />
                   <div id="orgid_{$orgid}_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgid_{$orgid}_Menu" style="width: 300px;height: 300px;">
-                    <iframe name="orgid_{$orgid}_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid_{$orgid}&nouser=1&moderator=1&stype=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+                    <iframe name="orgid_{$orgid}_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid_{$orgid}&nouser=1&moderator=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
                   </div>
                 </div>
                 <div class="btn-group job">
@@ -178,7 +191,7 @@
                   </button>
                   <input id="sel_orgid_tpml" type="hidden" name="orgids[]" value="0" onchange="selDepart(this)" />
                   <div id="orgid_tpml_dropdown_menu" class="dropdown-menu org-sel-box" style="width: 300px;height: 300px;" role="menu" aria-labelledby="orgid_tpml_Menu">
-                    <iframe name="orgid_tpml_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid_tpml&nouser=1&moderator=1&stype=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+                    <iframe name="orgid_tpml_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=orgid_tpml&nouser=1&moderator=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
                   </div>
                 </div>
                 <div class="btn-group job">
@@ -208,7 +221,7 @@
                   <button type="button" id="uporgid_Menu" class="btn btn-outline-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">$upjob[depart]</button>
                   <input id="sel_uporgid" type="hidden" name="uporgid" value="$upjob['orgid']" onchange="selDepart(this)" />
                   <div id="uporgid_dropdown_menu" class="dropdown-menu org-sel-box" style="width: 300px;height: 300px;" role="menu" aria-labelledby="uporgid_Menu">
-                    <iframe name="uporgid_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=uporgid&nouser=1&stype=1&range=1&moderator=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+                    <iframe name="uporgid_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=uporgid&nouser=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
                   </div>
                 </div>
                 <div class="btn-group job">
@@ -233,15 +246,13 @@
         </div>
       </div>
     </div>
-    <dl class="mb-3 d-grid">
-      <input type="button" class="btn btn-primary" value="{lang save_changes}" onclick="account_submit()">
-    </dl>
   </form>
 </div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">{lang close}</button>
+  <button type="button" class="btn btn-primary" id="adduser_submit" onclick="account_submit()">{lang save_changes}</button>
 </div>
 <script type="text/javascript" reload="1">
-location.hash = '#user_{$user['uid']}';
-
 var orgsel_html = jQuery('#nav').html();
 var lastusername = '{$user[username]}',
   lastpassword = '',
@@ -252,11 +263,8 @@ var lastusername = '{$user[username]}',
 var pwlength = 0;
 var strongpw = new Array();
 var ignoreEmail = false;
-  checkPwdComplexity(document.getElementById('password'), document.getElementById('password2'), 1);
-
-
+checkPwdComplexity(document.getElementById('password'), document.getElementById('password2'), 1);
 function account_submit() {
-  
   //判断用户名
   if(jQuery('#email').val() == '') {
     jQuery('#email').focus();
@@ -303,12 +311,14 @@ function account_submit() {
     showmessage('{lang weixin_illegal}', 'danger', 1000, 1);
     return false;
   }
+  showmessage('{lang In_the_save}','','3000',0);
   ajaxpost('accountform', 'ajaxwaitid', 'return_edituser');
   return false;
 }
 
 function succeedhandle_edituser(url, message, values) {
   showmessage(message, 'success', 3000, 1);
+  layuiModules.table.reloadData('table');
 };
 
 function errorhandle_edituser(msg, values) {
@@ -321,3 +331,4 @@ jQuery(document).ready(function(e) {
   });
 });
 </script>
+<!--{template common/footer_ajax}-->

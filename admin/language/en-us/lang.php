@@ -198,7 +198,6 @@ $lang = array
     'migration_tool' => 'Migration Tool',
     'tips' => 'Tips',
     'use_default' => '- Use Default -',
-    'unknown' => 'Unknown',
     'already_existed' => 'Already Exists',
     'all_audit' => 'All Audits',
     'developer_list' => 'Developer List',

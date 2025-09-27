@@ -90,6 +90,7 @@
 			type: 'desc'
 		},
         done: function(){
+            checkStatusBtn(this.id);
             $('#search-btn').click(function () {
                 executedynamisc_search();
             })
@@ -105,16 +106,7 @@
         },
 	  });
       layuiModules.table.on('checkbox(table)', function(obj){
-        var checkStatus = layuiModules.table.checkStatus(obj.config.id);
-        var checkedCount = checkStatus.data.length;
-        var getCheckDataBtn = document.getElementById('getCheckDataBtn');
-        if(checkedCount > 0) {
-            getCheckDataBtn.removeAttribute('disabled');
-            getCheckDataBtn.classList.remove('layui-btn-disabled');
-        } else {
-            getCheckDataBtn.setAttribute('disabled', 'disabled');
-            getCheckDataBtn.classList.add('layui-btn-disabled');
-        }
+        checkStatusBtn(obj.config.id);
     });
     //头工具栏事件
 	layuiModules.table.on('toolbar(table)', function(obj){

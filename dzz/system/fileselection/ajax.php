@@ -165,7 +165,7 @@ if ($operation == 'upload') {//上传图片文件
         case 'newpdf':
             $filename = lang('new_pdf') . '.pdf';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('privilege'))));
+                exit(json_encode(array('error' => lang('no_privilege'))));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/pdf.pdf');
             break;

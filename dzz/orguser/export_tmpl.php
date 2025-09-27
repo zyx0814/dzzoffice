@@ -9,7 +9,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$h0 = array('username' => lang('compellation'), 'email' => lang('email'), 'password' => lang('user_login_password'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'));
+$h0 = array('username' => lang('username'), 'email' => lang('email'), 'password' => lang('user_login_password'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'));
 $h1 = getProfileForImport();
 $h0 = array_merge($h0, $h1);
 $title = lang('bulk_import_user_template');

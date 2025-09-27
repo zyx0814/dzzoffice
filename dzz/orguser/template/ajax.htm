@@ -32,7 +32,7 @@
 </div>
 <script type="text/javascript" reload="1">
   function account_submit() {
-    showmessage('{lang In_the_save}','',0,0);
+    showmessage('{lang In_the_save}','','3000',0);
     var formData = $('.cpform').serialize();
     jQuery.post('{MOD_URL}&op=ajax&do=set&ajaxdata=json',formData, function (data) {
       if (data['success']) {
@@ -43,7 +43,7 @@
         showmessage('{lang save_unsuccess}','danger',3000,1);
       }
     },'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+        showmessage('{lang do_failed}', 'error', 3000, 1);
     });
   }
 </script>

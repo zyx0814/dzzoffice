@@ -98,7 +98,7 @@
     }
 </script>
 <div class="modal-header">
-  <h4 class="modal-title text-truncate">{lang user_select_title}</h4>
+  <h4 class="modal-title text-truncate"><!--{if $type == 1}-->{lang org_select_title}<!--{else}-->{lang user_select_title}<!--{/if}--></h4>
 	<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
 </div>
 <form onsubmit="return seluser_submit(this);">
@@ -106,8 +106,7 @@
   <input type="hidden" name="selectsubmit" value="true">
   <div class="modal-body user-select-body">
     <div class="user-select-search" >
-        <label>{lang selecte_user_to_add}</label>
-          <input id="user_select_search_input" type="text" class="form-control" placeholder="{lang user_select_search_tip}"/>
+        <input id="user_select_search_input" type="text" class="form-control" placeholder="{lang user_select_search_tip}"/>
     </div>
     <div class="user-select-content">
       <div class="user-select-content-left">
@@ -117,7 +116,7 @@
         </div>
       </div>
       <div class="user-select-content-right">
-        <div class="selected-member">{lang user_select_selected}<b class="selected_sum" style="padding:0 5px;">{eval echo count($selects);}</b>{lang selected_ge_user}</div>
+        <div class="selected-member">{lang user_select_selected}<b class="selected_sum" style="padding:0 5px;">{eval echo count($selects);}</b><!--{if $type == 1}-->{lang selected_ge_department}<!--{else}-->{lang selected_ge_user}<!--{/if}--></div>
           <ul class="sele-right-classa" id="seluser">
             <!--{loop $selects $key $value}-->
             <li id="seluser_sl_$key" class="right-classa-depart" data-val="$key"> {eval echo avatar_block($value['uid']);}
@@ -175,6 +174,7 @@
 	 var ids=[];
 	 jQuery('#seluser>li').each(function(){
 		 var val=jQuery(this).data('val');
+		 val = String(val);
 		 var title='';
 		 var innerhtml=this.innerHTML;
 		 innerhtml=innerhtml.replace(/<i class=\"ti-close mdi mdi-close\"><\/i>/i,'');

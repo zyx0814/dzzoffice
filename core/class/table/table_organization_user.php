@@ -111,7 +111,7 @@ class table_organization_user extends dzz_table {
                 }
             }
         }
-        if ($return = DB::delete($this->_table, "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'")) {
+        if ($uids && $return = DB::delete($this->_table, "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'")) {
             //删除管理员表数据
             DB::delete('organization_admin', "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'");
             include_once libfile('function/cache');

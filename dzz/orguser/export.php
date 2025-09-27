@@ -11,7 +11,7 @@ if (!defined('IN_DZZ')) {
 }
 require_once libfile('function/organization');
 require_once DZZ_ROOT . './core/class/class_PHPExcel.php';
-$h0 = array('username' => lang('compellation'), 'email' => lang('email'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'));
+$h0 = array('username' => lang('username'), 'email' => lang('email'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'));
 $h1 = getProfileForImport();
 $h0 = array_merge($h0, $h1);
 $orgid = intval($_GET['orgid']);
@@ -20,10 +20,10 @@ if($_G['adminid']==1) {
 
 }elseif($orgid) {
 	if (!C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        showmessage('system_administrator_export',dreferer());
+        showmessage('system_administrator_export');
     }
 } else {
-	showmessage('system_administrator_export',dreferer());
+	showmessage('system_administrator_export');
 }
 if (!submitcheck('exportsubmit')) {
     $orgpath = C::t('organization')->getPathByOrgid($orgid);
@@ -45,7 +45,7 @@ if (!submitcheck('exportsubmit')) {
     include template('export');
     exit();
 } else {
-    if (!is_array($_GET['item'])) showmessage('please_select_project_export', dreferer());
+    if (!is_array($_GET['item'])) showmessage('please_select_project_export');
     foreach ($h0 as $key => $value) {
         if (!in_array($key, $_GET['item'])) unset($h0[$key]);
     }

@@ -20,34 +20,27 @@
 <div id="classtree_top" class="classtree-topbar dtheme">
 	<a class="newdir" href="javascript:;" onclick="jstree_create_organization();return false;" title="{lang creation_agency}"></a>
 	<a class="newdir_1" href="javascript:;" onclick="jstree_create_dir();return false;" title="{lang creation_bottom_section}"></a>
-	<a class="newdoc" href="javascript:;" onclick="jstree_create_user();return false;" title="{lang add_user}"></a>
-	<a class="import " href="{MOD_URL}&op=import" title="{lang import_user}"></a>
-	<a class="guide" href="javascript:;" onclick="show_guide();return false;" title="{lang moderate_explain}"></a>
+	<a class="import " href="{MOD_URL}&op=import" title="{lang import_user}" target="_blank"></a>
+	<a class="guide" href="javascript:;" onclick="showWindow('exportuser','{MOD_URL}&op=ajax&do=guide');return false;" title="{lang moderate_explain}"></a>
 	<!--{if $_G[ 'adminid']==1}--><a class="set" href="javascript:;" onclick="showWindow('set','{MOD_URL}&op=ajax&do=set','get',0);return false;" title="{lang set}"></a><!--{/if}-->
 </div>
 <div id="classtree" class="classtree-container" style="padding:5px 0;overflow:hidden;border-top:1px solid #FFF;"></div>
 <script type="text/javascript">
 	var orgtree = $orgtree;
 	var ajaxurl = '{MOD_URL}&op=ajax&';
-	var baseurl = '{MOD_URL}&';
 	jQuery(document).ready(function(e) {
 		jQuery("#classtree").jstree({
 			"core": {
 				"multiple": true,
-				'check_callback': function(operation, node, node_parent, node_position, more) {
-					// operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
-					// in case of 'rename_node' node_position is filled with the new node name
-					if(node.id == 'other') return false;
-					if(node_parent.id == 'other' && node.type != 'user') return false;
-					return operation === 'copy_node' && node.type == 'organization' ? false : true;
+				"check_callback": true,
+				"themes": {
+					"responsive": false
 				},
-				"themes": { "responsive": false, "variant": 'large' },
-				"data": {
-					dataType: 'json',
-					url: '{MOD_URL}&op=ajax&do=getchildren&t=' + new Date().getTime(),
-					data: function(node) {
-						return { 'id': node.id };
-					}
+				"data": function (node, cb) {
+					var self = this;
+					jQuery.getJSON('{MOD_URL}&op=ajax&do=getchildren', {'id': node.id}, function (json) {
+						cb.call(this, json);
+					});
 				}
 			},
 			"dnd": {
@@ -79,11 +72,6 @@
 					"valid_children": ['user']
 				},
 				"disabled": {
-					//  "icon" : "jstree-icon-file",
-					"valid_children": []
-				},
-				"user": {
-					//  "icon" : "jstree-icon-file",
 					"valid_children": []
 				}
 			},
@@ -98,7 +86,6 @@
 							var inst = jQuery.jstree.reference(data.reference);
 							var node = inst.get_node(data.reference);
 							if(node.type == 'default') return true;
-							//if(node.type == 'user') return true;
 							if(inst.is_disabled(node)) {
 								return true;
 							}
@@ -109,7 +96,7 @@
 							return false;
 						},
 						"label": "{lang creation_equally_section}",
-						"icon": "mdi mdi-newspaper-variant-multiple",
+						"icon": "mdi mdi-plus-circle-multiple-outline",
 						"action": function(data) {
 							var inst = jQuery.jstree.reference(data.reference),
 								obj = inst.get_node(data.reference),
@@ -117,17 +104,19 @@
 
 							var position = jQuery.inArray(obj.id, obj1.children) + 1;
 							jQuery.post('{MOD_URL}&op=ajax&do=create', { 'forgid': obj.parent, 'orgid': obj.id, 't': new Date().getTime() }, function(json) {
-
-								if(!json || json.error) {
+								if(json.error) {
 									showmessage(json.error, 'danger', 3000, 1);
 								} else if(json.orgid > 0) {
+									showmessage(__lang.creation_success,'success',3000,1);
 									var arr = { "id": json.orgid, "text": json.orgname, "type": "organization", "icon": (json.forgid > 0) ? 'dzz/system/images/department.png' : 'dzz/system/images/organization.png' }
 									inst.create_node(obj1, arr, position, function(new_node) {
 										setTimeout(function() { inst.edit(new_node); }, 0);
 									});
+								} else {
+									showmessage(__lang.new_failure,'danger',3000,1);
 								}
 							}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-								showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+								showmessage('{lang do_failed}', 'error', 3000, 1);
 							});
 						}
 					},
@@ -141,36 +130,79 @@
 							var parent = inst.get_node(node.parent);
 							if(node.type == 'group') return true;
 							if(node.type == 'default') return true;
-							if(node.type == 'user') return true;
 							if(inst.is_disabled(node)) {
 								return true;
 							}
 							return false;
 						},
 						"label": "{lang creation_bottom_section}",
-						"icon": "mdi mdi-newspaper-variant",
+						"icon": "mdi mdi-plus-circle-outline",
 						"action": function(data) {
 							var inst = jQuery.jstree.reference(data.reference),
 								obj = inst.get_node(data.reference);
 							inst.open_node(obj,function(){
 								jQuery.post('{MOD_URL}&op=ajax&do=create', { 'forgid': obj.id, 't': new Date().getTime() }, function(json) {
-									if(!json || json.error) {
+									if(json.error) {
 										showmessage(json.error, 'danger', 3000, 1);
 									} else if(json.orgid > 0) {
+										showmessage(__lang.creation_success,'success',3000,1);
 										var arr = { "id": json.orgid, "text": json.orgname, "type": "organization", "icon": (json.forgid > 0) ? 'dzz/system/images/department.png' : 'dzz/system/images/organization.png' };
-	
 										inst.create_node(obj, arr, "first", function(new_node) {
 											setTimeout(function() { inst.edit(new_node); }, 0);
 										});
+									} else {
+										showmessage(__lang.new_failure,'danger',3000,1);
 									}
 								}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-									showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+									showmessage('{lang do_failed}', 'error', 3000, 1);
 								});
 							});
 							
 						}
 					},
 
+					"setorg": {
+						"separator_before": false,
+						"separator_after": false,
+						"_disabled": function(data) {
+							var inst = jQuery.jstree.reference(data.reference);
+							var node = inst.get_node(data.reference);
+							if(node.type == 'group') return true;
+							if(node.type == 'default') return true;
+							if(inst.is_disabled(node)) {
+								return true;
+							}
+							return false;
+						},
+						"label": "{lang set}",
+						"icon": "mdi mdi-cog",
+						"action": function(data) {
+							var inst = jQuery.jstree.reference(data.reference),
+								obj = inst.get_node(data.reference);
+								orgedit(obj.id);
+						}
+					},
+					"export": {
+						"separator_before": false,
+						"separator_after": false,
+						"_disabled": function(data) {
+							var inst = jQuery.jstree.reference(data.reference);
+							var node = inst.get_node(data.reference);
+							if(node.type == 'group') return true;
+							if(node.type == 'default') return true;
+							if(inst.is_disabled(node)) {
+								return true;
+							}
+							return false;
+						},
+						"label": "{lang export_user}",
+						"icon": "mdi mdi-tray-arrow-down",
+						"action": function(data) {
+							var inst = jQuery.jstree.reference(data.reference),
+								obj = inst.get_node(data.reference);
+								exportuser(obj.id);
+						}
+					},
 					"rename": {
 						"separator_before": false,
 						"separator_after": false,
@@ -181,7 +213,6 @@
 							if(inst.is_disabled(node)) {
 								return true;
 							}
-							if(node.type == 'user') return true;
 
 							return false;
 						},
@@ -195,7 +226,6 @@
 
 							var inst = jQuery.jstree.reference(data.reference),
 								obj = inst.get_node(data.reference);
-							console.log('aaaaaaa');
 							inst.edit(obj);
 
 						}
@@ -207,6 +237,7 @@
 						"_disabled": function(data) {
 							var inst = jQuery.jstree.reference(data.reference);
 							var node = inst.get_node(data.reference);
+							if(node.type == 'group') return true;
 							if(node.type == 'default') return true;
 							if(inst.is_disabled(node)) {
 								return true;
@@ -250,111 +281,67 @@
 								showmessage(msg, 'danger', 3000, 1);
 								return;
 							}
-							if(obj.parent == 'other') {
-								var uids = [];
-								for(var i in nodes) {
-									uids.push(nodes[i].li_attr.uid);
-								}
-								var msg = '{lang orguser_tree_delete}';
-
-								var data = { 'uids': uids, 'forgid': obj.parent, 'type': 'user', 'realdelete': '1' };
-							} else {
-								if(obj.type == 'user') {
-									var uids = [];
-									for(var i in nodes) {
-										uids.push(nodes[i].li_attr.uid);
-									}
-
-									var msg = '{lang orguser_tree_permission_delete}';
-									var data = { 'uids': uids, 'forgid': obj.parent, 'type': 'user' };
-
-								} else {
-									if(nodes.length > 1) {
-										showmessage('{lang orguser_tree_batch_delete}', 'danger', 3000, 1);
-										return;
-									}
-									var msg = '{lang orguser_tree_all_delete}';
-									var data = { 'orgid': obj.id, 'forgid': obj.parent }
-								}
+							if(nodes.length > 1) {
+								showmessage('{lang orguser_tree_batch_delete}', 'danger', 3000, 1);
+								return;
 							}
-							Confirm(msg,function(){
+							var msg = '{lang orguser_tree_all_delete}';
+							var data = { 'orgid': obj.id, 'forgid': obj.parent }
+							layer.confirm(msg, {skin:'lyear-skin-danger'}, function(index){
+								layer.msg(__lang.please_wait, {offset:'10px',time:0})
 								jQuery.post('{MOD_URL}&op=ajax&do=delete&t=' + new Date().getTime(), data, function(json) {
-									if(json.error) {
-										showmessage(json.error, 'danger', 3000, 1);
-									} else {
+									if(json.success) {
 										if(inst.is_selected(obj)) {
 											inst.delete_node(inst.get_selected(true));
 										} else {
 											inst.delete_node(obj);
 										}
-										if(obj.type == 'user') {
-											var parent = inst.get_node('other');
-											inst.refresh_node(parent);
+										layer.msg(__lang.delete_success,{offset:'10px'});
+										if(obj.id == orgid) {
+											showDetail(obj.id);
 										}
+									} else if(json.error) {
+										layer.alert(json.error,{skin:'lyear-skin-danger'});
+									} else {
+										layer.msg(__lang.delete_unsuccess,{offset:'10px'});
 									}
-
 								}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-									showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+									layer.msg('{lang do_failed}',{offset:'10px'});
 								});
-								});
-							
+							});
 						}
 					}
 				}
 			},
-			"search": {
-				"show_only_matches": true,
-				"fuzzy": false,
-				"ajax": { 'url': '{MOD_URL}&op=ajax&do=search', 'dataType': 'json' }
-			},
-			"plugins": ["unique", "contextmenu", "dnd", "types", "search",'wholerow']
-			// List of active plugins
-
+			"plugins": ["unique", "contextmenu", "dnd", "types", 'wholerow']
 		});
-
-		jQuery("#classtree").on('ready.jstree', function(e) {
-			var inst = jQuery("#classtree").jstree(true);
-			for(var i in orgtree) {
-				if(document.getElementById(orgtree[i][0])) open_node_dg(inst, document.getElementById(orgtree[i][0]), orgtree[i]);
-			}
-		});
-		jQuery(document).on('touchend', '#classtree .jstree-anchor', function() {
-			var inst = jQuery("#classtree").jstree(true);
-			var node = jQuery(this).closest('.jstree-node');
-			inst.select_node(node);
-			return false;
-		});
-		jQuery("#classtree").on('select_node.jstree', function(e, data) {
+		jQuery('#classtree').on('select_node.jstree', function (e, data) {
 			var inst = jQuery("#classtree").jstree(true);
 			inst.open_node(data.node);
 			if(data.selected.length > 1) return;
-			if(data.node.id == "other") return;
-			if(data.node.type == 'user') {
-				showDetail(data.node.li_attr.uid, 'user');
+			var hash='organization_'+data.node.id;
+			location.hash=hash;
+		});
+		jQuery("#classtree").on('ready.jstree', function(e) {
+			var inst = $("#classtree").jstree(true);
+			var hash = location.hash;
+			if(hash) {
+				hash = (hash.replace(/^#/,''));
+				hashHandler(hash);
 			} else {
-				showDetail(data.node.id, 'organization');
+				if(orgid) {
+					open_node_by_id(orgid);
+				} else {
+					open_node_by_id('other');
+				}
 			}
 		});
-
-		jQuery("#classtree").on('load_node.jstree', function(e, data) { //设置空节点为leaf
-			var inst = jQuery("#classtree").jstree(true);
-			if(data.node.children.length < 1) {
-				jQuery('#' + data.node.id).removeClass('jstree-closed').addClass('jstree-leaf');;
-			}
-		});
-
 		jQuery(document).on('dnd_move.vakata', function(e, data) {
 			if(jQuery(data.event.target).closest('.moderators-acceptor').length) {
 				jQuery('.moderators-acceptor').addClass('hover').find('img').attr('src', 'avatar.php?uid=' + jQuery(data.element).parent().attr('uid') + '&size=middle');
 			} else {
 				jQuery('.moderators-acceptor').removeClass('hover');
 			}
-		});
-		jQuery(document).on('dnd_stop.vakata', function(e, data) {
-			if(!jQuery(data.event.target).closest('.moderators-acceptor').length) return;
-			var uid = jQuery(data.element).parent().attr('uid');
-			var orgid = jQuery('.moderators-acceptor').attr('orgid');
-			moderator_add(orgid, uid);
 		});
 		jQuery("#classtree").on('move_node.jstree', function(e, data) {
 			if(jQuery(e.target).closest('.moderators-acceptor').length) return;
@@ -363,57 +350,23 @@
 			var parent = inst.get_node(data.parent);
 			var post = {};
 			var needsave = 0;
-			if(node.type == 'user' && data.parent != data.old_parent) { //移动用户
-				post.uid = node.li_attr.uid;
-				post.forgid = data.old_parent;
-				post.orgid = data.parent;
-				post.type = 'user';
-				needsave = 1;
-			} else {
 				post.orgid = node.id;
 				post.forgid = data.parent;
 				post.position = data.position;
 				needsave = 1;
-			}
 			if(needsave) {
 				jQuery.post('{MOD_URL}&op=ajax&do=move&t=' + new Date().getTime(), post, function(json) {
 					if(json.error) {
 						showmessage(json.error, 'danger', 3000, 1, null, function() {
 							window.location.reload();
 						});
+					} else if(json.success) {
+						showmessage(__lang.move_success,'success',3000,1);
 					}
 				}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-					showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+					showmessage('{lang do_failed}', 'error', 3000, 1);
 				});
 			}
-		});
-		jQuery("#classtree").on('copy_node.jstree', function(e, data) {
-			if(jQuery(e.target).closest('.moderators-acceptor').length) return;
-			var inst = jQuery("#classtree").jstree(true);
-			var node = data.node;
-			var parent = inst.get_node(data.parent);
-			var post = {};
-			var needsave = 0;
-			if(node.type == 'user' && data.parent != data.old_parent) { //移动用户
-				post.uid = node.li_attr.uid;
-				post.forgid = data.old_parent;
-				post.orgid = data.parent;
-				post.type = 'user';
-				post.copy = 1;
-				needsave = 1;
-			} else {
-				return;
-			}
-			if(needsave) {
-				jQuery.post('{MOD_URL}&op=ajax&do=move&t=' + new Date().getTime(), post, function(json) {
-
-				}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-					showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
-				});
-			}
-		});
-		jQuery("#classtree").on('open_node.jstree', function(e, data) {
-			//jQuery("#"+data.node.id+" .jstree-anchor").addTouch();
 		});
 		jQuery("#classtree").on('rename_node.jstree', function(e, data) {
 			var inst = jQuery("#classtree").jstree(true);
@@ -424,21 +377,85 @@
 				return;
 			}
 			jQuery.post('{MOD_URL}&op=ajax&do=rename&t=' + new Date().getTime(), { 'orgid': data.node.id, text: data.text }, function(json) {
-				if(!json || json.error) {
+				if(json.success) {
+					jQuery('.title_orgname').html(data.text);
+					jQuery('#orgname').val(data.text);
+					inst.refresh();
+					showmessage(__lang.org_update_success,'success',3000,1);
+				}else if(json.error) {
 					obj.text = data.old;
 					inst.set_text(obj, data.old);
 					if(json.error) showmessage(json.error, 'danger', 3000, 1);
 				}else{
-					jQuery('#title_orgname').html(data.text);
-					jQuery('#orgname').val(data.text).data('oldname',data.text);
-					inst.refresh();
+					showmessage(__lang.set_unsuccess,'danger',3000,1);
 				}
 			}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-				showmessage('操作失败，请稍后再试: ' + textStatus, 'error', 3000, 1);
+				showmessage('{lang do_failed}', 'error', 3000, 1);
 			});
 		});
-		// jQuery("#classtree").on('create_node.jstree',function(e,data){});
-
 	});
+	var oldhash=null;
+	function hashHandler(){
+		var hash = location.hash;
+		hash = hash.replace(/^#/i,'');
+		if(!hash) return;
+		var flag=hash.replace(/_.+?$/i,'');
+		switch (flag){
+			case 'organization':
+				var gid=hash.replace('organization_','');
+				open_node_by_id(gid);
+				break;
+		}
+		
+		if(hash === oldhash){
+			return false;
+		}else{
+			oldhash=hash;
+			if(orgid == gid) return;
+			if(gid == 'other' && !orgid)  return;
+			showDetail(gid, 'organization');
+		}
+		return false; 
+	}
+
+	function open_node_by_id(gid){
+		var inst=$('#classtree').jstree(true);
+		var node=null;
+		if(gid){
+			node=inst.get_node(gid);
+		}else{
+			inst.deselect_all();
+			return;
+		}
+		if(node){
+			inst.deselect_all();
+			var selects=inst.get_selected();
+			for(var i=0;i<selects.length;i++){
+				if(selects[i]===node.id){
+					continue;
+				}
+				inst.deselect_node('#'+selects[i]);
+			}
+			inst.select_node(node);
+		}else{
+			$.post('{MOD_URL}&op=ajax&do=getParentsArr',{'gid':gid},function(data){
+				var node=inst.get_node('#'+data[0]);
+				open_node_bg(inst,node,data);
+			},'json').fail(function (jqXHR, textStatus, errorThrown) {
+				showmessage('{lang do_failed}', 'error', 3000, 1);
+			});
+		}
+	}
+	function open_node_bg(inst,node,arr){
+		inst.open_node(node,function(node){
+			var i=jQuery.inArray(node.id,arr);
+			if(i<arr.length && i>-1 && document.getElementById(arr[i+1])){
+				open_node_bg(inst,document.getElementById(arr[i+1]),arr);
+			}else{
+				inst.deselect_all();
+				inst.select_node(node);
+			}
+		});
+	}
 </script>
 <!--{/if}-->

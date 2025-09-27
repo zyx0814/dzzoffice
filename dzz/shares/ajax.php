@@ -325,7 +325,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
                     $first_path = $path['path'];
                 }
             }
-            $propertys = C::t('resources')->get_property_by_rid($rids, true, $first_path);
+            $propertys = C::t('resources')->get_property_by_rid($rids, true, $first_path,false);
         }
         if ($propertys['error']) {
             showmessage($propertys['error']);

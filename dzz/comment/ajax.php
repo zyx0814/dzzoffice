@@ -61,7 +61,7 @@ if (submitcheck('replysubmit')) {
     if ($data = C::t('comment')->fetch($cid)) {
         $data['message'] = dzzcode($data['message'], 0, 0, 0, 0, 1);
         if (!$_G['adminid'] == 1 && $_G['uid'] != $data['authorid'])
-            showmessage('privilege');
+            showmessage('no_privilege');
     } else {
         showmessage('discuss_nonentity_del');
     }
@@ -137,7 +137,7 @@ if (submitcheck('replysubmit')) {
     $cid = intval($_GET['cid']);
     $data = C::t('comment')->fetch($cid);
     if ($_G['adminid'] != 1 && $_G['uid'] != $data['authorid'])
-        exit(json_encode(array('msg' => lang('privilege'))));
+        exit(json_encode(array('msg' => lang('no_privilege'))));
     if (C::t('comment')->delete_by_cid($cid)) {
         exit(json_encode(array('msg' => 'success')));
     } else {

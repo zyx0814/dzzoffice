@@ -13,7 +13,11 @@ if (!defined('IN_DZZ')) {
 Hook::listen('check_login');
 
 if (submitcheck('avatarsubmit')) {
-    $my_info = (intval($_G['group']['perm']) & perm_binPerm::getPowerArr()['my_info']) ? true : false;
+    if($_G['adminid'] == 1) {
+        $my_info = false;
+    } else {
+        $my_info = perm_check::checkuserperm('my_info');
+    }
     if ($my_info) exit(json_encode(array('error' => '您所在的用户组没有权限修改头像！')));
     if ($_GET['imagedata']) $success = upbase64($_GET['imagedata'], $_G['uid']);
     if ($_GET['aid']) IO::delete('attach::' . intval($_GET['aid']));

@@ -1,5 +1,15 @@
-<div class="card">
-	<div class="card-body">
-		{lang orguser_guide_text}
-	</div>
+<!--{template common/header_ajax}-->
+<div class="modal-header">
+  <h4 class="modal-title text-truncate">{lang moderate_explain}</h4>
+  <div class="float-end">
+    <button type="button" class="modal-fullscreen-btn"><i class="mdi"></i></button>
+    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+  </div>
 </div>
+<div class="modal-body">
+{lang orguser_guide_text}
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">{lang close}</button>
+</div>
+<!--{template common/footer_ajax}-->
