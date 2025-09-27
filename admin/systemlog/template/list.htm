@@ -51,7 +51,7 @@
         var table = layui.table;
         table.render({
             elem: '#table',
-            url: '{MOD_URL}&do=getinfo',
+            url: '{MOD_URL}&do=getinfo&ajaxdata=json',
             toolbar: '#toolbar',
             where: {operation: operation,keyword: keyword},
             title: '系统日志数据表格',

@@ -108,7 +108,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 
     if (isset($_GET['ajaxdata'])) {
         if ($_GET['ajaxdata'] === 'json') {
-            helper_output::json(array('message' => $show_message, 'data' => $values));
+            helper_output::json(array('code' => 1, 'msg' => $show_message, 'message' => $show_message, 'data' => $values));
         } else if ($_GET['ajaxdata'] === 'html') {
             helper_output::html($show_message);
         }

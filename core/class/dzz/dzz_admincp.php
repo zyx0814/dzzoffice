@@ -203,6 +203,9 @@ class dzz_admincp {
     }
 
     function do_user_login() {
+        if($_GET['ajaxdata'] == 'json') {
+            exit(json_encode(array('code' => 1, 'msg' => '管理员登录状态失效，请重新登录！')));
+        }
         require $this->admincpfile('login');
     }
 
