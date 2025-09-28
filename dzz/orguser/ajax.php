@@ -506,8 +506,8 @@ if ($do == 'upload') {//上传图片文件
         foreach (C::t('organization')->fetch_parent_by_orgid($gid) as $orgid) {
             $arr[] = $orgid;
         }
+        $arr = array_unique($arr);
     }
-    $arr = array_unique($arr);
     exit(json_encode($arr));
 } elseif ($do == 'usergroupid') {
     $uids = is_array($_GET['uids']) ? $_GET['uids'] : explode(',', $_GET['uids']);

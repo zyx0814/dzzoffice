@@ -413,6 +413,7 @@
 			oldhash=hash;
 			if(orgid == gid) return;
 			if(gid == 'other' && !orgid)  return;
+			if(hash == 'search') return;
 			showDetail(gid, 'organization');
 		}
 		return false; 

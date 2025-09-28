@@ -602,6 +602,7 @@
 		//执行搜索
 		function execute_search() {
 			searchConditionChange();
+			location.hash = 'search';
 			$('#user-name').val(searchjson.username);
 			searchjson['issearch'] = 1;
 			layuiModules.table.reloadData('table', {
