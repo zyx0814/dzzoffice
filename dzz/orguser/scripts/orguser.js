@@ -486,7 +486,7 @@ function set_org_logo(orgid,aid){
 function folder_maxspacesize(obj,orgid){
 	jQuery.post(ajaxurl+'do=folder_maxspacesize',{'orgid':orgid,'maxspacesize':obj.value,'t':new Date().getTime()},function(json){
 		if(json.success) {
-			ajaxget(MOD_URL+'&op=view&do=orgedit&orgid='+orgid, 'fwin_content_orgedit');
+			ajaxget(MOD_URL+'&op=view&do=orgedit&orgid='+orgid, 'fwin_content_orgwindow');
 			showmessage('空间大小设置成功','success',3000,1);
 		} else if(json.error){
 			obj.value=json.val;
@@ -502,12 +502,17 @@ function insertorg(ids, data) {
 	var orgids = ids.map(function(id) {
         return id.replace(/\D/g, '');
     });
-	if(!orgids) showmessage('需要先选择部门','danger',3000,1);
+	if (orgids.length === 0) {
+		return showmessage('需要先选择目标部门', 'danger', 3000, 1);
+	}
 	var checkStatus = layuiModules.table.checkStatus('table');
 	var data = checkStatus.dataCache;
 	var uids = [];
 	for(var i in data) {
 		uids.push(data[i].uid);
+	}
+	if(uids.length === 0) {
+		return showmessage('请选择用户', 'danger', 3000, 1);
 	}
 	var data = {'uids': uids,'orgids': orgids};
 	jQuery.post(MOD_URL+'&op=ajax&do=insert', data,function(json){
@@ -530,11 +535,9 @@ function moveuser(ids, data) {
         return id.replace(/\D/g, '');
     });
 	if (orgids.length > 1) {
-		showmessage('请选择一个目标部门', 'danger', 3000, 1);
-		return;
+		return showmessage('请选择一个目标部门', 'danger', 3000, 1);
 	} else if (orgids.length === 0) {
-		showmessage('需要先选择目标部门', 'danger', 3000, 1);
-		return;
+		return showmessage('需要先选择目标部门', 'danger', 3000, 1);
 	}
 	if(!orgid) showmessage('没有选择原部门','danger',3000,1);
 	var checkStatus = layuiModules.table.checkStatus('table');
@@ -542,6 +545,9 @@ function moveuser(ids, data) {
 	var uids = [];
 	for(var i in data) {
 		uids.push(data[i].uid);
+	}
+	if(uids.length === 0) {
+		return showmessage('请选择用户', 'danger', 3000, 1);
 	}
 	var data = {'uids': uids,'orgid': orgids[0],'forgid': orgid};
 	jQuery.post(MOD_URL+'&op=ajax&do=move&type=user', data,function(json){

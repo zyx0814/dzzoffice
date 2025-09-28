@@ -1,6 +1,6 @@
 <?php
 $lang = array(
-    'appname' => 'Organization Users',
+  'appname' => 'Organization Users',
   'explorer_gropuperm' => array(
       'Collaborative Members',
       'Administrators',
@@ -144,25 +144,6 @@ $lang = array(
   'weixin_registered' => 'This WeChat ID has already been registered',
   'user_registered_retry' => 'This username has already been registered. Please change the username and try again',
   'import_user' => 'Import Users',
-  'orguser_guide_text' => '<h4><strong>Organization Management Usage Instructions</strong></h4>
-    <ul class="">
-      <li><img src="dzz/system/images/organization.png" />&nbsp;Select an organization to set organization information</li>
-      <li><img src="dzz/system/images/department.png" />&nbsp;Select a department to set department information</li>
-      <li><img src="dzz/system/images/user.png" />&nbsp;Select a user to set user information</li>
-      <li>Personnel, departments, and organizations can be directly dragged and moved to change positions. Moving is used to change the department to which a user belongs, and to change the parent organization or parent department of a department</li>
-      <li>Hold down the <code>ctrl</code> key while moving a user or department to copy. Used to add a user to multiple departments at the same time</li>
-      <li>Hold down the <code>ctrl</code> key to select multiple items. After selecting multiple items, release the <code>ctrl</code> key and move to perform bulk moving. Do not release the <code>ctrl</code> key while moving to perform bulk copying</li>
-      <li>Hold down the <code>shift</code> key to select multiple items in bulk</li>
-      <li>Right-click on a department, organization, or user to bring up the right-click menu. The menu contains additional corresponding operations</li>
-    </ul>
-    <div class="alert alert-warning">
-      <h4><strong>User Deletion Instructions:</strong></h4>
-      <ul class="mb-0">
-        <li>Deleting a user from all organizations or departments only removes the user from the organization or department. The user will no longer have all usage permissions of the organization or department, but the user will not be deleted from the system</li>
-        <li>When a user has no affiliated organization or department, they will appear in the "Unorganized Users List". Only system administrators can manage the "Unorganized Users List"</li>
-        <li style="color:red">When a system administrator deletes a user from the "Unorganized Users List", the user will be completely deleted from the system, and all system data and saved files of the user will be deleted. Administrators please use this function with caution and only delete users after confirming that they need to be removed</li>
-      </ul>
-    </div>',
-  'group_permission_guide_text' => 'User Group Permissions and Operation Rules Instructions',
+  'group_permission_guide_text' => 'Each user can only set up one user group. Administrators have global system permissions. Please operate with caution!',
 );
 ?>

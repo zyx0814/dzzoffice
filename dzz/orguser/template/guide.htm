@@ -7,7 +7,102 @@
   </div>
 </div>
 <div class="modal-body">
-{lang orguser_guide_text}
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">一、用户组管理规则</button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+        <div class="accordion-body">
+          <ul class="list-group list-group-numbered">
+              <li class="list-group-item">
+                  <strong>用户组唯一性：</strong>每个用户仅可归属一个用户组，用户组间为互斥关系，需明确单一身份，不可同时加入多个用户组。
+              </li>
+              <li class="list-group-item">
+                  <strong>权限配置归属：</strong>仅「系统管理员」拥有用户组配置权限（含用户组分配、调整、移除等操作），其他用户组无此权限。
+              </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne4">
+        <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne4" aria-expanded="true" aria-controls="collapseOne4">二、各级管理员权限说明</button>
+      </h2>
+      <div id="collapseOne4" class="accordion-collapse collapse show" aria-labelledby="headingOne4" data-parent="#accordionExample">
+        <div class="accordion-body">
+          <ul class="list-group list-group-numbered">
+            <li class="list-group-item">
+              <strong>机构/部门管理员权限：</strong>
+              <ul class="list-unstyled">
+                <li>• 权限范围：仅负责管理所属机构/部门相关事务，具体包括：
+                  <ul class="list-unstyled ms-4 mb-3">
+                      <li class="mb-1">① 管理本机构/部门成员（添加、编辑、调整成员权限等）；</li>
+                      <li class="mb-1">② 管理本机构/部门共享目录（创建、修改访问权限、删除共享目录等）。</li>
+                  </ul>
+                </li>
+                <li>• 层级管理机制：采用“上一级管理下一级”原则，由上一级机构/部门管理员负责设置下一级机构/部门管理员。</li>
+              </ul>
+            </li>
+            <li class="list-group-item">
+              <strong>系统管理员权限：</strong>
+              <ul class="list-unstyled">
+                <li>「系统管理员」拥有系统全局权限，且是唯一可设置用户组的角色；分配该权限时需严格审核，避免因权限滥用引发数据安全或系统管理风险。</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne3">
+        <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="true" aria-controls="collapseOne3">三、机构/部门操作技巧</button>
+      </h2>
+      <div id="collapseOne3" class="accordion-collapse collapse show" aria-labelledby="headingOne3" data-parent="#accordionExample">
+        <div class="accordion-body">
+          <ul class="list-group list-group-numbered">
+              <li class="list-group-item">
+                  <strong>位置调整：</strong>部门、机构可直接拖拽移动，移动操作即更换其上级机构/上级部门。
+              </li>
+              <li class="list-group-item">
+                  <strong>批量操作：</strong>
+                  <ul class="list-unstyled ms-4 mt-2">
+                      <li class="mb-1">• 按住 <span class="badge bg-info">ctrl</span> 键可多选，松开 <span class="badge bg-info">ctrl</span> 键后移动为「批量移动」；不松开 <span class="badge bg-info">ctrl</span> 键移动为「批量复制」；</li>
+                      <li>• 按住 <span class="badge bg-info">shift</span> 键可批量连续选择。</li>
+                  </ul>
+              </li>
+              <li class="list-group-item">
+                  <strong>右键菜单：</strong>在部门、机构名称上点击鼠标右键，可调出右键菜单，执行更多操作。
+              </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne2">
+        <button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">四、用户删除说明</button>
+      </h2>
+      <div id="collapseOne2" class="accordion-collapse collapse show" aria-labelledby="headingOne2" data-parent="#accordionExample">
+        <div class="accordion-body">
+          <ul class="list-group list-group-numbered">
+              <li class="list-group-item">
+                  <strong>机构/部门管理员权限：</strong>仅可将用户从本机构/部门中移除，移除后用户不再拥有该机构/部门的所有使用权限，但不会从系统中删除用户。
+              </li>
+              <li class="list-group-item">
+                  <strong>未加入机构用户管理：</strong>当用户无所属机构/部门时，会进入“未加入机构用户列表”，该列表仅允许「系统管理员」管理。
+              </li>
+              <li class="list-group-item text-danger">
+                  <strong>系统管理员权限：</strong>
+                  <ul class="list-unstyled ms-4 mt-2">
+                      <li>• 仅「系统管理员」可执行“彻底删除用户”操作；</li>
+                      <li>• 彻底删除会清除用户在系统中的所有数据及保存文件，需谨慎操作，确认无误后再执行。</li>
+                  </ul>
+              </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">{lang close}</button>

@@ -287,7 +287,7 @@ _filemanage.setInfoPanel = function () {
 		}
 		if (_filemanage.infoPanelUrl !== fid) {
 			var rid = $('#ridinput').val();
-			_explorer.infoRequest = $.post(MOD_URL + '&op=dynamic&do=getfiledynamic', {
+			_explorer.infoRequest = $.post(MOD_URL + '&op=dynamic&do=getfiledynamic&ajaxdata=html', {
 				'fid': rid ? 0 : fid,
 				'rid': rid,
 				'bz': bz
@@ -313,7 +313,7 @@ _filemanage.setInfoPanel = function () {
 		}
 	} else if (rids.length === 1) {
 		if (_filemanage.infoPanelUrl !== rids[0]) {
-			_explorer.infoRequest = $.post(MOD_URL + '&op=dynamic&do=getfiledynamic', {
+			_explorer.infoRequest = $.post(MOD_URL + '&op=dynamic&do=getfiledynamic&ajaxdata=html', {
 				'rid': rids
 			}, function (data) {
 				$('#rightMenu').html(data);
@@ -323,7 +323,7 @@ _filemanage.setInfoPanel = function () {
 	} else {
 		var ridsstr = rids.join(',');
 		if (_filemanage.infoPanelUrl !== ridsstr) {
-			_explorer.infoRequest = $.post(MOD_URL + '&op=dynamic&do=getfiledynamic', {
+			_explorer.infoRequest = $.post(MOD_URL + '&op=dynamic&do=getfiledynamic&ajaxdata=html', {
 				'rid': rids
 			}, function (data) {
 				$('#rightMenu').html(data);

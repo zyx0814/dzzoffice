@@ -16,10 +16,10 @@
 </div>
 <ul class="nav nav-tabs mb-0">
     <li class="nav-item">
-      <a class="nav-link active" href="{MOD_URL}&op=edituser&uid=$user['uid']" ajaxtarget="fwin_content_edit_user">{lang basic_message}</a>
+      <a class="nav-link active" href="{MOD_URL}&op=edituser&uid=$user['uid']" ajaxtarget="fwin_content_orgwindow">{lang basic_message}</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{MOD_URL}&op=edituser&do=profile&uid=$user['uid']" ajaxtarget="fwin_content_edit_user">{lang details_information}</a>
+      <a class="nav-link" href="{MOD_URL}&op=edituser&do=profile&uid=$user['uid']" ajaxtarget="fwin_content_orgwindow">{lang details_information}</a>
     </li>
   </ul>
 <div class="modal-body">
@@ -120,14 +120,14 @@
       <label class="col-sm-2">{lang user_status}</label>
       <div class="col-sm-10">
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" id="status1" name="status" <!--{if !$user[status]}-->checked="checked"<!--{/if}--> value="0">
+          <input class="form-check-input" type="radio" id="status1" name="status" <!--{if !$user[status]}-->checked="checked"<!--{/if}--> value="0" <!--{if $uid == $_G['uid']}-->disabled="disabled"<!--{/if}-->>
           <label class="form-check-label" for="status1">{lang normal}</label>
         </div>
         <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" id="status2" name="status" <!--{if $user[status]}-->checked="checked"<!--{/if}--> value="1">
+          <input class="form-check-input" type="radio" id="status2" name="status" <!--{if $user[status]}-->checked="checked"<!--{/if}--> value="1" <!--{if $uid == $_G['uid']}-->disabled="disabled"<!--{/if}-->>
           <label class="form-check-label" for="status2">{lang forbidden}</label>
         </div>
-        <span class="form-text">{lang adduser_disable_user_text}</span>
+        <span class="form-text"><!--{if $uid == $_G['uid']}-->不能禁用自己！<!--{/if}-->{lang adduser_disable_user_text}</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -140,7 +140,7 @@
           <!--{/if}-->
           <!--{/loop}-->
         </select>
-        <a class="btn btn-link" href="javascript:;" onclick="groupsetinfo();return false;">{lang group_permission_guide_text}</a>
+        <span class="form-text">{lang group_permission_guide_text}</span>
       </div>
     </div>
     <div class="row mb-3">

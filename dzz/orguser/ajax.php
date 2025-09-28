@@ -454,6 +454,9 @@ if ($do == 'upload') {//上传图片文件
     if (!$uid) {
         exit(json_encode(array('error' => '用户不存在')));
     }
+    if($uid == $_G['uid']) {
+        exit(json_encode(array('error' => '不能操作自己')));
+    }
     $uperm = false;
     if ($_G['adminid'] != 1) {
         if ($orgids_uid = C::t('organization_user')->fetch_orgids_by_uid($uid)) {

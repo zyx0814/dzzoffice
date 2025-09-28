@@ -104,7 +104,7 @@
           <!--{/if}-->
           <!--{/loop}-->
         </select>
-        <a class="btn btn-link" href="javascript:;" onclick="groupsetinfo();return false;">{lang group_permission_guide_text}</a>
+        <span class="form-text">{lang group_permission_guide_text}</span>
       </div>
     </div>
     <div class="row mb-3">
@@ -287,7 +287,7 @@
 	}
 
 	function succeedhandle_adduser(url, message, values) {
-    hideWindow('edit_user');
+    hideWindow('orgwindow');
     showmessage(message, 'success', 3000, 1);
     showDetail('$org['orgid']');
 	};

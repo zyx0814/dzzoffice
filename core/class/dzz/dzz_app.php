@@ -494,7 +494,6 @@ class dzz_app extends dzz_base {
 
             $this->cachelist[] = 'usergroup_' . $this->var['member']['groupid'];
 
-
         } else {
             $this->_init_guest();
         }
@@ -573,7 +572,6 @@ class dzz_app extends dzz_base {
 
         if ($this->init_user) {
             $allowvisitflag = CURSCRIPT == 'user' || defined('ALLOWGUEST') && ALLOWGUEST;
-
             if (isset($this->var['member']['status']) && $this->var['member']['status'] == -1 && !$allowvisitflag) {
                 showmessage('user_banned');
             }

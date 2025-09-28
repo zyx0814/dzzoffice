@@ -17,7 +17,6 @@ if ($do == 'filelist' && !$uid) {
 Hook::listen('check_login');
 //获取文件夹右侧信息
 if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
-    //文件信息或者动态请求
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     $fileinfo = array();
     if($bz && $bz !== 'dzz') {
@@ -54,7 +53,7 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
         if ($fid) {
             //文件夹信息
             $fileinfo = C::t('resources')->get_property_by_fid($fid);
-            if($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+            if($fileinfo['error']) showmessage($fileinfo['error']);
             if ($fileinfo['isgroup']) {
                 $org = C::t('organization')->fetch($fileinfo['gid']);
                 if ($org) {
@@ -89,7 +88,7 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
             }
         } else {
             $fileinfo = C::t('resources')->get_property_by_rid($rid);
-            if($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+            if($fileinfo['error']) showmessage($fileinfo['error']);
             $vnext = false;
             $total = C::t('resources_version')->fetch_all_by_rid($rid, $limit, true);
             if ($total > $nextstart) {
@@ -126,7 +125,7 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
         exit();
     } elseif ($ridnum > 1) {//如果是多项选中，则调对应综合文件信息
         $fileinfo = C::t('resources')->get_property_by_rid($rids);
-        if($fileinfo['error']) showmessage($fileinfo['error'],MOD_URL);
+        if($fileinfo['error']) showmessage($fileinfo['error']);
         include template('right_menu');
         exit();
     }

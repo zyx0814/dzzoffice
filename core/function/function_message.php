@@ -93,7 +93,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
         dheader("location: " . str_replace('&amp;', '&', $url_forward));
     }
     $url_forward_js = addslashes(str_replace('\\', '%27', $url_forward));
-    if ($param['location'] && !empty($_G['inajax'])) {
+    if(!empty($param['location']) && !empty($_G['inajax'])) {
         include template('common/header_ajax');
         echo '<script type="text/javascript" reload="1">window.location.href=\'' . $url_forward_js . '\';</script>';
         include template('common/footer_ajax');
@@ -121,7 +121,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 
     $show_jsmessage = str_replace("'", "\\'", $param['striptags'] ? strip_tags($show_message) : $show_message);
 
-    if ((!$param['showmsg'] || $param['showid']) && !defined('IN_MOBILE')) {
+    if((!$param['showmsg'] || !empty($param['showid'])) && !defined('IN_MOBILE') ) {
         $show_message = '';
     }
 
@@ -133,7 +133,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
     }
 
     $extra = '';
-    if ($param['showid']) {
+    if(!empty($param['showid'])) {
         $extra .= 'if($(\'' . $param['showid'] . '\')) {$(\'' . $param['showid'] . '\').innerHTML = \'' . $show_jsmessage . '\';}';
     }
     if ($param['handle']) {
@@ -186,7 +186,6 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
     }
     $show_message .= $extra ? '<script type="text/javascript" reload="1">' . $extra . $st . '</script>' : '';
     $show_message .= $param['extrajs'] ? $param['extrajs'] : '';
-    //print_r($param);exit($show_message);
     if ((defined('template') && template == '1') || $_G['config']['template'] == '1') {
         include template('common/showmessage', 'lyear');
     } else {

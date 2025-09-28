@@ -72,6 +72,12 @@ if (!submitcheck('regsubmit')) {
 } else {
     $type = isset($_GET['returnType']) ? $_GET['returnType'] : '';
     Hook::listen('check_val', $_GET);//用户数据验证钩子,用户注册资料信息提交验证
+    //验证IP同一时间段内注册
+    if($setting['regctrl']) {
+        if(C::t('regip')->count_by_ip_dateline($_G['clientip'], $_G['timestamp']-$setting['regctrl']*3600)) {
+            showTips(array('error' => lang('register_ctrl', array('regctrl' => $setting['regctrl']))), $type);
+        }
+    }
     $result = $_GET;
     Hook::listen('register_common', $result);//用户注册钩子
 
@@ -107,6 +113,10 @@ if (!submitcheck('regsubmit')) {
     if ($setarr) {
         $setarr['uid'] = $result['uid'];
         C::t('user_profile')->insert($setarr);
+    }
+    if($setting['regctrl']) {
+        C::t('regip')->delete_by_dateline($_G['timestamp']-$setting['regctrl']*3600);
+        C::t('regip')->insert(array('ip' => $_G['clientip'], 'count' => -1, 'dateline' => $_G['timestamp']));
     }
     //新用户登录
     setloginstatus(array(

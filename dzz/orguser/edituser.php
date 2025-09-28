@@ -188,7 +188,7 @@ if ($do == 'add') {
         }
 
         $user = C::t('user')->fetch_by_uid($uid);
-        if ($user['groupid'] < $_G['groupid'] || (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member']))) {
+        if (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member'])) {
             //处理用户部门和职位
             C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
 
@@ -196,11 +196,6 @@ if ($do == 'add') {
             C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
 
             showmessage('edit_user_success', MOD_URL);
-        }
-        //禁用创始人验证
-        $status = intval($_GET['status']) ? 1 : 0;
-        if ($status == 1 && C::t('user')->checkfounder($user)) {
-            showmessage('is_root_user');
         }
 
         //用户名验证
@@ -224,7 +219,6 @@ if ($do == 'add') {
                 showmessage('profile_username_protect');
             }
         }
-
 
         //如果输入手机号码，检查手机号码不能重复
         $phone = trim($_GET['phone']);
@@ -260,7 +254,15 @@ if ($do == 'add') {
                 showmessage('email_registered_retry');
             }
         }
-        $setarr = array('username' => $username, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid, 'status' => intval($_GET['status']));
+        $setarr = array('username' => $username, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid);
+        if($uid != $_G['uid']) {
+            //禁用创始人验证
+            $status = intval($_GET['status']) ? 1 : 0;
+            if ($status == 1 && C::t('user')->checkfounder($user)) {
+                showmessage('is_root_user');
+            }
+            $setarr['status'] = $status;
+        }
         //密码验证部分
         if ($_GET['password']) {
             if ($_G['setting']['pwlength']) {
@@ -282,10 +284,11 @@ if ($do == 'add') {
             $setarr['password'] = md5(md5($_GET['password']) . $salt);
             $setarr['secques'] = '';
         }
-    
         C::t('user')->update($uid, $setarr);
-        if ($setarr['status'] != $user['status']) {
-            logStatusChange($uid, $user['status'], $setarr['status']);
+        if($uid != $_G['uid']) {
+            if ($setarr['status'] != $user['status']) {
+                logStatusChange($uid, $user['status'], $setarr['status']);
+            }
         }
         if($_G[ 'adminid'] == 1) {
             //处理管理员
@@ -310,7 +313,6 @@ if ($do == 'add') {
         $user = C::t('user')->fetch_by_uid($uid);
         $userfield = C::t('user_field')->fetch($uid);
 
-        //$user['status']=$user['status']>0?0:1;
         $departs = array();
         $data_depart = array();
         //$departs=getDepartmentByUid($uid);
@@ -353,7 +355,7 @@ if ($do == 'add') {
         }
         //$orgtree_all=getDepartmentOption_admin(0,'',true);
         $perm = 1;
-        if ($user['groupid'] < $_G['groupid'] || (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member']))) {
+        if (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member'])) {
             $perm = 0;
         }
         include template('edituser');

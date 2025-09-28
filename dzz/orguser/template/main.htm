@@ -79,29 +79,21 @@
     };
 	function orgedit(id) {
 		if(!id) id = orgid;
-		showWindow('orgedit',MOD_URL+'&op=view&do=orgedit&orgid='+id,'get',0)
+		showWindow('orgwindow',MOD_URL+'&op=view&do=orgedit&orgid='+id,'get',0)
 	}
 	function exportuser(id) {
 		if(!id) id = orgid;
-		showWindow('exportuser',MOD_URL+'&op=export&orgid='+id,'get',0)
+		showWindow('orgwindow',MOD_URL+'&op=export&orgid='+id,'get',0)
 	}
 	function adduser(id) {
 		if(!id) id = orgid;
-		showWindow('edit_user',MOD_URL+'&op=edituser&orgid='+id,'get',0)
+		showWindow('orgwindow',MOD_URL+'&op=edituser&orgid='+id,'get',0)
 	}
 	function usergroupname(groupid) {
 		return usergroups[groupid] ? usergroups[groupid].grouptitle : '{lang unknown}';
 	}
 	function tablereload(){
 		layuiModules.table.reloadData('table');
-	}
-	function groupsetinfo() {
-		layer.open({
-			type: 1,
-			title: '{lang group_permission_guide_text}',
-			maxmin: true,
-			content: '<ul class="list-group list-group-numbered"><li class="list-group-item"><strong>用户组唯一规则：</strong>每个用户仅支持设置一个用户组，不可同时归属多个用户组（用户组间为互斥关系，需明确单一身份）。</li><li class="list-group-item"><strong>用户组设置权限归属：</strong>仅限「管理员」拥有用户组配置权限（包括用户组分配、调整、移除等操作），其他用户组无此权限。</li> <li class="list-group-item"><strong>机构和部门管理员管理规则：</strong><ul class="list-unstyled mt-1"><li>• 权限范围：仅负责管理所属机构/部门相关事务，包括：<ul class="list-unstyled ms-3 mt-1"><li>▸ 管理所属机构/部门内的成员（添加、编辑、调整权限等）</li><li>▸ 管理所属机构/部门的所有共享目录（创建、修改访问权限、删除共享目录等）</li><li>▸ 采用「层级管理制」——由上一级机构和部门管理员，负责设置下一级机构和部门管理员</li></ul></li></ul></li><li class="list-group-item text-danger"><strong>管理员权限风险警示：</strong>「管理员」拥有系统全局权限，且是唯一可设置用户组的角色；分配「管理员」权限时需严格审核，避免权限滥用导致数据安全或系统管理风险。</li></ul>'
-		})
 	}
 	jQuery(document).ready(function(e) {
 		var hash = window.location.hash.replace('#', '');
@@ -197,9 +189,13 @@
 										yes: function(index, layero) {
 											var data = checkStatus.dataCache;
 											var groupid = layero.find('select[name="group"]').val();
+											if(!groupid) return showmessage('请选择用户组', 'danger', 3000, 1);
 											var uids = [];
 											for(var i in data) {
 												uids.push(data[i].uid);
+											}
+											if(uids.length === 0) {
+												return showmessage('请选择用户', 'danger', 3000, 1);
 											}
 											var data = {'uids': uids,'groupid': groupid};
 											jQuery.post('{MOD_URL}&op=ajax&do=usergroupid', data,function(json){
@@ -228,6 +224,9 @@
 									for(var i in data) {
 										uids.push(data[i].uid);
 									}
+									if(uids.length === 0) {
+										return showmessage('请选择用户', 'danger', 3000, 1);
+									}
 									var deldata = {'type': 'user', 'uids': uids,'forgid': orgid};
 									layer.confirm('{lang orguser_tree_permission_delete}', {title:'{lang remove}('+data.length+')个用户', skin:'lyear-skin-danger'}, function(index){
 										layer.msg(__lang.please_wait, {offset:'10px',time:0});
@@ -250,10 +249,10 @@
 										showmessage("请先选择一个机构或部门", 'danger', 3000, 1);
 										return;
 									}
-									showWindow('edit_user','{DZZSCRIPT}?mod=system&op=selorguser&type=1&range=1&stype=1&callback=moveuser&template=1&moderator=1','get',0);
+									showWindow('orgwindow','{DZZSCRIPT}?mod=system&op=selorguser&type=1&range=1&stype=1&callback=moveuser&template=1&moderator=1','get',0);
 								break;
 								case 'insert':
-									showWindow('edit_user','{DZZSCRIPT}?mod=system&op=selorguser&type=1&range=1&stype=1&multiple=1&callback=insertorg&template=1&moderator=1','get',0);
+									showWindow('orgwindow','{DZZSCRIPT}?mod=system&op=selorguser&type=1&range=1&stype=1&multiple=1&callback=insertorg&template=1&moderator=1','get',0);
 								break;
 							}
 						},
@@ -286,6 +285,7 @@
 			});
 			layuiModules.form.on('select(selectTpl)', function(obj){
 				var value = obj.value;
+				if(!value) return showmessage('请选择用户组', 'danger', 3000, 1);
 				var index = $(obj.elem).closest('tr').data('index');
 				var data = layuiModules.table.cache['table'][index] || {};
 				jQuery.post('{MOD_URL}&op=ajax&do=usergroupid', {'uids': data.uid,'groupid':value},function(json){
@@ -372,6 +372,9 @@
 					for(var i in data) {
 						uids.push(data[i].uid);
 					}
+					if(uids.length === 0) {
+						return showmessage('请选择用户', 'danger', 3000, 1);
+					}
 					layer.confirm('{lang orguser_tree_delete}', {title:'{lang delete}('+data.length+')个用户', skin:'lyear-skin-danger'}, function(index){
 						layer.msg(__lang.please_wait, {offset:'10px',time:0});
 						jQuery.post('{MOD_URL}&op=ajax&do=delete&type=user', {'uids': uids}, function(json) {
@@ -397,7 +400,7 @@
 			layuiModules.table.on('tool(table)', function(obj){
 				var data = obj.dataCache;
 				if(obj.event === 'edit'){
-					showWindow('edit_user',MOD_URL+'&op=edituser&uid='+data.uid,'get',0)
+					showWindow('orgwindow',MOD_URL+'&op=edituser&uid='+data.uid,'get',0)
 					return;
 				}
 			});
@@ -427,7 +430,7 @@
 				'<p><strong>{lang user_status}：</strong>' + (data.status==1 ? '<span class="text-danger">禁用</span>' : '<span class="text-success">正常</span>') + '</p>' +
 				'<p><strong>{lang usergroup}：</strong>' + usergroupname(data.groupid) + '</p>'
 				layer.alert(template, {
-					title: '<strong>UID：'+data.uid+'</strong> {alng detail}：'
+					title: '<strong>UID：'+data.uid+'</strong> {lang detail}：'
 				});
 
 			// 标注选中样式
