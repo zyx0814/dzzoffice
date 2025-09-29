@@ -164,7 +164,20 @@ if ($do == 'stats') {
     }
     $env_str = '';
     foreach ($env_items as $key => $item) {
-        $status = $item['status'];
+        $status = 1;
+        if ($item['r'] != 'notset') {
+            if (intval($item['current']) && intval($item['r'])) {
+                if (intval($item['current']) < intval($item['r'])) {
+                    $status = 0;
+                    $error_code = ENV_CHECK_ERROR;
+                }
+            } else {
+                if (strcmp($item['current'], $item['r']) < 0) {
+                    $status = 0;
+                    $error_code = ENV_CHECK_ERROR;
+                }
+            }
+        }
         $env_str .= "<tr>\n";
         $env_str .= "<td>" . lang($key) . "</td>\n";
         $env_str .= "<td>" . lang($item['r']) . "</td>\n";
