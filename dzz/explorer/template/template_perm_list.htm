@@ -28,15 +28,15 @@
     <li <!--{if $folderperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
     <!--{/loop}-->
 </ul>
-<!--{/if}-->
 <!--{else}-->
 <div class="text-center">
     <img src="static/image/common/no_list.png">
     <p class="text-muted fs-5">{lang no_related_data}</p>
 </div>
 <!--{/if}-->
+<!--{/if}-->
 <div class="right-card-header">
-    <div class="title">您的实际生效权限 <i class="ms-1 mdi mdi-information-outline" title="<!--{if isset($usergroupperm) && $usergroupperm > 0}-->管理员权限<!--{else}-->用户/组权限和一般协作成员权限组合<!--{/if}-->"></i></div>
+    <div class="title">您的实际生效权限 <i class="ms-1 mdi mdi-information-outline" title="<!--{if $_G['adminid'] == 1 || (isset($usergroupperm) && $usergroupperm > 0)}-->管理员权限<!--{else}-->用户/组权限和一般协作成员权限组合<!--{/if}-->"></i></div>
 </div>
 <!--{if $myperm}-->
 <ul class="proper-show proper-poewr">
