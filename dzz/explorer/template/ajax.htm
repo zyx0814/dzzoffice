@@ -499,7 +499,7 @@
     <li class="nav-item">
         <a class="nav-link <!--{if $do=='property'}-->active<!--{/if}-->" href="{MOD_URL}&op=ajax&do=property&rid=$fileinfo['rid']&fid=$fileinfo['fid']" ajaxtarget="fwin_content_property">{lang property}</a>
     </li>
-    <!--{if $fileinfo[fid] !== '-1'}-->
+    <!--{if $fileinfo[isfolder] && $fileinfo[fid] !== '-1'}-->
     <li class="nav-item">
         <a class="nav-link <!--{if $do=='perm'}-->active<!--{/if}-->" href="{MOD_URL}&op=ajax&do=perm&property=1&fid=$fileinfo['fid']&rid=$fileinfo['rid']" ajaxtarget="fwin_content_property">{lang jurisdiction}</a>
     </li>

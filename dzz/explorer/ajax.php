@@ -402,7 +402,9 @@ if ($do == 'upload') {//上传图片文件
         $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
     }
     if($fileinfo['error']) exit(json_encode(array('error' => $fileinfo['error'])));
-    if (!$fileinfo['editperm']) exit(json_encode(array('error' => lang('file_comment_no_privilege'))));
+    if (!perm_check::checkperm_Container($fileinfo['fid'], 'comment')) {
+        exit(json_encode(array('error' => lang('file_comment_no_privilege'))));
+    }
     include_once libfile('function/code');
     include_once libfile('function/use');
     $msg = isset($_GET['msg']) ? censor($_GET['msg']) : '';
@@ -1008,11 +1010,11 @@ if ($do == 'upload') {//上传图片文件
             $userstr = implode(',', $userids);
             $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);
             if(isset($usergroupperm) && $usergroupperm > 0) {
-                $folderperm = C::t('folder')->fetch_perm_by_fid($fid);
+                $folderperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
             }
         }
     }
-    $myperm = perm_check::getPerm($fid);
+    $myperm = perm_check::getPerm($fileinfo['fid']);
     $perms = get_permsarray();
     if(!$property) {
         include template('template_perm');

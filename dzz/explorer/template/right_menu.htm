@@ -49,7 +49,7 @@
                     <!--{/if}-->
                     <!--{if $folderperm}-->
                     <div class="right-card-header">
-                        <div class="title">一般协作成员权限</div>
+                        <div class="title">{lang directory_right}</div>
                         <button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button>
                     </div>
                     <ul class="proper-show proper-poewr">
@@ -223,7 +223,7 @@
                     <span>{lang property}</span>
                 </a>
             </li>
-            <!--{if $fileinfo[fid] !== '-1'}-->
+            <!--{if $fileinfo[isfolder] && $fileinfo[fid] !== '-1'}-->
             <li class="nav-item">
                 <a class="nav-link perm-tab" id="perm-tab" data-toggle="tab" href="#perm-tab" role="tab" aria-controls="perm" data-item="perm" data-rid="$fileinfo[rid]" data-fid="$fileinfo[fid]" aria-selected="false" onclick="rightinfo(this)">
                     <i class="mdi mdi-lock"></i>
