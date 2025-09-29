@@ -146,14 +146,19 @@ function env_check(&$env_items) {
         } elseif ($key == 'attachmentupload') {
             $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknown';
         } elseif ($key == 'allow_url_fopen') {
-            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ? ini_get('allow_url_fopen') : 'unknown';
+            $env_items[$key]['current'] =@ini_get('allow_url_fopen') ?: 'unknown';
         } elseif ($key == 'gdversion') {
             $tmp = function_exists('gd_info') ? gd_info() : array();
             $env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
             unset($tmp);
         } elseif ($key == 'diskspace') {
             if (function_exists('disk_free_space')) {
-                $env_items[$key]['current'] = floor(disk_free_space(ROOT_PATH) / (1024 * 1024)) . 'M';
+                $freeSpace = disk_free_space(ROOT_PATH);
+                if ($freeSpace !== false) {
+                    $env_items[$key]['current'] = floor($freeSpace / (1024 * 1024)) . 'M';
+                } else {
+                    $env_items[$key]['current'] = 'unknown';
+                }
             } else {
                 $env_items[$key]['current'] = 'unknown';
             }
@@ -205,6 +210,10 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
                     $error_code = ENV_CHECK_ERROR;
                 }
             }
+        }
+        if ($item['current'] == 'noext') {
+            $status = 0;
+            $error_code = ENV_CHECK_ERROR;
         }
         if (VIEW_OFF) {
             $env_str .= "\t\t<runCondition name=\"$key\" status=\"$status\" Require=\"$item[r]\" Best=\"$item[b]\" Current=\"$item[current]\"/>\n";

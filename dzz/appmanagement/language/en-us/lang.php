@@ -49,6 +49,7 @@ $lang = array(
     'MonthyChart' => 'Monthly',
     'contour' => 'Weekly',
     'date_line' => 'Daily',
+    'notset' => 'Unlimited',
 );
 
 ?>

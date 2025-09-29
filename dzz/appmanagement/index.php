@@ -99,67 +99,72 @@ if ($do == 'stats') {
     }
     $env_items = array
     (
-        'systemOS' => array('c' => 'PHP_OS', 'r' => '不限制', 'b' => 'Linux'),
+        'systemOS' => array('c' => 'PHP_OS', 'r' => 'notset', 'b' => 'Linux'),
         'php_version' => array('c' => 'PHP_VERSION', 'r' => '7+', 'b' => 'php7.4'),
         'php_os_version' => array('c' => 'PHP_INT_SIZE', 'r' => '32位(32位不支持2G以上文件上传下载)', 'b' => '64位'),
-        'max_upload_size' => array('r' => '不限制', 'b' => '50M'),
-        'post_max_size' => array('r' => '不限制', 'b' => '50M'),
-        'memory_limit' => array('r' => '不限制', 'b' => '128M'),
+        'max_upload_size' => array('r' => 'notset', 'b' => '50M'),
+        'post_max_size' => array('r' => 'notset', 'b' => '50M'),
+        'memory_limit' => array('r' => 'notset', 'b' => '128M'),
         'gd_version' => array('r' => '1.0', 'b' => '2.0'),
         'disk_space' => array('r' => '50M', 'b' => '10G以上'),
-        'SERVER_SOFTWARE' => array('r' => '不限制', 'b' => 'nginx'),
-        'max_execution_time' => array('r' => '不限制', 'b' => '不限制'),
-        'max_input_time' => array('r' => '不限制', 'b' => '不限制'),
+        'SERVER_SOFTWARE' => array('r' => 'notset', 'b' => 'nginx'),
+        'max_execution_time' => array('r' => 'notset', 'b' => 'notset'),
+        'max_input_time' => array('r' => 'notset', 'b' => 'notset'),
     );
     foreach ($env_items as $key => $item) {
+        $env_items[$key]['status'] = 1;
         if ($key == 'php_version') {
             $env_items[$key]['current'] = PHP_VERSION;
+            if (version_compare($env_items[$key]['current'], '7.0.0') < 0) {
+                $env_items[$key]['status'] = 0;
+            }
         } elseif ($key == 'php_os_version') {
             $env_items[$key]['current'] = phpBuild64() ? 64 : 32;
         } elseif ($key == 'max_upload_size') {
-            $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknownn';
+            $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknown';
         } elseif ($key == 'memory_limit') {
             $env_items[$key]['current'] = ini_get('memory_limit') ?? 'unknown';
         } elseif ($key == 'post_max_size') {
             $env_items[$key]['current'] = ini_get('post_max_size') ?? 'unknown';
         } elseif ($key == 'allow_url_fopen') {
-            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ? ini_get('allow_url_fopen') : 'unknown';
+            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ?: 'unknown';
         } elseif ($key == 'gd_version') {
             $tmp = function_exists('gd_info') ? gd_info() : array();
             $env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
             unset($tmp);
+            if ($env_items[$key]['current'] == 'noext') {
+                $env_items[$key]['status'] = 0;
+            }
         } elseif ($key == 'disk_space') {
             if (function_exists('disk_free_space')) {
-                $env_items[$key]['current'] = floor(disk_free_space(ROOT_PATH) / (1024 * 1024)) . 'M';
+                $freeSpace = disk_free_space(ROOT_PATH);
+                if ($freeSpace !== false) {
+                    $env_items[$key]['current'] = floor($freeSpace / (1024 * 1024)) . 'M';
+                } else {
+                    $env_items[$key]['current'] = 'unknown';
+                }
             } else {
                 $env_items[$key]['current'] = 'unknown';
             }
-        } elseif ($key == 'php_os_version') {
-            if (PHP_INT_SIZE === 4) {
-                $env_items[$key]['current'] = '32位';
-            } else if (PHP_INT_SIZE === 8) {
-                $env_items[$key]['current'] = '64位';
-            } else {
-                $env_items[$key]['current'] = '无法确定架构类型';
-            }
         } elseif ($key == 'SERVER_SOFTWARE') {
-            $env_items[$key]['current'] = $_SERVER["SERVER_SOFTWARE"];
+            $env_items[$key]['current'] = $_SERVER["SERVER_SOFTWARE"] ?? 'unknown';
         } elseif ($key == 'max_execution_time') {
-            $env_items[$key]['current'] = ini_get('max_execution_time') . lang('sec');
+            $val = ini_get('max_execution_time') ?: 'unknown';
+            $env_items[$key]['current'] = $val . ($val !== 'unknown' ? lang('sec') : '');
         } elseif ($key == 'max_input_time') {
-            $env_items[$key]['current'] = ini_get('max_input_time') . lang('sec');
+            $val = ini_get('max_input_time') ?: 'unknown';
+            $env_items[$key]['current'] = $val . ($val !== 'unknown' ? lang('sec') : '');
         } elseif (isset($item['c'])) {
             $env_items[$key]['current'] = constant($item['c']);
         }
 
-        $env_items[$key]['status'] = 1;
         if ($item['r'] != 'notset' && strcmp($env_items[$key]['current'], $item['r']) < 0) {
             $env_items[$key]['status'] = 0;
         }
     }
     $env_str = '';
     foreach ($env_items as $key => $item) {
-        $status = 1;
+        $status = $item['status'];
         $env_str .= "<tr>\n";
         $env_str .= "<td>" . lang($key) . "</td>\n";
         $env_str .= "<td>" . lang($item['r']) . "</td>\n";

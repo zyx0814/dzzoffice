@@ -49,6 +49,7 @@ $lang = array(
     'MonthyChart' => '月线',
     'contour' => '周线',
     'date_line' => '日线',
+    'notset' => '不限制',
 );
 
 ?>
