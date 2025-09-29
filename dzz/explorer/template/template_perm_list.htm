@@ -1,6 +1,37 @@
 <!--{if $perms}-->
 <div class="right-card-header">
-    <div class="title">{lang my_permission}</div>
+    <div class="title">管理员权限</div>
+</div>
+<ul class="proper-show proper-poewr">
+    <!--{loop $perms $k $val}-->
+    <li style="display:block;"><span class="{$val[2]}" title="$val[0]"></span></li>
+    <!--{/loop}-->
+</ul>
+<!--{if $_G['group']['perm']}-->
+<div class="right-card-header">
+    <div class="title">您的用户组权限</div>
+</div>
+<ul class="proper-show proper-poewr">
+    <!--{loop $perms $k $val}-->
+    <li <!--{if $_G['group']['perm'] & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
+    <!--{/loop}-->
+</ul>
+<!--{/if}-->
+<!--{if $fileinfo['gid']}-->
+<div class="right-card-header">
+    <div class="title">一般协作成员权限</div>
+    <!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
+</div>
+<!--{if $folderperm}-->
+<ul class="proper-show proper-poewr">
+    <!--{loop $perms $k $val}-->
+    <li <!--{if $folderperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
+    <!--{/loop}-->
+</ul>
+<!--{/if}-->
+<!--{/if}-->
+<div class="right-card-header">
+    <div class="title">您的实际生效权限 <i class="ms-1 mdi mdi-information-outline" title="<!--{if isset($usergroupperm) && $usergroupperm > 0}-->管理员权限<!--{else}-->用户/组权限和一般协作成员权限组合<!--{/if}-->"></i></div>
 </div>
 <!--{if $myperm}-->
 <ul class="proper-show proper-poewr">
@@ -14,17 +45,7 @@
     <p class="text-muted fs-5">{lang no_permission}</p>
 </div>
 <!--{/if}-->
-<!--{if $folderperm}-->
-<div class="right-card-header">
-    <div class="title">{lang directory_right}</div>
-    <button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button>
-</div>
-<ul class="proper-show proper-poewr">
-    <!--{loop $perms $k $val}-->
-    <li <!--{if $folderperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
-    <!--{/loop}-->
-</ul>
-<!--{/if}-->
+<!--{if $_G['setting']['allowshare']}--><span class="form-text">系统管理员已关闭分享功能</span><!--{/if}-->
 <!--{if $org}-->
 <div class="right-card-header">
     <div class="title"><!--{if $org[type]== '1'}-->{lang group}<!--{else}--><!--{if $org[forgid]>0}-->{lang department}<!--{else}-->{lang organization}<!--{/if}--><!--{/if}-->{lang member}</div>

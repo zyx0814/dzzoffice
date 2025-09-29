@@ -5,7 +5,7 @@ if (!defined('IN_DZZ')) {
 include_once libfile('function/code');
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 $uid = $_G['uid'];
-if ($do == 'filelist' && !$uid) {
+if ($do == 'filelist' && !$_G['uid']) {
     $errorResponse = [
         "code" => 1,
         "msg" => lang('no_login_operation'),
@@ -72,7 +72,7 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
                 }
                 $progress = set_space_progress($usesize, $maxspace);
             } elseif ($fileinfo['pfid'] == 0) {
-                $spaceinfo = dzzgetspace($uid);
+                $spaceinfo = dzzgetspace($_G['uid']);
                 $maxspace = $spaceinfo['maxspacesize'];
                 $usesize = $spaceinfo['usesize'];
                 $progress = set_space_progress($usesize, $maxspace);
@@ -113,16 +113,11 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
             $filemeta = C::t('resources_meta')->fetch_by_key($rid,'desc', true);
             if($filemeta) $fileinfo['desc'] = $filemeta;
         }
-        if($fileinfo['isfolder']) {
-            if($fileinfo['gid']) {
-                $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $uid);//获取用户权限
-                if(isset($usergroupperm) && $usergroupperm > 0) {
-                    $folderperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
-                }
-            }
-            $myperm = perm_check::getPerm($fileinfo['fid']);
-            $perms = get_permsarray();//获取所有权限
+        if($fileinfo['gid']) {
+            $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);//获取用户权限
         }
+        $myperm = perm_check::getPerm($fileinfo['fid']);
+        $perms = get_permsarray();//获取所有权限
         include template('right_menu');
         exit();
     } elseif ($ridnum > 1) {//如果是多项选中，则调对应综合文件信息

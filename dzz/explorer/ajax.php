@@ -94,9 +94,13 @@ if ($do == 'upload') {//上传图片文件
             }
             $perm += 1;
         }
+        if(!$perm) exit(json_encode(array('error' => '目录权限不允许为空')));
         if ($perm == $groupperm) exit(json_encode(array('success' => true)));
-        if (!$inherit && !$perm) exit(json_encode(array('error' => '顶级目录权限不允许为空')));
         $fid = intval($_GET['fid']);
+        if($gid) {
+            $usergroupperm = C::t('organization_admin')->chk_memberperm($gid, $_G['uid']);//获取用户权限
+            if(!$usergroupperm) exit(json_encode(array('error' => '您没有权限修改此目录权限')));
+        }
         if (C::t('folder')->update($fid, array('perm' => $perm))) {
             //如果是编辑权限，增加相关事件
             if (!$new) {
@@ -1009,11 +1013,9 @@ if ($do == 'upload') {//上传图片文件
             }
             $userstr = implode(',', $userids);
             $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);
-            if(isset($usergroupperm) && $usergroupperm > 0) {
-                $folderperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
-            }
         }
     }
+    $folderperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
     $myperm = perm_check::getPerm($fileinfo['fid']);
     $perms = get_permsarray();
     if(!$property) {

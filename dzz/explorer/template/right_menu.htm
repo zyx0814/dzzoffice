@@ -47,17 +47,6 @@
                         <p>{lang no_permission}</p>
                     </div>
                     <!--{/if}-->
-                    <!--{if $folderperm}-->
-                    <div class="right-card-header">
-                        <div class="title">{lang directory_right}</div>
-                        <button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button>
-                    </div>
-                    <ul class="proper-show proper-poewr">
-                        <!--{loop $perms $k $val}-->
-                        <li <!--{if $folderperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
-                        <!--{/loop}-->
-                    </ul>
-                    <!--{/if}-->
                 </div>
             </div>
             <!--{/if}-->
@@ -65,7 +54,7 @@
             <!--{if $org}-->
             <div class="border-top p-1">
                 <div class="right-card-header">
-                    <div class="title">{lang about}<!--{if $org[type]== '1'}-->{lang group}<!--{else}--><!--{if $org[forgid]>0}-->{lang department}<!--{else}-->{lang organization}<!--{/if}--><!--{/if}--></div>
+                    <div class="title">{lang about}<!--{if $org[type]== '1'}-->{lang group}<!--{else}--><!--{if $org[forgid]>0}-->{lang department}<!--{else}-->{lang organization}<!--{/if}--><!--{/if}--> <i class="ms-1 mdi mdi-information-outline" data-toggle="tooltip" data-placement="right" title="机构部门需前往机构用户中进行管理"></i></div>
                     <!--{if $usergroupperm >= 1 && $org['type']}-->
                     <button type="button" class="groupbutton dcolor" onclick="showWindow('groupsetting','{MOD_URL}&op=group&do=group_ajax&operation=groupsetting&gid=$fileinfo['gid']','get',0)">
                         <span class="mdi mdi-cog"></span>
@@ -257,4 +246,7 @@
 </div>
 <script type="text/javascript" reload="1">
     _explorer.Scroll();
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 </script>
