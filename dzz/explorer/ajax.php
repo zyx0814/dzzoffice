@@ -954,26 +954,19 @@ if ($do == 'upload') {//上传图片文件
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
     $limit = 20;
-    $commentperm = false;
     if ($rid) {
         $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
         if($fileinfo['error']) showmessage($fileinfo['error']);
-        if (perm_check::checkperm_Container($fileinfo['fid'], 'comment')) {
-            $commentperm = true;
-            $total = C::t('resources_event')->fetch_by_rid($rid, $page, $limit, true,2);
-            if ($total) {
-                $events = C::t('resources_event')->fetch_by_rid($rid, $page, $limit,false, 2);
-            }
+        $total = C::t('resources_event')->fetch_by_rid($rid, $page, $limit, true,2);
+        if ($total) {
+            $events = C::t('resources_event')->fetch_by_rid($rid, $page, $limit,false, 2);
         }
     } elseif($fid) {
         $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
         if($fileinfo['error']) showmessage($fileinfo['error']);
-        if (perm_check::checkperm_Container($fid, 'comment')) {
-            $commentperm = true;
-            $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true, $page, $limit, '', 2);
-            if ($total) {
-                $events = C::t('resources_event')->fetch_by_pfid_rid($fid, false, $page, $limit, '', 2);
-            }
+        $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true, $page, $limit, '', 2);
+        if ($total) {
+            $events = C::t('resources_event')->fetch_by_pfid_rid($fid, false, $page, $limit, '', 2);
         }
     }
     if ($total) {
@@ -983,10 +976,9 @@ if ($do == 'upload') {//上传图片文件
     } else {
         $info = lang('no_cmment');
     }
-    if($commentperm) {//有查看评论权限
-        if(!$fileinfo['editperm']) $addinfo = lang('no_comment_perm_file');//有查看评论权限但无发布权限
-    } else {//无查看评论权限
-        $info = lang('no_comment_perm');
+    $commentperm = false;
+    if (perm_check::checkperm_Container($fid, 'comment')) {
+        $commentperm = true;
     }
     $commentid = 2;
     if(!$property) {

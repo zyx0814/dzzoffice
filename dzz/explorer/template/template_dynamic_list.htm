@@ -1,5 +1,5 @@
 <!--{if $do == 'comment'}-->
-<!--{if $commentperm && $fileinfo['editperm']}-->
+<!--{if $commentperm}-->
 <div class="comment-area dtheme">
     <div class="messageMenu"> 
 	    <form action="{MOD_URL}&op=ajax&do=commentajax" method="post" onsubmit="return comment_file(this)" id="commentid{$commentid}">
@@ -98,9 +98,8 @@
     });
 </script>
 <ul class="lyear-timeline lyear-timeline-left just-now" style="margin-top: 55px;"></ul>
-<!--{/if}-->
-<!--{if $addinfo}-->
-<div class="alert alert-warning">$addinfo</div>
+<!--{else}-->
+<div class="alert alert-warning">{lang no_comment_perm_file}</div>
 <!--{/if}-->
 <!--{/if}-->
 <!--{if $events}-->
