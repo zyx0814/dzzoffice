@@ -163,15 +163,15 @@ INSERT INTO `dzz_usergroup` VALUES(10, 0, 'system', 'private', '信息录入员'
 -- 转存表中的数据 `dzz_usergroup_field`
 --
 
-INSERT INTO `dzz_usergroup_field` VALUES(1, 0, '', 0, 524287);
-INSERT INTO `dzz_usergroup_field` VALUES(2, 0, '', 0, 524287);
-INSERT INTO `dzz_usergroup_field` VALUES(3, 0, '', 0, 524287);
+INSERT INTO `dzz_usergroup_field` VALUES(1, 0, '', 0, 1847295);
+INSERT INTO `dzz_usergroup_field` VALUES(2, 0, '', 0, 1847295);
+INSERT INTO `dzz_usergroup_field` VALUES(3, 0, '', 0, 1847295);
 INSERT INTO `dzz_usergroup_field` VALUES(4, -1, '', 0, 7);
 INSERT INTO `dzz_usergroup_field` VALUES(5, -1, '', 0, 1);
 INSERT INTO `dzz_usergroup_field` VALUES(6, -1, '', 0, 1);
 INSERT INTO `dzz_usergroup_field` VALUES(7, -1, 'gif, jpg, jpeg, png', 0, 7);
 INSERT INTO `dzz_usergroup_field` VALUES(8, -1, '', 0, 7);
-INSERT INTO `dzz_usergroup_field` VALUES(9, 10240, '', 0, 524287);
+INSERT INTO `dzz_usergroup_field` VALUES(9, 10240, '', 0, 1847295);
 INSERT INTO `dzz_usergroup_field` VALUES(10, 10240, '', 0, 229039);
 
 
@@ -385,7 +385,7 @@ INSERT INTO `dzz_user_field` (`uid`, `docklist`, `screenlist`, `applist`, `notic
 INSERT INTO `dzz_resources_permgroup` (`id`, `pername`, `perm`, `off`, `default`, `system`) VALUES
 (1, '只读', 7, 0, 1, 1),
 (2, '只写', 10243, 0, 0, 1),
-(3, '完全控制', 798719, 0, 0, 1),
+(3, '完全控制', 1847295, 0, 0, 1),
 (4, '仅下载', 1927, 0, 0, 1),
 (5, '读写1', 10927, 0, 0, 1),
 (6, '读写2', 12271, 0, 0, 1),
