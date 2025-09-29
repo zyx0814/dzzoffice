@@ -29,6 +29,11 @@
     <!--{/loop}-->
 </ul>
 <!--{/if}-->
+<!--{else}-->
+<div class="text-center">
+    <img src="static/image/common/no_list.png">
+    <p class="text-muted fs-5">{lang no_related_data}</p>
+</div>
 <!--{/if}-->
 <div class="right-card-header">
     <div class="title">您的实际生效权限 <i class="ms-1 mdi mdi-information-outline" title="<!--{if isset($usergroupperm) && $usergroupperm > 0}-->管理员权限<!--{else}-->用户/组权限和一般协作成员权限组合<!--{/if}-->"></i></div>

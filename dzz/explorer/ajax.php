@@ -1014,8 +1014,8 @@ if ($do == 'upload') {//上传图片文件
             $userstr = implode(',', $userids);
             $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);
         }
+        $folderperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
     }
-    $folderperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
     $myperm = perm_check::getPerm($fileinfo['fid']);
     $perms = get_permsarray();
     if(!$property) {
