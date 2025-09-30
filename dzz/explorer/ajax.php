@@ -362,19 +362,18 @@ if ($do == 'upload') {//上传图片文件
     }
 } elseif ($do == 'tag') {
     $rid = isset($_GET['rid']) ? $_GET['rid'] : '';
-    if (!$fileinfo = C::t('resources')->fetch_info_by_rid($rid)) {
-        showmessage('no_relevant_content');
-    }
+    $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
+    if($fileinfo['error']) showmessage($fileinfo['error']);
+    if(!$fileinfo['editperm']) showmessage(lang('no_privilege'));
     $tags = C::t('resources_tag')->fetch_tag_by_rid($rid);
     if (isset($_GET['addtag']) && $_GET['addtag']) {
         $tags = isset($_GET['tags']) ? $_GET['tags'] : '';
         $tagsarr = array_filter(explode(',', $tags));
-        if (empty($tagsarr)) {
-            exit(json_encode(array('error' => lang('tag_name_ismust'))));
-        }
         $tagsubmit = array();
-        foreach ($tagsarr as $v) {
-            $tagsubmit[] = getstr($v);
+        if (!empty($tagsarr)) {
+            foreach ($tagsarr as $v) {
+                $tagsubmit[] = getstr($v);
+            }
         }
         if ($insert = C::t('resources_tag')->insert_data($rid, $tagsubmit)) {
             $statisarr = array(

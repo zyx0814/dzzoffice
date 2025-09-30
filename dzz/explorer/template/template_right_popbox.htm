@@ -70,7 +70,7 @@
          }
       }
        var text = obj.find('.popbox-text').text();
-       jQuery.post(MOD_URL+'&op=group&do=right_popbox&operation=setmemberperm&gid='+gid,{'guid':currentUid,'perm':perm},function(data){
+       jQuery.post(MOD_URL+'&op=group&do=right_popbox&operation=setmemberperm&ajaxdata=json&gid='+gid,{'guid':currentUid,'perm':perm},function(data){
 			if(data['success']){
 			    if(perm > 1  && orgtype == 1){
                     var html = '{lang explorer_groupperm_creater}';
@@ -87,8 +87,10 @@
                     obj.closest('.doperm').siblings('.numer_admin').find('.permgrouptextspan').text(text);
                 }
 				showmessage(data['success'],'success',3000,1);
-			}else {
-                showDetail(data['error']);
+			} else if(data['msg']) {
+				showmessage(data['msg'], 'error', 3000, 1);
+			} else {
+                showmessage('{lang do_failed}', 'error', 3000, 1);
             }
 	   },'json').fail(function (jqXHR, textStatus, errorThrown) {
 			showmessage('{lang do_failed}', 'error', 3000, 1);
@@ -97,12 +99,11 @@
 
     jQuery(document).off('click.removeuser').on('click.removeuser','.right_popbox_header .removeuser',function(){
         var obj = jQuery(this);
-        var msg =__lang.delete_member_confirm_info;
-		layer.confirm(__lang.delete_member_confirm_info, {skin:'lyear-skin-danger'}, function(index){
-			layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
+		layer.confirm('{lang delete_member_confirm_info}', {skin:'lyear-skin-danger'}, function(index){
+			layer.msg('{lang deleting_not_please_close}', {offset:'10px',time:0});
 			var currentdouid = '{$_G['uid']}';
              var currentUid = '{$userinfos['uid']}';
-             jQuery.post(MOD_URL+'&op=group&do=right_popbox&operation=deletemember', {
+             jQuery.post(MOD_URL+'&op=group&do=right_popbox&operation=deletemember&ajaxdata=json', {
                  'gid': gid,
                  'uids': currentUid
              }, function (data) {
@@ -120,14 +121,15 @@
                          }
                          jQuery('.member_details_info').popbox('close');
                      }
-					 layer.msg(__lang.delete_success, {offset:'10px'});
-                 } else {
-					layer.alert(data['error'], {skin:'lyear-skin-danger'});
+					 layer.msg('{lang delete_success}', {offset:'10px'});
+                 } else if(data['msg']) {
+					layer.alert(data['msg'], {skin:'lyear-skin-danger'});
+				 } else {
+					layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
                  }
-
                  return false;
              }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-				showmessage('{lang do_failed}', 'error', 3000, 1);
+				layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
 			});
 		});
 	})

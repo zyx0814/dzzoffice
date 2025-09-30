@@ -1046,6 +1046,7 @@
 <form action="{MOD_URL}&op=ajax&do=tag" method="post" onsubmit="save_tag(this);return false;">
     <input type="hidden" name="rid" value="$rid"/>
     <input type="hidden" name="addtag" value="1"/>
+    <input type="hidden" name="ajaxdata" value="json"/>
     <div class="modal-header">
         <h4 class="modal-title text-truncate">{lang edit_label}</h4>
         <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
@@ -1088,21 +1089,34 @@
         $.post(form.action, jQuery(form).serialize(), function (data) {
             if (data['success']) {
                 var html = '';
-                for (var o in data['tagsadd']) {
-                    html += '<span class="layui-badge-rim m-1" data-tid="' + data['tagsadd'][o]['tid'] + '" id="' + rid + '-' + data['tagsadd'][o]['tid'] + '">' + data['tagsadd'][o]['tagname'] + '</span>';
+                if (data['tagsadd']) {
+                    for (var o in data['tagsadd']) {
+                        html += '<span class="layui-badge-rim m-1" data-tid="' + data['tagsadd'][o]['tid'] + '" id="' + rid + '-' + data['tagsadd'][o]['tid'] + '">' + data['tagsadd'][o]['tagname'] + '</span>';
+                    }
                 }
-                for (var o in data['tagsdel']) {
-                    $('#' + rid + '-' + data['tagsdel'][o]['tid']).remove();
+
+                if (data['tagsdel']) {
+                    for (var o in data['tagsdel']) {
+                        $('#' + rid + '-' + data['tagsdel'][o]['tid']).remove();
+                    }
                 }
-                if ($('#taglist-' + rid).children('span').length < 1) {
-                    $('#taglist-' + rid).html(html);
+                var taglist = $('#taglist-' + rid);
+                if (html || taglist.children('span').length > 0) {
+                    if (html) {
+                        if (taglist.children('span').length < 1) {
+                            taglist.html(html);
+                        } else {
+                            taglist.append(html);
+                        }
+                    }
                 } else {
-                    $('#taglist-' + rid).append(html);
+                    taglist.html('{lang no_labels_set}');
                 }
+
                 showmessage('{lang do_success}','success',3000,1);
                 hideWindow('$_GET[handlekey]');
-            } else if(data['error']) {
-                layer.alert(data['error'], {skin:'lyear-skin-danger'});
+            } else if(data['msg']) {
+                layer.alert(data['msg'], {skin:'lyear-skin-danger'});
             } else {
                 layer.alert('{lang do_failed}', {skin:'lyear-skin-danger'});
             }

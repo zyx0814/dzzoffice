@@ -25,7 +25,7 @@
 <!--{if $fileinfo['gid']}-->
 <div class="right-card-header">
     <div class="title">一般协作成员权限</div>
-    <!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
+    <!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')" data-toggle="tooltip" data-placement="right" title="编辑目录权限"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
 </div>
 <!--{if $folderperm}-->
 <ul class="proper-show proper-poewr">
@@ -41,7 +41,7 @@
 <!--{/if}-->
 <!--{/if}-->
 <div class="right-card-header">
-    <div class="title">您的实际生效权限</div>
+    <div class="title">您的实际生效权限<i class="ms-1 mdi mdi-information-outline" data-toggle="tooltip" data-placement="right" title="<!--{if $_G['adminid'] == 1}-->您作为系统管理员，拥有该目录的全部权限，不受任何限制。<!--{elseif isset($usergroupperm) && $usergroupperm > 0}-->您作为管理员，拥有该目录的全部管理权限。<!--{else}-->您的实际权限 = 一般协作成员权限 × 您的用户/组权限（仅两者都允许的操作才能生效）。<!--{/if}-->"></i></div>
 </div>
 <!--{if $myperm}-->
 <ul class="proper-show proper-poewr">
@@ -55,7 +55,7 @@
     <p class="text-muted fs-5">{lang no_permission}</p>
 </div>
 <!--{/if}-->
-<span class="form-text"><i class="ms-1 mdi mdi-information-outline"></i> <!--{if $_G['adminid'] == 1}-->您作为系统管理员，拥有该目录的全部权限，不受任何限制。<!--{elseif isset($usergroupperm) && $usergroupperm > 0}-->您作为管理员，拥有该目录的全部管理权限。<!--{else}-->您的实际权限 = 一般协作成员权限 × 您的用户/组权限（仅两者都允许的操作才能生效）。<!--{/if}--></span>
+<span class="form-text"></span>
 <!--{if $_G['setting']['allowshare']}--><span class="form-text">系统管理员已关闭分享功能</span><!--{/if}-->
 <!--{if $org}-->
 <div class="right-card-header">
@@ -75,7 +75,7 @@
             <span class="perm-name"><!--{if $v['perm'] == 0}-->{lang explorer_groupperm_cooperative}<!--{elseif $v['perm'] == 1}-->{lang explorer_groupperm_manager}<!--{elseif $v['perm'] == 2}-->{lang explorer_groupperm_creater}<!--{/if}--></span>
         </div>
         <!--{if $usergroupperm > 1}-->
-        <a href="javascript:;" class="js-popbox member_details_info dropdown-toggle fs-5" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;" data-href="{MOD_URL}&op=group&do=right_popbox&gid=$fileinfo['gid']&uid={$v['uid']}"></a>
+        <a href="javascript:;" class="js-popbox member_details_info dropdown-toggle fs-5" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;" data-href="{MOD_URL}&op=group&do=right_popbox&gid=$fileinfo['gid']&uid={$v['uid']}&ajaxdata=html"></a>
         <!--{/if}-->
     </li>
     <!--{/loop}-->
@@ -92,6 +92,7 @@ $multi
     var userids = '';
 $(document).ready(function(){
     userids = '{$userstr}';
+    $('[data-toggle="tooltip"]').tooltip();
 });
 jQuery(".right-numerbottom .js-popbox").each(function(){
     jQuery(this).popbox();

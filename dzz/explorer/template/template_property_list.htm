@@ -96,10 +96,11 @@
 </div>
 <!--{/if}-->
 <!--{if $fileinfo['rid'] && !$bz && !$fileinfo['ismulti']}-->
+<!--{if $fileinfo['editperm']}-->
 <div class="row mb-1">
     <label class="col-sm-3">{lang file_desc}</label>
     <div class="col-sm-9">
-        <textarea name="desc" class="form-control form-control_desc" <!--{if !$fileinfo['editperm']}-->disabled="disabled"<!--{/if}--> placeholder="{lang file_desc_placeholder}">$fileinfo['desc']</textarea>
+        <textarea name="desc" class="form-control form-control_desc" placeholder="{lang file_desc_placeholder}">$fileinfo['desc']</textarea>
     </div>
     <script type="text/javascript">
     jQuery('.form-control_desc').change(function(){
@@ -108,14 +109,22 @@
     });
     </script>
 </div>
+<!--{else}-->
+<div class="row mb-1">
+    <label class="col-sm-3">{lang file_desc}</label>
+    <div class="col-sm-9 text-break">$fileinfo['desc']</div>
+</div>
+<!--{/if}-->
 <!--文件详情结束-->
 <!--标签开始-->
 <div class="border-top p-1">
     <div class="right-card-header">
         <div class="title">{lang label}</div>
+        <!--{if $fileinfo['editperm']}-->
         <button type="button" class="dcolor conpile-poewr" onclick="showWindow('property','{MOD_URL}&op=ajax&do=tag&rid={$fileinfo['rid']}','get',0)">
             <span class="mdi mdi-pencil fs-6"></span>
         </button>
+        <!--{/if}-->
     </div>
     <div class="right-card-body" id="taglist-{$fileinfo['rid']}">
         <!--{if $tags}-->
