@@ -249,22 +249,20 @@ class perm_check {
             if (!perm_FolderSPerm::isPower(perm_FolderSPerm::flagPower($bz), $action)) return false;
             return true;
         }
-        if ($pfid) {
-            if ($folder = C::t('folder')->fetch($pfid)) {
-                //首先判断目录的超级权限；
-                if ($action == 'rename') {
-                    $action = 'edit';
-                }
-                if (in_array($action, array('read', 'delete', 'edit', 'download', 'copy'))) {
-                    if ($_G['uid'] == $folder['uid']) $action .= '1';
-                    else $action .= '2';
-                }
-                if ($folder['fsperm'] && !perm_FolderSPerm::isPower($folder['fsperm'], $action)) return false;
-                //默认目录只有管理员有权限改变排列
-                //if($action=='admin' && $_G['adminid']!=1 && $folder['flag']!='folder') return false;
-                if ($folder && $folder['gid']) {
-                    return self::groupPerm($pfid, $action, $folder['gid']);
-                }
+        if ($pfid && $folder = C::t('folder')->fetch($pfid)) {
+            //首先判断目录的超级权限；
+            if ($action == 'rename') {
+                $action = 'edit';
+            }
+            if (in_array($action, array('read', 'delete', 'edit', 'download', 'copy'))) {
+                if ($_G['uid'] == $folder['uid']) $action .= '1';
+                else $action .= '2';
+            }
+            if ($folder['fsperm'] && !perm_FolderSPerm::isPower($folder['fsperm'], $action)) return false;
+            //默认目录只有管理员有权限改变排列
+            //if($action=='admin' && $_G['adminid']!=1 && $folder['flag']!='folder') return false;
+            if ($folder['gid']) {
+                return self::groupPerm($pfid, $action, $folder['gid']);
             }
         }
         return self::userPerm($pfid, $action);

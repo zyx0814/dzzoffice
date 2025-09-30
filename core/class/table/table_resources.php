@@ -919,8 +919,15 @@ class table_resources extends dzz_table {
                 }
                 if($filestatis['edituid']) {
                     $fileinfo['edituid'] = $filestatis['edituid'];
-                    $fileinfo['editusername'] = c::t('user')->fetch_by_username_uid($filestatis['edituid']);
+                    if($filestatis['edituid'] == $_G['uid']) {
+                        $fileinfo['editusername'] = lang('my_self');
+                    } else {
+                        $fileinfo['editusername'] = c::t('user')->fetch_by_username_uid($filestatis['edituid']);
+                    }
                 }
+            }
+            if($fileinfo['uid'] == $_G['uid']) {
+                $fileinfo['username'] = lang('my_self');
             }
             $fileinfo['fdateline'] = dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
             $fileinfo['ftype'] = getFileTypeName($fileinfo['type'], $fileinfo['ext']);
@@ -1032,6 +1039,9 @@ class table_resources extends dzz_table {
         $fileinfo['editperm'] = 0;
         if (perm_check::checkperm_Container($fid, 'edit')) {
             $fileinfo['editperm'] = 1;
+        }
+        if($fileinfo['uid'] == $_G['uid']) {
+            $fileinfo['username'] = lang('my_self');
         }
         $fileinfo['isfolder'] = true;
         $fileinfo['fdateline'] = ($fileinfo['dateline']) ? dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s') : '';

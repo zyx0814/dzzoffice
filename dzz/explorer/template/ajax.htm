@@ -178,7 +178,9 @@
                 } else if ('{$setting}') {
                     showmessage('{lang update_success}', 'success', 3000, 1);
                     hideWindow('property');
-                    location.reload();
+                    if ($('.perm-tab').hasClass('active')) {
+                        jQuery('.perm-tab').click();
+                    }
                 } else {
                     showmessage('{lang do_success}', 'success', 3000, 1);
                     hideWindow('property');
