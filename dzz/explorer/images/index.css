@@ -9,7 +9,7 @@
 .version_menu .group-editMenu{display:none}
 .version_menu:hover .editMenu{display:none}
 .version_menu:hover .group-editMenu{display:block;font-size:14px}
-.right-card-header{display:flex;justify-content:space-between;align-items:center}
+.right-card-header{display:flex;flex-wrap: wrap;justify-content:space-between;align-items:center}
 .right-card-header .title{float:left;font-weight:600;font-size:14px}
 .org-sel-box{height:300px}
 .atwho-view{z-index:9999 !important;width:150px !important;background:white;border:1px solid #DDD;border-radius:3px;box-shadow:0 0 5px rgba(0,0,0,0.1)}
