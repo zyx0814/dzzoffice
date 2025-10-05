@@ -31,8 +31,18 @@ if ($identify && file_exists($appConfig)) {
         if (empty($about['version'])) $about['version'] = $appinfo['version'];
     }
 }
-if (empty($about['name_en'])) {
-    $about['name_en'] = 'DzzOffice';
+if ($_G['language'] === 'zh-en' && isset($about['name_zh'])) {
+    $about['name'] = $about['name_zh'];
+} elseif ($_G['language'] === 'en-us' && isset($about['name_en'])) {
+    $about['name'] = $about['name_en'];
+} else {
+    if (isset($about['name_zh'])) {
+        $about['name'] = $about['name_zh'];
+    } elseif (isset($about['name_en'])) {
+        $about['name'] = $about['name_en'];
+    } else {
+        $about['name'] = 'DzzOffice';
+    }
 }
 $version = 'V' . CORE_VERSION;
 if ($_G['ismobile'] && !$_GET['inajax']) {

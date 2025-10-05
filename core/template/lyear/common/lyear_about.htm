@@ -19,14 +19,7 @@
   <p class="aboutlogo">
     <img src="<!--{if $about['logo']}-->$about['logo']<!--{else}-->$sitelogo<!--{/if}-->" />
   </p>
-  <h4 class="name">
-    <!--{if $about['name_zh']}-->
-    <span class="name-zh">$about['name_zh']</span>
-    <!--{/if}-->
-    <!--{if $about['name_en']}-->
-    <span class="name-en">$about['name_en']</span>
-    <!--{/if}-->
-  </h4>
+  <h4 class="name">$about['name']</h4>
   <!--{if $about['version']}-->
   <p class="license">
     <span class="text-muted">{lang app_version}：</span> $about['version']

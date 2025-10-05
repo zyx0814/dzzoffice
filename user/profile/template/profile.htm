@@ -241,9 +241,9 @@ function show_error(fieldid, extrainfo) {
 }
 function show_success(message) {
 	message = message == '' ? '{lang update_date_success}' : message;
-	showDialog(message, 'right', '{lang reminder}', function(){
-		window.location.href=window.location.href;
-	}, 0, null, '', '', '', '', 3);
+  showmessage(message+'。3秒钟之后刷新页面...','info',3000,1,'top',function(){
+      window.location.reload();
+  });
 }
 function clearErrorInfo() {
 	jQuery('.has-error').removeClass('has-error');

@@ -71,15 +71,7 @@
             <p class="logo">
                 <img src="<!--{if $about['logo']}-->$about['logo']<!--{else}-->$sitelogo<!--{/if}-->" />
             </p>
-            <p class="name">
-                <!--{if $about['name_zh']}-->
-                <span class="name-zh">$about['name_zh']</span>
-                <!--{/if}-->
-                <!--{if $about['name_en']}-->
-                <span class="name-en">$about['name_en']</span>
-                <!--{/if}-->
-
-            </p>
+            <p class="name">$about['name']</p>
             <div class="detail">
                 <!--{if $about['version']}-->
                 <p class="version">
