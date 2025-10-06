@@ -156,19 +156,26 @@ class template {
         return $tplfile;
     }
 	//读取模板内容
-	private function parse_template_include($tpl){
+	private function parse_template_include($tpl) {
 		global $_G;
-		if(strpos($tpl, ':') !== false) {
+		if (strpos($tpl, ':') !== false) {
 			list($templateid, $tpl) = explode(':', $tpl);
 			$tpldir = $templateid;
 		}
-        $template = $this->parse_tplfile($tpl,$tpldir,false,true);
-        $this->includeTemplate[$template] = filemtime($template);
-        if(!is_file($template) || !$fp = fopen($template, 'r')){
-            return;
-        }
-        $content = fread($fp, filesize($template));
-        return $content;
+		$template = $this->parse_tplfile($tpl, $tpldir, false, true);
+		$this->includeTemplate[$template] = filemtime($template);
+		if (!is_file($template) || !$fp = fopen($template, 'r')){
+			return;
+		}
+		
+		$fileSize = filesize($template);
+		if ($fileSize <= 0) return; // 空文件或无效大小，直接返回
+		
+		$fp = fopen($template, 'r');
+		if (!$fp) return;
+		$content = fread($fp, $fileSize);
+		fclose($fp);
+		return $content;
 	}
 
 	function parse_template(&$template) {
