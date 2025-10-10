@@ -370,6 +370,9 @@ _explorer.jstree_select = function (hash) {
     if (!hash) {
         hash = $('#position').find("li[flag='home']").attr('hashs');
     }
+    if (!hash) {
+        hash = '';
+    }
     var op = hash.replace(/&(.+?)$/ig, ''); //(hash,'op');
     var fid = _explorer.getUrlParam(hash, 'fid');
     if (op === 'group') {

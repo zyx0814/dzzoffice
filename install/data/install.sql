@@ -782,7 +782,7 @@ CREATE TABLE `dzz_resources` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
   `ext` char(15) NOT NULL DEFAULT '' COMMENT '后缀',
   `size` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '大小',
-  `sperm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '权限',
+  `sperm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '超级权限',
   `isdelete` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否被删除',
   `deldateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
   `flag` char(15) NOT NULL DEFAULT '' COMMENT '文件标识,文件夹为folder,群组机构部门为organization',
