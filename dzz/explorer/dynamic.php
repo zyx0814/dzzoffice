@@ -111,7 +111,7 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
         }
         if($fileinfo['rid']) {
             $filemeta = C::t('resources_meta')->fetch_by_key($rid,'desc', true);
-            if($filemeta) $fileinfo['desc'] = $filemeta;
+            if($filemeta) $fileinfo['desc'] = htmlspecialchars($filemeta);
         }
         if($fileinfo['gid']) {
             $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);//获取用户权限

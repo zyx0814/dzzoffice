@@ -325,7 +325,8 @@ if ($do == 'deleteIco') {//删除文件到回收站
     if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
         return array('error' => lang('no_privilege'));
     }
-    $desc = isset($_GET['desc']) ? trim($_GET['desc']) : '';
+    $desc = isset($_GET['desc']) ? htmlspecialchars(trim($_GET['desc'])) : '';
+
     C::t('resources_meta')->update_by_key($fileinfo['rid'], array('desc' => $desc));
     exit(json_encode(array('success' => true)));
 }
