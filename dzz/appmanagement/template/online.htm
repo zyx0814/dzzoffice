@@ -12,9 +12,11 @@
 <link rel="stylesheet" href="static/lyear/js/layui/css/layui.css?{VERHASH}">
 <div class="alert alert-warning alert-dismissible fade show" role="alert">
 <strong>{lang board_message}</strong>
+<ul class="mb-0">
 <li>暂不支持强制下线用户！</li>
 <li>最后活动时间为每10分钟更新一次，在此期间活动不会更新。</li>
 <li>当前更新用户在线时间的时间频率为：<!--{if $_G['setting']['oltimespan']}-->$_G['setting']['oltimespan']分钟/次<!--{else}-->不记录用户在线时间<!--{/if}--></li>
+</ul>
 <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
 </div>
 <table class="layui-hide" id="table" lay-filter="table"></table>

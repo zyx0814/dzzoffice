@@ -15,10 +15,10 @@ if (!defined('IN_DZZ')) {
 class dzz_notification {
 
 
-    public static function notification_add($touid, $type, $note, $notevars = array(), $category = 0, $langfolder = '') {
+    public static function notification_add($uid, $type, $note, $notevars = array(), $category = 0, $langfolder = '') {
         global $_G;
 
-        if (!($tospace = getuserbyuid($touid))) {
+        if (!($tospace = getuserbyuid($uid))) {
             return false;
         }
         
@@ -44,13 +44,13 @@ class dzz_notification {
         }
         $oldnote = array();
         if(!$_G['setting']['notificationrepetition']) {
-            $oldnote = C::t('notification')->fetch_by_fromid_uid_type($notevars['from_id'], $notevars['from_idtype'], $touid, $type);
+            $oldnote = C::t('notification')->fetch_by_fromid_uid_type($notevars['from_id'], $notevars['from_idtype'], $uid, $type);
         }
 
         if (empty($oldnote['from_num'])) $oldnote['from_num'] = 0;
         $notevars['from_num'] = (isset($notevars['from_num']) && $notevars['from_num']) ? $notevars['from_num'] : 1;
         $setarr = array(
-            'uid' => $touid,
+            'uid' => $uid,
             'type' => $type,
             'new' => 1,
             'wx_new' => 1,
@@ -78,11 +78,11 @@ class dzz_notification {
         //self::wx_notification($setarr);
         //$banType = array('task');
         if (empty($oldnote['new'])) {
-            C::t('user')->increase($touid, array('newprompt' => 1));
+            C::t('user')->increase($uid, array('newprompt' => 1));
 
             /*require_once libfile('function/mail');
             $mail_subject = lang('notification', 'mail_to_user');
-            sendmail_touser($touid, $mail_subject, $notestring,  $type);*/
+            sendmail_touser($uid, $mail_subject, $notestring,  $type);*/
         }
     }
 
