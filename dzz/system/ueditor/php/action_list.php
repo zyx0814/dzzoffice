@@ -5,6 +5,9 @@
  * Date: 14-04-09
  * Time: 上午10:17
  */
+if (!defined('IN_DZZ')) {
+    exit('Access Denied');
+}
 include "Uploader.class.php";
 
 /* 判断类型 */
