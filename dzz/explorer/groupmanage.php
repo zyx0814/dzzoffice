@@ -134,17 +134,8 @@ if ($do == 'filelist') {
 
 } elseif ($do == 'groupmanage') {
     prem();
-    $gids = isset($_GET['gid']) ? $_GET['gid'] : '';
-    if (!$orgs = DB::fetch_all("select * from %t where orgid in(%n)", array('organization', $gids))) {
-        exit(json_encode(array('error' => lang('explorer_do_failed'))));
-    }
-    //暂无对应事件记录，此处数据方便之后加
-    /* $orgarr = array();
-     $gidarr = array();
-     foreach($orgs as $v){
-         $orgarr['orgid'] = $v;
-         $gidarr[] = $v['orgid'];
-     }*/
+    $gid = isset($_GET['gid']) ? intval($_GET['gid']): '';
+    if(!$gid) exit(json_encode(array('error' => lang('explorer_do_failed'))));
     $setarr = array();
     if (isset($_GET['groupon'])) {
         $setarr['manageon'] = intval($_GET['groupon']);
@@ -153,8 +144,7 @@ if ($do == 'filelist') {
         $setarr['diron'] = intval($_GET['diron']);
     }
     if (!empty($setarr)) {
-        $gidstr = "'" . implode("','", is_array($gids) ? $gids : array($gids)) . "'";
-        if (DB::update('organization', $setarr, "orgid in(" . $gidstr . ")")) {
+        if (DB::update('organization',$setarr,array('orgid' => $gid))) {
             exit(json_encode(array('success' => true)));
         } else {
             exit(json_encode(array('error' => lang('explorer_do_failed'))));
