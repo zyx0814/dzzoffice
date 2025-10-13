@@ -38,6 +38,7 @@ switch ($action) {
 }
 
 /* 输出结果 */
+header('Content-Type: application/json; charset=utf-8');
 if (isset($_GET["callback"])) {
     if (preg_match("/^[\w_]+$/", $_GET["callback"])) {
         echo htmlspecialchars($_GET["callback"]) . '(' . json_encode($result) . ')';
@@ -47,14 +48,10 @@ if (isset($_GET["callback"])) {
         ));
     }
 } else {
-
     if ($markdown) {
         $result = array('url' => $result['url'],
             'success' => $result['state'] == 'SUCCESS' ? 1 : 0,
             'message' => $result['state']);
-
     }
     echo json_encode($result);
-
-
 }

@@ -25,7 +25,7 @@ class Uploader {
     private $stateInfo; //上传状态信息,
     private $stateMap = array( //上传状态映射表，国际化用户需考虑此处数据的国际化
         "SUCCESS", //上传成功标记，在UEditor中内不可改变，否则flash判断会出错
-        "文件大小超出 upload_max_filesize ",
+        "文件大小超出 upload_max_filesize 限制",
         "文件大小超出 MAX_FILE_SIZE 限制",
         "文件未被完整上传",
         "没有文件被上传",
@@ -87,7 +87,7 @@ class Uploader {
             return;
         }
 
-        $this->oriName = $file['name'];
+        $this->oriName = strip_tags($file['name']);
         $this->fileSize = $file['size'];
         $this->fileType = $this->getFileExt();
         $this->fileName = $this->getFileName();
