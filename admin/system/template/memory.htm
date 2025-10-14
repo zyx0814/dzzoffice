@@ -4,22 +4,62 @@
 	<div class="container-fluid">
 		<div class="card">
 			<div class="card-body">
-				<div class="alert alert-info">
-					内存优化主要用于缓存通用数据及会话（session），以加快系统访问速度。以下是常见的缓存方式及相关说明：
-					<ul class="form-text">
-						<li>File（文件缓存）：将数据直接写入缓存文件，适用于测试或小规模使用场景。</li>
-						<li>APC：PHP的内存缓存系统，主要用于加速PHP脚本执行。</li>
-						<li>Memcache：高性能分布式内存对象缓存系统，适用于高并发读取场景。</li>
-						<li>Memcached：高性能分布式内存对象缓存系统，适用于高并发读取场景。</li>
-						<li>Redis：开源内存数据结构存储系统，支持多种数据类型，适用于需要持久化和高性能的场景，推荐使用。</li>
-						<li>Wincache：专为Windows环境设计的PHP缓存扩展，功能类似APC。</li>
-						<li>XCache：PHP的内存缓存系统，功能类似APC。</li>
-					</ul>
-					相关设置说明：<br>
-					优化系统会依据当前服务器环境，依次选用合适的缓存方式<br>
-					内存接口的主要设置位于 \config\config.php 配置文件中，可通过编辑该文件进行高级设置。
+				<div class="accordion mb-3" id="accordionExample">
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingOne1">
+							<button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseOne1" aria-expanded="false" aria-controls="collapseOne1">常见缓存方式</button>
+						</h2>
+						<div id="collapseOne1" class="accordion-collapse collapse" aria-labelledby="headingOne1">
+							<div class="accordion-body">
+								<strong>（无需全部开启，建议根据实际场景选择1种启用）：</strong>
+								<ul class="list-group list-group-numbered form-text">
+									<li class="list-group-item">File（文件缓存）：将数据直接写入缓存文件，适用于测试或小规模使用场景。</li>
+									<li class="list-group-item">APC：PHP的内存缓存系统，主要用于加速PHP脚本执行。</li>
+									<li class="list-group-item">Memcache：高性能分布式内存对象缓存系统，适用于高并发读取场景。</li>
+									<li class="list-group-item">Memcached：高性能分布式内存对象缓存系统，适用于高并发读取场景。</li>
+									<li class="list-group-item">Redis：开源内存数据结构存储系统，支持多种数据类型，适用于需要持久化和高性能的场景，推荐使用。</li>
+									<li class="list-group-item">Wincache：专为Windows环境设计的PHP缓存扩展，功能类似APC。</li>
+									<li class="list-group-item">XCache：PHP的内存缓存系统，功能类似APC。</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingOne4">
+							<button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne4" aria-expanded="true" aria-controls="collapseOne4">模块生效前提</button>
+						</h2>
+						<div id="collapseOne4" class="accordion-collapse collapse show" aria-labelledby="headingOne4">
+							<div class="accordion-body">
+								<strong>（需同时满足以下两项条件）：</strong><br>
+								• PHP扩展环境支持：指服务器需安装对应缓存方式的PHP扩展（如使用Redis需安装Redis PHP扩展，使用APC需安装APC扩展），模块内可查看各扩展支持状态。<br>
+								• Config设置开启：指需在 <code>\config\config.php</code> 配置文件中，开启对应缓存方式的相关设置（如缓存开关、连接参数等），模块内可查看Config设置是否打开。
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+						<h2 class="accordion-header" id="headingOne3">
+							<button class="accordion-button collapsed" type="button" data-toggle="collapse" data-target="#collapseOne3" aria-expanded="false" aria-controls="collapseOne3">相关设置说明</button>
+						</h2>
+						<div id="collapseOne3" class="accordion-collapse collapse" aria-labelledby="headingOne3">
+							<div class="accordion-body">
+							• 优化系统会依据当前服务器环境，依次选用合适的缓存方式<br>
+							• 内存接口的主要设置位于 \config\config.php 配置文件中，可通过编辑该文件进行高级设置。<br>
+							</div>
+						</div>
+					</div>
+					<div class="accordion-item">
+					<h2 class="accordion-header" id="headingOne2">
+						<button class="accordion-button" type="button" data-toggle="collapse" data-target="#collapseOne2" aria-expanded="true" aria-controls="collapseOne2">内存优化优缺点说明</button>
+					</h2>
+					<div id="collapseOne2" class="accordion-collapse collapse show" aria-labelledby="headingOne2">
+						<div class="accordion-body">
+							• 优点：缓存通用数据及会话（session），大幅加快系统访问速度，减少服务器资源消耗。<br>
+							• 缺点：缓存数据与数据库数据可能存在同步延迟，导致数据不一致，进而引发功能不符合预期的情况（如数据更新后页面未及时显示最新内容）。
+						</div>
+					</div>
+					</div>
 				</div>
-				<a class="btn btn-primary d-grid mb-1" href="{MOD_URL}&op=memory&do=clear">内存清理<!--{if $do=='clear'}--> (清理完毕)<!--{/if}--></a>
+				<a class="btn btn-primary d-grid mb-3" href="{MOD_URL}&op=memory&do=clear">内存清理<!--{if $do=='clear'}--> (清理完毕)<!--{/if}--></a>
 				<div class="table-responsive">
 					<table class="table table-hover table-striped table-bordered align-middle">
 						<thead>

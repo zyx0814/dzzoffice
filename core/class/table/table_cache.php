@@ -19,7 +19,6 @@ class table_cache extends dzz_table {
 
         parent::__construct();
     }
-
 }
 
 ?>
