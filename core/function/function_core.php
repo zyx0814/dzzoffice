@@ -620,7 +620,7 @@ function isemail($email) {
 }
 
 function isphone($phone) {
-    return preg_match("/^1[3456789]\d{9,10}$/", $phone);
+    return preg_match('/^(\d{1,12}|\d{1,3}-\d{1,12})$/', $phone);
 }
 
 function quescrypt($questionid, $answer) {
