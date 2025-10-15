@@ -38,7 +38,7 @@ if ($_GET['do'] == 'orgtree') {
     $data = array();
     if ($_GET['id'] == '#') {
         if ($_G['adminid'] != 1 && $moderator) $topids = C::t('organization_admin')->fetch_toporgids_by_uid($_G['uid']);
-        if ($_G['adminid'] != 1 && $onlymyorg) $isorgdis = C::t('organization_user')->fetch_org_by_uid($_G['uid']);
+        if ($_G['adminid'] != 1 && $onlymyorg) $isorgdis = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
         foreach (C::t('organization')->fetch_all_by_forgid($id, false, -1) as $value) {
             if ($_G['adminid'] != 1 && $moderator && !in_array($value['orgid'], $topids)) continue;
             if ($_G['adminid'] != 1 && $onlymyorg && !in_array($value['orgid'], $isorgdis)) continue;
@@ -88,7 +88,7 @@ if ($_GET['do'] == 'orgtree') {
                 getuserIcon($uids, $datas, $data);
             }
         } else {
-            if ($_G['adminid'] != 1 && $onlymyorg) $isorgdis = C::t('organization_user')->fetch_org_by_uid($_G['uid']);
+            if ($_G['adminid'] != 1 && $onlymyorg) $isorgdis = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
             foreach (C::t('organization')->fetch_all_by_forgid($id) as $value) {
                 if ($_G['adminid'] != 1 && $onlymyorg && !in_array($value['orgid'], $isorgdis)) continue;
                 if (!$moderator || C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'], $_G['uid'])) {

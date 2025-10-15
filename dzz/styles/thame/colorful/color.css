@@ -6,23 +6,6 @@
  * @link        http://www.dzzoffice.com
  * @author      dzzfox(dzzfox@gmail.com)
  */
-#taskbar .taskbar-back {
-	background:_BACKGROUND_;
-	opacity:0.4;
-	filter:Alpha(opacity=40)
-}
-.taskbar-bottom .taskbar-back{
-	border-top:1px solid rgba(255,255,255,0.4);
-}
-.taskbar-left .taskbar-back{
-	border-right:1px solid rgba(255,255,255,0.4);
-}
-.taskbar-top .taskbar-back{
-	border-bottom:1px solid rgba(255,255,255,0.4);
-}
-.taskbar-right .taskbar-back{
-	border-left:1px solid rgba(255,255,255,0.4);
-}
 
 /* 窗体样式×/
 

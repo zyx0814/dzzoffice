@@ -16,6 +16,7 @@ if ($gid) {
     if (!$group = C::t('organization')->fetch($gid)) {
         showmessage('no_group', dreferer());
     }
+    $explorer_setting = get_resources_some_setting();
     if ($group['type'] == 1 && !$explorer_setting['grouponperm']) {
         showmessage('no_privilege', dreferer());
     }

@@ -201,7 +201,7 @@ class table_resources_recyle extends dzz_table {
             if ($explorer_setting['finallydelete'] > 0) {
                 $endtime = intval($explorer_setting['finallydelete']);
                 $dateend = strtotime("+" . $endtime . "day", $v['deldateline']);
-                $v['finallydate'] = self::diffBetweenTwoDays($dateend);
+                $v['finallydate'] = getexpiretext($dateend);
             } else {
                 $v['finallydate'] = '--';
             }
@@ -214,17 +214,6 @@ class table_resources_recyle extends dzz_table {
             $result[$v['rid']] = $v;
         }
         return $result;
-    }
-
-    //获取最终删除时间
-    public function diffBetweenTwoDays($end) {
-        $days = 0;
-        $start = TIMESTAMP;
-        if ($start < $end) {
-            $days = floor(($start - $end) / 86400);
-        }
-        if ($days < 0) $days = 0;
-        return $days;
     }
 
     //文件恢复

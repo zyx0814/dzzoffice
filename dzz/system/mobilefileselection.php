@@ -9,8 +9,6 @@ include_once libfile('function/filerouterule');
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 $callback_url = isset($_GET['callback_url']) ? $_GET['callback_url'] : '';//回调函数名称
 $allowcreate = isset($_GET['allowcreate']) ? intval($_GET['allowcreate']) : 1;//是否允许新建文件夹
-//获取配置设置值
-$explorer_setting = get_resources_some_setting();
 $range = isset($_GET['range']) ? trim($_GET['range']) : '';//指定范围
 $defaultselect = isset($_GET['defaultsel']) ? filerouteParse(trim($_GET['defaultsel'])) : filerouteParse('我的网盘');//默认选中,支持路径如：我的网盘/xxx,群组xxx/xxx,群组或机构|xxx，群组或机构|xxx/新建文件夹
 $type = isset($_GET['type']) ? intval($_GET['type']) : 0;//2,选择位置；1，保存文件；0，选择文件；默认为0

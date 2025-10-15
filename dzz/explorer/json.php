@@ -67,8 +67,7 @@ $data['sourcedata'] = array(
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
 
 $data['space'] = $space;
-$thame = getThames();
-$data['thame'] = $thame['data'];
+$data['thame'] = array('system' => array('folder'=>'colorful'));
 $infoPanelOpened = C::t('user_setting')->fetch_by_skey('infoPanelOpened');
 if (isset($infoPanelOpened)) {
     $data['infoPanelOpened'] = ($infoPanelOpened) ? 1 : 0;

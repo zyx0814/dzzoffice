@@ -43,7 +43,7 @@ if (submitcheck('appsubmit')) {
     }
     showmessage('do_success', dreferer());
 }
-$positionarr = array('0' => lang('none'), '1' => lang('start_menu')/*, '2' => lang('desktop'), '3' => lang('taskbar')*/);
+$positionarr = array('0' => lang('none'), '1' => lang('start_menu'));
 include libfile('function/organization');
 $group = intval($_GET['group']);
 $depid = intval($_GET['depid']);

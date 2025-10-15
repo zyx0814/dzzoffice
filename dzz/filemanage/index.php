@@ -22,13 +22,15 @@ if (!$uid) {
 }
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $orgid = isset($_GET['orgid']) ? intval($_GET['orgid']) : '';
-$typearr = array('image' => lang('photo'),
-    'document' => lang('type_attach'),
-    'link' => lang('type_link'),
-    'video' => lang('video'),
-    'folder' => lang('folder'),
-    'dzzdoc' => 'DZZ' . lang('type_attach'),
-    'attach' => lang('rest_attachment')
+$typeinfo = array(
+    'recycle' => array('name' => lang('recycle'), 'icon' => 'mdi-delete'),
+    'image' => array('name' => lang('photo'), 'icon' => 'mdi-file-image'),
+    'document' => array('name' => lang('type_attach'), 'icon' => 'mdi-file-document'),
+    'link' => array('name' => lang('type_link'), 'icon' => 'mdi-web'),
+    'video' => array('name' => lang('video'), 'icon' => 'mdi-video'),
+    'folder' => array('name' => lang('folder'), 'icon' => 'mdi-folder'),
+    'dzzdoc' => array('name' => 'DZZ' . lang('type_attach'), 'icon' => 'mdi-file'),
+    'attach' => array('name' => lang('rest_attachment'), 'icon' => 'mdi-file-chart')
 );
 require libfile('function/organization');
 if ($do == 'delete') {
@@ -96,8 +98,12 @@ if ($do == 'delete') {
         $param[] = $keyword;
     }
     if ($type) {
-        $sql .= ' and type=%s';
-        $param[] = $type;
+        if($type == 'recycle') {
+            $pfid = -1;
+        } else {
+            $sql .= ' and type=%s';
+            $param[] = $type;
+        }
     }
     if ($pfid) {
         $sql .= ' and (pfid = %d)';
@@ -126,64 +132,66 @@ if ($do == 'delete') {
     } else {
         $whereClause = "uid = $uid AND $sql";
     }
+    $list = array();
     $count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('resources') . " WHERE $whereClause", $param);
     if ($count) {
         $data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $whereClause $order $limitsql", $param);
-    }
-    $list = array();
-    foreach ($data as $value) {
-        if (!$data = C::t('resources')->fetch_by_rid($value['rid'])) {
-            continue;
-        }
-        //文件统计信息
-        $filestatis = C::t('resources_statis')->fetch_by_rid($value['rid']);
-        if ($data['relpath'] == '/') {
-            $data['relpath'] = '回收站';
-        }
-        if ($data['isdelete']) {
-            $isdelete = '是';
-        } else {
-            $isdelete = '否';
-        }
-        if ($_G['adminid']) {
-            $copys = $data['copys'];
-            if ($data['aid']) {
-                $FileUri = IO::getStream('attach::' . $data['aid']);
-                if(is_array($FileUri) && $FileUri['error']) {
-                    $FileUri = '<span class="text-danger">'.$FileUri['error'].'</span>';
-                } else {
-                    if ($data['attachment']) {
-                        $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
-                    } else {
-                        $FileUri = '<span class="text-danger">数据库中没有查到aid为：'.$data['aid'].'的记录</span>';
-                    }
-                }
-            } else {
-                $FileUri = '';
+        foreach ($data as $value) {
+            if (!$data = C::t('resources')->fetch_by_rid($value['rid'])) {
+                continue;
             }
+            //文件统计信息
+            $filestatis = C::t('resources_statis')->fetch_by_rid($value['rid']);
+            if ($data['relpath'] == '/') {
+                $data['relpath'] = '回收站';
+            }
+            if ($data['isdelete']) {
+                $isdelete = '是';
+            } else {
+                $isdelete = '否';
+            }
+            if ($_G['adminid']) {
+                $copys = $data['copys'];
+                if ($data['aid']) {
+                    $FileUri = IO::getStream('attach::' . $data['aid']);
+                    if(is_array($FileUri) && $FileUri['error']) {
+                        $FileUri = '<span class="text-danger">'.$FileUri['error'].'</span>';
+                    } else {
+                        if ($data['attachment']) {
+                            $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
+                        } else {
+                            $FileUri = '<span class="text-danger">数据库中没有查到aid为：'.$data['aid'].'的记录</span>';
+                        }
+                    }
+                } else {
+                    $FileUri = '';
+                }
+            }
+            $list[] = [
+                "username" => '<a href="user.php?uid=' . $data['uid'] . '" target="_blank">' . $data['username'] . '</a>',
+                "rid" => $data['rid'],
+                "name" => '<img class="icon" src="' . $data['img'] . '">' . $data['name'],
+                "dpath" => $data['dpath'],
+                "size" => $data['fsize'],
+                "type" => $data['ftype'],
+                "ftype" => $data['type'],
+                "oid" => $data['oid'],
+                "md5" => $data['md5'],
+                "relpath" => $data['relpath'],
+                "dateline" => $data['fdateline'],
+                "isdelete" => $isdelete,
+                "copys" => $copys,
+                "FileUri" => $FileUri,
+                "downs" => $filestatis['downs'],
+                "views" => $filestatis['views'],
+                "edits" => $filestatis['edits'],
+            ];
         }
-        $list[] = [
-            "username" => '<a href="user.php?uid=' . $data['uid'] . '" target="_blank">' . $data['username'] . '</a>',
-            "rid" => $data['rid'],
-            "name" => '<img class="icon" src="' . $data['img'] . '">' . $data['name'],
-            "dpath" => $data['dpath'],
-            "size" => $data['fsize'],
-            "type" => $data['ftype'],
-            "ftype" => $data['type'],
-            "oid" => $data['oid'],
-            "md5" => $data['md5'],
-            "relpath" => $data['relpath'],
-            "dateline" => $data['fdateline'],
-            "isdelete" => $isdelete,
-            "copys" => $copys,
-            "FileUri" => $FileUri,
-            "downs" => $filestatis['downs'],
-            "views" => $filestatis['views'],
-            "edits" => $filestatis['edits'],
-        ];
     }
-    $typearrname = $typearr[$type] ? $typearr[$type] : lang('all_typename_attach');
-    $breadcrumb = '<li class="breadcrumb-item"><a href="javascript:;" class="fid-btn" data-fid="">' . $typearrname . '</a></li>';
+    
+    $typearrname = $typeinfo[$type]['name'] ?? lang('all_typename_attach');
+    $typeicon = $typeinfo[$type]['icon'] ?? 'mdi-file-document-outline';
+    $breadcrumb = '<li class="breadcrumb-item"><a href="javascript:;" class="fid-btn" data-fid=""><i class="mdi '.$typeicon.' pe-2"></i>' . $typearrname . '</a></li>';
     if (!empty($foldername)) {
         $i = 0;
         foreach ($foldername as $v) {

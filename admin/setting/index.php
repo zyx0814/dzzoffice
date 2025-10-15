@@ -50,7 +50,7 @@ if (!submitcheck('settingsubmit')) {
             $setting['desktop_default'] = unserialize($setting['desktop_default']);
         }
         if (!$setting['desktop_default']) {
-            $setting['desktop_default'] = array('iconview' => 2, 'taskbar' => 'bottom', 'iconposition' => 0, 'direction' => 0,);
+            $setting['desktop_default'] = array('iconview' => 2);
         }
         if ($_G['setting']['dzz_iconview']) {
             $iconview = $_G['setting']['iconview'];

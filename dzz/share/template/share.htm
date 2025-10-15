@@ -16,6 +16,9 @@
 <main class="bs-main-container">
 	<div class="container-fluid">
 		<div class="card">
+			<div class="card-header">
+				<div class="card-title titleinfo"><i class="mdi mdi-share-variant-outline pe-2"></i>{lang all}</div>
+			</div>
 			<div class="card-body">
 				<div class="card-search mb-2-5">
 					  <div class="row">
@@ -97,6 +100,11 @@
 	initSort: {
 		field: 'dateline',
 		type: 'desc'
+	},
+	done: function(res, curr, count) {
+		if(res.title) {
+			$('.titleinfo').html(res.title);
+		}
 	}
 	});
 	table.on('checkbox(table)', function(obj){

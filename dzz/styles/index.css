@@ -69,10 +69,6 @@ height: expression(this.height > 50 && this.width<=this.height ? 50 : true);
 	right: 0px;
 	bottom: 0px;
 }
-.taskbar {
-	display: none
-}
-;
 .desktop {
 	position: absolute;
 	width: 100%;

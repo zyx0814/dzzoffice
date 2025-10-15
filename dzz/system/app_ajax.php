@@ -16,7 +16,6 @@ if ($operation == 'app') {
     $config = array();
     if ($_G['uid']) {
         $config = C::t('user_field')->fetch($_G['uid']);
-
         if (!$config) {
             $config = dzz_userconfig_init();
             if ($config['applist']) {
@@ -31,7 +30,6 @@ if ($operation == 'app') {
                 $applist = array();
             }
             if ($applist_n = array_keys(C::t('app_market')->fetch_all_by_notdelete($_G['uid']))) {
-
                 $newappids = array();
                 foreach ($applist_n as $appid) {
                     if (!in_array($appid, $applist)) {
@@ -45,7 +43,6 @@ if ($operation == 'app') {
                 }
             }
         }
-
     } else {
         $applist = array_keys(C::t('app_market')->fetch_all_by_default());
     }

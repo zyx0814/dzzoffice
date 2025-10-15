@@ -27,7 +27,6 @@ $data = array();
 $powerarr = perm_binPerm::getPowerArr();
 if ($do == 'get_children') {
     if ($id == 'group') {
-        //$orgids = C::t('organization_user')->fetch_org_by_uid($uid,1);
         $groupinfo = C::t('organization')->fetch_group_by_uid($uid, true);
         foreach ($groupinfo as $v) {
             $children = (C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) ? true : false;

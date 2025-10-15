@@ -82,8 +82,6 @@ function getCode62($url) {//获取url的code62码
     return $show;
 }
 
-function hookscriptoutput() {}
-
 define('DZZ_CORE_FUNCTION', true);
 function getOauthRedirect($url) {//获取链接的auth地址
     $wx = new qyWechat(array('appid' => getglobal('setting/CorpID'), 'appsecret' => getglobal('setting/CorpSecret')));
@@ -205,7 +203,6 @@ function stripsearchkey($string) {
     return $string;
 }
 
-
 function system_error($message, $show = true, $save = true, $halt = true) {
     dzz_error::system_error($message, $show, $save, $halt);
 }
@@ -285,7 +282,6 @@ function getuserbyuid($uid, $fetch_archive = 0) {
 }
 
 function chk_submitroule($type) {
-
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_GET['formhash']) && $_GET['formhash'] == formhash() && empty($_SERVER['HTTP_X_FLASH_VERSION']) && (empty($_SERVER['HTTP_REFERER']) ||
             preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST']))) {
 
@@ -694,7 +690,7 @@ function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel i
             if (empty($headerColor)) {//没有设置时，创建头像背景色，并且入库
                 $colorkey = rand(1, 15);
                 $headerColor = $colors[$colorkey];
-                C::t('user_setting')->insert_by_skey('headerColor', $headerColor, $user['uid']);
+                if($user['uid']) C::t('user_setting')->insert_by_skey('headerColor', $headerColor, $user['uid']);
             }
         } else {//游客默认使用第一个值；
             $headerColor = $colors[0];
@@ -740,50 +736,6 @@ function avatar_group($gid, $groupcolors = array(), $class = 'iconFirstWord') {
             C::t('organization')->update($gid, array('aid' => $groupcolor));
             return '<span class="iconFirstWord img-avatar" style="background:' . $groupcolor . ';" title="' . $groupinfo['orgname'] . '">' . strtoupper(new_strsubstr($groupinfo['orgname'], 1, '')) . '</span>';
         }
-    }
-}
-
-function getResourceByLang($flag) {
-    $langset = getglobal('language');
-    if (empty($langset)) return '';
-    switch ($flag) {
-        case 'select2':
-            $t = "static/select2/select2_locale_{lang}.js";
-            $src = str_replace('{lang}', $langset, $t);
-            if (file_exists($src)) {
-                return $src;
-            } else {
-                return '';
-            }
-            break;
-        case 'datepicker':
-            $t = "static/datepicker/i18n/datepicker-{lang}.js";
-            $src = str_replace('{lang}', $langset, $t);
-            if (file_exists($src)) {
-                return $src;
-            } else {
-                return '';
-            }
-            break;
-        case 'timepicker':
-            $t = "static/datepicker/timepicker/i18n/jquery-ui-timepicker-{lang}.js";
-            $src = str_replace('{lang}', $langset, $t);
-            if (file_exists($src)) {
-                return $src;
-            } else {
-                return '';
-            }
-            break;
-        case 'ueditor':
-            $t = "dzz/system/ueditor/lang/{lang}/{lang}.js";
-            $src = str_replace('{lang}', strtolower($langset), $t);
-            if (file_exists($src)) {
-                return $src;
-            } else {
-                return '';
-            }
-            break;
-
     }
 }
 
@@ -1027,7 +979,6 @@ function savecache($cachename, $data) {
 function save_syscache($cachename, $data) {
     savecache($cachename, $data);
 }
-
 
 function dimplode($array) {
     if (!empty($array)) {
@@ -1301,7 +1252,6 @@ function output_ajax() {
     return $s;
 }
 
-
 function debug($var = null, $vardump = false) {
     echo '<pre>';
     $vardump = empty($var) ? true : $vardump;
@@ -1405,7 +1355,6 @@ function runlog($file, $message, $halt = 0) {
     helper_log::runlog($file, $message, $halt);
 }
 
-
 function dmkdir($dir, $mode = 0777, $makeindex = TRUE) {
     if (!is_dir($dir)) {
         dmkdir(dirname($dir), $mode, $makeindex);
@@ -1469,7 +1418,6 @@ function diconv($str, $in_charset, $out_charset = CHARSET, $ForceTable = FALSE) 
     return $out;
 }
 
-
 function renum($array) {
     $newnums = $nums = array();
     foreach ($array as $id => $num) {
@@ -1518,7 +1466,6 @@ function setstatus($position, $value, $baseon = null) {
     }
     return $t & 0xFFFF;
 }
-
 
 function memory($cmd, $key = '', $value = '', $ttl = 0, $prefix = '') {
     if ($cmd == 'check') {
@@ -1576,7 +1523,6 @@ function ipbanned($onlineip) {
         return preg_match("/^(" . $_G['cache']['ipbanned']['regexp'] . ")$/", $onlineip);
     }
 }
-
 
 function sysmessage($message) {
     helper_sysmessage::show($message);
@@ -1807,7 +1753,6 @@ function array_sort($arr, $keys, $type = 'asc') { //二维数组排序；
     return $new_array;
 }
 
-
 if (!function_exists('json_decode')) {
     function json_decode($content, $assoc = false) {
         require_once DZZ_ROOT . '/dzz/class/class_json.php';
@@ -1854,76 +1799,13 @@ function getThames() {//处理风格
         $arr = DB::fetch_first("select * from " . DB::table('thame') . " where 1 ORDER BY `default` DESC LIMIT 1");
     }
     if (empty($arr['folder'])) $arr['folder'] = 'colorful';
-    $arr['modules'] = unserialize(stripslashes($arr['modules']));
-
-    if (empty($arr['modules']['window'])) {
-        $arr['modules']['window'] = 'colorful';
-    }
-    if (empty($arr['modules']['filemanage'])) {
-        $arr['modules']['filemanage'] = 'window_jd';
-    }
-    if (empty($arr['modules']['icoblock'])) {
-        $arr['modules']['icoblock'] = 'default';
-    }
-    if (empty($arr['modules']['menu'])) {
-        $arr['modules']['menu'] = 'default';
-    }
-    if (empty($arr['modules']['startmenu'])) {
-        $arr['modules']['startmenu'] = 'default';
-    }
-    if (empty($arr['modules']['taskbar'])) {
-        $arr['modules']['taskbar'] = 'default';
-    }
     $data['system'] = $arr;
-    $data['custom'] = array(
-        'custom_url' => !empty($thames['custom_url']) ? $thames['custom_url'] : '',
-        'custom_color' => !empty($thames['custom_color']) ? $thames['custom_color'] : '',
-        'custom_btype' => !empty($thames['custom_btype']) ? $thames['custom_btype'] : '',
-
-    );
-
     $return['data'] = $data;
     $return['thame'] = array(
         'folder' => $arr['folder'],
-        'color' => !empty($arr['enable_color']) ? (!empty($thames['custom_color']) ? $thames['custom_color'] : $arr['color']) : '',
-        'modules' => $arr['modules'],
+        'color' => !empty($arr['enable_color']) ? (!empty($thames['custom_color']) ? $thames['custom_color'] : $arr['color']) : ''
     );
     return $return;
-}
-
-function getTableBytype($type) {
-    switch ($type) {
-        case 'folder':
-            return array('fid', 'folder');
-        case 'attach':
-            return array('qid', 'source_attach');
-        case 'document':
-            return array('did', 'source_document');
-        case 'image':
-            return array('picid', 'source_image');
-        case 'link':
-            return array('lid', 'source_link');
-        case 'video':
-            return array('vid', 'source_video');
-        case 'music':
-            return array('mid', 'source_music');
-        case 'topic':
-            return array('tid', 'source_topic');
-        case 'app':
-            return array('appid', 'app_market');
-        case 'user':
-            return array('uid', 'user');
-    }
-    return false;
-}
-
-function getsource_by_idtype($type, $oid) {
-    global $_G;
-    if ($arr = getTableBytype($type)) {
-        return C::t($arr[1])->fetch($oid);
-    } else {
-        return false;
-    }
 }
 
 function topshowmessage($msg) {
@@ -1943,18 +1825,16 @@ function SpaceSize($size, $gid = 0, $isupdate = 0, $uid = 0) {
     global $_G, $space;
     if (empty($uid)) $uid = $_G['uid'];
     if ($gid > 0) {
-        if (!$org = C::t('organization')->fetch($gid)) { //机构不存在时，返回错误；
-            //return false;
+        if ($org = C::t('organization')->fetch($gid)) { //机构不存在时，返回错误；
+            $spacearr['usesize'] = intval($org['usesize']);
+            $spacearr['maxspacesize'] = C::t('organization')->get_usespace_size_by_orgid($gid);
         }
-        $spacearr['usesize'] = intval($org['usesize']);
-
-        $spacearr['maxspacesize'] = C::t('organization')->get_usespace_size_by_orgid($gid);
     } else {
         if ($uid) {
             $space = dzzgetspace($uid);
         } elseif (!$space) {
             $space = dzzgetspace($uid);
-        } else {
+        } elseif($uid) {
             $space['usesize'] = DB::result_first("select usesize from %t where uid=%d", array('user_field', $uid));
         }
         $spacearr = $space;
@@ -1963,7 +1843,7 @@ function SpaceSize($size, $gid = 0, $isupdate = 0, $uid = 0) {
         $new_usesize = ($spacearr['usesize'] + $size) > 0 ? ($spacearr['usesize'] + $size) : 0;
         if ($gid > 0) {
             C::t('organization')->update($gid, array('usesize' => $new_usesize));
-        } else {
+        } elseif($uid) {
             C::t('user_field')->update($uid, array('usesize' => $new_usesize));
         }
         return true;
@@ -1988,21 +1868,6 @@ function SpaceSize($size, $gid = 0, $isupdate = 0, $uid = 0) {
     }
 }
 
-function getPositionName($fid) {
-    $return = '';
-    $folder = C::t('folder')->fetch($fid);
-    if ($folder['flag'] == 'dock') {
-        $return = lang('dock');
-
-    } elseif ($folder['flag'] == 'desktop') {
-        $return = lang('desktop');
-    } else {
-        $return = $folder['fname'];
-    }
-    if ($return) return '"' . $return . '"';
-    else return '';
-}
-
 function getPathByPfid($pfid, $arr = array(), $count = 0) {
     //static $arr=array();
     //static $count=0;
@@ -2013,11 +1878,8 @@ function getPathByPfid($pfid, $arr = array(), $count = 0) {
         if ($value['pfid'] > 0 && $value['pfid'] != $pfid) $arr = getPathByPfid($value['pfid'], $arr, $count);
     }
     //$arr=array_reverse($arr);
-
     return $arr;
-
 }
-
 
 //返回自己和上级目录fid数组；
 function getTopFid($fid, $i = 0, $arr = array()) {
@@ -2030,21 +1892,6 @@ function getTopFid($fid, $i = 0, $arr = array()) {
     return $arr;
 }
 
-/*function replace_remote($icoarr){
-	global $_G;
-	switch($icoarr['type']){
-		case 'attach':case 'document':
-			$icoarr['url']='';
-			break;
-		case 'image':
-			if($icoarr['thumb']) $icoarr['img']=$_G['setting']['attachurl'].getimgthumbname($icoarr['url']);
-			else $icoarr['img']=getAttachUrl(array('attachment'=>$icoarr['url'],'remote'=>$icoarr['remote']),true);
-			$icoarr['_bz']=$bz;
-			$icoarr['url']=getAttachUrl(array('attachment'=>$icoarr['url'],'remote'=>$icoarr['remote']),true);
-			break;
-	}
-	return $icoarr;
-}*/
 function replace_canshu($str, $data = array()) {
     global $_G;
     $replacearr = array('{dzzscript}' => 'index.php', '{DZZSCRIPT}' => 'index.php', '{adminscript}' => 'admin.php', '{ADMINSCRIPT}' => 'admin.php', '{uid}' => $_G['uid']);
@@ -2069,7 +1916,7 @@ function dzz_libfile($libname, $folder = '') {
 
 function dzzlang($file, $langvar = null, $vars = array(), $default = null) {
     global $_G;
-//	return lang($file,$langvar,$vars,$defualt,'dzz/admin');
+    //	return lang($file,$langvar,$vars,$defualt,'dzz/admin');
     list($path, $file) = explode('/', $file);
     if (!$file) {
         $file = $path;
@@ -2175,7 +2022,6 @@ function getFileTypeName($type, $ext) {
     return $name;
 }
 
-
 function dzzgetspace($uid) {
     global $_G;
     $space = array();
@@ -2195,7 +2041,7 @@ function dzzgetspace($uid) {
 
     //获取相关设置信息
     $setting = $_G['setting'];
-    if ($config = DB::fetch_first("select usesize,attachextensions,maxattachsize,addsize,buysize,perm,taskbar,userspace from " . DB::table('user_field') . " where uid='{$uid}'")) {
+    if ($uid && $config = DB::fetch_first("select usesize,attachextensions,maxattachsize,addsize,buysize,perm,userspace from " . DB::table('user_field') . " where uid='{$uid}'")) {
         $config['perm'] = ($config['perm'] < 1) ? $usergroup['perm'] : $config['perm'];
         $config['attachextensions'] = ($config['attachextensions'] < 0) ? $usergroup['attachextensions'] : $config['attachextensions'];
         $config['maxattachsize'] = ($config['maxattachsize'] < 0) ? $usergroup['maxattachsize'] * 1024 * 1024 : $config['maxattachsize'] * 1024 * 1024;
@@ -2213,6 +2059,10 @@ function dzzgetspace($uid) {
             }
         }
         $space = array_merge($space, $config);
+    } else {
+        $space['maxattachsize'] = $usergroup['maxattachsize'] * 1024 * 1024;
+        $space['maxspacesize'] = $usergroup['maxspacesize'] * 1024 * 1024;
+        $space['attachextensions'] = $usergroup['attachextensions'];
     }
     $space['fusesize'] = formatsize($space['usesize']);
     if ($space['maxspacesize'] > 0) {
@@ -2223,9 +2073,9 @@ function dzzgetspace($uid) {
         $space['fmaxspacesize'] = '未分配空间';
     }
     $space['attachextensions'] = str_replace(' ', '', $space['attachextensions']);
-
-    //$space['typefid'] = C::t('folder')->fetch_typefid_by_uid($uid);
     $space['maxChunkSize'] = $_G['setting']['maxChunkSize'];
+    unset($space['password']);
+    unset($space['salt']);
     return $space;
 }
 
@@ -2439,7 +2289,6 @@ function image_to_icon($source, $target, $domain) {
     }
 }
 
-
 function getTxtAttachByMd5($message, $filename_title, $ext) {
     global $_G;
     @set_time_limit(0);
@@ -2514,7 +2363,6 @@ function getTxtAttachByMd5($message, $filename_title, $ext) {
     return $attach;
 }
 
-
 function checkCopy($icoid = 0, $sourcetype = '', $iscut = 0, $obz, $tbz) {
     global $_G;
     $copy = 1;
@@ -2531,54 +2379,6 @@ function checkCopy($icoid = 0, $sourcetype = '', $iscut = 0, $obz, $tbz) {
 
     }
     return $copy;
-}
-
-// function delete_icoid_from_container($icoid, $pfid) {
-//     global $_G;
-//     $typefid = C::t('folder')->fetch_typefid_by_uid($_G['uid']);
-//     if ($pfid == $typefid['dock']) {
-//         $docklist = DB::result_first("select docklist from " . DB::table('user_field') . " where uid='{$_G['uid']}'");
-//         $docklist = $docklist ? explode(',', $docklist) : array();
-//         foreach ($docklist as $key => $value) {
-//             if ($value == $icoid) {
-//                 unset($docklist[$key]);
-//             }
-//         }
-//         C::t('user_field')->update($_G['uid'], array('docklist' => implode(',', $docklist)));
-//     } elseif ($pfid == $typefid['desktop']) {
-
-//         $icos = DB::result_first("select screenlist from " . DB::table('user_field') . " where uid='{$_G['uid']}'");
-//         $icos = $icos ? explode(',', $icos) : array();
-//         foreach ($icos as $key => $value) {
-//             if ($value == $icoid) {
-//                 unset($icos[$key]);
-//             }
-//         }
-//         C::t('user_field')->update($_G['uid'], array('screenlist' => implode(',', $icos)));
-//     }
-// }
-
-function dzz_update_source($type, $oid, $data, $istype = false) {
-    $idtypearr = array('lid', 'vid', 'mid', 'qid', 'picid', 'did', 'fid');
-    $typearr = array('link', 'video', 'music', 'attach', 'image', 'document', 'folder');
-    $table = '';
-    $idtype = '';
-    $pre = 'source_';
-    if ($isidtype) {
-        if (in_array($type, $idtypearr)) {
-            if ($type == 'fid') $pre = '';
-            $table = '' . $pre . str_replace($idtypearr, $typearr, $type);
-            $idtype = $type;
-        }
-    } else {
-        if ($type == 'folder') $pre = '';
-        if (in_array($type, $typearr)) {
-            $table = '' . $pre . $type;
-            $idtype = str_replace($typearr, $idtypearr, $type);
-        }
-    }
-    if ($table) return C::t($table)->update($oid, $data);
-    else return false;
 }
 
 function getAttachUrl($attach, $absolute = false) {
@@ -2736,7 +2536,6 @@ function addtoconfig($icoarr, $ticoid = 0) {
 
 
         } elseif ($folder['flag'] == 'desktop') {
-
             if ($nav = C::t('user_field')->fetch($_G['uid'])) {
                 $icos = $nav['screenlist'] ? explode(',', $nav['screenlist']) : array();
                 if (in_array($icoid, $icos)) {//已经存在则先删除
@@ -2805,7 +2604,6 @@ function save_to_local($source, $target) {
     }
     return $succeed;
 }
-
 
 function uploadtolocal($upload, $dir = 'appimg', $target = '', $exts = array('jpg', 'jpeg', 'png', 'gif', 'webp')) {
     global $_G;
@@ -2951,108 +2749,62 @@ function get_resources_some_setting() {
         'allownewcat' => false,
         'finallydelete' => false
     );
-    if (!isset($setting['explorer_usermemoryOn'])) {
+    $getUsersByRule = function($ruleStr) use ($_G) {
+        $users = [];
+        $orgUserModel = C::t('organization_user');
+        $hasOrg = null; // 缓存当前用户是否属于任何组织的判断结果
+        foreach (explode(',', $ruleStr) as $v) {
+            if (preg_match('/^\d+$/', $v)) {
+                // 组织ID：批量获取该组织下所有用户
+                foreach ($orgUserModel->get_all_user_byorgid($v,false) as $val) {
+                    $users[] = $val['uid'];
+                }
+            } elseif ($v == 'other') {
+                 // 其他用户：仅当用户无组织时添加（直接查询数据库记录数）
+                if ($hasOrg === null) {
+                    $hasOrg = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid = %d",['organization_user', $_G['uid']]) > 0;
+                }
+                if (!$hasOrg) {
+                    $users[] = $_G['uid'];
+                }
+            } elseif (preg_match('/^uid_(\d+)$/', $v, $m)) {
+                // 直接指定用户ID
+                $users[] = $m[1];
+            }
+        }
+        return array_unique($users);
+    };
+    // 处理用户存储权限
+    if (!isset($setting['explorer_usermemoryOn']) || ($setting['explorer_usermemoryOn'] == 1 && ($setting['explorer_mermoryusersetting'] ?? '') != 'appoint')) {//未指定用户时
         $data['useronperm'] = true;
-    } else {
-        //用户存储开启
-        if ($setting['explorer_usermemoryOn'] == 1) {
-            $spaceon = $setting['explorer_mermoryusersetting'] ?? '';
-            if ($spaceon == 'appoint') {//指定用户时
-                $usersarr = explode(',', $setting['explorer_memoryorgusers']);
-                $users = array();
-                foreach ($usersarr as $v) {
-                    //群组id
-                    if (preg_match('/^\d+$/', $v)) {
-                        foreach (C::t('organization_user')->get_all_user_byorgid($v) as $val) {
-                            $users[] = $val['uid'];
-                        }
-                    } elseif ($v == 'other') {
-                        $otherUsers = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
-                        if (!$otherUsers) {
-                            $users[] = $_G['uid'];
-                        }
-                    } elseif (preg_match('/^uid_\d+$/', $v)) {
-                        $users[] = preg_replace('/uid_/', '', $v);
-                    }
-
-                }
-                $users = array_unique($users);
-                $data['userallowonperm'] = $users;
-                if (in_array($_G['uid'], $data['userallowonperm'])) {
-                    $data['useronperm'] = true;
-                }
-
-            } else {//未指定用户时
-                $data['useronperm'] = true;
-            }
-        }
+    } elseif ($setting['explorer_usermemoryOn'] == 1) {//指定用户时
+        $data['userallowonperm'] = $getUsersByRule($setting['explorer_memoryorgusers'] ?? '');
+        $data['useronperm'] = in_array($_G['uid'], $data['userallowonperm']);
     }
+    // 处理文件版本
+    $data['fileVersion'] = !isset($setting['fileVersion']) || $setting['fileVersion'] == 1;
+    $data['fileVersionNumber'] = isset($setting['fileVersionNumber']) ? (int)$setting['fileVersionNumber'] : 0;
 
-    if (!isset($setting['fileVersion']) || (isset($setting['fileVersion']) && $setting['fileVersion'] == 1)) {
-        $data['fileVersion'] = true;
-    } else {
-        $data['fileVersion'] = false;
-    }
-    if (isset($setting['fileVersionNumber']) && $setting['fileVersionNumber']) {
-        $data['fileVersionNumber'] = $setting['fileVersionNumber'];
-    }
+    // 处理组织和群组权限
+    $data['orgonperm'] = !isset($setting['explorer_organizationOn']) || $setting['explorer_organizationOn'] == 1;
+    $data['grouponperm'] = !isset($setting['explorer_groupOn']) || $setting['explorer_groupOn'] == 1;
 
-    if ((isset($setting['explorer_organizationOn']) && $setting['explorer_organizationOn'] == 1) || !isset($setting['explorer_organizationOn'])) {
-        $data['orgonperm'] = true;
-    }
+    // 左侧顶部内容显示控制
+    $data['left_topcontent'] = $data['grouponperm'] || $data['useronperm'] || $data['orgonperm'];
 
-    if ((isset($setting['explorer_groupOn']) && $setting['explorer_groupOn'] == 1) || !isset($setting['explorer_groupOn'])) {
-        $data['grouponperm'] = true;
-    }
-
-    if (!$data['grouponperm'] && !$data['useronperm'] && !$data['orgonperm']) {
-        $data['left_topcontent'] = false;
-    }
-    if (!isset($setting['explorer_groupcreate'])) {
+    // 处理新建群组权限
+    if (!isset($setting['explorer_groupcreate']) || ($setting['explorer_groupcreate'] == 1 && ($setting['explorer_mermorygroupsetting'] ?? '') != 'appoint')) {
         $data['allownewgroup'] = true;
-    } else {
-        if ($setting['explorer_groupcreate'] == 1) {
-            $groupcreateon = isset($setting['explorer_mermorygroupsetting']) ? $setting['explorer_mermorygroupsetting'] : '';
-            if ($groupcreateon == 'appoint') {//指定用户时
-                $usersarr = explode(',', $setting['explorer_memorygroupusers']);
-                $users = array();
-                foreach ($usersarr as $v) {
-                    //群组id
-                    if (preg_match('/^\d+$/', $v)) {
-                        foreach (C::t('organization_user')->get_all_user_byorgid($v) as $val) {
-                            $users[] = $val['uid'];
-                        }
-                    } elseif ($v == 'other') {
-                        $otherUsers = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
-                        if (!$otherUsers) {
-                            $users[] = $_G['uid'];
-                        }
-                    } elseif (preg_match('/^uid_\d+$/', $v)) {
-                        $users[] = preg_replace('/uid_/', '', $v);
-                    }
+    } elseif ($setting['explorer_groupcreate'] == 1) {
+        $data['userallowgroupcreate'] = $getUsersByRule($setting['explorer_memorygroupusers'] ?? '');
+        $data['allownewgroup'] = in_array($_G['uid'], $data['userallowgroupcreate']);
+    }
 
-                }
-                $users = array_unique($users);
-                $data['userallowgroupcreate'] = $users;
-                if (in_array($_G['uid'], $data['userallowgroupcreate'])) {
-                    $data['allownewgroup'] = true;
-                }
+    // 处理新建分类权限
+    $data['allownewcat'] = !isset($setting['explorer_catcreate']) || $setting['explorer_catcreate'] == 1;
 
-            } else {//未指定用户时
-                $data['allownewgroup'] = true;
-            }
-        }
-    }
-    if (!isset($setting['explorer_catcreate'])) {
-        $data['allownewcat'] = true;
-    } else {
-        $data['allownewcat'] = ($setting['explorer_catcreate'] == 1) ? true : false;
-    }
-    if (!isset($setting['explorer_finallydelete']) || $setting['explorer_finallydelete'] < 0) {
-        $data['finallydelete'] = false;
-    } else {
-        $data['finallydelete'] = intval($setting['explorer_finallydelete']);
-    }
+    // 处理彻底删除设置
+    $data['finallydelete'] = isset($setting['explorer_finallydelete']) && $setting['explorer_finallydelete'] >= 0 ? (int)$setting['explorer_finallydelete'] : false;
     return $data;
 }
 
@@ -3199,7 +2951,6 @@ function set_space_progress($usespace, $totalspace = 0) {
         if ($percent > 100) $percent = 100;
     }
     return $percent;
-
 }
 
 //ajax返回成功信息数据
@@ -3247,10 +2998,7 @@ function dzz_userconfig_init() {  //初始化用户信息
         'updatetime' => $_G['timestamp'],
         'wins' => serialize(array()),
         'perm' => 0,
-        'iconview' => $_G['setting']['desktop_default']['iconview'] ? $_G['setting']['desktop_default']['iconview'] : 2,
-        'taskbar' => $_G['setting']['desktop_default']['taskbar'] ? $_G['setting']['desktop_default']['taskbar'] : 'bottom',
-        'iconposition' => intval($_G['setting']['desktop_default']['iconposition']),
-        'direction' => intval($_G['setting']['desktop_default']['direction']),
+        'iconview' => $_G['setting']['desktop_default']['iconview'] ? $_G['setting']['desktop_default']['iconview'] : 2
     );
 
 
@@ -3258,8 +3006,8 @@ function dzz_userconfig_init() {  //初始化用户信息
     $apps = C::t('app_market')->fetch_all_by_default($_G['uid']);
 
     foreach ($apps as $appid => $app) {
-
         $userconfig['applist'][] = $appid;
+        if(!$_G['uid']) continue;
         if ($app['position'] == 1) {
             continue;
         } elseif ($app['position'] == 2) { //桌面
@@ -3289,11 +3037,11 @@ function dzz_userconfig_init() {  //初始化用户信息
                 else $userconfig['docklist'][] = $icoarr['rid'];
             }
         }
-
     }
     $userconfig['applist'] = $userconfig['applist'] ? implode(',', $userconfig['applist']) : '';
     $userconfig['screenlist'] = $userconfig['screenlist'] ? implode(',', $userconfig['screenlist']) : '';
     $userconfig['docklist'] = $userconfig['docklist'] ? implode(',', $userconfig['docklist']) : '';
+    if(!$_G['uid']) return $userconfig;
     C::t('user_field')->insert($userconfig, false, true);
     if ($userconfig['applist']) C::t('app_user')->insert_by_uid($_G['uid'], $userconfig['applist'], 1);
     return C::t('user_field')->fetch($_G['uid']);

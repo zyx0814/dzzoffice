@@ -45,7 +45,6 @@ if ($do == 'filelist') {
     }
     if (isset($_GET['search']) && $_GET['search'] && $_GET['search'] != 'all') {
         $search = $_GET['search'];
-        $orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门
         if ($search == 'manage') {
             $myorgid = array();
             foreach (DB::fetch_all("select ou.orgid from %t ou 
@@ -87,7 +86,7 @@ if ($do == 'filelist') {
     } else {
         $wheresql .= " and orgid in(%n)";
         //获取用户所在群组id
-        $params[] = C::t('organization_user')->fetch_org_by_uid($uid, 1);
+        $params[] = C::t('organization_user')->fetch_orgids_by_uid($uid, 1);
     }
     $list = array();
     $count = DB::result_first("select count(*) from %t $wheresql $order", $params);

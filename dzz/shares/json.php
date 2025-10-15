@@ -33,8 +33,7 @@ $data['sourcedata'] = array(
     'app' => $appdata ? $appdata : array()
 );
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
-$thame = getThames();
-$data['thame'] = $thame['data'];
+$data['thame'] = array('system' => array('folder'=>'colorful'));
 $data['space'] = $space;
 echo json_encode($data);
 exit();

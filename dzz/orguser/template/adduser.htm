@@ -24,7 +24,7 @@
     <div class="row mb-3">
       <label for="email" class="col-sm-2">{lang login_email} <span class="text-danger">*</span></label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="email" name="email" autocomplete="off" value="$user[email]" onblur="checkemail(this.id);">
+        <input type="text" class="form-control" id="email" name="email" autocomplete="off" value="$user[email]" onblur="checkemail(this.id);" inputmode="email">
         <p id="emailmore" style="height:1px;margin:0;">&nbsp;</p>
         <span id="chk_email" class="form-text">
           <span id="suc_email"></span><span class="help-msg"></span> {lang adduser_login_email_text}
@@ -43,7 +43,7 @@
     <div class="row mb-3">
       <label for="phone" class="col-sm-2">{lang phone_number}</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" placeholder="{lang weixin_phone_number}" id="phone" name="phone" autocomplete="off" value="$user[phone]">
+        <input type="text" class="form-control" placeholder="{lang weixin_phone_number}" id="phone" name="phone" autocomplete="off" value="$user[phone]" inputmode="tel">
         <span id="chk_phone" class="form-text">{lang adduser_phone_number_text}</span>
       </div>
     </div>

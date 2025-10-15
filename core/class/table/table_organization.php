@@ -77,7 +77,7 @@ class table_organization extends dzz_table {
             }
         } else {
             if ($uid) {
-                $orgids = C::t('organization_user')->fetch_org_by_uid($uid);
+                $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid);
                 $orgids = array_unique($orgids);
                 $toporgids = array();
                 foreach (parent::fetch_all($orgids) as $v) {
@@ -683,7 +683,7 @@ class table_organization extends dzz_table {
     }
 
     //获取用户有权限的机构orgid
-    public function fetch_all_orgid() {
+    public function fetch_all_orgid($isadmin = true) {
         global $_G;
         $uid = $_G['uid'];
         //获取当前用户参与的机构和群组
@@ -691,7 +691,7 @@ class table_organization extends dzz_table {
         $orgids_admin = array();
         $orgids_member = array();
         $explorer_setting = get_resources_some_setting();
-        if ($_G['adminid'] == 1) {
+        if ($isadmin && $_G['adminid'] == 1) {
             $orgdatas = DB::fetch_all("select orgid,`type` from %t where 1", array('organization'));
         } else {
             $orgdatas = DB::fetch_all("select u.orgid,o.`type` from %t u left join %t o on u.orgid=o.orgid where uid = %d", array('organization_user', 'organization', $uid));

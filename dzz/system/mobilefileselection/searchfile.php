@@ -84,7 +84,7 @@ if ($exts) {
         $param[] = $extarr;
     }
 }
-$orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门
+$orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门
 $or = array();
 if (!$fid) {
     //我的

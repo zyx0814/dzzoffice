@@ -224,7 +224,7 @@ class table_shares extends dzz_table {
         $params = array($this->_table);
         $wheresql = ' uid = %d';
         $params[] = $uid;
-        $orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门();
+        $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门();
         $manageorgids = $orgids['orgids_admin'];
         if (!empty($manageorgids)) {
             $wheresql .= ' or gid in(%n)';

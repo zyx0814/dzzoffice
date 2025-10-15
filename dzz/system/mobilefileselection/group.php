@@ -38,7 +38,7 @@ $nextstart = $start + $limit;
 $explorer_setting = get_resources_some_setting();
 $groups = array();
 //获取用户坐在群组id
-$orgids = C::t('organization_user')->fetch_org_by_uid($uid, 1);
+$orgids = C::t('organization_user')->fetch_orgids_by_uid($uid, 1);
 if (DB::result_first("select count(*) from %t where orgid in(%n) $ordersql ", array('organization', $orgids)) > $nextstart) {
     $next = $nextstart;
 }

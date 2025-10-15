@@ -175,6 +175,7 @@ if ($operation == 'get_children') {
                 }
             }
         }
+        $explorer_setting = get_resources_some_setting();
         if ($explorer_setting['grouponperm'] && (!$rangeval || ($rangeval && in_array('group', $selrangearr)))) {
             $groups = C::t('organization')->fetch_group_by_uid($uid);
             $children = (count($groups) > 0) ? true : false;

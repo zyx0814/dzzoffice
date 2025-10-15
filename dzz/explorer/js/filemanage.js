@@ -393,8 +393,7 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	html = html.replace(/\{from\}/g, data.from);
 	html = html.replace(/\{delusername\}/g, data.username);
 	html = html.replace(/\{deldateline\}/g, data.deldateline);
-	//__lang.some_day_after.replace('{day}', data.finallydate)
-	html = html.replace(/\{finallydate\}/g, (data.finallydate > 0) ? __lang.some_day_after.replace('{day}', data.finallydate):__lang.within_a_day);
+	html = html.replace(/\{finallydate\}/g, data.finallydate);
 	html = html.replace(/\{views\}/g, data.views);
 	html = html.replace(/\{times\}/g, data.times);
 	html = html.replace(/\{downs\}/g, data.downs);

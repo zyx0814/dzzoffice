@@ -10,12 +10,21 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $navtitle = lang('appname');
-$typearr = array('folder' => lang('catalogue'), 'image' => lang('photo'), 'document' => lang('type_attach'), 'dzzdoc' => 'Dzz' . lang('type_attach'), 'video' => lang('type_video'), 'attach' => lang('attachment'), 'link' => lang('type_link'), 'url' => lang('other'));
 $type = trim($_GET['type']);
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
 $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
 $start = ($page - 1) * $limit;
+$typeinfo = array(
+    'folder' => array('name' => lang('catalogue'), 'icon' => 'mdi-folder'),
+    'image' => array('name' => lang('photo'), 'icon' => 'mdi-file-image'),
+    'document' => array('name' => lang('type_attach'), 'icon' => 'mdi-file-document'),
+    'link' => array('name' => lang('type_link'), 'icon' => 'mdi-web'),
+    'video' => array('name' => lang('video'), 'icon' => 'mdi-video'),
+    'dzzdoc' => array('name' => 'DZZ' . lang('type_attach'), 'icon' => 'mdi-file'),
+    'attach' => array('name' => lang('attachment'), 'icon' => 'mdi-file-chart'),
+    'url' => array('name' => lang('other'), 'icon' => 'mdi-share-all-outline')
+);
 if ($do == 'getinfo') {
     $field = in_array($_GET['field'], array('title', 'dateline', 'type', 'count','downs', 'username','endtime','times')) ? trim($_GET['field']) : 'dateline';
     $order = in_array($_GET['order'], array('asc', 'desc')) ? trim($_GET['order']) : 'DESC';
@@ -80,13 +89,16 @@ if ($do == 'getinfo') {
             "times" => $value['times'] ? $value['count'] . '/' . $value['times'] : lang('no_limit'),
         ];
     }
+    $typearrname = $typeinfo[$type]['name'] ?? lang('all');
+    $typeicon = $typeinfo[$type]['icon'] ?? 'mdi-share-variant-outline';
+    $title = '<i class="mdi '.$typeicon.' pe-2"></i>' . $typearrname;
     header('Content-Type: application/json');
     $return = [
         "code" => 0,
         "msg" => "",
         "count" => $count ? $count : 0,
         "data" => $data ? $data : [],
-        "breadcrumb" => $breadcrumb,
+        "title" => $title,
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {

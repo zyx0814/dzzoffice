@@ -24,7 +24,7 @@ if ($do == 'updatesetting') {//更新设置
         'explorer_mermoryonlymyorg' => $setting['explorer_mermoryonlymyorg'],
         'explorer_memorygroupusers' => $setting['explorer_memorygroupusers'],
         'explorer_catcreate' => (isset($setting['explorer_catcreate']) && $setting['explorer_catcreate'] == 'on') ? 1 : 0,
-        'explorer_finallydelete' => (isset($setting['explorer_finallydelete'])) ? $setting['explorer_finallydelete'] : -1
+        'explorer_finallydelete' => (isset($setting['explorer_finallydelete'])) ? intval($setting['explorer_finallydelete']) : -1
     );
     if (C::t('setting')->update_batch($setarr)) {
         updatecache('setting');

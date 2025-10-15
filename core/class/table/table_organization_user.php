@@ -144,26 +144,6 @@ class table_organization_user extends dzz_table {
         } else return false;
     }
 
-    public function fetch_org_by_uid($uids, $orgtype = 0) {
-        $uids = (array)$uids;
-        $orgids = array();
-
-        $param = array($this->_table);
-        if ($orgtype > -1) {
-            $sql = "select u.orgid from %t u LEFT JOIN %t o ON u.orgid=o.orgid where u.uid IN(%n) and o.type=%d";
-            $param[] = 'organization';
-            $param[] = $uids;
-            $param[] = $orgtype;
-        } else {
-            $sql = "select orgid from %t where uid IN(%n)";
-            $param[] = $uids;
-        }
-        foreach (DB::fetch_all($sql, $param) as $value) {
-            $orgids[$value['orgid']] = $value['orgid'];
-        }
-        return $orgids;
-    }
-
     public function fetch_uids_by_orgid($orgids) {
         $uids = array();
         if (!is_array($orgids)) $orgids = array($orgids);
@@ -231,7 +211,6 @@ class table_organization_user extends dzz_table {
         } else {
             return false;
         }
-
     }
 
     public function fetch_usernums_by_orgid($orgid) {
@@ -317,18 +296,21 @@ class table_organization_user extends dzz_table {
     }
 
     //获取当前机构或部门及下级所有的用户
-    public function get_all_user_byorgid($orgid) {
+    public function get_all_user_byorgid($orgid,$isadmin = true) {
         $pathkey = DB::result_first("select pathkey from %t where orgid = %d", array('organization', $orgid));
         $params = array('organization', 'organization_user', 'user', '^' . $pathkey . '.*');
         $userinfo = array();
         foreach (DB::fetch_all("select o.orgid,ou.*,u.username,u.email from %t o 
           left join %t ou on ou.orgid = o.orgid
           left join %t u on ou.uid = u.uid  where o.pathkey regexp %s", $params) as $v) {
-            $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", array('organization_admin', $orgid, $v['uid']));
-            if (!$admintype) {
-                $v['perm'] = 0;
-            } else {
-                $v['perm'] = $admintype;
+            if(!$v['uid']) continue;
+            if($isadmin) {
+                $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", array('organization_admin', $orgid, $v['uid']));
+                if (!$admintype) {
+                    $v['perm'] = 0;
+                } else {
+                    $v['perm'] = $admintype;
+                }
             }
             $userinfo[] = $v;
         }

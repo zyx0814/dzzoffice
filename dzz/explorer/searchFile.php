@@ -85,7 +85,7 @@ if ($do == 'filelist') {
     } else {
         $wheresql .= " and (r.isdelete < 1)";
     }
-    $orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门
+    $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门
     $or = array();
     //文件名条件
     if (!empty($searcharr['keywords']) && !preg_match('/^\s*$/', $searcharr['keywords'])) {

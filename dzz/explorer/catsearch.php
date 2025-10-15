@@ -108,7 +108,7 @@ if ($do == 'delsearchcat') {//删除搜索类型
         }
     }
     $explorer_setting = get_resources_some_setting();
-    $orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门
+    $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门
     $powerarr = perm_binPerm::getPowerArr();
 
     $or = array();
