@@ -351,7 +351,6 @@ function check_username($username) {
 }
 
 function check_usernamecensor($username) {
-    global $_G;
     return true;
 }
 

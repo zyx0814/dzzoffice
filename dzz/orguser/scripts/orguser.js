@@ -80,6 +80,33 @@ function checkemail(id) {
 }
 function checknick(id) {
 	errormessage(id);
+	var nickname = trim(jQuery('#'+id).val());
+	if(jQuery('#chk_' + id).parent()[0].className.match(/ p_right/) && (nickname == '' || nickname == lastnickname) || nickname == lastnickname) {
+		return;
+	} 
+	if(nickname.match(/<|"/ig)) {
+		errormessage(id, __lang.illegal_characters);
+		return;
+	}
+	if(nickname){
+		var unlen = nickname.replace(/[^\x00-\xff]/g, "**").length;
+		if(unlen > 30) {
+			errormessage(id, __lang.profile_nickname_toolong);
+			return;
+		}
+		var x = new Ajax();
+		jQuery('#suc_' + id).removeClass('p_right');
+		jQuery.getJSON('user.php?mod=ajax&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=checknickname&nickname=' + encodeURI(nickname), function(json) {
+			if(json.error){
+				errormessage(id, json.error);
+			}else{
+				errormessage(id, 'succeed');
+			}
+		});
+	}
+}
+function checkusername(id) {
+	errormessage(id);
 	var username = trim(jQuery('#'+id).val());
 	if(jQuery('#chk_' + id).parent()[0].className.match(/ p_right/) && (username == '' || username == lastusername) || username == lastusername) {
 		return;
@@ -247,6 +274,7 @@ function jstree_create_dir(){
 }
 
 function showDetail(id,idtype){
+	if(!id) id = 'other';
 	if(!idtype) idtype='organization';
 	var hash=idtype+'_'+id;
 	location.hash=hash;

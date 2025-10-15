@@ -671,16 +671,16 @@ function avatar($uid, $size = 'middle', $returnsrc = FALSE, $real = FALSE, $stat
  */
 function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel img-avatar") {
     static $colors = array('#6b69d6', '#a966ef', '#e9308d', '#e74856', '#f35b42', '#00cc6a', '#0078d7', '#5290f3', '#00b7c3', '#0099bc', '#018574', '#c77c52', '#ff8c00', '#68768a', '#7083cb', '#26a255');
-
-    if (!$uid) {
-        $uid = getglobal('uid');
-    }
     if ($uid) {
         $user = getuserbyuid($uid);
     } else {
-        $user = array('uid' => 0, 'username' => 'guest', 'avatarstatus' => 0, 'adminid' => 0, 'groupid' => 7, 'credits' => 0, 'timeoffset' => 9999);
+        global $_G;
+        if($_G['uid']) {
+            $user = array('uid' => $_G['uid'], 'username' => $_G['username'],'nickname' => $_G['member']['nickname'], 'avatarstatus' => $_G['member']['avatarstatus']);
+        } else {
+            $user = array('uid' => 0, 'username' => 'guest', 'avatarstatus' => 0);
+        }
     }
-    if (empty($user)) return '';
     if ($user['avatarstatus']) {//用户已经上传头像
         return '<img src="avatar.php?uid=' . $user['uid'] . '" class="img-circle special_avatar_class img-avatar" title="' . $user['username'] . '">';
     } else {//没有上传头像，使用背景+首字母
@@ -695,7 +695,7 @@ function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel i
         } else {//游客默认使用第一个值；
             $headerColor = $colors[0];
         }
-        return '<span class="' . $class . '" style="background:' . $headerColor . '" title="' . $user['username'] . '">' . new_strsubstr(ucfirst($user['username']), 1, '') . '</span>';
+        return '<span class="' . $class . '" style="background:' . $headerColor . '" title="' . $user['username'] . '">' . new_strsubstr(ucfirst($user['nickname'] ? $user['nickname'] : $user['username']), 1, '') . '</span>';
     }
 }
 
@@ -741,7 +741,6 @@ function avatar_group($gid, $groupcolors = array(), $class = 'iconFirstWord') {
 
 function checkLanguage() {
     global $_G;
-    $uid = getglobal('uid');
     $langList = $_G['config']['output']['language_list'];
     $langSet = '';
 

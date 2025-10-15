@@ -49,6 +49,18 @@ if ($do == 'add') {
                 showmessage('user_registered_retry');
             }
         }
+        $nickname = isset($_GET['nickname']) ? htmlspecialchars(trim(($_GET['nickname']))) : '';
+        if($nickname) {
+            $usernamelen = dstrlen($nickname);
+            if ($usernamelen) {
+                if ($usernamelen > 30) {
+                    showmessage('profile_nickname_toolong');
+                }
+                if(C::t('user')->fetch_by_nickname($nickname)) {
+                    showmessage('profile_nickname_exist');
+                }
+            }
+        }
         $user_extra = array();
         //如果输入手机号码，检查手机号码不能重复
         $phone = trim($_GET['phone']);
@@ -220,6 +232,19 @@ if ($do == 'add') {
             }
         }
 
+        $nickname = isset($_GET['nickname']) ? htmlspecialchars(trim(($_GET['nickname']))) : '';
+        if($nickname) {
+            $usernamelen = dstrlen($nickname);
+            if ($usernamelen) {
+                if ($usernamelen > 30) {
+                    showmessage('profile_nickname_toolong');
+                }
+                if($user['nickname'] !== $nickname && C::t('user')->fetch_by_nickname($nickname)) {
+                    showmessage('profile_nickname_exist');
+                }
+            }
+        }
+
         //如果输入手机号码，检查手机号码不能重复
         $phone = trim($_GET['phone']);
         if ($phone) {
@@ -254,7 +279,7 @@ if ($do == 'add') {
                 showmessage('email_registered_retry');
             }
         }
-        $setarr = array('username' => $username, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid);
+        $setarr = array('username' => $username,'nickname' => $nickname, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid);
         if($uid != $_G['uid']) {
             //禁用创始人验证
             $status = intval($_GET['status']) ? 1 : 0;

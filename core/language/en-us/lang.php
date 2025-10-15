@@ -833,8 +833,8 @@ $lang = array(
     'login_strike' => 'Too many incorrect password attempts, please try again after {forbiddentime} seconds',
     'logout_succeed' => 'You have logged out of the site, you will be redirected to the pre-logout page as a guest, please wait...',
     'register_activation_invalid' => 'Sorry, activation failed, please log in again to verify the user that needs activation',
-    'profile_nickname_tooshort' => 'Sorry, the username you entered is less than 3 characters. Please enter a longer username.',
-    'profile_nickname_toolong' => 'Sorry, the username you entered exceeds 30 characters. Please enter a shorter username.',
+    'profile_nickname_tooshort' => 'Sorry, the nickname you entered is less than 3 characters. Please enter a longer username.',
+    'profile_nickname_toolong' => 'Sorry, the nickname you entered exceeds 30 characters. Please enter a shorter username.',
     'profile_nickname_illegal' => 'The username contains sensitive characters.',
     'profile_nickname_duplicate' => 'This username has already been registered.',
     'profile_username_tooshort' => 'Sorry, the username you entered is less than 3 characters. Please enter a longer username.',
@@ -1636,6 +1636,10 @@ $lang = array(
     'all_comments' => 'All Comments',
     'current_comments' => 'Current Comments',
     'unknown' => 'Unknown',
+    'nickname' => 'Nickname',
+    'user_nickname' => 'User Nickname',
+    'profile_nickname_exist' => 'Nickname already exists',
+    'illegal_characters' => 'Illegal characters',
 );
 
 ?>

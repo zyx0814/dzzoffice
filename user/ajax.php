@@ -14,9 +14,9 @@ if ($_GET['action'] == 'checkusername') {
     $username = isset($_GET['username']) ? trim($_GET['username']) : '';
     $usernamelen = dstrlen($username);
     if ($usernamelen < 3) {
-        showTips(array('error' => lang('profile_nickname_tooshort')));
+        showTips(array('error' => lang('profile_username_tooshort')));
     } elseif ($usernamelen > 30) {
-        showTips(array('error' => lang('profile_nickname_toolong')));
+        showTips(array('error' => lang('profile_username_toolong')));
     }
 
     require_once libfile('function/user');
@@ -33,22 +33,26 @@ if ($_GET['action'] == 'checkusername') {
     if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
         showTips(array('error' => lang('profile_nickname_protect')));
     }
-
+} elseif ($_GET['action'] == 'checknickname') {
+    $nickname = isset($_GET['nickname']) ? htmlspecialchars(trim(($_GET['nickname']))) : '';
+    $usernamelen = dstrlen($nickname);
+    if ($usernamelen) {
+        if ($usernamelen > 30) {
+            showTips(array('error' => lang('profile_nickname_toolong')));
+        }
+        if(C::t('user')->fetch_by_nickname($nickname)) {
+            showTips(array('error' => lang('profile_nickname_exist')));
+        }
+    }
 } elseif ($_GET['action'] == 'checkemail') {
-
     require_once libfile('function/user');
     checkemail($_GET['email']);
-
-
 } elseif ($_GET['action'] == 'checkuserexists') {
-
     if (C::t('user')->fetch_by_username(trim($_GET['username']))) {
         showmessage('<img src="' . $_G['style']['imgdir'] . '/check_right.gif" width="13" height="13">', '', array(), array('msgtype' => 3));
-
     } else {
         showmessage('username_nonexistence', '', array(), array('msgtype' => 3));
     }
-
 } elseif ($_GET['action'] == 'district') {
     $container = $_GET['container'];
     $showlevel = intval($_GET['level']);
@@ -59,7 +63,6 @@ if ($_GET['action'] == 'checkusername') {
     if ($values[0]) {
         $level++;
     } else if ($_G['uid'] && !empty($_GET['showdefault'])) {
-
         space_merge($_G['member'], 'profile');
         $district = array();
         if ($containertype == 'birth') {
@@ -118,4 +121,3 @@ if ($_GET['action'] == 'checkusername') {
     exit();
 }
 showTips(array('msg' => 'success'), $type, $template);
-

@@ -83,10 +83,9 @@ if ($orgids && $stype != 2) {
 if ($uids && $stype != 1) {
     $sel_user = C::t('user')->fetch_all($uids);
     foreach ($sel_user as $value) {
-        $selects['uid_' . $value['uid']] = $sel_user[$value['uid']];
+        $selects['uid_' . $value['uid']] = $value;
     }
     if ($aorgids = C::t('organization_user')->fetch_orgids_by_uid($uids)) {
-
         foreach ($aorgids as $orgid) {
             $arr = C::t('organization')->fetch_parent_by_orgid($orgid, true);
             $count = count($arr);
