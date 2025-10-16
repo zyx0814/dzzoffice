@@ -1112,7 +1112,7 @@ class io_dzz extends io_api {
     }
 
     public static function uploadToattachment($attach, $fid, $force = false) {
-        global $_G, $documentexts, $space, $docexts;
+        global $_G, $documentexts, $space;
         if (!$force && !perm_check::checkperm_Container($fid, 'upload')) {
             return array('error' => lang('no_privilege'));
         }

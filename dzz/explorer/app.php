@@ -33,124 +33,101 @@ if ($do == 'updatesetting') {//更新设置
         exit(json_encode(array('error' => true, 'msg' => lang('update_setting_failed'))));
     }
 } else {
-    //查询所有设置
-    $setting = C::t('setting')->fetch_all(
-        array(
-            'explorer_usermemoryOn',
-            'explorer_mermoryusersetting',
-            'explorer_memoryorgusers',
-            'explorer_memorySpace',
-            'explorer_organizationOn',
-            'explorer_groupOn',
-            'explorer_groupcreate',
-            'explorer_mermorygroupsetting',
-            'explorer_mermoryonlymyorg',
-            'explorer_memorygroupusers',
-            'explorer_catcreate',
-            'explorer_finallydelete'
-        ));
-    //处理指定空间人员
-    if ($setting['explorer_memoryorgusers']) {
-        $muids = explode(',', $setting['explorer_memoryorgusers']);
-    }
-    $orgids = $uids = $sel_org = $sel_user = array();
-    foreach ($muids as $value) {
-        if (strpos($value, 'uid_') !== false) {
-            $uids[] = str_replace('uid_', '', $value);
-        } else {
-            $orgids[] = $value;
-        }
-    }
-    $open = array();
-    if ($orgids) {
-        $sel_org = C::t('organization')->fetch_all($orgids);
+    // 查询所有设置
+    $setting = C::t('setting')->fetch_all([
+        'explorer_usermemoryOn',
+        'explorer_mermoryusersetting',
+        'explorer_memoryorgusers',
+        'explorer_memorySpace',
+        'explorer_organizationOn',
+        'explorer_groupOn',
+        'explorer_groupcreate',
+        'explorer_mermorygroupsetting',
+        'explorer_mermoryonlymyorg',
+        'explorer_memorygroupusers',
+        'explorer_catcreate',
+        'explorer_finallydelete'
+    ]);
 
-        foreach ($sel_org as $key => $value) {
-            $orgpath = getPathByOrgid($value['orgid']);
-            $sel_org[$key]['orgpath'] = implode('-', ($orgpath));
-            $arr = (array_keys($orgpath));
-            //print_r($arr);
-            array_pop($arr);
-            if ($count = count($arr)) {
-                if ($open[$arr[$count - 1]]) {
-                    if (count($open[$arr[$count - 1]]) > $count) $open[$arr[count($arr) - 1]] = $arr;
-                } else {
-                    $open[$arr[$count - 1]] = $arr;
-                }
+    /**
+     * 处理用户/组织设置的通用函数
+     * @param string $settingKey 设置项的键名（如 'explorer_memoryorgusers'）
+     * @return array 包含解析后的组织、用户、展开状态
+     */
+    $processMemoryUsers = function($settingKey) use ($setting) {
+        $memoryUsers = $setting[$settingKey] ?? '';
+        $muids = $memoryUsers ? explode(',', $memoryUsers) : [];
+        
+        $orgids = [];
+        $uids = [];
+        foreach ($muids as $value) {
+            if (strpos($value, 'uid_') !== false) {
+                $uids[] = str_replace('uid_', '', $value);
+            } else {
+                $orgids[] = $value;
             }
         }
-        if (in_array('other', $orgids)) {
-            $sel_org[] = array('orgname' => lang('no_org_user'), 'orgid' => 'other', 'forgid' => 1);
+
+        $selOrg = [];
+        $open = [];
+        // 处理组织
+        if ($orgids) {
+            $selOrg = C::t('organization')->fetch_all($orgids);
+            foreach ($selOrg as $key => $org) {
+                $orgPath = getPathByOrgid($org['orgid']);
+                $selOrg[$key]['orgpath'] = implode('-', $orgPath);
+                $arr = array_keys($orgPath);
+                array_pop($arr); // 移除最后一个元素
+                $count = count($arr);
+                if ($count) {
+                    $lastKey = $arr[$count - 1];
+                    // 保留最短路径（避免重复展开）
+                    if (empty($open[$lastKey]) || count($open[$lastKey]) > $count) {
+                        $open[$lastKey] = $arr;
+                    }
+                }
+            }
+            // 处理"无组织用户"
+            if (in_array('other', $orgids)) {
+                $selOrg[] = [
+                    'orgname' => lang('no_org_user'),
+                    'orgid' => 'other',
+                    'forgid' => 1
+                ];
+            }
         }
-    }
 
-    if ($uids) {
-        $sel_user = C::t('user')->fetch_user_avatar_by_uids($uids);
-        if ($aorgids = C::t('organization_user')->fetch_orgids_by_uid($uids)) {
-            foreach ($aorgids as $orgid) {
+        // 处理用户及其所属组织的展开状态
+        $selUser = [];
+        if ($uids) {
+            $selUser = C::t('user')->fetch_user_avatar_by_uids($uids);
+            $aOrgIds = C::t('organization_user')->fetch_orgids_by_uid($uids);
+            foreach ($aOrgIds as $orgid) {
                 $arr = C::t('organization')->fetch_parent_by_orgid($orgid, true);
-
-                if ($count = count($arr)) {
-                    if ($open[$arr[$count - 1]]) {
-                        if (count($open[$arr[$count - 1]]) > $count) $open[$arr[count($arr) - 1]] = $arr;
-                    } else {
-                        $open[$arr[$count - 1]] = $arr;
+                $count = count($arr);
+                if ($count) {
+                    $lastKey = $arr[$count - 1];
+                    if (empty($open[$lastKey]) || count($open[$lastKey]) > $count) {
+                        $open[$lastKey] = $arr;
                     }
                 }
             }
         }
-    }
-    if ($setting['explorer_memorygroupusers']) {
-        $muids = explode(',', $setting['explorer_memorygroupusers']);
-    }
-    $orgids1 = $uids1 = $sel_org1 = $sel_user1 = array();
-    foreach ($muids as $value) {
-        if (strpos($value, 'uid_') !== false) {
-            $uids1[] = str_replace('uid_', '', $value);
-        } else {
-            $orgids1[] = $value;
-        }
-    }
-    //新建群组用户
-    $open1 = array();
-    if ($orgids1) {
-        $sel_org1 = C::t('organization')->fetch_all($orgids1);
 
-        foreach ($sel_org1 as $key => $value) {
-            $orgpath = getPathByOrgid($value['orgid']);
-            $sel_org1[$key]['orgpath'] = implode('-', ($orgpath));
-            $arr = (array_keys($orgpath));
-            //print_r($arr);
-            array_pop($arr);
-            if ($count = count($arr)) {
-                if ($open1[$arr[$count - 1]]) {
-                    if (count($open1[$arr[$count - 1]]) > $count) $open1[$arr[count($arr) - 1]] = $arr;
-                } else {
-                    $open1[$arr[$count - 1]] = $arr;
-                }
-            }
-        }
-        if (in_array('other', $orgids1)) {
-            $sel_org1[] = array('orgname' => lang('no_org_user'), 'orgid' => 'other', 'forgid' => 1);
-        }
-    }
+        return [
+            'selOrg' => $selOrg,
+            'selUser' => $selUser,
+            'open' => $open
+        ];
+    };
 
-    if ($uids1) {
-        $sel_user1 = C::t('user')->fetch_user_avatar_by_uids($uids1);
-        if ($aorgids = C::t('organization_user')->fetch_orgids_by_uid($uids1)) {
-            foreach ($aorgids as $orgid) {
-                $arr = C::t('organization')->fetch_parent_by_orgid($orgid, true);
+    $result1 = $processMemoryUsers('explorer_memoryorgusers');
+    $result2 = $processMemoryUsers('explorer_memorygroupusers');
 
-                if ($count = count($arr)) {
-                    if ($open1[$arr[$count - 1]]) {
-                        if (count($open[$arr[$count - 1]]) > $count) $open1[$arr[count($arr) - 1]] = $arr;
-                    } else {
-                        $open1[$arr[$count - 1]] = $arr;
-                    }
-                }
-            }
-        }
-    }
-    $openarr = json_encode(array('orgids' => $open, 'orgids1' => $open1));
+    $openarr = json_encode([
+        'orgids' => $result1['open'],
+        'orgids1' => $result2['open']
+    ]);
+
     require template('app_manage');
 }

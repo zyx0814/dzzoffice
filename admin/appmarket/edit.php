@@ -209,5 +209,30 @@ function app_pic_delete($picids) {
         C::t('app_pic')->delete_by_picid($picid);
     }
 }
-
+function dzz_app_pic_save($FILE, $dir = 'appimg') {
+    global $_G;
+    $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
+    $ext = strtolower(substr(strrchr($FILE['name'], '.'), 1, 10));
+    if (!in_array($ext, $imageext)) return '文件格式不允许';
+    $subdir = $subdir1 = $subdir2 = '';
+    $subdir1 = date('Ym');
+    $subdir2 = date('d');
+    $subdir = $subdir1 . '/' . $subdir2 . '/';
+    $target = $dir . '/' . $subdir;
+    $filename = date('His') . '' . strtolower(random(16));
+    if (!$attach = io_dzz::UploadSave($FILE)) {
+        return '应用图片上传失败';
+    }
+    $setarr = array(
+        'uid' => $_G['uid'],
+        'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
+        'dateline' => $_G['timestamp'],
+        'aid' => $attach['aid'],
+    );
+    if ($setarr['picid'] = DB::insert('app_pic', $setarr, 1)) {
+        C::t('attachment')->addcopy_by_aid($attach['aid']);
+        return $setarr;
+    }
+    return false;
+}
 ?>

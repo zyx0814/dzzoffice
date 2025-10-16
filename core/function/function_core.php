@@ -41,12 +41,12 @@ function getfileinfo($icoid, $sid = false) {
 
 function dzzMD5($file, $maxchunk = 100, $chunksize_first = 256) {
     /*
-  获取文件的dzzhash值
-  $file:文件地址,仅支持本地文件地址；
-  $maxchunk:获取多少块数据
-  $chunksize_first:每块取多少字节计算md5;
-  return:第一块md5和所有块的md5;
-*/
+    获取文件的dzzhash值
+    $file:文件地址,仅支持本地文件地址；
+    $maxchunk:获取多少块数据
+    $chunksize_first:每块取多少字节计算md5;
+    return:第一块md5和所有块的md5;
+    */
     if (!is_file($file)) return false;
     $filesize = filesize($file);
     $chunk = round($filesize / $maxchunk);
@@ -867,7 +867,6 @@ function modauthkey($id) {
     return md5(getglobal('username') . getglobal('uid') . getglobal('authkey') . substr(TIMESTAMP, 0, -7) . $id);
 }
 
-
 function loadcache($cachenames, $force = false) {
     global $_G;
     static $loadedcache = array();
@@ -1606,28 +1605,6 @@ function dunserialize($data) {
     return $ret;
 }
 
-function browserversion($type) {
-    static $return = array();
-    static $types = array('ie' => 'msie', 'firefox' => '', 'chrome' => '', 'opera' => '', 'safari' => '', 'mozilla' => '', 'webkit' => '', 'maxthon' => '', 'qq' => 'qqbrowser');
-    if (!$return) {
-        $useragent = strtolower($_SERVER['HTTP_USER_AGENT']);
-        $other = 1;
-        foreach ($types as $i => $v) {
-            $v = $v ? $v : $i;
-            if (strpos($useragent, $v) !== false) {
-                preg_match('/' . $v . '(\/|\s)([\d\.]+)/i', $useragent, $matches);
-                $ver = $matches[2];
-                $other = $ver !== 0 && $v != 'mozilla' ? 0 : $other;
-            } else {
-                $ver = 0;
-            }
-            $return[$i] = $ver;
-        }
-        $return['other'] = $other;
-    }
-    return $return[$type];
-}
-
 function removedirectory($dirname, $keepdir = FALSE, $time = 0) {
     $dirname = str_replace(array("\n", "\r", '..'), array('', '', ''), $dirname);
 
@@ -1646,24 +1623,11 @@ function removedirectory($dirname, $keepdir = FALSE, $time = 0) {
     return !$keepdir ? (@rmdir($dirname) ? TRUE : FALSE) : TRUE;
 }
 
-global $documentexts, $textexts, $unRunExts, $docexts, $imageexts, $idtype2type;
+global $documentexts, $textexts, $unRunExts, $imageexts;
 $documentexts = array('DZZDOC', 'HTM', 'HTML', 'SHTM', 'SHTML', 'HTA', 'HTC', 'XHTML', 'STM', 'SSI', 'JS', 'JSON', 'AS', 'ASC', 'ASR', 'XML', 'XSL', 'XSD', 'DTD', 'XSLT', 'RSS', 'RDF', 'LBI', 'DWT', 'ASP', 'ASA', 'ASPX', 'ASCX', 'ASMX', 'CONFIG', 'CS', 'CSS', 'CFM', 'CFML', 'CFC', 'TLD', 'TXT', 'PHP', 'PHP3', 'PHP4', 'PHP5', 'PHP-DIST', 'PHTML', 'JSP', 'WML', 'TPL', 'LASSO', 'JSF', 'VB', 'VBS', 'VTM', 'VTML', 'INC', 'SQL', 'JAVA', 'EDML', 'MASTER', 'INFO', 'INSTALL', 'THEME', 'CONFIG', 'MODULE', 'PROFILE', 'ENGINE', 'DOC', 'DOCX', 'XLS', 'XLSX', 'PPT', 'PPTX', 'ODT', 'ODS', 'ODG', 'RTF', 'ET', 'DPX', 'WPS');
 $textexts = array('DZZDOC', 'HTM', 'HTML', 'SHTM', 'SHTML', 'HTA', 'HTC', 'XHTML', 'STM', 'SSI', 'JS', 'JSON', 'AS', 'ASC', 'ASR', 'XML', 'XSL', 'XSD', 'DTD', 'XSLT', 'RSS', 'RDF', 'LBI', 'DWT', 'ASP', 'ASA', 'ASPX', 'ASCX', 'ASMX', 'CONFIG', 'CS', 'CSS', 'CFM', 'CFML', 'CFC', 'TLD', 'TXT', 'PHP', 'PHP3', 'PHP4', 'PHP5', 'PHP-DIST', 'PHTML', 'JSP', 'WML', 'TPL', 'LASSO', 'JSF', 'VB', 'VBS', 'VTM', 'VTML', 'INC', 'SQL', 'JAVA', 'EDML', 'MASTER', 'INFO', 'INSTALL', 'THEME', 'CONFIG', 'MODULE', 'PROFILE', 'ENGINE');
 $unRunExts = array('htm', 'html', 'js', 'php', 'jsp', 'asp', 'aspx', 'xml', 'htc', 'shtml', 'shtm', 'vbs'); //需要阻止运行的后缀名；
-$docexts = array('DOC', 'DOCX', 'XLS', 'XLSX', 'PPT', 'PPTX', 'ODT', 'ODS', 'ODG', 'RTF', 'ET', 'DPX', 'WPS');
-//echo strtolower(implode(',',$docexts));
 $imageexts = array('JPG', 'JPEG', 'GIF', 'PNG', 'BMP', 'webp');
-$videoexts =
-$idtype2type = array(
-    'picid' => 'image',
-    'lid' => 'link',
-    'mid' => 'music',
-    'vid' => 'video',
-    'did' => 'document',
-    'appid' => 'app',
-    'qid' => 'attach',
-    'uid' => 'user'
-);
 function get_os($agent = '') {
     if (!$agent) $agent = $_SERVER['HTTP_USER_AGENT'];
     $os = 'unknown';
@@ -1733,60 +1697,6 @@ function get_os($agent = '') {
         $os = 'unkonow';
     }
     return $os;
-}
-
-function array_sort($arr, $keys, $type = 'asc') { //二维数组排序；
-    $keysvalue = $new_array = array();
-    foreach ($arr as $k => $v) {
-        $keysvalue[$k] = $v[$keys];
-    }
-    if ($type == 'asc') {
-        asort($keysvalue);
-    } else {
-        arsort($keysvalue);
-    }
-    reset($keysvalue);
-    foreach ($keysvalue as $k => $v) {
-        $new_array[$k] = $arr[$k];
-    }
-    return $new_array;
-}
-
-if (!function_exists('json_decode')) {
-    function json_decode($content, $assoc = false) {
-        require_once DZZ_ROOT . '/dzz/class/class_json.php';
-        if ($assoc) {
-            $json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
-        } else {
-            $json = new Services_JSON;
-        }
-        return $json->decode($content);
-    }
-}
-
-if (!function_exists('json_encode')) {
-    function json_encode($content) {
-        require_once DZZ_ROOT . '/dzz/class/class_json.php';
-        $json = new Services_JSON;
-        return $json->encode($content);
-    }
-}
-
-function arr_encode(&$array) {
-    foreach ($array as $key => $value) {
-        if (is_array($value)) {
-            arr_encode($array[$key]);
-        } else {
-            $array[$key] = (diconv(stripslashes($value), CHARSET, 'UTF-8'));
-        }
-    }
-}
-
-function json_encode_gbk($array) {
-    global $_G;
-    arr_encode($array);
-    $json = json_encode($array);
-    return ($json);
 }
 
 function getThames() {//处理风格
@@ -1911,61 +1821,6 @@ function dzz_libfile($libname, $folder = '') {
     } else {
         return realpath("{$libpath}/{$libname}.php");
     }
-}
-
-function dzzlang($file, $langvar = null, $vars = array(), $default = null) {
-    global $_G;
-    //	return lang($file,$langvar,$vars,$defualt,'dzz/admin');
-    list($path, $file) = explode('/', $file);
-    if (!$file) {
-        $file = $path;
-        $path = '';
-    }
-
-    if ($path == '') {
-        $vars1 = explode(':', $file);
-        if (count($vars1) == 2) {
-            list($plugfolder, $file) = explode(':', $file);
-            $key = 'plugin_' . $plugfolder . '_' . $file;
-            if (!isset($_G['lang'][$key])) {
-                include DZZ_ROOT . './dzz/plugin/' . $plugfolder . '/language/' . 'lang_' . $file . '.php';
-                $_G['lang'][$key] = $lang;
-            }
-        } else {
-            $key = $file;
-            if (!isset($_G['lang'][$key])) {
-                include DZZ_ROOT . './dzz/language/' . ($path == '' ? '' : $path . '/') . 'lang_' . $file . '.php';
-                $_G['lang'][$key] = $lang;
-            }
-        }
-        $returnvalue = &$_G['lang'];
-    } else {
-        $key = $path == '' ? $file : $path . '_' . $file;
-        if (!isset($_G['lang'][$key])) {
-            include DZZ_ROOT . './dzz/' . $path . '/language/lang_' . $file . '.php';
-            $_G['lang'][$key] = $lang;
-        }
-
-        $returnvalue = &$_G['lang'];
-    }
-    $return = $langvar !== null ? (isset($returnvalue[$key][$langvar]) ? $returnvalue[$key][$langvar] : null) : $returnvalue[$key];
-    $return = $return === null ? ($default !== null ? $default : $langvar) : $return;
-    $searchs = $replaces = array();
-    if ($vars && is_array($vars)) {
-        foreach ($vars as $k => $v) {
-            $searchs[] = '{' . $k . '}';
-            $replaces[] = $v;
-        }
-    }
-    if (is_string($return) && strpos($return, '{_G/') !== false) {
-        preg_match_all('/\{_G\/(.+?)\}/', $return, $gvar);
-        foreach ($gvar[0] as $k => $v) {
-            $searchs[] = $v;
-            $replaces[] = getglobal($gvar[1][$k]);
-        }
-    }
-    $return = str_replace($searchs, $replaces, $return);
-    return $return;
 }
 
 function getFileTypeName($type, $ext) {
@@ -2259,33 +2114,6 @@ function imagetolocal($source, $dir = 'appimg', $target = '') {
         }
         return $target;
     } else return false;
-}
-
-function image_to_icon($source, $target, $domain) {
-    global $_G;
-    if (!$data = dzz_file_get_contents($source)) {
-        return false;
-    }
-    if (!$target) {
-        $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
-        $ext = str_replace("/\?.+?/i", '', strtolower(substr(strrchr($source, '.'), 1, 10)));
-        if (!in_array($ext, $imageext)) $ext = 'jpg';
-        $subdir = $subdir1 = $subdir2 = '';
-        $subdir1 = date('Ym');
-        $subdir2 = date('d');
-        $subdir = $subdir1 . '/' . $subdir2 . '/';
-        $target = 'icon/' . $subdir . '' . $domain . '_' . strtolower(random(8)) . '.' . $ext;
-        $target_attach = $_G['setting']['attachdir'] . $target;
-    } else {
-        $target_attach = $_G['setting']['attachdir'] . $target;
-    }
-    $targetpath = dirname($target_attach);
-    dmkdir($targetpath);
-    if (file_put_contents($target_attach, $data)) {
-        return $target;
-    } else {
-        return false;
-    }
 }
 
 function getTxtAttachByMd5($message, $filename_title, $ext) {
@@ -2628,56 +2456,6 @@ function uploadtolocal($upload, $dir = 'appimg', $target = '', $exts = array('jp
     } else {
         return false;
     }
-}
-
-function upload_to_icon($upload, $target, $domain = '') {
-    global $_G;
-    $source = $upload['tmp_name'];
-    if (!$target) {
-        $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
-        $ext = strtolower(substr(strrchr($upload['name'], '.'), 1, 10));
-        if (!in_array($ext, $imageext)) return false;
-        $subdir = $subdir1 = $subdir2 = '';
-        $subdir1 = date('Ym');
-        $subdir2 = date('d');
-        $subdir = $subdir1 . '/' . $subdir2 . '/';
-        $target = 'icon/' . $subdir . '' . $domain . '_' . strtolower(random(8)) . '.' . $ext;
-        $target_attach = $_G['setting']['attachdir'] . $target;
-    } else {
-        $target_attach = $_G['setting']['attachdir'] . $target;
-    }
-    if (save_to_local($source, $target_attach)) {
-        return $target;
-    } else {
-        return false;
-    }
-}
-
-function dzz_app_pic_save($FILE, $dir = 'appimg') {
-    global $_G;
-    $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
-    $ext = strtolower(substr(strrchr($FILE['name'], '.'), 1, 10));
-    if (!in_array($ext, $imageext)) return '文件格式不允许';
-    $subdir = $subdir1 = $subdir2 = '';
-    $subdir1 = date('Ym');
-    $subdir2 = date('d');
-    $subdir = $subdir1 . '/' . $subdir2 . '/';
-    $target = $dir . '/' . $subdir;
-    $filename = date('His') . '' . strtolower(random(16));
-    if (!$attach = io_dzz::UploadSave($FILE)) {
-        return '应用图片上传失败';
-    }
-    $setarr = array(
-        'uid' => $_G['uid'],
-        'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-        'dateline' => $_G['timestamp'],
-        'aid' => $attach['aid'],
-    );
-    if ($setarr['picid'] = DB::insert('app_pic', $setarr, 1)) {
-        C::t('attachment')->addcopy_by_aid($attach['aid']);
-        return $setarr;
-    }
-    return false;
 }
 
 /**
@@ -3117,7 +2895,6 @@ function sms($tplsign, $to, $params = array('expire' => 15, 'codelength' => 6)) 
     $params['to'] = $to;
     $result = Hook::listen('sms', $params);
     return $result[0];
-
 }
 
 /**

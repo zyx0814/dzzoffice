@@ -46,15 +46,15 @@
 				<div class="selectorguser" <!--{if $setting['explorer_mermoryusersetting']!='appoint'}-->style="display:none"<!--{/if}-->>
 					<div class="clearfix">
 						<div class="d-flex" id="orgids">
-							<!--{loop $sel_org $value}-->
-							<button id="orgids_sl_$value['orgid']" type="button" class="btn btn-outline-primary btn-sorg" data-val="$value['orgid']">
+							<!--{loop $result1['selOrg'] $value}-->
+							<button id="orgids_sl_$value['orgid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg" data-val="$value['orgid']">
 								{eval echo avatar_group($value['orgid'],null,'iconFirstWord');}
-								$value[orgname] <a href="javascript:;" class="mdi mdi-close" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
+								$value[orgname] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
 							</button>
 							<!--{/loop}-->
-							<!--{loop $sel_user $value1}-->
-							<button id="orgids_sl_uid_$value1['uid']" data-val="uid_$value1['uid']" type="button" class="btn btn-outline-primary btn-sorg">
-								{eval echo avatar_block($value1['uid'],array($value1['uid']=>$value1['headerColor']),'iconFirstWord');} $value1['username'] <a href="javascript:;" class="mdi mdi-close" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
+							<!--{loop $result1['selUser'] $value}-->
+							<button id="orgids_sl_uid_$value['uid']" data-val="uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg">
+								{eval echo avatar_block($value['uid'],array($value['uid']=>$value['headerColor']),'iconFirstWord');} $value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
 							</button>
 							<!--{/loop}-->
 						</div>
@@ -96,7 +96,7 @@
 		<div class="row mb-3">
 			<label class="col-sm-2"></label>
 			<div class="col-sm-10">
-				<div  id="memorycreateinfo" <!--{if isset($setting['explorer_groupcreate']) && $setting['explorer_groupcreate'] == 0}-->class="hide"<!--{/if}--> >
+				<div id="memorycreateinfo" <!--{if isset($setting['explorer_groupcreate']) && $setting['explorer_groupcreate'] == 0}-->class="hide"<!--{/if}--> >
 					<div class="function-radio clearfix">
 						<div class="form-check form-check-inline">
 							<input type="radio" class="form-check-input" id="explorer_mermorygroupsetting1" value="all" name="setting[explorer_mermorygroupsetting]"<!--{if !isset($setting['explorer_mermorygroupsetting']) || $setting['explorer_mermorygroupsetting'] == 'all'}-->checked<!--{/if}--> >
@@ -111,32 +111,28 @@
 						</div>
 						<span class="form-text">{lang allow_appointcreate_group}</span>
 					</div>
-				</div>
-				<div class="selectgroupuser"<!--{if $setting['explorer_mermorygroupsetting']!='appoint'}-->style="display:none;"<!--{/if}-->>
-					<div class="clearfix">
-						<div id="groupcreateids">
-							<!--{loop $sel_org1 $value}-->
-							<button id="groupcreateids_sl_$value['orgid']" type="button" class="btn btn-outline-primary btn-sorg" data-val="$value['orgid']">
-								{eval echo avatar_group($value['orgid'],null,'iconFirstWord');}
-								$value[orgname] <a href="javascript:;" class="mdi mdi-close" title="{lang delete}" onclick="selorg.remove('groupcreateids',this);"></a>
-							</button>
-							<!--{/loop}-->
-							<!--{loop $sel_user1 $value1}-->
-							<button id="groupcreateids_sl_uid_$value1['uid']" data-val="uid_$value1['uid']" type="button" class="btn btn-outline-primary btn-sorg">
-								{eval echo avatar_block($value1['uid'],array($value1['uid']=>$value1['headerColor']),'iconFirstWord');}$value1['username'] <a href="javascript:;" class="mdi mdi-close"  title="{lang delete}" onclick="selorg.remove('groupcreateids',this);"></a>
-							</button>
-							<!--{/loop}-->
+					<div class="selectgroupuser"<!--{if $setting['explorer_mermorygroupsetting']!='appoint'}-->style="display:none;"<!--{/if}-->>
+						<div class="clearfix">
+							<div id="groupcreateids">
+								<!--{loop $result2['selOrg'] $value}-->
+								<button id="groupcreateids_sl_$value['orgid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg" data-val="$value['orgid']">
+									{eval echo avatar_group($value['orgid'],null,'iconFirstWord');}
+									$value[orgname] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('groupcreateids',this);"></a>
+								</button>
+								<!--{/loop}-->
+								<!--{loop $result2['selUser'] $value}-->
+								<button id="groupcreateids_sl_uid_$value['uid']" data-val="uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg">
+									{eval echo avatar_block($value['uid'],array($value['uid']=>$value['headerColor']),'iconFirstWord');}$value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('groupcreateids',this);"></a>
+								</button>
+								<!--{/loop}-->
+							</div>
+							<input id="sel_groupcreateids" name="setting[explorer_memorygroupusers]" type="hidden" value="$setting['explorer_memorygroupusers']"/>
 						</div>
-						<input id="sel_groupcreateids" name="setting[explorer_memorygroupusers]" type="hidden" value="$setting['explorer_memorygroupusers']"/>
-					</div>
-					<div class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle btn btn-primary" id="groupcreateids_Menu" data-toggle="dropdown">{lang select_departments_or_users}
-							<span class="caret"></span></a>
-						<div  class="dropdown-menu org-sel-box" role="menu" aria-labelledby="groupcreateids_Menu">
-							<iframe name="groupcreateids_iframe" class="org-sel-box-iframe"
-									src="{DZZSCRIPT}?mod=system&op=orgtree&ctrlid=groupcreateids&template=1&multiple=1&range=1"
-									frameborder="0" marginheight="0" marginwidth="0" width="100%"
-									height="100%" allowtransparency="true"></iframe>
+						<div class="dropdown">
+							<a href="javascript:;" class="dropdown-toggle btn btn-primary" id="groupcreateids_Menu" data-toggle="dropdown">{lang select_departments_or_users}</a>
+							<div class="dropdown-menu org-sel-box" role="menu" aria-labelledby="groupcreateids_Menu">
+								<iframe name="groupcreateids_iframe" class="org-sel-box-iframe" src="{DZZSCRIPT}?mod=system&op=orgtree&ctrlid=groupcreateids&template=1&multiple=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+							</div>
 						</div>
 					</div>
 				</div>
