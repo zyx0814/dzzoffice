@@ -2,13 +2,29 @@
 
 namespace admin\systemlog\classes;
 class Systemlog {
-    //$arr 必须传入 level,content
+    //$arr 必须传入 mark,content
     public function run($arr = array()) {
+        if (!isset($arr["mark"])) {
+            return;
+        }
+        if(!$arr["content"]) {
+            return;
+        }
         global $_G;
-        if ($_G['setting']['systemlog_open'] > 0) {
-            $systemlog_setting = unserialize($_G['setting']['systemlog_setting']);
-            //判断是否开启该类型日志
-            if (!isset($arr["mark"]) || (isset($systemlog_setting[$arr["mark"]]) && $systemlog_setting[$arr["mark"]]["is_open"] != 1)) {
+        // 处理$_G['setting']可能不存在的情况，默认systemlog_open为1
+        $systemlogOpen = 1;
+        if (isset($_G['setting']['systemlog_open'])) {
+            $systemlogOpen = $_G['setting']['systemlog_open'];
+        }
+        if ($systemlogOpen > 0) {
+            $systemlog_setting = [];
+            if (isset($_G['setting']['systemlog_setting'])) {
+                $systemlog_setting = unserialize($_G['setting']['systemlog_setting']);
+                //判断是否开启该类型日志
+                if (isset($systemlog_setting[$arr["mark"]]) && $systemlog_setting[$arr["mark"]]["is_open"] != 1) {
+                    return;
+                }
+            } elseif($arr["mark"] !== 'errorlog') {//不能获取到日志开关时，除系统错误日志外，其他日志全部返回
                 return;
             }
             $file = $arr["mark"];//$arr["level"];//级别

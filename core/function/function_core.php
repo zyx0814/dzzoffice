@@ -665,38 +665,65 @@ function avatar($uid, $size = 'middle', $returnsrc = FALSE, $real = FALSE, $stat
     }
 }
 
-/*获取用户头像模板，如果没有会生成背景+首字母的头像
- * param:$uid    		需要生成的用户UID;
- * param:$headercolors  传递的用户头像信息数组格式为array('1'=>'#e9308d','2'=>'#e74856'),键为UID，值为颜色值
+/**
+ * 获取用户头像模板，如果没有会生成背景+首字母的头像
+ * @param int $uid 需要生成的用户UID
+ * @param array $headercolors 用户头像颜色信息数组，格式为array('1'=>'#e9308d','2'=>'#e74856')，键为UID
+ * @param string $class 头像元素的CSS类名
+ * @param array|null $user 可选，指定用户信息数组，格式如array('username' => 'guest', 'avatarstatus' => 0)
+ * @return string 头像HTML代码
  */
-function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel img-avatar") {
+function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel img-avatar", $user = null) {
     static $colors = array('#6b69d6', '#a966ef', '#e9308d', '#e74856', '#f35b42', '#00cc6a', '#0078d7', '#5290f3', '#00b7c3', '#0099bc', '#018574', '#c77c52', '#ff8c00', '#68768a', '#7083cb', '#26a255');
-    if ($uid) {
-        $user = getuserbyuid($uid);
+    static $userheaderColors = array();
+
+    // 优先使用传入的$user数组
+    if ($user !== null) {
+        $user = array_merge(array('uid' => $uid, 'username' => 'guest', 'nickname' => '', 'avatarstatus' => 0),$user);
     } else {
-        global $_G;
-        if($_G['uid']) {
-            $user = array('uid' => $_G['uid'], 'username' => $_G['username'],'nickname' => $_G['member']['nickname'], 'avatarstatus' => $_G['member']['avatarstatus']);
-        } else {
-            $user = array('uid' => 0, 'username' => 'guest', 'avatarstatus' => 0);
-        }
-    }
-    if ($user['avatarstatus']) {//用户已经上传头像
-        return '<img src="avatar.php?uid=' . $user['uid'] . '" class="img-circle special_avatar_class img-avatar" title="' . $user['username'] . '">';
-    } else {//没有上传头像，使用背景+首字母
         if ($uid) {
-            if ($headercolors[$uid]) $headerColor = $headercolors[$uid];
-            else $headerColor = C::t('user_setting')->fetch_by_skey('headerColor', $user['uid']);
-            if (empty($headerColor)) {//没有设置时，创建头像背景色，并且入库
-                $colorkey = rand(1, 15);
-                $headerColor = $colors[$colorkey];
-                if($user['uid']) C::t('user_setting')->insert_by_skey('headerColor', $headerColor, $user['uid']);
+            $user = getuserbyuid($uid)?: [];
+        } else {
+            global $_G;
+            if (!empty($_G['uid'])) {
+                $user = array('uid' => $_G['uid'], 'username' => $_G['username'], 'nickname' => $_G['member']['nickname'] ?? '', 'avatarstatus' => $_G['member']['avatarstatus'] ?? 0);
             }
-        } else {//游客默认使用第一个值；
-            $headerColor = $colors[0];
         }
-        return '<span class="' . $class . '" style="background:' . $headerColor . '" title="' . $user['username'] . '">' . new_strsubstr(ucfirst($user['nickname'] ? $user['nickname'] : $user['username']), 1, '') . '</span>';
     }
+    if (empty($user)) {
+        $user = array('uid' => 0, 'username' => 'guest', 'nickname' => '', 'avatarstatus' => 0);
+    }
+
+    // 用户已上传头像时返回img标签
+    if ($user['avatarstatus']) {
+        return '<img src="avatar.php?uid=' . $user['uid'] . '" ' . 'class="img-circle special_avatar_class img-avatar" ' . 'title="' . $user['username'] . '">';
+    }
+
+    // 未上传头像时生成背景+首字母的头像
+    // 确定背景颜色
+    if ($user['uid']) {
+        if (!empty($headercolors[$user['uid']])) {
+            $headerColor = $headercolors[$user['uid']];
+        } else {
+            if (!empty($userheaderColors[$user['uid']])) {
+                $headerColor = $userheaderColors[$user['uid']];
+            } else {
+                $headerColor = C::t('user_setting')->fetch_by_skey('headerColor', $user['uid']);
+                // 未设置颜色时随机生成并保存
+                if (empty($headerColor)) {
+                    $colorKey = mt_rand(0, count($colors) - 1); // 使用count避免硬编码
+                    $headerColor = $colors[$colorKey];
+                    C::t('user_setting')->insert_by_skey('headerColor', $headerColor, $user['uid']);
+                }
+                $userheaderColors[$user['uid']] = $headerColor;
+            }
+        }
+    } else {
+        // 游客默认使用第一个颜色
+        $headerColor = $colors[0];
+    }
+
+    return '<span class="' . $class . '" style="background:' . $headerColor . '" title="' . $user['username'] . '">' . new_strsubstr(ucfirst($user['username']), 1, '') . '</span>';
 }
 
 /*获取群组机构头像模板，如果没有会生成背景+首字母的头像

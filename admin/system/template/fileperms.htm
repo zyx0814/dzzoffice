@@ -31,14 +31,20 @@
 			<!--{if $result}-->
 			<div class="alert alert-warning d-flex align-items-center" role="alert">
 				<i class="dzz dzz-error me-2 fs-5"></i>
-				<div>
-					如果某个文件或目录被检查到“无法写入”(以红色列出)，请即刻通过 FTP 或其他工具修改其属性(例如设置为 777)，以确保站点功能的正常使用。
-				</div>
-			  </div>
-			<ol class="list-group list-group-numbered">
-				$result
-			  </ol>
+				<div>如果某个文件或目录被检查到“无法写入”(以红色列出)，请通过 FTP 或其他工具修改其属性(例如设置为 777)，以确保站点功能的正常使用。</div>
+			</div>
+			<div class="alert alert-$alert d-flex align-items-center" role="alert">
+				<i class="dzz dzz-error me-2 fs-5"></i>
+				<div>$msg</div>
+			</div>
+			<ul class="list-group list-group-numbered">
+			$result
+			</ul>
 			<!--{else}-->
+			<div class="text-center">
+				<img src="static/image/common/no_list.png" /><br>
+				<span class="text-muted lead">{lang no_related_data}</span>
+			</div>
 			<!--{/if}-->
 			<!--{/if}-->
 			</div>

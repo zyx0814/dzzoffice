@@ -256,7 +256,7 @@ EOT;
         } else {
             $VERSION = 'Unknown';
         }
-        echo '<p>Time: ' . date('Y-m-d H:i:s') . ' IP: ' . getglobal('clientip') . ' version: ' . $VERSION . ' BackTraceID: ' . $backtraceid . '</p>';
+        echo '<p>Time: ' . date('Y-m-d H:i:s O') . ' IP: ' . getglobal('clientip') . ' version: ' . $VERSION . ' BackTraceID: ' . $backtraceid . '</p>';
         if (!empty($errormsg)) {
             echo '<div class="info">' . $errormsg . '</div>';
         }

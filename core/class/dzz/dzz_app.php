@@ -294,6 +294,7 @@ class dzz_app extends dzz_base {
         global $_config;
         $data = array(
             "config_read" => "core\dzz\config",
+            "systemlog" => "admin\systemlog\classes\systemlog",
         );
         Hook::import($data);
         Hook::listen("config_read", $_GET);
