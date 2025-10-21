@@ -2653,8 +2653,31 @@ function getimportdata($name = '', $addslashes = 0, $ignoreerror = 0, $data = ''
 
     if (empty($data)) {
         if ($_GET['importtype'] == 'file') {
-            $data = @implode('', file($_FILES['importfile']['tmp_name']));
-            @unlink($_FILES['importfile']['tmp_name']);
+            if ($_FILES['importfile']['error'] !== UPLOAD_ERR_OK) {
+                $error = $_FILES['importfile']['error'];
+                switch ($error) {
+                    case UPLOAD_ERR_INI_SIZE:
+                        $msg = "上传文件超过php.ini限制";
+                        break;
+                    case UPLOAD_ERR_FORM_SIZE:
+                        $msg = "上传文件超过表单限制";
+                        break;
+                    case UPLOAD_ERR_PARTIAL:
+                        $msg = "文件仅部分上传";
+                        break;
+                    case UPLOAD_ERR_NO_FILE:
+                        $msg = "未上传文件";
+                        break;
+                    default:
+                        $msg = "上传失败，错误码: $error";
+                }
+                if (!$ignoreerror) {
+                    showmessage("文件上传错误: $msg");
+                }
+            } else {
+                $data = @implode('', file($_FILES['importfile']['tmp_name']));
+                @unlink($_FILES['importfile']['tmp_name']);
+            }
         } else {
             if (!empty($_GET['importtxt'])) {
                 $data = $_GET['importtxt'];
@@ -2921,6 +2944,9 @@ function sms($tplsign, $to, $params = array('expire' => 15, 'codelength' => 6)) 
     $params['tplsign'] = $tplsign;
     $params['to'] = $to;
     $result = Hook::listen('sms', $params);
+    if (empty($result) || !isset($result[0])) {
+        return ['error' => '短信服务未配置或钩子未注册'];
+    }
     return $result[0];
 }
 
