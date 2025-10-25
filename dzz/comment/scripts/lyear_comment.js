@@ -204,7 +204,7 @@ function feed_addAttach(arr,el,tid){
 	}
   	html+='  		  <div class="ico_vattvb_right">';
     html+='            <div class="ico_name">'+arr['filename']+'</div>';
-    html+='            <a href="javascript:void(0);" title="" class="del_fattvb" onClick="removeAttach(jQuery(this).parent().parent().parent().parent(),\''+tid+'\');" >'+__lang.del_adjunct+'</a>';
+    html+='            <a href="javascript:void(0);" title="" class="del_fattvb btn btn-outline-danger btn-sm" onClick="removeAttach(jQuery(this).parent().parent().parent().parent(),\''+tid+'\');" >'+__lang.del_adjunct+'</a>';
     html+='            <input type="hidden" name="attach[aid][]" value="'+arr['aid']+'" />';
 	html+='            <input type="hidden" name="attach[title][]" value="'+arr['filename']+'" />';
 	html+='            <input type="hidden" name="attach[type][]" value="attach" />';
@@ -286,7 +286,7 @@ function uploadfrom_desktop(tid){
 		exts = exts.replace(/\(/g,'|');
 		exts = exts.replace(/\)/g,'$');
 		exts = encodeURIComponent(exts);
-		 showWindow('openfile', 'index.php?mod=system&op=filewindow&handlekey=svaefile&mulitype=1&exts='+exts+'&callback=opencallback', 'get', '0',function(data){//只打开本地盘
+		showWindow('openfile', 'index.php?mod=system&op=filewindow&template=1&handlekey=svaefile&mulitype=1&exts='+exts+'&callback=opencallback', 'get', '0',function(data){//只打开本地盘
 		var datas=data;
 		for(var i in datas){
 			var arr=datas[i];
@@ -297,7 +297,7 @@ function uploadfrom_desktop(tid){
 				html+='           <div class="ico_vattvb "><img alt="'+arr['name']+'" src="'+arr['img']+'" class="img_50_50"></div>';
 			  	html+='  		  <div class="ico_vattvb_right">';
 				html+='            <div class="ico_name">'+arr['name']+'</div>';
-				html+='            <a href="javascript:void(0);" title="" class="del_fattvb" onClick="removeAttach(jQuery(this).parent().parent().parent().parent(),\''+tid+'\');" >'+__lang.del_adjunct+'</a>';
+				html+='            <a href="javascript:void(0);" title="" class="del_fattvb btn btn-outline-danger btn-sm" onClick="removeAttach(jQuery(this).parent().parent().parent().parent(),\''+tid+'\');" >'+__lang.del_adjunct+'</a>';
 				if(arr['type']=='image' || arr['type']=='attach' || arr['type']=='document'){
 				html+='            <input type="hidden" name="attach[aid][]" value="'+arr['aid']+'" />';
 				html+='            <input type="hidden" name="attach[img][]" value="" />';

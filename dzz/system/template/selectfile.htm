@@ -1,18 +1,5 @@
 <!--{template common/header_ajax}-->
-
-<script>
-    var savefile ='{$savefile}';
-</script>
-<link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
-<link href="dzz/system/css/selfilewindow.css?{VERHASH}" rel="stylesheet" media="all">
-<link href="dzz/system/css/select-file.css?{VERHASH}" rel="stylesheet" media="all">
-
-<div class="group-content" id="seluser_dropdown_menu" style="overflow:hidden">
-    <iframe name="selposition_iframe" id="selfile_iframe" class="org-sel-box-iframe"
-            src="$theurl"
-            frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%"
-            allowtransparency="true"></iframe>
-</div>
+<iframe name="selposition_iframe" id="selfile_iframe" class="org-sel-box-iframe" src="$theurl" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="600px" allowtransparency="true"></iframe>
 <script type="text/javascript" reload="1">
     function hide_window(){
         hideWindow("$_GET['handlekey']");
