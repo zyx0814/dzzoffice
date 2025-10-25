@@ -12,16 +12,16 @@
     <meta name="author" content="DzzOffice" />
     <meta name="copyright" content="2012-{eval echo dgmdate(TIMESTAMP,'Y-m-d');} www.dzzoffice.com" />
     <script type="text/javascript" src="static/jquery/jquery.min.js?{VERHASH}"></script>
-    <link rel="resource" type="application/l10n" href="{MOD_PATH}/web/locale/locale.json">
+    <link rel="resource" type="application/l10n" href="{MOD_PATH}/web/locale/locale.json?{VERHASH}">
 		<script type="text/javascript">
 			var fileName 	= "$fileName";
 			var MOD_PATH  = "{MOD_PATH}";
       var canDownload = "$perm_download";
 		</script>
-    <link rel="stylesheet" href="{MOD_PATH}/web/viewer.css">
-    <script type="text/javascript" src="{MOD_PATH}/build/pdf.js"></script>
-    <script type="text/javascript" src="{MOD_PATH}/build/pdf.worker.js"></script>
-    <script type="text/javascript" src="{MOD_PATH}/web/viewer.js"></script>
+    <link rel="stylesheet" href="{MOD_PATH}/web/viewer.css?{VERHASH}">
+    <script type="text/javascript" src="{MOD_PATH}/build/pdf.js?{VERHASH}"></script>
+    <script type="text/javascript" src="{MOD_PATH}/build/pdf.worker.js?{VERHASH}"></script>
+    <script type="text/javascript" src="{MOD_PATH}/web/viewer.js?{VERHASH}"></script>
 		<script>
       $(document).ready(function (){
         $('#editorStampButton').parent().hide();// 编辑或添加图像
@@ -47,27 +47,27 @@
         annotationEditorMode: -1, // 注释编辑器模式：-1：隐藏；0：可用；1：不可用
         // disablePreferences: true,  // 禁用首选项
         // enableScripting: false,  // 启用脚本
-        sidebarViewOnLoad: 0, // 加载侧边栏
-        // forcePageColors: true,
+        sidebarViewOnLoad: 1, // 加载侧边栏
+        // forcePageColors: true, // 强制页面颜色
 
         renderAnnotationsAsImageBitmap: false,  // 禁用ImageBitmap
         scrollMode: 0,
-        renderingQueue: true, // 
+        renderingQueue: true, // 启用渲染队列
         disableAutoFetch: true, // 禁止预加载
-        // disableStream: true,
+        // disableStream: true, // 禁用流
         // maxImageSize: 1024*1024, // 限制图片大小为1MB
         // scale: 1.0, // 默认缩放比例
         // useOnlyCssZoom: true, // 用CSS缩放替代Canvas重绘
         // disableFontFace: true,  // 禁用@font-face减少字体解析错误——会导致部分文本无法显示或乱码
 
-        isEvalSupported: false,
-        imageResourcesPath: MOD_PATH+'/web/images/',
-        cMapUrl: MOD_PATH+'/web/cmaps/',
-        cMapPacked: true,
-        standardFontDataUrl: MOD_PATH+'/web/standard_fonts/',
-        workerSrc: MOD_PATH + 'p/build/pdf.worker.js',
-        localeProperties: {lang: '$lang'},
-        defaultUrl: "$file",
+        isEvalSupported: false, // 禁用eval
+        imageResourcesPath: MOD_PATH+'/web/images/', // 图片资源路径
+        cMapUrl: MOD_PATH+'/web/cmaps/', // 字体资源路径
+        cMapPacked: true, // 使用压缩字体
+        standardFontDataUrl: MOD_PATH+'/web/standard_fonts/', // 标准字体资源路径
+        workerSrc: MOD_PATH + 'p/build/pdf.worker.js', // worker路径
+        localeProperties: {lang: '$lang'}, //语言
+        defaultUrl: "$file", // 默认加载文件
       };
       PDFViewerApplicationOptions.setAll(options);  // PDFViewerApplicationOptions.set(key,value);
 		</script>
