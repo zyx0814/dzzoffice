@@ -994,37 +994,6 @@ $lang = array(
     </p>
     <p>The {sitename} Management Team.
     {siteurl}</p>',
-    'get_passwd_message_wuser' => '
-    <p>Dear Investor {username}, this email is sent from {sitename}.</p>
-
-    <p>You received this email because this email address is registered as a user email on {sitename}, and the user requested to use the Email Password Reset function.</p>
-    <p>
-    ----------------------------------------------------------------------<br />
-    <strong>Important!</strong><br />
-    ----------------------------------------------------------------------</p>
-
-    <p>If you did not submit a password reset request or are not a registered investor of {sitename}, please ignore and delete this email immediately. Only continue reading the following content if you confirm that you need to reset your password.</p>
-    <p>
-    ----------------------------------------------------------------------<br />
-    <strong>Password Reset Instructions</strong><br />
-    ----------------------------------------------------------------------</p>
-    </p>
-    You only need to click the link below to reset your password within three days after submitting the request:<br />
-
-    <a href="{siteurl}&amp;do=getpasswd&amp;wid={wid}&amp;id={idstring}" target="_blank">{siteurl}&amp;do=getpasswd&amp;wid={wid}&amp;id={idstring}</a>
-    <br />
-    (If the above is not a clickable link, please manually copy the URL to your browser\'s address bar and access it)</p>
-
-    <p>After entering a new password and submitting it on the page opened by the above link, you can log in to the website using the new password. You can change your password at any time in the user settings.</p>
-
-    <p>The IP address of the submitter of this request is {clientip}</p>
-
-
-    <p>
-    Best regards,<br />
-    </p>
-    <p>The {sitename} Management Team.
-    {siteurl}</p>',
 
     'email_verify_subject' => 'Email Address Verification',
     'email_verify_message' => '<br />
@@ -1081,79 +1050,6 @@ $lang = array(
     The {sitename} Management Team.<br />
     {siteurl}</p>',
 
-
-        'add_member_subject' => 'You Have Been Added as a Member',
-    'add_member_message' => '
-    {newusername},
-    This email is sent from {sitename}.<br />
-    <br />
-    I am {adminusername}, one of the administrators of {sitename}. You received this email because you have just been added as a member of {sitename}, and this email address is the one we used to register your account.<br />
-    <br />
-    ----------------------------------------------------------------------<br />
-    Important!<br />
-    ----------------------------------------------------------------------<br />
-    <br />
-    If you are not interested in {sitename} or do not wish to be a member, please ignore this email.<br />
-    <br />
-    ----------------------------------------------------------------------<br />
-    Account Information<br />
-    ----------------------------------------------------------------------<br />
-    <br />
-    Website Name: {sitename}<br />
-    Website URL: {siteurl}<br />
-    <br />
-    Username: {newusername}<br />
-    Password: {newpassword}<br />
-    <br />
-    You can now log in to {sitename} using your account. We wish you a pleasant experience!<br />
-    <br />
-    <br />
-    <br />
-    Best regards,<br />
-    <br />
-    The {sitename} Management Team.<br />
-    {siteurl}',
-
-
-    'birthday_subject' => 'Happy Birthday to You',
-    'birthday_message' => '<br />
-    {username},<br />
-    This email is sent from {sitename}.<br />
-    <br />
-    You received this email because this address is registered as your user email on {sitename}, and according to the information you provided, today is your birthday. We are delighted to send you birthday greetings on this special day. On behalf of the {sitename} Management Team, we sincerely wish you a happy birthday.<br />
-    <br />
-    If you are not a member of {sitename} or today is not your birthday, it may be that someone has used your email address by mistake or entered incorrect birthday information. This email will not be sent repeatedly, so please ignore it.<br />
-    <br />
-    <br />
-    Best regards,<br />
-    <br />
-    The {sitename} Management Team.<br />
-    {siteurl}',
-
-
-    'email_to_invite_subject' => 'Your Friend {$_G[member][username]} Sent You a Registration Invitation Code for {$_G[setting][sitename]}',
-    'email_to_invite_message' => '<br />
-    $sendtoname,<br />
-    This email is sent by {$_G[member][username]} from {$_G[setting][sitename]}.<br />
-    <br />
-    You received this email because {$_G[member][username]} recommended the following content to you via the "Send Invitation Code to Friend" feature on {sitename}. If you are not interested, please ignore this email. You do not need to unsubscribe or take any further action.<br />
-    <br />
-    ----------------------------------------------------------------------<br />
-    Start of Original Message<br />
-    ----------------------------------------------------------------------<br />
-    <br />
-    $message<br />
-    <br />
-    ----------------------------------------------------------------------<br />
-    End of Original Message<br />
-    ----------------------------------------------------------------------<br />
-    <br />
-    Please note that this email is only sent by a user via the "Send Invitation Code to Friend" feature, not an official website email. The website management team will not be responsible for such emails.<br />
-    <br />
-    Welcome to visit {$_G[setting][sitename]}<br />
-    $_G[siteurl]',
-
-
     'moderate_member_subject' => 'User Review Result Notification',
     'moderate_member_message' => '<br />
     <p>{username},
@@ -1193,19 +1089,6 @@ $lang = array(
     The {sitename} Management Team.<br />
     {siteurl}',
 
-    'adv_expiration_subject' => 'The Ads on Your Site Will Expire in {day} Days. Please Handle It Promptly.',
-    'adv_expiration_message' => 'The following ads on your site will expire in {day} days. Please handle them promptly:<br /><br />{advs}',
-    'invite_payment_email_message' => '
-    Welcome to {sitename} ({siteurl}). Your order {orderid} has been paid successfully and confirmed as valid.<br />
-    <br />----------------------------------------------------------------------<br />
-    The following are the invitation codes you obtained:
-    <br />----------------------------------------------------------------------<br />
-
-    {codetext}
-
-    <br />----------------------------------------------------------------------<br />
-    Important!
-    <br />----------------------------------------------------------------------<br />',
     'bindemail_subject' => 'Email Binding',
     'bindemail_message' => '<br />
     Dear {username}, hello.<br />
@@ -1285,7 +1168,7 @@ $lang = array(
         'Saturday' => 'Saturday',
         'Sunday' => 'Sunday',
     ),
-    'dot' => ',', // 英文中用逗号表示列举分隔，替代中文的“、”
+    'dot' => ',',
     'archive' => 'Archive',
     'end' => 'End',
     // core/misc/misc_seccode.php
@@ -1293,8 +1176,7 @@ $lang = array(
     'seccode_image_ani_tips' => '<span class="seccode_image_tips">Please enter the characters in the animated image below</span>',
     'seccode_sound_tips' => '<span class="seccode_sound_tips">Enter the characters you hear</span>',
     'seccode' => 'Verification Code',
-    'fullblankspace' => ' ', // 英文中用普通空格替代中文全角空格
-
+    'fullblankspace' => ' ',
 
     'search' => 'Search',
     'page' => 'Page {page}',
@@ -1641,5 +1523,4 @@ $lang = array(
     'profile_nickname_exist' => 'Nickname already exists',
     'illegal_characters' => 'Illegal characters',
 );
-
 ?>

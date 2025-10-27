@@ -2,7 +2,6 @@
 $lang = array(
     'my_clouds' => '我的云',
     'add_clouds' => '添加云',
-    'apptodesktop' => '添加到桌面',
     'add_ali_cloud' => '添加阿里云',
     'site_name' => '站点名称',
     'disk_name' => '存储名称',

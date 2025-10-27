@@ -2,7 +2,6 @@
 $lang = array(
     'my_clouds' => 'My Clouds',
     'add_clouds' => 'Add Cloud',
-    'apptodesktop' => 'Add to Desktop',
     'add_ali_cloud' => 'Add Alibaba Cloud',
     'site_name' => 'Site Name',
     'disk_name' => 'Storage Name',

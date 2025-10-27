@@ -13,7 +13,6 @@ function dzz_explorer_init() {//初始化用户信息
     $userconfig = C::t('user_field')->fetch($_G['uid']);
     $userconfig['rootfid'] = $rootfid;
     return $userconfig;
-
 }
 
 //检查类型数据
@@ -70,5 +69,3 @@ function dzz_explorer_searchcat_info_init() {
         }
     }
 }
-
-
