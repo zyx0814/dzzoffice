@@ -99,10 +99,9 @@ class table_app_open extends dzz_table {
         return $data;
     }
 
-    public function fetch_all_orderby_ext($uid, $ext_all = array()) {
+    public function fetch_all_orderby_ext($uid, $ext_all = array(), $appids = array()) {
         $data = array();
-        $appids = array();
-        if ($config = C::t('user_field')->fetch($uid)) {
+        if (!$appids && $config = C::t('user_field')->fetch($uid)) {
             if ($config['applist']) {
                 $appids = explode(',', $config['applist']);
             }
@@ -114,9 +113,6 @@ class table_app_open extends dzz_table {
             }
         }
         return $data;
-
     }
-
 }
-
 ?>

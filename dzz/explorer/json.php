@@ -29,7 +29,7 @@ $appdata = C::t('app_market')->fetch_all_by_appid($applist);
 $icosdata = array();
 //获取打开方式
 $data['extopen']['all'] = C::t('app_open')->fetch_all_ext();
-$data['extopen']['ext'] = C::t('app_open')->fetch_all_orderby_ext($_G['uid'], $data['extopen']['all']);
+$data['extopen']['ext'] = C::t('app_open')->fetch_all_orderby_ext($_G['uid'], $data['extopen']['all'], $applist);
 $data['extopen']['user'] = C::t('app_open_default')->fetch_all_by_uid($_G['uid']);
 //目录数据
 $folderdata = array();
