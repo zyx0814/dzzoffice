@@ -54,7 +54,6 @@ _explorer.FolderSPower=function(power,action){//判断有无权限;
     return true; 
 }
 _explorer.FileSPower=function(power,action){//判断有无权限;
-   
 	var actionArr={   'delete'      : 1,		
   					  'edit'  		 : 2,		
 					  'rename'   	: 4,		
@@ -76,12 +75,11 @@ _explorer.FileSPower=function(power,action){//判断有无权限;
 
 _explorer.Permission_Container=function(action,fid){
 	//预处理些权限
-	//首先判断超级权限
 	if(!_explorer.sourcedata.folder[fid]) return false;
 	var perm=_explorer.sourcedata.folder[fid].perm;
 	var sperm=_explorer.sourcedata.folder[fid].fsperm;	
 	var gid=_explorer.sourcedata.folder[fid].gid;
-	//判断超级权限
+	//首先判断超级权限
 	if(!_explorer.FolderSPower(sperm,action)) return false;
 	if(_explorer.space.uid<1) return false;//游客没有权限；
 	/*if(_explorer.space.self>1){
@@ -98,11 +96,6 @@ _explorer.Permission_Container=function(action,fid){
 		}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
 			action='upload';
 		}
-		if(jQuery.inArray(action,['read','delete','edit','download','copy'])>-1){
-			if(_explorer.myuid==_explorer.sourcedata.folder[fid].uid) action+='1';
-			else action+='2';
-		}
-		return _explorer.isPower(perm,action);
 	}else{
 		if(action=='admin' || action=='multiselect'){
 			//是自己的目录有管理权限
@@ -115,16 +108,12 @@ _explorer.Permission_Container=function(action,fid){
 		}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
 			action='upload';
 		}
-		
-		if(jQuery.inArray(action,['read','delete','edit','download','copy'])>-1){
-			if(_explorer.myuid==_explorer.sourcedata.folder[fid].uid) action+='1';
-			else action+='2';
-		}
-
-		return _explorer.isPower(perm,action);
-		
 	}
-	return false;
+	if(jQuery.inArray(action,['read','delete','edit','download','copy'])>-1){
+		if(_explorer.myuid==_explorer.sourcedata.folder[fid].uid) action+='1';
+		else action+='2';
+	}
+	return _explorer.isPower(perm,action);
 }
 
 _explorer.Permission=function(action,data){
@@ -132,13 +121,11 @@ _explorer.Permission=function(action,data){
 	//预处理些权限
 	if(data.isdelete>0) return true; //回收站有权限；
 	var fid=data.pfid;
-	var sperm=data.sperm;
 	if(action=='download'){ //不是附件类型的不能下载
 		if(data.type!='document' && data.type!='attach' && data.type!='image' && data.type!='folder') return false;
 	}else if(action=='copy'){ //回收站内不能复制
 		if(data.flag=='recycle') return false;
 		if(data.type=='app' ||  data.type=='storage' || data.type=='pan' || data.type=='ftp') return false;
-		
 	}else if(action=='paste'){ //没有复制或剪切，没法粘帖
 		if(_explorer.cut.icos.length<1) return false;
 		action=_explorer.sourcedata.icos[_explorer.cut.icos[0]].type;
@@ -148,41 +135,35 @@ _explorer.Permission=function(action,data){
 	}else if(action=='rename'){ //重命名
 		if(data.type=='folder' && data.bz && (data.bz.split(':')[0]=='ALIOSS' || data.bz.split(':')[0]=='qiniu')) return false;
 		action='delete';
-		
 	}else if(action=='multiselect'){
 		action='copy';
 	}else if(action=='drag'){
 		if(data.gid>0) action='copy';
 		else action='admin';
+	}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
+		action='upload';
 	}
-	if(!_explorer.FileSPower(sperm,action)) return false;
+	if(!_explorer.FileSPower(data.sperm,action)) return false;
 	if(jQuery.inArray(action,['read','delete','edit','download','copy'])>-1){
 		if(_explorer.myuid==data.uid) action+='1';
 		else action+='2';
 	}
-	return _explorer.Permission_Container(action,fid);
-	
-};
-
-//判断容器是否有写入此类型文件的权限
-_explorer.Permission_Container_write=function(fid,type){
-	if(!_explorer.sourcedata.folder[fid]) return false;
-	var sperm=_explorer.sourcedata.folder[fid].fsperm;	
-	var gid=_explorer.sourcedata.folder[fid].gid;
-	var action=type;
-	if(jQuery.inArray(type,['folder','link','dzzdoc','shortcut','video'])<0) action='newtype';
-	//判断超级权限
-	if(!_explorer.FolderSPower(sperm,action)) return false;
-	if(_explorer.myuid<1) return false;//游客没有权限；
-	if(gid>0){
-		 //是机构管理员有权权限；
-		 if(_explorer.space.self>1 || _explorer.sourcedata.folder[fid].ismoderator>0) return true;
-	}else{
-			//是自己的目录有管理权限
-			if(_explorer.myuid==_explorer.sourcedata.folder[fid].uid) return true;
-			//云端的资源默认都有管理权限；
-			if(_explorer.sourcedata.folder[fid].bz) return true;
+	if(_explorer.sourcedata.folder[fid]) {
+		return _explorer.Permission_Container(action,fid);
+	} else {
+		if(data.gid>0){
+			if(action=='admin'){
+				if(_explorer.space.self>1) return true;
+				else return false;
+			}
+		}else{
+			if(action=='admin' || action=='multiselect'){
+				//是自己的目录有管理权限
+				if(_explorer.space.uid==data.uid) return true;
+				//云端的资源默认都有管理权限；
+				if(data.bz) return true;
+			}
+		}
+		return _explorer.isPower(data.perm,action);
 	}
-	
-	return _explorer.Permission_Container(action,fid);
-}
+};

@@ -55,7 +55,6 @@ if ($do == 'upload') {//上传图片文件
     $upload_handler = new UploadHandler($options);
     exit();
 } elseif ($do == 'selectperm') {
-
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     $gid = isset($_GET['gid']) ? intval($_GET['gid']) : '';
     $inherit = true;//是否允许继承上级权限
@@ -155,11 +154,13 @@ if ($do == 'upload') {//上传图片文件
 } elseif ($do == 'newFolder') {//新建文件夹
     $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
-    $folderinfo = C::t('folder')->fetch($fid);
     $noperm = 1;
-    if ($folderinfo['gid'] && C::t('organization_admin')->chk_memberperm($folderinfo['gid'])) {
-        $noperm = 0;
-        $inheritperm = DB::result_first("select perm from %t where fid = %d", array('folder', $fid));
+    if($fid) {
+        $folderinfo = C::t('folder')->fetch($fid);
+        if ($folderinfo['gid'] && C::t('organization_admin')->chk_memberperm($folderinfo['gid'])) {
+            $noperm = 0;
+            $inheritperm = DB::result_first("select perm from %t where fid = %d", array('folder', $fid));
+        }
     }
     $name = !empty($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
     if (isset($_GET['createfolder'])) {
@@ -194,8 +195,6 @@ if ($do == 'upload') {//上传图片文件
         $perms = get_permsarray();//获取所有权限
         $permselect = true;
     }
-
-
 } elseif ($do == 'newLink') {//新建连接
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {

@@ -675,8 +675,8 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 		el.find('.browserOpen').remove();
 		if(subdata === false) el.find('.openwith').remove();
 	}
-	//如果在收藏，搜索和最近使用页面去掉删去和剪切和重命名
-	if (_filemanage.winid.indexOf('collect') != -1 || _filemanage.winid.indexOf('recent') != -1 || _filemanage.winid.indexOf('search') != -1) {
+	//如果在收藏页面去掉删去和剪切和重命名
+	if (_filemanage.winid.indexOf('collect') != -1) {
 		el.find('.cut,.delete,.rename').remove();
 	}
 	if (_explorer.hash.indexOf('cloud') != -1) {
@@ -886,8 +886,8 @@ function contextmenuico(rid) {
 		el.find('.copy').remove();
 		el.find('.paste').remove();
 	}
-	//如果在收藏,搜索和最近使用页面去掉删去和剪切和重命名
-	if(_filemanage.winid.indexOf('collect') != -1 || _filemanage.winid.indexOf('recent') != -1 || _filemanage.winid.indexOf('search') != -1){
+	//如果在收藏页面去掉删去和剪切和重命名
+	if(_filemanage.winid.indexOf('collect') != -1){
 		el.find('.cut,.delete,.rename').remove();
 	}
 	if (_explorer.hash.indexOf('cloud') != -1) {
@@ -2348,7 +2348,6 @@ _filemanage.delIco = function (rid, noconfirm) {
 	var data = {};
 	if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 		if (icosdata.bz && icosdata.bz) {
-
 			for (var i in _filemanage.selectall.icos) {
 				path.push(_explorer.sourcedata.icos[_filemanage.selectall.icos[i]].dpath);
 			}
@@ -2357,7 +2356,6 @@ _filemanage.delIco = function (rid, noconfirm) {
 				'bz': icosdata.bz
 			};
 		} else {
-
 			for (var i in _filemanage.selectall.icos) {
 				path.push(_explorer.sourcedata.icos[_filemanage.selectall.icos[i]].dpath);
 			}
