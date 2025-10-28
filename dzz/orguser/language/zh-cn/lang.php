@@ -142,7 +142,6 @@ $lang = array(
   'user_phone_exist' => '手机号码已经存在',
   'user_phone_registered' => '用户手机号码已经被注册',
   'weixin_registered' => '该微信号已经被注册',
-  'user_registered_retry' => '该用户名已经被注册，请更换用户名再试',
   'import_user' => '导入用户',
   'group_permission_guide_text' => '每个用户仅支持设置一个用户组，管理员拥有系统全局权限，请谨慎操作！',
 );

@@ -47,6 +47,7 @@ class perm_binPerm {
             'comment' => 1048576, //评论
             'my_disk' => 2097152, //个人网盘
             'my_info' => 4194304, //个人头像
+            'my_username' => 8388608, //个人用户名
         );
     }
 
@@ -75,6 +76,7 @@ class perm_binPerm {
             'comment' => lang('comment'),
             'my_disk' => lang('my_disk'),
             'my_info' => lang('my_info'),
+            'my_username' => lang('my_username'),
         );
     }
 
@@ -102,8 +104,9 @@ class perm_binPerm {
             'share' => 'dzz dzz-share mdi mdi-share-variant',
             'approve' => 'dzz dzz-check-box mdi mdi-checkbox-marked',
             'comment' => 'dzz dzz-comment mdi mdi-comment',
-            'my_disk' => 'dzz dzz-mydisk mdi mdi-account-box',
-            'my_info' => 'dzz dzz-avatar mdi mdi-account-circle',
+            'my_disk' => 'mdi mdi-account-box',
+            'my_info' => 'mdi mdi-account-circle',
+            'my_username' => 'mdi mdi-account-edit',
         );
     }
 
@@ -132,6 +135,7 @@ class perm_binPerm {
             'flag' => '',
             'my_disk' => 'control', // 对个人网盘生效
             'my_info' => 'user',
+            'my_username' => 'user',
         );
     }
 

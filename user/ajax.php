@@ -26,7 +26,7 @@ if ($_GET['action'] == 'checkusername') {
     } elseif ($ucresult == -2) {
         showTips(array('error' => lang('profile_nickname_protect')));
     } elseif ($ucresult == -3) {
-        showTips(array('error' => lang('register_check_found')));
+        showTips(array('error' => lang('profile_nickname_duplicate')));
     }
 
     $censorexp = '/^(' . str_replace(array('\\*', "\r\n", ' '), array('.*', '|', ''), preg_quote(($_G['setting']['censoruser'] = trim($_G['setting']['censoruser'])), '/')) . ')$/i';

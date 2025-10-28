@@ -1072,10 +1072,6 @@ _filemanage.Open = function (rid, extid, title) {
 		extid = getExtOpen(data, true);
 	}
 	if (extid) {
-		if (_explorer.extopen.all[extid].appid > 0 && _explorer.sourcedata.app[_explorer.extopen.all[extid].appid]['available'] < 1) {
-			Alert(__lang.regret_app + _explorer.sourcedata.app[_explorer.extopen.all[extid].appid]['appname'] + __lang.already_close, 5, null, null, 'info');
-			return;
-		}
 		var extdata_url = extopen_replace(data, extid);
 		if (extdata_url) {
 			extdata_url = extdata_url.replace(/{\w+}/g, '');

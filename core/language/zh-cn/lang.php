@@ -1521,6 +1521,7 @@ $lang = array(
     'no_permission' => '暂无相关权限',
     'my_disk' => '个人网盘',
     'my_info' => '禁止修改（设置头像/修改密码等）',
+    'my_username' => '允许修改用户名',
     'org_group' => '组织群组',
     'folder_permissions' => '文件夹权限',
     'folder_permission_range' => '文件夹权限范围',
@@ -1544,5 +1545,6 @@ $lang = array(
     'user_nickname' => '用户昵称',
     'profile_nickname_exist' => '用户昵称已存在',
     'illegal_characters' => '包含敏感字符',
+    'user_registered_retry' => '该用户名已经被注册，请更换用户名再试',
 );
 ?>

@@ -87,9 +87,19 @@
         <input type="hidden" name="formhash" value="{FORMHASH}" />
          <input type="hidden" name="vid" value="$vid" />
         
-        <div class="row mb-3">
+        <div class="row mb-3" id="th_my_username">
+          <!--{if $my_username}-->
+          <label class="col-sm-2">{lang username} <span class="text-danger">*</span></label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" autocomplete="off" value="$_G[username]" onblur="checkusername(this.id);">
+            <span id="chk_username" class="form-text">
+              <span id="suc_username"></span><span id="showerror_my_username" class="help-msg"></span> 用户名必须是唯一的，请勿使用特殊字符。可用于系统登录。
+            </span>
+          <!--{else}-->
           <label class="col-sm-2">{lang username}</label>
-          <div class="col-sm-10"><strong><code>$_G[username]</code></strong>
+          <div class="col-sm-10">
+          <strong><code>$_G[username]</code></strong>
+          <!--{/if}-->
           </div>
         </div>
         <!--{if $userstatus['lastvisit']}-->
@@ -123,18 +133,18 @@
 					<div class="col-md-4">
             $htmls[$key]
           </div>
-					<div class="col-md-4">
+					<div class="col-md-2">
             <!--{if $vid || $key=='department'}-->
             <input type="hidden" name="privacy[$key]" value="$privacy[$key]" />
             <!--{else}-->
-            <select name="privacy[$key]" class="form-select" style="width:120px;">
+            <select name="privacy[$key]" class="form-select">
                 <!--{loop $_config['profile']['privacy'] $k $v}-->
                 <option value="$k" {if $privacy[$key] == $k} selected="selected"{/if}>$v</option>
                 <!--{/loop}-->
             </select>
             <!--{/if}-->
           </div>
-          </div>
+        </div>
         <!--{/if}-->
         <!--{/loop}--> 
         <!--{if in_array('timeoffset', $allowitems)}-->
@@ -225,9 +235,51 @@
 </main>
 <script type="text/javascript">
   var formhash = '{FORMHASH}';
+  var lastusername = '{$_G[username]}';
 jQuery(document).on('blur','.has-error .form-control',function(){
 	if(this.value) jQuery(this).closest('.form-group').removeClass('has-error');
 });
+function errormessage(id, msg,passlevel) {
+	if(jQuery('#'+id).length > 0) {
+		msg = !msg ? '' : msg;
+		if(msg == 'succeed') {
+			msg = '';
+			jQuery('#suc_' + id).addClass('p_right');
+		} else if(msg !== '') {
+			jQuery('#suc_' + id).removeClass('p_right');
+		}
+		jQuery('#chk_' + id).find('.help-msg').html(msg);
+		if(msg && !passlevel) jQuery('#'+id).addClass('is-invalid');
+		else jQuery('#'+id).removeClass('is-invalid');
+	}
+}
+function checkusername(id) {
+	errormessage(id);
+	var username = trim(jQuery('#'+id).val());
+	if(jQuery('#chk_' + id).parent()[0].className.match(/ p_right/) && (username == '' || username == lastusername) || username == lastusername) {
+		return;
+	} 
+	if(username.match(/<|"/ig)) {
+		errormessage(id, __lang.profile_nickname_illegal);
+		return;
+	}
+	if(username){
+		var unlen = username.replace(/[^\x00-\xff]/g, "**").length;
+		if(unlen < 3 || unlen > 30) {
+			errormessage(id, unlen < 3 ? __lang.username_character : __lang.username_character);
+			return;
+		}
+		var x = new Ajax();
+		jQuery('#suc_' + id).removeClass('p_right');
+		jQuery.getJSON('user.php?mod=ajax&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=checkusername&username=' + encodeURI(username), function(json) {
+			if(json.error){
+				errormessage(id, json.error);
+			}else{
+				errormessage(id, 'succeed');
+			}
+		});
+	}
+}
 function show_error(fieldid, extrainfo) {
 	var elem = jQuery('#th_'+fieldid);
 	if(elem) {
@@ -237,6 +289,7 @@ function show_error(fieldid, extrainfo) {
 		
 		document.getElementById('showerror_'+fieldid).innerHTML = "{lang check_date_item} " + extrainfo;
 		$(fieldid).focus();
+    showmessage('请先检查表单内容是否正确','error',3000,1);
 	}
 }
 function show_success(message) {

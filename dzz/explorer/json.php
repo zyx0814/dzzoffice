@@ -22,9 +22,6 @@ if (isset($_G['setting']['explorer_finallydelete'])) {
     }
 }
 $applist = C::t('app_market')->fetch_all_by_default($_G['uid'],true);
-//应用数据
-$appdata = array();
-$appdata = C::t('app_market')->fetch_all_by_appid($applist);
 //获取系统桌面设置信息
 $icosdata = array();
 //获取打开方式
@@ -61,8 +58,7 @@ $data['formhash'] = $_G['formhash'];
 
 $data['sourcedata'] = array(
     'icos' => $icosdata ? $icosdata : array(),
-    'folder' => $folderdata ? $folderdata : array(),
-    'app' => $appdata ? $appdata : array()
+    'folder' => $folderdata ? $folderdata : array()
 );
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
 

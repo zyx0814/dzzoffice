@@ -97,7 +97,6 @@ class table_organization extends dzz_table {
                                 $groups['org'][] = $orginfo;
                             }
                             //$orginfo = DB::fetch_first("select * from %t where `orgid` = %d and syatemon = %d ORDER BY disp", array($this->_table, $toporgid, 1));
-
                         } else {
                             if ($orginfo['syatemon'] == 1 && $orginfo['manageon'] == 1 && $orginfo['diron'] == 1) {
                                 if ($getmember) {
@@ -110,7 +109,6 @@ class table_organization extends dzz_table {
                         $toporgids[] = $toporgid;
                     }
                 }
-
             }
         }
         return $groups;
@@ -122,7 +120,6 @@ class table_organization extends dzz_table {
         $groups = array();
         $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid, 1);
         foreach (DB::fetch_all("select * from %t where `orgid` IN(%n) order by disp", array($this->_table, $orgids)) as $orginfo) {
-
             if ($foreces) {
                 if ($orginfo['syatemon'] == 0) {//系统管理员关闭群组
                     continue;

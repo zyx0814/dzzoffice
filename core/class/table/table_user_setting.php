@@ -88,7 +88,6 @@ class table_user_setting extends dzz_table {
             $this->store_cache($cachekey, $val);
             return $val;
         }
-
     }
 
     public function delete_by_field($skeys, $uid = 0) { //删除用户某项设置值

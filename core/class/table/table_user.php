@@ -292,12 +292,9 @@ class table_user extends dzz_table {
     }
 
     public function chk_email_by_uid($email, $uid) {
-
         if (parent::fetch_all("select uid from %t where email = %s and uid != %d", array($this->_table, $email, $uid))) {
-
             return true;
         }
-
         return false;
     }
 
@@ -318,7 +315,6 @@ class table_user extends dzz_table {
     }
 
     public function fetch_by_nickname($username, $fetch_archive = 0) {
-
         $user = array();
         if ($username) {
             $user = DB::fetch_first('SELECT * FROM %t WHERE nickname=%s', array($this->_table, $username));
@@ -327,7 +323,6 @@ class table_user extends dzz_table {
     }
 
     public function fetch_by_phone($username, $fetch_archive = 0) {
-
         $user = array();
         if ($username) {
             $user = DB::fetch_first('SELECT * FROM %t WHERE phone=%s', array($this->_table, $username));
@@ -336,7 +331,6 @@ class table_user extends dzz_table {
     }
 
     public function fetch_by_weixinid($username, $fetch_archive = 0) {
-
         $user = array();
         if ($username) {
             $user = DB::fetch_first('SELECT * FROM %t WHERE weixinid=%s', array($this->_table, $username));
@@ -345,7 +339,6 @@ class table_user extends dzz_table {
     }
 
     public function fetch_by_wechat_userid($username, $fetch_archive = 0) {
-
         $user = array();
         if ($username) {
             $user = DB::fetch_first('SELECT * FROM %t WHERE wechat_userid=%s', array($this->_table, $username));

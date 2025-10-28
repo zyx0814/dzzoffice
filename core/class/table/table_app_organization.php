@@ -65,6 +65,7 @@ class table_app_organization extends dzz_table {
     }
 
     public function fetch_notin_appids_by_uid($uid) {
+        if (!$uid) return array();
         $paichu_appids = $orgids = array();
         foreach (C::t('organization_user')->fetch_orgids_by_uid($uid) as $orgid) {
             if ($parentids = C::t('organization')->fetch_parent_by_orgid($orgid)) {

@@ -397,7 +397,7 @@ $lang = array(
     'delete_group_confirms' => 'Confirm group deletion?',
     'access_denied' => 'Access Denied',
     'finally_delete_setting' => 'Permanent Deletion Settings',
-    'explorer_finallydelete_text' => 'Configure automatic deletion of recycle bin items. Unit: days. Max 100 items per operation.',
+    'explorer_finallydelete_text' => 'Configure automatic deletion of recycle bin items. Unit: days. Max <span class="text-danger">100</span> items per operation.',
     'explorer_finallydelete_one' => '-1: Never delete recycle bin items',
     'explorer_finallydelete_zreo' => '0: Delete directly without recycle bin',
     'explorer_finallydelete_two' => '0: Auto-delete recycle bin items after set days',

@@ -10,51 +10,19 @@ if ($do == 'saveIndex') {
     exit(json_encode(array('success' => $ret)));
 } else {
     if ($_G['uid']) {
-        $config = array();
-        $config = C::t('user_field')->fetch($_G['uid']);
-        if (!$config) {
-            $config = dzz_userconfig_init();
-            if ($config['applist']) {
-                $applist = explode(',', $config['applist']);
-            } else {
-                $applist = array();
-            }
-        } else {//检测不允许删除的应用,重新添加进去
-            if ($config['applist']) {
-                $applist = explode(',', $config['applist']);
-            } else {
-                $applist = array();
-            }
-            if ($applist_n = array_keys(C::t('app_market')->fetch_all_by_notdelete($_G['uid']))) {
-                $newappids = array();
-                foreach ($applist_n as $appid) {
-                    if (!in_array($appid, $applist)) {
-                        $applist[] = $appid;
-                        $newappids[] = $appid;
-                    }
-                }
-                if ($newappids) {
-                    C::t('app_user')->insert_by_uid($_G['uid'], $newappids);
-                    C::t('user_field')->update($_G['uid'], array('applist' => implode(',', $applist)));
-                }
-            }
-        }
         $userstatus = C::t('user_status')->fetch($_G['uid']);
         $space = dzzgetspace($_G['uid']);
-    } else {
-        $applist = array_keys(C::t('app_market')->fetch_all_by_default());
     }
     //获取已安装应用
-    $app = C::t('app_market')->fetch_all_by_appid($applist);
+    $applist = C::t('app_market')->fetch_all_by_default($_G['uid']);
     $applist_1 = array();
-    foreach ($app as $key => $value) {
+
+    foreach ($applist as $key => $value) {
         if ($value['isshow'] < 1) continue;
-        if ($value['available'] < 1) continue;
-        if ($value['position'] < 1) continue;//位置为无的忽略
-        //判断管理员应用
-        if ($_G['adminid'] != 1 && $value['group'] == 3) {
-            continue;
+        if ($value['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $value['appico'])) {
+            $value['appico'] = $_G['setting']['attachurl'] . $value['appico'];
         }
+        $value['url'] = replace_canshu($value['appurl']);
         $applist_1[$value['appid']] = $value;
     }
 

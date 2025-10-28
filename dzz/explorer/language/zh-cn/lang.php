@@ -408,7 +408,7 @@ $lang = array(
     'delete_group_confirms' => '确定要删除群组吗？',
     'access_denied' => '拒绝访问',
     'finally_delete_setting' => '彻底删除设置',
-    'explorer_finallydelete_text' => '此处设置回收站内文件自动删除时间；单位：天；每次最多删除100个文件。',
+    'explorer_finallydelete_text' => '此处设置回收站内文件自动删除时间；单位：天；每次最多删除<span class="text-danger">100</span>个文件。',
     'explorer_finallydelete_one' => '-1：表示不自动删除回收站内文件；',
     'explorer_finallydelete_zreo' => '0：表示直接删除，不进入回收站；',
     'explorer_finallydelete_two' => '0：表示回收站内文件超过设置的天数时自动删除。',

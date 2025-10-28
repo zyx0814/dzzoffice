@@ -1905,10 +1905,8 @@ function getFileTypeName($type, $ext) {
 
 function dzzgetspace($uid) {
     global $_G;
-    $space = array();
-    if ($uid == 0) {
-        $space = array('uid' => 0, 'self' => 0, 'username' => '', 'adminid' => 0, 'groupid' => 7, 'credits' => 0, 'timeoffset' => 9999, 'usesize' => 0, 'maxspacesize' => -1, 'attachextensions' => '');
-    } else {
+    $space = array('uid' => 0, 'self' => 0, 'username' => '', 'adminid' => 0, 'groupid' => 7, 'credits' => 0, 'timeoffset' => 9999, 'usesize' => 0, 'maxspacesize' => -1, 'attachextensions' => '');
+    if ($uid > 0) {
         $space = getuserbyuid($uid);
     }
 
@@ -1922,22 +1920,27 @@ function dzzgetspace($uid) {
 
     //获取相关设置信息
     $setting = $_G['setting'];
-    if ($uid && $config = DB::fetch_first("select usesize,attachextensions,maxattachsize,addsize,buysize,perm,userspace from " . DB::table('user_field') . " where uid='{$uid}'")) {
-        $config['perm'] = ($config['perm'] < 1) ? $usergroup['perm'] : $config['perm'];
-        $config['attachextensions'] = ($config['attachextensions'] < 0) ? $usergroup['attachextensions'] : $config['attachextensions'];
-        $config['maxattachsize'] = ($config['maxattachsize'] < 0) ? $usergroup['maxattachsize'] * 1024 * 1024 : $config['maxattachsize'] * 1024 * 1024;
-        //判断是否有用户独享空间设置
-        if ($config['userspace'] > 0 || $config['userspace'] == -1) {
-            $config['maxspacesize'] = ($config['userspace'] > 0) ? $config['userspace'] * 1024 * 1024 : $config['userspace'];
-        } elseif ($config['userspace'] == 0) {//如果未设置用户空间
-            //用户组空间(去掉额外空间和购买空间)
-            if ($usergroup['maxspacesize'] == 0) {
-                $config['maxspacesize'] = 0;
-            } elseif ($usergroup['maxspacesize'] < 0) {
-                $config['maxspacesize'] = -1;
-            } else {
-                $config['maxspacesize'] = $usergroup['maxspacesize'] * 1024 * 1024;
+    if ($space['uid']) {
+        $config = DB::fetch_first("select usesize,attachextensions,maxattachsize,addsize,buysize,perm,userspace from " . DB::table('user_field') . " where uid='{$uid}'");
+        if($config) {
+            $config['perm'] = ($config['perm'] < 1) ? $usergroup['perm'] : $config['perm'];
+            $config['attachextensions'] = ($config['attachextensions'] < 0) ? $usergroup['attachextensions'] : $config['attachextensions'];
+            $config['maxattachsize'] = ($config['maxattachsize'] < 0) ? $usergroup['maxattachsize'] * 1024 * 1024 : $config['maxattachsize'] * 1024 * 1024;
+            //判断是否有用户独享空间设置
+            if ($config['userspace'] > 0 || $config['userspace'] == -1) {
+                $config['maxspacesize'] = ($config['userspace'] > 0) ? $config['userspace'] * 1024 * 1024 : $config['userspace'];
+            } elseif ($config['userspace'] == 0) {//如果未设置用户空间
+                //用户组空间(去掉额外空间和购买空间)
+                if ($usergroup['maxspacesize'] == 0) {
+                    $config['maxspacesize'] = 0;
+                } elseif ($usergroup['maxspacesize'] < 0) {
+                    $config['maxspacesize'] = -1;
+                } else {
+                    $config['maxspacesize'] = $usergroup['maxspacesize'] * 1024 * 1024;
+                }
             }
+        } else {//用户UID存在，但用户信息不存在时自动创建
+            $config = dzz_userconfig_init();
         }
         $space = array_merge($space, $config);
     } else {
@@ -2355,73 +2358,6 @@ function addtoconfig($icoarr, $ticoid = 0) {
     $oposition = 10000;
     $icoid = $icoarr['rid'];
     if ($folder = C::t('folder')->fetch($icoarr['pfid'])) {
-        if ($folder['flag'] == 'dock') {
-            if ($docklistarr = C::t('user_field')->fetch($_G['uid'])) {
-                $docklist = $docklistarr['docklist'] ? explode(',', $docklistarr['docklist']) : array();
-                if (in_array($icoid, $docklist)) {//已经存在则先删除
-                    foreach ($docklist as $key => $id) {
-                        if (intval($id) < 0 || $id == $icoid) {
-                            unset($docklist[$key]);
-                            $oposition = $key;
-                        }
-                    }
-                }
-                if ($ticoid && in_array($ticoid, $docklist)) {
-                    $temp = array();
-                    foreach ($docklist as $key => $id) {
-                        if ($id == $ticoid) {
-                            if ($oposition > $key) {
-                                $temp[] = $icoid;
-                                $temp[] = $id;
-                            } else {
-                                $temp[] = $id;
-                                $temp[] = $icoid;
-                            }
-                        } else {
-                            $temp[] = $id;
-                        }
-                    }
-                    $docklist = $temp;
-                } else {
-                    $docklist[] = $icoid;
-                }
-                C::t('user_field')->update($_G['uid'], array('docklist' => trim(implode(',', $docklist), ',')));
-            }
-
-
-        } elseif ($folder['flag'] == 'desktop') {
-            if ($nav = C::t('user_field')->fetch($_G['uid'])) {
-                $icos = $nav['screenlist'] ? explode(',', $nav['screenlist']) : array();
-                if (in_array($icoid, $icos)) {//已经存在则先删除
-                    foreach ($icos as $key => $id) {
-                        if (intval($id) < 0 || $id == $icoid) {
-                            unset($icos[$key]);
-                            $oposition = $key;
-                        }
-                    }
-                }
-                if ($ticoid && in_array($ticoid, $icos)) {
-                    $temp = array();
-                    foreach ($icos as $key => $id) {
-                        if ($id == $ticoid) {
-                            if ($oposition > $key) {
-                                $temp[] = $icoid;
-                                $temp[] = $id;
-                            } else {
-                                $temp[] = $id;
-                                $temp[] = $icoid;
-                            }
-                        } else {
-                            $temp[] = $id;
-                        }
-                    }
-                    $icos = $temp;
-                } else {
-                    $icos[] = $icoid;
-                }
-                C::t('user_field')->update($_G['uid'], array('screenlist' => implode(',', $icos)));
-            }
-        }
         if ($icoarr['type'] == 'folder' && $icoarr['flag'] == '') {
             C::t('folder')->update($icoarr['oid'], array('pfid' => $folder['fid'], 'gid' => $folder['gid']));
         }
@@ -2819,55 +2755,14 @@ function dzz_userconfig_init() {  //初始化用户信息
     $userconfig = array(
         'uid' => $_G['uid'],
         'applist' => array(),
-        'screenlist' => array(),
-        'docklist' => array(),
         'dateline' => $_G['timestamp'],
         'updatetime' => $_G['timestamp'],
-        'wins' => serialize(array()),
         'perm' => 0,
         'iconview' => $_G['setting']['desktop_default']['iconview'] ? $_G['setting']['desktop_default']['iconview'] : 2
     );
 
-
-    //处理理默认应用;
-    $apps = C::t('app_market')->fetch_all_by_default($_G['uid']);
-
-    foreach ($apps as $appid => $app) {
-        $userconfig['applist'][] = $appid;
-        if(!$_G['uid']) continue;
-        if ($app['position'] == 1) {
-            continue;
-        } elseif ($app['position'] == 2) { //桌面
-            $fid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G['uid']}' and flag='desktop'");
-        } else { //dock条
-            $fid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G['uid']}' and flag='dock'");
-        }
-        if (!$fid) continue;
-        if ($rid = DB::result_first("select rid from " . DB::table('resources') . " where uid='{$_G['uid']}' and oid='{$appid}' and type='app'")) {
-            C::t('resources')->update_by_rid($rid, array('pfid' => $fid, 'isdelete' => 0));
-            if ($app['position'] == 2) $userconfig['screenlist'][] = $rid;
-            else $userconfig['docklist'][] = $rid;
-        } else {
-            $icoarr = array(
-                'uid' => $_G['uid'],
-                'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-                'oid' => $appid,
-                'name' => '',
-                'type' => 'app',
-                'dateline' => $_G['timestamp'],
-                'pfid' => $fid,
-                'ext' => '',
-                'size' => 0,
-            );
-            if ($icoarr['rid'] = C::t('resources')->insert_data($icoarr, 1)) {
-                if ($app['position'] == 2) $userconfig['screenlist'][] = $icoarr['rid'];
-                else $userconfig['docklist'][] = $icoarr['rid'];
-            }
-        }
-    }
-    $userconfig['applist'] = $userconfig['applist'] ? implode(',', $userconfig['applist']) : '';
-    $userconfig['screenlist'] = $userconfig['screenlist'] ? implode(',', $userconfig['screenlist']) : '';
-    $userconfig['docklist'] = $userconfig['docklist'] ? implode(',', $userconfig['docklist']) : '';
+    $appids = C::t('app_market')->fetch_all_by_default($_G['uid'],true);
+    $userconfig['applist'] = $appids ? implode(',', $appids) : '';
     if(!$_G['uid']) return $userconfig;
     C::t('user_field')->insert($userconfig, false, true);
     if ($userconfig['applist']) C::t('app_user')->insert_by_uid($_G['uid'], $userconfig['applist'], 1);

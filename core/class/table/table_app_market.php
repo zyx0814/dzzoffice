@@ -13,7 +13,6 @@ if (!defined('IN_DZZ')) {
 
 class table_app_market extends dzz_table {
     public function __construct() {
-
         $this->_table = 'app_market';
         $this->_pk = 'appid';
         $this->_pre_cache_key = 'app_market_';
@@ -117,42 +116,7 @@ class table_app_market extends dzz_table {
     }
 
     public function fetch_all_by_notdelete($uid = 0) { //取得所有默认不能删除的应用
-        global $_G;
-        if ($_G['uid'] == $uid) {
-            $groupid = $_G['groupid'];
-        } else {
-            $space = getuserbyuid($uid);
-            if($space) {
-                $groupid = $space['groupid'];
-            } else {
-                $uid = 0;
-            }
-        }
-        if ($uid) {
-            if ($groupid == 1) {//系统管理员
-                $l = " `group` = '1'";
-                if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
-                    $l .= " and appid  NOT IN (" . dimplode($notappids) . ") ";
-                }
-                $sql = "`position`>0 and (`group`='0' OR `group`=2 OR `group`=3 OR (" . $l . ")) ";
-            } elseif ($groupid == 2) {
-                $l = " (`group` = '1')";
-                if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
-                    $l .= " and appid  NOT IN (" . dimplode($notappids) . ") ";
-                }
-                $sql = " `position`>0 and (`group` = '2' OR `group`='0' or (" . $l . "))";
-            } else {                                //普通成员
-                //属于普通用户应用但不属于特定部门的应用
-                $l = " (`group` = '1')";
-                if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
-                    $l .= " and appid  NOT IN (" . dimplode($notappids) . ") ";
-                }
-                $sql = "`position`>0 and (`group`='0' or  (" . $l . "))";
-            }
-        } else { //游客
-            $sql = "`position`>0 and (`group`='-1' or `group`='0')";
-        }
-        return DB::fetch_all("select * from %t where $sql and  notdelete>0 and available>0 order by disp ", array($this->_table), 'appid');
+        return self::fetch_all_by_default($uid);
     }
 
     public function fetch_all_by_default($uid = 0, $appid = false) { // 取得所有默认的应用
@@ -169,11 +133,7 @@ class table_app_market extends dzz_table {
         }
         if ($uid) {
             if ($groupid == 1) { // 系统管理员
-                $l = "`group` = '1'";
-                if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {
-                    $l .= " and appid NOT IN (" . dimplode($notappids) . ") ";
-                }
-                $sql = "`position` > 0 and (`group` = '0' OR `group` = '2' OR `group` = '3' OR (" . $l . "))";
+                $sql = "`position` > 0";
             } elseif ($groupid == 2) {
                 $l = " (`group` = '1')";
                 if ($notappids = C::t('app_organization')->fetch_notin_appids_by_uid($uid)) {

@@ -19,7 +19,7 @@ $userstatus = C::t('user_status')->fetch($uid);//用户状态
 $userstatus['profileprogress'] = $userstatus['profileprogress'] ? $userstatus['profileprogress'] : 0;
 $users = getuserbyuid($uid);
 //$qqlogin = DB::fetch_first("select openid,unbind from %t where uid=%d", array('user_qqconnect', $uid));
-
+$my_username = perm_check::checkuserperm('my_username');
 //读取缓存
 loadcache('profilesetting');
 
@@ -30,8 +30,45 @@ if (empty($_G['cache']['profilesetting'])) {
 }
 
 if (submitcheck('profilesubmit')) {
+    $setarr = $verifyarr = $errorarr = $userarr = array();
+    if($my_username) {
+        //用户名验证
+        $username = trim($_GET['username']);
 
-    $setarr = $verifyarr = $errorarr = array();
+        $usernamelen = dstrlen($_GET['username']);
+        if ($usernamelen < 3) {
+            profile_showerror('my_username',lang('profile_username_tooshort'));
+        } elseif ($usernamelen > 30) {
+            profile_showerror('my_username',lang('profile_username_toolong'));
+        } elseif (!check_username(addslashes(trim(stripslashes($username))))) {
+            profile_showerror('my_username',lang('profile_username_illegal'));
+        }
+
+        //如果输入用户名，检查用户名不能重复
+        if ($username != $_G['username']) {
+            if (C::t('user')->fetch_by_username($username)) {
+                profile_showerror('my_username',lang('user_registered_retry'));
+            }
+            if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
+                profile_showerror('my_username',lang('profile_username_protect'));
+            }
+        }
+        $userarr['username'] = $username;
+    }
+    $language = isset($_GET['language']) ? trim($_GET['language']) : '';
+    if($language) {
+        $langList = $_G['config']['output']['language_list'];
+        if (isset($langList[$language])) {
+            $userarr['language'] = $language;
+        }
+    }
+    $timeoffset = intval($_GET['timeoffset']);
+    if ($timeoffset >= -12 && $timeoffset <= 12 || $timeoffset == 9999) {
+        $userarr['timeoffset'] = $timeoffset;
+    }
+    if($userarr) {
+        C::t('user')->update($_G['uid'], $userarr);
+    }
 
     $censor = dzz_censor::instance();//敏感字符过滤类实例
     //验证
@@ -61,15 +98,6 @@ if (submitcheck('profilesubmit')) {
         }
         if ($field && !$field['available']) {
             continue;
-        } elseif ($key == 'timeoffset') {
-            if ($value >= -12 && $value <= 12 || $value == 9999) {
-                C::t('user')->update($_G['uid'], array('timeoffset' => intval($value)));
-            }
-        } elseif ($key == 'language') {
-            $langList = $_G['config']['output']['language_list'];
-            if (isset($langList[$value])) {
-                C::t('user')->update($_G['uid'], array('language' => ($value)));
-            }
         } elseif ($key == 'site') {
             if (!in_array(strtolower(substr($value, 0, 6)), array('http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://')) && !preg_match('/^static\//', $value) && !preg_match('/^data\//', $value)) {
                 $value = 'http://' . $value;
@@ -244,11 +272,6 @@ if (submitcheck('profilesubmit')) {
     countprofileprogress();//计算资料完整度
     $message = $vid ? lang('profile_verify_verifying', array('verify' => $verifyconfig['title'])) : '';
     profile_showsuccess($message);//资料修改提示
-
-} elseif (isset($_GET['action']) && $_GET['action'] == 'qq_unbind') {//取消绑定，根据类型判断取消绑定内容
-    C::t('user_qqconnect')->delete($_GET['openid']);
-    showmessage('qq_unbind_success', dreferer(), array(), array('alert' => 'right'));
-    //Hook::listen('unbind_qq');
 } else {
     $vid = !empty($_GET['vid']) ? intval($_GET['vid']) : 0;
     $privacy = C::t('user_profile')->fetch_privacy_by_uid($uid);

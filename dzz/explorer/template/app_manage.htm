@@ -167,6 +167,7 @@
 				<input type="text" class="form-control" name="setting[explorer_finallydelete]" onblur="checks()" id="textnumber" <!--{if isset($setting['explorer_finallydelete'])}-->value="{$setting[explorer_finallydelete]}"<!--{else}-->value="-1"<!--{/if}-->/>
 				<ul class="form-text">
 					<li>{lang explorer_finallydelete_text}</li>
+					<li class="text-danger">是否会自动删除文件取决于系统工具-计划任务中的回收站自动删除任务是否执行。</li>
 					<li><={lang explorer_finallydelete_one}</li>
 					<li>={lang explorer_finallydelete_zreo}</li>
 					<li>>{lang explorer_finallydelete_two}</li>

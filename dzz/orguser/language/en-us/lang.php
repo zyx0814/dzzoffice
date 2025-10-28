@@ -142,7 +142,6 @@ $lang = array(
   'user_phone_exist' => 'Mobile phone number already exists',
   'user_phone_registered' => 'User\'s mobile phone number has already been registered',
   'weixin_registered' => 'This WeChat ID has already been registered',
-  'user_registered_retry' => 'This username has already been registered. Please change the username and try again',
   'import_user' => 'Import Users',
   'group_permission_guide_text' => 'Each user can only set up one user group. Administrators have global system permissions. Please operate with caution!',
 );

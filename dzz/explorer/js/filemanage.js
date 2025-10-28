@@ -1517,10 +1517,6 @@ _filemanage.Open = function (rid, extid, title) {
 	obj.dpath = data.dpath;
 	//判断打开的url中是否含有dzzjs:等特殊协议；为了安全，只有应用才可以
   /* if(obj.type=='app'){
-	       if(_explorer.sourcedata.app[obj.oid] && _explorer.sourcedata.app[obj.oid]['available']<1){
-	           Alert(__lang.regret_app+_explorer.sourcedata.app[obj.oid]['appname']+__lang.already_close,5,null,null,'info');
-	           return ;
-	       }
 	       if(obj.url.indexOf('dzzjs:')===0){
 	           eval((obj.url.replace('dzzjs:','')));
 	           return;
@@ -1559,12 +1555,7 @@ _filemanage.Open = function (rid, extid, title) {
 		extid = getExtOpen(data, true);
 	}
 	if (extid) {
-		if (_explorer.extopen.all[extid].appid > 0 && _explorer.sourcedata.app[_explorer.extopen.all[extid].appid]['available'] < 1) {
-			Alert(__lang.regret_app + _explorer.sourcedata.app[_explorer.extopen.all[extid].appid]['appname'] + __lang.already_close, 5, null, null, 'info');
-			return;
-		}
 		var extdata_url = extopen_replace(data, extid);
-		//var app=_explorer.sourcedata.app[_explorer.extopen.all[extid].appid];
 		if (extdata_url) {
 			extdata_url = extdata_url.replace(/{\w+}/g, '');
 			if (extdata_url.indexOf('dzzjs:OpenPicWin') === 0) {

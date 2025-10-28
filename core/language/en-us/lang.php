@@ -1499,6 +1499,7 @@ $lang = array(
     'no_permission' => 'No relevant permissions available for the time being',
     'my_disk' => 'Personal Cloud Disk',
     'my_info' => 'Configuration changes (setting profile picture/changing password, etc.)',
+    'my_username' => 'User name modification is allowed',
     'org_group' => 'Organization Group',
     'folder_permissions' => 'Folder Permissions',
     'folder_permission_range' => 'Folder Permission Scope',
@@ -1522,5 +1523,6 @@ $lang = array(
     'user_nickname' => 'User Nickname',
     'profile_nickname_exist' => 'Nickname already exists',
     'illegal_characters' => 'Illegal characters',
+    'user_registered_retry' => 'This username has already been registered. Please change the username and try again',
 );
 ?>

@@ -189,7 +189,6 @@ function getuserIcon($uids, $datas, &$data) {
             $headercolor = $avatars[$uid]['headerColor'];
             $v['icon'] = false;
             $v['text'] = '<span class="Topcarousel" style="background:' . $headercolor . ';" title="' . preg_replace("/<em.+?\/em>/i", '', $v['text']) . '">' . strtoupper(new_strsubstr($v['text'], 1, '')) . '</span>' . $v['text'];
-
         } else {
             $v['icon'] = false;
             $v['text'] = avatar_block($uid) . $v['text'];
