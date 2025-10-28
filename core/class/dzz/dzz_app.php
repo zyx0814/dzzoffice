@@ -131,7 +131,7 @@ class dzz_app extends dzz_base {
             'uid' => 0,
             'username' => '',
             'adminid' => 0,
-            'groupid' => 1,
+            'groupid' => 7,
             'sid' => '',
             'formhash' => '',
             'connectguest' => 0,
@@ -641,7 +641,6 @@ class dzz_app extends dzz_base {
             $data = Hook::get();
             @file_put_contents($tagfile, "<?php \t\n return " . var_export($data, true) . ";");
         }
-
     }
 
     public function timezone_set($timeoffset = 0) {

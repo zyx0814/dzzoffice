@@ -9,13 +9,13 @@
 $path = dzzdecode(urldecode($_GET['path']));
 $width = intval($_GET['width']);
 $height = intval($_GET['height']);
-$size = trim($_GET['size']);
+$size = isset($_GET['size']) ? trim($_GET['size']) : '';
 $thumbtype = $_GET['thumbtype'] ? intval($_GET['thumbtype']) : '1';
 $size = in_array($size, array_keys($_G['setting']['thumbsize'])) ? $size : 'large';
 $original = intval($_GET['original']);
 if (!$width) $width = $_G['setting']['thumbsize'][$size]['width'];
 if (!$height) $height = $_G['setting']['thumbsize'][$size]['height'];
-$download = trim($_GET['a']);
+$download = isset($_GET['a']) ? trim($_GET['a']) : '';
 if ($download == 'down') {
     if (!$filename = urldecode($_GET['filename'])) {
         $meta = IO::getMeta($path);
