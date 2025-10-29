@@ -6,12 +6,11 @@ if (!defined('IN_DZZ')) {
 function build_cache_usergroups() {
     global $_G;
     $data_uf = C::t('usergroup_field')->fetch_all();
-    foreach (C::t('usergroup')->range_orderby_creditshigher() as $key => $value) {
-        $group = array_merge(array('groupid' => $value['groupid'], 'type' => $value['type'], 'grouptitle' => $value['grouptitle'], 'creditshigher' => $value['creditshigher'], 'creditslower' => $value['creditslower'], 'stars' => $value['stars'], 'color' => $value['color'], 'icon' => $value['icon'], 'system' => $value['system']), $data_uf[$key]);
+    foreach (C::t('usergroup')->range_orderby_credit() as $key => $value) {
+        $group = array_merge(array('groupid' => $value['groupid'], 'type' => $value['type'], 'grouptitle' => $value['grouptitle'], 'stars' => $value['stars'], 'color' => $value['color'], 'icon' => $value['icon'], 'system' => $value['system']), $data_uf[$key]);
 
         $groupid = $group['groupid'];
         $group['grouptitle'] = $group['color'] ? '<font color="' . $group['color'] . '">' . $group['grouptitle'] . '</font>' : $group['grouptitle'];
-        unset($group['creditshigher'], $group['creditslower']);
         unset($group['groupid']);
         $data[$groupid] = $group;
     }
@@ -36,7 +35,7 @@ function build_cache_usergroups_single() {
         $data['grouptype'] = $data['type'];
         $data['grouppublic'] = $data['system'] != 'private';
         $data['maxspacesize'] = intval($data['maxspacesize']);
-        unset($data['type'], $data['system'], $data['creditshigher'], $data['creditslower'], $data['groupavatar'], $data['admingid']);
+        unset($data['type'], $data['system'], $data['groupavatar'], $data['admingid']);
         savecache('usergroup_' . $data['groupid'], $data);
     }
 }

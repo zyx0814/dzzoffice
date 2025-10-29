@@ -28,6 +28,7 @@ if ($do == 'get_children') {
             }
             $data[] = $arr;
         }
+        exit(json_encode($data));
     } elseif (preg_match('/g_\d+/', $id)) {
         $gid = intval(str_replace('g_', '', $id));
         $groupinfo = C::t('organization')->fetch($gid);
@@ -46,6 +47,7 @@ if ($do == 'get_children') {
                 );
             }
         }
+        exit(json_encode($data));
     } elseif (preg_match('/gid_\d+/', $id)) {
         $gid = intval(str_replace('gid_', '', $id));
         $orginfo = C::t('organization')->fetch($gid);
@@ -98,6 +100,7 @@ if ($do == 'get_children') {
                 $data[] = $arr;
             }
         }
+        exit(json_encode($data));
     } elseif (preg_match('/f_\d+/', $id)) {
         $fid = intval(str_replace('f_', '', $id));
         foreach (C::t('folder')->fetch_folder_by_pfid($fid, array('fname', 'fid', 'gid')) as $val) {
@@ -112,7 +115,7 @@ if ($do == 'get_children') {
                     'hashs' => 'group&do=file&gid=' . $val['gid'] . '&fid=' . $val['fid'])
             );
         }
-
+        exit(json_encode($data));
     } elseif (preg_match('/u_\d+/', $id)) {
         $fid = intval(str_replace('u_', '', $id));
         foreach (C::t('folder')->fetch_folder_by_pfid($fid, array('fname', 'fid')) as $v) {
@@ -128,6 +131,7 @@ if ($do == 'get_children') {
                 )
             );
         }
+        exit(json_encode($data));
     } elseif ($id == 'cloud') {
         $path = empty($_GET['path']) ? '' : trim($_GET['path']);
         $bzid = explode(':', $path);
@@ -159,6 +163,7 @@ if ($do == 'get_children') {
                 }
             }
         }
+        exit(json_encode($data));
     } else {
         //获取配置设置值
         $explorer_setting = get_resources_some_setting();
@@ -220,10 +225,8 @@ if ($do == 'get_children') {
                 'li_attr' => array('hashs' => "cloud")
             );
         }
+        exit(json_encode($data));
     }
-
-} elseif ($do == 'filemanage') {
-
 } elseif ($do == 'getParentsArr') {//获取
     $fid = intval($_GET['fid']);
     $gid = intval($_GET['gid']);
@@ -304,6 +307,5 @@ if ($do == 'get_children') {
         $data['group'] = $arr;
 
     }
-
+    exit(json_encode($data));
 }
-exit(json_encode($data));

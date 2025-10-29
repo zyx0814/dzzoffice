@@ -19,16 +19,6 @@ class table_usergroup extends dzz_table {
         parent::__construct();
     }
 
-    public function fetch_by_credits($credits, $type = 'member') {
-        if (is_array($credits)) {
-            $creditsf = intval($credits[0]);
-            $creditse = intval($credits[1]);
-        } else {
-            $creditsf = $creditse = intval($credits);
-        }
-        return DB::fetch_first('SELECT grouptitle, groupid FROM %t WHERE ' . ($type ? DB::field('type', $type) . ' AND ' : '') . '%d>=creditshigher AND %d<creditslower LIMIT 1', array($this->_table, $creditsf, $creditse));
-    }
-
     public function fetch_all_by_type($type = '', $radminid = null, $allfields = false) {
         $parameter = array($this->_table);
         $wherearr = array();
@@ -75,15 +65,15 @@ class table_usergroup extends dzz_table {
     }
 
     public function fetch_all_by_not_groupid($gid) {
-        return DB::fetch_all('SELECT groupid, type, grouptitle, creditshigher, radminid FROM %t WHERE type=\'member\' AND creditshigher=\'0\' OR (groupid NOT IN (%n) AND radminid<>\'1\' AND type<>\'member\') ORDER BY (creditshigher<>\'0\' || creditslower<>\'0\'), creditslower, groupid', array($this->_table, $gid), $this->_pk);
+        return DB::fetch_all('SELECT groupid, type, grouptitle, radminid FROM %t WHERE type=\'member\' OR (groupid NOT IN (%n) AND radminid<>\'1\' AND type<>\'member\') ORDER BY groupid', array($this->_table, $gid), $this->_pk);
     }
 
     public function fetch_all_not($gid, $creditnotzero = false) {
-        return DB::fetch_all('SELECT groupid, radminid, type, grouptitle, creditshigher, creditslower FROM %t WHERE groupid NOT IN (%n) ORDER BY ' . ($creditnotzero ? "(creditshigher<>'0' || creditslower<>'0'), " : '') . 'creditshigher, groupid', array($this->_table, $gid), $this->_pk);
+        return DB::fetch_all('SELECT groupid, radminid, type, grouptitle FROM %t WHERE groupid NOT IN (%n) ORDER BY groupid', array($this->_table, $gid), $this->_pk);
     }
 
     public function fetch_new_groupid($fetch = false) {
-        $sql = 'SELECT groupid, grouptitle FROM ' . DB::table($this->_table) . " WHERE type='member' AND creditslower>'0' ORDER BY creditslower LIMIT 1";
+        $sql = 'SELECT groupid, grouptitle FROM ' . DB::table($this->_table) . " WHERE type='member' ORDER BY groupid LIMIT 1";
         if ($fetch) {
             return DB::fetch_first($sql);
         } else {
@@ -95,7 +85,7 @@ class table_usergroup extends dzz_table {
         if (!$ids) {
             return null;
         }
-        return DB::fetch_all('SELECT * FROM %t WHERE ' . DB::field('groupid', $ids) . ' ORDER BY type, radminid, creditshigher', array($this->_table), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE ' . DB::field('groupid', $ids) . ' ORDER BY type, radminid', array($this->_table), $this->_pk);
     }
 
     public function fetch_all_switchable($ids) {
@@ -106,11 +96,7 @@ class table_usergroup extends dzz_table {
     }
 
     public function range_orderby_credit() {
-        return DB::fetch_all('SELECT * FROM %t ORDER BY (creditshigher<>\'0\' || creditslower<>\'0\'), creditslower, groupid', array($this->_table), $this->_pk);
-    }
-
-    public function range_orderby_creditshigher() {
-        return DB::fetch_all('SELECT * FROM %t ORDER BY creditshigher', array($this->_table), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t ORDER BY groupid', array($this->_table), $this->_pk);
     }
 
     public function fetch_all_by_radminid($radminid, $glue = '>', $orderby = 'type') {

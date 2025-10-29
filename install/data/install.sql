@@ -1268,20 +1268,11 @@ CREATE TABLE `dzz_usergroup` (
   `type` enum('system','special','member') NOT NULL DEFAULT 'member' COMMENT '用户组类型',
   `system` varchar(255) NOT NULL DEFAULT 'private' COMMENT '系统类型',
   `grouptitle` varchar(255) NOT NULL DEFAULT '' COMMENT '用户组名称',
-  `creditshigher` int(10) NOT NULL DEFAULT '0',
-  `creditslower` int(10) NOT NULL DEFAULT '0',
   `stars` tinyint(3) NOT NULL DEFAULT '0',
   `color` varchar(255) NOT NULL DEFAULT '' COMMENT '颜色',
   `icon` varchar(255) NOT NULL DEFAULT '' COMMENT '图标',
-  `allowvisit` tinyint(1) NOT NULL DEFAULT '0',
-  `allowsendpm` tinyint(1) NOT NULL DEFAULT '1',
-  `allowinvite` tinyint(1) NOT NULL DEFAULT '0',
-  `allowmailinvite` tinyint(1) NOT NULL DEFAULT '0',
-  `maxinvitenum` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '最大邀请数',
-  `inviteprice` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '邀请价格',
-  `maxinviteday` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '邀请有效期',
-  PRIMARY KEY (`groupid`),
-  KEY `creditsrange` (`creditshigher`,`creditslower`)
+  `extra` text NOT NULL COMMENT '附加信息',
+  PRIMARY KEY (`groupid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户组表';
 
 DROP TABLE IF EXISTS `dzz_usergroup_field`;

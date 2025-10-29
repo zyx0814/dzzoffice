@@ -148,16 +148,16 @@ INSERT INTO `dzz_hooks` (`id`, `app_market_id`, `name`, `description`, `type`, `
 -- 转存表中的数据 `dzz_usergroup`
 --
 
-INSERT INTO `dzz_usergroup` VALUES(1, 1, 'system', 'private', '管理员', 0, 0, 9, '', '', 2, 1, 1, 1, 0, 0, 10);
-INSERT INTO `dzz_usergroup` VALUES(2, 2, 'system', 'private', '机构和部门管理员', 0, 0, 8, '', '', 1, 1, 1, 1, 0, 0, 10);
-INSERT INTO `dzz_usergroup` VALUES(3, 3, 'system', 'private', '部门管理员', 0, 0, 7, '', '', 1, 1, 1, 1, 0, 0, 10);
-INSERT INTO `dzz_usergroup` VALUES(4, 0, 'system', 'private', '禁止发言', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
-INSERT INTO `dzz_usergroup` VALUES(5, 0, 'system', 'private', '禁止访问', 0, 0, 0, '', '', 0, 1, 0, 0, 0, 0, 0);
-INSERT INTO `dzz_usergroup` VALUES(6, 0, 'system', 'private', '禁止 IP', 0, 0, 0, '', '', 0, 1, 0, 0, 0, 0, 0);
-INSERT INTO `dzz_usergroup` VALUES(7, 0, 'system', 'private', '游客', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 10);
-INSERT INTO `dzz_usergroup` VALUES(8, 0, 'system', 'private', '等待验证成员', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
-INSERT INTO `dzz_usergroup` VALUES(9, 0, 'system', 'private', '普通成员', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
-INSERT INTO `dzz_usergroup` VALUES(10, 0, 'system', 'private', '信息录入员', 0, 0, 0, '', '', 1, 1, 0, 0, 0, 0, 0);
+INSERT INTO `dzz_usergroup` VALUES(1, 1, 'system', 'private', '管理员', 9, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(2, 2, 'system', 'private', '机构和部门管理员', 8, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(3, 3, 'system', 'private', '部门管理员', 7, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(4, 0, 'system', 'private', '禁止发言', 0, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(5, 0, 'system', 'private', '禁止访问', 0, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(6, 0, 'system', 'private', '禁止 IP', 0, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(7, 0, 'system', 'private', '游客', 0, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(8, 0, 'system', 'private', '等待验证成员', 0, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(9, 0, 'system', 'private', '普通成员', 0, '', '', '');
+INSERT INTO `dzz_usergroup` VALUES(10, 0, 'system', 'private', '信息录入员', 0, '', '','');
 
 --
 -- 转存表中的数据 `dzz_usergroup_field`
