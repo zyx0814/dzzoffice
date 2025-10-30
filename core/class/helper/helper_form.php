@@ -162,11 +162,11 @@ class helper_form {
             foreach ($urllist[0] as $key => $val) {
                 $val = trim($val);
                 $return[0][$key] = $val;
-                if (!preg_match('/^http:\/\//is', $val)) $val = 'http://' . $val;
+                if (!preg_match('/^https?:\/\//is', $val)) $val = 'http://' . $val;
                 $tmp = parse_url($val);
                 $return[1][$key] = $tmp['host'];
                 if ($tmp['port']) {
-                    $return[1][$key] .= ":$tmp[port]";
+                    $return[1][$key] .= ":{$tmp['port']}";
                 }
             }
         }

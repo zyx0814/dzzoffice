@@ -7,7 +7,8 @@ if (!defined('IN_DZZ')) {
 class helper_dbtool {
 
     public static function dbversion() {
-        return DB::result_first("SELECT VERSION()");
+        $db = & DB::object();
+		return $db->version();
     }
 
     public static function dbsize() {

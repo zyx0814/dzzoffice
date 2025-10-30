@@ -26,19 +26,8 @@ class memory_driver_memcache {
                 $connect = @$this->obj->connect($config['server'], $config['port']);
             }
 
-            $this->enable = $this->checkEnable($connect);
+            $this->enable = $connect ? true : false;
         }
-    }
-
-    public function checkEnable($connect) {
-        if ($connect) {
-            $this->set('_check_', '_check_', 10);
-            if ($this->get('_check_') == '_check_') {
-                return true;
-            }
-            $this->rm('_check_');
-        }
-        return false;
     }
 
     public function get($key) {
@@ -50,8 +39,12 @@ class memory_driver_memcache {
     }
 
     public function set($key, $value, $ttl = 0) {
-        return $this->obj->set($key, $value, MEMCACHE_COMPRESSED, $ttl);
-    }
+		return $this->obj->set($key, $value, 0, $ttl); // 不再使用MEMCACHE_COMPRESSED，因为不能increment
+	}
+
+	public function add($key, $value, $ttl = 0) {
+		return $this->obj->add($key, $value, 0, $ttl);
+	}
 
     public function rm($key) {
         return $this->obj->delete($key);
@@ -62,11 +55,21 @@ class memory_driver_memcache {
     }
 
     public function inc($key, $step = 1) {
-        return $this->obj->increment($key, $step);
-    }
+		if (!$this->obj->increment($key, $step)) {
+			$this->set($key, $step);
+		}
+	}
 
-    public function dec($key, $step = 1) {
-        return $this->obj->decrement($key, $step);
+	public function incex($key, $step = 1) {
+		return $this->obj->increment($key, $step);
+	}
+
+	public function dec($key, $step = 1) {
+		return $this->obj->decrement($key, $step);
+	}
+
+	public function exists($key) {
+	    return $this->obj->get($key) !== FALSE;
     }
 
 }

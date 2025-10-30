@@ -148,17 +148,13 @@ if ($method == 'show_license') {
             show_msg('dbname_invalid', $dbname, 0);
         } else {
             //兼容支持域名直接带有端口的情况
-            if (strpos($dbhost, ':') !== false) {
-                list($dbhost1, $port) = explode(':', $dbhost);
-
-            } elseif (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
-                $unix_socket = $dbhost1;
-                $dbhost1 = 'localhost';
+            if (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
+                $unix_socket = $dbhost;
+                $dbhost = 'localhost';
             } else {
-                $dbhost1 = $dbhost;
+                $dbhost = $dbhost;
             }
-            if (empty($port)) $port = '3306';
-            $link = new mysqli($dbhost1, $dbuser, $dbpw, '', $port, $unix_socket);
+            $link = new mysqli($dbhost, $dbuser, $dbpw, '', null, $unix_socket);
             $errno = $link->connect_errno;
             $error = $link->connect_error;
             if ($errno) {
@@ -195,7 +191,6 @@ if ($method == 'show_license') {
         $_config['db'][1]['dbname'] = $dbname;
         $_config['db'][1]['dbpw'] = $dbpw;
         $_config['db'][1]['dbuser'] = $dbuser;
-        $_config['db'][1]['port'] = $port ? $port : '3306';
         $_config['db'][1]['tablepre'] = $tablepre;
         $_config['admincp']['founder'] = (string)$uid;
         $_config['security']['authkey'] = $authkey;

@@ -63,16 +63,12 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
         show_msg('undefine_func', 'mysqli_connect', 0);
     }
     //兼容支持域名直接带有端口的情况
-    if (strpos($dbhost, ':') !== false) {
-        list($dbhost, $port) = explode(':', $dbhost);
-
-    } elseif (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
+    if (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
         $unix_socket = $dbhost;
         $dbhost = 'localhost';
     }
-    if (empty($port)) $port = '3306';
     mysqli_report(MYSQLI_REPORT_OFF);
-    $link = @new mysqli($dbhost, $dbuser, $dbpw, '', $port, $unix_socket);
+    $link = @new mysqli($dbhost, $dbuser, $dbpw, '', null, $unix_socket);
     if ($link->connect_errno) {
         $errno = $link->connect_errno;
         $error = $link->connect_error;

@@ -13,7 +13,7 @@ class dzz_session_close {
     public $var;
     public $isnew = false;
     protected $newguest = array('sid' => 0, 'ip' => '',
-        'uid' => 0, 'username' => '', 'groupid' => 0, 'invisible' => 0, 'action' => 0,
+        'uid' => 0, 'username' => '', 'groupid' => 7, 'invisible' => 0, 'action' => 0,
         'lastactivity' => 0, 'fid' => 0, 'tid' => 0, 'lastolupdate' => 0);
 
     protected $table;
@@ -125,7 +125,7 @@ class dzz_session_close {
         return 0;
     }
 
-    public function fetch_all_by_fid($fid, $limit) {
+    public function fetch_all_by_fid($fid, $limit = 0) {
         return array();
     }
 

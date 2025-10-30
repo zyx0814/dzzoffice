@@ -76,13 +76,13 @@ class db_driver_mysqli_slave extends db_driver_mysqli {
     }
 
     public function query($sql, $silent = false, $unbuffered = false) {
-        if (!(!$this->slaveexcept && strtoupper(substr($sql, 0, 6)) === 'SELECT' && $this->_slave_connect())) {
-            $this->_master_connect();
-        }
-        $this->tablename = '';
-        $this->slaveexcept = false;
-        return parent::query($sql, $silent, $unbuffered);
-    }
+		if(!(!$this->slaveexcept && strtoupper(substr($sql, 0 , 6)) === 'SELECT' && strpos(strtoupper($sql), 'FOR UPDATE') === FALSE && $this->_slave_connect())) {
+			$this->_master_connect();
+		}
+		$this->tablename = '';
+		$this->slaveexcept = false;
+		return parent::query($sql, $silent, $unbuffered);
+	}
 
 }
 

@@ -25,7 +25,6 @@ $_config['db'][1]['dbcharset'] 		= 'utf8';
 $_config['db'][1]['pconnect'] 		= 0;
 $_config['db'][1]['dbname']  		= 'dzzoffice';
 $_config['db'][1]['tablepre'] 		= 'dzz_';
-$_config['db'][1]['port'] = '3306';//mysql端口
 $_config['db'][1]['unix_socket'] = '';//使用此方式连接时 dbhost设置为localhost
 
 /**
@@ -85,12 +84,13 @@ $_config['db']['common']['slave_except_table'] = '';
 //内存变量前缀, 可更改,避免同服务器中的程序引用错乱
 $_config['memory']['prefix'] = 'dzzoffice_';
 
-/* reids设置, 需要PHP扩展组件支持, timeout参数的作用没有查证 */
+/* Redis设置, 需要PHP扩展组件支持, timeout参数的作用没有查证 */
 $_config['memory']['redis']['server'] = '';
 $_config['memory']['redis']['port'] = 6379;
 $_config['memory']['redis']['pconnect'] = 1;
 $_config['memory']['redis']['timeout'] = 0;
 $_config['memory']['redis']['requirepass'] = '';//如果redis需要密码，请填写redis密码
+$_config['memory']['redis']['db'] = 0;//这里可以填写0到15的数字，每个站点使用不同的db
 /**
  * 是否使用 Redis::SERIALIZER_IGBINARY选项,需要igbinary支持,windows下测试时请关闭，否则会出>现错误Reading from client: Connection reset by peer
  * 支持以下选项，默认使用PHP的serializer
@@ -98,22 +98,28 @@ $_config['memory']['redis']['requirepass'] = '';//如果redis需要密码，请�
  * Redis::SERIALIZER_PHP =1
  * Redis::SERIALIZER_NONE =0 //则不使用serialize,即无法保存array
  */
-$_config['memory']['redis']['serializer'] = 1;
+/**
+ * 此配置现在已经取消，默认对array使用php serializer进行编码保存，其它数据直接原样保存 
+ */
+//$_config['memory']['redis']['serializer'] = 1;
 
-$_config['memory']['memcache']['server'] = '127.0.0.1'; // memcache 服务器地址
+$_config['memory']['memcache']['server'] = ''; // memcache 服务器地址
 $_config['memory']['memcache']['port'] = 11211;			// memcache 服务器端口
 $_config['memory']['memcache']['pconnect'] = 1;			// memcache 是否长久连接
 $_config['memory']['memcache']['timeout'] = 1;			// memcache 服务器连接超时
 
-$_config['memory']['memcached']['server'] = '127.0.0.1'; // memcached 服务器地址
+$_config['memory']['memcached']['server'] = ''; // memcached 服务器地址
 $_config['memory']['memcached']['port'] = 11211;		// memcached 服务器端口
 $_config['memory']['memcached']['pconnect'] = 1;		// memcached 是否长久连接
 $_config['memory']['memcached']['timeout'] = 1;			// memcached 服务器连接超时
 
-$_config['memory']['apc'] = 0;							// 启动对 apc 的支持
+$_config['memory']['apc'] = 0;							// 启动对 APC 的支持
+$_config['memory']['apcu'] = 0;							// 启动对 APCu 的支持
 $_config['memory']['xcache'] = 0;						// 启动对 xcache 的支持
 $_config['memory']['eaccelerator'] = 0;					// 启动对 eaccelerator 的支持
 $_config['memory']['wincache'] = 0;						// 启动对 wincache 的支持
+$_config['memory']['yac'] = 0;     						//启动对 YAC 的支持
+$_config['memory']['file']['server'] = '';				// File 缓存存放目录，如设置为 data/cache/filecache ，设置后启动 File 缓存
 
 
 // 服务器相关设置

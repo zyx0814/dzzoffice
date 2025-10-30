@@ -28,7 +28,6 @@ class dzz_table extends dzz_base {
             $this->_cache_ttl = $ttl;
             $this->_allowmem = true;
         }
-        if (getglobal('setting/CorpID') && getglobal('setting/CorpSecret')) $this->_wxbind = true;
         $this->_init_extend();
         parent::__construct();
     }

@@ -18,31 +18,13 @@ class memory_driver_memcached {
 			return;
 		}
         if (!empty($config['server'])) {
-            $this->obj = new Memcached();
-            $connect = $this->connectd($config['server'], $config['port']);
-            $this->enable = $this->checkEnable($connect);
+            $this->obj = new Memcached;
+            $this->obj->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
+			$this->obj->setOption(Memcached::OPT_TCP_NODELAY, true);
+			$this->obj->addServer($config['server'], $config['port']);
+            $connect=$this->obj->set('connect', '1');
+            $this->enable = $connect ? true : false;
         }
-    }
-
-    public function checkEnable($connect) {
-        if ($connect) {
-            $this->set('_check_', '_check_', 10);
-            if ($this->get('_check_') == '_check_') {
-                return true;
-            }
-            $this->rm('_check_');
-        }
-        return false;
-    }
-
-    public function connectd($host, $port) {
-        $servers = $this->obj->getServerList();
-        if (is_array($servers)) {
-            foreach ($servers as $server) {
-                if ($server['host'] == $host and $server['port'] == $port) return true;
-            }
-        }
-        return $this->obj->addServer($host, $port);
     }
 
     public function get($key) {
@@ -57,6 +39,10 @@ class memory_driver_memcached {
         return $this->obj->set($key, $value, $ttl);
     }
 
+    public function add($key, $value, $ttl = 0) {
+		return $this->obj->add($key, $value, $ttl);
+	}
+
     public function rm($key) {
         return $this->obj->delete($key);
     }
@@ -66,12 +52,21 @@ class memory_driver_memcached {
     }
 
     public function inc($key, $step = 1) {
-        return $this->obj->increment($key, $step);
-    }
+		return $this->obj->increment($key, $step, $step);
+	}
 
-    public function dec($key, $step = 1) {
-        return $this->obj->decrement($key, $step);
-    }
+	public function incex($key, $step = 1) {
+		return $this->obj->increment($key, $step);
+	}
+
+	public function dec($key, $step = 1) {
+		return $this->obj->decrement($key, $step);
+	}
+
+	public function exists($key) {
+		$this->obj->get($key);
+		return \Memcached::RES_NOTFOUND !== $this->obj->getResultCode();
+	}
 
 }
 

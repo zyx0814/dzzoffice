@@ -147,7 +147,6 @@ INSERT INTO `dzz_hooks` (`id`, `app_market_id`, `name`, `description`, `type`, `
 --
 -- 转存表中的数据 `dzz_usergroup`
 --
-
 INSERT INTO `dzz_usergroup` VALUES(1, 1, 'system', 'private', '管理员', 9, '', '', '');
 INSERT INTO `dzz_usergroup` VALUES(2, 2, 'system', 'private', '机构和部门管理员', 8, '', '', '');
 INSERT INTO `dzz_usergroup` VALUES(3, 3, 'system', 'private', '部门管理员', 7, '', '', '');

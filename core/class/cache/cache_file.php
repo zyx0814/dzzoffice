@@ -19,23 +19,24 @@ class ultrax_cache {
     }
 
     function set_cache($key, $value, $life) {
-        global $_G;
-        $data = array($key => array('data' => $value, 'life' => $life));
-        require_once libfile('function/cache');
-        $cache_file = $this->get_cache_file_path($key);
-        dmkdir(dirname($cache_file));
-        $cachedata = "\$data = " . arrayeval($data) . ";\n";
-        if ($fp = @fopen($cache_file, 'wb')) {
-            fwrite($fp, "<?php\n//Dzz! cache file, DO NOT modify me!" .
-                "\n//Created: " . date("M j, Y, G:i") .
-                "\n//Identify: " . md5($cache_file . $cachedata . $_G['config']['security']['authkey']) . "\n\nif(!defined('IN_DZZ')) {\n\texit('Access Denied');\n}\n\n$cachedata?>");
-            fclose($fp);
-        } else {
-            exit('Can not write to cache files, please check directory ./data/ and ./data/ultraxcache/ .');
-        }
-        return true;
-    }
-
+		global $_G;
+		$data = array($key => array('data' => $value, 'life' => $life));
+		require_once libfile('function/cache');
+		$cache_file = $this->get_cache_file_path($key);
+		dmkdir(dirname($cache_file));
+		$cachedata = "\$data = " . arrayeval($data) . ";\n";
+		$cachedata_save = "<?php\n//Dzz! cache file, DO NOT modify me!".
+		"\n//Created: " . date("M j, Y, G:i") .
+		"\n//Identify: " . md5($cache_file . $cachedata . $_G['config']['security']['authkey']) . "\n\nif(!defined('IN_DZZ')) {\n\texit('Access Denied');\n}\n\n$cachedata?>";
+		$fp = fopen($cache_file, 'cb');
+		if(!($fp && flock($fp, LOCK_EX) && ftruncate($fp, 0) && fwrite($fp, $cachedata_save) && fflush($fp) && flock($fp, LOCK_UN) && fclose($fp))) {
+			flock($fp, LOCK_UN);
+			fclose($fp);
+			unlink($cache_file);
+			exit('Can not write to cache files, please check directory ./data/ and ./data/ultraxcache/ .');
+		}
+		return true;
+	}
     function del_cache($key) {
         $cache_file = $this->get_cache_file_path($key);
         if (file_exists($cache_file)) {

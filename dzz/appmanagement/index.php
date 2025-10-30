@@ -258,7 +258,7 @@ if ($do == 'stats') {
     }
     exit($jsonReturn);
 }
-$appdata = DB::fetch_all("select appid,appname,appico,appurl,identifier,appadminurl from %t where ((`group`=3 and isshow>0) OR appadminurl!='')  and `available`>0 order by appid",array('app_market'));
+$appdata = DB::fetch_all("select appid,appname,appico,appurl,identifier,appadminurl,`group` from %t where ((`group`=3 and isshow>0) OR appadminurl!='')  and `available`>0 order by appid",array('app_market'));
 $data = array();
 foreach ($appdata as $k => $v) {
     if ($v["identifier"] == "appmanagement") continue;

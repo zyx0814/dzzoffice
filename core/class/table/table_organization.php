@@ -600,7 +600,7 @@ class table_organization extends dzz_table {
 
     public function wx_update($orgid) {
         global $_G;
-        if (!$this->_wxbind) return;
+        if (!$_G['setting']['CorpID'] || !$_G['setting']['CorpSecret']) return false;
         if (!$org = parent::fetch($orgid)) return false;
         if ($org['type'] > 0) {//群主类型不同步至微信
             return false;

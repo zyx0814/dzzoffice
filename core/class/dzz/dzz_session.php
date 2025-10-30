@@ -10,7 +10,7 @@ class dzz_session {
     public $var;
     public $isnew = false;
     private $newguest = array('sid' => 0, 'ip' => '',
-        'uid' => 0, 'username' => '', 'groupid' => 0, 'invisible' => 0, 'action' => 0,
+        'uid' => 0, 'username' => '', 'groupid' => 7, 'invisible' => 0, 'action' => 0,
         'lastactivity' => 0, 'lastolupdate' => 0);
 
     private $old = array('sid' => '', 'ip' => '', 'uid' => 0);
@@ -172,10 +172,8 @@ class dzz_session {
                     C::app()->session->set($k, $_G['member'][$k]);
                 }
             }
-            if (isset($_G['action'])) {
-                foreach ($_G['action'] as $k => $v) {
-                    C::app()->session->set($k, $v);
-                }
+            foreach ($_G['action'] as $k => $v) {
+                C::app()->session->set($k, $v);
             }
 
             C::app()->session->update();

@@ -179,7 +179,7 @@ class dzz_database {
 
     public static function quote($str, $noarray = false) {
         if (is_string($str))
-            return '\'' . addcslashes($str, "\n\r\\'\"\032") . '\'';
+            return '\'' . self::$db->escape_string($str) . '\'';
 
         if (is_int($str) or is_float($str))
             return '\'' . $str . '\'';

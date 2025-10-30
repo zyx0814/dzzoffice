@@ -19,10 +19,6 @@ class memory_driver_apc {
         return apc_fetch($key);
     }
 
-    public function getMulti($keys) {
-        return apc_fetch($keys);
-    }
-
     public function set($key, $value, $ttl = 0) {
         return apc_store($key, $value, $ttl);
     }

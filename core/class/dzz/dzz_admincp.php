@@ -193,7 +193,7 @@ class dzz_admincp {
             return false;
         } elseif (empty($founders)) {
             return true;
-        } elseif (strexists(",$founders,", ",$user[uid],")) {
+        } elseif (strexists(",$founders,", ",{$user['uid']},")) {
             return true;
         } elseif (!is_numeric($user['nickname']) && strexists(",$founders,", ",$user[nickname],")) {
             return true;
@@ -214,7 +214,7 @@ class dzz_admincp {
     }
 
     function admincpfile($action) {
-        return './admin/login/login.php';
+        return DZZ_ROOT.'./admin/login/login.php';
     }
 }
 

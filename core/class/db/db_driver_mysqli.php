@@ -36,7 +36,7 @@ class db_driver_mysqli {
                     $this->map['user_status'] =
                     $this->map['user_profile'] =
                     $this->map['user_field'] =
-                        $this->map['user'];
+                    $this->map['user'];
                 }
             }
         }
@@ -51,16 +51,10 @@ class db_driver_mysqli {
         if (empty($this->config) || empty($this->config[$serverid])) {
             $this->halt('config_db_not_found');
         }
-        //兼容支持域名直接带有端口的情况
-        if (strpos($this->config[$serverid]['dbhost'], ':') !== false) {
-            list($dbhost, $port) = explode(':', $this->config[$serverid]['dbhost']);
-            if ($port && empty($this->config[$serverid]['port'])) $this->config[$serverid]['port'] = $port;
-            if ($dbhost) $this->config[$serverid]['dbhost'] = $dbhost;
-        } elseif (strpos($this->config[$serverid]['dbhost'], '.sock') !== false) {//地址直接是socket地址
+        if (strpos($this->config[$serverid]['dbhost'], '.sock') !== false) {//地址直接是socket地址
             $this->config[$serverid]['unix_socket'] = $this->config[$serverid]['dbhost'];
             $this->config[$serverid]['dbhost'] = 'localhost';
         }
-        if (empty($this->config[$serverid]['port'])) $this->config[$serverid]['port'] = '3306';
 
         $this->link[$serverid] = $this->_dbconnect(
             $this->config[$serverid]['dbhost'],
@@ -69,16 +63,16 @@ class db_driver_mysqli {
             $this->config[$serverid]['dbcharset'],
             $this->config[$serverid]['dbname'],
             $this->config[$serverid]['pconnect'],
-            $this->config[$serverid]['port'],
             $this->config[$serverid]['unix_socket']
         );
         $this->curlink = $this->link[$serverid];
     }
 
-    function _dbconnect($dbhost, $dbuser, $dbpw, $dbcharset, $dbname, $pconnect, $port = '3306', $unix_socket = '', $halt = true) {
+    function _dbconnect($dbhost, $dbuser, $dbpw, $dbcharset, $dbname, $pconnect, $unix_socket = '', $halt = true) {
         mysqli_report(MYSQLI_REPORT_OFF);
+        if (intval($pconnect) === 1) $dbhost = 'p:' . $dbhost; // 前面加p:，表示persistent connection
         $link = new mysqli();
-        if (!$link->real_connect($dbhost, $dbuser, $dbpw, $dbname, $port, $unix_socket)) {
+        if (!$link->real_connect($dbhost, $dbuser, $dbpw, $dbname, null, $unix_socket)) {
             $halt && $this->halt('notconnect', $this->errno());
         } else {
             $this->curlink = $link;
