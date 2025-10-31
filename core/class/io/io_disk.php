@@ -128,6 +128,18 @@ class io_disk extends io_api {
                     showmessage($ret['error'], BASESCRIPT . '?mod=connect');
                 }
             }
+            if (!defined('IN_ADMIN')) {
+                if ($_G['adminid'] != 1 && $this->isSystemDirectory($config['attachdir'])) {
+                    showmessage('非管理员不允许挂载敏感目录，请选择其他目录', BASESCRIPT . '?mod=connect');
+                }
+                if ($_G['adminid'] != 1 && $this->isWebsiteDirectory($config['attachdir'])) {
+                    showmessage('非管理员不允许挂载敏感目录，请选择其他目录', BASESCRIPT . '?mod=connect');
+                }
+                // 检测上下级冲突
+                if (self::checkdiskLocal($config['attachdir'])) {
+                    showmessage('该路径与已挂载的本地目录存在上下级关系，不允许重复挂载', BASESCRIPT . '?mod=connect');
+                }
+            }
             $config['uid'] = $uid;
             if ($id = DB::result_first("select id from %t where uid=%d and attachdir=%s", array(self::T, $uid, $config['attachdir']))) {
                 DB::update(self::T, $config, "id ='{$id}'");
@@ -154,6 +166,138 @@ class io_disk extends io_api {
             include template('oauth_disk');
             exit();
         }
+    }
+
+    // 路径规范化函数
+    private function normalizePath($path) {
+        $isWindows = (strpos($path, ':\\') !== false);
+        $separator = $isWindows ? '\\' : '/';
+        // 处理冗余分隔符
+        $pathParts = preg_split('/[\\\\\/]+/', $path);
+        $path = implode($separator, array_filter($pathParts));
+        // 去除结尾分隔符
+        return rtrim($path, $separator);
+    }
+
+    /**
+     * 检测路径是否为系统敏感目录
+     * @param string $path 规范化后的本地路径
+     * @return bool true=是系统目录，false=非系统目录
+     */
+    private function isSystemDirectory($path) {
+        $isWindows = (strpos(PHP_OS, 'WIN') !== false); // 判断当前服务器系统
+        if ($isWindows) {
+            // Windows系统敏感目录
+            $systemDirs = [
+                'C:\Windows',
+                'C:\Program Files',
+                'C:\Program Files (x86)',
+            ];
+        } else {
+            // Linux/Unix系统敏感目录
+            $systemDirs = [
+                '/bin',
+                '/sbin',
+                '/usr/bin',
+                '/usr/sbin',
+                '/etc',
+                '/boot',
+                '/root',
+                '/proc',
+                '/sys',
+            ];
+        }
+        $isWindows = (strpos($path, ':\\') !== false);
+        $separator = $isWindows ? '\\' : '/';
+        $normalizedPath = $this->normalizePath($path);
+        
+        foreach ($systemDirs as $sysDir) {
+            $normalizedSysDir = $this->normalizePath($sysDir);
+            // 判断：路径是否等于系统目录，或为系统目录的子目录
+            $sysDirWithSep = $normalizedSysDir . $separator;
+            $pathWithSep = $normalizedPath . $separator;
+            
+            if ($normalizedPath === $normalizedSysDir || strpos($pathWithSep, $sysDirWithSep) === 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检测路径是否为网站目录（含子目录）
+     * @param string $path 规范化后的用户挂载路径
+     * @return bool true=属于网站目录，false=不属于
+     */
+    private function isWebsiteDirectory($path) {
+        $websiteRoot = DZZ_ROOT;
+        if (empty($websiteRoot)) {
+            return false;
+        }
+        
+        $isWindows = (strpos($path, ':\\') !== false);
+        $separator = $isWindows ? '\\' : '/';
+        $normalizedPath = $this->normalizePath($path);
+        $normalizedRoot = $this->normalizePath($websiteRoot);
+        
+        // 情况1：路径等于网站根目录
+        if ($normalizedPath === $normalizedRoot) {
+            return true;
+        }
+        
+        // 情况2：路径是网站根目录的子目录（拼接分隔符避免部分匹配）
+        $rootWithSep = $normalizedRoot . $separator;
+        $pathWithSep = $normalizedPath . $separator;
+        if (strpos($pathWithSep, $rootWithSep) === 0) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * 检测新本地路径与已有本地路径是否存在上下级冲突
+     * @param string $path 规范化后的新路径（如 E:\mysite 或 /home/mysite）
+     * @return bool true=存在冲突，false=无冲突
+     */
+    private function checkdiskLocal($path) {
+        global $_G;
+        // 确定当前系统的路径分隔符（根据新路径判断）
+        $isWindows = (strpos($path, ':\\') !== false);
+        $separator = $isWindows ? '\\' : '/';
+
+        $attachdirs = DB::fetch_all("select attachdir,uid from %t where 1", array(self::T));
+
+        // 对每个已有路径，判断是否与新路径存在上下级关系
+        foreach ($attachdirs as $attachdir) {
+            // 如果是同一用户的挂载，允许某些情况下的路径重叠
+            if ($attachdir['uid'] == $_G['uid']) {
+                // 同一用户可以有嵌套挂载
+                continue;
+            }
+            // 处理已有路径的系统兼容性（确保分隔符一致，避免跨系统挂载冲突）
+            $attachdiriswindows = (strpos($attachdir['attachdir'], ':\\') !== false);
+            if ($isWindows != $attachdiriswindows) {
+                // 不同系统路径（如Windows和Linux），不可能是上下级，跳过
+                continue;
+            }
+
+            // 拼接分隔符，避免部分匹配（如 /home/ab 和 /home/abc 不应该被判定为上下级）
+            $newPath = $path . $separator;
+            $existingPath = $attachdir['attachdir'] . $separator;
+
+            // 情况1：新路径是已有路径的子目录（如 已有E:\a，新路径E:\a\b）
+            if (strpos($newPath, $existingPath) === 0) {
+                return true;
+            }
+
+            // 情况2：已有路径是新路径的子目录（如 已有E:\a\b，新路径E:\a）
+            if (strpos($existingPath, $newPath) === 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function parsePath($path) {

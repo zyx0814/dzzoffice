@@ -21,6 +21,12 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
     $fileinfo = array();
     if($bz && $bz !== 'dzz') {
         $fileinfo=IO::getCloud($bz);
+        if (!$fileinfo) {
+            exit(json_encode(array('error' => lang('cloud_no_info'))));
+        }
+        if($fileinfo['available']<1) {
+            exit(json_encode(array('error' => lang('cloud_no_available'))));
+        }
         $fileinfo['fname'] = $fileinfo['cloudname'];
         $fileinfo['ftype'] = $fileinfo['cloudtype'].'('.$fileinfo['name'].')';
         $fileinfo['realpath'] = $fileinfo['attachdir'];
