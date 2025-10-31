@@ -7,11 +7,6 @@
         selorg.openarr = openarr;
     });
 </script>
-<style type="text/css">
-	.org-sel-box.dropdown-menu {
-		padding: 0px;
-	}
-</style>
 <div class="card-body scroll-y">
     <form class="form-horizontal" action="{MOD_URL}&op=app&do=updatesetting" onsubmit="return submitsetting(this);">
 		<div class="row mb-1">
@@ -42,28 +37,28 @@
 						</div>
 					</div>
 					<span class="form-text">{lang storage_designated_personnel_or_department_personnel}</span>
-				</div>
-				<div class="selectorguser" <!--{if $setting['explorer_mermoryusersetting']!='appoint'}-->style="display:none"<!--{/if}-->>
-					<div class="clearfix">
-						<div class="d-flex" id="orgids">
-							<!--{loop $result1['selOrg'] $value}-->
-							<button id="orgids_sl_$value['orgid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg" data-val="$value['orgid']">
-								{eval echo avatar_group($value['orgid'],null,'iconFirstWord');}
-								$value[orgname] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
-							</button>
-							<!--{/loop}-->
-							<!--{loop $result1['selUser'] $value}-->
-							<button id="orgids_sl_uid_$value['uid']" data-val="uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg">
-								{eval echo avatar_block($value['uid'],array($value['uid']=>$value['headerColor']),'iconFirstWord');} $value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
-							</button>
-							<!--{/loop}-->
+					<div class="selectorguser" <!--{if $setting['explorer_mermoryusersetting']!='appoint'}-->style="display:none"<!--{/if}-->>
+						<div class="clearfix">
+							<div class="d-flex" id="orgids">
+								<!--{loop $result1['selOrg'] $value}-->
+								<button id="orgids_sl_$value['orgid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg" data-val="$value['orgid']">
+									{eval echo avatar_group($value['orgid'],null,'iconFirstWord');}
+									$value[orgname] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
+								</button>
+								<!--{/loop}-->
+								<!--{loop $result1['selUser'] $value}-->
+								<button id="orgids_sl_uid_$value['uid']" data-val="uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg">
+									{eval echo avatar_block($value['uid'],array($value['uid']=>$value['headerColor']),'iconFirstWord');} $value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
+								</button>
+								<!--{/loop}-->
+							</div>
+							<input id="sel_orgids" name="setting[explorer_memoryorgusers]" type="hidden" value="$setting['explorer_memoryorgusers']"/>
 						</div>
-						<input id="sel_orgids" name="setting[explorer_memoryorgusers]" type="hidden" value="$setting['explorer_memoryorgusers']"/>
-					</div>
-					<div class="dropdown">
-						<a href="javascript:;" class="dropdown-toggle btn btn-primary" id="orgids_Menu" data-toggle="dropdown">{lang select_departments_or_users}<span class="caret"></span></a>
-						<div id="orgids_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgids_Menu">
-							<iframe name="orgids_iframe" class="org-sel-box-iframe" src="{DZZSCRIPT}?mod=system&op=orgtree&template=1&ctrlid=orgids&multiple=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+						<div class="dropdown">
+							<a href="javascript:;" class="dropdown-toggle btn btn-primary" id="orgids_Menu" data-toggle="dropdown">{lang select_departments_or_users}</a>
+							<div id="orgids_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="orgids_Menu">
+								<iframe name="orgids_iframe" class="org-sel-box-iframe" src="{DZZSCRIPT}?mod=system&op=orgtree&template=1&ctrlid=orgids&multiple=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -162,6 +157,51 @@
 			</div>
 		</div>
 		<div class="row mb-3">
+			<label class="col-sm-2">开启网盘挂载</label>
+			<div class="col-sm-10">
+				<div class="function-radio clearfix">
+					<div class="form-check form-check-inline">
+						<input type="radio" class="form-check-input" value="all" id="cloudsetting" name="setting[explorer_mermorycloudsetting]" <!--{if !isset($setting['explorer_mermorycloudsetting']) || $setting['explorer_mermorycloudsetting'] == 'all'}-->checked<!--{/if}--> >
+						<label class="form-check-label" for="cloudsetting">{lang all_personnel}</label>
+					</div>
+					<span class="form-text">允许所有成员使用网盘挂载。</span>
+				</div>
+				<div class="function-radio clearfix">
+					<div class="form-check form-check-inline">
+						<input type="radio" id="mermorycloudsetting" class="form-check-input" name="setting[explorer_mermorycloudsetting]" value="appoint"
+						<!--{if $setting['explorer_mermorycloudsetting']=='appoint'}-->checked
+						<!--{/if}--> >
+						<label class="form-check-label" for="mermorycloudsetting">{lang designated_personnel_or_department_personnel}</label>
+					</div>
+				</div>
+				<span class="form-text">仅为指定的人员或部门人员可以使用网盘挂载，未指定人员表示关闭网盘挂载功能。</span>
+				<div class="selectclouduser" <!--{if $setting['explorer_mermorycloudsetting']!='appoint'}-->style="display:none"<!--{/if}-->>
+					<div class="clearfix">
+						<div class="d-flex" id="cloudorgids">
+							<!--{loop $result3['selOrg'] $value}-->
+							<button id="cloudorgids_sl_$value['orgid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg" data-val="$value['orgid']">
+								{eval echo avatar_group($value['orgid'],null,'iconFirstWord');}
+								$value[orgname] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('cloudorgids',this);"></a>
+							</button>
+							<!--{/loop}-->
+							<!--{loop $result3['selUser'] $value}-->
+							<button id="cloudorgids_sl_uid_$value['uid']" data-val="uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg">
+								{eval echo avatar_block($value['uid'],array($value['uid']=>$value['headerColor']),'iconFirstWord');} $value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('cloudorgids',this);"></a>
+							</button>
+							<!--{/loop}-->
+						</div>
+						<input id="sel_cloudorgids" name="setting[explorer_memorycloudusers]" type="hidden" value="$setting['explorer_memorycloudusers']"/>
+					</div>
+					<div class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle btn btn-primary" id="cloudorgids_Menu" data-toggle="dropdown">{lang select_departments_or_users}</a>
+						<div id="cloudorgids_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="cloudorgids_Menu">
+							<iframe name="cloudorgids_iframe" class="org-sel-box-iframe" src="{DZZSCRIPT}?mod=system&op=orgtree&template=1&ctrlid=cloudorgids&multiple=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true"></iframe>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mb-3">
 			<label class="col-sm-2" for="textnumber">{lang finally_delete_setting}</label>
 			<div class="col-sm-10">
 				<input type="text" class="form-control" name="setting[explorer_finallydelete]" onblur="checks()" id="textnumber" <!--{if isset($setting['explorer_finallydelete'])}-->value="{$setting[explorer_finallydelete]}"<!--{else}-->value="-1"<!--{/if}-->/>
@@ -200,10 +240,8 @@ function checks(){
     $('#usercreatememory').change(function () {
         if ($(this).prop('checked')) {
             $('#memorycreateinfo').removeClass('hide');
-            //$('#usermemory_value').val(1);
         } else {
             $('#memorycreateinfo').addClass('hide');
-            //$('#usermemory_value').val(0);
         }
     })
 
@@ -233,6 +271,14 @@ function checks(){
             $('div.selectorguser').show();
         } else {
             $('div.selectorguser').hide();
+        }
+    })
+	$('.function-radio').find('input[name="setting[explorer_mermorycloudsetting]"]').change(function () {
+        var val = $(this).val();
+        if (val == 'appoint') {
+            $('div.selectclouduser').show();
+        } else {
+            $('div.selectclouduser').hide();
         }
     })
     //版本数量设置框切换

@@ -5,7 +5,6 @@ if (!defined('IN_DZZ')) {
 }
 error_reporting(E_ERROR);
 function updatecache($cachename = '') {
-
     $updatelist = empty($cachename) ? array() : (is_array($cachename) ? $cachename : array($cachename));
     if (!$updatelist) {
         @include_once libfile('cache/setting', 'function');
@@ -14,7 +13,6 @@ function updatecache($cachename = '') {
         $cachedir = DZZ_ROOT . './core/function/cache';
         $cachedirhandle = dir($cachedir);
         while ($entry = $cachedirhandle->read()) {
-
             if (!in_array($entry, array('.', '..')) && preg_match("/^cache\_([\_\w]+)\.php$/", $entry, $entryr) && $entryr[1] != 'setting' && substr($entry, -4) == '.php' && is_file($cachedir . '/' . $entry)) {
                 @include_once libfile('cache/' . $entryr[1], 'function');
                 call_user_func('build_cache_' . $entryr[1]);
@@ -45,7 +43,6 @@ function updatecache($cachename = '') {
             }
         }
     } else {
-
         foreach ($updatelist as $entry) {
             $entrys = explode(':', $entry);
 

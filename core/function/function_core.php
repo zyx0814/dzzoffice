@@ -2523,6 +2523,7 @@ function get_resources_some_setting() {
         'useronperm' => false,
         'orgonperm' => false,
         'grouponperm' => false,
+        'cloudperm' => false,
         'fileVersion' => true,
         'fileVersionNumber' => 0,
         'userallowonperm' => array(),
@@ -2563,6 +2564,13 @@ function get_resources_some_setting() {
         $data['userallowonperm'] = $getUsersByRule($setting['explorer_memoryorgusers'] ?? '');
         $data['useronperm'] = in_array($_G['uid'], $data['userallowonperm']);
     }
+    // 处理网盘挂载权限
+    if (($setting['explorer_mermorycloudsetting'] ?? '') != 'appoint') {//未指定用户时
+        $data['cloudperm'] = true;
+    } else {//指定用户时
+        $data['cloudallowonperm'] = $getUsersByRule($setting['explorer_memorycloudusers'] ?? '');
+        $data['cloudperm'] = in_array($_G['uid'], $data['cloudallowonperm']);
+    }
     // 处理文件版本
     $data['fileVersion'] = !isset($setting['fileVersion']) || $setting['fileVersion'] == 1;
     $data['fileVersionNumber'] = isset($setting['fileVersionNumber']) ? (int)$setting['fileVersionNumber'] : 0;
@@ -2572,7 +2580,7 @@ function get_resources_some_setting() {
     $data['grouponperm'] = !isset($setting['explorer_groupOn']) || $setting['explorer_groupOn'] == 1;
 
     // 左侧顶部内容显示控制
-    $data['left_topcontent'] = $data['grouponperm'] || $data['useronperm'] || $data['orgonperm'];
+    $data['left_topcontent'] = $data['grouponperm'] || $data['useronperm'] || $data['orgonperm'] || $data['cloudperm'];
 
     // 处理新建群组权限
     if (!isset($setting['explorer_groupcreate']) || ($setting['explorer_groupcreate'] == 1 && ($setting['explorer_mermorygroupsetting'] ?? '') != 'appoint')) {

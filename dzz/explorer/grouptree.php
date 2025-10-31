@@ -216,7 +216,7 @@ if ($do == 'get_children') {
                 'li_attr' => array('hashs' => 'mygroup')
             );
         }
-        if ($_G['uid']) {
+        if ($explorer_setting['cloudperm']) {
             $data[] = array(
                 'id' => 'cloud',
                 'text' => '网络挂载',

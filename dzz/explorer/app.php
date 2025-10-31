@@ -16,6 +16,7 @@ if ($do == 'updatesetting') {//更新设置
     $setarr = array(
         'explorer_usermemoryOn' => (isset($setting['explorer_usermemoryOn']) && $setting['explorer_usermemoryOn'] == 'on') ? 1 : 0,
         'explorer_mermoryusersetting' => $setting['explorer_mermoryusersetting'],
+        'explorer_mermorycloudsetting' => $setting['explorer_mermorycloudsetting'],
         'explorer_memoryorgusers' => $setting['explorer_memoryorgusers'],
         'explorer_organizationOn' => (isset($setting['explorer_organizationOn']) && $setting['explorer_organizationOn'] == 'on') ? 1 : 0,//isset($setting['organizationOn'])?$setting['organizationOn']:'',
         'explorer_groupOn' => (isset($setting['explorer_groupOn']) && $setting['explorer_groupOn'] == 'on') ? 1 : 0,//isset($setting['groupOn'])?$setting['groupOn']:'',
@@ -23,6 +24,7 @@ if ($do == 'updatesetting') {//更新设置
         'explorer_mermorygroupsetting' => $setting['explorer_mermorygroupsetting'],
         'explorer_mermoryonlymyorg' => $setting['explorer_mermoryonlymyorg'],
         'explorer_memorygroupusers' => $setting['explorer_memorygroupusers'],
+        'explorer_memorycloudusers' => $setting['explorer_memorycloudusers'],
         'explorer_catcreate' => (isset($setting['explorer_catcreate']) && $setting['explorer_catcreate'] == 'on') ? 1 : 0,
         'explorer_finallydelete' => (isset($setting['explorer_finallydelete'])) ? intval($setting['explorer_finallydelete']) : -1
     );
@@ -37,7 +39,9 @@ if ($do == 'updatesetting') {//更新设置
     $setting = C::t('setting')->fetch_all([
         'explorer_usermemoryOn',
         'explorer_mermoryusersetting',
+        'explorer_mermorycloudsetting',
         'explorer_memoryorgusers',
+        'explorer_memorycloudusers',
         'explorer_memorySpace',
         'explorer_organizationOn',
         'explorer_groupOn',
@@ -123,10 +127,12 @@ if ($do == 'updatesetting') {//更新设置
 
     $result1 = $processMemoryUsers('explorer_memoryorgusers');
     $result2 = $processMemoryUsers('explorer_memorygroupusers');
+    $result3 = $processMemoryUsers('explorer_memorycloudusers');
 
     $openarr = json_encode([
         'orgids' => $result1['open'],
-        'orgids1' => $result2['open']
+        'orgids1' => $result2['open'],
+        'orgids2' => $result3['open']
     ]);
 
     require template('app_manage');

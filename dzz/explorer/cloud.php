@@ -5,6 +5,10 @@ if (!defined('IN_DZZ')) {
 if (!$_G['uid']) {
     showmessage('no_privilege', dreferer());
 }
+$explorer_setting = get_resources_some_setting();
+if (!$explorer_setting['cloudperm']) {
+    showmessage('no_privilege', dreferer());
+}
 $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
 if ($bz && $bz !== 'dzz') {
     $path = isset($_GET['path']) ? trim($_GET['path']) : '';

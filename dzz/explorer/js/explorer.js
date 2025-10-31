@@ -405,6 +405,8 @@ _explorer.topMenu = function (hash, fid) {
 			jQuery('.listchange').show();
 			jQuery('.rightswitch').show();
 			if (hash == 'cloud') {
+				jQuery('.listchange').hide();
+				jQuery('.rightswitch').hide();
 				_explorer.infoPanel_hide = 1;
 			} else {
 				_explorer.infoPanel_hide = 0;
@@ -461,6 +463,10 @@ _explorer.jstree_select = function (hash) {
 		_explorer.open_node_by_id(fid);
 	} else if (op === 'cloud') {
 		var inst = $('#position').jstree(true);
+		if (!inst || typeof inst.select_node !== 'function') {
+			console.warn('jstree instance is not available');
+			return;
+		}
 		var bz = _explorer.getUrlParam(hash, 'bz');
 		if (bz) {
 			bz = bz.replace(/:/g, '_');
