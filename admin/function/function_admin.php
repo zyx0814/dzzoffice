@@ -258,7 +258,7 @@ function importByarray($arr, $force = 0) {
         $appid = $app['appid'] = C::t('app_market')->insert($app, 1);
     }
     if ($arr['hooks']) {//初始化钩子
-        C::t('hooks')->insert_by_appid($appid, $arr['hooks'], $arr['_attributes']['hooks']);
+        C::t('hooks')->insert_by_appid($appid, $arr['hooks'], $arr['_attributes']['hooks'], $oapp['available'] ? 1 : 0);
     }
     if ($appid) {
         C::t('app_open')->insert_by_exts($appid, ($app['fileext'] ? explode(',', $app['fileext']) : array()));

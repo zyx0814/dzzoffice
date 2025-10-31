@@ -258,6 +258,11 @@ if ($operation == 'check_install') {//根据appid检查app应用是否需要更�
         $zippath = DZZ_ROOT . 'data/update/app/' . $baseinfo["app_path"] . '/' . $baseinfo["identifier"] . '/' . $baseinfo['version'] . '/';
         $zipfile = $zippath . $baseinfo["identifier"] . ".zip";
         $md5file = $zippath . $baseinfo["identifier"] . ".md5.dzz";
+        if (!function_exists('zip_open')) {
+            $return["status"] = 0;
+            $return["msg"] = '缺少zip模块！请检查php.ini文件！';
+            exit(json_encode($return));
+        }
         dzzunzip($zipfile, $zippath, $md5file);
 
 

@@ -44,7 +44,7 @@ if ($keyword) {
     }
     if ($count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('app_market') . " WHERE 1 $sql")) {
         $apps = DB::fetch_all("SELECT * FROM " . DB::table('app_market') . " WHERE 1 $sql $order limit $start,$perpage");
-        $multi = multi($count, $perpage, $page, $theurl);
+        $multi = multi($count, $perpage, $page, $theurl, 'pull-right');
     }
 }
 

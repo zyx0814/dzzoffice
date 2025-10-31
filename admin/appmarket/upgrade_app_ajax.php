@@ -354,6 +354,11 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         $zippath = DZZ_ROOT . 'data/update/app/' . $upgradeinfo["app_path"] . '/' . $upgradeinfo["identifier"] . '/' . $upgradeinfo['version'] . '/';
         $zipfile = $zippath . $upgradeinfo["identifier"] . ".zip";
         $md5file = $zippath . $upgradeinfo["identifier"] . ".md5.dzz";
+        if (!function_exists('zip_open')) {
+            $return["status"] = 0;
+            $return["msg"] = '缺少zip模块！请检查php.ini文件！';
+            exit(json_encode($return));
+        }
         dzzunzip($zipfile, $zippath, $md5file);
         //end
 
@@ -495,6 +500,11 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
 
             if ($finish) {
                 unset($apparray["app"]["upgrade_version"]);//此信息xml里面已取消
+                
+                // 合并 extra 信息，新配置优先
+                $extra = isset($appinfo['extra']) ? unserialize($appinfo['extra']) : array();
+                $merged_extra = array_merge($extra, $apparray['app']['extra']);
+                $apparray['app']['extra'] = $merged_extra;
 
                 //保存对应的应用名及应用地址
                 if ($appinfo['identifier'] != $upgradeinfo['identifier']) {

@@ -45,7 +45,7 @@ class table_hooks extends dzz_table {
         return $ret;
     }
 
-    public function insert_by_appid($appid, $hooks, $attributes = array()) {
+    public function insert_by_appid($appid, $hooks, $attributes = array(), $status = 0) {
         if (!$appid) return false;
         $ret = 0;
         foreach ($hooks as $name => $addons) {
@@ -59,7 +59,7 @@ class table_hooks extends dzz_table {
             }
 
             if ($hid = DB::result_first("select id from %t where name=%s and addons=%s", array($this->_table, $name, $addons))) {
-                if (parent::update($hid, array('app_market_id' => $appid, 'priority' => $priority, 'description' => $description, 'status' => 0))) {
+                if (parent::update($hid, array('app_market_id' => $appid, 'priority' => $priority, 'description' => $description, 'status' => $status))) {
                     $ret += 1;
                 }
             } else {

@@ -225,6 +225,7 @@ class perm_check {
                 if ($_G['uid'] == $arr['uid']) $action .= '1';
                 else $action .= '2';
             }
+
             //首先判断ico的超级权限；
             if ($arr['sperm'] && !perm_FileSPerm::isPower($arr['sperm'], $action)) return false;
 
