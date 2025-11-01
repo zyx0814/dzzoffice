@@ -27,19 +27,16 @@ function debugmessage($ajax = 0) {
     $sqlw = array('Using filesort' => 0, 'Using temporary' => 0);
     $db = DB::object();
     $queries = count($db->sqldebug);
-    $links = array();
-    foreach ($db->link as $k => $link) {
-        $links[$ismysqli ? $link->thread_id : (string)$link] = $k;
-    }
     $sqltime = 0;
     foreach ($db->sqldebug as $string) {
         $sqltime += $string[1];
         $extra = $dt = '';
         $n++;
         $sql = preg_replace('/' . preg_quote($_G['config']['db']['1']['tablepre']) . '[\w_]+/', '<font color=blue>\\0</font>', nl2br(dhtmlspecialchars($string[0])));
+        !empty($string[4]) && $sql .= '; // '.print_r($string[4], 1);
         $sqldebugrow = '<div id="sql_' . $n . '" style="display:none;padding:0">';
         if (preg_match('/^SELECT /', $string[0])) {
-            $query = $string[3]->query("EXPLAIN " . $string[0]);
+            $query = DB::query('EXPLAIN '.$string[0], !empty($string[4]) ? $string[4] : []);
             $i = 0;
             $sqldebugrow .= '<table style="border-bottom:none">';
             while ($row = DB::fetch($query)) {
@@ -61,10 +58,10 @@ function debugmessage($ajax = 0) {
         }
         $sqldebugrow .= '<table><tr style="border-bottom:1px dotted gray"><td width="400">File</td><td width="80">Line</td><td>Function</td></tr>';
         foreach ($string[2] as $error) {
-            $error['file'] = str_replace(array(DZZ_ROOT, '\\'), array('', '/'), $error['file']);
-            $error['class'] = isset($error['class']) ? $error['class'] : '';
-            $error['type'] = isset($error['type']) ? $error['type'] : '';
-            $error['function'] = isset($error['function']) ? $error['function'] : '';
+            $error['file'] = str_replace([DZZ_ROOT, '\\'], ['', '/'], $error['file']);
+            $error['class'] = $error['class'] ?? '';
+            $error['type'] = $error['type'] ?? '';
+            $error['function'] = $error['function'] ?? '';
             $sqldebugrow .= "<tr><td>{$error['file']}</td><td>{$error['line']}</td><td>{$error['class']}{$error['type']}{$error['function']}()</td></tr>";
             if (strexists($error['file'], 'dzz/dzz_table') || strexists($error['file'], 'table/table')) {
                 $dt = ' &bull; ' . $error['file'];
@@ -73,7 +70,7 @@ function debugmessage($ajax = 0) {
         }
         $sqldebugrow .= '</table></div>' . ($extra ? $extra . '<br />' : '') . '<br />';
 
-        $sqldebug .= '<li><span style="cursor:pointer" onclick="document.getElementById(\'sql_' . $n . '\').style.display = document.getElementById(\'sql_' . $n . '\').style.display == \'\' ? \'none\' : \'\'"><s>' . $string[1] . 's</s> &bull; DBLink ' . $links[$ismysqli ? $string[3]->thread_id : (string)$string[3]] . $dt . '<br />' . $sql . '</span><br /></li>' . $sqldebugrow;
+        $sqldebug .= '<li><span style="cursor:pointer" onclick="document.getElementById(\'sql_' . $n . '\').style.display = document.getElementById(\'sql_' . $n . '\').style.display == \'\' ? \'none\' : \'\'"><s>' . $string[1] . 's</s> ' . $dt . '<br />' . $sql . '</span><br /></li>' . $sqldebugrow;
     }
     $ajaxhtml = 'data/' . $debugfile . '_ajax.php';
     if ($ajax) {

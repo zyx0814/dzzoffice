@@ -30,10 +30,8 @@ if (!is_dir('./data/' . $backupdir)) {
 $operation = $_GET['operation'] ? $_GET['operation'] : 'export';
 $op = isset($_GET['op']) ? $_GET['op'] : '';
 if ($operation == 'export') {
-
     $navtitle = lang('database_export') . ' - ' . lang('appname');
     if (!submitcheck('exportsubmit', 1)) {
-
         $shelldisabled = function_exists('shell_exec') ? '' : 'disabled';
         $tables = '';
         $dztables = array();
@@ -44,9 +42,7 @@ if ($operation == 'export') {
         foreach ($dzz_tables as $table) {
             $dztables[$table['Name']] = $table['Name'];
         }
-
         $defaultfilename = date('ymd') . '_' . random(8);
-
     } else {
         $submit = true;
         DB::query('SET SQL_QUOTE_SHOW_CREATE=0', 'SILENT');
@@ -270,8 +266,8 @@ if ($operation == 'export') {
 
     }
     include template('database');
+    exit();
 } elseif ($operation == 'import') {
-
     $msg = '';
     $navtitle = lang('db_recover') . ' - ' . lang('appname');
     if (($re = checkpermission('dbimport')) !== true) {
@@ -373,7 +369,7 @@ if ($operation == 'export') {
         }
     }
     include template('database');
-
+    exit();
 } elseif ($operation == 'runquery') {
     $navtitle = lang('nav_db_runquery') . ' - ' . lang('appname');
     $checkperm = checkpermission('runquery', 0);
@@ -414,6 +410,12 @@ if ($operation == 'export') {
         }
     }
     include template('database');
+    exit();
+} elseif ($operation == 'db') {
+    $navtitle = lang('database_db_switch') . ' - ' . lang('appname');
+    $is_pdo_supported = class_exists('PDO');
+    include template('database');
+    exit();
 }
 
 function createtable($sql, $dbcharset) {

@@ -182,7 +182,8 @@ class dzz_app extends dzz_base {
         } else if (isset($_SERVER['HTTP_X_FORWARDED_SERVER'])) {
             $host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
         }
-        $_G['siteurl'] = dhtmlspecialchars('http'.($_G['isHTTPS'] ? 's' : '').'://'.trim($host,'/').$sitepath.'/');
+        $_G['scheme'] = 'http'.($_G['isHTTPS'] ? 's' : '');
+        $_G['siteurl'] = dhtmlspecialchars($_G['scheme'].'://'.trim($host,'/').$sitepath.'/');
 
         $url = parse_url($_G['siteurl']);
         $_G['siteroot'] = isset($url['path']) ? $url['path'] : '';
@@ -422,17 +423,26 @@ class dzz_app extends dzz_base {
         }
         return $ip;
     }
-
     private function _init_db() {
-        if ($this->init_db) {
-            $driver = 'db_driver_mysqli';
-            if (getglobal('config/db/slave')) {
-                $driver = 'db_driver_mysqli_slave';
-            }
-            $this->var['mysql_driver'] = $driver;
-            DB::init($driver, $this->config['db']);
-        }
-    }
+		if($this->init_db || $this->init_setting) {
+			if($this->config['db']['driver'] == 'pdo' && class_exists('PDO')) {
+				$driver = 'db_driver_pdo';
+				if(getglobal('config/db/slave')) {
+					$driver = 'db_driver_pdo_slave';
+				}
+				$this->var['db_driver'] = 'pdo';
+			} else {
+				$driver = 'db_driver_mysqli';
+				if(getglobal('config/db/slave')) {
+					$driver = 'db_driver_mysqli_slave';
+				}
+				$this->var['db_driver'] = 'mysqli';
+			}
+
+			$this->var['mysql_driver'] = $driver;
+			DB::init($driver, $this->config['db'], $this->config['sqllog']);
+		}
+	}
 
     private function _init_session() {
 
@@ -444,7 +454,7 @@ class dzz_app extends dzz_base {
             $this->var['sid'] = $this->session->sid;
             $this->var['session'] = $this->session->var;
 
-            if (!empty($this->var['sid']) && $this->var['sid'] != $this->var['cookie']['sid']) {
+            if (isset($this->var['sid']) && $this->var['sid'] !== $this->var['cookie']['sid']) {
                 dsetcookie('sid', $this->var['sid'], 86400);
             }
 
@@ -589,7 +599,7 @@ class dzz_app extends dzz_base {
                 dheader("Location: user.php?mod=login");
             }
         }
-        if (isset($this->var['setting']['nocacheheaders']) && $this->var['setting']['nocacheheaders']) {
+        if ($this->var['setting']['nocacheheaders']) {
             @header("Expires: -1");
             @header("Cache-Control: no-store, private, post-check=0, pre-check=0, max-age=0", FALSE);
             @header("Pragma: no-cache");
@@ -597,7 +607,7 @@ class dzz_app extends dzz_base {
 
         $lastact = TIMESTAMP . "\t" . dhtmlspecialchars(basename($this->var['PHP_SELF'])) . "\t" . dhtmlspecialchars($this->var['mod']);
         dsetcookie('lastact', $lastact, 86400);
-        setglobal('currenturl_encode', base64_encode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
+        setglobal('currenturl_encode', base64_encode($this->var['scheme'] .'://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
     }
 
     private function _init_setting() {

@@ -32,7 +32,7 @@ class db_driver_mysqli_slave extends db_driver_mysqli {
         if (!$this->slaveexcept && $this->excepttables) {
             $this->slaveexcept = in_array($tablename, $this->excepttables, true);
         }
-        $this->serverid = isset($this->map[$this->tablename]) ? $this->map[$this->tablename] : 1;
+        $this->serverid = $this->map[$this->tablename] ?? 1;
         return $this->tablepre . $tablename;
     }
 

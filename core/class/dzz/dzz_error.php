@@ -24,6 +24,7 @@ class dzz_error {
         }
 
         if ($halt) {
+            header('HTTP/1.1 503 Service Unavailable');
             exit();
         } else {
             return $message;
@@ -181,7 +182,7 @@ class dzz_error {
     public static function show_error($type, $errormsg, $phpmsg = '', $typemsg = '', $backtraceid = '') {
         global $_G;
         ob_end_clean();
-        $gzip = getglobal('gzipcompress');
+        $gzip = $_G['gzipcompress'];
         ob_start($gzip ? 'ob_gzhandler' : null);
         header("HTTP/1.1 503 Service Temporarily Unavailable");
         header("Status: 503 Service Temporarily Unavailable");
@@ -256,7 +257,7 @@ EOT;
         } else {
             $VERSION = 'Unknown';
         }
-        echo '<p>Time: ' . date('Y-m-d H:i:s O') . ' IP: ' . getglobal('clientip') . ' version: ' . $VERSION . ' BackTraceID: ' . $backtraceid . '</p>';
+        echo '<p>Time: ' . date('Y-m-d H:i:s O') . ' IP: ' . $_G['clientip'] . ' version: ' . $VERSION . ' BackTraceID: ' . $backtraceid . '</p>';
         if (!empty($errormsg)) {
             echo '<div class="info">' . $errormsg . '</div>';
         }
@@ -299,45 +300,13 @@ EOT;
     public static function sql_clear($message) {
         $message = self::clear($message);
         $message = str_replace(DB::object()->tablepre, '', $message);
-        $message = dhtmlspecialchars($message);
-        return $message;
+        return dhtmlspecialchars($message);
     }
 
     public static function write_error_log($message) {
         $loginfo = array("mark" => "errorlog", "content" => $message);
         Hook::listen('systemlog', $loginfo);
         return;
-
-        $message = dzz_error::clear($message);
-        $time = time();
-        $file = DZZ_ROOT . './data/log/' . date("Ym") . '_errorlog.php';
-        $hash = md5($message);
-
-        $uid = getglobal('uid');
-        $ip = getglobal('clientip');
-
-        $user = '<b>User:</b> uid=' . intval($uid) . '; IP=' . $ip . '; RIP:' . $_SERVER['REMOTE_ADDR'];
-        $uri = 'Request: ' . dhtmlspecialchars(dzz_error::clear($_SERVER['REQUEST_URI']));
-        $message = "<?PHP exit;?>\t{$time}\t$message\t$hash\t$user $uri\n";
-        if ($fp = @fopen($file, 'rb')) {
-            $lastlen = 50000;
-            $maxtime = 60 * 10;
-            $offset = filesize($file) - $lastlen;
-            if ($offset > 0) {
-                fseek($fp, $offset);
-            }
-            if ($data = fread($fp, $lastlen)) {
-                $array = explode("\n", $data);
-                if (is_array($array)) foreach ($array as $key => $val) {
-                    $row = explode("\t", $val);
-                    if ($row[0] != '<?PHP exit;?>') continue;
-                    if ($row[3] == $hash && ($row[1] > $time - $maxtime)) {
-                        return;
-                    }
-                }
-            }
-        }
-        error_log($message, 3, $file);
     }
 
 }

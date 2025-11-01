@@ -211,6 +211,22 @@ class db_driver_mysqli {
         throw new DbException($message, $code, $sql);
     }
 
+    function begin_transaction() {
+		return $this->curlink->begin_transaction();
+	}
+
+	function commit() {
+		return $this->curlink->commit();
+	}
+
+	function rollback() {
+		$rr = $this->curlink->rollback();
+		if(PHP_VERSION < '5.5') {
+			$this->curlink->autocommit(true);
+		}
+		return $rr;
+	}
+
 }
 
 ?>

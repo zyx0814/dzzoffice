@@ -7,13 +7,16 @@
 			<div class="card-body">
 				<ul class="nav nav-pills">
 					<li class="nav-item">
-						<a class="nav-link <!--{if $operation=='export' }-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=export">{lang export}</a>
+						<a class="nav-link <!--{if $operation=='export'}-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=export">{lang export}</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link <!--{if $operation=='import' }-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=import">{lang nav_db_import}</a>
+						<a class="nav-link <!--{if $operation=='import'}-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=import">{lang nav_db_import}</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link <!--{if $operation=='runquery' }-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=runquery">{lang nav_db_runquery}</a>
+						<a class="nav-link <!--{if $operation=='runquery'}-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=runquery">{lang nav_db_runquery}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link <!--{if $operation=='db'}-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=db">{lang database_db_switch}</a>
 					</li>
 				</ul>
 			</div>
@@ -304,6 +307,37 @@
 					</dl>
 				</form>
 				<!--{/if}-->
+				<!--{elseif $operation=='db'}-->
+				<div class="alert alert-info" role="alert">
+					<h5>数据库驱动配置说明</h5>
+					<p class="mb-2">当前系统支持 <code>mysqli</code> 和 <code>pdo</code> 两种数据库驱动，若需切换驱动（如启用 PDO），请手动修改配置文件(/config/config.php)：</p>
+					<p class="mb-1">在 <code>{eval echo '$_config["db"]';}</code> 数组下，新增或修改 <code>driver</code> 字段（默认为空，对应 mysqli）：</p>
+					<pre class="bg-dark text-light p-2 rounded overflow-auto">
+						<code>// 数据库驱动配置（二选一）
+						// 1. 启用 PDO 驱动（推荐，支持参数化查询，更安全）<br>
+						{eval echo '$_config["db"]["driver"] = "pdo";';}<br>
+						// 2. 启用 mysqli 驱动（默认方式）<br>
+						{eval echo '$_config["db"]["driver"] = "mysqli";';}
+						</code>
+					</pre>
+					<div class="mb-3">
+						<span class="fw-bold">当前配置文件中的数据库驱动为：</span>
+						{if $_config["db"]["driver"]}$_config["db"]["driver"]{else}未配置，使用默认方式{/if}
+					</div>
+					<div class="mb-3">
+						<span class="fw-bold">当前服务器PDO支持状态：</span>
+						{if $is_pdo_supported}<span class="text-success">✅ 已支持</span>{else}<span class="text-danger">❌ 未支持</span>{/if}
+					</div>
+					<div class="mb-3">
+						<span class="fw-bold">当前服务器使用的数据库驱动为：</span>$_G['db_driver']
+					</div>
+					<div class="mb-0">注意事项：
+						<ul class="mb-0">
+							<li>修改配置后无需重启服务，刷新页面即可生效。</li>
+							<li>建议修改前备份 <code>config.php</code> 文件，避免配置错误导致系统异常。</li>
+						</ul>
+					</div>
+				</div>
 				<!--{/if}-->
 			</div>
 		</div>

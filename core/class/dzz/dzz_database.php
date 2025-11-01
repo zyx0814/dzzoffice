@@ -9,11 +9,12 @@ class dzz_database {
     public static $db;
 
     public static $driver;
-    protected static $excludeTables = ['session', 'admincp_session', 'cache', 'syscache'];
+    protected static $logsql = 0;
 
-    public static function init($driver, $config) {
+    public static function init($driver, $config, $logsql = 0) {
         self::$driver = $driver;
         self::$db = new $driver;
+        self::$logsql = $logsql;
         self::$db->set_config($config);
         self::$db->connect();
     }
@@ -31,52 +32,65 @@ class dzz_database {
     }
 
     public static function delete($table, $condition, $limit = 0, $unbuffered = true) {
+        $arg = [];
         if (empty($condition)) {
             return false;
         } elseif (is_array($condition)) {
-            if (count($condition) == 2 && isset($condition['where']) && isset($condition['arg'])) {
-                $where = self::format($condition['where'], $condition['arg']);
-            } else {
-                $where = self::implode_field_value($condition, ' AND ');
-            }
+            $isPdo = self::is_pdo();
+            if(count($condition) == 2 && isset($condition['where']) && isset($condition['arg'])) {
+                $where = $isPdo ? self::format_prepared($condition['where'], $condition['arg']) : self::format($condition['where'], $condition['arg']);
+			} else {
+                $where = $isPdo ? self::implode_prepared($condition, $arg, ' AND ') : self::implode($condition, ' AND ');
+			}
         } else {
             $where = $condition;
         }
         $limit = dintval($limit);
-        $sql = "DELETE FROM " . self::table($table) . " WHERE $where " . ($limit > 0 ? "LIMIT $limit" : '');
-        self::logsql($table, $sql, 'deletelog');
-        return self::query($sql, ($unbuffered ? 'UNBUFFERED' : ''));
+        $sql = 'DELETE FROM ' . self::table($table) . " WHERE $where " . ($limit > 0 ? "LIMIT $limit" : '');
+        return self::query($sql, $arg, false, $unbuffered);
     }
 
     public static function insert($table, $data, $return_insert_id = false, $replace = false, $silent = false) {
+		if(!self::is_pdo()) {
+			$sql = 'SET '.self::implode($data);
+			$arg = null;
+		} else {
+			$arg = [];
+			$sql = self::implode_prepared_insert($data, $arg);
+		}
 
-        $sql = self::implode($data);
+		$cmd = $replace ? 'REPLACE INTO' : 'INSERT INTO';
 
-        $cmd = $replace ? 'REPLACE INTO' : 'INSERT INTO';
+        $sql = "$cmd " . self::table($table) . " $sql";
+		$silent = $silent ? 'SILENT' : '';
 
-        $sql = "$cmd " . self::table($table) . " SET $sql";
-        self::logsql($table, $sql, 'updatelog');
-        $silent = $silent ? 'SILENT' : '';
-        return self::query($sql, null, $silent, !$return_insert_id);
-    }
+		return self::query($sql, $arg, $silent, !$return_insert_id);
+	}
 
     public static function update($table, $data, $condition = '', $unbuffered = false, $low_priority = false) {
-        $sql = self::implode($data);
+        $isPdo = self::is_pdo();
+        if($isPdo) {
+            $arg = [];
+			$sql = self::implode_prepared($data, $arg);
+		} else {
+            $arg = null;
+			$sql = self::implode($data);
+		}
+
         if (empty($sql)) {
             return false;
         }
-        $cmd = "UPDATE " . ($low_priority ? 'LOW_PRIORITY' : '');
+        $cmd = 'UPDATE ' . ($low_priority ? 'LOW_PRIORITY' : '');
         $where = '';
         if (empty($condition)) {
             $where = '1';
         } elseif (is_array($condition)) {
-            $where = self::implode($condition, ' AND ');
+            $where = $isPdo ? self::implode_prepared($condition, $arg, ' AND ') : self::implode($condition, ' AND ');
         } else {
             $where = $condition;
         }
         $sql = "$cmd " . self::table($table) . " SET $sql WHERE $where";
-        self::logsql($table, $sql, 'updatelog');
-        $res = self::query($sql, $unbuffered ? 'UNBUFFERED' : '');
+        $res = self::query($sql, $arg, false, $unbuffered);
         return $res;
     }
 
@@ -91,18 +105,18 @@ class dzz_database {
         return self::$db->fetch_array($resourceid, $type);
     }
 
-    public static function fetch_first($sql, $arg = array(), $silent = false) {
+    public static function fetch_first($sql, $arg = [], $silent = false) {
         $res = self::query($sql, $arg, $silent, false);
         if ($res === 0) {
-            return array();
+            return [];
         }
         $ret = self::$db->fetch_array($res);
         self::$db->free_result($res);
-        return $ret ? $ret : array();
+        return $ret ? $ret : [];
     }
 
-    public static function fetch_all($sql, $arg = array(), $keyfield = '', $silent = false) {
-        $data = array();
+    public static function fetch_all($sql, $arg = [], $keyfield = '', $silent = false) {
+        $data = [];
         $query = self::query($sql, $arg, $silent, false);
         while ($row = self::$db->fetch_array($query)) {
             if ($keyfield && isset($row[$keyfield])) {
@@ -119,35 +133,49 @@ class dzz_database {
         return self::$db->result($resourceid, $row);
     }
 
-    public static function result_first($sql, $arg = array(), $silent = false) {
+    public static function result_first($sql, $arg = [], $silent = false) {
         $res = self::query($sql, $arg, $silent, false);
         $ret = self::$db->result($res, 0);
         self::$db->free_result($res);
         return $ret;
     }
 
-    public static function query($sql, $arg = array(), $silent = false, $unbuffered = false) {
+    public static function query($sql, $arg = [], $silent = false, $unbuffered = false) {
+        $isPdo = self::is_pdo();
         if (!empty($arg)) {
             if (is_array($arg)) {
-                $sql = self::format($sql, $arg);
+                $sql = $isPdo ? self::format_prepared($sql, $arg) : self::format($sql, $arg);
             } elseif ($arg === 'SILENT') {
                 $silent = true;
-
+                $arg = [];
             } elseif ($arg === 'UNBUFFERED') {
                 $unbuffered = true;
+                $arg = [];
             }
         }
         self::checkquery($sql);
 
-        $ret = self::$db->query($sql, $silent, $unbuffered);
+        $ret = self::$db->query($isPdo ? [$sql, $arg] : $sql, $silent, $unbuffered);
         if (!$unbuffered && $ret) {
             $cmd = trim(strtoupper(substr($sql, 0, strpos($sql, ' '))));
-            if ($cmd === 'SELECT') {
+            switch ($cmd) {
+                case 'SELECT':
+                    break;
+                case 'UPDATE':
+                case 'DELETE':
+                    $ret = self::$db->affected_rows();
+                    break;
+                case 'INSERT':
+                    $ret = self::$db->insert_id();
+                    break;
+            }
 
-            } elseif ($cmd === 'UPDATE' || $cmd === 'DELETE') {
-                $ret = self::$db->affected_rows();
-            } elseif ($cmd === 'INSERT') {
-                $ret = self::$db->insert_id();
+            if(self::$logsql) {
+                if ($cmd === 'UPDATE' || $cmd === 'INSERT') {
+                    self::logsql($sql, 'updatelog');
+                } elseif ($cmd === 'DELETE') {
+                    self::logsql($sql, 'deletelog');
+                }
             }
         }
         return $ret;
@@ -258,6 +286,7 @@ class dzz_database {
             case '|':
             case '&':
             case '^':
+            case '&~':
                 return $field . '=' . $field . $glue . self::quote($val);
                 break;
             case '>':
@@ -282,6 +311,10 @@ class dzz_database {
         }
     }
 
+    public static function is_pdo() {
+		return getglobal('db_driver') == 'pdo';
+	}
+
     public static function implode($array, $glue = ',') {
         $sql = $comma = '';
         $glue = ' ' . trim($glue) . ' ';
@@ -292,9 +325,29 @@ class dzz_database {
         return $sql;
     }
 
-    public static function implode_field_value($array, $glue = ',') {
-        return self::implode($array, $glue);
-    }
+    public static function implode_prepared_insert($array, &$arg, $glue = ',') {
+		$sql1 = $sql2 = $comma1 = $comma2 = '';
+		$glue = ' '.trim($glue).' ';
+		foreach($array as $k => $v) {
+			$sql1 .= $comma1.self::quote_field($k);
+			$sql2 .= $comma2.'?';
+			$arg[] = !is_object($v) ? $v : '';
+			$comma1 = $glue;
+			$comma2 = $glue;
+		}
+		return '('.$sql1.') VALUES ('.$sql2.')';
+	}
+
+	public static function implode_prepared($array, &$arg, $glue = ',') {
+		$sql = $comma = '';
+		$glue = ' '.trim($glue).' ';
+		foreach($array as $k => $v) {
+			$sql .= $comma.self::quote_field($k).'=?';
+			$arg[] = !is_object($v) ? $v : '';
+			$comma = $glue;
+		}
+		return $sql;
+	}
 
     public static function format($sql, $arg) {
         $count = substr_count($sql, '%');
@@ -342,34 +395,94 @@ class dzz_database {
         return $ret;
     }
 
-    protected static function logsql($table, $sql, $type) {
-        // 检查排除表
-        if (in_array($table, self::$excludeTables)) {
-            return;
-        }
-        static $config = null;
-        if ($config === null) {
-            global $_config;
-            $config = $_config['sqllog'] ?? 0;
-        }
-        
+    public static function format_prepared($sql, &$arg) {
+		$params = [];
+		$count = substr_count($sql, '%');
+		if(!$count) {
+			return $sql;
+		} elseif($count > count($arg)) {
+			throw new DbException('SQL string format error! This SQL need "'.$count.'" vars to replace into.', 0, $sql);
+		}
+
+		$len = strlen($sql);
+		$i = $find = 0;
+		$ret = '';
+		while($i <= $len && $find < $count) {
+			if($sql[$i] == '%') {
+				$next = $sql[$i + 1];
+				$v = $arg[$find];
+				if($next == 't') {
+					$ret .= self::table($v);
+				} elseif($next == 's') {
+					$v = is_array($v) ? serialize($v) : (string)$v;
+					$ret .= '?';
+					$params[] = $v;
+				} elseif($next == 'f') {
+					$ret .= sprintf('%F', $v);
+				} elseif($next == 'd') {
+					$ret .= dintval($v);
+				} elseif($next == 'i') {
+					$ret .= $v;
+				} elseif($next == 'n') {
+					if(!empty($v)) {
+						if(is_array($v)) {
+							$_ret = [];
+							foreach($v as $_v) {
+								$_ret[] = '?';
+								$params[] = $_v;
+							}
+							$ret .= implode(',', $_ret);
+						} else {
+							$ret .= '?';
+							$params[] = $v;
+						}
+					} else {
+						$ret .= '0';
+					}
+				} else {
+					$ret .= '?';
+					$params[] = $v;
+				}
+				$i++;
+				$find++;
+			} else {
+				$ret .= $sql[$i];
+			}
+			$i++;
+		}
+		if($i < $len) {
+			$ret .= substr($sql, $i);
+		}
+		$arg = $params;
+		return $ret;
+	}
+
+    public static function begin_transaction() {
+		return self::$db->begin_transaction();
+	}
+
+    public static function commit() {
+		return self::$db->commit();
+	}
+
+	public static function rollback() {
+		return self::$db->rollback();
+	}
+
+    protected static function logsql($sql, $type) {
         // 检查是否启用日志
-        if (empty($config)) {
+        if (empty(self::$logsql)) {
             return;
         }
 
-        if ($config == 2) {
+        if (self::$logsql == 2) {
             $backtrace = debug_backtrace();
             krsort($backtrace);
-            $call_chain = [];
-            foreach ($backtrace as $error) {
+            $call_chain = array_map(function($error) {
                 $file = str_replace(DZZ_ROOT, '', $error['file']);
-                $func = isset($error['class']) ? $error['class'] : '';
-                $func .= isset($error['type']) ? $error['type'] : '';
-                $func .= isset($error['function']) ? $error['function'] : '';
-                $line = sprintf('%04d', $error['line']);
-                $call_chain[] = "[file: {$file}] {$func}:{$line}";
-            }
+                $func = ($error['class'] ?? '') . ($error['type'] ?? '') . ($error['function'] ?? '');
+                return "[file: {$file}] {$func}:" . sprintf('%04d', $error['line']);
+            }, $backtrace);
 
             $sql .= ' 调用链：';
             $sql .= implode(' -> ', $call_chain);
@@ -386,6 +499,9 @@ class dzz_database_safecheck {
     protected static $config;
 
     public static function checkquery($sql) {
+        if(is_array($sql)) {
+			$sql = $sql[0];
+		}
         if (self::$config === null) {
             self::$config = getglobal('config/security/querysafe');
         }

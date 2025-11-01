@@ -384,6 +384,7 @@ $lang = array
     'updatecache' => '更新缓存',
     'database' => '数据库',
     'database_export' => '数据库导出',
+    'database_db_switch' => '数据库切换',
     'patch' => '安全中心',
     // 'update'=>'在线升级',
     'cron' => '计划任务',

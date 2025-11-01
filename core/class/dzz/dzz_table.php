@@ -72,6 +72,9 @@ class dzz_table extends dzz_base {
     }
 
     public function insert($data, $return_insert_id = false, $replace = false, $silent = false) {
+        if($replace && !empty($data[$this->_pk])) {
+			$this->clear_cache($data[$this->_pk]);
+		}
         return DB::insert($this->_table, $data, $return_insert_id, $replace, $silent);
     }
 
@@ -95,7 +98,7 @@ class dzz_table extends dzz_base {
     public function fetch_all($ids, $force_from_db = false) {
         $data = array();
         if (!empty($ids)) {
-            if ($force_from_db || ($data = $this->fetch_cache($ids)) === false || count($ids) != count($data)) {
+            if ($force_from_db || ($data = $this->fetch_cache($ids)) === false || count((array)$ids) != count((array)$data)) {
                 if (is_array($data) && !empty($data)) {
                     $ids = array_diff($ids, array_keys($data));
                 }

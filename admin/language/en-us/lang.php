@@ -382,6 +382,7 @@ $lang = array
     'updatecache' => 'Update Cache',
     'database' => 'Database',
     'database_export' => 'Database Export',
+    'database_db_switch' => 'Database Switch',
     'patch' => 'Security Center',
     // 'update'=>'Online Upgrade',
     'cron' => 'Scheduled Tasks',
