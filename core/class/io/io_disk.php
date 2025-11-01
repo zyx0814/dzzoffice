@@ -122,22 +122,18 @@ class io_disk extends io_api {
             $uid = defined('IN_ADMIN') ? 0 : $_G['uid'];
             $ret = $this->checkdisk($config);
             if (is_array($ret) && isset($ret['error'])) {
-                if (defined('IN_ADMIN')) {
-                    if ($ret['error']) showmessage($ret['error'], BASESCRIPT . '?mod=cloud&op=space');
-                } else {
-                    showmessage($ret['error'], BASESCRIPT . '?mod=connect');
-                }
+                showmessage($ret['error']);
             }
-            if (!defined('IN_ADMIN')) {
-                if ($_G['adminid'] != 1 && $this->isSystemDirectory($config['attachdir'])) {
-                    showmessage('非管理员不允许挂载敏感目录，请选择其他目录', BASESCRIPT . '?mod=connect');
+            if (!defined('IN_ADMIN') && $_G['adminid'] != 1) {
+                if ($this->isSystemDirectory($config['attachdir'])) {
+                    showmessage('非管理员不允许挂载敏感目录，请选择其他目录');
                 }
-                if ($_G['adminid'] != 1 && $this->isWebsiteDirectory($config['attachdir'])) {
-                    showmessage('非管理员不允许挂载敏感目录，请选择其他目录', BASESCRIPT . '?mod=connect');
+                if ($this->isWebsiteDirectory($config['attachdir'])) {
+                    showmessage('非管理员不允许挂载敏感目录，请选择其他目录');
                 }
                 // 检测上下级冲突
-                if (self::checkdiskLocal($config['attachdir'])) {
-                    showmessage('该路径与已挂载的本地目录存在上下级关系，不允许重复挂载', BASESCRIPT . '?mod=connect');
+                if (self::checkdiskLocal($config['attachdir'],$_G['uid'])) {
+                    showmessage('该路径与已挂载的本地目录存在上下级关系，不允许重复挂载');
                 }
             }
             $config['uid'] = $uid;
@@ -237,22 +233,19 @@ class io_disk extends io_api {
         
         $isWindows = (strpos($path, ':\\') !== false);
         $separator = $isWindows ? '\\' : '/';
-        $normalizedPath = $this->normalizePath($path);
-        $normalizedRoot = $this->normalizePath($websiteRoot);
         
-        // 情况1：路径等于网站根目录
-        if ($normalizedPath === $normalizedRoot) {
-            return true;
-        }
+        $normalizedPath = $this->normalizePath($path);       // 用户挂载路径
+        $normalizedRoot = $this->normalizePath($websiteRoot); // 网站根目录
         
-        // 情况2：路径是网站根目录的子目录（拼接分隔符避免部分匹配）
-        $rootWithSep = $normalizedRoot . $separator;
+        // 拼接分隔符，避免部分字符串匹配（如 /var/www1 和 /var/www 不被误判）
         $pathWithSep = $normalizedPath . $separator;
-        if (strpos($pathWithSep, $rootWithSep) === 0) {
-            return true;
-        }
+        $rootWithSep = $normalizedRoot . $separator;
         
-        return false;
+        // 双向校验：满足任一条件即判定为网站相关目录
+        $isSubOfWebsite = strpos($pathWithSep, $rootWithSep) === 0; // 用户路径是网站子目录
+        $isParentOfWebsite = strpos($rootWithSep, $pathWithSep) === 0; // 用户路径是网站上级目录
+        
+        return $isSubOfWebsite || $isParentOfWebsite;
     }
 
     /**
@@ -260,31 +253,31 @@ class io_disk extends io_api {
      * @param string $path 规范化后的新路径（如 E:\mysite 或 /home/mysite）
      * @return bool true=存在冲突，false=无冲突
      */
-    private function checkdiskLocal($path) {
-        global $_G;
+    private function checkdiskLocal($path,$uid = 0) {
         // 确定当前系统的路径分隔符（根据新路径判断）
         $isWindows = (strpos($path, ':\\') !== false);
         $separator = $isWindows ? '\\' : '/';
+        $normalizedPath = $this->normalizePath($path);
 
         $attachdirs = DB::fetch_all("select attachdir,uid from %t where 1", array(self::T));
 
         // 对每个已有路径，判断是否与新路径存在上下级关系
         foreach ($attachdirs as $attachdir) {
-            // 如果是同一用户的挂载，允许某些情况下的路径重叠
-            if ($attachdir['uid'] == $_G['uid']) {
-                // 同一用户可以有嵌套挂载
-                continue;
-            }
+            // 同一用户可以有嵌套挂载
+            if ($attachdir['uid'] == $uid) continue;
             // 处理已有路径的系统兼容性（确保分隔符一致，避免跨系统挂载冲突）
             $attachdiriswindows = (strpos($attachdir['attachdir'], ':\\') !== false);
+            // 不同系统路径（如Windows和Linux），不可能是上下级，跳过
+            if ($isWindows != $attachdiriswindows) continue;
             if ($isWindows != $attachdiriswindows) {
                 // 不同系统路径（如Windows和Linux），不可能是上下级，跳过
                 continue;
             }
+            $normalizedExisting = $this->normalizePath($attachdir['attachdir']);
 
             // 拼接分隔符，避免部分匹配（如 /home/ab 和 /home/abc 不应该被判定为上下级）
             $newPath = $path . $separator;
-            $existingPath = $attachdir['attachdir'] . $separator;
+            $existingPath = $normalizedExisting . $separator;
 
             // 情况1：新路径是已有路径的子目录（如 已有E:\a，新路径E:\a\b）
             if (strpos($newPath, $existingPath) === 0) {
