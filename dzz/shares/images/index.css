@@ -18,7 +18,6 @@ ul,ul li,li{list-style:none;padding:0;margin:0}
 .upload-click{position:absolute;top:0;bottom:0;width:100%;color:#fff;line-height:150px;text-align:center;font-size:18px;letter-spacing:2px}
 #exampleInputFile{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;opacity:0}
 .middlecenter .middlecenter-header{padding-top:1rem;padding-left:1rem;padding-right:1rem}
-.middlecenter .middlecenter-body{height:100%;height:80vh;}
 #middleconMenu{position:relative;height:100%;overflow:hidden}
 #middleconMenu .middlecenter{margin-right:0;-webkit-transition:margin 300ms cubic-bezier(0.4,0.0,0.2,1);transition:margin 300ms cubic-bezier(0.4,0.0,0.2,1);will-change:margin;position:relative}
 .scroll-100{height:100%;overflow:auto;position:relative}

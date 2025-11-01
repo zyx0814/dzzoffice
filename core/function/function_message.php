@@ -6,7 +6,6 @@ if (!defined('IN_DZZ')) {
 
 function dshowmessage($message, $url_forward = '', $values = array(), $extraparam = array(), $custom = 0) {
     global $_G, $show_message;
-    $_G['messageparam'] = func_get_args();
 
     if ($extraparam['break']) {
         return;
@@ -14,21 +13,22 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
     $_G['inshowmessage'] = true;
 
     $param = array(
-        'header' => false,
-        'timeout' => null,
-        'refreshtime' => null,
-        'closetime' => null,
-        'locationtime' => null,
-        'alert' => null,
-        'return' => false,
-        'redirectmsg' => 0,
-        'msgtype' => 1,
-        'showmsg' => true,
-        'showdialog' => false,
-        'login' => false,
-        'handle' => false,
-        'extrajs' => '',
-        'striptags' => false,
+        'header' => false,       // 是否发送 HTTP 头
+        'timeout' => null,       // 是否自动跳转
+        'refreshtime' => 3,      // 跳转延迟（默认3秒）
+        'closetime' => null,     // 弹窗关闭延迟
+        'locationtime' => null,  // 定位跳转延迟
+        'alert' => null,         // 消息类型（error/right/info）
+        'return' => false,       // 是否显示返回按钮
+        'redirectmsg' => 0,      // 重定向消息标识
+        'msgtype' => 1,          // 消息展示类型（1-页面/2-模态框/3-Ajax）
+        'showmsg' => true,       // 是否显示消息内容
+        'showdialog' => false,   // 是否显示对话框
+        'login' => false,        // 是否强制登录
+        'handle' => false,       // 是否触发回调函数
+        'extrajs' => '',         // 额外 JS 代码
+        'striptags' => false,    // 是否过滤 HTML 标签
+        'showid' => ''           // 指定消息渲染的 DOM ID
     );
 
     $navtitle = lang('board_message');
@@ -39,12 +39,8 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
         include template('common/showmessage');
         dexit();
     }
-    define('CACHE_FORBIDDEN', TRUE);
-    $_G['setting']['msgforward'] = @dunserialize($_G['setting']['msgforward']);
-    $handlekey = $leftmsg = '';
-    if (empty($_G['inajax']) && (!empty($_GET['quickforward']) || $_G['setting']['msgforward']['quick'] && empty($extraparam['clean_msgforward']) && $_G['setting']['msgforward']['messages'] && @in_array($message, $_G['setting']['msgforward']['messages']))) {
-        $param['header'] = true;
-    }
+
+    $handlekey = '';
     $_GET['handlekey'] = !empty($_GET['handlekey']) && preg_match('/^\w+$/', $_GET['handlekey']) ? $_GET['handlekey'] : '';
     if (!empty($_G['inajax'])) {
         $handlekey = $_GET['handlekey'] = !empty($_GET['handlekey']) ? dhtmlspecialchars($_GET['handlekey']) : '';
@@ -113,7 +109,6 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
             helper_output::html($show_message);
         }
     }
-
 
     if ($param['msgtype'] == 2 && $param['login']) {
         dheader('location: user.php?mod=login');
@@ -193,5 +188,4 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
     }
     exit();
 }
-
 ?>

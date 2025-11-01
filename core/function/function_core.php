@@ -500,7 +500,7 @@ function dheader($string, $replace = true, $http_response_code = 0) {
         }
     }
     $string = str_replace(array("\r", "\n"), array('', ''), $string);
-    if (empty($http_response_code) || PHP_VERSION < '4.3') {
+    if (empty($http_response_code)) {
         @header($string, $replace);
     } else {
         @header($string, $replace, $http_response_code);

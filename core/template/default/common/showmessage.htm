@@ -43,6 +43,7 @@
 		<!--{if $param['login']}-->
 		<!--{/if}-->
 	</div>
+	<!--{if $param['timeout']}-->
 	<script type="text/javascript">
 	jQuery(document).ready(function(){
 		function jump(cont){						
@@ -57,6 +58,7 @@
 		jump(3);
 	});
 	</script>
+	<!--{/if}-->
 	<!--{elseif $param['msgtype'] == 2 && !$_GET['layerindex']}-->
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
