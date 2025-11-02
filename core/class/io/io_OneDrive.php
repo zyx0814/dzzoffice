@@ -580,7 +580,9 @@ class io_OneDrive extends io_api {
                 'size' => 0,
                 'dateline' => $meta['lastModifiedDateTime'] ? strtotime($meta['lastModifiedDateTime']) : '',
                 'flag' => '',
-                'childCount' => $meta['folder']['childCount']
+                'childCount' => $meta['folder']['childCount'],
+                'preview' => $this->preview,
+                'sid' => $this->sharesid
             );
             if ($path == $bz) {
                 $icoarr['name'] = $this->_rootname;
@@ -630,7 +632,9 @@ class io_OneDrive extends io_api {
                 'pfid' => md5(str_replace(strrchr($path, '/'), '', $path)),
                 'size' => $meta['size'],
                 'dateline' => $meta['lastModifiedDateTime'] ? strtotime($meta['lastModifiedDateTime']) : '',
-                'flag' => ''
+                'flag' => '',
+                'preview' => $this->preview,
+                'sid' => $this->sharesid
             );
 
             $icoarr['fsize'] = formatsize($icoarr['size']);

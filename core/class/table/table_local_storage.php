@@ -21,6 +21,7 @@ class table_local_storage extends dzz_table {
     }
 
     public function fetch_by_remoteid($remoteid) {
+        if(!$remoteid) return array();
         $remoteid = intval($remoteid);
         if (!$data = self::fetch($remoteid)) {
             return array();
@@ -35,6 +36,7 @@ class table_local_storage extends dzz_table {
     }
 
     public function getBzByRemoteid($remoteid) { //通过remoteid获取bz,默认返回dzz
+        if (!$remoteid) return 'dzz';
         if (!($data = self::fetch_by_remoteid($remoteid))) {
             return 'dzz';
         }

@@ -733,6 +733,8 @@ class io_ALIOSS extends io_api {
                 'flag' => $flag,
                 'nextMarker' => $meta['nextMarker'],
                 'IsTruncated' => $meta['IsTruncated'],
+                'preview' => $this->preview,
+                'sid' => $this->sharesid
             );
 
             $icoarr['fsize'] = formatsize($icoarr['size']);
@@ -781,7 +783,9 @@ class io_ALIOSS extends io_api {
                 'ppath' => $arr['bz'] . $arr['bucket'] . $pf,
                 'size' => $meta['Size'],
                 'dateline' => $meta['LastModified'] ? strtotime($meta['LastModified']) : '',
-                'flag' => ''
+                'flag' => '',
+                'preview' => $this->preview,
+                'sid' => $this->sharesid
             );
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));

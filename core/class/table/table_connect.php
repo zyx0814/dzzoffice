@@ -13,6 +13,7 @@ if (!defined('IN_DZZ')) {
 //uid=0 的表示为默认应用
 
 class table_connect extends dzz_table {
+    private static $allbz = null;
     public function __construct() {
 
         $this->_table = 'connect';
@@ -59,10 +60,14 @@ class table_connect extends dzz_table {
     }
 
     public function fetch_all_bz() {
+        if (self::$allbz !== null) {
+            return self::$allbz;
+        }
         $data = array();
         foreach (DB::fetch_all("select bz from %t where 1", array($this->_table)) as $value) {
             $data[] = $value['bz'];
         }
+        self::$allbz = $data;
         return $data;
     }
 

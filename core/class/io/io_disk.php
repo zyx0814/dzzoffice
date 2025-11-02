@@ -674,7 +674,8 @@ class io_disk extends io_api {
                 'size' => 0,
                 'dateline' => intval($meta['mtime']),
                 'flag' => $meta['flag'] ? $meta['flag'] : '',
-                'mod' => $meta['mod']
+                'mod' => $meta['mod'],
+                'preview' => $this->preview
             );
 
             $icoarr['fsize'] = '-';
@@ -718,7 +719,8 @@ class io_disk extends io_api {
                 'size' => $meta['size'],
                 'dateline' => intval($meta['mtime']),
                 'flag' => '',
-                'mod' => $meta['mod']
+                'mod' => $meta['mod'],
+                'preview' => $this->preview
             );
 
             $icoarr['fsize'] = formatsize($icoarr['size']);

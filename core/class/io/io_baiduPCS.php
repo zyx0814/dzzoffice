@@ -693,7 +693,9 @@ class io_baiduPCS extends io_api {
                 'pfid' => md5(str_replace(strrchr($meta['path'], '/'), '', $bz . $meta['path'])),
                 'size' => 0,
                 'dateline' => intval($meta['mtime']),
-                'flag' => ''
+                'flag' => '',
+                'preview' => $this->preview,
+                'sid' => $this->sharesid
             );
             if ($icoarr['path'] == $root) {
                 $icoarr['name'] = $this->_rootname;
@@ -737,7 +739,9 @@ class io_baiduPCS extends io_api {
                 'pfid' => md5(str_replace(strrchr($meta['path'], '/'), '', $bz . $meta['path'])),
                 'size' => $meta['size'],
                 'dateline' => intval($meta['mtime']),
-                'flag' => ''
+                'flag' => '',
+                'preview' => $this->preview,
+                'sid' => $this->sharesid
             );
 
             $icoarr['fsize'] = formatsize($icoarr['size']);

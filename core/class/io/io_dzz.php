@@ -490,7 +490,6 @@ class io_dzz extends io_api {
                 'sperm' => perm_FileSPerm::typePower('attachment'),
                 'bz' => ''
             );
-
         } elseif (strpos($icoid, 'attach::') === 0) {
             $attach = C::t('attachment')->fetch(intval(str_replace('attach::', '', $icoid)));
             $bz = io_remote::getBzByRemoteid($attach['remote']);
@@ -506,10 +505,20 @@ class io_dzz extends io_api {
                     'url' => getAttachUrl($attach),
                     'md5' => $attach['md5'],
                     'bz' => '',
-                    'sperm' => perm_FileSPerm::typePower('attachment')
+                    'sperm' => perm_FileSPerm::typePower('attachment'),
+                    'preview' => $this->preview,
+                    'sid' => $this->sharesid
                 );
             } else {
-                $path = $bz . '/' . $attach['attachment'];
+                $path = '';
+                if ($this->preview) {
+                    $path = 'preview_';
+                }
+
+                if ($this->sharesid) {
+                    $path .= 'share_' . $this->sharesid . '_';
+                }
+                $path .= $bz . '/' . $attach['attachment'];
                 return IO::getMeta($path);
             }
 

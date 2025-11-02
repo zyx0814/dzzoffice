@@ -663,6 +663,8 @@ class io_qiniu extends io_api {
                 'flag' => $flag,
                 'nextMarker' => $meta['nextMarker'],
                 'IsTruncated' => $meta['IsTruncated'],
+                'preview' => $this->preview,
+                'sid' => $this->sharesid
             );
 
             $icoarr['fsize'] = formatsize($icoarr['size']);
@@ -709,7 +711,9 @@ class io_qiniu extends io_api {
                 'ppath' => $arr['bz'] . $arr['bucket'] . $pf,
                 'size' => $meta['fsize'],
                 'dateline' => $meta['putTime'] ? ceil($meta['putTime'] / 10000000) : '',
-                'flag' => ''
+                'flag' => '',
+                'preview' => $this->preview,
+                'sid' => $this->sharesid
             );
             $icoarr['fsize'] = formatsize($icoarr['size']);
             $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));

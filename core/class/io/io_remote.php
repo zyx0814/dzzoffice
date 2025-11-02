@@ -13,6 +13,7 @@ if (!defined('IN_DZZ')) {
 
 class io_remote {
     public static function getBzByRemoteid($remoteid) { //通过remoteid获取bz,默认返回dzz
+        if (!$remoteid) return 'dzz';
         return C::t('local_storage')->getBzByRemoteid($remoteid);
     }
 
