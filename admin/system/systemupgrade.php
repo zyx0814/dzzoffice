@@ -23,12 +23,14 @@ $operation = $_GET['operation'] ? trim($_GET['operation']) : 'check';
 $steplang = array('', lang('founder_upgrade_updatelist'), lang('founder_upgrade_download'), lang('founder_upgrade_compare'), lang('founder_upgrade_upgrading'), lang('founder_upgrade_complete'), 'dbupdate' => lang('founder_upgrade_dbupdate'));
 
 if ($operation == 'patch' || $operation == 'cross') {
-
+    $version = trim($_GET['version']);
+    //$release = trim($_GET['release']);
+    $locale = trim($_GET['locale']);
+    $charset = trim($_GET['charset']);
     if (!$_G['setting']['bbclosed']) {
-        $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_close_site') . '</p>';
-        $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.reload();" value="' . lang('founder_upgrade_reset') . '" /></p>';
-
-        $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
+        $msg = '<div class="alert alert-warning text-center"><i class="mdi mdi-information pe-2"></i>' . lang('upgrade_close_site') . '</div>';
+        $msg .= '<div class="mb-3 d-grid"><a href="javascript:;" class="fs-4 btn btn-primary" onclick="window.location.reload();"><i class="mdi mdi-sync pe-2"></i>' . lang('founder_upgrade_reset') . '</a></div>';
+        $msg .= '<p class="text-center"><script type="text/javascript">';
         $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
         $msg .= "</script></p>";
         if (!$_GET['iframe']) {
@@ -41,10 +43,6 @@ if ($operation == 'patch' || $operation == 'cross') {
     }
 
     $msg = '';
-    $version = trim($_GET['version']);
-    //$release = trim($_GET['release']);
-    $locale = trim($_GET['locale']);
-    $charset = trim($_GET['charset']);
     $upgradeinfo = $upgrade_step = array();
 
     if ($_GET['ungetfrom']) {
@@ -175,7 +173,6 @@ if ($operation == 'patch' || $operation == 'cross') {
         }
         $linkurl = $theurl . '&step=4';
     } elseif ($step == 4) {
-
         $confirm = $_GET['confirm'];
         if (!$confirm) {
             if ($_GET['siteftpsetting']) {
@@ -382,9 +379,7 @@ if ($operation == 'patch' || $operation == 'cross') {
     }
 
 } elseif ($operation == 'showupgrade') {
-
     if ($_G['setting']['upgrade']) {
-
         C::t('cache')->insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize(array('curversion' => $dzz_upgrade->versionpath())), 'dateline' => $_G['timestamp'],), false, true);
 
         $upgraderow = $patchrow = array();
@@ -425,10 +420,8 @@ if ($operation == 'patch' || $operation == 'cross') {
             }
         }
     } else {
-
         $msg = lang('upgrade_latest_version');
     }
-
 } elseif ($operation == 'recheck') {
     $upgrade_step = C::t('cache')->fetch('upgrade_step');
     $upgrade_step = dunserialize($upgrade_step['cachevalue']);

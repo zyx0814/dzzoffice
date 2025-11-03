@@ -386,7 +386,6 @@ $lang = array
     'database_export' => '数据库导出',
     'database_db_switch' => '数据库切换',
     'patch' => '安全中心',
-    // 'update'=>'在线升级',
     'cron' => '计划任务',
     'log' => '系统日志',
     'upgrade' => '在线升级',
@@ -453,7 +452,7 @@ $lang = array
     //admin/app/template/app.html
     'application_name_suppliers' => '可以根据应用名称、供应商、应用标识符搜索',
     'supplier' => '供应商',
-    'group_permissions' => '组权限',
+    'group_permissions' => '应用权限',
     'department_available' => '可用部门',
     //admin/app/template/top.html
     'open_way_manage' => '打开方式管理',
@@ -470,7 +469,6 @@ $lang = array
 										<li>接口返回数据格式如：{sum:10,timeout:0,notice:[]}表示： sum:新消息数量；timeout:轮询时间，前端查询到此数据后，相应的应用的右上角会出现10的提醒</li>
 										<li>参数：将地址中的参数用"{}"包裹，dzzscript:为桌面主程序（即index.php),adminscript:为后台管理主程序(即admin.php),添加应用时使用此参数可以增加应用的兼容性和移植性</li>',
     'application_provider_name' => '应用提供商名称',
-    'app_group_permissions' => '组权限限定此应用使用范围',
     'department_permissions' => '部门权限',
     'app_set_application_jurisdiction' => '设定应用的部门使用权限，一般应用于某些特殊的应用只允许特定部门的成员使用的情况',
     'app_number_fields' => '此项为多项输入框，输入标签按回车或","确认',
@@ -916,7 +914,6 @@ $lang = array
     'founder_upgrade_compare' => '本地文件比对',
     'founder_upgrade_upgrading' => '正在升级',
     'founder_upgrade_complete' => '升级完成',
-    'founder_upgrade_preupdatelist' => '待更新文件列表',
     'founder_upgrade_store_directory' => '<b>文件存放目录:</b> ',
     'founder_upgrade_diff_show' => '与本地文件的比对结果，状态 <span style="color:red;">差异</span> 表示该本地文件被修改过<br />注意：如果您的源文件是通过 <span style="color:red;">非二进制</span> 方式上传到服务器，可能导致对比结果不准确',
     'founder_upgrade_diff' => '差异',
@@ -949,7 +946,7 @@ $lang = array
     'accounts_supreme_authority' => '该帐号必需具有以下权限：读取文件、写入文件、删除文件、创建目录、子目录继承',
     'upgrade_continue_db' => '<p>您上次升级到 <b>{steplang}</b>，请继续完成升级<p><p><input type="button" class="btn btn-success" onclick="createIframe(\'{stepurl}\')" value="继续升级">&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'{recheckurl}\'" value="重新检测" /></p>',
 
-    'upgrade_close_site' => '升级前，请先关闭站点，并对文件及数据备份',
+    'upgrade_close_site' => '升级前，请先关闭站点再进行升级，并且建议先对文件及数据备份。',
     'upgrade_none' => '没有该升级信息 {upgradeurl}',
     'upgrade_download_upgradelist_error' => '获取待更新文件列表失败，是否重新获取？ {upgradeurl}',
     'upgrade_download_complete_to_compare' => '待更新文件下载完成，即将进行本地文件比较 {upgradeurl}',

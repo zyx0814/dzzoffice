@@ -117,7 +117,10 @@
                 <label class="form-check-label" for="group$key">$value</label>
               </div>
               <!--{/loop}-->
-              <span class="form-text">{lang app_group_permissions}</span>
+              <ul class="form-text">
+                <li>限定此应用使用范围</li>
+                <li>机构和部门管理员可用：表示用户的用户组为机构和部门管理员时才能使用，与用户是否为某机构部门管理员无关</li>
+              </ul>
             </div>
           </div>
           <div class="row mb-3" id="perm_depart" <!--{if $app[ 'group']!=1}-->style="display:none"<!--{/if}-->>

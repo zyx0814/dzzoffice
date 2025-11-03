@@ -28,16 +28,19 @@
 		<!--{if !$param['redirectmsg']}-->
 		<button class="btn btn-success" onclick="location.href='$url_forward';return false;">{lang immdeiate_jump}<!--{if $param['timeout']}-->（<span class="num">3</span>s）<!--{/if}--></button>
 		<!--{else}-->
-		<button class="btn btn-primary" onclick="location.href='$url_forward';return false;">{lang return_to_the_naxt_level}<!--{if $param['timeout']}-->（<span class="num">3</span>s）<!--{/if}--></button>
+		<button class="btn-info" onclick="location.href='$url_forward';return false;">{lang return_to_the_naxt_level}<!--{if $param['timeout']}-->（<span class="num">3</span>s）<!--{/if}--></button>
 		<!--{/if}-->
-		<button class="btn btn-primary" onclick="location.href='/';return false;">首页</button>
+		<button class="btn btn-primary" onclick="location.href='/';return false;">{lang homepage}</button>
 		<!--{elseif $allowreturn}-->
+		<div class="return-btn-container"></div>
 		<script type="text/javascript">
 			if(history.length > (BROWSER.ie ? 0 : 1)) {
-				document.write('<a class="btn btn-primary" href="javascript:history.back()">{lang goback}</a> <a class="btn btn-info" href="/">首页</a>');
+				var btnHtml = '<a class="btn btn-info" href="javascript:history.back()">{lang goback}</a> ' + 
+							'<a class="btn btn-primary" href="/">{lang homepage}</a>';
 			} else {
-				document.write('<a class="btn btn-primary" href="/">首页</a>');
+				var btnHtml = '<a class="btn btn-primary" href="/">{lang homepage}</a>';
 			}
+			$('.return-btn-container').html(btnHtml);
 		</script>
 		<!--{/if}-->
 	</div>

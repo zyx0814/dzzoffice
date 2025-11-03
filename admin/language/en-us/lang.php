@@ -468,7 +468,6 @@ $lang = array
                                             <li>Interface return data format example: {sum:10,timeout:0,notice:[]} means: sum: number of new messages; timeout: polling interval. After the frontend queries this data, a reminder of "10" will appear in the upper right corner of the corresponding application.</li>
                                             <li>Parameters: Wrap parameters in the URL with "{}". "dzzscript" refers to the desktop main program (i.e., index.php), and "adminscript" refers to the backend management main program (i.e., admin.php). Using these parameters when adding an application improves compatibility and portability.</li>',
     'application_provider_name' => 'Application Provider Name',
-    'app_group_permissions' => 'Group Permissions Restrict the Usage Scope of This Application',
     'department_permissions' => 'Department Permissions',
     'app_set_application_jurisdiction' => 'Set Department Usage Permissions for the Application. Generally used for scenarios where certain special applications are only allowed to be used by members of specific departments',
     'app_number_fields' => 'This is a multi-input field. Confirm input tags by pressing Enter or ","',
@@ -909,7 +908,6 @@ $lang = array
     'founder_upgrade_compare' => 'Local File Comparison',
     'founder_upgrade_upgrading' => 'Upgrading in Progress',
     'founder_upgrade_complete' => 'Upgrade Completed',
-    'founder_upgrade_preupdatelist' => 'Pending Update File List',
     'founder_upgrade_store_directory' => '<b>File Storage Directory:</b> ',
     'founder_upgrade_diff_show' => 'Comparison result with local files. The status <span style="color:red;">Difference</span> indicates that the local file has been modified<br />Note: If your source files were uploaded to the server via <span style="color:red;">non-binary</span> mode, the comparison result may be inaccurate',
     'founder_upgrade_diff' => 'Difference',

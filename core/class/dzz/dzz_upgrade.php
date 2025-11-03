@@ -38,11 +38,9 @@ class dzz_upgrade {
         }
         if (!$upgradedataflag) {
             $this->mkdirs(dirname($file));
-            $fp = fopen($file, 'w');
-            if (!$fp) {
-                return array();
-            }
-            fwrite($fp, $upgradedata);
+            if(file_put_contents($file, $upgradedata) === false) {
+				return array();
+			}
         }
 
         return $return;
@@ -111,10 +109,9 @@ class dzz_upgrade {
             $file = DZZ_ROOT . './data/update/dzzoffice' . $upgradeinfo['latestversion'] . '/updatelist.tmp';
             $upgradedata = file_get_contents($file);
             $upgradedata = str_replace($searchlist, '', $upgradedata);
-            $fp = fopen($file, 'w');
-            if ($fp) {
-                fwrite($fp, $upgradedata);
-            }
+            if(file_put_contents($file, $upgradedata) === false) {
+				return array();
+			}
         }
 
         return array($modifylist, $showlist, $ignorelist, $newlist);
@@ -265,35 +262,41 @@ class dzz_upgrade {
     }
 
     function copy_dir($srcdir, $destdir) {
-        $dir = @opendir($srcdir);
-        while ($entry = @readdir($dir)) {
-            $file = $srcdir . $entry;
-            if ($entry != '.' && $entry != '..') {
-                if (is_dir($file)) {
-                    self::copy_dir($file . '/', $destdir . $entry . '/');
-                } else {
-                    self::mkdirs(dirname($destdir . $entry));
-                    copy($file, $destdir . $entry);
+        if ($dir = @opendir($srcdir)) {
+            while ($entry = @readdir($dir)) {
+                $file = $srcdir . $entry;
+                if ($entry != '.' && $entry != '..') {
+                    if (is_dir($file)) {
+                        self::copy_dir($file . '/', $destdir . $entry . '/');
+                    } else {
+                        self::mkdirs(dirname($destdir . $entry));
+                        copy($file, $destdir . $entry);
+                    }
                 }
             }
+            closedir($dir);
+        } else {
+            return false;
         }
-        closedir($dir);
     }
 
     function rmdirs($srcdir) {
-        $dir = @opendir($srcdir);
-        while ($entry = @readdir($dir)) {
-            $file = $srcdir . $entry;
-            if ($entry != '.' && $entry != '..') {
-                if (is_dir($file)) {
-                    self::rmdirs($file . '/');
-                } else {
-                    @unlink($file);
+        if ($dir = @opendir($srcdir)) {
+            while ($entry = @readdir($dir)) {
+                $file = $srcdir . $entry;
+                if ($entry != '.' && $entry != '..') {
+                    if (is_dir($file)) {
+                        self::rmdirs($file . '/');
+                    } else {
+                        @unlink($file);
+                    }
                 }
             }
+            closedir($dir);
+            rmdir($srcdir);
+        } else {
+            return false;
         }
-        closedir($dir);
-        rmdir($srcdir);
     }
 
     function upgradeinformation() {

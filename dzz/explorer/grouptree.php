@@ -231,7 +231,7 @@ if ($do == 'get_children') {
     $fid = intval($_GET['fid']);
     $gid = intval($_GET['gid']);
     $bz = empty($_GET['bz']) ? '' : urldecode($_GET['bz']);
-    $ret = array();
+    $arr = array();
     if ($fid) {
         $subfix = '';
         $org = array();
