@@ -17,9 +17,6 @@ button{margin-bottom:0;border-color:#2b7acd;background:#2b7acd;color:#fff;cursor
 #notice{padding:0 20px;font-size:24px}
 .header{padding:30px 0}
 .step_0 .content{padding:30px 200px 0}
-#ali_available_img{width:22px;height:22px;display:inline-block;border:0;float:left}
-.sel{background:url(sel.png) no-repeat}
-.seled{background:url(seled.png) no-repeat}
 label{height:24px;cursor:pointer;position:relative;}
 .btn{display:inline-block;text-align:center;text-decoration:none;vertical-align:middle;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;color:#fff;background-color:#0d6efd;border-color:#0d6efd;margin-right:5px;margin-top:5px;font-size:22px}
 .btn:hover{color:#fff;background-color:#0b5ed7;border-color:#0a58ca}
@@ -42,3 +39,18 @@ ul{list-style:none;padding:0px;margin:0px}
 .form-text{color:#6c757d;display:block;flex:1 0 70%;margin-left:25%;font-size:14px;padding-top:8px}
 .form-text:hover{color:#007bff}
 .desc{text-align:left}
+.ckb {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    background: #fff;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.ckb:checked {
+    background: #007bff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='%23fff'%3e%3cpath d='M18.9 4.9L9 14.8l-3.5-3.5-2.8 2.8L9 20.4 21.7 7.7l-2.8-2.8z'/%3e%3c/svg%3e");
+    border-color: #007bff;
+    background-size: 14px;
+}

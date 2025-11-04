@@ -23,17 +23,12 @@ class dbstuff {
         $this->tablepre = $tablepre;
         mysqli_report(MYSQLI_REPORT_OFF);
         $this->link = new mysqli();
-        //兼容支持域名直接带有端口的情况
-        if (strpos($dbhost, ':') !== false) {
-            list($dbhost, $port) = explode(':', $dbhost);
-
-        } elseif (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
+        if (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
             $unix_socket = $dbhost;
             $dbhost = 'localhost';
         }
-        if (empty($port)) $port = '3306';
 
-        if (!$this->link->real_connect($dbhost, $dbuser, $dbpw, $dbname, $port, $unix_socket, MYSQLI_CLIENT_COMPRESS)) {
+        if (!$this->link->real_connect($dbhost, $dbuser, $dbpw, $dbname, null, $unix_socket, MYSQLI_CLIENT_COMPRESS)) {
             $this->halt('Can not connect to MySQL server');
         }
         if (version_compare($this->version(), '5.5.3', '<')) {

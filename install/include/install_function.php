@@ -409,11 +409,9 @@ if (!function_exists('file_put_contents')) {
 }
 
 function createtable($sql, $dbver) {
-
-    $type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
-    $type = in_array($type, array('MYISAM', 'HEAP', 'MEMORY', 'INNODB')) ? $type : 'MyISAM';
-    return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) .
-        (" ENGINE=$type DEFAULT CHARSET=" . DBCHARSET);
+	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
+	$type = in_array($type, array('INNODB', 'MYISAM', 'HEAP', 'MEMORY')) ? $type : 'INNODB';
+	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql). " ENGINE=$type DEFAULT CHARSET=".DBCHARSET.(DBCHARSET === 'utf8mb4' ? " COLLATE=utf8mb4_unicode_ci" : "");
 }
 
 function dir_writeable($dir) {
@@ -988,8 +986,7 @@ function show_setting($setname, $varname = '', $value = '', $type = 'text|passwo
 
     } elseif ($type == 'checkbox') {
         if (!is_array($varname) && !is_array($value)) {
-            echo "<input id=\"ali_available\" type=\"hidden\" name=\"$varname\" value=\"" . ($value ? '1' : '0') . "\">";
-            echo "<label onclick=\"if($('ali_available').value!=1){ $('ali_available').value='1';$('ali_available_img').className='seled'}else{ $('ali_available').value='0';$('ali_available_img').className='sel';}\"><span id=\"ali_available_img\" class=\"" . ($value ? 'seled' : 'sel') . "\" ></span>&nbsp;" . lang($setname . '_check_label') . "</label>\n";
+            echo "<input type=\"checkbox\" class=\"ckb\" id=\"$varname\" name=\"$varname\" value=\"1\"".($value ? 'checked="checked"' : '')."><label for=\"$varname\">".lang($setname.'_check_label')."</label>\n";
         }
     } elseif ($type == 'select') {
         echo "<select name=\"$varname\" >";

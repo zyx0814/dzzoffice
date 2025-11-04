@@ -7,6 +7,7 @@ $_config = array();
 /**
  * 数据库主服务器设置, 支持多组服务器设置, 当设置多组服务器时, 则会根据分布式策略使用某个服务器
  * @example
+ * $_config['db']['driver'] = '';// 空(默认)/mysqli/pdo
  * $_config['db']['1']['dbhost'] = 'localhost'; // 服务器地址
  * $_config['db']['1']['dbuser'] = 'root'; // 用户
  * $_config['db']['1']['dbpw'] = '';// 密码
@@ -14,6 +15,7 @@ $_config = array();
  * $_config['db']['1']['pconnect'] = '0';// 是否持续连接
  * $_config['db']['1']['dbname'] = 'x1';// 数据库
  * $_config['db']['1']['tablepre'] = 'pre_';// 表名前缀
+ * $_config['db']['1']['dsn'] = 'mysql:host=localhost;dbname=x1';// DSN配置（PDO）
  *
  * $_config['db']['2']['dbhost'] = 'localhost';
  * ...
@@ -73,7 +75,11 @@ $_config['db']['common'] = array();
  */
 $_config['db']['common']['slave_except_table'] = '';
 
-
+/*
+ * 数据库引擎，根据自己的数据库引擎进行设置，V2.4.0之后默认为innodb，之前为myisam
+ * 对于从低版本升级到V2.4.0及以上，并且没有转换数据库引擎的用户，在此设置为myisam
+ * $_config['db']['common']['engine'] = 'innodb';
+ */
 
 /**
  * 内存服务器优化设置
