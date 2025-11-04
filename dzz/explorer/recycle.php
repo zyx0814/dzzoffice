@@ -8,20 +8,16 @@ $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 //按条件筛选内容
 if ($do == 'filelist') {
-    $usersettings = C::t('user_setting')->fetch_all_user_setting();
+    $usersettings = C::t('user_setting')->fetch_all_user_setting($_G['uid']);
     $sid = htmlspecialchars($_GET['sid']);
     //分页
     $limit = isset($_GET['perpage']) ? intval($_GET['perpage']) : 20;//默认每页条数
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
     $start = ($page - 1) * $limit;//开始条数
-    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : ($usersettings['recycledisp'] ? $usersettings['recycledisp'] : 4);
-
+    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : ($usersettings['recycledisp'] ? intval($usersettings['recycledisp']) : 4);
     $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
-
     $asc = (isset($_GET['asc'])) ? intval($_GET['asc']) : 1;
-
     $order = $asc > 0 ? 'ASC' : "DESC";
-
     switch ($disp) {
         case 0:
             $orderby = 'r.name';
@@ -38,7 +34,6 @@ if ($do == 'filelist') {
         case 4:
             $orderby = 're.deldateline';
             break;
-
     }
     $ordersql = '';
     if (is_array($orderby)) {
@@ -50,7 +45,6 @@ if ($do == 'filelist') {
         $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
     }
     $condition = array();
-
     //文件夹id
     if (!empty($_GET['fids']) && $_GET['fids']) {
         $pfid = intval($_GET['fids']);
@@ -99,7 +93,6 @@ if ($do == 'filelist') {
         // 处理 $data 为 null 或无效的情况
         $total = $start; // 或者其他合适的默认值
     }
-    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : intval($usersettings['recycledisp']);//文件排序
     $iconview = (isset($_GET['iconview'])) ? intval($_GET['iconview']) : intval($usersettings['recycleiconview']);//排列方式
     if (!$json_data = json_encode($data)) $data = array();
     if (!$json_data = json_encode($folderdata)) $folderdata = array();

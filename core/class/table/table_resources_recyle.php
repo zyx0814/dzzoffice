@@ -205,7 +205,7 @@ class table_resources_recyle extends dzz_table {
             } else {
                 $v['finallydate'] = '--';
             }
-            $v['deldateline'] = dgmdate($v['deldateline'], 'Y-m-d');
+            $v['deldateline'] = dgmdate($v['deldateline'], 'Y-m-d H:i:s');
             //获取文件图标
             $v['img'] = C::t('resources')->get_icosinfo_by_rid($v['rid']);
             //文件大小信息

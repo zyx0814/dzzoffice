@@ -187,6 +187,7 @@ if ($method == 'show_license') {
         }
         $uid = 1;
         $authkey = substr(md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $dbhost . $dbuser . $dbpw . $dbname . $pconnect . substr($timestamp, 0, 6)), 8, 6) . random(10);
+        $_config['db']['driver'] = 'mysqli';
         $_config['db'][1]['dbhost'] = $dbhost;
         $_config['db'][1]['dbname'] = $dbname;
         $_config['db'][1]['dbpw'] = $dbpw;

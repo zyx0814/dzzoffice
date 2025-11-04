@@ -8,7 +8,7 @@ $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'filelist') {
     include libfile('function/use');
-    $usersettings = C::t('user_setting')->fetch_all_user_setting();
+    $usersettings = C::t('user_setting')->fetch_all_user_setting($_G['uid']);
     $explorer_setting = get_resources_some_setting();
     $searchtype = isset($_GET['searchtype']) ? trim($_GET['searchtype']) : '';
     $searchtypearr = explode('&', $searchtype);
@@ -23,18 +23,13 @@ if ($do == 'filelist') {
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
     $start = ($page - 1) * $perpage;//开始条数
     $total = 0;//总条数
-    $disp = intval($_GET['disp']);
+    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : intval($usersettings['disp']);
     $sid = empty($_GET['sid']) ? 0 : $_GET['sid'];//id
     $data = array();
-
     $limitsql = "limit $start,$perpage";
-
     $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
-
     $asc = intval($_GET['asc']);
-
     $order = $asc > 0 ? 'ASC' : "DESC";
-
     $powerarr = perm_binPerm::getPowerArr();
 
     switch ($disp) {
@@ -50,7 +45,6 @@ if ($do == 'filelist') {
         case 3:
             $orderby = 'dateline';
             break;
-
     }
     $ordersql = '';
     if (is_array($orderby)) {
@@ -293,9 +287,7 @@ if ($do == 'filelist') {
             if ($folder = C::t('folder')->fetch_by_fid($fid)) $folderdata[$fid] = $folder;
         }
     }
-    $disp = isset($_GET['disp']) ? intval($_GET['disp']) : intval($usersettings['disp']);//文件排序
-    if (!isset($usersettings['iconview'])) $usersettings['iconview'] = 4;
-    $iconview = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($usersettings['iconview']));//排列方式
+    $iconview = isset($_GET['iconview']) ? intval($_GET['iconview']) : ($usersettings['iconview'] ? intval($usersettings['iconview']) : 4);//排列方式
     $total = $total ?  $total : 0;
     if (!$json_data = json_encode($data)) $data = array();
     if (!$json_data = json_encode($folderdata)) $folderdata = array();

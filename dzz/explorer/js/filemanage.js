@@ -343,6 +343,7 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	}
 	this.data[data.rid] = data;
 	var template = _filemanage.get_template(this.id);
+	if(!template) template = '';
 	//创建图标列表
 	if (data.flag) {
 		if (!data.img) {
@@ -969,14 +970,16 @@ function contextmenubody(fid) {
 	if (!fid) {
 		el.find('.property').remove();
 		el.find('.paste').remove();
-	if(_filemanage.winid != 'recycle-list'){
-		el.find('.recoverall').remove();
-		el.find('.deleteall').remove();
+		if(_filemanage.winid != 'recycle-list'){
+			el.find('.recoverall').remove();
+			el.find('.deleteall').remove();
+			el.find('.sort .disp4').remove();
+		}else{
+			el.find('.sort .disp2').remove();
+			el.find('.sort .disp3').remove();
+		}
 	}else{
-		el.find('.sort .disp2').remove();
-		el.find('.sort .disp3').remove();
-	}
-	}else{
+		el.find('.sort .disp4').remove();
 		el.find('.recoverall').remove();
 		el.find('.deleteall').remove();
 	}
@@ -1434,6 +1437,8 @@ _filemanage.Sort = function (data, disp, asc) {
 				//asc=0;
 				sarr[sarr.length] = (data[i].dateline) + '___' + i;
 				break;
+			case 4:
+				sarr[sarr.length] = (data[i].deldateline) + '___' + i;
 		}
 	}
 	if (parseInt(disp) === 1) {
