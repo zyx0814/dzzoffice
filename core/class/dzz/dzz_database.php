@@ -10,11 +10,13 @@ class dzz_database {
 
     public static $driver;
     protected static $logsql = 0;
+    protected static $ispdo = false;
 
     public static function init($driver, $config, $logsql = 0) {
         self::$driver = $driver;
         self::$db = new $driver;
         self::$logsql = $logsql;
+        self::$ispdo = $driver == 'db_driver_pdo';
         self::$db->set_config($config);
         self::$db->connect();
     }
@@ -36,11 +38,10 @@ class dzz_database {
         if (empty($condition)) {
             return false;
         } elseif (is_array($condition)) {
-            $isPdo = self::is_pdo();
             if(count($condition) == 2 && isset($condition['where']) && isset($condition['arg'])) {
-                $where = $isPdo ? self::format_prepared($condition['where'], $condition['arg']) : self::format($condition['where'], $condition['arg']);
+                $where = self::$ispdo ? self::format_prepared($condition['where'], $condition['arg']) : self::format($condition['where'], $condition['arg']);
 			} else {
-                $where = $isPdo ? self::implode_prepared($condition, $arg, ' AND ') : self::implode($condition, ' AND ');
+                $where = self::$ispdo ? self::implode_prepared($condition, $arg, ' AND ') : self::implode($condition, ' AND ');
 			}
         } else {
             $where = $condition;
@@ -51,7 +52,7 @@ class dzz_database {
     }
 
     public static function insert($table, $data, $return_insert_id = false, $replace = false, $silent = false) {
-		if(!self::is_pdo()) {
+		if(!self::$ispdo) {
 			$sql = 'SET '.self::implode($data);
 			$arg = null;
 		} else {
@@ -68,8 +69,7 @@ class dzz_database {
 	}
 
     public static function update($table, $data, $condition = '', $unbuffered = false, $low_priority = false) {
-        $isPdo = self::is_pdo();
-        if($isPdo) {
+        if(self::$ispdo) {
             $arg = [];
 			$sql = self::implode_prepared($data, $arg);
 		} else {
@@ -85,7 +85,7 @@ class dzz_database {
         if (empty($condition)) {
             $where = '1';
         } elseif (is_array($condition)) {
-            $where = $isPdo ? self::implode_prepared($condition, $arg, ' AND ') : self::implode($condition, ' AND ');
+            $where = self::$ispdo ? self::implode_prepared($condition, $arg, ' AND ') : self::implode($condition, ' AND ');
         } else {
             $where = $condition;
         }
@@ -141,10 +141,9 @@ class dzz_database {
     }
 
     public static function query($sql, $arg = [], $silent = false, $unbuffered = false) {
-        $isPdo = self::is_pdo();
         if (!empty($arg)) {
             if (is_array($arg)) {
-                $sql = $isPdo ? self::format_prepared($sql, $arg) : self::format($sql, $arg);
+                $sql = self::$ispdo ? self::format_prepared($sql, $arg) : self::format($sql, $arg);
             } elseif ($arg === 'SILENT') {
                 $silent = true;
                 $arg = [];
@@ -155,7 +154,7 @@ class dzz_database {
         }
         self::checkquery($sql);
 
-        $ret = self::$db->query($isPdo ? [$sql, $arg] : $sql, $silent, $unbuffered);
+        $ret = self::$db->query(self::$ispdo ? [$sql, $arg] : $sql, $silent, $unbuffered);
         if (!$unbuffered && $ret) {
             $cmd = trim(strtoupper(substr($sql, 0, strpos($sql, ' '))));
             switch ($cmd) {
@@ -310,10 +309,6 @@ class dzz_database {
                 throw new DbException('Not allow this glue between field and value: "' . $glue . '"');
         }
     }
-
-    public static function is_pdo() {
-		return getglobal('db_driver') == 'pdo';
-	}
 
     public static function implode($array, $glue = ',') {
         $sql = $comma = '';

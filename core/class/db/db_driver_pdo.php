@@ -149,8 +149,9 @@ class db_driver_pdo extends db_driver_mysqli {
 			}
 
 			if(!$silent) {
-				$this->halt($this->error(), $this->errno(), $sql);
+				$this->halt($this->error() ?? $e->getMessage(), $this->errno(), $sql);
 			}
+			return false;
 		}
 
 		if(defined('DZZ_DEBUG') && DZZ_DEBUG) {

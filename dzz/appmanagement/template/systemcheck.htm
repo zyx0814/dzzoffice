@@ -74,7 +74,7 @@
 					</tr>
 					<tr>
 						<th>服务器数据库</th>
-						<td>MySQL <!--{eval echo helper_dbtool::dbversion();}-->，{$_G['mysql_driver']}</td>
+						<td>MySQL <!--{eval echo helper_dbtool::dbversion();}-->，{$_G['mysql_driver']} ，引擎：<!--{if $_G['config']['db']['common']['engine']}-->$_G['config']['db']['common']['engine']<!--{else}-->myisam<!--{/if}--> ，字符集：{$_G['config']['db'][1]['dbcharset']}</td>
 					</tr>
 					<tr>
 						<th>域名</th>

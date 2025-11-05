@@ -48,7 +48,7 @@ function runquery($sql) {
 function createtable($sql, $dbcharset) {
     $type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
     $defaultengine = strtolower(getglobal('config/db/common/engine')) !== 'innodb' ? 'MyISAM' : 'InnoDB';
-    $type = in_array($type, ['MYISAM', 'HEAP', 'MEMORY']) ? $type : $defaultengine;
+    $type = in_array($type, ['INNODB', 'MYISAM', 'HEAP', 'MEMORY']) ? $type : $defaultengine;
     return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) . " ENGINE=$type DEFAULT CHARSET=".$dbcharset . ($dbcharset == 'utf8mb4' ? ' COLLATE=utf8mb4_unicode_ci' : '');
 }
 

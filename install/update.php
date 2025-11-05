@@ -156,12 +156,8 @@ if ($_GET['step'] == 'start') {
         preg_match("/(CREATE TABLE .+?)\s*(ENGINE|TYPE)\s*=\s*(\w+)/s", $newsqls[$i], $maths);
 
         $maths[3] = strtoupper($maths[3]);
-        if ($maths[3] == 'MEMORY' || $maths[3] == 'HEAP') {
-            $type = " ENGINE=MEMORY" . (empty($config['dbcharset']) ? '' : " DEFAULT CHARSET=$config[dbcharset]");
-        } else {
-            $type = " ENGINE=MYISAM" . (empty($config['dbcharset']) ? '' : " DEFAULT CHARSET=$config[dbcharset]");
-        }
-        $usql = $maths[1] . $type;
+        $type = in_array($maths[3], array('INNODB', 'MYISAM', 'HEAP', 'MEMORY')) ? $maths[3] : 'INNODB';
+        $usql = $maths[1] . " ENGINE=" .$type. (empty($config['dbcharset']) ? '' : " DEFAULT CHARSET=$config[dbcharset]");
 
         $usql = str_replace("CREATE TABLE IF NOT EXISTS dzz_", 'CREATE TABLE IF NOT EXISTS ' . $config['tablepre'], $usql);
         $usql = str_replace("CREATE TABLE IF NOT EXISTS `dzz_", 'CREATE TABLE IF NOT EXISTS `' . $config['tablepre'], $usql);
@@ -754,10 +750,9 @@ function dir_clear($dir) {
 }
 
 function create_table($sql, $dbcharset) {
-    $type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
-    $type = in_array($type, array('MYISAM', 'HEAP', 'MEMORY')) ? $type : 'MYISAM';
-    return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) .
-        (" ENGINE=$type DEFAULT CHARSET=" . $dbcharset);
+	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
+	$type = in_array($type, array('INNODB', 'MYISAM', 'HEAP', 'MEMORY')) ? $type : 'INNODB';
+	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql). " ENGINE=$type DEFAULT CHARSET=".$dbver.($dbver === 'utf8mb4' ? " COLLATE=utf8mb4_unicode_ci" : "");
 }
 
 ?>

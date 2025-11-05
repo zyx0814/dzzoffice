@@ -167,8 +167,7 @@ class db_driver_mysqli {
     }
 
     function num_rows($query) {
-        $query = $query ? $query->num_rows : 0;
-        return $query;
+        return $query ? $query->num_rows : 0;
     }
 
     function num_fields($query) {
@@ -184,8 +183,7 @@ class db_driver_mysqli {
     }
 
     function fetch_row($query) {
-        $query = $query ? $query->fetch_row() : null;
-        return $query;
+        return $query ? $query->fetch_row() : null;
     }
 
     function fetch_fields($query) {

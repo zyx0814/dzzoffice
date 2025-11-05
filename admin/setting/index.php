@@ -42,6 +42,8 @@ if (!submitcheck('settingsubmit')) {
             $defaultdepartment = lang('no_join_agency_department');
             $setting['defaultdepartment'] = 'other';
         }
+        $setting['sitebeian'] = dhtmlspecialchars($setting['sitebeian']);
+
         $applist = DB::fetch_all("select appname,identifier from %t where isshow>0 and `available`>0 and app_path='dzz' ORDER BY disp", array('app_market'));
 
         //$orgtree=getDepartmentOption(0);

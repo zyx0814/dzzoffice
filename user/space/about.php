@@ -41,7 +41,7 @@ if ($_G['language'] === 'zh-en' && isset($about['name_zh'])) {
     } elseif (isset($about['name_en'])) {
         $about['name'] = $about['name_en'];
     } else {
-        $about['name'] = 'DzzOffice';
+        $about['name'] = $_G['setting']['sitename'] ?? 'DzzOffice';
     }
 }
 $version = 'V' . CORE_VERSION;
