@@ -23,7 +23,7 @@ $_config = array();
 $_config['db'][1]['dbhost']  		= 'localhost';//支持三种直接加端口如：127.0.0.1:3306或使用UNix socket 如：/tmp/mysql.sock
 $_config['db'][1]['dbuser']  		= 'root';
 $_config['db'][1]['dbpw'] 	 		= 'root';
-$_config['db'][1]['dbcharset'] 		= 'utf8';
+$_config['db'][1]['dbcharset'] 		= 'utf8mb4';
 $_config['db'][1]['pconnect'] 		= 0;
 $_config['db'][1]['dbname']  		= 'dzzoffice';
 $_config['db'][1]['tablepre'] 		= 'dzz_';
@@ -46,7 +46,8 @@ $_config['db'][1]['unix_socket'] = '';//使用此方式连接时 dbhost设置为
  *
  */
 $_config['db']['1']['slave'] = array();
-
+//数据库驱动
+$_config['db']['driver'] = 'mysqli';
 //启用从服务器的开关
 $_config['db']['slave'] = false;
 /**
@@ -78,8 +79,8 @@ $_config['db']['common']['slave_except_table'] = '';
 /*
  * 数据库引擎，根据自己的数据库引擎进行设置，V2.4.0之后默认为innodb，之前为myisam
  * 对于从低版本升级到V2.4.0及以上，并且没有转换数据库引擎的用户，在此设置为myisam
- * $_config['db']['common']['engine'] = 'innodb';
  */
+$_config['db']['common']['engine'] = 'innodb';
 
 /**
  * 内存服务器优化设置

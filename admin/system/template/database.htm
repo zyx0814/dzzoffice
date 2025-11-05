@@ -18,6 +18,9 @@
 					<li class="nav-item">
 						<a class="nav-link <!--{if $operation=='db'}-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=db">{lang database_db_switch}</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link <!--{if $operation=='utf8mb4'}-->active<!--{/if}-->" hidefocus="true" href="{MOD_URL}&op=database&operation=utf8mb4">{lang database_db_utf8mb4}</a>
+					</li>
 				</ul>
 			</div>
 		</div>
@@ -338,6 +341,89 @@
 						</ul>
 					</div>
 				</div>
+				<!--{elseif $operation=='utf8mb4'}-->
+				<form id="cpform" action="{MOD_URL}&op=database&operation=utf8mb4" method="post" name="cpform">
+					<input type="hidden" value="{FORMHASH}" name="formhash">
+					<input type="hidden" value="true" name="utf8mb4submit">
+					<!--{if $_config['db']['common']['engine'] !== 'innodb'}-->
+					<div class="alert alert-warning">
+						请注意当前配置文件中的数据库引擎不是InnoDB，请先修改配置文件(/config/config.php)，新增或修改{eval echo '$_config["db"]["common"]["engine"]';}为<code>innodb</code>。
+					</div>
+					<!--{/if}-->
+					<!--{if $_config['db']['1']['dbcharset'] !== 'utf8mb4'}-->
+					<div class="alert alert-warning">
+						请注意当前配置文件中的字符集校对不是utf8mb4，请先修改配置文件(/config/config.php)，修改{eval echo '$_config["db"]["1"]["dbcharset"]';}为<code>utf8mb4</code>。
+					</div>
+					<!--{/if}-->
+					<div class="alert alert-info">
+						<strong>数据库字符集升级说明</strong>
+						<p>为提升系统对表情符号、生僻字等特殊内容的支持能力，现提供 <strong>"InnoDB + utf8mb4"</strong> 数据库字符集升级选项。若数据量较大（如超过 1GB / 含百万级数据表），推荐优先通过数据库工具手动升级，规避超时风险。</p>
+						
+						<strong>升级优势：</strong>
+						<ul>
+							<li><strong>完整字符支持</strong>：utf8mb4 是 MySQL 的完整 UTF-8 实现，可存储 😊🎉 等表情及生僻字，解决原字符集存储异常问题。</li>
+							<li><strong>引擎性能优化</strong>：InnoDB 支持事务、行级锁，相比原引擎（MyISAM）大幅提升并发操作稳定性，减少数据丢失风险。</li>
+							<li><strong>标准兼容</strong>：符合现代 Web 应用的字符编码标准，后续集成插件、扩展功能时兼容性更强。</li>
+						</ul>
+						
+						<strong>注意事项：</strong>
+						<ul class="mb-0">
+							<li><strong>备份要求</strong>：升级前请务必备份所有文件和数据库数据。</li>
+							<li><strong>时间消耗</strong>：升级过程根据数据量大小可能需要数分钟，请耐心等待</li>
+							<li><strong>插件兼容</strong>：升级后部分插件可能不兼容（如报错），可联系插件作者获取适配版本</li>
+							<li><strong>不可逆性</strong>：字符集与引擎升级后无法直接回退，需通过升级前的备份恢复原始状态，请务必确认备份完整后再操作。</li>
+							<li><strong>超时风险</strong>：若通过本功能进行升级，可能触发两类超时：
+								<ul class="mb-0">
+									<li>1.PHP 脚本超时：默认 30-60 秒，大数据表（如百万级数据）执行引擎 / 字符集转换时易超时，中断升级。</li>
+									<li>2.Nginx 连接超时：默认 60 秒，长时间无响应会断开连接，导致前端报错但后台仍可能运行，引发数据不一致。</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+					 <!--{if $issubmit}-->
+					 <div class="row mb-3">
+						<div class="col-md-4">
+							<div class="alert alert-info">
+							<strong>总表数:</strong> {$count}
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="alert alert-success">
+							<strong>成功处理:</strong> {$success_count}
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="alert alert-danger">
+							<strong>处理失败:</strong> {$error_count}
+							</div>
+						</div>
+					</div>
+					<!--{if $error_count > 0}-->
+					<div class="alert alert-danger">
+						<strong>注意：</strong>存在错误或不支持的表，请检查后手动处理。
+					</div>
+					<!--{/if}-->
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover align-middle">
+							<thead class="thead-dark">
+								<tr>
+									<th>表名</th>
+									<th>当前引擎</th>
+									<th>字符集校对</th>
+									<th>引擎状态</th>
+									<th>字符集状态</th>
+								</tr>
+							</thead>
+							<tbody>
+								$html
+							</tbody>
+						</table>
+					</div>
+					<!--{/if}-->
+					<dl class="mb-3 d-grid">
+						<button type="submit" class="btn btn-primary btn-round bodyloading">开始升级</button>
+					</dl>
+				</form>
 				<!--{/if}-->
 			</div>
 		</div>

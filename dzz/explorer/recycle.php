@@ -16,7 +16,7 @@ if ($do == 'filelist') {
     $start = ($page - 1) * $limit;//开始条数
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : ($usersettings['recycledisp'] ? intval($usersettings['recycledisp']) : 4);
     $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
-    $asc = (isset($_GET['asc'])) ? intval($_GET['asc']) : 1;
+    $asc = (isset($_GET['asc'])) ? intval($_GET['asc']) : 0;
     $order = $asc > 0 ? 'ASC' : "DESC";
     switch ($disp) {
         case 0:

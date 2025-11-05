@@ -416,12 +416,76 @@ if ($operation == 'export') {
     $is_pdo_supported = class_exists('PDO');
     include template('database');
     exit();
+} elseif ($operation == 'utf8mb4') {
+    $navtitle = lang('database_db_utf8mb4') . ' - ' . lang('appname');
+    $html = '';
+    $success_count = 0;
+    $error_count = 0;
+    $issubmit = false;
+    if (submitcheck('utf8mb4submit')) {
+        $issubmit = true;
+        $db_result = DB::fetch_all('SHOW TABLE STATUS WHERE `Name` LIKE \''.$tablepre.'%\';');
+        foreach ($db_result as $tb) {
+            $html .= '<tr>';
+            $html .= '<td>'.$tb['Name'].'</td>';
+            $html .= '<td>'.$tb['Engine'].'</td>';
+            $html .= '<td>'.$tb['Collation'].'</td>';
+            $table = str_replace('dzz_', $tablepre, $tb['Name']);
+            if ($tb['Engine'] != 'InnoDB') {
+                $result = DB::query("ALTER TABLE $table ENGINE=InnoDB;", 'SILENT');
+                if ($result) {
+                    $html .= '<td><span class="text-success">已成功转换为 InnoDB 引擎</span></td>';
+                    $success_count++;
+                } else {
+                    $html .= '<td><span class="text-danger">转换到 InnoDB 失败，请人工处理！</span></td>';
+                    $error_count++;
+                }
+            } else {
+                $html .= '<td><span class="text-info">已是 InnoDB 引擎，无需转换</span></td>';
+            }
+            if ($tb['Collation'] != 'utf8mb4_unicode_ci') {
+                // 对文字排序进行过滤，避免不合法文字排序进入升级流程。
+                // 从 MySQL 8.0.28 开始, utf8_general_ci 更名为 utf8mb3_general_ci
+                if (!in_array($tb['Collation'], array('utf8mb4_unicode_ci', 'utf8_general_ci', 'utf8mb3_general_ci', 'gbk_chinese_ci', 'big5_chinese_ci', 'utf8mb4_general_ci'))) {
+                    $html .= '<td><span class="text-danger">字符集不受支持，请人工处理！</span></td>';
+                    $error_count++;
+                } else {
+                    $result = DB::query("ALTER TABLE $table CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+                    if($result) {
+                        $html .= '<td><span class="text-warning">已升级为 utf8mb4 字符集</span></td>';
+                        $success_count++;
+                    } else {
+                        $html .= '<td><span class="text-danger">字符集升级失败</span></td>';
+                        $error_count++;
+                    }
+                }
+            } else {
+                $html .= '<td><span class="text-success">已是 utf8mb4 字符集，无需升级</span></td>';
+            }
+            $html .= '</tr>';
+        }
+        $count = count($db_result);
+    }
+    include template('database');
+    exit();
 }
 
+function get_convert_sql($type, $table) {
+	global $_G;
+	$table = str_replace('dzz_', $_G['config']['db'][1]['tablepre'], $table);
+	if ($type == 'innodb') {
+		$query = "ALTER TABLE $table ENGINE=InnoDB;";
+	} else if ($type == 'utf8mb4') {
+		$query = "ALTER TABLE $table CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+	} else if ($type == 'check') {
+		$query = "SHOW TABLE STATUS WHERE `Name` = '$table';";
+	}
+	return $query;
+}
 function createtable($sql, $dbcharset) {
     $type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
     $defaultengine = strtolower(getglobal('config/db/common/engine')) !== 'innodb' ? 'MyISAM' : 'InnoDB';
-    $type = in_array($type, ['MYISAM', 'HEAP', 'MEMORY']) ? $type : $defaultengine;
+    $type = in_array($type, ['INNODB', 'MYISAM', 'HEAP', 'MEMORY']) ? $type : $defaultengine;
     return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) . " ENGINE=$type DEFAULT CHARSET=".$dbcharset . ($dbcharset == 'utf8mb4' ? ' COLLATE=utf8mb4_unicode_ci' : '');
 }
 

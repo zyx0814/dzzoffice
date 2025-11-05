@@ -8,7 +8,7 @@ CREATE TABLE `dzz_admincp_session` (
   `errorcount` tinyint(1) NOT NULL DEFAULT '0' COMMENT '错误次数',
   `storage` mediumtext NOT NULL COMMENT '存储数据',
   PRIMARY KEY (`uid`,`panel`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='管理员会话表';
+) ENGINE=InnoDB COMMENT='管理员会话表';
 
 DROP TABLE IF EXISTS `dzz_app_market`;
 CREATE TABLE `dzz_app_market` (
@@ -47,7 +47,7 @@ CREATE TABLE `dzz_app_market` (
   UNIQUE KEY `appurl` (`appurl`),
   KEY `available` (`available`),
   KEY `identifier` (`identifier`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='应用市场表';
+) ENGINE=InnoDB COMMENT='应用市场表';
 
 DROP TABLE IF EXISTS `dzz_app_open`;
 CREATE TABLE `dzz_app_open` (
@@ -59,7 +59,7 @@ CREATE TABLE `dzz_app_open` (
   PRIMARY KEY (`extid`),
   KEY `appid` (`appid`),
   KEY `ext` (`ext`,`disp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='应用打开方式表';
+) ENGINE=InnoDB COMMENT='应用打开方式表';
 
 DROP TABLE IF EXISTS `dzz_app_open_default`;
 CREATE TABLE `dzz_app_open_default` (
@@ -68,7 +68,7 @@ CREATE TABLE `dzz_app_open_default` (
   `extid` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '扩展ID',
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   UNIQUE KEY `defaultext` (`ext`,`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户默认应用打开方式表';
+) ENGINE=InnoDB COMMENT='用户默认应用打开方式表';
 
 DROP TABLE IF EXISTS `dzz_app_organization`;
 CREATE TABLE `dzz_app_organization` (
@@ -77,7 +77,7 @@ CREATE TABLE `dzz_app_organization` (
   `dateline` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
   UNIQUE KEY `orgid` (`appid`,`orgid`),
   KEY `appid` (`appid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='应用与组织关系表';
+) ENGINE=InnoDB COMMENT='应用与组织关系表';
 
 DROP TABLE IF EXISTS `dzz_app_pic`;
 CREATE TABLE `dzz_app_pic` (
@@ -90,7 +90,7 @@ CREATE TABLE `dzz_app_pic` (
   PRIMARY KEY (`picid`),
   KEY `uid` (`uid`),
   KEY `idtype` (`appid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='应用图片表';
+) ENGINE=InnoDB COMMENT='应用图片表';
 
 DROP TABLE IF EXISTS `dzz_app_relative`;
 CREATE TABLE `dzz_app_relative` (
@@ -99,7 +99,7 @@ CREATE TABLE `dzz_app_relative` (
   `tagid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '标签ID',
   PRIMARY KEY (`rid`),
   UNIQUE KEY `appid` (`appid`,`tagid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='应用关联表';
+) ENGINE=InnoDB COMMENT='应用关联表';
 
 DROP TABLE IF EXISTS `dzz_app_tag`;
 CREATE TABLE `dzz_app_tag` (
@@ -110,7 +110,7 @@ CREATE TABLE `dzz_app_tag` (
   PRIMARY KEY (`tagid`),
   KEY `appid` (`hot`),
   KEY `classid` (`tagname`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='应用标签表';
+) ENGINE=InnoDB COMMENT='应用标签表';
 
 DROP TABLE IF EXISTS `dzz_app_user`;
 CREATE TABLE `dzz_app_user` (
@@ -124,7 +124,7 @@ CREATE TABLE `dzz_app_user` (
   UNIQUE KEY `appuser` (`appid`,`uid`),
   KEY `appid` (`appid`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='应用用户表';
+) ENGINE=InnoDB COMMENT='应用用户表';
 
 DROP TABLE IF EXISTS `dzz_attach`;
 CREATE TABLE `dzz_attach` (
@@ -146,7 +146,7 @@ CREATE TABLE `dzz_attach` (
   KEY `tid` (`fid`),
   KEY `area` (`area`),
   KEY `areaid` (`areaid`,`area`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='附件表';
+) ENGINE=InnoDB COMMENT='附件表';
 
 DROP TABLE IF EXISTS `dzz_attachment`;
 CREATE TABLE `dzz_attachment` (
@@ -166,7 +166,7 @@ CREATE TABLE `dzz_attachment` (
   KEY `md5` (`md5`,`filesize`),
   KEY `filetype` (`filetype`),
   KEY `unrun` (`unrun`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='系统附件表';
+) ENGINE=InnoDB COMMENT='系统附件表';
 
 DROP TABLE IF EXISTS `dzz_cache`;
 CREATE TABLE `dzz_cache` (
@@ -174,7 +174,7 @@ CREATE TABLE `dzz_cache` (
   `cachevalue` mediumblob NOT NULL COMMENT '缓存值',
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`cachekey`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='缓存表';
+) ENGINE=InnoDB COMMENT='缓存表';
 
 DROP TABLE IF EXISTS `dzz_collect`;
 CREATE TABLE `dzz_collect` (
@@ -185,7 +185,7 @@ CREATE TABLE `dzz_collect` (
   `copys` int(10) unsigned NOT NULL COMMENT '副本数',
   `type` varchar(30) NOT NULL DEFAULT '' COMMENT '类型',
   PRIMARY KEY (`cid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='收藏表';
+) ENGINE=InnoDB COMMENT='收藏表';
 
 DROP TABLE IF EXISTS `dzz_comment`;
 CREATE TABLE `dzz_comment` (
@@ -209,7 +209,7 @@ CREATE TABLE `dzz_comment` (
   PRIMARY KEY (`cid`),
   KEY `authorid` (`authorid`,`idtype`),
   KEY `id` (`id`,`idtype`,`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='评论表';
+) ENGINE=InnoDB COMMENT='评论表';
 
 DROP TABLE IF EXISTS `dzz_comment_at`;
 CREATE TABLE `dzz_comment_at` (
@@ -218,7 +218,7 @@ CREATE TABLE `dzz_comment_at` (
   `dateline` int(10) unsigned NOT NULL COMMENT '创建时间',
   UNIQUE KEY `pid_uid` (`cid`,`uid`),
   KEY `dateline` (`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='评论@表';
+) ENGINE=InnoDB COMMENT='评论@表';
 
 DROP TABLE IF EXISTS `dzz_comment_attach`;
 CREATE TABLE `dzz_comment_attach` (
@@ -235,7 +235,7 @@ CREATE TABLE `dzz_comment_attach` (
   PRIMARY KEY (`qid`),
   KEY `dateline` (`dateline`),
   KEY `tid` (`cid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='评论附件表';
+) ENGINE=InnoDB COMMENT='评论附件表';
 
 DROP TABLE IF EXISTS `dzz_connect`;
 CREATE TABLE `dzz_connect` (
@@ -251,7 +251,7 @@ CREATE TABLE `dzz_connect` (
   `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '显示顺序',
   UNIQUE KEY `bz` (`bz`),
   KEY `disp` (`disp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='连接表';
+) ENGINE=InnoDB COMMENT='连接表';
 
 DROP TABLE IF EXISTS `dzz_connect_disk`;
 CREATE TABLE `dzz_connect_disk` (
@@ -265,7 +265,7 @@ CREATE TABLE `dzz_connect_disk` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `charset` varchar(30) NOT NULL DEFAULT 'GBK' COMMENT '编码',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='磁盘连接表';
+) ENGINE=InnoDB COMMENT='磁盘连接表';
 
 DROP TABLE IF EXISTS `dzz_connect_ftp`;
 CREATE TABLE `dzz_connect_ftp` (
@@ -285,7 +285,7 @@ CREATE TABLE `dzz_connect_ftp` (
   `on` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   `charset` varchar(30) NOT NULL DEFAULT 'GBK' COMMENT '编码',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='FTP连接表';
+) ENGINE=InnoDB COMMENT='FTP连接表';
 
 DROP TABLE IF EXISTS `dzz_connect_onedrive`;
 CREATE TABLE `dzz_connect_onedrive` (
@@ -304,7 +304,7 @@ CREATE TABLE `dzz_connect_onedrive` (
   `scope` varchar(255) NOT NULL COMMENT '权限范围',
   PRIMARY KEY (`id`),
   UNIQUE KEY `cuid` (`cuid`,`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='OneDrive连接表';
+) ENGINE=InnoDB COMMENT='OneDrive连接表';
 
 DROP TABLE IF EXISTS `dzz_connect_pan`;
 CREATE TABLE `dzz_connect_pan` (
@@ -326,7 +326,7 @@ CREATE TABLE `dzz_connect_pan` (
   `session_secret` varchar(255) NOT NULL COMMENT '会话密钥',
   PRIMARY KEY (`id`),
   UNIQUE KEY `cuid` (`cuid`,`uid`,`bz`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘连接表';
+) ENGINE=InnoDB COMMENT='网盘连接表';
 
 DROP TABLE IF EXISTS `dzz_connect_storage`;
 CREATE TABLE `dzz_connect_storage` (
@@ -341,7 +341,7 @@ CREATE TABLE `dzz_connect_storage` (
   `bz` varchar(30) NOT NULL DEFAULT '' COMMENT '云存储标识',
   `hostname` varchar(255) NOT NULL DEFAULT '' COMMENT '主机名',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='存储连接表';
+) ENGINE=InnoDB COMMENT='存储连接表';
 
 DROP TABLE IF EXISTS `dzz_cron`;
 CREATE TABLE `dzz_cron` (
@@ -358,7 +358,7 @@ CREATE TABLE `dzz_cron` (
   `minute` char(36) NOT NULL DEFAULT '' COMMENT '几分运行',
   PRIMARY KEY (`cronid`),
   KEY `nextrun` (`available`,`nextrun`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='计划任务表';
+) ENGINE=InnoDB COMMENT='计划任务表';
 
 DROP TABLE IF EXISTS `dzz_district`;
 CREATE TABLE `dzz_district` (
@@ -370,7 +370,7 @@ CREATE TABLE `dzz_district` (
   `displayorder` smallint(6) NOT NULL DEFAULT '0' COMMENT '显示顺序',
   PRIMARY KEY (`id`),
   KEY `upid` (`upid`,`displayorder`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='地区表';
+) ENGINE=InnoDB COMMENT='地区表';
 
 DROP TABLE IF EXISTS `dzz_document`;
 CREATE TABLE `dzz_document` (
@@ -390,7 +390,7 @@ CREATE TABLE `dzz_document` (
   KEY `dateline` (`dateline`),
   KEY `disp` (`disp`),
   KEY `fid` (`fid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文档表';
+) ENGINE=InnoDB COMMENT='文档表';
 
 DROP TABLE IF EXISTS `dzz_document_event`;
 CREATE TABLE `dzz_document_event` (
@@ -402,7 +402,7 @@ CREATE TABLE `dzz_document_event` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`eid`),
   KEY `did` (`did`,`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文档事件表';
+) ENGINE=InnoDB COMMENT='文档事件表';
 
 DROP TABLE IF EXISTS `dzz_document_reversion`;
 CREATE TABLE `dzz_document_reversion` (
@@ -419,7 +419,7 @@ CREATE TABLE `dzz_document_reversion` (
   KEY `qid` (`did`),
   KEY `uid` (`uid`),
   KEY `username` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文档版本表';
+) ENGINE=InnoDB COMMENT='文档版本表';
 
 DROP TABLE IF EXISTS `dzz_failedlogin`;
 CREATE TABLE `dzz_failedlogin` (
@@ -428,7 +428,7 @@ CREATE TABLE `dzz_failedlogin` (
   `count` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '登录失败次数',
   `lastupdate` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后更新时间',
   PRIMARY KEY (`ip`,`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='登录失败表';
+) ENGINE=InnoDB COMMENT='登录失败表';
 
 DROP TABLE IF EXISTS `dzz_folder`;
 CREATE TABLE `dzz_folder` (
@@ -452,7 +452,7 @@ CREATE TABLE `dzz_folder` (
   `deldateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
   PRIMARY KEY (`fid`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文件夹表';
+) ENGINE=InnoDB COMMENT='文件夹表';
 
 DROP TABLE IF EXISTS `dzz_folder_attr`;
 CREATE TABLE `dzz_folder_attr` (
@@ -463,7 +463,7 @@ CREATE TABLE `dzz_folder_attr` (
   PRIMARY KEY (`id`),
   KEY `fid` (`fid`),
   KEY `skey` (`skey`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文件夹属性表';
+) ENGINE=InnoDB COMMENT='文件夹属性表';
 
 DROP TABLE IF EXISTS `dzz_folder_default`;
 CREATE TABLE `dzz_folder_default` (
@@ -478,7 +478,7 @@ CREATE TABLE `dzz_folder_default` (
   `default` varchar(255) NOT NULL DEFAULT '' COMMENT '目录默认值',
   PRIMARY KEY (`fid`),
   UNIQUE KEY `type` (`flag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文件夹类型表';
+) ENGINE=InnoDB COMMENT='文件夹类型表';
 
 DROP TABLE IF EXISTS `dzz_folder_event`;
 CREATE TABLE `dzz_folder_event` (
@@ -493,7 +493,7 @@ CREATE TABLE `dzz_folder_event` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
   PRIMARY KEY (`eid`),
   KEY `fid` (`fid`,`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文件夹事件表';
+) ENGINE=InnoDB COMMENT='文件夹事件表';
 
 DROP TABLE IF EXISTS `dzz_folder_flag`;
 CREATE TABLE `dzz_folder_flag` (
@@ -503,7 +503,7 @@ CREATE TABLE `dzz_folder_flag` (
   `iconview` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '目录默认排列方式：4：列表：1：图标',
   `disp` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '目录默认排序字段：0:name;1:size:2:type:3:dateline',
   PRIMARY KEY (`flag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='目录默认设置';
+) ENGINE=InnoDB COMMENT='目录默认设置';
 
 DROP TABLE IF EXISTS `dzz_folder_perm`;
 CREATE TABLE `dzz_folder_perm` (
@@ -511,7 +511,7 @@ CREATE TABLE `dzz_folder_perm` (
   `permname` varchar(60) NOT NULL DEFAULT '' COMMENT '权限名称',
   `perm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '权限值',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='文件夹权限表';
+) ENGINE=InnoDB COMMENT='文件夹权限表';
 
 DROP TABLE IF EXISTS `dzz_folder_sub`;
 CREATE TABLE `dzz_folder_sub` (
@@ -525,7 +525,7 @@ CREATE TABLE `dzz_folder_sub` (
   `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '排序',
   PRIMARY KEY (`subid`),
   KEY `pflag` (`pflag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='子文件夹表';
+) ENGINE=InnoDB COMMENT='子文件夹表';
 
 DROP TABLE IF EXISTS `dzz_hooks`;
 CREATE TABLE `dzz_hooks` (
@@ -541,7 +541,7 @@ CREATE TABLE `dzz_hooks` (
   PRIMARY KEY (`id`),
   KEY `app_market_id` (`name`),
   KEY `priority` (`priority`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='钩子表';
+) ENGINE=InnoDB COMMENT='钩子表';
 
 DROP TABLE IF EXISTS `dzz_icon`;
 CREATE TABLE `dzz_icon` (
@@ -561,7 +561,7 @@ CREATE TABLE `dzz_icon` (
   KEY `uid` (`uid`),
   KEY `copys` (`copys`),
   KEY `dateline` (`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='图标表';
+) ENGINE=InnoDB COMMENT='图标表';
 
 DROP TABLE IF EXISTS `dzz_iconview`;
 CREATE TABLE `dzz_iconview` (
@@ -580,7 +580,7 @@ CREATE TABLE `dzz_iconview` (
   `cssname` varchar(60) NOT NULL COMMENT 'css名称',
   PRIMARY KEY (`id`),
   KEY `avaliable` (`avaliable`,`disp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='图标视图表';
+) ENGINE=InnoDB COMMENT='图标视图表';
 
 DROP TABLE IF EXISTS `dzz_imagetype`;
 CREATE TABLE `dzz_imagetype` (
@@ -591,7 +591,7 @@ CREATE TABLE `dzz_imagetype` (
   `displayorder` tinyint(3) NOT NULL DEFAULT '0' COMMENT '图片类型显示顺序',
   `directory` char(100) NOT NULL COMMENT '图片类型目录',
   PRIMARY KEY (`typeid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='图片类型表';
+) ENGINE=InnoDB COMMENT='图片类型表';
 
 DROP TABLE IF EXISTS `dzz_local_router`;
 CREATE TABLE `dzz_local_router` (
@@ -604,7 +604,7 @@ CREATE TABLE `dzz_local_router` (
   `priority` smallint(6) unsigned NOT NULL DEFAULT '100' COMMENT '优先级',
   PRIMARY KEY (`routerid`),
   KEY `priority` (`priority`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='本地路由表';
+) ENGINE=InnoDB COMMENT='本地路由表';
 
 DROP TABLE IF EXISTS `dzz_local_storage`;
 CREATE TABLE `dzz_local_storage` (
@@ -621,7 +621,7 @@ CREATE TABLE `dzz_local_storage` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`remoteid`),
   KEY `disp` (`disp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='本地存储表';
+) ENGINE=InnoDB COMMENT='本地存储表';
 
 DROP TABLE IF EXISTS `dzz_mailcron`;
 CREATE TABLE `dzz_mailcron` (
@@ -631,7 +631,7 @@ CREATE TABLE `dzz_mailcron` (
   `sendtime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '发送时间',
   PRIMARY KEY (`cid`),
   KEY `sendtime` (`sendtime`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='邮件计划任务表';
+) ENGINE=InnoDB COMMENT='邮件计划任务表';
 
 DROP TABLE IF EXISTS `dzz_mailqueue`;
 CREATE TABLE `dzz_mailqueue` (
@@ -642,7 +642,7 @@ CREATE TABLE `dzz_mailqueue` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '发送时间',
   PRIMARY KEY (`qid`),
   KEY `mcid` (`cid`,`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='邮件发送队列表';
+) ENGINE=InnoDB COMMENT='邮件发送队列表';
 
 DROP TABLE IF EXISTS `dzz_notification`;
 CREATE TABLE `dzz_notification` (
@@ -667,7 +667,7 @@ CREATE TABLE `dzz_notification` (
   KEY `category` (`uid`,`dateline`),
   KEY `by_type` (`uid`,`type`,`dateline`),
   KEY `from_id` (`from_id`,`from_idtype`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='通知表';
+) ENGINE=InnoDB COMMENT='通知表';
 
 DROP TABLE IF EXISTS `dzz_onlinetime`;
 CREATE TABLE `dzz_onlinetime` (
@@ -676,7 +676,7 @@ CREATE TABLE `dzz_onlinetime` (
   `total` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '总在线时间',
   `lastupdate` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后更新时间',
   PRIMARY KEY (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='在线时间表';
+) ENGINE=InnoDB COMMENT='在线时间表';
 
 DROP TABLE IF EXISTS `dzz_organization`;
 CREATE TABLE `dzz_organization` (
@@ -706,7 +706,7 @@ CREATE TABLE `dzz_organization` (
   KEY `disp` (`disp`),
   KEY `pathkey` (`pathkey`),
   KEY `dateline` (`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='组织表';
+) ENGINE=InnoDB COMMENT='组织表';
 
 DROP TABLE IF EXISTS `dzz_organization_admin`;
 CREATE TABLE `dzz_organization_admin` (
@@ -718,7 +718,7 @@ CREATE TABLE `dzz_organization_admin` (
   `admintype` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0管理员，1群组创始人',
   PRIMARY KEY (`id`),
   UNIQUE KEY `orgid` (`orgid`,`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='组织管理员表';
+) ENGINE=InnoDB COMMENT='组织管理员表';
 
 DROP TABLE IF EXISTS `dzz_organization_job`;
 CREATE TABLE `dzz_organization_job` (
@@ -729,7 +729,7 @@ CREATE TABLE `dzz_organization_job` (
   `opuid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '操作人UID',
   PRIMARY KEY (`jobid`),
   KEY `orgid` (`orgid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='组织职位表';
+) ENGINE=InnoDB COMMENT='组织职位表';
 
 DROP TABLE IF EXISTS `dzz_organization_upjob`;
 CREATE TABLE `dzz_organization_upjob` (
@@ -740,7 +740,7 @@ CREATE TABLE `dzz_organization_upjob` (
   `opuid` int(10) NOT NULL DEFAULT '0' COMMENT '操作人UID',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='组织用户职位表';
+) ENGINE=InnoDB COMMENT='组织用户职位表';
 
 DROP TABLE IF EXISTS `dzz_organization_user`;
 CREATE TABLE `dzz_organization_user` (
@@ -749,7 +749,7 @@ CREATE TABLE `dzz_organization_user` (
   `jobid` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '职位ID',
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   UNIQUE KEY `orgid` (`orgid`,`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='组织用户表';
+) ENGINE=InnoDB COMMENT='组织用户表';
 
 DROP TABLE IF EXISTS `dzz_process`;
 CREATE TABLE `dzz_process` (
@@ -758,7 +758,7 @@ CREATE TABLE `dzz_process` (
   `extra` int(10) DEFAULT NULL COMMENT '附加信息',
   PRIMARY KEY (`processid`),
   KEY `expiry` (`expiry`)
-) ENGINE=MEMORY DEFAULT CHARSET=utf8 COMMENT='进程表';
+) ENGINE=InnoDB COMMENT='进程表';
 
 DROP TABLE IF EXISTS `dzz_regip`;
 CREATE TABLE `dzz_regip` (
@@ -766,7 +766,7 @@ CREATE TABLE `dzz_regip` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0',
   `count` smallint(6) NOT NULL DEFAULT '0',
   KEY ip (ip)
-) ENGINE=MEMORY DEFAULT CHARSET=utf8 COMMENT='注册IP表';
+) ENGINE=InnoDB COMMENT='注册IP表';
 
 DROP TABLE IF EXISTS `dzz_resources`;
 CREATE TABLE `dzz_resources` (
@@ -791,7 +791,7 @@ CREATE TABLE `dzz_resources` (
   KEY `pfid` (`pfid`),
   KEY `uid` (`uid`),
   KEY `isdelete` (`isdelete`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件信息表';
+) ENGINE=InnoDB COMMENT='网盘文件信息表';
 
 DROP TABLE IF EXISTS `dzz_resources_attr`;
 CREATE TABLE `dzz_resources_attr` (
@@ -802,7 +802,7 @@ CREATE TABLE `dzz_resources_attr` (
   `vid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '属性值id',
   PRIMARY KEY (`id`),
   KEY `rid_skey_vid` (`rid`,`skey`,`vid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件属性表';
+) ENGINE=InnoDB COMMENT='网盘文件属性表';
 
 DROP TABLE IF EXISTS `dzz_resources_cat`;
 CREATE TABLE `dzz_resources_cat` (
@@ -815,7 +815,7 @@ CREATE TABLE `dzz_resources_cat` (
   `default` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1,系統默認；0，非系统默认',
   `iconview` tinyint(1) NOT NULL DEFAULT '1' COMMENT '图标显示',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件分类表';
+) ENGINE=InnoDB COMMENT='网盘文件分类表';
 
 DROP TABLE IF EXISTS `dzz_resources_clipboard`;
 CREATE TABLE `dzz_resources_clipboard` (
@@ -828,7 +828,7 @@ CREATE TABLE `dzz_resources_clipboard` (
   `copytype` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '1复制，2粘贴',
   `bz` varchar(10) NOT NULL DEFAULT '' COMMENT 'bz',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件剪贴板表';
+) ENGINE=InnoDB COMMENT='网盘文件剪贴板表';
 
 DROP TABLE IF EXISTS `dzz_resources_collect`;
 CREATE TABLE `dzz_resources_collect` (
@@ -844,7 +844,7 @@ CREATE TABLE `dzz_resources_collect` (
   `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '排序',
   `pfid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父级目录id',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件收藏表';
+) ENGINE=InnoDB COMMENT='网盘文件收藏表';
 
 DROP TABLE IF EXISTS `dzz_resources_event`;
 CREATE TABLE `dzz_resources_event` (
@@ -866,7 +866,7 @@ CREATE TABLE `dzz_resources_event` (
   KEY `pfid` (`pfid`),
   KEY `do` (`do`),
   KEY `dateline` (`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件事件表';
+) ENGINE=InnoDB COMMENT='网盘文件事件表';
 
 DROP TABLE IF EXISTS `dzz_resources_meta`;
 CREATE TABLE `dzz_resources_meta` (
@@ -880,7 +880,7 @@ CREATE TABLE `dzz_resources_meta` (
   UNIQUE KEY `rid_key` (`rid`,`key`(200)),
   KEY `rid` (`rid`),
   KEY `key` (`key`(200))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件扩展表';
+) ENGINE=InnoDB COMMENT='网盘文件扩展表';
 
 DROP TABLE IF EXISTS `dzz_resources_path`;
 CREATE TABLE `dzz_resources_path` (
@@ -888,7 +888,7 @@ CREATE TABLE `dzz_resources_path` (
   `path` varchar(1000) NOT NULL DEFAULT '' COMMENT '路径',
   `pathkey` varchar(255) NOT NULL DEFAULT '' COMMENT '路径层次关系',
   PRIMARY KEY (`fid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件路径表';
+) ENGINE=InnoDB COMMENT='网盘文件路径表';
 
 DROP TABLE IF EXISTS `dzz_resources_permgroup`;
 CREATE TABLE `dzz_resources_permgroup` (
@@ -899,7 +899,7 @@ CREATE TABLE `dzz_resources_permgroup` (
   `default` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否默认',
   `system` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '1系统默认权限组，不允许删除;0用户自定义权限组',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件权限组表';
+) ENGINE=InnoDB COMMENT='网盘文件权限组表';
 
 DROP TABLE IF EXISTS `dzz_resources_recyle`;
 CREATE TABLE `dzz_resources_recyle` (
@@ -917,7 +917,7 @@ CREATE TABLE `dzz_resources_recyle` (
   PRIMARY KEY (`id`),
   KEY `uid` (`uid`),
   KEY `gid` (`gid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件回收站表';
+) ENGINE=InnoDB COMMENT='网盘文件回收站表';
 
 DROP TABLE IF EXISTS `dzz_resources_statis`;
 CREATE TABLE `dzz_resources_statis` (
@@ -936,7 +936,7 @@ CREATE TABLE `dzz_resources_statis` (
   KEY `rid` (`rid`),
   KEY `fid` (`fid`),
   KEY `pfid` (`pfid`,`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件统计表';
+) ENGINE=InnoDB COMMENT='网盘文件统计表';
 
 DROP TABLE IF EXISTS `dzz_resources_tag`;
 CREATE TABLE `dzz_resources_tag` (
@@ -946,7 +946,7 @@ CREATE TABLE `dzz_resources_tag` (
   `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
   `username` varchar(60) NOT NULL DEFAULT '' COMMENT '用户名',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件标签表';
+) ENGINE=InnoDB COMMENT='网盘文件标签表';
 
 DROP TABLE IF EXISTS `dzz_resources_version`;
 CREATE TABLE `dzz_resources_version` (
@@ -962,7 +962,7 @@ CREATE TABLE `dzz_resources_version` (
   `type` char(15) NOT NULL DEFAULT '' COMMENT '类型',
   `dateline` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
   PRIMARY KEY (`vid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网盘文件版本表';
+) ENGINE=InnoDB COMMENT='网盘文件版本表';
 
 DROP TABLE IF EXISTS `dzz_seccheck`;
 CREATE TABLE `dzz_seccheck` (
@@ -975,7 +975,7 @@ CREATE TABLE `dzz_seccheck` (
   KEY dateline (`dateline`),
   KEY succeed (`succeed`),
   KEY verified (`verified`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='安全验证表';
+) ENGINE=InnoDB COMMENT='安全验证表';
 
 DROP TABLE IF EXISTS `dzz_session`;
 CREATE TABLE `dzz_session` (
@@ -990,14 +990,14 @@ CREATE TABLE `dzz_session` (
   `lastolupdate` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '最后更新在线列表时间',
   UNIQUE KEY `sid` (`sid`),
   KEY `uid` (`uid`)
-) ENGINE=MEMORY DEFAULT CHARSET=utf8 COMMENT='在线会话表';
+) ENGINE=InnoDB COMMENT='在线会话表';
 
 DROP TABLE IF EXISTS `dzz_setting`;
 CREATE TABLE `dzz_setting` (
   `skey` varchar(255) NOT NULL DEFAULT '' COMMENT '设置键',
   `svalue` text NOT NULL COMMENT '设置值',
   PRIMARY KEY (`skey`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='系统设置表';
+) ENGINE=InnoDB COMMENT='系统设置表';
 
 DROP TABLE IF EXISTS `dzz_shares`;
 CREATE TABLE `dzz_shares` (
@@ -1023,7 +1023,7 @@ CREATE TABLE `dzz_shares` (
   KEY `gid` (`gid`),
   KEY `uid` (`uid`),
   KEY `pfid` (`pfid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='分享文件表';
+) ENGINE=InnoDB COMMENT='分享文件表';
 
 DROP TABLE IF EXISTS `dzz_shorturl`;
 CREATE TABLE `dzz_shorturl` (
@@ -1031,7 +1031,7 @@ CREATE TABLE `dzz_shorturl` (
   `url` text NOT NULL COMMENT '原始URL',
   `count` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '点击次数',
   PRIMARY KEY (`sid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='短链接表';
+) ENGINE=InnoDB COMMENT='短链接表';
 
 DROP TABLE IF EXISTS `dzz_smiley`;
 CREATE TABLE `dzz_smiley` (
@@ -1044,7 +1044,7 @@ CREATE TABLE `dzz_smiley` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT COMMENT '表情ID',
   PRIMARY KEY (`id`),
   KEY `type` (`type`,`displayorder`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='表情表';
+) ENGINE=InnoDB COMMENT='表情表';
 
 DROP TABLE IF EXISTS `dzz_syscache`;
 CREATE TABLE `dzz_syscache` (
@@ -1053,7 +1053,7 @@ CREATE TABLE `dzz_syscache` (
   `dateline` int(10) unsigned NOT NULL COMMENT '更新时间',
   `data` mediumblob NOT NULL COMMENT '缓存数据',
   PRIMARY KEY (`cname`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='系统缓存表';
+) ENGINE=InnoDB COMMENT='系统缓存表';
 
 DROP TABLE IF EXISTS `dzz_tag`;
 CREATE TABLE `dzz_tag` (
@@ -1064,7 +1064,7 @@ CREATE TABLE `dzz_tag` (
   `idtype` varchar(60) NOT NULL COMMENT '标识类型',
   `hot` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '使用热度',
   PRIMARY KEY (`tid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='标签表';
+) ENGINE=InnoDB COMMENT='标签表';
 
 DROP TABLE IF EXISTS `dzz_thame`;
 CREATE TABLE `dzz_thame` (
@@ -1085,7 +1085,7 @@ CREATE TABLE `dzz_thame` (
   `version` varchar(15) NOT NULL DEFAULT '1.0' COMMENT '版本',
   PRIMARY KEY (`id`),
   KEY `disp` (`disp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='主题表';
+) ENGINE=InnoDB COMMENT='主题表';
 
 DROP TABLE IF EXISTS `dzz_user`;
 CREATE TABLE `dzz_user` (
@@ -1106,7 +1106,7 @@ CREATE TABLE `dzz_user` (
   `adminid` tinyint(1) NOT NULL DEFAULT '0' COMMENT '管理ID',
   `groupid` smallint(6) unsigned NOT NULL DEFAULT '9' COMMENT '用户组ID',
   `language` varchar(12) NOT NULL DEFAULT 'zh-cn' COMMENT '语言',
-  `regip` char(15) NOT NULL COMMENT '注册IP',
+  `regip` varchar(45) NOT NULL COMMENT '注册IP',
   `regdate` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '注册时间',
   `secques` char(8) NOT NULL DEFAULT '' COMMENT '安全提问',
   `salt` char(6) NOT NULL DEFAULT '' COMMENT '密码加密因子',
@@ -1118,7 +1118,7 @@ CREATE TABLE `dzz_user` (
   UNIQUE KEY `email` (`email`),
   KEY `groupid` (`groupid`),
   KEY `username` (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户基本信息表';
+) ENGINE=InnoDB COMMENT='用户基本信息表';
 
 DROP TABLE IF EXISTS `dzz_user_field`;
 CREATE TABLE `dzz_user_field` (
@@ -1144,7 +1144,7 @@ CREATE TABLE `dzz_user_field` (
   `privacy` text NOT NULL COMMENT '隐私设置',
   `userspace` int(11) NOT NULL DEFAULT '0' COMMENT '用户空间大小，-1表示无空间，0表示不限制',
   UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户使用信息表';
+) ENGINE=InnoDB COMMENT='用户使用信息表';
 
 DROP TABLE IF EXISTS `dzz_user_profile`;
 CREATE TABLE `dzz_user_profile` (
@@ -1153,7 +1153,7 @@ CREATE TABLE `dzz_user_profile` (
   `value` text NOT NULL COMMENT '值',
   `privacy` smallint(3) NOT NULL DEFAULT '0' COMMENT '资料权限',
   PRIMARY KEY (`uid`,`fieldid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户资料表';
+) ENGINE=InnoDB COMMENT='用户资料表';
 
 DROP TABLE IF EXISTS `dzz_user_profile_setting`;
 CREATE TABLE `dzz_user_profile_setting` (
@@ -1177,7 +1177,7 @@ CREATE TABLE `dzz_user_profile_setting` (
   `validate` text NOT NULL COMMENT '验证规则',
   `customable` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否允许自定义',
   PRIMARY KEY (`fieldid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户资料字段表';
+) ENGINE=InnoDB COMMENT='用户资料字段表';
 
 DROP TABLE IF EXISTS `dzz_user_setting`;
 CREATE TABLE `dzz_user_setting` (
@@ -1188,13 +1188,13 @@ CREATE TABLE `dzz_user_setting` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `skey` (`skey`,`uid`),
   KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户设置表';
+) ENGINE=InnoDB COMMENT='用户设置表';
 
 DROP TABLE IF EXISTS `dzz_user_status`;
 CREATE TABLE `dzz_user_status` (
   `uid` int(10) unsigned NOT NULL,
-  `regip` char(15) NOT NULL DEFAULT '',
-  `lastip` char(15) NOT NULL DEFAULT '',
+  `regip` varchar(45) NOT NULL DEFAULT '',
+  `lastip` varchar(45) NOT NULL DEFAULT '',
   `lastvisit` int(10) unsigned NOT NULL DEFAULT '0',
   `lastactivity` int(10) unsigned NOT NULL DEFAULT '0',
   `lastsendmail` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1202,7 +1202,7 @@ CREATE TABLE `dzz_user_status` (
   `profileprogress` tinyint(2) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`uid`),
   KEY `lastactivity` (`lastactivity`,`invisible`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户状态表';
+) ENGINE=InnoDB COMMENT='用户状态表';
 
 DROP TABLE IF EXISTS `dzz_user_thame`;
 CREATE TABLE `dzz_user_thame` (
@@ -1213,7 +1213,7 @@ CREATE TABLE `dzz_user_thame` (
   `custom_color` varchar(255) NOT NULL DEFAULT '' COMMENT '自定义背景色',
   `thame` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '主题ID',
   UNIQUE KEY `uid` (`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户主题表';
+) ENGINE=InnoDB COMMENT='用户主题表';
 
 DROP TABLE IF EXISTS `dzz_user_verify`;
 CREATE TABLE `dzz_user_verify` (
@@ -1233,7 +1233,7 @@ CREATE TABLE `dzz_user_verify` (
   KEY `verify5` (`verify5`),
   KEY `verify6` (`verify6`),
   KEY `verify7` (`verify7`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户认证表';
+) ENGINE=InnoDB COMMENT='用户认证表';
 
 DROP TABLE IF EXISTS `dzz_user_verify_info`;
 CREATE TABLE `dzz_user_verify_info` (
@@ -1248,7 +1248,7 @@ CREATE TABLE `dzz_user_verify_info` (
   PRIMARY KEY (`vid`),
   KEY `verifytype` (`verifytype`,`flag`),
   KEY `uid` (`uid`,`verifytype`,`dateline`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户认证信息表';
+) ENGINE=InnoDB COMMENT='用户认证信息表';
 
 DROP TABLE IF EXISTS `dzz_user_wechat`;
 CREATE TABLE `dzz_user_wechat` (
@@ -1259,7 +1259,7 @@ CREATE TABLE `dzz_user_wechat` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   UNIQUE KEY `uid` (`uid`),
   UNIQUE KEY `openid` (`openid`,`appid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='微信用户信息表';
+) ENGINE=InnoDB COMMENT='微信用户信息表';
 
 DROP TABLE IF EXISTS `dzz_usergroup`;
 CREATE TABLE `dzz_usergroup` (
@@ -1273,7 +1273,7 @@ CREATE TABLE `dzz_usergroup` (
   `icon` varchar(255) NOT NULL DEFAULT '' COMMENT '图标',
   `extra` text NOT NULL COMMENT '附加信息',
   PRIMARY KEY (`groupid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户组表';
+) ENGINE=InnoDB COMMENT='用户组表';
 
 DROP TABLE IF EXISTS `dzz_usergroup_field`;
 CREATE TABLE `dzz_usergroup_field` (
@@ -1283,7 +1283,7 @@ CREATE TABLE `dzz_usergroup_field` (
   `maxattachsize` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户组附件大小',
   `perm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户组权限',
   UNIQUE KEY `groupid` (`groupid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='用户组属性表';
+) ENGINE=InnoDB COMMENT='用户组属性表';
 
 DROP TABLE IF EXISTS `dzz_vote`;
 CREATE TABLE `dzz_vote` (
@@ -1301,7 +1301,7 @@ CREATE TABLE `dzz_vote` (
   `idtype` varchar(30) NOT NULL DEFAULT '' COMMENT '调用者id所在的表名',
   `showuser` tinyint(1) NOT NULL DEFAULT '0' COMMENT '显示投票用户',
   PRIMARY KEY (`voteid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='投票表';
+) ENGINE=InnoDB COMMENT='投票表';
 
 DROP TABLE IF EXISTS `dzz_vote_item`;
 CREATE TABLE `dzz_vote_item` (
@@ -1313,7 +1313,7 @@ CREATE TABLE `dzz_vote_item` (
   `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '图片aid',
   `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '显示顺序',
   PRIMARY KEY (`itemid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='投票项表';
+) ENGINE=InnoDB COMMENT='投票项表';
 
 DROP TABLE IF EXISTS `dzz_vote_item_count`;
 CREATE TABLE `dzz_vote_item_count` (
@@ -1321,7 +1321,7 @@ CREATE TABLE `dzz_vote_item_count` (
   `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'UID',
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '投票时间',
   UNIQUE KEY `itemid` (`itemid`,`uid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='投票项统计表';
+) ENGINE=InnoDB COMMENT='投票项统计表';
 
 DROP TABLE IF EXISTS `dzz_wx_app`;
 CREATE TABLE `dzz_wx_app` (
@@ -1344,4 +1344,4 @@ CREATE TABLE `dzz_wx_app` (
   `report_location` tinyint(1) NOT NULL DEFAULT '0' COMMENT '上报地理位置',
   `otherpic` varchar(255) NOT NULL,
   PRIMARY KEY (`appid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='微信应用表';
+) ENGINE=InnoDB COMMENT='微信应用表';

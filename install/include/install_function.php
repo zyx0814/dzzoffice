@@ -310,7 +310,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
         echo "</table>\n";
     }
     echo "<h2 class=\"title\">其他检查</h2>\n";
-    echo "<p class=\"tb\">数据库需使用MYSQL5.5.3及以上版本，其他版本可能不能正常使用。</p>\n";
+    echo "<p class=\"tb\">数据库需使用 MySQL 5.5.3 及以上版本。（注：MySQL 5.5.3 是支持 utf8mb4 字符集的最低版本，本系统采用 InnoDB + utf8mb4 组合以支持表情符号、生僻字等 4 字节字符；低于此版本将无法正常存储此类字符，可能导致功能异常。）</p>\n";
     show_next_step(2, $error_code);
     show_footer();
 }
