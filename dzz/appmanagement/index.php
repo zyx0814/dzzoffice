@@ -87,103 +87,34 @@ if ($do == 'stats') {
     $func_strextra = '';
     foreach ($filesock_items as $item) {
         $status = function_exists($item);
-        $func_strextra .= "<tr>\n";
-        $func_strextra .= "<td>$item()</td>\n";
+        $func_strextra .= '<div class="col-lg-3 col-md-4 col-sm-6 ext-opt">';
+        $func_strextra .= '<span>'.$item.'</span>';
         if ($status) {
-            $func_strextra .= "<td class=\"text-success\"><i class=\"mdi lead mdi-check-circle me-2\"></i>" . lang('supportted') . "</td>\n";
-            $func_strextra .= "<td>" . lang('none') . "</td>\n";
+            $func_strextra .= '<span title='.lang('supportted').' class="ext-icon text-success lead mdi mdi-check-circle"></span>';
         } else {
-            $func_strextra .= "<td class=\"nw text-danger\"><i class=\"mdi lead mdi-close-circle me-2\"></i>" . lang('unsupportted') . "</td>\n";
-            $func_strextra .= "<td><font color=\"red\">" . lang('advice_' . $item) . "</font></td>\n";
+            $func_strextra .= '<span title='.lang('unsupportted').' class="ext-icon text-danger lead mdi mdi-close-circle"></span>';
         }
+        $func_strextra .= '</div>';
     }
-    $env_items = array
-    (
-        'systemOS' => array('c' => 'PHP_OS', 'r' => 'notset', 'b' => 'Linux'),
-        'php_version' => array('c' => 'PHP_VERSION', 'r' => '7+', 'b' => 'php7.4'),
-        'php_os_version' => array('c' => 'PHP_INT_SIZE', 'r' => '32位(32位不支持2G以上文件上传下载)', 'b' => '64位'),
-        'max_upload_size' => array('r' => 'notset', 'b' => '50M'),
-        'post_max_size' => array('r' => 'notset', 'b' => '50M'),
-        'memory_limit' => array('r' => 'notset', 'b' => '128M'),
-        'gd_version' => array('r' => '1.0', 'b' => '2.0'),
-        'disk_space' => array('r' => '50M', 'b' => '10G以上'),
-        'SERVER_SOFTWARE' => array('r' => 'notset', 'b' => 'nginx'),
-        'max_execution_time' => array('r' => 'notset', 'b' => 'notset'),
-        'max_input_time' => array('r' => 'notset', 'b' => 'notset'),
-    );
-    foreach ($env_items as $key => $item) {
-        $env_items[$key]['status'] = 1;
-        if ($key == 'php_version') {
-            $env_items[$key]['current'] = PHP_VERSION;
-            if (version_compare($env_items[$key]['current'], '7.0.0') < 0) {
-                $env_items[$key]['status'] = 0;
-            }
-        } elseif ($key == 'php_os_version') {
-            $env_items[$key]['current'] = phpBuild64() ? 64 : 32;
-        } elseif ($key == 'max_upload_size') {
-            $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknown';
-        } elseif ($key == 'memory_limit') {
-            $env_items[$key]['current'] = ini_get('memory_limit') ?? 'unknown';
-        } elseif ($key == 'post_max_size') {
-            $env_items[$key]['current'] = ini_get('post_max_size') ?? 'unknown';
-        } elseif ($key == 'allow_url_fopen') {
-            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ?: 'unknown';
-        } elseif ($key == 'gd_version') {
-            $tmp = function_exists('gd_info') ? gd_info() : array();
-            $env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
-            unset($tmp);
-            if ($env_items[$key]['current'] == 'noext') {
-                $env_items[$key]['status'] = 0;
-            }
-        } elseif ($key == 'disk_space') {
-            if (function_exists('disk_free_space')) {
-                $freeSpace = disk_free_space(ROOT_PATH);
-                if ($freeSpace !== false) {
-                    $env_items[$key]['current'] = floor($freeSpace / (1024 * 1024)) . 'M';
-                } else {
-                    $env_items[$key]['current'] = 'unknown';
-                }
-            } else {
-                $env_items[$key]['current'] = 'unknown';
-            }
-        } elseif ($key == 'SERVER_SOFTWARE') {
-            $env_items[$key]['current'] = $_SERVER["SERVER_SOFTWARE"] ?? 'unknown';
-        } elseif ($key == 'max_execution_time') {
-            $val = ini_get('max_execution_time') ?: 'unknown';
-            $env_items[$key]['current'] = $val . ($val !== 'unknown' ? lang('sec') : '');
-        } elseif ($key == 'max_input_time') {
-            $val = ini_get('max_input_time') ?: 'unknown';
-            $env_items[$key]['current'] = $val . ($val !== 'unknown' ? lang('sec') : '');
-        } elseif (isset($item['c'])) {
-            $env_items[$key]['current'] = constant($item['c']);
-        }
-
-        if ($item['r'] != 'notset' && strcmp($env_items[$key]['current'], $item['r']) < 0) {
-            $env_items[$key]['status'] = 0;
-        }
+    $memory_limit = ini_get('memory_limit') ?? 'unknown';
+    $max_upload_size = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknown';
+    $post_max_size = ini_get('post_max_size') ?? 'unknown';
+    $php_os_version = phpBuild64() ? 64 : 32;
+    $max_input_time = ini_get('max_input_time') ?: 'unknown';
+    $max_execution_time = ini_get('max_execution_time') ?: 'unknown';
+    $tmp = function_exists('gd_info') ? gd_info() : array();
+    $gd_version = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
+    unset($tmp);
+    $disable_functions = ini_get('disable_functions');
+    $disable_functions = explode(',', $disable_functions);
+    $disable_func_str = '';
+    foreach ($disable_functions as $value) {
+        $disable_func_str .= "<span class=\"badge badge-outline-danger\">$value</span>\n";
     }
-    $env_str = '';
-    foreach ($env_items as $key => $item) {
-        $status = 1;
-        if ($item['r'] != 'notset') {
-            if (intval($item['current']) && intval($item['r'])) {
-                if (intval($item['current']) < intval($item['r'])) {
-                    $status = 0;
-                    $error_code = ENV_CHECK_ERROR;
-                }
-            } else {
-                if (strcmp($item['current'], $item['r']) < 0) {
-                    $status = 0;
-                    $error_code = ENV_CHECK_ERROR;
-                }
-            }
-        }
-        $env_str .= "<tr>\n";
-        $env_str .= "<td>" . lang($key) . "</td>\n";
-        $env_str .= "<td>" . lang($item['r']) . "</td>\n";
-        $env_str .= "<td>" . lang($item['b']) . "</td>\n";
-        $env_str .= ($status ? "<td class=\"text-success\"><i class=\"mdi lead mdi-check-circle me-2\"></i>" : "<td class=\"nw text-danger\"><i class=\"mdi lead mdi-close-circle me-2\"></i>") . $item['current'] . "</td>\n";
-        $env_str .= "</tr>\n";
+    $loaded_extensions = get_loaded_extensions();
+    $extensions = '';
+    foreach ($loaded_extensions as $key => $value) {
+        $extensions .= "<span class=\"badge badge-outline-primary\">$value</span>\n";
     }
     include template('systemcheck');
     exit();
@@ -369,6 +300,57 @@ function getData($time, $starttime, $endtime) {
             }
             $data = getData($time, $starttime, $endtime);
             break;
+    }
+    return $data;
+}
+
+// 服务器持续运行时间
+function getUptime(){
+    global $_G;
+    $list = array(
+        'day'		=> 0,
+        'hour'		=> 0,
+        'minute'	=> 0,
+        'second'	=> 0,
+    );
+    $time = '';
+    if ($_G['config']['system_os'] == 'windows') {
+        $res = shell_exec('WMIC OS Get LastBootUpTime');
+        $time = explode("\r\n", $res);
+        $time = isset($time[1]) ? intval($time[1]) : '';
+        if (!$time) return '不可用';
+        $time = time() - strtotime($time);
+    }else {
+        $filePath = '/proc/uptime';
+        if (@is_file($filePath)) {
+            $time = file_get_contents($filePath);
+        }
+        if (!$time) return '不可用';
+    }
+    $num	= (float) $time;
+    $second	= (int) fmod($num, 60);
+    $num	= (int) ($num / 60);
+    $minute	= (int) $num % 60;
+    $num	= (int) ($num / 60);
+    $hour	= (int) $num % 24;
+    $num	= (int) ($num / 24);
+    $day	= (int) $num;
+    foreach($list as $k => $v) {
+        $list[$k] = $$k;
+    }
+    $str = '';
+    foreach($list as $key => $val) {
+        $str .= ' ' . ($val ? $val : 0) . ' ' . lang('data.'.$key);
+    }
+    return $str;
+}
+// 服务器盘大小
+function serversize($path){
+    $data = array('sizeTotal' => 0, 'sizeUse' => 0);
+    if(!function_exists('disk_total_space')){return $data;}
+    if($path) {
+        $data['sizeTotal'] = @disk_total_space($path);
+        $data['sizeUse'] = $data['sizeTotal'] - @disk_free_space($path);
     }
     return $data;
 }

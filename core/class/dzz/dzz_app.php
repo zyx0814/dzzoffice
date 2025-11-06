@@ -312,10 +312,10 @@ class dzz_app extends dzz_base {
 
         //系统编码配置
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $config['system_os'] = 'windows';
+            $_config['system_os'] = 'windows';
             if (!$_config['system_charset']) $_config['system_charset'] = 'gbk';
         } else {
-            $config['system_os'] = 'linux';
+            $_config['system_os'] = 'linux';
             if (!$_config['system_charset']) $_config['system_charset'] = 'utf-8';
         }
         if (empty($_config['security']['authkey'])) {
