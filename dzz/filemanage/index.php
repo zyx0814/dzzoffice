@@ -152,16 +152,17 @@ if ($do == 'delete') {
             }
             if ($_G['adminid']) {
                 $copys = $data['copys'];
-                if ($data['aid']) {
-                    $FileUri = IO::getStream('attach::' . $data['aid']);
-                    if(is_array($FileUri) && $FileUri['error']) {
-                        $FileUri = '<span class="text-danger">'.$FileUri['error'].'</span>';
-                    } else {
-                        if ($data['attachment']) {
-                            $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
+                if ($data['attachment']) {
+                    if ($data['rbz']) {
+                        $FileUri = IO::getStream($data['rbz'] . '/' . $data['attachment']);
+                        if(is_array($FileUri) && $FileUri['error']) {
+                            $FileUri = '<span class="text-danger">'.$FileUri['error'].'</span>';
                         } else {
-                            $FileUri = '<span class="text-danger">数据库中没有查到aid为：'.$data['aid'].'的记录</span>';
+                            $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
                         }
+                    } else {
+                        $FileUri = $_G['setting']['attachdir'] . $data['attachment'];
+                        $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
                     }
                 } else {
                     $FileUri = '';
@@ -184,7 +185,7 @@ if ($do == 'delete') {
                 "FileUri" => $FileUri,
                 "downs" => $filestatis['downs'],
                 "views" => $filestatis['views'],
-                "edits" => $filestatis['edits'],
+                "edits" => $filestatis['edits']
             ];
         }
     }

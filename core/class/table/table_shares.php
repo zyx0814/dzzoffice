@@ -32,12 +32,11 @@ class table_shares extends dzz_table {
             $setarr['gid'] = $fileinfo['gid'];
             $setarr['pfid'] = $fileinfo['pfid'];
             if (count($rids) > 1) $more = true;
+            $fileinfo = C::t('resources')->fetch_by_rid($rids[0]);
             if ($more) {
-                $fileinfo = C::t('resources')->fetch_by_rid($rids[0]);
                 $fileinfo['name'] .= '等文件(文件夹)';
                 $setarr['type'] = 'url';
             } else {
-                $fileinfo = C::t('resources')->fetch_by_rid($rids[0]);
                 $setarr['type'] = $fileinfo['type'];
             }
         }
