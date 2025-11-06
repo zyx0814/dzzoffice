@@ -489,12 +489,21 @@ class table_resources_version extends dzz_table {
 
     public function get_versioninfo_by_rid_vid($rid, $vid = 0) {
         $rid = trim($rid);
+        if (!$rid) array();
         $vid = intval($vid);
-        if (!$rid) return;
-        if (!$vid) {
-            return C::t('resources')->fetch_info_by_rid($rid);
+        $data = array();
+        if ($vid) {
+            $data = DB::fetch_first("select * from %t where rid = %s and vid = %d", array($this->_table, $rid, $vid));
+        } else {
+            $data = C::t('resources')->fetch_info_by_rid($rid);
         }
-        return DB::fetch_first("select * from %t where rid = %s and vid = %d", array($this->_table, $rid, $vid));
+        if ($data) {
+            $data['ffsize'] = lang('property_info_size', array('fsize' => formatsize($data['size']), 'size' => $data['size']));
+            $data['fdateline'] = dgmdate($data['dateline'], 'Y-m-d H:i:s');
+            $data['ftype'] = getFileTypeName($data['type'], $data['ext']);
+        }
+        
+        return $data;
     }
 
     public function fetch_version_by_rid_vid($rid, $vid) {

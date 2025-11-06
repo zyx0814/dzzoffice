@@ -820,7 +820,7 @@ if ($do == 'upload') {//上传图片文件
         if ($fileinfo['error']) showmessage($fileinfo['error']);
     }
     if ($_G['adminid'] && $versioninfo['aid']) {
-        $attachment = IO::getFileUri('attach::' . $versioninfo['aid']);
+        $attachment = IO::getStream('attach::' . $versioninfo['aid']);
     }
 } elseif ($do == 'deletethisversion') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';

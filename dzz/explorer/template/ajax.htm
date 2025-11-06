@@ -871,10 +871,10 @@
         <div class="col-sm-9">$versioninfo[vdesc]</div>
     </div>
     <!--{/if}-->
-    <!--{if $fileinfo[ftype]}-->
+    <!--{if $versioninfo[ftype]}-->
     <div class="row mb-1"> 
         <label class="col-sm-3">{lang type}</label>
-        <div class="col-sm-9">$fileinfo['ftype']</div>
+        <div class="col-sm-9">$versioninfo['ftype']</div>
     </div>
     <!--{/if}-->
     <div class="row mb-1"> 
@@ -883,52 +883,16 @@
     </div>
     <div class="row mb-1">
         <label class="col-sm-3">{lang creator}</label>
-        <div class="col-sm-9">$fileinfo['username']</div>
+        <div class="col-sm-9">$versioninfo['username']</div>
     </div>
-    <!--{if $fileinfo['editusername']}-->
-    <div class="row mb-1">
-        <label class="col-sm-3">{lang editor}</label>
-        <div class="col-sm-9">$fileinfo['editusername']</div>
-    </div>
-    <!--{/if}-->
     <div class="row mb-1"> 
         <label class="col-sm-3">{lang big_small}</label>
-        <div class="col-sm-9">$fileinfo['ffsize']</div>
+        <div class="col-sm-9">$versioninfo['ffsize']</div>
     </div>
-    <!--{if $fileinfo[fdateline]}-->
+    <!--{if $versioninfo[fdateline]}-->
     <div class="row mb-1"> 
         <label class="col-sm-3">{lang create_time}</label>
-        <div class="col-sm-9">$fileinfo[fdateline]</div>
-    </div>
-    <!--{/if}-->
-    <!--{if $fileinfo[editdateline]}-->
-    <div class="row mb-1"> 
-        <label class="col-sm-3">{lang edit_time}</label>
-        <div class="col-sm-9">$fileinfo[editdateline]</div>
-    </div>
-    <!--{/if}-->
-    <!--{if $fileinfo[opendateline]}-->
-    <div class="row mb-1"> 
-        <label class="col-sm-3">{lang last_visit}</label>
-        <div class="col-sm-9">$fileinfo[opendateline]</div>
-    </div>
-    <!--{/if}-->
-    <!--{if $fileinfo[downs]}-->
-    <div class="row mb-1">
-        <label class="col-sm-3">{lang download_times}</label>
-        <div class="col-sm-9">$fileinfo[downs]</div>
-    </div>
-    <!--{/if}-->
-    <!--{if $fileinfo[views]}-->
-    <div class="row mb-1">
-        <label class="col-sm-3">{lang view_count}</label>
-        <div class="col-sm-9">$fileinfo[views]</div>
-    </div>
-    <!--{/if}-->
-    <!--{if $fileinfo[edits]}-->
-    <div class="row mb-1">
-        <label class="col-sm-3">{lang edit_times}</label>
-        <div class="col-sm-9">$fileinfo[edits]</div>
+        <div class="col-sm-9">$versioninfo[fdateline]</div>
     </div>
     <!--{/if}-->
     <!--{if $attachment}-->
