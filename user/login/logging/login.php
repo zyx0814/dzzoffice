@@ -69,7 +69,7 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
                     $jobname = $user['jobname'];
                     if(!$jobname) {
                         $usergroup = $_G['cache']['usergroups'][$user['groupid']] ?? array();
-                        $jobname = $usergroup['grouptitle'] ?? '成员';
+                        $jobname = $usergroup['grouptitle'] ? $usergroup['grouptitle'] : '成员';
                     }
                     
                     $data[] = array(

@@ -14,11 +14,8 @@ require './core/coreBase.php';
 $dzz = C::app();
 $dzz->init();
 $s = trim($_GET['s'] ?? '');
-if (!$path = dzzdecode($s)) {
+if (!$s || !$path = dzzdecode($s)) {
     exit('Access Denied');
-}
-if (isset($_GET['sid'])) {
-    $sid = dzzdecode(trim($_GET['sid']));
 }
 if ($_GET['a'] == 'down') {
     IO::download($path, $_GET['filename']);
@@ -84,11 +81,7 @@ if ($_GET['a'] == 'down') {
             }, $url);
             //添加path参数；
             if (strpos($url, '?') !== false && strpos($url, 'path=') === false) {
-                if ($sid) {
-                    $pre .= 'sid:' . $sid . '_';
-                } else {
-                    $pre = 'preview_';
-                }
+                $pre = 'preview_';
                 $url .= '&path=' . dzzencode($pre . $path);
             }
             $url = $_G['siteurl'] . $url;
