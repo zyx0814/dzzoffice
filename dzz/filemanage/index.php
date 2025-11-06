@@ -9,7 +9,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$navtitle = lang('appname');
+$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
 $uid = $_G['uid'];
 if (!$uid) {
     $errorResponse = [

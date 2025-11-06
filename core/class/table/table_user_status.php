@@ -16,7 +16,7 @@ class table_user_status extends dzz_table {
 
         $this->_table = 'user_status';
         $this->_pk = 'uid';
-        $this->_pre_cache_key = 'user_status_';
+        // $this->_pre_cache_key = 'user_status_';
 
         parent::__construct();
     }

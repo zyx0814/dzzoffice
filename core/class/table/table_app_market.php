@@ -15,8 +15,8 @@ class table_app_market extends dzz_table {
     public function __construct() {
         $this->_table = 'app_market';
         $this->_pk = 'appid';
-        $this->_pre_cache_key = 'app_market_';
-        $this->_cache_ttl = 60 * 60;
+        // $this->_pre_cache_key = 'app_market_';
+        // $this->_cache_ttl = 60 * 60;
 
         parent::__construct();
     }
@@ -87,7 +87,6 @@ class table_app_market extends dzz_table {
 
         $data = DB::fetch_all("SELECT * FROM %t WHERE appid IN(%n)", array($this->_table, $appids));
         foreach ($data as $value) {
-
             if (strpos($value['appico'], 'appico') === 0) {//删除应用图标
                 @unlink($_G['setting']['attachdir'] . $value['appico']);
             }
@@ -123,7 +122,7 @@ class table_app_market extends dzz_table {
         global $_G;
         if ($_G['uid'] == $uid) {
             $groupid = $_G['groupid'];
-        } else {
+        } elseif ($uid) {
             $space = getuserbyuid($uid);
             if($space) {
                 $groupid = $space['groupid'];
@@ -154,15 +153,8 @@ class table_app_market extends dzz_table {
 
         // 根据 $appid 参数决定返回哪些字段
         $select = $appid ? "appid" : "*";
-
-        if ($appid) {
-            // 如果只需要 appid，直接返回一个包含所有 appid 的数组
-            $result = DB::fetch_all("select $select from %t where $sql and available > 0 order by disp ", array($this->_table));
-            return array_column($result, 'appid');
-        } else {
-            // 返回所有字段
-            return DB::fetch_all("select $select from %t where $sql and available > 0 order by disp ", array($this->_table), 'appid');
-        }
+        $result = DB::fetch_all("select $select from %t where $sql and available > 0 order by disp ", array($this->_table), $appid ? null : 'appid');
+        return $appid ? array_column($result, 'appid') : $result;
     }
 
     public function fetch_appid_by_mod($mod, $match = 0) {//$match==1表示全匹配，默认模糊匹配
@@ -203,7 +195,6 @@ class table_app_market extends dzz_table {
     }
 
     public function fetch_all_by_appurl($appurl, $identifier) {
-
         return DB::fetch_all("select * from %t where appurl=%s and identifier=%s", array($this->_table, $appurl, $identifier));
     }
 
@@ -211,5 +202,4 @@ class table_app_market extends dzz_table {
         $appid = intval($appid);
         return DB::result_first("select appico from %t where appid = %d", array($this->_table, $appid));
     }
-
 }

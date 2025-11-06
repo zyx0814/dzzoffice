@@ -16,8 +16,8 @@ class table_user_field extends dzz_table {
 
         $this->_table = 'user_field';
         $this->_pk = 'uid';
-        $this->_pre_cache_key = 'user_field_';
-        $this->_cache_ttl = 60 * 60;
+        // $this->_pre_cache_key = 'user_field_';
+        // $this->_cache_ttl = 60 * 60;
 
         parent::__construct();
     }

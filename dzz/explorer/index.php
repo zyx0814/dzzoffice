@@ -2,7 +2,8 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$navtitle = lang('appname');
+include libfile('function/appperm');
+$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
 $uid = $_G['uid'];
 $space = dzzgetspace($uid);
 $space['self'] = intval($space['self']);

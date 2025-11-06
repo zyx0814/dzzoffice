@@ -16,7 +16,7 @@ class table_user_verify extends dzz_table {
 
         $this->_table = 'user_verify';
         $this->_pk = 'uid';
-        $this->_pre_cache_key = 'user_verify_';
+        // $this->_pre_cache_key = 'user_verify_';
         //$this->_cache_ttl = 0;
         parent::__construct();
     }

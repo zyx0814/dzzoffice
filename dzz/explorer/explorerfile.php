@@ -8,7 +8,6 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-define('CURRENT_PATH', 'dzz/system');
 $do = empty($_GET['do']) ? '' : $_GET['do'];
 $uid = isset($_GET['uid']) ? intval($_GET['uid']) : $_G['uid'];
 

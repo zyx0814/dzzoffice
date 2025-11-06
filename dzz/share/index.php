@@ -9,7 +9,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$navtitle = lang('appname');
+$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
 $type = trim($_GET['type']);
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;

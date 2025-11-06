@@ -49,10 +49,10 @@ $allowvisit = array('file', 'group_ajax', 'right_popbox', 'delete_group');
 $do = isset($_GET['do']) ? trim($_GET['do']) : 'file';
 if ($do == 'delete_group') {
     if ($group['type'] == 0 && $_G['adminid'] != 1) {
-        exit(json_encode(array('error' => lang('no_privilage'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     if ($group['type'] == 1 && $perm < 2) {
-        exit(json_encode(array('error' => lang('no_privilage'))));
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
     $return = C::t('organization')->delete_by_orgid($gid);
     if (isset($return['error'])) {

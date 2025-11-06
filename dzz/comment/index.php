@@ -12,7 +12,7 @@ if (!defined('IN_DZZ')) {
 Hook::listen('check_login');
 $uid = $_G['uid'];
 include_once libfile('function/appperm');
-$navtitle = lang('appname');
+$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'getinfo') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'desc';

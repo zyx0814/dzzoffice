@@ -2,13 +2,12 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-include libfile('function/organization');
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-global $_G;
-$uid = $_G['uid'];
 if ($_G['adminid'] != 1) {
-    showmessage('no_privilage',MOD_URL);
+    showmessage('no_privilege',MOD_URL);
 }
+include libfile('function/organization');
+$uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'updatesetting') {//更新设置
     include_once libfile('function/cache');

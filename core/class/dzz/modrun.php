@@ -37,7 +37,6 @@ class Modrun {
                 break;
             default:
                 exit('arg error');
-
         }
     }
 
@@ -53,6 +52,7 @@ class Modrun {
 
     //加载文件
     private static function loadFile($files = null) {
+        if (!$files) return;
         global $_config, $_G;
         if (is_array($files)) {
 

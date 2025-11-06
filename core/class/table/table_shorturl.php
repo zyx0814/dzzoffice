@@ -16,8 +16,8 @@ class table_shorturl extends dzz_table {
 
         $this->_table = 'shorturl';
         $this->_pk = 'sid';
-        $this->_pre_cache_key = 'shorturl_';
-        $this->_cache_ttl = 0;
+        // $this->_pre_cache_key = 'shorturl_';
+        // $this->_cache_ttl = 0;
         parent::__construct();
     }
 

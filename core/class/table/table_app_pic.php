@@ -15,8 +15,8 @@ class table_app_pic extends dzz_table {
 
         $this->_table = 'app_pic';
         $this->_pk = 'picid';
-        /*$this->_pre_cache_key = 'app_pic_';
-        $this->_cache_ttl = 0;*/
+        $this->_pre_cache_key = 'app_pic_';
+        $this->_cache_ttl = 0;
 
         parent::__construct();
     }
