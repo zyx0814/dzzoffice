@@ -68,7 +68,7 @@
                 <td width="40"><input type="checkbox" class="form-check-input" name="delete[]" value="$value[id]" /></td>
                 <td ><img src="$value[img]" />$value[cloudname]</td>
                 <td>$value[username]</td>
-                <td> $value['dateline'] </td>
+                <td>$value['dateline']</td>
               </tr>
               <!--{/loop}-->
             </table>
@@ -109,7 +109,7 @@
                 <label class="form-check-label" for="available2">{lang no}</label>
               </div>
               <!--{else}-->
-              <input type="hidden"  name="available"  value="$cloud[available]" />
+              <input type="hidden" name="available" value="$cloud[available]" />
               <!--{/if}-->
               <ul class="form-text">
                 <!--{if $cloud[warning]}-->
@@ -201,6 +201,9 @@
                   <th>{lang name}</th>
                   <th>{lang username}</th>
                   <th>{lang add_time}</th>
+                  <!--{if $bz=='disk'}-->
+                  <td>位置</td>
+                  <!--{/if}-->
                 </tr>
               </thead>
               <!--{loop $list $value}-->
@@ -209,6 +212,9 @@
                 <td ><img src="$value[img]" />$value[cloudname]</td>
                 <td>$value[username]</td>
                 <td> $value['dateline'] </td>
+                <!--{if $value[type]=='disk'}-->
+                <td>$value['attachdir']</td>
+                <!--{/if}-->
               </tr>
               <!--{/loop}-->
             </table>

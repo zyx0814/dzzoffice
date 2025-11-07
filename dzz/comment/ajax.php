@@ -98,7 +98,7 @@ if (submitcheck('replysubmit')) {
     }
     $modal = intval($_GET['modal']);
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
-    $perpage = 10;
+    $perpage = 20;
     $start = ($page - 1) * $perpage;
     $limit = $start . "-" . $perpage;
     $gets = array('mod' => 'comment', 'op' => 'ajax', 'template' => $template, 'do' => 'getcomment', 'id' => $id, 'idtype' => $idtype, 'modal' => $modal);

@@ -32,7 +32,7 @@
     <div class="row mb-3">
       <label for="email" class="col-sm-2">{lang login_email} <span class="text-danger">*</span></label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="email" name="email" autocomplete="off" value="$user[email]" onblur="checkemail(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}--> inputmode="email" placeholder="{lang login_email}">
+        <input type="text" class="form-control" id="email" name="email" value="$user[email]" onblur="checkemail(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}--> inputmode="email" placeholder="{lang login_email}">
         <p id="emailmore" style="height:1px;margin:0;">&nbsp;</p>
         <span id="chk_email" class="form-text">
           <span id="suc_email"></span><span class="help-msg"></span> {lang required_used_login_system}
@@ -42,7 +42,7 @@
     <div class="row mb-3">
       <label for="username" class="col-sm-2">{lang username} <span class="text-danger">*</span></label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" autocomplete="off" value="$user[username]" onblur="checkusername(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
+        <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" value="$user[username]" onblur="checkusername(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_username" class="form-text">
           <span id="suc_username"></span><span class="help-msg"></span> {lang login_username_tips}
         </span>
@@ -51,7 +51,7 @@
     <!-- <div class="row mb-3">
       <label for="nickname" class="col-sm-2">{lang nickname}</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="nickname" name="nickname" placeholder="{lang user_nickname}" autocomplete="off" value="$user[nickname]" onblur="checknick(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
+        <input type="text" class="form-control" id="nickname" name="nickname" placeholder="{lang user_nickname}" value="$user[nickname]" onblur="checknick(this.id);" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_nickname" class="form-text">
           <span id="suc_nickname"></span><span class="help-msg"></span> {lang user_nickname}，不能用于登录
         </span>
@@ -81,21 +81,21 @@
     <div class="row mb-3">
       <label for="phone" class="col-sm-2">{lang phone_number}</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" placeholder="{lang weixin_phone_number}" id="phone" name="phone" autocomplete="off" value="$user[phone]" <!--{if !$perm}-->disabled="disabled"<!--{/if}--> inputmode="tel">
+        <input type="text" class="form-control" placeholder="{lang weixin_phone_number}" id="phone" name="phone" value="$user[phone]" <!--{if !$perm}-->disabled="disabled"<!--{/if}--> inputmode="tel">
         <span id="chk_phone" class="form-text">{lang adduser_phone_number_text}</span>
       </div>
     </div>
     <div class="row mb-3">
       <label for="weixinid" class="col-sm-2">{lang weixin}</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" placeholder="{lang user_weixin}" id="weixinid" name="weixinid" autocomplete="off" value="$user[weixinid]" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
+        <input type="text" class="form-control" placeholder="{lang user_weixin}" id="weixinid" name="weixinid" value="$user[weixinid]" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_weixinid" class="form-text">{lang edituser_weixin_text}</span>
       </div>
     </div>
     <div class="row mb-3">
       <label for="password" class="col-sm-2">{lang user_login_password}</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" name="password" autocomplete="off" id="password" placeholder="{lang space_not_change_password}" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
+        <input type="text" class="form-control" name="password" id="password" placeholder="{lang space_not_change_password}" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_password" class="form-text">
           <span id="suc_password"></span>
           <span id="chk_password" class="help-msg"></span>{lang space_not_change_password}
@@ -105,7 +105,7 @@
     <div class="row mb-3">
       <label for="password2" class="col-sm-2">{lang new_password_confirm}</label>
       <div class="col-sm-10">
-        <input type="text" class="form-control" id="password2" name="password2" autocomplete="off" placeholder="{lang space_not_change_password}" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
+        <input type="text" class="form-control" id="password2" name="password2" placeholder="{lang space_not_change_password}" <!--{if !$perm}-->disabled="disabled"<!--{/if}-->>
         <span id="chk_password2" class="form-text">
           <span id="suc_password2"></span>
           <span id="chk_password2" class="help-msg"></span>{lang space_not_change_password}

@@ -1407,24 +1407,8 @@ $lang = array(
     'oauth_ALIOSS_ALY_storage' => '阿里云云存储',
     'oauth_ALIOSS_click_gain' => '点此获取bucket列表',
     'oauth_ALIOSS_bucket' => '选择要管理的bucket，点击左侧的连接可以自动获取bucket列表',
-    'select_node_address' => '选择节点地址',
-    'oauth_ALIOSS_node1' => '杭州节点外网地址',
-    'oauth_ALIOSS_node2' => '杭州节点内网地址',
-    'oauth_ALIOSS_node3' => '青岛节点外网地址',
-    'oauth_ALIOSS_node4' => '青岛节点内网地址',
-    'oauth_ALIOSS_node5' => '北京节点外网地址',
-    'oauth_ALIOSS_node6' => '北京节点内网地址',
-    'oauth_ALIOSS_node7' => '香港节点外网地址',
-    'oauth_ALIOSS_node8' => '香港节点内网地址',
-    'oauth_ALIOSS_node9' => '深圳节点外网地址',
-    'oauth_ALIOSS_node10' => '深圳节点内网地址',
-    'oauth_ALIOSS_node11' => '上海节点外网地址',
-    'oauth_ALIOSS_node12' => '上海节点内网地址',
-    'oauth_ALIOSS_node13' => '美国硅谷外网地址',
-    'oauth_ALIOSS_node14' => '美国硅谷内网地址',
-    'oauth_ALIOSS_node15' => '新加坡外网地址',
-    'oauth_ALIOSS_node16' => '新加坡内网地址',
-    'oauth_ALIOSS_node17' => '选择内网地址时，必须保证服务器和云存储bucket在同一节点内。',
+    'select_node_address' => '地域节点',
+    'oauth_ALIOSS_node17' => 'Endpoint，选择内网地址时，必须保证服务器和云存储bucket在同一节点内。',
 
     // admin/cloud/template/auth_qcos.html
     'oauth_QCOS_add_ALY' => '添加腾讯云存储',
@@ -1546,5 +1530,6 @@ $lang = array(
     'profile_nickname_exist' => '用户昵称已存在',
     'illegal_characters' => '包含敏感字符',
     'user_registered_retry' => '该用户名已经被注册，请更换用户名再试',
+    'no_cloud_service' => '暂无云服务',
 );
 ?>

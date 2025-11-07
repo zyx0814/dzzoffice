@@ -75,7 +75,8 @@ function checkemail(id) {
 		}else{
 			errormessage(id, 'succeed');
 		}
-		
+	}).fail(function(jqXHR, textStatus, errorThrown) {
+		showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 	});
 }
 function checknick(id) {
@@ -102,6 +103,8 @@ function checknick(id) {
 			}else{
 				errormessage(id, 'succeed');
 			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 		});
 	}
 }
@@ -129,6 +132,8 @@ function checkusername(id) {
 			}else{
 				errormessage(id, 'succeed');
 			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 		});
 	}
 }

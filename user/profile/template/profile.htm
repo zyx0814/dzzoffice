@@ -91,7 +91,7 @@
           <!--{if $my_username}-->
           <label class="col-sm-2">{lang username} <span class="text-danger">*</span></label>
           <div class="col-sm-6">
-            <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" autocomplete="off" value="$_G[username]" onblur="checkusername(this.id);">
+            <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" value="$_G[username]" onblur="checkusername(this.id);">
             <span id="chk_username" class="form-text">
               <span id="suc_username"></span><span id="showerror_my_username" class="help-msg"></span> 用户名必须是唯一的，请勿使用特殊字符。可用于系统登录。
             </span>
@@ -277,6 +277,8 @@ function checkusername(id) {
 			}else{
 				errormessage(id, 'succeed');
 			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 		});
 	}
 }

@@ -65,7 +65,9 @@
 				jQuery('#spaceinfo_'+remoteid+' .spacecheck a').html('<i class="mdi mdi-refresh"></i>');
 			},5000);
 		 }
-	 });
+	 }).fail(function(jqXHR, textStatus, errorThrown) {
+    showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
+  });
  }
 </script>
 <!--{template lyear:footer_simple}--> 

@@ -19,6 +19,8 @@ if ($_GET['do'] == 'getBucket') {
     if ($bz == 'QCOS') {
         $region = $_GET['region'];
         $re = $p->getBucketList($id, $key, $region);
+    } elseif ($bz == 'ALIOSS') {
+        $re = $p->getBucketList($id, $key, $_GET['hostname']);
     } else {
         $re = $p->getBucketList($id, $key);
     }

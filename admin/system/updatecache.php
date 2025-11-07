@@ -27,6 +27,10 @@ if ($step == 1) {
     if (in_array('perm',$type)) {
         clearpermcache();
     }
+    if (in_array('memory', $type)) {
+        C::memory()->clear();
+        DB::delete('cache',' 1 ');
+    }
 }
 include template('updatecache');
 ?>

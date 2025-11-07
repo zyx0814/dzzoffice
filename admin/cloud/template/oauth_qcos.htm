@@ -106,9 +106,9 @@
                     jQuery('#bucket').html(html);
                 }
             }
-
-        });
-
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
+		});
     }
 
     function validate(form) {

@@ -11,15 +11,6 @@ if (!defined('IN_DZZ')) {
 }
 $navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
 $uid = $_G['uid'];
-if (!$uid) {
-    $errorResponse = [
-        "code" => 1,
-        "msg" => lang('no_login_operation'),
-        "count" => 0,
-        "data" => [],
-    ];
-    exit(json_encode($errorResponse));
-}
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $orgid = isset($_GET['orgid']) ? intval($_GET['orgid']) : '';
 $typeinfo = array(

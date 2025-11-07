@@ -8,15 +8,6 @@ if ($_G['adminid'] != 1) {
 }
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'filelist') {
-    if (!$_G['uid']) {
-        $errorResponse = [
-            "code" => 1,
-            "msg" => lang('no_login_operation'),
-            "count" => 0,
-            "data" => [],
-        ];
-        exit(json_encode($errorResponse));
-    }
     $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
     $field = isset($_GET['sort']) ? $_GET['sort'] : 'dateline';
     $limit = empty($_GET['limit']) ? 50 : $_GET['limit'];

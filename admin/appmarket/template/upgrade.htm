@@ -189,7 +189,6 @@
 		},'json')
 		.fail(function (jqXHR, textStatus, errorThrown) {
 			loader.destroy();
-			// 这里处理请求失败的情况
 			showmessage('请求失败: ' + textStatus, 'error', 3000, 1);
 		});
 	}

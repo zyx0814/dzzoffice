@@ -9,22 +9,6 @@
 if (!defined('IN_LEYUN')) {
     exit('Access Denied');
 }
-function getBucketList($access_id, $access_key) {
-    $re = array();
-    if (!$access_id || !$access_key) return array();
-
-    require_once ROOT_PATH . './core/api/oss_sdk/sdk.class.php';
-    $oss = new ALIOSS($access_id, $access_key);
-    $response = $oss->list_bucket();
-    if (!$response->isOK()) {
-        return array();
-    }
-    $bucket = $response->getBody();
-    foreach ($bucket['ListAllMyBucketsResult']['Buckets']['Bucket'] as $value) {
-        $re[] = $value['Name'];
-    }
-    return $re;
-}
 
 function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
     show_header();

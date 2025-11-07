@@ -29,7 +29,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-3" for="email">accessKey</label>
 					<div class="col-sm-4">
-						<input type="text" id="access_id" class="form-control" name="access_id" autocomplete="off" value="" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('warning');}else{jQuery(this).parent().parent().removeClass('warning');getBucket();}">
+						<input type="text" id="access_id" class="form-control" name="access_id" value="" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('warning');}else{jQuery(this).parent().parent().removeClass('warning');getBucket();}">
 					</div>
 					<div class="col-sm-5">
 						<span class="help-inline">{lang oauth_JSS_JD_storage}accessKey</span>
@@ -38,7 +38,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-3" for="email">secretKey</label>
 					<div class="col-sm-4">
-						<input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('warning');}else{jQuery(this).parent().parent().removeClass('warning');getBucket();}">
+						<input type="password" class="form-control" id="access_key" name="access_key" value="" onblur="if(this.value==''){jQuery(this).parent().parent().addClass('warning');}else{jQuery(this).parent().parent().removeClass('warning');getBucket();}">
 					</div>
 					<div class="col-sm-5">
 						<span class="help-inline">{lang oauth_JSS_JD_storage}secretKey</span>
@@ -72,7 +72,7 @@
 		if(id == '' || key == '') {
 			return;
 		}
-		jQuery.getJSON(DZZSCRIPT + '?mod=connect&op=ajax&do=getBucket&bz=JSS', { id: id, key: key }, function(json) {
+		jQuery.getJSON(DZZSCRIPT + '?mod=connect&op=oauth&do=getBucket&bz=JSS', { id: id, key: key }, function(json) {
 			if(json.error) {
 				alert(json.error);
 			} else if(json.length > 0) {
@@ -82,6 +82,8 @@
 				}
 				jQuery('#bucket').html(html);
 			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 		});
 
 	}

@@ -105,6 +105,8 @@
 					el.button('reset');
 				}, 2000);
 			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 		});
 	}
 </script>

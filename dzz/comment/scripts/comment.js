@@ -278,6 +278,8 @@ function feed_delete(cid,domid,tid){
 			try{
 				callback_by_comment(domid,'delete');
 			}catch(e){}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 		});
 	}
 }

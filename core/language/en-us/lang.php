@@ -1386,23 +1386,7 @@ $lang = array(
     'oauth_ALIOSS_click_gain' => 'Click here to get bucket list',
     'oauth_ALIOSS_bucket' => 'Select the bucket to manage; click the link on the left to automatically get the bucket list',
     'select_node_address' => 'Select Node Address',
-    'oauth_ALIOSS_node1' => 'Hangzhou Node (External Network Address)',
-    'oauth_ALIOSS_node2' => 'Hangzhou Node (Internal Network Address)',
-    'oauth_ALIOSS_node3' => 'Qingdao Node (External Network Address)',
-    'oauth_ALIOSS_node4' => 'Qingdao Node (Internal Network Address)',
-    'oauth_ALIOSS_node5' => 'Beijing Node (External Network Address)',
-    'oauth_ALIOSS_node6' => 'Beijing Node (Internal Network Address)',
-    'oauth_ALIOSS_node7' => 'Hong Kong Node (External Network Address)',
-    'oauth_ALIOSS_node8' => 'Hong Kong Node (Internal Network Address)',
-    'oauth_ALIOSS_node9' => 'Shenzhen Node (External Network Address)',
-    'oauth_ALIOSS_node10' => 'Shenzhen Node (Internal Network Address)',
-    'oauth_ALIOSS_node11' => 'Shanghai Node (External Network Address)',
-    'oauth_ALIOSS_node12' => 'Shanghai Node (Internal Network Address)',
-    'oauth_ALIOSS_node13' => 'Silicon Valley (USA) Node (External Network Address)',
-    'oauth_ALIOSS_node14' => 'Silicon Valley (USA) Node (Internal Network Address)',
-    'oauth_ALIOSS_node15' => 'Singapore Node (External Network Address)',
-    'oauth_ALIOSS_node16' => 'Singapore Node (Internal Network Address)',
-    'oauth_ALIOSS_node17' => 'When selecting an internal network address, ensure the server and cloud storage bucket are in the same node.',
+    'oauth_ALIOSS_node17' => 'Endpoint，When selecting an internal network address, ensure the server and cloud storage bucket are in the same node.',
 
     // admin/cloud/template/auth_qcos.html
     'oauth_QCOS_add_ALY' => 'Add Tencent Cloud Storage',
@@ -1524,5 +1508,6 @@ $lang = array(
     'profile_nickname_exist' => 'Nickname already exists',
     'illegal_characters' => 'Illegal characters',
     'user_registered_retry' => 'This username has already been registered. Please change the username and try again',
+    'no_cloud_service' => 'No Cloud Service',
 );
 ?>

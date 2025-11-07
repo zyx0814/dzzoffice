@@ -146,6 +146,8 @@ function item_import(id){
 			showmessage('{lang import_success}', 'success', 3000, 1);
 			window.setTimeout(function(){el.parent().parent().remove();if(importing) run_import_all();},0);
 		}
+	}).fail(function(jqXHR, textStatus, errorThrown) {
+		showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 	});
 }
 function getData(id){

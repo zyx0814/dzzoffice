@@ -40,6 +40,8 @@
 					var self = this;
 					jQuery.getJSON('{MOD_URL}&op=ajax&do=getchildren', {'id': node.id}, function (json) {
 						cb.call(this, json);
+					}).fail(function(jqXHR, textStatus, errorThrown) {
+						showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 					});
 				}
 			},

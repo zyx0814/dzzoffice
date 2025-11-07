@@ -18,14 +18,14 @@
                 <div class="row mb-3">
                     <label class="col-sm-2" for="access_id">API SecretId</label>
                     <div class="col-sm-10">
-                        <input type="text" id="access_id" class="form-control" name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');getBucket();}">
+                        <input type="text" id="access_id" class="form-control" name="access_id" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');getBucket();}">
                         <span class="form-text">{lang oauth_QCOS_ALY_storage}API SecretId</span>
                     </div>
                 </div>
                 <div class="row mb-3">
                 <label class="col-sm-2" for="access_key">API SecretKey</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');getBucket();}">
+                    <input type="password" class="form-control" id="access_key" name="access_key" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');getBucket();}">
                     <span class="form-text">{lang oauth_QCOS_ALY_storage}API SecretKey</span>
                 </div>
                 </div>
@@ -59,7 +59,7 @@
                 <div class="row mb-3">
                 <label class="col-sm-2" for="schema">{lang oauth_QCOS_agree}</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="schema" name="schema" autocomplete="off" value="{if $ali[agree]}$ali[agree]{else}http{/if}">
+                    <input type="text" class="form-control" id="schema" name="schema" value="{if $ali[agree]}$ali[agree]{else}http{/if}">
                     <span class="form-text">{lang oauth_QCOS_agree_tip}</span>
                 </div>
                 </div>
@@ -103,7 +103,9 @@
                 }
             }
 
-        });
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
+		});
 
     }
 

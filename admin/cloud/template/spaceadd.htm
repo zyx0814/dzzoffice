@@ -5,6 +5,7 @@
 		<!--{template right_header}-->
 		<div class="card">
 			<div class="card-body">
+				<!--{if $list}-->
 				<!--{loop $list $key $value}-->
 				<h4>$value[header]</h4>
 				<div class="d-flex flex-wrap p-1">
@@ -18,6 +19,12 @@
 				<!--{/loop}-->
 				</div>
 				<!--{/loop}--> 
+				<!--{else}-->
+				<div class="text-center">
+					<img src="static/image/common/no_list.png" /><br>
+					<span class="text-muted lead">{lang no_cloud_service}</span>
+				</div>
+				<!--{/if}-->
 			</div>
 		</div>
 	</div>

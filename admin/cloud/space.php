@@ -42,7 +42,6 @@ if ($_GET['do'] == 'checkspace') {
     } else {
         $list = array();
         foreach (C::t('local_storage')->fetch_all_orderby_disp() as $key => $value) {
-
             if ($arr = C::t('local_storage')->update_sizecount_by_remoteid($value['remoteid'])) {
                 $value['fusesize'] = formatsize($value['usesize']);
                 if ($value['totalsize'])
@@ -50,7 +49,6 @@ if ($_GET['do'] == 'checkspace') {
                 else
                     $value['ftotalsize'] = lang('unlimited');
             }
-
             $list[] = $value;
         }
     }

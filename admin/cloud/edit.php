@@ -36,36 +36,25 @@ if ($_GET['do'] == 'usercloud') {
                 $value1['bz'] = $value['bz'];
                 $value1['icoid'] = md5($value['bz'] . ':' . $value1['id'] . ':' . $value['root']);
                 $value1['img'] = 'dzz/images/default/system/' . $cloud['bz'] . '.png';
-
             } elseif ($cloud['type'] == 'storage') {
                 $value1['access_id'] = authcode($value1['access_id'], 'DECODE', $value1['type']) ? authcode($value1['access_id'], 'DECODE', $value1['type']) : $value1['access_id'];
                 if (!$value1['cloudname']) $value1['cloudname'] = $cloud['name'] . ':' . ($value1['bucket'] ? $value1['bucket'] : cutstr($value1['access_id'], 4, $dot = ''));
                 $value1['bz'] = $value['bz'];
                 $value1['img'] = 'dzz/images/default/system/' . $cloud['bz'] . '.png';
             } else {
-
                 $value1['bz'] = $value['bz'];
                 $value1['img'] = 'dzz/images/default/system/' . $cloud['bz'] . '.png';
             }
+            $value1['type'] = $cloud['type'];
             $user = getuserbyuid($value1['uid']);
             $value1['username'] = $user['username'];
-            $value1['dateline'] = dgmdate($value1['dateline']);
+            $value1['dateline'] = dgmdate($value1['dateline'], 'Y-m-d H:i:s');
             $list[] = $value1;
         }
         $multi = multi($count, $perpage, $page, $theurl, 'pull-right');
         include template('edit');
         exit();
     }
-} elseif ($_GET['do'] == 'getBucket') {
-    $id = $_GET['id'];
-    $key = $_GET['key'];
-    if ($re = io_ALIOSS::getBucketList($id, $key)) {
-        echo json_encode($re);
-    } else {
-        echo json_encode(array());
-    }
-    exit();
-
 } else {
     $bz = $_GET['bz'];
     $cloud = C::t('connect')->fetch($bz);

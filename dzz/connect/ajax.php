@@ -39,24 +39,6 @@ if ($_GET['do'] == 'delete') {
         echo json_encode(array('error' => lang('delete_unsuccess')));
     }
     exit();
-} elseif ($_GET['do'] == 'getBucket') {
-    $id = trim(rawurldecode($_GET['id']));
-    $key = trim(rawurldecode($_GET['key']));
-    $bz = empty($_GET['bz']) ? 'ALIOSS' : $_GET['bz'];
-    switch ($bz) {
-        case 'ALIOSS':
-            $re = io_ALIOSS::getBucketList($id, $key);
-            break;
-        case 'JSS':
-            $re = io_JSS::getBucketList($id, $key);
-            break;
-    }
-    if ($re) {
-        echo json_encode($re);
-    } else {
-        echo json_encode(array());
-    }
-    exit();
 } elseif ($_GET['do'] == 'rename') {
     $return = array();
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';

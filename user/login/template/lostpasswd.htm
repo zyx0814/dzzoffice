@@ -16,7 +16,7 @@
         </div>
         <h2 class="main-title">{lang getpassword}</h2>
         <div class="Mbody">
-            <form class="signin-form loginForm" method="post" autocomplete="off" id="lostpwform_$loginhash" role="form"  onsubmit="lyearlostpass('lostpw_container_$loginhash','lostpwform_$loginhash','returnmessage3_$loginhash');return false;" action="user.php?mod=login&op=logging&action=lostpasswd">
+            <form class="signin-form loginForm" method="post" id="lostpwform_$loginhash" role="form"  onsubmit="lyearlostpass('lostpw_container_$loginhash','lostpwform_$loginhash','returnmessage3_$loginhash');return false;" action="user.php?mod=login&op=logging&action=lostpasswd">
                 <input type="hidden" name="formhash" value="{FORMHASH}" />
                 <input type="hidden" name="lostpwsubmit" value="true" />
                 <input type="hidden" name="handlekey" value="lostpw_$loginhash" />

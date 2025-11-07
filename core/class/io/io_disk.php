@@ -558,13 +558,20 @@ class io_disk extends io_api {
                     'mtime' => $file->getMTime()
                 );
             } else {
+                try {
+                    $fileSize = $file->getSize();
+                    $ctime = $file->getCTime();
+                    $mtime = $file->getMTime();
+                } catch (Exception $e) {
+                    continue;
+                }
                 $fileinfo = array(
                     'path' => ($bzarr['path1'] ? ($bzarr['path1'] . '/') : '') . $filename,
                     'name' => $filename,
                     'type' => 'file',
-                    'size' => $file->getSize(),
-                    'ctime' => $file->getCTime(),
-                    'mtime' => $file->getMTime()
+                    'size' => $fileSize,
+                    'ctime' => $ctime,
+                    'mtime' => $mtime
                 );
             }
             $icoarr = $this->_formatMeta($fileinfo, $bzarr['bz']);

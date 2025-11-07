@@ -204,6 +204,8 @@ function checkusername(el) {
 		
 		jQuery.getJSON('user.php?mod=ajax&action=checkusername&username=' + encodeURI(username), function(json) {
 			errormessage(el, json.error||'');
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 		});
 	}
 }
@@ -257,7 +259,6 @@ function checkpassword(el1, el2) {
 }
 
 function checkemail(el) {
-	
 	var email = trim(el.val());
 	if(email == '' || email == lastemail) {
 		errormessage(el);
@@ -273,7 +274,9 @@ function checkemail(el) {
 		return;
 	}
 	jQuery.getJSON('user.php?mod=ajax&action=checkemail&email=' + email, function(json) {	
-			errormessage(el, json.error||'');	
+		errormessage(el, json.error||'');
+	}).fail(function(jqXHR, textStatus, errorThrown) {
+		showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 	});
 }
 
