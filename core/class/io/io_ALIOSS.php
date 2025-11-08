@@ -24,6 +24,7 @@ class io_ALIOSS extends io_api {
     private $_rootname = '';
     private $perm = 0;
     private $alc = '';
+    private $hostname = '';
 
     public function __construct($path) {
         global $_G;
@@ -37,9 +38,7 @@ class io_ALIOSS extends io_api {
 
     public function MoveToSpace($path, $attach) {
         global $_G;
-        /*
-	 *移动附件	 *
-	 */
+        /*移动附件*/
         $filename = substr($path, strrpos($path, '/') + 1);
         $fpath = substr($path, 0, strrpos($path, '/')) . '/';
         if ($re = $this->makeDir($fpath)) { //创建目录
@@ -88,11 +87,10 @@ class io_ALIOSS extends io_api {
 
     protected function _makeDir($path) {
         global $_G;
-        $arr = $this->parsePath($path);
         try {
             $oss = $this->init($path);
             if (is_array($oss) && $oss['error']) return $oss;
-
+            $arr = $this->parsePath($path);
             $response = $oss->create_object_dir($arr['bucket'], $arr['object']);
             if (!$response->isOk()) {
                 return array('error' => $response->status);
@@ -125,7 +123,11 @@ class io_ALIOSS extends io_api {
         } else {
             $this->_rootname .= ':' . ($root['bucket'] ? $root['bucket'] : cutstr($root['access_id'], 4, $dot = ''));
         }
+        $this->hostname = $root['hostname'];
         $this->bucket = $root['bucket'];
+        if (empty($access_id) || empty($access_key) || empty($root['hostname'])) {
+            return array('error' => 'Invalid credentials or endpoint');
+        }
         try {
             return new ALIOSS($access_id, $access_key, $root['hostname']);
 
@@ -135,9 +137,9 @@ class io_ALIOSS extends io_api {
     }
 
     public function getBucketALC($path) {
-        $arr = $this->parsePath($path);
         $oss = $this->init($path, 1);
         if (is_array($oss) && $oss['error']) return $oss;
+        $arr = $this->parsePath($path);
         $response = $oss->get_bucket_acl($arr['bucket']);
         $alc = $response->getBody();
         return $this->alc = $alc['AccessControlPolicy']['AccessControlList']['Grant'];
@@ -236,9 +238,9 @@ class io_ALIOSS extends io_api {
     }
 
     public function getFileUri($path) {
-        $arr = $this->parsePath($path);
         $oss = $this->init($path, 1);
         if (is_array($oss) && $oss['error']) return $oss;
+        $arr = $this->parsePath($path);
         if (empty($this->alc)) {
             try {
                 $this->alc = $this->getBucketALC($path);
@@ -354,9 +356,9 @@ class io_ALIOSS extends io_api {
     //获取文件流；
     //$path: 路径
     public function getStream($path) {
-        $arr = $this->parsePath($path);
         $oss = $this->init($path, 1);
         if (is_array($oss) && $oss['error']) return $oss;
+        $arr = $this->parsePath($path);
         if (empty($this->alc)) {
             try {
                 $this->alc = $this->getBucketALC($path);
@@ -375,10 +377,12 @@ class io_ALIOSS extends io_api {
         $arr = explode(':', $path);
         $bz = $arr[0] . ':' . $arr[1] . ':';
         $arr1 = explode('/', $arr[2]);
-        //if(count($arr1)>1){
-        $bucket = $arr1[0];
-        unset($arr1[0]);
-        //}else $bucket='';
+        if(count($arr1)>1){
+            $bucket = $arr1[0];
+            unset($arr1[0]);
+        } else {
+            $bucket = $this->bucket;
+        }
         //if(!$bucket) return array('error'=>'bucket不能为空');
         $object = implode('/', $arr1);
         return array('bucket' => $bucket, 'object' => $object, 'bz' => $bz);
@@ -411,10 +415,10 @@ class io_ALIOSS extends io_api {
     public function upload_by_content($fileContent, $path, $filename, $ondup = 'overwrite') {
         global $_G;
         $path .= $filename;
-        $arr = $this->parsePath($path);
         try {
             $oss = $this->init($path);
             if (is_array($oss) && $oss['error']) return $oss;
+            $arr = $this->parsePath($path);
             $upload_file_options = array(
                 'content' => $fileContent,
                 'length' => strlen($fileContent)
@@ -422,7 +426,7 @@ class io_ALIOSS extends io_api {
             $response = $oss->upload_file_by_content($arr['bucket'], $arr['object'], $upload_file_options);
 
             if (!$response->isOk()) {
-                return array('error' => $response->status);
+                return array('error' => $response->status ?? 'upload error');
             }
             if (md5($fileContent) != strtolower(trim($response->header['etag'], '"'))) { //验证上传是否完整
                 return array('error' => lang('upload_file_incomplete'));
@@ -459,11 +463,11 @@ class io_ALIOSS extends io_api {
      */
     public function listFiles($path, $by = 'time', $marker = '', $limit = 100, $force = 0) {
         global $_G, $_GET, $documentexts, $imageexts;
-        $arr = $this->parsePath($path);
 
         $icosdata = array();
         $oss = $this->init($path, 1);
         if (is_array($oss) && $oss['error']) return $oss;
+        $arr = $this->parsePath($path);
         if (!$arr['bucket']) {
             $response = $oss->list_bucket();
             $bucket = $response->getBody();
@@ -626,11 +630,11 @@ class io_ALIOSS extends io_api {
 	*/
     public function getMeta($path, $force = 0) {
         global $_G, $_GET, $documentexts, $imageexts;
-        $arr = $this->parsePath($path);
 
         $icosdata = array();
         $oss = $this->init($path, 1);
         if (is_array($oss) && $oss['error']) return $oss;
+        $arr = $this->parsePath($path);
         if (empty($arr['object']) || empty($arr['bucket'])) {
             $meta = array(
                 'Key' => '',
@@ -800,8 +804,8 @@ class io_ALIOSS extends io_api {
 
     //根据路径获取目录树的数据；
     public function getFolderDatasByPath($path) {
-        $bzarr = $this->parsePath($path);
         $oss = $this->init($path, 1);
+        $bzarr = $this->parsePath($path);
         $spath = $bzarr['object'];
 
         if (!$this->bucket && $bzarr['bucket']) {
@@ -1040,11 +1044,11 @@ class io_ALIOSS extends io_api {
     //
     public function Delete($path, $force = false) {
         //global $dropbox;
-        $arr = $this->parsePath($path);
         $rid = md5($path);
         try {
             $oss = $this->init($path, $force);
             if (is_array($oss) && $oss['error']) return $oss;
+            $arr = $this->parsePath($path);
             //判断删除的对象是否为文件夹
             if (strrpos($arr['object'], '/') == (strlen($arr['object']) - 1)) { //是文件夹
                 $objects = $this->getFolderObjects($oss, $path);
@@ -1069,13 +1073,13 @@ class io_ALIOSS extends io_api {
     //$bz：api;
     public function CreateFolder($path, $fname) {
         global $_G;
-        $arr = $this->parsePath($path);
         //exit('createrfolder==='.$fname.'===='.$path1.'===='.$bz);
         //exit($path.$fname.'vvvvvvvvvvv');
         $return = array();
         try {
             $oss = $this->init($path);
             if (is_array($oss) && $oss['error']) return $oss;
+            $arr = $this->parsePath($path);
 
             $response = $oss->create_object_dir($arr['bucket'], $arr['object'] . $fname);
             if (!$response->isOk()) {
@@ -1214,11 +1218,11 @@ class io_ALIOSS extends io_api {
     public function upload($file, $path, $filename, $partinfo = array(), $ondup = 'overwrite') {
         global $_G;
         $path .= $filename;
-        $arr = $this->parsePath($path);
 
         try {
             $oss = $this->init($path);
             if (is_array($oss) && $oss['error']) return $oss;
+            $arr = $this->parsePath($path);
             $upload_file_options = array(
                 'fileUpload' => $file,
             );
@@ -1353,11 +1357,11 @@ class io_ALIOSS extends io_api {
     public function CopyTo($opath, $path, $iscopy) {
         static $i = 0;
         $i++;
-        $oarr = $this->parsePath($opath);
         $arr = IO::parsePath($path);
 
         $oss = $this->init($opath);
         if (is_array($oss) && $oss['error']) return $oss;
+        $oarr = $this->parsePath($opath);
         try {
             $data = $this->getMeta($opath);
             switch ($data['type']) {

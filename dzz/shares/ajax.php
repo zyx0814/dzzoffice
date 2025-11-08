@@ -199,7 +199,6 @@ if ($do == 'uploads') {//上传新文件(指新建)
     }
     $filename = '';
     $bzpath = isset($_GET['bz']) ? trim($_GET['bz']) : '';
-    $bz = getBzByPath($fid);
     switch ($type) {
         case 'newTxt':
             $filename = lang('new_txt') . '.txt';

@@ -249,7 +249,11 @@ if ($do == 'upload') {//上传图片文件
     $bzpath = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     $fid = intval($_GET['fid']);
     $filename = '';
-    $bz = getBzByPath($fid);
+    if ($bzpath) {
+        $bz = getBzByPath($fid);
+    } else {
+        $bz = '';
+    }
     switch ($type) {
         case 'newTxt':
             $filename = lang('new_txt') . '.txt';
