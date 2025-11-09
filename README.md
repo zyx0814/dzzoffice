@@ -1,21 +1,23 @@
 ﻿<div align="center">
-<img src="./static/image/common/logo.png" width="128px" alt="DzzOffice" />
-
-# DzzOffice
-<h4 align="center">多云存储 • 在线文档管理 • 协同办公 • 100%开源</h4>
-<p align="center">
-  <a href="http://dzzoffice.com" target="_blank">官网</a> •
-  <a href="http://dzzoffice.com" target="_blank">下载</a> •
-  <a href="http://demo.dzzoffice.com" target="_blank">演示</a>  • 
-  <a href="./UPDATE.md" target="_blank">更新日志</a>
-</p>
-<p align="center">
-  <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/stargazers"><img src="https://gitee.com/zyx0814/dzzoffice/badge/star.svg?theme=dark" alt='gitee star'/></a>
-  <a target="_blank" href="https://github.com/zyx0814/dzzoffice/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zyx0814/dzzoffice?style=social"></a>
-</p>
+  <img src="./static/image/common/logo.png" width="128px" alt="DzzOffice" />
+  <h1>DzzOffice</h1>
+  <h4>多云存储 • 在线文档管理 • 协同办公 • 100%开源</h4>
+  <p>
+    <a href="http://dzzoffice.com" target="_blank">官网</a> •
+    <a href="http://dzzoffice.com" target="_blank">下载</a> •
+    <a href="http://demo.dzzoffice.com" target="_blank">演示</a>  • 
+    <a href="./UPDATE.md" target="_blank">更新日志</a>
+  </p>
+  <p>
+    <a href="https://hellogithub.com/repository/zyx0814/dzzoffice" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=734f17351a6a4a0d9e94749651923a5e&claim_uid=wytcYV5NWvThIjQ&theme=neutral" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+  </p>
+  <p>
+    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/stargazers"><img src="https://gitee.com/zyx0814/dzzoffice/badge/star.svg?theme=dark" alt='gitee star'/></a>
+    <a target="_blank" href="https://github.com/zyx0814/dzzoffice/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zyx0814/dzzoffice?style=social"></a>
+  </p>
 </div>
 
-## DzzOffice 介绍：
+## 📝 项目介绍
 
 DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于“Google 企业应用套件”和“微软 Office365”的协同办公平台。它由多款开源办公应用组成，用户可根据需求选择和安装，实现高度灵活和可定制的使用体验。
 
@@ -40,7 +42,7 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 
 更多应用可前往[DzzOffice 应用市场](http://www.dzzoffice.com/index.php?mod=dzzmarket)获取。
 
-## 安装部署
+## 📥 安装部署
 
 ### 软件环境要求
 1. **操作系统**：支持Linux、Windows、Mac OS，推荐使用Linux。
@@ -58,7 +60,9 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 
 镜像地址：https://github.com/zyx0814/dzzoffice-docker
 
-## DzzOffice 在线更新方法
+## 🔝 升级方法
+
+### 在线更新
 
 1. 进入您原来的系统，关闭您的站点。进行数据备份；
 2. 备份文件（如果有程序文件或风格文件的改动）；
@@ -66,7 +70,7 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 4. 系统工具 -> 更新系统缓存；
 5. 系统设置 -> 打开站点。
 
-## DzzOffice 离线更新方法（仅支持从V2.01版本升级）
+### 离线更新（仅支持从V2.01版本升级）
 
 1. 进入您原来的系统，关闭您的站点。进行数据备份；
 2. 备份文件（如果有程序文件或风格文件的改动）；
@@ -77,11 +81,11 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 7. 管理员登录后，系统工具 -> 更新系统缓存。
 8. 系统设置 -> 打开站点。
 
-## 开源协议
+## 📄 开源许可
 
 * 本项目遵循 [AGPL-3.0](http://www.dzzoffice.com/licenses/license.txt) 开源许可协议
 
-## 参与贡献
+## 🤲 参与贡献
 
 感谢您对 DzzOffice 的支持！每一个贡献都是项目进步的重要力量。我们欢迎通过以下方式参与共建：
 
@@ -102,14 +106,25 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 
 让我们携手学习、共同进步，一起打造更加完善的 DzzOffice。
 
-## QQ 交流群
+## 💬 加入社区
+
+🤝 DzzOffice QQ交流群：与开发者和用户一起交流讨论，获取最新资讯和技术支持
+
 **DzzOffice 交流群1：**[240726](https://qm.qq.com/q/gPvj9eNCAo "240726")
 
 **DzzOffice 交流群2：**[245384](https://qm.qq.com/q/lwXQmUiI5G "245384")
 
 **DzzOffice 交流群3：**[162934210](https://qm.qq.com/q/eHn2SHMiUS "162934210")
 
-## 友情提示
+## 📝 友情提示
 - 请随时关注更新动态，您可进行手动修补，让自己的站点时刻保持最安全的状态!
 
 - V2.0 bata版本需先升级到V2.01版本，才能升级后续版本。
+
+<div align="center">
+  <h3>🌟 感谢您的关注</h3>
+  <p>如果您觉得 DzzOffice 有价值，请给我们一个 ⭐ Star，这是对我们最大的鼓励！</p>
+  <p>
+    <strong>让我们一起构建更好的办公协作平台！ 🚀</strong>
+  </p>
+</div>
