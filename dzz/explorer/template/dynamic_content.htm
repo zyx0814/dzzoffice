@@ -212,12 +212,12 @@
             search_data.uids = $(this).val();
         });
         // 搜索按钮功能
-		$(document).on('click', '#search-btn', function() {
+        $(document).off('click', '#search-btn').on('click', '#search-btn', function() {
             search_data.doobj = $('#object').val();
             search_data.username = $('#username').val();
             executedynamisc_search();
         });
-        $('#refreshsearch').click(function() {
+        $(document).off('click', '#refreshsearch').on('click', '#refreshsearch', function() {
             $('#operation').val('');
             $('#object').val('');
 		    $('#username').val('');

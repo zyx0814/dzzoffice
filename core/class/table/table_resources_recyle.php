@@ -139,7 +139,7 @@ class table_resources_recyle extends dzz_table {
             }
         }
         $explorer_setting = get_resources_some_setting();
-        $orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门
+        $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门
         $powerarr = perm_binPerm::getPowerArr();
         $or = array();
         //如果没有群组和网盘限制条件，默认查询我有权限管理的群组和我删除的文件

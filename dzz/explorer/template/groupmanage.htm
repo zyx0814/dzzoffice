@@ -91,10 +91,10 @@
 		},
         done: function(){
             checkStatusBtn(this.id);
-            $('#search-btn').click(function () {
+            $(document).off('click', '#search-btn').on('click', '#search-btn', function() {
                 executedynamisc_search();
-            })
-            $('#refreshsearch').click(function() {
+            });
+            $(document).off('click', '#refreshsearch').on('click', '#refreshsearch', function() {
                 $('#selectDate').val('');
                 $('#selectDate1').val('');
                 $('#groupon').val('0');

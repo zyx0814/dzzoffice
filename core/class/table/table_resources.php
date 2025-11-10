@@ -423,7 +423,6 @@ class table_resources extends dzz_table {
         //增加安全相关的路径
         $data['dpath'] = dzzencode($data['path']);
         $data['apath'] = $data['aid'] ? dzzencode('attach::' . $data['aid']) : $data['dpath'];
-        if (!$data['sperm']) $data['sperm'] = perm_FileSPerm::typePower($data['type'], $data['ext']);
         if (!$data['perm']) $data['perm'] = perm_check::getPerm($data['pfid']);
         Hook::listen('filter_resource_rid', $data);//数据过滤挂载点
         $this->store_cache($cachekey, $data);

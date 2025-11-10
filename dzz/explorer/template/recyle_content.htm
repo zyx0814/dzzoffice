@@ -70,10 +70,10 @@
 		todayBtn: "linked",
 		calendarWeeks: true,
     });
-   $('#search-btn').click(function () {
+	$(document).off('click', '#search-btn').on('click', '#search-btn', function() {
 		searchRecycledata();
-	})
-	$('#refreshsearch').click(function() {
+	});
+	$(document).off('click', '#refreshsearch').on('click', '#refreshsearch', function() {
 		$('#selectDate').val('');
 		$('#selectDate1').val('');
 		$('#search_data_text').text('{lang all}');

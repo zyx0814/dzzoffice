@@ -768,7 +768,7 @@ if ($do == 'upload') {//上传图片文件
             $fileinfo = C::t('resources')->get_property_by_rid($rid);
         } elseif ($fid) {
             $fileinfo = C::t('resources')->get_property_by_fid($fid);
-        } elseif($paths) {
+        } else {
             $patharr = explode(',', $paths);
             $rids = array();
             foreach ($patharr as $v) {
@@ -937,7 +937,7 @@ if ($do == 'upload') {//上传图片文件
         if ($total) {
             $events = C::t('resources_event')->fetch_by_rid($rid, $page, $limit, false, 1);
         }
-    } elseif($fid) {
+    } else {
         $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
         if($fileinfo['error']) showmessage($fileinfo['error']);
         $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true, $page, $limit, '', 1);
@@ -969,7 +969,7 @@ if ($do == 'upload') {//上传图片文件
         if ($total) {
             $events = C::t('resources_event')->fetch_by_rid($rid, $page, $limit,false, 2);
         }
-    } elseif($fid) {
+    } else {
         $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
         if($fileinfo['error']) showmessage($fileinfo['error']);
         $total = C::t('resources_event')->fetch_by_pfid_rid($fid, true, $page, $limit, '', 2);
@@ -1000,22 +1000,24 @@ if ($do == 'upload') {//上传图片文件
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if ($rid) {
         $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
-    } elseif ($fid) {
+    } else {
         $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
     }
     if($fileinfo['error']) showmessage($fileinfo['error']);
     if($fileinfo['gid']) {
-        $org = C::t('organization')->fetch($fileinfo['gid']);
-        if($org) {
-            $members = C::t('organization_user')->fetch_user_byorgid($fileinfo['gid'],'', false);
-            //处理成员头像函数
-            $userids = array();
-            foreach ($members as $k => $v) {
-                $userids[] = $v['uid'];
+        if ($fileinfo['isgroup']) {
+            $org = C::t('organization')->fetch($fileinfo['gid']);
+            if($org) {
+                $members = C::t('organization_user')->fetch_user_byorgid($fileinfo['gid'],'', false);
+                //处理成员头像函数
+                $userids = array();
+                foreach ($members as $k => $v) {
+                    $userids[] = $v['uid'];
+                }
+                $userstr = implode(',', $userids);
             }
-            $userstr = implode(',', $userids);
-            $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);
         }
+        $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);
         $folderperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
     }
     $myperm = perm_check::getPerm($fileinfo['fid']);

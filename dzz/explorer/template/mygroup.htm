@@ -86,10 +86,10 @@
 		},
         done: function(){
             checkStatusBtn(this.id);
-            $('#search-btn').click(function () {
+            $(document).off('click', '#search-btn').on('click', '#search-btn', function() {
                 executedynamisc_search();
-            })
-            $('#refreshsearch').click(function() {
+            });
+            $(document).off('click', '#refreshsearch').on('click', '#refreshsearch', function() {
                 $('#selectDate').val('');
                 $('#selectDate1').val('');
                 $('#mygroupsearch').val('all');
@@ -97,7 +97,7 @@
                     search_data[o] = '';
                 }
                 executedynamisc_search();
-            })
+            });
         },
 	  });
       layuiModules.table.on('checkbox(mygroup)', function(obj){
