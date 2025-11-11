@@ -53,25 +53,6 @@ _explorer.FolderSPower=function(power,action){//判断有无权限;
     if( (power & parseInt(actionArr[action])) == parseInt(actionArr[action]) ) return false;  
     return true; 
 }
-_explorer.FileSPower=function(power,action){//判断有无权限;
-	var actionArr={   'delete'      : 1,		
-  					  'edit'  		 : 2,		
-					  'rename'   	: 4,		
-					  'move'	    : 8,      
-					  'download'  	: 16,
-					  'share'		: 32,
-					  'widget'	  	: 64,
-					  'wallpaper'	: 128,
-					  'cut'         : 256,
-					  'shortcut'    : 512	 
-	};
-	
-	if(action=='copy') action='delete';
-	if(parseInt(actionArr[action])<1) return true;
-	//权限比较时，进行与操作，得到0的话，表示没有权限  
-    if( (power & parseInt(actionArr[action])) == parseInt(actionArr[action]) ) return false;  
-    return true; 
-}
 
 _explorer.Permission_Container=function(action,fid){
 	//预处理些权限
@@ -118,14 +99,12 @@ _explorer.Permission_Container=function(action,fid){
 
 _explorer.Permission=function(action,data){
 	if(_explorer.myuid<1) return false; //游客无权限；
-	//预处理些权限
 	if(data.isdelete>0) return true; //回收站有权限；
 	var fid=data.pfid;
 	if(action=='download'){ //不是附件类型的不能下载
 		if(data.type!='document' && data.type!='attach' && data.type!='image' && data.type!='folder') return false;
 	}else if(action=='copy'){ //回收站内不能复制
 		if(data.flag=='recycle') return false;
-		if(data.type=='app' ||  data.type=='storage' || data.type=='pan' || data.type=='ftp') return false;
 	}else if(action=='paste'){ //没有复制或剪切，没法粘帖
 		if(_explorer.cut.icos.length<1) return false;
 		action=_explorer.sourcedata.icos[_explorer.cut.icos[0]].type;
@@ -143,11 +122,15 @@ _explorer.Permission=function(action,data){
 	}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
 		action='upload';
 	}
-	if(!_explorer.FileSPower(data.sperm,action)) return false;
 	if(jQuery.inArray(action,['read','delete','edit','download','copy'])>-1){
 		if(_explorer.myuid==data.uid) action+='1';
 		else action+='2';
 	}
+	//判断文件自身权限；
+	if (data.sperm && data.sperm>0) {
+		return _explorer.isPower(data.sperm,action);
+	}
+	//判断容器权限；
 	if(_explorer.sourcedata.folder[fid]) {
 		return _explorer.Permission_Container(action,fid);
 	} else {

@@ -139,7 +139,7 @@ class table_resources extends dzz_table {
             //判断目录是否为空，为空则不判断当前目录权限
             if ($ridnum) {
                 if (perm_check::checkperm_Container($icoarr['pfid'], $action . '2') || ($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['pfid'], $action . '1'))) {
-                    if (!perm_check::checkperm_Container($icoarr['oid'], $action . '2') && !($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['oid'], $action . '1'))) return array('error' => lang('has_no_privilege_file'));
+                    if (!perm_check::checkperm_Container($icoarr['oid'], $action . '2', '', $folderinfo['uid']) && !($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['oid'], $action . '1', '', $folderinfo['uid']))) return array('error' => lang('has_no_privilege_file'));
                 } else {
                     return array('error' => lang('has_no_privilege_file'));
                 }
@@ -644,21 +644,7 @@ class table_resources extends dzz_table {
                 $arr['shareid'] = $sharestable->fetch_by_shareid($value['rid']);
                 if ($sid) {
                     $arr['dpath'] = dzzencode('sid:' . $sid . '_' . $value['rid']);
-                    if ($isfilter && isset($arr['attachment'])) {
-                        unset($arr['attachment']);
-                    }
-                    if (isset($arr['relativepath'])) {
-                        unset($arr['relativepath']);
-                    }
-                    if (isset($arr['relpath'])) {
-                        unset($arr['relpath']);
-                    }
-                    if (isset($arr['realpath'])) {
-                        unset($arr['realpath']);
-                    }
-                    if (isset($arr['position'])) {
-                        unset($arr['position']);
-                    }
+                    unset($arr['relativepath'], $arr['relpath'], $arr['realpath'], $arr['position']);
                 }
                 if ($isfilter && isset($arr['attachment'])) {
                     unset($arr['attachment']);

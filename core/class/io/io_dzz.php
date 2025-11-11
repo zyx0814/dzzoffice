@@ -956,10 +956,10 @@ class io_dzz extends io_api {
         }
         $fname = IO::name_filter($fname);
 
-        if (!$folder = C::t('folder')->fetch($pfid)) {//DB::fetch_first("select fid,pfid,iconview,disp,gid,perm_inherit from %t where fid=%d", array('folder', $pfid))) {
+        if (!$folder = C::t('folder')->fetch($pfid)) {
             return array('error' => lang('parent_directory_not_exist'));
         }
-        if (!$force && !perm_check::checkperm_Container($pfid, 'folder')) {
+        if (!$force && !perm_check::checkperm_Container($pfid, 'folder', '' , $folder['uid'])) {
             return array('error' => lang('no_privilege'));
         }
         if (($ondup == 'overwrite') && ($rid = $this->getRepeatIDByName($fname, $pfid, true))) {//如果目录下有同名目录
@@ -1026,12 +1026,6 @@ class io_dzz extends io_api {
                 $setarr1['path'] = $setarr1['rid'];
                 $setarr1['dpath'] = dzzencode($setarr1['rid']);
                 $setarr1['bz'] = '';
-                //addtoconfig($setarr1);
-                /*  $setarr1['fsize'] = formatsize($setarr1['size']);
-                  $setarr1['img'] = 'dzz/images/extimg/folder.png';
-                  $setarr1['ftype'] = getFileTypeName($setarr1['type'], $setarr1['ext']);
-                  $setarr1['fdateline'] = dgmdate($setarr1['dateline']);
-                  $setarr1['sperm'] = perm_FileSPerm::typePower($setarr1['type'], $setarr1['ext']);*/
                 if ($fid = $setarr1['pfid']) {
                     $event = 'creat_folder';
                     $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
@@ -1531,10 +1525,10 @@ class io_dzz extends io_api {
         }
         $gid = $folder['gid'];
         if (in_array($icoarr['type'], array('folder', 'link', 'video', 'dzzdoc'))) {
-            if (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload')) {
+            if (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload', '' , $folder['uid'])) {
                 return array('error' => lang('no_privilege'));
             }
-        } elseif (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload')) {
+        } elseif (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload', '' , $folder['uid'])) {
             return array('error' => lang('no_privilege'));
         }
         $target = $icoarr['attachment'];
@@ -2055,9 +2049,9 @@ class io_dzz extends io_api {
                     }
 
                     //判断有无新建权限,如果是文件夹判断是否有文件件新建权限
-                    if ($icoarr['type'] == 'folder' && !perm_check::checkperm_Container($pfid, 'folder')) {
+                    if ($icoarr['type'] == 'folder' && !perm_check::checkperm_Container($pfid, 'folder', '' , $tfolder['uid'])) {
                         return array('error' => lang('no_privilege'));
-                    } elseif (!perm_check::checkperm_Container($pfid, 'upload')) {
+                    } elseif (!perm_check::checkperm_Container($pfid, 'upload', '' , $tfolder['uid'])) {
                         return array('error' => lang('no_privilege'));
                     }
                 }
@@ -2263,7 +2257,7 @@ class io_dzz extends io_api {
                 }
 
                 //判断当前目录有无添加权限
-                if (!perm_check::checkperm_Container($pfid, 'upload')) {
+                if (!perm_check::checkperm_Container($pfid, 'upload', '' , $tfolder['uid'])) {
                     return array('error' => lang('no_privilege'));
                 }
             }

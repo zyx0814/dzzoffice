@@ -65,7 +65,7 @@ if ($folder['gid'] > 0) {
         $doing = false;
     } elseif (!$group['manageon'] || !$group['diron']) {
         $doing = false;
-    } elseif (!perm_check::checkperm_Container($fid, 'upload')) {
+    } elseif (!perm_check::checkperm_Container($fid, 'upload', '' , $folder['uid'])) {
         $doing = false;
     }
 } else {

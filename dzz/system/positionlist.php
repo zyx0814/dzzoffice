@@ -282,7 +282,7 @@ if ($do == 'get_children') {
 } elseif ($do == 'geffolderinfo') {
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     $data = C::t('folder')->fetch_by_fid($fid);
-    if (!perm_check::checkperm_Container('read', $data)) {
+    if (!perm_check::checkperm_Container($fid, 'read')) {
         exit(json_encode(array('error' => lang('no_privilege'))));
     }
     exit(json_encode($data));

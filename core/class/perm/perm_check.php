@@ -15,6 +15,11 @@ class perm_check {
      */
     public static function getuserPerm() {
         global $_G;
+        static $userPermCache = [];
+        $cacheKey = $_G['uid'];
+        if (isset($userPermCache[$cacheKey])) {
+            return $userPermCache[$cacheKey];
+        }
         $perm = DB::result_first("select perm from %t where uid=%d", array('user_field', $_G['uid']));
         // 个人权限无效时，使用用户组权限
         if ($perm < 1) $perm = intval($_G['group']['perm']);
@@ -23,6 +28,7 @@ class perm_check {
             $power = new perm_binPerm($perm);
             $perm = $power->delPower('share');
         }
+        $userPermCache[$cacheKey] = $perm;
         return $perm;
     }
 
@@ -65,15 +71,10 @@ class perm_check {
             }
             // 权限不继承上级（flag标识）：处理分享权限后，合并用户基础权限
             if ($power->isPower('flag')) {
-                if ($_G['setting']['allowshare']) {
-                    $perm = $power->delPower('share');
-                }
-                $power1 = new perm_binPerm($perm);
-                return $power1->mergePower(self::getuserPerm());//$power1->power;
+                return $power->mergePower(self::getuserPerm());//$power1->power;
             }
             // 权限继承上级：递归查上级文件夹权限，合并用户基础权限
             if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
-                //return self::getPerm($folder['pfid'],$bz,$i);
                 $perm = self::getPerm($folder['pfid'], $bz, $i);
                 $power1 = new perm_binPerm($perm);
                 return $power1->mergePower(self::getuserPerm());//$power1->power;
@@ -123,11 +124,7 @@ class perm_check {
         } else {
             $power = new perm_binPerm($perm);
             if ($power->isPower('flag')) {//不继承，使用此权限
-                if ($_G['setting']['allowshare']) {
-                    $perm = $power->delPower('share');
-                }
-                $power1 = new perm_binPerm($perm);
-                return $power1->mergePower(self::getuserPerm());
+                return $power->mergePower(self::getuserPerm());
             } else { //继承上级，查找上级
                 if ($folder['pfid'] > 0 && $folder['pfid'] != $folder['fid']) { //有上级目录
                     return self::getPerm1($folder['pfid'], $bz, $i);
@@ -136,6 +133,32 @@ class perm_check {
                 }
             }
         }
+    }
+
+    /**
+     * 获取文件权限
+     * @param int $arr 文件信息
+     * @return int 权限值（0表示无权限，其他值通过位运算表示具体权限）
+     */
+    public static function getridPerm($arr) {
+        global $_G;
+        // 未登录用户无权限
+        if (!$_G['uid']) return 0;
+        // 超级管理员直接拥有全部权限
+        if ($_G['adminid'] == 1) return perm_binPerm::getGroupPower('all');
+        // 文件权限优先：若设置了sperm，直接以文件权限为基础
+        if (!empty($arr['sperm'])) {
+            $power = new perm_binPerm($arr['sperm']);
+            // 合并用户组权限（最终限制）
+            return $power->mergePower(self::getuserPerm());
+        }
+        // 无文件权限：继承所在目录的权限
+        if ($arr['fid']) {
+            return self::getPerm($arr['fid']);
+        } elseif ($arr['pfid']) {
+            return self::getPerm($arr['pfid']);
+        }
+        return 0;
     }
 
     /**
@@ -269,7 +292,9 @@ class perm_check {
             if ($arr['gid']) {
                 if (!self::checkgroupPerm($arr['gid'])) return false; // 非机构成员无权限
                 if (!empty($arr['sperm'])) { // 文件自身有权限时，优先判断
-                    return perm_FileSPerm::isPower($arr['sperm'], $action);
+                    $power = new perm_binPerm($arr['sperm']);
+                    $perm = $power->mergePower(self::getuserPerm());
+                    return perm_binPerm::havePower($action, $perm);
                 }
             }
 
@@ -285,7 +310,7 @@ class perm_check {
      * @param string $bz 标识（第三方挂载场景）
      * @return bool 是否有权限
      */
-    public static function checkperm_Container($pfid, $action = '', $bz = '') {
+    public static function checkperm_Container($pfid, $action = '', $bz = '', $uid = 0) {
         global $_G;
         if (!$pfid) return false;// 无容器ID时无权限
         if ($_G['uid'] < 1) return false; // 未登录无权限
@@ -295,11 +320,14 @@ class perm_check {
             return perm_FolderSPerm::isPower(perm_FolderSPerm::flagPower($bz), $action);
         }
         // 处理操作类型：rename等效于edit；根据容器归属拼接权限后缀
-        if ($pfid && $folder = C::t('folder')->fetch($pfid)) {
-            $action = ($action == 'rename') ? 'edit' : $action;
-            if (in_array($action, ['read', 'delete', 'edit', 'download', 'copy'])) {
-                $action .= ($_G['uid'] == $folder['uid']) ? '1' : '2';
-            }
+        if (!$uid) {
+            $folder = C::t('folder')->fetch($pfid);
+            if (empty($folder)) return false;
+            $uid = $folder['uid'] ?? 0;
+        }
+        $action = ($action == 'rename') ? 'edit' : $action;
+        if (in_array($action, ['read', 'delete', 'edit', 'download', 'copy'])) {
+            $action .= ($_G['uid'] == $uid) ? '1' : '2';
         }
         // 校验容器自身权限
         return self::containerPerm($pfid, $action);
