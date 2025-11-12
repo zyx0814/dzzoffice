@@ -18,8 +18,8 @@ class table_connect extends dzz_table {
 
         $this->_table = 'connect';
         $this->_pk = 'bz';
-        // $this->_pre_cache_key = 'connect_';
-        // $this->_cache_ttl = 60 * 60;
+        $this->_pre_cache_key = 'connect_';
+        $this->_cache_ttl = 60 * 60;
         parent::__construct();
     }
 

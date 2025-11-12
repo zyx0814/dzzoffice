@@ -77,17 +77,16 @@
 </div>
 <form>
     <div class="modal-body">
-        <!--{if !$noperm}-->
         <div class="row">
             <div class="col-sm-2 border-end" id="permgroup">
                 <h6>{lang select_permissions}：</h6>
                 <div class="form-check <!--{if !$inherit}-->hide<!--{/if}-->">
-                    <input type="radio" class="inputRadios form-check-input" name="inputRadios" value="$inheritperm" id="$inheritperm" <!--{if $groupperm == $inheritperm}-->checked="checked"<!--{/if}-->/>
-                    <label class="form-check-label" for="$inheritperm">{lang superior_authority}</label>
+                    <input type="radio" class="inputRadios form-check-input" name="inputRadios" value="$inheritperm" id="inputRadios" <!--{if $fperm == $inheritperm}-->checked="checked"<!--{/if}-->/>
+                    <label class="form-check-label" for="inputRadios">{lang superior_authority}</label>
                 </div>
                 <!--{loop $permgroups $val}-->
                 <div class="form-check">
-                    <input type="radio" class="inputRadios form-check-input" name="inputRadios" value="$val['perm']" id="$val['id']" <!--{if $new}--><!--{if $val['default']}-->checked="checked"<!--{/if}--><!--{else}--><!--{if $groupperm && $groupperm == ($val['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->/>
+                    <input type="radio" class="inputRadios form-check-input" name="inputRadios" value="$val['perm']" id="$val['id']" <!--{if $new}--><!--{if $val['default']}-->checked="checked"<!--{/if}--><!--{else}--><!--{if $fperm && $fperm == ($val['perm'])}-->checked="checked"<!--{/if}--><!--{/if}-->/>
                     <label class="form-check-label" for="$val['id']">$val[pername]</label>
                 </div>
                 <!--{/loop}-->
@@ -98,7 +97,7 @@
                     <div class="row g-0" id="select_perm">
                         <!--{loop $perms $k $v}-->
                         <div class="form-check col-sm-6">
-                            <input type="checkbox" class="form-check-input" value="$v[1]" name="selectperm[]" id="perm$v[1]" <!--{if $v[1] & $groupperm}-->checked="checked" <!--{/if}-->>
+                            <input type="checkbox" class="form-check-input" value="$v[1]" name="selectperm[]" id="perm$v[1]" <!--{if $v[1] & $fperm}-->checked="checked" <!--{/if}-->>
                             <label class="form-check-label fs-6" for="perm$v[1]">
                                 <div class="all-yourself">
                                     <span class="{$v[2]} view-eidt text-primary pe-1" data-perm="$v[1]"></span><span>$v[0]</span>
@@ -110,7 +109,6 @@
                 </div>
             </div>
         </div>
-        <!--{/if}-->
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">{lang cancel}</button>
@@ -167,7 +165,7 @@
         })
     }
     function chk_create(form) {
-        $.post('index.php?mod=explorer&op=ajax&do=selectperm&permsubmit=true&fid={$fid}&gid={$gid}&new={$new}&setting={$setting}', $(form).serialize(), function (data) {
+        $.post('index.php?mod=explorer&op=ajax&do=selectperm&permsubmit=true&fid={$fid}&rid={$rid}&new={$new}&setting={$setting}', $(form).serialize(), function (data) {
             if (data['success']) {
                 if ('{$new}' == 1) {
                     hideWindow('property');
@@ -185,8 +183,8 @@
                     showmessage('{lang do_success}', 'success', 3000, 1);
                     hideWindow('property');
                 }
-            }  else if(data['error']) {
-                showmessage(data['error'], 'error', 3000, 1);
+            }  else if(data['msg']) {
+                showmessage(data['msg'], 'error', 3000, 1);
             } else {
                 showmessage('{lang do_failed}', 'error', 3000, 1);
             }
@@ -359,8 +357,8 @@
                 <h6>{lang select_permissions}：</h6>
                 <!--{if $inherit}-->
                 <div class="form-check">
-                    <input type="radio" class="inputRadios form-check-input" name="inputRadios" value="$inheritperm" checked="checked" id="new_{$inheritperm}"/>
-                    <label class="form-check-label" for="new_{$inheritperm}">{lang inheritperm}</label>
+                    <input type="radio" class="inputRadios form-check-input" name="inputRadios" value="$inheritperm" checked="checked" id="inputRadios"/>
+                    <label class="form-check-label" for="inputRadios">{lang inheritperm}</label>
                 </div>
                 <!--{/if}-->
                 <!--{loop $permgroups $val}-->

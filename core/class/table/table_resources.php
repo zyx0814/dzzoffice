@@ -522,15 +522,15 @@ class table_resources extends dzz_table {
         return $folderinfo;
     }
 
-    public function fetch_all_by_pfid($pfid, $conditions = array(), $limit = 0, $orderby = '', $order = '', $start = 0, $count = false, $sid = false, $isfilter = false) {
+    public function fetch_all_by_pfid($pfid, $conditions = array(), $limit = 0, $orderby = '', $order = '', $start = 0, $count = false, $sid = false, $isfilter = false, $withTotal = false) {
+        if (!$pfid) return array();
         global $_G;
-        $limitsql = $limit ? DB::limit($start, $limit) : '';
-        $data = array();
         $wheresql = ' 1 ';
         $where = array();
         $para = array($this->_table);
         $where[] = ' isdelete < 1 ';
         $mustdition = '';
+        $isread = true;
         //解析搜索条件
         if ($conditions && is_string($conditions)) {//字符串条件语句
             $wheresql .= $conditions;
@@ -622,7 +622,7 @@ class table_resources extends dzz_table {
         }
         if ($mustdition) $wheresql = '(' . $wheresql . $mustdition . ')';
         if ($where) $wheresql .= ' and ' . implode(' AND ', $where);
-        if ($count) return DB::result_first("SELECT COUNT(*) FROM %t  $wheresql ", $para);
+        if ($count) return DB::result_first("SELECT COUNT(*) FROM %t where $wheresql ", $para);
         $ordersql = '';
         if (is_array($orderby)) {
             foreach ($orderby as $key => $value) {
@@ -638,10 +638,10 @@ class table_resources extends dzz_table {
                 $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
             }
         }
-        $sharestable = C::t('shares');
+        $limitsql = $limit ? DB::limit($start, $limit) : '';
+        $data = array();
         foreach (DB::fetch_all("SELECT rid FROM %t where $wheresql $ordersql $limitsql", $para) as $value) {
             if ($arr = self::fetch_by_rid($value['rid'], '', false, $sid)) {
-                $arr['shareid'] = $sharestable->fetch_by_shareid($value['rid']);
                 if ($sid) {
                     $arr['dpath'] = dzzencode('sid:' . $sid . '_' . $value['rid']);
                     unset($arr['relativepath'], $arr['relpath'], $arr['realpath'], $arr['position']);
@@ -651,6 +651,10 @@ class table_resources extends dzz_table {
                 }
                 $data[$value['rid']] = $arr;
             }
+        }
+        if ($withTotal) {
+            $total = DB::result_first("SELECT COUNT(*) FROM %t where $wheresql ", $para);
+            return array('data' => $data, 'total' => $total);
         }
         return $data;
     }

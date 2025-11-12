@@ -27,7 +27,7 @@
 		cols: [[
             {type:'checkbox', fixed: 'left'}
             ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-            ,{field:'name', title: '{lang name}',edit: 'text', templet: function(d) {return d.name;}}
+            ,{field:'name', title: '{lang name}<i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="点击相应名称可以重命名" style="margin-left: 5px;"></i>',edit: 'text', templet: function(d) {return d.name;}}
 		  ,{field:'cloudname', title: '所属云存储',style:'cursor:pointer;', templet: function(d) {return d.cloudname;}}
 		  ,{field:'dateline', title: '{lang create_date}',style:'cursor:pointer;', align: 'center', templet: function(d) {return d.dateline;}}
 		  ,{field:'username', title: '{lang username}',style:'cursor:pointer;', align: 'center'}

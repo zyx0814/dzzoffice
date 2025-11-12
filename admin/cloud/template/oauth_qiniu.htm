@@ -20,14 +20,14 @@
                 <div class="row mb-3">
                   <label class="col-sm-2" for="access_id">AK</label>
                   <div class="col-sm-10">
-                    <input type="text" id="access_id" class="form-control"  name="access_id" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" onfocus="jQuery(this).removeClass('is-invalid');" />
+                    <input type="text" id="access_id" class="form-control"  name="access_id" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" onfocus="jQuery(this).removeClass('is-invalid');" />
                     <span class="form-text">{lang oauth_qinniu_storage} AK</span>
                   </div>
                 </div>
                 <div class="row mb-3">
                   <label class="col-sm-2" for="access_key">SK</label>
                   <div class="col-sm-10">
-                    <input type="password" class="form-control" id="access_key" name="access_key" autocomplete="off" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" onfocus="jQuery(this).removeClass('is-invalid');" />
+                    <input type="password" class="form-control" id="access_key" name="access_key" value="$ali[access_id]" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" onfocus="jQuery(this).removeClass('is-invalid');" />
                     <span class="form-text">{lang oauth_qinniu_storage} SK</span>
                   </div>
                 </div>
@@ -41,7 +41,7 @@
                 <div class="row mb-3">
                   <label class="col-sm-2" for="hostname">{lang visit_domain_name}</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="hostname" name="hostname" autocomplete="off" value="$ali[hostname]" onfocus="jQuery(this).removeClass('is-invalid');" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" />
+                    <input type="text" class="form-control" id="hostname" name="hostname" value="$ali[hostname]" onfocus="jQuery(this).removeClass('is-invalid');" onblur="if(this.value==''){jQuery(this).addClass('is-invalid');}else{jQuery(this).removeClass('is-invalid');}" />
                     <span class="form-text">{lang oauth_qinniu_storage_bucket}</span>
                   </div>
                 </div>

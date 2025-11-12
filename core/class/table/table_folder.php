@@ -211,17 +211,9 @@ class table_folder extends dzz_table {
         }
         $data['title'] = $data['fname'];
         //统计文件数
-        if ($data['gid'] > 0) {//如果是群组
-            //文件数
-            $data['iconum'] = DB::result_first("select COUNT(*) from " . DB::table('resources') . " where pfid='{$fid}' and gid='{$gid}' and isdelete<1");
-            //文件夹数
-            $data['foldernum'] = DB::result_first("select COUNT(*) from " . DB::table('resources') . " where pfid='{$fid}' and gid='{$gid}' and type='folder' and isdelete<1");
-        } else {
-            //文件数
-            $data['iconum'] = DB::result_first("select COUNT(*) from " . DB::table('resources') . " where pfid='{$fid}' and isdelete < 1");
-            //文件夹数
-            $data['foldernum'] = DB::result_first("select COUNT(*) from " . DB::table('resources') . " where pfid='{$fid}' and type='folder' and isdelete < 1");
-        }
+        $data['iconum'] = 0;
+        //文件夹数
+        $data['foldernum'] = 0;
         $data['perm'] = perm_check::getPerm($fid);
         $data['perm1'] = $data['perm_inherit'];
         if ($data['gid'] > 0) {
@@ -384,7 +376,7 @@ class table_folder extends dzz_table {
     public function fetch_all_by_pfid($pfid, $count) {
         global $_G;
         $wheresql = 'pfid = %d  and isdelete<1';
-        if ($folder = C::t('folder')->fetch_by_fid($pfid)) {
+        if ($folder = self::fetch($pfid)) {
             $where1 = array();
             if (!$this->noperm && $folder['gid'] > 0) {
                 $folder['perm'] = perm_check::getPerm($folder['fid']);
@@ -428,12 +420,17 @@ class table_folder extends dzz_table {
     }
 
     public function fetch_folderinfo_by_fid($fid) {//查询群组目录及文件基本信息
+        static $info = array();
+        if (isset($info[$fid])) {
+            return $info[$fid];
+        }
         $fid = intval($fid);
         if (!$folderinfo = self::fetch($fid)) {
             return false;
         }
         $pathinfo = C::t('resources_path')->fetch_pathby_pfid($fid, true);
         $info = array_merge($folderinfo, $pathinfo);
+        $info[$fid] = $info;
         return $info;
 
     }

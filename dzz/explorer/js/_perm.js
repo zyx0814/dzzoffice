@@ -8,30 +8,31 @@
 
 _explorer.isPower=function(power,action){//判断有无权限;
 	var actionArr={ 'flag' 		: 1,		//标志位为1表示权限设置,否则表示未设置，继承上级；
-					  'read1'		: 2,		//读取自己的文件
-					  'read2'		: 4,		//读取所有文件
-					  'delete1'		: 8,		//删除自己的文件
-					  'delete2'		: 16,		//删除所有文件
-					  'edit1'		: 32,		//编辑自己的文件
-					  'edit2'		: 64,		//编辑所有文件
-					  'download1'   : 128,		//下载自己的文件
-					  'download2'	: 256,		//下载所有文件
-					  'copy1'       : 512,		//拷贝自己的文件
-					  'copy2'       : 1024,		//拷贝所有文件
-					  'upload'		: 2048,		//上传
-					 // 'newtype'		: 4096,		//新建其他类型文件（除文件夹、网址、dzz文档、视频、快捷方式以外）
-					  'folder'      : 8192,		//新建文件夹
-					 // 'link'    	: 16384,	//新建网址
-					 // 'dzzdoc'   	: 32768,	//新建dzz文档  
-					 // 'video'		: 65536,	//新建视频
-					 // 'shortcut'	: 131072,	//快捷方式
-					  'share'   	: 262144,	//分享
+					'read1'		: 2,		//读取自己的文件
+					'read2'		: 4,		//读取所有文件
+					'delete1'		: 8,		//删除自己的文件
+					'delete2'		: 16,		//删除所有文件
+					'edit1'		: 32,		//编辑自己的文件
+					'edit2'		: 64,		//编辑所有文件
+					'download1'   : 128,		//下载自己的文件
+					'download2'	: 256,		//下载所有文件
+					'copy1'       : 512,		//拷贝自己的文件
+					'copy2'       : 1024,		//拷贝所有文件
+					'upload'		: 2048,		//上传
+					// 'newtype'		: 4096,		//新建其他类型文件（除文件夹、网址、dzz文档、视频、快捷方式以外）
+					'folder'      : 8192,		//新建文件夹
+					// 'link'    	: 16384,	//新建网址
+					// 'dzzdoc'   	: 32768,	//新建dzz文档  
+					// 'video'		: 65536,	//新建视频
+					// 'shortcut'	: 131072,	//快捷方式
+					'share'   	: 262144,	//分享
+					'approve' : 524288, //审批
+					'comment' : 1048576, //评论
 	};
-	if(parseInt(actionArr[action])<1) return false;
-	//权限比较时，进行与操作，得到0的话，表示没有权限
-	//console.log([action,actionArr[action],power,(power & parseInt(actionArr[action]))]);  
-    if( (power & parseInt(actionArr[action])) >0 ) return true;  
-    return false; 
+	var perm = actionArr[action];
+	if(perm < 1) return false;
+	// 位运算：权限值与操作位的交集不为0，则有权限
+	return (parseInt(power) & perm) !== 0;
 }
 _explorer.FolderSPower=function(power,action){//判断有无权限;
 	var actionArr={   'delete'  : 1,		
@@ -71,7 +72,7 @@ _explorer.Permission_Container=function(action,fid){
 			if(_explorer.space.self>1 || _explorer.sourcedata.folder[fid].ismoderator>0) return true;
 			else return false;
 		}else if(action=='rename'){
-			action='delete';
+			action='edit';
 		}else if(action=='multiselect'){
 			action='copy';
 		}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
@@ -85,7 +86,7 @@ _explorer.Permission_Container=function(action,fid){
 			if(_explorer.sourcedata.folder[fid].bz) return true;
 		}
 		if(action=='rename'){
-			action='delete';
+			action='edit';
 		}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
 			action='upload';
 		}
@@ -113,7 +114,7 @@ _explorer.Permission=function(action,data){
 		else return false;
 	}else if(action=='rename'){ //重命名
 		if(data.type=='folder' && data.bz && (data.bz.split(':')[0]=='ALIOSS' || data.bz.split(':')[0]=='qiniu')) return false;
-		action='delete';
+		action='edit';
 	}else if(action=='multiselect'){
 		action='copy';
 	}else if(action=='drag'){

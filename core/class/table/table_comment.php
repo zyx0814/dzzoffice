@@ -16,8 +16,8 @@ class table_comment extends dzz_table {
 
         $this->_table = 'comment';
         $this->_pk = 'cid';
-        // $this->_pre_cache_key = 'comment_';
-        // $this->_cache_ttl = 60 * 60;
+        $this->_pre_cache_key = 'comment_';
+        $this->_cache_ttl = 60 * 60;
         parent::__construct();
     }
 

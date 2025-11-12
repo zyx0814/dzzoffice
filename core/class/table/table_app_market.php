@@ -15,8 +15,8 @@ class table_app_market extends dzz_table {
     public function __construct() {
         $this->_table = 'app_market';
         $this->_pk = 'appid';
-        // $this->_pre_cache_key = 'app_market_';
-        // $this->_cache_ttl = 60 * 60;
+        $this->_pre_cache_key = 'app_market_';
+        $this->_cache_ttl = 60 * 60;
 
         parent::__construct();
     }

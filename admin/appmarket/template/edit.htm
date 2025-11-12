@@ -37,14 +37,14 @@
           <div class="row mb-3">
             <label for="appname" class="col-sm-2">{lang application_name}</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="appname" name="appname" autocomplete="off" value="$app[appname]">
+              <input type="text" class="form-control" id="appname" name="appname" value="$app[appname]">
             </div>
             <span class="form-text"></span> 
           </div>
           <div class="row mb-3">
             <label for="identifier" class="col-sm-2">{lang application_identifier}</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="identifier" name="identifier" autocomplete="off" value="$app[identifier]">
+              <input type="text" class="form-control" id="identifier" name="identifier" value="$app[identifier]">
               <ul class="form-text">
                 {lang app_application_identifier_text}
               </ul>
@@ -53,7 +53,7 @@
           <div class="row mb-3">
             <label for="app_path" class="col-sm-2">{lang application_app_path}</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="app_path" name="app_path" autocomplete="off" value="$app[app_path]">
+              <input type="text" class="form-control" id="app_path" name="app_path" value="$app[app_path]">
               <ul class="form-text">
                 {lang app_application_app_path_text}
               </ul>
@@ -62,7 +62,7 @@
           <div class="row mb-3">
             <label for="appurl" class="col-sm-2">{lang application_site}</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="appurl" name="appurl" autocomplete="off" value="$app[appurl]">
+              <input type="text" class="form-control" id="appurl" name="appurl" value="$app[appurl]">
               <ul class="form-text">
                 {lang app_application_site_text}
               </ul>
@@ -71,7 +71,7 @@
           <div class="row mb-3">
             <label for="appadminurl" class="col-sm-2">{lang application_appadminurl}</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="appadminurl" name="appadminurl" autocomplete="off" value="$app[appadminurl]">
+              <input type="text" class="form-control" id="appadminurl" name="appadminurl" value="$app[appadminurl]">
               <ul class="form-text">
                 {lang app_application_appadminurl_text}
               </ul>
@@ -80,7 +80,7 @@
           <div class="row mb-3">
             <label for="vendor" class="col-sm-2">{lang supplier}</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="vendor" name="vendor" autocomplete="off" value="$app[vendor]">
+              <input type="text" class="form-control" id="vendor" name="vendor" value="$app[vendor]">
               <span class="form-text">{lang application_provider_name}</span>
             </div>
           </div>
@@ -148,7 +148,7 @@
             <label class="col-sm-2" for="tag">{lang application_label}</label>
             <div class="col-sm-10">
               <div class="input-group mb-3">
-                <input class="form-control" type="text" name="tag" id="tag" autocomplete="off" data-source="$tag_source" data-items="5" value="$app[tags]">
+                <input class="form-control" type="text" name="tag" id="tag" data-source="$tag_source" data-items="5" value="$app[tags]">
               </div>
               <ul class="form-text">
                 <li>{lang app_number_fields}</li>
@@ -160,7 +160,7 @@
             <label class="col-sm-2" for="fileext">{lang app_support_extension}</label>
             <div class="col-sm-10">
               <div class="input-group mb-3">
-                <input class="form-control" type="text" name="fileext" id="fileext" autocomplete="off" data-source="$fileext_source" value="$app[fileext]">
+                <input class="form-control" type="text" name="fileext" id="fileext" data-source="$fileext_source" value="$app[fileext]">
               </div>
               <ul class="form-text">
               {lang app_not_allowed_open_text}

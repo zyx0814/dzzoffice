@@ -55,34 +55,37 @@ if ($do == 'upload') {//上传图片文件
     $upload_handler = new UploadHandler($options);
     exit();
 } elseif ($do == 'selectperm') {
+    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
-    $gid = isset($_GET['gid']) ? intval($_GET['gid']) : '';
-    $inherit = true;//是否允许继承上级权限
-
-    //如果是顶级群组的文件夹权限不允许继承上级权限
-    if ($gid && $orginfo = C::t('organization')->fetch($gid)) {
-        if ($fid == $orginfo['fid']) {
-            $inherit = false;
-        } else {
-            $folderinfo = C::t('folder')->fetch($fid);
-            $inheritperm = DB::result_first("select perm from %t where fid = %d", array('folder', $folderinfo['pfid']));
-        }
+    if ($rid) {
+        $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
     } else {
-        $folderinfo = C::t('folder')->fetch($fid);
+        $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
     }
-
+    if($fileinfo['error']) showmessage($fileinfo['error']);
+    $inherit = true;//是否允许继承上级权限
+    if ($fileinfo['gid']) {
+        $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);//获取用户权限
+        if(!$usergroupperm) showmessage('no_privilege');
+        //如果是顶级群组的文件夹权限不允许继承上级权限
+        if ($orginfo = C::t('organization')->fetch($fileinfo['gid'])) {
+            if ($fid == $orginfo['fid']) {
+                $inherit = false;
+            } else {
+                $inheritperm = DB::result_first("select perm from %t where fid = %d", array('folder', $fileinfo['pfid']));
+            }
+        }
+    }
     //是否是新建权限
     $new = (isset($_GET['new']) && $_GET['new']) ? 1 : 0;
-
     $setting = (isset($_GET['setting']) && $_GET['setting']) ? 1 : 0;
-
     //获取权限
-    $groupperm = intval(C::t('folder')->fetch_perm_by_fid($fid));
+    if ($fileinfo['isfolder']) {
+        $fperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
+    } else {
+        $fperm = $fileinfo['sperm'];
+    }
 
-    //获取权限组
-    $permgroups = C::t('resources_permgroup')->fetch_all();
-
-    $perms = get_permsarray();//获取所有权限
     //设置权限
     if (isset($_GET['permsubmit']) && $_GET['permsubmit']) {
         $perms = isset($_GET['selectperm']) ? $_GET['selectperm'] : array();
@@ -93,36 +96,45 @@ if ($do == 'upload') {//上传图片文件
             }
             $perm += 1;
         }
-        if(!$perm) exit(json_encode(array('error' => '目录权限不允许为空')));
-        if ($perm == $groupperm) exit(json_encode(array('success' => true)));
-        $fid = intval($_GET['fid']);
-        if($gid) {
-            $usergroupperm = C::t('organization_admin')->chk_memberperm($gid, $_G['uid']);//获取用户权限
-            if(!$usergroupperm) exit(json_encode(array('error' => '您没有权限修改此目录权限')));
-        }
-        if (C::t('folder')->update($fid, array('perm' => $perm))) {
-            //如果是编辑权限，增加相关事件
-            if (!$new) {
-                //增加群组事件
-                if ($orginfo && !$inherit) {
-                    $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $gid);
-                    $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'folder' => $orginfo['orgname'], 'hash' => $hash);
-
-                    C::t('resources_event')->addevent_by_pfid($fid, 'set_group_perm', 'setperm', $eventdata, $gid, '', $orginfo['orgname']);
-                } else {//增加文件夹事件
-                    $rid = C::t('resources')->fetch_rid_by_fid($fid);
-                    $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-                    $realpath = preg_replace('/dzz:(.+?):/', '', $path);
-                    $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $gid);
-                    $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'position' => $realpath, 'hash' => $hash);
-                    C::t('resources_event')->addevent_by_pfid($fid, 'set_folder_perm', 'setperm', $eventdata, $gid, $rid, $folderinfo['fname']);
+        if ($perm == $fperm) exit(json_encode(array('success' => true)));
+        if ($fileinfo['isfolder']) {
+            if(!$perm) exit(json_encode(array('msg' => '目录权限不允许为空')));
+            if (C::t('folder')->update($fileinfo['fid'], array('perm' => $perm))) {
+                //如果是编辑权限，增加相关事件
+                if (!$new) {
+                    //增加群组事件
+                    $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['fid'], $fileinfo['gid']);
+                    if ($orginfo && !$inherit) {
+                        $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'folder' => $orginfo['orgname'], 'hash' => $hash);
+                        C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'set_group_perm', 'setperm', $eventdata, $fileinfo['gid'], '', $orginfo['orgname']);
+                    } else {//增加文件夹事件
+                        $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'position' => $fileinfo['realpath'] . $fileinfo['name'], 'hash' => $hash);
+                        C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'set_folder_perm', 'setperm', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
+                    }
                 }
+                exit(json_encode(array('success' => true, 'perm' => $perm)));
+            } else {
+                exit(json_encode(array('msg' => lang('save_unsuccess'))));
             }
-            exit(json_encode(array('success' => true, 'perm' => $perm)));
         } else {
-            exit(json_encode(array('error' => true)));
+            if (C::t('resources')->update_by_rid($fileinfo['rid'], array('sperm' => $perm))) {
+                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['fid'], $fileinfo['gid']);
+                $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'position' => $fileinfo['realpath'] . $fileinfo['name'], 'hash' => $hash);
+                C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'set_folder_perm', 'setperm', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
+                exit(json_encode(array('success' => true, 'perm' => $perm)));
+            } else {
+                exit(json_encode(array('msg' => lang('save_unsuccess'))));
+            }
         }
-
+    } else {
+        //获取权限组
+        $permgroups = C::t('resources_permgroup')->fetch_all();
+        //获取所有权限
+        if ($fileinfo['isfolder']) {
+            $perms = get_permsarray();
+        } else {
+            $perms = get_permsarray('document');
+        }
     }
 } elseif ($do == 'addgroup') {//添加群组
     if (isset($_GET['arr'])) {
@@ -1018,10 +1030,16 @@ if ($do == 'upload') {//上传图片文件
             }
         }
         $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);
-        $folderperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
     }
     $myperm = perm_check::getPerm($fileinfo['fid']);
-    $perms = get_permsarray();
+    //获取所有权限
+    if ($fileinfo['isfolder']) {
+        $perms = get_permsarray();
+        $fperm = C::t('folder')->fetch_perm_by_fid($fileinfo['fid']);
+    } else {
+        $perms = get_permsarray('document');
+        $fperm = $fileinfo['sperm'];
+    }
     if(!$property) {
         include template('template_perm');
         exit();

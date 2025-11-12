@@ -12,19 +12,19 @@
 		</div>
 		<div class="card">
 			<div class="card-body container">
-				<form id="cpform" action="{MOD_URL}&op=mailcheck" class="form-horizontal" autocomplete="off" method="post" name="cpform" target="mailcheckiframe">
+				<form id="cpform" action="{MOD_URL}&op=mailcheck" class="form-horizontal" method="post" name="cpform" target="mailcheckiframe">
 					<input type="hidden" value="{FORMHASH}" name="formhash">
 					<input type="hidden" value="true" name="mailchecksubmit">
 					<div class="row mb-3">
 						<label class="col-sm-2" for="sitename">{lang setting_mail_check_test_from}</label>
 						<div class="col-sm-10">
-							<input class="form-control" type="text" id="sitename" required name="test_from" autocomplete="off" value="">
+							<input class="form-control" type="text" id="sitename" required name="test_from" value="">
 						</div>
 					</div>
 					<div class="row mb-3">
 						<label class="col-sm-2" for="testto">{lang setting_mail_check_test_to}</label>
 						<div class="col-sm-10">
-							<textarea type="textarea" class="form-control" id="testto" name="test_to" autocomplete="off"></textarea>
+							<textarea type="textarea" class="form-control" id="testto" name="test_to"></textarea>
 							<span class="form-text">{lang setting_mail_check_test_to_comment}</span>
 						</div>
 					</div>

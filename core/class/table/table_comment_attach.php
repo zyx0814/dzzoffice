@@ -16,8 +16,8 @@ class table_comment_attach extends dzz_table {
 
         $this->_table = 'comment_attach';
         $this->_pk = 'qid';
-        // $this->_pre_cache_key = 'comment_attach_';
-        // $this->_cache_ttl = 60 * 60;
+        $this->_pre_cache_key = 'comment_attach_';
+        $this->_cache_ttl = 60 * 60;
         parent::__construct();
     }
 

@@ -587,7 +587,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	}
 };
 
-
 _filemanage.prototype.setToolButton = function () { //设置工具栏
 	var rids = _filemanage.selectall.icos;
 	var data = _explorer.sourcedata.icos[rids[0]];
@@ -727,7 +726,6 @@ _filemanage.SetMoreButton = function () {
 		}
 	});
 };
-
 
 _filemanage.prototype.showIcos = function (ext) {
 	//排序数据
@@ -1070,35 +1068,33 @@ _filemanage.prototype.createIcosContainer = function () {
 				_filemanage.selectall.icos = [];
 				_filemanage.selectall.position = {};
 				el.find('.Icoblock').removeClass('Icoselected');
-				el.find('.selectall-box').removeClass('Icoselected');
+				el.find('.select-all').removeClass('Icoselected');
 				self.selectInfo();
 			}
-		})
-		.end().find('.selectall-box').on('click', function () {
-			var el = jQuery(this);
-			var selectall = true;
-			if (el.hasClass('Icoselected')) {
-				el.removeClass('Icoselected');
-				selectall = false;
-				_filemanage.selectall.icos = [];
-			} else {
-				el.addClass('Icoselected');
-				selectall = true;
-				_filemanage.selectall.icos = [];
-			}
-
-			_filemanage.selectall.container = containerid;
-			jQuery('#' + containerid).find('.Icoblock').each(function () {
-				if (selectall) {
-					jQuery(this).addClass('Icoselected');
-					_filemanage.selectall.icos.push(jQuery(this).attr('rid'));
-				} else {
-					jQuery(this).removeClass('Icoselected');
-				}
-			});
-			self.selectInfo();
-			return false;
 		});
+	jQuery(document).off('click', '.select-all').on('click', '.select-all', function() {
+		var el = jQuery(this);
+		var selectall = true;
+		if (el.hasClass('Icoselected')) {
+			el.removeClass('Icoselected');
+			selectall = false;
+			_filemanage.selectall.icos = [];
+		} else {
+			el.addClass('Icoselected mdi-checkbox-blank-outline');
+			selectall = true;
+			_filemanage.selectall.icos = [];
+		}
+		_filemanage.selectall.container = containerid;
+		jQuery('#' + containerid).find('.Icoblock').each(function () {
+			if (selectall) {
+				jQuery(this).addClass('Icoselected');
+				_filemanage.selectall.icos.push(jQuery(this).attr('rid'));
+			} else {
+				jQuery(this).removeClass('Icoselected');
+			}
+		});
+		self.selectInfo();
+	});
 	jQuery(document).off('click.select-toperate').on('click.select-toperate', '.mdi-close', function () {
 		var hash = location.hash;
 		jQuery('.navtopheader').css('display', 'none');
@@ -1193,12 +1189,17 @@ _filemanage.prototype._selectInfo = function () {
 	if (sum > 0) { //有选中
 		jQuery('.navtopheader').css('display', 'block');
 		jQuery('.navtopheader').html(html);
-		jQuery('.selectall-box').addClass('Icoselected');
 		jQuery('.selectall-box .select-info').html('<span class="num">' + sum + '</span>个选中');
 		jQuery('.docunment-allfile').hide();
 		_explorer.toggleRight();
 		if (sum >= total) { //全部选中
-			jQuery('.selectall-box').addClass('Icoselected');
+			jQuery('.select-all').addClass('Icoselected');
+			jQuery('.select-all').removeClass('mdi-checkbox-intermediate').addClass('mdi-checkbox-marked');
+			jQuery('.select-all').attr('title', '取消全选');
+		} else { //部分选中
+			jQuery('.select-all').removeClass('mdi-checkbox-marked').addClass('mdi-checkbox-intermediate');
+			jQuery('.select-all').removeClass('Icoselected');
+			jQuery('.select-all').attr('title', '全选');
 		}
 		if (hash.indexOf('recycle') != -1 || hash.indexOf('isdelete') != -1) {
 			jQuery('.recycle-option-icon').show();
@@ -1206,8 +1207,8 @@ _filemanage.prototype._selectInfo = function () {
 	} else { //没有选中
 		jQuery('.navtopheader').css('display', 'none');
 		jQuery('.navtopheader').html('');
-		jQuery('.selectall-box').removeClass('Icoselected');
-		jQuery('.selectall-box .select-info').html(this.view < 4 ? '全选' : '');
+		jQuery('.select-all').removeClass('Icoselected');
+		jQuery('.selectall-box .select-info').html('');
 		jQuery('.docunment-allfile').show();
 		if (hash.indexOf('recycle') != -1) {
 			jQuery('.recycle-option-icon').hide();
@@ -2079,14 +2080,14 @@ _filemanage.Rename = function (rid, text) {
 				_filemanage.prototype._selectInfo();
 				layer.msg('已重命名为：'+json.name, {offset:'10px'});
 			} else {
-				jQuery('#file_text_' + rid).html(filename);
+				jQuery('#file_text_' + rid).html(ico.name);
 				if (json.error) {
 					layer.msg(json.error, {offset:'10px'});
 				}
 			}
 		},
 		error: function () {
-			jQuery('#file_text_' + rid).html(filename);
+			jQuery('#file_text_' + rid).html(ico.name);
 			layer.msg(__lang.js_network_error, {offset:'10px'});
 		}
 	});
@@ -2575,7 +2576,6 @@ _filemanage.cut = function (rid) {
 			_explorer.cut.icos = json.rid;
 			jQuery('.Icoblock').removeClass('iscut');
 			for (var o in json.rid) {
-
 				jQuery('.Icoblock[rid=' + json.rid[o] + ']').addClass('iscut');
 				filenames += _explorer.sourcedata.icos[json.rid[o]].name + ',';
 				total--;

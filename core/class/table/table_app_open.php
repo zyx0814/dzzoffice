@@ -15,7 +15,7 @@ class table_app_open extends dzz_table {
         $this->_table = 'app_open';
         $this->_pk = 'extid';
         $this->_pre_cache_key = 'app_open_';
-        $this->_cache_ttl = 0;
+        $this->_cache_ttl = 60 * 60;
         parent::__construct();
     }
 

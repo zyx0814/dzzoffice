@@ -17,7 +17,6 @@ if ($operation == 'filelist') {
     $perpage = isset($_GET['perpage']) ? intval($_GET['perpage']) : 100;//默认每页条数
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
     $start = ($page - 1) * $perpage;//开始条数
-    $total = 0;//总条数
     $disp = intval($_GET['disp']);
     $sid = empty($_GET['sid']) ? 0 : $_GET['sid'];//id
     $bz = empty($_GET['bz']) ? '' : urldecode($_GET['bz']);
@@ -118,8 +117,8 @@ if ($operation == 'filelist') {
                             break;
 
                     }
-                    $folder['perm'] = perm_check::getPerm($folder['fid']);//获取文件权限
-                    foreach (C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start, false, false, true) as $v) {
+                    $data = C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start, false, false, true, true);
+                    foreach ($data['data'] as $v) {
                         if ($v['type'] != 'folder' && $permfilter && $v['gid']) {
                             if (filter_permdata($permfilter, $folder['perm'], $v, $uid)) {
                                 continue;
@@ -135,21 +134,13 @@ if ($operation == 'filelist') {
             }
         }
     }
-    if (count($data) >= $perpage) {
-        $total = $start + $perpage * 2 - 1;
-    } else {
-        $total = $start + count($data);
-    }
-    //$total=$count;//总条数
-    if (!$json_data = json_encode($data)) $data = array();
-    if (!$json_data = json_encode($folderdata)) $folderdata = array();
+    $total = $data['total'] ?? 0;
     //返回数据
     $return = array(
         'sid' => $sid,
         'total' => $total,
-        'data' => $data ? $data : array(),
-
-        'folderdata' => $folderdata ? $folderdata : array(),
+        'data' => $data['data'] ?? array(),
+        'folderdata' => $folderdata ?? array(),
         'param' => array(
             'disp' => $folder['disp'],
             'view' => $folder['iconview'],

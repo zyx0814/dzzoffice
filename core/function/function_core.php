@@ -2472,12 +2472,26 @@ function get_permsarray($type = 'folder') {
     $powers = perm_binPerm::getPowerArr();
     $icos = perm_binPerm::getPowerIcos();
     $types = perm_binPerm::getPowerType();
+    if ($type == 'document') {
+        $basetype = 'folder';
+    } else {
+        $basetype = $type;
+    }
     $perms = array();
     foreach ($titles as $key => $title) {
-        if (!isset($types[$key]) || $types[$key] != $type) {
+        if (!isset($types[$key]) || $types[$key] != $basetype) {
             continue;
         }
         $perms[$key] = array($title,$powers[$key],$icos[$key]);
+    }
+    if ($type == 'document') {
+        // 文档场景：移除目录专属权限（上传、新建文件夹等）
+        $removekeys = array('upload', 'folder');
+        foreach ($removekeys as $key) {
+            if (isset($perms[$key])) {
+                unset($perms[$key]);
+            }
+        }
     }
     return $perms;
 }

@@ -123,7 +123,12 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
             $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);//获取用户权限
         }
         $myperm = perm_check::getPerm($fileinfo['fid']);
-        $perms = get_permsarray();//获取所有权限
+        //获取所有权限
+        if ($fileinfo['isfolder']) {
+            $perms = get_permsarray();
+        } else {
+            $perms = get_permsarray('document');
+        }
         include template('right_menu');
         exit();
     } elseif ($ridnum > 1) {//如果是多项选中，则调对应综合文件信息

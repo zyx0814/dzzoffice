@@ -111,7 +111,7 @@ function html_login_form() {
     $lang1 = lang();
     $year = dgmdate(TIMESTAMP, 'Y');
     $maintitle = lang('title_admincp');
-    $loginuser = $isguest ? '<div class="mb-3"><input class="form-control" name="admin_email" type="text" title="" autofocus placeholder="' . lang('login_email_username') . '" autocomplete="off" required/></div>' : '<p class="text-center text-muted">' . $_G['member']['username'] . '</p><p class="text-center text-muted">' . $_G['member']['email'] . '</p>';
+    $loginuser = $isguest ? '<div class="mb-3"><input class="form-control" name="admin_email" type="text" title="" autofocus placeholder="' . lang('login_email_username') . '"  required/></div>' : '<p class="text-center text-muted">' . $_G['member']['username'] . '</p><p class="text-center text-muted">' . $_G['member']['email'] . '</p>';
     $sid = getglobal('sid');
     $avatarstatus = getglobal('avatarstatus', 'member');
     $avastar = '';
@@ -129,7 +129,7 @@ function html_login_form() {
     $forcesecques = '<option value="0">' . ($_G['config']['admincp']['forcesecques'] ? $lang1['forcesecques'] : $lang1['security_question_0']) . '</option>';
     echo <<<EOT
 <div class="card card-shadowed p-5 mb-0 mr-2 ml-2" style="width: 380px;">
-<form method="post" autocomplete="off" name="login" id="loginform" class="signin-form loginForm" action="$extra" onsubmit="pwmd5('admin_password')">
+<form method="post" name="login" id="loginform" class="signin-form loginForm" action="$extra" onsubmit="pwmd5('admin_password')">
 	<input type="hidden" name="sid" value="$sid">
 		<div class="card-body text-center">
 			<div class="text-center mb-3 img-avatar-128 w-100">$avastar</div>
@@ -137,7 +137,7 @@ function html_login_form() {
 		</div>
 		$loginuser
 		<div class="mb-3">
-			<input type="password" class="form-control" id="admin_password" autofocus placeholder="$lang1[password]" name="admin_password" value="" autocomplete="off" required>
+			<input type="password" class="form-control" id="admin_password" autofocus placeholder="$lang1[password]" name="admin_password" value="" required>
 		</div>
 		<div class="mb-3 d-grid">
 		<input name="submit" value="$lang1[login]" type="submit" class="btn btn-primary bodyloading"  />

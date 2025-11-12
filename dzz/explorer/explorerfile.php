@@ -96,31 +96,9 @@ if ($do == 'filelist') {
             $arr = array();
             //查询当前文件夹信息
             if ($folder = C::t('folder')->fetch_by_fid($id)) {
-                if ($folder['gid']) {
-                    $uid = $_G['uid'];
-                    //群组信息
-                    if (!$group = C::t('organization')->fetch($folder['gid'])) {
-                        $mqx = '1';
-                    }
-                    //获取群组成员权限
-                    $perm = C::t('organization_admin')->chk_memberperm($folder['gid'], $uid);
-                    //判断群组是否开启，如果未开启(共享目录)并且不是管理员不能访问
-                    if (!$group['diron'] && !$perm) {
-                        $mqx = '1';
-                    }
-                    //判断是否有权限访问群组，如果不是管理员权限(主要针对系统管理员和上级管理员),并且非成员
-                    if (!$perm && !C::t('organization')->ismember($folder['gid'], $uid, false)) {
-                        $mqx = '1';
-                    }
-                }
-                if (!$folder['fid']) {
-                    $mqx = '1';
-                }
-                if (!$mqx) {
+                if ($folder['fid']) {
                     $folder['disp'] = $disp = intval($_GET['disp']) ? intval($_GET['disp']) : intval($folder['disp']);//文件排序
-
                     $folder['iconview'] = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($folder['iconview']));//排列方式
-
                     $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
                     $conditions = array();
                     if ($keyword) {
@@ -144,28 +122,19 @@ if ($do == 'filelist') {
                             $orderby = 'dateline';
                             break;
                     }
-                    $folder['perm'] = perm_check::getPerm($folder['fid']);//获取文件权限
-                    $data = C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start, false, false, true);//查询文件信息
+                    $data = C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start, false, false, true, true);//查询文件信息
                     $folderdata[$folder['fid']] = $folder;//文件夹信息
                 }
             }
         }
     }
-    if (count($data) >= $perpage) {
-        $total = $start + $perpage * 2 - 1;
-    } else {
-        $total = $start + count($data);
-    }
-    //$total=$count;//总条数
-    if (!$json_data = json_encode($data)) $data = array();
-    if (!$json_data = json_encode($folderdata)) $folderdata = array();
+    $total = $data['total'] ?? 0;
     //返回数据
     $return = array(
         'sid' => $sid,
         'total' => $total,
-        'data' => $data ? $data : array(),
-
-        'folderdata' => $folderdata ? $folderdata : array(),
+        'data' => $data['data'] ?? array(),
+        'folderdata' => $folderdata ?? array(),
         'param' => array(
             'disp' => $folder['disp'],
             'view' => $folder['iconview'],

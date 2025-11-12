@@ -25,18 +25,18 @@
 <!--{if $fileinfo['gid']}-->
 <div class="right-card-header">
     <div class="title">一般协作成员权限</div>
-    <!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[gid]}','{$fileinfo[fid]}')" data-toggle="tooltip" data-placement="right" title="编辑目录权限"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
+    <!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[rid]}','{$fileinfo[fid]}')" data-toggle="tooltip" data-placement="right" title="编辑目录权限"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
 </div>
-<!--{if $folderperm}-->
+<!--{if $fperm}-->
 <ul class="proper-show proper-poewr">
     <!--{loop $perms $k $val}-->
-    <li <!--{if $folderperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
+    <li <!--{if $fperm & $val[1]}-->style="display:block;"<!--{else}-->style="display:none;"<!--{/if}-->><span class="{$val[2]}" title="$val[0]"></span></li>
     <!--{/loop}-->
 </ul>
 <!--{else}-->
 <div class="text-center">
     <img src="static/image/common/no_list.png">
-    <p class="text-muted fs-5">{lang no_related_data}</p>
+    <p class="text-muted fs-5">未设置权限，继承目录权限</p>
 </div>
 <!--{/if}-->
 <!--{/if}-->
@@ -55,7 +55,12 @@
     <p class="text-muted fs-5">{lang no_permission}</p>
 </div>
 <!--{/if}-->
-<span class="form-text"></span>
+<!--{else}-->
+<div class="text-center">
+    <img src="static/image/common/no_list.png">
+    <p class="text-muted fs-5">{lang no_related_data}</p>
+</div>
+<!--{/if}-->
 <!--{if $_G['setting']['allowshare']}--><span class="form-text">系统管理员已关闭分享功能</span><!--{/if}-->
 <!--{if $org}-->
 <div class="right-card-header">
@@ -125,4 +130,3 @@ function seluser_group(ids,data) {
     return false;
     };
 </script>
-<!--{/if}-->
