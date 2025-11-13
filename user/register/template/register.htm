@@ -25,22 +25,22 @@
 		<!--{if $_GET[action] != 'activation'}-->
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-mail" aria-hidden="true"></span>
-      <input type="text" class="form-control" id="email" name="email" placeholder="{lang register_email_tips}" required/>
+      <input type="text" class="form-control" id="email" name="email" autocomplete="off" placeholder="{lang register_email_tips}" required/>
       <span id="chk_email" class="help-msg text-danger"></span> 
     </div>
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-account" aria-hidden="true"></span>
-      <input type="text" class="form-control" id="username" name="username" placeholder="{lang username}" required/>
+      <input type="text" class="form-control" id="username" name="username" autocomplete="off" placeholder="{lang username}" required/>
       <span id="chk_username" class="help-msg text-danger"></span>
     </div>
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-lock" aria-hidden="true"></span>
-      <input type="password" class="form-control" id="password" name="password" placeholder="{lang register_password_tips}" required/>
+      <input type="password" class="form-control" id="password" name="password" autocomplete="off" placeholder="{lang register_password_tips}" required/>
       <span id="chk_password" class="help-msg text-danger"></span> 
     </div>
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-lock" aria-hidden="true"></span>
-      <input type="password" class="form-control" id="password2" name="password2" placeholder="{lang register_repassword_tips}" required>
+      <input type="password" class="form-control" id="password2" name="password2" autocomplete="off" placeholder="{lang register_repassword_tips}" required>
       <span id="chk_password2" class="help-msg text-danger"></span> 
     </div>
     <!--{loop $_G['cache']['fields_register'] $field}-->
