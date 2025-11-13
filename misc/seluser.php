@@ -25,13 +25,7 @@ if ($org = C::t('organization')->fetch($orgid)) {
 }
 //机构列表
 $orgtree = getDepartmentOption($toporgid, '', true);
-
 //获取部门的用户列表；
-
 $userlist = C::t('organization_user')->fetch_user_by_orgid($orgid);
-
-//获取机构部门树
-//$departmenttree=getDepartmentOption($orgid);
-
 include template('misc_seluser');
 ?>

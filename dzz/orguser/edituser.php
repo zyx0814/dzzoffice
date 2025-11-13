@@ -168,7 +168,7 @@ if ($do == 'add') {
         }
         if ($org = C::t('organization')->fetch($orgid)) {
             $org['jobs'] = C::t('organization_job')->fetch_all_by_orgid($org['orgid']);
-            $orgpath = getPathByOrgid($org['orgid']);
+            $orgpath = C::t('organization')->getPathByOrgid($org['orgid'], false);
             $org['depart'] = implode('-', ($orgpath));
         }
 
@@ -334,13 +334,11 @@ if ($do == 'add') {
         Hook::listen('syntoline_user', $uid, 'edit');//注册绑定到钉钉部门表
         showmessage('edit_user_success', MOD_URL);
     } else {
-        require_once libfile('function/organization');
         $user = C::t('user')->fetch_by_uid($uid);
         $userfield = C::t('user_field')->fetch($uid);
 
         $departs = array();
         $data_depart = array();
-        //$departs=getDepartmentByUid($uid);
         $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid);
         //判断是否对此用户有管理权限
         $uperm = false;
@@ -363,7 +361,7 @@ if ($do == 'add') {
         }
         $departs = C::t('organization')->fetch_all($orgids);
         foreach ($departs as $key => $value) {
-            $orgpath = getPathByOrgid($value['orgid']);
+            $orgpath = C::t('organization')->getPathByOrgid($value['orgid'], false);
             $value['depart'] = implode('-', ($orgpath));
             $value['ismoderator'] = C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'], $_G['uid']);
             $value['jobs'] = C::t('organization_job')->fetch_all_by_orgid($value['orgid']);
@@ -372,13 +370,11 @@ if ($do == 'add') {
             $value['jobname'] = $value['jobs'][$value['jobid']] ? $value['jobs'][$value['jobid']]['name'] : lang('none');
             $data_depart[$key] = $value;
         }
-        //$orgtree_admin=getDepartmentOption_admin(0);
         if ($upjob = C::t('organization_upjob')->fetch_by_uid($uid)) {
             $upjob['jobs'] = C::t('organization_job')->fetch_all_by_orgid($upjob['orgid']);
         } else {
             $upjob = array('jobid' => 0, 'depart' => lang('please_select_a_organization_or_department'), 'name' => lang('none'));
         }
-        //$orgtree_all=getDepartmentOption_admin(0,'',true);
         $perm = 1;
         if (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member'])) {
             $perm = 0;

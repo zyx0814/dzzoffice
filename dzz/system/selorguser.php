@@ -11,7 +11,6 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-include_once libfile('function/organization');
 $ids = isset($_GET['ids']) ? rawurldecode($_GET['ids']) : '';
 $type = isset($_GET['type']) ? $_GET['type'] : '';
 $template = isset($_GET['template']) ? $_GET['template'] : '';
@@ -67,7 +66,7 @@ $open = array();//默认打开的
 if ($orgids && $stype != 2) {
     $sel_org = C::t('organization')->fetch_all($orgids);
     foreach ($sel_org as $key => $value) {
-        $orgpath = getPathByOrgid($value['orgid']);
+        $orgpath = C::t('organization')->getPathByOrgid($value['orgid'], false);
         $value['orgname'] = implode('-', ($orgpath));
         $selects[$key] = $value;
     }

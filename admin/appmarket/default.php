@@ -50,7 +50,7 @@ $depid = intval($_GET['depid']);
 
 $org = array();
 if ($depid && $org = C::t('organization')->fetch($depid)) {
-    $orgpath = getPathByOrgid($depid);
+    $orgpath = C::t('organization')->getPathByOrgid($depid, false);
     $orgpath = implode('-', ($orgpath));
 } else {
     $orgpath = lang('select_a_organization_or_department');

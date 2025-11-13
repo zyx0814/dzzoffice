@@ -13,7 +13,6 @@ $navtitle = "用户资料";
 Hook::listen('check_login');
 $uid = intval($_GET['uid'] ? $_GET['uid'] : $_G['uid']);
 include_once libfile('function/profile');
-include_once libfile('function/organization');
 $users = dzzgetspace($uid);
 $space = C::t('user_profile')->get_user_info_by_uid($uid);
 $space['regdate'] = dgmdate($users['regdate']);
@@ -32,7 +31,7 @@ $profiles['usergroup'] = array('title' => lang('usergroup'), 'value' => $usergro
 //资料用户所在的部门
 $department = '';
 foreach (C::t('organization_user')->fetch_orgids_by_uid($uid) as $orgid) {
-    $orgpath = getPathByOrgid($orgid);
+    $orgpath = C::t('organization')->getPathByOrgid($orgid, false);
     $department .= '<span class="badge bg-primary rounded-pill me-2 fs-7">' . implode('-', ($orgpath)) . '</span>';
 }
 if (empty($department)) $department = lang('not_join_agency_department');

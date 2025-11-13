@@ -169,7 +169,7 @@ if (submitcheck('appsubmit')) {
         if ($orgids) {
             $sel_org = C::t('organization')->fetch_all($orgids);
             foreach ($sel_org as $key => $value) {
-                $orgpath = getPathByOrgid($value['orgid']);
+                $orgpath = C::t('organization')->getPathByOrgid($value['orgid'], false);
                 $sel_org[$key]['orgname'] = implode('-', ($orgpath));
                 $sel[] = $value['orgid'];
                 $arr = (array_keys($orgpath));

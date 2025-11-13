@@ -277,8 +277,6 @@ function getOrgidTree($orgid) {
     }
     return $oids;
 }
-
-//获取此机构和所有上级机构的id
 //获取此机构和所有上级机构的id
 function getUpOrgidTree($orgid, $onlyid = true, $pids = array()) {
     global $_G;

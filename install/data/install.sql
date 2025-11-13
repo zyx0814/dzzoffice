@@ -372,55 +372,6 @@ CREATE TABLE `dzz_district` (
   KEY `upid` (`upid`,`displayorder`)
 ) ENGINE=InnoDB COMMENT='地区表';
 
-DROP TABLE IF EXISTS `dzz_document`;
-CREATE TABLE `dzz_document` (
-  `did` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '文档ID',
-  `tid` int(10) unsigned NOT NULL COMMENT '主题ID',
-  `fid` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '文库分类id',
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `username` char(30) NOT NULL DEFAULT '' COMMENT '用户名',
-  `area` char(15) NOT NULL DEFAULT '' COMMENT '地区',
-  `areaid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '地区ID',
-  `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '附件ID',
-  `version` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '版本',
-  `isdelete` tinyint(10) unsigned NOT NULL DEFAULT '0' COMMENT '删除状态',
-  `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '排序',
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`did`),
-  KEY `dateline` (`dateline`),
-  KEY `disp` (`disp`),
-  KEY `fid` (`fid`)
-) ENGINE=InnoDB COMMENT='文档表';
-
-DROP TABLE IF EXISTS `dzz_document_event`;
-CREATE TABLE `dzz_document_event` (
-  `eid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '事件ID',
-  `did` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '文档ID',
-  `action` char(15) NOT NULL DEFAULT '' COMMENT '事件类型',
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `username` char(30) NOT NULL DEFAULT '' COMMENT '用户名',
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  PRIMARY KEY (`eid`),
-  KEY `did` (`did`,`uid`)
-) ENGINE=InnoDB COMMENT='文档事件表';
-
-DROP TABLE IF EXISTS `dzz_document_reversion`;
-CREATE TABLE `dzz_document_reversion` (
-  `did` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '文档ID',
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '附件ID',
-  `revid` int(10) NOT NULL AUTO_INCREMENT COMMENT '版本ID',
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `username` varchar(30) NOT NULL DEFAULT '' COMMENT '用户名',
-  `version` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '版本号',
-  `attachs` text NOT NULL COMMENT '附件信息',
-  PRIMARY KEY (`revid`),
-  KEY `dateline` (`dateline`),
-  KEY `qid` (`did`),
-  KEY `uid` (`uid`),
-  KEY `username` (`username`)
-) ENGINE=InnoDB COMMENT='文档版本表';
-
 DROP TABLE IF EXISTS `dzz_failedlogin`;
 CREATE TABLE `dzz_failedlogin` (
   `ip` varchar(45) NOT NULL DEFAULT '' COMMENT '登录IP',
@@ -1123,15 +1074,10 @@ CREATE TABLE `dzz_user` (
 DROP TABLE IF EXISTS `dzz_user_field`;
 CREATE TABLE `dzz_user_field` (
   `uid` int(10) unsigned NOT NULL COMMENT '用户ID',
-  `docklist` text NOT NULL COMMENT '桌面布局',
-  `screenlist` text NOT NULL COMMENT '屏幕布局',
   `applist` text NOT NULL COMMENT '应用布局',
   `noticebanlist` text NOT NULL COMMENT '通知屏蔽列表',
   `iconview` tinyint(1) NOT NULL DEFAULT '2' COMMENT '图标视图',
-  `iconposition` tinyint(1) NOT NULL DEFAULT '0' COMMENT '图标位置',
   `direction` tinyint(1) NOT NULL DEFAULT '0' COMMENT '方向',
-  `autolist` tinyint(1) NOT NULL DEFAULT '1' COMMENT '自动隐藏',
-  `taskbar` enum('bottom','left','top','right') NOT NULL DEFAULT 'bottom' COMMENT '任务栏位置',
   `dateline` int(10) unsigned NOT NULL COMMENT '创建时间',
   `updatetime` int(10) unsigned NOT NULL COMMENT '最后更新时间',
   `attachextensions` varchar(255) NOT NULL DEFAULT '-1' COMMENT '允许上传附件类型，留空表示不限制',
@@ -1139,7 +1085,6 @@ CREATE TABLE `dzz_user_field` (
   `usesize` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '已使用空间',
   `addsize` bigint(20) unsigned NOT NULL DEFAULT '0',
   `buysize` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `wins` text NOT NULL COMMENT '窗口设置',
   `perm` int(10) NOT NULL DEFAULT '0' COMMENT '权限',
   `privacy` text NOT NULL COMMENT '隐私设置',
   `userspace` int(11) NOT NULL DEFAULT '0' COMMENT '用户空间大小，-1表示无空间，0表示不限制',

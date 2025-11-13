@@ -31,7 +31,7 @@ if (!submitcheck('exportsubmit')) {
 
     //默认选中
     $open = array();
-    $patharr = getPathByOrgid($orgid);
+    $patharr = C::t('organization')->getPathByOrgid($orgid, false);
     $arr = array_keys($patharr);
     array_pop($arr);
     $count = count($arr);

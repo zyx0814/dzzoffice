@@ -58,7 +58,7 @@ class table_user_profile extends dzz_table {
         if ($user = C::t('user')->get_user_by_uid($uid)) {
             $info = array_merge($user, $info);
         }
-        $field = DB::fetch_first("select attachextensions,maxattachsize,usesize,addsize,buysize,wins,perm from %t where uid = %d", array('user_field', $uid));
+        $field = DB::fetch_first("select attachextensions,maxattachsize,usesize,addsize,buysize,perm from %t where uid = %d", array('user_field', $uid));
         $info = array_merge($field, $info);
         return $info;
     }

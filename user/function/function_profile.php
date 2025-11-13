@@ -42,8 +42,7 @@ function profile_setting($fieldid, $space = array(), $showstatus = false, $ignor
 
             } elseif ($fieldid == 'department') {
                 if ($_G['profile_verifys'][$uid][$fieldid]) {
-                    include_once libfile('function/organization');
-                    $orgtree = getPathByOrgid($_G['profile_verifys'][$uid][$fieldid]);
+                    $orgtree =  C::t('organization')->getPathByOrgid($_G['profile_verifys'][$uid][$fieldid], false);
                     $verifyvalue = implode('-', ($orgtree));
                 } else {
                     $verifyvalue = '';
@@ -298,10 +297,8 @@ function profile_show($fieldid, $space = array(), $getalone = false) {
         }
         return $return;
     } elseif ($fieldid == 'department') {
-
         if ($space['department']) {
-            include_once libfile('function/organization');
-            $orgtree = getPathByOrgid($space['department']);
+            $orgtree = C::t('organization')->getPathByOrgid($space['department'], false);
             return implode('-', ($orgtree));
         } else {
             return lang('not_choose_agencies_departments');
@@ -437,7 +434,6 @@ function profile_privacy_check($uid, $privacy) {
             $_G[$var] = true;
             break;
         case 1: //本部门,不包括下级部门
-            include_once libfile('function/organization');
             $orgids = $vorgids = array();
             //查看资料用户所在的部门
             $vorgids = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
@@ -450,7 +446,6 @@ function profile_privacy_check($uid, $privacy) {
 
             break;
         case 2: //本机构
-            include_once libfile('function/organization');
             $orgids = $vorgids = array();
             //查看资料用户所在的部门
             $vorgids = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);

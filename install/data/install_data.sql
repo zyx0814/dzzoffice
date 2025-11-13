@@ -378,8 +378,8 @@ INSERT INTO dzz_user_profile_setting VALUES('interest', 0, 0, 0, '兴趣爱好',
 -- 转存表中的数据 `dzz_user_field`
 --
 
-INSERT INTO `dzz_user_field` (`uid`, `docklist`, `screenlist`, `applist`, `noticebanlist`, `iconview`, `iconposition`, `direction`, `autolist`, `taskbar`, `dateline`, `updatetime`, `attachextensions`, `maxattachsize`, `usesize`, `addsize`, `buysize`, `wins`, `perm`, `privacy`) VALUES
-(1, '', '', '1,10', '', 2, 0, 0, 1, 'bottom', 0, 0, '-1', -1, 0, 0, 0, '', 0, '');
+INSERT INTO `dzz_user_field` (`uid`, `applist`, `noticebanlist`, `iconview`, `direction`, `dateline`, `updatetime`, `attachextensions`, `maxattachsize`, `usesize`, `addsize`, `buysize`, `perm`, `privacy`) VALUES
+(1, '1,10', '', 2, 0, 0, 0, '-1', -1, 0, 0, '', 0, '');
 
 INSERT INTO `dzz_resources_permgroup` (`id`, `pername`, `perm`, `off`, `default`, `system`) VALUES
 (1, '只读', 7, 0, 1, 1),

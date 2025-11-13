@@ -23,7 +23,6 @@ $typeinfo = array(
     'dzzdoc' => array('name' => 'DZZ' . lang('type_attach'), 'icon' => 'mdi-file'),
     'attach' => array('name' => lang('rest_attachment'), 'icon' => 'mdi-file-chart')
 );
-require libfile('function/organization');
 if ($do == 'delete') {
     $icoid = isset($_GET['icoid']) ? trim($_GET['icoid']) : '';
     if (empty($icoid)) {
@@ -216,8 +215,8 @@ if ($do == 'delete') {
     }
     exit($jsonReturn);
 } else {
-    if ($org = C::t('organization')->fetch($orgid)) {
-        $orgpath = getPathByOrgid($org['orgid']);
+    if ($orgid && $org = C::t('organization')->fetch($orgid)) {
+        $orgpath = C::t('organization')->getPathByOrgid($org['orgid'], false);
         $org['depart'] = implode('-', ($orgpath));
     } else {
         $org = array();
