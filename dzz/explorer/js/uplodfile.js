@@ -10,6 +10,7 @@ _upload.fid = null;
 _upload.maxli=10;//设置为0时，不缓存添加数据功能
 _upload.datas=[];
 _upload.ondup = '';
+_upload.limitConcurrentUploads = 3;
 var attachextensions = '';
 var maxfileSize = null;
 if (_explorer.space && _explorer.space.attachextensions) {
@@ -22,6 +23,9 @@ if (_explorer.space && _explorer.space.maxattachsize) {
 }
 if (_explorer.space && _explorer.space.explorermyset && _explorer.space.explorermyset.ondup) {
     _upload.ondup =  parseInt(_explorer.space.explorermyset.ondup) > 0 ? '&ondup=' + parseInt(_explorer.space.explorermyset.ondup) : '';
+}
+if (_explorer.space && _explorer.space.limitConcurrentUploads) {
+    _upload.limitConcurrentUploads =  _explorer.space.limitConcurrentUploads > 0 ? _explorer.space.limitConcurrentUploads : 3;
 }
 function fileupload(el, fid) {
     el.off();
@@ -39,20 +43,46 @@ function fileupload(el, fid) {
         pasteZone: el.attr('id') == 'wangpan-upload-folder' ? null : $('#middleconMenu'),
         maxFileSize: maxfileSize, // 5 MB
         acceptFileTypes: new RegExp(attachextensions, 'i'),
-        sequentialUploads: true
+        sequentialUploads: true,
+        limitConcurrentUploads: 1
 	}).on('fileuploadadd', function (e, data) {
         layerupload();
+        // 检测是否是文件夹上传，因为文件夹并发上传时，会重复创建目录
+        var isFolderUpload = false;
 		if(_upload.maxli && _upload.datas.length>=_upload.maxli){
 			_upload.datas.push(data);
 			_upload.uploadadd();
+            $.each(data.files, function(index, file) {
+                if (file.webkitRelativePath && file.webkitRelativePath.indexOf('/') !== -1) {
+                    isFolderUpload = true;
+                    return false;
+                }
+            });
 		}else{
 			data.context = $('<li class="dialog-file-list"></li>').appendTo($('.dialog-filelist-ul'));
 			
-			$.each(data.files, function (index, file) {
+			$.each(data.files, function(index, file) {
 				$(_upload.getItemTpl(file)).appendTo(data.context);
 				_upload.uploadadd();
+                if (file.webkitRelativePath && file.webkitRelativePath.indexOf('/') !== -1) {
+                    isFolderUpload = true;
+                }
 			});
 		}
+        
+        // 如果是文件夹上传，设置顺序上传
+        if (isFolderUpload) {
+            $(this).fileupload('option', {
+                sequentialUploads: true,
+                limitConcurrentUploads: 1
+            });
+        } else {
+            // 非文件夹上传恢复默认设置
+            $(this).fileupload('option', {
+                sequentialUploads: false,
+                limitConcurrentUploads: _upload.limitConcurrentUploads
+            });
+        }
     }).on('fileuploadsubmit', function (e, data) {
         data.context.find('.upload-cancel').off('click').on('click', function () {
             data.abort();
