@@ -55,7 +55,7 @@
     jQuery(document).ready(function(e) {
         var hash=location.hash;
         //var fid=_explorer.getUrlParam(hash,'fid');
-        var  fid = $('#fidinput').val();
+        var fid = $('#fidinput').val();
 		_filemanage.fid=fid;
 		_filemanage.subfix = 'f';
 		_filemanage.winid = 'f_'+fid;
@@ -74,6 +74,10 @@
 			_filemanage && _filemanage.setInfoPanel();
 			return false;
 		}
-        _filemanage.getData(_explorer.appUrl+'&op=explorerfile&do=filelist&sid=f-'+fid);
+		var iconview = '';
+		if (_explorer.space && _explorer.space.explorermyset && _explorer.space.explorermyset.iconview) {
+			var iconview = '&iconview='+ (parseInt(jQuery('.sizeMenu .icons-thumbnail').attr('iconview')) < 4 ? 2 : 4);
+		}
+        _filemanage.getData(_explorer.appUrl+'&op=explorerfile&do=filelist&sid=f-'+fid+iconview);
     });
 </script>

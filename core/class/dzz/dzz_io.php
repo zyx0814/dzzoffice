@@ -367,12 +367,12 @@ class dzz_io {
 		}
     }
 
-    public static function uploadStream($file, $name, $path, $relativePath = '', $content_range = '', $force = false) {
+    public static function uploadStream($file, $name, $path, $relativePath = '', $content_range = array(), $force = false, $ondup = 'newcopy') {
         $name = self::name_filter(urldecode($name));
         $relativePath = self::clean(urldecode($relativePath));
         if ($io = self::initIO($path)) {
             $path = self::clean(urldecode($path));
-            $return = $io->uploadStream($file, $name, $path, $relativePath, $content_range, $force);
+            $return = $io->uploadStream($file, $name, $path, $relativePath, $content_range, $force, $ondup);
             if (isset($return['icoarr']) && is_array($return['icoarr']) && count($return['icoarr']) > 0) {
                 Hook::listen('createafter_addindex', $return['icoarr'][0]);
             }

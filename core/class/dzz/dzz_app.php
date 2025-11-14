@@ -198,6 +198,11 @@ class dzz_app extends dzz_base {
         $ismobile = helper_browser::ismobile();
         if ($ismobile) define('IN_MOBILE', $ismobile);
         $_G['ismobile'] = $ismobile;
+        if ($_G['isHTTPS']) {
+            define('APP_CHECK_URL', "https://dzzoffice.com/");
+        } else {
+            define('APP_CHECK_URL', "http://dzzoffice.com/");
+        }
         $this->var = &$_G;
     }
 

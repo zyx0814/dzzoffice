@@ -388,7 +388,16 @@ class UploadHandler {
                 }
             }
             try {
-                if ($return = IO::uploadStream($filepath, $name, $path, $relativePath, $content_range, $force)) {
+                $ondup = isset($_GET['ondup']) ? intval($_GET['ondup']) : 0;
+                //同名文件处理，只限上传到dzz盘生效
+                if ($ondup == 1) {
+                    $ondup = 'overwrite';//覆盖
+                } elseif ($ondup == 2) {
+                    $ondup = 'ignore';//跳过
+                } else {
+                    $ondup = 'newcopy';//重命名
+                }
+                if ($return = IO::uploadStream($filepath, $name, $path, $relativePath, $content_range, $force, $ondup)) {
                     if (isset($return['error'])) {
                         $file->error = $return['error'];
                     } elseif (is_array($return)) {

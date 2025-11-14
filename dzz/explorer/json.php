@@ -54,14 +54,12 @@ if ($clipboardinfo) {
 }
 
 $data['formhash'] = $_G['formhash'];
-
-
 $data['sourcedata'] = array(
     'icos' => $icosdata ? $icosdata : array(),
     'folder' => $folderdata ? $folderdata : array()
 );
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
-
+$space['explorermyset'] = unserialize(C::t('user_setting')->fetch_by_skey('explorermyset', $uid));
 $data['space'] = $space;
 $data['thame'] = array('system' => array('folder'=>'colorful'));
 $infoPanelOpened = C::t('user_setting')->fetch_by_skey('infoPanelOpened');

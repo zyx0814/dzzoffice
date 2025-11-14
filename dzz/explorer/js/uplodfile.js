@@ -9,6 +9,7 @@ _upload.filelist = $('.fileList');
 _upload.fid = null;
 _upload.maxli=10;//设置为0时，不缓存添加数据功能
 _upload.datas=[];
+_upload.ondup = '';
 var attachextensions = '';
 var maxfileSize = null;
 if (_explorer.space && _explorer.space.attachextensions) {
@@ -19,6 +20,9 @@ if (_explorer.space && _explorer.space.attachextensions) {
 if (_explorer.space && _explorer.space.maxattachsize) {
     maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
 }
+if (_explorer.space && _explorer.space.explorermyset && _explorer.space.explorermyset.ondup) {
+    _upload.ondup =  parseInt(_explorer.space.explorermyset.ondup) > 0 ? '&ondup=' + parseInt(_explorer.space.explorermyset.ondup) : '';
+}
 function fileupload(el, fid) {
     el.off();
     if (_explorer.hash.indexOf('cloud') != -1) {
@@ -27,7 +31,7 @@ function fileupload(el, fid) {
         uploadfid = fid;
     }
     el.fileupload({
-        url: MOD_URL + '&op=ajax&do=uploads&container=' + uploadfid,
+        url: MOD_URL + '&op=ajax&do=uploads&container=' + uploadfid + _upload.ondup,
         dataType: 'json',
         autoUpload: true,
         maxChunkSize: parseInt(_explorer.space.maxChunkSize), //2M
@@ -100,7 +104,11 @@ function fileupload(el, fid) {
 				_upload.uploaddone('error');
             } else {
 				_upload.uploaddone();
-                data.context.find('.upload-file-status .precent').html(__lang.update_finish);
+                if (file.data.msg) {
+                    data.context.find('.upload-file-status .precent').html(file.data.msg);
+                } else {
+					data.context.find('.upload-file-status .precent').html(__lang.update_finish);
+                }
                 data.context.addClass('success').find('.upload-file-status .speed').html('');
                 data.context.find('.upload-file-operate').html('');
 				data.context.find('.process').css('display', 'none');

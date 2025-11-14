@@ -1,3 +1,4 @@
+<!--{if $_G['adminid'] == 1}-->
 <script type="text/javascript">
     try {
         var openarr = $openarr;
@@ -7,8 +8,48 @@
         selorg.openarr = openarr;
     });
 </script>
+<!--{/if}-->
 <div class="card-body scroll-y">
     <form class="form-horizontal" action="{MOD_URL}&op=app&do=updatesetting" onsubmit="return submitsetting(this);">
+		<div class="pb-1 border-bottom mb-3">
+			<span class="border-start border-5 border-primary rounded ps-1"></span> 个人设置
+		</div>
+		<div class="row mb-3">
+            <label class="col-sm-2">同名文件处理</label>
+            <div class="col-sm-10">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="ondup1" name="explorermyset[ondup]" value="1" <!--{if $explorermyset['ondup']==1}-->checked<!--{/if}-->>
+                <label class="form-check-label" for="ondup1">覆盖</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="ondup2" name="explorermyset[ondup]" value="0" <!--{if !$explorermyset['ondup']}-->checked<!--{/if}-->>
+                <label class="form-check-label" for="ondup2">重命名</label>
+              </div>
+			  <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="ondup3" name="explorermyset[ondup]" value="2" <!--{if $explorermyset['ondup'] == 2}-->checked<!--{/if}-->>
+                <label class="form-check-label" for="ondup3">跳过</label>
+              </div>
+			  <span class="form-text">上传文件时同名文件处理方式，该功能只对上传到Dzz生效，对网络挂载无效。</span>
+            </div>
+		</div>
+		<div class="row mb-3">
+            <label class="col-sm-2">显示模式</label>
+            <div class="col-sm-10">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="iconview1" name="explorermyset[iconview]" value="1" <!--{if $explorermyset['iconview']==1}-->checked<!--{/if}-->>
+                <label class="form-check-label" for="iconview1">适用于所有文件夹</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="iconview2" name="explorermyset[iconview]" value="0" <!--{if !$explorermyset['iconview']}-->checked<!--{/if}-->>
+                <label class="form-check-label" for="iconview2">适用于单个文件夹</label>
+              </div>
+              <span class="form-text">为每个文件夹选择视图模式，或对所有文件夹使用相同的视图模式</span>
+            </div>
+		</div>
+		<!--{if $_G['adminid'] == 1}-->
+		<div class="pb-1 border-bottom mb-3">
+			<span class="border-start border-5 border-primary rounded ps-1"></span> 网盘设置
+		</div>
 		<div class="row mb-1">
 			<label class="col-sm-2" for="usermemory">{lang start_person_dir}</label>
 			<div class="col-sm-10">
@@ -214,6 +255,7 @@
 				</ul>
 			</div>
 		</div>
+		<!--{/if}-->
 		<dl class="mb-3 d-grid">
             <input type="submit" value="{lang affirm}" class="btn btn-primary btn-round bodyloading"/>
           </dl>

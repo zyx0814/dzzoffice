@@ -370,7 +370,6 @@ class io_dzz extends io_api {
         if (!$folder = C::t('folder')->fetch($icoarr['pfid'])) {
             return array('error' => lang('parent_directory_not_exist'));
         }
-        $gid = $folder['gid'];
         $editperm = perm_check::checkperm('edit', $icoarr);
         if (!$force && !$editperm) {
             return array('error' => lang('file_edit_no_privilege'));
@@ -383,7 +382,6 @@ class io_dzz extends io_api {
             $setting = $_G['setting'];
             //当前文件版本数量
             $versionnum = DB::result_first("select count(*) from %t where rid = %s", array('resources_version', $icoarr['rid']));
-            //
             //版本开启
             $vperm = (!isset($setting['fileVersion']) || $setting['fileVersion']) ? true : false;
             //版本数量限制
@@ -422,20 +420,18 @@ class io_dzz extends io_api {
             $csize = $attach['filesize'] - $icoarr['size'];
             //重新计算用户空间
             if ($csize) {
-                if (!SpaceSize($csize, $gid, 0, $icoarr['uid'])) {
-
+                if (!SpaceSize($csize, $folder['gid'], 0, $icoarr['uid'])) {
                     return array('error' => lang('inadequate_capacity_space'));
                 }
-                SpaceSize($csize, $gid, 1, $icoarr['uid']);
+                SpaceSize($csize, $folder['gid'], 1, $icoarr['uid']);
             }
-            $oldaid = $icoarr['aid'];
             //更新附件数量
-            if ($oldaid != $attach['aid']) {
+            if ($icoarr['aid'] != $attach['aid']) {
                 C::t('resources')->update_by_rid($rid, array('size' => $attach['filesize']));
                 C::t('resources_statis')->add_statis_by_rid($rid, array('editdateline' => TIMESTAMP));
                 C::t('resources_attr')->update_by_skey($icoarr['rid'], $icoarr['vid'], array('aid' => $attach['aid']));
                 C::t('attachment')->update($attach['aid'], array('copys' => $attach['copys'] + 1));
-                C::t('attachment')->delete_by_aid($oldaid);
+                C::t('attachment')->delete_by_aid($icoarr['aid']);
             }
             $path = C::t('resources_path')->fetch_pathby_pfid($icoarr['pfid']);
             $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
@@ -1366,7 +1362,7 @@ class io_dzz extends io_api {
         return $arr;
     }
 
-    public function uploadStream($file, $filename, $pfid, $relativePath = '', $content_range = array(), $force = false) {
+    public function uploadStream($file, $filename, $pfid, $relativePath = '', $content_range = array(), $force = false, $ondup = 'newcopy') {
         $data = array();
         $params = array();
         //处理目录(没有分片或者最后一个分片时创建目录
@@ -1408,9 +1404,10 @@ class io_dzz extends io_api {
         }
         fclose($handle);
         if ($arr['ispart']) {
-            $re = $this->upload($fileContent, $data['pfid'], $filename, $arr, 'newcopy', $force);
+            $re = $this->upload($fileContent, $data['pfid'], $filename, $arr, $ondup, $force);
             if ($arr['iscomplete']) {
                 if (empty($re['error'])) {
+                    if ($re['msg']) $data['msg'] = $re['msg'];
                     $data['icoarr'][] = $re;
                     return $data;
                 } else {
@@ -1421,11 +1418,12 @@ class io_dzz extends io_api {
                 return true;
             }
         } else {
-            $re = $this->upload($fileContent, $data['pfid'], $filename, array(), 'newcopy', $force);
+            $re = $this->upload($fileContent, $data['pfid'], $filename, array(), $ondup, $force);
             if (empty($re['error'])) {
                 if ($re['type'] == 'image' && $re['aid']) {
                     $re['imgpath'] = DZZSCRIPT . '?mod=io&op=thumbnail&path=' . dzzencode('attach::' . $re['aid']);
                 }
+                if ($re['msg']) $data['msg'] = $re['msg'];
                 $re['monthdate'] = dgmdate($re['dateline'], 'm-d');
                 $re['hourdate'] = dgmdate($re['dateline'], 'H:i');
                 $re['pfid'] = $data['pfid'];
@@ -1449,16 +1447,33 @@ class io_dzz extends io_api {
      * @param string $fileContent 文件内容字符串
      * @param string $fid 上传文件的目标保存目录fid
      * @param string $fileName 文件名
-     * @param string $ondup overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进行重命名，命名规则为“文件名_日期.后缀”。
+     * @param string $ondup overwrite：表示覆盖同名文件；newcopy：表示生成文件副本并进行重命名，命名规则为“文件名_日期.后缀”; ignore：表示跳过此文件。
      * @param boolean $isCreateSuperFile 是否分片上传
      * @return string
      */
     public function upload($fileContent, $fid, $filename, $partinfo = array(), $ondup = 'newcopy', $force = false) {
         global $_G;
         $filename = IO::name_filter($filename);
-        if (($ondup == 'overwrite') && ($rid = $this->getRepeatIDByName($filename, $fid))) {//如果目录下有同名文件
-            return $this->overwriteUpload($fileContent, $rid, $filename, $partinfo, $force);//覆盖
-        } else $nfilename = IO::getFileName($filename, $fid); //重命名
+        if (!$filename) {
+            return array('error' => lang('name_cannot_empty'));
+        }
+        if (($ondup == 'overwrite' || $ondup == 'ignore') && ($rid = $this->getRepeatIDByName($filename, $fid))) {//如果目录下有同名文件
+            if ($ondup == 'overwrite') {//覆盖
+                return $this->overwriteUpload($fileContent, $rid, $filename, $partinfo, $force);
+            } else if ($ondup == 'ignore') {//忽略
+                if (!$icoarr = C::t('resources')->fetch_by_rid($rid)) {
+                    return array('error' => lang('file_not_exist1'));
+                }
+                if (!$icoarr['msg']) {
+                    $icoarr['msg'] = '同名文件已跳过';
+                }
+                return $icoarr;
+            } else {
+                return array('error' => lang('parameters_error'));
+            }
+        } else {
+            $nfilename = IO::getFileName($filename, $fid); //重命名
+        }
         if ($partinfo['ispart']) {
             if ($partinfo['partnum'] == 1) {
                 if ($target = $this->getCache($partinfo['flag'] . '_' . md5($filename))) {
@@ -1479,7 +1494,6 @@ class io_dzz extends io_api {
             if (!$partinfo['iscomplete']) return true;
             else {
                 $this->deleteCache($partinfo['flag'] . '_' . md5($filename));
-
             }
         } else {
             $pathinfo = pathinfo($filename);
@@ -1512,23 +1526,17 @@ class io_dzz extends io_api {
     }
 
     public function overwriteUpload($fileContent, $rid, $filename, $partinfo = array(), $force = false) {
-        global $_G, $space;
-
-        if (!$fileContent) {
-            return array('error' => lang('file_content_cannot_empty'));
-        }
+        global $_G;
         if (!$icoarr = C::t('resources')->fetch_by_rid($rid)) {
-            return array('error' => lang('file_not_exist1'));
+            return array('error' => lang('file_not_exist'));
+        }
+        if ($icoarr['isdelete']) {
+            return array('error' => lang('file_been_deleted'));
         }
         if (!$folder = C::t('folder')->fetch($icoarr['pfid'])) {
             return array('error' => lang('parent_directory_not_exist'));
         }
-        $gid = $folder['gid'];
-        if (in_array($icoarr['type'], array('folder', 'link', 'video', 'dzzdoc'))) {
-            if (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload', '' , $folder['uid'])) {
-                return array('error' => lang('no_privilege'));
-            }
-        } elseif (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload', '' , $folder['uid'])) {
+        if (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload', '' , $folder['uid'])) {
             return array('error' => lang('no_privilege'));
         }
         $target = $icoarr['attachment'];
@@ -1547,34 +1555,83 @@ class io_dzz extends io_api {
             file_put_contents($_G['setting']['attachdir'] . './' . $target, $fileContent);
         }
 
-
         if (!$attach = $this->save($target, $icoarr['name'])) {
             return array('error' => lang('file_save_exist'));
         }
-        //计算用户新的空间大小
-        $csize = $attach['filesize'] - $icoarr['size'];
 
-        //重新计算用户空间
-        if ($csize) {
-            if (!SpaceSize($csize, $gid, '', $folder['uid'])) {
-                return array('error' => lang('inadequate_capacity_space'));
-            }
-            SpaceSize($csize, $gid, 1, $folder['uid']);
+        $covertype = 0;
+        //当前文件版本数量
+        $versionnum = DB::result_first("select count(*) from %t where rid = %s", array('resources_version', $icoarr['rid']));
+        //版本开启
+        $vperm = (!isset($_G['setting']['fileVersion']) || $_G['setting']['fileVersion']) ? true : false;
+        //版本数量限制
+        $vnumlimit = isset($_G['setting']['fileVersionNumber']) ? intval($_G['setting']['fileVersionNumber']) : 0;
+        //当上传版本开启，上传版本数量不限制；或者上传版本开启，文件版本数量未达到上限：设置当前文件为最新版本
+        if ($vperm && (!$vnumlimit || ($vnumlimit && ($versionnum < $vnumlimit)))) {
+            $covertype = 1;
+            //当上传版本关闭，并且文件包含版本；或者上传版本开启，并且版本数量达到上限：剔除最老版本，并设置新文件为主版本
+        } elseif ((!$vperm && $versionnum > 0) || ($vperm && $vnumlimit && $versionnum >= $vnumlimit)) {
+            $covertype = 2;
+            //当上传版本关闭，且当前文件不含有版本：替换当前文件
+        } elseif (!$vperm && !$versionnum) {
+            $covertype = 0;
         }
-        $oldaid = $icoarr['aid'];
-        //更新附件数量
-        if ($oldaid != $attach['aid']) {
-            /*  if ($icoarr['type'] == 'document') {
-                  C::t('source_document')->update($icoarr['did'], array('aid' => $attach['aid']));
-              } else {
-                  C::t('source_attach')->update($icoarr['qid'], array('aid' => $attach['aid']));
-              }*/
-            C::t('resources_attr')->update_by_skey($icoarr['rid'], $icoarr['vid'], array('aid' => $attach['aid']));
-            C::t('attachment')->update($attach['aid'], array('copys' => $attach['copys'] + 1));
-            C::t('attachment')->delete_by_aid($oldaid);
+        if ($covertype) {
+            if ($covertype == 2) {
+                $vinfo = DB::fetch_first("select min(dateline),vid from %t where rid = %s ", array('resources_version', $icoarr['rid']));
+                C::t('resources_version')->delete_by_vid($vinfo['vid'], $icoarr['rid']);
+            }
+            $setarr = array(
+                'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
+                'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
+                'name' => $icoarr['name'],
+                'aid' => $attach['aid'],
+                'size' => $attach['filesize'],
+                'ext' => $attach['filetype'],
+                'dateline' => TIMESTAMP
+            );
+            $return = C::t('resources_version')->add_new_version_by_rid($icoarr['rid'], $setarr, $force, false);
+            if ($return['error']) {
+                return array('error' => $return['error']);
+            }
+        } else {
+            //计算用户新的空间大小
+            $csize = $attach['filesize'] - $icoarr['size'];
+            //重新计算用户空间
+            if ($csize) {
+                if (!SpaceSize($csize, $folder['gid'], 0, $icoarr['uid'])) {
+                    return array('error' => lang('inadequate_capacity_space'));
+                }
+                SpaceSize($csize, $folder['gid'], 1, $icoarr['uid']);
+            }
+            //更新附件数量
+            if ($icoarr['aid'] != $attach['aid']) {
+                C::t('resources')->update_by_rid($rid, array('size' => $attach['filesize']));
+                C::t('resources_statis')->add_statis_by_rid($rid, array('editdateline' => TIMESTAMP));
+                C::t('resources_attr')->update_by_skey($icoarr['rid'], $icoarr['vid'], array('aid' => $attach['aid']));
+                C::t('attachment')->update($attach['aid'], array('copys' => $attach['copys'] + 1));
+                C::t('attachment')->delete_by_aid($icoarr['aid']);
+            }
+            $path = C::t('resources_path')->fetch_pathby_pfid($icoarr['pfid']);
+            $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
+            $eventdata = array(
+                'title' => $icoarr['name'],
+                'aid' => $icoarr['aid'],
+                'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
+                'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
+                'path' => $icoarr['path'],
+                'position' => $path,
+                'hash' => $hash
+            );
+            $event = 'edit_file';
+            C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], $event, 'edit', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name']);
         }
         $icoarr['size'] = $attach['filesize'];
         $icoarr['aid'] = $attach['aid'];
+        if (!$icoarr['msg']) {
+            $icoarr['msg'] = '同名文件覆盖成功';
+        }
         return $icoarr;
     }
 

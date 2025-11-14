@@ -46,17 +46,15 @@
   <li class="nav-item">
     <a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=collection" data-hash="collection"><i class="mdi mdi-star"></i><span>{lang collect}</span></a>
   </li>
-  <!--{if $_G['adminid'] == 1}-->
   <li class="border-bottom"></li>
   <li><span class="dropdown-item-text text-muted fw-bold">{lang manage}</span></li>
   <li class="nav-item">
     <a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=app" data-hash="app"><i class="mdi mdi-cog"></i><span>{lang function_management}</span></a>
   </li>
-  <!--{if $explorer_setting['grouponperm']}-->
+  <!--{if $_G['adminid'] == 1}-->
   <li class="nav-item">
     <a href="javascript:;" class="nav-link document-data" data-href="{MOD_URL}&op=groupmanage" data-hash="groupmanage"><i class="mdi mdi-account-cog"></i><span>{lang groups_management}</span></a>
   </li>
-  <!--{/if}-->
   <!--{/if}--> 
 </ul>
 <div id="template_newGroupButton" style="display:none"> 
