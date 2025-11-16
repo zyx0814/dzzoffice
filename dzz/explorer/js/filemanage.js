@@ -246,7 +246,6 @@ _filemanage.setInfoPanel = function () {
 	var rids = _filemanage.selectall.icos;
 	if (_explorer.infoRequest){
 		_explorer.infoRequest.abort();
-		_filemanage.infoPanelUrl='';
 	} 
 	if (!_explorer.infoPanelOpened || _explorer.infoPanel_hide) {
 		return; //右侧面板没有打开的话，不加载文件详细信息
@@ -283,9 +282,7 @@ _filemanage.setInfoPanel = function () {
 				+'</div>';
 			$('#rightMenu').html(data);
 			_filemanage.infoPanelUrl = '';
-			return false;
-		}
-		if (_filemanage.infoPanelUrl !== fid) {
+		} else if (_filemanage.infoPanelUrl !== fid) {
 			var rid = $('#ridinput').val();
 			_explorer.infoRequest = $.post(MOD_URL + '&op=dynamic&do=getfiledynamic&ajaxdata=html', {
 				'fid': rid ? 0 : fid,
@@ -819,7 +816,7 @@ function contextmenuico(rid) {
 	//重命名权限
 	if (!_explorer.Permission('rename', obj)) {
 		el.find('.rename').remove();
-	}
+	} 
 
 	//下载权限
 	if (!_explorer.Permission('download', obj)) {
@@ -1711,6 +1708,7 @@ _filemanage.collect = function (rid) {
 	var collect = 1;
 	var ico = null;
 	var i = 0;
+	var isalert = false;
 	//	console.log(_filemanage.selectall.icos.length);
 	if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 		for (i = 0; i < _filemanage.selectall.icos.length; i++) {
@@ -1750,12 +1748,11 @@ _filemanage.collect = function (rid) {
 								
 								total--;
 							} else {
+								isalert = true;
 								msg += '<p class="text-danger">' + _explorer.sourcedata.icos[key].name + json.msg[key].error + '</p>';
-
 							}
 						}
 						_filemanage.showTemplatenoFile(containid, total);
-
 					} else {
 						for (var i in json.msg) {
 							if (json.msg[i] === 'success') {
@@ -1763,23 +1760,28 @@ _filemanage.collect = function (rid) {
 								msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.cancle_collect_success + '</p>';
 								jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.colllection-item').addClass('hide');
 							} else {
+								isalert = true;
 								msg += '<p class="text-danger">' + _explorer.sourcedata.icos[i].name + json.msg[i].error + '</p>';
 							}
 						}
 					}
 				} else {
-					
 					for (var i in json.msg) {
 						if (json.msg[i] === 'success') {							
 							msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.collect_success + '</p>';
 							_explorer.sourcedata.icos[rid].collect = 1;
 							jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.colllection-item').removeClass('hide');
 						} else {
+							isalert = true;
 							msg += '<p class="text-danger">' + _explorer.sourcedata.icos[i].name + json.msg[i].error + '</p>';
 						}
 					}
 				}
-				layer.msg(msg, {offset:'10px'});
+				if (isalert) {
+					layer.alert(msg);
+				} else {
+					layer.msg(msg, {offset:'10px'});
+				}
 			}
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
 			layer.msg(__lang.do_failed, {offset:'10px'});
@@ -2116,6 +2118,7 @@ _filemanage.finallyDelete = function (rid, noconfirm, title) {
 	var icosdata = _explorer.sourcedata.icos[rid];
 	var path = [];
 	var data = {};
+	var isalert = false;
 	if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 		/*if(icosdata.bz && icosdata.bz){
 
@@ -2154,10 +2157,15 @@ _filemanage.finallyDelete = function (rid, noconfirm, title) {
 					total--;
 					_filemanage.showTemplatenoFile(containid, total);
 				} else {
+					isalert = true;
 					msg += '<p class="text-danger">' + json.msg[i] + '</p>';
 				}
 			}
-			layer.msg(msg, {offset:'10px'});
+			if (isalert) {
+				layer.alert(msg);
+			} else {
+				layer.msg(msg, {offset:'10px'});
+			}
             _filemanage.deleteIndex(rids);
             _filemanage.removeridmore(rids);
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
@@ -2170,6 +2178,7 @@ _filemanage.deleteAll = function () {
 		var filemanage = _filemanage.cons[_filemanage.winid];
 		var containid = 'filemanage-' + _filemanage.winid;
 		var total = filemanage.total;
+		var isalert = false;
 		var url = _explorer.appUrl + '&op=dzzcp&do=emptyallrecycle&k=' + new Date().getTime();
 		layer.confirm(__lang.finally_delete_file_confirm, {title:'您确定删除回收站所有文件吗？删除之后不可恢复',skin:'lyear-skin-danger'}, function(index){
 			layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
@@ -2187,10 +2196,15 @@ _filemanage.deleteAll = function () {
 						rids.push(i);
 						total--;
 					} else {
+						isalert = true;
 						msg += '<p class="text-danger">' + data.msg[i] + '</p>';
 					}
 				}
-				layer.msg(msg, {offset:'10px'});
+				if (isalert) {
+					layer.alert(msg);
+				} else {
+					layer.msg(msg, {offset:'10px'});
+				}
 				_filemanage.showTemplatenoFile(containid, total);
 				_filemanage.deleteIndex(rids);
 				_filemanage.removeridmore(rids);
@@ -2202,6 +2216,7 @@ _filemanage.recoverAll = function () {
 	var filemanage = _filemanage.cons[_filemanage.winid];
 	var containid = 'filemanage-' + _filemanage.winid;
 	var total = filemanage.total;
+	var isalert = false;
 	var url = _explorer.appUrl + '&op=dzzcp&do=recoverAll&k=' + new Date().getTime();
 	layer.confirm(__lang.recover_file_confirm, {title:'您确定恢复所有文件到原位置吗？',skin:'lyear-skin-warning'}, function(index){
 		layer.msg(__lang.recovering_not_please_close, {offset:'10px',time:0});
@@ -2219,12 +2234,16 @@ _filemanage.recoverAll = function () {
 					rids.push(i);
 					total--;
 					_filemanage.showTemplatenoFile(containid, total);
-
 				} else {
+					isalert = true;
 					msg += '<p class="text-danger">' + data.msg[i] + '</p>';
 				}
 			}
-			layer.msg(msg, {offset:'10px'});
+			if (isalert) {
+				layer.alert(msg);
+			} else {
+				layer.msg(msg, {offset:'10px'});
+			}
             _filemanage.removeridmore(rids);
 		});
 	});
@@ -2240,6 +2259,7 @@ _filemanage.RecoverFile = function (rid, noconfirm) {
 	var icosdata = _explorer.sourcedata.icos[rid];
 	var path = [];
 	var data = {};
+	var isalert = false;
 	if (_filemanage.selectall.icos.length > 0 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
 		/*if(icosdata.bz && icosdata.bz){
 
@@ -2277,10 +2297,15 @@ _filemanage.RecoverFile = function (rid, noconfirm) {
 				_filemanage.showTemplatenoFile(containid, total);
 
 			} else {
+				isalert = true;
 				msg += '<p class="text-danger">' + json.msg[i] + '</p>';
 			}
 		}
-		layer.msg(msg, {offset:'10px'});
+		if (isalert) {
+			layer.alert(msg);
+		} else {
+			layer.msg(msg, {offset:'10px'});
+		}
         _filemanage.removeridmore(rids);
 
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
@@ -2377,6 +2402,7 @@ _filemanage.delIco = function (rid, noconfirm) {
 	jQuery.post(url, data, function (json) {
 		var rids = [];
 		var msg = '';
+		var isalert = false;
 		for (var i in json.msg) {
 			if (json.msg[i] === 'success') {
 				msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.delete_success + '</p>';
@@ -2385,10 +2411,15 @@ _filemanage.delIco = function (rid, noconfirm) {
 				total--;
 				_filemanage.showTemplatenoFile(containid, total);
 			} else {
+				isalert = true;
 				msg += '<p class="text-danger">' + json.msg[i] + '</p>';
 			}
 		}
-		layer.msg(msg, {offset:'10px'});
+		if (isalert) {
+			layer.alert(msg);
+		} else {
+			layer.msg(msg, {offset:'10px'});
+		}
         _filemanage.removeridmore(rids);
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
 		layer.msg(__lang.do_failed, {offset:'10px'});
@@ -2433,8 +2464,10 @@ _filemanage.removeridmore = function(rids){
 
 }
 _filemanage.removerid = function (rid) {
+	if (!rid) return;
 	//var self=this;
 	var data = _explorer.sourcedata.icos[rid];
+	if (!data) return;
 	//this.asc= this.asc?1:0;
 	var containerid = 'filemanage-' + _filemanage.winid;
 	var el = jQuery('#' + containerid + ' .Icoblock[rid=' + rid + ']');
@@ -2515,8 +2548,10 @@ _filemanage.copy = function (rid,fid) {
 			filenames = filenames.substr(0, filenames.length - 1);
 			layer.msg(filenames + __lang.copy_success, {offset:'10px'});
 			if(fid) {_filemanage.paste(fid);}
+		} else if(json.msg) {
+			layer.alert(json.msg, {skin:'lyear-skin-danger'});
 		} else {
-			layer.msg(json.msg, {offset:'10px'});
+			layer.msg(__lang.do_failed, {offset:'10px'});
 		}
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
 		layer.msg(__lang.do_failed, {offset:'10px'});
@@ -2583,8 +2618,10 @@ _filemanage.cut = function (rid) {
 			_filemanage.showTemplatenoFile(containid, total);
 			filenames = filenames.substr(0, filenames.length - 1);
 			layer.msg(filenames + __lang.cut_success, {offset:'10px'});
+		} else if(json.msg) {
+			layer.alert(json.msg, {skin:'lyear-skin-danger'});
 		} else {
-			layer.msg(json.msg, {offset:'10px'});
+			layer.msg(__lang.do_failed, {offset:'10px'});
 		}
 
 	}, 'json').fail(function (jqXHR, textStatus, errorThrown) {

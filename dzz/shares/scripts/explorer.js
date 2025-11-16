@@ -296,6 +296,7 @@ function allsave() {
 						}
 					}
 					var rids = rids.join(',');
+					showmessage(__lang.In_the_save, 'info', 0, 1);
 					$.post(MOD_URL+'&op=save', {'fid': data,'sid':sid, 'dzzrids': rids}, function (data) {
 						if (data.error) {
 							showmessage(data.error, 'danger', 5000, 1);

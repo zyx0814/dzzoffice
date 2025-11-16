@@ -9,7 +9,6 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-
 if (!$path = dzzdecode(rawurldecode($_GET['path']))) {
     @header('HTTP/1.1 404 Not Found');
     @header('Status: 404 Not Found');

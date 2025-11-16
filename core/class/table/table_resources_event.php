@@ -385,8 +385,8 @@ class table_resources_event extends dzz_table {
         //检测删除权限
         $pfid = $comment['pfid'];
         if ($folder = C::t('folder')->fetch($pfid)) {
-            if (($uid != $comment['uid']) && !perm_check::checkperm_Container($folder['fid'], 'delete2') && !($uid == $folder['uid'] && perm_check::checkperm_Container($folder['fid'], 'delete1'))) {
-                return array('error' => lang('no_privilege'));
+            if (($uid != $comment['uid']) && !perm_check::checkperm_Container($folder['fid'], 'delete', '', $folder['uid'])) {
+                return array('error' => lang('file_delete_no_privilege'));
             }
         }
         if (parent::delete($id)) {

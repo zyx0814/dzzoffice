@@ -429,10 +429,8 @@ class table_folder extends dzz_table {
             return false;
         }
         $pathinfo = C::t('resources_path')->fetch_pathby_pfid($fid, true);
-        $info = array_merge($folderinfo, $pathinfo);
-        $info[$fid] = $info;
-        return $info;
-
+        $info[$fid] = array_merge($folderinfo, $pathinfo);
+        return $info[$fid];
     }
 
     //获取文件夹权限

@@ -23,27 +23,26 @@ class table_resources_clipboard extends dzz_table {
                 $rids .= $v . ',';
             }
         } else {
-            foreach (DB::fetch_all("select rid,uid,pfid,gid,oid,`type` from %t where rid in (%n) and isdelete < 1", array('resources', $paths)) as $v) {
-                $pfid = $v['pfid'];
+            foreach (DB::fetch_all("select * from %t where rid in (%n) and isdelete < 1", array('resources', $paths)) as $v) {
                 if ($copytype == 1) {
                     if ($v['type'] == 'folder') {
                         $return = C::t('resources')->check_folder_perm($v, 'copy');
                         if ($return['error']) return array('error' => $return['error']);
                         $typearr[] = 1;
                     } else {
-                        if (!perm_check::checkperm_Container($pfid, 'copy2') && !($uid == $v['uid'] && perm_check::checkperm_Container($pfid, 'copy1'))) {
-                            return array('error' => lang('no_privilege'));
+                        if (!perm_check::checkperm('copy', $v)) {
+                            return array('error' => lang('file_copy_no_privilege'));
                         }
                         $typearr[] = 2;
                     }
                 } else {
                     if ($v['type'] == 'folder') {
-                        $return = C::t('resources')->check_folder_perm($v, 'cut');
+                        $return = C::t('resources')->check_folder_perm($v, 'delete');
                         if ($return['error']) return array('error' => $return['error']);
                         $typearr[] = 1;
                     } else {
-                        if (!perm_check::checkperm_Container($pfid, 'delete2') && !($uid == $v['uid'] && perm_check::checkperm_Container($pfid, 'delete1'))) {
-                            return array('error' => lang('no_privilege'));
+                        if (!perm_check::checkperm('delete', $v)) {
+                            return array('error' => lang('file_delete_no_privilege'));
                         }
                         $typearr[] = 2;
                     }

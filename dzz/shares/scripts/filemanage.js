@@ -763,11 +763,11 @@ _filemanage.prototype.createIcosContainer = function () {
 				_filemanage.selectall.icos = [];
 				_filemanage.selectall.position = {};
 				el.find('.Icoblock').removeClass('Icoselected');
-				el.find('.selectall-box').removeClass('Icoselected');
+				el.find('.select-all').removeClass('Icoselected');
 				self.selectInfo();
 			}
-		})
-		.end().find('.selectall-box').on('click', function () {
+		});
+		jQuery(document).off('click', '.select-all').on('click', '.select-all', function() {
 			var el = jQuery(this);
 			var selectall = true;
 			if (el.hasClass('Icoselected')) {
@@ -775,11 +775,10 @@ _filemanage.prototype.createIcosContainer = function () {
 				selectall = false;
 				_filemanage.selectall.icos = [];
 			} else {
-				el.addClass('Icoselected');
+				el.addClass('Icoselected mdi-checkbox-blank-outline');
 				selectall = true;
 				_filemanage.selectall.icos = [];
 			}
-
 			_filemanage.selectall.container = containerid;
 			jQuery('#' + containerid).find('.Icoblock').each(function () {
 				if (selectall) {
@@ -790,7 +789,6 @@ _filemanage.prototype.createIcosContainer = function () {
 				}
 			});
 			self.selectInfo();
-			return false;
 		});
 	jQuery(document).off('click.cselect').on('click.cselect', '.mdi-close', function () {
 		jQuery('.navtopheader').css('display', 'none');
@@ -878,11 +876,16 @@ _filemanage.prototype._selectInfo = function () {
 	if (sum > 0) { //有选中
 		jQuery('.navtopheader').css('display', 'block');
 		jQuery('.navtopheader').html(html);
-		jQuery('.selectall-box').addClass('Icoselected');
 		jQuery('.selectall-box .select-info').html('<span class="num">' + sum + '</span>个选中');
 		jQuery('.docunment-allfile').hide();
 		if (sum >= total) { //全部选中
-			jQuery('.selectall-box').addClass('Icoselected');
+			jQuery('.select-all').addClass('Icoselected');
+			jQuery('.select-all').removeClass('mdi-checkbox-intermediate').addClass('mdi-checkbox-marked');
+			jQuery('.select-all').attr('title', '取消全选');
+		} else { //部分选中
+			jQuery('.select-all').removeClass('mdi-checkbox-marked').addClass('mdi-checkbox-intermediate');
+			jQuery('.select-all').removeClass('Icoselected');
+			jQuery('.select-all').attr('title', '全选');
 		}
 	} else { //没有选中
 		jQuery('.navtopheader').css('display', 'none');
@@ -1273,12 +1276,13 @@ _filemanage.downAll = function () {
 	var rids = [];
 	for (var key in _explorer.sourcedata.icos) {
 		if (_explorer.sourcedata.icos.hasOwnProperty(key)) {
-			rids.push(_explorer.sourcedata.icos[key].rid);
+			rids.push(_explorer.sourcedata.icos[key].dpath);
 		}
 	}
 	$.post(MOD_URL+'&op=ajax&do=adddowns', {'sid':sid},function (json) {
 		if (json['success']) {
 			var url = DZZSCRIPT + '?mod=io&op=download&path=' + rids;
+			console.log(url);
 			if (BROWSER.ie) {
 				window.open(url);
 			} else {

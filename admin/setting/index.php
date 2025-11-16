@@ -10,7 +10,6 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
     exit('Access Denied');
 }
 include_once libfile('function/cache');
-include_once libfile('function/organization');
 $operation = empty($_GET['operation']) ? 'basic' : trim($_GET['operation']);
 $setting = C::t('setting')->fetch_all(null);
 if ($setting['thumbsize']) {
@@ -31,10 +30,8 @@ if (!submitcheck('settingsubmit')) {
     if ($operation == 'basic') {
         $navtitle = lang('members_verify_base') . ' - ' . lang('appname');
         $spacesize = DB::result_first("select maxspacesize from " . DB::table('usergroup_field') . " where groupid='9'");
-        include_once libfile('function/organization');
-
         if ($setting['defaultdepartment']) {
-            $patharr = getPathByOrgid($setting['defaultdepartment']);
+            $patharr = C::t('organization')->getPathByOrgid($setting['defaultdepartment'], false);
             $defaultdepartment = implode(' - ', ($patharr));
 
         }
@@ -43,10 +40,7 @@ if (!submitcheck('settingsubmit')) {
             $setting['defaultdepartment'] = 'other';
         }
         $setting['sitebeian'] = dhtmlspecialchars($setting['sitebeian']);
-
         $applist = DB::fetch_all("select appname,identifier from %t where isshow>0 and `available`>0 and app_path='dzz' ORDER BY disp", array('app_market'));
-
-        //$orgtree=getDepartmentOption(0);
     } elseif ($operation == 'desktop') {
         if ($setting['desktop_default'] && !is_array($setting['desktop_default'])) {
             $setting['desktop_default'] = unserialize($setting['desktop_default']);
@@ -118,7 +112,7 @@ if (!submitcheck('settingsubmit')) {
         if ($setting['loginset'] && !is_array($setting['loginset'])) {
             $setting['loginset'] = unserialize($setting['loginset']);
                 if ($setting['loginset']['orgid']) {
-                $patharr = getPathByOrgid($setting['loginset']['orgid']);
+                $patharr = C::t('organization')->getPathByOrgid($setting['loginset']['orgid'], false);
                 $orgid = implode(' - ', ($patharr));
             }
             if (empty($orgid)) {

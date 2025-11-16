@@ -54,7 +54,6 @@ $lang = array(
     'delfolder' => 'Delete Folder',
     'delete_file' => 'Deleted file <a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}',
     'delete_folder' => 'Deleted folder <a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}',
-    'has_no_privilege_file' => 'Contains files without permissions',
     'finallydelete' => 'Permanently Delete',
     'finallydel_file' => 'Permanently deleted <a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}',
     'recover_error' => 'Recovery failed',

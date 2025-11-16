@@ -210,7 +210,7 @@ if ($do == 'upload') {//上传图片文件
 } elseif ($do == 'newLink') {//新建连接
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-        $arr = array('error' => lang('no_privilege'));
+        $arr = array('error' => lang('folder_upload_no_privilege'));
     }
 } elseif ($do == 'linkadd') {
     if (isset($_GET['createlink']) && $_GET['createlink']) {
@@ -270,42 +270,42 @@ if ($do == 'upload') {//上传图片文件
         case 'newTxt':
             $filename = lang('new_txt') . '.txt';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('no_privilege'))));
+                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
             }
             $content = ' ';
             break;
         case 'newDzzDoc':
             $filename = lang('new_dzzdoc') . '.dzzdoc';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('no_privilege'))));
+                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
             }
             $content = ' ';
             break;
         case 'newDoc':
             $filename = lang('new_word') . '.docx';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('no_privilege'))));
+                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/word.docx');
             break;
         case 'newExcel':
             $filename = lang('new_excel') . '.xlsx';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('no_privilege'))));
+                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/excel.xlsx');
             break;
         case 'newPowerPoint':
             $filename = lang('new_PowerPoint') . '.pptx';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('no_privilege'))));
+                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/ppt.pptx');
             break;
         case 'newpdf':
             $filename = lang('new_pdf') . '.pdf';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('no_privilege'))));
+                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/pdf.pdf');
             break;
@@ -695,7 +695,7 @@ if ($do == 'upload') {//上传图片文件
                     $gidarr = array();
                     foreach (DB::fetch_all("select pfid,name,gid from %t where rid in(%n)", array('resources', $rids)) as $v) {
                         if (!perm_check::checkperm_Container($v['pfid'], 'share')) {
-                            $arr = array('error' => lang('no_privilege'));
+                            $arr = array('error' => lang('file_share_no_privilege'));
                         } else {
                             $gidarr[] = $v['gid'];
                             $filenames[] = $v['name'];

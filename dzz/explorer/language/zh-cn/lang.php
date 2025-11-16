@@ -54,7 +54,6 @@ $lang = array(
     'delfolder' => '删除文件夹',
     'delete_file' => '删除文件<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}',
     'delete_folder' => '删除文件夹<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}',
-    'has_no_privilege_file' => '含有无权限文件',
     'finallydelete' => '彻底删除',
     'finallydel_file' => '彻底删除了文件(文件夹)<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{filename}',
     'recover_error' => '恢复失败',

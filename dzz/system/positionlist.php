@@ -270,7 +270,7 @@ if ($do == 'get_children') {
         $newname = IO::getFolderName($fname, $fid);
         exit(json_encode(array('success' => true, 'fname' => $newname)));
     } else {
-        exit(json_encode(array('error' => lang('no_privilege'))));
+        exit(json_encode(array('error' => lang('folder_newfolder_no_privilege'))));
     }
 } elseif ($do == 'checkupload') {
     $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
@@ -282,7 +282,7 @@ if ($do == 'get_children') {
 } elseif ($do == 'geffolderinfo') {
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if (!perm_check::checkperm_Container($fid, 'read')) {
-        exit(json_encode(array('error' => lang('no_privilege'))));
+        exit(json_encode(array('error' => lang('file_read_no_privilege'))));
     }
     $data = C::t('folder')->fetch_by_fid($fid);
     exit(json_encode($data));

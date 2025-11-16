@@ -14,6 +14,6 @@ if ($operation == 'chkperm') {
     if (perm_check::checkperm_Container($fid, 'upload')) {
         exit(json_encode(array('success' => true)));
     } else {
-        exit(json_encode(array('error' => lang('no_privilege'))));
+        exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
     }
 }

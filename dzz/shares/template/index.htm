@@ -147,18 +147,14 @@
 					<a href="javascript:;" type="button" class="btn property dcolor" onclick="_filemanage.property('{rid}')"><i class="mdi mdi-sort-variant" data-toggle="tooltip" data-placement="bottom" title="{lang property}"></i>
 					</a>
 				</div>
-				<script type="text/javascript" reload="1">
-					jQuery(function () {
-					jQuery('[data-toggle="tooltip"]').tooltip();
-					});
-				</script>
 			</div>
 			<div id="template_file" style="display:none">
 				<div class="navtoperate dtheme">
 					<div class="select-toperate">
-					<div class="select-toperate select-toperate-left selectall-box">
-						<span class="mdi mdi-close dcolor fs-5"></span>
-						<div class="select-info fs-5"></div>
+					<div class="select-toperate select-toperate-left selectall-box fs-5">
+						<span class="mdi mdi-close dcolor" data-toggle="tooltip" data-placement="bottom" title="{lang close}"></span>
+						<span class="select-all mdi dcolor" title="{lang select_all}"></span>
+						<div class="select-info"></div>
 					</div>
 					<div class="select-toperate select-toperate-center toolButtons">
 						<div class="shareMenu">
@@ -170,12 +166,7 @@
 					</ul>
 					</div>
 					</div>
-				</div>
-				<script type="text/javascript" reload="1">
-					jQuery(function () {
-					jQuery('[data-toggle="tooltip"]').tooltip();
-					});
-				</script>       
+				</div> 
 			</div>
 			<div id="template_nofile_notice" style="display:none">
 				<div class="emptyPage" id="noticeinfo">
@@ -350,6 +341,7 @@
         dropdown: null
     };
 	jQuery(document).ready(function(e) {
+		jQuery('[data-toggle="tooltip"]').tooltip();
 		layui.use(function(){
 		  layuiModules.dropdown = layui.dropdown;
 			layuiModules.dropdown.render({

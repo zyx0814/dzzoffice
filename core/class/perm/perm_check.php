@@ -69,7 +69,7 @@ class perm_check {
             if (!self::checkgroupPerm($folder['gid'])) {
                 return 0;
             }
-            // 权限不继承上级（flag标识）：处理分享权限后，合并用户基础权限
+            // 权限不继承上级（flag标识）：合并用户基础权限
             if ($power->isPower('flag')) {
                 return $power->mergePower(self::getuserPerm());//$power1->power;
             }
@@ -235,6 +235,38 @@ class perm_check {
     }
 
     /**
+     * 检查分享权限
+     * @param int $sid 分享ID
+     * @param string $action 操作类型
+     * @return bool 是否有权限
+     */
+    public static function checkshareperm($sid, $action) {
+        global $_G;
+        if (!$sid) return false;
+        // 超级管理员拥有全部权限
+        if ($_G['uid'] > 0 && $_G['adminid'] == 1) return true;
+        $share = C::t('shares')->fetch($sid);
+        if (!$share) return false;// 分享不存在
+        // 分享状态无效（如被删除、过期）
+        if (in_array($share['status'], [-3, -4, -5]) || ($share['endtime'] && $share['endtime'] < TIMESTAMP)) {
+            return false;
+        }
+        $perms = $share['perm'] ? array_flip(explode(',', $share['perm'])) : [];
+        // 需登录才能访问的分享，未登录则拦截
+        if (isset($perms[3]) && $_G['uid'] < 1) return false;
+
+        // 根据分享权限配置判断操作权限
+        switch ($action) {
+            case 'read': return !isset($perms[2]); // 无禁用预览权限
+            case 'edit': return isset($perms[4]);  // 有允许编辑权限
+            case 'download':
+            case 'copy': return !isset($perms[1]); // 无禁用下载/复制权限
+            case 'comment': return isset($perms[6]); // 有允许评论权限
+            default: return empty($share['perm']) && in_array($action, ['download', 'read', 'copy']);
+        }
+    }
+
+    /**
      * 检查文件的操作权限（综合判断：超级管理员、预览、分享、机构/个人身份、文件自身权限等）
      * 权限优先级：超级管理员 → 预览权限 → 分享权限 → 机构/个人身份校验 → 文件自身权限（sperm） → 容器继承权限
      * @param string $action 操作类型（如'read'、'edit'等）
@@ -250,27 +282,9 @@ class perm_check {
         if ($arr['preview'] && ($action == 'read' || $action == 'copy' || $action == 'download')) {
             return true;
         }
-        // 分享权限处理：根据分享配置判断
+        // 分享权限处理
         if ($arr['sid']) {
-            $share = C::t('shares')->fetch($arr['sid']);
-            if (!$share) return false;// 分享不存在
-            // 分享状态无效（如被删除、过期）
-            if (in_array($share['status'], [-3, -4, -5]) || ($share['endtime'] && $share['endtime'] < TIMESTAMP)) {
-                return false;
-            }
-            $perms = $share['perm'] ? array_flip(explode(',', $share['perm'])) : [];
-            // 需登录才能访问的分享，未登录则拦截
-            if (isset($perms[3]) && $_G['uid'] < 1) return false;
-
-            // 根据分享权限配置判断操作权限
-            switch ($action) {
-                case 'read': return !isset($perms[2]); // 无禁用预览权限
-                case 'edit': return isset($perms[4]);  // 有允许编辑权限
-                case 'download':
-                case 'copy': return !isset($perms[1]); // 无禁用下载/复制权限
-                case 'comment': return isset($perms[6]); // 有允许评论权限
-                default: return empty($share['perm']) && in_array($action, ['download', 'read', 'copy']);
-            }
+            return self::checkshareperm($arr['sid'], $action);
         }
         // 未登录用户无权限
         if ($_G['uid'] < 1) return false;
@@ -308,7 +322,11 @@ class perm_check {
      * @param int $pfid 容器ID
      * @param string $action 操作类型
      * @param string $bz 标识（第三方挂载场景）
+     * @param int $uid 用户ID
      * @return bool 是否有权限
+     * @note 对于文件夹操作，权限检查应基于其父级目录的权限。
+     *       在resources表中，文件夹的oid字段记录其自身ID，而pfid字段记录其所在的父级目录ID，
+     *       因此在进行文件夹操作时应当检查其父级目录的权限而非自身权限。
      */
     public static function checkperm_Container($pfid, $action = '', $bz = '', $uid = 0) {
         global $_G;

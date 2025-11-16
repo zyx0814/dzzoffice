@@ -67,8 +67,8 @@ class table_resources extends dzz_table {
             $updatepath = true;
         }
         $fid = $infoarr['pfid'];
-        if (!perm_check::checkperm_Container($infoarr['pfid'], 'edit2') && !($_G['uid'] == $infoarr['uid'] && perm_check::checkperm_Container($infoarr['pfid'], 'edit1'))) {
-            return array('error' => lang('no_privilege'));
+        if (!perm_check::checkperm('edit', $infoarr)) {
+            return array('error' => lang('file_edit_no_privilege'));
         }
         $setarr = array(
             'isdelete' => 1,
@@ -119,43 +119,35 @@ class table_resources extends dzz_table {
         //获取文件夹fid集合
         $fids = C::t('resources_path')->fetch_folder_containfid_by_pfid($icoarr['oid']);
         $rids = array();
-        $resources = array();
         $extrasql = '';
         if (!$isdelete) {
             $extrasql = ' and isdelete < 1 ';
         }
         //获取当前文件下所有下级rid
-        foreach (DB::fetch_all("select rid,pfid,oid,uid,gid,sperm from %t where (oid in(%n) or pfid in(%n)) and rid != %s $extrasql", array($this->_table, $fids, $fids, $icoarr['rid'])) as $v) {
+        foreach (DB::fetch_all("select * from %t where (oid in(%n) or pfid in(%n)) and rid != %s $extrasql", array($this->_table, $fids, $fids, $icoarr['rid'])) as $v) {
             $rids[] = $v['rid'];
-            $resources[] = $v;
+            if ($v['type'] == 'folder' || $v['sperm'] > 0) {//只判断文件夹和设置了文件权限的文件
+                if (!perm_check::checkperm($action, $v)) {
+                    return array('error' => lang('has_no_privilege_file') . ' ' . $v['name']);
+                }
+            }
         }
         $index = array_search($icoarr['oid'], $fids);
         unset($fids[$index]);
         $ridnum = count($rids);
         $fidnum = count($fids);
-        if ($icoarr['gid'] > 0) {
-            $folderinfo = C::t('folder')->fetch($icoarr['oid']);
-            if (!perm_FolderSPerm::isPower($folderinfo['fsperm'], $action)) return array('error' => lang('has_no_privilege_file'));
-            //判断目录是否为空，为空则不判断当前目录权限
-            if ($ridnum) {
-                if (perm_check::checkperm_Container($icoarr['pfid'], $action . '2') || ($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['pfid'], $action . '1'))) {
-                    if (!perm_check::checkperm_Container($icoarr['oid'], $action . '2', '', $folderinfo['uid']) && !($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['oid'], $action . '1', '', $folderinfo['uid']))) return array('error' => lang('has_no_privilege_file'));
-                } else {
-                    return array('error' => lang('has_no_privilege_file'));
-                }
+        $folderinfo = C::t('folder')->fetch($icoarr['oid']);
+        //判断目录是否为空，为空则不判断当前目录权限
+        if ($ridnum) {
+            if (perm_check::checkperm_Container($icoarr['pfid'], $action, '', $folderinfo['uid'])) {
+                if (!perm_check::checkperm_Container($icoarr['oid'], $action, '', $folderinfo['uid'])) return array('error' => lang('has_no_privilege_file'));
             } else {
-                //判断是否具有上级删除权限
-                if (!perm_check::checkperm_Container($icoarr['pfid'], $action . '2') && !($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['pfid'], $action . '1'))) {
-                    return array('error' => lang('has_no_privilege_file'));
-                }
+                return array('error' => lang('has_no_privilege_file'));
             }
-            if (count($resources)) {
-                foreach ($resources as $v) {
-                    if (!perm_check::checkperm($action, $v)) {
-                        $arr = self::fetch_by_rid($v['rid']);
-                        return array('error' => lang('has_no_privilege_file') . ' ' . $arr['name']);
-                    }
-                }
+        } else {
+            //判断是否具有上级删除权限
+            if (!perm_check::checkperm_Container($icoarr['pfid'], $action, '', $folderinfo['uid'])) {
+                return array('error' => lang('has_no_privilege_file'));
             }
         }
         return array($icoarr['oid'], $ridnum, $fidnum, $fids, $rids);
@@ -171,7 +163,6 @@ class table_resources extends dzz_table {
         if (!$infoarr = parent::fetch($rid)) {
             return false;
         }
-        $parentfid = $infoarr['pfid'];//父级目录
         $setarr = array(
             'pfid' => -1,
             'isdelete' => 1,
@@ -196,7 +187,6 @@ class table_resources extends dzz_table {
                 if ($ridnum) self::update_by_rid($rids, $setarr1);
                 //查询回收站是否有相同数据，如果有合并回收站数据
                 if ($recyledata = C::t('resources_recyle')->fetch_by_rid($infoarr['rid'])) {
-
                     if (C::t('folder')->update($currentfid, $setarr)) {
                         if ($fidnum) DB::update('folder', $setarr1, 'fid in(' . dimplode($rfids) . ')');
                         DB::update('resources_recyle', array('deldateline' => $infoarr['deldateline'], 'uid' => $uid), array('id' => $recyledata['id']));
@@ -220,8 +210,8 @@ class table_resources extends dzz_table {
             $dels[] = $rid;
         } else {
             //文件权限判断
-            if (!perm_check::checkperm_Container($parentfid, 'delete2') && !($uid == $infoarr['uid'] && perm_check::checkperm_Container($parentfid, 'delete1'))) {
-                return array('error' => lang('no_privilege'));
+            if (!perm_check::checkperm('delete', $infoarr)) {
+                return array('error' => lang('file_delete_no_privilege'));
             }
             if (DB::result_first("select count(*) from %t where rid = %s", array('resources_recyle', $rid))) {
                 return array('error' => lang('file_isdelete_in_recycle'));
@@ -726,6 +716,34 @@ class table_resources extends dzz_table {
         return $datainfo;
     }
 
+    //查询目录下的rid
+    public function fetch_rids_by_pfid($pfid, $uid = '', $checkperm = true) {
+        $currentuid = getglobal('uid');
+        $pfid = intval($pfid);
+        $where = " pfid = %d";
+        $param = array($this->_table, $pfid);
+        $datainfo = array();
+        if ($uid) {
+            $where .= " and uid = %d";
+            $param[] = $uid;
+        }
+        foreach (DB::fetch_all("select * from %t where $where and isdelete < 1 order by dateline desc", $param) as $k => $value) {
+            if ($checkperm) {
+                if ($value['type'] == 'folder' || $value['sperm'] > 0) {
+                    if ($checkperm == 'download') {
+                        if (!perm_check::checkperm('download', $value)) continue;
+                    } elseif ($checkperm == 'copy') {
+                        if (!perm_check::checkperm('copy', $value)) continue;
+                    } else {
+                        if (!perm_check::checkperm('read', $value)) continue;
+                    }
+                }
+            }
+            $datainfo[] = $value['rid'];
+        }
+        return $datainfo;
+    }
+
     //通过rid更新数据
     public function update_by_rid($rid, $setarr) {
         if (!is_array($rid)) $rid = (array)$rid;
@@ -847,7 +865,7 @@ class table_resources extends dzz_table {
                 return array('error' => lang('no_privilege'));
             }
             if ($checkperm && !perm_check::checkperm('read', $fileinfo)) {
-                return array('error' => lang('no_privilege'));
+                return array('error' => lang('file_read_no_privilege'));
             }
             //位置信息
             if ($realpath) {
@@ -922,7 +940,7 @@ class table_resources extends dzz_table {
             $fileinfo['fdateline'] = dgmdate($fileinfo['dateline'], 'Y-m-d H:i:s');
             $fileinfo['ftype'] = getFileTypeName($fileinfo['type'], $fileinfo['ext']);
             if(!$fileinfo['fid']) {
-                if($fileinfo['oid']) {
+                if($fileinfo['oid'] && $fileinfo['type'] != 'link') {//这里因为链接类型的文件oid对应的是collect表中的cid，会影响权限判断
                     $fileinfo['fid'] = $fileinfo['oid'];
                 } else {
                     $fileinfo['fid'] = $fileinfo['pfid'];

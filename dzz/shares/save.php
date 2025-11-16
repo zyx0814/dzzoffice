@@ -12,11 +12,10 @@ global $_G;
 if (!$_G['uid']) {
     exit(json_encode(array('error' => '未登录，请先登录')));
 }
-$sid = $_GET['sid'] ? $_GET['sid'] : '';
+$sid = $_GET['sid'] ? dzzdecode($_GET['sid']) : '';
 if (!$sid) {
     exit(json_encode(array('error' => 'Access Denied')));
 }
-$sid = dzzdecode($sid);
 $share = C::t('shares')->fetch($sid);
 if (!$share) {
     exit(json_encode(array('error' => lang('share_file_iscancled'))));
@@ -33,87 +32,27 @@ if ($share['times'] && $share['times'] <= $share['count']) {
 if ($share['status'] == -3) {
     exit(json_encode(array('error' => lang('share_file_deleted'))));
 }
-if (empty($share['filepath'])) {
-    exit(json_encode(array('error' => '分享路径无效')));
-}
 $dzzrids = isset($_GET['dzzrids']) ? trim($_GET['dzzrids']) : '';
 if (!$dzzrids) {
-    $dzzrids = $_GET['token']['paths'];
+    exit(json_encode(array('error' => lang('no_file_selected'))));
 }
-$download = 1;
 if ($share['perm']) {
     $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
     if (isset($perms[1])) {
-        $download = 0; // 下载权限被禁用
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
-}
-if (!$download) {
-    exit(json_encode(array('error' => lang('no_privilege'))));
 }
 $icoids = explode(',', $dzzrids);
 $data = array();
-$ridarr = array();
 $fid = isset($_GET['fid']) ? intval($_GET['fid']) : 0;
-$folder = C::t('folder')->fetch($fid);
-$explorer_setting = get_resources_some_setting();
-$doing = true;
-if ($folder['gid'] > 0) {
-    $group = C::t('organization')->fetch($folder['gid']);
-    if ($group['type'] == 0 && !$explorer_setting['orgonperm']) {
-        $doing = false;
-    } elseif ($group['type'] == 0 && !$explorer_setting['grouponperm']) {
-        $doing = false;
-    } elseif (!$group['manageon'] || !$group['diron']) {
-        $doing = false;
-    } elseif (!perm_check::checkperm_Container($fid, 'upload', '' , $folder['uid'])) {
-        $doing = false;
-    }
-} else {
-    if (!$explorer_setting['useronperm']) {
-        $doing = false;
-    }
-}
-if (!$doing) {
-    $data['error'][$fid] = lang('no_privilege');
-    $data['msg'][$fid] = 'error';
-    $data['name'][$fid] = '';
-    if (isset($_GET['token'])) {
-        exit(json_encode(array('error' => lang('no_privilege'))));
-    } else {
-        exit(json_encode($data));
-    }
-}
-
-$totalsize = 0;
-$icos = $folderids = array();
-$i = 0;
-$errorarr = array();
 foreach ($icoids as $icoid) {
     $rid = dzzdecode($icoid);
     if (empty($rid)) {
         exit(json_encode(array('error' => $rid . '：' . lang('forbid_operation'))));
     }
-    
-    $return = IO::CopyTo($rid, $fid, 1);
+    $return = IO::CopyTo($rid, $fid, 1, true);
     if ($return['error']) {
         exit(json_encode(array('error' => $return['error'])));
     }
-    if ($return['success'] === true) {
-        $data['icoarr'][] = $return['newdata'];
-        if (!$tbz) {
-            addtoconfig($return['newdata'], $ticoid);
-        }
-        $i++;
-    } else {
-        $errorarr[] = $return['error'];
-    }
 }
-if (isset($_GET['token'])) {
-    if (count($errorarr)) {
-        exit(json_encode(array('error' => $errorarr[0])));
-    } else {
-        exit(json_encode(array('success' => lang('save_success'))));
-    }
-} else {
-    exit(json_encode(array('success' => lang('save_success'))));
-}
+exit(json_encode(array('success' => lang('save_success'))));

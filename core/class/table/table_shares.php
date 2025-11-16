@@ -200,7 +200,7 @@ class table_shares extends dzz_table {
             return array('error' => lang('share_not_exists'));
         }
         if (!perm_check::checkperm_Container($shareinfo['pfid'], 'share')) {
-            return array('error' => lang('no_privilege'));
+            return array('error' => lang('file_share_no_privilege'));
         }
         $setarr['dateline'] = time();
         $setarr['uid'] = getglobal('uid');

@@ -60,9 +60,8 @@ if ($do == 'filelist') {
             $force = $marker;
         }
         $folder = IO::getMeta($path);
-        $perm=perm_check::checkperm('read', $folder);
-        if (!$perm) {
-            exit(json_encode(array('error' => lang('no_privilege'))));
+        if (!perm_check::checkperm('read', $folder)) {
+            exit(json_encode(array('error' => lang('file_read_no_privilege'))));
         }
         if ($folder['error']) {
             exit(json_encode(array('error' => $folder['error'])));

@@ -150,17 +150,15 @@ class table_resources_version extends dzz_table {
     }
 
     //上传新版本
-    public function add_new_version_by_rid($rid, $setarr, $force = false, $editperm = false) {
+    public function add_new_version_by_rid($rid, $setarr, $force = false) {
         global $_G, $documentexts;
         $cachekey = 'resourcesversiondata_' . $rid;
         if (!$resources = C::t('resources')->fetch_info_by_rid($rid)) {
             return array('error' => lang('file_not_exist'));
         }
         //检测权限
-        if (!$editperm) {
-            if (!$force && !perm_check::checkperm_Container($resources['pfid'], 'edit2') && !($_G['uid'] == $resources['uid'] && perm_check::checkperm_Container($resources['pfid'], 'edit1'))) {
-                return array('error' => lang('no_privilege'));
-            }
+        if (!$force && !perm_check::checkperm('edit', $resources)) {
+            return array('error' => lang('file_edit_no_privilege'));
         }
         //文件类型获取
         $imgexts = array('jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp');
@@ -269,8 +267,8 @@ class table_resources_version extends dzz_table {
         if (!$fileinfo = C::t('resources')->fetch($versioninfo['rid'])) return array('error' => lang('file_not_exist'));
 
         //判断编辑权限
-        if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
-            return array('error' => lang('no_privilege'));
+        if (!perm_check::checkperm('edit', $fileinfo)) {
+            return array('error' => lang('file_edit_no_privilege'));
         }
 
         $vfilename = DB::result_first("select sval from %t where vid = %d and rid = %s and skey = %s", array('resources_attr', $vid, $versioninfo['rid'], 'title'));
@@ -371,8 +369,8 @@ class table_resources_version extends dzz_table {
         $fileinfo = C::t('resources')->fetch_info_by_rid($versioninfo['rid']);
 
         //判断编辑权限
-        if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
-            return array('error' => lang('no_privilege'));
+        if (!perm_check::checkperm('edit', $fileinfo)) {
+            return array('error' => lang('file_edit_no_privilege'));
         }
         if (empty($sertarr)) {
             return array('error' => lang('explorer_do_failed'));
@@ -424,8 +422,8 @@ class table_resources_version extends dzz_table {
         }
 
         //判断编辑权限
-        if (!perm_check::checkperm_Container($fileinfo['pfid'], 'edit2') && !($_G['uid'] == $fileinfo['uid'] && perm_check::checkperm_Container($fileinfo['pfid'], 'edit1'))) {
-            return array('error' => lang('no_privilege'));
+        if (!perm_check::checkperm('edit', $fileinfo)) {
+            return array('error' => lang('file_edit_no_privilege'));
         }
         //没有版本时,属性表和版本数据处理
         $setarr = array(

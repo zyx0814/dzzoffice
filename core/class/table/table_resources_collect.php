@@ -26,9 +26,7 @@ class table_resources_collect extends dzz_table {
                     'dateline' => time(),
                     'pfid' => $data['pfid']
                 );
-                if (!perm_check::checkperm_Container($data['pfid'], 'read2') && !($_G['uid'] == $data['uid'] && perm_check::checkperm_Container($data['pfid'], 'read1'))) {
-                    continue;
-                }
+                if (!perm_check::checkperm('read', $data)) continue;
                 if (self::add_collect($setarr)) {
                     //处理数据
                     $arr['msg'][$v] = 'success';
