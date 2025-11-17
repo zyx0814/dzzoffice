@@ -146,6 +146,11 @@ class perm_check {
         if (!$_G['uid']) return 0;
         // 超级管理员直接拥有全部权限
         if ($_G['adminid'] == 1) return perm_binPerm::getGroupPower('all');
+        //机构/部门/群组文件夹
+        if ($arr['gid']) {
+            if (self::checkgroupPerm($arr['gid'], 'admin')) return perm_binPerm::getGroupPower('all');// 机构管理员拥有全部权限
+            if (!self::checkgroupPerm($arr['gid'])) return 0;// 非成员：无权限
+        }
         // 文件权限优先：若设置了sperm，直接以文件权限为基础
         if (!empty($arr['sperm'])) {
             $power = new perm_binPerm($arr['sperm']);
@@ -304,6 +309,7 @@ class perm_check {
 
             // 机构文件：先校验机构成员身份，再判断文件自身权限（sperm），最后继承容器权限
             if ($arr['gid']) {
+                if (self::checkgroupPerm($arr['gid'], 'admin')) return true;// 机构管理员拥有全部权限
                 if (!self::checkgroupPerm($arr['gid'])) return false; // 非机构成员无权限
                 if (!empty($arr['sperm'])) { // 文件自身有权限时，优先判断
                     $power = new perm_binPerm($arr['sperm']);

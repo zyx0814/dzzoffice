@@ -17,6 +17,7 @@ $id = intval($_GET['id']);
 $op = isset($_GET['op']) ? $_GET['op'] : '';
 if (!$operation) {
     if (!submitcheck('smileysubmit')) {
+        $operation = $op;
         $dirfilter = $list = array();
         foreach (C::t('imagetype')->fetch_all_by_type('smiley') as $type) {
             $type['smiliesnum'] = C::t('smiley')->count_by_type_typeid('smiley', $type['typeid']);
@@ -45,7 +46,6 @@ if (!$operation) {
             }
         }
     } else {
-
         if (is_array($_GET['namenew'])) {
             foreach ($_GET['namenew'] as $id => $val) {
                 $_GET['availablenew'][$id] = $_GET['availablenew'][$id] && $_GET['smiliesnum'][$id] > 0 ? 1 : 0;
@@ -85,7 +85,6 @@ if (!$operation) {
         showmessage('do_success', dreferer());
     }
 } elseif ($operation == 'update' && $id) {
-
     if (!($smtype = C::t('imagetype')->fetch($id))) {
         showmessage('smilies_type_nonexistence', dreferer());
     } else {
@@ -113,7 +112,6 @@ if (!$operation) {
         showmessage(lang('smilies_directory_invalid', array('smurl' => $smurl)), dreferer());
     }
     if (!submitcheck('editsubmit')) {
-
         $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
         $smiliesperpage = 100;
         $start_limit = ($page - 1) * $smiliesperpage;

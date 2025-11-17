@@ -132,7 +132,7 @@ if ($do == 'get_children') {
             );
         }
         exit(json_encode($data));
-    } elseif ($id == 'cloud') {
+    } elseif ($id == 'mycloud') {
         $path = empty($_GET['path']) ? '' : trim($_GET['path']);
         $bzid = explode(':', $path);
         $bzid = $bzid[0] . ':' . $bzid[1];
@@ -218,11 +218,11 @@ if ($do == 'get_children') {
         }
         if ($explorer_setting['cloudperm']) {
             $data[] = array(
-                'id' => 'cloud',
+                'id' => 'mycloud',
                 'text' => '网络挂载',
-                'type' => 'cloud',
+                'type' => 'mycloud',
                 'children' => true,
-                'li_attr' => array('hashs' => "cloud")
+                'li_attr' => array('hashs' => 'cloud')
             );
         }
         exit(json_encode($data));

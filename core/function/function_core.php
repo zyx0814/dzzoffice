@@ -791,49 +791,58 @@ function checkLanguage() {
 }
 
 function lang($langvar = null, $vars = array(), $default = null, $curpath = '') {
-
     global $_G;
     $checkLanguage = $_G['language'];
     if ($curpath) {
-        include DZZ_ROOT . './' . $curpath . '/language/' . $checkLanguage . '/' . 'lang.php';
-        $_G['lang']['template'] = $lang;
+        $pathKey = 'curpath_' . $curpath;
+        if (!isset($_G['lang'][$pathKey])) {
+            $curpathlangfile = DZZ_ROOT . './' . $curpath . '/language/' . $checkLanguage . '/lang.php';
+            if (file_exists($curpathlangfile)) {
+                include $curpathlangfile;
+                $_G['lang'][$pathKey] = $lang;
+            } else {
+                $_G['lang'][$pathKey] = [];
+            }
+        }
+        $returnvalue = $_G['lang'][$pathKey];
     } else {
-        if (defined('CURSCRIPT')) {
-            $key1 = CURSCRIPT . '_template';
-        }
-        if (defined('CURSCRIPT') && defined('CURMODULE')) {
-            $key2 = CURSCRIPT . '_' . CURMODULE . '_template';
-        }
-
         if (!isset($_G['lang']['template'])) {
-            $_G['lang']['template'] = array();
-
-            if (file_exists(DZZ_ROOT . './core/language/' . $checkLanguage . '/' . 'lang.php')) {
-                include DZZ_ROOT . './core/language/' . $checkLanguage . '/' . 'lang.php';
+            $_G['lang']['template'] = [];
+            $corelangfile = DZZ_ROOT . './core/language/' . $checkLanguage . '/lang.php';
+            if (file_exists($corelangfile)) {
+                include $corelangfile;
                 $_G['lang']['template'] = $lang;
             }
         }
-
-        if (isset($key1) && !isset($_G['lang'][$key1])) {
-            if (file_exists(DZZ_ROOT . './' . CURSCRIPT . '/language/' . $checkLanguage . '/' . 'lang.php')) {
-                include DZZ_ROOT . './' . CURSCRIPT . '/language/' . $checkLanguage . '/' . 'lang.php';
-                $_G['lang']['template'] = array_merge($_G['lang']['template'], $lang);
-
+        $returnvalue = $_G['lang']['template'];
+        if (defined('CURSCRIPT')) {
+            $key1 = CURSCRIPT . '_template';
+            if (!isset($_G['lang'][$key1])) {
+                $curscriptlangfile = DZZ_ROOT . './' . CURSCRIPT . '/language/' . $checkLanguage . '/lang.php';
+                if (file_exists($curscriptlangfile)) {
+                    include $curscriptlangfile;
+                    $_G['lang'][$key1] = array_merge($_G['lang']['template'], $lang);
+                } else {
+                    $_G['lang'][$key1] = $_G['lang']['template'];
+                }
             }
-        }
-
-        if (isset($key2) && !isset($_G['lang'][$key2])) {
-            if (file_exists(DZZ_ROOT . './' . CURSCRIPT . '/' . CURMODULE . '/language/' . $checkLanguage . '/' . 'lang.php')) {
-
-                include DZZ_ROOT . './' . CURSCRIPT . '/' . CURMODULE . '/language/' . $checkLanguage . '/' . 'lang.php';
-                $_G['lang']['template'] = array_merge($_G['lang']['template'], $lang);
+            $returnvalue = $_G['lang'][$key1];
+            if (defined('CURMODULE')) {
+                $key2 = CURSCRIPT . '_' . CURMODULE . '_template';
+                if (!isset($_G['lang'][$key2])) {
+                    $curmodulelangfile = DZZ_ROOT . './' . CURSCRIPT . '/' . CURMODULE . '/language/' . $checkLanguage . '/lang.php';
+                    if (file_exists($curmodulelangfile)) {
+                        include $curmodulelangfile;
+                        $_G['lang'][$key2] = array_merge($_G['lang'][$key1], $lang);
+                    } else {
+                        $_G['lang'][$key2] = $_G['lang'][$key1];
+                    }
+                }
+                $returnvalue = $_G['lang'][$key2];
             }
-        }
-
+        }   
     }
-    $returnvalue = &$_G['lang'];
-
-    $return = $langvar !== null ? (isset($returnvalue['template'][$langvar]) ? $returnvalue['template'][$langvar] : null) : $returnvalue['template'];
+    $return = $langvar !== null ? (isset($returnvalue[$langvar]) ? $returnvalue[$langvar] : null) : $returnvalue;
     $return = $return === null ? ($default !== null ? $default : $langvar) : $return;
     $searchs = $replaces = array();
     if ($vars && is_array($vars)) {
@@ -846,12 +855,14 @@ function lang($langvar = null, $vars = array(), $default = null, $curpath = '') 
     if (is_string($return) && strpos($return, '{_G/') !== false) {
         preg_match_all('/\{_G\/(.+?)\}/', $return, $gvar);
         foreach ($gvar[0] as $k => $v) {
-            $searchs[] = $v;
+            $searchs[] = (string)$v;
             $replaces[] = getglobal($gvar[1][$k]);
         }
     }
 
-    $return = str_replace($searchs, $replaces, $return);
+    if($searchs || $replaces) {
+		$return = str_replace($searchs, $replaces, $return);
+	}
     return $return;
 }
 

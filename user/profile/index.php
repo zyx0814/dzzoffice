@@ -18,8 +18,11 @@ $space = C::t('user_profile')->get_userprofile_by_uid($uid);//用户资料信息
 $userstatus = C::t('user_status')->fetch($uid);//用户状态
 $userstatus['profileprogress'] = $userstatus['profileprogress'] ? $userstatus['profileprogress'] : 0;
 $users = getuserbyuid($uid);
-//$qqlogin = DB::fetch_first("select openid,unbind from %t where uid=%d", array('user_qqconnect', $uid));
-$my_username = perm_check::checkuserperm('my_username');
+$vid = intval($_GET['vid']);
+$my_username = false;
+if (!$vid) {
+    $my_username = perm_check::checkuserperm('my_username');
+}
 //读取缓存
 loadcache('profilesetting');
 
@@ -72,7 +75,6 @@ if (submitcheck('profilesubmit')) {
 
     $censor = dzz_censor::instance();//敏感字符过滤类实例
     //验证
-    $vid = intval($_GET['vid']);
     if ($vid) {
         $verifyconfig = $_G['setting']['verify'][$vid];
         if ($verifyconfig['available'] && (empty($verifyconfig['groupid']) || in_array($_G['groupid'], $verifyconfig['groupid']))) {
@@ -275,13 +277,12 @@ if (submitcheck('profilesubmit')) {
 } else {
     $vid = !empty($_GET['vid']) ? intval($_GET['vid']) : 0;
     $privacy = C::t('user_profile')->fetch_privacy_by_uid($uid);
+    $allowitems = array();
     if ($vid) {
-        $allowitems = array();
         if (empty($_G['setting']['verify'][$vid]['groupid']) || in_array($_G['groupid'], $_G['setting']['verify'][$vid]['groupid'])) {
             $allowitems = $_G['setting']['verify'][$vid]['field'];
         }
     } else {
-        $allowitems = array();
         $verifyfieldid = array();
         //在认证里的资料项只在认证页里出现
         foreach ($_G['setting']['verify'] as $key => $value) {

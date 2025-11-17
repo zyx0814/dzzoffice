@@ -218,12 +218,6 @@ class table_folder extends dzz_table {
         $data['perm1'] = $data['perm_inherit'];
         if ($data['gid'] > 0) {
             $data['isadmin'] = $data['ismoderator'] = C::t('organization_admin')->is_admin_by_orgid($data['gid'], $_G['uid']);
-            $permtitle = perm_binPerm::getGroupTitleByPower($data['perm1']);
-            if (file_exists('dzz/images/default/system/folder-' . $permtitle['flag'] . '.png')) {
-                $data['icon'] = './dzz/images/default/system/folder-' . $permtitle['flag'] . '.png';
-            } else {
-                $data['icon'] = './dzz/images/default/system/folder-read.png';
-            }
         }
         $data['realpath'] = C::t('resources_path')->fetch_pathby_pfid($fid);
         $data['relativepath'] = preg_replace('/dzz:(.+?):/', '', $data['realpath']);

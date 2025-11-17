@@ -448,7 +448,6 @@ _explorer.topMenu = function (hash, fid) {
 	}
 };
 
-
 //通过hash值来设置左侧树的选择指示
 _explorer.jstree_select = function (hash) {
 	if (!hash) {
@@ -474,13 +473,13 @@ _explorer.jstree_select = function (hash) {
 			if (node) {
 				inst.select_node('#bz_' + bz);
 			} else {
-				node = inst.get_node('#cloud');
+				node = inst.get_node('#mycloud');
 				inst.open_node(node, function (node) {
 					inst.select_node('#bz_' + bz);
 				});
 			}
 		} else {
-			inst.select_node('#cloud');
+			inst.select_node('#mycloud');
 		}
 	} else if (op === 'mygroup') {
 		$('#position').jstree(true).select_node('#group');

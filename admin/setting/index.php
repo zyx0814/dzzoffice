@@ -120,7 +120,7 @@ if (!submitcheck('settingsubmit')) {
                 $setting['loginset']['orgid'] = 'other';
             }
         }
-    } elseif ($operation == 'smiley') {
+    } elseif ($operation == 'smileyset') {
         $navtitle = lang('expression_set') . ' - ' . lang('appname');
     } elseif ($operation == 'mail') {
         $navtitle = lang('mail') . ' - ' . lang('appname');

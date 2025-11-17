@@ -2,75 +2,21 @@
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
   <div class="container-fluid">
-    <!--{if $operation !=='censor' && $operation!=='space'}-->
+    <!--{if $operation !== 'censor' && $operation !== 'space'}-->
     <div class="card">
-      <div class="card-body">
-        <ul class="nav nav-pills">
-        <!--{if $operation=='mail'}-->
-        <li class="nav-item"><a class="nav-link active" href="{MOD_URL}&operation=mail">{lang set}</a></li>
-        <li class="nav-item"><a class="nav-link" href="{MOD_URL}&op=mailcheck">{lang setting_mail_check}</a></li>
-        <!--{elseif $operation=='smiley'}-->
-        <li class="nav-item"><a class="nav-link active" href="{MOD_URL}&operation=smiley">{lang expression_set}</a> </li>
-        <li class="nav-item"><a class="nav-link" href="{MOD_URL}&op=smiley">{lang expression_class}</a></li>
-        <!--{elseif $operation=='basic'}-->
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
-        <!--{elseif $operation=='at'}-->
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
-        <!--{elseif $operation=='upload'}-->
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
-        <!--{elseif $operation=='notification'}-->
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
-        <!--{elseif $operation=='loginset'}-->
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=denlu">{lang basicSet}</a></li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=sec">{lang verification_code_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=loginset">{lang login_page_set}</a> </li>
-        <!--{elseif $operation=='denlu'}-->
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=denlu">{lang basicSet}</a></li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=sec">{lang verification_code_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=loginset">{lang login_page_set}</a> </li>
-        <!--{elseif $operation=='access'}-->
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=denlu">{lang basicSet}</a></li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=sec">{lang verification_code_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=loginset">{lang login_page_set}</a> </li>
-        <!--{elseif $operation=='datetime'}-->
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=basic">{lang members_verify_base}</a> </li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=datetime">{lang time_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=upload">{lang upload_download_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=at">@{lang sector_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=notification">{lang notification_set}</a></li>
-        <!--{elseif $operation=='sec'}-->
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=denlu">{lang basicSet}</a></li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=access">{lang register_visit}</a> </li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=sec">{lang verification_code_set}</a> </li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=loginset">{lang login_page_set}</a> </li>
-        <!--{elseif $operation=='permgroup'}-->
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=permgroup">{lang folder_perm_group}</a></li>
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=usergroup">{lang usergroup_perm}</a> </li>
-        <!--{elseif $operation=='usergroup'}-->
-        <li class="nav-item"> <a class="nav-link" href="{MOD_URL}&operation=permgroup">{lang folder_perm_group}</a></li>
-        <li class="nav-item"> <a class="nav-link active" href="{MOD_URL}&operation=usergroup">{lang usergroup_perm}</a> </li>
-        <!--{/if}-->
-        </ul>
-      </div>
+        <div class="card-body">
+            <ul class="nav nav-pills">
+                <!--{loop $currentGroup['subnav'] $item}-->
+                <li class="nav-item">
+                    <a class="nav-link <!--{if $operation == $item['op']}-->active<!--{/if}-->"
+                      href="{MOD_URL}&<!--{if isset($item['param'])}-->{$item['param']}<!--{else}-->operation<!--{/if}-->={$item['op']}">
+                        <!--{if isset($item['prefix'])}-->{$item['prefix']}<!--{/if}-->
+                        <!--{eval echo lang($item['lang']);}-->
+                    </a>
+                </li>
+                <!--{/loop}-->
+            </ul>
+        </div>
     </div>
     <!--{/if}-->
     <div class="card">
@@ -1083,10 +1029,10 @@
           </form>
           <link rel="stylesheet" type="text/css" href="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css?{VERHASH}">
           <script type="text/javascript" src="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.js?{VERHASH}"></script>
-          <!--{elseif $operation=='smiley'}-->
+          <!--{elseif $operation=='smileyset'}-->
           <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
             <input type="hidden" value="{FORMHASH}" name="formhash">
-            <input type="hidden" value="smiley" name="operation">
+            <input type="hidden" value="smileyset" name="operation">
             <div class="row mb-3">
               <label class="col-sm-2" for="settingnewsmthumb">{lang wide_high_expression_images}</label>
               <div class="col-sm-10">

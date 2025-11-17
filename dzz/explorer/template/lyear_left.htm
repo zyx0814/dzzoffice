@@ -101,11 +101,11 @@ $(document).ready(function(e) {
                 "valid_children": ['depart','folder']
             },
 			      "group": {//群组
-                 "li_attr":'aaa',
+                "li_attr":'aaa',
                 "icon": "mdi mdi-account-multiple",
                 "valid_children": ['folder']
             },
-            "cloud": {//云盘
+            "mycloud": {//云盘
                 "icon": "mdi mdi-cloud",
                 "valid_children": ['folder']
             },
@@ -137,7 +137,7 @@ $(document).ready(function(e) {
   $('#position').off('open_node.jstree').on('open_node.jstree', function (e, data) {
 		 var node = data.node;
 		if(node.id=='group') jQuery(jQuery('#template_newGroupButton').html()).appendTo('#group');
-    if(node.id=='cloud') jQuery(jQuery('#template_newcloudButton').html()).appendTo('#cloud');
+    if(node.id=='mycloud') jQuery(jQuery('#template_newcloudButton').html()).appendTo('#mycloud');
 	});
 
     $("#position").off('ready.jstree').on('ready.jstree', function(e) {
@@ -151,6 +151,6 @@ $(document).ready(function(e) {
       }
 		//增加添加群组按钮
 		jQuery(jQuery('#template_newGroupButton').html()).appendTo('#group');
-    jQuery(jQuery('#template_newcloudButton').html()).appendTo('#cloud');
-     });
+    jQuery(jQuery('#template_newcloudButton').html()).appendTo('#mycloud');
+  });
 </script> 

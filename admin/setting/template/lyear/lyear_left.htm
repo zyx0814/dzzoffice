@@ -1,23 +1,97 @@
 <ul class="nav-drawer nav-stacked nav-pills">
-	<li class="nav-item">
-		<a class="nav-link <!--{if $operation=='basic' || $operation=='datetime' || $operation=='upload' || $operation=='at' || $operation=='notification'}-->active<!--{/if}-->" href="{MOD_URL}&operation=basic"><i class="mdi mdi-card-text-outline"></i><span>{lang basicSet}</span></a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link <!--{if $operation=='denlu' || $operation=='access' || $operation=='sec' || $operation=='loginset'}-->active<!--{/if}-->" href="{MOD_URL}&operation=denlu"><i class="mdi mdi-login"></i><span>{lang loginSet}</span></a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link <!--{if $operation=='space'}-->active<!--{/if}-->" href="{MOD_URL}&operation=space"><i class="mdi mdi-view-week"></i><span>{lang spaceSet}</span></a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link <!--{if $operation=='mail' || $op=='mailcheck' }-->active<!--{/if}-->" href="{MOD_URL}&operation=mail"><i class="mdi mdi-email"></i><span>{lang mail}</span></a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link <!--{if $operation=='smiley' || $op=='smiley' }-->active<!--{/if}-->" href="{MOD_URL}&operation=smiley"><i class="mdi mdi-sticker-emoji"></i><span>{lang expression_manage}</span></a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link <!--{if $operation=='permgroup' || $operation=='usergroup'}-->active<!--{/if}-->" href="{MOD_URL}&operation=permgroup"><i class="mdi mdi-account-supervisor"></i><span>{lang permGroupSet}</span></a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link <!--{if $operation=='censor' }-->active<!--{/if}-->" href="{MOD_URL}&operation=censor"><i class="mdi mdi-percent"></i><span>{lang words_management}</span></a>
-	</li>
+	<!--{eval
+	$navs = [
+        [
+            'icon' => 'mdi-card-text-outline',
+            'lang' => 'basicSet',
+            'hasSubnav' => true,
+            'activeops' => ['basic', 'datetime', 'upload', 'at', 'notification'],
+            'subnav' => [
+                ['op' => 'basic', 'lang' => 'members_verify_base'],
+                ['op' => 'datetime', 'lang' => 'time_set'],
+                ['op' => 'upload', 'lang' => 'upload_download_set'],
+                ['op' => 'at', 'lang' => 'sector_set', 'prefix' => '@'],
+                ['op' => 'notification', 'lang' => 'notification_set']
+            ]
+        ],
+        [
+            'icon' => 'mdi-login',
+            'lang' => 'loginSet',
+            'hasSubnav' => true,
+            'activeops' => ['denlu', 'access', 'sec', 'loginset'],
+            'subnav' => [
+                ['op' => 'denlu', 'lang' => 'basicSet'],
+                ['op' => 'access', 'lang' => 'register_visit'],
+                ['op' => 'sec', 'lang' => 'verification_code_set'],
+                ['op' => 'loginset', 'lang' => 'login_page_set']
+            ]
+        ],
+        [
+            'icon' => 'mdi-view-week',
+            'lang' => 'spaceSet',
+            'hasSubnav' => false,
+            'op' => 'space'
+        ],
+        [
+            'icon' => 'mdi-view-week',
+            'lang' => 'mail',
+            'hasSubnav' => true,
+            'activeops' => ['mail', 'mailcheck'],
+            'subnav' => [
+                ['op' => 'mail', 'param' => 'operation', 'lang' => 'set'],
+                ['op' => 'mailcheck', 'param' => 'op', 'lang' => 'setting_mail_check']
+            ]
+        ],
+        [
+            'icon' => 'mdi-sticker-emoji',
+            'lang' => 'expression_manage',
+            'hasSubnav' => true,
+            'activeops' => ['smileyset', 'smiley'],
+            'subnav' => [
+                ['op' => 'smileyset', 'param' => 'operation', 'lang' => 'expression_set'],
+                ['op' => 'smiley', 'param' => 'op', 'lang' => 'expression_class']
+            ]
+        ],
+        [
+            'icon' => 'mdi-account-supervisor',
+            'lang' => 'permGroupSet',
+            'hasSubnav' => true,
+            'activeops' => ['permgroup', 'usergroup'],
+            'subnav' => [
+                ['op' => 'permgroup', 'lang' => 'folder_perm_group'],
+                ['op' => 'usergroup', 'lang' => 'usergroup_perm']
+            ]
+        ],
+        [
+            'icon' => 'mdi-percent',
+            'lang' => 'words_management',
+            'hasSubnav' => false,
+            'op' => 'censor'
+        ]
+    ];
+	$currentGroup = [];
+	}-->
+    <!--{loop $navs $nav}-->
+    <li class="nav-item<!--{if $nav[hasSubnav]}--> nav-item-has-subnav<!--{if $nav[activeops] && in_array($operation, $nav[activeops])}--> active open<!--{/if}--><!--{/if}-->"> 
+        <a class="nav-link<!--{if !$nav[activeops] && $operation == $nav[op]}--> active<!--{/if}-->" href="<!--{if $nav[hasSubnav]}-->javascript:void(0)<!--{else}-->{MOD_URL}&operation={$nav[op]}<!--{/if}-->">
+            <i class="mdi {$nav[icon]}"></i>
+            <span><!--{eval echo lang($nav['lang']);}--></span>
+        </a>
+        <!--{if $nav[hasSubnav]}-->
+        <ul class="nav nav-subnav">
+            <!--{loop $nav[subnav] $item}-->
+            <!--{if !$currentGroup && $item['op'] == $operation}-->
+            <!--{eval $currentGroup = $nav;}-->
+            <!--{/if}-->
+            <li class="nav-item">
+                <a class="nav-link <!--{if $operation == $item[op]}-->active<!--{/if}-->" href="{MOD_URL}&<!--{if $item[param]}-->{$item[param]}<!--{else}-->operation<!--{/if}-->={$item[op]}">
+                <!--{if $item[prefix]}-->{$item[prefix]}<!--{/if}-->
+                <!--{eval echo lang($item['lang']);}-->
+                </a>
+            </li>
+            <!--{/loop}-->
+        </ul>
+        <!--{/if}-->
+    </li>
+    <!--{/loop}-->
 </ul>

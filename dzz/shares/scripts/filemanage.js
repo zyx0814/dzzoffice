@@ -1282,7 +1282,6 @@ _filemanage.downAll = function () {
 	$.post(MOD_URL+'&op=ajax&do=adddowns', {'sid':sid},function (json) {
 		if (json['success']) {
 			var url = DZZSCRIPT + '?mod=io&op=download&path=' + rids;
-			console.log(url);
 			if (BROWSER.ie) {
 				window.open(url);
 			} else {

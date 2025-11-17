@@ -74,6 +74,7 @@
       </div>
       <!--{/if}-->
       <iframe id="frame_profile" name="frame_profile" style="display: none"></iframe>
+      <!--{if !$vid}-->
       <div class="d-flex mb-3">
         <img src="avatar.php?uid=$_G['uid']" alt="{$_G['username']}" class="cropimage avatar-xl rounded-circle me-3">
         <div class="flex-grow-1">
@@ -82,6 +83,7 @@
           <p class="mt-1 mb-0">选择一张您喜欢的图片，裁剪后会自动生成200x200大小，上传图片大小不能超过2M。</p>
         </div>
       </div>
+      <!--{/if}-->
       <form id="accountform" name="accountform" class="row gx-3 gy-2 align-items-center" action="{MOD_URL}" method="post" enctype="multipart/form-data" target="frame_profile" onsubmit="clearErrorInfo();">
         <input type="hidden" name="profilesubmit" value="true" />
         <input type="hidden" name="formhash" value="{FORMHASH}" />
@@ -102,6 +104,7 @@
           <!--{/if}-->
           </div>
         </div>
+        <!--{if !$vid}-->
         <!--{if $userstatus['lastvisit']}-->
         <div class="row mb-3">
           <label class="col-sm-2">最近在线时间</label>
@@ -125,6 +128,7 @@
           <div class="col-sm-10"><strong><code><!--{eval $phone=$users['phone'];if(strlen($phone) === 11)$phone = substr($phone, 0, 3) . '******' . substr($phone, 9);echo $phone}--></code></strong>
           </div>
         </div>
+        <!--{/if}-->
         <!--{/if}-->
         <!--{loop $settings $key $value}--> 
         <!--{if $value[available]}-->
@@ -163,7 +167,6 @@
                 <span class="gray form-text">{lang time_zone_state}</span>
             </div>
         </div>
-        <!--{/if}-->
         <div class="row mb-3">
             <label class="col-sm-2" for="language">{lang language}</label>
             <div class="col-md-4">
@@ -175,6 +178,7 @@
                 </select>
             </div>
         </div>
+        <!--{/if}-->
         <!--{if !$vid || $showbtn}-->
         <dl class="mb-3 d-grid">
              <input type="submit" class="btn btn-primary btn-round bodyloading" <!--{if $vid}-->value="{lang submit_audit}"<!--{else}-->value="{lang save}"<!--{/if}-->>

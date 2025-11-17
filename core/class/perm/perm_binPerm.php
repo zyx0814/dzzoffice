@@ -3,7 +3,6 @@
 * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
 * @license     http://www.dzzoffice.com/licenses/license.txt
 * @package     DzzOffice
-* @version     DzzOffice 1.1 2014.07.05
 * @link        http://www.dzzoffice.com
 * @author      zyx(zyx@dzz.cc)
 */
@@ -16,6 +15,7 @@
 class perm_binPerm {
     protected $powe;  //权限存贮变量,十进制整数
     protected $powerarr;
+    protected static $groupPowerCache = null;
 
     public function __construct($power) {
         $this->power = intval($power);
@@ -111,7 +111,7 @@ class perm_binPerm {
     }
 
     /**
-     * 新增：权限类型映射（区分文件夹操作权限/控制类权限）
+     * 权限类型映射（区分文件夹操作权限/控制类权限）
      * @return array 键：权限键名，值：权限类型（folder=文件夹操作，control=控制类）
      */
     public static function getPowerType() {
@@ -144,22 +144,22 @@ class perm_binPerm {
     }
 
     public static function groupPowerPack() {
-        $data = array('read' => array('title' => lang('read_only'), 'flag' => 'read', 'permitem' => array('read1', 'read2'), 'tip' => lang('read_only_state')),
-            'only-download' => array('title' => lang('upload_only'), 'flag' => 'only-download', 'permitem' => array('read1', 'read2', 'download1', 'download2', 'copy1', 'copy2'), 'tip' => lang('upload_only_state')),
-            'read-write1' => array('title' => lang('read_write') . '1', 'flag' => 'read-write1', 'permitem' => array('read1', 'read2', 'delete1', 'edit1', 'download1', 'copy1', 'upload', 'folder'), 'tip' => lang('read_write_state')),
-            'read-write2' => array('title' => lang('read_write') . '2', 'flag' => 'read-write2', 'permitem' => array('read1', 'read2', 'delete1', 'edit1', 'edit2', 'download1', 'download2', 'copy1', 'copy2', 'upload', 'folder'), 'tip' => lang('read_write_state1')),
-            'read-write3' => array('title' => lang('read_write') . '3', 'flag' => 'read-write3', 'permitem' => array('read1', 'read2', 'edit1', 'edit2', 'download1', 'download2', 'copy1', 'copy2', 'upload', 'folder'), 'tip' => lang('read_write_state2')),
-            'only-write1' => array('title' => lang('write_only'), 'flag' => 'only-write1', 'permitem' => array('read1', 'upload', 'folder'), 'tip' => lang('write_only_state')),
-            'all' => array('title' => lang('full_control'), 'flag' => 'all', 'permitem' => 'all', 'tip' => lang('full_control_state'))
-        );
-        foreach ($data as $key => $value) {
-            $data[$key]['power'] = self::getSumByAction($value['permitem']);
+        if (self::$groupPowerCache !== null) {
+            return self::$groupPowerCache;
         }
+        $groups = [
+            'read' => ['read1', 'read2'],
+            'all' => 'all'
+        ];
+        $data = [];
+        foreach ($groups as $key => $value) {
+            $data[$key] = self::getSumByAction($value);
+        }
+        self::$groupPowerCache = $data;
         return $data;
     }
 
     public function addPower($action) {
-
         //利用逻辑或添加权限
         if (isset($this->powerarr[$action])) return $this->power = $this->power | intval($this->powerarr[$action]);
     }
@@ -178,12 +178,6 @@ class perm_binPerm {
         if (!$this->powerarr[$action]) return 0;
         return $this->power & intval($this->powerarr[$action]);
     }
-
-    public function returnPower() {
-        //为了减少存贮位数，返回也可以转化为十六进制
-        return $this->power;
-    }
-
 
     public static function havePower($action, $perm) {
         //权限比较时，进行与操作，得到0的话，表示没有权限
@@ -216,15 +210,6 @@ class perm_binPerm {
 
     public static function getGroupPower($type) { //权限包
         $data = self::groupPowerPack();
-        return $data[$type]['power'];
+        return $data[$type] ?? $data['read'];
     }
-
-    public static function getGroupTitleByPower($power) {
-        $data = self::groupPowerPack();
-        foreach ($data as $key => $value) {
-            if ($value['power'] == $power) return $value;
-        }
-        return $data['read'];
-    }
-
 }
