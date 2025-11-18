@@ -13,7 +13,6 @@ _explorer = function (json) {
 	_explorer.formhash = json.formhash; //FORMHASH
 	_explorer.extopen = json.extopen || {}; //打开方式信息
 	_explorer.sourcedata = json.sourcedata || []; //所有文件信息
-	_explorer.thame = json.thame || {};
 	_explorer.infoPanelOpened = json.infoPanelOpened || 0;
 	_explorer.infoRequest = 0;
 	_explorer.deletefinally = json.deletefinally || 0;
@@ -907,7 +906,7 @@ function rightinfo(obj) {
 	jQuery('.right-tab-'+item).html('<div class="emptyPage"><i class="layui-icon layui-icon-loading layui-anim layui-anim-rotate layui-anim-loop" style="font-size:30px;"></i></div>');
 	switch(item){
 		case 'perm':
-			ajaxget(MOD_URL+'&op=ajax&do=perm&fid='+fid,'perm-tab','perm-tab')
+			ajaxget(MOD_URL+'&op=ajax&do=perm&rid='+rid+'&fid='+fid,'perm-tab','perm-tab')
 		break;
 		case 'comment':
 		    ajaxget(MOD_URL+'&op=ajax&do=comment&rid='+rid+'&fid='+fid,'comment-tab','comment-tab')
@@ -921,8 +920,8 @@ function rightinfo(obj) {
 	}
 }
 
-function editgroupperm(gid,fid){
-	showWindow('property', MOD_URL+'&op=ajax&do=selectperm&fid='+fid+'&gid='+gid+'&new=0','get','0');
+function editgroupperm(rid,fid){
+	showWindow('property', MOD_URL+'&op=ajax&do=selectperm&fid='+fid+'&rid='+rid+'&new=0','get','0');
 }
 
 function historyupload(obj,rid) {

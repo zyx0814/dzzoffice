@@ -28,7 +28,6 @@ $data['sourcedata'] = array(
     'folder' => $folderdata ? $folderdata : array()
 );
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
-$data['thame'] = array('system' => array('folder'=>'colorful'));
 $data['space'] = $space;
 echo json_encode($data);
 exit();

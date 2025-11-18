@@ -416,68 +416,6 @@ CREATE TABLE `dzz_folder_attr` (
   KEY `skey` (`skey`)
 ) ENGINE=InnoDB COMMENT='文件夹属性表';
 
-DROP TABLE IF EXISTS `dzz_folder_default`;
-CREATE TABLE `dzz_folder_default` (
-  `fid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '目录ID',
-  `innav` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否在导航显示',
-  `fname` varchar(255) NOT NULL DEFAULT '' COMMENT '目录名称',
-  `perm` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '目录权限',
-  `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '目录默认显示方式',
-  `iconview` tinyint(1) NOT NULL DEFAULT '0' COMMENT '目录默认图标显示方式',
-  `display` smallint(6) NOT NULL DEFAULT '10' COMMENT '目录默认显示数量',
-  `flag` varchar(255) NOT NULL DEFAULT 'folder' COMMENT '目录标识',
-  `default` varchar(255) NOT NULL DEFAULT '' COMMENT '目录默认值',
-  PRIMARY KEY (`fid`),
-  UNIQUE KEY `type` (`flag`)
-) ENGINE=InnoDB COMMENT='文件夹类型表';
-
-DROP TABLE IF EXISTS `dzz_folder_event`;
-CREATE TABLE `dzz_folder_event` (
-  `eid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '事件ID',
-  `fid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '文件夹ID',
-  `gid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '群组ID',
-  `action` varchar(60) NOT NULL DEFAULT '' COMMENT '事件类型',
-  `body_template` text NOT NULL COMMENT '事件内容',
-  `body_data` text NOT NULL COMMENT '事件内容替换数据',
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `username` varchar(30) NOT NULL DEFAULT '' COMMENT '用户名',
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
-  PRIMARY KEY (`eid`),
-  KEY `fid` (`fid`,`dateline`)
-) ENGINE=InnoDB COMMENT='文件夹事件表';
-
-DROP TABLE IF EXISTS `dzz_folder_flag`;
-CREATE TABLE `dzz_folder_flag` (
-  `flag` char(30) NOT NULL DEFAULT '' COMMENT '目录标识符',
-  `fsperm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目录默认超级权限',
-  `perm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目录默认权限',
-  `iconview` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '目录默认排列方式：4：列表：1：图标',
-  `disp` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '目录默认排序字段：0:name;1:size:2:type:3:dateline',
-  PRIMARY KEY (`flag`)
-) ENGINE=InnoDB COMMENT='目录默认设置';
-
-DROP TABLE IF EXISTS `dzz_folder_perm`;
-CREATE TABLE `dzz_folder_perm` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `permname` varchar(60) NOT NULL DEFAULT '' COMMENT '权限名称',
-  `perm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '权限值',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB COMMENT='文件夹权限表';
-
-DROP TABLE IF EXISTS `dzz_folder_sub`;
-CREATE TABLE `dzz_folder_sub` (
-  `subid` int(10) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `pflag` varchar(30) NOT NULL DEFAULT '' COMMENT '所属目录标识符',
-  `fname` char(50) NOT NULL DEFAULT '' COMMENT '目录名称',
-  `flag` varchar(30) NOT NULL DEFAULT 'folder' COMMENT '目录标识符',
-  `fsperm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目录超级权限',
-  `perm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '目录权限',
-  `allow_exts` text NOT NULL COMMENT '允许的文件类型，使用英文逗号隔开',
-  `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '排序',
-  PRIMARY KEY (`subid`),
-  KEY `pflag` (`pflag`)
-) ENGINE=InnoDB COMMENT='子文件夹表';
-
 DROP TABLE IF EXISTS `dzz_hooks`;
 CREATE TABLE `dzz_hooks` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -1017,27 +955,6 @@ CREATE TABLE `dzz_tag` (
   PRIMARY KEY (`tid`)
 ) ENGINE=InnoDB COMMENT='标签表';
 
-DROP TABLE IF EXISTS `dzz_thame`;
-CREATE TABLE `dzz_thame` (
-  `id` smallint(6) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL COMMENT '主题名称',
-  `folder` varchar(255) NOT NULL DEFAULT 'window_jd' COMMENT '主题文件夹',
-  `backimg` varchar(255) NOT NULL COMMENT '背景图片',
-  `thumb` varchar(255) NOT NULL COMMENT '缩略图',
-  `btype` tinyint(1) NOT NULL DEFAULT '1' COMMENT '背景类型',
-  `url` varchar(255) NOT NULL COMMENT '主题地址',
-  `default` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否默认',
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `disp` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '显示顺序',
-  `modules` text NOT NULL COMMENT '模块',
-  `color` varchar(255) NOT NULL DEFAULT '' COMMENT '主题颜色',
-  `enable_color` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否启用主题颜色',
-  `vendor` varchar(255) NOT NULL COMMENT '供应商',
-  `version` varchar(15) NOT NULL DEFAULT '1.0' COMMENT '版本',
-  PRIMARY KEY (`id`),
-  KEY `disp` (`disp`)
-) ENGINE=InnoDB COMMENT='主题表';
-
 DROP TABLE IF EXISTS `dzz_user`;
 CREATE TABLE `dzz_user` (
   `uid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '用户UID',
@@ -1148,17 +1065,6 @@ CREATE TABLE `dzz_user_status` (
   PRIMARY KEY (`uid`),
   KEY `lastactivity` (`lastactivity`,`invisible`)
 ) ENGINE=InnoDB COMMENT='用户状态表';
-
-DROP TABLE IF EXISTS `dzz_user_thame`;
-CREATE TABLE `dzz_user_thame` (
-  `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `custom_backimg` varchar(255) NOT NULL COMMENT '自定义背景图',
-  `custom_url` varchar(255) NOT NULL COMMENT '自定义背景图链接',
-  `custom_btype` tinyint(1) unsigned NOT NULL COMMENT '背景图类型',
-  `custom_color` varchar(255) NOT NULL DEFAULT '' COMMENT '自定义背景色',
-  `thame` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '主题ID',
-  UNIQUE KEY `uid` (`uid`)
-) ENGINE=InnoDB COMMENT='用户主题表';
 
 DROP TABLE IF EXISTS `dzz_user_verify`;
 CREATE TABLE `dzz_user_verify` (

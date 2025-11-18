@@ -171,11 +171,23 @@ class table_app_market extends dzz_table {
     }
 
     public function fetch_by_identifier($identifier, $app_path = 'dzz') {
-        return DB::fetch_first("select * from %t where app_path=%s and identifier=%s ", array($this->_table, $app_path, $identifier));
+        static $cache = array();
+        $cache_key = 'identifier_' . $identifier;
+        
+        if (!isset($cache[$cache_key])) {
+            $cache[$cache_key] = DB::fetch_first("select * from %t where app_path=%s and identifier=%s ", array($this->_table, $app_path, $identifier));
+        }
+         return $cache[$cache_key];
     }
 
     public function fetch_by_allidentifier($identifier) {
-        return DB::fetch_first("select * from %t where identifier=%s ", array($this->_table, $identifier));
+        static $cache = array();
+        $cache_key = 'identifier_' . $identifier;
+        
+        if (!isset($cache[$cache_key])) {
+            $cache[$cache_key] = DB::fetch_first("select * from %t where identifier=%s ", array($this->_table, $identifier));
+        }
+        return $cache[$cache_key];
     }
 
     public function fetch_by_mod() {

@@ -254,20 +254,17 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	var template = _filemanage.get_template(this.id);
 	//创建图标列表
 	if (data.flag) {
-		if (!data.img) {
-			data.img = 'dzz/styles/thame/' + _explorer.thame.system.folder + '/system/' + data.flag + '.png';
-		}
-		data.error = 'dzz/images/default/system/' + data.flag + '.png';
-	} else if (data.type === 'folder') {
-		data.icon = data.img ? data.img : data.icon;
-		data.error = data.icon || 'dzz/images/default/system/folder.png';
-		data.img = data.icon ? ((data.icon).replace('dzz/images/default', 'dzz/styles/thame/' + _explorer.thame.system.folder)) : 'dzz/styles/thame/' + _explorer.thame.system.folder + '/system/folder.png';
-	} else if (data.type === 'shortcut' && data.ttype === 'folder') {
-		data.error = data.tdata.img || 'dzz/images/default/system/folder.png';
-		data.img = data.tdata.img ? ((data.tdata.img + '').replace('dzz/images/default', 'dzz/styles/thame/' + _explorer.thame.system.folder)) : 'dzz/styles/thame/' + _explorer.thame.system.folder + '/system/folder.png';
-	} else {
-		data.error = 'dzz/images/default/icodefault.png';
-	}
+        if (!data.img) {
+            data.img = 'dzz/images/default/system/' + data.flag + '.png';
+        }
+        data.error = 'dzz/images/default/system/' + data.flag + '.png';
+    } else if (data.type === 'folder') {
+        data.icon = data.img ? data.img : data.icon;
+        data.error = data.icon || 'dzz/images/default/system/folder.png';
+        data.img = data.icon ? data.icon : 'dzz/images/default/system/folder.png';
+    } else {
+        data.error = 'dzz/images/default/icodefault.png';
+    }
 	var html = template.replace(/\{name\}/g, data.name);
 	html = html.replace(/\{rid\}/g, data.rid);
 	html = html.replace(/tsrc=\"\{img\}\"/g, 'src="{img}"');

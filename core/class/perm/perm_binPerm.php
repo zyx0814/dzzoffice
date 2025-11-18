@@ -139,10 +139,6 @@ class perm_binPerm {
         );
     }
 
-    public static function getMyPower() {//获取用户桌面默认的权限
-        return self::getSumByAction(array('read1', 'read2', 'delete1', 'edit1', 'download1', 'download2', 'copy1', 'copy2', 'upload', 'newtype', 'folder', 'link', 'dzzdoc', 'video', 'shortcut', 'share'));
-    }
-
     public static function groupPowerPack() {
         if (self::$groupPowerCache !== null) {
             return self::$groupPowerCache;

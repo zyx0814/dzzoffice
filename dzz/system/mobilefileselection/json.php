@@ -26,7 +26,6 @@ $data['sourcedata'] = array(
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
 
 $data['space'] = $space;
-$data['thame'] = array('system' => array('folder'=>'colorful'));
 $data['mulitype'] = $mulitype;
 $data['fileselectiontype'] = $type;
 $data['callback_url'] = $callback;

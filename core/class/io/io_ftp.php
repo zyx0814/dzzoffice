@@ -53,7 +53,7 @@ class io_ftp extends io_api {
         } else {
             $this->error = 'need authorize';
         }
-        $this->perm = perm_binPerm::getMyPower();
+        $this->perm = perm_binPerm::getGroupPower('all');
         return $this;
     }
 

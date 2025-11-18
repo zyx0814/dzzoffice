@@ -62,7 +62,6 @@ $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['a
 $space['explorermyset'] = unserialize(C::t('user_setting')->fetch_by_skey('explorermyset', $uid));
 $space['limitConcurrentUploads'] = $_G['setting']['explorer_limitConcurrentUploads'] ? intval($_G['setting']['explorer_limitConcurrentUploads']) : 3;
 $data['space'] = $space;
-$data['thame'] = array('system' => array('folder'=>'colorful'));
 $infoPanelOpened = C::t('user_setting')->fetch_by_skey('infoPanelOpened');
 if (isset($infoPanelOpened)) {
     $data['infoPanelOpened'] = ($infoPanelOpened) ? 1 : 0;

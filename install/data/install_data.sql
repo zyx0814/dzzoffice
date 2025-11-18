@@ -102,15 +102,6 @@ INSERT INTO `dzz_cron` VALUES(8,1,'system','限时操作清理','cron_threadexpi
 INSERT INTO `dzz_cron` VALUES(9,1,'app','回收站自动删除任务','dzz:explorer:cron_explorer_recycle.php',1746603582,1746604800,-1,-1,-1,'0');
 
 --
--- 转存表中的数据 `dzz_folder_default`
---
-
---INSERT INTO `dzz_folder_default` VALUES(1, 1, '桌面', 0, 0, 1, 0, 'desktop', '');
---INSERT INTO `dzz_folder_default` VALUES(2, 1, '我的文档', 0, 0, 1, 0, 'document', 'm:desktop');
---INSERT INTO `dzz_folder_default` VALUES(3, 1, '任务栏', 0, 0, 1, 10, 'dock', '');
---INSERT INTO `dzz_folder_default` VALUES(4, 1, '回收站', 0, 0, 1, 9999, 'recycle', 'm:desktop');
-
---
 -- 转存表中的数据 `dzz_hooks`
 --
 INSERT INTO `dzz_hooks` (`id`, `app_market_id`, `name`, `description`, `type`, `update_time`, `addons`, `status`,`priority`) VALUES

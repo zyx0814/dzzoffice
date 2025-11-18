@@ -132,13 +132,12 @@ class table_resources_collect extends dzz_table {
         }
     }
 
-    public function fetch_by_rid($rid) {
+    public function fetch_by_rid($rid, $uid = 0) {
         $rid = trim($rid);
-        $uid = getglobal('uid');
-        if (DB::result_first("select count(*) from %t where uid = %d and rid = %s", array($this->_table, $uid, $rid))) {
-            return true;
-        } else {
-            return false;
+        if (!$uid) {
+            $uid = getglobal('uid');
         }
+        $result = DB::result_first("SELECT 1 FROM %t WHERE uid = %d AND rid = %s LIMIT 1", array($this->_table, $uid, $rid));
+        return $result ? true : false;
     }
 }

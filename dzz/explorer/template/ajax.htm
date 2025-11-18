@@ -72,7 +72,7 @@
 <!--{elseif $do == 'selectperm'}-->
 <!--目录权限-->
 <div class="modal-header">
-    <h4 class="modal-title text-truncate" id="myModalLabel">{lang directory_right}</h4>
+    <h4 class="modal-title text-truncate" id="myModalLabel"><!--{if $fileinfo['isfolder']}-->目录<!--{else}-->文档<!--{/if}-->权限</h4>
     <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
 </div>
 <form>
@@ -499,7 +499,7 @@
     <li class="nav-item">
         <a class="nav-link <!--{if $do=='property'}-->active<!--{/if}-->" href="{MOD_URL}&op=ajax&do=property&rid=$fileinfo['rid']&fid=$fileinfo['fid']" ajaxtarget="fwin_content_property">{lang property}</a>
     </li>
-    <!--{if $fileinfo[isfolder] && $fileinfo[fid] !== '-1'}-->
+    <!--{if $fileinfo[fid] !== '-1'}-->
     <li class="nav-item">
         <a class="nav-link <!--{if $do=='perm'}-->active<!--{/if}-->" href="{MOD_URL}&op=ajax&do=perm&property=1&fid=$fileinfo['fid']&rid=$fileinfo['rid']" ajaxtarget="fwin_content_property">{lang jurisdiction}</a>
     </li>

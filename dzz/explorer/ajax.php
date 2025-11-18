@@ -65,7 +65,7 @@ if ($do == 'upload') {//上传图片文件
     if($fileinfo['error']) showmessage($fileinfo['error']);
     $inherit = true;//是否允许继承上级权限
     if ($fileinfo['gid']) {
-        $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);//获取用户权限
+        $usergroupperm = perm_check::checkgroupPerm($fileinfo['gid'], 'admin');//判断管理员权限
         if(!$usergroupperm) showmessage('no_privilege');
         //如果是顶级群组的文件夹权限不允许继承上级权限
         if ($orginfo = C::t('organization')->fetch($fileinfo['gid'])) {
@@ -85,7 +85,7 @@ if ($do == 'upload') {//上传图片文件
     } else {
         $fperm = $fileinfo['sperm'];
     }
-
+    
     //设置权限
     if (isset($_GET['permsubmit']) && $_GET['permsubmit']) {
         $perms = isset($_GET['selectperm']) ? $_GET['selectperm'] : array();
@@ -327,7 +327,7 @@ if ($do == 'upload') {//上传图片文件
     $path = isset($_GET['name']) ? trim($_GET['name']) : '';
     $prefix = isset($_GET['prefix']) ? trim($_GET['prefix']) : '';
     $arr = array();
-    if ($fid = C::t('resources_path')->fetch_by_path($path, $prefix)) {
+    if ($fid = C::t('resources_path')->fetch_by_path($path, $prefix, $uid)) {
         if (preg_match('/c_\d+/', $fid)) {
             $arr['cid'] = str_replace('c_', '', $fid);
         } else {
@@ -420,7 +420,7 @@ if ($do == 'upload') {//上传图片文件
         $fileinfo = C::t('resources')->get_property_by_fid($fid,false);
     }
     if($fileinfo['error']) exit(json_encode(array('error' => $fileinfo['error'])));
-    if (!perm_check::checkperm_Container($fileinfo['fid'], 'comment')) {
+    if (!perm_check::checkperm('comment', $fileinfo)) {
         exit(json_encode(array('error' => lang('file_comment_no_privilege'))));
     }
     include_once libfile('function/code');
@@ -693,8 +693,8 @@ if ($do == 'upload') {//上传图片文件
                     if (count($rids) > 1) $more = true;
                     $filenames = array();
                     $gidarr = array();
-                    foreach (DB::fetch_all("select pfid,name,gid from %t where rid in(%n)", array('resources', $rids)) as $v) {
-                        if (!perm_check::checkperm_Container($v['pfid'], 'share')) {
+                    foreach (DB::fetch_all("select * from %t where rid in(%n)", array('resources', $rids)) as $v) {
+                        if (!perm_check::checkperm('share', $v)) {
                             $arr = array('error' => lang('file_share_no_privilege'));
                         } else {
                             $gidarr[] = $v['gid'];
@@ -997,7 +997,7 @@ if ($do == 'upload') {//上传图片文件
         $info = lang('no_cmment');
     }
     $commentperm = false;
-    if (perm_check::checkperm_Container($fid, 'comment')) {
+    if (perm_check::checkperm('comment', $fileinfo)) {
         $commentperm = true;
     }
     $commentid = 2;
@@ -1029,9 +1029,9 @@ if ($do == 'upload') {//上传图片文件
                 $userstr = implode(',', $userids);
             }
         }
-        $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);
+        $usergroupperm = perm_check::checkgroupPerm($fileinfo['gid'], 'admin');//判断管理员权限
     }
-    $myperm = perm_check::getPerm($fileinfo['fid']);
+    $myperm = perm_check::getridPerm($fileinfo);
     //获取所有权限
     if ($fileinfo['isfolder']) {
         $perms = get_permsarray();

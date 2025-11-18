@@ -22,7 +22,11 @@ class table_local_storage extends dzz_table {
 
     public function fetch_by_remoteid($remoteid) {
         if(!$remoteid) return array();
+        static $fetch_by_remoteid = array();
         $remoteid = intval($remoteid);
+        if (isset($fetch_by_remoteid[$remoteid])) {
+            return $fetch_by_remoteid[$remoteid];
+        }
         if (!$data = self::fetch($remoteid)) {
             return array();
         }
@@ -32,6 +36,7 @@ class table_local_storage extends dzz_table {
         if ($data['dname'] && $data['did']) {
             if ($pan = C::t($data['dname'])->fetch($data['did'])) $data = array_merge($pan, $data);
         }
+        $fetch_by_remoteid[$remoteid] = $data;
         return $data;
     }
 

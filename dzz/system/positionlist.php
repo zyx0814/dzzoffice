@@ -69,7 +69,6 @@ if ($do == 'get_children') {
         if ($orginfo && $orginfo['available'] == 1 && $orginfo['diron'] == 1) {
             foreach (C::t('folder')->fetch_folder_by_pfid($orginfo['fid']) as $val) {
                 $children = (C::t('resources')->fetch_folder_num_by_pfid($val['fid']) > 0) ? true : false;
-
                 $arr = array(
                     'id' => 'f_' . $val['fid'],
                     'text' => $val['fname'],
@@ -77,13 +76,6 @@ if ($do == 'get_children') {
                     'children' => $children,
                     'li_attr' => array('fid' => $val['fid'], 'gid' => $val['orgid'])
                 );
-                if ($val['flag'] == 'app') {
-                    $appid = C::t("folder_attr")->fetch_by_skey_fid($val['fid'], 'appid');
-                    if ($imgs = C::t('app_market')->fetch_appico_by_appid($appid)) {
-                        $arr['icon'] = 'data/attachment/' . $imgs;
-                    }
-
-                }
                 $data[] = $arr;
             }
         }

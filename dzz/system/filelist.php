@@ -72,13 +72,6 @@ if ($do == 'get_children') {
                     'children' => $children,
                     'li_attr' => array('fid' => $val['fid'], 'gid' => $val['orgid'])
                 );
-                if ($val['flag'] == 'app') {
-                    $appid = C::t("folder_attr")->fetch_by_skey_fid($val['fid'], 'appid');
-                    if ($imgs = C::t('app_market')->fetch_appico_by_appid($appid)) {
-                        $arr['icon'] = 'data/attachment/' . $imgs;
-                    }
-
-                }
                 $data[] = $arr;
             }
         }

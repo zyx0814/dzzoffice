@@ -28,7 +28,7 @@ class io_OneDrive extends io_api {
         $cloud = C::t('connect')->fetch(self::BZ);
         $this->uid = $_G['adminid'] ? $_G['uid'] : 0;
         $this->_rootname = $cloud['name'];
-        $this->perm = perm_binPerm::getMyPower();
+        $this->perm = perm_binPerm::getGroupPower('all');
         //$this->init($path);
         //print_r($arr);
 

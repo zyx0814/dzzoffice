@@ -343,31 +343,17 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	if(!template) template = '';
 	//创建图标列表
 	if (data.flag) {
-		if (!data.img) {
-			data.img = 'dzz/styles/thame/' + _explorer.thame.system.folder + '/system/' + data.flag + '.png';
-		}
-		data.error = 'dzz/images/default/system/' + data.flag + '.png';
-	} else if (data.type === 'folder') {
-		if (data.gid > 0) {
-			data.icon = data.img ? data.img : data.icon;
-			data.error = data.icon || 'dzz/images/default/system/folder-read.png';
-			data.img = data.icon ? data.icon.replace('dzz/images/default', 'dzz/styles/thame/' + _explorer.thame.system.folder) : 'dzz/styles/thame/' + _explorer.thame.system.folder + '/system/folder-read.png';
-		} else {
-			data.icon = data.img ? data.img : data.icon;
-			data.error = data.icon || 'dzz/images/default/system/folder.png';
-			data.img = data.icon ? ((data.icon).replace('dzz/images/default', 'dzz/styles/thame/' + _explorer.thame.system.folder)) : 'dzz/styles/thame/' + _explorer.thame.system.folder + '/system/folder.png';
-		}
-	} else if (data.type === 'shortcut' && data.ttype === 'folder') {
-		if (data.tdata.gid > 0) {
-			data.error = data.tdata.img || 'dzz/images/default/system/folder-read.png';
-			data.img = (data.tdata.img + '').replace('dzz/images/default', 'dzz/styles/thame/' + _explorer.thame.system.folder);
-		} else {
-			data.error = data.tdata.img || 'dzz/images/default/system/folder.png';
-			data.img = data.tdata.img ? ((data.tdata.img + '').replace('dzz/images/default', 'dzz/styles/thame/' + _explorer.thame.system.folder)) : 'dzz/styles/thame/' + _explorer.thame.system.folder + '/system/folder.png';
-		}
-	} else {
-		data.error = 'dzz/images/default/icodefault.png';
-	}
+        if (!data.img) {
+            data.img = 'dzz/images/default/system/' + data.flag + '.png';
+        }
+        data.error = 'dzz/images/default/system/' + data.flag + '.png';
+    } else if (data.type === 'folder') {
+        data.icon = data.img ? data.img : data.icon;
+        data.error = data.icon || 'dzz/images/default/system/folder.png';
+        data.img = data.icon ? data.icon : 'dzz/images/default/system/folder.png';
+    } else {
+        data.error = 'dzz/images/default/icodefault.png';
+    }
 	var html = template.replace(/\{name\}/g, data.name);
 	html = html.replace(/\{rid\}/g, data.rid);
 	html = html.replace(/tsrc=\"\{img\}\"/g, 'src="{img}"');
@@ -679,6 +665,8 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 	if (_explorer.hash.indexOf('cloud') != -1) {
 		el.find('.collect').remove();
 		el.find('.clone').remove();
+		el.find('.history').remove();
+		el.find('.dynamic').remove();
 	}
 	_filemanage.SetMoreButton();
 };
@@ -889,6 +877,8 @@ function contextmenuico(rid) {
 	if (_explorer.hash.indexOf('cloud') != -1) {
 		el.find('.collect').remove();
 		el.find('.clone').remove();
+		el.find('.history').remove();
+		el.find('.dynamic').remove();
 	}
 	if (!el.find('.menu-item').length) {
 		el.hide();
@@ -1216,21 +1206,6 @@ _filemanage.prototype._selectInfo = function () {
 };
 _filemanage.prototype.PageInfo = function () {
 	return;
-	/*var Sum=0;
-	var Size=0;
-	for(var i in this.data){
-		Sum++;
-		Size+=(this.data[i].size)*1;
-	}
-	var leftinfo=__lang.bottom_leftinfo.replace('{n}',Sum).replace('{size}',formatSize(Size)).replace('{total}',this.total);
-	jQuery('#bottom_content_'+this.winid+'_'+this.id).html('<div style="line-height:35px;">'+leftinfo+'</div>');
-	//jQuery('#'+this.winid+' .BOTTOM .info_right').html();
-	jQuery('#bottom_content_'+this.winid+'_'+this.id).show();
-	if(this.bottomShowTimer) window.clearTimeout(this.bottomShowTimer);
-	var self=this;
-	this.bottomShowTimer=window.setTimeout(function(){
-		jQuery('#bottom_content_'+self.winid+'_'+self.id).hide();
-	},1000);*/
 };
 
 _filemanage.prototype.pageClick = function (page) {
@@ -1722,7 +1697,6 @@ _filemanage.collect = function (rid) {
 			collect = 0;
 		}
 	} else {
-
 		ico = _explorer.sourcedata.icos[rid];
 		if (ico.collect) {
 			collect = 0;

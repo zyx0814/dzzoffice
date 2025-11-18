@@ -611,9 +611,9 @@ class io_dzz extends io_api {
                 switch ($meta['type']) {
                     case 'folder':
                         $lposition = $position . $meta['name'] . '/';
-                        $contents = C::t('resources')->fetch_by_pfid($meta['oid'], '', $checkperm);
-                        foreach ($contents as $key => $value) {
-                            $this->getFolderInfo(array($value['rid']), $lposition, $zip);
+                        $rids = C::t('resources')->fetch_rids_by_pfid($meta['oid'], '', $checkperm);
+                        foreach ($rids as $rid) {
+                            $this->getFolderInfo(array($rid), $lposition, $zip,$checkperm);
                         }
                         break;
                     case 'discuss':
@@ -677,7 +677,6 @@ class io_dzz extends io_api {
             $attachurl = str_replace('TMP::', $tmp . '/', $path);
             $pathinfo = pathinfo($attachurl);
             $attachment = array('attachment' => $attachurl, 'name' => $filename ? $filename : $pathinfo['basename']);
-
         } elseif (preg_match('/\w{32}/i', $path)) {
             $icoid = trim($path);
             $icoarr = C::t('resources')->fetch_by_rid($path);
@@ -695,13 +694,10 @@ class io_dzz extends io_api {
             //添加事件
             if ($attachurl) {
                 $eventdata = array('username' => getglobal('username'), 'dateline' => TIMESTAMP);
-
                 $infos = C::t('resources')->fetch_info_by_rid($path);
-
                 $path = C::t('resources_path')->fetch_pathby_pfid($infos['pfid']);
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($infos['pfid'], $infos['gid']);
                 $eventdata['position'] = $icoarr['relpath'];
-
                 $eventdata['files'] = $icoarr['name'];
                 $eventdata['hash'] = $hash;
                 $statisdata = array(
@@ -743,13 +739,10 @@ class io_dzz extends io_api {
             //添加事件
             if ($attachurl) {
                 $eventdata = array('username' => getglobal('username'), 'dateline' => TIMESTAMP);
-
                 $infos = C::t('resources')->fetch_info_by_rid($path);
-
                 $path = C::t('resources_path')->fetch_pathby_pfid($infos['pfid']);
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($infos['pfid'], $infos['gid']);
                 $eventdata['position'] = $icoarr['relpath'];
-
                 $eventdata['files'] = $icoarr['name'];
                 $eventdata['hash'] = $icoarr['hash'];
                 $statisdata = array(
@@ -892,17 +885,16 @@ class io_dzz extends io_api {
             return $data;
         } else $fname = $this->getFolderName($fname, 0); //重命名
         $flag = $params['flag'] ? $params['flag'] : 'folder';
-        if ($flag !== 'folder') $folder_set = C::t('folder_flag')->fetch($flag);
         $top = array(
             'pfid' => 0,
             'uid' => $_G['uid'],
             'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
-            'perm' => $perm ? $perm : ($folder_set['perm'] ? $folder_set['perm'] : 0),
-            'fsperm' => $folder_set['fsperm'] ? $folder_set['fsperm'] : 0,
+            'perm' => $perm ? $perm : 0,
+            'fsperm' => 0,
             'fname' => $fname,
             'flag' => $flag,
-            'disp' => $folder_set['disp'] ? $folder_set['disp'] : 0,
-            'iconview' => $folder_set['iconview'] ? $folder_set['iconview'] : 4,
+            'disp' => 0,
+            'iconview' => 4,
             'innav' => 0,
             'isdelete' => 0
         );
@@ -961,15 +953,14 @@ class io_dzz extends io_api {
         $path = C::t('resources_path')->fetch_pathby_pfid($folder['fid']);
         //如果flag!=='folder'，使用此flag的默认设置
         $flag = $params['flag'] ? $params['flag'] : 'folder';
-        if ($flag !== 'folder') $folder_set = C::t('folder_flag')->fetch($flag);
         $setarr = array('fname' => $fname,
             'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
             'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
             'pfid' => $folder['fid'],
-            'disp' => $folder_set['disp'] ? $folder_set['disp'] : $folder['disp'],
-            'iconview' => $folder_set['iconview'] ? $folder_set['iconview'] : $folder['iconview'],
-            'perm' => $perm ? $perm : ($folder_set['perm'] ? $folder_set['perm'] : 0),
-            'fsperm' => $folder_set['fsperm'] ? $folder_set['fsperm'] : 0,
+            'disp' => $folder['disp'],
+            'iconview' => $folder['iconview'],
+            'perm' => $perm ? $perm : 0,
+            'fsperm' => 0,
             'flag' => $flag,
             'dateline' => $_G['timestamp'],
             'gid' => $folder['gid'],
@@ -1824,9 +1815,9 @@ class io_dzz extends io_api {
                             } else {
                                 $data['newdata'] = $re['icoarr'];
                                 $data['success'] = true;
-                                $contents = C::t('resources')->fetch_by_pfid($data['oid']);
-                                foreach ($contents as $key => $value) {
-                                    $data['contents'][$key] = $this->CopyTo($value['rid'], $re['folderarr']['path'], $iscopy);
+                                $rids = C::t('resources')->fetch_rids_by_pfid($data['oid'], '', $checkperm);
+                                foreach ($rids as $rid) {
+                                    $data['contents'][$key] = $this->CopyTo($rid, $re['folderarr']['path'], $iscopy);
                                 }
                             }
                         }
@@ -2338,9 +2329,9 @@ class io_dzz extends io_api {
                     if ($icoarr['pfid'] != $pfid && $currentinfo = DB::fetch_first("select oid,rid from %t where pfid = %d and `name` = %s and `type` = %s and isdelete < 1", array('resources', $tfolder['fid'], $icoarr['name'], 'folder'))) {
                         $currentfid = $currentinfo['oid'];
                         //复制源文件夹数据到目标目录同名文件夹
-                        foreach (C::t('resources')->fetch_by_pfid($icoarr['oid']) as $value) {
+                        foreach (C::t('resources')->fetch_rids_by_pfid($icoarr['oid'], '', $checkperm) as $value) {
                             try {
-                                $this->FileCopy($value['rid'], $currentfid, false);
+                                $this->FileCopy($value, $currentfid, false);
                             } catch (Exception $e) {
                             }
                         }
@@ -2349,14 +2340,13 @@ class io_dzz extends io_api {
                         $icoarr['rid'] = $data['rid'];
                     } else {//如果目标目录中不存在同名文件夹或者存在同名文件夹而源文件位置和目标位置在同一目录，执行创建
                         if ($data = $this->CreateFolderByPath($icoarr['name'], $pfid)) {//根据文件夹名字和当前文件夹路径创建文件夹
-                            foreach (C::t('resources')->fetch_by_pfid($folder['fid']) as $value) {//查询原文件夹中文件
+                            foreach (C::t('resources')->fetch_rids_by_pfid($folder['fid'], '', $checkperm) as $value) {//查询原文件夹中文件
                                 try {
-                                    $this->FileCopy($value['rid'], $data['pfid'], false);//复制原文件夹中文件到新文件夹
+                                    $this->FileCopy($value, $data['pfid'], false);//复制原文件夹中文件到新文件夹
                                 } catch (Exception $e) {
                                 }
                             }
                             $return['folderarr'] = $data['folderarr'][0];
-
                             $icoarr['rid'] = $data['icoarr'][0]['rid'];
                         }
                     }
@@ -2384,9 +2374,7 @@ class io_dzz extends io_api {
                 }
 
                 if ($ricoid = $this->getRepeatIDByName($icoarr['name'], $pfid, ($icoarr['type'] == 'folder') ? true : false)) {//如果目录下有同名文件
-
                     $icoarr['name'] = IO::getFileName($icoarr['name'], $pfid);
-
                 }
                 $setarr = array(
                     'name' => $icoarr['name'],

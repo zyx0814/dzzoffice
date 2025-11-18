@@ -185,7 +185,7 @@ if ($operation == 'upload') {//上传图片文件
     $path = isset($_GET['name']) ? trim($_GET['name']) : '';
     $prefix = isset($_GET['prefix']) ? trim($_GET['prefix']) : '';
     $arr = array();
-    if ($fid = C::t('resources_path')->fetch_by_path($path, $prefix)) {
+    if ($fid = C::t('resources_path')->fetch_by_path($path, $prefix, $uid)) {
         if (preg_match('/c_\d+/', $fid)) {
             $arr['cid'] = str_replace('c_', '', $fid);
         } else {

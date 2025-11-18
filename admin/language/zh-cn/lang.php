@@ -24,12 +24,6 @@ $lang = array
     'type_management' => '分类管理',
     'photograph_class' => '图片类',
     'version_information' => '版本信息，如',
-
-    'cloud_type_pan' => '网盘',
-    'cloud_type_storage' => '云存储',
-    'cloud_type_local' => '内置',
-    'cloud_type_ftp' => 'FTP',
-    'cloud_type_disk' => '本地磁盘',
     'none_write_add_theme' => '还没有添加主题',
     'illegal' => '不合法',
     'data_set' => '资料设置',

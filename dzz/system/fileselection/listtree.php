@@ -67,13 +67,6 @@ if ($operation == 'get_children') {
                         'hashs' => 'group&do=file&gid=' . $orginfo['orgid'] . '&fid=' . $val['fid']
                     )
                 );
-                if ($val['flag'] == 'app') {
-                    $appid = C::t("folder_attr")->fetch_by_skey_fid($val['fid'], 'appid');
-                    if ($imgs = C::t('app_market')->fetch_appico_by_appid($appid)) {
-                        $arr['icon'] = 'data/attachment/' . $imgs;
-                    }
-
-                }
                 $data[] = $arr;
             }
         }

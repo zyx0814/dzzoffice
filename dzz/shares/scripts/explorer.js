@@ -79,7 +79,6 @@ _explorer = function (json) {
 	_explorer.formhash = json.formhash; //FORMHASH
 	_explorer.extopen = json.extopen || {}; //打开方式信息
 	_explorer.sourcedata = json.sourcedata || []; //所有文件信息
-	_explorer.thame = json.thame || {};
 };
 _explorer.appUrl = MOD_URL;
 _explorer.fid = '';

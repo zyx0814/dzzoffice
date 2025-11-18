@@ -120,9 +120,9 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
             if($filemeta) $fileinfo['desc'] = htmlspecialchars($filemeta);
         }
         if($fileinfo['gid']) {
-            $usergroupperm = C::t('organization_admin')->chk_memberperm($fileinfo['gid'], $_G['uid']);//获取用户权限
+            $usergroupperm = perm_check::checkgroupPerm($fileinfo['gid'], 'admin');//判断管理员权限
         }
-        $myperm = perm_check::getPerm($fileinfo['fid']);
+        $myperm = perm_check::getridPerm($fileinfo);
         //获取所有权限
         if ($fileinfo['isfolder']) {
             $perms = get_permsarray();

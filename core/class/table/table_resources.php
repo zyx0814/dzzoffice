@@ -116,6 +116,11 @@ class table_resources extends dzz_table {
     public function check_folder_perm($icoarr, $action, $isdelete = false) {
         global $_G;
         if ($action == 'cut') $action = 'delete';
+        if (perm_check::checkperm_Container($icoarr['pfid'], $action)) {
+            if (!perm_check::checkperm_Container($icoarr['oid'], $action, '', $icoarr['uid'])) return array('error' => lang('has_no_privilege_file') . '：' . $icoarr['name']);
+        } else {
+            return array('error' => lang('has_no_privilege_file') . '：' . $icoarr['name']);
+        }
         //获取文件夹fid集合
         $fids = C::t('resources_path')->fetch_folder_containfid_by_pfid($icoarr['oid']);
         $rids = array();
@@ -136,20 +141,6 @@ class table_resources extends dzz_table {
         unset($fids[$index]);
         $ridnum = count($rids);
         $fidnum = count($fids);
-        $folderinfo = C::t('folder')->fetch($icoarr['oid']);
-        //判断目录是否为空，为空则不判断当前目录权限
-        if ($ridnum) {
-            if (perm_check::checkperm_Container($icoarr['pfid'], $action, '', $folderinfo['uid'])) {
-                if (!perm_check::checkperm_Container($icoarr['oid'], $action, '', $folderinfo['uid'])) return array('error' => lang('has_no_privilege_file'));
-            } else {
-                return array('error' => lang('has_no_privilege_file'));
-            }
-        } else {
-            //判断是否具有上级删除权限
-            if (!perm_check::checkperm_Container($icoarr['pfid'], $action, '', $folderinfo['uid'])) {
-                return array('error' => lang('has_no_privilege_file'));
-            }
-        }
         return array($icoarr['oid'], $ridnum, $fidnum, $fids, $rids);
     }
 
@@ -366,18 +357,19 @@ class table_resources extends dzz_table {
         if (!$data = self::getsourcedata($rid)) {
             return array();
         }
+        $apath = $data['aid'] ? dzzencode('attach::' . $data['aid']) : '';
         $data['size'] = isset($data['size']) ? $data['size'] : 0;
         if ($data['type'] == 'image') {
-            $data['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode('attach::' . $data['aid']);
-            $data['url'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=large&path=' . dzzencode('attach::' . $data['aid']);
+            $data['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . $apath;
+            $data['url'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=large&path=' . $apath;
         } elseif ($data['type'] == 'attach' || $data['type'] == 'document') {
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
-            $data['url'] = DZZSCRIPT . '?mod=io&op=getStream&path=' . dzzencode('attach::' . $data['aid']);
+            $data['url'] = DZZSCRIPT . '?mod=io&op=getStream&path=' . $apath;
         } elseif ($data['type'] == 'shortcut') {
             $data['ttype'] = $data['tdata']['type'];
             $data['ext'] = $data['tdata']['ext'];
         } elseif ($data['type'] == 'dzzdoc') {
-            $data['url'] = DZZSCRIPT . '?mod=document&icoid=' . dzzencode('attach::' . $data['aid']);
+            $data['url'] = DZZSCRIPT . '?mod=document&icoid=' . $apath;
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         } elseif ($data['type'] == 'folder') {
             //$contaions = self::get_contains_by_fid($data['oid'], true);
@@ -401,19 +393,20 @@ class table_resources extends dzz_table {
         $data['fdateline'] = dgmdate($data['dateline'], 'Y-m-d H:i:s');
         $data['fsize'] = formatsize($data['size']);
         $data['ffsize'] = lang('property_info_size', array('fsize' => formatsize($data['size']), 'size' => $data['size']));
-        $data['relativepath'] = $data['path'] ? $data['path'] : '';
-        $data['relpath'] = dirname(preg_replace('/dzz:(.+?):/', '', $data['relativepath'])) . '/';
+        if(empty($data['relativepath'])) $data['relativepath'] = $data['path'] ? $data['path'] : '';
+        if(empty($data['relpath'])) $data['relpath'] = dirname(preg_replace('/dzz:(.+?):/', '', $data['relativepath'])) . '/';
         $data['path'] = $data['rid'];
         $data['bz'] = '';
         $data['preview'] = $preview;
         $data['sid'] = $sid;
-        $data['collect'] = C::t('resources_collect')->fetch_by_rid($rid);
+        $data['collect'] = C::t('resources_collect')->fetch_by_rid($rid, $_G['uid']);
         if ($data['remote'] > 1) $data['rbz'] = io_remote::getBzByRemoteid($data['remote']);
         $data['shareid'] = C::t('shares')->fetch_by_shareid($rid);
         //增加安全相关的路径
         $data['dpath'] = dzzencode($data['path']);
-        $data['apath'] = $data['aid'] ? dzzencode('attach::' . $data['aid']) : $data['dpath'];
-        if (!$data['perm']) $data['perm'] = perm_check::getPerm($data['pfid']);
+        $data['apath'] = $data['aid'] ? $apath : $data['dpath'];
+        $data['sperm'] = perm_check::getridPerm(array('rid' => $data['rid'], 'uid' => $data['uid'], 'sperm' => $data['sperm'], 'perm' => $data['perm'], 'pfid' => $data['pfid'], 'gid' => $data['gid']));
+        if (!$data['perm']) $data['perm'] = $data['sperm'];
         Hook::listen('filter_resource_rid', $data);//数据过滤挂载点
         $this->store_cache($cachekey, $data);
         return $data;
@@ -553,6 +546,7 @@ class table_resources extends dzz_table {
         }
         if (is_array($pfid)) {
             $arr = array();
+            $pfid = array_unique($pfid);//去重
             foreach ($pfid as $fid) {
                 $temp = array('pfid = %d');
                 $para[] = $fid;
@@ -568,6 +562,7 @@ class table_resources extends dzz_table {
                                     $where1[] = "uid='{$_G['uid']}'";
                                 }
                             }
+                            $isread = perm_check::checkgroupPerm($folder['gid'], 'admin');
                             $where1 = array_filter($where1);
                             if (!empty($where1)) $temp[] = "(" . implode(' OR ', $where1) . ")";
                             else $temp[] = "0";
@@ -597,6 +592,7 @@ class table_resources extends dzz_table {
                                 $where1[] = "uid='{$_G['uid']}'";
                             }
                         }
+                        $isread = perm_check::checkgroupPerm($folder['gid'], 'admin');
                         $where1 = array_filter($where1);
                         if ($where1) $temp[] = "(" . implode(' OR ', $where1) . ")";
                         else $temp[] = "0";
@@ -609,6 +605,25 @@ class table_resources extends dzz_table {
             }
             $where[] = '(' . implode(' and ', $temp) . ')';
             unset($temp);
+        }
+        if (!$isread) {
+            $userPerm = perm_check::getuserPerm();
+            $powerArr = perm_binPerm::getPowerArr();
+            $read1Bit = $powerArr['read1'];
+            $read2Bit = $powerArr['read2'];
+            $readBits = $read1Bit | $read2Bit;
+
+            // 普通成员文件权限逻辑：
+            // 1. sperm = 0：继承文件夹权限
+            // 2. sperm > 0：检查文件自身权限与用户权限的合并结果
+            //    - 如果有read2权限：可以读取所有文件
+            //    - 如果只有read1权限：只能读取自己的文件
+            $where[] = "(sperm = 0 OR 
+                  (sperm > 0 AND 
+                   (((sperm & $userPerm) & $read2Bit) > 0 OR 
+                    (((sperm & $userPerm) & $read1Bit) > 0 AND uid = '{$_G['uid']}'))
+                  )
+                 )";
         }
         if ($mustdition) $wheresql = '(' . $wheresql . $mustdition . ')';
         if ($where) $wheresql .= ' and ' . implode(' AND ', $where);
@@ -676,28 +691,21 @@ class table_resources extends dzz_table {
             $param[] = $uid;
         }
         $path = C::t('resources_path')->fetch_pathby_pfid($pfid);
-        foreach (DB::fetch_all("select * from %t  where $where and isdelete < 1 order by dateline desc", $param) as $k => $value) {
-            if ($value['type'] == 'folder') {
-                $value['path'] = $path . $value['name'] . '/';//路径
-                if ($checkperm) {
-                    if (!perm_check::checkperm_Container($value['oid'], 'read2') &&
-                        !($value['uid'] == $currentuid && perm_check::checkperm_Container($value['oid'], 'read1'))
-                    ) {
-                        continue;
-                    }
-                }
-            } else {
-                if ($checkperm) {
-                    $value['path'] = $path . $value['name'];//路径
-                    if (!perm_check::checkperm_Container($value['oid'], 'read2') &&
-                        !($value['uid'] == $currentuid) && perm_check::checkperm_Container($value['oid'], 'read1')
-                    ) {
-                        continue;
+        foreach (DB::fetch_all("select * from %t where $where and isdelete < 1 order by dateline desc", $param) as $k => $value) {
+            if ($checkperm) {
+                if ($value['type'] == 'folder' || $value['sperm'] > 0) {
+                    if ($checkperm == 'download') {
+                        if (!perm_check::checkperm('download', $value)) continue;
+                    } elseif ($checkperm == 'copy') {
+                        if (!perm_check::checkperm('copy', $value)) continue;
+                    } else {
+                        if (!perm_check::checkperm('read', $value)) continue;
                     }
                 }
             }
+            $value['path'] = $path . $value['name'] . ($value['type'] == 'folder' ? '/' : '');//路径
             $data = C::t('resources_attr')->fetch_by_rid($value['rid'], $value['vid']);
-            $data['collect'] = C::t('resources_collect')->fetch_by_rid($value['rid']);
+            $data['collect'] = C::t('resources_collect')->fetch_by_rid($value['rid'], $currentuid);
             $datainfo[$k] = $value;
             $datainfo[$k] = array_merge($datainfo[$k], $data);
             if (!isset($datainfo[$k]['img'])) {
@@ -883,12 +891,9 @@ class table_resources extends dzz_table {
                 $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $fileinfo['path']);
             }
             //编辑权限信息
-            $fileinfo['editperm'] = 1;
-            if ($fileinfo['gid'] > 0) {
-                $powerarr = perm_binPerm::getPowerArr();
-                if (!(C::t('organization_admin')->chk_memberperm($fileinfo['gid'])) && !($uid == $fileinfo['uid'] && $fileinfo['perm_inherit'] & $powerarr['edit1']) && !($fileinfo['perm_inherit'] & $powerarr['edit2'])) {
-                    $fileinfo['editperm'] = 0;
-                }
+            $fileinfo['editperm'] = 0;
+            if (perm_check::checkperm('edit', $fileinfo)) {
+                $fileinfo['editperm'] = 1;
             }
 
             //文件图标信息
@@ -1022,7 +1027,7 @@ class table_resources extends dzz_table {
         if (!$fileinfo) {
             return array('error' => lang('no_privilege'));
         }
-        if (!perm_check::checkperm_Container($fid, 'read')) {
+        if (!perm_check::checkperm('read', $fileinfo)) {
             return array('error' => lang('folder_read_no_privilege'));
         }
         $fileinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $fileinfo['path']);
@@ -1045,7 +1050,7 @@ class table_resources extends dzz_table {
 
         //编辑权限信息
         $fileinfo['editperm'] = 0;
-        if (perm_check::checkperm_Container($fid, 'edit')) {
+        if (perm_check::checkperm('edit', $fileinfo)) {
             $fileinfo['editperm'] = 1;
         }
         if($fileinfo['uid'] == $_G['uid']) {

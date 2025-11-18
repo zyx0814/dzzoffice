@@ -1779,24 +1779,6 @@ function get_os($agent = '') {
     return $os;
 }
 
-function getThames() {//处理风格
-    global $_G;
-    $thames = DB::fetch_first("SELECT * FROM " . DB::table('user_thame') . " WHERE uid='{$_G['uid']}'");
-    $return = $data = array();
-    $arr = array();
-    if (empty($thames['thame']) || (!$arr = DB::fetch_first("select * from " . DB::table('thame') . " where id='{$thames['thame']}'"))) {
-        $arr = DB::fetch_first("select * from " . DB::table('thame') . " where 1 ORDER BY `default` DESC LIMIT 1");
-    }
-    if (empty($arr['folder'])) $arr['folder'] = 'colorful';
-    $data['system'] = $arr;
-    $return['data'] = $data;
-    $return['thame'] = array(
-        'folder' => $arr['folder'],
-        'color' => !empty($arr['enable_color']) ? (!empty($thames['custom_color']) ? $thames['custom_color'] : $arr['color']) : ''
-    );
-    return $return;
-}
-
 function topshowmessage($msg) {
     include template('common/header_common');
     echo "<script type=\"text/javascript\">";
@@ -2339,6 +2321,11 @@ function getDzzPath($attach) {
 }
 
 function geticonfromext($ext, $type = '') {
+    static $geticonfromext = array();
+    $cache_key = $ext . '|' . $type;
+    if (isset($geticonfromext[$cache_key])) {
+        return $geticonfromext[$cache_key];
+    }
     global $_G;
     $img = 'dzz/images/extimg/' . strtolower($ext) . '.png';
     if (!is_file(DZZ_ROOT . $img)) {
@@ -2368,6 +2355,7 @@ function geticonfromext($ext, $type = '') {
                 $img = 'dzz/images/extimg/unknow.png';
         }
     }
+    $geticonfromext[$cache_key] = $img;
     return $img;
 }
 
@@ -2542,6 +2530,10 @@ function parse_name($name, $type = 0) {
 
 //增加函数处理网盘权限判断
 function get_resources_some_setting() {
+    static $resources_some_setting = null;
+    if ($resources_some_setting !== null) {
+        return $resources_some_setting;
+    }
     global $_G;
     $setting = $_G['setting'];
     $data = array(
@@ -2620,6 +2612,7 @@ function get_resources_some_setting() {
 
     // 处理彻底删除设置
     $data['finallydelete'] = isset($setting['explorer_finallydelete']) && $setting['explorer_finallydelete'] >= 0 ? (int)$setting['explorer_finallydelete'] : false;
+    $resources_some_setting = $data;
     return $data;
 }
 

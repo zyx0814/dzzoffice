@@ -55,7 +55,7 @@
             <div class="border-top p-1">
                 <div class="right-card-header">
                     <div class="title">{lang about}<!--{if $org[type]== '1'}-->{lang group}<!--{else}--><!--{if $org[forgid]>0}-->{lang department}<!--{else}-->{lang organization}<!--{/if}--><!--{/if}--> <i class="ms-1 mdi mdi-information-outline" data-toggle="tooltip" data-placement="right" title="机构部门需前往机构用户中进行管理"></i></div>
-                    <!--{if $usergroupperm >= 1 && $org['type']}-->
+                    <!--{if $usergroupperm && $org['type']}-->
                     <button type="button" class="groupbutton dcolor" onclick="showWindow('groupsetting','{MOD_URL}&op=group&do=group_ajax&operation=groupsetting&gid=$fileinfo['gid']','get',0)">
                         <span class="mdi mdi-cog"></span>
                     </button>
@@ -212,7 +212,7 @@
                     <span>{lang property}</span>
                 </a>
             </li>
-            <!--{if $fileinfo[isfolder] && $fileinfo[fid] !== '-1'}-->
+            <!--{if $fileinfo[fid] !== '-1'}-->
             <li class="nav-item">
                 <a class="nav-link perm-tab" id="perm-tab" data-toggle="tab" href="#perm-tab" role="tab" aria-controls="perm" data-item="perm" data-rid="$fileinfo[rid]" data-fid="$fileinfo[fid]" aria-selected="false" onclick="rightinfo(this)">
                     <i class="mdi mdi-lock"></i>

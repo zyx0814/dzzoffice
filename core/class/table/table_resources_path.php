@@ -120,11 +120,13 @@ class table_resources_path extends dzz_table {
         return $pfids;
     }
 
-    public function fetch_by_path($path, $prefix = '') {
+    public function fetch_by_path($path, $prefix = '', $uid = 0) {
         $opath = trim($path);
         $patharr = explode('/', $opath);
         $path = self::path_transferred_meaning($path);
-        $uid = getglobal('uid');
+        if (!$uid) {
+            $uid = getglobal('uid');
+        }
         if ($prefix) {
             switch ($prefix) {
                 case  'g':

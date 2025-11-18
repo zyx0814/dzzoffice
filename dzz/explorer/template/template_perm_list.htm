@@ -25,7 +25,7 @@
 <!--{if $fileinfo['gid']}-->
 <div class="right-card-header">
     <div class="title">一般协作成员权限</div>
-    <!--{if isset($usergroupperm) && $usergroupperm > 0}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[rid]}','{$fileinfo[fid]}')" data-toggle="tooltip" data-placement="right" title="编辑目录权限"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
+    <!--{if $usergroupperm}--><button type="button" class="dcolor conpile-poewr" onclick="editgroupperm('{$fileinfo[rid]}','{$fileinfo[fid]}')" data-toggle="tooltip" data-placement="right" title="编辑<!--{if $fileinfo['isfolder']}-->目录<!--{else}-->文档<!--{/if}-->权限"><span class="mdi mdi-pencil fs-6"></span></button><!--{/if}-->
 </div>
 <!--{if $fperm}-->
 <ul class="proper-show proper-poewr">
@@ -65,7 +65,7 @@
 <!--{if $org}-->
 <div class="right-card-header">
     <div class="title"><!--{if $org[type]== '1'}-->{lang group}<!--{else}--><!--{if $org[forgid]>0}-->{lang department}<!--{else}-->{lang organization}<!--{/if}--><!--{/if}-->{lang member}</div>
-    <!--{if $usergroupperm >= 1 && $org['type']}-->
+    <!--{if $usergroupperm && $org['type']}-->
     <button type="button" class="groupbutton dcolor" onclick="select_group_user();return false;"><span class="mdi mdi-plus-circle"></span></button>
     <!--{/if}-->
 </div>
@@ -79,7 +79,7 @@
             </div>
             <span class="perm-name"><!--{if $v['perm'] == 0}-->{lang explorer_groupperm_cooperative}<!--{elseif $v['perm'] == 1}-->{lang explorer_groupperm_manager}<!--{elseif $v['perm'] == 2}-->{lang explorer_groupperm_creater}<!--{/if}--></span>
         </div>
-        <!--{if $usergroupperm > 1}-->
+        <!--{if $usergroupperm}-->
         <a href="javascript:;" class="js-popbox member_details_info dropdown-toggle fs-5" data-placement="bottom" data-trigger="focus" data-auto-adapt="true" data-toggle="popover" style="display: inline-block;width: 28px;" data-href="{MOD_URL}&op=group&do=right_popbox&gid=$fileinfo['gid']&uid={$v['uid']}&ajaxdata=html"></a>
         <!--{/if}-->
     </li>
@@ -128,5 +128,5 @@ function seluser_group(ids,data) {
             showmessage('{lang do_failed}', 'error', 3000, 1);
         });
     return false;
-    };
+};
 </script>

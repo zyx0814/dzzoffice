@@ -24,12 +24,6 @@ $lang = array
     'type_management' => 'Category Management',
     'photograph_class' => 'Image Category',
     'version_information' => 'Version Information, e.g.',
-
-    'cloud_type_pan' => 'Cloud Drive',
-    'cloud_type_storage' => 'Cloud Storage',
-    'cloud_type_local' => 'Built-in',
-    'cloud_type_ftp' => 'FTP',
-    'cloud_type_disk' => 'Local Disk',
     'none_write_add_theme' => 'No theme has been added yet',
     'illegal' => 'Illegal',
     'data_set' => 'Data Settings',

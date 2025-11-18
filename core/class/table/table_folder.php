@@ -104,25 +104,9 @@ class table_folder extends dzz_table {
                 $path['pathkey'] = '_' . $path['fid'] . '_';
             }
             C::t('resources_path')->insert($path);
-            self::check_sub_by_flag($path['fid'], $data['flag']);
             return $path['fid'];
         }
         return false;
-    }
-
-    public function check_sub_by_flag($pfid, $flag) {//检查这个目录是否含有子目录,有就创建
-        $subids = C::t('folder_sub')->fetch_all_by_flag($flag);
-        foreach ($subids as $value) {
-            $params = array(
-                'flag' => $value['flag'],
-                'fsperm' => $value['fsperm'],
-                'allow_exts' => $value['allow_exts'],
-                'iconview' => $value['iconview'],
-                'disp' => $value['disp']
-            );
-            IO::CreateFolder($pfid, $value['fname'], $value['perm'], $params, 'newcopy', true);
-        }
-        return true;
     }
 
     public function get_folder_pathinfo_by_fid($fid, $folderarr = array(), $i = 0) {

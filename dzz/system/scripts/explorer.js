@@ -39,7 +39,6 @@ _explorer = function (json) {
         _explorer.defaultexttype = '';
     }
     _explorer.defaultfilename = json.defaultfilename || '';
-    _explorer.thame = json.thame || {};
     _explorer.infoRequest = 0;
     _explorer.deletefinally = json.deletefinally || 0;
     _explorer.cut = json.cut || {
