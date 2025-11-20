@@ -104,12 +104,8 @@
 		cols: [[
 		{type:'checkbox', fixed: 'left'}
 		  ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-		  <!--{if $_G['adminid']}-->,{field:'username', title: '{lang creator}', sort: true, align: 'center',templet: function(d) {
-          return d.username;
-        }}<!--{/if}-->
-		  ,{field:'name', title: '{lang filename}', sort: true,templet: function(d) {
-          return d.name;
-        }}
+		  ,{field:'username', title: '{lang creator}', sort: true, align: 'center',templet: function(d) {return d.username;}}
+		  ,{field:'name', title: '{lang filename}', sort: true,templet: function(d) {return d.name;}}
 		  ,{field:'size', title: '{lang file_size}', align: 'center', sort: true}
 		  ,{field:'type', title: '{lang file_type}', align: 'center', sort: true}
 		  ,{field:'relpath', title: '{lang file_location}', align: 'left'}
@@ -170,14 +166,11 @@
 						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
 						template += '<div class="accordion-body">';
 						template += '<p><strong>ID:</strong> ' + item.LAY_NUM + '</p>';
-						<!--{if $_G['adminid']}-->
 						template += '<p><strong>{lang creator}:</strong> ' + item.username + '</p>';
-						<!--{/if}-->
 						template += '<p><strong>{lang file_size}:</strong> ' + item.size + '</p>';
 						template += '<p><strong>{lang file_type}:</strong> ' + item.type + '</p>';
 						template += '<p><strong>{lang file_location}:</strong> ' + item.relpath + '</p>';
 						template += '<p><strong>{lang add_time}:</strong> ' + item.dateline + '</p>';
-						<!--{if $_G['adminid']}-->
 						if (item.FileUri) {
 							template += '<p><strong>文件地址:</strong> ' + item.FileUri + '</p>';
 						}
@@ -187,7 +180,6 @@
 						if (item.md5) {
 							template += '<p><strong>MD5:</strong> ' + item.md5 + '</p>';
 						}
-						<!--{/if}-->
 						if (item.isdelete !== undefined) {
 							template += '<p><strong>是否在回收站:</strong> ' + item.isdelete + '</p>';
 						}
@@ -223,7 +215,7 @@
 					});
 					layer.confirm('您确定要删除这'+data.length+'个文件(如果是文件夹将包含其下的子文件都会被删除)吗？删除之后不可恢复！', {skin:'lyear-skin-danger'}, function(index){
 						var loading = layer.load(0, { shade:  [0.1, '#000'] });
-						jQuery.post('{MOD_URL}&do=delete', {'icoid': postData},function(json){
+						jQuery.post('{MOD_URL}&do=delete&ajaxdata=json', {'icoid': postData},function(json){
 							layer.close(loading);
 							layer.close(index);
 							if(json['msg']=='success'){
@@ -278,7 +270,7 @@
 				var loading = layer.load(0, { shade:  [0.1, '#000'] });
 				$.ajax({
 					type: "post",
-					url: "{MOD_URL}&do=delete",
+					url: "{MOD_URL}&do=delete&ajaxdata=json",
 					data: {icoid: obj.data.rid},
 					dataType: 'json',
 					success: function (res, status) {
@@ -318,18 +310,14 @@
 			var template =
 			'<p><strong>ID:</strong> ' + data.LAY_NUM+ '</p>' +
 			'<p><strong>{lang filename}:</strong> ' + data.name + '</p>' +
-			<!--{if $_G['adminid']}-->
 			'<p><strong>{lang creator}:</strong> ' + data.username + '</p>' + 
-			<!--{/if}-->
 			'<p><strong>{lang file_size}:</strong> ' + data.size + '</p>' +
 			'<p><strong>{lang file_type}:</strong> ' + data.type + '</p>' +
 			'<p><strong>{lang file_location}:</strong> ' + data.relpath + '</p>' +
 			'<p><strong>{lang add_time}:</strong> ' + data.dateline + '</p>' +
-			<!--{if $_G['adminid']}-->
 			(data.FileUri ? '<p><strong>文件地址:</strong> ' + data.FileUri + '</p>' : '') +
 			(data.copys ? '<p><strong>引用数:</strong> ' + data.copys + '</p>' : '') +
 			(data.md5 ? '<p><strong>MD5:</strong> ' + data.md5 + '</p>' : '') +
-			<!--{/if}-->
 			(data.isdelete !== undefined ? '<p><strong>是否在回收站:</strong> ' + data.isdelete + '</p>' : '') +
 			(data.downs ? '<p><strong>{lang download_times}:</strong> ' + data.downs + '</p>' : '') +
 			(data.views ? '<p><strong>{lang view_count}:</strong> ' + data.views + '</p>' : '') +

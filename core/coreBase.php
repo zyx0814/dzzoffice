@@ -46,12 +46,10 @@ if (DZZ_CORE_DEBUG) {
     register_shutdown_function(array('core', 'handleShutdown'));
 }
 
-if (function_exists('spl_autoload_register')) {
-    //注册系统自动加载函数
-    spl_autoload_register(array('core', 'autoload'));
-    //注册命名空间
-    core::addNamespace($_config['namespacelist']);
-}
+//注册系统自动加载函数
+spl_autoload_register(array('core', 'autoload'));
+//注册命名空间
+core::addNamespace($_config['namespacelist']);
 
 class C extends \core {}
 

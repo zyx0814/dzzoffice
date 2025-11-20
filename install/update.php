@@ -296,7 +296,7 @@ if ($_GET['step'] == 'start') {
     $appurl = "{adminscript}?mod=filemanage";
     $filemanageappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
     if ($filemanageappid) {
-        C::t('app_market')->update($filemanageappid, array('appurl' => "{dzzscript}?mod=filemanage", 'group' => 1, 'open' => 1, 'app_path' => 'dzz', 'position' => 1));
+        C::t('app_market')->update($filemanageappid, array('appurl' => "{dzzscript}?mod=filemanage", 'open' => 1, 'app_path' => 'dzz', 'position' => 1));
     }
     $appurl = "{adminscript}?mod=orguser";
     $orguserappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));

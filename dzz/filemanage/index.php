@@ -10,6 +10,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
+Hook::listen('adminlogin');
 $uid = $_G['uid'];
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $orgid = isset($_GET['orgid']) ? intval($_GET['orgid']) : '';
@@ -33,10 +34,6 @@ if ($do == 'delete') {
     $failedicoids = [];
 
     foreach ($icoids as $icoid) {
-        if (!$_G['adminid']) {
-            $ruid = DB::result_first("select uid from %t where rid=%s", array('resources', $icoid));
-            if ($ruid !== $uid) exit(json_encode(['msg' => '该文件不存在或您没有权限']));
-        }
         try {
             $return = IO::Delete($icoid, true);
             if (!$return['error']) {
@@ -117,15 +114,10 @@ if ($do == 'delete') {
         }
     }
     $limitsql = 'limit ' . $start . ',' . $limit;
-    if ($_G['adminid']) {
-        $whereClause = $sql;
-    } else {
-        $whereClause = "uid = $uid AND $sql";
-    }
     $list = array();
-    $count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('resources') . " WHERE $whereClause", $param);
+    $count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('resources') . " WHERE $sql", $param);
     if ($count) {
-        $data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $whereClause $order $limitsql", $param);
+        $data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $sql $order $limitsql", $param);
         foreach ($data as $value) {
             if (!$data = C::t('resources')->fetch_by_rid($value['rid'])) {
                 continue;
@@ -140,23 +132,21 @@ if ($do == 'delete') {
             } else {
                 $isdelete = '否';
             }
-            if ($_G['adminid']) {
-                $copys = $data['copys'];
-                if ($data['attachment']) {
-                    if ($data['rbz']) {
-                        $FileUri = IO::getStream($data['rbz'] . '/' . $data['attachment']);
-                        if(is_array($FileUri) && $FileUri['error']) {
-                            $FileUri = '<span class="text-danger">'.$FileUri['error'].'</span>';
-                        } else {
-                            $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
-                        }
+            $copys = $data['copys'];
+            if ($data['attachment']) {
+                if ($data['rbz']) {
+                    $FileUri = IO::getStream($data['rbz'] . '/' . $data['attachment']);
+                    if(is_array($FileUri) && $FileUri['error']) {
+                        $FileUri = '<span class="text-danger">'.$FileUri['error'].'</span>';
                     } else {
-                        $FileUri = $_G['setting']['attachdir'] . $data['attachment'];
                         $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
                     }
                 } else {
-                    $FileUri = '';
+                    $FileUri = $_G['setting']['attachdir'] . $data['attachment'];
+                    $FileUri = '<a href="'.$FileUri.'" target="_blank">'.$FileUri.'</a>';
                 }
+            } else {
+                $FileUri = '';
             }
             $list[] = [
                 "username" => '<a href="user.php?uid=' . $data['uid'] . '" target="_blank">' . $data['username'] . '</a>',
