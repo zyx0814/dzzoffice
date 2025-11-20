@@ -95,7 +95,6 @@ class dzz_upgrade_app {
         }
         updatecache('setting');
         //echo $need_upgrade_num;exit;
-        //$this->upgradeinformation();
         return $return;
     }
 
@@ -493,35 +492,19 @@ class dzz_upgrade_app {
         rmdir($srcdir);
     }
 
-    function upgradeinformation() {
-        global $_G;
-        include_once DZZ_ROOT . './core/core_version.php';
-        $update = array();
-        $update['uniqueid'] = C::t('setting')->fetch('siteuniqueid');
-        $update['usum'] = DB::result_first("select COUNT(*) from %t where 1", array('user'));
-        $update['siteurl'] = $_G['siteurl'];
-        $update['sitename'] = $_G['setting']['sitename'];
-        $update['version'] = CORE_VERSION;
-        $update['release'] = CORE_RELEASE;
-        $update['fixbug'] = CORE_FIXBUG;
-        $data = '';
-        foreach ($update as $key => $value) {
-            $data .= $key . '=' . rawurlencode($value) . '&';
-        }
-        $upgradeurl = 'ht' . 'tp:/' . '/dev' . '.' . 'd' . 'zzo' . 'ffice.' . 'c' . 'om/co' . 'unt' . '.p' . 'hp?' . 'os=d' . 'zzoff' . 'ice&update=' . rawurlencode(base64_encode($data)) . '&timestamp=' . TIMESTAMP;
-        dfsockopen($upgradeurl, 0, '', '', FALSE, '', 1);
-    }
-
     public function curlcloudappmarket($url = "", $post_data = "", $token = "") {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
         $response = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $errorno = curl_errno($curl);
+        curl_close($curl);
         if ($errorno) {
             return ($errorno);
         }

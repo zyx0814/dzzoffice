@@ -157,9 +157,9 @@ class table_attachment extends dzz_table {
 
     }
 
-    public function insert($setarr, $return_insert_id = 1, $replace = false, $silent = false) {
+    public function insert($setarr, $return_insert_id = 1, $nohook = false, $silent = false) {
         if ($aid = parent::insert($setarr, $return_insert_id)) {
-            Hook::listen('table_attachment_insert', $aid);//插入附件表时的挂载点
+            if(!$nohook) Hook::listen('table_attachment_insert', $aid);//插入附件表时的挂载点
             return $aid;
         }
         return false;

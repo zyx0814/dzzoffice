@@ -37,6 +37,7 @@ class Modrun {
                 break;
             default:
                 exit('arg error');
+
         }
     }
 
