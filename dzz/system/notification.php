@@ -10,9 +10,9 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 require libfile('function/code');
-$filter = trim($_GET['filter']);
-$template = isset($_GET['template']) ? $_GET['template'] : '';
+$filter = isset($_GET['filter']) ? trim($_GET['filter']) : '';
 if ($filter == 'new') {//列出所有新通知
+    $template = isset($_GET['template']) ? $_GET['template'] : '';
     $list = array();
     $nids = array();//new>0
     foreach (DB::fetch_all("select n.*,u.avatarstatus from %t n LEFT JOIN %t u ON n.authorid=u.uid where n.new>0 and n.uid=%d  order by dateline DESC", array('notification', 'user', $_G['uid'])) as $value) {
@@ -24,6 +24,12 @@ if ($filter == 'new') {//列出所有新通知
     if ($nids) {//去除新标志
         C::t('notification')->update($nids, array('new' => 0));
     }
+    if ($template == '1') {
+        include template('lyear_notification', 'lyear');
+    } else {
+        include template('notification');
+    }
+    dexit();
 } elseif ($filter == 'checknew') {//检查有没有新通知
     $num = DB::result_first("select COUNT(*) from %t where new>0 and uid=%d", array('notification', $_G['uid']));
     $notificationrefresh = $_G['setting']['notification'] ? $_G['setting']['notification'] : 60;
@@ -87,11 +93,10 @@ if ($filter == 'new') {//列出所有新通知
         $params[] = '%' . $keyword . '%';
     }
 
-
     $theurl = BASESCRIPT . "?" . url_implode($gets);
     $list = array();
     if ($count = DB::result_first("select COUNT(*) from %t n where n.uid=%d $searchsql", $countparam)) {
-        foreach (DB::fetch_all("select n.*,u.avatarstatus,a.appico from %t n LEFT JOIN %t u ON n.authorid=u.uid left join %t a on n.from_id = a.appid where n.uid=%d $searchsql order by n.dateline DESC limit $start,$perpage", $params) as $value) {
+        foreach (DB::fetch_all("select n.*,a.appico from %t n LEFT JOIN %t u ON n.authorid=u.uid left join %t a on n.from_id = a.appid where n.uid=%d $searchsql order by n.dateline DESC limit $start,$perpage", $params) as $value) {
             $value['dateline'] = dgmdate($value['dateline'], 'u');
             $value['note'] = dzzcode($value['note'], 1, 1, 1, 1, 1);
             if (!$value['appico']) {
@@ -102,17 +107,9 @@ if ($filter == 'new') {//列出所有新通知
             $list[] = $value;
         }
     }
-    $next = false;
-    if ($count && $count > $start + count($list)) $next = true;
     $theurl = DZZSCRIPT . "?" . url_implode($gets);//分页链接
     $multi = multi($count, $perpage, $page, $theurl, 'pull-right');
     include template('notification_list');
     dexit();
 }
-if ($template == '1') {
-    include template('lyear_notification', 'lyear');
-} else {
-    include template('notification');
-}
-dexit();
 ?>
