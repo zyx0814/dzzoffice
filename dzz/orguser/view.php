@@ -47,10 +47,10 @@ function generateDepartmentPath($uid) {
                     $pathNames[] = $organizations[$pathId]['orgname'];
                 }
             }
-            $department[] = '<a href="javascript:;" class="badge badge-outline-primary me-1" onclick="showDetail(\''. $pathId .'\')">' . implode('-', $pathNames). '</a>';
+            $department[] = '<a href="javascript:;" class="" onclick="showDetail(\''. $pathId .'\')">' . implode('-', $pathNames). '</a>';
         }
     }
-    return implode('', $department) ?: lang('no_institution_users');
+    return implode(',', $department) ?: lang('no_institution_users');
 }
 /**
  * 生成用户列表项

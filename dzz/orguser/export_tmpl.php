@@ -9,7 +9,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$h0 = array('username' => lang('username'), 'email' => lang('email'), 'password' => lang('user_login_password'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'));
+require_once libfile('function/orguser');
 $h1 = getProfileForImport();
 $h0 = array_merge($h0, $h1);
 $title = lang('bulk_import_user_template');
@@ -63,39 +63,4 @@ while (!feof($fp)) {
 }
 @unlink($filename);
 exit();
-
-function getColIndex($index) {
-    $string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    $ret = '';
-    if ($index > 255) return '';
-    for ($i = 0; $i < floor($index / strlen($string)); $i++) {
-        $ret = $string[$i];
-    }
-    $ret .= $string[($index % (strlen($string)))];
-    return $ret;
-}
-
-function getProfileForImport() {
-    global $_G;
-    if (empty($_G['cache']['profilesetting'])) {
-        loadcache('profilesetting');
-    }
-    $profilesetting = $_G['cache']['profilesetting'];
-    $ret = array();
-    foreach ($profilesetting as $key => $value) {
-        if (in_array($key, array('department', 'realname', 'gender', 'birthyear', 'birthmonth', 'birthday', 'constellation', 'zodiac'))) continue;
-        elseif ($value['formtype'] == 'file') continue;
-        elseif ($value['formtype'] == 'select' || $value['formtype'] == 'radio') {
-            $ret[$key] = $value['title']/*.($value['choices']?'('.preg_replace("/[\r\n]/i",'|',$value['choices']).')':'')*/
-            ;
-        } elseif ($value['formtype'] == 'checkbox') {
-            $ret[$key] = $value['title']/*.($value['choices']?'('.preg_replace("/[\r\n]/i",'-',$value['choices']).')':'')*/
-            ;
-        } else {
-            $ret[$key] = $value['title'];
-        }
-    }
-    return $ret;
-}
-
 ?>

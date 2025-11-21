@@ -117,10 +117,7 @@ if ($do == 'importing') {
         }
     } else { //新添用户
         if (!check_username($_GET['username'])) exit(json_encode(array('error' => lang('user_name_sensitive'))));
-
-
         $user = uc_add_user($_GET['username'], $_GET['password'], $email);
-
         $uid = $user['uid'];
         if ($uid < 1) exit(json_encode(array('error' => lang('import_failure'))));
         $base = array(
@@ -236,8 +233,8 @@ if ($do == 'importing') {
         C::t('user_status')->insert($status, false, true);
     }
     //处理部门和职位
-    $_GET['orgname'] = !empty($_GET['orgname']) ? explode('/', $_GET['orgname']) : array();
-    $_GET['job'] = !empty($_GET['job']) ? explode('/', $_GET['job']) : array();
+    $_GET['orgname'] = !empty($_GET['orgname']) ? explode('/', $_GET['orgname']) : [];
+    $_GET['job'] = !empty($_GET['job']) ? explode('/', $_GET['job']) : [];
 
     //创建机构和部门
     foreach ($_GET['orgname'] as $key => $orgname) {
@@ -245,7 +242,8 @@ if ($do == 'importing') {
         if ($porgid = DB::result_first("select orgid from %t where forgid=%d and orgname=%s", array('organization', $orgid, $orgname))) {
             $orgid = $porgid;
         } else {
-            $setarr = array('forgid' => $orgid,
+            $setarr = array(
+                'forgid' => $orgid,
                 'orgname' => $orgname,
                 'fid' => 0,
                 'disp' => 100,
@@ -257,21 +255,21 @@ if ($do == 'importing') {
             }
         }
     }
-
-    //用户加入机构
-    if ($isappend) {//增量导入时
-        C::t('organization_user')->insert_by_orgid($orgid, $uid);
-    } else {
-        C::t('organization_user')->delete_by_uid($uid, 0);
-        C::t('organization_user')->insert_by_orgid($orgid, $uid);
-    }
     if ($orgid) {
+        //用户加入机构
+        if ($isappend) {//增量导入时
+            C::t('organization_user')->insert_by_orgid($orgid, $uid);
+        } else {
+            C::t('organization_user')->delete_by_uid($uid, 0);
+            C::t('organization_user')->insert_by_orgid($orgid, $uid);
+        }
         foreach ($_GET['job'] as $key => $jobname) { //处理职位
             $jobid = 0;
             if ($pjobid = DB::result_first("select jobid from %t where orgid=%d and name=%s", array('organization_job', $orgid, $jobname))) {
                 $jobid = $pjobid;
             } else {
-                $setarr = array('orgid' => $orgid,
+                $setarr = array(
+                    'orgid' => $orgid,
                     'name' => $_GET['job'][$key],
                     'dateline' => TIMESTAMP,
                     'opuid' => $_G['uid']
@@ -294,6 +292,7 @@ if ($do == 'importing') {
     exit(json_encode(array('msg' => 'success')));
 } elseif ($do == 'list') {
     require_once DZZ_ROOT . './core/class/class_PHPExcel.php';
+    require_once libfile('function/orguser');
     $inputFileName = $_G['setting']['attachdir'] . $_GET['file'];
     if (!is_file($inputFileName)) {
         showmessage('orguser_import_user_table', MOD_URL . '&op=import');
@@ -303,7 +302,7 @@ if ($do == 'importing') {
     $objPHPExcel = $objReader->load($inputFileName);
     $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
     //获取导入数据的字段
-    $h0 = array('username' => lang('username'), 'email' => lang('email'), 'nickname' => lang('username'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'), 'password' => lang('user_login_password'));
+    $h0 = array('username' => lang('username'), 'email' => lang('email'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'), 'password' => lang('user_login_password'));
     $h1 = getProfileForImport();
     $h0 = array_merge($h0, $h1);
     //获取可导入的用户资料
@@ -441,28 +440,4 @@ function checkprofile($fieldid, &$value) {
     return true;
 
 }
-
-function getProfileForImport() {
-    global $_G;
-    if (empty($_G['cache']['profilesetting'])) {
-        loadcache('profilesetting');
-    }
-    $profilesetting = $_G['cache']['profilesetting'];
-    $ret = array();
-    foreach ($profilesetting as $key => $value) {
-        if (in_array($key, array('department', 'realname', 'gender', 'birthyear', 'birthmonth', 'birthday', 'constellation', 'zodiac'))) continue;
-        elseif ($value['formtype'] == 'file') continue;
-        elseif ($value['formtype'] == 'select' || $value['formtype'] == 'radio') {
-            $ret[$key] = $value['title']/*.($value['choices']?'('.preg_replace("/[\r\n]/i",'|',$value['choices']).')':'')*/
-            ;
-        } elseif ($value['formtype'] == 'checkbox') {
-            $ret[$key] = $value['title']/*.($value['choices']?'('.preg_replace("/[\r\n]/i",'-',$value['choices']).')':'')*/
-            ;
-        } else {
-            $ret[$key] = $value['title'];
-        }
-    }
-    return $ret;
-}
-
 ?>

@@ -68,7 +68,10 @@
 			<div class="alert alert-warning">
 				<strong>导入用户说明：</strong>
 				<ul class="mb-0">
-					{lang import_list_text}
+					<li>用户名和邮箱项目为必填项</li>
+					<li>点击下面的导入项的内容，可以临时编辑，编辑部门时注意，部门每行是上下级的关系，上一行为下一行的上级部门</li>
+					<li>不需要导入的项目，可以在右侧进行删除</li>
+					<li>点击导入按钮，导入当前项目，全部导入按钮，按顺序导入所有项，中途可以再次点击停止</li>
 				</ul>
 			</div>
 		<div class="table-responsive" style="padding:0;">
@@ -87,10 +90,10 @@
 				<!--{loop $h $key1 $value1}--> 
 				<!--{if is_array($value[$value1])}-->
 				<td class="editable" key="$value1"><!--{loop $value[$value1] $value2}-->
-				<p class="form-control">$value2</p>
+				<p class="form-control m-0">$value2</p>
 				<!--{/loop}--></td>
 				<!--{else}-->
-				<td class="editable" key="$value1"><p class="form-control">$value[$value1]</p></td>
+				<td class="editable" key="$value1"><p class="form-control m-0">$value[$value1]</p></td>
 				<!--{/if}--> 
 				<!--{/loop}-->
 				<td><button type="button" id="button_item_$i" class="btn btn-outline-primary me-2" onclick="item_import('item_$i',this);" data-loading-text="{lang in_import}">{lang import_nbsp}</button><a href="javascript:;" class="btn btn-outline-danger" title="{lang delete_item}" onclick="item_remove(this);return false;"><i class="mdi mdi-delete"></i></a></td>
@@ -188,11 +191,10 @@ jQuery(document).ready(function(e) {
 			return true;
 		}		
 	  var val=jQuery(this).html();
-	  jQuery(this).html('<input type="text" class="form-control editinput" onkeyup="if(event.keyCode==13){jQuery(this).parent().html(this.value);}" style="width:'+(jQuery(this).width())+'px" value="'+val+'"  onblur="jQuery(this).parent().html(this.value);">');
+	  jQuery(this).removeClass('form-control');
+	  jQuery(this).html('<input type="text" class="form-control editinput" onkeyup="if(event.keyCode==13){jQuery(this).parent().addClass(\'form-control\');jQuery(this).parent().html(this.value);}" value="'+val+'" onblur="jQuery(this).parent().addClass(\'form-control\');jQuery(this).parent().html(this.value);">');
 	  jQuery(this).find('input').focus();
   });
-  
-  
 });
 </script> 
 <!--{template lyear:footer_simple}--> 
