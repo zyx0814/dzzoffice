@@ -60,7 +60,7 @@ html_login_footer();
 
 function html_login_header($form = true) {
     global $_G;
-    $uid = getglobal('uid');
+    $uid = $_G['uid'];
     $charset = CHARSET;
     $lang = &lang();
     $title = $lang['login_title'];
@@ -106,14 +106,14 @@ EOT;
 
 function html_login_form() {
     global $_G;
-    $uid = getglobal('uid');
-    $isguest = !getglobal('uid');
+    $uid = $_G['uid'];
+    $isguest = !$uid;
     $lang1 = lang();
     $year = dgmdate(TIMESTAMP, 'Y');
     $maintitle = lang('title_admincp');
     $loginuser = $isguest ? '<div class="mb-3"><input class="form-control" name="admin_email" type="text" title="" autofocus placeholder="' . lang('login_email_username') . '"  required/></div>' : '<p class="text-center text-muted">' . $_G['member']['username'] . '</p><p class="text-center text-muted">' . $_G['member']['email'] . '</p>';
-    $sid = getglobal('sid');
-    $avatarstatus = getglobal('avatarstatus', 'member');
+    $sid = $_G['sid'];
+    $avatarstatus = $_G['member']['avatarstatus'];
     $avastar = '';
     if (!$uid) {
         if ($_G['setting']['bbclosed']) {

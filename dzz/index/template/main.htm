@@ -28,27 +28,101 @@
 		align-items: center;
 		justify-content: center;
 	}
+	.hero-card,.user-meta,.meta-info,.meta-badge,.hero-left{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center}
+	.hero-card{background:linear-gradient(135deg,#1890ff 0%,#007bff 100%);border-radius:12px;padding:35px;color:#fff;box-shadow:0 8px 25px rgba(24,144,255,0.25);margin-bottom:24px;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;position:relative;overflow:hidden}
+	.hero-card .bg-icon{position:absolute;right:10%;bottom:-40px;font-size:220px;opacity:0.08;transform:rotate(-10deg);color:#fff;pointer-events:none}
+	.hero-left{z-index:2}
+	.user-meta{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;align-items:flex-start}
+	.greeting-text{font-size:2rem;font-weight:700;margin-bottom:5px;line-height:1.2}
+	.meta-info{font-size:0.95rem;opacity:0.85;-ms-flex-wrap:wrap;flex-wrap:wrap}
+	.meta-badge{background:rgba(255,255,255,0.2);padding:2px 10px;border-radius:4px;font-size:0.8rem;margin-right:15px}
+	.hero-clock{text-align:right;z-index:2;padding-left:40px;border-left:1px solid rgba(255,255,255,0.15)}
+	@media (max-width:768px){.hero-clock{display:none}
+	.hero-card,.hero-left,.meta-info{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start}
+	.hero-card{padding:25px}
+	.hero-clock{display:none}
+	.meta-info{margin-bottom:0}
+	.meta-badge{margin-right:0;margin-bottom:8px}
+	}.clock-time{font-size:3rem;font-weight:200;line-height:1;margin-bottom:5px;font-family:'Helvetica Neue',sans-serif}
+	.clock-date{font-size:1rem;opacity:0.85;letter-spacing:1px}
+	.stat-header{display:flex;align-items:center;margin-bottom:12px}
+	.stat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-right:12px}
+	.stat-value{font-size:1.25rem;font-weight:700;margin-bottom:4px;line-height:1.2}
+	.bg-blue-soft{background:#e6f7ff;color:#007bff}
+	.bg-teal-soft{background:#e6fffb;color:#13c2c2}
+	.bg-purple-soft{background:#f9f0ff;color:#722ed1}
+	.bg-orange-soft{background:#fff7e6;color:#fa8c16}
 </style>
 <!--{template lyear:header_simple_noleft_end}-->
 <main class="bs-main-container" style="padding-left: 0;">
 	<div class="container-fluid">
-		<div class="card d-flex flex-wrap justify-content-between">
-			<div class="card-body">
-				<div class="display-4 fs-4 fw-bold mb-1">{$_G['username']}，<span id="greeting">早上好！</span></div>
-				<p>您于<!--{eval echo dgmdate($userstatus['lastvisit'])}-->登录。当前时间：<span id="current-date"></span><span class="ps-2" id="weekday"></span><span class="ps-2" id="time">00:00:00</span>。</p>
+		<div class="hero-card">
+			<i class="mdi mdi-chart-bubble bg-icon"></i> 
+			<div class="hero-left">
+				<div class="user-meta">
+					<div class="greeting-text"><span id="greeting">早上好！</span>$_G['username']</div>
+					<div class="meta-info">
+						<span class="meta-badge"><i class="mdi mdi-identifier me-1"></i> UID: $_G['uid']</span>
+						<span class="meta-badge"><i class="mdi mdi-email-outline me-1"></i> $_G['member']['email']</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="hero-clock">
+				<div class="clock-time" id="time">--:--:--</div>
+				<div class="clock-date"><span id="current-date"></span><span class="ps-2" id="weekday"></span></div>
 			</div>
 		</div>
-		<div class="row card-banner bg-white">
-			<div class="card mb-0 shadow-none">
+		<div class="stats-grid row">
+			<div class="col-sm-6 col-md-6 col-lg-3">
+				<div class="card">
 				<div class="card-body">
-					<div class="d-flex justify-content-between">
-					<span class="avatar-md rounded-circle avatar-box text-white bg-yellow">
-						<i class="mdi mdi-cloud-outline fs-4"></i>
-					</span>
-					<span class="fs-4 text-truncate">$space['fusesize']/$space['fmaxspacesize']</span>
+					<div class="stat-header">
+						<div class="stat-icon bg-blue-soft"><i class="mdi mdi-cloud"></i></div>
+						<span class="text-muted">云盘空间</span>
 					</div>
-					<div class="text-end">空间使用</div>
+					<div class="stat-value">$space['fusesize'] <small class="text-muted fw-normal fs-6">/ $space['fmaxspacesize']</small></div>
+					<div class="text-muted">我的网盘空间</div>
 				</div>
+				</div>
+			</div>
+			<!--{if $userstatus['lastvisit']}-->
+			<div class="col-sm-6 col-md-6 col-lg-3">
+			<div class="card">
+				<div class="card-body">
+				<div class="stat-header">
+					<div class="stat-icon bg-teal-soft"><i class="mdi mdi-calendar-clock"></i></div>
+					<span class="text-muted">最近活跃时间</span>
+				</div>
+				<div class="stat-value"><!--{eval echo dgmdate($userstatus['lastvisit'], 'u')}--></div>
+				<div class="text-muted">上次访问时间</div>
+				</div> 
+			</div>
+			</div>
+			<!--{/if}-->
+			<div class="col-sm-6 col-md-6 col-lg-3">
+			<div class="card">
+				<div class="card-body">
+				<div class="stat-header">
+					<div class="stat-icon bg-purple-soft"><i class="mdi mdi-calendar-heart"></i></div>
+					<span class="text-muted">加入时间</span>
+				</div>
+				<div class="stat-value"><!--{eval echo dgmdate($_G['member']['regdate'])}--></div> 
+				<div class="text-muted">已加入 <span class="fw-bold text-primary">$regdatedays</span> 天</div>
+				</div>
+			</div>
+			</div>
+			<div class="col-sm-6 col-md-6 col-lg-3">
+			<div class="card">
+				<div class="card-body">
+				<div class="stat-header">
+					<div class="stat-icon bg-orange-soft"><i class="mdi mdi-shield-account"></i></div>
+					<span class="text-muted">当前用户组</span>
+				</div>
+				<div class="stat-value">$_G['group']['grouptitle']</div>
+				<div class="text-muted">级别和权限定义</div>
+				</div> 
+			</div>
 			</div>
 		</div>
 		<!--{if $applist_1}-->
@@ -90,11 +164,7 @@
 <script>
 	// 服务器时间初始化
 	var serverTimestamp = '$servertime'; 
-	
-	// 客户端加载时间
 	var clientTimestampAtLoad = Date.now();
-	
-	// 计算时间偏移量
 	var timeOffset = serverTimestamp - clientTimestampAtLoad;
 	
 	// 获取当前服务器时间
@@ -169,14 +239,12 @@
 			hours = hours.toString().padStart(2, '0');
 			minutes = minutes.toString().padStart(2, '0');
 			seconds = seconds.toString().padStart(2, '0');
-			
-			// 构建时间字符串
+
 			var timeString = hours + ':' + minutes;
 			if (showSeconds) {
 				timeString += ':' + seconds;
 			}
-			
-			// 应用到DOM
+
 			$('#time').text(timeString);
 		}
 		

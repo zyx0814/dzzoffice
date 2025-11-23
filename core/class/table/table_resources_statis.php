@@ -119,20 +119,18 @@ class table_resources_statis extends dzz_table {
     //最近使用文件夹
     public function fetch_folder_by_uid($limit = 5) {
         global $_G;
-        $uid = getglobal('uid');
         $folderdata = array();
         $orderby = ' order by edits desc,views desc,editdateline desc,opendateline desc';
         $limitsql = ' limit ' . $limit;
-        $folders = DB::fetch_all("select * from %t where uid = %d  and fid != 0 and rid != '' $orderby $limitsql", array($this->_table, $uid));
+        $folders = DB::fetch_all("select * from %t where uid = %d  and fid != 0 and rid != '' $orderby $limitsql", array($this->_table, $_G['uid']));
         return $folders;
     }
 
     //最近使用的文件
     public function fetch_files_by_uid($limit = 20) {
         global $_G;
-        $uid = getglobal('uid');
         $data = array();
-        $param = array($this->_table, $uid);
+        $param = array($this->_table, $_G['uid']);
         $wheresql = " where uid = %d and fid = 0 and rid != '' ";
         $orderby = ' order by edits desc,views desc,editdateline desc,opendateline desc';
         $limitsql = ' limit ' . $limit;

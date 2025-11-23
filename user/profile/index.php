@@ -14,10 +14,10 @@ Hook::listen('check_login');//检查是否登录，未登录跳转到登录界�
 $navtitle = lang('myCountCenter');
 $uid = intval($_G['uid']);
 $verify = C::t('user_verify')->fetch($_G['uid']);//验证信息
-$space = C::t('user_profile')->get_userprofile_by_uid($uid);//用户资料信息
+$userinfo = C::t('user_profile')->get_userprofile_by_uid($uid);//用户资料信息
 $userstatus = C::t('user_status')->fetch($uid);//用户状态
 $userstatus['profileprogress'] = $userstatus['profileprogress'] ? $userstatus['profileprogress'] : 0;
-$users = getuserbyuid($uid);
+$space = dzzgetspace($_G['uid']);
 $vid = intval($_GET['vid']);
 $my_username = false;
 if (!$vid) {
@@ -294,6 +294,8 @@ if (submitcheck('profilesubmit')) {
             if ($value['available'] > 0 && !in_array($key, $verifyfieldid)) $allowitems[] = $key;
         }
         $allowitems[] = 'timeoffset';
+        $servertime = time() * 1000;
+        $regdatedays = floor((time() - intval($_G['member']['regdate'])) / (60 * 60 * 24));
     }
     $showbtn = ($vid && $verify['verify' . $vid] != 1) || empty($vid);
     if (!empty($verify) && is_array($verify)) {

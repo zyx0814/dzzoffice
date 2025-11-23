@@ -884,7 +884,7 @@ function template($file, $tpldir = '', $templateNotMust = false) {
 
     if ($tplrefresh === null) {
         $tplrefresh = getglobal('config/output/tplrefresh');
-        $timestamp = getglobal('timestamp');
+        $timestamp = $_G['timestamp'];
     }
 
     if (empty($timecompare) || $tplrefresh == 1 || ($tplrefresh > 1 && !($timestamp % $tplrefresh))) {

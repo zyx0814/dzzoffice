@@ -1,243 +1,356 @@
 <!--{template lyear:header_simple_start}-->
 <style>
-  /* 裁剪样式 */
-  .image-wrapper {
-      height: 364px;
-      width: 100%;
-      box-shadow: inset 0 0 3px rgba(0, 0, 0, .075);
-      background-color: #fcfdfe;
-      overflow: hidden;
-  }
-  .image-preview {
-      float: left;
-      margin-bottom: 0.5rem;
-      margin-right: 0.5rem;
-      border: 1px solid #f1f2f3;
-      border-radius: 2px;
-      background-color: #fff;
-      overflow: hidden;
-  }
-  .image-preview img {
-      vertical-align: top;
-  }
-  .preview-lg {
-    height: 200px;
-    width: 200px;
-  }
-  .preview-md {
-    height: 120px;
-    width: 120px;
-  }
-  .preview-sm {
-    height: 48px;
-    width: 48px;
-  }
-  @media (max-width: 991px) {
-      #image-modal .image-btns {
-          margin-bottom: 15px;
-      }
-  }
-  [data-theme='dark'] .image-wrapper,
-  [data-theme='dark'] .image-preview {
-      background-color: rgba(255,255,255, .2);
-  }
-  [data-theme='dark'] .image-preview {
-      border-color: rgba(255,255,255, .2);
-  }
+.image-wrapper{height:364px;width:100%;box-shadow:inset 0 0 3px rgba(0,0,0,.075);background-color:#fcfdfe;overflow:hidden}
+.image-preview{float:left;margin-bottom:0.5rem;margin-right:0.5rem;border:1px solid #f1f2f3;border-radius:2px;background-color:#fff;overflow:hidden}
+.image-preview img{vertical-align:top}
+.preview-lg{height:200px;width:200px}
+.preview-md{height:120px;width:120px}
+.preview-sm{height:48px;width:48px}
+@media (max-width:991px){#image-modal .image-btns{margin-bottom:15px}
+}[data-theme='dark'] .image-wrapper,[data-theme='dark'] .image-preview{background-color:rgba(255,255,255,.2)}
+[data-theme='dark'] .image-preview{border-color:rgba(255,255,255,.2)}
+.hero-card,.user-meta,.meta-info,.meta-badge,.hero-left,.progress-wrapper{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center}
+.hero-card{background:linear-gradient(135deg,#1890ff 0%,#007bff 100%);border-radius:12px;padding:35px;color:#fff;box-shadow:0 8px 25px rgba(24,144,255,0.25);margin-bottom:24px;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;position:relative;overflow:hidden}
+.hero-card .bg-icon{position:absolute;right:10%;bottom:-40px;font-size:220px;opacity:0.08;transform:rotate(-10deg);color:#fff;pointer-events:none}
+.hero-left{z-index:2}
+.avatar-box{position:relative;margin-right:30px;-ms-flex-negative:0;flex-shrink:0}
+.cropimage{width:100px;height:100px;border-radius:50%;border:4px solid rgba(255,255,255,0.3);object-fit:cover;background:#fff}
+.trigger-btn{position:absolute !important;bottom:5px;right:0;background:#fff;color:#1890ff;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);transition:transform 0.2s}
+.trigger-btn:hover{transform:scale(1.1)}
+.user-meta{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;align-items:flex-start}
+.greeting-text{font-size:2rem;font-weight:700;margin-bottom:5px;line-height:1.2}
+.meta-info{font-size:0.95rem;margin-bottom:12px;opacity:0.85;-ms-flex-wrap:wrap;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,0.2);padding:2px 10px;border-radius:4px;font-size:0.8rem;margin-right:15px}
+.progress-wrapper{background:rgba(0,0,0,0.2);border-radius:20px;padding:6px 15px;font-size:0.85rem;color:rgba(255,255,255,0.9)}
+.progress-bar-bg{width:100px;height:6px;background:rgba(255,255,255,0.2);border-radius:3px;margin-left:10px;overflow:hidden}
+.hero-clock{text-align:right;z-index:2;padding-left:40px;border-left:1px solid rgba(255,255,255,0.15)}
+@media (max-width:768px){.hero-clock{display:none}
+.hero-card,.hero-left,.meta-info{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:start;-ms-flex-align:start;align-items:flex-start}
+.hero-card{padding:25px}
+.avatar-box{margin-right:0;margin-bottom:15px}
+.hero-clock{display:none}
+.progress-bar-bg{width:120px}
+.meta-info{margin-bottom:0}
+.meta-badge{margin-right:0;margin-bottom:8px}
+}.clock-time{font-size:3rem;font-weight:200;line-height:1;margin-bottom:5px;font-family:'Helvetica Neue',sans-serif}
+.clock-date{font-size:1rem;opacity:0.85;letter-spacing:1px}
+.stat-header{display:flex;align-items:center;margin-bottom:12px}
+.stat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-right:12px}
+.stat-value{font-size:1.25rem;font-weight:700;margin-bottom:4px;line-height:1.2}
+.bg-blue-soft{background:#e6f7ff;color:#1890ff}
+.bg-teal-soft{background:#e6fffb;color:#13c2c2}
+.bg-purple-soft{background:#f9f0ff;color:#722ed1}
+.bg-orange-soft{background:#fff7e6;color:#fa8c16}
+.btn-save{transition:all 0.2s}
+.btn-save:hover{transform:translateY(-2px)}
 </style>
 <script type="text/javascript" src="static/js/jquery.textareaexplander.js?{VERHASH}"></script>
 <link rel="stylesheet" type="text/css" href="static/lyear/js/cropper/cropper.min.css">
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
-	<div class="container-fluid">
-		<div class="card">
-			<div class="card-body container">
-      <!--{if $vid}-->
-      <div class="alert <!--{if $showbtn}-->alert-warning<!--{else}-->alert-success<!--{/if}-->">
-          <!--{if $showbtn}-->
-            <p><i class="mdi mdi-help-circle-outline" ></i> {lang profile_message1}。</p> 
-            <!--{if $_G['setting']['verify'][$vid]['desc']}-->
-            {eval $desc=dzzcode($_G['setting']['verify'][$vid]['desc']);}
-            <p class="ml20">$desc</p>
-            <!--{/if}-->
-          <!--{else}-->
-           <p><i class="mdi mdi-check-bold" ></i> {lang profile_message2}</p>
-          <!--{/if}-->
-      </div>
-      <!--{else}-->
-      <div class="mb-2">
-      	<div class="progress progress-relative" style="margin:0">
-          <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="$userstatus[profileprogress]" aria-valuemin="0" aria-valuemax="100" style="width: {$userstatus[profileprogress]}%;min-width: 100px;">
-            <span class="sr-only">{lang Information_complete} {$userstatus[profileprogress]}% </span>
-          </div>
-        </div>
-      </div>
-      <!--{/if}-->
-      <iframe id="frame_profile" name="frame_profile" style="display: none"></iframe>
-      <!--{if !$vid}-->
-      <div class="d-flex mb-3">
-        <img src="avatar.php?uid=$_G['uid']" alt="{$_G['username']}" class="cropimage avatar-xl rounded-circle me-3">
-        <div class="flex-grow-1">
-          <input type="hidden" class="form-control image-src" name="picurl_two" id="picurl_two" value="avatar.php?uid=$_G['uid']" />
-          <button class="btn btn-outline-primary trigger-btn" type="button" <!--{if $my_info}-->disabled<!--{/if}-->>修改头像</button>
-          <p class="mt-1 mb-0">选择一张您喜欢的图片，裁剪后会自动生成200x200大小，上传图片大小不能超过2M。</p>
-        </div>
-      </div>
-      <!--{/if}-->
-      <form id="accountform" name="accountform" class="row gx-3 gy-2 align-items-center" action="{MOD_URL}" method="post" enctype="multipart/form-data" target="frame_profile" onsubmit="clearErrorInfo();">
-        <input type="hidden" name="profilesubmit" value="true" />
-        <input type="hidden" name="formhash" value="{FORMHASH}" />
-         <input type="hidden" name="vid" value="$vid" />
-        
-        <div class="row mb-3" id="th_my_username">
-          <!--{if $my_username}-->
-          <label class="col-sm-2">{lang username} <span class="text-danger">*</span></label>
-          <div class="col-sm-6">
-            <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" value="$_G[username]" onblur="checkusername(this.id);">
-            <span id="chk_username" class="form-text">
-              <span id="suc_username"></span><span id="showerror_my_username" class="help-msg"></span> 用户名必须是唯一的，请勿使用特殊字符。可用于系统登录。
-            </span>
-          <!--{else}-->
-          <label class="col-sm-2">{lang username}</label>
-          <div class="col-sm-10">
-          <strong><code>$_G[username]</code></strong>
-          <!--{/if}-->
-          </div>
-        </div>
-        <!--{if !$vid}-->
-        <!--{if $userstatus['lastvisit']}-->
-        <div class="row mb-3">
-          <label class="col-sm-2">最近在线时间</label>
-          <div class="col-sm-10"><strong><code><!--{eval echo dgmdate($userstatus['lastvisit'])}--></code></strong>
-          </div>
-        </div>
-        <!--{/if}-->
-				<div class="row mb-3">
-          <label class="col-sm-2"><!--{if $users[regip]}-->{lang registration_time}<!--{else}-->{lang add_time}<!--{/if}--></label>
-          <div class="col-sm-10"><strong><code><!--{eval echo dgmdate($users['regdate'])}--></code></strong>
-          </div>
-        </div>
-				<div class="row mb-3">
-          <label class="col-sm-2">{lang email}</label>
-          <div class="col-sm-10"><strong><code>$space['email']</code></strong>
-          </div>
-        </div>
-        <!--{if $users['phone']}-->
-        <div class="row mb-3">
-          <label class="col-sm-2">手机号码</label>
-          <div class="col-sm-10"><strong><code><!--{eval $phone=$users['phone'];if(strlen($phone) === 11)$phone = substr($phone, 0, 3) . '******' . substr($phone, 9);echo $phone}--></code></strong>
-          </div>
-        </div>
-        <!--{/if}-->
-        <!--{/if}-->
-        <!--{loop $settings $key $value}--> 
-        <!--{if $value[available]}-->
-        <div class="row mb-3" id="th_$key">
-          <label class="col-sm-2" for="$key">$value[title]<!--{if $value[required]}--><span class="rq" title="{lang required}">*</span><!--{/if}--></label>
-					<div class="col-md-4">
-            $htmls[$key]
-          </div>
-					<div class="col-md-2">
-            <!--{if $vid || $key=='department'}-->
-            <input type="hidden" name="privacy[$key]" value="$privacy[$key]" />
-            <!--{else}-->
-            <select name="privacy[$key]" class="form-select">
-                <!--{loop $_config['profile']['privacy'] $k $v}-->
-                <option value="$k" {if $privacy[$key] == $k} selected="selected"{/if}>$v</option>
-                <!--{/loop}-->
-            </select>
-            <!--{/if}-->
-          </div>
-        </div>
-        <!--{/if}-->
-        <!--{/loop}--> 
-        <!--{if in_array('timeoffset', $allowitems)}-->
-        <div class="row mb-3">
-            <label class="col-sm-2" for="timeoffset">{lang time_zone}</label>
-            <div class="col-md-4">
-                <!--{eval $timeoffset = array({lang timezone});}-->
-                <select name="timeoffset" class="form-select" id="timeoffset">
-                    <!--{loop $timeoffset $key $desc}-->
-                    <option value="$key" {if $key==$space[timeoffset]} selected="selected" {/if}>$desc</option>
-                    <!--{/loop}-->
-                </select>
-                <p class="mt10">{lang current_time} :
-                    <!--{date($_G['timestamp'])}-->
-                </p>
-                <span class="gray form-text">{lang time_zone_state}</span>
+  <div class="container-fluid">
+    <div class="hero-card">
+        <i class="mdi mdi-chart-bubble bg-icon"></i> 
+        <div class="hero-left">
+            <div class="avatar-box">
+                <img src="avatar.php?uid=$_G['uid']" class="cropimage" alt="$_G['username']">
+                <!--{if !$my_info}-->
+                <input type="hidden" class="form-control image-src" name="picurl_two" id="picurl_two" value="avatar.php?uid=$_G['uid']" />
+                <div class="trigger-btn" title="{lang Modify_the_picture}"><i class="mdi mdi-camera"></i></div>
+                <!--{/if}-->
+            </div>
+            <div class="user-meta">
+                <div class="greeting-text" id="greeting-msg">你好, $_G['username']</div>
+                <div class="meta-info">
+                    <span class="meta-badge"><i class="mdi mdi-identifier me-1"></i> UID: $_G['uid']</span>
+                    <span class="meta-badge"><i class="mdi mdi-email-outline me-1"></i> $userinfo['email']</span>
+                </div>
+                
+                <div class="progress-wrapper">
+                    <span>{lang Information_complete} {$userstatus[profileprogress]}%</span>
+                    <div class="progress progress-bar-bg">
+                      <div class="progress-bar bg-success" role="progressbar" style="width: {$userstatus[profileprogress]}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row mb-3">
-            <label class="col-sm-2" for="language">{lang language}</label>
-            <div class="col-md-4">
-                <select name="language" class="form-select" id="language">
-                    <option value="" <!--{if $space[language] == ''}-->selected="selected"<!--{/if}-->>{lang language_auto}</option>
-                    <!--{loop $langList $key $value}-->
-                    <option value="$key" <!--{if $space[language] == $key}-->selected="selected"<!--{/if}--> /> $value</option>
-                    <!--{/loop}-->
-                </select>
-            </div>
-        </div>
-        <!--{/if}-->
-        <!--{if !$vid || $showbtn}-->
-        <dl class="mb-3 d-grid">
-             <input type="submit" class="btn btn-primary btn-round bodyloading" <!--{if $vid}-->value="{lang submit_audit}"<!--{else}-->value="{lang save}"<!--{/if}-->>
-        </dl>
-         <!--{/if}-->
-      </form>
-      <!--图片裁剪START-->
-      <div class="modal fade" id="image-modal">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
 
-            <div class="modal-header">
-                <h6 class="modal-title text-truncate" id="image-modal-label">上传图片</h6>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="image-body">
-                <div class="image-upload mb-3">
-                    <button class="btn btn-primary" type="button" onclick="$('input[id=imageInput]').click();">请选择图片</button>
-                    <span class="image-name"></span>
-                    <input type="file" class="image-input d-none" id="imageInput" name="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff">
-                </div>
-                <div class="row">
-                    <div class="col-lg-8 mb-3">
-                    <div class="image-wrapper"></div>
-                    </div>
-                    <div class="col-lg-4">
-                    <div class="image-previews clearfix">
-                        <div class="image-preview preview-lg"></div>
-                        <div class="image-preview preview-md"></div>
-                        <div class="image-preview preview-sm"></div>
-                    </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4 image-btns">
-                    <button class="btn btn-primary mdi mdi-rotate-left" data-method="rotate" data-option="-90" type="button" title="向左旋转-90度"></button>
-                    <button class="btn btn-primary mdi mdi-rotate-right" data-method="rotate" data-option="90" type="button" title="向右旋转90度"></button>
-                    <button type="button" class="btn btn-primary mdi mdi-magnify-plus-outline" data-method="zoom" data-option="0.1" title="放大图片"></button>
-                    <button type="button" class="btn btn-primary mdi mdi-magnify-minus-outline" data-method="zoom" data-option="-0.1" title="缩小图片"></button>
-                    <button type="button" class="btn btn-primary mdi mdi-cached" data-method="reset" title="重置图片"></button>
-                    </div>
-                    <div class="col-lg-5 image-btns toggles-btns">
-                    </div>
-                    <div class="col-lg-3">
-                    <button class="btn btn-primary btn-block upload-btn mdi mdi-content-save" type="submit">保存修改</button>
-                    </div>
-                </div>
-                </div>
-            </div>
-            
-            </div>
+        <div class="hero-clock">
+            <div class="clock-time" id="clock-time">--:--:--</div>
+            <div class="clock-date" id="clock-date">Loading...</div>
         </div>
     </div>
+    <!--{if $vid}-->
+    <div class="alert <!--{if $showbtn}-->alert-warning<!--{else}-->alert-success<!--{/if}-->">
+        <!--{if $showbtn}-->
+          <p><i class="mdi mdi-alert-circle-outline"></i> {lang profile_message1}。</p> 
+          <!--{if $_G['setting']['verify'][$vid]['desc']}-->
+          {eval $desc=dzzcode($_G['setting']['verify'][$vid]['desc']);}
+          <p class="ml20">$desc</p>
+          <!--{/if}-->
+        <!--{else}-->
+          <p><i class="mdi mdi-check-bold" ></i> {lang profile_message2}</p>
+        <!--{/if}-->
+    </div>
+    <!--{else}-->
+    <div class="stats-grid row">
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="stat-header">
+                <div class="stat-icon bg-blue-soft"><i class="mdi mdi-cloud"></i></div>
+                <span class="text-muted">云盘空间</span>
+            </div>
+            <div class="stat-value">$space['fusesize'] <small class="text-muted fw-normal fs-6">/ $space['fmaxspacesize']</small></div>
+            <div class="text-muted">我的网盘空间</div>
+          </div>
+        </div>
+      </div>
+      <!--{if $userstatus['lastvisit']}-->
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="stat-header">
+                <div class="stat-icon bg-teal-soft"><i class="mdi mdi-calendar-clock"></i></div>
+                <span class="text-muted">最近活跃时间</span>
+            </div>
+            <div class="stat-value"><!--{eval echo dgmdate($userstatus['lastvisit'], 'u')}--></div>
+            <div class="text-muted">上次访问时间</div>
+          </div> 
+        </div>
+      </div>
+      <!--{/if}-->
+      <!--{if $userinfo['regdate']}-->
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="stat-header">
+                <div class="stat-icon bg-purple-soft"><i class="mdi mdi-calendar-heart"></i></div>
+                <span class="text-muted">加入时间</span>
+            </div>
+            <div class="stat-value"><!--{eval echo dgmdate($userinfo['regdate'])}--></div> 
+            <div class="text-muted">已加入 <span class="fw-bold text-primary">$regdatedays</span> 天</div>
+          </div>
+        </div>
+      </div>
+      <!--{/if}-->
+      <div class="col-sm-6 col-md-6 col-lg-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="stat-header">
+                <div class="stat-icon bg-orange-soft"><i class="mdi mdi-shield-account"></i></div>
+                <span class="text-muted">当前用户组</span>
+            </div>
+            <div class="stat-value">$_G['group']['grouptitle']</div>
+            <div class="text-muted">级别和权限定义</div>
+          </div> 
+        </div>
+      </div>
+    </div>
+    <!--{/if}-->
+    <iframe id="frame_profile" name="frame_profile" style="display: none"></iframe>
+    <div class="card">
+        <div class="card-header"> 
+            <div class="card-title"><i class="mdi mdi-card-account-details me-2 text-primary"></i>{lang edit_data}</div>
+        </div>
+        <div class="card-body"> 
+          <form id="accountform" name="accountform" class="" action="{MOD_URL}" method="post" enctype="multipart/form-data" target="frame_profile" onsubmit="clearErrorInfo();">
+            <input type="hidden" name="profilesubmit" value="true" />
+            <input type="hidden" name="formhash" value="{FORMHASH}" />
+            <input type="hidden" name="vid" value="$vid" />
+            <!--{if $my_username}-->
+            <div class="row mb-3" id="th_my_username">
+              <label class="col-sm-2">{lang username} <span class="text-danger">*</span></label>
+              <div class="col-sm-6">
+                <input type="text" class="form-control" id="username" name="username" placeholder="{lang login_username_placeholder}" value="$_G[username]" onblur="checkusername(this.id);">
+                <span id="chk_username" class="form-text">
+                  <span id="suc_username"></span><span id="showerror_my_username" class="help-msg"></span> 用户名必须是唯一的，请勿使用特殊字符。可用于系统登录。
+                </span>
+              </div>
+            </div>
+            <!--{/if}-->
+            <!--{if !$vid}-->
+            <!--{if $userinfo['phone']}-->
+            <div class="row mb-3">
+              <label class="col-sm-2">手机号码</label>
+              <div class="col-sm-10"><strong><code><!--{eval $phone=$userinfo['phone'];if(strlen($phone) === 11)$phone = substr($phone, 0, 3) . '******' . substr($phone, 9);echo $phone}--></code></strong>
+              </div>
+            </div>
+            <!--{/if}-->
+            <!--{/if}-->
+            <!--{loop $settings $key $value}--> 
+            <!--{if $value[available]}-->
+            <div class="row mb-3" id="th_$key">
+              <label class="col-sm-2" for="$key">$value[title]<!--{if $value[required]}--><span class="rq" title="{lang required}">*</span><!--{/if}--></label>
+              <div class="col-md-4">
+                $htmls[$key]
+              </div>
+              <div class="col-md-2">
+                <!--{if $vid || $key=='department'}-->
+                <input type="hidden" name="privacy[$key]" value="$privacy[$key]" />
+                <!--{else}-->
+                <select name="privacy[$key]" class="form-select">
+                    <!--{loop $_config['profile']['privacy'] $k $v}-->
+                    <option value="$k" {if $privacy[$key] == $k} selected="selected"{/if}>$v</option>
+                    <!--{/loop}-->
+                </select>
+                <!--{/if}-->
+              </div>
+            </div>
+            <!--{/if}-->
+            <!--{/loop}--> 
+            <!--{if in_array('timeoffset', $allowitems)}-->
+            <div class="row mb-3">
+                <label class="col-sm-2" for="timeoffset">{lang time_zone}</label>
+                <div class="col-md-4">
+                    <!--{eval $timeoffset = array({lang timezone});}-->
+                    <select name="timeoffset" class="form-select" id="timeoffset">
+                        <!--{loop $timeoffset $key $desc}-->
+                        <option value="$key" {if $key==$userinfo[timeoffset]} selected="selected" {/if}>$desc</option>
+                        <!--{/loop}-->
+                    </select>
+                    <p class="mt10">{lang current_time} :
+                        <!--{date($_G['timestamp'])}-->
+                    </p>
+                    <span class="gray form-text">{lang time_zone_state}</span>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2" for="language">{lang language}</label>
+                <div class="col-md-4">
+                    <select name="language" class="form-select" id="language">
+                        <option value="" <!--{if $userinfo[language] == ''}-->selected="selected"<!--{/if}-->>{lang language_auto}</option>
+                        <!--{loop $langList $key $value}-->
+                        <option value="$key" <!--{if $userinfo[language] == $key}-->selected="selected"<!--{/if}--> /> $value</option>
+                        <!--{/loop}-->
+                    </select>
+                </div>
+            </div>
+            <!--{/if}-->
+            <!--{if !$vid || $showbtn}-->
+            <dl class="mb-3 d-grid">
+                <input type="submit" class="btn btn-primary btn-round bodyloading btn-save" <!--{if $vid}-->value="{lang submit_audit}"<!--{else}-->value="{lang save}"<!--{/if}-->>
+            </dl>
+            <!--{/if}-->
+          </form>
+        </div>
     </div>
   </div>
-</div>
 </main>
+<div class="modal fade" id="image-modal">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title text-truncate" id="image-modal-label">上传图片</h6>
+            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="image-body">
+            <div class="image-upload mb-3">
+                <button class="btn btn-primary" type="button" onclick="$('input[id=imageInput]').click();">请选择图片</button>
+                <span class="image-name"></span>
+                <input type="file" class="image-input d-none" id="imageInput" name="file" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff">
+                <p class="mt-1 mb-0">选择一张您喜欢的图片，裁剪后会自动生成200x200大小，上传图片大小不能超过2M。</p>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 mb-3">
+                <div class="image-wrapper"></div>
+                </div>
+                <div class="col-lg-4">
+                <div class="image-previews clearfix">
+                    <div class="image-preview preview-lg"></div>
+                    <div class="image-preview preview-md"></div>
+                    <div class="image-preview preview-sm"></div>
+                </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 image-btns">
+                <button class="btn btn-primary mdi mdi-rotate-left" data-method="rotate" data-option="-90" type="button" title="向左旋转-90度"></button>
+                <button class="btn btn-primary mdi mdi-rotate-right" data-method="rotate" data-option="90" type="button" title="向右旋转90度"></button>
+                <button type="button" class="btn btn-primary mdi mdi-magnify-plus-outline" data-method="zoom" data-option="0.1" title="放大图片"></button>
+                <button type="button" class="btn btn-primary mdi mdi-magnify-minus-outline" data-method="zoom" data-option="-0.1" title="缩小图片"></button>
+                <button type="button" class="btn btn-primary mdi mdi-cached" data-method="reset" title="重置图片"></button>
+                </div>
+                <div class="col-lg-5 image-btns toggles-btns">
+                </div>
+                <div class="col-lg-3">
+                <button class="btn btn-primary btn-block upload-btn mdi mdi-content-save" type="submit">保存修改</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
+(function() {
+    var serverTimestamp = '<!--{eval echo time()}-->'; 
+    var regTimestamp = '{$userinfo['regdate']}'; 
+
+    function pad(num) {
+        return num < 10 ? '0' + num : num.toString();
+    }
+
+    // 格式化时间戳为可读日期/时间
+    function formatTime(timestamp) {
+        var date = new Date(timestamp * 1000);
+        
+        // Time string HH:mm:ss
+        var h = pad(date.getHours());
+        var m = pad(date.getMinutes());
+        var s = pad(date.getSeconds());
+        var timeStr = h + ':' + m + ':' + s;
+
+        // Date string YYYY年MM月DD日 星期X
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var dayOfMonth = date.getDate();
+        var weekday = date.getDay();
+        var weekdayNames = ["日", "一", "二", "三", "四", "五", "六"];
+        
+        var dateStr = year + '年' + month + '月' + dayOfMonth + '日 星期' + weekdayNames[weekday];
+
+        return { time: timeStr, date: dateStr, hour: date.getHours() };
+    }
+
+    // 启动时钟和问候语逻辑
+    function startClock() {
+        function update() {
+            serverTimestamp++;
+            var formatted = formatTime(serverTimestamp);
+            document.getElementById('clock-time').textContent = formatted.time;
+            document.getElementById('clock-date').textContent = formatted.date;
+            updateGreeting(formatted.hour);
+        }
+
+        setInterval(update, 1000);
+        update();
+    }
+
+    // 根据小时数更新问候语
+    function updateGreeting(hour) {
+        var greet = "你好";
+        var username = "$_G['username']";
+
+        if (hour >= 5 && hour < 11) {
+            greet = "早上好";
+        } else if (hour >= 11 && hour < 13) {
+            greet = "中午好";
+        } else if (hour >= 13 && hour < 18) {
+            greet = "下午好";
+        } else if (hour >= 18 && hour < 22) {
+            greet = "晚上好";
+        } else {
+            greet = "夜深了";
+        }
+        document.getElementById('greeting-msg').textContent = greet + ", " + username;
+    }
+
+    // 初始化
+    startClock();
+})();
   var formhash = '{FORMHASH}';
   var lastusername = '{$_G[username]}';
 jQuery(document).on('blur','.has-error .form-control',function(){

@@ -34,7 +34,17 @@ if ($filter == 'new') {//列出所有新通知
     $num = DB::result_first("select COUNT(*) from %t where new>0 and uid=%d", array('notification', $_G['uid']));
     $notificationrefresh = $_G['setting']['notification'] ? $_G['setting']['notification'] : 60;
     exit(json_encode(array('sum' => $num, 'timeout' => $notificationrefresh * 1000)));
-} else {
+} elseif ($filter == 'delete') {
+    $id = isset($_GET['id']) ? intval($_GET['id']) : '';
+    if (!$id) {
+        exit(json_encode(array('error' => '参数错误')));
+    }
+    if (DB::delete('notification', array('id' => $id, 'uid' => $_G['uid']))) {
+        exit(json_encode(array('success' => true)));
+    } else {
+        exit(json_encode(array('error' => '删除失败')));
+    }
+}else {
     Hook::listen('check_login');
     $list = array();
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
@@ -96,13 +106,16 @@ if ($filter == 'new') {//列出所有新通知
     $theurl = BASESCRIPT . "?" . url_implode($gets);
     $list = array();
     if ($count = DB::result_first("select COUNT(*) from %t n where n.uid=%d $searchsql", $countparam)) {
-        foreach (DB::fetch_all("select n.*,a.appico from %t n LEFT JOIN %t u ON n.authorid=u.uid left join %t a on n.from_id = a.appid where n.uid=%d $searchsql order by n.dateline DESC limit $start,$perpage", $params) as $value) {
+        foreach (DB::fetch_all("select n.*,a.appico,a.appname from %t n LEFT JOIN %t u ON n.authorid=u.uid left join %t a on n.from_id = a.appid where n.uid=%d $searchsql order by n.dateline DESC limit $start,$perpage", $params) as $value) {
             $value['dateline'] = dgmdate($value['dateline'], 'u');
             $value['note'] = dzzcode($value['note'], 1, 1, 1, 1, 1);
             if (!$value['appico']) {
                 $value['appico'] = $sitelogo;
             } else {
                 $value['appico'] = $_G['setting']['attachurl'] . $value['appico'];
+            }
+            if (!$value['appname']) {
+                $value['appname'] = lang('system');
             }
             $list[] = $value;
         }

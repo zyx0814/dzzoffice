@@ -60,7 +60,7 @@ class table_resources_clipboard extends dzz_table {
 
         $rids = substr($rids, 0, -1);
         $setarr = array(
-            'uid' => getglobal('uid'),
+            'uid' => $uid,
             'username' => getglobal('username'),
             'dateline' => time(),
             'type' => $type,

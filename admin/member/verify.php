@@ -124,7 +124,7 @@ if (!submitcheck('verifysubmit', true)) {
                     }
                     if ($_G['cache']['profilesetting'][$key]['formtype'] == 'file') {
                         if ($field) {
-                            $field = '<a href="' . (getglobal('setting/attachurl') . $field) . '" target="_blank"><img src="' . (getglobal('setting/attachurl') . $field) . '" class="verifyimg" /></a>';
+                            $field = '<a href="' . ($_G['setting']['attachurl'] . $field) . '" target="_blank"><img src="' . ($_G['setting']['attachurl'] . $field) . '" class="verifyimg" /></a>';
                         } else {
                             $field = lang('members_verify_pic_removed');
                         }
@@ -163,7 +163,7 @@ if (!submitcheck('verifysubmit', true)) {
                         }
                         if ($_G['cache']['profilesetting'][$key]['formtype'] == 'file') {
                             if ($value[$field]) {
-                                $value[$field] = '<a href="' . (getglobal('setting/attachurl') . $value[$field]) . '" target="_blank"><img src="' . (getglobal('setting/attachurl') . $value[$field]) . '" class="verifyimg" /></a>';
+                                $value[$field] = '<a href="' . ($_G['setting']['attachurl'] . $value[$field]) . '" target="_blank"><img src="' . ($_G['setting']['attachurl'] . $value[$field]) . '" class="verifyimg" /></a>';
                             } else {
                                 $value[$field] = lang('members_verify_pic_removed');
                             }
@@ -286,7 +286,7 @@ if (!submitcheck('verifysubmit', true)) {
                             $common = ',';
                             if ($_G['cache']['profilesetting'][$field]['formtype'] == 'file') {
                                 $deleteverifyimg = true;
-                                @unlink(getglobal('setting/attachdir') . $fields[$key]);
+                                @unlink($_G['setting']['attachdir'] . $fields[$key]);
                                 $fields[$field] = '';
                             }
                         }

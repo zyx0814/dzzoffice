@@ -10,7 +10,6 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
     exit('Access Denied');
 }
 $operation = $_GET['operation'] ? $_GET['operation'] : 'updatecache';
-$url = getglobal('siteurl') . BASESCRIPT . '?mod=system&op=' . $operation;
-$url = outputurl($url);
+$url = BASESCRIPT . '?mod=system&op=' . $operation;
 @header("location: $url");
 ?>

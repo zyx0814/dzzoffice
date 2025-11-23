@@ -47,7 +47,7 @@ cropImage.prototype = {
     },
     click: function(e) {
         // 点击上传按钮
-        this.$imageText = $(e.target).prev('.image-src');
+        this.$imageText = jQuery('.image-src');
         this.$imageModal.modal('show');
         this.initPreview();
     },

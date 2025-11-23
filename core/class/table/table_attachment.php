@@ -23,6 +23,7 @@ class table_attachment extends dzz_table {
 
     public function setUnrun_by_aid($aid, $r) {//设置允许运行，如果文件在本地同时修改实际文件名，增加无法运行的后缀；
         $data = parent::fetch($aid);
+        $attachdir = getglobal('setting/attachdir');
         if ($data['remote'] == 0 || $data['remote'] == 1) {//文件在本地，修改文件名
             if ($r > 0) {
                 $earr = explode('.', $data['attachment']);
@@ -30,17 +31,16 @@ class table_attachment extends dzz_table {
                     if (in_array(strtolower($ext), array($data['filetype'], 'dzz'))) unset($earr[$key]);
                 }
                 $tattachment = implode('.', $earr) . '.dzz';
-                if (is_file(getglobal('setting/attachdir') . './' . $data['attachment']) && @rename(getglobal('setting/attachdir') . './' . $data['attachment'], getglobal('setting/attachdir') . './' . $tattachment)) {
+                if (is_file($attachdir . './' . $data['attachment']) && @rename($attachdir . './' . $data['attachment'], $attachdir . './' . $tattachment)) {
                     return parent::update($aid, array('unrun' => $r, 'attachment' => $tattachment));
                 }
-
             } else {
                 $earr = explode('.', $data['attachment']);
                 foreach ($earr as $key => $ext) {
                     if (in_array(strtolower($ext), array($data['filetype'], 'dzz'))) unset($earr[$key]);
                 }
                 $tattachment = implode('.', $earr) . '.' . $data['filetype'];
-                if (is_file(getglobal('setting/attachdir') . './' . $data['attachment']) && @rename(getglobal('setting/attachdir') . './' . $data['attachment'], getglobal('setting/attachdir') . './' . $tattachment)) {
+                if (is_file($attachdir . './' . $data['attachment']) && @rename($attachdir . './' . $data['attachment'], $attachdir . './' . $tattachment)) {
                     return parent::update($aid, array('unrun' => $r, 'attachment' => $tattachment));
                 }
             }

@@ -1,37 +1,54 @@
 <!--{template lyear:header_simple_start}-->
 <style>
-	.lyear-message-list > li {
-		border-bottom: 1px solid rgba(77, 82, 89, 0.05);
-		margin-bottom: 10px;
-	}
-	.lyear-message-item {
-		width: calc(100% - 50px);
-	}
+.n-item{display:flex;padding:20px 24px;border-bottom:1px solid #f5f5f5;align-items:flex-start;transition:background 0.2s;background:#fff}
+.n-visual{position:relative;width:46px;height:46px;margin-right:16px;flex-shrink:0}
+.img-avatar{width:46px;height:46px;object-fit:cover;display:block;line-height:46px}
+.app-badge-icon{position:absolute;bottom:-5px;right:-5px;width:24px;height:24px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,0.1);font-size:10px;border:2px solid #fff;z-index:2}
+.n-content{flex:1;min-width:0;padding-right:20px}
+.n-meta{display:flex;align-items:center;flex-wrap:wrap;margin-bottom:6px;font-size:13px;line-height:1.5}
+.n-title{font-weight:700;margin-right:6px}
+.n-body{font-size:14px;line-height:1.5;word-break:break-all}
+.n-actions{display:flex;align-items:center;gap:10px;padding-top:5px}
+.btn-jump{width:34px;height:34px;border-radius:50%;background:#f0f7ff;color:#1890ff;color:var(--bs-primary);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.2s}
+.btn-jump:hover{background:#1890ff;background:var(--bs-primary);color:#fff;box-shadow:0 3px 8px rgba(24,144,255,0.25)}
+.btn-del{width:34px;height:34px;border-radius:50%;border:none;background:transparent;color:#999;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all 0.2s}
+.btn-del:hover{background:#fff1f0;color:#ff4d4f}
+@media (max-width:768px){.n-item{flex-wrap:wrap;padding:16px}
+.n-visual{margin-right:12px}
+.n-content{width:calc(100% - 60px);padding-right:0;margin-bottom:8px}
+.n-actions{width:100%;padding-left:60px;box-sizing:border-box;justify-content:flex-start;gap:15px;padding-top:0}
+}
 </style>
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container main-allnotice">
 	<div class="container-fluid">
 	  <div class="card">
 		<div class="card-header">
-			<div class="card-title lead">
-				<!--{if $img}--><img src="$img" class="img-avatar-36"><!--{else}--><span class="mdi mdi-bell-circle"></span><!--{/if}--><strong class="p-2">{$tongzhileixing}($count)</strong>
+			<div class="card-title">
+				<!--{if $img}--><img src="$img" class="img-avatar-24"><!--{else}--><span class="mdi mdi-bell-circle"></span><!--{/if}--><strong class="p-2">{$tongzhileixing}($count)</strong>
 			</div>
 		</div>
 		<!--{if $list}-->
 		<ul class="list-group list-group-flush mb-3">
 			<!--{loop $list $value}-->
-			<li class="d-flex flex-wrap list-group-item">
-				<div class="d-flex lyear-message-item">
-				<a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a>
-				<div class="flex-grow-1 ms-2 pe-2">
-					<!--{if $value[title]}--><strong>$value[title]</strong><!--{/if}-->
-					<!--{if $value[note]}--><div class="me-auto text-break">$value[note]</div><!--{/if}-->
-					<!--{if $value[redirecturl]}--><div class="text-muted text-break">{lang from}：<a href="$value[redirecturl]" target="_blank" class="dcolor">$value[redirecturl]</a></div><!--{/if}-->
-					<small class="text-muted">$value['dateline']</small>
-				</div>
-				</div>
-				<!--{if !$img}--><img src="$value[appico]" class="img-avatar-36"><!--{/if}-->
-			</li>
+			<li class="n-item list-group-item n-id-$value[id]">
+                <div class="n-visual">
+					<a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a>
+					<!--{if !$img}--><img src="$value[appico]" class="app-badge-icon"><!--{/if}-->
+                </div>
+                <div class="n-content">
+                    <div class="n-meta">
+                        <span class="n-title">$value[title]</span>
+                        <!--{if !$img}--><span class="badge badge-outline-primary me-2">$value['appname']</span><!--{/if}-->
+                        <span class="text-muted">$value['dateline']</span>
+                    </div>
+                    <div class="n-body text-break">$value[note]</div>
+                </div>
+                <div class="n-actions">
+					<!--{if $value[redirecturl]}--><a href="$value[redirecturl]" target="_blank" class="btn-jump" title="{lang jump_page}"><i class="mdi mdi-open-in-new"></i></a><!--{/if}-->
+                    <button class="btn-del" title="{lang delete}" onclick="notdelete('$value[id]')"><i class="mdi mdi-delete"></i></button>
+                </div>
+            </li>
 			<!--{/loop}-->
 		</ul>
 		<!--{if $multi}-->
@@ -48,4 +65,19 @@
 	</div>
 </div>
 </main>
+<script type="text/javascript">
+function notdelete(id){
+	showDialog('您确定要删除该通知吗？', 'confirm','', function(){
+		$.post('{MOD_URL}&op=notification&filter=delete',{id:id},function(json){
+		if(json['success']){
+			$('.n-id-'+id).remove();
+		}else if(json['error']){
+			showmessage(json['error'],"danger",3000,1);
+		}else{
+			showmessage('{lang system_error}','danger',3000,1);
+		}
+	},'json');
+	});
+}
+</script>
 <!--{template lyear:footer_simple}--> 

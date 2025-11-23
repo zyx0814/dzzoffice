@@ -1,36 +1,23 @@
-<!--{eval $bodyClass ='center-vh overflow-y-auto';}-->
 <!--{template lyear:header_simple}-->
 <style>
-	.recharge-amount {
-		display: flex;
-		flex-wrap: wrap;
-	}
-.recharge-amount li {
-    width: 140px;
-    cursor: pointer;
-    margin: 0px 0px 5px;
-    padding: 3px;
-    color: #4d5259;
-    text-align: center;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border: 3px solid transparent;
-    -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, .175);
-    box-shadow: 0 0 2px rgba(0, 0, 0, .175);
-}
-.recharge-amount li.active {
-	border-color: #007bff;
-    border-color: var(--bs-primary);
-}
-.recharge-amount li:hover {
-	border-color: #0096FF;
-}
-.recharge-amount li input {
-    display: none;
-}
-.recharge-amount li .col {
-	overflow: hidden;
-}
+	body{height:100vh;display:-ms-flexbox;display:flex;-ms-flex-align:center;align-items:center;-ms-flex-pack:center;justify-content:center;padding:15px;overflow:auto}
+	.login-card{background:#FFFFFF;width:100%;max-width:540px;padding:40px 30px 20px 30px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,0.1);text-align:center;-ms-flex-direction:column;flex-direction:column;-ms-flex-align:center;align-items:center}
+	.logo-wrapper{width:100%;text-align:center;margin-bottom:15px}
+	.logo{max-width:100%;height:auto;width:auto;max-height:70px;border:0;display:inline-block}
+	.title{font-size:26px;font-weight:700;color:#333333;margin-bottom:8px;width:100%}
+	.subtitle-badge{font-size:12px;color:#007BFF;background:#E6F2FF;padding:4px 12px;border-radius:20px;font-weight:600;margin-bottom:20px;display:inline-block}
+	.instruction{font-size:14px;color:#888888;margin-bottom:16px;text-align:center;width:100%}
+	.user-container{width:100%;margin:0;text-align:left;padding:0}
+	.user-card{width:calc(50% - 10px);margin:5px;padding:12px;border:1px solid #E5E7EB;border-radius:6px;cursor:pointer;background:#fff;position:relative;transition:all 0.2s ease}
+	@media (max-width:480px){.user-card{width:100%;margin:5px 0}
+	}.user-card:hover{border-color:#99C2FF;background:#F9FAFB}
+	.user-card.active{border-color:#007BFF;background-color:#F0F7FF}
+	.img-avatar{width:40px;height:40px;margin-right:12px}
+	.user-info{-ms-flex-direction:column;flex-direction:column;-ms-flex:1;flex:1;min-width:0}
+	.user-name{font-size:14px;font-weight:600;color:#333}
+	.user-role{font-size:12px;color:#888;margin-top:2px}
+	.login-footer{width:100%;border-top:1px solid #F3F4F6;padding-top:15px;margin-top:auto}
+	.login-footer span,.login-footer a{font-size:12px;color:#9CA3AF;margin:3px 0;line-height:1.5}
 </style>
 <script type="text/javascript">
 	function loginsub(formid,rspaceid){
@@ -66,7 +53,7 @@
 </script>
 <!--{eval $loginhash = 'L'.random(4);}-->
 <!--背景层-->
-<div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:0;  font-size: 0px; background:{eval echo $_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#76838f';};"> 
+<div id="wrapper_div" style="width:100%;height:100%;position: absolute;top:0px;left:0px;margin:0px;padding:0px;overflow:hidden;z-index:-1;font-size:0px;background:{eval echo $_G['setting']['loginset']['bcolor']?$_G['setting']['loginset']['bcolor']:'#76838f';};"> 
 	<!--{if !$_G['setting']['loginset']['bcolor']}-->
 	<img src="{eval echo $_G['setting']['loginset']['img']?$_G['setting']['loginset']['img']:MOD_PATH.'/images/login.jpg';}" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index:1;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%">
 	<!--{/if}-->
@@ -74,59 +61,53 @@
     <iframe id="wrapper_frame" name="wrapper_frame" src="$_G['setting']['loginset']['url']" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" style="z-index:2;position:absolute;width:100%;height:100%;background:url(dzz/images/b.gif);"></iframe>
     <!--{/if}-->
 </div>
-<div class="card card-shadowed p-2 mb-0 mr-2 ml-2" style="max-width: 648px;">
-	<div class="card-body text-center" style="padding: 1rem;">
-		<div class="text-center mb-3">
-			<img src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->">
+<div class="login-card d-flex">
+	<div class="logo-wrapper">
+		<img src="<!--{if $_G['setting']['bbclosed']}-->static/image/common/logo.png<!--{else}-->{eval echo $_G['setting']['sitelogo']?'index.php?mod=io&op=thumbnail&size=small&path='.dzzencode('attach::'.$_G['setting']['sitelogo']):'static/image/common/logo.png';}<!--{/if}-->" alt="DzzOffice" class="logo">
+	</div>
+	<!--{if $_G[setting][loginset][title]}-->
+	<h1 class="title">$_G[setting][loginset][title]</h1>
+	<!--{/if}--> 
+	<!--{if $_G[setting][loginset][subtitle]}-->
+	<div class="subtitle-badge">$_G[setting][loginset][subtitle]</div>
+	<!--{/if}-->
+	<!--{if $_G[setting][bbclosed]}-->
+	<p class="text-danger">{lang site_closed_please_admin}</p>
+	<!--{/if}-->
+	<p class="instruction">请选择或登录您的 DzzOffice 账户</p>
+	<form method="post" name="login" id="loginform_$loginhash" class="signin-form loginForm w-100" role="form" onsubmit="loginsub('loginform_$loginhash', 'returnmessage_$loginhash');return false;" action="user.php?mod=login&op=login">
+		<input type="hidden" name="formhash" value="{FORMHASH}" />
+		<input type="hidden" name="referer" value="{$referer}" />
+		<input type="hidden" id="login_uid" name="uid" value="" />
+		<ul class="user-container d-flex flex-wrap" id="userContainer">
+			<!--{loop $data $v}-->
+			<li class="user-card d-flex align-items-center" data-uid="$v['uid']" title="$v[username]">
+				{eval echo avatar_block($v['uid']);}
+				<div class="user-info d-flex">
+					<span class="user-name text-truncate">$v[username]</span>
+					<span class="user-role text-truncate" title="$v[jobname]">$v[jobname]</span>
+				</div>
+			</li>
+			<!--{/loop}-->
+		</ul>
+		<div class="p-2 d-grid">
+			<button class="btn btn-primary lyearloading disabled" type="submit" name="loginsubmit" id="loginsubmit" value="true">{lang login_empty}</button>
 		</div>
-		<!--{if $_G[setting][loginset][title]}-->
-		<h2 class="main-title">$_G[setting][loginset][title]</h2>
-		<!--{/if}--> 
-		<!--{if $_G[setting][loginset][subtitle]}-->
-		<div class="sub-title">$_G[setting][loginset][subtitle]</div>
+		<!--{if $_G[setting][loginset][other]}-->
+		<a href="user.php?mod=login&template=1" class="btn-link">{lang other_login}</a>
 		<!--{/if}-->
-		<!--{if $_G[setting][bbclosed]}-->
-		<p class="text-danger">{lang site_closed_please_admin}</p>
-		<!--{/if}-->
-		<div class="text-muted mb-1">请选择下列用户登录</div>
-		<form method="post" name="login" id="loginform_$loginhash" class="signin-form loginForm" role="form" onsubmit="loginsub('loginform_$loginhash', 'returnmessage_$loginhash');return false;" action="user.php?mod=login&op=login">
-			<input type="hidden" name="formhash" value="{FORMHASH}" />
-			<input type="hidden" name="referer" value="{$referer}" />
-			<input type="hidden" id="login_uid" name="uid" value="" />
-			<ul class="list-inline recharge-amount">
-				<!--{loop $data $v}-->
-				<li class="list-inline-item" data-uid="$v['uid']" title="$v[username]">
-					<div class="d-flex align-items-center">
-						<div class="col-auto pe-1">
-						{eval echo avatar_block($v['uid']);}
-						</div>
-						<div class="col text-start">
-							<div class="text-truncate fs-6">$v[username]</div>
-							<div class="text-secondary text-truncate fs-7" title="$v[jobname]">$v[jobname]</div>
-						</div>
-					</div>
-				</li>
-				<!--{/loop}-->
-			</ul>
-			<!--{if $_G[setting][loginset][other]}-->
-			<div class="mb-3 float-end">
-				<a class="pull-right" href="user.php?mod=login&template=1">{lang other_login}</a>
-			</div>
-			<!--{/if}-->
-			<div class="mb-3 d-grid">
-				<button class="btn btn-primary lyearloading disabled" type="submit" name="loginsubmit" id="loginsubmit" value="true">{lang login_empty}</button>
-			</div>
-			<p class="error-msg text-danger text-center" id="returnmessage_$loginhash"></p>
-		</form>
-  		<p class="text-center text-muted mb-0"><!--{template lyear:copyright}--></p>
+		<p class="error-msg text-danger text-center" id="returnmessage_$loginhash"></p>
+	</form>
+	<div class="login-footer">
+		<!--{template lyear:copyright}-->
 	</div>
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-    $(document).on('click', '.recharge-amount li', function() {
+    $(document).on('click', '.user-container li', function() {
         $(this).addClass('active').siblings().removeClass('active');
+		$('#loginsubmit').html('作为 '+$(this).attr('title')+' 登录').removeClass('disabled');
 		$('#login_uid').val($(this).data('uid'));
-		$('#loginsubmit').removeClass('disabled');
         $(this).siblings().find('input').prop('checked', 0);
         $(this).find('input').prop('checked', 1);
     });

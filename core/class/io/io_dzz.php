@@ -693,7 +693,7 @@ class io_dzz extends io_api {
             $attachurl = IO::getStream($path);
             //添加事件
             if ($attachurl) {
-                $eventdata = array('username' => getglobal('username'), 'dateline' => TIMESTAMP);
+                $eventdata = array('username' => $_G['username'], 'dateline' => TIMESTAMP);
                 $infos = C::t('resources')->fetch_info_by_rid($path);
                 $path = C::t('resources_path')->fetch_pathby_pfid($infos['pfid']);
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($infos['pfid'], $infos['gid']);
@@ -738,7 +738,7 @@ class io_dzz extends io_api {
             $attachurl = IO::getStream($path);
             //添加事件
             if ($attachurl) {
-                $eventdata = array('username' => getglobal('username'), 'dateline' => TIMESTAMP);
+                $eventdata = array('username' => $_G['username'], 'dateline' => TIMESTAMP);
                 $infos = C::t('resources')->fetch_info_by_rid($path);
                 $path = C::t('resources_path')->fetch_pathby_pfid($infos['pfid']);
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($infos['pfid'], $infos['gid']);
@@ -2037,17 +2037,15 @@ class io_dzz extends io_api {
                     //添加事件
                     $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
                     $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
-                    $username = getglobal('username');
                     $eventdata = array(
-                        'username' => $username,
+                        'username' => $_G['username'],
                         'filename' => $icoarr['name'],
                         'position' => $path,
                         'hash' => $hash
                     );
                     C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], 'recover_file', 'recoverfile', $eventdata, $icoarr['gid'], $rid, $icoarr['name']);
-                    $uid = getglobal('uid');
                     $statisdata = array(
-                        'uid' => $uid,
+                        'uid' => $_G['uid'],
                         'edits' => 1,
                         'editdateline' => TIMESTAMP
                     );
@@ -2379,8 +2377,8 @@ class io_dzz extends io_api {
                 $setarr = array(
                     'name' => $icoarr['name'],
                     'oid' => $icoarr['oid'],
-                    'uid' => getglobal('uid'),
-                    'username' => getglobal('username'),
+                    'uid' => $_G['uid'],
+                    'username' => $_G['username'],
                     'pfid' => $pfid,
                     'gid' => $tfolder['gid'],
                     'type' => $icoarr['type'],

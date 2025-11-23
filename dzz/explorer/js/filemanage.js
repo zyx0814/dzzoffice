@@ -264,13 +264,13 @@ _filemanage.setInfoPanel = function () {
 		var fid = _filemanage.fid || $('#fidinput').val();
 		if (!fid) {
 			if(_explorer.hash.indexOf('recent') != -1) {
-				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-clock-time-four text-info right-topicon"></i><span class="text-truncate fs-6 ps-1">'+__lang.recently_used+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">最近修改、打开的文件,只显示前25条记录。</div></div></div>';
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-clock-time-four text-info right-topicon"></i><span class="text-truncate fs-6 ps-1">'+__lang.recently_used+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3 text-muted">说明</label><div class="col-sm-9 text-break">最近修改、打开的文件,只显示前25条记录。</div></div></div>';
 			} else if (_explorer.hash.indexOf('collection') != -1) {
-				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-star right-topicon text-yellow"></i><span class="text-truncate fs-6 ps-1">'+__lang.collect+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">文件添加收藏后可以实现快速访问。</div></div></div>';
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-star right-topicon text-yellow"></i><span class="text-truncate fs-6 ps-1">'+__lang.collect+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3 text-muted">说明</label><div class="col-sm-9 text-break">文件添加收藏后可以实现快速访问。</div></div></div>';
 			} else if (_explorer.hash.indexOf('catsearch') != -1) {
-				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-file-document-outline right-topicon text-primary"></i><span class="text-truncate fs-6 ps-1">'+__lang.type+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">按类型对文件进行分类。</div></div></div>';
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-file-document-outline right-topicon text-primary"></i><span class="text-truncate fs-6 ps-1">'+__lang.type+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3 text-muted">说明</label><div class="col-sm-9 text-break">按类型对文件进行分类。</div></div></div>';
 			} else if (_explorer.hash.indexOf('recycle') != -1) {
-				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-delete right-topicon text-danger"></i><span class="text-truncate fs-6 ps-1">'+__lang.explorer_recycle_name+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3">说明</label><div class="col-sm-9 text-break">在这里管理您删除的文件（夹）。</div></div></div>';
+				var data = '<div class="briefMenu modal-header dtheme border-bottom clearfix"><div class="modal-title"><i class="mdi mdi-delete right-topicon text-danger"></i><span class="text-truncate fs-6 ps-1">'+__lang.explorer_recycle_name+'</span><button type="button" class="toggRight btn-close"></button></div></div></div><div class="p-2 border-bottom"><div class="row"><label class="col-sm-3 text-muted">说明</label><div class="col-sm-9 text-break">在这里管理您删除的文件（夹）。</div></div></div>';
 			} else {
 				var data = '<div class="briefMenu modal-header clearfix"><div class="modal-title"><button type="button" class="toggRight btn-close"></button></div></div>';
 			}
@@ -296,7 +296,7 @@ _filemanage.setInfoPanel = function () {
 						var filemanage = _filemanage.cons[_filemanage.winid];
 						if (filemanage) {
 							var infoText = '<div class="row mb-1">' +
-									'<label class="col-sm-3">分页信息</label>' +
+									'<label class="col-sm-3 text-muted">分页信息</label>' +
 									'<div class="col-sm-9 text-break">' +
 										'共' + filemanage.totalpage + '页(' + filemanage.total + '条记录),' + filemanage.perpage + '条/页' +
 									'</div>' +

@@ -109,7 +109,7 @@ class dzz_io {
         @header('cache-control:public');
         header('Content-Type: ' . $mine);
         @ob_end_clean();
-        if (getglobal('gzipcompress')) @ob_start('ob_gzhandler');
+        if ($_G['gzipcompress']) @ob_start('ob_gzhandler');
         @readfile($file);
         @flush();
         @ob_flush();
@@ -495,6 +495,7 @@ class dzz_io {
     }
 
     public static function saveToAttachment($file_path, $filename, $tospace = 1, $width = 256, $height = 256) {
+        global $_G;
         $md5 = md5_file($file_path);
         $filesize = filesize($file_path);
         if ($md5 && $attach = DB::fetch_first("select * from %t where md5=%s and filesize=%d", array('attachment', $md5, $filesize))) {
@@ -517,12 +518,12 @@ class dzz_io {
             $ext = strtolower($pathinfo['extension']);
             $target = self::getPath($ext ? ('.' . $ext) : '', 'dzz');
             $ext = $pathinfo['extension'] ? $pathinfo['extension'] : '';
-            if ($ext && in_array(strtolower($ext), getglobal('setting/unRunExts'))) {
+            if ($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])) {
                 $unrun = 1;
             } else {
                 $unrun = 0;
             }
-            $filepath = getglobal('setting/attachdir') . $target;
+            $filepath = $_G['setting']['attachdir'] . $target;
             $handle = fopen($file_path, 'r');
             $handle1 = fopen($filepath, 'w');
             while (!feof($handle)) {
@@ -545,12 +546,12 @@ class dzz_io {
                 'copys' => 0,
                 'md5' => $md5,
                 'unrun' => $unrun,
-                'dateline' => getglobal('timestamp'),
+                'dateline' => $_G['timestamp'],
             );
 
             if ($attach['aid'] = C::t('attachment')->insert($attach, 1)) {
                 C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
-                if ($tospace) dfsockopen(getglobal('siteurl') . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1);
+                if ($tospace) dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1);
                 if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
                     $attach['img'] = C::t('attachment')->getThumbByAid($attach['aid'], 255, 255);
                     $attach['isimage'] = 1;

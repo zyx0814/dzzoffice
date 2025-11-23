@@ -1,4 +1,5 @@
 .m-right-300{margin-right:300px}
+.sidebar-main .dropdown-item-text{font-size: 12px}
 .bs-main-container .card{transition:none;margin-bottom:0;border-radius:0}
 .gallery-grid .gallery-item{padding-bottom:5px}
 .list-group-item{background-color:transparent}
@@ -135,9 +136,9 @@ button:focus{outline:none}
 .address-wrapper .bordeInput{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:0;z-index:11}
 .groupbutton{border:none;float:right;font-size:17px;color:rgba(78,85,99,0.65)}
 .mechsnismMenu ul li{cursor:pointer;position:relative}
-.jstree-node .groupbutton{float:none;margin:0px;position:absolute;right:17px;top:7px}
+.jstree-node .groupbutton{float:none;margin:0px;position:absolute;right:17px;top:6px}
 .groupbutton:focus{outline:none}
-.typeaMenu .groupbutton{float:none;margin:0px;position:absolute;right:14px;top:7px}
+.typeaMenu .groupbutton{float:none;margin:0px;position:absolute;right:14px;top:3px}
 .user-select-content-left .left-empty{margin-right:40px}
 .positionMenu .jstree-wholerow-ul{padding-left:17px;width:100%}
 .positionMenu .jstree-default .jstree-icon.mdi-folder{color:#f9b743}

@@ -1113,21 +1113,21 @@ class UploadHandler
 
 	public function getPath($filename,$dir='dzz'){
 		global $_G;
-			$pathinfo = pathinfo($filename);
-			$ext = $pathinfo['extension']?($pathinfo['extension']):'';
-			if($ext && in_array(strtolower($ext) ,getglobal('setting/unRunExts'))){
-				$ext='dzz';
-			}
-		    $subdir = $subdir1 = $subdir2 = '';
-			$subdir1 = date('Ym');
-			$subdir2 = date('d');
-			$subdir = $subdir1.'/'.$subdir2.'/';
-			$target1=$dir.'/'.$subdir.'index.html';
-			$target=$dir.'/'.$subdir;
-			$target_attach=$_G['setting']['attachdir'].$target1;
-			$targetpath = dirname($target_attach);
-			dmkdir($targetpath);
-			return $target.date('His').''.strtolower(random(16)).'.'.$ext;
+        $pathinfo = pathinfo($filename);
+        $ext = $pathinfo['extension']?($pathinfo['extension']):'';
+        if($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])){
+            $ext='dzz';
+        }
+        $subdir = $subdir1 = $subdir2 = '';
+        $subdir1 = date('Ym');
+        $subdir2 = date('d');
+        $subdir = $subdir1.'/'.$subdir2.'/';
+        $target1=$dir.'/'.$subdir.'index.html';
+        $target=$dir.'/'.$subdir;
+        $target_attach=$_G['setting']['attachdir'].$target1;
+        $targetpath = dirname($target_attach);
+        dmkdir($targetpath);
+        return $target.date('His').''.strtolower(random(16)).'.'.$ext;
 	 }
 	public function save($file_path,$filename) {
 	 global $_G;
