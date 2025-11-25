@@ -1,4 +1,4 @@
-﻿<div align="center">
+﻿﻿<div align="center">
   <img src="./static/image/common/logo.png" width="128px" alt="DzzOffice" />
   <h1>DzzOffice</h1>
   <h4>多云存储 • 在线文档管理 • 协同办公 • 100%开源</h4>
@@ -12,6 +12,7 @@
     <a href="https://hellogithub.com/repository/zyx0814/dzzoffice" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=734f17351a6a4a0d9e94749651923a5e&claim_uid=wytcYV5NWvThIjQ&theme=neutral" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
   </p>
   <p>
+<img src="https://img.shields.io/badge/php-%3E%3D7.4-brightgreen" />
     <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/stargazers"><img src="https://gitee.com/zyx0814/dzzoffice/badge/star.svg?theme=dark" alt='gitee star'/></a>
     <a target="_blank" href="https://github.com/zyx0814/dzzoffice/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zyx0814/dzzoffice?style=social"></a>
   </p>
@@ -128,3 +129,7 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
     <strong>让我们一起构建更好的办公协作平台！ 🚀</strong>
   </p>
 </div>
+
+## Star 历史
+
+[![Star History Chart](https://api.star-history.com/svg?repos=zyx0814/dzzoffice&type=Date)](https://www.star-history.com/#zyx0814/dzzoffice&Date)

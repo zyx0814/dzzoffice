@@ -46,6 +46,7 @@ class perm_check {
         // 超级管理员直接拥有全部权限
         if ($_G['adminid'] == 1) return perm_binPerm::getGroupPower('all');
         if (isset($_G['gperm'])) return intval($_G['gperm']);//可以通过这个参数直接使用此权限值不去查询权限
+        if(!$fid) return 0;
 
         $i++;
         if ($i > 20) { //防死循环，如果循环20次以上，直接退出；
@@ -100,6 +101,7 @@ class perm_check {
 
     public static function getPerm1($fid, $bz = '', $i = 0, $newperm = 0) {
         global $_G;
+        if (!$fid) return 0;
 
         $i++;
         if ($i > 20) { //防死循环，如果循环20次以上，直接退出；
@@ -317,6 +319,7 @@ class perm_check {
                     return perm_binPerm::havePower($action, $perm);
                 }
             }
+            if (!$arr['pfid']) return false;
 
             // 个人文件或无自身权限的机构文件：继承容器（上级文件夹）权限
             return self::containerPerm($arr['pfid'], $action);

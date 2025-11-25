@@ -43,7 +43,7 @@ if ($do == 'filelist') {
             $orderby = array('type', 'ext');
             break;
         case 3:
-            $orderby = 'dateline';
+            $orderby = 'r.dateline';
             break;
     }
     $ordersql = '';
