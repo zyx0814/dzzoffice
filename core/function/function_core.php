@@ -680,15 +680,8 @@ function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel i
     // 优先使用传入的$user数组
     if ($user !== null) {
         $user = array_merge(array('uid' => $uid, 'username' => 'guest', 'nickname' => '', 'avatarstatus' => 0),$user);
-    } else {
-        if ($uid) {
-            $user = getuserbyuid($uid)?: [];
-        } else {
-            global $_G;
-            if (!empty($_G['uid'])) {
-                $user = array('uid' => $_G['uid'], 'username' => $_G['username'], 'nickname' => $_G['member']['nickname'] ?? '', 'avatarstatus' => $_G['member']['avatarstatus'] ?? 0);
-            }
-        }
+    } elseif ($uid) {
+        $user = getuserbyuid($uid)?: [];
     }
     if (empty($user)) {
         $user = array('uid' => 0, 'username' => 'guest', 'nickname' => '', 'avatarstatus' => 0);
@@ -718,12 +711,10 @@ function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel i
                 $userheaderColors[$user['uid']] = $headerColor;
             }
         }
+        return '<span class="' . $class . '" style="background:' . $headerColor . '" title="' . $user['username'] . '">' . new_strsubstr(ucfirst($user['username']), 1, '') . '</span>';
     } else {
-        // 游客默认使用第一个颜色
-        $headerColor = $colors[0];
+        return '<img src="static/image/avatar/noavatar_middle.png" ' . 'class="img-circle special_avatar_class img-avatar" ' . 'title="' . $user['username'] . '">';
     }
-
-    return '<span class="' . $class . '" style="background:' . $headerColor . '" title="' . $user['username'] . '">' . new_strsubstr(ucfirst($user['username']), 1, '') . '</span>';
 }
 
 /*获取群组机构头像模板，如果没有会生成背景+首字母的头像

@@ -29,7 +29,7 @@ if (file_exists(dirname(__FILE__) . '/' . $avatar)) {
         exit;
     }
     $size = in_array($size, array('big', 'middle', 'small')) ? $size : 'middle';
-    $avatar_url = 'static/image/avatar/noavatar_' . $size . '.gif';
+    $avatar_url = 'static/image/avatar/noavatar_' . $size . '.png';
 }
 
 if (empty($random)) {
