@@ -12,7 +12,7 @@
     <a href="https://hellogithub.com/repository/zyx0814/dzzoffice" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=734f17351a6a4a0d9e94749651923a5e&claim_uid=wytcYV5NWvThIjQ&theme=neutral" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
   </p>
   <p>
-<img src="https://img.shields.io/badge/php-%3E%3D7.4-brightgreen" />
+<img src="https://img.shields.io/badge/php-%3E%3D7.0-brightgreen" />
     <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/stargazers"><img src="https://gitee.com/zyx0814/dzzoffice/badge/star.svg?theme=dark" alt='gitee star'/></a>
     <a target="_blank" href="https://github.com/zyx0814/dzzoffice/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zyx0814/dzzoffice?style=social"></a>
   </p>

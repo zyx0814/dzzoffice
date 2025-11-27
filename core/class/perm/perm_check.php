@@ -320,8 +320,6 @@ class perm_check {
                 }
             }
             if (!$arr['pfid']) return false;
-
-            // 个人文件或无自身权限的机构文件：继承容器（上级文件夹）权限
             return self::containerPerm($arr['pfid'], $action);
         }
     }

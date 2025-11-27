@@ -100,11 +100,11 @@ class io_disk extends io_api {
         $filepath = diconv($config['attachdir'], CHARSET, $config['charset']);
         if (!$attachdir = realpath($filepath)) return array('error' => 'folder not exist! or no permission');
         if (!file_put_contents($attachdir . DIRECTORY_SEPARATOR . $filename_encode, $str)) {
-            return array('error' => 'folder ' . $config['attachdir'] . ' not writable');
+            return array('error' => 'folder ' . $config['attachdir'] . ' not writable(没有写权限)');
         }
         //exit($attachdir.DIRECTORY_SEPARATOR.$filename_encode);
         if ($str != file_get_contents($attachdir . DIRECTORY_SEPARATOR . $filename_encode)) {
-            return array('error' => 'folder ' . $config['attachdir'] . ' not readable');
+            return array('error' => 'folder ' . $config['attachdir'] . ' not readable(没有读权限)');
         }
         @unlink($attachdir . DIRECTORY_SEPARATOR . $filename_encode);
         return true;
