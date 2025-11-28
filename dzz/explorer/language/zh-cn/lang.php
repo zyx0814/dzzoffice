@@ -85,6 +85,8 @@ $lang = array(
     'cancle_collect_success' => '取消收藏成功',
     'collect_file_not_exists' => '收藏不存在',
     'down' => '下载',
+    'share_downfile' => '通过分享下载了文件<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{files}',
+    'share_downfiles' => '通过分享下载了文件<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{files}等',
     'downfile' => '下载了<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{files}',
     'downfiles' => '下载了<a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{files}等',
     'comment_not_exists' => '评论不存在',

@@ -584,10 +584,20 @@ class io_dzz extends io_api {
             }
             $filenames = substr($filenames, 0, -1);
             $eventdata['files'] = $filenames;
-            C::t('resources_event')->addevent_by_pfid($infos['pfid'], 'downfiles', 'down', $eventdata, $infos['gid'], '', $filenames);
+            if ($this->sharesid) {
+                $event = 'share_downfiles';
+            } else {
+                $event = 'downfiles';
+            }
+            C::t('resources_event')->addevent_by_pfid($infos['pfid'], $event, 'down', $eventdata, $infos['gid'], '', $filenames);
         } else {
             $eventdata['files'] = $infos['name'];
-            C::t('resources_event')->addevent_by_pfid($infos['pfid'], 'downfile', 'down', $eventdata, $infos['gid'], $infos['rid'], $infos['name']);
+            if ($this->sharesid) {
+                $event = 'share_downfile';
+            } else {
+                $event = 'downfile';
+            }
+            C::t('resources_event')->addevent_by_pfid($infos['pfid'], $event, 'down', $eventdata, $infos['gid'], $infos['rid'], $infos['name']);
         }
 
         $filename = (strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($filename) : $filename);
@@ -654,7 +664,7 @@ class io_dzz extends io_api {
         } elseif ($this->preview) {
             $checkperm = false;//预览文件不判断权限
         } else {
-            $checkperm = 'download';//其他其他需要判断下载权限
+            $checkperm = 'download';//其他需要判断下载权限
         }
         if (count($paths) > 1) {
             $this->zipdownload($paths, $filename, $checkperm);
@@ -680,6 +690,12 @@ class io_dzz extends io_api {
         } elseif (preg_match('/\w{32}/i', $path)) {
             $icoid = trim($path);
             $icoarr = C::t('resources')->fetch_by_rid($path);
+            //这里强制要求判断下载权限，分享文件也会记录下载事件，前面已经处理分享权限判断，附件文件不需要判断权限
+            if ($checkperm == 'download') {
+                if (!perm_check::checkperm('download', $icoarr)) {
+                    topshowmessage(lang('file_download_no_privilege'));
+                }
+            }
             if (!$icoarr['rid']) {
                 topshowmessage(lang('attachment_nonexistence'));
             } elseif ($icoarr['type'] == 'folder') {
@@ -704,7 +720,12 @@ class io_dzz extends io_api {
                     'downs' => 1,
                 );
                 C::t('resources_statis')->add_statis_by_rid($icoarr['rid'], $statisdata);
-                if (!C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], 'downfile', 'down', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name'])) {
+                if ($this->sharesid) {
+                    $event = 'share_downfile';
+                } else {
+                    $event = 'downfile';
+                }
+                if (!C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], $event, 'down', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name'])) {
                     return false;
                 }
             }
@@ -749,7 +770,12 @@ class io_dzz extends io_api {
                     'downs' => 1,
                 );
                 C::t('resources_statis')->add_statis_by_rid($icoarr['rid'], $statisdata);
-                if (!C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], 'downfile', 'down', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name'])) {
+                if ($this->sharesid) {
+                    $event = 'share_downfile';
+                } else {
+                    $event = 'downfile';
+                }
+                if (!C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], $event, 'down', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name'])) {
                     return false;
                 }
             }

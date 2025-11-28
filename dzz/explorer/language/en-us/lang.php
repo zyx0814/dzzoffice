@@ -86,6 +86,8 @@ $lang = array(
     'cancle_collect_success' => 'Removed from favorites',
     'collect_file_not_exists' => 'Favorite does not exist',
     'down' => 'Download',
+    'share_downfile' => 'Downloaded the file via sharing <a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{files}',
+    'share_downfiles' => 'Downloaded files including <a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{files} via sharing',
     'downfile' => 'Downloaded <a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{files}',
     'downfiles' => 'Downloaded <a href=\'javascript:;\' onclick="location.hash=\'{hash}\';">{position}</a>{files} and others',
     'comment_not_exists' => 'Comment does not exist',
