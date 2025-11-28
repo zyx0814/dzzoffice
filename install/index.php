@@ -91,10 +91,10 @@ if ($method == 'show_license') {
     $_config = $default_config;
     //}
 
-    $dbhost = $_config['db'][1]['dbhost'];
-    $dbname = $_config['db'][1]['dbname'];
-    $dbpw = $_config['db'][1]['dbpw'];
-    $dbuser = $_config['db'][1]['dbuser'];
+    $dbhost = getenv('MYSQL_HOST') ?: $_config['db'][1]['dbhost'];
+    $dbname = getenv('MYSQL_DATABASE') ?: $_config['db'][1]['dbname'];
+    $dbpw = getenv('MYSQL_PASSWORD') ?: $_config['db'][1]['dbpw'];
+    $dbuser = getenv('MYSQL_USER') ?: $_config['db'][1]['dbuser'];
     $tablepre = $_config['db'][1]['tablepre'];
     $adminemail = 'admin@dzzoffice.com';
 
@@ -197,6 +197,9 @@ if ($method == 'show_license') {
         $_config['security']['authkey'] = $authkey;
         $_config['cookie']['cookiepre'] = random(4) . '_';
         $_config['memory']['prefix'] = random(6) . '_';
+        $_config['memory']['redis']['server'] = getenv('REDIS_HOST') ?: '';
+        $_config['memory']['redis']['port'] = getenv('REDIS_PORT') ?: 6379;
+        $_config['memory']['redis']['requirepass'] = getenv('REDIS_PASSWORD') ?: '';
 
         save_config_file(ROOT_PATH . CONFIG, $_config, $default_config);
         $runqueryerror = 0;
