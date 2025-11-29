@@ -249,22 +249,6 @@ if ($do == 'deleteIco') {//删除文件到回收站
     }
     echo json_encode($arr);
     exit();
-} elseif ($do == 'download') {//暂无请求到此的下载
-    define('NOROBOT', TRUE);
-    $path = empty($_GET['icoid']) ? trim($_GET['path']) : $_GET['icoid'];
-    $patharr = explode(',', $path);
-    $paths = array();
-    foreach ($patharr as $path) {
-        if ($path = dzzdecode($path)) {
-            $paths[] = $path;
-        }
-    }
-    if ($paths) {
-        IO::download($paths, $_GET['filename']);
-        exit();
-    } else {
-        exit('path error!');
-    }
 } elseif ($do == 'uploadnewVersion') {//更新文件版本
     $rid = isset($_GET['rid']) ? $_GET['rid'] : '';
     $setarr = array(

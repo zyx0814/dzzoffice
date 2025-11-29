@@ -49,40 +49,29 @@ function fileupload(el, fid) {
         layerupload();
         // 检测是否是文件夹上传，因为文件夹并发上传时，会重复创建目录
         var isFolderUpload = false;
+        $.each(data.files, function(index, file) {
+            if ((file.webkitRelativePath && file.webkitRelativePath.indexOf('/') !== -1) || 
+                (file.relativePath && file.relativePath.indexOf('/') !== -1)) {
+                isFolderUpload = true;
+                return false;
+            }
+        });
+        // 设置上传选项
+        $(this).fileupload('option', {
+            sequentialUploads: isFolderUpload,
+            limitConcurrentUploads: isFolderUpload ? 1 : _upload.limitConcurrentUploads
+        });
 		if(_upload.maxli && _upload.datas.length>=_upload.maxli){
 			_upload.datas.push(data);
 			_upload.uploadadd();
-            $.each(data.files, function(index, file) {
-                if (file.webkitRelativePath && file.webkitRelativePath.indexOf('/') !== -1) {
-                    isFolderUpload = true;
-                    return false;
-                }
-            });
 		}else{
 			data.context = $('<li class="dialog-file-list"></li>').appendTo($('.dialog-filelist-ul'));
 			
 			$.each(data.files, function(index, file) {
 				$(_upload.getItemTpl(file)).appendTo(data.context);
 				_upload.uploadadd();
-                if (file.webkitRelativePath && file.webkitRelativePath.indexOf('/') !== -1) {
-                    isFolderUpload = true;
-                }
 			});
 		}
-        
-        // 如果是文件夹上传，设置顺序上传
-        if (isFolderUpload) {
-            $(this).fileupload('option', {
-                sequentialUploads: true,
-                limitConcurrentUploads: 1
-            });
-        } else {
-            // 非文件夹上传恢复默认设置
-            $(this).fileupload('option', {
-                sequentialUploads: false,
-                limitConcurrentUploads: _upload.limitConcurrentUploads
-            });
-        }
     }).on('fileuploadsubmit', function (e, data) {
         data.context.find('.upload-cancel').off('click').on('click', function () {
             data.abort();
