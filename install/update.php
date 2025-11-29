@@ -306,7 +306,7 @@ if ($_GET['step'] == 'start') {
     $appurl = "{adminscript}?mod=share";
     $shareappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
     if ($shareappid) {
-        C::t('app_market')->update($shareappid, array('appurl' => "{dzzscript}?mod=share", 'group' => 1, 'open' => 1, 'app_path' => 'dzz', 'position' => 1));
+        C::t('app_market')->update($shareappid, array('appurl' => "{dzzscript}?mod=share", 'open' => 1, 'app_path' => 'dzz', 'position' => 1));
     }
     $appurl = "{dzzscript}?mod=comment";
     $commentappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));

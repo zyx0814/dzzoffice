@@ -9,6 +9,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
+Hook::listen('adminlogin');
 $navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
 $type = trim($_GET['type']);
 $do = isset($_GET['do']) ? $_GET['do'] : '';
@@ -51,14 +52,8 @@ if ($do == 'getinfo') {
         $sql .= " and uid=%d";
         $param[] = $uid;
     }
-    if ($_G['adminid']) {
-        if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", $param)) {
-            $list = DB::fetch_all("SELECT * FROM %t WHERE $sql $orderby limit $start,$limit", $param);
-        }
-    } else {
-        if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid =$uid1 and $sql", $param)) {
-            $list = DB::fetch_all("SELECT * FROM %t WHERE uid =$uid1 and $sql $orderby limit $start,$limit", $param);
-        }
+    if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", $param)) {
+        $list = DB::fetch_all("SELECT * FROM %t WHERE $sql $orderby limit $start,$limit", $param);
     }
     $sharestatus = array('-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>', '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>', '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>', '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>', '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>');
     $data = array();

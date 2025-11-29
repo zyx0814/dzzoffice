@@ -116,14 +116,10 @@ class table_resources extends dzz_table {
     public function check_folder_perm($icoarr, $action, $isdelete = false) {
         global $_G;
         if ($action == 'cut') $action = 'delete';
-        if (perm_check::checkperm_Container($icoarr['pfid'], $action)) {
-            if (!perm_check::checkperm_Container($icoarr['oid'], $action, '', $icoarr['uid'])) return array('error' => lang('has_no_privilege_file') . '：' . $icoarr['name']);
-        } else {
-            return array('error' => lang('has_no_privilege_file') . '：' . $icoarr['name']);
-        }
         //获取文件夹fid集合
         $fids = C::t('resources_path')->fetch_folder_containfid_by_pfid($icoarr['oid']);
         $rids = array();
+        $resources = array();
         $extrasql = '';
         if (!$isdelete) {
             $extrasql = ' and isdelete < 1 ';
@@ -131,16 +127,44 @@ class table_resources extends dzz_table {
         //获取当前文件下所有下级rid
         foreach (DB::fetch_all("select * from %t where (oid in(%n) or pfid in(%n)) and rid != %s $extrasql", array($this->_table, $fids, $fids, $icoarr['rid'])) as $v) {
             $rids[] = $v['rid'];
-            if ($v['type'] == 'folder' || $v['sperm'] > 0) {//只判断文件夹和设置了文件权限的文件
-                if (!perm_check::checkperm($action, $v)) {
-                    return array('error' => lang('has_no_privilege_file') . ' ' . $v['name']);
-                }
+            if ($v['type'] == 'folder' || $v['sperm'] > 0) {//只获取文件夹和设置了文件权限的文件
+                $resources[] = $v;
             }
         }
         $index = array_search($icoarr['oid'], $fids);
         unset($fids[$index]);
         $ridnum = count($rids);
         $fidnum = count($fids);
+        if ($icoarr['gid'] > 0) {
+            $folderinfo = C::t('folder')->fetch($icoarr['oid']);
+            //判断目录是否为空，为空则不判断当前目录权限
+            if ($ridnum) {
+                if (perm_check::checkperm_Container($icoarr['pfid'], $action . '2') || ($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['pfid'], $action . '1'))) {
+                    if (!perm_check::checkperm_Container($icoarr['oid'], $action . '2') && !($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['oid'], $action . '1'))) return array('error' => lang('has_no_privilege_file') . '：' . $icoarr['name']);
+                } else {
+                    return array('error' => lang('has_no_privilege_file') . '：' . $icoarr['name']);
+                }
+            } else {
+                //判断是否具有上级删除权限
+                if (!perm_check::checkperm_Container($icoarr['pfid'], $action . '2') && !($_G['uid'] == $folderinfo['uid'] && perm_check::checkperm_Container($icoarr['pfid'], $action . '1'))) {
+                    return array('error' => lang('has_no_privilege_file') . '：' . $icoarr['name']);
+                }
+            }
+            
+            // 子资源权限校验
+            if (count($resources)) {
+                foreach ($resources as $v) {
+                    if (!perm_check::checkperm($action, $v)) {
+                        return array('error' => lang('has_no_privilege_file') . '：' . $v['name']);
+                    }
+                }
+            }
+        } else {
+            // 个人网盘：仅校验父级
+            if (!perm_check::checkperm_Container($icoarr['pfid'], $action)) {
+                return array('error' => lang('has_no_privilege_file') . '：' . $icoarr['name']);
+            }
+        }
         return array($icoarr['oid'], $ridnum, $fidnum, $fids, $rids);
     }
 

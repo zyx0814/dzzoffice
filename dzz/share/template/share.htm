@@ -26,8 +26,8 @@
 							<div class="input-group mb-3">
 								<span class="input-group-text">{lang share_title}</span>
 								<input type="text" class="form-control" name="keyword" id="keyword" placeholder="{lang share_title}" aria-label="{lang share_title}">
-								<!--{if $_G['adminid']}--><span class="input-group-text">{lang username}</span>
-								<input type="text" class="form-control" name="username" id="username" placeholder="{lang username}" placeholder="{lang username}" aria-label="{lang username}"><!--{/if}-->
+								<span class="input-group-text">{lang username}</span>
+								<input type="text" class="form-control" name="username" id="username" placeholder="{lang username}" placeholder="{lang username}" aria-label="{lang username}">
 							  </div>
 						</div>
 						<div class="col-md-4">
@@ -42,8 +42,8 @@
 						<button type="button" id="getCheckDataBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-disabled" lay-event="getCheckData" disabled>{lang get_selected_row_data}</button>
 						<div class="layui-btn-group me-2">
 							<button type="button" class="layui-btn layui-btn-danger layui-btn-sm layui-btn-sm layui-btn-disabled" id="deletebtn" lay-event="delete" disabled>{lang del_share}</button>
-							<!--{if $_G['adminid']}--><button type="button" id="forbiddenbtn" class="layui-btn layui-bg-orange layui-btn-sm layui-btn-sm layui-btn-disabled" lay-event="forbidden" disabled>{lang screen_share}</button>
-							<button type="button" class="layui-btn layui-btn-sm layui-btn-sm layui-btn-disabled" id="allowbtn" lay-event="allow" disabled>{lang cancel_shielding}</button><!--{/if}-->
+							<button type="button" id="forbiddenbtn" class="layui-btn layui-bg-orange layui-btn-sm layui-btn-sm layui-btn-disabled" lay-event="forbidden" disabled>{lang screen_share}</button>
+							<button type="button" class="layui-btn layui-btn-sm layui-btn-sm layui-btn-disabled" id="allowbtn" lay-event="allow" disabled>{lang cancel_shielding}</button>
 						</div>
 						<button type="button" class="layui-btn layui-btn-normal layui-btn-sm" lay-event="get">{lang refresh}</button>
 					</div>
@@ -79,17 +79,11 @@
 	cols: [[
 		{type:'checkbox', fixed: 'left'}
 		,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-		,{field:'title', title: '{lang share_typename_attach}', sort: true,templet: function(d) {
-			return d.title;
-		}}
-		,{field:'status', title: '{lang status}', align: 'center', sort: true,templet: function(d) {
-			return d.status;
-		}}
+		,{field:'title', title: '{lang share_typename_attach}', sort: true,templet: function(d) {return d.title;}}
+		,{field:'status', title: '{lang status}', align: 'center', sort: true,templet: function(d) {return d.status;}}
 		,{field:'dateline', title: '{lang share_time}', align: 'center', sort: true,templet:function(d){return d.dateline}}
 		,{field:'endtime', title: '{lang failure_time}', align: 'center', sort: true}
-		<!--{if $_G['adminid']}-->,{field:'username', title: '{lang share_user}', align: 'center', sort: true,templet: function(d) {
-		return d.username;
-	}}<!--{/if}-->
+		,{field:'username', title: '{lang share_user}', align: 'center', sort: true,templet: function(d) {return d.username;}}
 		,{field:'count', title: '{lang view_count}', align: 'center', sort: true,templet:function(d){return d.count+'{lang degree}'}}
 		,{field:'downs', title: '{lang download_times}', align: 'center', sort: true,templet:function(d){return d.downs+'{lang degree}'}}
 		,{field:'password', title: '{lang extract_password}', align: 'center', sort: true}
@@ -149,14 +143,12 @@
 						template += '<p><strong>{lang share_typename_attach}:</strong> ' + item.title + '</p>';
 						template += '<p><strong>状态:</strong> ' + item.status + '</p>';
 						template += '<p><strong>{lang share_time}:</strong> ' + item.dateline + '</p>';
-						<!--{if $_G['adminid']}-->
 						template += '<p><strong>{lang share_user}:</strong> ' + item.username + '</p>';
-						<!--{/if}-->
-							template += '<p><strong>{lang link}:</strong> <a href="' + item.sharelink + '" target="_blank">' + item.sharelink + '</a></p>';
-							template += '<p><strong>{lang extract_password}:</strong> ' + item.password + '</p>';
-							template += '<p><strong>{lang failure_time}:</strong> ' + item.endtime + '</p>';
-							template += '<p><strong>{lang view_count}:</strong> ' + item.count + '{lang degree}</p>';
-							template += '<p><strong>{lang download_times}:</strong> ' + item.downs + '{lang degree}</p>';
+						template += '<p><strong>{lang link}:</strong> <a href="' + item.sharelink + '" target="_blank">' + item.sharelink + '</a></p>';
+						template += '<p><strong>{lang extract_password}:</strong> ' + item.password + '</p>';
+						template += '<p><strong>{lang failure_time}:</strong> ' + item.endtime + '</p>';
+						template += '<p><strong>{lang view_count}:</strong> ' + item.count + '{lang degree}</p>';
+						template += '<p><strong>{lang download_times}:</strong> ' + item.downs + '{lang degree}</p>';
 						template += '<p><strong>{lang limited_number}:</strong> ' + item.times + '</p>';
 						template += '<p><strong>{lang file_type}:</strong> ' + item.type + '</p>';
 						template += '</div>';
@@ -294,9 +286,7 @@
 			'<p><strong>状态:</strong> ' + data.status + '</p>' +
 			'<p><strong>{lang share_time}:</strong> ' + data.dateline + '</p>' +
 			'<p><strong>{lang failure_time}:</strong> ' + data.endtime + '</p>' +
-			<!--{if $_G['adminid']}-->
 			'<p><strong>{lang share_user}:</strong> ' + data.username + '</p>' + 
-			<!--{/if}-->
 			'<p><strong>{lang link}:</strong> <a href="' + data.sharelink + '">' + data.sharelink + '</a></p>' +
 			'<p><strong>{lang extract_password}:</strong> ' + data.password + '</p>' +
 			'<p><strong>{lang view_count}:</strong> ' + data.count + '{lang degree}</p>' +

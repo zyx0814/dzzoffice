@@ -196,17 +196,20 @@ class table_shares extends dzz_table {
     }
 
     public function delete_by_id($id) {
+        global $_G;
         if (!$shareinfo = parent::fetch($id)) {
             return array('error' => lang('share_not_exists'));
         }
-        if (!perm_check::checkperm_Container($shareinfo['pfid'], 'share')) {
-            return array('error' => lang('file_share_no_privilege'));
+        if ($_G['adminid'] != 1) {
+            if (!perm_check::checkperm_Container($shareinfo['pfid'], 'share')) {
+                return array('error' => lang('file_share_no_privilege'));
+            }
         }
         $setarr['dateline'] = time();
-        $setarr['uid'] = getglobal('uid');
-        $setarr['username'] = getglobal('username');
+        $setarr['uid'] = $_G['uid'];
+        $setarr['username'] = $_G['username'];
         if (parent::delete($id)) {
-            $url = getglobal('siteurl') . 'index.php?mod=shares&sid=' . dzzencode($id);
+            $url = $_G['siteurl'] . 'index.php?mod=shares&sid=' . dzzencode($id);
             C::t('shorturl')->delete_by_url($url);//删除短链接
             $eventdata = array('username' => $setarr['username'], 'filename' => $shareinfo['title']);
             C::t('resources_event')->addevent_by_pfid($shareinfo['pfid'], 'cancle_share', 'cancleshare', $eventdata, $shareinfo['gid'], '', $shareinfo['title']);

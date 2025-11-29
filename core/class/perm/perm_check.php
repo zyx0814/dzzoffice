@@ -319,8 +319,15 @@ class perm_check {
                     return perm_binPerm::havePower($action, $perm);
                 }
             }
-            if (!$arr['pfid']) return false;
-            return self::containerPerm($arr['pfid'], $action);
+            /**
+             * 处理目录权限判断的fid参数：
+             * 1. 优先使用pfid（父级目录ID），符合“文件夹权限继承父级”的核心规则；
+             * 2. 若pfid为0（顶级目录，无父级），则使用fid（当前目录自身ID）替代，解决顶级目录权限判断失效问题；
+             * 3. 仅顶级目录场景会用到fid，非顶级目录始终以pfid为准。
+             */
+            $fid = $arr['pfid'] ? $arr['pfid'] : $arr['fid'];
+            if (!$fid) return false;
+            return self::containerPerm($fid, $action);
         }
     }
 
@@ -345,13 +352,14 @@ class perm_check {
             return perm_FolderSPerm::isPower(perm_FolderSPerm::flagPower($bz), $action);
         }
         // 处理操作类型：rename等效于edit；根据容器归属拼接权限后缀
-        if (!$uid) {
-            $folder = C::t('folder')->fetch($pfid);
-            if (empty($folder)) return false;
-            $uid = $folder['uid'] ?? 0;
-        }
         $action = ($action == 'rename') ? 'edit' : $action;
         if (in_array($action, ['read', 'delete', 'edit', 'download', 'copy'])) {
+            // 优先使用传入的uid，未传则查询当前pfid对应的文件夹uid
+            if (!$uid) {
+                $folder = C::t('folder')->fetch($pfid);
+                if (empty($folder)) return false;
+                $uid = $folder['uid'] ?? 0;
+            }
             $action .= ($_G['uid'] == $uid) ? '1' : '2';
         }
         // 校验容器自身权限
