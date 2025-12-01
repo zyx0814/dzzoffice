@@ -64,7 +64,7 @@ class dzz_admincp {
         } else {
             if (!$this->isfounder) {
                 $session = C::t('user')->fetch($this->adminuser['uid']);
-                if ($session) {
+                if ($session && ($session['groupid']==1)) {
                     $session = array_merge($session, (array)C::t('admincp_session')->fetch($this->adminuser['uid'], $session['groupid']));
                 } else $session = array();
             } else {

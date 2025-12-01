@@ -313,7 +313,7 @@
             <div class="row mb-3">
               <label for="notificationrefresh" class="col-sm-2">通知刷新时间间隔</label>
               <div class="col-sm-10">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input type="text" id="notificationrefresh" class="form-control" required name="settingnew[notificationrefresh]" value="$setting[notificationrefresh]" />
                   <span class="input-group-text">秒</span>
                 </div>
@@ -362,7 +362,7 @@
             <div class="row mb-3">
               <label for="upload_file_ext" class="col-sm-2">{lang setting_main_suffix}</label>
               <div class="col-sm-10">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input class="js-tags-input form-control" type="text" id="upload_file_ext" name="settingnew[unRunExts]" value="$setting[unRunExts]" >
                 </div>
                 <ul class="form-text">
@@ -373,7 +373,7 @@
             <div class="row mb-3">
               <label for="maxChunkSize" class="col-sm-2">{lang upload_block_size}</label>
               <div class="col-sm-10">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input type="text" class="form-control" id="maxChunkSize" required name="settingnew[maxChunkSize]" value="$setting[maxChunkSize]">
                   <span class="input-group-text">M</span>
                 </div>
@@ -382,13 +382,6 @@
                   </ul>
               </div>
             </div>
-            <!-- <div class="row mb-3 border-bottom pb-2">
-              <label for="limitConcurrentUploads" class="col-sm-2">上传并发线程</label>
-              <div class="col-sm-10">
-                  <input type="text" class="form-control" id="limitConcurrentUploads" required name="settingnew[limitConcurrentUploads]" value="$setting['limitConcurrentUploads']">
-                <span class="form-text">推荐=10;文件或分片同时上传数</span>
-              </div>
-            </div> -->
             <div class="row mb-3">
               <label class="col-sm-2">{lang file_more_version_set}</label>
               <div class="col-sm-10">
@@ -406,7 +399,7 @@
               <div class="row mb-3">
                 <label for="fileVersionNumber1" class="col-sm-2">{lang file_multiple_version_features}</label>
                 <div class="col-sm-10">
-                  <div class="input-group mb-3">
+                  <div class="input-group">
                     <input type="text" class="form-control" required id="fileVersionNumber1" name="settingnew[fileVersionNumber]" <!--{if isset($setting['fileVersion'])}-->value="$setting[fileVersionNumber]" <!--{/if}-->  placeholder="0">
                     <span class="input-group-text">{lang individual}</span>
                   </div>
@@ -500,7 +493,7 @@
             <div class="row mb-3">
               <label class="col-sm-2">{lang Login template}</label>
               <div class="col-sm-10">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <a class="loginset-template" href="admin/setting/images/template1.jpg" target="_blank">
                     <div class="loginset-template-icon<!--{if $setting[loginset][template] ==1}--> loginset-template-icon1<!--{/if}-->" data-template="1">
                       <span class="mdi mdi-check-bold"></span>
@@ -726,7 +719,7 @@
             <div class="row mb-3">
               <label for="numberoflogins" class="col-sm-2">{lang Number of login attempts}</label>
               <div class="col-sm-10">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input type="text" id="numberoflogins" class="form-control" required name="settingnew[numberoflogins]" value="$setting[numberoflogins]" />
                   <span class="input-group-text">次</span>
                 </div>
@@ -736,7 +729,7 @@
             <div class="row mb-3">
               <label for="forbiddentime" class="col-sm-2">{lang Forbidden time}</label>
               <div class="col-sm-10">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input type="text" id="forbiddentime" class="form-control" required name="settingnew[forbiddentime]" value="$setting[forbiddentime]" />
                   <span class="input-group-text">{lang sec}</span>
                 </div>
@@ -746,7 +739,7 @@
             <div class="row mb-3">
               <label for="oltimespan" class="col-sm-2">用户在线时间更新时长</label>
               <div class="col-sm-10">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input type="text" class="form-control" id="oltimespan" name="settingnew[oltimespan]" value="$setting[oltimespan]" required>
                   <span class="input-group-text">{lang minute}</span>
                 </div>
@@ -987,7 +980,7 @@
             <div class="row mb-3">
               <label for="systemSpace" class="col-sm-2">{lang setSystemSpace}</label>
               <div class="col-sm-10">
-                <div class="input-group mb-3">
+                <div class="input-group">
                   <input type="text" class="form-control" id="systemSpace" placeholder="0" name="settingnew[systemSpace]" value="$setting[systemSpace]">
                   <span class="input-group-text">M</span>
                 </div>

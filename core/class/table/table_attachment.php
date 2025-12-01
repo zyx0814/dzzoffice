@@ -91,7 +91,11 @@ class table_attachment extends dzz_table {
             return $this->update($aid, array('copys' => $data['copys'] - 1));
         } else {
             if (io_remote::DeleteFromSpace($data)) {
-                return $this->delete($aid);
+                if ($return = $this->delete($aid)) {
+                    // 删除文件钩子
+                    Hook::listen('finalydelete', $aid);
+                }
+                return $return;
             } else {
                 return false;
             }

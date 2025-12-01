@@ -338,9 +338,6 @@ class perm_check {
      * @param string $bz 标识（第三方挂载场景）
      * @param int $uid 用户ID
      * @return bool 是否有权限
-     * @note 对于文件夹操作，权限检查应基于其父级目录的权限。
-     *       在resources表中，文件夹的oid字段记录其自身ID，而pfid字段记录其所在的父级目录ID，
-     *       因此在进行文件夹操作时应当检查其父级目录的权限而非自身权限。
      */
     public static function checkperm_Container($pfid, $action = '', $bz = '', $uid = 0) {
         global $_G;

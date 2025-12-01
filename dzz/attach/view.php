@@ -14,6 +14,7 @@ if ($_GET['a'] == 'down') {
     exit();
 } elseif ($_GET['a'] == 'view') {
     $icoarr = IO::getMeta($path);
+    if ($icoarr['error']) exit($icoarr['error']);
     // print_r($icoarr);
     if ($icoarr['type'] == 'video') {
         @header("Location: $icoarr[url]");

@@ -1507,5 +1507,6 @@ $lang = array(
     'cloud_type_mail' => 'Email',
     'cloud_type_ftp' => 'FTP',
     'cloud_type_disk' => 'Local Disk',
+    'cloud_type_local'=>'Local',
 );
 ?>

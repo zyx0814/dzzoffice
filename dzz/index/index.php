@@ -59,6 +59,6 @@ if ($do == 'saveIndex') {
         }
     }
     $servertime = time() * 1000;
-    $regdatedays = floor((time() - $_G['member']['regdate']) / (60 * 60 * 24));
+    $regdatedays = floor((time() - intval($_G['member']['regdate'])) / (60 * 60 * 24));
     include template('main');
 }

@@ -18,22 +18,28 @@ class ultrax_cache {
         return false;
     }
 
-    function set_cache($key, $value, $life) {
+    /**
+     * 缓存数据
+     * @param string $key 缓存key
+     * @param mixed $value 缓存数据
+     * @param int $life 缓存有效期
+     * @return bool
+     */
+    function set_cache($key, $value, $life = 0) {
 		global $_G;
-		$data = array($key => array('data' => $value, 'life' => $life));
+		$data = [$key => ['data' => $value, 'life' => $life]];
 		require_once libfile('function/cache');
 		$cache_file = $this->get_cache_file_path($key);
 		dmkdir(dirname($cache_file));
 		$cachedata = "\$data = " . arrayeval($data) . ";\n";
-		$cachedata_save = "<?php\n//Dzz! cache file, DO NOT modify me!".
-		"\n//Created: " . date("M j, Y, G:i") .
-		"\n//Identify: " . md5($cache_file . $cachedata . $_G['config']['security']['authkey']) . "\n\nif(!defined('IN_DZZ')) {\n\texit('Access Denied');\n}\n\n$cachedata?>";
+        $cachedata_save = "<?php\nif(!defined('IN_DZZ')) {\n\texit('Access Denied');\n}\n\n$cachedata?>";
 		$fp = fopen($cache_file, 'cb');
 		if(!($fp && flock($fp, LOCK_EX) && ftruncate($fp, 0) && fwrite($fp, $cachedata_save) && fflush($fp) && flock($fp, LOCK_UN) && fclose($fp))) {
 			flock($fp, LOCK_UN);
 			fclose($fp);
 			unlink($cache_file);
-			exit('Can not write to cache files, please check directory ./data/ and ./data/ultraxcache/ .');
+            $cache_root = $this->conf['path'] ?? 'cache directory';
+            exit('Can not write to cache files! Please check the permissions and existence of "'.$cache_root.'".');
 		}
 		return true;
 	}
@@ -46,7 +52,7 @@ class ultrax_cache {
     }
 
     function _get_cache($key) {
-        static $data = array();
+        static $data = [];
         if (!isset($data[$key])) {
             include $this->get_cache_file_path($key);
         }
@@ -66,7 +72,7 @@ class ultrax_cache {
     }
 
     function get_cache_file_path($key) {
-        static $cache_path = array();
+        static $cache_path = [];
         if (!isset($cache_path[$key])) {
             $dir = hexdec($key[0] . $key[1] . $key[2]) % 1000;
             $cache_path[$key] = $this->conf['path'] . '/' . $dir . '/' . $key . '.php';

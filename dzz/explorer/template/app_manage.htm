@@ -245,7 +245,7 @@
 		<div class="row mb-3">
 			<label class="col-sm-2" for="textnumber">{lang finally_delete_setting}</label>
 			<div class="col-sm-10">
-				<div class="input-group mb-3">
+				<div class="input-group">
                   <input type="text" class="form-control" name="setting[explorer_finallydelete]" onblur="checks()" id="textnumber" <!--{if isset($setting['explorer_finallydelete'])}-->value="{$setting[explorer_finallydelete]}"<!--{else}-->value="-1"<!--{/if}-->/>
                   <span class="input-group-text">天</span>
                 </div>
@@ -261,7 +261,7 @@
 		<div class="row mb-3">
 			<label class="col-sm-2" for="explorer_limitConcurrentUploads">上传并发线程</label>
 			<div class="col-sm-10">
-				<div class="input-group mb-3">
+				<div class="input-group">
                   <input type="text" class="form-control" name="setting[explorer_limitConcurrentUploads]" id="explorer_limitConcurrentUploads" <!--{if isset($setting['explorer_limitConcurrentUploads'])}-->value="{$setting[explorer_limitConcurrentUploads]}"<!--{else}-->value="3"<!--{/if}-->/>
                   <span class="input-group-text">个</span>
                 </div>

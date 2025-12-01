@@ -1528,5 +1528,6 @@ $lang = array(
     'cloud_type_mail' => '邮箱',
     'cloud_type_ftp' => 'FTP',
     'cloud_type_disk' => '本地磁盘',
+    'cloud_type_local'=>'内置',
 );
 ?>

@@ -11,7 +11,7 @@ class ultrax_cache {
     }
 
     function get_cache($key) {
-        static $data = array();
+        static $data = [];
         if (!isset($data[$key])) {
             $cache = C::t('cache')->fetch($key);
             if (!$cache) {
@@ -26,11 +26,11 @@ class ultrax_cache {
     }
 
     function set_cache($key, $value, $life) {
-        $data = array(
+        $data = [
             'cachekey' => $key,
             'cachevalue' => serialize(array('data' => $value, 'life' => $life)),
             'dateline' => time(),
-        );
+        ];
         return C::t('cache')->insert($data);
     }
 

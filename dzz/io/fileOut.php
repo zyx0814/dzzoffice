@@ -30,93 +30,44 @@ function output_error($status_code, $message) {
 }
 
 if (!$_G['uid']) {
-    output_error(403, lang('not_login'));
-}
-
-define('PERM_CACHE_DIR', DZZ_ROOT . '/data/cache/perm/');
-// 缓存有效期（秒），默认5分钟
-define('PERM_CACHE_EXPIRE', 300);
-
-if (!is_dir(PERM_CACHE_DIR)) {
-    @mkdir(PERM_CACHE_DIR, 0777, true);
-    @file_put_contents(PERM_CACHE_DIR . '/index.htm', '');
-}
-/**
- * 获取权限缓存
- * @param int $uid 用户ID
- * @param string $path 资源路径
- * @return bool|false 缓存结果（true/false）或false（缓存无效）
- */
-function get_perm_cache($uid, $path) {
-    $cacheKey = md5("{$uid}_{$path}");
-    $cacheFile = PERM_CACHE_DIR . "{$cacheKey}.php";
-    
-    if (!is_file($cacheFile)) {
-        return false;
-    }
-    
-    $data = @unserialize(@file_get_contents($cacheFile));
-    if (!$data || !isset($data['time'], $data['result'])) {
-        @unlink($cacheFile);// 缓存格式错误，清理无效文件
-        return false;
-    }
-    
-    if (TIMESTAMP - $data['time'] > PERM_CACHE_EXPIRE) {
-        @unlink($cacheFile);
-        return false;
-    }
-    
-    return $data['result'];
-}
-/**
- * 写入权限缓存
- * @param int $uid 用户ID
- * @param string $path 资源路径
- * @param bool $result 权限检查结果（true/false）
- */
-function set_perm_cache($uid, $path, $result) {
-    $cacheKey = md5("{$uid}_{$path}");
-    $cacheFile = PERM_CACHE_DIR . "{$cacheKey}.php";
-    
-    $data = serialize([
-        'time' => TIMESTAMP,
-        'result' => $result
-    ]);
-    
-    $fp = @fopen($cacheFile, 'w');
-    // 写入缓存（加锁避免并发写入问题）
-    if ($fp) {
-        @flock($fp, LOCK_EX);
-        @fwrite($fp, $data);
-        @flock($fp, LOCK_UN);
-        @fclose($fp);
-    }
+    output_error(401, lang('not_login'));
 }
 
 if (!$path = dzzdecode(rawurldecode($_GET['path']))) {
-    output_error(403,'Access Denied');
+    output_error(404,'Access Denied');
 }
-// 权限检查（优先使用缓存）
-$permResult = get_perm_cache($_G['uid'], $path);
-if ($permResult === false) {
-    // 缓存未命中：获取元数据并检查权限
-    $meta = IO::getMeta($path);
-    if (!$meta) {
-        output_error(404, lang('file_not_exist'));
+// 非管理员校验权限
+if ($_G['adminid'] != 1) {
+    // 系统缓存类初始化
+    require_once DZZ_ROOT . 'core/class/cache/cache_file.php';
+    $cacheConf = [
+        'path' => 'data/cache/perm'
+    ];
+    $cache = new ultrax_cache($cacheConf);
+    $cacheKey = md5("{$_G['uid']}_{$path}");
+    $permResult = $cache->get_cache($cacheKey);
+    if ($permResult === false) {
+        // 缓存未命中/已过期：重新校验权限
+        $meta = IO::getMeta($path);
+        if (!$meta) {
+            output_error(404, lang('file_not_exist'));
+        }
+        if ($meta['error']) {
+            output_error(403, $meta['error']);
+        }
+        
+        // 仅rid存在时校验权限，否则默认拒绝
+        $permResult = (isset($meta['rid']) && !empty($meta['rid'])) ? perm_check::checkperm('download', $meta) : false;
+        // 写入缓存：300秒过期
+        $cache->set_cache($cacheKey, $permResult, 300);
     }
-    if ($meta['error']) {
-        output_error(403, $meta['error']);
+    if (!$permResult) {
+        output_error(403, lang('file_download_no_privilege'));
     }
-    $permResult = (isset($meta['rid']) && !empty($meta['rid'])) ? perm_check::checkperm('download', $meta) : false;
-    // 写入缓存（即使权限为false也缓存，减少重复检查）
-    set_perm_cache($_G['uid'], $path, $permResult);
-}
-if (!$permResult) {
-    output_error(403, lang('file_download_no_privilege'));
 }
 
 if (!$url = (IO::getStream($path))) {
-    output_error(403,lang('attachment_nonexistence'));
+    output_error(404,lang('attachment_nonexistence'));
 }
 if (is_array($url) && isset($url['error'])) {
     output_error(403,$url['error']);

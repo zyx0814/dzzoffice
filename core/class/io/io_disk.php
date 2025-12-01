@@ -898,7 +898,7 @@ class io_disk extends io_api {
         $bzarr = $this->parsePath($path);
         $file = $this->attachdir . $bzarr['path'];
         if (is_dir($file)) {
-            $ret = $this->removedir($file);
+            $ret = removedirectory($file);
         } else {
             $ret = @unlink($file);
         }
@@ -911,24 +911,6 @@ class io_disk extends io_api {
         } else {
             return array('rid' => $rid, 'error' => lang('failure'));
         }
-    }
-
-    private function removedir($dirname, $keepdir = false) {
-        $dirname = str_replace(array("\n", "\r", '..'), array('', '', ''), $dirname);
-
-        if (!is_dir($dirname)) {
-            return FALSE;
-        }
-        $handle = opendir($dirname);
-        while (($file = readdir($handle)) !== FALSE) {
-            if ($file != '.' && $file != '..') {
-                $dir = $dirname . DIRECTORY_SEPARATOR . $file;
-                $mtime = filemtime($dir);
-                is_dir($dir) ? $this->removedir($dir) : (((TIMESTAMP - $mtime) > $time) ? unlink($dir) : '');
-            }
-        }
-        closedir($handle);
-        return !$keepdir ? (@rmdir($dirname) ? TRUE : FALSE) : TRUE;
     }
 
     public function CreateFolderByPath($path, $pfid = '', $noperm = false) {

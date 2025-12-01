@@ -246,6 +246,7 @@ class io_dzz extends io_api {
     public function createThumb($path, $size, $width = 0, $height = 0, $thumbtype = 1) {
         global $_G;
         if (!$data = IO::getMeta($path)) return false;
+        if ($data['error']) return false;
         $imgcachePath = 'imgcache/';
         $cachepath = str_replace('//', '/', str_replace(':', '/', $data['attachment'] ? $data['attachment'] : $data['path']));
         $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_' . $thumbtype . '.jpeg';
@@ -290,6 +291,7 @@ class io_dzz extends io_api {
         global $_G;
         //$path:可能的值 icoid,'dzz::dzz/201401/02/wrwsdfsdfasdsf.txt'等dzzPath格式；
         if (!$data = IO::getMeta($path)) return false;
+        if ($data['error']) return false;
         $enable_cache = true; //是否启用缓存
         $quality = 80;
         $imgcachePath = 'imgcache/';

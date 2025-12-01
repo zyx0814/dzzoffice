@@ -32,6 +32,9 @@ if ($_GET['a'] == 'down') {
         if (!$icoarr = IO::getMeta($path)) {
             showmessage('attachment_nonexistence');
         }
+        if ($icoarr['error']) {
+            showmessage($icoarr['error']);
+        }
         $icoarr['icoid'] = $_GET['s'];
     }
     if ($icoarr['type'] == 'link') {
