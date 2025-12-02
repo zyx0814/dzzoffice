@@ -44,9 +44,9 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 
 ### 软件环境要求
 1. **操作系统**：支持Linux、Windows、Mac OS，推荐使用Linux。
-2. **数据库**：支持MySQL 5.5.3+（推荐MySQL 5.7+或MySQL 8.0+）、MariaDB 10.2+。
+2. **数据库**：支持MySQL 5.7+（推荐MySQL 8）、MariaDB 10.2+。
 3. **Web服务器软件**：支持Apache 2.4+、Nginx 1.18+（推荐）、Zeus、IIS等，使用Nginx时需搭配php-fpm。
-4. **PHP运行环境**：支持PHP 7.0+（推荐PHP 7.4或PHP 8.0+）。
+4. **PHP运行环境**：支持PHP 7.4+（推荐PHP 8.1）。
 5. **客户端浏览器**：推荐使用Chrome 60+、Firefox 60+、iOS 12+、IE 10+。
 6. **离线部署说明**：DzzOffice完全支持离线部署，但部分插件（如“永中office预览”）的正常使用有赖于公网提供的服务，使用此类插件时需连接外网。
 

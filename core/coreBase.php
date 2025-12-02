@@ -29,7 +29,7 @@ require DZZ_ROOT . 'core/core_version.php';
 require DZZ_ROOT . 'core/class/class_core.php';
 set_exception_handler(array('core', 'handleException'));
 
-$_config = array_merge($_config, core::loadConfig(DZZ_ROOT . CONFIG_NAME . BS . 'config_default' . EXT));
+$config_default = array_merge($_config, core::loadConfig(DZZ_ROOT . CONFIG_NAME . BS . 'config_default' . EXT));
 
 $install = core::loadConfig(DZZ_ROOT . CONFIG_NAME . BS . CONFIG_NAME . EXT);
 if (!$install) {
@@ -37,7 +37,7 @@ if (!$install) {
     exit();
 }
 
-$_config = array_merge($_config, $install);
+$_config = array_merge($config_default, $install);
 
 $_config = array_merge($_config, core::loadConfig(DZZ_ROOT . CONFIG_NAME . BS . 'config_frame' . EXT));
 

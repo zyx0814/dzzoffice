@@ -20,7 +20,7 @@ $tagid = intval($_GET['tagid']);
 $group = intval($_GET['group']);
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;
-$gets = array('mod' => 'appmarket', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group);
+$gets = array('mod' => 'appmarket', 'op' => 'appupgrade', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group);
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $refer = urlencode($theurl . '&page=' . $page);
 $order = 'ORDER BY disp';
