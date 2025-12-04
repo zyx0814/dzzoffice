@@ -2,25 +2,6 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-if (!function_exists('sys_get_temp_dir')) {
-    function sys_get_temp_dir() {
-        if (!empty($_ENV['TMP'])) {
-            return realpath($_ENV['TMP']);
-        }
-        if (!empty($_ENV['TMPDIR'])) {
-            return realpath($_ENV['TMPDIR']);
-        }
-        if (!empty($_ENV['TEMP'])) {
-            return realpath($_ENV['TEMP']);
-        }
-        $tempfile = tempnam(__FILE__, '');
-        if (file_exists($tempfile)) {
-            unlink($tempfile);
-            return realpath(dirname($tempfile));
-        }
-        return null;
-    }
-}
 
 function getfileinfo($icoid, $sid = false) {
     if (preg_match('/^dzz:[gu]id_\d+:.+?/i', $icoid)) {
@@ -190,7 +171,7 @@ function cpurl($type = 'parameter', $filters = array('sid', 'frames')) {
     $extra = $and = '';
     foreach ($getarray as $key => $value) {
         if (!in_array($key, $filters)) {
-            @$extra .= $and . $key . ($type == 'parameter' ? '%3D' : '=') . rawurlencode($value);
+            @$extra .= $and . $key . ($type == 'parameter' ? '%3D' : '=') . rawurlencode((string)$value);
             $and = $type == 'parameter' ? '%26' : '&';
         }
     }
@@ -308,15 +289,19 @@ function authcode($string = '', $operation = 'DECODE', $key = '', $expiry = 0, $
     if (!$string) {
         return '';
     }
-    //$ckey_length = 4;
+
     $key = md5($key != '' ? $key : getglobal('authkey'));
+    // a参与加解密, b参与数据验证, c进行密文随机变换
     $keya = md5(substr($key, 0, 16));
     $keyb = md5(substr($key, 16, 16));
     $keyc = $ckey_length ? ($operation == 'DECODE' ? substr($string, 0, $ckey_length) : substr(md5(microtime()), -$ckey_length)) : '';
 
+    // 参与运算的密钥组
     $cryptkey = $keya . md5($keya . $keyc);
     $key_length = strlen($cryptkey);
 
+    // 前 10 位用于保存时间戳验证数据有效性, 10 - 26位保存 $keyb , 解密时通过其验证数据完整性
+	// 如果是解码的话会从第 $ckey_length 位开始, 因为密文前 $ckey_length 位保存动态密匙以保证解密正确
     $string = $operation == 'DECODE' ? base64_decode(substr(str_replace(array('_', '-'), array('/', '+'), $string), $ckey_length)) : sprintf('%010d', $expiry ? $expiry + time() : 0) . substr(md5($string . $keyb), 0, 16) . $string;
     $string_length = strlen($string);
 
@@ -345,12 +330,16 @@ function authcode($string = '', $operation = 'DECODE', $key = '', $expiry = 0, $
     }
 
     if ($operation == 'DECODE') {
+        // 这里按照算法对数据进行验证, 保证数据有效性和完整性
+		// $result 01 - 10 位是时间, 如果小于当前时间或为 0 则通过
+		// $result 10 - 26 位是加密时的 $keyb , 需要和入参的 $keyb 做比对
         if (((int)substr($result, 0, 10) == 0 || (int)substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) === substr(md5(substr($result, 26) . $keyb), 0, 16)) {
             return substr($result, 26);
         } else {
             return '';
         }
     } else {
+        // 把动态密钥保存在密文里, 并用 base64 编码保证传输时不被破坏
         return $keyc . str_replace(array('/', '+'), array('_', '-'), str_replace('=', '', base64_encode($result)));
     }
 }
@@ -438,7 +427,7 @@ function dzzdecode($string, $key = '', $ckey_length = 0) {
     return $str;
 }
 
-function fsocketopen($hostname, $port = 80, &$errno, &$errstr, $timeout = 15) {
+function fsocketopen($hostname, $port = 80, &$errno = null, &$errstr = null, $timeout = 15) {
     $fp = '';
     if (function_exists('fsockopen')) {
         $fp = @fsockopen($hostname, $port, $errno, $errstr, $timeout);
@@ -569,12 +558,12 @@ function checkmobile() {
         'up.link', 'blazer', 'helio', 'hosin', 'huawei', 'novarra', 'coolpad', 'webos', 'techfaith', 'palmsource',
         'alcatel', 'amoi', 'ktouch', 'nexian', 'ericsson', 'philips', 'sagem', 'wellcom', 'bunjalloo', 'maui', 'smartphone',
         'iemobile', 'spice', 'bird', 'zte-', 'longcos', 'pantech', 'gionee', 'portalmmm', 'jig browser', 'hiptop',
-        'benq', 'haier', '^lct', '320x320', '240x320', '176x220');
+        'benq', 'haier', '^lct', '320x320', '240x320', '176x220', 'windows phone');
     static $wmlbrowser_list = array('cect', 'compal', 'ctl', 'lg', 'nec', 'tcl', 'alcatel', 'ericsson', 'bird', 'daxian', 'dbtel', 'eastcom',
         'pantech', 'dopod', 'philips', 'haier', 'konka', 'kejian', 'lenovo', 'benq', 'mot', 'soutec', 'nokia', 'sagem', 'sgh',
         'sed', 'capitel', 'panasonic', 'sonyericsson', 'sharp', 'amoi', 'panda', 'zte');
 
-    $pad_list = array('pad', 'gt-p1000');
+    static $pad_list = array('ipad', 'pad', 'gt-p1000');
 
     $useragent = strtolower($_SERVER['HTTP_USER_AGENT']);
 
@@ -885,7 +874,6 @@ function template($file, $tpldir = '', $templateNotMust = false) {
         return $cachefile;
     }
     return FALSE;
-
 }
 
 function dsign($str, $length = 16) {
@@ -931,7 +919,7 @@ function getpath($path) {
     return $path;
 }
 
-function dgmdate($timestamp, $format = 'dt', $timeoffset = '9999', $uformat = '') {
+function dgmdate($timestamp, $format = 'dt', $timeoffset = 9999, $uformat = '') {
     global $_G;
     $format == 'u' && !$_G['setting']['dateconvert'] && $format = 'dt';
     static $dformat, $tformat, $dtformat, $offset, $lang;
@@ -2553,7 +2541,7 @@ function get_resources_some_setting() {
             } elseif ($v == 'other') {
                  // 其他用户：仅当用户无组织时添加（直接查询数据库记录数）
                 if ($hasOrg === null) {
-                    $hasOrg = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid = %d",['organization_user', $_G['uid']]) > 0;
+                    $hasOrg = $orgUserModel->fetch_num_by_uid($_G['uid']);
                 }
                 if (!$hasOrg) {
                     $users[] = $_G['uid'];

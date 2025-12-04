@@ -41,7 +41,7 @@ class template {
         $content = "<?php if(!defined('IN_DZZ')) exit('Access Denied'); /*".serialize($this->includeTemplate)."*/?>\n".$content;
         $this->includeTemplate = array();
         if (!@$fp = fopen(DZZ_ROOT . $cachefile, 'w')) {
-            $this -> error('directory_notfound', dirname(DZZ_ROOT . $cachefile));
+            $this->error('directory_notfound', dirname(DZZ_ROOT . $cachefile));
         }
         flock($fp, 2);
         fwrite($fp, $content);
@@ -148,7 +148,7 @@ class template {
             if($this->templateNotMust || $nomasttplfile){
                 return '';
             }else{
-                $this -> error('template_notfound', $tplfile);
+                $this->error('template_notfound', $tplfile);
             }
 
         }
@@ -219,8 +219,8 @@ class template {
 		$template = preg_replace_callback("/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}[\n\r\t]*/is", array($this, 'parse_template_callback_stripvtags_loop123'), $template);
 		$template = preg_replace("/\{\/loop\}/i", "<? } ?>", $template);
 		$template = preg_replace("/\{$const_regexp\}/s", "<?=\\1?>", $template);
-		if (!empty($this -> replacecode)) {
-			$template = str_replace($this -> replacecode['search'], $this -> replacecode['replace'], $template);
+		if (!empty($this->replacecode)) {
+			$template = str_replace($this->replacecode['search'], $this->replacecode['replace'], $template);
 		}
 		$template = preg_replace("/ \?\>[\n\r]*\<\? /s", " ", $template);
 		$template = preg_replace_callback("/\"(http)?[\w\.\/:]+\?[^\"]+?&[^\"]+?\"/", array($this, 'parse_template_callback_transamp_0'), $template);
@@ -251,54 +251,54 @@ class template {
 	}
 
 	function parse_template_callback_loadsubtemplate_2($matches) {
-		return $this -> loadsubtemplate($matches[2]);
+		return $this->loadsubtemplate($matches[2]);
 	}
 
 	function parse_template_callback_languagevar_1($matches) {
-		return $this -> languagevar($matches[1]);
+		return $this->languagevar($matches[1]);
 	}
 	function parse_template_callback_languagevar_2($matches) {
-		return $this -> languagevar1($matches[1]);
+		return $this->languagevar1($matches[1]);
 	}
 	function parse_template_callback_img($matches) {
-		return $this -> language_img($matches);
+		return $this->language_img($matches);
 	}
 	function parse_template_callback_url($matches) {
-		return $this -> language_url($matches[1]);
+		return $this->language_url($matches[1]);
 	}
 	function parse_template_callback_linkurl($matches) {
-		return $this -> language_linkurl($matches);
+		return $this->language_linkurl($matches);
 	}
 	function parse_template_callback_blocktags_1($matches) {
-		return $this -> blocktags($matches[1]);
+		return $this->blocktags($matches[1]);
 	}
 
 	function parse_template_callback_blockdatatags_1($matches) {
-		return $this -> blockdatatags($matches[1]);
+		return $this->blockdatatags($matches[1]);
 	}
 
 	function parse_template_callback_adtags_1($matches) {
-		return $this -> adtags($matches[1]);
+		return $this->adtags($matches[1]);
 	}
 
 	function parse_template_callback_adtags_21($matches) {
-		return $this -> adtags($matches[2], $matches[1]);
+		return $this->adtags($matches[2], $matches[1]);
 	}
 
 	function parse_template_callback_datetags_1($matches) {
-		return $this -> datetags($matches[1]);
+		return $this->datetags($matches[1]);
 	}
 
 	function parse_template_callback_avatartags_1($matches) {
-		return $this -> avatartags($matches[1]);
+		return $this->avatartags($matches[1]);
 	}
 
 	function parse_template_callback_evaltags_2($matches) {
-		return $this -> evaltags($matches[2]);
+		return $this->evaltags($matches[2]);
 	}
 
 	function parse_template_callback_evaltags_1($matches) {
-		return $this -> evaltags($matches[1]);
+		return $this->evaltags($matches[1]);
 	}
 
 
@@ -307,43 +307,43 @@ class template {
 	}
 
 	function parse_template_callback_addquote_1($matches) {
-		return $this -> addquote('<?=' . $matches[1] . '?>');
+		return $this->addquote('<?=' . $matches[1] . '?>');
 	}
 
 	function parse_template_callback_stripvtags_template1($matches) {
-		return $this -> stripvtags('<? include template(\'' . $matches[1] . '\'); ?>');
+		return $this->stripvtags('<? include template(\'' . $matches[1] . '\'); ?>');
 	}
 
 	function parse_template_callback_stripvtags_echo1($matches) {
-		return $this -> stripvtags('<? echo ' . $matches[1] . '; ?>');
+		return $this->stripvtags('<? echo ' . $matches[1] . '; ?>');
 	}
 
 	function parse_template_callback_stripvtags_if123($matches) {
-		return $this -> stripvtags($matches[1] . '<? if(' . $matches[2] . ') { ?>' . $matches[3]);
+		return $this->stripvtags($matches[1] . '<? if(' . $matches[2] . ') { ?>' . $matches[3]);
 	}
 
 	function parse_template_callback_stripvtags_elseif123($matches) {
-		return $this -> stripvtags($matches[1] . '<? } elseif(' . $matches[2] . ') { ?>' . $matches[3]);
+		return $this->stripvtags($matches[1] . '<? } elseif(' . $matches[2] . ') { ?>' . $matches[3]);
 	}
 
 	function parse_template_callback_stripvtags_loop12($matches) {
-		return $this -> stripvtags('<? if(is_array(' . $matches[1] . ')) foreach(' . $matches[1] . ' as ' . $matches[2] . ') { ?>');
+		return $this->stripvtags($this->looptags($matches[1], $matches[2]));
 	}
 
 	function parse_template_callback_stripvtags_loop123($matches) {
-		return $this -> stripvtags('<? if(is_array(' . $matches[1] . ')) foreach(' . $matches[1] . ' as ' . $matches[2] . ' => ' . $matches[3] . ') { ?>');
+		return $this->stripvtags($this->looptags($matches[1], $matches[2], $matches[3]));
 	}
 
 	function parse_template_callback_transamp_0($matches) {
-		return $this -> transamp($matches[0]);
+		return $this->transamp($matches[0]);
 	}
 
 	function parse_template_callback_stripscriptamp_12($matches) {
-		return $this -> stripscriptamp($matches);
+		return $this->stripscriptamp($matches);
 	}
 
 	function parse_template_callback_stripblock_12($matches) {
-		return $this -> stripblock($matches[1], $matches[2]);
+		return $this->stripblock($matches[1], $matches[2]);
 	}
 
 
@@ -410,11 +410,11 @@ class template {
 
 	//模版lang替换
 	function languagevar($var) {
-		!isset($this -> language['inner']) && $this -> language['inner'] = array();
-		$langvar = &$this -> language['inner'];
+		!isset($this->language['inner']) && $this->language['inner'] = array();
+		$langvar = &$this->language['inner'];
 		
 		if (!isset($langvar[$var])) {
-			$this -> language['inner'] = lang();
+			$this->language['inner'] = lang();
 		}
 		if(isset($langvar[$var])) {
 			return $langvar[$var];
@@ -442,8 +442,8 @@ class template {
 		$str = strrchr(basename($var[3]),'.');
 		$arr = array('.png','.gif','.jpg','.jpeg','.bmp');
 		if(in_array($str, $arr)){
-			$name = $this -> site_operation($var[3]);
-			$src = $this -> check_file_exists($name);
+			$name = $this->site_operation($var[3]);
+			$src = $this->check_file_exists($name);
 			if($src){
 				return '<img ' . $var[1] . ' src='.$var[2].$name.$var[4] . $var[5] . '>';
 			}else{
@@ -457,8 +457,8 @@ class template {
 	//url的地址替换
 	function language_url($var) {
 		$var = str_replace(' ','',$var);
-		$name = $this -> site_operation($var);
-		$src = $this -> check_file_exists($name);
+		$name = $this->site_operation($var);
+		$src = $this->check_file_exists($name);
 		if($src){
 			return ':url('.$name.')';
 		}else{
@@ -468,8 +468,8 @@ class template {
 	function language_linkurl($var) {
 		$var[3] = str_replace(' ','',$var[3]);
 		$link_src = str_replace('?{VERHASH}','',$var[3]);		
-		$name = $this -> site_operation($link_src);
-		$src = $this -> check_file_exists($name);	
+		$name = $this->site_operation($link_src);
+		$src = $this->check_file_exists($name);	
 		if($src){		
 			return '<link ' . $var[1] . ' href='.$var[2].$name.$var[4] . $var[5] .'>';
 		}else{
@@ -483,66 +483,62 @@ class template {
 		$imgname = basename($var);
 		$str = strrchr($imgname,'.');
 		return $name = str_replace($str,'.'.$this->default_language.$str,$var);
-		
 	}
-	
 
 	function adtags($parameter, $varname = '') {
 		$parameter = stripslashes($parameter);
-		$i = count($this -> replacecode['search']);
-		$this -> replacecode['search'][$i] = $search = "<!--AD_TAG_$i-->";
-		$this -> replacecode['replace'][$i] = "<?php " . (!$varname ? 'echo ' : '$' . $varname . '=') . "adshow(\"$parameter\");?>";
+		$i = count($this->replacecode['search']);
+		$this->replacecode['search'][$i] = $search = "<!--AD_TAG_$i-->";
+		$this->replacecode['replace'][$i] = "<?php " . (!$varname ? 'echo ' : '$' . $varname . '=') . "adshow(\"$parameter\");?>";
 		return $search;
 	}
 
 	function datetags($parameter) {
 		$parameter = stripslashes($parameter);
-		$i = count($this -> replacecode['search']);
-		$this -> replacecode['search'][$i] = $search = "<!--DATE_TAG_$i-->";
-		$this -> replacecode['replace'][$i] = "<?php echo dgmdate($parameter);?>";
+		$i = count($this->replacecode['search']);
+		$this->replacecode['search'][$i] = $search = "<!--DATE_TAG_$i-->";
+		$this->replacecode['replace'][$i] = "<?php echo dgmdate($parameter);?>";
 		return $search;
 	}
 
 	function avatartags($parameter) {
 		$parameter = stripslashes($parameter);
-		$i = count($this -> replacecode['search']);
-		$this -> replacecode['search'][$i] = $search = "<!--AVATAR_TAG_$i-->";
-		$this -> replacecode['replace'][$i] = "<?php echo avatar($parameter);?>";
+		$i = count($this->replacecode['search']);
+		$this->replacecode['search'][$i] = $search = "<!--AVATAR_TAG_$i-->";
+		$this->replacecode['replace'][$i] = "<?php echo avatar($parameter);?>";
 		return $search;
 	}
 
 	function evaltags($php) {
 		$php = str_replace('\"', '"', $php);
-		$i = count($this -> replacecode['search']);
-		$this -> replacecode['search'][$i] = $search = "<!--EVAL_TAG_$i-->";
-		$this -> replacecode['replace'][$i] = "<? $php?>";
+		$i = count($this->replacecode['search']);
+		$this->replacecode['search'][$i] = $search = "<!--EVAL_TAG_$i-->";
+		$this->replacecode['replace'][$i] = "<? $php?>";
 		return $search;
 	}
 
 	function hooktags($hookid, $key = '') {
 		global $_G;
-		$i = count($this -> replacecode['search']);
-		$this -> replacecode['search'][$i] = $search = "<!--HOOK_TAG_$i-->";
+		$i = count($this->replacecode['search']);
+		$this->replacecode['search'][$i] = $search = "<!--HOOK_TAG_$i-->";
 		$dev = '';
 		if (isset($_G['config']['plugindeveloper']) && $_G['config']['plugindeveloper'] == 2) {
 			$dev = "echo '<hook>[" . ($key ? 'array' : 'string') . " $hookid" . ($key ? '/\'.' . $key . '.\'' : '') . "]</hook>';";
 		}
 		$key = $key != '' ? "[$key]" : '';
-		$this -> replacecode['replace'][$i] = "<?php {$dev}if(!empty(\$_G['setting']['pluginhooks']['$hookid']$key)) echo \$_G['setting']['pluginhooks']['$hookid']$key;?>";
+		$this->replacecode['replace'][$i] = "<?php {$dev}if(!empty(\$_G['setting']['pluginhooks']['$hookid']$key)) echo \$_G['setting']['pluginhooks']['$hookid']$key;?>";
 		return $search;
 	}
 
 	function stripphpcode($type, $code) {
-		$this -> phpcode[$type][] = $code;
-		return '{phpcode:' . $type . '/' . (count($this -> phpcode[$type]) - 1) . '}';
+		$this->phpcode[$type][] = $code;
+		return '{phpcode:' . $type . '/' . (count($this->phpcode[$type]) - 1) . '}';
 	}
-
 	function loadsubtemplate($file) {
 		$tplfile = template($file, 0, '', 1);
-		$filename =DZZ_ROOT.'/' . $tplfile;
-
-		if (($content = @implode('', file($filename))) || ($content = $this -> getphptemplate(@implode('', file(substr($filename, 0, -4) . '.php'))))) {
-			$this -> subtemplates[] = $tplfile;
+		$filename = DZZ_ROOT . '/' . $tplfile;
+		if((file_exists($filename) && is_readable($filename) && ($content = implode('', file($filename)))) || (file_exists(substr($filename, 0, -4) . '.php') && is_readable(substr($filename, 0, -4) . '.php') && ($content = $this->getphptemplate(implode('', file(substr($filename, 0, -4) . '.php')))))) {
+			$this->subtemplates[] = $tplfile;
 			return $content;
 		} else {
 			return '<!-- ' . $file . ' -->';
@@ -563,12 +559,29 @@ class template {
 			//fix notice
 			list($b, $m) = explode('::', $module);
 			if ($b && $b == $_G['basescript'] && (!$m || $m == CURMODULE)) {
-				$this -> csscurmodules .= $content;
+				$this->csscurmodules .= $content;
 				return;
 			}
 		}
 		return;
 	}
+
+	function looptags($param1, $param2, $param3 = '') {
+		if(preg_match("/^\<\?\=\\\$.+?\?\>$/s", $param1)) {
+			$exprtemp = $param1;
+			$return = '<? if(isset('.$param1.') && is_array('.$param1.')) ';
+		} else {
+			$exprtemp = '$l_'.random(8);
+			$return = '<? '.$exprtemp.' = '.$param1.';if(is_array('.$exprtemp.')) ';
+		}
+		if($param3) {
+			$return .= 'foreach('.$exprtemp.' as '.$param2.' => '.$param3.') { ?>';
+		} else {
+			$return .= 'foreach('.$exprtemp.' as '.$param2.') { ?>';
+		}
+		return $return;
+	}
+
 	function transamp($str) {
 		$str = str_replace('&', '&amp;', $str);
 		$str = str_replace('&amp;amp;', '&amp;', $str);

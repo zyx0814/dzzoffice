@@ -200,7 +200,6 @@ class table_organization extends dzz_table {
 
     //获取机构群组下级
     public function fetch_org_by_uidorgid($uid, $orgid) {
-
         $resultarr = array();
         //如果该用户是当前部门普通成员则不获取下级机构信息,如果是下级机构成员或当前机构管理员则获取下级部门信息
         if (C::t('organization_admin')->chk_memberperm($orgid, $uid)) {//如果是管理员

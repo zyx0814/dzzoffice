@@ -213,6 +213,16 @@ class table_organization_user extends dzz_table {
         }
     }
 
+    //判断用户是否为机构部门成员
+    public function fetch_num_by_uid($uid) {
+        if (!$uid) return false;
+        if (DB::result_first("select count(*) from %t where uid = %d", array($this->_table, $uid))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function fetch_usernums_by_orgid($orgid) {
         if (!$orgid) return '';
         $numbers = DB::result_first("select count(*) from %t where orgid = %d", array($this->_table, $orgid));

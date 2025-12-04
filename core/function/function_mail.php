@@ -3,7 +3,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 @set_time_limit(300);
-function sendmail($toemail, $subject, $message, $from = '') {
+function sendmail($toemail, $subject, $message = '', $from = '') {
     global $_G;
     if (!is_array($_G['setting']['mail'])) {
         $_G['setting']['mail'] = dunserialize($_G['setting']['mail']);
