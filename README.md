@@ -1,25 +1,34 @@
 ﻿﻿<div align="center">
-  <img src="./static/image/common/logo.png" width="128px" alt="DzzOffice" />
+  <a href="https://github.com/zyx0814/dzzoffice" title="DzzOffice 开源协同办公系统">
+    <img src="./static/image/common/logo.png" width="128px" alt="DzzOffice 开源协同办公系统" />
+  </a>
   <h1>DzzOffice</h1>
-  <h4>多云存储 • 在线文档管理 • 协同办公 • 100%开源</h4>
+  <h4>多云存储 • 在线文档 • 团队协作 • 私有化部署 • 100%开源</h4>
   <p>
-    <a href="http://dzzoffice.com" target="_blank">官网</a> •
-    <a href="http://dzzoffice.com" target="_blank">下载</a> •
-    <a href="http://demo.dzzoffice.com" target="_blank">演示</a>  • 
-    <a href="./UPDATE.md" target="_blank">更新日志</a>
+    <a href="https://dzzoffice.com" target="_blank" style="text-decoration: none;"><img src="https://img.shields.io/badge/官网-DzzOffice-4285F4?style=flat-square&logo=google-chrome" alt="官网" /></a>
+    <a href="https://demo.dzzoffice.com" target="_blank" style="text-decoration: none;"><img src="https://img.shields.io/badge/在线演示-体验功能-28A745?style=flat-square&logo=demoivre" alt="在线演示" /></a>
+    <a href="./UPDATE.md" target="_blank" style="text-decoration: none;"><img src="https://img.shields.io/badge/更新日志-版本记录-FCC367?style=flat-square&logo=file-alt" alt="更新日志" /></a>
+    <a href="https://hub.docker.com/r/xiaohu2023/dzzoffice" target="_blank" style="text-decoration: none;"><img src="https://img.shields.io/badge/Docker-快速部署-2496ED?style=flat-square&logo=docker" alt="Docker部署" /></a>
   </p>
-  <p>
-<img src="https://img.shields.io/badge/php-%3E%3D7.0-brightgreen" />
-    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/stargazers"><img src="https://gitee.com/zyx0814/dzzoffice/badge/star.svg?theme=dark" alt='gitee star'/></a>
-    <a target="_blank" href="https://github.com/zyx0814/dzzoffice/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zyx0814/dzzoffice?style=social"></a>
-  </p>
+
+</div>
+<div align="center">
+  <div>
+    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice?tab=readme-ov-file#-安装部署" title="PHP版本要求"><img src="https://img.shields.io/badge/PHP-%3E%3D7.0-brightgreen?style=flat-square&logo=php" alt="PHP版本要求" /></a>
+    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice?tab=readme-ov-file#-安装部署" title="数据库版本要求"><img src="https://img.shields.io/badge/MySQL/MariaDB-%3E%3D5.7-blue?style=flat-square&logo=mysql" alt="数据库版本要求" /></a>
+    <a target="_blank" href="https://www.dzzoffice.com/licenses/license.txt" title="DzzOffice 开源协议"><img src="https://img.shields.io/github/license/zyx0814/dzzoffice?style=flat-square&logo=gnu&color=orange" alt="开源协议" /></a>
+    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/UPDATE.md" title="DzzOffice 最新版本"><img src="https://img.shields.io/badge/version-v2.4.0-blue.svg" alt="最新版本" /></a>
+    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/stargazers"><img src="https://gitee.com/zyx0814/dzzoffice/badge/star.svg?theme=dark" alt="Gitee Star" /></a>
+    <a target="_blank" href="https://github.com/zyx0814/dzzoffice/stargazers"><img src="https://img.shields.io/github/stars/zyx0814/dzzoffice?style=flat-square&logo=github&color=yellow" alt="GitHub Stars" /></a>
+    <a target="_blank" href="https://github.com/zyx0814/dzzoffice/network/members"><img src="https://img.shields.io/github/forks/zyx0814/dzzoffice?style=flat-square&logo=github&color=blue" alt="GitHub Forks" /></a>
+  </div>
 </div>
 
 ## 📝 项目介绍
 
-DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于“Google 企业应用套件”和“微软 Office365”的协同办公平台。它由多款开源办公应用组成，用户可根据需求选择和安装，实现高度灵活和可定制的使用体验。
+DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于“Google 企业应用套件”和“微软 Office365”的协同办公平台。它由多款开源办公应用构成，用户可根据需求选择和安装，实现高度灵活和可定制的使用体验。
 
-作为集云存储与应用管理于一体的工具，DzzOffice 具备强大的文件共享功能和丰富的成员权限管理机制，广泛适用于个人云存储、团队网盘以及企业 OA 等多种场景。通过简单部署，它能接入多种云存储服务，轻松实现在线协同办公，有效提升团队工作效率。
+支持多云端存储整合、在线文档编辑、团队协作、文件管理等核心功能，还提供私有化部署方案，满足企业/团队对数据安全和个性化办公的需求。其集云存储与应用管理于一体，有强大的文件共享功能和丰富的成员权限管理机制，广泛用于个人云存储、团队网盘、企业 OA 等场景。
 
 #### 核心功能与工具组合
 套件包含多款实用工具，用户可按需选择单一工具或组合使用，并能设置默认登录工具，兼顾强大功能与灵活适配性，满足不同规模企业和团队的需求。这些工具包含但不限于：
