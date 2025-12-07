@@ -5,7 +5,6 @@ if(!defined('IN_DZZ')) {
 class core
 {
 	private static $_tables;
-	private static $_tptables;
 	private static $_imports;
 	private static $_app;
 	private static $_memory;
@@ -25,22 +24,8 @@ class core
 		return self::$_app;
 	}
 
-	public static function creatapp() {
-
-		if(!is_object(self::$_app)) {
-
-			self::$_app = dzz_app::instance();
-		}
-
-		return self::$_app;
-	}
-
 	public static function t($name) {
 		return self::_make_obj($name, 'table', DZZ_TABLE_EXTENDABLE);
-	}
-	
-	public static function tp_t($name) {
-		return self::_tp_make_obj($name, 'table', DZZ_TABLE_EXTENDABLE);
 	}
 	
 	public static function m($name) {
@@ -79,21 +64,6 @@ class core
 			}
 		}
 		return self::$_tables[$cname];
-	}
-	
-	protected static function _tp_make_obj($name, $type, $extendable = true, $p = array()) {
-		$folder = null;
-		if($name[0] === '#') {
-			list(, $folder, $name) = explode('#', $name);
-		}
-		$cname = $type.'_'.$name;
-		if(!isset(self::$_tptables[$cname])) {
-			/*if(!class_exists($cname, false)) {
-				self::import('class'.'/'.$type.'/'.$name,$folder); 
-			}*/
-			self::$_tptables[$cname] = new dzz_mode($name); 
-		}
-		return self::$_tptables[$cname];
 	}
 
 	public static function memory() {
@@ -327,37 +297,24 @@ class core
 
 	public static function loadConfig($file = null){
 	    if($file && file_exists($file)){
-
             return include $file;
-
         }else{
             return false;
         }
-
     }
 
     public static function getConfig($name){
-
         global $_config;
-
         return $_config[$name];
     }
     public static function setConfig($name,$value = null){
-
         global $_config;
-
         if(is_string($name)){//单个设置
-
             $name = strtolower($name);
-
             $_config[$name] = $value;
-
         }elseif(is_array($name)){//批量设置
-
             $name = array_change_key_case($name,CASE_LOWER);
-
             foreach($name as $k=>$v){
-
                 $_config[$k] = $v;
             }
         }else{

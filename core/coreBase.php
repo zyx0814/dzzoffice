@@ -57,10 +57,6 @@ class Hook extends \core\dzz\Hook {}
 
 class DB extends dzz_database {}
 
-class Tpdb extends \core\dzz\Tpdb {}
-
-class Tpsqli extends \core\dzz\Tpsqli {}
-
 class IO extends dzz_io {}
 
 require DZZ_ROOT . 'core/function/function_misc.php';

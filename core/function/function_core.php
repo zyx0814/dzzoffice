@@ -439,6 +439,33 @@ function fsocketopen($hostname, $port = 80, &$errno = null, &$errstr = null, $ti
     return $fp;
 }
 
+/**
+ * 封装的高性能网络套接字请求方法（对外统一入口）
+ * 兼容 curl/fsockopen，支持HTTP/HTTPS、POST提交、Cookie、文件上传、超时控制等特性
+ * 核心逻辑委托给 _dfsockopen 实现，本函数仅负责加载依赖并转发调用
+ *
+ * @param string $url 目标请求地址（必填），支持 http://、https:// 协议
+ * @param int $limit 返回内容长度限制，0 表示不限制（默认）
+ * @param string|array $post POST请求数据：字符串格式（a=1&b=2）或数组（自动编码），空字符串表示GET请求（默认）
+ * @param string $cookie 请求携带的Cookie字符串，格式：name1=value1; name2=value2（默认空）
+ * @param bool $bysocket 是否强制使用fsockopen（跳过curl），FALSE=优先curl（默认），TRUE=强制socket
+ * @param string $ip 指定目标服务器IP（绕过DNS解析），空字符串表示自动解析域名（默认）
+ * @param int $timeout 请求超时时间（秒），默认15秒
+ * @param bool $block 是否启用阻塞模式，TRUE=阻塞（默认），FALSE=非阻塞
+ * @param string $encodetype 数据编码方式：URLENCODE（常规表单，默认）/ MULTIPART（文件上传）
+ * @param bool $allowcurl 是否允许使用curl，TRUE=优先curl（默认），FALSE=禁用curl直接使用socket
+ * @param int $position HTTP_RANGE断点续传位置，0表示从开头请求（默认）
+ * @param array $files 上传文件数组（配合MULTIPART编码），格式：
+ *                     [
+ *                         'file字段名' => [
+ *                             'name' => '文件名',
+ *                             'tmp_name' => '临时文件路径',
+ *                             'type' => '文件MIME类型'
+ *                         ]
+ *                     ]（默认空数组）
+ *
+ * @return string|false 成功返回目标URL的响应内容（响应体），失败返回false（超时/连接失败/无响应等）
+ */
 function dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $ip = '', $timeout = 15, $block = TRUE, $encodetype = 'URLENCODE', $allowcurl = TRUE, $position = 0, $files = array()) {
     require_once libfile('function/filesock');
     return _dfsockopen($url, $limit, $post, $cookie, $bysocket, $ip, $timeout, $block, $encodetype, $allowcurl, $position, $files);
@@ -2627,7 +2654,7 @@ function get_update_app_num() {
     $map = array();
     $map["upgrade_version"] = array("neq", "");
     $map["available"] = array("gt", "0");
-    $num = DB::result_first("select COUNT(*) from %t where `available`>0 and upgrade_version!=''", array('app_market'));// C::tp_t('app_market')->where($map)->count("*");
+    $num = DB::result_first("select COUNT(*) from %t where `available`>0 and upgrade_version!=''", array('app_market'));
     return $num;
 }
 

@@ -53,7 +53,7 @@ if ($operation == 'check_install') {//根据appid检查app应用是否需要更�
     }
     $time = dgmdate(TIMESTAMP, 'Ymd');
 
-    $appinfo = DB::result_first("select COUNT(*) from %t where mid=%d", array('app_market', $baseinfo['mid']));//C::tp_t('app_market')->where($map)->find();
+    $appinfo = DB::result_first("select COUNT(*) from %t where mid=%d", array('app_market', $baseinfo['mid']));
     $return = array(
         "url" => ADMINSCRIPT . '?mod=' . MOD_NAME . '&op=install_app_ajax',
         "status" => 1,
@@ -169,15 +169,6 @@ if ($operation == 'check_install') {//根据appid检查app应用是否需要更�
     $release = trim($_GET['release']);
     $locale = trim($_GET['locale']);
     $charset = trim($_GET['charset']);
-
-    /*$upgradeinfo = $upgrade_step = array();
-    
-    $appid = $_GET["appid"]; 
-    $appinfo = C::tp_t('app_market')->find( $appid );
-    
-    $upgrade_version = unserialize($appinfo["upgrade_version"]);
-    $upgradeinfo = $upgrade_version[$operation]; 
-    $appinfo["upgradeinfo"]=$upgradeinfo;*/
 
     $dzz_upgrade = new dzz_upgrade_app();
     if ($step != 5) {

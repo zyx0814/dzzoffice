@@ -118,21 +118,14 @@ if ($do == 'delete') {
     $count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('resources') . " WHERE $sql", $param);
     if ($count) {
         $data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $sql $order $limitsql", $param);
+        $resources = C::t('resources');
+        $resources_statis = C::t('resources_statis');
         foreach ($data as $value) {
-            if (!$data = C::t('resources')->fetch_by_rid($value['rid'])) {
+            if (!$data = $resources->fetch_by_rid($value['rid'])) {
                 continue;
             }
             //文件统计信息
-            $filestatis = C::t('resources_statis')->fetch_by_rid($value['rid']);
-            if ($data['relpath'] == '/') {
-                $data['relpath'] = '回收站';
-            }
-            if ($data['isdelete']) {
-                $isdelete = '是';
-            } else {
-                $isdelete = '否';
-            }
-            $copys = $data['copys'];
+            $filestatis = $resources_statis->fetch_by_rid($value['rid']);
             if ($data['attachment']) {
                 if ($data['rbz']) {
                     $FileUri = IO::getStream($data['rbz'] . '/' . $data['attachment']);
@@ -158,10 +151,10 @@ if ($do == 'delete') {
                 "ftype" => $data['type'],
                 "oid" => $data['oid'],
                 "md5" => $data['md5'],
-                "relpath" => $data['relpath'],
+                "relpath" => ($data['relpath'] == '/') ? '回收站' : $data['relpath'],
                 "dateline" => $data['fdateline'],
-                "isdelete" => $isdelete,
-                "copys" => $copys,
+                "isdelete" => $data['isdelete'] ? '是' : '否',
+                "copys" => $data['copys'],
                 "FileUri" => $FileUri,
                 "downs" => $filestatis['downs'],
                 "views" => $filestatis['views'],

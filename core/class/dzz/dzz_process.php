@@ -9,7 +9,7 @@ class dzz_process {
 		$status = dzz_process::_status('get', $process) || dzz_process::_find($process, $ttl);
 		
 		if($autounlock && !$status) {
-			register_shutdown_function('discuz_process::unlock', $process);
+			register_shutdown_function('dzz_process::unlock', $process);
 		}
 
 		return $status;
