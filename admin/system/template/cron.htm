@@ -98,6 +98,9 @@
 				</form>
 				<!--{elseif $_GET['run']}-->
 				<!--{else}-->
+				<div class="alert alert-danger">
+					当前计划任务<!--{if empty($_config['remote']['on']) || empty($_config['remote']['cron'])}-->采用用户访问时触发<!--{else}-->已关闭用户访问触发，可通过系统级的计划任务触发<!--{/if}-->
+				</div>
 				<div class="alert alert-warning">
 					<h5>{lang board_message}</h5>
 					<ul class="form-text">

@@ -15,7 +15,6 @@ include_once libfile('function/cache');
 $op = isset($_GET['op']) ? $_GET['op'] : '';
 $navtitle = lang('cron') . ' - ' . lang('appname');
 if (empty($_GET['edit']) && empty($_GET['run'])) {
-
     if (!submitcheck('cronssubmit')) {
         $crons = array();
         $query = DB::query("SELECT * FROM " . DB::table('cron') . " ORDER BY type DESC");
@@ -50,7 +49,6 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
             $crons[] = $cron;
         }
     } else {
-
         if ($ids = dimplode($_GET['delete'])) {
             DB::delete('cron', "cronid IN ($ids) AND type!='system'");
         }
@@ -87,9 +85,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
         $redirecturl = BASESCRIPT . '?mod=system&op=cron';
         $msg_type = 'success';
     }
-
 } else {
-
     $cronid = empty($_GET['run']) ? $_GET['edit'] : $_GET['run'];
     $cron = DB::fetch_first("SELECT * FROM " . DB::table('cron') . " WHERE cronid='$cronid'");
     if (!$cron) {
@@ -104,9 +100,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
     $cron['minute'] = explode("\t", $cron['minute']);
 
     if (!empty($_GET['edit'])) {
-
         if (!submitcheck('editsubmit')) {
-
             $navtitle = lang('misc_cron_edit') . ' - ' . lang('appname');
 
             $weekdayselect = $dayselect = $hourselect = '';
