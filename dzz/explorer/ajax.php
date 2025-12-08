@@ -619,7 +619,8 @@ if ($do == 'upload') {//上传图片文件
             } else {
                 if($bz) {
                     $bzinfo = IO::getMeta($files);
-                    if ($share['error']) showTips(array('error' => $share['error']), 'json');
+                    if (!$bzinfo) showTips(array('error' => lang('file_not_exist')), 'json');
+                    if ($bzinfo['error']) showTips(array('error' => $bzinfo['error']), 'json');
                     $share['type'] = $bzinfo['type'];
                 }
                 $ret = C::t('shares')->insert($share,$bz);
@@ -680,7 +681,9 @@ if ($do == 'upload') {//上传图片文件
             } else {
                 if($bz) {
                     $share = IO::getMeta($files);
-                    if ($share['error']) {
+                    if (!$share) {
+                        $arr = array('error' => lang('file_not_exist'));
+                    } elseif ($share['error']) {
                         $arr = array('error' => $share['error']);
                     } else {
                         $share['title'] = $share['name'];
@@ -724,6 +727,7 @@ if ($do == 'upload') {//上传图片文件
     if ($bz) {
         if ($fid) {
             $fileinfo = IO::getMeta($fid);
+            if (!$fileinfo) showmessage('file_not_exist');
             if ($fileinfo['error']) showmessage($fileinfo['error']);
             if (!$_G['adminid'] &&  $fileinfo['uid'] != $_G['uid']) {
                 showmessage('no_privilege');
@@ -742,21 +746,18 @@ if ($do == 'upload') {//上传图片文件
             $contents = array(0, 0);
             foreach ($rids as $icoid) {
                 if (!$icoarr = IO::getMeta($icoid)) continue;
-                if ($icoarr['error']) {
-                    showmessage($icoarr['error']);
-                } else {
-                    switch ($icoarr['type']) {
-                        case 'folder':
-                            $contains = IO::getContains($icoarr['path']);
-                            $size += intval($contains['size']);
-                            $contents[0] += $contains['contain'][0];
-                            $contents[1] += $contains['contain'][1] + 1;
-                            break;
-                        default:
-                            $size += $icoarr['size'];
-                            $contents[0] += 1;
-                            break;
-                    }
+                if ($icoarr['error']) showmessage($icoarr['error']);
+                switch ($icoarr['type']) {
+                    case 'folder':
+                        $contains = IO::getContains($icoarr['path']);
+                        $size += intval($contains['size']);
+                        $contents[0] += $contains['contain'][0];
+                        $contents[1] += $contains['contain'][1] + 1;
+                        break;
+                    default:
+                        $size += $icoarr['size'];
+                        $contents[0] += 1;
+                        break;
                 }
             }
             $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($size), 'size' => $size));
@@ -764,6 +765,7 @@ if ($do == 'upload') {//上传图片文件
         } else {
             $paths = dzzdecode($paths);
             $fileinfo = IO::getMeta($paths);
+            if (!$fileinfo) showmessage(lang('file_not_exist'));
             if ($fileinfo['error']) showmessage($fileinfo['error']);
             if (!$_G['adminid'] &&  $fileinfo['uid'] != $_G['uid']) {
                 showmessage('no_privilege');

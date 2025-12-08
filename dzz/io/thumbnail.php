@@ -6,7 +6,11 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-$path = dzzdecode(urldecode($_GET['path']));
+if (!$path = dzzdecode(urldecode($_GET['path']))) {
+    @header('HTTP/1.1 404 Not Found');
+    @header('Status: 404 Not Found');
+    exit('Access Denied');
+}
 $width = intval($_GET['width']);
 $height = intval($_GET['height']);
 $size = isset($_GET['size']) ? trim($_GET['size']) : '';
@@ -19,6 +23,16 @@ $download = isset($_GET['a']) ? trim($_GET['a']) : '';
 if ($download == 'down') {
     if (!$filename = urldecode($_GET['filename'])) {
         $meta = IO::getMeta($path);
+        if (!$meta) {
+            @header('HTTP/1.1 404 Not Found');
+            @header('Status: 404 Not Found');
+            exit(lang('file_no_exist'));
+        }
+        if ($meta['error']) {
+            @header('HTTP/1.1 500 Internal Server Error');
+            @header('Status: 500 Internal Server Error');
+            exit($meta['error']);
+        }
         $filename = $meta['name'];
         $filesize = $meta['size'];
     }

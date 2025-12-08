@@ -416,6 +416,7 @@ class dzz_io {
 
     public static function download($paths, $filename = '', $checkperm = true) {
         $paths = (array)$paths;
+        if (!$paths) return false;
         if ($io = self::initIO($paths[0])) {
             $paths = self::clean($paths);
             $io->download($paths, $filename, $checkperm);

@@ -435,7 +435,12 @@ class io_disk extends io_api {
     //@param number $path  文件的路径
     //@param string $data  文件的新内容
     public function setFileContent($path, $data) {
-
+        $meta = $this->getMeta($path);
+        if (!$meta) return ['error' => 'not_found'];
+        if ($meta['error']) return $meta;
+        if (!perm_check::checkperm('edit', $meta)) {
+            return array('error' => lang('file_edit_no_privilege'));
+        }
         $bzarr = $this->parsepath($path);
 
         $file = $this->attachdir . $bzarr['path'];
@@ -443,11 +448,10 @@ class io_disk extends io_api {
             return array('error' => '写入失败');
         }
 
-        $icoarr = $this->getMeta($path);
-        if ($icoarr['type'] == 'image') {
-            $icoarr['img'] .= '&t=' . TIMESTAMP;
+        if ($meta['type'] == 'image') {
+            $meta['img'] .= '&t=' . TIMESTAMP;
         }
-        return $icoarr;
+        return $meta;
     }
 
     /**
@@ -766,6 +770,11 @@ class io_disk extends io_api {
     //获得文件内容；
     public function getFileContent($path) {
         $url = $this->getStream($path);
+        if (is_array($url) && isset($url['error'])) {
+            @header('HTTP/1.1 403 Not Found');
+            @header('Status: 403 Not Found');
+            exit($url['error']);
+        }
         return file_get_contents($url);
     }
 
@@ -840,10 +849,15 @@ class io_disk extends io_api {
             // Download the file
             $file = $this->getMeta($path);
             if ($file['type'] == 'folder') {
-                $this->zipdownload($path);
+                $this->zipdownload($path, $filename);
                 exit();
             }
             $url = $this->getStream($path);
+            if (is_array($url) && isset($url['error'])) {
+                @header('HTTP/1.1 403 Not Found');
+                @header('Status: 403 Not Found');
+                exit($url['error']);
+            }
             if (!$fp = @fopen($url, 'rb')) {
                 topshowmessage(lang('file_not_exist'));
             }

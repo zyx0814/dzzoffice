@@ -22,7 +22,7 @@ class dzz_cron {
             return false;
         }
         if ($cron) {
-            $cron['filename'] = str_replace(array('..', '/', '\\'), '', $cron['filename']);
+            $cron['filename'] = str_replace(['..', '/', '\\'], '', $cron['filename']);
             $efile = explode(':', $cron['filename']);
             if (count($efile) > 1) {
                 $filename = array_pop($efile);
@@ -40,6 +40,9 @@ class dzz_cron {
                 if (!@include $cronfile) {
                     return false;
                 }
+            } else {
+                $data = ['available' => '0'];
+				C::t('cron')->update($cron['cronid'], $data);
             }
         }
         self::nextcron();
@@ -94,7 +97,7 @@ class dzz_cron {
             $cron['minute'] = $nexttime['minute'];
         }
         $nextrun = @gmmktime($cron['hour'], $cron['minute'] > 0 ? $cron['minute'] : 0, 0, $monthnow, $cron['day'], $yearnow) - getglobal('setting/timeoffset') * 3600;
-        $data = array('lastrun' => TIMESTAMP, 'nextrun' => $nextrun);
+        $data = ['lastrun' => TIMESTAMP, 'nextrun' => $nextrun];
         if (!($nextrun > TIMESTAMP)) {
             $data['available'] = '0';
         }
@@ -108,7 +111,7 @@ class dzz_cron {
         $hour = $hour == -2 ? gmdate('H', TIMESTAMP + getglobal('setting/timeoffset') * 3600) : $hour;
         $minute = $minute == -2 ? gmdate('i', TIMESTAMP + getglobal('setting/timeoffset') * 3600) : $minute;
 
-        $nexttime = array();
+        $nexttime = [];
         if ($cron['hour'] == -1 && !$cron['minute']) {
             $nexttime['hour'] = $hour;
             $nexttime['minute'] = $minute + 1;

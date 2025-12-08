@@ -675,7 +675,7 @@ class io_OneDrive extends io_api {
     //获得文件内容；
     public function getFileContent($path) {
         $ret = $this->getStream($path);
-        if (is_array($ret) && $ret['error']) return $ret;
+        if (is_array($ret)) return $ret;
         return file_get_contents($ret);
     }
     //重写文件内容
@@ -816,7 +816,7 @@ class io_OneDrive extends io_api {
             // Download the file
             $file = $this->getMeta($path);
             if ($file['type'] == 'folder') {//目录压缩下载
-                $this->zipdownload($path);
+                $this->zipdownload($path, $filename);
                 exit();
             } else {//文件直接跳转到文件源地址；不再通过服务器中转
                 /*@header("Location: $url");

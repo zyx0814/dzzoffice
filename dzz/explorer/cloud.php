@@ -17,6 +17,9 @@ if ($bz && $bz !== 'dzz') {
     }
     if ($path) {
         $root = IO::getMeta($path);
+        if (!$root) {
+            showmessage('file_not_exist', dreferer());
+        }
         if ($root['error']) {
             showmessage($root['error'], dreferer());
         }

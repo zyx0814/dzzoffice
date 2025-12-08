@@ -764,7 +764,7 @@ class io_baiduPCS extends io_api {
                 'path' => $icosdata['path'],
                 'fname' => $icosdata['name'],
                 'uid' => $icosdata['uid'],
-                'pfid' => $icoadata['pfid'],
+                'pfid' => $icosdata['pfid'],
                 'iconview' => $_GET['iconview'] ? intval($_GET['iconview']) : 1,
                 'disp' => $_GET['disp'] ? intval($_GET['disp']) : 1,
                 'perm' => $this->perm,
@@ -864,7 +864,7 @@ class io_baiduPCS extends io_api {
             // Download the file
             $file = $this->getMeta($path);
             if ($file['type'] == 'folder') {//目录压缩下载
-                $this->zipdownload($path);
+                $this->zipdownload($path, $filename);
                 exit();
             } else {//文件直接跳转到文件源地址；不再通过服务器中转
                 @header("Location: $url");

@@ -61,7 +61,9 @@ if ($operation == 'deleteIco') {//删除文件到回收站
     }
     exit(json_encode($arr));
 } elseif ($operation == 'rename') {
-    $path = dzzdecode($_GET['path']);
+    if (!$path = dzzdecode($_GET['path'])) {
+        exit(json_encode(array('error' => lang('parameter_error'))));
+    }
     $text = str_replace('...', '', getstr(IO::name_filter($_GET['text']), 80));
     $ret = IO::rename($path, $text);
     exit(json_encode($ret));

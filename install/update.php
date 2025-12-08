@@ -7,6 +7,7 @@
  * @author      zyx(zyx@dzz.cc)
  */
 define('CURSCRIPT', 'misc');
+define('DZZSCRIPT', 'index.php');
 require __DIR__ . '/../core/coreBase.php';
 @set_time_limit(0);
 error_reporting(0);

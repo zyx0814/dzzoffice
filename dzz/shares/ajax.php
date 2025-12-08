@@ -18,6 +18,9 @@ if (!$sid) {
     exit(json_encode(array('error' => 'Access Denied')));
 }
 $sid = dzzdecode($sid);
+if (!$sid) {
+    exit(json_encode(array('error' => 'Access Denied')));
+}
 $share = C::t('shares')->fetch($sid);
 if (!$share || empty($share['filepath'])) exit(json_encode(array('error' => lang('share_file_iscancled'))));
 if ($share['status'] == -4) exit(json_encode(array('error' => lang('shared_links_screened_administrator'))));
@@ -248,6 +251,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
     if ($bz) {
         if ($fid) {
             $propertys = IO::getMeta($fid);
+            if (!$propertys) showmessage('file_not_exist');
             if ($propertys['error']) {
                 showmessage($propertys['error']);
             }
@@ -290,6 +294,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
         } else {
             $paths = dzzdecode($paths);
             $propertys = IO::getMeta($paths);
+            if (!$propertys) showmessage('file_not_exist');
             if ($propertys['error']) {
                 showmessage($propertys['error']);
             }

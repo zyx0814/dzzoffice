@@ -983,7 +983,7 @@ class io_Qcos extends io_api {
             // Download the file
             $file = $this->getMeta($path);
             if ($file['type'] == 'folder') {
-                $this->zipdownload($path);
+                $this->zipdownload($path, $filename);
                 exit();
             }
             if (!$fp = @fopen($url, 'rb')) {

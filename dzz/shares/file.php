@@ -109,6 +109,7 @@ if ($do == 'filelist') {
         }
         if (strpos($dbz, $filepaths) === 0) {
             $folder = IO::getMeta($bz);
+            if (!$folder) exit(json_encode(array('error' => lang('file_no_exist'))));
             if ($folder['error']) {
                 exit(json_encode(array('error' => $folder['error'])));
             }
@@ -194,6 +195,7 @@ if ($do == 'filelist') {
     if($share['pfid'] == -1) {
         $ignore = 0;
         $folder = IO::getMeta('sid:' . $sid . '_' .$filepaths,0,$sid);
+        if (!$folder) exit(json_encode(array('error' => lang('file_no_exist'))));
         if ($folder['error']) {
             if ($folder['delete']) {
                 DB::update('shares', array('status' => '-3'), array('id' => $sid));

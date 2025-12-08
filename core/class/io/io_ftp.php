@@ -305,7 +305,12 @@ class io_ftp extends io_api {
     //@param number $path  文件的路径
     //@param string $data  文件的新内容
     public function setFileContent($path, $data) {
-
+        $meta = $this->getMeta($path);
+        if (!$meta) return ['error' => 'not_found'];
+        if ($meta['error']) return $meta;
+        if (!perm_check::checkperm('edit', $meta)) {
+            return array('error' => lang('file_edit_no_privilege'));
+        }
         $bzarr = $this->parsePath($path);
         $temp = tempnam(sys_get_temp_dir(), 'tmpimg_');
         if (!file_put_contents($temp, $data)) {
@@ -316,11 +321,10 @@ class io_ftp extends io_api {
         } else {
             return array('error' => $this->conn->error());
         }
-        $icoarr = $this->getMeta($path);
-        if ($icoarr['type'] == 'image') {
-            $icoarr['img'] .= '&t=' . TIMESTAMP;
+        if ($meta['type'] == 'image') {
+            $meta['img'] .= '&t=' . TIMESTAMP;
         }
-        return $icoarr;
+        return $meta;
     }
 
     /**
@@ -730,7 +734,7 @@ class io_ftp extends io_api {
             // Download the file
             $file = $this->getMeta($path);
             if ($file['type'] == 'folder') {
-                $this->zipdownload($path);
+                $this->zipdownload($path, $filename);
                 exit();
             }
             $arr = $this->parsePath($path);

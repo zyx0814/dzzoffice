@@ -137,8 +137,8 @@ class io_dzz extends io_api {
             $tmp = str_replace('\\', '/', sys_get_temp_dir());
             return str_replace('TMP::', $tmp . '/', $path);
         } elseif (preg_match('/\w{32}/i', $path)) {
-            $icoid = trim($path);
             $icoarr = C::t('resources')->fetch_by_rid($path);
+            if (!$icoarr) return false;
             Hook::listen('io_dzz_getstream_attach', $icoarr);//挂载点
             if ($icoarr['rbz']) {
                 return IO::getStream($icoarr['rbz'] . '/' . $icoarr['attachment'], $fop);
@@ -159,6 +159,7 @@ class io_dzz extends io_api {
                 return false;
             }
             $icoarr = C::t('resources')->fetch_by_rid($rid);
+            if (!$icoarr) return false;
             Hook::listen('io_dzz_getstream_attach', $icoarr);//挂载点
             if ($icoarr['rbz']) {
                 return IO::getStream($icoarr['rbz'] . '/' . $icoarr['attachment'], $fop);
@@ -682,7 +683,7 @@ class io_dzz extends io_api {
             $path = getDzzPath($attachment);
             $attachurl = IO::getStream($path);
         } elseif (strpos($path, 'dzz::') === 0) {
-            $attachment = array('attachment' => preg_replace("/^dzz::/i", '', $path), 'name' => $filename ? $filename : substr(strrpos($path, '/')));
+            $attachment = array('attachment' => preg_replace("/^dzz::/i", '', $path), 'name' => $filename ? $filename : substr($path, strrpos($path, '/') + 1));
             $attachurl = $_G['setting']['attachdir'] . $attachment['attachment'];
         } elseif (strpos($path, 'TMP::') === 0) {
             $tmp = str_replace('\\', '/', sys_get_temp_dir());
@@ -709,6 +710,11 @@ class io_dzz extends io_api {
             }
             $attachment = $icoarr;
             $attachurl = IO::getStream($path);
+            if (is_array($attachurl) && isset($attachurl['error'])) {
+                @header('HTTP/1.1 403 Not Found');
+                @header('Status: 403 Not Found');
+                exit($attachurl['error']);
+            }
             //添加事件
             if ($attachurl) {
                 $eventdata = array('username' => $_G['username'], 'dateline' => TIMESTAMP);
@@ -759,6 +765,11 @@ class io_dzz extends io_api {
             }
             $attachment = $icoarr;
             $attachurl = IO::getStream($path);
+            if (is_array($attachurl) && isset($attachurl['error'])) {
+                @header('HTTP/1.1 403 Not Found');
+                @header('Status: 403 Not Found');
+                exit($attachurl['error']);
+            }
             //添加事件
             if ($attachurl) {
                 $eventdata = array('username' => $_G['username'], 'dateline' => TIMESTAMP);
@@ -826,7 +837,7 @@ class io_dzz extends io_api {
             if ($rid = DB::result_first("select rid from %t where pfid = %d and name = %s and isdelete < 1", array('resources', $pfid, $filename))) {
                 $icoarr = C::t('resources')->fetch_by_rid($rid);
             } else {
-                return array('rid' => $icoarr['rid'], 'error' => lang('file_longer_exists'));
+                return array('error' => lang('file_longer_exists'));
             }
 
             if ($force || perm_check::checkperm('delete', $icoarr)) {
@@ -1845,7 +1856,7 @@ class io_dzz extends io_api {
                                 $data['success'] = true;
                                 $rids = C::t('resources')->fetch_rids_by_pfid($data['oid'], '', $checkperm);
                                 foreach ($rids as $rid) {
-                                    $data['contents'][$key] = $this->CopyTo($rid, $re['folderarr']['path'], $iscopy);
+                                    $data['contents'][$rid] = $this->CopyTo($rid, $re['folderarr']['path'], $iscopy);
                                 }
                             }
                         }

@@ -20,52 +20,61 @@
  */
 define('APPTYPEID', 119);
 define('CURSCRIPT', 'wopi');
-require __DIR__.'./../../coreBase.php';
+define('DZZSCRIPT', 'index.php');
+require __DIR__ . './../../coreBase.php';
 $dzz = C::app();
 $dzz->init();
 require_once('wopi.php');
-$path=dzzdecode($_GET['path']);
-
+if (!$path = dzzdecode($_GET['path'])) {
+	exit(json_encode(['error' => "path error"]));
+}
 if ($_GET['access_token']) {
-	require_once DZZ_ROOT.'./user/function/function_user.php';
-	$access_token=dzzdecode($_GET['access_token']);
-	list($uid,$alock)=explode('|',$access_token);
-	$user=getuserbyuid($uid);
-	setloginstatus($user,0);
-	//Lock支持
-	
-	if($lock=$_SERVER['HTTP_X_WOPI_LOCK']){
-		$oldlock=$_SERVER['HTTP_X_WOPI_OLDLOCK'];
-	}else{
-		$lock=$alock?$alock:$_GET['lock'];
+	require_once DZZ_ROOT . './user/function/function_user.php';
+	if (!$access_token = dzzdecode($_GET['access_token'])) {
+		exit(json_encode(['error' => "access_token error"]));
 	}
-	if($Override=$_SERVER['HTTP_X_WOPI_OVERRIDE']){
-		if($Override=='PUT'){
-			Wopi::PutFile($path,$lock);
-		}elseif($Override=='LOCK'){
-			Wopi::Lock($path,$lock,$oldlock);
-		}elseif($Override=='UNLOCK'){
-			Wopi::unLock($path,$lock);
-		}elseif($Override=='GET_LOCK'){
+	list($uid, $alock) = explode('|', $access_token);
+	if (intval($uid) <= 0) {
+		exit(json_encode(['error' => "uid error"]));
+	}
+	$user = getuserbyuid($uid);
+	if (!$user) {
+		exit(json_encode(['error' => "userinfo error"]));
+	}
+	setloginstatus($user, 0);
+	//Lock支持
+
+	if ($lock = $_SERVER['HTTP_X_WOPI_LOCK']) {
+		$oldlock = $_SERVER['HTTP_X_WOPI_OLDLOCK'];
+	} else {
+		$lock = $alock ? $alock : $_GET['lock'];
+	}
+	if ($Override = $_SERVER['HTTP_X_WOPI_OVERRIDE']) {
+		if ($Override == 'PUT') {
+			Wopi::PutFile($path, $lock);
+		} elseif ($Override == 'LOCK') {
+			Wopi::Lock($path, $lock, $oldlock);
+		} elseif ($Override == 'UNLOCK') {
+			Wopi::unLock($path, $lock);
+		} elseif ($Override == 'GET_LOCK') {
 			Wopi::getLock($path);
-		}elseif($Override=='REFRESH_LOCK'){	
-			Wopi::Lock($path,$lock);
+		} elseif ($Override == 'REFRESH_LOCK') {
+			Wopi::Lock($path, $lock);
 		}
-	}elseif($_GET['action']=='contents'){
-		if($_SERVER['REQUEST_METHOD']=='POST'){
+	} elseif ($_GET['action'] == 'contents') {
+		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			Wopi::PutFile($path);
-		}else{
-			Wopi::GetFile($path);	
+		} else {
+			Wopi::GetFile($path);
 		}
-	}elseif($_GET['action']=='lock'){
-		Wopi::Lock($path,$lock);
-	}elseif($_GET['action']=='unlock'){
-		Wopi::unLock($path,$lock);
-	}else{
-		Wopi::CheckFileInfo($path,$lock);
+	} elseif ($_GET['action'] == 'lock') {
+		Wopi::Lock($path, $lock);
+	} elseif ($_GET['action'] == 'unlock') {
+		Wopi::unLock($path, $lock);
+	} else {
+		Wopi::CheckFileInfo($path, $lock);
 	}
 } else {
 	//print_r(Wopi::CheckFileInfo($path));
-    print_r(Wopi::GenerateFileLink($path,'http://oos.dzz.com/','')); //TEST FUNCTION
+	print_r(Wopi::GenerateFileLink($path, 'http://oos.dzz.com/', '')); //TEST FUNCTION
 }
-
