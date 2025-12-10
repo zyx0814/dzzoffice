@@ -629,11 +629,6 @@ _explorer.image_resize = function (img, width, height) {
 				realh = (h > height) ? parseInt(height) : h;
 				realw = (h > height) ? parseInt(width) : (realh * w / h);
 			}
-			if (realw < 32 && realh < 32) {
-				jQuery(img).addClass('image_tosmall').css({
-					padding: ((height - realh) / 2 - 1) + 'px ' + ((width - realw) / 2 - 1) + 'px'
-				});
-			}
 		}
 		jQuery(img).show();
 	});
@@ -654,11 +649,6 @@ _explorer.icoimgError = function (img, width, height) {
 					} else {
 						realh = (h > height) ? parseInt(height) : h;
 						realw = realh * w / h;
-					}
-					if (realw < 32 && realh < 32) {
-						jQuery(img).addClass('image_tosmall').css({
-							padding: ((height - realh) / 2 - 1) + 'px ' + ((width - realw) / 2 - 1) + 'px'
-						});
 					}
 					try {
 						img.style.width = realw + 'px';

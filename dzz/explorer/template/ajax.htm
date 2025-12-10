@@ -732,7 +732,7 @@
                 var selector = '#' + containid + ' .Icoblock[rid={$files}]';
                 var icoblock = jQuery(selector);
                 if (icoblock.length > 0) {
-                    icoblock.find('.share-item').removeClass('hide');
+                    icoblock.find('.status-share').removeClass('hide');
                 }
                 layer.msg('{lang share_creation_success}', {offset:'10px'});
                 <!--{/if}-->
@@ -765,7 +765,7 @@
                     var selector = '#' + containid + ' .Icoblock[rid={$files}]';
                     var icoblock = jQuery(selector);
                     if (icoblock.length > 0) {
-                        icoblock.find('.share-item').addClass('hide');
+                        icoblock.find('.status-share').addClass('hide');
                     }
                     layer.msg('{lang share_creation_success}', {offset:'10px'});
                     <!--{/if}-->

@@ -41,14 +41,16 @@
 				</div>
 			</div>
 			<div id="template_middleicon" style="display:none">
-				<div class="middleicon window">
-					<div class="square-fileList js-file-item-tpl clearfix list-view">
-						<div id="Icoblock_middleicon_{rid}" class="Icoblock middleicon" rid="{rid}" flag="{flag}">
-							<div class="toggleGlow card file-item">
-								<div class="icoimgContainer icoimgContainer_{type}"><img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" /></div>
-								<div class="editable-name text-center" id="file_text_{rid}" title="{name}">{name}</div>
+				<div class="middleicon user-select-none">
+					<div class="js-file-item-tpl clearfix file-grid">
+						<div id="Icoblock_middleicon_{rid}" class="Icoblock file-card toggleGlow" rid="{rid}" flag="{flag}">
+							<div class="icoimgContainer">
+								<img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
 							</div>
-							<a href="javascript:;" class="icoblank_righttop mdi fs-5"></a>
+							<div class="name-area">
+								<div class="file-name" id="file_text_{rid}" title="{name}">{name}</div>
+							</div>
+							<a href="javascript:;" class="icoblank_lefttop mdi fs-5"></a>
 						</div>
 					</div>
 				</div>
@@ -102,7 +104,7 @@
 												<img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
 											</div>
 											<div class="file-name-wrapper">
-											<div class="filename"><span class="editable-name detail_text detail_item_name_text" id="file_text_{rid}">{name}</span></div>
+											<div class="filename"><span class="file-name detail_text detail_item_name_text" id="file_text_{rid}">{name}</span></div>
 												<div class="text-muted small file-item-block text-truncate">{fdateline} {fsize}</div>
 											</div>
 										</div>

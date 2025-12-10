@@ -390,15 +390,15 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	html = html.replace(/\{count\}/g, data.count);
 	//分享状态
 	if(data.shareid > 0) {
-		var sharestatus = '<span class="share-item" ><i class="mdi mdi-share-circle text-success" title="'+__lang.shared+'"></i></span>';
+		var sharestatus = '<span class="status-icon status-share" ><i class="mdi mdi-share-circle text-success" title="'+__lang.shared+'"></i></span>';
 	} else {
-		var sharestatus = '<span class="share-item hide"><i class="mdi mdi-share-circle text-success" title="'+__lang.shared+'"></i></span>';
+		var sharestatus = '<span class="status-icon status-share hide"><i class="mdi mdi-share-circle text-success" title="'+__lang.shared+'"></i></span>';
 	}
 	//收藏
 	if(data.collect){
-		var collectstatus = '<span class="colllection-item" ><i class="mdi mdi-star-circle text-yellow" title="'+__lang.already_collected+'"></i></span>';
+		var collectstatus = '<span class="status-icon status-colllection" ><i class="mdi mdi-star-circle text-yellow" title="'+__lang.already_collected+'"></i></span>';
 	}else{
-		var collectstatus = '<span class="colllection-item hide"><i class="mdi mdi-star-circle text-yellow" title="'+__lang.already_collected+'"></i></span>';
+		var collectstatus = '<span class="status-icon status-colllection hide"><i class="mdi mdi-star-circle text-yellow" title="'+__lang.already_collected+'"></i></span>';
 	}
 	html = html.replace(/\{collectstatus\}/g,collectstatus);
     html = html.replace(/\{sharestatus\}/g,sharestatus);
@@ -450,7 +450,7 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		});
 		//处理多选框
 		//if(!_filemanage.fid || _explorer.Permission_Container('multiselect',this.fid)){
-		el.find('.icoblank_righttop').on('click', function () {
+		el.find('.icoblank_lefttop').on('click', function () {
 			var flag = true;
 			var ell = jQuery(this).parent();
 			var rid = el.attr('rid');
@@ -1732,7 +1732,7 @@ _filemanage.collect = function (rid) {
 							if (json.msg[i] === 'success') {
 								_explorer.sourcedata.icos[rid].collect = 0;
 								msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.cancle_collect_success + '</p>';
-								jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.colllection-item').addClass('hide');
+								jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.status-colllection').addClass('hide');
 							} else {
 								isalert = true;
 								msg += '<p class="text-danger">' + _explorer.sourcedata.icos[i].name + json.msg[i].error + '</p>';
@@ -1744,7 +1744,7 @@ _filemanage.collect = function (rid) {
 						if (json.msg[i] === 'success') {							
 							msg += '<p>' + _explorer.sourcedata.icos[i].name + __lang.collect_success + '</p>';
 							_explorer.sourcedata.icos[rid].collect = 1;
-							jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.colllection-item').removeClass('hide');
+							jQuery('#' + containid + ' .Icoblock[rid=' + i + ']').find('.status-colllection').removeClass('hide');
 						} else {
 							isalert = true;
 							msg += '<p class="text-danger">' + _explorer.sourcedata.icos[i].name + json.msg[i].error + '</p>';
