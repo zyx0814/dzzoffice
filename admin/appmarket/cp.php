@@ -114,6 +114,10 @@ if ($do == 'export') {//应用导出
         $finish = TRUE;
     }
     if ($finish) {
+        if ($app['fileext']) {
+            //清理缓存
+            C::t('app_open')->clear_cache('ext_all');
+        }
         C::t('app_market')->update($appid, array('available' => 0));
         writelog('otherlog', "关闭应用 " . $app['appname']);
         showmessage('application_close_successful', $_GET['refer'], array(), array('alert' => 'right'));
@@ -164,6 +168,10 @@ if ($do == 'export') {//应用导出
         $finish = TRUE;
     }
     if ($finish) {
+        if ($app['fileext']) {
+            //清理缓存
+            C::t('app_open')->clear_cache('ext_all');
+        }
         C::t('app_market')->update($appid, array('available' => 1));
         writelog('otherlog', "开启应用 " . $app['appname']);
         showmessage('application_start_successful', $_GET['refer'], array(), array('alert' => 'right'));

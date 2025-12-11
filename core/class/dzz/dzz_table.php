@@ -37,6 +37,7 @@ class dzz_table extends dzz_base {
     /**
      * 缓存过期时间（秒）
      * 优先级：全局配置 > 类内定义 > 默认值
+     * 0表示永久缓存（需手动清理）
      * @var int
      */
     protected $_cache_ttl;

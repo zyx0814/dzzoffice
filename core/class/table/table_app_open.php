@@ -23,7 +23,6 @@ class table_app_open extends dzz_table {
         $data = self::fetch($extid);
         DB::update($this->_table, array('isdefault' => 0), "ext='{$data['ext']}'");
         $this->clear_cache('ext_all');
-        $this->clear_cache('all');
         return self::update($extid, array('isdefault' => 1));
     }
 
@@ -32,7 +31,6 @@ class table_app_open extends dzz_table {
             $result = self::update($v, array('disp' => $k));
         }
         $this->clear_cache('ext_all');
-        $this->clear_cache('all');
         return true;
     }
 
@@ -45,7 +43,6 @@ class table_app_open extends dzz_table {
             }
         }
         $this->clear_cache('ext_all');
-        $this->clear_cache('all');
         return DB::delete($this->_table, " appid='{$appid}'");
     }
 
@@ -67,35 +64,40 @@ class table_app_open extends dzz_table {
             if ($ext && !in_array($ext, $oexts)) parent::insert(array('ext' => $ext, 'appid' => $appid));
         }
         $this->clear_cache('ext_all');
-        $this->clear_cache('all');
         return true;
     }
 
     public function fetch_all_ext() {
         global $_G;
         $data = array();
-        if (($data = $this->fetch_cache('all')) === false) {
-            $data = array();
+        $ext_all = $this->fetch_cache('ext_all');
+        if ($ext_all === false) {
+            $ext_all = array();
             $query = DB::query("SELECT * FROM %t WHERE 1 ", array($this->_table));
             while ($value = DB::fetch($query)) {
-                if ($value['appid']) {
-                    if ($app = C::t('app_market')->fetch_by_appid($value['appid'], false)) {
-                        if ($app['available'] < 1) continue;
-                        if (!$_G['uid'] && $app['group'] > 0) continue;
-                        if (!$value['icon']) $value['icon'] = $app['appico'];
-                        if (!$value['name']) $value['name'] = $app['appname'];
-                        if (!$value['url']) $value['url'] = $app['appurl'];
-                        if (!$value['nodup']) $value['nodup'] = $app['nodup'];
-                        if (!$value['feature']) $value['feature'] = $app['feature'];
-                    } else {
-                        continue;
-                    }
-                }
-                $value['url'] = replace_canshu($value['url']);
-                $data[$value['extid']] = $value;
+                $ext_all[$value['extid']] = $value;
             }
-            if (!empty($data)) $this->store_cache('all', $data);
+            $this->store_cache('ext_all', $ext_all);
         }
+
+        foreach ($ext_all as $value) {
+            if ($value['appid']) {
+                if ($app = C::t('app_market')->fetch_by_appid($value['appid'], false)) {
+                    if ($app['available'] < 1) continue;
+                    if (!$_G['uid'] && $app['group'] > 0) continue;
+                    if (!$value['icon']) $value['icon'] = $app['appico'];
+                    if (!$value['name']) $value['name'] = $app['appname'];
+                    if (!$value['url']) $value['url'] = $app['appurl'];
+                    if (!$value['nodup']) $value['nodup'] = $app['nodup'];
+                    if (!$value['feature']) $value['feature'] = $app['feature'];
+                } else {
+                    continue;
+                }
+            }
+            $value['url'] = replace_canshu($value['url']);
+            $data[$value['extid']] = $value;
+        }
+
         return $data;
     }
 
