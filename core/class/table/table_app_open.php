@@ -69,32 +69,37 @@ class table_app_open extends dzz_table {
 
     public function fetch_all_ext() {
         global $_G;
-        $data = array();
         $ext_all = $this->fetch_cache('ext_all');
         if ($ext_all === false) {
             $ext_all = array();
+            $app_cache = array();// 临时缓存app数据，避免重复调用
             $query = DB::query("SELECT * FROM %t WHERE 1 ", array($this->_table));
             while ($value = DB::fetch($query)) {
-                $ext_all[$value['extid']] = $value;
+                if ($value['appid']) {
+                    if (!isset($app_cache[$value['appid']])) {
+                        $app_cache[$value['appid']] = C::t('app_market')->fetch_by_appid($value['appid'], false);
+                    }
+                    $app = $app_cache[$value['appid']];
+                    if ($app) {
+                        if ($app['available'] < 1) continue;
+                        $value['icon'] = $app['appico'];
+                        $value['name'] = $app['appname'];
+                        $value['url'] = $app['appurl'];
+                        $value['nodup'] = $app['nodup'];
+                        $value['feature'] = $app['feature'];
+                        $value['group'] = $app['group'];
+                        $value['url'] = $app['url'];
+                        $ext_all[] = $value;
+                    }
+                }
             }
+            unset($app_cache);
             $this->store_cache('ext_all', $ext_all);
         }
 
+        $data = array();
         foreach ($ext_all as $value) {
-            if ($value['appid']) {
-                if ($app = C::t('app_market')->fetch_by_appid($value['appid'], false)) {
-                    if ($app['available'] < 1) continue;
-                    if (!$_G['uid'] && $app['group'] > 0) continue;
-                    if (!$value['icon']) $value['icon'] = $app['appico'];
-                    if (!$value['name']) $value['name'] = $app['appname'];
-                    if (!$value['url']) $value['url'] = $app['appurl'];
-                    if (!$value['nodup']) $value['nodup'] = $app['nodup'];
-                    if (!$value['feature']) $value['feature'] = $app['feature'];
-                } else {
-                    continue;
-                }
-            }
-            $value['url'] = replace_canshu($value['url']);
+            if (!$_G['uid'] && $value['group'] > 0) continue;
             $data[$value['extid']] = $value;
         }
 
