@@ -120,7 +120,7 @@ if ($do == 'export') {//应用导出
         }
         C::t('app_market')->update($appid, array('available' => 0));
         writelog('otherlog', "关闭应用 " . $app['appname']);
-        showmessage('application_close_successful', $_GET['refer'], array(), array('alert' => 'right'));
+        showmessage('application_close_successful', $_GET['refer']);
     }
 
 } elseif ($do == 'enable') {//开启应用
@@ -174,7 +174,7 @@ if ($do == 'export') {//应用导出
         }
         C::t('app_market')->update($appid, array('available' => 1));
         writelog('otherlog', "开启应用 " . $app['appname']);
-        showmessage('application_start_successful', $_GET['refer'], array(), array('alert' => 'right'));
+        showmessage('application_start_successful', $_GET['refer']);
     }
 
 } elseif ($do == 'install') {//安装应用
@@ -195,7 +195,7 @@ if ($do == 'export') {//应用导出
 } elseif ($do == 'uninstall') {//卸载应用
     $appid = intval($_GET['appid']);
     if (!$app = C::t('app_market')->fetch($appid)) {
-        showmessage('list_cp_Application_delete', '', array(), array('alert' => 'right'));
+        showmessage('list_cp_Application_delete', dreferer());
     }
     $app['extra'] = unserialize($app['extra']);
     $finish = FALSE;
@@ -237,7 +237,7 @@ if ($do == 'export') {//应用导出
         $temp_install = DZZ_ROOT . './data/update/app/' . $app['app_path'] . '/' . $app['identifier'];
         removedirectory($temp_install);
         writelog('otherlog', "卸载应用 " . $app['appname']);
-        showmessage($msg, MOD_URL, array(), array('alert' => 'right'));
+        showmessage($msg, dreferer());
     }
 } elseif ($do == 'uninstall_confirm') {//卸载应用
     $navtitle = '卸载应用 - ' . lang('appname');
@@ -282,7 +282,7 @@ if ($do == 'export') {//应用导出
     }
     if ($finish) {
         C::t('app_market')->update($appid, array('version' => $toversion));
-        showmessage('application_upgrade_successful', MOD_URL, array(), array('alert' => 'right'));
+        showmessage('application_upgrade_successful', MOD_URL);
     }
 }
 function installapp($apparray){
@@ -312,11 +312,11 @@ function installapp($apparray){
                 cron_create($app);
             }
 
-            showmessage('application_import_successful', MOD_URL, array(), array('alert' => 'right'));
+            showmessage('application_import_successful', dreferer());
         }
     } else {
         $app = importByarray($apparray, 0);
-        showmessage('application_import_successful', MOD_URL, array(), array('alert' => 'right'));
+        showmessage('application_import_successful', dreferer());
     }
 }
 ?>

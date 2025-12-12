@@ -14,11 +14,11 @@ $op = isset($_GET['op']) ? $_GET['op'] : '';
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $navtitle = lang('memory') . ' - ' . lang('appname');
 $do_clear_ok = $do == 'clear' ? ' (清理完毕)' : '';
+$do_clear_link = '<a href="' . MOD_URL . '&op=memory&do=clear">' . lang('memory_clear') . '</a>' . $do_clear_ok;
 
 $cache_extension = C::memory()->extension;
 $cache_config = C::memory()->config;
 $cache_type = C::memory()->type;
-
 $dir = DZZ_ROOT.'./core/class/memory';
 $qaadir = dir($dir);
 $cachelist = array();
@@ -30,7 +30,8 @@ while($entry = $qaadir->read()) {
         $available = is_array($cache_config[$cache]) ? !empty($cache_config[$cache]['server']) : !empty($cache_config[$cache]);
         $cachelist[] = array($memory->cacheName,
             $memory->env($config) ? '<span class="text-success">'.lang('supportted').'</span>' : '<span class="text-danger">'.lang('unsupportted').'</span>',
-            $available ? '<span class="text-primary">'.lang('open').'</span>' : lang('close')
+            $available ? '<span class="text-primary">'.lang('open').'</span>' : lang('close'),
+            $cache_type == $memory->cacheName ? $do_clear_link : '--'
         );
     }
 }
@@ -40,6 +41,7 @@ foreach($cachelist as $cache) {
     $env_str .= "<td>$cache[0]</td>\n";
     $env_str .= "<td>$cache[1]</td>\n";
     $env_str .= "<td>$cache[2]</td>\n";
+    $env_str .= "<td>$cache[3]</td>\n";
     $env_str .= "</tr>\n";
 }
 

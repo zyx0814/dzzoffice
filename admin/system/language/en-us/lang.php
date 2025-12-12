@@ -5,5 +5,6 @@ $lang = array(
     'fileperms' => 'File Permission Check',
     'memory' => 'Memory Optimization',
     'database_db_utf8mb4' => 'Database Optimization',
+    'memory_clear' => 'Memory Clear',
 );
 ?>
