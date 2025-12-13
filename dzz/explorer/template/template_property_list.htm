@@ -55,7 +55,7 @@
 <!--{if $fileinfo[editdateline]}-->
 <div class="row mb-1"> 
     <label class="col-sm-3 text-muted">{lang edit_time}</label>
-    <div class="col-sm-9">$fileinfo[editdateline]</div>
+    <div class="col-sm-9">$fileinfo[editdateline] <!--{if $vtotal}--><a href="javascript:;" class="layui-badge layui-bg-orange" onclick="jQuery('.version-tab').click();" title="$vtotal {lang history_revision}"><i class="mdi mdi-file-clock"></i> $vtotal</a><!--{/if}--></div>
 </div>
 <!--{/if}-->
 <!--{if $fileinfo[opendateline]}-->

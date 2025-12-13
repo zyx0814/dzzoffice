@@ -306,6 +306,8 @@ _filemanage.setInfoPanel = function () {
 					}
 				}
 				_filemanage.infoPanelUrl = fid;
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				$('#rightMenu').html(textStatus + ' ' + errorThrown);
 			});
 		}
 	} else if (rids.length === 1) {
@@ -315,6 +317,8 @@ _filemanage.setInfoPanel = function () {
 			}, function (data) {
 				$('#rightMenu').html(data);
 				_filemanage.infoPanelUrl = rids[0];
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				$('#rightMenu').html(textStatus + ' ' + errorThrown);
 			});
 		}
 	} else {
@@ -325,6 +329,8 @@ _filemanage.setInfoPanel = function () {
 			}, function (data) {
 				$('#rightMenu').html(data);
 				_filemanage.infoPanelUrl = ridsstr;
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				$('#rightMenu').html(textStatus + ' ' + errorThrown);
 			});
 		}
 	}
@@ -2182,6 +2188,8 @@ _filemanage.deleteAll = function () {
 				_filemanage.showTemplatenoFile(containid, total);
 				_filemanage.deleteIndex(rids);
 				_filemanage.removeridmore(rids);
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				layer.msg(__lang.do_failed, {offset:'10px'});
 			});
 		});
 	}
@@ -2219,6 +2227,8 @@ _filemanage.recoverAll = function () {
 				layer.msg(msg, {offset:'10px'});
 			}
             _filemanage.removeridmore(rids);
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			layer.msg(__lang.do_failed, {offset:'10px'});
 		});
 	});
 }

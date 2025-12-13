@@ -59,7 +59,7 @@ $data['sourcedata'] = array(
     'folder' => $folderdata ? $folderdata : array()
 );
 $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
-$space['explorermyset'] = unserialize(C::t('user_setting')->fetch_by_skey('explorermyset', $uid));
+$space['explorermyset'] = dunserialize(C::t('user_setting')->fetch_by_skey('explorermyset', $uid));
 $space['limitConcurrentUploads'] = $_G['setting']['explorer_limitConcurrentUploads'] ? intval($_G['setting']['explorer_limitConcurrentUploads']) : 3;
 $data['space'] = $space;
 $infoPanelOpened = C::t('user_setting')->fetch_by_skey('infoPanelOpened');

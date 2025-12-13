@@ -95,16 +95,10 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
         } else {
             $fileinfo = C::t('resources')->get_property_by_rid($rid);
             if($fileinfo['error']) showmessage($fileinfo['error']);
-            $vnext = false;
-            $total = C::t('resources_version')->fetch_all_by_rid($rid, $limit, true);
-            if ($total > $nextstart) {
-                $vnext = $nextstart;
-            }
-            if($total) {
-                $versions = C::t('resources_version')->fetch_all_by_rid($rid, $limit, false);
-                $versionnums = count($versions);
-            }
+            // 获取版本
+            $vtotal = C::t('resources_version')->fetch_all_by_rid($rid, '', true);
             $tags = C::t('resources_tag')->fetch_tag_by_rid($rid);
+            // 获取事件
             $total = C::t('resources_event')->fetch_by_rid($fileinfo['rid'], $start, $limit, true);
             if ($total > $nextstart) {
                 $next = $nextstart;

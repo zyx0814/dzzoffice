@@ -36,6 +36,8 @@ _explorer.getConfig = function (url, callback) {
 		if (typeof callback === "function") {
 			callback(json);
 		}
+	}).fail(function (jqXHR, textStatus, errorThrown) {
+		layer.alert(textStatus + ' ' + errorThrown, {skin:'lyear-skin-danger'});
 	});
 };
 _explorer.initEvents = function () { //初始化页面事件

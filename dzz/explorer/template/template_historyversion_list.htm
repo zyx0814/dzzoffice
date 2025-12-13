@@ -1,5 +1,5 @@
 <div class="alert alert-warning"><!--{if $_G['setting']['fileVersion']}-->当前管理员设置了最多保留{$_G['setting']['fileVersionNumber']}个历史版本。<!--{else}-->当前管理员已关闭历史版本功能，不再生成历史版本。<!--{/if}--></div>
-<!--{if $fileinfo['editperm'] && $_G['setting']['fileVersion'] && ($_G['setting']['fileVersionNumber'] == 0 || $_G['setting']['fileVersionNumber'] > $versionnums )}-->
+<!--{if $fileinfo['editperm']}-->
 <div class="upload d-grid">
     <button type="button" class="btn btn-outline-primary" title="{lang upload_update}">
         <span class="mdi mdi-file-upload"></span> {lang upload_update}
@@ -8,7 +8,7 @@
 </div>
 <!--{/if}-->
 <ul class="list-group mb-3">
-<!--{if $versions}-->
+<!--{if $total}-->
     <!--{loop $versions $v}-->
     <li class="list-group-item d-flex justify-content-between align-items-start version_menu version_{$v[vid]}">
         <div class="unameMenu-upload">
@@ -84,8 +84,3 @@
 <!--{/if}-->
 </ul>
 $multi
-<!--{if $vnext}-->
-<div class="mb-1 d-grid">
-    <a href="javascript:;" class="btn btn-link btn-sm text-end" onclick="jQuery('.version-tab').click();">{lang upload_more}</a>
-</div>
-<!--{/if}-->

@@ -336,17 +336,6 @@ function checks(){
             $('div.selectclouduser').hide();
         }
     })
-    //版本数量设置框切换
-    $('#fileversion').change(function () {
-        if ($(this).prop('checked')) {
-            $('#fileversionnum').removeClass('hide');
-            //$(this).val(1);
-        } else {
-            $('#fileversionnum').addClass('hide');
-            $('#fileVersionNumber').val(0);
-            //$(this).val(0);
-        }
-    })
     function submitsetting(form) {
     	if(!recylenum) return false;
         $.post(form.action, jQuery(form).serialize(), function (data) {
