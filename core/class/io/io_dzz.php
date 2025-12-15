@@ -314,9 +314,11 @@ class io_dzz extends io_api {
         if (!$fileurls) {
             $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
         }
-        if (!is_string($fileurls['filedir'])) {
-            header("HTTP/1.1 304 Not Modified");
-            exit;
+        if (!$fileurls['filedir']) {
+            $fileurls['filedir'] = $this->getStream($path);
+        }
+        if (!$fileurls['fileurl']) {
+            $fileurls['fileurl'] = $this->getFileUri($path);
         }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {

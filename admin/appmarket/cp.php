@@ -282,7 +282,7 @@ if ($do == 'export') {//应用导出
     }
     if ($finish) {
         C::t('app_market')->update($appid, array('version' => $toversion));
-        showmessage('application_upgrade_successful', MOD_URL);
+        showmessage('application_upgrade_successful', dreferer());
     }
 }
 function installapp($apparray){
