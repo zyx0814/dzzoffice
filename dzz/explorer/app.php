@@ -47,7 +47,7 @@ if ($do == 'updatesetting') {//更新设置
         exit(json_encode(array('success' => true, 'msg' => lang('update_setting_success'))));
     }
 } else {
-    $explorermyset = unserialize(C::t('user_setting')->fetch_by_skey('explorermyset', $uid));
+    $explorermyset = dunserialize(C::t('user_setting')->fetch_by_skey('explorermyset', $uid));
     if ($_G['adminid'] == 1) {
         // 查询所有设置
         $setting = C::t('setting')->fetch_all([
