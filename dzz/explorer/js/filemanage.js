@@ -604,6 +604,11 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 		el.find('.multi').remove();
 	}
 
+	//过滤仅文件时才显示的情况
+	if (data.type === 'folder') {
+		el.find('.onlyfolder').remove();
+	}
+
 	//判断权限
 	var collects = 0;
 	for (var i = 0; i < rids.length; i++) {
@@ -792,6 +797,10 @@ function contextmenuico(rid) {
 	var obj = _explorer.sourcedata.icos[rid];
 	if (obj.type == 'shortcut' || obj.type == 'storage' || obj.type == 'pan' || _explorer.myuid < 1) {
 		el.find('.shortcut').remove();
+	}
+	//过滤仅文件时才显示的情况
+	if (obj.type === 'folder') {
+		el.find('.onlyfolder').remove();
 	}
 	//判断copy
 	if (!_explorer.Permission('copy', obj)) {

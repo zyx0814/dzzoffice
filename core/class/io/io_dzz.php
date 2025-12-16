@@ -901,7 +901,7 @@ class io_dzz extends io_api {
 
     //获取不重复的目录名称
     public function getFolderName($name, $pfid) {
-        $i = 0;
+        static $i = 0;
         $name = IO::name_filter($name);
         //echo("select COUNT(*) from ".DB::table('folder')." where fname='{$name}' and  pfid='{$pfid}'");
         if (DB::result_first("select COUNT(*) from %t where fname=%s and  pfid=%d and isdelete<1", array('folder', $name, $pfid))) {

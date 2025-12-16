@@ -423,4 +423,5 @@ $lang = array(
     'time_error_starttime' => '开始时间不能晚于结束时间',
     'add_cat' => '添加类型',
     'open_browser' => '浏览器打开',
+    'no_history' => '没有历史版本',
 );

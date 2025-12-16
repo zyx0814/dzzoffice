@@ -412,4 +412,5 @@ $lang = array(
     'time_error_starttime' => 'Start time after end time',
     'add_cat' => 'Add Type',
     'open_browser' => 'Open Browser',
+    'no_history' => 'No history',
 );

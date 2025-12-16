@@ -1290,6 +1290,7 @@ $lang = array(
     'select_bucket_node_address' => '请选择bucket和节点地址',
     'upload_file_incomplete' => '上传文件不完整，请重试',
     'folder_not_allowed_rename' => '文件夹不允许重命名',
+    'folder_not_allowed_history' => '文件夹不支持历史版本',
     'file_merge_error' => '文件合并出差错',
     'ftp_Parameter_setting_error' => 'FTP 参数设置错误，请检查',
     'try_connect_FTP_failed' => '尝试连接ftp未成功，请检查参数后重试',

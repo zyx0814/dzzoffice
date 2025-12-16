@@ -156,6 +156,11 @@ class table_resources_version extends dzz_table {
         if (!$resources = C::t('resources')->fetch_info_by_rid($rid)) {
             return array('error' => lang('file_not_exist'));
         }
+        if ($resources['type'] == 'folder') {
+            return array('error' => lang('folder_not_allowed_history'));
+        }
+        if (!$setarr['name']) $setarr['name'] = $resources['name'];
+        if (!$setarr['name']) return array('error' => lang('name_cannot_empty'));
         //检测权限
         if (!$force && !perm_check::checkperm('edit', $resources)) {
             return array('error' => lang('file_edit_no_privilege'));
@@ -202,7 +207,6 @@ class table_resources_version extends dzz_table {
         if ($vid = parent::insert($setarr, 1)) {
             $this->clear_cache($cachekey);
             //更新主表数据
-            //DB::update('resources',array('vid'=>$vid,'size'=>$setarr['size'],'ext'=>$setarr['ext'],'type'=>$setarr['type'],'name'=>$filename),array('rid'=>$rid))
             if (C::t('resources')->update_by_rid($rid, array('vid' => $vid, 'size' => $setarr['size'], 'ext' => $setarr['ext'], 'type' => $setarr['type'], 'name' => $filename))) {
                 SpaceSize($setarr['size'], $resources['gid'], true);
                 //插入属性表数据
@@ -272,6 +276,10 @@ class table_resources_version extends dzz_table {
         }
 
         $vfilename = DB::result_first("select sval from %t where vid = %d and rid = %s and skey = %s", array('resources_attr', $vid, $versioninfo['rid'], 'title'));
+        if (!$vfilename) $vfilename = $fileinfo['name'];
+        if (!$vfilename) {
+            return array('error' => lang('name_cannot_empty'));
+        }
 
         //获取不重复的名字
         $filename = self::getFileName($vfilename, $fileinfo['pfid'], $versioninfo['rid']);

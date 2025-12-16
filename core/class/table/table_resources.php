@@ -70,14 +70,10 @@ class table_resources extends dzz_table {
         if (!perm_check::checkperm('edit', $infoarr)) {
             return array('error' => lang('file_edit_no_privilege'));
         }
-        $setarr = array(
-            'isdelete' => 1,
-            'deldateline' => time()
-        );
-        $position = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $position = preg_replace('/dzz:(.+?):/', '', $position);
         //DB::update($this->_table, array('name' => $newname, 'dateline' => TIMESTAMP), array('rid' => $rid))
         if (self::update_by_rid($rid, array('name' => $newname, 'dateline' => TIMESTAMP))) {
+            $position = C::t('resources_path')->fetch_pathby_pfid($fid);
+            $position = preg_replace('/dzz:(.+?):/', '', $position);
             if ($updatepath) {
                 C::t('folder')->update($infoarr['oid'], array('fname' => $newname));
                 C::t('resources_path')->update_path_by_fid($infoarr['oid'], $newname);
@@ -778,6 +774,9 @@ class table_resources extends dzz_table {
 
     //通过rid更新数据
     public function update_by_rid($rid, $setarr) {
+        if (isset($setarr['name'])) {//如果需要修改文件名但文件名为空则返回false
+            if (!$setarr['name']) return false;
+        }
         if (!is_array($rid)) $rid = (array)$rid;
         if (parent::update($rid, $setarr)) {
             foreach ($rid as $v) {

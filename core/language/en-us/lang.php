@@ -1269,6 +1269,7 @@ $lang = array(
     'select_bucket_node_address' => 'Please select bucket and node address',
     'upload_file_incomplete' => 'Uploaded file is incomplete. Please try again.',
     'folder_not_allowed_rename' => 'Folder renaming is not allowed',
+    'folder_not_allowed_history' => 'Folder history is not allowed',
     'file_merge_error' => 'Error occurred while merging files',
     'ftp_Parameter_setting_error' => 'FTP parameter setting error. Please check.',
     'try_connect_FTP_failed' => 'Failed to connect to FTP. Please check the parameters and try again.',

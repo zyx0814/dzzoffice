@@ -61,6 +61,7 @@
                 <span class="badge badge-outline-primary">{lang principal_edition}</span>
             </div>
         </div>
+        <span class="editMenu">{eval echo formatsize($fileinfo['size']);}</span>
         <a href="javascript:;" class="group-editMenu dropdown-toggle fs-5" data-toggle="dropdown"></a>
         <ul class="dropdown-menu dropdown-menu-version">
             <li><a class="dropdown-item" href="javascript:;" data-rid="$fileinfo[rid]" data-vid="$fileinfo[vid]" onclick="infoversion(this)"><i class="mdi mdi-information-variant"></i><span class="file-text">{lang version_information}</span></a></li>

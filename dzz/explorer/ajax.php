@@ -924,6 +924,7 @@ if ($do == 'upload') {//上传图片文件
     $property = isset($_GET['property']) ? intval($_GET['property']) : 0;
     $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
     if ($fileinfo['error']) showmessage($fileinfo['error']);
+    if ($fileinfo['type'] == 'folder') showmessage('folder_not_allowed_history');
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
     $vlimit = 20;
     $limit = ($page) ? $page . '-' . $vlimit : $vlimit;
