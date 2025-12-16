@@ -5,7 +5,7 @@ if (!defined('IN_DZZ')) {
 }
 
 class helper_config {
-    function save($filename, $config, $default = array()) {
+    public static function save($filename, $config, $default = array()) {
 
         $config = self::setdefault($config, $default);
         $date = gmdate("Y-m-d H:i:s", time() + 3600 * 8);
@@ -20,7 +20,7 @@ class helper_config {
         file_put_contents($filename, $content);
     }
 
-    public function setdefault($var, $default) {
+    public static function setdefault($var, $default) {
         foreach ($default as $k => $v) {
             if (!isset($var[$k])) {
                 $var[$k] = $default[$k];
@@ -31,7 +31,7 @@ class helper_config {
         return $var;
     }
 
-    public function getvars($data, $type = 'VAR') {
+    public static function getvars($data, $type = 'VAR') {
         $evaluate = '';
         foreach ($data as $key => $val) {
             if (!preg_match("/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/", $key)) {
@@ -47,7 +47,7 @@ class helper_config {
         return $evaluate;
     }
 
-    public function buildarray($array, $level = 0, $pre = '$_config') {
+    public static function buildarray($array, $level = 0, $pre = '$_config') {
         static $ks;
         if ($level == 0) {
             $ks = array();

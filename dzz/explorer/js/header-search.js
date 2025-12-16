@@ -165,7 +165,7 @@ function show_more_search_condition(e) {
             showmessage(__lang.do_failed, 'error', 3000, 1);
         });
     }
-    if (positionfill && searchjson['fid'] != false && searchjson['fid'].length) {
+    if (positionfill && searchjson['fid'] && searchjson['fid'].length) {
         var fids = searchjson['fid'];
         for (var f in fids) {
             $('#header-seaech-checkbox').find('input[value="' + fids[f] + '"]').prop('checked', true);
@@ -182,7 +182,7 @@ function show_more_search_condition(e) {
     }
    
     //特定用户设置
-    if (searchjson['uid'].length >0) {
+    if (searchjson['uid'] && searchjson['uid'].length >0) {
         var text = $('.searchowner li a[data-val="user"]').text();
         jQuery('.searchowner').closest('.dropdown-type').find('.anytime').text(text);
         jQuery('.searchowner').parents('.dropdown-type').find('.typeowner,.name_emile').show();

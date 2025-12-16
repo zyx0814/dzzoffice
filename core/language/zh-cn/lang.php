@@ -1530,5 +1530,6 @@ $lang = array(
     'cloud_type_ftp' => 'FTP',
     'cloud_type_disk' => '本地磁盘',
     'cloud_type_local'=>'内置',
+    'system_close' => '系统关闭，请稍后再试',
 );
 ?>

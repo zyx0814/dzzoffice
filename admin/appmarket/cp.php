@@ -195,7 +195,7 @@ if ($do == 'export') {//应用导出
 } elseif ($do == 'uninstall') {//卸载应用
     $appid = intval($_GET['appid']);
     if (!$app = C::t('app_market')->fetch($appid)) {
-        showmessage('list_cp_Application_delete', dreferer());
+        showmessage('list_cp_Application_delete', MOD_URL);
     }
     $app['extra'] = unserialize($app['extra']);
     $finish = FALSE;
@@ -237,7 +237,7 @@ if ($do == 'export') {//应用导出
         $temp_install = DZZ_ROOT . './data/update/app/' . $app['app_path'] . '/' . $app['identifier'];
         removedirectory($temp_install);
         writelog('otherlog', "卸载应用 " . $app['appname']);
-        showmessage($msg, dreferer());
+        showmessage($msg, MOD_URL);
     }
 } elseif ($do == 'uninstall_confirm') {//卸载应用
     $navtitle = '卸载应用 - ' . lang('appname');

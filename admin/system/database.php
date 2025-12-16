@@ -465,6 +465,27 @@ if ($operation == 'export') {
             $html .= '</tr>';
         }
         $count = count($db_result);
+        $updated = false;
+
+        // 检查并更新引擎设置
+        if($_config['db']['common']['engine'] !== 'innodb') {
+            $updated = true;
+        }
+
+        // 检查并更新字符集设置
+        if($_config['db']['1']['dbcharset'] !== 'utf8mb4') {
+            $updated = true;
+        }
+
+        if($updated) {
+            $configfile = DZZ_ROOT.CONFIG_NAME.BS.CONFIG_NAME.EXT;
+            if(@file_exists($configfile)){
+                $apps_config = include($configfile);
+                $apps_config['db']['1']['dbcharset'] = 'utf8mb4';
+                $apps_config['db']['common']['engine'] = 'innodb';
+                helper_config::save($configfile, $apps_config);
+            }
+        }
     }
     include template('database');
     exit();
