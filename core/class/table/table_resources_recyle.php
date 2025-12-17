@@ -207,7 +207,7 @@ class table_resources_recyle extends dzz_table {
             }
             $v['deldateline'] = dgmdate($v['deldateline'], 'Y-m-d H:i:s');
             //获取文件图标
-            $v['img'] = C::t('resources')->get_icosinfo_by_rid($v['rid']);
+            $v['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($v['rid']);
             //文件大小信息
             $v['fsize'] = ($v['size']) ? formatsize($v['size']) : 0;
             $v['isdelete'] = 1;

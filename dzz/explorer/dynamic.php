@@ -124,7 +124,7 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
             $perms = get_permsarray('document');
         }
         include template('right_menu');
-        exit();
+        dexit();
     } elseif ($ridnum > 1) {//如果是多项选中，则调对应综合文件信息
         $fileinfo = C::t('resources')->get_property_by_rid($rids);
         if($fileinfo['error']) showmessage($fileinfo['error']);

@@ -23,11 +23,13 @@
     <input type="hidden" name="referer" value="$referer"/>
     <input type="hidden" name="handlekey" value="$_GET[handlekey]"/>
 		<!--{if $_GET[action] != 'activation'}-->
+    <!--{if !$_G['setting']['regemail']}-->
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-mail" aria-hidden="true"></span>
       <input type="text" class="form-control" id="email" name="email" autocomplete="off" placeholder="{lang register_email_tips}" required/>
       <span id="chk_email" class="help-msg text-danger"></span> 
     </div>
+    <!--{/if}-->
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-account" aria-hidden="true"></span>
       <input type="text" class="form-control" id="username" name="username" autocomplete="off" placeholder="{lang username}" required/>
@@ -92,7 +94,7 @@
 	
 	jQuery(document).ready(function (e) {
 	
-		addFormEvent('registerform',1);
+		addFormEvent('registerform',1<!--{if !$_G['setting']['regemail']}-->,1<!--{/if}-->);
 		if (jQuery('.ie8,.ie9').length) { //ie8模拟placeholder;
 			jQuery(':input[placeholder]').each(function () {
 				jQuery(this).placeholder();

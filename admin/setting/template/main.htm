@@ -547,6 +547,21 @@
                 </div>
               </div>
             </div>
+            <div class="row mb-3">
+                <label class="col-sm-2">找回密码按钮</label>
+                <div class="col-sm-10">
+                  <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="lostpasswdbtn1" name="settingnew[loginset][lostpasswdbtn]" <!--{if $setting[loginset][lostpasswdbtn]}-->checked="checked"<!--{/if}--> value="1">
+                      <label class="form-check-label" for="lostpasswdbtn1">{lang hide}</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="lostpasswdbtn2" name="settingnew[loginset][lostpasswdbtn]" <!--{if !$setting[loginset][lostpasswdbtn]}-->checked="checked"<!--{/if}--> value="0">
+                      <label class="form-check-label" for="lostpasswdbtn2">{lang show}</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             <dl class="mb-3 d-grid">
                 <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
             </dl>
@@ -891,12 +906,26 @@
             </div>
             <div id="bbrules_more" style="<!--{if $setting['bbrules']>0}-->display:block<!--{else}-->display:none<!--{/if}-->">
               <div class="row mb-3">
-              <label class="col-sm-2" for="bbrulestxt">{lang terms_service_content}</label>
-              <div class="col-sm-10">
-                <textarea class="form-control" type="texterea" name="settingnew[bbrulestxt]" id="bbrulestxt" rows="5">$setting[bbrulestxt]</textarea> 
-                <span class="form-text">{lang details_sites_terms_service}</span>
+                <label class="col-sm-2" for="bbrulestxt">{lang terms_service_content}</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" type="texterea" name="settingnew[bbrulestxt]" id="bbrulestxt" rows="5">$setting[bbrulestxt]</textarea> 
+                  <span class="form-text">{lang details_sites_terms_service}</span>
+                </div>
               </div>
             </div>
+            <div class="row mb-3">
+              <label class="col-sm-2">注册邮箱字段</label>
+              <div class="col-sm-10">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="regemail1" name="settingnew[regemail]" value="1" <!--{if $setting[regemail]}-->checked<!--{/if}-->>
+                  <label class="form-check-label" for="regemail1">{lang hide}</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="regemail2" name="settingnew[regemail]" value="0" <!--{if !$setting[regemail]}-->checked<!--{/if}-->>
+                  <label class="form-check-label" for="regemail2">{lang show}</label>
+                </div>
+              <span class="form-text">显示邮箱字段时必须填写邮箱信息，隐藏邮箱字段时系统会自动生成邮箱信息</span>
+              </div>
             </div>
             <dl class="mb-3 d-grid">
               <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit"  value="{lang save_changes}" type="submit">

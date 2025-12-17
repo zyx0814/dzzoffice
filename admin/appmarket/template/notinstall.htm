@@ -14,7 +14,7 @@
 						<th >{lang application_name}</th>
 						<th >{lang group_permissions}</th>
 						<th >{lang version}</th>
-						<th >{lang dir}(dzz目录下)</th>
+						<th >{lang dir}</th>
 						<th>{lang supplier}</th>
 						<th >{lang operation}</th>
 					</thead>
@@ -32,10 +32,10 @@
 						</td>
 						<td>$value[grouptitle]</td>
 						<td>$value[version]</td>
-						<td>$value[identifier]</td>
+						<td>$value[app_path]/$value[identifier]</td>
 						<td>$value[vendor]</td>
 						<td>
-							<a class="btn btn-primary" href="{MOD_URL}&op=cp&do=install&app_path=dzz&app_name=$value[identifier]">{lang install}</a>
+							<a class="btn btn-primary" href="{MOD_URL}&op=cp&do=install&app_path=$value[app_path]&app_name=$value[identifier]">{lang install}</a>
 						</td>
 					</tr>
 					<!--{/loop}-->

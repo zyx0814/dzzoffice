@@ -158,7 +158,7 @@ elseif(isset($_GET[\'' . $mysqlplek . '\'])) {
 	}
 	</script>";
 
-    if (!defined('IN_ADMINCP') && file_exists(DZZ_ROOT . './static/image/common/temp-grid.png')) $debug .= <<<EOF
+    if (!defined('IN_ADMIN') && file_exists(DZZ_ROOT . './static/image/common/temp-grid.png')) $debug .= <<<EOF
 <script type="text/javascript">
 var s = '<button style="position: fixed; width: 40px; right: 0; top: 30px; border: none; border:1px solid orange;background: yellow; color: red; cursor: pointer;" onclick="var pageHight = top.document.body.clientHeight;document.getElementById(\'tempgrid\').style.height = pageHight + \'px\';document.getElementById(\'tempgrid\').style.visibility = top.document.getElementById(\'tempgrid\').style.visibility == \'hidden\'?\'\':\'hidden\';o.innerHTML = o.innerHTML == \'网格\'?\'关闭\':\'网格\';">网格</button>';
 s += '<div id="tempgrid" style="position: absolute; top: 0px; left: 50%; margin-left: -500px; width: 1000px; height: 0; background: url(static/image/common/temp-grid.png); visibility :hidden;"></div>';
@@ -180,7 +180,7 @@ EOF;
             }
         }
     }
-    $modid = $_G['basescript'] . (!defined('IN_ADMINCP') ? '::' . CURMODULE : '');
+    $modid = (defined('CURSCRIPT') ? CURSCRIPT : '') . (defined('CURMODULE') ? '::' . CURMODULE : '');
     $svn = '';
     if (file_exists(DZZ_ROOT . './.svn/entries')) {
         $svn = @file(DZZ_ROOT . './.svn/entries');

@@ -61,12 +61,10 @@ if ($do == 'getinfo') {
         $sharelink = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($value['id']));
         $value['expireday'] = getexpiretext($value['endtime']);
         $rids = explode(',', $value['filepath']);
-        if($value['pfid'] == -1) {
-            $img = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($value['filepath']);
-        } elseif (count($rids) > 1) {
+        if (count($rids) > 1) {
             $img = '/dzz/explorer/images/ic-files.png';
         } else {
-            $img = C::t('resources')->get_icosinfo_by_rid($value['filepath']);
+            $img = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($value['filepath']);
         }
         $data[] = [
             "sid" => $value['id'],

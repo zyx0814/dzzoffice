@@ -287,12 +287,10 @@ if ($do == 'filelist') {
             }
         }
     }
-    if($share['pfid'] == -1) {
-        $share['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($share['filepath']);
-    } elseif (count($rids) > 1) {
+    if (count($rids) > 1) {
         $share['img'] = '/dzz/explorer/images/ic-files.png';
     } else {
-        $share['img'] = C::t('resources')->get_icosinfo_by_rid($share['filepath']);
+        $share['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($share['filepath']);
     }
     C::t('shares')->add_views_by_id($sid);
 }

@@ -27,6 +27,6 @@ if (!$short) {
     exit('Access Denied');
 }
 C::t('shorturl')->addview($sid);
-@header("Location: " . outputurl($short['url']));
+@header("Location: " . $_G['siteurl'] . outputurl($short['url']));
 exit();
 ?>

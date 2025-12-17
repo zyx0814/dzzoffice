@@ -33,61 +33,67 @@ if ($do == 'notinstall') {
     foreach (DB::fetch_all("select appid,identifier from %t where %i ", array('app_market', $sql)) as $value) {
         $identifiers[$value['appid']] = $value['identifier'];
     }
-    $appdir = DZZ_ROOT . '/dzz';
+    $appdirs = array(
+        DZZ_ROOT . '/dzz',
+        DZZ_ROOT . '/admin'
+    );
     $list = [];
-    try {
-        $appsIterator = new DirectoryIterator($appdir);
-        foreach ($appsIterator as $entry) {
-            // 跳过无效条目和已安装的应用
-            if ($entry->isDot() || !$entry->isDir() || in_array($entry->getFilename(), $identifiers)) {
-                continue;
-            }
-            
-            $entryName = $entry->getFilename();
-            $entryPath = $entry->getPathname();
-            $xmlFilePath = "{$entryPath}/dzz_app_{$entryName}.xml";
-            
-            // 检查主应用XML文件
-            if (file_exists($xmlFilePath)) {
-                $importtxt = file_get_contents($xmlFilePath);
-                if ($importtxt !== false) {
-                    processAppXml($importtxt, $entryName, $list, $identifiers);
+    foreach ($appdirs as $appdir) {
+        if (!is_dir($appdir)) {
+            continue;
+        }
+        try {
+            $appsIterator = new DirectoryIterator($appdir);
+            foreach ($appsIterator as $entry) {
+                // 跳过无效条目和已安装的应用
+                if ($entry->isDot() || !$entry->isDir() || in_array($entry->getFilename(), $identifiers)) {
+                    continue;
                 }
-            } else {
-                // 检查子目录
-                try {
-                    $subdirIterator = new DirectoryIterator($entryPath);
-                    foreach ($subdirIterator as $subEntry) {
-                        if ($subEntry->isDot() || !$subEntry->isDir()) {
-                            continue;
-                        }
-                        
-                        $subEntryName = $subEntry->getFilename();
-                        $subEntryIdentifier = "{$entryName}:{$subEntryName}";
-                        
-                        // 跳过已安装的子应用
-                        if (in_array($subEntryIdentifier, $identifiers)) {
-                            continue;
-                        }
-                        
-                        $subEntryPath = $subEntry->getPathname();
-                        $subXmlFilePath = "{$subEntryPath}/dzz_app_{$entryName}_{$subEntryName}.xml";
-                        
-                        if (file_exists($subXmlFilePath)) {
-                            $importtxt = file_get_contents($subXmlFilePath);
-                            if ($importtxt !== false) {
-                                processAppXml($importtxt, $subEntryIdentifier, $list, $identifiers);
+                
+                $entryName = $entry->getFilename();
+                $entryPath = $entry->getPathname();
+                $xmlFilePath = "{$entryPath}/dzz_app_{$entryName}.xml";
+                
+                // 检查主应用XML文件
+                if (file_exists($xmlFilePath)) {
+                    $importtxt = file_get_contents($xmlFilePath);
+                    if ($importtxt !== false) {
+                        processAppXml($importtxt, $entryName, $list, $identifiers);
+                    }
+                } else {
+                    // 检查子目录
+                    try {
+                        $subdirIterator = new DirectoryIterator($entryPath);
+                        foreach ($subdirIterator as $subEntry) {
+                            if ($subEntry->isDot() || !$subEntry->isDir()) {
+                                continue;
+                            }
+                            
+                            $subEntryName = $subEntry->getFilename();
+                            $subEntryIdentifier = "{$entryName}:{$subEntryName}";
+                            
+                            // 跳过已安装的子应用
+                            if (in_array($subEntryIdentifier, $identifiers)) {
+                                continue;
+                            }
+                            
+                            $subEntryPath = $subEntry->getPathname();
+                            $subXmlFilePath = "{$subEntryPath}/dzz_app_{$entryName}_{$subEntryName}.xml";
+                            
+                            if (file_exists($subXmlFilePath)) {
+                                $importtxt = file_get_contents($subXmlFilePath);
+                                if ($importtxt !== false) {
+                                    processAppXml($importtxt, $subEntryIdentifier, $list, $identifiers);
+                                }
                             }
                         }
+                    } catch (Exception $e) {
                     }
-                } catch (Exception $e) {
-                    // 记录子目录遍历错误
-                    error_log("Error reading subdirectory {$entryPath}: " . $e->getMessage());
                 }
             }
+        } catch (Exception $e) {
+            showmessage('Error reading directory '.$appdir, dreferer());
         }
-    } catch (Exception $e) {
-        showmessage('Error reading directory '.$appdir, dreferer());
     }
     include template('notinstall');
     exit;

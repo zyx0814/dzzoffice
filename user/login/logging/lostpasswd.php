@@ -4,14 +4,14 @@ if (!defined('IN_DZZ')) {
 }
 
 define('NOROBOT', TRUE);
-if ($_G['setting']['bbclosed']) {
-    dheader("Location: user.php?mod=login");
-}
 global $_G;
 $navtitle = lang('lostpassword');
 if (isset($_GET['lostpwsubmit'])) {
-    $_GET['email'] = strtolower(trim($_GET['email']));
     $type = $_GET['returnType'];
+    if ($_G['setting']['bbclosed']) {
+        showTips(array('error' => lang('system_close')), $type);
+    }
+    $_GET['email'] = strtolower(trim($_GET['email']));
     if ($_GET['email']) {
         $emailcount = C::t('user')->count_by_email($_GET['email'], 1);
         if (!$emailcount) {
@@ -47,7 +47,9 @@ if (isset($_GET['lostpwsubmit'])) {
         showTips(array('error'=>"Failed to send email to  \"$tmp[email]\", please contact the administrator"),$type);
     }
     showTips(array('success' => array('msg' => lang('password_has_been_sent_email', array('email' => $_GET['email'])) . lang('please_tree_edit_password'), 'url' => $_G['siteurl'], 'email' => $_GET['email']), $type));
-
 } else {
+    if ($_G['setting']['bbclosed']) {
+        dheader("Location: user.php?mod=login");
+    }
     include template('lostpasswd');
 }

@@ -263,10 +263,10 @@ function getuserbyuid($uid, $fetch_archive = 0) {
 }
 
 function chk_submitroule($type) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_GET['formhash']) && $_GET['formhash'] == formhash() && empty($_SERVER['HTTP_X_FLASH_VERSION']) && (empty($_SERVER['HTTP_REFERER']) ||
-            preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST']))) {
-
-    } else {
+    // if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_GET['formhash']) && $_GET['formhash'] == formhash() && empty($_SERVER['HTTP_X_FLASH_VERSION']) && (empty($_SERVER['HTTP_REFERER']) ||
+    //         preg_replace("/https?:\/\/([^\:\/]+).*/i", "\\1", $_SERVER['HTTP_REFERER']) == preg_replace("/([^\:]+).*/", "\\1", $_SERVER['HTTP_HOST']))) {
+    // } else {
+    if (empty($_GET['formhash']) || $_GET['formhash'] != formhash()) {
         showTips(array('error' => '提交方式不合法', 'error_code' => 403), $type, 'common/illegal_operation');
     }
 }
@@ -562,7 +562,7 @@ function fileext($filename) {
 
 function formhash($specialadd = '') {
     global $_G;
-    $hashadd = defined('IN_ADMINCP') ? 'Only For Dzz! Admin Control Panel' : '';
+    $hashadd = defined('IN_ADMIN') ? 'Only For Dzz! Admin Control Panel' : '';
     return substr(md5(substr($_G['timestamp'], 0, -7) . $_G['username'] . $_G['uid'] . $_G['authkey'] . $hashadd . $specialadd), 8, 8);
 }
 
@@ -1196,7 +1196,7 @@ function output() {
     } else {
         define('DZZ_OUTPUTED', 1);
     }
-    if (isset($_G['setting']['rewritestatus'])) {
+    if ($_G['config']['rewritestatus']) {
         $content = ob_get_contents();
         $content = output_replace($content);
         ob_end_clean();
@@ -1210,7 +1210,7 @@ function output() {
 
 function outputurl($url = "") {
     global $_G;
-    if (isset($_G['setting']['rewritestatus'])) {
+    if ($_G['config']['rewritestatus']) {
         $url = output_replace($url);
     }
     return $url;
@@ -1218,16 +1218,14 @@ function outputurl($url = "") {
 
 function output_replace($content) {
     global $_G;
-    if (defined('IN_ADMINCP')) return $content;
     if (!empty($_G['setting']['output']['str']['search'])) {
-
-        $content = str_replace($_G['setting']['rewrite']['str']['search'], $_G['setting']['rewrite']['str']['replace'], $content);
+        $content = str_replace($_G['setting']['output']['str']['search'], $_G['setting']['output']['str']['replace'], $content);
     }
     if (!empty($_G['config']['rewrite']['preg']['search'])) {
-
+        $modurl = defined('MOD_URL') ? MOD_URL : '';
         //处理js中 app_url,mod_url
-        $string1 = "APP_URL='" . MOD_URL . "'";//",APP_URL='".MOD_URL."',MOD_URL = '".MOD_URL."'";
-        $string2 = "MOD_URL='" . MOD_URL . "'";
+        $string1 = "APP_URL='" . $modurl . "'";//",APP_URL='".MOD_URL."',MOD_URL = '".MOD_URL."'";
+        $string2 = "MOD_URL='" . $modurl . "'";
         $string = array($string1, $string2);
         $md5[] = md5($string1);
         $md5[] = md5($string2);
@@ -1278,7 +1276,6 @@ function output_replace($content) {
 
 function output_ajax() {
     global $_G;
-
     $s = ob_get_contents();
     ob_end_clean();
     $s = preg_replace("/([\\x01-\\x08\\x0b-\\x0c\\x0e-\\x1f])+/", ' ', $s);
@@ -1288,7 +1285,7 @@ function output_ajax() {
     }
 
     $havedomain = isset($_G['setting']['domain']['app']) ? implode('', $_G['setting']['domain']['app']) : '';
-    if ((isset($_G['setting']['rewritestatus']) && $_G['setting']['rewritestatus']) || !empty($havedomain)) {
+    if ($_G['config']['rewritestatus'] || !empty($havedomain)) {
         $s = output_replace($s);
     }
     return $s;

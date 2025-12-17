@@ -50,11 +50,13 @@
 			<input type="checkbox" class="form-check-input" name="cookietime" id="cookietime_$loginhash" value="2592000" $cookietimecheck>
 			<label class="form-check-label not-user-select" for="cookietime_$loginhash">{lang automatic_login_within_thirtydays}</label>
 			<div class="float-end">
-				<!--{if $_G['setting']['regstatus']>0}--> 
+				<!--{if $_G['setting']['regstatus']>0}-->
 				<a class="pull-right"  href="user.php?mod=register&referer={eval echo urlencode($referer);}"  <!--{if !empty($_GET['inajax'])}-->onclick="_login.register($referer);return false;"<!--{/if}--> title="$_G['setting']['reglinkname']">$_G['setting']['reglinkname']</a> 
-				<span class="spacer  pull-right">|</span> 
-				<!--{/if}--> 
+				<!--{/if}-->
+				<!--{if $_G['setting']['regstatus']>0 && !$_G['setting']['loginset']['lostpasswdbtn']}--><span class="spacer pull-right">|</span><!--{/if}-->
+				<!--{if !$_G['setting']['loginset']['lostpasswdbtn']}-->
 				<a class="pull-right" href="user.php?mod=login&op=logging&action=lostpasswd">{lang getpassword}</a>
+				<!--{/if}-->
 			</div>
 		</div>
 		<div class="mb-3 third-wrapper clearfix">
@@ -71,7 +73,6 @@
 <script type="text/javascript" src="static/js/md5.js?{VERHASH}" reload="1"></script> 
 <!--{/if}--> 
 <script type="text/javascript">
-
 	var pwdclear = 1;
 	function initinput_login() {
 		document.body.focus();

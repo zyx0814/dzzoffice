@@ -249,12 +249,10 @@ class table_shares extends dzz_table {
             }
             $val['expireday'] = getexpiretext($val['endtime']);
             $rids = explode(',', $val['filepath']);
-            if($val['pfid'] == -1) {
-                $val['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($val['filepath']);
-            } elseif (count($rids) > 1) {
+            if (count($rids) > 1) {
                 $val['img'] = '/dzz/explorer/images/ic-files.png';
             } else {
-                $val['img'] = C::t('resources')->get_icosinfo_by_rid($val['filepath']);
+                $val['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($val['filepath']);
             }
             $val['name'] = $val['title'];
             $val['rid'] = $val['id'];

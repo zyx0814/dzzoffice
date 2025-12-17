@@ -22,8 +22,7 @@ function errormessage(el, msg,passlevel) {
 	}
 }
 
-function addFormEvent(formid, focus){
-	
+function addFormEvent(formid, focus, email){
 	jQuery('#username').on('blur keyup', function () {
 		if(this.value == '') {
 			errormessage(jQuery(this), __lang.username_character);
@@ -31,14 +30,15 @@ function addFormEvent(formid, focus){
 			checkusername(jQuery(this));
 		}
 	});
-	jQuery('#email').on('blur keyup', function () {
-		if(this.value == '') {
-			errormessage(jQuery(this), __lang.register_email_tips1);
-		}else{
-			checkemail(jQuery(this));
-		}
-	});
-	
+	if (email) {
+		jQuery('#email').on('blur keyup', function () {
+			if(this.value == '') {
+				errormessage(jQuery(this), __lang.register_email_tips1);
+			}else{
+				checkemail(jQuery(this));
+			}
+		});
+	}
 
 	checkPwdComplexity(document.getElementById('password'), document.getElementById('password2'));
 	
@@ -83,7 +83,6 @@ function checkPwdComplexity(Obj1, Obj2, modify) {
 	});
 }
 
-
 function checkstrongpw(el) {
 	var passlevel = 0;
 	var val=el.val();
@@ -98,7 +97,6 @@ function checkstrongpw(el) {
 	}
 	return passlevel;
 }
-
 
 function showbirthday(){
 	var el = document.getElementById('birthday');
@@ -133,8 +131,6 @@ function trim(str) {
 	return str.replace(/^\s*(.*?)[\s\n]*$/g, '$1');
 }
 
-
-
 function checksubmit(form) {
 	var p_chks = jQuery('#registerform').find('.has-error');
 	if(p_chks.length>0){
@@ -160,11 +156,8 @@ function check_submit(form){
 		return false;
 	}
 	var url = jQuery(form).attr('action');
-
 	url = (url)? url:'user.php?mod=register';
-
 	var type = 'json';
-
 	jQuery.post(url+'&returnType='+type,jQuery(form).serialize(),function(json){
 
 		if(json.success){
@@ -279,5 +272,3 @@ function checkemail(el) {
 		showmessage('{lang do_failed}' + textStatus, 'danger', 3000, 1);
 	});
 }
-
-

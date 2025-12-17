@@ -44,16 +44,21 @@ class table_shorturl extends dzz_table {
 
     public function getShortUrl($url) {
         $sid = self::getSid($url);
-        if (DB::result_first("select COUNT(*) from %t where sid=%s", array($this->_table, $sid))) {
-            return getglobal('siteurl') . 'short.php?sid=' . $sid;
+        $shorturl = getglobal('siteurl') . 'short.php?sid=' . $sid;
+        
+        // 检查是否已存在记录
+        if (!DB::result_first("select COUNT(*) from %t where sid=%s", array($this->_table, $sid))) {
+            // 如果不存在，则插入新记录
+            $setarr = array(
+                'sid' => $sid,
+                'url' => $url,
+            );
+            if (!parent::insert($setarr)) {
+                return ''; // 插入失败返回空字符串
+            }
         }
-        $setarr = array('sid' => $sid,
-            'url' => $url,
-        );
-        if (parent::insert($setarr)) {
-            return getglobal('siteurl') . 'short.php?sid=' . $sid;
-        }
-        return '';
+        
+        return outputurl($shorturl);
     }
 
     public function addview($sid) {

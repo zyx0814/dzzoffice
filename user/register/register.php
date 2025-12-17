@@ -71,6 +71,9 @@ if (!submitcheck('regsubmit')) {
     exit();
 } else {
     $type = isset($_GET['returnType']) ? $_GET['returnType'] : '';
+    if ($_G['setting']['regemail'] && !$_GET['email']) {//如果设置隐藏邮箱字段且未提交邮箱则随机生成一个
+        $_GET['email'] = random(20) . '@dzz.com';
+    }
     Hook::listen('check_val', $_GET);//用户数据验证钩子,用户注册资料信息提交验证
     //验证IP同一时间段内注册
     if($setting['regctrl']) {
