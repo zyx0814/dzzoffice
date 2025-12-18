@@ -2323,42 +2323,46 @@ function getDzzPath($attach) {
     return $url;
 }
 
-function geticonfromext($ext, $type = '') {
-    static $geticonfromext = array();
-    $cache_key = $ext . '|' . $type;
-    if (isset($geticonfromext[$cache_key])) {
-        return $geticonfromext[$cache_key];
+function geticonfromext($ext = '', $type = '') {
+    static $iconcache = array();
+    $cachekey = $ext . '|' . $type;
+    if (isset($iconcache[$cachekey])) {
+        return $iconcache[$cachekey];
     }
-    global $_G;
-    $img = 'dzz/images/extimg/' . strtolower($ext) . '.png';
-    if (!is_file(DZZ_ROOT . $img)) {
-        switch ($type) {
-            case 'video':
-                $img = 'dzz/images/extimg/video.png';
-                break;
-            case 'music':
-                $img = 'dzz/images/extimg/music.png';
-                break;
-            case 'document':
-                $img = 'dzz/images/extimg/document.png';
-                break;
-            case 'folder':
-                $img = 'dzz/images/default/system/folder.png';
-                break;
-            case 'link':
-                $img = 'dzz/images/extimg/link.png';
-                break;
-            case 'dzzdoc':
-                $img = 'dzz/images/extimg/dzzdoc.png';
-                break;
-            case 'topic':
-                $img = 'dzz/images/extimg/topic.png';
-                break;
-            default:
-                $img = 'dzz/images/extimg/unknow.png';
+    $img = '';
+    if ($ext) {
+        $img = 'dzz/images/extimg/' . strtolower($ext) . '.png';
+        if (is_file(DZZ_ROOT . $img)) {
+            $iconcache[$cachekey] = $img;
+            return $img;
         }
     }
-    $geticonfromext[$cache_key] = $img;
+    switch ($type) {
+        case 'video':
+            $img = 'dzz/images/extimg/video.png';
+            break;
+        case 'music':
+            $img = 'dzz/images/extimg/music.png';
+            break;
+        case 'document':
+            $img = 'dzz/images/extimg/document.png';
+            break;
+        case 'folder':
+            $img = 'dzz/images/default/system/folder.png';
+            break;
+        case 'link':
+            $img = 'dzz/images/extimg/link.png';
+            break;
+        case 'dzzdoc':
+            $img = 'dzz/images/extimg/dzzdoc.png';
+            break;
+        case 'topic':
+            $img = 'dzz/images/extimg/topic.png';
+            break;
+        default:
+            $img = 'dzz/images/extimg/unknow.png';
+    }
+    $iconcache[$cachekey] = $img;
     return $img;
 }
 

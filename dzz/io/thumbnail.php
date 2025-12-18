@@ -61,7 +61,11 @@ if ($download == 'down') {
     exit();
 
 } else {
-    IO::getThumb($path, $width, $height, $original, false, $thumbtype);
+    if(!IO::getThumb($path, $width, $height, $original, false, $thumbtype)) {
+        @header('HTTP/1.1 404 Not Found');
+        @header('Status: 404 Not Found');
+        exit(lang('file_no_exist'));
+    }
 }
 if ($original) {
     if ($returnurl) return $_G['setting']['attachurl'] . './' . $data['attachment'];

@@ -264,9 +264,15 @@ class table_resources_event extends dzz_table {
 
     //查询当前用户所有动态
     public function fetch_all_event($start = 0, $limit = 0, $condition = array(), $ordersql = '', $count = false) {
+        global $_G;
+        $isadmin = false;
+        // 去除注释就允许管理员查看所有动态，越过限制
+        if ($_G['adminid'] == 1) {
+            //$isadmin = true;
+        }
         $limitsql = $limit ? DB::limit($start, $limit) : '';
         $wheresql = ' 1 ';
-        $uid = getglobal('uid');
+        $uid = $_G['uid'];
         $params = array($this->_table, 'folder');
         $explorer_setting = get_resources_some_setting();//获取系统设置
         $powerarr = perm_binPerm::getPowerArr();
@@ -276,7 +282,7 @@ class table_resources_event extends dzz_table {
         //如果筛选条件没有用户限制，默认查询当前用户网盘数据
         if (!isset($condition['uidval'])) {
             //用户自己的文件
-            if ($explorer_setting['useronperm']) {//判断当前用户存储是否开启，如果开启则查询当前用户网盘数据
+            if (!$isadmin && $explorer_setting['useronperm']) {//判断当前用户存储是否开启，如果开启则查询当前用户网盘数据
                 $usercondition ['nogid'] = " e.gid=0 and e.uid=%d ";
                 $params[] = $uid;
             }
@@ -295,28 +301,30 @@ class table_resources_event extends dzz_table {
 
         if (isset($usercondition['nogid'])) $wheresql .= 'and (' . $usercondition ['nogid'] . ')';
 
-
         //群组条件后需判断有无用户条件
         $orgcondition = array();
-        $orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门，并排除已关闭的群组或机构
-        //我管理的群组或部门
-        if ($orgids['orgids_admin']) {
+        if (!$isadmin) {
+            $orgids = C::t('organization')->fetch_all_orgid();//获取所有有管理权限的部门，并排除已关闭的群组或机构
+            //我管理的群组或部门
+            if ($orgids['orgids_admin']) {
 
-            $orgcondition[] = "  e.gid IN (%n) ";
+                $orgcondition[] = "  e.gid IN (%n) ";
 
-            $params[] = $orgids['orgids_admin'];
+                $params[] = $orgids['orgids_admin'];
+            }
+            //我参与的群组
+            if ($orgids['orgids_member']) {
+                $orgcondition[] = "  (e.gid IN(%n) and ((f.perm_inherit & %d) OR (e.uid=%d and f.perm_inherit & %d))) ";
+                $params[] = $orgids['orgids_member'];
+                $params[] = $powerarr['read2'];
+                $params[] = $uid;
+                $params[] = $powerarr['read1'];
+            }
         }
-        //我参与的群组
-        if ($orgids['orgids_member']) {
-            $orgcondition[] = "  (e.gid IN(%n) and ((f.perm_inherit & %d) OR (e.uid=%d and f.perm_inherit & %d))) ";
-            $params[] = $orgids['orgids_member'];
-            $params[] = $powerarr['read2'];
-            $params[] = $uid;
-            $params[] = $powerarr['read1'];
-        }
+
         if ($orgcondition) {//如果有群组条件
             $or = isset($usercondition ['nogid']) ? 'or' : 'and';//判断是否有网盘数据
-            if ($usercondition ['hasgid']) {//如果有网盘数据，则与群组条件组合为或的关系
+            if ($usercondition['hasgid']) {//如果有网盘数据，则与群组条件组合为或的关系
                 $wheresql .= " $or ((" . implode(' OR ', $orgcondition) . ") and " . $usercondition ['hasgid'] . ") ";
                 $params[] = $uids;
             } else {
@@ -324,7 +332,7 @@ class table_resources_event extends dzz_table {
             }
             $wheresql = '(' . $wheresql . ')';
         } else {
-            if (!isset($usercondition ['nogid'])) {
+            if (!$isadmin && !isset($usercondition['nogid'])) {
                 $wheresql .= ' and 0 ';
             }
         }
@@ -372,7 +380,6 @@ class table_resources_event extends dzz_table {
             $events[] = $v;
         }
         return $events;
-
     }
 
     //删除评论

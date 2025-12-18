@@ -1043,11 +1043,19 @@
                   </div>
                   <span class="form-text">{lang space_group_set_tip}</span>
                 </div>
-                </div>
+              </div>
             </div>
             <dl class="mb-3 d-grid">
               <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit" value="{lang save_changes}" type="submit">
             </dl>
+            <div class="alert alert-warning alert-dismissible" role="alert">
+              <strong>{lang board_message}</strong>
+              <ul class="mb-0">
+                <li>用户组对应的存储空间配置，需在用户组设置模块内进行调整；</li>
+                <li>单个用户的个人存储空间配置，需在机构用户模块的用户信息编辑界面中进行调整。</li>
+              </ul>
+              <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+            </div>
           </form>
           <link rel="stylesheet" type="text/css" href="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.css?{VERHASH}">
           <script type="text/javascript" src="static/lyear/js/jquery-tagsinput/jquery.tagsinput.min.js?{VERHASH}"></script>

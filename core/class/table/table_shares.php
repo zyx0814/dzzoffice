@@ -260,9 +260,15 @@ class table_shares extends dzz_table {
             //检查文件是否被恢复
             if ($val['status'] == -3) {
                 $isdelete = false;
-                foreach (DB::fetch_all("select isdelete from %t where rid in(%n)", array('resources', $rids)) as $v) {
+                $resources = DB::fetch_all("select isdelete from %t where rid in(%n)", array('resources', $rids));
+                // 如果查询不到资源记录，则维持删除状态
+                if (empty($resources)) {
+                    $isdelete = true;
+                }
+                foreach ($resources as $v) {
                     if ($v['isdelete'] > 0) {
                         $isdelete = true;
+                        break; // 找到一个删除的就可以退出循环
                     }
                 }
                 if (!$isdelete) {

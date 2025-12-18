@@ -2099,7 +2099,7 @@ class io_dzz extends io_api {
     }
 
     //本地文件移动到本地其它区域
-    public function FileMove($rid, $pfid, $first = true, $force) {
+    public function FileMove($rid, $pfid, $first = true, $force = false) {
         global $_G;
         @set_time_limit(0);
         @ini_set("memory_limit", "512M");
