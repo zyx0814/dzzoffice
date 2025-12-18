@@ -2348,7 +2348,7 @@ function geticonfromext($ext = '', $type = '') {
             $img = 'dzz/images/extimg/document.png';
             break;
         case 'folder':
-            $img = 'dzz/images/default/system/folder.png';
+            $img = 'dzz/images/extimg/folder.png';
             break;
         case 'link':
             $img = 'dzz/images/extimg/link.png';

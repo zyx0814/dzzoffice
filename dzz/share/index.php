@@ -63,7 +63,9 @@ if ($do == 'getinfo') {
         $rids = explode(',', $value['filepath']);
         if (count($rids) > 1) {
             $img = '/dzz/explorer/images/ic-files.png';
-        } else {
+        } elseif ($value['type'] == 'folder') {
+            $img = '/dzz/images/extimg/folder.png';
+        }else {
             $img = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($value['filepath']);
         }
         $data[] = [

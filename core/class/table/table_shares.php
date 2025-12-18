@@ -251,6 +251,8 @@ class table_shares extends dzz_table {
             $rids = explode(',', $val['filepath']);
             if (count($rids) > 1) {
                 $val['img'] = '/dzz/explorer/images/ic-files.png';
+            } elseif ($val['type'] == 'folder') {
+                $val['img'] = '/dzz/images/extimg/folder.png';
             } else {
                 $val['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($val['filepath']);
             }

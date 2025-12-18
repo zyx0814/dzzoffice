@@ -289,7 +289,9 @@ if ($do == 'filelist') {
     }
     if (count($rids) > 1) {
         $share['img'] = '/dzz/explorer/images/ic-files.png';
-    } else {
+    } elseif ($share['type'] == 'folder') {
+        $share['img'] = '/dzz/images/extimg/folder.png';
+    }else {
         $share['img'] = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode($share['filepath']);
     }
     C::t('shares')->add_views_by_id($sid);
