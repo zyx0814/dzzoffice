@@ -41,17 +41,12 @@ if ($do == 'delete') {
                     'msg' => 'success',
                     'name' => $return['name']
                 ];
-                $dels[] = $icoid . '_0';
             } else {
                 $failedicoids[$icoid] = $return['error'];
             }
         } catch (Exception $e) {
             $failedicoids[$icoid] = 'An unexpected error occurred: ' . $e->getMessage();
         }
-    }
-    // 执行成功的条目数检查
-    if (!empty($dels)) {
-        Hook::listen('solrdel', $dels);
     }
 
     $response = [

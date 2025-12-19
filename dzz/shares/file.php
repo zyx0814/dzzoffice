@@ -52,6 +52,7 @@ if ($share['password'] && (dzzdecode($share['password']) != authcode($_G['cookie
 $canview = 1;
 $download = 1;
 $create = 0;
+$rename = 0;
 if ($share['perm']) {
     $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
     if (isset($perms[3]) && !$_G['uid']) { // 3 表示仅登录访问
@@ -64,6 +65,9 @@ if ($share['perm']) {
     }
     if (isset($perms[1])) {
         $download = 0; // 下载权限被禁用
+    }
+    if (isset($perms[7])) {
+        $rename = 1;
     }
 }
 $fdateline = dgmdate($share['dateline'], 'Y-m-d');
@@ -334,6 +338,7 @@ $return = array(
         'disp' => $disp,
         'download' => $download,
         'create' => $do ? $create : 0,
+        'rename' => $rename,
         'open' => $canview,
         'view' => $view,
         'page' => $page,

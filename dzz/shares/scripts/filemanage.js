@@ -329,7 +329,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
     }
 
 	if (this.view < 4) {
-
 		el.on('mouseenter', function () {
 			jQuery(this).addClass('hover');
 
@@ -484,8 +483,14 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 	}
 	//判断下载权限
 	var downloadprem = 0; // 默认值
-    if (_filemanage && _filemanage.param && _filemanage.param.download) {
-        downloadprem = _filemanage.param.download;
+	var renameprem = 0;
+    if (_filemanage && _filemanage.param) {
+		if (_filemanage.param.download) {
+			downloadprem = _filemanage.param.download;
+		}
+		if (_filemanage.param.rename) {
+			renameprem = _filemanage.param.rename;
+		}
     }
     //下载权限
     if (!downloadprem) {
@@ -496,6 +501,10 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 		jQuery('.allsave').show();
         jQuery('.downAll').show();
     }
+	//判断重命名权限
+	if (!renameprem) {
+		el.find('.rename').remove();
+	}
 
 	//打开方式
 	if (rids.length === 1) {
@@ -601,8 +610,14 @@ function contextmenuico(rid) {
         el.find('.shortcut').remove();
     }
     var downloadprem = 0; // 默认值
-    if (_filemanage && _filemanage.param && _filemanage.param.download) {
-        downloadprem = _filemanage.param.download;
+	var renameprem = 0;
+    if (_filemanage && _filemanage.param) {
+		if (_filemanage.param.download) {
+			downloadprem = _filemanage.param.download;
+		}
+		if (_filemanage.param.rename) {
+			renameprem = _filemanage.param.rename;
+		}
     }
     //下载权限
     if (!downloadprem) {
@@ -615,6 +630,9 @@ function contextmenuico(rid) {
         jQuery('.allsave').show();
         jQuery('.downAll').show();
     }
+	if (!renameprem) {
+		el.find('.rename').remove();
+	}
 
     //多选时的情况
     if (_filemanage.selectall.icos.length > 1 && jQuery.inArray(rid, _filemanage.selectall.icos) > -1) {
@@ -629,6 +647,7 @@ function contextmenuico(rid) {
             el.find('.downpackage').remove();
         }
         el.find('.download').remove();
+		el.find('.rename').remove();
     } else {
         el.find('.downpackage').remove();
     }
@@ -1357,7 +1376,6 @@ _filemanage.NewIco = function (type, fid) {
 			if (data.msg === 'success') {
 				_explorer.sourcedata.icos[data.rid] = data;
 				_filemanage.cons['f-1'].CreateIcos(data);
-                _filemanage.addIndex(data);
 				showmessage('已创建：'+data.name, 'success', 3000, 1);
             } else {
 				showmessage(data.error, 'danger', 5000, 1);
@@ -1367,32 +1385,96 @@ _filemanage.NewIco = function (type, fid) {
         });
 	}
 };
-//增加索引
-_filemanage.addIndex = function(data){
-	if(data.bz) return;
-	if(data.filetype != 'folder' && data.filetype != 'link'){
-        $.post(MOD_URL+'&op=ajax&sid='+sid+'&do=addIndex',{
-            'aid':data.aid,
-            'rid':data.rid,
-            'username':data.username,
-            'filetype':data.filetype,
-            'filename':data.name,
-            'md5':data.md5,
-            'vid':data.vid,
-			'pfid':data.pfid,
-			'gid':data.gid,
-			'uid':data.uid,
-        },function(json){
-            if(json['success']){
-
-            }else{
-                alert(json.error);
-            }
-        },'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage(__lang.do_failed, 'error', 3000, 1);
-        });
+_filemanage.rename = function (id) {
+	var ico = _explorer.sourcedata.icos[id];
+	if (!ico) {
+		return;
 	}
-}
+	var filemanage = _filemanage.cons[_filemanage.winid];
+
+	var el = jQuery('#file_text_' + id);
+	el.closest('td').addClass('renaming');
+	var filename = el.html();
+	var html = '';
+	if (filemanage.view > 3) {
+		html = "<input type='text' class='form-control' name='text' id='input_" + id + "' style=\"width:" + (el.closest('td').width() - 110) + "px;padding:2px; \" value=\"" + filename + "\">";
+	} else {
+		html = "<input type='textarea' class='form-control' name='text' id='input_" + id + "' value=\"" + filename + "\">";
+	}
+	el.html(html);
+	var ele = jQuery('#input_' + id);
+	ele.select();
+	ele.on('keyup', function (e) {
+		e = e ? e : event;
+		if (e.keyCode === 13) {
+			jQuery(document).trigger('mousedown.file_text_' + id);
+		}
+	});
+	jQuery(document).on('mousedown.file_text_' + id, function (e) {
+		//var obj = event.srcElement ? event.srcElement : event.target;
+		e = e ? e : window.event;
+		var obj = e.srcElement ? e.srcElement : e.target;
+		if (jQuery(obj).closest('#file_text_' + id).length < 1) {
+			jQuery(document).off('.file_text_' + id);
+			var text = ele.val() || "";
+            var emptymatch = /^\s*$/;
+            if(emptymatch.test(text)){
+				el.html(filename);
+				el.css('overflow', 'hidden');
+				el.closest('td').removeClass('renaming');
+				return false;
+            }
+			text = text.replace("\n", '');
+			if (filename !== text) {
+				_filemanage.Rename(id, text);
+			} else {
+				el.html(filename);
+				el.css('overflow', 'hidden');
+				el.closest('td').removeClass('renaming');
+			}
+			//jQuery('#content_'+filemanage.winid+' .icoblank[icoid="'+id+'"]').css('z-index',10);
+		}
+	});
+
+};
+
+_filemanage.Rename = function (rid, text) {
+	var ico = _explorer.sourcedata.icos[rid];
+	var filemanage = _filemanage.cons[_filemanage.winid];
+	layer.msg('正在操作中，请不要关闭浏览器或刷新页面', {offset:'10px',time:0});
+	jQuery.ajax({
+		type: 'post',
+		url: _explorer.appUrl + '&op=ajax&do=rename',
+		data: {
+			"text": text,
+			'sid':sid,
+			"path": ico.dpath,
+			"t": (new Date().getTime())
+		},
+		dataType: "json",
+		success: function (json) {
+			if(json.bz){
+				json.rid = rid;
+			}
+			if (json.rid) {
+				_explorer.sourcedata.icos[json.rid].name = json.name;
+				filemanage.data[json.rid].name = json.name;
+				filemanage.CreateIcos(_explorer.sourcedata.icos[json.rid], true);
+				_filemanage.prototype._selectInfo();
+				layer.msg('已重命名为：'+json.name, {offset:'10px'});
+			} else {
+				jQuery('#file_text_' + rid).html(ico.name);
+				if (json.error) {
+					layer.msg(json.error, {offset:'10px'});
+				}
+			}
+		},
+		error: function () {
+			jQuery('#file_text_' + rid).html(ico.name);
+			layer.msg(__lang.js_network_error, {offset:'10px'});
+		}
+	});
+};
 _filemanage.showTemplatenoFile = function (containid, total) {
 	if (total < 1 && jQuery('#' + containid).find('.emptyPage').length == 0) {
 		jQuery(jQuery('#template_nofile_notice').html()).appendTo(jQuery('#' + containid));

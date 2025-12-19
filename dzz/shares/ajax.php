@@ -38,6 +38,7 @@ if ($share['status'] == -3) {
 $filepaths = $share['filepath'];
 $rids = explode(',', $filepaths);
 $create = 0;
+$rename = 0;
 $download = 1;
 if ($share['perm']) {
     $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
@@ -49,6 +50,9 @@ if ($share['perm']) {
     }
     if (isset($perms[1])) {
         $download = 0; // 下载权限被禁用
+    }
+    if (isset($perms[7])) {
+        $rename = 1;
     }
 }
 if ($do == 'adddowns') {
@@ -335,40 +339,17 @@ if ($do == 'uploads') {//上传新文件(指新建)
             showmessage($propertys['error']);
         }
     }
-} elseif ($do == 'addIndex') {//索引文件
-    if (!$create) {
-        exit(json_encode(array('error' => '没有上传权限')));
+} elseif ($do == 'rename') {
+    if (!$rename) {
+        exit(json_encode(array('error' => lang('no_privilege'))));
     }
-    global $_G;
-    $indexarr = array(
-        'id' => $_GET['rid'] . '_' . intval($_GET['vid']),
-        'name' => $_GET['filename'],
-        'username' => $_GET['username'],
-        'type' => $_GET['filetype'],
-        'flag' => 'explorer',
-        'vid' => intval($_GET['vid']),
-        'gid' => intval($_GET['gid']),
-        'uid' => intval($_GET['uid']),
-        'aid' => isset($_GET['aid']) ? intval($_GET['aid']) : 0,
-        'md5' => isset($_GET['md5']) ? trim($_GET['md5']) : '',
-        'readperm' => 0
-    );
-    $fid = intval($_GET['pfid']);
-    $folderdata = C::t('folder')->fetch($fid);
-    $perm = $folderdata['perm_inherit'];
-    if (perm_binPerm::havePower('read2', $perm)) {
-        $indexarr['readperm'] = 2;
-    } elseif (perm_binPerm::havePower('read1', $perm)) {
-        $indexarr['readperm'] = 1;
-    } else {
-        $indexarr['readperm'] = 0;
+    if (!$path = dzzdecode($_GET['path'])) {
+        exit(json_encode(array('error' => lang('parameter_error'))));
     }
-    $return = Hook::listen('solraddfile', $indexarr);
-    if ($return[0]['error']) {
-        exit(json_encode($return[0]));
-    } else {
-        exit(json_encode(array('success' => true)));
-    }
+    $text = str_replace('...', '', getstr(IO::name_filter($_GET['text']), 80));
+    $ret = IO::rename($path, $text);
+    exit(json_encode($ret));
+
 }
 include template('ajax');
 function validatefid($share = array(), $fid = '') {

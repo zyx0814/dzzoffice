@@ -269,6 +269,7 @@ class perm_check {
             case 'download':
             case 'copy': return !isset($perms[1]); // 无禁用下载/复制权限
             case 'comment': return isset($perms[6]); // 有允许评论权限
+            case 'rename': return isset($perms[7]); // 有允许重命名权限
             default: return empty($share['perm']) && in_array($action, ['download', 'read', 'copy']);
         }
     }

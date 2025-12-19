@@ -135,6 +135,9 @@
 					<a href="javascript:;" type="button" class="btn allsave dcolor" data-placement="bottom" onclick="allsave()">
 						<i class="mdi mdi-content-save" data-toggle="tooltip" data-placement="bottom" title="{lang save}"></i>
 					</a>
+					<a href="javascript:;" type="button" class="btn rename single dcolor" onclick="_filemanage.rename('{rid}')">
+						<i class="mdi mdi-pencil" data-toggle="tooltip" data-placement="bottom" title="{lang rechristen}"></i>
+					</a>
 					<a href="javascript:;" type="button" class="btn download single dcolor" onclick="_filemanage.downAttach('{rid}')" >
 						<i class="mdi mdi-download" data-toggle="tooltip" data-placement="bottom" title="{lang download}"></i>
 					</a>
@@ -198,6 +201,9 @@
 			</li>
 			<li class="layui-menu-item-parent menu-item allsave" onclick="allsave();">
 				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-content-save pe-2"></i>{lang save}</div>
+			</li>
+			<li class="layui-menu-item-parent menu-item rename" onclick="_filemanage.rename('{rid}');">
+				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-pencil pe-2"></i>{lang rechristen}</div>
 			</li>
 			<li class="layui-menu-item-parent menu-item download" onclick="_filemanage.downAttach('{rid}');">
 				<div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-download pe-2"></i>{lang download}</div>

@@ -822,7 +822,6 @@ function primaryVersion(obj) {
 			;
 			_explorer.sourcedata.icos[datas.rid] = datas;
 			datas.vid = 0;
-			_filemanage.addIndex(datas);
 			_filemanage.cons['f-' + datas.pfid].CreateIcos(datas, true);
 			_filemanage.prototype._selectInfo();
 		} else {
@@ -1001,7 +1000,6 @@ function historyupload(obj,rid) {
                         _explorer.sourcedata.icos[data['filedata'].rid] = data['filedata'];
                         _filemanage.cons['f-' + data['filedata'].pfid].CreateIcos(data['filedata'], true);
                         resourcesdata.vid = 0;
-                        _filemanage.addIndex(resourcesdata);
 						if ($('.version-tab').hasClass('active')) {
 							jQuery('.version-tab').click();
 						}

@@ -1942,7 +1942,6 @@ _filemanage.NewIco = function (type, fid) {
 			if (data.msg === 'success') {
 				_explorer.sourcedata.icos[data.rid] = data;
 				_filemanage.cons['f-' + fid].CreateIcos(data);
-                _filemanage.addIndex(data);
 				_filemanage.rename(data.rid);
 				layer.msg('已创建：'+data.name, {offset:'10px'});
             } else {
@@ -1953,45 +1952,7 @@ _filemanage.NewIco = function (type, fid) {
         });
 	}
 };
-//增加索引
-_filemanage.addIndex = function(data){
-	if(data.bz) return;
-	if(data.filetype != 'folder' && data.filetype != 'link'){
-        $.post(MOD_URL+'&op=ajax&do=addIndex',{
-            'aid':data.aid,
-            'rid':data.rid,
-            'username':data.username,
-            'filetype':data.filetype,
-            'filename':data.name,
-            'md5':data.md5,
-            'vid':data.vid,
-			'pfid':data.pfid,
-			'gid':data.gid,
-			'uid':data.uid,
-        },function(json){
-            if(json['success']){
 
-            }else{
-                alert(json.error);
-            }
-        },'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage(__lang.do_failed, 'error', 3000, 1);
-        });
-	}
-}
-_filemanage.updateIndex = function(data){
-    if(data.type != 'folder' && data.type != 'link'){
-        $.post(MOD_URL+'&op=ajax&do=updateIndex',data,function(json){
-            if(json['success']){
-
-            }else{
-                alert(json.error);
-            }
-        },'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage(__lang.do_failed, 'error', 3000, 1);
-        });
-    }
-}
 _filemanage.rename = function (id) {
 	var ico = _explorer.sourcedata.icos[id];
 	if (!ico) {
@@ -2066,8 +2027,6 @@ _filemanage.Rename = function (rid, text) {
 				_explorer.sourcedata.icos[json.rid].name = json.name;
 				filemanage.data[json.rid].name = json.name;
 				filemanage.CreateIcos(_explorer.sourcedata.icos[json.rid], true);
-				var updatedatas = {'arr[rid]':json.rid,'arr[name]':json.name,'arr[vid]':json.vid,'type':json.type};
-                _filemanage.updateIndex(updatedatas);
 				_filemanage.prototype._selectInfo();
 				layer.msg('已重命名为：'+json.name, {offset:'10px'});
 			} else {
@@ -2083,19 +2042,6 @@ _filemanage.Rename = function (rid, text) {
 		}
 	});
 };
-_filemanage.deleteIndex=function(rids){
-	$.post(MOD_URL+'&op=ajax&do=deleteIndex',{
-       'rids':rids
-    },function(json){
-        if(json['success']){
-
-        }else{
-            alert(json.error);
-        }
-    },'json').fail(function (jqXHR, textStatus, errorThrown) {
-		showmessage(__lang.do_failed, 'error', 3000, 1);
-	});
-}
 //回收站删除时弹出框
 _filemanage.finallyDelete = function (rid, noconfirm, title) {
 	var filemanage = _filemanage.cons[_filemanage.winid];
@@ -2155,7 +2101,6 @@ _filemanage.finallyDelete = function (rid, noconfirm, title) {
 			} else {
 				layer.msg(msg, {offset:'10px'});
 			}
-            _filemanage.deleteIndex(rids);
             _filemanage.removeridmore(rids);
 		}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
 			layer.msg(__lang.do_failed, {offset:'10px'});
@@ -2195,7 +2140,6 @@ _filemanage.deleteAll = function () {
 					layer.msg(msg, {offset:'10px'});
 				}
 				_filemanage.showTemplatenoFile(containid, total);
-				_filemanage.deleteIndex(rids);
 				_filemanage.removeridmore(rids);
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 				layer.msg(__lang.do_failed, {offset:'10px'});
@@ -2656,14 +2600,10 @@ _filemanage.paste = function (fid) {
 				}
 				if (json.icoarr) {
 					var filemanage = _filemanage.cons['f-' + fid];
-					var addIndex = (json['copytype']) ? true:false;
 					for (i = 0; i < json.icoarr.length; i++) {
 						if (json.icoarr[i].pfid == filemanage.fid) {
 							_explorer.sourcedata.icos[json.icoarr[i].rid] = json.icoarr[i];
 							filemanage.CreateIcos(json.icoarr[i]);
-							if(addIndex){
-								_filemanage.addIndex(json.icoarr[i]);
-							}
 						}
 					}
 					layer.msg('粘贴成功', {offset:'10px'});

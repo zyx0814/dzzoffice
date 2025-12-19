@@ -152,24 +152,6 @@ function fileupload(el, fid) {
                                 }
                             }catch(e){}
                         }
-                        if(file.data.icoarr[i].type != 'folder'){
-                            /*$.post(MOD_URL+'&op=ajax&do=addIndex',{
-                                'aid':file.data.icoarr[i].aid,
-                                'rid':file.data.icoarr[i].rid,
-                                'username':file.data.icoarr[i].username,
-                                'filetype':file.data.icoarr[i].filetype,
-                                'filename':file.data.icoarr[i].filename,
-                                'vid':file.data.icoarr[i].vid,
-                                'md5':file.data.icoarr[i].md5,
-                            },function(data){
-                                if(data['success']){
-
-                                }else{
-                                    alert(data.error);
-                                }
-                            },'json')*/
-                           // _filemanage.addIndex(file.data.icoarr[i]);
-                        }
                     }
                 }
 				if(_upload.maxli){

@@ -715,6 +715,7 @@ if ($do == 'upload') {//上传图片文件
                         $share['title'] = $filenames[0];
                     }
                 }
+                $share['perm'] = array();
             }
         }
     }
@@ -857,59 +858,6 @@ if ($do == 'upload') {//上传图片文件
         exit(json_encode(array('error' => lang('no_privilege'))));
     }
 
-} elseif ($do == 'addIndex') {//索引文件
-    global $_G;
-    $indexarr = array(
-        'id' => $_GET['rid'] . '_' . intval($_GET['vid']),
-        'name' => $_GET['filename'],
-        'username' => $_GET['username'],
-        'type' => $_GET['filetype'],
-        'flag' => 'explorer',
-        'vid' => intval($_GET['vid']),
-        'gid' => intval($_GET['gid']),
-        'uid' => intval($_GET['uid']),
-        'aid' => isset($_GET['aid']) ? intval($_GET['aid']) : 0,
-        'md5' => isset($_GET['md5']) ? trim($_GET['md5']) : '',
-        'readperm' => 0
-    );
-    $fid = intval($_GET['pfid']);
-    $folderdata = C::t('folder')->fetch($fid);
-    $perm = $folderdata['perm_inherit'];
-    if (perm_binPerm::havePower('read2', $perm)) {
-        $indexarr['readperm'] = 2;
-    } elseif (perm_binPerm::havePower('read1', $perm)) {
-        $indexarr['readperm'] = 1;
-    } else {
-        $indexarr['readperm'] = 0;
-    }
-    $return = Hook::listen('solraddfile', $indexarr);
-    if ($return[0]['error']) {
-        exit(json_encode($return[0]));
-    } else {
-        exit(json_encode(array('success' => true)));
-    }
-} elseif ($do == 'updateIndex') {
-    $arr = isset($_GET['arr']) ? $_GET['arr'] : '';
-    if (empty($arr)) {
-        exit(json_encode(array('error' => '缺少数据')));
-    }
-    $rid = isset($arr['rid']) ? trim($arr['rid']) : '';
-    if (!$rid) exit(json_encode(array('error' => '缺少数据')));
-    $vid = isset($arr['vid']) ? intval($_GET['vid']) : 0;
-    $result = Hook::listen('solredit', $setarr);
-    if ($result[0]['error']) {
-        exit(json_encode(array('error' => $result[0]['error'])));
-    } else {
-        exit(json_encode(array('success' => true)));
-    }
-} elseif ($do == 'deleteIndex') {
-    $rids = $_GET['rids'];
-    $ids = array();
-    foreach ($rids as $v) {
-        $ids[] = $v . '_' . '0';
-    }
-    Hook::listen('solrdel', $ids);
-    exit(json_encode(array('success' => true)));
 } elseif ($do == 'setExtopenDefault') {
     $extid=$_GET['extid'];
     if(!$extid) exit(json_encode(array('error' => '缺少参数')));
