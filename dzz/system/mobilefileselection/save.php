@@ -1,7 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: a
- * Date: 2018/5/22
- * Time: 10:39
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
  */

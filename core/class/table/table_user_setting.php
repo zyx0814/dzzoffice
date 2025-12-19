@@ -15,6 +15,7 @@ class table_user_setting extends dzz_table {
 
     public function insert($skeyarr, $uid = 0, $replace = false, $silent = false) {//插入用户设置
         if (!$uid) $uid = getglobal('uid');
+        if (!$uid) return false;
         $cachkeys = array();
         foreach ($skeyarr as $key => $value) {
             $setarr = array('uid' => $uid,
@@ -32,6 +33,7 @@ class table_user_setting extends dzz_table {
 
     public function update($skeyarr, $uid = 0, $unbuffered = false, $low_priority = false) {//更新用户设置
         if (!$uid) $uid = getglobal('uid');
+        if (!$uid) return false;
         $cachkeys = array();
         foreach ($skeyarr as $key => $value) {
             $setarr = array('uid' => $uid,
@@ -49,6 +51,7 @@ class table_user_setting extends dzz_table {
 
     public function update_by_skey($skey, $val, $uid = 0) {
         if (!$uid) $uid = getglobal('uid');
+        if (!$uid) return false;
         if (!DB::update($this->_table, array('svalue' => $val), array('uid' => $uid, 'skey' => $skey))) {
             $setarr = array('uid' => $uid,
                 'uid' => $uid,
@@ -65,6 +68,7 @@ class table_user_setting extends dzz_table {
 
     public function insert_by_skey($skey, $val, $uid = 0) {
         if (!$uid) $uid = getglobal('uid');
+        if (!$uid) return false;
         $setarr = array(
             'uid' => $uid,
             'skey' => $skey,
@@ -78,8 +82,8 @@ class table_user_setting extends dzz_table {
     }
 
     public function fetch_by_skey($skey, $uid = 0) { //获取用户某项设置值
-        static $vals = array();
         if (!$uid) $uid = getglobal('uid');
+        if (!$uid) return array();
         $cachekey = $uid . '_' . $skey;//增加缓存
         if ($ret = $this->fetch_cache($cachekey)) {
             return $ret;
@@ -92,6 +96,7 @@ class table_user_setting extends dzz_table {
 
     public function delete_by_field($skeys, $uid = 0) { //删除用户某项设置值
         if (!$uid) $uid = getglobal('uid');
+        if (!$uid) return false;
         $skeys = (array)$skeys;
         $cachekeys = array();
         foreach ($skeys as $skey) {
@@ -124,6 +129,7 @@ class table_user_setting extends dzz_table {
     //获取当前用户所有设置项
     public function fetch_all_user_setting($uid = 0) {
         if (!$uid) $uid = getglobal('uid');
+        if (!$uid) return array();
         $settings = array();
         $cachekey = 'settings_' . $uid;
         if ($settings = $this->fetch_cache($cachekey)) {

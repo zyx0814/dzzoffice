@@ -45,7 +45,7 @@
 					<div class="js-file-item-tpl clearfix file-grid">
 						<div id="Icoblock_middleicon_{rid}" class="Icoblock file-card" rid="{rid}" flag="{flag}">
 							<div class="icoimgContainer toggleGlow">
-								<img class="Icoblock_icon" tsrc="{img}" title="{name}" onload="_explorer.image_resize(this);" onerror="_explorer.icoimgError(this)" error="dzz/images/default/icodefault.png" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
+								<img class="Icoblock_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}"/>
 							</div>
 							<div class="name-area">
 								<div class="file-name" id="file_text_{rid}" title="{name}">{name}</div>
@@ -101,7 +101,7 @@
 									<td class="detail_item_td " valign="middle" width="50%" style="overflow:hidden;position:relative">
 										<div class="file-info-col toggleGlow" rid="{rid}">
 											<div class="thumbnail">
-												<img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-start="image" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}" data-end="image" />
+												<img class="detail_item_name_icon" tsrc="{img}" title="{name}" error="dzz/images/default/icodefault.png" onerror="jQuery(this).attr('src',jQuery(this).attr('error'))" data-original="index.php?mod=io&op=thumbnail&original=1&path={dpath}" data-download="index.php?mod=io&op=download&path={dpath}"/>
 											</div>
 											<div class="file-name-wrapper">
 											<div class="filename"><span class="file-name detail_text detail_item_name_text" id="file_text_{rid}">{name}</span></div>
@@ -386,7 +386,6 @@
 </script> 
 <script type="text/javascript" src="{MOD_PATH}/scripts/explorer.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/scripts/filemanage.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/js/imgReady.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/dzzthumb/jquery.dzzthumb.js?{VERHASH}"></script>
 <!-- The basic File Upload plugin --> 
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included --> 

@@ -40,10 +40,12 @@ class table_resources_collect extends dzz_table {
             }
 
         }
+        if (!$arr) return array('error' => lang('explorer_do_failed'));
         return $arr;
     }
 
     public function add_collect($setarr) {
+        if (!$setarr['uid']) return false;
         //如果已经加入收藏，不允许重复收藏
         if (DB::result_first("select id from %t where rid = %s and uid = %d", array($this->_table, $setarr['rid'], $setarr['uid']))) {
             return false;
@@ -74,6 +76,7 @@ class table_resources_collect extends dzz_table {
     public function delete_usercollect_by_rid($rids) {
         if (!is_array($rids)) $rids = (array)$rids;
         $uid = getglobal('uid');
+        if (!$uid) return array('error' => lang('no_privilege'));
         $i = 0;
         $return = array();
         foreach ($rids as $v) {
@@ -106,6 +109,7 @@ class table_resources_collect extends dzz_table {
     //清空当前用户的所有收藏
     public function delete_by_uid() {
         $uid = getglobal('uid');
+        if (!$uid) return false;
         if (DB::delete($this->_table, array('uid' => $uid))) {
             return true;
         } else {
@@ -116,6 +120,7 @@ class table_resources_collect extends dzz_table {
     //查询当前用户所有收藏
     public function fetch_by_uid($limitsql = '', $ordersql = '') {
         $uid = getglobal('uid');
+        if (!$uid) return false;
         if ($return = DB::fetch_all("select * from %t where uid = %d  $ordersql $limitsql", array($this->_table, $uid))) {
             return $return;
         } else {
@@ -125,6 +130,7 @@ class table_resources_collect extends dzz_table {
 
     public function fetch_rid_by_uid() {
         $uid = getglobal('uid');
+        if (!$uid) return false;
         if ($return = DB::fetch_all("select rid from %t where uid = %d", array($this->_table, $uid))) {
             return $return;
         } else {
@@ -137,6 +143,7 @@ class table_resources_collect extends dzz_table {
         if (!$uid) {
             $uid = getglobal('uid');
         }
+        if (!$rid) return false;
         $result = DB::result_first("SELECT 1 FROM %t WHERE uid = %d AND rid = %s LIMIT 1", array($this->_table, $uid, $rid));
         return $result ? true : false;
     }

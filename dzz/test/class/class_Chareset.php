@@ -1,12 +1,10 @@
 <?php
-/*
- * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
  * @license     http://www.dzzoffice.com/licenses/license.txt
  * @package     DzzOffice
  * @link        http://www.dzzoffice.com
- * @author      qchlian(3580164@qq.com)
+ * @author      zyx(zyx@dzz.cc)
  */
-
 class Chareset{
     // 自动转换字符集 支持数组转换
     public function autocharset($string, $from='gbk', $to='utf-8') {

@@ -1,14 +1,16 @@
 <?php
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
+ */
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-global $_G;
 $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'delshare') {
-    if (!$_G['uid']) {
-        exit(json_encode(array('error' => lang('not_login'))));
-    }
     $shareid = explode(',', trim($_GET['shareid']));
     $return = array();
     foreach ($shareid as $v) {
@@ -21,15 +23,6 @@ if ($do == 'delshare') {
     }
     exit(json_encode($return));
 } elseif ($do == 'filelist') {
-    if (!$_G['uid']) {
-        $errorResponse = [
-            "code" => 1,
-            "msg" => lang('no_login_operation'),
-            "count" => 0,
-            "data" => [],
-        ];
-        exit(json_encode($errorResponse));
-    }
     $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
     $field = isset($_GET['sort']) ? $_GET['sort'] : 'dateline';
     $limit = empty($_GET['limit']) ? 50 : $_GET['limit'];
@@ -86,6 +79,5 @@ if ($do == 'delshare') {
     }
     exit($jsonReturn);
 } else {
-    Hook::listen('check_login');
     require template('share_content');
 }

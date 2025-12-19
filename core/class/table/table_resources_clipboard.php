@@ -14,6 +14,7 @@ class table_resources_clipboard extends dzz_table {
     //$copytype默认值为1，为1是复制，为2是剪切
     public function insert_data($paths, $copytype = 1, $bz = '') {
         $uid = getglobal('uid');
+        if (!$uid) return array('error' => lang('no_privilege'));
         if (!is_array($paths)) $paths = (array)$paths;
         $rids = '';
         $typearr = array();
@@ -77,6 +78,7 @@ class table_resources_clipboard extends dzz_table {
 
     public function delete_by_uid() {
         $uid = getglobal('uid');
+        if (!$uid) return false;
         if (DB::result_first("select count(*) from %t where uid = %d", array($this->_table, $uid)) > 0) {
             return DB::delete($this->_table, array('uid' => $uid));
         }
@@ -84,6 +86,7 @@ class table_resources_clipboard extends dzz_table {
 
     public function fetch_by_uid() {
         $uid = getglobal('uid');
+        if (!$uid) return false;
         if ($return = DB::fetch_first("select * from %t where uid = %d", array($this->_table, $uid))) {
             return $return;
         }
@@ -92,6 +95,7 @@ class table_resources_clipboard extends dzz_table {
 
     public function fetch_user_paste_type() {
         $uid = getglobal('uid');
+        if (!$uid) return array();
         return DB::result_first("select `type` from %t where uid = %d", array($this->_table, $uid));
     }
 

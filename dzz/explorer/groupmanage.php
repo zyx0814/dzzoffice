@@ -1,8 +1,13 @@
 <?php
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
+ */
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-global $_G;
 if ($_G['adminid'] != 1) {
     showmessage('no_privilege', dreferer());
 }
@@ -174,9 +179,6 @@ if ($do == 'filelist') {
 }
 function prem() {
     global $_G;
-    if(!$_G['uid']) {
-        exit(json_encode(array('error' => lang('not_login'))));
-    }
     if ($_G['adminid'] != 1) {
         exit(json_encode(array('error' => lang('no_privilege'))));
     }

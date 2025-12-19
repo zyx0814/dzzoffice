@@ -97,6 +97,7 @@ class table_user_profile extends dzz_table {
 
     public function update_by_skey($fieldid, $val, $uid = 0) {
         if (!$uid) $uid = getglobal('uid');
+        if (!$uid) return false;
         if (!DB::update($this->_table, array('value' => $val), array('uid' => $uid, 'fieldid' => $fieldid))) {
             $setarr = array('uid' => $uid,
                 'fieldid' => $fieldid,

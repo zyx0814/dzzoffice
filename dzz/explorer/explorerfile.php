@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: a
- * Date: 2017/8/29
- * Time: 10:43
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
  */
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
@@ -24,7 +24,7 @@ if ($do == 'filelist') {
     $marker = empty($_GET['marker']) ? '' : trim($_GET['marker']);
     $data = array();
 
-    if ($_G['uid'] && $bz && $bz !== 'dzz') {//云盘查询
+    if ($bz && $bz !== 'dzz') {//云盘查询
         $bzinfo=IO::getCloud($bz);
         if (!$bzinfo) {
             exit(json_encode(array('error' => lang('cloud_no_info'))));

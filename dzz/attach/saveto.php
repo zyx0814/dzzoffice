@@ -10,11 +10,6 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 if (empty($_G['uid'])) {
-    include template('common/header_reload');
-    echo "<script type=\"text/javascript\">";
-    echo "try{top._login.logging();}catch(e){}";
-    echo "</script>";
-    include template('common/footer_reload');
     topshowmessage(lang('no_login_operation'));
 }
 $pfid = DB::result_first("select fid from %t where flag='document' and uid= %d", array('folder', $_G['uid']));

@@ -408,9 +408,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	}
 	html = html.replace(/\{collectstatus\}/g,collectstatus);
     html = html.replace(/\{sharestatus\}/g,sharestatus);
-	if (data.type !== 'image') {
-		html = html.replace(/data-start=\"image\".+?data-end=\"image\"/ig, '');
-	}
 	var position_hash = '';
 	if (data.gid > 0) {
 		position_hash = data.pfid > 0 ? '#group&do=file&gid=' + data.gid + '&fid=' + data.pfid : '#group&gid=' + data.gid;
@@ -426,7 +423,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	if (flag && jQuery('.Icoblock[rid=' + data.rid + ']').length > 0) {
 		jQuery('.Icoblock[rid=' + data.rid + ']').replaceWith(html);
 		el = jQuery('.Icoblock[rid=' + data.rid + ']')
-
 	} else {
 		jQuery(html).appendTo('#' + containerid + ' .js-file-item-tpl');
 		el = jQuery('.Icoblock[rid=' + data.rid + ']');

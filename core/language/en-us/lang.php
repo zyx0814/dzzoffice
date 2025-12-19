@@ -846,7 +846,7 @@ $lang = array(
     'profile_illegal' => 'Incorrect format or empty content.',
     'profile_nickname_protect' => 'The username contains characters blocked by the system.',
     'profile_username_protect' => 'The username contains characters blocked by the system.',
-    'register_check_found' => 'This username has already been registered. Please use a different username. <a href="user.php?mod=login&action=login" onclick="try{_login.logging();}catch(e){return true}">Log in</a>',
+    'register_check_found' => 'This username has already been registered. Please use a different username. <a href="user.php?mod=login&action=login">Log in</a>',
     'register_activation' => 'Username already exists.',
     'no_invitation_code' => 'Sorry, the invitation code cannot be empty. Registration is not allowed without an invitation code.',
     'wrong_invitation_code' => 'Sorry, the invitation code is incorrect. Please re-enter. Registration is not allowed without an invitation code.',

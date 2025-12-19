@@ -115,9 +115,8 @@ class table_organization extends dzz_table {
     }
 
     public function fetch_group_by_uid($uid, $foreces = false) {//查询自定义群组，$foreces=true为jstree加载内容，进行群组开启判断
-        global $_G;
-        if (!$uid) return false;
         $groups = array();
+        if (!$uid) return $groups;
         $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid, 1);
         foreach (DB::fetch_all("select * from %t where `orgid` IN(%n) order by disp", array($this->_table, $orgids)) as $orginfo) {
             if ($foreces) {

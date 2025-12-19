@@ -1,12 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: a
- * Date: 2017/5/11
- * Time: 10:58
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
  */
 function dzz_explorer_init() {//初始化用户信息
     global $_G;
+    if (!$_G['uid']) return array();
     //初始化默认目录
     $rootfid = dzz_explorer_folder_init();
     dzz_explorer_searchcat_info_init();

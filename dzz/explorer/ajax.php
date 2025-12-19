@@ -1,16 +1,13 @@
 <?php
-/*
- * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
  * @license     http://www.dzzoffice.com/licenses/license.txt
  * @package     DzzOffice
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-global $_G;
 $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'upload') {//上传图片文件

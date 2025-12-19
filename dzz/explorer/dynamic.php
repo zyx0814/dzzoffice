@@ -1,20 +1,16 @@
 <?php
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
+ */
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 include_once libfile('function/code');
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 $uid = $_G['uid'];
-if ($do == 'filelist' && !$_G['uid']) {
-    $errorResponse = [
-        "code" => 1,
-        "msg" => lang('no_login_operation'),
-        "count" => 0,
-        "data" => [],
-    ];
-    exit(json_encode($errorResponse));
-}
-Hook::listen('check_login');
 //获取文件夹右侧信息
 if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';

@@ -847,7 +847,7 @@ $lang = array(
     'profile_illegal' => '格式不正确或为空',
     'profile_nickname_protect' => '用户名包含被系统屏蔽的字符',
     'profile_username_protect' => '用户名包含被系统屏蔽的字符',
-    'register_check_found' => '该用户名已注册，请更换用户名&nbsp;<a href="user.php?mod=login&action=login" onclick="try{_login.logging();}catch(e){return true}">登录</a>',
+    'register_check_found' => '该用户名已注册，请更换用户名&nbsp;<a href="user.php?mod=login&action=login">登录</a>',
     'register_activation' => '用户名已存在',
     'no_invitation_code' => '抱歉，邀请码为空请填写，没有邀请码不允许注册',
     'wrong_invitation_code' => '抱歉，邀请码错误，请重新填写，没有邀请码不允许注册',

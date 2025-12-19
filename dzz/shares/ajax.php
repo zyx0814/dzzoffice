@@ -1,16 +1,13 @@
 <?php
-/*
- * @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
  * @license     http://www.dzzoffice.com/licenses/license.txt
  * @package     DzzOffice
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-global $_G;
 $uid = $_G['uid'];
 $do = empty($_GET['do']) ? '' : $_GET['do'];
 $sid = $_GET['sid'] ? $_GET['sid'] : '';

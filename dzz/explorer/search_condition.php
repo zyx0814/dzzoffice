@@ -1,15 +1,18 @@
 <?php
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
+ */
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-global $_G;
 $uid = $_G['uid'];
 if (isset($_GET['requestfile']) && $_GET['requestfile']) {
     $positions = array();
     $explorer_setting = get_resources_some_setting();
-    $orgs = array();
-    $groupinfo = array();
+    $orgs = $groups = $groupinfo = array();
     if ($explorer_setting['orgonperm']) {
         $orgs = C::t('organization')->fetch_all_orggroup($uid);//机构群组
     }
@@ -22,9 +25,10 @@ if (isset($_GET['requestfile']) && $_GET['requestfile']) {
         $homefid = C::t('folder')->fetch_fid_by_flag('home');
         $positions[] = array('pname' => '我的网盘', 'pfid' => $homefid);
     }
-
-    $groups = array_merge($orgs['org'], $groupinfo);
-
+    if ($orgs['org']) {
+        $groups = array_merge($orgs['org'], $groupinfo);
+    }
+    
     foreach ($groups as $v) {
         if ($v['type'] == 1) {
             $positions[] = array('pname' => $v['orgname'], 'pfid' => $v['fid'], 'type' => '群组');

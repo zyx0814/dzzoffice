@@ -296,9 +296,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	html = html.replace(/\{qrcode\}/g, data.qrcode);
 	html = html.replace(/\{password\}/g, data.password);
 	html = html.replace(/\{count\}/g, data.count);
-	if (data.type !== 'image') {
-		html = html.replace(/data-start=\"image\".+?data-end=\"image\"/ig, '');
-	}
 	var position_hash = '#home&do=filelist&fid=' + data.pfid;
 	html = html.replace(/\{position_hash\}/g, position_hash);
 	//处理操作按钮

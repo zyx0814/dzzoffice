@@ -1,9 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: a
- * Date: 2017/8/29
- * Time: 10:43
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
  */
 if (!defined('IN_DZZ')) {
     exit('Access Denied');

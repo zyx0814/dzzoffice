@@ -2542,7 +2542,6 @@ function get_resources_some_setting() {
         return $resources_some_setting;
     }
     global $_G;
-    $setting = $_G['setting'];
     $data = array(
         'useronperm' => false,
         'orgonperm' => false,
@@ -2556,6 +2555,10 @@ function get_resources_some_setting() {
         'allownewcat' => false,
         'finallydelete' => false
     );
+    if (!$_G['uid']) {
+        return $data;
+    }
+    $setting = $_G['setting'];
     $getUsersByRule = function($ruleStr) use ($_G) {
         $users = [];
         $orgUserModel = C::t('organization_user');

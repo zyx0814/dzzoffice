@@ -1,8 +1,13 @@
 <?php
+/* @copyright   Leyun internet Technology(Shanghai)Co.,Ltd
+ * @license     http://www.dzzoffice.com/licenses/license.txt
+ * @package     DzzOffice
+ * @link        http://www.dzzoffice.com
+ * @author      zyx(zyx@dzz.cc)
+ */
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-global $_G;
 $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'filelist') {
@@ -121,6 +126,5 @@ if ($do == 'filelist') {
     }
     exit($jsonReturn);
 } else {
-    Hook::listen('check_login');
     require template('mygroup');
 }
