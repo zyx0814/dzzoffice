@@ -55,7 +55,7 @@ class table_resources extends dzz_table {
         return self::update_by_rid($rids, $setarr);
     }
 
-    public function rename_by_rid($rid, $newname) {
+    public function rename_by_rid($rid, $newname, $sid = '') {
         global $_G;
         $uid = $_G['uid'];
         if (!$infoarr = $this->fetch_info_by_rid($rid)) {
@@ -91,7 +91,12 @@ class table_resources extends dzz_table {
             C::t('resources_statis')->add_statis_by_rid($rid, $statisdata);
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($infoarr['pfid'], $infoarr['gid']);
             $eventdata = array('username' => $_G['username'], 'position' => $position, 'filename' => $infoarr['name'], 'newfilename' => $newname, 'hash' => $hash);
-            C::t('resources_event')->addevent_by_pfid($infoarr['pfid'], 'rename_file', 'rename', $eventdata, $infoarr['gid'], $rid, $infoarr['name']);
+            if ($sid) {
+                $event = 'share_rename_file';
+            } else {
+                $event = 'rename_file';
+            }
+            C::t('resources_event')->addevent_by_pfid($infoarr['pfid'], $event, 'rename', $eventdata, $infoarr['gid'], $rid, $infoarr['name']);
             $this->clear_cache($cachkey);
             $this->clear_cache($rid);
             return array('newname' => $newname);

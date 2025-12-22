@@ -27,7 +27,6 @@ ul{list-style:none;padding:0px;margin:0px}
 #menu{width:100%;margin:0 0 10px 0;text-align:center}
 #menu td{padding:10px;color:#999;border-bottom:3px solid #EEE}
 .tb{border-spacing:0;border-collapse:collapse;width:100%;overflow:auto}
-.tb th{font-weight:600}
 .tb th,.tb td{padding:6px 13px;border:1px solid #c6d1e3}
 .tb tr{background-color:#fff;border-top:1px solid #c6cbd1}
 .tb tr:nth-child(2n){background-color:#f8f9fa}

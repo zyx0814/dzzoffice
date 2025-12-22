@@ -162,7 +162,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
                     $arr['msg'] = 'success';
                 }
             } else {
-                $arr['error'] = lang('network_error');
+                $arr['error'] = lang('js_network_error');
             }
         }
     }
@@ -336,7 +336,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
             showmessage($propertys['error']);
         }
     }
-} elseif ($do == 'rename') {
+} elseif ($do == 'rename') {//重命名
     if (!$rename) {
         exit(json_encode(array('error' => lang('no_privilege'))));
     }
@@ -346,7 +346,30 @@ if ($do == 'uploads') {//上传新文件(指新建)
     $text = str_replace('...', '', getstr(IO::name_filter($_GET['text']), 80));
     $ret = IO::rename($path, $text);
     exit(json_encode($ret));
-
+} elseif ($do == 'report') {//举报
+    if (!$_G['uid']) {
+        exit(json_encode(array('error' => lang('no_login'))));
+    }
+    $type = isset($_GET['type']) ? intval($_GET['type']) : 0;
+    $desc = isset($_GET['desc']) ? trim($_GET['desc']) : '';
+    
+    // 插入举报记录
+    $data = array(
+        'sid' => $sid,
+        'title' => $share['title'],
+        'username' => $_G['username'],
+        'type' => $type,
+        'desc' => $desc
+    );
+    
+    $result = C::t('share_report')->addreport($_G['uid'], $data);
+    if ($result['success']) {
+        exit(json_encode(array('success' => true)));
+    } elseif ($result['error']) {
+        exit(json_encode(array('error' => $result['error'])));
+    } else {
+        exit(json_encode(array('error' => lang('report_submit_failed'))));
+    }
 }
 include template('ajax');
 function validatefid($share = array(), $fid = '') {

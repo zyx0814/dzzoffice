@@ -14,7 +14,7 @@
 						<span id="sharefdateline"></span> 
 						失效时间：<span class="me-1" id="expireday">永久有效</span> 
 						<i class="me-1 mdi mdi-eye" title="{lang view_count}"></i><span class="me-1" id="shareviews">0</span> 
-						<i class="me-1 mdi mdi-download" title="{lang download_times}"></i><span id="sharedowns">0</span>
+						<i class="me-1 mdi mdi-download" title="{lang download_times}"></i><span class="me-1" id="sharedowns">0</span>
 					</div>
 				</div>
 			</div>
@@ -335,6 +335,42 @@
 		</ul>
 	</div>
 </div>
+<div class="modal fade">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+		<div class="modal-header">
+			<h4 class="modal-title text-truncate">{lang report}</h4>
+			<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+		</div>
+      <div class="modal-body">
+		<form id="cpform" action="{MOD_URL}" method="post" name="cpform">
+			<span class="form-text">如有发现违法有害信息，请在下方选择原因提交举报</span>
+			<div class="row mb-3">
+				<label class="col-sm-3">{lang report_type}</label>
+				<div class="col-sm-9">
+					<!--{loop $reporttypes $key $value}-->
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" id="reportType{$key}" name="reportType" value="$key">
+						<label class="form-check-label" for="reportType{$key}">$value</label>
+					</div>
+					<!--{/loop}-->
+				</div>
+			</div>
+			<div class="row mb-3" id="reportTypeGroup" style="display:none;">
+				<label class="col-sm-3">{lang report_desc}</label>
+				<div class="col-sm-9"> 
+					<textarea class="form-control" id="reportTypeDesc" rows="3" placeholder="{lang please_input_report_reason}"></textarea>
+				</div>
+			</div>
+		</form>
+	  </div>
+      <div class="modal-footer">
+		<button type="button" class="btn btn-primary" id="reportsubmit">{lang submit}</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">{lang close}</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="_blank" unselectable="on" onselectstart="return event.srcElement.type== 'text';" style="background: url(&quot;dzz/images/b.gif&quot;); z-index: 10000; width: 100%; height: 100%; margin: 0px; padding: 0px; right: 0px; bottom: 0px; position: absolute; top: 0px; left: 0px; display: none;"></div>
 <iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>
 <div id="dataContainer" class="hide"></div>
@@ -361,6 +397,64 @@
 						return false;
 					}
 				}
+			});
+		});
+		// 在文件末尾添加举报功能
+		$(document).on('click', '#reportBtn', function() {
+			if (!sid) {
+				showmessage('{lang parameter_error}', 'danger', 3000, 1);
+				return;
+			}
+			// 清空之前的选择
+			$('input[name="reportType"]').prop('checked', false);
+			$('#reportTypeGroup').hide();
+			$('#reportTypeDesc').val('');
+			jQuery('.modal').modal('show');
+		});
+
+		// 监听举报类型变化
+		$('input[name="reportType"]').on('change', function() {
+			if ($(this).val() == 5) {
+				$('#reportTypeGroup').show();
+			} else {
+				$('#reportTypeGroup').hide();
+			}
+		});
+		
+		// 提交举报
+		$('#reportsubmit').click(function() { 
+			var type = $('input[name="reportType"]:checked').val();
+			var desc = '';
+			
+			if (!type) {
+				showmessage('请选择举报类型', 'danger', 3000, 1);
+				return;
+			}
+			
+			if (type == 5) {
+				desc = $('#reportTypeDesc').val();
+				if (!desc) {
+					showmessage('{lang please_input_report_reason}', 'danger', 3000, 1);
+					return;
+				}
+			}
+			
+			// 提交举报
+			$.post(MOD_URL + '&op=ajax&do=report', {
+				'sid': sid,
+				'type': type,
+				'desc': desc
+			}, function(json) {
+				if (json.success) {
+					showmessage('{lang report_submitted}', 'success', 3000, 1);
+					jQuery('.modal').modal('hide');
+				} else if (json.error) {
+					showmessage(json.error, 'danger', 3000, 1);
+				} else {
+					showmessage('{lang report_submit_failed}', 'danger', 3000, 1);
+				}
+			}, 'json').fail(function() {
+				showmessage('{lang js_network_error}', 'danger', 3000, 1);
 			});
 		});
 		_filemanage.SetMoreButton();

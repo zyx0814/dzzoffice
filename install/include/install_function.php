@@ -65,14 +65,14 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
         }
         return false;
     } else {
-        if ($query = $link->query("SHOW databases")) {
+        if ($query = $link->query("SHOW TABLES FROM $dbname")) {
             if (!$query) {
                 return false;
             }
             while ($row = $query->fetch_row()) {
-                if ($dbname == $row[0]) {
-                    return false;
-                }
+                if(preg_match("/^$tablepre/", $row[0])) {
+					return false;
+				}
             }
         }
     }
@@ -124,7 +124,7 @@ function env_check(&$env_items) {
         } elseif ($key == 'php_bit') {
             $env_items[$key]['current'] = phpBuild64() ? 64 : 32;
         } elseif ($key == 'attachmentupload') {
-            $env_items[$key]['current'] = @ini_get('file_uploads') ? ini_get('upload_max_filesize') : 'unknown';
+            $env_items[$key]['current'] = @ini_get('file_uploads') ? getmaxupload() : 'unknown';
         } elseif ($key == 'allow_url_fopen') {
             $env_items[$key]['current'] =@ini_get('allow_url_fopen') ?: 'unknown';
         } elseif ($key == 'gdversion') {
@@ -133,18 +133,16 @@ function env_check(&$env_items) {
             unset($tmp);
         } elseif ($key == 'diskspace') {
             if (function_exists('disk_free_space')) {
-                $freeSpace = disk_free_space(ROOT_PATH);
-                if ($freeSpace !== false) {
-                    $env_items[$key]['current'] = floor($freeSpace / (1024 * 1024)) . 'M';
-                } else {
-                    $env_items[$key]['current'] = 'unknown';
-                }
+                $env_items[$key]['current'] = disk_free_space(ROOT_PATH);
             } else {
                 $env_items[$key]['current'] = 'unknown';
             }
         } elseif (isset($item['c'])) {
             $env_items[$key]['current'] = constant($item['c']);
-        }
+        } elseif($key == 'opcache') {
+			$opcache_data = function_exists('opcache_get_configuration') ? opcache_get_configuration() : array();
+			$env_items[$key]['current'] = !empty($opcache_data['directives']['opcache.enable']) ? 'enable' : 'disable';
+		}
 
         $env_items[$key]['status'] = 1;
         if ($item['r'] != 'notset' && strcmp($env_items[$key]['current'], $item['r']) < 0) {
@@ -153,24 +151,31 @@ function env_check(&$env_items) {
     }
 }
 
-function phpBuild64() {
-    if (PHP_INT_SIZE === 8) return true;//部分版本,64位会返回4;
-    ob_clean();
-    ob_start();
-    var_dump(12345678900);
-    $res = ob_get_clean();
-    if (strstr($res, 'float')) return false;
-    return true;
-}
-
 function function_check(&$func_items) {
     foreach ($func_items as $item) {
         function_exists($item) or show_msg('undefine_func', $item, 0);
     }
 }
 
-function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_items) {
+function dfloatval($int, $allowarray = false) {
+	$ret = floatval($int);
+	if($int == $ret || !$allowarray && is_array($int)) return $ret;
+	if($allowarray && is_array($int)) {
+		foreach($int as &$v) {
+			$v = dfloatval($v, true);
+		}
+		return $int;
+	} elseif($int <= 0xffffffff) {
+		$l = strlen($int);
+		$m = substr($int, 0, 1) == '-' ? 1 : 0;
+		if(($l - $m) === strspn($int,'0987654321', $m)) {
+			return $int;
+		}
+	}
+	return $ret;
+}
 
+function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_items) {
     $env_str = $file_str = $func_str = '';
     $error_code = 0;
     foreach ($env_items as $key => $item) {
@@ -179,8 +184,8 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
         }
         $status = 1;
         if ($item['r'] != 'notset') {
-            if (intval($item['current']) && intval($item['r'])) {
-                if (intval($item['current']) < intval($item['r'])) {
+            if (dfloatval($item['current']) && dfloatval($item['r'])) {
+                if (dfloatval($item['current']) < dfloatval($item['r'])) {
                     $status = 0;
                     $error_code = ENV_CHECK_ERROR;
                 }
@@ -195,14 +200,18 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
             $status = 0;
             $error_code = ENV_CHECK_ERROR;
         }
+        if($key == 'diskspace') {
+			$item['current'] = format_space($item['current']);
+			$item['r'] = format_space($item['r']);
+		}
         if (VIEW_OFF) {
-            $env_str .= "\t\t<runCondition name=\"$key\" status=\"$status\" Require=\"$item[r]\" Best=\"$item[b]\" Current=\"$item[current]\"/>\n";
+            $env_str .= "\t\t<runCondition name=\"$key\" status=\"$status\" Require=\"{$item['r']}\" Best=\"{$item['b']}\" Current=\"{$item['current']}\"/>\n";
         } else {
             $env_str .= "<tr>\n";
             $env_str .= "<td>" . lang($key) . "</td>\n";
             $env_str .= "<td>" . lang($item['r']) . "</td>\n";
             $env_str .= "<td>" . lang($item['b']) . "</td>\n";
-            $env_str .= ($status ? "<td class=\"w\">" : "<td class=\"nw\">") . $item['current'] . "</td>\n";
+            $env_str .= ($status ? "<td class=\"w\">" : "<td class=\"nw\">") . lang($item['current']) . "</td>\n";
             $env_str .= "</tr>\n";
         }
     }
@@ -237,23 +246,22 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
         echo $env_str;
         echo "</table>\n";
     }
-    if ($file_str || $dir_str) {
-        echo "<div class=\"title\">" . lang('priv_check') . "</div>\n";
-        echo "<table class=\"tb\">\n";
-        echo "\t<tr>\n";
-        echo "\t<th class=\"padleft\">" . lang('step1_file') . "</th>\n";
-        echo "\t<th>" . lang('step1_need_status') . "</th>\n";
-        echo "\t<th>" . lang('step1_status') . "</th>\n";
-        echo "</tr>\n";
-        echo $file_str;
-        echo $dir_str;
-        echo "</table>\n";
-    }
+
+    echo "<div class=\"title\">" . lang('priv_check') . "</div>\n";
+    echo "<table class=\"tb\">\n";
+    echo "\t<tr>\n";
+    echo "\t<th>" . lang('step1_file') . "</th>\n";
+    echo "\t<th>" . lang('step1_need_status') . "</th>\n";
+    echo "\t<th>" . lang('step1_status') . "</th>\n";
+    echo "</tr>\n";
+    echo $file_str;
+    echo $dir_str;
+    echo "</table>\n";
 
     foreach ($func_items as $item) {
         $status = function_exists($item);
         $func_str .= "<tr>\n";
-        $func_str .= "<td>$item()</td>\n";
+        $func_str .= "<td class=\"padleft\">$item()</td>\n";
         if ($status) {
             $func_str .= "<td class=\"w\">" . lang('supportted') . "</td>\n";
             $func_str .= "<td>" . lang('none') . "</td>\n";
@@ -262,13 +270,14 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
             $func_str .= "<td class=\"nw\">" . lang('unsupportted') . "</td>\n";
             $func_str .= "<td><font color=\"red\">" . lang('advice_' . $item) . "</font></td>\n";
         }
+        $func_str .= "</tr>\n";
     }
     $func_strextra = '';
     $filesock_disabled = 0;
     foreach ($filesock_items as $item) {
         $status = function_exists($item);
         $func_strextra .= "<tr>\n";
-        $func_strextra .= "<td>$item()</td>\n";
+        $func_strextra .= "<td class=\"padleft\">$item()</td>\n";
         if ($status) {
             $func_strextra .= "<td class=\"w\">" . lang('supportted') . "</td>\n";
             $func_strextra .= "<td>" . lang('none') . "</td>\n";
@@ -278,6 +287,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
             $func_strextra .= "<td class=\"nw\">" . lang('unsupportted') . "</td>\n";
             $func_strextra .= "<td><font color=\"red\">" . lang('advice_' . $item) . "</font></td>\n";
         }
+        $func_strextra .= "</tr>\n";
     }
     if ($filesock_disabled == count($filesock_items)) {
         $error_code = ENV_CHECK_ERROR;
@@ -372,7 +382,7 @@ function show_license() {
     $next = $step + 1;
     show_header();
     $title = lang('step_env_check_title');
-    $version = 'DzzOffice' . CORE_VERSION . ' &nbsp;&nbsp;   ' . INSTALL_LANG . ' ' . CORE_RELEASE;
+    $version = SOFT_NAME . CORE_VERSION . ' &nbsp;&nbsp;   ' . INSTALL_LANG . ' ' . CORE_RELEASE;
     $release = CORE_RELEASE;
     $install_lang = lang(INSTALL_LANG);
     echo <<<EOT
@@ -438,6 +448,7 @@ function show_header() {
     $install_lang = lang(INSTALL_LANG);
     $title = lang('title_install');
     $charset = CHARSET;
+    $sitename = SOFT_NAME;
     echo <<<EOT
 <!DOCTYPE>
 <html>
@@ -450,7 +461,7 @@ function show_header() {
 <link rel="stylesheet" href="images/style.css" type="text/css" media="all" />
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="">
-<meta name="author" content="DzzOffice" />
+<meta name="author" content="$sitename" />
 <meta content="Leyun internet Technology(Shanghai)Co.,Ltd" name="Copyright" />
 <script type="text/javascript">
 	function $(id) {
@@ -475,8 +486,8 @@ function show_header() {
 </head>
 <body>
 <div class="container step_$step">
-<h1><img src="images/logo.png">DzzOffice 安装程序</h1>
-<div style="padding: 10px; text-align: center;">
+<h1><img src="images/logo.png">$sitename 安装程序</h1>
+<div style="padding: 10px 30px 15px 30px; text-align: center;">
 EOT;
     $step > 0 && show_step($step);
     echo "\r\n";
@@ -490,7 +501,7 @@ function show_footer($quit = true) {
     $date = date("Y");
     echo <<<EOT
 	</div>
-	<div id="footer">Copyright © 2012-$date DzzOffice.com All Rights Reserved.</div>
+	<div id="footer">Copyright © 2012-$date www.dzzoffice.com All Rights Reserved.</div>
 	</div>
 </div>
 </body>
@@ -513,24 +524,28 @@ function showjsmessage($message) {
     echo '<script type="text/javascript">showmessage(\'' . addslashes($message) . '\');</script>' . "\r\n";
 }
 
-function random($length) {
-    $hash = '';
-    $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
-    $max = strlen($chars) - 1;
+function random($length, $numeric = 0) {
+    $seed = base_convert(md5(microtime() . $_SERVER['DOCUMENT_ROOT']), 16, $numeric ? 10 : 35);
+    $seed = $numeric ? (str_replace('0', '', $seed) . '012340567890') : ($seed . 'zZ' . strtoupper($seed));
+    if ($numeric) {
+        $hash = '';
+    } else {
+        $hash = chr(rand(1, 26) + rand(0, 1) * 32 + 64);
+        $length--;
+    }
+    $max = strlen($seed) - 1;
     for ($i = 0; $i < $length; $i++) {
-        $hash .= $chars[random_int(0, $max)];
+        $hash .= $seed[mt_rand(0, $max)];
     }
     return $hash;
 }
 
 function redirect($url) {
-
     echo "<script>" .
         "function redirect() {window.location.replace('$url');}\n" .
         "setTimeout('redirect();', 0);\n" .
         "</script>";
     exit();
-
 }
 
 function get_onlineip() {
@@ -554,7 +569,6 @@ function timezone_set($timeoffset = 8) {
 }
 
 function save_config_file($filename, $config, $default) {
-
     $config = setdefault($config, $default);
     $date = gmdate("Y-m-d H:i:s", time() + 3600 * 8);
     $content = <<<EOT
@@ -688,20 +702,39 @@ function runquery($sql) {
         $num++;
     }
     unset($sql);
-    foreach ($ret as $query) {
-        $query = trim($query);
-        if ($query) {
-
-            if (substr($query, 0, 12) == 'CREATE TABLE') {
+    $oldtablename = "";
+    foreach($ret as $query) {
+		if($query) {
+			if(substr($query, 0, 12) == 'CREATE TABLE') {
                 $name = str_replace('`', '', preg_replace("/CREATE TABLE\s+([`a-z0-9_`]+)\s+.*/is", "\\1", $query));
-                $db->query(createtable($query, $db->version()));
-                showjsmessage(lang('create_table') . ' ' . $name . ' ... ' . lang('succeed'));
-            } else {
-                $db->query($query);
-            }
+				if ($db->query(createtable($query, $db->version()))) {
+					showjsmessage(lang('create_table').' '.$name.'  ... '.lang('succeed'));
+				} else {
+					showjsmessage(lang('create_table').' '.$name.'  ... '.lang('failed'));
+					return false;
+				}
+			} elseif(substr($query, 0, 6) == 'INSERT') {
+				$name = preg_replace("/INSERT\s+INTO\s+[\`]?([a-z0-9_]+)[\`]? .*/is", "\\1", $query);
+				if ($db->query($query)) {
+					if($oldtablename != $name) {
+						showjsmessage(lang('init_table_data').' '.$name.'  ... '.lang('succeed'));
+						$oldtablename = $name;
+					}
+				} else {
+					showjsmessage(lang('init_table_data').' '.$name.'  ... '.lang('failed'));
+					return false;
+				}
+			}else{
+				if (!$db->query($query)) {
+					showjsmessage(lang('failed'));
+					return false;
+				}
+			}
 
-        }
-    }
+		}
+	}
+
+    return true;
 }
 
 function charcovert($string) {
@@ -748,7 +781,7 @@ function var_to_hidden($k, $v) {
     return "<input type=\"hidden\" name=\"$k\" value=\"$v\" />\n";
 }
 
-function fsocketopen($hostname, $port = 80, &$errno, &$errstr, $timeout = 15) {
+function fsocketopen($hostname, $port = 80, &$errno = null, &$errstr = null, $timeout = 15) {
     $fp = '';
     if (function_exists('fsockopen')) {
         $fp = @fsockopen($hostname, $port, $errno, $errstr, $timeout);
@@ -765,7 +798,7 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
     $matches = parse_url($url);
     $scheme = $matches['scheme'];
     $host = $matches['host'];
-    $path = $matches['path'] ? $matches['path'] . ($matches['query'] ? '?' . $matches['query'] : '') : '/';
+    $path = !empty($matches['path']) ? $matches['path'] . (!empty($matches['query']) ? '?' . $matches['query'] : '') : '/';
     $port = !empty($matches['port']) ? $matches['port'] : 80;
 
     if (function_exists('curl_init') && $allowcurl) {
@@ -803,7 +836,7 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
         $header .= "Accept-Language: zh-cn\r\n";
         $boundary = $encodetype == 'URLENCODE' ? '' : '; boundary=' . trim(substr(trim($post), 2, strpos(trim($post), "\n") - 2));
         $header .= $encodetype == 'URLENCODE' ? "Content-Type: application/x-www-form-urlencoded\r\n" : "Content-Type: multipart/form-data$boundary\r\n";
-        $header .= "User-Agent: $_SERVER[HTTP_USER_AGENT]\r\n";
+        $header .= "User-Agent: {$_SERVER['HTTP_USER_AGENT']}\r\n";
         $header .= "Host: $host:$port\r\n";
         $header .= 'Content-Length: ' . strlen($post) . "\r\n";
         $header .= "Connection: Close\r\n";
@@ -814,7 +847,7 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
         $out = "GET $path HTTP/1.0\r\n";
         $header = "Accept: */*\r\n";
         $header .= "Accept-Language: zh-cn\r\n";
-        $header .= "User-Agent: $_SERVER[HTTP_USER_AGENT]\r\n";
+        $header .= "User-Agent: {$_SERVER['HTTP_USER_AGENT']}\r\n";
         $header .= "Host: $host:$port\r\n";
         $header .= "Connection: Close\r\n";
         $header .= "Cookie: $cookie\r\n\r\n";
@@ -872,8 +905,8 @@ function check_env() {
     $errors = array('quit' => false);
     $quit = false;
 
-    if (!function_exists('mysql_connect') && !function_exists('mysqli_connect')) {
-        $errors[] = 'mysql_unsupport';
+    if (!function_exists('mysqli_connect')) {
+        $errors[] = 'mysqli_unsupport';
         $quit = true;
     }
 
@@ -1068,9 +1101,9 @@ function getvars($data, $type = 'VAR') {
 
 function buildarray($array, $level = 0, $pre = '$_config') {
     static $ks;
+    $return = '';
     if ($level == 0) {
         $ks = array();
-        $return = '';
     }
 
     foreach ($array as $key => $val) {
@@ -1156,4 +1189,77 @@ function dhtmlspecialchars($string) {
         }
     }
     return $string;
+}
+
+function format_space($space) {
+    if($space > 1048576) {
+		if($space > 1073741824) {
+			return floor($space / 1073741824).'GB';
+		} else {
+			return floor($space / 1048576).'MB';
+		}
+	}
+	return $space;
+}
+
+function is_https() {
+	// PHP 标准服务器变量
+	if(isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') {
+		return true;
+	}
+	// X-Forwarded-Proto 事实标准头部, 用于反代透传 HTTPS 状态
+	if(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') {
+		return true;
+	}
+	// 阿里云全站加速私有 HTTPS 状态头部
+	if(isset($_SERVER['HTTP_X_CLIENT_SCHEME']) && strtolower($_SERVER['HTTP_X_CLIENT_SCHEME']) == 'https') {
+		return true;
+	}
+	// 西部数码建站助手私有 HTTPS 状态头部
+	if(isset($_SERVER['HTTP_FROM_HTTPS']) && strtolower($_SERVER['HTTP_FROM_HTTPS']) != 'off') {
+		return true;
+	}
+	// 服务器端口号兜底判断
+	if(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
+		return true;
+	}
+	return false;
+}
+
+function getmaxupload() {
+	$sizeconv = array('B' => 1, 'KB' => 1024, 'MB' => 1048576, 'GB' => 1073741824);
+	$sizes = array();
+	$sizes[] = ini_get('upload_max_filesize');
+	$sizes[] = ini_get('post_max_size');
+	$sizes[] = ini_get('memory_limit');
+	if(intval($sizes[1]) === 0) {
+		unset($sizes[1]);
+	}
+	if(intval($sizes[2]) === -1) {
+		unset($sizes[2]);
+	}
+	$sizes = preg_replace_callback(
+		'/^(\-?\d+)([KMG]?)$/i',
+		function($arg) use ($sizeconv) {
+			return (intval($arg[1]) * $sizeconv[strtoupper($arg[2]).'B']).'|'.strtoupper($arg[0]);
+		},
+		$sizes
+	);
+	natsort($sizes);
+	$output = explode('|', current($sizes));
+	if(!empty($output[1])) {
+		return $output[1];
+	} else {
+		return ini_get('upload_max_filesize');
+	}
+}
+
+function phpBuild64() {
+    if (PHP_INT_SIZE === 8) return true;//部分版本,64位会返回4;
+    ob_clean();
+    ob_start();
+    var_dump(12345678900);
+    $res = ob_get_clean();
+    if (strstr($res, 'float')) return false;
+    return true;
 }

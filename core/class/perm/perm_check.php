@@ -20,9 +20,10 @@ class perm_check {
         if (isset($userPermCache[$cacheKey])) {
             return $userPermCache[$cacheKey];
         }
-        $perm = DB::result_first("select perm from %t where uid=%d", array('user_field', $_G['uid']));
+        //$perm = DB::result_first("select perm from %t where uid=%d", array('user_field', $_G['uid']));
         // 个人权限无效时，使用用户组权限
-        if ($perm < 1) $perm = intval($_G['group']['perm']);
+        //if ($perm < 1) $perm = intval($_G['group']['perm']);
+        $perm = intval($_G['group']['perm']);
         // 若系统允许分享，移除当前用户的分享权限
         if ($_G['setting']['allowshare']) {
             $power = new perm_binPerm($perm);

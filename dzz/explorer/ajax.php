@@ -232,7 +232,7 @@ if ($do == 'upload') {//上传图片文件
                         $arr['msg'] = 'success';
                     }
                 } else {
-                    $arr['error'] = lang('network_error');
+                    $arr['error'] = lang('js_network_error');
                 }
             }
         }
@@ -816,10 +816,6 @@ if ($do == 'upload') {//上传图片文件
             $tags = C::t('resources_tag')->fetch_tag_by_rid($fileinfo['rid']);
             $filemeta = C::t('resources_meta')->fetch_by_key($fileinfo['rid'],'desc', true);
             if($filemeta) $fileinfo['desc'] = htmlspecialchars($filemeta);
-            $attrdata = C::t('resources_attr')->fetch_by_rid($fileinfo['rid'], $fileinfo['vid']);
-            if ($_G['adminid'] && $attrdata['aid']) {
-                $attachment = IO::getStream('attach::' . $attrdata['aid']);
-            }
         }
     }
 } elseif ($do == 'editFileVersionInfo') {

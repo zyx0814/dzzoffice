@@ -13,6 +13,9 @@ class table_shares extends dzz_table {
 
     public function insert($setarr, $bz = false, $replace = false, $silent = false) {
         $rid = $setarr['filepath'];
+        if (!$setarr['title']) {
+            return ['error' => '分享标题不能为空'];
+        }
         $more = false;
         if ($bz) {
             $setarr['gid'] = 0;

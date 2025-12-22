@@ -33,7 +33,6 @@ $lang = array(
     'update_never_succeeded' => '有0个文件上传成功',
     'already_start' => '已开启',
     'extension' => '扩展名',
-    'add_url' => '添加网址',
     'no_file' => '还没有分享的文件或文件夹',
     'medium_icons' => '中等图标',
     'deltail_lsit' => '详细列表',

@@ -89,12 +89,6 @@
 </div>
 <!--{/if}-->
 <div id="folderinfo"></div>
-<!--{if $attachment}-->
-<div class="row mb-1">
-    <label class="col-sm-3 text-muted">文件地址</label>
-    <div class="col-sm-9 text-break"><!--{if is_array($attachment) && $attachment['error']}--><span class="text-danger">$attachment['error']</span><!--{else}-->$attachment<!--{/if}--></div>
-</div>
-<!--{/if}-->
 <!--{if $fileinfo['rid'] && !$bz && !$fileinfo['ismulti']}-->
 <!--{if $fileinfo['editperm']}-->
 <div class="row mb-1">

@@ -9,22 +9,22 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-if ($_G['adminid'] != 1) exit(json_encode(array('error' => lang('no_privilege'))));
-if (!$_G['uid']) exit(json_encode(array('error' => lang('no_login_operation'))));
-if ($_GET['do'] == 'delete') {
+Hook::listen('adminlogin');
+$do = isset($_GET['do']) ? $_GET['do'] : '';
+if ($do == 'delete') {
     $sids = $_GET['sids'];
     $return = array();
     foreach ($sids as $v) {
         $result = C::t('shares')->delete_by_id($v);
         if ($result['error']) {
-            exit(json_encode(array('error' => $result['error'])));
+            exit(json_encode(array('msg' => $result['error'])));
         }
     }
     exit(json_encode(array('success' => true)));
-} elseif ($_GET['do'] == 'forbidden') {
+} elseif ($do == 'forbidden') {
     $sids = $_GET['sids'];
     if (!$sids) {
-        exit(json_encode(array('error' => '非法操作')));
+        showmessage('forbid_operation');
     }
     if ($_GET['flag'] == 'forbidden') {
         $status = -4;
@@ -34,11 +34,37 @@ if ($_GET['do'] == 'delete') {
         $msg = lang('cancel_shielding_success');
     }
     if ($sids && C::t('shares')->update($sids, array('status' => $status))) {
-        exit(json_encode(array('msg' => $msg)));
+        exit(json_encode(array('success' => true, 'msg' => $msg)));
     } else {
-        exit(json_encode(array('error' => lang('share_screen_failure'))));
+        showmessage('share_screen_failure');
     }
+} elseif ($do == 'shareinfo') {
+    $sid = intval($_GET['sid']);
+    if (!$sid) {
+        showmessage('forbid_operation');
+    }
+    $share = C::t('shares')->fetch($sid);
+    if (!$share['id']) {
+        showmessage('share_file_iscancled');
+    }
+    $sharestatus = array(
+        '-5' => lang('sharefile_isdeleted_or_positionchange'),
+        '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>',
+        '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>',
+        '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>',
+        '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>',
+        '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>'
+    );
+    $share['endtime'] = getexpiretext($share['endtime']);
+    $share['sharelink'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($share['id']));
+    $share['dateline'] = $share['dateline'] ? dgmdate($share['dateline'],'Y-m-d H:i:s') : '';
+    $share['password'] = $share['password'] ? dzzdecode($share['password']) : lang('open_links');
+    $share['times'] = $share['times'] ? $share['count'] . '/' . $share['times'] : lang('no_limit');
+    $share['status'] = $sharestatus[$share['status']];
+    $share['type'] = getFileTypeName($share['type'], $share['ext']);
+    include template('ajax');
+    exit();
 } else {
-    exit(json_encode(array('error' => '非法操作')));
+    showmessage('forbid_operation');
 }
 ?>

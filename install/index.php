@@ -15,12 +15,7 @@ if (function_exists('set_magic_quotes_runtime')) {
 
 define('IN_DZZ', TRUE);
 define('IN_LEYUN', TRUE);
-define('ROOT_PATH', dirname(__FILE__) . '/../');
-define('BS', DIRECTORY_SEPARATOR);//系统目录分割符
-define('DZZ_ROOT', dirname(dirname(__FILE__)) . BS);//系统根目录
-define('CORE_NAME', 'core');//核心目录名
-define('CORE_PATH', DZZ_ROOT . CORE_NAME . BS . 'class');//核心类目录
-define('APP_DIRNAME', 'dzz');//应用目录名
+define('ROOT_PATH', dirname(__DIR__).'/');
 
 require ROOT_PATH . './core/core_version.php';
 require ROOT_PATH . './install/include/install_var.php';
@@ -52,7 +47,7 @@ if (file_exists($lockfile) && $method != 'ext_info') {
 timezone_set();
 
 if (in_array($method, array('ext_info'))) {
-    $isHTTPS = ($_SERVER['HTTPS'] && strtolower($_SERVER['HTTPS']) != 'off') ? true : false;
+    $isHTTPS = is_https();
     $PHP_SELF = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
     $sitepath = substr($PHP_SELF, 0, strrpos($PHP_SELF, '/'));
     $sitepath = preg_replace('/install$/i', '', $sitepath);
@@ -91,6 +86,7 @@ if ($method == 'show_license') {
     $_config = $default_config;
     //}
 
+    $company = SOFT_NAME;
     $dbhost = getenv('MYSQL_HOST') ?: $_config['db'][1]['dbhost'];
     $dbname = getenv('MYSQL_DATABASE') ?: $_config['db'][1]['dbname'];
     $dbpw = getenv('MYSQL_PASSWORD') ?: $_config['db'][1]['dbpw'];
@@ -126,9 +122,6 @@ if ($method == 'show_license') {
             $error_msg['admininfo']['password2'] = 1;
             $submit = false;
         }
-    }
-
-    if ($submit && !VIEW_OFF && $_SERVER['REQUEST_METHOD'] == 'POST') {
         $forceinstall = isset($_POST['dbinfo']['forceinstall']) ? $_POST['dbinfo']['forceinstall'] : '';
         $dbname_not_exists = true;
         if (!empty($dbhost) && empty($forceinstall)) {
@@ -186,7 +179,7 @@ if ($method == 'show_license') {
             show_msg('admininfo_invalid', '', 0);
         }
         $uid = 1;
-        $authkey = substr(md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . $dbhost . $dbuser . $dbpw . $dbname . $pconnect . substr($timestamp, 0, 6)), 8, 6) . random(10);
+        $authkey = md5((isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '') . $_SERVER['HTTP_USER_AGENT'] . $dbhost . $dbuser . $dbpw . $dbname .$username.$password . substr(time(), 0, 6)) . random(10);
         $_config['db']['driver'] = 'mysqli';
         $_config['db'][1]['dbhost'] = $dbhost;
         $_config['db'][1]['dbname'] = $dbname;
@@ -207,36 +200,35 @@ if ($method == 'show_license') {
             show_header();
             show_install();
         }
+
+        @set_time_limit(0);
+        @ignore_user_abort(TRUE);
+        ini_set('max_execution_time', 0);
+        ini_set('mysql.connect_timeout', 0);
+
         $db = new dbstuff;
 
         $db->connect($dbhost, $dbuser, $dbpw, $dbname, DBCHARSET);
-        for ($i = 0; $i < 5; $i++) {
-            showjsmessage(lang('begin_establish_data_tables'));
-        }
+        showjsmessage(lang('begin_establish_data_tables'));
         $sql = file_get_contents($sqlfile);
         $sql = str_replace("\r\n", "\n", $sql);
-        runquery($sql);
-        for ($i = 0; $i < 5; $i++) {
-            showjsmessage(lang('table_clear_success'));
+        if (!runquery($sql)) {
+            exit();
         }
-
-        for ($i = 0; $i < 5; $i++) {
-            showjsmessage(lang('start_importing_initialized_data'));
-        }
+        showjsmessage(lang('table_clear_success'));
+        showjsmessage(lang('start_importing_initialized_data'));
         $sql = file_get_contents(ROOT_PATH . './install/data/install_data.sql');
         $sql = str_replace("\r\n", "\n", $sql);
-        runquery($sql);
-        for ($i = 0; $i < 5; $i++) {
-            showjsmessage(lang('start_importing_initialized_data1'));
+        if (!runquery($sql)) {
+            exit();
         }
-
-        for ($i = 0; $i < 5; $i++) {
-            showjsmessage(lang('set_system'));
-        }
+        showjsmessage(lang('start_importing_initialized_data1'));
+        showjsmessage(lang('set_system'));
         $onlineip = $_SERVER['REMOTE_ADDR'];
         $timestamp = time();
 
-        $backupdir = substr(md5($_SERVER['SERVER_ADDR'] . $_SERVER['HTTP_USER_AGENT'] . substr($timestamp, 0, 4)), 8, 6);
+        $backupdir = substr(md5((isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '') . $_SERVER['HTTP_USER_AGENT'] . substr($timestamp, 0, 4)), 8, 6);
+	
         $ret = false;
         if (is_dir(ROOT_PATH . 'data/backup')) {
             $ret = @rename(ROOT_PATH . 'data/backup', ROOT_PATH . 'data/backup_' . $backupdir);
@@ -282,18 +274,10 @@ if ($method == 'show_license') {
         $ctype = 1;
         $data = addslashes(serialize($userstats));
         $db->query("REPLACE INTO {$tablepre}syscache (cname, ctype, dateline, data) VALUES ('userstats', '$ctype', '" . time() . "', '$data')");
-        for ($i = 0; $i < 5; $i++) {
-            showjsmessage(lang('set_system1'));
-        }
-
-        for ($i = 0; $i < 5; $i++) {
-            showjsmessage(lang('import_division_data'));
-        }
+        showjsmessage(lang('set_system1'));
+        showjsmessage(lang('import_division_data'));
         install_districtdata();
-
-        for ($i = 0; $i < 5; $i++) {
-            showjsmessage(lang('import_division_data1'));
-        }
+        showjsmessage(lang('import_division_data1'));
 
         $yearmonth = date('Ym_', time());
         loginit($yearmonth . 'loginlog');
@@ -303,15 +287,12 @@ if ($method == 'show_license') {
         dir_clear(ROOT_PATH . './data/template');
         dir_clear(ROOT_PATH . './data/cache');
 
-        foreach ($serialize_sql_setting as $k => $v) {
-            $v = addslashes(serialize($v));
-            $db->query("REPLACE INTO {$tablepre}setting VALUES ('$k', '$v')");
-        }
         if ($runqueryerror) {
             showjsmessage('<span class="red">' . lang('error_quit_msg') . '</span>');
             show_footer();
             exit();
         }
+
         showjsmessage(lang('system_data_installation_successful'));
         show_footer();
     }

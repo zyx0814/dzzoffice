@@ -71,16 +71,16 @@ $env_items = array
     'php_bit' => array('c' => 'PHP_INT_SIZE', 'r' => '32位(32位不支持2G以上文件上传下载)', 'b' => '64位'),
     'attachmentupload' => array('r' => 'notset', 'b' => '50M'),
     'gdversion' => array('r' => '1.0', 'b' => '2.0'),
-    'diskspace' => array('r' => '50M', 'b' => '10G以上'),
-
+    'diskspace' => array('r' => '50M', 'b' => 'notset'),
+    'opcache' => array('r' => 'notset', 'b' => 'enable'),
 );
 
 $dirfile_items = array
 (
 
-    //'config' => array('type' => 'file', 'path' => CONFIG),
+    'config' => array('type' => 'file', 'path' => CONFIG),
     'config_dir' => array('type' => 'dir', 'path' => './config'),
-    //'data' => array('type' => 'dir', 'path' => './data'),
+    'data' => array('type' => 'dir', 'path' => './data'),
     'cache' => array('type' => 'dir', 'path' => './data/cache'),
     'avatar' => array('type' => 'dir', 'path' => './data/avatar'),
     'ftemplates' => array('type' => 'dir', 'path' => './data/template'),
@@ -93,17 +93,6 @@ $dirfile_items = array
     'attach_imgcache' => array('type' => 'dir', 'path' => './data/attachment/imgcache'),
     'attach_qrcode' => array('type' => 'dir', 'path' => './data/attachment/qrcode'),
     'logs' => array('type' => 'dir', 'path' => './data/log'),
-);
-
-
-$form_app_reg_items = array
-(
-
-    'siteinfo' => array
-    (
-        'sitename' => array('type' => 'text', 'required' => 1, 'reg' => '/^.*$/', 'value' => array('type' => 'constant', 'var' => 'SOFT_NAME')),
-        'siteurl' => array('type' => 'text', 'required' => 1, 'reg' => '/^https?:\/\//', 'value' => array('type' => 'var', 'var' => 'default_appurl'))
-    )
 );
 
 $form_db_init_items = array
@@ -126,9 +115,5 @@ $form_db_init_items = array
         'password2' => array('type' => 'password', 'required' => 1, 'reg' => '/^.*$/'),
 
     )
-
 );
-
-$serialize_sql_setting = array();
-
 ?>

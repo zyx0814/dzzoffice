@@ -650,7 +650,7 @@ function random($length, $numeric = 0) {
     }
     $max = strlen($seed) - 1;
     for ($i = 0; $i < $length; $i++) {
-        $hash .= $seed[random_int(0, $max)];
+        $hash .= $seed[mt_rand(0, $max)];
     }
     return $hash;
 }
@@ -1412,6 +1412,10 @@ function dreferer($default = '') {
     $_G['referer'] = !empty($_GET['referer']) ? $_GET['referer'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
     $_G['referer'] = substr($_G['referer'], -1) == '?' ? substr($_G['referer'], 0, -1) : $_G['referer'];
     if (strpos($_G['referer'], 'user.php?mod=login&op=logging&action=login')) {
+        $_G['referer'] = $default;
+    }
+
+    if (preg_match('/install(\/|$)/', $_G['referer'])) {
         $_G['referer'] = $default;
     }
     $_G['referer'] = dhtmlspecialchars($_G['referer'], ENT_QUOTES);

@@ -891,7 +891,7 @@ CREATE TABLE `dzz_setting` (
 DROP TABLE IF EXISTS `dzz_shares`;
 CREATE TABLE `dzz_shares` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(120) NOT NULL DEFAULT '' COMMENT '分享标题',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '分享标题',
   `filepath` text NOT NULL COMMENT '文件',
   `dateline` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分享时间',
   `times` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '分享总次数，为0则为不限制',
@@ -902,7 +902,7 @@ CREATE TABLE `dzz_shares` (
   `pfid` int(11) NOT NULL DEFAULT '0' COMMENT '父级目录id',
   `password` varchar(256) NOT NULL DEFAULT '' COMMENT '分享密码，留空为公开分享',
   `perm` varchar(120) NOT NULL DEFAULT '' COMMENT '分享权限',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '-4：文件不存在；-3：次数到；-1：已过期；0：正常',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '分享状态（-4：已屏蔽；-3：文件不存在；-2：次数用尽；-1：已过期；0：正常）',
   `private` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否私有',
   `count` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '分享使用次数',
   `downs` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '下载次数',

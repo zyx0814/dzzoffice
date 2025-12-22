@@ -17,7 +17,7 @@
 	<div class="container-fluid">
 		<div class="card">
 			<div class="card-header">
-				<div class="card-title titleinfo"><i class="mdi mdi-share-variant-outline pe-2"></i>{lang all}</div>
+				<div class="card-title"><i class="mdi mdi-share-variant-outline pe-2"></i>{lang share_list}</div>
 			</div>
 			<div class="card-body">
 				<div class="card-search mb-2-5">
@@ -25,10 +25,17 @@
 						<div class="col-md-8">
 							<div class="input-group mb-3">
 								<span class="input-group-text">{lang share_title}</span>
-								<input type="text" class="form-control" name="keyword" id="keyword" placeholder="{lang share_title}" aria-label="{lang share_title}">
+								<input type="text" class="form-control" name="keyword" id="keyword" placeholder="{lang share_title}">
 								<span class="input-group-text">{lang username}</span>
-								<input type="text" class="form-control" name="username" id="username" placeholder="{lang username}" placeholder="{lang username}" aria-label="{lang username}">
-							  </div>
+								<input type="text" class="form-control" name="username" id="username" placeholder="{lang username}">
+								<span class="input-group-text">{lang file_type}</span>
+								<select class="form-select" id="filetype">
+									<option value="">{lang all}</option>
+									<!--{loop $typeinfo $key $value}-->
+									<option value="$key">$value</option>
+									<!--{/loop}-->
+								</select>
+							</div>
 						</div>
 						<div class="col-md-4">
 						  <button type="submit" class="btn btn-primary me-1" id="search-btn">{lang search}</button>
@@ -58,49 +65,45 @@
 </main>
 <script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script>
-	var type = '';
 	layui.use('table', function(){
-	  var table = layui.table;
+	var table = layui.table;
 	table.render({
-	elem: '#table',
-	url: '{MOD_URL}&do=getinfo&ajaxdata=json',
-	title: '分享管理数据表格',
-	toolbar: '#toolbar',
-	autoSort: false,
-	even:true,
-	cellMinWidth:120,
-	text: {
-		none: '{lang no_related_data}'
-	},
-	page: {
-		limit: 20,
-		limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000]
-	},
-	cols: [[
-		{type:'checkbox', fixed: 'left'}
-		,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-		,{field:'title', title: '{lang share_typename_attach}', sort: true,templet: function(d) {return d.title;}}
-		,{field:'status', title: '{lang status}', align: 'center', sort: true,templet: function(d) {return d.status;}}
-		,{field:'dateline', title: '{lang share_time}', align: 'center', sort: true,templet:function(d){return d.dateline}}
-		,{field:'endtime', title: '{lang failure_time}', align: 'center', sort: true}
-		,{field:'username', title: '{lang share_user}', align: 'center', sort: true,templet: function(d) {return d.username;}}
-		,{field:'count', title: '{lang view_count}', align: 'center', sort: true,templet:function(d){return d.count+'{lang degree}'}}
-		,{field:'downs', title: '{lang download_times}', align: 'center', sort: true,templet:function(d){return d.downs+'{lang degree}'}}
-		,{field:'password', title: '{lang extract_password}', align: 'center', sort: true}
-		,{field:'type', title: '{lang file_type}', align: 'center', sort: true}
-		,{field:'times', title: '{lang limited_number}', align: 'center', sort: true}
-		,{title: '{lang operation}',width:150, align:'center', toolbar: '#barDemo'}
-	]],
-	initSort: {
-		field: 'dateline',
-		type: 'desc'
-	},
-	done: function(res, curr, count) {
-		checkStatusBtn();
-		if(res.title) {
-			$('.titleinfo').html(res.title);
+		elem: '#table',
+		url: '{MOD_URL}&do=getinfo&ajaxdata=json',
+		title: '分享管理数据表格',
+		toolbar: '#toolbar',
+		autoSort: false,
+		even:true,
+		cellMinWidth:120,
+		text: {
+			none: '{lang no_related_data}'
+		},
+		page: {
+			limit: 20,
+			limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000]
+		},
+		cols: [[
+			{type:'checkbox', fixed: 'left'}
+			,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
+			,{field:'title', title: '{lang share_title}', sort: true,templet: function(d) {return d.title;}}
+			,{field:'status', title: '{lang share_status}', align: 'center', sort: true,templet: function(d) {return d.status;}}
+			,{field:'dateline', title: '{lang share_time}', align: 'center', sort: true}
+			,{field:'endtime', title: '{lang failure_time}', align: 'center', sort: true}
+			,{field:'username', title: '{lang share_user}', align: 'center', sort: true,templet: function(d) {return d.username;}}
+			,{field:'count', title: '{lang view_count}', align: 'center', sort: true,templet:function(d){return d.count+'{lang degree}'}}
+			,{field:'downs', title: '{lang download_times}', align: 'center', sort: true,templet:function(d){return d.downs+'{lang degree}'}}
+			,{field:'password', title: '{lang extract_password}', align: 'center', sort: true}
+			,{field:'type', title: '{lang file_type}', align: 'center', sort: true}
+			,{field:'times', title: '{lang limited_number}', align: 'center', sort: true}
+			,{title: '{lang operation}',width:150, align:'center', toolbar: '#barDemo'}
+		]],
+		initSort: {
+			field: 'dateline',
+			type: 'desc'
+		},
+		done: function(res, curr, count) {
+			checkStatusBtn();
 		}
-	}
 	});
 	table.on('checkbox(table)', function(obj){
 		checkStatusBtn();
@@ -121,17 +124,17 @@
 						template += '<div class="accordion-item">';
 						template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
 						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
-						template += '{lang share_typename_attach}：' + item.title;
+						template += '{lang share_title}：' + item.title;
 						template += '</button>';
 						template += '</h2>';
 						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
 						template += '<div class="accordion-body">';
 						template += '<p><strong>ID:</strong> ' + item.LAY_NUM + '</p>';
-						template += '<p><strong>{lang share_typename_attach}:</strong> ' + item.title + '</p>';
-						template += '<p><strong>状态:</strong> ' + item.status + '</p>';
+						template += '<p><strong>{lang share_title}:</strong> ' + item.title + '</p>';
+						template += '<p><strong>{lang share_status}:</strong> ' + item.status + '</p>';
 						template += '<p><strong>{lang share_time}:</strong> ' + item.dateline + '</p>';
 						template += '<p><strong>{lang share_user}:</strong> ' + item.username + '</p>';
-						template += '<p><strong>{lang link}:</strong> <a href="' + item.sharelink + '" target="_blank">' + item.sharelink + '</a></p>';
+						template += '<p><strong>{lang share_address}:</strong> <a href="' + item.sharelink + '" target="_blank">' + item.sharelink + '</a></p>';
 						template += '<p><strong>{lang extract_password}:</strong> ' + item.password + '</p>';
 						template += '<p><strong>{lang failure_time}:</strong> ' + item.endtime + '</p>';
 						template += '<p><strong>{lang view_count}:</strong> ' + item.count + '{lang degree}</p>';
@@ -147,96 +150,10 @@
 					title: '选中的分享信息'
 				});
 				break;
-				case 'delete':
-				if (data.length === 0) {
-					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
-					return;
-				}
-				var sids = new Array();
-				$.each(data,function(i) {
-					sids.push(this.sid);
-				});
-				layer.confirm('{lang share_stop_sharing1}', {title: '{lang affirm_stop_sharing}',skin:'lyear-skin-danger'}, function(index){
-					var loading = layer.load(0, { shade:  [0.1, '#000'] });
-					jQuery.post('{MOD_URL}&op=ajax&do=delete', {'sids': sids},function(json){
-						layer.close(loading);
-						layer.close(index);
-						if(json.success){
-							showmessage('删除成功', 'success', '3000', 1);
-						} else if(json.error){
-							showmessage(json.error, 'danger', '3000', 1);
-						} else {
-							showmessage('{lang error}', 'danger', '3000', 1);
-						}
-						table.reloadData('table');
-					},'json').fail(function() {
-							layer.close(loading);
-							layer.close(index);
-							showmessage('{lang do_failed}', 'danger',3000,1);
-						});
-				});
-				break;
-				case 'forbidden':
-				if (data.length === 0) {
-					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
-					return;
-				}
-				var sids = new Array();
-				$.each(data,function(i) {
-					sids.push(this.sid);
-				});
-				layer.confirm('{lang share_stop_sharing2}', {title: '{lang affirm_screen_share}',skin:'lyear-skin-warning'}, function(index){
-					var loading = layer.load(0, { shade:  [0.1, '#000'] });
-					jQuery.post('{MOD_URL}&op=ajax&do=forbidden', {'sids': sids, "flag": 'forbidden'},function(json){
-						layer.close(loading);
-						layer.close(index);
-						if(json.msg){
-							showmessage(json.msg, 'success', '3000', 1);
-						} else if(json.error){
-							showmessage(json.error, 'danger', '3000', 1);
-						} else {
-							showmessage('{lang shielding_failure}', 'danger', '3000', 1);
-						}
-						table.reloadData('table');
-					},'json').fail(function() {
-							layer.close(loading);
-							layer.close(index);
-							showmessage('{lang do_failed}', 'danger',3000,1);
-						});
-				});
-				break;
-				case 'allow':
-				if (data.length === 0) {
-					showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
-					return;
-				}
-				var sids = new Array();
-				$.each(data,function(i) {
-					sids.push(this.sid);
-				});
-				layer.confirm('{lang share_stop_sharing3}', {title: '{lang affirm_cancel_shielding}',skin:'lyear-skin-info'}, function(index){
-					var loading = layer.load(0, { shade:  [0.1, '#000'] });
-					jQuery.post('{MOD_URL}&op=ajax&do=forbidden', {'sids': sids, "flag": 'allow'},function(json){
-						layer.close(loading);
-						layer.close(index);
-						if(json.msg){
-							showmessage(json.msg, 'success', '3000', 1);
-						} else if(json.error){
-								showmessage(json.error, 'danger', '3000', 1);
-						} else {
-							showmessage('{lang cancel_shielding_failure}', 'danger', '3000', 1);
-						}
-						table.reloadData('table');
-					},'json').fail(function() {
-							layer.close(loading);
-							layer.close(index);
-							showmessage('{lang do_failed}', 'danger',3000,1);
-						});
-				});
-				break;
+				<!--{template toolbar}-->
 				case 'get':
 				table.reloadData('table', {
-					where: {type: type,keyword:$('#keyword').val(),username:$('#username').val()}, // 清空搜索参数
+					where: {type: $('#filetype').val(),keyword:$('#keyword').val(),username:$('#username').val()}, // 清空搜索参数
 					page: {
 						curr: 1 //重新从第 1 页开始
 					}
@@ -269,13 +186,13 @@
 		function showDataTemplate(obj) {
 			var data = obj.dataCache;
 			var template =
-			'<p><strong>{lang share_typename_attach}:</strong> ' + data.title + '</p>' +
-			'<p><strong>状态:</strong> ' + data.status + '</p>' +
+			'<p><strong>{lang share_title}:</strong> ' + data.title + '</p>' +
+			'<p><strong>{lang share_status}:</strong> ' + data.status + '</p>' +
 			'<p><strong>{lang share_time}:</strong> ' + data.dateline + '</p>' +
-			'<p><strong>{lang failure_time}:</strong> ' + data.endtime + '</p>' +
 			'<p><strong>{lang share_user}:</strong> ' + data.username + '</p>' + 
-			'<p><strong>{lang link}:</strong> <a href="' + data.sharelink + '">' + data.sharelink + '</a></p>' +
+			'<p><strong>{lang share_address}:</strong> <a href="' + data.sharelink + '" target="_blank">' + data.sharelink + '</a></p>' +
 			'<p><strong>{lang extract_password}:</strong> ' + data.password + '</p>' +
+			'<p><strong>{lang failure_time}:</strong> ' + data.endtime + '</p>' +
 			'<p><strong>{lang view_count}:</strong> ' + data.count + '{lang degree}</p>' +
 			'<p><strong>{lang download_times}:</strong> ' + data.downs + '{lang degree}</p>' +
 			'<p><strong>{lang file_type}:</strong> ' + data.type + '</p><p><strong>{lang limited_number}:</strong> ' + data.times + '</p>';
@@ -303,41 +220,21 @@
 		}
 		// 搜索按钮功能
 		$(document).on('click', '#search-btn', function() {
-		// 获取搜索关键词
-		var keyword = $('#keyword').val();
-		var username = $('#username').val();
-		table.reloadData('table', {
-		  where: { keyword: keyword,username:username},
-		  page: {
-			curr: 1 //重新从第 1 页开始
-		  }
+			table.reloadData('table', {
+			where: {type: $('#filetype').val(), keyword: $('#keyword').val(),username:$('#username').val()},
+			page: {
+				curr: 1 //重新从第 1 页开始
+			}
+			});
 		});
-	  });
 	   // 重置按钮功能
 	   $('#refreshsearch').click(function() {
 		// 清空表单内容
         $('#username').val('');
         $('#keyword').val('');
+		$('#filetype').val('');
 		table.reloadData('table', {
-		  where: {type: type}, // 清空搜索参数
-		  page: {
-			curr: 1 //重新从第 1 页开始
-		  }
-		});
-	  });
-	  // 类型按钮功能
-	  $(document).on('click', '.type-btn', function() {
-		// 移除所有 .type-btn 的 active 类
-		$('.type-btn').removeClass('active');
-		// 为当前点击的按钮添加 active 类
-		$(this).addClass('active');
-		$('#keyword').val('');
-		$('#username').val('');
-		// 获取当前的 type 值
-		operation = $(this).data('operation');
-		type = $(this).data('type');
-		table.reloadData('table', {
-		  where: {type: type},
+		  where: {}, // 清空搜索参数
 		  page: {
 			curr: 1 //重新从第 1 页开始
 		  }

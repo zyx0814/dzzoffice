@@ -709,9 +709,9 @@ function getvars($data, $type = 'VAR') {
 
 function buildarray($array, $level = 0, $pre = '$_config') {
     static $ks;
+    $return = '';
     if ($level == 0) {
         $ks = array();
-        $return = '';
     }
 
     foreach ($array as $key => $val) {

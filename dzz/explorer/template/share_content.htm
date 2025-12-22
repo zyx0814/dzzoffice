@@ -36,8 +36,8 @@
 		,cols: [[
             {type:'checkbox', fixed: 'left'}
             ,{title: 'ID',width:80, fixed: 'left',type: 'numbers'}
-            ,{field:'title', title: '{lang share_typename_attach}',minWidth:120, sort: true, templet: function(d) {return d.title;}}
-            ,{field:'status', title: '状态', align: 'center',width:120, sort: true,templet: function(d) {return d.status;}}
+            ,{field:'title', title: '{lang share_title}',minWidth:120, sort: true, templet: function(d) {return d.title;}}
+            ,{field:'status', title: '{lang share_status}', align: 'center',width:120, sort: true,templet: function(d) {return d.status;}}
             ,{field:'dateline', title: '{lang share_time}',width:180, align: 'center',sort: true}
             ,{field:'endtime', title: '{lang failure_time}',width:120,align: 'center', sort: true}
 		  ,{field:'count', title: '{lang view_count}',width:120, align: 'center', sort: true,templet:function(d){return d.count+'{lang degree}'}}
@@ -71,16 +71,16 @@
                         template += '<div class="accordion-item">';
                         template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
                         template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
-                        template += '{lang share_typename_attach}：' + item.title;
+                        template += '{lang share_title}：' + item.title;
                         template += '</button>';
                         template += '</h2>';
                         template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
                         template += '<div class="accordion-body">';
                         template += '<p><strong>ID:</strong> ' + item.LAY_NUM + '</p>';
-						template += '<p><strong>{lang share_typename_attach}:</strong> ' + item.title + '</p>';
-						template += '<p><strong>状态:</strong> ' + item.status + '</p>';
+						template += '<p><strong>{lang share_title}:</strong> ' + item.title + '</p>';
+						template += '<p><strong>{lang share_status}:</strong> ' + item.status + '</p>';
 						template += '<p><strong>{lang share_time}:</strong> ' + item.dateline + '</p>';
-                        template += '<p><strong>{lang link}:</strong> <a href="' + item.sharelink + '" target="_blank">' + item.sharelink + '</a></p>';
+                        template += '<p><strong>{lang share_address}:</strong> <a href="' + item.sharelink + '" target="_blank">' + item.sharelink + '</a></p>';
                         template += (item.password ? '<p><strong>{lang extract_password}：</strong>' + item.password + '</p>' : '<p><strong>{lang share_type}：</strong>{lang open_links}</p>');
                         template += '<p><strong>{lang failure_time}:</strong> ' + item.endtime + '</p>';
                         template += '<p><strong>{lang view_count}:</strong> ' + item.count + '{lang degree}</p>';
@@ -249,12 +249,12 @@
     function showDataTemplate(obj) {
         var data = obj.dataCache;
         var template =
-        '<p><strong>{lang share_typename_attach}：</strong>' + data.title + '</p>' +
-        '<p><strong>状态：</strong>' + data.status + '</p>' +
+        '<p><strong>{lang share_title}：</strong>' + data.title + '</p>' +
+        '<p><strong>{lang share_status}：</strong>' + data.status + '</p>' +
         '<p><strong>{lang share_time}：</strong>' + data.dateline + '</p>' +
-        '<p><strong>{lang failure_time}：</strong>' + data.endtime + '</p>' +
-        '<p><strong>{lang link}：</strong><a href="' + data.sharelink + '">' + data.sharelink + '</a></p>' +
+        '<p><strong>{lang share_address}：</strong><a href="' + data.sharelink + '">' + data.sharelink + '</a></p>' +
         (data.password ? '<p><strong>{lang extract_password}：</strong>' + data.password + '</p>' : '<p><strong>{lang share_type}：</strong>{lang open_links}</p>')+
+        '<p><strong>{lang failure_time}：</strong>' + data.endtime + '</p>' +
         '<p><strong>{lang view_count}：</strong>' + data.count + '{lang degree}</p>' +
         '<p><strong>{lang download_times}：</strong>' + data.downs + '{lang degree}</p>'+
         '<p><strong>{lang limited_number}：</strong>' + data.times + '</p>'

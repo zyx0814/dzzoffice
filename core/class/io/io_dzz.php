@@ -96,7 +96,7 @@ class io_dzz extends io_api {
         if ($icoarr['name'] != $text && ($ricoid = $this->getRepeatIDByName($text, $icoarr['pfid'], ($icoarr['type'] == 'folder') ? true : false))) {//如果目录下有同名文件
             return array('error' => lang('filename_already_exists'));
         }
-        if (!$arr = C::t('resources')->rename_by_rid($rid, $text)) {
+        if (!$arr = C::t('resources')->rename_by_rid($rid, $text, $this->sharesid)) {
             return array('error' => 'Not modified!');
         }
         if($arr['error']) return array('error' => $arr['error']);

@@ -97,7 +97,7 @@ if ($operation == 'upload') {//上传图片文件
                         $arr['msg'] = 'success';
                     }
                 } else {
-                    $arr['error'] = lang('network_error');
+                    $arr['error'] = lang('js_network_error');
                 }
             }
         }

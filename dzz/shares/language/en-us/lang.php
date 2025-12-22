@@ -32,7 +32,6 @@ $lang = array(
     'update_never_succeeded' => '0 files uploaded successfully',
     'already_start' => 'Already Started',
     'extension' => 'Extension',
-    'add_url' => 'Add URL',
     'no_file' => 'No shared files or folders yet',
     'medium_icons' => 'Medium Icons',
     'deltail_lsit' => 'Detailed List',

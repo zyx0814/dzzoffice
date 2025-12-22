@@ -52,6 +52,13 @@
 	.bg-teal-soft{background:#e6fffb;color:#13c2c2}
 	.bg-purple-soft{background:#f9f0ff;color:#722ed1}
 	.bg-orange-soft{background:#fff7e6;color:#fa8c16}
+	.popup-index-li{flex: 0 0 auto;width: 100%;}
+	@media (min-width: 365px){.popup-index-li {width: 50%}}
+	@media (min-width:576px){.popup-index-li{width: 33.33333333%}}
+	@media (min-width:768px){.popup-index-li{width: 25%}}
+	@media (min-width:1200px){.popup-index-li{width: 16.66666667%}}
+	@media (min-width:1600px){.popup-index-li{width: 12.5%}}
+	@media (min-width:1920px){.popup-index-li{width: 8.33333333%}}
 </style>
 <!--{template lyear:header_simple_noleft_end}-->
 <main class="bs-main-container" style="padding-left: 0;">
@@ -100,18 +107,20 @@
 			</div>
 			</div>
 			<!--{/if}-->
+			<!--{if $_G['member']['regdate']}-->
 			<div class="col-sm-6 col-md-6 col-lg-3">
-			<div class="card">
-				<div class="card-body">
-				<div class="stat-header">
-					<div class="stat-icon bg-purple-soft"><i class="mdi mdi-calendar-heart"></i></div>
-					<span class="text-muted">加入时间</span>
-				</div>
-				<div class="stat-value"><!--{eval echo dgmdate($_G['member']['regdate'])}--></div> 
-				<div class="text-muted">已加入 <span class="fw-bold text-primary">$regdatedays</span> 天</div>
+				<div class="card">
+					<div class="card-body">
+					<div class="stat-header">
+						<div class="stat-icon bg-purple-soft"><i class="mdi mdi-calendar-heart"></i></div>
+						<span class="text-muted">加入时间</span>
+					</div>
+					<div class="stat-value"><!--{eval echo dgmdate($_G['member']['regdate'])}--></div> 
+					<div class="text-muted">已加入 <span class="fw-bold text-primary">$regdatedays</span> 天</div>
+					</div>
 				</div>
 			</div>
-			</div>
+			<!--{/if}-->
 			<div class="col-sm-6 col-md-6 col-lg-3">
 			<div class="card">
 				<div class="card-body">
@@ -128,8 +137,8 @@
 		<!--{if $applist_1}-->
 		<div class="row ui-sortable">
 			<!--{loop $applist_1 $key $value}-->
-			<div class="popup-index-li col-xxl-2 col-xl-3 col-lg-3 col-md-4 col-sm-6 col-12" data-appid="$value[appid]">
-				<a <!--{if $value['open']}-->target="_blank"<!--{/if}--> href="$value[url]" title="$value[appname]" class="card card-market border m-2">
+			<div class="popup-index-li" data-appid="$value[appid]">
+				<a <!--{if $value['open']}-->target="_blank"<!--{/if}--> href="$value[url]" title="$value[appname]" class="card card-market">
 				<div class="card-body text-center">
 					<img src="$value[appico]" class="app-icon">
 					<div class="card-title text-body text-truncate">$value[appname]</div>

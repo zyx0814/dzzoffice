@@ -1,0 +1,22 @@
+<!--{template common/header_ajax}-->
+<div class="modal-header">
+	<h4 class="modal-title text-truncate">分享文件信息</h4>
+	<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+	<p><strong>{lang share_title}:</strong> $share['title']</p>
+	<p><strong>{lang share_status}:</strong> $share['status']</p>
+	<p><strong>{lang share_time}:</strong> $share['dateline']</p>
+	<p><strong>{lang share_user}:</strong> <a href="user.php?uid={$share['uid']}" target="_blank">$share['username']</a></p> 
+	<p><strong>{lang share_address}:</strong> <a href="{$share['sharelink']}"> $share['sharelink']</a></p>
+	<p><strong>{lang extract_password}:</strong> $share['password']</p>
+	<p><strong>{lang failure_time}:</strong> $share['endtime']</p>
+	<p><strong>{lang view_count}:</strong> $share['count'] {lang degree}</p>
+	<p><strong>{lang download_times}:</strong> $share['downs'] {lang degree}</p>
+	<p><strong>{lang file_type}:</strong> $share['type']</p>
+	<p><strong>{lang limited_number}:</strong> $share['times']</p>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-secondary" data-dismiss="modal">{lang close}</button>
+</div>
+<!--{template common/footer_ajax}-->
