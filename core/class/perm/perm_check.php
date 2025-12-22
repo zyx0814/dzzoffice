@@ -24,7 +24,7 @@ class perm_check {
         // 个人权限无效时，使用用户组权限
         //if ($perm < 1) $perm = intval($_G['group']['perm']);
         $perm = intval($_G['group']['perm']);
-        // 若系统允许分享，移除当前用户的分享权限
+        // 若系统不允许分享，移除当前用户的分享权限
         if ($_G['setting']['allowshare']) {
             $power = new perm_binPerm($perm);
             $perm = $power->delPower('share');

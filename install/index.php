@@ -9,13 +9,14 @@
 
 error_reporting(E_ERROR);
 @set_time_limit(1000);
-if (function_exists('set_magic_quotes_runtime')) {
-    @set_magic_quotes_runtime(0);
-}
 
 define('IN_DZZ', TRUE);
 define('IN_LEYUN', TRUE);
 define('ROOT_PATH', dirname(__DIR__).'/');
+
+if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+    exit('您的 PHP 版本过低 (' . PHP_VERSION . ')，请升级到 PHP 7.0 或更高版本。');
+}
 
 require ROOT_PATH . './core/core_version.php';
 require ROOT_PATH . './install/include/install_var.php';
@@ -44,49 +45,35 @@ if (file_exists($lockfile) && $method != 'ext_info') {
     show_msg('database_nonexistence', '', 0);
 }
 
-timezone_set();
-
-if (in_array($method, array('ext_info'))) {
-    $isHTTPS = is_https();
-    $PHP_SELF = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
-    $sitepath = substr($PHP_SELF, 0, strrpos($PHP_SELF, '/'));
-    $sitepath = preg_replace('/install$/i', '', $sitepath);
-    $bbserver = 'http'.($isHTTPS ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath;
+// 设置时区
+if (function_exists('date_default_timezone_set')) {
+    @date_default_timezone_set('Etc/GMT-8');
 }
 
 if ($method == 'show_license') {
-
     show_license();
-
 } elseif ($method == 'phpinfo') {
     exit(phpinfo());
 } elseif ($method == 'env_check') {
-
     VIEW_OFF && function_check($func_items);
     env_check($env_items);
     dirfile_check($dirfile_items);
     show_env_result($env_items, $dirfile_items, $func_items, $filesock_items);
-
 } elseif ($method == 'db_init') {
     $submit = true;
     $default_config = $_config = array();
     $default_configfile = './config/config_default.php';
 
     if (!file_exists(ROOT_PATH . $default_configfile)) {
-        exit('config_default.php was lost, please reupload this  file.');
+        exit('config_default.php 丢失，请重新上传。');
     } else {
         include ROOT_PATH . $default_configfile;
         $default_config = $_config;
     }
-
-
-    /*if(file_exists(ROOT_PATH.CONFIG)) {//修改不调用已有的config.php内的信息
-        include ROOT_PATH.CONFIG;
-    } else {*/
     $_config = $default_config;
-    //}
 
     $company = SOFT_NAME;
+    // 支持环境变量注入 (Docker友好)
     $dbhost = getenv('MYSQL_HOST') ?: $_config['db'][1]['dbhost'];
     $dbname = getenv('MYSQL_DATABASE') ?: $_config['db'][1]['dbname'];
     $dbpw = getenv('MYSQL_PASSWORD') ?: $_config['db'][1]['dbpw'];
@@ -106,9 +93,7 @@ if ($method == 'show_license') {
                 $tmp = $$key;
                 $$k = $tmp[$k];
                 if (empty($$k) || !preg_match($v['reg'], $$k)) {
-                    if (empty($$k) && !$v['required']) {
-                        continue;
-                    }
+                    if (empty($$k) && !$v['required']) continue;
                     $submit = false;
                     VIEW_OFF or $error_msg[$key][$k] = 1;
                 }
@@ -123,14 +108,11 @@ if ($method == 'show_license') {
             $submit = false;
         }
         $forceinstall = isset($_POST['dbinfo']['forceinstall']) ? $_POST['dbinfo']['forceinstall'] : '';
-        $dbname_not_exists = true;
         if (!empty($dbhost) && empty($forceinstall)) {
-            $dbname_not_exists = check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre);
-            if (!$dbname_not_exists) {
+            if (!check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre)) {
                 $form_db_init_items['dbinfo']['forceinstall'] = array('type' => 'checkbox', 'required' => 0, 'reg' => '/^.*+/');
                 $error_msg['dbinfo']['forceinstall'] = 1;
                 $submit = false;
-                $dbname_not_exists = false;
             }
         }
     }
@@ -140,23 +122,24 @@ if ($method == 'show_license') {
         if (empty($dbname)) {
             show_msg('dbname_invalid', $dbname, 0);
         } else {
+            $unix_socket = null;
             //兼容支持域名直接带有端口的情况
             if (strpos($dbhost, '.sock') !== false) {//地址直接是socket地址
                 $unix_socket = $dbhost;
                 $dbhost = 'localhost';
-            } else {
-                $dbhost = $dbhost;
             }
             $link = new mysqli($dbhost, $dbuser, $dbpw, '', null, $unix_socket);
-            $errno = $link->connect_errno;
-            $error = $link->connect_error;
-            if ($errno) {
-                if ($errno == 1045) {
-                    show_msg('database_errno_1045', $error, 0);
-                } elseif ($errno == 2003 || $errno == 2002) {
-                    show_msg('database_errno_2003', $error, 0);
-                } else {
-                    show_msg('database_connect_error', $error, 0);
+            if($link->connect_errno) {
+                $errno = $link->connect_errno;
+                $error = $link->connect_error;
+                if ($errno) {
+                    if ($errno == 1045) {
+                        show_msg('database_errno_1045', $error, 0);
+                    } elseif ($errno == 2003 || $errno == 2002) {
+                        show_msg('database_errno_2003', $error, 0);
+                    } else {
+                        show_msg('database_connect_error', $error, 0);
+                    }
                 }
             }
             $link->query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET " . DBCHARSET);
@@ -251,11 +234,9 @@ if ($method == 'show_license') {
             $db->query("REPLACE INTO {$tablepre}setting (skey, svalue) VALUES ('sitename', '" . $company . "')");
             $db->query("REPLACE INTO {$tablepre}setting (skey, svalue) VALUES ('bbname', '" . $company . "')");
             //插入默认机构
-            $db->query("INSERT INTO {$tablepre}organization (`orgid`,`orgname`, `forgid`, `fid`, `disp`, `dateline`, `usesize`, `maxspacesize`, `indesk`,`available`,`pathkey`,`syatemon`,`manageon`,`diron`)
- VALUES( 1, '$company', 0, 1, 0, '$timestamp', 0, 0, 0,1,'_1_',1,1,1)");
+            $db->query("INSERT INTO {$tablepre}organization (`orgid`,`orgname`, `forgid`, `fid`, `disp`, `dateline`, `usesize`, `maxspacesize`, `indesk`,`available`,`pathkey`,`syatemon`,`manageon`,`diron`) VALUES( 1, '$company', 0, 1, 0, '$timestamp', 0, 0, 0,1,'_1_',1,1,1)");
             //插入默认机构文件夹
-            $db->query("INSERT INTO {$tablepre}folder (`fid`,`pfid`, `uid`, `username`, `innav`, `fname`, `perm`, `perm_inherit`, `fsperm`,`disp`,`iconview`,`display`,`dateline`,`gid`,`flag`,`default`,`isdelete`,`deldateline`)
- VALUES( 1, 0, 0, '', 1, '$company',7,7,0,0,4,0,'$timestamp', 1, 'organization','',0,0)");
+            $db->query("INSERT INTO {$tablepre}folder (`fid`,`pfid`, `uid`, `username`, `innav`, `fname`, `perm`, `perm_inherit`, `fsperm`,`disp`,`iconview`,`display`,`dateline`,`gid`,`flag`,`default`,`isdelete`,`deldateline`) VALUES( 1, 0, 0, '', 1, '$company',7,7,0,0,4,0,'$timestamp', 1, 'organization','',0,0)");
             //插入默认机构path路径
             $db->query("INSERT INTO {$tablepre}resources_path (`fid`,`path`, `pathkey`) VALUES( 1, 'dzz:gid_1:$company/','_1_')");
             //将管理员加入默认机构
@@ -297,29 +278,46 @@ if ($method == 'show_license') {
         show_footer();
     }
     show_form($form_db_init_items, $error_msg);
-
 } elseif ($method == 'ext_info') {
+    $version = CORE_VERSION;
+    $sitename = SOFT_NAME;
+    $enter_desktop = lang('enter_desktop');
+    $handwork_del = lang('handwork_del');
+
     @touch($lockfile);
     @unlink(ROOT_PATH . './install/index.php');
     @unlink(ROOT_PATH . './install/update.php');
     show_header();
     echo '<iframe src="../misc.php?mod=syscache" style="display:none;"></iframe>';
-    echo '<h2 style="display: flex;align-items: center;justify-content: center;flex-wrap: wrap;"><img src="images/right.png" style="padding-right: 5px;">' . lang('install_successfully') . '</h2>';
-    echo '<p style="text-align: left;">请使用管理员账号登录管理后台、并且按照下面的步骤依次配置系统！</p><ol style="text-align: left;font-size: 14px;"><li>系统默认仅预装了少量的应用，更多应用需要到 应用市场 内选择安装；</li><li>进入 系统设置 设置默认首页，平台名称、logo等系统基本设置；</li><li>如果系统只是在内网环境使用，可以在 系统设置 中关闭升级提醒，以免影响用户体验和页面性能。</li><li class="red">' . lang('handwork_del') . '"./install/index.php"</li></ol>';
-    echo '<p class="title">接下来您可以：</p>';
-    echo '<a href="' . $bbserver . 'index.php?mod=appmanagement" class="btn">进入管理后台</a>';
-    echo '<a href="' . $bbserver . '" class="btn">' . lang('enter_desktop') . '</a>';
+    echo <<<EOT
+<div class="finish-card">
+    <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+    </div>
+    
+    <h2 class="finish-title">恭喜，安装完成！</h2>
+    <p class="finish-subtitle">$sitename V$version 已成功部署在您的服务器上</p>
+    
+    <div class="finish-actions">
+        <a href="/index.php?mod=appmanagement" class="btn btn-secondary">进入管理后台</a>
+        <a href="/" class="btn btn-primary">$enter_desktop</a>
+    </div>
+
+    <div class="security-tip">
+    <p style="text-align: left;">请使用管理员账号登录管理后台、并且按照下面的步骤依次配置系统！</p><ol style="text-align: left;font-size: 14px;"><li>系统默认仅预装了少量的应用，更多应用需要到 应用市场 内选择安装；</li><li>进入 系统设置 设置默认首页，平台名称、logo等系统基本设置；</li><li>如果系统只是在内网环境使用，可以在 系统设置 中关闭升级提醒，以免影响用户体验和页面性能。</li><li class="red">$handwork_del/install/index.php"</li></ol>
+    </div>
+</div>
+EOT;
     show_footer();
 } elseif ($method == 'install_check') {
-
     if (file_exists($lockfile)) {
         show_msg('installstate_succ');
     } else {
         show_msg('lock_file_not_touch', $lockfile, 0);
     }
-
 } elseif ($method == 'tablepre_check') {
-
     $dbinfo = getgpc('dbinfo');
     extract($dbinfo);
     if (check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre)) {

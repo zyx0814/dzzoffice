@@ -15,27 +15,26 @@ function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
     global $step;
     $title = lang($error_no);
     $comment = lang($error_no . '_comment', false);
-    $errormsg = '';
     if ($error_msg) {
         if (!empty($error_msg)) {
             foreach ((array)$error_msg as $k => $v) {
                 if (is_numeric($k)) {
-                    $comment .= "<li><em class=\"red\">" . lang($v) . "</em></li>";
+                    $comment .= "<li><em class=\"alert\">" . lang($v) . "</em></li>";
                 }
             }
         }
     }
     if($step > 0) {
-        echo "<div class=\"red\"><h3>$title</h3><ul>$comment</ul>";
+        echo "<div><h3 class=\"alert\">$title</h3><ul>$comment</ul>";
     } else {
-        echo "<div class=\"main\"><div class=\"red\"><h3>$title</h3><ul>$comment</ul>";
+        echo "<div class=\"main\"><div class=\"red\"><h3 class=\"alert\">$title</h3><ul>$comment</ul>";
     }
 
     if($quit) {
         echo '<br /><span class="red">'.lang('error_quit_msg').'</span><br /><br /><br />';
     }
 
-    echo '<input type="button" class="btn" onclick="history.back()" value="'.lang('click_to_back').'" />';
+    echo '<input type="button" class="btn btn-secondary" onclick="history.back()" value="'.lang('click_to_back').'" />';
 
     echo '</div>';
 
@@ -235,7 +234,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
     }
     show_header();
     if ($env_str) {
-        echo "<div class=\"title\">" . lang('env_check') . "</div>\n";
+        echo "<div class=\"box\"><h2 class=\"title\">" . lang('env_check') . "</h2>\n";
         echo "<table class=\"tb\">\n";
         echo "<tr>\n";
         echo "\t<th>" . lang('project') . "</th>\n";
@@ -244,10 +243,10 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
         echo "\t<th>" . lang('curr_server') . "</th>\n";
         echo "</tr>\n";
         echo $env_str;
-        echo "</table>\n";
+        echo "</table></div>\n";
     }
 
-    echo "<div class=\"title\">" . lang('priv_check') . "</div>\n";
+    echo "<div class=\"box\"><h2 class=\"title\">" . lang('priv_check') . "</h2>\n";
     echo "<table class=\"tb\">\n";
     echo "\t<tr>\n";
     echo "\t<th>" . lang('step1_file') . "</th>\n";
@@ -256,7 +255,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
     echo "</tr>\n";
     echo $file_str;
     echo $dir_str;
-    echo "</table>\n";
+    echo "</table></div>\n";
 
     foreach ($func_items as $item) {
         $status = function_exists($item);
@@ -293,7 +292,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
         $error_code = ENV_CHECK_ERROR;
     }
     if ($func_str || $func_strextra) {
-        echo "<h2 class=\"title\">" . lang('func_depend') . "</h2>\n";
+        echo "<div class=\"box\"><h2 class=\"title\">" . lang('func_depend') . "</h2>\n";
         echo "<table class=\"tb\">\n";
         echo "<tr>\n";
         echo "\t<th>" . lang('func_name') . "</th>\n";
@@ -301,22 +300,21 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
         echo "\t<th>" . lang('suggestion') . "</th>\n";
         echo "</tr>\n";
         echo $func_str . $func_strextra;
-        echo "</table>\n";
+        echo "</table></div>\n";
     }
-    echo "<h2 class=\"title\">其他检查</h2>\n";
-    echo "<p class=\"tb\">数据库需使用 MySQL >= 5.7 或 MariaDB >= 10.2</p>\n";
+    echo "<div class=\"box\"><h2 class=\"title\">其他检查</h2>\n";
+    echo "<p class=\"tb\">数据库需使用 MySQL >= 5.7 或 MariaDB >= 10.2</p></div>\n";
     show_next_step(2, $error_code);
     show_footer();
 }
 
 function show_next_step($step, $error_code) {
-    global $uchidden;
     echo "<form action=\"index.php\" method=\"post\">\n";
     echo "<input type=\"hidden\" name=\"step\" value=\"$step\" />";
     if ($error_code == 0) {
-        $nextstep = "<input type=\"button\" class=\"btn\" onclick=\"history.back();return false;\" value=\"" . lang('old_step') . "\">&nbsp;&nbsp;<input type=\"submit\" class=\"btn\" value=\"" . lang('new_step') . "\">\n";
+        $nextstep = "<input type=\"button\" class=\"btn btn-secondary\" onclick=\"history.back();return false;\" value=\"" . lang('old_step') . "\">&nbsp;&nbsp;<input type=\"submit\" class=\"btn btn-primary\" value=\"" . lang('new_step') . "\">\n";
     } else {
-        $nextstep = "<input type=\"button\" class=\"btn\" disabled=\"disabled\" value=\"" . lang('not_continue') . "\">\n";
+        $nextstep = "<input type=\"button\" class=\"btn btn-danger\" disabled=\"disabled\" value=\"" . lang('not_continue') . "\">\n";
     }
     echo $nextstep;
     echo "</form>\n";
@@ -332,7 +330,7 @@ function show_form(&$form_items, $error_msg) {
     show_setting('start');
     show_setting('hidden', 'step', $step);
     $is_first = 1;
-    echo '<div class="container-fluid" id="form_items_' . $step . '">';
+    echo '<div id="form_items_' . $step . '">';
     foreach ($form_items as $key => $items) {
         global ${'error_' . $key};
         if ($is_first == 0) {
@@ -378,17 +376,16 @@ function show_form(&$form_items, $error_msg) {
 }
 
 function show_license() {
-    global $self, $step;
-    $next = $step + 1;
     show_header();
     $title = lang('step_env_check_title');
     $version = SOFT_NAME . CORE_VERSION . ' &nbsp;&nbsp;   ' . INSTALL_LANG . ' ' . CORE_RELEASE;
-    $release = CORE_RELEASE;
+    $sitename = SOFT_NAME;
     $install_lang = lang(INSTALL_LANG);
     echo <<<EOT
-		<h2 style="font-weight: 600;">$install_lang</h2>
-		<h3>$version</h3>
-		<a href="?step=1" class="btn">$title</a>
+    <h2 style="color: #1a202c; margin-bottom: 10px; font-weight: 600;">欢迎安装 $sitename</h2>
+		<h3 style="font-weight: 600; margin-bottom: 20px;">$install_lang</h3>
+        <div style="font-size: 16px; color: #555; margin-bottom: 30px;">$version</div>
+		<a href="?step=1" class="btn btn-primary">$title</a>
 EOT;
     show_footer();
 }
@@ -444,8 +441,6 @@ function show_header() {
     define('SHOW_HEADER', TRUE);
     global $step;
     $version = CORE_VERSION;
-    $release = CORE_RELEASE;
-    $install_lang = lang(INSTALL_LANG);
     $title = lang('title_install');
     $charset = CHARSET;
     $sitename = SOFT_NAME;
@@ -472,22 +467,14 @@ function show_header() {
 		document.getElementById('progress').innerHTML = message;
 	}
 </script>
-<style>
-	body { margin: 0; padding: 0; background: #f4f5fa;font-size: 16px; }
-	.container {margin: 40px auto 40px auto;max-width: 920px;border: 1px solid #007bff; border-width: 5px 1px 1px;background: #FFF; border-radius: 12px;box-shadow: 0 5px 10px rgba(0, 0, 0, .15) !important;color: #35435c;}
-	h1 {font-size: 48px;margin: 0;padding: 10px;color: #fff;padding-left: 10px;border-bottom: 1px solid #ededee;background-color: #007bff;display: flex;align-items: center;align-content: center;flex-wrap: wrap;border-radius: 5px 5px 0 0;}
-	table {width: 100%; margin: 0 0 10px 0; text-align: center; }
-	.current { font-weight: bold; color: #007bff !important; border-bottom-color: #007bff !important; }
-	#footer {text-align: center;color: #6c757d; padding: 10px;border-top: 1px solid rgba(77, 82, 89, 0.1); }
-	a,button {font-size: 16px;color: #007bff;padding:10px;border-radius:5px;border:1px solid #007bff;background-color:transparent;text-decoration:none;transition:color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;font-weight:400;line-height:1.5;text-align:center;}
-	a:hover {color: #fff;background-color: #007bff;}
-	.title{font-size: 20px;margin-bottom: 10px;font-weight: 500;}
-</style>
 </head>
 <body>
 <div class="container step_$step">
-<h1><img src="images/logo.png">$sitename 安装程序</h1>
-<div style="padding: 10px 30px 15px 30px; text-align: center;">
+    <div class="header">
+        <h1><img src="images/logo.png"> DzzOffice 安装程序</h1>
+        <span class="version">V$version</span>
+    </div>
+<div class="main" style="padding: 10px 30px 15px 30px; text-align: center;">
 EOT;
     $step > 0 && show_step($step);
     echo "\r\n";
@@ -594,9 +581,12 @@ function setdefault($var, $default) {
     return $var;
 }
 
-function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
-    $ckey_length = 4;
-    $key = md5($key ? $key : UC_KEY);
+function authcode($string = '', $operation = 'DECODE', $key = '', $expiry = 0, $ckey_length = 4) {
+    if (!$string) {
+        return '';
+    }
+
+    $key = md5($key != '' ? $key : UC_KEY);
     $keya = md5(substr($key, 0, 16));
     $keyb = md5(substr($key, 16, 16));
     $keyc = $ckey_length ? ($operation == 'DECODE' ? substr($string, 0, $ckey_length) : substr(md5(microtime()), -$ckey_length)) : '';
@@ -604,7 +594,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
     $cryptkey = $keya . md5($keya . $keyc);
     $key_length = strlen($cryptkey);
 
-    $string = $operation == 'DECODE' ? base64_decode(substr($string, $ckey_length)) : sprintf('%010d', $expiry ? $expiry + time() : 0) . substr(md5($string . $keyb), 0, 16) . $string;
+    $string = $operation == 'DECODE' ? base64_decode(substr(str_replace(array('_', '-'), array('/', '+'), $string), $ckey_length)) : sprintf('%010d', $expiry ? $expiry + time() : 0) . substr(md5($string . $keyb), 0, 16) . $string;
     $string_length = strlen($string);
     $result = '';
     $box = range(0, 255);
@@ -633,7 +623,7 @@ function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
             return '';
         }
     } else {
-        return $keyc . str_replace('=', '', base64_encode($result));
+        return $keyc . str_replace(array('/', '+'), array('_', '-'), str_replace('=', '', base64_encode($result)));
     }
 
 }
@@ -680,7 +670,7 @@ function show_install() {
     <div class="pContainer">
         <div id="progress" class="progress" style="width:0%"></div>
     </div>
-    <input type="button" class="btn" name="submit" value="<?php echo lang('new_step'); ?>" disabled="disabled" id="laststep" onclick="initinput()">
+    <input type="button" class="btn btn-secondary" name="submit" value="<?php echo lang('new_step'); ?>" disabled="disabled" id="laststep" onclick="initinput()">
     <?php
 }
 
@@ -989,10 +979,10 @@ function show_setting($setname, $varname = '', $value = '', $type = 'text|passwo
     }
     if (strpos($type, 'submit') !== FALSE) {
         if (strpos($type, 'oldbtn') !== FALSE) {
-            echo "<input type=\"button\" class=\"btn\" name=\"oldbtn\" value=\"" . lang('old_step') . "\"  onclick=\"history.back();\">\n";
+            echo "<input type=\"button\" class=\"btn btn-secondary\" name=\"oldbtn\" value=\"" . lang('old_step') . "\"  onclick=\"history.back();\">\n";
         }
         $value = empty($value) ? 'next_step' : $value;
-        echo "<input type=\"submit\" name=\"$varname\" value=\"" . lang($value) . "\" class=\"btn\">\n";
+        echo "<input type=\"submit\" name=\"$varname\" value=\"" . lang($value) . "\" class=\"btn btn-primary\">\n";
         return true;
     }
 

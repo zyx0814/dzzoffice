@@ -1415,9 +1415,6 @@ function dreferer($default = '') {
         $_G['referer'] = $default;
     }
 
-    if (preg_match('/install(\/|$)/', $_G['referer'])) {
-        $_G['referer'] = $default;
-    }
     $_G['referer'] = dhtmlspecialchars($_G['referer'], ENT_QUOTES);
     $_G['referer'] = str_replace('&amp;', '&', $_G['referer']);
     $reurl = parse_url($_G['referer']);

@@ -914,6 +914,20 @@ CREATE TABLE `dzz_shares` (
   KEY `pfid` (`pfid`)
 ) ENGINE=InnoDB COMMENT='分享文件表';
 
+DROP TABLE IF EXISTS `dzz_share_report`;
+CREATE TABLE `dzz_share_report` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  `sid` bigint(20) unsigned NOT NULL COMMENT '分享id',
+  `uid` bigint(20) unsigned NOT NULL COMMENT '举报用户id',
+  `username` varchar(60) NOT NULL COMMENT '举报用户名',
+  `type` tinyint(3) unsigned NOT NULL COMMENT '举报类型',
+  `desc` text NOT NULL COMMENT '举报原因（其他）描述',
+  `dateline` int(11) unsigned NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `sid` (`sid`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB COMMENT='分享举报表';
+
 DROP TABLE IF EXISTS `dzz_shorturl`;
 CREATE TABLE `dzz_shorturl` (
   `sid` char(10) NOT NULL COMMENT '短链接ID',
