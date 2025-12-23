@@ -170,6 +170,10 @@ class table_app_market extends dzz_table {
         return DB::result_first("select appid from %t where $sql ", $param);
     }
 
+    public function fetch_appid_by_identifier($identifier) {
+        return DB::result_first("select appid from %t where identifier=%s ", array($this->_table, $identifier));
+    }
+
     public function fetch_by_identifier($identifier, $app_path = 'dzz') {
         static $cache = array();
         $cache_key = 'identifier_' . $identifier;

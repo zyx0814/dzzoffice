@@ -260,7 +260,7 @@ if ($do == 'importing') {
         if ($isappend) {//增量导入时
             C::t('organization_user')->insert_by_orgid($orgid, $uid);
         } else {
-            C::t('organization_user')->delete_by_uid($uid, 0);
+            C::t('organization_user')->delete_by_uid($uid, 0, 0);
             C::t('organization_user')->insert_by_orgid($orgid, $uid);
         }
         foreach ($_GET['job'] as $key => $jobname) { //处理职位

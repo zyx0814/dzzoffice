@@ -329,74 +329,74 @@
 				var checkStatus = layuiModules.table.checkStatus(obj.config.id);
 				var data = checkStatus.dataCache;
 				switch(obj.event){
-				case 'getCheckData':
-					if (data.length === 0) {
-						showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
-						return;
-					}
-					var template = '<div class="accordion">';
-					var userStatus;
-					data.forEach (function (item) {
-						if (item.status == 1) {
-							userStatus = '<span class="text-danger">禁用</span>';
-						} else {
-							userStatus = '<span class="text-success">正常</span>';
+					case 'getCheckData':
+						if (data.length === 0) {
+							showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
+							return;
 						}
-						template += '<div class="accordion-item">';
-						template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
-						template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
-						template += 'UID：' + item.uid;
-						template += '</button>';
-						template += '</h2>';
-						template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
-						template += '<div class="accordion-body">';
-						template += '<p><strong>{lang username}：</strong><span class="img-avatar-36 me-1 '+(item.online ? 'user-status-info' : 'user-status-secondary') +'" title="' + (item.online ? '在线' : '离线') + '">' + item.avatar + '</span>' + item.username + '</p>';
-						template += '<p><strong>{lang is_department}:</strong> ' + item.department + '</p>';
-						template += '<p><strong>{lang email}:</strong> ' + item.email + '</p>';
-						template += '<p><strong>{lang user_status}:</strong> ' + userStatus + '</p>';
-						template += '<p><strong>{lang usergroup}:</strong> ' + usergroupname(item.groupid) + '</p>';
-						template += '</div>';
-						template += '</div>';
-						template += '</div>';
-					});
-					template += '</div>';
-					layer.alert(template, {
-						title: '选中的记录'
-					});
-				break;
-				case 'delete':
-					if (data.length === 0) {
-						showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
-						return;
-					}
-					var uids = [];
-					for(var i in data) {
-						uids.push(data[i].uid);
-					}
-					if(uids.length === 0) {
-						return showmessage('请选择用户', 'danger', 3000, 1);
-					}
-					layer.confirm('{lang orguser_tree_delete}', {title:'{lang delete}('+data.length+')个用户', skin:'lyear-skin-danger'}, function(index){
-						layer.msg(__lang.please_wait, {offset:'10px',time:0});
-						jQuery.post('{MOD_URL}&op=ajax&do=delete&type=user', {'uids': uids}, function(json) {
-							if(json.success) {
-								layer.msg('{lang delete_success}',{offset:'10px'});
-								layuiModules.table.reloadData('table');
-							} else if(json.error) {
-								layer.alert(json.error,{skin:'lyear-skin-danger'});
+						var template = '<div class="accordion">';
+						var userStatus;
+						data.forEach (function (item) {
+							if (item.status == 1) {
+								userStatus = '<span class="text-danger">禁用</span>';
 							} else {
-								layer.msg('{lang delete_unsuccess}',{offset:'10px'});
+								userStatus = '<span class="text-success">正常</span>';
 							}
-						}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-							layer.msg('{lang do_failed}',{offset:'10px'});
+							template += '<div class="accordion-item">';
+							template += '<h2 class="accordion-header" id="Open-heading' + item.LAY_NUM + '">';
+							template += '<button class="accordion-button" type="button" data-toggle="collapse" data-target="#Open-collapse' + item.LAY_NUM + '" aria-expanded="true" aria-controls="Open-collapse' + item.LAY_NUM + '">';
+							template += 'UID：' + item.uid;
+							template += '</button>';
+							template += '</h2>';
+							template += '<div id="Open-collapse' + item.LAY_NUM + '" class="accordion-collapse collapse show" aria-labelledby="Open-heading' + item.LAY_NUM + '">';
+							template += '<div class="accordion-body">';
+							template += '<p><strong>{lang username}：</strong><span class="img-avatar-36 me-1 '+(item.online ? 'user-status-info' : 'user-status-secondary') +'" title="' + (item.online ? '在线' : '离线') + '">' + item.avatar + '</span>' + item.username + '</p>';
+							template += '<p><strong>{lang is_department}:</strong> ' + item.department + '</p>';
+							template += '<p><strong>{lang email}:</strong> ' + item.email + '</p>';
+							template += '<p><strong>{lang user_status}:</strong> ' + userStatus + '</p>';
+							template += '<p><strong>{lang usergroup}:</strong> ' + usergroupname(item.groupid) + '</p>';
+							template += '</div>';
+							template += '</div>';
+							template += '</div>';
 						});
-					});
-				break;
-				case 'get':
-				tablereload();
-				break; 
-			};
-		});
+						template += '</div>';
+						layer.alert(template, {
+							title: '选中的记录'
+						});
+					break;
+					case 'delete':
+						if (data.length === 0) {
+							showmessage("{lang please_select_at_least_one_row}", 'danger', 3000, 1);
+							return;
+						}
+						var uids = [];
+						for(var i in data) {
+							uids.push(data[i].uid);
+						}
+						if(uids.length === 0) {
+							return showmessage('请选择用户', 'danger', 3000, 1);
+						}
+						layer.confirm('{lang orguser_tree_delete}', {title:'{lang delete}('+data.length+')个用户', skin:'lyear-skin-danger'}, function(index){
+							layer.msg(__lang.please_wait, {offset:'10px',time:0});
+							jQuery.post('{MOD_URL}&op=ajax&do=delete&type=user', {'uids': uids}, function(json) {
+								if(json.success) {
+									layer.msg('{lang delete_success}',{offset:'10px'});
+									layuiModules.table.reloadData('table');
+								} else if(json.error) {
+									layer.alert(json.error,{skin:'lyear-skin-danger'});
+								} else {
+									layer.msg('{lang delete_unsuccess}',{offset:'10px'});
+								}
+							}, 'json').fail(function (jqXHR, textStatus, errorThrown) {
+								layer.msg('{lang do_failed}',{offset:'10px'});
+							});
+						});
+					break;
+					case 'get':
+					tablereload();
+					break; 
+				};
+			});
 			//监听工具条
 			layuiModules.table.on('tool(table)', function(obj){
 				var data = obj.dataCache;

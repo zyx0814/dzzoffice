@@ -594,7 +594,8 @@ CREATE TABLE `dzz_organization` (
   PRIMARY KEY (`orgid`),
   KEY `disp` (`disp`),
   KEY `pathkey` (`pathkey`),
-  KEY `dateline` (`dateline`)
+  KEY `dateline` (`dateline`),
+  KEY `type` (`type`)
 ) ENGINE=InnoDB COMMENT='组织表';
 
 DROP TABLE IF EXISTS `dzz_organization_admin`;
@@ -606,7 +607,8 @@ CREATE TABLE `dzz_organization_admin` (
   `opuid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户UID',
   `admintype` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0管理员，1群组创始人',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `orgid` (`orgid`,`uid`)
+  UNIQUE KEY `orgid` (`orgid`,`uid`),
+  KEY `uid` (`uid`)
 ) ENGINE=InnoDB COMMENT='组织管理员表';
 
 DROP TABLE IF EXISTS `dzz_organization_job`;
@@ -637,7 +639,8 @@ CREATE TABLE `dzz_organization_user` (
   `uid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '用户UID',
   `jobid` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '职位ID',
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  UNIQUE KEY `orgid` (`orgid`,`uid`)
+  UNIQUE KEY `orgid` (`orgid`,`uid`),
+  KEY `uid` (`uid`)
 ) ENGINE=InnoDB COMMENT='组织用户表';
 
 DROP TABLE IF EXISTS `dzz_process`;

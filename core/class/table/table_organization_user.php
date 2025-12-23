@@ -84,12 +84,39 @@ class table_organization_user extends dzz_table {
         return true;
     }
 
-    public function delete_by_uid($uid, $wxupdate = 1) {
-        if ($return = DB::delete($this->_table, "uid='{$uid}'")) {
+    /**
+     * 根据UID删除用户与组织的关联
+     * @param int $uid 用户UID
+     * @param int $wxupdate 微信更新标记
+     * @param int $type 删除类型：-1=全部(默认)，0=仅部门，1=仅群组
+     * @return bool|int 受影响的行数或false
+     */
+    public function delete_by_uid($uid, $wxupdate = 1, $type = -1) {
+        // 1. 参数安全处理
+        $uid = intval($uid);
+        if (!$uid) return false;
+        $type = intval($type);
 
+        $param = array();
+        if ($type > -1) {
+            // 按类型筛选：联表删除
+            $sql = "DELETE u FROM %t u LEFT JOIN %t o ON u.orgid=o.orgid WHERE u.uid = %d AND o.type=%d";
+            $param = array($this->_table, 'organization', $uid, $type);
+        } else {
+            // 删除全部：直接删除
+            $sql = "DELETE FROM %t WHERE uid = %d";
+            $param = array($this->_table, $uid);
+        }
+
+        $return = DB::query($sql, $param);
+
+        // 同步逻辑
+        if ($return > 0) {
             self::syn_user($uid);
             return $return;
-        } else return false;
+        }
+
+        return false;
     }
 
     public function delete_by_uid_orgid($uids, $orgid, $wxupdate = 1) {

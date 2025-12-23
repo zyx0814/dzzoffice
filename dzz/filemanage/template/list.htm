@@ -206,7 +206,7 @@
 							layer.close(loading);
 							layer.close(index);
 							if(json['msg']=='success'){
-								showmessage('删除成功', 'success', '3000', 1);
+								showmessage('{lang delete_success}', 'success', '3000', 1);
 								table.reloadData('table');
 							}else if(json['msg']){
 								showmessage(json['msg'], 'danger', '3000', 1);
@@ -265,7 +265,7 @@
 						layer.close(index);
 						if (res.msg == 'success') {
 							obj.del();
-							showmessage('删除成功', 'success',3000,1);
+							showmessage('{lang delete_success}', 'success',3000,1);
 						} else {
 							showmessage(res.msg, 'danger',3000,1);
 						}

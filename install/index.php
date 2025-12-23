@@ -289,24 +289,29 @@ if ($method == 'show_license') {
     @unlink(ROOT_PATH . './install/update.php');
     show_header();
     echo '<iframe src="../misc.php?mod=syscache" style="display:none;"></iframe>';
-    echo <<<EOT
+echo <<<EOT
 <div class="finish-card">
     <div class="success-icon">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
     </div>
+    <h2 style="font-size: 24px; color: #1a202c; margin-bottom: 10px;">恭喜，安装完成！</h2>
+    <p style="color: #718096; margin-bottom: 30px;">$sitename V$version 已成功部署</p>
     
-    <h2 class="finish-title">恭喜，安装完成！</h2>
-    <p class="finish-subtitle">$sitename V$version 已成功部署在您的服务器上</p>
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: left; max-width: 500px; margin: 0 auto 30px;">
+        <p style="font-weight: 600; margin-bottom: 10px; color: #475569;">请使用管理员账号登录管理后台、并且按照下面的步骤依次配置系统！</p>
+        <ol style="color: #64748b; font-size: 14px; line-height: 2;">
+            <li>系统默认仅预装了少量的应用，更多应用需要到 应用市场 内选择安装；</li>
+            <li>进入系统设置中设置平台名称、Logo 等系统基本信息。</li>
+            <li>如果系统只是在内网环境使用，可以在 系统设置 中关闭升级提醒，以免影响用户体验和页面性能。</li>
+            <li class="red"><strong>安全提醒：</strong>$handwork_del/install/index.php。</li>
+        </ol>
+    </div>
     
     <div class="finish-actions">
-        <a href="/index.php?mod=appmanagement" class="btn btn-secondary">进入管理后台</a>
-        <a href="/" class="btn btn-primary">$enter_desktop</a>
-    </div>
-
-    <div class="security-tip">
-    <p style="text-align: left;">请使用管理员账号登录管理后台、并且按照下面的步骤依次配置系统！</p><ol style="text-align: left;font-size: 14px;"><li>系统默认仅预装了少量的应用，更多应用需要到 应用市场 内选择安装；</li><li>进入 系统设置 设置默认首页，平台名称、logo等系统基本设置；</li><li>如果系统只是在内网环境使用，可以在 系统设置 中关闭升级提醒，以免影响用户体验和页面性能。</li><li class="red">$handwork_del/install/index.php"</li></ol>
+        <a href="/index.php?mod=appmanagement" class="btn btn-primary" style="margin-right: 15px;">进入管理后台</a>
+        <a href="/" class="btn btn-secondary">$enter_desktop</a>
     </div>
 </div>
 EOT;

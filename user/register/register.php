@@ -141,7 +141,6 @@ if (!submitcheck('regsubmit')) {
             $notevars = array(
                 'from_id' => 0,
                 'from_idtype' => 'welcomemsg',
-                'url' => '',
                 'author' => $_G['username'],
                 'authorid' => $_G['uid'],
                 'note_title' => $welcomemsgtitle,
@@ -165,7 +164,6 @@ if (!submitcheck('regsubmit')) {
             $notevars = array(
                 'from_id' => 0,
                 'from_idtype' => 'welcomemsg',
-                'url' => '',
                 'author' => $_G['username'],
                 'authorid' => $_G['uid'],
                 'note_title' => $welcomemsgtitle,

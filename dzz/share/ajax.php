@@ -33,7 +33,7 @@ if ($do == 'delete') {
         $status = 0;
         $msg = lang('cancel_shielding_success');
     }
-    if ($sids && C::t('shares')->update($sids, array('status' => $status))) {
+    if (C::t('shares')->update($sids, array('status' => $status))) {
         exit(json_encode(array('success' => true, 'msg' => $msg)));
     } else {
         showmessage('share_screen_failure');
@@ -64,6 +64,16 @@ if ($do == 'delete') {
     $share['type'] = getFileTypeName($share['type'], $share['ext']);
     include template('ajax');
     exit();
+} elseif ($do == 'del') {
+    $id = intval($_GET['id']);
+    if (!$id) {
+        showmessage('forbid_operation');
+    }
+    if (C::t('share_report')->delete($id)) {
+        exit(json_encode(array('success' => true)));
+    } else {
+        showmessage('share_screen_failure');
+    }
 } else {
     showmessage('forbid_operation');
 }

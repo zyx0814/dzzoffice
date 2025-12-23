@@ -13,7 +13,7 @@ case 'delete':
 			layer.close(loading);
 			layer.close(index);
 			if(json.success){
-				showmessage('删除成功', 'success', '3000', 1);
+				showmessage('{lang delete_success}', 'success', '3000', 1);
 			} else if(json.msg){
 				showmessage(json.msg, 'danger', '3000', 1);
 			} else {

@@ -74,7 +74,28 @@ class table_share_report extends dzz_table {
             'desc' => $setarr['desc'],
             'dateline' => TIMESTAMP
         );
+
         if (parent::insert($data)) {
+            global $_G;
+            //发送通知给管理员
+            $reporttxt = '用户 ' . $_G['username'] . ' 举报了分享标题为 ' . dhtmlspecialchars($setarr['title']) . ' 的分享，举报类型：' . $reporttypes[$setarr['type']] . '，请管理员及时处理。';
+            foreach (C::t('user')->fetch_all_by_adminid(1) as $value) {
+                if ($value['uid'] != $_G['uid']) {
+                    $notevars = array(
+                        'from_id' => 0,
+                        'from_idtype' => 'sharereport',
+                        'note_url' => DZZSCRIPT . '?mod=share&op=report',
+                        'author' => $_G['username'],
+                        'authorid' => $_G['uid'],
+                        'note_title' => '分享举报通知',
+                        'note_message' => $reporttxt
+                    );
+                    $action = 'share_report';
+                    $type = 'share_report_' . $setarr['sid'] . '_' . $value['uid'];
+
+                    dzz_notification::notification_add($value['uid'], $type, $action, $notevars);
+                }
+            }
             $ret['success'] = true;
             return $ret;
         }

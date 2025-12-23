@@ -298,7 +298,7 @@ if (!submitcheck('verifysubmit', true)) {
                         }
                         $verify['flag'][] = $value['vid'];
                         //发送通知
-                        $notevars = array('from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'profile' => $fieldtitle, 'dataline' => dgmdate(TIMESTAMP), 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'), 'reason' => $_GET['reason'][$value['vid']],);
+                        $notevars = array('from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'profile' => $fieldtitle, 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'), 'reason' => $_GET['reason'][$value['vid']],);
 
                         $action = 'user_profile_moderate_refusal';
                         $type = 'user_profile_moderate_refusal_' . $vid;
@@ -314,7 +314,7 @@ if (!submitcheck('verifysubmit', true)) {
                             $verify["verify"]['1'][] = $value['uid'];
                         }
                         //发送通知
-                        $notevars = array('from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'dataline' => dgmdate(TIMESTAMP), 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'),);
+                        $notevars = array('from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'),);
 
                         $action = 'user_profile_moderate_pass';
                         $type = 'user_profile_moderate_pass_' . $vid;

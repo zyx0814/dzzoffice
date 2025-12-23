@@ -256,10 +256,9 @@ if (submitcheck('profilesubmit')) {
                     $notevars = array(
                         'from_id' => $appid,
                         'from_idtype' => 'app',
-                        'url' => 'admin.php?mod=member&op=verify&vid=' . $vid,
-                        'author' => getglobal('username'),
-                        'authorid' => getglobal('uid'),
-                        'dataline' => dgmdate(TIMESTAMP),
+                        'url' => ADMINSCRIPT . '?mod=member&op=verify&vid=' . $vid,
+                        'author' => $_G['username'],
+                        'authorid' => $_G['uid'],
                         'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : '资料审核',
                     );
                     $action = 'profile_moderate';

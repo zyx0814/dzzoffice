@@ -11,5 +11,6 @@ define('APPTYPEID', 0);
 define('CURSCRIPT', 'user');
 define('BASESCRIPT', basename(__FILE__));
 define('DZZSCRIPT', 'index.php');
+define('ADMINSCRIPT', 'admin.php');
 define('template', '1');
 require __DIR__ . '/core/dzzstart.php';

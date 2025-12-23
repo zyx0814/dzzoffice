@@ -121,7 +121,7 @@
                 $.post('{DZZSCRIPT}?mod=connect&op=ajax&do=delete',{'bz': data.bz,id:data.id},function(data){
 					if(data['msg']){
 						obj.del();
-						layer.msg('删除成功', {offset:'10px'});
+						layer.msg('{lang delete_success}', {offset:'10px'});
 					} else {
 						if(data['error']){
 							layer.msg(data['error'], {offset:'10px'});

@@ -255,9 +255,7 @@ function getuserbyuid($uid, $fetch_archive = 0) {
     if (empty($users[$uid])) {
         $users[$uid] = C::t('user')->fetch($uid);
     }
-    if (!isset($users[$uid]['self']) && $uid == getglobal('uid') && getglobal('uid')) {
 
-    }
     if ($users[$uid]['adminid'] == 1) $users[$uid]['self'] = 2;
     return $users[$uid];
 }
@@ -548,6 +546,7 @@ function dsetcookie($var, $value = '', $life = 0, $prefix = 1, $httponly = false
     $life = $life > 0 ? getglobal('timestamp') + $life : ($life < 0 ? getglobal('timestamp') - 31536000 : 0);
 
     $secure = $_G['isHTTPS'];
+    
     setcookie($var, $value, $life, $config['cookiepath'], $config['cookiedomain'], $secure, $httponly);
 }
 

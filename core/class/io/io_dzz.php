@@ -618,7 +618,7 @@ class io_dzz extends io_api {
     }
 
     public function getFolderInfo($paths, $position = '', &$zip, $checkperm = true) {
-        $data = array();
+        static $data = array();
         try {
             foreach ($paths as $path) {
                 $meta = $this->getMeta($path);

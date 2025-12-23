@@ -40,7 +40,7 @@ $download = 1;
 if ($share['perm']) {
     $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
     if (isset($perms[3]) && !$_G['uid']) { // 3 表示仅登录访问
-        exit(json_encode(array('error' => 'no_login')));
+        exit(json_encode(array('error' => 'to_login')));
     }
     if (isset($perms[5])) {
         $create = 1;
@@ -348,7 +348,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
     exit(json_encode($ret));
 } elseif ($do == 'report') {//举报
     if (!$_G['uid']) {
-        exit(json_encode(array('error' => lang('no_login'))));
+        exit(json_encode(array('error' => lang('to_login'))));
     }
     $type = isset($_GET['type']) ? intval($_GET['type']) : 0;
     $desc = isset($_GET['desc']) ? trim($_GET['desc']) : '';

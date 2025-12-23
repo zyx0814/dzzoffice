@@ -24,11 +24,7 @@ function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
             }
         }
     }
-    if($step > 0) {
-        echo "<div><h3 class=\"alert\">$title</h3><ul>$comment</ul>";
-    } else {
-        echo "<div class=\"main\"><div class=\"red\"><h3 class=\"alert\">$title</h3><ul>$comment</ul>";
-    }
+    echo "<div><h3 class=\"alert\">$title</h3><ul>$comment</ul>";
 
     if($quit) {
         echo '<br /><span class="red">'.lang('error_quit_msg').'</span><br /><br /><br />';
