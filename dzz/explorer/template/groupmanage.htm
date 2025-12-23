@@ -1,13 +1,18 @@
 <div class="middletopMenu">
     <div class="row justify-content-end">
-        <div class="col-sm-4 mb-3">
-            <select name="field_type" id="groupon" class="form-select">
-                <option value="0" selected="selected">{lang all_groups}</option>
-                <option value="1">{lang already_close}</option>
-                <option value="2">{lang already_start}</option>
-            </select>
-        </div>
         <div class="col-sm-6 mb-3">
+            <div class="input-group">
+                <label class="input-group-text" for="orgname">{lang group_name}</label>
+                <input type="text" class="form-control" id="orgname" placeholder="{lang group_name}">
+                <label class="input-group-text" for="groupon">群组状态</label>
+                <select name="field_type" id="groupon" class="form-select">
+                    <option value="0" selected="selected">{lang all_groups}</option>
+                    <option value="1">{lang already_close}</option>
+                    <option value="2">{lang already_start}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-4 mb-3">
             <div class="input-daterange input-group" id="datepicker">
                 <label class="input-group-text" for="selectDate">{lang to}</label>
                 <input type="text" class="form-control selectDate" id="selectDate" placeholder="{lang start_time}">
@@ -39,7 +44,8 @@
     var search_data = {
         'startdate': '',
         'enddate': '',
-        'groupon':'',
+        'groupon': '',
+        'orgname': '',
         'sort':'dateline',
 		'order':'desc'
     };
@@ -98,6 +104,7 @@
                 $('#selectDate').val('');
                 $('#selectDate1').val('');
                 $('#groupon').val('0');
+                $('#orgname').val('');
                 for (var o in search_data) {
                     search_data[o] = '';
                 }
@@ -266,6 +273,7 @@
     });
     function executedynamisc_search() {
         search_data.groupon = $('#groupon').val();
+        search_data.orgname = $('#orgname').val();
         search_data.startdate = $('#selectDate').val();
         search_data.enddate = $('#selectDate1').val();
         layuiModules.table.reloadData('table', {

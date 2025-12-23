@@ -19,6 +19,7 @@ if ($do == 'filelist') {
     $startdate = isset($_GET['startdate']) ? trim($_GET['startdate']) : '';
     $enddate = isset($_GET['enddate']) ? trim($_GET['enddate']) : '';
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
+    $orgname = isset($_GET['orgname']) ? trim($_GET['orgname']) : '';
     $start = ($page - 1) * $limit;
     $validfields = ['orgname','dateline'];
     $validSortOrders = ['asc', 'desc'];
@@ -40,6 +41,10 @@ if ($do == 'filelist') {
         $enddate = strtotime($enddate);
         $wheresql .= " and dateline <= %d";
         $params[] = $enddate;
+    }
+    if ($orgname) {
+        $wheresql .= " and orgname LIKE %s";
+        $params[] = '%' . $orgname . '%';
     }
     //状态筛选
     if (isset($_GET['groupon']) && $_GET['groupon']) {
