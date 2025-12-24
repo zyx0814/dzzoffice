@@ -104,6 +104,8 @@ if ($do == 'stats') {
     $tmp = function_exists('gd_info') ? gd_info() : array();
     $gd_version = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
     unset($tmp);
+    $opcache = function_exists('opcache_get_configuration') ? opcache_get_configuration() : array();
+    $opcache = !empty($opcache['directives']['opcache.enable']) ? lang('enable') : lang('forbidden');
     $disable_functions = ini_get('disable_functions');
     $disable_functions = explode(',', $disable_functions);
     $disable_func_str = '';

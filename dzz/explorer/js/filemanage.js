@@ -1436,32 +1436,52 @@ _filemanage.Sort = function (data, disp, asc) {
 	if (!data) {
 		return [];
 	}
+
+    function naturalSort(a, b) {
+        // 提取字符串中的数字部分转为数值，非数字部分保留字符串
+        var numReg = /(\d+)/g;
+        var aParts = a.replace(/_/g, '').split(numReg).map(function (part) {
+            return isNaN(part) ? part : parseInt(part, 10);
+        });
+        var bParts = b.replace(/_/g, '').split(numReg).map(function (part) {
+            return isNaN(part) ? part : parseInt(part, 10);
+        });
+
+        // 逐段比较（数字按数值比，字符串按字符比）
+        for (var i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+            var aPart = aParts[i] || '';
+            var bPart = bParts[i] || '';
+            if (aPart !== bPart) {
+                return (aPart < bPart) ? -1 : 1;
+            }
+        }
+        return 0;
+    }
+
 	for (var i in data) {
-
 		switch (parseInt(disp)) {
-			case 0:
-
+			case 0:// 按名称排序
 				if (data[i].type === 'folder') {
-					sarr[sarr.length] = ' ' + data[i].name.replace(/_/g, '') + ' ___' + i;
+					sarr[sarr.length] = ' ' + data[i].name.replace(/_/g, '') + '___' + i;
 				} else {
 					sarr[sarr.length] = data[i].name.replace(/_/g, '') + '___' + i;
 				}
 				break;
-			case 1:
+			case 1:// 按大小排序
 				sarr[sarr.length] = data[i].size + '___' + i;
 				break;
-			case 2:
+			case 2:// 按类型/扩展名排序
 				if (data[i].type === 'folder') {
 					sarr[sarr.length] = ' ' + '___' + i;
 				} else {
 					sarr[sarr.length] = data[i].ext + data[i].type + '___' + i;
 				}
 				break;
-			case 3:
+			case 3:// 按创建时间排序
 				//asc=0;
 				sarr[sarr.length] = (data[i].dateline) + '___' + i;
 				break;
-			case 4:
+			case 4:// 按删除时间排序
 				sarr[sarr.length] = (data[i].deldateline) + '___' + i;
 		}
 	}
@@ -1470,7 +1490,9 @@ _filemanage.Sort = function (data, disp, asc) {
 			return (parseInt(a) - parseInt(b));
 		});
 
-	} else {
+	} else if (parseInt(disp) === 0) {
+        sarr = sarr.sort(naturalSort);
+    } else {
 		sarr = sarr.sort();
 	}
 	var temp = {};
@@ -1488,6 +1510,7 @@ _filemanage.Sort = function (data, disp, asc) {
 	}
 	return temp;
 };
+
 _filemanage.get_template = function (sid, whole, disp, asc) {
 	var obj = _filemanage.cons[sid];
 	var str = '';

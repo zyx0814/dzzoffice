@@ -980,58 +980,81 @@ _selectfile.Search = function (data, keyword) {
 };
 _selectfile.Sort = function (data, disp, asc) {
     var sarr = [];
-    if (!data) {
-        return [];
-    }
-    for (var i in data) {
+	if (!data) {
+		return [];
+	}
 
-        switch (parseInt(disp)) {
-            case 0:
-
-                if (data[i].type === 'folder') {
-                    sarr[sarr.length] = ' ' + data[i].name.replace(/_/g, '') + ' ___' + i;
-                } else {
-                    sarr[sarr.length] = data[i].name.replace(/_/g, '') + '___' + i;
-                }
-                break;
-            case 1:
-                sarr[sarr.length] = data[i].size + '___' + i;
-                break;
-            case 2:
-                if (data[i].type === 'folder') {
-                    sarr[sarr.length] = ' ' + '___' + i;
-                } else {
-                    sarr[sarr.length] = data[i].ext + data[i].type + '___' + i;
-                }
-                break;
-            case 3:
-                //asc=0;
-                sarr[sarr.length] = (data[i].dateline) + '___' + i;
-                break;
-        }
-    }
-    if (parseInt(disp) === 1) {
-        sarr = sarr.sort(function (a, b) {
-            return (parseInt(a) - parseInt(b));
+    function naturalSort(a, b) {
+        // 提取字符串中的数字部分转为数值，非数字部分保留字符串
+        var numReg = /(\d+)/g;
+        var aParts = a.replace(/_/g, '').split(numReg).map(function (part) {
+            return isNaN(part) ? part : parseInt(part, 10);
+        });
+        var bParts = b.replace(/_/g, '').split(numReg).map(function (part) {
+            return isNaN(part) ? part : parseInt(part, 10);
         });
 
-    } else {
-        sarr = sarr.sort();
-    }
-    var temp = {};
-    var temp1 = '';
-    if (asc > 0) {
-        for (i = 0; i < sarr.length; i++) {
-            temp1 = sarr[i].split('___');
-            temp['icos_' + temp1[1]] = data[temp1[1]];
+        // 逐段比较（数字按数值比，字符串按字符比）
+        for (var i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+            var aPart = aParts[i] || '';
+            var bPart = bParts[i] || '';
+            if (aPart !== bPart) {
+                return (aPart < bPart) ? -1 : 1;
+            }
         }
-    } else {
-        for (i = sarr.length - 1; i >= 0; i--) {
-            temp1 = sarr[i].split('___');
-            temp['icos_' + temp1[temp1.length - 1]] = data[temp1[temp1.length - 1]];
-        }
+        return 0;
     }
-    return temp;
+
+	for (var i in data) {
+		switch (parseInt(disp)) {
+			case 0:// 按名称排序
+				if (data[i].type === 'folder') {
+					sarr[sarr.length] = ' ' + data[i].name.replace(/_/g, '') + '___' + i;
+				} else {
+					sarr[sarr.length] = data[i].name.replace(/_/g, '') + '___' + i;
+				}
+				break;
+			case 1:// 按大小排序
+				sarr[sarr.length] = data[i].size + '___' + i;
+				break;
+			case 2:// 按类型/扩展名排序
+				if (data[i].type === 'folder') {
+					sarr[sarr.length] = ' ' + '___' + i;
+				} else {
+					sarr[sarr.length] = data[i].ext + data[i].type + '___' + i;
+				}
+				break;
+			case 3:// 按创建时间排序
+				//asc=0;
+				sarr[sarr.length] = (data[i].dateline) + '___' + i;
+				break;
+			case 4:// 按删除时间排序
+				sarr[sarr.length] = (data[i].deldateline) + '___' + i;
+		}
+	}
+	if (parseInt(disp) === 1) {
+		sarr = sarr.sort(function (a, b) {
+			return (parseInt(a) - parseInt(b));
+		});
+	} else if (parseInt(disp) === 0) {
+        sarr = sarr.sort(naturalSort);
+    } else {
+		sarr = sarr.sort();
+	}
+	var temp = {};
+	var temp1 = '';
+	if (asc > 0) {
+		for (i = 0; i < sarr.length; i++) {
+			temp1 = sarr[i].split('___');
+			temp['icos_' + temp1[1]] = data[temp1[1]];
+		}
+	} else {
+		for (i = sarr.length - 1; i >= 0; i--) {
+			temp1 = sarr[i].split('___');
+			temp['icos_' + temp1[temp1.length - 1]] = data[temp1[temp1.length - 1]];
+		}
+	}
+	return temp;
 };
 _selectfile.get_template = function (sid, whole, disp, asc) {
     var obj = _selectfile.cons[sid];

@@ -48,10 +48,10 @@
 			<div class="accordion-body">
 				<div class="row">
 					<div class="col-lg-3 col-md-4 col-sm-6">
-						<strong>PHP详情: </strong><span><a href="{MOD_URL}&do=phpinfo" target="_blank">点击查看</a></span>
+						<strong>PHP 详情: </strong><span><a href="{MOD_URL}&do=phpinfo" target="_blank">点击查看</a></span>
 					</div>
 					<div class="col-lg-3 col-md-4 col-sm-6">
-						<strong>PHP版本: </strong><span>{PHP_VERSION}</span>
+						<strong>PHP 版本: </strong><span>{PHP_VERSION}</span>
 					</div>
 					<div class="col-lg-3 col-md-4 col-sm-6">
 						<strong>PHP 平台版本: </strong><span>$php_os_version</span>
@@ -72,19 +72,22 @@
 						<strong>最大请求时间: </strong><span>$max_input_time</span>
 					</div>
 					<div class="col-lg-3 col-md-4 col-sm-6">
-						<strong>PHP部署方式: </strong><span><!--{eval echo php_sapi_name();}--></span>
+						<strong>PHP 部署方式: </strong><span><!--{eval echo php_sapi_name();}--></span>
 					</div>
 					<div class="col-lg-3 col-md-4 col-sm-6">
-						<strong>PHP报错: </strong><span><!--{if ini_get('display_errors')}-->已开启<!--{else}-->已关闭<!--{/if}--></span>
+						<strong>PHP 报错: </strong><span><!--{if ini_get('display_errors')}-->已开启<!--{else}-->已关闭<!--{/if}--></span>
 					</div>
 					<div class="col-lg-3 col-md-4 col-sm-6">
-						<strong>PHP脚本所有者: </strong><span><!--{eval echo get_current_user();}--></span>
+						<strong>PHP 脚本所有者: </strong><span><!--{eval echo get_current_user();}--></span>
+					</div>
+					<div class="col-sm-3">
+						<strong>OPcache: </strong><span>{$opcache}</span>
 					</div>
 					<div class="col-sm-6">
-						<strong>php安装目录: </strong><span>{PHP_BINDIR}</span>
+						<strong>PHP 安装目录: </strong><span>{PHP_BINDIR}</span>
 					</div>
 					<div class="col-sm-6">
-						<strong>php安装目录: </strong><span><!--{eval echo php_ini_loaded_file();}--></span>
+						<strong>PHP ini目录: </strong><span><!--{eval echo php_ini_loaded_file();}--></span>
 					</div>
 				</div>
 				禁用的函数：$disable_func_str

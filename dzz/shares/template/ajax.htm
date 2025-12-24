@@ -85,14 +85,29 @@
     <!--{if $propertys['contain']}-->
     <div class="row mb-1">
         <label class="col-sm-3">{lang include}</label>
-        <div class="col-sm-9">$propertys['contain']</div>
+        <div class="col-sm-9 ffinclude">$propertys['contain']</div>
     </div>
     <!--{/if}-->
     <!--{if $propertys['ffsize']}-->
     <div class="row mb-1">
         <label class="col-sm-3">{lang big_small}</label>
-        <div class="col-sm-9">$propertys['ffsize']</div>
+        <div class="col-sm-9 ffsize">$propertys['ffsize']</div>
     </div>
+    <!--{/if}-->
+    <!--{if $propertys['getcontains']}-->
+    <script type="text/javascript" reload="1">
+    jQuery(document).ready(function(){
+        if(window.getcontains_request){
+            window.getcontains_request.abort();
+        }
+        if ('{$propertys['rid']}') {
+            window.getcontains_request=jQuery.post(MOD_URL + '&op=ajax&do=getcontains&sid={$_GET['sid']}', {'rids': '{$propertys['rid']}'}, function (data) {
+                jQuery('div.ffinclude').html(data.contain);
+                jQuery('div.ffsize').html(data.ffsize);
+            }, 'json');
+        }
+    });
+    </script>
     <!--{/if}-->
     <!--{if $propertys[fdateline]}-->
     <div class="row mb-1">
