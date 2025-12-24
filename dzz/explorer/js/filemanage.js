@@ -182,6 +182,7 @@ _filemanage.Arrange = function (obj, id, view) {
 };
 _filemanage.Disp = function (obj, id, disp) {
 	var filemanage = _filemanage.cons[id];
+	if (!filemanage) return;
 	if (filemanage.subfix === 'f') {
 		if (_explorer.hash.indexOf('cloud') != -1) {
 			var fid = _filemanage.rid;
@@ -221,6 +222,7 @@ _filemanage.Disp = function (obj, id, disp) {
 		}
 	});
 };
+
 _filemanage.searchsubmit = function (sid) {
 	var keyword = document.getElementById('searchInput_' + sid).value;
 	keyword = (keyword === __lang.search) ? keyword : '';
@@ -1141,37 +1143,9 @@ _filemanage.prototype.createIcosContainer = function () {
 		_filemanage.setInfoPanel();
 	});
 	_select.init(containerid);
-	if (this.view < 4) {
-
-
-	} else {
-		jQuery('#' + containerid).find('.detail_header:not(.detail_header_select)').on('click', function () {
-			var disp = parseInt(jQuery(this).attr('disp'));
-
-			if (disp * 1 === self.disp * 1) {
-				if (self.asc > 0) {
-					self.asc = 0;
-				} else {
-					self.asc = 1;
-				}
-			} else {
-				_filemanage.Disp(this, self.id, disp);
-				self.asc = 1;
-			}
-			self.disp = disp;
-			if (self.fid) {
-				if (_explorer.hash.indexOf('cloud') != -1) {
-					self.fid = _filemanage.rid;
-				}
-				_explorer.sourcedata.folder[self.fid].disp = disp;
-			}
-			if (self.bz.indexOf('ALIOSS') === 0 || self.bz.indexOf('JSS') === 0) {
-				self.showIcos();
-			} else {
-				self.pageClick(1);
-			}
-		});
-	}
+	jQuery('#' + containerid).off('click', '.detail_header:not(.detail_header_select)').on('click', '.detail_header:not(.detail_header_select)', function () {
+		_filemanage.Disp(this, self.id, parseInt(jQuery(this).attr('disp')));
+	});
 	el.closest('.scroll-srcollbars').scroll(function () {
 		var el = jQuery(this);
 		if (el.height() + el.scrollTop() >= el.children().first().height()) {
@@ -1440,10 +1414,10 @@ _filemanage.Sort = function (data, disp, asc) {
     function naturalSort(a, b) {
         // 提取字符串中的数字部分转为数值，非数字部分保留字符串
         var numReg = /(\d+)/g;
-        var aParts = a.replace(/_/g, '').split(numReg).map(function (part) {
+        var aParts = a.split(numReg).map(function (part) {
             return isNaN(part) ? part : parseInt(part, 10);
         });
-        var bParts = b.replace(/_/g, '').split(numReg).map(function (part) {
+        var bParts = b.split(numReg).map(function (part) {
             return isNaN(part) ? part : parseInt(part, 10);
         });
 
@@ -1461,11 +1435,17 @@ _filemanage.Sort = function (data, disp, asc) {
 	for (var i in data) {
 		switch (parseInt(disp)) {
 			case 0:// 按名称排序
-				if (data[i].type === 'folder') {
-					sarr[sarr.length] = ' ' + data[i].name.replace(/_/g, '') + '___' + i;
-				} else {
-					sarr[sarr.length] = data[i].name.replace(/_/g, '') + '___' + i;
-				}
+				// 使用前缀来确保文件夹在前，同时不影响排序比较
+				var prefix = (data[i].type === 'folder') ? '0_' : '1_';
+				var nameForSort = data[i].name.toLowerCase(); // 统一转小写进行不区分大小写排序
+				sarr[sarr.length] = {
+					prefix: prefix,
+					name: nameForSort,
+					originalName: data[i].name,
+					key: i,
+					// 为了兼容旧的排序数组格式，也保留字符串形式
+					str: prefix + nameForSort + '___' + i
+				};
 				break;
 			case 1:// 按大小排序
 				sarr[sarr.length] = data[i].size + '___' + i;
@@ -1478,7 +1458,6 @@ _filemanage.Sort = function (data, disp, asc) {
 				}
 				break;
 			case 3:// 按创建时间排序
-				//asc=0;
 				sarr[sarr.length] = (data[i].dateline) + '___' + i;
 				break;
 			case 4:// 按删除时间排序
@@ -1486,13 +1465,38 @@ _filemanage.Sort = function (data, disp, asc) {
 		}
 	}
 	if (parseInt(disp) === 1) {
+		// 按大小排序 - 数值排序
 		sarr = sarr.sort(function (a, b) {
-			return (parseInt(a) - parseInt(b));
+			var aSize = parseInt(a.split('___')[0]) || 0;
+			var bSize = parseInt(b.split('___')[0]) || 0;
+			return aSize - bSize;
 		});
 
 	} else if (parseInt(disp) === 0) {
-        sarr = sarr.sort(naturalSort);
-    } else {
+        // 按名称排序 - 使用改进的自然排序
+		sarr = sarr.sort(function(a, b) {
+			// 先按文件夹/文件前缀排序
+			if (a.prefix !== b.prefix) {
+				return a.prefix < b.prefix ? -1 : 1;
+			}
+			// 再按名称自然排序
+			return naturalSort(a.name, b.name);
+		});
+		
+		// 转换为字符串数组以保持一致性
+		var tempArr = [];
+		for (var j = 0; j < sarr.length; j++) {
+			tempArr[j] = sarr[j].str;
+		}
+		sarr = tempArr;
+    } else if (parseInt(disp) === 3 || parseInt(disp) === 4) {
+		// 按时间排序 - 数值排序
+		sarr = sarr.sort(function (a, b) {
+			var aTime = parseInt(a.split('___')[0]) || 0;
+			var bTime = parseInt(b.split('___')[0]) || 0;
+			return aTime - bTime;
+		});
+	} else {
 		sarr = sarr.sort();
 	}
 	var temp = {};
