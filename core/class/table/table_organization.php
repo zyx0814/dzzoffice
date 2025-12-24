@@ -137,9 +137,6 @@ class table_organization extends dzz_table {
                 //群组图
                 $orginfo['imgs'] = 'index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $orginfo['aid']);
             }
-            /* $contaions = C::t('resources')->get_contains_by_fid($orginfo['fid'],true);
-             $orginfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-             $orginfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));*/
             $groups[] = $orginfo;
         }
         return $groups;

@@ -226,5 +226,15 @@ if ($operation == 'upload') {//上传图片文件
     if ($propertys['error']) {
         $error = $propertys['error'];
     }
+} elseif ($operation == 'getcontains') {
+    $rids =$_GET['rids'];
+    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
+    if ($rids) {
+        $rids = explode(',', $rids);
+        $fileinfo = C::t('resources')->get_containsdata_by_rid($rids);
+    } else {
+        $fileinfo = C::t('resources')->get_containsdata_by_fid($fid);
+    }
+    exit(json_encode($fileinfo));
 }
 include template('fileselection/ajax');

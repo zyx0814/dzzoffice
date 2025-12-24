@@ -37,7 +37,7 @@ if ($do == 'delshare') {
     }
     $limitsql = "limit $start,$limit";
     $list = array();
-    $count = C::t('shares')->fetch_all_share_file($limitsql, $order,true);
+    $count = C::t('shares')->fetch_all_share_file($limitsql, $order, true);
     if ($count) {
         $sharestatus = array('-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>', '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>', '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>', '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>', '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>');
         $shareinfo = C::t('shares')->fetch_all_share_file($limitsql, $order);

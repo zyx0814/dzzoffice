@@ -37,14 +37,42 @@
 <!--{if $fileinfo['contain']}-->
 <div class="row mb-1"> 
     <label class="col-sm-3 text-muted">{lang include}</label>
-    <div class="col-sm-9">$fileinfo['contain']</div>
+    <div class="col-sm-9 ffinclude" data-id="{TIMESTAMP}">$fileinfo['contain']</div>
 </div>
 <!--{/if}-->
 <!--{if $fileinfo['ffsize']}-->
 <div class="row mb-1"> 
     <label class="col-sm-3 text-muted">{lang big_small}</label>
-    <div class="col-sm-9">$fileinfo['ffsize']</div>
+    <div class="col-sm-9 ffsize" data-id="{TIMESTAMP}">$fileinfo['ffsize']</div>
 </div>
+<!--{/if}-->
+<!--{if $fileinfo['getcontains']}-->
+<script type="text/javascript" reload="1">
+jQuery(document).ready(function(){
+    if(window.getcontains_request){
+        window.getcontains_request.abort();
+    }
+    <!--{if $fileinfo['rid']}-->
+        window.getcontains_request=jQuery.post(MOD_URL + '&op=ajax&do=getcontains', {'rids': '{$fileinfo['rid']}'}, function (data) {
+            jQuery('div.ffinclude[data-id="{TIMESTAMP}"]').fadeOut(100, function(){
+                jQuery(this).html(data.contain).fadeIn(100);
+            });
+            jQuery('div.ffsize[data-id="{TIMESTAMP}"]').fadeOut(100, function(){
+                jQuery(this).html(data.ffsize).fadeIn(100);
+            });
+        }, 'json');
+    <!--{elseif $fileinfo['fid']}-->
+        window.getcontains_request= jQuery.post(MOD_URL + '&op=ajax&do=getcontains', {'fid': '{$fileinfo['fid']}'}, function (data) {
+            jQuery('div.ffinclude[data-id="{TIMESTAMP}"]').fadeOut(100, function(){
+                jQuery(this).html(data.contain).fadeIn(100);
+            });
+            jQuery('div.ffsize[data-id="{TIMESTAMP}"]').fadeOut(100, function(){
+                jQuery(this).html(data.ffsize).fadeIn(100);
+            });
+        }, 'json');
+    <!--{/if}-->
+});
+</script>
 <!--{/if}-->
 <!--{if $fileinfo[fdateline]}-->
 <div class="row mb-1"> 

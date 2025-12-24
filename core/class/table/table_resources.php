@@ -397,13 +397,9 @@ class table_resources extends dzz_table {
             $data['url'] = DZZSCRIPT . '?mod=document&icoid=' . $apath;
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         } elseif ($data['type'] == 'folder') {
-            //$contaions = self::get_contains_by_fid($data['oid'], true);
-            //$data['contaions'] = $contaions;
             $relativepath = str_replace(':', '', strrchr($data['path'], ':'));
             $data['position'] = substr($relativepath, 0, strlen($relativepath) - 1);
-            $data['fsize'] = 0;//formatsize($contaions['size']);
-            // $data['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-            // $data['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+            $data['fsize'] = 0;
             $data['img'] = $data['img'] ? $data['img'] : 'dzz/images/default/system/' . $data['flag'] . '.png';
         } else {
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
@@ -477,9 +473,16 @@ class table_resources extends dzz_table {
        }*/
 
     //查询目录文件数,$getversion =>是否获取版本数据
-    public function get_contains_by_fid($fid, $getversion = true) {
+    public function get_contains_by_fid($fid, $getversion = true, $dirs = true) {
         $contains = array('size' => 0, 'contain' => array(0, 0));
-        $pfids = C::t('resources_path')->fetch_folder_containfid_by_pfid($fid);
+
+        if ($dirs) {
+            // 获取包含所有子目录的fid
+            $pfids = C::t('resources_path')->fetch_folder_containfid_by_pfid($fid);
+        } else {
+            // 只获取当前目录下的直接子项
+            $pfids = array($fid);
+        }
 
         foreach (DB::fetch_all("select r.rid,r.vid,r.size as primarysize,r.type,r.pfid,v.size from %t r 
         left join %t v on r.rid=v.rid where r.pfid in (%n) and r.isdelete < 1", array($this->_table, 'resources_version', $pfids)) as $v) {
@@ -507,27 +510,6 @@ class table_resources extends dzz_table {
     //查询文件对应的rid
     public function fetch_rid_by_fid($fid) {
         return DB::result_first("select rid from %t where oid = %d and `type` = 'folder' ", array($this->_table, $fid));
-    }
-
-    /*  //查询文件夹对应的fid
-      public function fetch_fid_by_rid($rid)
-      {
-          return DB::result_first("select oid from %t where rid = %s and `type` = %s", array($this->_table, $rid, 'folder'));
-      }*/
-
-    //获取文件夹基本信息
-    public function get_folderinfo_by_fid($fid, $contain = true) {
-        if (!$folderinfo = C::t('folder')->fetch($fid)) return false;
-        if($contain) {
-            $contaions = self::get_contains_by_fid($fid, true);
-            $folderinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-            $folderinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
-        }
-        $path = C::t('resources_path')->fetch_pathby_pfid($fid);
-        $folderinfo['realpath'] = preg_replace('/dzz:(.+?):/', '', $path);
-        $folderinfo['fdateline'] = dgmdate($folderinfo['dateline'], 'Y-m-d H:i:s');
-        $folderinfo['isgroup'] = ($folderinfo['flag'] == 'organization') ? true : false;
-        return $folderinfo;
     }
 
     public function fetch_all_by_pfid($pfid, $conditions = array(), $limit = 0, $orderby = '', $order = '', $start = 0, $count = false, $sid = false, $isfilter = false, $withTotal = false) {
@@ -873,22 +855,11 @@ class table_resources extends dzz_table {
 
             if ($contains) {
                 //文件大小和文件个数信息
-                $tmpinfo['contains'] = array('size' => 0, 'contain' => array(0, 0));
-                foreach ($tnpinfo['hascontain'] as $k => $v) {
-                    if ($v) {
-                        $tmpinfo['contains']['contain'][1] += 1;
-                        $childcontains = self::get_contains_by_fid($infos[$k]['oid'], true);
-                        $tmpinfo['contains']['contain'][0] += $childcontains['contain'][0];
-                        $tmpinfo['contains']['contain'][1] += $childcontains['contain'][1];
-                        $tmpinfo['contains']['size'] += $childcontains['size'];
-                    } else {
-                        $tmpinfo['contains']['contain'][0] += 1;
-                        $tmpinfo['contains']['size'] += $infos[$k]['size'];
-                    }
-                }
-                $fileinfo['fsize'] = formatsize($tmpinfo['contains']['size']);
-                $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($tmpinfo['contains']['size']), 'size' => $tmpinfo['contains']['size']));
-                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $tmpinfo['contains']['contain'][0], 'foldernum' => $tmpinfo['contains']['contain'][1]));
+                $fsize = lang('calculating');
+                $fileinfo['fsize'] = $fsize;
+                $fileinfo['ffsize'] = $fsize;
+                $fileinfo['contain'] = $fsize;
+                $fileinfo['getcontains'] = true;
             }
             $fileinfo['img'] = '/dzz/explorer/images/ic-files.png';
 
@@ -938,11 +909,11 @@ class table_resources extends dzz_table {
             if ($contains) {
                 //文件大小信息
                 if ($fileinfo['type'] == 'folder') {
-                    $contaions = self::get_contains_by_fid($fileinfo['oid'], true);
-                    $contaions['contain'][1] += 1;
-                    $fileinfo['fsize'] = formatsize($contaions['size']);
-                    $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-                    $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+                    $fsize = lang('calculating');
+                    $fileinfo['fsize'] = $fsize;
+                    $fileinfo['ffsize'] = $fsize;
+                    $fileinfo['contain'] = $fsize;
+                    $fileinfo['getcontains'] = true;
                 } elseif($fileinfo['type'] == 'link') {
                     $fileinfo['url'] = C::t('resources_attr')->fetch_by_key($fileinfo['rid'], $fileinfo['vid'],'url',true);
                 } else {
@@ -1015,22 +986,20 @@ class table_resources extends dzz_table {
             }
             $fileinfo['fsize'] = formatsize($tmpinfo['contains']['size']);
             $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($tmpinfo['contains']['size']), 'size' => $tmpinfo['contains']['size']));
-            $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $tmpinfo['contains']['contain'][0], 'foldernum' => $tmpinfo['contains']['contain'][1]));
+            $fileinfo['contain'] = lang('property_info_contain', array('count' => $tmpinfo['contains']['contain'][0] + $tmpinfo['contains']['contain'][1], 'filenum' => $tmpinfo['contains']['contain'][0], 'foldernum' => $tmpinfo['contains']['contain'][1]));
         } else {
-            $fileinfo = $this->fetch($rids[0]);
+            $fileinfo = DB::fetch_first("select `type`,size,oid from %t where rid=%s", array($this->_table, $rids[0]));
             //文件类型和大小信息
             if ($fileinfo['type'] == 'folder') {
                 $contaions = self::get_contains_by_fid($fileinfo['oid'], true);
                 $contaions['contain'][1] += 1;
                 $fileinfo['fsize'] = formatsize($contaions['size']);
                 $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
-            } elseif ($fileinfo['ext']) {
-                $fileinfo['fsize'] = formatsize($fileinfo['size']);
-                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => 1, 'foldernum' => 0));
+                $fileinfo['contain'] = lang('property_info_contain', array('count' => $contaions['contain'][0] + $contaions['contain'][1], 'filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
             } else {
                 $fileinfo['fsize'] = formatsize($fileinfo['size']);
-                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => 1, 'foldernum' => 0));
+                $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($fileinfo['size']), 'size' => $fileinfo['size']));
+                $fileinfo['contain'] = lang('property_info_contain', array('count' => 1,'filenum' => 1, 'foldernum' => 0));
             }
         }
         return $fileinfo;
@@ -1040,8 +1009,9 @@ class table_resources extends dzz_table {
         $fileinfo = array();
         if ($fid) {
             $contaions = self::get_contains_by_fid($fid, true);
-            $fileinfo['fsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
-            $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+            $fileinfo['fsize'] = formatsize($contaions['size']);
+            $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
+            $fileinfo['contain'] = lang('property_info_contain', array('count' => $contaions['contain'][0] + $contaions['contain'][1], 'filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
         }
         return $fileinfo;
     }
@@ -1066,11 +1036,11 @@ class table_resources extends dzz_table {
             $fileinfo['ftype'] = lang('type_folder');
         }
         if ($contains) {
-            $contaions = self::get_contains_by_fid($fid, true);
-            $fsize = lang('property_info_size', array('fsize' => formatsize($contaions['size']), 'size' => $contaions['size']));
+            $fsize = lang('calculating');
             $fileinfo['fsize'] = $fsize;
             $fileinfo['ffsize'] = $fsize;
-            $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contaions['contain'][0], 'foldernum' => $contaions['contain'][1]));
+            $fileinfo['contain'] = $fsize;
+            $fileinfo['getcontains'] = true;
             $statis = C::t('resources_statis')->fetch_by_fid($fid);
             $fileinfo['opendateline'] = ($statis['opendateline']) ? dgmdate($statis['opendateline'], 'Y-m-d H:i:s') : '';
             $fileinfo['editdateline'] = ($statis['editdateline']) ? dgmdate($statis['editdateline'], 'Y-m-d H:i:s') : '';

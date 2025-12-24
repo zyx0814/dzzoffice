@@ -733,7 +733,7 @@ if ($do == 'upload') {//上传图片文件
             $contains = IO::getContains($fileinfo['path']);
             $fileinfo['ftype'] = lang('type_folder');
             $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-            $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
+            $fileinfo['contain'] = lang('property_info_contain', array('count' => $contains['contain'][0] + $contains['contain'][1], 'filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
         } elseif (strpos($paths, ',') !== false) {
             $patharr = explode(',', $paths);
             $rids = array();
@@ -759,7 +759,7 @@ if ($do == 'upload') {//上传图片文件
                 }
             }
             $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($size), 'size' => $size));
-            $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contents[0], 'foldernum' => $contents[1]));
+            $fileinfo['contain'] = lang('property_info_contain', array('count' => $contents[0] + $contents[1], 'filenum' => $contents[0], 'foldernum' => $contents[1]));
         } else {
             $paths = dzzdecode($paths);
             $fileinfo = IO::getMeta($paths);
@@ -772,7 +772,7 @@ if ($do == 'upload') {//上传图片文件
                 $contains = IO::getContains($fileinfo['path']);
                 $fileinfo['ftype'] = lang('type_folder');
                 $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-                $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
+                $fileinfo['contain'] = lang('property_info_contain', array('count' => $contains['contain'][0] + $contains['contain'][1], 'filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
             }
         }
     } else {
@@ -988,5 +988,15 @@ if ($do == 'upload') {//上传图片文件
         include template('template_perm');
         exit();
     }
+} elseif ($do == 'getcontains') {
+    $rids =$_GET['rids'];
+    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
+    if ($rids) {
+        $rids = explode(',', $rids);
+        $fileinfo = C::t('resources')->get_containsdata_by_rid($rids);
+    } else {
+        $fileinfo = C::t('resources')->get_containsdata_by_fid($fid);
+    }
+    exit(json_encode($fileinfo));
 }
 include template('ajax');

@@ -11,11 +11,7 @@ if (!defined('IN_DZZ')) {
 $uid = $_G['uid'];
 $do = empty($_GET['do']) ? '' : $_GET['do'];
 $sid = $_GET['sid'] ? $_GET['sid'] : '';
-if (!$sid) {
-    exit(json_encode(array('error' => 'Access Denied')));
-}
-$sid = dzzdecode($sid);
-if (!$sid) {
+if (!$sid = dzzdecode($sid)) {
     exit(json_encode(array('error' => 'Access Denied')));
 }
 $share = C::t('shares')->fetch($sid);
@@ -262,7 +258,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
             $contains = IO::getContains($propertys['path']);
             $propertys['ftype'] = lang('type_folder');
             $propertys['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-            $propertys['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
+            $propertys['contain'] = lang('property_info_contain', array('count' => $contains['contain'][0] + $contains['contain'][1], 'filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
         } elseif (strpos($paths, ',') !== false) {
             $patharr = explode(',', $paths);
             $rids = array();
@@ -291,7 +287,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
                 }
             }
             $propertys['ffsize'] = lang('property_info_size', array('fsize' => formatsize($size), 'size' => $size));
-            $propertys['contain'] = lang('property_info_contain', array('filenum' => $contents[0], 'foldernum' => $contents[1]));
+            $propertys['contain'] = lang('property_info_contain', array('count' => $contents[0] + $contents[1], 'filenum' => $contents[0], 'foldernum' => $contents[1]));
         } else {
             $paths = dzzdecode($paths);
             $propertys = IO::getMeta($paths);
@@ -306,7 +302,7 @@ if ($do == 'uploads') {//上传新文件(指新建)
                 $contains = IO::getContains($propertys['path']);
                 $propertys['ftype'] = lang('type_folder');
                 $propertys['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-                $propertys['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
+                $propertys['contain'] = lang('property_info_contain', array('count' => $contains['contain'][0] + $contains['contain'][1], 'filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
             }
         }
     }else {
@@ -370,6 +366,13 @@ if ($do == 'uploads') {//上传新文件(指新建)
     } else {
         exit(json_encode(array('error' => lang('report_submit_failed'))));
     }
+} elseif ($do == 'getcontains') {
+    $rids = $_GET['rids'];
+    $fileinfo = array();
+    if ($rids) {
+        $fileinfo = C::t('resources')->get_containsdata_by_rid($rids);
+    }
+    exit(json_encode($fileinfo));
 }
 include template('ajax');
 function validatefid($share = array(), $fid = '') {

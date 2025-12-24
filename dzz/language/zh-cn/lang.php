@@ -252,8 +252,7 @@ $lang = array(
     'property_size' => '大  小：',
     'property_creator' => '创 建 者：',
     'property_info_size' => '{fsize}&nbsp;({size}&nbsp;字节)',
-    'property_info_contain' => '{filenum}&nbsp;个文件，{foldernum}&nbsp;个文件夹',
-    'share_web_music_flash' => '添加网址、视频、音乐、Flash',
+    'property_info_contain' => '{count}项({filenum}&nbsp;个文件，{foldernum}&nbsp;个文件夹)',
     'privacy_settings' => '隐私设置',
     'friend_-1' => '继承父级',
     'friend_0' => '全站可见',
@@ -369,5 +368,6 @@ $lang = array(
     'copy_address' => '复制地址',
     'edit_date' => '修改时间',
     'rename' => '重命名',
+    'calculating' => '正在计算...',
 );
 ?>

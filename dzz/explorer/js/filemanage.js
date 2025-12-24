@@ -440,16 +440,66 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		el.find('.share').remove();
 	}
 
+	var layerIndex = -1;
+    var hoverTimer = null;
+
+	function buildMetaContent(fileData) {
+		var templateHtml = $('#file-meta-template').html();
+		var fileSize = fileData.type == 'folder' ? '--' : (fileData.fsize || '--');
+		templateHtml = templateHtml.replace(/\{name\}/g, fileData.name || '未知文件');
+		templateHtml = templateHtml.replace(/\{ftype\}/g, fileData.ftype || '未知类型');
+		templateHtml = templateHtml.replace(/\{size\}/g, fileSize);
+		templateHtml = templateHtml.replace(/\{position\}/g, fileData.relpath || '--');
+		templateHtml = templateHtml.replace(/\{fdateline\}/g, fileData.fdateline || '--');
+		templateHtml = templateHtml.replace(/\{username\}/g, fileData.username || '--');
+
+		return templateHtml;
+	}
+
+    // 鼠标进入事件
+    el.on('mouseenter', function (e) {
+		jQuery(this).addClass('hover');
+		e = e ? e : window.event;
+
+        // 延迟200ms显示（避免快速划过触发）
+        hoverTimer = setTimeout(function () {
+            layerIndex = layer.tips(
+                buildMetaContent(data),
+                e.target,
+                {
+                    tips: [1, '#333'],
+                    tipsMore: false,
+                    shade: 0, // 无遮罩
+                    time: 0, // 不自动关闭
+                    area: 'auto',
+                }
+            );
+        }, 600);
+    });
+
+    // 鼠标离开事件
+    el.on('mouseleave', function () {
+		jQuery(this).removeClass('hover');
+        // 清除延迟定时器
+        if (hoverTimer) {
+            clearTimeout(hoverTimer);
+            hoverTimer = null;
+        }
+        // 关闭提示框
+        if (layerIndex !== -1) {
+            layer.close(layerIndex);
+            layerIndex = -1;
+        }
+    });
+
+    // 元素被移除时清理
+    el.on('remove', function () {
+        if (hoverTimer) clearTimeout(hoverTimer);
+        if (layerIndex !== -1) layer.close(layerIndex);
+    });
+
 	if (this.view < 4) {
 
-		el.on('mouseenter', function () {
-			jQuery(this).addClass('hover');
-
-		});
-		el.on('mouseleave', function () {
-			jQuery(this).removeClass('hover');
-
-		});
 		//处理多选框
 		//if(!_filemanage.fid || _explorer.Permission_Container('multiselect',this.fid)){
 		el.find('.icoblank_lefttop').on('click', function () {
@@ -488,17 +538,7 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
         }
 
 	} else { //详细列表时
-		el.bind('mouseenter', function () {
-			jQuery(this).addClass('hover');
-			//return false;
-		});
-		el.bind('mouseleave', function () {
-			jQuery(this).removeClass('hover');
-			//return false;
-		});
-
 		//点击图片和名称直接打开
-
 		el.on('click', function (e) {
 			e = e ? e : window.event;
 			var tag = e.srcElement ? e.srcElement : e.target;

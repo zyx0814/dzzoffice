@@ -253,8 +253,7 @@ $lang = array(
     'property_size' => 'Size:',
     'property_creator' => 'Creator:',
     'property_info_size' => '{fsize}&nbsp;({size}&nbsp;bytes)',
-    'property_info_contain' => '{filenum}&nbsp;files, {foldernum}&nbsp;folders',
-    'share_web_music_flash' => 'Add Link, Video, Music, Flash',
+    'property_info_contain' => '{count} items ({filenum}&nbsp;files, {foldernum}&nbsp;folders)',
     'privacy_settings' => 'Privacy Settings',
     'friend_-1' => 'Inherit from Parent',
     'friend_0' => 'Visible to All',
@@ -368,5 +367,6 @@ $lang = array(
     'copy_address' => 'Copy Address',
     'edit_date' => 'Modification time',
     'rename' => 'Rename',
+    'calculating' => 'Calculating',
 );
 ?>

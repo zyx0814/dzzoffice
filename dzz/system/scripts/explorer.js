@@ -332,7 +332,12 @@ _explorer.hashHandler = function () { //处理页面hash变化
     hash = hash.replace(/^#/i, '');
     _explorer.jstree_select(hash);
     if (!hash) {
-        return false;
+        if (_explorer.defaultselect) {
+            hash = _explorer.defaultselect;
+            _explorer.jstree_select(hash);
+        } else {
+            return false;
+        }
     }
     if (hash === _explorer.hash) {
         return false;

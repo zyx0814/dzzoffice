@@ -284,6 +284,12 @@ if ($method == 'show_license') {
     $enter_desktop = lang('enter_desktop');
     $handwork_del = lang('handwork_del');
 
+    $isHTTPS = is_https();
+    $PHP_SELF = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
+    $sitepath = substr($PHP_SELF, 0, strrpos($PHP_SELF, '/'));
+    $sitepath = preg_replace('/install$/i', '', $sitepath);
+    $bbserver = 'http'.($isHTTPS ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath;
+
     @touch($lockfile);
     @unlink(ROOT_PATH . './install/index.php');
     @unlink(ROOT_PATH . './install/update.php');
@@ -310,8 +316,8 @@ echo <<<EOT
     </div>
     
     <div class="finish-actions">
-        <a href="/index.php?mod=appmanagement" class="btn btn-primary" style="margin-right: 15px;">进入管理后台</a>
-        <a href="/" class="btn btn-secondary">$enter_desktop</a>
+        <a href="{$bbserver}index.php?mod=appmanagement" class="btn btn-primary" style="margin-right: 15px;">进入管理后台</a>
+        <a href="$bbserver" class="btn btn-secondary">$enter_desktop</a>
     </div>
 </div>
 EOT;
