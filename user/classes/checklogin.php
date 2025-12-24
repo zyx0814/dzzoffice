@@ -7,7 +7,12 @@ class Checklogin {
             if($_GET['ajaxdata'] == 'json') {
                 exit(json_encode(array('code' => 1, 'msg' => '请先登录','message' => '请先登录')));
             } else {
-                dheader("Location: user.php?mod=login");
+                include template('common/header_reload');
+                echo "<script type=\"text/javascript\" reload=\"1\">";
+				echo "var referer=encodeURIComponent(window.location.href);";
+                echo "window.location.href='user.php?mod=login&referer='+referer";
+                echo "</script>";
+                include template('common/footer_reload');
                 exit();
             }
         }

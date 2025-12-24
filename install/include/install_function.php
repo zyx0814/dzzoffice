@@ -12,25 +12,38 @@ if (!defined('IN_LEYUN')) {
 
 function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
     show_header();
-    global $step;
     $title = lang($error_no);
     $comment = lang($error_no . '_comment', false);
     if ($error_msg) {
         if (!empty($error_msg)) {
+            $comment .= '<ul style="margin-top:10px; line-height:1.8;">';
             foreach ((array)$error_msg as $k => $v) {
                 if (is_numeric($k)) {
-                    $comment .= "<li><em class=\"alert\">" . lang($v) . "</em></li>";
+                    $comment .= "<li>" . lang($v) . "</li>";
                 }
             }
+            $comment .= '</ul>';
         }
     }
-    echo "<div><h3 class=\"alert\">$title</h3><ul>$comment</ul>";
+    $alert_class = $success ? 'alert-success' : 'alert-error';
+    $icon_svg = $success 
+        ? '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>' 
+        : '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
 
-    if($quit) {
-        echo '<br /><span class="red">'.lang('error_quit_msg').'</span><br /><br /><br />';
-    }
-
-    echo '<input type="button" class="btn btn-secondary" onclick="history.back()" value="'.lang('click_to_back').'" />';
+    echo <<<EOT
+<div class="alert-container">
+    <div class="alert {$alert_class}">
+        <div class="icon-box">
+            {$icon_svg}
+            <span>{$title}</span>
+        </div>
+        <div style="color:#4b5563; font-size:14px; margin-left: 42px;">$comment</div>
+        
+        <div style="margin-top: 25px; margin-left: 42px;border-top: 1px solid rgba(0, 0, 0, 0.05);padding-top: 15px;text-align: right;">
+            <button class="btn btn-secondary" onclick="history.back()">返回上一步</button>
+        </div>
+    </div>
+EOT;
 
     echo '</div>';
 
@@ -323,8 +336,8 @@ function show_form(&$form_items, $error_msg) {
         return;
     }
     show_header();
-    show_setting('start');
-    show_setting('hidden', 'step', $step);
+    echo "<form method=\"post\" action=\"index.php\">\n";
+    echo "<input type=\"hidden\" name=\"step\" value=\"$step\">\n";
     $is_first = 1;
     echo '<div id="form_items_' . $step . '">';
     foreach ($form_items as $key => $items) {
@@ -365,34 +378,30 @@ function show_form(&$form_items, $error_msg) {
     }
     echo '</div>';
     echo '</div>';
-    echo '<table class="tb2">';
     show_setting('', 'submitname', 'new_step', ($step == 2 ? 'submit|oldbtn' : 'submit'));
-    show_setting('end');
+    echo "</form>\n";
+    echo '</div>';
     show_footer();
 }
 
 function show_license() {
     show_header();
     $title = lang('step_env_check_title');
-    $version = SOFT_NAME . CORE_VERSION . ' &nbsp;&nbsp;   ' . INSTALL_LANG . ' ' . CORE_RELEASE;
+    $version = SOFT_NAME . 'V' . CORE_VERSION . '(' . CORE_RELEASE . ')';
     $sitename = SOFT_NAME;
     $install_lang = lang(INSTALL_LANG);
     echo <<<EOT
-    <h2 style="color: #1a202c; margin-bottom: 10px; font-weight: 600;">欢迎安装 $sitename</h2>
-		<h3 style="font-weight: 600; margin-bottom: 20px;">$install_lang</h3>
-        <div style="font-size: 16px; color: #555; margin-bottom: 30px;">$version</div>
-		<a href="?step=1" class="btn btn-primary">$title</a>
+<div style="text-align: center; padding: 40px 20px;">
+    <img src="images/logo.png" style="width: 80px; margin-bottom: 20px;">
+    <h2 style="font-size: 24px; color: #333; margin-bottom: 10px;">欢迎安装 $sitename</h2>
+    <p style="color: #666; font-size: 16px; margin-bottom: 40px;">$version $install_lang</p>
+    <div style="background:#f9fafb; padding:20px; border-radius:12px; border:1px solid #e5e7eb; max-width:600px; margin:0 auto 40px auto; text-align:left; color:#4b5563;">
+        <p>感谢您选择 {$sitename}。本向导将引导您完成环境检测、数据库配置及系统安装。</p>
+    </div>
+    <a href="?step=1" class="btn btn-primary" style="padding: 12px 50px; font-size: 16px;">$title</a>
+</div>
 EOT;
     show_footer();
-}
-
-if (!function_exists('file_put_contents')) {
-    function file_put_contents($filename, $s) {
-        $fp = @fopen($filename, 'w');
-        @fwrite($fp, $s);
-        @fclose($fp);
-        return TRUE;
-    }
 }
 
 function createtable($sql, $dbver) {
@@ -441,7 +450,7 @@ function show_header() {
     $charset = CHARSET;
     $sitename = SOFT_NAME;
     echo <<<EOT
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="$charset" />
@@ -465,17 +474,31 @@ function show_header() {
 </script>
 </head>
 <body>
-<div class="container step_$step">
-    <div class="header">
-        <h1><img src="images/logo.png"> DzzOffice 安装程序</h1>
-        <span class="version">V$version</span>
-    </div>
-<div class="main" style="padding: 10px 30px 15px 30px; text-align: center;">
+<div class="container">
+<div class="header">
+    <h1><img src="images/logo.png" alt="Logo"> {$sitename} 安装向导</h1>
+    <div class="version">V$version</div>
+</div>
 EOT;
-    $step > 0 && show_step($step);
-    echo "\r\n";
-	echo str_repeat('  ', 1024 * 4);
-	echo "\r\n";
+    // 显示步骤条
+    if ($step > 0 && $step < 5) {
+        $steps = array(
+            1 => lang('step_title_1'),
+            2 => lang('step_title_2'),
+            3 => lang('step_title_3'),
+            4 => lang('step_title_4')
+        );
+        echo '<div class="step-nav">';
+        foreach ($steps as $k => $t) {
+            $cls = '';
+            $num = $k;
+            if ($k < $step) { $cls = 'done'; $num = '✔'; }
+            if ($k == $step) { $cls = 'active'; }
+            echo "<div class=\"step-item $cls\"><span class=\"step-num\">$num</span> $t</div>";
+        }
+        echo '</div>';
+    }
+    echo  '<div class="main">';
 	flush();
 	ob_flush();
 }
@@ -483,11 +506,8 @@ EOT;
 function show_footer($quit = true) {
     $date = date("Y");
     echo <<<EOT
-	</div>
-	<div id="footer">Copyright © 2012-$date www.dzzoffice.com All Rights Reserved.</div>
-	</div>
-</div>
-</body>
+	</div><div id="footer">Copyright © 2012-$date www.dzzoffice.com All Rights Reserved.</div>
+	</div></body>
 </html>
 EOT;
     $quit && exit();
@@ -922,7 +942,6 @@ function check_env() {
 }
 
 function show_error($type, $errors = '', $quit = false) {
-
     global $lang, $step, $runqueryerror;
     $title = lang($type);
     $comment = lang($type . '_comment', false);
@@ -956,26 +975,20 @@ function show_tips($tip, $title = '', $comment = '', $style = 1) {
     $title = empty($title) ? lang($tip) : $title;
     $comment = empty($comment) ? lang($tip . '_comment', FALSE) : $comment;
     if ($style) {
-        echo "<div class=\"title\">$title</div>";
+        echo "<h2 class=\"title\">$title</h2>";
     }
     $comment && print($comment);
     echo "";
 }
 
 function show_setting($setname, $varname = '', $value = '', $type = 'text|password|checkbox', $error = '') {
-    if ($setname == 'start') {
-        echo "<form method=\"post\" action=\"index.php\">\n";
-        return;
-    } elseif ($setname == 'end') {
-        echo "</table></form>\n";
-        return;
-    } elseif ($setname == 'hidden') {
+    if ($setname == 'hidden') {
         echo "<input type=\"hidden\" name=\"$varname\" value=\"$value\">\n";
         return;
     }
     if (strpos($type, 'submit') !== FALSE) {
         if (strpos($type, 'oldbtn') !== FALSE) {
-            echo "<input type=\"button\" class=\"btn btn-secondary\" name=\"oldbtn\" value=\"" . lang('old_step') . "\"  onclick=\"history.back();\">\n";
+            echo "<input type=\"button\" class=\"btn btn-secondary\" name=\"oldbtn\" value=\"" . lang('old_step') . "\"  onclick=\"history.back();\">&nbsp;\n";
         }
         $value = empty($value) ? 'next_step' : $value;
         echo "<input type=\"submit\" name=\"$varname\" value=\"" . lang($value) . "\" class=\"btn btn-primary\">\n";
@@ -1011,32 +1024,6 @@ function show_setting($setname, $varname = '', $value = '', $type = 'text|passwo
     echo "$comment</span></div>\n";
 
     return true;
-}
-
-function show_step($step) {
-    $laststep = 4;
-    $step_title_1 = lang('step_title_1');
-    $step_title_2 = lang('step_title_2');
-    $step_title_3 = lang('step_title_3');
-    $step_title_4 = lang('step_title_4');
-
-    $stepclass = array();
-    for ($i = 1; $i <= $laststep; $i++) {
-        $stepclass[$i] = $i == $step ? 'current' : ($i < $step ? '' : 'unactivated');
-    }
-    $stepclass[$laststep] .= ' last';
-
-    echo <<<EOT
-	<table id="menu">
-	<tr>
-	<td class="$stepclass[1]">$step_title_1</td>
-	<td class="$stepclass[2]">$step_title_2</td>
-	<td class="$stepclass[3]">$step_title_3</td>
-	<td class="$stepclass[4]">$step_title_4</td>
-	</tr>
-	</table>
-EOT;
-
 }
 
 function lang($lang_key, $force = true) {

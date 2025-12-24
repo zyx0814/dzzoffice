@@ -46,8 +46,6 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
     if ($seccodecheck) $seccode = random(6, 1);
 
     $referer = (isset($_GET['referer'])) ? $_GET['referer'] : dreferer();
-    // 防止登录后返回到安装界面
-    $referer = preg_replace("/\/?install\/?.*$/", '/', $referer);
 
     $_G['sso_referer'] = $referer;
 
