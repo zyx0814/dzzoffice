@@ -33,19 +33,6 @@ class table_resources extends dzz_table {
         return $idstr;
     }
 
-    /*  public function getparentsuri($pfid)
-      {
-          $path = array();
-          if ($parent = DB::result_first('select pfid,fname from %t where fid = %d', array('folder', $pfid))) {
-              if ($parent['pfid'] > 0 && $parent['pfid'] != $pfid) {
-                  $path[] = $parent['fname'];
-                  self::getparenturi($parent['pfid']);
-              }
-          }
-          $path = array_reverse($path);
-          $path = implode('/', $path);
-          return $path;
-      }*/
     public function update_by_pfids($pfids, $setarr) {
         if (!is_array($pfids)) $pfids = (array)$pfids;
         $rids = array();
@@ -81,7 +68,6 @@ class table_resources extends dzz_table {
             //更新属性表数据
             C::t('resources_attr')->update_by_skey($rid, $infoarr['vid'], array('title' => $newname));
             //更新缓存
-            $cachkey = 'resourcesdata_' . $rid;
             $this->clear_cache($cachkey);
             $statisdata = array(
                 'uid' => $_G['uid'],
@@ -98,7 +84,6 @@ class table_resources extends dzz_table {
             }
             C::t('resources_event')->addevent_by_pfid($infoarr['pfid'], $event, 'rename', $eventdata, $infoarr['gid'], $rid, $infoarr['name']);
             $this->clear_cache($cachkey);
-            $this->clear_cache($rid);
             return array('newname' => $newname);
         }
         return array('error' => lang('rechristen_error'));
@@ -204,7 +189,7 @@ class table_resources extends dzz_table {
                 //查询回收站是否有相同数据，如果有合并回收站数据
                 if ($recyledata = C::t('resources_recyle')->fetch_by_rid($infoarr['rid'])) {
                     if (C::t('folder')->update($currentfid, $setarr)) {
-                        if ($fidnum) DB::update('folder', $setarr1, 'fid in(' . dimplode($rfids) . ')');
+                        if ($fidnum) DB::update('folder', $setarr1, 'fid in(' . dimplode($fids) . ')');
                         DB::update('resources_recyle', array('deldateline' => $infoarr['deldateline'], 'uid' => $uid), array('id' => $recyledata['id']));
                     } else {
                         if ($ridnum) DB::update($this->table, array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $infoarr['pfid']), 'rid in(' . dimplode($rids) . ')');
@@ -213,7 +198,7 @@ class table_resources extends dzz_table {
                     }
                 } else {
                     if (C::t('folder')->update($currentfid, $setarr)) {
-                        if ($fidnum) DB::update('folder', $setarr1, 'fid  in(' . dimplode($rfids) . ')');
+                        if ($fidnum) DB::update('folder', $setarr1, 'fid  in(' . dimplode($fids) . ')');
                         C::t('resources_recyle')->insert_data($infoarr);
                     } else {
                         if ($ridnum) self::update_by_rid($rids, array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $infoarr['pfid']));
@@ -316,7 +301,6 @@ class table_resources extends dzz_table {
                 return false;
             }
         } elseif ($status == 2) {
-            $this->clear_cache($rid);
             $this->clear_cache($cachekey);
             //删除回收站数据
             C::t('resources_recyle')->delete_by_rid($rid);
@@ -433,48 +417,10 @@ class table_resources extends dzz_table {
         return $data;
     }
 
-    /* //查询群组id
-     public function fetch_gid_by_rid($rid)
-     {
-         return DB::result_first("select gid from %t where rid = %d", array($this->_table, $rid));
-     }*/
-
-    /*   //查询多个文件右侧信息
-       public function fetch_rightinfo_by_rid($rids)
-       {
-           if (!is_array($rids)) $rids = (array)$rids;
-           $fileinfo = array();
-           $contains = array('size' => 0, 'contain' => array(0, 0));
-           foreach (DB::fetch_all("select * from %t where rid in(%n)", array($this->_table, $rids)) as $value) {
-               $contains['size'] += $value['size'];
-               if ($value['type'] == 'folder') {
-                   $contains['contain'][1] += 1;
-                   $containchild = '';
-                   $containchild = $this->get_contains_by_fid($value['oid'], true);
-                   if (!empty($containchild)) {
-                       $contains['contain'][1] += $containchild['contain'][1];
-                       $contains['contain'][0] += $containchild['contain'][0];
-                       $contains['size'] += $containchild['size'];
-                   }
-
-               } else {
-                   $contains['contain'][0] += 1;
-               }
-               if (!isset($fileinfo['path'])) {
-                   $path = C::t('resources_path')->fetch_pathby_pfid($value['pfid']);
-                   $fileinfo['position'] = preg_replace('/dzz:(.+?):/', '', $path);
-               }
-
-           }
-           $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-           $fileinfo['contain'] = lang('property_info_contain', array('filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
-           $fileinfo['filenum'] = count($rids);
-           return $fileinfo;
-       }*/
-
     //查询目录文件数,$getversion =>是否获取版本数据
     public function get_contains_by_fid($fid, $getversion = true, $dirs = true) {
         $contains = array('size' => 0, 'contain' => array(0, 0));
+        $results = array();
 
         if ($dirs) {
             // 获取包含所有子目录的fid
@@ -484,15 +430,16 @@ class table_resources extends dzz_table {
             $pfids = array($fid);
         }
 
-        foreach (DB::fetch_all("select r.rid,r.vid,r.size as primarysize,r.type,r.pfid,v.size from %t r 
+        foreach (DB::fetch_all("select r.rid,r.vid,r.oid,r.size as primarysize,r.type,r.pfid,v.size from %t r 
         left join %t v on r.rid=v.rid where r.pfid in (%n) and r.isdelete < 1", array($this->_table, 'resources_version', $pfids)) as $v) {
-            if (!isset($resluts[$v['rid']])) {
-                $resluts[$v['rid']] = $v;
+            if (!isset($results[$v['rid']])) {
+                $results[$v['rid']] = $v;
             } else {
-                $resluts[$v['rid']]['size'] += intval($v['size']);
+                $results[$v['rid']]['size'] += intval($v['size']);
             }
         }
-        foreach ($resluts as $value) {
+
+        foreach ($results as $value) {
             if ($getversion) {
                 $contains['size'] += ($value['size'] > 0) ? $value['size'] : $value['primarysize'];
             } else {

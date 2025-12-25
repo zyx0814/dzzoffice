@@ -462,6 +462,9 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
     el.on('mouseenter', function (e) {
 		jQuery(this).addClass('hover');
 		e = e ? e : window.event;
+		if (jQuery(e.target).closest('.no-meta-tip').length > 0) {
+            return;
+        }
 
         // 延迟200ms显示（避免快速划过触发）
         hoverTimer = setTimeout(function () {

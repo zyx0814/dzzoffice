@@ -38,12 +38,7 @@ class table_resources_version extends dzz_table {
             } else {
                 $limitsql = "limit 0,$limitarr[0]";
             }
-        }/*else{
-           $cachekey = 'resourcesversiondata_'.$rid;
-           if($versions = $this->fetch_cache($cachekey)){
-               return $versions;
-           }
-       }*/
+        }
         if ($count) {
             return DB::result_first("select count(*) from %t where rid = %s", array($this->_table, $rid));
         }
@@ -74,7 +69,6 @@ class table_resources_version extends dzz_table {
                 $versions[$val['vid']] = $filedata;
             }
         }
-        //$this->store_cache($cachekey,$versions);
         return $versions;
     }
 
@@ -88,7 +82,6 @@ class table_resources_version extends dzz_table {
                 return false;
             }
         }
-        $cachekey = 'resourcesversiondata_' . $rid;
         if (parent::delete($vid)) {
             if ($vinfo['aid']) C::t('attachment')->delete_by_aid($vinfo['aid']);
             SpaceSize(-$vinfo['size'], $datainfo['gid'], 1, $datainfo['uid']);
@@ -100,6 +93,7 @@ class table_resources_version extends dzz_table {
                 $eventdata = array('username' => $_G['username'], 'position' => $position, 'filename' => $datainfo['name'], 'version' => $vid, 'hash' => $hash);
                 C::t('resources_event')->addevent_by_pfid($datainfo['pfid'], 'delete_version', 'delversion', $eventdata, $datainfo['gid'], $rid, $datainfo['name']);
             }
+            $cachekey = 'resourcesversiondata_' . $rid;
             $this->clear_cache($cachekey);
             if ($nvid) {//如果删除的是主版本，需要重新设置文件其他版本为主版本
                 self::set_primary_version_by_vid($nvid, true);
@@ -108,26 +102,6 @@ class table_resources_version extends dzz_table {
         return true;
     }
 
-    /* public  function  delete_by_version($icoid,$vid){
-         global $_G ;
-         $cachekey = 'resourcesversiondata_'.$icoid;
-         if(parent::delete($vid)){
-             C::t('resources_attr')->delete_by_rvid($icoid,$vid);
-            //DB::delete('resources_attr',array('rid'=>$icoid,'vid'=>$vid));
-             $eventdata = array(
-                 'rid'=>$icoid,
-                 'uid'=>$_G['uid'],
-                 'username'=>$_G['username'],
-                 'event_body'=>'delete_version',
-                 'body_data'=>serialize(array('version'=>$vid)),
-                 'dateline'=>TIMESTAMP,
-             );
-            DB::insert('resources_event',$eventdata);
-             $v = DB::result_first("select vid from %t where rid=%s order by dateline DESC ",array($this->_table,$icoid));
-             C::t('resources')->update($icoid,array('vid',$v));
-             return array('msg'=>$v);
-         }else return array('error'=>lang('error_delete_version_failed'));
-     }*/
     public function delete_by_rid($rid) {
         $vids = array();
         $aids = array();
@@ -138,8 +112,8 @@ class table_resources_version extends dzz_table {
             $aids[] = $value['aid'];
             $size += intval($value['size']);
         }
-        $cachekey = 'resourcesversiondata_' . $rid;
         if ($ret = parent::delete($vids)) {
+            $cachekey = 'resourcesversiondata_' . $rid;
             $this->clear_cache($cachekey);
             foreach ($aids as $aid) {
                 C::t('attachment')->delete_by_aid($aid);
@@ -152,7 +126,6 @@ class table_resources_version extends dzz_table {
     //上传新版本
     public function add_new_version_by_rid($rid, $setarr, $force = false) {
         global $_G, $documentexts;
-        $cachekey = 'resourcesversiondata_' . $rid;
         if (!$resources = C::t('resources')->fetch_info_by_rid($rid)) {
             return array('error' => lang('file_not_exist'));
         }
@@ -205,6 +178,7 @@ class table_resources_version extends dzz_table {
 
         //新数据插入版本表
         if ($vid = parent::insert($setarr, 1)) {
+            $cachekey = 'resourcesversiondata_' . $rid;
             $this->clear_cache($cachekey);
             //更新主表数据
             if (C::t('resources')->update_by_rid($rid, array('vid' => $vid, 'size' => $setarr['size'], 'ext' => $setarr['ext'], 'type' => $setarr['type'], 'name' => $filename))) {
@@ -356,7 +330,6 @@ class table_resources_version extends dzz_table {
         if (!$versioninfo = parent::fetch($vid)) {
             return array('error' => lang('file_not_exist'));
         }
-        $cachekey = 'resourcesversiondata_' . $versioninfo['rid'];
         $eventdesc = $eventname = '';
         $sertarr = array();
         if ($versioninfo['vname'] != $vname) {
@@ -414,8 +387,8 @@ class table_resources_version extends dzz_table {
                 );
                 C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], $eventdesc, 'editversiondesc', $eventdata1, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
             }
+            $cachekey = 'resourcesversiondata_' . $versioninfo['rid'];
             $this->clear_cache($cachekey);
-            $this->clear_cache($versioninfo['rid']);
             return array('vid' => $vid, 'primaryvid' => $fileinfo['vid'], 'fdateline' => dgmdate($versioninfo['dateline'], 'Y-m-d H:i:s'));
         } else {
             return array('error' => lang('explorer_do_failed'));

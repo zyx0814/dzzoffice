@@ -101,14 +101,6 @@ class table_app_market extends dzz_table {
         return true;
     }
 
-    /*public function fetch_all_by_tagid($classid,$count=false,$force=false){
-        if($force || ($data = $this->fetch_cache(intval($classid),'app_market_class_') === false)) {
-            $data=DB::fetch_all("select * from %t where classid= %d ",array($this->_table,$classid));
-            if(!empty($data)) $this->store_cache(intval($classid), $data, 3600,'app_market_class_');
-        }
-        return $count?count($data):$data;
-    }*/
-
     public function get_appid_by_appurl($appurl) {
         return DB::fetch_all("select appid from %t where appurl=%s", array($this->_table, $appurl));
 

@@ -238,21 +238,6 @@ if ($do == 'upload') {//上传图片文件
         }
     }
     exit(json_encode($arr));
-} elseif ($do == 'showtips') {
-    $msgtext = isset($_GET['msg']) ? trim($_GET['msg']) : lang('system_unknow_error');
-} elseif ($do == 'txt') {//新建文档
-    $filename = lang('new_txt') . '.txt';
-    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
-    if ($arr = IO::upload_by_content(' ', $fid, $filename)) {
-        if ($arr['error']) {
-
-        } else {
-            $arr['msg'] = 'success';
-        }
-    } else {
-        $arr = array();
-        $arr['error'] = lang('failure_newfolder');
-    }
 } elseif ($do == 'newIco') {//新建文件
     $type = trim($_GET['type']);
     $bzpath = isset($_GET['bz']) ? trim($_GET['bz']) : '';
@@ -342,21 +327,6 @@ if ($do == 'upload') {//上传图片文件
     } else {
         exit(json_encode(array('error' => true, 'json')));
     }
-} elseif ($do == 'uploadfile') {//上传文件获取相关文件信息
-    $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
-    if ($rid) {
-        $arr = C::t('resources')->fetch_by_rid($rid);
-    } else {
-        $arr = array('error' => lang('system_busy'));
-    }
-} elseif ($do == 'getfolder') {//获取文件夹信息
-    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
-    if ($fid) {
-        $arr = C::t('resources')->fetch_by_oid($fid);
-    } else {
-        $arr = array('error' => lang('system_busy'));
-    }
-
 } elseif ($do == 'collect') {//收藏与取消收藏
     $paths = $_GET['paths'];
     //collect参数为1为收藏,否则为取消收藏,未接收到此参数，默认为收藏
@@ -376,7 +346,7 @@ if ($do == 'upload') {//上传图片文件
     $rid = isset($_GET['rid']) ? $_GET['rid'] : '';
     $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
     if($fileinfo['error']) showmessage($fileinfo['error']);
-    if(!$fileinfo['editperm']) showmessage(lang('no_privilege'));
+    if(!$fileinfo['editperm']) showmessage('file_edit_no_privilege');
     $tags = C::t('resources_tag')->fetch_tag_by_rid($rid);
     if (isset($_GET['addtag']) && $_GET['addtag']) {
         $tags = isset($_GET['tags']) ? $_GET['tags'] : '';
@@ -763,7 +733,7 @@ if ($do == 'upload') {//上传图片文件
         } else {
             $paths = dzzdecode($paths);
             $fileinfo = IO::getMeta($paths);
-            if (!$fileinfo) showmessage(lang('file_not_exist'));
+            if (!$fileinfo) showmessage('file_not_exist');
             if ($fileinfo['error']) showmessage($fileinfo['error']);
             if (!$_G['adminid'] &&  $fileinfo['uid'] != $_G['uid']) {
                 showmessage('no_privilege');

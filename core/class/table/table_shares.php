@@ -30,12 +30,10 @@ class table_shares extends dzz_table {
             if (count($pfids) > 1) {
                 return array('error' => lang('Only_allow_sharing_filesinsamedirectory'));
             }
-            $vrid = $rids[0];
-            $fileinfo = C::t('resources')->fetch_info_by_rid($vrid);
+            $fileinfo = C::t('resources')->fetch_info_by_rid($rids[0]);
             $setarr['gid'] = $fileinfo['gid'];
             $setarr['pfid'] = $fileinfo['pfid'];
             if (count($rids) > 1) $more = true;
-            $fileinfo = C::t('resources')->fetch_by_rid($rids[0]);
             if ($more) {
                 $fileinfo['name'] .= '等文件(文件夹)';
                 $setarr['type'] = 'url';

@@ -674,8 +674,8 @@ function riddesc(rid,desc) {
 	jQuery.post(_explorer.appUrl + '&op=dzzcp&do=riddesc', data, function (json) {
 		if(json.success){
 			_filemanage.prototype._selectInfo();
-		} else if(json.error){
-			showmessage(json.error, 'danger', 3000, 1);
+		} else if(json.msg){
+			showmessage(json.msg, 'danger', 3000, 1);
 		} else {
 			showmessage(__lang.do_failed, 'danger', 3000, 1);
 		}

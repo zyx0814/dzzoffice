@@ -309,13 +309,10 @@ if ($do == 'deleteIco') {//删除文件到回收站
 } elseif ($do == 'riddesc') {//修改文件描述
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     if (!$rid) exit(json_encode(array('error' => lang('explorer_do_failed'))));
-    $fileinfo = C::t('resources')->fetch_by_rid($rid);
-    if(!$fileinfo) exit(json_encode(array('error' => lang('explorer_do_failed'))));
-    if (!perm_check::checkperm('edit', $fileinfo)) {
-        exit(json_encode(array('error' => lang('file_edit_no_privilege'))));
-    }
+    $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
+    if($fileinfo['error']) showmessage($fileinfo['error']);
+    if(!$fileinfo['editperm']) showmessage('file_edit_no_privilege');
     $desc = isset($_GET['desc']) ? htmlspecialchars(trim($_GET['desc'])) : '';
-
-    C::t('resources_meta')->update_by_key($fileinfo['rid'], array('desc' => $desc));
+    C::t('resources_meta')->update_by_key($rid, array('desc' => $desc));
     exit(json_encode(array('success' => true)));
 }
