@@ -1,7 +1,7 @@
 <!--根文件进度条开始-->
 <!--{if ($fileinfo['isgroup'] || $fileinfo['pfid'] == 0) && !$fileinfo['ismulti'] && !$bz}-->
 <div class="right-progress mb-2">
-    <p class="mb-0">已使用{eval echo formatsize($usesize);}(<!--{if $maxspace == 0}-->不限制<!--{elseif $maxspace < 0}-->0<!--{else}-->共{eval echo formatsize($maxspace);}<!--{/if}-->)</p>
+    <p class="mb-0">已使用{eval echo formatsize($usesize);}(<!--{if $maxspace == 0}-->不限制<!--{elseif $maxspace < 0}-->无空间<!--{else}-->共{eval echo formatsize($maxspace);}<!--{/if}-->)</p>
     <div class="progress">
         <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width:{$progress}%;">
         </div>

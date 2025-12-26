@@ -8,10 +8,9 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$do = empty($_GET['do']) ? '' : trim($_GET['do']);
+$do = isset($_GET['do']) ? trim($_GET['do']) : '';
 $uid = $_G['uid'];
 $refer = dreferer();
-$do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'addopenrecord') {//增加打开记录
     $rid = $_GET['rid'];
     $setarr = array(

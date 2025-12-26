@@ -8,9 +8,8 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$do = empty($_GET['do']) ? '' : $_GET['do'];
+$do = isset($_GET['do']) ? trim($_GET['do']) : '';
 $uid = isset($_GET['uid']) ? intval($_GET['uid']) : $_G['uid'];
-
 if ($do == 'filelist') {
     $perpage = isset($_GET['perpage']) ? intval($_GET['perpage']) : 100;//默认每页条数
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数

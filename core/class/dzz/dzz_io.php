@@ -552,7 +552,7 @@ class dzz_io {
 
             if ($attach['aid'] = C::t('attachment')->insert($attach, 1)) {
                 C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
-                if ($tospace) dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1);
+                if ($tospace) dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1, false);
                 if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
                     $attach['img'] = C::t('attachment')->getThumbByAid($attach['aid'], 255, 255);
                     $attach['isimage'] = 1;

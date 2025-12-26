@@ -610,30 +610,31 @@ function getExtOpen(data, isdefault) {
 }
 //文件路径
 function extopen_replace(ico, extid) {
-    ico.icoid = ico.rid;
-    var extdata = _explorer.extopen.all[extid];
-    var extdata_url = '';
-    if (!ico || !extdata) {
-        return false;
+	ico.icoid = ico.rid;
+	var extdata = _explorer.extopen.all[extid];
+	var extdata_url = '';
+	if (!ico || !extdata) {
+		return false;
+	}
+	for (var key in ico) {
+		extdata_url = extdata.url.replace(/{(\w+)}/g, function ($1) {
+			key = $1.replace(/[{}]/g, '');
+			if (key === 'url') {
+				return encodeURIComponent(ico[key]);
+			} else if (key === 'icoid') {
+				return ico.rid;
+			} else if (key === 'path') {
+				return ico.dpath;
+			} else {
+				return ico[key];
+			}
+		});
+	}
+    if (extdata_url.indexOf('dzzjs:') === -1 && extdata_url.indexOf('path=') === -1) {
+        var separator = extdata_url.indexOf('?') !== -1 ? '&' : '?';
+        extdata_url = extdata_url + separator + 'path=' + ico.dpath;
     }
-    for (var key in ico) {
-        extdata_url = extdata.url.replace(/{(\w+)}/g, function ($1) {
-            key = $1.replace(/[{}]/g, '');
-            if (key === 'url') {
-                return encodeURIComponent(ico[key]);
-            } else if (key === 'icoid') {
-                return ico.rid;
-            } else if (key === 'path') {
-                return ico.dpath;
-            } else {
-                return ico[key];
-            }
-        });
-    }
-    if (extdata_url.indexOf('dzzjs:') === -1 && extdata_url.indexOf('?') !== -1 && extdata_url.indexOf('path=') === -1) {
-        extdata_url = extdata_url + '&path=' + ico.dpath;
-    }
-    return extdata_url;
+	return extdata_url;
 }
 _selectfile.prototype._selectInfo = function () {
     //设置全选框信息

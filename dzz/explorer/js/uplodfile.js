@@ -135,22 +135,22 @@ function fileupload(el, fid) {
                     for (var i = 0; i < file.data.folderarr.length; i++) {
                         _explorer.sourcedata.folder[file.data.folderarr[i].fid] = file.data.folderarr[i];
                     }
+                    try{
+                        var inst = $("#position").jstree(true);
+                        var selects=inst.get_selected();
+                        var node=inst.get_parent('#'+selects[0]);
+                        if (node != '#') {
+                            inst.refresh_node(node);
+                        } else {
+                            jQuery("#position").jstree('refresh');
+                        }
+                    }catch(e){}
                 }
                 if (file.data.icoarr) {
                     for (var i = 0; i < file.data.icoarr.length; i++) {
                         if (file.data.icoarr[i].pfid == _filemanage.cons['f-' + fid].fid) {
                             _explorer.sourcedata.icos[file.data.icoarr[i].rid] = file.data.icoarr[i];
                             _filemanage.cons['f-' + fid].CreateIcos(file.data.icoarr[i]);
-                            try{
-                                var inst = $("#position").jstree(true);
-                                var selects=inst.get_selected();
-                                var node=inst.get_parent('#'+selects[0]);
-                                if (node != '#') {
-                                    inst.refresh_node(node);
-                                } else {
-                                    jQuery("#position").jstree('refresh');
-                                }
-                            }catch(e){}
                         }
                     }
                 }

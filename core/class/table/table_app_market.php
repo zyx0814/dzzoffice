@@ -29,7 +29,7 @@ class table_app_market extends dzz_table {
         return $ret;
     }
 
-    public function fetch_by_appid($appid, $havecount = false) { //返回一条数据同时加载统计表数据
+    public function fetch_by_appid($appid, $havecount = false, $outputurl = false) { //返回一条数据同时加载统计表数据
         global $_G;
         $appid = intval($appid);
         if (!$data = parent::fetch($appid)) return array();
@@ -39,7 +39,7 @@ class table_app_market extends dzz_table {
         $data['fileext'] = $data['fileext'] ? explode(',', $data['fileext']) : array();
         $data['icon'] = $data['appico'];
         $data['title'] = $data['appname'];
-        $data['url'] = replace_canshu($data['appurl']);
+        $data['url'] = $outputurl ? outputurl(replace_canshu($data['appurl'])) : replace_canshu($data['appurl']);
         $data['noticeurl'] = replace_canshu($data['noticeurl']);
         if ($havecount) {
             $data['viewnum'] = intval($count['viewnum']);

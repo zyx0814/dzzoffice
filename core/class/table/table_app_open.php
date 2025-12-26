@@ -77,7 +77,7 @@ class table_app_open extends dzz_table {
             while ($value = DB::fetch($query)) {
                 if ($value['appid']) {
                     if (!isset($app_cache[$value['appid']])) {
-                        $app_cache[$value['appid']] = C::t('app_market')->fetch_by_appid($value['appid'], false);
+                        $app_cache[$value['appid']] = C::t('app_market')->fetch_by_appid($value['appid'], false, true);
                     }
                     $app = $app_cache[$value['appid']];
                     if ($app) {

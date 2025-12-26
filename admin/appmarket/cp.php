@@ -180,7 +180,13 @@ if ($do == 'export') {//应用导出
 } elseif ($do == 'install') {//安装应用
     $finish = FALSE;
     $dir = $_GET['app_path'];
+    if (!$dir) {
+        showmessage('未传递app_path参数', $_GET['refer']);
+    }
     $appname = $_GET['app_name'];
+    if (!$appname) {
+        showmessage('未传递app_name参数', $_GET['refer']);
+    }
     $xmlfile = 'dzz_app_' . $appname . '.xml';
     $importfile = DZZ_ROOT . './' . $dir . '/' . $appname . '/' . $xmlfile;
     if (!file_exists($importfile)) {
@@ -191,7 +197,6 @@ if ($do == 'export') {//应用导出
 
     $apparray = getimportdata('Dzz! app');
     installapp($apparray);
-
 } elseif ($do == 'uninstall') {//卸载应用
     $appid = intval($_GET['appid']);
     if (!$app = C::t('app_market')->fetch($appid)) {

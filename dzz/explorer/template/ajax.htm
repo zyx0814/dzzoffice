@@ -756,7 +756,7 @@
     }
     function removeshare(form) {
         layer.confirm('{lang delete_share_links_lose_efficacy_sure}', {skin:'lyear-skin-danger'}, function(index){
-            $.post('{MOD_URL}&op=ajax&do=share&do=del', $(form).serialize(), function (data) {
+            $.post('{MOD_URL}&op=ajax&do=share&do1=del', $(form).serialize(), function (data) {
                 layer.msg(__lang.deleting_not_please_close, {offset:'10px',time:0});
                 if (data['success']) {
                    <!--{if $table}-->

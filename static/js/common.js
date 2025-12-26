@@ -1844,28 +1844,14 @@ function showTopMsg(msg,timeout){
 jQuery(document).ready(function(e) {
     jQuery(document).on('click','a',function(){
 		var href=this.href,id='',name=jQuery(this).attr('title')?jQuery(this).attr('title'):strip_tags(this.innerHTML);
-		
 		if(href.indexOf('user.php?uid=')!==-1){
 			id='profile';
-			try{top.OpenWindow(id, href, __lang.subscriber_data);}catch(e){
-				window.open(href,name);
-				return false;
-			}
+			window.open(href,name);
 			return false;
 		}else if(this.target=='_dzz'){
-			if(jQuery(this).attr('icon')){
-				var taskdata={img:jQuery(this).attr('icon'),name:name};						  
-			}else{
-				var taskdata={};
-			}
 			try{
-				if(top._config){
-					top.OpenWindow('url', href, name,'',taskdata);
-					return false;
-				}else{
-					window.open(href,name);
-					return false;
-				}
+				window.open(href,name);
+				return false;
 			}catch(e){}
 		}
 	});

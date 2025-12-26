@@ -83,9 +83,10 @@ if ($_GET['a'] == 'down') {
                 }
             }, $url);
             //添加path参数；
-            if (strpos($url, '?') !== false && strpos($url, 'path=') === false) {
+            if (strpos($url, 'path=') === false) {
                 $pre = 'preview_';
-                $url .= '&path=' . dzzencode($pre . $path);
+                $separator = strpos($url, '?') !== false ? '&' : '?';
+                $url .= $separator . 'path=' . dzzencode($pre . $path);
             }
             $url = $_G['siteurl'] . $url;
             @header("Location: $url");

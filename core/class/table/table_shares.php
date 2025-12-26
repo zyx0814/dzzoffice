@@ -53,7 +53,6 @@ class table_shares extends dzz_table {
             $eventdata = array(
                 'username' => $setarr['username'],
                 'filename' => $fileinfo['name'],
-                'url' => getglobal('siteurl') . 'index.php?mod=shares&sid=' . dzzencode($insert),
                 'position' => $path,
                 'hash' => $hash,
             );

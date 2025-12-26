@@ -1783,9 +1783,9 @@ function get_os($agent = '') {
 }
 
 function topshowmessage($msg) {
-    include template('common/header_common');
+    include template('common/header_reload');
     echo "<script type=\"text/javascript\">";
-    echo "try{if(top._config){top.showDialog('" . $msg . "');}else{alert('" . $msg . "');}}catch(e){alert('" . $msg . "');}";
+    echo "alert('" . $msg . "');";
     echo "</script>";
     include template('common/footer_reload');
     exit();
@@ -1804,9 +1804,7 @@ function SpaceSize($size, $gid = 0, $isupdate = 0, $uid = 0) {
             $spacearr['maxspacesize'] = C::t('organization')->get_usespace_size_by_orgid($gid);
         }
     } else {
-        if ($uid) {
-            $space = dzzgetspace($uid);
-        } elseif (!$space) {
+        if (!$space) {
             $space = dzzgetspace($uid);
         } elseif($uid) {
             $space['usesize'] = DB::result_first("select usesize from %t where uid=%d", array('user_field', $uid));
@@ -1957,7 +1955,6 @@ function dzzgetspace($uid) {
     //$space['groupsize']=$usergroup['maxspacesize']*1024*1024;
 
     //获取相关设置信息
-    $setting = $_G['setting'];
     if ($space['uid']) {
         $config = DB::fetch_first("select usesize,attachextensions,maxattachsize,addsize,buysize,perm,userspace from " . DB::table('user_field') . " where uid='{$uid}'");
         if($config) {

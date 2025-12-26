@@ -194,7 +194,6 @@ class io_dzz extends io_api {
         } elseif (strpos($path, 'TMP::') === 0) {
             return $_G['siteurl'] . 'index.php?mod=io&op=getStream&path=' . dzzencode($path);
         } else {
-
             $icoarr = C::t('resources')->fetch_by_rid($path);
             if ($icoarr['aid']) {
                 $attachment = C::t('attachment')->fetch($icoarr['aid']);
@@ -1117,13 +1116,11 @@ class io_dzz extends io_api {
                         foreach ($_G['setting']['thumbsize'] as $key => $value) {
                             $this->createThumb('dzz::' . $attach['attachment'], $key);
                         }
-                        /*$this->createThumb('dzz::'.$attach['attachment'],256,256);
-						$this->createThumb('dzz::'.$attach['attachment'],1440,900);*/
                     } catch (Exception $e) {
                     }
                 }
                 C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
-                if ($remoteid > 1) dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', false, '', 1);
+                if ($remoteid > 1) dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', false, '', 1, false);
                 unset($attach['attachment']);
                 return $attach;
             } else {
@@ -1132,7 +1129,14 @@ class io_dzz extends io_api {
         }
     }
 
-    public static function uploadToattachment($attach, $fid, $force = false) {
+
+    /** 附件保存到网盘
+     * @param array $attach 附件信息
+     * @param int $fid 文件夹id
+     * @param int $force 强制保存
+     * @return array|bool
+     */
+    public static function uploadToattachment($attach, $fid, $force = false, $spacesize = false) {
         global $_G, $documentexts, $space;
         if (!$force && !perm_check::checkperm_Container($fid, 'upload')) {
             return array('error' => lang('folder_upload_no_privilege'));
@@ -1141,6 +1145,9 @@ class io_dzz extends io_api {
             return array('error' => lang('parent_directory_not_exist'));
         }
         $gid = $folder['gid'];
+        if ($spacesize && !SpaceSize($attach['filesize'], $gid)) {
+            return array('error' => lang('inadequate_capacity_space'));
+        }
 
         $attach['filename'] = IO::getFileName($attach['filename'], $fid);
 
@@ -1695,7 +1702,7 @@ class io_dzz extends io_api {
                 );
                 if ($attach['aid'] = DB::insert('attachment', ($attach), 1)) {
                     C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
-                    dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1);
+                    dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1, false);
 
                     return $attach;
                 }
@@ -2528,7 +2535,7 @@ class io_dzz extends io_api {
             );
             if ($attach['aid'] = C::t('attachment')->insert($attach, 1)) {
                 C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
-                dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1);
+                dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1, false);
                 unset($attach['attachment']);
                 return $attach;
             } else {
@@ -2598,9 +2605,10 @@ class io_dzz extends io_api {
 
     }
 
+
     public function shenpiCreateFile($fid, $path, $attach) {
         $data = $this->CreateFolderByPath($path, $fid);
-        return io_dzz::uploadToattachment($attach, $data['pfid']);
+        return io_dzz::uploadToattachment($attach, $data['pfid'], false, true);
     }
 }
 

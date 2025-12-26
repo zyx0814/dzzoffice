@@ -309,18 +309,10 @@ function feed_addAttach(arr,el,tid){
 	
 	el.replaceWith(html);
 	check_attach_share_tid(tid);
-	//document.getElementById('attachmentViewBox_0').innerHTML+=html;
-	
-	//jQuery('#attachmentViewBox_0').html(html);
 }
 function feed_downAttach(qid){
 	var url=DZZSCRIPT+'?mod=comment&op=down&qid='+qid;
-	if(BROWSER.ie){
-			window.open(url);
-		}else{
-			if(!window.frames['hidefram']) jQuery('<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>').appendTo('body');
-			window.frames['hideframe'].location=url;
-		}
+	window.open(url);
 }
 function feed_attach_saveto(qid){
 	var url=DZZSCRIPT+'?mod=comment&op=saveto&qid='+qid;
@@ -335,20 +327,10 @@ function feed_attach_saveto(qid){
             showmessage(__lang.do_failed, 'error', 3000, 1);
         });
 	});
-	
-	
 }
 function feed_attach_preview(qid){
 	var url=DZZSCRIPT+'?mod=comment&op=preview&qid='+qid;
-	if(!top._config) window.open(url);
-	else{
-		if(!window.frames['hidefram']) jQuery('<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>').appendTo('body');
-		window.frames['hideframe'].location=url;
-	}
-}
-function feed_attach_del(qid){
-	var url=DZZSCRIPT+'?mod=comment&op=delete&qid='+qid;
-	
+	window.open(url);
 }
 
 function check_attach_share_tid(tid){
@@ -371,7 +353,6 @@ function check_attach_share_tid(tid){
 }
 function removeAttach(el,tid){
 	el.slideUp(500,function(){jQuery(this).remove();check_attach_share_tid(tid);});
-		
 }
 
 //从桌面选择文件
@@ -389,8 +370,6 @@ function uploadfrom_desktop(tid){
 		exts = encodeURIComponent(exts);
 		 showWindow('openfile', 'index.php?mod=system&op=filewindow&handlekey=svaefile&mulitype=1&exts='+exts+'&callback=opencallback', 'get', '0',function(data){//只打开本地盘
 		var datas=data;
-		
-		
 		for(var i in datas){
 			var arr=datas[i];
 			var html='';
@@ -447,10 +426,6 @@ function check_publish_enable(tid){
 		jQuery('#message_'+tid).removeClass('writein');
 	}
 }
-
-
-
-
 
 (function($) {
  

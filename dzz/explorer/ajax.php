@@ -554,7 +554,7 @@ if ($do == 'upload') {//上传图片文件
         $files = $_GET['rid'];
     }
     if (isset($_GET['share'])) {
-        if (isset($_GET['delshare']) && $_GET['delshare'] == 1 && isset($_GET['do']) && $_GET['do'] == 'del') {
+        if (isset($_GET['delshare']) && $_GET['delshare'] == 1 && isset($_GET['do1']) && $_GET['do1'] == 'del') {
             $id = isset($_GET['id']) ? intval($_GET['id']) : '';
             $return = C::t('shares')->delete_by_id($id);
             if ($return['success']) {

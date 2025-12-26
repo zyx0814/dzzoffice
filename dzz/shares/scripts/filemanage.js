@@ -1256,9 +1256,10 @@ function extopen_replace(ico, extid) {
 			}
 		});
 	}
-	if (extdata_url.indexOf('dzzjs:') === -1 && extdata_url.indexOf('?') !== -1 && extdata_url.indexOf('path=') === -1) {
-		extdata_url = extdata_url + '&path=' + ico.dpath;
-	}
+    if (extdata_url.indexOf('dzzjs:') === -1 && extdata_url.indexOf('path=') === -1) {
+        var separator = extdata_url.indexOf('?') !== -1 ? '&' : '?';
+        extdata_url = extdata_url + separator + 'path=' + ico.dpath;
+    }
 	return extdata_url;
 }
 

@@ -18,16 +18,16 @@ for(var i in arr['attachs']){
 	}
 	html+='</div><div class="p-2">';
 	if(attach.preview>0){
-		html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
+		html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
 	}
 	if(attach.type=='dzzdoc' || attach.type=='link'){
 	} else {
-		html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download;
+		html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download;
 		if(attach.downloads>0){
 			html+='('+attach['downloads']+__lang.degree+')';
 		}
 		html+='</a>';
-		html+='<a href="javascript:void(0);" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
+		html+='<a href="javascript:void(0);" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
 	}
 	html+='</div>';
 	html+='</div>';
@@ -88,17 +88,17 @@ function feed_reply(arr){
 		}
 		html+='</div><div class="p-2">';
 		if(attach.preview>0){
-			html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
+			html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
 		}
 		if(attach.type=='dzzdoc' || attach.type=='link'){
 
 		} else {
-			html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download;
+			html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download;
 			if(attach.downloads>0){
 				html+='('+attach['downloads']+__lang.degree+')';
 			}
 			html+='</a>';
-			html+='<a href="javascript:void(0);" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
+			html+='<a href="javascript:void(0);" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
 		}
 		html+='</div>';
 		html+='</div>';
@@ -222,12 +222,7 @@ function feed_addAttach(arr,el,tid){
 }
 function feed_downAttach(qid){
 	var url=DZZSCRIPT+'?mod=comment&op=down&qid='+qid;
-	if(BROWSER.ie){
-			window.open(url);
-		}else{
-			if(!window.frames['hidefram']) jQuery('<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>').appendTo('body');
-			window.frames['hideframe'].location=url;
-		}
+	window.open(url);
 }
 function feed_attach_saveto(qid){
 	var url=DZZSCRIPT+'?mod=comment&op=saveto&qid='+qid;
@@ -245,11 +240,7 @@ function feed_attach_saveto(qid){
 }
 function feed_attach_preview(qid){
 	var url=DZZSCRIPT+'?mod=comment&op=preview&qid='+qid;
-	if(!top._config) window.open(url);
-	else{
-		if(!window.frames['hidefram']) jQuery('<iframe id="hideframe" name="hideframe" src="about:blank" frameborder="0" marginheight="0" marginwidth="0" width="0" height="0" allowtransparency="true" style="display:none;z-index:-99999"></iframe>').appendTo('body');
-		window.frames['hideframe'].location=url;
-	}
+	window.open(url);
 }
 
 function check_attach_share_tid(tid){
@@ -272,7 +263,6 @@ function check_attach_share_tid(tid){
 }
 function removeAttach(el,tid){
 	el.slideUp(500,function(){jQuery(this).remove();check_attach_share_tid(tid);});
-		
 }
 
 //从桌面选择文件

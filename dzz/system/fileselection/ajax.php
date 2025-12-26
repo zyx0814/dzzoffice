@@ -72,9 +72,11 @@ if ($operation == 'upload') {//上传图片文件
         $arr['error'] = lang('failure_newfolder');
     }
     exit(json_encode($arr));
-    // }
-
-
+} elseif ($operation == 'newLink') {//新建连接
+    $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
+    if (!perm_check::checkperm_Container($fid, 'upload')) {
+        $arr = array('error' => lang('folder_upload_no_privilege'));
+    }
 } elseif ($operation == 'linkadd') {
     if (isset($_GET['createlink']) && $_GET['createlink']) {
         $link = isset($_GET['link']) ? trim($_GET['link']) : '';
