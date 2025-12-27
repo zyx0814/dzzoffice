@@ -71,10 +71,6 @@ class dzz_error {
 
         list($showtrace, $logtrace) = dzz_error::debug_backtrace();
         $title = lang('db_' . $message);
-        $title_msg = lang('db_error_message');
-        $title_sql = lang('db_query_sql');
-        $title_backtrace = lang('backtrace');
-        $title_help = lang('db_help_link');
 
         $db = &DB::object();
         $dberrno = $db->errno();

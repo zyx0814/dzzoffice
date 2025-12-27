@@ -52,7 +52,7 @@ if ($_GET['from']) {
 if (empty($_GET['step'])) $_GET['step'] = 'start';
 $lockfile = DZZ_ROOT . './data/update.lock';
 if (file_exists($lockfile) && !$_GET['from']) {
-    show_msg('请您先手工删除 ./data/update.lock 文件，再次运行本文件进行升级。');
+    show_msg('请您先手工删除 ./data/update.lock 文件，然后再运行本文件进行升级。');
 }
 
 $sqlfile = DZZ_ROOT . './install/data/install.sql';
@@ -102,7 +102,7 @@ if ($_GET['step'] == 'start') {
         show_msg('您的站点未关闭，正在关闭，请稍后...', $theurl . '?step=start', 5000);
     }
     $phpversion = PHP_VERSION;
-    $msg = 'php版本不支持，仅支持php7+到php8以下，建议使用php7.4<br>当前版本：' . $phpversion . '<br><br><a href="' . $theurl . '?step=prepare' . ($_GET['from'] ? '&from=' . rawurlencode($_GET['from']) . '&frommd5=' . rawurlencode($_GET['frommd5']) : '') . '">已更换PHP版本，开始升级</a>';
+    $msg = 'php版本不支持，仅支持php7.0+，建议使用php7.4或php8.0+<br>当前版本：' . $phpversion . '<br><br><a href="' . $theurl . '?step=prepare' . ($_GET['from'] ? '&from=' . rawurlencode($_GET['from']) . '&frommd5=' . rawurlencode($_GET['frommd5']) : '') . '">已更换PHP版本，开始升级</a>';
     if (strcmp($phpversion, '7+') < 0) {
         show_msg($msg);
     }
@@ -437,6 +437,19 @@ if ($_GET['step'] == 'start') {
         fwrite($fp, ' ');
         fclose($fp);
     }
+    //删除多余文件
+    @unlink(DZZ_ROOT . './admin/appmarket/import.php');
+    @unlink(DZZ_ROOT . './admin/appmarket/list.php');
+    @unlink(DZZ_ROOT . './misc/seluser.php');
+    @unlink(DZZ_ROOT . './dzz/attach/down.php');
+    @unlink(DZZ_ROOT . './dzz/attach/preview.php');
+    @unlink(DZZ_ROOT . './dzz/attach/view.php');
+    @unlink(DZZ_ROOT . './dzz/system/attachment.php');
+    @unlink(DZZ_ROOT . './dzz/system/save.php');
+    //删除之前版本多余模板文件
+    dir_clear(DZZ_ROOT . './admin/login/images');
+    dir_clear(DZZ_ROOT . './admin/member/images');
+    dir_clear(DZZ_ROOT . './dzz/system/ueditor/php');
     //删除数据库恢复文件，防止一些安全问题；
     @unlink(DZZ_ROOT . './data/restore.php');
     dir_clear(DZZ_ROOT . './data/template');
@@ -469,10 +482,6 @@ function has_another_special_table($tablename, $key) {
     } else {
         return TRUE;
     }
-}
-
-function converttodzzcode($aid) {
-    return 'path=' . dzzencode('attach::' . $aid);
 }
 
 function get_special_tables_array($tablename) {
@@ -617,14 +626,7 @@ END;
 
 function show_footer() {
     $date = date("Y");
-    print<<<END
-	</div>
-	<div id="footer">Copyright © 2012-$date DzzOffice.com All Rights Reserved.</div>
-	</div>
-	<br>
-	</body>
-	</html>
-END;
+    echo "</div><div id=\"footer\">Copyright © 2012-$date www.dzzoffice.com All Rights Reserved.</div></div><br></body></html>";
 }
 
 function runquery($sql) {
@@ -659,90 +661,17 @@ function runquery($sql) {
     }
 }
 
-
-function save_config_file($filename, $config, $default, $deletevar) {
-    $config = setdefault($config, $default, $deletevar);
-    $date = gmdate("Y-m-d H:i:s", time() + 3600 * 8);
-    $content = <<<EOT
-<?php
-\$_config = array();
-
-EOT;
-    $content .= getvars(array('_config' => $config));
-    $content .= "\r\n// " . str_pad('  THE END  ', 50, '-', STR_PAD_BOTH) . " //\r\n\r\n?>";
-    if (!is_writable($filename) || !($len = file_put_contents($filename, $content))) {
-        file_put_contents(DZZ_ROOT . './data/config.php', $content);
-        return 0;
-    }
-    return 1;
-}
-
-function setdefault($var, $default, $deletevar) {
-    foreach ($default as $k => $v) {
-        if (!isset($var[$k])) {
-            $var[$k] = $default[$k];
-        } elseif (is_array($v)) {
-            $var[$k] = setdefault($var[$k], $default[$k]);
-        }
-    }
-    foreach ($deletevar as $k) {
-        unset($var[$k]);
-    }
-    return $var;
-}
-
-function getvars($data, $type = 'VAR') {
-    $evaluate = '';
-    foreach ($data as $key => $val) {
-        if (!preg_match("/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/", $key)) {
-            continue;
-        }
-        if (is_array($val)) {
-            $evaluate .= buildarray($val, 0, "\${$key}") . "\r\n";
-        } else {
-            $val = addcslashes($val, '\'\\');
-            $evaluate .= $type == 'VAR' ? "\$$key = '$val';\n" : "define('" . strtoupper($key) . "', '$val');\n";
-        }
-    }
-    return $evaluate;
-}
-
-function buildarray($array, $level = 0, $pre = '$_config') {
-    static $ks;
-    $return = '';
-    if ($level == 0) {
-        $ks = array();
-    }
-
-    foreach ($array as $key => $val) {
-        if ($level == 0) {
-            $newline = str_pad('  CONFIG ' . strtoupper($key) . '  ', 70, '-', STR_PAD_BOTH);
-            $return .= "\r\n// $newline //\r\n";
-            if ($key == 'admincp') {
-                $newline = str_pad(' Founders: $_config[\'admincp\'][\'founder\'] = \'1,2,3\'; ', 70, '-', STR_PAD_BOTH);
-                $return .= "// $newline //\r\n";
-            }
-        }
-
-        $ks[$level] = $ks[$level - 1] . "['$key']";
-        if (is_array($val)) {
-            $ks[$level] = $ks[$level - 1] . "['$key']";
-            $return .= buildarray($val, $level + 1, $pre);
-        } else {
-            $val = is_string($val) || strlen($val) > 12 || !preg_match("/^\-?[1-9]\d*$/", $val) ? '\'' . addcslashes($val, '\'\\') . '\'' : $val;
-            $return .= $pre . $ks[$level - 1] . "['$key']" . " = $val;\r\n";
-        }
-    }
-    return $return;
-}
-
 function dir_clear($dir) {
-    global $lang;
     if ($directory = @dir($dir)) {
         while ($entry = $directory->read()) {
             $filename = $dir . '/' . $entry;
-            if (is_file($filename)) {
-                @unlink($filename);
+            if($entry != '.' && $entry != '..') {
+                if (is_file($filename)) {
+                    @unlink($filename);
+                } else {
+                    dir_clear($filename);
+                    @rmdir($filename);
+                }
             }
         }
         $directory->close();

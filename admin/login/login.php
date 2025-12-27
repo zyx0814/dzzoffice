@@ -34,11 +34,11 @@ if ($this->core->var['inajax']) {
     ajaxshowheader();
     ajaxshowfooter();
 }
-
+$lang = lang();
 if($this->cpaccess == -2 || $this->cpaccess == -3) {
-    html_login_header(false);
+    html_login_header(false, $lang);
 } else {
-    html_login_header();
+    html_login_header(true, $lang);
 }
 if($this->cpaccess == -2 || $this->cpaccess == -3) {
     echo '<div class="alert alert-danger" role="alert">' . lang('login_cp_noaccess') . '</div>';
@@ -53,18 +53,15 @@ if($this->cpaccess == -2 || $this->cpaccess == -3) {
 
 } else {
 
-    html_login_form();
+    html_login_form($lang);
 }
 
 html_login_footer();
 
-function html_login_header($form = true) {
+function html_login_header($form = true, $lang = array()) {
     global $_G;
-    $uid = $_G['uid'];
     $charset = CHARSET;
-    $lang = &lang();
     $title = $lang['login_title'];
-    $tips = $lang['login_tips'];
 
     echo <<<EOT
 <!DOCTYPE>
@@ -94,8 +91,6 @@ EOT;
 }
 
 function html_login_footer($halt = true) {
-    $version = CORE_VERSION;
-    $release = CORE_RELEASE;
     echo <<<EOT
 </body>
 </html>
@@ -104,18 +99,14 @@ EOT;
     $halt && exit();
 }
 
-function html_login_form() {
+function html_login_form($lang = array()) {
     global $_G;
-    $uid = $_G['uid'];
-    $isguest = !$uid;
-    $lang1 = lang();
     $year = dgmdate(TIMESTAMP, 'Y');
-    $maintitle = lang('title_admincp');
-    $loginuser = $isguest ? '<div class="mb-3"><input class="form-control" name="admin_email" type="text" title="" autofocus placeholder="' . lang('login_email_username') . '"  required/></div>' : '<p class="text-center text-muted">' . $_G['member']['username'] . '</p><p class="text-center text-muted">' . $_G['member']['email'] . '</p>';
+    $maintitle = $lang['title_admincp'];
+    $loginuser = !$_G['uid'] ? '<div class="mb-3"><input class="form-control" name="admin_email" type="text" title="" autofocus placeholder="' . lang('login_email_username') . '"  required/></div>' : '<h5 class="text-center">' . $_G['member']['username'] . '</h5><p class="text-center text-muted">' . $_G['member']['email'] . '</p>';
     $sid = $_G['sid'];
-    $avatarstatus = $_G['member']['avatarstatus'];
     $avastar = '';
-    if (!$uid) {
+    if (!$_G['uid']) {
         if ($_G['setting']['bbclosed']) {
             $sitelogo = 'static/image/common/logo.png';
         } else {
@@ -123,10 +114,9 @@ function html_login_form() {
         }
         $avastar = '<img src="' . $sitelogo . '">';
     } else {
-        $avastar = avatar_block($uid);
+        $avastar = avatar_block($_G['uid']);
     }
     $extra = BASESCRIPT . '?' . $_SERVER['QUERY_STRING'];
-    $forcesecques = '<option value="0">' . ($_G['config']['admincp']['forcesecques'] ? $lang1['forcesecques'] : $lang1['security_question_0']) . '</option>';
     echo <<<EOT
 <div class="card card-shadowed p-5 mb-0 mr-2 ml-2" style="width: 380px;">
 <form method="post" name="login" id="loginform" class="signin-form loginForm" action="$extra" onsubmit="pwmd5('admin_password')">
@@ -137,10 +127,10 @@ function html_login_form() {
 		</div>
 		$loginuser
 		<div class="mb-3">
-			<input type="password" class="form-control" id="admin_password" autofocus placeholder="$lang1[password]" name="admin_password" value="" required>
+			<input type="password" class="form-control" id="admin_password" autofocus placeholder="$lang[password]" name="admin_password" value="" required>
 		</div>
 		<div class="mb-3 d-grid">
-		<input name="submit" value="$lang1[login]" type="submit" class="btn btn-primary bodyloading"  />
+		<input name="submit" value="$lang[login]" type="submit" class="btn btn-primary bodyloading"  />
 		</div>
 </form>
 <p class="text-center text-muted mb-0"><span>Powered By <a href="http://www.dzzoffice.com" target="_blank" class="dcolor">DzzOffice</a>&nbsp;&copy; 2012-$year</span></p>

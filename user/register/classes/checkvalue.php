@@ -26,7 +26,7 @@ class Checkvalue {
         $seccodecheck = $_G['setting']['seccodestatus'] & 1;
 
         //验证码
-        if ($secqaacheck || $seccodecheck) {
+        if ($seccodecheck) {
             if (!check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
                 showTips(array('error' => lang('submit_seccode_invalid')), $type);
             }

@@ -433,8 +433,13 @@ function dir_clear($dir) {
     if ($directory = @dir($dir)) {
         while ($entry = $directory->read()) {
             $filename = $dir . '/' . $entry;
-            if (is_file($filename)) {
-                @unlink($filename);
+            if($entry != '.' && $entry != '..') {
+                if (is_file($filename)) {
+                    @unlink($filename);
+                } else {
+                    dir_clear($filename);
+                    @rmdir($filename);
+                }
             }
         }
         $directory->close();
