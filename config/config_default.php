@@ -170,6 +170,10 @@ $_config['security']['querysafe']['dnote']	= array('/*','*/','#','--','"');
 $_config['security']['querysafe']['dlikehex']	= 1;
 $_config['security']['querysafe']['afullnote']	= 0;
 
+$_config['security']['fsockopensafe']['port']	= array(80, 443);	//fsockopen 有效的端口
+$_config['security']['fsockopensafe']['ipversion']	= array('ipv6', 'ipv4');	//fsockopen 有效的IP协议
+$_config['security']['fsockopensafe']['verifypeer']	= false;	// fsockopen是否验证证书有效性，开启可提升安全性，但需自行解决证书配置问题
+
 $_config['admincp']['founder']			= '1';		// 站点创始人：拥有站点管理后台的最高权限，每个站点可以设置 1名或多名创始人
 													// 可以使用uid，也可以使用用户名；多个创始人之间请使用逗号“,”分开;
 $_config['admincp']['checkip']			= 1;		// 后台管理操作是否验证管理员的 IP, 1=是[安全], 0=否。仅在管理员无法登录后台时设置 0。

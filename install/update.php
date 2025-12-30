@@ -440,16 +440,21 @@ if ($_GET['step'] == 'start') {
     //删除多余文件
     @unlink(DZZ_ROOT . './admin/appmarket/import.php');
     @unlink(DZZ_ROOT . './admin/appmarket/list.php');
+    @unlink(DZZ_ROOT . './admin/appmarket/upgrade.php');
     @unlink(DZZ_ROOT . './misc/seluser.php');
     @unlink(DZZ_ROOT . './dzz/attach/down.php');
     @unlink(DZZ_ROOT . './dzz/attach/preview.php');
     @unlink(DZZ_ROOT . './dzz/attach/view.php');
     @unlink(DZZ_ROOT . './dzz/system/attachment.php');
     @unlink(DZZ_ROOT . './dzz/system/save.php');
+    @unlink(DZZ_ROOT . './dzz/system/fileselection/listcontent.php');
     //删除之前版本多余模板文件
     dir_clear(DZZ_ROOT . './admin/login/images');
     dir_clear(DZZ_ROOT . './admin/member/images');
     dir_clear(DZZ_ROOT . './dzz/system/ueditor/php');
+    dir_clear(DZZ_ROOT . './dzz/styles/icoblock');
+    dir_clear(DZZ_ROOT . './dzz/styles/images');
+    dir_clear(DZZ_ROOT . './dzz/styles/thame');
     //删除数据库恢复文件，防止一些安全问题；
     @unlink(DZZ_ROOT . './data/restore.php');
     dir_clear(DZZ_ROOT . './data/template');

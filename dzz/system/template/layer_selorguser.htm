@@ -121,7 +121,7 @@
 	<div class="selected-member">{lang user_select_selected}<b class="selected_sum" style="padding:0 5px;">{eval echo count($selects);}</b>{lang selected_ge_user}</div>
 		<ul class="sele-right-classa" id="seluser">
 		<!--{loop $selects $key $value}-->
-		<li id="seluser_sl_$key" class="right-classa-depart" data-val="$key"> {eval echo avatar_block($value['uid']);}
+		<li id="seluser_sl_$key" class="right-classa-depart" data-val="$key"> {eval echo avatar_block($value['uid'], array(), null, $value);}
 			$value['username'] <i class="ti-close mdi mdi-close"></i> </li>
 		<!--{/loop}-->
 		</ul>

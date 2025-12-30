@@ -61,7 +61,7 @@ function generateDepartmentPath($uid) {
 function generateUserItem($user, $department = '') {
     return [
         "uid" => $user['uid'],
-        "avatar" => avatar_block($user['uid']),
+        "avatar" => avatar_block($user['uid'], array(), null, $user),
         "username" => $user['username'],
         "email" => $user['email'],
         "status" => $user['status'],
@@ -127,7 +127,7 @@ function getRawUserData($orgid, $issearch, $limitsql) {
         }
         $count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('user') . " WHERE $where",$params);
         if ($count) {
-            $userData = DB::fetch_all("SELECT username, uid, email, groupid, `status` FROM " . DB::table('user') . " WHERE $where $sortSql limit $limitsql", $params);
+            $userData = DB::fetch_all("SELECT username, uid, email, groupid, `status`, avatarstatus, headerColor FROM " . DB::table('user') . " WHERE $where $sortSql limit $limitsql", $params);
         }
         $org['orgname'] = '搜索结果';
         $orgid = 0;

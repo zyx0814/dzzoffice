@@ -124,9 +124,6 @@ if ($operation == 'filelist') {
                                 continue;
                             }
                         }
-                        if ($v['type'] == 'image') {
-                            $v['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=100&height=90&path=' . dzzencode('attach::' . $v['aid']);
-                        }
                         $data[$v['rid']] = $v;
                     }
                     $folderdata[$folder['fid']] = $folder;//文件夹信息

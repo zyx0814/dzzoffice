@@ -64,9 +64,6 @@ _explorer.Permission_Container=function(action,fid){
 	//判断超级权限
 	if(!_explorer.FolderSPower(sperm,action)) return false;
 	if(_explorer.space.uid<1) return false;//游客没有权限；
-	/*if(_explorer.space.self>1){
-		 return true;//系统管理员有权限
-	}*/
 	if(gid>0){
 		if(action=='admin'){
 			if(_explorer.space.self>1 || _explorer.sourcedata.folder[fid].ismoderator>0) return true;
@@ -112,14 +109,6 @@ _explorer.Permission=function(action,data){
 	var fid=data.pfid;
 	if(action=='download'){ //不是附件类型的不能下载
 		if(data.type!='document' && data.type!='attach' && data.type!='image' && data.type!='folder') return false;
-	}else if(action=='copy'){ //回收站内不能复制
-		if(data.flag=='recycle') return false;
-	}else if(action=='paste'){ //没有复制或剪切，没法粘帖
-		if(_explorer.cut.icos.length<1) return false;
-		action=_explorer.sourcedata.icos[_explorer.cut.icos[0]].type;
-	}else if(action=='chmod'){ //修改权限
-		if(data.bz && data.bz.split(':')[0]=='ftp') return true;
-		else return false;
 	}else if(action=='rename'){ //重命名
 		if(data.type=='folder' && data.bz && (data.bz.split(':')[0]=='ALIOSS' || data.bz.split(':')[0]=='qiniu')) return false;
 		action='delete';

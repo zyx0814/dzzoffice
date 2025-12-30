@@ -37,7 +37,7 @@ if ($ext == 'dzz' || ($ext && in_array($ext, $_G['setting']['unRunExts']))) {//å
 } else {
     $mime = dzz_mime::get_type($ext);
 }
-@header('Content-Disposition: inline; filename="' . $filename . '"');
+@header('Content-Disposition: inline; filename="' . $filename . '"; filename*=utf-8\'\'' . rawurlencode($filename));
 @header('cache-control:public');
 @header('Content-Type: ' . $mime);
 @header('Accept-Ranges: bytes');

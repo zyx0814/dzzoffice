@@ -19,8 +19,6 @@ class table_resources_version extends dzz_table {
             $data['img'] = DZZSCRIPT . '?mod=io&op=thumbnail&size=small&path=' . dzzencode('attach::' . $data['aid']);
         } elseif ($data['type'] == 'attach' || $data['type'] == 'document') {
             $data['img'] = geticonfromext($data['ext'], $data['type']);
-        } elseif ($data['type'] == 'dzzdoc') {
-            $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         } else {
             $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         }
@@ -265,7 +263,6 @@ class table_resources_version extends dzz_table {
         }
         //更改resources表数据
         $updatearr = array('vid' => $vid, 'name' => $filename, 'size' => $versioninfo['size'], 'ext' => $versioninfo['ext'], 'type' => $versioninfo['type']);
-        //DB::update('resources',$updatearr,array('rid'=>$versioninfo['rid']))
         if (C::t('resources')->update_by_rid($versioninfo['rid'], $updatearr)) {
             //文件路径信息
             $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
@@ -421,10 +418,8 @@ class table_resources_version extends dzz_table {
         //将数据插入版本表
         if ($vid = parent::insert($setarr, 1)) {
             //更新属性表数据
-            //DB::update('resources_attr',array('vid'=>$vid),array('rid'=>$rid,'vid'=>0));
             C::t('resources_attr')->update_by_skey($rid, 0, array('vid' => $vid));
             //更新主表数据
-            //DB::update('resources',array('vid'=>$vid),array('rid'=>$rid))
             if (C::t('resources')->update_by_rid($rid, array('vid' => $vid))) {
                 $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
                 $path = preg_replace('/dzz:(.+?):/', '', $path);

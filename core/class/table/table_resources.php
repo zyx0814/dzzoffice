@@ -57,7 +57,6 @@ class table_resources extends dzz_table {
         if (!perm_check::checkperm('edit', $infoarr)) {
             return array('error' => lang('file_edit_no_privilege'));
         }
-        //DB::update($this->_table, array('name' => $newname, 'dateline' => TIMESTAMP), array('rid' => $rid))
         if (self::update_by_rid($rid, array('name' => $newname, 'dateline' => TIMESTAMP))) {
             $position = C::t('resources_path')->fetch_pathby_pfid($fid);
             $position = preg_replace('/dzz:(.+?):/', '', $position);
@@ -377,9 +376,6 @@ class table_resources extends dzz_table {
         } elseif ($data['type'] == 'shortcut') {
             $data['ttype'] = $data['tdata']['type'];
             $data['ext'] = $data['tdata']['ext'];
-        } elseif ($data['type'] == 'dzzdoc') {
-            $data['url'] = DZZSCRIPT . '?mod=document&icoid=' . $apath;
-            $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         } elseif ($data['type'] == 'folder') {
             $relativepath = str_replace(':', '', strrchr($data['path'], ':'));
             $data['position'] = substr($relativepath, 0, strlen($relativepath) - 1);
@@ -1017,8 +1013,6 @@ class table_resources extends dzz_table {
             $data['img'] = geticonfromext($data['ext'], $data['type']);
         } elseif ($data['type'] == 'shortcut') {
             $data['img'] = isset($data['tdata']['img']) ? $data['tdata']['img'] : geticonfromext($data['tdata']['ext'], $data['tdata']['type']);
-        } elseif ($data['type'] == 'dzzdoc') {
-            $data['img'] = isset($data['img']) ? $data['img'] : geticonfromext($data['ext'], $data['type']);
         } elseif ($data['type'] == 'folder') {
             $data['img'] = $data['img'] ? $data['img'] : 'dzz/images/default/system/' . $data['flag'] . '.png';
         } else {

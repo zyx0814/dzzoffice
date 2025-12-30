@@ -20,7 +20,7 @@ $lang = array(
     'share_stop_sharing3' => '<p class="text-center">该条分享记录将被恢复访问。</p><p class="text-center">你确认要取消屏蔽该条分享吗？</p>',
     'share_file_content' => '好东西要晒出来，快把你的文件分享给身边的朋友们吧。',
     'share_list' => '分享列表',
-    'report_list' => '举报列表'
+    'report_list' => '举报列表',
 );
 
 ?>

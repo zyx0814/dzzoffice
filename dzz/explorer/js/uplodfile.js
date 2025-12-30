@@ -136,7 +136,7 @@ function fileupload(el, fid) {
                         _explorer.sourcedata.folder[file.data.folderarr[i].fid] = file.data.folderarr[i];
                     }
                     try{
-                        var inst = $("#position").jstree(true);
+						var inst = $("#position").jstree(true);
                         var selects=inst.get_selected();
                         var node=inst.get_parent('#'+selects[0]);
                         if (node != '#') {
@@ -144,7 +144,7 @@ function fileupload(el, fid) {
                         } else {
                             jQuery("#position").jstree('refresh');
                         }
-                    }catch(e){}
+					}catch(e){}
                 }
                 if (file.data.icoarr) {
                     for (var i = 0; i < file.data.icoarr.length; i++) {

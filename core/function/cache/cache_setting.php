@@ -9,7 +9,7 @@ function build_cache_setting() {
 
     $skipkeys = array('backupdir', 'custombackup');
     $serialized = array('verify', 'unRunExts', 'iconview', 'storage', 'reginput', 'memory', 'secqaa', 'sitemessage', 'disallowfloat',
-        'seccodedata', 'strongpw', 'upgrade', 'desktop_default', 'loginset', 'at_range', 'thumbsize');
+        'seccodedata', 'strongpw', 'upgrade', 'loginset', 'at_range', 'thumbsize');
 
     $data = array();
 
@@ -20,7 +20,6 @@ function build_cache_setting() {
             $setting['svalue'] .= substr($setting['svalue'], -1, 1) != '/' ? '/' : '';
         } elseif ($setting['skey'] == 'attachurl') {
             $setting['svalue'] .= substr($setting['svalue'], -1, 1) != '/' ? '/' : '';
-
         } elseif (in_array($setting['skey'], $serialized)) {
             $setting['svalue'] = @dunserialize($setting['svalue'], $setting['skey']);
             if ($setting['skey'] == 'search') {
@@ -42,9 +41,6 @@ function build_cache_setting() {
     $data['disallowfloat'] = is_array($data['disallowfloat']) ? implode('|', $data['disallowfloat']) : '';
 
     if (!$data['imagelib']) unset($data['imageimpath']);
-
-    $data['iconview'] = C::t('iconview')->fetch_all();
-
 
     $data['seccodedata'] = is_array($data['seccodedata']) ? $data['seccodedata'] : array();
     if ($data['seccodedata']['type'] == 2) {
@@ -94,7 +90,6 @@ function build_cache_setting() {
     if (!$data['jspath']) {
         $data['jspath'] = 'static/js/';
     }
-
 
     $reginputbwords = array('username', 'password', 'password2', 'email');
     if (in_array($data['reginput']['username'], $reginputbwords) || !preg_match('/^[A-z]\w+?$/', $data['reginput']['username'])) {

@@ -85,7 +85,6 @@ _selectfile.select_Scrolly = function (els) {
         });
         new PerfectScrollbar(this);
     })
-
 }
 
 //iocn图标切换
@@ -107,7 +106,6 @@ _selectfile.get_template = function (sid, whole, disp, asc) {
             case 2:
             case 3:
                 str = jQuery('#template_middleicon').html();
-
                 break;
             case 4:
                 str = jQuery('#template_detaillist').html();
@@ -132,8 +130,8 @@ _selectfile.get_template = function (sid, whole, disp, asc) {
                 break;
         }
     }
+    if (!str) return '';
     return str;
-
 };
 _selectfile.prototype.CreateIcos = function (data, flag) {
     var self = this;
@@ -165,8 +163,6 @@ _selectfile.prototype.CreateIcos = function (data, flag) {
 
     html = html.replace(/\{username\}/g, data.username);
     html = html.replace(/\{replynum\}/g, data.replynum ? data.replynum : '0');
-
-
     html = html.replace(/\{zIndex\}/g, 10);
     html = html.replace(/\{error\}/g, data.error);
     html = html.replace(/\{size\}/g, ((data.type === 'folder' || data.type === 'app' || data.type === 'shortcut') ? '' : data.fsize));
@@ -186,25 +182,11 @@ _selectfile.prototype.CreateIcos = function (data, flag) {
     html = html.replace(/\{times\}/g, data.times);
     html = html.replace(/\{downs\}/g, data.downs);
     html = html.replace(/\{expireday\}/g, data.expireday);
-    html = html.replace(/\{sharelink\}/g, data.sharelink);
     html = html.replace(/dsrc=\"\{qrcode\}\"/g, 'src="{qrcode}"');
     html = html.replace(/dsrc='\{qrcode\}'/g, "src='{qrcode}'");
     html = html.replace(/\{qrcode\}/g, data.qrcode);
     html = html.replace(/\{password\}/g, data.password);
     html = html.replace(/\{count\}/g, data.count);
-    if (data.status < 0) {
-        var sharestatus = '<span  style="color: red;">(' + data.fstatus + ')</span>';
-    } else {
-        sharestatus = '';
-    }
-    //收藏
-    if (data.collect) {
-        var collectstatus = '<a href="javascript:;" class="dzz-colllection-item" ><i class="dzz dzz-star" title=""></i></a>';
-    } else {
-        var collectstatus = '<a href="javascript:;" class="dzz-colllection-item hide"><i class="dzz dzz-star" title=""></i></a>';
-    }
-    html = html.replace(/\{collectstatus\}/g, collectstatus);
-    html = html.replace(/\{sharestatus\}/g, sharestatus);
     if (data.type !== 'image') {
         html = html.replace(/data-start=\"image\".+?data-end=\"image\"/ig, '');
     }
@@ -222,37 +204,17 @@ _selectfile.prototype.CreateIcos = function (data, flag) {
         jQuery('.Icoblock[rid=' + data.rid + ']').replaceWith(html);
         el = jQuery('.Icoblock[rid=' + data.rid + ']')
     } else {
-//        jQuery(html).appendTo('#' + containerid + ' .js-file-item-tpl');
-		  jQuery('#' + containerid + ' .js-file-item-tpl').prepend(html);
+        jQuery('#' + containerid + ' .js-file-item-tpl').prepend(html);
         el = jQuery('.Icoblock[rid=' + data.rid + ']');
-        jQuery('#shareinfo_' + data.rid).on('click', function (e) {
-            return false;
-        });
-
     }
 
-  /*  //检查下载和分享菜单
-    //判断下载权限
-    if (!_explorer.Permission('download', data)) {
-        el.find('.download').remove();
-    }
-
-    //判断分享权限
-    if (!_explorer.Permission('share', data)) {
-        el.find('.share').remove();
-    }
-*/
+     el.bind('mouseenter', function () {
+        jQuery(this).addClass('hover');
+    });
+    el.bind('mouseleave', function () {
+        jQuery(this).removeClass('hover');
+    });
     if (this.view < 4) {
-
-        el.on('mouseenter', function () {
-            jQuery(this).addClass('hover');
-
-        });
-        el.on('mouseleave', function () {
-            jQuery(this).removeClass('hover');
-
-        });
-
         //处理多选框
         //if(!_selectfile.fid || _explorer.Permission_Container('multiselect',this.fid)){
         el.find('.icoblank_rightbottom').on('click', function () {
@@ -294,17 +256,6 @@ _selectfile.prototype.CreateIcos = function (data, flag) {
         }
 
     } else { //详细列表时
-
-
-        el.bind('mouseenter', function () {
-            jQuery(this).addClass('hover');
-            //return false;
-        });
-        el.bind('mouseleave', function () {
-            jQuery(this).removeClass('hover');
-            //return false;
-        });
-
         //点击图片和名称直接打开
 
         el.on('click', function (e) {
@@ -330,7 +281,6 @@ _selectfile.prototype.CreateIcos = function (data, flag) {
 
     }
     el.on('dblclick', function (e) {
-        if (!_selectfile.fid && _selectfile.winid == 'recycle-list') return true;
         var tag = e.srcElement ? e.srcElement : e.target;
         if (/input|textarea/i.test(tag.tagName)) {
             return true;
@@ -521,7 +471,6 @@ _selectfile.Open = function (rid, extid, title) {
 };
 
 //获取打开方式
-
 function getExtOpen(data, isdefault) {
 
     if (data.type === 'folder' || data.type === 'user' || data.type === 'app' || data.type === 'pan' || data.type === 'storage' || data.type === 'disk') {
@@ -636,44 +585,6 @@ function extopen_replace(ico, extid) {
     }
 	return extdata_url;
 }
-_selectfile.prototype._selectInfo = function () {
-    //设置全选框信息
-    //设置全选按钮的文字
-    var sum = _selectfile.selectall.icos.length;
-    var total = jQuery('#filemanage-' + this.id).find('.Icoblock').length;
-    var html = jQuery('#template_file').html();
-    var hash = location.hash;
-    if (sum > 0) { //有选中
-        jQuery('.navtopheader').css('display', 'block');
-        jQuery('.navtopheader').html(html);
-        jQuery('.selectall-box').addClass('Icoselected');
-        jQuery('.selectall-box .select-info').html('已选中<span class="num">' + sum + '</span>个文件');
-        jQuery('.docunment-allfile').hide();
-        if (sum >= total) { //全部选中
-            jQuery('.selectall-box').addClass('Icoselected');
-        }
-    } else { //没有选中
-        jQuery('.navtopheader').css('display', 'none');
-        jQuery('.navtopheader').html('');
-        jQuery('.selectall-box').removeClass('Icoselected');
-        jQuery('.selectall-box .select-info').html(this.view < 4 ? '全选' : '');
-        jQuery('.docunment-allfile').show();
-        if (hash.indexOf('recycle') != -1) {
-            jQuery('.recycle-option-icon').hide();
-        }
-    }
-    //this.setToolButton(); //设置头部工具菜单；
-    return false;
-};
-_selectfile.prototype.selectInfo = function () {
-    var self = this;
-    if (this.selectinfoTimer) {
-        window.clearTimeout(this.selectinfoTimer);
-    }
-    this.selectinfoTimer = window.setTimeout(function () {
-        self._selectInfo();
-    }, 200);
-};
 _selectfile.prototype.appendIcos = function (data) {
     var self = this;
     if (_selectfile.showicosTimer[this.winid]) {
@@ -730,37 +641,11 @@ _selectfile.prototype.createIcosContainer = function () {
                 _selectfile.selectall.icos = [];
                 _selectfile.selectall.position = {};
                 el.find('.Icoblock').removeClass('Icoselected');
-                el.find('.selectall-box').removeClass('Icoselected');
                 if(_explorer.type){
                     _selectfile.changefileName('');
                 }
-                self.selectInfo();
-            }
-        })
-        .end().find('.selectall-box').on('click', function () {
-        var el = jQuery(this);
-        var selectall = true;
-        if (el.hasClass('Icoselected')) {
-            el.removeClass('Icoselected');
-            selectall = false;
-            _selectfile.selectall.icos = [];
-        } else {
-            el.addClass('Icoselected');
-            selectall = true;
-            _selectfile.selectall.icos = [];
-        }
-        _selectfile.selectall.container = containerid;
-        jQuery('#' + containerid).find('.Icoblock').each(function () {
-            if (selectall) {
-                jQuery(this).addClass('Icoselected');
-                _selectfile.selectall.icos.push(jQuery(this).attr('rid'));
-            } else {
-                jQuery(this).removeClass('Icoselected');
             }
         });
-        self.selectInfo();
-        return false;
-    });
     if(_explorer.mulitype){
         _select.init(containerid);
     }
@@ -778,13 +663,6 @@ _selectfile.prototype.createIcosContainer = function () {
             self.pageClick(self.currentpage);
         }
     });
-    if (this.fid) {
-        $.getScript(MOD_PATH + '/scripts/uplodfile.js', function () {
-            jQuery('.wangpan-upload-file').each(function () {
-                fileupload(jQuery(this), self.fid);
-            });
-        });
-    }
     if (this.total < 1 && jQuery('#' + containerid).find('.emptyPage').length == 0) {
         jQuery(jQuery('#template_nofile_notice').html()).appendTo(div);
     } else {
@@ -922,8 +800,6 @@ _selectfile.prototype.DetachEvent = function () {
     document.onmousemove = _selectfile.onmousemove;
     document.onmouseup = _selectfile.onmouseup;
     document.onselectstart = _selectfile.onselectstart;
-
-
 };
 _selectfile.prototype.AttachEvent = function (e) {
     _selectfile.onmousemove = document.onmousemove;
@@ -944,7 +820,6 @@ _selectfile.prototype.AttachEvent = function (e) {
 
     }
 };
-
 
 _selectfile.Search = function (data, keyword) {
     var data1 = {};
@@ -1064,44 +939,6 @@ _selectfile.Sort = function (data, disp, asc) {
 	}
 	return temp;
 };
-_selectfile.get_template = function (sid, whole, disp, asc) {
-    var obj = _selectfile.cons[sid];
-    var str = '';
-    if (whole) {
-        switch (obj.view) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                str = jQuery('#template_middleicon').html();
-
-                break;
-            case 4:
-                str = jQuery('#template_detaillist').html();
-                //替换
-                break;
-        }
-        //替换参数
-        str = str.replace(/\{asc_\d\}/g, obj.asc);
-        var regx = new RegExp('\{show_' + obj.disp + '\}', 'ig');
-        str = str.replace(regx, 'inline-block');
-        str = str.replace(/\{show_\d}/ig, 'none');
-    } else {
-        switch (obj.view) {
-            case 0:
-            case 1:
-            case 2:
-            case 3:
-                str = jQuery('#template_middleicon .js-file-item-tpl').html();
-                break;
-            case 4:
-                str = jQuery('#template_detaillist .js-file-item-tpl').html();
-                break;
-        }
-    }
-    return str;
-
-};
 _selectfile.rename = function (id) {
     var ico = _explorer.sourcedata.icos[id];
     if (!ico) {
@@ -1212,17 +1049,6 @@ _selectfile.downAttach = function (id) {
     //}
     return false;
 };
-_selectfile.downThumb = function (id) {
-    var data = _explorer.sourcedata.icos[id];
-    var url = data.url + '&filename=' + encodeURIComponent(data.name) + '&a=down&t=' + new Date().getTime();
-    if (BROWSER.ie) {
-        window.open(url);
-    } else {
-        window.frames.hideframe.location = url;
-    }
-    //}
-    return false;
-};
 _selectfile.property = function (rid, isfolder) {
     var path = '';
     if (isfolder) {
@@ -1264,8 +1090,6 @@ _selectfile.NewIco = function (type, fid) {
 		  },'json').fail(function (jqXHR, textStatus, errorThrown) {
             showmessage(__lang.do_failed, 'error', 3000, 1);
         });
-    } else if (type === 'newLink') {
-        showWindow('newLink', _explorer.appUrl + '&do=ajax&operation=' + type + '&fid=' + fid,'get',0);
     } else {
         $.post(_explorer.appUrl + '&do=ajax&operation=newIco&type=' + type, {
             'fid': fid
@@ -1359,168 +1183,6 @@ _selectfile.Disp = function (obj, id, disp) {
         }
     });
 };
-//文件复制
-_selectfile.copy = function (rid) {
-    if (!rid) {
-        rid = _selectfile.selectall.icos[0];
-    }
-    var icosdata = _explorer.sourcedata.icos[rid];
-    var path = [];
-    var data = {};
-    if (_selectfile.selectall.icos.length > 0 && jQuery.inArray(rid, _selectfile.selectall.icos) > -1) {
-        if (icosdata.bz && icosdata.bz) {
-            for (var i in _selectfile.selectall.icos) {
-                path.push(_explorer.sourcedata.icos[_selectfile.selectall.icos[i]].dpath);
-            }
-            data = {
-                rids: path,
-                'bz': icosdata.bz
-            };
-        } else {
-            for (var i in _selectfile.selectall.icos) {
-                path.push(_explorer.sourcedata.icos[_selectfile.selectall.icos[i]].dpath);
-            }
-            data = {
-                rids: path
-            };
-        }
-    } else {
-        if (icosdata.bz && icosdata.bz) {
-            data = {
-                rids: [icosdata.dpath],
-                'bz': icosdata.bz
-            };
-        } else {
-            data = {
-                rids: [icosdata.dpath]
-            };
-        }
-    }
-    //复制类型值为1，剪切类型值为2
-    data.copytype = 1;
-    var url = _explorer.appUrl + '&do=dzzcp&operation=copyfile&t=' + new Date().getTime();
-    jQuery.post(url, data, function (json) {
-        if (json.msg === 'success') {
-            var filenames = '';
-            _explorer.cut.iscut = 0;
-            _explorer.cut.icos = json.rid;
-            for (var o in json['rid']) {
-                jQuery('.Icoblock[rid=' + json.rid[o] + ']').removeClass('iscut');
-                filenames += _explorer.sourcedata.icos[json.rid[o]].name + ',';
-            }
-            filenames = filenames.substr(0, filenames.length - 1);
-            top.showmessage(filenames + __lang.copy_success, 'success', 1000, 1, 'right-bottom');
-        } else {
-            top.showmessage(json.msg, 'error', 3000, 1, 'right-bottom');
-        }
-    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage(__lang.do_failed, 'error', 3000, 1);
-    });
-};
-//文件剪切
-_selectfile.cut = function (rid) {
-    var filemanage = _selectfile.cons[_selectfile.winid];
-    var containid = 'filemanage-' + _selectfile.winid;
-    var total = filemanage.total;
-    if (!rid) {
-        rid = _selectfile.selectall.icos[0];
-    }
-    var icosdata = _explorer.sourcedata.icos[rid];
-    var path = [];
-    var data = {};
-    if (_selectfile.selectall.icos.length > 0 && jQuery.inArray(rid, _selectfile.selectall.icos) > -1) {
-        if (icosdata.bz && icosdata.bz) {
-            for (var i in _selectfile.selectall.icos) {
-                path.push(_explorer.sourcedata.icos[_selectfile.selectall.icos[i]].dpath);
-            }
-            data = {
-                rids: path,
-                'bz': icosdata.bz
-            };
-        } else {
-            for (var i in _selectfile.selectall.icos) {
-                path.push(_explorer.sourcedata.icos[_selectfile.selectall.icos[i]].dpath);
-            }
-            data = {
-                rids: path
-            };
-        }
-    } else {
-        if (icosdata.bz && icosdata.bz) {
-            data = {
-                rids: [icosdata.dpath],
-                'bz': icosdata.bz
-            };
-        } else {
-            data = {
-                rids: [icosdata.dpath]
-            };
-        }
-    }
-    //复制类型值为1，剪切类型值为2
-    data.copytype = 2;
-    var url = _explorer.appUrl + '&do=dzzcp&operation=copyfile';
-    jQuery.post(url, data, function (json) {
-        if (json.msg === 'success') {
-            var filenames = '';
-            _explorer.cut.iscut = 1;
-            _explorer.cut.icos = json.rid;
-            jQuery('.Icoblock').removeClass('iscut');
-            for (var o in json.rid) {
-                jQuery('.Icoblock[rid=' + json.rid[o] + ']').addClass('iscut');
-                filenames += _explorer.sourcedata.icos[json.rid[o]].name + ',';
-                total--;
-            }
-            // _selectfile.showTemplatenoFile(containid, total);
-            filenames = filenames.substr(0, filenames.length - 1);
-            top.showmessage(filenames + __lang.cut_success, 'success', 1000, 1, 'right-bottom');
-        } else {
-            top.showmessage(json.msg, 'error', 3000, 1, 'right-bottom');
-        }
-    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage(__lang.do_failed, 'error', 3000, 1);
-    });
-};
-//粘贴
-_selectfile.paste = function (fid) {
-    var folder = _explorer.sourcedata.folder[fid];
-    if (!folder) {
-        return false;
-    }
-    var data = {
-        'tpath': folder.fid,
-        'tbz': folder.bz
-    };
-    var url = _explorer.appUrl + '&do=dzzcp&operation=paste';
-    var i = 0;
-    var node = null;
-    jQuery.post(url, data, function (json) {
-        if (fid === _selectfile.fid) {
-            if (json.folderarr) {
-                for (i = 0; i < json.folderarr.length; i++) {
-                    _explorer.sourcedata.folder[json.folderarr[i].fid] = json.folderarr[i];
-                }
-                node = jQuery('#position').jstree(true).get_node(folder.gid > 0 ? (folder.type > 0 ? '#g_' + folder.gid : '#gid_' + folder.gid) : '#f-' + folder.pfid);
-                jQuery('#position').jstree('refresh', node);
-                jQuery('#position').jstree('correct_state', node);
-            }
-            if (json.icoarr) {
-                var filemanage = _selectfile.cons['f-' + fid];
-                for (i = 0; i < json.icoarr.length; i++) {
-                    if (json.icoarr[i].pfid === filemanage.fid) {
-                        _explorer.sourcedata.icos[json.icoarr[i].rid] = json.icoarr[i];
-                        filemanage.CreateIcos(json.icoarr[i]);
-                    }
-                }
-            }
-        } else {
-            top.showmessage('粘贴成功', 'success', 3000, 1);
-        }
-    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage(__lang.do_failed, 'error', 3000, 1);
-    });
-
-};
 _selectfile.delIco = function (rid, noconfirm) {
     var filemanage = _selectfile.cons[_selectfile.winid];
     var containid = 'filemanage-' + _selectfile.winid;
@@ -1531,7 +1193,6 @@ _selectfile.delIco = function (rid, noconfirm) {
     var icosdata = _explorer.sourcedata.icos[rid];
     if (!noconfirm) {
         var finallydelete = (_explorer.deletefinally == 1) ? true:false;
-        //var finallydelete = false;
         if (_selectfile.selectall.icos.length > 0 && jQuery.inArray(rid, _selectfile.selectall.icos) > -1) {
             if (_explorer.sourcedata.icos[_selectfile.selectall.icos[0]].isdelete > 0 || (_explorer.sourcedata.icos[_selectfile.selectall.icos[0]].bz && _explorer.sourcedata.icos[_selectfile.selectall.icos[0]].bz)) {
                 top.showDialog((finallydelete) ? __lang.js_finallydelete_selectall : __lang.js_delete_selectall,'confirm','' ,function () {
@@ -1643,10 +1304,7 @@ _selectfile.removerid = function (rid) {
     delete filemanage.currentdata['icos_' + rid];
     filemanage.sum--;
     filemanage.total--;
-    filemanage.selectInfo();
     _selectfile.stack_run(filemanage.winid); //删除时如果有未显示的接着显示
-
-
 };
 _selectfile.removeridmore = function (rids) {
     if (rids.length > 1) {
@@ -1677,7 +1335,6 @@ _selectfile.removeridmore = function (rids) {
             delete filemanage.currentdata['icos_' + currentrid];
             filemanage.sum--;
             filemanage.total--;
-            filemanage.selectInfo();
             _selectfile.stack_run(filemanage.winid); //删除时如果有未显示的接着显示
         }
 

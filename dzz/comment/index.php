@@ -52,11 +52,10 @@ if ($do == 'getinfo') {
     }
     $count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('comment') . " WHERE $whereClause", $param);
     if ($count) {
-        $data = DB::fetch_all("SELECT * FROM " . DB::table('comment') . " WHERE $whereClause $order $limitsql", $param);
+        $data = DB::fetch_all("SELECT c.*, u.username FROM " . DB::table('comment') . " AS c LEFT JOIN " . DB::table('user') . " AS u ON c.edituid = u.uid WHERE $whereClause $order $limitsql", $param);
     }
     $list = array();
     foreach ($data as $value) {
-        $user = getuserbyuid($value['edituid']);
         $list[] = [
             "authorid" => $value['author'],
             "ip" => $value['ip'],
@@ -64,7 +63,7 @@ if ($do == 'getinfo') {
             "dateline" => dgmdate($value['dateline'], 'Y-n-j H:i:s'),
             "cid" => $value['cid'],
             "edittime" => $value['edittime'] ? dgmdate($value['edittime'], 'Y-n-j H:i:s') : '',
-            "edituid" => $user['username'],
+            "edituid" => $value['username'],
             "message" => $value['message'],
             "fid" => $value['id'],
             "idtype" => $value['idtype']

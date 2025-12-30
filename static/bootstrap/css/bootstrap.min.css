@@ -1475,7 +1475,7 @@ td.visible-print,th.visible-print{display:table-cell!important}
 #message_tip_box .text-danger{color:#666}
 .form-group kbd{padding:0}
 .form-group .help-block{margin-bottom:0}
-.fwinmask{background:#FFF;box-shadow:1px 3px 15px rgba(0,0,0,0.8),inset 0 0 10px #FFF;padding:5px;border:1px solid #CCC\0;*border:1px solid #CCC;border-radius:3px;min-width:320px;max-width:600px}
+.fwinmask{background:#FFF;box-shadow:1px 3px 15px rgba(0,0,0,0.8),inset 0 0 10px #FFF;padding:5px;border:1px solid #CCC;border-radius:3px;min-width:320px;max-width:600px}
 .fwinmask table{width:100%}
 .fwinmask p{margin:0;padding:0px}
 .fwinmask button.close{font-size:1.5rem;position:absolute;top:0;right:0;width:30px;height:30px;line-height:30px}

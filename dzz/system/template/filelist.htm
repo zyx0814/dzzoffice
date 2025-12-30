@@ -1,7 +1,7 @@
 <!--{template common/header_simple_start}-->
 <link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
 <link rel="stylesheet" href="static/perfect-scrollbar/css/perfect-scrollbar.css?{VERHASH}">
-<link rel="stylesheet" href="static/css/common.css">
+<link rel="stylesheet" href="static/css/common.css?{VERHASH}">
 <link href="dzz/system/css/selfilewindow.css?{VERHASH}" rel="stylesheet" media="all">
 <link href="dzz/system/css/select-file.css?{VERHASH}" rel="stylesheet" media="all">
 <script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
@@ -23,7 +23,6 @@ body {
      var nouser=parseInt('$_GET[nouser]')>0?1:0;
      var stype='$_GET[stype]'?parseInt('$_GET[stype]'):0;//0:可以选择机构和用户；1：仅选择机构和部门：2：仅选择用户
      var moderator=parseInt('$_GET[moderator]')>0?1:0;*/
-    var ismobile = '$_G['ismobile']' ? 1 : 0;
 </script>
 <!--{template common/header_simple_end}-->
 <!--内容区开始-->
@@ -342,4 +341,4 @@ function hide_window(){
 <script type="text/javascript" src="dzz/system/scripts/select-file.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/perfect-scrollbar/js/perfect-scrollbar.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/input_field.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script> 

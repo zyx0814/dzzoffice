@@ -72,7 +72,6 @@ if ($do == 'folder') {
     exit('success');
 } elseif ($do == 'infopanelopen') {
     $infopanelopen = intval($_GET['infopanelopen']);
-    //$infoPanelOpened=($infopanelopen == 1) ? 'on':'off';
     $settinginfo = C::t('user_setting')->fetch_by_skey('infoPanelOpened');
     if (isset($settinginfo)) {
         C::t('user_setting')->update_by_skey('infoPanelOpened', $infopanelopen);
@@ -80,8 +79,5 @@ if ($do == 'folder') {
         C::t('user_setting')->insert_by_skey('infoPanelOpened', $infopanelopen);
     }
     exit('success');
-
-
 }
-
 ?>

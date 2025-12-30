@@ -1,6 +1,6 @@
 <!--{loop $voteuser $value}-->
 <div class="pull-left pe-2">
-    <a href="user.php?uid=$value['uid']" title="admin" hidefocus="true" target="_blank">{eval echo avatar_block($value['uid']);}</a>
+    <a href="user.php?uid=$value['uid']" title="admin" hidefocus="true" target="_blank">{eval echo avatar_block($value['uid'], array(), null, $value);}</a>
 </div>
 <!--{/loop}-->
 <!--{if $nextpage>0}-->

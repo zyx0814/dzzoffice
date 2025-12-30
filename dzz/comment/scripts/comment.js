@@ -40,7 +40,7 @@ for(var i in arr['attachs']){
    	 html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
      html+='	        </p>';
      html+='	     </div>';
-}else if(attach.type=='dzzdoc' || attach.type=='link'){
+}else if(attach.type=='link'){
       html+='	<div class="file_fed file_fed_'+attach.type+' clearfix">';
       html+='          <div class="ico_ffed "><a href="javascript:;" onclick="feed_attach_preview(\''+attach['qid']+'\')"><img src="'+attach['img']+'" alt="'+attach['title']+'" style="height:50px;"></a></div>';
       html+='          <p class="name_ffed">'+attach['title']+'</p>';
@@ -147,7 +147,7 @@ function feed_reply(arr){
    	 // html+='		        <a href="javascript:void(0);" title="" hidefocus="true" class="save_dffed skip_mmfed"  onclick="feed_attach_saveto(\''+attach['qid']+'\')">'+__lang.js_saved_my_documents+'</a> ';
      html+='	        </p>';
      html+='	     </div>';
-}else if(attach.type=='dzzdoc' || attach.type=='link'){
+}else if(attach.type=='link'){
       html+='	<div class="file_fed file_fed_'+attach.type+' clearfix">';
       html+='          <div class="ico_ffed "><a href="javascript:;" onclick="feed_attach_preview(\''+attach['qid']+'\')"><img src="'+attach['img']+'" alt="'+attach['title']+'" style="height:50px;"></a></div>';
       html+='          <p class="name_ffed">'+attach['title']+'</p>';

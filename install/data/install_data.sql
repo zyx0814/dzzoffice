@@ -126,16 +126,6 @@ INSERT INTO `dzz_hooks` (`id`, `app_market_id`, `name`, `description`, `type`, `
 (20, 8, 'systemlog', '', 1, 0, 'admin\\systemlog\\classes\\systemlog', 1, 0);
 
 --
--- 转存表中的数据 `dzz_iconview`
---
-
---INSERT INTO `dzz_iconview` VALUES(1, '大图标', 100, 100, 155, 160, 30, 30, 50, 0, 1, 1, 'bigicon');
---INSERT INTO `dzz_iconview` VALUES(2, '中图标', 50, 50, 100, 103, 30, 20, 40, 0, 1, 2, 'middleicon');
---INSERT INTO `dzz_iconview` VALUES(3, '中图标列表', 50, 50, 180, 70, 20, 20, 40, 1, 1, 3, 'middlelist');
---INSERT INTO `dzz_iconview` VALUES(4, '小图标列表', 32, 32, 220, 42, 20, 20, 36, 1, 1, 4, 'smalllist');
-
-
---
 -- 转存表中的数据 `dzz_usergroup`
 --
 INSERT INTO `dzz_usergroup` VALUES(1, 1, 'system', 'private', '管理员', 9, '', '', '');
@@ -363,7 +353,6 @@ INSERT INTO dzz_user_profile_setting VALUES('qq', 1, 0, 0, 'QQ', '', 9, 0, 0, 0,
 INSERT INTO dzz_user_profile_setting VALUES('skype', 1, 0, 0, 'skype', '', 10, 0, 0, 0, 0, 0, 0, 'text', 0, '', 0,'', 0);
 INSERT INTO dzz_user_profile_setting VALUES('bio', 1, 0, 0, '自我介绍', '', 17, 0, 0, 0, 0, 0, 0, 'textarea', 0, '',0, '', 0);
 INSERT INTO dzz_user_profile_setting VALUES('interest', 0, 0, 0, '兴趣爱好', '', 16, 0, 0, 0, 0, 0, 0, 'textarea', 0, '',0, '', 0);
-
 
 --
 -- 转存表中的数据 `dzz_user_field`

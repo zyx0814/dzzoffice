@@ -4,10 +4,7 @@ namespace admin\systemlog\classes;
 class Systemlog {
     //$arr 必须传入 mark,content
     public function run($arr = array()) {
-        if (!isset($arr["mark"])) {
-            return;
-        }
-        if(!$arr["content"]) {
+        if (!isset($arr["mark"]) || !$arr["content"]) {
             return;
         }
         global $_G;

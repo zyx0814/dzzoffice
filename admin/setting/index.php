@@ -41,18 +41,6 @@ if (!submitcheck('settingsubmit')) {
         }
         $setting['sitebeian'] = dhtmlspecialchars($setting['sitebeian']);
         $applist = DB::fetch_all("select appname,identifier from %t where isshow>0 and `available`>0 and app_path='dzz' ORDER BY disp", array('app_market'));
-    } elseif ($operation == 'desktop') {
-        if ($setting['desktop_default'] && !is_array($setting['desktop_default'])) {
-            $setting['desktop_default'] = unserialize($setting['desktop_default']);
-        }
-        if (!$setting['desktop_default']) {
-            $setting['desktop_default'] = array('iconview' => 2);
-        }
-        if ($_G['setting']['dzz_iconview']) {
-            $iconview = $_G['setting']['iconview'];
-        } else {
-            $iconview = C::t('iconview')->fetch_all();
-        }
     } elseif ($operation == 'upload') {
         $setting['maxChunkSize'] = round($setting['maxChunkSize'] / (1024 * 1024), 2);
         $navtitle = lang('upload_download_set') . ' - ' . lang('appname');
@@ -105,8 +93,6 @@ if (!submitcheck('settingsubmit')) {
         $seccodestatus[1] = $setting['seccodestatus'] & 1;
         $seccodestatus[2] = $setting['seccodestatus'] & 2;
         $seccodestatus[3] = $setting['seccodestatus'] & 4;
-    } elseif ($operation == 'desktop') {
-        $navtitle = lang('desktop_set') . ' - ' . lang('appname');
     } elseif ($operation == 'loginset') {
         $navtitle = lang('login_page_set') . ' - ' . lang('appname');
         if ($setting['loginset'] && !is_array($setting['loginset'])) {

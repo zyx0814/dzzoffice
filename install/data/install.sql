@@ -126,28 +126,6 @@ CREATE TABLE `dzz_app_user` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB COMMENT='应用用户表';
 
-DROP TABLE IF EXISTS `dzz_attach`;
-CREATE TABLE `dzz_attach` (
-  `qid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '附件ID',
-  `uid` int(10) NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `username` char(30) NOT NULL DEFAULT '' COMMENT '用户名',
-  `fid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '文件ID',
-  `aid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '附件ID',
-  `filename` char(80) NOT NULL DEFAULT '' COMMENT '文件名',
-  `area` char(15) NOT NULL DEFAULT '' COMMENT '地区',
-  `areaid` int(10) NOT NULL DEFAULT '0' COMMENT '地区ID',
-  `reversion` smallint(6) NOT NULL DEFAULT '0' COMMENT '版本',
-  `downloads` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '下载次数',
-  `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `deletetime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
-  `deleteuid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '删除人UID',
-  PRIMARY KEY (`qid`),
-  KEY `dateline` (`dateline`),
-  KEY `tid` (`fid`),
-  KEY `area` (`area`),
-  KEY `areaid` (`areaid`,`area`)
-) ENGINE=InnoDB COMMENT='附件表';
-
 DROP TABLE IF EXISTS `dzz_attachment`;
 CREATE TABLE `dzz_attachment` (
   `aid` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '附件ID',
@@ -393,7 +371,7 @@ CREATE TABLE `dzz_folder` (
   `perm_inherit` int(10) NOT NULL DEFAULT '0' COMMENT '继承权限',
   `fsperm` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '超级权限',
   `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '显示顺序',
-  `iconview` tinyint(1) NOT NULL DEFAULT '1' COMMENT '图标视图',
+  `iconview` tinyint(1) NOT NULL DEFAULT '2' COMMENT '图标视图',
   `display` smallint(6) NOT NULL DEFAULT '0' COMMENT '显示方式',
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `gid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '群组ID',
@@ -451,25 +429,6 @@ CREATE TABLE `dzz_icon` (
   KEY `copys` (`copys`),
   KEY `dateline` (`dateline`)
 ) ENGINE=InnoDB COMMENT='图标表';
-
-DROP TABLE IF EXISTS `dzz_iconview`;
-CREATE TABLE `dzz_iconview` (
-  `id` smallint(6) unsigned NOT NULL AUTO_INCREMENT COMMENT '图标ID',
-  `name` varchar(255) NOT NULL COMMENT '图标名称',
-  `width` smallint(6) unsigned NOT NULL DEFAULT '64' COMMENT '图标宽度',
-  `height` smallint(6) unsigned NOT NULL DEFAULT '64' COMMENT '图标高度',
-  `divwidth` smallint(6) unsigned NOT NULL DEFAULT '100' COMMENT '图标容器宽度',
-  `divheight` smallint(6) unsigned NOT NULL DEFAULT '100' COMMENT '图标容器高度',
-  `paddingtop` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '图标容器padding-top',
-  `paddingleft` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '图标容器padding-left',
-  `textlength` smallint(6) unsigned NOT NULL DEFAULT '30' COMMENT '图标名称显示长度',
-  `align` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '图标排列方式',
-  `avaliable` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否可用',
-  `disp` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '排序',
-  `cssname` varchar(60) NOT NULL COMMENT 'css名称',
-  PRIMARY KEY (`id`),
-  KEY `avaliable` (`avaliable`,`disp`)
-) ENGINE=InnoDB COMMENT='图标视图表';
 
 DROP TABLE IF EXISTS `dzz_imagetype`;
 CREATE TABLE `dzz_imagetype` (
@@ -577,7 +536,7 @@ CREATE TABLE `dzz_organization` (
   `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '显示顺序',
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `usesize` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '使用空间',
-  `maxspacesize` bigint(20) NOT NULL DEFAULT '0' COMMENT '0：不限制，-1表示無空間',
+  `maxspacesize` bigint(20) NOT NULL DEFAULT '0' COMMENT '0：不限制，-1表示无空间',
   `indesk` tinyint(1) NOT NULL DEFAULT '0' COMMENT '是否创建快捷方式',
   `available` tinyint(1) NOT NULL DEFAULT '1' COMMENT '是否启用',
   `pathkey` varchar(255) NOT NULL DEFAULT '' COMMENT '路径键',
@@ -705,7 +664,8 @@ CREATE TABLE `dzz_resources_cat` (
   `tag` text NOT NULL COMMENT '分类标签',
   `keywords` text NOT NULL COMMENT '分类关键字',
   `default` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1,系統默認；0，非系统默认',
-  `iconview` tinyint(1) NOT NULL DEFAULT '1' COMMENT '图标显示',
+  `iconview` tinyint(1) NOT NULL DEFAULT '2' COMMENT '图标显示',
+  `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '排序',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB COMMENT='网盘文件分类表';
 
@@ -732,7 +692,7 @@ CREATE TABLE `dzz_resources_collect` (
   `dateline` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
   `size` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '大小',
   `filename` varchar(60) NOT NULL DEFAULT '' COMMENT '文件名',
-  `iconview` tinyint(1) NOT NULL DEFAULT '1' COMMENT '展示方式',
+  `iconview` tinyint(1) NOT NULL DEFAULT '2' COMMENT '展示方式',
   `disp` smallint(6) NOT NULL DEFAULT '0' COMMENT '排序',
   `pfid` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '父级目录id',
   PRIMARY KEY (`id`)
@@ -902,7 +862,7 @@ CREATE TABLE `dzz_shares` (
   `username` varchar(60) NOT NULL DEFAULT '' COMMENT '分享人',
   `uid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '分享用户id',
   `gid` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '群组id',
-  `pfid` int(11) NOT NULL DEFAULT '0' COMMENT '父级目录id',
+  `pfid` int(11) NOT NULL DEFAULT '0' COMMENT '父级目录id，-1表示网盘挂载目录',
   `password` varchar(256) NOT NULL DEFAULT '' COMMENT '分享密码，留空为公开分享',
   `perm` varchar(120) NOT NULL DEFAULT '' COMMENT '分享权限',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '分享状态（-4：已屏蔽；-3：文件不存在；-2：次数用尽；-1：已过期；0：正常）',
@@ -999,6 +959,7 @@ CREATE TABLE `dzz_user` (
   `newprompt` smallint(6) unsigned NOT NULL DEFAULT '0' COMMENT '消息数',
   `timeoffset` char(4) NOT NULL DEFAULT '9999' COMMENT '时区',
   `grid` smallint(6) NOT NULL DEFAULT '0' COMMENT '用户组ID',
+  `headerColor` varchar(20) NOT NULL DEFAULT '' COMMENT '头像颜色',
   PRIMARY KEY (`uid`),
   UNIQUE KEY `email` (`email`),
   KEY `groupid` (`groupid`),

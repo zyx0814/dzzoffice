@@ -15,7 +15,7 @@ if ($filter == 'new') {//列出所有新通知
     $template = isset($_GET['template']) ? $_GET['template'] : '';
     $list = array();
     $nids = array();//new>0
-    foreach (DB::fetch_all("select n.*,u.avatarstatus from %t n LEFT JOIN %t u ON n.authorid=u.uid where n.new>0 and n.uid=%d  order by dateline DESC", array('notification', 'user', $_G['uid'])) as $value) {
+    foreach (DB::fetch_all("select n.*,u.username,u.uid,u.avatarstatus,u.headerColor from %t n LEFT JOIN %t u ON n.authorid=u.uid where n.new>0 and n.uid=%d  order by dateline DESC", array('notification', 'user', $_G['uid'])) as $value) {
         $value['dateline'] = dgmdate($value['dateline'], 'u');
         $value['note'] = dzzcode($value['note'], 1, 1, 1, 1, 1);
         $nids[] = $value['id'];
@@ -106,7 +106,7 @@ if ($filter == 'new') {//列出所有新通知
     $theurl = BASESCRIPT . "?" . url_implode($gets);
     $list = array();
     if ($count = DB::result_first("select COUNT(*) from %t n where n.uid=%d $searchsql", $countparam)) {
-        foreach (DB::fetch_all("select n.*,a.appico,a.appname from %t n LEFT JOIN %t u ON n.authorid=u.uid left join %t a on n.from_id = a.appid where n.uid=%d $searchsql order by n.dateline DESC limit $start,$perpage", $params) as $value) {
+        foreach (DB::fetch_all("select n.*,a.appico,a.appname,u.username,u.uid,u.avatarstatus,u.headerColor from %t n LEFT JOIN %t u ON n.authorid=u.uid left join %t a on n.from_id = a.appid where n.uid=%d $searchsql order by n.dateline DESC limit $start,$perpage", $params) as $value) {
             $value['dateline'] = dgmdate($value['dateline'], 'u');
             $value['note'] = dzzcode($value['note'], 1, 1, 1, 1, 1);
             if (!$value['appico']) {

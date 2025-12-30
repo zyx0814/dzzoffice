@@ -418,4 +418,7 @@ $lang = array(
     'add_cat' => '添加类型',
     'open_browser' => '浏览器打开',
     'no_history' => '没有历史版本',
+    'perm' => '权限',
+    'space_used' => '已使用空间',
+    'space_total' => '总空间',
 );

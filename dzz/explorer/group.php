@@ -274,13 +274,13 @@ if ($do == 'delete_group') {
             $params[] = '%' . $keyword . '%';
         }
         $list = array();
-        foreach (DB::fetch_all("select uid,username  from %t   $sql_user", $params) as $value) {
+        foreach (DB::fetch_all("select uid,username,avatarstatus,headerColor from %t $sql_user", $params) as $value) {
             if ($value['uid'] == $uid) continue;
             $list[] = array('name' => $value['username'],
                 'searchkey' => pinyin::encode($value['username'], 'all') . $value['username'],
                 'id' => 'u' . $value['uid'],
                 'title' => $value['username'] . ':' . 'u' . $value['uid'],
-                'avatar' => avatar_block($value['uid'])
+                'avatar' => avatar_block($value['uid'], array(), null, $value)
             );
         }
         exit(json_encode($list));

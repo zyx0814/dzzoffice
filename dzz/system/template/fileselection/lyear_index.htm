@@ -4,7 +4,6 @@
 <link rel="stylesheet" href="static/css/common.css?{VERHASH}">
 <link href="dzz/system/css/selfilewindow.css?{VERHASH}" rel="stylesheet" media="all">
 <link rel="stylesheet" href="{MOD_PATH}/css/rightmenu/style.css?{VERHASH}"/>
-<link href="dzz/system/css/rightmenu.css?{VERHASH}" rel="stylesheet" media="all">
 <link href="dzz/system/css/select-file.css?{VERHASH}" rel="stylesheet" media="all">
 <script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
 <script type="text/javascript">
@@ -63,31 +62,17 @@
         if (type == 1) {//保存文件
             if (rid.length) {//选择文件提示是否覆盖
                 var filedata = _explorer.sourcedata.icos[rid];
-                    parent.layer.confirm(__lang.js_save_recover_file.replace('{filename}', filedata.name), {skin:'lyear-skin-danger',title: '确认覆盖'}, function(index){
-                        parent.layer.msg(__lang.loading_please_wait, {icon: 'smile',skin: 'bg-info',offset:'t'});
-                        $.post('index.php?mod=system&op=fileselection&template=1&do=save&operation=chkperm', {
-                        'path': fid
-                    }, function (data) {
-                        if (data['error']) {
-                            parent.layer.msg(data['error'], {icon: 'error',skin: 'bg-danger',offset:'t'});
-                            return false;
-                        } else {
-                            var fileData = _explorer.sourcedata.icos[rid];
-                            data = fileData;
-                            try{
-                                if(typeof parent.showWindow_callback == 'function'){
-                                    parent.showWindow_callback(data,'$token');
-                                }
-                            }catch(e){}	
-                            if (parent.{$callback}) {
-                                try{parent.{$callback}(data, '$token');}catch(e){}
-                            }
-                            parent.layer.close(index);
-                            return;
+                parent.layer.confirm(__lang.js_save_recover_file.replace('{filename}', filedata.name), {skin:'lyear-skin-danger',title: '确认覆盖'}, function(){
+                    try{
+                        if(typeof parent.showWindow_callback == 'function'){
+                            parent.showWindow_callback(filedata,'$token');
                         }
-                    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-                        showmessage('{lang do_failed}', 'error', 3000, 1);
-                    });
+                    }catch(e){}	
+                    if (parent.{$callback}) {
+                        try{parent.{$callback}(filedata, '$token');}catch(e){}
+                    }
+                    parent.layer.close(index);
+                    return;
 				});
             } else {//未选择文件上传文件返回
                 var filename = $('#savenewname').val();
@@ -183,7 +168,6 @@
 </script>
 <script type="text/javascript" src="dzz/system/scripts/explorer.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/jstree.min.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/js/imgReady.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/system/scripts/lyear_select-file.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/system/scripts/_perm.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/system/scripts/_hotkey.js?{VERHASH}"></script>
@@ -192,15 +176,6 @@
 <script type="text/javascript" src="static/perfect-scrollbar/js/perfect-scrollbar.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/input_field.js?{VERHASH}"></script>
 <!-- The basic File Upload plugin -->
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
-<!-- The basic File Upload plugin -->
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/perfect-scrollbar/js/perfect-scrollbar.min.js?{VERHASH}"></script>
-<!-- The basic File Upload plugin -->
-<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
 </body>
 </html>

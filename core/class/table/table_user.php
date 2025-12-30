@@ -558,20 +558,12 @@ class table_user extends dzz_table {
 
     //获取用户信息包含头像信息
     public function fetch_user_avatar_by_uids($uids) {
-        if (!is_array($uids)) $uids = array($uids);
-        $uids = array_unique($uids);
-        $users = array();
-        foreach (DB::fetch_all("select u.*,s.svalue from %t u left join %t s on u.uid=s.uid and s.skey=%s where u.uid in(%n)", array('user', 'user_setting', 'headerColor', $uids)) as $v) {
-            if ($v['avatarstatus'] == 1) {
-                $v['avatarstatus'] = 1;
-            } else {
-                $v['avatarstatus'] = 0;
-                $v['headerColor'] = $v['svalue'];
-            }
-            $users[$v['uid']] = $v;
+        $uids = array_unique((array)$uids);
+        if (empty($uids)) {
+            return array();
         }
-
-        return $users;
+        
+        return DB::fetch_all("SELECT avatarstatus, uid, username, headerColor FROM %t WHERE uid IN (%n)", array('user', $uids), 'uid');
     }
 
     public function fetch_userinfo_detail_by_uid($uid) {
@@ -588,19 +580,4 @@ class table_user extends dzz_table {
     public function fetch_all_user_data() {
         return DB::fetch_all("select * from %t where 1", array($this->_table));
     }
-    /*//获取用户信息，包含资料等信息
-    public function fetch_user_infomessage_by_uid($uid){
-        $users = array();
-        foreach(DB::fetch_all("select u.*,s.svalue from %t u left join %t s on u.uid=s.uid and s.skey=%s where u.uid =%d",array('user','user_setting','headerColor',$uid)) as $v){
-            if($v['avatarstatus'] == 1){
-                $v['avatarstatus'] = 1;
-            }else{
-                $v['avatarstatus'] = 0;
-                $v['headerColor'] = $v['svalue'];
-            }
-            $users[$v['uid']] = $v;
-        }
-
-        return $users;
-    }*/
 }

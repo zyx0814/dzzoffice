@@ -38,20 +38,7 @@ _contextmenu.right_ico = function (e, rid) {
     }
     //如果是选择位置则只保留新建文件夹菜单
     if(_explorer.type == 2){
-        el.find('.download,.cut,.copy,.delete').remove();
-    }
-    //判断copy
-    if (!_explorer.Permission('copy', obj)) {
-        el.find('.copy').remove();
-    }
-    //判断粘贴
-    if (!_explorer.Permission('upload', obj) || _explorer.cut.icos.length < 1 || _selectfile.fid < 1) {
-        el.find('.paste').remove();
-    }
-
-    //分享权限
-    if (!_explorer.Permission('share', obj)) {
-        el.find('.share').remove();
+        el.find('.download,.delete').remove();
     }
 
     //重命名权限
@@ -64,35 +51,26 @@ _contextmenu.right_ico = function (e, rid) {
         el.find('.download').remove();
         el.find('.downpackage').remove();
     }
-    //ftp的chmod权限
-    if (!_explorer.Permission('chmod', obj)) {
-        el.find('.chmod').remove();
-    }
     //删除权限
     if (!_explorer.Permission('delete', obj)) {
-        el.find('.cut').remove();
         el.find('.delete').remove();
     }
     //不允许删除的情况
     if (obj.notdelete > 0 && obj.type == 'app') {
         el.find('.delete').remove();
-        el.find('.cut').remove();
-        el.find('.copy').remove();
     }
 
 
     //多选时的情况
-    var collects = 0;
     if (_selectfile.selectall.icos.length > 1 && jQuery.inArray(rid, _selectfile.selectall.icos) > -1) {
         if(obj.isdelete == 1){
-            el.find('.menu-item:not(.recover,.finallydelete)').remove();
+            el.find('.menu-item').remove();
         }else{
-            el.find('.menu-item:not(.delete,.cut,.copy,.restore,.downpackage,.property,.collect,.paste,.share,.cancleshare)').remove();
+            el.find('.menu-item:not(.delete,.downpackage,.property)').remove();
         }
         var pd = 1;
         for (var i = 0; i < _selectfile.selectall.icos.length; i++) {
             var ico = _explorer.sourcedata.icos[_selectfile.selectall.icos[i]];
-            if (ico.collect) collects += 1;
             if (!_explorer.Permission('download', ico)) {
                 pd = 0;
                 break;
@@ -102,35 +80,13 @@ _contextmenu.right_ico = function (e, rid) {
             el.find('.downpackage').remove();
         }
         el.find('.download').remove();
-        if (collects == _selectfile.selectall.icos.length) {//区别是已收藏时，菜单显示取消收藏
-            el.find('.collect .menu-text').html('取消收藏');
-        }
     } else {
-        if (obj.collect) el.find('.collect .menu-text').html('取消收藏');
         el.find('.downpackage').remove();
     }
 
-
-    if (obj.isdelete == 1) {
-        el.find('.menu-item:not(.recover,.finallydelete)').remove();
-    } else {
-        el.find('.finallydelete').remove();
-        el.find('.recover').remove();
-    }
-    if(_selectfile.winid.indexOf('collect') != -1){
-        el.find('.cut').remove();
-        el.find('.copy').remove();
-        el.find('.paste').remove();
-    }
-    //分享处理
-    if(_selectfile.winid.indexOf('share') != -1){
-        el.find('.menu-item:not(.cancleshare,.editshare)').remove();
-    }else{
-        el.find('.cancleshare,.editshare').remove();
-    }
     //如果在收藏,搜索和最近使用页面去掉删去和剪切和重命名
-    if(_selectfile.winid.indexOf('collect') != -1 || _selectfile.winid.indexOf('recent') != -1 || _selectfile.winid.indexOf('search') != -1){
-        el.find('.cut,.delete,.rename').remove();
+    if(_selectfile.winid.indexOf('search') != -1){
+        el.find('.delete,.rename').remove();
     }
     if (!el.find('.menu-item').length) {
         el.hide();
@@ -283,29 +239,9 @@ _contextmenu.right_body = function (e, fid) {
     });
     if (!fid) {
         el.find('.property').remove();
-        el.find('.paste').remove();
-       if(_selectfile.winid != 'recycle-list'){
-           el.find('.recoverall').remove();
-           el.find('.deleteall').remove();
-       }else{
-           el.find('.sort .disp2').remove();
-           el.find('.sort .disp3').remove();
-       }
-    }else{
-        el.find('.recoverall').remove();
-        el.find('.deleteall').remove();
     }
     if (!_explorer.Permission_Container('folder', fid)) {
         el.find('.newfolder').remove();
-    }
-    if (!_explorer.Permission_Container('link', fid)) {
-        el.find('.newlink').remove();
-    }
-    if (!_explorer.Permission_Container('dzzdoc', fid)) {
-        el.find('.newdzzdoc').remove();
-    }
-    if (!_explorer.Permission_Container('upload', fid)) {
-        el.find('.newdzzdoc').remove();
     }
     if (!_explorer.Permission_Container('newtype', fid)) {
         el.find('.newtext').remove();
@@ -317,42 +253,11 @@ _contextmenu.right_body = function (e, fid) {
     if (el.find('.create .menu-item').length < 1) {
         el.find('.create').remove();
     }
-    if (_explorer.cut.icos.length < 1) el.find('.paste').remove();
-
-    if (_explorer.Permission_Container('upload', fid)) {
-
-        if (BROWSER.ie) {
-            jQuery('<input id="right_uploadfile_' + fid + '" name="files[]" tabIndex="-1" style="position: absolute;outline:none; filter: alpha(opacity=0); PADDING-BOTTOM: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; font-family: Arial; font-size: 180px;height:30px;width:200px;top: 0px; cursor: pointer; right: 0px; padding-top: 0px; opacity: 0;direction:ltr;background-image:none" type="file" multiple="multiple" >').appendTo(el.find('.upload'));
-            fileupload(jQuery('#right_uploadfile_' + fid));
-
-            jQuery('<input id="right_uploadfolder_' + fid + '" name="files[]" tabIndex="-1" style="position: absolute;outline:none; filter: alpha(opacity=0); PADDING-BOTTOM: 0px; margin: 0px; padding-left: 0px; padding-right: 0px; font-family: Arial; font-size: 180px;height:30px;width:200px;top: 0px; cursor: pointer; right: 0px; padding-top: 0px; opacity: 0;direction:ltr;background-image:none" type="file" multiple="multiple" >').appendTo(el.find('.uploadfolder'));
-            fileupload(jQuery('#right_uploadfolder_' + fid));
-
-        } else {
-            console.log(el.find('.upload'));
-            el.find('.upload').get(0).onclick = function () {
-                jQuery('.js-upload-file input').trigger('click');
-                console.log(jQuery('.js-upload-file input'));
-                console.log('aaaa');
-                el.hide();
-            }
-            el.find('.uploadfolder').get(0).onclick = function () {
-                jQuery('.js-upload-folder input').trigger('click');
-                el.hide();
-            }
-        }
-    } else {
-        el.find('.upload').remove();
-        el.find('.uploadfolder').remove();
-    }
     //设置默认桌面
 
     //检测新建和上传是否都没有
     if (el.find('.create .menu>.menu-item').length < 1) {
         el.find('.create').remove();
-    }
-    if(_selectfile.winid == 'share-list'){
-        el.find('.menu-item').remove();
     }
     if (el.find('.menu-item').length < 1) {
         el.hide();

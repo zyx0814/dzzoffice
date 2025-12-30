@@ -33,7 +33,7 @@
 			<!--{loop $list $value}-->
 			<li class="n-item list-group-item n-id-$value[id]">
                 <div class="n-visual">
-					<a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a>
+					<a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid'], array(), null, $value);}</a>
 					<!--{if !$img}--><img src="$value[appico]" class="app-badge-icon"><!--{/if}-->
                 </div>
                 <div class="n-content">

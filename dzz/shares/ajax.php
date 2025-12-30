@@ -204,10 +204,6 @@ if ($do == 'uploads') {//上传新文件(指新建)
             $filename = lang('new_txt') . '.txt';
             $content = ' ';
             break;
-        case 'newDzzDoc':
-            $filename = lang('new_dzzdoc') . '.dzzdoc';
-            $content = ' ';
-            break;
         case 'newDoc':
             $filename = lang('new_word') . '.docx';
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/word.docx');

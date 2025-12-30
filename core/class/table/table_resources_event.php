@@ -90,64 +90,6 @@ class table_resources_event extends dzz_table {
         return json_decode($text);
     }
 
-    //根据fid查询评论
-    public function fetch_comment_by_fid($fid, $count = false, $start = 0, $limit = 0) {
-        $fid = intval($fid);
-        $params = array($this->_table, $fid, 1);
-        $limitsql = $limit ? DB::limit($start, $limit) : '';
-        if ($count) {
-            return DB::result_first("select count(*) from %t where pfid = %d and rid = '' and `type`= %d", $params);
-        }
-        $events = array();
-        include_once libfile('function/use');
-        foreach (DB::fetch_all("select * from %t where pfid = %d and rid = '' and `type`= %d order by dateline desc $limitsql", $params) as $v) {
-            $v['body_data'] = unserialize($v['body_data']);
-            $v['body_data']['msg'] = self::emoji_decode($v['body_data']['msg']);
-            $v['body_data']['msg'] = preg_replace_callback("/@\[(.+?):(.+?)\]/i", "atreplacement", $v['body_data']['msg']);
-            $v['body_data']['msg'] = dzzcode($v['body_data']['msg']);
-            $v['do_lang'] = lang($v['do']);
-            $v['details'] = lang($v['event_body'], $v['body_data']);
-            $v['fdate'] = dgmdate($v['dateline'], 'u');
-            $uids[] = $v['uid'];
-            $events[] = $v;
-        }
-        if (count($events)) {
-            $events = self::result_events_has_avatarstatusinfo($uids, $events);
-        }
-
-
-        return $events;
-    }
-
-    //根据fid查询评论
-    public function fetch_comment_by_rid($rid, $count = false, $start = 0, $limit = 0) {
-        $rid = trim($rid);
-        $params = array($this->_table, $rid, 1);
-        $limitsql = $limit ? DB::limit($start, $limit) : '';
-        if ($count) {
-            return DB::result_first("select count(*) from %t where rid = %s and `type`= %d", $params);
-        }
-        $uid = array();
-        $events = array();
-        include_once libfile('function/use');
-        foreach (DB::fetch_all("select * from %t where rid = %s and `type`= %d order by dateline desc $limitsql", $params) as $v) {
-            $v['body_data'] = unserialize($v['body_data']);
-            $v['body_data']['msg'] = self::emoji_decode($v['body_data']['msg']);
-            $v['body_data']['msg'] = preg_replace_callback("/@\[(.+?):(.+?)\]/i", "atreplacement", $v['body_data']['msg']);
-            $v['body_data']['msg'] = dzzcode($v['body_data']['msg']);
-            $v['do_lang'] = lang($v['do']);
-            $v['details'] = lang($v['event_body'], $v['body_data']);
-            $v['fdate'] = dgmdate($v['dateline'], 'u');
-            $uids[] = $v['uid'];
-            $events[] = $v;
-        }
-        if (count($events)) {
-            $events = self::result_events_has_avatarstatusinfo($uids, $events);
-        }
-
-        return $events;
-    }
-
     //根据rid查询动态
     public function fetch_by_rid($rids, $start = 0, $limit = 0, $count = false, $type = false) {
         if (!is_array($rids)) $rids = (array)$rids;
@@ -218,35 +160,12 @@ class table_resources_event extends dzz_table {
             $v['body_data'] = unserialize($v['body_data']);
             $v['body_data']['msg'] = preg_replace_callback("/@\[(.+?):(.+?)\]/i", "atreplacement", $v['body_data']['msg']);
             $v['body_data']['msg'] = dzzcode($v['body_data']['msg']);
-            $at_users = array();
             $v['do_lang'] = lang($v['do']);
             $v['details'] = lang($v['event_body'], $v['body_data']);
             $v['fdate'] = dgmdate($v['dateline'], 'u');
             $events[] = $v;
         }
         return $events;
-    }
-
-    public function result_events_has_avatarstatusinfo($uids, $events) {
-        $uids = array_unique($uids);
-        $avatars = array();
-        foreach (DB::fetch_all("select u.avatarstatus,u.uid,s.svalue from %t u left join %t s on u.uid=s.uid and s.skey=%s where u.uid in(%n)", array('user', 'user_setting', 'headerColor', $uids)) as $v) {
-            if ($v['avatarstatus'] == 1) {
-                $avatars[$v['uid']]['avatarstatus'] = 1;
-            } else {
-                $avatars[$v['uid']]['avatarstatus'] = 0;
-                $avatars[$v['uid']]['headerColor'] = $v['svalue'];
-            }
-        }
-        $fevents = array();
-        foreach ($events as $v) {
-            $v['avatarstatus'] = $avatars[$v['uid']]['avatarstatus'];
-            if (!$avatars[$v['uid']]['avatarstatus'] && isset($avatars[$v['uid']]['headerColor'])) {
-                $v['headerColor'] = $avatars[$v['uid']]['headerColor'];
-            }
-            $fevents[] = $v;
-        }
-        return $fevents;
     }
 
     //查询该文件最近的动态

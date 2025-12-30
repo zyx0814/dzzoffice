@@ -76,7 +76,6 @@ if ($_GET['do'] == 'imageUpload') {
     if (!$_G['uid'])
         $status = 3;
     //游客无权投票；
-    //if($voteuids) $voteuser=DB::fetch_all("select uid,username,avatarstatus from %t where uid IN (%n) limit 6",array('user',$voteuids));
 } elseif ($_GET['do'] == 'getvoteuser') {
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
     $perpage = 20;
@@ -93,7 +92,7 @@ if ($_GET['do'] == 'imageUpload') {
     }
     if ($itemids && $vote['showuser']) {//获取投票人
         if ($count = DB::result_first("select COUNT(DISTINCT uid) from %t where itemid IN(%n)", array('vote_item_count', $itemids))) {
-            foreach (DB::fetch_all("select DISTINCT u.uid,u.username,u.avatarstatus from %t c LEFT JOIN %t u ON c.uid=u.uid where itemid IN(%n) order by c.dateline DESC limit $start,$perpage", array('vote_item_count', 'user', $itemids)) as $value) {
+            foreach (DB::fetch_all("select DISTINCT u.uid,u.username,u.avatarstatus,u.headerColor from %t c LEFT JOIN %t u ON c.uid=u.uid where itemid IN(%n) order by c.dateline DESC limit $start,$perpage", array('vote_item_count', 'user', $itemids)) as $value) {
                 $voteuser[$value['uid']] = $value;
             }
         }
@@ -145,8 +144,6 @@ if ($_GET['do'] == 'imageUpload') {
         $votetotal += $value['number'];
     }
     $votesum = DB::result_first("select COUNT(DISTINCT uid) from %t where itemid IN(%n)", array('vote_item_count', $itemids));
-    //if($voteuids) $voteuser=DB::fetch_all("select uid,username from %t where uid IN(%n) limit 6",array('user',$voteuids));
-
 } elseif ($_GET['do'] == 'itemdelete') {
 
     if ($itemid = empty($_GET['itemid']) ? 0 : intval($_GET['itemid'])) {

@@ -88,7 +88,14 @@ _filemanage.getData = function (url, callback) {
 			jQuery('.allsave,.downAll,.new-buildMenu,.icons-thumbnail').hide();
 			return false;
 		} else if (json.password){
-			jQuery('#filemanage-f-1').html('<div class="container"><div class="card shadow m-3"><div class="card-header">'+json.password.avatar+' <strong>'+json.password.username+'</strong> <span class="ml10">给您加密分享了文件</span></div><div class="card-body"><div class="row mb-3"><label class="col-sm-2" for="passwords">请输入提取密码</label><div class="col-sm-10"><input type="password" class="form-control passwords" id="passwords" name="password" placeholder="请填写提取密码" value=""></div></div></div><div class="card-footer d-grid"><button type="button" class="btn btn-primary btn-round bodyloading" onclick="passwordsubmit()" value="true">提取文件</button></div></div></div>');
+			jQuery('#expireday').html('');
+			jQuery('.share-title').html('<strong>'+json.password.username+'</strong> <span class="ml10">给您加密分享了文件</span>');
+			jQuery('#sharefdateline').html('');
+			jQuery('.shareusername').html('加密分享');
+			jQuery('#shareviews').html(0);
+			jQuery('#sharedowns').html(0);
+			jQuery('.file-icon').html(json.password.avatar);
+			jQuery('#filemanage-f-1').html('<div class="container"><div class="card shadow m-3"><div class="card-body"><div class="row mb-3"><label class="col-sm-2" for="passwords">请输入提取密码</label><div class="col-sm-10"><input type="password" class="form-control passwords" id="passwords" name="password" placeholder="请填写提取密码" value=""></div></div></div><div class="card-footer d-grid"><button type="button" class="btn btn-primary btn-round bodyloading" onclick="passwordsubmit()" value="true">提取文件</button></div></div></div>');
 			jQuery('.allsave,.downAll,.new-buildMenu,.icons-thumbnail').hide();
 			return false;
 		} else {
@@ -1072,6 +1079,7 @@ _filemanage.get_template = function (fid, whole, disp, asc) {
 				break;
 		}
 	}
+	if (!str) return '';
 	return str;
 
 };

@@ -189,7 +189,7 @@ class table_organization_user extends dzz_table {
         $limitsql = $limit ? " LIMIT $limit" : "";
         $finalSortSql = $sortSql ?: "ORDER BY username";
         // 获取非机构用户列表
-        $users = DB::fetch_all("SELECT username, uid, email, groupid, `status`, groupid FROM %t WHERE uid NOT IN(%n) $finalSortSql $limitsql",array('user', $uids_org),'uid');
+        $users = DB::fetch_all("SELECT username, uid, email, groupid, `status`, groupid, avatarstatus, headerColor FROM %t WHERE uid NOT IN(%n) $finalSortSql $limitsql",array('user', $uids_org),'uid');
         if ($count) {
             $total = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid NOT IN(%n)", array('user', $uids_org));
             return [
@@ -207,7 +207,7 @@ class table_organization_user extends dzz_table {
 
         if ($count) return DB::result_first("select COUNT(*) FROM %t where orgid IN(%n)", array($this->_table, $orgids));
         $finalSortSql = $sortSql ?: "ORDER BY dateline DESC";
-        return DB::fetch_all("select o.*, u.username, u.email, u.groupid, u.status from " . DB::table('organization_user') . " o LEFT JOIN " . DB::table('user') . " u ON o.uid=u.uid where o.orgid IN(" . dimplode($orgids) . ") $finalSortSql $limitsql");
+        return DB::fetch_all("select o.*, u.username, u.email, u.groupid, u.status, u.avatarstatus,u.headerColor from " . DB::table('organization_user') . " o LEFT JOIN " . DB::table('user') . " u ON o.uid=u.uid where o.orgid IN(" . dimplode($orgids) . ") $finalSortSql $limitsql");
     }
 
     public function fetch_orgids_by_uid($uids, $orgtype = 0) {
@@ -318,7 +318,7 @@ class table_organization_user extends dzz_table {
             $params[] = $uid;
         }
         $userinfo = array();
-        foreach (DB::fetch_all("select o.*,u.username,u.email,u.adminid from %t o left join %t u on o.uid = u.uid where o.orgid = %d $where", $params) as $v) {
+        foreach (DB::fetch_all("select o.*,u.username,u.email,u.adminid,u.avatarstatus,u.uid,u.headerColor from %t o left join %t u on o.uid = u.uid where o.orgid = %d $where", $params) as $v) {
             $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", array('organization_admin', $orgid, $v['uid']));
             if($admintype) {
                 $v['perm'] = $admintype;

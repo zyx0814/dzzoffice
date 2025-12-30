@@ -75,7 +75,7 @@
     <li class="list-group-item d-flex justify-content-between align-items-start {$v['uid']}_delete">
         <div class="fw-bold text-truncate">
             <div class="perm-avatar">
-                {eval echo avatar_block($v['uid']);} <!--{if $v['uid'] == $_G['uid']}-->{lang my_self}<!--{else}-->$v['username']<!--{/if}-->
+                {eval echo avatar_block($v['uid'], array(), null, $v);} <!--{if $v['uid'] == $_G['uid']}-->{lang my_self}<!--{else}-->$v['username']<!--{/if}-->
             </div>
             <span class="perm-name"><!--{if $v['perm'] == 0}-->{lang explorer_groupperm_cooperative}<!--{elseif $v['perm'] == 1}-->{lang explorer_groupperm_manager}<!--{elseif $v['perm'] == 2}-->{lang explorer_groupperm_creater}<!--{/if}--></span>
         </div>

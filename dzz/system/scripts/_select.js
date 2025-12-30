@@ -302,7 +302,6 @@ _select.SelectedStyle=function(container,rid,flag,multi){
 		el.removeClass('Icoselected');	
 	}
 
-	if(_selectfile.cons[filemanageid]) _selectfile.cons[filemanageid].selectInfo();
 	if(_explorer.type){
 		_selectfile.changefileName(rid);
 	}

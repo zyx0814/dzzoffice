@@ -683,24 +683,38 @@ function avatar($uid, $size = 'middle', $returnsrc = FALSE, $real = FALSE, $stat
 /**
  * 获取用户头像模板，如果没有会生成背景+首字母的头像
  * @param int $uid 需要生成的用户UID
- * @param array $headercolors 用户头像颜色信息数组，格式为array('1'=>'#e9308d','2'=>'#e74856')，键为UID
- * @param string $class 头像元素的CSS类名
+ * @param array $headercolors 可选，用户头像颜色信息数组，格式为array('1'=>'#e9308d','2'=>'#e74856')，键为UID
+ * @param string|null $class 可选，头像元素的CSS类名
  * @param array|null $user 可选，指定用户信息数组，格式如array('username' => 'guest', 'avatarstatus' => 0)
  * @return string 头像HTML代码
  */
-function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel img-avatar", $user = null) {
+function avatar_block($uid = 0, $headercolors = array(), $class = null, $user = null) {
+    global $_G;
     static $colors = array('#6b69d6', '#a966ef', '#e9308d', '#e74856', '#f35b42', '#00cc6a', '#0078d7', '#5290f3', '#00b7c3', '#0099bc', '#018574', '#c77c52', '#ff8c00', '#68768a', '#7083cb', '#26a255');
     static $userheaderColors = array();
+    if ($class == null) $class = "Topcarousel img-avatar";
 
-    // 优先使用传入的$user数组
-    if ($user !== null) {
-        $user = array_merge(array('uid' => $uid, 'username' => 'guest', 'nickname' => '', 'avatarstatus' => 0),$user);
-    } elseif ($uid) {
-        $user = getuserbyuid($uid)?: [];
+    // 获取用户数据
+    if ($user === null) {
+        if ($uid == $_G['uid']) {
+            // 当前用户
+            $user = array(
+                'uid' => $_G['uid'], 
+                'username' => $_G['username'], 
+                'avatarstatus' => $_G['member']['avatarstatus'],
+                'headerColor' => $_G['member']['headerColor'] ?? ''
+            );
+        } elseif ($uid) {
+            // 其他用户
+            $user = getuserbyuid($uid) ?: [];
+        } else {
+            // 未指定用户
+            $user = [];
+        }
     }
-    if (empty($user)) {
-        $user = array('uid' => 0, 'username' => 'guest', 'nickname' => '', 'avatarstatus' => 0);
-    }
+
+    // 合并默认值
+    $user = array_merge(array('uid' => 0, 'username' => 'guest', 'avatarstatus' => 0, 'headerColor' => ''), $user);
 
     // 用户已上传头像时返回img标签
     if ($user['avatarstatus']) {
@@ -710,21 +724,30 @@ function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel i
     // 未上传头像时生成背景+首字母的头像
     // 确定背景颜色
     if ($user['uid']) {
-        if (!empty($headercolors[$user['uid']])) {
-            $headerColor = $headercolors[$user['uid']];
+        // 优先使用缓存
+        if (!empty($userheaderColors[$user['uid']])) {
+            $headerColor = $userheaderColors[$user['uid']];
         } else {
-            if (!empty($userheaderColors[$user['uid']])) {
-                $headerColor = $userheaderColors[$user['uid']];
+            // 优先使用传递的颜色
+            if (!empty($headercolors[$user['uid']])) {
+                $headerColor = $headercolors[$user['uid']];
             } else {
-                $headerColor = C::t('user_setting')->fetch_by_skey('headerColor', $user['uid']);
-                // 未设置颜色时随机生成并保存
+                // 优先使用user表的headerColor
+                $headerColor = $user['headerColor'];
+                // 仍无值 → 读取user_setting的旧值（兼容历史数据）
                 if (empty($headerColor)) {
-                    $colorKey = mt_rand(0, count($colors) - 1); // 使用count避免硬编码
-                    $headerColor = $colors[$colorKey];
-                    C::t('user_setting')->insert_by_skey('headerColor', $headerColor, $user['uid']);
+                    $headerColor = C::t('user_setting')->fetch_by_skey('headerColor', $user['uid']);
+                    
+                    // 无任何值（旧值未查询/查询不到）→ 随机生成新值
+                    if (empty($headerColor)) {
+                        $colorKey = mt_rand(0, count($colors) - 1); // 使用count避免硬编码
+                        $headerColor = $colors[$colorKey];
+                    }
+                    // 统一保存到user表（旧值同步/新值存储）
+                    C::t('user')->update($user['uid'], array('headerColor' => $headerColor));
                 }
-                $userheaderColors[$user['uid']] = $headerColor;
             }
+            $userheaderColors[$user['uid']] = $headerColor;
         }
         return '<span class="' . $class . '" style="background:' . $headerColor . '" title="' . $user['username'] . '">' . new_strsubstr(ucfirst($user['username']), 1, '') . '</span>';
     } else {
@@ -739,36 +762,27 @@ function avatar_block($uid = 0, $headercolors = array(), $class = "Topcarousel i
 function avatar_group($gid, $groupcolors = array(), $class = 'iconFirstWord') {
     static $colors = array('#6b69d6', '#a966ef', '#e9308d', '#e74856', '#f35b42', '#00cc6a', '#0078d7', '#5290f3', '#00b7c3', '#0099bc', '#018574', '#c77c52', '#ff8c00', '#68768a', '#7083cb', '#26a255');
     $gid = intval($gid);
+    $groupData = array();
     if ($groupcolors[$gid]) {
-        if ($groupcolor = $groupcolors[$gid]['aid']) {
-            if (preg_match('/^\#.+/', $groupcolor)) {
-                return '<span class="iconFirstWord img-avatar" style="background:' . $groupcolor . ';" title="' . $groupcolors[$gid]['orgname'] . '">' . strtoupper(new_strsubstr($groupcolors[$gid]['orgname'], 1, '')) . '</span>';
-            } elseif (preg_match('/^\d+$/', $groupcolor) && $groupcolors > 0) {
-                return '<img src="index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $groupcolor) . '" class="img-circle" title="' . $groupcolors[$gid]['orgname'] . '">';
-            }
-        } else {
-            $colorkey = rand(1, 15);
-            $groupcolor = $colors[$colorkey];
-            C::t('organization')->update($gid, array('aid' => $groupcolor));
-            return '<span class="iconFirstWord img-avatar" style="background:' . $groupcolor . ';"  title="' . $groupcolors[$gid]['orgname'] . '">' . strtoupper(new_strsubstr($groupcolors[$gid]['orgname'], 1, '')) . '</span>';
-        }
+        $groupData['orgname'] = $groupcolors[$gid]['orgname'];
+        $groupData['aid'] = $groupcolors[$gid]['aid'] ?? '';
     } else {
-        if (!$groupinfo = C::t('organization')->fetch($gid)) {
+        $groupData = C::t('organization')->fetch($gid);
+        if (empty($groupData)) {
             return '<span class="dzz dzz-group mdi mdi-account"></span>';
         }
-        if ($groupinfo['aid']) {
-            if (preg_match('/^\#.+/', $groupinfo['aid'])) {
-                return '<span class="iconFirstWord img-avatar" style="background:' . $groupinfo['aid'] . ';" title="' . $groupinfo['orgname'] . '">' . strtoupper(new_strsubstr($groupinfo['orgname'], 1, '')) . '</span>';
-            } elseif (preg_match('/^\d+$/', $groupinfo['aid']) && $groupinfo['aid'] > 0) {
-                return '<img src="index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $groupinfo['aid']) . '" class="img-circle" title="' . $groupinfo['orgname'] . '">';
-            }
-        } else {
-
-            $colorkey = rand(1, 15);
-            $groupcolor = $colors[$colorkey];
-            C::t('organization')->update($gid, array('aid' => $groupcolor));
-            return '<span class="iconFirstWord img-avatar" style="background:' . $groupcolor . ';" title="' . $groupinfo['orgname'] . '">' . strtoupper(new_strsubstr($groupinfo['orgname'], 1, '')) . '</span>';
-        }
+    }
+    $aid = $groupData['aid'] ?? '';
+    $orgname = $groupData['orgname'] ?? '';
+    if (preg_match('/^\#.+/', $aid)) {
+        return '<span class="' . $class . ' img-avatar" style="background:' . $aid . ';" title="' . $orgname . '">' . strtoupper(new_strsubstr($orgname, 1, '')) . '</span>';
+    } elseif (preg_match('/^\d+$/', $aid) && $aid > 0) {
+        return '<img src="index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $aid) . '" class="img-circle" title="' . $orgname . '">';
+    } else {
+        $colorkey = rand(1, 15);
+        $groupcolor = $colors[$colorkey];
+        C::t('organization')->update($gid, array('aid' => $groupcolor));
+        return '<span class="' . $class . ' img-avatar" style="background:' . $groupcolor . ';" title="' . $orgname . '">' . strtoupper(new_strsubstr($orgname, 1, '')) . '</span>';
     }
 }
 
@@ -1928,9 +1942,7 @@ function getFileTypeName($type, $ext) {
     }
 
     $name = '';
-    if ($ext == 'dzzdoc') {
-        $name = lang('extname_dzzdoc');
-    } elseif ($ext == 'txt') {
+    if ($ext == 'txt') {
         $name = lang('extname_txt');
     } else {
         $name = strtoupper($ext) . ' ' . $typename;
@@ -2833,7 +2845,7 @@ function dzz_userconfig_init() {  //初始化用户信息
         'dateline' => $_G['timestamp'],
         'updatetime' => $_G['timestamp'],
         'perm' => 0,
-        'iconview' => $_G['setting']['desktop_default']['iconview'] ? $_G['setting']['desktop_default']['iconview'] : 2
+        'iconview' => 2
     );
 
     $appids = C::t('app_market')->fetch_all_by_default($_G['uid'],true);

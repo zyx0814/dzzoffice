@@ -407,4 +407,7 @@ $lang = array(
     'add_cat' => 'Add Type',
     'open_browser' => 'Open Browser',
     'no_history' => 'No history',
+    'perm' => 'Permissions',
+    'space_used' => 'Space Used',
+    'space_total' => 'Space Total',
 );

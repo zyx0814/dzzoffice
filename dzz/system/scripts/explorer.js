@@ -41,10 +41,6 @@ _explorer = function (json) {
     _explorer.defaultfilename = json.defaultfilename || '';
     _explorer.infoRequest = 0;
     _explorer.deletefinally = json.deletefinally || 0;
-    _explorer.cut = json.cut || {
-            iscut: 0,
-            icos: []
-        };
 };
 _explorer.appUrl = 'index.php?mod=system&op=fileselection';
 _explorer.hash = '';
@@ -237,27 +233,6 @@ _explorer.topNav_init = function () {
                 case '我的网盘':
                     _explorer.routerule(path);
                     break;
-                case '动态':
-                    hash = 'dynamic';
-                    break;
-                case '回收站':
-                    hash = 'recycle';
-                    break;
-                case '分享':
-                    hash = 'share';
-                    break;
-                case '收藏':
-                    hash = 'collection';
-                    break;
-                case '最近使用':
-                    hash = 'recent';
-                    break;
-                case '文件夹权限':
-                    hash = 'perm';
-                    break;
-                case '功能管理':
-                    hash = 'app';
-                    break;
                 case '图片':
                 case '文档':
                     path = '类型:' + path;
@@ -424,7 +399,6 @@ _explorer.open_node_by_id = function (fid, gid) {
     }
 };
 _explorer.open_node_bg = function (inst, node, arr) {
-
     inst.open_node(node, function (node) {
         var i = jQuery.inArray(node.id, arr);
         if (i < arr.length && i > -1 && document.getElementById(arr[i + 1])) {
@@ -483,84 +457,9 @@ _explorer.Scroll = function (els) {
     });
 };
 
-
-_explorer.image_resize = function (img, width, height) {
-    width = !width ? jQuery(img).parent().width() : width;
-    height = !height ? jQuery(img).parents('.icoimgContainer').parent().height() : height;
-    imgReady(img.src, function () {
-        var w = this.width;
-        var h = this.height;
-        var realw = 0,
-            realh = 0;
-        if (w > 0 && h > 0) {
-            if ((w / h) > 1) {
-                realw = (w > width) ? parseInt(width) : w;
-                realh = (w > width) ? parseInt(height) : (realw * h / w);
-                img.style.width = realw + 'px';
-                img.style.height = realh + 'px';
-            } else {
-                realh = (h > height) ? parseInt(height) : h;
-                realw = (h > height) ? parseInt(width) : (realh * w / h);
-                img.style.width = realw + 'px';
-                img.style.height = 'auto';
-            }
-            if (realw < 32 && realh < 32) {
-                jQuery(img).addClass('image_tosmall').css({
-                    padding: ((height - realh) / 2 - 1) + 'px ' + ((width - realw) / 2 - 1) + 'px'
-                });
-            }
-        }
-        jQuery(img).show();
-    });
-
-};
-_explorer.icoimgError = function (img, width, height) {
-    width = !width ? jQuery(img).parent().width() : width;
-    height = !height ? jQuery(img).parent().height() : height;
-    if (jQuery(img).attr('error')) {
-        imgReady(jQuery(img).attr('error'), function () {
-                var w = this.width;
-                var h = this.height;
-                var realw = 0,
-                    realh = 0;
-                if (w > 0 && h > 0) {
-                    if ((w / h) > 1) {
-                        realw = (w > width) ? parseInt(width) : w;
-                        realh = realw * h / w;
-                    } else {
-                        realh = (h > height) ? parseInt(height) : h;
-                        realw = realh * w / h;
-                    }
-                    if (realw < 32 && realh < 32) {
-                        jQuery(img).addClass('image_tosmall').css({
-                            padding: ((height - realh) / 2 - 1) + 'px ' + ((width - realw) / 2 - 1) + 'px'
-                        });
-                    }
-                    try {
-                        img.style.width = realw + 'px';
-                        img.style.height = realh + 'px';
-
-                    } catch (e) {
-
-                    }
-                    img.src = jQuery(img).attr('error');
-                    jQuery(img).show();
-                }
-            },
-            function () {
-            },
-            function () {
-                img.onerror = null;
-                img.src = 'dzz/images/default/icodefault.png';
-                jQuery(img).show();
-            }
-        );
-    }
-};
 jQuery(window).resize(function () {
     _explorer.Scroll();
 });
-
 
 function checkAll(type, form, value, checkall, changestyle) {
     checkall = checkall ? checkall : 'chkall';

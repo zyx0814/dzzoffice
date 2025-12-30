@@ -86,7 +86,8 @@
 		  ,{field:'creater', title: '{lang explorer_groupperm_manager}', align: 'center', sort: true}
 		  ,{field:'usernum', title: '{lang membership}', align: 'center', sort: true}
 		  ,{field:'dateline', title: '{lang create_date}', align: 'center',sort: true}
-          ,{field:'maxspacesize', title: '空间大小(M)<i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="点击对应的单元格支持编辑，单位为M" style="margin-left: 5px;"></i>', align: 'center',sort: true,edit: 'text',width:150}
+          ,{field:'usesize', title: '{lang space_used}', align: 'center',sort: true,edit: 'text',width:150}
+          ,{field:'maxspacesize', title: '{lang space_total}(M)<i class="layui-icon layui-icon-tips layui-font-14" lay-event="email-tips" title="点击对应的单元格支持编辑，单位为M" style="margin-left: 5px;"></i>', align: 'center',sort: true,edit: 'text',width:150}
           ,{field:'diron', title: '状态',templet: '#switchTpl',align: 'center',sort: true, unresize: true}
           ,{field:'desc', title: '{lang introduce}',hide:true}
           ,{title: '{lang operation}',align:'center', toolbar: '#barDemo'}
@@ -140,7 +141,8 @@
                         template += '<p><strong>{lang explorer_groupperm_manager}:</strong> ' + item.creater + '</p>';
                         template += '<p><strong>{lang membership}:</strong> ' + item.usernum + '</p>';
                         template += '<p><strong>{lang create_date}:</strong> ' + item.dateline + '</p>';
-                        template += '<p><strong>空间大小:</strong> ' + item.maxspacesize + 'M</p>';
+                        template += '<p><strong>{lang space_used}:</strong> ' + item.usesize + '</p>';
+                        template += '<p><strong>{lang space_total}:</strong> ' + (item.maxspacesize == 0 ? '无限制' : (item.maxspacesize < 0 ? '无空间' : item.maxspacesize + 'M')) + '</p>';
                         template += '<p><strong>状态:</strong> ' + (item.diron == 1 ? '开启' : '关闭') + '</p>';
                     template += '</div>';
                     template += '</div>';
@@ -257,7 +259,7 @@
     });
     //触发排序事件 
 	layuiModules.table.on('sort(table)', function(obj){
-        if(obj.field == 'usernum' ||  obj.field == 'maxspacesize' || obj.field == 'creater') {
+        if(obj.field == 'usernum' || obj.field == 'creater') {
             layer.msg('该排序结果为前端根据当前页数据进行排序', {offset:'10px'});
         } else {
             search_data.sort = obj.field;
@@ -295,7 +297,8 @@
         '<p><strong>{lang explorer_groupperm_manager}:</strong> ' + data.creater + '</p>' +
         '<p><strong>{lang membership}:</strong> ' + data.usernum + '</p>' +
         '<p><strong>{lang create_date}:</strong> ' + data.dateline + '</p>' +
-        '<p><strong>空间大小:</strong> ' + data.maxspacesize + 'M</p>' +
+        '<p><strong>{lang space_used}:</strong> ' + data.usesize+ '</p>' +
+        '<p><strong>{lang space_total}:</strong> ' + (data.maxspacesize == 0 ? '无限制' : (data.maxspacesize < 0 ? '无空间' : data.maxspacesize + 'M')) + '</p>' +
         '<p><strong>状态:</strong> ' + (data.diron == 1 ? '开启' : '关闭') + '</p>'
         layer.alert(template, {
             title: 'ID <strong>' + data.LAY_NUM + '</strong> {lang detail}：'

@@ -82,7 +82,7 @@
 		<ul class="user-container d-flex flex-wrap" id="userContainer">
 			<!--{loop $data $v}-->
 			<li class="user-card d-flex align-items-center" data-uid="$v['uid']" title="$v[username]">
-				{eval echo avatar_block($v['uid']);}
+				{eval echo avatar_block($v['uid'], array(), null, $v);}
 				<div class="user-info d-flex">
 					<span class="user-name text-truncate">$v[username]</span>
 					<span class="user-role text-truncate" title="$v[jobname]">$v[jobname]</span>

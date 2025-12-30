@@ -182,7 +182,7 @@
       <div id="orgids" class="d-flex flex-wrap">
         <!--{loop $moderators $value}-->
         <button id="orgids_sl_uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg" data-val="uid_$value['uid']">
-          {eval echo avatar_block($value['uid']);} $value[username]
+          {eval echo avatar_block($value['uid'], array(), null, $value);} $value[username]
           <!--{if $pmoderator}--><a href="javascript:;" class="ibtn mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a><!--{/if}-->
         </button>
         <!--{/loop}-->

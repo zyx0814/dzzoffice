@@ -22,9 +22,6 @@
         <li class="layui-menu-item-parent menu-item share" onclick="_filemanage.share('{rid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-share-variant pe-2"></i>{lang share}</div>
         </li>
-        <li class="layui-menu-item-parent menu-item collect" onclick="_filemanage.collect('{rid}');">
-            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-star pe-2"></i><span class="layui-menu-item-text">{lang collect}</span></div>
-        </li>
         <li class="layui-menu-item-divider">
             <div class="layui-menu-body-title dropdown-item"></div>
         </li>
@@ -47,6 +44,9 @@
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-dots-vertical pe-2"></i>{lang more}<i class="layui-icon layui-icon-right"></i></div>
             <div class="layui-panel layui-menu-body-panel dropdown-menu border">
                 <ul>
+                    <li class="layui-menu-item-parent menu-item collect" onclick="_filemanage.collect('{rid}');">
+                        <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-star pe-2"></i><span class="layui-menu-item-text">{lang collect}</span></div>
+                    </li>
                     <li class="menu-item copy clone" onclick="_filemanage.copy('{rid}','{fid}');">
                         <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-file-document-multiple pe-2"></i>{lang clone}</div>
                     </li>
@@ -67,6 +67,9 @@
         </li>
         <li class="layui-menu-item-parent menu-item finallydelete" onclick="_filemanage.finallyDelete('{rid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-delete pe-2"></i>{lang completely_cancel}</div>
+        </li>
+        <li class="layui-menu-item-parent menu-item perm" onclick="_filemanage.perm('{fid}','{rid}');">
+            <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-lock pe-2"></i>{lang perm}</div>
         </li>
         <li class="layui-menu-item-parent menu-item property" onclick="_filemanage.property('{rid}');">
             <div class="layui-menu-body-title dropdown-item"><i class="mdi mdi-sort-variant pe-2"></i>{lang property}</div>
@@ -200,6 +203,9 @@
         </li>
         <li class="menu-item property" onclick="window.location.reload();">
             <div class="layui-menu-body-title dropdown-item"><span class="mdi mdi-sync pe-2"></span>{lang refresh}</div>
+        </li>
+        <li class="menu-item property" onclick="_filemanage.perm('{fid}');">
+            <div class="layui-menu-body-title dropdown-item"><span class="mdi mdi-lock pe-2"></span>{lang perm}</div>
         </li>
         <li class="menu-item property" onclick="_filemanage.property('{fid}',1);">
             <div class="layui-menu-body-title dropdown-item"><span class="mdi mdi-sort-variant pe-2"></span>{lang property}</div>

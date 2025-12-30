@@ -89,7 +89,7 @@
 								<!--{/loop}-->
 								<!--{loop $result1['selUser'] $value}-->
 								<button id="orgids_sl_uid_$value['uid']" data-val="uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg">
-									{eval echo avatar_block($value['uid'],array($value['uid']=>$value['headerColor']),'iconFirstWord');} $value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
+									{eval echo avatar_block($value['uid'], array(), null, $value);} $value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('orgids',this);"></a>
 								</button>
 								<!--{/loop}-->
 							</div>
@@ -158,7 +158,7 @@
 								<!--{/loop}-->
 								<!--{loop $result2['selUser'] $value}-->
 								<button id="groupcreateids_sl_uid_$value['uid']" data-val="uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg">
-									{eval echo avatar_block($value['uid'],array($value['uid']=>$value['headerColor']),'iconFirstWord');}$value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('groupcreateids',this);"></a>
+									{eval echo avatar_block($value['uid'], array(), null, $value);}$value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('groupcreateids',this);"></a>
 								</button>
 								<!--{/loop}-->
 							</div>
@@ -227,7 +227,7 @@
 							<!--{/loop}-->
 							<!--{loop $result3['selUser'] $value}-->
 							<button id="cloudorgids_sl_uid_$value['uid']" data-val="uid_$value['uid']" type="button" class="btn btn-outline-primary btn-sm btn-sorg">
-								{eval echo avatar_block($value['uid'],array($value['uid']=>$value['headerColor']),'iconFirstWord');} $value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('cloudorgids',this);"></a>
+								{eval echo avatar_block($value['uid'], array(), null, $value);} $value['username'] <a href="javascript:;" class="mdi mdi-close-circle lead" title="{lang delete}" onclick="selorg.remove('cloudorgids',this);"></a>
 							</button>
 							<!--{/loop}-->
 						</div>

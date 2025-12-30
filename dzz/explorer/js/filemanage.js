@@ -92,7 +92,13 @@ _filemanage.getData = function (url, callback) {
 			}
 			_explorer.topMenu(location.hash.replace('#',''),_filemanage.fid);
 			var obj = null;
-			
+			if (json.param && json.param.view == 1) {
+				json.param.view = 2;
+			}
+			// 这里限制只接受2、4的view，因为可能会存在其他view导致功能异常
+			if (json.param && (json.param.view != 2 && json.param.view != 4)) {
+				json.param.view = 2;
+			}
 			if (json.param.page > 1) {
 				obj = _filemanage.cons[json.sid];
 				obj.appendIcos(json.data);
@@ -348,7 +354,6 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 	}
 	this.data[data.rid] = data;
 	var template = _filemanage.get_template(this.id);
-	if(!template) template = '';
 	//创建图标列表
 	if (data.flag) {
         if (!data.img) {
@@ -1031,9 +1036,6 @@ function contextmenubody(fid) {
 	if (!_explorer.Permission_Container('link', fid)) {
 		el.find('.newlink').remove();
 	}
-	if (!_explorer.Permission_Container('dzzdoc', fid)) {
-		el.find('.newdzzdoc').remove();
-	}
 	if (!_explorer.Permission_Container('upload', fid)) {
 		el.find('.upload').remove();
 		el.find('.paste').remove();
@@ -1528,7 +1530,6 @@ _filemanage.get_template = function (sid, whole, disp, asc) {
 			case 2:
 			case 3:
 				str = jQuery('#template_middleicon').html();
-
 				break;
 			case 4:
 				str = jQuery('#template_detaillist').html();
@@ -1553,6 +1554,7 @@ _filemanage.get_template = function (sid, whole, disp, asc) {
 				break;
 		}
 	}
+	if (!str) return '';
 	return str;
 
 };
@@ -1585,15 +1587,6 @@ _filemanage.Open = function (rid, extid, title) {
     }else*/ if (obj.type === 'link') {
         addstatis(rid);
 		window.open(data.url);
-		return;
-	} else if (obj.type === 'dzzdoc') {
-		obj.url = "index.php?mod=document&icoid=" + obj.id;
-		if(atdingding){ 
-			window.open( encodeURI(SITEURL+"index.php?mod=dingtalk&op=loginfromding&redirecturl="+encodeURIComponent(obj.url)) );
-		}else{
-			window.open(obj.url);
-		} 
-		addstatis(obj.id);
 		return;
 	} else if (obj.type === 'folder') {
 		var hash = '';
@@ -2717,4 +2710,7 @@ _filemanage.history = function(rid) {
 };
 _filemanage.dynamic = function(rid) {
 	showWindow('property', _explorer.appUrl + '&op=ajax&do=dynamic&property=1&rid=' + rid, 'get', 0);
+};
+_filemanage.perm = function(fid, rid) {
+	showWindow('property', _explorer.appUrl + '&op=ajax&do=perm&property=1&fid=' + fid + '&rid=' + (rid ? rid : ''), 'get', 0);
 };

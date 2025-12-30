@@ -160,6 +160,7 @@ class table_shares extends dzz_table {
     public function update_by_id($id, $setarr,$bz='') {
         if (empty($setarr)) return false;
         if (!$id) return false;
+        global $_G;
         $rid = $setarr['filepath'];
         $more = false;
         if(!$bz) {
@@ -176,19 +177,19 @@ class table_shares extends dzz_table {
         }
         
         $setarr['dateline'] = time();
-        $setarr['uid'] = getglobal('uid');
-        $setarr['username'] = getglobal('username');
+        $setarr['uid'] = $_G['uid'];
+        $setarr['username'] = $_G['username'];
         if (parent::update($id, $setarr)) {
             if($bz) return $id;
             $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
             $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
-            $eventdata = array('username' => $setarr['username'], 'filename' => $fileinfo['name'], 'url' => getglobal('siteurl') . 'index.php&mod=shares&sid=' . dzzencode($id), 'position' => $path, 'hash' => $hash);
+            $eventdata = array('username' => $setarr['username'], 'filename' => $fileinfo['name'], 'position' => $path, 'hash' => $hash);
             if (!C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'edit_share_file', 'share', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name'])) {
                 parent::delete($id);
                 return array('error' => lang('file_not_exist'));
             } else {
-                return $id;
+                return array('success' => $id);
             }
         } else {
             return array('error' => lang('explorer_do_failed'));
@@ -211,6 +212,7 @@ class table_shares extends dzz_table {
         if (parent::delete($id)) {
             $url = $_G['siteurl'] . 'index.php?mod=shares&sid=' . dzzencode($id);
             C::t('shorturl')->delete_by_url($url);//删除短链接
+            C::t('share_report')->delete_by_sid($id);//删除举报记录
             $eventdata = array('username' => $setarr['username'], 'filename' => $shareinfo['title']);
             C::t('resources_event')->addevent_by_pfid($shareinfo['pfid'], 'cancle_share', 'cancleshare', $eventdata, $shareinfo['gid'], '', $shareinfo['title']);
             return array('success' => true, 'shareid' => $id, 'sharetitle' => $shareinfo['title']);

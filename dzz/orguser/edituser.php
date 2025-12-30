@@ -144,7 +144,7 @@ if ($do == 'add') {
         if (C::t('user_field')->fetch($uid)) {
             C::t('user_field')->update($uid, array('addsize' => $addsize, 'perm' => 0));
         } else {
-            C::t('user_field')->insert(array('uid' => $uid, 'addsize' => $addsize, 'perm' => 0, 'iconview' => $_G['setting']['desktop_default']['iconview'] ? $_G['setting']['desktop_default']['iconview'] : 2));
+            C::t('user_field')->insert(array('uid' => $uid, 'addsize' => $addsize, 'perm' => 0, 'iconview' => 2));
         }
 
         if ($orgids) C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
@@ -325,7 +325,7 @@ if ($do == 'add') {
         if (C::t('user_field')->fetch($uid)) {
             C::t('user_field')->update($uid, array('userspace' => $userspace, 'perm' => 0));
         } else {
-            C::t('user_field')->insert(array('uid' => $uid, 'userspace' => $userspace, 'perm' => 0, 'iconview' => $_G['setting']['desktop_default']['iconview'] ? $_G['setting']['desktop_default']['iconview'] : 2));
+            C::t('user_field')->insert(array('uid' => $uid, 'userspace' => $userspace, 'perm' => 0, 'iconview' => 2));
         }
         //处理用户部门和职位
         if ($orgids) C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);

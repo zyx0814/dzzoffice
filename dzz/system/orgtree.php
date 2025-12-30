@@ -88,13 +88,23 @@ if ($_GET['do'] == 'orgtree') {
                     $isother = false;
                 }
                 if ($isother) {
-                    $uids = array();
                     $datas = array();
                     foreach (C::t('organization_user')->fetch_user_not_in_orgid($limit) as $value) {
-                        $uids[] = $value['uid'];
-                        $datas[] = array('id' => 'uid_' . $value['uid'], 'text' => $value['username'] . '<em class="hide">' . $value['email'] . '</em>', 'icon' => 'dzz/system/images/user.png', 'state' => array('disabled' => $disable), "type" => $type, 'li_attr' => array('uid' => $value['uid']));
+                        $datas[] = array(
+                            'id' => 'uid_' . $value['uid'],
+                            'text' => $value['username'] . '<em class="hide">' . $value['email'] . '</em>',
+                            'icon' => 'dzz/system/images/user.png',
+                            'state' => array('disabled' => $disable),
+                            "type" => $type,
+                            'li_attr' => array(
+                                'uid' => $value['uid'],
+                                'username' => $value['username'],
+                                'avatarstatus' => $value['avatarstatus'],
+                                'headerColor'  => $value['headerColor'],
+                            )
+                        );
                     }
-                    getuserIcon($uids, $datas, $data);
+                    getuserIcon($datas, $data);
                 }
             }
         } else {
@@ -133,16 +143,25 @@ if ($_GET['do'] == 'orgtree') {
                     $isorguid = false;
                 }
                 if ($isorguid) {
-                    $uids = array();
                     $datas = array();
-
                     foreach (C::t('organization_user')->fetch_user_by_orgid($id, $limit) as $value) {
                         if (!$value['uid']) continue;
-                        $uids[] = $value['uid'];
                         if ($showjob && $value['jobid']) $jobname = DB::result_first("select name from %t where jobid=%d", array('organization_job', $value['jobid']));
-                        $datas[] = array('id' => 'orgid_' . $value['orgid'] . '_uid_' . $value['uid'], 'text' => $value['username'] . ($jobname ? '<em> [' . $jobname . ']</em>' : '') . '<em class="hide">' . $value['email'] . '</em>', 'icon' => 'dzz/system/images/user.png', 'state' => array('disabled' => $disable), "type" => $type, 'li_attr' => array('uid' => $value['uid']));
+                        $datas[] = array(
+                            'id' => 'orgid_' . $value['orgid'] . '_uid_' . $value['uid'],
+                            'text' => $value['username'] . ($jobname ? '<em> [' . $jobname . ']</em>' : '') . '<em class="hide">' . $value['email'] . '</em>',
+                            'icon' => 'dzz/system/images/user.png',
+                            'state' => array('disabled' => $disable),
+                            "type" => $type,
+                            'li_attr' => array(
+                                'uid' => $value['uid'],
+                                'username' => $value['username'],
+                                'avatarstatus' => $value['avatarstatus'],
+                                'headerColor'  => $value['headerColor'],
+                            )
+                        );
                     }
-                    getuserIcon($uids, $datas, $data);
+                    getuserIcon($datas, $data);
                 }
             }
         }
@@ -184,31 +203,14 @@ if ($_GET['do'] == 'orgtree') {
     }
     exit(json_encode($temp));
 }
-function getuserIcon($uids, $datas, &$data) {
-    $uids = array_unique($uids);
-    $avatars = array();
-    foreach (DB::fetch_all('select u.avatarstatus,u.uid,s.svalue from %t u left join %t s on u.uid=s.uid and s.skey=%s where u.uid in(%n)', array('user', 'user_setting', 'headerColor', $uids)) as $v) {
-        if ($v['avatarstatus'] == 1) {
-            $avatars[$v['uid']]['avatarstatus'] = 1;
-        } else {
-            $avatars[$v['uid']]['avatarstatus'] = 0;
-            $avatars[$v['uid']]['headerColor'] = $v['svalue'];
-        }
-    }
-    $userarr = array();
-    $data1 = array();
+function getuserIcon($datas, &$data) {
     foreach ($datas as $v) {
         $uid = $v['li_attr']['uid'];
-        $avatarstatus = $avatars[$uid]['avatarstatus'];
-        if ($avatars[$v['li_attr']['uid']]['avatarstatus']) {
-            $v['icon'] = 'avatar.php?uid=' . $v['li_attr']['uid'];
-        } elseif ($avatars[$uid]['headerColor']) {
-            $headercolor = $avatars[$uid]['headerColor'];
-            $v['icon'] = false;
-            $v['text'] = '<span class="Topcarousel" style="background:' . $headercolor . ';" title="' . preg_replace("/<em.+?\/em>/i", '', $v['text']) . '">' . strtoupper(new_strsubstr($v['text'], 1, '')) . '</span>' . $v['text'];
+        if ($v['li_attr']['avatarstatus']) {
+            $v['icon'] = 'avatar.php?uid=' . $uid;
         } else {
             $v['icon'] = false;
-            $v['text'] = avatar_block($uid) . $v['text'];
+            $v['text'] = avatar_block($uid, array(), null, $v['li_attr']) . $v['text'];
         }
         $data[] = $v;
     }

@@ -91,9 +91,7 @@ if ($do == 'upload') {//上传图片文件
                 $data[] = $arr;
             }
         }
-
     }
-
     exit(json_encode($data));
 } elseif ($do == 'getjobs') {
     $orgid = intval($_GET['orgid']);

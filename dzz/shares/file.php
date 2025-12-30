@@ -56,7 +56,7 @@ $rename = 0;
 if ($share['perm']) {
     $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
     if (isset($perms[3]) && !$_G['uid']) { // 3 表示仅登录访问
-        exit(json_encode(array('error' => 'to_login')));
+        exit(json_encode(array('error' => lang('to_login'))));
     } elseif (isset($perms[2])) { // 2 表示禁用预览权限
         $canview = 0;
     }

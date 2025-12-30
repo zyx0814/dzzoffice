@@ -20,7 +20,7 @@ for(var i in arr['attachs']){
 	if(attach.preview>0){
 		html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
 	}
-	if(attach.type=='dzzdoc' || attach.type=='link'){
+	if(attach.type=='link'){
 	} else {
 		html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download;
 		if(attach.downloads>0){
@@ -90,7 +90,7 @@ function feed_reply(arr){
 		if(attach.preview>0){
 			html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_attach_preview(\''+attach['qid']+'\')">'+__lang.preview+'</a>';
 		}
-		if(attach.type=='dzzdoc' || attach.type=='link'){
+		if(attach.type=='link'){
 
 		} else {
 			html+='<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm me-2" onclick="feed_downAttach(\''+attach['qid']+'\')">'+__lang.download;

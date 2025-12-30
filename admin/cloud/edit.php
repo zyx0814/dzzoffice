@@ -30,7 +30,7 @@ if ($_GET['do'] == 'usercloud') {
         $theurl = BASESCRIPT . '?mod=cloud&op=edit&do=usercloud&bz=' . $bz;
         $dname = $cloud['dname'];
         $count = DB::result_first("select COUNT(*) from " . DB::table($dname) . " where bz='{$bz}' and uid>0");
-        foreach (DB::fetch_all("select * from " . DB::table($dname) . " where bz='{$bz}' and uid>0 order by dateline DESC limit $start,$perpage") as $value1) {
+        foreach (DB::fetch_all("select t.*, u.username from " . DB::table($dname) . " as t LEFT JOIN " . DB::table('user') . " as u on t.uid = u.uid where bz='{$bz}' and t.uid>0 order by dateline DESC limit $start,$perpage") as $value1) {
             if ($cloud['type'] == 'pan') {
                 if (!$value1['cloudname']) $value1['cloudname'] = $cloud['name'] . ':' . ($value1['cusername'] ? $value1['cusername'] : $value1['cuid']);
                 $value1['bz'] = $value['bz'];
@@ -46,8 +46,7 @@ if ($_GET['do'] == 'usercloud') {
                 $value1['img'] = 'dzz/images/default/system/' . $cloud['bz'] . '.png';
             }
             $value1['type'] = $cloud['type'];
-            $user = getuserbyuid($value1['uid']);
-            $value1['username'] = $user['username'];
+            $value1['username'] = $value1['username'];
             $value1['dateline'] = dgmdate($value1['dateline'], 'Y-m-d H:i:s');
             $list[] = $value1;
         }

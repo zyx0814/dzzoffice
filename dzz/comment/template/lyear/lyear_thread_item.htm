@@ -28,7 +28,7 @@
 								<!--{if $attach[preview]>0}-->
 								<a href="javascript:void(0);" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_attach_preview('$attach[qid]')">{lang preview}</a>
 								<!--{/if}-->
-								<!--{if $attach['type']=='dzzdoc' || $attach['type']=='link'}-->
+								<!--{if $attach['type']=='link'}-->
 								<!--{else}-->
 								<a href="javascript:;" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_downAttach('$attach[qid]')">{lang download}<!--{if $attach[downloads]>0}-->($attach[downloads]{lang degree})<!--{/if}--></a>
 								<a href="javascript:void(0);" title="" hidefocus="true" class="btn btn-outline-info btn-sm" onclick="feed_attach_saveto('$attach[qid]')">{lang js_saved_my_documents}</a>

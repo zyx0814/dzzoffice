@@ -18680,7 +18680,7 @@ UE.plugin.register('dzzfile',function(){
 										dsize:arr.fsize
 									});
 									break;
-								case 'attach':case 'document':
+								case 'attach':case 'document':case 'dzzdoc':
 									 var url=(DZZSCRIPT?DZZSCRIPT:'index.php')+'?mod=io&op=getStream&original=1&path='+(arr.apath?arr.apath:arr.dpath);
 									 var html='';
 									html += '<span class="dzz-attach" style="background:#EEE;padding:10px;border-radius:5px;line-height:1.5em;display:inline-flex;align-items:center;">' +
@@ -18697,14 +18697,6 @@ UE.plugin.register('dzzfile',function(){
 												'</span>';
 									me.execCommand('insertHtml', html);
 									me.fireEvent("catchRemoteImage");
-									break;
-								case 'dzzdoc':
-									var html='';
-									html += '<span class="dzz-dzzdoc" style="background:#EEE;padding:10px;border-radius:5px;line-height:1.5em;display:inline-flex;align-items:center;">' +
-												'<img class="dzz-dzzdoc-icon" src="'+ arr.img + '" _src="' + arr.img + '" />' +
-												'<a class="dzz-dzzdoc-title" href="' + arr.url +'" title="' + arr.name + '" aid="'+arr.aid+'" path="attach::'+arr.aid+'" apath="'+arr.apath+'" >' + arr.name + '</a>' +
-												'</span>';
-									me.execCommand('insertHtml', html);
 									break;
 								
 								case 'video':

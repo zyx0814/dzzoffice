@@ -10,7 +10,7 @@
       <ul class="list-group">
         <!--{loop $list $value}-->
         <li class="list-group-item d-flex justify-content-between align-items-start">
-          <span><a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid']);}</a></span>
+          <span><a href="user.php?uid=$value['authorid']" target="_blank">{eval echo avatar_block($value['authorid'], array(), null, $value);}</a></span>
           <div class="ms-2 me-auto text-break">
             <div class="fw-bold">$value[title]</div>
             $value[note]

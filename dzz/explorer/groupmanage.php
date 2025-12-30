@@ -21,7 +21,7 @@ if ($do == 'filelist') {
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $orgname = isset($_GET['orgname']) ? trim($_GET['orgname']) : '';
     $start = ($page - 1) * $limit;
-    $validfields = ['orgname','dateline'];
+    $validfields = ['orgname','dateline', 'maxspacesize' , 'usesize'];
     $validSortOrders = ['asc', 'desc'];
     if (in_array($field, $validfields) && in_array($order, $validSortOrders)) {
         $order = " ORDER BY $field $order";
@@ -71,6 +71,7 @@ if ($do == 'filelist') {
                     "usernum" => C::t('organization_user')->fetch_usernums_by_orgid($v['orgid']),
                     "creater" => C::t('organization_admin')->fetch_group_creater($v['orgid']),
                     "maxspacesize" => $v['maxspacesize'],
+                    "usesize" => formatsize($v['usesize']),
                     "diron" => $v['diron'] ? 1 : 0,
                     "desc" => $v['desc'],
                     "dateline" => dgmdate($v['dateline'], 'Y-m-d H:i:s'),

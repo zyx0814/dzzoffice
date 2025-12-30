@@ -64,7 +64,7 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
                 $param = array('organization_user', 'organization_job', 'user');
                 $sql = "ou.orgid = %d AND u.adminid != 1 AND u.status = 0";
                 if (!$_G['cache']['usergroups']) loadcache('usergroups');
-                $users = DB::fetch_all("SELECT u.uid,u.username,u.groupid,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, array($orgid)));
+                $users = DB::fetch_all("SELECT u.uid,u.username,u.avatarstatus,u.headerColor,u.groupid,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, array($orgid)));
                 foreach ($users as $user) {
                     $jobname = $user['jobname'];
                     if(!$jobname) {
@@ -75,6 +75,8 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
                     $data[] = array(
                         'uid' => $user['uid'],
                         'username' => $user['username'],
+                        'avatarstatus' => $user['avatarstatus'],
+                        'headerColor' => $user['headerColor'],
                         'jobname' => $jobname
                     );
                 }

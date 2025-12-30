@@ -1,15 +1,13 @@
-<!--{template common/header_simple_start}-->
+<!--{template common/header_simple_start_xh}-->
 <link href="static/jstree/themes/default/style.min.css?{VERHASH}" rel="stylesheet" media="all">
 <link rel="stylesheet" href="static/perfect-scrollbar/css/perfect-scrollbar.css?{VERHASH}">
 <link rel="stylesheet" href="static/css/common.css">
 <link href="dzz/system/css/selfilewindow.css?{VERHASH}" rel="stylesheet" media="all">
 <link rel="stylesheet" href="{MOD_PATH}/css/rightmenu/style.css"/>
-<link href="dzz/system/css/rightmenu.css?{VERHASH}" rel="stylesheet" media="all">
 <link href="dzz/system/css/select-file.css?{VERHASH}" rel="stylesheet" media="all">
 <script type="text/javascript" src="static/js/jquery.leftDrager.js?{VERHASH}"></script>
 <script type="text/javascript">
     var ctrlid = '$ctrlid';
-    var ismobile = '$_G['ismobile']' ? 1 : 0;
     var template = '0';
     var range = '{$range}';
     var urldefined = '{$urldefined}';
@@ -55,31 +53,19 @@
             if (rid.length) {//选择文件提示是否覆盖
                 var filedata = _explorer.sourcedata.icos[rid];
                 top.showDialog(__lang.js_save_recover_file.replace('{filename}', filedata.name), 'confirm', '', function () {
-                    $.post('index.php?mod=system&op=fileselection&do=save&operation=chkperm', {
-                        'path': fid,
-                        k: Math.random()
-                    }, function (data) {
-                        if (data['error']) {
-                            top.showmessage(data['error'], "danger", 2000, 1);
-                            return false;
-                        } else {
-							try{
-								if(typeof parent.showWindow_callback == 'function'){
-									parent.showWindow_callback(data,'$token');
-								}else if(typeof opened.showWindow_callback == 'function'){
-									parent.showWindow_callback(data,'$token');
-								} 
-							}catch(e){}	
-							if (parent.{$callback}) {
-								try{parent.{$callback}(data, '$token');}catch(e){}
-							} else {
-							   try{ opened.{$callback}(data, '$token');}catch(e){}
-							}
-                            hide_window();
-                        }
-                    }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-                        showmessage('{lang do_failed}', 'error', 3000, 1);
-                    });
+                    try{
+                        if(typeof parent.showWindow_callback == 'function'){
+                            parent.showWindow_callback(filedata,'$token');
+                        }else if(typeof opened.showWindow_callback == 'function'){
+                            parent.showWindow_callback(filedata,'$token');
+                        } 
+                    }catch(e){}	
+                    if (parent.{$callback}) {
+                        try{parent.{$callback}(filedata, '$token');}catch(e){}
+                    } else {
+                        try{ opened.{$callback}(filedata, '$token');}catch(e){}
+                    }
+                    hide_window();
                 });
             } else {//未选择文件创建文件返回
                 var filename = $('#savenewname').val();
@@ -186,7 +172,6 @@
 </script>
 <script type="text/javascript" src="dzz/system/scripts/explorer.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/jstree.min.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/js/imgReady.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/system/scripts/select-file.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/system/scripts/_perm.js?{VERHASH}"></script>
 <script type="text/javascript" src="dzz/system/scripts/_hotkey.js?{VERHASH}"></script>
@@ -195,15 +180,6 @@
 <script type="text/javascript" src="static/perfect-scrollbar/js/perfect-scrollbar.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/js/input_field.js?{VERHASH}"></script>
 <!-- The basic File Upload plugin -->
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<script type="text/javascript" src="static/jquery_file_upload/jquery.ui.widget.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/jquery_file_upload/jquery.iframe-transport.js?{VERHASH}"></script>
-<!-- The basic File Upload plugin -->
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
-<script type="text/javascript" src="static/perfect-scrollbar/js/perfect-scrollbar.min.js?{VERHASH}"></script>
-<!-- The basic File Upload plugin -->
-<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js?{VERHASH}"></script>
 </body>
 </html>

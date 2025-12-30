@@ -2,9 +2,7 @@ html,body{margin:0;padding:0}
 body{font-family:"Microsoft YaHei","Segoe UI",-apple-system,BlinkMacSystemFont,sans-serif;background-color:#f0f2f5;color:#333;font-size:14px;line-height:1.6}
 a{text-decoration:none;color:#006eff;transition:color 0.2s}
 *{box-sizing:border-box;outline:none}
-@keyframes slideUpFade{from{opacity:0;transform:translateY(20px)}
-to{opacity:1;transform:translateY(0)}
-}.container{max-width:950px;margin:40px auto;background:#ffffff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.08);animation:slideUpFade 0.5s ease-out forwards;border:1px solid #e1e4e8;overflow:hidden}
+.container{max-width:950px;margin:40px auto;background:#ffffff;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.08);border:1px solid #e1e4e8;overflow:hidden}
 .header{background:#fff;padding:20px 30px;border-bottom:1px solid #e5e7eb;zoom:1}
 .header:after{content:"";display:table;clear:both}
 .header h1{margin:0;float:left;font-size:20px;color:#333;line-height:32px;display:flex;align-items:center}

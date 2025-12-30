@@ -143,7 +143,7 @@ class io_dzz extends io_api {
             if ($icoarr['rbz']) {
                 return IO::getStream($icoarr['rbz'] . '/' . $icoarr['attachment'], $fop);
             } else {
-                if ($icoarr['type'] == 'video' || $icoarr['type'] == 'dzzdoc' || $icoarr['type'] == 'link') {
+                if ($icoarr['type'] == 'video' || $icoarr['type'] == 'link') {
                     return $icoarr['url'];
                 }
                 return $_G['setting']['attachdir'] . $icoarr['attachment'];
@@ -164,7 +164,7 @@ class io_dzz extends io_api {
             if ($icoarr['rbz']) {
                 return IO::getStream($icoarr['rbz'] . '/' . $icoarr['attachment'], $fop);
             } else {
-                if ($icoarr['type'] == 'video' || $icoarr['type'] == 'dzzdoc' || $icoarr['type'] == 'link') {
+                if ($icoarr['type'] == 'video' || $icoarr['type'] == 'link') {
                     return $icoarr['url'];
                 }
                 return $_G['setting']['attachdir'] . $icoarr['attachment'];
@@ -201,7 +201,7 @@ class io_dzz extends io_api {
                 Hook::listen('io_dzz_getstream_attach', $icoarr);//挂载点
                 $bz = io_remote::getBzByRemoteid($icoarr['remote']);
                 if ($bz == 'dzz') {
-                    if ($icoarr['type'] == 'video' || $icoarr['type'] == 'dzzdoc' || $icoarr['type'] == 'link') {
+                    if ($icoarr['type'] == 'video' || $icoarr['type'] == 'link') {
                         return $icoarr['url'];
                     }
                     return $_G['siteurl'] . $_G['setting']['attachurl'] . $icoarr['attachment'];
@@ -631,7 +631,6 @@ class io_dzz extends io_api {
                         }
                         break;
                     case 'discuss':
-                    case 'dzzdoc':
                     case 'shortcut':
                     case 'user':
                     case 'link':
@@ -1211,7 +1210,7 @@ class io_dzz extends io_api {
                 'uid' => $_G['uid'] ? $_G['uid'] : $folder['uid'],
                 'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
                 'name' => $attach['filename'],
-                'type' => ($attach['filetype'] == 'dzzdoc') ? 'dzzdoc' : 'document',
+                'type' => 'document',
                 'dateline' => $_G['timestamp'],
                 'pfid' => intval($fid),
                 'flag' => '',
@@ -1872,7 +1871,6 @@ class io_dzz extends io_api {
                         break;
                     case 'shortcut':
                     case 'discuss':
-                    case 'dzzdoc':
                     case 'user':
                     case 'link':
                     case 'music':
@@ -1922,10 +1920,8 @@ class io_dzz extends io_api {
                                 $newname = $this->getFolderName($fname, $pfid);
                                 $this->rename($finfo['rid'], $newname);
                             }
-                            //DB::update('resources', array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid), array('rid' => $finfo['rid']));
                             C::t('resources')->update_by_rid($finfo['rid'], array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid));
                         }
-                        //DB::update('folder', array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid), array('fid' => $finfo['fid']));
                         C::t('folder')->update($finfo['fid'], array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $pfid));
                     }
                     $pfid = $data['pfid'] = $finfo['fid'];
@@ -2003,9 +1999,7 @@ class io_dzz extends io_api {
                             $rids[] = $v['rid'];
                         }
                     }
-                    // DB::update('resources', array('pfid' => $rinfo['oid']), 'rid in(' . dimplode($rids) . ')');
                     if (count($rids) > 0) C::t('resources')->update_by_rid($rids, array('pfid' => $rinfo['oid']));
-                    //DB::update('folder', array('pfid' => $rinfo['oid']), 'fid in(' . dimplode($fids) . ')');
                     if (count($fids) > 0) C::t('folder')->update($fids, array('pfid' => $rinfo['oid']));
                     //更改当前目录下所有下级文件路径
                     C::t('resources_path')->update_pathdata_by_fid($icoarr['oid'], $rinfo['oid'], true);
@@ -2031,7 +2025,6 @@ class io_dzz extends io_api {
                     if ($icoarr['isdelete'] > 0) {
                         $recoverarr = array('isdelete' => 0, 'deldateline' => 0, 'pfid' => $icoarr['pfid']);
                         //恢复文件夹表数据和resources表数据
-                        //if (DB::update('folder', $recoverarr, 'fid =' . $icoarr['oid']) && DB::update('resources', $recoverarr, "rid ='{$rid}'")) {
                         if (C::t('resources')->update_by_rid($rid, $recoverarr)) {
                             C::t('folder')->update($icoarr['oid'], $recoverarr);
                             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($icoarr['pfid'], $icoarr['gid']);
@@ -2078,7 +2071,6 @@ class io_dzz extends io_api {
                 }
 
                 //恢复文件
-                //if (DB::update('resources', $recoverarr, array('rid' => $rid))) {
                 if (C::t('resources')->update_by_rid($rid, $recoverarr)) {
                     //删除回收站收据
                     C::t('resources_recyle')->delete_by_rid($icoarr['rid']);
@@ -2223,7 +2215,6 @@ class io_dzz extends io_api {
                             $rids[] = $v['rid'];
                         }
                         //修改文件夹表数据和resources表数据
-                        // DB::update('resources', array('oid' => $folder['fid'], 'pfid' => $pfid, 'gid' => $gid, 'uid' => $_G['uid'], 'username' => $_G['username']), array('rid' => $rid)
                         if (C::t('folder')->update($folder['fid'], $folder) &&
                             C::t('resources')->update_by_rid($rid, array('oid' => $folder['fid'], 'pfid' => $pfid, 'gid' => $gid, 'uid' => $_G['uid'], 'username' => $_G['username']))
                         ) {
@@ -2231,12 +2222,10 @@ class io_dzz extends io_api {
                             C::t('resources_path')->update_pathdata_by_fid($folder['fid'], $pfid);
                             if ($fids) {
                                 //修改资源表数据
-                                //DB::update('resources', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
                                 C::t('resources')->update_by_pfids($fids, $folderinfo);
                                 //更改动态表数据
                                 DB::update('resources_event', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
                                 //更改folder表数据
-                                // DB::update('folder', $folderinfo, "pfid IN(" . dimplode($fids) . ")");
                                 C::t('folder')->update_by_pfids($fids, $folderinfo);
                             }
                             if ($contains['size'] > 0) {

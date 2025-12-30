@@ -12,6 +12,7 @@
     <a href="javascript:;" type="button" class="btn copy clone dcolor" onclick="_filemanage.copy('{rid}','{fid}')"><i class="mdi mdi-file-document-multiple" data-toggle="tooltip" data-placement="bottom" title="{lang clone}"></i></a>
     <a href="javascript:;" type="button" class="btn cut dcolor" onclick="_filemanage.cut('{rid}')"><i class="mdi mdi-content-cut" data-toggle="tooltip" data-placement="bottom" title="{lang cut}"></i></a>
     <a href="javascript:;" type="button" class="btn paste dcolor" onclick="_filemanage.paste('{fid}')"><i class="mdi mdi-clipboard-file" data-toggle="tooltip" data-placement="bottom" title="{lang paste}"></i></a>
+    <a href="javascript:;" type="button" class="btn perm dcolor single" onclick="_filemanage.perm('{fid}','{rid}')"><i class="mdi mdi-lock" data-toggle="tooltip" data-placement="bottom" title="{lang perm}"></i> </a>
     <a href="javascript:;" type="button" class="btn share dcolor" onclick="_filemanage.share('{rid}')"><i class="mdi mdi-share-variant" data-toggle="tooltip" data-placement="bottom" title="{lang share}"></i> </a>
     <a href="javascript:;" type="button" class="btn collect dcolor" onclick="_filemanage.collect('{rid}')"><i class="mdi mdi-star" data-toggle="tooltip" data-placement="bottom" title="{lang collect}"></i></a>
     <a href="javascript:;" type="button" class="btn history single onlyfolder dcolor" onclick="_filemanage.history('{rid}')"><i class="mdi mdi-file-clock" data-toggle="tooltip" data-placement="bottom" title="{lang history_revision}"></i> </a>
@@ -31,6 +32,7 @@
             <li class="download single"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.downAttach('{rid}')"><i class="mdi mdi-download"></i><span class="file-text">{lang download}</span></a></li>
             <li class="downpackage multi"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.downpackage('{rid}')"><i class="mdi mdi-package-down"></i><span class="file-text">{lang downpackage}</span></a></li>
             <li class="delete"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.delIco('{rid}')"><i class="mdi mdi-delete"></i><span class="file-text">{lang delete}</span></a></li>
+            <li class="perm single"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.perm('{fid}','{rid}')"><i class="mdi mdi-lock"></i><span class="file-text">{lang perm}</span></a></li>
             <li class="share"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.share('{rid}')"><i class="mdi mdi-share-variant"></i><span class="file-text">{lang share}</span></a></li>
             <li class="collect"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.collect('{rid}')"><i class="mdi mdi-star"></i><span class="file-text">{lang collect}</span></a></li>
             <li class="history single onlyfolder"><a class="dropdown-item" href="javascript:;" onclick="_filemanage.history('{rid}')"><i class="mdi mdi-file-clock"></i><span class="file-text">{lang history_revision}</span></a></li>

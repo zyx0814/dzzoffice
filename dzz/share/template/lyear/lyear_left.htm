@@ -2,4 +2,7 @@
 	<li class="nav-item">
 		<a class="nav-link <!--{if !$op}-->active<!--{/if}-->" href="{MOD_URL}"><i class="mdi mdi-share-variant-outline"></i><span>{lang share_list}</span></a>
 	</li>
+	<li class="nav-item">
+		<a class="nav-link <!--{if $op == 'report'}-->active<!--{/if}-->" href="{MOD_URL}&op=report"><i class="mdi mdi-shield-link-variant-outline"></i><span>{lang report_list}</span></a>
+	</li>
 </ul>

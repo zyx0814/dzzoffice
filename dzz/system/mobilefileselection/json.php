@@ -20,10 +20,9 @@ $applist = C::t('app_market')->fetch_all_by_default($_G['uid'],true);
 $icosdata = array();
 $data['formhash'] = $_G['formhash'];
 $data['sourcedata'] = array(
-    'icos' => $icosdata ? $icosdata : array(),
-    'folder' => $folderdata ? $folderdata : array()
+    'icos' => [],
+    'folder' => []
 );
-$space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
 
 $data['space'] = $space;
 $data['mulitype'] = $mulitype;
