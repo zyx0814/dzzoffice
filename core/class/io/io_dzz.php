@@ -1954,8 +1954,6 @@ class io_dzz extends io_api {
             } else {
                 $icoarr['pfid'] = $dirinfo['pfid'];
             }
-        } else {
-            return ['rid' => $rid, 'error' => lang('file_longer_exists')];
         }
         $gid = $icoarr['gid'];
         //判断是否具有恢复权限
@@ -2032,7 +2030,6 @@ class io_dzz extends io_api {
                     if ($newpfid) {
                         C::t('resources_path')->update_pathdata_by_fid($icoarr['oid'], $newpfid);
                     }
-                    //删除回收站数据
                 }
                 //删除回收站数据
                 C::t('resources_recyle')->delete_by_rid($icoarr['rid']);

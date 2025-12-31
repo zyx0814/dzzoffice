@@ -161,7 +161,12 @@ if ($do == 'deleteIco') {//删除文件到回收站
         if (empty($icoid)) {
             continue;
         }
-        $return = IO::Recover($icoid);
+        //判断文件是否在回收站
+        if (!$recycleinfo = C::t('resources_recyle')->get_data_by_rid($icoid)) {
+            $arr['msg'][$icoid] = lang('file_longer_exists');
+        } else {
+            $return = IO::Recover($icoid);
+        }
         if (!$return['error']) {
             //处理数据
             $arr['sucessicoids'][$return['rid']] = $return['rid'];
@@ -182,7 +187,12 @@ if ($do == 'deleteIco') {//删除文件到回收站
         if (empty($icoid)) {
             continue;
         }
-        $return = IO::Recover($icoid);
+        //判断文件是否在回收站
+        if (!$recycleinfo = C::t('resources_recyle')->get_data_by_rid($icoid)) {
+            $arr['msg'][$icoid] = lang('file_longer_exists');
+        } else {
+            $return = IO::Recover($icoid);
+        }
 
         if (!$return['error']) {
             //处理数据
