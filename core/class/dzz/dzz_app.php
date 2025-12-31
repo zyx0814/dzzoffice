@@ -10,11 +10,11 @@ class dzz_app extends dzz_base {
 
     var $session = null;
 
-    var $config = array();
+    var $config = [];
 
-    var $var = array();
+    var $var = [];
 
-    var $cachelist = array();
+    var $cachelist = [];
 
     var $init_db = true;
     var $init_setting = true;
@@ -31,7 +31,7 @@ class dzz_app extends dzz_base {
 
     var $initated = false;
 
-    var $superglobal = array(
+    var $superglobal = [
         'GLOBALS' => 1,
         '_GET' => 1,
         '_POST' => 1,
@@ -41,9 +41,9 @@ class dzz_app extends dzz_base {
         '_ENV' => 1,
         '_FILES' => 1,
         '_config' => 1
-    );
+    ];
 
-    public static function &instance($params = array()) {
+    public static function &instance($params = []) {
         static $object;
         if (empty($object)) {
             $object = new self($params);
@@ -51,7 +51,7 @@ class dzz_app extends dzz_base {
         return $object;
     }
 
-    public function __construct($params = array()) {
+    public function __construct($params = []) {
         foreach ($params as $k => $v) {
             $this->$k = $v;
         }
@@ -127,7 +127,7 @@ class dzz_app extends dzz_base {
         define('IS_ROBOT', checkrobot());
 
         global $_G;
-        $_G = array(
+        $_G = [
             'uid' => 0,
             'username' => '',
             'adminid' => 0,
@@ -142,25 +142,25 @@ class dzz_app extends dzz_base {
             'charset' => '',
             'gzipcompress' => '',
             'authkey' => '',
-            'timenow' => array(),
+            'timenow' => [],
 
             'PHP_SELF' => '',
             'siteurl' => '',
             'siteroot' => '',
             'siteport' => '',
 
-            'config' => array(),
-            'setting' => array(),
-            'member' => array(),
-            'group' => array(),
-            'cookie' => array(),
-            'style' => array(),
-            'cache' => array(),
-            'session' => array(),
-            'lang' => array(),
+            'config' => [],
+            'setting' => [],
+            'member' => [],
+            'group' => [],
+            'cookie' => [],
+            'style' => [],
+            'cache' => [],
+            'session' => [],
+            'lang' => [],
 
             'rssauth' => '',
-        );
+        ];
 
         $_G['PHP_SELF'] = dhtmlspecialchars($this->_get_script_url());
         $_G['basescript'] = CURSCRIPT . 'php';
@@ -193,7 +193,7 @@ class dzz_app extends dzz_base {
             $_G['siteurl'] = str_replace(SUB_DIR, '/', $_G['siteurl']);
             $_G['siteroot'] = str_replace(SUB_DIR, '/', $_G['siteroot']);
         }
-        $_G['browser'] = helper_browser::getbrowser();
+        $_G['browser'] = helper_browser::getBrowser();
         $_G['platform'] = helper_browser::getplatform();
         $ismobile = helper_browser::ismobile();
         if ($ismobile) define('IN_MOBILE', $ismobile);
@@ -267,10 +267,10 @@ class dzz_app extends dzz_base {
             $_GET['page'] = rawurlencode($_GET['page']);
         }
         if (isset($_GET['mod'])) {
-            $_GET['mod'] = (str_replace(array('<', '>', ".", "%", "'", '"', '}', '{', ',', '/', '\\'), '', $_GET['mod']));
+            $_GET['mod'] = (str_replace(['<', '>', ".", "%", "'", '"', '}', '{', ',', '/', '\\'], '', $_GET['mod']));
         }
         if (isset($_GET['op'])) {
-            $_GET['op'] = (str_replace(array('<', '>', ".", "%", "'", '"', '}', '{', ',', '/', '\\'), '', $_GET['op']));
+            $_GET['op'] = (str_replace(['<', '>', ".", "%", "'", '"', '}', '{', ',', '/', '\\'], '', $_GET['op']));
         }
         if (!(!empty($_GET['handlekey']) && preg_match('/^\w+$/', $_GET['handlekey']))) {
             unset($_GET['handlekey']);
@@ -298,10 +298,10 @@ class dzz_app extends dzz_base {
 
     private function _init_config() {
         global $_config;
-        $data = array(
+        $data = [
             "config_read" => "core\dzz\config",
             "systemlog" => "admin\systemlog\classes\systemlog",
-        );
+        ];
         Hook::import($data);
         Hook::listen("config_read", $_GET);
         if (empty($_config)) {
@@ -361,7 +361,7 @@ class dzz_app extends dzz_base {
             $this->_xss_check();
         }
 
-        if ($this->config['security']['attackevasive'] && (!defined('CURSCRIPT') || !in_array($this->var['mod'], array('seccode', 'secqaa', 'swfupload')) && !defined('DISABLEDEFENSE'))) {
+        if ($this->config['security']['attackevasive'] && (!defined('CURSCRIPT') || !in_array($this->var['mod'], ['seccode', 'secqaa', 'swfupload']) && !defined('DISABLEDEFENSE'))) {
             require_once libfile('function/security');
         }
 
@@ -392,7 +392,7 @@ class dzz_app extends dzz_base {
 
     private function _xss_check() {
 
-        static $check = array('"', '>', '<', '\'', 'CONTENT-TRANSFER-ENCODING');
+        static $check = ['"', '>', '<', '\'', 'CONTENT-TRANSFER-ENCODING'];
 
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $temp = $_SERVER['REQUEST_URI'];
@@ -484,7 +484,7 @@ class dzz_app extends dzz_base {
                         dsetcookie('lip', $this->var['member']['lastip'] . ',' . $this->var['member']['lastvisit']);
                     }
 
-                    C::t('user_status')->update($this->var['uid'], array('lastip' => $this->var['clientip'], 'lastvisit' => TIMESTAMP));
+                    C::t('user_status')->update($this->var['uid'], ['lastip' => $this->var['clientip'], 'lastvisit' => TIMESTAMP]);
                 }
             }
         }
@@ -495,7 +495,7 @@ class dzz_app extends dzz_base {
             if ($auth = getglobal('auth', 'cookie')) {
                 $auth = daddslashes(explode("\t", authcode($auth, 'DECODE')));
             }
-            list($dzz_pw, $dzz_uid) = empty($auth) || count($auth) < 2 ? array('', '') : $auth;
+            list($dzz_pw, $dzz_uid) = empty($auth) || count($auth) < 2 ? ['', ''] : $auth;
 
             if ($dzz_uid) {
                 $user = getuserbyuid($dzz_uid, 1);
@@ -504,7 +504,7 @@ class dzz_app extends dzz_base {
             if (!empty($user) && $user['password'] == $dzz_pw && ($user['status'] < 1 || $user['uid'] == 1)) {//加上判断用户是否被禁用
                 $this->var['member'] = $user;
             } else {
-                $user = array();
+                $user = [];
                 $this->_init_guest();
             }
 
@@ -552,7 +552,7 @@ class dzz_app extends dzz_base {
         $username = '';
         $groupid = 7;
 
-        setglobal('member', array('uid' => 0, 'username' => $username, 'adminid' => 0, 'groupid' => $groupid, 'credits' => 0, 'timeoffset' => 9999));
+        setglobal('member', ['uid' => 0, 'username' => $username, 'adminid' => 0, 'groupid' => $groupid, 'credits' => 0, 'timeoffset' => 9999]);
     }
 
     private function _init_cron() {
@@ -577,10 +577,10 @@ class dzz_app extends dzz_base {
         }
 
         $timeoffset = $this->init_setting ? $this->var['member']['timeoffset'] : $this->var['setting']['timeoffset'];
-        $this->var['timenow'] = array(
+        $this->var['timenow'] = [
             'time' => dgmdate(TIMESTAMP),
             'offset' => $timeoffset >= 0 ? ($timeoffset == 0 ? '' : '+' . $timeoffset) : $timeoffset
-        );
+        ];
         $this->timezone_set($timeoffset);
 
         $this->var['formhash'] = formhash();
@@ -599,7 +599,7 @@ class dzz_app extends dzz_base {
 
         if ($this->var['setting']['bbclosed']) {
             if ($this->var['member']['adminid'] == 1) { //系统管理员允许访问
-            } elseif (in_array(CURSCRIPT, array('admin', 'user', 'api')) || defined('ALLOWGUEST') && ALLOWGUEST) {
+            } elseif (in_array(CURSCRIPT, ['admin', 'user', 'api']) || defined('ALLOWGUEST') && ALLOWGUEST) {
             } else {
                 dheader("Location: user.php?mod=login");
             }
@@ -640,7 +640,7 @@ class dzz_app extends dzz_base {
     //初始化之前导入数据库钩子
     private function _init_hook() {
         $tagfile = CACHE_DIR . BS . 'tags' . EXT;
-        $data = array();
+        $data = [];
         if (file_exists($tagfile)) {//文件存在则导入文件
             $data = include $tagfile;
             //if(is_array($data)) $data=array_unique($data);
@@ -648,7 +648,7 @@ class dzz_app extends dzz_base {
         if ($data) {
             Hook::import($data);
         } else {
-            foreach (DB::fetch_all("SELECT name,addons FROM %t where `status`='1' ORDER BY priority DESC", array('hooks')) as $value) {
+            foreach (DB::fetch_all("SELECT name,addons FROM %t where `status`='1' ORDER BY priority DESC", ['hooks']) as $value) {
                 $addons = $value['addons'];//同一个挂载点下多个钩子改为多条记录
                 Hook::add($value['name'], $addons);
             }

@@ -24,15 +24,14 @@ class JSSDK {
 
     $signature = sha1($string);
 
-    $signPackage = array(
-      "appId"     => $this->appId,
-      "nonceStr"  => $nonceStr,
-      "timestamp" => $timestamp,
-      "url"       => $url,
-      "signature" => $signature,
-      "rawString" => $string
-    );
-    return $signPackage; 
+      return [
+        "appId"     => $this->appId,
+        "nonceStr"  => $nonceStr,
+        "timestamp" => $timestamp,
+        "url"       => $url,
+        "signature" => $signature,
+        "rawString" => $string
+      ];
   }
 
   private function createNonceStr($length = 16) {

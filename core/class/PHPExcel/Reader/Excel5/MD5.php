@@ -71,7 +71,7 @@ class PHPExcel_Reader_Excel5_MD5
     public function getContext()
     {
         $s = '';
-        foreach (array('a', 'b', 'c', 'd') as $i) {
+        foreach (['a', 'b', 'c', 'd'] as $i) {
             $v = $this->[$i];
             $s .= chr($v & 0xff);
             $s .= chr(($v >> 8) & 0xff);
@@ -97,10 +97,10 @@ class PHPExcel_Reader_Excel5_MD5
         $C = $this->c;
         $D = $this->d;
 
-        $F = array('PHPExcel_Reader_Excel5_MD5','F');
-        $G = array('PHPExcel_Reader_Excel5_MD5','G');
-        $H = array('PHPExcel_Reader_Excel5_MD5','H');
-        $I = array('PHPExcel_Reader_Excel5_MD5','I');
+        $F = ['PHPExcel_Reader_Excel5_MD5','F'];
+        $G = ['PHPExcel_Reader_Excel5_MD5','G'];
+        $H = ['PHPExcel_Reader_Excel5_MD5','H'];
+        $I = ['PHPExcel_Reader_Excel5_MD5','I'];
 
         /* ROUND 1 */
         self::step($F, $A, $B, $C, $D, $words[0], 7, 0xd76aa478);

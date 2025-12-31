@@ -14,8 +14,8 @@ include_once libfile('function/profile', '', 'user');
 include_once libfile('function/admin');
 loadcache('profilesetting');
 $vid = intval($_GET['vid']);
-$anchor = in_array($_GET['anchor'], array('authstr', 'refusal', 'pass', 'add')) ? $_GET['anchor'] : 'authstr';
-$current = array($anchor => 1);
+$anchor = in_array($_GET['anchor'], ['authstr', 'refusal', 'pass', 'add']) ? $_GET['anchor'] : 'authstr';
+$current = [$anchor => 1];
 $op = isset($_GET['op']) ? $_GET['op'] : '';
 //判断管理权限
 if ($vid) {
@@ -45,10 +45,10 @@ if (!submitcheck('verifysubmit', true)) {
     } elseif ($anchor == 'authstr') {
         $_GET['flag'] = 0;
     }
-    $intkeys = array('uid', 'verifytype', 'flag', 'verify1', 'verify2', 'verify3', 'verify4', 'verify5', 'verify6', 'verify7');
-    $strkeys = array();
-    $randkeys = array();
-    $likekeys = array('username');
+    $intkeys = ['uid', 'verifytype', 'flag', 'verify1', 'verify2', 'verify3', 'verify4', 'verify5', 'verify6', 'verify7'];
+    $strkeys = [];
+    $randkeys = [];
+    $likekeys = ['username'];
     $results = getwheres($intkeys, $strkeys, $randkeys, $likekeys, 'v.');
     foreach ($likekeys as $k) {
         $_GET[$k] = dhtmlspecialchars($_GET[$k]);
@@ -66,20 +66,20 @@ if (!submitcheck('verifysubmit', true)) {
 
     $wheresql = empty($wherearr) ? '1' : implode(' AND ', $wherearr);
 
-    $orders = getorders(array('dateline', 'uid'), 'dateline', 'v.');
+    $orders = getorders(['dateline', 'uid'], 'dateline', 'v.');
     $ordersql = $orders['sql'];
     if ($orders['urls'])
         $thurl .= '&' . implode('&', $orders['urls']);
-    $orderby = array($_GET['orderby'] => ' selected');
-    $ordersc = array($_GET['ordersc'] => ' selected');
+    $orderby = [$_GET['orderby'] => ' selected'];
+    $ordersc = [$_GET['ordersc'] => ' selected'];
 
-    $orders = in_array($_G['orderby'], array('dateline', 'uid')) ? $_G['orderby'] : 'dateline';
-    $ordersc = in_array(strtolower($_GET['ordersc']), array('asc', 'desc')) ? $_GET['ordersc'] : 'desc';
+    $orders = in_array($_G['orderby'], ['dateline', 'uid']) ? $_G['orderby'] : 'dateline';
+    $ordersc = in_array(strtolower($_GET['ordersc']), ['asc', 'desc']) ? $_GET['ordersc'] : 'desc';
 
     $perpage = empty($_GET['perpage']) ? 0 : intval($_GET['perpage']);
-    if (!in_array($perpage, array(10, 20, 50, 100)))
+    if (!in_array($perpage, [10, 20, 50, 100]))
         $perpage = 10;
-    $perpages = array($perpage => ' selected');
+    $perpages = [$perpage => ' selected'];
     $thurl .= '&perpage=' . $perpage;
 
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
@@ -103,7 +103,7 @@ if (!submitcheck('verifysubmit', true)) {
             $verifyuids = array_keys($verifyusers);
             $profiles = C::t('user_profile')->fetch_all($verifyuids, false, 0);
         }
-        $list = array();
+        $list = [];
         foreach ($verifyusers as $uid => $value) {
             if ($anchor == 'pass') {
                 $value = array_merge($value, $profiles[$uid]);
@@ -119,7 +119,7 @@ if (!submitcheck('verifysubmit', true)) {
                 $i++;
 
                 foreach ($fields as $key => $field) {
-                    if (in_array($key, array('constellation', 'zodiac', 'birthyear', 'birthmonth'))) {
+                    if (in_array($key, ['constellation', 'zodiac', 'birthyear', 'birthmonth'])) {
                         continue;
                     }
                     if ($_G['cache']['profilesetting'][$key]['formtype'] == 'file') {
@@ -128,7 +128,7 @@ if (!submitcheck('verifysubmit', true)) {
                         } else {
                             $field = lang('members_verify_pic_removed');
                         }
-                    } elseif (in_array($key, array('gender', 'birthday', 'department'))) {
+                    } elseif (in_array($key, ['gender', 'birthday', 'department'])) {
 
                         $field = profile_show($key, $fields);
                     }
@@ -144,9 +144,6 @@ if (!submitcheck('verifysubmit', true)) {
                 }
 
                 $fieldstr .= "</tbody><tr><td colspan=\"5\">$opstr <span id=\"reason_$value[vid]\" style=\"display: none;\" title=\"" . lang('moderate_reasonpm') . "\" ><input type=\"text\" class=\"form-control\" placeholder=\"" . lang('moderate_reasonpm') . "\" name=\"reason[$value[vid]]\" style=\"margin: 0px;\"></span><dl><input type=\"button\" value=\"" . lang('moderate') . "\" name=\"singleverifysubmit\" class=\"btn btn-primary\" onclick=\"singleverify($value[vid]);\"></dl></td></tr></table>";
-                $value['fieldstr'] = $fieldstr;
-                $value['dateline'] = dgmdate($value['dateline'], 'u');
-                $list[$uid] = $value;
                 // = array($value['username'], $verifytype, dgmdate($value['dateline'], 'dt'), $fieldstr);
                 //showtablerow("id=\"mod_$value[vid]_row\" verifyid=\"$value[vid]\"", $cssarr, $valuearr);
             } else {
@@ -157,8 +154,8 @@ if (!submitcheck('verifysubmit', true)) {
                 $fieldstr .= '<tr><td width="100">' . lang('members_verify_fieldid') . '</td><td>' . lang('members_verify_newvalue') . '</td></tr>';
 
                 foreach ($fields as $key => $field) {
-                    if (!in_array($key, array('constellation', 'zodiac', 'birthyear', 'birthmonth'))) {
-                        if (in_array($key, array('gender', 'birthday', 'department'))) {
+                    if (!in_array($key, ['constellation', 'zodiac', 'birthyear', 'birthmonth'])) {
+                        if (in_array($key, ['gender', 'birthday', 'department'])) {
                             $value[$field] = profile_show($key, $value);
                         }
                         if ($_G['cache']['profilesetting'][$key]['formtype'] == 'file') {
@@ -172,20 +169,20 @@ if (!submitcheck('verifysubmit', true)) {
                     }
                 }
                 $fieldstr .= "</table>";
-                $value['fieldstr'] = $fieldstr;
                 $opstr = "<ul class=\"list-unstyled\"><li><div class=\"form-check form-check-inline\"><input type=\"radio\" class=\"form-check-input\" name=\"verify[$value[uid]]\" value=\"export\" onclick=\"mod_setbg($value[uid], 'export');\"><label class=\"form-check-label\">" . lang('export') . "</label></div></li><li><div class=\"form-check form-check-inline\"><input type=\"radio\" class=\"form-check-input\" name=\"verify[$value[uid]]\" value=\"refusal\" onclick=\"mod_setbg($value[uid], 'refusal');\"><label class=\"form-check-label\">" . lang('refuse') . "</label></div></li></ul>";
                 $value['opstr'] = $opstr;
-                $value['dateline'] = dgmdate($value['dateline'], 'u');
-                $list[$uid] = $value;
                 //showtablerow("id=\"mod_$value[uid]_row\"", $cssarr, $valuearr);
             }
+            $value['fieldstr'] = $fieldstr;
+            $value['dateline'] = dgmdate($value['dateline'], 'u');
+            $list[$uid] = $value;
         }
         $multi = multi($count, $perpage, $page, $thurl, 'pull-right');
     }
 
 } else {
     if ($anchor == 'pass') {
-        $verifyuids = array();
+        $verifyuids = [];
 
         foreach ($_GET['verify'] as $uid => $type) {
             if ($type == 'export') {
@@ -193,7 +190,7 @@ if (!submitcheck('verifysubmit', true)) {
             } elseif ($type == 'refusal') {
                 $verifyuids['refusal'][] = $uid;
                 //发送通知
-                $notevars = array('from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'profile' => $fieldtitle, 'dataline' => dgmdate(TIMESTAMP), 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'), 'reason' => $_GET['reason'][$value['vid']],);
+                $notevars = ['from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'profile' => $fieldtitle, 'dataline' => dgmdate(TIMESTAMP), 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'), 'reason' => $_GET['reason'][$value['vid']],];
 
                 $action = 'user_profile_pass_refusal';
                 $type = 'user_profile_pass_refusal_' . $vid;
@@ -202,12 +199,12 @@ if (!submitcheck('verifysubmit', true)) {
             }
         }
         if (is_array($verifyuids['refusal']) && !empty($verifyuids['refusal'])) {
-            C::t('user_verify')->update($verifyuids['refusal'], array("verify$vid" => '0'));
+            C::t('user_verify')->update($verifyuids['refusal'], ["verify$vid" => '0']);
             if ($vid == 1)
-                C::t('user')->update($uid, array('grid' => '0'));
+                C::t('user')->update($uid, ['grid' => '0']);
         }
         if (is_array($verifyuids['export']) && !empty($verifyuids['export']) || empty($verifyuids['refusal'])) {
-            $uids = array();
+            $uids = [];
             if (is_array($verifyuids['export']) && !empty($verifyuids['export'])) {
                 $uids = $verifyuids['export'];
             }
@@ -225,13 +222,13 @@ if (!submitcheck('verifysubmit', true)) {
                 $value = array_merge($value, $members[$uid], $profiles[$uid]);
                 $str = $common = '';
                 foreach ($fields as $key => $field) {
-                    if (in_array($key, array('constellation', 'zodiac', 'birthyear', 'birthmonth', 'birthprovince', 'birthdist', 'birthcommunity', 'resideprovince', 'residedist', 'residecommunity'))) {
+                    if (in_array($key, ['constellation', 'zodiac', 'birthyear', 'birthmonth', 'birthprovince', 'birthdist', 'birthcommunity', 'resideprovince', 'residedist', 'residecommunity'])) {
                         continue;
                     }
                     if ($showtitle) {
                         $title .= $common . ($key == 'username' ? lang('username') : $_G['cache']['profilesetting'][$key]['title']);
                     }
-                    if (in_array($key, array('gender', 'birthday', 'department'))) {
+                    if (in_array($key, ['gender', 'birthday', 'department'])) {
                         $value[$field] = profile_show($key, $value);
                     }
                     $str .= $common . $value[$field];
@@ -256,24 +253,24 @@ if (!submitcheck('verifysubmit', true)) {
             echo $verifylist;
             exit();
         } else {
-            showmessage('members_verify_succeed', ADMINSCRIPT . '?mod=member&op=verify&vid=' . $vid . '&anchor=pass', array(), array('alert' => 'right'));
+            showmessage('members_verify_succeed', ADMINSCRIPT . '?mod=member&op=verify&vid=' . $vid . '&anchor=pass', [], ['alert' => 'right']);
         }
     } else {
-        $vids = array();
+        $vids = [];
         $single = intval($_GET['singleverify']);
-        $verifyflag = empty($_GET['verify']) ? false : true;
+        $verifyflag = !empty($_GET['verify']);
         if ($verifyflag) {
             if ($single) {
-                $_GET['verify'] = array($single => $_GET['verify'][$single]);
+                $_GET['verify'] = [$single => $_GET['verify'][$single]];
             }
             foreach ($_GET['verify'] as $id => $type) {
                 $vids[] = $id;
             }
 
             $verifysetting = $_G['setting']['verify'];
-            $verify = $refusal = array();
+            $verify = $refusal = [];
             foreach (C::t('user_verify_info')->fetch_all($vids) as $value) {
-                if (in_array($_GET['verify'][$value['vid']], array('refusal', 'validate'))) {
+                if (in_array($_GET['verify'][$value['vid']], ['refusal', 'validate'])) {
                     $fields = dunserialize($value['field']);
                     $verifysetting = $_G['setting']['verify'][$value['verifytype']];
 
@@ -291,14 +288,14 @@ if (!submitcheck('verifysubmit', true)) {
                             }
                         }
                         if ($deleteverifyimg) {
-                            C::t('user_verify_info')->update($value['vid'], array('field' => serialize($fields)));
+                            C::t('user_verify_info')->update($value['vid'], ['field' => serialize($fields)]);
                         }
                         if ($value['verifytype']) {
                             $verify["verify"]['-1'][] = $value['uid'];
                         }
                         $verify['flag'][] = $value['vid'];
                         //发送通知
-                        $notevars = array('from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'profile' => $fieldtitle, 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'), 'reason' => $_GET['reason'][$value['vid']],);
+                        $notevars = ['from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'profile' => $fieldtitle, 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'), 'reason' => $_GET['reason'][$value['vid']],];
 
                         $action = 'user_profile_moderate_refusal';
                         $type = 'user_profile_moderate_refusal_' . $vid;
@@ -307,14 +304,14 @@ if (!submitcheck('verifysubmit', true)) {
                         C::t('user_profile')->update(intval($value['uid']), $fields);
                         if ($fields['department']) {//含有department时审核通过后，把此用户加入相应的部门
 
-                            C::t('organization_user')->insert_by_orgid($fields['department'], array($value['uid']));
+                            C::t('organization_user')->insert_by_orgid($fields['department'], [$value['uid']]);
                         }
                         $verify['delete'][] = $value['vid'];
                         if ($value['verifytype']) {
                             $verify["verify"]['1'][] = $value['uid'];
                         }
                         //发送通知
-                        $notevars = array('from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'),);
+                        $notevars = ['from_id' => 0, 'from_idtype' => '', 'author' => $_G['username'], 'authorid' => $_G['uid'], 'url' => 'user.php?mod=profile&vid=' . $vid, 'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : lang('members_verify_profile'),];
 
                         $action = 'user_profile_moderate_pass';
                         $type = 'user_profile_moderate_pass_' . $vid;
@@ -326,9 +323,9 @@ if (!submitcheck('verifysubmit', true)) {
             if ($vid && !empty($verify["verify"])) {
                 foreach ($verify["verify"] as $flag => $uids) {
                     $flag = intval($flag);
-                    C::t('user_verify')->update($uids, array("verify$vid" => $flag));
+                    C::t('user_verify')->update($uids, ["verify$vid" => $flag]);
                     if ($vid == 1)
-                        C::t('user')->update($uids, array('grid' => 6));
+                        C::t('user')->update($uids, ['grid' => 6]);
                 }
             }
 
@@ -337,16 +334,16 @@ if (!submitcheck('verifysubmit', true)) {
             }
 
             if (!empty($verify['flag'])) {
-                C::t('user_verify_info')->update($verify['flag'], array('flag' => '-1'));
+                C::t('user_verify_info')->update($verify['flag'], ['flag' => '-1']);
             }
         }
         if ($single) {
             echo "<script type=\"text/javascript\">var trObj = parent.document.getElementById('mod_{$single}_row');trObj.parentNode.removeChild(trObj);</script>";
         } else {
-            showmessage('members_verify_succeed', ADMINSCRIPT . '?mod=member&op=verify&vid=' . $vid . '&anchor=' . $_GET['anchor'], array(), array('alert' => 'right'));
+            showmessage('members_verify_succeed', ADMINSCRIPT . '?mod=member&op=verify&vid=' . $vid . '&anchor=' . $_GET['anchor'], [], ['alert' => 'right']);
         }
     }
 }
 
 include template('verify');
-?>
+

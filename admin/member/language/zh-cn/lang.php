@@ -11,12 +11,12 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-$lang = array
-(
+$lang =
+    [
 
     'appname' => '用户资料管理'
 
-);
+    ];
 
 
-?>
+

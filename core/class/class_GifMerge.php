@@ -29,12 +29,12 @@ class GifMerge {
 	var $global_color_table_size	= 0;
 	var $out_color_table_sizecode	= 0;
 	var $global_color_table_sizecode= 0;
-	var $gif			= array(0x47, 0x49, 0x46);
-	var $buffer			= array();
-	var $local_in			= array();
-	var $global_in			= array();
-	var $global_out			= array();
-	var $logical_screen_descriptor	= array();
+	var $gif			= [0x47, 0x49, 0x46];
+	var $buffer			= [];
+	var $local_in			= [];
+	var $global_in			= [];
+	var $global_out			= [];
+	var $logical_screen_descriptor	= [];
 
 	function __construct($images, $t1, $t2, $t3, $loop, $dl, $xpos, $ypos, $model) {
 		if($model) {
@@ -317,4 +317,3 @@ class GifMerge {
 	}
 }
 
-?>

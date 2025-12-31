@@ -19,32 +19,32 @@ $url = APP_CHECK_URL . "market/app/list";//$cloudurl."?mod=dzzmarket&op=index_aj
 $type = empty($_GET['type']) ? 1 : intval($_GET['type']);
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
-$nettype = isset($_GET['nettype']) ? intval($_GET['nettype']) : '';;
+$nettype = isset($_GET['nettype']) ? intval($_GET['nettype']) : '';
 $orderid = isset($_GET['order']) ? trim($_GET['order']) : '';
 $orderarr = ['updatetime', 'price', 'downloads', 'replys', 'views', 'dateline'];
 $order = in_array($orderid, $orderarr) ? $orderid : 'disp';
 $classid = intval($_GET['classid']);
 $price = intval($_GET['price']);
-$nettypetitle = array('1' => '内网', '2' => '外网');
-$post_data = array("siteuniqueid" => $_G["setting"]["siteuniqueid"], "page" => $page, "type" => 1, "classid" => $classid, "price" => $price,"nettype" => $nettype,"order" => $order);
+$nettypetitle = ['1' => '内网', '2' => '外网'];
+$post_data = ["siteuniqueid" => $_G["setting"]["siteuniqueid"], "page" => $page, "type" => 1, "classid" => $classid, "price" => $price,"nettype" => $nettype,"order" => $order];
 $json = curlcloudappmarket($url, $post_data);
 $json = json_decode($json, true);
-$list = array();
+$list = [];
 $total = 0;
 if ($json["status"] == 1) {
     $list = $json["data"]["list"];
     $total = $json["data"]["total"];
     $perpage = $json["data"]["perpage"];
-    $gets = array('op' => 'cloudappmarket', 'type' => $type, 'classid' => $classid, 'price' => $price,'nettype' => $nettype,'order' => $order);
+    $gets = ['op' => 'cloudappmarket', 'type' => $type, 'classid' => $classid, 'price' => $price,'nettype' => $nettype,'order' => $order];
     $theurl = MOD_URL . "&" . url_implode($gets);
     $multi = multi($total, $perpage, $page, $theurl, 'justify-content-center');
 } else {
     $error = '在线获取应用列表失败，请尝试前往官网下载';
 }
 if ($list) {
-    $local_applist = DB::fetch_all("select * from %t where 1", array('app_market'));
+    $local_applist = DB::fetch_all("select * from %t where 1", ['app_market']);
     foreach ($list as $k => $v) {
-        $list[$k]["local_appinfo"] = array();
+        $list[$k]["local_appinfo"] = [];
         $list[$k]["baseinfo"] = base64_encode(serialize($v));
         if ($v["identifier"]) {
             foreach ($local_applist as $k2 => $v3) {
@@ -77,4 +77,3 @@ function curlcloudappmarket($url = "", $post_data = "", $token = "") {
     }
     return ($response);
 }
-?>

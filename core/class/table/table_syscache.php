@@ -26,14 +26,14 @@ class table_syscache extends dzz_table {
     }
 
     public function fetch($cachename, $force_from_db = false) {
-        $data = $this->fetch_all(array($cachename));
+        $data = $this->fetch_all([$cachename]);
         return isset($data[$cachename]) ? $data[$cachename] : false;
     }
 
     public function fetch_all($cachenames, $force_from_db = false) {
 
-        $data = array();
-        $cachenames = is_array($cachenames) ? $cachenames : array($cachenames);
+        $data = [];
+        $cachenames = is_array($cachenames) ? $cachenames : [$cachenames];
         if ($this->_allowmem) {
             $data = memory('get', $cachenames);
             $newarray = $data !== false ? array_diff($cachenames, array_keys($data)) : $cachenames;
@@ -45,7 +45,7 @@ class table_syscache extends dzz_table {
         }
 
         if ($this->_isfilecache) {
-            $lostcaches = array();
+            $lostcaches = [];
             foreach ($cachenames as $cachename) {
                 if (!@include_once(DZZ_ROOT . './data/cache/cache_' . $cachename . '.php')) {
                     $lostcaches[] = $cachename;
@@ -76,7 +76,7 @@ class table_syscache extends dzz_table {
         foreach ($cachenames as $name) {
             if ($data[$name] === null) {
                 $data[$name] = null;
-                $this->_allowmem && (memory('set', $name, array()));
+                $this->_allowmem && (memory('set', $name, []));
             }
         }
 
@@ -84,12 +84,12 @@ class table_syscache extends dzz_table {
     }
 
     public function insert($cachename, $data = false, $replace = false, $silent = false) {
-        parent::insert(array(
+        parent::insert([
             'cname' => $cachename,
             'ctype' => is_array($data) ? 1 : 0,
             'dateline' => TIMESTAMP,
             'data' => is_array($data) ? serialize($data) : $data,
-        ), false, true);
+        ], false, true);
 
         if ($this->_allowmem && memory('get', $cachename) !== false) {
             memory('set', $cachename, $data);
@@ -112,4 +112,4 @@ class table_syscache extends dzz_table {
     }
 }
 
-?>
+

@@ -5,7 +5,7 @@ if (!defined('IN_DZZ')) {
 }
 
 class helper_config {
-    public static function save($filename, $config, $default = array()) {
+    public static function save($filename, $config, $default = []) {
 
         $config = self::setdefault($config, $default);
         $date = gmdate("Y-m-d H:i:s", time() + 3600 * 8);
@@ -15,7 +15,7 @@ class helper_config {
             
             \$_config = array();
             EOT;
-        $content .= self::getvars(array('_config' => $config));
+        $content .= self::getvars(['_config' => $config]);
         $content .= "\r\n// " . str_pad('  THE END  ', 50, '-', STR_PAD_BOTH) . "\r\n return \$_config;";
         file_put_contents($filename, $content);
     }
@@ -23,9 +23,9 @@ class helper_config {
     public static function setdefault($var, $default) {
         foreach ($default as $k => $v) {
             if (!isset($var[$k])) {
-                $var[$k] = $default[$k];
+                $var[$k] = $v;
             } elseif (is_array($v)) {
-                $var[$k] = setdefault($var[$k], $default[$k]);
+                $var[$k] = setdefault($var[$k], $v);
             }
         }
         return $var;
@@ -50,7 +50,7 @@ class helper_config {
     public static function buildarray($array, $level = 0, $pre = '$_config') {
         static $ks;
         if ($level == 0) {
-            $ks = array();
+            $ks = [];
             $return = '';
         }
 
@@ -77,4 +77,3 @@ class helper_config {
     }
 }
 
-?>

@@ -5,9 +5,9 @@ if (!defined('IN_DZZ')) {
 }
 
 function build_cache_smilies() {
-    $data = array();
+    $data = [];
 
-    $data = array('searcharray' => array(), 'replacearray' => array(), 'typearray' => array());
+    $data = ['searcharray' => [], 'replacearray' => [], 'typearray' => []];
     foreach (C::t('smiley')->fetch_all_cache() as $smiley) {
         $data['searcharray'][$smiley['id']] = '/' . preg_quote(dhtmlspecialchars($smiley['code']), '/') . '/';
         $data['replacearray'][$smiley['id']] = $smiley['url'];
@@ -17,4 +17,3 @@ function build_cache_smilies() {
     savecache('smilies', $data);
 }
 
-?>

@@ -186,7 +186,7 @@ class baiduRequestCore {
         // Set some default values.
         $this->request_url = $url;
         $this->method = self::HTTP_GET;
-        $this->request_headers = array();
+        $this->request_headers = [];
         $this->request_body = '';
         // Set a new Request class if one was set.
         if (isset($helpers ['request']) && !empty($helpers ['request'])) {
@@ -535,8 +535,8 @@ class baiduRequestCore {
         curl_setopt($curl_handle, CURLOPT_NOSIGNAL, true);
         curl_setopt($curl_handle, CURLOPT_REFERER, $this->request_url);
         curl_setopt($curl_handle, CURLOPT_USERAGENT, $this->useragent);
-        curl_setopt($curl_handle, CURLOPT_READFUNCTION, array(
-            $this, 'streaming_read_callback'));
+        curl_setopt($curl_handle, CURLOPT_READFUNCTION, [
+            $this, 'streaming_read_callback']);
         if ($this->debug_mode) {
             curl_setopt($curl_handle, CURLOPT_VERBOSE, true);
         }
@@ -566,7 +566,7 @@ class baiduRequestCore {
         }
         // Process custom headers
         if (isset($this->request_headers) && count($this->request_headers)) {
-            $temp_headers = array();
+            $temp_headers = [];
             foreach ($this->request_headers as $k => $v) {
                 $temp_headers [] = $k . ': ' . $v;
             }
@@ -596,8 +596,8 @@ class baiduRequestCore {
             default : // Assumed GET
                 curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, $this->method);
                 if (isset($this->write_stream)) {
-                    curl_setopt($curl_handle, CURLOPT_WRITEFUNCTION, array(
-                        $this, 'streaming_write_callback'));
+                    curl_setopt($curl_handle, CURLOPT_WRITEFUNCTION, [
+                        $this, 'streaming_write_callback']);
                     curl_setopt($curl_handle, CURLOPT_HEADER, false);
                 } else {
                     curl_setopt($curl_handle, CURLOPT_POSTFIELDS, $this->request_body);
@@ -642,7 +642,7 @@ class baiduRequestCore {
             $this->response_headers = explode("\r\n", $this->response_headers);
             array_shift($this->response_headers);
             // Loop through and split up the headers.
-            $header_assoc = array();
+            $header_assoc = [];
             foreach ($this->response_headers as $header) {
                 $kv = explode(': ', $header);
                 //$header_assoc [strtolower ( $kv [0] )] = $kv [1];
@@ -827,7 +827,7 @@ class baiduResponseCore {
      * @param integer|array $codes (Optional) The status code(s) to expect. Pass an <php:integer> for a single acceptable value, or an <php:array> of integers for multiple acceptable values.
      * @return boolean Whether we received the expected status code or not.
      */
-    public function isOK($codes = array(200, 201, 204, 206)) {
+    public function isOK($codes = [200, 201, 204, 206]) {
         if (is_array($codes)) {
             return in_array($this->status, $codes);
         }

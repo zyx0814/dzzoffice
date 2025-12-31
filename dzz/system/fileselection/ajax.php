@@ -14,7 +14,7 @@ $uid = $_G['uid'];
 $operation = isset($_GET['operation']) ? trim($_GET['operation']) : '';
 if ($operation == 'newFolder') {//新建文件夹
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
-    if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
+    if(!$fid) exit(json_encode(['error'=>lang('no_target_folderID')]));
     $perm = 0;
     $name = !empty($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
     $fid = intval($_GET['fid']);
@@ -27,7 +27,7 @@ if ($operation == 'newFolder') {//新建文件夹
 
         }
     } else {
-        $arr = array();
+        $arr = [];
         $arr['error'] = lang('failure_newfolder');
     }
     exit(json_encode($arr));
@@ -42,7 +42,7 @@ if ($operation == 'newFolder') {//新建文件夹
             $arr['msg'] = 'success';
         }
     } else {
-        $arr = array();
+        $arr = [];
         $arr['error'] = lang('failure_newfolder');
     }
 } elseif ($operation == 'newIco') {//新建文件
@@ -53,41 +53,41 @@ if ($operation == 'newFolder') {//新建文件夹
         case 'newTxt':
             $filename = lang('new_txt') . '.txt';
             if (!perm_check::checkperm_Container($fid, 'upload')) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = ' ';
             break;
         case 'newDoc':
             $filename = lang('new_word') . '.docx';
             if (!perm_check::checkperm_Container($fid, 'upload')) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/word.docx');
             break;
         case 'newExcel':
             $filename = lang('new_excel') . '.xlsx';
             if (!perm_check::checkperm_Container($fid, 'upload')) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/excel.xlsx');
             break;
         case 'newPowerPoint':
             $filename = lang('new_PowerPoint') . '.pptx';
             if (!perm_check::checkperm_Container($fid, 'upload')) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/ppt.pptx');
             break;
         case 'newpdf':
             $filename = lang('new_pdf') . '.pdf';
             if (!perm_check::checkperm_Container($fid, 'upload')) {
-                exit(json_encode(array('error' => lang('no_privilege'))));
+                exit(json_encode(['error' => lang('no_privilege')]));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/pdf.pdf');
             break;
         default:
             if (!perm_check::checkperm_Container($fid, 'upload')) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = ' ';
     }
@@ -98,14 +98,14 @@ if ($operation == 'newFolder') {//新建文件夹
             $arr['msg'] = 'success';
         }
     } else {
-        $arr = array();
+        $arr = [];
         $arr['error'] = lang('new_failure');
     }
     exit(json_encode($arr));
 } elseif ($operation == 'getfid') {//获取路径对应目录
     $path = isset($_GET['name']) ? trim($_GET['name']) : '';
     $prefix = isset($_GET['prefix']) ? trim($_GET['prefix']) : '';
-    $arr = array();
+    $arr = [];
     if ($fid = C::t('resources_path')->fetch_by_path($path, $prefix, $uid)) {
         if (preg_match('/c_\d+/', $fid)) {
             $arr['cid'] = str_replace('c_', '', $fid);
@@ -120,9 +120,9 @@ if ($operation == 'newFolder') {//新建文件夹
                 $arr['fid'] = $fid;
             }
         }
-        exit(json_encode(array('success' => $arr, 'json')));
+        exit(json_encode(['success' => $arr, 'json']));
     } else {
-        exit(json_encode(array('error' => true, 'json')));
+        exit(json_encode(['error' => true, 'json']));
     }
 } elseif ($operation == 'property') {//属性
     $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
@@ -138,7 +138,7 @@ if ($operation == 'newFolder') {//新建文件夹
         }
     } else {
         $patharr = explode(',', $paths);
-        $rids = array();
+        $rids = [];
         foreach ($patharr as $v) {
             $rids[] = dzzdecode($v);
         }

@@ -23,11 +23,11 @@ $onlymyorg = intval($_GET['onlymyorg']);//是否只显示我所在的部门
 $range = intval($_GET['range']);//0：所有部门和群组；1：仅部门；2：仅群组
 $multiple = intval($_GET['multiple']); //是否允许多线
 $showjob = intval($_GET['showjob']); //是否显示职位
-$callback = $_GET['callback'] ? $_GET['callback'] : 'callback_selectuser';//回调函数名称
+$callback = $_GET['callback'] ?: 'callback_selectuser';//回调函数名称
 $callback_url = isset($_GET['callback_url']) ? trim($_GET['callback_url']) : '';
 $deferer = dreferer();
 $token = htmlspecialchars($_GET['token']);
-$gets = array(
+$gets = [
     'zero' => $zero,
     'nouser' => $nouser,
     'stype' => $stype,
@@ -41,12 +41,12 @@ $gets = array(
     'showjob' => $showjob,
     'ctrlid' => 'seluser',
     'callback_url' => $callback_url
-);
+];
 $theurl = MOD_URL . "&op=orgtree&" . url_implode($gets);
 $ids = explode(',', $ids);
 //规整默认值  g_开头的为群组，纯数字的为uid
-$orgids = array();
-$uids = array();
+$orgids = [];
+$uids = [];
 
 foreach ($ids as $value) {
     if (strpos($value, 'g_') !== false) {
@@ -60,9 +60,9 @@ foreach ($ids as $value) {
 
     }
 }
-$selects = array();//已选数组
+$selects = [];//已选数组
 //组装openarr
-$open = array();//默认打开的
+$open = [];//默认打开的
 if ($orgids && $stype != 2) {
     $sel_org = C::t('organization')->fetch_all($orgids);
     foreach ($sel_org as $key => $value) {
@@ -101,7 +101,7 @@ if ($uids && $stype != 1) {
 if ($uids) {
     $no_org_uids = C::t('organization_user')->fetch_user_not_in_orgid();
     if (array_intersect($uids, array_keys($no_org_uids))) {
-        $open['other'] = array('other');
+        $open['other'] = ['other'];
     }
 }
 $openarr_length = count($open) ? '1' : '';

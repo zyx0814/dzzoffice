@@ -40,7 +40,7 @@ class PHPExcel_CalcEngine_CyclicReferenceStack {
 	 *
 	 *  @var mixed[]
 	 */
-	private $_stack = array();
+	private $_stack = [];
 
 
 	/**
@@ -83,7 +83,7 @@ class PHPExcel_CalcEngine_CyclicReferenceStack {
 	 * Clear the stack
 	 */
 	public function clear() {
-		$this->_stack = array();
+		$this->_stack = [];
 	}	//	function push()
 
 	/**

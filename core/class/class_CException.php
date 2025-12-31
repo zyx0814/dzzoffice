@@ -6,4 +6,3 @@ if(!defined('IN_DZZ')) {
 class CException extends Exception{
 
 }
-?>

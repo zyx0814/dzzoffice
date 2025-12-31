@@ -25,7 +25,7 @@
 * OLE_ChainedBlockStream::stream_open().
 * @var  array
 */
-$GLOBALS['_OLE_INSTANCES'] = array();
+$GLOBALS['_OLE_INSTANCES'] = [];
 
 /**
 * OLE package base class.
@@ -54,7 +54,7 @@ class PHPExcel_Shared_OLE
 	* Array of PPS's found on the OLE container
 	* @var array
 	*/
-	public $_list = array();
+	public $_list = [];
 
 	/**
 	 * Root directory of OLE container
@@ -134,11 +134,11 @@ class PHPExcel_Shared_OLE
 		$mbatFirstBlockId = self::_readInt4($fh);
 		// Number of blocks in Master Block Allocation Table
 		$mbbatBlockCount = self::_readInt4($fh);
-		$this->bbat = array();
+		$this->bbat = [];
 
 		// Remaining 4 * 109 bytes of current block is beginning of Master
 		// Block Allocation Table
-		$mbatBlocks = array();
+		$mbatBlocks = [];
 		for ($i = 0; $i < 109; ++$i) {
 			$mbatBlocks[] = self::_readInt4($fh);
 		}
@@ -165,7 +165,7 @@ class PHPExcel_Shared_OLE
 		}
 
 		// Read short block allocation table (SBAT)
-		$this->sbat = array();
+		$this->sbat = [];
 		$shortBlockCount = $sbbatBlockCount * $this->bigBlockSize / 4;
 		$sbatFh = $this->getStream($sbatFirstBlockId);
 		for ($blockId = 0; $blockId < $shortBlockCount; ++$blockId) {
@@ -276,18 +276,18 @@ class PHPExcel_Shared_OLE
 			$type = self::_readInt1($fh);
 			switch ($type) {
 			case self::OLE_PPS_TYPE_ROOT:
-				$pps = new PHPExcel_Shared_OLE_PPS_Root(null, null, array());
+				$pps = new PHPExcel_Shared_OLE_PPS_Root(null, null, []);
 				$this->root = $pps;
 				break;
 			case self::OLE_PPS_TYPE_DIR:
 				$pps = new PHPExcel_Shared_OLE_PPS(null, null, null, null, null,
-								   null, null, null, null, array());
+								   null, null, null, null, []);
 				break;
 			case self::OLE_PPS_TYPE_FILE:
 				$pps = new PHPExcel_Shared_OLE_PPS_File($name);
 				break;
 			default:
-				continue;
+                break;
 			}
 			fseek($fh, 1, SEEK_CUR);
 			$pps->Type    = $type;
@@ -315,8 +315,8 @@ class PHPExcel_Shared_OLE
 		// Initialize $pps->children on directories
 		foreach ($this->_list as $pps) {
 			if ($pps->Type == self::OLE_PPS_TYPE_DIR || $pps->Type == self::OLE_PPS_TYPE_ROOT) {
-				$nos = array($pps->DirPps);
-				$pps->children = array();
+				$nos = [$pps->DirPps];
+				$pps->children = [];
 				while ($nos) {
 					$no = array_pop($nos);
 					if ($no != -1) {

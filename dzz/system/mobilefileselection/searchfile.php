@@ -12,7 +12,7 @@ $page = empty($_GET['page']) ? 1 : intval($_GET['page']);//页码数
 $start = ($page - 1) * $perpage;//开始条数
 $total = 0;//总条数
 $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 3;
-$data = array();
+$data = [];
 $limitsql = "limit $start,$perpage";
 
 $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
@@ -32,7 +32,7 @@ switch ($disp) {
         $orderby = 'r.size';
         break;
     case 2:
-        $orderby = array('r.type', 'ext');
+        $orderby = ['r.type', 'ext'];
         break;
     case 3:
         $orderby = 'r.dateline';
@@ -49,7 +49,7 @@ if (is_array($orderby)) {
     $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
 }
 $wheresql = ' where 1';
-$param = array('resources', 'folder');
+$param = ['resources', 'folder'];
 if ($keyword && !preg_match('/^\s*$/', $keyword)) {
     $kewordsarr = explode(',', $keyword);
     $tids = C::t('tag')->fetch_tid_by_tagname($kewordsarr, 'explorer');
@@ -62,7 +62,7 @@ if ($keyword && !preg_match('/^\s*$/', $keyword)) {
         }
 
     }
-    $keywordsqlarr = array();
+    $keywordsqlarr = [];
     foreach ($kewordsarr as $v) {
         $keywordsqlarr[] = " r.name like(%s) ";
         $param[] = '%' . trim($v) . '%';
@@ -85,7 +85,7 @@ if ($exts) {
     }
 }
 $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门
-$or = array();
+$or = [];
 if (!$fid) {
     //我的
     $or[] = "(r.gid=0 and r.uid=%d)";
@@ -120,8 +120,8 @@ if (!$fid) {
     }
 }
 if ($or && !$fid) $wheresql .= " and (" . implode(' OR ', $or) . ")";
-$data = array();
-$foldersids = $folderdata = array();
+$data = [];
+$foldersids = $folderdata = [];
 if ($total = DB::result_first("SELECT COUNT(*) FROM %t r LEFT JOIN %t f ON r.pfid=f.fid $wheresql", $param) > $start) {
     foreach (DB::fetch_all("SELECT r.rid  FROM %t r LEFT JOIN %t f ON r.pfid=f.fid $wheresql  $limitsql", $param) as $value) {
         if ($arr = C::t('resources')->fetch_by_rid($value['rid'])) {
@@ -150,9 +150,9 @@ $next = false;
 if (count($data) >= $perpage) {
     $next = $page + 1;
 }
-$return = array(
+$return = [
     'total' => count($data) + $start,
-    'param' => array(
+    'param' => [
         'disp' => $disp,
         'view' => $iconview,
         'page' => $next,
@@ -164,8 +164,8 @@ $return = array(
         'fid' => $fid,
         'localsearch' => $bz ? 1 : 0,
         'exts' => $exts
-    ),
-);
+    ],
+];
 $params = json_encode($return['param']);
 require template('mobilefileselection/searchfile');
 exit();

@@ -2,7 +2,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$lang = array(
+$lang = [
     'appname' => 'Personal Center',
     'username' => 'Username',
     'login_guest' => 'No account? <a href="user.php?mod={$_G[setting][regname]}">{$_G[setting][reglinkname]}</a>',
@@ -106,7 +106,6 @@ $lang = array(
     'submit_audit' => 'Submit for Review',
     'Information_complete' => 'Profile Completion',
     'compellation' => 'Name',
-    'unbind' => 'Unbind',
     'landing_directly' => 'Login Directly',
     'register_binding' => 'Register and Bind',
     'login_bound' => 'Login and Bind',
@@ -147,4 +146,4 @@ $lang = array(
     'register_ctrl' => 'Sorry, your IP address cannot be registered within {regctrl} hours',
     'no_modify_password' => 'Your user group is not allowed to modify your password. ',
     'no_modify_group' => 'The function is not supported in your user group. ',
-);
+];

@@ -40,7 +40,7 @@ if (!submitcheck('settingsubmit')) {
             $setting['defaultdepartment'] = 'other';
         }
         $setting['sitebeian'] = dhtmlspecialchars($setting['sitebeian']);
-        $applist = DB::fetch_all("select appname,identifier from %t where isshow>0 and `available`>0 and app_path='dzz' ORDER BY disp", array('app_market'));
+        $applist = DB::fetch_all("select appname,identifier from %t where isshow>0 and `available`>0 and app_path='dzz' ORDER BY disp", ['app_market']);
     } elseif ($operation == 'upload') {
         $setting['maxChunkSize'] = round($setting['maxChunkSize'] / (1024 * 1024), 2);
         $navtitle = lang('upload_download_set') . ' - ' . lang('appname');
@@ -50,10 +50,10 @@ if (!submitcheck('settingsubmit')) {
     } elseif ($operation == 'at') {
         $navtitle = '@' . lang('sector_set') . ' - ' . lang('appname');
         $setting['at_range'] = dunserialize($setting['at_range']);
-        $usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid ASC", array('usergroup_field', 'usergroup'));
+        $usergroups = DB::fetch_all("select f.*,g.grouptitle from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('2','3','4','5','6','7','8') order by groupid ASC", ['usergroup_field', 'usergroup']);
     } elseif ($operation == 'access') {
         $navtitle = lang('loginSet') . ' - ' . lang('appname');
-        $welcomemsg = array();
+        $welcomemsg = [];
 		if($setting['welcomemsg'] == 1) {
 			$welcomemsg[] = '1';
 		} elseif($setting['welcomemsg'] == 2) {
@@ -74,11 +74,11 @@ if (!submitcheck('settingsubmit')) {
         $permgroups = C::t('resources_permgroup')->fetch_all();
         $navtitle = lang('permGroupSet') . ' - ' . lang('appname');
     } elseif ($operation == 'usergroup') {
-        $usergroups = DB::fetch_all("select f.*,g.grouptitle,g.type from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('3','4','5','6','8') order by groupid ASC", array('usergroup_field', 'usergroup'));
+        $usergroups = DB::fetch_all("select f.*,g.grouptitle,g.type from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid NOT IN ('3','4','5','6','8') order by groupid ASC", ['usergroup_field', 'usergroup']);
         $navtitle = lang('usergroup_perm') . ' - ' . lang('appname');
     } elseif ($operation == 'datetime') {
         $navtitle = lang('time_or_date') . ' - ' . lang('appname');
-        $checktimeformat = array($setting['timeformat'] == 'H:i' ? 24 : 12 => 'checked');
+        $checktimeformat = [$setting['timeformat'] == 'H:i' ? 24 : 12 => 'checked'];
         $setting['userdateformat'] = dateformat($setting['userdateformat']);
         $setting['dateformat'] = dateformat($setting['dateformat']);
         $timezones = lang('setting_timezone');
@@ -87,7 +87,7 @@ if (!submitcheck('settingsubmit')) {
         $seccodecheck = /*$secreturn =*/
             1;
         $sectpl = '<br /><sec>: <sec><sec>';
-        $checksc = array();
+        $checksc = [];
         $setting['seccodedata'] = dunserialize($setting['seccodedata']);
         $setting['reginput'] = dunserialize($setting['reginput']);
         $seccodestatus[1] = $setting['seccodestatus'] & 1;
@@ -112,7 +112,7 @@ if (!submitcheck('settingsubmit')) {
         $navtitle = lang('mail') . ' - ' . lang('appname');
         $setting['mail'] = dunserialize($setting['mail']);
         $passwordmask = $setting['mail']['auth_password'] ? $setting['mail']['auth_password'][0] . '********' . substr($setting['mail']['auth_password'], -2) : '';
-        $smtps = array();
+        $smtps = [];
         foreach ($setting['mail']['smtp'] as $id => $smtp) {
             $smtp['authcheck'] = $smtp['auth'] ? 'checked' : '';
             $smtp['auth_password'] = $smtp['auth_password'] ? $smtp['auth_password'][0] . '********' . substr($smtp['auth_password'], -2) : '';
@@ -144,7 +144,7 @@ if (!submitcheck('settingsubmit')) {
         //设置默认应用
         if ($settingnew["default_mod"] && $settingnew["default_mod"] != $_GET["old_default_mod"]) {
             $configfile = DZZ_ROOT . 'data/cache/default_mod.php';
-            $configarr = array();
+            $configarr = [];
             $configarr['default_mod'] = $settingnew["default_mod"];
             @file_put_contents($configfile, "<?php \t\n return " . var_export($configarr, true) . ";");
         }
@@ -152,7 +152,7 @@ if (!submitcheck('settingsubmit')) {
         if ($settingnew['unRunExts'])
             $settingnew['unRunExts'] = explode(',', trim($settingnew['unRunExts'], ','));
         else
-            $settingnew['unRunExts'] = array();
+            $settingnew['unRunExts'] = [];
         if (!in_array('php', $settingnew['unRunExts']))
             $settingnew['unRunExts'][] = 'php';
         if (empty($settingnew['maxChunkSize']) || $settingnew['maxChunkSize'] < 0) {
@@ -161,7 +161,7 @@ if (!submitcheck('settingsubmit')) {
         $settingnew['maxChunkSize'] = intval($settingnew['maxChunkSize'] * 1024 * 1024);
         $group = $_GET['group'];
         foreach ($group as $key => $value) {
-            C::t('usergroup_field')->update(intval($key), array('maxspacesize' => intval($value['maxspacesize']), 'maxattachsize' => intval($value['maxattachsize']), 'attachextensions' => trim($value['attachextensions'])));
+            C::t('usergroup_field')->update(intval($key), ['maxspacesize' => intval($value['maxspacesize']), 'maxattachsize' => intval($value['maxattachsize']), 'attachextensions' => trim($value['attachextensions'])]);
         }
         include_once libfile('function/cache');
         updatecache('usergroups');
@@ -173,8 +173,8 @@ if (!submitcheck('settingsubmit')) {
     } elseif ($operation == 'mail') {
         $setting['mail'] = dunserialize($setting['mail']);
         $oldsmtp = $settingnew['mail']['mailsend'] == 3 ? $settingnew['mail']['smtp'] : $settingnew['mail']['esmtp'];
-        $deletesmtp = $settingnew['mail']['mailsend'] != 1 ? ($settingnew['mail']['mailsend'] == 3 ? $settingnew['mail']['smtp']['delete'] : $settingnew['mail']['esmtp']['delete']) : array();
-        $settingnew['mail']['smtp'] = array();
+        $deletesmtp = $settingnew['mail']['mailsend'] != 1 ? ($settingnew['mail']['mailsend'] == 3 ? $settingnew['mail']['smtp']['delete'] : $settingnew['mail']['esmtp']['delete']) : [];
+        $settingnew['mail']['smtp'] = [];
         foreach ($oldsmtp as $id => $value) {
             if ((empty($deletesmtp) || !in_array($id, $deletesmtp)) && !empty($value['server']) && !empty($value['port'])) {
                 $passwordmask = $setting['mail']['smtp'][$id]['auth_password'] ? $setting['mail']['smtp'][$id]['auth_password'][0] . '********' . substr($setting['mail']['smtp'][$id]['auth_password'], -2) : '';
@@ -186,7 +186,7 @@ if (!submitcheck('settingsubmit')) {
         if (!empty($_GET['newsmtp'])) {
             foreach ($_GET['newsmtp']['server'] as $id => $server) {
                 if (!empty($server) && !empty($_GET['newsmtp']['port'][$id])) {
-                    $settingnew['mail']['smtp'][] = array('server' => $server, 'port' => $_GET['newsmtp']['port'][$id] ? intval($_GET['newsmtp']['port'][$id]) : 25, 'auth' => $_GET['newsmtp']['auth'][$id] ? 1 : 0, 'from' => $_GET['newsmtp']['from'][$id], 'auth_username' => $_GET['newsmtp']['auth_username'][$id], 'auth_password' => $_GET['newsmtp']['auth_password'][$id]);
+                    $settingnew['mail']['smtp'][] = ['server' => $server, 'port' => $_GET['newsmtp']['port'][$id] ? intval($_GET['newsmtp']['port'][$id]) : 25, 'auth' => $_GET['newsmtp']['auth'][$id] ? 1 : 0, 'from' => $_GET['newsmtp']['from'][$id], 'auth_username' => $_GET['newsmtp']['auth_username'][$id], 'auth_password' => $_GET['newsmtp']['auth_password'][$id]];
                 }
 
             }
@@ -229,7 +229,7 @@ if (!submitcheck('settingsubmit')) {
          }
 
         if (empty($settingnew['strongpw'])) {
-            $settingnew['strongpw'] = array();
+            $settingnew['strongpw'] = [];
         }
         if(isset($settingnew['welcomemsgtitle'])) {
             $settingnew['welcomemsgtitle'] = cutstr(trim(dhtmlspecialchars($settingnew['welcomemsgtitle'])), 75);
@@ -274,7 +274,7 @@ if (!submitcheck('settingsubmit')) {
         $settingnew['seccodestatus'] = bindec(intval($settingnew['seccodestatus'][3]) . intval($settingnew['seccodestatus'][2]) . intval($settingnew['seccodestatus'][1]));
 
     } elseif ($operation == 'censor') {
-        $data = array('replace' => trim($_GET['replace']), 'words' => $_GET['badwords']);
+        $data = ['replace' => trim($_GET['replace']), 'words' => $_GET['badwords']];
         savecache('censor', $data);
         showmessage('do_success', dreferer());
     } elseif ($operation == 'loginset') {
@@ -286,13 +286,12 @@ if (!submitcheck('settingsubmit')) {
             } else {
                 $arr = explode('.', $back);
                 $ext = array_pop($arr);
-                if ($ext && in_array(strtolower($ext), array('jpg', 'jpeg', 'gif', 'png', 'webp'))) {
+                if ($ext && in_array(strtolower($ext), ['jpg', 'jpeg', 'gif', 'png', 'webp'])) {
                     $settingnew['loginset']['img'] = $back;
-                    $settingnew['loginset']['bcolor'] = '';
                 } else {
                     $settingnew['loginset']['url'] = $back;
-                    $settingnew['loginset']['bcolor'] = '';
                 }
+                $settingnew['loginset']['bcolor'] = '';
             }
         } else {
             $settingnew['loginset']['bcolor'] = '';
@@ -300,11 +299,11 @@ if (!submitcheck('settingsubmit')) {
     }
     $updatecache = FALSE;
     if ($settingnew) {
-        $settings = array();
+        $settings = [];
         foreach ($settingnew as $key => $val) {
             if ($setting[$key] != $val) {
                 $updatecache = TRUE;
-                if (in_array($key, array('timeoffset', 'regstatus', 'oltimespan', 'seccodestatus'))) {
+                if (in_array($key, ['timeoffset', 'regstatus', 'oltimespan', 'seccodestatus'])) {
                     $val = (float)$val;
                 }
 
@@ -331,9 +330,9 @@ if (!submitcheck('settingsubmit')) {
 }
 function dateformat($string, $operation = 'formalise') {
     $string = dhtmlspecialchars(trim($string));
-    $replace = $operation == 'formalise' ? array(array('n', 'j', 'y', 'Y'), array('mm', 'dd', 'yy', 'yyyy')) : array(array('mm', 'dd', 'yyyy', 'yy'), array('n', 'j', 'Y', 'y'));
+    $replace = $operation == 'formalise' ? [['n', 'j', 'y', 'Y'], ['mm', 'dd', 'yy', 'yyyy']] : [['mm', 'dd', 'yyyy', 'yy'], ['n', 'j', 'Y', 'y']];
     return str_replace($replace[0], $replace[1], $string);
 }
 
 include template('main');
-?>
+

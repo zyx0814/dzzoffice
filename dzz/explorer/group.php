@@ -44,25 +44,23 @@ if (!$group['manageon'] && $perm < 1) {
 
 if (!$group['available']) {
     $contenterrormsg = lang('group_no_file_by_system');
-} else {
-    if (!$group['diron'] && !$perm) {
-        $contenterrormsg = ($group['type'] > 0) ? lang('group_no_file_by_manage') : lang('group_no_file_by_system');
-    }
+} elseif (!$group['diron'] && !$perm) {
+    $contenterrormsg = ($group['type'] > 0) ? lang('group_no_file_by_manage') : lang('group_no_file_by_system');
 }
-$allowvisit = array('file', 'group_ajax', 'right_popbox', 'delete_group');
+$allowvisit = ['file', 'group_ajax', 'right_popbox', 'delete_group'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : 'file';
 if ($do == 'delete_group') {
     if ($group['type'] == 0 && $_G['adminid'] != 1) {
-        exit(json_encode(array('error' => lang('no_privilege'))));
+        exit(json_encode(['error' => lang('no_privilege')]));
     }
     if ($group['type'] == 1 && $perm < 2) {
-        exit(json_encode(array('error' => lang('no_privilege'))));
+        exit(json_encode(['error' => lang('no_privilege')]));
     }
     $return = C::t('organization')->delete_by_orgid($gid);
     if (isset($return['error'])) {
-        exit(json_encode(array('error' => $return['error'])));
+        exit(json_encode(['error' => $return['error']]));
     } else {
-        exit(json_encode(array('success' => true)));
+        exit(json_encode(['success' => true]));
     }
 } elseif ($do == 'file') {
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
@@ -75,19 +73,19 @@ if ($do == 'delete_group') {
         $folderpathstr = implode('\\', $folderpatharr);
         //统计打开次数,如果当前文件夹在resources表无数据，则记录其文件夹id对应数据
         if ($rid = C::t('resources')->fetch_rid_by_fid($fid)) {
-            $setarr = array(
+            $setarr = [
                 'uid' => $uid,
                 'views' => 1,
                 'opendateline' => TIMESTAMP,
                 'fid' => $fid
-            );
+            ];
             C::t('resources_statis')->add_statis_by_rid($rid, $setarr);
         } else {
-            $setarr = array(
+            $setarr = [
                 'uid' => $uid,
                 'views' => 1,
                 'opendateline' => TIMESTAMP,
-            );
+            ];
             C::t('resources_statis')->add_statis_by_fid($fid, $setarr);
         }
     }
@@ -96,13 +94,13 @@ if ($do == 'delete_group') {
     if ($operation == 'addgroupuser') {//添加群组成员
         $gid = isset($_GET['gid']) ? intval($_GET['gid']) : '';
         if (!$perm || !$group['type']) {
-            return array('error' => lang('no_privilege'));
+            return ['error' => lang('no_privilege')];
         }
         //添加或修改用户时
         if (submitcheck('selectsubmit')) {
             $uidarr = explode(',', trim($_GET['uids']));
-            $uids = array();
-            $userarr = array();
+            $uids = [];
+            $userarr = [];
             foreach ($uidarr as $v) {
                 $uids[] = preg_replace('/uid_/', '', $v);
             }
@@ -116,20 +114,20 @@ if ($do == 'delete_group') {
             $getuserids = array_merge($olduids, $uids);
 
             //获取用户数据
-            foreach (DB::fetch_all("select username,uid from %t where uid in(%n)", array('user', $getuserids)) as $v) {
+            foreach (DB::fetch_all("select username,uid from %t where uid in(%n)", ['user', $getuserids]) as $v) {
                 $userarr[$v['uid']] = $v['username'];
             }
 
             //删除用户
-            $removeuser = array();
-            $insertuser = array();
+            $removeuser = [];
+            $insertuser = [];
 
             foreach ($olduids as $v) {
                 if (!in_array($v, $uids) && ($uid != $v || ($uid == $v && $_G['adminid'] == 1))) {
                     $removeuser[] = $v;
                 }
             }
-            $delusers = array();
+            $delusers = [];
             //判断删除用户权限并删除用户
             if (count($removeuser) > 0) {
                 foreach ($removeuser as $k => $v) {
@@ -158,7 +156,7 @@ if ($do == 'delete_group') {
 
                 foreach (C::t('organization_user')->delete_by_uid_orgid($removeuser, $gid) as $uid) {
                     if ($uid != $_G['uid']) {
-                        $notevars = array(
+                        $notevars = [
                             'from_id' => $appid,
                             'from_idtype' => 'app',
                             // 'url' => getglobal('siteurl') . '/#group&gid='.$orgid,
@@ -166,7 +164,7 @@ if ($do == 'delete_group') {
                             'authorid' => $_G['uid'],
                             'dataline' => dgmdate(TIMESTAMP),
                             'fname' => getstr($group['orgname'], 31),
-                        );
+                        ];
                         $action = 'explorer_user_remove';
                         $ntype = 'explorer_user_remove_' . $gid;
 
@@ -175,11 +173,11 @@ if ($do == 'delete_group') {
                 }
                 //增加事件
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($group['fid'], $gid);
-                $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'orgname' => $group['orgname'], 'delusers' => implode(',', $delusers), 'hash' => $hash);
+                $eventdata = ['username' => $_G['username'], 'uid' => $_G['uid'], 'orgname' => $group['orgname'], 'delusers' => implode(',', $delusers), 'hash' => $hash];
                 C::t('resources_event')->addevent_by_pfid($group['fid'], 'delete_group_user', 'deleteuser', $eventdata, $gid, '', $group['orgname']);
             }
             //新添加用户
-            $insertusername = array();
+            $insertusername = [];
             foreach ($uids as $v) {
                 if (!in_array($v, $olduids) && !empty($v)) {
                     $insertuser[] = $v;
@@ -193,7 +191,7 @@ if ($do == 'delete_group') {
                 foreach (C::t('organization_user')->insert_by_orgid($gid, $insertuser) as $iu) {
                     //发送通知
                     if ($iu != $_G['uid']) {
-                        $notevars = array(
+                        $notevars = [
                             'from_id' => $appid,
                             'from_idtype' => 'app',
                             'url' => $_G['siteurl'] . MOD_URL . '#group&gid=' . $gid,
@@ -202,7 +200,7 @@ if ($do == 'delete_group') {
                             'dataline' => dgmdate(TIMESTAMP),
                             'fname' => getstr($group['orgname'], 31),
                             'permtitle' => $permtitle[0]
-                        );
+                        ];
                         $action = 'explorer_user_add';
                         $ntype = 'explorer_user_add_' . $gid;
                         dzz_notification::notification_add($iu, $ntype, $action, $notevars, 1, 'dzz/explorer');
@@ -210,19 +208,19 @@ if ($do == 'delete_group') {
                 }
                 //增加事件
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($group['fid'], $gid);
-                $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'orgname' => $group['orgname'], 'insertusers' => implode(',', $insertusername), 'hash' => $hash);
+                $eventdata = ['username' => $_G['username'], 'uid' => $_G['uid'], 'orgname' => $group['orgname'], 'insertusers' => implode(',', $insertusername), 'hash' => $hash];
                 C::t('resources_event')->addevent_by_pfid($group['fid'], 'add_group_user', 'adduser', $eventdata, $gid, '', $group['orgname']);
             }
             if ($type == 1) {
-                exit(json_encode(array('success' => true)));
+                exit(json_encode(['success' => true]));
             } else {
-                exit(json_encode(array('success' => true, 'fid' => $group['fid'])));
+                exit(json_encode(['success' => true, 'fid' => $group['fid']]));
             }
         }
     } elseif ($operation == 'groupsetting') {
         $gid = $_GET['gid'];
         if (!$perm || !$group['type']) {
-            return array('error' => lang('no_privilege'));
+            return ['error' => lang('no_privilege')];
         }
         if (isset($_GET['setsubmit'])) {
             $arr = $_GET['arr'];
@@ -233,9 +231,9 @@ if ($do == 'delete_group') {
             }
             $return = C::t('organization')->update_by_orgid($gid, $arr);
             if ($return['error']) {
-                showTips(array('error' => $return['error']), 'json');
+                showTips(['error' => $return['error']], 'json');
             } else {
-                showTips(array('success' => true), 'json');
+                showTips(['success' => true], 'json');
             }
 
         } else {
@@ -256,9 +254,9 @@ if ($do == 'delete_group') {
                 $fid = $fileinfo['pfid'];
             }
         }
-        $perm = DB::result_first("select perm_inherit from %t where fid = %d", array('folder', $fid));
+        $perm = DB::result_first("select perm_inherit from %t where fid = %d", ['folder', $fid]);
         $powerarr = perm_binPerm::getPowerArr();
-        $uids = array();
+        $uids = [];
         if ($perm & $powerarr['read2']) {
             $members = C::t('organization_user')->fetch_parentadminer_andchild_uid_by_orgid($gid, true);
             $uids = $members['all'];
@@ -267,21 +265,21 @@ if ($do == 'delete_group') {
             $uids = $members['adminer'];
         }
 
-        $params = array('user', $uids);
+        $params = ['user', $uids];
         $sql_user = 'where uid in(%n) ';
         if ($keyword) {
             $sql_user .= ' and username like %s';
             $params[] = '%' . $keyword . '%';
         }
-        $list = array();
+        $list = [];
         foreach (DB::fetch_all("select uid,username,avatarstatus,headerColor from %t $sql_user", $params) as $value) {
             if ($value['uid'] == $uid) continue;
-            $list[] = array('name' => $value['username'],
+            $list[] = ['name' => $value['username'],
                 'searchkey' => pinyin::encode($value['username'], 'all') . $value['username'],
                 'id' => 'u' . $value['uid'],
                 'title' => $value['username'] . ':' . 'u' . $value['uid'],
-                'avatar' => avatar_block($value['uid'], array(), null, $value)
-            );
+                'avatar' => avatar_block($value['uid'], [], null, $value)
+            ];
         }
         exit(json_encode($list));
     }
@@ -290,8 +288,8 @@ if ($do == 'delete_group') {
 } elseif ($do == 'right_popbox') {
     $uuid = $_GET['uid'];
     //成员相关信息
-    $userinfos = DB::fetch_first("select u.username, u.uid,u.adminid from %t u where u.uid = %d", array('user', $uuid));
-    $uperm = DB::fetch_first("select admintype from %t  where uid = %d and orgid = %d", array('organization_admin', $uuid, $gid));
+    $userinfos = DB::fetch_first("select u.username, u.uid,u.adminid from %t u where u.uid = %d", ['user', $uuid]);
+    $uperm = DB::fetch_first("select admintype from %t  where uid = %d and orgid = %d", ['organization_admin', $uuid, $gid]);
     if($uperm['admintype']) {
         $userinfos['perm'] = $uperm['admintype'];
     } elseif ($userinfos['adminid'] == 1) {
@@ -299,7 +297,7 @@ if ($do == 'delete_group') {
     } else {
         $userinfos['perm'] = 0;
     }
-    $allowoperation = array('setmemberperm', 'deletemember');
+    $allowoperation = ['setmemberperm', 'deletemember'];
     if ($operation && !in_array($operation, $allowoperation)) {
         showmessage('explorer_do_failed', dreferer());
     }
@@ -317,7 +315,7 @@ if ($do == 'delete_group') {
             $appid = C::t('app_market')->fetch_appid_by_mod('{dzzscript}?mod=' . MOD_NAME, 2);
             $permtitle = lang('explorer_gropuperm');
             if ($guid != $_G['uid']) {
-                $notevars = array(
+                $notevars = [
                     'from_id' => $appid,
                     'from_idtype' => 'app',
                     'url' => $_G['siteurl'] . MOD_URL . '/#group&gid=' . $gid,
@@ -326,13 +324,13 @@ if ($do == 'delete_group') {
                     'dataline' => dgmdate(TIMESTAMP),
                     'fname' => getstr($group['orgname'], 31),
                     'permtitle' => $permtitle[$perm],
-                );
+                ];
                 $action = 'explorer_user_change';
                 $type = 'explorer_user_change_' . $gid;
 
                 dzz_notification::notification_add($guid, $type, $action, $notevars, 1, 'dzz/explorer');
                 if ($return['olduser']) {
-                    $notevars = array(
+                    $notevars = [
                         'from_id' => $appid,
                         'from_idtype' => 'app',
                         'url' => $_G['siteurl'] . MOD_URL . '#group&gid=' . $gid,
@@ -341,7 +339,7 @@ if ($do == 'delete_group') {
                         'dataline' => dgmdate(TIMESTAMP),
                         'fname' => getstr($group['orgname'], 31),
                         'permtitle' => $permtitle[0],
-                    );
+                    ];
                     $action = 'explorer_user_change';
                     $type = 'explorer_user_change_' . $gid;
                     dzz_notification::notification_add($return['olduser']['uid'], $type, $action, $notevars, 1, 'dzz/explorer');
@@ -350,10 +348,10 @@ if ($do == 'delete_group') {
             }
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($group['fid'], $gid);
             if ($perm == 2) {
-                $body_data = array('username' => $_G['username'], 'oldusername' => $return['olduser']['username'], 'groupname' => $group['orgname'], 'newusername' => $return['member'], 'hash' => $hash);
+                $body_data = ['username' => $_G['username'], 'oldusername' => $return['olduser']['username'], 'groupname' => $group['orgname'], 'newusername' => $return['member'], 'hash' => $hash];
                 $event_body = 'change_creater';
             } else {
-                $body_data = array('username' => $_G['username'], 'groupname' => $group['orgname'], 'permname' => $permtitle[$perm], 'member' => $return['member'], 'hash' => $hash);
+                $body_data = ['username' => $_G['username'], 'groupname' => $group['orgname'], 'permname' => $permtitle[$perm], 'member' => $return['member'], 'hash' => $hash];
 
                 $event_body = 'update_member_perm';
             }
@@ -367,7 +365,7 @@ if ($do == 'delete_group') {
             $appid = C::t('app_market')->fetch_appid_by_mod('{dzzscript}?mod=explorer', 2);
             foreach ($deluids as $uid) {
                 if ($uid != $_G['uid']) {
-                    $notevars = array(
+                    $notevars = [
                         'from_id' => $appid,
                         'from_idtype' => 'app',
                         // 'url' => getglobal('siteurl') . '/#group&gid='.$orgid,
@@ -375,24 +373,24 @@ if ($do == 'delete_group') {
                         'authorid' => $_G['uid'],
                         'dataline' => dgmdate(TIMESTAMP),
                         'fname' => getstr($group['orgname'], 31),
-                    );
+                    ];
                     $action = 'explorer_user_remove';
                     $type = 'explorer_user_remove_' . $gid;
 
                     dzz_notification::notification_add($uid, $type, $action, $notevars, 1, 'dzz/explorer');
                 }
             }
-            $deluserarr = array();
-            foreach (DB::fetch_all("select username from %t where uid in(%n)", array('user', $deluids)) as $v) {
+            $deluserarr = [];
+            foreach (DB::fetch_all("select username from %t where uid in(%n)", ['user', $deluids]) as $v) {
                 $deluserarr[] = $v['username'];
             }
             //增加事件
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($group['fid'], $gid);
-            $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'orgname' => $group['orgname'], 'delusers' => implode(',', $deluserarr), 'hash' => $hash);
+            $eventdata = ['username' => $_G['username'], 'uid' => $_G['uid'], 'orgname' => $group['orgname'], 'delusers' => implode(',', $deluserarr), 'hash' => $hash];
             C::t('resources_event')->addevent_by_pfid($group['fid'], 'delete_group_user', 'deleteuser', $eventdata, $gid, '', $group['orgname']);
         }
 
-        exit(json_encode(array('success' => true, 'uids' => $deluids)));
+        exit(json_encode(['success' => true, 'uids' => $deluids]));
     } else {
         include template('template_right_popbox');
     }

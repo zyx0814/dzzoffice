@@ -6,12 +6,12 @@ if (!defined('IN_DZZ')) {
 class helper_form {
     private static function _create($cookie, $code = '') {
 		global $_G;
-		$ssid = C::t('seccheck')->insert(array(
+		$ssid = C::t('seccheck')->insert([
 		    'dateline' => TIMESTAMP,
 		    'code' => $code,
 		    'succeed' => 0,
 		    'verified' => 0,
-		), true);
+        ], true);
 		dsetcookie($cookie, $ssid.'.'.substr(md5($ssid.$_G['uid'].$_G['authkey']), 8, 18));
 	}
     public static function make_seccode($idhash){
@@ -20,7 +20,7 @@ class helper_form {
         $seccodeunits = '';
         if($_G['setting']['seccodedata']['type'] == 1) {
             $len = strtoupper(CHARSET) == 'GBK' ? 2 : 3;
-            $code = array(substr($seccode, 0, 3), substr($seccode, 3, 3));
+            $code = [substr($seccode, 0, 3), substr($seccode, 3, 3)];
             $seccode = '';
             for($i = 0; $i < 2; $i++) {
                 $seccode .= substr(lang('chn'), $code[$i] * $len, $len);
@@ -155,7 +155,7 @@ class helper_form {
 
 
     public static function get_url_list($message) {
-        $return = array();
+        $return = [];
 
         (strpos($message, '[/img]') || strpos($message, '[/flash]')) && $message = preg_replace("/\[img[^\]]*\]\s*([^\[\<\r\n]+?)\s*\[\/img\]|\[flash[^\]]*\]\s*([^\[\<\r\n]+?)\s*\[\/flash\]/is", '', $message);
         if (preg_match_all("/((https?|ftp|gopher|news|telnet|rtsp|mms|callto|bctp|thunder|qqdl|synacast){1}:\/\/|www\.)[^ \[\]\"']+/i", $message, $urllist)) {
@@ -174,4 +174,3 @@ class helper_form {
     }
 }
 
-?>

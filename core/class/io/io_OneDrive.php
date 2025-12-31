@@ -17,7 +17,7 @@ require_once(DZZ_ROOT . './core/api/OneDrive/autoload.php');
 class io_OneDrive extends io_api {
     const T = 'connect_onedrive';
     const BZ = 'OneDrive';
-    private $icosdatas = array();
+    private $icosdatas = [];
     private $uid = '';
     private $_root = '';
     private $_rootname = '';
@@ -63,7 +63,7 @@ class io_OneDrive extends io_api {
     }
 
     public function CreateFolderByPath($path, $pfid = '', $noperm = false) {
-        $data = array();
+        $data = [];
         if ($this->makeDir($path)) {
             $data = $this->getMeta($path);
         }
@@ -74,7 +74,7 @@ class io_OneDrive extends io_api {
         $bzarr = $this->parsePath($path);
 
         $patharr = explode('/', trim(preg_replace("/^" . str_replace('/', '\/', $this->_root) . "/", '', urldecode($bzarr['path'])), '/'));
-        $folderarr = array();
+        $folderarr = [];
         $p = $bzarr['bz'] . $this->_root;
 
         foreach ($patharr as $value) {
@@ -105,7 +105,7 @@ class io_OneDrive extends io_api {
             return true;
         } catch (Exception $e) {
             //var_dump($e);
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
 
     }
@@ -116,7 +116,7 @@ class io_OneDrive extends io_api {
         $id = trim($bzarr[1]);
         $cloud = C::t('connect')->fetch(self::BZ);
         if ($token = C::t(self::T)->fetch($id)) {
-            if (!$isguest && $token['uid'] > 0 && $token['uid'] != $_G['uid']) return array('error' => 'need authorize to ' . self::BZ);
+            if (!$isguest && $token['uid'] > 0 && $token['uid'] != $_G['uid']) return ['error' => 'need authorize to ' . self::BZ];
             $access_token = $token['access_token'];
             if ($token['cloudname']) {
                 $this->_rootname = $token['cloudname'];
@@ -124,9 +124,9 @@ class io_OneDrive extends io_api {
                 $this->_rootname .= ':' . $token['cusername'];
             }
         } else {
-            return array('error' => 'need authorize to ' . self::BZ);
+            return ['error' => 'need authorize to ' . self::BZ];
         }
-        $onedrive = new Client(array('client_id' => $cloud['key'], 'state' => array('redirect_uri' => $_G['siteurl'] . 'oauth.php', 'access_token' => $access_token, 'expires_in' => $token['expires_in'], 'refreshtime' => $token['refreshtime'])));
+        $onedrive = new Client(['client_id' => $cloud['key'], 'state' => ['redirect_uri' => $_G['siteurl'] . 'oauth.php', 'access_token' => $access_token, 'expires_in' => $token['expires_in'], 'refreshtime' => $token['refreshtime']]]);
         if ($onedrive->getAccessTokenStatus() < 1) {
             return $this->refresh_token($path);
         } else {
@@ -139,10 +139,10 @@ class io_OneDrive extends io_api {
         $id = trim($bzarr[1]);
         $cloud = C::t('connect')->fetch(self::BZ);
         if ($arr = C::t(self::T)->fetch($id)) {
-            $onedrive = new Client(array('client_id' => $cloud['key'], 'state' => array('redirect_uri' => getglobal('siteurl') . 'oauth.php')));
+            $onedrive = new Client(['client_id' => $cloud['key'], 'state' => ['redirect_uri' => getglobal('siteurl') . 'oauth.php']]);
             $ret = $onedrive->refreshAccessToken($cloud['secret'], $arr['refresh_token']);
             if (is_array($ret) && isset($ret['error'])) return $ret;
-            $token = array();
+            $token = [];
             if ($ret['access_token']) {
                 $token['refresh_token'] = $ret['refresh_token'];
                 $token['access_token'] = $ret['access_token'];
@@ -151,7 +151,7 @@ class io_OneDrive extends io_api {
                 $onedrive->setState($token);
                 return $onedrive;
             } else {
-                return array('error' => lang('refresh_access_token'));
+                return ['error' => lang('refresh_access_token')];
             }
         }
         return false;
@@ -161,17 +161,17 @@ class io_OneDrive extends io_api {
         global $_G, $_GET;
         if (empty($_G['uid'])) {
             dsetcookie('_refer', rawurlencode(BASESCRIPT . '?mod=connect&op=oauth&bz=OneDrive'));
-            showmessage('to_login', '', array(), array('showmsg' => true, 'login' => 1));
+            showmessage('to_login', '', [], ['showmsg' => true, 'login' => 1]);
         }
         $cloud = C::t('connect')->fetch(self::BZ);
         $clientid = $cloud['key'];
-        $onedrive = new Client(array('client_id' => $clientid, 'state' => array('redirect_uri' => $_G['siteurl'] . 'oauth.php')));
+        $onedrive = new Client(['client_id' => $clientid, 'state' => ['redirect_uri' => $_G['siteurl'] . 'oauth.php']]);
         if (!empty($_GET['code'])) {
             $ret = $onedrive->obtainAccessToken($cloud['secret'], $_GET['code']);
             if ($ret['error']) exit($ret['error']);
 
             if ((($state = authcode($_GET['state'], 'DECODE')) == $cloud['key'] || $state == 'in_admin_' . $cloud['key']) && $ret['access_token']) {
-                $token = array();
+                $token = [];
                 $token['refreshtime'] = TIMESTAMP;
                 $token['uid'] = strpos($state, 'in_admin_') === 0 ? 0 : $_G['uid'];
                 $userinfo = $onedrive->fetchAccountInfo();
@@ -188,7 +188,7 @@ class io_OneDrive extends io_api {
                 $token['expires_in'] = $ret['expires_in'];
 
 
-                if ($id = DB::result_first("select id from %t where uid=%d and cuid=%d and bz='OneDrive'", array(self::T, $token['uid'], $token['cuid']))) {
+                if ($id = DB::result_first("select id from %t where uid=%d and cuid=%d and bz='OneDrive'", [self::T, $token['uid'], $token['cuid']])) {
                     C::t(self::T)->update($id, $token);
                 } else {
                     $token['bz'] = self::BZ;
@@ -196,14 +196,14 @@ class io_OneDrive extends io_api {
                     $id = C::t(self::T)->insert($token, 1);
                 }
                 if (strpos($state, 'in_admin_') === 0) { //插入企业盘空间库(local_storage);
-                    $setarr = array('name' => 'OneDrive：' . $token['cuid'],
+                    $setarr = ['name' => 'OneDrive：' . $token['cuid'],
                         'bz' => self::BZ,
                         'isdefault' => 0,
                         'dname' => self::T,
                         'did' => $id,
                         'dateline' => TIMESTAMP
-                    );
-                    if (!DB::result_first("select COUNT(*) from %t where did=%d and dname=%s", array('local_storage', $id, self::T))) {
+                    ];
+                    if (!DB::result_first("select COUNT(*) from %t where did=%d and dname=%s", ['local_storage', $id, self::T])) {
                         C::t('local_storage')->insert($setarr);
                     }
                 }
@@ -222,15 +222,15 @@ class io_OneDrive extends io_api {
         } else {
 
             $state = authcode(defined('IN_ADMIN') ? 'in_admin_' . $clientid : $clientid, 'ENCODE');
-            $url = $onedrive->getLogInUrl(array(
+            $url = $onedrive->getLogInUrl([
                     'wl.signin',
                     'wl.offline_access',
                     'onedrive.readwrite'
-                )
+                ]
                 , $_G['siteurl'] . 'oauth.php'
             );
             session_start();
-            $_SESSION['onedrive.oauth.state'] = array('state' => $state, 'bz' => self::BZ);
+            $_SESSION['onedrive.oauth.state'] = ['state' => $state, 'bz' => self::BZ];
             @header('Location: ' . $url);
             exit();
         }
@@ -244,7 +244,7 @@ class io_OneDrive extends io_api {
             $patharr[$key] = urlencode($value);
         }
         $path1 = implode('/', $patharr);
-        return array('bz' => $bzarr[0] . ':' . $bzarr[1] . ':', 'path' => $path1);
+        return ['bz' => $bzarr[0] . ':' . $bzarr[1] . ':', 'path' => $path1];
     }
 
     /**
@@ -261,7 +261,7 @@ class io_OneDrive extends io_api {
         if (is_array($onedrive) && $onedrive['error']) return $onedrive;
         $ret = $onedrive->fetchAccountInfo();
         if (isset($ret['error'])) return $ret;
-        $arr = array();
+        $arr = [];
         if ($ret['quota']['total']) $arr['quota'] = $ret['quota']['total'];
         if ($ret['quota']['used']) $arr['used'] = $ret['quota']['used'];
         return $arr;
@@ -282,7 +282,7 @@ class io_OneDrive extends io_api {
         if (empty($patharr[0])) unset($patharr[0]);
 
         //print_r($bzarr);exit($spath);
-        $folderarr = array();
+        $folderarr = [];
         for ($i = 0; $i <= count($patharr); $i++) {
             $path1 = $bzarr['bz'] . $this->_root;
             for ($j = 0; $j <= $i; $j++) {
@@ -305,7 +305,7 @@ class io_OneDrive extends io_api {
             $onedrive = $this->init($path, 1);
             $ret = $onedrive->createLink($bzarr['path'], $type);
         } catch (Exception $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
         if (isset($ret['error'])) return $ret;
         return $ret['link']['webUrl'];
@@ -322,7 +322,7 @@ class io_OneDrive extends io_api {
             if (isset($ret['error'])) return $ret;
             return $ret['@content.downloadUrl'];
         } catch (Exception $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
     }
     //获取文件流地址；
@@ -355,7 +355,7 @@ class io_OneDrive extends io_api {
             return 2;//已经存在缩略图
         }
         //调用挂载点程序生成缩略图绝对和相对地址；
-        $fileurls = array();
+        $fileurls = [];
         Hook::listen('thumbnail', $fileurls, $path);
         if ($fileurls) {
             //生成图片缩略图
@@ -371,7 +371,7 @@ class io_OneDrive extends io_api {
                 return 0;
             }
         } else {
-            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
+            $fileurls = ['fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path)];
         }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
@@ -405,7 +405,7 @@ class io_OneDrive extends io_api {
             IO::output_thumb($_G['setting']['attachdir'] . './' . $target);
         }
         //调用挂载点程序生成缩略图绝对和相对地址；
-        $fileurls = array();
+        $fileurls = [];
         Hook::listen('thumbnail', $fileurls, $path);
         if ($fileurls) {
             //生成图片缩略图
@@ -423,7 +423,7 @@ class io_OneDrive extends io_api {
                 IO::output_thumb($imgurl);
             }
         } else {
-            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
+            $fileurls = ['fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path)];
         }
         if (!is_string($fileurls['filedir'])) {
             header("HTTP/1.1 304 Not Modified");
@@ -468,7 +468,7 @@ class io_OneDrive extends io_api {
      */
     public function listFiles($path, $by = 'time', $order = 'desc', $limit = 200, $nextMarker = '') {
         global $_G, $_GET, $documentexts, $imageexts;
-        if ($limitarr = explode('-', $limit)) $limit = intval($limitarr[1] ? $limitarr[1] : $limitarr[0]);
+        if ($limitarr = explode('-', $limit)) $limit = intval($limitarr[1] ?: $limitarr[0]);
         if (empty($by) || $by == 'time') $by = 'lastModifiedDateTime';
         if (empty($order)) $order = 'desc';
 
@@ -479,11 +479,11 @@ class io_OneDrive extends io_api {
             $onedrive = $this->init($path, 1);
             if (is_array($onedrive) && $onedrive['error']) return $onedrive;
 
-            $data = array();
-            $icosdata = array();
-            $param = array('orderby' => $by . ' ' . strtolower($order),
+            $data = [];
+            $icosdata = [];
+            $param = ['orderby' => $by . ' ' . strtolower($order),
                 'top' => $limit
-            );
+            ];
             if ($nextMarker) $param['skiptoken'] = $nextMarker;
             if ($result = $onedrive->fetchChildren($path1, $param)) {
 
@@ -505,12 +505,12 @@ class io_OneDrive extends io_api {
             }
             return $icosdata;
         } catch (Exception $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
     }
 
     /*获取目录信息*/
-    public function getContains($path, $suborg = false, $contains = array('size' => 0, 'contain' => array(0, 0))) {
+    public function getContains($path, $suborg = false, $contains = ['size' => 0, 'contain' => [0, 0]]) {
         foreach ($this->listFiles($path) as $value) {
             if ($value['type'] == 'folder') {
                 $contains = $this->getContains($value['path'], false, $contains);
@@ -530,7 +530,7 @@ class io_OneDrive extends io_api {
 	*/
     public function getMeta($path, $force = 0) {
         global $_G, $_GET, $documentexts, $imageexts;
-        $icosdata = array();
+        $icosdata = [];
         $bzarr = $this->parsePath($path);
         $bz = $bzarr['bz'];
         $path1 = $bzarr['path'];
@@ -540,16 +540,15 @@ class io_OneDrive extends io_api {
         if (is_array($onedrive) && $onedrive['error']) return $onedrive;
         //exit($path1.'==='.$path.'==='.$bz);
         $meta = $onedrive->fetchObject($path1);
-        if ($meta['error']) return array('error' => $meta['error']);
-        $icosdata = $this->_formatMeta($meta, $bz, $path);
-        return $icosdata;
+        if ($meta['error']) return ['error' => $meta['error']];
+        return $this->_formatMeta($meta, $bz, $path);
     }
 
     //将api获取的meta数据转化为icodata
     public function _formatMeta($meta, $bz, $path) {
         global $_G, $documentexts, $imageexts;
         //判断是否为根目录
-        $icosdata = array();
+        $icosdata = [];
         if ($this->uid) {
             $uid = $this->uid;
             $userinfo = getuserbyuid($uid);
@@ -561,14 +560,14 @@ class io_OneDrive extends io_api {
         $meta['id'] = md5($meta['id']);//str_replace('!','%',$meta['id']);
         if ($meta['folder']) {
             $rid = md5($path);
-            $icoarr = array(
+            $icoarr = [
                 'icoid' => $rid,
                 'rid' => $rid,
                 'path' => $path,
                 'dpath' => dzzencode($path),
                 'bz' => ($bz),
                 'gid' => 0,
-                'name' => $meta['name'] ? $meta['name'] : '',
+                'name' => $meta['name'] ?: '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -583,7 +582,7 @@ class io_OneDrive extends io_api {
                 'childCount' => $meta['folder']['childCount'],
                 'preview' => $this->preview,
                 'sid' => $this->sharesid
-            );
+            ];
             if ($path == $bz) {
                 $icoarr['name'] = $this->_rootname;
                 $icoarr['flag'] = self::BZ;
@@ -591,14 +590,6 @@ class io_OneDrive extends io_api {
                 $icoarr['path'] = $bz;
                 $icoarr['dpath'] = dzzencode($bz);
             }
-            /* print_r($icoarr);
-				echo (str_replace(strrchr($path, '/'), '',$path));*/
-            $icoarr['fsize'] = formatsize($icoarr['size']);
-            $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
-            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
-            $icosdata = $icoarr;
-
         } else {
             $ext = substr(strrchr($meta['name'], '.'), 1);
             if (in_array($ext, $imageexts)) $type = 'image';
@@ -613,14 +604,14 @@ class io_OneDrive extends io_api {
                 $url = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=getStream&path=' . dzzencode($path) . '&n=' . urlencode($meta['name']);
             }
             $rid = md5($path);
-            $icoarr = array(
+            $icoarr = [
                 'icoid' => $rid,
                 'rid' => $rid,
                 'path' => $path,
                 'dpath' => dzzencode($path),
                 'bz' => ($bz),
                 'gid' => 0,
-                'name' => $meta['name'] ? $meta['name'] : '',
+                'name' => $meta['name'] ?: '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -635,25 +626,22 @@ class io_OneDrive extends io_api {
                 'flag' => '',
                 'preview' => $this->preview,
                 'sid' => $this->sharesid
-            );
-
-            $icoarr['fsize'] = formatsize($icoarr['size']);
-            $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
-            $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
-            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
-            $icosdata = $icoarr;
+            ];
+            $icoarr['ffsize'] = lang('property_info_size', ['fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']]);
         }
-
-        return $icosdata;
+        $icoarr['fsize'] = formatsize($icoarr['size']);
+        $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
+        if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+        else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+        return $icoarr;
     }
 
     //通过icosdata获取folderdata数据
     public function getFolderByIcosdata($icosdata) {
         global $_GET;
-        $folder = array();
+        $folder = [];
         if ($icosdata['type'] == 'folder') {
-            $folder = array('fid' => $icosdata['oid'],
+            $folder = ['fid' => $icosdata['oid'],
                 'path' => $icosdata['path'],
                 'fname' => $icosdata['name'],
                 'uid' => $icosdata['uid'],
@@ -666,7 +654,7 @@ class io_OneDrive extends io_api {
                 'ppath' => $icosdata['ppath'],
                 'childCount' => $icosdata['childCount'],
                 'fsperm' => perm_FolderSPerm::flagPower('external')
-            );
+            ];
 
         }
         return $folder;
@@ -692,7 +680,7 @@ class io_OneDrive extends io_api {
         $onedrive = $this->init($bz, 1);
         if (is_array($onedrive) && $onedrive['error']) return $onedrive;
         $meta = $onedrive->createFile($path1, $filename, $data);
-        if ($meta['error']) return array('error' => $meta['error']);
+        if ($meta['error']) return ['error' => $meta['error']];
         $icoarr = $this->_formatMeta($meta, $bz, $path);
         if ($icoarr['type'] == 'image') {
             $this->deleteThumb($path);
@@ -711,8 +699,8 @@ class io_OneDrive extends io_api {
         $ext = strtolower(substr(strrchr($path, '.'), 1));
         $name = ($ext ? (str_replace('.', '_', preg_replace("/\.\w+$/i", '', $name)) . '.' . $ext) : $name);
         $name = IO::name_filter($name);
-        $meta = $onedrive->updateObject($path1, array('name' => $name));
-        if ($meta['error']) return array('error' => $meta['error']);
+        $meta = $onedrive->updateObject($path1, ['name' => $name]);
+        if ($meta['error']) return ['error' => $meta['error']];
         return $this->_formatMeta($meta, $bz, $path);
     }
 
@@ -725,7 +713,7 @@ class io_OneDrive extends io_api {
         $bzarr = $this->parsePath($path);
         $bz = $bzarr['bz'];
         $path1 = $bzarr['path'];
-        $return = array();
+        $return = [];
         try {
             $onedrive = $this->init($bz);
             if (is_array($onedrive) && $onedrive['error']) return $onedrive;
@@ -736,10 +724,10 @@ class io_OneDrive extends io_api {
             }
             $icoarr = $this->_formatMeta($ret, $bz, $path . '/' . $fname);
             $folderarr = $this->getFolderByIcosdata($icoarr);
-            $return = array('folderarr' => $folderarr, 'icoarr' => $icoarr);
+            $return = ['folderarr' => $folderarr, 'icoarr' => $icoarr];
         } catch (Exception $e) {
             //var_dump($e);
-            $return = array('error' => $e->getMessage());
+            $return = ['error' => $e->getMessage()];
         }
         return $return;
     }
@@ -767,7 +755,7 @@ class io_OneDrive extends io_api {
     }
 
     public function getFolderInfo($paths, $position = '', &$zip) {
-        static $data = array();
+        static $data = [];
         try {
             foreach ($paths as $path) {
                 $onedrive = $this->init($path, 1);
@@ -777,7 +765,7 @@ class io_OneDrive extends io_api {
                     case 'folder':
                         $lposition = $position . $meta['name'] . '/';
                         $contents = $this->listFiles($path);
-                        $arr = array();
+                        $arr = [];
                         foreach ($contents as $key => $value) {
                             $arr[] = $value['path'];
                         }
@@ -817,15 +805,14 @@ class io_OneDrive extends io_api {
             $file = $this->getMeta($path);
             if ($file['type'] == 'folder') {//目录压缩下载
                 $this->zipdownload($path, $filename);
-                exit();
             } else {//文件直接跳转到文件源地址；不再通过服务器中转
                 /*@header("Location: $url");
 				exit();*/
                 $file['name'] = '"' . (strtolower(CHARSET) == 'utf-8' && (strexists($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strexists($_SERVER['HTTP_USER_AGENT'], 'Edge') || strexists($_SERVER['HTTP_USER_AGENT'], 'rv:11')) ? urlencode($file['name']) : $file['name']) . '"';
                 $d = new FileDownload();
                 $d->download($url, $file['name'], $file['size'], $file['dateline'], true);
-                exit();
             }
+            exit();
 
 
         } catch (Exception $e) {
@@ -840,10 +827,10 @@ class io_OneDrive extends io_api {
 	 * param $file:文件路径（可以是url路径，需要服务器开启allow_url_fopen);
 	*/
 
-    public function multiUpload($opath, $path, $filename, $attach = array(), $ondup = "rename") {
+    public function multiUpload($opath, $path, $filename, $attach = [], $ondup = "rename") {
         global $_G;
 
-        $partsize = 1024 * 1024 * 1; //分块大小2M
+        $partsize = 1024 * 1024; //分块大小2M
         if ($attach) {
             $data = $attach;
             $data['size'] = $attach['filesize'];
@@ -853,24 +840,24 @@ class io_OneDrive extends io_api {
         }
         $size = $data['size'];
         if (is_array($filepath = IO::getStream($opath))) {
-            return array('error' => $filepath['error']);
+            return ['error' => $filepath['error']];
         }
 
         if ($size < $partsize) {
             //获取文件内容
             if (!$handle = fopen($filepath, 'rb')) {
-                return array('error' => lang('open_file_error'));
+                return ['error' => lang('open_file_error')];
             }
             while (!feof($handle)) {
                 $fileContent .= fread($handle, 8192);
                 //if(strlen($fileContent)==0) return array('error'=>'文件不存在');
             }
-            return $this->upload_by_content($fileContent, $path, $filename, array(), $ondup);
+            return $this->upload_by_content($fileContent, $path, $filename, [], $ondup);
         } else { //分片上传
             $this->deleteCache($path . '/' . $filename);
-            $partinfo = array('ispart' => true, 'partnum' => 0, 'iscomplete' => false);
+            $partinfo = ['ispart' => true, 'partnum' => 0, 'iscomplete' => false];
             if (!$handle = fopen($filepath, 'rb')) {
-                return array('error' => lang('open_file_error'));
+                return ['error' => lang('open_file_error')];
             }
             $cachefile = $_G['setting']['attachdir'] . './cache/' . md5($opath) . random(5) . '.dzz';
             $start = 0;
@@ -931,13 +918,13 @@ class io_OneDrive extends io_api {
             if (is_array($onedrive) && $onedrive['error']) return $onedrive;
             $response = $onedrive->deleteObject($path1);
             if ($response['error']) {
-                return array('icoid' => $rid, 'rid' => $rid, 'error' => $response['error']);
+                return ['icoid' => $rid, 'rid' => $rid, 'error' => $response['error']];
             }
-            return array('icoid' => $rid, 'rid' => $rid,
+            return ['icoid' => $rid, 'rid' => $rid,
                 'name' => substr(strrchr($path, '/'), 1),
-            );
+            ];
         } catch (Exception $e) {
-            return array('icoid' => $rid, 'rid' => $rid, 'error' => $e->getMessage());
+            return ['icoid' => $rid, 'rid' => $rid, 'error' => $e->getMessage()];
         }
     }
 
@@ -945,7 +932,7 @@ class io_OneDrive extends io_api {
     public function getFolderName($name, $path) {
         static $i = 0;
         if (!$this->icosdatas) $this->icosdatas = $this->listFiles($path);
-        $names = array();
+        $names = [];
         foreach ($icosdatas as $value) {
             $names[] = $value['name'];
         }
@@ -959,7 +946,7 @@ class io_OneDrive extends io_api {
     }
 
     private function getPartInfo($content_range) {
-        $arr = array();
+        $arr = [];
         if (!$content_range) {
             $arr['ispart'] = false;
             $arr['iscomplete'] = true;
@@ -989,11 +976,11 @@ class io_OneDrive extends io_api {
         global $_G;
         $cachekey = 'onedrive_upload_' . md5($path);
 
-        C::t('cache')->insert(array(
+        C::t('cache')->insert([
             'cachekey' => $cachekey,
             'cachevalue' => serialize($data),
             'dateline' => $_G['timestamp'],
-        ), false, true);
+        ], false, true);
     }
 
     private function deleteCache($path) {
@@ -1069,7 +1056,7 @@ class io_OneDrive extends io_api {
     }
 
     public function uploadStream($file, $filename, $path, $relativePath, $content_range) {
-        $data = array();
+        $data = [];
 
         //处理目录(没有分片或者最后一个分片时创建目录
         $arr = $this->getPartInfo($content_range);
@@ -1088,15 +1075,11 @@ class io_OneDrive extends io_api {
 
                 if (intval($re['code']) == 'nameAlreadyExists') {
                     continue;
-                } else {
-                    if (isset($re['error'])) {
-                        return $re;
-                    } else {
-                        if ($key == 0) {
-                            $data['icoarr'][] = $re['icoarr'];
-                            $data['folderarr'][] = $re['folderarr'];
-                        }
-                    }
+                } elseif (isset($re['error'])) {
+                    return $re;
+                } elseif ($key == 0) {
+                    $data['icoarr'][] = $re['icoarr'];
+                    $data['folderarr'][] = $re['folderarr'];
                 }
             }
             //$path.='/'.implode('/',$patharr);
@@ -1121,15 +1104,14 @@ class io_OneDrive extends io_api {
 
             if (empty($re1['error'])) {
                 $data['icoarr'][] = $re1;
-                return $data;
             } else {
                 $data['error'] = $re1['error'];
-                return $data;
             }
+            return $data;
         }
     }
 
-    public function upload_by_content($fileContent, $path, $filename, $partinfo = array(), $ondup = 'rename') {
+    public function upload_by_content($fileContent, $path, $filename, $partinfo = [], $ondup = 'rename') {
         $cachefile = getglobal('setting/attachdir') . 'cache/' . random(10) . '_' . $filename;
         file_put_contents($cachefile, $fileContent);
         $ret = $this->upload($cachefile, $path, $filename, $partinfo, $ondup);
@@ -1137,7 +1119,7 @@ class io_OneDrive extends io_api {
         return $ret;
     }
 
-    public function upload($file, $path, $filename, $partinfo = array()) {
+    public function upload($file, $path, $filename, $partinfo = []) {
         global $_G;
         //$path.=$filename;
         $arr = $this->parsePath($path);
@@ -1150,18 +1132,18 @@ class io_OneDrive extends io_api {
                     //初始化分块
                     $response = $onedrive->createSession($arr['path'], $filename);
                     if (empty($response['uploadUrl'])) {
-                        return array('error' => 'upload.createSession failure ' . $response['error']);
+                        return ['error' => 'upload.createSession failure ' . $response['error']];
                     }
                     $uploadUrl = $response['uploadUrl'];
                     //上传分块
                     $ret = $onedrive->uploadFragment($uploadUrl, $file, $partinfo['Content-Range']);
                     if ($ret['error']) {
                         $onedrive->cancelSession($uploadUrl);
-                        return array('error' => 'upload partNember 1 error ' . $ret['error']);
+                        return ['error' => 'upload partNember 1 error ' . $ret['error']];
                     }
 
 
-                    $data = array();
+                    $data = [];
                     $data['uploadUrl'] = $uploadUrl;
                     $data['filesize'] = filesize($file);
                     $data['partnum'] = 1;
@@ -1173,17 +1155,13 @@ class io_OneDrive extends io_api {
                     //上传分块
                     $ret = $onedrive->uploadFragment($uploadUrl, $file, $partinfo['Content-Range']);
 
+                    $this->deleteCache($path);
                     if ($ret['error']) {
-                        $this->deleteCache($path);
                         $onedrive->cancelSession($uploadUrl);
-                        return array('error' => 'upload partNember ' . $cache['partnum'] . ' error ' . $ret['error']);
+                        return ['error' => 'upload partNember ' . $cache['partnum'] . ' error ' . $ret['error']];
                     }
 
-                    $this->deleteCache($path);
-
-                    $icoarr = $this->_formatMeta($ret, $arr['bz'], $path . '/' . $filename);
-
-                    return $icoarr;
+                    return $this->_formatMeta($ret, $arr['bz'], $path . '/' . $filename);
 
                 } else {
                     $cache = $this->getCache($path);
@@ -1194,7 +1172,7 @@ class io_OneDrive extends io_api {
                     if ($ret['error']) {
                         $this->deleteCache($path);
                         $onedrive->cancelSession($uploadUrl);
-                        return array('error' => 'upload partNember ' . $cache['partnum'] . ' error ' . $ret['error']);
+                        return ['error' => 'upload partNember ' . $cache['partnum'] . ' error ' . $ret['error']];
                     }
 
                     //print_r($cache);
@@ -1212,15 +1190,13 @@ class io_OneDrive extends io_api {
                     return $meta;
                 }
 
-                $icoarr = $this->_formatMeta($meta, $arr['bz'], $path . '/' . $filename);
-
-                return $icoarr;
+                return $this->_formatMeta($meta, $arr['bz'], $path . '/' . $filename);
             }
         } catch (Exception $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
 
     }
 }
 
-?>
+

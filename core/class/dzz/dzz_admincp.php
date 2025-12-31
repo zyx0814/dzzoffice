@@ -8,15 +8,15 @@ class dzz_admincp {
     var $script = null;
 
     var $userlogin = false;
-    var $adminsession = array();
-    var $adminuser = array();
+    var $adminsession = [];
+    var $adminuser = [];
     var $perms = null;
 
     var $panel = 1;
 
     var $isfounder = false;
 
-    var $cpsetting = array();
+    var $cpsetting = [];
 
     var $cpaccess = 0;
 
@@ -51,13 +51,13 @@ class dzz_admincp {
 
     function writecplog() {
         global $_G;
-        $extralog = implodearray(array('GET' => $_GET, 'POST' => $_POST), array('formhash', 'submit', 'addsubmit', 'admin_password', 'sid', 'action'));
+        $extralog = implodearray(['GET' => $_GET, 'POST' => $_POST], ['formhash', 'submit', 'addsubmit', 'admin_password', 'sid', 'action']);
         writelog('cplog', $extralog);
     }
 
     function check_cpaccess() {
         global $_G;
-        $session = array();
+        $session = [];
 
         if (!$this->adminuser['uid']) {
             $this->cpaccess = 0;
@@ -66,7 +66,7 @@ class dzz_admincp {
                 $session = C::t('user')->fetch($this->adminuser['uid']);
                 if ($session && ($session['groupid']==1)) {
                     $session = array_merge($session, (array)C::t('admincp_session')->fetch($this->adminuser['uid'], $session['groupid']));
-                } else $session = array();
+                } else $session = [];
             } else {
                 $session = C::t('admincp_session')->fetch($this->adminuser['uid'], $this->panel);
             }
@@ -113,17 +113,17 @@ class dzz_admincp {
 
         if ($this->cpaccess == 1) {
             C::t('admincp_session')->delete($this->adminuser['uid'], $this->adminuser['groupid'], $this->sessionlife);
-            C::t('admincp_session')->insert(array(
+            C::t('admincp_session')->insert([
                 'uid' => $this->adminuser['uid'],
                 'adminid' => $this->adminuser['adminid'],
                 'panel' => $this->adminuser['groupid'],
                 'ip' => $this->core->var['clientip'],
                 'dateline' => TIMESTAMP,
                 'errorcount' => 0,
-            ));
+            ]);
         } elseif ($this->cpaccess == 3) {
             //$this->load_admin_perms();
-            C::t('admincp_session')->update($this->adminuser['uid'], $this->adminuser['groupid'], array('dateline' => TIMESTAMP, 'ip' => $this->core->var['clientip'], 'errorcount' => -1));
+            C::t('admincp_session')->update($this->adminuser['uid'], $this->adminuser['groupid'], ['dateline' => TIMESTAMP, 'ip' => $this->core->var['clientip'], 'errorcount' => -1]);
         }
 
         if ($this->cpaccess != 3) {
@@ -140,11 +140,11 @@ class dzz_admincp {
         require_once DZZ_ROOT . '/user/function/function_user.php';
         $ucresult = uc_user_login($this->adminuser['uid'], $_POST['admin_password'], 1, 1, $_POST['admin_questionid'], $_POST['admin_answer'], $this->core->var['clientip']);
         if ($ucresult[0] > 0) {
-            C::t('admincp_session')->update($this->adminuser['uid'], $this->adminuser['groupid'], array('dateline' => TIMESTAMP, 'ip' => $this->core->var['clientip'], 'errorcount' => -1));
-            dheader('Location: ' . BASESCRIPT . '?' . cpurl('url', array('sid')));
+            C::t('admincp_session')->update($this->adminuser['uid'], $this->adminuser['groupid'], ['dateline' => TIMESTAMP, 'ip' => $this->core->var['clientip'], 'errorcount' => -1]);
+            dheader('Location: ' . BASESCRIPT . '?' . cpurl('url', ['sid']));
         } else {
             $errorcount = $this->adminsession['errorcount'] + 1;
-            C::t('admincp_session')->update($this->adminuser['uid'], $this->adminuser['groupid'], array('dateline' => TIMESTAMP, 'ip' => $this->core->var['clientip'], 'errorcount' => $errorcount));
+            C::t('admincp_session')->update($this->adminuser['uid'], $this->adminuser['groupid'], ['dateline' => TIMESTAMP, 'ip' => $this->core->var['clientip'], 'errorcount' => $errorcount]);
         }
     }
 
@@ -161,13 +161,13 @@ class dzz_admincp {
                 if ($result['status'] == 1) {
 
                     if ($this->checkfounder($result['member']) || $result['member']['groupid'] == 1) {
-                        C::t('admincp_session')->insert(array(
+                        C::t('admincp_session')->insert([
                             'uid' => $result['member']['uid'],
                             'adminid' => $result['member']['adminid'],
                             'panel' => $result['member']['groupid'],
                             'dateline' => TIMESTAMP,
                             'ip' => $this->core->var['clientip'],
-                            'errorcount' => -1), false, true);
+                            'errorcount' => -1], false, true);
 
                         setloginstatus($result['member'], 0);
                         dheader('Location: ' . $_SERVER['HTTP_REFERER']);
@@ -204,7 +204,7 @@ class dzz_admincp {
 
     function do_user_login() {
         if($_GET['ajaxdata'] == 'json') {
-            exit(json_encode(array('code' => 1, 'msg' => '管理员登录状态失效，请重新登录！')));
+            exit(json_encode(['code' => 1, 'msg' => '管理员登录状态失效，请重新登录！']));
         }
         require $this->admincpfile('login');
     }
@@ -218,4 +218,3 @@ class dzz_admincp {
     }
 }
 
-?>

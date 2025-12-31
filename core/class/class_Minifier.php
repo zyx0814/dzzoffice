@@ -81,7 +81,7 @@ class Minifier
      *
      * @var array
      */
-    protected static $defaultOptions = array('flaggedComments' => true);
+    protected static $defaultOptions = ['flaggedComments' => true];
 
     /**
      * Contains lock ids which are used to replace certain code patterns and
@@ -89,7 +89,7 @@ class Minifier
      *
      * @var array
      */
-    protected $locks = array();
+    protected $locks = [];
 
     /**
      * Takes a string containing javascript and removes unneeded characters in
@@ -100,7 +100,7 @@ class Minifier
      * @throws \Exception
      * @return bool|string
      */
-    public static function minify($js, $options = array())
+    public static function minify($js, $options = [])
     {
         try {
             ob_start();
@@ -191,6 +191,7 @@ class Minifier
                     // string/regex check below, resetting $this->b with getReal
                     if($this->b === ' ')
                         break;
+                    break;
 
                 // otherwise we treat the newline like a space
 
@@ -219,12 +220,13 @@ class Minifier
                         case ' ':
                             if(!static::isAlphaNumeric($this->a))
                                 break;
+                            break;
 
                         default:
                             // check for some regex that breaks stuff
                             if ($this->a === '/' && ($this->b === '\'' || $this->b === '"')) {
                                 $this->saveRegex();
-                                continue;
+                                break;
                             }
 
                             echo $this->a;
@@ -474,7 +476,6 @@ class Minifier
                 // block below.
                 case "\n":
                     throw new \RuntimeException('Unclosed string at position: ' . $startpos );
-                    break;
 
                 // Escaped characters get picked up here. If it's an escaped new line it's not really needed
                 case '\\':
@@ -551,7 +552,7 @@ class Minifier
         /* lock things like <code>"asd" + ++x;</code> */
         $lock = '"LOCK---' . crc32(time()) . '"';
 
-        $matches = array();
+        $matches = [];
         preg_match('/([+-])(\s+)([+-])/S', $js, $matches);
         if (empty($matches)) {
             return $js;
@@ -559,10 +560,9 @@ class Minifier
 
         $this->locks[$lock] = $matches[2];
 
-        $js = preg_replace('/([+-])\s+([+-])/S', "$1{$lock}$2", $js);
         /* -- */
 
-        return $js;
+        return preg_replace('/([+-])\s+([+-])/S', "$1{$lock}$2", $js);
     }
 
     /**

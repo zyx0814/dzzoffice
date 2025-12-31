@@ -579,7 +579,7 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	public function allDrawings(PHPExcel $pPHPExcel = null)
 	{
 		// Get an array of all drawings
-		$aDrawings	= array();
+		$aDrawings	= [];
 
 		// Loop through PHPExcel
 		$sheetCount = $pPHPExcel->getSheetCount();

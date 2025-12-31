@@ -70,7 +70,7 @@ class memory_driver_redis {
 
     function getMulti($keys) {
         $result = $this->obj->mGet($keys);
-        $newresult = array();
+        $newresult = [];
         $index = 0;
         foreach ($keys as $key) {
             if ($result[$index] !== false) {
@@ -98,7 +98,7 @@ class memory_driver_redis {
     }
 
     function add($key, $value, $ttl = 0) {
-		if ($ttl > 0) return $this->obj->set($key, $value, array('nx', 'ex' => $ttl));
+		if ($ttl > 0) return $this->obj->set($key, $value, ['nx', 'ex' => $ttl]);
 		return $this->obj->setnx($key, $value);
 	}
 
@@ -122,7 +122,7 @@ class memory_driver_redis {
 
     function incex($key, $step = 1) {
 		$script = "if redis.call('exists', ARGV[1]) == 1 then return redis.call('incrby', ARGV[1], ARGV[2]) end";
-		return $this->evalscript($script, array($key, $step));
+		return $this->evalscript($script, [$key, $step]);
 	}
 
     function dec($key, $step = 1) {
@@ -274,4 +274,3 @@ class memory_driver_redis {
 	}
 }
 
-?>

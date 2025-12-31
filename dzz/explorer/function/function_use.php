@@ -2,23 +2,23 @@
 
 //解析类型条件
 function parsefileType($type) {
-    $ext = array();
+    $ext = [];
     $extstr = '';
     switch ($type) {
         case 'image' :
-            $ext = array('jpg', 'png', 'gif', 'jpeg');
+            $ext = ['jpg', 'png', 'gif', 'jpeg'];
             break;
         case 'pdf':
-            $ext = array('pdf');
+            $ext = ['pdf'];
             break;
         case 'document':
-            $ext = array('doc', 'docx', 'xls', 'ppt', 'pdf', 'dzzdoc', 'txt', 'html');
+            $ext = ['doc', 'docx', 'xls', 'ppt', 'pdf', 'dzzdoc', 'txt', 'html'];
             break;
         case 'excel':
-            $ext = array('xlsx', 'xls');
+            $ext = ['xlsx', 'xls'];
             break;
         case 'ppt':
-            $ext = array('ppt', 'pptx');
+            $ext = ['ppt', 'pptx'];
             break;
     }
     return $ext;
@@ -26,7 +26,7 @@ function parsefileType($type) {
 
 //解析位置标志条件
 function parsePositionFlag($flags) {
-    $positionarr = array();
+    $positionarr = [];
     foreach ($flags as $flag) {
         switch ($flag) {
             case 'isstarted':
@@ -36,10 +36,10 @@ function parsePositionFlag($flags) {
                     $ridstr .= "'" . $v['rid'] . "'" . ',';
                 }
                 $ridstr = substr($ridstr, 0, -1);
-                $positionarr['rid'] = array($ridstr, 'in', 'and');
+                $positionarr['rid'] = [$ridstr, 'in', 'and'];
                 break;
             case 'isdelete':
-                $positionarr['isdelete'] = array(0, '>', 'and');
+                $positionarr['isdelete'] = [0, '>', 'and'];
                 break;
             default :
 
@@ -75,13 +75,13 @@ function parsePositionFlag($flags) {
 }*/
 //解析用户条件
 function parseUsers($users) {
-    $conditionarr = array();
+    $conditionarr = [];
     switch ($users) {
         case 'self':
-            $conditionarr = array(getglobal('uid'), '=', 'and');
+            $conditionarr = [getglobal('uid'), '=', 'and'];
             break;
         case 'noself':
-            $conditionarr = array(' uid != ' . getglobal('uid') . ' and gid != 0 ', 'stringsql', 'and');
+            $conditionarr = [' uid != ' . getglobal('uid') . ' and gid != 0 ', 'stringsql', 'and'];
             break;
         default :
             $userstr = '';

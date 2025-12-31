@@ -18,7 +18,7 @@ class MultipartUpload {
     private $options;
     private $partSize;
 
-    public function __construct($client, $body, $options = array()) {
+    public function __construct($client, $body, $options = []) {
         $this->client = $client;
         $this->body = $body;
         $this->options = $options;
@@ -30,7 +30,7 @@ class MultipartUpload {
         $rt = $this->initiateMultipartUpload();
         $uploadId = $rt['UploadId'];
         $partNumber = 1;
-        $parts = array();
+        $parts = [];
         for (;;) {
             if ($this->body->eof()) {
                 break;
@@ -39,25 +39,25 @@ class MultipartUpload {
             if (empty($body)) {
                 break;
             }
-            $result = $this->client->uploadPart(array(
+            $result = $this->client->uploadPart([
                         'Bucket' => $this->options['Bucket'],
                         'Key' => $this->options['Key'],
                         'Body' => $body,
                         'UploadId' => $uploadId,
-                        'PartNumber' => $partNumber));
+                        'PartNumber' => $partNumber]);
             if (md5($body) != substr($result['ETag'], 1, -1)){
                 throw new CosException("ETag check inconsistency");
             }
-            $part = array('PartNumber' => $partNumber, 'ETag' => $result['ETag']);
-            array_push($parts, $part);
+            $part = ['PartNumber' => $partNumber, 'ETag' => $result['ETag']];
+            $parts[] = $part;
             ++$partNumber;
         }
         try {
-            $rt = $this->client->completeMultipartUpload(array(
+            $rt = $this->client->completeMultipartUpload([
                 'Bucket' => $this->options['Bucket'],
                 'Key' => $this->options['Key'],
                 'UploadId' => $uploadId,
-                'Parts' => $parts));
+                'Parts' => $parts]);
         } catch(\Exception $e){
             throw $e;
         }
@@ -67,13 +67,13 @@ class MultipartUpload {
     public function resumeUploading() {
         $uploadId = $this->options['UploadId'];
         $rt = $this->client->ListParts(
-            array('UploadId' => $uploadId,
+            ['UploadId' => $uploadId,
                 'Bucket'=>$this->options['Bucket'],
-                'Key'=>$this->options['Key']));
-                $parts = array();
+                'Key'=>$this->options['Key']]);
+                $parts = [];
         if (count($rt['Parts']) > 0) {
             foreach ($rt['Parts'] as $part) {
-                $parts[$part['PartNumber'] - 1] = array('PartNumber' => $part['PartNumber'], 'ETag' => $part['ETag']);
+                $parts[$part['PartNumber'] - 1] = ['PartNumber' => $part['PartNumber'], 'ETag' => $part['ETag']];
             }
         }
         for ($partNumber = 1;;++$partNumber) {
@@ -90,37 +90,33 @@ class MultipartUpload {
                 continue;
             }
 
-            $result = $this->client->uploadPart(array(
+            $result = $this->client->uploadPart([
                 'Bucket' => $this->options['Bucket'],
                 'Key' => $this->options['Key'],
                 'Body' => $body,
                 'UploadId' => $uploadId,
-                'PartNumber' => $partNumber));
+                'PartNumber' => $partNumber]);
             if (md5($body) != substr($result['ETag'], 1, -1)){
                 throw new CosException("ETag check inconsistency");
             }
-            $parts[$partNumber-1] = array('PartNumber' => $partNumber, 'ETag' => $result['ETag']);
+            $parts[$partNumber-1] = ['PartNumber' => $partNumber, 'ETag' => $result['ETag']];
 
         }
-        $rt = $this->client->completeMultipartUpload(array(
+        return $this->client->completeMultipartUpload([
             'Bucket' => $this->options['Bucket'],
             'Key' => $this->options['Key'],
             'UploadId' => $uploadId,
-            'Parts' => $parts));
-        return $rt;
+            'Parts' => $parts]);
     }
 
     private function calculatePartSize($minPartSize) {
         $partSize = intval(ceil(($this->body->getSize() / self::MAX_PARTS)));
         $partSize = max($minPartSize, $partSize);
         $partSize = min($partSize, self::MAX_PART_SIZE);
-        $partSize = max($partSize, self::MIN_PART_SIZE);
-
-        return $partSize;
+        return max($partSize, self::MIN_PART_SIZE);
     }
 
     private function initiateMultipartUpload() {
-        $result = $this->client->createMultipartUpload($this->options);
-        return $result;
+        return $this->client->createMultipartUpload($this->options);
     }
 }

@@ -22,4 +22,4 @@ class table_wx_app extends dzz_table {
 
 }
 
-?>
+

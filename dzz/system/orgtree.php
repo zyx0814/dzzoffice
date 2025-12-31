@@ -35,7 +35,7 @@ if ($_GET['do'] == 'orgtree') {
         $type = "disabled";
     }
 
-    $data = array();
+    $data = [];
     if ($_GET['id'] == '#') {
         if ($_G['adminid'] != 1 && $moderator) $topids = C::t('organization_admin')->fetch_toporgids_by_uid($_G['uid']);
         foreach (C::t('organization')->fetch_all_by_forgid($id) as $value) {
@@ -57,12 +57,12 @@ if ($_GET['do'] == 'orgtree') {
                 $orgdisable = true;
                 $orgtype = 'disable';
             }
-            $arr = array(
+            $arr = [
                 'id' => $value['orgid'],
                 'text' => $value['orgname'],
-                'state' => array('disabled' => $orgdisable),
+                'state' => ['disabled' => $orgdisable],
                 "type" => $orgtype,
-                'children' => true);
+                'children' => true];
 
             if (preg_match('/^\d+$/', $value['aid']) && $value['aid'] > 0) {
                 $arr['text'] = $value['orgname'];
@@ -74,95 +74,92 @@ if ($_GET['do'] == 'orgtree') {
             $data[] = $arr;
         }
         if ($stype != 1 && $range < 2 || $stype == 2 && $onlymyorg == 1) {
-            $data[] = array('id' => 'other', 'text' => $zero, 'state' => array('disabled' => $disable), "type" => ($type == "disabled") ? $type : 'default', 'children' => true);
+            $data[] = ['id' => 'other', 'text' => $zero, 'state' => ['disabled' => $disable], "type" => ($type == "disabled") ? $type : 'default', 'children' => true];
         }
 
-    } else {
-        //获取用户列表
-        if ($_GET['id'] == 'other') {//无机构用户
-            if (($moderator && $_G['adminid'] != 1) || $nouser || $stype == 1) {
-            } else {
-                $isother = true;
-                //仅显示我所在的部门时，有部门的用户则不显示
-                if ($_G['adminid'] != 1 && $onlymyorg && C::t('organization_user')->fetch_num_by_uid($_G['uid'])) {
-                    $isother = false;
-                }
-                if ($isother) {
-                    $datas = array();
-                    foreach (C::t('organization_user')->fetch_user_not_in_orgid($limit) as $value) {
-                        $datas[] = array(
-                            'id' => 'uid_' . $value['uid'],
-                            'text' => $value['username'] . '<em class="hide">' . $value['email'] . '</em>',
-                            'icon' => 'dzz/system/images/user.png',
-                            'state' => array('disabled' => $disable),
-                            "type" => $type,
-                            'li_attr' => array(
-                                'uid' => $value['uid'],
-                                'username' => $value['username'],
-                                'avatarstatus' => $value['avatarstatus'],
-                                'headerColor'  => $value['headerColor'],
-                            )
-                        );
-                    }
-                    getuserIcon($datas, $data);
-                }
-            }
+    } elseif ($_GET['id'] == 'other') {//获取用户列表，无机构用户
+        if (($moderator && $_G['adminid'] != 1) || $nouser || $stype == 1) {
         } else {
-            foreach (C::t('organization')->fetch_all_by_forgid($id) as $value) {
-                //仅显示我所在的部门时，判断用户是否在该部门中
-                if ($_G['adminid'] != 1 && $onlymyorg && !C::t('organization')->ismember($value['orgid'], $_G['uid'])) continue;
-                if (!$moderator || C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'], $_G['uid'])) {
-                    $orgdisable = '';
-                    $orgtype = 'organization';
-                } else {
-                    $orgdisable = '"disabled":true,';
-                    $orgtype = 'disabled';
-                }
-                $arr = array(
-                    'id' => $value['orgid'],
-                    'text' => $value['orgname'],
-                    'state' => array('disabled' => $orgdisable),
-                    "type" => $orgtype,
-                    'children' => true);
-
-                if (preg_match('/^\d+$/', $value['aid']) && $value['aid'] > 0) {
-                    $arr['text'] = $value['orgname'];
-                    $arr['icon'] = 'index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $value['aid']);
-                } else {
-                    $arr['text'] = avatar_group($value['orgid'], $value) . $value['orgname'];
-                    $arr['icon'] = false;
-                }
-                $data[] = $arr;
+            $isother = true;
+            //仅显示我所在的部门时，有部门的用户则不显示
+            if ($_G['adminid'] != 1 && $onlymyorg && C::t('organization_user')->fetch_num_by_uid($_G['uid'])) {
+                $isother = false;
             }
-            if ($nouser || $stype == 1 || ($moderator && !$ismoderator)) {
-
+            if ($isother) {
+                $datas = [];
+                foreach (C::t('organization_user')->fetch_user_not_in_orgid($limit) as $value) {
+                    $datas[] = [
+                        'id' => 'uid_' . $value['uid'],
+                        'text' => $value['username'] . '<em class="hide">' . $value['email'] . '</em>',
+                        'icon' => 'dzz/system/images/user.png',
+                        'state' => ['disabled' => $disable],
+                        "type" => $type,
+                        'li_attr' => [
+                            'uid' => $value['uid'],
+                            'username' => $value['username'],
+                            'avatarstatus' => $value['avatarstatus'],
+                            'headerColor'  => $value['headerColor'],
+                        ]
+                    ];
+                }
+                getuserIcon($datas, $data);
+            }
+        }
+    } else {//获取用户列表，有机构用户
+        foreach (C::t('organization')->fetch_all_by_forgid($id) as $value) {
+            //仅显示我所在的部门时，判断用户是否在该部门中
+            if ($_G['adminid'] != 1 && $onlymyorg && !C::t('organization')->ismember($value['orgid'], $_G['uid'])) continue;
+            if (!$moderator || C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'], $_G['uid'])) {
+                $orgdisable = '';
+                $orgtype = 'organization';
             } else {
-                $isorguid = true;
-                //仅显示我所在的部门时，判断用户是否在该部门中
-                if ($_G['adminid'] != 1 && $onlymyorg && !C::t('organization_user')->fetch_num_by_orgid_uid($id, $_G['uid'])) {
-                    $isorguid = false;
+                $orgdisable = '"disabled":true,';
+                $orgtype = 'disabled';
+            }
+            $arr = [
+                'id' => $value['orgid'],
+                'text' => $value['orgname'],
+                'state' => ['disabled' => $orgdisable],
+                "type" => $orgtype,
+                'children' => true];
+
+            if (preg_match('/^\d+$/', $value['aid']) && $value['aid'] > 0) {
+                $arr['text'] = $value['orgname'];
+                $arr['icon'] = 'index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $value['aid']);
+            } else {
+                $arr['text'] = avatar_group($value['orgid'], $value) . $value['orgname'];
+                $arr['icon'] = false;
+            }
+            $data[] = $arr;
+        }
+        if ($nouser || $stype == 1 || ($moderator && !$ismoderator)) {
+
+        } else {
+            $isorguid = true;
+            //仅显示我所在的部门时，判断用户是否在该部门中
+            if ($_G['adminid'] != 1 && $onlymyorg && !C::t('organization_user')->fetch_num_by_orgid_uid($id, $_G['uid'])) {
+                $isorguid = false;
+            }
+            if ($isorguid) {
+                $datas = [];
+                foreach (C::t('organization_user')->fetch_user_by_orgid($id, $limit) as $value) {
+                    if (!$value['uid']) continue;
+                    if ($showjob && $value['jobid']) $jobname = DB::result_first("select name from %t where jobid=%d", ['organization_job', $value['jobid']]);
+                    $datas[] = [
+                        'id' => 'orgid_' . $value['orgid'] . '_uid_' . $value['uid'],
+                        'text' => $value['username'] . ($jobname ? '<em> [' . $jobname . ']</em>' : '') . '<em class="hide">' . $value['email'] . '</em>',
+                        'icon' => 'dzz/system/images/user.png',
+                        'state' => ['disabled' => $disable],
+                        "type" => $type,
+                        'li_attr' => [
+                            'uid' => $value['uid'],
+                            'username' => $value['username'],
+                            'avatarstatus' => $value['avatarstatus'],
+                            'headerColor'  => $value['headerColor'],
+                        ]
+                    ];
                 }
-                if ($isorguid) {
-                    $datas = array();
-                    foreach (C::t('organization_user')->fetch_user_by_orgid($id, $limit) as $value) {
-                        if (!$value['uid']) continue;
-                        if ($showjob && $value['jobid']) $jobname = DB::result_first("select name from %t where jobid=%d", array('organization_job', $value['jobid']));
-                        $datas[] = array(
-                            'id' => 'orgid_' . $value['orgid'] . '_uid_' . $value['uid'],
-                            'text' => $value['username'] . ($jobname ? '<em> [' . $jobname . ']</em>' : '') . '<em class="hide">' . $value['email'] . '</em>',
-                            'icon' => 'dzz/system/images/user.png',
-                            'state' => array('disabled' => $disable),
-                            "type" => $type,
-                            'li_attr' => array(
-                                'uid' => $value['uid'],
-                                'username' => $value['username'],
-                                'avatarstatus' => $value['avatarstatus'],
-                                'headerColor'  => $value['headerColor'],
-                            )
-                        );
-                    }
-                    getuserIcon($datas, $data);
-                }
+                getuserIcon($datas, $data);
             }
         }
     }
@@ -174,20 +171,20 @@ if ($_GET['do'] == 'orgtree') {
     $sql = "username LIKE %s";
     $sql_org = "orgname LIKE %s";
     //搜索用户
-    $data = array('other');
+    $data = ['other'];
     if (!$nouser) {
-        $uids = array();
-        foreach (DB::fetch_all("select * from %t where $sql ", array('user', $str)) as $value) {
+        $uids = [];
+        foreach (DB::fetch_all("select * from %t where $sql ", ['user', $str]) as $value) {
             $uids[] = $value['uid'];
             $data['uid_' . $value['uid']] = 'uid_' . $value['uid'];
         }
-        $orgids = array();
+        $orgids = [];
         foreach ($orgusers = C::t('organization_user')->fetch_all_by_uid($uids) as $value) {
             $data['uid_' . $value['uid']] = 'orgid_' . $value['orgid'] . '_uid_' . $value['uid'];
             $orgids[] = $value['orgid'];
         }
     }
-    foreach (DB::fetch_all("select orgid from %t where $sql_org", array('organization', $str)) as $value) {
+    foreach (DB::fetch_all("select orgid from %t where $sql_org", ['organization', $str]) as $value) {
         $orgids[] = $value['orgid'];
     }
     $orgids = array_unique($orgids);
@@ -197,7 +194,7 @@ if ($_GET['do'] == 'orgtree') {
             $data[$value] = $value;
         }
     }
-    $temp = array();
+    $temp = [];
     foreach ($data as $value) {
         $temp[] = $value;
     }
@@ -210,7 +207,7 @@ function getuserIcon($datas, &$data) {
             $v['icon'] = 'avatar.php?uid=' . $uid;
         } else {
             $v['icon'] = false;
-            $v['text'] = avatar_block($uid, array(), null, $v['li_attr']) . $v['text'];
+            $v['text'] = avatar_block($uid, [], null, $v['li_attr']) . $v['text'];
         }
         $data[] = $v;
     }
@@ -221,4 +218,3 @@ if ($template == '1') {
 } else {
     include template('orgtree');
 }
-?>

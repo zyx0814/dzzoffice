@@ -12,7 +12,7 @@ define('CURSCRIPT', 'dzz');
 define('DZZSCRIPT', 'index.php');
 require __DIR__ . '/core/coreBase.php';
 $dzz = C::app();
-$dzz->cachelist = array();
+$dzz->cachelist = [];
 $dzz->init();
 session_start();
 $_GET['state'] = $_SESSION['onedrive.oauth.state']['state'];

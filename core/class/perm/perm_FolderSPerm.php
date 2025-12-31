@@ -29,7 +29,7 @@
 
 class perm_FolderSPerm {
     public static function getPowerarr() {
-        return array(
+        return [
             'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
             'read1' => 2,        //读取自己的文件
             'read2' => 4,        //读取所有文件
@@ -51,7 +51,7 @@ class perm_FolderSPerm {
             'share' => 262144,    //分享
             'approve' => 524288,//审批
             'comment' => 1048576,//评论
-        );
+        ];
     }
 
     public static function getPerm($action) {
@@ -59,7 +59,7 @@ class perm_FolderSPerm {
         return isset($powerarr[$action]) ? intval($powerarr[$action]) : 0;
     }
 
-    public static function getSumByAction($action = array()) { //$action==all 时返回所有的值相加
+    public static function getSumByAction($action = []) { //$action==all 时返回所有的值相加
         $i = 0;
         $powerarr = self::getPowerarr();
         if ($action == 'all') {
@@ -118,4 +118,4 @@ class perm_FolderSPerm {
     }
 }
 
-?>
+

@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => 'Management',
     'php_version_too_low' => 'PHP version is too low. Please upgrade PHP to 5.3 or higher first; PHP 5.4 or higher is recommended',
     'step_env_check_desc' => 'Environment and file directory permission check',
@@ -26,6 +26,5 @@ $lang = array(
     'data.minute' => 'Minutes',
     'data.hour' => 'Hours',
     'data.day' => 'Days',
-);
+];
 
-?>

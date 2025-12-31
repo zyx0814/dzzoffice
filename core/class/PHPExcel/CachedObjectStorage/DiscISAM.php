@@ -71,9 +71,9 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 			fseek($this->_fileHandle,0,SEEK_END);
 			$offset = ftell($this->_fileHandle);
 			fwrite($this->_fileHandle, serialize($this->_currentObject));
-			$this->_cellCache[$this->_currentObjectID]	= array('ptr' => $offset,
+			$this->_cellCache[$this->_currentObjectID]	= ['ptr' => $offset,
 																'sz'  => ftell($this->_fileHandle) - $offset
-															   );
+            ];
 			$this->_currentCellIsDirty = false;
 		}
 		$this->_currentObjectID = $this->_currentObject = null;
@@ -175,7 +175,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 			$this->_currentObject->detach();
 			$this->_currentObject = $this->_currentObjectID = null;
 		}
-		$this->_cellCache = array();
+		$this->_cellCache = [];
 
 		//	detach ourself from the worksheet, so that it can then delete this object successfully
 		$this->_parent = null;

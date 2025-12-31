@@ -17,7 +17,7 @@ class BaiduPCS {
 	 * 百度PCS RESTFUL API SERVER调用地址前缀
 	 * @var array
 	 */
-	private $_pcs_uri_prefixs = array ('https' => 'https://pcs.baidu.com/rest/2.0/pcs/' );
+	private $_pcs_uri_prefixs = ['https' => 'https://pcs.baidu.com/rest/2.0/pcs/'];
 
 	private $_accessToken = '';
 
@@ -55,7 +55,7 @@ class BaiduPCS {
 	 * @param string $headers 附加的HTTP HEADER信息
 	 * @return string
 	 */
-	private function _baseControl($apiMethod, $params, $method = 'GET', $headers = array()) {
+	private function _baseControl($apiMethod, $params, $method = 'GET', $headers = []) {
 
 		$method = strtoupper ( $method );
 
@@ -78,9 +78,7 @@ class BaiduPCS {
 		}
 
 		$baiduRequestCore->send_request ();
-		$result = $baiduRequestCore->get_response_body ();
-
-		return $result;
+        return $baiduRequestCore->get_response_body ();
 	}
 
 	/**
@@ -88,8 +86,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function getQuota() {
-		$result = $this->_baseControl ( 'quota?method=info' . '&access_token=' . $this->_accessToken, array () );
-		return $result;
+        return $this->_baseControl ( 'quota?method=info' . '&access_token=' . $this->_accessToken, []);
 	}
 
 	/**
@@ -116,8 +113,7 @@ class BaiduPCS {
 			$requestStr .= '&type=tmpfile';
 		}
 
-		$result = $this->_baseControl ( $requestStr, $postContent, 'POST', array ('Content-Type' => 'multipart/form-data; boundary=' . $boundary ) );
-		return $result;
+        return $this->_baseControl ( $requestStr, $postContent, 'POST', ['Content-Type' => 'multipart/form-data; boundary=' . $boundary]);
 	}
 
 	/**
@@ -131,8 +127,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function createSuperFile($targetPath, $fileName, array $params, $newFileName = null,$ondup = 'newcopy') {
-		$result = $this->_baseControl ( 'file?method=createsuperfile&path=' . urlencode ( $targetPath . (empty ( $newFileName ) ? $fileName : $newFileName) ) . '&ondup='.$ondup.'&access_token=' . $this->_accessToken, array ('param' => json_encode ( array ('block_list' => $params ) ) ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=createsuperfile&path=' . urlencode ( $targetPath . (empty ( $newFileName ) ? $fileName : $newFileName) ) . '&ondup='.$ondup.'&access_token=' . $this->_accessToken, ['param' => json_encode ( ['block_list' => $params])], 'POST' );
 	}
 
 	/**
@@ -141,8 +136,7 @@ class BaiduPCS {
 	 * @return 文件内容
 	 */
 	public function download($path) {
-		$result = $this->_baseControl ( 'file?method=download' . '&access_token=' . $this->_accessToken, array ('path' => $path ), 'GET' );
-		return $result;
+        return $this->_baseControl ( 'file?method=download' . '&access_token=' . $this->_accessToken, ['path' => $path], 'GET' );
 	}
 
 	/**
@@ -151,8 +145,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function makeDirectory($path) {
-		$result = $this->_baseControl ( 'file?method=mkdir' . '&access_token=' . $this->_accessToken, array ('path' => $path ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=mkdir' . '&access_token=' . $this->_accessToken, ['path' => $path], 'POST' );
 	}
 
 	/**
@@ -161,8 +154,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function getMeta($path) {
-		$result = $this->_baseControl ( 'file?method=meta' . '&access_token=' . $this->_accessToken, array ('path' => $path ) );
-		return $result;
+        return $this->_baseControl ( 'file?method=meta' . '&access_token=' . $this->_accessToken, ['path' => $path]);
 	}
 
 	/**
@@ -171,14 +163,13 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function getBatchMeta(array $paths) {
-		$list = array ();
+		$list = [];
 		foreach ( $paths as $value ) {
-			array_push ( $list, array ('path' => $value ) );
+			$list[] = ['path' => $value];
 		}
-		$list = array ('list' => $list );
+		$list = ['list' => $list];
 		$list = json_encode ( $list );
-		$result = $this->_baseControl ( 'file?method=meta' . '&access_token=' . $this->_accessToken, array ('param' => $list ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=meta' . '&access_token=' . $this->_accessToken, ['param' => $list], 'POST' );
 	}
 
 	/**
@@ -190,8 +181,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function listFiles($path, $by = 'name', $order = 'asc', $limit = '0-9') {
-		$result = $this->_baseControl ( 'file?method=list' . '&access_token=' . $this->_accessToken, array ('path' => $path, 'by' => $by, 'order' => $order, 'limit' => $limit ) );
-		return $result;
+        return $this->_baseControl ( 'file?method=list' . '&access_token=' . $this->_accessToken, ['path' => $path, 'by' => $by, 'order' => $order, 'limit' => $limit]);
 	}
 
 	/**
@@ -201,8 +191,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function moveSingle($from, $to) {
-		$result = $this->_baseControl ( 'file?method=move' . '&access_token=' . $this->_accessToken, array ('from' => $from, 'to' => $to ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=move' . '&access_token=' . $this->_accessToken, ['from' => $from, 'to' => $to], 'POST' );
 	}
 
 	/**
@@ -212,14 +201,13 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function moveBatch(array $from, array $to) {
-		$list = array ();
+		$list = [];
 		for($i = 0; $i < count ( $from ); $i ++) {
-			array_push ( $list, array ('from' => $from [$i], 'to' => $to [$i] ) );
+			$list[] = ['from' => $from [$i], 'to' => $to [$i]];
 		}
-		$list = array ('list' => $list );
+		$list = ['list' => $list];
 		$list = json_encode ( $list );
-		$result = $this->_baseControl ( 'file?method=move' . '&access_token=' . $this->_accessToken, array ('param' => $list ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=move' . '&access_token=' . $this->_accessToken, ['param' => $list], 'POST' );
 	}
 
 	/**
@@ -229,8 +217,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function copySingle($from, $to) {
-		$result = $this->_baseControl ( 'file?method=copy' . '&access_token=' . $this->_accessToken, array ('from' => $from, 'to' => $to ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=copy' . '&access_token=' . $this->_accessToken, ['from' => $from, 'to' => $to], 'POST' );
 	}
 
 	/**
@@ -240,15 +227,14 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function copyBatch(array $from, array $to) {
-		$list = array ();
+		$list = [];
 		for($i = 0; $i < count ( $from ); $i ++) {
-			array_push ( $list, array ('from' => $from [$i], 'to' => $to [$i] ) );
+			$list[] = ['from' => $from [$i], 'to' => $to [$i]];
 		}
-		$list = array ('list' => $list );
+		$list = ['list' => $list];
 		$list = json_encode ( $list );
 
-		$result = $this->_baseControl ( 'file?method=copy' . '&access_token=' . $this->_accessToken, array ('param' => $list ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=copy' . '&access_token=' . $this->_accessToken, ['param' => $list], 'POST' );
 	}
 
 	/**
@@ -257,8 +243,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function deleteSingle($path) {
-		$result = $this->_baseControl ( 'file?method=delete' . '&access_token=' . $this->_accessToken, array ('path' => $path ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=delete' . '&access_token=' . $this->_accessToken, ['path' => $path], 'POST' );
 	}
 
 	/**
@@ -267,15 +252,14 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function deleteBatch(array $paths) {
-		$list = array ();
+		$list = [];
 		foreach ( $paths as $value ) {
-			array_push ( $list, array ('path' => $value ) );
+			$list[] = ['path' => $value];
 		}
-		$list = array ('list' => $list );
+		$list = ['list' => $list];
 		$list = json_encode ( $list );
 
-		$result = $this->_baseControl ( 'file?method=delete' . '&access_token=' . $this->_accessToken, array ('param' => $list ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'file?method=delete' . '&access_token=' . $this->_accessToken, ['param' => $list], 'POST' );
 	}
 
 	/**
@@ -286,8 +270,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function search($path, $wd, $re = 1) {
-		$result = $this->_baseControl ( 'file?method=search' . '&access_token=' . $this->_accessToken, array ('path' => $path, 'wd' => $wd, 're' => $re ) );
-		return $result;
+        return $this->_baseControl ( 'file?method=search' . '&access_token=' . $this->_accessToken, ['path' => $path, 'wd' => $wd, 're' => $re]);
 	}
 
 	/**
@@ -299,8 +282,7 @@ class BaiduPCS {
 	 * @return 文件内容
 	 */
 	public function thumbnail($path, $width, $height, $quality = 100) {
-		$result = $this->_baseControl ( 'thumbnail?method=generate' . '&access_token=' . $this->_accessToken, array ('path' => $path, 'width' => $width, 'height' => $height, 'quality' => $quality ), 'GET' );
-		return $result;
+        return $this->_baseControl ( 'thumbnail?method=generate' . '&access_token=' . $this->_accessToken, ['path' => $path, 'width' => $width, 'height' => $height, 'quality' => $quality], 'GET' );
 	}
 
 	/**
@@ -309,8 +291,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function diff($cursor) {
-		$result = $this->_baseControl ( 'file?method=diff' . '&access_token=' . $this->_accessToken, array ('cursor' => $cursor ) );
-		return $result;
+        return $this->_baseControl ( 'file?method=diff' . '&access_token=' . $this->_accessToken, ['cursor' => $cursor]);
 	}
 
 	/**
@@ -319,8 +300,7 @@ class BaiduPCS {
 	 * @return 文件内容
 	 */
 	public function downloadStream($path) {
-		$result = $this->_baseControl ( 'stream?method=download' . '&access_token=' . $this->_accessToken, array ('path' => $path ) );
-		return $result;
+        return $this->_baseControl ( 'stream?method=download' . '&access_token=' . $this->_accessToken, ['path' => $path]);
 	}
 /**
 	 * 为当前用户获取流式文件地址
@@ -328,16 +308,14 @@ class BaiduPCS {
 	 * @return 文件内容
 	 */
 	public function getStreamUri($path) {
-		$result = $this->_baseControl ( 'stream?method=download' . '&access_token=' . $this->_accessToken, array ('path' => $path ),'GET',array('returnurl'=>true) );
-		return $result;
+        return $this->_baseControl ( 'stream?method=download' . '&access_token=' . $this->_accessToken, ['path' => $path],'GET', ['returnurl'=>true]);
 	}
 	/* 为当前用户进行视频转码并实现在线实时观看
 	 * @param string $path
 	 * @return 文件内容
 	 */
 	public function getStreamingUri($path,$type) {
-		$result = $this->_baseControl ( 'file?method=streaming' . '&access_token=' . $this->_accessToken, array ('path' => $path, 'type' => $type ),'GET',array('returnurl'=>true) );
-		return $result;
+        return $this->_baseControl ( 'file?method=streaming' . '&access_token=' . $this->_accessToken, ['path' => $path, 'type' => $type],'GET', ['returnurl'=>true]);
 	}
 	/**
 	 * 获取应用目录下所有流式文件列表
@@ -348,8 +326,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function listStream($type, $start = 0, $limit = '1000', $filterPath = '') {
-		$result = $this->_baseControl ( 'stream?method=list' . '&access_token=' . $this->_accessToken, array ('type' => $type, 'start' => $start, 'limit' => $limit, 'filter_path' => $filterPath ) );
-		return $result;
+        return $this->_baseControl ( 'stream?method=list' . '&access_token=' . $this->_accessToken, ['type' => $type, 'start' => $start, 'limit' => $limit, 'filter_path' => $filterPath]);
 	}
 
 	/**
@@ -359,8 +336,7 @@ class BaiduPCS {
 	 * @return 文件播放列表URL
 	 */
 	public function streaming($path, $type) {
-		$result = $this->_baseControl ( 'file?method=streaming' . '&access_token=' . $this->_accessToken, array ('path' => $path, 'type' => $type ) );
-		return $result;
+        return $this->_baseControl ( 'file?method=streaming' . '&access_token=' . $this->_accessToken, ['path' => $path, 'type' => $type]);
 	}
 
 	/**
@@ -376,8 +352,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function cloudMatch($path, $contentLength, $contentMd5, $sliceMd5, $contentCrc32) {
-		$result = $this->_baseControl ( 'file?method=rapidupload' . '&access_token=' . $this->_accessToken, array ('path' => $path, 'content-length' => $contentLength, 'content-md5' => $contentMd5, 'slice-md5' => $sliceMd5, 'content-crc32' => $contentCrc32 ) );
-		return $result;
+        return $this->_baseControl ( 'file?method=rapidupload' . '&access_token=' . $this->_accessToken, ['path' => $path, 'content-length' => $contentLength, 'content-md5' => $contentMd5, 'slice-md5' => $sliceMd5, 'content-crc32' => $contentCrc32]);
 	}
 
 	/**
@@ -391,8 +366,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function addOfflineDownloadTask($savePath, $sourceUrl, $rateLimit = '', $timeout = 3600, $callback='', $expires = ''){
-		$result = $this->_baseControl ( 'services/cloud_dl?method=add_task' . '&access_token=' . $this->_accessToken, array ('save_path' => $savePath, 'source_url' => $sourceUrl, 'rate_limit' => $rateLimit, 'timeout' => $timeout, 'callback' =>$callback ), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'services/cloud_dl?method=add_task' . '&access_token=' . $this->_accessToken, ['save_path' => $savePath, 'source_url' => $sourceUrl, 'rate_limit' => $rateLimit, 'timeout' => $timeout, 'callback' =>$callback], 'POST' );
 	}
 
 	/**
@@ -403,8 +377,7 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function queryOfflineDownloadTask($taskIds, $opType = 1, $expires = ''){
-		$result = $this->_baseControl ( 'services/cloud_dl?method=query_task' . '&access_token=' . $this->_accessToken, array ('task_ids' => $taskIds, 'op_type' => $opType) );
-		return $result;
+        return $this->_baseControl ( 'services/cloud_dl?method=query_task' . '&access_token=' . $this->_accessToken, ['task_ids' => $taskIds, 'op_type' => $opType]);
 	}
 
 	/**
@@ -421,10 +394,9 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function listOfflineDownloadTask($start = 0, $limit = 10, $asc = 0, $sourceURL = '', $savePath = '', $createTime = '', $status = 1, $needTaskInfo = 1, $expires = ''){
-		$result = $this->_baseControl ( 'services/cloud_dl?method=list_task' . '&access_token=' . $this->_accessToken,
-				array ('start' => $start, 'limit' => $limit, 'asc' => $asc, 'source_url' => $sourceURL,
-						'save_path' => $savePath, 'create_time' => $createTime, 'status' => $status, 'need_task_info' =>$needTaskInfo), 'POST' );
-		return $result;
+        return $this->_baseControl ( 'services/cloud_dl?method=list_task' . '&access_token=' . $this->_accessToken,
+                ['start' => $start, 'limit' => $limit, 'asc' => $asc, 'source_url' => $sourceURL,
+                        'save_path' => $savePath, 'create_time' => $createTime, 'status' => $status, 'need_task_info' =>$needTaskInfo], 'POST' );
 	}
 
 	/**
@@ -434,8 +406,6 @@ class BaiduPCS {
 	 * @return string
 	 */
 	public function cancelOfflineDownloadTask($taskId, $expires = ''){
-		$result = $this->_baseControl ( 'services/cloud_dl?method=cancel_task' . '&access_token=' . $this->_accessToken, array ('task_id' => $taskId) );
-		return $result;
+        return $this->_baseControl ( 'services/cloud_dl?method=cancel_task' . '&access_token=' . $this->_accessToken, ['task_id' => $taskId]);
 	}
 }
-?>

@@ -16,7 +16,7 @@ if ($do == 'filelist') {
     $explorer_setting = get_resources_some_setting();
     $searchtype = isset($_GET['searchtype']) ? trim($_GET['searchtype']) : '';
     $searchtypearr = explode('&', $searchtype);
-    $searcharr = array();
+    $searcharr = [];
     foreach ($searchtypearr as $v) {
         $searchtemp = explode('=', $v);
         if ($searchtemp[1] != 'all') {
@@ -29,7 +29,7 @@ if ($do == 'filelist') {
     $total = 0;//总条数
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : intval($usersettings['disp']);
     $sid = empty($_GET['sid']) ? 0 : $_GET['sid'];//id
-    $data = array();
+    $data = [];
     $limitsql = "limit $start,$perpage";
     $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
     $asc = intval($_GET['asc']);
@@ -44,7 +44,7 @@ if ($do == 'filelist') {
             $orderby = 'size';
             break;
         case 2:
-            $orderby = array('type', 'ext');
+            $orderby = ['type', 'ext'];
             break;
         case 3:
             $orderby = 'r.dateline';
@@ -60,20 +60,20 @@ if ($do == 'filelist') {
         $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
     }
     $wheresql = ' where 1';
-    $folderdata = array();
-    $folderids = array();
-    $conditions = array();
+    $folderdata = [];
+    $folderids = [];
+    $conditions = [];
     //文件位置标志条件 [isdelete,isstarred]
-    $param = array('resources', 'folder');
+    $param = ['resources', 'folder'];
     if (!empty($searcharr['flagval'])) {
         $conditions['flag'] = explode(',', $searcharr['flagval']);
         if (in_array('isdelete', $conditions['flag'])) {
             $wheresql .= " and r.pfid = '-1'";
-            $param = array('resources', 'resources_recyle');
+            $param = ['resources', 'resources_recyle'];
         }
         if (in_array('isstarred', $conditions['flag'])) {
             $rids = C::t('resources_collect')->fetch_rid_by_uid();
-            $ridarr = array();
+            $ridarr = [];
             foreach ($rids as $v) {
                 $ridarr[] = $v['rid'];
             }
@@ -84,7 +84,7 @@ if ($do == 'filelist') {
         $wheresql .= " and (r.isdelete < 1)";
     }
     $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门
-    $or = array();
+    $or = [];
     //文件名条件
     if (!empty($searcharr['keywords']) && !preg_match('/^\s*$/', $searcharr['keywords'])) {
         $conditions['keywords'] = trim($searcharr['keywords']);
@@ -97,7 +97,7 @@ if ($do == 'filelist') {
             $tagsql = " r.rid in(%n)";
             $param[] = $rids;
         }
-        $keywordsqlarr = array();
+        $keywordsqlarr = [];
         foreach ($kewordsarr as $v) {
             $keywordsqlarr[] = " r.name like(%s) ";
             $param[] = '%' . trim($v) . '%';
@@ -114,7 +114,7 @@ if ($do == 'filelist') {
         if ($conditions['type'] == 'folder') {
             $wheresql .= " and r.type = %s and r.flag not in(%n)";
             $param[] = $conditions['type'];
-            $param[] = array('document', 'recycle');
+            $param[] = ['document', 'recycle'];
         } else {
             $typestr = parsefileType($conditions['type']);
             $wheresql .= " and r.ext IN (%n)";
@@ -122,7 +122,7 @@ if ($do == 'filelist') {
         }
     } else {//排除特殊目录
         $wheresql .= " and  r.flag not in(%n) and r.type != %s";
-        $param[] = array('document', 'recycle');
+        $param[] = ['document', 'recycle'];
         $param[] = 'app';
 
     }
@@ -143,10 +143,10 @@ if ($do == 'filelist') {
     if (!empty($searcharr['fid'])) {
         $conditions['fid'] = $searcharr['fid'];
         $condition['fid'] = explode(',', $conditions['fid']);
-        $fids = array();
-        $gids = array();
+        $fids = [];
+        $gids = [];
 
-        foreach (DB::fetch_all("select gid,fid from %t where fid in(%n)", array('folder', $condition['fid'])) as $v) {
+        foreach (DB::fetch_all("select gid,fid from %t where fid in(%n)", ['folder', $condition['fid']]) as $v) {
             if ($v['gid'] > 0) {
                 $gids[] = $v['gid'];
             } else {
@@ -161,7 +161,7 @@ if ($do == 'filelist') {
                     $orgs[] = $val;// 追加子部门
                 }
             }
-            foreach (DB::fetch_all('select orgid,diron from %t where orgid in(%n)', array('organization', $orgs)) as $v) {
+            foreach (DB::fetch_all('select orgid,diron from %t where orgid in(%n)', ['organization', $orgs]) as $v) {
                 if ($v['diron'] == 0) {
                     $index = array_search($v['orgid'], $orgs);
                     unset($orgs[$index]);
@@ -267,8 +267,8 @@ if ($do == 'filelist') {
     }
 
     $wheresql .= ' and  (' . $permsql . ')';
-    $data = array();
-    $foldersids = $folderdata = array();
+    $data = [];
+    $foldersids = $folderdata = [];
     $conditions = array_filter($conditions);
     if (isset($conditions['flag']) && in_array('isdelete', $conditions['flag'])) {
         $countsql = 'SELECT COUNT(*) FROM %t r LEFT JOIN %t re ON r.rid=re.rid';
@@ -292,17 +292,17 @@ if ($do == 'filelist') {
         }
     }
     $iconview = isset($_GET['iconview']) ? intval($_GET['iconview']) : ($usersettings['iconview'] ? intval($usersettings['iconview']) : 4);//排列方式
-    $total = $total ?  $total : 0;
-    if (!$json_data = json_encode($data)) $data = array();
-    if (!$json_data = json_encode($folderdata)) $folderdata = array();
+    $total = $total ?: 0;
+    if (!$json_data = json_encode($data)) $data = [];
+    if (!$json_data = json_encode($folderdata)) $folderdata = [];
     //返回数据
-    $return = array(
+    $return = [
         'sid' => $sid,
         'total' => $total,
 
-        'data' => $data ? $data : array(),
-        'folderdata' => $folderdata ? $folderdata : array(),
-        'param' => array(
+        'data' => $data ?: [],
+        'folderdata' => $folderdata ?: [],
+        'param' => [
             'disp' => $disp,
             'view' => $iconview,
             'page' => $page,
@@ -312,54 +312,54 @@ if ($do == 'filelist') {
             'asc' => $asc,
             'keyword' => $keyword,
             'localsearch' => $bz ? 1 : 0
-        ),
+        ],
         'conditions' => $conditions
-    );
+    ];
     exit(json_encode($return));
 } elseif ($do == 'getsearchval') {
     $uids = isset($_GET['uid']) ? $_GET['uid'] : '';
     $fids = isset($_GET['fid']) ? $_GET['fid'] : '';
-    $usernamearr = array();
-    foreach (DB::fetch_all("select uid,username from %t where uid in(%n)", array('user', $uids)) as $v) {
+    $usernamearr = [];
+    foreach (DB::fetch_all("select uid,username from %t where uid in(%n)", ['user', $uids]) as $v) {
         $usernamearr[$v['uid']] = $v['username'];
     }
-    $foldername = array();
-    foreach (DB::fetch_all("select fname,gid from %t where fid in(%n)", array('folder', $fids)) as $v) {
+    $foldername = [];
+    foreach (DB::fetch_all("select fname,gid from %t where fid in(%n)", ['folder', $fids]) as $v) {
         if ($v['gid'] > 0) {
-            $type = DB::result_first("select `type` from %t where orgid = %d", array('organization', $v['gid']));
+            $type = DB::result_first("select `type` from %t where orgid = %d", ['organization', $v['gid']]);
             $foldername[] = ($type == 1) ? $v['fname'] . '(群组)' : $v['fname'] . '(机构)';
         } else {
             $foldername[] = $v['fname'];
         }
 
     }
-    exit(json_encode(array('folder' => $foldername, 'user' => $usernamearr)));
+    exit(json_encode(['folder' => $foldername, 'user' => $usernamearr]));
 } elseif ($do == 'parseinputcondition') {
     $foldernames = isset($_GET['foldername']) ? trim($_GET['foldername']) : '';
     $usernames = isset($_GET['username']) ? trim($_GET['username']) : '';
-    $uids = array();
-    $fids = array();
+    $uids = [];
+    $fids = [];
     if ($foldernames) {
         $orgs = C::t('organization')->fetch_all_orggroup($uid);//机构群组
         $groupinfo = C::t('organization')->fetch_group_by_uid($uid, true);//个人群组
         $homefid = C::t('folder')->fetch_fid_by_flag('home');
         $groups = array_merge($orgs['org'], $groupinfo);
 
-        $positions[] = array($homefid);
+        $positions[] = [$homefid];
         foreach ($groups as $v) {
-            $positions[] = array($v['fid']);
+            $positions[] = [$v['fid']];
         }
         $foldernamearr = explode(',', $foldernames);
-        foreach (DB::fetch_all("select fid from %t where fname in(%n) and pfid = 0", array('folder', $foldernamearr)) as $v) {
+        foreach (DB::fetch_all("select fid from %t where fname in(%n) and pfid = 0", ['folder', $foldernamearr]) as $v) {
             $fids[] = $v['fid'];
         }
     }
     if ($usernames) {
         $usernamearr = explode(',', $usernames);
-        foreach (DB::fetch_all("select uid from %t where username in(%n)", array('user', $usernamearr)) as $v) {
+        foreach (DB::fetch_all("select uid from %t where username in(%n)", ['user', $usernamearr]) as $v) {
             $uids[] = $v['uid'];
         }
     }
-    exit(json_encode(array('fids' => $fids, 'uids' => $uids)));
+    exit(json_encode(['fids' => $fids, 'uids' => $uids]));
 }
 require template('searchFile');

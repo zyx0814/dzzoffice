@@ -15,10 +15,10 @@ if (submitcheck('routersubmit')) {
     $delete = $_GET['delete'];
     foreach ($_GET['name'] as $routerid => $value) {
         if (in_array($routerid, $delete)) continue;
-        $setarr = array(
+        $setarr = [
             'priority' => intval($_GET['priority'][$routerid]),
             'available' => intval($_GET['available'][$routerid]),
-        );
+        ];
         if (!empty($value)) $setarr['name'] = $value;
         C::t('local_router')->update($routerid, $setarr);
     }
@@ -26,14 +26,14 @@ if (submitcheck('routersubmit')) {
     showmessage('do_success', dreferer());
 } else {
 
-    $storage = array();
+    $storage = [];
     foreach (C::t('local_storage')->fetch_all_orderby_disp() as $key => $value) {
         $value['fusesize'] = formatsize($value['usesize']);
         if ($value['totalsize']) $value['ftotalsize'] = formatsize($value['totalsize']);
         else $value['ftotalsize'] = lang('unlimited');
         $storage[$value['remoteid']] = $value;
     }
-    $list = array();
+    $list = [];
     foreach (C::t('local_router')->fetch_all_orderby_priority() as $value) {
         $value['position'] = $storage[$value['remoteid']]['name'];
         $value['bz_available'] = $storage[$value['remoteid']]['available'];
@@ -44,4 +44,4 @@ if (submitcheck('routersubmit')) {
 include template('router');
 
 
-?>
+

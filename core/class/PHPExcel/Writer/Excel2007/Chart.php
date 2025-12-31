@@ -671,9 +671,9 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 		$groupCount = $plotArea->getPlotGroupCount();
 
 		if ($groupCount == 1) {
-			$chartType = array($plotArea->getPlotGroupByIndex(0)->getPlotType());
+			$chartType = [$plotArea->getPlotGroupByIndex(0)->getPlotType()];
 		} else {
-			$chartTypes = array();
+			$chartTypes = [];
 			for($i = 0; $i < $groupCount; ++$i) {
 				$chartTypes[] = $plotArea->getPlotGroupByIndex($i)->getPlotType();
 			}
@@ -733,19 +733,17 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 			($groupType !== PHPExcel_Chart_DataSeries::TYPE_STOCKCHART)) {
 
 			if ($groupType !== PHPExcel_Chart_DataSeries::TYPE_LINECHART) {
-				if (($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART) ||
+                $objWriter->startElement('c:varyColors');
+                if (($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART) ||
 					($groupType == PHPExcel_Chart_DataSeries::TYPE_PIECHART_3D) ||
 					($groupType == PHPExcel_Chart_DataSeries::TYPE_DONUTCHART) ||
 					($plotSeriesCount > 1)) {
-					$objWriter->startElement('c:varyColors');
-						$objWriter->writeAttribute('val', 1);
-					$objWriter->endElement();
-				} else {
-					$objWriter->startElement('c:varyColors');
-						$objWriter->writeAttribute('val', 0);
-					$objWriter->endElement();
-				}
-			}
+                    $objWriter->writeAttribute('val', 1);
+                } else {
+                    $objWriter->writeAttribute('val', 0);
+                }
+                $objWriter->endElement();
+            }
 		}
 
 		foreach($plotSeriesOrder as $plotSeriesIdx => $plotSeriesRef) {
@@ -978,10 +976,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 						$objWriter->endElement();
 					}
 
-				$objWriter->endElement();
-
-			$objWriter->endElement();
-		} else {
+        } else {
 			$objWriter->startElement('c:'.$dataType.'Ref');
 
 				$objWriter->startElement('c:f');
@@ -1021,11 +1016,10 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 						}
 					}
 
-				$objWriter->endElement();
-
-			$objWriter->endElement();
-		}
-	}
+        }
+        $objWriter->endElement();
+        $objWriter->endElement();
+    }
 
 	/**
 	 * Write Bubble Chart Details

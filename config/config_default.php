@@ -1,5 +1,5 @@
 <?php
-$_config = array();
+$_config = [];
 
 // ----------------------------  CONFIG DB  ----------------------------- //
 // ----------------------------  数据库相关设置---------------------------- //
@@ -45,7 +45,7 @@ $_config['db'][1]['unix_socket'] = '';//使用此方式连接时 dbhost设置为
  * ...
  *
  */
-$_config['db']['1']['slave'] = array();
+$_config['db']['1']['slave'] = [];
 //数据库驱动
 $_config['db']['driver'] = 'mysqli';
 //启用从服务器的开关
@@ -60,12 +60,12 @@ $_config['db']['slave'] = false;
  * 对于没有明确声明服务器的表, 则一律默认部署在第一服务器上
  *
  */
-$_config['db']['map'] = array();
+$_config['db']['map'] = [];
 
 /**
  * 数据库 公共设置, 此类设置通常对针对每个部署的服务器
  */
-$_config['db']['common'] = array();
+$_config['db']['common'] = [];
 
 /**
  *  禁用从数据库的数据表, 表名字之间使用逗号分割
@@ -164,14 +164,14 @@ $_config['security']['urlxssdefend']		= true;		// 自身 URL XSS 防御
 $_config['security']['attackevasive']		= 0;		// CC 攻击防御 1|2|4|8
 
 $_config['security']['querysafe']['status']	= 1;		// 是否开启SQL安全检测，可自动预防SQL注入攻击
-$_config['security']['querysafe']['dfunction']	= array('load_file','hex','substring','if','ord','char');
-$_config['security']['querysafe']['daction']	= array('@','intooutfile','intodumpfile','unionselect','(select', 'unionall', 'uniondistinct');
-$_config['security']['querysafe']['dnote']	= array('/*','*/','#','--','"');
+$_config['security']['querysafe']['dfunction']	= ['load_file','hex','substring','if','ord','char'];
+$_config['security']['querysafe']['daction']	= ['@','intooutfile','intodumpfile','unionselect','(select', 'unionall', 'uniondistinct'];
+$_config['security']['querysafe']['dnote']	= ['/*','*/','#','--','"'];
 $_config['security']['querysafe']['dlikehex']	= 1;
 $_config['security']['querysafe']['afullnote']	= 0;
 
-$_config['security']['fsockopensafe']['port']	= array(80, 443);	//fsockopen 有效的端口
-$_config['security']['fsockopensafe']['ipversion']	= array('ipv6', 'ipv4');	//fsockopen 有效的IP协议
+$_config['security']['fsockopensafe']['port']	= [80, 443];	//fsockopen 有效的端口
+$_config['security']['fsockopensafe']['ipversion']	= ['ipv6', 'ipv4'];	//fsockopen 有效的IP协议
 $_config['security']['fsockopensafe']['verifypeer']	= false;	// fsockopen是否验证证书有效性，开启可提升安全性，但需自行解决证书配置问题
 
 $_config['admincp']['founder']			= '1';		// 站点创始人：拥有站点管理后台的最高权限，每个站点可以设置 1名或多名创始人

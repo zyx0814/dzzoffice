@@ -83,7 +83,7 @@ class Client extends GuzzleClient {
 
     public function commandToRequestTransformer(CommandInterface $command)
     {
-        $this->action = $command->GetName();
+        $this->action = $command->getName();
         $this->operation = $this->api[$this->action];
         $transformer = new CommandToRequestTransformer($this->cosConfig, $this->operation); 
         $seri = new Serializer($this->desc);
@@ -92,8 +92,7 @@ class Client extends GuzzleClient {
         $request = $transformer->uploadBodyTransformer($command, $request);
         $request = $transformer->metadataTransformer($command, $request);
         $request = $transformer->md5Transformer($command, $request);
-        $request = $transformer->specialParamTransformer($command, $request);
-        return $request;
+        return $transformer->specialParamTransformer($command, $request);
     }
 
     public function responseToResultTransformer(ResponseInterface $response, RequestInterface $request, CommandInterface $command)
@@ -105,8 +104,7 @@ class Client extends GuzzleClient {
 
         $result = $transformer->metaDataTransformer($command, $response, $result);
         $result = $transformer->extraHeadersTransformer($command, $request, $result);
-        $result = $transformer->selectContentTransformer($command, $result);
-        return $result;
+        return $transformer->selectContentTransformer($command, $result);
     }
     
     public function __destruct() {
@@ -143,47 +141,46 @@ class Client extends GuzzleClient {
         return $this->createPresignedUrl($request, $expires);
     }
 
-    public function getObjectUrl($bucket, $key, $expires = null, array $args = array()) {
-        $command = $this->getCommand('GetObject', $args + array('Bucket' => $bucket, 'Key' => $key));
+    public function getObjectUrl($bucket, $key, $expires = null, array $args = []) {
+        $command = $this->getCommand('GetObject', $args + ['Bucket' => $bucket, 'Key' => $key]);
         $request = $this->commandToRequestTransformer($command);
         return $this->createPresignedUrl($request, $expires)->__toString();
     }
 
-    public function upload($bucket, $key, $body, $options = array()) {
+    public function upload($bucket, $key, $body, $options = []) {
         $body = Psr7\stream_for($body);
         $options['PartSize'] = isset($options['PartSize']) ? $options['PartSize'] : MultipartUpload::MIN_PART_SIZE;
         if ($body->getSize() < $options['PartSize']) {
-            $rt = $this->putObject(array(
+            $rt = $this->putObject([
                     'Bucket' => $bucket,
                     'Key'    => $key,
                     'Body'   => $body,
-                ) + $options);
+                ] + $options);
         }
         else {
-            $multipartUpload = new MultipartUpload($this, $body, array(
+            $multipartUpload = new MultipartUpload($this, $body, [
                     'Bucket' => $bucket,
                     'Key' => $key,
-                ) + $options);
+                ] + $options);
 
             $rt = $multipartUpload->performUploading();
         }
         return $rt;
     }
 
-    public function resumeUpload($bucket, $key, $body, $uploadId, $options = array()) {
+    public function resumeUpload($bucket, $key, $body, $uploadId, $options = []) {
         $body = Psr7\stream_for($body);
         $options['PartSize'] = isset($options['PartSize']) ? $options['PartSize'] : MultipartUpload::DEFAULT_PART_SIZE;
-        $multipartUpload = new MultipartUpload($this, $body, array(
+        $multipartUpload = new MultipartUpload($this, $body, [
                 'Bucket' => $bucket,
                 'Key' => $key,
                 'UploadId' => $uploadId,
-            ) + $options);
+            ] + $options);
 
-        $rt = $multipartUpload->resumeUploading();
-        return $rt;
+        return $multipartUpload->resumeUploading();
     }
 
-    public function copy($bucket, $key, $copySource, $options = array()) {
+    public function copy($bucket, $key, $copySource, $options = []) {
 
         $options['PartSize'] = isset($options['PartSize']) ? $options['PartSize'] : Copy::DEFAULT_PART_SIZE;
 
@@ -194,10 +191,10 @@ class Client extends GuzzleClient {
         $copySource['VersionId'] = isset($copySource['VersionId']) ? $copySource['VersionId'] : "";
         try {
             $rt = $cosSourceClient->headObject(
-                array('Bucket'=>$copySource['Bucket'],
+                ['Bucket'=>$copySource['Bucket'],
                     'Key'=>$copySource['Key'],
                     'VersionId'=>$copySource['VersionId'],
-                )
+                ]
             );
         } catch (\Exception $e) {
             throw $e;
@@ -206,42 +203,41 @@ class Client extends GuzzleClient {
         $contentLength =$rt['ContentLength'];
         // sample copy
         if ($contentLength < $options['PartSize']) {
-            $rt = $this->copyObject(array(
+            return $this->copyObject([
                     'Bucket' => $bucket,
                     'Key'    => $key,
                     'CopySource'   => $copySource['Bucket']. '.cos.'. $copySource['Region'].
                                       ".myqcloud.com/". $copySource['Key']. "?versionId=". $copySource['VersionId'],
-                ) + $options
+                ] + $options
             );
-            return $rt;
         }
         // multi part copy
         $copySource['ContentLength'] = $contentLength;
-        $copy = new Copy($this, $copySource, array(
+        $copy = new Copy($this, $copySource, [
                 'Bucket' => $bucket,
                 'Key'    => $key
-            ) + $options
+            ] + $options
         );
         return $copy->copy();
     }
 
-    public function doesBucketExist($bucket, array $options = array())
+    public function doesBucketExist($bucket, array $options = [])
     {
         try {
-            $this->HeadBucket(array(
-                'Bucket' => $bucket));
+            $this->HeadBucket([
+                'Bucket' => $bucket]);
             return True;
         } catch (\Exception $e){
             return False;
         }
     }
 
-    public function doesObjectExist($bucket, $key, array $options = array())
+    public function doesObjectExist($bucket, $key, array $options = [])
     {
         try {
-            $this->HeadObject(array(
+            $this->HeadObject([
                 'Bucket' => $bucket,
-                'Key' => $key));
+                'Key' => $key]);
             return True;
         } catch (\Exception $e){
             return False;

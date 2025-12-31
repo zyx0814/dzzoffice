@@ -30,9 +30,8 @@ if ($bz && $bz !== 'dzz') {
         $folderpathstr = implode('\\', $folderpatharr);
     }
     include template('cloud_content');
-    exit();
 } else {
-    $data = array();
+    $data = [];
     $query = DB::query("SELECT * FROM " . DB::table('connect') . " WHERE available > 0");
     while ($value = DB::fetch($query)) {
         $type = $value['type'];
@@ -57,7 +56,7 @@ if ($bz && $bz !== 'dzz') {
                 $data[] = [
                     'id' => $value1['id'],
                     'cloudname' => '<img class="w-32 pe-2" src="dzz/images/default/system/'.$value['bz'].'.png" title="'.$value1['cloudname'].'">'.$value['name'],
-                    'name' => $value1['cloudname'] ? $value1['cloudname'] : $value['name'],
+                    'name' => $value1['cloudname'] ?: $value['name'],
                     'dateline' => dgmdate($value1['dateline'], 'Y-m-d H:i:s'),
                     'hashbz' => $cloudid,
                     'attachdir' => $value1['attachdir'],
@@ -72,5 +71,5 @@ if ($bz && $bz !== 'dzz') {
         showmessage('JSON 编码失败，请刷新重试', dreferer());
     }
     include template('cloud_list');
-    exit();
 }
+exit();

@@ -13,8 +13,7 @@ if (!defined('IN_DZZ')) {
 
 class table_seccheck extends dzz_table
 {
-	private $_uids = array();
-	public function __construct() {
+    public function __construct() {
 
 		$this->_table = 'seccheck';
 		$this->_pk    = 'ssid';
@@ -50,13 +49,13 @@ class table_seccheck extends dzz_table
 		if ($this->_allowmem) {
 			memory('inc', $ssid . "_verified", 1, 0, $this->_pre_cache_key);
 		} else {
-			DB::query("UPDATE %t SET verified=verified+1 WHERE ssid=%d", array($this->_table, $ssid));
+			DB::query("UPDATE %t SET verified=verified+1 WHERE ssid=%d", [$this->_table, $ssid]);
 		}
 	}
 
 	public function update_succeed($ssid) {
 		if (!$this->_allowmem) {
-			return DB::query("UPDATE %t SET verified=verified+1,succeed=succeed+1 WHERE ssid=%d", array($this->_table, $ssid));
+			return DB::query("UPDATE %t SET verified=verified+1,succeed=succeed+1 WHERE ssid=%d", [$this->_table, $ssid]);
 		}
 		memory('inc', $ssid . "_verified", 1, 0, $this->_pre_cache_key);
 		memory('inc', $ssid . "_succeed", 1, 0, $this->_pre_cache_key);
@@ -67,7 +66,7 @@ class table_seccheck extends dzz_table
 		if ($this->_allowmem) {
 			// 由Cache自己处理过期
 		} else {
-			DB::query("TRUNCATE %t", array($this->_table));
+			DB::query("TRUNCATE %t", [$this->_table]);
 		}
 	}
 
@@ -95,7 +94,7 @@ class table_seccheck extends dzz_table
 			return parent::fetch($id, $force_from_db);
 		}
 
-		$data = array();
+		$data = [];
 		$data['ssid'] = $id;
 		$data['code'] = memory('get', $id . "_code", $this->_pre_cache_key);
 		$data['dateline'] = memory('get', $id . "_dateline", $this->_pre_cache_key);
@@ -118,4 +117,3 @@ class table_seccheck extends dzz_table
 
 }
 
-?>

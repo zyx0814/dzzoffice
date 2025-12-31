@@ -4,8 +4,8 @@ namespace core\dzz;
 
 class Hook {
 
-    private static $tags = array();
-    public static $usetag = array();
+    private static $tags = [];
+    public static $usetag = [];
 
     /**
      * 动态添加行为扩展到某个标签
@@ -16,7 +16,7 @@ class Hook {
      * @return void
      */
     public static function add($tag, $behavior, $first = false) {
-        isset(self::$tags[$tag]) || self::$tags[$tag] = array();
+        isset(self::$tags[$tag]) || self::$tags[$tag] = [];
         if (is_array($behavior) && !is_callable($behavior)) {//此处废弃，暂不调整
             if (!array_key_exists('_overlay', $behavior) || !$behavior['_overlay']) {
                 unset($behavior['_overlay']);
@@ -58,7 +58,7 @@ class Hook {
             //获取全部的插件信息
             return self::$tags;
         } else {
-            return array_key_exists($tag, self::$tags) ? self::$tags[$tag] : array();
+            return array_key_exists($tag, self::$tags) ? self::$tags[$tag] : [];
         }
     }
 
@@ -71,7 +71,7 @@ class Hook {
      * @return mixed
      */
     public static function listen($tag, &$params = null, $extra = null, $once = false) {
-        $results = array();
+        $results = [];
 
         $tags = static::get($tag);
 
@@ -83,7 +83,7 @@ class Hook {
                 foreach ($name as $val) {
                     $results[$key] = self::exec($val, $break, $tag, $params, $extra);
 
-                    if (false === $results[$key] || $break == true) {
+                    if (false === $results[$key] || $break) {
                         break;
 
                     } elseif ($once) {
@@ -97,7 +97,7 @@ class Hook {
 
                 $results[$key] = self::exec($name, $break, $tag, $params, $extra);
 
-                if (false === $results[$key] || $break == true) {
+                if (false === $results[$key] || $break) {
 
                     // 如果返回false 则中断行为执行
                     break;
@@ -143,7 +143,7 @@ class Hook {
         $method = static::parseName($tag, 1, false);
         if ($class instanceof \Closure) {
 
-            $result = call_user_func_array($class, array(& $params, $extra));
+            $result = call_user_func_array($class, [& $params, $extra]);
             $class = 'Closure';
 
         } elseif (is_array($class)) {
@@ -161,11 +161,11 @@ class Hook {
 
         } elseif (strpos($class, '::')) {
 
-            $result = call_user_func_array($class, array(& $params, $extra));
+            $result = call_user_func_array($class, [& $params, $extra]);
 
         } else {
             $obj = new $class();
-            $method = ($tag && is_callable(array($obj, $method))) ? $method : 'run';
+            $method = ($tag && is_callable([$obj, $method])) ? $method : 'run';
             $result = $obj->$method($params, $extra, $break);
 
         }

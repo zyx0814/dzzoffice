@@ -36,7 +36,7 @@ class table_folder_attr extends dzz_table {
     }
 
     public function insert($setarr, $return_insert_id = false, $replace = false, $silent = false) {
-        if ($id = DB::result_first("select id from %t where fid=%d and skey=%s", array($this->_table, $setarr['fid'], $setarr['skey']))) {
+        if ($id = DB::result_first("select id from %t where fid=%d and skey=%s", [$this->_table, $setarr['fid'], $setarr['skey']])) {
             if ($setarr['skey'] == 'icon') {
                 $o = parent::fetch($id);
             }
@@ -54,11 +54,11 @@ class table_folder_attr extends dzz_table {
 
     public function insert_data_by_fid($fid, $skeyarr) {//插入文件夹设置值
         foreach ($skeyarr as $key => $value) {
-            $setarr = array(
+            $setarr = [
                 'fid' => $fid,
                 'skey' => $key,
                 'svalue' => $value
-            );
+            ];
             self::insert($setarr);
         }
         return true;
@@ -66,43 +66,43 @@ class table_folder_attr extends dzz_table {
 
     public function update_by_fid($fid, $skeyarr) {//更新文件设置
         foreach ($skeyarr as $key => $value) {
-            $setarr = array(
+            $setarr = [
                 'fid' => $fid,
                 'skey' => $key,
                 'svalue' => $value,
-            );
+            ];
             self::insert($setarr);
         }
         return true;
     }
 
     public function update_by_skey_fid($fid, $skey, $val) {
-        $setarr = array(
+        $setarr = [
             'fid' => $fid,
             'skey' => $skey,
             'svalue' => $val,
-        );
+        ];
         return self::insert($searr);
 
     }
 
     public function insert_by_skey_fid($fid, $skey, $val) {
-        $setarr = array(
+        $setarr = [
             'fid' => $fid,
             'skey' => $skey,
             'svalue' => $val
-        );
+        ];
         return self::insert($setarr);
     }
 
     public function fetch_by_skey_fid($fid, $skey) { //获取文件夹某项设置值
-        return DB::result_first("select svalue from %t where fid=%d and skey=%s", array($this->_table, $fid, $skey));
+        return DB::result_first("select svalue from %t where fid=%d and skey=%s", [$this->_table, $fid, $skey]);
     }
 
     public function delete_by_field_fid($fid, $skeys) { //删除文件夹某项设置值
         $skeys = (array)$skeys;
         $i = 0;
-        foreach (DB::fetch_all("select id from %t where fid=%d and skeys IN (%n)", array($this->_table, $fid, $skeys)) as $value) {
+        foreach (DB::fetch_all("select id from %t where fid=%d and skeys IN (%n)", [$this->_table, $fid, $skeys]) as $value) {
             if (self::delete_by_id($value['id'])) $i++;
         }
         return $i;
@@ -111,7 +111,7 @@ class table_folder_attr extends dzz_table {
     public function delete_by_fid($fid) { //删除设置
         $fid = (array)$fid;
         $i = 0;
-        foreach (DB::fetch_all("select id from %t where fid=%d", array($this->_table, $fid)) as $value) {
+        foreach (DB::fetch_all("select id from %t where fid=%d", [$this->_table, $fid]) as $value) {
             if (self::delete_by_id($value['id'])) $i++;
         }
         return $i;
@@ -119,8 +119,8 @@ class table_folder_attr extends dzz_table {
 
     //获取当前文件夹所有附属信息
     public function fetch_all_folder_setting_by_fid($fid) {
-        $settings = array();
-        foreach (DB::fetch_all("select * from %t where fid = %d", array($this->_table, $fid)) as $v) {
+        $settings = [];
+        foreach (DB::fetch_all("select * from %t where fid = %d", [$this->_table, $fid]) as $v) {
             $settings[$v['skey']] = $v['svalue'];
         }
         return $settings;
@@ -128,8 +128,8 @@ class table_folder_attr extends dzz_table {
 
     //获取当前文件夹所有附属信息
     public function fetch_all_by_fid($fid) {
-        $settings = array();
-        foreach (DB::fetch_all("select * from %t where fid = %d", array($this->_table, $fid)) as $v) {
+        $settings = [];
+        foreach (DB::fetch_all("select * from %t where fid = %d", [$this->_table, $fid]) as $v) {
             if ($v['skey'] == 'icon') {
                 $v['svalue'] = C::t('attachment')->getThumbByAid($value['svalue']);
             }

@@ -18,7 +18,7 @@ touch($lockfile);
 
 @set_time_limit(0);
 
-$list = $sublist = $cids = $touids = array();
+$list = $sublist = $cids = $touids = [];
 foreach (C::t('mailcron')->fetch_all_by_sendtime($_G['timestamp'], 0, $pernum) as $value) {
     if ($value['touid']) $touids[$value['touid']] = $value['touid'];
     $cids[] = $value['cid'];
@@ -32,7 +32,7 @@ foreach (C::t('mailqueue')->fetch_all_by_cid($cids) as $value) {
 }
 
 if ($touids) {
-    C::t('user_status')->update($touids, array('lastsendmail' => TIMESTAMP), 'UNBUFFERED');
+    C::t('user_status')->update($touids, ['lastsendmail' => TIMESTAMP], 'UNBUFFERED');
 }
 
 C::t('mailcron')->delete($cids);
@@ -61,4 +61,3 @@ foreach ($list as $cid => $value) {
         }
     }
 }
-?>

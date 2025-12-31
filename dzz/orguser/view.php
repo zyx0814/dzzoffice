@@ -61,7 +61,7 @@ function generateDepartmentPath($uid) {
 function generateUserItem($user, $department = '') {
     return [
         "uid" => $user['uid'],
-        "avatar" => avatar_block($user['uid'], array(), null, $user),
+        "avatar" => avatar_block($user['uid'], [], null, $user),
         "username" => $user['username'],
         "email" => $user['email'],
         "status" => $user['status'],
@@ -291,4 +291,3 @@ if($do == 'userlist') {
     }
     include template('user');
 }
-?>

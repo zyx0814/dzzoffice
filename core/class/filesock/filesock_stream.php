@@ -4,14 +4,14 @@ if (!defined('IN_DZZ')) {
 }
 
 class filesock_stream extends filesock_base {
-	public function request($param = array()) {
+	public function request($param = []) {
 		parent::request($param);
 		if(!$this->safequery) {
 			return '';
 		}
 		$boundary = $this->encodetype == 'application/x-www-form-urlencoded' ? '' : '----WebKitFormBoundary'.random(16);
 		$header = '';
-		$headerlist = array();
+		$headerlist = [];
 		$headerlist['Accept'] = '*/*';
 		$headerlist['Accept-Language'] = 'zh-CN';
 		$headerlist['User-Agent'] = $this->useragent;
@@ -49,7 +49,7 @@ class filesock_stream extends filesock_base {
 			}
 			$headerlist['Content-Length'] = strlen($data);
 			$headerlist['Cache-Control'] = 'no-cache';
-		} elseif(!in_array($this->method, array('GET', 'HEAD')) && $this->rawdata) {
+		} elseif(!in_array($this->method, ['GET', 'HEAD']) && $this->rawdata) {
 			$data = $this->rawdata;
 			$headerlist['Content-Type'] = $this->encodetype;
 			$headerlist['Content-Length'] = strlen($data);
@@ -71,13 +71,13 @@ class filesock_stream extends filesock_base {
 		}
 	
 		$fpflag = 0;
-		$context = array();
+		$context = [];
 		if($this->scheme == 'https') {
-			$context['ssl'] = array(
+			$context['ssl'] = [
 				'verify_peer' => false,
 				'verify_peer_name' => false,
 				'peer_name' => $this->host,
-			);
+            ];
 			if($this->verifypeer) {
 				$context['ssl']['verify_peer'] = true;
 				$context['ssl']['verify_peer_name'] = true;
@@ -88,12 +88,12 @@ class filesock_stream extends filesock_base {
 			}
 		}
 		if(ini_get('allow_url_fopen')) {
-			$context['http'] = array(
+			$context['http'] = [
 				'method' => $this->method,
 				'header' => $header,
 				'timeout' => $this->conntimeout,
 				'ignore_errors' => !$this->failonerror,
-			);
+            ];
 			if(isset($data)) {
 				$context['http']['content'] = $data;
 			}
@@ -105,14 +105,14 @@ class filesock_stream extends filesock_base {
 				$errstr = $est;
 				return true;
 			});
-			$fp = @fopen($this->scheme.'://'.($this->primaryip ? $this->primaryip : $this->host).':'.$this->port.$this->path, 'b', false, $context);
+			$fp = @fopen($this->scheme.'://'.($this->primaryip ?: $this->host).':'.$this->port.$this->path, 'b', false, $context);
 			$fpflag = 1;
 			restore_error_handler();
 		} elseif(function_exists('stream_socket_client')) {
 			$context = stream_context_create($context);
-			$fp = @stream_socket_client(($this->scheme == 'https' ? 'ssl://' : '').($this->primaryip ? $this->primaryip : $this->host).':'.$this->port, $errno, $errstr, $this->conntimeout, STREAM_CLIENT_CONNECT, $context);
+			$fp = @stream_socket_client(($this->scheme == 'https' ? 'ssl://' : '').($this->primaryip ?: $this->host).':'.$this->port, $errno, $errstr, $this->conntimeout, STREAM_CLIENT_CONNECT, $context);
 		} else {
-			$fp = @fsocketopen(($this->scheme == 'https' ? 'ssl://' : '').($this->scheme == 'https' ? $this->host : ($this->ip ? $this->ip : $this->host)), $this->port, $errno, $errstr, $this->conntimeout);
+			$fp = @fsocketopen(($this->scheme == 'https' ? 'ssl://' : '').($this->scheme == 'https' ? $this->host : ($this->ip ?: $this->host)), $this->port, $errno, $errstr, $this->conntimeout);
 		}
 	
 		if(!$fp) {

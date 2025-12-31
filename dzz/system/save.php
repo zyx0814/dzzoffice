@@ -26,7 +26,7 @@ $space = dzzgetspace($_G['uid']);
 $space['self'] = intval($space['self']);
 $refer = dreferer();
 if ($do == 'folder') {
-    $data = array();
+    $data = [];
     $fid = intval($_GET['fid']);
     if (isset($_GET['iconview'])) $data['iconview'] = intval($_GET['iconview']);
     if (isset($_GET['disp'])) $data['disp'] = intval($_GET['disp']);
@@ -37,7 +37,7 @@ if ($do == 'folder') {
     exit('success');
 } elseif ($do == 'catsearch') {
     $cid = intval($_GET['catid']);
-    $data = array();
+    $data = [];
     if (isset($_GET['iconview'])) $data['iconview'] = intval($_GET['iconview']);
     if (isset($_GET['disp'])) $data['disp'] = intval($_GET['disp']);
     if ($data) {
@@ -46,7 +46,7 @@ if ($do == 'folder') {
     exit('success');
 } elseif ($do == 'search') {
     $uid = getglobal('uid');
-    $data = array();
+    $data = [];
     if (isset($_GET['iconview'])) $data['iconview'] = intval($_GET['iconview']);
     if (isset($_GET['disp'])) $data['disp'] = intval($_GET['disp']);
     foreach ($data as $k => $v) {
@@ -59,7 +59,7 @@ if ($do == 'folder') {
     exit('success');
 } elseif ($do == 'recycle') {
     $uid = getglobal('uid');
-    $data = array();
+    $data = [];
     if (isset($_GET['iconview'])) $data['recycleiconview'] = intval($_GET['iconview']);
     if (isset($_GET['disp'])) $data['recycledisp'] = intval($_GET['disp']);
     foreach ($data as $k => $v) {
@@ -80,4 +80,3 @@ if ($do == 'folder') {
     }
     exit('success');
 }
-?>

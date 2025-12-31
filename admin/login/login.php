@@ -45,7 +45,7 @@ if($this->cpaccess == -2 || $this->cpaccess == -3) {
 
 } elseif ($this->cpaccess == -1) {
     $ltime = $this->sessionlife - (TIMESTAMP - $this->adminsession['dateline']);
-    echo '<div class="alert alert-danger" role="alert">' . lang('login_cplock', array('ltime' => $ltime)) . '</div>';
+    echo '<div class="alert alert-danger" role="alert">' . lang('login_cplock', ['ltime' => $ltime]) . '</div>';
 
 } elseif ($this->cpaccess == -4) {
     $ltime = $this->sessionlife - (TIMESTAMP - $this->adminsession['dateline']);
@@ -58,7 +58,7 @@ if($this->cpaccess == -2 || $this->cpaccess == -3) {
 
 html_login_footer();
 
-function html_login_header($form = true, $lang = array()) {
+function html_login_header($form = true, $lang = []) {
     global $_G;
     $charset = CHARSET;
     $title = $lang['login_title'];
@@ -80,8 +80,8 @@ function html_login_header($form = true, $lang = array()) {
 <body class="center-vh overflow-y-auto">
 EOT;
     if ($form) {
-        $loginset_img = $_G['setting']['loginset']['img'] ? $_G['setting']['loginset']['img'] : 'user/login/images/login.jpg';
-        $loginset_bcolor = $_G['setting']['loginset']['bcolor'] ? $_G['setting']['loginset']['bcolor'] : '#76838f';
+        $loginset_img = $_G['setting']['loginset']['img'] ?: 'user/login/images/login.jpg';
+        $loginset_bcolor = $_G['setting']['loginset']['bcolor'] ?: '#76838f';
         echo <<<EOT
 <div id="wrapper_div" style="width: 100%;height:100%;  position: absolute; top: 0px; left: 0px; margin: 0px; padding: 0px; overflow: hidden;z-index:0;  font-size: 0px; background:$loginset_bcolor;"> 
 	<img src="$loginset_img" name="imgbg" id="imgbg" style="right: 0px; bottom: 0px; top: 0px; left: 0px; z-index:1;margin:0;padding:0;overflow:hidden; position: absolute;width:100%;height:100%" height="100%" width="100%">
@@ -99,7 +99,7 @@ EOT;
     $halt && exit();
 }
 
-function html_login_form($lang = array()) {
+function html_login_form($lang = []) {
     global $_G;
     $year = dgmdate(TIMESTAMP, 'Y');
     $maintitle = $lang['title_admincp'];
@@ -138,4 +138,3 @@ function html_login_form($lang = array()) {
 EOT;
 }
 
-?>

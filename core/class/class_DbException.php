@@ -17,4 +17,3 @@ class DbException extends Exception{
 		return $this->sql;
 	}
 }
-?>

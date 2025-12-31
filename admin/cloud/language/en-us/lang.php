@@ -1,5 +1,4 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => 'Cloud Settings and Management',
-);
-?>
+];

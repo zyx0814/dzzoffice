@@ -9,21 +9,21 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
+$navtitle = $global_appinfo['appname'] ?: lang('appname');
 Hook::listen('adminlogin');
 $uid = $_G['uid'];
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $orgid = isset($_GET['orgid']) ? intval($_GET['orgid']) : '';
-$typeinfo = array(
-    'recycle' => array('name' => lang('recycle'), 'icon' => 'mdi-delete'),
-    'image' => array('name' => lang('photo'), 'icon' => 'mdi-file-image'),
-    'document' => array('name' => lang('type_attach'), 'icon' => 'mdi-file-document'),
-    'link' => array('name' => lang('type_link'), 'icon' => 'mdi-web'),
-    'video' => array('name' => lang('video'), 'icon' => 'mdi-video'),
-    'folder' => array('name' => lang('folder'), 'icon' => 'mdi-folder'),
-    'dzzdoc' => array('name' => 'DZZ' . lang('type_attach'), 'icon' => 'mdi-file'),
-    'attach' => array('name' => lang('rest_attachment'), 'icon' => 'mdi-file-chart')
-);
+$typeinfo = [
+    'recycle' => ['name' => lang('recycle'), 'icon' => 'mdi-delete'],
+    'image' => ['name' => lang('photo'), 'icon' => 'mdi-file-image'],
+    'document' => ['name' => lang('type_attach'), 'icon' => 'mdi-file-document'],
+    'link' => ['name' => lang('type_link'), 'icon' => 'mdi-web'],
+    'video' => ['name' => lang('video'), 'icon' => 'mdi-video'],
+    'folder' => ['name' => lang('folder'), 'icon' => 'mdi-folder'],
+    'dzzdoc' => ['name' => 'DZZ' . lang('type_attach'), 'icon' => 'mdi-file'],
+    'attach' => ['name' => lang('rest_attachment'), 'icon' => 'mdi-file-chart']
+];
 if ($do == 'delete') {
     $icoid = isset($_GET['icoid']) ? trim($_GET['icoid']) : '';
     if (empty($icoid)) {
@@ -72,8 +72,8 @@ if ($do == 'delete') {
         $order = 'ORDER BY dateline DESC';
     }
     $sql = "type!='app' and type!='shortcut'";
-    $foldername = array();
-    $param = array();
+    $foldername = [];
+    $param = [];
     if ($keyword) {
         $sql .= ' and (name like %s OR username=%s)';
         $param[] = '%' . $keyword . '%';
@@ -90,26 +90,22 @@ if ($do == 'delete') {
     if ($pfid) {
         $sql .= ' and (pfid = %d)';
         $param[] = $pfid;
-        $pathkey = DB::result_first("select pathkey from %t where fid = %d", array('resources_path', $pfid));
+        $pathkey = DB::result_first("select pathkey from %t where fid = %d", ['resources_path', $pfid]);
         $patharr = explode('-', str_replace('_', '', $pathkey));
         unset($patharr[0]);
-        foreach (DB::fetch_all("select fname,fid from %t where fid in(%n)", array('folder', $patharr)) as $v) {
-            $foldername[] = array('fid' => $v['fid'], 'fname' => $v['fname']);
+        foreach (DB::fetch_all("select fname,fid from %t where fid in(%n)", ['folder', $patharr]) as $v) {
+            $foldername[] = ['fid' => $v['fid'], 'fname' => $v['fname']];
         }
-    } else {
-        if ($orgid) {
-            if ($org = C::t('organization')->fetch($orgid)) {
-                $fids = array($org['fid']);
-                foreach (DB::fetch_all("select fid from %t where pfid=%d", array('folder', $org['fid'])) as $value) {
-                    $fids[] = $value['fid'];
-                }
-                $sql .= ' and  pfid IN(%n)';
-                $param[] = $fids;
-            }
+    } elseif ($orgid && $org = C::t('organization')->fetch($orgid)) {
+        $fids = [$org['fid']];
+        foreach (DB::fetch_all("select fid from %t where pfid=%d", ['folder', $org['fid']]) as $value) {
+            $fids[] = $value['fid'];
         }
+        $sql .= ' and  pfid IN(%n)';
+        $param[] = $fids;
     }
     $limitsql = 'limit ' . $start . ',' . $limit;
-    $list = array();
+    $list = [];
     $count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('resources') . " WHERE $sql", $param);
     if ($count) {
         $data = DB::fetch_all("SELECT rid FROM " . DB::table('resources') . " WHERE $sql $order $limitsql", $param);
@@ -176,8 +172,8 @@ if ($do == 'delete') {
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $list ? $list : [],
+        "count" => $count ?: 0,
+        "data" => $list ?: [],
         "breadcrumb" => $breadcrumb,
     ];
     $jsonReturn = json_encode($return);
@@ -197,10 +193,9 @@ if ($do == 'delete') {
         $orgpath = C::t('organization')->getPathByOrgid($org['orgid'], false);
         $org['depart'] = implode('-', ($orgpath));
     } else {
-        $org = array();
+        $org = [];
         $org['depart'] = lang('select_a_organization_or_department');
         $org['orgid'] = $orgid;
     }
     include template('list');
 }
-?>

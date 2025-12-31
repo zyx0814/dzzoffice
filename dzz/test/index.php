@@ -24,7 +24,7 @@ $teststring=$obj->autocharset( $teststring ,'utf8','utf8');
 $testid = !empty($_GET['testid']) ? intval($_GET['testid']) : 0;
 
 //所有参数使用$_GET获取；
-$test = array();
+$test = [];
 $navtitle = lang('title1');
 //定义模板的title内容；
 if ($testid) $test = C::t('test') -> fetch($testid);

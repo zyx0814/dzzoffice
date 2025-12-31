@@ -11,19 +11,16 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 $uid = $_G['uid'];
 $operation = isset($_GET['operation']) ? trim($_GET['operation']) : '';
 if ($operation == 'editpermgroup') {//编辑权限组
-    if ($_G['adminid'] != 1) exit(json_encode(array('error' => lang('no_privilege'))));
+    if ($_G['adminid'] != 1) exit(json_encode(['error' => lang('no_privilege')]));
     $perms = get_permsarray();//获取所有权限;
+    $id = isset($_GET['id']) ? intval($_GET['id']) : '';
     if (isset($_GET['submit'])) {
-        $id = isset($_GET['id']) ? intval($_GET['id']) : '';
         $groupperminfo = C::t('resources_permgroup')->fetch($id);
         $permname = isset($_GET['pername']) ? trim($_GET['pername']) : '';
         if (preg_match('/^\s*$/', $permname)) {
-            exit(json_encode(array('error' => '权限组名称不能为空')));
-        } else {
-            if ($groupperminfo['pername'] != $permname && C::t('resources_permgroup')->fetch_by_name($permname)) {
-                exit(json_encode(array('error' => '权限组名称不能重复')));
-            }
-
+            exit(json_encode(['error' => '权限组名称不能为空']));
+        } elseif ($groupperminfo['pername'] != $permname && C::t('resources_permgroup')->fetch_by_name($permname)) {
+            exit(json_encode(['error' => '权限组名称不能重复']));
         }
         $selperms = isset($_GET['perms']) ? $_GET['perms'] : '';
         $groupperm = 0;
@@ -34,36 +31,33 @@ if ($operation == 'editpermgroup') {//编辑权限组
             $groupperm += 1;
         }
         if (!$groupperm) {
-            exit(json_encode(array('error' => '请勾选权限')));
+            exit(json_encode(['error' => '请勾选权限']));
         }
-        $setarr = array(
+        $setarr = [
             'pername' => $permname,
             'perm' => $groupperm,
             'default' => isset($_GET['default']) ? intval($_GET['default']) : 0
-        );
+        ];
         if (C::t('resources_permgroup')->update_by_id($id, $setarr)) {
-            $selectperm = array();
+            $selectperm = [];
             foreach ($perms as $k => $v) {
                 if ($v[1] & $setarr['perm']) {
                     $selectperm[] = $v[2];
                 }
             }
-            showTips(array('success' => array('id' => $id, 'pername' => $setarr['pername'], 'perm' => $selectperm, 'default' => $setarr['default'], 'off' => $groupperminfo['off'])));
+            showTips(['success' => ['id' => $id, 'pername' => $setarr['pername'], 'perm' => $selectperm, 'default' => $setarr['default'], 'off' => $groupperminfo['off']]]);
         } else {
-            showTips(array('error' => true));
+            showTips(['error' => true]);
         }
 
-    } else {
-        $id = isset($_GET['id']) ? intval($_GET['id']) : '';
-        if (!$groupperm = C::t('resources_permgroup')->fetch($id)) {
-            exit(json_encode(array('error' => '权限组不存在或已经被删除')));
-        }
+    } elseif (!$groupperm = C::t('resources_permgroup')->fetch($id)) {
+        exit(json_encode(['error' => '权限组不存在或已经被删除']));
     }
 } elseif ($operation == 'editusergroup') {
     $groupid = isset($_GET['groupid']) ? intval($_GET['groupid']) : 0;
-    $group = array();
+    $group = [];
     if ($groupid > 0) {
-        $group = DB::fetch_first("select f.*,g.grouptitle,g.type from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid=%d", array('usergroup_field', 'usergroup', $groupid));
+        $group = DB::fetch_first("select f.*,g.grouptitle,g.type from %t f LEFT JOIN %t g ON g.groupid=f.groupid where f.groupid=%d", ['usergroup_field', 'usergroup', $groupid]);
         if(!$group) showmessage('未查询到用户组信息');
     }
     if (isset($_GET['submit'])) {
@@ -75,26 +69,24 @@ if ($operation == 'editpermgroup') {//编辑权限组
         }
         if ($groupid > 0) {
             if ($group['grouptitle'] != $grouptitle) {
-                if(DB::fetch_first('SELECT * FROM %t WHERE grouptitle=%s', array('usergroup', $grouptitle))) {
+                if(DB::fetch_first('SELECT * FROM %t WHERE grouptitle=%s', ['usergroup', $grouptitle])) {
                     showmessage('用户组名称不能重复');
                 }
             }
-        } else {
-            if(DB::fetch_first('SELECT * FROM %t WHERE grouptitle=%s', array('usergroup', $grouptitle))) {
-                showmessage('用户组名称不能重复');
-            }
+        } elseif(DB::fetch_first('SELECT * FROM %t WHERE grouptitle=%s', ['usergroup', $grouptitle])) {
+            showmessage('用户组名称不能重复');
         }
         
         
-        $data = array(
+        $data = [
             'grouptitle' => $grouptitle,
-        );
+        ];
         $updatecache = false;
-        $setarr = array(
+        $setarr = [
             'maxspacesize' => intval($groupfield['maxspacesize']),
             'maxattachsize' => intval($groupfield['maxattachsize']),
             'attachextensions' => trim($groupfield['attachextensions'])
-        );
+        ];
         $selperms = isset($_GET['perms']) ? $_GET['perms'] : '';
         $groupperm = 0;
         if (!empty($selperms)) {
@@ -122,12 +114,12 @@ if ($operation == 'editpermgroup') {//编辑权限组
             include_once libfile('function/cache');
             updatecache('usergroups');
         }
-        exit(json_encode(array('success' => true)));
+        exit(json_encode(['success' => true]));
     } else {
         $perms = get_permsarray();//获取所有权限;
         $controlperms = get_permsarray('control');
         $userperms = get_permsarray('user');
-        if(in_array($group['groupid'],array(1,2))) {
+        if(in_array($group['groupid'], [1,2])) {
             $isadminperm = true;
         }
     }
@@ -136,8 +128,8 @@ if ($operation == 'editpermgroup') {//编辑权限组
     if (!$groupid) {
         showmessage('parameters_error');
     }
-    if(!in_array($groupid, array('1','2','3','5','6','7','8','9'))) {
-        $count = c::t('user')->count_by_groupid($groupid);
+    if(!in_array($groupid, ['1','2','3','5','6','7','8','9'])) {
+        $count = C::t('user')->count_by_groupid($groupid);
         if($count) {
             showmessage('该用户组当前有'.$count.'个用户正在使用，请先将用户移出该用户组后再删除');
         }
@@ -148,6 +140,6 @@ if ($operation == 'editpermgroup') {//编辑权限组
     } else {
         showmessage('核心组不允许删除');
     }
-    exit(json_encode(array('success' => true)));
+    exit(json_encode(['success' => true]));
 }
 include template('ajax');

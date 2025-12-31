@@ -39,7 +39,7 @@ class table_resources_attr extends dzz_table {
     }
 
     public function insert($setarr, $return_insert_id = false, $replace = false, $silent = false) {
-        if ($id = DB::result_first("select id from %t where rid=%s and skey=%s and vid=%d", array($this->_table, $setarr['rid'], $setarr['skey'], intval($setarr['vid'])))) {
+        if ($id = DB::result_first("select id from %t where rid=%s and skey=%s and vid=%d", [$this->_table, $setarr['rid'], $setarr['skey'], intval($setarr['vid'])])) {
             if ($setarr['skey'] == 'icon') {
                 $o = parent::fetch($id);
             }
@@ -63,8 +63,8 @@ class table_resources_attr extends dzz_table {
         if ($returndata = $this->fetch_cache($cachekey)) {
             return $returndata;
         }
-        $returndata = array();
-        foreach (DB::fetch_all("select * from %t where rid = %s and vid = %d", array($this->_table, $rid, $vid)) as $val) {
+        $returndata = [];
+        foreach (DB::fetch_all("select * from %t where rid = %s and vid = %d", [$this->_table, $rid, $vid]) as $val) {
             if ($val['skey'] == 'icon') {
                 $val['sval'] = C::t('attachment')->getThumbByAid($val['sval'], 0, 0, 1);
                 $val['skey'] = 'img';
@@ -83,7 +83,7 @@ class table_resources_attr extends dzz_table {
             }
             return $returndata;
         }
-        $returndata = DB::fetch_first("SELECT * FROM %t WHERE rid = %s AND vid = %d AND skey = %s", array($this->_table, $rid, $vid, $key));
+        $returndata = DB::fetch_first("SELECT * FROM %t WHERE rid = %s AND vid = %d AND skey = %s", [$this->_table, $rid, $vid, $key]);
         if ($returndata) {
             $this->store_cache($cachekey, $returndata);
             if ($isval) {
@@ -93,10 +93,10 @@ class table_resources_attr extends dzz_table {
         return $returndata;
     }
 
-    public function insert_attr($rid, $vid = 0, $attrs = array()) {
+    public function insert_attr($rid, $vid = 0, $attrs = []) {
         $i = 0;
         foreach ($attrs as $k => $v) {
-            $setarr = array('rid' => $rid, 'skey' => $k, 'vid' => $vid, 'sval' => $v);
+            $setarr = ['rid' => $rid, 'skey' => $k, 'vid' => $vid, 'sval' => $v];
             if (self::insert($setarr)) {
                 $i++;
             }
@@ -106,7 +106,7 @@ class table_resources_attr extends dzz_table {
 
     public function delete_by_rvid($rid, $vid) {
         $i = 0;
-        foreach (DB::fetch_all("select id from %t where rid=%s and vid=%d", array($this->_table, $rid, $vid)) as $value) {
+        foreach (DB::fetch_all("select id from %t where rid=%s and vid=%d", [$this->_table, $rid, $vid]) as $value) {
             if (self::delete_by_id($value['id'])) {
                 $i++;
             }
@@ -117,7 +117,7 @@ class table_resources_attr extends dzz_table {
     public function delete_by_rid($rid) {
         if (!is_array($rid)) $rid = (array)$rid;
         $i = 0;
-        foreach (DB::fetch_all("select id from %t where rid IN(%n) ", array($this->_table, $rid)) as $value) {
+        foreach (DB::fetch_all("select id from %t where rid IN(%n) ", [$this->_table, $rid]) as $value) {
             if (self::delete_by_id($value['id'])) {
                 $i++;
             }
@@ -128,7 +128,7 @@ class table_resources_attr extends dzz_table {
     public function update_by_skey($rid, $vid, $skeyarr) {
         $i = 0;
         foreach ($skeyarr as $k => $v) {
-            $setarr = array('rid' => $rid, 'skey' => $k, 'vid' => $vid, 'sval' => $v);
+            $setarr = ['rid' => $rid, 'skey' => $k, 'vid' => $vid, 'sval' => $v];
             if (self::insert($setarr)) {
                 $i++;
             }
@@ -138,8 +138,8 @@ class table_resources_attr extends dzz_table {
 
     public function update_vid_by_rvid($rid, $oldvid, $vid) {
         $i = 0;
-        foreach (DB::fetch_all("select id from %t where rid=%s and vid = %d", array($this->_table, $rid, $oldvid)) as $value) {
-            if (self::update($value['id'], array('vid' => $vid))) {
+        foreach (DB::fetch_all("select id from %t where rid=%s and vid = %d", [$this->_table, $rid, $oldvid]) as $value) {
+            if (self::update($value['id'], ['vid' => $vid])) {
                 $i++;
             }
         }

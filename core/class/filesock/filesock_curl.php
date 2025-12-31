@@ -5,35 +5,35 @@ if (!defined('IN_DZZ')) {
 
 class filesock_curl extends filesock_base {
 	public $curlstatus;
-	public function __construct($param = array()) {
+	public function __construct($param = []) {
 		parent::__construct($param);
 		if(version_compare(PHP_VERSION, '7.2', '>=')) {
 			$this->allowmultiip = true;
 		}
 	}
-	public function request($param = array()) {
+	public function request($param = []) {
 		parent::request($param);
 		if(!$this->safequery) {
 			return '';
 		}
 		$ch = curl_init();
-		$headerlist = $httpheader = array();
+		$headerlist = $httpheader = [];
 		if($this->primaryip) {
 			$headerlist['Host'] = $this->host;
 		}
 		$headerlist['User-Agent'] = $this->useragent;
 		if($this->primaryip) {
 			if($this->allowmultiip && $this->iplist) {
-				$iplist = array();
+				$iplist = [];
 				foreach($this->iplist[1] as $v) {
 					$iplist[] = '['.$v.']';
 				}
 				foreach($this->iplist[0] as $v) {
 					$iplist[] = $v;
 				}
-				curl_setopt($ch, CURLOPT_RESOLVE, array($this->host.':'.$this->port.':'.implode(',', $iplist)));
+				curl_setopt($ch, CURLOPT_RESOLVE, [$this->host.':'.$this->port.':'.implode(',', $iplist)]);
 			} else {
-				curl_setopt($ch, CURLOPT_RESOLVE, array($this->host.':'.$this->port.':'.$this->primaryip));
+				curl_setopt($ch, CURLOPT_RESOLVE, [$this->host.':'.$this->port.':'.$this->primaryip]);
 			}
 		}
 		curl_setopt($ch, CURLOPT_URL, $this->scheme.'://'.$this->host.($this->port ? ':'.$this->port : '').$this->path);
@@ -75,7 +75,7 @@ class filesock_curl extends filesock_base {
 				$headerlist['Content-Type'] = $this->encodetype;
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $this->rawdata);
 			}
-		} elseif(!in_array($this->method, array('GET', 'HEAD')) && $this->rawdata) {
+		} elseif(!in_array($this->method, ['GET', 'HEAD']) && $this->rawdata) {
 			$headerlist['Content-Type'] = $this->encodetype;
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->method);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $this->rawdata);

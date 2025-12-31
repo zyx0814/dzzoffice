@@ -20,12 +20,12 @@ class table_app_organization extends dzz_table {
     }
 
     public function insert($appid, $orgid = false, $replace = false, $silent = false) {
-        return DB::insert($this->_table, array("orgid" => $orgid, 'appid' => $appid, 'dateline' => TIMESTAMP), 1, 1);
+        return DB::insert($this->_table, ["orgid" => $orgid, 'appid' => $appid, 'dateline' => TIMESTAMP], 1, 1);
     }
 
     public function replace_orgids_by_appid($appid, $orgids) {
         $Oorgids = self::fetch_orgids_by_appid($appid);
-        if (!is_array($orgids)) $orgids = array($orgids);
+        if (!is_array($orgids)) $orgids = [$orgids];
         $insertids = array_diff($orgids, $Oorgids);
         $delids = array_diff($Oorgids, $orgids);
         if ($delids) DB::delete($this->_table, "appid='{$appid}' and orgid IN (" . dimplode($delids) . ")");
@@ -41,22 +41,22 @@ class table_app_organization extends dzz_table {
 
     public function delete_by_orgid($orgids) {
         if (!$orgids) return;
-        if (!is_array($orgids)) $orgids = array($orgids);
+        if (!is_array($orgids)) $orgids = [$orgids];
         return DB::delete($this->_table, "orgid IN (" . dimplode($orgids) . ")");
     }
 
     public function fetch_appids_by_orgid($orgids, $sub = false) {
-        $appids = array();
+        $appids = [];
         $orgids = (array)$orgids;
         if ($sub) {
 
-            foreach (DB::fetch_all("select * from %t where 1", array($this->_table)) as $value) {
+            foreach (DB::fetch_all("select * from %t where 1", [$this->_table]) as $value) {
                 if (($porgids = C::t('organization')->fetch_parent_by_orgid($value['orgid'], true)) && array_intersect($porgids, $orgids)) {
                     $appids[] = $value['appid'];
                 }
             }
         } else {
-            $query = DB::query("select appid from %t where orgid IN(%n)", array($this->_table, $orgids));
+            $query = DB::query("select appid from %t where orgid IN(%n)", [$this->_table, $orgids]);
             while ($value = DB::fetch($query)) {
                 $appids[] = $value['appid'];
             }
@@ -65,8 +65,8 @@ class table_app_organization extends dzz_table {
     }
 
     public function fetch_notin_appids_by_uid($uid) {
-        if (!$uid) return array();
-        $paichu_appids = $orgids = array();
+        if (!$uid) return [];
+        $paichu_appids = $orgids = [];
         foreach (C::t('organization_user')->fetch_orgids_by_uid($uid) as $orgid) {
             if ($parentids = C::t('organization')->fetch_parent_by_orgid($orgid)) {
                 $orgids = array_merge($orgids, $parentids);
@@ -75,9 +75,9 @@ class table_app_organization extends dzz_table {
         if ($orgids) {
             $appids = C::t('app_organization')->fetch_appids_by_orgid($orgids);
         } else {
-            $appids = array();
+            $appids = [];
         }
-        foreach (DB::fetch_all("select appid from %t where appid NOT IN(%n) ", array($this->_table, $appids)) as $value) {
+        foreach (DB::fetch_all("select appid from %t where appid NOT IN(%n) ", [$this->_table, $appids]) as $value) {
             $paichu_appids[] = $value['appid'];
         }
 
@@ -85,8 +85,8 @@ class table_app_organization extends dzz_table {
     }
 
     public function fetch_orgids_by_appid($appid) {
-        $orgids = array();
-        $arr = DB::fetch_all("select orgid from %t where appid = %d ", array($this->_table, $appid));
+        $orgids = [];
+        $arr = DB::fetch_all("select orgid from %t where appid = %d ", [$this->_table, $appid]);
         foreach ($arr as $value) {
             $orgids[] = $value['orgid'];
         }
@@ -96,4 +96,4 @@ class table_app_organization extends dzz_table {
 
 }
 
-?>
+

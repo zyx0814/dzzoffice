@@ -14,16 +14,16 @@ if (!defined('IN_DZZ')) {
 class Uploader {
     private $fileField; //文件域名
     private $file; //文件上传对象
-    private $base64; //文件上传对象
+    //文件上传对象
     private $config; //配置信息
     private $oriName; //原始文件名
     private $fileName; //新文件名
-    private $fullName; //完整文件名,即从当前配置目录开始的URL
-    private $filePath; //完整文件名,即从当前配置目录开始的URL
+    //完整文件名,即从当前配置目录开始的URL
+    //完整文件名,即从当前配置目录开始的URL
     private $fileSize; //文件大小
     private $fileType; //文件类型
     private $stateInfo; //上传状态信息,
-    private $stateMap = array( //上传状态映射表，国际化用户需考虑此处数据的国际化
+    private $stateMap = [ //上传状态映射表，国际化用户需考虑此处数据的国际化
         "SUCCESS", //上传成功标记，在UEditor中内不可改变，否则flash判断会出错
         "文件大小超出 upload_max_filesize 限制",
         "文件大小超出 MAX_FILE_SIZE 限制",
@@ -43,7 +43,7 @@ class Uploader {
         "ERROR_DEAD_LINK" => "链接不可用",
         "ERROR_HTTP_LINK" => "链接不是http链接",
         "ERROR_HTTP_CONTENTTYPE" => "链接contentType不正确"
-    );
+    ];
 
     /**
      * 构造函数
@@ -185,9 +185,9 @@ class Uploader {
         //打开输出缓冲区并获取远程图片
         ob_start();
         $context = stream_context_create(
-            array('http' => array(
+            ['http' => [
                 'follow_location' => false // don't follow redirects
-            ))
+            ]]
         );
         readfile($imgUrl, false, $context);
         $img = ob_get_contents();
@@ -300,7 +300,7 @@ class Uploader {
      * @return array
      */
     public function getFileInfo() {
-        return array(
+        return [
             "state" => $this->stateInfo,
             "url" => $this->attach['url'],
             "title" => $this->fileName,
@@ -308,7 +308,7 @@ class Uploader {
             "type" => $this->fileType,
             "size" => $this->fileSize,
             "attach" => $this->attach
-        );
+        ];
     }
 
     public function getPath($filename, $dir = 'dzz') {
@@ -326,7 +326,7 @@ class Uploader {
         $target_attach = getglobal('setting/attachdir') . $target1;
         $targetpath = dirname($target_attach);
         dmkdir($targetpath);
-        return $target . date('His') . '' . strtolower(random(16)) . '.' . $ext;
+        return $target . date('His') . strtolower(random(16)) . '.' . $ext;
     }
 
     public function save($file_path, $filename) {
@@ -334,16 +334,16 @@ class Uploader {
 
         $md5 = md5_file($file_path);
         $filesize = filesize($file_path);
-        if ($md5 && $attach = DB::fetch_first("select * from %t where md5=%s and filesize=%d", array('attachment', $md5, $filesize))) {
+        if ($md5 && $attach = DB::fetch_first("select * from %t where md5=%s and filesize=%d", ['attachment', $md5, $filesize])) {
             $attach['filename'] = $filename;
             $attach['filetype'] = trim($this->fileType, '.');
-            if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
+            if (in_array(strtolower($attach['filetype']), ['png', 'jpeg', 'jpg', 'gif', 'bmp'])) {
                 $attach['url'] = C::t('attachment')->getThumbByAid($attach, 0, 0, 1);
                 $attach['img'] = C::t('attachment')->getThumbByAid($attach, 256, 256);
                 $attach['isimage'] = 1;
             } else {
                 $attach['img'] = geticonfromext($attach['filetype']);
-                $attach['url'] = (DZZSCRIPT ? DZZSCRIPT : 'index.php') . '?mod=io&op=getStream&path=' . dzzencode('attach::' . $attach['aid']);
+                $attach['url'] = (DZZSCRIPT ?: 'index.php') . '?mod=io&op=getStream&path=' . dzzencode('attach::' . $attach['aid']);
                 $attach['isimage'] = 0;
             }
             $attach['dpath'] = $attach['apath'] = dzzencode('attach::' . $attach['aid']);
@@ -372,7 +372,7 @@ class Uploader {
             $filesize = filesize($filepath);
             $remote = 0;
 
-            $attach = array(
+            $attach = [
 
                 'filesize' => $filesize,
                 'attachment' => $target,
@@ -383,18 +383,18 @@ class Uploader {
                 'md5' => $md5,
                 'unrun' => $unrun,
                 'dateline' => $_G['timestamp'],
-            );
+            ];
 
             if ($attach['aid'] = C::t('attachment')->insert($attach, 1)) {
                 C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
                 dfsockopen(getglobal('siteurl') . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1, false);
-                if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
+                if (in_array(strtolower($attach['filetype']), ['png', 'jpeg', 'jpg', 'gif', 'bmp'])) {
                     $attach['url'] = C::t('attachment')->getThumbByAid($attach, 0, 0, 1);
                     $attach['img'] = C::t('attachment')->getThumbByAid($attach, 256, 256);
                     $attach['isimage'] = 1;
                 } else {
                     $attach['img'] = geticonfromext($attach['filetype']);
-                    $attach['url'] = (DZZSCRIPT ? DZZSCRIPT : 'index.php') . '?mod=io&op=getStream&path=' . dzzencode('attach::' . $attach['aid']);
+                    $attach['url'] = (DZZSCRIPT ?: 'index.php') . '?mod=io&op=getStream&path=' . dzzencode('attach::' . $attach['aid']);
                     $attach['isimage'] = 0;
                 }
                 $attach['dpath'] = $attach['apath'] = dzzencode('attach::' . $attach['aid']);

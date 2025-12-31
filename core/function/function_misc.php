@@ -31,7 +31,7 @@ function convertip($ip) {
 
 function convertip_tiny($ip, $ipdatafile) {
 
-    static $fp = NULL, $offset = array(), $index = NULL;
+    static $fp = NULL, $offset = [], $index = NULL;
 
     $ipdot = explode('.', $ip);
     $ip = pack('N', ip2long($ip));
@@ -42,7 +42,7 @@ function convertip_tiny($ip, $ipdatafile) {
     if ($fp === NULL && $fp = @fopen($ipdatafile, 'rb')) {
         $offset = @unpack('Nlen', @fread($fp, 4));
         $index = @fread($fp, $offset['len'] - 4);
-    } elseif ($fp == FALSE) {
+    } elseif (!$fp) {
         return '- Invalid IP data file';
     }
 
@@ -204,26 +204,11 @@ function convertip_full($ip, $ipdatafile) {
 
 }
 
-function modlog($thread, $action) {
-    global $_G;
-    $reason = $_GET['reason'];
-    writelog('modslog', dhtmlspecialchars("{$_G['timestamp']}\t{$_G['username']}\t{$_G['adminid']}\t{$_G['clientip']}\t" . $_G['forum']['fid'] . "\t" . $_G['forum']['name'] . "\t{$thread['tid']}\t{$thread['subject']}\t$action\t$reason\t" . $_G['toforum']['fid'] . "\t" . $_G['toforum']['name']));
-}
-
-function savebanlog($username, $origgroupid, $newgroupid, $expiration, $reason) {
-    global $_G;
-    if ($_G['setting']['plugins']['func'][HOOKTYPE]['savebanlog']) {
-        $param = func_get_args();
-        hookscript('savebanlog', 'global', 'funcs', array('param' => $param), 'savebanlog');
-    }
-    writelog('banlog', dhtmlspecialchars("{$_G['timestamp']}\t{$_G['member']['username']}\t{$_G['groupid']}\t{$_G['clientip']}\t$username\t$origgroupid\t$newgroupid\t$expiration\t$reason"));
-}
-
 function clearlogstring($str) {
     if (!empty($str)) {
         if (!is_array($str)) {
             $str = dhtmlspecialchars(trim($str));
-            $str = str_replace(array("\t", "\r\n", "\n", "   ", "  "), ' ', $str);
+            $str = str_replace(["\t", "\r\n", "\n", "   ", "  "], ' ', $str);
         } else {
             foreach ($str as $key => $val) {
                 $str[$key] = clearlogstring($val);
@@ -233,7 +218,7 @@ function clearlogstring($str) {
     return $str;
 }
 
-function implodearray($array, $skip = array()) {
+function implodearray($array, $skip = []) {
     $return = '';
     if (is_array($array) && !empty($array)) {
         foreach ($array as $key => $value) {
@@ -251,4 +236,4 @@ function implodearray($array, $skip = array()) {
     return $return;
 }
 
-?>
+

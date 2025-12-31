@@ -25,8 +25,8 @@ class table_setting extends dzz_table {
         return $auto_unserialize ? (array)unserialize($data) : $data;
     }
 
-    public function fetch_all($skeys = array(), $auto_unserialize = false) {
-        $data = array();
+    public function fetch_all($skeys = [], $auto_unserialize = false) {
+        $data = [];
         $where = !empty($skeys) ? ' WHERE ' . DB::field($this->_pk, $skeys) : '';
         $query = DB::query('SELECT * FROM ' . DB::table($this->_table) . $where);
         while ($value = DB::fetch($query)) {
@@ -36,11 +36,11 @@ class table_setting extends dzz_table {
     }
 
     public function update($skey, $svalue, $unbuffered = false, $low_priority = false) {
-        return DB::insert($this->_table, array($this->_pk => $skey, 'svalue' => is_array($svalue) ? serialize($svalue) : $svalue), false, true);
+        return DB::insert($this->_table, [$this->_pk => $skey, 'svalue' => is_array($svalue) ? serialize($svalue) : $svalue], false, true);
     }
 
     public function update_batch($array) {
-        $settings = array();
+        $settings = [];
         foreach ($array as $key => $value) {
             $key = addslashes($key);
             $value = addslashes(is_array($value) ? serialize($value) : $value);
@@ -53,7 +53,7 @@ class table_setting extends dzz_table {
     }
 
     public function skey_exists($skey) {
-        return DB::result_first('SELECT skey FROM %t WHERE skey=%s LIMIT 1', array($this->_table, $skey)) ? true : false;
+        return (bool)DB::result_first('SELECT skey FROM %t WHERE skey=%s LIMIT 1', [$this->_table, $skey]);
     }
 
     public function fetch_all_not_key($skey) {
@@ -69,10 +69,10 @@ class table_setting extends dzz_table {
     }
 
     public function update_count($skey, $num) {
-        return DB::query("UPDATE %t SET svalue = svalue + %d WHERE skey = %s", array($this->_table, $num, $skey), false, true);
+        return DB::query("UPDATE %t SET svalue = svalue + %d WHERE skey = %s", [$this->_table, $num, $skey], false, true);
     }
 
 
 }
 
-?>
+

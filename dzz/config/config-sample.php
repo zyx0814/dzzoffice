@@ -1,5 +1,5 @@
 <?php
-return array(
+return [
     /*是否有访问权限，0=>任何人都可访问,1=>需登录可访问,2=>管理员可访问,3=>创始人可访问;默认值为1*/
     'allow_view' => 1,
     'allow_robot' => false,//是否允许机器人爬取
@@ -13,4 +13,4 @@ return array(
      * 此配置默认为空
     */
     'libfile' => '',
-);
+];

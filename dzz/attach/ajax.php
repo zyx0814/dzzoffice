@@ -13,12 +13,12 @@ if (!defined('IN_DZZ')) {
 if ($_GET['do'] == 'imageUpload') {
 
     include_once libfile('class/uploadhandler');
-    $options = array('generate_response' => false,
+    $options = ['generate_response' => false,
         'param_name' => 'upfile',
         'accept_file_types' => '/\.(gif|jpe?g|png)$/i',
         'upload_dir' => $_G['setting']['attachdir'] . 'cache/',
         'upload_url' => $_G['setting']['attachurl'] . 'cache/',
-    );
+    ];
     $upload_handler = new uploadhandler($options);
 
     $type = $_GET['type'];
@@ -38,7 +38,7 @@ if ($_GET['do'] == 'imageUpload') {
         $str = '';
         foreach ($info as $value) {
             $value['state'] = 'SUCCESS';
-            if (in_array($value['filetype'], array('jpg', 'jpeg', 'png', 'gif', 'bmp'))) {
+            if (in_array($value['filetype'], ['jpg', 'jpeg', 'png', 'gif', 'bmp'])) {
                 $value['url'] = DZZSCRIPT . '?mod=io&op=thumbnail&width=700&height=500&path=' . dzzencode('attach::' . $value['aid']) . '&original=1';
                 $str .= '<img class="attach-item image" path="' . rawurlencode('attach::' . $value['aid']) . '" src="' . $value['url'] . '" _src="' . $value['url'] . '" />';
             } else {
@@ -53,4 +53,4 @@ if ($_GET['do'] == 'imageUpload') {
     exit();
 
 }
-?>
+

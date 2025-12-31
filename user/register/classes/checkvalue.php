@@ -21,24 +21,24 @@ class Checkvalue {
 
         //验证同意协议
         if ($setting['bbrules'] && $bbrulehash != $_POST['agreebbrule']) {
-            showTips(array('error' => lang('register_rules_agree')), $type);
+            showTips(['error' => lang('register_rules_agree')], $type);
         }
         $seccodecheck = $_G['setting']['seccodestatus'] & 1;
 
         //验证码
         if ($seccodecheck) {
             if (!check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
-                showTips(array('error' => lang('submit_seccode_invalid')), $type);
+                showTips(['error' => lang('submit_seccode_invalid')], $type);
             }
         }
 
         //验证用户名 
         $usernamelen = dstrlen($params['username']);
         if ($usernamelen < 3) {
-            showTips(array('error' => lang('profile_username_tooshort')), $type);
+            showTips(['error' => lang('profile_username_tooshort')], $type);
         }
         if ($usernamelen > 30) {
-            showTips(array('error' => lang('profile_username_toolong')), $type);
+            showTips(['error' => lang('profile_username_toolong')], $type);
         }
 
         //验证邮箱
@@ -50,13 +50,13 @@ class Checkvalue {
 
             if (strlen($params['password']) < $setting['pwlength']) {
 
-                showTips(array('error' => lang('profile_password_tooshort', array('pwlength' => $setting['pwlength']))), $type);
+                showTips(['error' => lang('profile_password_tooshort', ['pwlength' => $setting['pwlength']])], $type);
             }
         }
         //验证密码强度
         if ($setting['strongpw']) {
 
-            $strongpw_str = array();
+            $strongpw_str = [];
 
             if (in_array(1, $setting['strongpw']) && !preg_match("/\d+/", $params['password'])) {
 
@@ -84,21 +84,21 @@ class Checkvalue {
 
             if ($strongpw_str) {
 
-                showTips(array('error' => lang('password_weak') . implode(',', $strongpw_str)), $type);
+                showTips(['error' => lang('password_weak') . implode(',', $strongpw_str)], $type);
             }
         }
         //验证两次密码一致性
         if ($params['password'] !== $params['password2']) {
 
-            showTips(array('error' => lang('password_not_match')), $type);
+            showTips(['error' => lang('password_not_match')], $type);
         }
 
         if (!$params['password'] || $params['password'] != addslashes($params['password'])) {
 
-            showTips(array('error' => lang('profile_passwd_illegal')), $type);
+            showTips(['error' => lang('profile_passwd_illegal')], $type);
         }
 
-        $profile = $verifyarr = array();
+        $profile = $verifyarr = [];
 
         foreach ($_G['cache']['fields_register'] as $field) {
             $field_key = $field['fieldid'];
@@ -107,7 +107,7 @@ class Checkvalue {
                 $field_val = true;
             }
             if (!profile_check($field_key, $field_val)) {
-                showTips(array('error' => $field['title'] . lang('profile_illegal')), $type);
+                showTips(['error' => $field['title'] . lang('profile_illegal')], $type);
             }
         }
     }

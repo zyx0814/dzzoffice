@@ -21,14 +21,14 @@ class table_local_storage extends dzz_table {
     }
 
     public function fetch_by_remoteid($remoteid) {
-        if(!$remoteid) return array();
-        static $fetch_by_remoteid = array();
+        if(!$remoteid) return [];
+        static $fetch_by_remoteid = [];
         $remoteid = intval($remoteid);
         if (isset($fetch_by_remoteid[$remoteid])) {
             return $fetch_by_remoteid[$remoteid];
         }
         if (!$data = self::fetch($remoteid)) {
-            return array();
+            return [];
         }
         if ($connect = C::t('connect')->fetch($data['bz'])) {
             $data = array_merge($connect, $data);
@@ -54,21 +54,21 @@ class table_local_storage extends dzz_table {
     }
 
     public function fetch_all_orderby_disp() {
-        $data = array();
-        foreach (DB::fetch_all("SELECT s.*,c.available FROM %t s LEFT JOIN %t c ON c.bz=s.bz WHERE 1 ORDER BY s.disp ", array($this->_table, 'connect')) as $value) {
+        $data = [];
+        foreach (DB::fetch_all("SELECT s.*,c.available FROM %t s LEFT JOIN %t c ON c.bz=s.bz WHERE 1 ORDER BY s.disp ", [$this->_table, 'connect']) as $value) {
             $data[$value['remoteid']] = $value;
         }
         return $data;
     }
 
     public function update_usesize_by_remoteid($remoteid, $ceof) {
-        if (!$remoteid) $remoteid = DB::result_first("select remoteid from %t where bz='dzz' limit 1", array($this->_table));
+        if (!$remoteid) $remoteid = DB::result_first("select remoteid from %t where bz='dzz' limit 1", [$this->_table]);
         $ceof = intval($ceof);
         try {
             if ($ceof > 0) {
-                DB::query("update %t set usesize=usesize+%d where remoteid=%d", array($this->_table, $ceof, $remoteid));
+                DB::query("update %t set usesize=usesize+%d where remoteid=%d", [$this->_table, $ceof, $remoteid]);
             } else {
-                DB::query("update %t set usesize=usesize-%d where remoteid=%d", array($this->_table, abs($ceof), $remoteid));
+                DB::query("update %t set usesize=usesize-%d where remoteid=%d", [$this->_table, abs($ceof), $remoteid]);
             }
             $this->clear_cache($remoteid);
         } catch (Exception $e) {
@@ -87,7 +87,7 @@ class table_local_storage extends dzz_table {
     public function getQuota($remoteid) {
         global $_G;
         $data = self::fetch_by_remoteid($remoteid);
-        $return = array();
+        $return = [];
         if ($data['type'] == 'local') {
             $return['usesize'] = C::t('attachment')->getSizeByRemote($remoteid);
             $return['totalsize'] = disk_free_space($_G['setting']['attachdir']);
@@ -116,8 +116,8 @@ class table_local_storage extends dzz_table {
 
     public function delete_by_remoteid($remoteid) {
         $data = self::fetch($remoteid);
-        if ($data['bz'] == 'dzz') return array('error' => '内置，不能删除');
-        if (C::t('attachment')->getSizeByRemote($remoteid) > 0) return array('error' => '有文件未迁移，不能删除');
+        if ($data['bz'] == 'dzz') return ['error' => '内置，不能删除'];
+        if (C::t('attachment')->getSizeByRemote($remoteid) > 0) return ['error' => '有文件未迁移，不能删除'];
         C::t('local_router')->delete_by_remoteid($remoteid);
         if ($data['dname'] && $data['did']) C::t($data['dname'])->delete_by_id($data['did']);//删除链接
         return self::delete($remoteid);
@@ -129,4 +129,4 @@ class table_local_storage extends dzz_table {
 
 }
 
-?>
+

@@ -16,13 +16,13 @@ class table_share_report extends dzz_table {
      * @return array 举报类型数组
      */
     public function get_report_types() {
-        return array(
+        return [
             1 => '侵权',
             2 => '色情',
             3 => '暴力',
             4 => '政治',
             5 => '其他'
-        );
+        ];
     }
 
     /**
@@ -32,7 +32,7 @@ class table_share_report extends dzz_table {
      * @return array 添加结果
      */
     public function addreport($uid, $setarr) {
-        $ret = array();
+        $ret = [];
         if (!$uid) {
             $ret['error'] = '用户ID不能为空';
             return $ret;
@@ -59,21 +59,21 @@ class table_share_report extends dzz_table {
             return $ret;
         }
         // 检查用户是否已经举报过该分享
-        $isreport = DB::fetch_first("SELECT * FROM %t WHERE sid=%d AND uid=%d", array($this->_table, $setarr['sid'], $uid));
+        $isreport = DB::fetch_first("SELECT * FROM %t WHERE sid=%d AND uid=%d", [$this->_table, $setarr['sid'], $uid]);
         
         if ($isreport) {
             $ret['error'] = '您已举报过该分享，请等待管理员处理';
             return $ret;
         }
         // 未举报，添加举报记录
-        $data = array(
+        $data = [
             'sid' => $setarr['sid'],
             'uid' => $uid,
             'username' => $setarr['username'],
             'type' => $setarr['type'],
             'desc' => $setarr['desc'],
             'dateline' => TIMESTAMP
-        );
+        ];
 
         if (parent::insert($data)) {
             global $_G;
@@ -81,7 +81,7 @@ class table_share_report extends dzz_table {
             $reporttxt = '用户 ' . $_G['username'] . ' 举报了分享标题为 ' . dhtmlspecialchars($setarr['title']) . ' 的分享，举报类型：' . $reporttypes[$setarr['type']] . '，请管理员及时处理。';
             foreach (C::t('user')->fetch_all_by_adminid(1) as $value) {
                 if ($value['uid'] != $_G['uid']) {
-                    $notevars = array(
+                    $notevars = [
                         'from_id' => 0,
                         'from_idtype' => 'sharereport',
                         'note_url' => DZZSCRIPT . '?mod=share&op=report',
@@ -89,7 +89,7 @@ class table_share_report extends dzz_table {
                         'authorid' => $_G['uid'],
                         'note_title' => '分享举报通知',
                         'note_message' => $reporttxt
-                    );
+                    ];
                     $action = 'share_report';
                     $type = 'share_report_' . $setarr['sid'] . '_' . $value['uid'];
 
@@ -111,23 +111,23 @@ class table_share_report extends dzz_table {
      */
     public function handle_share_report($id, $status) {
         // 检查举报是否存在
-        $report = DB::fetch_first("SELECT * FROM %t WHERE id=%d", array('share_report', $id));
+        $report = DB::fetch_first("SELECT * FROM %t WHERE id=%d", ['share_report', $id]);
         if (!$report) {
             return false;
         }
         
         // 更新举报状态
-        $result = DB::update('share_report', array(
+        $result = DB::update('share_report', [
             'status' => $status,
             'modifyTime' => TIMESTAMP
-        ), array('id' => $id));
+        ], ['id' => $id]);
         
         // 如果设置为禁止分享，则同时更新分享状态
         if ($result && $status == 2) {
-            DB::update('shares', array('status' => -4), array('id' => $report['sid']));
+            DB::update('shares', ['status' => -4], ['id' => $report['sid']]);
         }
         
-        return $result ? true : false;
+        return (bool)$result;
     }
 
     /**
@@ -139,9 +139,9 @@ class table_share_report extends dzz_table {
         if (!$sid) return false;
         
         // 删除所有与该分享ID相关的举报记录
-        $result = DB::delete($this->_table, array('sid' => $sid));
+        $result = DB::delete($this->_table, ['sid' => $sid]);
         
         // 返回影响的行数，大于等于0表示删除成功
-        return $result !== false ? true : false;
+        return $result !== false;
     }
 }

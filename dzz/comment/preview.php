@@ -21,4 +21,4 @@ if (!$attach || !$attach['aid']) {
 $shareurl = $_G['siteurl'] . 'share.php?a=view&s=' . dzzencode('attach::' . $attach['aid']) . '&n=' . rawurlencode($attach['title']);
 dheader('Location:' . outputurl($shareurl));
 exit();
-?>
+

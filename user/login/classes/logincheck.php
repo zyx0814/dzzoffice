@@ -21,17 +21,17 @@ class Logincheck {
 
                 $referer = (isset($_GET['referer'])) ? $_GET['referer'] : dreferer();
 
-                $referer = $referer ? $referer : './';
+                $referer = $referer ?: './';
                 if (strpos($referer, 'user.php') !== false) {
                     $referer = 'index.php';
                 }
                 $referer = str_replace('logging', '', $referer);
 
-                $param = array('username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['member']['uid']);
+                $param = ['username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['member']['uid']];
 
                 if (!$_GET['inajax']) {
 
-                    showTips(array('lang' => lang('login_succeed', $param), 'referer' => $referer ? $referer : './'), 'html', 'common/showtips');
+                    showTips(['lang' => lang('login_succeed', $param), 'referer' => $referer ?: './'], 'html', 'common/showtips');
 
                 } else {
                     include template('login_skip');

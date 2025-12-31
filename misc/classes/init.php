@@ -10,15 +10,15 @@ class Init {
         $dzz = C::app();
 
         $dzz->reject_robot();
-        $modarray = array('seccode', 'sendmail', 'stat', 'seluser', 'ajax', 'syscache', 'movetospace', 'setunrun', 'upgrade', 'sendwx');
+        $modarray = ['seccode', 'sendmail', 'stat', 'seluser', 'ajax', 'syscache', 'movetospace', 'setunrun', 'upgrade', 'sendwx'];
 
 
         $mod = getgpc('mod');
         $mod = (empty($mod) || !in_array($mod, $modarray)) ? 'error' : $mod;
-        if (in_array($mod, array('seccode', 'movetospace', 'setunrun', 'ajax', 'syscache', 'stat', 'sendmail', 'sendwx'))) {
+        if (in_array($mod, ['seccode', 'movetospace', 'setunrun', 'ajax', 'syscache', 'stat', 'sendmail', 'sendwx'])) {
             define('ALLOWGUEST', 1);
         }
-        $dzz->cachelist = array();
+        $dzz->cachelist = [];
         switch ($mod) {
             case 'seccode':
             case 'syscache':

@@ -210,7 +210,7 @@ class PHPExcel_CachedObjectStorage_SQLite extends PHPExcel_CachedObjectStorage_C
 		if ($cellIdsResult === false)
 			throw new PHPExcel_Exception(sqlite_error_string($this->_DBHandle->lastError()));
 
-		$cellKeys = array();
+		$cellKeys = [];
 		foreach($cellIdsResult as $row) {
 			$cellKeys[] = $row['id'];
 		}

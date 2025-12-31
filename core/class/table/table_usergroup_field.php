@@ -21,9 +21,9 @@ class table_usergroup_field extends dzz_table {
     }
 
     public function fetch_all($ids = null, $force_from_db = false) {
-        return DB::fetch_all("SELECT * FROM %t where 1", array($this->_table), $this->_pk);
+        return DB::fetch_all("SELECT * FROM %t where 1", [$this->_table], $this->_pk);
     }
 
 }
 
-?>
+

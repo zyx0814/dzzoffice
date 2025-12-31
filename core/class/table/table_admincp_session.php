@@ -21,27 +21,27 @@ class table_admincp_session extends dzz_table {
 
     public function fetch($uid, $panel = false) {
         $sql = 'SELECT * FROM %t WHERE uid=%d AND panel=%d';
-        return DB::fetch_first($sql, array($this->_table, $uid, $panel));
+        return DB::fetch_first($sql, [$this->_table, $uid, $panel]);
     }
 
     public function fetch_all_by_panel($panel) {
-        return DB::fetch_all('SELECT * FROM %t WHERE panel=%d', array($this->_table, $panel), 'uid');
+        return DB::fetch_all('SELECT * FROM %t WHERE panel=%d', [$this->_table, $panel], 'uid');
     }
 
     public function delete($uid, $panel = false, $ttl = 3600) {
 
 
         $sql = 'DELETE FROM %t WHERE (uid=%d AND panel=%d) OR dateline<%d';
-        DB::query($sql, array($this->_table, $uid, $panel, TIMESTAMP - intval($ttl)));
+        DB::query($sql, [$this->_table, $uid, $panel, TIMESTAMP - intval($ttl)]);
 
     }
 
     public function update($uid, $panel, $data = false, $low_priority = false) {
         if (!empty($data) && is_array($data)) {
-            DB::update($this->_table, $data, array('uid' => $uid, 'panel' => $panel));
+            DB::update($this->_table, $data, ['uid' => $uid, 'panel' => $panel]);
         }
     }
 
 }
 
-?>
+

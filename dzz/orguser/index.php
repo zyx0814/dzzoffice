@@ -11,9 +11,9 @@ if (!defined('IN_DZZ')) {
 }
 include_once libfile('function/appperm');
 Hook::listen('check_login');
-$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
+$navtitle = $global_appinfo['appname'] ?: lang('appname');
 $orgid = 'other';
-$orgtree = array();
+$orgtree = [];
 if ($_G['adminid'] != 1) {
     //获取用户的有权限的部门树
     $orgids = C::t('organization_admin')->fetch_orgids_by_uid($_G['uid']);
@@ -35,4 +35,4 @@ if ($_G['adminid'] != 1) {
 $orgtree = json_encode($orgtree);
 if (!$_G['cache']['usergroups']) loadcache('usergroups');
 include template('main');
-?>
+

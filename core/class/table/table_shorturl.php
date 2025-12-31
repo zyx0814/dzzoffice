@@ -47,12 +47,12 @@ class table_shorturl extends dzz_table {
         $shorturl = getglobal('siteurl') . 'short.php?sid=' . $sid;
         
         // 检查是否已存在记录
-        if (!DB::result_first("select COUNT(*) from %t where sid=%s", array($this->_table, $sid))) {
+        if (!DB::result_first("select COUNT(*) from %t where sid=%s", [$this->_table, $sid])) {
             // 如果不存在，则插入新记录
-            $setarr = array(
+            $setarr = [
                 'sid' => $sid,
                 'url' => $url,
-            );
+            ];
             if (!parent::insert($setarr)) {
                 return ''; // 插入失败返回空字符串
             }
@@ -62,7 +62,7 @@ class table_shorturl extends dzz_table {
     }
 
     public function addview($sid) {
-        return DB::query("update %t set count=count+1 where sid=%s", array($this->_table, $sid));
+        return DB::query("update %t set count=count+1 where sid=%s", [$this->_table, $sid]);
     }
 
     public function delete_by_url($url) {
@@ -71,4 +71,4 @@ class table_shorturl extends dzz_table {
     }
 }
 
-?>
+

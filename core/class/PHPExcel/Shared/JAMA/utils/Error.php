@@ -14,7 +14,7 @@ define('JAMALANG', 'EN');
 //All errors may be defined by the following format:
 //define('ExceptionName', N);
 //$error['lang'][ExceptionName] = 'Error message';
-$error = array();
+$error = [];
 
 /*
 I've used Babelfish and a little poor knowledge of Romance/Germanic languages for the translations here.

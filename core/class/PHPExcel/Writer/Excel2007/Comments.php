@@ -59,7 +59,7 @@ class PHPExcel_Writer_Excel2007_Comments extends PHPExcel_Writer_Excel2007_Write
   		$comments	= $pWorksheet->getComments();
 
   		// Authors cache
-  		$authors	= array();
+  		$authors	= [];
   		$authorId	= 0;
 		foreach ($comments as $comment) {
 			if (!isset($authors[$comment->getAuthor()])) {

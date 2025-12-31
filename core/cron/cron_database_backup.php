@@ -32,7 +32,7 @@ if (!is_dir('./data/' . $backupdir)) {
     mkdir('./data/' . $backupdir, 0777);
 }
 global $excepttables;
-$excepttables = array();
+$excepttables = [];
 $filename = date('ymd') . '_' . random(8);
 DB::query('SET SQL_QUOTE_SHOW_CREATE=0', 'SILENT');
 $tables = arraykeys2(fetchtablelist($tablepre), 'Name');
@@ -52,7 +52,7 @@ while (!$success) {
     $volume += 1;
     $idstring = '# Identify: ' . base64_encode("{$_G['timestamp']}," . $_G['setting']['version'] . ",dzz,multivol,{$volume},{$tablepre},{$dbcharset}") . "\n";
     $dumpcharset = str_replace('-', '', $_G['charset']);
-    $backupfilename = './data/' . $backupdir . '/' . str_replace(array('/', '\\', '.', "'"), '', $filename);
+    $backupfilename = './data/' . $backupdir . '/' . str_replace(['/', '\\', '.', "'"], '', $filename);
     $sqldump = '';
     $startfrom = $startrow;
     if (!$tableid && $volume == 1) {
@@ -96,11 +96,11 @@ while (!$success) {
         }
     } else {
         $success = true;
-        C::t('cache')->insert(array(
+        C::t('cache')->insert([
             'cachekey' => 'db_export',
-            'cachevalue' => serialize(array('dateline' => $_G['timestamp'])),
+            'cachevalue' => serialize(['dateline' => $_G['timestamp']]),
             'dateline' => $_G['timestamp'],
-        ), false, true);
+        ], false, true);
 
     }
 }
@@ -110,7 +110,7 @@ function fetchtablelist($tablepre = '') {
     $dbname = $arr[1] ? $arr[0] : '';
     $tablepre = str_replace('_', '\_', $tablepre);
     $sqladd = $dbname ? " FROM $dbname LIKE '$arr[1]%'" : "LIKE '$tablepre%'";
-    $tables = $table = array();
+    $tables = $table = [];
     $query = DB::query("SHOW TABLE STATUS $sqladd");
     while ($table = DB::fetch($query)) {
         $table['Name'] = ($dbname ? "$dbname." : '') . $table['Name'];
@@ -120,7 +120,7 @@ function fetchtablelist($tablepre = '') {
 }
 
 function arraykeys2($array, $key2) {
-    $return = array();
+    $return = [];
     foreach ($array as $val) {
         $return[] = $val[$key2];
     }
@@ -166,7 +166,7 @@ function sqldumptable($table, $startfrom = 0, $currsize = 0) {
     $db = &DB::object();
     $offset = 300;
     $tabledump = '';
-    $tablefields = array();
+    $tablefields = [];
     $_GET['usehex'] = TRUE;
     $query = DB::query("SHOW FULL COLUMNS FROM $table", 'SILENT');
     if (strexists($table, 'adminsessions')) {
@@ -226,4 +226,4 @@ function sqldumptable($table, $startfrom = 0, $currsize = 0) {
     return $tabledump;
 }
 
-?>
+

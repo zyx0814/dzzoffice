@@ -11,8 +11,8 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-$lang = array
-(
+$lang =
+    [
     'appname' => '系统设置',
     'spaceSet' => '空间设置',
     'loginSet' => '登录设置',
@@ -36,7 +36,7 @@ $lang = array
     'usergroup_perm' => '用户组权限',
     'permission_group_delete_success' => '权限组删除成功',
     'file_upload_limit' => '文件上传限制',
-);
+    ];
 
 
-?>
+

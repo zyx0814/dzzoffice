@@ -80,7 +80,7 @@ class db_driver_pdo_slave extends db_driver_pdo {
 		if(is_array($sql)) {
 			$_sql = $sql[0];
 		}
-		if(!(!$this->slaveexcept && strtoupper(substr($_sql, 0, 6)) === 'SELECT' && !str_contains(strtoupper($_sql), 'FOR UPDATE') && $this->_slave_connect())) {
+		if(!(!$this->slaveexcept && strtoupper(substr($_sql, 0, 6)) === 'SELECT' && strpos(strtoupper($_sql), 'FOR UPDATE') === false && $this->_slave_connect())) {
 			$this->_master_connect();
 		}
 		$this->tablename = '';

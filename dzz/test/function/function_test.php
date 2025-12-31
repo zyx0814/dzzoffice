@@ -12,4 +12,4 @@ if(!defined('IN_DZZ')) {
 function test(){
 	return lang('title1');
 }
-?>
+

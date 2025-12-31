@@ -37,7 +37,7 @@ class table_user extends dzz_table {
         } else {
             $groupid = $_G['setting']['newusergroupid'];
         }
-        $setarr = array(
+        $setarr = [
             'username' => addslashes($userArr['username']),
             'nickname'=>addslashes($userArr['nickname']),
             'email' => isset($userArr['email']) ? $userArr['email'] : '',
@@ -47,14 +47,14 @@ class table_user extends dzz_table {
             'regdate' => TIMESTAMP,
             'regip' => $_G['clientip'],
             'groupid' => $groupid
-        );
+        ];
         $setarr['uid'] = parent::insert($setarr, 1);
         return $setarr;
     }
 
     public function update_password($uid, $password) {
         $uid = intval($uid);
-        if (parent::update($uid, array('password' => $password))) {
+        if (parent::update($uid, ['password' => $password])) {
             return true;
         }
         return false;
@@ -76,7 +76,7 @@ class table_user extends dzz_table {
         $uid = self::add_user($userArr);
 
         //默认机构
-        if ($addorg && is_array($uid) && getglobal('setting/defaultdepartment') && DB::fetch_first("select orgid from %t where orgid=%d ", array('organization', getglobal('setting/defaultdepartment')))) {
+        if ($addorg && is_array($uid) && getglobal('setting/defaultdepartment') && DB::fetch_first("select orgid from %t where orgid=%d ", ['organization', getglobal('setting/defaultdepartment')])) {
             C::t('organization_user')->insert_by_orgid(getglobal('setting/defaultdepartment'), $uid['uid']);
         }
 
@@ -97,7 +97,7 @@ class table_user extends dzz_table {
             C::t('organization_user')->delete_by_uid($uid, 0);
 
             //删除用户文件
-            if ($homefid = DB::result_first("select fid from %t where uid=%d and flag='home' ", array('folder', $uid))) {
+            if ($homefid = DB::result_first("select fid from %t where uid=%d and flag='home' ", ['folder', $uid])) {
                 C::t('folder')->delete_by_fid($homefid, true);
             }
 
@@ -129,9 +129,9 @@ class table_user extends dzz_table {
         if (self::checkfounder($user)) { //创始人不允许修改
             return true;
         }
-        $arr = array();
+        $arr = [];
         if ($groupid == 1) {
-            parent::update($uid, array('adminid' => 1, 'groupid' => 1));
+            parent::update($uid, ['adminid' => 1, 'groupid' => 1]);
         } else {
             if (empty($groupid)) $groupid = 9;
             //因为用户组权限开放，所有这里就不强制设为机构管理员了，以免用户组权限被覆盖
@@ -140,20 +140,20 @@ class table_user extends dzz_table {
             // } elseif($groupid == 2) {
             //     $groupid=9;
             // }
-            parent::update($uid, array('adminid' => 0, 'groupid' => $groupid));
+            parent::update($uid, ['adminid' => 0, 'groupid' => $groupid]);
         }
     }
 
     public function update_credits($uid, $credits) {
         if ($uid) {
-            $data = array('credits' => intval($credits));
-            DB::update($this->_table, $data, array('uid' => intval($uid)), 'UNBUFFERED');
+            $data = ['credits' => intval($credits)];
+            DB::update($this->_table, $data, ['uid' => intval($uid)], 'UNBUFFERED');
             $this->update_cache($uid, $data);
         }
     }
 
     public function update_by_groupid($groupid, $data) {
-        $uids = array();
+        $uids = [];
         $groupid = dintval($groupid, true);
         if ($groupid && $this->_allowmem) {
             $uids = array_keys($this->fetch_all_by_groupid($groupid));
@@ -168,13 +168,13 @@ class table_user extends dzz_table {
 
     public function fetch_userbasic_by_uid($uid) {
 
-        return DB::fetch_first("select uid,email,username from %t where uid = %d", array($this->_table, $uid));
+        return DB::fetch_first("select uid,email,username from %t where uid = %d", [$this->_table, $uid]);
     }
 
     public function increase($uids, $setarr) {
         $uids = dintval((array)$uids, true);
-        $sql = array();
-        $allowkey = array('newprompt');
+        $sql = [];
+        $allowkey = ['newprompt'];
         foreach ($setarr as $key => $value) {
             if (($value = intval($value)) && in_array($key, $allowkey)) {
                 $sql[] = "`$key`=`$key`+'$value'";
@@ -188,9 +188,9 @@ class table_user extends dzz_table {
 
 
     public function fetch_all_by_username($usernames, $fetch_archive = 1) {
-        $users = array();
+        $users = [];
         if (!empty($usernames)) {
-            $users = DB::fetch_all('SELECT * FROM %t WHERE username IN (%n)', array($this->_table, (array)$usernames), 'username');
+            $users = DB::fetch_all('SELECT * FROM %t WHERE username IN (%n)', [$this->_table, (array)$usernames], 'username');
         }
         return $users;
     }
@@ -203,11 +203,11 @@ class table_user extends dzz_table {
 
         $uid = intval($uid);
 
-        static $users = array();
+        static $users = [];
 
         if ($uid && empty($users[$uid])) {
 
-            $users[$uid] = DB::fetch_first("select * from %t  where uid = %d", array($this->_table, $uid));
+            $users[$uid] = DB::fetch_first("select * from %t  where uid = %d", [$this->_table, $uid]);
         }
 
         if ($users[$uid]['adminid'] == 1) $users[$uid]['self'] = 2;
@@ -219,13 +219,13 @@ class table_user extends dzz_table {
     public function fetch_uid_by_username($username, $fetch_archive = 0) {
         $uid = 0;
         if ($username) {
-            $uid = DB::result_first('SELECT uid FROM %t WHERE username=%s', array($this->_table, $username));
+            $uid = DB::result_first('SELECT uid FROM %t WHERE username=%s', [$this->_table, $username]);
         }
         return $uid;
     }
 
     public function fetch_all_uid_by_username($usernames, $fetch_archive = 1) {
-        $uids = array();
+        $uids = [];
         if ($usernames) {
             foreach ($this->fetch_all_by_username($usernames, $fetch_archive) as $username => $value) {
                 $uids[$username] = $value['uid'];
@@ -235,16 +235,16 @@ class table_user extends dzz_table {
     }
 
     public function fetch_all_by_adminid($adminids, $fetch_archive = 1) {
-        $users = array();
+        $users = [];
         $adminids = dintval((array)$adminids, true);
         if ($adminids) {
-            $users = DB::fetch_all('SELECT * FROM %t WHERE adminid IN (%n) ORDER BY adminid, uid', array($this->_table, (array)$adminids), $this->_pk);
+            $users = DB::fetch_all('SELECT * FROM %t WHERE adminid IN (%n) ORDER BY adminid, uid', [$this->_table, (array)$adminids], $this->_pk);
         }
         return $users;
     }
 
     public function fetch_all_username_by_uid($uids) {
-        $users = array();
+        $users = [];
         if (($uids = dintval($uids, true))) {
             foreach ($this->fetch_all($uids) as $uid => $value) {
                 $users[$uid] = $value['username'];
@@ -254,11 +254,11 @@ class table_user extends dzz_table {
     }
 
     public function count_by_groupid($groupid) {
-        return $groupid ? DB::result_first('SELECT COUNT(*) FROM %t WHERE ' . DB::field('groupid', $groupid), array($this->_table)) : 0;
+        return $groupid ? DB::result_first('SELECT COUNT(*) FROM %t WHERE ' . DB::field('groupid', $groupid), [$this->_table]) : 0;
     }
 
     public function fetch_all_by_groupid($groupid, $start = 0, $limit = 0) {
-        $users = array();
+        $users = [];
         if (($groupid = dintval($groupid, true))) {
             $users = DB::fetch_all('SELECT * FROM ' . DB::table($this->_table) . ' WHERE ' . DB::field('groupid', $groupid) . ' ' . DB::limit($start, $limit), null, 'uid');
         }
@@ -292,77 +292,77 @@ class table_user extends dzz_table {
     }
 
     public function chk_email_by_uid($email, $uid) {
-        if (parent::fetch_all("select uid from %t where email = %s and uid != %d", array($this->_table, $email, $uid))) {
+        if (parent::fetch_all("select uid from %t where email = %s and uid != %d", [$this->_table, $email, $uid])) {
             return true;
         }
         return false;
     }
 
     public function fetch_by_email($email, $fetch_archive = 0) {
-        $user = array();
+        $user = [];
         if ($email) {
-            $user = DB::fetch_first('SELECT * FROM %t WHERE email=%s', array($this->_table, $email));
+            $user = DB::fetch_first('SELECT * FROM %t WHERE email=%s', [$this->_table, $email]);
         }
         return $user;
     }
 
     public function fetch_by_username($username, $fetch_archive = 0) {
-        $user = array();
+        $user = [];
         if ($username) {
-            $user = DB::fetch_first('SELECT * FROM %t WHERE username=%s', array($this->_table, $username));
+            $user = DB::fetch_first('SELECT * FROM %t WHERE username=%s', [$this->_table, $username]);
         }
         return $user;
     }
 
     public function fetch_by_nickname($username, $fetch_archive = 0) {
-        $user = array();
+        $user = [];
         if ($username) {
-            $user = DB::fetch_first('SELECT * FROM %t WHERE nickname=%s', array($this->_table, $username));
+            $user = DB::fetch_first('SELECT * FROM %t WHERE nickname=%s', [$this->_table, $username]);
         }
         return $user;
     }
 
     public function fetch_by_phone($username, $fetch_archive = 0) {
-        $user = array();
+        $user = [];
         if ($username) {
-            $user = DB::fetch_first('SELECT * FROM %t WHERE phone=%s', array($this->_table, $username));
+            $user = DB::fetch_first('SELECT * FROM %t WHERE phone=%s', [$this->_table, $username]);
         }
         return $user;
     }
 
     public function fetch_by_weixinid($username, $fetch_archive = 0) {
-        $user = array();
+        $user = [];
         if ($username) {
-            $user = DB::fetch_first('SELECT * FROM %t WHERE weixinid=%s', array($this->_table, $username));
+            $user = DB::fetch_first('SELECT * FROM %t WHERE weixinid=%s', [$this->_table, $username]);
         }
         return $user;
     }
 
     public function fetch_by_wechat_userid($username, $fetch_archive = 0) {
-        $user = array();
+        $user = [];
         if ($username) {
-            $user = DB::fetch_first('SELECT * FROM %t WHERE wechat_userid=%s', array($this->_table, $username));
+            $user = DB::fetch_first('SELECT * FROM %t WHERE wechat_userid=%s', [$this->_table, $username]);
         }
         return $user;
     }
 
     public function fetch_by_uid($uid, $fetch_archive = 0) {
-        $user = array();
+        $user = [];
         if ($uid) {
-            $user = DB::fetch_first('SELECT * FROM %t WHERE uid=%d', array($this->_table, $uid));
+            $user = DB::fetch_first('SELECT * FROM %t WHERE uid=%d', [$this->_table, $uid]);
         }
         return $user;
     }
 
     public function fetch_by_username_uid($uid, $fetch_archive = 0) {
-        $user = DB::fetch_first('SELECT username FROM %t WHERE uid=%d', array($this->_table, $uid));
+        $user = DB::fetch_first('SELECT username FROM %t WHERE uid=%d', [$this->_table, $uid]);
         return $user['username'];
     }
 
     public function fetch_all_by_email($emails, $fetch_archive = 1) {
-        $users = array();
+        $users = [];
         if (!empty($emails)) {
-            $users = DB::fetch_all('SELECT * FROM %t WHERE %i', array($this->_table, DB::field('email', $emails)), 'email');
+            $users = DB::fetch_all('SELECT * FROM %t WHERE %i', [$this->_table, DB::field('email', $emails)], 'email');
         }
         return $users;
     }
@@ -370,21 +370,21 @@ class table_user extends dzz_table {
     public function count_by_email($email, $fetch_archive = 0) {
         $count = 0;
         if ($email) {
-            $count = DB::result_first('SELECT COUNT(*) FROM %t WHERE email=%s', array($this->_table, $email));
+            $count = DB::result_first('SELECT COUNT(*) FROM %t WHERE email=%s', [$this->_table, $email]);
         }
         return $count;
     }
 
     public function fetch_all_by_like_username($username, $start = 0, $limit = 0) {
-        $data = array();
+        $data = [];
         if ($username) {
-            $data = DB::fetch_all('SELECT * FROM %t WHERE username LIKE %s' . DB::limit($start, $limit), array($this->_table, stripsearchkey($username) . '%'), 'uid');
+            $data = DB::fetch_all('SELECT * FROM %t WHERE username LIKE %s' . DB::limit($start, $limit), [$this->_table, stripsearchkey($username) . '%'], 'uid');
         }
         return $data;
     }
 
     public function count_by_like_username($username) {
-        return !empty($username) ? DB::result_first('SELECT COUNT(*) FROM %t WHERE username LIKE %s', array($this->_table, stripsearchkey($username) . '%')) : 0;
+        return !empty($username) ? DB::result_first('SELECT COUNT(*) FROM %t WHERE username LIKE %s', [$this->_table, stripsearchkey($username) . '%']) : 0;
     }
 
 
@@ -397,22 +397,22 @@ class table_user extends dzz_table {
     }
 
     public function count_by_regdate($timestamp) {
-        return DB::result_first('SELECT COUNT(*) FROM %t WHERE regdate>%d', array($this->_table, $timestamp));
+        return DB::result_first('SELECT COUNT(*) FROM %t WHERE regdate>%d', [$this->_table, $timestamp]);
     }
 
     //根据用户组id，查询用户id
     public function fetch_uid_by_groupid($groupid) {
         $groupid = intval($groupid);
-        return DB::fetch_all("select uid from %t where groupid = %d", array($this->_table, $groupid));
+        return DB::fetch_all("select uid from %t where groupid = %d", [$this->_table, $groupid]);
     }
 
     public function fetch_all_stat_memberlist($username, $orderby = '', $sort = '', $start = 0, $limit = 0) {
-        $orderby = in_array($orderby, array('uid', 'credits', 'regdate', 'gender', 'username', 'posts', 'lastvisit'), true) ? $orderby : 'uid';
+        $orderby = in_array($orderby, ['uid', 'credits', 'regdate', 'gender', 'username', 'posts', 'lastvisit'], true) ? $orderby : 'uid';
         $sql = '';
 
         $sql = !empty($username) ? " WHERE username LIKE '" . addslashes(stripsearchkey($username)) . "%'" : '';
 
-        $memberlist = array();
+        $memberlist = [];
         $query = DB::query("SELECT m.uid, m.username, mp.gender, m.email, m.regdate, ms.lastvisit, mc.posts, m.credits
 			FROM " . DB::table($this->_table) . " m
 			LEFT JOIN " . DB::table('user_profile') . " mp ON mp.uid=m.uid
@@ -430,40 +430,39 @@ class table_user extends dzz_table {
 
     public function insert($uid, $ip = false, $groupid = false, $extdata = false, $adminid = 0) {
         if (($uid = dintval($uid))) {
-            $profile = isset($extdata['profile']) ? $extdata['profile'] : array();
+            $profile = isset($extdata['profile']) ? $extdata['profile'] : [];
             //$profile['uid'] = $uid;
-            $base = array(
+            $base = [
                 'uid' => $uid,
                 'adminid' => intval($adminid),
                 'groupid' => intval($groupid),
                 'regdate' => TIMESTAMP,
                 'emailstatus' => intval($extdata['emailstatus']),
 
-            );
-            $status = array(
+            ];
+            $status = [
                 'uid' => $uid,
                 'regip' => (string)$ip,
                 'lastip' => (string)$ip,
                 'lastvisit' => TIMESTAMP,
                 'lastactivity' => TIMESTAMP,
                 'lastsendmail' => 0
-            );
+            ];
 
-            $ext = array('uid' => $uid);
             parent::update($uid, $base);
             C::t('user_status')->insert($status, false, true);
             C::t('user_profile')->update($uid, $profile);
         }
     }
 
-    public function insert_user($userarr, $groupid = 9, $profilearr = array()) {
+    public function insert_user($userarr, $groupid = 9, $profilearr = []) {
         global $_G;
         if (empty($userarr)) {
             return false;
         }
         $ip = $_G['clientip'];
         $salt = substr(uniqid(rand()), -6);
-        $setarr = array(
+        $setarr = [
             'username' => addslashes($userarr['username']),
             'email' => $userarr['email'],
             'salt' => $salt,
@@ -473,17 +472,17 @@ class table_user extends dzz_table {
             'groupid' => $groupid,
             'phone' => $userarr['phone'],
             'phonestatus' => $userarr['phonestatus']
-        );
+        ];
         $uid = parent::insert($setarr, 1);
         if ($uid) {
-            $status = array(
+            $status = [
                 'uid' => $uid,
                 'regip' => (string)$ip,
                 'lastip' => (string)$ip,
                 'lastvisit' => TIMESTAMP,
                 'lastactivity' => TIMESTAMP,
                 'lastsendmail' => 0
-            );
+            ];
             C::t('user_status')->insert($status, 1);
             if (!empty($profilearr)) {
                 C::t('user_profile')->update($uid, $profilearr);
@@ -511,7 +510,7 @@ class table_user extends dzz_table {
             }
             $ret = parent::delete($val, $unbuffered, $fetch_archive);
             if ($this->_allowmem) {
-                $data = ($data = memory('get', 'deleteuids')) === false ? array() : $data;
+                $data = ($data = memory('get', 'deleteuids')) === false ? [] : $data;
                 foreach ((array)$val as $uid) {
                     $data[$uid] = $uid;
                 }
@@ -522,19 +521,19 @@ class table_user extends dzz_table {
     }
 
     public function max_uid() {
-        return DB::result_first('SELECT MAX(uid) FROM %t', array($this->_table));
+        return DB::result_first('SELECT MAX(uid) FROM %t', [$this->_table]);
     }
 
     public function range_by_uid($from, $limit) {
-        return DB::fetch_all('SELECT * FROM %t WHERE uid >= %d ORDER BY uid LIMIT %d', array($this->_table, $from, $limit), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE uid >= %d ORDER BY uid LIMIT %d', [$this->_table, $from, $limit], $this->_pk);
     }
 
     public function update_groupid_by_groupid($source, $target) {
-        return DB::query('UPDATE %t SET groupid=%d WHERE adminid <= 0 AND groupid=%d', array($this->_table, $target, $source));
+        return DB::query('UPDATE %t SET groupid=%d WHERE adminid <= 0 AND groupid=%d', [$this->_table, $target, $source]);
     }
 
     public function fetch_all_user() {
-        return DB::fetch_all("select * from %t", array($this->_table));
+        return DB::fetch_all("select * from %t", [$this->_table]);
     }
 
     //获取用户独享空间配置值,若未分配，则获取用户已使用空间
@@ -542,11 +541,11 @@ class table_user extends dzz_table {
         global $_G;
         $setting = $_G['setting'];
         $userallotspace = 0;
-        $uids = array();
-        foreach (DB::fetch_all("select uid from %t", array($this->_table)) as $v) {
+        $uids = [];
+        foreach (DB::fetch_all("select uid from %t", [$this->_table]) as $v) {
             $uids[] = $v['uid'];
         }
-        foreach (DB::fetch_all("select userspace,usesize from %t where uid in(%n)", array('user_field', $uids)) as $val) {
+        foreach (DB::fetch_all("select userspace,usesize from %t where uid in(%n)", ['user_field', $uids]) as $val) {
             if ($val['userspace'] > 0) {
                 $userallotspace += $val['userspace'] * 1024 * 1024;
             } else {
@@ -560,16 +559,16 @@ class table_user extends dzz_table {
     public function fetch_user_avatar_by_uids($uids) {
         $uids = array_unique((array)$uids);
         if (empty($uids)) {
-            return array();
+            return [];
         }
         
-        return DB::fetch_all("SELECT avatarstatus, uid, username, headerColor FROM %t WHERE uid IN (%n)", array('user', $uids), 'uid');
+        return DB::fetch_all("SELECT avatarstatus, uid, username, headerColor FROM %t WHERE uid IN (%n)", ['user', $uids], 'uid');
     }
 
     public function fetch_userinfo_detail_by_uid($uid) {
         $uid = intval($uid);
-        $users = DB::fetch_first("select u.uid,u.phone,u.email,ug.* from %t u left join %t ug  on u.groupid=ug.groupid where uid = %d", array('user', 'usergroup', $uid));
-        foreach (DB::fetch_all("select * from %t where uid = %d", array('user_profile', $uid)) as $v) {
+        $users = DB::fetch_first("select u.uid,u.phone,u.email,ug.* from %t u left join %t ug  on u.groupid=ug.groupid where uid = %d", ['user', 'usergroup', $uid]);
+        foreach (DB::fetch_all("select * from %t where uid = %d", ['user_profile', $uid]) as $v) {
             if (!$v['privacy']) {
                 $users['information'][$v['fieldid']] = $v['value'];
             }
@@ -578,6 +577,6 @@ class table_user extends dzz_table {
     }
 
     public function fetch_all_user_data() {
-        return DB::fetch_all("select * from %t where 1", array($this->_table));
+        return DB::fetch_all("select * from %t where 1", [$this->_table]);
     }
 }

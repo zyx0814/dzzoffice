@@ -78,8 +78,7 @@ class CommandToRequestTransformer {
         }
         $uri = $uri->withQuery($query);
         $request = $request->withUri($uri);
-        $request = $request->withHeader('Host', $origin_host);
-        return $request;
+        return $request->withHeader('Host', $origin_host);
     }
 
     // format upload body

@@ -15,7 +15,7 @@ class UploadHandler {
     protected $options;
     // PHP File Upload error message codes:
     // http://php.net/manual/en/features.file-upload.errors.php
-    protected $error_messages = array(
+    protected $error_messages = [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
         2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
         3 => 'The uploaded file was only partially uploaded',
@@ -29,10 +29,10 @@ class UploadHandler {
         'max_file_size' => 'File is too big',
         'min_file_size' => 'File is too small',
         'accept_file_types' => 'Filetype not allowed',
-    );
+    ];
 
     function __construct($options = null, $initialize = true, $error_messages = null) {
-        $this->options = array(
+        $this->options = [
             'script_url' => $this->get_full_url() . '/',
             'mkdir_mode' => 0755,
             'param_name' => 'files',
@@ -40,7 +40,7 @@ class UploadHandler {
             // DELETE requests. This is a parameter sent to the client:
             'access_control_allow_origin' => '*',
             'access_control_allow_credentials' => false,
-            'access_control_allow_methods' => array(
+            'access_control_allow_methods' => [
                 'OPTIONS',
                 'HEAD',
                 'GET',
@@ -48,12 +48,12 @@ class UploadHandler {
                 'PUT',
                 'PATCH',
                 'DELETE'
-            ),
-            'access_control_allow_headers' => array(
+            ],
+            'access_control_allow_headers' => [
                 'Content-Type',
                 'Content-Range',
                 'Content-Disposition'
-            ),
+            ],
             // Enable to provide file downloads via GET requests to the PHP script:
             // Defines which files (based on their names) are accepted for upload:
             'accept_file_types' => '/.+$/i',
@@ -64,7 +64,7 @@ class UploadHandler {
             // Set the following option to false to enable resumable uploads:
             'discard_aborted_uploads' => true,
 
-        );
+        ];
         if ($options) {
             $this->options = array_merge($this->options, $options);
         }
@@ -117,7 +117,7 @@ class UploadHandler {
 
 
     protected function get_upload_path($file_name = null, $version = null) {
-        $file_name = $file_name ? $file_name : '';
+        $file_name = $file_name ?: '';
         $version_path = empty($version) ? '' : $version . '/';
         return $this->options['upload_dir']
             . $version_path . $file_name;
@@ -160,8 +160,10 @@ class UploadHandler {
         switch ($last) {
             case 'g':
                 $val *= 1024;
+                break;
             case 'm':
                 $val *= 1024;
+                break;
             case 'k':
                 $val *= 1024;
         }
@@ -239,7 +241,7 @@ class UploadHandler {
     protected function upcount_name($name) {
         return preg_replace_callback(
             '/(?:(?: \(([\d]+)\))?(\.[^.]+))?$/',
-            array($this, 'upcount_name_callback'),
+            [$this, 'upcount_name_callback'],
             $name,
             1
         );
@@ -299,7 +301,7 @@ class UploadHandler {
 
     protected function isToCloud() {
         $container = self::get_container();
-        $path = str_replace(array('icosContainer_folder_', 'icosContainer_body_'), '', $container);
+        $path = str_replace(['icosContainer_folder_', 'icosContainer_body_'], '', $container);
         if (is_numeric($path)) {
             return false;
         } else {
@@ -366,7 +368,7 @@ class UploadHandler {
             }
             $file->size = is_array($content_range) ? ($content_range[1] + $filesize) : $filesize;
 
-            $path = str_replace(array('icosContainer_folder_', 'icosContainer_body_'), '', $container);
+            $path = str_replace(['icosContainer_folder_', 'icosContainer_body_'], '', $container);
             if (is_numeric($path)) { //传到本地时
                 //判断权限
                 if (!$force && !perm_check::checkperm_Container($path, 'upload')) {
@@ -520,13 +522,13 @@ class UploadHandler {
         }
         $file_name = $this->get_file_name_param();
         if ($file_name) {
-            $response = array(
+            $response = [
                 substr($this->options['param_name'], 0, -1) => $this->get_file_object($file_name)
-            );
+            ];
         } else {
-            $response = array(
+            $response = [
                 $this->options['param_name'] => $this->get_file_objects()
-            );
+            ];
         }
         return $this->generate_response($response, $print_response);
     }
@@ -549,7 +551,7 @@ class UploadHandler {
         $content_range = $this->get_server_var('HTTP_CONTENT_RANGE') ?
             preg_split('/[^0-9]+/', $this->get_server_var('HTTP_CONTENT_RANGE')) : null;
         $size = $content_range ? $content_range[3] : null;
-        $files = array();
+        $files = [];
         /* print_r($_GET);
          ECHO 'AAAA';
          die;*/
@@ -559,8 +561,8 @@ class UploadHandler {
             foreach ($upload['tmp_name'] as $index => $value) {
                 $files[] = $this->handle_file_upload(
                     $upload['tmp_name'][$index],
-                    $file_name ? $file_name : $upload['name'][$index],
-                    $size ? $size : $upload['size'][$index],
+                    $file_name ?: $upload['name'][$index],
+                    $size ?: $upload['size'][$index],
                     isset($_GET['relativePath']) ? dirname($_GET['relativePath']) : '',
                     $upload['type'][$index],
                     $upload['error'][$index],
@@ -578,9 +580,9 @@ class UploadHandler {
 
             $files[] = $this->handle_file_upload(
                 isset($upload['tmp_name']) ? $upload['tmp_name'] : null,
-                $file_name ? $file_name : (isset($upload['name']) ?
+                $file_name ?: (isset($upload['name']) ?
                     $upload['name'] : null),
-                $size ? $size : (isset($upload['size']) ?
+                $size ?: (isset($upload['size']) ?
                     $upload['size'] : $this->get_server_var('CONTENT_LENGTH')),
                 '',
                 isset($_GET['relativePath']) ? dirname($_GET['relativePath']) : '',
@@ -596,7 +598,7 @@ class UploadHandler {
 
         }
         return $this->generate_response(
-            array($this->options['param_name'] => $files),
+            [$this->options['param_name'] => $files],
             $print_response
         );
     }
@@ -615,9 +617,8 @@ class UploadHandler {
                 }
             }
         }
-        return $this->generate_response(array('success' => $success), $print_response);
+        return $this->generate_response(['success' => $success], $print_response);
     }
 
 }
 
-?>

@@ -17,10 +17,10 @@ include_once libfile('function/cache');
 $dzz_upgrade = new dzz_upgrade();
 $step = intval($_GET['step']);
 $op = isset($_GET['op']) ? $_GET['op'] : '';
-$step = $step ? $step : 1;
+$step = $step ?: 1;
 $operation = $_GET['operation'] ? trim($_GET['operation']) : 'check';
 
-$steplang = array('', lang('founder_upgrade_updatelist'), lang('founder_upgrade_download'), lang('founder_upgrade_compare'), lang('founder_upgrade_upgrading'), lang('founder_upgrade_complete'), 'dbupdate' => lang('founder_upgrade_dbupdate'));
+$steplang = ['', lang('founder_upgrade_updatelist'), lang('founder_upgrade_download'), lang('founder_upgrade_compare'), lang('founder_upgrade_upgrading'), lang('founder_upgrade_complete'), 'dbupdate' => lang('founder_upgrade_dbupdate')];
 
 if ($operation == 'patch' || $operation == 'cross') {
     $version = trim($_GET['version']);
@@ -35,15 +35,14 @@ if ($operation == 'patch' || $operation == 'cross') {
         $msg .= "</script></p>";
         if (!$_GET['iframe']) {
             include template('upgrade');
-            exit();
         } else {
             include template('upgrade_iframe');
-            exit();
         }
+        exit();
     }
 
     $msg = '';
-    $upgradeinfo = $upgrade_step = array();
+    $upgradeinfo = $upgrade_step = [];
 
     if ($_GET['ungetfrom']) {
         if (md5($_GET['ungetfrom'] . $_G['config']['security']['authkey']) == $_GET['ungetfrommd5']) {
@@ -63,11 +62,11 @@ if ($operation == 'patch' || $operation == 'cross') {
     //$upgrade_step['release'] = $release;
     $upgrade_step['charset'] = $charset;
     $upgrade_step['locale'] = $locale;
-    C::t('cache')->insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize($upgrade_step), 'dateline' => $_G['timestamp'],), false, true);
+    C::t('cache')->insert(['cachekey' => 'upgrade_step', 'cachevalue' => serialize($upgrade_step), 'dateline' => $_G['timestamp'],], false, true);
 
     $upgrade_run = C::t('cache')->fetch('upgrade_run');
     if (!$upgrade_run) {
-        C::t('cache')->insert(array('cachekey' => 'upgrade_run', 'cachevalue' => serialize($_G['setting']['upgrade']), 'dateline' => $_G['timestamp'],), false, true);
+        C::t('cache')->insert(['cachekey' => 'upgrade_run', 'cachevalue' => serialize($_G['setting']['upgrade']), 'dateline' => $_G['timestamp'],], false, true);
         $upgrade_run = $_G['setting']['upgrade'];
     } else {
         $upgrade_run = dunserialize($upgrade_run['cachevalue']);
@@ -84,17 +83,16 @@ if ($operation == 'patch' || $operation == 'cross') {
             }
         }
         if (!$upgradeinfo) {
-            $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_none', array('upgradeurl' => upgradeinformation(-1))) . '</p>';
+            $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_none', ['upgradeurl' => upgradeinformation(-1)]) . '</p>';
             $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
             $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
             $msg .= "</script></p>";
             if (!$_GET['iframe']) {
                 include template('upgrade');
-                exit();
             } else {
                 include template('upgrade_iframe');
-                exit();
             }
+            exit();
         }
 
         $updatefilelist = $dzz_upgrade->fetch_updatefile_list($upgradeinfo);
@@ -103,16 +101,15 @@ if ($operation == 'patch' || $operation == 'cross') {
         $theurl = $_G['siteurl'] . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&locale=' . $locale . '&charset=' . $charset;
 
         if (empty($updatefilelist)) {
-            $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_download_upgradelist_error', array('upgradeurl' => upgradeinformation(-2))) . '</p>';
+            $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_download_upgradelist_error', ['upgradeurl' => upgradeinformation(-2)]) . '</p>';
             $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . ($thurl) . '\';", 1000);</script>';
             $msg .= ' <p style="margin:10px 0"><a href="' . $thurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</p>';
             if (!$_GET['iframe']) {
                 include template('upgrade');
-                exit();
             } else {
                 include template('upgrade_iframe');
-                exit();
             }
+            exit();
         }
 
     }
@@ -123,7 +120,7 @@ if ($operation == 'patch' || $operation == 'cross') {
         exit();
     } elseif ($step == 2) {
         $fileseq = intval($_GET['fileseq']);
-        $fileseq = $fileseq ? $fileseq : 1;
+        $fileseq = $fileseq ?: 1;
         if ($fileseq > count($updatefilelist)) {
             if ($upgradeinfo['isupdatedb']) {
                 $dzz_upgrade->download_file($upgradeinfo, 'install/data/install.sql');
@@ -132,7 +129,7 @@ if ($operation == 'patch' || $operation == 'cross') {
             }
             $linkurl = $theurl . '&step=3';
             $downloadstatus = 3;
-            $msg = lang('upgrade_download_complete_to_compare', array('upgradeurl' => upgradeinformation(0)));
+            $msg = lang('upgrade_download_complete_to_compare', ['upgradeurl' => upgradeinformation(0)]);
             if (!$_GET['iframe']) {
                 $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 1000);</script>';
                 $msg .= ' <p><a href="' . $linkurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</a></p>';
@@ -150,16 +147,16 @@ if ($operation == 'patch' || $operation == 'cross') {
                 $downloadstatus = $dzz_upgrade->download_file($upgradeinfo, $updatefilelist[$fileseq - 1], 'upload', $updatemd5filelist[$fileseq - 1]);
                 if ($downloadstatus == 1) {
                     $linkurl = $theurl . '&step=2&fileseq=' . $fileseq . '&iframe=1';
-                    $msg = lang('upgrade_downloading_file', array('file' => $updatefilelist[$fileseq - 1], 'percent' => sprintf("%2d", 100 * $fileseq / count($updatefilelist)) . '%', 'upgradeurl' => upgradeinformation(1))) . '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 50);</script>';
+                    $msg = lang('upgrade_downloading_file', ['file' => $updatefilelist[$fileseq - 1], 'percent' => sprintf("%2d", 100 * $fileseq / count($updatefilelist)) . '%', 'upgradeurl' => upgradeinformation(1)]) . '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 50);</script>';
                     $msg .= ' <p><a href="' . $linkurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</a></p>';
 
                 } elseif ($downloadstatus == 2) {
                     $linkurl = $theurl . '&step=2&fileseq=' . ($fileseq + 1) . '&iframe=1';
-                    $msg = '<p style="margin:10px 0">' . lang('upgrade_downloading_file', array('file' => $updatefilelist[$fileseq - 1], 'percent' => sprintf("%2d", 100 * $fileseq / count($updatefilelist)) . '%', 'upgradeurl' => upgradeinformation(1))) . '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 50);</script></p>';
+                    $msg = '<p style="margin:10px 0">' . lang('upgrade_downloading_file', ['file' => $updatefilelist[$fileseq - 1], 'percent' => sprintf("%2d", 100 * $fileseq / count($updatefilelist)) . '%', 'upgradeurl' => upgradeinformation(1)]) . '<script type="text/JavaScript">setTimeout("location.href=\'' . $linkurl . '\';", 50);</script></p>';
                     $msg .= ' <p><a href="' . $linkurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</a></p>';
                 } else {
                     $linkurl = $theurl . '&step=2&fileseq=' . ($fileseq) . '&iframe=1';
-                    $msg = '<p style="margin:10px 0">' . lang('upgrade_redownload', array('file' => $updatefilelist[$fileseq - 1], 'upgradeurl' => upgradeinformation(-3))) . '</p>';
+                    $msg = '<p style="margin:10px 0">' . lang('upgrade_redownload', ['file' => $updatefilelist[$fileseq - 1], 'upgradeurl' => upgradeinformation(-3)]) . '</p>';
                     $msg .= '<p style="margin:10px 0;"><input type="button" class="btn btn-success"  value="' . lang('founder_upgrade_reset') . '" onclick="location.href=\'' . $linkurl . '\'" />';
                 }
                 include template('upgrade_iframe');
@@ -169,7 +166,7 @@ if ($operation == 'patch' || $operation == 'cross') {
     } elseif ($step == 3) {
         list($modifylist, $showlist, $ignorelist, $newlist) = $dzz_upgrade->compare_basefile($upgradeinfo, $updatefilelist, $updatemd5filelist);
         if (empty($modifylist) && empty($showlist) && empty($ignorelist) && empty($newlist)) {
-            $msg = lang('filecheck_nofound_md5file', array('upgradeurl' => upgradeinformation(-4)));
+            $msg = lang('filecheck_nofound_md5file', ['upgradeurl' => upgradeinformation(-4)]);
         }
         $linkurl = $theurl . '&step=4';
     } elseif ($step == 4) {
@@ -183,7 +180,7 @@ if ($operation == 'patch' || $operation == 'cross') {
             }
 
             if ($upgradeinfo['isupdatedb']) {
-                $checkupdatefilelist = array('install/update.php', 'install/data/install.sql', 'install/data/install_data.sql');
+                $checkupdatefilelist = ['install/update.php', 'install/data/install.sql', 'install/data/install_data.sql'];
                 $checkupdatefilelist = array_merge($checkupdatefilelist, $updatefilelist);
             } else {
                 $checkupdatefilelist = $updatefilelist;
@@ -213,7 +210,7 @@ if ($operation == 'patch' || $operation == 'cross') {
         if (!$_GET['startupgrade']) {
             if (!$_GET['backfile']) {
                 $linkurl = $theurl . '&step=4&backfile=1&confirm=' . $confirm . $paraftp;
-                $msg = '<p style="margin:10px 0">' . lang('upgrade_backuping', array('upgradeurl' => upgradeinformation(2))) . '</p>';
+                $msg = '<p style="margin:10px 0">' . lang('upgrade_backuping', ['upgradeurl' => upgradeinformation(2)]) . '</p>';
                 $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . ($linkurl) . '\';", 1000);</script>';
                 $msg .= ' <p style="margin:10px 0"><a href="' . $linkurl . '" class=\"btn btn-link\">' . lang('message_redirect') . '</p>';
                 include template('upgrade');
@@ -224,7 +221,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                 $backfile = DZZ_ROOT . './data/back/dzzoffice' . CORE_VERSION . '/' . $updatefile;
                 if (is_file($destfile)) {
                     if (!$dzz_upgrade->copy_file($destfile, $backfile, 'file')) {
-                        $msg = '<p style="margin:10px 0">' . lang('upgrade_backup_error', array('upgradeurl' => upgradeinformation(-5))) . '</p>';
+                        $msg = '<p style="margin:10px 0">' . lang('upgrade_backup_error', ['upgradeurl' => upgradeinformation(-5)]) . '</p>';
                         $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
                         $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
                         $msg .= "</script></p>";
@@ -233,7 +230,7 @@ if ($operation == 'patch' || $operation == 'cross') {
                     }
                 }
             }
-            $msg = '<p style="margin:10px 0">' . lang('upgrade_backup_complete', array('upgradeurl' => upgradeinformation(3))) . '</p>';
+            $msg = '<p style="margin:10px 0">' . lang('upgrade_backup_complete', ['upgradeurl' => upgradeinformation(3)]) . '</p>';
             $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . ($theurl . '&step=4&startupgrade=1&confirm=' . $confirm . $paraftp) . '\';", 1000);</script>';
             $msg .= ' <p><a href="' . ($theurl . '&step=4&startupgrade=1&confirm=' . $confirm . $paraftp) . '" class=\"btn btn-link\">' . lang('message_redirect') . '</p>';
             include template('upgrade');
@@ -251,30 +248,25 @@ if ($operation == 'patch' || $operation == 'cross') {
             }
             if (!$dzz_upgrade->copy_file($srcfile, $destfile, $confirm)) {
                 if ($confirm == 'ftp') {
-                    $msg = '<p style="margin:10px 0">' . lang('upgrade_ftp_upload_error', array('file' => $updatefile, 'upgradeurl' => upgradeinformation(-6))) . '</p>';
+                    $msg = '<p style="margin:10px 0">' . lang('upgrade_ftp_upload_error', ['file' => $updatefile, 'upgradeurl' => upgradeinformation(-6)]) . '</p>';
                     $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_reupload') . '" />';
                     $msg .= '&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_reset_ftp') . '" /></p>';
-                    $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                    $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
-                    $msg .= "</script></p>";
-                    include template('upgrade');
-                    exit();
 
                 } else {
-                    $msg = '<p style="margin:10px 0">' . lang('upgrade_copy_error', array('file' => $updatefile, 'upgradeurl' => upgradeinformation(-7))) . '</p>';
+                    $msg = '<p style="margin:10px 0">' . lang('upgrade_copy_error', ['file' => $updatefile, 'upgradeurl' => upgradeinformation(-7)]) . '</p>';
                     $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_recopy') . '" />';
                     $msg .= '&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_set_ftp') . '" /></p>';
-                    $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                    $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
-                    $msg .= "</script></p>";
-                    include template('upgrade');
-                    exit();
 
                 }
+                $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
+                $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
+                $msg .= "</script></p>";
+                include template('upgrade');
+                exit();
             }
         }
         if ($upgradeinfo['isupdatedb']) {
-            $dbupdatefilearr = array('update.php', 'install/data/install.sql', 'install/data/install_data.sql');
+            $dbupdatefilearr = ['update.php', 'install/data/install.sql', 'install/data/install_data.sql'];
             foreach ($dbupdatefilearr as $dbupdatefile) {
                 $srcfile = DZZ_ROOT . './data/update/dzzoffice' . $version . '/' . $dbupdatefile;
                 $dbupdatefile = $dbupdatefile == 'update.php' ? 'install/update.php' : $dbupdatefile;
@@ -285,33 +277,28 @@ if ($operation == 'patch' || $operation == 'cross') {
                 }
                 if (!$dzz_upgrade->copy_file($srcfile, $destfile, $confirm)) {
                     if ($confirm == 'ftp') {
-                        $msg = '<p style="margin:10px 0">' . lang('upgrade_ftp_upload_error', array('file' => $updatefile, 'upgradeurl' => upgradeinformation(-6))) . '</p>';
+                        $msg = '<p style="margin:10px 0">' . lang('upgrade_ftp_upload_error', ['file' => $updatefile, 'upgradeurl' => upgradeinformation(-6)]) . '</p>';
                         $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_reupload') . '" />';
                         $msg .= '&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_reset_ftp') . '" /></p>';
-                        $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
-                        $msg .= "</script></p>";
-                        include template('upgrade');
-                        exit();
 
                     } else {
-                        $msg = '<p style="margin:10px 0">' . lang('upgrade_copy_error', array('file' => $updatefile, 'upgradeurl' => upgradeinformation(-7))) . '</p>';
+                        $msg = '<p style="margin:10px 0">' . lang('upgrade_copy_error', ['file' => $updatefile, 'upgradeurl' => upgradeinformation(-7)]) . '</p>';
                         $msg .= '<p style="margin:10px 0"><input type="button" class="btn btn-primary" onclick="window.location.href=\'' . $linkurl . '\'" value="' . lang('founder_upgrade_recopy') . '" />';
                         $msg .= '&nbsp;<input type="button" class="btn btn-default" onclick="window.location.href=\'' . $ftplinkurl . '\'" value="' . lang('founder_upgrade_set_ftp') . '" /></p>';
-                        $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
-                        $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
-                        $msg .= "</script></p>";
-                        include template('upgrade');
-                        exit();
 
                     }
+                    $msg .= "<p style=\"margin:10px 0\"><script type=\"text/javascript\">";
+                    $msg .= "if(history.length > (BROWSER.ie ? 0 : 1)) document.write('<a href=\"javascript:history.go(-1);\" class=\"btn btn-link\">" . lang('message_return') . "</a>');";
+                    $msg .= "</script></p>";
+                    include template('upgrade');
+                    exit();
                 }
             }
             $upgrade_step['step'] = 'dbupdate';
-            C::t('cache')->insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize($upgrade_step), 'dateline' => $_G['timestamp'],), false, true);
+            C::t('cache')->insert(['cachekey' => 'upgrade_step', 'cachevalue' => serialize($upgrade_step), 'dateline' => $_G['timestamp'],], false, true);
             $dbreturnurl = $_G['siteurl'] . ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $operation . '&version=' . $version . '&step=5';
             $linkurl = $_G['siteurl'] . 'install/update.php?step=prepare&from=' . rawurlencode($dbreturnurl) . '&frommd5=' . rawurlencode(md5($dbreturnurl . $_G['config']['security']['authkey']));
-            $msg = '<p style="margin:10px 0">' . lang('upgrade_file_successful', array('upgradeurl' => upgradeinformation(4))) . '</p>';
+            $msg = '<p style="margin:10px 0">' . lang('upgrade_file_successful', ['upgradeurl' => upgradeinformation(4)]) . '</p>';
             $msg .= '<script type="text/JavaScript">setTimeout(function(){createIframe(\'' . $linkurl . '\');}, 1000);</script>';
             $msg .= ' <p><a href="javascript:;" onclick="createIframe(\'' . $linkurl . '\');return false" class=\"btn btn-link\">' . lang('message_redirect') . '</p>';
             include template('upgrade');
@@ -339,7 +326,7 @@ if ($operation == 'patch' || $operation == 'cross') {
         $dzz_upgrade->rmdirs(DZZ_ROOT . $old_update_dir);
         $dzz_upgrade->rmdirs(DZZ_ROOT . $old_back_dir);
 
-        $msg = lang('upgrade_successful', array('version' => $version, 'save_update_dir' => $new_update_dir, 'save_back_dir' => $new_back_dir, 'upgradeurl' => upgradeinformation(0)));
+        $msg = lang('upgrade_successful', ['version' => $version, 'save_update_dir' => $new_update_dir, 'save_back_dir' => $new_back_dir, 'upgradeurl' => upgradeinformation(0)]);
 
     }
 
@@ -356,11 +343,11 @@ if ($operation == 'patch' || $operation == 'cross') {
                 if ($upgrade_step['cachevalue']['step'] == 'dbupdate') {
                     $dbreturnurl = $_G['siteurl'] . $theurl . '&step=5';
                     $stepurl = $_G['siteurl'] . 'install/update.php?step=prepare&from=' . rawurlencode($dbreturnurl) . '&frommd5=' . rawurlencode(md5($dbreturnurl . $_G['config']['security']['authkey']));
-                    $msg = '<p style="margin:10px 0;">' . lang('upgrade_continue_db', array('steplang' => $steplang['dbupdate'], 'stepurl' => $stepurl, 'recheckurl' => $recheckurl)) . '</p>';
+                    $msg = '<p style="margin:10px 0;">' . lang('upgrade_continue_db', ['steplang' => $steplang['dbupdate'], 'stepurl' => $stepurl, 'recheckurl' => $recheckurl]) . '</p>';
 
                 } else {
                     $stepurl = $theurl . '&step=' . $upgrade_step['cachevalue']['step'];
-                    $msg = '<p style="margin:10px 0;">' . lang('upgrade_continue', array('steplang' => $steplang[$upgrade_step['cachevalue']['step']], 'stepurl' => $stepurl, 'recheckurl' => $recheckurl)) . '</p>';
+                    $msg = '<p style="margin:10px 0;">' . lang('upgrade_continue', ['steplang' => $steplang[$upgrade_step['cachevalue']['step']], 'stepurl' => $stepurl, 'recheckurl' => $recheckurl]) . '</p>';
 
                 }
             }
@@ -380,9 +367,9 @@ if ($operation == 'patch' || $operation == 'cross') {
 
 } elseif ($operation == 'showupgrade') {
     if ($_G['setting']['upgrade']) {
-        C::t('cache')->insert(array('cachekey' => 'upgrade_step', 'cachevalue' => serialize(array('curversion' => $dzz_upgrade->versionpath())), 'dateline' => $_G['timestamp'],), false, true);
+        C::t('cache')->insert(['cachekey' => 'upgrade_step', 'cachevalue' => serialize(['curversion' => $dzz_upgrade->versionpath()]), 'dateline' => $_G['timestamp'],], false, true);
 
-        $upgraderow = $patchrow = array();
+        $upgraderow = $patchrow = [];
         $charset = str_replace('-', '', strtoupper($_G['config']['output']['charset']));
         $dbversion = helper_dbtool::dbversion();
         $locale = '';
@@ -403,18 +390,17 @@ if ($operation == 'patch' || $operation == 'cross') {
 
         if (!is_array($_G['setting']['upgrade']))
             $_G['setting']['upgrade'] = unserialize($_G['setting']['upgrade']);
-        $list = array();
+        $list = [];
         foreach ($_G['setting']['upgrade'] as $type => $upgrade) {
             $unupgrade = 0;
             if (version_compare($upgrade['phpversion'], PHP_VERSION) > 0 || version_compare($upgrade['mysqlversion'], $dbversion) > 0) {
                 $unupgrade = 1;
             }
             $list[$type]['linkurl'] = $linkurl = ADMINSCRIPT . '?mod=system&op=systemupgrade&operation=' . $type . '&version=' . $upgrade['latestversion'] . '&locale=' . $locale . '&charset=' . $charset;
+            $list[$type]['title'] = 'DzzOffice' . $upgrade['latestversion'] . '_' . $locale . '_' . $charset;
             if ($unupgrade) {
-                $list[$type]['title'] = 'DzzOffice' . $upgrade['latestversion'] . '_' . $locale . '_' . $charset;
                 $list[$type]['btn1'] = lang('founder_upgrade_require_config') . ' php v' . PHP_VERSION . 'MYSQL v' . $dbversion;
             } else {
-                $list[$type]['title'] = 'DzzOffice' . $upgrade['latestversion'] . '_' . $locale . '_' . $charset;
                 $list[$type]['btn1'] = '<input type="button" class="btn btn-primary" onclick="confirm(\'' . lang('founder_upgrade_backup_remind') . '\') ? window.location.href=\'' . $linkurl . '\' : \'\';" value="' . lang('founder_upgrade_automatically') . '">';
                 $list[$type]['official'] = '<a class="btn btn-success" href="' . $upgrade['official'] . '" target="_blank">' . lang('founder_upgrade_manually') . '</a>';
             }
@@ -439,4 +425,3 @@ if ($operation == 'patch' || $operation == 'cross') {
     dheader('Location: ' . $url);
 }
 include template('upgrade');
-?>

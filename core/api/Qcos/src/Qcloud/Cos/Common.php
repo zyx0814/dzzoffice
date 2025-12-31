@@ -3,7 +3,7 @@
 namespace Qcloud\Cos;
 
 function region_map($region) {
-    $regionmap = array('cn-east'=>'ap-shanghai',
+    $regionmap = ['cn-east'=>'ap-shanghai',
             'cn-south'=>'ap-guangzhou',
             'cn-north'=>'ap-beijing-1',
             'cn-south-2'=>'ap-guangzhou-2',
@@ -14,7 +14,7 @@ function region_map($region) {
             'sh'=>'ap-shanghai',
             'gz'=>'ap-guangzhou',
             'cd'=>'ap-chengdu',
-            'sgp'=>'ap-singapore');
+            'sgp'=>'ap-singapore'];
     if (array_key_exists($region, $regionmap)) {
         return $regionmap[$region];
     }

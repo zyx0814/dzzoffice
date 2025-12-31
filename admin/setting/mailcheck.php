@@ -38,6 +38,6 @@ if (!submitcheck('mailchecksubmit')) {
     } else {
         $alertmsg = lang('setting_mail_check_error') . $alertmsg;
     }
-    echo '<script language="javascript">alert(\'' . str_replace(array('\'', "\n", "\r"), array('\\\'', '\n', ''), $alertmsg) . '\');</script>';
+    echo '<script language="javascript">alert(\'' . str_replace(['\'', "\n", "\r"], ['\\\'', '\n', ''], $alertmsg) . '\');</script>';
 }
-?>
+

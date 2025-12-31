@@ -24,7 +24,7 @@ class table_app_market extends dzz_table {
     public function update($appid, $setarr, $unbuffered = false, $low_priority = false) {
         if (($ret = parent::update($appid, $setarr)) && isset($setarr['available'])) {
             //如果是启用或关闭时，更新钩子表的status字段
-            C::t('hooks')->update_by_appid($appid, array('status' => intval($setarr['available'])));
+            C::t('hooks')->update_by_appid($appid, ['status' => intval($setarr['available'])]);
         }
         return $ret;
     }
@@ -32,11 +32,11 @@ class table_app_market extends dzz_table {
     public function fetch_by_appid($appid, $havecount = false, $outputurl = false) { //返回一条数据同时加载统计表数据
         global $_G;
         $appid = intval($appid);
-        if (!$data = parent::fetch($appid)) return array();
+        if (!$data = parent::fetch($appid)) return [];
         if ($data['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $data['appico'])) {
             $data['appico'] = $_G['setting']['attachurl'] . $data['appico'];
         }
-        $data['fileext'] = $data['fileext'] ? explode(',', $data['fileext']) : array();
+        $data['fileext'] = $data['fileext'] ? explode(',', $data['fileext']) : [];
         $data['icon'] = $data['appico'];
         $data['title'] = $data['appname'];
         $data['url'] = $outputurl ? outputurl(replace_canshu($data['appurl'])) : replace_canshu($data['appurl']);
@@ -55,16 +55,16 @@ class table_app_market extends dzz_table {
         global $_G;
         if (!$appids) return false;
         if (!is_array($appids)) {
-            $appids = array($appids);
+            $appids = [$appids];
         }
-        $return = array();
+        $return = [];
         foreach ($appids as $appid) {
             $appid = intval($appid);
             if (!$data = self::fetch($appid)) continue;
             if ($data['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $data['appico'])) {
                 $data['appico'] = $_G['setting']['attachurl'] . $data['appico'];
             }
-            $data['fileext'] = $data['fileext'] ? explode(',', $data['fileext']) : array();
+            $data['fileext'] = $data['fileext'] ? explode(',', $data['fileext']) : [];
             $data['icon'] = $data['appico'];
             $data['title'] = $data['appname'];
             $data['url'] = replace_canshu($data['appurl']);
@@ -83,9 +83,9 @@ class table_app_market extends dzz_table {
 
     public function delete_by_appid($appids) { //删除应用
         global $_G;
-        if (!is_array($appids)) $appids = array(intval($appids));
+        if (!is_array($appids)) $appids = [intval($appids)];
 
-        $data = DB::fetch_all("SELECT * FROM %t WHERE appid IN(%n)", array($this->_table, $appids));
+        $data = DB::fetch_all("SELECT * FROM %t WHERE appid IN(%n)", [$this->_table, $appids]);
         foreach ($data as $value) {
             if (strpos($value['appico'], 'appico') === 0) {//删除应用图标
                 @unlink($_G['setting']['attachdir'] . $value['appico']);
@@ -102,7 +102,7 @@ class table_app_market extends dzz_table {
     }
 
     public function get_appid_by_appurl($appurl) {
-        return DB::fetch_all("select appid from %t where appurl=%s", array($this->_table, $appurl));
+        return DB::fetch_all("select appid from %t where appurl=%s", [$this->_table, $appurl]);
 
     }
 
@@ -145,13 +145,13 @@ class table_app_market extends dzz_table {
 
         // 根据 $appid 参数决定返回哪些字段
         $select = $appid ? "appid" : "*";
-        $result = DB::fetch_all("select $select from %t where $sql and available > 0 order by disp ", array($this->_table), $appid ? null : 'appid');
+        $result = DB::fetch_all("select $select from %t where $sql and available > 0 order by disp ", [$this->_table], $appid ? null : 'appid');
         return $appid ? array_column($result, 'appid') : $result;
     }
 
     public function fetch_appid_by_mod($mod, $match = 0) {//$match==1表示全匹配，默认模糊匹配
         $sql = '';
-        $param = array($this->_table);
+        $param = [$this->_table];
         if (!$match) {
             $sql = " appurl LIKE %s";
             $param[] = '%' . $mod . '%';
@@ -163,51 +163,51 @@ class table_app_market extends dzz_table {
     }
 
     public function fetch_appid_by_identifier($identifier) {
-        return DB::result_first("select appid from %t where identifier=%s ", array($this->_table, $identifier));
+        return DB::result_first("select appid from %t where identifier=%s ", [$this->_table, $identifier]);
     }
 
     public function fetch_by_identifier($identifier, $app_path = 'dzz') {
-        static $cache = array();
+        static $cache = [];
         $cache_key = 'identifier_' . $identifier;
         
         if (!isset($cache[$cache_key])) {
-            $cache[$cache_key] = DB::fetch_first("select * from %t where app_path=%s and identifier=%s ", array($this->_table, $app_path, $identifier));
+            $cache[$cache_key] = DB::fetch_first("select * from %t where app_path=%s and identifier=%s ", [$this->_table, $app_path, $identifier]);
         }
          return $cache[$cache_key];
     }
 
     public function fetch_by_allidentifier($identifier) {
-        static $cache = array();
+        static $cache = [];
         $cache_key = 'identifier_' . $identifier;
         
         if (!isset($cache[$cache_key])) {
-            $cache[$cache_key] = DB::fetch_first("select * from %t where identifier=%s ", array($this->_table, $identifier));
+            $cache[$cache_key] = DB::fetch_first("select * from %t where identifier=%s ", [$this->_table, $identifier]);
         }
         return $cache[$cache_key];
     }
 
     public function fetch_by_mod() {
-        return DB::fetch_first("select * from %t where app_path=%s and identifier=%s ", array($this->_table, CURSCRIPT, CURMODULE));
+        return DB::fetch_first("select * from %t where app_path=%s and identifier=%s ", [$this->_table, CURSCRIPT, CURMODULE]);
     }
 
     public function fetch_all_identifier($available = 0) {
-        $data = array();
+        $data = [];
         $sql = "identifier!=''";
         if ($available) {
             $sql .= " and `available`>0";
         }
-        foreach (DB::fetch_all("select appid,identifier,app_path from %t where %i ", array($this->_table, $sql)) as $value) {
+        foreach (DB::fetch_all("select appid,identifier,app_path from %t where %i ", [$this->_table, $sql]) as $value) {
             $data[$value['appid']] = $value;
         }
         return $data;
     }
 
     public function fetch_all_by_appurl($appurl, $identifier) {
-        return DB::fetch_all("select * from %t where appurl=%s and identifier=%s", array($this->_table, $appurl, $identifier));
+        return DB::fetch_all("select * from %t where appurl=%s and identifier=%s", [$this->_table, $appurl, $identifier]);
     }
 
     public function fetch_appico_by_appid($appid) {
         $appid = intval($appid);
-        return DB::result_first("select appico from %t where appid = %d", array($this->_table, $appid));
+        return DB::result_first("select appico from %t where appid = %d", [$this->_table, $appid]);
     }
 }

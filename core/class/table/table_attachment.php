@@ -25,24 +25,17 @@ class table_attachment extends dzz_table {
         $data = parent::fetch($aid);
         $attachdir = getglobal('setting/attachdir');
         if ($data['remote'] == 0 || $data['remote'] == 1) {//文件在本地，修改文件名
+            $earr = explode('.', $data['attachment']);
+            foreach ($earr as $key => $ext) {
+                if (in_array(strtolower($ext), [$data['filetype'], 'dzz'])) unset($earr[$key]);
+            }
             if ($r > 0) {
-                $earr = explode('.', $data['attachment']);
-                foreach ($earr as $key => $ext) {
-                    if (in_array(strtolower($ext), array($data['filetype'], 'dzz'))) unset($earr[$key]);
-                }
                 $tattachment = implode('.', $earr) . '.dzz';
-                if (is_file($attachdir . './' . $data['attachment']) && @rename($attachdir . './' . $data['attachment'], $attachdir . './' . $tattachment)) {
-                    return parent::update($aid, array('unrun' => $r, 'attachment' => $tattachment));
-                }
             } else {
-                $earr = explode('.', $data['attachment']);
-                foreach ($earr as $key => $ext) {
-                    if (in_array(strtolower($ext), array($data['filetype'], 'dzz'))) unset($earr[$key]);
-                }
                 $tattachment = implode('.', $earr) . '.' . $data['filetype'];
-                if (is_file($attachdir . './' . $data['attachment']) && @rename($attachdir . './' . $data['attachment'], $attachdir . './' . $tattachment)) {
-                    return parent::update($aid, array('unrun' => $r, 'attachment' => $tattachment));
-                }
+            }
+            if (is_file($attachdir . './' . $data['attachment']) && @rename($attachdir . './' . $data['attachment'], $attachdir . './' . $tattachment)) {
+                return parent::update($aid, ['unrun' => $r, 'attachment' => $tattachment]);
             }
         }
         return false;
@@ -67,17 +60,16 @@ class table_attachment extends dzz_table {
 
     public function get_total_filesize() {
         $attachsize = 0;
-        $attachsize = DB::result_first("SELECT SUM(filesize) FROM " . DB::table($this->table));
-        return $attachsize;
+        return DB::result_first("SELECT SUM(filesize) FROM " . DB::table($this->table));
     }
 
     public function addcopy_by_aid($aids, $ceof = 1) {
-        if (!is_array($aids)) $aids = array($aids);
+        if (!is_array($aids)) $aids = [$aids];
 
         if ($ceof > 0) {
-            DB::query("update %t set copys=copys+%d where aid IN(%n)", array($this->_table, $ceof, $aids));
+            DB::query("update %t set copys=copys+%d where aid IN(%n)", [$this->_table, $ceof, $aids]);
         } else {
-            DB::query("update %t set copys=copys-%d where aid IN(%n)", array($this->_table, abs($ceof), $aids));
+            DB::query("update %t set copys=copys-%d where aid IN(%n)", [$this->_table, abs($ceof), $aids]);
         }
         $this->clear_cache($aids);
     }
@@ -88,7 +80,7 @@ class table_attachment extends dzz_table {
             return false;
         }
         if ($data['copys'] > 1) {
-            return $this->update($aid, array('copys' => $data['copys'] - 1));
+            return $this->update($aid, ['copys' => $data['copys'] - 1]);
         } else {
             if (io_remote::DeleteFromSpace($data)) {
                 if ($return = $this->delete($aid)) {
@@ -104,14 +96,14 @@ class table_attachment extends dzz_table {
     }
 
     public function fetch_by_md5($md5) { //通过md5值返回一条数据
-        return DB::fetch_first("SELECT * FROM %t WHERE md5 = %s ", array($this->table, $md5));
+        return DB::fetch_first("SELECT * FROM %t WHERE md5 = %s ", [$this->table, $md5]);
     }
 
     public function getSizeByRemote($remoteid) { //统计占用空间
         if ($remoteid < 2) {
-            return DB::result_first("SELECT  sum(filesize) FROM %t WHERE remote <2 and copys>0 ", array($this->table));
+            return DB::result_first("SELECT  sum(filesize) FROM %t WHERE remote <2 and copys>0 ", [$this->table]);
         } else {
-            return DB::result_first("SELECT  sum(filesize) FROM %t WHERE remote = %d and copys>0 ", array($this->table, $remoteid));
+            return DB::result_first("SELECT  sum(filesize) FROM %t WHERE remote = %d and copys>0 ", [$this->table, $remoteid]);
         }
 
     }
@@ -131,7 +123,7 @@ class table_attachment extends dzz_table {
         }
         $filter['sizelt'] = (isset($filter['sizelt']) ? intval($filter['sizelt']) : 0) * 1024 * 1024;
         if ($filter['sizelt'] > 0) {
-            $where .= " and filesize>'{$filter[sizelt]}'";
+            $where .= " and filesize>'{$filter['sizelt']}'";
         }
         $filter['sizegt'] = (isset($filter['sizegt']) ? intval($filter['sizegt']) : 0) * 1024 * 1024;
         if ($filter['sizegt'] > 0) {
@@ -170,4 +162,4 @@ class table_attachment extends dzz_table {
     }
 }
 
-?>
+

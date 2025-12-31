@@ -8,7 +8,7 @@ function build_cache_usergroups() {
     $data_uf = C::t('usergroup_field')->fetch_all();
     $usergroups = C::t('usergroup')->range_orderby_credit();
     
-    $groups = array();
+    $groups = [];
     
     foreach ($usergroups as $gid => $data) {
         $group = array_merge($data, (array)$data_uf[$gid]);

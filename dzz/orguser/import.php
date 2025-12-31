@@ -14,7 +14,7 @@ $isadmin = 2;
 if ($_G['adminid'] != 1) {
     $isadmin = 0;
     if (!C::t('organization_admin')->fetch_orgids_by_uid($_G['uid'])) {
-        if($do == 'importing') exit(json_encode(array('error' => lang('orguser_import_user'))));
+        if($do == 'importing') exit(json_encode(['error' => lang('orguser_import_user')]));
         showmessage('orguser_import_user', dreferer());
     }
     if($_G['setting']['org_import_user']) $isadmin=1;//允许机构部门管理员使用覆盖方式导入
@@ -23,7 +23,7 @@ require_once libfile('function/organization');
 $navtitle = lang('user_import') . ' - ' . lang('appname');
 if ($do == 'importing') {
     $orgid = intval($_GET['orgid']);
-    if(!$orgid && $_G['adminid'] != 1) exit(json_encode(array('error' => '机构部门管理员需要选择导入机构才能导入')));
+    if(!$orgid && $_G['adminid'] != 1) exit(json_encode(['error' => '机构部门管理员需要选择导入机构才能导入']));
     //判断邮箱是否存在
     require_once libfile('function/user', '', 'user');
     $email = trim($_GET['email']);
@@ -34,8 +34,8 @@ if ($do == 'importing') {
     $_GET['weixinid'] = addslashes(trim(stripslashes(trim($_GET['weixinid']))));
     $_GET['mobile'] = addslashes(trim(stripslashes(trim($_GET['mobile']))));
 
-    if (empty($email) || empty($_GET['username'])) exit(json_encode(array('error' => lang('name_email_empty'))));
-    if (!isemail($email)) exit(json_encode(array('error' => 'email' . lang('format_error'))));
+    if (empty($email) || empty($_GET['username'])) exit(json_encode(['error' => lang('name_email_empty')]));
+    if (!isemail($email)) exit(json_encode(['error' => 'email' . lang('format_error')]));
 
     $isappend = intval($_GET['append']);
     $sendmail = intval($_GET['sendmail']);
@@ -52,63 +52,63 @@ if ($do == 'importing') {
         $exist = 1;
         if ($isfounder = C::t('user')->checkfounder($user)) $isappend = 1;//创始人不支持覆盖导入
         if ($isappend) {//增量添加，如果原先没有nickname,增加
-            $appendfield = array();
+            $appendfield = [];
 
             if ($_GET['mobile'] && empty($user['phone'])) {
                 if (!preg_match("/^\d+$/", $_GET['mobile'])) {
-                    exit(json_encode(array('error' => lang('phone_number_illegal'))));
+                    exit(json_encode(['error' => lang('phone_number_illegal')]));
                 }
                 if (C::t('user')->fetch_by_phone($_GET['mobile'])) {
-                    exit(json_encode(array('error' => lang('user_phone_exist'))));
+                    exit(json_encode(['error' => lang('user_phone_exist')]));
                 }
                 $appendfield['phone'] = $_GET['mobile'];
 
             }
             if ($_GET['weixinid'] && empty($user['weixinid'])) {
                 if (!preg_match("/^[a-zA-Z\d_]{5,}$/i", $_GET['weixinid'])) {
-                    exit(json_encode(array('error' => lang('weixin_illegal'))));
+                    exit(json_encode(['error' => lang('weixin_illegal')]));
                 }
                 if (C::t('user')->fetch_by_weixinid($_GET['weixinid'])) {
-                    exit(json_encode(array('error' => lang('weixin_exist'))));
+                    exit(json_encode(['error' => lang('weixin_exist')]));
                 }
                 $appendfield['weixinid'] = $_GET['weixinid'];
             }
             if ($appendfield) C::t('user')->update($uid, $appendfield);
         } else { //覆盖导入时，覆盖用户的姓名和密码
             $salt = substr(uniqid(rand()), -6);
-            if (!check_username($_GET['username'])) exit(json_encode(array('error' => lang('user_name_sensitive'))));
-            $setarr = array('username' => $_GET['username'],
+            if (!check_username($_GET['username'])) exit(json_encode(['error' => lang('user_name_sensitive')]));
+            $setarr = ['username' => $_GET['username'],
                 'password' => md5(md5($_GET['password']) . $salt),
                 'salt' => $salt
-            );
+            ];
 
             if ($_GET['mobile'] && $_GET['mobile'] != $user['phone']) {
                 if (!preg_match("/^\d+$/", $_GET['mobile'])) {
-                    exit(json_encode(array('error' => lang('phone_number_illegal'))));
+                    exit(json_encode(['error' => lang('phone_number_illegal')]));
                 }
                 if (C::t('user')->fetch_by_phone($_GET['mobile'])) {
-                    exit(json_encode(array('error' => lang('user_phone_exist'))));
+                    exit(json_encode(['error' => lang('user_phone_exist')]));
                 }
                 $setarr['phone'] = $_GET['mobile'];
 
             }
             if ($_GET['weixinid'] && $_GET['weixinid'] != $user['weixinid']) {
                 if (!preg_match("/^[a-zA-Z\d_]{5,}$/i", $_GET['weixinid'])) {
-                    exit(json_encode(array('error' => lang('weixin_illegal'))));
+                    exit(json_encode(['error' => lang('weixin_illegal')]));
                 }
                 if (C::t('user')->fetch_by_weixinid($_GET['weixinid'])) {
-                    exit(json_encode(array('error' => lang('weixin_exist'))));
+                    exit(json_encode(['error' => lang('weixin_exist')]));
                 }
                 $setarr['weixinid'] = $_GET['weixinid'];
             }
             C::t('user')->update($uid, $setarr);
             if ($sendmail) { //发送密码到用户邮箱，延时发送
-                $email_password_message = lang('email_password_message', array(
+                $email_password_message = lang('email_password_message', [
                     'sitename' => $_G['setting']['sitename'],
                     'siteurl' => $_G['siteurl'],
                     'email' => $email,
                     'password' => $_GET['password']
-                ));
+                ]);
 
                 if (!sendmail_cron("$email <$email>", lang('email_password_subject'), $email_password_message)) {
                     runlog('sendmail', "$email sendmail failed.");
@@ -116,17 +116,17 @@ if ($do == 'importing') {
             }
         }
     } else { //新添用户
-        if (!check_username($_GET['username'])) exit(json_encode(array('error' => lang('user_name_sensitive'))));
+        if (!check_username($_GET['username'])) exit(json_encode(['error' => lang('user_name_sensitive')]));
         $user = uc_add_user($_GET['username'], $_GET['password'], $email);
         $uid = $user['uid'];
-        if ($uid < 1) exit(json_encode(array('error' => lang('import_failure'))));
-        $base = array(
+        if ($uid < 1) exit(json_encode(['error' => lang('import_failure')]));
+        $base = [
             'uid' => $uid,
             'adminid' => 0,
             'groupid' => 9,
             'regdate' => TIMESTAMP,
             'emailstatus' => 1,
-        );
+        ];
         if ($_GET['mobile']) {
             if (!preg_match("/^\d+$/", $_GET['mobile'])) {
             } elseif (C::t('user')->fetch_by_phone($_GET['mobile'])) {
@@ -143,12 +143,12 @@ if ($do == 'importing') {
         }
         C::t('user')->update($uid, $base);
         if ($sendmail) { //发送密码到用户邮箱，延时发送
-            $email_password_message = lang('email_password_message', array(
+            $email_password_message = lang('email_password_message', [
                 'sitename' => $_G['setting']['sitename'],
                 'siteurl' => $_G['siteurl'],
                 'email' => $email,
                 'password' => $_GET['password']
-            ));
+            ]);
 
             if (!sendmail_cron("$email <$email>", lang('email_password_subject'), $email_password_message)) {
                 runlog('sendmail', "$email sendmail failed.");
@@ -163,7 +163,7 @@ if ($do == 'importing') {
 
     if ($exist && $isappend) { //增量时
         $oldprofile = C::t('user_profile')->fetch($uid);
-        $profile = array();
+        $profile = [];
         if (!empty($_GET['birth']) && empty($oldprofile['birthyear'])) {
             $birth = strtotime($_GET['birth']);
             if ($birth < TIMESTAMP && $birth > 0) {
@@ -193,7 +193,7 @@ if ($do == 'importing') {
             C::t('user_profile')->insert($profile);
         }
     } else {
-        $profile = array();
+        $profile = [];
         if (!empty($_GET['birth'])) {
             $birth = strtotime(trim($_GET['birth']));
             if ($birth < TIMESTAMP && $birth > 0) {
@@ -222,14 +222,14 @@ if ($do == 'importing') {
         C::t('user_profile')->insert($profile);
 
         //插入用户状态表
-        $status = array(
+        $status = [
             'uid' => $uid,
             'regip' => '',
             'lastip' => '',
             'lastvisit' => TIMESTAMP,
             'lastactivity' => TIMESTAMP,
             'lastsendmail' => 0
-        );
+        ];
         C::t('user_status')->insert($status, false, true);
     }
     //处理部门和职位
@@ -239,17 +239,17 @@ if ($do == 'importing') {
     //创建机构和部门
     foreach ($_GET['orgname'] as $key => $orgname) {
         if (empty($orgname)) continue;
-        if ($porgid = DB::result_first("select orgid from %t where forgid=%d and orgname=%s", array('organization', $orgid, $orgname))) {
+        if ($porgid = DB::result_first("select orgid from %t where forgid=%d and orgname=%s", ['organization', $orgid, $orgname])) {
             $orgid = $porgid;
         } else {
-            $setarr = array(
+            $setarr = [
                 'forgid' => $orgid,
                 'orgname' => $orgname,
                 'fid' => 0,
                 'disp' => 100,
                 'indesk' => 0,
                 'dateline' => TIMESTAMP,
-            );
+            ];
             if ($porgid = C::t('organization')->insert_by_orgid($setarr)) {
                 $orgid = $porgid;
             }
@@ -257,39 +257,37 @@ if ($do == 'importing') {
     }
     if ($orgid) {
         //用户加入机构
-        if ($isappend) {//增量导入时
-            C::t('organization_user')->insert_by_orgid($orgid, $uid);
-        } else {
+        if (!$isappend) {
             C::t('organization_user')->delete_by_uid($uid, 0, 0);
-            C::t('organization_user')->insert_by_orgid($orgid, $uid);
         }
+        C::t('organization_user')->insert_by_orgid($orgid, $uid);
         foreach ($_GET['job'] as $key => $jobname) { //处理职位
             $jobid = 0;
-            if ($pjobid = DB::result_first("select jobid from %t where orgid=%d and name=%s", array('organization_job', $orgid, $jobname))) {
+            if ($pjobid = DB::result_first("select jobid from %t where orgid=%d and name=%s", ['organization_job', $orgid, $jobname])) {
                 $jobid = $pjobid;
             } else {
-                $setarr = array(
+                $setarr = [
                     'orgid' => $orgid,
                     'name' => $_GET['job'][$key],
                     'dateline' => TIMESTAMP,
                     'opuid' => $_G['uid']
-                );
+                ];
                 if ($pjobid = C::t('organization_job')->insert($setarr, 1)) {
                     $jobid = $pjobid;
                 }
             }
             if ($jobid) {
                 if ($isappend) {//增量导入时
-                    if (!DB::result_first("select COUNT(*) from %t where uid=%d and orgid=%d and jobid>0 ", array('organization_user', $uid, $orgid))) {
-                        DB::update('organization_user', array('jobid' => $jobid), "uid='{$uid}' and orgid='{$orgid}'");
+                    if (!DB::result_first("select COUNT(*) from %t where uid=%d and orgid=%d and jobid>0 ", ['organization_user', $uid, $orgid])) {
+                        DB::update('organization_user', ['jobid' => $jobid], "uid='{$uid}' and orgid='{$orgid}'");
                     }
                 } else {//覆盖导入时
-                    DB::update('organization_user', array('jobid' => $jobid), "uid='{$uid}' and orgid='{$orgid}'");
+                    DB::update('organization_user', ['jobid' => $jobid], "uid='{$uid}' and orgid='{$orgid}'");
                 }
             }
         }
     }
-    exit(json_encode(array('msg' => 'success')));
+    exit(json_encode(['msg' => 'success']));
 } elseif ($do == 'list') {
     require_once DZZ_ROOT . './core/class/class_PHPExcel.php';
     require_once libfile('function/orguser');
@@ -302,11 +300,11 @@ if ($do == 'importing') {
     $objPHPExcel = $objReader->load($inputFileName);
     $sheetData = $objPHPExcel->getActiveSheet()->toArray(null, true, true, true);
     //获取导入数据的字段
-    $h0 = array('username' => lang('username'), 'email' => lang('email'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'), 'password' => lang('user_login_password'));
+    $h0 = ['username' => lang('username'), 'email' => lang('email'), 'birth' => lang('date_birth'), 'gender' => lang('gender'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'), 'password' => lang('user_login_password')];
     $h1 = getProfileForImport();
     $h0 = array_merge($h0, $h1);
     //获取可导入的用户资料
-    $h = array();
+    $h = [];
     foreach ($sheetData[1] as $key => $value) {
         $value = trim($value);
         foreach ($h0 as $fieldid => $title) {
@@ -323,12 +321,12 @@ if ($do == 'importing') {
         showmessage('lack_required_fields_name_email');
     }
     if (!in_array('email', $h)) {
-        $h = array_merge(array('_' => 'email'), $h);
+        $h = array_merge(['_' => 'email'], $h);
     }
-    $list = array();
+    $list = [];
     foreach ($sheetData as $key => $value) {
         if ($key <= 1) continue;
-        $temp = array();
+        $temp = [];
         foreach ($value as $col => $val) {
             if (trim($val) == '') continue;
             if ($h[$col] == 'orgname') {
@@ -362,7 +360,7 @@ if ($do == 'importing') {
     if (empty($orgpath)) $orgpath = lang('choose_import_agency_department');
 
     //默认选中
-    $open = array();
+    $open = [];
     $patharr = C::t('organization')->getPathByOrgid($orgid, false);
     $arr = (array_keys($patharr));
     array_pop($arr);
@@ -372,20 +370,19 @@ if ($do == 'importing') {
     } else {
         $open[$arr[$count - 1]] = $arr;
     }
-    $openarr = json_encode(array('orgid' => $open));
+    $openarr = json_encode(['orgid' => $open]);
     include template('import_list');
     exit();
 } else {
     if (submitcheck('importfilesubmit')) {
         if ($_FILES['importfile']['tmp_name']) {
-            $allowext = array('xls', 'xlsx');
+            $allowext = ['xls', 'xlsx'];
             $ext = strtolower(substr(strrchr($_FILES['importfile']['name'], '.'), 1, 10));
             if (!in_array($ext, $allowext)) showmessage('orguser_import_xls_xlsx', dreferer());
-            if ($file = uploadtolocal($_FILES['importfile'], 'cache', '', array('xls', 'xlsx'))) {
+            if ($file = uploadtolocal($_FILES['importfile'], 'cache', '', ['xls', 'xlsx'])) {
                 $url = outputurl($_G['siteurl'] . MOD_URL . '&op=import&do=list&file=' . urlencode($file));
                 @header("Location: $url");
                 exit();
-                showmessage('orguser_import_user_message', outputurl($_G['siteurl'] . MOD_URL . '&op=import&do=list&file=' . urlencode($file)));
             } else {
                 showmessage('orguser_import_tautology', dreferer());
             }
@@ -403,7 +400,7 @@ function checkprofile($fieldid, &$value) {
         loadcache('profilesetting');
     }
     $field = $_G['cache']['profilesetting'][$fieldid];
-    if (empty($field) || in_array($fieldid, array('department', 'realname', 'gender', 'birthyear', 'birthmonth', 'birthday', 'birth', 'constellation', 'zodiac', 'email', 'nickname', 'password', 'orgname', 'job', 'username'))) {
+    if (empty($field) || in_array($fieldid, ['department', 'realname', 'gender', 'birthyear', 'birthmonth', 'birthday', 'birth', 'constellation', 'zodiac', 'email', 'nickname', 'password', 'orgname', 'job', 'username'])) {
         return false;
     }
 
@@ -415,13 +412,13 @@ function checkprofile($fieldid, &$value) {
         if ($field['size'] && strlen($value) > $field['size']) {
             return false;
         } else {
-            $field['validate'] = !empty($field['validate']) ? $field['validate'] : ($_G['profilevalidate'][$fieldid] ? $_G['profilevalidate'][$fieldid] : '');
+            $field['validate'] = !empty($field['validate']) ? $field['validate'] : ($_G['profilevalidate'][$fieldid] ?: '');
             if ($field['validate'] && !preg_match($field['validate'], $value)) {
                 return false;
             }
         }
     } elseif ($field['formtype'] == 'checkbox' || $field['formtype'] == 'list') {
-        $arr = array();
+        $arr = [];
         $value = explode('\n', $value);
         foreach ($value as $op) {
             if (in_array(trim($op), trim($field['choices']))) {
@@ -440,4 +437,3 @@ function checkprofile($fieldid, &$value) {
     return true;
 
 }
-?>

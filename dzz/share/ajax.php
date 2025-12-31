@@ -13,14 +13,14 @@ Hook::listen('adminlogin');
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'delete') {
     $sids = $_GET['sids'];
-    $return = array();
+    $return = [];
     foreach ($sids as $v) {
         $result = C::t('shares')->delete_by_id($v);
         if ($result['error']) {
-            exit(json_encode(array('msg' => $result['error'])));
+            exit(json_encode(['msg' => $result['error']]));
         }
     }
-    exit(json_encode(array('success' => true)));
+    exit(json_encode(['success' => true]));
 } elseif ($do == 'forbidden') {
     $sids = $_GET['sids'];
     if (!$sids) {
@@ -33,8 +33,8 @@ if ($do == 'delete') {
         $status = 0;
         $msg = lang('cancel_shielding_success');
     }
-    if (C::t('shares')->update($sids, array('status' => $status))) {
-        exit(json_encode(array('success' => true, 'msg' => $msg)));
+    if (C::t('shares')->update($sids, ['status' => $status])) {
+        exit(json_encode(['success' => true, 'msg' => $msg]));
     } else {
         showmessage('share_screen_failure');
     }
@@ -47,14 +47,14 @@ if ($do == 'delete') {
     if (!$share['id']) {
         showmessage('share_file_iscancled');
     }
-    $sharestatus = array(
+    $sharestatus = [
         '-5' => lang('sharefile_isdeleted_or_positionchange'),
         '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>',
         '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>',
         '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>',
         '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>',
         '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>'
-    );
+    ];
     $share['endtime'] = getexpiretext($share['endtime']);
     $share['sharelink'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($share['id']));
     $share['dateline'] = $share['dateline'] ? dgmdate($share['dateline'],'Y-m-d H:i:s') : '';
@@ -70,11 +70,11 @@ if ($do == 'delete') {
         showmessage('forbid_operation');
     }
     if (C::t('share_report')->delete($id)) {
-        exit(json_encode(array('success' => true)));
+        exit(json_encode(['success' => true]));
     } else {
         showmessage('share_screen_failure');
     }
 } else {
     showmessage('forbid_operation');
 }
-?>
+

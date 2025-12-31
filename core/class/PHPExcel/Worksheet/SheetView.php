@@ -41,11 +41,11 @@ class PHPExcel_Worksheet_SheetView
 	const SHEETVIEW_PAGE_LAYOUT			= 'pageLayout';
 	const SHEETVIEW_PAGE_BREAK_PREVIEW	= 'pageBreakPreview';
 
-	private static $_sheetViewTypes = array(
+	private static $_sheetViewTypes = [
 		self::SHEETVIEW_NORMAL,
 		self::SHEETVIEW_PAGE_LAYOUT,
 		self::SHEETVIEW_PAGE_BREAK_PREVIEW,
-	);
+    ];
 
 	/**
 	 * ZoomScale

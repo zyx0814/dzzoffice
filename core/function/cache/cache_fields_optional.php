@@ -11,10 +11,10 @@ if (!defined('IN_DZZ')) {
 }
 
 function build_cache_fields_optional() {
-    $data = array();
+    $data = [];
 
     foreach (C::t('user_profile_setting')->fetch_all_by_available_required(1, 0) as $field) {
-        $choices = array();
+        $choices = [];
         if ($field['selective']) {
             foreach (explode("\n", $field['choices']) as $item) {
                 list($index, $choice) = explode('=', $item);
@@ -30,4 +30,3 @@ function build_cache_fields_optional() {
     savecache('fields_optional', $data);
 }
 
-?>

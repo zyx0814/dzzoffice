@@ -93,7 +93,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
 	public function copyCellCollection(PHPExcel_Worksheet $parent) {
 		parent::copyCellCollection($parent);
 
-		$newCollection = array();
+		$newCollection = [];
 		foreach($this->_cellCache as $k => &$cell) {
 			$newCollection[$k] = clone $cell;
 			$newCollection[$k]->attach($this);
@@ -116,7 +116,7 @@ class PHPExcel_CachedObjectStorage_Memory extends PHPExcel_CachedObjectStorage_C
 		}
 		unset($cell);
 
-		$this->_cellCache = array();
+		$this->_cellCache = [];
 
 		//	detach ourself from the worksheet, so that it can then delete this object successfully
 		$this->_parent = null;

@@ -8,8 +8,8 @@
  */
 
 
-$lang = array
-(
+$lang =
+    [
     'appname' => 'Notification Center',
     'app_notice' => 'Notifications',
     'noapp_notice' => 'No notifications yet',
@@ -27,5 +27,5 @@ $lang = array
     'permissions_change_failure' => 'Failed to modify permissions. This operation is not supported on Windows servers',
     'news_platform_send_here' => 'Welcome! Platform messages and notifications will be sent here promptly',
     'all_notice' => 'All notifications',
-);
-?>
+    ];
+

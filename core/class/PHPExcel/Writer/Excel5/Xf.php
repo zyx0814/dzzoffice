@@ -381,7 +381,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @static	array of int
 	 *
 	 */
-	private static $_mapBorderStyle = array	( PHPExcel_Style_Border::BORDER_NONE				=> 0x00,
+	private static $_mapBorderStyle = [PHPExcel_Style_Border::BORDER_NONE				=> 0x00,
 											  PHPExcel_Style_Border::BORDER_THIN				=> 0x01,
 											  PHPExcel_Style_Border::BORDER_MEDIUM				=> 0x02,
 											  PHPExcel_Style_Border::BORDER_DASHED				=> 0x03,
@@ -395,7 +395,7 @@ class PHPExcel_Writer_Excel5_Xf
 											  PHPExcel_Style_Border::BORDER_DASHDOTDOT			=> 0x0B,
 											  PHPExcel_Style_Border::BORDER_MEDIUMDASHDOTDOT	=> 0x0C,
 											  PHPExcel_Style_Border::BORDER_SLANTDASHDOT		=> 0x0D,
-											);
+    ];
 
 	/**
 	 * Map border style
@@ -414,7 +414,7 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @static	array of int
 	 *
 	 */
-	private static $_mapFillType = array( PHPExcel_Style_Fill::FILL_NONE					=> 0x00,
+	private static $_mapFillType = [PHPExcel_Style_Fill::FILL_NONE					=> 0x00,
 										  PHPExcel_Style_Fill::FILL_SOLID					=> 0x01,
 										  PHPExcel_Style_Fill::FILL_PATTERN_MEDIUMGRAY		=> 0x02,
 										  PHPExcel_Style_Fill::FILL_PATTERN_DARKGRAY		=> 0x03,
@@ -435,7 +435,7 @@ class PHPExcel_Writer_Excel5_Xf
 										  PHPExcel_Style_Fill::FILL_PATTERN_GRAY0625		=> 0x12,
 										  PHPExcel_Style_Fill::FILL_GRADIENT_LINEAR			=> 0x00,	// does not exist in BIFF8
 										  PHPExcel_Style_Fill::FILL_GRADIENT_PATH			=> 0x00,	// does not exist in BIFF8
-										);
+    ];
 	/**
 	 * Map fill type
 	 *
@@ -453,14 +453,14 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @static	array of int
 	 *
 	 */
-	private static $_mapHAlign = array( PHPExcel_Style_Alignment::HORIZONTAL_GENERAL			=> 0,
+	private static $_mapHAlign = [PHPExcel_Style_Alignment::HORIZONTAL_GENERAL			=> 0,
 										PHPExcel_Style_Alignment::HORIZONTAL_LEFT				=> 1,
 										PHPExcel_Style_Alignment::HORIZONTAL_CENTER				=> 2,
 										PHPExcel_Style_Alignment::HORIZONTAL_RIGHT				=> 3,
 										PHPExcel_Style_Alignment::HORIZONTAL_FILL				=> 4,
 										PHPExcel_Style_Alignment::HORIZONTAL_JUSTIFY			=> 5,
 										PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS	=> 6,
-									  );
+    ];
 	/**
 	 * Map to BIFF2-BIFF8 codes for horizontal alignment
 	 *
@@ -479,11 +479,11 @@ class PHPExcel_Writer_Excel5_Xf
 	 * @static	array of int
 	 *
 	 */
-	private static $_mapVAlign = array( PHPExcel_Style_Alignment::VERTICAL_TOP		=> 0,
+	private static $_mapVAlign = [PHPExcel_Style_Alignment::VERTICAL_TOP		=> 0,
 										PHPExcel_Style_Alignment::VERTICAL_CENTER	=> 1,
 										PHPExcel_Style_Alignment::VERTICAL_BOTTOM	=> 2,
 										PHPExcel_Style_Alignment::VERTICAL_JUSTIFY	=> 3,
-									  );
+    ];
 	/**
 	 * Map to BIFF2-BIFF8 codes for vertical alignment
 	 *

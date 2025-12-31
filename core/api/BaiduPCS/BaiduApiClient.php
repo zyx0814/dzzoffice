@@ -21,20 +21,20 @@ class BaiduApiClient
 	/**
 	 * Scheme & domain for Baidu OpenAPI interfaces.
 	 */
-	public static $BD_OPENAPI_DEFAULT_DOMAINS = array(
+	public static $BD_OPENAPI_DEFAULT_DOMAINS = [
 		'public'	=> 'http://openapi.baidu.com',
 		'rest'		=> 'https://openapi.baidu.com',
 		'file'		=> 'https://openapi.baidu.com',
-	);
+    ];
 	
     /**
      * URL prefixs for Baidu OpenAPI interfaces.
      */
-    public static $BD_OPENAPI_DEFAULT_PREFIXS = array(
+    public static $BD_OPENAPI_DEFAULT_PREFIXS = [
     	'public'	=> 'http://openapi.baidu.com/public/2.0/',
     	'rest'		=> 'https://openapi.baidu.com/rest/2.0/',
     	'file'		=> 'https://openapi.baidu.com/file/2.0/',
-    );
+    ];
     
 	protected $clientId;
 	protected $accessToken;
@@ -156,7 +156,7 @@ class BaiduApiClient
 	public function beginBatch()
 	{
 		if ($this->batchQueue === null) {
-			$this->batchQueue = array();
+			$this->batchQueue = [];
 		}
 	}
 
@@ -185,29 +185,29 @@ class BaiduApiClient
      * @param string $type Type name of the openapi, could be 'rest', or 'public'.
      * @return array|false Returns an array if success, or false if failed.
      */
-    public function & api($uri, $params = array(), $httpMethod = 'GET', $type = 'rest')
+    public function & api($uri, $params = [], $httpMethod = 'GET', $type = 'rest')
     {
     	if (substr($uri, 0, 8) === 'https://') {
     		//apis using https + access_token
-    		$params = array_merge(array('access_token' => $this->getAccessToken()), $params);
+    		$params = array_merge(['access_token' => $this->getAccessToken()], $params);
     	} elseif (substr($uri, 0, 7) === 'http://') {
     		//apis using http + client_id
-    		$params = array_merge(array('client_id' => $this->getClientId()), $params);
+    		$params = array_merge(['client_id' => $this->getClientId()], $params);
     	} else {
     		if (substr($uri, 0, 6) === '/rest/') {
     			//apis using https + access_token and default domain
     			$uri = self::$BD_OPENAPI_DEFAULT_DOMAINS['rest'] . $uri;
-    			$params = array_merge(array('access_token' => $this->getAccessToken()), $params);
+    			$params = array_merge(['access_token' => $this->getAccessToken()], $params);
     		} elseif (substr($uri, 0, 8) === '/public/') {
     			//apis using http + client and default domain
     			$uri = self::$BD_OPENAPI_DEFAULT_DOMAINS['public'] . $uri;
-    			$params = array_merge(array('client_id' => $this->getClientId()), $params);
+    			$params = array_merge(['client_id' => $this->getClientId()], $params);
     		} elseif ($type === 'rest') {
     			$uri = self::$BD_OPENAPI_DEFAULT_PREFIXS['rest'] . $uri;
-    			$params = array_merge(array('access_token' => $this->getAccessToken()), $params);
+    			$params = array_merge(['access_token' => $this->getAccessToken()], $params);
     		} elseif ($type === 'public') {
     			$uri = self::$BD_OPENAPI_DEFAULT_PREFIXS['public'] . $uri;
-    			$params = array_merge(array('client_id' => $this->getClientId()), $params);
+    			$params = array_merge(['client_id' => $this->getClientId()], $params);
     		} else {
     			BaiduUtils::setError(-1, 'Invalid params for ' . __METHOD__ . ": uri[$uri] type[$type]");
     			return false;
@@ -232,14 +232,14 @@ class BaiduApiClient
     		$query = http_build_query($params, '', '&');
     		
     		$parts = parse_url($uri);
-    		$item = array('domain' => $parts['host'],
+    		$item = ['domain' => $parts['host'],
     			'path' => $parts['path'],
     			'params' => $parts['query'] ? $parts['query'] . '&' . $query : $query,
-    			'http_method' => $httpMethod);
+    			'http_method' => $httpMethod];
     		if ($parts['scheme'] === 'https') {
-    			$this->batchQueue[0][] = array('i' => $item, 'r' => & $result);
+    			$this->batchQueue[0][] = ['i' => $item, 'r' => & $result];
     		} else {
-    			$this->batchQueue[1][] = array('i' => $item, 'r' => & $result);
+    			$this->batchQueue[1][] = ['i' => $item, 'r' => & $result];
     		}
     	}
     	return $result;
@@ -255,9 +255,9 @@ class BaiduApiClient
      * @param $params Api specific parameters.
      * @return Returns an array if success, or false if failed.
      */
-    public function upload($uri, $params = array())
+    public function upload($uri, $params = [])
     {
-    	$params = array_merge(array('access_token' => $this->getAccessToken()), $params);
+    	$params = array_merge(['access_token' => $this->getAccessToken()], $params);
     	
     	if (substr($uri, 0, 8) === 'https://' || substr($uri, 0, 7) === 'http://') {
     		//do nothing
@@ -282,7 +282,7 @@ class BaiduApiClient
 	public static function iconv($var, $inCharset = 'UTF-8', $outCharset = 'GBK')
 	{
 		if (is_array($var)) {
-			$rvar = array();
+			$rvar = [];
 			foreach ($var as $key => $val) {
 				$rvar[$key] = self::iconv($val, $inCharset, $outCharset);
 			}
@@ -315,14 +315,14 @@ class BaiduApiClient
 		}
 		
 		$num = count($batchQueue);
-		$params = array();
+		$params = [];
 		foreach ($batchQueue as $item) {
 			$params[] = $item['i'];
 		}
 		
 		$json = json_encode($params);
 		$serialOnly = ($this->batchMode === self::BATCH_MODE_SERIAL_ONLY);
-		$params = array('method' => $json, 'serial_only' => $serialOnly);
+		$params = ['method' => $json, 'serial_only' => $serialOnly];
 		
 		if ($useHttps) {
 			$params['access_token'] = $this->getAccessToken();

@@ -11,8 +11,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-$lang = array
-(
+$lang =
+    [
     'appname' => 'User Profile Management'
-);
-?>
+    ];

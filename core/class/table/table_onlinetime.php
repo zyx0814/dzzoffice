@@ -23,14 +23,13 @@ class table_onlinetime extends dzz_table {
     }
 
     public function range_by_field($start = 0, $limit = 0, $orderby = '', $sort = '') {
-        $orderby = in_array($orderby, array('thismonth', 'total', 'lastupdate'), true) ? $orderby : '';
+        $orderby = in_array($orderby, ['thismonth', 'total', 'lastupdate'], true) ? $orderby : '';
         return DB::fetch_all('SELECT * FROM ' . DB::table($this->_table) . ($orderby ? ' WHERE ' . $orderby . ' >0 ORDER BY ' . DB::order($orderby, $sort) : '') . ' ' . DB::limit($start, $limit), null, $this->_pk);
     }
 
     public function update_thismonth() {
-        return DB::update($this->_table, array('thismonth' => 0));
+        return DB::update($this->_table, ['thismonth' => 0]);
     }
 
 }
 
-?>

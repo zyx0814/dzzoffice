@@ -120,9 +120,9 @@ function set_bucket_acl($obj){
 //获取bucket ACL
 function get_bucket_acl($obj){
 	$bucket = 'phpsdk1349849394';
-	$options = array(
+	$options = [
 		ALIOSS::OSS_CONTENT_TYPE => 'text/xml',
-	);
+    ];
 		
 	$response = $obj->get_bucket_acl($bucket,$options);
 	_format($response);	
@@ -187,12 +187,12 @@ function  delete_bucket_website($obj){
 function  set_bucket_cors($obj){
 	$bucket = 'phpsdk1349849394';
 	
-	$cors_rule[ALIOSS::OSS_CORS_ALLOWED_HEADER]=array("x-oss-test");
-	$cors_rule[ALIOSS::OSS_CORS_ALLOWED_METHOD]=array("GET");
-	$cors_rule[ALIOSS::OSS_CORS_ALLOWED_ORIGIN]=array("http://www.b.com");
-	$cors_rule[ALIOSS::OSS_CORS_EXPOSE_HEADER]=array("x-oss-test1");
+	$cors_rule[ALIOSS::OSS_CORS_ALLOWED_HEADER]= ["x-oss-test"];
+	$cors_rule[ALIOSS::OSS_CORS_ALLOWED_METHOD]= ["GET"];
+	$cors_rule[ALIOSS::OSS_CORS_ALLOWED_ORIGIN]= ["http://www.b.com"];
+	$cors_rule[ALIOSS::OSS_CORS_EXPOSE_HEADER]= ["x-oss-test1"];
 	$cors_rule[ALIOSS::OSS_CORS_MAX_AGE_SECONDS] = 10;
-	$cors_rules=array($cors_rule);
+	$cors_rules= [$cors_rule];
 	
     $response = $obj->set_bucket_cors($bucket, $cors_rules);
 	_format($response);	
@@ -232,12 +232,12 @@ function  options_object($obj){
 //获取object列表
 function list_object($obj){
 	$bucket = 'efrwerwertyrty';
-	$options = array(
+	$options = [
 		'delimiter' => '/',
 		'prefix' => '',
 		'max-keys' => 10,
 		//'marker' => 'myobject-1330850469.pdf',
-	);
+    ];
 	
 	$response = $obj->list_object($bucket,$options);	
 	_format($response);
@@ -269,13 +269,13 @@ function upload_by_content($obj){
 		}
 		*/
 	    
-		$upload_file_options = array(
+		$upload_file_options = [
 			'content' => $content,
 			'length' => strlen($content),
-			ALIOSS::OSS_HEADERS => array(
+			ALIOSS::OSS_HEADERS => [
 				'Expires' => '2012-10-01 08:00:00',
-			),
-		);
+            ],
+        ];
 		
 		$response = $obj->upload_file_by_content($bucket,$object,$upload_file_options);	
 		echo 'upload file {'.$object.'}'.($response->isOk()?'ok':'fail')."\n";
@@ -300,9 +300,9 @@ function copy_object($obj){
 		$from_object = '&#26;&#26;_100.txt';
 		$to_bucket = 'invalidxml';
 		$to_object = '&#26;&#26;_100.txt';
-		$options = array(
+		$options = [
 			'content-type' => 'application/json',
-		);
+        ];
 
 		$response = $obj->copy_object($from_bucket,$from_object,$to_bucket,$to_object,$options);
 		_format($response);
@@ -328,12 +328,12 @@ function delete_object($obj){
 //删除objects
 function delete_objects($obj){
 	$bucket = 'phpsdk1349849394';
-	$objects = array('myfoloder-1349850940/','myfoloder-1349850941/',);   
+	$objects = ['myfoloder-1349850940/','myfoloder-1349850941/',];
 	
-	$options = array(
+	$options = [
 		'quiet' => false,
 		//ALIOSS::OSS_CONTENT_TYPE => 'text/xml',
-	);
+    ];
 	
 	$response = $obj->delete_objects($bucket,$objects,$options);
 	_format($response);
@@ -344,10 +344,10 @@ function get_object($obj){
 	$bucket = 'phpsdk1349849394';
 	$object = 'netbeans-7.1.2-ml-cpp-linux.sh'; 
 	
-	$options = array(
+	$options = [
 		ALIOSS::OSS_FILE_DOWNLOAD => "d:\\cccccccccc.sh",
 		//ALIOSS::OSS_CONTENT_TYPE => 'txt/html',
-	);	
+    ];
 	
 	$response = $obj->get_object($bucket,$object,$options);
 	_format($response);
@@ -368,10 +368,10 @@ function upload_by_multi_part($obj){
 	$object = 'Mining.the.Social.Web-'.time().'.pdf';  //英文
 	$filepath = "D:\\Book\\Mining.the.Social.Web.pdf";  //英文
 		
-	$options = array(
+	$options = [
 		ALIOSS::OSS_FILE_UPLOAD => $filepath,
 		'partSize' => 5242880,
-	);
+    ];
 
 	$response = $obj->create_mpu_object($bucket, $object,$options);
 	_format($response);
@@ -389,11 +389,11 @@ function upload_by_dir($obj){
 
 //通过multi-part上传整个目录(新版)
 function batch_upload_file($obj){
-	$options = array(
+	$options = [
 		'bucket' 	=> 'phpsdk1349849394',
 		'object'	=> 'picture',
 		'directory' => 'D:\alidata\www\logs\aliyun.com\oss',
-	);
+    ];
 	$response = $obj->batch_upload_file($options);
 }
 

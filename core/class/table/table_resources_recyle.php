@@ -13,7 +13,7 @@ class table_resources_recyle extends dzz_table {
 
     //插入回收站文件
     public function insert_data($setarr) {
-        $arr = array(
+        $arr = [
             'rid' => $setarr['rid'],
             'uid' => getglobal('uid'),
             'username' => getglobal('username'),
@@ -22,13 +22,13 @@ class table_resources_recyle extends dzz_table {
             'size' => $setarr['size'],
             'pfid' => $setarr['pfid'],
             'deldateline' => $setarr['deldateline']
-        );
+        ];
         $path = C::t('resources_path')->fetch_pathby_pfid($arr['pfid']);
         $arr['pathinfo'] = $path;
         if ($cid = parent::insert($arr)) {
             if ($path) $path = preg_replace('/dzz:(.+?):/', '', $path);
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($setarr['pfid'], $setarr['gid']);
-            $eventdata = array('username' => $arr['username'], 'filename' => $arr['filename'], 'position' => ($path) ? $path : '', 'hash' => $hash);
+            $eventdata = ['username' => $arr['username'], 'filename' => $arr['filename'], 'position' => ($path) ?: '', 'hash' => $hash];
             if ($setarr['type'] == 'folder') {
 
                 if (C::t('resources_event')->addevent_by_pfid($setarr['pfid'], 'delete_folder', 'delfolder', $eventdata, $setarr['gid'], $setarr['rid'], $setarr['name'])) {
@@ -52,8 +52,8 @@ class table_resources_recyle extends dzz_table {
     //查询群组回收站文件
     public function fetch_by_gid($gid) {
         $gid = intval($gid);
-        $result = array();
-        foreach (DB::fetch_all("select * from %t where gid = %d", array($this->_table, $gid)) as $v) {
+        $result = [];
+        foreach (DB::fetch_all("select * from %t where gid = %d", [$this->_table, $gid]) as $v) {
             $v['info'] = C::t('resources')->fetch_by_rid($v['rid']);
             $v['info']['deldateline'] = dgmdate($v['info']['deldateline']);
             $result[] = $v;
@@ -64,28 +64,27 @@ class table_resources_recyle extends dzz_table {
     //查询回收站文件
     public function fetch_by_ids($ids) {
         if (!is_array($ids)) $ids = (array)$ids;
-        $results = DB::fetch_all("select * from %t where id in(%n)", array($this->_table, $ids));
-        return $results;
+        return DB::fetch_all("select * from %t where id in(%n)", [$this->_table, $ids]);
     }
 
     //查询有权限回收站文件：我删除的和我管理的群组的(其他普通用户删除的文件不列出=>即我有权限删除的)
     public function fetch_all_recycle_data() {
         global $_G;
         $uid = $_G['uid'];
-        $recycles = array();
+        $recycles = [];
         $orgids = C::t('organization')->fetch_all_orgid();
         $manageorgid = $orgids['orgids_admin'];
-        if ($results = DB::fetch_all("select * from %t where uid = %d or gid in(%n)", array($this->_table, $uid, $manageorgid))) {
+        if ($results = DB::fetch_all("select * from %t where uid = %d or gid in(%n)", [$this->_table, $uid, $manageorgid])) {
             $recycles = $results;
         }
         return $recycles;
     }
 
     //查询回收站数据
-    public function fetch_all_rid($pfids = array()) {
-        $rids = array();
+    public function fetch_all_rid($pfids = []) {
+        $rids = [];
         $wheresql = ' where 1 ';
-        $params = array($this->table);
+        $params = [$this->table];
         if ($pfids) {
             $wheresql .= " and pfid IN (%n)";
             $params[] = $pfids;
@@ -93,7 +92,7 @@ class table_resources_recyle extends dzz_table {
         $uid = getglobal('uid');
         //查询有管理权限的群组id
         $manageorg = C::t('organization')->fetch_all_manage_orgid();
-        $manageorgid = array();
+        $manageorgid = [];
         foreach ($manageorg as $v) {
             $manageorgid[] = $v['orgid'];
         }
@@ -107,11 +106,11 @@ class table_resources_recyle extends dzz_table {
     }
 
     //查询回收站文件信息
-    public function fetch_all_recycle($start = 0, $limit = 0, $condition = array(), $ordersql = '', $count = false) {
+    public function fetch_all_recycle($start = 0, $limit = 0, $condition = [], $ordersql = '', $count = false) {
         global $_G;
         $limitsql = $limit ? DB::limit($start, $limit) : '';
         $wheresql = ' where 1 ';
-        $params = array($this->table, 'resources', 'folder');
+        $params = [$this->table, 'resources', 'folder'];
         //解析搜索条件
         if ($condition && is_string($condition)) {//字符串条件语句
             $wheresql .= $condition;
@@ -141,24 +140,20 @@ class table_resources_recyle extends dzz_table {
         $explorer_setting = get_resources_some_setting();
         $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门
         $powerarr = perm_binPerm::getPowerArr();
-        $or = array();
+        $or = [];
         //如果没有群组和网盘限制条件，默认查询我有权限管理的群组和我删除的文件
         if (!isset($condition['re.gid']) && !isset($condition['re.pfid'])) {
             $uid = $_G['uid'];
+            if ($explorer_setting['useronperm']) {
+                $or[] = '(re.uid = %d and re.gid = 0)';
+                $params[] = $uid;
+            }
             if ($_G['adminid'] == 1) {
-                if ($explorer_setting['useronperm']) {
-                    $or[] = '(re.uid = %d and re.gid = 0)';
-                    $params[] = $uid;
-                }
                 $gids = array_unique(array_merge($orgids['orgids_admin'], $orgids['orgids_member']));
                 $or[] = ' (re.gid in (%n) )';
                 $params[] = $gids;
 
             } else {
-                if ($explorer_setting['useronperm']) {
-                    $or[] = '(re.uid = %d and re.gid = 0)';
-                    $params[] = $uid;
-                }
 
                 //我管理的群组或部门的文件
                 if ($orgids['orgids_admin']) {
@@ -221,13 +216,13 @@ class table_resources_recyle extends dzz_table {
         global $_G;
         $uid = $_G['uid'];
         if (!is_array($ids)) $ids = (array)$ids;
-        $idarr = array();
+        $idarr = [];
         foreach ($ids as $id) {
             if (!$recyle = parent::fetch($id)) {
                 continue;
             }
             $rid = $recyle['rid'];
-            if (!$result = DB::fetch_first("select * from %t where rid = %s", array('resources', $rid))) {
+            if (!$result = DB::fetch_first("select * from %t where rid = %s", ['resources', $rid])) {
                 continue;
             }
             if ($result['gid'] > 0) {
@@ -239,17 +234,17 @@ class table_resources_recyle extends dzz_table {
                     }
                 }
             }
-            if (DB::update('resources', array('isdelete' => 0, 'deldateline' => 0), array('rid' => $rid)) && parent::delete($id)) {
+            if (DB::update('resources', ['isdelete' => 0, 'deldateline' => 0], ['rid' => $rid]) && parent::delete($id)) {
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($result['pfid'], $result['gid']);
-                $eventdata = array(
+                $eventdata = [
                     'username' => getglobal('username'),
                     'filename' => $result['name'],
                     'hash' => $hash
-                );
+                ];
                 if (C::t('resources_event')->addevent_by_pfid($result['pfid'], 'recover_file', 'recoverfile', $eventdata, $result['gid'], $rid, $result['name'])) {
                     $idarr[] = $id;
                 } else {
-                    DB::update($this->_table, array('isdelete' => 1, 'deldateline' => $result['deldateline']), array('rid' => $rid));
+                    DB::update($this->_table, ['isdelete' => 1, 'deldateline' => $result['deldateline']], ['rid' => $rid]);
                     continue;
                 }
 
@@ -260,7 +255,7 @@ class table_resources_recyle extends dzz_table {
     }
 
     public function fetch_by_rid($rid) {
-        return DB::fetch_first("select * from %t where rid=%s", array($this->_table, $rid));
+        return DB::fetch_first("select * from %t where rid=%s", [$this->_table, $rid]);
     }
 
     public function delete_by_rid($rid) {
@@ -277,7 +272,7 @@ class table_resources_recyle extends dzz_table {
     //彻底删除
     public function delete_by_id($id) {
         if (!is_array($id)) $id = (array)$id;
-        $ids = array();
+        $ids = [];
         foreach ($id as $v) {
             if (!$recyle = parent::fetch($v)) {
                 continue;
@@ -292,12 +287,12 @@ class table_resources_recyle extends dzz_table {
     //根据rid获取回收站数据
     public function get_data_by_rid($rid) {
         $rid = trim($rid);
-        return DB::fetch_first("select * from %t where rid = %s", array($this->_table, $rid));
+        return DB::fetch_first("select * from %t where rid = %s", [$this->_table, $rid]);
     }
 
     public function fetch_rid_bydate($date) {
-        $rids = array();
-        foreach (DB::fetch_all("select rid from %t where deldateline <= %s", array($this->_table, $date)) as $v) {
+        $rids = [];
+        foreach (DB::fetch_all("select rid from %t where deldateline <= %s", [$this->_table, $date]) as $v) {
             $rids[] = $v['rid'];
         }
         return $rids;

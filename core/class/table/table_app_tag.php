@@ -32,7 +32,7 @@ class table_app_tag extends dzz_table {
             } elseif (strpos($tags, ',') !== false) {
                 $tagnames = explode(',', trim($tags));
             } else {
-                $tagnames = array(trim($tags, "'"));
+                $tagnames = [trim($tags, "'")];
             }
         } else {
             $tagnames = $tags;
@@ -40,18 +40,18 @@ class table_app_tag extends dzz_table {
 
 
         $tagarr = DB::fetch_all('SELECT tagid,tagname FROM ' . DB::table($this->_table) . "  WHERE  tagname IN( " . dimplode($tagnames) . ")");
-        $have_tagnames = array();
-        $have_tagids = array();
+        $have_tagnames = [];
+        $have_tagids = [];
 
         foreach ($tagarr as $tagid => $value) {
             $have_tagnames[] = $value['tagname'];
             $have_tagids[] = $value['tagid'];
         }
         //已经存在的增加hot +1;
-        DB::query("UPDATE " . DB::table($this->_table) . " SET hot=hot+1 WHERE tagid IN(%n)", array($have_tagids));
+        DB::query("UPDATE " . DB::table($this->_table) . " SET hot=hot+1 WHERE tagid IN(%n)", [$have_tagids]);
         $insert_names = array_diff($tagnames, $have_tagnames);
         foreach ($insert_names as $name) {
-            $have_tagids[] = self::insert(array('tagname' => $name, 'dateline' => TIMESTAMP, 'hot' => 1), 1);
+            $have_tagids[] = self::insert(['tagname' => $name, 'dateline' => TIMESTAMP, 'hot' => 1], 1);
         }
         //插入关系表
         C::t('app_relative')->update_by_appid($appid, $have_tagids);
@@ -59,7 +59,7 @@ class table_app_tag extends dzz_table {
 
     public function delete_by_tagid($tagids) {
         DB::query("UPDATE " . DB::table($this->_table) . " SET hot=hot-1 WHERE tagid IN(" . dimplode($tagids) . ")");
-        DB::delete($this->_table, array('hot' => 0));
+        DB::delete($this->_table, ['hot' => 0]);
     }
 
     public function deletetags($tags) {
@@ -70,14 +70,14 @@ class table_app_tag extends dzz_table {
             } elseif (strpos($tags, ',') !== false) {
                 $tagnames = explode(',', trim($tags));
             } else {
-                $tagnames = array($tags);
+                $tagnames = [$tags];
             }
         } else {
             $tagnames = $tags;
         }
         $tagarr = DB::fetch_all('SELECT tagid,tagname,hot FROM ' . DB::table($this->_table) . "  WHERE tagname IN (" . dimplode($tagnames) . ")");
-        $have_tagids = array();
-        $delete_tagids = array();
+        $have_tagids = [];
+        $delete_tagids = [];
         foreach ($tagarr as $tagid => $value) {
             if ($value['hot'] > 1) $have_tagids[] = $value['tagname'];
             elseif ($value['hot'] < 1) {
@@ -93,4 +93,4 @@ class table_app_tag extends dzz_table {
 
 }
 
-?>
+

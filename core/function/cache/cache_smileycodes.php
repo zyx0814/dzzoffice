@@ -6,7 +6,7 @@ if (!defined('IN_DZZ')) {
 }
 
 function build_cache_smileycodes() {
-    $data = array();
+    $data = [];
     foreach (C::t('imagetype')->fetch_all_by_type('smiley', 1) as $type) {
         foreach (C::t('smiley')->fetch_all_by_type_code_typeid('smiley', $type['typeid']) as $smiley) {
             if ($size = @getimagesize('./static/image/smiley/' . $type['directory'] . '/' . $smiley['url'])) {
@@ -17,5 +17,3 @@ function build_cache_smileycodes() {
 
     savecache('smileycodes', $data);
 }
-
-?>

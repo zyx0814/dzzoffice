@@ -166,7 +166,7 @@ class XmlLocation extends AbstractLocation
         if ($type == 'object' || $type == 'array') {
             if (!$param->getData('xmlFlattened')) {
                 if ($namespace) {
-                    $writer->startElementNS(null, $name, $namespace);
+                    $writer->startElementNs(null, $name, $namespace);
                 } else {
                     $writer->startElement($name);
                 }
@@ -200,7 +200,7 @@ class XmlLocation extends AbstractLocation
     protected function writeAttribute($writer, $prefix, $name, $namespace, $value)
     {
         if ($namespace) {
-            $writer->writeAttributeNS($prefix, $name, $namespace, $value);
+            $writer->writeAttributeNs($prefix, $name, $namespace, $value);
         } else {
             $writer->writeAttribute($name, $value);
         }
@@ -218,12 +218,12 @@ class XmlLocation extends AbstractLocation
     protected function writeElement(\XMLWriter $writer, $prefix, $name, $namespace, $value)
     {
         if ($namespace) {
-            $writer->startElementNS($prefix, $name, $namespace);
+            $writer->startElementNs($prefix, $name, $namespace);
         } else {
             $writer->startElement($name);
         }
         if (strpbrk($value, '<>&')) {
-            $writer->writeCData($value);
+            $writer->writeCdata($value);
         } else {
             $writer->writeRaw($value);
         }

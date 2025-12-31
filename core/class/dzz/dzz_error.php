@@ -63,7 +63,7 @@ class dzz_error {
             $show .= "<li>[Line: {$error['line']}]" . $file . "($func)</li>";
             $log .= (!empty($log) ? ' -> ' : '') . $file . '#' . $func . ':' . $error['line'];
         }
-        return array($show, $log);
+        return [$show, $log];
     }
 
     public static function db_error($message, $sql) {
@@ -118,9 +118,9 @@ class dzz_error {
         $trace = $exception->getTrace();
         krsort($trace);
 
-        $trace[] = array('file' => $exception->getFile(), 'line' => $exception->getLine(), 'function' => 'break');
+        $trace[] = ['file' => $exception->getFile(), 'line' => $exception->getLine(), 'function' => 'break'];
         $logmsg = '';
-        $phpmsg = array();
+        $phpmsg = [];
         foreach ($trace as $error) {
             if (!empty($error['function'])) {
                 $fun = '';
@@ -155,12 +155,12 @@ class dzz_error {
                 $fun .= ')';
                 $error['function'] = $fun;
             }
-            $phpmsg[] = array(
-                'file' => str_replace(array(DZZ_ROOT, '\\'), array('', '/'), $error['file']),
+            $phpmsg[] = [
+                'file' => str_replace([DZZ_ROOT, '\\'], ['', '/'], $error['file']),
                 'line' => $error['line'],
                 'function' => $error['function'],
-            );
-            $file = str_replace(array(DZZ_ROOT, '\\'), array('', '/'), $error['file']);
+            ];
+            $file = str_replace([DZZ_ROOT, '\\'], ['', '/'], $error['file']);
             $func = isset($error['class']) ? $error['class'] : '';
             $func .= isset($error['type']) ? $error['type'] : '';
             $func .= isset($error['function']) ? $error['function'] : '';
@@ -280,7 +280,7 @@ EOT;
         echo '<div class="help">' . lang('suggestion_user') . '</div>';
         echo '<div class="help">' . lang('suggestion') . '</div>';
 
-        $endmsg = lang('error_end_message', array('host' => $host));
+        $endmsg = lang('error_end_message', ['host' => $host]);
         echo <<<EOT
 <div class="help">$endmsg</div>
 </div>
@@ -290,7 +290,7 @@ EOT;
     }
 
     public static function clear($message) {
-        return str_replace(array("\t", "\r", "\n"), " ", $message);
+        return str_replace(["\t", "\r", "\n"], " ", $message);
     }
 
     public static function sql_clear($message) {
@@ -300,9 +300,8 @@ EOT;
     }
 
     public static function write_error_log($message) {
-        $loginfo = array("mark" => "errorlog", "content" => $message);
+        $loginfo = ["mark" => "errorlog", "content" => $message];
         Hook::listen('systemlog', $loginfo);
-        return;
     }
 
 }

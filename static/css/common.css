@@ -218,7 +218,7 @@ dl>dd{margin-left:10px}
 .ball-beat > div{background-color:#bdbdbd;width:15px;height:15px;border-radius:100%;margin:2px;-webkit-animation-fill-mode:both;animation-fill-mode:both;display:inline-block;-webkit-animation:ball-beat 0.7s 0s infinite linear;-moz-animation:ball-beat 0.7s 0s infinite linear;-ms-animation:ball-beat 0.7s 0s infinite linear;animation:ball-beat 0.7s 0s infinite linear}
 .ball-beat > div:nth-child(2n-1){-webkit-animation-delay:0.35s !important;-moz-animation-delay:0.35s !important;-ms-animation-delay:0.35s !important;animation-delay:0.35s !important}
 .checkbox-inline,.radio-inline{margin-top:10px}
-.form-horizontal checkbox-inline,.form-horizontal .radio-inline{margin-top:0}
+.form-horizontal .checkbox-inline,.form-horizontal .radio-inline{margin-top:0}
 .checkbox-inline+.checkbox-inline,.radio-inline+.radio-inline{margin-top:10px}
 .checkbox-inline+.checkbox-inline,.radio-inline+.radio-inline{margin-top:10px;margin-left:15px}
 .form-horizontal .checkbox-inline+.checkbox-inline,.form-horizontal .radio-inline+.radio-inline{margin-top:0}

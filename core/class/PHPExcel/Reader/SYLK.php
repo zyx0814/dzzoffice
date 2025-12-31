@@ -63,7 +63,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 *
 	 * @var array
 	 */
-	private $_formats = array();
+	private $_formats = [];
 
 	/**
 	 * Format Count
@@ -142,7 +142,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 		$fileHandle = $this->_fileHandle;
 		rewind($fileHandle);
 
-		$worksheetInfo = array();
+		$worksheetInfo = [];
 		$worksheetInfo[0]['worksheetName'] = 'Worksheet';
 		$worksheetInfo[0]['lastColumnLetter'] = 'A';
 		$worksheetInfo[0]['lastColumnIndex'] = 0;
@@ -150,7 +150,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 		$worksheetInfo[0]['totalColumns'] = 0;
 
 		// Loop through file
-		$rowData = array();
+		$rowData = [];
 
 		// loop through one row (line) at a time in the file
 		$rowIndex = 0;
@@ -235,11 +235,11 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 		}
 		$objPHPExcel->setActiveSheetIndex( $this->_sheetIndex );
 
-		$fromFormats	= array('\-',	'\ ');
-		$toFormats		= array('-',	' ');
+		$fromFormats	= ['\-',	'\ '];
+		$toFormats		= ['-',	' '];
 
 		// Loop through file
-		$rowData = array();
+		$rowData = [];
 		$column = $row = '';
 
 		// loop through one row (line) at a time in the file
@@ -255,7 +255,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 			$dataType = array_shift($rowData);
 			//	Read shared styles
 			if ($dataType == 'P') {
-				$formatArray = array();
+				$formatArray = [];
 				foreach($rowData as $rowDatum) {
 					switch($rowDatum[0]) {
 						case 'P' :	$formatArray['numberformat']['code'] = str_replace($fromFormats,$toFormats,substr($rowDatum,1));
@@ -350,7 +350,7 @@ class PHPExcel_Reader_SYLK extends PHPExcel_Reader_Abstract implements PHPExcel_
 			//	Read cell formatting
 			} elseif ($dataType == 'F') {
 				$formatStyle = $columnWidth = $styleSettings = '';
-				$styleData = array();
+				$styleData = [];
 				foreach($rowData as $rowDatum) {
 					switch($rowDatum[0]) {
 						case 'C' :

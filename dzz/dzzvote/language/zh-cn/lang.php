@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'most_can_choose' => '最多可选择',
     'most_can_choose1' => '最多选择',
     'item' => '项',
@@ -30,6 +30,5 @@ $lang = array(
     'there_no_deadline' => '无截止时间',
     'voting_ended' => '投票已结束',
     'day' => '天',
-);
+];
 
-?>

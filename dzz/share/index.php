@@ -10,10 +10,10 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 Hook::listen('adminlogin');
-$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
+$navtitle = $global_appinfo['appname'] ?: lang('appname');
 $op = isset($_GET['op']) ? trim($_GET['op']) : '';
 $do = isset($_GET['do']) ? $_GET['do'] : '';
-$typeinfo = array(
+$typeinfo = [
     'folder' => lang('catalogue'),
     'image' => lang('photo'),
     'document' => lang('type_attach'),
@@ -22,10 +22,10 @@ $typeinfo = array(
     'dzzdoc' => 'DZZ' . lang('type_attach'),
     'attach' => lang('attachment'),
     'url' => lang('other')
-);
+];
 if ($do == 'getinfo') {
-    $field = in_array($_GET['field'], array('title', 'dateline', 'type', 'count','downs', 'username','endtime','times')) ? trim($_GET['field']) : 'dateline';
-    $order = in_array($_GET['order'], array('asc', 'desc')) ? trim($_GET['order']) : 'DESC';
+    $field = in_array($_GET['field'], ['title', 'dateline', 'type', 'count','downs', 'username','endtime','times']) ? trim($_GET['field']) : 'dateline';
+    $order = in_array($_GET['order'], ['asc', 'desc']) ? trim($_GET['order']) : 'DESC';
     $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
     $type = isset($_GET['type']) ? trim($_GET['type']) : '';
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
@@ -35,7 +35,7 @@ if ($do == 'getinfo') {
     $uid = intval($_GET['uid']);
     $orderby = " order by $field " . $order;
     $sql = "1";
-    $param = array('shares');
+    $param = ['shares'];
     if ($type) {
         $sql .= " and type=%s";
         $param[] = $type;
@@ -52,17 +52,17 @@ if ($do == 'getinfo') {
         $sql .= " and uid=%d";
         $param[] = $uid;
     }
-    $data = array();
+    $data = [];
     if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", $param)) {
         $list = DB::fetch_all("SELECT * FROM %t WHERE $sql $orderby limit $start,$limit", $param);
-        $sharestatus = array(
+        $sharestatus = [
             '-5' => lang('sharefile_isdeleted_or_positionchange'),
             '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>',
             '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>',
             '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>',
             '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>',
             '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>'
-        );
+        ];
         foreach ($list as $value) {
             $sharelink = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($value['id']));
             $value['expireday'] = getexpiretext($value['endtime']);
@@ -95,8 +95,8 @@ if ($do == 'getinfo') {
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $data ? $data : []
+        "count" => $count ?: 0,
+        "data" => $data ?: []
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {
@@ -113,4 +113,4 @@ if ($do == 'getinfo') {
 } else {
     include template('share');
 }
-?>
+

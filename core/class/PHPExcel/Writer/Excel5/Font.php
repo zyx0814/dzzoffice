@@ -144,12 +144,12 @@ class PHPExcel_Writer_Excel5_Font
 	 * @static	array of int
 	 *
 	 */
-	private static $_mapUnderline = array(	PHPExcel_Style_Font::UNDERLINE_NONE					=> 0x00,
+	private static $_mapUnderline = [PHPExcel_Style_Font::UNDERLINE_NONE					=> 0x00,
 											PHPExcel_Style_Font::UNDERLINE_SINGLE				=> 0x01,
 											PHPExcel_Style_Font::UNDERLINE_DOUBLE				=> 0x02,
 											PHPExcel_Style_Font::UNDERLINE_SINGLEACCOUNTING		=> 0x21,
 											PHPExcel_Style_Font::UNDERLINE_DOUBLEACCOUNTING		=> 0x22,
-										 );
+    ];
 	/**
 	 * Map underline
 	 *

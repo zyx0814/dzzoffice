@@ -21,8 +21,8 @@ class table_user_wechat extends dzz_table {
     }
 
     function fetch_by_openid($openid, $appid) {
-        return DB::fetch_first("select * from %t where openid=%s and appid=%s", array($this->_table, $openid, $appid));
+        return DB::fetch_first("select * from %t where openid=%s and appid=%s", [$this->_table, $openid, $appid]);
     }
 }
 
-?>
+

@@ -11,7 +11,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 $navtitle = lang('data_set') . ' - ' . lang('appname');
 $op = isset($_GET['op']) ? $_GET['op'] : '';
-$profilevalidate = array(
+$profilevalidate = [
     'telephone' => '/^((\\(?\\d{3,4}\\)?)|(\\d{3,4}-)?)\\d{7,8}$/',
     'mobile' => '/^(\+)?(86)?0?1\\d{10}$/',
     'zipcode' => '/^\\d{5,6}$/',
@@ -19,41 +19,41 @@ $profilevalidate = array(
     'height' => '/^\\d{1,3}$/',
     'weight' => '/^\\d{1,3}$/',
     'qq' => '/^[1-9]*[1-9][0-9]*$/'
-);
-$fieldid = $_GET['fieldid'] ? $_GET['fieldid'] : '';
+];
+$fieldid = $_GET['fieldid'] ?: '';
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'delete') {
     C::t('user_profile_setting')->delete_by_fieldid($fieldid);
     require_once libfile('function/cache');
-    updatecache(array('profilesetting', 'fields_required', 'fields_optional', 'fields_register', 'setting'));
-    showmessage('data_del_success', dreferer(), array(), array('alert' => 'right'));
+    updatecache(['profilesetting', 'fields_required', 'fields_optional', 'fields_register', 'setting']);
+    showmessage('data_del_success', dreferer(), [], ['alert' => 'right']);
 
 } elseif ($fieldid) {
-    $_G['setting']['privacy'] = !empty($_G['setting']['privacy']) ? $_G['setting']['privacy'] : array();
+    $_G['setting']['privacy'] = !empty($_G['setting']['privacy']) ? $_G['setting']['privacy'] : [];
     $_G['setting']['privacy'] = is_array($_G['setting']['privacy']) ? $_G['setting']['privacy'] : dunserialize($_G['setting']['privacy']);
     $field = C::t('user_profile_setting')->fetch($fieldid);
-    $fixedfields1 = array('uid', 'constellation', 'zodiac');
-    $fixedfields2 = array('gender', 'birthday', 'department');
+    $fixedfields1 = ['uid', 'constellation', 'zodiac'];
+    $fixedfields2 = ['gender', 'birthday', 'department'];
     $field['isfixed1'] = in_array($fieldid, $fixedfields1);
     $field['isfixed2'] = $field['isfixed1'] || in_array($fieldid, $fixedfields2);
     //$field['customable'] = preg_match('/^field[1-8]$/i', $fieldid);
-    $field['validate'] = $field['validate'] ? $field['validate'] : ($profilevalidate[$fieldid] ? $profilevalidate[$fieldid] : '');
+    $field['validate'] = $field['validate'] ?: ($profilevalidate[$fieldid] ?: '');
     if (!submitcheck('editsubmit')) {
         include template('profileset_edit');
         exit();
     } else {
 
-        $setarr = array(
+        $setarr = [
             'invisible' => intval($_POST['invisible']),
             'showincard' => intval($_POST['showincard']),
             'showinregister' => intval($_POST['showinregister']),
             'allowsearch' => intval($_POST['allowsearch']),
             'displayorder' => intval($_POST['displayorder'])
-        );
+        ];
         if (!$field['isfixed2']) {
             $_POST['title'] = dhtmlspecialchars(trim($_POST['title']));
             if (empty($_POST['title'])) {
-                showmessage('data_name_empty', ADMINSCRIPT . '?mod=member&op=profileset&fieldid=' . $fieldid, array(), array('alert' => 'error'));
+                showmessage('data_name_empty', ADMINSCRIPT . '?mod=member&op=profileset&fieldid=' . $fieldid, [], ['alert' => 'error']);
             }
             $setarr['title'] = $_POST['title'];
             $setarr['description'] = dhtmlspecialchars(trim($_POST['description']));
@@ -70,7 +70,7 @@ if ($do == 'delete') {
             if ($_POST['choices']) {
                 $_POST['choices'] = trim($_POST['choices']);
                 $ops = explode("\n", $_POST['choices']);
-                $parts = array();
+                $parts = [];
                 foreach ($ops as $op) {
                     $parts[] = dhtmlspecialchars(trim($op));
                 }
@@ -96,23 +96,23 @@ if ($do == 'delete') {
             $_G['setting']['privacy']['profile'][$fieldid] = intval($_POST['privacy']);
             C::t('setting')->update('privacy', $_G['setting']['privacy']);
         }
-        updatecache(array('profilesetting', 'fields_required', 'fields_optional', 'fields_register', 'setting'));
+        updatecache(['profilesetting', 'fields_required', 'fields_optional', 'fields_register', 'setting']);
 
-        showmessage('subscriber_data_edit_success', ADMINSCRIPT . '?mod=member&op=profileset', array(), array('alert' => 'right'));
+        showmessage('subscriber_data_edit_success', ADMINSCRIPT . '?mod=member&op=profileset', [], ['alert' => 'right']);
     }
 } else {
 
     if (!submitcheck('ordersubmit')) {
-        $list = array();
+        $list = [];
         foreach (C::t('user_profile_setting')->range() as $fieldid => $value) {
-            $list[$fieldid] = array(
+            $list[$fieldid] = [
                 'title' => $value['title'],
                 'displayorder' => $value['displayorder'],
                 'available' => $value['available'],
                 'invisible' => $value['invisible'],
                 'showincard' => $value['showincard'],
                 'showinregister' => $value['showinregister'],
-                'customable' => $value['customable']);
+                'customable' => $value['customable']];
         }
 
         unset($list['birthyear']);
@@ -122,13 +122,13 @@ if ($do == 'delete') {
 
     } else {
         foreach ($_GET['displayorder'] as $fieldid => $value) {
-            $setarr = array(
+            $setarr = [
                 'displayorder' => intval($value),
                 'invisible' => intval($_GET['invisible'][$fieldid]) ? 0 : 1,
                 'available' => intval($_GET['available'][$fieldid]),
                 'showincard' => intval($_GET['showincard'][$fieldid]),
                 'showinregister' => intval($_GET['showinregister'][$fieldid]),
-            );
+            ];
             C::t('user_profile_setting')->update($fieldid, $setarr);
 
             if ($fieldid == 'birthday') {
@@ -138,7 +138,7 @@ if ($do == 'delete') {
             }
         }
         foreach ($_GET['add']['displayorder'] as $key => $value) {
-            $setarr = array(
+            $setarr = [
                 'displayorder' => intval($value),
                 'invisible' => intval($_GET['add']['invisible'][$key]) ? 0 : 1,
                 'available' => intval($_GET['add']['available'][$key]),
@@ -146,21 +146,21 @@ if ($do == 'delete') {
                 'showinregister' => intval($_GET['add']['showinregister'][$key]),
                 'title' => dhtmlspecialchars($_GET['add']['title'][$key]),
                 'fieldid' => dhtmlspecialchars($_GET['add']['fieldid'][$key])
-            );
+            ];
             if (empty($setarr['title']) || empty($setarr['fieldid'])) continue;
-            if (DB::result_first("select COUNT(*) from %t where fieldid=%s", array('user_profile_setting', $settarr['fieldid']))) {
+            if (DB::result_first("select COUNT(*) from %t where fieldid=%s", ['user_profile_setting', $settarr['fieldid']])) {
                 continue;
             }
             C::t('user_profile_setting')->insert($setarr);
 
         }
         require_once libfile('function/cache');
-        updatecache(array('profilesetting', 'fields_required', 'fields_optional', 'fields_register', 'setting'));
-        showmessage('subscriber_data_item_edit_success', dreferer(), array(), array('alert' => 'right'));
+        updatecache(['profilesetting', 'fields_required', 'fields_optional', 'fields_register', 'setting']);
+        showmessage('subscriber_data_item_edit_success', dreferer(), [], ['alert' => 'right']);
     }
 }
 
 
 include template('profileset');
 
-?>
+

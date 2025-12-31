@@ -126,19 +126,18 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 			case '_outline':
 			case '_vertical':
 				throw new PHPExcel_Exception('Cannot get shared component for a pseudo-border.');
-				break;
-			case '_bottom':
-				return $this->_parent->getSharedComponent()->getBottom();		break;
-			case '_diagonal':
-				return $this->_parent->getSharedComponent()->getDiagonal();		break;
-			case '_left':
-				return $this->_parent->getSharedComponent()->getLeft();			break;
-			case '_right':
-				return $this->_parent->getSharedComponent()->getRight();		break;
-			case '_top':
-				return $this->_parent->getSharedComponent()->getTop();			break;
+            case '_bottom':
+				return $this->_parent->getSharedComponent()->getBottom();
+            case '_diagonal':
+				return $this->_parent->getSharedComponent()->getDiagonal();
+            case '_left':
+				return $this->_parent->getSharedComponent()->getLeft();
+            case '_right':
+				return $this->_parent->getSharedComponent()->getRight();
+            case '_top':
+				return $this->_parent->getSharedComponent()->getTop();
 
-		}
+        }
 	}
 
 	/**
@@ -171,7 +170,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 		case '_vertical':
 				$key = 'vertical';		break;
 		}
-		return $this->_parent->getStyleArray(array($key => $array));
+		return $this->_parent->getStyleArray([$key => $array]);
 	}
 
 	/**
@@ -238,7 +237,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 			$pValue = PHPExcel_Style_Border::BORDER_MEDIUM;
 		}
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getStyleArray(array('style' => $pValue));
+			$styleArray = $this->getStyleArray(['style' => $pValue]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_borderStyle = $pValue;
@@ -267,7 +266,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 		$color = $pValue->getIsSupervisor() ? $pValue->getSharedComponent() : $pValue;
 
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getColor()->getStyleArray(array('argb' => $color->getARGB()));
+			$styleArray = $this->getColor()->getStyleArray(['argb' => $color->getARGB()]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_color = $color;

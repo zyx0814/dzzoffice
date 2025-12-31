@@ -7,11 +7,11 @@ if (!defined('IN_DZZ')) {
 function build_cache_setting() {
     global $_G;
 
-    $skipkeys = array('backupdir', 'custombackup');
-    $serialized = array('verify', 'unRunExts', 'iconview', 'storage', 'reginput', 'memory', 'secqaa', 'sitemessage', 'disallowfloat',
-        'seccodedata', 'strongpw', 'upgrade', 'loginset', 'at_range', 'thumbsize');
+    $skipkeys = ['backupdir', 'custombackup'];
+    $serialized = ['verify', 'unRunExts', 'iconview', 'storage', 'reginput', 'memory', 'secqaa', 'sitemessage', 'disallowfloat',
+        'seccodedata', 'strongpw', 'upgrade', 'loginset', 'at_range', 'thumbsize'];
 
-    $data = array();
+    $data = [];
 
     foreach (C::t('setting')->fetch_all_not_key($skipkeys) as $setting) {
         if ($setting['skey'] == 'attachdir') {
@@ -42,7 +42,7 @@ function build_cache_setting() {
 
     if (!$data['imagelib']) unset($data['imageimpath']);
 
-    $data['seccodedata'] = is_array($data['seccodedata']) ? $data['seccodedata'] : array();
+    $data['seccodedata'] = is_array($data['seccodedata']) ? $data['seccodedata'] : [];
     if ($data['seccodedata']['type'] == 2) {
         if (extension_loaded('ming')) {
             unset($data['seccodedata']['background'], $data['seccodedata']['adulterate'],
@@ -57,11 +57,11 @@ function build_cache_setting() {
         $data['seccodedata']['height'] = 34;
     }
 
-    $data['watermarktype'] = !empty($data['watermarktype']) ? dunserialize($data['watermarktype']) : array();
-    $data['watermarktext'] = !empty($data['watermarktext']) ? dunserialize($data['watermarktext']) : array();
+    $data['watermarktype'] = !empty($data['watermarktype']) ? dunserialize($data['watermarktype']) : [];
+    $data['watermarktext'] = !empty($data['watermarktext']) ? dunserialize($data['watermarktext']) : [];
     foreach ($data['watermarktype'] as $k => $v) {
         if ($data['watermarktype'][$k] == 'text' && $data['watermarktext']['text'][$k]) {
-            if ($data['watermarktext']['text'][$k] && strtoupper(CHARSET) != 'UTF-8') {
+            if (strtoupper(CHARSET) != 'UTF-8') {
                 $data['watermarktext']['text'][$k] = diconv($data['watermarktext']['text'][$k], CHARSET, 'UTF-8', true);
             }
             $data['watermarktext']['text'][$k] = bin2hex($data['watermarktext']['text'][$k]);
@@ -91,7 +91,7 @@ function build_cache_setting() {
         $data['jspath'] = 'static/js/';
     }
 
-    $reginputbwords = array('username', 'password', 'password2', 'email');
+    $reginputbwords = ['username', 'password', 'password2', 'email'];
     if (in_array($data['reginput']['username'], $reginputbwords) || !preg_match('/^[A-z]\w+?$/', $data['reginput']['username'])) {
         $data['reginput']['username'] = random(6);
     }
@@ -113,7 +113,7 @@ function build_cache_setting() {
 
 function parsehighlight($highlight) {
     if ($highlight) {
-        $colorarray = array('', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple', 'gray');
+        $colorarray = ['', 'red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple', 'gray'];
         $string = sprintf('%02d', $highlight);
         $stylestr = sprintf('%03b', $string[0]);
 
@@ -128,5 +128,3 @@ function parsehighlight($highlight) {
     }
     return $style;
 }
-
-?>

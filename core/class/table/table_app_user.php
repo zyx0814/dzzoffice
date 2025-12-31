@@ -32,17 +32,17 @@ class table_app_user extends dzz_table {
         if (DB::query("update " . DB::table($this->_table) . " set lasttime=" . intval($lasttime) . ", num=num+1 where appid='{$appid}' and uid='{$uid}'")) {
 
         } else {
-            parent::insert(array('uid' => $uid, 'appid' => $appid, 'lasttime' => $lasttime, 'dateline' => TIMESTAMP, 'num' => 1), false, true);
+            parent::insert(['uid' => $uid, 'appid' => $appid, 'lasttime' => $lasttime, 'dateline' => TIMESTAMP, 'num' => 1], false, true);
         }
     }
 
     public function insert_by_uid($uid, $appids, $isall = 0) {
         if (!$appids) return false;
-        if (!is_array($appids)) $appids = array($appids);
+        if (!is_array($appids)) $appids = [$appids];
         //删除原来的
-        $oids = array();
-        $delids = array();
-        $insertids = array();
+        $oids = [];
+        $delids = [];
+        $insertids = [];
         $oarr = DB::fetch_all("select * from " . DB::table('app_user') . " where uid='{$uid}'");
         foreach ($oarr as $value) {
             $oids[] = $value['appid'];
@@ -52,18 +52,18 @@ class table_app_user extends dzz_table {
             self::delete($delids);
         }
         foreach ($appids as $appid) {
-            if (!in_array($appid, $oids)) DB::insert('app_user', array('uid' => $uid, 'appid' => $appid, 'dateline' => TIMESTAMP, 'num' => 1));
+            if (!in_array($appid, $oids)) DB::insert('app_user', ['uid' => $uid, 'appid' => $appid, 'dateline' => TIMESTAMP, 'num' => 1]);
         }
         return true;
     }
 
     public function fetch_all_appids_by_uid($uid) {
-        $data = array();
-        foreach (DB::fetch_all("select appid from %t where uid=%d", array($this->_table, $uid)) as $value) {
+        $data = [];
+        foreach (DB::fetch_all("select appid from %t where uid=%d", [$this->_table, $uid]) as $value) {
             $data[] = $value['appid'];
         }
         return $data;
     }
 }
 
-?>
+

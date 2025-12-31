@@ -23,19 +23,19 @@ $range = isset($_GET['range']) ? $_GET['range'] : 0;//是否限制展示0不限�
 //默认选中,支持路径如：我的网盘/xxx,群组xxx/xxx,群组或机构|xxx，群组或机构|xxx/新建文件夹
 $defaultselect = isset($_GET['defaultsel']) ? filerouteParse(trim($_GET['defaultsel'])) : filerouteParse('我的网盘');
 $defaultjson = json_encode($defaultselect);
-$data = array();
+$data = [];
 $powerarr = perm_binPerm::getPowerArr();
 if ($do == 'get_children') {
     if ($id == 'group') {
         $groupinfo = C::t('organization')->fetch_group_by_uid($uid, true);
         foreach ($groupinfo as $v) {
             $children = (C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) ? true : false;
-            $arr = array(
+            $arr = [
                 'id' => 'g_' . $v['orgid'],
                 'type' => 'group',
                 'children' => $children,
-                'li_attr' => array('fid' => $v['fid'], 'gid' => $v['orgid'])
-            );
+                'li_attr' => ['fid' => $v['fid'], 'gid' => $v['orgid']]
+            ];
             if (intval($v['aid']) == 0) {
                 $arr['text'] = '<span class="iconFirstWord" style="background:' . $v['aid'] . ';">' . strtoupper(new_strsubstr($v['orgname'], 1, '')) . '</span>' . $v['orgname'];
                 $arr['icon'] = false;
@@ -53,13 +53,13 @@ if ($do == 'get_children') {
         if ($groupinfo && $groupinfo['available'] == 1 && $groupinfo['diron'] == 1) {
             foreach (C::t('folder')->fetch_folder_by_pfid($groupinfo['fid']) as $val) {
                 $children = (C::t('resources')->fetch_folder_num_by_pfid($val['fid']) > 0) ? true : false;
-                $data[] = array(
+                $data[] = [
                     'id' => 'f_' . $val['fid'],
                     'text' => $val['fname'],
                     'type' => 'folder',
                     'children' => $children,
-                    'li_attr' => array('fid' => $val['fid'], 'gid' => $val['orgid'])
-                );
+                    'li_attr' => ['fid' => $val['fid'], 'gid' => $val['orgid']]
+                ];
             }
         }
         exit(json_encode($data));
@@ -69,13 +69,13 @@ if ($do == 'get_children') {
         if ($orginfo && $orginfo['available'] == 1 && $orginfo['diron'] == 1) {
             foreach (C::t('folder')->fetch_folder_by_pfid($orginfo['fid']) as $val) {
                 $children = (C::t('resources')->fetch_folder_num_by_pfid($val['fid']) > 0) ? true : false;
-                $arr = array(
+                $arr = [
                     'id' => 'f_' . $val['fid'],
                     'text' => $val['fname'],
                     'type' => 'folder',
                     'children' => $children,
-                    'li_attr' => array('fid' => $val['fid'], 'gid' => $val['orgid'])
-                );
+                    'li_attr' => ['fid' => $val['fid'], 'gid' => $val['orgid']]
+                ];
                 $data[] = $arr;
             }
         }
@@ -84,13 +84,13 @@ if ($do == 'get_children') {
 
         if ($groupinfo) {
             foreach ($groupinfo as $val) {
-                $children = (DB::result_first("select count(*) from %t where forgid = %d", array('organization', $val['orgid'])) > 0) ? true : false;
-                $arr = array(
+                $children = (DB::result_first("select count(*) from %t where forgid = %d", ['organization', $val['orgid']]) > 0) ? true : false;
+                $arr = [
                     'id' => 'gid_' . $val['orgid'],
                     'type' => 'department',
                     'children' => $children,
-                    'li_attr' => array('fid' => $val['fid'], 'gid' => $val['orgid'])
-                );
+                    'li_attr' => ['fid' => $val['fid'], 'gid' => $val['orgid']]
+                ];
                 if (intval($val['aid']) == 0) {
                     $arr['text'] = '<span class="iconFirstWord" style="background:' . $val['aid'] . ';">' . strtoupper(new_strsubstr($val['orgname'], 1, '')) . '</span>' . $val['orgname'];
                     $arr['icon'] = false;
@@ -104,30 +104,30 @@ if ($do == 'get_children') {
         exit(json_encode($data));
     } elseif (preg_match('/f_\d+/', $id)) {
         $fid = intval(str_replace('f_', '', $id));
-        $params = array('folder', $fid, $powerarr['upload']);
+        $params = ['folder', $fid, $powerarr['upload']];
         //foreach (DB::fetch_all("select fid,fname from %t where pfid = %d and perm_inherit & %d",$params) as $val){
         foreach (C::t('folder')->fetch_folder_by_pfid($fid) as $val) {
             $children = (C::t('resources')->fetch_folder_num_by_pfid($val['fid']) > 0) ? true : false;
-            $data[] = array(
+            $data[] = [
                 'id' => 'f_' . $val['fid'],
                 'text' => $val['fname'],
                 'type' => 'folder',
                 'children' => $children,
-                'li_attr' => array('fid' => $val['fid'])
-            );
+                'li_attr' => ['fid' => $val['fid']]
+            ];
         }
         exit(json_encode($data));
     } elseif (preg_match('/u_\d+/', $id)) {
         $fid = intval(str_replace('u_', '', $id));
         foreach (C::t('folder')->fetch_folder_by_pfid($fid) as $v) {
             $children = (C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) ? true : false;
-            $data[] = array(
+            $data[] = [
                 'id' => 'u_' . $v['fid'],
                 'text' => $v['fname'],
                 'type' => 'folder',
                 'children' => $children,
-                'li_attr' => array('fid' => $v['fid'])
-            );
+                'li_attr' => ['fid' => $v['fid']]
+            ];
         }
     } else {
         //获取配置设置值
@@ -135,29 +135,29 @@ if ($do == 'get_children') {
         if ($explorer_setting['useronperm'] && (!$range || ($range && $selhome))) {
             $fid = C::t('folder')->fetch_fid_by_flag('home');
             $children = (C::t('resources')->fetch_folder_num_by_pfid($fid) > 0) ? true : false;
-            $data[] = array(
+            $data[] = [
                 'id' => 'u_' . $fid,
                 'text' => lang('explorer_user_root_dirname'),
                 'type' => 'home',
                 'children' => $children,
-                'li_attr' => array('fid' => $fid)
-            );
+                'li_attr' => ['fid' => $fid]
+            ];
         }
         if ($explorer_setting['orgonperm'] && (!$range || ($range && $selorg))) {
             $orgs = C::t('organization')->fetch_all_orggroup($uid);
             foreach ($orgs['org'] as $v) {
-                if (DB::result_first("select count(*) from %t where forgid = %d", array('organization', $v['orgid'])) > 0 || C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) {
+                if (DB::result_first("select count(*) from %t where forgid = %d", ['organization', $v['orgid']]) > 0 || C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) {
                     $children = true;
                 } else {
                     $children = false;
                 }
                 if (!empty($v)) {
-                    $arr = array(
+                    $arr = [
                         'id' => 'gid_' . $v['orgid'],
                         'type' => ($v['pfid'] > 0 ? 'department' : 'organization'),
                         'children' => $children,
-                        'li_attr' => array('fid' => $v['fid'], 'gid' => $v['gid'])
-                    );
+                        'li_attr' => ['fid' => $v['fid'], 'gid' => $v['gid']]
+                    ];
                     if (intval($v['aid']) == 0) {
                         $arr['text'] = '<span class="iconFirstWord" style="background:' . $v['aid'] . ';">' . strtoupper(new_strsubstr($v['orgname'], 1, '')) . '</span>' . $v['orgname'];
                         $arr['icon'] = false;
@@ -172,13 +172,13 @@ if ($do == 'get_children') {
         if ($explorer_setting['grouponperm'] && (!$range || ($range && $selgroup))) {
             $groups = C::t('organization')->fetch_group_by_uid($uid);
             $children = (count($groups) > 0) ? true : false;
-            $data[] = array(
+            $data[] = [
                 'id' => 'group',
                 'text' => '群组',
                 'type' => 'group',
                 'children' => $children,
-                'li_attr' => array('hashs' => 'mygroup')
-            );
+                'li_attr' => ['hashs' => 'mygroup']
+            ];
         }
     }
     exit(json_encode($data));
@@ -187,10 +187,10 @@ if ($do == 'get_children') {
 } elseif ($do == 'getParentsArr') {//获取
     $fid = intval($_GET['fid']);
     $gid = intval($_GET['gid']);
-    $ret = array();
+    $ret = [];
     if ($fid) {
         $subfix = '';
-        $org = array();
+        $org = [];
         foreach (C::t('folder')->fetch_all_parent_by_fid($fid) as $value) {
             if (empty($subfix)) {
                 if ($value['gid']) {//是部门或者群组
@@ -213,7 +213,7 @@ if ($do == 'get_children') {
             }
         }
         if ($subfix == 'g_') {//群组的话，需要增加顶级"群组"
-            array_push($arr, 'group');
+            $arr[] = 'group';
         }
         $arr = array_reverse($arr);
     } elseif ($gid) {
@@ -236,7 +236,7 @@ if ($do == 'get_children') {
     exit(json_encode($arr));
 } elseif ($do == 'creatnewfolder') {
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
-    if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
+    if(!$fid) exit(json_encode(['error'=>lang('no_target_folderID')]));
     $fname = isset($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
     if ($arr = IO::CreateFolder($fid, $fname, $perm)) {
         if ($arr['error']) {
@@ -246,7 +246,7 @@ if ($do == 'get_children') {
 
         }
     } else {
-        $arr = array();
+        $arr = [];
         $arr['error'] = lang('failure_newfolder');
     }
     exit(json_encode($arr));
@@ -260,21 +260,21 @@ if ($do == 'get_children') {
     if (perm_check::checkperm_Container($fid, 'folder')) {
         $fname = isset($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
         $newname = IO::getFolderName($fname, $fid);
-        exit(json_encode(array('success' => true, 'fname' => $newname)));
+        exit(json_encode(['success' => true, 'fname' => $newname]));
     } else {
-        exit(json_encode(array('error' => lang('folder_newfolder_no_privilege'))));
+        exit(json_encode(['error' => lang('folder_newfolder_no_privilege')]));
     }
 } elseif ($do == 'checkupload') {
     $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
     if (perm_check::checkperm_Container($fid, 'upload')) {
-        exit(json_encode(array('perm' => true)));
+        exit(json_encode(['perm' => true]));
     } else {
-        exit(json_encode(array('perm' => false)));
+        exit(json_encode(['perm' => false]));
     }
 } elseif ($do == 'geffolderinfo') {
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if (!perm_check::checkperm_Container($fid, 'read')) {
-        exit(json_encode(array('error' => lang('file_read_no_privilege'))));
+        exit(json_encode(['error' => lang('file_read_no_privilege')]));
     }
     $data = C::t('folder')->fetch_by_fid($fid);
     exit(json_encode($data));

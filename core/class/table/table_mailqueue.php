@@ -21,17 +21,17 @@ class table_mailqueue extends dzz_table {
 
     public function fetch_all_by_cid($cids) {
         if (empty($cids)) {
-            return array();
+            return [];
         }
-        return DB::fetch_all('SELECT * FROM %t WHERE ' . DB::field('cid', $cids), array($this->_table));
+        return DB::fetch_all('SELECT * FROM %t WHERE ' . DB::field('cid', $cids), [$this->_table]);
     }
 
     public function delete_by_cid($cids) {
         if (empty($cids)) {
             return false;
         }
-        return DB::query('DELETE FROM %t WHERE ' . DB::field('cid', $cids), array($this->_table));
+        return DB::query('DELETE FROM %t WHERE ' . DB::field('cid', $cids), [$this->_table]);
     }
 }
 
-?>
+

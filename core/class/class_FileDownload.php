@@ -118,12 +118,10 @@ class FileDownload{ // class start
         $range_end=intval($range_end);
       }
       $range_end = min($range_end, $file_size - 1);
-      $range = array('start'=>intval($start),'end'=>$range_end);
-      return $range;  
+      return ['start'=>intval($start),'end'=>$range_end];
     }
     return null;
   }
  
 } // class end 
   
-?> 

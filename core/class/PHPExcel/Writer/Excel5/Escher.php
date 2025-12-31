@@ -347,8 +347,8 @@ class PHPExcel_Writer_Excel5_Escher
 
 			// initialize spape offsets
 			$totalSize = 8;
-			$spOffsets = array();
-			$spTypes   = array();
+			$spOffsets = [];
+			$spTypes   = [];
 
 			// treat the inner data
 			foreach ($this->_object->getChildren() as $spContainer) {

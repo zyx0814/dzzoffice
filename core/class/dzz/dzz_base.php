@@ -5,8 +5,6 @@ if (!defined('IN_DZZ')) {
 }
 
 abstract class dzz_base {
-    private $_e;
-    private $_m;
 
     public function __construct() {}
 
@@ -52,4 +50,3 @@ abstract class dzz_base {
 
 }
 
-?>

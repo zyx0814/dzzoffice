@@ -40,14 +40,14 @@ class PHPExcel_HashTable
 	 *
 	 * @var array
 	 */
-	public $_items = array();
+	public $_items = [];
 
 	/**
 	 * HashTable key map
 	 *
 	 * @var array
 	 */
-	public $_keyMap = array();
+	public $_keyMap = [];
 
 	/**
 	 * Create a new PHPExcel_HashTable
@@ -126,8 +126,8 @@ class PHPExcel_HashTable
 	 *
 	 */
 	public function clear() {
-		$this->_items = array();
-		$this->_keyMap = array();
+		$this->_items = [];
+		$this->_keyMap = [];
 	}
 
 	/**

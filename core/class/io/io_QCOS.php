@@ -17,7 +17,7 @@ include_once DZZ_ROOT . './core/api/Qcos/vendor/autoload.php';
 class io_Qcos extends io_api {
     const T = 'connect_storage';
     const BZ = 'QCOS';
-    private $icosdatas = array();
+    private $icosdatas = [];
     private $bucket = '';
     private $uid = '';
     private $_root = '';
@@ -30,7 +30,7 @@ class io_Qcos extends io_api {
 
     public function __construct($path) {
         global $_G;
-        $arr = DB::fetch_first("SELECT root,name FROM %t WHERE bz=%s", array('connect', self::BZ));
+        $arr = DB::fetch_first("SELECT root,name FROM %t WHERE bz=%s", ['connect', self::BZ]);
 
         $this->_root = $arr['root'];
         $this->uid = $_G['adminid'] ? $_G['uid'] : 0;
@@ -48,9 +48,9 @@ class io_Qcos extends io_api {
         $bzarr = explode(':', $bz);
         $id = trim($bzarr[1]);
         if (!$root = DB::fetch_first("select * from " . DB::table(self::T) . " where  id='{$id}'")) {
-            return array('error' => 'need authorize to ' . $bzarr[0]);
+            return ['error' => 'need authorize to ' . $bzarr[0]];
         }
-        if (!$isguest && $root['uid'] > 0 && $root['uid'] != $_G['uid']) return array('error' => 'need authorize to qcos');
+        if (!$isguest && $root['uid'] > 0 && $root['uid'] != $_G['uid']) return ['error' => 'need authorize to qcos'];
 
         $access_id = authcode($root['access_id'], 'DECODE', $root['bz']);
         if (empty($access_id)) $access_id = $root['access_id'];
@@ -62,18 +62,17 @@ class io_Qcos extends io_api {
         try {
 
             $this->qcos_config = [
-                'credentials' => array(
+                'credentials' => [
                     'secretId' => $access_id,
                     'secretKey' => $access_key
-                ),
+                ],
                 'region' => $hostnamearr[1],
                 'schema' => $hostnamearr[0],
             ];
 
-            $qcos = new Qcloud\Cos\Client($this->qcos_config);
-            return $qcos;
+            return new Qcloud\Cos\Client($this->qcos_config);
         } catch (Exception $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
     }
 
@@ -105,11 +104,11 @@ class io_Qcos extends io_api {
         $bucket = $arr['bucket'];
         $object = $arr['object'];
         $obz = io_remote::getBzByRemoteid($attach['remote']);
-        $save_path = array();
+        $save_path = [];
         if ($obz == 'dzz') {
             try {
                 $content = fopen(getglobal('setting/attachdir') . $attach['attachment'], 'rb');
-                $save_path = $qcos->putObject(array('Bucket' => $bucket, 'Key' => $object, 'Body' => $content));
+                $save_path = $qcos->putObject(['Bucket' => $bucket, 'Key' => $object, 'Body' => $content]);
             } catch (ErrorException $e) {
                 $save_path['error'] = $e->getMessage();
             }
@@ -118,17 +117,16 @@ class io_Qcos extends io_api {
             try {
                 $opath = $obz . '/' . $attach['attachment'];
                 $content = IO::getFileContent($opath);
-                $save_path = $qcos->putObject(array('Bucket' => $bucket, 'Key' => $object, 'Body' => $content));
+                $save_path = $qcos->putObject(['Bucket' => $bucket, 'Key' => $object, 'Body' => $content]);
             } catch (ErrorException $e) {
                 $save_path['error'] = $e->getMessage();
             }
         }
         if ($save_path['error']) {
-            return array('error' => $save_path['error']);
+            return ['error' => $save_path['error']];
         } else {
             return true;
         }
-        return false;
     }
 
     /**
@@ -138,7 +136,7 @@ class io_Qcos extends io_api {
      * @param bool $noperm
      */
     public function CreateFolderByPath($path, $pfid = '', $noperm = false) {
-        $data = array();
+        $data = [];
         if ($this->makeDir($path)) {
             $data = $this->getMeta($path);
         }
@@ -148,7 +146,7 @@ class io_Qcos extends io_api {
     public function makeDir($path) {
         $arr = $this->parsePath($path);
         $patharr = explode('/', trim($arr['object'], '/'));
-        $folderarr = array();
+        $folderarr = [];
         $p = $arr['bz'] . $arr['bucket'];
         foreach ($patharr as $value) {
             $p .= '/' . $value;
@@ -167,9 +165,9 @@ class io_Qcos extends io_api {
         $qcos = $this->init($path);
         if (is_array($qcos) && $qcos['error']) return $qcos;
         try {
-            $ret = $qcos->putObject(array('Bucket' => $arr['bucket'], 'Key' => $arr['object'] . '/', 'Body' => ''));
+            $ret = $qcos->putObject(['Bucket' => $arr['bucket'], 'Key' => $arr['object'] . '/', 'Body' => '']);
         } catch (ErrorException $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
 
         return true;
@@ -182,18 +180,18 @@ class io_Qcos extends io_api {
         $arr = $this->parsePath($path);
         $qcos = $this->init($path, 1);
         if (is_array($qcos) && $qcos['error']) return $qcos;
-        $this->alc = $qcos->getObjectAcl(array($arr['bucket'], $arr['object']));
+        $this->alc = $qcos->getObjectAcl([$arr['bucket'], $arr['object']]);
         return $this->alc;
     }
 
     //获取存储桶列表
     public static function getBucketList($access_id, $access_key, $region) {
-        $re = array();
+        $re = [];
         $config = [
-            'credentials' => array(
+            'credentials' => [
                 'secretId' => $access_id,
                 'secretKey' => $access_key
-            ),
+            ],
             'region' => $region,
             'schema' => 'http',
         ];
@@ -206,15 +204,15 @@ class io_Qcos extends io_api {
                         $re[] = $value['Name'];
                     }
                 } else {
-                    return array('error' => 'Bucket为空！');
+                    return ['error' => 'Bucket为空！'];
                 }
             } else {
-                return array();
+                return [];
             }
         } catch (Exception $e) {
             //请求失败
             //echo($e);
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
         return $re;
     }
@@ -233,7 +231,7 @@ class io_Qcos extends io_api {
             $access_key = $_GET['access_key'];
             $region = $_GET['region'];
             $bucket = $_GET['bucket'];
-            $schema = $_GET['schema'] ? $_GET['schema'] : 'http';
+            $schema = $_GET['schema'] ?: 'http';
             if (!$access_id || !$access_key) {
                 showmessage(lang('input_QCOS_acc_sec') . 'Access Key ID and Access Key Secret', dreferer());
             }
@@ -241,9 +239,9 @@ class io_Qcos extends io_api {
 
 
             $qcos_config = [
-                'credentials' => array(
+                'credentials' => [
                     'secretId' => $access_key,
-                    'secretKey' => $access_key),
+                    'secretKey' => $access_key],
                 'region' => $region,
                 'schema' => 'http',
             ];
@@ -251,7 +249,7 @@ class io_Qcos extends io_api {
             $cosClient = new Qcloud\Cos\Client($qcos_config);
             $type = 'QCOS';
             $uid = defined('IN_ADMIN') ? 0 : $_G['uid'];
-            $setarr = array(
+            $setarr = [
                 'uid' => $uid,
                 'access_id' => $access_id,
                 'access_key' => authcode($access_key, 'ENCODE', $type),
@@ -259,32 +257,32 @@ class io_Qcos extends io_api {
                 'bucket' => $bucket,
                 'dateline' => TIMESTAMP,
                 'hostname' => $schema . ':' . $region
-            );
+            ];
             if ($id = DB::result_first("select id from " . DB::table(self::T) . " where uid='{$uid}' and access_id='{$access_id}' and bucket='{$bucket}'")) {
                 DB::update(self::T, $setarr, "id ='{$id}'");
             } else {
                 $id = DB::insert(self::T, $setarr, 1);
             }
             if (defined('IN_ADMIN')) {
-                $setarr = array(
-                    'name' => $clouds[$type]['name'] . ':' . ($bucket ? $bucket : cutstr($access_id, 4, '')),
+                $setarr = [
+                    'name' => $clouds[$type]['name'] . ':' . ($bucket ?: cutstr($access_id, 4, '')),
                     'bz' => $type,
                     'isdefault' => 0,
                     'dname' => self::T,
                     'did' => $id,
                     'dateline' => TIMESTAMP,
-                );
-                if (!DB::result_first("select COUNT(*) from %t where did=%d and dname=%s ", array(
+                ];
+                if (!DB::result_first("select COUNT(*) from %t where did=%d and dname=%s ", [
                     'local_storage',
                     $id,
                     self::T
-                ))
+                ])
                 ) {
                     C::t('local_storage')->insert($setarr);
                 }
                 showmessage('do_success', BASESCRIPT . '?mod=cloud&op=space');
             } else {
-                showmessage('do_success', $refer ? $refer : BASESCRIPT . '?mod=connect');
+                showmessage('do_success', $refer ?: BASESCRIPT . '?mod=connect');
             }
         } else {
             include template('oauth_qcos');
@@ -331,10 +329,10 @@ class io_Qcos extends io_api {
             return 2;//已经存在缩略图
         }
         //调用挂载点程序生成缩略图绝对和相对地址；
-        $fileurls = array();
+        $fileurls = [];
         Hook::listen('thumbnail', $fileurls, $path);
         if (!$fileurls) {
-            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
+            $fileurls = ['fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path)];
         }
         //非图片类文件的时候，直接获取文件后缀对应的图片
         if (!$imginfo = @getimagesize($fileurls['filedir'])) {
@@ -369,10 +367,10 @@ class io_Qcos extends io_api {
             IO::output_thumb($_G['setting']['attachdir'] . './' . $target);
         }
         //调用挂载点程序生成缩略图绝对和相对地址；
-        $fileurls = array();
+        $fileurls = [];
         Hook::listen('thumbnail', $fileurls, $path);
         if (!$fileurls) {
-            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
+            $fileurls = ['fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path)];
         }
         if (!is_string($fileurls['filedir'])) {
             header("HTTP/1.1 304 Not Modified");
@@ -423,7 +421,7 @@ class io_Qcos extends io_api {
         //}else $bucket='';
         //if(!$bucket) return array('error'=>'bucket不能为空');
         $object = implode('/', $arr1);
-        return array('bucket' => $bucket, 'object' => $object, 'bz' => $bz);
+        return ['bucket' => $bucket, 'object' => $object, 'bz' => $bz];
     }
     //重写文件内容
     //@param number $path  文件的路径
@@ -434,17 +432,16 @@ class io_Qcos extends io_api {
         $qcos = $this->init($path);
         if (is_array($qcos) && $qcos['error']) return $qcos;
         try {
-            $ret = $qcos->Upload($arr['bucket'], $arr['object'], $data);
-            $meta = array(
+            $ret = $qcos->upload($arr['bucket'], $arr['object'], $data);
+            $meta = [
                 'Key' => $arr['object'],
                 'Size' => strlen($data),
                 'LastModified' => dgmdate(TIMESTAMP, 'Y-m-d H:i:s'),
-            );
+            ];
 
-            $icoarr = $this->_formatMeta($meta, $arr);
-            return $icoarr;
+            return $this->_formatMeta($meta, $arr);
         } catch (ErrorException $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
     }
 
@@ -466,17 +463,16 @@ class io_Qcos extends io_api {
         $qcos = $this->init($path);
         if (is_array($qcos) && $qcos['error']) return $qcos;
         try {
-            $ret = $qcos->Upload($arr['bucket'], $arr['object'] . '/' . $filename, $fileContent);
-            $meta = array(
+            $ret = $qcos->upload($arr['bucket'], $arr['object'] . '/' . $filename, $fileContent);
+            $meta = [
                 'Key' => $arr['object'] . '/' . $filename,
                 'Size' => strlen($fileContent),
                 'LastModified' => dgmdate(TIMESTAMP, 'Y-m-d H:i:s'),
-            );
+            ];
 
-            $icoarr = $this->_formatMeta($meta, $arr);
-            return $icoarr;
+            return $this->_formatMeta($meta, $arr);
         } catch (Exception $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
     }
 
@@ -504,19 +500,19 @@ class io_Qcos extends io_api {
         global $_G, $_GET, $documentexts, $imageexts;
         $arr = $this->parsePath($path);
 
-        $icosdata = array();
-        $folders = $icos = array();
+        $icosdata = [];
+        $folders = $icos = [];
         $qcos = $this->init($path);
         if (is_array($qcos) && $qcos['error']) return $qcos;
 
         try {
-            $data = $qcos->listObjectslistObjects(array(
+            $data = $qcos->listObjectslistObjects([
                 'Bucket' => $arr['bucket'],
                 'Marker' => $arr['object'],
                 'MaxKeys' => $limit,
-            ));
+            ]);
         } catch (ErrorException $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
         foreach ($data['Contents'] as $v) {
             if ($v['size'] == 0 && substr($v['Key'], -1) == '/') {
@@ -527,7 +523,7 @@ class io_Qcos extends io_api {
         }
         /* if ($icodata['Contents']) $icos = $icodata['Contents'];
          if ($data['CommonPrefixes']) $folders = $data['CommonPrefixes'];*/
-        $value = array();
+        $value = [];
 
         foreach ($icos as $key => $value) {
             if (is_array($value)) {
@@ -541,7 +537,7 @@ class io_Qcos extends io_api {
             }
         }
 
-        $value = array();
+        $value = [];
         foreach ($folders as $key => $value) {
 
             if (is_array($value)) {
@@ -559,9 +555,9 @@ class io_Qcos extends io_api {
             }
         }
 
-        $value = array();
+        $value = [];
         $value['isdir'] = true;
-        $value['Key'] = $data['Prefix'] ? $data['Prefix'] : '';
+        $value['Key'] = $data['Prefix'] ?: '';
         $value['nextMarker'] = $data['NextMarker'];
         $value['IsTruncated'] = $data['IsTruncated'];
 
@@ -588,18 +584,18 @@ class io_Qcos extends io_api {
      *
      * @return icosdatas
      */
-    public function listFilesAll(&$qcos, $path, $limit = '1000', $marker = '', $icosdata = array()) {
+    public function listFilesAll(&$qcos, $path, $limit = '1000', $marker = '', $icosdata = []) {
         //static $icosdata=array();
-        $folders = $icos = array();
+        $folders = $icos = [];
         $arr = $this->parsePath($path);
         try {
-            $data = $qcos->listObjects(array(
+            $data = $qcos->listObjects([
                 'Bucket' => $arr['bucket'],
                 'Marker' => $arr['object'],
                 'MaxKeys' => $limit,
-            ));
+            ]);
         } catch (ErrorException $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
         foreach ($data['Contents'] as $v) {
             if ($v['size'] == 0 && substr($v['Key'], -1) == '/') {
@@ -608,7 +604,7 @@ class io_Qcos extends io_api {
                 $icos[] = $v;
             }
         }
-        $value = array();
+        $value = [];
 
         foreach ($icos as $key => $value) {
             if (is_array($value)) {
@@ -622,7 +618,7 @@ class io_Qcos extends io_api {
             }
         }
 
-        $value = array();
+        $value = [];
         foreach ($folders as $key => $value) {
 
             if (is_array($value)) {
@@ -640,9 +636,9 @@ class io_Qcos extends io_api {
             }
         }
 
-        $value = array();
+        $value = [];
         $value['isdir'] = true;
-        $value['Key'] = $data['Prefix'] ? $data['Prefix'] : '';
+        $value['Key'] = $data['Prefix'] ?: '';
         $value['nextMarker'] = $data['NextMarker'];
         $value['IsTruncated'] = $data['IsTruncated'];
 
@@ -671,31 +667,30 @@ class io_Qcos extends io_api {
         global $_G, $_GET, $documentexts, $imageexts;
         $arr = $this->parsePath($path);
 
-        $icosdata = array();
+        $icosdata = [];
         $qcos = $this->init($path, 1);
         if (is_array($qcos) && $qcos['error']) return $qcos;
         if (empty($arr['object']) || empty($arr['bucket'])) {
-            $meta = array(
+            $meta = [
                 'Key' => '',
                 'Size' => 0,
                 'LastModified' => '',
                 'isdir' => true
-            );
+            ];
         } else {
             try {
-                $meta = $qcos->headObject(array('Bucket' => $arr['bucket'], 'Key' => $arr['object']));
+                $meta = $qcos->headObject(['Bucket' => $arr['bucket'], 'Key' => $arr['object']]);
             } catch (Exception $e) {
-                return array('error' => $e->getMessage());
+                return ['error' => $e->getMessage()];
             }
         }
-        $icosdata = $this->_formatMeta($meta, $arr);
-        return $icosdata;
+        return $this->_formatMeta($meta, $arr);
     }
 
     //将api获取的meta数据转化为icodata
     public function _formatMeta($meta, $arr) {
         global $_G, $documentexts, $imageexts;
-        $icosdata = array();
+        $icosdata = [];
         ///print_r($meta);print_r($arr);exit($this->bucket);
         if ($this->uid) {
             $uid = $this->uid;
@@ -712,19 +707,15 @@ class io_Qcos extends io_api {
                 if ($this->bucket) {
                     $name = $this->bucket;
                     $pfid = 0;
-                    $pf = '';
-                    $flag = self::BZ;
                 } elseif ($arr['bucket']) {
                     $name = $arr['bucket'];
                     $pfid = md5($arr['bz']);
-                    $pf = '';
-                    $flag = self::BZ;
                 } else {
                     $name = $this->_rootname;
                     $pfid = 0;
-                    $pf = '';
-                    $flag = self::BZ;
                 }
+                $pf = '';
+                $flag = self::BZ;
                 if ($arr['bucket']) $arr['bucket'] .= '/';
             } else {
                 if ($arr['bucket']) $arr['bucket'] .= '/';
@@ -741,14 +732,14 @@ class io_Qcos extends io_api {
             //print_r($arr);
             //print_r($namearr);
             $rid = md5($arr['bz'] . $arr['bucket'] . $meta['Key']);
-            $icoarr = array(
+            $icoarr = [
                 'icoid' => $rid,
                 'rid' => $rid,
                 'path' => $arr['bz'] . $arr['bucket'] . $meta['Key'],
                 'dpath' => dzzencode($arr['bz'] . $arr['bucket'] . $meta['Key']),
                 'bz' => ($arr['bz']),
                 'gid' => 0,
-                'name' => $name ? $name : '',
+                'name' => $name ?: '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -764,15 +755,7 @@ class io_Qcos extends io_api {
                 'IsTruncated' => $meta['IsTruncated'],
                 'preview' => $this->preview,
                 'sid' => $this->sharesid
-            );
-
-            $icoarr['fsize'] = formatsize($icoarr['size']);
-            $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
-            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
-            $icosdata = $icoarr;
-            /*print_r($icosdata);
-        exit($meta['Key']);*/
+            ];
         } else {
             if ($arr['bucket']) $arr['bucket'] .= '/';
             $namearr = explode('/', $meta['Key']);
@@ -792,14 +775,14 @@ class io_Qcos extends io_api {
                 $url = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=getStream&path=' . dzzencode($arr['bz'] . $arr['bucket'] . $meta['Key']);
             }
             $rid = md5($arr['bz'] . $arr['bucket'] . $meta['Key']);
-            $icoarr = array(
+            $icoarr = [
                 'icoid' => $rid,
                 'rid' => $rid,
                 'path' => ($arr['bz'] . $arr['bucket'] . $meta['Key']),
                 'dpath' => dzzencode($arr['bz'] . $arr['bucket'] . $meta['Key']),
                 'bz' => ($arr['bz']),
                 'gid' => 0,
-                'name' => $name ? $name : '',
+                'name' => $name ?: '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -814,16 +797,14 @@ class io_Qcos extends io_api {
                 'flag' => '',
                 'preview' => $this->preview,
                 'sid' => $this->sharesid
-            );
-            $icoarr['fsize'] = formatsize($icoarr['size']);
-            $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
-            $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
-            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
-            $icosdata = $icoarr;
+            ];
+            $icoarr['ffsize'] = lang('property_info_size', ['fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']]);
         }
-
-        return $icosdata;
+        $icoarr['fsize'] = formatsize($icoarr['size']);
+        $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
+        if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+        else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+        return $icoarr;
     }
 
     //根据路径获取目录树的数据；
@@ -840,7 +821,7 @@ class io_Qcos extends io_api {
         }
         $spath = trim($spath, '/');
         $patharr = explode('/', $spath);
-        $folderarr = array();
+        $folderarr = [];
         $path1 = $bzarr['bz'] . $bzarr['bucket'];
         if ($arr = $this->getMeta($path1)) {
             if (!isset($arr['error'])) {
@@ -865,17 +846,13 @@ class io_Qcos extends io_api {
     //通过icosdata获取folderdata数据
     public function getFolderByIcosdata($icosdata) {
         global $_GET;
-        $folder = array();
+        $folder = [];
         //通过path判断是否为bucket
         $path = $icosdata['path'];
         $arr = $this->parsePath($path);
-        if (!$arr['bucket']) { //根目录
-            $fsperm = 0;
-        } else {
-            $fsperm = 0;
-        }
+        $fsperm = 0;
         if ($icosdata['type'] == 'folder') {
-            $folder = array(
+            $folder = [
                 'fid' => $icosdata['oid'],
                 'path' => $icosdata['path'],
                 'fname' => $icosdata['name'],
@@ -892,7 +869,7 @@ class io_Qcos extends io_api {
                 'icon' => '',
                 'nextMarker' => $icosdata['nextMarker'],
                 'IsTruncated' => $icosdata['IsTruncated'],
-            );
+            ];
             //print_r($folder);
         }
         return $folder;
@@ -930,7 +907,7 @@ class io_Qcos extends io_api {
     }
 
     public function getFolderInfo($paths, $position = '', $zip) {
-        static $data = array();
+        static $data = [];
         try {
             foreach ($paths as $path) {
                 $arr = IO::parsePath($path);
@@ -941,7 +918,7 @@ class io_Qcos extends io_api {
                     case 'folder':
                         $lposition = $position . $meta['name'] . '/';
                         $contents = $this->listFilesAll($oss, $path);
-                        $arr = array();
+                        $arr = [];
                         foreach ($contents as $key => $value) {
                             if ($value['path'] != $path) {
                                 $arr[] = $value['path'];
@@ -998,21 +975,6 @@ class io_Qcos extends io_api {
             $d = new FileDownload();
             $d->download($url, $file['name'], $file['size'], $file['dateline'], true);
             exit();
-            dheader('Date: ' . gmdate('D, d M Y H:i:s', $file['dateline']) . ' GMT');
-            dheader('Last-Modified: ' . gmdate('D, d M Y H:i:s', $file['dateline']) . ' GMT');
-            dheader('Content-Encoding: none');
-            dheader('Content-Disposition: attachment; filename=' . $file['name']);
-            dheader('Content-Type: application/octet-stream');
-            dheader('Content-Length: ' . $file['size']);
-            @ob_end_clean();
-            if (getglobal('gzipcompress')) @ob_start('ob_gzhandler');
-            while (!feof($fp)) {
-                echo fread($fp, $chunk);
-                @ob_flush();  // flush output
-                @flush();
-            }
-            fclose($fp);
-            exit();
         } catch (Exception $e) {
             // The file wasn't found at the specified path/revision
             //echo 'The file was not found at the specified path/revision';
@@ -1023,22 +985,22 @@ class io_Qcos extends io_api {
 
     //获取目录的所有下级和它自己的object
     public function getFolderObjects(&$qcos, $path, $limit = '1000', $marker = '') {
-        static $objects = array();
+        static $objects = [];
         $arr = $this->parsePath($path);
         //echo( $path.'---------');
 
-        $folders = $icos = array();
+        $folders = $icos = [];
         $arr = $this->parsePath($path);
         try {
-            $data = $qcos->listObjects(array(
+            $data = $qcos->listObjects([
                 'Bucket' => $arr['bucket'],
                 'Marker' => $arr['object'],
                 'MaxKeys' => $limit,
-            ));
+            ]);
         } catch (ErrorException $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
-        $value = array();
+        $value = [];
         foreach ($icos as $key => $value) {
             if (is_array($value)) {
                 $objects[] = $value['Key'];
@@ -1047,7 +1009,7 @@ class io_Qcos extends io_api {
                 break;
             }
         }
-        $value = array();
+        $value = [];
         foreach ($folders as $key => $value) {
             if (is_array($value)) {
                 $objects[] = $value['Prefix'];
@@ -1081,23 +1043,23 @@ class io_Qcos extends io_api {
             //判断删除的对象是否为文件夹
             if (substr($arr['object'], -1) == '/') { //是文件夹
                 $objects = $this->getFolderObjects($qcos, $path);
-                $objectsarr = array();
+                $objectsarr = [];
                 foreach ($objects as $v) {
-                    $objectsarr[] = array('Key' => $v);
+                    $objectsarr[] = ['Key' => $v];
                 }
-                $response = $qcos->deleteObjects(array('Bucket' => $arr['bucket'], 'Objects' => $objectsarr));
+                $response = $qcos->deleteObjects(['Bucket' => $arr['bucket'], 'Objects' => $objectsarr]);
             } else {
-                $response = $qcos->deleteObject(array('Bucket' => $arr['bucket'], 'Key' => $arr['object']));
+                $response = $qcos->deleteObject(['Bucket' => $arr['bucket'], 'Key' => $arr['object']]);
             }
             if ($response === false) {
-                return array('error' => $this->get_error_info($qcos));
+                return ['error' => $this->get_error_info($qcos)];
             }
-            return array(
+            return [
                 'icoid' => $rid, 'rid' => $rid,
                 'name' => substr(strrchr($path, '/'), 1),
-            );
+            ];
         } catch (Exception $e) {
-            return array('icoid' => $rid, 'rid' => $rid, 'error' => $e->getMessage());
+            return ['icoid' => $rid, 'rid' => $rid, 'error' => $e->getMessage()];
         }
     }
     //添加目录
@@ -1109,28 +1071,28 @@ class io_Qcos extends io_api {
         $arr = $this->parsePath($path);
         //exit('createrfolder==='.$fname.'===='.$path1.'===='.$bz);
         //exit($path.$fname.'vvvvvvvvvvv');
-        $return = array();
+        $return = [];
         try {
             $qcos = $this->init($path);
             if (is_array($qcos) && $qcos['error']) return $qcos;
 
             $ret = $qcos->putObjectByContent($arr['object'] . '/' . $fname . '/', '');
             if ($ret === false) {
-                return array('error' => $this->get_error_info($qcos));
+                return ['error' => $this->get_error_info($qcos)];
             }
-            $meta = array(
+            $meta = [
                 'isdir' => true,
                 'Key' => $arr['object'] . $fname . '/',
                 'Size' => 0,
                 'LastModified' => $ret->header['date'],
-            );
+            ];
             $icoarr = $this->_formatMeta($meta, $arr);
 
             $folderarr = $this->getFolderByIcosdata($icoarr);
-            $return = array('folderarr' => $folderarr, 'icoarr' => $icoarr);
+            $return = ['folderarr' => $folderarr, 'icoarr' => $icoarr];
         } catch (Exception $e) {
             //var_dump($e);
-            $return = array('error' => $e->getMessage());
+            $return = ['error' => $e->getMessage()];
         }
         return $return;
     }
@@ -1139,7 +1101,7 @@ class io_Qcos extends io_api {
     public function getFolderName($name, $path) {
         static $i = 0;
         if (!$this->icosdatas) $this->icosdatas = $this->listFiles($path);
-        $names = array();
+        $names = [];
         foreach ($this->icosdatas as $value) {
             $names[] = $value['name'];
         }
@@ -1161,11 +1123,11 @@ class io_Qcos extends io_api {
     private function saveCache($path, $data) {
         global $_G;
         $cachekey = 'qcos_uploadID_' . md5($path);
-        C::t('cache')->insert(array(
+        C::t('cache')->insert([
             'cachekey' => $cachekey,
             'cachevalue' => serialize($data),
             'dateline' => $_G['timestamp'],
-        ), false, true);
+        ], false, true);
     }
 
     private function deleteCache($path) {
@@ -1174,7 +1136,7 @@ class io_Qcos extends io_api {
     }
 
     private function getPartInfo($content_range) {
-        $arr = array();
+        $arr = [];
         if (!$content_range) {
             $arr['ispart'] = false;
             $arr['iscomplete'] = true;
@@ -1194,7 +1156,7 @@ class io_Qcos extends io_api {
     }
 
     public function uploadStream($file, $filename, $path, $relativePath, $content_range) {
-        $data = array();
+        $data = [];
         $arr = $this->getPartInfo($content_range);
         //echo ($relativePath).'vvvvvvvv';
         //if($arr['partnum']>1) print_r($arr);
@@ -1210,11 +1172,9 @@ class io_Qcos extends io_api {
                 $re = $this->CreateFolder($path1, $value);
                 if (isset($re['error'])) {
                     return $re;
-                } else {
-                    if ($key == 0) {
-                        $data['icoarr'][] = $re['icoarr'];
-                        $data['folderarr'][] = $re['folderarr'];
-                    }
+                } elseif ($key == 0) {
+                    $data['icoarr'][] = $re['icoarr'];
+                    $data['folderarr'][] = $re['folderarr'];
                 }
                 $path1 = $path1 . $value . '/';
             }
@@ -1229,11 +1189,10 @@ class io_Qcos extends io_api {
                 if ($arr['iscomplete']) {
                     if (empty($re1['error'])) {
                         $data['icoarr'][] = $re1;
-                        return $data;
                     } else {
                         $data['error'] = $re1['error'];
-                        return $data;
                     }
+                    return $data;
                 } else {
                     return true;
                 }
@@ -1242,11 +1201,10 @@ class io_Qcos extends io_api {
             $re1 = $this->upload($file, $path, $filename);
             if (empty($re1['error'])) {
                 $data['icoarr'][] = $re1;
-                return $data;
             } else {
                 $data['error'] = $re1['error'];
-                return $data;
             }
+            return $data;
         }
     }
 
@@ -1254,11 +1212,11 @@ class io_Qcos extends io_api {
         $arr = $this->parsePath($path);
         $oss = $this->init($path);
         if (is_array($oss) && $oss['error']) return $oss;
-        $ret = $oss->createMultipartUpload(array('Bucket' => $arr['bucket'], 'Key' => $arr['object']));
+        $ret = $oss->createMultipartUpload(['Bucket' => $arr['bucket'], 'Key' => $arr['object']]);
 
     }
 
-    public function upload($file, $path, $filename, $partinfo = array(), $ondup = 'overwrite') {
+    public function upload($file, $path, $filename, $partinfo = [], $ondup = 'overwrite') {
         global $_G;
         $path .= $filename;
         $arr = $this->parsePath($path);
@@ -1266,42 +1224,42 @@ class io_Qcos extends io_api {
         try {
             $oss = $this->init($path);
             if (is_array($oss) && $oss['error']) return $oss;
-            $upload_file_options = array(
+            $upload_file_options = [
                 'SourceFile' => $file,
-            );
+            ];
             if ($partinfo['partnum']) {
                 $upload_file_options['PartNumber'] = $partinfo['partnum'];
                 if ($partinfo['partnum'] == 1) {//第一个分块时 初始化分块上传得到$uploadID;并缓存住，留以后分块使用
                     //初始化分块
                     try {
-                        $response = $oss->CreateMultipartUpload(array('Bucket' => $arr['bucket'], 'Key' => $arr['object']));
+                        $response = $oss->CreateMultipartUpload(['Bucket' => $arr['bucket'], 'Key' => $arr['object']]);
                     } catch (ErrorException $e) {
-                        return array('error' => $e->getMessage());
+                        return ['error' => $e->getMessage()];
                     }
 
                     $upload_id = $response['UploadId'];
 
                     try {
                         //上传分块
-                        $response = $oss->UploadPart(array('Bucket' => $arr['bucket'], 'Key' => $arr['object'], 'UploadId' => $upload_id, 'PartNumber' => $upload_file_options));
+                        $response = $oss->UploadPart(['Bucket' => $arr['bucket'], 'Key' => $arr['object'], 'UploadId' => $upload_id, 'PartNumber' => $upload_file_options]);
                     } catch (ErrorException $e) {
-                        array('error' => $e->getMessage());
+                        return ['error' => $e->getMessage()];
                     }
 
                     if (md5_file($file) != strtolower(trim($response['ETag'], '"'))) { //验证上传是否完整
-                        return array('error' => lang('upload_file_incomplete'));
+                        return ['error' => lang('upload_file_incomplete')];
                     }
 
 
-                    $data = array();
+                    $data = [];
                     $data['upload_id'] = $upload_id;
                     $data['filesize'] = filesize($file);
                     $data['partnum'] = 1;
                     $data['path'] = $path;
-                    $data['parts'][$data['partnum']] = array(
+                    $data['parts'][$data['partnum']] = [
                         'PartNumber' => $data['partnum'],
                         'ETag' => $response['ETag']
-                    );
+                    ];
 
                     $this->saveCache($path, $data);
                 } else {
@@ -1310,43 +1268,41 @@ class io_Qcos extends io_api {
                     $cache['partnum'] += 1;
                     try {
                         //上传分块
-                        $response = $oss->UploadPart(array('Bucket' => $arr['bucket'], 'Key' => $arr['object'], 'UploadId' => $upload_id, 'PartNumber' => $upload_file_options));
+                        $response = $oss->UploadPart(['Bucket' => $arr['bucket'], 'Key' => $arr['object'], 'UploadId' => $upload_id, 'PartNumber' => $upload_file_options]);
                     } catch (ErrorException $e) {
-                        array('error' => $e->getMessage());
+                        return ['error' => $e->getMessage()];
                     }
 
                     if (md5_file($file) != strtolower(trim($response['ETag'], '"'))) { //验证上传是否完整
-                        return array('error' => lang('upload_file_incomplete'));
+                        return ['error' => lang('upload_file_incomplete')];
                     }
 
                     //print_r($cache);
                     $cache['filesize'] += filesize($file);
 
-                    $cache['parts'][$partinfo['partnum']] = array(
+                    $cache['parts'][$partinfo['partnum']] = [
                         'PartNumber' => $cache['partnum'],
                         'ETag' => $response['ETag']
-                    );
+                    ];
                     //print_r($cache);exit('dddd');
                     $this->saveCache($path, $cache);
                 }
                 if ($partinfo['iscomplete']) {
                     $cache = $this->getCache($path);
                     try {
-                        $response = $oss->completeMultipartUpload(array('Bucket' => $arr['bucket'], 'Key' => $arr['object'], 'UploadId' => $cache['upload_id'], 'Parts' => $cache['parts']));
+                        $response = $oss->completeMultipartUpload(['Bucket' => $arr['bucket'], 'Key' => $arr['object'], 'UploadId' => $cache['upload_id'], 'Parts' => $cache['parts']]);
                     } catch (ErrorException $e) {
-                        array('error' => $e->getMessage());
+                        return ['error' => $e->getMessage()];
                     }
 
                     $this->deleteCache($path);
-                    $meta = array(
+                    $meta = [
                         'Key' => $arr['object'],
                         'Size' => $cache['filesize'],
                         'LastModified' => $response['LastModified']->format('Y-m-d H:i:s'),
-                    );
+                    ];
 
-                    $icoarr = $this->_formatMeta($meta, $arr);
-
-                    return $icoarr;
+                    return $this->_formatMeta($meta, $arr);
                 } else {
                     return true;
                 }
@@ -1354,21 +1310,19 @@ class io_Qcos extends io_api {
                 $response = $oss->putObjectBySavePath($file, $arr['object']);
 
                 if ($response === false) {
-                    return array('error' => $this->get_error_info($oss));
+                    return ['error' => $this->get_error_info($oss)];
                 }
 
-                $meta = array(
+                $meta = [
                     'Key' => $arr['object'],
                     'Size' => filesize($file),
                     'LastModified' => $response['LastModified'],
-                );
+                ];
 
-                $icoarr = $this->_formatMeta($meta, $arr);
-
-                return $icoarr;
+                return $this->_formatMeta($meta, $arr);
             }
         } catch (Exception $e) {
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
 
     }
@@ -1379,7 +1333,7 @@ class io_Qcos extends io_api {
         $patharr = explode('/', $arr['object']);
         $arr['object1'] = '';
         if (strrpos($path, '/') == (strlen($path) - 1)) {//是目录
-            return array('error' => lang('folder_not_allowed_rename'));
+            return ['error' => lang('folder_not_allowed_rename')];
         } else {
             $ext = strtolower(substr(strrchr($arr['object'], '.'), 1));
             foreach ($patharr as $key => $value) {
@@ -1392,21 +1346,21 @@ class io_Qcos extends io_api {
             $oss = $this->init($path);
             if (is_array($oss) && $oss['error']) return $oss;
             try {
-                $result = $oss->getObject(array('Bucket' => $arr['bucket'], 'Key' => $arr['bucket']));
+                $result = $oss->getObject(['Bucket' => $arr['bucket'], 'Key' => $arr['bucket']]);
                 $CopySource = $result['Location'];
             } catch (ErrorException $e) {
-                return array('error' => $e->getMessage());
+                return ['error' => $e->getMessage()];
             }
 
             try {
-                $result = $oss->copyObject(array('Bucket' => $arr['bucket'], 'Key' => $arr['object1'], 'CopySource' => $CopySource));
+                $result = $oss->copyObject(['Bucket' => $arr['bucket'], 'Key' => $arr['object1'], 'CopySource' => $CopySource]);
             } catch (ErrorException $e) {
-                return array('error' => $e->getMessage());
+                return ['error' => $e->getMessage()];
             }
             try {
-                $response = $oss->deleteObject(array('Bucket' => $arr['bucket']));
+                $response = $oss->deleteObject(['Bucket' => $arr['bucket']]);
             } catch (ErrorException $e) {
-                return array('error' => $e->getMessage());
+                return ['error' => $e->getMessage()];
             }
 
         }
@@ -1443,12 +1397,12 @@ class io_Qcos extends io_api {
                             $data['success'] = true;
                             //echo $opath.'<br>';
                             $contents = $this->listFilesAll($oss, $opath);
-                            $value = array();
+                            $value = [];
                             foreach ($contents as $key => $value) {
                                 if ($value['path'] != $opath) {
                                     $data['contents'][$key] = $this->CopyTo($value['path'], $re['folderarr']['path'], $iscopy);
                                 }
-                                $value = array();
+                                $value = [];
                             }
                         }
                     } else {
@@ -1461,35 +1415,32 @@ class io_Qcos extends io_api {
                     if ($arr['bz'] == $oarr['bz']) {//同一个api时
                         $arr = $this->parsePath($path . $data['name']);
                         try {
-                            $result = $oss->getObject(array('Bucket' => $arr['bucket'], 'Key' => $arr['bucket']));
+                            $result = $oss->getObject(['Bucket' => $arr['bucket'], 'Key' => $arr['bucket']]);
                             $CopySource = $result['Location'];
                         } catch (ErrorException $e) {
                             $data['success'] = $e->getMessage();
                         }
 
                         try {
-                            $result = $oss->copyObject(array('Bucket' => $arr['bucket'], 'Key' => $oarr['object'], 'CopySource' => $CopySource));
+                            $result = $oss->copyObject(['Bucket' => $arr['bucket'], 'Key' => $oarr['object'], 'CopySource' => $CopySource]);
                         } catch (ErrorException $e) {
                             $data['success'] = $e->getMessage();
                         }
 
                         $response = $oss->copyObject($oarr['object'], $arr['object']);
 
-                        $meta = array(
+                        $meta = [
                             'Key' => $arr['object'],
                             'Size' => $data['size'],
                             'LastModified' => $response['LastModified'],
-                        );
+                        ];
                         $data['newdata'] = $this->_formatMeta($meta, $arr);
 
                         $data['success'] = true;
-                    } else {
-
-                        if ($re = IO::multiUpload($opath, $path, $data['name'])) {
-                            if ($re['error']) $data['success'] = $re['error']; else {
-                                $data['newdata'] = $re;
-                                $data['success'] = true;
-                            }
+                    } else if ($re = IO::multiUpload($opath, $path, $data['name'])) {
+                        if ($re['error']) $data['success'] = $re['error']; else {
+                            $data['newdata'] = $re;
+                            $data['success'] = true;
                         }
                     }
                     break;
@@ -1502,7 +1453,7 @@ class io_Qcos extends io_api {
         return $data;
     }
 
-    public function multiUpload($opath, $path, $filename, $attach = array(), $ondup = "newcopy") {
+    public function multiUpload($opath, $path, $filename, $attach = [], $ondup = "newcopy") {
         global $_G;
 
 
@@ -1516,7 +1467,7 @@ class io_Qcos extends io_api {
         }
         $size = $data['size'];
         if (is_array($filepath = IO::getStream($opath))) {
-            return array('error' => $filepath['error']);
+            return ['error' => $filepath['error']];
         }
 
         //exit(($size<$partsize).'===='.$size.'==='.$filepath.'===='.$path);
@@ -1524,7 +1475,7 @@ class io_Qcos extends io_api {
             //获取文件内容
             $fileContent = '';
             if (!$handle = fopen($filepath, 'rb')) {
-                return array('error' => lang('open_file_error'));
+                return ['error' => lang('open_file_error')];
             }
             while (!feof($handle)) {
                 $fileContent .= fread($handle, 8192);
@@ -1535,16 +1486,16 @@ class io_Qcos extends io_api {
             return $this->upload_by_content($fileContent, $path, $filename);
         } else { //分片上传
 
-            $partinfo = array('ispart' => true, 'partnum' => 0, 'iscomplete' => false);
+            $partinfo = ['ispart' => true, 'partnum' => 0, 'iscomplete' => false];
             if (!$handle = fopen($filepath, 'rb')) {
-                return array('error' => lang('open_file_error'));
+                return ['error' => lang('open_file_error')];
             }
 
             $cachefile = $_G['setting']['attachdir'] . './cache/' . md5($opath) . '.dzz';
             $fileContent = '';
             while (!feof($handle)) {
                 $fileContent .= fread($handle, 8192);
-                if (strlen($fileContent) == 0) return array('error' => lang('file_not_exist1'));
+                if (strlen($fileContent) == 0) return ['error' => lang('file_not_exist1')];
                 if (strlen($fileContent) >= $partsize) {
                     if ($partinfo['partnum'] * $partsize + strlen($fileContent) >= $size) $partinfo['iscomplete'] = true;
                     $partinfo['partnum'] += 1;

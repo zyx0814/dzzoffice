@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => 'Cloud Drive',
     'enter_keywords_match_file' => 'Enter keywords separated by commas',
     'explorer_groupperm_cooperative' => 'Collaborators',
@@ -410,4 +410,4 @@ $lang = array(
     'perm' => 'Permissions',
     'space_used' => 'Space Used',
     'space_total' => 'Space Total',
-);
+];

@@ -238,7 +238,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
         //    Flush the APC cache
         $this->__destruct();
 
-        $this->_cellCache = array();
+        $this->_cellCache = [];
 
         //    detach ourself from the worksheet, so that it can then delete this object successfully
         $this->_parent = null;

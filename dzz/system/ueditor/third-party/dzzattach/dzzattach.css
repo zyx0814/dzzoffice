@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*可以在这里添加你自己的css*/
 
 /*img{
@@ -123,7 +124,6 @@
 	background: url(images/tip_bottom.png);
 }
 
-@charset "UTF-8";
 /*在线预览*/
 .preview-box {
 	position:absolute;

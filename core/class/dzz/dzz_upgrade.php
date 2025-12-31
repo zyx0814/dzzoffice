@@ -21,7 +21,7 @@ class dzz_upgrade {
             $upgradedataflag = false;
         }
         //exit($this->upgradeurl.substr($upgradeinfo['upgradelist'], 0, -4).strtolower('_'.$this->locale.'_'.$this->charset).'.txt');
-        $return = array();
+        $return = [];
 
         $upgradedataarr = explode("\n", str_replace("\r\n", "\n", $upgradedata));
         foreach ($upgradedataarr as $k => $v) {
@@ -32,14 +32,14 @@ class dzz_upgrade {
             $return['md5'][$k] = substr($v, 0, 32);
             if (trim(substr($v, 32, 2)) != '*') {
                 @unlink($file);
-                return array();
+                return [];
             }
 
         }
         if (!$upgradedataflag) {
             $this->mkdirs(dirname($file));
             if(file_put_contents($file, $upgradedata) === false) {
-				return array();
+				return [];
 			}
         }
 
@@ -48,7 +48,7 @@ class dzz_upgrade {
 
     public function compare_basefile($upgradeinfo, $upgradefilelist, $upgrademd5list) {
         if (!$dzzfiles = @file(DZZ_ROOT . './admin/dzzofficefiles.md5')) {
-            $modifylist = $showlist = $searchlist = $md5datanew = $md5data = array();
+            $modifylist = $showlist = $searchlist = $md5datanew = $md5data = [];
             foreach ($upgradefilelist as $key => $file) {
                 $md5datanew[$file] = $upgrademd5list[$key];
                 $md5data[$file] = md5_file(DZZ_ROOT . './' . $file);
@@ -75,10 +75,10 @@ class dzz_upgrade {
                     fwrite($fp, $upgradedata);
                 }
             }
-            return array($modifylist, $showlist, $ignorelist, $newlist);
+            return [$modifylist, $showlist, $ignorelist, $newlist];
         }
 
-        $newupgradefilelist = $newlist = array();
+        $newupgradefilelist = $newlist = [];
         foreach ($upgradefilelist as $v) {
             if (!file_exists(DZZ_ROOT . './' . $v)) {
                 $newlist[$v] = $v;
@@ -87,7 +87,7 @@ class dzz_upgrade {
             }
         }
 
-        $modifylist = $showlist = $searchlist = array();
+        $modifylist = $showlist = $searchlist = [];
         foreach ($dzzfiles as $line) {
             $file = trim(substr($line, 34));
             $md5datanew[$file] = substr($line, 0, 32);
@@ -110,11 +110,11 @@ class dzz_upgrade {
             $upgradedata = file_get_contents($file);
             $upgradedata = str_replace($searchlist, '', $upgradedata);
             if(file_put_contents($file, $upgradedata) === false) {
-				return array();
+				return [];
 			}
         }
 
-        return array($modifylist, $showlist, $ignorelist, $newlist);
+        return [$modifylist, $showlist, $ignorelist, $newlist];
     }
 
     public function compare_file_content($file, $remotefile) {
@@ -122,7 +122,7 @@ class dzz_upgrade {
             return false;
         }
         $content = preg_replace('/\s/', '', file_get_contents($file));
-        $ctx = stream_context_create(array('http' => array('timeout' => 60)));
+        $ctx = stream_context_create(['http' => ['timeout' => 60]]);
         $remotecontent = preg_replace('/\s/', '', file_get_contents($remotefile, false, $ctx));
         if (strcmp($content, $remotecontent)) {
             return false;
@@ -302,9 +302,9 @@ class dzz_upgrade {
     function upgradeinformation() {
         global $_G;
         include_once DZZ_ROOT . './core/core_version.php';
-        $update = array();
+        $update = [];
         $update['uniqueid'] = C::t('setting')->fetch('siteuniqueid');
-        $update['usum'] = DB::result_first("select COUNT(*) from %t where 1", array('user'));
+        $update['usum'] = DB::result_first("select COUNT(*) from %t where 1", ['user']);
         $update['siteurl'] = $_G['siteurl'];
         $update['sitename'] = $_G['setting']['sitename'];
         $update['version'] = CORE_VERSION;
@@ -319,4 +319,3 @@ class dzz_upgrade {
     }
 }
 
-?>

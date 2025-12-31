@@ -58,7 +58,7 @@ class PHPExcel_CalcEngine_Logger {
 	 *
 	 * @var string[]
 	 */
-	private $_debugLog = array();
+	private $_debugLog = [];
 
 	/**
 	 * The calculation engine cell reference stack
@@ -137,7 +137,7 @@ class PHPExcel_CalcEngine_Logger {
 	 * Clear the calculation engine debug log
 	 */
 	public function clearLog() {
-		$this->_debugLog = array();
+		$this->_debugLog = [];
 	}	//	function flushLogger()
 
 	/**

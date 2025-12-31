@@ -33,7 +33,7 @@ class Zip {
     private $zipData = NULL;
     private $zipFile = NULL;
     private $zipComment = NULL;
-    private $cdRec = array(); // central directory
+    private $cdRec = []; // central directory
     private $offset = 0;
     private $isFinalized = FALSE;
     private $addExtraField = TRUE;
@@ -216,7 +216,7 @@ class Zip {
      *                               If you start the function by parsing an array, the array will be populated with the realPath
      *                               and zipPath kay/value pairs added to the archive by the function.
      */
-    public function addDirectoryContent($realPath, $zipPath, $recursive = TRUE, $followSymlinks = TRUE, &$addedFiles = array()) {
+    public function addDirectoryContent($realPath, $zipPath, $recursive = TRUE, $followSymlinks = TRUE, &$addedFiles = []) {
         if (file_exists($realPath) && !isset($addedFiles[realpath($realPath)])) {
             if (is_dir($realPath)) {
                 $this->addDirectory($zipPath);
@@ -684,7 +684,7 @@ class Zip {
             $dirs = array_splice($dirs, 1);
         }
 
-        $newDirs = array();
+        $newDirs = [];
         foreach ($dirs as $dir) {
             if ($dir !== "..") {
                 $subOffset--;
@@ -706,4 +706,3 @@ class Zip {
         return $root . implode("/", array_slice($newDirs, 0, $offset));
     }
 }
-?>

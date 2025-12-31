@@ -52,7 +52,7 @@ if ($action == 'update') {
         }
     }
     include template('common/header_ajax');
-    echo lang($message, array('flashcode' => $flashcode, 'idhash' => $idhash));
+    echo lang($message, ['flashcode' => $flashcode, 'idhash' => $idhash]);
     include template('common/footer_ajax');
 
 } elseif ($action == 'check') {
@@ -76,7 +76,7 @@ if ($action == 'update') {
     require_once libfile('class/seccode');
     $code = new seccode();
     $code->code = $seccode;
-    $code->type = (in_array($_G['setting']['seccodedata']['type'], array(2, 3))) ? 0 : $_G['setting']['seccodedata']['type'];
+    $code->type = (in_array($_G['setting']['seccodedata']['type'], [2, 3])) ? 0 : $_G['setting']['seccodedata']['type'];
     $code->width = $_G['setting']['seccodedata']['width'];
     $code->height = $_G['setting']['seccodedata']['height'];
     $code->background = $_G['setting']['seccodedata']['background'];
@@ -95,4 +95,3 @@ if ($action == 'update') {
     $code->display();
 
 }
-?>

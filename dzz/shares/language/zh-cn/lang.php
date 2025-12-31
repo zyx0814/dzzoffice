@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => '分享',
     'create' => '创建',
     'down' => '下载',
@@ -13,7 +13,6 @@ $lang = array(
     'state' => '状态',
     'edit_date' => '修改日期',
     'position' => '位置',
-    'choose' => '选取',
     'links' => '链接',
     'num' => '数',
     'manage' => '管理',
@@ -36,6 +35,5 @@ $lang = array(
     'no_file' => '还没有分享的文件或文件夹',
     'medium_icons' => '中等图标',
     'deltail_lsit' => '详细列表',
-);
+];
 
-?>

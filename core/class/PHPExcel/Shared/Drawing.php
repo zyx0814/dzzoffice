@@ -116,9 +116,7 @@ class PHPExcel_Shared_Drawing
 		}
 
 		// Round pixels to closest integer
-		$colWidth = (int) round($colWidth);
-
-		return $colWidth;
+        return (int) round($colWidth);
 	}
 
 	/**

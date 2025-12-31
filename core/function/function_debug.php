@@ -24,7 +24,7 @@ function debugmessage($ajax = 0) {
     $sqldebug = '';
     $ismysqli = DB::$driver == 'db_driver_mysqli' ? 1 : 0;
     $n = $dzz_table = 0;
-    $sqlw = array('Using filesort' => 0, 'Using temporary' => 0);
+    $sqlw = ['Using filesort' => 0, 'Using temporary' => 0];
     $db = DB::object();
     $queries = count($db->sqldebug);
     $sqltime = 0;
@@ -226,7 +226,7 @@ EOF;
         '<div id="__debugbar_s">
 			<table class="w" width=99%><tr><td valign=top width=50%>' .
         '<b style="float:left;width:1em;height:4em">文件</b>' .
-        '<em>版本:</em> DZZ! ' . CORE_VERSION . ($svn ? $svn : ' ' . CORE_RELEASE) . '<br />' .
+        '<em>版本:</em> DZZ! ' . CORE_VERSION . ($svn ?: ' ' . CORE_RELEASE) . '<br />' .
         '<em>ModID:</em> <s>' . $modid . '</s><br />' .
         '<em>包含:</em> ' .
         '<a id="__debug_3" href="#debugbar" onclick="switchTab(\'__debug\', 3, ' . $max . ')">[文件列表]</a>' .
@@ -259,13 +259,13 @@ EOF;
         '</div>' .
         '<div id="__debugbar__" style="clear:both">' .
         '<div id="__debug_c_1" style="display:none"><b>Queries: </b> ' . $queries . '<ol>';
-    $debug .= $sqldebug . '';
+    $debug .= $sqldebug;
     $debug .= '</ol></div>' .
         '<div id="__debug_c_4" style="display:none"><iframe id="sqldebug_ajax" name="sqldebug_ajax" src="../' . $ajaxhtml . '?k=' . $akey . '" frameborder="0" width="100%" height="800"></iframe></div>' .
         '<div id="__debug_c_2" style="display:none"><b>IP: </b>' . $_G['clientip'] . '<br /><b>User Agent: </b>' . $_SERVER['HTTP_USER_AGENT'] . '<br /><b>BROWSER.x: </b><script>for(BROWSERi in BROWSER) {var __s=BROWSERi+\':\'+BROWSER[BROWSERi]+\' \';jQuery(\'__debug_b\').innerHTML+=BROWSER[BROWSERi]!==0?__s:\'\';document.write(__s);}</script></div>' .
         '<div id="__debug_c_3" style="display:none"><ol>';
     foreach ($includes as $fn) {
-        $fn = str_replace(array(DZZ_ROOT, "\\"), array('', '/'), $fn);
+        $fn = str_replace([DZZ_ROOT, "\\"], ['', '/'], $fn);
         $debug .= '<li>';
         if (preg_match('/^dzz\//', $fn)) {
             $debug .= '[插件]';
@@ -289,7 +289,7 @@ EOF;
         if (isset($_ENV['analysis']['file'][$fn])) {
             memory_info($debug, $fn, $_ENV['analysis']['file'][$fn]);
         } else {
-            memory_info($debug, $fn, array('start_memory_get_usage' => 0, 'stop_memory_get_usage' => 0, 'start_memory_get_real_usage' => 0, 'stop_memory_get_real_usage' => 0, 'start_memory_get_peak_usage' => 0, 'stop_memory_get_peak_usage' => 0, 'start_memory_get_peak_real_usage' => 0, 'stop_memory_get_peak_real_usage' => 0));
+            memory_info($debug, $fn, ['start_memory_get_usage' => 0, 'stop_memory_get_usage' => 0, 'start_memory_get_real_usage' => 0, 'stop_memory_get_real_usage' => 0, 'start_memory_get_peak_usage' => 0, 'stop_memory_get_peak_usage' => 0, 'start_memory_get_peak_real_usage' => 0, 'stop_memory_get_peak_real_usage' => 0]);
         }
         $debug .= '</li>';
     }
@@ -357,4 +357,3 @@ $_GET = debugaddslashes($_GET); ';
 }
 
 
-?>

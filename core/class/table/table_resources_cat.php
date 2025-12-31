@@ -14,8 +14,8 @@ class table_resources_cat extends dzz_table {
     //添加搜索类型
     public function insert_cat($setarr) {
         //搜索类型同一用户不能重名
-        if (DB::result_first("select count(*) from %t where catname = %s and uid = %d", array($this->_table, $setarr['catname'], $setarr['uid'])) > 0) {
-            return array('error' => true, 'msg' => lang('exploder_name_repeat'));
+        if (DB::result_first("select count(*) from %t where catname = %s and uid = %d", [$this->_table, $setarr['catname'], $setarr['uid']]) > 0) {
+            return ['error' => true, 'msg' => lang('exploder_name_repeat')];
         }
         //处理标签数据
         if (isset($setarr['tag'])) {
@@ -29,9 +29,9 @@ class table_resources_cat extends dzz_table {
             $setarr['tag'] = substr($tags, 0, -1);
         }
         if ($insertid = parent::insert($setarr, 1)) {
-            return array('success' => true, 'insert' => $insertid);
+            return ['success' => true, 'insert' => $insertid];
         }
-        return array('error' => true, 'msg' => lang('exploder_add_failed'));
+        return ['error' => true, 'msg' => lang('exploder_add_failed')];
     }
 
     public function update($catid, $setarr, $unbuffered = false, $low_priority = false) {
@@ -39,7 +39,7 @@ class table_resources_cat extends dzz_table {
         if (isset($setarr['tag'])) {
             $oldtids = explode(',', $catinfo['tag']);
             $oldtids = array_filter($oldtids);
-            $newtids = array();
+            $newtids = [];
             $setarr['tag'] = array_filter(explode(',', $setarr['tag']));
             if (!empty($setarr['tag'])) {
                 //将标签放入标签表，如果有并且为该应用下，则自动增加使用数
@@ -82,13 +82,13 @@ class table_resources_cat extends dzz_table {
     }
 
     public function fetch_by_uid($uid) {
-        return DB::fetch_all("select * from %t where uid = %d order by `default` desc", array($this->_table, $uid));
+        return DB::fetch_all("select * from %t where uid = %d order by `default` desc", [$this->_table, $uid]);
     }
 
     //查询当前数据最近的一条
     public function fetch_rencent_id($id) {
         global $_G;
-        return DB::result_first("select id from %t where id < %d and uid = %d order by id desc", array($this->_table, $id, $_G['uid']));
+        return DB::result_first("select id from %t where id < %d and uid = %d order by id desc", [$this->_table, $id, $_G['uid']]);
     }
 
 }

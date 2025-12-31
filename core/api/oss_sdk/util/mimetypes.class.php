@@ -5,7 +5,7 @@
  *
  */
 class MimeTypes {
-	public static $mime_types = array (
+	public static $mime_types = [
 			'ez' => 'application/andrew-inset',
 			'aw' => 'application/applixware',
 			'atom' => 'application/atom+xml',
@@ -798,7 +798,7 @@ class MimeTypes {
 			'avi' => 'video/x-msvideo',
 			'movie' => 'video/x-sgi-movie',
 			'ice' => 'x-conference/x-cooltalk',
-	);
+    ];
 	
 	public static function get_mimetype($ext) {
 		return (isset ( self::$mime_types [$ext] ) ? self::$mime_types [$ext] : 'application/octet-stream');

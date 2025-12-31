@@ -63,42 +63,42 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 	 *
 	 * @var array
 	 */
-	private $_formats = array( 'h1' => array( 'font' => array( 'bold' => true,
+	private $_formats = ['h1' => ['font' => ['bold' => true,
 															   'size' => 24,
-															 ),
-											),	//	Bold, 24pt
-							   'h2' => array( 'font' => array( 'bold' => true,
+    ],
+    ],	//	Bold, 24pt
+							   'h2' => ['font' => ['bold' => true,
 															   'size' => 18,
-															 ),
-											),	//	Bold, 18pt
-							   'h3' => array( 'font' => array( 'bold' => true,
+                               ],
+                               ],	//	Bold, 18pt
+							   'h3' => ['font' => ['bold' => true,
 															   'size' => 13.5,
-															 ),
-											),	//	Bold, 13.5pt
-							   'h4' => array( 'font' => array( 'bold' => true,
+                               ],
+                               ],	//	Bold, 13.5pt
+							   'h4' => ['font' => ['bold' => true,
 															   'size' => 12,
-															 ),
-											),	//	Bold, 12pt
-							   'h5' => array( 'font' => array( 'bold' => true,
+                               ],
+                               ],	//	Bold, 12pt
+							   'h5' => ['font' => ['bold' => true,
 															   'size' => 10,
-															 ),
-											),	//	Bold, 10pt
-							   'h6' => array( 'font' => array( 'bold' => true,
+                               ],
+                               ],	//	Bold, 10pt
+							   'h6' => ['font' => ['bold' => true,
 															   'size' => 7.5,
-															 ),
-											),	//	Bold, 7.5pt
-							   'a'  => array( 'font' => array( 'underline' => true,
-															   'color' => array( 'argb' => PHPExcel_Style_Color::COLOR_BLUE,
-															                   ),
-															 ),
-											),	//	Blue underlined
-							   'hr' => array( 'borders' => array( 'bottom' => array( 'style' => PHPExcel_Style_Border::BORDER_THIN,
-																					 'color' => array( PHPExcel_Style_Color::COLOR_BLACK,
-																					                 ),
-																				   ),
-																),
-											),	//	Bottom border
-							 );
+                               ],
+                               ],	//	Bold, 7.5pt
+							   'a'  => ['font' => ['underline' => true,
+															   'color' => ['argb' => PHPExcel_Style_Color::COLOR_BLUE,
+                                                               ],
+                               ],
+                               ],	//	Blue underlined
+							   'hr' => ['borders' => ['bottom' => ['style' => PHPExcel_Style_Border::BORDER_THIN,
+																					 'color' => [PHPExcel_Style_Color::COLOR_BLACK,
+                                                                                     ],
+                               ],
+                               ],
+                               ],	//	Bottom border
+    ];
 
 
 	/**
@@ -163,10 +163,10 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 	}
 
 	//	Data Array used for testing only, should write to PHPExcel object on completion of tests
-	private $_dataArray = array();
+	private $_dataArray = [];
 
 	private $_tableLevel = 0;
-	private $_nestedColumn = array('A');
+	private $_nestedColumn = ['A'];
 
 	private function _setTableStartColumn($column) {
 		if ($this->_tableLevel == 0)
@@ -219,7 +219,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 			} elseif($child instanceof DOMElement) {
 //				echo '<b>DOM ELEMENT: </b>' , strtoupper($child->nodeName) , '<br />';
 
-				$attributeArray = array();
+				$attributeArray = [];
 				foreach($child->attributes as $attribute) {
 //					echo '<b>ATTRIBUTE: </b>' , $attribute->name , ' => ' , $attribute->value , '<br />';
 					$attributeArray[$attribute->name] = $attribute->value;
@@ -228,12 +228,10 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 				switch($child->nodeName) {
 					case 'meta' :
 						foreach($attributeArray as $attributeName => $attributeValue) {
-							switch($attributeName) {
-								case 'content':
-									//	TODO
-									//	Extract character set, so we can convert to UTF-8 if required
-									break;
-							}
+                            //	TODO
+                            //	Extract character set, so we can convert to UTF-8 if required
+                            if ($attributeName == 'content') {
+                            }
 						}
 						$this->_processDomElement($child,$sheet,$row,$column,$cellContent);
 						break;
@@ -267,7 +265,8 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 							$this->_flushCell($sheet,$column,$row,$cellContent);
 						}
 						++$row;
-					case 'br' :
+                        break;
+                    case 'br' :
 						if ($this->_tableLevel > 0) {
 							//	If we're inside a table, replace with a \n
 							$cellContent .= "\n";
@@ -281,15 +280,13 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 					case 'a'  :
 //						echo 'START OF HYPERLINK: ' , '<br />';
 						foreach($attributeArray as $attributeName => $attributeValue) {
-							switch($attributeName) {
-								case 'href':
-//									echo 'Link to ' , $attributeValue , '<br />';
-									$sheet->getCell($column.$row)->getHyperlink()->setUrl($attributeValue);
-									if (isset($this->_formats[$child->nodeName])) {
-										$sheet->getStyle($column.$row)->applyFromArray($this->_formats[$child->nodeName]);
-									}
-									break;
-							}
+                            //									echo 'Link to ' , $attributeValue , '<br />';
+                            if ($attributeName == 'href') {
+                                $sheet->getCell($column . $row)->getHyperlink()->setUrl($attributeValue);
+                                if (isset($this->_formats[$child->nodeName])) {
+                                    $sheet->getStyle($column . $row)->applyFromArray($this->_formats[$child->nodeName]);
+                                }
+                            }
 						}
 						$cellContent .= ' ';
 						$this->_processDomElement($child,$sheet,$row,$column,$cellContent);

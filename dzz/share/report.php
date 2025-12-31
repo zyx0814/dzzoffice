@@ -10,14 +10,14 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 Hook::listen('adminlogin');
-$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
+$navtitle = $global_appinfo['appname'] ?: lang('appname');
 $op = isset($_GET['op']) ? trim($_GET['op']) : '';
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $report = C::t('share_report');
 $reporttypes = $report->get_report_types();
 if ($do == 'getinfo') {
-    $field = in_array($_GET['field'], array('title', 'type', 'status', 'dateline')) ? trim($_GET['field']) : 'dateline';
-    $order = in_array($_GET['order'], array('asc', 'desc')) ? trim($_GET['order']) : 'DESC';
+    $field = in_array($_GET['field'], ['title', 'type', 'status', 'dateline']) ? trim($_GET['field']) : 'dateline';
+    $order = in_array($_GET['order'], ['asc', 'desc']) ? trim($_GET['order']) : 'DESC';
     $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
     $type = isset($_GET['type']) ? trim($_GET['type']) : '';
     $status = isset($_GET['status']) ? intval($_GET['status']) : null;
@@ -29,7 +29,7 @@ if ($do == 'getinfo') {
     }
     $orderby = " order by $field " . $order;
     $sql = "1";
-    $param = array('share_report');
+    $param = ['share_report'];
     if ($type) {
         $sql .= " and type=%s";
         $param[] = $type;
@@ -38,13 +38,13 @@ if ($do == 'getinfo') {
         $sql .= " and username LIKE %s";
         $param[] = '%' . $keyword . '%';
     }
-    $data = array();
+    $data = [];
     if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql", $param)) {
         $list = DB::fetch_all("SELECT sr.*, s.title, s.status FROM %t sr LEFT JOIN " . DB::table('shares') . " s ON sr.sid = s.id WHERE $sql $orderby LIMIT $start,$limit", $param);
-        $sharestatus = array(
+        $sharestatus = [
             '0' => '<span class="layui-badge layui-bg-green">分享正常</span>',
             '1' => '<span class="layui-badge layui-bg-orange">已不能访问</span>'
-        );
+        ];
         foreach ($list as $value) {
             if ($value['status'] == 0) {
                 $status = 0;
@@ -67,8 +67,8 @@ if ($do == 'getinfo') {
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $data ? $data : []
+        "count" => $count ?: 0,
+        "data" => $data ?: []
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {
@@ -85,4 +85,4 @@ if ($do == 'getinfo') {
 } else {
     include template('report');
 }
-?>
+

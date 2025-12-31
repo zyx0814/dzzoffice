@@ -4,7 +4,7 @@
 <div class="demo">{lang title}</div>
 <div class="demo1">{lang dev_desc}</div>
 */
-$lang = array (
+$lang = [
     'appname'=>'测试' ,//应用名称 统一用 appname
     'menu_setting'=>'设置' ,//菜单类 的语言统一以 menu_ 开头
     
@@ -18,5 +18,4 @@ $lang = array (
     'button_setting'=>'保存',//按钮类 的语言统一以 button_ 开头
     'info_test_hook_one'=>'我是一个钩子调用程序,哪儿需要，哪儿调用-1',//按钮类 的语言统一以 button_ 开头
     'info_test_hook_two'=>'我是一个钩子调用程序,哪儿需要，哪儿调用-2'//按钮类 的语言统一以 button_ 开头
-); 
-?>
+];

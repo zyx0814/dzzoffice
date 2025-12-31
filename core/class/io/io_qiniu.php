@@ -23,7 +23,7 @@ require_once(DZZ_ROOT . './core/api/qiniu/resumable_io.php');
 class io_qiniu extends io_api {
     const T = 'connect_storage';
     const BZ = 'qiniu';
-    private $icosdatas = array();
+    private $icosdatas = [];
     private $bucket = '';
     private $uid = '';
     private $_root = '';
@@ -33,7 +33,7 @@ class io_qiniu extends io_api {
 
     public function __construct($path) {
         global $_G;
-        $arr = DB::fetch_first("SELECT root,name FROM %t WHERE bz=%s", array('connect', self::BZ));
+        $arr = DB::fetch_first("SELECT root,name FROM %t WHERE bz=%s", ['connect', self::BZ]);
         $this->_root = $arr['root'];
         $this->uid = $_G['adminid'] ? $_G['uid'] : 0;
         $this->_rootname = $arr['name'];
@@ -69,7 +69,7 @@ class io_qiniu extends io_api {
     public function makeDir($path) {
         $arr = $this->parsePath($path);
         $patharr = explode('/', trim($arr['object'], '/'));
-        $folderarr = array();
+        $folderarr = [];
         $p = $arr['bz'] . $arr['bucket'];
         foreach ($patharr as $value) {
             $p .= '/' . $value;
@@ -93,12 +93,12 @@ class io_qiniu extends io_api {
             $upToken = $putPolicy->Token(null);
             list($ret, $err) = Qiniu_Put($upToken, $arr['object'] . '/', '', null);
             if ($err !== null) {
-                return array('error' => $err->Code . ':' . $err->Err);
+                return ['error' => $err->Code . ':' . $err->Err];
             }
             return true;
         } catch (Exception $e) {
             //var_dump($e);
-            return array('error' => $e->getMessage());
+            return ['error' => $e->getMessage()];
         }
 
     }
@@ -111,9 +111,9 @@ class io_qiniu extends io_api {
         $bzarr = explode(':', $bz);
         $id = trim($bzarr[1]);
         if (!$root = DB::fetch_first("select * from " . DB::table(self::T) . " where  id='{$id}'")) {
-            return array('error' => 'need authorize to ' . $bzarr[0]);
+            return ['error' => 'need authorize to ' . $bzarr[0]];
         }
-        if (!$isguest && $root['uid'] > 0 && $root['uid'] != $_G['uid']) return array('error' => 'need authorize to qiniu');
+        if (!$isguest && $root['uid'] > 0 && $root['uid'] != $_G['uid']) return ['error' => 'need authorize to qiniu'];
         $access_id = authcode($root['access_id'], 'DECODE', $root['bz']);
         if (empty($access_id)) $access_id = $root['access_id'];
         $access_key = authcode($root['access_key'], 'DECODE', $root['bz']);
@@ -122,7 +122,7 @@ class io_qiniu extends io_api {
         if ($root['cloudname']) {
             $this->_rootname = $root['cloudname'];
         } else {
-            $this->_rootname .= ':' . ($root['bucket'] ? $root['bucket'] : cutstr($root['access_id'], 4, $dot = ''));
+            $this->_rootname .= ':' . ($root['bucket'] ?: cutstr($root['access_id'], 4, $dot = ''));
         }
         $this->bucket = $root['bucket'];
         if (!isset($HOSTS[$region])) $region = 'huadong';
@@ -135,7 +135,7 @@ class io_qiniu extends io_api {
         global $_G, $_GET, $clouds, $HOSTS;
         if (empty($_G['uid'])) {
             dsetcookie('_refer', rawurlencode(BASESCRIPT . '?mod=connect&op=oauth&bz=qiniu'));
-            showmessage('to_login', '', array(), array('showmsg' => true, 'login' => 1));
+            showmessage('to_login', '', [], ['showmsg' => true, 'login' => 1]);
         }
         if (submitcheck('qiniusubmit')) {
             $access_id = $_GET['access_id'];
@@ -147,7 +147,7 @@ class io_qiniu extends io_api {
                 showmessage('please input qiniu AK and SK', dreferer());
             }
             if (!$bucket || !$hostname) showmessage('set_bucket_name_region', dreferer());
-            Qiniu_setKeys($access_id, $access_key);
+            Qiniu_SetKeys($access_id, $access_key);
             if (!isset($HOSTS[$region])) $region = 'huadong';
             Qiniu_UploadHost($HOSTS[$region]['up_http']);
             //print_r($_GET);exit('dddd');
@@ -177,33 +177,33 @@ class io_qiniu extends io_api {
 
             $type = 'qiniu';
             $uid = defined('IN_ADMIN') ? 0 : $_G['uid'];
-            $setarr = array('uid' => $uid,
+            $setarr = ['uid' => $uid,
                 'access_id' => $access_id,
                 'access_key' => authcode($access_key, 'ENCODE', $type),
                 'bz' => $type,
                 'bucket' => $bucket,
                 'hostname' => $hostname . '|' . $region,
                 'dateline' => TIMESTAMP,
-            );
+            ];
             if ($id = DB::result_first("select id from " . DB::table(self::T) . " where uid='{$uid}' and access_id='{$access_id}' and bucket='{$bucket}'")) {
                 DB::update(self::T, $setarr, "id ='{$id}'");
             } else {
                 $id = DB::insert(self::T, $setarr, 1);
             }
             if (defined('IN_ADMIN')) {
-                $setarr = array('name' => $clouds[$type]['name'] . ':' . ($bucket ? $bucket : cutstr($access_id, 4, '')),
+                $setarr = ['name' => $clouds[$type]['name'] . ':' . ($bucket ?: cutstr($access_id, 4, '')),
                     'bz' => $type,
                     'isdefault' => 0,
                     'dname' => self::T,
                     'did' => $id,
                     'dateline' => TIMESTAMP
-                );
-                if (!DB::result_first("select COUNT(*) from %t where did=%d and dname=%s ", array('local_storage', $id, self::T))) {
+                ];
+                if (!DB::result_first("select COUNT(*) from %t where did=%d and dname=%s ", ['local_storage', $id, self::T])) {
                     C::t('local_storage')->insert($setarr);
                 }
                 showmessage('do_success', BASESCRIPT . '?mod=cloud&op=space');
             } else {
-                showmessage('do_success', $refer ? $refer : BASESCRIPT . '?mod=connect');
+                showmessage('do_success', $refer ?: BASESCRIPT . '?mod=connect');
             }
         } else {
             include template('oauth_qiniu');
@@ -243,7 +243,6 @@ class io_qiniu extends io_api {
     public function createThumb($path, $size, $width = 0, $height = 0, $thumbtype = 1) {
         if (intval($width) < 1) $width = $_G['setting']['thumbsize'][$size]['width'];
         if (intval($height) < 1) $height = $_G['setting']['thumbsize'][$size]['height'];
-        return;
     }
 
     //获取缩略图
@@ -257,7 +256,7 @@ class io_qiniu extends io_api {
             IO::output_thumb($_G['setting']['attachdir'] . './' . $target);
         }
         //调用挂载点程序生成缩略图绝对和相对地址；
-        $fileurls = array();
+        $fileurls = [];
         Hook::listen('thumbnail', $fileurls, $path);
         if ($fileurls) {
             //生成图片缩略图
@@ -275,7 +274,7 @@ class io_qiniu extends io_api {
                 IO::output_thumb($imgurl);
             }
         } else {
-            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
+            $fileurls = ['fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path)];
         }
         if (!is_string($fileurls['filedir'])) {
             header("HTTP/1.1 304 Not Modified");
@@ -317,8 +316,6 @@ class io_qiniu extends io_api {
         } else {
             @header("Location:$imgViewPrivateUrl");
             exit();
-            //本地中转时
-            IO::output_thumb($imgViewPrivateUrl);
 
         }
     }
@@ -343,7 +340,7 @@ class io_qiniu extends io_api {
         $bucket = $arr1[0];
         unset($arr1[0]);
         $object = implode('/', $arr1);
-        return array('bucket' => $bucket, 'object' => $object, 'bz' => $bz);
+        return ['bucket' => $bucket, 'object' => $object, 'bz' => $bz];
     }
     //重写文件内容
     //@param number $path  文件的路径
@@ -368,7 +365,7 @@ class io_qiniu extends io_api {
         $patharr = explode('/', $arr['object']);
         $arr['object1'] = '';
         if (strrpos($path, '/') == (strlen($path) - 1)) {//是目录
-            return array('error' => lang('folder_not_allowed_rename'));
+            return ['error' => lang('folder_not_allowed_rename')];
         } else {
             $ext = strtolower(substr(strrchr($arr['object'], '.'), 1));
             foreach ($patharr as $key => $value) {
@@ -380,7 +377,7 @@ class io_qiniu extends io_api {
         $client = $this->init($path);
         $err = Qiniu_RS_Move($client, $arr['bucket'], $arr['object'], $arr['bucket'], $arr['object1']);
         if ($err !== null) {
-            return array('error' => $err->Code . ':' . $err->Err);
+            return ['error' => $err->Code . ':' . $err->Err];
         }
         return $this->getMeta($arr['bz'] . $arr['bucket'] . '/' . $arr['object1']);
     }
@@ -408,12 +405,11 @@ class io_qiniu extends io_api {
         $putExtra->Crc32 = 1;
         list($ret, $err) = Qiniu_Put($upToken, $arr['object'], $fileContent, $putExtra);
         if ($err !== null) {
-            return array('error' => $err->Code . ':' . $err->Err);
+            return ['error' => $err->Code . ':' . $err->Err];
         } else {
             $meta = $ret;
         }
-        $icoarr = $this->_formatMeta($meta, $arr);
-        return $icoarr;
+        return $this->_formatMeta($meta, $arr);
 
     }
 
@@ -438,9 +434,9 @@ class io_qiniu extends io_api {
         global $_G, $_GET, $documentexts, $imageexts;
         $arr = $this->parsePath($path);
 
-        $icosdata = array();
+        $icosdata = [];
         $client = $this->init($path, 1);
-        $data = array();
+        $data = [];
         list($commonPrefixes, $iterms, $markerOut, $err) = Qiniu_RSF_ListPrefix($client, $arr['bucket'], $arr['object'], $marker, '/', $limit);
 
         if ($err != null) {
@@ -451,7 +447,7 @@ class io_qiniu extends io_api {
 
             } else {
                 //runlog('qiniu_log',$err);
-                return array('error' => $err->Code . ':' . $err->Err);
+                return ['error' => $err->Code . ':' . $err->Err];
             }
         } else {
             $data['items'] = $iterms;
@@ -460,7 +456,7 @@ class io_qiniu extends io_api {
 
         if ($data['items']) $icos = $data['items'];
         if ($data['CommonPrefixes']) $folders = $data['CommonPrefixes'];
-        $value = array();
+        $value = [];
         foreach ($icos as $key => $value) {
             if (is_array($value)) {
                 $icoarr = $this->_formatMeta($value, $arr);
@@ -471,16 +467,16 @@ class io_qiniu extends io_api {
                 break;
             }
         }
-        $value = array();
+        $value = [];
         foreach ($folders as $key => $value) {
-            $value1 = array('isdir' => true, 'key' => $value);
+            $value1 = ['isdir' => true, 'key' => $value];
             $icoarr = $this->_formatMeta($value1, $arr);
             $icosdata[$icoarr['icoid']] = $icoarr;
         }
 
-        $value = array();
+        $value = [];
         $value['isdir'] = true;
-        $value['key'] = $arr['object'] ? $arr['object'] : '';
+        $value['key'] = $arr['object'] ?: '';
         $value['nextMarker'] = $markerOut;
         $value['IsTruncated'] = $markerOut ? 1 : 0;
 
@@ -494,10 +490,10 @@ class io_qiniu extends io_api {
         return $icosdata;
     }
 
-    public function listFilesAll(&$client, $path, $limit = '100', $marker = '', $icosdata = array()) {
+    public function listFilesAll(&$client, $path, $limit = '100', $marker = '', $icosdata = []) {
         //static $icosdata=array();
         $arr = $this->parsePath($path);
-        $data = array();
+        $data = [];
         list($commonPrefixes, $iterms, $markerOut, $err) = Qiniu_RSF_ListPrefix($client, $arr['bucket'], $arr['object'], $marker, '/', $limit);
         if ($err != null) {
             if ($err === Qiniu_RSF_EOF) {
@@ -506,7 +502,7 @@ class io_qiniu extends io_api {
 
             } else {
                 runlog('qiniu_log', $err);
-                return array('error' => $err->Code . ':' . $err->Err);
+                return ['error' => $err->Code . ':' . $err->Err];
             }
         } else {
             $data['items'] = $iterms;
@@ -516,7 +512,7 @@ class io_qiniu extends io_api {
 
         if ($data['items']) $icos = $data['items'];
         if ($data['CommonPrefixes']) $folders = $data['CommonPrefixes'];
-        $value = array();
+        $value = [];
 
         foreach ($icos as $key => $value) {
             if (is_array($value)) {
@@ -528,15 +524,15 @@ class io_qiniu extends io_api {
                 break;
             }
         }
-        $value = array();
+        $value = [];
         foreach ($folders as $key => $value) {
-            $value1 = array('isdir' => true, 'key' => $value);
+            $value1 = ['isdir' => true, 'key' => $value];
             $icoarr = $this->_formatMeta($value1, $arr);
             $icosdata[$icoarr['icoid']] = $icoarr;
         }
-        $value = array();
+        $value = [];
         $value['isdir'] = true;
-        $value['key'] = $arr['object'] ? $arr['object'] : '';
+        $value['key'] = $arr['object'] ?: '';
         $value['nextMarker'] = $markerOut;
         $value['IsTruncated'] = $markerOut ? 1 : 0;
 
@@ -557,7 +553,7 @@ class io_qiniu extends io_api {
     }
 
     /*获取目录信息*/
-    public function getContains($path, $suborg = false, $contains = array('size' => 0, 'contain' => array(0, 0))) {
+    public function getContains($path, $suborg = false, $contains = ['size' => 0, 'contain' => [0, 0]]) {
         foreach ($this->listFiles($path) as $value) {
             if ($value['type'] == 'folder') {
                 $contains = $this->getContains($value['path'], false, $contains);
@@ -584,23 +580,22 @@ class io_qiniu extends io_api {
             $meta['putTime'] = 0;
         } else {
             $client = $this->init($path, 1);
-            $icosdata = array();
+            $icosdata = [];
             list($meta, $err) = Qiniu_RS_Stat($client, $arr['bucket'], $arr['object']);
             if ($err !== null) {
                 runlog('qiniu_log', $err->Code . ':' . $err->Err);
-                return array('error' => $err->Code . ':' . $err->Err);
+                return ['error' => $err->Code . ':' . $err->Err];
             }
             $meta['key'] = substr($arr['object'], strrchr($meta['key'], '/'));
         }
 
-        $icosdata = $this->_formatMeta($meta, $arr);
-        return $icosdata;
+        return $this->_formatMeta($meta, $arr);
     }
 
     //将api获取的meta数据转化为icodata
     public function _formatMeta($meta, $arr) {
         global $_G, $documentexts, $imageexts;
-        $icosdata = array();
+        $icosdata = [];
         if (strrpos($meta['key'], '/') == (strlen($meta['key']) - 1)) $meta['isdir'] = true;
         if ($this->uid) {
             $uid = $this->uid;
@@ -615,19 +610,15 @@ class io_qiniu extends io_api {
                 if ($this->bucket) {
                     $name = $this->bucket;
                     $pfid = 0;
-                    $pf = '';
-                    $flag = self::BZ;
                 } elseif ($arr['bucket']) {
                     $name = $arr['bucket'];
                     $pfid = md5($arr['bz']);
-                    $pf = '';
-                    $flag = self::BZ;
                 } else {
                     $name = $this->_rootname;
                     $pfid = 0;
-                    $pf = '';
-                    $flag = self::BZ;
                 }
+                $pf = '';
+                $flag = self::BZ;
                 if ($arr['bucket']) $arr['bucket'] .= '/';
             } else {
                 if ($arr['bucket']) $arr['bucket'] .= '/';
@@ -642,14 +633,14 @@ class io_qiniu extends io_api {
                 $flag = '';
             }
             $rid = md5($arr['bz'] . $arr['bucket'] . $meta['key']);
-            $icoarr = array(
+            $icoarr = [
                 'icoid' => $rid,
                 'rid' => $rid,
                 'path' => $arr['bz'] . $arr['bucket'] . $meta['key'],
                 'dpath' => dzzencode($arr['bz'] . $arr['bucket'] . $meta['key']),
                 'bz' => ($arr['bz']),
                 'gid' => 0,
-                'name' => $name ? $name : '',
+                'name' => $name ?: '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -665,13 +656,7 @@ class io_qiniu extends io_api {
                 'IsTruncated' => $meta['IsTruncated'],
                 'preview' => $this->preview,
                 'sid' => $this->sharesid
-            );
-
-            $icoarr['fsize'] = formatsize($icoarr['size']);
-            $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
-            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
-            $icosdata = $icoarr;
+            ];
         } else {
             if ($arr['bucket']) $arr['bucket'] .= '/';
             $namearr = explode('/', $meta['key']);
@@ -692,14 +677,14 @@ class io_qiniu extends io_api {
                 $url = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=getStream&path=' . dzzencode($arr['bz'] . $arr['bucket'] . $meta['key']);
             }
             $rid = md5($arr['bz'] . $arr['bucket'] . $meta['key']);
-            $icoarr = array(
+            $icoarr = [
                 'icoid' => $rid,
                 'rid' => $rid,
                 'path' => ($arr['bz'] . $arr['bucket'] . $meta['key']),
                 'dpath' => dzzencode($arr['bz'] . $arr['bucket'] . $meta['key']),
                 'bz' => ($arr['bz']),
                 'gid' => 0,
-                'name' => $name ? $name : '',
+                'name' => $name ?: '',
                 'username' => $username,
                 'uid' => $uid,
                 'oid' => $rid,
@@ -714,16 +699,14 @@ class io_qiniu extends io_api {
                 'flag' => '',
                 'preview' => $this->preview,
                 'sid' => $this->sharesid
-            );
-            $icoarr['fsize'] = formatsize($icoarr['size']);
-            $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
-            $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
-            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
-            $icosdata = $icoarr;
+            ];
+            $icoarr['ffsize'] = lang('property_info_size', ['fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']]);
         }
-
-        return $icosdata;
+        $icoarr['fsize'] = formatsize($icoarr['size']);
+        $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
+        if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+        else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+        return $icoarr;
     }
 
     //根据路径获取目录树的数据；
@@ -738,7 +721,7 @@ class io_qiniu extends io_api {
 		}*/
         $spath = trim($spath, '/');
         $patharr = explode('/', $spath);
-        $folderarr = array();
+        $folderarr = [];
         $path1 = $bzarr['bz'] . $bzarr['bucket'] . '/';
         if ($arr = $this->getMeta($path1)) {
             if (!isset($arr['error'])) {
@@ -764,7 +747,7 @@ class io_qiniu extends io_api {
     //通过icosdata获取folderdata数据
     public function getFolderByIcosdata($icosdata) {
         global $_GET;
-        $folder = array();
+        $folder = [];
         //通过path判断是否为bucket
         $path = $icosdata['path'];
         $arr = $this->parsePath($path);
@@ -774,7 +757,7 @@ class io_qiniu extends io_api {
             $fsperm = perm_FolderSPerm::flagPower('qiniu');
         }
         if ($icosdata['type'] == 'folder') {
-            $folder = array('fid' => $icosdata['oid'],
+            $folder = ['fid' => $icosdata['oid'],
                 'path' => $icosdata['path'],
                 'fname' => $icosdata['name'],
                 'uid' => $icosdata['uid'],
@@ -790,7 +773,7 @@ class io_qiniu extends io_api {
                 'icon' => $icosdata['flag'] ? ('dzz/images/default/system/' . $icosdata['flag'] . '.png') : '',
                 'nextMarker' => $icosdata['nextMarker'],
                 'IsTruncated' => $icosdata['IsTruncated'],
-            );
+            ];
 
         }
         return $folder;
@@ -821,7 +804,7 @@ class io_qiniu extends io_api {
     }
 
     public function getFolderInfo($paths, $position = '', &$zip) {
-        static $data = array();
+        static $data = [];
         try {
             foreach ($paths as $path) {
                 $arr = IO::parsePath($path);
@@ -831,7 +814,7 @@ class io_qiniu extends io_api {
                     case 'folder':
                         $lposition = $position . $meta['name'] . '/';
                         $contents = $this->listFilesAll($client, $path);
-                        $arr = array();
+                        $arr = [];
                         foreach ($contents as $key => $value) {
                             if ($value['path'] != $path) {
                                 $arr[] = $value['path'];
@@ -887,23 +870,6 @@ class io_qiniu extends io_api {
             $d = new FileDownload();
             $d->download($url, $file['name'], $file['size'], $file['dateline'], true);
             exit();
-            dheader('Date: ' . gmdate('D, d M Y H:i:s', $file['dateline']) . ' GMT');
-            dheader('Last-Modified: ' . gmdate('D, d M Y H:i:s', $file['dateline']) . ' GMT');
-            dheader('Content-Encoding: none');
-            dheader('Content-Disposition: attachment; filename=' . $file['name']);
-            dheader('Content-Type: application/octet-stream');
-            dheader('Content-Length: ' . $file['size']);
-
-            @ob_end_clean();
-            if (getglobal('gzipcompress')) @ob_start('ob_gzhandler');
-            while (!feof($fp)) {
-                echo fread($fp, $chunk);
-                @ob_flush();  // flush output
-                @flush();
-            }
-            @fclose($fp);
-            exit();
-
         } catch (Exception $e) {
             // The file wasn't found at the specified path/revision
             //echo 'The file was not found at the specified path/revision';
@@ -913,7 +879,7 @@ class io_qiniu extends io_api {
 
     //获取目录的所有下级和它自己的object
     public function deleteFolder(&$client, $path, $limit = '100', $marker = '') {
-        static $objects = array();
+        static $objects = [];
         $arr = $this->parsePath($path);
         //echo( $path.'---------');
         list($commonPrefixes, $iterms, $markerOut, $err) = Qiniu_RSF_ListPrefix($client, $arr['bucket'], $arr['object'], $marker, '', $limit);
@@ -922,14 +888,14 @@ class io_qiniu extends io_api {
                 $data['items'] = $iterms;
             } else {
                 runlog('qiniu_log', $err->Code . ':' . $err->Err);
-                return array('error' => $err->Code . ':' . $err->Err);
+                return ['error' => $err->Code . ':' . $err->Err];
             }
         } else {
             $data['items'] = $iterms;
         }
         if ($data['items']) $icos = $data['items'];
-        $value = array();
-        $entries = array();
+        $value = [];
+        $entries = [];
         foreach ($icos as $key => $value) {
             if (is_array($value)) {
                 $entries[] = new Qiniu_RS_EntryPath($arr['bucket'], $value['key']);
@@ -967,16 +933,16 @@ class io_qiniu extends io_api {
             } else {
                 Qiniu_RS_Delete($client, $arr['bucket'], $arr['object']);
             }
-            return array('icoid' => $rid, 'rid' => $rid,
+            return ['icoid' => $rid, 'rid' => $rid,
                 'name' => substr(strrchr($path, '/'), 1),
-            );
+            ];
         } catch (Exception $e) {
-            return array('icoid' => $rid, 'rid' => $rid, 'error' => $e->getMessage());
+            return ['icoid' => $rid, 'rid' => $rid, 'error' => $e->getMessage()];
         }
     }
 
     public function CreateFolderByPath($path, $pfid = '', $noperm = false) {
-        $data = array();
+        $data = [];
         if ($this->makeDir($path)) {
             $data = $this->getMeta($path);
         }
@@ -996,14 +962,14 @@ class io_qiniu extends io_api {
         list($ret, $err) = Qiniu_Put($upToken, $arr['object'] . $fname . '/', '', null);
 
         if ($err !== null) {
-            return array('error' => $err->Code . ':' . $err->Err);
+            return ['error' => $err->Code . ':' . $err->Err];
         } else {
             $ret['isdir'] = true;
         }
         $icoarr = $this->_formatMeta($ret, $arr);
 
         $folderarr = $this->getFolderByIcosdata($icoarr);
-        return array('folderarr' => $folderarr, 'icoarr' => $icoarr);
+        return ['folderarr' => $folderarr, 'icoarr' => $icoarr];
 
     }
 
@@ -1011,7 +977,7 @@ class io_qiniu extends io_api {
     public function getFolderName($name, $path) {
         static $i = 0;
         if (!$this->icosdatas) $this->icosdatas = $this->listFiles($path);
-        $names = array();
+        $names = [];
         foreach ($icosdatas as $value) {
             $names[] = $value['name'];
         }
@@ -1033,11 +999,11 @@ class io_qiniu extends io_api {
     private function saveCache($path, $data) {
         global $_G;
         $cachekey = 'qiniu_uploadID_' . md5($path);
-        C::t('cache')->insert(array(
+        C::t('cache')->insert([
             'cachekey' => $cachekey,
             'cachevalue' => serialize($data),
             'dateline' => $_G['timestamp'],
-        ), false, true);
+        ], false, true);
     }
 
     private function deleteCache($path) {
@@ -1046,7 +1012,7 @@ class io_qiniu extends io_api {
     }
 
     private function getPartInfo($content_range) {
-        $arr = array();
+        $arr = [];
         if (!$content_range) {
             $arr['ispart'] = false;
             $arr['iscomplete'] = true;
@@ -1067,7 +1033,7 @@ class io_qiniu extends io_api {
 
     public function uploadStream($file, $filename, $path, $relativePath, $content_range) {
         global $_G;
-        $data = array();
+        $data = [];
         $arr = $this->getPartInfo($content_range);
         if ($relativePath && ($arr['iscomplete'])) {
             $path1 = $path;
@@ -1079,11 +1045,9 @@ class io_qiniu extends io_api {
                 $re = $this->CreateFolder($path1, $value);
                 if (isset($re['error'])) {
                     return $re;
-                } else {
-                    if ($key == 0) {
-                        $data['icoarr'][] = $re['icoarr'];
-                        $data['folderarr'][] = $re['folderarr'];
-                    }
+                } elseif ($key == 0) {
+                    $data['icoarr'][] = $re['icoarr'];
+                    $data['folderarr'][] = $re['folderarr'];
                 }
                 $path1 = $path1 . $value . '/';
             }
@@ -1099,11 +1063,10 @@ class io_qiniu extends io_api {
                 if ($arr['iscomplete']) {
                     if (empty($re1['error'])) {
                         $data['icoarr'][] = $re1;
-                        return $data;
                     } else {
                         $data['error'] = $re1['error'];
-                        return $data;
                     }
+                    return $data;
                 } else {
                     return true;
                 }
@@ -1112,11 +1075,10 @@ class io_qiniu extends io_api {
             $re1 = $this->upload($file, $path, $filename);
             if (empty($re1['error'])) {
                 $data['icoarr'][] = $re1;
-                return $data;
             } else {
                 $data['error'] = $re1['error'];
-                return $data;
             }
+            return $data;
         }
         /*if($arr['ispart']){
 			if($arr['partnum']==1){
@@ -1157,7 +1119,7 @@ class io_qiniu extends io_api {
 		}*/
     }
 
-    public function upload($file, $path, $filename, $partinfo = array(), $ondup = 'overwrite') {
+    public function upload($file, $path, $filename, $partinfo = [], $ondup = 'overwrite') {
         global $_G;
         $path .= $filename;
         $partsize = 4 * 1024 * 1024;//默认分块大小4M;
@@ -1183,11 +1145,11 @@ class io_qiniu extends io_api {
             $filesize = filesize($cachefile);
 
             if (!$data = $this->getCache($path)) {
-                $data = array();
+                $data = [];
             }
             $partnum = count($data);
             if (!$handle = fopen($cachefile, 'rb')) {
-                return array('error' => lang('upload_error_not_file'));
+                return ['error' => lang('upload_error_not_file')];
             }
             $tried = 0;
             $tryTimes = 3;
@@ -1203,7 +1165,7 @@ class io_qiniu extends io_api {
                     $tried += 1;
                     continue;
                 }
-                if ($err !== null) return array('error' => $err->Code . ':' . $err->Err);
+                if ($err !== null) return ['error' => $err->Code . ':' . $err->Err];
                 $data[] = $blkputRet;
             }
 
@@ -1223,7 +1185,7 @@ class io_qiniu extends io_api {
                         $tried += 1;
                         continue;
                     }
-                    if ($err !== null) return array('error' => $err->Code . ':' . $err->Err);
+                    if ($err !== null) return ['error' => $err->Code . ':' . $err->Err];
                     $data[] = $blkputRet;
                 }
                 fclose($handle);
@@ -1231,7 +1193,7 @@ class io_qiniu extends io_api {
                 $putExtra->Progresses = $data;
                 list($ret, $err) = dzz_Qiniu_Rio_Mkfile($upToken, $arr['object'], $filesize, $putExtra);
                 if ($err !== null) {
-                    return array('error' => $err->Code . ':' . $err->Err);
+                    return ['error' => $err->Code . ':' . $err->Err];
                 }
                 $ret['putTime'] = TIMESTAMP * 10000000;
                 @unlink($cachefile);
@@ -1252,12 +1214,10 @@ class io_qiniu extends io_api {
             list($ret, $err) = Qiniu_PutFile($upToken, $arr['object'], $file, $putExtra);
 
             if ($err !== null) {
-                return array('error' => $err->Code . ':' . $err->Err);
+                return ['error' => $err->Code . ':' . $err->Err];
             }
             $ret['putTime'] = TIMESTAMP * 10000000;
-            $icoarr = $this->_formatMeta($ret, $arr);
-
-            return $icoarr;
+            return $this->_formatMeta($ret, $arr);
         }
     }
 
@@ -1286,12 +1246,12 @@ class io_qiniu extends io_api {
                         $data['success'] = true;
                         //echo $opath.'<br>';
                         $contents = $this->listFilesAll($client, $opath);
-                        $value = array();
+                        $value = [];
                         foreach ($contents as $key => $value) {
                             if ($value['path'] != $opath) {
                                 $data['contents'][$key] = $this->CopyTo($value['path'], $re['folderarr']['path'], $iscopy);
                             }
-                            $value = array();
+                            $value = [];
                         }
                     }
                 } else {
@@ -1311,14 +1271,11 @@ class io_qiniu extends io_api {
                         $data['newdata'] = $this->getMeta($path . $data['name']);
                         $data['success'] = true;
                     }
-                } else {
-
-                    if ($re = IO::multiUpload($opath, $path, $data['name'])) {
-                        if ($re['error']) $data['success'] = $re['error'];
-                        else {
-                            $data['newdata'] = $re;
-                            $data['success'] = true;
-                        }
+                } elseif ($re = IO::multiUpload($opath, $path, $data['name'])) {
+                    if ($re['error']) $data['success'] = $re['error'];
+                    else {
+                        $data['newdata'] = $re;
+                        $data['success'] = true;
                     }
                 }
                 break;
@@ -1327,7 +1284,7 @@ class io_qiniu extends io_api {
         return $data;
     }
 
-    public function multiUpload($opath, $path, $filename, $attach = array(), $ondup = "newcopy") {
+    public function multiUpload($opath, $path, $filename, $attach = [], $ondup = "newcopy") {
         global $_G;
         @set_time_limit(0);
         /*
@@ -1344,13 +1301,13 @@ class io_qiniu extends io_api {
         }
         $size = $data['size'];
         if (is_array($filepath = IO::getStream($opath))) {
-            return array('error' => $filepath['error']);
+            return ['error' => $filepath['error']];
         }
         if ($size < $partsize) {
             //获取文件内容
             $fileContent = '';
             if (!$handle = fopen($filepath, 'rb')) {
-                return array('error' => lang('open_file_error'));
+                return ['error' => lang('open_file_error')];
             }
             while (!feof($handle)) {
                 $fileContent .= fread($handle, 8192);
@@ -1360,9 +1317,9 @@ class io_qiniu extends io_api {
             return $this->upload_by_content($fileContent, $path, $filename);
         } else { //分片上传
             if (!$handle = fopen($filepath, 'rb')) {
-                return array('error' => lang('open_file_error'));
+                return ['error' => lang('open_file_error')];
             }
-            $partinfo = array('ispart' => true);
+            $partinfo = ['ispart' => true];
             $cachefile = $_G['setting']['attachdir'] . './cache/' . md5($opath);
             while (!feof($handle)) {
                 file_put_contents($cachefile, fread($handle, 8192), FILE_APPEND);
@@ -1374,4 +1331,4 @@ class io_qiniu extends io_api {
     }
 }
 
-?>
+

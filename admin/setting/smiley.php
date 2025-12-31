@@ -11,21 +11,21 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 include libfile('function/cache');
 $navtitle = lang('expression_class') . ' - ' . lang('appname');
-$imgextarray = array('jpg', 'gif', 'png');
+$imgextarray = ['jpg', 'gif', 'png'];
 $operation = trim($_GET['operation']);
 $id = intval($_GET['id']);
 $op = isset($_GET['op']) ? $_GET['op'] : '';
 if (!$operation) {
     if (!submitcheck('smileysubmit')) {
         $operation = $op;
-        $dirfilter = $list = array();
+        $dirfilter = $list = [];
         foreach (C::t('imagetype')->fetch_all_by_type('smiley') as $type) {
             $type['smiliesnum'] = C::t('smiley')->count_by_type_typeid('smiley', $type['typeid']);
             $list[] = $type;
             $dirfilter[] = $type['directory'];
             $smtypes++;
         }
-        $list_no = array();
+        $list_no = [];
         $smdir = DZZ_ROOT . './static/image/smiley';
         $smtypedir = dir($smdir);
         $dirnum = 0;
@@ -41,7 +41,7 @@ if (!$operation) {
 
                     }
                 }
-                $list_no[$dirnum] = array('entry' => $entry, 'displayorder' => $smtypes + $dirnum + 1, 'available' => 0, 'name' => '', 'smnums' => $smnums, 'smilies' => $smilies);
+                $list_no[$dirnum] = ['entry' => $entry, 'displayorder' => $smtypes + $dirnum + 1, 'available' => 0, 'name' => '', 'smnums' => $smnums, 'smilies' => $smilies];
                 $dirnum++;
             }
         }
@@ -49,7 +49,7 @@ if (!$operation) {
         if (is_array($_GET['namenew'])) {
             foreach ($_GET['namenew'] as $id => $val) {
                 $_GET['availablenew'][$id] = $_GET['availablenew'][$id] && $_GET['smiliesnum'][$id] > 0 ? 1 : 0;
-                C::t('imagetype')->update($id, array('available' => $_GET['availablenew'][$id], 'name' => dhtmlspecialchars(trim($val)), 'displayorder' => $_GET['displayordernew'][$id]));
+                C::t('imagetype')->update($id, ['available' => $_GET['availablenew'][$id], 'name' => dhtmlspecialchars(trim($val)), 'displayorder' => $_GET['displayordernew'][$id]]);
             }
         }
 
@@ -66,22 +66,22 @@ if (!$operation) {
                     $smurl = './static/image/smiley/' . $_GET['newdirectory'][$key];
                     $smdir = DZZ_ROOT . $smurl;
                     if (!is_dir($smdir)) {
-                        showmessage(lang('smilies_directory_invalid', array('smurl' => $smurl)), dreferer());
+                        showmessage(lang('smilies_directory_invalid', ['smurl' => $smurl]), dreferer());
                     }
                     $newavailable[$key] = $_GET['newavailable'][$key] && $smnums[$key] > 0 ? 1 : 0;
-                    $data = array('available' => $_GET['newavailable'][$key], 'name' => dhtmlspecialchars($val), 'type' => 'smiley', 'displayorder' => $_GET['newdisplayorder'][$key], 'directory' => $_GET['newdirectory'][$key],);
+                    $data = ['available' => $_GET['newavailable'][$key], 'name' => dhtmlspecialchars($val), 'type' => 'smiley', 'displayorder' => $_GET['newdisplayorder'][$key], 'directory' => $_GET['newdirectory'][$key],];
                     $newSmileId = C::t('imagetype')->insert($data, true);
 
                     $smilies = update_smiles($smdir, $newSmileId, $imgextarray);
                     if ($smilies['smilies']) {
                         addsmilies($newSmileId, $smilies['smilies']);
-                        updatecache(array('smilies', 'smileycodes', 'smilies_js'));
+                        updatecache(['smilies', 'smileycodes', 'smilies_js']);
                     }
                 }
             }
         }
 
-        updatecache(array('smileytypes', 'smilies', 'smileycodes', 'smilies_js'));
+        updatecache(['smileytypes', 'smilies', 'smileycodes', 'smilies_js']);
         showmessage('do_success', dreferer());
     }
 } elseif ($operation == 'update' && $id) {
@@ -91,7 +91,7 @@ if (!$operation) {
         $smurl = './static/image/smiley/' . $smtype['directory'];
         $smdir = DZZ_ROOT . $smurl;
         if (!is_dir($smdir)) {
-            showmessage(lang('smilies_directory_invalid', array('smurl' => $smurl)), MOD_URL . '&op=smiley');
+            showmessage(lang('smilies_directory_invalid', ['smurl' => $smurl]), MOD_URL . '&op=smiley');
         }
     }
 
@@ -99,17 +99,17 @@ if (!$operation) {
 
     if ($smilies['smilies']) {
         addsmilies($id, $smilies['smilies']);
-        updatecache(array('smilies', 'smileycodes', 'smilies_js'));
-        showmessage(lang('smilies_update_succeed', array('smurl' => $smurl, 'num' => $smilies['num'], 'typename' => $smtype['name'])), MOD_URL . '&op=smiley');
+        updatecache(['smilies', 'smileycodes', 'smilies_js']);
+        showmessage(lang('smilies_update_succeed', ['smurl' => $smurl, 'num' => $smilies['num'], 'typename' => $smtype['name']]), MOD_URL . '&op=smiley');
     } else {
-        showmessage(lang('smilies_update_error', array('smurl' => $smurl)), MOD_URL . '&op=smiley');
+        showmessage(lang('smilies_update_error', ['smurl' => $smurl]), MOD_URL . '&op=smiley');
     }
 } elseif ($operation == 'edit' && $id) {
     $smtype = C::t('imagetype')->fetch($id);
     $smurl = './static/image/smiley/' . $smtype['directory'];
     $smdir = DZZ_ROOT . $smurl;
     if (!is_dir($smdir)) {
-        showmessage(lang('smilies_directory_invalid', array('smurl' => $smurl)), dreferer());
+        showmessage(lang('smilies_directory_invalid', ['smurl' => $smurl]), dreferer());
     }
     if (!submitcheck('editsubmit')) {
         $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
@@ -121,7 +121,7 @@ if (!$operation) {
 
         $smileynum = 1;
         $smilies = '';
-        $list = array();
+        $list = [];
         foreach (C::t('smiley')->fetch_all_by_typeid_type($id, 'smiley', $start_limit, $smiliesperpage) as $smiley) {
             $imgfilter[] = $smiley['url'];
             $list[$smileynum] = $smiley;
@@ -135,7 +135,7 @@ if (!$operation) {
             C::t('smiley')->delete($_GET['delete']);
         }
 
-        $unsfast = array();
+        $unsfast = [];
         if (is_array($_GET['displayorder'])) {
             foreach ($_GET['displayorder'] as $key => $val) {
                 if (!in_array($key, $_GET['fast'])) {
@@ -143,7 +143,7 @@ if (!$operation) {
                 }
                 $_GET['displayorder'][$key] = intval($_GET['displayorder'][$key]);
                 $_GET['code'][$key] = trim($_GET['code'][$key]);
-                $data = array('displayorder' => $_GET['displayorder'][$key], 'title' => $_GET['title'][$key]);
+                $data = ['displayorder' => $_GET['displayorder'][$key], 'title' => $_GET['title'][$key]];
                 if (!empty($_GET['code'][$key])) {
                     $data['code'] = $_GET['code'][$key];
                 }
@@ -151,17 +151,17 @@ if (!$operation) {
             }
         }
 
-        updatecache(array('smilies', 'smileycodes', 'smilies_js'));
+        updatecache(['smilies', 'smileycodes', 'smilies_js']);
         showmessage('smilies_edit_succeed', dreferer());
 
     }
 }
-function addsmilies($typeid, $smilies = array()) {
+function addsmilies($typeid, $smilies = []) {
     if (is_array($smilies)) {
-        $ids = array();
+        $ids = [];
         foreach ($smilies as $smiley) {
             if ($smiley['available']) {
-                $data = array('type' => 'smiley', 'displayorder' => $smiley['displayorder'], 'typeid' => $typeid, 'code' => '', 'url' => $smiley['url'],);
+                $data = ['type' => 'smiley', 'displayorder' => $smiley['displayorder'], 'typeid' => $typeid, 'code' => '', 'url' => $smiley['url'],];
                 $ids[] = C::t('smiley')->insert($data, true);
             }
         }
@@ -173,21 +173,21 @@ function addsmilies($typeid, $smilies = array()) {
 
 function update_smiles($smdir, $id, &$imgextarray) {
     $num = 0;
-    $smilies = $imgfilter = array();
+    $smilies = $imgfilter = [];
     foreach (C::t('smiley')->fetch_all_by_typeid_type($id, 'smiley') as $img) {
         $imgfilter[] = $img['url'];
     }
     $smiliesdir = dir($smdir);
     while ($entry = $smiliesdir->read()) {
         if (in_array(strtolower(fileext($entry)), $imgextarray) && !in_array($entry, $imgfilter) && preg_match("/^[\w\-\.\[\]\(\)\<\> &]+$/", substr($entry, 0, strrpos($entry, '.'))) && strlen($entry) < 30 && is_file($smdir . '/' . $entry)) {
-            $smilies[] = array('available' => 1, 'displayorder' => 0, 'url' => $entry);
+            $smilies[] = ['available' => 1, 'displayorder' => 0, 'url' => $entry];
             $num++;
         }
     }
     $smiliesdir->close();
 
-    return array('smilies' => $smilies, 'num' => $num);
+    return ['smilies' => $smilies, 'num' => $num];
 }
 
 include template('smiley');
-?>
+

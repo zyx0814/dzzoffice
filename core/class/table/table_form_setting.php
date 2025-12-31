@@ -13,7 +13,7 @@ if (!defined('IN_DZZ')) {
 }
 
 class table_form_setting extends dzz_table {
-    private $type = array('input', 'textarea', 'time', 'select', 'multiselect', 'user');
+    private $type = ['input', 'textarea', 'time', 'select', 'multiselect', 'user'];
 
     public function __construct() {
 
@@ -55,9 +55,9 @@ class table_form_setting extends dzz_table {
             case 'textarea':
                 $setarr['length'] = intval($form['length']);
                 $setarr['regex'] = trim($form['regex']);
-                $extra = array(
+                $extra = [
                     'hint' => getstr($form['hint']),
-                );
+                ];
                 $setarr['extra'] = serialize($extra);
                 break;
             case 'select':
@@ -69,11 +69,11 @@ class table_form_setting extends dzz_table {
                 break;
             case 'time':
                 $setarr['multiple'] = 0;
-                $extra = array(
+                $extra = [
                     'maxdate' => $form['maxdate'] ? strtotime($form['maxdate']) : 0,
                     'mindate' => $form['mindate'] ? strtotime($form['mindate']) : 0,
                     'dateformat' => trim($form['dateformat'])
-                );
+                ];
                 $setarr['extra'] = serialize($extra);
                 break;
 
@@ -101,10 +101,10 @@ class table_form_setting extends dzz_table {
     }
 
     /*获取所有表单项*/
-    public function fetch_all($flags = array(), $force_from_db = false) {
-        $data = array();
+    public function fetch_all($flags = [], $force_from_db = false) {
+        $data = [];
         $sql = 1;
-        $param = array($this->_table);
+        $param = [$this->_table];
         if ($flags) {
             $sql .= " and flag in (%n)";
             $param[] = $flags;

@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => '系统日志',
     'logs' => '运行记录',
     'systemlog_setting' => '设置',
@@ -9,6 +9,5 @@ $lang = array(
     'logtype' => '日志类型',
     'logflag' => '日志标识',
 
-);
+];
 
-?>

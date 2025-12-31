@@ -9,7 +9,7 @@ $operation = isset($_GET['operation']) ? trim($_GET['operation']) : '';
 //获取文件夹信息
 if ($operation == 'createFolder') {//新建文件夹
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
-    if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
+    if(!$fid) exit(json_encode(['error'=>lang('no_target_folderID')]));
     $perm = 0;
     $name = !empty($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
     $fname = IO::name_filter(getstr($name, 80));
@@ -20,7 +20,7 @@ if ($operation == 'createFolder') {//新建文件夹
             $arr['msg'] = 'success';
         }
     } else {
-        $arr = array();
+        $arr = [];
         $arr['error'] = lang('failure_newfolder');
     }
     exit(json_encode($arr));

@@ -15,7 +15,7 @@ define('NOROBOT', TRUE);
 $path = empty($_GET['icoid']) ? trim($_GET['path']) : $_GET['icoid'];
 $filename = $_GET['filename'] ?? '';
 $patharr = explode(',', $path);
-$paths = array();
+$paths = [];
 foreach ($patharr as $path) {
     if ($path = dzzdecode($path)) {
         $paths[] = $path;

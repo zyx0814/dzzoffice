@@ -9,22 +9,22 @@ if (!C::t('folder')->check_home_by_uid($uid)) {
     C::t('folder')->fetch_home_by_uid($uid);
 }
 $id = isset($_GET['id']) ? $_GET['id'] : '';
-$operation = $_GET['operation'] ? $_GET['operation'] : '';
+$operation = $_GET['operation'] ?: '';
 $range = isset($_GET['range']) ? trim($_GET['range']) : '';//指定范围
-$data = array();
+$data = [];
 if ($operation == 'get_children') {
     if ($id == 'group') {
         $groupinfo = C::t('organization')->fetch_group_by_uid($uid, true);
         foreach ($groupinfo as $v) {
             $children = (C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) ? true : false;
-            $arr = array(
+            $arr = [
                 'id' => 'g_' . $v['orgid'],
                 'type' => 'group',
                 'children' => $children,
-                'li_attr' => array('hashs' => 'group&gid=' . $v['orgid'])
-            );
+                'li_attr' => ['hashs' => 'group&gid=' . $v['orgid']]
+            ];
             if (intval($v['aid']) == 0) {
-                $arr['text'] = avatar_group($v['orgid'], array($v['orgid'] => array('aid' => $v['aid'], 'orgname' => $v['orgname']))) . $v['orgname'];
+                $arr['text'] = avatar_group($v['orgid'], [$v['orgid'] => ['aid' => $v['aid'], 'orgname' => $v['orgname']]]) . $v['orgname'];
                 $arr['icon'] = false;
             } else {
                 $arr['text'] = $v['orgname'];
@@ -38,16 +38,16 @@ if ($operation == 'get_children') {
         $gid = intval(str_replace('g_', '', $id));
         $groupinfo = C::t('organization')->fetch($gid);
         if ($groupinfo && ($groupinfo['diron'] == 1 || C::t('organization_admin')->chk_memberperm($gid, $uid))) {
-            foreach (C::t('folder')->fetch_folder_by_pfid($groupinfo['fid'], array('fname', 'fid')) as $val) {
+            foreach (C::t('folder')->fetch_folder_by_pfid($groupinfo['fid'], ['fname', 'fid']) as $val) {
                 $children = (C::t('resources')->fetch_folder_num_by_pfid($val['fid']) > 0) ? true : false;
-                $data[] = array(
+                $data[] = [
                     'id' => 'f_' . $val['fid'],
                     'text' => $val['fname'],
                     'type' => 'folder',
                     'children' => $children,
-                    'li_attr' => array(
-                        'hashs' => 'group&do=file&gid=' . $groupinfo['orgid'] . '&fid=' . $val['fid'])
-                );
+                    'li_attr' => [
+                        'hashs' => 'group&do=file&gid=' . $groupinfo['orgid'] . '&fid=' . $val['fid']]
+                ];
             }
         }
         exit(json_encode($data));
@@ -55,18 +55,18 @@ if ($operation == 'get_children') {
         $gid = intval(str_replace('gid_', '', $id));
         $orginfo = C::t('organization')->fetch($gid);
         if ($orginfo && ($orginfo['diron'] == 1 || C::t('organization_admin')->chk_memberperm($gid, $uid))) {
-            foreach (C::t('folder')->fetch_folder_by_pfid($orginfo['fid'], array('fname', 'fid')) as $val) {
+            foreach (C::t('folder')->fetch_folder_by_pfid($orginfo['fid'], ['fname', 'fid']) as $val) {
                 $children = (C::t('resources')->fetch_folder_num_by_pfid($val['fid']) > 0) ? true : false;
-                $arr = array(
+                $arr = [
                     'id' => 'f_' . $val['fid'],
                     'text' => $val['fname'],
                     'type' => 'folder',
                     'children' => $children,
-                    'li_attr' => array(
+                    'li_attr' => [
                         'href' => DZZSCRIPT . '?mod=' . MOD_NAME . '&op=group',
                         'hashs' => 'group&do=file&gid=' . $orginfo['orgid'] . '&fid=' . $val['fid']
-                    )
-                );
+                    ]
+                ];
                 $data[] = $arr;
             }
         }
@@ -80,14 +80,14 @@ if ($operation == 'get_children') {
                 } else {
                     $children = false;
                 }
-                $arr = array(
+                $arr = [
                     'id' => 'gid_' . $val['orgid'],
                     'type' => 'department',
                     'children' => $children,
-                    'li_attr' => array('hashs' => 'group&gid=' . $val['orgid'], 'args' => 'gid_' . $val['orgid'])
-                );
+                    'li_attr' => ['hashs' => 'group&gid=' . $val['orgid'], 'args' => 'gid_' . $val['orgid']]
+                ];
                 if (intval($val['aid']) == 0) {
-                    $arr['text'] = avatar_group($val['orgid'], array($val['orgid'] => array('aid' => $val['aid'], 'orgname' => $val['orgname']))) . $val['orgname'];
+                    $arr['text'] = avatar_group($val['orgid'], [$val['orgid'] => ['aid' => $val['aid'], 'orgname' => $val['orgname']]]) . $val['orgname'];
                     $arr['icon'] = false;
                 } else {
                     $arr['text'] = $val['orgname'];
@@ -99,37 +99,37 @@ if ($operation == 'get_children') {
         exit(json_encode($data));
     } elseif (preg_match('/f_\d+/', $id)) {
         $fid = intval(str_replace('f_', '', $id));
-        foreach (C::t('folder')->fetch_folder_by_pfid($fid, array('fname', 'fid', 'gid')) as $val) {
+        foreach (C::t('folder')->fetch_folder_by_pfid($fid, ['fname', 'fid', 'gid']) as $val) {
             $children = (C::t('resources')->fetch_folder_num_by_pfid($val['fid']) > 0) ? true : false;
-            $data[] = array(
+            $data[] = [
                 'id' => 'f_' . $val['fid'],
                 'text' => $val['fname'],
                 'type' => 'folder',
                 'children' => $children,
-                'li_attr' => array(
+                'li_attr' => [
                     'href' => DZZSCRIPT . '?mod=' . MOD_NAME . '&op=group',
-                    'hashs' => 'group&do=file&gid=' . $val['gid'] . '&fid=' . $val['fid'])
-            );
+                    'hashs' => 'group&do=file&gid=' . $val['gid'] . '&fid=' . $val['fid']]
+            ];
         }
         exit(json_encode($data));
     } elseif (preg_match('/u_\d+/', $id)) {
         $fid = intval(str_replace('u_', '', $id));
-        foreach (C::t('folder')->fetch_folder_by_pfid($fid, array('fname', 'fid')) as $v) {
+        foreach (C::t('folder')->fetch_folder_by_pfid($fid, ['fname', 'fid']) as $v) {
             $children = (C::t('resources')->fetch_folder_num_by_pfid($v['fid']) > 0) ? true : false;
-            $data[] = array(
+            $data[] = [
                 'id' => 'u_' . $v['fid'],
                 'text' => $v['fname'],
                 'type' => 'folder',
                 'children' => $children,
-                'li_attr' => array(
+                'li_attr' => [
                     'hashs' => 'home&do=file&fid=' . $v['fid']
-                )
-            );
+                ]
+            ];
         }
         exit(json_encode($data));
     } else {
         $explorer_setting = get_resources_some_setting();
-        $selrangearr = array();
+        $selrangearr = [];
         if ($range) {
             $selrangearr = explode(',', $range);
         }
@@ -138,13 +138,13 @@ if ($operation == 'get_children') {
             $folders = C::t('folder')->fetch_home_by_uid();
             $fid = $folders['fid'];
             $children = (C::t('resources')->fetch_folder_num_by_pfid($fid) > 0) ? true : false;
-            $data[] = array(
+            $data[] = [
                 'id' => 'u_' . $fid,
                 'text' => lang('explorer_user_root_dirname'),
                 'type' => 'home',
                 'children' => $children,
-                'li_attr' => array('hashs' => "home&fid=$fid", 'flag' => 'home')
-            );
+                'li_attr' => ['hashs' => "home&fid=$fid", 'flag' => 'home']
+            ];
         }
         if ($explorer_setting['orgonperm'] && (!$rangeval || ($rangeval && in_array('org', $selrangearr)))) {
             $orgs = C::t('organization')->fetch_all_orggroup($uid);
@@ -155,14 +155,14 @@ if ($operation == 'get_children') {
                     $children = false;
                 }
                 if (!empty($v)) {
-                    $arr = array(
+                    $arr = [
                         'id' => 'gid_' . $v['orgid'],
                         'type' => ($v['pfid'] > 0 ? 'department' : 'organization'),
                         'children' => $children,
-                        'li_attr' => array('hashs' => 'group&gid=' . $v['orgid'], 'args' => 'gid_' . $v['orgid'])
-                    );
+                        'li_attr' => ['hashs' => 'group&gid=' . $v['orgid'], 'args' => 'gid_' . $v['orgid']]
+                    ];
                     if (intval($v['aid']) == 0) {
-                        $arr['text'] = avatar_group($v['orgid'], array($v['orgid'] => array('aid' => $v['aid'], 'orgname' => $v['orgname']))) . $v['orgname'];
+                        $arr['text'] = avatar_group($v['orgid'], [$v['orgid'] => ['aid' => $v['aid'], 'orgname' => $v['orgname']]]) . $v['orgname'];
                         $arr['icon'] = false;
                     } else {
                         $arr['text'] = $v['orgname'];
@@ -175,23 +175,23 @@ if ($operation == 'get_children') {
         if ($explorer_setting['grouponperm'] && (!$rangeval || ($rangeval && in_array('group', $selrangearr)))) {
             $groups = C::t('organization')->fetch_group_by_uid($uid, true);
             $children = (count($groups) > 0) ? true : false;
-            $data[] = array(
+            $data[] = [
                 'id' => 'group',
                 'text' => '群组',
                 'type' => 'group',
                 'children' => $children,
-                'li_attr' => array('hashs' => '')
-            );
+                'li_attr' => ['hashs' => '']
+            ];
         }
     }
     exit(json_encode($data));
 } elseif ($operation == 'getParentsArr') {//获取
     $fid = intval($_GET['fid']);
     $gid = intval($_GET['gid']);
-    $ret = array();
+    $ret = [];
     if ($fid) {
         $subfix = '';
-        $org = array();
+        $org = [];
         foreach (C::t('folder')->fetch_all_parent_by_fid($fid) as $value) {
             if (empty($subfix)) {
                 if ($value['gid']) {//是部门或者群组
@@ -214,7 +214,7 @@ if ($operation == 'get_children') {
             }
         }
         if ($subfix == 'g_') {//群组的话，需要增加顶级"群组"
-            array_push($arr, 'group');
+            $arr[] = 'group';
         }
         $arr = array_reverse($arr);
     } elseif ($gid) {

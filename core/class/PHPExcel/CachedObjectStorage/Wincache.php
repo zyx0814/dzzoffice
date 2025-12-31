@@ -240,7 +240,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 		//	Flush the WinCache cache
 		$this->__destruct();
 
-		$this->_cellCache = array();
+		$this->_cellCache = [];
 
 		//	detach ourself from the worksheet, so that it can then delete this object successfully
 		$this->_parent = null;

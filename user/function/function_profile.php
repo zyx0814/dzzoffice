@@ -11,19 +11,19 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-function profile_setting($fieldid, $space = array(), $showstatus = false, $ignoreunchangable = false, $ignoreshowerror = false) {
+function profile_setting($fieldid, $space = [], $showstatus = false, $ignoreunchangable = false, $ignoreshowerror = false) {
     global $_G;
     if (empty($_G['cache']['profilesetting'])) {
         loadcache('profilesetting');
     }
     $field = $_G['cache']['profilesetting'][$fieldid];
-    if (empty($field) || !$field['available'] || in_array($fieldid, array('uid', 'constellation', 'zodiac', 'birthmonth', 'birthyear'))) {
+    if (empty($field) || !$field['available'] || in_array($fieldid, ['uid', 'constellation', 'zodiac', 'birthmonth', 'birthyear'])) {
         return '';
     }
     if ($showstatus) {
         $uid = intval($space['uid']);
         if ($uid && !isset($_G['profile_verifys'][$uid])) {
-            $_G['profile_verifys'][$uid] = array();
+            $_G['profile_verifys'][$uid] = [];
             if ($value = C::t('user_verify_info')->fetch_by_uid_verifytype($uid, 0)) {
                 $fields = dunserialize($value['field']);
                 foreach ($fields as $key => $fvalue) {
@@ -74,9 +74,9 @@ function profile_setting($fieldid, $space = array(), $showstatus = false, $ignor
             $birthmonthhtml .= "<option value=\"$i\"$selectstr>$i</option>";
         }
         $birthdayhtml = '';
-        if (empty($space['birthmonth']) || in_array($space['birthmonth'], array(1, 3, 5, 7, 8, 10, 12))) {
+        if (empty($space['birthmonth']) || in_array($space['birthmonth'], [1, 3, 5, 7, 8, 10, 12])) {
             $days = 31;
-        } elseif (in_array($space['birthmonth'], array(4, 6, 9, 11))) {
+        } elseif (in_array($space['birthmonth'], [4, 6, 9, 11])) {
             $days = 30;
         } elseif ($space['birthyear'] && (($space['birthyear'] % 400 == 0) || ($space['birthyear'] % 4 == 0 && $space['birthyear'] % 400 != 0))) {
             $days = 29;
@@ -107,7 +107,7 @@ function profile_setting($fieldid, $space = array(), $showstatus = false, $ignor
         if ($field['unchangeable'] && $space[$fieldid] > 0) {
             return '<p class="form-control-static profile profile-' . $fieldid . '">' . lang('gender_' . intval($space[$fieldid])) . '</span><input type="hidden" name="' . $fieldid . '" value="' . $space[$fieldid] . '" />';
         }
-        $selected = array($space[$fieldid] => ' selected="selected"');
+        $selected = [$space[$fieldid] => ' selected="selected"'];
         $html = '<select name="gender" id="gender" class="form-select form-control input-sm  profile profile-' . $fieldid . '" >';
         if ($field['unchangeable']) {
             $html .= '<option value="">' . lang('gender') . '</option>';
@@ -134,7 +134,7 @@ function profile_setting($fieldid, $space = array(), $showstatus = false, $ignor
             . '<div class="dropdown profile-group-department"  >'
             . '	  <input id="sel_' . $fieldid . '"  type="hidden" name="' . $fieldid . '"  value="' . (!empty($space[$fieldid]) ? $space[$fieldid] : '') . '" />'
             . '	  <button type="button" id="' . $fieldid . '_Menu" class="btn btn-default dropdown-toggle" data-toggle="dropdown">'
-            . '	' . ($space['department_tree'] ? $space['department_tree'] : lang('please_select_a_organization_or_department')) . ' <span class="caret"></span>'
+            . '	' . ($space['department_tree'] ?: lang('please_select_a_organization_or_department')) . ' <span class="caret"></span>'
             . '  </button>'
             . '  <div id="' . $fieldid . '_dropdown_menu" class="dropdown-menu org-sel-box" role="menu" aria-labelledby="' . $fieldid . '_Menu">'
             . '	   <iframe name="' . $fieldid . '_iframe" class="org-sel-box-iframe" src="index.php?mod=system&op=orgtree&template=1&ctrlid=' . $fieldid . '&nouser=1&range=1" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" allowtransparency="true" ></iframe>'
@@ -171,8 +171,7 @@ function profile_setting($fieldid, $space = array(), $showstatus = false, $ignor
             $space[$fieldid] = explode("\n", $space[$fieldid]);
             $html .= '<div class="class="profile profile-' . $fieldid . '" >';
             foreach ($field['choices'] as $op) {
-                $html .= ''
-                    . "<label class=\"checkbox-inline\"><input type=\"checkbox\" name=\"{$fieldid}[]\" id=\"$fieldid\"  value=\"$op\" " . (in_array($op, $space[$fieldid]) ? ' checked="checked"' : '') . " />"
+                $html .= "<label class=\"checkbox-inline\"><input type=\"checkbox\" name=\"{$fieldid}[]\" id=\"$fieldid\"  value=\"$op\" " . (in_array($op, $space[$fieldid]) ? ' checked="checked"' : '') . " />"
                     . "$op</label>";
             }
             $html .= '</div>';
@@ -180,8 +179,7 @@ function profile_setting($fieldid, $space = array(), $showstatus = false, $ignor
             $field['choices'] = explode("\n", $field['choices']);
             $html .= '<div class="profile profile-' . $fieldid . '" >';
             foreach ($field['choices'] as $op) {
-                $html .= ''
-                    . "<label class=\"radio-inline\"><input type=\"radio\" name=\"{$fieldid}\"  value=\"$op\" " . ($op == $space[$fieldid] ? ' checked="checked"' : '') . " />"
+                $html .= "<label class=\"radio-inline\"><input type=\"radio\" name=\"{$fieldid}\"  value=\"$op\" " . ($op == $space[$fieldid] ? ' checked="checked"' : '') . " />"
                     . "$op</label>";
             }
             $html .= '</div>';
@@ -217,7 +215,7 @@ function profile_setting($fieldid, $space = array(), $showstatus = false, $ignor
     return $html;
 }
 
-function profile_check($fieldid, &$value, $space = array()) {
+function profile_check($fieldid, &$value, $space = []) {
     global $_G;
 
     if (empty($_G['cache']['profilesetting'])) {
@@ -242,7 +240,7 @@ function profile_check($fieldid, &$value, $space = array()) {
         return false;
     }
 
-    if (in_array($fieldid, array('birthday', 'birthmonth', 'birthyear', 'gender'))) {
+    if (in_array($fieldid, ['birthday', 'birthmonth', 'birthyear', 'gender'])) {
         $value = intval($value);
         return true;
     }
@@ -254,13 +252,13 @@ function profile_check($fieldid, &$value, $space = array()) {
         if ($field['size'] && strlen($value) > $field['size']) {
             return false;
         } else {
-            $field['validate'] = !empty($field['validate']) ? $field['validate'] : ($_G['profilevalidate'][$fieldid] ? $_G['profilevalidate'][$fieldid] : '');
+            $field['validate'] = !empty($field['validate']) ? $field['validate'] : ($_G['profilevalidate'][$fieldid] ?: '');
             if ($field['validate'] && !preg_match($field['validate'], $value)) {
                 return false;
             }
         }
     } elseif ($field['formtype'] == 'checkbox' || $field['formtype'] == 'list') {
-        $arr = array();
+        $arr = [];
         foreach ($value as $op) {
             if (in_array($op, $field['choices'])) {
                 $arr[] = $op;
@@ -278,13 +276,13 @@ function profile_check($fieldid, &$value, $space = array()) {
     return true;
 }
 
-function profile_show($fieldid, $space = array(), $getalone = false) {
+function profile_show($fieldid, $space = [], $getalone = false) {
     global $_G;
     if (empty($_G['cache']['profilesetting'])) {
         loadcache('profilesetting');
     }
     $field = $_G['cache']['profilesetting'][$fieldid];
-    if (empty($field) || !$field['available'] || (!$getalone && in_array($fieldid, array('uid', 'birthmonth', 'birthyear')))) {
+    if (empty($field) || !$field['available'] || (!$getalone && in_array($fieldid, ['uid', 'birthmonth', 'birthyear']))) {
         return false;
     }
 
@@ -309,14 +307,14 @@ function profile_show($fieldid, $space = array(), $getalone = false) {
 }
 
 
-function showdistrict($values, $elems = array(), $container = 'districtbox', $showlevel = null, $containertype = 'birth') {
+function showdistrict($values, $elems = [], $container = 'districtbox', $showlevel = null, $containertype = 'birth') {
     $html = '';
     if (!preg_match("/^[A-Za-z0-9_]+$/", $container)) {
         return $html;
     }
     $showlevel = !empty($showlevel) ? intval($showlevel) : count($values);
-    $showlevel = $showlevel <= 4 ? $showlevel : 4;
-    $upids = array(0);
+    $showlevel = min($showlevel, 4);
+    $upids = [0];
     for ($i = 0; $i < $showlevel; $i++) {
         if (!empty($values[$i])) {
             $upids[] = intval($values[$i]);
@@ -327,16 +325,16 @@ function showdistrict($values, $elems = array(), $container = 'districtbox', $sh
             break;
         }
     }
-    $options = array(1 => array(), 2 => array(), 3 => array(), 4 => array());
+    $options = [1 => [], 2 => [], 3 => [], 4 => []];
     if ($upids && is_array($upids)) {
         foreach (C::t('district')->fetch_all_by_upid($upids, 'displayorder', 'ASC') as $value) {
-            if ($value['level'] == 1 && ($value['id'] != $values[0] && ($value['usetype'] == 0 || !(($containertype == 'birth' && in_array($value['usetype'], array(1, 3))) || ($containertype != 'birth' && in_array($value['usetype'], array(2, 3))))))) {
+            if ($value['level'] == 1 && ($value['id'] != $values[0] && ($value['usetype'] == 0 || !(($containertype == 'birth' && in_array($value['usetype'], [1, 3])) || ($containertype != 'birth' && in_array($value['usetype'], [2, 3])))))) {
                 continue;
             }
-            $options[$value['level']][] = array($value['id'], $value['name']);
+            $options[$value['level']][] = [$value['id'], $value['name']];
         }
     }
-    $names = array('province', 'city', 'district', 'community');
+    $names = ['province', 'city', 'district', 'community'];
     for ($i = 0; $i < 4; $i++) {
         if (!empty($elems[$i])) {
             $elems[$i] = dhtmlspecialchars(preg_replace("/[^\[A-Za-z0-9_\]]/", '', $elems[$i]));
@@ -366,7 +364,7 @@ function countprofileprogress($uid = 0) {
     global $_G;
 
     $uid = intval(!$uid ? $_G['uid'] : $uid);
-    $fields = array();
+    $fields = [];
     if (empty($_G['cache']['profilesetting'])) {
         require_once libfile('function/cache');
         updatecache('profilesetting');
@@ -385,10 +383,10 @@ function countprofileprogress($uid = 0) {
     }
 
     $progress = floor($complete / count($fields) * 100);
-    if (DB::result_first("select COUNT(*) from %t where uid=%d", array('user_status', $uid))) {
-        C::t('user_status')->update($uid, array('profileprogress' => $progress > 100 ? 100 : $progress), 'UNBUFFERED');
+    if (DB::result_first("select COUNT(*) from %t where uid=%d", ['user_status', $uid])) {
+        C::t('user_status')->update($uid, ['profileprogress' => $progress > 100 ? 100 : $progress], 'UNBUFFERED');
     } else {
-        C::t('user_status')->insert(array('uid' => $uid, 'regip' => $_G['clientip'], 'lastip' => $_G['clientip'], 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP, 'profileprogress' => $progress > 100 ? 100 : $progress,));
+        C::t('user_status')->insert(['uid' => $uid, 'regip' => $_G['clientip'], 'lastip' => $_G['clientip'], 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP, 'profileprogress' => $progress > 100 ? 100 : $progress,]);
     }
 
     return $progress;
@@ -434,7 +432,7 @@ function profile_privacy_check($uid, $privacy) {
             $_G[$var] = true;
             break;
         case 1: //本部门,不包括下级部门
-            $orgids = $vorgids = array();
+            $orgids = $vorgids = [];
             //查看资料用户所在的部门
             $vorgids = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
             //资料用户所在的部门
@@ -446,19 +444,19 @@ function profile_privacy_check($uid, $privacy) {
 
             break;
         case 2: //本机构
-            $orgids = $vorgids = array();
+            $orgids = $vorgids = [];
             //查看资料用户所在的部门
             $vorgids = C::t('organization_user')->fetch_orgids_by_uid($_G['uid']);
             //资料用户所在的部门
             $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid);
             if (!$vorgids && !$orgids) return ($_G[$var] = true); //都未加入部门，视为同机构
             //获取查看资料用户所属的机构数组
-            $vtops = array();
+            $vtops = [];
             foreach ($vorgids as $orgid) {
                 $vtops[] = C::t('organization')->getTopOrgid($orgid);
             }
             //获取资料用户所属的机构数组
-            $tops = array();
+            $tops = [];
             foreach ($orgids as $orgid) {
                 $tops[] = C::t('organization')->getTopOrgid($orgid);
             }

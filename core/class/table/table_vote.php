@@ -27,13 +27,13 @@ class table_vote extends dzz_table {
     }
 
     public function fetch_by_id_idtype($id, $idtype) {
-        $voteid = DB::result_first("select voteid from %t where id=%d and idtype=%s", array($this->_table, $id, $idtype));
+        $voteid = DB::result_first("select voteid from %t where id=%d and idtype=%s", [$this->_table, $id, $idtype]);
         return self::fetch_by_voteid($voteid);
     }
 
     public function insert_by_voteid($arr, $itemnew) {
         if ($voteid = parent::insert($arr, 1)) {
-            C::t('vote_item')->update_by_voteid($voteid, array(), $itemnew);
+            C::t('vote_item')->update_by_voteid($voteid, [], $itemnew);
         }
         return $voteid;
     }
@@ -55,7 +55,7 @@ class table_vote extends dzz_table {
 
     public function delete_by_id_idtype($ids, $idtype) {
         $ids = (array)$ids;
-        foreach (DB::fetch_all("select voteid from %t where id IN(%n) and idtype=%s", array('vote', $ids, $idtype)) as $value) {
+        foreach (DB::fetch_all("select voteid from %t where id IN(%n) and idtype=%s", ['vote', $ids, $idtype]) as $value) {
             $voteids[] = $value['voteid'];
         }
         return self::delete_by_voteid($voteids);
@@ -63,4 +63,4 @@ class table_vote extends dzz_table {
 
 }
 
-?>
+

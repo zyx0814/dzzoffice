@@ -24,7 +24,7 @@ class table_connect extends dzz_table {
     }
 
     public function fetch_all_by_available($onlyuser = false) {
-        $data = array();
+        $data = [];
         if ($onlyuser) $available = 1;
         else  $available = 0;
         $query = DB::query("SELECT * FROM " . DB::table($this->_table) . " WHERE available > '{$available}' and type!='local' ORDER BY disp");
@@ -48,7 +48,7 @@ class table_connect extends dzz_table {
 
     public function fetch_all_folderdata($uid) {
         $data = self::fetch_all_by_available();
-        $folderdata = array();
+        $folderdata = [];
         foreach ($data as $value) {
             foreach (DB::fetch_all("select id from " . DB::table($value['dname']) . " where uid>0 && uid='{$uid}'") as $value1) {
 
@@ -63,8 +63,8 @@ class table_connect extends dzz_table {
         if (self::$allbz !== null) {
             return self::$allbz;
         }
-        $data = array();
-        foreach (DB::fetch_all("select bz from %t where 1", array($this->_table)) as $value) {
+        $data = [];
+        foreach (DB::fetch_all("select bz from %t where 1", [$this->_table]) as $value) {
             $data[] = $value['bz'];
         }
         self::$allbz = $data;
@@ -81,4 +81,4 @@ class table_connect extends dzz_table {
     }
 }
 
-?>
+

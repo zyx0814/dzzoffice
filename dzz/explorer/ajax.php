@@ -12,10 +12,10 @@ $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'upload') {//上传图片文件
     include libfile('class/uploadhandler');
-    $options = array('accept_file_types' => '/\.(gif|jpe?g|png)$/i',
+    $options = ['accept_file_types' => '/\.(gif|jpe?g|png)$/i',
         'upload_dir' => $_G['setting']['attachdir'] . 'cache/',
         'upload_url' => $_G['setting']['attachurl'] . 'cache/',
-        'thumbnail' => array('max-width' => 40, 'max-height' => 40));
+        'thumbnail' => ['max-width' => 40, 'max-height' => 40]];
     $upload_handler = new uploadhandler($options);
     exit();
 } elseif ($do == 'uploads') {//上传新文件(指新建)
@@ -25,15 +25,15 @@ if ($do == 'upload') {//上传图片文件
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     require_once dzz_libfile('class/UploadHandler');
     //上传类型
-    $allowedExtensions = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
+    $allowedExtensions = $space['attachextensions'] ? explode(',', $space['attachextensions']) : [];
 
     $sizeLimit = ($space['maxattachsize']);
 
-    $options = array('accept_file_types' => $allowedExtensions ? ("/(\.|\/)(" . implode('|', $allowedExtensions) . ")$/i") : "/.+$/i",
-        'max_file_size' => $sizeLimit ? $sizeLimit : null,
+    $options = ['accept_file_types' => $allowedExtensions ? ("/(\.|\/)(" . implode('|', $allowedExtensions) . ")$/i") : "/.+$/i",
+        'max_file_size' => $sizeLimit ?: null,
         'upload_dir' => $_G['setting']['attachdir'] . 'cache/',
         'upload_url' => $_G['setting']['attachurl'] . 'cache/',
-    );
+    ];
     $upload_handler = new UploadHandler($options);
     exit();
 } elseif ($do == 'uploadfiles') {//上传文件(单纯的上传)
@@ -41,14 +41,14 @@ if ($do == 'upload') {//上传图片文件
     $space['self'] = intval($space['self']);
     require_once libfile('class/uploadhandler', '', 'core');
     //上传类型
-    $allowedExtensions = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
+    $allowedExtensions = $space['attachextensions'] ? explode(',', $space['attachextensions']) : [];
     $sizeLimit = ($space['maxattachsize']);
 
-    $options = array('accept_file_types' => $allowedExtensions ? ("/(\.|\/)(" . implode('|', $allowedExtensions) . ")$/i") : "/.+$/i",
-        'max_file_size' => $sizeLimit ? $sizeLimit : null,
+    $options = ['accept_file_types' => $allowedExtensions ? ("/(\.|\/)(" . implode('|', $allowedExtensions) . ")$/i") : "/.+$/i",
+        'max_file_size' => $sizeLimit ?: null,
         'upload_dir' => $_G['setting']['attachdir'] . 'cache/',
         'upload_url' => $_G['setting']['attachurl'] . 'cache/',
-    );
+    ];
     $upload_handler = new UploadHandler($options);
     exit();
 } elseif ($do == 'selectperm') {
@@ -71,7 +71,7 @@ if ($do == 'upload') {//上传图片文件
             if ($fid == $orginfo['fid']) {
                 $inherit = false;
             } else {
-                $inheritperm = DB::result_first("select perm from %t where fid = %d", array('folder', $fileinfo['pfid']));
+                $inheritperm = DB::result_first("select perm from %t where fid = %d", ['folder', $fileinfo['pfid']]);
             }
         }
     }
@@ -87,7 +87,7 @@ if ($do == 'upload') {//上传图片文件
     
     //设置权限
     if (isset($_GET['permsubmit']) && $_GET['permsubmit']) {
-        $perms = isset($_GET['selectperm']) ? $_GET['selectperm'] : array();
+        $perms = isset($_GET['selectperm']) ? $_GET['selectperm'] : [];
         $perm = 0;
         if (!empty($perms)) {
             foreach ($perms as $v) {
@@ -95,35 +95,33 @@ if ($do == 'upload') {//上传图片文件
             }
             $perm += 1;
         }
-        if ($perm == $fperm) exit(json_encode(array('success' => true)));
+        if ($perm == $fperm) exit(json_encode(['success' => true]));
         if ($fileinfo['isfolder']) {
-            if(!$perm) exit(json_encode(array('msg' => '目录权限不允许为空')));
-            if (C::t('folder')->update($fileinfo['fid'], array('perm' => $perm))) {
+            if(!$perm) exit(json_encode(['msg' => '目录权限不允许为空']));
+            if (C::t('folder')->update($fileinfo['fid'], ['perm' => $perm])) {
                 //如果是编辑权限，增加相关事件
                 if (!$new) {
                     //增加群组事件
                     $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['fid'], $fileinfo['gid']);
                     if ($orginfo && !$inherit) {
-                        $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'folder' => $orginfo['orgname'], 'hash' => $hash);
+                        $eventdata = ['username' => $_G['username'], 'uid' => $_G['uid'], 'folder' => $orginfo['orgname'], 'hash' => $hash];
                         C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'set_group_perm', 'setperm', $eventdata, $fileinfo['gid'], '', $orginfo['orgname']);
                     } else {//增加文件夹事件
-                        $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'position' => $fileinfo['realpath'] . $fileinfo['name'], 'hash' => $hash);
+                        $eventdata = ['username' => $_G['username'], 'uid' => $_G['uid'], 'position' => $fileinfo['realpath'] . $fileinfo['name'], 'hash' => $hash];
                         C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'set_folder_perm', 'setperm', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
                     }
                 }
-                exit(json_encode(array('success' => true, 'perm' => $perm)));
+                exit(json_encode(['success' => true, 'perm' => $perm]));
             } else {
-                exit(json_encode(array('msg' => lang('save_unsuccess'))));
+                exit(json_encode(['msg' => lang('save_unsuccess')]));
             }
+        } elseif (C::t('resources')->update_by_rid($fileinfo['rid'], ['sperm' => $perm])) {
+            $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['fid'], $fileinfo['gid']);
+            $eventdata = ['username' => $_G['username'], 'uid' => $_G['uid'], 'position' => $fileinfo['realpath'] . $fileinfo['name'], 'hash' => $hash];
+            C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'set_folder_perm', 'setperm', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
+            exit(json_encode(['success' => true, 'perm' => $perm]));
         } else {
-            if (C::t('resources')->update_by_rid($fileinfo['rid'], array('sperm' => $perm))) {
-                $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['fid'], $fileinfo['gid']);
-                $eventdata = array('username' => $_G['username'], 'uid' => $_G['uid'], 'position' => $fileinfo['realpath'] . $fileinfo['name'], 'hash' => $hash);
-                C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'set_folder_perm', 'setperm', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name']);
-                exit(json_encode(array('success' => true, 'perm' => $perm)));
-            } else {
-                exit(json_encode(array('msg' => lang('save_unsuccess'))));
-            }
+            exit(json_encode(['msg' => lang('save_unsuccess')]));
         }
     } else {
         //获取权限组
@@ -142,9 +140,9 @@ if ($do == 'upload') {//上传图片文件
         $img = isset($arr['aid']) ? trim($arr['aid']) : '';
         $groupmemorysetting = getglobal('groupmemorySpace', 'setting');
         //if (!$img) exit(json_encode(array('error' => true, 'msg' => '请选择或者上传一张图片，作为群组头像', 'pos' => 'img')));
-        if (preg_match('/^\s*$/', $groupname)) exit(json_encode(array('error' => true, 'msg' => '群组名不能为空', 'pos' => 'name')));
-        if (!C::t('organization')->chk_by_orgname($groupname, 1)) showTips(array('error' => true, 'msg' => '群组名已被占用', 'pos' => 'name'), 'json');
-        $setarr = array(
+        if (preg_match('/^\s*$/', $groupname)) exit(json_encode(['error' => true, 'msg' => '群组名不能为空', 'pos' => 'name']));
+        if (!C::t('organization')->chk_by_orgname($groupname, 1)) showTips(['error' => true, 'msg' => '群组名已被占用', 'pos' => 'name'], 'json');
+        $setarr = [
             'orgname' => $groupname,
             'aid' => $img,
             'desc' => htmlspecialchars(trim($arr['desc'])),
@@ -153,12 +151,11 @@ if ($do == 'upload') {//上传图片文件
             'maxspacesize' => $groupmemorysetting,
             'manageon' => 1,
             'diron' => 1
-        );
+        ];
         if ($return = C::t('organization')->insert_by_orgid($setarr)) {
-            if ($return) exit(json_encode(array('success' => true, 'gid' => $return)));
-            else exit(json_encode(array('error' => true, 'msg' => lang('create_group_failed'))));
+            exit(json_encode(['success' => true, 'gid' => $return]));
         } else {
-            exit(json_encode(array('error' => true)));
+            exit(json_encode(['error' => true, 'msg' => lang('create_group_failed')]));
         }
     }
 
@@ -170,7 +167,7 @@ if ($do == 'upload') {//上传图片文件
         $folderinfo = C::t('folder')->fetch($fid);
         if ($folderinfo['gid'] && C::t('organization_admin')->chk_memberperm($folderinfo['gid'])) {
             $noperm = 0;
-            $inheritperm = DB::result_first("select perm from %t where fid = %d", array('folder', $fid));
+            $inheritperm = DB::result_first("select perm from %t where fid = %d", ['folder', $fid]);
         }
     }
     $name = !empty($_GET['foldername']) ? trim($_GET['foldername']) : lang('newfolder');
@@ -181,15 +178,15 @@ if ($do == 'upload') {//上传图片文件
             $fid = $bz;
         } else {
             $fid = intval($fid);
-            $perms = isset($_GET['selectperm']) ? $_GET['selectperm'] : array();
-            if (!empty($perms) && $perms) {
+            $perms = isset($_GET['selectperm']) ? $_GET['selectperm'] : [];
+            if (!empty($perms)) {
                 foreach ($perms as $v) {
                     $perm += intval($v);
                 }
                 $perm += 1;
             }
         }
-        if(!$fid) exit(json_encode(array('error'=>lang('no_target_folderID'))));
+        if(!$fid) exit(json_encode(['error'=>lang('no_target_folderID')]));
         if ($arr = IO::CreateFolder($fid, $fname, $perm)) {
             if ($arr['error']) {
             } else {
@@ -197,7 +194,7 @@ if ($do == 'upload') {//上传图片文件
                 $arr['msg'] = 'success';
             }
         } else {
-            $arr = array();
+            $arr = [];
             $arr['error'] = lang('failure_newfolder');
         }
         exit(json_encode($arr));
@@ -209,7 +206,7 @@ if ($do == 'upload') {//上传图片文件
 } elseif ($do == 'newLink') {//新建连接
     $fid = isset($_GET['fid']) ? intval($_GET['fid']) : '';
     if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-        $arr = array('error' => lang('folder_upload_no_privilege'));
+        $arr = ['error' => lang('folder_upload_no_privilege')];
     }
 } elseif ($do == 'linkadd') {
     if (isset($_GET['createlink']) && $_GET['createlink']) {
@@ -222,21 +219,17 @@ if ($do == 'upload') {//上传图片文件
         }
         if (!preg_match("/^(http|ftp|https|mms)\:\/\/.{4,300}$/i", ($link))) {
             $arr['error'] = lang('invalid_format_url');
-        } else {
-            if (!perm_check::checkperm_Container($fid, 'upload')) {
-                $arr['error'] = lang('target_not_accept_link');
+        } elseif (!perm_check::checkperm_Container($fid, 'upload')) {
+            $arr['error'] = lang('target_not_accept_link');
+        } elseif ($data = io_dzz::linktourl($link, $fid,$name)) {
+            if ($data['error']) {
+                $arr['error'] = $data['error'];
             } else {
-                if ($data = io_dzz::linktourl($link, $fid,$name)) {
-                    if ($data['error']) {
-                        $arr['error'] = $data['error'];
-                    } else {
-                        $arr = $data;
-                        $arr['msg'] = 'success';
-                    }
-                } else {
-                    $arr['error'] = lang('js_network_error');
-                }
+                $arr = $data;
+                $arr['msg'] = 'success';
             }
+        } else {
+            $arr['error'] = lang('js_network_error');
         }
     }
     exit(json_encode($arr));
@@ -254,35 +247,35 @@ if ($do == 'upload') {//上传图片文件
         case 'newTxt':
             $filename = lang('new_txt') . '.txt';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = ' ';
             break;
         case 'newDoc':
             $filename = lang('new_word') . '.docx';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/word.docx');
             break;
         case 'newExcel':
             $filename = lang('new_excel') . '.xlsx';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/excel.xlsx');
             break;
         case 'newPowerPoint':
             $filename = lang('new_PowerPoint') . '.pptx';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/ppt.pptx');
             break;
         case 'newpdf':
             $filename = lang('new_pdf') . '.pdf';
             if (!perm_check::checkperm_Container($fid, 'upload', $bz)) {
-                exit(json_encode(array('error' => lang('folder_upload_no_privilege'))));
+                exit(json_encode(['error' => lang('folder_upload_no_privilege')]));
             }
             $content = file_get_contents(DZZ_ROOT . './dzz/images/newfile/pdf.pdf');
             break;
@@ -296,14 +289,14 @@ if ($do == 'upload') {//上传图片文件
             $arr['msg'] = 'success';
         }
     } else {
-        $arr = array();
+        $arr = [];
         $arr['error'] = lang('new_failure');
     }
     exit(json_encode($arr));
 } elseif ($do == 'getfid') {//获取路径对应目录
     $path = isset($_GET['name']) ? trim($_GET['name']) : '';
     $prefix = isset($_GET['prefix']) ? trim($_GET['prefix']) : '';
-    $arr = array();
+    $arr = [];
     if ($fid = C::t('resources_path')->fetch_by_path($path, $prefix, $uid)) {
         if (preg_match('/c_\d+/', $fid)) {
             $arr['cid'] = str_replace('c_', '', $fid);
@@ -318,25 +311,24 @@ if ($do == 'upload') {//上传图片文件
                 $arr['fid'] = $fid;
             }
         }
-        exit(json_encode(array('success' => $arr, 'json')));
+        exit(json_encode(['success' => $arr, 'json']));
     } else {
-        exit(json_encode(array('error' => true, 'json')));
+        exit(json_encode(['error' => true, 'json']));
     }
 } elseif ($do == 'collect') {//收藏与取消收藏
     $paths = $_GET['paths'];
     //collect参数为1为收藏,否则为取消收藏,未接收到此参数，默认为收藏
     $collect = isset($_GET['collect']) ? $_GET['collect'] : 1;
-    $rids = array();
+    $rids = [];
     foreach ($paths as $v) {
         $rids[] = dzzdecode($v);
     }
     if ($collect) {//加入收藏
         $return = C::t('resources_collect')->add_collect_by_rid($rids);
-        exit(json_encode($return));
     } else {//取消收藏
         $return = C::t('resources_collect')->delete_usercollect_by_rid($rids);
-        exit(json_encode($return));
     }
+    exit(json_encode($return));
 } elseif ($do == 'tag') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     if (!$rid) {
@@ -349,28 +341,28 @@ if ($do == 'upload') {//上传图片文件
     if (isset($_GET['addtag']) && $_GET['addtag']) {
         $tags = isset($_GET['tags']) ? $_GET['tags'] : '';
         $tagsarr = array_filter(explode(',', $tags));
-        $tagsubmit = array();
+        $tagsubmit = [];
         if (!empty($tagsarr)) {
             foreach ($tagsarr as $v) {
                 $tagsubmit[] = getstr($v);
             }
         }
         if ($insert = C::t('resources_tag')->insert_data($rid, $tagsubmit)) {
-            $statisarr = array(
+            $statisarr = [
                 'uid' => $uid,
                 'edits' => 1,
                 'editdateline' => TIMESTAMP
-            );
+            ];
             C::t('resources_statis')->add_statis_by_rid($rid, $statisarr);
-            showTips(array('success' => true, 'tagsadd' => $insert['add'], 'tagsdel' => $insert['del']), 'json');
+            showTips(['success' => true, 'tagsadd' => $insert['add'], 'tagsdel' => $insert['del']], 'json');
         } else {
             showmessage('add_unsuccess');
         }
     } else {
-        $tagarr = array();
-        $tagval = array();
+        $tagarr = [];
+        $tagval = [];
         foreach ($tags as $v) {
-            $tagarr[] = array('name' => $v['tagname']);
+            $tagarr[] = ['name' => $v['tagname']];
             $tagval[] = $v['tagname'];
         }
         $tagstr = htmlspecialchars(json_encode($tagarr));
@@ -386,22 +378,22 @@ if ($do == 'upload') {//上传图片文件
     }  else {
         showmessage('parameter_error');
     }
-    if($fileinfo['error']) exit(json_encode(array('error' => $fileinfo['error'])));
+    if($fileinfo['error']) exit(json_encode(['error' => $fileinfo['error']]));
     if (!perm_check::checkperm('comment', $fileinfo)) {
-        exit(json_encode(array('error' => lang('file_comment_no_privilege'))));
+        exit(json_encode(['error' => lang('file_comment_no_privilege')]));
     }
     include_once libfile('function/code');
     include_once libfile('function/use');
     $msg = isset($_GET['msg']) ? censor($_GET['msg']) : '';
     //获得提醒用户
-    $at_users = array();
+    $at_users = [];
     $message = preg_replace_callback("/@\[(.+?):(.+?)\]/i", "atreplacement", $msg);
     $appid = C::t('app_market')->fetch_appid_by_mod('{dzzscript}?mod=' . MOD_NAME, 1);
     $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['fid'], $fileinfo['gid']);
-    $eventdata = array('position' => $fileinfo['realpath'], 'hash' => $hash, 'msg' => $msg,'title' => $fileinfo['rid'] ? $fileinfo['name'] : '');
+    $eventdata = ['position' => $fileinfo['realpath'], 'hash' => $hash, 'msg' => $msg,'title' => $fileinfo['rid'] ? $fileinfo['name'] : ''];
     if ($insert = C::t('resources_event')->addevent_by_pfid($fileinfo['fid'], 'add_comment', 'addcomment', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name'], 1)) {
         if ($fileinfo['uid'] != $_G['uid']) {
-            $notevars = array(
+            $notevars = [
                 'from_id' => $appid,
                 'from_idtype' => 'app',
                 'url' => ($fileinfo['gid'] > 0) ? $_G['siteurl'] . MOD_URL . '#group&do=file&gid=' . $fileinfo['gid'] . '&fid=' . $fileinfo['fid'] : $_G['siteurl'] . MOD_URL . '#home&do=file&fid=' . $fileinfo['fid'],
@@ -410,7 +402,7 @@ if ($do == 'upload') {//上传图片文件
                 'dataline' => dgmdate(TIMESTAMP),
                 'fname' => getstr($fileinfo['name'], 31),
                 'comment' => ($message) ? getstr(dzzcode($message)) : '',
-            );
+            ];
             $action = 'explorer_comment_mydoc';
             $type = 'explorer_comment_mydoc_' . $fileinfo['fid'];
             dzz_notification::notification_add($fileinfo['uid'], $type, $action, $notevars, 1, 'dzz/explorer');
@@ -419,7 +411,7 @@ if ($do == 'upload') {//上传图片文件
             foreach ($at_users as $uid) {
                 if ($uid != $_G['uid']) {
                     //发送通知
-                    $notevars = array(
+                    $notevars = [
                         'from_id' => $appid,
                         'from_idtype' => 'app',
                         'url' => ($fileinfo['gid'] > 0) ? $_G['siteurl'] . MOD_URL . '#group&do=file&gid=' . $fileinfo['gid'] . '&fid=' . $fileinfo['fid'] : $_G['siteurl'] . MOD_URL . '#home&do=file&fid=' . $fileinfo['fid'],
@@ -429,14 +421,14 @@ if ($do == 'upload') {//上传图片文件
                         'fname' => getstr($fileinfo['name'], 31),
                         'comment' => ($message) ? getstr($message) : '',
 
-                    );
+                    ];
                     $action = 'explorer_comment_at';
                     $type = 'explorer_comment_at' . $fileinfo['fid'];
                     dzz_notification::notification_add($uid, $type, $action, $notevars, 0, MOD_PATH);
                 }
             }
         }
-        showTips(array('success' => true, 'json'));
+        showTips(['success' => true, 'json']);
     }
 } elseif ($do == 'addsearchcat') {//增加类型筛选
     $id = isset($_GET['id']) ? intval($_GET['id']) : '';
@@ -454,16 +446,16 @@ if ($do == 'upload') {//上传图片文件
         $id = $_GET['editcatsearch'];
         $arr = dhtmlspecialchars($_GET['arr']);
         if (!$arr['catname'] || preg_match('/^\s*$/', $arr['catname'])) {
-            exit(json_encode(array('error' => true, 'msg' => lang('name_is_must'))));
+            exit(json_encode(['error' => true, 'msg' => lang('name_is_must')]));
         }
 
-        $catoldid = DB::result_first("select id from %t where catname = %s and uid = %d", array('resources_cat', $arr['catname'], $uid));
+        $catoldid = DB::result_first("select id from %t where catname = %s and uid = %d", ['resources_cat', $arr['catname'], $uid]);
         if ($catoldid && $catoldid != $id) {
-            exit(json_encode(array('error' => true, 'msg' => lang('typename_must_only'))));
+            exit(json_encode(['error' => true, 'msg' => lang('typename_must_only')]));
         }
         //处理后缀名
         if ($arr['ext']) {
-            $qualifiedExt = array();
+            $qualifiedExt = [];
             $extarr = explode(',', $arr['ext']);
             foreach ($extarr as $v) {
                 if (!preg_match('/^\.\w+$/', $v)) {
@@ -478,26 +470,26 @@ if ($do == 'upload') {//上传图片文件
             $arr['ext'] = implode(',', $qualifiedExt);
         }
         if (!$arr['ext']) {
-            exit(json_encode(array('error' => true, 'msg' => lang('cat_is_must'))));
+            exit(json_encode(['error' => true, 'msg' => lang('cat_is_must')]));
         }
         if (C::t('resources_cat')->update($id, $arr)) {
-            exit(json_encode(array('success' => true)));
+            exit(json_encode(['success' => true]));
         } else {
-            exit(json_encode(array('error' => true)));
+            exit(json_encode(['error' => true]));
         }
     }
     if (isset($_GET['addcatsearch'])) {
         $arr = $_GET['arr'];
         //处理名称
         if (!$arr['catname'] || preg_match('/^\s*$/', $arr['catname'])) {
-            exit(json_encode(array('error' => true, 'msg' => lang('name_is_must'))));
+            exit(json_encode(['error' => true, 'msg' => lang('name_is_must')]));
         }
-        if (DB::result_first("select count(*) from %t where catname = %s and uid = %d", array('resources_cat', $arr['catname'], $uid)) > 0) {
-            exit(json_encode(array('error' => true, 'msg' => lang('typename_must_only'))));
+        if (DB::result_first("select count(*) from %t where catname = %s and uid = %d", ['resources_cat', $arr['catname'], $uid]) > 0) {
+            exit(json_encode(['error' => true, 'msg' => lang('typename_must_only')]));
         }
         //处理处理后缀名
         if ($arr['ext']) {
-            $qualifiedExt = array();
+            $qualifiedExt = [];
             $extarr = explode(',', $arr['ext']);
             foreach ($extarr as $v) {
                 if (!preg_match('/^\.\w+$/', $v)) {
@@ -511,14 +503,14 @@ if ($do == 'upload') {//上传图片文件
             $arr['ext'] = implode(',', $qualifiedExt);
         }
         if (!$arr['ext']) {
-            exit(json_encode(array('error' => true, 'msg' => lang('cat_is_error'))));
+            exit(json_encode(['error' => true, 'msg' => lang('cat_is_error')]));
         }
         $arr['uid'] = $uid;
         $insert = C::t('resources_cat')->insert_cat($arr);
         if ($insert['success']) {
-            exit(json_encode(array('success' => true, 'insertid' => $insert['insert'])));
+            exit(json_encode(['success' => true, 'insertid' => $insert['insert']]));
         } else {
-            exit(json_encode(array('error' => true, 'msg' => $insert['msg'])));
+            exit(json_encode(['error' => true, 'msg' => $insert['msg']]));
         }
     }
 
@@ -527,12 +519,12 @@ if ($do == 'upload') {//上传图片文件
     if ($_GET['delcat']) {
         if (C::t('resources_cat')->del_by_id($catid)) {
             $previd = C::t('resources_cat')->fetch_rencent_id($catid);
-            exit(json_encode(array('success' => true, 'catid' => $catid, 'previd' => $previd)));
+            exit(json_encode(['success' => true, 'catid' => $catid, 'previd' => $previd]));
         } else {
-            exit(json_encode(array('error' => true)));
+            exit(json_encode(['error' => true]));
         }
     } else {
-        exit(json_encode(array('error' => true)));
+        exit(json_encode(['error' => true]));
     }
 
 } elseif ($do == 'share') {//分享
@@ -544,7 +536,7 @@ if ($do == 'upload') {//上传图片文件
         if (count($patharr) == 1 && preg_match('/^\d+$/', $patharr[0])) {
             $shareid = $patharr[0];
         } else {
-            $rids = array();
+            $rids = [];
             foreach ($patharr as $v) {
                 $rids[] = dzzdecode($v);
             }
@@ -558,9 +550,9 @@ if ($do == 'upload') {//上传图片文件
             $id = isset($_GET['id']) ? intval($_GET['id']) : '';
             $return = C::t('shares')->delete_by_id($id);
             if ($return['success']) {
-                showTips(array('success' => true, 'shareid' => $id));
+                showTips(['success' => true, 'shareid' => $id]);
             } else {
-                showTips(array('error' => $return['error']));
+                showTips(['error' => $return['error']]);
             }
         } else {
             $share = $_GET['share'];
@@ -578,121 +570,117 @@ if ($do == 'upload') {//上传图片文件
             if ($id) {
                 $ret = C::t('shares')->update_by_id($id, $share, $bz);
                 if ($ret['error']) {
-                    showTips(array('error' => $ret['error']), 'json');
+                    showTips(['error' => $ret['error']], 'json');
                 } elseif ($ret['success']) {
-                    showTips(array('success' => true, 'shareurl' => C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($ret['success'])), 'shareid' => $ret['success']));
+                    showTips(['success' => true, 'shareurl' => C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($ret['success'])), 'shareid' => $ret['success']]);
                 } else {
-                    showTips(array('error' => lang('create_share_failer') . '！'), 'json');
+                    showTips(['error' => lang('create_share_failer') . '！'], 'json');
                 }
             } else {
                 if($bz) {
                     $bzinfo = IO::getMeta($files);
-                    if (!$bzinfo) showTips(array('error' => lang('file_not_exist')), 'json');
-                    if ($bzinfo['error']) showTips(array('error' => $bzinfo['error']), 'json');
+                    if (!$bzinfo) showTips(['error' => lang('file_not_exist')], 'json');
+                    if ($bzinfo['error']) showTips(['error' => $bzinfo['error']], 'json');
                     $share['type'] = $bzinfo['type'];
                 }
                 $ret = C::t('shares')->insert($share,$bz);
                 if ($ret['success']) {
-                    showTips(array('success' => true, 'shareurl' => C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($ret['success'])), 'shareid' => $ret['success']));
+                    showTips(['success' => true, 'shareurl' => C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($ret['success'])), 'shareid' => $ret['success']]);
                 } elseif ($ret['error']) {
-                    showTips(array('error' => $ret['error']), 'json');
+                    showTips(['error' => $ret['error']], 'json');
                 } else {
-                    showTips(array('error' => lang('create_share_failer') . '！'), 'json');
+                    showTips(['error' => lang('create_share_failer') . '！'], 'json');
                 }
             }
+        }
+    } elseif ($shareid) {
+        if ($share = C::t('shares')->fetch($shareid)) {
+            $share['shareurl'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($share['id']));
+            if ($share['password']) $share['password'] = dzzdecode($share['password']);
+            if ($share['status'] >= -2) {
+                if ($share['endtime'] && $share['endtime'] < TIMESTAMP) $share['status'] = -1;
+                elseif ($share['times'] && $share['times'] <= $share['count']) $share['status'] = -2;
+                else $share['status'] = 0;
+            }
+            if ($share['endtime']) {
+                $share['endtime'] = dgmdate($share['endtime'], 'Y-m-d H:i');
+            } else {
+                $share['endtime'] = '';
+            }
+            if (!$share['times']) {
+                $share['times'] = '';
+            }
+            $files = $share['filepath'];
+            $share['perm'] = explode(',', $share['perm']);
+            if($share['pfid']==-1) {
+                $bz = 1;
+            }
+        }
+    } elseif ($share = C::t('shares')->fetch_by_path($files)) {
+        $share['shareurl'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($share['id']));
+        if ($share['password']) $share['password'] = dzzdecode($share['password']);
+        if ($share['status'] >= -2) {
+            if ($share['endtime'] && $share['endtime'] < TIMESTAMP) $share['status'] = -1;
+            elseif ($share['times'] && $share['times'] <= $share['count']) $share['status'] = -2;
+            else $share['status'] = 0;
+        }
+        if ($share['endtime']) {
+            $share['endtime'] = dgmdate($share['endtime'], 'Y-m-d H:i');
+        } else {
+            $share['endtime'] = '';
+        }
+        if (!$share['times']) {
+            $share['times'] = '';
+        }
+        $share['perm'] = explode(',', $share['perm']);
+        if($share['pfid']==-1) {
+            $bz = 1;
         }
     } else {
-        if ($shareid) {
-            if ($share = C::t('shares')->fetch($shareid)) {
-                $share['shareurl'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($share['id']));
-                if ($share['password']) $share['password'] = dzzdecode($share['password']);
-                if ($share['status'] >= -2) {
-                    if ($share['endtime'] && $share['endtime'] < TIMESTAMP) $share['status'] = -1;
-                    elseif ($share['times'] && $share['times'] <= $share['count']) $share['status'] = -2;
-                    else $share['status'] = 0;
-                }
-                if ($share['endtime']) {
-                    $share['endtime'] = dgmdate($share['endtime'], 'Y-m-d H:i');
-                } else {
-                    $share['endtime'] = '';
-                }
-                if (!$share['times']) {
-                    $share['times'] = '';
-                }
-                $files = $share['filepath'];
-                $share['perm'] = explode(',', $share['perm']);
-                if($share['pfid']==-1) {
-                    $bz = 1;
-                }
+        if($bz) {
+            $share = IO::getMeta($files);
+            if (!$share) {
+                $arr = ['error' => lang('file_not_exist')];
+            } elseif ($share['error']) {
+                $arr = ['error' => $share['error']];
+            } else {
+                $share['title'] = $share['name'];
             }
         } else {
-            if ($share = C::t('shares')->fetch_by_path($files)) {
-                $share['shareurl'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($share['id']));
-                if ($share['password']) $share['password'] = dzzdecode($share['password']);
-                if ($share['status'] >= -2) {
-                    if ($share['endtime'] && $share['endtime'] < TIMESTAMP) $share['status'] = -1;
-                    elseif ($share['times'] && $share['times'] <= $share['count']) $share['status'] = -2;
-                    else $share['status'] = 0;
-                }
-                if ($share['endtime']) {
-                    $share['endtime'] = dgmdate($share['endtime'], 'Y-m-d H:i');
+            $rids = explode(',', $files);
+            //默认单个文件分享
+            $more = false;
+            //多个文件分享
+            if (count($rids) > 1) $more = true;
+            $filenames = [];
+            $gidarr = [];
+            foreach (DB::fetch_all("select * from %t where rid in(%n)", ['resources', $rids]) as $v) {
+                if (!perm_check::checkperm('share', $v)) {
+                    $arr = ['error' => lang('file_share_no_privilege')];
                 } else {
-                    $share['endtime'] = '';
+                    $gidarr[] = $v['gid'];
+                    $filenames[] = $v['name'];
                 }
-                if (!$share['times']) {
-                    $share['times'] = '';
-                }
-                $share['perm'] = explode(',', $share['perm']);
-                if($share['pfid']==-1) {
-                    $bz = 1;
-                }
+            }
+            //判断文件来源
+            if (count(array_unique($gidarr)) > 1) {
+                $arr = ['error' => lang('share_notallow_from_different_zone')];
+            }
+            //自动生成分享标题
+            if ($more) {
+                $share['title'] = $filenames[0] . lang('more_file_or_folder');
             } else {
-                if($bz) {
-                    $share = IO::getMeta($files);
-                    if (!$share) {
-                        $arr = array('error' => lang('file_not_exist'));
-                    } elseif ($share['error']) {
-                        $arr = array('error' => $share['error']);
-                    } else {
-                        $share['title'] = $share['name'];
-                    }
-                } else {
-                    $rids = explode(',', $files);
-                    //默认单个文件分享
-                    $more = false;
-                    //多个文件分享
-                    if (count($rids) > 1) $more = true;
-                    $filenames = array();
-                    $gidarr = array();
-                    foreach (DB::fetch_all("select * from %t where rid in(%n)", array('resources', $rids)) as $v) {
-                        if (!perm_check::checkperm('share', $v)) {
-                            $arr = array('error' => lang('file_share_no_privilege'));
-                        } else {
-                            $gidarr[] = $v['gid'];
-                            $filenames[] = $v['name'];
-                        }
-                    }
-                    //判断文件来源
-                    if (count(array_unique($gidarr)) > 1) {
-                        $arr = array('error' => lang('share_notallow_from_different_zone'));
-                    }
-                    //自动生成分享标题
-                    if ($more) {
-                        $share['title'] = $filenames[0] . lang('more_file_or_folder');
-                    } else {
-                        $share['title'] = $filenames[0];
-                    }
-                }
-                $share['perm'] = array();
+                $share['title'] = $filenames[0];
             }
         }
+        $share['perm'] = [];
     }
 } elseif ($do == 'property') {//属性
     $paths = isset($_GET['paths']) ? trim($_GET['paths']) : '';
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     $fid = isset($_GET['fid']) ? trim($_GET['fid']) : '';
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
-    $fileinfo = array();
+    $fileinfo = [];
     if ($bz) {
         if ($fid) {
             $fileinfo = IO::getMeta($fid);
@@ -703,16 +691,16 @@ if ($do == 'upload') {//上传图片文件
             }
             $contains = IO::getContains($fileinfo['path']);
             $fileinfo['ftype'] = lang('type_folder');
-            $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-            $fileinfo['contain'] = lang('property_info_contain', array('count' => $contains['contain'][0] + $contains['contain'][1], 'filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
+            $fileinfo['ffsize'] = lang('property_info_size', ['fsize' => formatsize($contains['size']), 'size' => $contains['size']]);
+            $fileinfo['contain'] = lang('property_info_contain', ['count' => $contains['contain'][0] + $contains['contain'][1], 'filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]]);
         } elseif (strpos($paths, ',') !== false) {
             $patharr = explode(',', $paths);
-            $rids = array();
+            $rids = [];
             foreach ($patharr as $v) {
                 $rids[] = dzzdecode($v);
             }
             $size = 0;
-            $contents = array(0, 0);
+            $contents = [0, 0];
             foreach ($rids as $icoid) {
                 if (!$icoarr = IO::getMeta($icoid)) continue;
                 if ($icoarr['error']) showmessage($icoarr['error']);
@@ -729,8 +717,8 @@ if ($do == 'upload') {//上传图片文件
                         break;
                 }
             }
-            $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($size), 'size' => $size));
-            $fileinfo['contain'] = lang('property_info_contain', array('count' => $contents[0] + $contents[1], 'filenum' => $contents[0], 'foldernum' => $contents[1]));
+            $fileinfo['ffsize'] = lang('property_info_size', ['fsize' => formatsize($size), 'size' => $size]);
+            $fileinfo['contain'] = lang('property_info_contain', ['count' => $contents[0] + $contents[1], 'filenum' => $contents[0], 'foldernum' => $contents[1]]);
         } else {
             $paths = dzzdecode($paths);
             $fileinfo = IO::getMeta($paths);
@@ -742,8 +730,8 @@ if ($do == 'upload') {//上传图片文件
             if ($fileinfo['type'] == 'folder') {
                 $contains = IO::getContains($fileinfo['path']);
                 $fileinfo['ftype'] = lang('type_folder');
-                $fileinfo['ffsize'] = lang('property_info_size', array('fsize' => formatsize($contains['size']), 'size' => $contains['size']));
-                $fileinfo['contain'] = lang('property_info_contain', array('count' => $contains['contain'][0] + $contains['contain'][1], 'filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]));
+                $fileinfo['ffsize'] = lang('property_info_size', ['fsize' => formatsize($contains['size']), 'size' => $contains['size']]);
+                $fileinfo['contain'] = lang('property_info_contain', ['count' => $contains['contain'][0] + $contains['contain'][1], 'filenum' => $contains['contain'][0], 'foldernum' => $contains['contain'][1]]);
             }
         }
     } else {
@@ -753,7 +741,7 @@ if ($do == 'upload') {//上传图片文件
             $fileinfo = C::t('resources')->get_property_by_fid($fid);
         } else {
             $patharr = explode(',', $paths);
-            $rids = array();
+            $rids = [];
             foreach ($patharr as $v) {
                 $rids[] = dzzdecode($v);
             }
@@ -769,12 +757,10 @@ if ($do == 'upload') {//上传图片文件
                 //获取总空间
                 if ($org['maxspacesize'] == 0) {
                     $maxspace = 0;
+                } elseif ($org['maxspacesize'] == -1) {
+                    $maxspace = -1;
                 } else {
-                    if ($org['maxspacesize'] == -1) {
-                        $maxspace = -1;
-                    } else {
-                        $maxspace = $org['maxspacesize'] * 1024 * 1024;
-                    }
+                    $maxspace = $org['maxspacesize'] * 1024 * 1024;
                 }
             }
             $progress = set_space_progress($usesize, $maxspace);
@@ -812,28 +798,28 @@ if ($do == 'upload') {//上传图片文件
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : 0;
     if (!$rid || !$vid) {
-        exit(json_encode(array('error' => 'access denied')));
+        exit(json_encode(['error' => 'access denied']));
     }
     $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
     if ($fileinfo['editperm']) {
         if (C::t('resources_version')->delete_by_vid($vid, $rid, true)) {
-            exit(json_encode(array('msg' => 'success')));
+            exit(json_encode(['msg' => 'success']));
         } else {
-            exit(json_encode(array('error' => '该版本不存在或最后一个不能删除')));
+            exit(json_encode(['error' => '该版本不存在或最后一个不能删除']));
         }
     } else {
-        exit(json_encode(array('error' => lang('no_privilege'))));
+        exit(json_encode(['error' => lang('no_privilege')]));
     }
 
 } elseif ($do == 'setExtopenDefault') {
     $extid=$_GET['extid'];
-    if(!$extid) exit(json_encode(array('error' => '缺少参数')));
+    if(!$extid) exit(json_encode(['error' => '缺少参数']));
 	if($extdata=C::t('app_open')->fetch($extid)){
 		C::t('app_open_default')->insert_default_by_uid($_G['uid'],$extid,$extdata['ext']);
 	} else {
-		exit(json_encode(array('error' => '参数错误')));
+		exit(json_encode(['error' => '参数错误']));
 	}
-    exit(json_encode(array('success' => true)));
+    exit(json_encode(['success' => true]));
 } elseif ($do == 'version') {
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     if (!$rid) showmessage('parameter_error');
@@ -844,7 +830,7 @@ if ($do == 'upload') {//上传图片文件
     $page = isset($_GET['page']) ? intval($_GET['page']) : 0;
     $vlimit = 20;
     $limit = ($page) ? $page . '-' . $vlimit : $vlimit;
-    $gets = array('op' => 'ajax', 'do' => 'version', 'rid' => $rid,'page' => $page,'property' => $property);
+    $gets = ['op' => 'ajax', 'do' => 'version', 'rid' => $rid,'page' => $page,'property' => $property];
     $theurl = MOD_URL . "&" . url_implode($gets);
     $total = C::t('resources_version')->fetch_all_by_rid($rid, '', true);
     if($total) {
@@ -879,7 +865,7 @@ if ($do == 'upload') {//上传图片文件
         showmessage('parameter_error');
     }
     if ($total) {
-        $gets = array('op' => 'ajax', 'do' => 'dynamic', 'rid' => $rid, 'fid' =>$fid,'page' => $page,'property' => $property);
+        $gets = ['op' => 'ajax', 'do' => 'dynamic', 'rid' => $rid, 'fid' =>$fid,'page' => $page,'property' => $property];
         $theurl = MOD_URL . "&" . url_implode($gets);
         $multi = multi($total, $limit, $page, $theurl);
     } else {
@@ -913,7 +899,7 @@ if ($do == 'upload') {//上传图片文件
         showmessage('parameter_error');
     }
     if ($total) {
-        $gets = array('op' => 'ajax', 'do' => 'comment', 'rid' => $rid, 'fid' =>$fid,'page' => $page,'property' => $property);
+        $gets = ['op' => 'ajax', 'do' => 'comment', 'rid' => $rid, 'fid' =>$fid,'page' => $page,'property' => $property];
         $theurl = MOD_URL . "&" . url_implode($gets);
         $multi = multi($total, $limit, $page, $theurl);
     } else {
@@ -947,7 +933,7 @@ if ($do == 'upload') {//上传图片文件
             if($org) {
                 $members = C::t('organization_user')->fetch_user_byorgid($fileinfo['gid'], '', false);
                 //处理成员头像函数
-                $userids = array();
+                $userids = [];
                 foreach ($members as $k => $v) {
                     $userids[] = $v['uid'];
                 }

@@ -1,11 +1,11 @@
 <?php
-$lang = array(
+$lang = [
   'appname' => 'Organization Users',
-  'explorer_gropuperm' => array(
+  'explorer_gropuperm' => [
       'Collaborative Members',
       'Administrators',
       'Founders'
-  ),
+  ],
   'orgname' => 'Organization Name',
   'orgname_placeholder' => 'Enter organization (group) name',
   'change' => 'Change',
@@ -132,5 +132,4 @@ $lang = array(
   'weixin_registered' => 'This WeChat ID has already been registered',
   'import_user' => 'Import Users',
   'group_permission_guide_text' => 'Each user can only set up one user group. Administrators have global system permissions. Please operate with caution!',
-);
-?>
+];

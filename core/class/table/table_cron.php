@@ -27,7 +27,7 @@ class table_cron extends dzz_table {
 
     public function fetch_all_nextruncronid($timestamp){
         $timestamp = intval($timestamp);
-        $cronid = array();
+        $cronid = [];
         foreach(DB::fetch_all ('SELECT cronid FROM '.DB::table($this->_table)." WHERE available>'0' AND nextrun<='$timestamp' ORDER BY nextrun") as $v){
             $cronid[] = $v['cronid'];
 		}
@@ -44,4 +44,4 @@ class table_cron extends dzz_table {
 
 }
 
-?>
+

@@ -54,135 +54,135 @@ class PHPExcel_Calculation_Engineering {
 	 *
 	 * @var mixed[]
 	 */
-	private static $_conversionUnits = array( 'g'		=> array(	'Group'	=> 'Mass',			'Unit Name'	=> 'Gram',						'AllowPrefix'	=> True		),
-											  'sg'		=> array(	'Group'	=> 'Mass',			'Unit Name'	=> 'Slug',						'AllowPrefix'	=> False	),
-											  'lbm'		=> array(	'Group'	=> 'Mass',			'Unit Name'	=> 'Pound mass (avoirdupois)',	'AllowPrefix'	=> False	),
-											  'u'		=> array(	'Group'	=> 'Mass',			'Unit Name'	=> 'U (atomic mass unit)',		'AllowPrefix'	=> True		),
-											  'ozm'		=> array(	'Group'	=> 'Mass',			'Unit Name'	=> 'Ounce mass (avoirdupois)',	'AllowPrefix'	=> False	),
-											  'm'		=> array(	'Group'	=> 'Distance',		'Unit Name'	=> 'Meter',						'AllowPrefix'	=> True		),
-											  'mi'		=> array(	'Group'	=> 'Distance',		'Unit Name'	=> 'Statute mile',				'AllowPrefix'	=> False	),
-											  'Nmi'		=> array(	'Group'	=> 'Distance',		'Unit Name'	=> 'Nautical mile',				'AllowPrefix'	=> False	),
-											  'in'		=> array(	'Group'	=> 'Distance',		'Unit Name'	=> 'Inch',						'AllowPrefix'	=> False	),
-											  'ft'		=> array(	'Group'	=> 'Distance',		'Unit Name'	=> 'Foot',						'AllowPrefix'	=> False	),
-											  'yd'		=> array(	'Group'	=> 'Distance',		'Unit Name'	=> 'Yard',						'AllowPrefix'	=> False	),
-											  'ang'		=> array(	'Group'	=> 'Distance',		'Unit Name'	=> 'Angstrom',					'AllowPrefix'	=> True		),
-											  'Pica'	=> array(	'Group'	=> 'Distance',		'Unit Name'	=> 'Pica (1/72 in)',			'AllowPrefix'	=> False	),
-											  'yr'		=> array(	'Group'	=> 'Time',			'Unit Name'	=> 'Year',						'AllowPrefix'	=> False	),
-											  'day'		=> array(	'Group'	=> 'Time',			'Unit Name'	=> 'Day',						'AllowPrefix'	=> False	),
-											  'hr'		=> array(	'Group'	=> 'Time',			'Unit Name'	=> 'Hour',						'AllowPrefix'	=> False	),
-											  'mn'		=> array(	'Group'	=> 'Time',			'Unit Name'	=> 'Minute',					'AllowPrefix'	=> False	),
-											  'sec'		=> array(	'Group'	=> 'Time',			'Unit Name'	=> 'Second',					'AllowPrefix'	=> True		),
-											  'Pa'		=> array(	'Group'	=> 'Pressure',		'Unit Name'	=> 'Pascal',					'AllowPrefix'	=> True		),
-											  'p'		=> array(	'Group'	=> 'Pressure',		'Unit Name'	=> 'Pascal',					'AllowPrefix'	=> True		),
-											  'atm'		=> array(	'Group'	=> 'Pressure',		'Unit Name'	=> 'Atmosphere',				'AllowPrefix'	=> True		),
-											  'at'		=> array(	'Group'	=> 'Pressure',		'Unit Name'	=> 'Atmosphere',				'AllowPrefix'	=> True		),
-											  'mmHg'	=> array(	'Group'	=> 'Pressure',		'Unit Name'	=> 'mm of Mercury',				'AllowPrefix'	=> True		),
-											  'N'		=> array(	'Group'	=> 'Force',			'Unit Name'	=> 'Newton',					'AllowPrefix'	=> True		),
-											  'dyn'		=> array(	'Group'	=> 'Force',			'Unit Name'	=> 'Dyne',						'AllowPrefix'	=> True		),
-											  'dy'		=> array(	'Group'	=> 'Force',			'Unit Name'	=> 'Dyne',						'AllowPrefix'	=> True		),
-											  'lbf'		=> array(	'Group'	=> 'Force',			'Unit Name'	=> 'Pound force',				'AllowPrefix'	=> False	),
-											  'J'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Joule',						'AllowPrefix'	=> True		),
-											  'e'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Erg',						'AllowPrefix'	=> True		),
-											  'c'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Thermodynamic calorie',		'AllowPrefix'	=> True		),
-											  'cal'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'IT calorie',				'AllowPrefix'	=> True		),
-											  'eV'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Electron volt',				'AllowPrefix'	=> True		),
-											  'ev'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Electron volt',				'AllowPrefix'	=> True		),
-											  'HPh'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Horsepower-hour',			'AllowPrefix'	=> False	),
-											  'hh'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Horsepower-hour',			'AllowPrefix'	=> False	),
-											  'Wh'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Watt-hour',					'AllowPrefix'	=> True		),
-											  'wh'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Watt-hour',					'AllowPrefix'	=> True		),
-											  'flb'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'Foot-pound',				'AllowPrefix'	=> False	),
-											  'BTU'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'BTU',						'AllowPrefix'	=> False	),
-											  'btu'		=> array(	'Group'	=> 'Energy',		'Unit Name'	=> 'BTU',						'AllowPrefix'	=> False	),
-											  'HP'		=> array(	'Group'	=> 'Power',			'Unit Name'	=> 'Horsepower',				'AllowPrefix'	=> False	),
-											  'h'		=> array(	'Group'	=> 'Power',			'Unit Name'	=> 'Horsepower',				'AllowPrefix'	=> False	),
-											  'W'		=> array(	'Group'	=> 'Power',			'Unit Name'	=> 'Watt',						'AllowPrefix'	=> True		),
-											  'w'		=> array(	'Group'	=> 'Power',			'Unit Name'	=> 'Watt',						'AllowPrefix'	=> True		),
-											  'T'		=> array(	'Group'	=> 'Magnetism',		'Unit Name'	=> 'Tesla',						'AllowPrefix'	=> True		),
-											  'ga'		=> array(	'Group'	=> 'Magnetism',		'Unit Name'	=> 'Gauss',						'AllowPrefix'	=> True		),
-											  'C'		=> array(	'Group'	=> 'Temperature',	'Unit Name'	=> 'Celsius',					'AllowPrefix'	=> False	),
-											  'cel'		=> array(	'Group'	=> 'Temperature',	'Unit Name'	=> 'Celsius',					'AllowPrefix'	=> False	),
-											  'F'		=> array(	'Group'	=> 'Temperature',	'Unit Name'	=> 'Fahrenheit',				'AllowPrefix'	=> False	),
-											  'fah'		=> array(	'Group'	=> 'Temperature',	'Unit Name'	=> 'Fahrenheit',				'AllowPrefix'	=> False	),
-											  'K'		=> array(	'Group'	=> 'Temperature',	'Unit Name'	=> 'Kelvin',					'AllowPrefix'	=> False	),
-											  'kel'		=> array(	'Group'	=> 'Temperature',	'Unit Name'	=> 'Kelvin',					'AllowPrefix'	=> False	),
-											  'tsp'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'Teaspoon',					'AllowPrefix'	=> False	),
-											  'tbs'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'Tablespoon',				'AllowPrefix'	=> False	),
-											  'oz'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'Fluid Ounce',				'AllowPrefix'	=> False	),
-											  'cup'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'Cup',						'AllowPrefix'	=> False	),
-											  'pt'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'U.S. Pint',					'AllowPrefix'	=> False	),
-											  'us_pt'	=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'U.S. Pint',					'AllowPrefix'	=> False	),
-											  'uk_pt'	=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'U.K. Pint',					'AllowPrefix'	=> False	),
-											  'qt'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'Quart',						'AllowPrefix'	=> False	),
-											  'gal'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'Gallon',					'AllowPrefix'	=> False	),
-											  'l'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'Litre',						'AllowPrefix'	=> True		),
-											  'lt'		=> array(	'Group'	=> 'Liquid',		'Unit Name'	=> 'Litre',						'AllowPrefix'	=> True		)
-											);
+	private static $_conversionUnits = ['g'		=> ['Group'	=> 'Mass',			'Unit Name'	=> 'Gram',						'AllowPrefix'	=> True],
+											  'sg'		=> ['Group'	=> 'Mass',			'Unit Name'	=> 'Slug',						'AllowPrefix'	=> False],
+											  'lbm'		=> ['Group'	=> 'Mass',			'Unit Name'	=> 'Pound mass (avoirdupois)',	'AllowPrefix'	=> False],
+											  'u'		=> ['Group'	=> 'Mass',			'Unit Name'	=> 'U (atomic mass unit)',		'AllowPrefix'	=> True],
+											  'ozm'		=> ['Group'	=> 'Mass',			'Unit Name'	=> 'Ounce mass (avoirdupois)',	'AllowPrefix'	=> False],
+											  'm'		=> ['Group'	=> 'Distance',		'Unit Name'	=> 'Meter',						'AllowPrefix'	=> True],
+											  'mi'		=> ['Group'	=> 'Distance',		'Unit Name'	=> 'Statute mile',				'AllowPrefix'	=> False],
+											  'Nmi'		=> ['Group'	=> 'Distance',		'Unit Name'	=> 'Nautical mile',				'AllowPrefix'	=> False],
+											  'in'		=> ['Group'	=> 'Distance',		'Unit Name'	=> 'Inch',						'AllowPrefix'	=> False],
+											  'ft'		=> ['Group'	=> 'Distance',		'Unit Name'	=> 'Foot',						'AllowPrefix'	=> False],
+											  'yd'		=> ['Group'	=> 'Distance',		'Unit Name'	=> 'Yard',						'AllowPrefix'	=> False],
+											  'ang'		=> ['Group'	=> 'Distance',		'Unit Name'	=> 'Angstrom',					'AllowPrefix'	=> True],
+											  'Pica'	=> ['Group'	=> 'Distance',		'Unit Name'	=> 'Pica (1/72 in)',			'AllowPrefix'	=> False],
+											  'yr'		=> ['Group'	=> 'Time',			'Unit Name'	=> 'Year',						'AllowPrefix'	=> False],
+											  'day'		=> ['Group'	=> 'Time',			'Unit Name'	=> 'Day',						'AllowPrefix'	=> False],
+											  'hr'		=> ['Group'	=> 'Time',			'Unit Name'	=> 'Hour',						'AllowPrefix'	=> False],
+											  'mn'		=> ['Group'	=> 'Time',			'Unit Name'	=> 'Minute',					'AllowPrefix'	=> False],
+											  'sec'		=> ['Group'	=> 'Time',			'Unit Name'	=> 'Second',					'AllowPrefix'	=> True],
+											  'Pa'		=> ['Group'	=> 'Pressure',		'Unit Name'	=> 'Pascal',					'AllowPrefix'	=> True],
+											  'p'		=> ['Group'	=> 'Pressure',		'Unit Name'	=> 'Pascal',					'AllowPrefix'	=> True],
+											  'atm'		=> ['Group'	=> 'Pressure',		'Unit Name'	=> 'Atmosphere',				'AllowPrefix'	=> True],
+											  'at'		=> ['Group'	=> 'Pressure',		'Unit Name'	=> 'Atmosphere',				'AllowPrefix'	=> True],
+											  'mmHg'	=> ['Group'	=> 'Pressure',		'Unit Name'	=> 'mm of Mercury',				'AllowPrefix'	=> True],
+											  'N'		=> ['Group'	=> 'Force',			'Unit Name'	=> 'Newton',					'AllowPrefix'	=> True],
+											  'dyn'		=> ['Group'	=> 'Force',			'Unit Name'	=> 'Dyne',						'AllowPrefix'	=> True],
+											  'dy'		=> ['Group'	=> 'Force',			'Unit Name'	=> 'Dyne',						'AllowPrefix'	=> True],
+											  'lbf'		=> ['Group'	=> 'Force',			'Unit Name'	=> 'Pound force',				'AllowPrefix'	=> False],
+											  'J'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Joule',						'AllowPrefix'	=> True],
+											  'e'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Erg',						'AllowPrefix'	=> True],
+											  'c'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Thermodynamic calorie',		'AllowPrefix'	=> True],
+											  'cal'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'IT calorie',				'AllowPrefix'	=> True],
+											  'eV'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Electron volt',				'AllowPrefix'	=> True],
+											  'ev'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Electron volt',				'AllowPrefix'	=> True],
+											  'HPh'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Horsepower-hour',			'AllowPrefix'	=> False],
+											  'hh'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Horsepower-hour',			'AllowPrefix'	=> False],
+											  'Wh'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Watt-hour',					'AllowPrefix'	=> True],
+											  'wh'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Watt-hour',					'AllowPrefix'	=> True],
+											  'flb'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'Foot-pound',				'AllowPrefix'	=> False],
+											  'BTU'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'BTU',						'AllowPrefix'	=> False],
+											  'btu'		=> ['Group'	=> 'Energy',		'Unit Name'	=> 'BTU',						'AllowPrefix'	=> False],
+											  'HP'		=> ['Group'	=> 'Power',			'Unit Name'	=> 'Horsepower',				'AllowPrefix'	=> False],
+											  'h'		=> ['Group'	=> 'Power',			'Unit Name'	=> 'Horsepower',				'AllowPrefix'	=> False],
+											  'W'		=> ['Group'	=> 'Power',			'Unit Name'	=> 'Watt',						'AllowPrefix'	=> True],
+											  'w'		=> ['Group'	=> 'Power',			'Unit Name'	=> 'Watt',						'AllowPrefix'	=> True],
+											  'T'		=> ['Group'	=> 'Magnetism',		'Unit Name'	=> 'Tesla',						'AllowPrefix'	=> True],
+											  'ga'		=> ['Group'	=> 'Magnetism',		'Unit Name'	=> 'Gauss',						'AllowPrefix'	=> True],
+											  'C'		=> ['Group'	=> 'Temperature',	'Unit Name'	=> 'Celsius',					'AllowPrefix'	=> False],
+											  'cel'		=> ['Group'	=> 'Temperature',	'Unit Name'	=> 'Celsius',					'AllowPrefix'	=> False],
+											  'F'		=> ['Group'	=> 'Temperature',	'Unit Name'	=> 'Fahrenheit',				'AllowPrefix'	=> False],
+											  'fah'		=> ['Group'	=> 'Temperature',	'Unit Name'	=> 'Fahrenheit',				'AllowPrefix'	=> False],
+											  'K'		=> ['Group'	=> 'Temperature',	'Unit Name'	=> 'Kelvin',					'AllowPrefix'	=> False],
+											  'kel'		=> ['Group'	=> 'Temperature',	'Unit Name'	=> 'Kelvin',					'AllowPrefix'	=> False],
+											  'tsp'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'Teaspoon',					'AllowPrefix'	=> False],
+											  'tbs'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'Tablespoon',				'AllowPrefix'	=> False],
+											  'oz'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'Fluid Ounce',				'AllowPrefix'	=> False],
+											  'cup'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'Cup',						'AllowPrefix'	=> False],
+											  'pt'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'U.S. Pint',					'AllowPrefix'	=> False],
+											  'us_pt'	=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'U.S. Pint',					'AllowPrefix'	=> False],
+											  'uk_pt'	=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'U.K. Pint',					'AllowPrefix'	=> False],
+											  'qt'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'Quart',						'AllowPrefix'	=> False],
+											  'gal'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'Gallon',					'AllowPrefix'	=> False],
+											  'l'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'Litre',						'AllowPrefix'	=> True],
+											  'lt'		=> ['Group'	=> 'Liquid',		'Unit Name'	=> 'Litre',						'AllowPrefix'	=> True]
+    ];
 
 	/**
 	 * Details of the Multiplier prefixes that can be used with Units of Measure in CONVERTUOM()
 	 *
 	 * @var mixed[]
 	 */
-	private static $_conversionMultipliers = array(	'Y'	=> array(	'multiplier'	=> 1E24,	'name'	=> 'yotta'	),
-													'Z'	=> array(	'multiplier'	=> 1E21,	'name'	=> 'zetta'	),
-													'E'	=> array(	'multiplier'	=> 1E18,	'name'	=> 'exa'	),
-													'P'	=> array(	'multiplier'	=> 1E15,	'name'	=> 'peta'	),
-													'T'	=> array(	'multiplier'	=> 1E12,	'name'	=> 'tera'	),
-													'G'	=> array(	'multiplier'	=> 1E9,		'name'	=> 'giga'	),
-													'M'	=> array(	'multiplier'	=> 1E6,		'name'	=> 'mega'	),
-													'k'	=> array(	'multiplier'	=> 1E3,		'name'	=> 'kilo'	),
-													'h'	=> array(	'multiplier'	=> 1E2,		'name'	=> 'hecto'	),
-													'e'	=> array(	'multiplier'	=> 1E1,		'name'	=> 'deka'	),
-													'd'	=> array(	'multiplier'	=> 1E-1,	'name'	=> 'deci'	),
-													'c'	=> array(	'multiplier'	=> 1E-2,	'name'	=> 'centi'	),
-													'm'	=> array(	'multiplier'	=> 1E-3,	'name'	=> 'milli'	),
-													'u'	=> array(	'multiplier'	=> 1E-6,	'name'	=> 'micro'	),
-													'n'	=> array(	'multiplier'	=> 1E-9,	'name'	=> 'nano'	),
-													'p'	=> array(	'multiplier'	=> 1E-12,	'name'	=> 'pico'	),
-													'f'	=> array(	'multiplier'	=> 1E-15,	'name'	=> 'femto'	),
-													'a'	=> array(	'multiplier'	=> 1E-18,	'name'	=> 'atto'	),
-													'z'	=> array(	'multiplier'	=> 1E-21,	'name'	=> 'zepto'	),
-													'y'	=> array(	'multiplier'	=> 1E-24,	'name'	=> 'yocto'	)
-												 );
+	private static $_conversionMultipliers = ['Y'	=> ['multiplier'	=> 1E24,	'name'	=> 'yotta'],
+													'Z'	=> ['multiplier'	=> 1E21,	'name'	=> 'zetta'],
+													'E'	=> ['multiplier'	=> 1E18,	'name'	=> 'exa'],
+													'P'	=> ['multiplier'	=> 1E15,	'name'	=> 'peta'],
+													'T'	=> ['multiplier'	=> 1E12,	'name'	=> 'tera'],
+													'G'	=> ['multiplier'	=> 1E9,		'name'	=> 'giga'],
+													'M'	=> ['multiplier'	=> 1E6,		'name'	=> 'mega'],
+													'k'	=> ['multiplier'	=> 1E3,		'name'	=> 'kilo'],
+													'h'	=> ['multiplier'	=> 1E2,		'name'	=> 'hecto'],
+													'e'	=> ['multiplier'	=> 1E1,		'name'	=> 'deka'],
+													'd'	=> ['multiplier'	=> 1E-1,	'name'	=> 'deci'],
+													'c'	=> ['multiplier'	=> 1E-2,	'name'	=> 'centi'],
+													'm'	=> ['multiplier'	=> 1E-3,	'name'	=> 'milli'],
+													'u'	=> ['multiplier'	=> 1E-6,	'name'	=> 'micro'],
+													'n'	=> ['multiplier'	=> 1E-9,	'name'	=> 'nano'],
+													'p'	=> ['multiplier'	=> 1E-12,	'name'	=> 'pico'],
+													'f'	=> ['multiplier'	=> 1E-15,	'name'	=> 'femto'],
+													'a'	=> ['multiplier'	=> 1E-18,	'name'	=> 'atto'],
+													'z'	=> ['multiplier'	=> 1E-21,	'name'	=> 'zepto'],
+													'y'	=> ['multiplier'	=> 1E-24,	'name'	=> 'yocto']
+    ];
 
 	/**
 	 * Details of the Units of measure conversion factors, organised by group
 	 *
 	 * @var mixed[]
 	 */
-	private static $_unitConversions = array(	'Mass'		=> array(	'g'		=> array(	'g'		=> 1.0,
+	private static $_unitConversions = ['Mass'		=> ['g'		=> ['g'		=> 1.0,
 																							'sg'	=> 6.85220500053478E-05,
 																							'lbm'	=> 2.20462291469134E-03,
 																							'u'		=> 6.02217000000000E+23,
 																							'ozm'	=> 3.52739718003627E-02
-																						),
-																		'sg'	=> array(	'g'		=> 1.45938424189287E+04,
+    ],
+																		'sg'	=> ['g'		=> 1.45938424189287E+04,
 																							'sg'	=> 1.0,
 																							'lbm'	=> 3.21739194101647E+01,
 																							'u'		=> 8.78866000000000E+27,
 																							'ozm'	=> 5.14782785944229E+02
-																						),
-																		'lbm'	=> array(	'g'		=> 4.5359230974881148E+02,
+                                                                        ],
+																		'lbm'	=> ['g'		=> 4.5359230974881148E+02,
 																							'sg'	=> 3.10810749306493E-02,
 																							'lbm'	=> 1.0,
 																							'u'		=> 2.73161000000000E+26,
 																							'ozm'	=> 1.60000023429410E+01
-																						),
-																		'u'		=> array(	'g'		=> 1.66053100460465E-24,
+                                                                        ],
+																		'u'		=> ['g'		=> 1.66053100460465E-24,
 																							'sg'	=> 1.13782988532950E-28,
 																							'lbm'	=> 3.66084470330684E-27,
 																							'u'		=> 1.0,
 																							'ozm'	=> 5.85735238300524E-26
-																						),
-																		'ozm'	=> array(	'g'		=> 2.83495152079732E+01,
+                                                                        ],
+																		'ozm'	=> ['g'		=> 2.83495152079732E+01,
 																							'sg'	=> 1.94256689870811E-03,
 																							'lbm'	=> 6.24999908478882E-02,
 																							'u'		=> 1.70725600000000E+25,
 																							'ozm'	=> 1.0
-																						)
-																	),
-												'Distance'	=> array(	'm'		=> array(	'm'		=> 1.0,
+                                                                        ]
+    ],
+												'Distance'	=> ['m'		=> ['m'		=> 1.0,
 																							'mi'	=> 6.21371192237334E-04,
 																							'Nmi'	=> 5.39956803455724E-04,
 																							'in'	=> 3.93700787401575E+01,
@@ -190,8 +190,8 @@ class PHPExcel_Calculation_Engineering {
 																							'yd'	=> 1.09361329797891E+00,
 																							'ang'	=> 1.00000000000000E+10,
 																							'Pica'	=> 2.83464566929116E+03
-																						),
-																		'mi'	=> array(	'm'		=> 1.60934400000000E+03,
+                                                ],
+																		'mi'	=> ['m'		=> 1.60934400000000E+03,
 																							'mi'	=> 1.0,
 																							'Nmi'	=> 8.68976241900648E-01,
 																							'in'	=> 6.33600000000000E+04,
@@ -199,8 +199,8 @@ class PHPExcel_Calculation_Engineering {
 																							'yd'	=> 1.76000000000000E+03,
 																							'ang'	=> 1.60934400000000E+13,
 																							'Pica'	=> 4.56191999999971E+06
-																						),
-																		'Nmi'	=> array(	'm'		=> 1.85200000000000E+03,
+                                                                        ],
+																		'Nmi'	=> ['m'		=> 1.85200000000000E+03,
 																							'mi'	=> 1.15077944802354E+00,
 																							'Nmi'	=> 1.0,
 																							'in'	=> 7.29133858267717E+04,
@@ -208,8 +208,8 @@ class PHPExcel_Calculation_Engineering {
 																							'yd'	=> 2.02537182785694E+03,
 																							'ang'	=> 1.85200000000000E+13,
 																							'Pica'	=> 5.24976377952723E+06
-																						),
-																		'in'	=> array(	'm'		=> 2.54000000000000E-02,
+                                                                        ],
+																		'in'	=> ['m'		=> 2.54000000000000E-02,
 																							'mi'	=> 1.57828282828283E-05,
 																							'Nmi'	=> 1.37149028077754E-05,
 																							'in'	=> 1.0,
@@ -217,8 +217,8 @@ class PHPExcel_Calculation_Engineering {
 																							'yd'	=> 2.77777777686643E-02,
 																							'ang'	=> 2.54000000000000E+08,
 																							'Pica'	=> 7.19999999999955E+01
-																						),
-																		'ft'	=> array(	'm'		=> 3.04800000000000E-01,
+                                                                        ],
+																		'ft'	=> ['m'		=> 3.04800000000000E-01,
 																							'mi'	=> 1.89393939393939E-04,
 																							'Nmi'	=> 1.64578833693305E-04,
 																							'in'	=> 1.20000000000000E+01,
@@ -226,8 +226,8 @@ class PHPExcel_Calculation_Engineering {
 																							'yd'	=> 3.33333333223972E-01,
 																							'ang'	=> 3.04800000000000E+09,
 																							'Pica'	=> 8.63999999999946E+02
-																						),
-																		'yd'	=> array(	'm'		=> 9.14400000300000E-01,
+                                                                        ],
+																		'yd'	=> ['m'		=> 9.14400000300000E-01,
 																							'mi'	=> 5.68181818368230E-04,
 																							'Nmi'	=> 4.93736501241901E-04,
 																							'in'	=> 3.60000000118110E+01,
@@ -235,8 +235,8 @@ class PHPExcel_Calculation_Engineering {
 																							'yd'	=> 1.0,
 																							'ang'	=> 9.14400000300000E+09,
 																							'Pica'	=> 2.59200000085023E+03
-																						),
-																		'ang'	=> array(	'm'		=> 1.00000000000000E-10,
+                                                                        ],
+																		'ang'	=> ['m'		=> 1.00000000000000E-10,
 																							'mi'	=> 6.21371192237334E-14,
 																							'Nmi'	=> 5.39956803455724E-14,
 																							'in'	=> 3.93700787401575E-09,
@@ -244,8 +244,8 @@ class PHPExcel_Calculation_Engineering {
 																							'yd'	=> 1.09361329797891E-10,
 																							'ang'	=> 1.0,
 																							'Pica'	=> 2.83464566929116E-07
-																						),
-																		'Pica'	=> array(	'm'		=> 3.52777777777800E-04,
+                                                                        ],
+																		'Pica'	=> ['m'		=> 3.52777777777800E-04,
 																							'mi'	=> 2.19205948372629E-07,
 																							'Nmi'	=> 1.90484761219114E-07,
 																							'in'	=> 1.38888888888898E-02,
@@ -253,92 +253,92 @@ class PHPExcel_Calculation_Engineering {
 																							'yd'	=> 3.85802469009251E-04,
 																							'ang'	=> 3.52777777777800E+06,
 																							'Pica'	=> 1.0
-																						)
-																	),
-												'Time'		=> array(	'yr'	=> array(	'yr'		=> 1.0,
+                                                                        ]
+                                                ],
+												'Time'		=> ['yr'	=> ['yr'		=> 1.0,
 																							'day'		=> 365.25,
 																							'hr'		=> 8766.0,
 																							'mn'		=> 525960.0,
 																							'sec'		=> 31557600.0
-																						),
-																		'day'	=> array(	'yr'		=> 2.73785078713210E-03,
+                                                ],
+																		'day'	=> ['yr'		=> 2.73785078713210E-03,
 																							'day'		=> 1.0,
 																							'hr'		=> 24.0,
 																							'mn'		=> 1440.0,
 																							'sec'		=> 86400.0
-																						),
-																		'hr'	=> array(	'yr'		=> 1.14077116130504E-04,
+                                                                        ],
+																		'hr'	=> ['yr'		=> 1.14077116130504E-04,
 																							'day'		=> 4.16666666666667E-02,
 																							'hr'		=> 1.0,
 																							'mn'		=> 60.0,
 																							'sec'		=> 3600.0
-																						),
-																		'mn'	=> array(	'yr'		=> 1.90128526884174E-06,
+                                                                        ],
+																		'mn'	=> ['yr'		=> 1.90128526884174E-06,
 																							'day'		=> 6.94444444444444E-04,
 																							'hr'		=> 1.66666666666667E-02,
 																							'mn'		=> 1.0,
 																							'sec'		=> 60.0
-																						),
-																		'sec'	=> array(	'yr'		=> 3.16880878140289E-08,
+                                                                        ],
+																		'sec'	=> ['yr'		=> 3.16880878140289E-08,
 																							'day'		=> 1.15740740740741E-05,
 																							'hr'		=> 2.77777777777778E-04,
 																							'mn'		=> 1.66666666666667E-02,
 																							'sec'		=> 1.0
-																						)
-																	),
-												'Pressure'	=> array(	'Pa'	=> array(	'Pa'		=> 1.0,
+                                                                        ]
+                                                ],
+												'Pressure'	=> ['Pa'	=> ['Pa'		=> 1.0,
 																							'p'			=> 1.0,
 																							'atm'		=> 9.86923299998193E-06,
 																							'at'		=> 9.86923299998193E-06,
 																							'mmHg'		=> 7.50061707998627E-03
-																						),
-																		'p'		=> array(	'Pa'		=> 1.0,
+                                                ],
+																		'p'		=> ['Pa'		=> 1.0,
 																							'p'			=> 1.0,
 																							'atm'		=> 9.86923299998193E-06,
 																							'at'		=> 9.86923299998193E-06,
 																							'mmHg'		=> 7.50061707998627E-03
-																						),
-																		'atm'	=> array(	'Pa'		=> 1.01324996583000E+05,
+                                                                        ],
+																		'atm'	=> ['Pa'		=> 1.01324996583000E+05,
 																							'p'			=> 1.01324996583000E+05,
 																							'atm'		=> 1.0,
 																							'at'		=> 1.0,
 																							'mmHg'		=> 760.0
-																						),
-																		'at'	=> array(	'Pa'		=> 1.01324996583000E+05,
+                                                                        ],
+																		'at'	=> ['Pa'		=> 1.01324996583000E+05,
 																							'p'			=> 1.01324996583000E+05,
 																							'atm'		=> 1.0,
 																							'at'		=> 1.0,
 																							'mmHg'		=> 760.0
-																						),
-																		'mmHg'	=> array(	'Pa'		=> 1.33322363925000E+02,
+                                                                        ],
+																		'mmHg'	=> ['Pa'		=> 1.33322363925000E+02,
 																							'p'			=> 1.33322363925000E+02,
 																							'atm'		=> 1.31578947368421E-03,
 																							'at'		=> 1.31578947368421E-03,
 																							'mmHg'		=> 1.0
-																						)
-																	),
-												'Force'		=> array(	'N'		=> array(	'N'			=> 1.0,
+                                                                        ]
+                                                ],
+												'Force'		=> ['N'		=> ['N'			=> 1.0,
 																							'dyn'		=> 1.0E+5,
 																							'dy'		=> 1.0E+5,
 																							'lbf'		=> 2.24808923655339E-01
-																						),
-																		'dyn'	=> array(	'N'			=> 1.0E-5,
+                                                ],
+																		'dyn'	=> ['N'			=> 1.0E-5,
 																							'dyn'		=> 1.0,
 																							'dy'		=> 1.0,
 																							'lbf'		=> 2.24808923655339E-06
-																						),
-																		'dy'	=> array(	'N'			=> 1.0E-5,
+                                                                        ],
+																		'dy'	=> ['N'			=> 1.0E-5,
 																							'dyn'		=> 1.0,
 																							'dy'		=> 1.0,
 																							'lbf'		=> 2.24808923655339E-06
-																						),
-																		'lbf'	=> array(	'N'			=> 4.448222,
+                                                                        ],
+																		'lbf'	=> ['N'			=> 4.448222,
 																							'dyn'		=> 4.448222E+5,
 																							'dy'		=> 4.448222E+5,
 																							'lbf'		=> 1.0
-																						)
-																	),
-												'Energy'	=> array(	'J'		=> array(	'J'			=> 1.0,
+                                                                        ]
+                                                ],
+												'Energy'	=> ['J'		=> ['J'			=> 1.0,
 																							'e'			=> 9.99999519343231E+06,
 																							'c'			=> 2.39006249473467E-01,
 																							'cal'		=> 2.38846190642017E-01,
@@ -351,8 +351,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 2.37304222192651E+01,
 																							'BTU'		=> 9.47815067349015E-04,
 																							'btu'		=> 9.47815067349015E-04
-																						),
-																		'e'		=> array(	'J'			=> 1.00000048065700E-07,
+                                                ],
+																		'e'		=> ['J'			=> 1.00000048065700E-07,
 																							'e'			=> 1.0,
 																							'c'			=> 2.39006364353494E-08,
 																							'cal'		=> 2.38846305445111E-08,
@@ -365,8 +365,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 2.37304336254586E-06,
 																							'BTU'		=> 9.47815522922962E-11,
 																							'btu'		=> 9.47815522922962E-11
-																						),
-																		'c'		=> array(	'J'			=> 4.18399101363672E+00,
+                                                                        ],
+																		'c'		=> ['J'			=> 4.18399101363672E+00,
 																							'e'			=> 4.18398900257312E+07,
 																							'c'			=> 1.0,
 																							'cal'		=> 9.99330315287563E-01,
@@ -379,8 +379,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 9.92878733152102E+01,
 																							'BTU'		=> 3.96564972437776E-03,
 																							'btu'		=> 3.96564972437776E-03
-																						),
-																		'cal'	=> array(	'J'			=> 4.18679484613929E+00,
+                                                                        ],
+																		'cal'	=> ['J'			=> 4.18679484613929E+00,
 																							'e'			=> 4.18679283372801E+07,
 																							'c'			=> 1.00067013349059E+00,
 																							'cal'		=> 1.0,
@@ -393,8 +393,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 9.93544094443283E+01,
 																							'BTU'		=> 3.96830723907002E-03,
 																							'btu'		=> 3.96830723907002E-03
-																						),
-																		'eV'	=> array(	'J'			=> 1.60219000146921E-19,
+                                                                        ],
+																		'eV'	=> ['J'			=> 1.60219000146921E-19,
 																							'e'			=> 1.60218923136574E-12,
 																							'c'			=> 3.82933423195043E-20,
 																							'cal'		=> 3.82676978535648E-20,
@@ -407,8 +407,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 3.80206452103492E-18,
 																							'BTU'		=> 1.51857982414846E-22,
 																							'btu'		=> 1.51857982414846E-22
-																						),
-																		'ev'	=> array(	'J'			=> 1.60219000146921E-19,
+                                                                        ],
+																		'ev'	=> ['J'			=> 1.60219000146921E-19,
 																							'e'			=> 1.60218923136574E-12,
 																							'c'			=> 3.82933423195043E-20,
 																							'cal'		=> 3.82676978535648E-20,
@@ -421,8 +421,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 3.80206452103492E-18,
 																							'BTU'		=> 1.51857982414846E-22,
 																							'btu'		=> 1.51857982414846E-22
-																						),
-																		'HPh'	=> array(	'J'			=> 2.68451741316170E+06,
+                                                                        ],
+																		'HPh'	=> ['J'			=> 2.68451741316170E+06,
 																							'e'			=> 2.68451612283024E+13,
 																							'c'			=> 6.41616438565991E+05,
 																							'cal'		=> 6.41186757845835E+05,
@@ -435,8 +435,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 6.37047316692964E+07,
 																							'BTU'		=> 2.54442605275546E+03,
 																							'btu'		=> 2.54442605275546E+03
-																						),
-																		'hh'	=> array(	'J'			=> 2.68451741316170E+06,
+                                                                        ],
+																		'hh'	=> ['J'			=> 2.68451741316170E+06,
 																							'e'			=> 2.68451612283024E+13,
 																							'c'			=> 6.41616438565991E+05,
 																							'cal'		=> 6.41186757845835E+05,
@@ -449,8 +449,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 6.37047316692964E+07,
 																							'BTU'		=> 2.54442605275546E+03,
 																							'btu'		=> 2.54442605275546E+03
-																						),
-																		'Wh'	=> array(	'J'			=> 3.59999820554720E+03,
+                                                                        ],
+																		'Wh'	=> ['J'			=> 3.59999820554720E+03,
 																							'e'			=> 3.59999647518369E+10,
 																							'c'			=> 8.60422069219046E+02,
 																							'cal'		=> 8.59845857713046E+02,
@@ -463,8 +463,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 8.54294774062316E+04,
 																							'BTU'		=> 3.41213254164705E+00,
 																							'btu'		=> 3.41213254164705E+00
-																						),
-																		'wh'	=> array(	'J'			=> 3.59999820554720E+03,
+                                                                        ],
+																		'wh'	=> ['J'			=> 3.59999820554720E+03,
 																							'e'			=> 3.59999647518369E+10,
 																							'c'			=> 8.60422069219046E+02,
 																							'cal'		=> 8.59845857713046E+02,
@@ -477,8 +477,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 8.54294774062316E+04,
 																							'BTU'		=> 3.41213254164705E+00,
 																							'btu'		=> 3.41213254164705E+00
-																						),
-																		'flb'	=> array(	'J'			=> 4.21400003236424E-02,
+                                                                        ],
+																		'flb'	=> ['J'			=> 4.21400003236424E-02,
 																							'e'			=> 4.21399800687660E+05,
 																							'c'			=> 1.00717234301644E-02,
 																							'cal'		=> 1.00649785509554E-02,
@@ -491,8 +491,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 1.0,
 																							'BTU'		=> 3.99409272448406E-05,
 																							'btu'		=> 3.99409272448406E-05
-																						),
-																		'BTU'	=> array(	'J'			=> 1.05505813786749E+03,
+                                                                        ],
+																		'BTU'	=> ['J'			=> 1.05505813786749E+03,
 																							'e'			=> 1.05505763074665E+10,
 																							'c'			=> 2.52165488508168E+02,
 																							'cal'		=> 2.51996617135510E+02,
@@ -505,8 +505,8 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 2.50369750774671E+04,
 																							'BTU'		=> 1.0,
 																							'btu'		=> 1.0,
-																						),
-																		'btu'	=> array(	'J'			=> 1.05505813786749E+03,
+                                                                        ],
+																		'btu'	=> ['J'			=> 1.05505813786749E+03,
 																							'e'			=> 1.05505763074665E+10,
 																							'c'			=> 2.52165488508168E+02,
 																							'cal'		=> 2.51996617135510E+02,
@@ -519,37 +519,37 @@ class PHPExcel_Calculation_Engineering {
 																							'flb'		=> 2.50369750774671E+04,
 																							'BTU'		=> 1.0,
 																							'btu'		=> 1.0,
-																						)
-																	),
-												'Power'		=> array(	'HP'	=> array(	'HP'		=> 1.0,
+                                                                        ]
+                                                ],
+												'Power'		=> ['HP'	=> ['HP'		=> 1.0,
 																							'h'			=> 1.0,
 																							'W'			=> 7.45701000000000E+02,
 																							'w'			=> 7.45701000000000E+02
-																						),
-																		'h'		=> array(	'HP'		=> 1.0,
+                                                ],
+																		'h'		=> ['HP'		=> 1.0,
 																							'h'			=> 1.0,
 																							'W'			=> 7.45701000000000E+02,
 																							'w'			=> 7.45701000000000E+02
-																						),
-																		'W'		=> array(	'HP'		=> 1.34102006031908E-03,
+                                                                        ],
+																		'W'		=> ['HP'		=> 1.34102006031908E-03,
 																							'h'			=> 1.34102006031908E-03,
 																							'W'			=> 1.0,
 																							'w'			=> 1.0
-																						),
-																		'w'		=> array(	'HP'		=> 1.34102006031908E-03,
+                                                                        ],
+																		'w'		=> ['HP'		=> 1.34102006031908E-03,
 																							'h'			=> 1.34102006031908E-03,
 																							'W'			=> 1.0,
 																							'w'			=> 1.0
-																						)
-																	),
-												'Magnetism'	=> array(	'T'		=> array(	'T'			=> 1.0,
+                                                                        ]
+                                                ],
+												'Magnetism'	=> ['T'		=> ['T'			=> 1.0,
 																							'ga'		=> 10000.0
-																						),
-																		'ga'	=> array(	'T'			=> 0.0001,
+                                                ],
+																		'ga'	=> ['T'			=> 0.0001,
 																							'ga'		=> 1.0
-																						)
-																	),
-												'Liquid'	=> array(	'tsp'	=> array(	'tsp'		=> 1.0,
+                                                                        ]
+                                                ],
+												'Liquid'	=> ['tsp'	=> ['tsp'		=> 1.0,
 																							'tbs'		=> 3.33333333333333E-01,
 																							'oz'		=> 1.66666666666667E-01,
 																							'cup'		=> 2.08333333333333E-02,
@@ -560,8 +560,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 1.30208333333333E-03,
 																							'l'			=> 4.92999408400710E-03,
 																							'lt'		=> 4.92999408400710E-03
-																						),
-																		'tbs'	=> array(	'tsp'		=> 3.00000000000000E+00,
+                                                ],
+																		'tbs'	=> ['tsp'		=> 3.00000000000000E+00,
 																							'tbs'		=> 1.0,
 																							'oz'		=> 5.00000000000000E-01,
 																							'cup'		=> 6.25000000000000E-02,
@@ -572,8 +572,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 3.90625000000000E-03,
 																							'l'			=> 1.47899822520213E-02,
 																							'lt'		=> 1.47899822520213E-02
-																						),
-																		'oz'	=> array(	'tsp'		=> 6.00000000000000E+00,
+                                                                        ],
+																		'oz'	=> ['tsp'		=> 6.00000000000000E+00,
 																							'tbs'		=> 2.00000000000000E+00,
 																							'oz'		=> 1.0,
 																							'cup'		=> 1.25000000000000E-01,
@@ -584,8 +584,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 7.81250000000000E-03,
 																							'l'			=> 2.95799645040426E-02,
 																							'lt'		=> 2.95799645040426E-02
-																						),
-																		'cup'	=> array(	'tsp'		=> 4.80000000000000E+01,
+                                                                        ],
+																		'cup'	=> ['tsp'		=> 4.80000000000000E+01,
 																							'tbs'		=> 1.60000000000000E+01,
 																							'oz'		=> 8.00000000000000E+00,
 																							'cup'		=> 1.0,
@@ -596,8 +596,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 6.25000000000000E-02,
 																							'l'			=> 2.36639716032341E-01,
 																							'lt'		=> 2.36639716032341E-01
-																						),
-																		'pt'	=> array(	'tsp'		=> 9.60000000000000E+01,
+                                                                        ],
+																		'pt'	=> ['tsp'		=> 9.60000000000000E+01,
 																							'tbs'		=> 3.20000000000000E+01,
 																							'oz'		=> 1.60000000000000E+01,
 																							'cup'		=> 2.00000000000000E+00,
@@ -608,8 +608,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 1.25000000000000E-01,
 																							'l'			=> 4.73279432064682E-01,
 																							'lt'		=> 4.73279432064682E-01
-																						),
-																		'us_pt'	=> array(	'tsp'		=> 9.60000000000000E+01,
+                                                                        ],
+																		'us_pt'	=> ['tsp'		=> 9.60000000000000E+01,
 																							'tbs'		=> 3.20000000000000E+01,
 																							'oz'		=> 1.60000000000000E+01,
 																							'cup'		=> 2.00000000000000E+00,
@@ -620,8 +620,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 1.25000000000000E-01,
 																							'l'			=> 4.73279432064682E-01,
 																							'lt'		=> 4.73279432064682E-01
-																						),
-																		'uk_pt'	=> array(	'tsp'		=> 1.15266000000000E+02,
+                                                                        ],
+																		'uk_pt'	=> ['tsp'		=> 1.15266000000000E+02,
 																							'tbs'		=> 3.84220000000000E+01,
 																							'oz'		=> 1.92110000000000E+01,
 																							'cup'		=> 2.40137500000000E+00,
@@ -632,8 +632,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 1.50085937500000E-01,
 																							'l'			=> 5.68260698087162E-01,
 																							'lt'		=> 5.68260698087162E-01
-																						),
-																		'qt'	=> array(	'tsp'		=> 1.92000000000000E+02,
+                                                                        ],
+																		'qt'	=> ['tsp'		=> 1.92000000000000E+02,
 																							'tbs'		=> 6.40000000000000E+01,
 																							'oz'		=> 3.20000000000000E+01,
 																							'cup'		=> 4.00000000000000E+00,
@@ -644,8 +644,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 2.50000000000000E-01,
 																							'l'			=> 9.46558864129363E-01,
 																							'lt'		=> 9.46558864129363E-01
-																						),
-																		'gal'	=> array(	'tsp'		=> 7.68000000000000E+02,
+                                                                        ],
+																		'gal'	=> ['tsp'		=> 7.68000000000000E+02,
 																							'tbs'		=> 2.56000000000000E+02,
 																							'oz'		=> 1.28000000000000E+02,
 																							'cup'		=> 1.60000000000000E+01,
@@ -656,8 +656,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 1.0,
 																							'l'			=> 3.78623545651745E+00,
 																							'lt'		=> 3.78623545651745E+00
-																						),
-																		'l'		=> array(	'tsp'		=> 2.02840000000000E+02,
+                                                                        ],
+																		'l'		=> ['tsp'		=> 2.02840000000000E+02,
 																							'tbs'		=> 6.76133333333333E+01,
 																							'oz'		=> 3.38066666666667E+01,
 																							'cup'		=> 4.22583333333333E+00,
@@ -668,8 +668,8 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 2.64114583333333E-01,
 																							'l'			=> 1.0,
 																							'lt'		=> 1.0
-																						),
-																		'lt'	=> array(	'tsp'		=> 2.02840000000000E+02,
+                                                                        ],
+																		'lt'	=> ['tsp'		=> 2.02840000000000E+02,
 																							'tbs'		=> 6.76133333333333E+01,
 																							'oz'		=> 3.38066666666667E+01,
 																							'cup'		=> 4.22583333333333E+00,
@@ -680,9 +680,9 @@ class PHPExcel_Calculation_Engineering {
 																							'gal'		=> 2.64114583333333E-01,
 																							'l'			=> 1.0,
 																							'lt'		=> 1.0
-																						)
-																	)
-											);
+                                                                        ]
+                                                ]
+    ];
 
 
 	/**
@@ -733,10 +733,10 @@ class PHPExcel_Calculation_Engineering {
 			}
 		}
 
-		return array( 'real'		=> $realNumber,
+		return ['real'		=> $realNumber,
 					  'imaginary'	=> $imaginary,
 					  'suffix'		=> $suffix
-					);
+        ];
 	}	//	function _parseComplex()
 
 
@@ -2346,7 +2346,7 @@ class PHPExcel_Calculation_Engineering {
 	 *	@return	array
 	 */
 	public static function getConversionGroups() {
-		$conversionGroups = array();
+		$conversionGroups = [];
 		foreach(self::$_conversionUnits as $conversionUnit) {
 			$conversionGroups[] = $conversionUnit['Group'];
 		}
@@ -2362,7 +2362,7 @@ class PHPExcel_Calculation_Engineering {
 	 *	@return	array
 	 */
 	public static function getConversionGroupUnits($group = NULL) {
-		$conversionGroups = array();
+		$conversionGroups = [];
 		foreach(self::$_conversionUnits as $conversionUnit => $conversionGroup) {
 			if ((is_null($group)) || ($conversionGroup['Group'] == $group)) {
 				$conversionGroups[$conversionGroup['Group']][] = $conversionUnit;
@@ -2379,12 +2379,12 @@ class PHPExcel_Calculation_Engineering {
 	 *	@return	array
 	 */
 	public static function getConversionGroupUnitDetails($group = NULL) {
-		$conversionGroups = array();
+		$conversionGroups = [];
 		foreach(self::$_conversionUnits as $conversionUnit => $conversionGroup) {
 			if ((is_null($group)) || ($conversionGroup['Group'] == $group)) {
-				$conversionGroups[$conversionGroup['Group']][] = array(	'unit'			=> $conversionUnit,
+				$conversionGroups[$conversionGroup['Group']][] = ['unit'			=> $conversionUnit,
 																		'description'	=> $conversionGroup['Unit Name']
-																	  );
+                ];
 			}
 		}
 		return $conversionGroups;
@@ -2472,16 +2472,14 @@ class PHPExcel_Calculation_Engineering {
 			return $value / $fromMultiplier;
 		} elseif ($unitGroup1 == 'Temperature') {
 			if (($fromUOM == 'F') || ($fromUOM == 'fah')) {
-				if (($toUOM == 'F') || ($toUOM == 'fah')) {
-					return $value;
-				} else {
-					$value = (($value - 32) / 1.8);
-					if (($toUOM == 'K') || ($toUOM == 'kel')) {
-						$value += 273.15;
-					}
-					return $value;
-				}
-			} elseif ((($fromUOM == 'K') || ($fromUOM == 'kel')) &&
+				if ($toUOM != 'F' && $toUOM != 'fah') {
+                    $value = (($value - 32) / 1.8);
+                    if (($toUOM == 'K') || ($toUOM == 'kel')) {
+                        $value += 273.15;
+                    }
+                }
+                return $value;
+            } elseif ((($fromUOM == 'K') || ($fromUOM == 'kel')) &&
 					  (($toUOM == 'K') || ($toUOM == 'kel'))) {
 						return $value;
 			} elseif ((($fromUOM == 'C') || ($fromUOM == 'cel')) &&

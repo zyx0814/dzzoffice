@@ -27,34 +27,34 @@ if ($do == 'editpass') {
     $navtitle = lang('password_edit');
     $strongpw = ($_G['setting']['strongpw']) ? json_encode($_G['setting']['strongpw']) : '';
     if (isset($_GET['editpass'])) {
-        if ($my_info) showTips(array('error' => lang('no_modify_password')), $type);
+        if ($my_info) showTips(['error' => lang('no_modify_password')], $type);
         //验证提交是否合法，阻止外部非法提交
         chk_submitroule($type);
 
         //验证码
         if (!check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
-            showTips(array('error' => lang('submit_seccode_invalid')), $type);
+            showTips(['error' => lang('submit_seccode_invalid')], $type);
         }
         //验证原密码
         $password0 = $_GET['password0'];
         if (md5(md5("") . $member['salt']) != $member['password']) {
             if (md5(md5($password0) . $member['salt']) != $member['password']) {
-                showTips(array('error' => lang('password_error')), $type);
+                showTips(['error' => lang('password_error')], $type);
             }
         }
         if ($_GET['password'] != addslashes($_GET['password'])) {
-            showTips(array('error' => lang('profile_passwd_illegal')), $type);
+            showTips(['error' => lang('profile_passwd_illegal')], $type);
         }
         if ($_GET['password'] && $_G['setting']['pwlength']) {
             if (strlen($_GET['password']) < $_G['setting']['pwlength']) {
 
-                showTips(array('error' => lang('profile_password_tooshort'), 'pwlength' => $_G['setting']['pwlength']), $type);
+                showTips(['error' => lang('profile_password_tooshort'), 'pwlength' => $_G['setting']['pwlength']], $type);
             }
         }
 
         //验证密码强度
         if ($_GET['password'] && $_G['setting']['strongpw']) {
-            $strongpw_str = array();
+            $strongpw_str = [];
             if (in_array(1, $_G['setting']['strongpw']) && !preg_match("/\d+/", $_GET['password'])) {
                 $strongpw_str[] = lang('strongpw_1');
             }
@@ -69,25 +69,25 @@ if ($do == 'editpass') {
             }
             if ($strongpw_str) {
 
-                showTips(array('error' => lang('password_weak') . implode(',', $strongpw_str)), $type);
+                showTips(['error' => lang('password_weak') . implode(',', $strongpw_str)], $type);
 
             }
         }
 
         if ($_GET['password'] && $_GET['password'] !== $_GET['password2']) {
-            showTips(array('error' => lang('profile_passwd_notmatch')), $type);
+            showTips(['error' => lang('profile_passwd_notmatch')], $type);
         }
-        $setarr = array();
+        $setarr = [];
 
         if ($_GET['password']) {
             $password = preg_match('/^\w{32}$/', $_GET['password']) ? $_GET['password'] : md5($_GET['password']);
             $password = md5($password . $member['salt']);
         }
         if ($password && C::t('user')->update_password($_G['uid'], $password)) {
-            showTips(array('success' => lang('update_password_success')), $type);
+            showTips(['success' => lang('update_password_success')], $type);
             exit();
         }
-        showTips(array('error' => lang('update_password_failed')), $type);
+        showTips(['error' => lang('update_password_failed')], $type);
         exit();
     }
 
@@ -95,7 +95,7 @@ if ($do == 'editpass') {
     $navtitle = '登录记录';
     function get_log_files($logdir = '', $action = 'action') {
         $dir = opendir($logdir);
-        $files = array();
+        $files = [];
         while ($entry = readdir($dir)) {
             $files[] = $entry;
         }
@@ -104,7 +104,7 @@ if ($do == 'editpass') {
         if ($files) {
             sort($files);
             $logfile = $action;
-            $logfiles = array();
+            $logfiles = [];
             $ym = '';
             foreach ($files as $file) {
                 if (strpos($file, $logfile) !== FALSE) {
@@ -115,7 +115,7 @@ if ($do == 'editpass') {
                 }
             }
             if ($logfiles) {
-                $lfs = array();
+                $lfs = [];
                 foreach ($logfiles as $ym => $lf) {
                     $lastlogfile = $lf[0];
                     unset($lf[0]);
@@ -124,14 +124,14 @@ if ($do == 'editpass') {
                 }
                 return $lfs;
             }
-            return array();
+            return [];
         }
-        return array();
+        return [];
     }
 
     !isset($_GET['page']) && $_GET['page'] = 1;
     $lpp = empty($_GET['lpp']) ? 20 : $_GET['lpp'];
-    $checklpp = array();
+    $checklpp = [];
     $checklpp[$lpp] = 'selected="selected"';
     $keyword = "uid=" . $_G['uid'];
     $pattern = '/\b' . preg_quote($keyword, '/') . '\b/';
@@ -139,11 +139,11 @@ if ($do == 'editpass') {
     $operation = "loginlog";
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $start = ($page - 1) * $lpp;
-    $gets = array(
+    $gets = [
         'mod' => MOD_NAME,
         'op' => $_GET['op'],
         'do' => $_GET['do']
-    );
+    ];
     $theurl = BASESCRIPT . "?" . url_implode($gets);
     $logdir = DZZ_ROOT . './data/log/';
     $logfiles = get_log_files($logdir, $operation);
@@ -153,16 +153,16 @@ if ($do == 'editpass') {
     $firstlogsnum = count($firstlogs);
     $countlogfile = count($logfiles);
 
-    $logs = array();
+    $logs = [];
     $jishu = 4000;//每个日志文件最多行数
     $start = ($page - 1) * $lpp;
     $lastlog = $last_secondlog = "";
 
-    $newdata = array();
+    $newdata = [];
     foreach ($logfiles as $k => $v) {
         $nowfilemaxnum = ($jishu * ($k + 1)) - ($jishu - $firstlogsnum);
         $startnum = ($nowfilemaxnum - $jishu) <= 0 ? 0 : ($nowfilemaxnum - $jishu + 1);
-        $newdata[] = array("file" => $v, "start" => $startnum, "end" => $nowfilemaxnum);
+        $newdata[] = ["file" => $v, "start" => $startnum, "end" => $nowfilemaxnum];
     }
     //print_R($newdata);
     //查询当前分页数据位于哪个日志文件
@@ -172,10 +172,8 @@ if ($do == 'editpass') {
             $lastlog = $v;
             if (($start + $lpp) < $v["end"]) {
 
-            } else {
-                if (isset($newdata[$k + 1])) {
-                    $last_secondlog = $newdata[$k + 1];
-                }
+            } else if (isset($newdata[$k + 1])) {
+                $last_secondlog = $newdata[$k + 1];
             }
             break;
         }
@@ -220,11 +218,11 @@ if ($do == 'editpass') {
         $logs2 = array_slice($logs2, 0, $jj);
         $logs = array_merge($logs, $logs2);
     }
-    $usergroup = array();
+    $usergroup = [];
     foreach (C::t('usergroup')->range() as $group) {
         $usergroup[$group['groupid']] = $group['grouptitle'];
     }
-    $list = array();
+    $list = [];
     foreach ($logs as $k => $logrow) {
         $log = explode("\t", $logrow);
         if (empty($log[1])) {
@@ -244,11 +242,11 @@ if ($do == 'editpass') {
     $bindemail = isset($_GET['newemail']) ? $_GET['newemail'] : '';
 
     if (!empty($bindemail)) {
-        if ($my_info) showTips(array('error' => lang('no_modify_group')), $type);
+        if ($my_info) showTips(['error' => lang('no_modify_group')], $type);
 
         if (C::t('user')->chk_email_by_uid($bindemail, $uid)) {
 
-            showTips(array('error' => lang('profile_email_duplicate')), $type);
+            showTips(['error' => lang('profile_email_duplicate')], $type);
         }
 
         $idstring = random(6);
@@ -258,22 +256,22 @@ if ($do == 'editpass') {
 
         $confirmurl = C::t('shorturl')->getShortUrl("user.php?mod=profile&op=password&do=changeemail&uid={$uid}&id=$idstring&email={$bindemail}");
 
-        $email_bind_message = lang('bindemail_message', array(
+        $email_bind_message = lang('bindemail_message', [
             'username' => $_G['member']['username'],
             'sitename' => $_G['setting']['sitename'],
             'siteurl' => $_G['siteurl'],
             'url' => $confirmurl
-        ));
+        ]);
         if (!sendmail("$member[username] <$bindemail>", lang('bindemail_subject'), $email_bind_message)) {
 
             runlog('sendmail', "$bindemail sendmail failed.");
 
-            showTips(array('error' => lang('setting_mail_send_error')), $type);
+            showTips(['error' => lang('setting_mail_send_error')], $type);
 
         } else {
-            $updatearr = array("emailsenddate" => $idstring . '_' . time());
+            $updatearr = ["emailsenddate" => $idstring . '_' . time()];
             C::t('user')->update($uid, $updatearr);
-            showTips(array('success' => array('email' => $bindemail)), $type);
+            showTips(['success' => ['email' => $bindemail]], $type);
 
         }
 

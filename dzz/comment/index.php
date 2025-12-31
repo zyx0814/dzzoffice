@@ -12,7 +12,7 @@ if (!defined('IN_DZZ')) {
 Hook::listen('check_login');
 $uid = $_G['uid'];
 include_once libfile('function/appperm');
-$navtitle = $global_appinfo['appname'] ? $global_appinfo['appname'] : lang('appname');
+$navtitle = $global_appinfo['appname'] ?: lang('appname');
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'getinfo') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'desc';
@@ -30,7 +30,7 @@ if ($do == 'getinfo') {
         $order = 'order by dateline DESC';
     }
     $sql = "cid!='app'";
-    $param = array();
+    $param = [];
     if ($keyword) {
         $sql .= 'and (message LIKE %s or author LIKE %s)';
         $param[] = '%' . $keyword . '%';
@@ -54,7 +54,7 @@ if ($do == 'getinfo') {
     if ($count) {
         $data = DB::fetch_all("SELECT c.*, u.username FROM " . DB::table('comment') . " AS c LEFT JOIN " . DB::table('user') . " AS u ON c.edituid = u.uid WHERE $whereClause $order $limitsql", $param);
     }
-    $list = array();
+    $list = [];
     foreach ($data as $value) {
         $list[] = [
             "authorid" => $value['author'],
@@ -73,8 +73,8 @@ if ($do == 'getinfo') {
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $list ? $list : [],
+        "count" => $count ?: 0,
+        "data" => $list ?: [],
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {
@@ -94,23 +94,22 @@ if ($do == 'getinfo') {
     foreach ($cids as $cid) {
         $data = C::t('comment')->fetch($cid);
         if ($_G['adminid'] != 1 && $_G['uid'] != $data['authorid']) {
-            exit(json_encode(array('msg' => lang('no_privilege'))));
+            exit(json_encode(['msg' => lang('no_privilege')]));
         }
         C::t('comment')->delete_by_cid($cid);
     }
-    exit(json_encode(array('msg' => 'success')));
+    exit(json_encode(['msg' => 'success']));
 } else {
     //获取通知包含类型
-    $searchappid = array();
-    foreach (DB::fetch_all("select distinct(module) from %t where authorid = %d", array('comment', $_G['uid'])) as $v) {
+    $searchappid = [];
+    foreach (DB::fetch_all("select distinct(module) from %t where authorid = %d", ['comment', $_G['uid']]) as $v) {
         $searchappid[] = $v['module'];
     }
-    $searchcats = array();
+    $searchcats = [];
     if ($searchappid) {
-        foreach (DB::fetch_all("select appname,identifier,appico from %t where identifier in(%n)", array('app_market', $searchappid)) as $v) {
-            $searchcats[] = array('identifier' => $v['identifier'], 'appname' => $v['appname'], 'appico' => $_G['setting']['attachurl'] . $v['appico']);
+        foreach (DB::fetch_all("select appname,identifier,appico from %t where identifier in(%n)", ['app_market', $searchappid]) as $v) {
+            $searchcats[] = ['identifier' => $v['identifier'], 'appname' => $v['appname'], 'appico' => $_G['setting']['attachurl'] . $v['appico']];
         }
     }
     include template('list');
 }
-?>

@@ -14,7 +14,7 @@ $selgroup = isset($_GET['selgroup']) ? $_GET['selgroup'] : 0;//展示群组0不�
 $range = isset($_GET['range']) ? $_GET['range'] : 0;//是否限制展示0不限定
 //默认选中,支持路径如：我的网盘/xxx,群组xxx/xxx,群组或机构|xxx，群组或机构|xxx/新建文件夹
 $defaultselect = isset($_GET['defaultsel']) ? trim($_GET['defaultsel']) : '';
-$gets = array(
+$gets = [
     'allowcreate' => $allowcreate,
     'nosearch' => 1,
     'inwindow' => 1,
@@ -25,7 +25,7 @@ $gets = array(
     'range' => $range,
     'defaultsel' => $defaultselect,
     'savefile' => $savefile
-);
+];
 $theurl = MOD_URL . "&op=positionlist&callback=" . $callback . '&' . url_implode($gets);
 include template('selposition');
 exit();

@@ -7,7 +7,7 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-$lang = array(
+$lang = [
     'please_use_desktop' => 'Please use within the desktop!',
     'share_the' => 'shared',
     'js_a_file' => ' file(s)',
@@ -38,10 +38,10 @@ $lang = array(
     'ma' => '?',
     'js_browser' => 'Browse Web',
     'js_needrefresh' => 'Login status has changed, please refresh the page immediately!',
-    'js_button' => array(
+    'js_button' => [
         'OK' => 'OK',
         'CANCEL' => 'Cancel',
-    ),
+    ],
     'keyboard' => 'Press keyboard',
     'key_on' => 'key above',
     'key_under' => 'key below',
@@ -368,5 +368,4 @@ $lang = array(
     'edit_date' => 'Modification time',
     'rename' => 'Rename',
     'calculating' => 'Calculating',
-);
-?>
+];

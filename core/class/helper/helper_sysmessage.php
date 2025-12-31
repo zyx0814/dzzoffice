@@ -6,12 +6,12 @@ if (!defined('IN_DZZ')) {
 
 class helper_sysmessage {
 
-    public static function show($message, $title = '', $msgvar = array()) {
+    public static function show($message, $title = '', $msgvar = []) {
         if (function_exists('lang')) {
             $message = lang($message, $msgvar);
             $title = $title ? lang($title) : lang('System_Message');
         } else {
-            $title = $title ? $title : 'System Message';
+            $title = $title ?: 'System Message';
         }
         $charset = CHARSET;
         echo <<<EOT
@@ -51,4 +51,3 @@ class helper_sysmessage {
 
 }
 
-?>

@@ -66,7 +66,7 @@ class io_remote {
         global $_G;
         if (is_numeric($re = self::MoveToSpace($attach, $remoteid))) {
             $remoteid = $re;
-            if (C::t('attachment')->update($attach['aid'], array('remote' => $re))) {
+            if (C::t('attachment')->update($attach['aid'], ['remote' => $re])) {
                 //删除原文件
                 $obz = io_remote::getBzByRemoteid($attach['remote']);
                 if ($obz == 'dzz') {
@@ -80,15 +80,13 @@ class io_remote {
             C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], -$attach['filesize']);
             $attach['remote'] = $remoteid;
             return $attach;
+        } elseif ($re['error']) {
+            $attach['error'] = $re['error'];
+            return $attach;
         } else {
-            if ($re['error']) {
-                $attach['error'] = $re['error'];
-                return $attach;
-            } else {
-                return false;
-            }
+            return false;
         }
     }
 }
 
-?>
+

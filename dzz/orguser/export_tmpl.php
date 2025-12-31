@@ -20,7 +20,7 @@ $objPHPExcel->getProperties()->setCreator($_G['username'])
     ->setDescription($title . ' Export By DzzOffice  ' . date('Y-m-d H:i:s'))
     ->setKeywords($title)
     ->setCategory($title);
-$list = array();
+$list = [];
 // Create a first sheet
 $objPHPExcel->setActiveSheetIndex(0);
 $j = 0;
@@ -63,4 +63,3 @@ while (!feof($fp)) {
 }
 @unlink($filename);
 exit();
-?>

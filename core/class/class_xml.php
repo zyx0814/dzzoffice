@@ -20,7 +20,7 @@ function xmlattribute($xml, $encodeing='ISO-8859-1') {
 	return $data;
 }
 
-function attribute2arr($values,$data=array() ){
+function attribute2arr($values,$data= []){
 	foreach( $values as $k=>$v ){
 		if( isset($v["item"]) ){
 			$return = attribute2arr($v["item"]);
@@ -72,7 +72,7 @@ class XMLparse {
 	var $data;
 	var $last_opened_tag;
 	var $isnormal;
-	var $attrs = array();
+	var $attrs = [];
 	var $failed = FALSE;
 
 	function __construct($isnormal,$encodeing) {
@@ -93,8 +93,8 @@ class XMLparse {
 	}
 
 	function parse(&$data) {
-		$this->document = array();
-		$this->stack	= array();
+		$this->document = [];
+		$this->stack	= [];
 		return xml_parse($this->parser, $data, true) && !$this->failed ? $this->document : '';
 	}
 
@@ -137,4 +137,3 @@ class XMLparse {
 	}
 }
 
-?>

@@ -16,12 +16,12 @@ class table_user_setting extends dzz_table {
     public function insert($skeyarr, $uid = 0, $replace = false, $silent = false) {//插入用户设置
         if (!$uid) $uid = getglobal('uid');
         if (!$uid) return false;
-        $cachkeys = array();
+        $cachkeys = [];
         foreach ($skeyarr as $key => $value) {
-            $setarr = array('uid' => $uid,
+            $setarr = ['uid' => $uid,
                 'skey' => $key,
                 'svalue' => $value
-            );
+            ];
             $cachkeys[] = $uid . '_' . $key;
             DB::insert($this->_table, $setarr, 0, 1);
         }
@@ -34,12 +34,12 @@ class table_user_setting extends dzz_table {
     public function update($skeyarr, $uid = 0, $unbuffered = false, $low_priority = false) {//更新用户设置
         if (!$uid) $uid = getglobal('uid');
         if (!$uid) return false;
-        $cachkeys = array();
+        $cachkeys = [];
         foreach ($skeyarr as $key => $value) {
-            $setarr = array('uid' => $uid,
+            $setarr = ['uid' => $uid,
                 'skey' => $key,
                 'svalue' => $value,
-            );
+            ];
             $cachkeys[] = $uid . '_' . $key;
             DB::insert($this->_table, $setarr, 0, 1);
         }
@@ -52,12 +52,12 @@ class table_user_setting extends dzz_table {
     public function update_by_skey($skey, $val, $uid = 0) {
         if (!$uid) $uid = getglobal('uid');
         if (!$uid) return false;
-        if (!DB::update($this->_table, array('svalue' => $val), array('uid' => $uid, 'skey' => $skey))) {
-            $setarr = array('uid' => $uid,
+        if (!DB::update($this->_table, ['svalue' => $val], ['uid' => $uid, 'skey' => $skey])) {
+            $setarr = [
                 'uid' => $uid,
                 'skey' => $skey,
                 'svalue' => $val
-            );
+            ];
             DB::insert($this->_table, $setarr, 0, 1);
         }
         //更新缓存
@@ -69,11 +69,11 @@ class table_user_setting extends dzz_table {
     public function insert_by_skey($skey, $val, $uid = 0) {
         if (!$uid) $uid = getglobal('uid');
         if (!$uid) return false;
-        $setarr = array(
+        $setarr = [
             'uid' => $uid,
             'skey' => $skey,
             'svalue' => $val
-        );
+        ];
         parent::insert($setarr, 0, 1);
         //更新缓存
         $this->clear_cache($uid . '_' . $skey);
@@ -83,12 +83,12 @@ class table_user_setting extends dzz_table {
 
     public function fetch_by_skey($skey, $uid = 0) { //获取用户某项设置值
         if (!$uid) $uid = getglobal('uid');
-        if (!$uid) return array();
+        if (!$uid) return [];
         $cachekey = $uid . '_' . $skey;//增加缓存
         if ($ret = $this->fetch_cache($cachekey)) {
             return $ret;
         } else {
-            $val = DB::result_first("select svalue from %t where uid=%d and skey=%s", array($this->_table, $uid, $skey));
+            $val = DB::result_first("select svalue from %t where uid=%d and skey=%s", [$this->_table, $uid, $skey]);
             $this->store_cache($cachekey, $val);
             return $val;
         }
@@ -98,7 +98,7 @@ class table_user_setting extends dzz_table {
         if (!$uid) $uid = getglobal('uid');
         if (!$uid) return false;
         $skeys = (array)$skeys;
-        $cachekeys = array();
+        $cachekeys = [];
         foreach ($skeys as $skey) {
             $cachekeys[] = $uid . '_' . $skey;
         }
@@ -112,9 +112,9 @@ class table_user_setting extends dzz_table {
 
     public function delete_by_uid($uids) { //删除设置
         $uids = (array)$uids;
-        $cachekeys = array();
+        $cachekeys = [];
 
-        foreach (DB::fetch_all("select skey,uid from %t where uid IN (%n)", array($this->_table, $uids)) as $value) {
+        foreach (DB::fetch_all("select skey,uid from %t where uid IN (%n)", [$this->_table, $uids]) as $value) {
             $cachekeys[] = $value['uid'] . '_' . $value['skey'];
         }
         if ($ret = DB::delete($this->_table, "uid IN (" . dimplode($uids) . ")")) {
@@ -129,17 +129,15 @@ class table_user_setting extends dzz_table {
     //获取当前用户所有设置项
     public function fetch_all_user_setting($uid = 0) {
         if (!$uid) $uid = getglobal('uid');
-        if (!$uid) return array();
-        $settings = array();
+        if (!$uid) return [];
+        $settings = [];
         $cachekey = 'settings_' . $uid;
-        if ($settings = $this->fetch_cache($cachekey)) {
-            return $settings;
-        } else {
-            foreach (DB::fetch_all("select * from %t where uid = %d", array($this->_table, $uid)) as $v) {
+        if (!($settings = $this->fetch_cache($cachekey))) {
+            foreach (DB::fetch_all("select * from %t where uid = %d", [$this->_table, $uid]) as $v) {
                 $settings[$v['skey']] = $v['svalue'];
             }
             $this->store_cache($cachekey, $settings);
-            return $settings;
         }
+        return $settings;
     }
 }

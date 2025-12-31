@@ -18,9 +18,8 @@ class io_disk extends io_api {
     const T = 'connect_disk';
     const BZ = 'disk';
     private $perm = 0;
-    private $icosdatas = array();
+    private $icosdatas = [];
     private $error = '';
-    private $conn = null;
     private $encode = 'GBK';
     private $uid = '';
     private $_root = '';
@@ -73,10 +72,10 @@ class io_disk extends io_api {
         if ($spath) {
             $patharr = explode('/', trim($spath, '/'));
         } else {
-            $patharr = array();
+            $patharr = [];
         }
         //if(empty($patharr[0])) unset($patharr[0]);
-        $folderarr = array();
+        $folderarr = [];
         for ($i = 0; $i <= count($patharr); $i++) {
             $path1 = '';
             for ($j = 0; $j < $i; $j++) {
@@ -98,13 +97,13 @@ class io_disk extends io_api {
         $filename_encode = diconv($filename, CHARSET, $config['charset']);
         //$filename_encode=$filename;
         $filepath = diconv($config['attachdir'], CHARSET, $config['charset']);
-        if (!$attachdir = realpath($filepath)) return array('error' => 'folder not exist! or no permission');
+        if (!$attachdir = realpath($filepath)) return ['error' => 'folder not exist! or no permission'];
         if (!file_put_contents($attachdir . DIRECTORY_SEPARATOR . $filename_encode, $str)) {
-            return array('error' => 'folder ' . $config['attachdir'] . ' not writable(没有写权限)');
+            return ['error' => 'folder ' . $config['attachdir'] . ' not writable(没有写权限)'];
         }
         //exit($attachdir.DIRECTORY_SEPARATOR.$filename_encode);
         if ($str != file_get_contents($attachdir . DIRECTORY_SEPARATOR . $filename_encode)) {
-            return array('error' => 'folder ' . $config['attachdir'] . ' not readable(没有读权限)');
+            return ['error' => 'folder ' . $config['attachdir'] . ' not readable(没有读权限)'];
         }
         @unlink($attachdir . DIRECTORY_SEPARATOR . $filename_encode);
         return true;
@@ -114,7 +113,7 @@ class io_disk extends io_api {
         global $_G, $_GET, $clouds;
         if (empty($_G['uid'])) {
             dsetcookie('_refer', rawurlencode(BASESCRIPT . '?mod=connect&op=oauth&bz=disk'));
-            showmessage('to_login', '', array(), array('showmsg' => true, 'login' => 1));
+            showmessage('to_login', '', [], ['showmsg' => true, 'login' => 1]);
         }
         if (submitcheck('disksubmit')) {
             $config = $_GET['config'];
@@ -137,26 +136,26 @@ class io_disk extends io_api {
                 }
             }
             $config['uid'] = $uid;
-            if ($id = DB::result_first("select id from %t where uid=%d and attachdir=%s", array(self::T, $uid, $config['attachdir']))) {
+            if ($id = DB::result_first("select id from %t where uid=%d and attachdir=%s", [self::T, $uid, $config['attachdir']])) {
                 DB::update(self::T, $config, "id ='{$id}'");
             } else {
                 $config['dateline'] = TIMESTAMP;
                 $id = DB::insert(self::T, $config, 1);
             }
             if (defined('IN_ADMIN')) {
-                $setarr = array('name' => $config['cloudname'],
+                $setarr = ['name' => $config['cloudname'],
                     'bz' => 'disk',
                     'isdefault' => 0,
                     'dname' => self::T,
                     'did' => $id,
                     'dateline' => TIMESTAMP
-                );
-                if (!DB::result_first("select COUNT(*) from %t where did=%d and dname=%s ", array('local_storage', $id, self::T))) {
+                ];
+                if (!DB::result_first("select COUNT(*) from %t where did=%d and dname=%s ", ['local_storage', $id, self::T])) {
                     C::t('local_storage')->insert($setarr);
                 }
                 showmessage('do_success', BASESCRIPT . '?mod=cloud&op=space');
             } else {
-                showmessage('do_success', $refer ? $refer : BASESCRIPT . '?mod=connect');
+                showmessage('do_success', $refer ?: BASESCRIPT . '?mod=connect');
             }
         } else {
             include template('oauth_disk');
@@ -259,7 +258,7 @@ class io_disk extends io_api {
         $separator = $isWindows ? '\\' : '/';
         $normalizedPath = $this->normalizePath($path);
 
-        $attachdirs = DB::fetch_all("select attachdir,uid from %t where 1", array(self::T));
+        $attachdirs = DB::fetch_all("select attachdir,uid from %t where 1", [self::T]);
 
         // 对每个已有路径，判断是否与新路径存在上下级关系
         foreach ($attachdirs as $attachdir) {
@@ -296,7 +295,7 @@ class io_disk extends io_api {
     public function parsePath($path) {
         $bzarr = explode(':', $path);
         $bzarr[2] = trim($bzarr[2], '/');
-        return array('bz' => $bzarr[0] . ':' . $bzarr[1] . ':', 'path' => diconv($bzarr[2], CHARSET, $this->encode), 'path1' => $bzarr[2]);
+        return ['bz' => $bzarr[0] . ':' . $bzarr[1] . ':', 'path' => diconv($bzarr[2], CHARSET, $this->encode), 'path1' => $bzarr[2]];
     }
 
     //获取文件流；
@@ -304,7 +303,7 @@ class io_disk extends io_api {
     public function getStream($path) {
         $arr = $this->parsePath($path);
         if (!$ret = realpath($this->attachdir . $arr['path'])) {
-            return array('error' => lang('file_not_exist'));
+            return ['error' => lang('file_not_exist')];
         }
         return $ret;
     }
@@ -336,10 +335,10 @@ class io_disk extends io_api {
         if (@getimagesize($_G['setting']['attachdir'] . './' . $target)) {
             return 2;//已经存在缩略图
         }
-        $fileurls = array();
+        $fileurls = [];
         Hook::listen('thumbnail', $fileurls, $path);//生成缩略图绝对和相对地址；
         if (!$fileurls) {
-            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
+            $fileurls = ['fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path)];
         }
         $filepath = $fileurls['filedir'];
         if (intval($width) < 1) $width = $_G['setting']['thumbsize'][$size]['width'];
@@ -384,10 +383,10 @@ class io_disk extends io_api {
         }
 
 
-        $fileurls = array();
+        $fileurls = [];
         Hook::listen('thumbnail', $fileurls, $path);//调用挂载点程序生成缩略图绝对和相对地址；
         if (!$fileurls) {
-            $fileurls = array('fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path));
+            $fileurls = ['fileurl' => $this->getFileUri($path), 'filedir' => $this->getStream($path)];
         }
         if (!is_string($fileurls['filedir'])) {
             header("HTTP/1.1 304 Not Modified");
@@ -424,12 +423,11 @@ class io_disk extends io_api {
             //if ($thumb = $image->Thumb($file, $target, $width, $height, 1)) {
             if ($returnurl) return $_G['setting']['attachurl'] . '/' . $target;
             $file = $target_attach;
-            IO::output_thumb($file);
         } else {
             if ($returnurl) return $fileurls['fileurl'];
             $file = $fileurls['filedir'];
-            IO::output_thumb($file);
         }
+        IO::output_thumb($file);
     }
     //重写文件内容
     //@param number $path  文件的路径
@@ -439,13 +437,13 @@ class io_disk extends io_api {
         if (!$meta) return ['error' => 'not_found'];
         if ($meta['error']) return $meta;
         if (!perm_check::checkperm('edit', $meta)) {
-            return array('error' => lang('file_edit_no_privilege'));
+            return ['error' => lang('file_edit_no_privilege')];
         }
-        $bzarr = $this->parsepath($path);
+        $bzarr = $this->parsePath($path);
 
         $file = $this->attachdir . $bzarr['path'];
         if (!file_put_contents($file, $data)) {
-            return array('error' => '写入失败');
+            return ['error' => '写入失败'];
         }
 
         if ($meta['type'] == 'image') {
@@ -492,21 +490,21 @@ class io_disk extends io_api {
      * 分块上传文件
      * param $file:文件路径（可以是url路径，需要服务器开启allow_url_fopen);
     */
-    public function multiUpload($opath, $path, $filename, $attach = array(), $ondup = "newcopy") {
+    public function multiUpload($opath, $path, $filename, $attach = [], $ondup = "newcopy") {
 
         /*
          * 分块上传文件
          * param $file:文件路径（可以是url路径，需要服务器开启allow_url_fopen);
         */
         if (is_array($filepath = IO::getStream($opath))) {
-            return array('error' => $filepath['error']);
+            return ['error' => $filepath['error']];
         }
         //判断大小
         //判断空间大小
         $filename = IO::name_filter($filename);
 
         if (!$handle = fopen($filepath, 'rb')) {
-            return array('error' => lang('open_file_error'));
+            return ['error' => lang('open_file_error')];
         }
         $arr = $this->parsePath($path . '/' . $filename);
 
@@ -516,7 +514,7 @@ class io_disk extends io_api {
         while (!feof($handle)) {
             $fileContent = fread($handle, 8192);
             if (!file_put_contents($file, $fileContent, FILE_APPEND)) {
-                return array('error' => lang('written_file_correct'));
+                return ['error' => lang('written_file_correct')];
             }
             unset($fileContent);
         }
@@ -527,7 +525,7 @@ class io_disk extends io_api {
     public function getTextEncode($str, $encode) {
         include_once DZZ_ROOT . './dzz/class/class_encode.php';
         $p = new Encode_Core();
-        $code = $p->get_encoding($str);
+        $code = $p::get_encoding($str);
         return diconv($str, $code, CHARSET);
     }
 
@@ -541,26 +539,26 @@ class io_disk extends io_api {
      * @return icosdatas
      */
     public function listFiles($path, $by = 'time', $order = 'desc', $limit = '', $force = 0) {
-        if ($this->error) return array('error' => $this->error);
+        if ($this->error) return ['error' => $this->error];
         $bzarr = $this->parsePath($path);
         $filepath = $this->attachdir . ($bzarr['path'] ? ('./' . $bzarr['path']) : '');
         if (!is_dir($filepath)) {
-            return array('error' => lang('folder_not_exist'));
+            return ['error' => lang('folder_not_exist')];
         }
-        $icosdata = array();
+        $icosdata = [];
         foreach (new DirectoryIterator($filepath) as $file) {
             if ($file->isDot()) {
                 continue;
             }
             $filename = diconv($file->getFilename(), $this->encode, CHARSET);
             if ($file->isDir()) {
-                $fileinfo = array(
+                $fileinfo = [
                     'path' => ($bzarr['path1'] ? ($bzarr['path1'] . '/') : '') . $filename,
                     'name' => $filename,
                     'type' => 'folder',
                     'size' => 0,
                     'mtime' => $file->getMTime()
-                );
+                ];
             } else {
                 try {
                     $fileSize = $file->getSize();
@@ -569,14 +567,14 @@ class io_disk extends io_api {
                 } catch (Exception $e) {
                     continue;
                 }
-                $fileinfo = array(
+                $fileinfo = [
                     'path' => ($bzarr['path1'] ? ($bzarr['path1'] . '/') : '') . $filename,
                     'name' => $filename,
                     'type' => 'file',
                     'size' => $fileSize,
                     'ctime' => $ctime,
                     'mtime' => $mtime
-                );
+                ];
             }
             $icoarr = $this->_formatMeta($fileinfo, $bzarr['bz']);
             $icosdata[$icoarr['icoid']] = $icoarr;
@@ -585,7 +583,7 @@ class io_disk extends io_api {
     }
 
     /*获取目录信息*/
-    public function getContains($path, $suborg = false, $contains = array('size' => 0, 'contain' => array(0, 0))) {
+    public function getContains($path, $suborg = false, $contains = ['size' => 0, 'contain' => [0, 0]]) {
         foreach ($this->listFiles($path) as $value) {
             if ($value['type'] == 'folder') {
                 $contains = $this->getContains($value['path'], false, $contains);
@@ -605,7 +603,7 @@ class io_disk extends io_api {
     */
     public function getMeta($path, $force = 0) {
         $bzarr = $this->parsePath($path);
-        $meta = array();
+        $meta = [];
         if ($path == $this->_root) {
             $meta['path'] = '';
             $meta['name'] = $this->_rootname;
@@ -622,7 +620,7 @@ class io_disk extends io_api {
 
             $file = $this->attachdir . $bzarr['path'];
             if (!file_exists($file)) {
-                return array('error' => lang('file_not_exist'),'delete' => 1);
+                return ['error' => lang('file_not_exist'),'delete' => 1];
             }
             if (is_dir($file)) {
                 $meta['type'] = 'folder';
@@ -637,15 +635,14 @@ class io_disk extends io_api {
 
         }
 
-        $icosdata = $this->_formatMeta($meta, $bzarr['bz']);
-        return $icosdata;
+        return $this->_formatMeta($meta, $bzarr['bz']);
     }
 
     //将api获取的meta数据转化为icodata
     public function _formatMeta($meta, $bz) {
         global $_G, $documentexts, $imageexts;
         //判断是否为根目录
-        $icosdata = array();
+        $icosdata = [];
         if ($meta['path'] == '') {
             $pfid = 0;
         } elseif (strpos($meta['path'], '/') === false) {
@@ -664,7 +661,7 @@ class io_disk extends io_api {
         }
         $dpath = dzzencode($this->sharepath.$bz . $meta['path']);
         if ($meta['type'] == 'folder') {
-            $icoarr = array(
+            $icoarr = [
                 'icoid' => $rid,
                 'rid' => $rid,
                 'path' => $bz . $meta['path'],
@@ -684,16 +681,12 @@ class io_disk extends io_api {
                 'pfid' => $pfid,
                 'size' => 0,
                 'dateline' => intval($meta['mtime']),
-                'flag' => $meta['flag'] ? $meta['flag'] : '',
+                'flag' => $meta['flag'] ?: '',
                 'mod' => $meta['mod'],
                 'preview' => $this->preview
-            );
+            ];
 
             $icoarr['fsize'] = '-';
-            $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
-            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
-            $icosdata = $icoarr;
 
         } else {
             $pathinfo = pathinfo($meta['path']);
@@ -708,7 +701,7 @@ class io_disk extends io_api {
                 $img = geticonfromext($ext, $type);
                 $url = $_G['siteurl'] . DZZSCRIPT . '?mod=io&op=getStream&path=' . $dpath;
             }
-            $icoarr = array(
+            $icoarr = [
                 'icoid' => $rid,
                 'rid' => $rid,
                 'path' => $bz . $meta['path'],
@@ -732,24 +725,23 @@ class io_disk extends io_api {
                 'flag' => '',
                 'mod' => $meta['mod'],
                 'preview' => $this->preview
-            );
+            ];
 
             $icoarr['fsize'] = formatsize($icoarr['size']);
-            $icoarr['ffsize'] = lang('property_info_size', array('fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']));
-            $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
-            if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
-            else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
-            $icosdata = $icoarr;
+            $icoarr['ffsize'] = lang('property_info_size', ['fsize' => formatsize($icoarr['size']), 'size' => $icoarr['size']]);
         }
-        return $icosdata;
+        $icoarr['ftype'] = getFileTypeName($icoarr['type'], $icoarr['ext']);
+        if (!$icoarr['dateline']) $icoarr['fdateline'] = '-';
+        else $icoarr['fdateline'] = dgmdate($icoarr['dateline']);
+        return $icoarr;
     }
 
     //通过icosdata获取folderdata数据
     public function getFolderByIcosdata($icosdata) {
         global $_GET;
-        $folder = array();
+        $folder = [];
         if ($icosdata['type'] == 'folder') {
-            $folder = array('fid' => $icosdata['oid'],
+            $folder = ['fid' => $icosdata['oid'],
                 'path' => $icosdata['path'],
                 'fname' => $icosdata['name'],
                 'uid' => $icosdata['uid'],
@@ -761,7 +753,7 @@ class io_disk extends io_api {
                 'bz' => $icosdata['bz'],
                 'gid' => $icosdata['gid'],
                 'fsperm' => perm_FolderSPerm::flagPower('external')
-            );
+            ];
 
         }
         return $folder;
@@ -801,7 +793,7 @@ class io_disk extends io_api {
     }
 
     public function getFolderInfo($paths, $position = '', &$zip) {
-        static $data = array();
+        static $data = [];
         try {
             foreach ($paths as $path) {
                 $arr = $this->parsePath($path);
@@ -812,7 +804,7 @@ class io_disk extends io_api {
                     case 'folder':
                         $lposition = $position . $meta['name'] . '/';
                         $contents = $this->listFiles($path);
-                        $arr = array();
+                        $arr = [];
                         foreach ($contents as $key => $value) {
                             $arr[] = $value['path'];
                         }
@@ -893,7 +885,7 @@ class io_disk extends io_api {
             if (rename($oldfile, $newfile)) {
                 return $this->getMeta($arr['bz'] . $path2);
             } else {
-                return array('error' => lang('failure'));
+                return ['error' => lang('failure')];
             }
         }
         return $this->getMeta($arr['bz'] . $arr['path1']);
@@ -918,20 +910,20 @@ class io_disk extends io_api {
         }
         $rid = md5($path);
         if ($ret) {
-            return array(
+            return [
                 'icoid' => $rid, 'rid' => $rid,
                 'name' => substr(strrchr($path, '/'), 1),
-            );
+            ];
         } else {
-            return array('rid' => $rid, 'error' => lang('failure'));
+            return ['rid' => $rid, 'error' => lang('failure')];
         }
     }
 
     public function CreateFolderByPath($path, $pfid = '', $noperm = false) {
-        $datas = array();
+        $datas = [];
         $arr = $this->parsePath($path);
         $patharr = explode('/', trim($arr['path'], '/'));
-        $folderarr = array();
+        $folderarr = [];
         $path = '';
         foreach ($patharr as $value) {
             $p = $path . DS . $value;
@@ -944,7 +936,7 @@ class io_disk extends io_api {
                 $meta['size'] = 0;
                 $icoarr = $this->_formatMeta($meta, $arr['bz']);
                 $folderarr = $this->getFolderByIcosdata($icoarr);
-                $datas[] = array('folderarr' => $folderarr, 'icoarr' => $icoarr);
+                $datas[] = ['folderarr' => $folderarr, 'icoarr' => $icoarr];
             }
 
         }
@@ -956,13 +948,13 @@ class io_disk extends io_api {
     //$bz：api;
     public function CreateFolder($path, $fname) {
         if (!$fname) {
-            return array('error' => lang('directory_name_can_not_empty'));
+            return ['error' => lang('directory_name_can_not_empty')];
         }
         global $_G;
         $fname = IO::name_filter($fname);
         $path = $path . '/' . $fname;
         $bzarr = $this->parsePath($path);
-        $return = array();
+        $return = [];
         $folder = $this->attachdir . DS . $bzarr['path'];
         if (dmkdir($folder, 0777, false)) {
             $meta['path'] = $bzarr['path1'];
@@ -971,7 +963,7 @@ class io_disk extends io_api {
             $meta['size'] = 0;
             $icoarr = $this->_formatMeta($meta, $bzarr['bz']);
             $folderarr = $this->getFolderByIcosdata($icoarr);
-            return array('folderarr' => $folderarr, 'icoarr' => $icoarr);
+            return ['folderarr' => $folderarr, 'icoarr' => $icoarr];
         }
     }
 
@@ -979,7 +971,7 @@ class io_disk extends io_api {
     public function getFolderName($name, $path) {
         static $i = 0;
         if (!$this->icosdatas) $this->icosdatas = $this->listFiles($path);
-        $names = array();
+        $names = [];
         foreach ($this->icosdatas as $value) {
             $names[] = $value['name'];
         }
@@ -993,7 +985,7 @@ class io_disk extends io_api {
     }
 
     private function getPartInfo($content_range) {
-        $arr = array();
+        $arr = [];
         if (!$content_range) {
             $arr['ispart'] = false;
             $arr['iscomplete'] = true;
@@ -1013,7 +1005,7 @@ class io_disk extends io_api {
     }
 
     public function uploadStream($file, $filename, $path, $relativePath, $content_range) {
-        $data = array();
+        $data = [];
         //exit($path.'===='.$filename);
 
         //处理目录(没有分片或者最后一个分片时创建目录
@@ -1032,11 +1024,9 @@ class io_disk extends io_api {
                 $re = $this->CreateFolder($path1, $value);
                 if (isset($re['error'])) {
                     return $re;
-                } else {
-                    if ($key == 0) {
-                        $data['icoarr'][] = $re['icoarr'];
-                        $data['folderarr'][] = $re['folderarr'];
-                    }
+                } elseif ($key == 0) {
+                    $data['icoarr'][] = $re['icoarr'];
+                    $data['folderarr'][] = $re['folderarr'];
                 }
 
             }
@@ -1052,11 +1042,10 @@ class io_disk extends io_api {
                     if (empty($re1['error'])) {
 
                         $data['icoarr'][] = $re1;
-                        return $data;
                     } else {
                         $data['error'] = $re1['error'];
-                        return $data;
                     }
+                    return $data;
                 } else {
                     return true;
                 }
@@ -1070,22 +1059,21 @@ class io_disk extends io_api {
                     $data['folderarr'][]=self::getFolderByIcosdata($icoarr);
                 }*/
                 $data['icoarr'][] = $re1;
-                return $data;
             } else {
                 $data['error'] = $re1['error'];
-                return $data;
             }
+            return $data;
         }
     }
 
-    public function upload($file, $path, $filename, $partinfo = array(), $ondup = 'newcopy') {
+    public function upload($file, $path, $filename, $partinfo = [], $ondup = 'newcopy') {
         global $_G;
 
         $bzarr = $this->parsePath($path . '/' . $filename);
         //获取文件内容
         $fileContent = '';
         if (!$handle = fopen($file, 'rb')) {
-            return array('error' => '打开文件错误');
+            return ['error' => '打开文件错误'];
         }
         $target = $this->attachdir . DS . $bzarr['path'];
         $dirpath = dirname($target);
@@ -1110,4 +1098,3 @@ class io_disk extends io_api {
     }
 }
 
-?>

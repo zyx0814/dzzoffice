@@ -61,7 +61,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 	 *
 	 * @var array
 	 */
-	private $_str_table		= array();
+	private $_str_table		= [];
 
 	/**
 	 * Color cache. Mapping between RGB value and color index.
@@ -126,7 +126,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		PHPExcel_Calculation_Functions::setReturnDateType(PHPExcel_Calculation_Functions::RETURNDATE_EXCEL);
 
 		// initialize colors array
-		$this->_colors          = array();
+		$this->_colors          = [];
 
 		// Initialise workbook writer
 		$this->_writerWorkbook = new PHPExcel_Writer_Excel5_Workbook($this->_phpExcel,
@@ -182,7 +182,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
 		// Write the worksheet streams before the global workbook stream,
 		// because the byte sizes of these are needed in the global workbook stream
-		$worksheetSizes = array();
+		$worksheetSizes = [];
 		for ($i = 0; $i < $countSheets; ++$i) {
 			$this->_writerWorksheets[$i]->close();
 			$worksheetSizes[] = $this->_writerWorksheets[$i]->_datasize;
@@ -211,7 +211,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		}
 
 		// define OLE Parts
-		$arrRootData = array($OLE);
+		$arrRootData = [$OLE];
 		// initialize OLE Properties file
 		if(isset($OLE_SummaryInformation)){
 			$arrRootData[] = $OLE_SummaryInformation;
@@ -252,7 +252,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$lastReducedSpId = 0;
 		$lastSpId = 0;
 
-		foreach ($this->_phpExcel->getAllsheets() as $sheet) {
+		foreach ($this->_phpExcel->getAllSheets() as $sheet) {
 			// sheet index
 			$sheetIndex = $sheet->getParent()->getIndex($sheet);
 
@@ -442,7 +442,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$totalCountShapes = 0;
 		$countDrawings = 0;
 
-		foreach ($this->_phpExcel->getAllsheets() as $sheet) {
+		foreach ($this->_phpExcel->getAllSheets() as $sheet) {
 			$sheetCountShapes = 0; // count number of shapes (minus group shape), in sheet
 
 			if (count($sheet->getDrawingCollection()) > 0) {
@@ -468,7 +468,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$dggContainer->setBstoreContainer($bstoreContainer);
 
 		// the BSE's (all the images)
-		foreach ($this->_phpExcel->getAllsheets() as $sheet) {
+		foreach ($this->_phpExcel->getAllSheets() as $sheet) {
 			foreach ($sheet->getDrawingCollection() as $drawing) {
 				if ($drawing instanceof PHPExcel_Worksheet_Drawing) {
 
@@ -581,56 +581,56 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$data .= pack('V', 0x30);
 
 		// SECTION
-		$dataSection = array();
+		$dataSection = [];
 		$dataSection_NumProps = 0;
 		$dataSection_Summary = '';
 		$dataSection_Content = '';
 
 		// GKPIDDSI_CODEPAGE: CodePage
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x01),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x02), // 2 byte signed integer
-							   'data'	=> array('data' => 1252));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x01],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x02], // 2 byte signed integer
+							   'data'	=> ['data' => 1252]];
 		$dataSection_NumProps++;
 
 		// GKPIDDSI_CATEGORY : Category
 		if($this->_phpExcel->getProperties()->getCategory()){
 			$dataProp = $this->_phpExcel->getProperties()->getCategory();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x02),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x1E),
-								   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x02],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x1E],
+								   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		// GKPIDDSI_VERSION :Version of the application that wrote the property storage
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x17),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x03),
-							   'data'	=> array('pack' => 'V', 'data' => 0x000C0000));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x17],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x03],
+							   'data'	=> ['pack' => 'V', 'data' => 0x000C0000]];
 		$dataSection_NumProps++;
 		// GKPIDDSI_SCALE : FALSE
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x0B),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x0B),
-							   'data'	=> array('data' => false));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x0B],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x0B],
+							   'data'	=> ['data' => false]];
 		$dataSection_NumProps++;
 		// GKPIDDSI_LINKSDIRTY : True if any of the values for the linked properties have changed outside of the application
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x10),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x0B),
-							   'data'	=> array('data' => false));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x10],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x0B],
+							   'data'	=> ['data' => false]];
 		$dataSection_NumProps++;
 		// GKPIDDSI_SHAREDOC : FALSE
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x13),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x0B),
-							   'data'	=> array('data' => false));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x13],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x0B],
+							   'data'	=> ['data' => false]];
 		$dataSection_NumProps++;
 		// GKPIDDSI_HYPERLINKSCHANGED : True if any of the values for the _PID_LINKS (hyperlink text) have changed outside of the application
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x16),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x0B),
-							   'data'	=> array('data' => false));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x16],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x0B],
+							   'data'	=> ['data' => false]];
 		$dataSection_NumProps++;
 
 		// GKPIDDSI_DOCSPARTS
@@ -646,10 +646,10 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		  // value
 		  $dataProp .= 'Worksheet'.chr(0);
 
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x0D),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x101E),
-							   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x0D],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x101E],
+							   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
 		$dataSection_NumProps++;
 
 		// GKPIDDSI_HEADINGPAIR
@@ -680,10 +680,10 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 			  $dataProp .= pack('v', 0x0000);
 		      $dataProp .= pack('v', 0x0000);
 
-        $dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x0C),
-        					   'offset' => array('pack' => 'V'),
-        					   'type' 	=> array('pack' => 'V', 'data' => 0x100C),
-        					   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+        $dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x0C],
+        					   'offset' => ['pack' => 'V'],
+        					   'type' 	=> ['pack' => 'V', 'data' => 0x100C],
+        					   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
         $dataSection_NumProps++;
 
 		// 		4 	Section Length
@@ -781,95 +781,95 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 		$data .= pack('V', 0x30);
 
 		// SECTION
-		$dataSection = array();
+		$dataSection = [];
 		$dataSection_NumProps = 0;
 		$dataSection_Summary = '';
 		$dataSection_Content = '';
 
 		// CodePage : CP-1252
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x01),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x02), // 2 byte signed integer
-							   'data'	=> array('data' => 1252));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x01],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x02], // 2 byte signed integer
+							   'data'	=> ['data' => 1252]];
 		$dataSection_NumProps++;
 
 		//	Title
 		if($this->_phpExcel->getProperties()->getTitle()){
 			$dataProp = $this->_phpExcel->getProperties()->getTitle();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x02),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x1E), // null-terminated string prepended by dword string length
-								   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x02],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x1E], // null-terminated string prepended by dword string length
+								   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		//	Subject
 		if($this->_phpExcel->getProperties()->getSubject()){
 			$dataProp = $this->_phpExcel->getProperties()->getSubject();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x03),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x1E), // null-terminated string prepended by dword string length
-								   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x03],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x1E], // null-terminated string prepended by dword string length
+								   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		//	Author (Creator)
 		if($this->_phpExcel->getProperties()->getCreator()){
 			$dataProp = $this->_phpExcel->getProperties()->getCreator();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x04),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x1E), // null-terminated string prepended by dword string length
-								   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x04],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x1E], // null-terminated string prepended by dword string length
+								   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		//	Keywords
 		if($this->_phpExcel->getProperties()->getKeywords()){
 			$dataProp = $this->_phpExcel->getProperties()->getKeywords();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x05),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x1E), // null-terminated string prepended by dword string length
-								   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x05],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x1E], // null-terminated string prepended by dword string length
+								   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		//	Comments (Description)
 		if($this->_phpExcel->getProperties()->getDescription()){
 			$dataProp = $this->_phpExcel->getProperties()->getDescription();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x06),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x1E), // null-terminated string prepended by dword string length
-								   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x06],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x1E], // null-terminated string prepended by dword string length
+								   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		//	Last Saved By (LastModifiedBy)
 		if($this->_phpExcel->getProperties()->getLastModifiedBy()){
 			$dataProp = $this->_phpExcel->getProperties()->getLastModifiedBy();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x08),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x1E), // null-terminated string prepended by dword string length
-								   'data'	=> array('data' => $dataProp, 'length' => strlen($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x08],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x1E], // null-terminated string prepended by dword string length
+								   'data'	=> ['data' => $dataProp, 'length' => strlen($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		//	Created Date/Time
 		if($this->_phpExcel->getProperties()->getCreated()){
 			$dataProp = $this->_phpExcel->getProperties()->getCreated();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x0C),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x40), // Filetime (64-bit value representing the number of 100-nanosecond intervals since January 1, 1601)
-								   'data'	=> array('data' => PHPExcel_Shared_OLE::LocalDate2OLE($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x0C],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x40], // Filetime (64-bit value representing the number of 100-nanosecond intervals since January 1, 1601)
+								   'data'	=> ['data' => PHPExcel_Shared_OLE::LocalDate2OLE($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		//	Modified Date/Time
 		if($this->_phpExcel->getProperties()->getModified()){
 			$dataProp = $this->_phpExcel->getProperties()->getModified();
-			$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x0D),
-								   'offset' => array('pack' => 'V'),
-								   'type' 	=> array('pack' => 'V', 'data' => 0x40), // Filetime (64-bit value representing the number of 100-nanosecond intervals since January 1, 1601)
-								   'data'	=> array('data' => PHPExcel_Shared_OLE::LocalDate2OLE($dataProp)));
+			$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x0D],
+								   'offset' => ['pack' => 'V'],
+								   'type' 	=> ['pack' => 'V', 'data' => 0x40], // Filetime (64-bit value representing the number of 100-nanosecond intervals since January 1, 1601)
+								   'data'	=> ['data' => PHPExcel_Shared_OLE::LocalDate2OLE($dataProp)]];
 			$dataSection_NumProps++;
 		}
 		//	Security
-		$dataSection[] = array('summary'=> array('pack' => 'V', 'data' => 0x13),
-							   'offset' => array('pack' => 'V'),
-							   'type' 	=> array('pack' => 'V', 'data' => 0x03), // 4 byte signed integer
-							   'data'	=> array('data' => 0x00));
+		$dataSection[] = ['summary'=> ['pack' => 'V', 'data' => 0x13],
+							   'offset' => ['pack' => 'V'],
+							   'type' 	=> ['pack' => 'V', 'data' => 0x03], // 4 byte signed integer
+							   'data'	=> ['data' => 0x00]];
 		$dataSection_NumProps++;
 
 

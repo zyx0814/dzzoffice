@@ -6,7 +6,7 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-$clouds = DB::fetch_all("select * from " . DB::table('connect') . " where 1 order by disp", array(), 'bz');
+$clouds = DB::fetch_all("select * from " . DB::table('connect') . " where 1 order by disp", [], 'bz');
 $bz = $_GET['bz'];
 $navtitle = lang('add_storage_location') . ' - ' . lang('space_management');
 if ($_GET['do'] == 'getBucket') {
@@ -27,15 +27,13 @@ if ($_GET['do'] == 'getBucket') {
     if ($re) {
         echo json_encode($re);
     } else {
-        echo json_encode(array());
+        echo json_encode([]);
     }
-    exit();
 } else {
     //error_reporting(E_ALL);
     if (!$bz) {
         showmessage('Access Denied', dreferer());
     }
     IO::authorize($bz);
-    exit();
 }
-?>
+exit();

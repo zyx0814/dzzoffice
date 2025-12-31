@@ -50,21 +50,21 @@ $gropunext = isset($_GET['gropunext']) ? intval($_GET['gropunext']) : true;
 $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 3;
 $bz = empty($_GET['bz']) ? '' : urldecode($_GET['bz']);
 $marker = empty($_GET['marker']) ? '' : trim($_GET['marker']);
-$data = array();
+$data = [];
 $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
 $exts = isset($_GET['exts']) ? trim($_GET['exts']) : '';
-$conditions = array();
+$conditions = [];
 if ($keyword) {
-    $conditions['name'] = array($keyword, 'like', 'and');
+    $conditions['name'] = [$keyword, 'like', 'and'];
 }
 
 //类型筛选
 if ($exts) {
     if ($exts == 'folder') {
-        $conditions['type'] = array('folder', '=', 'and');
+        $conditions['type'] = ['folder', '=', 'and'];
     } else {
         $extarr = explode(',', $exts);
-        $conditions['ext'] = array($extarr, 'in', 'and');
+        $conditions['ext'] = [$extarr, 'in', 'and'];
     }
 }
 $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 0;
@@ -81,7 +81,7 @@ switch ($disp) {
         $groupby = 'o.dateline';
         break;
     case 2:
-        $orderby = array('type', 'ext');
+        $orderby = ['type', 'ext'];
         $groupby = 'o.dateline';
         break;
     case 3:
@@ -95,22 +95,22 @@ if ($folder = C::t('folder')->fetch_folderinfo_by_fid($fid)) {
         showmessage('no_privilege', dreferer());
     }
 }
-$folder['gid'] = ($gid) ? $gid : 0;
+$folder['gid'] = ($gid) ?: 0;
 $folder['ismoderator'] = $perm;
-$folderjson = json_encode(array($fid => $folder));
+$folderjson = json_encode([$fid => $folder]);
 $folderpath = array_filter(explode('/', preg_replace('/dzz:(.+?):/', '', $folder['path'])));
 $navtitle = $folderpath[0];
 $pathkeyarr = explode('-', str_replace('_', '', $folder['pathkey']));
-$folderpatharr = array();
-foreach (DB::fetch_all("select fid,gid,fname from %t where fid in(%n)", array('folder', $pathkeyarr)) as $v) {
-    $folderpatharr[] = array('fid' => $v['fid'], 'gid' => $v['gid'], 'name' => $v['fname']);
+$folderpatharr = [];
+foreach (DB::fetch_all("select fid,gid,fname from %t where fid in(%n)", ['folder', $pathkeyarr]) as $v) {
+    $folderpatharr[] = ['fid' => $v['fid'], 'gid' => $v['gid'], 'name' => $v['fname']];
 }
-$groups = array();
+$groups = [];
 $newperpage = 10;
 //如果是机构获或部门取下级
 if ($gid > 0 && $group['type'] == 0 && $gropunext) {
     if (C::t('organization_admin')->chk_memberperm($gid, $uid) || C::t('organization')->ismember($gid, $uid, true)) {
-        foreach (DB::fetch_all("select o.*,f.fid from %t  o left join %t f on o.fid=f.fid where o.forgid = %d  order by $groupby $order limit $start,$perpage", array('organization', 'folder', $gid)) as $v) {
+        foreach (DB::fetch_all("select o.*,f.fid from %t  o left join %t f on o.fid=f.fid where o.forgid = %d  order by $groupby $order limit $start,$perpage", ['organization', 'folder', $gid]) as $v) {
             if (((C::t('organization_admin')->chk_memberperm($v['orgid'], $uid) > 0) || ($v['manageon'] && $v['diron'])) && $v['syatemon']) {
                 $resultarr[] = $v;
                 if (intval($v['aid'])) {
@@ -174,7 +174,7 @@ if ($gid) {
 }
 
 //返回数据
-$return = array('fid' => $fid, 'data' => $data ? $data : array(), 'param' => array(
+$return = ['fid' => $fid, 'data' => $data ?: [], 'param' => [
     'perpage' => $perpage,
     'bz' => $bz,
     'asc' => $asc,
@@ -187,8 +187,8 @@ $return = array('fid' => $fid, 'data' => $data ? $data : array(), 'param' => arr
     'groupnext' => $gropunext,
     'localsearch' => $bz ? 1 : 0,
     'createFolderPerm' => $createFolderPerm
-)
-);
+]
+];
 $params = json_encode($return['param']);
 require template('mobilefileselection/filelist');
 exit();

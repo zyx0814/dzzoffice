@@ -21,14 +21,14 @@ class table_app_open extends dzz_table {
 
     public function setDefault($extid) {
         $data = self::fetch($extid);
-        DB::update($this->_table, array('isdefault' => 0), "ext='{$data['ext']}'");
+        DB::update($this->_table, ['isdefault' => 0], "ext='{$data['ext']}'");
         $this->clear_cache('ext_all');
-        return self::update($extid, array('isdefault' => 1));
+        return self::update($extid, ['isdefault' => 1]);
     }
 
     public function setOrders($extid) {
         foreach ($extid as $k => $v) {
-            $result = self::update($v, array('disp' => $k));
+            $result = self::update($v, ['disp' => $k]);
         }
         $this->clear_cache('ext_all');
         return true;
@@ -36,7 +36,7 @@ class table_app_open extends dzz_table {
 
     public function delete_by_appid($appid) {
         if (!$appid) return false;
-        $query = DB::query("SELECT * FROM %t WHERE appid=%d ", array($this->_table, $appid));
+        $query = DB::query("SELECT * FROM %t WHERE appid=%d ", [$this->_table, $appid]);
         while ($value = DB::fetch($query)) {
             if ($value['extid']) {
                 $result = C::t('app_open_default')->delete_by_extid($value['extid']);
@@ -48,10 +48,10 @@ class table_app_open extends dzz_table {
 
     public function insert_by_exts($appid, $exts) {
         if (!$appid) return false;
-        if (!is_array($exts)) $exts = $exts ? explode(',', $exts) : array();
+        if (!is_array($exts)) $exts = $exts ? explode(',', $exts) : [];
         //删除原来的ext
-        $oexts = array();
-        $delids = array();
+        $oexts = [];
+        $delids = [];
         $oextarr = DB::fetch_all("select * from " . DB::table('app_open') . " where appid='{$appid}'");
         foreach ($oextarr as $value) {
             $oexts[] = $value['ext'];
@@ -61,7 +61,7 @@ class table_app_open extends dzz_table {
             self::delete($delids);
         }
         foreach ($exts as $ext) {
-            if ($ext && !in_array($ext, $oexts)) parent::insert(array('ext' => $ext, 'appid' => $appid));
+            if ($ext && !in_array($ext, $oexts)) parent::insert(['ext' => $ext, 'appid' => $appid]);
         }
         $this->clear_cache('ext_all');
         return true;
@@ -71,9 +71,9 @@ class table_app_open extends dzz_table {
         global $_G;
         $ext_all = $this->fetch_cache('ext_all');
         if ($ext_all === false) {
-            $ext_all = array();
-            $app_cache = array();// 临时缓存app数据，避免重复调用
-            $query = DB::query("SELECT * FROM %t WHERE 1 ", array($this->_table));
+            $ext_all = [];
+            $app_cache = [];// 临时缓存app数据，避免重复调用
+            $query = DB::query("SELECT * FROM %t WHERE 1 ", [$this->_table]);
             while ($value = DB::fetch($query)) {
                 if ($value['appid']) {
                     if (!isset($app_cache[$value['appid']])) {
@@ -97,7 +97,7 @@ class table_app_open extends dzz_table {
             $this->store_cache('ext_all', $ext_all);
         }
 
-        $data = array();
+        $data = [];
         foreach ($ext_all as $value) {
             if (!$_G['uid'] && $value['group'] > 0) continue;
             $data[$value['extid']] = $value;
@@ -106,8 +106,8 @@ class table_app_open extends dzz_table {
         return $data;
     }
 
-    public function fetch_all_orderby_ext($uid, $ext_all = array(), $appids = array()) {
-        $data = array();
+    public function fetch_all_orderby_ext($uid, $ext_all = [], $appids = []) {
+        $data = [];
         if (!$appids && $config = C::t('user_field')->fetch($uid)) {
             if ($config['applist']) {
                 $appids = explode(',', $config['applist']);
@@ -122,4 +122,4 @@ class table_app_open extends dzz_table {
         return $data;
     }
 }
-?>
+

@@ -29,7 +29,7 @@
 class perm_FileSPerm {
 
     public static function getPowerarr() {
-        return array(
+        return [
             'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
             'read1' => 2,        //读取自己的文件
             'read2' => 4,        //读取所有文件
@@ -51,7 +51,7 @@ class perm_FileSPerm {
             'share' => 262144,    //分享
             'approve' => 524288,//审批
             'comment' => 1048576,//评论
-        );
+        ];
     }
 
     public static function getPerm($action) {
@@ -59,7 +59,7 @@ class perm_FileSPerm {
         return isset($powerarr[$action]) ? intval($powerarr[$action]) : 0;
     }
 
-    public static function getSumByAction($action = array()) { //$action==all 时返回所有的值相加
+    public static function getSumByAction($action = []) { //$action==all 时返回所有的值相加
         $i = 0;
         $powerarr = self::getPowerarr();
         if ($action == 'all') {
@@ -82,11 +82,7 @@ class perm_FileSPerm {
     }
 
     public static function typePower($type, $ext = '') { //返回类型的权限
-        global $textexts;
-        switch ($type) {
-            default:
-                return 0;
-        }
+        return 0;
     }
 
     public static function flagPower($flag) { //返回默认目录的权限
@@ -99,13 +95,12 @@ class perm_FileSPerm {
             case 'app':
             case 'desktop':
             case 'dock':
-                return self::getSumByAction(array('delete1', 'delete2', 'share', 'edit1', 'edit2', 'copy1', 'copy2', 'download1', 'download2'));
+                return self::getSumByAction(['delete1', 'delete2', 'share', 'edit1', 'edit2', 'copy1', 'copy2', 'download1', 'download2']);
             case 'recycle':
-                return self::getSumByAction(array('delete1', 'delete2', 'share', 'edit1', 'edit2', 'copy1', 'copy2', 'folder', 'upload', 'download1', 'download2'));
+                return self::getSumByAction(['delete1', 'delete2', 'share', 'edit1', 'edit2', 'copy1', 'copy2', 'folder', 'upload', 'download1', 'download2']);
             default:
                 return 0;
         }
     }
 }
 
-?>

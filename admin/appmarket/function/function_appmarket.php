@@ -48,4 +48,3 @@ function dzzunzip($filename, $path, $md5file) {
         zip_close($resource);
     }
 }
-?>

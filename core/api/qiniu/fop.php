@@ -14,7 +14,7 @@ class Qiniu_ImageView {
 
     public function MakeRequest($url)
     {
-    	$ops = array($this->Mode);
+    	$ops = [$this->Mode];
 
     	if (!empty($this->Width)) {
     		$ops[] = 'w/' . $this->Width;

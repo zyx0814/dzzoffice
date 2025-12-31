@@ -16,15 +16,15 @@ class Wopi
 		$editperm = perm_check::checkperm('edit', $meta);
 		$code = self::checkLock($path, $lock);
 		if (intval($code) == 409) $editperm = 0; //文件被锁定，不能编辑
-		$FileInfoDto = array(
+		$FileInfoDto = [
 			'BaseFileName' => $meta['name'],
 			'OwnerId' => $meta['uid'] . '_' . TIMESTAMP,
-			'ReadOnly' => $editperm ? false : true,
+			'ReadOnly' => !$editperm,
 			'SupportsCoauth' => true, //，表示WOPI服务器支持多个用户同时对文件进行修改
 
 			'UserFriendlyName' => getglobal('username'), //是用户的名称，如果被锁定，WOPI客户端在某些场景可能会配置一个替代的字符串，或者展示没有名称
 			'UserId' => getglobal('uid'), //用于WOPI服务器唯一标识用户。
-			'UserCanWrite' => $editperm ? true : false, //表示用户有权限改变文件
+			'UserCanWrite' => (bool)$editperm, //表示用户有权限改变文件
 
 			'UserCanAttend' => 'true', //表示用户有权限查看这个文件的广播。广播是一个文件的活动，涉及控制一组参加者的文件的视图的一个或多个呈现者。比如一个传播者能够通过广播将幻灯片广播给多个接受者。
 			'UserCanPresent' => true, //表示用户有权限广播这个文件给那些有权限浏览文件的人。广播是一个文件的活动，涉及控制一组参加者的文件的视图的一个或多个呈现者。比如一个传播者能够通过广播将幻灯片广播给多个接受者。
@@ -35,9 +35,9 @@ class Wopi
 			'Size' => $meta['size'], //filesize($_SERVER['DOCUMENT_ROOT'] . '/' . $fileName),
 			'Version' => $meta['md5'], //代表基于WOPI服务器的版本模式，文件的当前版本。当文件改变时，这个值一定要改变，同时对于一个给定的文件，版本的值应该从不重复。
 
-		);
+        ];
 		//判断是否支持文件锁
-		if ($editperm && in_array($meta['ext'], array('docm', 'docx', 'odt'))) {
+		if ($editperm && in_array($meta['ext'], ['docm', 'docx', 'odt'])) {
 			$FileInfoDto['SupportsLocks'] = true; //表示WOPI服务器支持对于文件Lock 、Unlock 、RefreshLock 和UnlockAndRelock 操作
 			$FileInfoDto['SupportsGetLock'] = true; //表示WOPI服务器提供了GetLock 
 
@@ -45,7 +45,7 @@ class Wopi
 			$FileInfoDto['SupportsLocks'] = false;
 		}
 		//判断是否支持文件更新
-		if ($editperm && in_array($meta['ext'], array('docm', 'docx', 'odt', 'dotx', 'ods', 'xlsb', 'xlsm', 'xlsx', 'odp', 'ppsx', 'pptx', 'odp', 'pptx'))) {
+		if ($editperm && in_array($meta['ext'], ['docm', 'docx', 'odt', 'dotx', 'ods', 'xlsb', 'xlsm', 'xlsx', 'odp', 'ppsx', 'pptx', 'odp', 'pptx'])) {
 			$FileInfoDto['SupportsUpdate'] = true; //表示WOPI服务器支持对于文件的PutFile 和PutRelativeFile 操作
 		}
 		helper_output::json($FileInfoDto);
@@ -141,7 +141,7 @@ class Wopi
 			$code = 400;
 		} elseif ($lock1 = self::getLockStr($path)) {
 			if ($lockarr1 = json_decode($lock1, true)) {
-				$lockarr = json_decode(($oldlock ? $oldlock : $lock), true);
+				$lockarr = json_decode(($oldlock ?: $lock), true);
 				if ($lockarr['S'] != $lockarr1['S']) {
 					$code = '409' . '|' . $lock1;
 				}
@@ -194,7 +194,7 @@ class Wopi
 		if ($discovery['error']) return  $discovery;
 
 		if (!in_array($fileExtension, $discovery['exts'])) {
-			return array('error' => 'filetype error');
+			return ['error' => 'filetype error'];
 		}
 
 		if (empty($action) || empty($discovery['actions'][$action])) {
@@ -245,19 +245,18 @@ class Wopi
 		$requestUrl = $requestUrl . str_replace('[1]', $guid, $wopi_url_temlpate);
 		$requestUrl = str_replace("[0]", $fileUrl, $requestUrl) . '&ui=zh-CN&rs=zh-CN';
 		$wopiSrc = $internalUrl . "wopi/files/$fileID?access_token=$guid&ui=zh-CN&rs=zh-CN";
-		$ret = array(
-			'fileID' => $fileID,
-			'protocol' => $protocol,
-			'wopiSrc' => $wopiSrc,
-			'urlsrc' => $urlsrc,
-			'webSocket' => $webSocket,
-			'fullsrc' => $requestUrl,
-			'access_token' => $guid,
-			'action' => $action,
-			'lockstatus' => $code, //检测锁状态
-			//'discovery'=>$discovery
-		);
-		return $ret; //LINK SHOW TEST
+        return [
+            'fileID' => $fileID,
+            'protocol' => $protocol,
+            'wopiSrc' => $wopiSrc,
+            'urlsrc' => $urlsrc,
+            'webSocket' => $webSocket,
+            'fullsrc' => $requestUrl,
+            'access_token' => $guid,
+            'action' => $action,
+            'lockstatus' => $code, //检测锁状态
+            //'discovery'=>$discovery
+        ]; //LINK SHOW TEST
 	}
 	private static function getActionByDiscovery($oosDiscoveryUrl)
 	{
@@ -266,15 +265,15 @@ class Wopi
 			$sourceXml = file_get_contents($cachefile);
 		}
 		if (!$sourceXml) {
-			$arrContextOptions = array(
-				"ssl" => array(
+			$arrContextOptions = [
+				"ssl" => [
 					"verify_peer" => false,
 					"verify_peer_name" => false,
-				),
-			);
+                ],
+            ];
 			if (!$sourceXml = file_get_contents($oosDiscoveryUrl, false, stream_context_create($arrContextOptions))) {
 				$error = error_get_last();
-				return array('error' => "HTTP request failed. Error was: " . $error['message']);
+				return ['error' => "HTTP request failed. Error was: " . $error['message']];
 			}
 			str_replace('"', "'", $sourceXml);
 			@file_put_contents($cachefile, $sourceXml);
@@ -282,22 +281,21 @@ class Wopi
 
 		$xml = simplexml_load_string($sourceXml);
 		$elements = $xml->xpath("net-zone/app/action");
-		$actions = $exts = array();
+		$actions = $exts = [];
 		foreach ($elements as  $value) {
-			$temparr = array(
+			$temparr = [
 				'ext' => (string)$value['ext'],
 				'action' => (string)$value['name'],
 				'urlsrc' => (string)$value['urlsrc']
-			);
+            ];
 			if (empty($temparr['ext'])) continue;
 			//if(isset($actions[$temparr['action']][$temparr['ext']])) continue;
 			$exts[$temparr['ext']] = $temparr['ext'];
 			$actions[$temparr['action']][$temparr['ext']] = $temparr['urlsrc'];
 		}
-		$ret = array(
-			'exts' => array_keys($exts),
-			'actions' => $actions
-		);
-		return $ret;
+        return [
+            'exts' => array_keys($exts),
+            'actions' => $actions
+        ];
 	}
 }

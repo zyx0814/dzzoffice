@@ -15,10 +15,10 @@ class filesock_base {
 	public $block = true;
 	public $encodetype = 'URLENCODE';
 	public $position = 0;
-	public $files = array();
+	public $files = [];
 	public $unsafe = false;
 	public $useragent = '';
-	public $header = array();
+	public $header = [];
 	public $rawdata = '';
 	public $returnbody = true;
 	public $failonerror = true;
@@ -38,7 +38,7 @@ class filesock_base {
 	public $iplist;
 	public $verifypeer;
 
-	public function __construct($param = array()) {
+	public function __construct($param = []) {
 		global $_G;
 		$this->verifypeer = $_G['config']['security']['fsockopensafe']['verifypeer'] ?? false;
 		if(!empty($param)) {
@@ -51,7 +51,7 @@ class filesock_base {
 		$this->primaryip = '';
 		if(!$tmp || empty($tmp['host'])) return false;
 		$isip = false;
-		if(filter_var(str_replace(array('[',']'), '', $tmp['host']), FILTER_VALIDATE_IP)) {
+		if(filter_var(str_replace(['[',']'], '', $tmp['host']), FILTER_VALIDATE_IP)) {
 			$isip = true;
 		}
 		if(isset($tmp['user']) || isset($tmp['pass'])) return false;
@@ -67,7 +67,7 @@ class filesock_base {
 		} elseif($isip) {
 			$this->primaryip = $tmp['host'];
 		}
-		if(!in_array(strtolower($tmp['scheme']), array('http', 'https'))) {
+		if(!in_array(strtolower($tmp['scheme']), ['http', 'https'])) {
 			return false;
 		}
 		$port = $_G['config']['security']['fsockopensafe']['port'] ?? [80, 443];
@@ -126,7 +126,7 @@ class filesock_base {
 		}
 		$dnsresult = [[],[]];
 		$recordtype = 0;
-		$ipversion = $_G['config']['security']['fsockopensafe']['ipversion'] ?? array('ipv6', 'ipv4');
+		$ipversion = $_G['config']['security']['fsockopensafe']['ipversion'] ?? ['ipv6', 'ipv4'];
 		if(in_array('ipv4', $ipversion)) {
 			$recordtype += DNS_A;
 		}
@@ -201,7 +201,7 @@ class filesock_base {
 	}
 	public function set($param) {
 		if(is_string($param)) {
-			$param = array('url' => $param);
+			$param = ['url' => $param];
 		}
 		foreach($param as $key => $value) {
 			if(property_exists($this, $key)) {
@@ -209,7 +209,7 @@ class filesock_base {
 			}
 		}
 	}
-	public function request($param = array()) {
+	public function request($param = []) {
 		if(!empty($param)) {
 			$this->set($param);
 		}
@@ -229,27 +229,27 @@ class filesock_base {
 			$this->post = $postnew;
 		}
 	}
-	public function get($param = array()) {
+	public function get($param = []) {
 		$this->method = 'GET';
 		return $this->request($param);
 	}
-	public function post($param = array()) {
+	public function post($param = []) {
 		$this->method = 'POST';
 		return $this->request($param);
 	}
-	public function head($param = array()) {
+	public function head($param = []) {
 		$this->method = 'HEAD';
 		return $this->request($param);
 	}
-	public function patch($param = array()) {
+	public function patch($param = []) {
 		$this->method = 'PATCH';
 		return $this->request($param);
 	}
-	public function put($param = array()) {
+	public function put($param = []) {
 		$this->method = 'PUT';
 		return $this->request($param);
 	}
-	public function delete($param = array()) {
+	public function delete($param = []) {
 		$this->method = 'DELETE';
 		return $this->request($param);
 	}

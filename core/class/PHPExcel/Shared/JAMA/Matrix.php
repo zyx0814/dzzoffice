@@ -39,7 +39,7 @@ class PHPExcel_Shared_JAMA_Matrix {
 	 *	@var array
 	 *	@access public
 	 */
-	public $A = array();
+	public $A = [];
 
 	/**
 	 *	Matrix row dimension
@@ -997,7 +997,8 @@ class PHPExcel_Shared_JAMA_Matrix {
 			switch($match) {
 				case 'object':
 						if ($args[0] instanceof PHPExcel_Shared_JAMA_Matrix) { $M = $args[0]; } else { throw new PHPExcel_Calculation_Exception(self::ArgumentTypeException); }
-				case 'array':
+                    break;
+                case 'array':
 						$M = new PHPExcel_Shared_JAMA_Matrix($args[0]);
 						break;
 				default:

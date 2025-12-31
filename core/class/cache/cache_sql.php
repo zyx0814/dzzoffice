@@ -28,7 +28,7 @@ class ultrax_cache {
     function set_cache($key, $value, $life) {
         $data = [
             'cachekey' => $key,
-            'cachevalue' => serialize(array('data' => $value, 'life' => $life)),
+            'cachevalue' => serialize(['data' => $value, 'life' => $life]),
             'dateline' => time(),
         ];
         return C::t('cache')->insert($data);
@@ -39,4 +39,3 @@ class ultrax_cache {
     }
 }
 
-?>

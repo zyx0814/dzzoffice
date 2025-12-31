@@ -202,7 +202,7 @@ class RequestCore
 		// Set some default values.
 		$this->request_url = $url;
 		$this->method = self::HTTP_GET;
-		$this->request_headers = array();
+		$this->request_headers = [];
 		$this->request_body = '';
 
 		// Set a new Request class if one was set.
@@ -615,7 +615,7 @@ class RequestCore
 		curl_setopt($curl_handle, CURLOPT_NOSIGNAL, true);
 		curl_setopt($curl_handle, CURLOPT_REFERER, $this->request_url);
 		curl_setopt($curl_handle, CURLOPT_USERAGENT, $this->useragent);
-		curl_setopt($curl_handle, CURLOPT_READFUNCTION, array($this, 'streaming_read_callback'));
+		curl_setopt($curl_handle, CURLOPT_READFUNCTION, [$this, 'streaming_read_callback']);
 
 		// Verification of the SSL cert
 		if ($this->ssl_verification)
@@ -682,7 +682,7 @@ class RequestCore
 		// Process custom headers
 		if (isset($this->request_headers) && count($this->request_headers))
 		{
-			$temp_headers = array();
+			$temp_headers = [];
 
 			foreach ($this->request_headers as $k => $v)
 			{
@@ -727,7 +727,7 @@ class RequestCore
 				curl_setopt($curl_handle, CURLOPT_CUSTOMREQUEST, $this->method);
 				if (isset($this->write_stream))
 				{
-					curl_setopt($curl_handle, CURLOPT_WRITEFUNCTION, array($this, 'streaming_write_callback'));
+					curl_setopt($curl_handle, CURLOPT_WRITEFUNCTION, [$this, 'streaming_write_callback']);
 					curl_setopt($curl_handle, CURLOPT_HEADER, false);
 				}
 				else
@@ -784,7 +784,7 @@ class RequestCore
 			array_shift($this->response_headers);
 
 			// Loop through and split up the headers.
-			$header_assoc = array();
+			$header_assoc = [];
 			foreach ($this->response_headers as $header)
 			{
 				$kv = explode(': ', $header);
@@ -850,9 +850,9 @@ class RequestCore
 		set_time_limit(0);
 
 		// Skip everything if there are no handles to process.
-		if (count($handles) === 0) return array();
+		if (count($handles) === 0) return [];
 
-		if (!$opt) $opt = array();
+		if (!$opt) $opt = [];
 
 		// Initialize any missing options
 		$limit = isset($opt['limit']) ? $opt['limit'] : -1;
@@ -861,7 +861,7 @@ class RequestCore
 		$handle_list = $handles;
 		$http = new $this->request_class();
 		$multi_handle = curl_multi_init();
-		$handles_post = array();
+		$handles_post = [];
 		$added = count($handles);
 		$last_handle = null;
 		$count = 0;
@@ -887,7 +887,7 @@ class RequestCore
 			}
 
 			// Figure out which requests finished.
-			$to_process = array();
+			$to_process = [];
 
 			while ($done = curl_multi_info_read($multi_handle))
 			{
@@ -1012,7 +1012,7 @@ class ResponseCore
 	 * @param integer|array $codes (Optional) The status code(s) to expect. Pass an <php:integer> for a single acceptable value, or an <php:array> of integers for multiple acceptable values.
 	 * @return boolean Whether we received the expected status code or not.
 	 */
-	public function isOK($codes = array(200, 201, 204, 206))
+	public function isOK($codes = [200, 201, 204, 206])
 	{
 		if (is_array($codes))
 		{
@@ -1027,10 +1027,10 @@ class ResponseCore
 	}
 	
 	public function xml2array($contents, $get_attributes=1, $priority = 'tag') {
-        if(!$contents) return array();
+        if(!$contents) return [];
 
 		 if(!function_exists('xml_parser_create')) {//检查php系统函数
-			return array();
+			return [];
 		 }
 	
 		$parser = xml_parser_create('');
@@ -1042,20 +1042,20 @@ class ResponseCore
 	
 		 if(!$xml_values) return;
 	
-		$xml_array = array();
-		$parents = array();
-		$opened_tags = array();
-		$arr = array();
+		$xml_array = [];
+		$parents = [];
+		$opened_tags = [];
+		$arr = [];
 	
 		$current = &$xml_array;
 	
-		$repeated_tag_index = array();
+		$repeated_tag_index = [];
 		foreach($xml_values as $data) {
 			 unset($attributes,$value);
 			extract($data);
 	
-			$result = array();
-			$attributes_data = array();
+			$result = [];
+			$attributes_data = [];
 			  
 			 if(isset($value)) {
 				 if($priority == 'tag') $result = $value;
@@ -1084,7 +1084,7 @@ class ResponseCore
 						$current[$tag][$repeated_tag_index[$tag.'_'.$level]] = $result;
 						$repeated_tag_index[$tag.'_'.$level]++;
 					 } else {
-						$current[$tag] = array($current[$tag],$result);
+						$current[$tag] = [$current[$tag],$result];
 						$repeated_tag_index[$tag.'_'.$level] = 2;
 						  
 						 if(isset($current[$tag.'_attr'])) {
@@ -1110,10 +1110,9 @@ class ResponseCore
 						 if($priority == 'tag' and $get_attributes and $attributes_data) {
 							$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
 						 }
-						$repeated_tag_index[$tag.'_'.$level]++;
-	
-					 } else {
-						$current[$tag] = array($current[$tag],$result);
+
+                    } else {
+						$current[$tag] = [$current[$tag],$result];
 						$repeated_tag_index[$tag.'_'.$level] = 1;
 						 if($priority == 'tag' and $get_attributes) {
 							 if(isset($current[$tag.'_attr'])) {
@@ -1126,9 +1125,9 @@ class ResponseCore
 								$current[$tag][$repeated_tag_index[$tag.'_'.$level] . '_attr'] = $attributes_data;
 							 }
 						 }
-						$repeated_tag_index[$tag.'_'.$level]++;
-					}
-				 }
+                    }
+                    $repeated_tag_index[$tag.'_'.$level]++;
+                }
 	
 			 } elseif($type == 'close') {
 				$current = &$parent[$level-1];

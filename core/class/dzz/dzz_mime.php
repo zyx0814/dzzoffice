@@ -5,7 +5,7 @@ class dzz_mime {
     /**
      * MIME map of the file extensions.
      */
-    protected static $mime_maps = array(
+    protected static $mime_maps = [
         'ez' => 'application/andrew-inset',
         'aw' => 'application/applixware',
         'atom' => 'application/atom+xml',
@@ -799,7 +799,7 @@ class dzz_mime {
         'avi' => 'video/x-msvideo',
         'movie' => 'video/x-sgi-movie',
         'ice' => 'x-conference/x-cooltalk',
-    );
+    ];
 
     /**
      * Get file MIME according to its extension.

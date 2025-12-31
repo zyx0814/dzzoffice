@@ -33,4 +33,4 @@ if ($step == 1) {
     }
 }
 include template('updatecache');
-?>
+

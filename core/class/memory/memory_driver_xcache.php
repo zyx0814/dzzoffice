@@ -41,4 +41,3 @@ class memory_driver_xcache {
 
 }
 
-?>

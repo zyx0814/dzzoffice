@@ -6,9 +6,9 @@ if(!defined('IN_DZZ')) {
 
 
 class zipfile {
-	var $datasec      = array();
+	var $datasec      = [];
 
-	var $ctrl_dir     = array();
+	var $ctrl_dir     = [];
 
 	var $eof_ctrl_dir = "\x50\x4b\x05\x06\x00\x00\x00\x00";
 
@@ -109,7 +109,7 @@ class zipfile {
 class SimpleUnzip {
 		var $Comment = '';
 
-		var $Entries = array();
+		var $Entries = [];
 
 		var $Name = '';
 
@@ -156,7 +156,7 @@ class SimpleUnzip {
 		} // end of the 'GetTime()' method
 
 		function ReadFile($in_FileName) {
-			$this->Entries = array();
+			$this->Entries = [];
 
 			$this->Name = $in_FileName;
 			$this->Time = filemtime($in_FileName);
@@ -172,15 +172,15 @@ class SimpleUnzip {
 			$aP = unpack('x16/v1CL', $aE[1]);
 			$this->Comment = substr($aE[1], 18, $aP['CL']);
 
-			$this->Comment = strtr($this->Comment, array("\r\n" => "\n",
-								                         "\r"   => "\n"));
+			$this->Comment = strtr($this->Comment, ["\r\n" => "\n",
+								                         "\r"   => "\n"]);
 
 			$aE = explode("\x50\x4b\x01\x02", $vZ);
 			$aE = explode("\x50\x4b\x03\x04", $aE[0]);
 			array_shift($aE);
 
 			foreach($aE as $vZ) {
-				$aI = array();
+				$aI = [];
 				$aI['E']  = 0;
 				$aI['EM'] = '';
 				$aP = unpack('v1VN/v1GPF/v1CM/v1FT/v1FD/V1CRC/V1CS/V1UCS/v1FNL', $vZ);
@@ -306,4 +306,3 @@ class SimpleUnzipEntry {
 		} // end of the 'SimpleUnzipEntry' constructor
 } // end of the 'SimpleUnzipEntry' class
 
-?>

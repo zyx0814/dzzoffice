@@ -5,7 +5,7 @@ if (!defined('IN_DZZ')) {
 }
 error_reporting(E_ERROR);
 function updatecache($cachename = '') {
-    $updatelist = empty($cachename) ? array() : (is_array($cachename) ? $cachename : array($cachename));
+    $updatelist = empty($cachename) ? [] : (is_array($cachename) ? $cachename : [$cachename]);
     if (!$updatelist) {
         @include_once libfile('cache/setting', 'function');
 
@@ -13,7 +13,7 @@ function updatecache($cachename = '') {
         $cachedir = DZZ_ROOT . './core/function/cache';
         $cachedirhandle = dir($cachedir);
         while ($entry = $cachedirhandle->read()) {
-            if (!in_array($entry, array('.', '..')) && preg_match("/^cache\_([\_\w]+)\.php$/", $entry, $entryr) && $entryr[1] != 'setting' && substr($entry, -4) == '.php' && is_file($cachedir . '/' . $entry)) {
+            if (!in_array($entry, ['.', '..']) && preg_match("/^cache\_([\_\w]+)\.php$/", $entry, $entryr) && $entryr[1] != 'setting' && substr($entry, -4) == '.php' && is_file($cachedir . '/' . $entry)) {
                 @include_once libfile('cache/' . $entryr[1], 'function');
                 call_user_func('build_cache_' . $entryr[1]);
             }
@@ -28,7 +28,7 @@ function updatecache($cachename = '') {
             if (is_dir($cachedir)) {
                 $cachedirhandle = dir($cachedir);
                 while ($entry = $cachedirhandle->read()) {
-                    if (!in_array($entry, array('.', '..')) && preg_match("/^cache\_([\_\w]+)\.php$/", $entry, $entryr) && substr($entry, -4) == '.php' && is_file($cachedir . '/' . $entry)) {
+                    if (!in_array($entry, ['.', '..']) && preg_match("/^cache\_([\_\w]+)\.php$/", $entry, $entryr) && substr($entry, -4) == '.php' && is_file($cachedir . '/' . $entry)) {
                         try {
                             @include_once $cachedir . '/' . $entry;
                             //call_user_func('build_cache_'.$dir.'_'.$entryr[1]);
@@ -106,9 +106,9 @@ function getcachevars($data, $type = 'VAR') {
 
 function smthumb($size, $smthumb = 50) {
     if ($size[0] <= $smthumb && $size[1] <= $smthumb) {
-        return array('w' => $size[0], 'h' => $size[1]);
+        return ['w' => $size[0], 'h' => $size[1]];
     }
-    $sm = array();
+    $sm = [];
     $x_ratio = $smthumb / $size[0];
     $y_ratio = $smthumb / $size[1];
     if (($x_ratio * $size[1]) < $smthumb) {
@@ -130,10 +130,7 @@ function arrayeval($array, $level = 0) {
         return var_export($array, true);
     }
 
-    $space = '';
-    for ($i = 0; $i <= $level; $i++) {
-        $space .= "\t";
-    }
+    $space = str_repeat("\t", $level + 1);
     $evaluate = "Array\n$space(\n";
     $comma = $space;
     if (is_array($array)) {
@@ -188,4 +185,3 @@ function clearpermcache() {
     $dirHandle->close();
     return true;
 }
-?>

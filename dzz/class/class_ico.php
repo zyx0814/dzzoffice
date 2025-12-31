@@ -28,7 +28,7 @@ class Ico {
      * @type array(R, G, B) = array(255, 255, 255)
      * @var  public
      **/
-    public $bgcolor = array(255, 255, 255);
+    public $bgcolor = [255, 255, 255];
 
     /**
      * Ico::bgcolor_transparent
@@ -38,7 +38,7 @@ class Ico {
      * @var  public
      **/
     public $bgcolor_transparent = true;
-    public $formats = array();
+    public $formats = [];
 
     /**
      * Ico::Ico()
@@ -48,7 +48,7 @@ class Ico {
      * @return              void
      **/
     function __construct($path = '', $proxy = '') {
-        $this->formats = array();
+        $this->formats = [];
         if (!empty($path)) {
             $this->LoadFile($path, $proxy);
         }
@@ -89,7 +89,7 @@ class Ico {
      * @return  boolean          Success
      **/
     function LoadData($data) {
-        $this->formats = array();
+        $this->formats = [];
 
         /**
          * ICO header
@@ -117,7 +117,7 @@ class Ico {
             $icodata = unpack("LSize/LWidth/LHeight/SPlanes/SBitCount/LCompression/LImageSize/LXpixelsPerM/LYpixelsPerM/LColorsUsed/LColorsImportant", substr($data, $this->formats[$i]['FileOffset']));
 
             $this->formats[$i]['header'] = $icodata;
-            $this->formats[$i]['colors'] = array();
+            $this->formats[$i]['colors'] = [];
 
             $this->formats[$i]['BitCount'] = $this->formats[$i]['header']['BitCount'];
 
@@ -132,12 +132,12 @@ class Ico {
                     $icodata = substr($data, $this->formats[$i]['FileOffset'] + $icodata['Size'], $this->formats[$i]['ColorCount'] * 4);
                     $offset = 0;
                     for ($j = 0; $j < $this->formats[$i]['ColorCount']; $j++) {
-                        $this->formats[$i]['colors'][] = array(
+                        $this->formats[$i]['colors'][] = [
                             'red' => ord($icodata[$offset]),
                             'green' => ord($icodata[$offset + 1]),
                             'blue' => ord($icodata[$offset + 2]),
                             'reserved' => ord($icodata[$offset + 3])
-                        );
+                        ];
                         $offset += 4;
                     }
                     $length = $this->formats[$i]['header']['Width'] * $this->formats[$i]['header']['Height'] * (1 + $this->formats[$i]['BitCount']) / $this->formats[$i]['BitCount'];
@@ -146,18 +146,18 @@ class Ico {
                 case 1:
                     $icodata = substr($data, $this->formats[$i]['FileOffset'] + $icodata['Size'], $this->formats[$i]['ColorCount'] * 4);
 
-                    $this->formats[$i]['colors'][] = array(
+                    $this->formats[$i]['colors'][] = [
                         'blue' => ord($icodata[0]),
                         'green' => ord($icodata[1]),
                         'red' => ord($icodata[2]),
                         'reserved' => ord($icodata[3])
-                    );
-                    $this->formats[$i]['colors'][] = array(
+                    ];
+                    $this->formats[$i]['colors'][] = [
                         'blue' => ord($icodata[4]),
                         'green' => ord($icodata[5]),
                         'red' => ord($icodata[6]),
                         'reserved' => ord($icodata[7])
-                    );
+                    ];
 
                     $length = $this->formats[$i]['header']['Width'] * $this->formats[$i]['header']['Height'] / 8;
                     $this->formats[$i]['data'] = substr($data, $this->formats[$i]['FileOffset'] + $this->formats[$i]['header']['Size'] + 8, $length);
@@ -211,7 +211,7 @@ class Ico {
             $red = hexdec($red[1] . $red[2]);
         }
 
-        $this->bgcolor = array($red, $green, $blue);
+        $this->bgcolor = [$red, $green, $blue];
     }
 
     /**
@@ -259,12 +259,12 @@ class Ico {
         /**
          * allocate pallete and get XOR image
          **/
-        if (in_array($this->formats[$index]['BitCount'], array(1, 4, 8, 24))) {
+        if (in_array($this->formats[$index]['BitCount'], [1, 4, 8, 24])) {
             if ($this->formats[$index]['BitCount'] != 24) {
                 /**
                  * color pallete
                  **/
-                $c = array();
+                $c = [];
                 for ($i = 0; $i < $this->formats[$index]['ColorCount']; $i++) {
                     $c[$i] = $this->AllocateColor($im, $this->formats[$index]['colors'][$i]['blue'],
                         $this->formats[$index]['colors'][$i]['green'],
@@ -364,10 +364,10 @@ class Ico {
                     for ($j = 0; $j < $this->formats[$index]['Width']; $j++) {
                         if ($leftbits) {
                             $color = substr($this->formats[$index]['data'], $offset, 1);
-                            $color = array(
+                            $color = [
                                 'High' => bindec(substr(decbin(ord($color)), 0, 4)),
                                 'Low' => bindec(substr(decbin(ord($color)), 4))
-                            );
+                            ];
                             if ($bits[$maskoffset++] == 0) {
                                 imagesetpixel($im, $j, $i, $c[$color['High']]);
                             }
@@ -432,4 +432,3 @@ class Ico {
     }
 }
 
-?>

@@ -36,14 +36,14 @@ if (is_array($orderby)) {
 $next = false;
 $nextstart = $start + $limit;
 $explorer_setting = get_resources_some_setting();
-$groups = array();
+$groups = [];
 //获取用户坐在群组id
 $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid, 1);
-if (DB::result_first("select count(*) from %t where orgid in(%n) $ordersql ", array('organization', $orgids)) > $nextstart) {
+if (DB::result_first("select count(*) from %t where orgid in(%n) $ordersql ", ['organization', $orgids]) > $nextstart) {
     $next = $nextstart;
 }
 if ($explorer_setting['grouponperm']) {
-    foreach (DB::fetch_all("select * from %t where orgid in(%n) $ordersql $limitsql", array('organization', $orgids)) as $orginfo) {
+    foreach (DB::fetch_all("select * from %t where orgid in(%n) $ordersql $limitsql", ['organization', $orgids]) as $orginfo) {
         if ($orginfo['syatemon'] == 0) {//系统管理员关闭群组
             continue;
         } elseif ($orginfo['syatemon'] == 1 && $orginfo['manageon'] == 0 && C::t('organization_admin')->chk_memberperm($orginfo['orgid'], $uid) == 0) {//管理员关闭群组，当前用户不具备管理员权限

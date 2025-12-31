@@ -10,7 +10,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $template = $_GET['template'] ?? '';
-$about = array();
+$about = [];
 $identify = filter_var($_GET['modname'], FILTER_SANITIZE_STRING);
 $appConfig = DZZ_ROOT . './dzz/' . $identify . '/config/config.php';
 if ($_G['setting']['bbclosed']) {
@@ -35,23 +35,17 @@ if ($_G['language'] === 'zh-en' && isset($about['name_zh'])) {
     $about['name'] = $about['name_zh'];
 } elseif ($_G['language'] === 'en-us' && isset($about['name_en'])) {
     $about['name'] = $about['name_en'];
+} elseif (isset($about['name_zh'])) {
+    $about['name'] = $about['name_zh'];
+} elseif (isset($about['name_en'])) {
+    $about['name'] = $about['name_en'];
 } else {
-    if (isset($about['name_zh'])) {
-        $about['name'] = $about['name_zh'];
-    } elseif (isset($about['name_en'])) {
-        $about['name'] = $about['name_en'];
-    } else {
-        $about['name'] = $_G['setting']['sitename'] ? $_G['setting']['sitename'] : 'DzzOffice';
-    }
+    $about['name'] = $_G['setting']['sitename'] ?: 'DzzOffice';
 }
 $version = 'V' . CORE_VERSION;
 if ($_G['ismobile'] && !$_GET['inajax']) {
     include template('mobile_about');
-} else {
-    if ($template == '1') {
-        include template('lyear_about', 'lyear');
-    } else {
-        include template('about');
-    }
-}
+} elseif ($template == '1') {
+    include template('lyear_about', 'lyear');
+} else include template('about');
 exit();

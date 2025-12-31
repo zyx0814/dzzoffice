@@ -62,17 +62,17 @@ class Client {
 	 *         a valid OneDrive client state, as returned by getState(). Default:
 	 *         array().
 	 */
-	public function __construct(array $options = array()) {
+	public function __construct(array $options = []) {
 		$this->_clientId = array_key_exists('client_id', $options)
 			? (string) $options['client_id'] : CLIENT_ID;
 
 		$this->_state = array_key_exists('state', $options)
-			? $options['state'] :array(
+			? $options['state'] : [
 				'redirect_uri' => '',
 				'token'        => '',
 				'expire_in'    => 0,
 				'refreshtime'=>0
-			);
+            ];
 	}
 
 	/**
@@ -106,9 +106,9 @@ class Client {
 	 *         support it.
 	 * @return (string) The login URL.
 	 */
-	public function getLogInUrl(array $scopes, $redirectUri, array $options = array()) {
+	public function getLogInUrl(array $scopes, $redirectUri, array $options = []) {
 		if (null === $this->_clientId) {
-			return array('error'=>'The client ID must be set to call getLoginUrl()');
+			return ['error'=>'The client ID must be set to call getLoginUrl()'];
 		}
 
 		$imploded    = implode(' ', $scopes);
@@ -118,15 +118,13 @@ class Client {
 		// When using this URL, the browser will eventually be redirected to the
 		// callback URL with a code passed in the URL query string (the name of the
 		// variable is "code"). This is suitable for PHP.
-		$url = self::AUTH_URL
-			. '?client_id=' . urlencode($this->_clientId)
-			. '&scope=' . ($imploded)
-			. '&response_type=code'
-			. '&redirect_uri=' . urlencode($redirectUri)
-			. '&display=popup'
-			. '&locale=en';
-
-		return $url;
+        return self::AUTH_URL
+            . '?client_id=' . urlencode($this->_clientId)
+            . '&scope=' . ($imploded)
+            . '&response_type=code'
+            . '&redirect_uri=' . urlencode($redirectUri)
+            . '&display=popup'
+            . '&locale=en';
 	}
 
 	/**
@@ -177,11 +175,11 @@ class Client {
 	 */
 	public function obtainAccessToken($clientSecret, $code) {
 		if (null === $this->_clientId) {
-			return array('error'=>'The client ID must be set to call obtainAccessToken()');
+			return ['error'=>'The client ID must be set to call obtainAccessToken()'];
 		}
 
 		if (null === $this->_state['redirect_uri']) {
-			return array('error'=>'The state\'s redirect URI must be set to call obtainAccessToken()');
+			return ['error'=>'The state\'s redirect URI must be set to call obtainAccessToken()'];
 		}
 
 		$url = self::TOKEN_URL
@@ -193,7 +191,7 @@ class Client {
 
 		$curl = curl_init();
 
-		curl_setopt_array($curl, array(
+		curl_setopt_array($curl, [
 			CURLOPT_URL            => $url,
 			// General options.
 			CURLOPT_RETURNTRANSFER => true,
@@ -204,24 +202,24 @@ class Client {
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_TIMEOUT        => 15
-			
-		));
+
+        ]);
 		
 		$result = curl_exec($curl);
 		curl_close($curl);
 		$decoded = json_decode($result,true);
 
 		if (null === $decoded) {
-			return array('error'=>'json_decode() failed');
+			return ['error'=>'json_decode() failed'];
 		}
 		return  $this->_state =$decoded;
 	}
 	public function refreshAccessToken($clientSecret, $refresh_token) {
 		if (null === $this->_clientId) {
-			return array('error'=>'没有获取到 client ID');
+			return ['error'=>'没有获取到 client ID'];
 		}
 		if (!$refresh_token) {
-			return array('error'=>'没有获取到refresh_token');
+			return ['error'=>'没有获取到refresh_token'];
 		}
 		if(!$this->_state['redirect_uri']) $this->_state['redirect_uri'] = CALLBACK_URI;
 		
@@ -235,7 +233,7 @@ class Client {
 	
 		$curl = curl_init();
 
-		curl_setopt_array($curl, array(
+		curl_setopt_array($curl, [
 			CURLOPT_URL            => $url,
 			// General options.
 			CURLOPT_RETURNTRANSFER => true,
@@ -246,15 +244,15 @@ class Client {
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_TIMEOUT        => 15
-			
-		));
+
+        ]);
 		
 		$result = curl_exec($curl);
 		curl_close($curl);
 		$decoded = json_decode($result,true);
 
 		if (null === $decoded) {
-			return array('error'=>'json_decode() failed');
+			return ['error'=>'json_decode() failed'];
 		}
 		return $this->_state = $decoded;
 		
@@ -275,7 +273,7 @@ class Client {
 	}
 	public function fetchChildren($path,$parameter) {
 	
-		return $this->apiGet('/drive/root:'.($path?$path:'/').':/children',array(),$parameter);
+		return $this->apiGet('/drive/root:'.($path?:'/').':/children', [],$parameter);
 	}
 	/**
 	 * Fetches an object from the current OneDrive account.
@@ -286,7 +284,7 @@ class Client {
 	 *         the OneDrive object fetched.
 	 */
 	public function fetchObject($path='') {
-		return $this->apiGet('/drive/root:'.($path?$path:'/'));
+		return $this->apiGet('/drive/root:'.($path?:'/'));
 	}
 	/**
 	 * Updates the properties of an object in the current OneDrive account.
@@ -296,14 +294,14 @@ class Client {
 	 *         array().
 	 * @throw  (Exception) Thrown on I/O errors.
 	 */
-	public function updateObject($path, $properties = array()) {
-		$path   = '/drive/root:'.($path?$path:'/');
+	public function updateObject($path, $properties = []) {
+		$path   = '/drive/root:'.($path?:'/');
 		return $this->apiPatch($path, $properties);
 	}
 	//$type=='Crop' 剪裁图像;
 	public function thumbnails($path,$width,$height,$type='') {
-		$parameter=array('select'=>'c'.$width.'x'.$height.($type=='Crop'?'_Crop':''));
-		return $this->apiGet('/drive/root:'.($path?$path:'/').':/thumbnails',array(),$parameter);
+		$parameter= ['select'=>'c'.$width.'x'.$height.($type=='Crop'?'_Crop':'')];
+		return $this->apiGet('/drive/root:'.($path?:'/').':/thumbnails', [],$parameter);
 	}
 
 	
@@ -320,7 +318,7 @@ class Client {
 	 *         the OneDrive folder created.
 	 */
 	public function createFolder($path,$name,$ondup='fail') {
-		if(!in_array((string)$ondup,array('rename','fail'))) $ondup='rename';
+		if(!in_array((string)$ondup, ['rename','fail'])) $ondup='rename';
 		
 		if ('' === $path) {
 			$path = '/drive/root/children';
@@ -328,12 +326,12 @@ class Client {
 			$path = '/drive/root:'.$path.':/children';
 		}
 
-		$properties = array(
+		$properties = [
 			'name' => (string)($name),
 			'@name.conflictBehavior'=>(string)$ondup,
-			'folder'=>(object)array()
-			
-		);
+			'folder'=>(object)[]
+
+        ];
 		return $this->apiPost($path, (object) $properties);
 	}
 		
@@ -359,17 +357,17 @@ class Client {
 		$stream = fopen('php://temp', 'w+b');
 
 		if (false === $stream) {
-			return array('error'=>'fopen() failed');
+			return ['error'=>'fopen() failed'];
 		}
 
 		if (false === fwrite($stream, $content)) {
 			fclose($stream);
-			return array('error'=>'fwrite() failed');
+			return ['error'=>'fwrite() failed'];
 		}
 
 		if (!rewind($stream)) {
 			fclose($stream);
-			return array('error'=>'rewind() failed');
+			return ['error'=>'rewind() failed'];
 		}
 
 		// TODO: some versions of cURL cannot PUT memory streams? See here for a
@@ -385,7 +383,7 @@ class Client {
 		}
 
 		if(!$stream = fopen($file, 'r+b')){
-			return array('error'=>'打开文件失败');
+			return ['error'=>'打开文件失败'];
 		}
 		// TODO: some versions of cURL cannot PUT memory streams? See here for a
 		// workaround: https://bugs.php.net/bug.php?id=43468
@@ -408,7 +406,7 @@ class Client {
 	
 	
 	public function createSession($path,$name,$ondup='rename') {
-		if(!in_array((string)$ondup,array('rename','replace','fail'))) $ondup='rename';
+		if(!in_array((string)$ondup, ['rename','replace','fail'])) $ondup='rename';
 		
 		if ('' === $path) {
 			$path = '/drive/root:/'.urlencode(urldecode($name)).':/upload.createSession';
@@ -416,11 +414,11 @@ class Client {
 			$path = '/drive/root:'.$path.'/'.urlencode(urldecode($name)).':/upload.createSession';
 		}
 
-		$properties = array(
-			'item'=>array(
+		$properties = [
+			'item'=> [
 					'@name.conflictBehavior'=>(string)$ondup,
-				)
-		);
+            ]
+        ];
 		return $this->apiPost($path, (object) $properties);
 	}
 	
@@ -431,14 +429,14 @@ class Client {
 	public function uploadFragment($uploadUrl,$file ,$contentRange) {
 		
 		$stream = @fopen($file, 'r+b');
-		$ret = $this->apiPut($uploadUrl, $stream,array('Content-Range'=>$contentRange));
+		$ret = $this->apiPut($uploadUrl, $stream, ['Content-Range'=>$contentRange]);
 		@fclose($stream);
 		return $ret;
 		//return new File($this, $file->id, $file);
 	}
 	
 	public function createLink($path,$type='view') {
-		if(!in_array((string)$type,array('view','edit'))) $ondup='view';
+		if(!in_array((string)$type, ['view','edit'])) $ondup='view';
 		
 		if ('' === $path) {
 			$path = '/drive/root:/'.$path.':/action.createLink';
@@ -446,9 +444,9 @@ class Client {
 			$path = '/drive/root:'.$path.':/action.createLink';
 		}
 
-		$properties = array(
+		$properties = [
 			'type'=>$type
-		);
+        ];
 		return $this->apiPost($path, (object) $properties);
 	}
 	
@@ -471,9 +469,9 @@ class Client {
 		}else{
 			$tpath = '/drive/root:'.urldecode($tpath);
 		}
-		$this->apiPatch($path, (object) array(
-			'parentReference' => array('path'=>$tpath),
-		));
+		$this->apiPatch($path, (object) [
+			'parentReference' => ['path'=>$tpath],
+        ]);
 	}
 
 	/**
@@ -497,9 +495,9 @@ class Client {
 			$tpath = '/drive/root:'.$tpath;
 		}
 		
-		$properties = array(
-			'parentReference' => array('path'=>$tpath),
-		);
+		$properties = [
+			'parentReference' => ['path'=>$tpath],
+        ];
 		return $this->apiPost($path, (object) $properties);
 	}
 
@@ -529,10 +527,10 @@ class Client {
 	public function fetchShared() {
 		return $this->apiGet('me/skydrive/shared');
 	}
-	private static function _createCurl($path, $options = array()) {
+	private static function _createCurl($path, $options = []) {
 		$curl = curl_init();
 
-		$default_options = array(
+		$default_options = [
 			// General options.
 			CURLOPT_RETURNTRANSFER => true,
 			CURLOPT_FOLLOWLOCATION => true,
@@ -542,8 +540,8 @@ class Client {
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_SSL_VERIFYPEER => false,
 			CURLOPT_TIMEOUT        => 1500
-			
-		);
+
+        ];
 
 		// See http://php.net/manual/en/function.array-merge.php for a description of the + operator (and why array_merge() would be wrong)
 		$final_options = $options + $default_options;
@@ -558,7 +556,7 @@ class Client {
 	 * @param  (string) $path - The path of the API call (eg. me/skydrive).
 	 * @param  (array) $options - Further curl options to set.
 	 */
-	public function apiGet($path, $options = array(),$data=array()) {
+	public function apiGet($path, $options = [], $data= []) {
 		$url = self::API_URL . $path
 			. ($data?('?'.http_build_query($data).'&'):'?')
 			. 'access_token=' . urlencode($this->_state['access_token']);
@@ -580,17 +578,17 @@ class Client {
 		$data = (object) $data;
 		$curl = self::_createCurl($path);
 
-		curl_setopt_array($curl, array(
+		curl_setopt_array($curl, [
 			CURLOPT_URL        => $url,
 			CURLOPT_POST       => true,
 
-			CURLOPT_HTTPHEADER => array(
+			CURLOPT_HTTPHEADER => [
 				'Content-Type: application/json', // The data is sent as JSON as per OneDrive documentation
 				'Authorization: Bearer ' . $this->_state['access_token']
-			),
+            ],
 
 			CURLOPT_POSTFIELDS => json_encode($data)
-		));
+        ]);
 
 		return $this->_processResult($curl);
 	}
@@ -607,21 +605,21 @@ class Client {
 		$url   = (strpos($path,'https://')===false)?self::API_URL . $path:$path;
 		$curl  = self::_createCurl($path);
 		$stats = fstat($stream);
-		$headers = array(
+		$headers = [
 			'Authorization: Bearer ' . $this->_state['access_token']
-		);
+        ];
 		foreach($extraheader as $key => $val){
 			$headers[] = "$key: $val";
 		}
 		
 
-		$options = array(
+		$options = [
 			CURLOPT_URL        => $url,
 			CURLOPT_HTTPHEADER => $headers,
 			CURLOPT_PUT        => true,
 			CURLOPT_INFILE     => $stream,
 			CURLOPT_INFILESIZE => $stats[7] // Size
-		);
+        ];
 		curl_setopt_array($curl, $options);
 		return $this->_processResult($curl);
 	}
@@ -638,17 +636,17 @@ class Client {
 		$data = (object) $data;
 		$curl = self::_createCurl($path);
 
-		curl_setopt_array($curl, array(
+		curl_setopt_array($curl, [
 			CURLOPT_URL           => $url,
 			CURLOPT_CUSTOMREQUEST => 'PATCH',
 
-			CURLOPT_HTTPHEADER    => array(
+			CURLOPT_HTTPHEADER    => [
 				'Content-Type: application/json', // The data is sent as JSON as per OneDrive documentation
 				'Authorization: Bearer ' . $this->_state['access_token']
-			),
+            ],
 
 			CURLOPT_POSTFIELDS    => json_encode($data)
-		));
+        ]);
 		return $this->_processResult($curl);
 	}
 	/**
@@ -662,10 +660,10 @@ class Client {
 
 		$curl = self::_createCurl($path);
 
-		curl_setopt_array($curl, array(
+		curl_setopt_array($curl, [
 			CURLOPT_URL           => $url,
 			CURLOPT_CUSTOMREQUEST => 'DELETE'
-		));
+        ]);
 
 		return $this->_processResult($curl);
 	}
@@ -681,17 +679,17 @@ class Client {
 		$data = (object) $data;
 		$curl = self::_createCurl($path);
 
-		curl_setopt_array($curl, array(
+		curl_setopt_array($curl, [
 			CURLOPT_URL           => $url,
 			CURLOPT_CUSTOMREQUEST => 'MOVE',
 
-			CURLOPT_HTTPHEADER    => array(
+			CURLOPT_HTTPHEADER    => [
 				'Content-Type: application/json', // The data is sent as JSON as per OneDrive documentation
 				'Authorization: Bearer ' . $this->_state['access_token']
-			),
+            ],
 
 			CURLOPT_POSTFIELDS    => json_encode($data)
-		));
+        ]);
 		return $this->_processResult($curl);
 	}
 
@@ -706,17 +704,17 @@ class Client {
 		$data = (object) $data;
 		$curl = self::_createCurl($path);
 
-		curl_setopt_array($curl, array(
+		curl_setopt_array($curl, [
 			CURLOPT_URL           => $url,
 			CURLOPT_CUSTOMREQUEST => 'COPY',
 
-			CURLOPT_HTTPHEADER    => array(
+			CURLOPT_HTTPHEADER    => [
 				'Content-Type: application/json', // The data is sent as JSON as per OneDrive documentation
 				'Authorization: Bearer ' . $this->_state['access_token']
-			),
+            ],
 
 			CURLOPT_POSTFIELDS    => json_encode($data)
-		));
+        ]);
 
 		return $this->_processResult($curl);
 	}
@@ -732,7 +730,7 @@ class Client {
 		$result = curl_exec($curl);
 
 		if (false === $result) {
-			return array('error'=>'curl_exec() failed: ' . curl_error($curl));
+			return ['error'=>'curl_exec() failed: ' . curl_error($curl)];
 		}
 
 		$info = curl_getinfo($curl);
@@ -749,12 +747,12 @@ class Client {
 //print_r($info);exit($result);
 		// Empty JSON string is returned as an empty object.
 		if ('' == $result) {
-			return  array();
+			return  [];
 		}
 		
 		$decoded = json_decode($result,true);
 		if (isset($decoded['error'])) {
-			return array('error'=> $decoded['error']['code'].':'.$decoded['error']['message'],'code'=>$decoded['error']['code']);
+			return ['error'=> $decoded['error']['code'].':'.$decoded['error']['message'],'code'=>$decoded['error']['code']];
 		}
 		//print_r($info);exit($result);
 		return $decoded;

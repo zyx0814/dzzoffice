@@ -20,9 +20,9 @@ class table_organization_upjob extends dzz_table {
     }
 
     public function fetch_by_uid($uid) {
-        if (!$data = DB::fetch_first("select * from %t where uid=%d ", array($this->_table, $uid))) return array();
-        if (!$job = C::t('organization_job')->fetch_by_jobid($data['jobid'])) return array();
-        $job['depart'] = array();
+        if (!$data = DB::fetch_first("select * from %t where uid=%d ", [$this->_table, $uid])) return [];
+        if (!$job = C::t('organization_job')->fetch_by_jobid($data['jobid'])) return [];
+        $job['depart'] = [];
         foreach ($job['orgtree'] as $value) {
             $job['depart'][] = $value['orgname'];
         }
@@ -32,17 +32,17 @@ class table_organization_upjob extends dzz_table {
 
     public function insert_by_uid($uid, $jobid) {
         if (!$jobid) return self::delete_by_uid($uid);
-        $setarr = array('uid' => $uid,
+        $setarr = ['uid' => $uid,
             'jobid' => $jobid,
             'dateline' => TIMESTAMP,
             'opuid' => getglobal('uid')
-        );
+        ];
         return parent::insert($setarr, 1, 1);
     }
 
     public function delete_by_uid($uid) {
-        return DB::query("delete from %t where uid=%d", array($this->_table, $uid));
+        return DB::query("delete from %t where uid=%d", [$this->_table, $uid]);
     }
 }
 
-?>
+

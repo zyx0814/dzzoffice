@@ -14,7 +14,7 @@ $navtitle = lang('cloud_set');
 if (empty($operation)) $operation = 'setting';
 if ($operation == 'setting') {
     if (!submitcheck('cloudsubmit')) {
-        $list = array();
+        $list = [];
         foreach (DB::fetch_all("select * from " . DB::table('connect') . " where 1 order by disp") as $value) {
 
             if ($value['type'] == 'pan' && (empty($value['key']) || empty($value['secret']))) {
@@ -30,10 +30,10 @@ if ($operation == 'setting') {
         $_GET = dhtmlspecialchars($_GET);
         foreach ($_GET['name'] as $bz => $value) {
             if (empty($value)) continue;
-            $setarr = array('name' => $value,
+            $setarr = ['name' => $value,
                 'disp' => intval($_GET['disp'][$bz]),
                 'available' => intval($_GET['available'][$bz])
-            );
+            ];
             if ($bz == 'dzz' && $setarr['available'] < 1) $setarr['available'] = 1;
             //没有定义api文件不能开启
             if (!is_file(DZZ_ROOT . './core/class/io/io_' . ($bz) . '.php')) $setarr['available'] = 0;
@@ -57,4 +57,4 @@ if ($operation == 'setting') {
 }
 
 include template('cloud');
-?>
+

@@ -20,19 +20,19 @@ class table_failedlogin extends dzz_table {
     }
 
     public function fetch_username($ip = '', $username = '') {
-        return DB::fetch_first("SELECT * FROM %t WHERE ip=%s AND username=%s", array($this->_table, $ip, $username));
+        return DB::fetch_first("SELECT * FROM %t WHERE ip=%s AND username=%s", [$this->_table, $ip, $username]);
     }
 
     public function fetch_ip($ip = '', $username = '') {
-        return DB::fetch_first("SELECT * FROM %t WHERE ip=%s AND username = %s", array($this->_table, $ip, $username));
+        return DB::fetch_first("SELECT * FROM %t WHERE ip=%s AND username = %s", [$this->_table, $ip, $username]);
     }
 
     public function delete_old($time) {
-        DB::query("DELETE FROM %t WHERE lastupdate<%d", array($this->_table, TIMESTAMP - intval($time)), 'UNBUFFERED');
+        DB::query("DELETE FROM %t WHERE lastupdate<%d", [$this->_table, TIMESTAMP - intval($time)], 'UNBUFFERED');
     }
 
     public function update_failed($ip = '', $username = '') {
-        DB::query("UPDATE %t SET count=count+1, lastupdate=%d WHERE ip=%s AND username = %s", array($this->_table, TIMESTAMP, $ip, $username));
+        DB::query("UPDATE %t SET count=count+1, lastupdate=%d WHERE ip=%s AND username = %s", [$this->_table, TIMESTAMP, $ip, $username]);
     }
 
 }

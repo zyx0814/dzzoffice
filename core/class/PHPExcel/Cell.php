@@ -238,7 +238,8 @@ class PHPExcel_Cell
 				break;
 			case PHPExcel_Cell_DataType::TYPE_STRING2:
 				$pDataType = PHPExcel_Cell_DataType::TYPE_STRING;
-			case PHPExcel_Cell_DataType::TYPE_STRING:
+                break;
+            case PHPExcel_Cell_DataType::TYPE_STRING:
 			case PHPExcel_Cell_DataType::TYPE_INLINE:
 				$this->_value = PHPExcel_Cell_DataType::checkString($pValue);
 				break;
@@ -256,8 +257,7 @@ class PHPExcel_Cell
 				break;
 			default:
 				throw new PHPExcel_Exception('Invalid datatype: ' . $pDataType);
-				break;
-		}
+        }
 
 		// set the datatype
 		$this->_dataType = $pDataType;
@@ -548,7 +548,7 @@ class PHPExcel_Cell
 	public static function coordinateFromString($pCoordinateString = 'A1')
 	{
 		if (preg_match("/^([$]?[A-Z]{1,3})([$]?\d{1,7})$/", $pCoordinateString, $matches)) {
-			return array($matches[1],$matches[2]);
+			return [$matches[1],$matches[2]];
 		} elseif ((strpos($pCoordinateString,':') !== FALSE) || (strpos($pCoordinateString,',') !== FALSE)) {
 			throw new PHPExcel_Exception('Cell coordinate string can not be a range of cells');
 		} elseif ($pCoordinateString == '') {
@@ -655,14 +655,12 @@ class PHPExcel_Cell
 		}
 
 		// Build range
-		$imploded = array();
+		$imploded = [];
 		$counter = count($pRange);
 		for ($i = 0; $i < $counter; ++$i) {
 			$pRange[$i] = implode(':', $pRange[$i]);
 		}
-		$imploded = implode(',', $pRange);
-
-		return $imploded;
+        return implode(',', $pRange);
 	}
 
 	/**
@@ -697,7 +695,7 @@ class PHPExcel_Cell
 		$rangeStart[0]	= self::columnIndexFromString($rangeStart[0]);
 		$rangeEnd[0]	= self::columnIndexFromString($rangeEnd[0]);
 
-		return array($rangeStart, $rangeEnd);
+		return [$rangeStart, $rangeEnd];
 	}
 
 	/**
@@ -711,7 +709,7 @@ class PHPExcel_Cell
 		// Calculate range outer borders
 		list($rangeStart,$rangeEnd) = self::rangeBoundaries($pRange);
 
-		return array( ($rangeEnd[0] - $rangeStart[0] + 1), ($rangeEnd[1] - $rangeStart[1] + 1) );
+		return [($rangeEnd[0] - $rangeStart[0] + 1), ($rangeEnd[1] - $rangeStart[1] + 1)];
 	}
 
 	/**
@@ -738,7 +736,7 @@ class PHPExcel_Cell
 			list($rangeA, $rangeB) = explode(':', $pRange);
 		}
 
-		return array( self::coordinateFromString($rangeA), self::coordinateFromString($rangeB));
+		return [self::coordinateFromString($rangeA), self::coordinateFromString($rangeB)];
 	}
 
 	/**
@@ -752,7 +750,7 @@ class PHPExcel_Cell
 		//	Using a lookup cache adds a slight memory overhead, but boosts speed
 		//	caching using a static within the method is faster than a class static,
 		//		though it's additional memory overhead
-		static $_indexCache = array();
+		static $_indexCache = [];
 
 		if (isset($_indexCache[$pString]))
 			return $_indexCache[$pString];
@@ -760,12 +758,12 @@ class PHPExcel_Cell
 		//	It's surprising how costly the strtoupper() and ord() calls actually are, so we use a lookup array rather than use ord()
 		//		and make it case insensitive to get rid of the strtoupper() as well. Because it's a static, there's no significant
 		//		memory overhead either
-		static $_columnLookup = array(
+		static $_columnLookup = [
 			'A' => 1, 'B' => 2, 'C' => 3, 'D' => 4, 'E' => 5, 'F' => 6, 'G' => 7, 'H' => 8, 'I' => 9, 'J' => 10, 'K' => 11, 'L' => 12, 'M' => 13,
 			'N' => 14, 'O' => 15, 'P' => 16, 'Q' => 17, 'R' => 18, 'S' => 19, 'T' => 20, 'U' => 21, 'V' => 22, 'W' => 23, 'X' => 24, 'Y' => 25, 'Z' => 26,
 			'a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5, 'f' => 6, 'g' => 7, 'h' => 8, 'i' => 9, 'j' => 10, 'k' => 11, 'l' => 12, 'm' => 13,
 			'n' => 14, 'o' => 15, 'p' => 16, 'q' => 17, 'r' => 18, 's' => 19, 't' => 20, 'u' => 21, 'v' => 22, 'w' => 23, 'x' => 24, 'y' => 25, 'z' => 26
-		);
+        ];
 
 		//	We also use the language construct isset() rather than the more costly strlen() function to match the length of $pString
 		//		for improved performance
@@ -795,7 +793,7 @@ class PHPExcel_Cell
 		//	Using a lookup cache adds a slight memory overhead, but boosts speed
 		//	caching using a static within the method is faster than a class static,
 		//		though it's additional memory overhead
-		static $_indexCache = array();
+		static $_indexCache = [];
 
 		if (!isset($_indexCache[$pColumnIndex])) {
 			// Determine column string
@@ -821,7 +819,7 @@ class PHPExcel_Cell
 	 */
 	public static function extractAllCellReferencesInRange($pRange = 'A1') {
 		// Returnvalue
-		$returnValue = array();
+		$returnValue = [];
 
 		// Explode spaces
 		$cellBlocks = explode(' ', str_replace('$', '', strtoupper($pRange)));
@@ -864,7 +862,7 @@ class PHPExcel_Cell
 		}
 
 		//	Sort the result by column and row
-		$sortKeys = array();
+		$sortKeys = [];
 		foreach (array_unique($returnValue) as $coord) {
 			sscanf($coord,'%[A-Z]%d', $column, $row);
 			$sortKeys[sprintf('%3s%09d',$column,$row)] = $coord;

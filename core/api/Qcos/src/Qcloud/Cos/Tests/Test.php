@@ -15,10 +15,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
         $this->bucket = getenv('COS_BUCKET');
         $this->region = getenv('COS_REGION');
         $this->bucket2 = "tmp".$this->bucket;
-        $this->cosClient = new Client(array('region' => $this->region,
-            'credentials' => array(
+        $this->cosClient = new Client(['region' => $this->region,
+            'credentials' => [
                 'secretId' => getenv('COS_KEY'),
-                'secretKey' => getenv('COS_SECRET'))));
+                'secretKey' => getenv('COS_SECRET')]]);
         try {
             $this->cosClient->createBucket(['Bucket' => $this->bucket]);
         } catch(\Exception $e) {
@@ -65,7 +65,7 @@ class COSTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidRegionBucket()
     {
-        $regionlist = array('cn-east','ap-shanghai',
+        $regionlist = ['cn-east','ap-shanghai',
         'cn-south','ap-guangzhou',
         'cn-north','ap-beijing-1',
         'cn-south-2','ap-guangzhou-2',
@@ -76,15 +76,15 @@ class COSTest extends \PHPUnit_Framework_TestCase
         'sh','ap-shanghai',
         'gz','ap-guangzhou',
         'cd','ap-chengdu',
-        'sgp','ap-singapore');
+        'sgp','ap-singapore'];
         foreach ($regionlist as$region) {
             try {
 
-                $this->cosClient = new Client(array('region' => $region,
-                    'credentials' => array(
+                $this->cosClient = new Client(['region' => $region,
+                    'credentials' => [
                         'appId' => getenv('COS_APPID'),
                         'secretId' => getenv('COS_KEY'),
-                        'secretKey' => getenv('COS_SECRET'))));
+                        'secretKey' => getenv('COS_SECRET')]]);
                 $this->cosClient->createBucket(['Bucket' => $this->bucket]);
             } catch (ServiceResponseException $e) {
                 $this->assertEquals([$e->getStatusCode()], [409]);
@@ -98,14 +98,14 @@ class COSTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidRegionBucket()
     {
-        $regionlist = array('cn-east-2','ap-shanghai-3');
+        $regionlist = ['cn-east-2','ap-shanghai-3'];
         foreach ($regionlist as$region) {
             try {
-                $this->cosClient = new Client(array('region' => $region,
-                    'credentials' => array(
+                $this->cosClient = new Client(['region' => $region,
+                    'credentials' => [
                         'appId' => getenv('COS_APPID'),
                         'secretId' => getenv('COS_KEY'),
-                        'secretKey' => getenv('COS_SECRET'))));
+                        'secretKey' => getenv('COS_SECRET')]]);
                 $this->cosClient->createBucket(['Bucket' => $this->bucket]);
             } catch (ServiceResponseException $e) {
                 $this->assertFalse(TRUE);
@@ -137,7 +137,7 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testCreateInvalidBucket()
     {
         try {
-            $this->cosClient->createBucket(array('Bucket' => 'qwe_123' . $this->bucket));
+            $this->cosClient->createBucket(['Bucket' => 'qwe_123' . $this->bucket]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertTrue($e->getExceptionCode() === 'InvalidBucketName' && $e->getStatusCode() === 400);
@@ -152,10 +152,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->createBucket(
-                array(
+                [
                     'Bucket' => $this->bucket2,
                     'ACL'=>'private'
-                ));
+                ]);
             sleep(COSTest::SYNC_TIME);
             TestHelper::nuke($this->bucket2);
         } catch (ServiceResponseException $e) {
@@ -174,10 +174,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
             TestHelper::nuke($this->bucket2);
             sleep(COSTest::SYNC_TIME);
             $this->cosClient->createBucket(
-                array(
+                [
                     'Bucket' => $this->bucket2,
                     'ACL'=>'public-read'
-                )
+                ]
             );
             sleep(COSTest::SYNC_TIME);
             TestHelper::nuke($this->bucket2);
@@ -198,10 +198,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
             TestHelper::nuke($this->bucket2);
             sleep(COSTest::SYNC_TIME);
             $this->cosClient->createBucket(
-                array(
+                [
                     'Bucket' => $this->bucket2,
                     'ACL'=>'public'
-                )
+                ]
             );
             sleep(COSTest::SYNC_TIME);
             TestHelper::nuke($this->bucket2);
@@ -218,10 +218,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'ACL'=>'private'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -237,10 +237,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'ACL'=>'public-read'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -257,10 +257,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'ACL'=>'public'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'InvalidArgument' && $e->getStatusCode() === 400);
@@ -275,10 +275,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'GrantRead' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -294,10 +294,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'GrantWrite' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -313,10 +313,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'GrantFullControl' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -332,10 +332,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'GrantFullControl' => 'id="qcs::cam::uin/2779643970:uin/2779643970",id="qcs::cam::uin/2779643970:uin/2779643970",id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -351,10 +351,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'GrantFullControl' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -370,12 +370,12 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'GrantRead' => 'id="qcs::cam::uin/123:uin/123"',
                     'GrantWrite' => 'id="qcs::cam::uin/2779643970:uin/2779643970"',
                     'GrantFullControl' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -392,10 +392,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'GrantFullControl' => 'id="qcs::camuin/321023:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'InvalidArgument' && $e->getStatusCode() === 400);
@@ -410,23 +410,23 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
-                    'Grants' => array(
-                        array(
-                            'Grantee' => array(
+                    'Grants' => [
+                        [
+                            'Grantee' => [
                                 'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                                 'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
                                 'Type' => 'CanonicalUser',
-                            ),
+                            ],
                             'Permission' => 'FULL_CONTROL',
-                        ),
-                    ),
-                    'Owner' => array(
+                        ],
+                    ],
+                    'Owner' => [
                         'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                         'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
-                    )
-                )
+                    ]
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -442,23 +442,23 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
-                    'Grants' => array(
-                        array(
-                            'Grantee' => array(
+                    'Grants' => [
+                        [
+                            'Grantee' => [
                                 'DisplayName' => 'qcs::cam::anyone:anyone',
                                 'ID' => 'qcs::cam::anyone:anyone',
                                 'Type' => 'CanonicalUser',
-                            ),
+                            ],
                             'Permission' => 'FULL_CONTROL',
-                        ),
-                    ),
-                    'Owner' => array(
+                        ],
+                    ],
+                    'Owner' => [
                         'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                         'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
-                    )
-                )
+                    ]
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -477,10 +477,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
             TestHelper::nuke($this->bucket2);
             sleep(COSTest::SYNC_TIME);
             $this->cosClient->PutBucketAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket2,
                     'GrantFullControl' => 'id="qcs::cam::uin/321023:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'NoSuchBucket' && $e->getStatusCode() === 404);
@@ -494,14 +494,14 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutBucketAclCover()
     {
         try {
-            $this->cosClient->PutBucketAcl(array(
+            $this->cosClient->PutBucketAcl([
                 'Bucket' =>  $this->bucket,
                 'GrantFullControl' => 'id="qcs::cam::uin/2779643970:uin/2779643970"',
                 'GrantRead' => 'id="qcs::cam::uin/2779643970:uin/2779643970"',
-                'GrantWrite' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'));
-            $this->cosClient->PutBucketAcl(array(
+                'GrantWrite' => 'id="qcs::cam::uin/2779643970:uin/2779643970"']);
+            $this->cosClient->PutBucketAcl([
                 'Bucket' =>  $this->bucket,
-                'GrantWrite' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'));
+                'GrantWrite' => 'id="qcs::cam::uin/2779643970:uin/2779643970"']);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -515,8 +515,8 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testHeadBucket()
     {
         try {
-            $this->cosClient->HeadBucket(array(
-                'Bucket' =>  $this->bucket));
+            $this->cosClient->HeadBucket([
+                'Bucket' =>  $this->bucket]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -533,8 +533,8 @@ class COSTest extends \PHPUnit_Framework_TestCase
         try {
             TestHelper::nuke($this->bucket2);
             sleep(COSTest::SYNC_TIME);
-            $this->cosClient->HeadBucket(array(
-                'Bucket' =>  $this->bucket2));
+            $this->cosClient->HeadBucket([
+                'Bucket' =>  $this->bucket2]);
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'NoSuchBucket' && $e->getStatusCode() === 404);
         }
@@ -547,8 +547,8 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testGetBucketEmpty()
     {
         try {
-            $this->cosClient->ListObjects(array(
-                'Bucket' =>  $this->bucket));
+            $this->cosClient->ListObjects([
+                'Bucket' =>  $this->bucket]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -566,9 +566,9 @@ class COSTest extends \PHPUnit_Framework_TestCase
             TestHelper::nuke($this->bucket2);
             sleep(COSTest::SYNC_TIME);
             $this->cosClient->ListObjects(
-                array(
+                [
                     'Bucket' =>  $this->bucket2
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'NoSuchBucket' && $e->getStatusCode() === 404);
@@ -584,27 +584,27 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->putBucketCors(
-                array(
+                [
                     'Bucket' => $this->bucket,
-                    'CORSRules' => array(
-                        array(
+                    'CORSRules' => [
+                        [
                             'ID' => '1234',
-                            'AllowedHeaders' => array('*',),
-                            'AllowedMethods' => array('PUT',),
-                            'AllowedOrigins' => array('*',),
-                            'ExposeHeaders' => array('*',),
+                            'AllowedHeaders' => ['*',],
+                            'AllowedMethods' => ['PUT',],
+                            'AllowedOrigins' => ['*',],
+                            'ExposeHeaders' => ['*',],
                             'MaxAgeSeconds' => 1,
-                        ),
-                        array(
+                        ],
+                        [
                             'ID' => '12345',
-                            'AllowedHeaders' => array('*',),
-                            'AllowedMethods' => array('GET',),
-                            'AllowedOrigins' => array('*',),
-                            'ExposeHeaders' => array('*',),
+                            'AllowedHeaders' => ['*',],
+                            'AllowedMethods' => ['GET',],
+                            'AllowedOrigins' => ['*',],
+                            'ExposeHeaders' => ['*',],
                             'MaxAgeSeconds' => 1,
-                        ),
-                    ),
-                )
+                        ],
+                    ],
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -621,32 +621,32 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->putBucketCors(
-                array(
+                [
                     'Bucket' => $this->bucket,
-                    'CORSRules' => array(
-                        array(
+                    'CORSRules' => [
+                        [
                             'ID' => '1234',
-                            'AllowedHeaders' => array('*',),
-                            'AllowedMethods' => array('PUT',),
-                            'AllowedOrigins' => array('*',),
-                            'ExposeHeaders' => array('*',),
+                            'AllowedHeaders' => ['*',],
+                            'AllowedMethods' => ['PUT',],
+                            'AllowedOrigins' => ['*',],
+                            'ExposeHeaders' => ['*',],
                             'MaxAgeSeconds' => 1,
-                        ),
-                        array(
+                        ],
+                        [
                             'ID' => '12345',
-                            'AllowedHeaders' => array('*',),
-                            'AllowedMethods' => array('GET',),
-                            'AllowedOrigins' => array('*',),
-                            'ExposeHeaders' => array('*',),
+                            'AllowedHeaders' => ['*',],
+                            'AllowedMethods' => ['GET',],
+                            'AllowedOrigins' => ['*',],
+                            'ExposeHeaders' => ['*',],
                             'MaxAgeSeconds' => 1,
-                        ),
-                    ),
-                )
+                        ],
+                    ],
+                ]
             );
             $this->cosClient->getBucketCors(
-                array(
+                [
                     'Bucket' => $this->bucket
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -663,9 +663,9 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->getBucketCors(
-                array(
+                [
                     'Bucket' => $this->bucket
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'NoSuchCORSConfiguration' && $e->getStatusCode() === 404);
@@ -680,38 +680,38 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $result = $this->cosClient->putBucketLifecycle(
-                array(
+                [
                     'Bucket' => $this->bucket,
-                    'Rules' => array(
-                        array(
+                    'Rules' => [
+                        [
                             'Status' => 'Enabled',
-                            'Filter' => array(
-                                'Tag' => array(
+                            'Filter' => [
+                                'Tag' => [
                                     'Key' => 'datalevel',
                                     'Value' => 'backup'
-                                )
-                            ),
-                            'Transitions' => array(
-                                array(
+                                ]
+                            ],
+                            'Transitions' => [
+                                [
                                     # 30天后转换为Standard_IA
                                     'Days' => 30,
-                                    'StorageClass' => 'Standard_IA'),
-                                array(
+                                    'StorageClass' => 'Standard_IA'],
+                                [
                                     # 365天后转换为Archive
                                     'Days' => 365,
-                                    'StorageClass' => 'Archive')
-                            ),
-                            'Expiration' => array(
+                                    'StorageClass' => 'Archive']
+                            ],
+                            'Expiration' => [
                                 # 3650天后过期删除
                                 'Days' => 3650,
-                            )
-                        )
-                    )
-                )
+                            ]
+                        ]
+                    ]
+                ]
             );
-            $result = $this->cosClient->getBucketLifecycle(array(
+            $result = $this->cosClient->getBucketLifecycle([
                 'Bucket' => $this->bucket,
-            ));
+            ]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -726,39 +726,39 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $result = $this->cosClient->putBucketLifecycle(
-                array(
+                [
                     'Bucket' => $this->bucket,
-                    'Rules' => array(
-                        array(
+                    'Rules' => [
+                        [
                             'Status' => 'Enabled',
-                            'Filter' => array(
-                                'Tag' => array(
+                            'Filter' => [
+                                'Tag' => [
                                     'Key' => 'datalevel',
                                     'Value' => 'backup'
-                                )
-                            ),
-                            'Transitions' => array(
-                                array(
+                                ]
+                            ],
+                            'Transitions' => [
+                                [
                                     # 30天后转换为Standard_IA
                                     'Days' => 30,
-                                    'StorageClass' => 'Standard_IA'),
-                                array(
+                                    'StorageClass' => 'Standard_IA'],
+                                [
                                     # 365天后转换为Archive
                                     'Days' => 365,
-                                    'StorageClass' => 'Archive')
-                            ),
-                            'Expiration' => array(
+                                    'StorageClass' => 'Archive']
+                            ],
+                            'Expiration' => [
                                 # 3650天后过期删除
                                 'Days' => 3650,
-                            )
-                        )
-                    )
-                )
+                            ]
+                        ]
+                    ]
+                ]
             );
-            $result = $this->cosClient->deleteBucketLifecycle(array(
+            $result = $this->cosClient->deleteBucketLifecycle([
                 // Bucket is required
                 'Bucket' => $this->bucket,
-            ));
+            ]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -773,23 +773,23 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $result = $this->cosClient->putBucketLifecycle(
-                array(
+                [
                     'Bucket' => $this->bucket,
-                    'Rules' => array(
-                        array(
-                            'Expiration' => array(
+                    'Rules' => [
+                        [
+                            'Expiration' => [
                                 'Days' => 1000,
-                            ),
+                            ],
                             'ID' => 'id1',
                             'Status' => 'Enabled',
-                            'Transitions' => array(
-                                array(
+                            'Transitions' => [
+                                [
                                     'Days' => 100,
-                                    'StorageClass' => 'Standard_IA'),
-                            ),
-                        ),
-                    )
-                )
+                                    'StorageClass' => 'Standard_IA'],
+                            ],
+                        ],
+                    ]
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'NoSuchBucket' && $e->getStatusCode() === 404);
@@ -805,12 +805,12 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             try{
-                $this->cosClient->deleteBucket(array('Bucket' => '12345-'.$this->bucket));
+                $this->cosClient->deleteBucket(['Bucket' => '12345-'.$this->bucket]);
             } catch (\Exception $e) {
             }
-            $this->cosClient->createBucket(array('Bucket' => '12345-'.$this->bucket));
+            $this->cosClient->createBucket(['Bucket' => '12345-'.$this->bucket]);
             sleep(COSTest::SYNC_TIME);
-            $this->cosClient->deleteBucket(array('Bucket' => '12345-'.$this->bucket));
+            $this->cosClient->deleteBucket(['Bucket' => '12345-'.$this->bucket]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -824,8 +824,8 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutBucket3()
     {
         try {
-            $this->cosClient->createBucket(array('Bucket' => '12-333-4445' . $this->bucket));
-            $this->cosClient->deleteBucket(array('Bucket' => '12-333-4445' . $this->bucket));
+            $this->cosClient->createBucket(['Bucket' => '12-333-4445' . $this->bucket]);
+            $this->cosClient->deleteBucket(['Bucket' => '12-333-4445' . $this->bucket]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -839,7 +839,7 @@ class COSTest extends \PHPUnit_Framework_TestCase
         public function testGetBucketLocation()
     {
         try {
-            $this->cosClient->getBucketLocation(array('Bucket' => $this->bucket));
+            $this->cosClient->getBucketLocation(['Bucket' => $this->bucket]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -856,7 +856,7 @@ class COSTest extends \PHPUnit_Framework_TestCase
         try {
             TestHelper::nuke($this->bucket2);
             sleep(COSTest::SYNC_TIME);
-            $this->cosClient->getBucketLocation(array('Bucket' => $this->bucket2));
+            $this->cosClient->getBucketLocation(['Bucket' => $this->bucket2]);
         } catch (ServiceResponseException $e) {
             //            echo($e->getExceptionCode());
             //            echo($e->getStatusCode());
@@ -906,10 +906,7 @@ class COSTest extends \PHPUnit_Framework_TestCase
             $f = fopen($local_test_key, "wb");
             fwrite($f, $body);
             fclose($f);
-            $this->cosClient->upload($bucket=$this->bucket,
-                                     $key=$key,
-                                     $body=fopen($local_test_key, "rb"),
-                                     $options=['PartSize'=>1024 * 1024 + 1]);
+            $this->cosClient->upload();
             $rt = $this->cosClient->getObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $download_md5 = base64_encode(md5($rt['Body'], true));
             $this->assertEquals($md5, $download_md5);
@@ -927,12 +924,12 @@ class COSTest extends \PHPUnit_Framework_TestCase
     {
         try {
             $this->cosClient->putObject(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'Key' => '11//32//43',
                     'Body' => 'Hello World!',
                     'ServerSideEncryption' => 'AES256'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -950,9 +947,9 @@ class COSTest extends \PHPUnit_Framework_TestCase
             TestHelper::nuke($this->bucket2);
             sleep(COSTest::SYNC_TIME);
             $this->cosClient->putObject(
-                array(
+                [
                     'Bucket' => $this->bucket, 'Key' => 'hello.txt', 'Body' => 'Hello World'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'NoSuchBucket');
@@ -1008,17 +1005,17 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectMeta() {
         try {
             $key = '你好.txt';
-            $meta = array(
-                'test' => str_repeat('a', 1 * 1024),
+            $meta = [
+                'test' => str_repeat('a', 1024),
                 'test-meta' => 'qwe-23ds-ad-xcz.asd.*qweqw'
-            );
-            $this->cosClient->putObject(array(
+            ];
+            $this->cosClient->putObject([
                 'Bucket' => $this->bucket,
                 'Key' => '你好.txt',
                 'Body' => '1234124',
                 'Metadata' => $meta
-                     
-            ));
+
+            ]);
             $rt = $this->cosClient->headObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $this->assertEquals($rt['Metadata'], $meta);
         } catch (ServiceResponseException $e) {
@@ -1034,15 +1031,12 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testUploadLargeObjectMeta() {
         try {
             $key = '你好.txt';
-            $meta = array(
-                'test' => str_repeat('a', 1 * 1024),
+            $meta = [
+                'test' => str_repeat('a', 1024),
                 'test-meta' => 'qwe-23ds-ad-xcz.asd.*qweqw'
-            );
+            ];
             $body = $this->generateRandomString(2*1024*1024+1023);
-            $this->cosClient->upload($bucket=$this->bucket,
-                                     $key=$key,
-                                     $body=$body,
-                                     $options=['PartSize'=>1024 * 1024 + 1, 'Metadata'=>$meta]);
+            $this->cosClient->upload();
             $rt = $this->cosClient->headObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $this->assertEquals($rt['Metadata'], $meta);
         } catch (ServiceResponseException $e) {
@@ -1058,13 +1052,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
      */
     public function testPutObjectMeta2K() {
         try {
-            $this->cosClient->putObject(array(
+            $this->cosClient->putObject([
                 'Bucket' => $this->bucket,
                 'Key' => '你好.txt',
                 'Body' => '1234124',
-                'Metadata' => array(
+                'Metadata' => [
                     'lew' => str_repeat('a', 3 * 1024),
-                )));
+                ]]);
         } catch (ServiceResponseException $e) {
             $this->assertEquals(
                 [$e->getStatusCode(), $e->getExceptionCode()],
@@ -1082,10 +1076,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
         try {
             $key = '→↓←→↖↗↙↘! \"#$%&\'()*+,-./0123456789:;<=>@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
             $this->cosClient->upload($this->bucket, $key, 'Hello World');
-            $this->cosClient->headObject(array(
+            $this->cosClient->headObject([
                 'Bucket' => $this->bucket,
                 'Key' => $key
-            ));
+            ]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -1101,10 +1095,7 @@ class COSTest extends \PHPUnit_Framework_TestCase
             $key = '你好.txt';
             $body = $this->generateRandomString(2*1024*1024+1023);
             $md5 = base64_encode(md5($body, true));
-            $this->cosClient->upload($bucket=$this->bucket,
-                                     $key=$key,
-                                     $body=$body,
-                                     $options=['PartSize'=>1024 * 1024 + 1]);
+            $this->cosClient->upload();
             $rt = $this->cosClient->getObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $download_md5 = base64_encode(md5($rt['Body'], true));
             $this->assertEquals($md5, $download_md5);
@@ -1136,11 +1127,7 @@ class COSTest extends \PHPUnit_Framework_TestCase
                                           'Key' => $key,
                                           'UploadId' => $uploadId]);
             $this->assertEquals(count($rt['Parts']), 1);
-            $this->cosClient->resumeUpload($bucket=$this->bucket,
-                                           $key=$key,
-                                           $body=$body,
-                                           $uploadId=$uploadId,
-                                           $options=['PartSize'=>$partSize]);
+            $this->cosClient->resumeUpload();
             $rt = $this->cosClient->getObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $download_md5 = base64_encode(md5($rt['Body'], true));
             $this->assertEquals($md5, $download_md5);
@@ -1157,9 +1144,9 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testGetObject() {
         try {
             $this->cosClient->upload($this->bucket, '你好.txt', 'Hello World');
-            $this->cosClient->getObject(array(
+            $this->cosClient->getObject([
                 'Bucket' => $this->bucket,
-                'Key' => '你好.txt',));
+                'Key' => '你好.txt',]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -1173,9 +1160,9 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectSpecialName() {
         try {
             $this->cosClient->upload($this->bucket, '你好<>!@#^%^&*&(&^!@#@!.txt', 'Hello World');
-            $this->cosClient->getObject(array(
+            $this->cosClient->getObject([
                 'Bucket' => $this->bucket,
-                'Key' => '你好<>!@#^%^&*&(&^!@#@!.txt',));
+                'Key' => '你好<>!@#^%^&*&(&^!@#@!.txt',]);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -1189,10 +1176,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectIfMatchTrue() {
         try {
             $this->cosClient->upload($this->bucket, '你好.txt', 'Hello World');
-            $this->cosClient->getObject(array(
+            $this->cosClient->getObject([
                 'Bucket' => $this->bucket,
                 'Key' => '你好.txt',
-                'IfMatch' => '"b10a8db164e0754105b7a99be72e3fe5"'));
+                'IfMatch' => '"b10a8db164e0754105b7a99be72e3fe5"']);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -1208,10 +1195,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectIfMatchFalse() {
         try {
             $this->cosClient->upload($this->bucket, '你好.txt', 'Hello World');
-            $this->cosClient->getObject(array(
+            $this->cosClient->getObject([
                 'Bucket' => $this->bucket,
                 'Key' => '你好.txt',
-                'IfMatch' => '""'));
+                'IfMatch' => '""']);
         } catch (ServiceResponseException $e) {
             $this->assertEquals(
                 [$e->getStatusCode(), $e->getExceptionCode()],
@@ -1228,10 +1215,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectIfNoneMatchTrue() {
         try {
             $this->cosClient->upload($this->bucket, '你好.txt', 'Hello World');
-            $rt = $this->cosClient->getObject(array(
+            $rt = $this->cosClient->getObject([
                 'Bucket' => $this->bucket,
                 'Key' => '你好.txt',
-                'IfNoneMatch' => '"b10a8db164e0754105b7a99be72e3fe5"'));
+                'IfNoneMatch' => '"b10a8db164e0754105b7a99be72e3fe5"']);
         } catch (ServiceResponseException $e) {
             print $e;
             $this->assertFalse(TRUE);
@@ -1247,10 +1234,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testGetObjectIfNoneMatchFalse() {
         try {
             $this->cosClient->upload($this->bucket, '你好.txt', 'Hello World');
-            $this->cosClient->getObject(array(
+            $this->cosClient->getObject([
                 'Bucket' => $this->bucket,
                 'Key' => '你好.txt',
-                'IfNoneMatch' => '""'));
+                'IfNoneMatch' => '""']);
 
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1299,10 +1286,7 @@ class COSTest extends \PHPUnit_Framework_TestCase
             $dst_key = 'hi.txt';
             $body = $this->generateRandomString(2*1024*1024+333);
             $md5 = base64_encode(md5($body, true));
-            $this->cosClient->upload($bucket=$this->bucket,
-                                     $key=$src_key,
-                                     $body=$body,
-                                     $options=['PartSize'=>1024 * 1024 + 1]);
+            $this->cosClient->upload();
             $this->cosClient->copy($bucket=$this->bucket,
                                    $key=$dst_key, 
                                    $copySource = ['Bucket'=>$this->bucket,
@@ -1327,25 +1311,25 @@ class COSTest extends \PHPUnit_Framework_TestCase
         try {
             $this->cosClient->upload($this->bucket, '11', 'hello.txt');
             $this->cosClient->PutObjectAcl(
-                    array(
+                    [
                     'Bucket' => $this->bucket,
                     'Key' => '11',
-                    'Grants' => array(
-                        array(
-                            'Grantee' => array(
+                    'Grants' => [
+                        [
+                            'Grantee' => [
                                 'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                                 'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
                                 'Type' => 'CanonicalUser',
-                            ),
+                            ],
                             'Permission' => 'FULL_CONTROL',
-                        ),
+                        ],
                         // ... repeated
-                    ),
-                    'Owner' => array(
+                    ],
+                    'Owner' => [
                         'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                         'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
-                    )
-                )
+                    ]
+                    ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1364,24 +1348,24 @@ class COSTest extends \PHPUnit_Framework_TestCase
         try {
             $this->cosClient->upload($this->bucket, '11', 'hello.txt');
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'Key' => '11',
-                    'Grants' => array(
-                        array(
-                            'Grantee' => array(
+                    'Grants' => [
+                        [
+                            'Grantee' => [
                                 'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                                 'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
                                 'Type' => 'CanonicalUser',
-                            ),
+                            ],
                             'Permission' => 'FULL_CONTROL',
-                        ),
-                    ),
-                    'Owner' => array(
+                        ],
+                    ],
+                    'Owner' => [
                         'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                         'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
-                    )
-                )
+                    ]
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1396,13 +1380,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclPrivate()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'Key' => '你好.txt',
                     'ACL'=>'private'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1417,13 +1401,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclPublicRead()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'Key' => '你好.txt',
                     'ACL'=>'public-read'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1439,13 +1423,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclInvalid()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'Key' => '你好.txt',
                     'ACL'=>'public'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'InvalidArgument' && $e->getStatusCode() === 400);
@@ -1459,13 +1443,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclReadToUser()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'Key' => '你好.txt',
                     'GrantRead' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1480,13 +1464,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclFullToUser()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'Key' => '你好.txt',
                     'GrantFullControl' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1501,13 +1485,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclToUsers()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'Key' => '你好.txt',
                     'GrantFullControl' => 'id="qcs::cam::uin/2779643970:uin/2779643970",id="qcs::cam::uin/2779643970:uin/2779643970",id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1522,13 +1506,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclToSubuser()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'Key' => '你好.txt',
                     'GrantFullControl' => 'id="qcs::cam::uin/2779643970:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1544,13 +1528,13 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclInvalidGrant()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' =>  $this->bucket,
                     'Key' => '你好.txt',
                     'GrantFullControl' => 'id="qcs::camuin/321023:uin/2779643970"'
-                )
+                ]
             );
         } catch (ServiceResponseException $e) {
             $this->assertTrue($e->getExceptionCode() === 'InvalidArgument' && $e->getStatusCode() === 400);
@@ -1564,27 +1548,27 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclByBody()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->PutObjectAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'Key' => '你好.txt',
-                    'Grants' => array(
-                        array(
-                            'Grantee' => array(
+                    'Grants' => [
+                        [
+                            'Grantee' => [
                                 'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                                 'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
                                 'Type' => 'CanonicalUser',
-                            ),
+                            ],
                             'Permission' => 'FULL_CONTROL',
-                        ),
+                        ],
                         // ... repeated
-                    ),
-                    'Owner' => array(
+                    ],
+                    'Owner' => [
                         'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                         'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
-                    )
-                )
+                    ]
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1599,27 +1583,27 @@ class COSTest extends \PHPUnit_Framework_TestCase
     public function testPutObjectAclByBodyToAnyone()
     {
         try {
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123'));
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => '你好.txt', 'Body' => '123']);
             $this->cosClient->putObjectAcl(
-                array(
+                [
                     'Bucket' => $this->bucket,
                     'Key' => '你好.txt',
-                    'Grants' => array(
-                        array(
-                            'Grantee' => array(
+                    'Grants' => [
+                        [
+                            'Grantee' => [
                                 'DisplayName' => 'qcs::cam::anyone:anyone',
                                 'ID' => 'qcs::cam::anyone:anyone',
                                 'Type' => 'CanonicalUser',
-                            ),
+                            ],
                             'Permission' => 'FULL_CONTROL',
-                        ),
+                        ],
                         // ... repeated
-                    ),
-                    'Owner' => array(
+                    ],
+                    'Owner' => [
                         'DisplayName' => 'qcs::cam::uin/2779643970:uin/2779643970',
                         'ID' => 'qcs::cam::uin/2779643970:uin/2779643970',
-                    )
-                )
+                    ]
+                ]
             );
         } catch (ServiceResponseException $e) {
             print $e;
@@ -1642,36 +1626,36 @@ class COSTest extends \PHPUnit_Framework_TestCase
 12500004,weqw4e,sh
 3278522,azxc,gz
 4343,ewqew,tj";
-            $this->cosClient->putObject(array('Bucket' => $this->bucket,'Key' => $key, 'Body' => $body));
-            $result = $this->cosClient->selectObjectContent(array(
+            $this->cosClient->putObject(['Bucket' => $this->bucket,'Key' => $key, 'Body' => $body]);
+            $result = $this->cosClient->selectObjectContent([
                         'Bucket' => $this->bucket, //格式：BucketName-APPID
                         'Key' => $key,
                         'Expression' => 'Select * from COSObject s',
                         'ExpressionType' => 'SQL',
-                        'InputSerialization' => array(
+                        'InputSerialization' => [
                             'CompressionType' => 'None',
-                            'CSV' => array(
+                            'CSV' => [
                                 'FileHeaderInfo' => 'USE',
                                 'RecordDelimiter' => '\n',
                                 'FieldDelimiter' => ',',
                                 'QuoteEscapeCharacter' => '"',
                                 'Comments' => '#',
                                 'AllowQuotedRecordDelimiter' => 'FALSE'
-                                )   
-                            ),  
-                        'OutputSerialization' => array(
-                            'CSV' => array(
+                            ]
+                        ],
+                        'OutputSerialization' => [
+                            'CSV' => [
                                 'QuoteField' => 'ASNEEDED',
                                 'RecordDelimiter' => '\n',
                                 'FieldDelimiter' => ',',
                                 'QuoteCharacter' => '"',
-                                'QuoteEscapeCharacter' => '"' 
-                                )   
-                            ),  
-                        'RequestProgress' => array(
+                                'QuoteEscapeCharacter' => '"'
+                            ]
+                        ],
+                        'RequestProgress' => [
                                 'Enabled' => 'FALSE'
-                                )   
-                            )); 
+                        ]
+            ]);
             foreach ($result['Data'] as $data) {
             }
         } catch (\Exception $e) {

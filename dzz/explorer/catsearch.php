@@ -13,9 +13,9 @@ $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'delsearchcat') {//删除搜索类型
     $catid = isset($_GET['id']) ? intval($_GET['id']) : '';
     if (C::t('resources_cat')->del_by_id($catid)) {
-        exit(json_encode(array('success' => true, 'insertid' => $insert)));
+        exit(json_encode(['success' => true, 'insertid' => $insert]));
     } else {
-        exit(json_encode(array('error' => true)));
+        exit(json_encode(['error' => true]));
     }
 } elseif ($do == 'searchfile') {
     $catid = isset($_GET['id']) ? intval($_GET['id']) : '';
@@ -31,7 +31,7 @@ if ($do == 'delsearchcat') {//删除搜索类型
     $disp = intval($_GET['disp']);
     $sid = empty($_GET['sid']) ? 0 : $_GET['sid'];//id
     $catid = intval(str_replace('cat-', '', $sid));
-    $data = array();
+    $data = [];
     $limitsql = "limit $start,$perpage";
 
     $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
@@ -48,7 +48,7 @@ if ($do == 'delsearchcat') {//删除搜索类型
             $orderby = 'r.size';
             break;
         case 2:
-            $orderby = array('r.type', 'r.ext');
+            $orderby = ['r.type', 'r.ext'];
             break;
         case 3:
             $orderby = 'r.dateline';
@@ -65,9 +65,9 @@ if ($do == 'delsearchcat') {//删除搜索类型
         $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
     }
     $wheresql = ' where r.isdelete < 1';
-    $param = array('resources', 'folder');
-    $folderdata = array();
-    $folderids = array();
+    $param = ['resources', 'folder'];
+    $folderdata = [];
+    $folderids = [];
     $cats = C::t('resources_cat')->fetch_by_id($catid);
     //如果接收到后缀名条件，则按指定后缀名搜索
     $exts = isset($_GET['exts']) ? getstr($_GET['exts']) : '';
@@ -76,14 +76,12 @@ if ($do == 'delsearchcat') {//删除搜索类型
         $extarr = explode(',', str_replace('.', '', $exts));
         $wheresql .= " and r.ext IN (%n)";
         $param[] = $extarr;
+    } elseif ($cats['ext']) {
+        $extarr = explode(',', str_replace('.', '', $cats['ext']));
+        $wheresql .= " and r.ext IN (%n)";
+        $param[] = $extarr;
     } else {
-        if ($cats['ext']) {
-            $extarr = explode(',', str_replace('.', '', $cats['ext']));
-            $wheresql .= " and r.ext IN (%n)";
-            $param[] = $extarr;
-        } else {
-            $wheresql .= " and 0 ";
-        }
+        $wheresql .= " and 0 ";
     }
     //如果接收到标签条件
     if ($tags) {
@@ -115,7 +113,7 @@ if ($do == 'delsearchcat') {//删除搜索类型
     $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门
     $powerarr = perm_binPerm::getPowerArr();
 
-    $or = array();
+    $or = [];
     //用户自己的文件
     if ($explorer_setting['useronperm']) {
         $or[] = "(r.gid=0 and r.uid=%d)";
@@ -136,8 +134,8 @@ if ($do == 'delsearchcat') {//删除搜索类型
     }
     if ($or) {
         $wheresql .= " and (" . implode(' OR ', $or) . ")";
-        $data = array();
-        $folderids = $folderdata = array();
+        $data = [];
+        $folderids = $folderdata = [];
         if ($total = DB::result_first("SELECT COUNT(*) FROM %t r LEFT JOIN %t f ON r.pfid=f.fid $wheresql", $param)) {
             foreach (DB::fetch_all("SELECT rid FROM %t r LEFT JOIN %t f ON r.pfid=f.fid $wheresql $ordersql $limitsql", $param) as $value) {
                 if ($arr = C::t('resources')->fetch_by_rid($value['rid'])) {
@@ -155,16 +153,16 @@ if ($do == 'delsearchcat') {//删除搜索类型
 
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : intval($cats['disp']);//文件排序
     $iconview = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($cats['iconview']));//排列方式
-    $total = $total ? $total : 0;
-    if (!$json_data = json_encode($data)) $data = array();
-    if (!$json_data = json_encode($folderdata)) $folderdata = array();
+    $total = $total ?: 0;
+    if (!$json_data = json_encode($data)) $data = [];
+    if (!$json_data = json_encode($folderdata)) $folderdata = [];
     //返回数据
-    $return = array(
+    $return = [
         'sid' => $sid,
         'total' => $total,
-        'data' => $data ? $data : array(),
-        'folderdata' => $folderdata ? $folderdata : array(),
-        'param' => array(
+        'data' => $data ?: [],
+        'folderdata' => $folderdata ?: [],
+        'param' => [
             'disp' => $disp,
             'view' => $iconview,
             'page' => $page,
@@ -176,8 +174,8 @@ if ($do == 'delsearchcat') {//删除搜索类型
             'tags' => $tags,
             'exts' => $exts,
             'localsearch' => $bz ? 1 : 0
-        )
-    );
+        ]
+    ];
     exit(json_encode($return));
 
 }

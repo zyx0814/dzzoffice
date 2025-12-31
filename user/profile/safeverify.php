@@ -25,7 +25,7 @@ if ($do == 'chkpass') {
 
         if (!check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
 
-            showTips(array('error' => lang('submit_seccode_invalid'), 'codeerror' => true), $type);
+            showTips(['error' => lang('submit_seccode_invalid'), 'codeerror' => true], $type);
         }
     }
 
@@ -36,11 +36,11 @@ if ($do == 'chkpass') {
         } else {
             $_SESSION['chkerrornum' . $uid] = 1;
         }
-        showTips(array('error' => lang('login_password_invalid'), 'errornum' => $_SESSION['chkerrornum' . $uid]), $type);
+        showTips(['error' => lang('login_password_invalid'), 'errornum' => $_SESSION['chkerrornum' . $uid]], $type);
 
     } else {
         $_SESSION['chkerrornum' . $uid] = 0;
-        showTips(array('success' => true), $type);
+        showTips(['success' => true], $type);
     }
 } elseif ($do == 'chkemail') {
 
@@ -52,22 +52,22 @@ if ($do == 'chkpass') {
 
     $confirmurl = C::t('shorturl')->getShortUrl("user.php?mod=profile&op=password&do=changeemail&uid={$uid}&email={$verifyemail}&idchk=$idstring");
 
-    $email_bind_message = lang('varifyemail_message', array(
+    $email_bind_message = lang('varifyemail_message', [
         'username' => $_G['member']['username'],
         'sitename' => $_G['setting']['sitename'],
         'siteurl' => $_G['siteurl'],
         'url' => $confirmurl
-    ));
+    ]);
     if (!sendmail("$member[username] <$verifyemail>", lang('varifyemail_subject'), $email_bind_message)) {
 
         runlog('sendmail', "$verifyemail sendmail failed.");
 
-        showTips(array('error' => lang('setting_mail_send_error')), $type);
+        showTips(['error' => lang('setting_mail_send_error')], $type);
 
     } else {
-        $updatearr = array("emailsenddate" => $idstring . '_' . time());
+        $updatearr = ["emailsenddate" => $idstring . '_' . time()];
         C::t('user')->update($uid, $updatearr);
-        showTips(array('success' => array('email' => $verifyemail)), $type);
+        showTips(['success' => ['email' => $verifyemail]], $type);
 
     }
 }

@@ -51,10 +51,10 @@ class PHPExcel_IOFactory
 	 * @access	private
 	 * @static
 	 */
-	private static $_searchLocations = array(
-		array( 'type' => 'IWriter', 'path' => 'PHPExcel/Writer/[0].php', 'class' => 'PHPExcel_Writer_[0]' ),
-		array( 'type' => 'IReader', 'path' => 'PHPExcel/Reader/[0].php', 'class' => 'PHPExcel_Reader_[0]' )
-	);
+	private static $_searchLocations = [
+		['type' => 'IWriter', 'path' => 'PHPExcel/Writer/[0].php', 'class' => 'PHPExcel_Writer_[0]'],
+		['type' => 'IReader', 'path' => 'PHPExcel/Reader/[0].php', 'class' => 'PHPExcel_Reader_[0]']
+    ];
 
 	/**
 	 * Autoresolve classes
@@ -63,7 +63,7 @@ class PHPExcel_IOFactory
 	 * @access	private
 	 * @static
 	 */
-	private static $_autoResolveClasses = array(
+	private static $_autoResolveClasses = [
 		'Excel2007',
 		'Excel5',
 		'Excel2003XML',
@@ -72,7 +72,7 @@ class PHPExcel_IOFactory
 		'Gnumeric',
 		'HTML',
 		'CSV',
-	);
+    ];
 
     /**
      *	Private constructor for PHPExcel_IOFactory
@@ -116,7 +116,7 @@ class PHPExcel_IOFactory
 	 * @param	string $classname 	Example: PHPExcel_Writer_[0]
 	 */
 	public static function addSearchLocation($type = '', $location = '', $classname = '') {
-		self::$_searchLocations[] = array( 'type' => $type, 'path' => $location, 'class' => $classname );
+		self::$_searchLocations[] = ['type' => $type, 'path' => $location, 'class' => $classname];
 	}	//	function addSearchLocation()
 
 	/**

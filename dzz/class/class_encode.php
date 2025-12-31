@@ -79,7 +79,7 @@ class Encode_Core {
      * @return string $encoding
      */
     public static function get_encoding($str) {
-        $ary = array();
+        $ary = [];
 
         //$ary[] = "ASCII";
         $ary[] = "UTF-8";
@@ -119,4 +119,4 @@ class Encode_Core {
     }
 }
 
-?>
+

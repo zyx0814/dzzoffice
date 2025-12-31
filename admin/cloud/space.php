@@ -9,7 +9,7 @@
 if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
     exit('Access Denied');
 }
-$cloud = DB::fetch_first("select * from %t where bz='dzz'", array('connect'));
+$cloud = DB::fetch_first("select * from %t where bz='dzz'", ['connect']);
 $navtitle = $cloud['name'] . ' - ' . lang('space_management') . ' - ' . lang('cloud_set');
 if ($_GET['do'] == 'checkspace') {
     $remoteid = intval($_GET['remoteid']);
@@ -31,16 +31,16 @@ if ($_GET['do'] == 'checkspace') {
     if (submitcheck('cloudsubmit')) {
         $isdefault = intval($_GET['isdefault']);
         foreach ($_GET['name'] as $remoteid => $value) {
-            $setarr = array(
+            $setarr = [
                 'disp' => intval($_GET['disp'][$remoteid]),
                 'isdefault' => ($remoteid == $isdefault) ? 1 : 0
-            );
+            ];
             if (!empty($value)) $setarr['name'] = getstr($value);
             C::t('local_storage')->update($remoteid, $setarr);
         }
         showmessage('do_success', dreferer());
     } else {
-        $list = array();
+        $list = [];
         foreach (C::t('local_storage')->fetch_all_orderby_disp() as $key => $value) {
             if ($arr = C::t('local_storage')->update_sizecount_by_remoteid($value['remoteid'])) {
                 $value['fusesize'] = formatsize($value['usesize']);
@@ -54,4 +54,4 @@ if ($_GET['do'] == 'checkspace') {
     }
     include template('space');
 }
-?>
+

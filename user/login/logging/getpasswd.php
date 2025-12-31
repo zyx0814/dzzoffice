@@ -37,11 +37,11 @@ if ($_GET['uid'] && $_GET['id']) {
         }
         if ($_G['setting']['pwlength']) {
             if (strlen($_GET['newpasswd1']) < $_G['setting']['pwlength']) {
-                showmessage(lang('profile_password_tooshort', array('pwlength' => $_G['setting']['pwlength'])));
+                showmessage(lang('profile_password_tooshort', ['pwlength' => $_G['setting']['pwlength']]));
             }
         }
         if ($_G['setting']['strongpw']) {
-            $strongpw_str = array();
+            $strongpw_str = [];
             if (in_array(1, $_G['setting']['strongpw']) && !preg_match("/\d+/", $_GET['newpasswd1'])) {
                 $strongpw_str[] = lang('strongpw_1');
             }
@@ -62,8 +62,8 @@ if ($_GET['uid'] && $_GET['id']) {
 
         $password = md5(md5($_GET['newpasswd1']) . $salt);
 
-        C::t('user')->update($_GET['uid'], array('password' => $password, 'authstr' => '', 'salt' => $salt));
-        showmessage('getpasswd_succeed', 'index.php', array());
+        C::t('user')->update($_GET['uid'], ['password' => $password, 'authstr' => '', 'salt' => $salt]);
+        showmessage('getpasswd_succeed', 'index.php', []);
     }
 
 } else {

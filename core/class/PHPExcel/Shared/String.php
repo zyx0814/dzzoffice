@@ -46,14 +46,14 @@ class PHPExcel_Shared_String
 	 *
 	 * @var string[]
 	 */
-	private static $_controlCharacters = array();
+	private static $_controlCharacters = [];
 
 	/**
 	 * SYLK Characters array
 	 *
 	 * $var array
 	 */
-	private static $_SYLKCharacters = array();
+	private static $_SYLKCharacters = [];
 
 	/**
 	 * Decimal separator
@@ -108,7 +108,7 @@ class PHPExcel_Shared_String
 	 */
 	private static function _buildSYLKCharacters()
 	{
-		self::$_SYLKCharacters = array(
+		self::$_SYLKCharacters = [
 			"\x1B 0"  => chr(0),
 			"\x1B 1"  => chr(1),
 			"\x1B 2"  => chr(2),
@@ -265,7 +265,7 @@ class PHPExcel_Shared_String
 			"\x1B/="  => 'ý', // 253 in CP1252
 			"\x1BN|"  => 'þ', // 254 in CP1252
 			"\x1BNHy" => 'ÿ', // 255 in CP1252
-		);
+        ];
 	}
 
 	/**
@@ -383,13 +383,11 @@ class PHPExcel_Shared_String
 	public static function SanitizeUTF8($value)
 	{
 		if (self::getIsIconvEnabled()) {
-			$value = @iconv('UTF-8', 'UTF-8', $value);
-			return $value;
+            return @iconv('UTF-8', 'UTF-8', $value);
 		}
 
 		if (self::getIsMbstringEnabled()) {
-			$value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
-			return $value;
+            return mb_convert_encoding($value, 'UTF-8', 'UTF-8');
 		}
 
 		// else, no conversion
@@ -431,7 +429,7 @@ class PHPExcel_Shared_String
 	 * @param mixed[] $arrcRuns Details of rich text runs in $value
 	 * @return string
 	 */
-	public static function UTF8toBIFF8UnicodeShort($value, $arrcRuns = array())
+	public static function UTF8toBIFF8UnicodeShort($value, $arrcRuns = [])
 	{
 		// character count
 		$ln = self::CountCharacters($value, 'UTF-8');
@@ -478,8 +476,7 @@ class PHPExcel_Shared_String
 		// characters
 		$chars = self::ConvertEncoding($value, 'UTF-16LE', 'UTF-8');
 
-		$data = pack('vC', $ln, $opt) . $chars;
-		return $data;
+        return pack('vC', $ln, $opt) . $chars;
 	}
 
 	/**

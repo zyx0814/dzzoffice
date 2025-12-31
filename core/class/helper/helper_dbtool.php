@@ -32,7 +32,7 @@ class helper_dbtool {
     }
 
     public static function showtablecloumn($tablename) {
-        $data = array();
+        $data = [];
         $db = &DB::object();
         $query = $db->query("SHOW FULL COLUMNS FROM " . DB::table($tablename), 'SILENT');
         while ($field = @DB::fetch($query)) {
@@ -42,7 +42,7 @@ class helper_dbtool {
     }
 
     public static function isexisttable($tablename) {
-        $tablearr = array();
+        $tablearr = [];
         $query = DB::query('SHOW TABLES', 'SILENT');
         while ($table = DB::fetch($query)) {
             foreach ($table as $value) {
@@ -57,4 +57,3 @@ class helper_dbtool {
     }
 }
 
-?>

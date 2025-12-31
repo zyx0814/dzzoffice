@@ -17,4 +17,4 @@ $time = 60 * 60 * 24 * 7; //7天 七天没有修改的将被删除；
 
 //清理图片缓存
 removedirectory($_G['setting']['attachdir'] . 'imgcache/', true, $time);
-?>
+

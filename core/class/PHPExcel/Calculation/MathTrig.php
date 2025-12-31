@@ -51,7 +51,7 @@ class PHPExcel_Calculation_MathTrig {
 	private static function _factors($value) {
 		$startVal = floor(sqrt($value));
 
-		$factorArray = array();
+		$factorArray = [];
 		for ($i = $startVal; $i > 1; --$i) {
 			if (($value % $i) == 0) {
 				$factorArray = array_merge($factorArray,self::_factors($value / $i));
@@ -65,7 +65,7 @@ class PHPExcel_Calculation_MathTrig {
 			rsort($factorArray);
 			return $factorArray;
 		} else {
-			return array((integer) $value);
+			return [(integer) $value];
 		}
 	}	//	function _factors()
 
@@ -346,7 +346,7 @@ class PHPExcel_Calculation_MathTrig {
 	 */
 	public static function GCD() {
 		$returnValue = 1;
-		$allValuesFactors = array();
+		$allValuesFactors = [];
 		// Loop through arguments
 		foreach(PHPExcel_Calculation_Functions::flattenArray(func_get_args()) as $value) {
 			if (!is_numeric($value)) {
@@ -451,7 +451,7 @@ class PHPExcel_Calculation_MathTrig {
 	 */
 	public static function LCM() {
 		$returnValue = 1;
-		$allPoweredFactors = array();
+		$allPoweredFactors = [];
 		// Loop through arguments
 		foreach(PHPExcel_Calculation_Functions::flattenArray(func_get_args()) as $value) {
 			if (!is_numeric($value)) {
@@ -464,7 +464,7 @@ class PHPExcel_Calculation_MathTrig {
 			}
 			$myFactors = self::_factors(floor($value));
 			$myCountedFactors = array_count_values($myFactors);
-			$myPoweredFactors = array();
+			$myPoweredFactors = [];
 			foreach($myCountedFactors as $myCountedFactor => $myCountedPower) {
 				$myPoweredFactors[$myCountedFactor] = pow($myCountedFactor,$myCountedPower);
 			}
@@ -525,12 +525,12 @@ class PHPExcel_Calculation_MathTrig {
 	 * @return	float
 	 */
 	public static function MDETERM($matrixValues) {
-		$matrixData = array();
-		if (!is_array($matrixValues)) { $matrixValues = array(array($matrixValues)); }
+		$matrixData = [];
+		if (!is_array($matrixValues)) { $matrixValues = [[$matrixValues]]; }
 
 		$row = $maxColumn = 0;
 		foreach($matrixValues as $matrixRow) {
-			if (!is_array($matrixRow)) { $matrixRow = array($matrixRow); }
+			if (!is_array($matrixRow)) { $matrixRow = [$matrixRow]; }
 			$column = 0;
 			foreach($matrixRow as $matrixCell) {
 				if ((is_string($matrixCell)) || ($matrixCell === null)) {
@@ -567,12 +567,12 @@ class PHPExcel_Calculation_MathTrig {
 	 * @return	array
 	 */
 	public static function MINVERSE($matrixValues) {
-		$matrixData = array();
-		if (!is_array($matrixValues)) { $matrixValues = array(array($matrixValues)); }
+		$matrixData = [];
+		if (!is_array($matrixValues)) { $matrixValues = [[$matrixValues]]; }
 
 		$row = $maxColumn = 0;
 		foreach($matrixValues as $matrixRow) {
-			if (!is_array($matrixRow)) { $matrixRow = array($matrixRow); }
+			if (!is_array($matrixRow)) { $matrixRow = [$matrixRow]; }
 			$column = 0;
 			foreach($matrixRow as $matrixCell) {
 				if ((is_string($matrixCell)) || ($matrixCell === null)) {
@@ -603,13 +603,13 @@ class PHPExcel_Calculation_MathTrig {
 	 * @return	array
 	 */
 	public static function MMULT($matrixData1,$matrixData2) {
-		$matrixAData = $matrixBData = array();
-		if (!is_array($matrixData1)) { $matrixData1 = array(array($matrixData1)); }
-		if (!is_array($matrixData2)) { $matrixData2 = array(array($matrixData2)); }
+		$matrixAData = $matrixBData = [];
+		if (!is_array($matrixData1)) { $matrixData1 = [[$matrixData1]]; }
+		if (!is_array($matrixData2)) { $matrixData2 = [[$matrixData2]]; }
 
 		$rowA = 0;
 		foreach($matrixData1 as $matrixRow) {
-			if (!is_array($matrixRow)) { $matrixRow = array($matrixRow); }
+			if (!is_array($matrixRow)) { $matrixRow = [$matrixRow]; }
 			$columnA = 0;
 			foreach($matrixRow as $matrixCell) {
 				if ((is_string($matrixCell)) || ($matrixCell === null)) {
@@ -624,7 +624,7 @@ class PHPExcel_Calculation_MathTrig {
 			$matrixA = new PHPExcel_Shared_JAMA_Matrix($matrixAData);
 			$rowB = 0;
 			foreach($matrixData2 as $matrixRow) {
-				if (!is_array($matrixRow)) { $matrixRow = array($matrixRow); }
+				if (!is_array($matrixRow)) { $matrixRow = [$matrixRow]; }
 				$columnB = 0;
 				foreach($matrixRow as $matrixCell) {
 					if ((is_string($matrixCell)) || ($matrixCell === null)) {
@@ -898,10 +898,10 @@ class PHPExcel_Calculation_MathTrig {
 			return '';
 		}
 
-		$mill = Array('', 'M', 'MM', 'MMM', 'MMMM', 'MMMMM');
-		$cent = Array('', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM');
-		$tens = Array('', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC');
-		$ones = Array('', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX');
+		$mill = ['', 'M', 'MM', 'MMM', 'MMMM', 'MMMMM'];
+		$cent = ['', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM'];
+		$tens = ['', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC'];
+		$ones = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
 
 		$roman = '';
 		while ($aValue > 5999) {
@@ -1152,7 +1152,7 @@ class PHPExcel_Calculation_MathTrig {
 	 * @param	string		$condition		The criteria that defines which cells will be summed.
 	 * @return	float
 	 */
-	public static function SUMIF($aArgs,$condition,$sumArgs = array()) {
+	public static function SUMIF($aArgs,$condition,$sumArgs = []) {
 		// Return value
 		$returnValue = 0;
 
@@ -1265,11 +1265,7 @@ class PHPExcel_Calculation_MathTrig {
 		$array2 = PHPExcel_Calculation_Functions::flattenArray($matrixData2);
 		$count1 = count($array1);
 		$count2 = count($array2);
-		if ($count1 < $count2) {
-			$count = $count1;
-		} else {
-			$count = $count2;
-		}
+        $count = min($count1, $count2);
 
 		$result = 0;
 		for ($i = 0; $i < $count; ++$i) {
@@ -1295,11 +1291,7 @@ class PHPExcel_Calculation_MathTrig {
 		$array2 = PHPExcel_Calculation_Functions::flattenArray($matrixData2);
 		$count1 = count($array1);
 		$count2 = count($array2);
-		if ($count1 < $count2) {
-			$count = $count1;
-		} else {
-			$count = $count2;
-		}
+        $count = min($count1, $count2);
 
 		$result = 0;
 		for ($i = 0; $i < $count; ++$i) {
@@ -1325,11 +1317,7 @@ class PHPExcel_Calculation_MathTrig {
 		$array2 = PHPExcel_Calculation_Functions::flattenArray($matrixData2);
 		$count1 = count($array1);
 		$count2 = count($array2);
-		if ($count1 < $count2) {
-			$count = $count1;
-		} else {
-			$count = $count2;
-		}
+        $count = min($count1, $count2);
 
 		$result = 0;
 		for ($i = 0; $i < $count; ++$i) {

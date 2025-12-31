@@ -21,18 +21,18 @@ $cache_config = C::memory()->config;
 $cache_type = C::memory()->type;
 $dir = DZZ_ROOT.'./core/class/memory';
 $qaadir = dir($dir);
-$cachelist = array();
+$cachelist = [];
 while($entry = $qaadir->read()) {
-    if(!in_array($entry, array('.', '..')) && preg_match("/^memory\_driver\_[\w\.]+$/", $entry) && substr($entry, -4) == '.php' && strlen($entry) < 30 && is_file($dir.'/'.$entry)) {
-        $cache = str_replace(array('.php', 'memory_driver_'), '', $entry);
+    if(!in_array($entry, ['.', '..']) && preg_match("/^memory\_driver\_[\w\.]+$/", $entry) && substr($entry, -4) == '.php' && strlen($entry) < 30 && is_file($dir.'/'.$entry)) {
+        $cache = str_replace(['.php', 'memory_driver_'], '', $entry);
         $class_name = 'memory_driver_'.$cache;
         $memory = new $class_name();
         $available = is_array($cache_config[$cache]) ? !empty($cache_config[$cache]['server']) : !empty($cache_config[$cache]);
-        $cachelist[] = array($memory->cacheName,
+        $cachelist[] = [$memory->cacheName,
             $memory->env($config) ? '<span class="text-success">'.lang('supportted').'</span>' : '<span class="text-danger">'.lang('unsupportted').'</span>',
             $available ? '<span class="text-primary">'.lang('open').'</span>' : lang('close'),
             $cache_type == $memory->cacheName ? $do_clear_link : '--'
-        );
+        ];
     }
 }
 $env_str = '';
@@ -49,4 +49,4 @@ if($do == 'clear') {
     C::memory()->clear();
 }
 include template('memory');
-?>
+

@@ -12,7 +12,7 @@ global $_G;
 $setting = isset($_G['setting']) ? $_G['setting'] : '';
 
 if (empty($setting)) {
-    $setting = C::t('setting')->fetch_all(array(), true);
+    $setting = C::t('setting')->fetch_all([], true);
 }
 if ($_G['uid'] > 0) {
     if ($_G['setting']['bbclosed']) {
@@ -58,27 +58,27 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
 
         if ($setting['loginset']['template'] == 4) {
             $templateId = 4;
-            $data = array();
+            $data = [];
             if($setting['loginset']['orgid'] && $setting['loginset']['orgid'] !== 'other') {
                 $orgid = $setting['loginset']['orgid'];
-                $param = array('organization_user', 'organization_job', 'user');
+                $param = ['organization_user', 'organization_job', 'user'];
                 $sql = "ou.orgid = %d AND u.adminid != 1 AND u.status = 0";
                 if (!$_G['cache']['usergroups']) loadcache('usergroups');
-                $users = DB::fetch_all("SELECT u.uid,u.username,u.avatarstatus,u.headerColor,u.groupid,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, array($orgid)));
+                $users = DB::fetch_all("SELECT u.uid,u.username,u.avatarstatus,u.headerColor,u.groupid,j.name as jobname FROM %t ou LEFT JOIN %t j ON ou.jobid = j.jobid LEFT JOIN %t u ON ou.uid = u.uid WHERE $sql ORDER BY u.uid ASC LIMIT 1000",array_merge($param, [$orgid]));
                 foreach ($users as $user) {
                     $jobname = $user['jobname'];
                     if(!$jobname) {
-                        $usergroup = $_G['cache']['usergroups'][$user['groupid']] ?? array();
-                        $jobname = $usergroup['grouptitle'] ? $usergroup['grouptitle'] : '成员';
+                        $usergroup = $_G['cache']['usergroups'][$user['groupid']] ?? [];
+                        $jobname = $usergroup['grouptitle'] ?: '成员';
                     }
                     
-                    $data[] = array(
+                    $data[] = [
                         'uid' => $user['uid'],
                         'username' => $user['username'],
                         'avatarstatus' => $user['avatarstatus'],
                         'headerColor' => $user['headerColor'],
                         'jobname' => $jobname
-                    );
+                    ];
                 }
             }
             
@@ -91,18 +91,18 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
     Hook::listen('login_valchk', $_GET);//验证登录输入值及登录失败次数
     //验证码开启，检测验证码
     if ($seccodecheck && !check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
-        showTips(array('error' => lang('submit_seccode_invalid')), $type);
+        showTips(['error' => lang('submit_seccode_invalid')], $type);
     }
 
     //登录
     $result = userlogin($_GET['email'], $_GET['password'], $_GET['questionid'], $_GET['answer'], 'auto', $_G['clientip']);
 
     if ($result['status'] == -2) {
-        $errorlog = "用户" . ($result['ucresult']['email'] ? $result['ucresult']['email'] : $_GET['email']) . "尝试登录失败，该用户已禁用。";
+        $errorlog = "用户" . ($result['ucresult']['email'] ?: $_GET['email']) . "尝试登录失败，该用户已禁用。";
         writelog('loginlog', $errorlog);
-        showTips(array('error' => lang('user_stopped_please_admin')), $type);
+        showTips(['error' => lang('user_stopped_please_admin')], $type);
     } elseif ($_G['setting']['bbclosed'] > 0 && $result['member']['adminid'] != 1) {
-        showTips(array('error' => lang('site_closed_please_admin')), $type);
+        showTips(['error' => lang('site_closed_please_admin')], $type);
     }
 
     if ($result['status'] > 0) {
@@ -116,7 +116,7 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
         }
 
         //记录登录
-        C::t('user_status')->update($_G['uid'], array('lastip' => $_G['clientip'], 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP));
+        C::t('user_status')->update($_G['uid'], ['lastip' => $_G['clientip'], 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP]);
         //邀请登录
         //Hook::listen('inviate');
 
@@ -126,28 +126,28 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
         $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
 
         writelog('loginlog', '登录成功');
-        showTips(array('success' => array('message' => lang('login_succeed_no_redirect'), 'url_forward' => $href)), $type);
+        showTips(['success' => ['message' => lang('login_succeed_no_redirect'), 'url_forward' => $href]], $type);
 
 
     } else {//登录失败记录日志 
         //写入日志
         $password = preg_replace("/^(.{".round(strlen($_GET['password']) / 4)."})(.+?)(.{".round(strlen($_GET['password']) / 6)."})$/s", "\\1***\\3", $_GET['password']);
-        $errorlog = "用户" . ($result['ucresult']['email'] ? $result['ucresult']['email'] : $_GET['email']) . "尝试登录[" . $password . "]错误";
+        $errorlog = "用户" . ($result['ucresult']['email'] ?: $_GET['email']) . "尝试登录[" . $password . "]错误";
         writelog('loginlog', $errorlog);
 
         loginfailed($_GET['email']);//更新登录失败记录
 
         if ($_G['member_loginperm'] > 1) {
 
-            showTips(array('error' => lang('login_invalid', array('loginperm' => $_G['member_loginperm'] - 1))), $type);
+            showTips(['error' => lang('login_invalid', ['loginperm' => $_G['member_loginperm'] - 1])], $type);
 
         } elseif ($_G['member_loginperm'] == -1) {
 
-            showTips(array('error' => lang('login_password_invalid')), $type);
+            showTips(['error' => lang('login_password_invalid')], $type);
 
         } else {
 
-            showTips(array('error' => lang('login_strike', array('forbiddentime' => $_G['setting']['forbiddentime'] ? $_G['setting']['forbiddentime'] : 900))), $type);
+            showTips(['error' => lang('login_strike', ['forbiddentime' => $_G['setting']['forbiddentime'] ?: 900])], $type);
         }
     }
 }

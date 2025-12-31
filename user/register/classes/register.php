@@ -18,7 +18,7 @@ class Register {
 
                 $url_forward = 'index.php';
             }
-            showmessage('login_succeed', $url_forward ? $url_forward : './', array('username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['uid']), array());
+            showmessage('login_succeed', $url_forward ?: './', ['username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['uid']], []);
 
         } elseif (!$setting['regclosed']) {//判断是否开启注册，如果未开启则提示
 
@@ -31,7 +31,7 @@ class Register {
 
             } elseif (!$setting['regstatus']) {
 
-                showmessage(!$setting['regclosemessage'] ? 'register_disable' : str_replace(array("\r", "\n"), '', $setting['regclosemessage']));
+                showmessage(!$setting['regclosemessage'] ? 'register_disable' : str_replace(["\r", "\n"], '', $setting['regclosemessage']));
             }
         }
     }

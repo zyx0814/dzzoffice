@@ -47,7 +47,7 @@ class table_comment extends dzz_table {
 
     public function update_by_cid($cid, $message, $rcid, $attach) {
         $ret = 0;
-        $ret += parent::update($cid, array('message' => $message, 'rcid' => $rcid, 'edituid' => getglobal('uid'), 'edittime' => TIMESTAMP));
+        $ret += parent::update($cid, ['message' => $message, 'rcid' => $rcid, 'edituid' => getglobal('uid'), 'edittime' => TIMESTAMP]);
 
         $ret += C::t('comment_attach')->update_by_cid($cid, $attach);
 
@@ -56,8 +56,8 @@ class table_comment extends dzz_table {
 
     public function delete_by_cid($cid) {
         if (!$data = parent::fetch($cid)) return false;
-        $delcids = array($cid);
-        foreach (DB::fetch_all("select cid from %t where pcid=%d ", array($this->_table, $cid)) as $value) {
+        $delcids = [$cid];
+        foreach (DB::fetch_all("select cid from %t where pcid=%d ", [$this->_table, $cid]) as $value) {
             $delcids[] = $value['cid'];
         }
         if ($return = parent::delete($delcids)) {
@@ -81,8 +81,8 @@ class table_comment extends dzz_table {
 
     public function delete_by_id_idtype($ids, $idtype) {
         $ids = (array)$ids;
-        $dels = array();
-        foreach (DB::fetch_all("select * from %t where id IN (%n) and idtype=%s", array($this->_table, $ids, $idtype)) as $value) {
+        $dels = [];
+        foreach (DB::fetch_all("select * from %t where id IN (%n) and idtype=%s", [$this->_table, $ids, $idtype]) as $value) {
             $dels[] = $value['cid'];
         }
         if ($return = parent::delete($dels)) {
@@ -106,12 +106,12 @@ class table_comment extends dzz_table {
             }
         }
 
-        if ($iscount) return DB::result_first("select COUNT(*) from %t where id=%s and idtype=%s and pcid=0", array($this->_table, $id, $idtype));
-        $data = array();
-        foreach (DB::fetch_all("select * from %t where id=%s and idtype=%s and pcid=0 order by dateline DESC $limitsql", array($this->_table, $id, $idtype)) as $value) {
+        if ($iscount) return DB::result_first("select COUNT(*) from %t where id=%s and idtype=%s and pcid=0", [$this->_table, $id, $idtype]);
+        $data = [];
+        foreach (DB::fetch_all("select * from %t where id=%s and idtype=%s and pcid=0 order by dateline DESC $limitsql", [$this->_table, $id, $idtype]) as $value) {
             $value['message'] = dzzcode($value['message']);
             $value['dateline'] = dgmdate($value['dateline'], 'u');
-            $value['replies'] = DB::result_first("select COUNT(*) from  %t where pcid=%d", array($this->_table, $value['cid']));
+            $value['replies'] = DB::result_first("select COUNT(*) from  %t where pcid=%d", [$this->_table, $value['cid']]);
             $value['replys'] = self::fetch_all_by_pcid($value['cid'], 5);
             $value['attachs'] = C::t('comment_attach')->fetch_all_by_cid($value['cid']);
             $data[] = $value;
@@ -129,9 +129,9 @@ class table_comment extends dzz_table {
                 $limitsql .= " limit " . intval($limit[0]);
             }
         }
-        if ($iscount) return DB::result_first("select COUNT(*) from %t where pcid=%d ", array($this->_table, $pcid));
-        $data = array();
-        foreach (DB::fetch_all("select * from %t where pcid=%d order by dateline DESC $limitsql", array($this->_table, $pcid)) as $value) {
+        if ($iscount) return DB::result_first("select COUNT(*) from %t where pcid=%d ", [$this->_table, $pcid]);
+        $data = [];
+        foreach (DB::fetch_all("select * from %t where pcid=%d order by dateline DESC $limitsql", [$this->_table, $pcid]) as $value) {
             $value['message'] = dzzcode($value['message']);
             $value['dateline'] = dgmdate($value['dateline'], 'u');
             $value['attachs'] = C::t('comment_attach')->fetch_all_by_cid($value['cid']);
@@ -146,7 +146,7 @@ class table_comment extends dzz_table {
 
     public function copy_by_id_idtype($oid, $id, $idtype) {
         $return = 0;
-        foreach (DB::fetch_all("select * from %t where id=%s and idtype=%s and pcid='0'", array($this->_table, $oid, $idtype)) as $value) {
+        foreach (DB::fetch_all("select * from %t where id=%s and idtype=%s and pcid='0'", [$this->_table, $oid, $idtype]) as $value) {
             $ocid = $value['cid'];
             unset($value['cid']);
             $value['id'] = $id;
@@ -155,7 +155,7 @@ class table_comment extends dzz_table {
                 C::t('comment_attach')->copy_by_cid($ocid, $value['cid']);
                 $return += 1;
                 //拷贝子评论
-                foreach (DB::fetch_all("select * from %t where pcid=%d ", array($this->_table, $ocid)) as $value1) {
+                foreach (DB::fetch_all("select * from %t where pcid=%d ", [$this->_table, $ocid]) as $value1) {
                     $ocid = $value1['cid'];
                     unset($value1['cid']);
                     $value1['pcid'] = $value['cid'];
@@ -173,4 +173,4 @@ class table_comment extends dzz_table {
 
 }
 
-?>
+

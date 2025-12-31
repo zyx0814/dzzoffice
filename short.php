@@ -29,4 +29,3 @@ if (!$short) {
 C::t('shorturl')->addview($sid);
 @header("Location: " . $_G['siteurl'] . outputurl($short['url']));
 exit();
-?>

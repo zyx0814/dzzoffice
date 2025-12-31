@@ -22,7 +22,7 @@ $multiple = intval($_GET['multiple']); //是否允许多线
 //$callback=$_GET['callback']?$_GET['callback']:'callback_selectuser';//回调函数名称
 $callbackurl = isset($_GET['callbackurl']) ? trim($_GET['callbackurl']) : '';//回调地址
 $token = htmlspecialchars($_GET['token']);
-$gets = array(
+$gets = [
     'zero' => $zero,
     'nouser' => $nouser,
     'stype' => $stype,
@@ -31,10 +31,10 @@ $gets = array(
     'multiple' => $multiple,
     'nosearch' => 1,
     'ctrlid' => 'seluser'
-);
+];
 //获取选中项
 $ids = explode(',', $ids);
-$selectorgids = $selectuids = array();
+$selectorgids = $selectuids = [];
 foreach ($ids as $value) {
     if (strpos($value, 'g_') !== false) {
         if ($stype == 2) continue;//仅选择用户时，忽略部门和群组
@@ -48,13 +48,13 @@ foreach ($ids as $value) {
 }
 $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 //获取所有机构和部门
-$orgdatas = $orgids = $orgnames = $selectorginfo = array();
-foreach (DB::fetch_all("select pathkey from %t where `type` = %d", array('organization', 0)) as $v) {
-    $param = array('organization', 0);
+$orgdatas = $orgids = $orgnames = $selectorginfo = [];
+foreach (DB::fetch_all("select pathkey from %t where `type` = %d", ['organization', 0]) as $v) {
+    $param = ['organization', 0];
     $pathkey = $pathkey . '.*';
-    foreach (DB::fetch_all("select * from %t where pathkey regexp %s and `type` = 0", array('organization', $pathkey)) as $val) {
+    foreach (DB::fetch_all("select * from %t where pathkey regexp %s and `type` = 0", ['organization', $pathkey]) as $val) {
         if (intval($val['aid']) == 0) {
-            $val['img'] = avatar_group($val['orgid'], array($val['orgid'] => array('aid' => $val['aid'], 'orgname' => $val['orgname'])));
+            $val['img'] = avatar_group($val['orgid'], [$val['orgid'] => ['aid' => $val['aid'], 'orgname' => $val['orgname']]]);
         } else {
             $val['icon'] = 'index.php?mod=io&op=thumbnail&width=24&height=24&path=' . dzzencode('attach::' . $val['aid']);
         }
@@ -67,14 +67,14 @@ foreach (DB::fetch_all("select pathkey from %t where `type` = %d", array('organi
     }
 }
 $wheresql = 'ou.orgid in(%n) ';
-$param = array('organization_user', 'organization', 'user', 'user_setting', 'headerColor', $orgids);
+$param = ['organization_user', 'organization', 'user', 'user_setting', 'headerColor', $orgids];
 if ($keyword) {
     $wheresql .= ' and (u.username LIKE %s or u.email LIKE %s or u.phone LIKE %s)';
     $param[] = '%' . $keyword . '%';
     $param[] = '%' . $keyword . '%';
     $param[] = '%' . $keyword . '%';
 }
-$selectuserinfo = array();
+$selectuserinfo = [];
 $selectnum = ($stype == 1) ? count($selectorgids) : count($selectuids);
 if (!$nouser) {
     $data = DB::fetch_all("select ou.orgid,o.pathkey,u.uid,u.username,u.avatarstatus,s.svalue from %t ou left join %t o on o.orgid=ou.orgid

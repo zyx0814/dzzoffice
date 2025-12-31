@@ -11,34 +11,34 @@ if (!defined('IN_DZZ')) {
 include_once DZZ_ROOT . './core/core_version.php';
 require_once libfile('function/admin');
 include_once libfile('function/cache');
-$map = array();
+$map = [];
 $today = dgmdate(TIMESTAMP, 'Ymd');
 $map["available"] = 1;
-$applist = DB::fetch_all("select * from %t where `available`>0", array('app_market'));
+$applist = DB::fetch_all("select * from %t where `available`>0", ['app_market']);
 
-$return = array("sum" => 0);
+$return = ["sum" => 0];
 $num = 0;
 if ($applist) {
     $dzz_upgrade = new dzz_upgrade_app();
-    $appinfo = array();
+    $appinfo = [];
     $appinfo["mysqlversion"] = helper_dbtool::dbversion();
     $appinfo["phpversion"] = PHP_VERSION;
     $appinfo["dzzversion"] = CORE_VERSION;
     foreach ($applist as $k => $v) {
         if (empty($v['app_path'])) $v['app_path'] = 'dzz';
-        $savedata = array();
+        $savedata = [];
         if ($v["mid"] > 0) {//云端检测
             $info = array_merge($v, $appinfo);
             $response = $dzz_upgrade->check_upgrade_byversion($info);
-            $map = array(
+            $map = [
                 "upgrade_version" => '',
                 "check_upgrade_time" => ''
-            );
+            ];
             if ($response && $response["status"] == 1) {
-                $map = array(
+                $map = [
                     "upgrade_version" => serialize($response["data"]),
                     "check_upgrade_time" => dgmdate(TIMESTAMP, 'Ymd')
-                );
+                ];
 
             }
             $re = C::t('app_market')->update($v['appid'], $map);
@@ -50,22 +50,20 @@ if ($applist) {
                 $apparray = getimportdata('Dzz! app', 0, 0, $importtxt);
                 if (version_compare($apparray["app"]["version"], $v["version"]) > 0) {
                     $num++;
-                    $savedata = array(
+                    $savedata = [
                         "upgrade_version" => serialize($apparray["app"]),
                         "check_upgrade_time" => dgmdate(TIMESTAMP, 'Ymd')
-                    );
-                    $re = C::t('app_market')->update($v['appid'], $savedata);
+                    ];
                 } else {
-                    $savedata = array(
+                    $savedata = [
                         "upgrade_version" => '',
                         "check_upgrade_time" => dgmdate(TIMESTAMP, 'Ymd')
-                    );
-                    $re = C::t('app_market')->update($v['appid'], $savedata);
+                    ];
                 }
+                $re = C::t('app_market')->update($v['appid'], $savedata);
             }
         }
     }
 }
 $return["sum"] = $num;
 exit(json_encode($return));
-?>

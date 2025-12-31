@@ -125,7 +125,7 @@ class PHPExcel_DocumentProperties
      *
      * @var string
      */
-    private $_customProperties    = array();
+    private $_customProperties    = [];
 
 
     /**
@@ -438,11 +438,11 @@ class PHPExcel_DocumentProperties
      * @return PHPExcel_DocumentProperties
      */
     public function setCustomProperty($propertyName,$propertyValue='',$propertyType=NULL) {
-        if (($propertyType === NULL) || (!in_array($propertyType,array(self::PROPERTY_TYPE_INTEGER,
+        if (($propertyType === NULL) || (!in_array($propertyType, [self::PROPERTY_TYPE_INTEGER,
                                                                        self::PROPERTY_TYPE_FLOAT,
                                                                        self::PROPERTY_TYPE_STRING,
                                                                        self::PROPERTY_TYPE_DATE,
-                                                                       self::PROPERTY_TYPE_BOOLEAN)))) {
+                                                                       self::PROPERTY_TYPE_BOOLEAN]))) {
             if ($propertyValue === NULL) {
                 $propertyType = self::PROPERTY_TYPE_STRING;
             } elseif (is_float($propertyValue)) {
@@ -456,7 +456,7 @@ class PHPExcel_DocumentProperties
             }
         }
 
-        $this->_customProperties[$propertyName] = array('value' => $propertyValue, 'type' => $propertyType);
+        $this->_customProperties[$propertyName] = ['value' => $propertyValue, 'type' => $propertyType];
         return $this;
     }
 

@@ -22,7 +22,7 @@ class CholeskyDecomposition {
 	 *	@var array
 	 *	@access private
 	 */
-	private $L = array();
+	private $L = [];
 
 	/**
 	 *	Matrix row and column dimension

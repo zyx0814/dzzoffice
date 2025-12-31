@@ -28,7 +28,7 @@ if (file_exists(dirname(__FILE__) . '/' . $avatar)) {
         echo 0;
         exit;
     }
-    $size = in_array($size, array('big', 'middle', 'small')) ? $size : 'middle';
+    $size = in_array($size, ['big', 'middle', 'small']) ? $size : 'middle';
     $avatar_url = 'static/image/avatar/noavatar_' . $size . '.png';
 }
 
@@ -42,7 +42,7 @@ header('Location: ' . SITEURL . '/' . $avatar_url);
 exit;
 
 function get_avatar($uid, $size = 'middle', $type = '') {
-    $size = in_array($size, array('big', 'middle', 'small')) ? $size : 'middle';
+    $size = in_array($size, ['big', 'middle', 'small']) ? $size : 'middle';
     $uid = abs(intval($uid));
     $uid = sprintf("%09d", $uid);
     $dir1 = substr($uid, 0, 3);

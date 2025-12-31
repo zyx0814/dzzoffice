@@ -10,6 +10,5 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $navtitle = '分享文件';
-$reporttypes = c::t('share_report')->get_report_types();
+$reporttypes = C::t('share_report')->get_report_types();
 include template('index');
-?>

@@ -10,13 +10,13 @@ if (!defined('IN_DZZ')) {
  */
 class dzz_table extends dzz_base {
 
-    public $data = array();
+    public $data = [];
     /**
      * 方法钩子存储数组
      * 结构：[方法名 => [前置钩子数组, 后置钩子数组]]，用于扩展方法执行逻辑
      * @var array
      */
-    public $methods = array();
+    public $methods = [];
     /**
      * 数据表名（不含前缀，由 DB::table() 自动拼接前缀）
      * @var string
@@ -69,7 +69,7 @@ class dzz_table extends dzz_base {
      *        - table: 数据表名（不含前缀）
      *        - pk: 主键字段名
      */
-    public function __construct($para = array()) {
+    public function __construct($para = []) {
         if (!empty($para)) {
             $this->_table = $para['table'];
             $this->_pk = $para['pk'];
@@ -105,8 +105,7 @@ class dzz_table extends dzz_base {
      * @return int 记录总数
      */
     public function count() {
-        $count = (int)DB::result_first("SELECT count(*) FROM " . DB::table($this->_table));
-        return $count;
+        return (int)DB::result_first("SELECT count(*) FROM " . DB::table($this->_table));
     }
 
     /**
@@ -195,7 +194,7 @@ class dzz_table extends dzz_base {
      * @return array|false 成功返回记录数组，失败返回false
      */
     public function fetch($id, $force_from_db = false) {
-        $data = array();
+        $data = [];
         if (!empty($id)) {
             // 强制读库 或 缓存未命中时，从数据库读取
             if ($force_from_db || ($data = $this->fetch_cache($id)) === false) {
@@ -214,7 +213,7 @@ class dzz_table extends dzz_base {
      * @return array 以主键为键的记录数组
      */
     public function fetch_all($ids, $force_from_db = false) {
-        $data = array();
+        $data = [];
         if (!empty($ids)) {
             // 强制读库 或 缓存不完整时，补充读取数据库
             if ($force_from_db || ($data = $this->fetch_cache($ids)) === false || count((array)$ids) != count((array)$data)) {
@@ -223,7 +222,7 @@ class dzz_table extends dzz_base {
                     $ids = array_diff($ids, array_keys($data));
                 }
                 // 初始化缓存数据数组
-                if ($data === false) $data = array();
+                if ($data === false) $data = [];
                 // 查询未缓存的主键记录
                 if (!empty($ids)) {
                     $query = DB::query('SELECT * FROM ' . DB::table($this->_table) . ' WHERE ' . DB::field($this->_pk, $ids));
@@ -247,7 +246,7 @@ class dzz_table extends dzz_base {
         // 执行 SHOW FIELDS 查询字段结构，SILENT 静默执行忽略错误
         $query = DB::query('SHOW FIELDS FROM ' . DB::table($this->_table), '', 'SILENT');
         if ($query) {
-            $data = array();
+            $data = [];
             while ($value = DB::fetch($query)) {
                 $data[$value['Field']] = $value;
             }
@@ -267,7 +266,7 @@ class dzz_table extends dzz_base {
             $this->checkpk();// 排序时必须有主键
         }
         // DB::order() 安全拼接排序语句，DB::limit() 拼接分页语句
-        return DB::fetch_all('SELECT * FROM ' . DB::table($this->_table) . ($sort ? ' ORDER BY ' . DB::order($this->_pk, $sort) : '') . DB::limit($start, $limit), null, $this->_pk ? $this->_pk : '');
+        return DB::fetch_all('SELECT * FROM ' . DB::table($this->_table) . ($sort ? ' ORDER BY ' . DB::order($this->_pk, $sort) : '') . DB::limit($start, $limit), null, $this->_pk ?: '');
     }
 
     /**
@@ -381,7 +380,7 @@ class dzz_table extends dzz_base {
     public function reset_cache($ids, $pre_cache_key = null) {
         $ret = false;
         if ($this->_allowmem) {
-            $keys = array();
+            $keys = [];
             // 获取已缓存的主键
             if (($cache_data = $this->fetch_cache($ids, $pre_cache_key)) !== false) {
                 $keys = array_intersect(array_keys($cache_data), $ids);
@@ -456,4 +455,3 @@ class dzz_table extends dzz_base {
     }
 }
 
-?>

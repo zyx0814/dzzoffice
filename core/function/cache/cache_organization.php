@@ -8,7 +8,7 @@ function build_cache_organization() {
     set_time_limit(0);
     @ini_set("memory_limit", "512M");
     include_once libfile('function/organization');
-    $data = array();
+    $data = [];
     /*$query=DB::query("select * from ".DB::table('organization')." where 1 limit 1000");
     while($value=DB::fetch($query)){
         //获取此机构下的用户；
@@ -19,4 +19,4 @@ function build_cache_organization() {
     savecache('organization', $data);
 }
 
-?>
+

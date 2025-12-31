@@ -99,7 +99,7 @@ class PHPExcel_Shared_OLE_PPS
 	* Array of child PPS's (only used by Root and Dir PPS's)
 	* @var array
 	*/
-	public $children = array();
+	public $children = [];
 
 	/**
 	* Pointer to OLE container

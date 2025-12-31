@@ -20,10 +20,11 @@ class helper_json {
                 return '"' . addcslashes($data, "\r\n\t\"") . '"';
             case 'object':
                 $data = get_object_vars($data);
+                break;
             case 'array':
                 $count = 0;
-                $indexed = array();
-                $associative = array();
+                $indexed = [];
+                $associative = [];
                 foreach ($data as $key => $value) {
                     if ($count !== NULL && (gettype($key) !== 'integer' || $count++ !== $key)) {
                         $count = NULL;
@@ -43,4 +44,3 @@ class helper_json {
     }
 }
 
-?>

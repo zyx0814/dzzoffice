@@ -17,7 +17,7 @@ if ($_G['uid']) {
     if (strpos($url_forward, 'user.php') !== false) {
         $url_forward = 'index.php';
     }
-    showmessage('login_succeed', $url_forward ? $url_forward : './', array('username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['uid']), array());
+    showmessage('login_succeed', $url_forward ?: './', ['username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['uid']], []);
 } elseif ($setting['bbclosed']) {
     showmessage('site_closed_please_admin');
 } elseif (!$setting['regclosed']) {
@@ -26,7 +26,7 @@ if ($_G['uid']) {
             showmessage('register_disable_activation');
         }
     } elseif (!$setting['regstatus']) {
-        showmessage(!$setting['regclosemessage'] ? 'register_disable' : str_replace(array("\r", "\n"), '', $setting['regclosemessage']));
+        showmessage(!$setting['regclosemessage'] ? 'register_disable' : str_replace(["\r", "\n"], '', $setting['regclosemessage']));
     }
 }
 $seccodecheck = $setting['seccodestatus'] & 1;
@@ -43,15 +43,15 @@ if (!submitcheck('regsubmit')) {
     $auth = $_GET['auth'];
 
     $username = isset($_GET['username']) ? dhtmlspecialchars($_GET['username']) : '';
-    $allowitems = array();
+    $allowitems = [];
     foreach ($_G['cache']['profilesetting'] as $key => $value) {
         if ($value['available'] > 0)
             $allowitems[] = $key;
     }
-    $htmls = $settings = array();
+    $htmls = $settings = [];
     foreach ($_G['cache']['fields_register'] as $field) {
         $fieldid = $field['fieldid'];
-        $html = profile_setting($fieldid, array(), false, false, true);
+        $html = profile_setting($fieldid, [], false, false, true);
         if ($html) {
             $settings[$fieldid] = $_G['cache']['profilesetting'][$fieldid];
             $htmls[$fieldid] = $html;
@@ -78,7 +78,7 @@ if (!submitcheck('regsubmit')) {
     //验证IP同一时间段内注册
     if($setting['regctrl']) {
         if(C::t('regip')->count_by_ip_dateline($_G['clientip'], $_G['timestamp']-$setting['regctrl']*3600)) {
-            showTips(array('error' => lang('register_ctrl', array('regctrl' => $setting['regctrl']))), $type);
+            showTips(['error' => lang('register_ctrl', ['regctrl' => $setting['regctrl']])], $type);
         }
     }
     $result = $_GET;
@@ -87,17 +87,17 @@ if (!submitcheck('regsubmit')) {
     //获取ip
     $ip = $_G['clientip'];
     //用户状态表数据
-    $status = array(
+    $status = [
         'uid' => $result['uid'],
         'regip' => (string)$ip,
         'lastip' => (string)$ip,
         'lastvisit' => TIMESTAMP,
         'lastactivity' => TIMESTAMP,
         'lastsendmail' => 0
-    );
+    ];
     //插入用户状态表
     DB::insert('user_status', $status, 1);
-    $setarr = array();
+    $setarr = [];
     foreach ($_GET as $key => $value) {
         $field = $_G['cache']['profilesetting'][$key];
         if (empty($field)) {
@@ -119,15 +119,15 @@ if (!submitcheck('regsubmit')) {
     }
     if($setting['regctrl']) {
         C::t('regip')->delete_by_dateline($_G['timestamp']-$setting['regctrl']*3600);
-        C::t('regip')->insert(array('ip' => $_G['clientip'], 'count' => -1, 'dateline' => $_G['timestamp']));
+        C::t('regip')->insert(['ip' => $_G['clientip'], 'count' => -1, 'dateline' => $_G['timestamp']]);
     }
     //新用户登录
-    setloginstatus(array(
+    setloginstatus([
         'uid' => $result['uid'],
         'username' => $result['username'],
         'password' => $result['password'],
         'groupid' => $result['groupid'],
-    ), 0);
+    ], 0);
     $welcomemsg = & $setting['welcomemsg'];
     $welcomemsgtitle = & $setting['welcomemsgtitle'];
     $welcomemsgtxt = & $setting['welcomemsgtxt'];
@@ -138,14 +138,14 @@ if (!submitcheck('regsubmit')) {
         $welcomemsgtxt = replacesitevar($welcomemsgtxt);
         if($welcomemsg == 1) {
             $welcomemsgtxt = nl2br(str_replace(':', '&#58;', $welcomemsgtxt));
-            $notevars = array(
+            $notevars = [
                 'from_id' => 0,
                 'from_idtype' => 'welcomemsg',
                 'author' => $_G['username'],
                 'authorid' => $_G['uid'],
                 'note_title' => $welcomemsgtitle,
                 'note_message' => $welcomemsgtxt
-            );
+            ];
             $action = 'register_welcomemsg';
             $type = 'register_welcomemsg_' . $result['uid'];
 
@@ -161,14 +161,14 @@ if (!submitcheck('regsubmit')) {
                 return false;
             }
             $welcomemsgtxt = nl2br(str_replace(':', '&#58;', $welcomemsgtxt));
-            $notevars = array(
+            $notevars = [
                 'from_id' => 0,
                 'from_idtype' => 'welcomemsg',
                 'author' => $_G['username'],
                 'authorid' => $_G['uid'],
                 'note_title' => $welcomemsgtitle,
                 'note_message' => $welcomemsgtxt
-            );
+            ];
             $action = 'register_welcomemsg';
             $type = 'register_welcomemsg_' . $result['uid'];
 
@@ -177,7 +177,7 @@ if (!submitcheck('regsubmit')) {
     }
 
     //设置显示提示文字
-    $param = daddslashes(array('sitename' => $setting['sitename'], 'username' => $result['username'], 'usergroup' => $_G['cache']['usergroups'][$result['groupid']]['grouptitle'], 'uid' => $result['uid']));
+    $param = daddslashes(['sitename' => $setting['sitename'], 'username' => $result['username'], 'usergroup' => $_G['cache']['usergroups'][$result['groupid']]['grouptitle'], 'uid' => $result['uid']]);
 
     $messageText = lang('register_succeed', $param);
 
@@ -185,10 +185,10 @@ if (!submitcheck('regsubmit')) {
     $url_forward = (isset($_GET['referer'])) ? $_GET['referer'] : dreferer();
 
 
-    $url_forward = $url_forward ? $url_forward : './';
+    $url_forward = $url_forward ?: './';
     if (strpos($url_forward, 'user.php') !== false) {
         $url_forward = 'index.php';
     }
-    showTips(array('success' => array('message' => $messageText, 'url_forward' => $url_forward)), $type);
+    showTips(['success' => ['message' => $messageText, 'url_forward' => $url_forward]], $type);
 
 }

@@ -6,13 +6,13 @@ if (!defined('IN_DZZ')) {
 
 class dzz_memory extends dzz_base {
     private $config;
-    private $extension = array();
+    private $extension = [];
     private $memory;
     private $prefix;
     private $userprefix;
     public $type;
     public $enable = false;
-    public $debug = array();
+    public $debug = [];
 
     public $gotset = false; // 是否支持Set数据类型
 	public $gothash = false; // 是否支持Hash数据类型
@@ -43,7 +43,7 @@ class dzz_memory extends dzz_base {
                     $this->gotset = method_exists($this->memory, 'feature') && $this->memory->feature('set');
 					$this->gothash = method_exists($this->memory, 'feature') && $this->memory->feature('hash');
 					$this->goteval = method_exists($this->memory, 'feature') && $this->memory->feature('eval');
-					$this->gotsortedset = method_exists($this->memory, 'feature') && $this->memory->feature('sortedset');;
+					$this->gotsortedset = method_exists($this->memory, 'feature') && $this->memory->feature('sortedset');
 					$this->gotcluster = method_exists($this->memory, 'feature') && $this->memory->feature('cluster');
 					$this->gotpipeline = method_exists($this->memory, 'feature') && $this->memory->feature('pipeline');
 					break;
@@ -63,14 +63,14 @@ class dzz_memory extends dzz_base {
                 if ($getmulti) {
                     $ret = $this->memory->getMulti($this->_key($key));
                     if ($ret !== false && !empty($ret)) {
-                        $_ret = array();
+                        $_ret = [];
                         foreach ((array)$ret as $_key => $value) {
                             $_ret[$this->_trim_key($_key)] = $value;
                         }
                         $ret = $_ret;
                     }
                 } else {
-                    $ret = array();
+                    $ret = [];
                     $_ret = false;
                     foreach ($key as $id) {
                         if (($_ret = $this->memory->get($this->_key($id))) !== false && isset($_ret)) {
@@ -145,10 +145,8 @@ class dzz_memory extends dzz_base {
             if (!isset($hasinc)) $hasinc = method_exists($this->memory, 'inc');
             if ($hasinc) {
                 $ret = $this->memory->inc($this->_key($key), $step);
-            } else {
-                if (($data = $this->memory->get($key)) !== false) {
-                    $ret = ($this->memory->set($key, $data + ($step)) !== false ? $this->memory->get($key) : false);
-                }
+            } elseif (($data = $this->memory->get($key)) !== false) {
+				$ret = ($this->memory->set($key, $data + ($step)) !== false ? $this->memory->get($key) : false);
             }
         }
         return $ret;
@@ -171,10 +169,8 @@ class dzz_memory extends dzz_base {
 			if(!isset($hasdec)) $hasdec = method_exists($this->memory, 'dec');
 			if($hasdec) {
 				$ret = $this->memory->dec($this->_key($key), $step);
-			} else {
-				if(($data = $this->memory->get($key)) !== false) {
-					$ret = ($this->memory->set($key, $data - ($step)) !== false ? $this->memory->get($key) : false);
-				}
+			} elseif(($data = $this->memory->get($key)) !== false) {
+				$ret = ($this->memory->set($key, $data - ($step)) !== false ? $this->memory->get($key) : false);
 			}
 		}
 		return $ret;
@@ -262,7 +258,7 @@ class dzz_memory extends dzz_base {
 			return false;
 		}
 		if (!is_array($argv)) {
-			$argv = array();
+			$argv = [];
 		}
 		$this->userprefix = $prefix;
 		if ($sha_key) {
@@ -272,18 +268,16 @@ class dzz_memory extends dzz_base {
 			if (!$sha) {
 				if (!$script) return false;
 				$should_load = true;
-			} else {
-				if (!$this->memory->scriptexists($sha)) { // 重启redis后，有可能sha-key存在，但script已经不存在了
-					$should_load = true;
-				}
+			} elseif (!$this->memory->scriptexists($sha)) { // 重启redis后，有可能sha-key存在，但script已经不存在了
+				$should_load = true;
 			}
 			if ($should_load) {
 				$sha = $this->memory->loadscript($script);
 				$this->memory->set($this->_key($sha_key), $sha);
 			}
-			return $this->memory->evalSha($sha, array_merge(array($this->_key('')), $argv));
+			return $this->memory->evalSha($sha, array_merge([$this->_key('')], $argv));
 		} else {
-			return $this->memory->evalscript($script, array_merge(array($this->_key('')), $argv));
+			return $this->memory->evalscript($script, array_merge([$this->_key('')], $argv));
 		}
 	}
 
@@ -381,4 +375,3 @@ class dzz_memory extends dzz_base {
     }
 }
 
-?>

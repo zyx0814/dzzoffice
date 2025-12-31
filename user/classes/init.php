@@ -7,7 +7,7 @@ use \C;
 class Init {
     public function dzzInitbefore() {
 
-        $cachelist = array('usergroups', 'fields_register');
+        $cachelist = ['usergroups', 'fields_register'];
 
         $dzz = C::app();
 

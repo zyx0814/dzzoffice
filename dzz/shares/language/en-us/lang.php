@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => 'Share',
     'create' => 'Create',
     'down' => 'Download',
@@ -35,6 +35,5 @@ $lang = array(
     'no_file' => 'No shared files or folders yet',
     'medium_icons' => 'Medium Icons',
     'deltail_lsit' => 'Detailed List',
-);
+];
 
-?>

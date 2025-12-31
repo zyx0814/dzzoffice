@@ -9,16 +9,13 @@ class dzz_session {
     public $sid = null;
     public $var;
     public $isnew = false;
-    private $newguest = array('sid' => 0, 'ip' => '',
+    private $newguest = ['sid' => 0, 'ip' => '',
         'uid' => 0, 'username' => '', 'groupid' => 7, 'invisible' => 0, 'action' => 0,
-        'lastactivity' => 0, 'lastolupdate' => 0);
-
-    private $old = array('sid' => '', 'ip' => '', 'uid' => 0);
+        'lastactivity' => 0, 'lastolupdate' => 0];
 
     private $table;
 
     public function __construct($sid = '', $ip = '', $uid = 0) {
-        $this->old = array('sid' => $sid, 'ip' => $ip, 'uid' => $uid);
         $this->var = $this->newguest;
 
         $this->table = C::t('session');
@@ -41,8 +38,8 @@ class dzz_session {
     }
 
     public function init($sid, $ip, $uid) {
-        $this->old = array('sid' => $sid, 'ip' => $ip, 'uid' => $uid);
-        $session = array();
+        $this->old = ['sid' => $sid, 'ip' => $ip, 'uid' => $uid];
+        $session = [];
         if ($sid) {
             $session = $this->table->fetch($sid, $ip, $uid);
         }
@@ -145,7 +142,7 @@ class dzz_session {
             $ulastactivity = (int)$ulastactivity;
             $oltimespan = (int)$_G['setting']['oltimespan'];
             $lastolupdate = (int)C::app()->session->var['lastolupdate'];
-            if ($_G['uid'] && $oltimespan && (int)TIMESTAMP - ($lastolupdate ? $lastolupdate : $ulastactivity) > $oltimespan * 60) {
+            if ($_G['uid'] && $oltimespan && (int)TIMESTAMP - ($lastolupdate ?: $ulastactivity) > $oltimespan * 60) {
                 $isinsert = false;
                 if (C::app()->session->isnew) {
                     $oldata = C::t('onlinetime')->fetch($_G['uid']);
@@ -158,12 +155,12 @@ class dzz_session {
                     $isinsert = !C::t('onlinetime')->update_onlinetime($_G['uid'], $oltimespan, $oltimespan, TIMESTAMP);
                 }
                 if ($isinsert) {
-                    C::t('onlinetime')->insert(array(
+                    C::t('onlinetime')->insert([
                         'uid' => $_G['uid'],
                         'thismonth' => $oltimespan,
                         'total' => $oltimespan,
                         'lastupdate' => TIMESTAMP,
-                    ));
+                    ]);
                 }
                 C::app()->session->set('lastolupdate', TIMESTAMP);
             }
@@ -184,7 +181,7 @@ class dzz_session {
                     //C::t('user_count')->update($_G['uid'], array('oltime' => round(intval($onlinetime['total']) / 60)));
                 }
                 dsetcookie('ulastactivity', authcode(TIMESTAMP, 'ENCODE'), 31536000);
-                C::t('user_status')->update($_G['uid'], array('lastip' => $_G['clientip'], 'lastactivity' => TIMESTAMP, 'lastvisit' => TIMESTAMP));
+                C::t('user_status')->update($_G['uid'], ['lastip' => $_G['clientip'], 'lastactivity' => TIMESTAMP, 'lastvisit' => TIMESTAMP]);
             }
             $updated = true;
         }
@@ -192,4 +189,3 @@ class dzz_session {
     }
 }
 
-?>

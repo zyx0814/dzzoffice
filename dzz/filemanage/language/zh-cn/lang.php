@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => '文件管理',
     'folder' => '文件夹',
     'rotation' => '旋转',
@@ -15,5 +15,4 @@ $lang = array(
     'rest_attachment' => '其他附件',
     'Are you sure you want to delete this' => '您确定要删除这',
     'file (if it is a folder, all the sub files under it will be deleted)? Cannot recover after deletion' => '文件(如果是文件夹将包含其下的子文件都会被删除)吗？删除之后不可恢复！',
-);
-?>
+];

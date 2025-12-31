@@ -1,11 +1,11 @@
 <?php
-$lang = array(
+$lang = [
   'appname' => '机构用户',
-  'explorer_gropuperm' => array(
+  'explorer_gropuperm' => [
       '协作成员',
       '管理员',
       '创始人'
-  ),
+  ],
   'orgname' => '机构名称',
   'orgname_placeholder' => '输入机构(群组)名称',
   'change' => '更换',
@@ -132,5 +132,4 @@ $lang = array(
   'weixin_registered' => '该微信号已经被注册',
   'import_user' => '导入用户',
   'group_permission_guide_text' => '每个用户仅支持设置一个用户组，管理员拥有系统全局权限，请谨慎操作！',
-);
-?>
+];

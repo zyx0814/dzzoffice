@@ -21,12 +21,12 @@ if ($operation == 'filelist') {
     $sid = empty($_GET['sid']) ? 0 : $_GET['sid'];//id
     $bz = empty($_GET['bz']) ? '' : urldecode($_GET['bz']);
     $marker = empty($_GET['marker']) ? '' : trim($_GET['marker']);
-    $data = array();
+    $data = [];
     $permfilter = isset($_GET['permfilter']) ? trim($_GET['permfilter']) : '';
     if ($bz) {//云盘查询
         $asc = intval($_GET['asc']);
         list($prex, $id) = explode('-', $sid);
-        $disp = intval($_GET['disp']) ? intval($_GET['disp']) : 0;//文件排序
+        $disp = intval($_GET['disp']) ?: 0;//文件排序
         $order = $asc > 0 ? 'asc' : "desc";
         switch ($_GET['disp']) {
             case 0:
@@ -36,7 +36,7 @@ if ($operation == 'filelist') {
                 $by = 'size';
                 break;
             case 2 :
-                $by = array('type', 'ext');
+                $by = ['type', 'ext'];
                 break;
             case 3:
                 $by = 'dateline';
@@ -56,7 +56,7 @@ if ($operation == 'filelist') {
         if ($icosdata['error']) {
             exit(json_encode($icosdata));
         }
-        $folderdata = array();
+        $folderdata = [];
         $ignore = 0;
         foreach ($icosdata as $key => $value) {
             if ($value['error']) {
@@ -80,22 +80,22 @@ if ($operation == 'filelist') {
     } else {
         list($prex, $id) = explode('-', $sid);
         if ($prex == 'f') {
-            $arr = array();
+            $arr = [];
             //查询当前文件夹信息
             if ($folder = C::t('folder')->fetch_by_fid($id)) {
                 if ($folder['fid']) {
-                    $folder['disp'] = $disp = intval($_GET['disp']) ? intval($_GET['disp']) : intval($folder['disp']);//文件排序
+                    $folder['disp'] = $disp = intval($_GET['disp']) ?: intval($folder['disp']);//文件排序
                     $folder['iconview'] = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($folder['iconview']));//排列方式
-                    $conditions = array();
+                    $conditions = [];
                     $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
                     $exts = isset($_GET['exts']) ? trim($_GET['exts']) : '';
                     if ($exts) {
                         $extsarr = explode(',', $exts);
-                        $conditions['ext'] = array($extsarr, 'in', 'and');
+                        $conditions['ext'] = [$extsarr, 'in', 'and'];
                     }
 
                     if ($keyword) {
-                        $conditions['name'] = array($keyword, 'like', 'and');
+                        $conditions['name'] = [$keyword, 'like', 'and'];
                     }
                     $conditions['mustdition'] = "or (flag = 'folder')";
                     $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 1;
@@ -110,7 +110,7 @@ if ($operation == 'filelist') {
                             $orderby = 'size';
                             break;
                         case 2:
-                            $orderby = array('type', 'ext');
+                            $orderby = ['type', 'ext'];
                             break;
                         case 3:
                             $orderby = 'dateline';
@@ -133,12 +133,12 @@ if ($operation == 'filelist') {
     }
     $total = $data['total'] ?? 0;
     //返回数据
-    $return = array(
+    $return = [
         'sid' => $sid,
         'total' => $total,
-        'data' => $data['data'] ?? array(),
-        'folderdata' => $folderdata ?? array(),
-        'param' => array(
+        'data' => $data['data'] ?? [],
+        'folderdata' => $folderdata ?? [],
+        'param' => [
             'disp' => $folder['disp'],
             'view' => $folder['iconview'],
             'page' => $page,
@@ -148,13 +148,13 @@ if ($operation == 'filelist') {
             'asc' => $asc,
             'keyword' => $keyword,
             'localsearch' => $bz ? 1 : 0
-        )
-    );
+        ]
+    ];
     exit(json_encode($return));
 }
 function filter_permdata($permfilter, $perm, $data, $uid) {
     $powerarr = perm_binPerm::getPowerArr();
-    $specialperm = array('read', 'edit', 'delete', 'download', 'copy');
+    $specialperm = ['read', 'edit', 'delete', 'download', 'copy'];
     $noperm = false;
     if (!C::t('organization_admin')->chk_memberperm($data['gid'], $uid)) {
         $permfilterarr = explode(',', $permfilter);
@@ -166,17 +166,13 @@ function filter_permdata($permfilter, $perm, $data, $uid) {
                         $noperm = true;
                         break;
                     }
-                } else {
-                    if (!($powerarr[$val . '2'] & $perm)) {
-                        $noperm = true;
-                        break;
-                    }
-                }
-            } else {
-                if (!($powerarr[$val] & $perm)) {
+                } elseif (!($powerarr[$val . '2'] & $perm)) {
                     $noperm = true;
                     break;
                 }
+            } elseif (!($powerarr[$val] & $perm)) {
+                $noperm = true;
+                break;
             }
         }
     }

@@ -5,44 +5,44 @@ require dirname(__FILE__) . '/../vendor/autoload.php';
 $secretId = "COS_SECRETID"; //"云 API 密钥 SecretId";
 $secretKey = "COS_SECRETKEY"; //"云 API 密钥 SecretKey";
 $region = "ap-beijing"; //设置一个默认的存储桶地域
-$cosClient = new Qcloud\Cos\Client(array(
+$cosClient = new Qcloud\Cos\Client([
     'region' => $region,
     'schema' => 'https', //协议头部，默认为http
-    'credentials'=> array(
+    'credentials'=> [
         'secretId'  => $secretId ,
         'secretKey' => $secretKey
-    )
-));
+    ]
+]);
 try { 
-    $result = $cosClient->selectObjectContent(array( 
+    $result = $cosClient->selectObjectContent([
         'Bucket' => $bucket, //格式：BucketName-APPID
         'Key' => $key, 
         'Expression' => 'Select * from COSObject s', 
         'ExpressionType' => 'SQL', 
-        'InputSerialization' => array( 
+        'InputSerialization' => [
             'CompressionType' => 'None', 
-            'CSV' => array( 
+            'CSV' => [
                 'FileHeaderInfo' => 'NONE', 
                 'RecordDelimiter' => '\n', 
                 'FieldDelimiter' => ',', 
                 'QuoteEscapeCharacter' => '"', 
                 'Comments' => '#', 
-                'AllowQuotedRecordDelimiter' => 'FALSE' 
-                )   
-            ),  
-        'OutputSerialization' => array( 
-            'CSV' => array( 
+                'AllowQuotedRecordDelimiter' => 'FALSE'
+            ]
+        ],
+        'OutputSerialization' => [
+            'CSV' => [
                 'QuoteField' => 'ASNEEDED', 
                 'RecordDelimiter' => '\n', 
                 'FieldDelimiter' => ',', 
                 'QuoteCharacter' => '"', 
-                'QuoteEscapeCharacter' => '"' 
-                )   
-            ),  
-        'RequestProgress' => array( 
-                'Enabled' => 'FALSE' 
-        )   
-    ));  
+                'QuoteEscapeCharacter' => '"'
+            ]
+        ],
+        'RequestProgress' => [
+                'Enabled' => 'FALSE'
+        ]
+    ]);
     // 请求成功
     foreach ($result['Data'] as $data) { 
         // 迭代遍历select结果

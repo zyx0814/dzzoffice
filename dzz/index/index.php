@@ -4,10 +4,10 @@ if (!defined('IN_DZZ')) {
 }
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'saveIndex') {
-    if (!$_G['uid']) exit(json_encode(array('error' => 'notlogin')));
+    if (!$_G['uid']) exit(json_encode(['error' => 'notlogin']));
     $appids = implode(',', $_GET['appids']);
     $ret = C::t('user_setting')->update_by_skey('index_simple_appids', $appids);
-    exit(json_encode(array('success' => $ret)));
+    exit(json_encode(['success' => $ret]));
 } else {
     if ($_G['uid']) {
         $userstatus = C::t('user_status')->fetch($_G['uid']);
@@ -15,7 +15,7 @@ if ($do == 'saveIndex') {
     }
     //获取已安装应用
     $applist = C::t('app_market')->fetch_all_by_default($_G['uid']);
-    $applist_1 = array();
+    $applist_1 = [];
 
     foreach ($applist as $key => $value) {
         if ($value['isshow'] < 1) continue;
@@ -28,7 +28,7 @@ if ($do == 'saveIndex') {
 
     if ($_G['uid'] && $sortids = C::t('user_setting')->fetch_by_skey('index_simple_appids')) {
         $appids = explode(',', $sortids);
-        $temp = array();
+        $temp = [];
         foreach ($appids as $appid) {
             if ($applist_1[$appid]) {
                 $temp[$appid] = $applist_1[$appid];
@@ -40,22 +40,19 @@ if ($do == 'saveIndex') {
             $temp[$appid] = $value;
         }
         $applist_1 = $temp;
-    } else {
-        //对应用根据disp 排序
-        if ($applist_1) {
-            $sort = array(
-                'direction' => 'SORT_ASC',
-                'field' => 'disp',
-            );
-            $arrSort = array();
-            foreach ($applist_1 as $uniqid => $row) {
-                foreach ($row as $key => $value) {
-                    $arrSort[$key][$uniqid] = $value;
-                }
+    } elseif ($applist_1) {//对应用根据disp 排序
+        $sort = [
+            'direction' => 'SORT_ASC',
+            'field' => 'disp',
+        ];
+        $arrSort = [];
+        foreach ($applist_1 as $uniqid => $row) {
+            foreach ($row as $key => $value) {
+                $arrSort[$key][$uniqid] = $value;
             }
-            if ($sort['direction']) {
-                array_multisort($arrSort[$sort['field']], constant($sort['direction']), $applist_1);
-            }
+        }
+        if ($sort['direction']) {
+            array_multisort($arrSort[$sort['field']], constant($sort['direction']), $applist_1);
         }
     }
     $servertime = time() * 1000;

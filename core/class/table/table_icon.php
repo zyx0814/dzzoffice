@@ -34,19 +34,19 @@ class table_icon extends dzz_table {
                 @unlink($_G['setting']['attachdir'] . $icon['pic']);
                 C::t('icon')->delete($did);
             } else {
-                C::t('icon')->update($did, array('copys' => $icon['copys'] + $ceof));
+                C::t('icon')->update($did, ['copys' => $icon['copys'] + $ceof]);
             }
         }
     }
 
     public function fetch_by_link($link) {//根据连接判断icon
 
-        $data = array();
+        $data = [];
         $parse_url = parse_url($link);
         $host = $parse_url['host'];
         $host = preg_replace("/^www./", '', $host);//strstr('.',$host);
         if ($_SERVER['HTTP_HOST'] == $host || $_SERVER['HTTP_HOST'] == 'www.' . $host) $host = 'localhost';
-        foreach (DB::fetch_all("select * from %t where domain=%s order by disp DESC,dateline DESC", array($this->_table, $host)) as $value) {
+        foreach (DB::fetch_all("select * from %t where domain=%s order by disp DESC,dateline DESC", [$this->_table, $host]) as $value) {
             if ($value['reg']) {
                 if (preg_match("/^\/.+?\/\w+$/i", $value['reg']) && preg_match($value['reg'], $link)) {
                     return $value;
@@ -57,10 +57,10 @@ class table_icon extends dzz_table {
                 $data[] = $value;
             }
         }
-        return $data ? $data[0] : array();
+        return $data ? $data[0] : [];
     }
 
 
 }
 
-?>
+

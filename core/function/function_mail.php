@@ -41,8 +41,8 @@ $message
 EOT;
 
     $mailusername = isset($_G['setting']['mail']['mailusername']) ? $_G['setting']['mail']['mailusername'] : 1;
-    $_G['setting']['mail']['port'] = $_G['setting']['mail']['port'] ? $_G['setting']['mail']['port'] : 25;
-    $_G['setting']['mail']['mailsend'] = $_G['setting']['mail']['mailsend'] ? $_G['setting']['mail']['mailsend'] : 1;
+    $_G['setting']['mail']['port'] = $_G['setting']['mail']['port'] ?: 25;
+    $_G['setting']['mail']['mailsend'] = $_G['setting']['mail']['mailsend'] ?: 1;
 
     if ($_G['setting']['mail']['mailsend'] == 3) {
         $email_from = empty($from) ? $_G['setting']['adminemail'] : $from;
@@ -169,12 +169,11 @@ EOT;
         fputs($fp, "\r\n\r\n");
         fputs($fp, "$email_message\r\n.\r\n");
         $lastmessage = fgets($fp, 512);
+        fputs($fp, "QUIT\r\n");
         if (substr($lastmessage, 0, 3) != 250) {
-            fputs($fp, "QUIT\r\n");
             runlog('SMTP', "({$_G['setting']['mail']['server']}:{$_G['setting']['mail']['port']}) END - $lastmessage", 0);
             return false;
         }
-        fputs($fp, "QUIT\r\n");
 
         return true;
 
@@ -203,15 +202,15 @@ function sendmail_cron($toemail, $subject, $message) {
     if ($value) {
         $cid = $value['cid'];
     } else {
-        $cid = C::t('mailcron')->insert(array('email' => $toemail), true);
+        $cid = C::t('mailcron')->insert(['email' => $toemail], true);
     }
     $message = preg_replace("/href\=\"(?!(http|https)\:\/\/)(.+?)\"/i", 'href="' . $_G['siteurl'] . '\\1"', $message);
-    $setarr = array(
+    $setarr = [
         'cid' => $cid,
         'subject' => $subject,
         'message' => $message,
         'dateline' => $_G['timestamp']
-    );
+    ];
     C::t('mailqueue')->insert($setarr);
 
     return true;
@@ -241,25 +240,25 @@ function sendmail_touser($touid, $subject, $message, $mailtype = '') {
         if ($value) {
             $cid = $value['cid'];
             if ($value['sendtime'] < $sendtime) $sendtime = $value['sendtime'];
-            C::t('mailcron')->update($cid, array('email' => $tospace['email'], 'sendtime' => $sendtime));
+            C::t('mailcron')->update($cid, ['email' => $tospace['email'], 'sendtime' => $sendtime]);
         } else {
-            $cid = C::t('mailcron')->insert(array(
+            $cid = C::t('mailcron')->insert([
                 'touid' => $touid,
                 'email' => $tospace['email'],
                 'sendtime' => $sendtime,
-            ), true);
+            ], true);
         }
         $message = preg_replace("/href\=\"(?!(http|https)\:\/\/)(.+?)\"/i", 'href="' . $_G['siteurl'] . '\\1"', $message);
-        $setarr = array(
+        $setarr = [
             'cid' => $cid,
             'subject' => $subject,
             'message' => $message,
             'dateline' => $_G['timestamp']
-        );
+        ];
         C::t('mailqueue')->insert($setarr);
         return true;
     }
     return false;
 }
 
-?>
+

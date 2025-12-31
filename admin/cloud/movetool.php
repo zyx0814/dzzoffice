@@ -12,7 +12,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 $navtitle = lang('dzzpan') . ' - ' . lang('migration_tool') . ' - ' . lang('cloud_set');
 if (submitcheck('movesubmit')) {
     $_GET = dhtmlspecialchars($_GET);
-    $gets = array(
+    $gets = [
         'mod' => 'cloud',
         'op' => 'movetool_run',
         'oremoteid' => intval($_GET['oremoteid']),
@@ -20,7 +20,7 @@ if (submitcheck('movesubmit')) {
         'exts' => trim($_GET['router']['exts']),
         'sizelt' => $_GET['router']['size']['lt'],
         'sizegt' => $_GET['router']['size']['gt'],
-    );
+    ];
     $runurl = BASESCRIPT . "?" . url_implode($gets);
     if (!$sourcedata = C::t('local_storage')->fetch_by_remoteid($gets['oremoteid'])) {
         showmessage('storage_location_exist', dreferer());
@@ -50,7 +50,7 @@ if (submitcheck('movesubmit')) {
     include template('movetool_run');
     exit();
 } else {
-    $spaces = array();
+    $spaces = [];
     foreach (C::t('local_storage')->fetch_all_orderby_disp() as $key => $value) {
         if ($arr = C::t('local_storage')->update_sizecount_by_remoteid($value['remoteid'])) {
             $value['fusesize'] = formatsize($arr['usesize']);
@@ -64,4 +64,4 @@ if (submitcheck('movesubmit')) {
     $spaces_json = json_encode($spaces);
     include template('movetool');
 }
-?>
+

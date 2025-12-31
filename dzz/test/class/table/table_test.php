@@ -21,11 +21,11 @@ class table_test extends dzz_table {
 	}
 	
 	public function fetchall(){
-		$data=array();
-		foreach(DB::fetch_all("select * from %t ",array($this->_table)) as $value){
+		$data= [];
+		foreach(DB::fetch_all("select * from %t ", [$this->_table]) as $value){
 			$data[]=$value;
 		}
 		return $data;
 	}
 }
-?>
+

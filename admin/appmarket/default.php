@@ -15,17 +15,17 @@ if ($_GET['do'] == 'clear') {
     $i = intval($_GET['i']);
     $appid = intval($_GET['appid']);
     if (!$appid)
-        exit(json_encode(array('error' => lang('application_nonentity'))));
+        exit(json_encode(['error' => lang('application_nonentity')]));
 
     $start = 0;
-    foreach (DB::fetch_all("select uid,applist from %t where uid>%d order by uid limit  50", array('user_field', $i)) as $value) {
+    foreach (DB::fetch_all("select uid,applist from %t where uid>%d order by uid limit  50", ['user_field', $i]) as $value) {
         $i = $value['uid'];
         $start++;
-        $applist = $value['applist'] ? explode(',', $value['applist']) : array();
-        $diff = array_diff($applist, array($appid));
-        C::t('user_field')->update($value['uid'], array('applist' => implode(',', $diff)));
+        $applist = $value['applist'] ? explode(',', $value['applist']) : [];
+        $diff = array_diff($applist, [$appid]);
+        C::t('user_field')->update($value['uid'], ['applist' => implode(',', $diff)]);
     }
-    $ret = array();
+    $ret = [];
     if ($start < 50) {
         $ret['msg'] = 'success';
     } else {
@@ -36,19 +36,19 @@ if ($_GET['do'] == 'clear') {
 
 }
 if (submitcheck('appsubmit')) {
-    $setarr = array();
+    $setarr = [];
     foreach ($_GET['disp'] as $key => $value) {
-        $setarr = array('disp' => intval($value), 'position' => intval($_GET['position'][$key]), 'notdelete' => intval($_GET['notdelete'][$key]),);
+        $setarr = ['disp' => intval($value), 'position' => intval($_GET['position'][$key]), 'notdelete' => intval($_GET['notdelete'][$key]),];
         C::t('app_market')->update($key, $setarr);
     }
     showmessage('do_success', dreferer());
 }
-$positionarr = array('0' => lang('none'), '1' => lang('start_menu'));
+$positionarr = ['0' => lang('none'), '1' => lang('start_menu')];
 include libfile('function/organization');
 $group = intval($_GET['group']);
 $depid = intval($_GET['depid']);
 
-$org = array();
+$org = [];
 if ($depid && $org = C::t('organization')->fetch($depid)) {
     $orgpath = C::t('organization')->getPathByOrgid($depid, false);
     $orgpath = implode('-', ($orgpath));
@@ -61,14 +61,14 @@ $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;
-$gets = array('mod' => MOD_NAME, 'op' => 'default', 'keyword' => $keyword, 'depid' => $depid, 'group' => $group, 'position' => $position,);
+$gets = ['mod' => MOD_NAME, 'op' => 'default', 'keyword' => $keyword, 'depid' => $depid, 'group' => $group, 'position' => $position,];
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $refer = urlencode($theurl . '&page=' . $page);
 
 $order = 'ORDER BY disp';
 $start = ($page - 1) * $perpage;
-$list = array();
-$sqlarr = array();
+$list = [];
+$sqlarr = [];
 if ($depid) {
     //获取此机构所有下级机构的id
     if ($appids = C::t('app_organization')->fetch_appids_by_orgid($depid, true)) {
@@ -78,7 +78,7 @@ if ($depid) {
     }
 
 } elseif ($group == 1) {
-    $appids = array();
+    $appids = [];
     // (DB::fetch_all("select appid from %t where 1 ",array('app_organization')) as $value) {
     //	$appids[$value['appid']] = $value['appid'];
     //}
@@ -103,14 +103,14 @@ if ($keyword) {
     $sql .= " and `position`='{$position}'";
 }
 
-$apps = array();
+$apps = [];
 
 if ($count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('app_market') . " WHERE $sql ")) {
     $apps = DB::fetch_all("SELECT * FROM " . DB::table('app_market') . " WHERE $sql $order limit $start,$perpage");
     $multi = multi($count, $perpage, $page, $theurl, 'pull-right');
 }
-$orgs = array();
-foreach (DB::fetch_all("select a.appid,o.orgid,o.orgname from %t a LEFT JOIN %t o ON o.orgid=a.orgid where 1 ", array('app_organization', 'organization')) as $value) {
+$orgs = [];
+foreach (DB::fetch_all("select a.appid,o.orgid,o.orgname from %t a LEFT JOIN %t o ON o.orgid=a.orgid where 1 ", ['app_organization', 'organization']) as $value) {
     $orgs[$value['appid']][] = $value;
 }
 foreach ($apps as $value) {
@@ -124,4 +124,4 @@ foreach ($apps as $value) {
     $list[] = $value;
 }
 include template('appdefault');
-?>
+

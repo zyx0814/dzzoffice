@@ -73,7 +73,7 @@ class Baidu
     	$this->clientId = $clientId;
     	$this->clientSecret = $clientSecret;
     	$this->redirectUri = $redirectUri;
-    	$this->setStore($store ? $store : new BaiduCookieStore($clientId));
+    	$this->setStore($store ?: new BaiduCookieStore($clientId));
     }
 
 	/**
@@ -149,7 +149,7 @@ class Baidu
 		// if it's not, we should clear all the persistent data and to 
 		// get an access token again.
 		if (isset($_REQUEST['bd_sig']) && isset($_REQUEST['bd_user'])) {
-			$params = array('bd_user' => $_REQUEST['bd_user']);
+			$params = ['bd_user' => $_REQUEST['bd_user']];
 			$sig = BaiduUtils::generateSign($params, $this->clientSecret, 'bd_sig');
 			if ($sig != $_REQUEST['bd_sig'] || $user['uid'] != $_REQUEST['bd_user']) {
 				$this->store->remove('session');
@@ -228,7 +228,7 @@ class Baidu
 	{
 		$session = $this->getSession();
 		if (is_array($session) && isset($session['uid']) && isset($session['uname'])) {
-			return array('uid' => $session['uid'], 'uname' => $session['uname']);
+			return ['uid' => $session['uid'], 'uname' => $session['uname']];
 		} else {
 			return false;
 		}

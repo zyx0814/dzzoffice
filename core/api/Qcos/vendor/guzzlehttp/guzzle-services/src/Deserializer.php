@@ -152,13 +152,11 @@ class Deserializer
 
         $context['visitors'][$location] = $this->responseLocations[$location];
 
-        $result = $this->responseLocations[$location]->before(
+        return $this->responseLocations[$location]->before(
             $result,
             $response,
             $model
         );
-
-        return $result;
     }
 
     /**
@@ -235,9 +233,7 @@ class Deserializer
         }
 
         // Visit each item in the response
-        $result = $this->responseLocations[$location]->visit($result, $response, $model);
-
-        return $result;
+        return $this->responseLocations[$location]->visit($result, $response, $model);
     }
 
     /**

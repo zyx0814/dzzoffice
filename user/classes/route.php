@@ -15,7 +15,7 @@ class Route {
 
         $dzz = C::app();
 
-        $modarray = array('activate', 'clearcookies', 'getpasswd', 'login', 'lostpasswd', 'seccode', 'register', 'ajax', 'regverify', 'switchstatus', 'profile', 'password', 'avatar', 'space', 'sso');
+        $modarray = ['activate', 'clearcookies', 'getpasswd', 'login', 'lostpasswd', 'seccode', 'register', 'ajax', 'regverify', 'switchstatus', 'profile', 'password', 'avatar', 'space', 'sso'];
 
         $mod = !in_array($dzz->var['mod'], $modarray) && (!preg_match('/^\w+$/', $dzz->var['mod'])) ? $_config['default_mod'] : $dzz->var['mod'];
 

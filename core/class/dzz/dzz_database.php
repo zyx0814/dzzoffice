@@ -9,14 +9,14 @@ class dzz_database {
     public static $db;
 
     public static $driver;
-    protected static $logsql = 0;
-    protected static $ispdo = false;
+    protected static $logsql;
+    public static $ispdo;
 
     public static function init($driver, $config, $logsql = 0) {
         self::$driver = $driver;
-        self::$db = new $driver;
         self::$logsql = $logsql;
-        self::$ispdo = $driver == 'db_driver_pdo';
+        self::$ispdo = $driver == 'pdo';
+        self::$db = new $driver;
         self::$db->set_config($config);
         self::$db->connect();
     }
@@ -90,8 +90,7 @@ class dzz_database {
             $where = $condition;
         }
         $sql = "$cmd " . self::table($table) . " SET $sql WHERE $where";
-        $res = self::query($sql, $arg, false, $unbuffered);
-        return $res;
+        return self::query($sql, $arg, false, $unbuffered);
     }
 
     public static function insert_id() {
@@ -112,7 +111,7 @@ class dzz_database {
         }
         $ret = self::$db->fetch_array($res);
         self::$db->free_result($res);
-        return $ret ? $ret : [];
+        return $ret ?: [];
     }
 
     public static function fetch_all($sql, $arg = [], $keyfield = '', $silent = false) {
@@ -242,8 +241,8 @@ class dzz_database {
     }
 
     public static function limit($start, $limit = 0) {
-        $limit = intval($limit > 0 ? $limit : 0);
-        $start = intval($start > 0 ? $start : 0);
+        $limit = intval(max($limit, 0));
+        $start = intval(max($start, 0));
         if ($start > 0 && $limit > 0) {
             return " LIMIT $start, $limit";
         } elseif ($limit) {
@@ -275,35 +274,29 @@ class dzz_database {
 
         switch ($glue) {
             case '>=':
+            case '<=':
             case '=':
                 return $field . $glue . self::quote($val);
-                break;
             case '-':
             case '+':
                 return $field . '=' . $field . $glue . self::quote((string)$val);
-                break;
             case '|':
             case '&':
             case '^':
             case '&~':
                 return $field . '=' . $field . $glue . self::quote($val);
-                break;
             case '>':
             case '<':
             case '<>':
-            case '<=':
                 return $field . $glue . self::quote($val);
-                break;
 
             case 'like':
                 return $field . ' LIKE(' . self::quote($val) . ')';
-                break;
 
             case 'in':
             case 'notin':
                 $val = $val ? implode(',', self::quote($val)) : '\'\'';
                 return $field . ($glue == 'notin' ? ' NOT' : '') . ' IN(' . $val . ')';
-                break;
 
             default:
                 throw new DbException('Not allow this glue between field and value: "' . $glue . '"');
@@ -483,14 +476,17 @@ class dzz_database {
             $sql .= implode(' -> ', $call_chain);
         }
         writelog($type, $sql);
-        return;
     }
+
+    public static function is_pdo() {
+		return self::$ispdo;
+	}
 
 }
 
 class dzz_database_safecheck {
 
-    protected static $checkcmd = array('SEL' => 1, 'UPD' => 1, 'INS' => 1, 'REP' => 1, 'DEL' => 1);
+    protected static $checkcmd = ['SEL' => 1, 'UPD' => 1, 'INS' => 1, 'REP' => 1, 'DEL' => 1];
     protected static $config;
 
     public static function checkquery($sql) {
@@ -517,7 +513,7 @@ class dzz_database_safecheck {
     }
 
     private static function _do_query_safe($sql) {
-        $sql = str_replace(array('\\\\', '\\\'', '\\"', '\'\''), '', $sql);
+        $sql = str_replace(['\\\\', '\\\'', '\\"', '\'\''], '', $sql);
         $mark = $clean = '';
         if (strpos($sql, '/') === false && strpos($sql, '#') === false && strpos($sql, '-- ') === false && strpos($sql, '@') === false && strpos($sql, '`') === false) {
             $clean = preg_replace("/'(.+?)'/s", '', $sql);
@@ -623,4 +619,3 @@ class dzz_database_safecheck {
 
 }
 
-?>

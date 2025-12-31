@@ -9,23 +9,23 @@ if (submitcheck('settingsubmit')) {
         showmessage('no_privilege');
     }
     $settingnew = $_GET["settingnew"];
-    $data = array();
+    $data = [];
     foreach ($settingnew["mark"] as $k => $v) {
         if (isset($data[$v])) {
             showmessage("日志标记 " . $v . " 重复");
         }
-        $data[$v] = array(
+        $data[$v] = [
             "title" => $settingnew["title"][$k],
             "is_open" => intval($settingnew["is_open"][$k]),
             "issystem" => $settingnew["issystem"][$k]
-        );
+        ];
     }
 
     $settingnew = serialize($data);
-    $update = array(
+    $update = [
         "systemlog_open" => $_GET["systemlog_open"],
         "systemlog_setting" => $settingnew,
-    );
+    ];
     $result = C::t('setting')->update_batch($update);
     if ($result) {
         include_once libfile('function/cache');

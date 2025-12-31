@@ -125,7 +125,7 @@ class PHPExcel_Calculation_LookupRef {
 				list($startAddress,$endAddress) = explode(':',$cellAddress);
 				$startAddress = preg_replace('/[^a-z]/i','',$startAddress);
 				$endAddress = preg_replace('/[^a-z]/i','',$endAddress);
-				$returnValue = array();
+				$returnValue = [];
 				do {
 					$returnValue[] = (integer) PHPExcel_Cell::columnIndexFromString($startAddress);
 				} while ($startAddress++ != $endAddress);
@@ -200,7 +200,7 @@ class PHPExcel_Calculation_LookupRef {
 				list($startAddress,$endAddress) = explode(':',$cellAddress);
 				$startAddress = preg_replace('/[^0-9]/','',$startAddress);
 				$endAddress = preg_replace('/[^0-9]/','',$endAddress);
-				$returnValue = array();
+				$returnValue = [];
 				do {
 					$returnValue[][] = (integer) $startAddress;
 				} while ($startAddress++ != $endAddress);
@@ -620,7 +620,7 @@ class PHPExcel_Calculation_LookupRef {
 				return $arrayValues;
 			}
 			$rowNum = $rowKeys[--$rowNum];
-			$returnArray = array();
+			$returnArray = [];
 			foreach($arrayValues as $arrayColumn) {
 				if (is_array($arrayColumn)) {
 					if (isset($arrayColumn[$rowNum])) {
@@ -655,8 +655,8 @@ class PHPExcel_Calculation_LookupRef {
 	 * Unlike the Excel TRANSPOSE function, which will only work on a single row or column, this function will transpose a full matrix.
 	 */
 	public static function TRANSPOSE($matrixData) {
-		$returnMatrix = array();
-		if (!is_array($matrixData)) { $matrixData = array(array($matrixData)); }
+		$returnMatrix = [];
+		if (!is_array($matrixData)) { $matrixData = [[$matrixData]]; }
 
 		$column = 0;
 		foreach($matrixData as $matrixRow) {
@@ -716,7 +716,7 @@ class PHPExcel_Calculation_LookupRef {
 		}
 
 		if (!$not_exact_match) {
-			uasort($lookup_array,array('self','_vlookupSort'));
+			uasort($lookup_array, ['self','_vlookupSort']);
 		}
 
 		$rowNumber = $rowValue = False;
@@ -802,8 +802,7 @@ class PHPExcel_Calculation_LookupRef {
                 return PHPExcel_Calculation_Functions::NA();
             } else {
                 //  otherwise return the appropriate value
-                $result = $lookup_array[$returnColumn][$rowNumber];
-				return $result;
+                return $lookup_array[$returnColumn][$rowNumber];
             }
         }
 
@@ -870,7 +869,7 @@ class PHPExcel_Calculation_LookupRef {
 				if (is_array($dataValue2)) {
 					$dataValue2 = array_shift($dataValue2);
 				}
-				$value = array($key1 => $dataValue1, $key2 => $dataValue2);
+				$value = [$key1 => $dataValue1, $key2 => $dataValue2];
 			}
 			unset($value);
 		}

@@ -28,7 +28,7 @@ function filerouteParse($path) {
                 break;
         }
     }
-    $arr = array();
+    $arr = [];
     if ($fid = C::t('resources_path')->fetch_by_path($path, $prefix)) {
         if (preg_match('/c_\d+/', $fid)) {
             $arr['cid'] = str_replace('c_', '', $fid);

@@ -14,34 +14,34 @@ if ($_GET['action'] == 'checkusername') {
     $username = isset($_GET['username']) ? trim($_GET['username']) : '';
     $usernamelen = dstrlen($username);
     if ($usernamelen < 3) {
-        showTips(array('error' => lang('profile_username_tooshort')));
+        showTips(['error' => lang('profile_username_tooshort')]);
     } elseif ($usernamelen > 30) {
-        showTips(array('error' => lang('profile_username_toolong')));
+        showTips(['error' => lang('profile_username_toolong')]);
     }
 
     require_once libfile('function/user');
     $ucresult = uc_user_checkname($username);
     if ($ucresult == -1) {
-        showTips(array('error' => lang('profile_nickname_illegal')));
+        showTips(['error' => lang('profile_nickname_illegal')]);
     } elseif ($ucresult == -2) {
-        showTips(array('error' => lang('profile_nickname_protect')));
+        showTips(['error' => lang('profile_nickname_protect')]);
     } elseif ($ucresult == -3) {
-        showTips(array('error' => lang('profile_nickname_duplicate')));
+        showTips(['error' => lang('profile_nickname_duplicate')]);
     }
 
-    $censorexp = '/^(' . str_replace(array('\\*', "\r\n", ' '), array('.*', '|', ''), preg_quote(($_G['setting']['censoruser'] = trim($_G['setting']['censoruser'])), '/')) . ')$/i';
+    $censorexp = '/^(' . str_replace(['\\*', "\r\n", ' '], ['.*', '|', ''], preg_quote(($_G['setting']['censoruser'] = trim($_G['setting']['censoruser'])), '/')) . ')$/i';
     if ($_G['setting']['censoruser'] && @preg_match($censorexp, $username)) {
-        showTips(array('error' => lang('profile_nickname_protect')));
+        showTips(['error' => lang('profile_nickname_protect')]);
     }
 } elseif ($_GET['action'] == 'checknickname') {
     $nickname = isset($_GET['nickname']) ? htmlspecialchars(trim(($_GET['nickname']))) : '';
     $usernamelen = dstrlen($nickname);
     if ($usernamelen) {
         if ($usernamelen > 30) {
-            showTips(array('error' => lang('profile_nickname_toolong')));
+            showTips(['error' => lang('profile_nickname_toolong')]);
         }
         if(C::t('user')->fetch_by_nickname($nickname)) {
-            showTips(array('error' => lang('profile_nickname_exist')));
+            showTips(['error' => lang('profile_nickname_exist')]);
         }
     }
 } elseif ($_GET['action'] == 'checkemail') {
@@ -49,22 +49,22 @@ if ($_GET['action'] == 'checkusername') {
     checkemail($_GET['email']);
 } elseif ($_GET['action'] == 'checkuserexists') {
     if (C::t('user')->fetch_by_username(trim($_GET['username']))) {
-        showmessage('<img src="' . $_G['style']['imgdir'] . '/check_right.gif" width="13" height="13">', '', array(), array('msgtype' => 3));
+        showmessage('<img src="' . $_G['style']['imgdir'] . '/check_right.gif" width="13" height="13">', '', [], ['msgtype' => 3]);
     } else {
-        showmessage('username_nonexistence', '', array(), array('msgtype' => 3));
+        showmessage('username_nonexistence', '', [], ['msgtype' => 3]);
     }
 } elseif ($_GET['action'] == 'district') {
     $container = $_GET['container'];
     $showlevel = intval($_GET['level']);
     $showlevel = $showlevel >= 1 && $showlevel <= 4 ? $showlevel : 4;
-    $values = array(intval($_GET['pid']), intval($_GET['cid']), intval($_GET['did']), intval($_GET['coid']));
-    $containertype = in_array($_GET['containertype'], array('birth', 'reside'), true) ? $_GET['containertype'] : 'birth';
+    $values = [intval($_GET['pid']), intval($_GET['cid']), intval($_GET['did']), intval($_GET['coid'])];
+    $containertype = in_array($_GET['containertype'], ['birth', 'reside'], true) ? $_GET['containertype'] : 'birth';
     $level = 1;
     if ($values[0]) {
         $level++;
-    } else if ($_G['uid'] && !empty($_GET['showdefault'])) {
+    } elseif ($_G['uid'] && !empty($_GET['showdefault'])) {
         space_merge($_G['member'], 'profile');
-        $district = array();
+        $district = [];
         if ($containertype == 'birth') {
             if (!empty($_G['member']['birthprovince'])) {
                 $district[] = $_G['member']['birthprovince'];
@@ -78,18 +78,16 @@ if ($_GET['action'] == 'checkusername') {
                     $district[] = $_G['member']['birthcommunity'];
                 }
             }
-        } else {
-            if (!empty($_G['member']['resideprovince'])) {
-                $district[] = $_G['member']['resideprovince'];
-                if (!empty($_G['member']['residecity'])) {
-                    $district[] = $_G['member']['residecity'];
-                }
-                if (!empty($_G['member']['residedist'])) {
-                    $district[] = $_G['member']['residedist'];
-                }
-                if (!empty($_G['member']['residecommunity'])) {
-                    $district[] = $_G['member']['residecommunity'];
-                }
+        } elseif (!empty($_G['member']['resideprovince'])) {
+            $district[] = $_G['member']['resideprovince'];
+            if (!empty($_G['member']['residecity'])) {
+                $district[] = $_G['member']['residecity'];
+            }
+            if (!empty($_G['member']['residedist'])) {
+                $district[] = $_G['member']['residedist'];
+            }
+            if (!empty($_G['member']['residecommunity'])) {
+                $district[] = $_G['member']['residecommunity'];
             }
         }
         if (!empty($district)) {
@@ -110,9 +108,9 @@ if ($_GET['action'] == 'checkusername') {
         $level++;
     }
     $showlevel = $level;
-    $elems = array();
+    $elems = [];
     if ($_GET['province']) {
-        $elems = array($_GET['province'], $_GET['city'], $_GET['district'], $_GET['community']);
+        $elems = [$_GET['province'], $_GET['city'], $_GET['district'], $_GET['community']];
     }
 
     include_once libfile('function/profile');
@@ -120,4 +118,4 @@ if ($_GET['action'] == 'checkusername') {
     include template('ajax');
     exit();
 }
-showTips(array('msg' => 'success'), $type, $template);
+showTips(['msg' => 'success'], $type, $template);

@@ -1,8 +1,8 @@
 <?php
 //获取配置设置值
 $explorer_setting = get_resources_some_setting();
-$myexplorer = array();
-$myorgs = array();
+$myexplorer = [];
+$myorgs = [];
 $mygroup = false;
 if ($explorer_setting['useronperm']) {
     $myexplorer = C::t('folder')->fetch_home_by_uid();

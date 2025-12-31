@@ -13,7 +13,7 @@ if (!defined('IN_DZZ')) {
 
 function uc_user_login($username, $password, $isuid, $checkques = '', $questionid = '', $answer = '', $ip = '') {
     //应用登录挂载点
-    $hookdata = array($username, $password, $isuid, $checkques, $questionid, $answer, $ip);
+    $hookdata = [$username, $password, $isuid, $checkques, $questionid, $answer, $ip];
     \Hook::listen('applogin', $hookdata);
     list($username, $password, $isuid, $checkques, $questionid, $answer, $ip) = $hookdata;
 
@@ -38,11 +38,11 @@ function uc_user_login($username, $password, $isuid, $checkques = '', $questioni
         $status = $user['uid'];
     }
     $merge = 0;
-    return array($status, $user['username'], $password, $user['email'], $merge);
+    return [$status, $user['username'], $password, $user['email'], $merge];
 }
 
 function userlogin($username, $password, $questionid = '', $answer = '', $loginfield = 'auto', $ip = '') {
-    $return = array();
+    $return = [];
 
     if ($loginfield == 'uid' && getglobal('setting/uidlogin')) {
         $isuid = 1;
@@ -68,7 +68,7 @@ function userlogin($username, $password, $questionid = '', $answer = '', $loginf
     } else {
         $return['ucresult'] = uc_user_login(addslashes($username), $password, $isuid, 1, $questionid, $answer, $ip);
     }
-    $tmp = array();
+    $tmp = [];
     $duplicate = '';
     list($tmp['uid'], $tmp['username'], $tmp['password'], $tmp['email'], $duplicate) = $return['ucresult'];
     $return['ucresult'] = $tmp;
@@ -116,26 +116,26 @@ function logincheck($username) {
     global $_G;
 
     $return = 0;
-    $numberoflogins = $_G['setting']['numberoflogins'] ? $_G['setting']['numberoflogins'] : 5;
-    $forbiddentime = $_G['setting']['forbiddentime'] ? $_G['setting']['forbiddentime'] : 900;
+    $numberoflogins = $_G['setting']['numberoflogins'] ?: 5;
+    $forbiddentime = $_G['setting']['forbiddentime'] ?: 900;
     $username = isset($username) ? trim($username) : '';
     $login = C::t('failedlogin')->fetch_ip($_G['clientip'], $username);
     $return = (!$_G['config']['userlogin']['checkip'] || !$login || (TIMESTAMP - $login['lastupdate'] > $forbiddentime)) ? $numberoflogins : max(0, $numberoflogins - $login['count']);
 
     if (!$login) {
-        C::t('failedlogin')->insert(array(
+        C::t('failedlogin')->insert([
             'ip' => $_G['clientip'],
             'count' => 0,
             'username' => $username,
             'lastupdate' => TIMESTAMP
-        ), false, true);
+        ], false, true);
     } elseif (TIMESTAMP - $login['lastupdate'] > 900) {
-        C::t('failedlogin')->insert(array(
+        C::t('failedlogin')->insert([
             'ip' => $_G['clientip'],
             'count' => 0,
             'username' => $username,
             'lastupdate' => TIMESTAMP
-        ), false, true);
+        ], false, true);
         C::t('failedlogin')->delete_old(901);
     }
     return $return;
@@ -153,9 +153,9 @@ function loginfailed($username) {
 function getinvite() {
     global $_G;
 
-    if ($_G['setting']['regstatus'] == 1) return array();
-    $result = array();
-    $cookies = empty($_G['cookie']['invite_auth']) ? array() : explode(',', $_G['cookie']['invite_auth']);
+    if ($_G['setting']['regstatus'] == 1) return [];
+    $result = [];
+    $cookies = empty($_G['cookie']['invite_auth']) ? [] : explode(',', $_G['cookie']['invite_auth']);
     $cookiecount = count($cookies);
 
     $_GET['invitecode'] = isset($_GET['invitecode']) ? trim($_GET['invitecode']) : '';
@@ -187,9 +187,9 @@ function getinvite() {
     return $result;
 }
 
-function replacesitevar($string, $replaces = array()) {
+function replacesitevar($string, $replaces = []) {
     global $_G;
-    $sitevars = array(
+    $sitevars = [
         '{sitename}' => $_G['setting']['sitename'],
         '{version}' => CORE_VERSION,
         '{years}' => date("Y"),
@@ -199,7 +199,7 @@ function replacesitevar($string, $replaces = array()) {
         '{username}' => $_G['member']['username'],
         '{myname}' => $_G['member']['username'],
         '{bbname}' => $_G['setting']['bbname'],
-    );
+    ];
     $replaces = array_merge($sitevars, $replaces);
     return str_replace(array_keys($replaces), array_values($replaces), $string);
 }
@@ -237,7 +237,7 @@ function checkfollowfeed() {
         if (!empty($uids)) {
             $count = C::t('home_follow_feed')->count_by_uid_dateline($uids, $lastcheckfeed);
             if ($count) {
-                dzz_notification::notification_add($_G['uid'], 'follow', 'member_follow', array('count' => $count, 'from_id' => $_G['uid'], 'from_idtype' => 'follow'), 1);
+                dzz_notification::notification_add($_G['uid'], 'follow', 'member_follow', ['count' => $count, 'from_id' => $_G['uid'], 'from_idtype' => 'follow'], 1);
             }
         }
     }
@@ -249,7 +249,7 @@ function checkemail($email, $type = 'json', $template = '') {
     global $_G;
     $email = strtolower(trim($email));
     if (strlen($email) > 40) {
-        showTips(array('error' => lang('profile_email_illegal')), $type, $template);
+        showTips(['error' => lang('profile_email_illegal')], $type, $template);
     }
     if (isset($_G['setting']['regmaildomain'])) {
 
@@ -257,25 +257,25 @@ function checkemail($email, $type = 'json', $template = '') {
 
         if ($_G['setting']['regmaildomain'] == 1 && !preg_match($maildomainexp, $email)) {
             //showmessage('profile_email_domain_illegal');
-            showTips(array('error' => lang('profile_email_domain_illegal')), $type, $template);
+            showTips(['error' => lang('profile_email_domain_illegal')], $type, $template);
 
         } elseif ($_G['setting']['regmaildomain'] == 2 && preg_match($maildomainexp, $email)) {
             //showmessage('profile_email_domain_illegal');
-            showTips(array('error' => lang('profile_email_domain_illegal')), $type, $template);
+            showTips(['error' => lang('profile_email_domain_illegal')], $type, $template);
 
         }
     }
 
     $ucresult = uc_user_checkemail($email);
     if ($ucresult == -4) {
-        showTips(array('error' => lang('profile_email_illegal')), $type, $template);
+        showTips(['error' => lang('profile_email_illegal')], $type, $template);
     } elseif ($ucresult == -5) {
         //showmessage('profile_email_domain_illegal');
-        showTips(array('error' => lang('profile_email_domain_illegal')), $type, $template);
+        showTips(['error' => lang('profile_email_domain_illegal')], $type, $template);
 
     } elseif ($ucresult == -6) {
         //showmessage('profile_email_duplicate');
-        showTips(array('error' => lang('profile_email_duplicate')), $type, $template);
+        showTips(['error' => lang('profile_email_duplicate')], $type, $template);
 
     }
     return true;
@@ -316,8 +316,7 @@ function check_emailaccess($email) {
 }
 
 function check_emailexists($email) {
-    $email = C::t('user')->fetch_by_email($email);
-    return $email;
+    return C::t('user')->fetch_by_email($email);
 }
 
 function uc_user_checkname($username) {
@@ -396,7 +395,7 @@ function uc_user_register($username, $password, $email, $nickname, $questionid =
 
     $uid = uc_add_user($username, $password, $email, $nickname, 0, $questionid, $answer, $regip);
     //加入默认机构
-    if ($addorg && is_array($uid) && getglobal('setting/defaultdepartment') && DB::fetch_first("select orgid from %t where orgid=%d ", array('organization', getglobal('setting/defaultdepartment')))) {
+    if ($addorg && is_array($uid) && getglobal('setting/defaultdepartment') && DB::fetch_first("select orgid from %t where orgid=%d ", ['organization', getglobal('setting/defaultdepartment')])) {
         C::t('organization_user')->insert_by_orgid(getglobal('setting/defaultdepartment'), $uid['uid']);
     }
     return $uid;
@@ -405,7 +404,7 @@ function uc_user_register($username, $password, $email, $nickname, $questionid =
 function uc_add_user($username, $password, $email, $nickname = '', $uid = 0, $questionid = '', $answer = '', $regip = '') {
     global $_G;
     $salt = substr(uniqid(rand()), -6);
-    $setarr = array(
+    $setarr = [
         'salt' => $salt,
         'password' => md5(md5($password) . $salt),
         'username' => $username,
@@ -413,7 +412,7 @@ function uc_add_user($username, $password, $email, $nickname = '', $uid = 0, $qu
         'secques' => quescrypt($questionid, $answer),
         'email' => $email,
         'regdate' => TIMESTAMP,
-    );
+    ];
 
     $setarr['uid'] = DB::insert('user', $setarr, 1);
     return $setarr;
@@ -434,7 +433,7 @@ function avatar_by_image($imageurl, $uid) {
     $success = 0;
     if ($data = file_get_contents($imageurl)) {
         $imageurl = tempnam($_G['setting']['attachdir'] . './cache/', 'tmpimg_');
-        if (!$data || $imageurl === FALSE) {
+        if ($imageurl === FALSE) {
             return false;
         }
         if (!file_put_contents($imageurl, $data)) return false;
@@ -452,7 +451,7 @@ function avatar_by_image($imageurl, $uid) {
         $success++;
     }
     if ($success > 2) {
-        C::t('user')->update($uid, array('avatarstatus' => '1'));
+        C::t('user')->update($uid, ['avatarstatus' => '1']);
     }
 
     return $success;
@@ -477,7 +476,7 @@ function set_home($uid, $dir = '.') {
 }
 
 function get_avatar($uid, $size = 'big', $type = '') {
-    $size = in_array($size, array('big', 'middle', 'small')) ? $size : 'big';
+    $size = in_array($size, ['big', 'middle', 'small']) ? $size : 'big';
     $uid = abs(intval($uid));
     $uid = sprintf("%09d", $uid);
     $dir1 = substr($uid, 0, 3);

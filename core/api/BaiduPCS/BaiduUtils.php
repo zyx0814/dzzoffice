@@ -24,12 +24,12 @@ class BaiduUtils
 	 * List of query parameters that get automatically dropped when rebuilding
 	 * the current URL.
 	 */
-	protected static $DROP_QUERY_PARAMS = array(
+	protected static $DROP_QUERY_PARAMS = [
 		'code',
 		'state',
 		'bd_user',
 		'bd_sig',
-	);
+    ];
 	
 	private static $errno = 0;
     private static $errmsg = '';
@@ -102,7 +102,7 @@ class BaiduUtils
      * @param bool $multi Whether it's a multipart POST request
      * @return string|false Returns string if success, or false if failed
      */
-	public static function request($url, $params = array(), $httpMethod = 'GET', $multi = false)
+	public static function request($url, $params = [], $httpMethod = 'GET', $multi = false)
     {
     	// when using bae(baidu app engine) to deploy the application,
     	// just comment the following line
@@ -112,7 +112,7 @@ class BaiduUtils
     	//$fetch= new BaeFetchUrl();
   		//$ch = $fetch->getHandle();
   		
-    	$curl_opts = array(
+    	$curl_opts = [
 			CURLOPT_CONNECTTIMEOUT	=> 3,
 			CURLOPT_TIMEOUT			=> 5,
 			CURLOPT_USERAGENT		=> 'baidu-apiclient-php-2.0',
@@ -120,7 +120,7 @@ class BaiduUtils
 	    	CURLOPT_RETURNTRANSFER	=> true,
 	    	CURLOPT_HEADER			=> false,
 	    	CURLOPT_FOLLOWLOCATION	=> false,
-		);
+        ];
 
 		if (stripos($url, 'https://') === 0) {
 			$curl_opts[CURLOPT_SSL_VERIFYPEER] = false;
@@ -132,7 +132,7 @@ class BaiduUtils
     		$curl_opts[CURLOPT_URL] = $url . $delimiter . $query;
     		$curl_opts[CURLOPT_POST] = false;
 		} else {
-			$headers = array();
+			$headers = [];
 			if ($multi && is_array($params) && !empty($params)) {
 				$body = self::buildHttpMultipartBody($params);
 				$headers[] = 'Content-Type: multipart/form-data; boundary=' . self::$boundary;
@@ -231,7 +231,7 @@ class BaiduUtils
 		if (!empty($parts['query'])) {
 			// drop known oauth params
 			$params = explode('&', $parts['query']);
-			$retained_params = array();
+			$retained_params = [];
 			foreach ($params as $param) {
 				if (self::shouldRetainParam($param)) {
 					$retained_params[] = $param;
@@ -270,7 +270,7 @@ class BaiduUtils
     private static function buildHttpMultipartBody($params)
     {
     	$body = '';
-		$pairs = array();
+		$pairs = [];
 		self::$boundary = $boundary = md5('BAIDU-PHP-SDK-V2' . microtime(true));
 		
 		foreach ($params as $key => $value) {

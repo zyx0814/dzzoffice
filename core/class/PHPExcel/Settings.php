@@ -51,15 +51,15 @@ class PHPExcel_Settings
     const PDF_RENDERER_MPDF 		= 'mPDF';
 
 
-    private static $_chartRenderers = array(
+    private static $_chartRenderers = [
         self::CHART_RENDERER_JPGRAPH,
-    );
+    ];
 
-    private static $_pdfRenderers = array(
+    private static $_pdfRenderers = [
         self::PDF_RENDERER_TCPDF,
         self::PDF_RENDERER_DOMPDF,
         self::PDF_RENDERER_MPDF,
-    );
+    ];
 
 
     /**
@@ -175,7 +175,7 @@ class PHPExcel_Settings
      */
     public static function setCacheStorageMethod(
     	$method = PHPExcel_CachedObjectStorageFactory::cache_in_memory,
-      $arguments = array()
+      $arguments = []
     )
     {
         return PHPExcel_CachedObjectStorageFactory::initialize($method, $arguments);

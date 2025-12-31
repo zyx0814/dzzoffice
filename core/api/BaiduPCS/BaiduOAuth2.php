@@ -20,12 +20,12 @@ class BaiduOAuth2
     /**
      * Endpoints for Baidu OAuth2.0.
      */
-    public static $BD_OAUTH2_ENDPOINTS = array(
+    public static $BD_OAUTH2_ENDPOINTS = [
     	'authorize'	=> 'https://openapi.baidu.com/oauth/2.0/authorize',
     	'token'		=> 'https://openapi.baidu.com/oauth/2.0/token',
     	'logout'	=> 'https://openapi.baidu.com/connect/2.0/logout',
 		'getLoginUser'	=> 'https://openapi.baidu.com/rest/2.0/passport/users/getLoggedInUser',
-    );
+    ];
   
     protected $clientId='';
     protected $clientSecret='';
@@ -83,8 +83,8 @@ class BaiduOAuth2
 	 */
 	public function getLogoutUrl($accessToken, $next = '')
 	{
-		$params = array('access_token' => $accessToken,
-						'next' => $next ? $next : BaiduUtils::getCurrentUrl());
+		$params = ['access_token' => $accessToken,
+						'next' => $next ?: BaiduUtils::getCurrentUrl()];
 		return self::$BD_OAUTH2_ENDPOINTS['logout'] . '?' . http_build_query($params, '', '&');
 	}
     
@@ -99,14 +99,14 @@ class BaiduOAuth2
 	 */
 	public function getAuthorizeUrl($responseType = 'code', $scope = '', $state = '', $display = 'popup')
 	{		
-		$params = array(
+		$params = [
 			'client_id'		=> $this->clientId,
 			'response_type'	=> $responseType,
 			'redirect_uri'	=> $this->redirectUri,
 			'scope'			=> $scope,
 			'state'			=> $state,
 			'display'		=> $display,
-		);
+        ];
 		return self::$BD_OAUTH2_ENDPOINTS['authorize'] . '?' . http_build_query($params, '', '&');
 	}
 	
@@ -118,13 +118,13 @@ class BaiduOAuth2
 	 */
 	public function getAccessTokenByAuthorizationCode($code)
 	{
-		$params = array(
+		$params = [
 			'grant_type'	=> 'authorization_code',
 			'code'			=> $code,
 			'client_id'		=> $this->clientId,
 			'client_secret'	=> $this->clientSecret,
 			'redirect_uri'	=> $this->redirectUri,
-		);
+        ];
 		return $this->makeAccessTokenRequest($params);
 	}
 	
@@ -136,12 +136,12 @@ class BaiduOAuth2
 	 */
 	public function getAccessTokenByClientCredentials($scope = '')
 	{
-		$params = array(
+		$params = [
 			'grant_type'	=> 'client_credentials',
 			'client_id'		=> $this->clientId,
 			'client_secret'	=> $this->clientSecret,
 			'scope'			=> $scope,
-		);
+        ];
 		return $this->makeAccessTokenRequest($params);
 	}
 	
@@ -153,11 +153,11 @@ class BaiduOAuth2
 	 */
 	public function getAccessTokenByDeveloperCredentials($accessKey, $secretKey)
 	{
-		$params = array(
+		$params = [
 			'grant_type'	=> 'developer_credentials',
 			'client_id'		=> $accessKey,
 			'client_secret'	=> $secretKey,
-		);
+        ];
 		return $this->makeAccessTokenRequest($params);
 	}
 	
@@ -170,13 +170,13 @@ class BaiduOAuth2
 	 */
 	public function getAccessTokenByRefreshToken($refreshToken, $scope = '')
 	{
-		$params = array(
+		$params = [
 			'grant_type'	=> 'refresh_token',
 			'refresh_token'	=> $refreshToken,
 			'client_id'		=> $this->clientId,
 			'client_secret'	=> $this->clientSecret,
 			'scope'			=> $scope,
-		);
+        ];
 		return $this->makeAccessTokenRequest($params);
 	}
 	
@@ -211,7 +211,7 @@ class BaiduOAuth2
 	}
 	public function getLoggedInUser($access_token)
 	{
-		$result = BaiduUtils::request(self::$BD_OAUTH2_ENDPOINTS['getLoginUser'], array('access_token'=>$access_token,'redirect_uri'	=> $this->redirectUri), 'GET');
+		$result = BaiduUtils::request(self::$BD_OAUTH2_ENDPOINTS['getLoginUser'], ['access_token'=>$access_token,'redirect_uri'	=> $this->redirectUri], 'GET');
 		if ($result) {
 			$result = json_decode($result, true);
 			if (isset($result['error_msg'])) {

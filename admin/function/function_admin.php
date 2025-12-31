@@ -14,11 +14,11 @@ function runquery($sql) {
     $tablepre = $_G['config']['db'][1]['tablepre'];
     $dbcharset = $_G['config']['db'][1]['dbcharset'];
 
-    $sql = str_replace(array(' dzz_', ' `dzz_', ' cdb_', ' `cdb_'), array(' {tablepre}', ' `{tablepre}', ' {tablepre}', ' `{tablepre}'), $sql);
+    $sql = str_replace([' dzz_', ' `dzz_', ' cdb_', ' `cdb_'], [' {tablepre}', ' `{tablepre}', ' {tablepre}', ' `{tablepre}'], $sql);
 
-    $sql = str_replace("\r", "\n", str_replace(array(' {tablepre}', ' `{tablepre}'), array(' ' . $tablepre, ' `' . $tablepre), $sql));
+    $sql = str_replace("\r", "\n", str_replace([' {tablepre}', ' `{tablepre}'], [' ' . $tablepre, ' `' . $tablepre], $sql));
 
-    $ret = array();
+    $ret = [];
     $num = 0;
     foreach (explode(";\n", trim($sql)) as $query) {
         $queries = explode("\n", trim($query));
@@ -64,7 +64,7 @@ function cron_create($app, $filename = '', $name = '', $weekday = -1, $day = -1,
     }
     $crondir = dir($dir);
     while ($filename = $crondir->read()) {
-        if (!in_array($filename, array('.', '..')) && preg_match("/^cron\_[\w\.]+$/", $filename)) {
+        if (!in_array($filename, ['.', '..']) && preg_match("/^cron\_[\w\.]+$/", $filename)) {
             $content = file_get_contents($dir . '/' . $filename);
             preg_match("/cronname\:(.+?)\n/", $content, $r);
             $name = trim($r[1]);
@@ -75,7 +75,7 @@ function cron_create($app, $filename = '', $name = '', $weekday = -1, $day = -1,
             preg_match("/hour\:(.+?)\n/", $content, $r);
             $hour = trim($r[1]) ? intval($r[1]) : -1;
             preg_match("/minute\:(.+?)\n/", $content, $r);
-            $minute = trim($r[1]) ? trim($r[1]) : 0;
+            $minute = trim($r[1]) ?: 0;
             $minutenew = explode(',', $minute);
             foreach ($minutenew as $key => $val) {
                 $minutenew[$key] = $val = intval($val);
@@ -88,7 +88,7 @@ function cron_create($app, $filename = '', $name = '', $weekday = -1, $day = -1,
             $filename = $app_path . ':' . $pluginid . ':' . $filename;
             $cronid = C::t('cron')->get_cronid_by_filename($filename);
             if (!$cronid) {
-                C::t('cron')->insert(array(
+                C::t('cron')->insert([
                     'available' => 1,
                     'type' => 'app',
                     'name' => $name,
@@ -97,15 +97,15 @@ function cron_create($app, $filename = '', $name = '', $weekday = -1, $day = -1,
                     'day' => $day,
                     'hour' => $hour,
                     'minute' => $minutenew,
-                ), true);
+                ], true);
             } else {
-                C::t('cron')->update($cronid, array(
+                C::t('cron')->update($cronid, [
                     'name' => $name,
                     'weekday' => $weekday,
                     'day' => $day,
                     'hour' => $hour,
                     'minute' => $minutenew,
-                ));
+                ]);
 
             }
         }
@@ -126,7 +126,7 @@ function cron_delete($app) {
     $crondir = dir($dir);
     $count = 0;
     while ($filename = $crondir->read()) {
-        if (!in_array($filename, array('.', '..')) && preg_match("/^cron\_[\w\.]+$/", $filename)) {
+        if (!in_array($filename, ['.', '..']) && preg_match("/^cron\_[\w\.]+$/", $filename)) {
             $filename = $app_path . ':' . $pluginid . ':' . $filename;
             $cronid = C::t('cron')->get_cronid_by_filename($filename);
             C::t('cron')->delete($cronid);
@@ -164,14 +164,14 @@ function dir_writeable($dir) {
 function exportdata($name, $filename, $data) {
     global $_G;
     require_once libfile('class/xml');
-    $root = array(
+    $root = [
         'Title' => $name,
         'Version' => $_G['setting']['version'],
         'Time' => dgmdate(TIMESTAMP, 'Y-m-d H:i'),
         'From' => $_G['setting']['bbname'] . ' (' . $_G['siteurl'] . ')',
         'Data' => exportarray($data, 1)
-    );
-    $filename = strtolower(str_replace(array('!', ' '), array('', '_'), $name)) . '_' . $filename . '.xml';
+    ];
+    $filename = strtolower(str_replace(['!', ' '], ['', '_'], $name)) . '_' . $filename . '.xml';
     $plugin_export = array2xml($root, 1);
     ob_end_clean();
     dheader('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -211,15 +211,15 @@ function base64toimage($data, $dir = 'appimg', $target = '') {
     global $_G;
     $dataarr = explode(',', $data);
     $imgcontent = base64_decode($dataarr[1]);
-    $imgext = str_replace(array('data:image/', ';base64'), '', $dataarr[0]);
+    $imgext = str_replace(['data:image/', ';base64'], '', $dataarr[0]);
     if (!$target) {
-        $imageext = array('jpg', 'jpeg', 'png', 'gif');
+        $imageext = ['jpg', 'jpeg', 'png', 'gif'];
         if (!in_array($imgext, $imageext)) $ext = 'jpg';
         $subdir = $subdir1 = $subdir2 = '';
         $subdir1 = date('Ym');
         $subdir2 = date('d');
         $subdir = $subdir1 . '/' . $subdir2 . '/';
-        $target1 = $_G['setting']['attachdir'] . $dir . '/' . $subdir . '' . date('His') . '' . strtolower(random(16)) . '.' . $imgext;
+        $target1 = $_G['setting']['attachdir'] . $dir . '/' . $subdir . date('His') . strtolower(random(16)) . '.' . $imgext;
         $target = str_replace($_G['setting']['attachdir'], '', $target1);
     } else {
         $target1 = $_G['setting']['attachdir'] . $target;
@@ -238,7 +238,7 @@ function base64toimage($data, $dir = 'appimg', $target = '') {
 function importByarray($arr, $force = 0) {
     $app = $arr['app'];
     //判断应用是否已经存在
-    $oapp = DB::fetch_first("select * from %t where identifier=%s and app_path=%s ", array('app_market', $app['identifier'], $app['app_path']));
+    $oapp = DB::fetch_first("select * from %t where identifier=%s and app_path=%s ", ['app_market', $app['identifier'], $app['app_path']]);
     if (!$force && $oapp) {
         showmessage('application_been');
     }
@@ -261,8 +261,8 @@ function importByarray($arr, $force = 0) {
         C::t('hooks')->insert_by_appid($appid, $arr['hooks'], $arr['_attributes']['hooks'], $oapp['available'] ? 1 : 0);
     }
     if ($appid) {
-        C::t('app_open')->insert_by_exts($appid, ($app['fileext'] ? explode(',', $app['fileext']) : array()));
-        C::t('app_tag')->addtags(($app['tag'] ? explode(',', $app['tag']) : array()), $appid);
+        C::t('app_open')->insert_by_exts($appid, ($app['fileext'] ? explode(',', $app['fileext']) : []));
+        C::t('app_tag')->addtags(($app['tag'] ? explode(',', $app['tag']) : []), $appid);
     }
     return $app;
 }
@@ -274,7 +274,7 @@ function upgradeinformation($status = 0) {
         return '';
     }
     if ($status == 1 && $upgrade_step['step'] == 2) return '';
-    $update = array();
+    $update = [];
     $siteuniqueid = C::t('setting')->fetch('siteuniqueid');
     $update['siteurl'] = $_G['siteurl'];
     $update['sitename'] = $_G['setting']['sitename'];
@@ -308,7 +308,7 @@ function upgradeinformation_app($status = 0) {
         }
     }
     if ($status == 0) return '';
-    $update = array();
+    $update = [];
     $siteuniqueid = C::t('setting')->fetch('siteuniqueid');
     $update['siteurl'] = $_G['siteurl'];
     $update['sitename'] = $_G['setting']['sitename'];
@@ -332,8 +332,8 @@ function upgradeinformation_app($status = 0) {
 
 function getwheres($intkeys, $strkeys, $randkeys, $likekeys, $pre = '') {
 
-    $wherearr = array();
-    $urls = array();
+    $wherearr = [];
+    $urls = [];
 
     foreach ($intkeys as $var) {
         $value = isset($_GET[$var]) ? $_GET[$var] : '';
@@ -381,11 +381,11 @@ function getwheres($intkeys, $strkeys, $randkeys, $likekeys, $pre = '') {
         }
     }
 
-    return array('wherearr' => $wherearr, 'urls' => $urls);
+    return ['wherearr' => $wherearr, 'urls' => $urls];
 }
 
 function getorders($alloworders, $default, $pre = '') {
-    $orders = array('sql' => '', 'urls' => array());
+    $orders = ['sql' => '', 'urls' => []];
     if (empty($_GET['orderby']) || !in_array($_GET['orderby'], $alloworders)) {
         $_GET['orderby'] = $default;
         if (empty($_GET['ordersc'])) $_GET['ordersc'] = 'desc';
@@ -403,4 +403,3 @@ function getorders($alloworders, $default, $pre = '') {
     return $orders;
 }
 
-?>

@@ -17,7 +17,7 @@ if (!defined('SFTP_ERR_SERVER_DISABLED')) {
 
 class dzz_sftp {
     var $enabled = false;
-    var $config = array();
+    var $config = [];
     var $func;
     var $connectid;
     var $_error;
@@ -25,7 +25,7 @@ class dzz_sftp {
     var $root = '';
     var $sftp = NULL;
 
-    function &instance($config = array()) {
+    function &instance($config = []) {
         static $object;
         if (empty($object)) {
             $object = new dzz_sftp($config);
@@ -33,7 +33,7 @@ class dzz_sftp {
         return $object;
     }
 
-    function __construct($config = array()) {
+    function __construct($config = []) {
         $this->set_error(0);
         $this->config = !$config ? getglobal('setting/ftp') : $config;
         $this->enabled = false;
@@ -165,7 +165,7 @@ class dzz_sftp {
     }
 
     function clear($str) {
-        return str_replace(array('/./', '//'), '/', str_replace(array("\n", "\r", '..'), '', $str));
+        return str_replace(['/./', '//'], '/', str_replace(["\n", "\r", '..'], '', $str));
     }
 
 
@@ -350,7 +350,7 @@ class dzz_sftp {
 
         $stdout_stream = ssh2_exec($this->connectid, '/usr/bin/ls -l ' . $path);
         stream_set_blocking($stdout_stream, true);
-        $rawList = array();
+        $rawList = [];
         while ($line = fgets($stdout_stream)) {
             $rawList[] = $line;
         }
@@ -365,22 +365,22 @@ class dzz_sftp {
     }
 
     function byteconvert($bytes) {
-        $symbol = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $symbol = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $exp = floor(log($bytes) / log(1024));
         return sprintf('%.2f ' . $symbol[$exp], ($bytes / pow(1024, floor($exp))));
     }
 
     function chmodnum($chmod) {
-        $trans = array('-' => '0', 'r' => '4', 'w' => '2', 'x' => '1', 't' => '1', 's' => '1');
+        $trans = ['-' => '0', 'r' => '4', 'w' => '2', 'x' => '1', 't' => '1', 's' => '1'];
         $chmod = substr(strtr($chmod, $trans), 1);
         $array = str_split($chmod, 3);
         return array_sum(str_split($array[0])) . array_sum(str_split($array[1])) . array_sum(str_split($array[2]));
     }
 
     function parseRawList($rawList) {
-        $data = array();
+        $data = [];
         foreach ($rawList as $key => $value) {
-            $temp = array();
+            $temp = [];
             $parser = null;
             /*if(preg_match("/Window/i",$this->systype)){
                 $parser = explode(" ", preg_replace('!\s+!', ' ', $value));
@@ -423,4 +423,3 @@ class dzz_sftp {
 
 }
 
-?>

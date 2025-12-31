@@ -12,7 +12,7 @@ $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'delshare') {
     $shareid = explode(',', trim($_GET['shareid']));
-    $return = array();
+    $return = [];
     foreach ($shareid as $v) {
         $result = C::t('shares')->delete_by_id($v);
         if ($result['success']) {
@@ -36,10 +36,10 @@ if ($do == 'delshare') {
         $order = ' ORDER BY dateline DESC';
     }
     $limitsql = "limit $start,$limit";
-    $list = array();
+    $list = [];
     $count = C::t('shares')->fetch_all_share_file($limitsql, $order, true);
     if ($count) {
-        $sharestatus = array('-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>', '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>', '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>', '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>', '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>');
+        $sharestatus = ['-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => '<span class="layui-badge">' . lang('been_blocked') . '</span>', '-3' => '<span class="layui-badge">' . lang('file_been_deleted') . '</span>', '-2' => '<span class="layui-badge layui-bg-gray">' . lang('degree_exhaust') . '</span>', '-1' => '<span class="layui-badge layui-bg-gray">' . lang('logs_invite_status_4') . '</span>', '0' => '<span class="layui-badge layui-bg-blue">' . lang('founder_upgrade_normal') . '</span>'];
         $shareinfo = C::t('shares')->fetch_all_share_file($limitsql, $order);
         foreach ($shareinfo as $v) {
             $list[] = [
@@ -52,7 +52,7 @@ if ($do == 'delshare') {
                 "dateline" => $v['fdateline'],
                 "status" => $sharestatus[$v['status']],
                 "sharelink" => $v['sharelink'],
-                "password" => $v['password']? $v['password'] : '',
+                "password" => $v['password']?: '',
                 "endtime" => $v['expireday'],
                 "qrcode" => $v['qrcode'],
                 "times" => $v['times'] ? $v['count'] . '/' . $v['times'] : lang('no_limit'),
@@ -63,8 +63,8 @@ if ($do == 'delshare') {
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $list ? $list : [],
+        "count" => $count ?: 0,
+        "data" => $list ?: [],
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {

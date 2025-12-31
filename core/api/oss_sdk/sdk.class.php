@@ -183,11 +183,11 @@ class ALIOSS{
 	const OSS_ACL_TYPE_PUBLIC_READ_WRITE = 'public-read-write';
 
 	//OSS ACL数组
-	static $OSS_ACL_TYPES = array(
+	static $OSS_ACL_TYPES = [
 	self::OSS_ACL_TYPE_PRIVATE,
 	self::OSS_ACL_TYPE_PUBLIC_READ,
 	self::OSS_ACL_TYPE_PUBLIC_READ_WRITE
-	);
+    ];
 
     const OSS_CORS_ALLOWED_ORIGIN='AllowedOrigin';
     const OSS_CORS_ALLOWED_METHOD='AllowedMethod';
@@ -206,7 +206,7 @@ class ALIOSS{
 	/**
 	 * 是否使用SSL
 	 */
-	public $hostarray=array( 'qingdao_out'=>'oss-cn-qingdao.aliyuncs.com',
+	public $hostarray= ['qingdao_out'=>'oss-cn-qingdao.aliyuncs.com',
 							 'qingdao_in'=>'oss-cn-qingdao-internal.aliyuncs.com',
 							 
 							 'beijing_out'=>'oss-cn-beijing.aliyuncs.com',
@@ -220,7 +220,7 @@ class ALIOSS{
 							 
 							  'shenzhen_out'=>'oss-cn-shenzhen.aliyuncs.com',
 							 'shenzhen_in'=>'oss-cn-shenzhen-internal.aliyuncs.com'
-							);
+    ];
 	public $use_ssl = false;
 
 	/**
@@ -439,7 +439,7 @@ class ALIOSS{
 		$scheme = $this->use_ssl ? 'https://' : 'http://';
 		
 		if($this->enable_domain_style){
-			$hostname = $this->vhost ? $this->vhost : (($options[self::OSS_BUCKET] =='')?$this->hostname:($options[self::OSS_BUCKET].'.').$this->hostname);
+			$hostname = $this->vhost ?: (($options[self::OSS_BUCKET] =='')?$this->hostname:($options[self::OSS_BUCKET].'.').$this->hostname);
 		}else{
 			$hostname = (isset($options[self::OSS_BUCKET]) && ''!==$options[self::OSS_BUCKET])?$this->hostname.'/'.$options[self::OSS_BUCKET]:$this->hostname;
 		}
@@ -449,20 +449,20 @@ class ALIOSS{
 		$resource = '';
 		$sub_resource = '';
 		$signable_resource = '';
-		$query_string_params = array();
-		$signable_query_string_params = array();
+		$query_string_params = [];
+		$signable_query_string_params = [];
 		$string_to_sign = '';		
 		
-		$headers = array (
+		$headers = [
 			self::OSS_CONTENT_MD5 => '',
 			self::OSS_CONTENT_TYPE => isset($options[self::OSS_CONTENT_TYPE])?$options[self::OSS_CONTENT_TYPE]:'application/x-www-form-urlencoded',
 			self::OSS_DATE => isset($options[self::OSS_DATE])? $options[self::OSS_DATE]: gmdate('D, d M Y H:i:s \G\M\T'),
 			self::OSS_HOST => $this->enable_domain_style?$hostname:$this->hostname,
-		);
+        ];
 
 		if(isset ( $options [self::OSS_OBJECT] ) && '/' !== $options [self::OSS_OBJECT]){
 			//$options[self::OSS_OBJECT] = $this->replace_invalid_xml_char($options[self::OSS_OBJECT]);
-			$signable_resource = '/'.str_replace(array('%2F','%25'),array('/','%'), rawurlencode($options[self::OSS_OBJECT]));
+			$signable_resource = '/'.str_replace(['%2F','%25'], ['/','%'], rawurlencode($options[self::OSS_OBJECT]));
 		}
 
 		if(isset($options[self::OSS_QUERY_STRING])){
@@ -470,10 +470,10 @@ class ALIOSS{
 		}
 		$query_string = $this->to_query_string($query_string_params);
 	
-		$signable_list = array(
+		$signable_list = [
 			'partNumber',
-			'uploadId',			
-		);
+			'uploadId',
+        ];
 		
 		foreach ($signable_list as $item){
 			if(isset($options[$item])){
@@ -590,7 +590,7 @@ class ALIOSS{
 		uksort($headers, 'strnatcasecmp');
 		
 		foreach ( $headers as $header_key => $header_value ) {
-			$header_value = str_replace ( array ("\r", "\n" ), '', $header_value );
+			$header_value = str_replace ( ["\r", "\n"], '', $header_value );
 			if ($header_value !== '') {
 				$request->add_header ( $header_key, $header_value );
 			}
@@ -676,15 +676,13 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if (! $options) {
-			$options = array ();
+			$options = [];
 		}
 
 		$options[self::OSS_BUCKET] = '';
 		$options[self::OSS_METHOD] = self::OSS_HTTP_GET;
 		$options[self::OSS_OBJECT] = '/';
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 
@@ -705,7 +703,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if (! $options) {
-			$options = array ();
+			$options = [];
 		}
 
 		//bucket
@@ -714,10 +712,8 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_PUT;
 		$options[self::OSS_OBJECT] = '/';
-		$options[self::OSS_HEADERS] = array(self::OSS_ACL => $acl);
-		$response = $this->auth ( $options );
-
-		return $response;
+		$options[self::OSS_HEADERS] = [self::OSS_ACL => $acl];
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -733,7 +729,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if (! $options) {
-			$options = array ();
+			$options = [];
 		}
 
 		//bucket
@@ -742,9 +738,7 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_DELETE;
 		$options[self::OSS_OBJECT] = '/';
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -761,7 +755,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -771,9 +765,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_GET;
 		$options[self::OSS_OBJECT] = '/';
 		$options[self::OSS_SUB_RESOURCE] = 'acl';
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -791,7 +783,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -800,10 +792,8 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_PUT;
 		$options[self::OSS_OBJECT] = '/';
-		$options[self::OSS_HEADERS] = array(self::OSS_ACL => $acl);
-		$response = $this->auth ( $options );
-
-		return $response;
+		$options[self::OSS_HEADERS] = [self::OSS_ACL => $acl];
+        return $this->auth ( $options );
 	}
 	
      /**
@@ -820,7 +810,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -830,9 +820,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_GET;
 		$options[self::OSS_OBJECT] = '/';
 		$options[self::OSS_SUB_RESOURCE] = 'logging';
-		$response = $this->auth ($options);
-
-		return $response;
+        return $this->auth ($options);
 	}
 
      /**
@@ -851,7 +839,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -888,7 +876,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -898,9 +886,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_DELETE;
 		$options[self::OSS_OBJECT] = '/';
 		$options[self::OSS_SUB_RESOURCE] = 'logging';
-		$response = $this->auth ($options);
-
-		return $response;
+        return $this->auth ($options);
 	}
 	
      /**
@@ -919,7 +905,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -958,7 +944,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -968,9 +954,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_GET;
 		$options[self::OSS_OBJECT] = '/';
 		$options[self::OSS_SUB_RESOURCE] = 'website';
-		$response = $this->auth ($options);
-
-		return $response;
+        return $this->auth ($options);
 	}
 	
      /**
@@ -987,7 +971,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -997,9 +981,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_DELETE;
 		$options[self::OSS_OBJECT] = '/';
 		$options[self::OSS_SUB_RESOURCE] = 'website';
-		$response = $this->auth ($options);
-
-		return $response;
+        return $this->auth ($options);
 	}
 	
      /**
@@ -1017,7 +999,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1070,7 +1052,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1080,9 +1062,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_GET;
 		$options[self::OSS_OBJECT] = '/';
 		$options[self::OSS_SUB_RESOURCE] = 'cors';
-		$response = $this->auth ($options);
-
-		return $response;
+        return $this->auth ($options);
 	}
 	
      /**
@@ -1099,7 +1079,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1109,9 +1089,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_DELETE;
 		$options[self::OSS_OBJECT] = '/';
 		$options[self::OSS_SUB_RESOURCE] = 'cors';
-		$response = $this->auth ($options);
-
-		return $response;
+        return $this->auth ($options);
 	}
 	
      /**
@@ -1129,7 +1107,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1138,10 +1116,8 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_OPTIONS;
 		$options[self::OSS_OBJECT] = $object;
-		$options[self::OSS_HEADERS] = array(self::OSS_OPTIONS_ORIGIN => $origin, self::OSS_OPTIONS_REQUEST_HEADERS => $request_headers, self::OSS_OPTIONS_REQUEST_METHOD => $request_method);
-		$response = $this->auth ( $options );
-
-		return $response;
+		$options[self::OSS_HEADERS] = [self::OSS_OPTIONS_ORIGIN => $origin, self::OSS_OPTIONS_REQUEST_HEADERS => $request_headers, self::OSS_OPTIONS_REQUEST_METHOD => $request_method];
+        return $this->auth ( $options );
 	}
 	/*%******************************************************************************************************%*/
 	//Object Operation
@@ -1168,7 +1144,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1177,16 +1153,14 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_GET;
 		$options[self::OSS_OBJECT] = '/';
-		$options[self::OSS_HEADERS] = array(
+		$options[self::OSS_HEADERS] = [
 		self::OSS_DELIMITER => isset($options[self::OSS_DELIMITER])?$options[self::OSS_DELIMITER]:'/',
 		self::OSS_PREFIX => isset($options[self::OSS_PREFIX])?$options[self::OSS_PREFIX]:'',
 		self::OSS_MAX_KEYS => isset($options[self::OSS_MAX_KEYS])?$options[self::OSS_MAX_KEYS]:self::OSS_MAX_KEYS_VALUE,
 		self::OSS_MARKER => isset($options[self::OSS_MARKER])?$options[self::OSS_MARKER]:'',
-		);
-				
-		$response = $this->auth ( $options );
+        ];
 
-		return $response;
+        return $this->auth ( $options );
 
 	}
 
@@ -1204,7 +1178,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1216,11 +1190,9 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_PUT;
 		$options[self::OSS_OBJECT] = $object.'/';   //虚拟目录需要以'/结尾'
-		$options[self::OSS_CONTENT_LENGTH] = array(self::OSS_CONTENT_LENGTH => 0);
+		$options[self::OSS_CONTENT_LENGTH] = [self::OSS_CONTENT_LENGTH => 0];
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -1239,7 +1211,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1272,9 +1244,7 @@ class ALIOSS{
 			$options[self::OSS_CONTENT_TYPE] = $content_type;
 		}
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -1292,7 +1262,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1327,8 +1297,7 @@ class ALIOSS{
 		$options[self::OSS_OBJECT] = $object;
 		$options[self::OSS_CONTENT_TYPE] = $content_type;
 		$options[self::OSS_CONTENT_LENGTH] = $filesize;
-		$response = $this->auth($options);
-		return $response;
+        return $this->auth($options);
 	}
 	
 	
@@ -1347,7 +1316,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//from bucket
@@ -1365,11 +1334,9 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $to_bucket;
 		$options[self::OSS_METHOD] = self::OSS_HTTP_PUT;
 		$options[self::OSS_OBJECT] = $to_object;
-		$options[self::OSS_HEADERS] = array(self::OSS_OBJECT_COPY_SOURCE => '/'.$from_bucket.'/'.$from_object);
+		$options[self::OSS_HEADERS] = [self::OSS_OBJECT_COPY_SOURCE => '/'.$from_bucket.'/'.$from_object];
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -1386,7 +1353,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1399,9 +1366,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_HEAD;
 		$options[self::OSS_OBJECT] = $object;
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -1418,7 +1383,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1431,9 +1396,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_DELETE;
 		$options[self::OSS_OBJECT] = $object;
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 	
 	/**
@@ -1450,7 +1413,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1507,7 +1470,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1556,7 +1519,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1569,9 +1532,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_GET;
 		$options[self::OSS_OBJECT] = $object;
 
-		$response = $this->get_object_meta($bucket, $object,$options);
-
-		return $response;
+        return $this->get_object_meta($bucket, $object,$options);
 	}
 
 
@@ -1589,7 +1550,7 @@ class ALIOSS{
 	public function get_multipart_counts($filesize, $part_size = 5242880 ){
 		$i = 0;
 		$sizecount = $filesize;
-		$values = array();
+		$values = [];
 
 		if((integer)$part_size <= 5242880){ 
 			$part_size = 5242880;	//5M
@@ -1602,10 +1563,10 @@ class ALIOSS{
 		while ($sizecount > 0)
 		{
 			$sizecount -= $part_size;
-			$values[] = array(
+			$values[] = [
 				self::OSS_SEEK_TO => ($part_size * $i),
 				self::OSS_LENGTH => (($sizecount > 0) ? $part_size : ($sizecount + $part_size)),
-			);
+            ];
 			$i++;
 		}
 
@@ -1624,7 +1585,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1640,11 +1601,9 @@ class ALIOSS{
 		$options[self::OSS_SUB_RESOURCE] = 'uploads';
 		$options[self::OSS_CONTENT] = '';
 		//$options[self::OSS_CONTENT_LENGTH] = 0;
-		$options[self::OSS_HEADERS] = array(self::OSS_CONTENT_TYPE => 'application/octet-stream');
+		$options[self::OSS_HEADERS] = [self::OSS_CONTENT_TYPE => 'application/octet-stream'];
 
-		$response = $this->auth ( $options );
-
-		return $response;		
+        return $this->auth ( $options );
 	}
 	
 	/**
@@ -1660,7 +1619,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1698,7 +1657,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1711,9 +1670,9 @@ class ALIOSS{
 		$options[self::OSS_BUCKET] = $bucket;
 		$options[self::OSS_OBJECT] = $object;
 		$options[self::OSS_UPLOAD_ID] = $upload_id;
-		$options[self::OSS_QUERY_STRING] = array();
+		$options[self::OSS_QUERY_STRING] = [];
 
-		foreach (array('max-parts', 'part-number-marker') as $param){
+		foreach (['max-parts', 'part-number-marker'] as $param){
 			if (isset($options[$param])){
 				$options[self::OSS_QUERY_STRING][$param] = $options[$param];
 				unset($options[$param]);
@@ -1736,7 +1695,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1767,7 +1726,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1824,7 +1783,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1835,7 +1794,7 @@ class ALIOSS{
 		$options[self::OSS_OBJECT] = '/';
 		$options[self::OSS_SUB_RESOURCE] = 'uploads';
 
-		foreach (array('key-marker', 'max-uploads', 'upload-id-marker') as $param){
+		foreach (['key-marker', 'max-uploads', 'upload-id-marker'] as $param){
 			if (isset($options[$param])){
 				$options[self::OSS_QUERY_STRING][$param] = $options[$param];
 				unset($options[$param]);
@@ -1859,7 +1818,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -1948,22 +1907,22 @@ class ALIOSS{
 		// 或的分片
 		$pieces = $this->get_multipart_counts($upload_filesize, (integer) $options[self::OSS_PART_SIZE]);
 
-		$response_upload_part = array();
+		$response_upload_part = [];
 		foreach ($pieces as $i => $piece){
-			$response_upload_part[] = $this->upload_part($bucket, $object, $uploadId, array(
+			$response_upload_part[] = $this->upload_part($bucket, $object, $uploadId, [
 				//'expect' => '100-continue',
 				self::OSS_FILE_UPLOAD => $options[self::OSS_FILE_UPLOAD],
 				'partNumber' => ($i + 1),
 				self::OSS_SEEK_TO => $upload_position + (integer) $piece[self::OSS_SEEK_TO],
 				self::OSS_LENGTH => (integer) $piece[self::OSS_LENGTH],
-			));
+            ]);
 		}
 		
-		$upload_parts = array();
+		$upload_parts = [];
 		$upload_part_result = true;
 		
 		foreach ($response_upload_part as $i=>$response){
-			$upload_part_result = $upload_part_result && $response->isOk();
+			$upload_part_result = $upload_part_result && $response->isOK();
 		}
 		
 		if(!$upload_part_result){
@@ -1971,10 +1930,10 @@ class ALIOSS{
 		}
 		
 		foreach ($response_upload_part as $i=>$response){
-			$upload_parts[] = array(
+			$upload_parts[] = [
 				'PartNumber' => ($i + 1),
 			    'ETag' => (string) $response->header['etag']
-			);		
+            ];
 		}
 				
 		return $this->complete_multipart_upload($bucket, $object, $uploadId, $upload_parts);
@@ -2017,10 +1976,10 @@ class ALIOSS{
 		$index = 1;
 		
 		foreach ($file_list_array as $item){
-			$options = array(
+			$options = [
 				self::OSS_FILE_UPLOAD => $item['path'],
 				self::OSS_PART_SIZE => 5242880,
-			);			
+            ];
 			
 			echo $index++.". ";
 			$response = $this->create_mpu_object($bucket, $item['file'],$options);
@@ -2074,7 +2033,7 @@ class ALIOSS{
 		
 		$recursive = false;
 		if(isset($options['recursive']) && !empty($options['recursive'])){
-			if(in_array($options['recursive'],array(true,false))){
+			if(in_array($options['recursive'], [true,false])){
 				$recursive = $options['recursive'];
 			}
 			unset($options['recursive']);
@@ -2090,10 +2049,10 @@ class ALIOSS{
 		$index = 1;
 		
 		foreach ($file_list_array as $item){
-			$options = array(
+			$options = [
 				self::OSS_FILE_UPLOAD => $item['path'],
 				self::OSS_PART_SIZE => 5242880,
-			);			
+            ];
 			
 			echo $index++.". ";
 			$response = $this->create_mpu_object($bucket, (!empty($object)?$object.'/':'').$item['file'],$options);
@@ -2143,9 +2102,7 @@ class ALIOSS{
 		$options[self::OSS_SUB_RESOURCE] = 'group';	   //设置?group
 		$options[self::OSS_CONTENT] = $this->make_object_group_xml($bucket,$object_arry);   //格式化xml
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -2172,11 +2129,9 @@ class ALIOSS{
 		$options[self::OSS_OBJECT] = $object_group;
 		//$options[self::OSS_OBJECT_GROUP] = true;	   //设置?group
 		//$options[self::OSS_CONTENT_TYPE] = 'txt/xml';  //重设Content-Type
-		$options[self::OSS_HEADERS] = array(self::OSS_OBJECT_GROUP => self::OSS_OBJECT_GROUP);  //header中的x-oss-file-group不能为空，否则返回值错误
+		$options[self::OSS_HEADERS] = [self::OSS_OBJECT_GROUP => self::OSS_OBJECT_GROUP];  //header中的x-oss-file-group不能为空，否则返回值错误
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -2203,11 +2158,9 @@ class ALIOSS{
 		$options[self::OSS_OBJECT] = $object_group;
 		$options[self::OSS_CONTENT_TYPE] = 'application/xml';  //重设Content-Type
 		//$options[self::OSS_OBJECT_GROUP] = true;	   //设置?group
-		$options[self::OSS_HEADERS] = array(self::OSS_OBJECT_GROUP => self::OSS_OBJECT_GROUP);
+		$options[self::OSS_HEADERS] = [self::OSS_OBJECT_GROUP => self::OSS_OBJECT_GROUP];
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -2224,7 +2177,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -2238,11 +2191,9 @@ class ALIOSS{
 		$options[self::OSS_OBJECT] = $object_group;
 		$options[self::OSS_CONTENT_TYPE] = 'application/xml';  //重设Content-Type
 		//$options[self::OSS_SUB_RESOURCE] = 'group';	   //设置?group
-		$options[self::OSS_HEADERS] = array(self::OSS_OBJECT_GROUP => self::OSS_OBJECT_GROUP);
+		$options[self::OSS_HEADERS] = [self::OSS_OBJECT_GROUP => self::OSS_OBJECT_GROUP];
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 	/**
@@ -2259,7 +2210,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -2272,9 +2223,7 @@ class ALIOSS{
 		$options[self::OSS_METHOD] = self::OSS_HTTP_DELETE;
 		$options[self::OSS_OBJECT] = $object_group;
 
-		$response = $this->auth ( $options );
-
-		return $response;
+        return $this->auth ( $options );
 	}
 
 
@@ -2296,7 +2245,7 @@ class ALIOSS{
 		$this->validate_options($options);
 
 		if(!$options){
-			$options = array();
+			$options = [];
 		}
 
 		//bucket
@@ -2367,8 +2316,8 @@ class ALIOSS{
 	 * @since 2012-03-04
 	 * @return string 返回诸如 key1=value1&key2=value2
 	 */
-	public function to_query_string($options = array()){
-		$temp = array();
+	public function to_query_string($options = []){
+		$temp = [];
 		
 		foreach ($options as $key => $value){
 			if (is_string($key) && !is_array($value)){
@@ -2398,8 +2347,8 @@ class ALIOSS{
 	}
 
 	private function s_replace($subject){
-		$search = array('<','>','&','\'','"');
-		$replace = array('&lt;','&gt;','&amp;','&apos;','&quot;');
+		$search = ['<','>','&','\'','"'];
+		$replace = ['&lt;','&gt;','&amp;','&apos;','&quot;'];
 		return str_replace($search, $replace, $subject);
 	}
 	
@@ -2408,16 +2357,16 @@ class ALIOSS{
 	 * @param unknown $invalid_xml_chars
 	 */
 	public function replace_invalid_xml_char($subject){
-		$search = array(
+		$search = [
 			'&#01;','&#02;','&#03;','&#04;','&#05;','&#06;','&#07;','&#08;','&#09;','&#10;','&#11;','&#12;','&#13;',
 			'&#14;','&#15;','&#16;','&#17;','&#18;','&#19;','&#20;','&#21;','&#22;','&#23;','&#24;','&#25;','&#26;',
 			'&#27;','&#28;','&#29;','&#30;','&#31;','&#127;'
-		);
-		$replace = array(
+        ];
+		$replace = [
 			'%01','%02','%03','%04','%05','%06','%07','%08','%09','%0A','%0B','%0C','%0D',
 			'%0E','%0F','%10','%11','%12','%13','%14','%15','%16','%17','%18','%19','%1A',
 			'%1B','%1C','%1D','%1E','%1F','%7F'
-		);
+        ];
 		
 		return str_replace($search, $replace, $subject);
 	}
@@ -2494,7 +2443,7 @@ class ALIOSS{
 	 * @return array
 	 */
 	private  function read_dir($dir, $exclude = ".|..|.svn", $recursive = false){
-		static $file_list_array = array();
+		static $file_list_array = [];
 		
 		$exclude_array = explode("|", $exclude);
 		//读取目录
@@ -2505,10 +2454,10 @@ class ALIOSS{
 					if(is_dir($new_file) && $recursive){
 						$this->read_dir($new_file,$exclude,$recursive);
 					}else{
-						$file_list_array[] = array(
+						$file_list_array[] = [
 							'path' => $new_file,
 							'file' => $file,
-						);
+                        ];
 					}
 				}
 			}
@@ -2530,8 +2479,7 @@ class ALIOSS{
 	 * @return string
 	 */
 	private function make_object_group_xml($bucket, $object_array){
-		$xml = '';
-		$xml .= '<CreateFileGroup>';
+        $xml = '<CreateFileGroup>';
 
 		if($object_array){
 			if(count($object_array) > self::OSS_MAX_OBJECT_GROUP_VALUE){
@@ -2676,7 +2624,7 @@ class ALIOSS{
 				throw new OSS_Exception(OSS_INVALID_OPTION_HEADERS, '-600');
 			}
 		} else {
-			$options [self::OSS_HEADERS] = array ();
+			$options [self::OSS_HEADERS] = [];
 		}
 
 		$options [self::OSS_HEADERS] [$key] = $value;

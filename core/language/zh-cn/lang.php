@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'More applications' => '更多应用',
     'Home page' => '首页',
     'parameters_error' => '参数错误',
@@ -12,7 +12,6 @@ $lang = array(
     'intension' => '强度',
     'save_file_to' => '保存文件',
     'select_position' => '选择位置',
-    'save_success' => '保存成功',
     'all_save' => '全部保存',
     'all_download' => '全部下载',
     'explorer_user_root_dirname' => '我的网盘',
@@ -69,7 +68,6 @@ $lang = array(
     'header' => '头部',
     'sidebar' => '侧边栏',
     'theme' => '主题',
-    'name' => '名称',
     'input_name' => '输入名称',
     'all_theme' => '全部主题',
     'add_theme' => '添加主题',
@@ -94,7 +92,6 @@ $lang = array(
     'subscriber_data_item_edit_success' => '用户资料项编辑成功',
     'js_exit' => '您确定要注销登录？',
     'username' => '用户名',
-    'password' => '密　码',
     'board_message' => '提示信息',
     'date_birth' => '出生日期',
     'cellphone' => '手机',
@@ -585,7 +582,6 @@ $lang = array(
 
     'members_verify_succeed' => '资料审核成功 ',
     'members_verify_update_succeed' => '认证设置更新成功 ',
-    'members_verify' => '审核资料',
     'validate' => '通过',
     'all_validate' => '全部通过',
     'moderate' => '审核',
@@ -722,7 +718,6 @@ $lang = array(
     'submit_invalid' => '抱歉，您的请求来路不正确或表单验证串不符，无法提交',
     'submit_seccode_invalid' => '抱歉，验证码填写错误',
     'getpasswd_illegal' => '抱歉，您所用的 ID 不存在或已过期，无法取回密码',
-    'getpasswd_succeed' => '您的密码已重新设置，请使用新密码登录',
     'jurisdictions' => '权限',
     'jurisdictions_set' => '权限设置',
     'privilege' => '没有权限',
@@ -783,7 +778,6 @@ $lang = array(
     'comment' => '评论',
     'discuss' => '讨论',
     'reply' => '回复',
-    'from' => '来自',
     'admininfo_password2_invalid' => '两次密码不一致，请检查',
 //	'anonymity' => '匿名',
     'viewmore' => '查看更多',
@@ -1155,7 +1149,7 @@ $lang = array(
     'total' => '共',
     '10k' => '万',
     'pagejumptip' => '输入页码，按回车快速跳转',
-    'date' => array(
+    'date' => [
         'before' => '前',
         'day' => '天',
         'yday' => '昨天',
@@ -1165,8 +1159,8 @@ $lang = array(
         'min' => '分钟',
         'sec' => '秒',
         'now' => '刚刚',
-    ),
-    'weeks' => array(
+    ],
+    'weeks' => [
         1 => '周一',
         2 => '周二',
         3 => '周三',
@@ -1174,8 +1168,8 @@ $lang = array(
         5 => '周五',
         6 => '周六',
         7 => '周日',
-    ),
-    'English_weeks' => array(
+    ],
+    'English_weeks' => [
         'Monday' => '周一',
         'Tuesday' => '周二',
         'Wednesday' => '周三',
@@ -1183,7 +1177,7 @@ $lang = array(
         'Friday' => '周五',
         'Saturday' => '周六',
         'Sunday' => '周日',
-    ),
+    ],
     'dot' => '、',
     'archive' => '存档',
     'end' => '末尾',
@@ -1304,11 +1298,11 @@ $lang = array(
     'status' => '状态',
     'file_share' => '文件分享',
     'expires_time' => '失效时间',
-    'explorer_gropuperm' => array(
+    'explorer_gropuperm' => [
         '协作成员',
         '管理员',
         '创始人'
-    ),
+    ],
     'about_current_version' => '当前版本',
     'license' => '授权协议',
     'service_and_support' => '服务支持',
@@ -1505,5 +1499,4 @@ $lang = array(
     'cloud_type_disk' => '本地磁盘',
     'cloud_type_local'=>'内置',
     'system_close' => '系统关闭，请稍后再试',
-);
-?>
+];

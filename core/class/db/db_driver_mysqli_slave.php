@@ -11,11 +11,11 @@ class db_driver_mysqli_slave extends db_driver_mysqli {
 
     public $slaveexcept = false;
 
-    public $excepttables = array();
+    public $excepttables = [];
 
     public $tablename = '';
 
-    protected $_weighttable = array();
+    protected $_weighttable = [];
 
     public $serverid = null;
 
@@ -86,4 +86,3 @@ class db_driver_mysqli_slave extends db_driver_mysqli {
 
 }
 
-?>

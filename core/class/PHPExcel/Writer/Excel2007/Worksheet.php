@@ -901,8 +901,8 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 	private function _writeBreaks(PHPExcel_Shared_XMLWriter $objWriter = null, PHPExcel_Worksheet $pSheet = null)
 	{
 		// Get row and column breaks
-		$aRowBreaks = array();
-		$aColumnBreaks = array();
+		$aRowBreaks = [];
+		$aColumnBreaks = [];
 		foreach ($pSheet->getBreaks() as $cell => $breakType) {
 			if ($breakType == PHPExcel_Worksheet::BREAK_ROW) {
 				$aRowBreaks[] = $cell;
@@ -972,7 +972,7 @@ class PHPExcel_Writer_Excel2007_Worksheet extends PHPExcel_Writer_Excel2007_Writ
 				$highestRow = $pSheet->getHighestRow();
 
 				// Loop through cells
-				$cellsByRow = array();
+				$cellsByRow = [];
 				foreach ($pSheet->getCellCollection() as $cellID) {
 					$cellAddress = PHPExcel_Cell::coordinateFromString($cellID);
 					$cellsByRow[$cellAddress[1]][] = $cellID;

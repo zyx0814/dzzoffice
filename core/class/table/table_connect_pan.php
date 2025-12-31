@@ -27,8 +27,8 @@ class table_connect_pan extends dzz_table {
 
         $value = self::fetch($id);
         $cloud = DB::fetch_first("select * from " . DB::table('connect') . " where bz='{$value['bz']}'");
-        if (!$value['cloudname']) $value['cloudname'] = $cloud['name'] . ':' . ($value['cusername'] ? $value['cusername'] : $cloud['cuid']);
-        $data = array(
+        if (!$value['cloudname']) $value['cloudname'] = $cloud['name'] . ':' . ($value['cusername'] ?: $cloud['cuid']);
+        return [
             'id' => $value['id'],
             'fid' => md5($cloud['bz'] . ':' . $value['id'] . ':' . $cloud['root']),
             'pfid' => 0,
@@ -42,13 +42,11 @@ class table_connect_pan extends dzz_table {
             'flag' => $cloud['bz'],
             'iconview' => 1,
             'disp' => '0',
-        );
-
-        return $data;
+        ];
     }
 
     public function fetch_all_by_id($ids) {
-        $data = array();
+        $data = [];
         foreach ($ids as $id) {
             $value = self::fetch_by_id($id);
             $data[$value['fid']] = $value;
@@ -57,7 +55,7 @@ class table_connect_pan extends dzz_table {
     }
 
     public function delete_by_id($id) {
-        $return = array();
+        $return = [];
         $data = parent::fetch($id);
         if (parent::delete($id)) {
             $return['msg'] = 'success';
@@ -71,17 +69,17 @@ class table_connect_pan extends dzz_table {
 
     public function delete_by_uid($uid) {
         if (!$uid) return 0;
-        foreach (DB::fetch_all("select id from %t where uid=%d", array($this->_table, $uid)) as $value) {
+        foreach (DB::fetch_all("select id from %t where uid=%d", [$this->_table, $uid]) as $value) {
             self::delete_by_id($value['id']);
         }
         return true;
     }
 
     public function delete_by_bz($bz) {
-        foreach (DB::fetch_all("select id from %t where bz=%s", array($this->_table, $bz)) as $value) {
+        foreach (DB::fetch_all("select id from %t where bz=%s", [$this->_table, $bz]) as $value) {
             self::delete_by_id($value['id']);
         }
     }
 }
 
-?>
+

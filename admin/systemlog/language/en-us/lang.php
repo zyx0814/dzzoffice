@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => 'System Logs',
     'logs' => 'Operation Records',
     'systemlog_setting' => 'Settings',
@@ -8,5 +8,4 @@ $lang = array(
     'logtypename' => 'Log Type Name',
     'logtype' => 'Log Type',
     'logflag' => 'Log Flag'
-);
-?>
+];

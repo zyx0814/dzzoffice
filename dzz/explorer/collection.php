@@ -48,23 +48,23 @@ if ($do == 'filelist') {
     } elseif ($orderby) {
         $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
     }
-    $count = DB::result_first("select count(*) from %t where uid = %d $ordersql ", array('resources_collect', $_G['uid']));
+    $count = DB::result_first("select count(*) from %t where uid = %d $ordersql ", ['resources_collect', $_G['uid']]);
     $collects = C::t('resources_collect')->fetch_by_uid($limitsql, $ordersql);
     $explorer_setting = get_resources_some_setting();
-    $data = array();
-    $folderids = $folderdata = array();
+    $data = [];
+    $folderids = $folderdata = [];
     foreach ($collects as $v) {
         $val = C::t('resources')->fetch_by_rid($v['rid']);
         if (!$explorer_setting['useronperm'] && $val['gid'] == 0) {
             continue;
         }
         if (!$explorer_setting['grouponperm'] && $val['gid'] > 0) {
-            if (DB::result_first("select `type` from %t where orgid = %d", array('organization', $val['gid'])) == 1) {
+            if (DB::result_first("select `type` from %t where orgid = %d", ['organization', $val['gid']]) == 1) {
                 continue;
             }
         }
         if (!$explorer_setting['orgonperm'] && $val['gid'] > 0) {
-            if (DB::result_first("select `type` from %t where orgid = %d", array('organization', $val['gid'])) == 0) {
+            if (DB::result_first("select `type` from %t where orgid = %d", ['organization', $val['gid']]) == 0) {
                 continue;
             }
         }
@@ -87,17 +87,17 @@ if ($do == 'filelist') {
 
     $disp = isset($_GET['disp']) ? intval($_GET['disp']) : 0;//文件排序
     $iconview = isset($_GET['iconview']) ? intval($_GET['iconview']) : 4;//排列方式
-    $total = $count ? $count : 0;//总条数
-    if (!$json_data = json_encode($data)) $data = array();
-    if (!$json_data = json_encode($foldedata)) $folderdata = array();
+    $total = $count ?: 0;//总条数
+    if (!$json_data = json_encode($data)) $data = [];
+    if (!$json_data = json_encode($foldedata)) $folderdata = [];
     //返回数据
-    $return = array(
+    $return = [
         'sid' => $sid,
         'total' => $total,
 
-        'data' => $data ? $data : array(),
-        'folderdata' => $folderdata ? $folderdata : array(),
-        'param' => array(
+        'data' => $data ?: [],
+        'folderdata' => $folderdata ?: [],
+        'param' => [
             'disp' => $disp,
             'view' => $iconview,
             'page' => $page,
@@ -109,15 +109,15 @@ if ($do == 'filelist') {
             'tags' => '',
             'exts' => '',
             'localsearch' => $bz ? 1 : 0
-        )
-    );
+        ]
+    ];
     exit(json_encode($return));
 } elseif ($do == 'canclecollect') {//取消收藏
     $rids = isset($_GET['rids']) ? $_GET['rids'] : '';
     $return = C::t('resources_collect')->delete_usercollect_by_rid($rids);
     exit(json_encode($return));
 } else {
-    $filearr = array();
+    $filearr = [];
 
     include template('collection_content');
 }

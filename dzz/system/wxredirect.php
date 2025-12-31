@@ -14,7 +14,7 @@ Hook::listen('check_login');//检查是否登录，未登录跳转到登录界�
 $code = rawurldecode($_GET['code']);
 $redirecturl = dzzdecode(rawurldecode($_GET['url']));
 if (empty($redirecturl)) $redirecturl = dzzdecode(rawurldecode($_GET['url']), '', 4);
-$weObj = new qyWechat(array('token' => getglobal('setting/token_0'), 'appid' => getglobal('setting/CorpID'), 'appsecret' => getglobal('setting/CorpSecret'), 'agentid' => 0, 'encodingaeskey' => getglobal('setting/encodingaeskey_0'), 'debug' => true));
+$weObj = new qyWechat(['token' => getglobal('setting/token_0'), 'appid' => getglobal('setting/CorpID'), 'appsecret' => getglobal('setting/CorpSecret'), 'agentid' => 0, 'encodingaeskey' => getglobal('setting/encodingaeskey_0'), 'debug' => true]);
 $userid = $weObj->getUserId($code, 0);
 
 //生成登录cookie
@@ -23,4 +23,4 @@ if ($user = C::t('user')->fetch(str_replace('dzz-', '', $userid))) {
 }
 @header("Location: $redirecturl");
 exit();
-?>
+

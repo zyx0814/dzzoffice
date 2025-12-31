@@ -15,7 +15,7 @@ class Loginvalchk {
 
         if (!($_G['member_loginperm'] = logincheck($params['email']))) {//登录失败错误次数
 
-            showTips(array('error' => lang('login_strike', array('forbiddentime' => $_G['setting']['forbiddentime'] ? $_G['setting']['forbiddentime'] : 900))), $type);
+            showTips(['error' => lang('login_strike', ['forbiddentime' => $_G['setting']['forbiddentime'] ?: 900])], $type);
 
         }
         if ($params['fastloginfield']) {
@@ -29,7 +29,7 @@ class Loginvalchk {
 
         if (!$params['password'] || $params['password'] != addslashes($params['password'])) {//密码验证
 
-            showTips(array('error' => lang('profile_passwd_illegal')), $type);
+            showTips(['error' => lang('profile_passwd_illegal')], $type);
 
         }
 

@@ -13,7 +13,7 @@ $perm = isset($_GET['perm']) ? trim($_GET['perm']) : '';//权限判断值：比�
 $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';//文件id(需用dzzencode加密)
 $filename = isset($_GET['filename']) ? trim($_GET['filename']) : '';
 $token = isset($_GET['token']) ? trim($_GET['token']) : '';//调用地方传递参数，将原样返回给回调函数
-$gets = array(
+$gets = [
     'allowcreate' => $allowcreate,
     'nosearch' => 1,
     'inwindow' => 1,
@@ -28,7 +28,7 @@ $gets = array(
     'mulitype' => $mulitype,
     'token' => $token,
     'perm' => $perm
-);
+];
 $theurl = MOD_URL . "&op=fileselection&callback=" . $callback . '&' . url_implode($gets);
 include template('selectfile');
 exit();

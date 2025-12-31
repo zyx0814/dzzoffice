@@ -39,20 +39,20 @@ class EigenvalueDecomposition {
 	 *	Arrays for internal storage of eigenvalues.
 	 *	@var array
 	 */
-	private $d = array();
-	private $e = array();
+	private $d = [];
+	private $e = [];
 
 	/**
 	 *	Array for internal storage of eigenvectors.
 	 *	@var array
 	 */
-	private $V = array();
+	private $V = [];
 
 	/**
 	*	Array for internal storage of nonsymmetric Hessenberg form.
 	*	@var array
 	*/
-	private $H = array();
+	private $H = [];
 
 	/**
 	*	Working storage for nonsymmetric algorithm.
@@ -798,7 +798,7 @@ class EigenvalueDecomposition {
 			$this->tql2();
 		} else {
 			$this->H = $this->A;
-			$this->ort = array();
+			$this->ort = [];
 			// Reduce to Hessenberg form.
 			$this->orthes();
 			// Reduce Hessenberg to real Schur form.

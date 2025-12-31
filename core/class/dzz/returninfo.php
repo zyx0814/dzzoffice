@@ -9,17 +9,17 @@ class Returninfo {
     private $callback;
     private $returnData;
 
-    public function __construct($param = array()) {
+    public function __construct($param = []) {
         $this->type = $this->exists($param, 'type') ? strtoupper($param['type']) : 'JSON';   // 类型 JSON,XML,CALLBACK,ARRAY，HTML
         $this->xmlroot = $this->exists($param, 'xmlroot') ? $param['xmlroot'] : 'xmlroot';   // xml root dom name
         $this->callback = $this->exists($param, 'callback') ? $param['callback'] : '';     // JS callback function name
 
-        $format = array();
+        $format = [];
         $format['retcode'] = $this->exists($param, 'format.retcode') ? $param['format']['retcode'] : 'retcode';//retcode 对应名称
         $format['msg'] = $this->exists($param, 'format.msg') ? $param['format']['msg'] : 'msg';        //msg 对应名称
         $format['data'] = $this->exists($param, 'format.data') ? $param['format']['data'] : 'data';      //data 对应名称
 
-        $result = array();
+        $result = [];
         $result[$format['retcode']] = $this->exists($param, 'retcode') ? $param['retcode'] : 0;
         $result[$format['msg']] = $this->exists($param, 'msg') ? $param['msg'] : '';
         $result[$format['data']] = $this->exists($param, 'data') ? $param['data'] : '';
@@ -114,9 +114,7 @@ class Returninfo {
 
     //判断数据是否存在
     private function exists($obj, $key = '') {
-        if ($key == '') {
-            return isset($obj) && !empty($obj);
-        } else {
+        if ($key != '') {
             $keys = explode('.', $key);
             for ($i = 0, $max = count($keys); $i < $max; $i++) {
                 if (isset($obj[$keys[$i]])) {
@@ -125,8 +123,8 @@ class Returninfo {
                     return false;
                 }
             }
-            return isset($obj) && !empty($obj);
         }
+        return isset($obj) && !empty($obj);
     }
 
     //判断是否需要加上<![CDATA[]]>标记

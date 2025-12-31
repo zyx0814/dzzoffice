@@ -61,7 +61,7 @@ class command
     /**
      * @var array the list of command arguments
      */
-    protected $_args = array();
+    protected $_args = [];
 
     /**
      * @var string the full command string to execute
@@ -119,7 +119,7 @@ class command
             } else {
                 $method = 'set'.ucfirst($key);
                 if (method_exists($this, $method)) {
-                    call_user_func(array($this,$method), $value);
+                    call_user_func([$this,$method], $value);
                 } else {
                     throw new \Exception("Unknown configuration option '$key'");
                 }
@@ -172,7 +172,7 @@ class command
      */
     public function setArgs($args)
     {
-        $this->_args = array($args);
+        $this->_args = [$args];
         return $this;
     }
 
@@ -205,7 +205,7 @@ class command
         } else {
             $separator = substr($key, -1)==='=' ? '' : ' ';
             if (is_array($value)) {
-                $params = array();
+                $params = [];
                 foreach ($value as $v) {
                     $params[] = $doEscape ? escapeshellarg($v) : $v;
                 }
@@ -283,10 +283,10 @@ class command
                 return false;
             }
         } else {
-            $descriptors = array(
-                1   => array('pipe','w'),
-                2   => array('pipe','a'),
-            );
+            $descriptors = [
+                1   => ['pipe','w'],
+                2   => ['pipe','a'],
+            ];
             $process = proc_open($command, $descriptors, $pipes, $this->procCwd, $this->procEnv, $this->procOptions);
 
             if (is_resource($process)) {
@@ -299,7 +299,7 @@ class command
                 $this->_exitCode = proc_close($process);
 
                 if ($this->_exitCode!==0) {
-                    $this->_error = $this->_stdErr ? $this->_stdErr : "Failed without error message: $command";
+                    $this->_error = $this->_stdErr ?: "Failed without error message: $command";
                     return false;
                 }
             } else {

@@ -32,12 +32,12 @@ function checkAtPerm($gid) {//检查@部门权限
 }
 
 //获取部门的目录树,返回从机构到此部门的名称的数组
-function getPathByOrgid($orgid, $path = array()) {
+function getPathByOrgid($orgid, $path = []) {
     return C::t('organization')->getPathByOrgid($orgid, false);
 }
 
 //获取机构树
-function getDepartmentOption($orgid, $url = '', $all = false, $i = 0, $pname = array()) {
+function getDepartmentOption($orgid, $url = '', $all = false, $i = 0, $pname = []) {
     $html = '';
 
     //$data[$orgid]['i']=$i;
@@ -47,9 +47,7 @@ function getDepartmentOption($orgid, $url = '', $all = false, $i = 0, $pname = a
             $html .= '<li role="presentation">';
             $html .= '<a href="' . ($url ? ($url . '&depid=0') : 'javascript:;') . '" tabindex="-1" role="menuitem" _orgid="0" ' . (!$url ? 'onclick="selDepart(this)"' : '') . '>';
             $html .= '<div class="child-org">';
-            for ($j = 0; $j < $i - 1; $j++) {
-                $html .= '<span class="child-tree tree-su">&nbsp;</span>';
-            }
+            $html .= str_repeat('<span class="child-tree tree-su">&nbsp;</span>', $i - 1);
             $html .= lang('all');
             $html .= '</div>';
             $html .= '</a></li>';
@@ -59,9 +57,7 @@ function getDepartmentOption($orgid, $url = '', $all = false, $i = 0, $pname = a
             $html .= '<li role="presentation">';
             $html .= '<a href="' . ($url ? ($url . '&depid=' . $org['orgid']) : 'javascript:;') . '" tabindex="-1" role="menuitem" _orgid="' . $org['orgid'] . '" ' . (!$url ? 'onclick="selDepart(this)"' : '') . ' data-orgname=' . implode('-', $pname) . '>';
             $html .= '<div class="child-org">';
-            for ($j = 0; $j < $i - 1; $j++) {
-                $html .= '<span class="child-tree tree-su">&nbsp;</span>';
-            }
+            $html .= str_repeat('<span class="child-tree tree-su">&nbsp;</span>', $i - 1);
             $html .= $org['orgname'];
             $html .= '</div>';
             $html .= '</a></li>';
@@ -77,9 +73,7 @@ function getDepartmentOption($orgid, $url = '', $all = false, $i = 0, $pname = a
             $html .= '<li role="presentation">';
             $html .= '<a href="' . ($url ? ($url . '&depid=' . $value['orgid']) : 'javascript:;') . '" tabindex="-1" role="menuitem" _orgid="' . $value['orgid'] . '" ' . (!$url ? 'onclick="selDepart(this)"' : '') . ' data-orgname=' . implode('-', $pname) . '>';
             $html .= '<div class="child-org">';
-            for ($j = 0; $j < $i - 1; $j++) {
-                $html .= '<span class="child-tree tree-su">&nbsp;</span>';
-            }
+            $html .= str_repeat('<span class="child-tree tree-su">&nbsp;</span>', $i - 1);
             $html .= '<span class="child-tree ' . ($k < $count ? 'tree-heng' : 'tree-heng1') . '">&nbsp;</span>' . $value['orgname'];
             $html .= '</div>';
             $html .= '</a></li>';
@@ -92,7 +86,7 @@ function getDepartmentOption($orgid, $url = '', $all = false, $i = 0, $pname = a
 }
 
 //获取机构树
-function getDepartmentOption_admin($orgid, $url = '', $all = false, $i = 0, $tree = array()) {
+function getDepartmentOption_admin($orgid, $url = '', $all = false, $i = 0, $tree = []) {
     global $_G;
     $html = '';
     if ($i < 1 && ($org = C::t('organization')->fetch($orgid)) && $org['forgid'] < 1) {
@@ -117,7 +111,7 @@ function getDepartmentOption_admin($orgid, $url = '', $all = false, $i = 0, $tre
     $count = C::t('organization')->fetch_all_by_forgid($orgid, true);
     if ($count) {
         $k = 1;
-        $value = array();
+        $value = [];
         foreach (C::t('organization')->fetch_all_by_forgid($orgid) as $key => $value) {
             if (!$all) {
                 $ismoderator = C::t('organization_admin')->ismoderator_by_uid_orgid($value['orgid'], $_G['uid']);
@@ -133,13 +127,11 @@ function getDepartmentOption_admin($orgid, $url = '', $all = false, $i = 0, $tre
 
             $html .= '<a href="' . ($url ? ($url . '&depid=' . $value['orgid']) : 'javascript:;') . '" tabindex="-1" role="menuitem" _orgid="' . $value['orgid'] . '" ' . (!$url ? ($ismoderator ? 'onclick="selDepart(this)"' : '') : '') . ' data-text="' . ($tree ? (implode(' - ', $tree) . ' - ') : '') . $value['orgname'] . '">';
             $html .= '<div class="child-org">';
-            for ($j = 0; $j < $i - 1; $j++) {
-                $html .= '<span class="child-tree tree-su">&nbsp;</span>';
-            }
+            $html .= str_repeat('<span class="child-tree tree-su">&nbsp;</span>', $i - 1);
             $html .= '<span class="child-tree ' . ($k < $count ? 'tree-heng' : 'tree-heng1') . '">&nbsp;</span>' . $value['orgname'];
             $html .= '</div>';
             $html .= '</a></li>';
-            $html .= getDepartmentOption_admin($value['orgid'], $url, $all, $i, array_merge($tree, array($value['orgname'])));
+            $html .= getDepartmentOption_admin($value['orgid'], $url, $all, $i, array_merge($tree, [$value['orgname']]));
             $k++;
         }
         //$html.='</tbody>';
@@ -148,8 +140,8 @@ function getDepartmentOption_admin($orgid, $url = '', $all = false, $i = 0, $tre
 }
 
 //获取机构树
-function getDepartmentJStree($orgid = 0, $notin = array()) {
-    static $uids = array();
+function getDepartmentJStree($orgid = 0, $notin = []) {
+    static $uids = [];
     $html = '';
     foreach (C::t('organization')->fetch_all_by_forgid($orgid) as $key => $value) {
         $html .= '<li  data-jstree=\'{"type":"org","icon":"dzz/system/images/organization.png"}\'>' . $value['orgname'];
@@ -167,12 +159,12 @@ function getDepartmentJStree($orgid = 0, $notin = array()) {
         $html .= '</ul>';
         $html .= ' </li>';
     }
-    return array('html' => $html, 'uids' => $uids);
+    return ['html' => $html, 'uids' => $uids];
 }
 
 //获取用户所在的部门
 function getDepartmentByUid($uid, $getManage = 0) {
-    $data = array();
+    $data = [];
     //获取用户所加入的所有部门
     $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid);
     if ($getManage && $orgids_m = C::t('organization_admin')->fetch_orgids_by_uid($uid)) {
@@ -188,7 +180,7 @@ function getDepartmentByUid($uid, $getManage = 0) {
 
 //获取用户部门及所属机构
 function getOrgByUid($uid, $getManage = 0) {
-    $orglist = array();
+    $orglist = [];
     $arr = getDepartmentByUid($uid, $getManage);
     foreach ($arr as $key => $value) {
         $orglist[$value[0]['orgid']] = $value[0];
@@ -203,7 +195,7 @@ function getOrgByUid($uid, $getManage = 0) {
 
 //获取应用可以使用的部门
 function getDepartmentByAppid($appid) {
-    $data = array();
+    $data = [];
     //获取用户所加入的所有部门
     $orgids = C::t('app_organization')->fetch_orgids_by_appid($appid);
     foreach ($orgids as $orgid) {
@@ -215,8 +207,7 @@ function getDepartmentByAppid($appid) {
 }
 
 function getTreeByOrgid($orgid) {
-    $orgarr = C::t('organization')->fetch_parent_by_orgid($orgid, false);
-    return $orgarr;
+    return C::t('organization')->fetch_parent_by_orgid($orgid, false);
 }
 
 //获取机构或部门的用户列表
@@ -224,12 +215,12 @@ function getTreeByOrgid($orgid) {
 //		>0  获取全部下级机构的成员
 // $notin   排除的用户列表;
 //返回 user列表数组;
-function getUserByOrgid($orgids, $dep = 0, $notin = array(), $onlyuid = false) {
+function getUserByOrgid($orgids, $dep = 0, $notin = [], $onlyuid = false) {
     $orgids = (array)$orgids;
     if (!$orgids) {
-        return array();
+        return [];
     }
-    $ids = array();
+    $ids = [];
     foreach ($orgids as $orgid) {
         if ($dep) {
             $ids = array_merge($ids, getOrgidTree($orgid));
@@ -239,7 +230,7 @@ function getUserByOrgid($orgids, $dep = 0, $notin = array(), $onlyuid = false) {
     }
     $uids = C::t('organization_user')->fetch_uids_by_orgid($ids);
     if ($notin) {
-        $arr = array();
+        $arr = [];
         foreach ($uids as $uid) {
             if (!in_array($uid, $notin)) $arr[] = $uid;
         }
@@ -249,11 +240,11 @@ function getUserByOrgid($orgids, $dep = 0, $notin = array(), $onlyuid = false) {
 
     if ($onlyuid) return $uids;
 
-    return DB::fetch_all("select uid,username from %t where uid IN (%n) ", array('user', $uids));
+    return DB::fetch_all("select uid,username from %t where uid IN (%n) ", ['user', $uids]);
 }
 
 function getOrgidByUid($uid, $sub = true) {//获取用户所在部门ID和所有下级部门ID
-    $ret = array();
+    $ret = [];
     $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid);
     if ($sub) {
         foreach ($orgids as $orgid) {
@@ -267,18 +258,18 @@ function getOrgidByUid($uid, $sub = true) {//获取用户所在部门ID和所有
 
 //获取此机构和所有下属机构的id
 function getOrgidTree($orgid) {
-    $oids = array();
+    $oids = [];
     if ($org = C::t('organization')->fetch($orgid)) {
-        foreach (DB::fetch_all("select orgid from %t where pathkey REGEXP %s order by disp", array('organization', '^' . $org['pathkey'])) as $value) {
+        foreach (DB::fetch_all("select orgid from %t where pathkey REGEXP %s order by disp", ['organization', '^' . $org['pathkey']]) as $value) {
             $oids[] = $value['orgid'];
         }
-        $oids = array_diff($oids, array($orgid));
+        $oids = array_diff($oids, [$orgid]);
         array_unshift($oids, $orgid);
     }
     return $oids;
 }
 //获取此机构和所有上级机构的id
-function getUpOrgidTree($orgid, $onlyid = true, $pids = array()) {
+function getUpOrgidTree($orgid, $onlyid = true, $pids = []) {
     global $_G;
     if ($org = C::t('organization')->fetch($orgid)) {
         if ($onlyid) {

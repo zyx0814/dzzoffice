@@ -9,42 +9,42 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
-$sid = $_GET['sid'] ? $_GET['sid'] : '';
+$sid = $_GET['sid'] ?: '';
 if (!$sid) {
-    exit(json_encode(array('error' => 'Access Denied')));
+    exit(json_encode(['error' => 'Access Denied']));
 }
 $sid = dzzdecode($sid);
 if (!$sid) {
-    exit(json_encode(array('error' => 'Access Denied')));
+    exit(json_encode(['error' => 'Access Denied']));
 }
 $share = C::t('shares')->fetch($sid);
-if (!$share || empty($share['filepath'])) exit(json_encode(array('error' => lang('share_file_iscancled'))));
-if ($share['status'] == -4) exit(json_encode(array('error' => lang('shared_links_screened_administrator'))));
-if ($share['status'] == -5) exit(json_encode(array('error' => lang('sharefile_isdeleted_or_positionchange'))));
+if (!$share || empty($share['filepath'])) exit(json_encode(['error' => lang('share_file_iscancled')]));
+if ($share['status'] == -4) exit(json_encode(['error' => lang('shared_links_screened_administrator')]));
+if ($share['status'] == -5) exit(json_encode(['error' => lang('sharefile_isdeleted_or_positionchange')]));
 //判断是否过期
 if ($share['endtime'] && $share['endtime'] < TIMESTAMP) {
-    exit(json_encode(array('error' => lang('share_link_expired'))));
+    exit(json_encode(['error' => lang('share_link_expired')]));
 }
 if ($share['times'] && $share['times'] <= $share['count']) {
-    exit(json_encode(array('error' => lang('link_already_reached_max_number'))));
+    exit(json_encode(['error' => lang('link_already_reached_max_number')]));
 }
 if ($share['status'] == -3) {
-    exit(json_encode(array('error' => lang('share_file_deleted'))));
+    exit(json_encode(['error' => lang('share_file_deleted')]));
 }
 if ($share['password'] && (dzzdecode($share['password']) != authcode($_G['cookie']['pass_' . $sid]))) {
     $avatar = avatar_block($share['uid']);
-    $return = array(
-        'password' => array(
+    $return = [
+        'password' => [
             'avatar' => $avatar,
             'username' => $share['username'],
-        )
-    );
+        ]
+    ];
     if ($_GET['passwordsubmit']) {
         if ($_GET['password'] != dzzdecode($share['password'])) {
-            exit(json_encode(array('error' => '密码不正确，请重试')));
+            exit(json_encode(['error' => '密码不正确，请重试']));
         }
         dsetcookie('pass_' . $sid, authcode($_GET['password'], 'ENCODE'));
-        exit(json_encode(array('success' => true)));
+        exit(json_encode(['success' => true]));
     } else {
         exit(json_encode($return));
     }
@@ -56,7 +56,7 @@ $rename = 0;
 if ($share['perm']) {
     $perms = array_flip(explode(',', $share['perm'])); // 将权限字符串转换为数组
     if (isset($perms[3]) && !$_G['uid']) { // 3 表示仅登录访问
-        exit(json_encode(array('error' => lang('to_login'))));
+        exit(json_encode(['error' => lang('to_login')]));
     } elseif (isset($perms[2])) { // 2 表示禁用预览权限
         $canview = 0;
     }
@@ -89,40 +89,40 @@ switch ($disp) {
         $orderby = 'size';
         break;
     case 2:
-        $orderby = array('type', 'ext');
+        $orderby = ['type', 'ext'];
         break;
     case 3:
         $orderby = 'dateline';
         break;
 }
-$data = array();
-$fids = array();
+$data = [];
+$fids = [];
 $filepaths = $share['filepath'];
 $rids = explode(',', $filepaths);
 if ($do == 'filelist') {
     if (!isset($fid)) {
-        exit(json_encode(array('error' => 'fid 参数错误')));
+        exit(json_encode(['error' => 'fid 参数错误']));
     }
     $bz = empty($_GET['bz']) ? '' : trim($_GET['bz']);
     if ($bz) {
         if (!$bz = dzzdecode($bz)) {
-            exit(json_encode(array('error' => 'bz 参数错误')));
+            exit(json_encode(['error' => 'bz 参数错误']));
         }
         if (preg_match('/^sid:([^\_]+)_/', $bz)) {
             $dbz = preg_replace('/^sid:[^\_]+_/', '', $bz);
         }
         if (strpos($dbz, $filepaths) === 0) {
             $folder = IO::getMeta($bz);
-            if (!$folder) exit(json_encode(array('error' => lang('file_no_exist'))));
+            if (!$folder) exit(json_encode(['error' => lang('file_no_exist')]));
             if ($folder['error']) {
-                exit(json_encode(array('error' => $folder['error'])));
+                exit(json_encode(['error' => $folder['error']]));
             }
             $bzinfo=IO::getCloud($folder['bz']);
             if (!$bzinfo) {
-                exit(json_encode(array('error' => lang('cloud_no_info'))));
+                exit(json_encode(['error' => lang('cloud_no_info')]));
             }
             if($bzinfo['available']<1) {
-                exit(json_encode(array('error' => lang('cloud_no_available'))));
+                exit(json_encode(['error' => lang('cloud_no_available')]));
             }
             if ($folder['type'] == 'folder') {
                 $limit = $start . '-' . ($start + $perpage);
@@ -136,7 +136,7 @@ if ($do == 'filelist') {
                 }
                 $icosdata = IO::listFiles($folder['path'], $orderby, $order, $limit,$force);
                 if ($icosdata['error']) {
-                    exit(json_encode(array('error' => $icosdata['error'])));
+                    exit(json_encode(['error' => $icosdata['error']]));
                 }
                 foreach ($icosdata as $key => $value) {
                     if ($value['error']) {
@@ -159,7 +159,7 @@ if ($do == 'filelist') {
             $foldername = $folder['name'];
             $folder['fid'] = $folder['rid'];
         } else {
-            exit(json_encode(array('error' => '该目录不在该分享范围内')));
+            exit(json_encode(['error' => '该目录不在该分享范围内']));
         }
     } else {
         list($prex, $id) = explode('-', $fid);
@@ -167,10 +167,10 @@ if ($do == 'filelist') {
             // 查询文件夹信息
             $folder = C::t('folder')->fetch_by_fid($id);
             if (!$folder) {
-                exit(json_encode(array('error' => '文件夹不存在')));
+                exit(json_encode(['error' => '文件夹不存在']));
             }
             if (!$folder['fid']) {
-                exit(json_encode(array('error' => '文件夹不存在')));
+                exit(json_encode(['error' => '文件夹不存在']));
             }
             $fiddata = C::t('resources_path')->fetch_folder_containfid_by_pfid($share['pfid']);
             if (!empty($fiddata)) {
@@ -180,18 +180,18 @@ if ($do == 'filelist') {
             if (in_array($id, $fiddata)) {
                 $path = C::t('resources_path')->fetch_pathby_pfid($id, true);
                 if (!$path['path']) {
-                    exit(json_encode(array('error' => '文件夹不存在')));
+                    exit(json_encode(['error' => '文件夹不存在']));
                 }
                 $foldername = $folder['title'];
-                $folder['disp'] = $disp = intval($_GET['disp']) ? intval($_GET['disp']) : intval($folder['disp']); // 文件排序
+                $folder['disp'] = $disp = intval($_GET['disp']) ?: intval($folder['disp']); // 文件排序
                 // 查询文件信息
-                $conditions = array();
+                $conditions = [];
                 $data = C::t('resources')->fetch_all_by_pfid($folder['fid'], $conditions, $perpage, $orderby, $order, $start, false, $sid, true);
             } else {
-                exit(json_encode(array('error' => '该目录不在该分享范围内')));
+                exit(json_encode(['error' => '该目录不在该分享范围内']));
             }
         } else {
-            exit(json_encode(array('error' => 'fid参数错误')));
+            exit(json_encode(['error' => 'fid参数错误']));
         }
     }
 } else {
@@ -199,20 +199,20 @@ if ($do == 'filelist') {
     if($share['pfid'] == -1) {
         $ignore = 0;
         $folder = IO::getMeta('sid:' . $sid . '_' .$filepaths,0,$sid);
-        if (!$folder) exit(json_encode(array('error' => lang('file_no_exist'))));
+        if (!$folder) exit(json_encode(['error' => lang('file_no_exist')]));
         if ($folder['error']) {
             if ($folder['delete']) {
-                DB::update('shares', array('status' => '-3'), array('id' => $sid));
-                exit(json_encode(array('error' => lang('share_file_deleted'))));
+                DB::update('shares', ['status' => '-3'], ['id' => $sid]);
+                exit(json_encode(['error' => lang('share_file_deleted')]));
             }
-            exit(json_encode(array('error' => $folder['error'])));
+            exit(json_encode(['error' => $folder['error']]));
         }
         $bzinfo=IO::getCloud($folder['bz']);
         if (!$bzinfo) {
-            exit(json_encode(array('error' => lang('cloud_no_info'))));
+            exit(json_encode(['error' => lang('cloud_no_info')]));
         }
         if($bzinfo['available']<1) {
-            exit(json_encode(array('error' => lang('cloud_no_available'))));
+            exit(json_encode(['error' => lang('cloud_no_available')]));
         }
         if ($folder['type'] == 'folder') {
             $limit = $start . '-' . ($start + $perpage);
@@ -226,7 +226,7 @@ if ($do == 'filelist') {
             }
             $icosdata = IO::listFiles('sid:' . $sid . '_' .$filepaths, $orderby, $order, $limit,$force);
             if ($icosdata['error']) {
-                exit(json_encode(array('error' => $icosdata['error'])));
+                exit(json_encode(['error' => $icosdata['error']]));
             }
             foreach ($icosdata as $key => $value) {
                 if ($value['error']) {
@@ -255,7 +255,7 @@ if ($do == 'filelist') {
             $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
         }
         if (!empty($rids)) {
-            $params = array('resources', $rids);
+            $params = ['resources', $rids];
             $wheresql = " where rid in(%n) and isdelete < 1";
             $limitsql = 'limit ' . $start . ',' . ($start + $perpage);
             $count = DB::result_first("select count(*) from %t $wheresql $ordersql $limitsql", $params);
@@ -286,8 +286,8 @@ if ($do == 'filelist') {
                 $data[$fileinfo['path']] = $fileinfo;
             }
             if (count($data) < 1) {
-                DB::update('shares', array('status' => '-3'), array('id' => $sid));
-                exit(json_encode(array('error' => lang('share_file_deleted'))));
+                DB::update('shares', ['status' => '-3'], ['id' => $sid]);
+                exit(json_encode(['error' => lang('share_file_deleted')]));
             }
         }
     }
@@ -305,36 +305,36 @@ if (count($data) >= $perpage) {
 } else {
     $total = $start + count($data);
 }
-if (!$json_data = json_encode($data)) $data = array();
+if (!$json_data = json_encode($data)) $data = [];
 if ($page > 1) {
     $foldername = '';
 }
 //返回数据
-$return = array(
+$return = [
     'fid' => 'f-1',
     'total' => $total,
-    'data' => $data ? $data : array(),
-    'foldername' => $foldername ? $foldername : '',
-    'folderid' => $folder['fid'] ? $folder['fid'] : '0',
-    'folderdata' => array(
-        1 => array(
-            'fid' => $folder['fid'] ? $folder['fid'] : '0',
+    'data' => $data ?: [],
+    'foldername' => $foldername ?: '',
+    'folderid' => $folder['fid'] ?: '0',
+    'folderdata' => [
+        1 => [
+            'fid' => $folder['fid'] ?: '0',
             'pfid' => '1',
             'path' => $folder['path'],
             'gid' => '1',
             'bz' => $folder['bz'],
-        )
-    ),
-    'share' => array(
+        ]
+    ],
+    'share' => [
         'fdateline' => $fdateline,
         'expireday' => $expireday,
         'title' => $share['title'],
         'username' => $share['username'],
-        'views' => $share['views'] ? $share['views'] : '1',
+        'views' => $share['views'] ?: '1',
         'downs' => $share['downs'],
         'img' => $share['img'],
-    ),
-    'param' => array(
+    ],
+    'param' => [
         'disp' => $disp,
         'download' => $download,
         'create' => $do ? $create : 0,
@@ -345,6 +345,6 @@ $return = array(
         'perpage' => $perpage,
         'total' => $total,
         'asc' => $asc,
-    )
-);
+    ]
+];
 exit(json_encode($return));

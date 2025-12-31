@@ -84,7 +84,7 @@ class PHPExcel_Writer_PDF
             throw new PHPExcel_Writer_Exception("PDF Rendering library has not been defined.");
         }
 
-        return call_user_func_array(array($this->_renderer, $name), $arguments);
+        return call_user_func_array([$this->_renderer, $name], $arguments);
     }
 
 }

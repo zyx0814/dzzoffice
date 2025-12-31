@@ -19,7 +19,7 @@ if ($step == 1) {
 } elseif ($step == 3) {
     $type = explode('_', $_GET['type']);
     try {
-        $entryarray = array(
+        $entryarray = [
             'data',
             'data/attachment',
             'data/attachment/appico',
@@ -30,7 +30,7 @@ if ($step == 1) {
             'data/cache',
             'data/log',
             'data/template'
-        );
+        ];
         $result = '';
         $allWritable = true; // 标记是否所有目录都可写
         
@@ -102,4 +102,4 @@ if ($step == 1) {
     }
 }
 include template('fileperms');
-?>
+

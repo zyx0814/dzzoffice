@@ -14,20 +14,18 @@ function show_msg($error_no, $error_msg = 'ok', $success = 1, $quit = TRUE) {
     show_header();
     $title = lang($error_no);
     $comment = lang($error_no . '_comment', false);
-    if ($error_msg) {
-        if (!empty($error_msg)) {
-            $comment .= '<ul style="margin-top:10px; line-height:1.8;">';
-            foreach ((array)$error_msg as $k => $v) {
-                if (is_numeric($k)) {
-                    $comment .= "<li>" . lang($v) . "</li>";
-                }
+    if (!empty($error_msg)) {
+        $comment .= '<ul style="margin-top:10px; line-height:1.8;">';
+        foreach ((array)$error_msg as $k => $v) {
+            if (is_numeric($k)) {
+                $comment .= "<li>" . lang($v) . "</li>";
             }
-            $comment .= '</ul>';
         }
+        $comment .= '</ul>';
     }
     $alert_class = $success ? 'alert-success' : 'alert-error';
-    $icon_svg = $success 
-        ? '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>' 
+    $icon_svg = $success
+        ? '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>'
         : '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
 
     echo <<<EOT
@@ -72,15 +70,13 @@ function check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre) {
             show_msg('database_connect_error', $error, 0);
         }
         return false;
-    } else {
-        if ($query = $link->query("SHOW TABLES FROM $dbname")) {
-            if (!$query) {
+    } elseif ($query = $link->query("SHOW TABLES FROM $dbname")) {
+        if (!$query) {
+            return false;
+        }
+        while ($row = $query->fetch_row()) {
+            if (preg_match("/^$tablepre/", $row[0])) {
                 return false;
-            }
-            while ($row = $query->fetch_row()) {
-                if(preg_match("/^$tablepre/", $row[0])) {
-					return false;
-				}
             }
         }
     }
@@ -103,23 +99,21 @@ function dirfile_check(&$dirfile_items) {
                 $dirfile_items[$key]['status'] = 1;
                 $dirfile_items[$key]['current'] = '+r+w';
             }
-        } else {
-            if (file_exists(ROOT_PATH . $item_path)) {
-                if (is_writable(ROOT_PATH . $item_path)) {
-                    $dirfile_items[$key]['status'] = 1;
-                    $dirfile_items[$key]['current'] = '+r+w';
-                } else {
-                    $dirfile_items[$key]['status'] = 0;
-                    $dirfile_items[$key]['current'] = '+r';
-                }
+        } else if (file_exists(ROOT_PATH . $item_path)) {
+            if (is_writable(ROOT_PATH . $item_path)) {
+                $dirfile_items[$key]['status'] = 1;
+                $dirfile_items[$key]['current'] = '+r+w';
             } else {
-                if (dir_writeable(dirname(ROOT_PATH . $item_path))) {
-                    $dirfile_items[$key]['status'] = 1;
-                    $dirfile_items[$key]['current'] = '+r+w';
-                } else {
-                    $dirfile_items[$key]['status'] = -1;
-                    $dirfile_items[$key]['current'] = 'nofile';
-                }
+                $dirfile_items[$key]['status'] = 0;
+                $dirfile_items[$key]['current'] = '+r';
+            }
+        } else {
+            if (dir_writeable(dirname(ROOT_PATH . $item_path))) {
+                $dirfile_items[$key]['status'] = 1;
+                $dirfile_items[$key]['current'] = '+r+w';
+            } else {
+                $dirfile_items[$key]['status'] = -1;
+                $dirfile_items[$key]['current'] = 'nofile';
             }
         }
     }
@@ -134,9 +128,9 @@ function env_check(&$env_items) {
         } elseif ($key == 'attachmentupload') {
             $env_items[$key]['current'] = @ini_get('file_uploads') ? getmaxupload() : 'unknown';
         } elseif ($key == 'allow_url_fopen') {
-            $env_items[$key]['current'] =@ini_get('allow_url_fopen') ?: 'unknown';
+            $env_items[$key]['current'] = @ini_get('allow_url_fopen') ?: 'unknown';
         } elseif ($key == 'gdversion') {
-            $tmp = function_exists('gd_info') ? gd_info() : array();
+            $tmp = function_exists('gd_info') ? gd_info() : [];
             $env_items[$key]['current'] = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
             unset($tmp);
         } elseif ($key == 'diskspace') {
@@ -147,10 +141,10 @@ function env_check(&$env_items) {
             }
         } elseif (isset($item['c'])) {
             $env_items[$key]['current'] = constant($item['c']);
-        } elseif($key == 'opcache') {
-			$opcache_data = function_exists('opcache_get_configuration') ? opcache_get_configuration() : array();
-			$env_items[$key]['current'] = !empty($opcache_data['directives']['opcache.enable']) ? 'enable' : 'disable';
-		}
+        } elseif ($key == 'opcache') {
+            $opcache_data = function_exists('opcache_get_configuration') ? opcache_get_configuration() : [];
+            $env_items[$key]['current'] = !empty($opcache_data['directives']['opcache.enable']) ? 'enable' : 'disable';
+        }
 
         $env_items[$key]['status'] = 1;
         if ($item['r'] != 'notset' && strcmp($env_items[$key]['current'], $item['r']) < 0) {
@@ -166,21 +160,21 @@ function function_check(&$func_items) {
 }
 
 function dfloatval($int, $allowarray = false) {
-	$ret = floatval($int);
-	if($int == $ret || !$allowarray && is_array($int)) return $ret;
-	if($allowarray && is_array($int)) {
-		foreach($int as &$v) {
-			$v = dfloatval($v, true);
-		}
-		return $int;
-	} elseif($int <= 0xffffffff) {
-		$l = strlen($int);
-		$m = substr($int, 0, 1) == '-' ? 1 : 0;
-		if(($l - $m) === strspn($int,'0987654321', $m)) {
-			return $int;
-		}
-	}
-	return $ret;
+    $ret = floatval($int);
+    if ($int == $ret || !$allowarray && is_array($int)) return $ret;
+    if ($allowarray && is_array($int)) {
+        foreach ($int as &$v) {
+            $v = dfloatval($v, true);
+        }
+        return $int;
+    } elseif ($int <= 0xffffffff) {
+        $l = strlen($int);
+        $m = substr($int, 0, 1) == '-' ? 1 : 0;
+        if (($l - $m) === strspn($int, '0987654321', $m)) {
+            return $int;
+        }
+    }
+    return $ret;
 }
 
 function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_items) {
@@ -197,21 +191,19 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
                     $status = 0;
                     $error_code = ENV_CHECK_ERROR;
                 }
-            } else {
-                if (strcmp($item['current'], $item['r']) < 0) {
-                    $status = 0;
-                    $error_code = ENV_CHECK_ERROR;
-                }
+            } elseif (strcmp($item['current'], $item['r']) < 0) {
+                $status = 0;
+                $error_code = ENV_CHECK_ERROR;
             }
         }
         if ($item['current'] == 'noext') {
             $status = 0;
             $error_code = ENV_CHECK_ERROR;
         }
-        if($key == 'diskspace') {
-			$item['current'] = format_space($item['current']);
-			$item['r'] = format_space($item['r']);
-		}
+        if ($key == 'diskspace') {
+            $item['current'] = format_space($item['current']);
+            $item['r'] = format_space($item['r']);
+        }
         if (VIEW_OFF) {
             $env_str .= "\t\t<runCondition name=\"$key\" status=\"$status\" Require=\"{$item['r']}\" Best=\"{$item['b']}\" Current=\"{$item['current']}\"/>\n";
         } else {
@@ -405,9 +397,9 @@ EOT;
 }
 
 function createtable($sql, $dbver) {
-	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
-	$type = in_array($type, array('INNODB', 'MYISAM', 'HEAP', 'MEMORY')) ? $type : 'INNODB';
-	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql). " ENGINE=$type DEFAULT CHARSET=".DBCHARSET.(DBCHARSET === 'utf8mb4' ? " COLLATE=utf8mb4_unicode_ci" : "");
+    $type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
+    $type = in_array($type, ['INNODB', 'MYISAM', 'HEAP', 'MEMORY']) ? $type : 'INNODB';
+    return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) . " ENGINE=$type DEFAULT CHARSET=" . DBCHARSET . (DBCHARSET === 'utf8mb4' ? " COLLATE=utf8mb4_unicode_ci" : "");
 }
 
 function dir_writeable($dir) {
@@ -433,7 +425,7 @@ function dir_clear($dir) {
     if ($directory = @dir($dir)) {
         while ($entry = $directory->read()) {
             $filename = $dir . '/' . $entry;
-            if($entry != '.' && $entry != '..') {
+            if ($entry != '.' && $entry != '..') {
                 if (is_file($filename)) {
                     @unlink($filename);
                 } else {
@@ -487,25 +479,30 @@ function show_header() {
 EOT;
     // 显示步骤条
     if ($step > 0 && $step < 5) {
-        $steps = array(
+        $steps = [
             1 => lang('step_title_1'),
             2 => lang('step_title_2'),
             3 => lang('step_title_3'),
             4 => lang('step_title_4')
-        );
+        ];
         echo '<div class="step-nav">';
         foreach ($steps as $k => $t) {
             $cls = '';
             $num = $k;
-            if ($k < $step) { $cls = 'done'; $num = '✔'; }
-            if ($k == $step) { $cls = 'active'; }
+            if ($k < $step) {
+                $cls = 'done';
+                $num = '✔';
+            }
+            if ($k == $step) {
+                $cls = 'active';
+            }
             echo "<div class=\"step-item $cls\"><span class=\"step-num\">$num</span> $t</div>";
         }
         echo '</div>';
     }
-    echo  '<div class="main">';
-	flush();
-	ob_flush();
+    echo '<div class="main">';
+    flush();
+    ob_flush();
 }
 
 function show_footer($quit = true) {
@@ -586,7 +583,7 @@ function save_config_file($filename, $config, $default) {
 \$_config = array();
 
 EOT;
-    $content .= getvars(array('_config' => $config));
+    $content .= getvars(['_config' => $config]);
     $content .= "\r\n// " . str_pad('  THE END  ', 50, '-', STR_PAD_BOTH) . "\r\n return \$_config;";
     file_put_contents($filename, $content);
 }
@@ -594,9 +591,9 @@ EOT;
 function setdefault($var, $default) {
     foreach ($default as $k => $v) {
         if (!isset($var[$k])) {
-            $var[$k] = $default[$k];
+            $var[$k] = $v;
         } elseif (is_array($v)) {
-            $var[$k] = setdefault($var[$k], $default[$k]);
+            $var[$k] = setdefault($var[$k], $v);
         }
     }
     return $var;
@@ -615,11 +612,11 @@ function authcode($string = '', $operation = 'DECODE', $key = '', $expiry = 0, $
     $cryptkey = $keya . md5($keya . $keyc);
     $key_length = strlen($cryptkey);
 
-    $string = $operation == 'DECODE' ? base64_decode(substr(str_replace(array('_', '-'), array('/', '+'), $string), $ckey_length)) : sprintf('%010d', $expiry ? $expiry + time() : 0) . substr(md5($string . $keyb), 0, 16) . $string;
+    $string = $operation == 'DECODE' ? base64_decode(substr(str_replace(['_', '-'], ['/', '+'], $string), $ckey_length)) : sprintf('%010d', $expiry ? $expiry + time() : 0) . substr(md5($string . $keyb), 0, 16) . $string;
     $string_length = strlen($string);
     $result = '';
     $box = range(0, 255);
-    $rndkey = array();
+    $rndkey = [];
     for ($i = 0; $i <= 255; $i++) {
         $rndkey[$i] = ord($cryptkey[$i % $key_length]);
     }
@@ -638,13 +635,13 @@ function authcode($string = '', $operation = 'DECODE', $key = '', $expiry = 0, $
         $result .= chr(ord($string[$i]) ^ ($box[($box[$a] + $box[$j]) % 256]));
     }
     if ($operation == 'DECODE') {
-        if(((int)substr($result, 0, 10) == 0 || (int)substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) === substr(md5(substr($result, 26).$keyb), 0, 16)) {
+        if (((int)substr($result, 0, 10) == 0 || (int)substr($result, 0, 10) - time() > 0) && substr($result, 10, 16) === substr(md5(substr($result, 26) . $keyb), 0, 16)) {
             return substr($result, 26);
         } else {
             return '';
         }
     } else {
-        return $keyc . str_replace(array('/', '+'), array('_', '-'), str_replace('=', '', base64_encode($result)));
+        return $keyc . str_replace(['/', '+'], ['_', '-'], str_replace('=', '', base64_encode($result)));
     }
 
 }
@@ -698,52 +695,49 @@ function show_install() {
 function runquery($sql) {
     global $lang, $tablepre, $db;
 
-    if (!isset($sql) || empty($sql)) return;
+    if (empty($sql)) return;
 
     $sql = str_replace("\r", "\n", str_replace(' ' . ORIG_TABLEPRE, ' ' . $tablepre, $sql));
     $sql = str_replace("\r", "\n", str_replace(' `' . ORIG_TABLEPRE, ' `' . $tablepre, $sql));
-    $ret = array();
+    $ret = [];
     $num = 0;
     foreach (explode(";\n", trim($sql)) as $query) {
         $ret[$num] = '';
         $queries = explode("\n", trim($query));
         foreach ($queries as $query) {
-            $ret[$num] .= (isset($query[0]) && $query[0] == '#') || (isset($query[1]) && isset($query[1]) && $query[0] . $query[1] == '--') ? '' : $query;
+            $ret[$num] .= (isset($query[0]) && $query[0] == '#') || (isset($query[1]) && $query[0] . $query[1] == '--') ? '' : $query;
         }
         $num++;
     }
     unset($sql);
     $oldtablename = "";
-    foreach($ret as $query) {
-		if($query) {
-			if(substr($query, 0, 12) == 'CREATE TABLE') {
+    foreach ($ret as $query) {
+        if ($query) {
+            if (substr($query, 0, 12) == 'CREATE TABLE') {
                 $name = str_replace('`', '', preg_replace("/CREATE TABLE\s+([`a-z0-9_`]+)\s+.*/is", "\\1", $query));
-				if ($db->query(createtable($query, $db->version()))) {
-					showjsmessage(lang('create_table').' '.$name.'  ... '.lang('succeed'));
-				} else {
-					showjsmessage(lang('create_table').' '.$name.'  ... '.lang('failed'));
-					return false;
-				}
-			} elseif(substr($query, 0, 6) == 'INSERT') {
-				$name = preg_replace("/INSERT\s+INTO\s+[\`]?([a-z0-9_]+)[\`]? .*/is", "\\1", $query);
-				if ($db->query($query)) {
-					if($oldtablename != $name) {
-						showjsmessage(lang('init_table_data').' '.$name.'  ... '.lang('succeed'));
-						$oldtablename = $name;
-					}
-				} else {
-					showjsmessage(lang('init_table_data').' '.$name.'  ... '.lang('failed'));
-					return false;
-				}
-			}else{
-				if (!$db->query($query)) {
-					showjsmessage(lang('failed'));
-					return false;
-				}
-			}
-
-		}
-	}
+                if ($db->query(createtable($query, $db->version()))) {
+                    showjsmessage(lang('create_table') . ' ' . $name . '  ... ' . lang('succeed'));
+                } else {
+                    showjsmessage(lang('create_table') . ' ' . $name . '  ... ' . lang('failed'));
+                    return false;
+                }
+            } elseif (substr($query, 0, 6) == 'INSERT') {
+                $name = preg_replace("/INSERT\s+INTO\s+[\`]?([a-z0-9_]+)[\`]? .*/is", "\\1", $query);
+                if ($db->query($query)) {
+                    if ($oldtablename != $name) {
+                        showjsmessage(lang('init_table_data') . ' ' . $name . '  ... ' . lang('succeed'));
+                        $oldtablename = $name;
+                    }
+                } else {
+                    showjsmessage(lang('init_table_data') . ' ' . $name . '  ... ' . lang('failed'));
+                    return false;
+                }
+            } elseif (!$db->query($query)) {
+                showjsmessage(lang('failed'));
+                return false;
+            }
+        }
+    }
 
     return true;
 }
@@ -814,8 +808,8 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
 
     if (function_exists('curl_init') && $allowcurl) {
         $ch = curl_init();
-        $ip && curl_setopt($ch, CURLOPT_HTTPHEADER, array("Host: " . $host));
-        curl_setopt($ch, CURLOPT_URL, $scheme . '://' . ($ip ? $ip : $host) . ':' . $port . $path);
+        $ip && curl_setopt($ch, CURLOPT_HTTPHEADER, ["Host: " . $host]);
+        curl_setopt($ch, CURLOPT_URL, $scheme . '://' . ($ip ?: $host) . ':' . $port . $path);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         if ($post) {
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -866,17 +860,17 @@ function dfopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $
     }
 
     $fpflag = 0;
-    if (!$fp = @fsocketopen(($ip ? $ip : $host), $port, $errno, $errstr, $timeout)) {
-        $context = array(
-            'http' => array(
+    if (!$fp = @fsocketopen(($ip ?: $host), $port, $errno, $errstr, $timeout)) {
+        $context = [
+            'http' => [
                 'method' => $post ? 'POST' : 'GET',
                 'header' => $header,
                 'content' => $post,
                 'timeout' => $timeout,
-            ),
-        );
+            ],
+        ];
         $context = stream_context_create($context);
-        $fp = @fopen($scheme . '://' . ($ip ? $ip : $host) . ':' . $port . $path, 'b', false, $context);
+        $fp = @fopen($scheme . '://' . ($ip ?: $host) . ':' . $port . $path, 'b', false, $context);
         $fpflag = 1;
     }
 
@@ -913,7 +907,7 @@ function check_env() {
 
     global $lang, $attachdir;
 
-    $errors = array('quit' => false);
+    $errors = ['quit' => false];
     $quit = false;
 
     if (!function_exists('mysqli_connect')) {
@@ -929,15 +923,15 @@ function check_env() {
         $quit = true;
     }
 
-    $checkdirarray = array(
+    $checkdirarray = [
         'attach' => $attachdir,
-    );
+    ];
 
     foreach ($checkdirarray as $key => $dir) {
         if (!dir_writeable(ROOT_PATH . $dir)) {
             $langkey = $key . '_unwriteable';
             $errors[] = $key . '_unwriteable';
-            if (!in_array($key, array('ftemplate'))) {
+            if ($key != 'ftemplate') {
                 $quit = TRUE;
             }
         }
@@ -951,12 +945,10 @@ function show_error($type, $errors = '', $quit = false) {
     $title = lang($type);
     $comment = lang($type . '_comment', false);
     $errormsg = '';
-    if ($errors) {
-        if (!empty($errors)) {
-            foreach ((array)$errors as $k => $v) {
-                if (is_numeric($k)) {
-                    $comment .= "<li><span class=\"red\">" . lang($v) . "</span></li>";
-                }
+    if (!empty($errors)) {
+        foreach ((array)$errors as $k => $v) {
+            if (is_numeric($k)) {
+                $comment .= "<li><span class=\"red\">" . lang($v) . "</span></li>";
             }
         }
     }
@@ -1007,7 +999,7 @@ function show_setting($setname, $varname = '', $value = '', $type = 'text|passwo
 
     } elseif ($type == 'checkbox') {
         if (!is_array($varname) && !is_array($value)) {
-            echo "<input type=\"checkbox\" class=\"ckb\" id=\"$varname\" name=\"$varname\" value=\"1\"".($value ? 'checked="checked"' : '')."><label for=\"$varname\">".lang($setname.'_check_label')."</label>\n";
+            echo "<input type=\"checkbox\" class=\"ckb\" id=\"$varname\" name=\"$varname\" value=\"1\"" . ($value ? 'checked="checked"' : '') . "><label for=\"$varname\">" . lang($setname . '_check_label') . "</label>\n";
         }
     } elseif ($type == 'select') {
         echo "<select name=\"$varname\" >";
@@ -1039,7 +1031,7 @@ function lang($lang_key, $force = true) {
 function _generate_key() {
     $random = random(32);
     $info = md5($_SERVER['SERVER_SOFTWARE'] . $_SERVER['SERVER_NAME'] . $_SERVER['SERVER_ADDR'] . $_SERVER['SERVER_PORT'] . $_SERVER['HTTP_USER_AGENT'] . time());
-    $return = array();
+    $return = [];
     for ($i = 0; $i < 32; $i++) {
         $return[$i] = $random[$i] . $info[$i];
     }
@@ -1081,7 +1073,7 @@ function buildarray($array, $level = 0, $pre = '$_config') {
     static $ks;
     $return = '';
     if ($level == 0) {
-        $ks = array();
+        $ks = [];
     }
 
     foreach ($array as $key => $val) {
@@ -1108,7 +1100,7 @@ function buildarray($array, $level = 0, $pre = '$_config') {
 
 function dimplode($array) {
     if (!empty($array)) {
-        return "'" . implode("','", is_array($array) ? $array : array($array)) . "'";
+        return "'" . implode("','", is_array($array) ? $array : [$array]) . "'";
     } else {
         return '';
     }
@@ -1161,7 +1153,7 @@ function dhtmlspecialchars($string) {
             $string[$key] = dhtmlspecialchars($val);
         }
     } else {
-        $string = str_replace(array('&', '"', '<', '>'), array('&amp;', '&quot;', '&lt;', '&gt;'), $string);
+        $string = str_replace(['&', '"', '<', '>'], ['&amp;', '&quot;', '&lt;', '&gt;'], $string);
         if (strpos($string, '&amp;#') !== false) {
             $string = preg_replace('/&amp;((#(\d{3,5}|x[a-fA-F0-9]{4}));)/', '&\\1', $string);
         }
@@ -1170,66 +1162,66 @@ function dhtmlspecialchars($string) {
 }
 
 function format_space($space) {
-    if($space > 1048576) {
-		if($space > 1073741824) {
-			return floor($space / 1073741824).'GB';
-		} else {
-			return floor($space / 1048576).'MB';
-		}
-	}
-	return $space;
+    if ($space > 1048576) {
+        if ($space > 1073741824) {
+            return floor($space / 1073741824) . 'GB';
+        } else {
+            return floor($space / 1048576) . 'MB';
+        }
+    }
+    return $space;
 }
 
 function is_https() {
-	// PHP 标准服务器变量
-	if(isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') {
-		return true;
-	}
-	// X-Forwarded-Proto 事实标准头部, 用于反代透传 HTTPS 状态
-	if(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') {
-		return true;
-	}
-	// 阿里云全站加速私有 HTTPS 状态头部
-	if(isset($_SERVER['HTTP_X_CLIENT_SCHEME']) && strtolower($_SERVER['HTTP_X_CLIENT_SCHEME']) == 'https') {
-		return true;
-	}
-	// 西部数码建站助手私有 HTTPS 状态头部
-	if(isset($_SERVER['HTTP_FROM_HTTPS']) && strtolower($_SERVER['HTTP_FROM_HTTPS']) != 'off') {
-		return true;
-	}
-	// 服务器端口号兜底判断
-	if(isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
-		return true;
-	}
-	return false;
+    // PHP 标准服务器变量
+    if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) != 'off') {
+        return true;
+    }
+    // X-Forwarded-Proto 事实标准头部, 用于反代透传 HTTPS 状态
+    if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https') {
+        return true;
+    }
+    // 阿里云全站加速私有 HTTPS 状态头部
+    if (isset($_SERVER['HTTP_X_CLIENT_SCHEME']) && strtolower($_SERVER['HTTP_X_CLIENT_SCHEME']) == 'https') {
+        return true;
+    }
+    // 西部数码建站助手私有 HTTPS 状态头部
+    if (isset($_SERVER['HTTP_FROM_HTTPS']) && strtolower($_SERVER['HTTP_FROM_HTTPS']) != 'off') {
+        return true;
+    }
+    // 服务器端口号兜底判断
+    if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
+        return true;
+    }
+    return false;
 }
 
 function getmaxupload() {
-	$sizeconv = array('B' => 1, 'KB' => 1024, 'MB' => 1048576, 'GB' => 1073741824);
-	$sizes = array();
-	$sizes[] = ini_get('upload_max_filesize');
-	$sizes[] = ini_get('post_max_size');
-	$sizes[] = ini_get('memory_limit');
-	if(intval($sizes[1]) === 0) {
-		unset($sizes[1]);
-	}
-	if(intval($sizes[2]) === -1) {
-		unset($sizes[2]);
-	}
-	$sizes = preg_replace_callback(
-		'/^(\-?\d+)([KMG]?)$/i',
-		function($arg) use ($sizeconv) {
-			return (intval($arg[1]) * $sizeconv[strtoupper($arg[2]).'B']).'|'.strtoupper($arg[0]);
-		},
-		$sizes
-	);
-	natsort($sizes);
-	$output = explode('|', current($sizes));
-	if(!empty($output[1])) {
-		return $output[1];
-	} else {
-		return ini_get('upload_max_filesize');
-	}
+    $sizeconv = ['B' => 1, 'KB' => 1024, 'MB' => 1048576, 'GB' => 1073741824];
+    $sizes = [];
+    $sizes[] = ini_get('upload_max_filesize');
+    $sizes[] = ini_get('post_max_size');
+    $sizes[] = ini_get('memory_limit');
+    if (intval($sizes[1]) === 0) {
+        unset($sizes[1]);
+    }
+    if (intval($sizes[2]) === -1) {
+        unset($sizes[2]);
+    }
+    $sizes = preg_replace_callback(
+        '/^(\-?\d+)([KMG]?)$/i',
+        function ($arg) use ($sizeconv) {
+            return (intval($arg[1]) * $sizeconv[strtoupper($arg[2]) . 'B']) . '|' . strtoupper($arg[0]);
+        },
+        $sizes
+    );
+    natsort($sizes);
+    $output = explode('|', current($sizes));
+    if (!empty($output[1])) {
+        return $output[1];
+    } else {
+        return ini_get('upload_max_filesize');
+    }
 }
 
 function phpBuild64() {

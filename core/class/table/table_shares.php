@@ -22,13 +22,13 @@ class table_shares extends dzz_table {
             $setarr['pfid'] = -1;
         } else {
             $rids = explode(',', $rid);
-            $pfids = array();
-            foreach (DB::fetch_all("select pfid from %t where rid in(%n)", array('resources', $rids)) as $v) {
+            $pfids = [];
+            foreach (DB::fetch_all("select pfid from %t where rid in(%n)", ['resources', $rids]) as $v) {
                 $pfids[] = $v['pfid'];
             }
             $pfids = array_unique($pfids);
             if (count($pfids) > 1) {
-                return array('error' => lang('Only_allow_sharing_filesinsamedirectory'));
+                return ['error' => lang('Only_allow_sharing_filesinsamedirectory')];
             }
             $fileinfo = C::t('resources')->fetch_info_by_rid($rids[0]);
             $setarr['gid'] = $fileinfo['gid'];
@@ -45,22 +45,22 @@ class table_shares extends dzz_table {
         $setarr['uid'] = getglobal('uid');
         $setarr['username'] = getglobal('username');
         if ($insert = parent::insert($setarr, 1)) {
-            if($bz) return array('success' => $insert);
+            if($bz) return ['success' => $insert];
             //$share['qrcode'] = self::getQRcodeBySid($insert);
             $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
             $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
-            $eventdata = array(
+            $eventdata = [
                 'username' => $setarr['username'],
                 'filename' => $fileinfo['name'],
                 'position' => $path,
                 'hash' => $hash,
-            );
+            ];
             if (!C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'share_file', 'share', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name'])) {
                 parent::delete($insert);
-                return array('error' => lang('create_share_failer'));
+                return ['error' => lang('create_share_failer')];
             } else {
-                return array('success' => $insert);
+                return ['success' => $insert];
             }
         }
     }
@@ -69,22 +69,22 @@ class table_shares extends dzz_table {
     public function change_by_rid($rid, $status = -3) {
         if (!is_array($rid)) $rid = (array)$rid;
         $wheresql = '0';
-        $params = array($this->_table);
+        $params = [$this->_table];
         foreach ($rid as $v) {
             $wheresql .= " or find_in_set(%s,filepath)";
             $params[] = $v;
         }
-        $sids = array();
+        $sids = [];
         foreach (DB::fetch_all("select id from %t where $wheresql", $params) as $v) {
             $sids[] = $v['id'];
         }
-        DB::update($this->_table, array('status' => $status), "id in(" . dimplode($sids) . ")");
+        DB::update($this->_table, ['status' => $status], "id in(" . dimplode($sids) . ")");
     }
 
     //文件进入回收站时，判断相关分享中是否还有对应数据，如果分享包含文件全部删除，改变分享状态
     public function recycle_by_rid($rids) {
         if (!is_array($rids)) $rids = (array)$rids;
-        $params = array($this->_table);
+        $params = [$this->_table];
         $wheresql = '0';
         foreach ($rids as $v) {
             $wheresql .= " or find_in_set(%s,filepath)";
@@ -94,7 +94,7 @@ class table_shares extends dzz_table {
         foreach ($sharedata as $v) {
             $paths = explode(',', $v['filepath']);
             if (count($paths) == 1) {
-                parent::update($v['id'], array('status' => '-3'));
+                parent::update($v['id'], ['status' => '-3']);
             } else {
                 foreach ($rids as $val) {
                     $index = array_search($val, $paths);
@@ -104,13 +104,13 @@ class table_shares extends dzz_table {
                         unset($paths[$index]);
                         $newpath = implode(',', $paths);
                         $isdelete = false;
-                        foreach (DB::fecth_all("select isdelete from %t where rid in(%n)", array('resources', $newpath)) as $v) {
+                        foreach (DB::fecth_all("select isdelete from %t where rid in(%n)", ['resources', $newpath]) as $v) {
                             if ($v['isdelete'] > 0) {
                                 $isdelete = true;
                             }
                         }
                         if ($isdelete) {
-                            parent::update($v['id'], array('status' => '-3'));
+                            parent::update($v['id'], ['status' => '-3']);
                         }
                     }
                 }
@@ -121,7 +121,7 @@ class table_shares extends dzz_table {
     //恢复文件时，改变分享状态
     public function recover_file_by_rid($rids) {
         if (!is_array($rids)) $rids = (array)$rids;
-        $params = array($this->_table);
+        $params = [$this->_table];
         $wheresql = '0';
         foreach ($rids as $v) {
             $wheresql .= " or find_in_set(%s,filepath)";
@@ -131,11 +131,11 @@ class table_shares extends dzz_table {
         foreach ($sharedata as $v) {
             $paths = explode(',', $v['filepath']);
             foreach ($rids as $val) {
-                $index = array_search($val, $paths);
+                $index = in_array($val, $paths);
                 if ($index === false) {
                     continue;
                 } else {
-                    parent::update($v['id'], array('status' => '0'));
+                    parent::update($v['id'], ['status' => '0']);
                 }
 
             }
@@ -144,14 +144,14 @@ class table_shares extends dzz_table {
 
     public function fetch_by_path($rid) {
         $rid = trim($rid);
-        if ($info = DB::fetch_first("select * from %t where filepath = %s", array($this->_table, $rid))) {
+        if ($info = DB::fetch_first("select * from %t where filepath = %s", [$this->_table, $rid])) {
             return $info;
         }
         return false;
     }
 
     public function fetch_by_shareid($rid) {
-        if ($info = DB::fetch_first("select id from %t where filepath = %s", array($this->_table, $rid))) {
+        if ($info = DB::fetch_first("select id from %t where filepath = %s", [$this->_table, $rid])) {
             return $info['id'];
         }
         return false;
@@ -166,11 +166,9 @@ class table_shares extends dzz_table {
         if(!$bz) {
             $rids = explode(',', $rid);
             if (count($rids) > 1) $more = true;
+            $fileinfo = C::t('resources')->fetch_info_by_rid($rids[0]);
             if ($more) {
-                $fileinfo = C::t('resources')->fetch_info_by_rid($rids[0]);
                 $fileinfo['name'] .= '等文件(文件夹)';
-            } else {
-                $fileinfo = C::t('resources')->fetch_info_by_rid($rids[0]);
             }
             $setarr['gid'] = $fileinfo['gid'];
             $setarr['pfid'] = $fileinfo['pfid'];
@@ -184,26 +182,26 @@ class table_shares extends dzz_table {
             $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
             $path = preg_replace('/dzz:(.+?):/', '', $path) ? preg_replace('/dzz:(.+?):/', '', $path) : '';
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
-            $eventdata = array('username' => $setarr['username'], 'filename' => $fileinfo['name'], 'position' => $path, 'hash' => $hash);
+            $eventdata = ['username' => $setarr['username'], 'filename' => $fileinfo['name'], 'position' => $path, 'hash' => $hash];
             if (!C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'edit_share_file', 'share', $eventdata, $fileinfo['gid'], $fileinfo['rid'], $fileinfo['name'])) {
                 parent::delete($id);
-                return array('error' => lang('file_not_exist'));
+                return ['error' => lang('file_not_exist')];
             } else {
-                return array('success' => $id);
+                return ['success' => $id];
             }
         } else {
-            return array('error' => lang('explorer_do_failed'));
+            return ['error' => lang('explorer_do_failed')];
         }
     }
 
     public function delete_by_id($id) {
         global $_G;
         if (!$shareinfo = parent::fetch($id)) {
-            return array('error' => lang('share_not_exists'));
+            return ['error' => lang('share_not_exists')];
         }
         if ($_G['adminid'] != 1) {
             if (!perm_check::checkperm_Container($shareinfo['pfid'], 'share')) {
-                return array('error' => lang('file_share_no_privilege'));
+                return ['error' => lang('file_share_no_privilege')];
             }
         }
         $setarr['dateline'] = time();
@@ -213,11 +211,11 @@ class table_shares extends dzz_table {
             $url = $_G['siteurl'] . 'index.php?mod=shares&sid=' . dzzencode($id);
             C::t('shorturl')->delete_by_url($url);//删除短链接
             C::t('share_report')->delete_by_sid($id);//删除举报记录
-            $eventdata = array('username' => $setarr['username'], 'filename' => $shareinfo['title']);
+            $eventdata = ['username' => $setarr['username'], 'filename' => $shareinfo['title']];
             C::t('resources_event')->addevent_by_pfid($shareinfo['pfid'], 'cancle_share', 'cancleshare', $eventdata, $shareinfo['gid'], '', $shareinfo['title']);
-            return array('success' => true, 'shareid' => $id, 'sharetitle' => $shareinfo['title']);
+            return ['success' => true, 'shareid' => $id, 'sharetitle' => $shareinfo['title']];
         } else {
-            return array('error' => lang('explorer_do_failed'));
+            return ['error' => lang('explorer_do_failed')];
         }
     }
 
@@ -225,7 +223,7 @@ class table_shares extends dzz_table {
     public function fetch_all_share_file($limitsql = '', $ordersql = '', $count = false) {
         global $_G;
         $uid = $_G['uid'];
-        $params = array($this->_table);
+        $params = [$this->_table];
         $wheresql = ' uid = %d';
         $params[] = $uid;
         $orgids = C::t('organization')->fetch_all_orgid(false);//获取所有有管理权限的部门();
@@ -234,11 +232,11 @@ class table_shares extends dzz_table {
             $wheresql .= ' or gid in(%n)';
             $params[] = $manageorgids;
         }
-        $shareinfo = array();
+        $shareinfo = [];
         if ($count) {
             return DB::result_first("select count(*) from %t where $wheresql $ordersql ", $params);
         }
-        $sharestatus = array('-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => lang('been_blocked'), '-3' => lang('file_been_deleted'), '-2' => lang('degree_exhaust'), '-1' => lang('logs_invite_status_4'), '0' => lang('founder_upgrade_normal'));
+        $sharestatus = ['-5' => lang('sharefile_isdeleted_or_positionchange'), '-4' => lang('been_blocked'), '-3' => lang('file_been_deleted'), '-2' => lang('degree_exhaust'), '-1' => lang('logs_invite_status_4'), '0' => lang('founder_upgrade_normal')];
         foreach (DB::fetch_all("select * from %t where $wheresql $ordersql $limitsql", $params) as $val) {
             $val['sharelink'] = C::t('shorturl')->getShortUrl('index.php?mod=shares&sid=' . dzzencode($val['id']));
             $val['fdateline'] = dgmdate($val['dateline'], 'Y-m-d H:i:s');
@@ -264,7 +262,7 @@ class table_shares extends dzz_table {
             //检查文件是否被恢复
             if ($val['status'] == -3) {
                 $isdelete = false;
-                $resources = DB::fetch_all("select isdelete from %t where rid in(%n)", array('resources', $rids));
+                $resources = DB::fetch_all("select isdelete from %t where rid in(%n)", ['resources', $rids]);
                 // 如果查询不到资源记录，则维持删除状态
                 if (empty($resources)) {
                     $isdelete = true;
@@ -276,20 +274,20 @@ class table_shares extends dzz_table {
                     }
                 }
                 if (!$isdelete) {
-                    DB::update($this->_table, array('status' => 0), array('id' => $val['id']));
+                    DB::update($this->_table, ['status' => 0], ['id' => $val['id']]);
                     $val['status'] = 0;
                 }
             }
             //检查文件是否移动
             if ($val['status'] == -5) {
                 $ischange = false;
-                $pfids = array();
-                foreach (DB::fetch_all("select pfid from %t where rid in(%n)", array('resources', $rids)) as $v) {
+                $pfids = [];
+                foreach (DB::fetch_all("select pfid from %t where rid in(%n)", ['resources', $rids]) as $v) {
                     $pfids[] = $v['pfid'];
                 }
                 $pfids = array_unique($pfids);
                 if (count($pfids) < 2 && $pfids[0] == $val['pfid']) {
-                    DB::update($this->_table, array('status' => 0), array('id' => $val['id']));
+                    DB::update($this->_table, ['status' => 0], ['id' => $val['id']]);
                     $val['status'] = 0;
                 }
             }
@@ -303,21 +301,19 @@ class table_shares extends dzz_table {
         $target = './qrcode/' . $sid[0] . '/' . $sid . '.png';
         $targetpath = dirname(getglobal('setting/attachdir') . $target);
         dmkdir($targetpath);
-        if (@getimagesize(getglobal('setting/attachdir') . $target)) {
-            return getglobal('setting/attachurl') . $target;
-        } else {//生成二维码
+        if (!@getimagesize(getglobal('setting/attachdir') . $target)) {//生成二维码
             QRcode::png((getglobal('siteurl') . 'index.php?mod=shares&sid=' . $sid), getglobal('setting/attachdir') . $target, 'M', 4, 2);
-            return getglobal('setting/attachurl') . $target;
         }
+        return getglobal('setting/attachurl') . $target;
     }
 
     //增加浏览次数
     public function add_views_by_id($id) {
-        return DB::query("update %t set views=views+1,count=count+1 where id = %d", array($this->_table, $id));
+        return DB::query("update %t set views=views+1,count=count+1 where id = %d", [$this->_table, $id]);
     }
 
     //增加下载次数
     public function add_downs_by_id($id) {
-        return DB::query("update %t set downs=downs+1 where id=%d", array($this->_table, $id));
+        return DB::query("update %t set downs=downs+1 where id=%d", [$this->_table, $id]);
     }
 }

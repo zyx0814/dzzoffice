@@ -3,7 +3,7 @@
 namespace admin\systemlog\classes;
 class Systemlog {
     //$arr 必须传入 mark,content
-    public function run($arr = array()) {
+    public function run($arr = []) {
         if (!isset($arr["mark"]) || !$arr["content"]) {
             return;
         }
@@ -36,7 +36,7 @@ class Systemlog {
                 $fp = fopen($logfile, "r");
                 while (!feof($fp)) {
                     //每次最多读取1M
-                    if ($data = fread($fp, 1024 * 1024 * 1)) {
+                    if ($data = fread($fp, 1024 * 1024)) {
                         //计算读取到的行数
                         $num = substr_count($data, "\n");
                         $i += $num;
@@ -62,7 +62,7 @@ class Systemlog {
             if ($fp = @fopen($logfile, 'a')) {
                 @flock($fp, 2);
                 if (!is_array($log)) {
-                    $log = array($log);
+                    $log = [$log];
                 }
                 $cur_url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                 $from_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
@@ -72,8 +72,8 @@ class Systemlog {
                     $username = $_G['username'];
                 }
                 foreach ($log as $tmp) {
-                    $tmp = implode("\t", clearlogstring(array($_G['timestamp'], $username, $_G['groupid'], $_G['clientip'], $tmp, $cur_url, $from_url, $_SERVER['HTTP_USER_AGENT'] ?? 'none', "uid=" . $_G['uid'])));
-                    fwrite($fp, "<?PHP exit;?>\t" . str_replace(array('<?', '?>'), '', $tmp) . "\n");
+                    $tmp = implode("\t", clearlogstring([$_G['timestamp'], $username, $_G['groupid'], $_G['clientip'], $tmp, $cur_url, $from_url, $_SERVER['HTTP_USER_AGENT'] ?? 'none', "uid=" . $_G['uid']]));
+                    fwrite($fp, "<?PHP exit;?>\t" . str_replace(['<?', '?>'], '', $tmp) . "\n");
                 }
                 fclose($fp);
             }

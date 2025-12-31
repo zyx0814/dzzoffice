@@ -11,14 +11,14 @@ use Psr\Http\Message\ResponseInterface;
 class ExceptionParser {
 
     public function parse(RequestInterface $request, ResponseInterface $response) {
-        $data = array(
+        $data = [
             'code'       => null,
             'message'    => null,
             //'type'       => $response->isClientError() ? 'client' : 'server',
             'type'       => 'client',
             'request_id' => null,
             'parsed'     => null
-        );
+        ];
 
 		$body = strval($response->getBody());
 

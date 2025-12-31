@@ -26,7 +26,7 @@ class Emailchk {
 
                 dsetcookie('auth', authcode("{$user['password']}\t{$user['uid']}", 'ENCODE'), 0, 1, true);
 
-                if ($uparr = array('email' => $email, 'emailstatus' => 1, 'emailsenddate' => 0)) {
+                if ($uparr = ['email' => $email, 'emailstatus' => 1, 'emailsenddate' => 0]) {
 
                     if (C::t('user')->update($buid, $uparr)) {
 
@@ -57,7 +57,7 @@ class Emailchk {
 
                 dsetcookie('auth', authcode("{$user['password']}\t{$user['uid']}", 'ENCODE'), 0, 1, true);
 
-                if ($uparr = array('emailsenddate' => 0)) {
+                if ($uparr = ['emailsenddate' => 0]) {
 
 
                     if (C::t('user')->update($vuid, $uparr)) {

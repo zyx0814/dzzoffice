@@ -13,7 +13,7 @@ class Apprun {
         $this->mod_prem_check($_config['MOD_VIEW_PERM']);
     }
 
-    private function mod_prem_check($chkarr = array()) {
+    private function mod_prem_check($chkarr = []) {
 
         global $_G;
 

@@ -32,11 +32,8 @@ class dzz_upgrade_app {
 
         include_once libfile('function/cache');
         include_once DZZ_ROOT . './core/core_version.php';
-        $map = array();
         $today = dgmdate(TIMESTAMP, 'Ymd');
-        $map["available"] = 1;
-        $map["check_upgrade_time"] = array("lt", $today);
-        $applist = DB::fetch_all("select * from %t where `available`>0 and check_upgrade_time<%d ", array('app_market', $today));
+        $applist = DB::fetch_all("select * from %t where `available`>0 and check_upgrade_time<%d ", ['app_market', $today]);
         if ($applist) {
             //根据当前版本查询是否需要更新
             $appinfo["mysqlversion"] = helper_dbtool::dbversion();
@@ -44,19 +41,15 @@ class dzz_upgrade_app {
             $appinfo["dzzversion"] = CORE_VERSION;
             foreach ($applist as $k => $v) {
                 if (empty($v['app_path'])) $v['app_path'] = 'dzz';
-                $savedata = array();
+                $savedata = [];
                 if ($v["mid"] > 0) {//云端检测
                     $info = array_merge($v, $appinfo);
                     $response = $this->check_upgrade_byversion($info);
                     if ($response) {
                         if ($response["status"] == 1) {
-                            $savedata = array("upgrade_version" => serialize($response["data"]), "check_upgrade_time" => $today);
+                            $savedata = ["upgrade_version" => serialize($response["data"]), "check_upgrade_time" => $today];
                         } else {
-                            if ($response["status"] != 2) {//云端应用未有新版本发布或找不到版本
-                                $savedata = array("upgrade_version" => "", "check_upgrade_time" => $today);
-                            } else {//云端应用不存在
-                                $savedata = array("upgrade_version" => "", "check_upgrade_time" => $today);
-                            }
+                            $savedata = ["upgrade_version" => "", "check_upgrade_time" => $today];
                         }
                     }
                 } else {//本地检测
@@ -66,13 +59,13 @@ class dzz_upgrade_app {
                         $apparray = getimportdata('Dzz! app', 0, 0, $importtxt);
                         if (version_compare($apparray["app"]["version"], $v["version"]) > 0) {
                             unset($apparray["app"]['appico']);//ico base64太长暂时屏蔽应用icon更新
-                            $savedata = array("upgrade_version" => serialize($apparray["app"]), "check_upgrade_time" => $today);
+                            $savedata = ["upgrade_version" => serialize($apparray["app"]), "check_upgrade_time" => $today];
 
                         } else {
-                            $savedata = array("upgrade_version" => "", "check_upgrade_time" => $today);
+                            $savedata = ["upgrade_version" => "", "check_upgrade_time" => $today];
                         }
                     } else {
-                        $savedata = array("upgrade_version" => "", "check_upgrade_time" => $today);
+                        $savedata = ["upgrade_version" => "", "check_upgrade_time" => $today];
                     }
                 }
                 if ($savedata) {
@@ -80,10 +73,7 @@ class dzz_upgrade_app {
                 }
             }
         }
-        $map = array();
-        $map["available"] = 1;
-        $map["upgrade_version"] = array("neq", "");
-        $need_upgrade_num = DB::result_first("select COUNT(*) from %t where `available`>0 and upgrade_version!=''", array('app_market'));
+        $need_upgrade_num = DB::result_first("select COUNT(*) from %t where `available`>0 and upgrade_version!=''", ['app_market']);
 
         if ($need_upgrade_num > 0) {
             C::t('setting')->update('upgrade_app_num', $need_upgrade_num);
@@ -99,7 +89,7 @@ class dzz_upgrade_app {
 
     public function check_upgrade_byversion($appinfo) {
         $url = $this->checknextversionurl . "market/app/nextversion";//."index.php?mod=dzzmarket&op=index_ajax&operation=nextversion";
-        $post_data = array(
+        $post_data = [
             "mid" => $appinfo['mid'],
             "version" => $appinfo['version'],
             "dzzversion" => $appinfo['dzzversion'],
@@ -107,18 +97,17 @@ class dzz_upgrade_app {
             "mysqlversion" => $appinfo['mysqlversion'],
             "identifier" => $appinfo['identifier'],
             "app_path" => $appinfo["app_path"]
-        );
+        ];
 
         $json = $this->curlcloudappmarket($url, $post_data);
-        $json = json_decode($json, true);
         /*$data=array();
         if( $json["status"]==1){
             $data = $json["data"];
         }*/
-        return $json;
+        return json_decode($json, true);
     }
 
-    public function fetch_updatefile_list($appinfo = array()) {
+    public function fetch_updatefile_list($appinfo = []) {
         $upgradeinfo = $appinfo["upgradeinfo"];
         $file = DZZ_ROOT . $appinfo['app_path'] . '/' . $appinfo['identifier'] . '/updatelist.tmp';
         $upgradedataflag = true;
@@ -128,7 +117,7 @@ class dzz_upgrade_app {
             $upgradedataflag = false;
         }
 
-        $return = array();
+        $return = [];
 
         $upgradedataarr = explode("\n", str_replace("\r\n", "\n", $upgradedata));
         foreach ($upgradedataarr as $k => $v) {
@@ -139,7 +128,7 @@ class dzz_upgrade_app {
             $return['md5'][$k] = substr($v, 0, 32);
             if (trim(substr($v, 32, 2)) != '*') {
                 @unlink($file);
-                return array();
+                return [];
             }
 
         }
@@ -147,7 +136,7 @@ class dzz_upgrade_app {
             $this->mkdirs(dirname($file));
             $fp = fopen($file, 'w');
             if (!$fp) {
-                return array();
+                return [];
             }
             fwrite($fp, $upgradedata);
         }
@@ -155,7 +144,7 @@ class dzz_upgrade_app {
         return $return;
     }
 
-    public function fetch_updatefile_list_bymd5($appinfo = array()) {
+    public function fetch_updatefile_list_bymd5($appinfo = []) {
         $upgradeinfo = $appinfo["upgradeinfo"];
         $file = DZZ_ROOT . $appinfo['app_path'] . '/' . $appinfo['identifier'] . '/updatelist.tmp';
         $upgradedataflag = true;
@@ -165,7 +154,7 @@ class dzz_upgrade_app {
             $upgradedataflag = false;
         }
 
-        $return = array();
+        $return = [];
         $upgradedataarr = explode("\n", str_replace("\r\n", "\n", $upgradedata));
         foreach ($upgradedataarr as $k => $v) {
             if (!$v) {
@@ -175,7 +164,7 @@ class dzz_upgrade_app {
             $return['md5'][$k] = substr($v, 0, 32);
             if (trim(substr($v, 32, 2)) != '*') {
                 @unlink($file);
-                return array();
+                return [];
             }
 
         }
@@ -183,7 +172,7 @@ class dzz_upgrade_app {
             $this->mkdirs(dirname($file));
             $fp = fopen($file, 'w');
             if (!$fp) {
-                return array();
+                return [];
             }
             fwrite($fp, $upgradedata);
         }
@@ -200,7 +189,7 @@ class dzz_upgrade_app {
             $upgradedataflag = false;
         }
 
-        $return = array();
+        $return = [];
         $upgradedataarr = explode("\n", str_replace("\r\n", "\n", $upgradedata));
         foreach ($upgradedataarr as $k => $v) {
             if (!$v) {
@@ -210,7 +199,7 @@ class dzz_upgrade_app {
             $return['md5'][$k] = substr($v, 0, 32);
             if (trim(substr($v, 32, 2)) != '*') {
                 @unlink($file);
-                return array();
+                return [];
             }
 
         }
@@ -218,7 +207,7 @@ class dzz_upgrade_app {
             $this->mkdirs(dirname($file));
             $fp = fopen($file, 'w');
             if (!$fp) {
-                return array();
+                return [];
             }
             fwrite($fp, $upgradedata);
         }
@@ -234,7 +223,7 @@ class dzz_upgrade_app {
             $upgradedataflag = false;
         }
 
-        $return = array();
+        $return = [];
         $upgradedataarr = explode("\n", str_replace("\r\n", "\n", $upgradedata));
         foreach ($upgradedataarr as $k => $v) {
             if (!$v) {
@@ -244,7 +233,7 @@ class dzz_upgrade_app {
             $return['md5'][$k] = substr($v, 0, 32);
             if (trim(substr($v, 32, 2)) != '*') {
                 @unlink($file);
-                return array();
+                return [];
             }
 
         }
@@ -252,7 +241,7 @@ class dzz_upgrade_app {
             $this->mkdirs(dirname($file));
             $fp = fopen($file, 'w');
             if (!$fp) {
-                return array();
+                return [];
             }
             fwrite($fp, $upgradedata);
         }
@@ -260,19 +249,19 @@ class dzz_upgrade_app {
         return $return;
     }
 
-    public function compare_basefile($appinfo = array(), $upgradefilelist) {
+    public function compare_basefile($appinfo = [], $upgradefilelist) {
         $upgradeinfo = $appinfo["upgradeinfo"];
         $source_file_md5 = DZZ_ROOT . $upgradeinfo['app_path'] . '/' . $appinfo['identifier'] . '/' . $appinfo['identifier'] . '.md5';
 
         if (!$dzzfiles = @file($source_file_md5)) {
-            return array();
+            return [];
         }
-        $newupgradefilelist = array();
+        $newupgradefilelist = [];
         foreach ($upgradefilelist as $v) {
             $newupgradefilelist[$v] = md5_file(DZZ_ROOT . $appinfo['app_path'] . '/' . $appinfo['identifier'] . './' . $v);
         }
 
-        $modifylist = $showlist = $searchlist = array();
+        $modifylist = $showlist = $searchlist = [];
         foreach ($dzzfiles as $line) {
             $file = trim(substr($line, 34));
             $md5datanew[$file] = substr($line, 0, 32);
@@ -298,12 +287,12 @@ class dzz_upgrade_app {
                 fwrite($fp, $upgradedata);
             }
         }
-        return array($modifylist, $showlist, $ignorelist);
+        return [$modifylist, $showlist, $ignorelist];
     }
 
-    public function compare_basefile_bymd5($appinfo = array(), $upgradefilelist, $updatemd5filelist) {
+    public function compare_basefile_bymd5($appinfo = [], $upgradefilelist, $updatemd5filelist) {
         $upgradeinfo = $appinfo["upgradeinfo"];
-        $upgradelist = $md5list = array();
+        $upgradelist = $md5list = [];
         foreach ($upgradefilelist as $k => $v) {
             $md5 = md5_file(DZZ_ROOT . $upgradeinfo['app_path'] . '/' . $appinfo['identifier'] . './' . $v); //此处路劲以最新版本为准
             if ($md5 != $updatemd5filelist[$k]) {
@@ -311,7 +300,7 @@ class dzz_upgrade_app {
                 $md5list[] = $updatemd5filelist[$k];
             }
         }
-        return array($upgradelist, $md5list);
+        return [$upgradelist, $md5list];
     }
 
     public function compare_file_content($file, $remotefile) {
@@ -319,7 +308,7 @@ class dzz_upgrade_app {
             return false;
         }
         $content = preg_replace('/\s/', '', file_get_contents($file));
-        $ctx = stream_context_create(array('http' => array('timeout' => 60)));
+        $ctx = stream_context_create(['http' => ['timeout' => 60]]);
         $remotecontent = preg_replace('/\s/', '', file_get_contents($remotefile, false, $ctx));
         if (strcmp($content, $remotecontent)) {
             return false;
@@ -328,7 +317,7 @@ class dzz_upgrade_app {
         }
     }
 
-    public function check_folder_perm($appinfo = array(), $updatefilelist) {
+    public function check_folder_perm($appinfo = [], $updatefilelist) {
         $path = DZZ_ROOT . $appinfo['app_path'] . '/' . $appinfo['identifier'] . '/';
         if (isset($appinfo["new_identifier"]) && $appinfo["new_identifier"]) {
             $dir = DZZ_ROOT . $appinfo['app_path'] . '/' . $appinfo['new_identifier'] . '/';
@@ -511,4 +500,3 @@ class dzz_upgrade_app {
     }
 }
 
-?>

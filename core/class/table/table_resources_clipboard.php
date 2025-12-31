@@ -14,36 +14,36 @@ class table_resources_clipboard extends dzz_table {
     //$copytype默认值为1，为1是复制，为2是剪切
     public function insert_data($paths, $copytype = 1, $bz = '') {
         $uid = getglobal('uid');
-        if (!$uid) return array('error' => lang('no_privilege'));
+        if (!$uid) return ['error' => lang('no_privilege')];
         if (!is_array($paths)) $paths = (array)$paths;
         $rids = '';
-        $typearr = array();
+        $typearr = [];
         if ($bz) {
             $typearr[] = 1;
             foreach ($paths as $v) {
                 $rids .= $v . ',';
             }
         } else {
-            foreach (DB::fetch_all("select * from %t where rid in (%n) and isdelete < 1", array('resources', $paths)) as $v) {
+            foreach (DB::fetch_all("select * from %t where rid in (%n) and isdelete < 1", ['resources', $paths]) as $v) {
                 if ($copytype == 1) {
                     if ($v['type'] == 'folder') {
                         $return = C::t('resources')->check_folder_perm($v, 'copy');
-                        if ($return['error']) return array('error' => $return['error']);
+                        if ($return['error']) return ['error' => $return['error']];
                         $typearr[] = 1;
                     } else {
                         if (!perm_check::checkperm('copy', $v)) {
-                            return array('error' => lang('file_copy_no_privilege'));
+                            return ['error' => lang('file_copy_no_privilege')];
                         }
                         $typearr[] = 2;
                     }
                 } else {
                     if ($v['type'] == 'folder') {
                         $return = C::t('resources')->check_folder_perm($v, 'delete');
-                        if ($return['error']) return array('error' => $return['error']);
+                        if ($return['error']) return ['error' => $return['error']];
                         $typearr[] = 1;
                     } else {
                         if (!perm_check::checkperm('delete', $v)) {
-                            return array('error' => lang('file_delete_no_privilege'));
+                            return ['error' => lang('file_delete_no_privilege')];
                         }
                         $typearr[] = 2;
                     }
@@ -57,10 +57,10 @@ class table_resources_clipboard extends dzz_table {
         } else {
             $type = $typearr[0];
         }
-        if (!$rids) return array('error' => lang('no_privilege'));
+        if (!$rids) return ['error' => lang('no_privilege')];
 
         $rids = substr($rids, 0, -1);
-        $setarr = array(
+        $setarr = [
             'uid' => $uid,
             'username' => getglobal('username'),
             'dateline' => time(),
@@ -68,26 +68,26 @@ class table_resources_clipboard extends dzz_table {
             'files' => $rids,
             'copytype' => $copytype,
             'bz' => $bz,
-        );
+        ];
         self::delete_by_uid();
         if ($copyid = parent::insert($setarr, 1)) {
-            return array('rid' => $rids, 'copyid' => $copyid, 'type' => $type);
+            return ['rid' => $rids, 'copyid' => $copyid, 'type' => $type];
         }
-        return array('error' => lang('sysem_busy'));
+        return ['error' => lang('sysem_busy')];
     }
 
     public function delete_by_uid() {
         $uid = getglobal('uid');
         if (!$uid) return false;
-        if (DB::result_first("select count(*) from %t where uid = %d", array($this->_table, $uid)) > 0) {
-            return DB::delete($this->_table, array('uid' => $uid));
+        if (DB::result_first("select count(*) from %t where uid = %d", [$this->_table, $uid]) > 0) {
+            return DB::delete($this->_table, ['uid' => $uid]);
         }
     }
 
     public function fetch_by_uid() {
         $uid = getglobal('uid');
         if (!$uid) return false;
-        if ($return = DB::fetch_first("select * from %t where uid = %d", array($this->_table, $uid))) {
+        if ($return = DB::fetch_first("select * from %t where uid = %d", [$this->_table, $uid])) {
             return $return;
         }
         return false;
@@ -95,17 +95,17 @@ class table_resources_clipboard extends dzz_table {
 
     public function fetch_user_paste_type() {
         $uid = getglobal('uid');
-        if (!$uid) return array();
-        return DB::result_first("select `type` from %t where uid = %d", array($this->_table, $uid));
+        if (!$uid) return [];
+        return DB::result_first("select `type` from %t where uid = %d", [$this->_table, $uid]);
     }
 
     //去掉粘贴板已删除的rid
     public function update_data_by_delrid($rids) {
         if (!is_array($rids)) $rids = (array)$rids;
         if (empty($rids)) return;
-        $datas = array();
+        $datas = [];
         foreach ($rids as $v) {
-            foreach (DB::fetch_all("select id,files from %t where find_in_set(%s,files)", array($this->table, $v)) as $val) {
+            foreach (DB::fetch_all("select id,files from %t where find_in_set(%s,files)", [$this->table, $v]) as $val) {
                 if ($val['files']) {
                     $files = explode(',', $val['files']);
                     $key = array_search($v, $files);
@@ -114,7 +114,7 @@ class table_resources_clipboard extends dzz_table {
                         parent::delete($val['id']);
                     } else {
                         $files = implode(',', $files);
-                        parent::update($val['id'], array('files' => $files));
+                        parent::update($val['id'], ['files' => $files]);
                     }
                 }
 

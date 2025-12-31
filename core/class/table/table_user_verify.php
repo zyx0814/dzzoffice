@@ -21,10 +21,10 @@ class table_user_verify extends dzz_table {
         parent::__construct();
     }
 
-    public function fetch_all_by_vid($vid, $flag, $uids = array()) {
-        $parameter = array($this->_table);
+    public function fetch_all_by_vid($vid, $flag, $uids = []) {
+        $parameter = [$this->_table];
         if ($vid > 0 && $vid < 8) {
-            $wherearr = array();
+            $wherearr = [];
             if ($uids) {
                 $wherearr[] = is_array($uids) ? 'uid IN(%n)' : 'uid=%d';
                 $parameter[] = $uids;
@@ -33,7 +33,7 @@ class table_user_verify extends dzz_table {
             $wherearr[] = "verify{$vid}=%d";
             return DB::fetch_all("SELECT * FROM %t WHERE " . implode(' AND ', $wherearr), $parameter, $this->_pk);
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -45,7 +45,7 @@ class table_user_verify extends dzz_table {
     }
 
     public function count_by_uid($uid) {
-        return DB::result_first('SELECT COUNT(*) FROM %t WHERE uid=%d', array($this->_table, $uid));
+        return DB::result_first('SELECT COUNT(*) FROM %t WHERE uid=%d', [$this->_table, $uid]);
     }
 
     public function count_by_search($uid, $vid, $username = '') {
@@ -54,14 +54,13 @@ class table_user_verify extends dzz_table {
     }
 
     public function search_condition($uid, $vid, $username) {
-        $parameter = array($this->_table, 'user');
-        $wherearr = array();
+        $parameter = [$this->_table, 'user'];
+        $wherearr = [];
         if ($uid) {
+            $parameter[] = $uid;
             if (is_array($uid)) {
-                $parameter[] = $uid;
                 $wherearr[] = 'v.uid IN (%n)';
             } else {
-                $parameter[] = $uid;
                 $wherearr[] = 'v.uid=%d';
             }
 
@@ -76,10 +75,9 @@ class table_user_verify extends dzz_table {
         }
         $wherearr[] = "v.uid=m.uid";
         $wheresql = !empty($wherearr) && is_array($wherearr) ? ' WHERE ' . implode(' AND ', $wherearr) : '';
-        return array($wheresql, $parameter);
+        return [$wheresql, $parameter];
 
     }
 
 }
 
-?>

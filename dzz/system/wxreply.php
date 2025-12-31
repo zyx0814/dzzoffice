@@ -8,7 +8,7 @@
  */
 
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-$weObj = new qyWechat(array('token' => getglobal('setting/token_0'), 'appid' => getglobal('setting/CorpID'), 'appsecret' => getglobal('setting/CorpSecret'), 'agentid' => 0, 'encodingaeskey' => getglobal('setting/encodingaeskey_0'), 'debug' => false));
+$weObj = new qyWechat(['token' => getglobal('setting/token_0'), 'appid' => getglobal('setting/CorpID'), 'appsecret' => getglobal('setting/CorpSecret'), 'agentid' => 0, 'encodingaeskey' => getglobal('setting/encodingaeskey_0'), 'debug' => false]);
 
 $weObj->valid(); //注意, 企业号与普通公众号不同，必须打开验证，不要注释掉
 $type = $weObj->getRev()->getRevType();
@@ -36,9 +36,9 @@ switch ($type) {
     case qyWechat::MSGTYPE_EVENT:
         $data = $weObj->getRev()->getRevData();//{"ToUserName":"wx735f8743226a8656","FromUserName":"dzz-1","CreateTime":"1413865073","MsgType":"event","AgentID":"0","Event":"unsubscribe","EventKey":{}
         if ($data['Event'] == 'unsubscribe') {
-            DB::update('user', array('wechat_status' => 4), "wechat_userid='{$data[FromUserName]}'");
+            DB::update('user', ['wechat_status' => 4], "wechat_userid='{$data[FromUserName]}'");
         } elseif ($data['Event'] == 'subscribe') {
-            DB::update('user', array('wechat_status' => 1), "wechat_userid='{$data[FromUserName]}'");
+            DB::update('user', ['wechat_status' => 1], "wechat_userid='{$data[FromUserName]}'");
             //发送关注成功消息
             $weObj->text($_G['setting']['sitename'] . lang('news_platform_send_here'))->reply();
         } elseif ($data['Event'] == 'view') {
@@ -50,4 +50,3 @@ switch ($type) {
         /* $weObj->text("help info")->reply();*/
 }
 exit();
-?>

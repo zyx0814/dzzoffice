@@ -14,8 +14,8 @@ class table_resources_permgroup extends dzz_table {
 
     public function insert($setarr, $return_insert_id = false, $replace = false, $silent = false) {
         if ($setarr['default'] == 1) {//删除原有默认值
-            if ($did = DB::result_first("select `id` from %t where `default` = %d", array($this->_table, 1))) {
-                parent::update($did, array('default' => 0));
+            if ($did = DB::result_first("select `id` from %t where `default` = %d", [$this->_table, 1])) {
+                parent::update($did, ['default' => 0]);
             }
         }
         if ($insert = parent::insert($setarr, 1)) {
@@ -26,19 +26,19 @@ class table_resources_permgroup extends dzz_table {
 
     public function update_by_id($id, $setarr) {
         if ($setarr['default'] == 1) {//删除原有默认值
-            if ($did = DB::result_first("select id from %t where `default` = %d", array($this->_table, 1))) {
-                parent::update($did, array('default' => 0));
+            if ($did = DB::result_first("select id from %t where `default` = %d", [$this->_table, 1])) {
+                parent::update($did, ['default' => 0]);
             }
         }
         return parent::update($id, $setarr);
     }
 
     public function fetch_by_name($pername) {
-        return DB::result_first("select count(*) from %t where pername = %s", array($this->_table, $pername));
+        return DB::result_first("select count(*) from %t where pername = %s", [$this->_table, $pername]);
     }
 
     public function fetch_all($off = null, $force_from_db = false) {
-        $params = array($this->_table);
+        $params = [$this->_table];
         $wheresql = '';
         if ($off) {
             $wheresql = "where off != %d";
@@ -51,20 +51,20 @@ class table_resources_permgroup extends dzz_table {
         $id = intval($id);
         $off = intval($off);
         if (parent::fetch($id)) {
-            if (parent::update($id, array('off' => $off))) {
-                return array('success' => true);
+            if (parent::update($id, ['off' => $off])) {
+                return ['success' => true];
             }
         }
-        return array('error' => true);
+        return ['error' => true];
     }
 
     public function setdefault_by_id($id) {
         $id = intval($id);
         if (!$id) return false;
-        if ($did = DB::fetch_first("select id from %t where `default` = %d", array($this->_table, 1))) {
-            parent::update($did, array('default' => 0));
+        if ($did = DB::fetch_first("select id from %t where `default` = %d", [$this->_table, 1])) {
+            parent::update($did, ['default' => 0]);
         }
-        return parent::update($id, array('default' => 1));
+        return parent::update($id, ['default' => 1]);
     }
 
     public function delete_by_id($id) {

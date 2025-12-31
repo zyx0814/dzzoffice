@@ -17,4 +17,3 @@ touch($lockfile);
 @set_time_limit(0);
 $noteid = 0;
 Hook::listen('online_notification', $noteid);//第三方发送提醒
-?>

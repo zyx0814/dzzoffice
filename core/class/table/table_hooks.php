@@ -22,8 +22,8 @@ class table_hooks extends dzz_table {
     public function update_by_appid($appid, $setarr) {
         if (empty($appid)) return false;
         $appid = (array)$appid;
-        $ids = array();
-        foreach (DB::fetch_all("select id from %t where app_market_id IN(%n)", array('hooks', $appid)) as $value) {
+        $ids = [];
+        foreach (DB::fetch_all("select id from %t where app_market_id IN(%n)", ['hooks', $appid]) as $value) {
             $ids[] = $value['id'];
         }
         if ($ret = parent::update($ids, $setarr)) {
@@ -35,8 +35,8 @@ class table_hooks extends dzz_table {
     public function delete_by_appid($appid) {
         if (empty($appid)) return false;
         $appid = (array)$appid;
-        $ids = array();
-        foreach (DB::fetch_all("select id from %t where app_market_id IN(%n)", array('hooks', $appid)) as $value) {
+        $ids = [];
+        foreach (DB::fetch_all("select id from %t where app_market_id IN(%n)", ['hooks', $appid]) as $value) {
             $ids[] = $value['id'];
         }
         if ($ret = parent::delete($ids)) {
@@ -45,7 +45,7 @@ class table_hooks extends dzz_table {
         return $ret;
     }
 
-    public function insert_by_appid($appid, $hooks, $attributes = array(), $status = 0) {
+    public function insert_by_appid($appid, $hooks, $attributes = [], $status = 0) {
         if (!$appid) return false;
         $ret = 0;
         foreach ($hooks as $name => $addons) {
@@ -58,12 +58,12 @@ class table_hooks extends dzz_table {
                 }
             }
 
-            if ($hid = DB::result_first("select id from %t where name=%s and addons=%s", array($this->_table, $name, $addons))) {
-                if (parent::update($hid, array('app_market_id' => $appid, 'priority' => $priority, 'description' => $description, 'status' => $status))) {
+            if ($hid = DB::result_first("select id from %t where name=%s and addons=%s", [$this->_table, $name, $addons])) {
+                if (parent::update($hid, ['app_market_id' => $appid, 'priority' => $priority, 'description' => $description, 'status' => $status])) {
                     $ret += 1;
                 }
             } else {
-                $data = array(
+                $data = [
                     'app_market_id' => $appid,
                     'name' => $name,
                     'priority' => $priority,
@@ -71,7 +71,7 @@ class table_hooks extends dzz_table {
                     'type' => '1',
                     'addons' => $addons,
                     'status' => 0
-                );
+                ];
                 if (parent::insert($data, 1, 1)) {
                     $ret += 1;
                 }
@@ -86,4 +86,4 @@ class table_hooks extends dzz_table {
     }
 }
 
-?>
+

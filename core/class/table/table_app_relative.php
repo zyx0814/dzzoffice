@@ -26,34 +26,34 @@ class table_app_relative extends dzz_table {
         //先删除有关此appid的部分
         self::delete_by_appid($appid);
         foreach ($tagids as $tagid) {
-            DB::insert($this->_table, array('appid' => intval($appid), 'tagid' => intval($tagid)));
+            DB::insert($this->_table, ['appid' => intval($appid), 'tagid' => intval($tagid)]);
         }
     }
 
     public function delete_by_appid($appid) {
-        $tagids = array();
-        foreach (DB::fetch_all("select tagid from %t where appid=%d", array($this->_table, $appid)) as $value) {
+        $tagids = [];
+        foreach (DB::fetch_all("select tagid from %t where appid=%d", [$this->_table, $appid]) as $value) {
             $tagids[] = $value['tagid'];
         }
         C::t('app_tag')->delete_by_tagid($tagids);
-        DB::query("DELETE FROM %t WHERE appid= %d ", array($this->_table, $appid));
+        DB::query("DELETE FROM %t WHERE appid= %d ", [$this->_table, $appid]);
     }
 
     public function fetch_all_by_tagid($tagid, $count = false) {
         $tagid = intval($tagid);
-        if ($count) return DB::result_first("select COUNT(*) from %t WHERE　tagid= %d ", array($this->_table, $tagid));
-        else return DB::fetch_all("SELECT * FROM %t WHERE tagid = %d ", array($this->_table, $tagid));
+        if ($count) return DB::result_first("select COUNT(*) from %t WHERE　tagid= %d ", [$this->_table, $tagid]);
+        else return DB::fetch_all("SELECT * FROM %t WHERE tagid = %d ", [$this->_table, $tagid]);
     }
 
     public function fetch_all_by_appid($appid, $count = false) {
         $appid = intval($appid);
-        if ($count) return DB::result_first("select COUNT(*) from %t r LEFT JOIN %t t ON r.tagid=t.tagid WHERE t.tagid>0 and  r.appid = %d ", array($this->_table, 'app_tag', $appid));
-        else return DB::fetch_all("SELECT t.* FROM %t r LEFT JOIN %t t ON r.tagid=t.tagid WHERE t.tagid>0 and  r.appid = %d ", array($this->_table, 'app_tag', $appid));
+        if ($count) return DB::result_first("select COUNT(*) from %t r LEFT JOIN %t t ON r.tagid=t.tagid WHERE t.tagid>0 and  r.appid = %d ", [$this->_table, 'app_tag', $appid]);
+        else return DB::fetch_all("SELECT t.* FROM %t r LEFT JOIN %t t ON r.tagid=t.tagid WHERE t.tagid>0 and  r.appid = %d ", [$this->_table, 'app_tag', $appid]);
     }
 
     public function fetch_appids_by_tagid($tagid) {
-        $appids = array();
-        foreach (DB::fetch_all("select appid from %t where tagid=%d", array($this->_table, $tagid)) as $value) {
+        $appids = [];
+        foreach (DB::fetch_all("select appid from %t where tagid=%d", [$this->_table, $tagid]) as $value) {
             $appids[] = $value['appid'];
         }
         return $appids;
@@ -61,4 +61,4 @@ class table_app_relative extends dzz_table {
 
 }
 
-?>
+

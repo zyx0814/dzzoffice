@@ -23,7 +23,7 @@ if ($do == 'export') {//应用导出
         $app['appico'] = $_G['setting']['attachdir'] . $app['appico'];
     }
     $app['appico'] = imagetobase64($app['appico']);
-    $app['extra'] = array();
+    $app['extra'] = [];
     $appid = $app['appid'];
     //unset($app['mid']);
     unset($app['appid']);
@@ -32,7 +32,7 @@ if ($do == 'export') {//应用导出
     unset($app['dateline']);
     unset($app['upgrade_version']);
     unset($app['check_upgrade_time']);
-    $apparray = array();
+    $apparray = [];
     if ($app['identifier']) {
         if (empty($app['app_path'])) $app['app_path'] = 'dzz';
         $entrydir = DZZ_ROOT . './' . $app['app_path'] . '/' . $app['identifier'];
@@ -58,15 +58,15 @@ if ($do == 'export') {//应用导出
     }
     $apparray['app'] = $app;
     $apparray['version'] = strip_tags($_G['setting']['version']);
-    $hooks = array();
+    $hooks = [];
 
-    foreach (DB::fetch_all("SELECT * FROM %t where `status`='1' and app_market_id='" . $appid . "' ORDER BY priority", array('hooks')) as $value) {
+    foreach (DB::fetch_all("SELECT * FROM %t where `status`='1' and app_market_id='" . $appid . "' ORDER BY priority", ['hooks']) as $value) {
         $hooks[$value['name']] = $value['addons'];
-        $hooks['_attributes'][$value['name']] = array("priority" => $value['priority'], 'description' => $value['description']);
+        $hooks['_attributes'][$value['name']] = ["priority" => $value['priority'], 'description' => $value['description']];
     }
 
     if ($hooks) $apparray['hooks'] = $hooks;
-    exportdata('Dzz! app', $app['identifier'] ? $app['identifier'] : random(5), $apparray);
+    exportdata('Dzz! app', $app['identifier'] ?: random(5), $apparray);
     exit();
 
 } elseif ($do == 'import') {//导入应用
@@ -118,7 +118,7 @@ if ($do == 'export') {//应用导出
             //清理缓存
             C::t('app_open')->clear_cache('ext_all');
         }
-        C::t('app_market')->update($appid, array('available' => 0));
+        C::t('app_market')->update($appid, ['available' => 0]);
         writelog('otherlog', "关闭应用 " . $app['appname']);
         showmessage('application_close_successful', $_GET['refer']);
     }
@@ -138,14 +138,12 @@ if ($do == 'export') {//应用导出
         if (isset($app['extra']['enablefile']) && $app['extra']['enablefile']) {
             $apparray['app']['extra'] = $app['extra'];
             $apparray['app']['version'] = $app['version'];
+        } elseif (file_exists($file)) {
+            $importtxt = @implode('', file($file));
+            $apparray = getimportdata('Dzz! app');
         } else {
-            if (file_exists($file)) {
-                $importtxt = @implode('', file($file));
-                $apparray = getimportdata('Dzz! app');
-            } else {
-                $apparray['app']['extra']['enablefile'] = "";
-                $apparray['app']['version'] = $app['version'];
-            }
+            $apparray['app']['extra']['enablefile'] = "";
+            $apparray['app']['version'] = $app['version'];
         }
         if (!empty($apparray['app']['extra']['enablefile']) && preg_match('/^[\w\.]+$/', $apparray['app']['extra']['enablefile'])) {
             $filename = $entrydir . '/' . $apparray['app']['extra']['enablefile'];
@@ -172,7 +170,7 @@ if ($do == 'export') {//应用导出
             //清理缓存
             C::t('app_open')->clear_cache('ext_all');
         }
-        C::t('app_market')->update($appid, array('available' => 1));
+        C::t('app_market')->update($appid, ['available' => 1]);
         writelog('otherlog', "开启应用 " . $app['appname']);
         showmessage('application_start_successful', $_GET['refer']);
     }
@@ -234,7 +232,7 @@ if ($do == 'export') {//应用导出
     } else {
         $finish = TRUE;
     }
-    $msg = lang('app_upgrade_uninstall_successful', array('upgradeurl' => upgradeinformation_app(-10))) . $msg;
+    $msg = lang('app_upgrade_uninstall_successful', ['upgradeurl' => upgradeinformation_app(-10)]) . $msg;
     if ($finish) {
         C::t('app_market')->delete_by_appid($appid);
         cron_delete($app);
@@ -251,7 +249,7 @@ if ($do == 'export') {//应用导出
     if (!$app = C::t('app_market')->fetch($appid)) {
         exit('Access Denied');
     }
-    $app_delete_confirm = lang('app_delete_confirm', array('appname' => $app['appname']));
+    $app_delete_confirm = lang('app_delete_confirm', ['appname' => $app['appname']]);
     include template('uninstall_confirm');
     exit;
 } elseif ($do == 'upgrade') {//本地升级应用
@@ -271,7 +269,7 @@ if ($do == 'export') {//应用导出
     $importtxt = @implode('', file($file));
     $apparray = getimportdata('Dzz! app', 0, 0, $importtxt);
     if ($apparray['version'] && empty($_GET['ignoreversion']) && (version_compare($apparray['version'], $_G['setting']['version']) > 0)) {
-        showmessage('application_upgrade_version_invalid', '', array('cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version'], 'url' => MOD_URL . '&op=cp&do=upgrade&ignoreversion=1&appid=' . $appid));
+        showmessage('application_upgrade_version_invalid', '', ['cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version'], 'url' => MOD_URL . '&op=cp&do=upgrade&ignoreversion=1&appid=' . $appid]);
     }
     $filename = $apparray['app']['extra']['upgradefile'];
     $toversion = $apparray['app']['version'];
@@ -286,7 +284,7 @@ if ($do == 'export') {//应用导出
         $finish = TRUE;
     }
     if ($finish) {
-        C::t('app_market')->update($appid, array('version' => $toversion));
+        C::t('app_market')->update($appid, ['version' => $toversion]);
         showmessage('application_upgrade_successful', dreferer());
     }
 }
@@ -295,10 +293,10 @@ function installapp($apparray){
     if ($apparray['app']['identifier']) {
         if (empty($apparray['app']['app_path'])) $apparray['app']['app_path'] = 'dzz';
         if (!is_dir(DZZ_ROOT . './' . $apparray['app']['app_path'] . '/' . $apparray['app']['identifier'])) {
-            showmessage(lang('list_cp_Application_directory_exist', array('app_path' => $apparray['app']['app_path'], 'identifier' => $apparray['app']['identifier'])));
+            showmessage(lang('list_cp_Application_directory_exist', ['app_path' => $apparray['app']['app_path'], 'identifier' => $apparray['app']['identifier']]));
         }
         if ($apparray['version'] && empty($_GET['ignoreversion']) && (version_compare($apparray['version'], $_G['setting']['version']) > 0)) {
-            showmessage('application_import_version_invalid', '', array('cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version']));
+            showmessage('application_import_version_invalid', '', ['cur_version' => $apparray['version'], 'set_version' => $_G['setting']['version']]);
         }
         $extra = $apparray['app']['extra'];
         $filename = isset($extra['installfile']) ? $extra['installfile'] : '';
@@ -324,4 +322,3 @@ function installapp($apparray){
         showmessage('application_import_successful', dreferer());
     }
 }
-?>

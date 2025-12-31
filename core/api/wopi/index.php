@@ -47,7 +47,7 @@ if ($_GET['access_token']) {
 	if ($lock = $_SERVER['HTTP_X_WOPI_LOCK']) {
 		$oldlock = $_SERVER['HTTP_X_WOPI_OLDLOCK'];
 	} else {
-		$lock = $alock ? $alock : $_GET['lock'];
+		$lock = $alock ?: $_GET['lock'];
 	}
 	if ($Override = $_SERVER['HTTP_X_WOPI_OVERRIDE']) {
 		if ($Override == 'PUT') {

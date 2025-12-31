@@ -32,4 +32,3 @@ if ($_GET['path']) {
     $src = urldecode($_GET['url']);
 }
 include template('index');
-?>

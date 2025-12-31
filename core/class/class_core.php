@@ -10,14 +10,14 @@ class core
 	private static $_memory;
 
     // 类名映射
-    protected static $map = array();
+    protected static $map = [];
 
     //psr4
-    private static $prefixLengthsPsr4 = array();
-    private static $prefixDirsPsr4    = array();
-    private static $fallbackDirsPsr4  = array();
+    private static $prefixLengthsPsr4 = [];
+    private static $prefixDirsPsr4    = [];
+    private static $fallbackDirsPsr4  = [];
 
-	public static function app($params=array()) {
+	public static function app($params= []) {
 		if(!is_object(self::$_app)) {
 			self::$_app = dzz_app::instance($params);
 		}
@@ -29,7 +29,7 @@ class core
 	}
 	
 	public static function m($name) {
-		$args = array();
+		$args = [];
 		if(func_num_args() > 1) {
 			$args = func_get_args();
 			unset($args[0]);
@@ -37,7 +37,7 @@ class core
 		return self::_make_obj($name, 'model', true, $args);
 	}
 
-	protected static function _make_obj($name, $type, $extendable = true, $p = array()) {
+	protected static function _make_obj($name, $type, $extendable = true, $p = []) {
 		$folder = null;
 		if($name[0] === '#') {
 			list(, $folder, $name) = explode('#', $name);
@@ -76,7 +76,7 @@ class core
 
 	public static function import($name, $folder = '', $force = true) {
 		//如果文件名为空或者false，阻止向下进行
-	    if(preg_match('/^\s*$/',$name) || $name == false){
+	    if(preg_match('/^\s*$/',$name) || !$name){
 	        return false;
         }
 		$key = $folder.$name;
@@ -101,16 +101,13 @@ class core
 			
 			if(isset($path2) && is_file($path2.$filename)) {
 				self::$_imports[$key] = true;
-				$rt = include $path2.$filename;
-				return $rt;
+                return include $path2.$filename;
 			}elseif(isset($path1) && is_file($path1.$filename)) {
 				self::$_imports[$key] = true;
-				$rt = include $path1.$filename;
-				return $rt;
+                return include $path1.$filename;
 			}elseif(is_file($path.$filename)) {
 				self::$_imports[$key] = true;
-				$rt = include $path.$filename;
-				return $rt;
+                return include $path.$filename;
 			} elseif(!$force) {
 				return false;
 			} else {
@@ -264,10 +261,10 @@ class core
 			list(, $key, $name) = explode('#', $name);
 		}
 		if(!isset($_ENV['analysis'])) {
-			$_ENV['analysis'] = array();
+			$_ENV['analysis'] = [];
 		}
 		if(!isset($_ENV['analysis'][$key])) {
-			$_ENV['analysis'][$key] = array();
+			$_ENV['analysis'][$key] = [];
 			$_ENV['analysis'][$key]['sum'] = 0;
 		}
 		$_ENV['analysis'][$key][$name]['start'] = microtime(TRUE);

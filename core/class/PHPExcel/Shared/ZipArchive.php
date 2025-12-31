@@ -152,20 +152,18 @@ class PHPExcel_Shared_ZipArchive
         }
 
         $extracted = "";
-        if ($list_index != -1) {
-            $extracted = $this->_zip->extractByIndex($list_index, PCLZIP_OPT_EXTRACT_AS_STRING);
-        } else {
+        if ($list_index == -1) {
             $filename = substr($fileName, 1);
             $list_index = -1;
             for ($i = 0; $i < $listCount; ++$i) {
-                if (strtolower($list[$i]["filename"]) == strtolower($fileName) || 
+                if (strtolower($list[$i]["filename"]) == strtolower($fileName) ||
                     strtolower($list[$i]["stored_filename"]) == strtolower($fileName)) {
                     $list_index = $i;
                     break;
                 }
             }
-            $extracted = $this->_zip->extractByIndex($list_index, PCLZIP_OPT_EXTRACT_AS_STRING);
         }
+        $extracted = $this->_zip->extractByIndex($list_index, PCLZIP_OPT_EXTRACT_AS_STRING);
         if ((is_array($extracted)) && ($extracted != 0)) {
             $contents = $extracted[0]["content"];
         }

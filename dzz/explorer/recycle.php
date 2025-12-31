@@ -48,7 +48,7 @@ if ($do == 'filelist') {
     } elseif ($orderby) {
         $ordersql = ' ORDER BY ' . $orderby . ' ' . $order;
     }
-    $condition = array();
+    $condition = [];
     //文件夹id
     if (!empty($_GET['fids']) && $_GET['fids']) {
         $pfid = intval($_GET['fids']);
@@ -58,9 +58,9 @@ if ($do == 'filelist') {
             $fids[] = $v;
         }
         if (count($fids) > 1) {
-            $condition['re.pfid'] = array($fids, 'in', 'and');
+            $condition['re.pfid'] = [$fids, 'in', 'and'];
         } else {
-            $condition['re.pfid'] = array($pfid);
+            $condition['re.pfid'] = [$pfid];
         }
     }
     //如果接受到的是群组id
@@ -70,20 +70,20 @@ if ($do == 'filelist') {
         $gids = C::t('organization')->get_childorg_by_orgid($gid);
         //如果有下级，即orgid数量大于1
         if (count($gids) > 1) {
-            $condition['re.gid'] = array($gids, 'in', 'and');
+            $condition['re.gid'] = [$gids, 'in', 'and'];
         } else {
-            $condition['re.gid'] = array($gid);
+            $condition['re.gid'] = [$gid];
         }
 
     }
     //时间范围
     if (!empty($_GET['after']) && $_GET['after']) {
         $startdate = strtotime($_GET['after']);
-        $condition[] = array(' re.deldateline > ' . $startdate, 'stringsql', 'and');
+        $condition[] = [' re.deldateline > ' . $startdate, 'stringsql', 'and'];
     }
     if (!empty($_GET['before']) && $_GET['before']) {
         $enddate = strtotime($_GET['before']);
-        $condition[] = array(' re.deldateline <= ' . $enddate, 'stringsql', 'and');
+        $condition[] = [' re.deldateline <= ' . $enddate, 'stringsql', 'and'];
 
     }
     $data = C::t('resources_recyle')->fetch_all_recycle($start, $limit, $condition, $ordersql);
@@ -98,15 +98,15 @@ if ($do == 'filelist') {
         $total = $start; // 或者其他合适的默认值
     }
     $iconview = (isset($_GET['iconview'])) ? intval($_GET['iconview']) : intval($usersettings['recycleiconview']);//排列方式
-    if (!$json_data = json_encode($data)) $data = array();
-    if (!$json_data = json_encode($folderdata)) $folderdata = array();
+    if (!$json_data = json_encode($data)) $data = [];
+    if (!$json_data = json_encode($folderdata)) $folderdata = [];
     //返回数据
-    $return = array(
+    $return = [
         'sid' => $sid,
         'total' => $total,
-        'data' => $data ? $data : array(),
-        'folderdata' => $folderdata ? $folderdata : array(),
-        'param' => array(
+        'data' => $data ?: [],
+        'folderdata' => $folderdata ?: [],
+        'param' => [
             'disp' => $disp,
             'view' => $iconview,
             'page' => $page,
@@ -119,8 +119,8 @@ if ($do == 'filelist') {
             'exts' => $exts,
             'localsearch' => $bz ? 1 : 0,
             'fid' => '',
-        )
-    );
+        ]
+    ];
     exit(json_encode($return));
 } else {
     //分页
@@ -167,7 +167,7 @@ if ($do == 'filelist') {
     $explorer_setting = get_resources_some_setting();
     if ($explorer_setting['useronperm']) {
         $fid = C::t('folder')->fetch_fid_by_flag('home');
-        $homearr = array('fid' => $fid, 'name' => lang('explorer_user_root_dirname'));
+        $homearr = ['fid' => $fid, 'name' => lang('explorer_user_root_dirname')];
     }
     //我参与的群组
     $manageorg = C::t('organization')->fetch_all_part_org();

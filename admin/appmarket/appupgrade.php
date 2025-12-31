@@ -20,12 +20,12 @@ $tagid = intval($_GET['tagid']);
 $group = intval($_GET['group']);
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;
-$gets = array('mod' => 'appmarket', 'op' => 'appupgrade', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group);
+$gets = ['mod' => 'appmarket', 'op' => 'appupgrade', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group];
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $refer = urlencode($theurl . '&page=' . $page);
 $order = 'ORDER BY disp';
 $start = ($page - 1) * $perpage;
-$apps = array();
+$apps = [];
 if ($keyword) {
     if ($count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('app_market') . " WHERE upgrade_version!='' and available>0 and  appname like '%$keyword%' or vendor like '%$keyword%'")) {
         $apps = DB::fetch_all("SELECT * FROM " . DB::table('app_market') . " WHERE  upgrade_version!='' and available>0 and appname like '%$keyword%' or vendor like '%$keyword%' $order limit $start,$perpage");
@@ -40,7 +40,7 @@ if ($keyword) {
 } else {
     $sql = " and upgrade_version!='' and available>0";
     if ($group) {
-        $sql = "  and upgrade_version!='' and `group` = '{$group}'";
+        $sql = "  and upgrade_version!='' and `group` = '$group'";
     }
     if ($count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('app_market') . " WHERE 1 $sql")) {
         $apps = DB::fetch_all("SELECT * FROM " . DB::table('app_market') . " WHERE 1 $sql $order limit $start,$perpage");
@@ -48,8 +48,8 @@ if ($keyword) {
     }
 }
 
-$list = array();
-$grouptitle = array('0' => lang('all'), '-1' => lang('visitors_visible'), '1' => lang('members_available'), '2' => lang('section_administrators_available'), '3' => lang('system_administrators_available'));
+$list = [];
+$grouptitle = ['0' => lang('all'), '-1' => lang('visitors_visible'), '1' => lang('members_available'), '2' => lang('section_administrators_available'), '3' => lang('system_administrators_available')];
 foreach ($apps as $value) {
     $value['tags'] = C::t('app_relative')->fetch_all_by_appid($value['appid']);
     if ($value['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $value['appico'])) {
@@ -62,4 +62,3 @@ foreach ($apps as $value) {
     $list[] = $value;
 }
 include template('upgrade');
-?>

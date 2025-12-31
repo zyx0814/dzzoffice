@@ -11,14 +11,14 @@ class Chinese {
 	var $table = '';
 	var $iconv_enabled = false;
 	var $convertbig5 = false;
-	var $unicode_table = array();
-	var $config  =  array (
+	var $unicode_table = [];
+	var $config  =  [
 		'SourceLang'		=> '',
 		'TargetLang'		=> '',
 		'GBtoUnicode_table'	=> 'gb-unicode.table',
 		'BIG5toUnicode_table'	=> 'big5-unicode.table',
 		'GBtoBIG5_table'   	=> 'gb-big5.table',
-	);
+    ];
 
 	function Chinese($SourceLang, $TargetLang, $ForceTable = FALSE) {
 		$this->config['SourceLang'] = $this->_lang($SourceLang);
@@ -54,7 +54,7 @@ class Chinese {
 	}
 
 	function OpenTable() {
-		$this->unicode_table = array();
+		$this->unicode_table = [];
 		if(!$this->iconv_enabled && $this->config['TargetLang'] == 'BIG5') {
 			$this->config['TargetLang'] = 'GBK';
 			$this->convertbig5 = TRUE;
@@ -119,8 +119,7 @@ class Chinese {
 				$i++;
 			}
 		}
-		$result = $c;
-		return $result;
+        return $c;
 	}
 
 	function Convert($SourceText) {
@@ -239,4 +238,3 @@ class Chinese {
 	}
 
 }
-?>

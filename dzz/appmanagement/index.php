@@ -14,7 +14,7 @@ $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'stats') {
     $starttime = trim($_GET['starttime']);
     $endtime = trim($_GET['endtime']);
-    $time = trim($_GET['time']) ? trim($_GET['time']) : 'day';
+    $time = trim($_GET['time']) ?: 'day';
     $operation = trim($_GET['operation']);
     switch ($time) {
         case 'month':
@@ -82,7 +82,7 @@ if ($do == 'stats') {
     }
 } elseif ($do == 'systemcheck') {
     define('ROOT_PATH', dirname(__FILE__));
-    $filesock_items = array('fsockopen', 'pfsockopen', 'stream_socket_client', 'mysqli_connect', 'file_get_contents', 'xml_parser_create', 'json_encode', 'filesize', 'curl_init', 'zip_open', 'mb_check_encoding', 'mb_convert_encoding');
+    $filesock_items = ['fsockopen', 'pfsockopen', 'stream_socket_client', 'mysqli_connect', 'file_get_contents', 'xml_parser_create', 'json_encode', 'filesize', 'curl_init', 'zip_open', 'mb_check_encoding', 'mb_convert_encoding'];
     $func_strextra = '';
     foreach ($filesock_items as $item) {
         $status = function_exists($item);
@@ -101,10 +101,10 @@ if ($do == 'stats') {
     $php_os_version = phpBuild64() ? 64 : 32;
     $max_input_time = ini_get('max_input_time') ?: 'unknown';
     $max_execution_time = ini_get('max_execution_time') ?: 'unknown';
-    $tmp = function_exists('gd_info') ? gd_info() : array();
+    $tmp = function_exists('gd_info') ? gd_info() : [];
     $gd_version = empty($tmp['GD Version']) ? 'noext' : $tmp['GD Version'];
     unset($tmp);
-    $opcache = function_exists('opcache_get_configuration') ? opcache_get_configuration() : array();
+    $opcache = function_exists('opcache_get_configuration') ? opcache_get_configuration() : [];
     $opcache = !empty($opcache['directives']['opcache.enable']) ? lang('enable') : lang('forbidden');
     $disable_functions = ini_get('disable_functions');
     $disable_functions = explode(',', $disable_functions);
@@ -139,20 +139,20 @@ if ($do == 'stats') {
     } else {
         $order = 'ORDER BY lastactivity DESC';
     }
-	$onlinedata = $list = array();
+	$onlinedata = $list = [];
     $sql = '1';
     if ($ismember == 1) {
         $sql .= ' and uid > 0';
     } elseif ($ismember == 2) {
         $sql .= ' and uid = 0';
     }
-    $param = array('session');
+    $param = ['session'];
     $limitsql = 'limit ' . $start . ',' . $limit;
     if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE $sql ", $param)) {
        $onlinedata = DB::fetch_all("SELECT * FROM %t WHERE $sql $order $limitsql", $param);
     }
     if ($onlinedata) {
-        $usergroup = array();
+        $usergroup = [];
         foreach (C::t('usergroup')->range() as $group) {
             $usergroup[$group['groupid']] = $group['grouptitle'];
         }
@@ -174,8 +174,8 @@ if ($do == 'stats') {
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $list ? $list : []
+        "count" => $count ?: 0,
+        "data" => $list ?: []
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {
@@ -190,8 +190,8 @@ if ($do == 'stats') {
     }
     exit($jsonReturn);
 }
-$appdata = DB::fetch_all("select appid,appname,appico,appurl,identifier,appadminurl,`group` from %t where ((`group`=3 and isshow>0) OR appadminurl!='')  and `available`>0 order by appid",array('app_market'));
-$data = array();
+$appdata = DB::fetch_all("select appid,appname,appico,appurl,identifier,appadminurl,`group` from %t where ((`group`=3 and isshow>0) OR appadminurl!='')  and `available`>0 order by appid", ['app_market']);
+$data = [];
 foreach ($appdata as $k => $v) {
     if ($v["identifier"] == "appmanagement") continue;
     if ($v['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $v['appico'])) {
@@ -223,11 +223,11 @@ function phpBuild64() {
 
 function getData($time, $starttime, $endtime) {
     $endtime = strtotime($endtime);
-    $data = array('total' => array(),
-        'add' => array(),
-        'total_d' => array(),
-        'add_d' => array(),
-    );
+    $data = ['total' => [],
+        'add' => [],
+        'total_d' => [],
+        'add_d' => [],
+    ];
     switch ($time) {
         case 'month':
             $stamp = strtotime($starttime);
@@ -235,14 +235,14 @@ function getData($time, $starttime, $endtime) {
             $key = $arr['year'] . '-' . $arr['mon'];
             $low = strtotime($key);
             $up = strtotime('+1 month', $low);
-            $ltotal = $data['total'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d", array('user', $up));
-            $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", array('user', $up, $low));
+            $ltotal = $data['total'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d", ['user', $up]);
+            $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", ['user', $up, $low]);
             $ltotal += $data['add'][$key];
             while ($up <= $endtime) {
                 $key = dgmdate($up, 'Y-m');
                 $low = strtotime($key);
                 $up = strtotime('+1 month', $low);
-                $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", array('user', $up, $low));
+                $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", ['user', $up, $low]);
                 $ltotal += $data['add'][$key];
                 $data['total'][$key] = $ltotal;
             }
@@ -253,14 +253,14 @@ function getData($time, $starttime, $endtime) {
             $low = strtotime('+' . (1 - $arr['wday']) . ' day', $stamp);
             $up = strtotime('+1 week', $low);
             $key = dgmdate($low, 'm-d') . '~' . dgmdate($up - 60 * 60 * 24, 'm-d');
-            $ltotal = $data['total'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d", array('user', $up));
-            $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", array('user', $up, $low));
+            $ltotal = $data['total'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d", ['user', $up]);
+            $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", ['user', $up, $low]);
             $ltotal += $data['add'][$key];
             while ($up < $endtime) {
                 $low = $up;
                 $up = strtotime('+1 week', $low);
                 $key = dgmdate($low, 'm-d') . '~' . dgmdate($up - 60 * 60 * 24, 'm-d');
-                $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", array('user', $up, $low));
+                $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", ['user', $up, $low]);
                 $ltotal += $data['add'][$key];
                 $data['total'][$key] = $ltotal;
             }
@@ -269,20 +269,20 @@ function getData($time, $starttime, $endtime) {
             $low = strtotime($starttime);//strtotime('+'.(1-$arr['hours']).' day',$stamp);
             $up = $low + 24 * 60 * 60;
             $key = dgmdate($low, 'Y-m-d');
-            $ltotal = $data['total'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d", array('user', $up));
-            $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", array('user', $up, $low));
+            $ltotal = $data['total'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d", ['user', $up]);
+            $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", ['user', $up, $low]);
             $ltotal += $data['add'][$key];
             while ($up <= $endtime) {
                 $low = $up;
                 $up = strtotime('+1 day', $low);
                 $key = dgmdate($low, 'Y-m-d');
-                $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", array('user', $up, $low));
+                $data['add'][$key] = DB::result_first("select COUNT(*) from %t where regdate<%d and regdate>=%d", ['user', $up, $low]);
                 $ltotal += $data['add'][$key];
                 $data['total'][$key] = $ltotal;
             }
             break;
         case 'all':
-            $min = DB::result_first("select min(regdate) from %t where regdate>0", array('user'));
+            $min = DB::result_first("select min(regdate) from %t where regdate>0", ['user']);
             $min -= 60;
             $max = TIMESTAMP + 60 * 60 * 8;
             $days = ($max - $min) / (60 * 60 * 24);
@@ -308,12 +308,12 @@ function getData($time, $starttime, $endtime) {
 // 服务器持续运行时间
 function getUptime(){
     global $_G;
-    $list = array(
+    $list = [
         'day'		=> 0,
         'hour'		=> 0,
         'minute'	=> 0,
         'second'	=> 0,
-    );
+    ];
     $time = '';
     if ($_G['config']['system_os'] == 'windows') {
         $res = shell_exec('WMIC OS Get LastBootUpTime');
@@ -341,13 +341,13 @@ function getUptime(){
     }
     $str = '';
     foreach($list as $key => $val) {
-        $str .= ' ' . ($val ? $val : 0) . ' ' . lang('data.'.$key);
+        $str .= ' ' . ($val ?: 0) . ' ' . lang('data.'.$key);
     }
     return $str;
 }
 // 服务器盘大小
 function serversize($path){
-    $data = array('sizeTotal' => 0, 'sizeUse' => 0);
+    $data = ['sizeTotal' => 0, 'sizeUse' => 0];
     if(!function_exists('disk_total_space')){return $data;}
     if($path) {
         $data['sizeTotal'] = @disk_total_space($path);

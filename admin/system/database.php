@@ -16,7 +16,7 @@ $db = &DB::object();
 $tabletype = 'Engine';
 $tablepre = $_G['config']['db'][1]['tablepre'];
 $dbcharset = $_G['config']['db'][1]['dbcharset'];
-$excepttables = array($tablepre.'admincp_session', $tablepre.'failedlogin', $tablepre.'session');
+$excepttables = [$tablepre.'admincp_session', $tablepre.'failedlogin', $tablepre.'session'];
 $backupdir = C::t('setting')->fetch('backupdir');
 if (!$backupdir) {
     $backupdir = random(6);
@@ -27,14 +27,14 @@ $backupdir = 'backup_' . $backupdir;
 if (!is_dir('./data/' . $backupdir)) {
     mkdir('./data/' . $backupdir, 0777);
 }
-$operation = $_GET['operation'] ? $_GET['operation'] : 'export';
+$operation = $_GET['operation'] ?: 'export';
 $op = isset($_GET['op']) ? $_GET['op'] : '';
 if ($operation == 'export') {
     $navtitle = lang('database_export') . ' - ' . lang('appname');
     if (!submitcheck('exportsubmit', 1)) {
         $shelldisabled = function_exists('shell_exec') ? '' : 'disabled';
         $tables = '';
-        $dztables = array();
+        $dztables = [];
         $tables = C::t('setting')->fetch('custombackup', true);
 
         $dzz_tables = fetchtablelist($tablepre);
@@ -57,7 +57,7 @@ if ($operation == 'export') {
         if ($_GET['type'] == 'dzz') {
             $tables = arraykeys2(fetchtablelist($tablepre), 'Name');
         } elseif ($_GET['type'] == 'custom') {
-            $tables = array();
+            $tables = [];
             $alltables = arraykeys2(fetchtablelist($tablepre), 'Name');
             if (empty($_GET['setup'])) {
                 $tables = C::t('setting')->fetch('custombackup', true);
@@ -83,10 +83,10 @@ if ($operation == 'export') {
         $volume = intval($_GET['volume']) + 1;
         $idstring = '# Identify: ' . base64_encode($_G['timestamp'] . "," . $_G['setting']['version'] . "," . $_GET['type'] . "," . $_GET['method'] . "," . $volume . "," . $tablepre . "," . $dbcharset) . "\n";
 
-        $dumpcharset = $_GET['sqlcharset'] ? $_GET['sqlcharset'] : str_replace('-', '', $_G['charset']);
+        $dumpcharset = $_GET['sqlcharset'] ?: str_replace('-', '', $_G['charset']);
         $setnames = ($_GET['sqlcharset'] && (!$_GET['sqlcompat'] || $_GET['sqlcompat'] == 'MYSQL41')) ? "SET NAMES '$dumpcharset';\n\n" : '';
         if ($_GET['sqlcharset']) {
-            DB::query('SET NAMES %s', array($_GET['sqlcharset']));
+            DB::query('SET NAMES %s', [$_GET['sqlcharset']]);
         }
         if ($_GET['sqlcompat'] == 'MYSQL40') {
             DB::query("SET SQL_MODE='MYSQL40'");
@@ -94,7 +94,7 @@ if ($operation == 'export') {
             DB::query("SET SQL_MODE=''");
         }
 
-        $backupfilename = './data/' . $backupdir . '/' . str_replace(array('/', '\\', '.', "'"), '', $_GET['filename']);
+        $backupfilename = './data/' . $backupdir . '/' . str_replace(['/', '\\', '.', "'"], '', $_GET['filename']);
 
         if ($_GET['usezip']) {
             require_once './core/class/class_zip.php';
@@ -147,7 +147,7 @@ if ($operation == 'export') {
                     }
                     unset($sqldump, $zip, $content);
                     $redirecturl = BASESCRIPT . "?mod=system&op=database&operation=export&type=" . rawurlencode($_GET['type']) . "&saveto=server&filename=" . rawurlencode($_GET['filename']) . "&method=multivol&sizelimit=" . rawurlencode($_GET['sizelimit']) . "&volume=" . rawurlencode($volume) . "&tableid=" . rawurlencode($tableid) . "&startfrom=" . rawurlencode($startrow) . "&extendins=" . rawurlencode($_GET['extendins']) . "&sqlcharset=" . rawurlencode($_GET['sqlcharset']) . "&sqlcompat=" . rawurlencode($_GET['sqlcompat']) . "&exportsubmit=yes&usehex={$_GET['usehex']}&usezip={$_GET['usezip']}";
-                    $msg = lang('database_export_multivol_redirect', array('volume' => $volume));
+                    $msg = lang('database_export_multivol_redirect', ['volume' => $volume]);
                     $msg_type = 'success';
 
                 }
@@ -159,7 +159,7 @@ if ($operation == 'export') {
                 if ($_GET['usezip'] == 1) {
                     $zip = new zipfile();
                     $zipfilename = $backupfilename . '.zip';
-                    $unlinks = array();
+                    $unlinks = [];
                     for ($i = 1; $i <= $volume; $i++) {
                         $filename = sprintf($dumpfile, $i);
                         $fp = fopen($filename, "r");
@@ -175,27 +175,26 @@ if ($operation == 'export') {
                             @unlink($link);
                         }
                     } else {
-                        C::t('cache')->insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'],), false, true);
-                        $msg .= lang('database_export_multivol_succeed', array('volume' => $volume, 'filelist' => $filelist));
+                        C::t('cache')->insert(['cachekey' => 'db_export', 'cachevalue' => serialize(['dateline' => $_G['timestamp']]), 'dateline' => $_G['timestamp'],], false, true);
+                        $msg .= lang('database_export_multivol_succeed', ['volume' => $volume, 'filelist' => $filelist]);
                         $msg_type = 'success';
                     }
                     unset($sqldump, $zip, $content);
                     fclose($fp);
                     @touch('./data/' . $backupdir . '/index.htm');
                     $filename = $zipfilename;
-                    C::t('cache')->insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'],), false, true);
-                    $msg .= lang('database_export_zip_succeed', array('filename' => $filename));
-                    $msg_type = 'success';
+                    C::t('cache')->insert(['cachekey' => 'db_export', 'cachevalue' => serialize(['dateline' => $_G['timestamp']]), 'dateline' => $_G['timestamp'],], false, true);
+                    $msg .= lang('database_export_zip_succeed', ['filename' => $filename]);
                 } else {
                     @touch('./data/' . $backupdir . '/index.htm');
                     for ($i = 1; $i <= $volume; $i++) {
                         $filename = sprintf($_GET['usezip'] == 2 ? $backupfilename . "-%s" . '.zip' : $dumpfile, $i);
                         $filelist .= "<li class=\"list-group-item\"><a href=\"$filename\">$filename</a></li>\n";
                     }
-                    C::t('cache')->insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'],), false, true);
-                    $msg .= lang('database_export_multivol_succeed', array('volume' => $volume, 'filelist' => $filelist));
-                    $msg_type = 'success';
+                    C::t('cache')->insert(['cachekey' => 'db_export', 'cachevalue' => serialize(['dateline' => $_G['timestamp']]), 'dateline' => $_G['timestamp'],], false, true);
+                    $msg .= lang('database_export_multivol_succeed', ['volume' => $volume, 'filelist' => $filelist]);
                 }
+                $msg_type = 'success';
             }
 
         } else {
@@ -221,7 +220,7 @@ if ($operation == 'export') {
 
 
             $mysqlbin = $mysql_base == '/' ? '' : addslashes($mysql_base) . 'bin/';
-            @shell_exec($mysqlbin . 'mysqldump --force --quick --skip-opt --create-options --add-drop-table' . ($_GET['extendins'] == 1 ? ' --extended-insert' : '') . '' . ($_GET['sqlcompat'] == 'MYSQL40' ? ' --compatible=mysql40' : '') . ' --host="' . $dbhost . '"' . ($dbport ? (is_numeric($dbport) ? ' --port=' . $dbport : ' --socket="' . $dbport . '"') : '') . ' --user="' . $dbuser . '" --password="' . $dbpw . '" "' . $dbname . '" ' . $tablesstr . ' > ' . $dumpfile);
+            @shell_exec($mysqlbin . 'mysqldump --force --quick --skip-opt --create-options --add-drop-table' . ($_GET['extendins'] == 1 ? ' --extended-insert' : '') . ($_GET['sqlcompat'] == 'MYSQL40' ? ' --compatible=mysql40' : '') . ' --host="' . $dbhost . '"' . ($dbport ? (is_numeric($dbport) ? ' --port=' . $dbport : ' --socket="' . $dbport . '"') : '') . ' --user="' . $dbuser . '" --password="' . $dbpw . '" "' . $dbname . '" ' . $tablesstr . ' > ' . $dumpfile);
 
             if (@file_exists($dumpfile)) {
 
@@ -240,9 +239,8 @@ if ($operation == 'export') {
                     @touch('./data/' . $backupdir . '/index.htm');
                     $filename = $backupfilename . '.zip';
                     unset($sqldump, $zip, $content);
-                    C::t('cache')->insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'],), false, true);
-                    $msg = lang('database_export_zip_succeed', array('filename' => $filename));
-                    $msg_type = 'success';
+                    C::t('cache')->insert(['cachekey' => 'db_export', 'cachevalue' => serialize(['dateline' => $_G['timestamp']]), 'dateline' => $_G['timestamp'],], false, true);
+                    $msg = lang('database_export_zip_succeed', ['filename' => $filename]);
                 } else {
                     if (@is_writeable($dumpfile)) {
                         $fp = fopen($dumpfile, 'rb+');
@@ -251,10 +249,10 @@ if ($operation == 'export') {
                     }
                     @touch('./data/' . $backupdir . '/index.htm');
                     $filename = $backupfilename . '.sql';
-                    C::t('cache')->insert(array('cachekey' => 'db_export', 'cachevalue' => serialize(array('dateline' => $_G['timestamp'])), 'dateline' => $_G['timestamp'],), false, true);
-                    $msg = lang('database_export_succeed', array('filename' => $filename));
-                    $msg_type = 'success';
+                    C::t('cache')->insert(['cachekey' => 'db_export', 'cachevalue' => serialize(['dateline' => $_G['timestamp']]), 'dateline' => $_G['timestamp'],], false, true);
+                    $msg = lang('database_export_succeed', ['filename' => $filename]);
                 }
+                $msg_type = 'success';
 
             } else {
                 $msg = lang('database_shell_fail');
@@ -278,7 +276,7 @@ if ($operation == 'export') {
     }
 
     if (!submitcheck('deletesubmit')) {
-        $exportlog = $exportsize = $exportziplog = array();
+        $exportlog = $exportsize = $exportziplog = [];
         if (is_dir(DZZ_ROOT . './data/' . $backupdir)) {
             $dir = dir(DZZ_ROOT . './data/' . $backupdir);
             while ($entry = $dir->read()) {
@@ -290,11 +288,11 @@ if ($operation == 'export') {
                         $identify = explode(',', base64_decode(preg_replace("/^# Identify:\s*(\w+).*/s", "\\1", fgets($fp, 256))));
                         fclose($fp);
                         $key = preg_replace('/^(.+?)(\-\d+)\.sql$/i', '\\1', basename($entry));
-                        $exportlog[$key][$identify[4]] = array('version' => $identify[1], 'type' => $identify[2], 'method' => $identify[3], 'volume' => $identify[4], 'filename' => $entry, 'dateline' => filemtime($entry), 'size' => $filesize);
+                        $exportlog[$key][$identify[4]] = ['version' => $identify[1], 'type' => $identify[2], 'method' => $identify[3], 'volume' => $identify[4], 'filename' => $entry, 'dateline' => filemtime($entry), 'size' => $filesize];
                         $exportsize[$key] += $filesize;
                     } elseif (preg_match("/\.zip$/i", $entry)) {
                         $filesize = filesize($entry);
-                        $exportziplog[] = array('type' => 'zip', 'filename' => $entry, 'size' => filesize($entry), 'dateline' => filemtime($entry));
+                        $exportziplog[] = ['type' => 'zip', 'filename' => $entry, 'size' => filesize($entry), 'dateline' => filemtime($entry)];
                     }
                 }
             }
@@ -307,10 +305,10 @@ if ($operation == 'export') {
         }
 
         $restore_url = $_G['siteurl'] . 'data/restore.php';
-        $do_import_option = lang('do_import_option', array('restore_url' => $restore_url));
+        $do_import_option = lang('do_import_option', ['restore_url' => $restore_url]);
         $datasiteurl = $_G['siteurl'] . 'data/';
         $lang = lang();
-        $list = array();
+        $list = [];
         foreach ($exportlog as $key => $val) {
             $info = $val[1];
             $info['dateline'] = is_int($info['dateline']) ? dgmdate($info['dateline']) : $lang['unknown'];
@@ -343,13 +341,13 @@ if ($operation == 'export') {
     } else {
         if (is_array($_GET['delete'])) {
             foreach ($_GET['delete'] as $filename) {
-                $file_path = './data/' . $backupdir . '/' . str_replace(array('/', '\\'), '', $filename);
+                $file_path = './data/' . $backupdir . '/' . str_replace(['/', '\\'], '', $filename);
                 if (is_file($file_path)) {
                     @unlink($file_path);
                 } else {
                     $i = 1;
                     while (1) {
-                        $file_path = './data/' . $backupdir . '/' . str_replace(array('/', '\\'), '', $filename . '-' . $i . '.sql');
+                        $file_path = './data/' . $backupdir . '/' . str_replace(['/', '\\'], '', $filename . '-' . $i . '.sql');
                         if (is_file($file_path)) {
                             @unlink($file_path);
                             $i++;
@@ -361,12 +359,11 @@ if ($operation == 'export') {
             }
             $msg = lang('database_file_delete_succeed');
             $msg_type = 'success';
-            $redirecturl = dreferer();
         } else {
             $msg = lang('database_file_delete_invalid');
             $msg_type = 'danger';
-            $redirecturl = dreferer();
         }
+        $redirecturl = dreferer();
     }
     include template('database');
     exit();
@@ -379,13 +376,13 @@ if ($operation == 'export') {
         include template('database');
         exit();
     }
-    $runquerys = array();
+    $runquerys = [];
     if (!submitcheck('sqlsubmit')) {
 
     } else {
         $queries = $_GET['queries'];
 
-        $sqlquery = splitsql(str_replace(array(' {tablepre}', ' cdb_', ' `cdb_', ' pre_', ' `pre_'), array(' ' . $tablepre, ' ' . $tablepre, ' `' . $tablepre, ' ' . $tablepre, ' `' . $tablepre), $queries));
+        $sqlquery = splitsql(str_replace([' {tablepre}', ' cdb_', ' `cdb_', ' pre_', ' `pre_'], [' ' . $tablepre, ' ' . $tablepre, ' `' . $tablepre, ' ' . $tablepre, ' `' . $tablepre], $queries));
         $affected_rows = 0;
         foreach ($sqlquery as $sql) {
             if (trim($sql) != '') {
@@ -400,14 +397,13 @@ if ($operation == 'export') {
             }
         }
         if ($sqlerror) {
-            $msg = lang('database_run_query_invalid', array('sqlerror' => $sqlerror));
+            $msg = lang('database_run_query_invalid', ['sqlerror' => $sqlerror]);
             $msg_type = 'danger';
-            $redirecturl = dreferer();
         } else {
-            $msg = lang('database_run_query_succeed', array('affected_rows' => $affected_rows));
+            $msg = lang('database_run_query_succeed', ['affected_rows' => $affected_rows]);
             $msg_type = 'success';
-            $redirecturl = dreferer();
         }
+        $redirecturl = dreferer();
     }
     include template('database');
     exit();
@@ -446,7 +442,7 @@ if ($operation == 'export') {
             if ($tb['Collation'] != 'utf8mb4_unicode_ci') {
                 // 对文字排序进行过滤，避免不合法文字排序进入升级流程。
                 // 从 MySQL 8.0.28 开始, utf8_general_ci 更名为 utf8mb3_general_ci
-                if (!in_array($tb['Collation'], array('utf8mb4_unicode_ci', 'utf8_general_ci', 'utf8mb3_general_ci', 'gbk_chinese_ci', 'big5_chinese_ci', 'utf8mb4_general_ci'))) {
+                if (!in_array($tb['Collation'], ['utf8mb4_unicode_ci', 'utf8_general_ci', 'utf8mb3_general_ci', 'gbk_chinese_ci', 'big5_chinese_ci', 'utf8mb4_general_ci'])) {
                     $html .= '<td><span class="text-danger">字符集不受支持，请人工处理！</span></td>';
                     $error_count++;
                 } else {
@@ -516,7 +512,7 @@ function fetchtablelist($tablepre = '') {
     $dbname = $arr[1] ? $arr[0] : '';
     $tablepre = str_replace('_', '\_', $tablepre);
     $sqladd = $dbname ? " FROM $dbname LIKE '$arr[1]%'" : "LIKE '$tablepre%'";
-    $tables = $table = array();
+    $tables = $table = [];
     $query = DB::query("SHOW TABLE STATUS $sqladd");
     while ($table = DB::fetch($query)) {
         $table['Name'] = ($dbname ? "$dbname." : '') . $table['Name'];
@@ -526,7 +522,7 @@ function fetchtablelist($tablepre = '') {
 }
 
 function arraykeys2($array, $key2) {
-    $return = array();
+    $return = [];
     foreach ($array as $val) {
         $return[] = $val[$key2];
     }
@@ -543,14 +539,14 @@ function syntablestruct($sql, $version, $dbcharset) {
 
     if ($sqlversion === $version) {
 
-        return $sqlversion && $dbcharset ? preg_replace(array('/ character set \w+/i', '/ collate \w+/i', "/DEFAULT CHARSET=\w+/is"), array('', '', "DEFAULT CHARSET=$dbcharset"), $sql) : $sql;
+        return $sqlversion && $dbcharset ? preg_replace(['/ character set \w+/i', '/ collate \w+/i', "/DEFAULT CHARSET=\w+/is"], ['', '', "DEFAULT CHARSET=$dbcharset"], $sql) : $sql;
     }
 
     if ($version) {
-        return preg_replace(array('/TYPE=HEAP/i', '/TYPE=(\w+)/is'), array("ENGINE=MEMORY DEFAULT CHARSET=$dbcharset", "ENGINE=\\1 DEFAULT CHARSET=$dbcharset"), $sql);
+        return preg_replace(['/TYPE=HEAP/i', '/TYPE=(\w+)/is'], ["ENGINE=MEMORY DEFAULT CHARSET=$dbcharset", "ENGINE=\\1 DEFAULT CHARSET=$dbcharset"], $sql);
 
     } else {
-        return preg_replace(array('/character set \w+/i', '/collate \w+/i', '/ENGINE=MEMORY/i', '/\s*DEFAULT CHARSET=\w+/is', '/\s*COLLATE=\w+/is', '/ENGINE=(\w+)(.*)/is'), array('', '', 'ENGINE=HEAP', '', '', 'TYPE=\\1\\2'), $sql);
+        return preg_replace(['/character set \w+/i', '/collate \w+/i', '/ENGINE=MEMORY/i', '/\s*DEFAULT CHARSET=\w+/is', '/\s*COLLATE=\w+/is', '/ENGINE=(\w+)(.*)/is'], ['', '', 'ENGINE=HEAP', '', '', 'TYPE=\\1\\2'], $sql);
     }
 }
 
@@ -599,7 +595,7 @@ function sqldumptable($table, $startfrom = 0, $currsize = 0) {
     global $_G, $db, $startrow, $dumpcharset, $complete, $excepttables;
     $offset = 300;
     $tabledump = '';
-    $tablefields = array();
+    $tablefields = [];
 
     $query = DB::query("SHOW FULL COLUMNS FROM $table", 'SILENT');
     if (strexists($table, 'adminsessions')) {
@@ -698,7 +694,7 @@ function sqldumptable($table, $startfrom = 0, $currsize = 0) {
 
 function splitsql($sql) {
     $sql = str_replace("\r", "\n", $sql);
-    $ret = array();
+    $ret = [];
     $num = 0;
     $queriesarray = explode(";\n", trim($sql));
     unset($sql);
@@ -717,9 +713,9 @@ function slowcheck($type1, $type2) {
     $t1 = $t1[0];
     $t2 = explode(' ', $type2);
     $t2 = $t2[0];
-    $arr = array($t1, $t2);
+    $arr = [$t1, $t2];
     sort($arr);
-    if ($arr == array('mediumtext', 'text')) {
+    if ($arr == ['mediumtext', 'text']) {
         return TRUE;
     } elseif (substr($arr[0], 0, 4) == 'char' && substr($arr[1], 0, 7) == 'varchar') {
         return TRUE;
@@ -742,4 +738,4 @@ function checkpermission($action, $break = 1) {
     }
 }
 
-?>
+

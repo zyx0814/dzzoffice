@@ -22,16 +22,16 @@ if ($do == 'getinfo') {
         $firstlogsnum = count($firstlogs);
         $countlogfile = count($logfiles);
         $count = ($countlogfile - 1) * 4000 + $firstlogsnum;
-        $logs = array();
+        $logs = [];
         $jishu = 4000;//每个日志文件最多行数
         $start = ($page - 1) * $limit;
         $lastlog = $last_secondlog = "";
 
-        $newdata = array();
+        $newdata = [];
         foreach ($logfiles as $k => $v) {
             $nowfilemaxnum = ($jishu * ($k + 1)) - ($jishu - $firstlogsnum);
             $startnum = ($nowfilemaxnum - $jishu) <= 0 ? 0 : ($nowfilemaxnum - $jishu + 1);
-            $newdata[] = array("file" => $v, "start" => $startnum, "end" => $nowfilemaxnum);
+            $newdata[] = ["file" => $v, "start" => $startnum, "end" => $nowfilemaxnum];
         }
         //print_R($newdata);
         //查询当前分页数据位于哪个日志文件
@@ -41,10 +41,8 @@ if ($do == 'getinfo') {
                 $lastlog = $v;
                 if (($start + $limit) < $v["end"]) {
 
-                } else {
-                    if (isset($newdata[$k + 1])) {
-                        $last_secondlog = $newdata[$k + 1];
-                    }
+                } elseif (isset($newdata[$k + 1])) {
+                    $last_secondlog = $newdata[$k + 1];
                 }
                 break;
             }
@@ -101,11 +99,11 @@ if ($do == 'getinfo') {
                 ];
                 exit(json_encode($errorResponse));
             }
-            $usergroup = array();
+            $usergroup = [];
             foreach (C::t('usergroup')->range() as $group) {
                 $usergroup[$group['groupid']] = $group['grouptitle'];
             }
-            $list = array();
+            $list = [];
             foreach ($logs as $logrow) {
                 $log = explode("\t", $logrow);
                 if (empty($log[1])) {
@@ -119,14 +117,14 @@ if ($do == 'getinfo') {
                     $loginfo = mb_convert_encoding($log[5], 'UTF-8', 'auto');
                 }
                 $list[] = [
-                    "operator" => $log[2] ? $log[2] : "",
-                    "usergroup" => $log[3] ? $log[3] : "",
-                    "ip" => $log[4] ? $log[4] : "",
-                    "time" => $log[1] ? $log[1] : "",
+                    "operator" => $log[2] ?: "",
+                    "usergroup" => $log[3] ?: "",
+                    "ip" => $log[4] ?: "",
+                    "time" => $log[1] ?: "",
                     "loginfo" => $loginfo,
-                    "visit" => $log[6] ? $log[6] : "",
-                    "from" => $log[7] ? $log[7] : "",
-                    "info" => $log[8] ? $log[8] : "",
+                    "visit" => $log[6] ?: "",
+                    "from" => $log[7] ?: "",
+                    "info" => $log[8] ?: "",
                 ];
             }
         }
@@ -135,8 +133,8 @@ if ($do == 'getinfo') {
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $list ? $list : [],
+        "count" => $count ?: 0,
+        "data" => $list ?: [],
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {
@@ -155,7 +153,7 @@ include template('list');
 function getactionarray() {
     $isfounder = true;
     unset($topmenu['index'], $menu['index']);
-    $actioncat = $actionarray = array();
+    $actioncat = $actionarray = [];
     $actioncat[] = 'setting';
     $actioncat = array_merge($actioncat, array_keys($topmenu));
     foreach ($menu as $tkey => $items) {
@@ -163,12 +161,12 @@ function getactionarray() {
             $actionarray[$tkey][] = $item;
         }
     }
-    return array('actions' => $actionarray, 'cats' => $actioncat);
+    return ['actions' => $actionarray, 'cats' => $actioncat];
 }
 
 function get_log_files($logdir = '', $action = 'action') {
     $dir = opendir($logdir);
-    $files = array();
+    $files = [];
     while ($entry = readdir($dir)) {
         $files[] = $entry;
     }
@@ -177,7 +175,7 @@ function get_log_files($logdir = '', $action = 'action') {
     if ($files) {
         sort($files);
         $logfile = $action;
-        $logfiles = array();
+        $logfiles = [];
         $ym = '';
         foreach ($files as $file) {
             if (strpos($file, $logfile) !== FALSE) {
@@ -188,7 +186,7 @@ function get_log_files($logdir = '', $action = 'action') {
             }
         }
         if ($logfiles) {
-            $lfs = array();
+            $lfs = [];
             foreach ($logfiles as $ym => $lf) {
                 $lastlogfile = $lf[0];
                 unset($lf[0]);
@@ -197,7 +195,7 @@ function get_log_files($logdir = '', $action = 'action') {
             }
             return $lfs;
         }
-        return array();
+        return [];
     }
-    return array();
+    return [];
 }

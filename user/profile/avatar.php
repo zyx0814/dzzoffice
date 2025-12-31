@@ -18,21 +18,21 @@ if (submitcheck('avatarsubmit')) {
     } else {
         $my_info = perm_check::checkuserperm('my_info');
     }
-    if ($my_info) exit(json_encode(array('error' => '您所在的用户组没有权限修改头像！')));
-    if ($_GET['imagedata']) $success = upbase64($_GET['imagedata'], $_G['uid']);
-    if ($_GET['aid']) IO::delete('attach::' . intval($_GET['aid']));
+    if ($my_info) exit(json_encode(['error' => '您所在的用户组没有权限修改头像！']));
+    if ($_GET['imagedata']) $success = upBase64($_GET['imagedata'], $_G['uid']);
+    if ($_GET['aid']) IO::Delete('attach::' . intval($_GET['aid']));
     if ($success) {
-        exit(json_encode(array('msg' => 'success')));
+        exit(json_encode(['msg' => 'success']));
     } else {
-        exit(json_encode(array('error' => '头像保存错误，请稍候重试')));
+        exit(json_encode(['error' => '头像保存错误，请稍候重试']));
     }
 } elseif ($_GET['do'] == 'imageupload') {
     include libfile('class/uploadhandler');
-    $options = array('accept_file_types' => '/\.(gif|jpe?g|png)$/i',
+    $options = ['accept_file_types' => '/\.(gif|jpe?g|png)$/i',
         'upload_dir' => $_G['setting']['attachdir'] . 'cache/',
         'upload_url' => $_G['setting']['attachurl'] . 'cache/',
-        'thumbnail' => array('max-width' => 512, 'max-height' => 512)
-    );
+        'thumbnail' => ['max-width' => 512, 'max-height' => 512]
+    ];
     $upload_handler = new uploadhandler($options);
     exit();
 }
@@ -64,7 +64,7 @@ function upBase64($base64Data, $uid) {
             $success++;
         }
         if ($success > 2) {
-            C::t('user')->update($uid, array('avatarstatus' => '1'));
+            C::t('user')->update($uid, ['avatarstatus' => '1']);
         }
         @unlink($temp);
         return $success;

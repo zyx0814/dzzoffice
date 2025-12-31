@@ -19,4 +19,4 @@ if ($attach = C::t('attachment')->fetch($aid)) {
     if ($re['error']) exit($re['error']);
 }
 exit('success');
-?>
+

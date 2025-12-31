@@ -3,8 +3,8 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-function _dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $ip = '', $timeout = 15, $block = TRUE, $encodetype  = 'URLENCODE', $allowcurl = TRUE, $position = 0, $files = array()) {
-    $param = array(
+function _dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FALSE, $ip = '', $timeout = 15, $block = TRUE, $encodetype  = 'URLENCODE', $allowcurl = TRUE, $position = 0, $files = []) {
+    $param = [
         'url' => $url,
         'limit' => $limit,
         'post' => $post,
@@ -16,9 +16,8 @@ function _dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FAL
         'allowcurl' => $allowcurl,
         'position' => $position,
         'files' => $files
-    );
+    ];
     $fs = filesock::open($param);
     return $fs->request();
 }
 
-?>

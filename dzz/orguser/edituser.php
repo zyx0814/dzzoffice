@@ -23,7 +23,7 @@ if (empty($do) && $uid)
 if ($do == 'add') {
     if (submitcheck('accountadd')) {
         //处理用户部门和职位
-        $orgids = array();
+        $orgids = [];
         foreach ($_GET['orgids'] as $key => $orgid) {
             if (!$orgid)
                 continue;
@@ -61,7 +61,7 @@ if ($do == 'add') {
                 }
             }
         }
-        $user_extra = array();
+        $user_extra = [];
         //如果输入手机号码，检查手机号码不能重复
         $phone = trim($_GET['phone']);
         if ($phone) {
@@ -92,7 +92,7 @@ if ($do == 'add') {
         //密码验证部分
         if ($_G['setting']['pwlength']) {
             if (strlen($_GET['password']) < $_G['setting']['pwlength']) {
-                showmessage('profile_password_tooshort', '', array('pwlength' => $_G['setting']['pwlength']));
+                showmessage('profile_password_tooshort', '', ['pwlength' => $_G['setting']['pwlength']]);
             }
         }
 
@@ -128,7 +128,7 @@ if ($do == 'add') {
             }
         }
         //插入用户状态表
-        $status = array('uid' => $uid, 'regip' => '', 'lastip' => '', 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP, 'lastsendmail' => 0);
+        $status = ['uid' => $uid, 'regip' => '', 'lastip' => '', 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP, 'lastsendmail' => 0];
         C::t('user_status')->insert($status, false, true);
         if($_G[ 'adminid'] == 1) {
             //处理管理员
@@ -142,9 +142,9 @@ if ($do == 'add') {
         //处理额外空间
         $addsize = intval($_GET['addsize']);
         if (C::t('user_field')->fetch($uid)) {
-            C::t('user_field')->update($uid, array('addsize' => $addsize, 'perm' => 0));
+            C::t('user_field')->update($uid, ['addsize' => $addsize, 'perm' => 0]);
         } else {
-            C::t('user_field')->insert(array('uid' => $uid, 'addsize' => $addsize, 'perm' => 0, 'iconview' => 2));
+            C::t('user_field')->insert(['uid' => $uid, 'addsize' => $addsize, 'perm' => 0, 'iconview' => 2]);
         }
 
         if ($orgids) C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
@@ -152,14 +152,14 @@ if ($do == 'add') {
         C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
         Hook::listen('syntoline_user', $uid, 'add');//注册绑定到钉钉部门表
         if ($_GET['sendmail']) {
-            $email_password_message = lang('email_password_message', array('sitename' => $_G['setting']['sitename'], 'siteurl' => $_G['siteurl'], 'email' => $_GET['email'], 'password' => $_GET['password']));
+            $email_password_message = lang('email_password_message', ['sitename' => $_G['setting']['sitename'], 'siteurl' => $_G['siteurl'], 'email' => $_GET['email'], 'password' => $_GET['password']]);
 
             if (!sendmail_cron("$_GET[email] <$_GET[email]>", lang('email_password_subject'), $email_password_message)) {
                 runlog('sendmail', "$_GET[email] sendmail failed.");
             }
         }
 
-        showmessage('add_user_success', MOD_URL, array('uid' => $uid, 'orgids' => $orgids));
+        showmessage('add_user_success', MOD_URL, ['uid' => $uid, 'orgids' => $orgids]);
 
     } else {
         $orgid = intval($_GET['orgid']);
@@ -194,7 +194,7 @@ if ($do == 'add') {
             }
         }
 
-        $orgids = array();
+        $orgids = [];
         foreach ($_GET['orgids'] as $key => $orgid) {
             if ($orgid) $orgids[$orgid] = intval($_GET['jobids'][$key]);
         }
@@ -269,9 +269,9 @@ if ($do == 'add') {
         //邮箱验证部分
         $email = strtolower(trim($_GET['email']));
         if (!isemail($email)) {
-            showmessage('profile_email_illegal', '', array(), array('handle' => false));
+            showmessage('profile_email_illegal', '', [], ['handle' => false]);
         } elseif (!check_emailaccess($email)) {
-            showmessage('profile_email_domain_illegal', '', array(), array('handle' => false));
+            showmessage('profile_email_domain_illegal', '', [], ['handle' => false]);
         }
         if ($email != strtolower($user['email'])) {
             //邮箱不能重复
@@ -279,7 +279,7 @@ if ($do == 'add') {
                 showmessage('email_registered_retry');
             }
         }
-        $setarr = array('username' => $username,'nickname' => $nickname, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid);
+        $setarr = ['username' => $username,'nickname' => $nickname, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid];
         if($uid != $_G['uid']) {
             //禁用创始人验证
             $status = intval($_GET['status']) ? 1 : 0;
@@ -292,7 +292,7 @@ if ($do == 'add') {
         if ($_GET['password']) {
             if ($_G['setting']['pwlength']) {
                 if (strlen($_GET['password']) < $_G['setting']['pwlength']) {
-                    showmessage('profile_password_tooshort', '', array('pwlength' => $_G['setting']['pwlength']));
+                    showmessage('profile_password_tooshort', '', ['pwlength' => $_G['setting']['pwlength']]);
                 }
             }
 
@@ -323,9 +323,9 @@ if ($do == 'add') {
         //$addsize = intval($_GET['addsize']);
         $userspace = intval($_GET['userspace']);
         if (C::t('user_field')->fetch($uid)) {
-            C::t('user_field')->update($uid, array('userspace' => $userspace, 'perm' => 0));
+            C::t('user_field')->update($uid, ['userspace' => $userspace, 'perm' => 0]);
         } else {
-            C::t('user_field')->insert(array('uid' => $uid, 'userspace' => $userspace, 'perm' => 0, 'iconview' => 2));
+            C::t('user_field')->insert(['uid' => $uid, 'userspace' => $userspace, 'perm' => 0, 'iconview' => 2]);
         }
         //处理用户部门和职位
         if ($orgids) C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
@@ -337,8 +337,8 @@ if ($do == 'add') {
         $user = C::t('user')->fetch_by_uid($uid);
         $userfield = C::t('user_field')->fetch($uid);
 
-        $departs = array();
-        $data_depart = array();
+        $departs = [];
+        $data_depart = [];
         $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid);
         //判断是否对此用户有管理权限
         $uperm = false;
@@ -373,7 +373,7 @@ if ($do == 'add') {
         if ($upjob = C::t('organization_upjob')->fetch_by_uid($uid)) {
             $upjob['jobs'] = C::t('organization_job')->fetch_all_by_orgid($upjob['orgid']);
         } else {
-            $upjob = array('jobid' => 0, 'depart' => lang('please_select_a_organization_or_department'), 'name' => lang('none'));
+            $upjob = ['jobid' => 0, 'depart' => lang('please_select_a_organization_or_department'), 'name' => lang('none')];
         }
         $perm = 1;
         if (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member'])) {
@@ -405,7 +405,7 @@ if ($do == 'add') {
         loadcache('profilesetting');
     }
     if (submitcheck('profilesubmit')) {
-        $setarr = array();
+        $setarr = [];
         foreach ($_GET as $key => $value) {
             $field = $_G['cache']['profilesetting'][$key];
             if (empty($field)) {
@@ -427,14 +427,14 @@ if ($do == 'add') {
         }
         showmessage('subscriber_data_alter_success', MOD_URL);
     } else {
-        $allowitems = array();
+        $allowitems = [];
         foreach ($_G['cache']['profilesetting'] as $key => $value) {
             if ($value['available'] > 0)
                 $allowitems[] = $key;
         }
-        $htmls = $settings = array();
+        $htmls = $settings = [];
         foreach ($allowitems as $fieldid) {
-            if (!in_array($fieldid, array('department', 'timeoffset'))) {
+            if (!in_array($fieldid, ['department', 'timeoffset'])) {
                 $html = profile_setting($fieldid, $space, false, true);
                 if ($html) {
                     $settings[$fieldid] = $_G['cache']['profilesetting'][$fieldid];
@@ -442,11 +442,11 @@ if ($do == 'add') {
                 }
             }
         }
-        $active = array('profile' => 'class="active"');
+        $active = ['profile' => 'class="active"'];
 
         include template('profile');
     }
 
 }
 exit();
-?>
+

@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => '网盘',
     'enter_keywords_match_file' => '请输入关键词，多个关键词用逗号分割',
     'explorer_groupperm_cooperative' => '协作成员',
@@ -139,7 +139,6 @@ $lang = array(
     'paste' => '粘贴',
     'edit_date' => '修改日期',
     'position' => '位置',
-    'choose' => '选取',
     'links' => '链接',
     'copy_address_succeeded' => '地址复制成功',
     'share_type' => '分享类型',
@@ -421,4 +420,4 @@ $lang = array(
     'perm' => '权限',
     'space_used' => '已使用空间',
     'space_total' => '总空间',
-);
+];

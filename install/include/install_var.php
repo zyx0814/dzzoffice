@@ -62,58 +62,57 @@ define('UNDEFINE_FUNC', 32);
 define('MISSING_PARAMETER', 33);
 define('LOCK_FILE_NOT_TOUCH', 34);
 
-$func_items = array('mysqli_connect', 'file_get_contents', 'xml_parser_create', 'json_encode', 'filesize', 'curl_init', 'zip_open', 'mb_check_encoding', 'mb_convert_encoding');
-$filesock_items = array('fsockopen', 'pfsockopen', 'stream_socket_client');
-$env_items = array
-(
-    'os' => array('c' => 'PHP_OS', 'r' => 'notset', 'b' => 'Linux'),
-    'php' => array('c' => 'PHP_VERSION', 'r' => '7.4+', 'b' => '8+'),
-    'php_bit' => array('c' => 'PHP_INT_SIZE', 'r' => '32位<br>(32位不支持2G以上文件上传下载)', 'b' => '64位'),
-    'attachmentupload' => array('r' => 'notset', 'b' => '50M'),
-    'gdversion' => array('r' => '1.0', 'b' => '2.0'),
-    'diskspace' => array('r' => '50M', 'b' => 'notset'),
-    'opcache' => array('r' => 'notset', 'b' => 'enable'),
-);
+$func_items = ['mysqli_connect', 'file_get_contents', 'xml_parser_create', 'json_encode', 'filesize', 'curl_init', 'zip_open', 'mb_check_encoding', 'mb_convert_encoding'];
+$filesock_items = ['fsockopen', 'pfsockopen', 'stream_socket_client'];
+$env_items =
+    [
+    'os' => ['c' => 'PHP_OS', 'r' => 'notset', 'b' => 'Linux'],
+    'php' => ['c' => 'PHP_VERSION', 'r' => '7.4+', 'b' => '8+'],
+    'php_bit' => ['c' => 'PHP_INT_SIZE', 'r' => '32位<br>(32位不支持2G以上文件上传下载)', 'b' => '64位'],
+    'attachmentupload' => ['r' => 'notset', 'b' => '50M'],
+    'gdversion' => ['r' => '1.0', 'b' => '2.0'],
+    'diskspace' => ['r' => '50M', 'b' => 'notset'],
+    'opcache' => ['r' => 'notset', 'b' => 'enable'],
+    ];
 
-$dirfile_items = array
-(
+$dirfile_items =
+    [
 
-    'config' => array('type' => 'file', 'path' => CONFIG),
-    'config_dir' => array('type' => 'dir', 'path' => './config'),
-    'data' => array('type' => 'dir', 'path' => './data'),
-    'cache' => array('type' => 'dir', 'path' => './data/cache'),
-    'avatar' => array('type' => 'dir', 'path' => './data/avatar'),
-    'ftemplates' => array('type' => 'dir', 'path' => './data/template'),
-    'attach' => array('type' => 'dir', 'path' => './data/attachment'),
-    'attach_dzz' => array('type' => 'dir', 'path' => './data/attachment/dzz'),
-    'attach_icon' => array('type' => 'dir', 'path' => './data/attachment/icon'),
-    'attach_appico' => array('type' => 'dir', 'path' => './data/attachment/appico'),
-    'attach_appimg' => array('type' => 'dir', 'path' => './data/attachment/appimg'),
-    'attach_cache' => array('type' => 'dir', 'path' => './data/attachment/cache'),
-    'attach_imgcache' => array('type' => 'dir', 'path' => './data/attachment/imgcache'),
-    'attach_qrcode' => array('type' => 'dir', 'path' => './data/attachment/qrcode'),
-    'logs' => array('type' => 'dir', 'path' => './data/log'),
-);
+    'config' => ['type' => 'file', 'path' => CONFIG],
+    'config_dir' => ['type' => 'dir', 'path' => './config'],
+    'data' => ['type' => 'dir', 'path' => './data'],
+    'cache' => ['type' => 'dir', 'path' => './data/cache'],
+    'avatar' => ['type' => 'dir', 'path' => './data/avatar'],
+    'ftemplates' => ['type' => 'dir', 'path' => './data/template'],
+    'attach' => ['type' => 'dir', 'path' => './data/attachment'],
+    'attach_dzz' => ['type' => 'dir', 'path' => './data/attachment/dzz'],
+    'attach_icon' => ['type' => 'dir', 'path' => './data/attachment/icon'],
+    'attach_appico' => ['type' => 'dir', 'path' => './data/attachment/appico'],
+    'attach_appimg' => ['type' => 'dir', 'path' => './data/attachment/appimg'],
+    'attach_cache' => ['type' => 'dir', 'path' => './data/attachment/cache'],
+    'attach_imgcache' => ['type' => 'dir', 'path' => './data/attachment/imgcache'],
+    'attach_qrcode' => ['type' => 'dir', 'path' => './data/attachment/qrcode'],
+    'logs' => ['type' => 'dir', 'path' => './data/log'],
+    ];
 
-$form_db_init_items = array
-(
-    'dbinfo' => array
-    (
-        'company' => array('type' => 'text', 'required' => 0, 'reg' => '/^.+$/', 'value' => array('type' => 'var', 'var' => 'company')),
-        'dbhost' => array('type' => 'text', 'required' => 1, 'reg' => '/^.+$/', 'value' => array('type' => 'var', 'var' => 'dbhost')),
-        'dbname' => array('type' => 'text', 'required' => 1, 'reg' => '/^.+$/', 'value' => array('type' => 'var', 'var' => 'dbname')),
-        'dbuser' => array('type' => 'text', 'required' => 0, 'reg' => '/^.*$/', 'value' => array('type' => 'var', 'var' => 'dbuser')),
-        'dbpw' => array('type' => 'text', 'required' => 0, 'reg' => '/^.*$/', 'value' => array('type' => 'var', 'var' => 'dbpw')),
-        'tablepre' => array('type' => 'text', 'required' => 0, 'reg' => '/^.*+/', 'value' => array('type' => 'var', 'var' => 'tablepre')),
-        'adminemail' => array('type' => 'text', 'required' => 1, 'reg' => '/@/', 'value' => array('type' => 'var', 'var' => 'adminemail')),
-    ),
-    'admininfo' => array
-    (
-        'email' => array('type' => 'text', 'required' => 1, 'reg' => '/@/', 'value' => array('type' => 'var', 'var' => 'adminemail')),
-        'username' => array('type' => 'text', 'required' => 1, 'reg' => '/^.*$/', 'value' => array('type' => 'constant', 'var' => 'admin')),
-        'password' => array('type' => 'password', 'required' => 1, 'reg' => '/^.*$/'),
-        'password2' => array('type' => 'password', 'required' => 1, 'reg' => '/^.*$/'),
+$form_db_init_items =
+    [
+    'dbinfo' =>
+        [
+        'company' => ['type' => 'text', 'required' => 0, 'reg' => '/^.+$/', 'value' => ['type' => 'var', 'var' => 'company']],
+        'dbhost' => ['type' => 'text', 'required' => 1, 'reg' => '/^.+$/', 'value' => ['type' => 'var', 'var' => 'dbhost']],
+        'dbname' => ['type' => 'text', 'required' => 1, 'reg' => '/^.+$/', 'value' => ['type' => 'var', 'var' => 'dbname']],
+        'dbuser' => ['type' => 'text', 'required' => 0, 'reg' => '/^.*$/', 'value' => ['type' => 'var', 'var' => 'dbuser']],
+        'dbpw' => ['type' => 'text', 'required' => 0, 'reg' => '/^.*$/', 'value' => ['type' => 'var', 'var' => 'dbpw']],
+        'tablepre' => ['type' => 'text', 'required' => 0, 'reg' => '/^.*+/', 'value' => ['type' => 'var', 'var' => 'tablepre']],
+        'adminemail' => ['type' => 'text', 'required' => 1, 'reg' => '/@/', 'value' => ['type' => 'var', 'var' => 'adminemail']],
+        ],
+    'admininfo' =>
+        [
+        'email' => ['type' => 'text', 'required' => 1, 'reg' => '/@/', 'value' => ['type' => 'var', 'var' => 'adminemail']],
+        'username' => ['type' => 'text', 'required' => 1, 'reg' => '/^.*$/', 'value' => ['type' => 'constant', 'var' => 'admin']],
+        'password' => ['type' => 'password', 'required' => 1, 'reg' => '/^.*$/'],
+        'password2' => ['type' => 'password', 'required' => 1, 'reg' => '/^.*$/'],
 
-    )
-);
-?>
+        ]
+    ];

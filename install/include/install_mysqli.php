@@ -32,8 +32,8 @@ class dbstuff {
             $this->halt('Can not connect to MySQL server');
         }
         if (version_compare($this->version(), '5.7', '<')) {
-			$this->halt('MySQL version must be 5.7 or greater');
-		}
+            $this->halt('MySQL version must be 5.7 or greater');
+        }
 
         if ($dbcharset) {
             $this->link->set_charset($dbcharset);
@@ -84,12 +84,12 @@ class dbstuff {
     }
 
     function error() {
-		return $this->link->error;
-	}
+        return $this->link->error;
+    }
 
-	function errno() {
-		return $this->link->errno;
-	}
+    function errno() {
+        return $this->link->errno;
+    }
 
     function result($query, $row) {
         if (!$query || $query->num_rows == 0) {
@@ -101,8 +101,7 @@ class dbstuff {
     }
 
     function num_rows($query) {
-        $query = $query ? $query->num_rows : 0;
-        return $query;
+        return $query ? $query->num_rows : 0;
     }
 
     function num_fields($query) {
@@ -118,8 +117,7 @@ class dbstuff {
     }
 
     function fetch_row($query) {
-        $query = $query ? $query->fetch_row() : null;
-        return $query;
+        return $query ? $query->fetch_row() : null;
     }
 
     function fetch_fields($query) {
@@ -143,4 +141,3 @@ class dbstuff {
     }
 }
 
-?>

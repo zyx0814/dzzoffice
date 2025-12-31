@@ -1,5 +1,5 @@
 <style>
-    html, body, dplayer {
+    html, body, #dplayer {
         overflow: hidden;
         width: 100%;
         height: 100%;

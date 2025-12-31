@@ -7,7 +7,7 @@
  * @author      zyx(zyx@dzz.cc)
  */
 
-$lang = array(
+$lang = [
     'please_use_desktop' => '请在桌面内使用！',
     'share_the' => '分享了',
     'js_a_file' => '个文件',
@@ -37,10 +37,10 @@ $lang = array(
     'ma' => '吗？',
     'js_browser' => '浏览网页',
     'js_needrefresh' => '登录状态已经改变，请立即刷新页面!',
-    'js_button' => array(
+    'js_button' => [
         'OK' => '确定',
         'CANCEL' => '取消',
-    ),
+    ],
     'keyboard' => '按键盘',
     'key_on' => '键上一个',
     'key_under' => '键下一个',
@@ -369,5 +369,4 @@ $lang = array(
     'edit_date' => '修改时间',
     'rename' => '重命名',
     'calculating' => '正在计算...',
-);
-?>
+];

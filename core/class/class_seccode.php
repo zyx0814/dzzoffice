@@ -90,7 +90,7 @@ class seccode {
 
 	function background() {
 		$this->im = imagecreatetruecolor($this->width, $this->height);
-		$backgrounds = $c = array();
+		$backgrounds = $c = [];
 		if($this->background && function_exists('imagecreatefromjpeg') && function_exists('imagecolorat') && function_exists('imagecopymerge') &&
 			function_exists('imagesetpixel') && function_exists('imageSX') && function_exists('imageSY')) {
 			if($handle = @opendir($this->datapath.'background/')) {
@@ -108,7 +108,7 @@ class seccode {
 				$colorindex = imagecolorat($imwm, 1, 0);
 				imagesetpixel($imwm, 0, 0, $colorindex);
 				$c[0] = $c['red'];$c[1] = $c['green'];$c[2] = $c['blue'];
-				imagecopymerge($this->im, $imwm, 0, 0, mt_rand(0, 200 - $this->width), mt_rand(0, 80 - $this->height), imageSX($imwm), imageSY($imwm), 100);
+				imagecopymerge($this->im, $imwm, 0, 0, mt_rand(0, 200 - $this->width), mt_rand(0, 80 - $this->height), imagesx($imwm), imagesy($imwm), 100);
 				imagedestroy($imwm);
 			}
 		}
@@ -176,9 +176,9 @@ class seccode {
 		$seccode = $this->code;
 		$seccoderoot = $this->type ? $this->fontpath.'ch/' : $this->fontpath.'en/';
 		$dirs = opendir($seccoderoot);
-		$seccodettf = array();
+		$seccodettf = [];
 		while($entry = readdir($dirs)) {
-			if($entry != '.' && $entry != '..' && in_array(strtolower(fileext($entry)), array('ttf', 'ttc'))) {
+			if($entry != '.' && $entry != '..' && in_array(strtolower(fileext($entry)), ['ttf', 'ttc'])) {
 				$seccodettf[] = $entry;
 			}
 		}
@@ -193,7 +193,7 @@ class seccode {
 				$cvt = new Chinese(CHARSET, 'utf8');
 				$seccode = $cvt->Convert($seccode);
 			}
-			$seccode = array(substr($seccode, 0, 3), substr($seccode, 3, 3));
+			$seccode = [substr($seccode, 0, 3), substr($seccode, 3, 3)];
 			$seccodelength = 2;
 		}
 		$widthtotal = 0;
@@ -208,14 +208,14 @@ class seccode {
 			$font[$i]['height'] = max($box[1], $box[3]) - min($box[5], $box[7]);
 			$font[$i]['hd'] = $font[$i]['height'] - $font[$i]['zheight'];
 			$font[$i]['width'] = (max($box[2], $box[4]) - min($box[0], $box[6])) + mt_rand(0, $this->width / 8);
-			$font[$i]['width'] = $font[$i]['width'] > $this->width / $seccodelength ? $this->width / $seccodelength : $font[$i]['width'];
+			$font[$i]['width'] = min($font[$i]['width'], $this->width / $seccodelength);
 			$widthtotal += $font[$i]['width'];
 		}
 		$x = mt_rand($font[0]['angle'] > 0 ? cos(deg2rad(90 - $font[0]['angle'])) * $font[0]['zheight'] : 1, $this->width - $widthtotal);
 		!$this->color && $text_color = imagecolorallocate($this->im, $this->fontcolor[0], $this->fontcolor[1], $this->fontcolor[2]);
 		for($i = 0; $i < $seccodelength; $i++) {
 			if($this->color) {
-				$this->fontcolor = array(mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+				$this->fontcolor = [mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255)];
 				$this->shadow && $text_shadowcolor = imagecolorallocate($this->im, 0, 0, 0);
 				$text_color = imagecolorallocate($this->im, $this->fontcolor[0], $this->fontcolor[1], $this->fontcolor[2]);
 			} elseif($this->shadow) {
@@ -230,7 +230,7 @@ class seccode {
 	}
 
 	function warping(&$obj) {
-		$rgb = array();
+		$rgb = [];
 		$direct = rand(0, 1);
 		$width = imagesx($obj);
 		$height = imagesy($obj);
@@ -247,8 +247,8 @@ class seccode {
 	}
 
 	function scatter(&$obj, $level = 0) {
-		$rgb = array();
-		$this->scatter = $level ? $level : $this->scatter;
+		$rgb = [];
+		$this->scatter = $level ?: $this->scatter;
 		$width = imagesx($obj);
 		$height = imagesy($obj);
 		for($j = 0;$j < $height;$j++) {
@@ -264,7 +264,7 @@ class seccode {
 
 	function giffont() {
 		$seccode = $this->code;
-		$seccodedir = array();
+		$seccodedir = [];
 		if(function_exists('imagecreatefromgif')) {
 			$seccoderoot = $this->datapath.'gif/';
 			$dirs = opendir($seccoderoot);
@@ -283,16 +283,15 @@ class seccode {
 				$font[$i]['width'] = $font[$i]['data'][0] + mt_rand(0, 6) - 4;
 				$font[$i]['height'] = $font[$i]['data'][1] + mt_rand(0, 6) - 4;
 				$font[$i]['width'] += mt_rand(0, $this->width / 5 - $font[$i]['width']);
-				$widthtotal += $font[$i]['width'];
-			} else {
+            } else {
 				$font[$i]['file'] = '';
 				$font[$i]['width'] = 8 + mt_rand(0, $this->width / 5 - 5);
-				$widthtotal += $font[$i]['width'];
-			}
-		}
+            }
+            $widthtotal += $font[$i]['width'];
+        }
 		$x = mt_rand(1, $this->width - $widthtotal);
 		for($i = 0; $i <= 3; $i++) {
-			$this->color && $this->fontcolor = array(mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+			$this->color && $this->fontcolor = [mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255)];
 			if($font[$i]['file']) {
 				$this->imcode = imagecreatefromgif($font[$i]['file']);
 				if($this->size) {
@@ -328,7 +327,7 @@ class seccode {
 			$strforswdaction .= $this->swfcode($codewidth, $spacing, $this->code[$i], $i+1);
 		}
 
-		ming_setScale(20.00000000);
+		ming_setscale(20.00000000);
 		ming_useswfversion(6);
 		$movie = new SWFMovie();
 		$movie->setDimension($this->width, $this->height);
@@ -396,33 +395,33 @@ class seccode {
 	}
 
 	function bitmap() {
-		$numbers = array
-			(
-			'B' => array('00','fc','66','66','66','7c','66','66','fc','00'),
-			'C' => array('00','38','64','c0','c0','c0','c4','64','3c','00'),
-			'E' => array('00','fe','62','62','68','78','6a','62','fe','00'),
-			'F' => array('00','f8','60','60','68','78','6a','62','fe','00'),
-			'G' => array('00','78','cc','cc','de','c0','c4','c4','7c','00'),
-			'H' => array('00','e7','66','66','66','7e','66','66','e7','00'),
-			'J' => array('00','f8','cc','cc','cc','0c','0c','0c','7f','00'),
-			'K' => array('00','f3','66','66','7c','78','6c','66','f7','00'),
-			'M' => array('00','f7','63','6b','6b','77','77','77','e3','00'),
-			'P' => array('00','f8','60','60','7c','66','66','66','fc','00'),
-			'Q' => array('00','78','cc','cc','cc','cc','cc','cc','78','00'),
-			'R' => array('00','f3','66','6c','7c','66','66','66','fc','00'),
-			'T' => array('00','78','30','30','30','30','b4','b4','fc','00'),
-			'V' => array('00','1c','1c','36','36','36','63','63','f7','00'),
-			'W' => array('00','36','36','36','77','7f','6b','63','f7','00'),
-			'X' => array('00','f7','66','3c','18','18','3c','66','ef','00'),
-			'Y' => array('00','7e','18','18','18','3c','24','66','ef','00'),
-			'2' => array('fc','c0','60','30','18','0c','cc','cc','78','00'),
-			'3' => array('78','8c','0c','0c','38','0c','0c','8c','78','00'),
-			'4' => array('00','3e','0c','fe','4c','6c','2c','3c','1c','1c'),
-			'6' => array('78','cc','cc','cc','ec','d8','c0','60','3c','00'),
-			'7' => array('30','30','38','18','18','18','1c','8c','fc','00'),
-			'8' => array('78','cc','cc','cc','78','cc','cc','cc','78','00'),
-			'9' => array('f0','18','0c','6c','dc','cc','cc','cc','78','00')
-			);
+		$numbers =
+            [
+			'B' => ['00','fc','66','66','66','7c','66','66','fc','00'],
+			'C' => ['00','38','64','c0','c0','c0','c4','64','3c','00'],
+			'E' => ['00','fe','62','62','68','78','6a','62','fe','00'],
+			'F' => ['00','f8','60','60','68','78','6a','62','fe','00'],
+			'G' => ['00','78','cc','cc','de','c0','c4','c4','7c','00'],
+			'H' => ['00','e7','66','66','66','7e','66','66','e7','00'],
+			'J' => ['00','f8','cc','cc','cc','0c','0c','0c','7f','00'],
+			'K' => ['00','f3','66','66','7c','78','6c','66','f7','00'],
+			'M' => ['00','f7','63','6b','6b','77','77','77','e3','00'],
+			'P' => ['00','f8','60','60','7c','66','66','66','fc','00'],
+			'Q' => ['00','78','cc','cc','cc','cc','cc','cc','78','00'],
+			'R' => ['00','f3','66','6c','7c','66','66','66','fc','00'],
+			'T' => ['00','78','30','30','30','30','b4','b4','fc','00'],
+			'V' => ['00','1c','1c','36','36','36','63','63','f7','00'],
+			'W' => ['00','36','36','36','77','7f','6b','63','f7','00'],
+			'X' => ['00','f7','66','3c','18','18','3c','66','ef','00'],
+			'Y' => ['00','7e','18','18','18','3c','24','66','ef','00'],
+			'2' => ['fc','c0','60','30','18','0c','cc','cc','78','00'],
+			'3' => ['78','8c','0c','0c','38','0c','0c','8c','78','00'],
+			'4' => ['00','3e','0c','fe','4c','6c','2c','3c','1c','1c'],
+			'6' => ['78','cc','cc','cc','ec','d8','c0','60','3c','00'],
+			'7' => ['30','30','38','18','18','18','1c','8c','fc','00'],
+			'8' => ['78','cc','cc','cc','78','cc','cc','cc','78','00'],
+			'9' => ['f0','18','0c','6c','dc','cc','cc','cc','78','00']
+            ];
 
 		foreach($numbers as $i => $number) {
 			for($j = 0; $j < 6; $j++) {
@@ -433,19 +432,19 @@ class seccode {
 			}
 		}
 
-		$bitmap = array();
+		$bitmap = [];
 		for($i = 0; $i < 20; $i++) {
 			for($j = 0; $j <= 3; $j++) {
 				$bytes = $numbers[$this->code[$j]][$i];
 				$a = mt_rand(0, 14);
-				array_push($bitmap, $bytes);
+				$bitmap[] = $bytes;
 			}
 		}
 
 		for($i = 0; $i < 8; $i++) {
 			$a = substr('012345', mt_rand(0, 2), 1) . substr('012345', mt_rand(0, 5), 1);
 			array_unshift($bitmap, $a);
-			array_push($bitmap, $a);
+			$bitmap[] = $a;
 		}
 
 		$image = pack('H*', '424d9e000000000000003e000000280000002000000018000000010001000000'.
@@ -456,4 +455,3 @@ class seccode {
 	}
 
 }
-?>

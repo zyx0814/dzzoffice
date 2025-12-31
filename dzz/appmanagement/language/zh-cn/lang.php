@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => '后台管理',
     'php_version_too_low' => 'php版本太低啦，请先升级php到5.3以上，建议使用php5.4及以上',
     'step_env_check_desc' => '环境以及文件目录权限检查',
@@ -26,6 +26,5 @@ $lang = array(
     'data.minute' => '分钟',
     'data.hour' => '小时',
     'data.day' => '天',
-);
+];
 
-?>

@@ -258,7 +258,7 @@ class dzz_io {
     //添加目录
     //$fname：目录名称;
     //$path：目录位置路径，如果是本地，$path 为pfid
-    public static function CreateFolder($path, $fname, $perm = 0, $params = array(), $ondup = 'newcopy', $force = false) {
+    public static function CreateFolder($path, $fname, $perm = 0, $params = [], $ondup = 'newcopy', $force = false) {
         $fname = self::name_filter($fname);
         if ($io = self::initIO($path)) {
             $path = self::clean($path);
@@ -270,7 +270,7 @@ class dzz_io {
     //添加多层目录
     //$fid：父级目录id;
     //$path：目录位置路径，如aaa/bbb/ccc
-    public static function CreateFolderByPath($path, $fid, $bz = 'dzz', $params = array()) {
+    public static function CreateFolderByPath($path, $fid, $bz = 'dzz', $params = []) {
         if ($io = self::initIO($bz)) {
             $path = self::clean($path);
             return $io->CreateFolderByPath($path, $fid, $params);
@@ -329,7 +329,7 @@ class dzz_io {
 
     //分片上传文件；
     //$path: 路径
-    public static function multiUpload($file, $path, $filename, $attach = array(), $ondup = "newcopy") {
+    public static function multiUpload($file, $path, $filename, $attach = [], $ondup = "newcopy") {
         $filename = self::name_filter($filename);
         if ($io = self::initIO($path)) {
             $path = self::clean($path);
@@ -355,7 +355,7 @@ class dzz_io {
 		}
     }
 
-    public static function upload_by_content($fileContent, $path, $filename, $partinfo = array(), $force = false) {
+    public static function upload_by_content($fileContent, $path, $filename, $partinfo = [], $force = false) {
         $filename = self::name_filter($filename);
         if ($io = self::initIO($path)) {
             $path = self::clean($path);
@@ -367,7 +367,7 @@ class dzz_io {
 		}
     }
 
-    public static function uploadStream($file, $name, $path, $relativePath = '', $content_range = array(), $force = false, $ondup = 'newcopy') {
+    public static function uploadStream($file, $name, $path, $relativePath = '', $content_range = [], $force = false, $ondup = 'newcopy') {
         $name = self::name_filter(urldecode($name));
         $relativePath = self::clean(urldecode($relativePath));
         if ($io = self::initIO($path)) {
@@ -439,11 +439,11 @@ class dzz_io {
         $cloud = DB::fetch_first("select * from " . DB::table('connect') . " where bz='{$bzarr[0]}'");
         if ($cloud['type'] == 'pan') {
             $root = DB::fetch_first("select * from " . DB::table($cloud['dname']) . " where  id='{$bzarr[1]}'");
-            if (!$root['cloudname']) $root['cloudname'] = $cloud['name'] . ':' . ($root['cusername'] ? $root['cusername'] : $root['cuid']);
+            if (!$root['cloudname']) $root['cloudname'] = $cloud['name'] . ':' . ($root['cusername'] ?: $root['cuid']);
         } elseif ($cloud['type'] == 'storage') {
             $root = DB::fetch_first("select * from " . DB::table($cloud['dname']) . " where id='{$bzarr[1]}'");
             $root['access_id'] = authcode($root['access_id'], 'DECODE', $root['bz']);
-            if (!$root['cloudname']) $root['cloudname'] = $cloud['name'] . ':' . ($root['bucket'] ? $root['bucket'] : cutstr($root['access_id'], 4, $dot = ''));
+            if (!$root['cloudname']) $root['cloudname'] = $cloud['name'] . ':' . ($root['bucket'] ?: cutstr($root['access_id'], 4, $dot = ''));
         } elseif ($cloud['type'] == 'ftp') {
             $root = DB::fetch_first("select * from " . DB::table($cloud['dname']) . " where id='{$bzarr[1]}'");
         } elseif ($cloud['type'] == 'disk') {
@@ -467,7 +467,7 @@ class dzz_io {
                 if (preg_match('/^sid:([^\_]+)_/', $value)) {
                     $value = preg_replace('/^sid:[^\_]+_/', '', $value);
                 }
-                $str[$key] = self::clean_path(str_replace(array("\n", "\r", '../'), '', $value));
+                $str[$key] = self::clean_path(str_replace(["\n", "\r", '../'], '', $value));
             }
         } else {
             if (strpos($str, 'preview_') === 0) {
@@ -476,7 +476,7 @@ class dzz_io {
             if (preg_match('/^sid:([^\_]+)_/', $str)) {
                 $str = preg_replace('/^sid:[^\_]+_/', '', $str);
             }
-            $str = self::clean_path(str_replace(array("\n", "\r", '../'), '', $str));
+            $str = self::clean_path(str_replace(["\n", "\r", '../'], '', $str));
         }
 
         return $str;
@@ -492,19 +492,19 @@ class dzz_io {
     }
 
     public static function name_filter($name) {
-        return str_replace(array('/', '\\', ':', '*', '?', '<', '>', '|', '"', "\n"), '', $name);
+        return str_replace(['/', '\\', ':', '*', '?', '<', '>', '|', '"', "\n"], '', $name);
     }
 
     public static function saveToAttachment($file_path, $filename, $tospace = 1, $width = 256, $height = 256) {
         global $_G;
         $md5 = md5_file($file_path);
         $filesize = filesize($file_path);
-        if ($md5 && $attach = DB::fetch_first("select * from %t where md5=%s and filesize=%d", array('attachment', $md5, $filesize))) {
+        if ($md5 && $attach = DB::fetch_first("select * from %t where md5=%s and filesize=%d", ['attachment', $md5, $filesize])) {
             $attach['filename'] = $filename;
             $pathinfo = pathinfo($filename);
-            $ext = $pathinfo['extension'] ? $pathinfo['extension'] : '';
+            $ext = $pathinfo['extension'] ?: '';
             $attach['filetype'] = $ext;
-            if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
+            if (in_array(strtolower($attach['filetype']), ['png', 'jpeg', 'jpg', 'gif', 'bmp'])) {
                 $attach['img'] = C::t('attachment')->getThumbByAid($attach, $width, $height);
                 $attach['isimage'] = 1;
             } else {
@@ -518,7 +518,7 @@ class dzz_io {
             $pathinfo = pathinfo($filename);
             $ext = strtolower($pathinfo['extension']);
             $target = self::getPath($ext ? ('.' . $ext) : '', 'dzz');
-            $ext = $pathinfo['extension'] ? $pathinfo['extension'] : '';
+            $ext = $pathinfo['extension'] ?: '';
             if ($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])) {
                 $unrun = 1;
             } else {
@@ -537,7 +537,7 @@ class dzz_io {
             $filesize = filesize($filepath);
             $remote = 0;
 
-            $attach = array(
+            $attach = [
 
                 'filesize' => $filesize,
                 'attachment' => $target,
@@ -548,12 +548,12 @@ class dzz_io {
                 'md5' => $md5,
                 'unrun' => $unrun,
                 'dateline' => $_G['timestamp'],
-            );
+            ];
 
             if ($attach['aid'] = C::t('attachment')->insert($attach, 1)) {
                 C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
                 if ($tospace) dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1, false);
-                if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
+                if (in_array(strtolower($attach['filetype']), ['png', 'jpeg', 'jpg', 'gif', 'bmp'])) {
                     $attach['img'] = C::t('attachment')->getThumbByAid($attach['aid'], 255, 255);
                     $attach['isimage'] = 1;
                 } else {
@@ -581,14 +581,14 @@ class dzz_io {
         $target_attach = $_G['setting']['attachdir'] . $target1;
         $targetpath = dirname($target_attach);
         dmkdir($targetpath);
-        return $target . date('His') . '' . strtolower(random(16)) . $ext;
+        return $target . date('His') . strtolower(random(16)) . $ext;
     }
     //获取不重复的文件名称
     public static function getFileName($name, $pfid) {
         static $i = 0;
         $name = self::name_filter($name);
         //echo("select COUNT(*) from ".DB::table('folder')." where fname='{$name}' and  pfid='{$pfid}'");
-        if (DB::result_first("select COUNT(*) from %t where type!='folder' and name=%s and isdelete<1 and pfid=%d", array('resources', $name, $pfid))) {
+        if (DB::result_first("select COUNT(*) from %t where type!='folder' and name=%s and isdelete<1 and pfid=%d", ['resources', $name, $pfid])) {
             $ext = '';
             $namearr = explode('.', $name);
             if (count($namearr) > 1) {
@@ -605,4 +605,3 @@ class dzz_io {
         }
     }
 }
-?>

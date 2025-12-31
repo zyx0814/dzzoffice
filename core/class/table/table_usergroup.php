@@ -20,8 +20,8 @@ class table_usergroup extends dzz_table {
     }
 
     public function fetch_all_by_type($type = '', $radminid = null, $allfields = false) {
-        $parameter = array($this->_table);
-        $wherearr = array();
+        $parameter = [$this->_table];
+        $wherearr = [];
         if (!empty($type)) {
             $parameter[] = $type;
             $wherearr[] = is_array($type) ? 'type IN(%n)' : 'type=%s';
@@ -35,7 +35,7 @@ class table_usergroup extends dzz_table {
     }
 
     public function update($id, $data, $type = false, $low_priority = false) {
-        if (!is_array($data) || !$data || !is_array($data) || !$id) {
+        if (!$data || !is_array($data) || !$id) {
             return null;
         }
         $condition = DB::field('groupid', $id);
@@ -61,15 +61,15 @@ class table_usergroup extends dzz_table {
         if (!$gid) {
             return null;
         }
-        return DB::fetch_all('SELECT groupid FROM %t WHERE groupid IN (%n) AND type=\'special\' AND radminid>0', array($this->_table, $gid), $this->_pk);
+        return DB::fetch_all('SELECT groupid FROM %t WHERE groupid IN (%n) AND type=\'special\' AND radminid>0', [$this->_table, $gid], $this->_pk);
     }
 
     public function fetch_all_by_not_groupid($gid) {
-        return DB::fetch_all('SELECT groupid, type, grouptitle, radminid FROM %t WHERE type=\'member\' OR (groupid NOT IN (%n) AND radminid<>\'1\' AND type<>\'member\') ORDER BY groupid', array($this->_table, $gid), $this->_pk);
+        return DB::fetch_all('SELECT groupid, type, grouptitle, radminid FROM %t WHERE type=\'member\' OR (groupid NOT IN (%n) AND radminid<>\'1\' AND type<>\'member\') ORDER BY groupid', [$this->_table, $gid], $this->_pk);
     }
 
     public function fetch_all_not($gid, $creditnotzero = false) {
-        return DB::fetch_all('SELECT groupid, radminid, type, grouptitle FROM %t WHERE groupid NOT IN (%n) ORDER BY groupid', array($this->_table, $gid), $this->_pk);
+        return DB::fetch_all('SELECT groupid, radminid, type, grouptitle FROM %t WHERE groupid NOT IN (%n) ORDER BY groupid', [$this->_table, $gid], $this->_pk);
     }
 
     public function fetch_new_groupid($fetch = false) {
@@ -85,18 +85,18 @@ class table_usergroup extends dzz_table {
         if (!$ids) {
             return null;
         }
-        return DB::fetch_all('SELECT * FROM %t WHERE ' . DB::field('groupid', $ids) . ' ORDER BY type, radminid', array($this->_table), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE ' . DB::field('groupid', $ids) . ' ORDER BY type, radminid', [$this->_table], $this->_pk);
     }
 
     public function fetch_all_switchable($ids) {
         if (!$ids) {
             return null;
         }
-        return DB::fetch_all('SELECT * FROM %t WHERE (type=\'special\' AND system<>\'private\' AND radminid=\'0\') OR groupid IN (%n) ORDER BY type, system', array($this->_table, $ids), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE (type=\'special\' AND system<>\'private\' AND radminid=\'0\') OR groupid IN (%n) ORDER BY type, system', [$this->_table, $ids], $this->_pk);
     }
 
     public function range_orderby_credit() {
-        return DB::fetch_all('SELECT * FROM %t ORDER BY groupid', array($this->_table), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t ORDER BY groupid', [$this->_table], $this->_pk);
     }
 
     public function fetch_all_by_radminid($radminid, $glue = '>', $orderby = 'type') {
@@ -104,12 +104,12 @@ class table_usergroup extends dzz_table {
         if ($ordersql = DB::order($orderby, 'DESC')) {
             $ordersql = ' ORDER BY ' . $ordersql;
         }
-        return DB::fetch_all('SELECT * FROM %t WHERE %i', array($this->_table, DB::field('radminid', intval($radminid), $glue) . $ordersql), 'groupid');
+        return DB::fetch_all('SELECT * FROM %t WHERE %i', [$this->_table, DB::field('radminid', intval($radminid), $glue) . $ordersql], 'groupid');
     }
 
     public function fetch_table_struct($result = 'FIELD') {
-        $datas = array();
-        $query = DB::query('DESCRIBE %t', array($this->_table));
+        $datas = [];
+        $query = DB::query('DESCRIBE %t', [$this->_table]);
         while ($data = DB::fetch($query)) {
             $datas[$data['Field']] = $result == 'FIELD' ? $data['Field'] : $data;
         }
@@ -117,8 +117,8 @@ class table_usergroup extends dzz_table {
     }
 
     public function buyusergroup_exists() {
-        return DB::result_first("SELECT COUNT(*) FROM %t WHERE type='special' and system>0", array($this->_table));
+        return DB::result_first("SELECT COUNT(*) FROM %t WHERE type='special' and system>0", [$this->_table]);
     }
 }
 
-?>
+

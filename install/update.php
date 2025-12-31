@@ -11,7 +11,7 @@ define('DZZSCRIPT', 'index.php');
 require __DIR__ . '/../core/coreBase.php';
 @set_time_limit(0);
 error_reporting(0);
-$cachelist = array();
+$cachelist = [];
 $dzz = C::app();
 $dzz->cachelist = $cachelist;
 $dzz->init_cron = false;
@@ -20,11 +20,11 @@ $dzz->init_user = false;
 $dzz->init_session = false;
 $dzz->init_misc = false;
 $dzz->init();
-$config = array(
+$config = [
     'dbcharset' => $_G['config']['db']['1']['dbcharset'],
     'charset' => $_G['config']['output']['charset'],
     'tablepre' => $_G['config']['db']['1']['tablepre']
-);
+];
 $theurl = 'update.php';
 $_G['siteurl'] = preg_replace('/\/install\/$/i', '/', $_G['siteurl']);
 if ($_GET['from']) {
@@ -135,8 +135,8 @@ if ($_GET['step'] == 'start') {
 } elseif ($_GET['step'] == 'sql') {
     $sql = implode('', file($sqlfile));
     preg_match_all("/CREATE\s+TABLE.+?dzz\_(.+?)\s*\((.+?)\)\s*(ENGINE|TYPE)\s*=\s*(\w+)/is", $sql, $matches);
-    $newtables = empty($matches[1]) ? array() : str_replace('`', '', $matches[1]);
-    $newsqls = empty($matches[0]) ? array() : $matches[0];
+    $newtables = empty($matches[1]) ? [] : str_replace('`', '', $matches[1]);
+    $newsqls = empty($matches[0]) ? [] : $matches[0];
     if (empty($newtables) || empty($newsqls)) {
         show_msg('SQL文件内容为空，请确认');
     }
@@ -157,7 +157,7 @@ if ($_GET['step'] == 'start') {
         preg_match("/(CREATE TABLE .+?)\s*(ENGINE|TYPE)\s*=\s*(\w+)/s", $newsqls[$i], $maths);
 
         $maths[3] = strtoupper($maths[3]);
-        $type = in_array($maths[3], array('INNODB', 'MYISAM', 'HEAP', 'MEMORY')) ? $maths[3] : 'INNODB';
+        $type = in_array($maths[3], ['INNODB', 'MYISAM', 'HEAP', 'MEMORY']) ? $maths[3] : 'INNODB';
         $usql = $maths[1] . " ENGINE=" .$type. (empty($config['dbcharset']) ? '' : " DEFAULT CHARSET=$config[dbcharset]");
 
         $usql = str_replace("CREATE TABLE IF NOT EXISTS dzz_", 'CREATE TABLE IF NOT EXISTS ' . $config['tablepre'], $usql);
@@ -173,7 +173,7 @@ if ($_GET['step'] == 'start') {
         $value = DB::fetch($query);
         $oldcols = getcolumn($value['Create Table']);
 
-        $updates = array();
+        $updates = [];
         $allfileds = array_keys($newcols);
         foreach ($newcols as $key => $value) {
             if ($key == 'PRIMARY') {
@@ -251,8 +251,8 @@ if ($_GET['step'] == 'start') {
 
 } elseif ($_GET['step'] == 'data') {
     //添加网盘应用
-    if (!DB::result_first("select COUNT(*) from %t where appurl=%s", array('app_market', '{dzzscript}?mod=explorer'))) {
-        C::t('app_market')->insert(array('appname' => '网盘',
+    if (!DB::result_first("select COUNT(*) from %t where appurl=%s", ['app_market', '{dzzscript}?mod=explorer'])) {
+        C::t('app_market')->insert(['appname' => '网盘',
             'appico' => 'appico/202411/02/170040bgapsjg4pt4nuee4.png',
             'appurl' => '{dzzscript}?mod=explorer',
             'appdesc' => '企业、团队文件集中管理。主要体现的功能是支持企业部门的组织架构建立共享目录，也支持组的方式灵活建立共享目录。支持文件标签，多版本，评论，详细的目录权限等协作功能',
@@ -267,27 +267,27 @@ if ($_GET['step'] == 'start') {
             'app_path' => 'dzz',
             'identifier' => 'explorer',
             'version' => '2.07',
-            'available' => 1), 0, 1);
+            'available' => 1], 0, 1);
     }
     //添加图片预览应用
-    if (!DB::result_first("select COUNT(*) from %t where identifier=%s", array('app_market', 'OpenPicWin'))) {
-        C::t('app_market')->insert(array('mid' => '25', 'appname' => '图片预览', 'appico' => 'appico/202411/02/184008xbuvo0sh8y1xey8f.png', 'appdesc' => '简易的图片浏览器', 'appurl' => "dzzjs:OpenPicWin('{icoid}')", 'appadminurl' => '', 'noticeurl' => '', 'dateline' => '0', 'disp' => '101', 'vendor' => '乐云网络', 'haveflash' => '0', 'isshow' => '0', 'havetask' => '1', 'hideInMarket' => '0', 'feature' => '', 'fileext' => 'image', 'group' => '0', 'orgid' => '0', 'position' => '1', 'system' => '0', 'notdelete' => '1', 'open' => '0', 'nodup' => '0', 'identifier' => 'OpenPicWin', 'app_path' => 'dzz/link', 'available' => '1', 'version' => '2.1'));
+    if (!DB::result_first("select COUNT(*) from %t where identifier=%s", ['app_market', 'OpenPicWin'])) {
+        C::t('app_market')->insert(['mid' => '25', 'appname' => '图片预览', 'appico' => 'appico/202411/02/184008xbuvo0sh8y1xey8f.png', 'appdesc' => '简易的图片浏览器', 'appurl' => "dzzjs:OpenPicWin('{icoid}')", 'appadminurl' => '', 'noticeurl' => '', 'dateline' => '0', 'disp' => '101', 'vendor' => '乐云网络', 'haveflash' => '0', 'isshow' => '0', 'havetask' => '1', 'hideInMarket' => '0', 'feature' => '', 'fileext' => 'image', 'group' => '0', 'orgid' => '0', 'position' => '1', 'system' => '0', 'notdelete' => '1', 'open' => '0', 'nodup' => '0', 'identifier' => 'OpenPicWin', 'app_path' => 'dzz/link', 'available' => '1', 'version' => '2.1']);
         $OpenPicWin = C::t('app_market')->fetch_by_identifier('OpenPicWin', 'dzz/link');
         if ($OpenPicWin['appid']) {
             C::t('app_open')->insert_by_exts($OpenPicWin['appid'], 'image');
         }
     }
     //添加DPlayer应用
-    if (!DB::result_first("select COUNT(*) from %t where appurl=%s", array('app_market', '{dzzscript}?mod=DPlayer'))) {
-        C::t('app_market')->insert(array('mid' => '41', 'appname' => 'DPlayer', 'appico' => 'appico/202411/02/184037v0by6dzb1wwobdy3.png', 'appdesc' => 'DPlayer，支持MP3,mp4,flv,wav等格式', 'appurl' => '{dzzscript}?mod=DPlayer', 'appadminurl' => '', 'noticeurl' => '', 'dateline' => '0', 'disp' => '0', 'vendor' => '小胡(gitee.com/xiaohu2024)', 'haveflash' => '0', 'isshow' => '0', 'havetask' => '1', 'hideInMarket' => '0', 'feature' => '', 'fileext' => 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne', 'group' => '0', 'orgid' => '0', 'position' => '1', 'system' => '0', 'notdelete' => '1', 'open' => '1', 'nodup' => '0', 'identifier' => 'DPlayer', 'app_path' => 'dzz', 'available' => '1', 'version' => '1.2'), 1, 1);
+    if (!DB::result_first("select COUNT(*) from %t where appurl=%s", ['app_market', '{dzzscript}?mod=DPlayer'])) {
+        C::t('app_market')->insert(['mid' => '41', 'appname' => 'DPlayer', 'appico' => 'appico/202411/02/184037v0by6dzb1wwobdy3.png', 'appdesc' => 'DPlayer，支持MP3,mp4,flv,wav等格式', 'appurl' => '{dzzscript}?mod=DPlayer', 'appadminurl' => '', 'noticeurl' => '', 'dateline' => '0', 'disp' => '0', 'vendor' => '小胡(gitee.com/xiaohu2024)', 'haveflash' => '0', 'isshow' => '0', 'havetask' => '1', 'hideInMarket' => '0', 'feature' => '', 'fileext' => 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne', 'group' => '0', 'orgid' => '0', 'position' => '1', 'system' => '0', 'notdelete' => '1', 'open' => '1', 'nodup' => '0', 'identifier' => 'DPlayer', 'app_path' => 'dzz', 'available' => '1', 'version' => '1.2'], 1, 1);
         $DPlayer = C::t('app_market')->fetch_by_identifier('DPlayer');
         if ($DPlayer['appid']) {
             C::t('app_open')->insert_by_exts($DPlayer['appid'], 'mp3,mp4,m4v,flv,mov,webm,ogv,ogg,wav,m3u8,f4v,webmv,mkv,magne');
         }
     }
     //添加PDF阅读器应用
-    if (!DB::result_first("select COUNT(*) from %t where appurl=%s", array('app_market', '{dzzscript}?mod=pdf'))) {
-        C::t('app_market')->insert(array('mid' => '13', 'appname' => 'PDF阅读器', 'appico' => 'appico/202411/02/170328nz056he0mixeezpo.png', 'appdesc' => '通过HTML5的方式来实现pdf在线预览', 'appurl' => 'index.php?mod=pdf', 'appadminurl' => '', 'noticeurl' => '', 'dateline' => '0', 'disp' => '110', 'vendor' => 'PDS.JS', 'haveflash' => '0', 'isshow' => '0', 'havetask' => '1', 'hideInMarket' => '0', 'feature' => '', 'fileext' => 'pdf,ai', 'group' => '0', 'orgid' => '0', 'position' => '1', 'system' => '0', 'notdelete' => '1', 'open' => '0', 'nodup' => '0', 'identifier' => 'pdf', 'app_path' => 'dzz', 'available' => '1', 'version' => '2.1'), 1, 1);
+    if (!DB::result_first("select COUNT(*) from %t where appurl=%s", ['app_market', '{dzzscript}?mod=pdf'])) {
+        C::t('app_market')->insert(['mid' => '13', 'appname' => 'PDF阅读器', 'appico' => 'appico/202411/02/170328nz056he0mixeezpo.png', 'appdesc' => '通过HTML5的方式来实现pdf在线预览', 'appurl' => 'index.php?mod=pdf', 'appadminurl' => '', 'noticeurl' => '', 'dateline' => '0', 'disp' => '110', 'vendor' => 'PDS.JS', 'haveflash' => '0', 'isshow' => '0', 'havetask' => '1', 'hideInMarket' => '0', 'feature' => '', 'fileext' => 'pdf,ai', 'group' => '0', 'orgid' => '0', 'position' => '1', 'system' => '0', 'notdelete' => '1', 'open' => '0', 'nodup' => '0', 'identifier' => 'pdf', 'app_path' => 'dzz', 'available' => '1', 'version' => '2.1'], 1, 1);
         $pdf = C::t('app_market')->fetch_by_identifier('pdf');
         if ($pdf['appid']) {
             C::t('app_open')->insert_by_exts($pdf['appid'], 'pdf,ai');
@@ -295,24 +295,24 @@ if ($_GET['step'] == 'start') {
     }
     //修改应用
     $appurl = "{adminscript}?mod=filemanage";
-    $filemanageappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
+    $filemanageappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", ['app_market', $appurl]);
     if ($filemanageappid) {
-        C::t('app_market')->update($filemanageappid, array('appurl' => "{dzzscript}?mod=filemanage", 'open' => 1, 'app_path' => 'dzz', 'position' => 1));
+        C::t('app_market')->update($filemanageappid, ['appurl' => "{dzzscript}?mod=filemanage", 'open' => 1, 'app_path' => 'dzz', 'position' => 1]);
     }
     $appurl = "{adminscript}?mod=orguser";
-    $orguserappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
+    $orguserappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", ['app_market', $appurl]);
     if ($orguserappid) {
-        C::t('app_market')->update($orguserappid, array('appurl' => "{dzzscript}?mod=orguser", 'group' => 1, 'open' => 1, 'app_path' => 'dzz', 'position' => 1));
+        C::t('app_market')->update($orguserappid, ['appurl' => "{dzzscript}?mod=orguser", 'group' => 1, 'open' => 1, 'app_path' => 'dzz', 'position' => 1]);
     }
     $appurl = "{adminscript}?mod=share";
-    $shareappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
+    $shareappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", ['app_market', $appurl]);
     if ($shareappid) {
-        C::t('app_market')->update($shareappid, array('appurl' => "{dzzscript}?mod=share", 'open' => 1, 'app_path' => 'dzz', 'position' => 1));
+        C::t('app_market')->update($shareappid, ['appurl' => "{dzzscript}?mod=share", 'open' => 1, 'app_path' => 'dzz', 'position' => 1]);
     }
     $appurl = "{dzzscript}?mod=comment";
-    $commentappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", array('app_market', $appurl));
+    $commentappid = DB::result_first("SELECT appid FROM %t WHERE appurl=%s", ['app_market', $appurl]);
     if ($commentappid) {
-        C::t('app_market')->update($commentappid, array('group' => 1, 'open' => 1, 'position' => 1));
+        C::t('app_market')->update($commentappid, ['group' => 1, 'open' => 1, 'position' => 1]);
     }
     //更新计划任务
     $cornarr = [
@@ -342,13 +342,13 @@ if ($_GET['step'] == 'start') {
         ]
     ];
     foreach ($cornarr as $v) {
-        if (!DB::result_first("select cronid from %t where filename = %s", array('cron', $v['filename']))) {
+        if (!DB::result_first("select cronid from %t where filename = %s", ['cron', $v['filename']])) {
             DB::insert('cron', $v);
         }
     }
     show_msg("数据升级结束", "$theurl?step=delete");
 } elseif ($_GET['step'] == 'delete') {
-    $oldtables = array();
+    $oldtables = [];
     $query = DB::query("SHOW TABLES LIKE '$config[tablepre]%'");
     while ($value = DB::fetch($query)) {
         $values = array_values($value);
@@ -357,10 +357,10 @@ if ($_GET['step'] == 'start') {
 
     $sql = implode('', file($sqlfile));
     preg_match_all("/CREATE\s+TABLE.+?dzz\_(.+?)\s*\((.+?)\)\s*(ENGINE|TYPE)\s*=\s*(\w+)/is", $sql, $matches);
-    $newtables = empty($matches[1]) ? array() : str_replace('`', '', $matches[1]);
-    $newsqls = empty($matches[0]) ? array() : $matches[0];
-    $deltables = array();
-    $delcolumns = array();
+    $newtables = empty($matches[1]) ? [] : str_replace('`', '', $matches[1]);
+    $newsqls = empty($matches[0]) ? [] : $matches[0];
+    $deltables = [];
+    $delcolumns = [];
 
     foreach ($oldtables as $tname) {
         $tname = substr($tname, strlen($config['tablepre']));
@@ -462,7 +462,7 @@ if ($_GET['step'] == 'start') {
     savecache('setting', '');
     if ($_G['setting']['default_mod']) {
         $configfile = DZZ_ROOT . 'data/cache/default_mod.php';
-        $configarr = array();
+        $configarr = [];
         $configarr['default_mod'] = $_G['setting']['default_mod'];
         @file_put_contents($configfile, "<?php \t\n return " . var_export($configarr, true) . ";");
     }
@@ -494,7 +494,7 @@ function get_special_tables_array($tablename) {
     $tablename = str_replace('_', '\_', $tablename);
     $query = DB::query("SHOW TABLES LIKE '{$tablename}\_%'");
     $dbo = DB::object();
-    $tables_array = array();
+    $tables_array = [];
     while ($row = $dbo->fetch_array($query, MYSQLI_NUM)) {
         if (preg_match("/^{$tablename}_(\\d+)$/i", $row[0])) {
             $prefix_len = strlen($dbo->tablepre);
@@ -518,7 +518,7 @@ function getcolumn($creatsql) {
     preg_match("/\((.+)\)\s*(ENGINE|TYPE)\s*\=/is", $creatsql, $matchs);
 
     $cols = explode("\n", $matchs[1]);
-    $newcols = array();
+    $newcols = [];
     foreach ($cols as $value) {
         $value = trim($value);
         if (empty($value)) continue;
@@ -552,8 +552,7 @@ function getcolumn($creatsql) {
 
 function remakesql($value) {
     $value = trim(preg_replace("/\s+/", ' ', $value));
-    $value = str_replace(array('`', ', ', ' ,', '( ', ' )', 'mediumtext'), array('', ',', ',', '(', ')', 'text'), $value);
-    return $value;
+    return str_replace(['`', ', ', ' ,', '( ', ' )', 'mediumtext'], ['', ',', ',', '(', ')', 'text'], $value);
 }
 
 function show_msg($message, $url_forward = '', $time = 1, $noexit = 0, $notice = '') {
@@ -575,9 +574,9 @@ END;
 function show_header() {
     global $config;
     $version = CORE_VERSION;
-    $nowarr = array($_GET['step'] => ' class="current"');
-    if (in_array($_GET['step'], array('waitingdb', 'prepare'))) {
-        $nowarr = array('sql' => ' class="current"');
+    $nowarr = [$_GET['step'] => ' class="current"'];
+    if (in_array($_GET['step'], ['waitingdb', 'prepare'])) {
+        $nowarr = ['sql' => ' class="current"'];
     }
     print<<<END
 	<!DOCTYPE html>
@@ -639,8 +638,8 @@ function runquery($sql) {
     $tablepre = $_G['config']['db'][1]['tablepre'];
     $dbcharset = $_G['config']['db'][1]['dbcharset'];
 
-    $sql = str_replace("\r", "\n", str_replace(array(' {tablepre}', ' dzz_', ' `dzz_'), array(' ' . $tablepre, ' ' . $tablepre, ' `' . $tablepre), $sql));
-    $ret = array();
+    $sql = str_replace("\r", "\n", str_replace([' {tablepre}', ' dzz_', ' `dzz_'], [' ' . $tablepre, ' ' . $tablepre, ' `' . $tablepre], $sql));
+    $ret = [];
     $num = 0;
     foreach (explode(";\n", trim($sql)) as $query) {
         $queries = explode("\n", trim($query));
@@ -686,8 +685,7 @@ function dir_clear($dir) {
 
 function create_table($sql, $dbcharset) {
 	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
-	$type = in_array($type, array('INNODB', 'MYISAM', 'HEAP', 'MEMORY')) ? $type : 'INNODB';
+	$type = in_array($type, ['INNODB', 'MYISAM', 'HEAP', 'MEMORY']) ? $type : 'INNODB';
 	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql). " ENGINE=$type DEFAULT CHARSET=".$dbver.($dbver === 'utf8mb4' ? " COLLATE=utf8mb4_unicode_ci" : "");
 }
 
-?>

@@ -4,14 +4,14 @@ if (!defined('IN_DZZ')) {
 }
 
 class dzz_censor {
-    var $censor_words = array();
+    var $censor_words = [];
     var $censor_replace = '*';
     var $highlight;
 
     public function __construct() {
         global $_G;
         if (empty($_G['cache']['censor'])) loadcache('censor');
-        $this->censor_words = !empty($_G['cache']['censor']['words']) ? explode(',', $_G['cache']['censor']['words']) : array();
+        $this->censor_words = !empty($_G['cache']['censor']['words']) ? explode(',', $_G['cache']['censor']['words']) : [];
         $this->censor_replace = !empty($_G['cache']['censor']['replace']) ? $_G['cache']['censor']['replace'] : '*';
     }
 
@@ -33,4 +33,3 @@ class dzz_censor {
 
 }
 
-?>

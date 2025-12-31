@@ -62,17 +62,17 @@ if ($attackevasive & 8) {
 
 function securitymessage($subject, $message, $reload = TRUE, $form = FALSE) {
     global $_G;
-    $scuritylang = array(
+    $scuritylang = [
         'attackevasive_1_subject' => '&#x9891;&#x7e41;&#x5237;&#x65b0;&#x9650;&#x5236;',
         'attackevasive_1_message' => '&#x60a8;&#x8bbf;&#x95ee;&#x672c;&#x7ad9;&#x901f;&#x5ea6;&#x8fc7;&#x5feb;&#x6216;&#x8005;&#x5237;&#x65b0;&#x95f4;&#x9694;&#x65f6;&#x95f4;&#x5c0f;&#x4e8e;&#x4e24;&#x79d2;&#xff01;&#x8bf7;&#x7b49;&#x5f85;&#x9875;&#x9762;&#x81ea;&#x52a8;&#x8df3;&#x8f6c;&#x20;&#x2e;&#x2e;&#x2e;',
         'attackevasive_2_subject' => '&#x4ee3;&#x7406;&#x670d;&#x52a1;&#x5668;&#x8bbf;&#x95ee;&#x9650;&#x5236;',
         'attackevasive_2_message' => '&#x672c;&#x7ad9;&#x73b0;&#x5728;&#x9650;&#x5236;&#x4f7f;&#x7528;&#x4ee3;&#x7406;&#x670d;&#x52a1;&#x5668;&#x8bbf;&#x95ee;&#xff0c;&#x8bf7;&#x53bb;&#x9664;&#x60a8;&#x7684;&#x4ee3;&#x7406;&#x8bbe;&#x7f6e;&#xff0c;&#x76f4;&#x63a5;&#x8bbf;&#x95ee;&#x672c;&#x7ad9;&#x3002;',
         'attackevasive_4_subject' => '&#x9875;&#x9762;&#x91cd;&#x8f7d;&#x5f00;&#x542f;',
         'attackevasive_4_message' => '&#x6b22;&#x8fce;&#x5149;&#x4e34;&#x672c;&#x7ad9;&#xff0c;&#x9875;&#x9762;&#x6b63;&#x5728;&#x91cd;&#x65b0;&#x8f7d;&#x5165;&#xff0c;&#x8bf7;&#x7a0d;&#x5019;&#x20;&#x2e;&#x2e;&#x2e;'
-    );
+    ];
 
-    $subject = $scuritylang[$subject] ? $scuritylang[$subject] : $subject;
-    $message = $scuritylang[$message] ? $scuritylang[$message] : $message;
+    $subject = $scuritylang[$subject] ?: $subject;
+    $message = $scuritylang[$message] ?: $message;
     if ($_GET['inajax']) {
         security_ajaxshowheader();
         echo '<div id="attackevasive_1" class="popupmenu_option"><b style="font-size: 16px">' . $subject . '</b><br /><br />' . $message . '</div>';
@@ -134,4 +134,3 @@ function security_ajaxshowfooter() {
     exit();
 }
 
-?>

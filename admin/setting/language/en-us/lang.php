@@ -10,8 +10,8 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$lang = array
-(
+$lang =
+    [
     'appname' => 'System Settings',
     'spaceSet' => 'Space Settings',
     'loginSet' => 'Login Settings',
@@ -36,5 +36,4 @@ $lang = array
     'usergroup_perm' => 'User Group Permissions',
     'permission_group_delete_success' => 'Permission group deleted successfully',
     'file_upload_limit' => 'File Upload Limits'
-);
-?>
+    ];

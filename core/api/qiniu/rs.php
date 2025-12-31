@@ -72,7 +72,7 @@ class Qiniu_RS_PutPolicy
 		}
 		$deadline += time();
 
-		$policy = array('scope' => $this->Scope, 'deadline' => $deadline);
+		$policy = ['scope' => $this->Scope, 'deadline' => $deadline];
 		if (!empty($this->CallbackUrl)) {
 			$policy['callbackUrl'] = $this->CallbackUrl;
 		}
@@ -220,7 +220,7 @@ function Qiniu_RS_Batch($self, $ops) // => ($data, $error)
 
 function Qiniu_RS_BatchStat($self, $entryPaths)
 {
-	$params = array();
+	$params = [];
 	foreach ($entryPaths as $entryPath) {
 		$params[] = Qiniu_RS_URIStat($entryPath->bucket, $entryPath->key);
 	}
@@ -229,7 +229,7 @@ function Qiniu_RS_BatchStat($self, $entryPaths)
 
 function Qiniu_RS_BatchDelete($self, $entryPaths)
 {
-	$params = array();
+	$params = [];
 	foreach ($entryPaths as $entryPath) {
 		$params[] = Qiniu_RS_URIDelete($entryPath->bucket, $entryPath->key);
 	}
@@ -238,7 +238,7 @@ function Qiniu_RS_BatchDelete($self, $entryPaths)
 
 function Qiniu_RS_BatchMove($self, $entryPairs)
 {
-	$params = array();
+	$params = [];
 	foreach ($entryPairs as $entryPair) {
 		$src = $entryPair->src;
 		$dest = $entryPair->dest;
@@ -249,7 +249,7 @@ function Qiniu_RS_BatchMove($self, $entryPairs)
 
 function Qiniu_RS_BatchCopy($self, $entryPairs)
 {
-	$params = array();
+	$params = [];
 	foreach ($entryPairs as $entryPair) {
 		$src = $entryPair->src;
 		$dest = $entryPair->dest;

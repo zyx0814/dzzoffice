@@ -20,8 +20,8 @@ class table_organization_job extends dzz_table {
     }
 
     public function fetch_all_by_orgid($orgid, $up = 0) {
-        $data = array();
-        foreach (DB::fetch_all("select * from %t where orgid = %d order by orgid", array($this->_table, $orgid)) as $value) {
+        $data = [];
+        foreach (DB::fetch_all("select * from %t where orgid = %d order by orgid", [$this->_table, $orgid]) as $value) {
             $data[$value['jobid']] = $value;
         }
         return $data;
@@ -36,14 +36,14 @@ class table_organization_job extends dzz_table {
 
     function insert_job_by_name($orgid = 0, $name = "", $opuid = 0) {
         if (!$orgid || !$name) return 0;
-        if (!$jobid = DB::result_first("select jobid from %t where orgid = %d and  name=%s", array('organization_job', $orgid, $name))) {
-            $data = array(
+        if (!$jobid = DB::result_first("select jobid from %t where orgid = %d and  name=%s", ['organization_job', $orgid, $name])) {
+            $data = [
                 "orgid" => $orgid,
                 'name' => $name,
                 'jobid' => 0,
                 'dateline' => TIMESTAMP,
                 'opuid' => $opuid,
-            );
+            ];
             if ($jobid = DB::insert('organization_job', $data, 1)) {//插入版本数据
                 return $jobid;
             }
@@ -54,4 +54,4 @@ class table_organization_job extends dzz_table {
     }
 }
 
-?>
+

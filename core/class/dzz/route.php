@@ -32,13 +32,13 @@ class Route {
                     if (!preg_match("/^\w+$/i", $path)) showmessage('undefined_action');
 
                 }
-                $modfile = './' . CURSCRIPT . '/' . str_replace(':', '/', $mod) . '/' . ($op ? $op : 'index') . EXT;
+                $modfile = './' . CURSCRIPT . '/' . str_replace(':', '/', $mod) . '/' . ($op ?: 'index') . EXT;
 
                 if (@!file_exists(DZZ_ROOT . $modfile)) {
 
                     //兼容老版
                     if (@!file_exists($modfile = './' . CURSCRIPT . '/' . CURSCRIPT . '_' . str_replace(':', '/', $mod) . EXT)) {
-                        showmessage($modfile . lang('file_nonexistence', array('modfile' => htmlspecialchars($modfile))));
+                        showmessage($modfile . lang('file_nonexistence', ['modfile' => htmlspecialchars($modfile)]));
                     }
 
                 }

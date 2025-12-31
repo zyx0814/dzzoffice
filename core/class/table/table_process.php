@@ -26,4 +26,4 @@ class table_process extends dzz_table {
     }
 }
 
-?>
+

@@ -29,10 +29,9 @@ if (!$msg && ($re = IO::setFileContent($path, $content, true))) {
 if ($msg) {
     @header('HTTP/1.1 500 Not Found');
     @header('Status: 500 Not Found');
-    exit();
 } else {
     @header('HTTP/1.1 200 Not Found');
-    exit();
 }
+exit();
 
-?>
+

@@ -23,7 +23,7 @@ class perm_binPerm {
     }
 
     public static function getPowerArr() {
-        return array(
+        return [
             'flag' => 1,        //标志位为1表示权限设置,否则表示未设置，继承上级；
             'read1' => 2,        //读取自己的文件
             'read2' => 4,        //读取所有文件
@@ -48,11 +48,11 @@ class perm_binPerm {
             'my_disk' => 2097152, //个人网盘
             'my_info' => 4194304, //个人头像
             'my_username' => 8388608, //个人用户名
-        );
+        ];
     }
 
     public static function getPowerTitle() {
-        return array(
+        return [
             'flag' => lang('flag_purview_setting'),
             'read1' => lang('read_my_file'),
             'read2' => lang('read_my_file1'),
@@ -77,12 +77,12 @@ class perm_binPerm {
             'my_disk' => lang('my_disk'),
             'my_info' => lang('my_info'),
             'my_username' => lang('my_username'),
-        );
+        ];
     }
 
     //获取权限对应图标
     public static function getPowerIcos() {
-        return array(
+        return [
             'flag' => '',
             'read1' => 'dzz dzz-visibility mdi mdi-eye',
             'read2' => 'dzz dzz-all-check mdi mdi-eye-plus',
@@ -107,7 +107,7 @@ class perm_binPerm {
             'my_disk' => 'mdi mdi-account-box',
             'my_info' => 'mdi mdi-account-circle',
             'my_username' => 'mdi mdi-account-edit',
-        );
+        ];
     }
 
     /**
@@ -115,7 +115,7 @@ class perm_binPerm {
      * @return array 键：权限键名，值：权限类型（folder=文件夹操作，control=控制类）
      */
     public static function getPowerType() {
-        return array(
+        return [
             'read1' => 'folder',
             'read2' => 'folder',
             'delete1' => 'folder',
@@ -136,7 +136,7 @@ class perm_binPerm {
             'my_disk' => 'control', // 对个人网盘生效
             'my_info' => 'user',
             'my_username' => 'user',
-        );
+        ];
     }
 
     public static function groupPowerPack() {
@@ -184,7 +184,7 @@ class perm_binPerm {
         return $perm & intval($powerarr[$action]);
     }
 
-    public static function getSumByAction($action = array()) { //$action==all 时返回所有的值相加
+    public static function getSumByAction($action = []) { //$action==all 时返回所有的值相加
         $i = 0;
         $powerarr = self::getPowerArr();
         if ($action == 'all') {

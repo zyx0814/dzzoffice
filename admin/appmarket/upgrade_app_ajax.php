@@ -16,38 +16,37 @@ include_once libfile('function/cache');
 include_once libfile('function/appmarket');
 $step = intval($_GET['step']);
 $op = isset($_GET['op']) ? $_GET['op'] : '';
-$step = $step ? $step : 1;
+$step = $step ?: 1;
 $operation = $_GET['operation'] ? trim($_GET['operation']) : 'upgrade';
 header('Content-type:text/json');
-$steplang = array('', lang('founder_upgrade_updatelist'), lang('founder_upgrade_download'), lang('founder_upgrade_compare'), lang('founder_upgrade_upgrading'), lang('founder_upgrade_complete'), 'dbupdate' => lang('founder_upgrade_dbupdate'));
+$steplang = ['', lang('founder_upgrade_updatelist'), lang('founder_upgrade_download'), lang('founder_upgrade_compare'), lang('founder_upgrade_upgrading'), lang('founder_upgrade_complete'), 'dbupdate' => lang('founder_upgrade_dbupdate')];
 if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更新
     $appid = $_GET["appid"];
     $appinfo = C::t('app_market')->fetch($appid);
     $time = dgmdate(TIMESTAMP, 'Ymd');
-    $return = array(
+    $return = [
         "url" => ADMINSCRIPT . '?mod=appmarket&op=upgrade',
         "status" => 1,
         "percent" => 5,
         "second" => 500,
         "mid" => $appinfo["mid"],
         "msg" => lang("app_upgrade_check_need_update")
-    );
+    ];
     //删除安装临时文件
     $temp_download = DZZ_ROOT . './data/update/app/' . $appinfo['app_path'] . '/' . $appinfo['identifier'];
     removedirectory($temp_download);
 
     if ($appinfo["check_upgrade_time"] == $time) {//今天已经检查过是否需要更新
-        if ($appinfo["upgrade_version"] != "") {
+        if ($appinfo["upgrade_version"] != "") {//已获取更新版本信息,待更新
             $return["url"] = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&appid=' . $appid;
             if ($appinfo["mid"] == 0) {
                 $return["url"] = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=localupgrade&appid=' . $appid;
             }
-            exit(json_encode($return));//已获取更新版本信息,待更新
-        } else {
+        } else {//不需要更新
             $return["status"] = 0;
             $return["msg"] = lang("app_upgrade_to_lastversion");
-            exit(json_encode($return));//不需要更新
         }
+        exit(json_encode($return));
     }
 
     if ($appinfo["mid"] == 0) {//判断本地应用是否升级
@@ -65,7 +64,6 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
             $return["status"] = 0;
             $return["msg"] = lang("app_upgrade_to_lastversion");
         }
-        exit(json_encode($return));
     } else {
         $dzz_upgrade = new dzz_upgrade_app();
         //根据当前版本查询是否需要更新 
@@ -74,36 +72,35 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         $appinfo["dzzversion"] = CORE_VERSION;
         $response = $dzz_upgrade->check_upgrade_byversion($appinfo);
 
-        if ($response && $response["status"] == 1) {
-            $map = array(
+        if ($response && $response["status"] == 1) {//需要更新
+            $map = [
                 "appid" => $appid,
                 "upgrade_version" => serialize($response["data"]),
                 "check_upgrade_time" => dgmdate(TIMESTAMP, 'Ymd')
-            );
+            ];
             $re = C::t('app_market')->update($appid, $map);
             $return["url"] = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&appid=' . $appid;
-            exit(json_encode($return));//需要更新
-        } else {
-            $map = array(
+        } else {//不需要更新
+            $map = [
                 "appid" => $appid,
                 "upgrade_version" => "",
                 "check_upgrade_time" => $time
-            );
+            ];
             $re = C::t('app_market')->update($appid, $map);//C::tp_t('app_market')->where("appid=".$appid)->save( $map );
             $return["status"] = 0;
             $return["msg"] = lang("app_upgrade_to_lastversion");
-            exit(json_encode($return));//不需要更新
         }
     }
+    exit(json_encode($return));
 } elseif ($operation == 'upgrade') {
     $appid = $_GET["appid"];
-    $return = array(
+    $return = [
         "url" => ADMINSCRIPT . '?mod=appmarket&op=upgrade',
         "status" => 1,
         "percent" => 10,
         "second" => 1,
         "msg" => lang("app_upgrade_newversion_will_start")
-    );
+    ];
     $appinfo = C::t('app_market')->fetch($appid);//C::tp_t('app_market')->find( $appid );
     $respon = $appinfo["upgrade_version"];
     if ($respon == "") {
@@ -135,21 +132,21 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
     $dzzversion = CORE_VERSION;
     //判断是否升级mysql 或者php 
     $charset = 'UTF8';
-    $upgraderow = array();
+    $upgraderow = [];
 
     if (version_compare($upgrade['dzzversion'], $dzzversion) > 0) {
         $return["status"] = 0;
-        $return["msg"] = lang('app_upgrade_dzzversion_error', array('version' => $upgrade['dzzversion']));
+        $return["msg"] = lang('app_upgrade_dzzversion_error', ['version' => $upgrade['dzzversion']]);
         exit(json_encode($return));//不需要安装
     }
     if (version_compare($upgrade['phpversion'], PHP_VERSION) > 0) {
         $return["status"] = 0;
-        $return["msg"] = lang('app_upgrade_phpversion_error', array('version' => $upgrade['phpversion']));
+        $return["msg"] = lang('app_upgrade_phpversion_error', ['version' => $upgrade['phpversion']]);
         exit(json_encode($return));//不需要安装
     }
     if (version_compare($upgrade['mysqlversion'], $dbversion) > 0) {
         $return["status"] = 0;
-        $return["msg"] = lang('app_upgrade_mysqlversion_error', array('version' => $upgrade['mysqlversion']));
+        $return["msg"] = lang('app_upgrade_mysqlversion_error', ['version' => $upgrade['mysqlversion']]);
         exit(json_encode($return));//不需要安装
     }
 
@@ -167,14 +164,14 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
     $return["url"] = $linkurl;
     exit(json_encode($return));
 } elseif ($operation == 'cross' || $operation == 'patch') {
-    $return = array(
+    $return = [
         "url" => ADMINSCRIPT . '?mod=appmarket&op=upgrade',
         "status" => 1,
         "percent" => 10,
         "second" => 0,
         "step" => 0,
         "msg" => lang("app_upgrade_newversion_start")
-    );
+    ];
 
     if (0 && !$_G['setting']['bbclosed']) {//应用升级暂时可不关闭站点
         $msg = '<p style="margin:10px 0;color:red">' . lang('upgrade_close_site') . '</p>';
@@ -189,12 +186,12 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
     }
 
     $step = intval($_REQUEST['step']);
-    $step = $step ? $step : 1;
+    $step = $step ?: 1;
 
     $release = trim($_GET['release']);
     $locale = trim($_GET['locale']);
     $charset = trim($_GET['charset']);
-    $upgradeinfo = $upgrade_step = array();
+    $upgradeinfo = $upgrade_step = [];
 
     $appid = $_GET["appid"];
     $appinfo = C::t('app_market')->fetch($appid);
@@ -276,7 +273,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         $updatefilelist = $dzz_upgrade->fetch_installapp_zip($upgradeinfo);
         if (empty($updatefilelist)) {
             $return["status"] = 0;
-            $return["msg"] = lang('app_upgrade_none', array('upgradeurl' => upgradeinformation_app(-1)));
+            $return["msg"] = lang('app_upgrade_none', ['upgradeurl' => upgradeinformation_app(-1)]);
             exit(json_encode($return));
         }
         $updatemd5filelist = $updatefilelist['md5'];
@@ -288,9 +285,9 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         $percent = 60;
 
         $fileseq = intval($_GET['fileseq']);
-        $fileseq = $fileseq ? $fileseq : 1;
+        $fileseq = $fileseq ?: 1;
         $position = intval($_GET['position']);
-        $position = $position ? $position : 0;
+        $position = $position ?: 0;
         $offset = 1024 * 1024;
         $packagesize = $upgradeinfo["packagesize"];
 
@@ -298,7 +295,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
             $linkurl = $theurl . '&step=3';
             $percent = 100;
             $return["step"] = 3;
-            $return["msg"] = lang('app_upgrade_download_complete', array('upgradeurl' => upgradeinformation_app(6)));
+            $return["msg"] = lang('app_upgrade_download_complete', ['upgradeurl' => upgradeinformation_app(6)]);
         } else {
             $downloadstatus = $dzz_upgrade->download_file($appinfo, $updatefilelist[$fileseq - 1], '', $updatemd5filelist[$fileseq - 1], $position, $offset);
 
@@ -312,10 +309,10 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
                 $file = $updatefilelist[$fileseq - 1];
             } else {
                 $return["status"] = 0;
-                $return["msg"] = lang('app_upgrade_downloading_error', array('file' => $updatefilelist[$fileseq - 1], 'upgradeurl' => upgradeinformation_app(-3)));
+                $return["msg"] = lang('app_upgrade_downloading_error', ['file' => $updatefilelist[$fileseq - 1], 'upgradeurl' => upgradeinformation_app(-3)]);
                 exit(json_encode($return));
             }
-            $msg = lang('app_upgrade_downloading_file', array('file' => $updatefilelist[$fileseq - 1], 'percent' => $percent . '%', 'upgradeurl' => ''));
+            $msg = lang('app_upgrade_downloading_file', ['file' => $updatefilelist[$fileseq - 1], 'percent' => $percent . '%', 'upgradeurl' => '']);
         }
         $stepover = 1;
         $return["url"] = $linkurl;
@@ -332,7 +329,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         $updatefilelist = $dzz_upgrade->fetch_updatefile_list_bymd5($appinfo);
         if (empty($updatefilelist)) {
             $return["status"] = 0;
-            $return["msg"] = lang('app_upgrade_none', array('upgradeurl' => upgradeinformation_app(-1)));
+            $return["msg"] = lang('app_upgrade_none', ['upgradeurl' => upgradeinformation_app(-1)]);
             exit(json_encode($return));
         }
 
@@ -386,7 +383,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
                 $return["status"] = 0;
                 $return["percent"] = 55;
                 $return["second"] = 0;
-                $return["msg"] = lang('app_upgrade_cannot_access_file', array('upgradeurl' => upgradeinformation_app(-4)));
+                $return["msg"] = lang('app_upgrade_cannot_access_file', ['upgradeurl' => upgradeinformation_app(-4)]);
                 $return["step"] = 1;
                 exit(json_encode($return));
             }
@@ -401,14 +398,14 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         if (!$_GET['startupgrade']) {
             if (!$_GET['backfile']) {
                 $linkurl = $theurl . '&step=4&backfile=1&confirm=' . $confirm . $paraftp;
-                $msg = '<p style="margin:10px 0">' . lang('upgrade_backuping', array('upgradeurl' => upgradeinformation(2))) . '</p>';
+                $msg = '<p style="margin:10px 0">' . lang('upgrade_backuping', ['upgradeurl' => upgradeinformation(2)]) . '</p>';
                 $msg .= '<script type="text/JavaScript">setTimeout("location.href=\'' . ($linkurl) . '\';", 1000);</script>';
                 $msg .= ' <p style="margin:10px 0"><a href="' . $linkurl . '">' . lang('message_redirect') . '</p>';
 
                 $return["url"] = $linkurl;
                 $return["percent"] = 55;
                 $return["second"] = 0;
-                $return["msg"] = lang('app_upgrade_backuping', array('upgradeurl' => upgradeinformation(2)));
+                $return["msg"] = lang('app_upgrade_backuping', ['upgradeurl' => upgradeinformation(2)]);
                 $return["step"] = 4;
                 exit(json_encode($return));
             }
@@ -419,7 +416,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
                 if (is_file($destfile)) {
                     if (!$dzz_upgrade->copy_file($destfile, $backfile, 'file')) {
                         $return["status"] = 0;
-                        $return["msg"] = lang('app_upgrade_backup_error', array('upgradeurl' => upgradeinformation(-5)));
+                        $return["msg"] = lang('app_upgrade_backup_error', ['upgradeurl' => upgradeinformation(-5)]);
                         exit(json_encode($return));
                     }
                 }
@@ -428,7 +425,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
             $return["url"] = $theurl . '&step=4&startupgrade=1&confirm=' . $confirm . $paraftp;
             $return["percent"] = 60;
             $return["second"] = 300;
-            $return["msg"] = lang('app_upgrade_backup_complete', array('upgradeurl' => upgradeinformation(3)));
+            $return["msg"] = lang('app_upgrade_backup_complete', ['upgradeurl' => upgradeinformation(3)]);
             exit(json_encode($return));
         }
 
@@ -441,16 +438,14 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
                     $destfile = DZZ_ROOT . $appinfo['app_path'] . '/' . $appinfo['identifier'] . '/' . $updatefile;
                 }
                 if (!$dzz_upgrade->copy_file($srcfile, $destfile, $confirm)) {
+                    $return["status"] = 0;
                     if ($confirm == 'ftp') {
-                        $return["status"] = 0;
-                        $return["msg"] = lang('app_upgrade_ftp_upload_error', array('file' => $updatefile, 'upgradeurl' => upgradeinformation_app(-6)));
-                        exit(json_encode($return));
+                        $return["msg"] = lang('app_upgrade_ftp_upload_error', ['file' => $updatefile, 'upgradeurl' => upgradeinformation_app(-6)]);
 
                     } else {
-                        $return["status"] = 0;
-                        $return["msg"] = lang('app_upgrade_copy_error', array('file' => $updatefile, 'upgradeurl' => upgradeinformation_app(-7)));
-                        exit(json_encode($return));
+                        $return["msg"] = lang('app_upgrade_copy_error', ['file' => $updatefile, 'upgradeurl' => upgradeinformation_app(-7)]);
                     }
+                    exit(json_encode($return));
                 }
             }
 
@@ -458,7 +453,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
             $return["url"] = $linkurl;
             $return["percent"] = 75;
             $return["second"] = 2000;
-            $return["msg"] = lang('app_upgrade_file_success', array('upgradeurl' => upgradeinformation_app(4)));
+            $return["msg"] = lang('app_upgrade_file_success', ['upgradeurl' => upgradeinformation_app(4)]);
             exit(json_encode($return));
         }
 
@@ -476,7 +471,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
                 $importfile2 = DZZ_ROOT . './' . $dir . '/' . $appname . '/dzz_app_' . $upgradeinfo['identifier'] . '.xml';
                 if (!file_exists($importfile2)) {
                     $return["status"] = 0;
-                    $return["msg"] = lang("app_upgrade_xmlfile_error", array('file' => $xmlfile, 'upgradeurl' => upgradeinformation_app(-8)));
+                    $return["msg"] = lang("app_upgrade_xmlfile_error", ['file' => $xmlfile, 'upgradeurl' => upgradeinformation_app(-8)]);
                     exit(json_encode($return));
                 } else {
                     @rename($importfile2, $importfile);
@@ -501,7 +496,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
                 unset($apparray["app"]["upgrade_version"]);//此信息xml里面已取消
                 
                 // 合并 extra 信息，新配置优先
-                $extra = isset($appinfo['extra']) ? unserialize($appinfo['extra']) : array();
+                $extra = isset($appinfo['extra']) ? unserialize($appinfo['extra']) : [];
                 $merged_extra = array_merge($extra, $apparray['app']['extra']);
                 $apparray['app']['extra'] = $merged_extra;
 
@@ -526,7 +521,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
             $return["percent"] = 80;
             $return["second"] = 300;
             $return["step"] = 5;
-            $return["msg"] = lang('app_upgrade_database_success', array('upgradeurl' => upgradeinformation_app(5)));
+            $return["msg"] = lang('app_upgrade_database_success', ['upgradeurl' => upgradeinformation_app(5)]);
             exit(json_encode($return));
         }
         $linkurl = ADMINSCRIPT . '?mod=appmarket&op=upgrade_app_ajax&operation=' . $operation . '&appid=' . $appid . '&step=5&confirm=' . $confirm;
@@ -546,9 +541,9 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
             @rename($srcfile, $desfile);
         }
 
-        $map = array(
+        $map = [
             "upgrade_version" => ""
-        );
+        ];
 
         $re = C::t('app_market')->update($appid, $map);
         updatecache('setting');
@@ -557,7 +552,7 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         $return["percent"] = 100;
         $return["second"] = 300;
         $return["step"] = 5;
-        $return["msg"] = lang("app_upgrade_newversion_success", array('upgradeurl' => upgradeinformation_app(1)));
+        $return["msg"] = lang("app_upgrade_newversion_success", ['upgradeurl' => upgradeinformation_app(1)]);
         exit(json_encode($return));
     }
 } elseif ($operation == 'localupgrade') {
@@ -595,12 +590,12 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
         $finish = TRUE;
     }
     if ($finish) {
-        $map = array(
+        $map = [
             "mid" => $mid,
             "version" => $toversion,
             "upgrade_version" => "",
             "check_upgrade_time" => 0
-        );
+        ];
 
         $re = C::t('app_market')->update($appid, $map);
     }
@@ -615,20 +610,20 @@ if ($operation == 'check_upgrade') {//根据appid检查app应用是否需要更�
 
 
 //获取安装时对应目录名称
-function getappidentifier($baseinfo = array()) {
+function getappidentifier($baseinfo = []) {
     if ($baseinfo) {
-        $map = array(
-            "mid" => array("neq", $baseinfo["mid"]),
+        $map = [
+            "mid" => ["neq", $baseinfo["mid"]],
             "identifier" => $baseinfo["identifier"],
             "app_path" => $baseinfo["app_path"]
-        );
-        $count = DB::result_first("select COUNT(*) from %t where mid!=%d and identifier=%s and app_path=%s", array('app_market', $baseinfo["mid"], $baseinfo["identifier"], $baseinfo["app_path"]));
+        ];
+        $count = DB::result_first("select COUNT(*) from %t where mid!=%d and identifier=%s and app_path=%s", ['app_market', $baseinfo["mid"], $baseinfo["identifier"], $baseinfo["app_path"]]);
         if ($count > 0) {
             $pos = true;
             $i = 1;
             while ($pos !== false) {
                 $map["identifier"] = $baseinfo["identifier"] . "_" . $baseinfo["mid"] . "_" . $i;
-                $count = DB::result_first("select COUNT(*) from %t where mid!=%d and identifier=%s and app_path=%s", array('app_market', $baseinfo["mid"], $map["identifier"], $baseinfo["app_path"]));
+                $count = DB::result_first("select COUNT(*) from %t where mid!=%d and identifier=%s and app_path=%s", ['app_market', $baseinfo["mid"], $map["identifier"], $baseinfo["app_path"]]);
                 if ($count == 0) {
                     $pos = false;
                 } else {
@@ -641,4 +636,3 @@ function getappidentifier($baseinfo = array()) {
     return $baseinfo;
 }
 
-?>

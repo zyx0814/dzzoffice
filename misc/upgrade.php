@@ -22,7 +22,7 @@ if ($_GET['action'] == 'checkupgrade') {
     exit;
 } elseif ($_GET['action'] == 'upgradenotice') {
     $html = '';
-    $list = array();
+    $list = [];
     if ($_G['setting']['upgradetis'] !== '3' && $_G['member']['adminid'] == 1) {
         if ($_G['setting']['upgradetis'] !== '1') {
             //系统升级信息
@@ -78,4 +78,3 @@ if ($_GET['action'] == 'checkupgrade') {
 }
 
 
-?>

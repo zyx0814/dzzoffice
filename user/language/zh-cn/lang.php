@@ -2,7 +2,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$lang = array(
+$lang = [
     'appname' => '个人中心',
     'username' => '用户名',
     'login_guest' => '没有帐号？<a href="user.php?mod={$_G[setting][regname]}">{$_G[setting][reglinkname]}</a>',
@@ -106,7 +106,6 @@ $lang = array(
     'submit_audit' => '提交审核',
     'Information_complete' => '资料完成',
     'compellation' => '姓 名',
-    'unbind' => '取消绑定',
     'landing_directly' => '直接登录',
     'register_binding' => '注册并绑定',
     'login_bound' => '登录并绑定',
@@ -148,4 +147,4 @@ $lang = array(
     'register_ctrl' => '抱歉，您的 IP 地址在 {regctrl} 小时内无法注册',
     'no_modify_password' => '您所在的用户组不允许修改密码。',
     'no_modify_group' => '您所在的用户组不支持该功能。',
-);
+];

@@ -20,7 +20,7 @@ $token = isset($_GET['token']) ? trim($_GET['token']) : '';//调用地方传递�
 $perm = isset($_GET['perm']) ? trim($_GET['perm']) : '';//权限判断值：比如 write,判断是否有写入权限；再如，write,copy，判断是否有写入和copy权限(即多个权限用逗号分隔)
 $mulitype = isset($_GET['mulitype']) ? intval($_GET['mulitype']) : 0;//0，不允许多选；1，允许多选
 if ($type == 1) {
-    $savefile = array();
+    $savefile = [];
     if ($rid) {
         $savefile = C::t('resources')->fetch_info_by_rid($rid);
         $filename = $savefile['name'];
@@ -28,7 +28,7 @@ if ($type == 1) {
         $savefile['name'] = $filename;
     }
 }
-$gets = array(
+$gets = [
     'allowcreate' => $allowcreate,
     'type' => $type,
     'rid' => $rid,
@@ -38,9 +38,9 @@ $gets = array(
     'exttype' => $exttype,
     'mulitype' => $mulitype,
     'perm' => $perm
-);
+];
 $urldefined = '&' . url_implode($gets);
-$allowvisit = array('file', 'listtree', 'explorerfile', 'json', 'ajax', 'dzzcp', 'save');
+$allowvisit = ['file', 'listtree', 'explorerfile', 'json', 'ajax', 'dzzcp', 'save'];
 if ($template == '1') {
     if ($do) {
         if (!in_array($do, $allowvisit)) {
@@ -52,22 +52,15 @@ if ($template == '1') {
         include template('fileselection/lyear_index');
         exit();
     }
-} else {
-    //如果是移动端
-    if ($_G['ismobile']) {
-        require MOD_PATH . '/mobilefileselection.php';
+} elseif ($_G['ismobile']) {//如果是移动端
+    require MOD_PATH . '/mobilefileselection.php';
+} elseif ($do) {
+    if (!in_array($do, $allowvisit)) {
+        showmessage('access_denied', dreferer());
     } else {
-        if ($do) {
-            if (!in_array($do, $allowvisit)) {
-                showmessage('access_denied', dreferer());
-            } else {
-                require MOD_PATH . '/fileselection/' . $do . '.php';
-            }
-        } else {
-            include template('fileselection/index');
-            exit();
-        }
+        require MOD_PATH . '/fileselection/' . $do . '.php';
     }
+} else {
+    include template('fileselection/index');
+    exit();
 }
-
-

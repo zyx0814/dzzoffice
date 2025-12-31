@@ -21,12 +21,12 @@ class dzz_process {
     }
 
     private static function _status($action, $process) {
-        static $plist = array();
+        static $plist = [];
         switch ($action) {
             case 'add' : $plist[$process] = true; break;
-			case 'get' : return !empty($plist[$process]); break;
-			case 'rm' : $plist[$process] = null; break;
-			case 'clear' : $plist = array(); break;
+			case 'get' : return !empty($plist[$process]);
+            case 'rm' : $plist[$process] = null; break;
+			case 'clear' : $plist = []; break;
         }
         return true;
     }
@@ -34,7 +34,7 @@ class dzz_process {
     private static function _find($name, $ttl) {
 
         if (!dzz_process::_cmd('get', $name)) {
-            if(dzz_process::_cmd('add', $name, $ttl) == true) {
+            if(dzz_process::_cmd('add', $name, $ttl)) {
 				$ret = false;
 			} else {
 				$ret = true;
@@ -78,7 +78,7 @@ class dzz_process {
         $ret = '';
         switch ($cmd) {
             case 'add':
-                $ret = C::t('process')->insert(array('processid' => $name, 'expiry' => time() + $ttl), FALSE, true);
+                $ret = C::t('process')->insert(['processid' => $name, 'expiry' => time() + $ttl], FALSE, true);
                 break;
             case 'get':
                 $ret = C::t('process')->fetch($name);
@@ -97,4 +97,3 @@ class dzz_process {
     }
 }
 
-?>

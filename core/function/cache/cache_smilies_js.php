@@ -13,7 +13,7 @@ function build_cache_smilies_js() {
     $spp = $_G['setting']['smcols'] * $_G['setting']['smrows'];
     $fpre = '';
     foreach (C::t('imagetype')->fetch_all_by_type('smiley', 1) as $type) {
-        $return_data = array();
+        $return_data = [];
         $return_datakey = '';
         $i = 0;
         $j = 1;
@@ -58,4 +58,3 @@ function build_cache_smilies_js() {
 
 }
 
-?>

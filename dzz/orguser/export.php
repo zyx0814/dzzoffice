@@ -28,7 +28,7 @@ if (!submitcheck('exportsubmit')) {
     if (empty($orgpath)) $orgpath = lang('please_select_range_export');
 
     //默认选中
-    $open = array();
+    $open = [];
     $patharr = C::t('organization')->getPathByOrgid($orgid, false);
     $arr = array_keys($patharr);
     array_pop($arr);
@@ -38,10 +38,9 @@ if (!submitcheck('exportsubmit')) {
     } else {
         $open[$arr[$count - 1]] = $arr;
     }
-    $openarr = json_encode(array('orgid' => $open));
+    $openarr = json_encode(['orgid' => $open]);
 
     include template('export');
-    exit();
 } else {
     if (!is_array($_GET['item'])) showmessage('please_select_project_export');
     foreach ($h0 as $key => $value) {
@@ -69,7 +68,7 @@ if (!submitcheck('exportsubmit')) {
         ->setDescription($title . ' - ' . lang('user_information_table') . ' Export By DzzOffice  ' . date('Y-m-d H:i:s'))
         ->setKeywords($title . ' - ' . lang('user_information_table'))
         ->setCategory(lang('user_information_table'));
-    $list = array();
+    $list = [];
     // Create a first sheet
     $objPHPExcel->setActiveSheetIndex(0);
     $j = 0;
@@ -88,7 +87,7 @@ if (!submitcheck('exportsubmit')) {
         $wheresql = " where 1 ";
     }
 
-    foreach (DB::fetch_all("select * from %t $wheresql", array('user')) as $user) {
+    foreach (DB::fetch_all("select * from %t $wheresql", ['user']) as $user) {
         $profile = C::t('user_profile')->fetch_all($user['uid']);
         if ($profile) $value = array_merge($user, $profile[$user['uid']]);
         else $value = $user;
@@ -100,8 +99,8 @@ if (!submitcheck('exportsubmit')) {
         }
         //获取用户的部门和职位
         if ($orgids = C::t('organization_user')->fetch_orgids_by_uid($value['uid'])) {
-            $orgnames = array();
-            $jobs = array();
+            $orgnames = [];
+            $jobs = [];
             
             // 收集所有部门和职位信息
             foreach ($orgids as $key => $gid) {
@@ -109,7 +108,7 @@ if (!submitcheck('exportsubmit')) {
                 $orgname = str_replace('-', '/', $orgpath);
                 if (!empty($orgname)) {
                     $orgnames[] = $orgname;
-                    if ($job = DB::fetch_first("select j.name from %t u LEFT JOIN %t j ON u.jobid=j.jobid  where u.orgid=%d and u.uid=%d", array('organization_user', 'organization_job', $gid, $user['uid']))) {
+                    if ($job = DB::fetch_first("select j.name from %t u LEFT JOIN %t j ON u.jobid=j.jobid  where u.orgid=%d and u.uid=%d", ['organization_user', 'organization_job', $gid, $user['uid']])) {
                         if (!empty($job['name'])) {
                             $jobs[] = $job['name'];
                         } else {
@@ -161,6 +160,5 @@ if (!submitcheck('exportsubmit')) {
         @flush();
     }
     @unlink($filename);
-    exit();
 }
-?>
+exit();

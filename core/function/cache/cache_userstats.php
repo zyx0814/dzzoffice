@@ -9,8 +9,7 @@ function build_cache_userstats() {
     $member = C::t('user')->range(0, 1, 'DESC');
     $member = current($member);
     $newsetuser = $member['username'];
-    $data = array('totalmembers' => $totalmembers, 'newsetuser' => $newsetuser);
+    $data = ['totalmembers' => $totalmembers, 'newsetuser' => $newsetuser];
     savecache('userstats', $data);
 }
 
-?>

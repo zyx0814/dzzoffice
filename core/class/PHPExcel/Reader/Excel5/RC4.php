@@ -35,7 +35,7 @@
 class PHPExcel_Reader_Excel5_RC4
 {
 	// Context
-	var $s = array();
+	var $s = [];
 	var $i = 0;
 	var $j = 0;
 

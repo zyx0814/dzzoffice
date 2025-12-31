@@ -90,7 +90,7 @@ class PHPExcel_Calculation_Functions {
 	 * @access	private
 	 * @var array
 	 */
-	protected static $_errorCodes	= array( 'null'				=> '#NULL!',
+	protected static $_errorCodes	= ['null'				=> '#NULL!',
 											 'divisionbyzero'	=> '#DIV/0!',
 											 'value'			=> '#VALUE!',
 											 'reference'		=> '#REF!',
@@ -98,7 +98,7 @@ class PHPExcel_Calculation_Functions {
 											 'num'				=> '#NUM!',
 											 'na'				=> '#N/A',
 											 'gettingdata'		=> '#GETTING_DATA'
-										   );
+    ];
 
 
 	/**
@@ -310,7 +310,7 @@ class PHPExcel_Calculation_Functions {
 		$condition	= PHPExcel_Calculation_Functions::flattenSingleValue($condition);
 		if (!isset($condition[0]))
 			$condition = '=""';
-		if (!in_array($condition[0],array('>', '<', '='))) {
+		if (!in_array($condition[0], ['>', '<', '='])) {
 			if (!is_numeric($condition)) { $condition = PHPExcel_Calculation::_wrapResult(strtoupper($condition)); }
 			return '='.$condition;
 		} else {
@@ -525,11 +525,9 @@ class PHPExcel_Calculation_Functions {
 			case 'float'	:
 			case 'integer'	:
 				return $value;
-				break;
-			case 'boolean'	:
+            case 'boolean'	:
 				return (integer) $value;
-				break;
-			case 'string'	:
+            case 'string'	:
 				//	Errors
 				if ((strlen($value) > 0) && ($value[0] == '#')) {
 					return $value;
@@ -601,7 +599,7 @@ class PHPExcel_Calculation_Functions {
 			return (array) $array;
 		}
 
-		$arrayValues = array();
+		$arrayValues = [];
 		foreach ($array as $value) {
 			if (is_array($value)) {
 				foreach ($value as $val) {
@@ -633,7 +631,7 @@ class PHPExcel_Calculation_Functions {
 			return (array) $array;
 		}
 
-		$arrayValues = array();
+		$arrayValues = [];
 		foreach ($array as $k1 => $value) {
 			if (is_array($value)) {
 				foreach ($value as $k2 => $val) {
@@ -703,7 +701,7 @@ if ((!function_exists('mb_str_replace')) &&
 	(function_exists('mb_substr')) && (function_exists('mb_strlen')) && (function_exists('mb_strpos'))) {
 	function mb_str_replace($search, $replace, $subject) {
 		if(is_array($subject)) {
-			$ret = array();
+			$ret = [];
 			foreach($subject as $key => $val) {
 				$ret[$key] = mb_str_replace($search, $replace, $val);
 			}

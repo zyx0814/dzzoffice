@@ -14,7 +14,7 @@ function Qiniu_RSF_ListPrefix(
 {
 	global $QINIU_RSF_HOST;
 
-	$query = array('bucket' => $bucket);
+	$query = ['bucket' => $bucket];
 	if (!empty($prefix)) {
 		$query['prefix'] = $prefix;
 	}
@@ -31,7 +31,7 @@ function Qiniu_RSF_ListPrefix(
 	$url =  $QINIU_RSF_HOST . '/list?' . http_build_query($query);
 	list($ret, $err) = Qiniu_Client_Call($self, $url);
 	if ($err !== null) {
-		return array(null,null, '', $err);
+		return [null,null, '', $err];
 	}
 	$commonPrefixes = $ret['commonPrefixes'];
 	$items = $ret['items'];
@@ -41,6 +41,6 @@ function Qiniu_RSF_ListPrefix(
 	} else {
 		$markerOut = $ret['marker'];
 	}
-	return array($commonPrefixes,$items, $markerOut, $err);
+	return [$commonPrefixes,$items, $markerOut, $err];
 }
 

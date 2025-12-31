@@ -24,7 +24,7 @@ class table_user_profile extends dzz_table {
         global $_G;
         $uid = $uid ? intval($uid) : '';
         if (!$uid) return false;
-        $values = array();
+        $values = [];
         if ($values = C::t('user')->get_user_by_uid($uid)) {
             $var = 'user_{$uid}_profile';
             if (($_G[$var] = self::fetch($uid)) !== false) {
@@ -34,7 +34,7 @@ class table_user_profile extends dzz_table {
                     $_G[$var]['department_tree'] = '请选择机构或部门';
                 }
             } else {
-                $_G[$var] = array();
+                $_G[$var] = [];
             }
             $values = array_merge($values, $_G[$var]);
         }
@@ -44,8 +44,8 @@ class table_user_profile extends dzz_table {
     public function get_user_info_by_uid($uid) {
         global $_G;
         $uid = $uid ? intval($uid) : '';
-        $info = array();
-        foreach ($result = DB::fetch_all("select * from %t where uid =%d", array($this->_table, $uid)) as $value) {
+        $info = [];
+        foreach ($result = DB::fetch_all("select * from %t where uid =%d", [$this->_table, $uid]) as $value) {
             $info[$value['fieldid']] = $value['value'];
             $info['privacy']['profile'][$value['fieldid']] = $value['privacy'];
         }
@@ -58,36 +58,35 @@ class table_user_profile extends dzz_table {
         if ($user = C::t('user')->get_user_by_uid($uid)) {
             $info = array_merge($user, $info);
         }
-        $field = DB::fetch_first("select attachextensions,maxattachsize,usesize,addsize,buysize,perm from %t where uid = %d", array('user_field', $uid));
-        $info = array_merge($field, $info);
-        return $info;
+        $field = DB::fetch_first("select attachextensions,maxattachsize,usesize,addsize,buysize,perm from %t where uid = %d", ['user_field', $uid]);
+        return array_merge($field, $info);
     }
 
     public function fetch($uid, $force_from_db = false) {
-        $data = array('uid' => $uid);
-        foreach (DB::fetch_all("select * from %t where uid =%d", array($this->_table, $uid)) as $value) {
+        $data = ['uid' => $uid];
+        foreach (DB::fetch_all("select * from %t where uid =%d", [$this->_table, $uid]) as $value) {
             $data[$value['fieldid']] = $value['value'];
         }
         return $data;
     }
 
     public function fetch_by_field($uid, $field) { //获取用户某项资料的值
-        return DB::result_first("select value from %t where uid=%d and fieldid=%s", array($this->_table, $uid, $field));
+        return DB::result_first("select value from %t where uid=%d and fieldid=%s", [$this->_table, $uid, $field]);
     }
 
     public function update($uid, $fieldarr, $unbuffered = false, $low_priority = false) {//插入用户资料
         foreach ($fieldarr as $key => $value) {
             if (is_array($value)) {
-                $setarr = array('uid' => $uid,
+                $setarr = ['uid' => $uid,
                     'fieldid' => $key,
                     'value' => $value['value'],
                     'privacy' => $value['privacy']
-                );
+                ];
             } else {
-                $setarr = array('uid' => $uid,
+                $setarr = ['uid' => $uid,
                     'fieldid' => $key,
                     'value' => $value
-                );
+                ];
             }
 
             DB::insert($this->_table, $setarr, 0, 1);
@@ -98,32 +97,32 @@ class table_user_profile extends dzz_table {
     public function update_by_skey($fieldid, $val, $uid = 0) {
         if (!$uid) $uid = getglobal('uid');
         if (!$uid) return false;
-        if (!DB::update($this->_table, array('value' => $val), array('uid' => $uid, 'fieldid' => $fieldid))) {
-            $setarr = array('uid' => $uid,
+        if (!DB::update($this->_table, ['value' => $val], ['uid' => $uid, 'fieldid' => $fieldid])) {
+            $setarr = ['uid' => $uid,
                 'fieldid' => $fieldid,
                 'value' => $val
-            );
+            ];
             DB::insert($this->_table, $setarr, 0, 1);
         }
         return true;
     }
 
     public function fetch_phone($phone) {
-        return DB::fetch_first("select * from %t where `fieldid` = %s and `value` = %s", array($this->_table, 'phone', $phone));
+        return DB::fetch_first("select * from %t where `fieldid` = %s and `value` = %s", [$this->_table, 'phone', $phone]);
     }
 
     public function fetch_weixinid($weixinid) {
-        return DB::fetch_first("select * from %t where `fieldid` = %s and `value` = %s", array($this->_table, 'weixinid', $weixinid));
+        return DB::fetch_first("select * from %t where `fieldid` = %s and `value` = %s", [$this->_table, 'weixinid', $weixinid]);
     }
 
     public function insert($fieldarr, $return_insert_id = false, $replace = false, $silent = false) {//插入用户资料
         $uid = $fieldarr['uid'];
         unset($fieldarr['uid']);
         foreach ($fieldarr as $key => $value) {
-            $setarr = array('uid' => $uid,
+            $setarr = ['uid' => $uid,
                 'fieldid' => $key,
                 'value' => $value
-            );
+            ];
             DB::insert($this->_table, $setarr, 0, 1);
         }
         return true;
@@ -131,8 +130,8 @@ class table_user_profile extends dzz_table {
 
     public function fetch_privacy_by_uid($uid) {
         $uid = intval($uid);
-        $privacys = array();
-        foreach (DB::fetch_all("select privacy,fieldid from %t where uid = %d", array($this->_table, $uid)) as $val) {
+        $privacys = [];
+        foreach (DB::fetch_all("select privacy,fieldid from %t where uid = %d", [$this->_table, $uid]) as $val) {
             $privacys[$val['fieldid']] = $val['privacy'];
         }
         return $privacys;
@@ -154,10 +153,10 @@ class table_user_profile extends dzz_table {
     }
 
     public function fetch_all($uids, $force_from_db = false) {
-        $data = array();
+        $data = [];
         $uids = (array)$uids;
         if (!empty($uids)) {
-            foreach (DB::fetch_all("select * from %t where uid IN (%n)", array($this->_table, $uids)) as $value) {
+            foreach (DB::fetch_all("select * from %t where uid IN (%n)", [$this->_table, $uids]) as $value) {
                 $data[$value['uid']][$value['fieldid']] = $value['value'];
                 $data[$value['uid']]['uid'] = $value['uid'];
             }
@@ -175,7 +174,7 @@ class table_user_profile extends dzz_table {
     }
 
     public function fetch_all_will_birthday_by_uid($uids) {
-        $birthlist = array();
+        $birthlist = [];
         if (!empty($uids)) {
             $uids = explode(',', (string)$uids);
             $uids = dimplode(dintval($uids, true));
@@ -187,8 +186,8 @@ class table_user_profile extends dzz_table {
             } else {
                 $wheresql = "(sf.birthmonth='$s_month' AND sf.birthday>='$s_day') OR (sf.birthmonth='$e_month' AND sf.birthday<='$e_day' AND sf.birthday>'0')";
             }
-            $data = array();
-            foreach (DB::fetch_all("select sf.*,u.username,u.email from %t sf LEFT JOIN %t u USING(uid) ON sf.uid=u.uid where sf.uid IN (%n) and $wheresql", array($this->_table, 'user', $uids)) as $value) {
+            $data = [];
+            foreach (DB::fetch_all("select sf.*,u.username,u.email from %t sf LEFT JOIN %t u USING(uid) ON sf.uid=u.uid where sf.uid IN (%n) and $wheresql", [$this->_table, 'user', $uids]) as $value) {
                 $data[$value['uid']][$value['fileid']] = $value['value'];
                 $data[$value['uid']]['username'] = $value['username'];
             }

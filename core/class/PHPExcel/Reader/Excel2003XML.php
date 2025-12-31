@@ -49,7 +49,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 	 *
 	 * @var array
 	 */
-	private $_styles = array();
+	private $_styles = [];
 
 	/**
 	 * Character set used in the file
@@ -87,10 +87,10 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 		//	Rowset					xmlns:z="#RowsetSchema"
 		//
 
-		$signature = array(
+		$signature = [
 				'<?xml version="1.0"',
 				'<?mso-application progid="Excel.Sheet"?>'
-			);
+        ];
 
 		// Open file
 		$this->_openFile($pFilename);
@@ -135,7 +135,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 			throw new PHPExcel_Reader_Exception($pFilename . " is an Invalid Spreadsheet file.");
 		}
 
-		$worksheetNames = array();
+		$worksheetNames = [];
 
 		$xml = simplexml_load_file($pFilename, 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 		$namespaces = $xml->getNamespaces(true);
@@ -163,7 +163,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 			throw new PHPExcel_Reader_Exception("Could not open " . $pFilename . " for reading! File does not exist.");
 		}
 
-		$worksheetInfo = array();
+		$worksheetInfo = [];
 
 		$xml = simplexml_load_file($pFilename, 'SimpleXMLElement', PHPExcel_Settings::getLibXmlLoaderOptions());
 		$namespaces = $xml->getNamespaces(true);
@@ -173,7 +173,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 		foreach($xml_ss->Worksheet as $worksheet) {
 			$worksheet_ss = $worksheet->attributes($namespaces['ss']);
 
-			$tmpInfo = array();
+			$tmpInfo = [];
 			$tmpInfo['worksheetName'] = '';
 			$tmpInfo['lastColumnLetter'] = 'A';
 			$tmpInfo['lastColumnIndex'] = 0;
@@ -256,7 +256,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
  	 * @return
  	 */
  	private static function _pixel2WidthUnits($pxs) {
-		$UNIT_OFFSET_MAP = array(0, 36, 73, 109, 146, 182, 219);
+		$UNIT_OFFSET_MAP = [0, 36, 73, 109, 146, 182, 219];
 
 		$widthUnits = 256 * ($pxs / 7);
 		$widthUnits += $UNIT_OFFSET_MAP[($pxs % 7)];
@@ -292,30 +292,30 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 	 */
 	public function loadIntoExisting($pFilename, PHPExcel $objPHPExcel)
 	{
-		$fromFormats	= array('\-',	'\ ');
-		$toFormats		= array('-',	' ');
+		$fromFormats	= ['\-',	'\ '];
+		$toFormats		= ['-',	' '];
 
-		$underlineStyles = array (
+		$underlineStyles = [
 				PHPExcel_Style_Font::UNDERLINE_NONE,
 				PHPExcel_Style_Font::UNDERLINE_DOUBLE,
 				PHPExcel_Style_Font::UNDERLINE_DOUBLEACCOUNTING,
 				PHPExcel_Style_Font::UNDERLINE_SINGLE,
 				PHPExcel_Style_Font::UNDERLINE_SINGLEACCOUNTING
-			);
-		$verticalAlignmentStyles = array (
+        ];
+		$verticalAlignmentStyles = [
 				PHPExcel_Style_Alignment::VERTICAL_BOTTOM,
 				PHPExcel_Style_Alignment::VERTICAL_TOP,
 				PHPExcel_Style_Alignment::VERTICAL_CENTER,
 				PHPExcel_Style_Alignment::VERTICAL_JUSTIFY
-			);
-		$horizontalAlignmentStyles = array (
+        ];
+		$horizontalAlignmentStyles = [
 				PHPExcel_Style_Alignment::HORIZONTAL_GENERAL,
 				PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
 				PHPExcel_Style_Alignment::HORIZONTAL_RIGHT,
 				PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
 				PHPExcel_Style_Alignment::HORIZONTAL_CENTER_CONTINUOUS,
 				PHPExcel_Style_Alignment::HORIZONTAL_JUSTIFY
-			);
+        ];
 
 		$timezoneObj = new DateTimeZone('Europe/London');
 		$GMT = new DateTimeZone('UTC');
@@ -411,7 +411,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 			$styleID = (string) $style_ss['ID'];
 //			echo 'Style ID = '.$styleID.'<br />';
 			if ($styleID == 'Default') {
-				$this->_styles['Default'] = array();
+				$this->_styles['Default'] = [];
 			} else {
 				$this->_styles[$styleID] = $this->_styles['Default'];
 			}
@@ -443,7 +443,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 					case 'Borders' :
 							foreach($styleData->Border as $borderStyle) {
 								$borderAttributes = $borderStyle->attributes($namespaces['ss']);
-								$thisBorder = array();
+								$thisBorder = [];
 								foreach($borderAttributes as $borderStyleKey => $borderStyleValue) {
 //									echo $borderStyleKey.' = '.$borderStyleValue.'<br />';
 									switch ($borderStyleKey) {
@@ -501,22 +501,18 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 					case 'Interior' :
 							foreach($styleAttributes as $styleAttributeKey => $styleAttributeValue) {
 //								echo $styleAttributeKey.' = '.$styleAttributeValue.'<br />';
-								switch ($styleAttributeKey) {
-									case 'Color' :
-											$this->_styles[$styleID]['fill']['color']['rgb'] = substr($styleAttributeValue,1);
-											break;
-								}
+                                if ($styleAttributeKey == 'Color') {
+                                    $this->_styles[$styleID]['fill']['color']['rgb'] = substr($styleAttributeValue, 1);
+                                }
 							}
 							break;
 					case 'NumberFormat' :
 							foreach($styleAttributes as $styleAttributeKey => $styleAttributeValue) {
 //								echo $styleAttributeKey.' = '.$styleAttributeValue.'<br />';
 								$styleAttributeValue = str_replace($fromFormats,$toFormats,$styleAttributeValue);
-								switch ($styleAttributeValue) {
-									case 'Short Date' :
-											$styleAttributeValue = 'dd/mm/yyyy';
-											break;
-								}
+                                if ($styleAttributeValue == 'Short Date') {
+                                    $styleAttributeValue = 'dd/mm/yyyy';
+                                }
 								if ($styleAttributeValue > '') {
 									$this->_styles[$styleID]['numberformat']['code'] = $styleAttributeValue;
 								}
@@ -676,7 +672,7 @@ class PHPExcel_Reader_Excel2003XML extends PHPExcel_Reader_Abstract implements P
 									foreach($temp as &$value) {
 										//	Only replace in alternate array entries (i.e. non-quoted blocks)
 										if ($key = !$key) {
-											$value = str_replace(array('[.','.',']'),'',$value);
+											$value = str_replace(['[.','.',']'],'',$value);
 										}
 									}
 								} else {

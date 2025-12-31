@@ -96,7 +96,7 @@ class PHPExcel_Writer_Excel2007_Rels extends PHPExcel_Writer_Excel2007_WriterPar
 			);
 			// a custom UI in workbook ?
 			if($pPHPExcel->hasRibbon()){
-				$this->_writeRelationShip(
+				$this->_writeRelationship(
 					$objWriter,
 					5,
 					'http://schemas.microsoft.com/office/2006/relationships/ui/extensibility',
@@ -171,7 +171,7 @@ class PHPExcel_Writer_Excel2007_Rels extends PHPExcel_Writer_Excel2007_WriterPar
 			// Relationships for vbaProject if needed
 			// id : just after the last sheet
 			if($pPHPExcel->hasMacros()){
-				$this->_writeRelationShip(
+				$this->_writeRelationship(
 					$objWriter,
 					($i + 1 + 3),
 					'http://schemas.microsoft.com/office/2006/relationships/vbaProject',
@@ -221,7 +221,7 @@ class PHPExcel_Writer_Excel2007_Rels extends PHPExcel_Writer_Excel2007_WriterPar
 			if ($includeCharts) {
 				$charts = $pWorksheet->getChartCollection();
 			} else {
-				$charts = array();
+				$charts = [];
 			}
 			if (($pWorksheet->getDrawingCollection()->count() > 0) ||
 				(count($charts) > 0)) {

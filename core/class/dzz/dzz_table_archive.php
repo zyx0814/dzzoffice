@@ -5,12 +5,12 @@ if (!defined('IN_DZZ')) {
 }
 
 class dzz_table_archive extends dzz_table {
-    public function __construct($para = array()) {
+    public function __construct($para = []) {
         parent::__construct($para);
     }
 
     public function fetch($id, $force_from_db = false, $fetch_archive = 0) {
-        $data = array();
+        $data = [];
         if (!empty($id)) {
             if ($fetch_archive < 2) {
                 $data = parent::fetch($id, $force_from_db);
@@ -26,7 +26,7 @@ class dzz_table_archive extends dzz_table {
 
 
     public function fetch_all($ids, $force_from_db = false, $fetch_archive = 1) {
-        $data = array();
+        $data = [];
         if (!empty($ids)) {
             if ($fetch_archive < 2) {
                 $data = parent::fetch_all($ids, $force_from_db);
@@ -59,4 +59,3 @@ class dzz_table_archive extends dzz_table {
     }
 }
 
-?>

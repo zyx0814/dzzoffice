@@ -12,12 +12,12 @@ class db_driver_mysqli {
     var $querynum = 0;
     var $slaveid = 0;
     var $curlink;
-    var $link = array();
-    var $config = array();
-    var $sqldebug = array();
-    var $map = array();
+    var $link = [];
+    var $config = [];
+    var $sqldebug = [];
+    var $map = [];
 
-    function db_mysql($config = array()) {
+    function db_mysql($config = []) {
         if (!empty($config)) {
             $this->set_config($config);
         }
@@ -77,7 +77,7 @@ class db_driver_mysqli {
         } else {
             $this->curlink = $link;
             $link->options(MYSQLI_OPT_LOCAL_INFILE, false);
-            $link->set_charset($dbcharset ? $dbcharset : $this->config[1]['dbcharset']);
+            $link->set_charset($dbcharset ?: $this->config[1]['dbcharset']);
             $serverset = 'sql_mode=\'\',';
             $serverset .= 'character_set_client=binary';
             $serverset && $link->query("SET $serverset");
@@ -128,7 +128,7 @@ class db_driver_mysqli {
         }
         $resultmode = $unbuffered ? MYSQLI_USE_RESULT : MYSQLI_STORE_RESULT;
         if (!($query = $this->curlink->query($sql, $resultmode))) {
-            if (in_array($this->errno(), array(2006, 2013)) && substr($silent, 0, 5) != 'RETRY') {
+            if (in_array($this->errno(), [2006, 2013]) && substr($silent, 0, 5) != 'RETRY') {
                 $this->connect();
                 return $this->query($sql, 'RETRY' . $silent);
             }
@@ -138,7 +138,7 @@ class db_driver_mysqli {
         }
 
         if (defined('DZZ_DEBUG') && DZZ_DEBUG) {
-            $this->sqldebug[] = array($sql, number_format((microtime(true) - $starttime), 6), debug_backtrace(), $this->curlink);
+            $this->sqldebug[] = [$sql, number_format((microtime(true) - $starttime), 6), debug_backtrace(), $this->curlink];
         }
 
         $this->querynum++;
@@ -227,4 +227,3 @@ class db_driver_mysqli {
 
 }
 
-?>

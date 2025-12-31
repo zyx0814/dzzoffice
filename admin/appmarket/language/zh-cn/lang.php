@@ -1,8 +1,7 @@
 <?php
-$lang = array(
+$lang = [
     'appmarket' => '应用市场',
     'appmarketedit' => '应用管理',
-    'installed' => '已安装',
     'upgrade' => '升级',
     'open_way' => '打开方式',
     'permission_management' => '权限管理',
@@ -83,5 +82,4 @@ $lang = array(
     'view_detail' => '查看详细',
     'buy_contract' => '联系购买',
     'manual_install_tip' => '如不能在线安装或需要选择安装老版本的应用，请通过 <a class="num" href="http://www.dzzoffice.com/index.php?mod=dzzmarket" target="_blank">官方应用市场</a> 下载应用安装包手动安装'
-);
-?>
+];

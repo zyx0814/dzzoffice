@@ -45,4 +45,3 @@ class memory_driver_wincache {
 
 }
 
-?>

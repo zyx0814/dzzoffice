@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'More applications' => 'More Applications',
     'Home page' => 'Home Page',
     'parameters_error' => 'Parameter Error',
@@ -12,7 +12,6 @@ $lang = array(
     'intension' => 'Intensity',
     'save_file_to' => 'Save File To',
     'select_position' => 'Select Location',
-    'save_success' => 'Saved Successfully',
     'all_save' => 'Save All',
     'all_download' => 'Download All',
     'explorer_user_root_dirname' => 'My Cloud Drive',
@@ -69,7 +68,6 @@ $lang = array(
     'header' => 'Header',
     'sidebar' => 'Sidebar',
     'theme' => 'Theme',
-    'name' => 'Name',
     'input_name' => 'Enter Name',
     'all_theme' => 'All Themes',
     'add_theme' => 'Add Theme',
@@ -585,7 +583,6 @@ $lang = array(
 
     'members_verify_succeed' => 'Profile Verification Succeeded ',
     'members_verify_update_succeed' => 'Verification Settings Updated Successfully ',
-    'members_verify' => 'Verify Profile',
     'validate' => 'Approve',
     'all_validate' => 'Approve All',
     'moderate' => 'Review',
@@ -721,7 +718,6 @@ $lang = array(
     'submit_invalid' => 'Sorry, your request source is invalid or the form verification code does not match, submission failed',
     'submit_seccode_invalid' => 'Sorry, the verification code is incorrect',
     'getpasswd_illegal' => 'Sorry, the ID you used does not exist or has expired, cannot retrieve password',
-    'getpasswd_succeed' => 'Your password has been reset, please log in with the new password',
     'jurisdictions' => 'Permissions',
     'jurisdictions_set' => 'Permission Settings',
     'privilege' => 'No Permission',
@@ -782,7 +778,6 @@ $lang = array(
     'comment' => 'Comment',
     'discuss' => 'Discussion',
     'reply' => 'Reply',
-    'from' => 'From',
     'admininfo_password2_invalid' => 'The two passwords do not match, please check',
     'anonymity' => 'Anonymous',
     'viewmore' => 'View More',
@@ -1134,7 +1129,7 @@ $lang = array(
     'total' => 'Total',
     '10k' => '10k', // 保留“万”的数值缩写，符合英文数据表达习惯
     'pagejumptip' => 'Enter page number and press Enter to jump quickly',
-    'date' => array(
+    'date' => [
         'before' => 'ago',
         'day' => 'day(s)',
         'yday' => 'Yesterday',
@@ -1144,8 +1139,8 @@ $lang = array(
         'min' => 'minute(s)',
         'sec' => 'second(s)',
         'now' => 'Just now',
-    ),
-    'weeks' => array(
+    ],
+    'weeks' => [
         1 => 'Monday',
         2 => 'Tuesday',
         3 => 'Wednesday',
@@ -1153,8 +1148,8 @@ $lang = array(
         5 => 'Friday',
         6 => 'Saturday',
         7 => 'Sunday',
-    ),
-    'English_weeks' => array(
+    ],
+    'English_weeks' => [
         'Monday' => 'Monday',
         'Tuesday' => 'Tuesday',
         'Wednesday' => 'Wednesday',
@@ -1162,7 +1157,7 @@ $lang = array(
         'Friday' => 'Friday',
         'Saturday' => 'Saturday',
         'Sunday' => 'Sunday',
-    ),
+    ],
     'dot' => ',',
     'archive' => 'Archive',
     'end' => 'End',
@@ -1220,7 +1215,6 @@ $lang = array(
     'profile_renew' => 'Please supplement the following login information',
     'register_from' => 'Referrer',
     'account' => 'Account',
-    'password' => 'Password',
     'activation' => 'Activation',
     'activation_unsuccess' => 'Activation Failed',
     'agree' => 'Agree',
@@ -1283,11 +1277,11 @@ $lang = array(
     'status' => 'Status',
     'file_share' => 'File Sharing',
     'expires_time' => 'Expiration Time',
-    'explorer_gropuperm' => array(
+    'explorer_gropuperm' => [
         'Collaborative Member',
         'Administrator',
         'Founder'
-    ),
+    ],
     'about_current_version' => 'Current Version',
     'license' => 'License Agreement',
     'service_and_support' => 'Service & Support',
@@ -1484,5 +1478,4 @@ $lang = array(
     'cloud_type_disk' => 'Local Disk',
     'cloud_type_local'=>'Local',
     'system_close' => 'System Closed',
-);
-?>
+];

@@ -133,7 +133,7 @@ class qyWechat
 	 */
 	public function xml_encode($data, $root='xml', $item='item', $attr='', $id='id', $encoding='utf-8') {
 	    if(is_array($attr)){
-	        $_attr = array();
+	        $_attr = [];
 	        foreach ($attr as $key => $value) {
 	            $_attr[] = "{$key}=\"{$value}\"";
 	        }
@@ -153,7 +153,7 @@ class qyWechat
 	 * @param array $arr
 	 */
 	static function json_encode($arr) {
-	    $parts = array ();
+	    $parts = [];
 	    $is_list = false;
 	    //Find out if the given array is a numerical array
 	    $keys = array_keys ( $arr );
@@ -245,7 +245,7 @@ class qyWechat
 
 			$strPOST = $param;
 		} else {
-			$aPOST = array();
+			$aPOST = [];
 			foreach($param as $key=>$val){
 				$aPOST[] = $key."=".urlencode($val);
 			}
@@ -277,7 +277,7 @@ class qyWechat
 	    $signature = isset($_GET["msg_signature"])?$_GET["msg_signature"]:'';
 	    $timestamp = isset($_GET["timestamp"])?$_GET["timestamp"]:'';
 	    $nonce = isset($_GET["nonce"])?$_GET["nonce"]:'';
-	    $tmpArr = array($str,$this->token, $timestamp, $nonce);//比普通公众平台多了一个加密的密文
+	    $tmpArr = [$str,$this->token, $timestamp, $nonce];//比普通公众平台多了一个加密的密文
 	    sort($tmpArr, SORT_STRING);
 	    $tmpStr = implode($tmpArr);
 	    $shaStr = sha1($tmpStr);
@@ -449,10 +449,10 @@ class qyWechat
 	 */
 	public function getRevPic(){
 		if (isset($this->_receive['PicUrl']))
-			return array(
+			return [
 				'mediaid'=>$this->_receive['MediaId'],
 				'picurl'=>(string)$this->_receive['PicUrl'],    //防止picurl为空导致解析出错
-			);
+            ];
 		else 
 			return false;
 	}
@@ -462,12 +462,12 @@ class qyWechat
 	 */
 	public function getRevGeo(){
 		if (isset($this->_receive['Location_X'])){
-			return array(
+			return [
 				'x'=>$this->_receive['Location_X'],
 				'y'=>$this->_receive['Location_Y'],
 				'scale'=>(string)$this->_receive['Scale'],
 				'label'=>(string)$this->_receive['Label']
-			);
+            ];
 		} else 
 			return false;
 	}
@@ -477,11 +477,11 @@ class qyWechat
 	 */
 	public function getRevEventGeo(){
         	if (isset($this->_receive['Latitude'])){
-        		 return array(
+        		 return [
 				'x'=>$this->_receive['Latitude'],
 				'y'=>$this->_receive['Longitude'],
 				'precision'=>$this->_receive['Precision'],
-			);
+                 ];
 		} else
 			return false;
 	}
@@ -559,7 +559,7 @@ class qyWechat
 	            if (isset($array['PicList'])){
 	                $array['PicList']=(array)$array['PicList'];
 	                $item=$array['PicList']['item'];
-	                $array['PicList']['item']=array();
+	                $array['PicList']['item']= [];
 	                foreach ( $item as $key => $value ){
 	                    $array['PicList']['item'][$key]=(array)$value;
 	                }
@@ -619,10 +619,10 @@ class qyWechat
 	 */
 	public function getRevVoice(){
 		if (isset($this->_receive['MediaId'])){
-			return array(
+			return [
 				'mediaid'=>$this->_receive['MediaId'],
 				'format'=>$this->_receive['Format'],
-			);
+            ];
 		} else 
 			return false;
 	}
@@ -632,10 +632,10 @@ class qyWechat
 	 */
 	public function getRevVideo(){
 		if (isset($this->_receive['MediaId'])){
-			return array(
+			return [
 					'mediaid'=>$this->_receive['MediaId'],
 					'thumbmediaid'=>$this->_receive['ThumbMediaId']
-			);
+            ];
 		} else
 			return false;
 	}
@@ -647,13 +647,13 @@ class qyWechat
 	 */
 	public function text($text='')
 	{
-		$msg = array(
+		$msg = [
 			'ToUserName' => $this->getRevFrom(),
 			'FromUserName'=>$this->getRevTo(),
 			'MsgType'=>self::MSGTYPE_TEXT,
 			'Content'=>$this->_auto_text_filter($text),
 			'CreateTime'=>time(),
-		);
+        ];
 		$this->Message($msg);
 		return $this;
 	}
@@ -665,13 +665,13 @@ class qyWechat
 	 */
 	public function image($mediaid='')
 	{
-		$msg = array(
+		$msg = [
 			'ToUserName' => $this->getRevFrom(),
 			'FromUserName'=>$this->getRevTo(),
 			'MsgType'=>self::MSGTYPE_IMAGE,
-			'Image'=>array('MediaId'=>$mediaid),
+			'Image'=> ['MediaId'=>$mediaid],
 			'CreateTime'=>time(),
-		);
+        ];
 		$this->Message($msg);
 		return $this;
 	}
@@ -683,13 +683,13 @@ class qyWechat
 	 */
 	public function voice($mediaid='')
 	{
-		$msg = array(
+		$msg = [
 			'ToUserName' => $this->getRevFrom(),
 			'FromUserName'=>$this->getRevTo(),
 			'MsgType'=>self::MSGTYPE_IMAGE,
-			'Voice'=>array('MediaId'=>$mediaid),
+			'Voice'=> ['MediaId'=>$mediaid],
 			'CreateTime'=>time(),
-		);
+        ];
 		$this->Message($msg);
 		return $this;
 	}
@@ -701,17 +701,17 @@ class qyWechat
 	 */
 	public function video($mediaid='',$title,$description)
 	{
-		$msg = array(
+		$msg = [
 			'ToUserName' => $this->getRevFrom(),
 			'FromUserName'=>$this->getRevTo(),
 			'MsgType'=>self::MSGTYPE_IMAGE,
-			'Video'=>array(
+			'Video'=> [
 			        'MediaId'=>$mediaid,
 			        'Title'=>$mediaid,
 			        'Description'=>$mediaid,
-			),
+            ],
 			'CreateTime'=>time(),
-		);
+        ];
 		$this->Message($msg);
 		return $this;
 	}
@@ -730,12 +730,12 @@ class qyWechat
 	 *  	"1"=>....
 	 *  )
 	 */
-	public function news($newsData=array())
+	public function news($newsData= [])
 	{
 
 		$count = count($newsData);
 		
-		$msg = array(
+		$msg = [
 			'ToUserName' => $this->getRevFrom(),
 			'FromUserName'=>$this->getRevTo(),
 			'MsgType'=>self::MSGTYPE_NEWS,
@@ -743,7 +743,7 @@ class qyWechat
 			'ArticleCount'=>$count,
 			'Articles'=>$newsData,
 
-		);
+        ];
 		$this->Message($msg);
 		return $this;
 	}
@@ -755,7 +755,7 @@ class qyWechat
 	 */
 	public function Message($msg = '',$append = false){
 	    if (is_null($msg)) {
-	        $this->_msg =array();
+	        $this->_msg = [];
 	    }elseif (is_array($msg)) {
 	        if ($append)
 	            $this->_msg = array_merge($this->_msg,$msg);
@@ -774,7 +774,7 @@ class qyWechat
 	 * @param string $msg 要发送的信息, 默认取$this->_msg
 	 * @param bool $return 是否返回信息而不抛出到浏览器 默认:否
 	 */
-	public function reply($msg=array(),$return = false)
+	public function reply($msg= [], $return = false)
 	{
 		if (empty($msg)) 
 			$msg = $this->_msg;
@@ -790,7 +790,7 @@ class qyWechat
 		$timestamp = time();
 		$nonce = rand(77,999)*rand(605,888)*rand(11,99);
 		$encrypt = $array[1];
-		$tmpArr = array($this->token, $timestamp, $nonce,$encrypt);//比普通公众平台多了一个加密的密文
+		$tmpArr = [$this->token, $timestamp, $nonce,$encrypt];//比普通公众平台多了一个加密的密文
 		sort($tmpArr, SORT_STRING);
 		$signature = implode($tmpArr);
 		$signature = sha1($signature);
@@ -1790,10 +1790,7 @@ class PKCS7Encoder
         }
         //获得补位所用的字符
         $pad_chr = chr($amount_to_pad);
-        $tmp = "";
-        for ($index = 0; $index < $amount_to_pad; $index++) {
-            $tmp .= $pad_chr;
-        }
+        $tmp = str_repeat($pad_chr, $amount_to_pad);
         return $text . $tmp;
     }
 
@@ -1855,10 +1852,10 @@ class Prpcrypt
 
             //			print(base64_encode($encrypted));
             //使用BASE64对加密后的字符串进行编码
-            return array(ErrorCode::$OK, base64_encode($encrypted));
+            return [ErrorCode::$OK, base64_encode($encrypted)];
         } catch (Exception $e) {
             //print $e;
-            return array(ErrorCode::$EncryptAESError, null);
+            return [ErrorCode::$EncryptAESError, null];
         }
     }
 
@@ -1881,7 +1878,7 @@ class Prpcrypt
             mcrypt_generic_deinit($module);
             mcrypt_module_close($module);
         } catch (Exception $e) {
-            return array(ErrorCode::$DecryptAESError, null);
+            return [ErrorCode::$DecryptAESError, null];
         }
 
 
@@ -1899,11 +1896,11 @@ class Prpcrypt
             $from_appid = substr($content, $xml_len + 4);
         } catch (Exception $e) {
             //print $e;
-            return array(ErrorCode::$IllegalBuffer, null);
+            return [ErrorCode::$IllegalBuffer, null];
         }
         if ($from_appid != $appid)
-            return array(ErrorCode::$ValidateAppidError, null);
-        return array(0, $xml_content);
+            return [ErrorCode::$ValidateAppidError, null];
+        return [0, $xml_content];
 
     }
 
@@ -1944,7 +1941,7 @@ class ErrorCode
     public static $EncodeBase64Error = 40009;
     public static $DecodeBase64Error = 40010;
     public static $GenReturnXmlError = 40011;
-    public static $errCode=array(
+    public static $errCode= [
             '0'=>'无问题',
             '40001'=>'签名验证错误',
             '40002'=>'xml解析失败',
@@ -1957,12 +1954,12 @@ class ErrorCode
             '40009'=>'base64加密失败',
             '40010'=>'base64解密失败',
             '40011'=>'生成xml失败',
-    );
+    ];
     public static function getErrText($err) {
         if (isset(self::$errCode[$err])) {
             return self::$errCode[$err];
         }else {
             return false;
-        };
+        }
     }
 }

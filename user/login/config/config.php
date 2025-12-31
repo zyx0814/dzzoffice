@@ -5,9 +5,9 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-return array(
+return [
     'allow_robot' => false,
     'default_op' => 'logging',
     'default_action' => 'login',
     'action_name' => 'action'
-);
+];

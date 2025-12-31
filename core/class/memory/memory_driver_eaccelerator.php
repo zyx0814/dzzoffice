@@ -33,4 +33,3 @@ class memory_driver_eaccelerator {
 
 }
 
-?>

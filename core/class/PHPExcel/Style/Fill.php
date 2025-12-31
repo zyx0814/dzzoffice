@@ -134,7 +134,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 */
 	public function getStyleArray($array)
 	{
-		return array('fill' => $array);
+		return ['fill' => $array];
 	}
 
 	/**
@@ -206,7 +206,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 */
 	public function setFillType($pValue = PHPExcel_Style_Fill::FILL_NONE) {
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getStyleArray(array('type' => $pValue));
+			$styleArray = $this->getStyleArray(['type' => $pValue]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_fillType = $pValue;
@@ -234,7 +234,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	 */
 	public function setRotation($pValue = 0) {
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getStyleArray(array('rotation' => $pValue));
+			$styleArray = $this->getStyleArray(['rotation' => $pValue]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_rotation = $pValue;
@@ -263,7 +263,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 		$color = $pValue->getIsSupervisor() ? $pValue->getSharedComponent() : $pValue;
 
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getStartColor()->getStyleArray(array('argb' => $color->getARGB()));
+			$styleArray = $this->getStartColor()->getStyleArray(['argb' => $color->getARGB()]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_startColor = $color;
@@ -292,7 +292,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 		$color = $pValue->getIsSupervisor() ? $pValue->getSharedComponent() : $pValue;
 
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getEndColor()->getStyleArray(array('argb' => $color->getARGB()));
+			$styleArray = $this->getEndColor()->getStyleArray(['argb' => $color->getARGB()]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_endColor = $color;

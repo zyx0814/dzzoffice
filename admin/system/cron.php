@@ -16,7 +16,7 @@ $op = isset($_GET['op']) ? $_GET['op'] : '';
 $navtitle = lang('cron') . ' - ' . lang('appname');
 if (empty($_GET['edit']) && empty($_GET['run'])) {
     if (!submitcheck('cronssubmit')) {
-        $crons = array();
+        $crons = [];
         $query = DB::query("SELECT * FROM " . DB::table('cron') . " ORDER BY type DESC");
         while ($cron = DB::fetch($query)) {
             $disabled = $cron['weekday'] == -1 && $cron['day'] == -1 && $cron['hour'] == -1 && $cron['minute'] == '' ? 'disabled' : '';
@@ -31,7 +31,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
                 $cron['time'] = lang('per_hour');
             }
             $cron['time'] .= $cron['hour'] >= 0 && $cron['hour'] < 24 ? sprintf('%02d', $cron['hour']) . lang('timeliness') : '';
-            if (!in_array($cron['minute'], array(-1, ''))) {
+            if (!in_array($cron['minute'], [-1, ''])) {
                 foreach ($cron['minute'] = explode("\t", $cron['minute']) as $k => $v) {
                     $cron['minute'][$k] = sprintf('%02d', $v);
                 }
@@ -55,7 +55,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
 
         if (is_array($_GET['namenew'])) {
             foreach ($_GET['namenew'] as $id => $name) {
-                $newcron = array('name' => dhtmlspecialchars($_GET['namenew'][$id]), 'available' => $_GET['availablenew'][$id]);
+                $newcron = ['name' => dhtmlspecialchars($_GET['namenew'][$id]), 'available' => $_GET['availablenew'][$id]];
                 if (empty($_GET['availablenew'][$id])) {
                     $newcron['nextrun'] = '0';
                 }
@@ -64,7 +64,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
         }
 
         if ($newname = trim($_GET['newname'])) {
-            DB::insert('cron', array('name' => dhtmlspecialchars($newname), 'type' => 'user', 'available' => '0', 'weekday' => '-1', 'day' => '-1', 'hour' => '-1', 'minute' => '', 'nextrun' => $_G['timestamp'],));
+            DB::insert('cron', ['name' => dhtmlspecialchars($newname), 'type' => 'user', 'available' => '0', 'weekday' => '-1', 'day' => '-1', 'hour' => '-1', 'minute' => '', 'nextrun' => $_G['timestamp'],]);
         }
 
         $query = DB::query("SELECT cronid, filename FROM " . DB::table('cron'));
@@ -72,12 +72,12 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
             $efile = explode(':', $cron['filename']);
             if (count($efile) > 1) {
                 $filename = array_pop($efile);
-                $cronfile = DZZ_ROOT . '' . implode("/", $efile) . '/cron/' . $filename;
+                $cronfile = DZZ_ROOT . implode("/", $efile) . '/cron/' . $filename;
             } else {
                 $cronfile = DZZ_ROOT . './core/cron/' . $cron['filename'];
             }
             if (!file_exists($cronfile)) {
-                DB::update('cron', array('available' => '0', 'nextrun' => '0',), "cronid='$cron[cronid]'");
+                DB::update('cron', ['available' => '0', 'nextrun' => '0',], "cronid='$cron[cronid]'");
             }
         }
         updatecache('setting');
@@ -95,7 +95,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
         include template('cron');
         exit();
     }
-    $cron['filename'] = str_replace(array('..', '/', '\\'), array('', '', ''), $cron['filename']);
+    $cron['filename'] = str_replace(['..', '/', '\\'], ['', '', ''], $cron['filename']);
     $cronminute = str_replace("\t", ',', $cron['minute']);
     $cron['minute'] = explode("\t", $cron['minute']);
 
@@ -136,18 +136,18 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
             }
 
             $msg = '';
-            $_GET['filenamenew'] = str_replace(array('..', '/', '\\'), '', $_GET['filenamenew']);
+            $_GET['filenamenew'] = str_replace(['..', '/', '\\'], '', $_GET['filenamenew']);
             $efile = explode(':', $_GET['filenamenew']);
             if (count($efile) > 1) {
                 $filename = array_pop($efile);
-                $cronfile = DZZ_ROOT . '' . implode("/", $efile) . '/cron/' . $filename;
+                $cronfile = DZZ_ROOT . implode("/", $efile) . '/cron/' . $filename;
             } else {
                 $cronfile = DZZ_ROOT . './core/cron/' . $cron['filename'];
             }
             if (preg_match("/[\\\\\/\*\?\"\<\>\|]+/", $_GET['filenamenew'])) {
                 $msg = lang('crons_filename_illegal');
             } elseif (!is_readable($cronfile)) {
-                $msg = lang('crons_filename_invalid', array('cronfile' => $cronfile));
+                $msg = lang('crons_filename_invalid', ['cronfile' => $cronfile]);
             } elseif ($_GET['weekdaynew'] == -1 && $daynew == -1 && $_GET['hournew'] == -1 && $minutenew === '') {
                 $msg = lang('crons_time_invalid');
             }
@@ -158,7 +158,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
                 exit();
             }
 
-            DB::update('cron', array('weekday' => $_GET['weekdaynew'], 'day' => $daynew, 'hour' => $_GET['hournew'], 'minute' => $minutenew, 'filename' => trim($_GET['filenamenew']),), "cronid='$cronid'");
+            DB::update('cron', ['weekday' => $_GET['weekdaynew'], 'day' => $daynew, 'hour' => $_GET['hournew'], 'minute' => $minutenew, 'filename' => trim($_GET['filenamenew']),], "cronid='$cronid'");
 
             dzz_cron::run($cronid);
 
@@ -169,17 +169,17 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
 
     } else {
 
-        $cron['filename'] = str_replace(array('..', '/', '\\'), '', $cron['filename']);
+        $cron['filename'] = str_replace(['..', '/', '\\'], '', $cron['filename']);
         $efile = explode(':', $cron['filename']);
         if (count($efile) > 1) {
             $filename = array_pop($efile);
-            $cronfile = DZZ_ROOT . '' . implode("/", $efile) . '/cron/' . $filename;
+            $cronfile = DZZ_ROOT . implode("/", $efile) . '/cron/' . $filename;
         } else {
             $cronfile = DZZ_ROOT . './core/cron/' . $cron['filename'];
         }
 
         if (!file_exists($cronfile)) {
-            $msg = lang('crons_run_invalid', array('cronfile' => $cronfile));
+            $msg = lang('crons_run_invalid', ['cronfile' => $cronfile]);
             $msg_type = 'danger';
 
         } else {
@@ -191,4 +191,3 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
     }
 }
 include template('cron');
-?>

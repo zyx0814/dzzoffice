@@ -19,6 +19,6 @@ if (!$attach || !$attach['aid']) {
     topshowmessage(lang('attachment_not_exist'));
 }
 //更新下载数量
-C::t('comment_attach')->update($attach['qid'], array('downloads' => $attach['downloads'] + 1));
+C::t('comment_attach')->update($attach['qid'], ['downloads' => $attach['downloads'] + 1]);
 IO::download('attach::' . $attach['aid'], $attach['title']);
-?>
+

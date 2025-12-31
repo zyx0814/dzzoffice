@@ -12,11 +12,11 @@ if (!defined('IN_DZZ')) {
 $lang = isset($_GET['lang']) ? trim($_GET['lang']) : 'zh-cn';
 $langList = $_G['config']['output']['language_list'];
 if(!$_G['uid']) {
-    exit(json_encode(array('msg' => 'error')));
+    exit(json_encode(['msg' => 'error']));
 }
 if (isset($langList[$lang])) {
-    C::t('user')->update($_G['uid'], array('language' => ($lang)));
-    exit(json_encode(array('msg' => 'success')));
+    C::t('user')->update($_G['uid'], ['language' => ($lang)]);
+    exit(json_encode(['msg' => 'success']));
 } else {
-    exit(json_encode(array('msg' => 'error')));
+    exit(json_encode(['msg' => 'error']));
 }

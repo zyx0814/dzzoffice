@@ -26,14 +26,14 @@ class table_app_open_default extends dzz_table {
 
     public function insert_default_by_uid($uid, $extid, $ext) {
         if (!$uid || !$extid || !$ext) return false;
-        DB::insert($this->_table, array('uid' => $uid, 'ext' => $ext, 'extid' => $extid, 'dateline' => TIMESTAMP), 0, 1);
+        DB::insert($this->_table, ['uid' => $uid, 'ext' => $ext, 'extid' => $extid, 'dateline' => TIMESTAMP], 0, 1);
         return true;
     }
 
     public function fetch_all_by_uid($uid) {
-        if (!$uid) return array();
-        $data = array();
-        $query = DB::query("SELECT ext,extid FROM %t WHERE uid= %d ", array($this->_table, $uid));
+        if (!$uid) return [];
+        $data = [];
+        $query = DB::query("SELECT ext,extid FROM %t WHERE uid= %d ", [$this->_table, $uid]);
         while ($value = DB::fetch($query)) {
             $data[$value['ext']] = $value['extid'];
         }
@@ -42,4 +42,4 @@ class table_app_open_default extends dzz_table {
 
 }
 
-?>
+

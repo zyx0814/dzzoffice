@@ -42,8 +42,8 @@ if ($do == 'edit') {
         unset($fieldarr['birthmonth']);
         unset($fieldarr['zodiac']);
         unset($fieldarr['constellation']);
-        $groupselect = array();
-        $usergroups = C::t('usergroup')->fetch_all_not(array(6, 7));
+        $groupselect = [];
+        $usergroups = C::t('usergroup')->fetch_all_not([6, 7]);
     } else {
         foreach ($_G['setting']['verify'] as $key => $value) {
             $_G['setting']['verify'][$key]['icon'] = str_replace($_G['setting']['attachurl'], '', $value['icon']);
@@ -77,7 +77,7 @@ if ($do == 'edit') {
             $verifynew['field']['birthmonth'] = 'birthmonth';
         }
 
-        $verifynew['groupid'] = !empty($verifynew['groupid']) && is_array($verifynew['groupid']) ? $verifynew['groupid'] : array();
+        $verifynew['groupid'] = !empty($verifynew['groupid']) && is_array($verifynew['groupid']) ? $verifynew['groupid'] : [];
         $_G['setting']['verify'][$vid] = $verifynew;
         $_G['setting']['verify']['enabled'] = false;
         for ($i = 1; $i < 8; $i++) {
@@ -91,8 +91,8 @@ if ($do == 'edit') {
         }
         C::t('setting')->update('verify', $_G['setting']['verify']);
 
-        updatecache(array('setting'));
-        showmessage('members_verify_save_success', ADMINSCRIPT . '?mod=member&op=verifyset', array(), array('alert' => 'right'));
+        updatecache(['setting']);
+        showmessage('members_verify_save_success', ADMINSCRIPT . '?mod=member&op=verifyset', [], ['alert' => 'right']);
     }
     include template('verifyset_edit');
     exit();
@@ -121,9 +121,9 @@ if ($do == 'edit') {
         }
         $_G['setting']['verify']['enabled'] = $enabled;
         C::t('setting')->update('verify', $_G['setting']['verify']);
-        updatecache(array('setting'));
+        updatecache(['setting']);
 
-        showmessage('members_verify_success', dreferer(), array(), array('alert' => 'right'));
+        showmessage('members_verify_success', dreferer(), [], ['alert' => 'right']);
     }
     include template('verifyset');
 }
@@ -154,4 +154,4 @@ function delverifyicon($icon) {
     return '';
 }
 
-?>
+

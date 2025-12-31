@@ -10,16 +10,16 @@
 if (!defined('IN_DZZ')) { //所有的php文件必须加上此句，防止被外部调用
     exit('Access Denied');
 }
-$h0 = array('username' => lang('username'), 'email' => lang('email'), 'nickname' => lang('username'), 'birth' => lang('date_birth'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position'));
+$h0 = ['username' => lang('username'), 'email' => lang('email'), 'nickname' => lang('username'), 'birth' => lang('date_birth'), 'mobile' => lang('cellphone'), 'weixinid' => lang('weixin'), 'orgname' => lang('category_department'), 'job' => lang('department_position')];
 function getProfileForImport() {
     global $_G;
     if (empty($_G['cache']['profilesetting'])) {
         loadcache('profilesetting');
     }
     $profilesetting = $_G['cache']['profilesetting'];
-    $ret = array();
+    $ret = [];
     foreach ($profilesetting as $key => $value) {
-        if (in_array($key, array('department', 'birthyear', 'birthmonth', 'birthday'))) {
+        if (in_array($key, ['department', 'birthyear', 'birthmonth', 'birthday'])) {
             continue;
         } elseif ($value['formtype'] == 'file') {
             continue;

@@ -10,7 +10,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$cloud = array();
+$cloud = [];
 $onlyuser = true;
 if($_G['adminid'] == 1) $onlyuser = false;
 $list = C::t('connect')->fetch_all_by_available($onlyuser);
@@ -19,4 +19,4 @@ foreach ($list as $value) {
     $cloud[$value['type']]['header'] = lang('cloud_type_' . $value['type']);
 }
 include template("addcloud");
-?>
+

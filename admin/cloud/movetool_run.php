@@ -11,7 +11,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 @ini_set('max_execution_time', 0);
 @set_time_limit(0);
-$gets = array(
+$gets = [
     'mod' => 'cloud',
     'op' => 'movetool_run',
     'oremoteid' => intval($_GET['oremoteid']),
@@ -20,7 +20,7 @@ $gets = array(
     'sizelt' => $_GET['sizelt'],
     'sizegt' => $_GET['sizegt'],
 
-);
+];
 $gets['aid'] = intval($_GET['aid']);
 $runurl = BASESCRIPT . "?" . url_implode($gets);
 $gets['aid1'] = intval($_GET['aid1']);
@@ -65,4 +65,3 @@ if ($attach = C::t('attachment')->getAttachByFilter($gets)) {
 }
 
 
-?>

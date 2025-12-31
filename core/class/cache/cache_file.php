@@ -82,4 +82,3 @@ class ultrax_cache {
 
 }
 
-?>

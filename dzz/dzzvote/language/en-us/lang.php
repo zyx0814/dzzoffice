@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'most_can_choose' => 'Maximum selectable',
     'most_can_choose1' => 'Maximum selection',
     'item' => 'item(s)',
@@ -30,6 +30,5 @@ $lang = array(
     'there_no_deadline' => 'No Deadline',
     'voting_ended' => 'Voting Ended',
     'day' => 'day(s)',
-);
+];
 
-?>

@@ -21,19 +21,19 @@ if ($do == 'filelist') {
     $path = rawurldecode($_GET['path']);
     if (!$path) $path = $bz;
     $marker = empty($_GET['marker']) ? '' : trim($_GET['marker']);
-    $data = array();
+    $data = [];
 
     if ($bz && $bz !== 'dzz') {//云盘查询
         $bzinfo=IO::getCloud($bz);
         if (!$bzinfo) {
-            exit(json_encode(array('error' => lang('cloud_no_info'))));
+            exit(json_encode(['error' => lang('cloud_no_info')]));
         }
         if($bzinfo['available']<1) {
-            exit(json_encode(array('error' => lang('cloud_no_available'))));
+            exit(json_encode(['error' => lang('cloud_no_available')]));
         }
         $asc = intval($_GET['asc']);
         list($prex, $id) = explode('-', $sid);
-        $disp = intval($_GET['disp']) ? intval($_GET['disp']) : 0;//文件排序
+        $disp = intval($_GET['disp']) ?: 0;//文件排序
         $order = $asc > 0 ? 'asc' : "desc";
         switch ($_GET['disp']) {
             case 0:
@@ -43,7 +43,7 @@ if ($do == 'filelist') {
                 $by = 'size';
                 break;
             case 2 :
-                $by = array('type', 'ext');
+                $by = ['type', 'ext'];
                 break;
             case 3:
                 $by = 'dateline';
@@ -60,20 +60,20 @@ if ($do == 'filelist') {
         }
         $folder = IO::getMeta($path);
         if (!$folder) {
-            exit(json_encode(array('error' => lang('file_not_exist'))));
+            exit(json_encode(['error' => lang('file_not_exist')]));
         }
         if (!perm_check::checkperm('read', $folder)) {
-            exit(json_encode(array('error' => lang('file_read_no_privilege'))));
+            exit(json_encode(['error' => lang('file_read_no_privilege')]));
         }
         if ($folder['error']) {
-            exit(json_encode(array('error' => $folder['error'])));
+            exit(json_encode(['error' => $folder['error']]));
         }
         $icosdata = IO::listFiles($path, $by, $order, $limit, $force);
 
         if ($icosdata['error']) {
-            exit(json_encode(array('error' => $icosdata['error'])));
+            exit(json_encode(['error' => $icosdata['error']]));
         }
-        $folderdata = array();
+        $folderdata = [];
         $ignore = 0;
         $folder['disp'] = $disp;
         $folder['iconview'] = $_GET['iconview'];
@@ -94,16 +94,16 @@ if ($do == 'filelist') {
     } else {
         list($prex, $id) = explode('-', $sid);
         if ($prex == 'f') {
-            $arr = array();
+            $arr = [];
             //查询当前文件夹信息
             if ($folder = C::t('folder')->fetch_by_fid($id)) {
                 if ($folder['fid']) {
-                    $folder['disp'] = $disp = intval($_GET['disp']) ? intval($_GET['disp']) : intval($folder['disp']);//文件排序
+                    $folder['disp'] = $disp = intval($_GET['disp']) ?: intval($folder['disp']);//文件排序
                     $folder['iconview'] = (isset($_GET['iconview']) ? intval($_GET['iconview']) : intval($folder['iconview']));//排列方式
                     $keyword = isset($_GET['keyword']) ? urldecode($_GET['keyword']) : '';
-                    $conditions = array();
+                    $conditions = [];
                     if ($keyword) {
-                        $conditions['name'] = array($keyword, 'like', 'and');
+                        $conditions['name'] = [$keyword, 'like', 'and'];
                     }
                     $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 1;
 
@@ -117,7 +117,7 @@ if ($do == 'filelist') {
                             $orderby = 'size';
                             break;
                         case 2:
-                            $orderby = array('type', 'ext');
+                            $orderby = ['type', 'ext'];
                             break;
                         case 3:
                             $orderby = 'dateline';
@@ -131,12 +131,12 @@ if ($do == 'filelist') {
     }
     $total = $data['total'] ?? 0;
     //返回数据
-    $return = array(
+    $return = [
         'sid' => $sid,
         'total' => $total,
-        'data' => $data['data'] ?? array(),
-        'folderdata' => $folderdata ?? array(),
-        'param' => array(
+        'data' => $data['data'] ?? [],
+        'folderdata' => $folderdata ?? [],
+        'param' => [
             'disp' => $folder['disp'],
             'view' => $folder['iconview'],
             'page' => $page,
@@ -146,7 +146,7 @@ if ($do == 'filelist') {
             'asc' => $asc,
             'keyword' => $keyword,
             'localsearch' => $bz ? 1 : 0
-        )
-    );
+        ]
+    ];
     exit(json_encode($return));
 }

@@ -26,7 +26,7 @@ class table_comment_attach extends dzz_table {
         if (!$data = self::fetch($qid)) return false;
         if ($data['aid'] > 0) {
             $attach = C::t('attachment')->fetch($data['aid']);
-            if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif'))) {
+            if (in_array(strtolower($attach['filetype']), ['png', 'jpeg', 'jpg', 'gif'])) {
                 $attach['img'] = C::t('attachment')->getThumbByAid($attach, 120, 80);
                 $attach['isimage'] = 1;
                 $attach['type'] = 'image';
@@ -45,7 +45,7 @@ class table_comment_attach extends dzz_table {
     public function insert_by_cid($cid, $attach) {
         //处理附件
         foreach ($attach['title'] as $key => $value) {
-            $setarr = array('cid' => $cid,
+            $setarr = ['cid' => $cid,
                 'dateline' => TIMESTAMP,
                 'aid' => intval($attach['aid'][$key]),
                 'title' => getstr($value),
@@ -53,22 +53,22 @@ class table_comment_attach extends dzz_table {
                 'img' => getstr($attach['img'][$key]),
                 'url' => getstr($attach['url'][$key]),
                 'ext' => getstr($attach['ext'][$key])
-            );
+            ];
 
             if (parent::insert($setarr)) {
                 if ($setarr['aid'] > 0) C::t('attachment')->addcopy_by_aid($setarr['aid']);
                 if ($setarr['type'] == 'link') {
-                    $imgarr = $setarr['img'] ? explode('icon', $setarr['img']) : array();
-                    if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", array('icon', 'icon' . $imgarr[1])))) C::t('icon')->update_copys_by_did($did);
+                    $imgarr = $setarr['img'] ? explode('icon', $setarr['img']) : [];
+                    if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", ['icon', 'icon' . $imgarr[1]]))) C::t('icon')->update_copys_by_did($did);
                 }
             }
         }
     }
 
     public function update_by_cid($cid, $attach) {
-        $qids = array();
+        $qids = [];
         $ret = 0;
-        foreach (DB::fetch_all("select qid from %t where cid=%d", array($this->_table, $cid)) as $value) {
+        foreach (DB::fetch_all("select qid from %t where cid=%d", [$this->_table, $cid]) as $value) {
             $qids[$value['qid']] = $value['qid'];
         }
 
@@ -77,7 +77,7 @@ class table_comment_attach extends dzz_table {
             if ($qid > 0) {
                 unset($qids[$qid]);
             } else {
-                $setarr = array('cid' => $cid,
+                $setarr = ['cid' => $cid,
                     'dateline' => TIMESTAMP,
                     'aid' => intval($attach['aid'][$key]),
                     'title' => trim($value),
@@ -85,12 +85,12 @@ class table_comment_attach extends dzz_table {
                     'img' => trim($attach['img'][$key]),
                     'url' => trim($attach['url'][$key]),
                     'ext' => trim($attach['ext'][$key])
-                );
+                ];
                 if ($ret += parent::insert($setarr)) {
                     if ($setarr['aid']) C::t('attachment')->addcopy_by_aid($setarr['aid']);
                     if ($setarr['type'] == 'link') {
-                        $imgarr = $setarr['img'] ? explode('icon', $setarr['img']) : array();
-                        if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", array('icon', 'icon' . $imgarr[1])))) C::t('icon')->update_copys_by_did($did, -1);
+                        $imgarr = $setarr['img'] ? explode('icon', $setarr['img']) : [];
+                        if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", ['icon', 'icon' . $imgarr[1]]))) C::t('icon')->update_copys_by_did($did, -1);
                     }
                 }
             }
@@ -102,13 +102,13 @@ class table_comment_attach extends dzz_table {
     public function delete_by_qid($qids) {
         $qids = (array)$qids;
         $ret = 0;
-        foreach (DB::fetch_all("select qid,aid,type,img from %t where qid IN(%n)", array('comment_attach', $qids)) as $value) {
+        foreach (DB::fetch_all("select qid,aid,type,img from %t where qid IN(%n)", ['comment_attach', $qids]) as $value) {
             if (parent::delete($value['qid'])) {
                 $ret += 1;
                 if ($value['aid'] > 0) C::t('attachment')->delete_by_aid($value['aid']);
                 if ($value['type'] == 'link') {
-                    $imgarr = $value['img'] ? explode('icon', $value['img']) : array();
-                    if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", array('icon', 'icon' . $imgarr[1])))) C::t('icon')->update_copys_by_did($did, -1);
+                    $imgarr = $value['img'] ? explode('icon', $value['img']) : [];
+                    if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", ['icon', 'icon' . $imgarr[1]]))) C::t('icon')->update_copys_by_did($did, -1);
                 }
             }
         }
@@ -118,13 +118,13 @@ class table_comment_attach extends dzz_table {
     public function delete_by_cid($cids) {
         $cids = (array)$cids;
         $ret = 0;
-        foreach (DB::fetch_all("select qid,aid,type,img from %t where cid IN (%n) ", array('comment_attach', $cids)) as $value) {
+        foreach (DB::fetch_all("select qid,aid,type,img from %t where cid IN (%n) ", ['comment_attach', $cids]) as $value) {
             if (parent::delete($value['qid'])) {
                 $ret += 1;
                 if ($value['aid'] > 0) C::t('attachment')->delete_by_aid($value['aid']);
                 if ($value['type'] == 'link') {
-                    $imgarr = $value['img'] ? explode('icon', $value['img']) : array();
-                    if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", array('icon', 'icon' . $imgarr[1])))) C::t('icon')->update_copys_by_did($did, -1);
+                    $imgarr = $value['img'] ? explode('icon', $value['img']) : [];
+                    if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", ['icon', 'icon' . $imgarr[1]]))) C::t('icon')->update_copys_by_did($did, -1);
                 }
             }
         }
@@ -133,9 +133,9 @@ class table_comment_attach extends dzz_table {
 
     public function fetch_all_by_cid($cid) {
         global $_G;
-        $data = array();
+        $data = [];
         //$openext=C::t('app_open')->fetch_all_orderby_ext($_G['uid']);
-        foreach (DB::fetch_all("select * from %t where cid= %d", array($this->_table, $cid)) as $value) {
+        foreach (DB::fetch_all("select * from %t where cid= %d", [$this->_table, $cid]) as $value) {
             $value['title'] = getstr($value['title']);
             $value['type'] = getstr($value['type']);
             $value['url'] = getstr($value['url']);
@@ -144,7 +144,7 @@ class table_comment_attach extends dzz_table {
 
             if ($value['aid'] > 0) {
                 $attach = C::t('attachment')->fetch($value['aid']);
-                if (in_array(strtolower($attach['filetype']), array('png', 'jpeg', 'jpg', 'gif', 'bmp'))) {
+                if (in_array(strtolower($attach['filetype']), ['png', 'jpeg', 'jpg', 'gif', 'bmp'])) {
                     $attach['img'] = C::t('attachment')->getThumbByAid($attach);
                     $attach['isimage'] = 1;
                     $value['type'] = 'image';
@@ -167,15 +167,15 @@ class table_comment_attach extends dzz_table {
     }
 
     public function copy_by_cid($ocid, $cid) {
-        $aids = array();
-        foreach (DB::fetch_all("select * from %t where cid=%d", array($this->_table, $ocid)) as $value) {
+        $aids = [];
+        foreach (DB::fetch_all("select * from %t where cid=%d", [$this->_table, $ocid]) as $value) {
             unset($value['qid']);
             $value['cid'] = $cid;
             if (parent::insert($value)) {
                 if ($value['type'] == 'attach' && $value['aid'] > 0) C::t('attachment')->addcopy_by_aid($value['aid']);
                 if ($value['type'] == 'link') {
-                    $imgarr = $value['img'] ? explode('icon', $value['img']) : array();
-                    if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", array('icon', 'icon' . $imgarr[1])))) C::t('icon')->update_copys_by_did($did);
+                    $imgarr = $value['img'] ? explode('icon', $value['img']) : [];
+                    if (isset($imgarr[1]) && ($did = DB::result_first("select did from %t where pic=%s", ['icon', 'icon' . $imgarr[1]]))) C::t('icon')->update_copys_by_did($did);
                 }
             }
         }
@@ -183,4 +183,4 @@ class table_comment_attach extends dzz_table {
     }
 }
 
-?>
+

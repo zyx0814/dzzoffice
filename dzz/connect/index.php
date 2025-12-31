@@ -10,7 +10,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-$data = array();
+$data = [];
 $query = DB::query("SELECT * FROM " . DB::table('connect') . " WHERE available > 0");
 while ($value = DB::fetch($query)) {
     $type = $value['type'];
@@ -23,7 +23,7 @@ while ($value = DB::fetch($query)) {
         foreach ($subQuery as $value1) {
             $cloudid = "{$value['bz']}:{$value1['id']}:";
             $data[] = [
-                'cloudname' => $value1['cloudname'] ? $value1['cloudname'] : $value['name'],
+                'cloudname' => $value1['cloudname'] ?: $value['name'],
                 'img' => 'dzz/images/default/system/'.$value['bz'].'.png',
                 'hashbz' => $cloudid,
             ];
@@ -31,4 +31,4 @@ while ($value = DB::fetch($query)) {
     }
 }
 include template("connect_index");
-?>
+

@@ -15,39 +15,38 @@ class table_resources_collect extends dzz_table {
         global $_G;
         if (!is_array($rids)) $rids = (array)$rids;
         $i = 0;
-        $arr = array();
+        $arr = [];
         foreach ($rids as $v) {
             //获取收藏文件基本信息
             if ($data = C::t('resources')->fetch_info_by_rid($v, true)) {
-                $setarr = array(
+                $setarr = [
                     'rid' => $v,
                     'uid' => $_G['uid'],
                     'username' => $_G['username'],
                     'dateline' => time(),
                     'pfid' => $data['pfid']
-                );
+                ];
                 if (!perm_check::checkperm('read', $data)) continue;
                 if (self::add_collect($setarr)) {
                     //处理数据
                     $arr['msg'][$v] = 'success';
-                    $ridarr[] = $v;
                     $i++;
                 } else {
-                    $arr['msg'][$v] = array('error' => lang('explorer_do_failed'));
+                    $arr['msg'][$v] = ['error' => lang('explorer_do_failed')];
                 }
             } else {
                 continue;
             }
 
         }
-        if (!$arr) return array('error' => lang('explorer_do_failed'));
+        if (!$arr) return ['error' => lang('explorer_do_failed')];
         return $arr;
     }
 
     public function add_collect($setarr) {
         if (!$setarr['uid']) return false;
         //如果已经加入收藏，不允许重复收藏
-        if (DB::result_first("select id from %t where rid = %s and uid = %d", array($this->_table, $setarr['rid'], $setarr['uid']))) {
+        if (DB::result_first("select id from %t where rid = %s and uid = %d", [$this->_table, $setarr['rid'], $setarr['uid']])) {
             return false;
         }
         //加入收藏
@@ -60,15 +59,15 @@ class table_resources_collect extends dzz_table {
 
     //取消当前用户收藏的某文件
     public function cancle_clooect_by_rid_uid($rid, $uid) {
-        if (!$collectinfo = DB::fetch_first("select * from %t where rid = %s", array($this->_table, $rid))) {
-            return array('error' => lang('collect_file_not_exists'));
+        if (!$collectinfo = DB::fetch_first("select * from %t where rid = %s", [$this->_table, $rid])) {
+            return ['error' => lang('collect_file_not_exists')];
         }
         if ($collectinfo['uid'] != $uid) {
-            return array('error' => lang('no_privilege'));
+            return ['error' => lang('no_privilege')];
         }
-        if (DB::delete($this->_table, array('rid' => $rid, 'uid' => $uid))) {
+        if (DB::delete($this->_table, ['rid' => $rid, 'uid' => $uid])) {
             $fileinfo = C::t('resources')->fetch_info_by_rid($rid);
-            return array('success' => true, 'rid' => $rid, 'name' => $fileinfo['name']);
+            return ['success' => true, 'rid' => $rid, 'name' => $fileinfo['name']];
         }
     }
 
@@ -76,15 +75,14 @@ class table_resources_collect extends dzz_table {
     public function delete_usercollect_by_rid($rids) {
         if (!is_array($rids)) $rids = (array)$rids;
         $uid = getglobal('uid');
-        if (!$uid) return array('error' => lang('no_privilege'));
+        if (!$uid) return ['error' => lang('no_privilege')];
         $i = 0;
-        $return = array();
+        $return = [];
         foreach ($rids as $v) {
             $return = self::cancle_clooect_by_rid_uid($v, $uid);
             if (!isset($return['error'])) {
                 //处理数据
                 $arr['msg'][$return['rid']] = 'success';
-                $ridarr[] = $return['rid'];
                 $i++;
             } else {
                 $arr['msg'][$return['rid']] = $return['error'];
@@ -97,8 +95,8 @@ class table_resources_collect extends dzz_table {
     //删除某文件的收藏
     public function delete_by_rid($rid) {
         if (!is_array($rid)) $rid = (array)$rid;
-        if (!$collectinfo = DB::fetch_first("select * from %t where rid in (%n)", array($this->_table, $rid))) {
-            return array('error' => lang('collect_file_not_exists'));
+        if (!$collectinfo = DB::fetch_first("select * from %t where rid in (%n)", [$this->_table, $rid])) {
+            return ['error' => lang('collect_file_not_exists')];
         }
         if (DB::delete($this->_table, 'rid in(' . dimplode($rid) . ')')) {
             return true;
@@ -110,7 +108,7 @@ class table_resources_collect extends dzz_table {
     public function delete_by_uid() {
         $uid = getglobal('uid');
         if (!$uid) return false;
-        if (DB::delete($this->_table, array('uid' => $uid))) {
+        if (DB::delete($this->_table, ['uid' => $uid])) {
             return true;
         } else {
             return false;
@@ -121,7 +119,7 @@ class table_resources_collect extends dzz_table {
     public function fetch_by_uid($limitsql = '', $ordersql = '') {
         $uid = getglobal('uid');
         if (!$uid) return false;
-        if ($return = DB::fetch_all("select * from %t where uid = %d  $ordersql $limitsql", array($this->_table, $uid))) {
+        if ($return = DB::fetch_all("select * from %t where uid = %d  $ordersql $limitsql", [$this->_table, $uid])) {
             return $return;
         } else {
             return false;
@@ -131,7 +129,7 @@ class table_resources_collect extends dzz_table {
     public function fetch_rid_by_uid() {
         $uid = getglobal('uid');
         if (!$uid) return false;
-        if ($return = DB::fetch_all("select rid from %t where uid = %d", array($this->_table, $uid))) {
+        if ($return = DB::fetch_all("select rid from %t where uid = %d", [$this->_table, $uid])) {
             return $return;
         } else {
             return false;
@@ -144,7 +142,7 @@ class table_resources_collect extends dzz_table {
             $uid = getglobal('uid');
         }
         if (!$rid) return false;
-        $result = DB::result_first("SELECT 1 FROM %t WHERE uid = %d AND rid = %s LIMIT 1", array($this->_table, $uid, $rid));
-        return $result ? true : false;
+        $result = DB::result_first("SELECT 1 FROM %t WHERE uid = %d AND rid = %s LIMIT 1", [$this->_table, $uid, $rid]);
+        return (bool)$result;
     }
 }

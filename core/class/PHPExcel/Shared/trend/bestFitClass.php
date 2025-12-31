@@ -61,14 +61,14 @@ class PHPExcel_Best_Fit
 	 *
 	 * @var	float[]
 	 **/
-	protected $_xValues				= array();
+	protected $_xValues				= [];
 
 	/**
 	 * Y-value dataseries of values
 	 *
 	 * @var	float[]
 	 **/
-	protected $_yValues				= array();
+	protected $_yValues				= [];
 
 	/**
 	 * Flag indicating whether values should be adjusted to Y=0
@@ -82,7 +82,7 @@ class PHPExcel_Best_Fit
 	 *
 	 * @var	float[]
 	 **/
-	protected $_yBestFitValues		= array();
+	protected $_yBestFitValues		= [];
 
 	protected $_goodnessOfFit 		= 1;
 
@@ -409,7 +409,7 @@ class PHPExcel_Best_Fit
 	 * @param	float[]		$xValues	The set of X-values for this regression
 	 * @param	boolean		$const
 	 */
-	function __construct($yValues, $xValues=array(), $const=True) {
+	function __construct($yValues, $xValues= [], $const=True) {
 		//	Calculate number of points
 		$nY = count($yValues);
 		$nX = count($xValues);

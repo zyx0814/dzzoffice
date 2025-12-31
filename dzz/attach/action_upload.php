@@ -14,38 +14,38 @@ include DZZ_ROOT . "./dzz/attach/Uploader.class.php";
 $base64 = "upload";
 switch (htmlspecialchars($_GET['action'])) {
     case 'uploadimage':
-        $config = array(
+        $config = [
             "pathFormat" => $CONFIG['imagePathFormat'],
             "maxSize" => $CONFIG['imageMaxSize'],
             "allowFiles" => $CONFIG['imageAllowFiles']
-        );
+        ];
         $fieldName = $markdown ? 'editormd-image-file' : $CONFIG['imageFieldName'];
         break;
     case 'uploadscrawl':
-        $config = array(
+        $config = [
             "pathFormat" => $CONFIG['scrawlPathFormat'],
             "maxSize" => $CONFIG['scrawlMaxSize'],
             "allowFiles" => $CONFIG['scrawlAllowFiles'],
             "oriName" => "scrawl.png"
-        );
+        ];
         $fieldName = $CONFIG['scrawlFieldName'];
         $base64 = "base64";
         break;
     case 'uploadvideo':
-        $config = array(
+        $config = [
             "pathFormat" => $CONFIG['videoPathFormat'],
             "maxSize" => $CONFIG['videoMaxSize'],
             "allowFiles" => $CONFIG['videoAllowFiles']
-        );
+        ];
         $fieldName = $CONFIG['videoFieldName'];
         break;
     case 'uploadfile':
     default:
-        $config = array(
+        $config = [
             "pathFormat" => $CONFIG['filePathFormat'],
             "maxSize" => $CONFIG['fileMaxSize'],
             "allowFiles" => $CONFIG['fileAllowFiles']
-        );
+        ];
         $fieldName = $CONFIG['fileFieldName'];
         break;
 }

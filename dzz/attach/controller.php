@@ -31,9 +31,9 @@ switch ($action) {
         break;
 
     default:
-        $result = array(
+        $result = [
             'state' => lang('request_address_wrong')
-        );
+        ];
         break;
 }
 
@@ -43,15 +43,15 @@ if (isset($_GET["callback"])) {
     if (preg_match("/^[\w_]+$/", $_GET["callback"])) {
         echo htmlspecialchars($_GET["callback"]) . '(' . json_encode($result) . ')';
     } else {
-        echo json_encode(array(
+        echo json_encode([
             'state' => lang('callback_parameter_valid')
-        ));
+        ]);
     }
 } else {
     if ($markdown) {
-        $result = array('url' => $result['url'],
+        $result = ['url' => $result['url'],
             'success' => $result['state'] == 'SUCCESS' ? 1 : 0,
-            'message' => $result['state']);
+            'message' => $result['state']];
     }
     echo json_encode($result);
 }

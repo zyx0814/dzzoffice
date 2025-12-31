@@ -5,7 +5,7 @@ if (!defined('IN_DZZ')) {
 }
 
 function build_cache_smileytypes() {
-    $data = array();
+    $data = [];
     foreach (C::t('imagetype')->fetch_all_by_type('smiley', 1) as $type) {
         $typeid = $type['typeid'];
         unset($type['typeid']);
@@ -16,5 +16,3 @@ function build_cache_smileytypes() {
 
     savecache('smileytypes', $data);
 }
-
-?>

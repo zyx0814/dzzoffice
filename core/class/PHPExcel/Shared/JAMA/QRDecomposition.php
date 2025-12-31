@@ -24,7 +24,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 	 *	Array for internal storage of decomposition.
 	 *	@var array
 	 */
-	private $QR = array();
+	private $QR = [];
 
 	/**
 	 *	Row dimension.
@@ -42,7 +42,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition {
 	 *	Array for internal storage of diagonal of R.
 	 *	@var  array
 	 */
-	private $Rdiag = array();
+	private $Rdiag = [];
 
 
 	/**

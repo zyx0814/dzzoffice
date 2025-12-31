@@ -39,10 +39,10 @@ class PHPExcel_Chart_DataSeriesValues
 	const DATASERIES_TYPE_STRING	= 'String';
 	const DATASERIES_TYPE_NUMBER	= 'Number';
 
-	private static $_dataTypeValues = array(
+	private static $_dataTypeValues = [
 		self::DATASERIES_TYPE_STRING,
 		self::DATASERIES_TYPE_NUMBER,
-	);
+    ];
 
 	/**
 	 * Series Data Type
@@ -84,12 +84,12 @@ class PHPExcel_Chart_DataSeriesValues
 	 *
 	 * @var	array of mixed
 	 */
-	private $_dataValues = array();
+	private $_dataValues = [];
 
 	/**
 	 * Create a new PHPExcel_Chart_DataSeriesValues object
 	 */
-	public function __construct($dataType = self::DATASERIES_TYPE_NUMBER, $dataSource = null, $formatCode = null, $pointCount = 0, $dataValues = array(), $marker = null)
+	public function __construct($dataType = self::DATASERIES_TYPE_NUMBER, $dataSource = null, $formatCode = null, $pointCount = 0, $dataValues = [], $marker = null)
 	{
 		$this->setDataType($dataType);
 		$this->_dataSource = $dataSource;
@@ -262,7 +262,7 @@ class PHPExcel_Chart_DataSeriesValues
 	 *					FALSE - don't change the value of _dataSource
 	 * @return	PHPExcel_Chart_DataSeriesValues
 	 */
-	public function setDataValues($dataValues = array(), $refreshDataSource = TRUE) {
+	public function setDataValues($dataValues = [], $refreshDataSource = TRUE) {
 		$this->_dataValues = PHPExcel_Calculation_Functions::flattenArray($dataValues);
 		$this->_pointCount = count($dataValues);
 
@@ -307,7 +307,7 @@ class PHPExcel_Chart_DataSeriesValues
 				} else {
 					$newArray = array_values(array_shift($newDataValues));
 					foreach($newArray as $i => $newDataSet) {
-						$newArray[$i] = array($newDataSet);
+						$newArray[$i] = [$newDataSet];
 					}
 
 					foreach($newDataValues as $newDataSet) {

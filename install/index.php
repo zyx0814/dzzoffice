@@ -12,7 +12,7 @@ error_reporting(E_ERROR);
 
 define('IN_DZZ', TRUE);
 define('IN_LEYUN', TRUE);
-define('ROOT_PATH', dirname(__DIR__).'/');
+define('ROOT_PATH', dirname(__DIR__) . '/');
 
 if (version_compare(PHP_VERSION, '7.0.0', '<')) {
     exit('您的 PHP 版本过低 (' . PHP_VERSION . ')，请升级到 PHP 7.0 或更高版本。');
@@ -25,10 +25,10 @@ require ROOT_PATH . './install/include/install_function.php';
 require ROOT_PATH . './install/language/zh-cn/lang.php';
 
 $view_off = getgpc('view_off');
-define('VIEW_OFF', $view_off ? TRUE : FALSE);
+define('VIEW_OFF', (bool)$view_off);
 
-$allow_method = array('show_license', 'env_check', 'db_init', 'ext_info', 'install_check', 'tablepre_check', 'phpinfo');
-$step = intval(getgpc('step', 'R')) ? intval(getgpc('step', 'R')) : 0;
+$allow_method = ['show_license', 'env_check', 'db_init', 'ext_info', 'install_check', 'tablepre_check', 'phpinfo'];
+$step = intval(getgpc('step', 'R')) ?: 0;
 $method = getgpc('method');
 
 if (empty($method) || !in_array($method, $allow_method)) {
@@ -61,7 +61,7 @@ if ($method == 'show_license') {
     show_env_result($env_items, $dirfile_items, $func_items, $filesock_items);
 } elseif ($method == 'db_init') {
     $submit = true;
-    $default_config = $_config = array();
+    $default_config = $_config = [];
     $default_configfile = './config/config_default.php';
 
     if (!file_exists(ROOT_PATH . $default_configfile)) {
@@ -81,7 +81,7 @@ if ($method == 'show_license') {
     $tablepre = $_config['db'][1]['tablepre'];
     $adminemail = 'admin@dzzoffice.com';
 
-    $error_msg = array();
+    $error_msg = [];
     if (isset($form_db_init_items) && is_array($form_db_init_items)) {
         foreach ($form_db_init_items as $key => $items) {
             $$key = getgpc($key, 'p');
@@ -110,7 +110,7 @@ if ($method == 'show_license') {
         $forceinstall = isset($_POST['dbinfo']['forceinstall']) ? $_POST['dbinfo']['forceinstall'] : '';
         if (!empty($dbhost) && empty($forceinstall)) {
             if (!check_db($dbhost, $dbuser, $dbpw, $dbname, $tablepre)) {
-                $form_db_init_items['dbinfo']['forceinstall'] = array('type' => 'checkbox', 'required' => 0, 'reg' => '/^.*+/');
+                $form_db_init_items['dbinfo']['forceinstall'] = ['type' => 'checkbox', 'required' => 0, 'reg' => '/^.*+/'];
                 $error_msg['dbinfo']['forceinstall'] = 1;
                 $submit = false;
             }
@@ -129,7 +129,7 @@ if ($method == 'show_license') {
                 $dbhost = 'localhost';
             }
             $link = new mysqli($dbhost, $dbuser, $dbpw, '', null, $unix_socket);
-            if($link->connect_errno) {
+            if ($link->connect_errno) {
                 $errno = $link->connect_errno;
                 $error = $link->connect_error;
                 if ($errno) {
@@ -162,7 +162,7 @@ if ($method == 'show_license') {
             show_msg('admininfo_invalid', '', 0);
         }
         $uid = 1;
-        $authkey = md5((isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '') . $_SERVER['HTTP_USER_AGENT'] . $dbhost . $dbuser . $dbpw . $dbname .$username.$password . substr(time(), 0, 6)) . random(10);
+        $authkey = md5((isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '') . $_SERVER['HTTP_USER_AGENT'] . $dbhost . $dbuser . $dbpw . $dbname . $username . $password . substr(time(), 0, 6)) . random(10);
         $_config['db']['driver'] = 'mysqli';
         $_config['db'][1]['dbhost'] = $dbhost;
         $_config['db'][1]['dbname'] = $dbname;
@@ -211,7 +211,7 @@ if ($method == 'show_license') {
         $timestamp = time();
 
         $backupdir = substr(md5((isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '') . $_SERVER['HTTP_USER_AGENT'] . substr($timestamp, 0, 4)), 8, 6);
-	
+
         $ret = false;
         if (is_dir(ROOT_PATH . 'data/backup')) {
             $ret = @rename(ROOT_PATH . 'data/backup', ROOT_PATH . 'data/backup_' . $backupdir);
@@ -251,7 +251,7 @@ if ($method == 'show_license') {
         $db->query("REPLACE INTO {$tablepre}user_status (uid, regip,lastip, lastvisit, lastactivity, lastsendmail, invisible, profileprogress) VALUES ('$uid', '', '','$timestamp', '$timestamp', '0', '0', '0');");
         $query = $db->query("SELECT COUNT(*) FROM {$tablepre}user");
         $totalmembers = $db->result($query, 0);
-        $userstats = array('totalmembers' => $totalmembers, 'newsetuser' => $username);
+        $userstats = ['totalmembers' => $totalmembers, 'newsetuser' => $username];
         $ctype = 1;
         $data = addslashes(serialize($userstats));
         $db->query("REPLACE INTO {$tablepre}syscache (cname, ctype, dateline, data) VALUES ('userstats', '$ctype', '" . time() . "', '$data')");
@@ -285,17 +285,17 @@ if ($method == 'show_license') {
     $handwork_del = lang('handwork_del');
 
     $isHTTPS = is_https();
-    $PHP_SELF = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
+    $PHP_SELF = $_SERVER['PHP_SELF'] ?: $_SERVER['SCRIPT_NAME'];
     $sitepath = substr($PHP_SELF, 0, strrpos($PHP_SELF, '/'));
     $sitepath = preg_replace('/install$/i', '', $sitepath);
-    $bbserver = 'http'.($isHTTPS ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$sitepath;
+    $bbserver = 'http' . ($isHTTPS ? 's' : '') . '://' . $_SERVER['HTTP_HOST'] . $sitepath;
 
     @touch($lockfile);
     @unlink(ROOT_PATH . './install/index.php');
     @unlink(ROOT_PATH . './install/update.php');
     show_header();
     echo '<iframe src="../misc.php?mod=syscache" style="display:none;"></iframe>';
-echo <<<EOT
+    echo <<<EOT
 <div class="finish-card">
     <div class="success-icon">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

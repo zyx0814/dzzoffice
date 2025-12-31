@@ -22,7 +22,7 @@ if ($_GET['do'] == 'usercloud') {
         }
         showmessage('do_success', dreferer());
     } else {
-        $list = array();
+        $list = [];
 
         $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
         $perpage = 20;
@@ -32,21 +32,13 @@ if ($_GET['do'] == 'usercloud') {
         $count = DB::result_first("select COUNT(*) from " . DB::table($dname) . " where bz='{$bz}' and uid>0");
         foreach (DB::fetch_all("select t.*, u.username from " . DB::table($dname) . " as t LEFT JOIN " . DB::table('user') . " as u on t.uid = u.uid where bz='{$bz}' and t.uid>0 order by dateline DESC limit $start,$perpage") as $value1) {
             if ($cloud['type'] == 'pan') {
-                if (!$value1['cloudname']) $value1['cloudname'] = $cloud['name'] . ':' . ($value1['cusername'] ? $value1['cusername'] : $value1['cuid']);
-                $value1['bz'] = $value['bz'];
-                $value1['icoid'] = md5($value['bz'] . ':' . $value1['id'] . ':' . $value['root']);
-                $value1['img'] = 'dzz/images/default/system/' . $cloud['bz'] . '.png';
+                if (!$value1['cloudname']) $value1['cloudname'] = $cloud['name'] . ':' . ($value1['cusername'] ?: $value1['cuid']);
             } elseif ($cloud['type'] == 'storage') {
                 $value1['access_id'] = authcode($value1['access_id'], 'DECODE', $value1['type']) ? authcode($value1['access_id'], 'DECODE', $value1['type']) : $value1['access_id'];
-                if (!$value1['cloudname']) $value1['cloudname'] = $cloud['name'] . ':' . ($value1['bucket'] ? $value1['bucket'] : cutstr($value1['access_id'], 4, $dot = ''));
-                $value1['bz'] = $value['bz'];
-                $value1['img'] = 'dzz/images/default/system/' . $cloud['bz'] . '.png';
-            } else {
-                $value1['bz'] = $value['bz'];
-                $value1['img'] = 'dzz/images/default/system/' . $cloud['bz'] . '.png';
+                if (!$value1['cloudname']) $value1['cloudname'] = $cloud['name'] . ':' . ($value1['bucket'] ?: cutstr($value1['access_id'], 4, $dot = ''));
             }
+            $value1['img'] = 'dzz/images/default/system/' . $cloud['bz'] . '.png';
             $value1['type'] = $cloud['type'];
-            $value1['username'] = $value1['username'];
             $value1['dateline'] = dgmdate($value1['dateline'], 'Y-m-d H:i:s');
             $list[] = $value1;
         }
@@ -61,32 +53,32 @@ if ($_GET['do'] == 'usercloud') {
     if (submitcheck('editsubmit')) {
         $_GET = dhtmlspecialchars($_GET);
         if ($cloud['type'] == 'pan') {
-            $setarr = array(
+            $setarr = [
                 'name' => $_GET['name'],
                 'root' => trim($_GET['root']),
                 'key' => trim($_GET['key']),
                 'secret' => trim($_GET['secret']),
                 'available' => intval($_GET['available']),
-            );
+            ];
             if (empty($setarr['key']) || empty($setarr['secret'])) {
                 $setarr['available'] = 0;
             }
 
         } elseif ($cloud['type'] == 'storage' || $cloud['type'] == 'ftp') {
-            $setarr = array(
+            $setarr = [
                 'name' => $_GET['name'],
                 'available' => intval($_GET['available']) > 1 ? 2 : 1,
-            );
+            ];
         } elseif ($cloud['type'] == 'local') {
-            $setarr = array(
+            $setarr = [
                 'name' => $_GET['name'],
                 'available' => 1,
-            );
+            ];
         } else {
-            $setarr = array(
+            $setarr = [
                 'name' => $_GET['name'],
                 'available' => intval($_GET['available']) > 1 ? 2 : 1,
-            );
+            ];
         }
         if (!is_file(DZZ_ROOT . './core/class/io/io_' . ($cloud['bz']) . '.php')) {
             $setarr['available'] = 0;
@@ -113,4 +105,4 @@ if ($_GET['do'] == 'usercloud') {
         include template('edit');
     }
 }
-?>
+

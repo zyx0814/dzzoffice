@@ -19,14 +19,14 @@ class table_organization_user extends dzz_table {
     }
 
     public function insert_by_orgid($orgid, $uids, $jobid = 0) {
-        if (!$uids || !$orgid) return array();
+        if (!$uids || !$orgid) return [];
         if (!$org = C::t('organization')->fetch($orgid)) {
-            return array();
+            return [];
         }
-        if (!is_array($uids)) $uids = array($uids);
-        $ret = array();
+        if (!is_array($uids)) $uids = [$uids];
+        $ret = [];
         foreach ($uids as $v) {
-            if (parent::insert(array("orgid" => $orgid, 'uid' => $v, 'jobid' => $jobid, 'dateline' => TIMESTAMP), 1, 1)) {
+            if (parent::insert(["orgid" => $orgid, 'uid' => $v, 'jobid' => $jobid, 'dateline' => TIMESTAMP], 1, 1)) {
                 $ret[$v] = $v;
             }
         }
@@ -37,17 +37,17 @@ class table_organization_user extends dzz_table {
     }
 
     public function fetch_by_uid_orgid($uid, $orgid) {
-        return DB::fetch_first("select * from %t where uid=%d and orgid=%d", array($this->_table, $uid, $orgid));
+        return DB::fetch_first("select * from %t where uid=%d and orgid=%d", [$this->_table, $uid, $orgid]);
     }
 
     public function replace_orgid_by_uid($uid, $orgarr) {
-        $orgids = array();
+        $orgids = [];
         foreach ($orgarr as $key => $value) {
             $orgids[] = $key;
         }
 
         $Oorgids = self::fetch_orgids_by_uid($uid);
-        if (!is_array($orgids)) $orgids = array($orgids);
+        if (!is_array($orgids)) $orgids = [$orgids];
         $insertids = array_diff($orgids, $Oorgids);
         $delids = array_diff($Oorgids, $orgids);
         $updateids = array_diff($orgids, $delids, $insertids);
@@ -56,19 +56,19 @@ class table_organization_user extends dzz_table {
             if ($orgid > 0) self::insert_by_orgid($orgid, $uid, $orgarr[$orgid]);
         }
         foreach ($updateids as $orgid) {
-            if ($orgid > 0) DB::update($this->_table, array('jobid' => $orgarr[$orgid]), "orgid='{$orgid}' and uid='{$uid}'");
+            if ($orgid > 0) DB::update($this->_table, ['jobid' => $orgarr[$orgid]], "orgid='{$orgid}' and uid='{$uid}'");
         }
         return true;
     }
 
     public function bind_uid_and_orgid($uid, $orgarr) {
-        $orgids = array();
+        $orgids = [];
         foreach ($orgarr as $key => $value) {
             $orgids[] = $key;
         }
 
         $Oorgids = self::fetch_orgids_by_uid($uid);
-        if (!is_array($orgids)) $orgids = array($orgids);
+        if (!is_array($orgids)) $orgids = [$orgids];
         $insertids = array_diff($orgids, $Oorgids);
         $delids = array_diff($Oorgids, $orgids);
         $updateids = array_diff($orgids, $delids, $insertids);
@@ -78,7 +78,7 @@ class table_organization_user extends dzz_table {
             if ($orgid > 0) self::insert_by_orgid($orgid, $uid, $orgarr[$orgid]);
         }
         foreach ($updateids as $orgid) {
-            if ($orgid > 0) DB::update($this->_table, array('jobid' => $orgarr[$orgid]), "orgid='{$orgid}' and uid='{$uid}'");
+            if ($orgid > 0) DB::update($this->_table, ['jobid' => $orgarr[$orgid]], "orgid='{$orgid}' and uid='{$uid}'");
         }
 
         return true;
@@ -97,15 +97,15 @@ class table_organization_user extends dzz_table {
         if (!$uid) return false;
         $type = intval($type);
 
-        $param = array();
+        $param = [];
         if ($type > -1) {
             // 按类型筛选：联表删除
             $sql = "DELETE u FROM %t u LEFT JOIN %t o ON u.orgid=o.orgid WHERE u.uid = %d AND o.type=%d";
-            $param = array($this->_table, 'organization', $uid, $type);
+            $param = [$this->_table, 'organization', $uid, $type];
         } else {
             // 删除全部：直接删除
             $sql = "DELETE FROM %t WHERE uid = %d";
-            $param = array($this->_table, $uid);
+            $param = [$this->_table, $uid];
         }
 
         $return = DB::query($sql, $param);
@@ -121,10 +121,10 @@ class table_organization_user extends dzz_table {
 
     public function delete_by_uid_orgid($uids, $orgid, $wxupdate = 1) {
         $uids = (array)$uids;
-        $uidarr = array();
+        $uidarr = [];
         //获取管理员用户
-        foreach (DB::fetch_all("select uid,admintype from %t where uid in(%n) and orgid = %d ", array('organization_admin', $uids, $orgid)) as $v) {
-            $uidarr[] = array('uid' => $v['uid'], 'perm' => $v['admintype']);
+        foreach (DB::fetch_all("select uid,admintype from %t where uid in(%n) and orgid = %d ", ['organization_admin', $uids, $orgid]) as $v) {
+            $uidarr[] = ['uid' => $v['uid'], 'perm' => $v['admintype']];
             $key = array_search($v['uid'], $uids);
             unset($uids[$key]);
         }
@@ -152,11 +152,11 @@ class table_organization_user extends dzz_table {
         if (!$orgids) return;
         $orgids = (array)$orgids;
         //$uids = self::fetch_uids_by_orgid($orgids);
-        $syn_uid = array();
+        $syn_uid = [];
         foreach ($orgids as $orgid) {
-            $org = DB::fetch_first("select orgid,type from %t where orgid=%d", array('organization', $orgid));
+            $org = DB::fetch_first("select orgid,type from %t where orgid=%d", ['organization', $orgid]);
             if ($org) {
-                $query = DB::query("select uid from %t where orgid=%d", array($this->_table, $orgid));
+                $query = DB::query("select uid from %t where orgid=%d", [$this->_table, $orgid]);
                 while ($value = DB::fetch($query)) {
                     if ($org["type"] == 0) $syn_uid[] = $value['uid'];
                 }
@@ -172,9 +172,9 @@ class table_organization_user extends dzz_table {
     }
 
     public function fetch_uids_by_orgid($orgids) {
-        $uids = array();
-        if (!is_array($orgids)) $orgids = array($orgids);
-        $query = DB::query("select uid from %t where orgid IN(%n)", array($this->_table, $orgids));
+        $uids = [];
+        if (!is_array($orgids)) $orgids = [$orgids];
+        $query = DB::query("select uid from %t where orgid IN(%n)", [$this->_table, $orgids]);
         while ($value = DB::fetch($query)) {
             $uids[] = $value['uid'];
         }
@@ -184,14 +184,14 @@ class table_organization_user extends dzz_table {
 
     public function fetch_user_not_in_orgid($limit = 10000, $count = false, $sortSql = '') {
         //获取属于机构和部门的用户
-        $uids_org = DB::fetch_all("SELECT DISTINCT u.uid FROM %t u INNER JOIN %t o ON u.orgid = o.orgid WHERE o.type = '0'", array($this->_table, 'organization'));
+        $uids_org = DB::fetch_all("SELECT DISTINCT u.uid FROM %t u INNER JOIN %t o ON u.orgid = o.orgid WHERE o.type = '0'", [$this->_table, 'organization']);
         $uids_org = array_column($uids_org, 'uid');
         $limitsql = $limit ? " LIMIT $limit" : "";
         $finalSortSql = $sortSql ?: "ORDER BY username";
         // 获取非机构用户列表
-        $users = DB::fetch_all("SELECT username, uid, email, groupid, `status`, groupid, avatarstatus, headerColor FROM %t WHERE uid NOT IN(%n) $finalSortSql $limitsql",array('user', $uids_org),'uid');
+        $users = DB::fetch_all("SELECT username, uid, email, groupid, `status`, groupid, avatarstatus, headerColor FROM %t WHERE uid NOT IN(%n) $finalSortSql $limitsql", ['user', $uids_org],'uid');
         if ($count) {
-            $total = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid NOT IN(%n)", array('user', $uids_org));
+            $total = DB::result_first("SELECT COUNT(*) FROM %t WHERE uid NOT IN(%n)", ['user', $uids_org]);
             return [
                 'list' => $users,
                 'count' => $total
@@ -201,20 +201,20 @@ class table_organization_user extends dzz_table {
     }
 
     public function fetch_user_by_orgid($orgids, $limit = 0, $count = false, $sortSql = '') {
-        if (!is_array($orgids)) $orgids = array($orgids);
+        if (!is_array($orgids)) $orgids = [$orgids];
         $limitsql = '';
         if ($limit) $limitsql = "limit $limit";
 
-        if ($count) return DB::result_first("select COUNT(*) FROM %t where orgid IN(%n)", array($this->_table, $orgids));
+        if ($count) return DB::result_first("select COUNT(*) FROM %t where orgid IN(%n)", [$this->_table, $orgids]);
         $finalSortSql = $sortSql ?: "ORDER BY dateline DESC";
         return DB::fetch_all("select o.*, u.username, u.email, u.groupid, u.status, u.avatarstatus,u.headerColor from " . DB::table('organization_user') . " o LEFT JOIN " . DB::table('user') . " u ON o.uid=u.uid where o.orgid IN(" . dimplode($orgids) . ") $finalSortSql $limitsql");
     }
 
     public function fetch_orgids_by_uid($uids, $orgtype = 0) {
         $uids = (array)$uids;
-        $orgids = array();
+        $orgids = [];
 
-        $param = array($this->_table);
+        $param = [$this->_table];
         if ($orgtype > -1) {
             $sql = "select u.orgid from %t u LEFT JOIN %t o ON u.orgid=o.orgid where u.uid IN(%n) and o.type=%d";
             $param[] = 'organization';
@@ -233,7 +233,7 @@ class table_organization_user extends dzz_table {
     //判断用户是否为当前部门成员
     public function fetch_num_by_orgid_uid($orgid, $uid) {
         if (!$orgid || !$uid) return false;
-        if (DB::result_first("select count(*) from %t where uid = %d and orgid = %d", array($this->_table, $uid, $orgid))) {
+        if (DB::result_first("select count(*) from %t where uid = %d and orgid = %d", [$this->_table, $uid, $orgid])) {
             return true;
         } else {
             return false;
@@ -243,7 +243,7 @@ class table_organization_user extends dzz_table {
     //判断用户是否为机构部门成员
     public function fetch_num_by_uid($uid) {
         if (!$uid) return false;
-        if (DB::result_first("select count(*) from %t where uid = %d", array($this->_table, $uid))) {
+        if (DB::result_first("select count(*) from %t where uid = %d", [$this->_table, $uid])) {
             return true;
         } else {
             return false;
@@ -252,14 +252,13 @@ class table_organization_user extends dzz_table {
 
     public function fetch_usernums_by_orgid($orgid) {
         if (!$orgid) return '';
-        $numbers = DB::result_first("select count(*) from %t where orgid = %d", array($this->_table, $orgid));
-        return $numbers;
+        return DB::result_first("select count(*) from %t where orgid = %d", [$this->_table, $orgid]);
     }
 
     public function fetch_usernum_by_orgid($orgid) {
         if (!$orgid) return false;
         $orgid = intval($orgid);
-        if ($result = DB::result_first("select count(*) from %t where orgid = %d", array($this->_table, $orgid))) {
+        if ($result = DB::result_first("select count(*) from %t where orgid = %d", [$this->_table, $orgid])) {
             return $result;
         }
         return false;
@@ -267,20 +266,20 @@ class table_organization_user extends dzz_table {
 
     public function fetch_all_by_uid($uids) {
         $uids = (array)$uids;
-        return DB::fetch_all("select * from %t where uid IN(%n) ", array($this->_table, $uids));
+        return DB::fetch_all("select * from %t where uid IN(%n) ", [$this->_table, $uids]);
     }
 
     public function move_to_forgid_by_orgid($forgid, $orgid) {//移动用户到上级部门
         if (!$org = C::t('organization')->fetch($forgid)) return false;
         if (!$org['forgid']) {
-            foreach (DB::fetch_all("select * from %t where orgid=%d", array($this->_table, $orgid)) as $value) {
+            foreach (DB::fetch_all("select * from %t where orgid=%d", [$this->_table, $orgid]) as $value) {
                 C::t('organization_admin')->delete_by_uid_orgid($value['uid'], $orgid);
             }
 
             return self::delete_by_orgid($orgid);
         }
-        foreach (DB::fetch_all("select * from %t where orgid=%d", array($this->_table, $orgid)) as $value) {
-            if (DB::result_first("select COUNT(*) from %t where orgid=%d and uid=%d", array($this->_table, $org['forgid'], $value['uid']))) {
+        foreach (DB::fetch_all("select * from %t where orgid=%d", [$this->_table, $orgid]) as $value) {
+            if (DB::result_first("select COUNT(*) from %t where orgid=%d and uid=%d", [$this->_table, $org['forgid'], $value['uid']])) {
                 C::t('organization_admin')->delete_by_uid_orgid($value['uid'], $orgid);
                 DB::delete($this->_table, "orgid='{$org['forgid']}' and uid='{$value['uid']}'");
             } else {
@@ -298,7 +297,7 @@ class table_organization_user extends dzz_table {
             C::t('organization_admin')->delete_by_uid_orgid($uid, $orgid);
             return self::delete_by_uid_orgid($uid, $orgid);
         }
-        if (!$copy && DB::result_first("select COUNT(*) from %t where orgid=%d and uid=%d", array($this->_table, $torgid, $uid))) {
+        if (!$copy && DB::result_first("select COUNT(*) from %t where orgid=%d and uid=%d", [$this->_table, $torgid, $uid])) {
             C::t('organization_admin')->delete_by_uid_orgid($uid, $orgid);
             return self::delete_by_uid_orgid($uid, $orgid, 0);
         } else {
@@ -311,15 +310,15 @@ class table_organization_user extends dzz_table {
     //查询成员
     public function fetch_user_byorgid($orgid, $username = '') {
         $where = " and 1=1";
-        $params = array($this->_table, 'user', $orgid);
+        $params = [$this->_table, 'user', $orgid];
         if ($username) {
-            $uid = DB::result_first("select uid from %t where username like %s", array('user', '%' . $username . '%'));
+            $uid = DB::result_first("select uid from %t where username like %s", ['user', '%' . $username . '%']);
             $where .= " and o.uid = %d";
             $params[] = $uid;
         }
-        $userinfo = array();
+        $userinfo = [];
         foreach (DB::fetch_all("select o.*,u.username,u.email,u.adminid,u.avatarstatus,u.uid,u.headerColor from %t o left join %t u on o.uid = u.uid where o.orgid = %d $where", $params) as $v) {
-            $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", array('organization_admin', $orgid, $v['uid']));
+            $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", ['organization_admin', $orgid, $v['uid']]);
             if($admintype) {
                 $v['perm'] = $admintype;
             } elseif ($v['adminid'] == 1) {
@@ -334,15 +333,15 @@ class table_organization_user extends dzz_table {
 
     //获取当前机构或部门及下级所有的用户
     public function get_all_user_byorgid($orgid,$isadmin = true) {
-        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", array('organization', $orgid));
-        $params = array('organization', 'organization_user', 'user', '^' . $pathkey . '.*');
-        $userinfo = array();
+        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", ['organization', $orgid]);
+        $params = ['organization', 'organization_user', 'user', '^' . $pathkey . '.*'];
+        $userinfo = [];
         foreach (DB::fetch_all("select o.orgid,ou.*,u.username,u.email from %t o 
           left join %t ou on ou.orgid = o.orgid
           left join %t u on ou.uid = u.uid  where o.pathkey regexp %s", $params) as $v) {
             if(!$v['uid']) continue;
             if($isadmin) {
-                $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", array('organization_admin', $orgid, $v['uid']));
+                $admintype = DB::result_first("select admintype from %t where orgid = %d and uid = %d", ['organization_admin', $orgid, $v['uid']]);
                 if (!$admintype) {
                     $v['perm'] = 0;
                 } else {
@@ -360,39 +359,39 @@ class table_organization_user extends dzz_table {
         global $_G;
         $uid = intval($uid);
         $gid = intval($gid);
-        if (!$group = C::t('organization')->fetch($gid)) array('error' => lang('group_not_exists'));
+        if (!$group = C::t('organization')->fetch($gid)) ['error' => lang('group_not_exists')];
 
         //获取操作用户权限
         $doperm = C::t('organization_admin')->chk_memberperm($gid, $_G['uid']);
-        if ($perm == 2 && $doperm != 2) return array('error' => lang('no_privilege'));//检查权限
+        if ($perm == 2 && $doperm != 2) return ['error' => lang('no_privilege')];//检查权限
 
         $permtitle = lang('explorer_gropuperm');
         //查詢用戶是否存在
         if ($result = DB::fetch_first("select ou.*,u.username from %t ou 
-            left join %t u on ou.uid=u.uid where ou.orgid=%d and ou.uid = %d", array($this->_table, 'user', $gid, $uid))) {
+            left join %t u on ou.uid=u.uid where ou.orgid=%d and ou.uid = %d", [$this->_table, 'user', $gid, $uid])) {
             //转让创始人
             if ($perm == 2) {
                 $olduser = DB::fetch_first("select u.uid,u.username from %t ou
-                left join %t u on ou.uid = u.uid where ou.orgid = %d and ou.admintype = %d", array('organization_admin', 'user', $gid, 2));
-                if (C::t('organization_admin')->update_perm($uid, $gid, $perm) && DB::delete('organization_admin', array('orgid' => $gid, 'uid' => $olduser['uid']))) {
-                    return array('success' => lang('change_creater_succeed'), 'perm' => $perm, 'olduid' => $olduser['uid'], 'olduser' => $olduser, 'member' => $result['username']);
+                left join %t u on ou.uid = u.uid where ou.orgid = %d and ou.admintype = %d", ['organization_admin', 'user', $gid, 2]);
+                if (C::t('organization_admin')->update_perm($uid, $gid, $perm) && DB::delete('organization_admin', ['orgid' => $gid, 'uid' => $olduser['uid']])) {
+                    return ['success' => lang('change_creater_succeed'), 'perm' => $perm, 'olduid' => $olduser['uid'], 'olduser' => $olduser, 'member' => $result['username']];
                 }
             } elseif (C::t('organization_admin')->update_perm($uid, $gid, $perm)) {//设置管理员
-                return array('success' => lang('do_success'), 'perm' => $perm, 'member' => $result['username']);
+                return ['success' => lang('do_success'), 'perm' => $perm, 'member' => $result['username']];
             }
         }
-        return array('error' => lang('explorer_do_failed'));
+        return ['error' => lang('explorer_do_failed')];
     }
 
     //查询机构下成员数
     public function fetch_num_by_toporgid($orgid) {
-        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", array('organization', $orgid));
-        $orgidarr = array();
-        foreach (DB::fetch_all("select orgid from %t where pathkey regexp %s", array('organization', '^' . $pathkey . '.*')) as $v) {
+        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", ['organization', $orgid]);
+        $orgidarr = [];
+        foreach (DB::fetch_all("select orgid from %t where pathkey regexp %s", ['organization', '^' . $pathkey . '.*']) as $v) {
             $orgidarr[] = $v['orgid'];
         }
-        $uidarr = array();
-        foreach (DB::fetch_all("select uid from %t where orgid in (%n)", array($this->_table, $orgidarr)) as $v) {
+        $uidarr = [];
+        foreach (DB::fetch_all("select uid from %t where orgid in (%n)", [$this->_table, $orgidarr]) as $v) {
             $uidarr[] = $v['uid'];
         }
         $uidarr = array_unique($uidarr);
@@ -401,24 +400,24 @@ class table_organization_user extends dzz_table {
 
     public function fetch_parentadminer_andchild_uid_by_orgid($orgid, $partget = true) {
         $uid = getglobal('uid');
-        $uids = array('adminer' => array(), 'partmember' => array());
+        $uids = ['adminer' => [], 'partmember' => []];
         $orgid = intval($orgid);
-        $parentadminer = array();
+        $parentadminer = [];
         //获取具有管理员权限的用户
-        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", array('organization', $orgid));
+        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", ['organization', $orgid]);
         $gids = explode('-', str_replace('_', '', $pathkey));
-        foreach (DB::fetch_all("select uid from %t where orgid in(%n)", array('organization_admin', $gids)) as $v) {
+        foreach (DB::fetch_all("select uid from %t where orgid in(%n)", ['organization_admin', $gids]) as $v) {
             $uids['adminer'][] = $v['uid'];
         }
         if ($partget) {
             //获取没有管理员权限的用户
-            $childgids = array($orgid);
+            $childgids = [$orgid];
             $like = $pathkey . '.+';
-            foreach (DB::fetch_all("select orgid from %t where pathkey REGEXP %s", array('organization', $like)) as $value) {
+            foreach (DB::fetch_all("select orgid from %t where pathkey REGEXP %s", ['organization', $like]) as $value) {
                 $childgids[] = $value['orgid'];
             }
-            $childuids = array();
-            foreach (DB::fetch_all("select uid from %t  where orgid in(%n)", array($this->_table, $childgids)) as $v) {
+            $childuids = [];
+            foreach (DB::fetch_all("select uid from %t  where orgid in(%n)", [$this->_table, $childgids]) as $v) {
                 $childuids[] = $v['uid'];
             }
             $uids['partmember'] = array_diff(array_unique($childuids), $uids['adminer']);
@@ -427,7 +426,7 @@ class table_organization_user extends dzz_table {
         return $uids;
     }
 
-    public function syn_user($data = array()) {
+    public function syn_user($data = []) {
         Hook::listen('syntoline_user', $data);//注册绑定到钉钉用户表
         //Hook::listen('dzztowxwork_synuser',$data);//注册绑定到企业微信用户表
     }

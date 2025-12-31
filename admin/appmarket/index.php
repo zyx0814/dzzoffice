@@ -15,10 +15,10 @@ $op = isset($_GET['op']) ? $_GET['op'] : '';
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if (submitcheck('appsubmit')) {
     $dels = $_GET['del'];
-    $allids = array();
+    $allids = [];
     foreach ($_GET['disp'] as $key => $value) {
         if (!in_array($key, $dels))
-            C::t('app_market')->update($key, array('disp' => $value));
+            C::t('app_market')->update($key, ['disp' => $value]);
     }
     //删除应用
     if ($dels) {
@@ -26,17 +26,17 @@ if (submitcheck('appsubmit')) {
     }
     showmessage('do_success', dreferer());
 }
-$grouptitle = array('0' => lang('all'), '-1' => lang('visitors_visible'), '1' => lang('members_available'), '2' => lang('section_administrators_available'), '3' => lang('system_administrators_available'));
+$grouptitle = ['0' => lang('all'), '-1' => lang('visitors_visible'), '1' => lang('members_available'), '2' => lang('section_administrators_available'), '3' => lang('system_administrators_available')];
 if ($do == 'notinstall') {
-    $identifiers = array();
+    $identifiers = [];
     $sql = "identifier!=''";
-    foreach (DB::fetch_all("select appid,identifier from %t where %i ", array('app_market', $sql)) as $value) {
+    foreach (DB::fetch_all("select appid,identifier from %t where %i ", ['app_market', $sql]) as $value) {
         $identifiers[$value['appid']] = $value['identifier'];
     }
-    $appdirs = array(
+    $appdirs = [
         DZZ_ROOT . '/dzz',
         DZZ_ROOT . '/admin'
-    );
+    ];
     $list = [];
     foreach ($appdirs as $appdir) {
         if (!is_dir($appdir)) {
@@ -99,21 +99,21 @@ if ($do == 'notinstall') {
     exit;
 } else {
     //获取所有标签top50；
-    $tags = DB::fetch_all("SELECT * FROM %t WHERE hot>0 ORDER BY HOT DESC limit 50", array('app_tag'), 'tagid');
+    $tags = DB::fetch_all("SELECT * FROM %t WHERE hot>0 ORDER BY HOT DESC limit 50", ['app_tag'], 'tagid');
     $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
     $tagid = intval($_GET['tagid']);
     $group = intval($_GET['group']);
     $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
     $perpage = 20;
-    $gets = array('mod' => 'appmarket', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group,'do' => $do);
+    $gets = ['mod' => 'appmarket', 'keyword' => $keyword, 'tagid' => $tagid, 'group' => $group,'do' => $do];
     $theurl = BASESCRIPT . "?" . url_implode($gets);
     $refer = urlencode($theurl . '&page=' . $page);
 
     $order = ' ORDER BY disp';
     $start = ($page - 1) * $perpage;
-    $apps = array();
+    $apps = [];
     $string = " 1 ";
-    $param = array('app_market');
+    $param = ['app_market'];
     if ($keyword) {
         $string .= " and appname like %s or vendor like %s or identifier like %s";
         $param[] = '%' . $keyword . '%';
@@ -138,7 +138,7 @@ if ($do == 'notinstall') {
         $multi = multi($count, $perpage, $page, $theurl, 'pull-right');
     }
 
-    $list = array();
+    $list = [];
     foreach ($apps as $value) {
         $value['tags'] = C::t('app_relative')->fetch_all_by_appid($value['appid']);
         if ($value['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $value['appico'])) {

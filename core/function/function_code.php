@@ -9,7 +9,7 @@
 if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
-loadcache(array('smilies', 'smileytypes'));
+loadcache(['smilies', 'smileytypes']);
 
 function dzzcode($message, $allowat = 1, $allowsmilies = 1, $allowbbcode = 1, $allowmediacode = 1, $allowhtml = 0) {
     global $_G;
@@ -72,28 +72,28 @@ function dzzcode($message, $allowat = 1, $allowsmilies = 1, $allowbbcode = 1, $a
             if (++$nest > 4) break;
         }
         //修复UBB标签不闭合造成的问题，理论上所有标签都可以以此方法处理
-        $message = preg_replace(array(
+        $message = preg_replace([
             "/\[u\](.+?)\[\/u\]/i",
             "/\[b\](.+?)\[\/b\]/i",
             "/\[s\](.+?)\[\/s\]/i",
             "/\[i\](.+?)\[\/i\]/i"
-        ),
-            array(
+        ],
+            [
                 "[uu]\\1[/uu]",
                 "[bb]\\1[/bb]",
                 "[ss]\\1[/ss]",
                 "[ii]\\1[/ii]",
-            ), $message);
+            ], $message);
 
-        $message = str_replace(array(
+        $message = str_replace([
             '[/color]', '[/backcolor]', '[/size]', '[/font]', '[/align]', '[bb]', '[/bb]', '[ss]', '[/ss]', '[hr]', '[/p]',
             '[i=s]', '[ii]', '[/ii]', '[uu]', '[/uu]', '[list]', '[list=1]', '[list=a]',
             '[list=A]', "\r\n[*]", '[*]', '[/list]', '[indent]', '[/indent]', '[/float]'
-        ), array(
+        ], [
             '</font>', '</font>', '</font>', '</font>', '</div>', '<strong>', '</strong>', '<strike>', '</strike>', '<hr class="l" />', '</p>', '<i class="pstatus">', '<i>',
             '</i>', '<u>', '</u>', '<ul>', '<ul type="1" class="litype_1">', '<ul type="a" class="litype_2">',
             '<ul type="A" class="litype_3">', '<li>', '<li>', '</ul>', '<blockquote>', '</blockquote>', '</span>'
-        ), preg_replace(array(
+        ], preg_replace([
             "/\[color=([#\w]+?)\]/i",
             "/\[color=((rgb|rgba)\([\d\s,]+?\))\]/i",
             "/\[backcolor=([#\w]+?)\]/i",
@@ -106,7 +106,7 @@ function dzzcode($message, $allowat = 1, $allowsmilies = 1, $allowbbcode = 1, $a
             "/\[float=left\]/i",
             "/\[float=right\]/i"
 
-        ), array(
+        ], [
             "<font color=\"\\1\">",
             "<font style=\"color:\\1\">",
             "<font style=\"background-color:\\1\">",
@@ -118,7 +118,7 @@ function dzzcode($message, $allowat = 1, $allowsmilies = 1, $allowbbcode = 1, $a
             "<p style=\"line-height:\\1px;text-indent:\\2em;text-align:\\3\">",
             "<span style=\"float:left;margin-right:5px\">",
             "<span style=\"float:right;margin-left:5px\">"
-        ), $message));
+        ], $message));
 
         if ($allowmediacode) {
             if (!defined('IN_MOBILE')) {
@@ -184,7 +184,7 @@ function dzzcode($message, $allowat = 1, $allowsmilies = 1, $allowbbcode = 1, $a
     unset($msglower);
 
 
-    return $allowhtml ? $message : nl2br(str_replace(array("\t", '   ', '  '), array('&nbsp; &nbsp; &nbsp; &nbsp; ', '&nbsp; &nbsp;', '&nbsp;&nbsp;'), $message));
+    return $allowhtml ? $message : nl2br(str_replace(["\t", '   ', '  '], ['&nbsp; &nbsp; &nbsp; &nbsp; ', '&nbsp; &nbsp;', '&nbsp;&nbsp;'], $message));
 }
 
 function parseurl($url, $text, $scheme) {
@@ -258,7 +258,7 @@ function parsetable($width, $bgcolor, $message) {
             ($width == '' ? NULL : 'style="width:' . $width . '"') .
             ($bgcolor ? ' bgcolor="' . $bgcolor . '">' : '>') : '<table>';
         foreach ($rows as $row) {
-            $s .= '<tr><td>' . str_replace(array('\|', '|', '\n'), array('&#124;', '</td><td>', "\n"), $row) . '</td></tr>';
+            $s .= '<tr><td>' . str_replace(['\|', '|', '\n'], ['&#124;', '</td><td>', "\n"], $row) . '</td></tr>';
         }
         $s .= '</table>';
         return $s;
@@ -318,27 +318,25 @@ function parseimg($width, $height, $src) {
 
     $img = '<img' . ($width > 0 ? ' width="' . $width . '"' : '') . ($height > 0 ? ' height="' . $height . '"' : '') . ' src="{url}" border="0" alt="" />';
 
-    $code = bbcodeurl($src, $img);
-
-    return $code;
+    return bbcodeurl($src, $img);
 }
 
 function parsemedia($params, $url) {
     $params = explode(',', $params);
-    $width = intval($params[1]) > 800 ? 800 : intval($params[1]);
-    $height = intval($params[2]) > 600 ? 600 : intval($params[2]);
+    $width = min(intval($params[1]), 800);
+    $height = min(intval($params[2]), 600);
 
     $url = addslashes($url);
-    if (!in_array(strtolower(substr($url, 0, 6)), array('http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://')) && !preg_match('/^static\//', $url) && !preg_match('/^data\//', $url)) {
+    if (!in_array(strtolower(substr($url, 0, 6)), ['http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://']) && !preg_match('/^static\//', $url) && !preg_match('/^data\//', $url)) {
         $url = 'http://' . $url;
     }
 
     if ($flv = parseflv($url, $width, $height)) {
         return $flv;
     }
-    if (in_array(count($params), array(3, 4))) {
+    if (in_array(count($params), [3, 4])) {
         $type = $params[0];
-        $url = htmlspecialchars(str_replace(array('<', '>'), '', str_replace('\\"', '\"', $url)));
+        $url = htmlspecialchars(str_replace(['<', '>'], '', str_replace('\\"', '\"', $url)));
         switch ($type) {
             case 'mp3':
             case 'wma':
@@ -372,7 +370,6 @@ function parsemedia($params, $url) {
                 return '<a href="' . $url . '" target="_blank">' . $url . '</a>';
         }
     }
-    return;
 }
 
 function parseflv($url, $width = 0, $height = 0) {
@@ -380,7 +377,7 @@ function parseflv($url, $width = 0, $height = 0) {
     $lowerurl = strtolower($url);
     $flv = '';
     $imgurl = '';
-    if ($lowerurl != str_replace(array('player.youku.com/player.php/sid/', 'tudou.com/v/', 'player.ku6.com/refer/'), '', $lowerurl)) {
+    if ($lowerurl != str_replace(['player.youku.com/player.php/sid/', 'tudou.com/v/', 'player.ku6.com/refer/'], '', $lowerurl)) {
         $flv = $url;
     } elseif (strpos($lowerurl, 'v.youku.com/v_show/') !== FALSE) {
         if (preg_match("/http:\/\/v.youku.com\/v_show\/id_([\w=]+)(.html)(.*?)$/i", $url, $matches)) {
@@ -415,7 +412,7 @@ function parseflv($url, $width = 0, $height = 0) {
                 $api = 'http://vo.ku6.com/fetchVideo4Player/1/' . $matches[1] . '.html';
                 $str = dzz_file_get_contents($api);
                 if (!empty($str) && preg_match("/\"picpath\":\"(.+?)\"/i", $str, $image)) {
-                    $imgurl = str_replace(array('\u003a', '\u002e'), array(':', '.'), $image[1]);
+                    $imgurl = str_replace(['\u003a', '\u002e'], [':', '.'], $image[1]);
                 }
             }
         }
@@ -426,7 +423,7 @@ function parseflv($url, $width = 0, $height = 0) {
                 $api = 'http://vo.ku6.com/fetchVideo4Player/1/' . $matches[1] . '.html';
                 $str = dzz_file_get_contents($api);
                 if (!empty($str) && preg_match("/\"picpath\":\"(.+?)\"/i", $str, $image)) {
-                    $imgurl = str_replace(array('\u003a', '\u002e'), array(':', '.'), $image[1]);
+                    $imgurl = str_replace(['\u003a', '\u002e'], [':', '.'], $image[1]);
                 }
             }
         }
@@ -481,7 +478,7 @@ function parseflv($url, $width = 0, $height = 0) {
                 $api = 'http://v.blog.sohu.com/videinfo.jhtml?m=view&id=' . $matches[1] . '&outType=3';
                 $str = dzz_file_get_contents($api);
                 if (!empty($str) && preg_match("/\"cutCoverURL\":\"(.+?)\"/i", $str, $image)) {
-                    $imgurl = str_replace(array('\u003a', '\u002e'), array(':', '.'), $image[1]);
+                    $imgurl = str_replace(['\u003a', '\u002e'], [':', '.'], $image[1]);
                 }
             }
         }
@@ -511,7 +508,7 @@ function parseflv($url, $width = 0, $height = 0) {
     }
     if ($flv) {
         if (!$width && !$height) {
-            return array('url' => $flv, 'img' => $imgurl);
+            return ['url' => $flv, 'img' => $imgurl];
         } else {
             $width = addslashes($width);
             $height = addslashes($height);
@@ -526,10 +523,10 @@ function parseflv($url, $width = 0, $height = 0) {
 
 function bbcodeurl($url, $tags) {
     if (!preg_match("/<.+?>/s", $url)) {
-        if (!in_array(strtolower(substr($url, 0, 6)), array('http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://')) && !preg_match('/^static\//', $url) && !preg_match('/^data\//', $url)) {
+        if (!in_array(strtolower(substr($url, 0, 6)), ['http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://']) && !preg_match('/^static\//', $url) && !preg_match('/^data\//', $url)) {
             $url = 'http://' . $url;
         }
-        return str_replace(array('submit', 'member.php?mod=logging'), array('', ''), str_replace('{url}', addslashes($url), $tags));
+        return str_replace(['submit', 'member.php?mod=logging'], ['', ''], str_replace('{url}', addslashes($url), $tags));
     } else {
         return '&nbsp;' . $url;
     }
@@ -554,4 +551,4 @@ function parseaudio($url, $width = 400) {
 }
 
 
-?>
+

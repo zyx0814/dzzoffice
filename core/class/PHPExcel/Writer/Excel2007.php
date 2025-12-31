@@ -58,7 +58,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 	 *
 	 * @var PHPExcel_Writer_Excel2007_WriterPart[]
 	 */
-	private $_writerParts	= array();
+	private $_writerParts	= [];
 
 	/**
 	 * Private PHPExcel
@@ -72,7 +72,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 	 *
 	 * @var string[]
 	 */
-	private $_stringTable	= array();
+	private $_stringTable	= [];
 
 	/**
 	 * Private unique PHPExcel_Style_Conditional HashTable
@@ -133,7 +133,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
     	// Assign PHPExcel
 		$this->setPHPExcel($pPHPExcel);
 
-    	$writerPartsArray = array(	'stringtable'	=> 'PHPExcel_Writer_Excel2007_StringTable',
+    	$writerPartsArray = ['stringtable'	=> 'PHPExcel_Writer_Excel2007_StringTable',
 									'contenttypes'	=> 'PHPExcel_Writer_Excel2007_ContentTypes',
 									'docprops' 		=> 'PHPExcel_Writer_Excel2007_DocProps',
 									'rels'			=> 'PHPExcel_Writer_Excel2007_Rels',
@@ -146,7 +146,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 									'chart'			=> 'PHPExcel_Writer_Excel2007_Chart',
 									'relsvba'		=> 'PHPExcel_Writer_Excel2007_RelsVBA',
 									'relsribbonobjects' => 'PHPExcel_Writer_Excel2007_RelsRibbon'
-								 );
+        ];
 
     	//	Initialise writer parts
 		//		and Assign their parent IWriters
@@ -154,10 +154,10 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 			$this->_writerParts[$writer] = new $class($this);
 		}
 
-    	$hashTablesArray = array( '_stylesConditionalHashTable',	'_fillHashTable',		'_fontHashTable',
+    	$hashTablesArray = ['_stylesConditionalHashTable',	'_fillHashTable',		'_fontHashTable',
 								  '_bordersHashTable',				'_numFmtHashTable',		'_drawingHashTable',
                                   '_styleHashTable'
-							    );
+        ];
 
 		// Set HashTable variables
 		foreach ($hashTablesArray as $tableName) {
@@ -206,7 +206,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 			PHPExcel_Calculation_Functions::setReturnDateType(PHPExcel_Calculation_Functions::RETURNDATE_EXCEL);
 
 			// Create string lookup table
-			$this->_stringTable = array();
+			$this->_stringTable = [];
 			for ($i = 0; $i < $this->_spreadSheet->getSheetCount(); ++$i) {
 				$this->_stringTable = $this->getWriterPart('StringTable')->createStringTable($this->_spreadSheet->getSheet($i), $this->_stringTable);
 			}

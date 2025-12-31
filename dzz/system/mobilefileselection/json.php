@@ -13,23 +13,23 @@ Hook::listen('check_login');//检查是否登录，未登录跳转到登录界�
 $uid = $_G['uid'];
 $space = dzzgetspace($uid);
 $space['self'] = intval($space['self']);
-$data = array();
+$data = [];
 $data['myuid'] = $uid;
 $applist = C::t('app_market')->fetch_all_by_default($_G['uid'],true);
 //获取系统桌面设置信息
-$icosdata = array();
+$icosdata = [];
 $data['formhash'] = $_G['formhash'];
-$data['sourcedata'] = array(
+$data['sourcedata'] = [
     'icos' => [],
     'folder' => []
-);
+];
 
 $data['space'] = $space;
 $data['mulitype'] = $mulitype;
 $data['fileselectiontype'] = $type;
 $data['callback_url'] = $callback;
 if ($exttype) {
-    $exttype = str_replace(array('&quot;', '|', '$'), array('"', '(', ')'), $exttype);
+    $exttype = str_replace(['&quot;', '|', '$'], ['"', '(', ')'], $exttype);
 }
 $data['allowselecttype'] = json_decode($exttype);
 $data['defaultfilename'] = isset($filename) ? $filename : '';

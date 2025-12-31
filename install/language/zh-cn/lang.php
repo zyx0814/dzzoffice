@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'admininfo_password2_invalid' => '两次密码不一致，请检查',
     'database_errno_1045' => '无法连接数据库，请检查数据库用户名或者密码是否正确',
     'database_errno_2003' => '无法连接数据库，请检查数据库是否启动，数据库服务器地址是否正确',
@@ -9,12 +9,12 @@ $lang = array(
     'SC_UTF8' => '简体中文 UTF8 版',
     'EN_UTF8' => 'ENGLIST UTF-8',
     'error_quit_msg' => '您必须解决报错问题，安装才可以继续',
-    'title_install' => SOFT_NAME. ' 安装向导',
+    'title_install' => SOFT_NAME . ' 安装向导',
     'agreement_yes' => '我同意',
     'agreement_no' => '我不同意',
     'notset' => '不限制',
     'enable' => '开启',
-	'disable' => '关闭',
+    'disable' => '关闭',
     'db_installing_title' => '正在安装，请稍候...',
     'message_title' => '提示信息',
     'error_message' => '错误信息',
@@ -77,8 +77,8 @@ $lang = array(
     'adminemail_comment' => '用于发送程序错误报告',
     'dbhost_comment' => '一般为 127.0.0.1 或 localhost;非3306端口需加端口号使用，如：127.0.0.1:3307；<br>如果使用unix socket连接，直接输入mysql.sock的位置如 /tmp/mysql.sock;',
     'dbname_comment' => '用于安装' . SOFT_NAME . '的数据库',
-	'dbuser_comment' => '您的数据库用户名',
-	'dbpw_comment' => '您的数据库密码',
+    'dbuser_comment' => '您的数据库用户名',
+    'dbpw_comment' => '您的数据库密码',
     'company_comment' => '组织简称，设置后将默认新建同名机构及共享目录。如：上海乐云。',
     'tablepre_comment' => '同一数据库运行多个副本时，请修改前缀',
     'forceinstall_check_label' => '我要删除数据，强制安装 !!!',
@@ -114,8 +114,8 @@ $lang = array(
     'unsupportted' => '不支持',
     'max_size' => '支持/最大尺寸',
     'project' => '项目',
-    'dzzoffice_required' => SOFT_NAME. ' 所需配置',
-    'dzzoffice_best' => SOFT_NAME. ' 最佳',
+    'dzzoffice_required' => SOFT_NAME . ' 所需配置',
+    'dzzoffice_best' => SOFT_NAME . ' 最佳',
     'curr_server' => '当前服务器',
     'env_check' => '环境检查',
     'os' => '操作系统',
@@ -166,5 +166,4 @@ $lang = array(
     'handwork_del' => '为了安全起见，请手工删除',
     'enter_desktop' => '进入首页',
     'undefine_func' => '未定义函数',
-);
-?>	
+];

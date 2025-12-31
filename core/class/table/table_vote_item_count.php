@@ -24,7 +24,7 @@ class table_vote_item_count extends dzz_table {
         $itemids = (array)$itemids;
         $ret = 0;
         foreach ($itemids as $itemid) {
-            $ret += parent::insert(array('uid' => $uid, 'itemid' => $itemid, 'dateline' => TIMESTAMP), 0, 1);
+            $ret += parent::insert(['uid' => $uid, 'itemid' => $itemid, 'dateline' => TIMESTAMP], 0, 1);
         }
         return $ret;
     }
@@ -35,4 +35,4 @@ class table_vote_item_count extends dzz_table {
     }
 }
 
-?>
+

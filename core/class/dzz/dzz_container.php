@@ -5,7 +5,7 @@ if (!defined('IN_DZZ')) {
 
 class dzz_container extends dzz_base {
     protected $_obj;
-    protected $_objs = array();
+    protected $_objs = [];
 
     public function __construct($obj = null) {
         if (isset($obj)) {
@@ -63,7 +63,7 @@ class dzz_container extends dzz_base {
                     $this->_obj->data = $this->_obj->{$name}($p[0], $p[1], $p[2], $p[3], $p[4]);
                     break;
                 default:
-                    $this->_obj->data = call_user_func_array(array($this->_obj, $name), $p);
+                    $this->_obj->data = call_user_func_array([$this->_obj, $name], $p);
                     break;
             }
             if (isset($this->_obj->methods[$name][1])) {
@@ -102,7 +102,7 @@ class dzz_container extends dzz_base {
                             $ret = $obj->{$extend['method']}($p[0], $p[1], $p[2], $p[3], $p[4]);
                             break;
                         default:
-                            $ret = call_user_func_array(array($obj, $extend['method']), $p);
+                            $ret = call_user_func_array([$obj, $extend['method']], $p);
                             break;
                     }
                 } elseif (is_callable($extend, true)) {
@@ -131,7 +131,7 @@ class dzz_container extends dzz_base {
                                         $ret = $obj->{$method}($p[0], $p[1], $p[2], $p[3], $p[4]);
                                         break;
                                     default:
-                                        $ret = call_user_func_array(array($obj, $method), $p);
+                                        $ret = call_user_func_array([$obj, $method], $p);
                                         break;
                                 }
                             } else {
@@ -182,4 +182,3 @@ class dzz_container extends dzz_base {
     }
 }
 
-?>

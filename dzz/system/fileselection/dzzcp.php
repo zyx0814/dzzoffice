@@ -7,11 +7,11 @@ Hook::listen('check_login');//检查是否登录，未登录跳转到登录界�
 $operation = empty($_GET['operation']) ? '' : trim($_GET['operation']);
 
 if ($operation == 'deleteIco') {//删除文件到回收站
-    $arr = array();
-    $names = array();
+    $arr = [];
+    $names = [];
     $i = 0;
     $icoids = $_GET['rids'];
-    $ridarr = array();
+    $ridarr = [];
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     foreach ($icoids as $icoid) {
         $icoid = dzzdecode($icoid);
@@ -41,7 +41,7 @@ if ($operation == 'deleteIco') {//删除文件到回收站
     exit();
 } elseif ($operation == 'rename') {
     if (!$path = dzzdecode($_GET['path'])) {
-        exit(json_encode(array('error' => lang('parameter_error'))));
+        exit(json_encode(['error' => lang('parameter_error')]));
     }
     $text = str_replace('...', '', getstr(IO::name_filter($_GET['text']), 80));
     $ret = IO::rename($path, $text);

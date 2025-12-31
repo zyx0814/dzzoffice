@@ -1,8 +1,7 @@
 <?php
-$lang = array(
+$lang = [
     'appmarket' => 'App Market',
     'appmarketedit' => 'App Management',
-    'installed' => 'Installed',
     'upgrade' => 'Upgrade',
     'open_way' => 'Opening Method',
     'permission_management' => 'Permission Management',
@@ -83,5 +82,4 @@ $lang = array(
     'view_detail' => 'View Details',
     'buy_contract' => 'Contact for Purchase',
     'manual_install_tip' => 'If online installation fails or you need to install an older version, please download the app installation package from the <a class="num" href="http://www.dzzoffice.com/index.php?mod=dzzmarket" target="_blank">official app market</a> for manual installation'
-);
-?>
+];

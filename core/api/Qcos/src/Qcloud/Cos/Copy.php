@@ -23,7 +23,7 @@ class Copy {
     private $commandList = [];
     private $requestList = [];
 
-    public function __construct($client, $source, $options = array()) {
+    public function __construct($client, $source, $options = []) {
         $minPartSize = $options['PartSize'];
         unset($options['PartSize']);
         $this->client = $client;
@@ -49,11 +49,11 @@ class Copy {
             $num2[$key] = $row ['ETag'];
         }
         array_multisort($num1, SORT_ASC, $num2, SORT_ASC, $this->parts);
-        return $this->client->completeMultipartUpload(array(
+        return $this->client->completeMultipartUpload([
             'Bucket' => $this->options['Bucket'],
             'Key' => $this->options['Key'],
             'UploadId' => $uploadId,
-            'Parts' => $this->parts)
+            'Parts' => $this->parts]
         );
 
     }
@@ -63,7 +63,7 @@ class Copy {
             $partNumber = 1;
             $partSize = $this->partSize;
             $finishedNum = 0;
-            $this->parts = array();
+            $this->parts = [];
             for ($index = 1; ; $index ++) {
                 if ($offset + $partSize  >= $this->size)
                 {
@@ -71,14 +71,14 @@ class Copy {
                 }
                 $copySourcePath = $this->copySource['Bucket']. '.cos.'. $this->copySource['Region'].
                     ".myqcloud.com/". $this->copySource['Key']. "?versionId=". $this->copySource['VersionId'];
-                $params = array(
+                $params = [
                     'Bucket' => $this->options['Bucket'],
                     'Key' => $this->options['Key'],
                     'UploadId' => $uploadId,
                     'PartNumber' => $partNumber,
                     'CopySource'=> $copySourcePath,
                     'CopySourceRange' => 'bytes='.((string)$offset).'-'.(string)($offset+$partSize - 1),
-                );
+                ];
                 if(!isset($parts[$partNumber])) {
                     $command = $this->client->getCommand('uploadPartCopy', $params);
                     $request = $this->client->commandToRequestTransformer($command);
@@ -98,7 +98,7 @@ class Copy {
             'fulfilled' => function ($response, $index) {
                 $index = $index + 1;
                 $response = $this->client->responseToResultTransformer($response, $this->requestList[$index], $this->commandList[$index]);
-                $part = array('PartNumber' => $index, 'ETag' => $response['ETag']);
+                $part = ['PartNumber' => $index, 'ETag' => $response['ETag']];
                 $this->parts[$index] = $part;
             },
            
@@ -108,7 +108,7 @@ class Copy {
                     $index = $index += 1;
                     try {
                         $rt =$this->client->execute($commandList[$index]);
-                        $part = array('PartNumber' => $index, 'ETag' => $rt['ETag']);
+                        $part = ['PartNumber' => $index, 'ETag' => $rt['ETag']];
                         $this->parts[$index] = $part;
                     } catch(Exception $e) {
                         if ($i == $retry) {
@@ -132,8 +132,7 @@ class Copy {
         $partSize = intval(ceil(($this->size / self::MAX_PARTS)));
         $partSize = max($minPartSize, $partSize);
         $partSize = min($partSize, self::MAX_PART_SIZE);
-        $partSize = max($partSize, self::MIN_PART_SIZE);
-        return $partSize;
+        return max($partSize, self::MIN_PART_SIZE);
     }
 
     private function initiateMultipartUpload() {

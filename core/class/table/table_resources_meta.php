@@ -34,7 +34,7 @@ class table_resources_meta extends dzz_table {
     }
 
     public function insert($setarr, $return_insert_id = false, $replace = false, $silent = false) {
-        if ($id = DB::result_first("select id from %t where rid=%s and `key`=%s", array($this->_table, $setarr['rid'], $setarr['key']))) {
+        if ($id = DB::result_first("select id from %t where rid=%s and `key`=%s", [$this->_table, $setarr['rid'], $setarr['key']])) {
             $ret = self::update($id, $setarr);
         } else {
             $setarr['dateline'] = TIMESTAMP;
@@ -51,13 +51,13 @@ class table_resources_meta extends dzz_table {
         if ($returndata = $this->fetch_cache($cachekey)) {
             return $isval ? $this->extract_values($returndata) : $returndata;
         }
-        $returndata = array();
-        foreach (DB::fetch_all("select * from %t where rid = %s", array($this->_table, $rid)) as $val) {
-            $returndata[$val['key']] = array(
+        $returndata = [];
+        foreach (DB::fetch_all("select * from %t where rid = %s", [$this->_table, $rid]) as $val) {
+            $returndata[$val['key']] = [
                 'value' => $val['value'],
                 'dateline' => $val['dateline'],
                 'editdateline' => $val['editdateline']
-            );
+            ];
         }
         $this->store_cache($cachekey, $returndata);
         return $isval ? $this->extract_values($returndata) : $returndata;
@@ -77,7 +77,7 @@ class table_resources_meta extends dzz_table {
             }
             return $returndata;
         }
-        $returndata = DB::fetch_first("SELECT * FROM %t WHERE rid = %s AND `key` = %s", array($this->_table, $rid, $key));
+        $returndata = DB::fetch_first("SELECT * FROM %t WHERE rid = %s AND `key` = %s", [$this->_table, $rid, $key]);
         if ($returndata) {
             $this->store_cache($cachekey, $returndata);
             if ($isval) {
@@ -89,7 +89,7 @@ class table_resources_meta extends dzz_table {
 
     public function delete_by_rid($rid) {
         $i = 0;
-        foreach (DB::fetch_all("select id from %t where rid=%s", array($this->_table, $rid)) as $value) {
+        foreach (DB::fetch_all("select id from %t where rid=%s", [$this->_table, $rid]) as $value) {
             if (self::delete_by_id($value['id'])) {
                 $i++;
             }
@@ -99,7 +99,7 @@ class table_resources_meta extends dzz_table {
 
     public function delete_by_key($rid, $key) {
         $i = 0;
-        foreach (DB::fetch_all("select id from %t where rid=%s and `key`=%d", array($this->_table, $rid, $key)) as $value) {
+        foreach (DB::fetch_all("select id from %t where rid=%s and `key`=%d", [$this->_table, $rid, $key]) as $value) {
             if (self::delete_by_id($value['id'])) {
                 $i++;
             }
@@ -110,11 +110,11 @@ class table_resources_meta extends dzz_table {
     public function update_by_key($rid, $keyarr) {
         $i = 0;
         foreach ($keyarr as $k => $v) {
-             $setarr = array(
+             $setarr = [
                 'rid' => $rid,
                 'key' => $k,
                 'value' => $v
-            );
+             ];
             if (self::insert($setarr)) {
                 $i++;
             }

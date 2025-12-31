@@ -11,82 +11,82 @@ class helper_browser {
         // check for most popular browsers first
         // unfortunately, that's IE. We also ignore Opera and Netscape 8
         // because they sometimes send msie agent
-        $useragent = $useragent ? $useragent : $_SERVER['HTTP_USER_AGENT'];
+        $useragent = $useragent ?: $_SERVER['HTTP_USER_AGENT'];
         if (strpos($useragent, 'MSIE') !== FALSE && strpos($useragent, 'Opera') === FALSE && strpos($useragent, 'Netscape') === FALSE) {
             //deal with Blazer
             if (preg_match("/Blazer\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('blazer' => $matches[1]);
+                return ['blazer' => $matches[1]];
             }
             //deal with IE
             if (preg_match("/MSIE ([0-9]{1,2}\.[0-9]{1,2})/", $useragent, $matches)) {
-                return array('ie' => $matches[1]);
+                return ['ie' => $matches[1]];
             }
         } elseif (strpos($useragent, 'IEMobile') !== FALSE) {
             if (preg_match("/IEMobile\/([0-9]{1,2}\.[0-9]{1,2})/", $useragent, $matches)) {
-                return array('ie' => $matches[1], 'ismobile' => $matches[1]);
+                return ['ie' => $matches[1], 'ismobile' => $matches[1]];
 
             }
         } elseif (strpos($useragent, 'Gecko')) {
             //deal with Gecko based
             if (strpos($useragent, 'Trident/7.0') !== FALSE && strpos($useragent, 'rv:11.0') !== FALSE) {
-                return array('ie' => 11);
+                return ['ie' => 11];
             } //if firefox
             elseif (preg_match("/Firefox\/([0-9]{1,2}\.[0-9]{1,2}(\.[0-9]{1,2})?)/", $useragent, $matches)) {
-                return array('firefox' => $matches[1]);
+                return ['firefox' => $matches[1]];
             }
 
             //if Netscape (based on gecko)
             if (preg_match("/Netscape\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('netscape' => $matches[1]);
+                return ['netscape' => $matches[1]];
             }
 
             //check chrome before safari because chrome agent contains both
             if (preg_match("/Chrome\/([^\s]+)/", $useragent, $matches)) {
-                return array('chrome' => $matches[1]);
+                return ['chrome' => $matches[1]];
             }
 
             //if Safari (based on gecko)
             if (preg_match("/Safari\/([0-9]{2,4}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('safari' => $matches[1]);
+                return ['safari' => $matches[1]];
             }
 
             //if Galeon (based on gecko)
             if (preg_match("/Galeon\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('galeon' => $matches[1]);
+                return ['galeon' => $matches[1]];
             }
 
             //if Konqueror (based on gecko)
             if (preg_match("/Konqueror\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('konqueror' => $matches[1]);
+                return ['konqueror' => $matches[1]];
             }
 
             // if Fennec (based on gecko)
             if (preg_match("/Fennec\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('fennec' => $matches[1]);
+                return ['fennec' => $matches[1]];
             }
 
             // if Maemo (based on gecko)
             if (preg_match("/Maemo\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('maemo' => $matches[1]);
+                return ['maemo' => $matches[1]];
             }
 
             //no specific Gecko found
             //return generic Gecko
-            return array('Gecko based' => true);
+            return ['Gecko based' => true];
         } elseif (strpos($useragent, 'Opera') !== FALSE) {
             //deal with Opera
             if (preg_match("/Opera[\/ ]([0-9]{1}\.[0-9]{1}([0-9])?)/", $useragent, $matches)) {
-                return array('opera' => $matches[1]);
+                return ['opera' => $matches[1]];
             }
         } elseif (strpos($useragent, 'Lynx') !== FALSE) {
             //deal with Lynx
             if (preg_match("/Lynx\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('lynx' => $matches[1]);
+                return ['lynx' => $matches[1]];
             }
         } elseif (strpos($useragent, 'Netscape') !== FALSE) {
             //NN8 with IE string
             if (preg_match("/Netscape\/([0-9]{1}\.[0-9]{1}(\.[0-9])?)/", $useragent, $matches)) {
-                return array('netscape' => $matches[1]);
+                return ['netscape' => $matches[1]];
             }
         } else {
             //unrecognized, this should be less than 1% of browsers (not counting bots like google etc)!
@@ -156,4 +156,3 @@ class helper_browser {
         return [];
     }
 }
-?>

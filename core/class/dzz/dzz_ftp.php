@@ -17,13 +17,13 @@ if (!defined('FTP_ERR_SERVER_DISABLED')) {
 
 class dzz_ftp {
     var $enabled = false;
-    var $config = array();
+    var $config = [];
     var $func;
     var $connectid;
     var $_error;
     var $systype = '';
 
-    function &instance($config = array()) {
+    function &instance($config = []) {
         static $object;
         if (empty($object)) {
             $object = new dzz_ftp($config);
@@ -31,7 +31,7 @@ class dzz_ftp {
         return $object;
     }
 
-    function __construct($config = array()) {
+    function __construct($config = []) {
         $this->set_error(0);
         $this->config = !$config ? getglobal('setting/ftp') : $config;
         $this->enabled = false;
@@ -156,7 +156,7 @@ class dzz_ftp {
     }
 
     function clear($str) {
-        return str_replace(array("\n", "\r", '..'), '', $str);
+        return str_replace(["\n", "\r", '..'], '', $str);
     }
 
 
@@ -249,7 +249,7 @@ class dzz_ftp {
 
     function ftp_login($username, $password) {
         $username = $this->clear($username);
-        $password = str_replace(array("\n", "\r"), array('', ''), $password);
+        $password = str_replace(["\n", "\r"], ['', ''], $password);
         return @ftp_login($this->connectid, $username, $password);
     }
 
@@ -337,7 +337,7 @@ class dzz_ftp {
         $path = dzz_ftp::clear($path);
         if (empty($path)) $path = self::ftp_pwd();
         else self::ftp_chdir($path);
-        $files = array();
+        $files = [];
         $rawList = ftp_rawlist($this->connectid, '');
         $data = self::parseRawList($rawList);
         foreach ($data as $key => $value) {
@@ -349,25 +349,25 @@ class dzz_ftp {
     }
 
     function byteconvert($bytes) {
-        $symbol = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $symbol = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $exp = floor(log($bytes) / log(1024));
         return sprintf('%.2f ' . $symbol[$exp], ($bytes / pow(1024, floor($exp))));
     }
 
     function chmodnum($chmod) {
-        $trans = array('-' => '0', 'r' => '4', 'w' => '2', 'x' => '1', 't' => '1', 's' => '1');
+        $trans = ['-' => '0', 'r' => '4', 'w' => '2', 'x' => '1', 't' => '1', 's' => '1'];
         $chmod = substr(strtr($chmod, $trans), 1);
         $array = str_split($chmod, 3);
         return array_sum(str_split($array[0])) . array_sum(str_split($array[1])) . array_sum(str_split($array[2]));
     }
 
     function parseRawList($rawList) {
-        $data = array();
+        $data = [];
         foreach ($rawList as $key => $value) {
-            $temp = array();
+            $temp = [];
             $parser = null;
+            $parser = explode(" ", preg_replace('!\s+!', ' ', $value));
             if (preg_match("/Window/i", $this->systype)) {
-                $parser = explode(" ", preg_replace('!\s+!', ' ', $value));
                 if (isset($parser)) {
                     list($month, $day, $year) = explode('-', $parser[0]);
                     $temp['mtime'] = strtotime($year . '-' . $month . '-' . $day . ' ' . $parser[1]);
@@ -375,17 +375,15 @@ class dzz_ftp {
 
                     if ($temp['type'] == 'folder') {
                         $temp['size'] = 0;
-                        $temp['name'] = substr($value, strrpos($value, $parser[3]));
                     } else {
                         $temp['size'] = $parser[2];
-                        $temp['name'] = substr($value, strrpos($value, $parser[3]));
                     }
+                    $temp['name'] = substr($value, strrpos($value, $parser[3]));
                     $temp['mod'] = 0;
                     $data[] = $temp;
                 }
             } else {
 
-                $parser = explode(" ", preg_replace('!\s+!', ' ', $value));
                 //echo $value;
                 //print_r($parser);
                 if (isset($parser)) {
@@ -407,4 +405,3 @@ class dzz_ftp {
 
 }
 
-?>

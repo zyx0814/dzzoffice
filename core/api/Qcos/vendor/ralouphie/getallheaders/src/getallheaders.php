@@ -9,13 +9,13 @@ if (!function_exists('getallheaders')) {
      */
     function getallheaders()
     {
-        $headers = array();
+        $headers = [];
 
-        $copy_server = array(
+        $copy_server = [
             'CONTENT_TYPE'   => 'Content-Type',
             'CONTENT_LENGTH' => 'Content-Length',
             'CONTENT_MD5'    => 'Content-Md5',
-        );
+        ];
 
         foreach ($_SERVER as $key => $value) {
             if (substr($key, 0, 5) === 'HTTP_') {

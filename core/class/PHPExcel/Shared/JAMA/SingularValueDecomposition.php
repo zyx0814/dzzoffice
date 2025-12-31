@@ -23,19 +23,19 @@ class SingularValueDecomposition  {
 	 *	Internal storage of U.
 	 *	@var array
 	 */
-	private $U = array();
+	private $U = [];
 
 	/**
 	 *	Internal storage of V.
 	 *	@var array
 	 */
-	private $V = array();
+	private $V = [];
 
 	/**
 	 *	Internal storage of singular values.
 	 *	@var array
 	 */
-	private $s = array();
+	private $s = [];
 
 	/**
 	 *	Row dimension.
@@ -65,8 +65,8 @@ class SingularValueDecomposition  {
 		$this->m = $Arg->getRowDimension();
 		$this->n = $Arg->getColumnDimension();
 		$nu      = min($this->m, $this->n);
-		$e       = array();
-		$work    = array();
+		$e       = [];
+		$work    = [];
 		$wantu   = true;
 		$wantv   = true;
 		$nct = min($this->m - 1, $this->n);

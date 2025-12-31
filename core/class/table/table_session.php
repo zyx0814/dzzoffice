@@ -21,21 +21,21 @@ class table_session extends dzz_table {
 
     public function fetch($sid, $ip = false, $uid = false) {
         if (empty($sid)) {
-            return array();
+            return [];
         }
         $this->checkpk();
         $session = parent::fetch($sid);
         if ($session && $ip !== false && $ip != "{$session['ip']}") {
-            $session = array();
+            $session = [];
         }
         if ($session && $uid !== false && $uid != $session['uid']) {
-            $session = array();
+            $session = [];
         }
         return $session;
     }
 
     public function fetch_member($ismember = 0, $invisible = 0, $start = 0, $limit = 0) {
-        $sql = array();
+        $sql = [];
         if ($ismember === 1) {
             $sql[] = 'uid > 0';
         } elseif ($ismember === 2) {
@@ -48,11 +48,11 @@ class table_session extends dzz_table {
         }
         $wheresql = !empty($sql) && is_array($sql) ? ' WHERE ' . implode(' AND ', $sql) : '';
         $sql = 'SELECT * FROM %t ' . $wheresql . ' ORDER BY lastactivity DESC' . DB::limit($start, $limit);
-        return DB::fetch_all($sql, array($this->_table), $this->_pk);
+        return DB::fetch_all($sql, [$this->_table], $this->_pk);
     }
 
     public function count_invisible($type = 1) {
-        return DB::result_first('SELECT COUNT(*) FROM %t WHERE invisible=%d', array($this->_table, $type));
+        return DB::result_first('SELECT COUNT(*) FROM %t WHERE invisible=%d', [$this->_table, $type]);
     }
 
     public function count($type = 0) {
@@ -75,13 +75,13 @@ class table_session extends dzz_table {
     }
 
     public function fetch_by_uid($uid) {
-        return !empty($uid) ? DB::fetch_first('SELECT * FROM %t WHERE uid=%d', array($this->_table, $uid)) : false;
+        return !empty($uid) ? DB::fetch_first('SELECT * FROM %t WHERE uid=%d', [$this->_table, $uid]) : false;
     }
 
     public function fetch_all_by_uid($uids, $start = 0, $limit = 0) {
-        $data = array();
+        $data = [];
         if (!empty($uids)) {
-            $data = DB::fetch_all('SELECT * FROM %t WHERE ' . DB::field('uid', $uids) . DB::limit($start, $limit), array($this->_table), null, 'uid');
+            $data = DB::fetch_all('SELECT * FROM %t WHERE ' . DB::field('uid', $uids) . DB::limit($start, $limit), [$this->_table], null, 'uid');
         }
         return $data;
     }
@@ -99,7 +99,7 @@ class table_session extends dzz_table {
     }
 
     public function fetch_all_by_fid($fid, $limit = 12) {
-        return ($fid = dintval($fid)) ? DB::fetch_all('SELECT uid, groupid, username, invisible, lastactivity FROM ' . DB::table('session') . " WHERE uid>'0' AND fid='$fid' AND invisible='0' ORDER BY lastactivity DESC" . DB::limit($limit)) : array();
+        return ($fid = dintval($fid)) ? DB::fetch_all('SELECT uid, groupid, username, invisible, lastactivity FROM ' . DB::table('session') . " WHERE uid>'0' AND fid='$fid' AND invisible='0' ORDER BY lastactivity DESC" . DB::limit($limit)) : [];
     }
 
     public function update_by_uid($uid, $data) {
@@ -118,12 +118,12 @@ class table_session extends dzz_table {
     }
 
     public function fetch_all_by_ip($ip, $start = 0, $limit = 0) {
-        $data = array();
+        $data = [];
         if (!empty($ip)) {
-            $data = DB::fetch_all('SELECT * FROM %t WHERE ip=%s ORDER BY lastactivity DESC' . DB::limit($start, $limit), array($this->_table, $ip), null);
+            $data = DB::fetch_all('SELECT * FROM %t WHERE ip=%s ORDER BY lastactivity DESC' . DB::limit($start, $limit), [$this->_table, $ip], null);
         }
         return $data;
     }
 }
 
-?>
+

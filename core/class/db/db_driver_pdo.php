@@ -144,7 +144,7 @@ class db_driver_pdo extends db_driver_mysqli {
 			$query->execute($arg);
 		} catch (Exception $e) {
 			list($stateCode, $errCode, $errMsg) = $query->errorInfo();
-			if(in_array($errCode, [2006, 2013]) && !str_starts_with($silent, 'RETRY')) {
+			if(in_array($errCode, [2006, 2013]) && substr($silent, 0, 5) !== 'RETRY') {
 				$this->connect();
 				return $this->query([$sql, $arg], 'RETRY'.$silent);
 			}

@@ -9,7 +9,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 Hook::listen('check_login');//检查是否登录，未登录跳转到登录界面
-$data = array();
+$data = [];
 $data['myuid'] = $_G['uid'];
 $data['deletefinally'] = 0;
 if (isset($_G['setting']['explorer_finallydelete'])) {
@@ -25,10 +25,10 @@ $data['extopen']['user'] = C::t('app_open_default')->fetch_all_by_uid($_G['uid']
 
 $data['formhash'] = $_G['formhash'];
 
-$data['sourcedata'] = array(
+$data['sourcedata'] = [
     'icos' => [],
     'folder' => []
-);
+];
 
 $data['space'] = [
     'self' => ($_G['adminid'] == 1) ? 2 : 0,
@@ -37,7 +37,7 @@ $data['space'] = [
 $data['mulitype'] = $mulitype;
 $data['fileselectiontype'] = $type;
 if ($exttype) {
-    $exttype = str_replace(array('&quot;', '|', '$'), array('"', '(', ')'), $exttype);
+    $exttype = str_replace(['&quot;', '|', '$'], ['"', '(', ')'], $exttype);
 }
 $data['allowselecttype'] = json_decode($exttype);
 $data['defaultfilename'] = isset($filename) ? $filename : '';

@@ -1,5 +1,5 @@
 <?php
-return array(
+return [
     //'libfile'=>'function/profile,function/organization',
     'default_mod' => 'space',
-);
+];

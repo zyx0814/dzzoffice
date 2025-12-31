@@ -15,13 +15,13 @@ include_once libfile('function/cache');//系统缓存
 require  libfile('function/test');
 //引入函数文件示例，此例将会调用./function/function_test.php,注意函数文件名的命名规则。
 Hook::listen('adminlogin');//管理员登录验证 钩子
-$op = isset($_GET['op'])?$_GET['op']:'admin';//默认菜单的选择
+$op = $_GET['op'] ?? 'admin';//默认菜单的选择
 $navtitle = lang('title1');//浏览器标题
 if ( submitcheck('settingsubmit')) { 
 	$settingnew = $_GET['settingnew']; 
-	$settingnew=array(
-		"test_setting"=>$settingnew["test_setting"], 
-	);
+	$settingnew= [
+		"test_setting"=>$settingnew["test_setting"],
+    ];
 	
 	$result = C::t('setting') -> update_batch($settingnew);
 	updatecache('setting');//更新setting缓存

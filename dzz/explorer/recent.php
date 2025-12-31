@@ -18,9 +18,9 @@ if ($do == 'filelist') {
     $asc = isset($_GET['asc']) ? intval($_GET['asc']) : 0;
     //最近使用文件
     $explorer_setting = get_resources_some_setting();
-    $param = array('resources_statis', $_G['uid']);
+    $param = ['resources_statis', $_G['uid']];
     $limitsql = ' limit ' . $perpage;
-    $recents = $data = array();
+    $recents = $data = [];
     $recents = DB::fetch_all("select * from %t where uid = %d and rid != '' order by opendateline desc, editdateline desc $limitsql", $param);
     foreach ($recents as $v) {
         if ($val = C::t('resources')->fetch_by_rid($v['rid'])) {
@@ -28,12 +28,12 @@ if ($do == 'filelist') {
                 continue;
             }
             if (!$explorer_setting['grouponperm'] && $val['gid'] > 0) {
-                if (DB::result_first("select `type` from %t where orgid = %d", array('organization', $val['gid'])) == 1) {
+                if (DB::result_first("select `type` from %t where orgid = %d", ['organization', $val['gid']]) == 1) {
                     continue;
                 }
             }
             if (!$explorer_setting['orgonperm'] && $val['gid'] > 0) {
-                if (DB::result_first("select `type` from %t where orgid = %d", array('organization', $val['gid'])) == 0) {
+                if (DB::result_first("select `type` from %t where orgid = %d", ['organization', $val['gid']]) == 0) {
                     continue;
                 }
             }
@@ -72,17 +72,17 @@ if ($do == 'filelist') {
 
     $iconview = isset($_GET['iconview']) ? intval($_GET['iconview']) : 4;//排列方式
     if ($data === null) {
-        $data = array();
+        $data = [];
     }
     $total = count($data);
-    if (!$json_data = json_encode($data)) $data = array();
+    if (!$json_data = json_encode($data)) $data = [];
     //返回数据
-    $return = array(
+    $return = [
         'sid' => $sid,
         'total' => $total,
-        'data' => $data ? $data : array(),
-        'folderdata' => array(),
-        'param' => array(
+        'data' => $data ?: [],
+        'folderdata' => [],
+        'param' => [
             'disp' => $disp,
             'view' => $iconview,
             'page' => $page,
@@ -94,8 +94,8 @@ if ($do == 'filelist') {
             'tags' => '',
             'exts' => '',
             'localsearch' => $bz ? 1 : 0
-        )
-    );
+        ]
+    ];
     exit(json_encode($return));
 } else {
     $displayTime = 1;

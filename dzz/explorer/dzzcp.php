@@ -15,11 +15,11 @@ $space['self'] = intval($space['self']);
 $refer = dreferer();
 
 if ($do == 'deleteIco') {//删除文件到回收站
-    $arr = array();
-    $names = array();
+    $arr = [];
+    $names = [];
     $i = 0;
     $icoids = $_GET['rids'];
-    $ridarr = array();
+    $ridarr = [];
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     $deletefinally = 0;
     if (isset($_G['setting']['explorer_finallydelete'])) {
@@ -57,33 +57,33 @@ if ($do == 'deleteIco') {//删除文件到回收站
     $rids = isset($_GET['rids']) ? $_GET['rids'] : '';
     $bzrid = isset($_GET['rid']) ? $_GET['rid'] : '';
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
-    $paths = array();
+    $paths = [];
     foreach ($rids as $rid) {
         $paths[] = dzzdecode($rid);
     }
     $copytype = isset($_GET['copytype']) ? intval($_GET['copytype']) : 1;
     $return = C::t('resources_clipboard')->insert_data($paths, $copytype, $bz);
     if ($return['error']) {
-        $arr = array('msg' => $return['error']);
+        $arr = ['msg' => $return['error']];
     } else {
         if ($bz && $bz !== 'dzz') {
             $rids = $bzrid;
         } else {
             $rids = explode(',', $return['rid']);
         }
-        $arr = array('msg' => 'success', 'rid' => $rids, 'copyid' => $return['copyid'], 'type' => $return['type']);
+        $arr = ['msg' => 'success', 'rid' => $rids, 'copyid' => $return['copyid'], 'type' => $return['type']];
     }
     exit(json_encode($arr));
 } elseif ($do == 'deletecopy') {
     $return = C::t('resources_clipboard')->delete_by_uid();
     if ($return) {
-        exit(json_encode(array('success' => true)));
+        exit(json_encode(['success' => true]));
     } else {
-        exit(json_encode(array('error' => true)));
+        exit(json_encode(['error' => true]));
     }
 } elseif ($do == 'rename') {
     if (!$path = dzzdecode($_GET['path'])) {
-        exit(json_encode(array('error' => lang('parameter_error'))));
+        exit(json_encode(['error' => lang('parameter_error')]));
     }
     $text = str_replace('...', '', getstr(IO::name_filter($_GET['text']), 80));
     $ret = IO::rename($path, $text);
@@ -99,21 +99,21 @@ if ($do == 'deleteIco') {//删除文件到回收站
     $tbz = trim($_GET['tbz']);
     $tpath = trim($_GET['tpath']);
 
-    $icoarr = array();
-    $folderarr = array();
+    $icoarr = [];
+    $folderarr = [];
 
     //判断是否有粘贴文件
     if (!$icoids) {
-        $data = array('error' => lang('data_error'));
+        $data = ['error' => lang('data_error')];
         echo json_encode($data);
         exit();
     }
     //判断是否是剪切
     $iscopy = ($copyinfo['copytype'] == 1) ? 1 : 0;
 
-    $data = array();
+    $data = [];
     $totalsize = 0;
-    $icos = $folderids = array();
+    $icos = $folderids = [];
     //分4种情况：a：本地到api；b：api到api；c：api到本地；d：本地到本地；
     foreach ($icoids as $icoid) {
         if (empty($icoid)) {
@@ -145,30 +145,23 @@ if ($do == 'deleteIco') {//删除文件到回收站
         C::t('resources_clipboard')->delete_by_uid();
         if (isset($data['error'])) $data['error'] = implode(';', $data['error']);
         $data['copytype'] = $iscopy;
-        echo json_encode($data);
-        exit();
     } else {
         $data['error'] = implode(';', $data['error']);
-        echo json_encode($data);
-        exit();
     }
+    echo json_encode($data);
+    exit();
 } elseif ($do == 'recoverFile') {//恢复文件
-    $arr = array();
+    $arr = [];
     $i = 0;
     $icoids = $_GET['rids'];
-    $ridarr = array();
+    $ridarr = [];
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     foreach ($icoids as $icoid) {
         $icoid = dzzdecode($icoid);
         if (empty($icoid)) {
             continue;
         }
-        //判断文件是否在回收站
-        if (!$recycleinfo = C::t('resources_recyle')->get_data_by_rid($icoid)) {
-            $arr['msg'][$icoid] = lang('file_longer_exists');
-        } else {
-            $return = IO::Recover($icoid);
-        }
+        $return = IO::Recover($icoid);
         if (!$return['error']) {
             //处理数据
             $arr['sucessicoids'][$return['rid']] = $return['rid'];
@@ -180,22 +173,16 @@ if ($do == 'deleteIco') {//删除文件到回收站
             $arr['msg'][$return['rid']] = $return['error'];
         }
     }
-    echo json_encode($arr);
-    exit();
+    exit(json_encode($arr));
 } elseif ($do == 'recoverAll') {//恢复所有文件
     $rids = C::t('resources_recyle')->fetch_all_rid();
-    if (count($rids) < 1) exit(json_encode(array('error' => lang('recycle_not_data'))));
+    if (count($rids) < 1) exit(json_encode(['error' => lang('recycle_not_data')]));
     foreach ($rids as $icoid) {
         //$icoid=dzzdecode($icoid);
         if (empty($icoid)) {
             continue;
         }
-        //判断文件是否在回收站
-        if (!$recycleinfo = C::t('resources_recyle')->get_data_by_rid($icoid)) {
-            $arr['msg'][$icoid] = lang('file_longer_exists');
-        } else {
-            $return = IO::Recover($icoid);
-        }
+        $return = IO::Recover($icoid);
 
         if (!$return['error']) {
             //处理数据
@@ -208,13 +195,12 @@ if ($do == 'deleteIco') {//删除文件到回收站
             $arr['msg'][$return['rid']] = $return['error'];
         }
     }
-    echo json_encode($arr);
-    exit();
+    exit(json_encode($arr));
 } elseif ($do == 'finallydelete') {//彻底删除文件
-    $arr = array();
+    $arr = [];
     $i = 0;
     $icoids = $_GET['rids'];
-    $ridarr = array();
+    $ridarr = [];
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     foreach ($icoids as $icoid) {
         $icoid = dzzdecode($icoid);
@@ -233,11 +219,10 @@ if ($do == 'deleteIco') {//删除文件到回收站
             $arr['msg'][$return['rid']] = $return['error'];
         }
     }
-    echo json_encode($arr);
-    exit();
+    exit(json_encode($arr));
 } elseif ($do == 'emptyallrecycle') {//清空回收站
     $rids = C::t('resources_recyle')->fetch_all_rid();
-    if (count($rids) < 1) exit(json_encode(array('error' => lang('recycle_not_data'))));
+    if (count($rids) < 1) exit(json_encode(['error' => lang('recycle_not_data')]));
     foreach ($rids as $icoid) {
         //$icoid=dzzdecode($icoid);
         $return = IO::Delete($icoid, true);
@@ -252,11 +237,10 @@ if ($do == 'deleteIco') {//删除文件到回收站
             $arr['msg'][$return['rid']] = $return['error'];
         }
     }
-    echo json_encode($arr);
-    exit();
+    exit(json_encode($arr));
 } elseif ($do == 'uploadnewVersion') {//更新文件版本
     $rid = isset($_GET['rid']) ? $_GET['rid'] : '';
-    $setarr = array(
+    $setarr = [
         'uid' => $uid,
         'username' => $_G['username'],
         'name' => getstr($_GET['name']),
@@ -264,37 +248,37 @@ if ($do == 'deleteIco') {//删除文件到回收站
         'size' => intval($_GET['size']),
         'ext' => $_GET['ext'],
         'dateline' => TIMESTAMP
-    );
+    ];
     $return = C::t('resources_version')->add_new_version_by_rid($rid, $setarr);
     if ($return['error']) {
-        exit(json_encode(array('error' => $return['error'])));
+        exit(json_encode(['error' => $return['error']]));
     } else {
-        $statisdata = array(
+        $statisdata = [
             'uid' => $_G['uid'],
             'edits' => 1,
             'editdateline' => TIMESTAMP
-        );
+        ];
         C::t('resources_statis')->add_statis_by_rid($rid, $statisdata);
         $resources = C::t('resources')->fetch_by_rid($rid);
-        exit(json_encode(array('success' => true, 'data' => $return, 'filedata' => $resources)));
+        exit(json_encode(['success' => true, 'data' => $return, 'filedata' => $resources]));
     }
 } elseif ($do == 'setpramiryversion') {//设置主版本
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : '';
     $return = C::t('resources_version')->set_primary_version_by_vid($vid);
     if ($return['rid']) {
         $resourcesdata = C::t('resources')->fetch_by_rid($return['rid']);
-        exit(json_encode(array('success' => true, 'data' => $resourcesdata)));
+        exit(json_encode(['success' => true, 'data' => $resourcesdata]));
     } else {
-        exit(json_encode(array('error' => true, 'msg' => $return['error'])));
+        exit(json_encode(['error' => true, 'msg' => $return['error']]));
     }
 
 } elseif ($do == 'setversionname') {//修改版本名称
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : '';
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
     $vname = isset($_GET['vname']) ? getstr($_GET['vname']) : '';
-    if (!$vname) exit(json_encode(array('error' => lang('explorer_do_failed'))));
+    if (!$vname) exit(json_encode(['error' => lang('explorer_do_failed')]));
     $vdesc = isset($_GET['vdesc']) ? dhtmlspecialchars(substr(trim($_GET['vdesc']), 0, 120)) : '';
-    $return = array();
+    $return = [];
     if ($vid) {
         $return = C::t('resources_version')->update_versionname_by_vid($vid, $vname, $vdesc);
     } else {
@@ -304,15 +288,15 @@ if ($do == 'deleteIco') {//删除文件到回收站
         exit(json_encode($return));
     } else {
         $msg = (!isset($return['error'])) ? lang('explorer_do_failed') : $return['error'];
-        exit(json_encode(array('error' => $msg)));
+        exit(json_encode(['error' => $msg]));
     }
 } elseif ($do == 'riddesc') {//修改文件描述
     $rid = isset($_GET['rid']) ? trim($_GET['rid']) : '';
-    if (!$rid) exit(json_encode(array('error' => lang('explorer_do_failed'))));
+    if (!$rid) exit(json_encode(['error' => lang('explorer_do_failed')]));
     $fileinfo = C::t('resources')->get_property_by_rid($rid,false);
     if($fileinfo['error']) showmessage($fileinfo['error']);
     if(!$fileinfo['editperm']) showmessage('file_edit_no_privilege');
     $desc = isset($_GET['desc']) ? htmlspecialchars(trim($_GET['desc'])) : '';
-    C::t('resources_meta')->update_by_key($rid, array('desc' => $desc));
-    exit(json_encode(array('success' => true)));
+    C::t('resources_meta')->update_by_key($rid, ['desc' => $desc]);
+    exit(json_encode(['success' => true]));
 }

@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => 'File Management',
     'folder' => 'Folder',
     'rotation' => 'Rotation',
@@ -15,5 +15,4 @@ $lang = array(
     'rest_attachment' => 'Other Attachments',
     'Are you sure you want to delete this' => 'Are you sure you want to delete this',
     'file (if it is a folder, all the sub files under it will be deleted)? Cannot recover after deletion' => 'file (if it is a folder, all sub-files under it will also be deleted)? It cannot be recovered after deletion!'
-);
-?>
+];

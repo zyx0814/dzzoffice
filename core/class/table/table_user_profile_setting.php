@@ -37,36 +37,36 @@ class table_user_profile_setting extends dzz_table {
     }
 
     public function fetch_all_by_available_unchangeable($available, $unchangeable) {
-        return DB::fetch_all('SELECT * FROM %t WHERE available=%d AND unchangeable=%d ORDER BY displayorder', array($this->_table, $available, $unchangeable), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE available=%d AND unchangeable=%d ORDER BY displayorder', [$this->_table, $available, $unchangeable], $this->_pk);
     }
 
     public function fetch_register_info() {
-        return DB::fetch_all("SELECT * FROM %t WHERE `showinregister` = %d AND `available` = %d  ORDER BY displayorder", array($this->_table, 1, 1));
+        return DB::fetch_all("SELECT * FROM %t WHERE `showinregister` = %d AND `available` = %d  ORDER BY displayorder", [$this->_table, 1, 1]);
     }
 
     public function fetch_all_by_available($available) {
-        return DB::fetch_all('SELECT * FROM %t WHERE available=%d ORDER BY displayorder', array($this->_table, $available), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE available=%d ORDER BY displayorder', [$this->_table, $available], $this->_pk);
     }
 
     public function fetch_all_by_available_formtype($available, $formtype) {
-        return DB::fetch_all('SELECT * FROM %t WHERE available=%d AND formtype=%s', array($this->_table, $available, $formtype), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE available=%d AND formtype=%s', [$this->_table, $available, $formtype], $this->_pk);
     }
 
     public function fetch_all_by_available_required($available, $required) {
-        return DB::fetch_all('SELECT * FROM %t WHERE available=%d AND required=%d', array($this->_table, $available, $required), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE available=%d AND required=%d', [$this->_table, $available, $required], $this->_pk);
     }
 
     public function fetch_all_by_available_showinregister($available, $showinregister) {
-        return DB::fetch_all('SELECT * FROM %t WHERE available=%d AND showinregister=%d', array($this->_table, $available, $showinregister), $this->_pk);
+        return DB::fetch_all('SELECT * FROM %t WHERE available=%d AND showinregister=%d', [$this->_table, $available, $showinregister], $this->_pk);
     }
 
     public function fetch_all_fields_by_available($available = 1) {//获取资料设置里的fieldid数组
         if (!$available) $available = 0;
-        $fieldids = array();
+        $fieldids = [];
         if ($available) {
             $sql = ' and available>0';
         }
-        foreach (DB::fetch_all("select fieldid from %t where 1 $sql ", array($this->_table)) as $value) {
+        foreach (DB::fetch_all("select fieldid from %t where 1 $sql ", [$this->_table]) as $value) {
             $fieldids[] = $value['fieldid'];
         }
         return $fieldids;

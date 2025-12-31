@@ -130,7 +130,7 @@ button.input-search-drop{-webkit-appearance:none;padding:0;cursor:pointer;backgr
 .about-body p{margin-bottom:10px}
 .about-body p .guide{color:#999}
 .about-copyright>a{color:#999}
-.about-copyright>a:hofer{color:#555;text-decoration:underline}
+.about-copyright>a:hover{color:#555;text-decoration:underline}
 @media (max-width:767px){.bs-container>.bs-main-container{margin-left:0}
 .bs-container>.bs-left-container{display:none}
 }

@@ -26,7 +26,7 @@ if ($do == 'filelist') {
         $order = ' ORDER BY dateline DESC';
     }
     $limitsql = "limit $start,$limit";
-    $params = array('organization', 1);
+    $params = ['organization', 1];
     $wheresql = " where `type` = %d";
     //日期筛选
     if ($startdate) {
@@ -42,26 +42,26 @@ if ($do == 'filelist') {
     if (isset($_GET['search']) && $_GET['search'] && $_GET['search'] != 'all') {
         $search = $_GET['search'];
         if ($search == 'manage') {
-            $myorgid = array();
+            $myorgid = [];
             foreach (DB::fetch_all("select ou.orgid from %t ou 
                   left join %t o on ou.orgid= o.orgid 
-                  where ou.uid = %d and ou.admintype = %d and o.type = %d", array('organization_admin', 'organization', $uid, 1, 1)) as $v) {
+                  where ou.uid = %d and ou.admintype = %d and o.type = %d", ['organization_admin', 'organization', $uid, 1, 1]) as $v) {
                 $myorgid[] = $v['orgid'];
             }
             $wheresql .= " and orgid in(%n)";
             $params[] = $myorgid;
         } elseif ($search == 'partake') {
-            $partorgids = array();
+            $partorgids = [];
             //获取参与的群组
             foreach (DB::fetch_all("select u.orgid from %t u 
                   left join %t o on u.orgid= o.orgid 
-                  where u.uid = %d  and o.type = %d", array('organization_user', 'organization', $uid, 1, 1)) as $v) {
+                  where u.uid = %d  and o.type = %d", ['organization_user', 'organization', $uid, 1, 1]) as $v) {
                 $partorgids[] = $v['orgid'];
             }
             //获取管理的群组并排除
             foreach (DB::fetch_all("select ou.orgid from %t ou 
                   left join %t o on ou.orgid= o.orgid 
-                  where ou.uid = %d  and o.type = %d", array('organization_admin', 'organization', $uid, 1)) as $v) {
+                  where ou.uid = %d  and o.type = %d", ['organization_admin', 'organization', $uid, 1]) as $v) {
                 if (in_array($v['orgid'], $partorgids)) {
                     $index = array_search($v['orgid'], $partorgids);
                     unset($partorgids[$index]);
@@ -70,10 +70,10 @@ if ($do == 'filelist') {
             $wheresql .= " and orgid in(%n)";
             $params[] = $partorgids;
         } elseif ($search == 'my') {
-            $myorgid = array();
+            $myorgid = [];
             foreach (DB::fetch_all("select ou.orgid from %t ou 
                   left join %t o on ou.orgid= o.orgid 
-                  where ou.uid = %d and ou.admintype = %d and o.type = %d", array('organization_admin', 'organization', $uid, 2, 1)) as $v) {
+                  where ou.uid = %d and ou.admintype = %d and o.type = %d", ['organization_admin', 'organization', $uid, 2, 1]) as $v) {
                 $myorgid[] = $v['orgid'];
             }
             $wheresql .= " and orgid in(%n)";
@@ -84,7 +84,7 @@ if ($do == 'filelist') {
         //获取用户所在群组id
         $params[] = C::t('organization_user')->fetch_orgids_by_uid($uid, 1);
     }
-    $list = array();
+    $list = [];
     $count = DB::result_first("select count(*) from %t $wheresql $order", $params);
     if ($count) {
         $explorer_setting = get_resources_some_setting();
@@ -110,8 +110,8 @@ if ($do == 'filelist') {
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $list ? $list : [],
+        "count" => $count ?: 0,
+        "data" => $list ?: [],
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {

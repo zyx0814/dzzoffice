@@ -183,7 +183,7 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 	 */
 	public function getStyleArray($array)
 	{
-		return array('borders' => $array);
+		return ['borders' => $array];
 	}
 
 	/**
@@ -393,7 +393,7 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
     		$pValue = PHPExcel_Style_Borders::DIAGONAL_NONE;
     	}
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getStyleArray(array('diagonaldirection' => $pValue));
+			$styleArray = $this->getStyleArray(['diagonaldirection' => $pValue]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_diagonalDirection = $pValue;
@@ -408,7 +408,7 @@ class PHPExcel_Style_Borders extends PHPExcel_Style_Supervisor implements PHPExc
 	 */
 	public function getHashCode() {
 		if ($this->_isSupervisor) {
-			return $this->getSharedComponent()->getHashcode();
+			return $this->getSharedComponent()->getHashCode();
 		}
     	return md5(
     		  $this->getLeft()->getHashCode()

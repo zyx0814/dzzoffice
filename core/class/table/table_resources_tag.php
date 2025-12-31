@@ -15,13 +15,13 @@ class table_resources_tag extends dzz_table {
         global $_G;
 
 
-        $tids = array();
-        $deltagnames = array();
+        $tids = [];
+        $deltagnames = [];
         if ($tid) {
             // return DB::delete($this->_table, 'rid in(' . dimplode($rid) . ') and tid = ' . $tid);
-            $tids = array($tid);
+            $tids = [$tid];
         } else {
-            foreach (DB::fetch_all("select tid from %t where rid = %s", array($this->_table, $rid)) as $v) {
+            foreach (DB::fetch_all("select tid from %t where rid = %s", [$this->_table, $rid]) as $v) {
                 $tids[] = $v['tid'];
             }
         }
@@ -36,16 +36,16 @@ class table_resources_tag extends dzz_table {
             if ($event) {
                 //添加动态
                 $uid = $_G['uid'];
-                $username = $_G['username'] ? $_G['username'] : $_G['clientip'];
+                $username = $_G['username'] ?: $_G['clientip'];
                 //查询文件信息
-                if (!$fileinfo = DB::fetch_first("select * from %t where rid = %s", array('resources', $rid))) {
+                if (!$fileinfo = DB::fetch_first("select * from %t where rid = %s", ['resources', $rid])) {
                     return false;
                 } else {
                     $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
                     $path = preg_replace('/dzz:(.+?):/', '', $path);
                 }
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
-                $eventdata = array('username' => $username, 'filename' => $fileinfo['name'], 'tagname' => implode(',', $deltagnames), 'position' => $path, 'hash' => $hash);
+                $eventdata = ['username' => $username, 'filename' => $fileinfo['name'], 'tagname' => implode(',', $deltagnames), 'position' => $path, 'hash' => $hash];
                 C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'del_tags', 'deltag', $eventdata, $fileinfo['gid'], $rid, $fileinfo['name']);
             }
         }
@@ -56,28 +56,28 @@ class table_resources_tag extends dzz_table {
     public function insert_data($rid, $tagnames, $isall = 1, $idtype = 'explorer') {
         global $_G;
         $uid = $_G['uid'];
-        $username = $_G['username'] ? $_G['username'] : $_G['clientip'];
+        $username = $_G['username'] ?: $_G['clientip'];
         //查询文件信息
-        if (!$fileinfo = DB::fetch_first("select * from %t where rid = %s", array('resources', $rid))) {
+        if (!$fileinfo = DB::fetch_first("select * from %t where rid = %s", ['resources', $rid])) {
             return false;
         } else {
             $path = C::t('resources_path')->fetch_pathby_pfid($fileinfo['pfid']);
             $path = preg_replace('/dzz:(.+?):/', '', $path);
         }
         //获取文件原有标签数据
-        $return = DB::fetch_all("select rt.tid,t.tagname from %t rt left join %t t on rt.tid = t.tid where rt.rid = %s", array($this->_table, 'tag', $rid));
+        $return = DB::fetch_all("select rt.tid,t.tagname from %t rt left join %t t on rt.tid = t.tid where rt.rid = %s", [$this->_table, 'tag', $rid]);
 
-        $addtags = $deleted = $deltids = $nochangetids = $deltags = array();
+        $addtags = $deleted = $deltids = $nochangetids = $deltags = [];
         //获取标签数据
         $tags = C::t('tag')->insert_data($tagnames, $idtype);
-        $tids = array();
+        $tids = [];
         foreach ($tags as $v) {
             $tids[] = $v['tid'];
         }
         foreach ($return as $v) {
             if (!in_array($v['tid'], $tids)) {
                 $deltids[] = $v['tid'];
-                $deleted[] = array('tid' => $v['tid'], 'tagname' => $v['tagname']);
+                $deleted[] = ['tid' => $v['tid'], 'tagname' => $v['tagname']];
                 $deltagnames[] = $v['tagname'];
             } else {
                 $nochangetids[] = $v['tid'];
@@ -86,18 +86,18 @@ class table_resources_tag extends dzz_table {
         //需要移除的标签
         if ($isall && count($deltids)) {
             //移除文件标签
-            DB::query("delete from %t where rid = %s and tid in(%n)", array($this->_table, $rid, $deltids));
+            DB::query("delete from %t where rid = %s and tid in(%n)", [$this->_table, $rid, $deltids]);
             //减少使用数
             C::t('tag')->addhot_by_tid($deltids, -1);
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
             //添加动态
-            $eventdata = array('username' => $username, 'filename' => $fileinfo['name'], 'tagname' => implode(',', $deltagnames), 'position' => $path, 'hash' => $hash);
+            $eventdata = ['username' => $username, 'filename' => $fileinfo['name'], 'tagname' => implode(',', $deltagnames), 'position' => $path, 'hash' => $hash];
             C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'del_tags', 'deltag', $eventdata, $fileinfo['gid'], $rid, $fileinfo['name']);
         }
         //获取需要添加的标签
         $addtids = (count($nochangetids) > 0) ? array_diff($tids, $nochangetids) : $tids;
         if (count($addtids)) {
-            $addtagnames = array();
+            $addtagnames = [];
             $insertsql = "insert into " . DB::table('resources_tag') . " (rid,tid,uid,username) values ";
             foreach ($addtids as $v) {
                 $insertsql .= "(%s,%d,%d,%s),";
@@ -106,7 +106,7 @@ class table_resources_tag extends dzz_table {
                 $params[] = $uid;
                 $params[] = $username;
                 $addtagnames[] = $tags[$v]['tagname'];
-                $addtags[] = array('tid' => $v, 'tagname' => $tags[$v]['tagname']);
+                $addtags[] = ['tid' => $v, 'tagname' => $tags[$v]['tagname']];
             }
             $insertsql = substr($insertsql, 0, -1);
             //添加文件标签
@@ -116,16 +116,16 @@ class table_resources_tag extends dzz_table {
 
             $addtagnames = implode(',', $addtagnames);
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fileinfo['pfid'], $fileinfo['gid']);
-            $eventdata = array('username' => $username, 'filename' => $fileinfo['name'], 'tagname' => $addtagnames, 'position' => $path, 'hash' => $hash);
+            $eventdata = ['username' => $username, 'filename' => $fileinfo['name'], 'tagname' => $addtagnames, 'position' => $path, 'hash' => $hash];
             C::t('resources_event')->addevent_by_pfid($fileinfo['pfid'], 'add_tags', 'addtag', $eventdata, $fileinfo['gid'], $rid, $fileinfo['name']);
         }
-        return array('success' => true, 'add' => $addtags, 'del' => $deleted);
+        return ['success' => true, 'add' => $addtags, 'del' => $deleted];
     }
 
     public function fetch_tag_by_rid($rid) {
         $rid = trim($rid);
-        $result = array();
-        if ($result = DB::fetch_all("select rt.tid,t.tagname from %t rt left join %t t on rt.tid = t.tid where rt.rid = %s and t.idtype = %s", array($this->_table, 'tag', $rid, 'explorer'))) {
+        $result = [];
+        if ($result = DB::fetch_all("select rt.tid,t.tagname from %t rt left join %t t on rt.tid = t.tid where rt.rid = %s and t.idtype = %s", [$this->_table, 'tag', $rid, 'explorer'])) {
             return $result;
         }
         return $result;
@@ -133,8 +133,8 @@ class table_resources_tag extends dzz_table {
 
     public function fetch_rid_in_tid($tids) {
         if (!is_array($tids)) $tids = (array)$tids;
-        $rids = array();
-        foreach (DB::fetch_all("select rid from %t where tid in(%n)", array($this->_table, $tids)) as $v) {
+        $rids = [];
+        foreach (DB::fetch_all("select rid from %t where tid in(%n)", [$this->_table, $tids]) as $v) {
             $rids[] = $v['rid'];
         }
         return $rids;
@@ -142,11 +142,11 @@ class table_resources_tag extends dzz_table {
 
     public function fetch_rid_by_tid($tids) {
         if (!is_array($tids)) $tids = (array)$tids;
-        $arr = array();
+        $arr = [];
         //获取标签对应的所有rid
-        if ($rids = DB::fetch_all("select rid,tid from %t where tid in(%n)", array($this->_table, $tids))) {
+        if ($rids = DB::fetch_all("select rid,tid from %t where tid in(%n)", [$this->_table, $tids])) {
             //遍历rid数组组成tid为键的数组
-            $ridarr = array();
+            $ridarr = [];
             foreach ($rids as $v) {
                 $ridarr[$v['tid']][] = $v['rid'];
             }
@@ -162,14 +162,9 @@ class table_resources_tag extends dzz_table {
                     }
                     $i++;
                 }
-                return $arr;
-            } else {
-                return $arr;
             }
-        } else {
-            return $arr;
-
         }
+        return $arr;
     }
 
 }

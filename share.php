@@ -41,7 +41,7 @@ if ($_GET['a'] == 'down') {
         @header('Location: ' . $icoarr['url']);
         exit();
     }
-    $imageexts = array('jpg', 'jpeg', 'png', 'gif'); //图片使用；
+    $imageexts = ['jpg', 'jpeg', 'png', 'gif']; //图片使用；
     $filename = $icoarr['name'];//rtrim($_GET['n'],'.dzz');
     $ext = $icoarr['ext'];//strtolower(substr(strrchr($filename, '.'), 1, 10));
     if (!$ext) $ext = preg_replace("/\?.+/i", '', strtolower(substr(strrchr(rtrim($url, '.dzz'), '.'), 1, 10)));
@@ -51,9 +51,9 @@ if ($_GET['a'] == 'down') {
         exit();
     }
     $extall = C::t('app_open')->fetch_all_ext();
-    $exts = array();
-    $bzarr = explode(':', $icoarr['rbz'] ? $icoarr['rbz'] : $icoarr['bz']);
-    $bz = ($bzarr[0]) ? $bzarr[0] : 'dzz';
+    $exts = [];
+    $bzarr = explode(':', $icoarr['rbz'] ?: $icoarr['bz']);
+    $bz = ($bzarr[0]) ?: 'dzz';
     foreach ($extall as $value) {
         if (!isset($exts[$value['ext']]) || $value['isdefault']) $exts[$value['ext']] = $value;
     }
@@ -64,19 +64,18 @@ if ($_GET['a'] == 'down') {
         $data = $exts[$ext];
     } elseif ($exts[$icoarr['type']]) {
         $data = $exts[$icoarr['type']];
-    } else $data = array();
+    } else $data = [];
     if ($data) {
         $url = $data['url'];
         if (strpos($url, 'dzzjs:') !== false) {//dzzjs形式时
             @header("Location: $icoarr[url]");
-            exit();
         } else {
             //替换参数
             $url = preg_replace_callback("/{(\w+)}/i", function ($matches) use ($icoarr) {
                 $key = $matches[1];
                 if ($key == 'path') {
                     return $icoarr['icoid'];
-                } else if ($key == 'icoid') {
+                } elseif ($key == 'icoid') {
                     return 'preview_' . random(5);
                 } else {
                     return urlencode($icoarr[$key]);
@@ -90,13 +89,12 @@ if ($_GET['a'] == 'down') {
             }
             $url = $_G['siteurl'] . $url;
             @header("Location: $url");
-            exit();
         }
 
     } else {//没有可用的打开方式，转入下载；
         IO::download($path);
-        exit();
     }
+    exit();
 
 }
 //获取文件流地址

@@ -107,7 +107,7 @@ class PHPExcel_Shared_OLERead {
 		// Total number of sectors used by MSAT
 		$this->numExtensionBlocks = self::_GetInt4d($this->data, self::NUM_EXTENSION_BLOCK_POS);
 
-		$bigBlockDepotBlocks = array();
+		$bigBlockDepotBlocks = [];
 		$pos = self::BIG_BLOCK_DEPOT_BLOCKS_POS;
 
 		$bbdBlocks = $this->numBigBlockDepotBlocks;
@@ -190,8 +190,7 @@ class PHPExcel_Shared_OLERead {
 				$block = self::_GetInt4d($this->smallBlockChain, $block*4);
 			}
 
-			return $streamData;
-		} else {
+        } else {
 			$numBlocks = $this->props[$stream]['size'] / self::BIG_BLOCK_SIZE;
 			if ($this->props[$stream]['size'] % self::BIG_BLOCK_SIZE != 0) {
 				++$numBlocks;
@@ -207,9 +206,9 @@ class PHPExcel_Shared_OLERead {
 				$block = self::_GetInt4d($this->bigBlockChain, $block*4);
 			}
 
-			return $streamData;
-		}
-	}
+        }
+        return $streamData;
+    }
 
 	/**
 	 * Read a standard stream (by joining sectors using information from SAT)
@@ -257,11 +256,11 @@ class PHPExcel_Shared_OLERead {
 			$name = str_replace("\x00", "", substr($d,0,$nameSize));
 
 
-			$this->props[] = array (
+			$this->props[] = [
 				'name' => $name,
 				'type' => $type,
 				'startBlock' => $startBlock,
-				'size' => $size);
+				'size' => $size];
 
 			// tmp helper to simplify checks
 			$upName = strtoupper($name);

@@ -1,4 +1,4 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => '个人首页'
-);
+];

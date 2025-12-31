@@ -14,14 +14,14 @@ $uid = $_G['uid'];
 //获取文件夹右侧信息
 if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
-    $fileinfo = array();
+    $fileinfo = [];
     if($bz && $bz !== 'dzz') {
         $fileinfo=IO::getCloud($bz);
         if (!$fileinfo) {
-            exit(json_encode(array('error' => lang('cloud_no_info'))));
+            exit(json_encode(['error' => lang('cloud_no_info')]));
         }
         if($fileinfo['available']<1) {
-            exit(json_encode(array('error' => lang('cloud_no_available'))));
+            exit(json_encode(['error' => lang('cloud_no_available')]));
         }
         $fileinfo['fname'] = $fileinfo['cloudname'];
         $fileinfo['ftype'] = $fileinfo['cloudtype'].'('.$fileinfo['name'].')';
@@ -64,12 +64,10 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
                     //获取总空间
                     if ($org['maxspacesize'] == 0) {
                         $maxspace = 0;
+                    } elseif ($org['maxspacesize'] == -1) {
+                        $maxspace = -1;
                     } else {
-                        if ($org['maxspacesize'] == -1) {
-                            $maxspace = -1;
-                        } else {
-                            $maxspace = $org['maxspacesize'] * 1024 * 1024;
-                        }
+                        $maxspace = $org['maxspacesize'] * 1024 * 1024;
                     }
                 }
                 $progress = set_space_progress($usesize, $maxspace);
@@ -141,7 +139,7 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
     } else {
         $order = ' ORDER BY e.dateline DESC';
     }
-    $condition = array();
+    $condition = [];
     if (!empty($_GET['doevent'])) {
         $eventdo = trim($_GET['doevent']);
         if ($eventdo == 'recover' || $eventdo == 'recoverfile') {
@@ -153,28 +151,28 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
     }
     if (!empty($_GET['doobj'])) {
         $obj = trim($_GET['doobj']);
-        $condition['do_obj'] = array($obj, 'like', 'and');
+        $condition['do_obj'] = [$obj, 'like', 'and'];
     }
     //开始时间
     if (!empty($_GET['startdate']) && $_GET['startdate']) {
         $startdate = strtotime($_GET['startdate']);
-        $condition[] = array(' e.dateline > ' . $startdate, 'stringsql', 'and');
+        $condition[] = [' e.dateline > ' . $startdate, 'stringsql', 'and'];
     }
 
     //结束时间
     if (!empty($_GET['enddate']) && $_GET['enddate']) {//结束时间+1天
         $enddate = strtotime($_GET['enddate']) + 86400;
-        $condition[] = array(' e.dateline <' . $enddate, 'stringsql', 'and');
+        $condition[] = [' e.dateline <' . $enddate, 'stringsql', 'and'];
     }
     if (!empty($_GET['username'])) {
         $username = trim($_GET['username']);
-        $condition['username'] = array($username, 'like', 'and');
+        $condition['username'] = [$username, 'like', 'and'];
     }
     if (!empty($_GET['uids'])) {
         $uids = $_GET['uids'];
-        $condition['uidval'] = array($uids, 'nowhere');
+        $condition['uidval'] = [$uids, 'nowhere'];
     }
-    $events = $list = array();
+    $events = $list = [];
     $count = C::t('resources_event')->fetch_all_event($start, $limit, $condition, $order, true);
     if ($count) {
         $events = C::t('resources_event')->fetch_all_event($start, $limit, $condition, $order);
@@ -193,8 +191,8 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
     $return = [
         "code" => 0,
         "msg" => "",
-        "count" => $count ? $count : 0,
-        "data" => $list ? $list : [],
+        "count" => $count ?: 0,
+        "data" => $list ?: [],
     ];
     $jsonReturn = json_encode($return);
     if ($jsonReturn === false) {
@@ -212,37 +210,37 @@ if ($do == 'getfiledynamic') {//获取文件或多文件右侧信息
     $id = $_GET['id'];
     $return = C::t('resources_event')->delete_comment_by_id($id);
     if ($return['error']) {
-        exit(json_encode(array('error' => $return['error'])));
+        exit(json_encode(['error' => $return['error']]));
     } else {
-        exit(json_encode(array('success' => true)));
+        exit(json_encode(['success' => true]));
     }
 }
-$operation_type = array(
-    array('addtag', lang('addtag')),
-    array('edit', lang('edit')),
-    array('down', lang('down')),
-    array('create', lang('create')),
-    array('recoverfile', lang('recoverfile')),
-    array('movedfolder', lang('movedfolder')),
-    array('movefile', lang('movefile')),
-    array('update_groupname', lang('update_groupname')),
-    array('update_setting', lang('update_setting')),
-    array('delfolder', lang('delfolder')),
-    array('delfile', lang('delfile')),
-    array('deleteuser', lang('deleteuser')),
-    array('deltag', lang('deltag')),
-    array('delversion', lang('delversion')),
-    array('finallydelete', lang('finallydelete')),
-    array('updatevesion', lang('updatevesion')),
-    array('setprimaryversion', lang('setprimaryversion')),
-    array('editversionname', lang('editversionname')),
-    array('editversiondesc', lang('editversiondesc')),
-    array('rename', lang('rename')),
-    array('share', lang('share')),
-    array('cancleshare', lang('cancleshare')),
-    array('addcomment', lang('addcomment')),
-    array('adduser', lang('adduser')),
-    array('setperm', lang('setperm')),
-    array('update_perm', lang('update_perm'))
-);
+$operation_type = [
+    ['addtag', lang('addtag')],
+    ['edit', lang('edit')],
+    ['down', lang('down')],
+    ['create', lang('create')],
+    ['recoverfile', lang('recoverfile')],
+    ['movedfolder', lang('movedfolder')],
+    ['movefile', lang('movefile')],
+    ['update_groupname', lang('update_groupname')],
+    ['update_setting', lang('update_setting')],
+    ['delfolder', lang('delfolder')],
+    ['delfile', lang('delfile')],
+    ['deleteuser', lang('deleteuser')],
+    ['deltag', lang('deltag')],
+    ['delversion', lang('delversion')],
+    ['finallydelete', lang('finallydelete')],
+    ['updatevesion', lang('updatevesion')],
+    ['setprimaryversion', lang('setprimaryversion')],
+    ['editversionname', lang('editversionname')],
+    ['editversiondesc', lang('editversiondesc')],
+    ['rename', lang('rename')],
+    ['share', lang('share')],
+    ['cancleshare', lang('cancleshare')],
+    ['addcomment', lang('addcomment')],
+    ['adduser', lang('adduser')],
+    ['setperm', lang('setperm')],
+    ['update_perm', lang('update_perm')]
+];
 require template('dynamic_content');

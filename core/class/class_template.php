@@ -6,13 +6,13 @@ if (!defined('IN_DZZ')) {
 class template {
 
 	public $csscurmodules = '';
-	public $replacecode = array('search' => array(), 'replace' => array());
-	public $language = array();//语言列表
+	public $replacecode = ['search' => [], 'replace' => []];
+	public $language = [];//语言列表
 	public $file = '';
 	public $default_language = '';//默认语言设置
     public $templateNotMust = false;//模板是否必须，如果为true,则模板不存在返回空字符串,不出现错误提示
 	
-	private $includeTemplate = array();//记录模版更新时间和路径
+	private $includeTemplate = [];//记录模版更新时间和路径
     private $tplkey = '';
     private $tplname = '';//模板名称
 
@@ -39,7 +39,7 @@ class template {
         $this->parse_template($content);//解析模板
         //加入安全代码和模版记录
         $content = "<?php if(!defined('IN_DZZ')) exit('Access Denied'); /*".serialize($this->includeTemplate)."*/?>\n".$content;
-        $this->includeTemplate = array();
+        $this->includeTemplate = [];
         if (!@$fp = fopen(DZZ_ROOT . $cachefile, 'w')) {
             $this->error('directory_notfound', dirname(DZZ_ROOT . $cachefile));
         }
@@ -184,48 +184,48 @@ class template {
 		$template = preg_replace("/([\n\r]+)\t+/s", "\\1", $template);
 		$template = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}", $template);
 		//js的lang替换
-		$template = preg_replace_callback("/<script[^>]+?src=\"(.+?)\".*?>[\s\S]*?/is", array($this, 'parse_template_callback_javascript'), $template);
+		$template = preg_replace_callback("/<script[^>]+?src=\"(.+?)\".*?>[\s\S]*?/is", [$this, 'parse_template_callback_javascript'], $template);
 		//模版lang替换
-		$template = preg_replace_callback("/\{lang\s+(.+?)\}/is", array($this, 'parse_template_callback_languagevar_1'), $template);
+		$template = preg_replace_callback("/\{lang\s+(.+?)\}/is", [$this, 'parse_template_callback_languagevar_1'], $template);
 		//模版__lang替换
-		$template = preg_replace_callback("/__lang\.(\w+)/i", array($this, 'parse_template_callback_languagevar_2'), $template);		
+		$template = preg_replace_callback("/__lang\.(\w+)/i", [$this, 'parse_template_callback_languagevar_2'], $template);
 		//img的src替换
-		$template = preg_replace_callback("/<img(.+?)src=([\"])(.+?)([\"])([^>]*?)>/is", array($this, 'parse_template_callback_img'), $template);
+		$template = preg_replace_callback("/<img(.+?)src=([\"])(.+?)([\"])([^>]*?)>/is", [$this, 'parse_template_callback_img'], $template);
 		//url的地址替换
-		$template = preg_replace_callback("/:\s*url\([\"']?(.+?)[\"']?\)/i", array($this, 'parse_template_callback_url'), $template);
+		$template = preg_replace_callback("/:\s*url\([\"']?(.+?)[\"']?\)/i", [$this, 'parse_template_callback_url'], $template);
 		//link的地址替换
-		$template = preg_replace_callback("/<link(.+?)href=([\"])(.+?)([\"])([^>]*?)>/i", array($this, 'parse_template_callback_linkurl'), $template);
+		$template = preg_replace_callback("/<link(.+?)href=([\"])(.+?)([\"])([^>]*?)>/i", [$this, 'parse_template_callback_linkurl'], $template);
 		
-		$template = preg_replace_callback("/[\n\r\t]*\{ad\/(.+?)\}[\n\r\t]*/i", array($this, 'parse_template_callback_adtags_1'), $template);
-		$template = preg_replace_callback("/[\n\r\t]*\{ad\s+([a-zA-Z0-9_\[\]]+)\/(.+?)\}[\n\r\t]*/i", array($this, 'parse_template_callback_adtags_21'), $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{ad\/(.+?)\}[\n\r\t]*/i", [$this, 'parse_template_callback_adtags_1'], $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{ad\s+([a-zA-Z0-9_\[\]]+)\/(.+?)\}[\n\r\t]*/i", [$this, 'parse_template_callback_adtags_21'], $template);
 		//解析<!--{date(1482625254)-->
-		$template = preg_replace_callback("/[\n\r\t]*\{date\((.+?)\)\}[\n\r\t]*/i", array($this, 'parse_template_callback_datetags_1'), $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{date\((.+?)\)\}[\n\r\t]*/i", [$this, 'parse_template_callback_datetags_1'], $template);
 		//解析<!--{avatar(5)-->
-		$template = preg_replace_callback("/[\n\r\t]*\{avatar\((.+?)\)\}[\n\r\t]*/i", array($this, 'parse_template_callback_avatartags_1'), $template);
-		$template = preg_replace_callback("/[\n\r\t]*\{eval\}\s*(\<\!\-\-)*(.+?)(\-\-\>)*\s*\{\/eval\}[\n\r\t]*/is", array($this, 'parse_template_callback_evaltags_2'), $template);
-		$template = preg_replace_callback("/[\n\r\t]*\{eval\s+(.+?)\s*\}[\n\r\t]*/is", array($this, 'parse_template_callback_evaltags_1'), $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{avatar\((.+?)\)\}[\n\r\t]*/i", [$this, 'parse_template_callback_avatartags_1'], $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{eval\}\s*(\<\!\-\-)*(.+?)(\-\-\>)*\s*\{\/eval\}[\n\r\t]*/is", [$this, 'parse_template_callback_evaltags_2'], $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{eval\s+(.+?)\s*\}[\n\r\t]*/is", [$this, 'parse_template_callback_evaltags_1'], $template);
 		$template = str_replace("{LF}", "<?=\"\\n\"?>", $template);
 		$template = preg_replace("/\{(\\\$[a-zA-Z0-9_\-\>\[\]\'\"\$\.\x7f-\xff]+)\}/s", "<?=\\1?>", $template);
-        $template = preg_replace_callback("/[\n\r\t]*\{Hook\s+([\w]+)\}[\n\r\t]*/is", array($this, 'parse_template_callback_hook'), $template);//钩子解析
-        $template = preg_replace_callback("/[\n\r\t]*\{Hook\s+([\w]+)\#(.+?)\#\}[\n\r\t]*/is", array($this, 'parse_template_callback_hook_1'), $template);//钩子解析,传参形式
-		$template = preg_replace_callback("/$var_regexp/s", array($this, 'parse_template_callback_addquote_1'), $template);
-		$template = preg_replace_callback("/\<\?\=\<\?\=$var_regexp\?\>\?\>/s", array($this, 'parse_template_callback_addquote_1'), $template);
-		$template = preg_replace_callback("/[\n\r\t]*\{echo\s+(.+?)\}[\n\r\t]*/is", array($this, 'parse_template_callback_stripvtags_echo1'), $template);
-		$template = preg_replace_callback("/([\n\r\t]*)\{if\s+(.+?)\}([\n\r\t]*)/is", array($this, 'parse_template_callback_stripvtags_if123'), $template);
-		$template = preg_replace_callback("/([\n\r\t]*)\{elseif\s+(.+?)\}([\n\r\t]*)/is", array($this, 'parse_template_callback_stripvtags_elseif123'), $template);
+        $template = preg_replace_callback("/[\n\r\t]*\{Hook\s+([\w]+)\}[\n\r\t]*/is", [$this, 'parse_template_callback_hook'], $template);//钩子解析
+        $template = preg_replace_callback("/[\n\r\t]*\{Hook\s+([\w]+)\#(.+?)\#\}[\n\r\t]*/is", [$this, 'parse_template_callback_hook_1'], $template);//钩子解析,传参形式
+		$template = preg_replace_callback("/$var_regexp/s", [$this, 'parse_template_callback_addquote_1'], $template);
+		$template = preg_replace_callback("/\<\?\=\<\?\=$var_regexp\?\>\?\>/s", [$this, 'parse_template_callback_addquote_1'], $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{echo\s+(.+?)\}[\n\r\t]*/is", [$this, 'parse_template_callback_stripvtags_echo1'], $template);
+		$template = preg_replace_callback("/([\n\r\t]*)\{if\s+(.+?)\}([\n\r\t]*)/is", [$this, 'parse_template_callback_stripvtags_if123'], $template);
+		$template = preg_replace_callback("/([\n\r\t]*)\{elseif\s+(.+?)\}([\n\r\t]*)/is", [$this, 'parse_template_callback_stripvtags_elseif123'], $template);
 		$template = preg_replace("/\{else\}/i", "<? } else { ?>", $template);
 		$template = preg_replace("/\{\/if\}/i", "<? } ?>", $template);
-		$template = preg_replace_callback("/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\}[\n\r\t]*/is", array($this, 'parse_template_callback_stripvtags_loop12'), $template);
-		$template = preg_replace_callback("/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}[\n\r\t]*/is", array($this, 'parse_template_callback_stripvtags_loop123'), $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\}[\n\r\t]*/is", [$this, 'parse_template_callback_stripvtags_loop12'], $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}[\n\r\t]*/is", [$this, 'parse_template_callback_stripvtags_loop123'], $template);
 		$template = preg_replace("/\{\/loop\}/i", "<? } ?>", $template);
 		$template = preg_replace("/\{$const_regexp\}/s", "<?=\\1?>", $template);
 		if (!empty($this->replacecode)) {
 			$template = str_replace($this->replacecode['search'], $this->replacecode['replace'], $template);
 		}
 		$template = preg_replace("/ \?\>[\n\r]*\<\? /s", " ", $template);
-		$template = preg_replace_callback("/\"(http)?[\w\.\/:]+\?[^\"]+?&[^\"]+?\"/", array($this, 'parse_template_callback_transamp_0'), $template);
-		$template = preg_replace_callback("/\<script[^\>]*?src=\"(.+?)\"(.*?)\>\s*\<\/script\>/is", array($this, 'parse_template_callback_stripscriptamp_12'), $template);
-		$template = preg_replace_callback("/[\n\r\t]*\{block\s+([a-zA-Z0-9_\[\]]+)\}(.+?)\{\/block\}/is", array($this, 'parse_template_callback_stripblock_12'), $template);
+		$template = preg_replace_callback("/\"(http)?[\w\.\/:]+\?[^\"]+?&[^\"]+?\"/", [$this, 'parse_template_callback_transamp_0'], $template);
+		$template = preg_replace_callback("/\<script[^\>]*?src=\"(.+?)\"(.*?)\>\s*\<\/script\>/is", [$this, 'parse_template_callback_stripscriptamp_12'], $template);
+		$template = preg_replace_callback("/[\n\r\t]*\{block\s+([a-zA-Z0-9_\[\]]+)\}(.+?)\{\/block\}/is", [$this, 'parse_template_callback_stripblock_12'], $template);
 		$template = preg_replace("/\<\?(\s{1})/is", "<?php\\1", $template);
 		$template = preg_replace("/\<\?\=(.+?)\?\>/is", "<?php echo \\1;?>", $template);
 		$template = str_replace('self.＄','self.$',  $template);
@@ -240,7 +240,7 @@ class template {
         return "<?php Hook::listen('".$matches[1]."'); ?>";
     }
    function parse_template_callback_hook_1($matches){
-	   $param=array($matches[2]);
+	   $param= [$matches[2]];
         return "<?php Hook::listen('".$matches[1]."',".$param.");?>"; //传参形式
     }
 
@@ -352,8 +352,7 @@ class template {
 		if (!isset($langvar[$var])) {
 	 		return "'".$var."'";
 		}
-		$jsonencode = json_encode($langvar[$var]);
-	 	return $jsonencode;
+        return json_encode($langvar[$var]);
 	}
 
 	function loadjstemplate($matches) {
@@ -375,7 +374,7 @@ class template {
 			}, $matches[0]);
 		}
 
-		$jslangcontent = array();
+		$jslangcontent = [];
 		if (preg_match_all('/__lang\.(\w+)/i', $content, $match)) {
 			$jslangcontent[] = 'if(!__lang){var __lang={};}';
 			
@@ -410,7 +409,7 @@ class template {
 
 	//模版lang替换
 	function languagevar($var) {
-		!isset($this->language['inner']) && $this->language['inner'] = array();
+		!isset($this->language['inner']) && $this->language['inner'] = [];
 		$langvar = &$this->language['inner'];
 		
 		if (!isset($langvar[$var])) {
@@ -440,7 +439,7 @@ class template {
 	function language_img($var) {
 		$var[3] = str_replace(' ','',$var[3]);
 		$str = strrchr(basename($var[3]),'.');
-		$arr = array('.png','.gif','.jpg','.jpeg','.bmp');
+		$arr = ['.png','.gif','.jpg','.jpeg','.bmp'];
 		if(in_array($str, $arr)){
 			$name = $this->site_operation($var[3]);
 			$src = $this->check_file_exists($name);
@@ -563,7 +562,6 @@ class template {
 				return;
 			}
 		}
-		return;
 	}
 
 	function looptags($param1, $param2, $param3 = '') {
@@ -585,8 +583,7 @@ class template {
 	function transamp($str) {
 		$str = str_replace('&', '&amp;', $str);
 		$str = str_replace('&amp;amp;', '&amp;', $str);
-		$str = str_replace('\"', '"', $str);
-		return $str;
+        return str_replace('\"', '"', $str);
 	}
 
 	function addquote($var) {
@@ -631,4 +628,3 @@ class template {
 	}
 
 }
-?>

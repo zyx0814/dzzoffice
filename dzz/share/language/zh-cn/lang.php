@@ -1,5 +1,5 @@
 <?php
-$lang = array(
+$lang = [
     'appname' => '分享管理',
     'shares' => '分享',
     'attachment' => '附件',
@@ -21,6 +21,5 @@ $lang = array(
     'share_file_content' => '好东西要晒出来，快把你的文件分享给身边的朋友们吧。',
     'share_list' => '分享列表',
     'report_list' => '举报列表',
-);
+];
 
-?>

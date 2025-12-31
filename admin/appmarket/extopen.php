@@ -33,9 +33,9 @@ if ($do == "setdefault") {
     error(lang('set_default') . lang('failure'));
 }
 $sql_app = "`available`>0";
-$param_app = array('app_market');
+$param_app = ['app_market'];
 $sql = '1';
-$param = array('app_open');
+$param = ['app_open'];
 if (preg_match("/[a-zA-Z0-9]{1,10}/i", $_GET['ext'])) {
     $ext = trim($_GET['ext']);
     $sql .= " and `ext` = %s";
@@ -50,12 +50,12 @@ $appid = intval($_GET['appid']);
 
 $page = empty($_GET['page']) ? 1 : intval($_GET['page']);
 $perpage = 20;
-$gets = array('mod' => 'appmarket', 'op' => 'extopen', 'ext' => $ext, 'appid' => $appid);
+$gets = ['mod' => 'appmarket', 'op' => 'extopen', 'ext' => $ext, 'appid' => $appid];
 $theurl = BASESCRIPT . "?" . url_implode($gets);
 $refer = urlencode($theurl . '&page=' . $page);
 
 $start = ($page - 1) * $perpage;
-$apps = array();
+$apps = [];
 
 
 if ($appid) {
@@ -69,7 +69,7 @@ if ($count) {
     $sql .= ' and `appid` IN(%n)';
     $param[] = array_keys($appdatas);
     $list = DB::fetch_all("select * from %t where  $sql  ORDER BY ext DESC", $param);
-    $newlist = array();
+    $newlist = [];
     foreach ($list as $k => $v) {
         $appdata = $appdatas[$v["appid"]];
         if ($appdata['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $appdata['appico'])) {
@@ -86,11 +86,11 @@ $multi = multi($count, $perpage, $page, $theurl, 'pull-right');
 ksort($newlist, SORT_STRING);
 $list = array_slice($newlist, $start, $perpage);
 foreach ($list as $k => $nlist) {
-    $sort = array(
+    $sort = [
         'direction' => 'SORT_ASC', //排序顺序标志 SORT_DESC 降序；SORT_ASC 升序
         'field' => 'disp', //排序字段
-    );
-    $arrSort = array();
+    ];
+    $arrSort = [];
     foreach ($nlist as $uniqid => $row) {
         foreach ($row as $key => $value) {
             $arrSort[$key][$uniqid] = $value;
@@ -103,4 +103,4 @@ foreach ($list as $k => $nlist) {
 }
 //print_r($list);exit;
 include template('extopen');
-?>
+

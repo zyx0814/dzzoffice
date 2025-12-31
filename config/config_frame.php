@@ -1,6 +1,6 @@
 <?php
-$_config = array();
-$_config['namespacelist'] = array(
+$_config = [];
+$_config['namespacelist'] = [
     'root'      =>DZZ_ROOT,
     'coreroot'  => DZZ_ROOT.'core',
     'admin'     => DZZ_ROOT.'admin',
@@ -8,7 +8,7 @@ $_config['namespacelist'] = array(
     'dzz'       => DZZ_ROOT.APP_DIRNAME,
     'user'      => DZZ_ROOT.'user',
     'misc'      => DZZ_ROOT.'misc'
-);
+];
 
 $_config['default_mod'] = 'index';
 
@@ -28,10 +28,10 @@ $_config['mod_view_perm'] = '';
 $_config['action_name'] = 'do';
 $_config['do_name'] = 'action';
 
-$_config['profile']['privacy'] = array(
+$_config['profile']['privacy'] = [
     '-1'=>'私密',
     '0'=>'公开',
     '1'=>'本部门可见',
     '2'=>'本机构可见',
-);
+];
 return $_config;

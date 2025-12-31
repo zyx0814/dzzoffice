@@ -142,7 +142,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 	 */
 	public function getStyleArray($array)
 	{
-		return array('numberformat' => $array);
+		return ['numberformat' => $array];
 	}
 
 	/**
@@ -205,7 +205,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 			$pValue = PHPExcel_Style_NumberFormat::FORMAT_GENERAL;
 		}
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getStyleArray(array('code' => $pValue));
+			$styleArray = $this->getStyleArray(['code' => $pValue]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_formatCode = $pValue;
@@ -237,7 +237,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 	{
 
 		if ($this->_isSupervisor) {
-			$styleArray = $this->getStyleArray(array('code' => self::builtInFormatCode($pValue)));
+			$styleArray = $this->getStyleArray(['code' => self::builtInFormatCode($pValue)]);
 			$this->getActiveSheet()->getStyle($this->getSelectedCells())->applyFromArray($styleArray);
 		} else {
 			$this->_builtInFormatCode = $pValue;
@@ -253,7 +253,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 	{
 		// Built-in format codes
 		if (is_null(self::$_builtInFormats)) {
-			self::$_builtInFormats = array();
+			self::$_builtInFormats = [];
 
 			// General
 			self::$_builtInFormats[0] = PHPExcel_Style_NumberFormat::FORMAT_GENERAL;
@@ -374,7 +374,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 	 *
 	 * @var array
 	 */
-	private static $_dateFormatReplacements = array(
+	private static $_dateFormatReplacements = [
 			// first remove escapes related to non-format characters
 			'\\'	=> '',
 			//	12-hour suffix
@@ -411,25 +411,25 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 			'ss'	=> 's',
 			//	fractional seconds - no php equivalent
 			'.s'	=> ''
-		);
+    ];
 	/**
 	 * Search/replace values to convert Excel date/time format masks hours to PHP format masks (24 hr clock)
 	 *
 	 * @var array
 	 */
-	private static $_dateFormatReplacements24 = array(
+	private static $_dateFormatReplacements24 = [
 			'hh'	=> 'H',
 			'h'		=> 'G'
-		);
+    ];
 	/**
 	 * Search/replace values to convert Excel date/time format masks hours to PHP format masks (12 hr clock)
 	 *
 	 * @var array
 	 */
-	private static $_dateFormatReplacements12 = array(
+	private static $_dateFormatReplacements12 = [
 			'hh'	=> 'h',
 			'h'		=> 'g'
-		);
+    ];
 
 	private static function _formatAsDate(&$value, &$format)
 	{
@@ -615,7 +615,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 				$format = preg_replace("/\\\\/", '', $format);
 
 				// Some non-number strings are quoted, so we'll get rid of the quotes, likewise any positional * symbols
-				$format = str_replace(array('"','*'), '', $format);
+				$format = str_replace(['"','*'], '', $format);
 
 				// Find out if we need thousands separator
 				// This is indicated by a comma enclosed by a digit placeholder:
@@ -630,7 +630,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 				// This is indicated by a number of commas after a digit placeholder:
 				//		#,   or	0.0,,
 				$scale = 1; // same as no scale
-				$matches = array();
+				$matches = [];
 				if (preg_match('/(#|0)(,+)/', $format, $matches)) {
 					$scale = pow(1000, strlen($matches[2]));
 

@@ -49,15 +49,8 @@ class PHPExcel_Reader_Excel2007_Theme
 	 */
 	private $_colourSchemeName;
 
-	/**
-	 * Colour Map indexed by position
-	 *
-	 * @var array of string
-	 */
-	private $_colourMapValues;
 
-
-	/**
+    /**
 	 * Colour Map
 	 *
 	 * @var array of string

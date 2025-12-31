@@ -11,21 +11,18 @@ if (!defined('IN_DZZ')) {
 $uid = $_G['uid'];
 $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'updatesetting') {//更新设置
-    $issave = false;
     $explorermyset = $_GET['explorermyset'];
-    $setarr = array(
+    $setarr = [
         'iconview' => intval($explorermyset['iconview']),
         'ondup' => intval($explorermyset['ondup']),
-    );
-    if (C::t('user_setting')->update_by_skey('explorermyset', serialize($setarr), $uid)) {
-        $issave = true;
-    } else {
-        exit(json_encode(array('error' => true, 'msg' => lang('update_setting_failed'))));
+    ];
+    if (!C::t('user_setting')->update_by_skey('explorermyset', serialize($setarr), $uid)) {
+        exit(json_encode(['error' => true, 'msg' => lang('update_setting_failed')]));
     }
     if ($_G['adminid'] == 1) {
         include_once libfile('function/cache');
         $setting = $_GET['setting'];
-        $setarr = array(
+        $setarr = [
             'explorer_usermemoryOn' => (isset($setting['explorer_usermemoryOn']) && $setting['explorer_usermemoryOn'] == 'on') ? 1 : 0,
             'explorer_mermoryusersetting' => $setting['explorer_mermoryusersetting'],
             'explorer_mermorycloudsetting' => $setting['explorer_mermorycloudsetting'],
@@ -40,17 +37,14 @@ if ($do == 'updatesetting') {//更新设置
             'explorer_catcreate' => (isset($setting['explorer_catcreate']) && $setting['explorer_catcreate'] == 'on') ? 1 : 0,
             'explorer_finallydelete' => (isset($setting['explorer_finallydelete'])) ? intval($setting['explorer_finallydelete']) : -1,
             'explorer_limitConcurrentUploads' => intval($setting['explorer_limitConcurrentUploads']),
-        );
+        ];
         if (C::t('setting')->update_batch($setarr)) {
             updatecache('setting');
-            $issave = true;
         } else {
-            exit(json_encode(array('error' => true, 'msg' => lang('update_setting_failed'))));
+            exit(json_encode(['error' => true, 'msg' => lang('update_setting_failed')]));
         }
     }
-    if ($issave) {
-        exit(json_encode(array('success' => true, 'msg' => lang('update_setting_success'))));
-    }
+    exit(json_encode(['success' => true, 'msg' => lang('update_setting_success')]));
 } else {
     $explorermyset = dunserialize(C::t('user_setting')->fetch_by_skey('explorermyset', $uid));
     if ($_G['adminid'] == 1) {

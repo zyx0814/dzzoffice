@@ -239,7 +239,7 @@ class PHPExcel_CachedObjectStorage_Memcache extends PHPExcel_CachedObjectStorage
 		//	Flush the Memcache cache
 		$this->__destruct();
 
-		$this->_cellCache = array();
+		$this->_cellCache = [];
 
 		//	detach ourself from the worksheet, so that it can then delete this object successfully
 		$this->_parent = null;
@@ -263,7 +263,7 @@ class PHPExcel_CachedObjectStorage_Memcache extends PHPExcel_CachedObjectStorage
 
 			//	Set a new Memcache object and connect to the Memcache server
 			$this->_memcache = new Memcache();
-			if (!$this->_memcache->addServer($memcacheServer, $memcachePort, false, 50, 5, 5, true, array($this, 'failureCallback'))) {
+			if (!$this->_memcache->addServer($memcacheServer, $memcachePort, false, 50, 5, 5, true, [$this, 'failureCallback'])) {
 				throw new PHPExcel_Exception('Could not connect to MemCache server at '.$memcacheServer.':'.$memcachePort);
 			}
 			$this->_cacheTime = $cacheTime;

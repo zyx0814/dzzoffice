@@ -22,9 +22,9 @@ abstract class BaiduStore
 	 * Supported variable key name.
 	 * @var array
 	 */
-	protected static $supportedKeys = array(
+	protected static $supportedKeys = [
 		'state', 'code', 'session',
-	);
+    ];
 	
 	protected $clientId;
 	
@@ -80,7 +80,7 @@ abstract class BaiduStore
 	 */
 	protected function getKeyForStore($key)
 	{
-		return implode('_', array('bds', $this->clientId, $key));
+		return implode('_', ['bds', $this->clientId, $key]);
 	}
 }
 
@@ -292,7 +292,7 @@ class BaiduMemcachedStore extends BaiduStore
 	
 	protected function getKeyForStore($key)
 	{
-		return implode('_', array('bds', $this->clientId, $this->sessionId, $key));
+		return implode('_', ['bds', $this->clientId, $this->sessionId, $key]);
 	}
 }
 

@@ -19,18 +19,18 @@ class table_collect extends dzz_table {
             if ($copys <= 1) {
                 return DB::delete('collect', "cid='{$link['cid']}'");
             } else {
-                return DB::update('collect', array('copys' => $copys - 1), "cid='{$link['cid']}'");
+                return DB::update('collect', ['copys' => $copys - 1], "cid='{$link['cid']}'");
             }
         }
     }
 
     public function addcopy_by_cid($cid, $ceof = 1) {
-        if (!is_array($cid)) $aids = array($cid);
+        if (!is_array($cid)) $aids = [$cid];
 
         if ($ceof > 0) {
-            DB::query("update %t set copys=copys+%d where cid IN(%n)", array($this->_table, $ceof, $cid));
+            DB::query("update %t set copys=copys+%d where cid IN(%n)", [$this->_table, $ceof, $cid]);
         } else {
-            DB::query("update %t set copys=copys-%d where cid IN(%n)", array($this->_table, abs($ceof), $cid));
+            DB::query("update %t set copys=copys-%d where cid IN(%n)", [$this->_table, abs($ceof), $cid]);
         }
     }
 }

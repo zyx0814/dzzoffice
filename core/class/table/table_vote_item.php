@@ -21,16 +21,16 @@ class table_vote_item extends dzz_table {
     }
 
     public function fetch_by_voteid($voteid, $type = 0) {
-        $data = array();
+        $data = [];
         $sql = 'voteid=%d';
-        $param = array($this->_table, $voteid);
+        $param = [$this->_table, $voteid];
         if ($type) {
             $sql .= " and type=%d";
         }
         foreach (DB::fetch_all("select * from %t where $sql order by disp", $param) as $value) {
             if ($value['type'] && $value['aid']) {
-                $value['img'] = (DZZSCRIPT ? DZZSCRIPT : 'index.php') . '?mod=io&op=thumbnail&width=240&height=160&path=' . dzzencode('attach::' . $value['aid']);
-                $value['url'] = (DZZSCRIPT ? DZZSCRIPT : 'index.php') . '?mod=io&op=thumbnail&width=240&height=160&original=1&path=' . dzzencode('attach::' . $value['aid']);
+                $value['img'] = (DZZSCRIPT ?: 'index.php') . '?mod=io&op=thumbnail&width=240&height=160&path=' . dzzencode('attach::' . $value['aid']);
+                $value['url'] = (DZZSCRIPT ?: 'index.php') . '?mod=io&op=thumbnail&width=240&height=160&original=1&path=' . dzzencode('attach::' . $value['aid']);
             }
             $data['type_' . $value['type']][] = $value;
         }
@@ -45,9 +45,9 @@ class table_vote_item extends dzz_table {
 
     public function delete_by_voteid($voteids) {
         $voteids = (array)$voteids;
-        $itemids = array();
-        $aids = array();
-        foreach (DB::fetch_all("select itemid,aid from %t where voteid IN(%n)", array($this->_table, $voteids)) as $value) {
+        $itemids = [];
+        $aids = [];
+        foreach (DB::fetch_all("select itemid,aid from %t where voteid IN(%n)", [$this->_table, $voteids]) as $value) {
             if ($value['aid']) $aids[] = $value['aid'];
             $itemids[] = $value['itemid'];
         }
@@ -64,12 +64,12 @@ class table_vote_item extends dzz_table {
         if (!$vote = C::t('vote')->fetch($voteid)) return false;
         //删除已有的项目
         $sql = 'voteid=%d';
-        $param = array($this->_table, $voteid);
+        $param = [$this->_table, $voteid];
         if ($item && ($ids = array_keys($item))) {
             $sql .= " and itemid NOT IN(%n)";
             $param[] = $ids;
         }
-        $dels = array();
+        $dels = [];
         foreach (DB::fetch_all("select itemid,aid from %t where $sql", $param) as $value) {
             if ($value['aid']) C::t('attachment')->delete_by_aid($value['aid']);
             $dels[] = $value['itemid'];
@@ -79,7 +79,7 @@ class table_vote_item extends dzz_table {
         }
 
         //更新已有项目
-        $addcopyaids = array();
+        $addcopyaids = [];
         foreach ($item as $key => $value) {
             if (empty($value['content']) && !$value['aid']) self::delete_by_itemid($key);
             $value['content'] = getstr($value['content']);
@@ -87,18 +87,18 @@ class table_vote_item extends dzz_table {
         }
 
         //添加新项目
-        $disp = DB::result_first("select max(disp) from %t where voteid=%d", array($this->_table, $voteid));
+        $disp = DB::result_first("select max(disp) from %t where voteid=%d", [$this->_table, $voteid]);
 
         foreach ($itemnew as $key => $value) {
             if (empty($value['content']) && !$value['aid']) continue;
             $disp++;
-            $setarr = array('voteid' => $voteid,
+            $setarr = ['voteid' => $voteid,
                 'content' => getstr($value['content']),
                 'type' => $value['aid'] ? 2 : 1,
                 'aid' => intval($value['aid']),
                 'disp' => $disp,
                 'number' => 0
-            );
+            ];
             if (parent::insert($setarr, 1) && $setarr['aid']) {
                 C::t('attachment')->addcopy_by_aid($setarr['aid']);
             }
@@ -110,11 +110,11 @@ class table_vote_item extends dzz_table {
     public function update_number_by_itemid($itemids, $uid) {
         $itemids = (array)$itemids;
 
-        if ($ret = DB::query(" update %t SET number=number+1 where itemid IN (%n) ", array($this->_table, $itemids))) {
+        if ($ret = DB::query(" update %t SET number=number+1 where itemid IN (%n) ", [$this->_table, $itemids])) {
             C::t('vote_item_count')->insert_by_itemid($itemids, $uid);
         }
         return $ret;
     }
 }
 
-?>
+

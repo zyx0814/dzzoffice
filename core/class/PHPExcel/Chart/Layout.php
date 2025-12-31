@@ -143,7 +143,7 @@ class PHPExcel_Chart_Layout
 	/**
 	 * Create a new PHPExcel_Chart_Layout
 	 */
-	public function __construct($layout=array())
+	public function __construct($layout= [])
 	{
 		if (isset($layout['layoutTarget']))	{ $this->_layoutTarget	= $layout['layoutTarget'];	}
 		if (isset($layout['xMode']))		{ $this->_xMode			= $layout['xMode'];			}

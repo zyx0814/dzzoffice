@@ -16,4 +16,4 @@ C::t('notification')->delete_clear(0, 30);
 C::t('notification')->delete_clear(1, 30);
 C::t('notification')->optimize();
 
-?>
+

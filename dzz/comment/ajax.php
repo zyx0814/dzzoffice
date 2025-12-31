@@ -14,7 +14,7 @@ include libfile('function/code');
 
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $template = isset($_GET['template']) ? $_GET['template'] : '';
-$guests = array('getcomment', 'getThread', 'getNewThreads', 'getReply', 'getReplys', 'getUserToJson');
+$guests = ['getcomment', 'getThread', 'getNewThreads', 'getReply', 'getReplys', 'getUserToJson'];
 if (empty($_G['uid']) && !in_array($do, $guests)) {
     include template('common/header_ajax');
     echo '&nbsp;&nbsp;&nbsp;<a href="user.php?mod=login" class="btn btn-primary">' . lang('login') . '</a>';
@@ -30,18 +30,18 @@ if (submitcheck('replysubmit')) {
     $message = censor($_GET['message']);
 
     if (empty($message)) {
-        showmessage('please_enter_comment', DZZSCRIPT . '?mod=comment', array());
+        showmessage('please_enter_comment', DZZSCRIPT . '?mod=comment');
     }
     $os = get_os();
     foreach ($_G['browser'] as $key => $value) {
         $outputer = $key;
     }
     //处理@
-    $at_users = array();
+    $at_users = [];
     $message = preg_replace_callback("/@\[(.+?):(.+?)\]/i", "atreplacement", $message);
-    $setarr = array('author' => $_G['username'], 'authorid' => $_G['uid'], 'pcid' => intval($_GET['pcid']), 'rcid' => intval($_GET['rcid']), 'id' => getstr($_GET['id'], 60), 'idtype' => trim($_GET['idtype']), 'module' => trim($_GET['module']), 'ip' => $_G['clientip'], 'xtllq' => $os . ' ' . $outputer, 'dateline' => TIMESTAMP, 'message' => $message,);
+    $setarr = ['author' => $_G['username'], 'authorid' => $_G['uid'], 'pcid' => intval($_GET['pcid']), 'rcid' => intval($_GET['rcid']), 'id' => getstr($_GET['id'], 60), 'idtype' => trim($_GET['idtype']), 'module' => trim($_GET['module']), 'ip' => $_G['clientip'], 'xtllq' => $os . ' ' . $outputer, 'dateline' => TIMESTAMP, 'message' => $message,];
     if (!$setarr['cid'] = C::t('comment')->insert_by_cid($setarr, $at_users, $_GET['attach'])) {
-        showmessage('internal_server_error', DZZSCRIPT . '?mod=comment', array('message' => $message));
+        showmessage('internal_server_error', DZZSCRIPT . '?mod=comment', ['message' => $message]);
     }
     $setarr['attachs'] = C::t('comment_attach')->fetch_all_by_cid($setarr['cid']);
     $setarr['dateline'] = dgmdate($setarr['dateline'], 'u');
@@ -52,7 +52,7 @@ if (submitcheck('replysubmit')) {
     $setarr['avatar'] = avatar_block($setarr['authorid']);
     if ($_G['adminid'] == 1 || $_G['uid'] == $setarr['authorid'])
         $setarr['haveperm'] = 1;
-    showmessage('comment_success', DZZSCRIPT . '?mod=comment', array('data' => rawurlencode(json_encode($setarr))));
+    showmessage('comment_success', DZZSCRIPT . '?mod=comment', ['data' => rawurlencode(json_encode($setarr))]);
 } elseif ($do == 'edit') {
     $cid = intval($_GET['cid']);
     if (!$cid) {
@@ -70,11 +70,11 @@ if (submitcheck('replysubmit')) {
         if ($data['rcid'])
             $data['rpost'] = C::t('comment')->fetch($data['rcid']);
         $space = dzzgetspace($_G['uid']);
-        $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
+        $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : [];
         $space['maxattachsize'] = intval($space['maxattachsize']);
     } else {
         C::t('comment')->update_by_cid($cid, censor($_GET['message']), intval($_GET['rcid']), $_GET['attach']);
-        $value = array();
+        $value = [];
         if ($value = C::t('comment')->fetch($cid)) {
             $value['message'] = dzzcode($value['message']);
             $value['dateline'] = dgmdate($value['dateline'], 'u');
@@ -87,7 +87,7 @@ if (submitcheck('replysubmit')) {
             $value['allowsmiley'] = intval($_GET['allowsmiley']);
             $value['avatar'] = avatar_block($value['authorid']);
         }
-        showmessage('do_success', DZZSCRIPT . '?mod=comment', array('data' => rawurlencode(json_encode($value))));
+        showmessage('do_success', DZZSCRIPT . '?mod=comment', ['data' => rawurlencode(json_encode($value))]);
     }
 
 } elseif ($do == 'getcomment') {
@@ -101,10 +101,10 @@ if (submitcheck('replysubmit')) {
     $perpage = 20;
     $start = ($page - 1) * $perpage;
     $limit = $start . "-" . $perpage;
-    $gets = array('mod' => 'comment', 'op' => 'ajax', 'template' => $template, 'do' => 'getcomment', 'id' => $id, 'idtype' => $idtype, 'modal' => $modal);
+    $gets = ['mod' => 'comment', 'op' => 'ajax', 'template' => $template, 'do' => 'getcomment', 'id' => $id, 'idtype' => $idtype, 'modal' => $modal];
     $theurl = BASESCRIPT . "?" . url_implode($gets);
     $count = C::t('comment')->fetch_all_by_idtype($id, $idtype, $limit, true);
-    $list = array();
+    $list = [];
     if ($count) {
         $list = C::t('comment')->fetch_all_by_idtype($id, $idtype, $limit);
     }
@@ -123,7 +123,7 @@ if (submitcheck('replysubmit')) {
         if ($value['rcid']) {
             $value['rpost'] = C::t('comment')->fetch($value['rcid']);
         }
-        $value['replies'] = DB::result_first("select COUNT(*) from  %t where pcid=%d", array('comment', $value['cid']));
+        $value['replies'] = DB::result_first("select COUNT(*) from  %t where pcid=%d", ['comment', $value['cid']]);
         $value['replys'] = C::t('comment')->fetch_all_by_pcid($value['cid'], 5);
     }
 } elseif ($do == 'getreplys') {
@@ -137,21 +137,21 @@ if (submitcheck('replysubmit')) {
     $cid = intval($_GET['cid']);
     $data = C::t('comment')->fetch($cid);
     if ($_G['adminid'] != 1 && $_G['uid'] != $data['authorid'])
-        exit(json_encode(array('msg' => lang('no_privilege'))));
+        exit(json_encode(['msg' => lang('no_privilege')]));
     if (C::t('comment')->delete_by_cid($cid)) {
-        exit(json_encode(array('msg' => 'success')));
+        exit(json_encode(['msg' => 'success']));
     } else {
-        exit(json_encode(array('error' => lang('delete_error'))));
+        exit(json_encode(['error' => lang('delete_error')]));
     }
 } elseif ($do == 'upload') {
     include_once libfile('class/uploadhandler');
     $space = dzzgetspace($_G['uid']);
-    $allowedExtensions = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
+    $allowedExtensions = $space['attachextensions'] ? explode(',', $space['attachextensions']) : [];
 
     // max file size in bytes
     $sizeLimit = intval($space['maxattachsize']);
 
-    $options = array('accept_file_types' => $allowedExtensions ? ("/(\.|\/)(" . implode('|', $allowedExtensions) . ")$/i") : "/.+$/i", 'max_file_size' => $sizeLimit ? $sizeLimit : null, 'upload_dir' => $_G['setting']['attachdir'] . 'cache/', 'upload_url' => $_G['setting']['attachurl'] . 'cache/',);
+    $options = ['accept_file_types' => $allowedExtensions ? ("/(\.|\/)(" . implode('|', $allowedExtensions) . ")$/i") : "/.+$/i", 'max_file_size' => $sizeLimit ?: null, 'upload_dir' => $_G['setting']['attachdir'] . 'cache/', 'upload_url' => $_G['setting']['attachurl'] . 'cache/',];
     $upload_handler = new uploadhandler($options);
     exit();
 
@@ -160,7 +160,7 @@ if (submitcheck('replysubmit')) {
     $idtype = trim($_GET['idtype']);
     $module = trim($_GET['module']);
     $space = dzzgetspace($_G['uid']);
-    $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
+    $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : [];
     $space['maxattachsize'] = intval($space['maxattachsize']);
     $pcid = 0;
 } elseif ($do == 'getReplyForm') {
@@ -175,7 +175,7 @@ if (submitcheck('replysubmit')) {
         $module = $data['module'];
     }
     $space = dzzgetspace($_G['uid']);
-    $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : array();
+    $space['attachextensions'] = $space['attachextensions'] ? explode(',', $space['attachextensions']) : [];
     $space['maxattachsize'] = intval($space['maxattachsize']);
 }
 function atreplacement($matches) {
@@ -185,7 +185,7 @@ function atreplacement($matches) {
     if (strpos($matches[2], 'g') !== false) {
         $gid = str_replace('g', '', $matches[2]);
         if (($org = C::t('organization')->fetch($gid)) && checkAtPerm($gid)) {//判定用户有没有权限@此部门
-            $uids = getUserByOrgid($gid, true, array(), true);
+            $uids = getUserByOrgid($gid, true, [], true);
             foreach ($uids as $uid) {
                 if ($uid != $_G['uid'])
                     $at_users[] = $uid;
@@ -211,4 +211,4 @@ if ($template == '1') {
 } else {
     include template('ajax');
 }
-?>
+

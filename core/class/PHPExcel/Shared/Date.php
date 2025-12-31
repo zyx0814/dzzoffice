@@ -47,7 +47,7 @@ class PHPExcel_Shared_Date
 	 * @public
 	 * @var	string[]
 	 */
-	public static $_monthNames = array(	'Jan' => 'January',
+	public static $_monthNames = ['Jan' => 'January',
 										'Feb' => 'February',
 										'Mar' => 'March',
 										'Apr' => 'April',
@@ -59,7 +59,7 @@ class PHPExcel_Shared_Date
 										'Oct' => 'October',
 										'Nov' => 'November',
 										'Dec' => 'December',
-									  );
+    ];
 
 	/*
 	 * Names of the months of the year, indexed by shortname
@@ -68,11 +68,11 @@ class PHPExcel_Shared_Date
 	 * @public
 	 * @var	string[]
 	 */
-	public static $_numberSuffixes = array(	'st',
+	public static $_numberSuffixes = ['st',
 											'nd',
 											'rd',
 											'th',
-										  );
+    ];
 
 	/*
 	 * Base calendar year to use for calculations
@@ -143,7 +143,7 @@ class PHPExcel_Shared_Date
 		}
 
 		$timezoneAdjustment = ($adjustToTimezone) ?
-		    PHPExcel_Shared_TimeZone::getTimezoneAdjustment($timezone, $returnValue) :
+		    PHPExcel_Shared_TimeZone::getTimeZoneAdjustment($timezone, $returnValue) :
 		    0;
 
 		// Return

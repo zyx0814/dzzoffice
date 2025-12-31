@@ -20,13 +20,13 @@ $formhash = isset($_GET['formhash']) ? $_GET['formhash'] : '';
 $filename = isset($_GET['filename']) ? trim($_GET['filename']) : '';
 $deferer = dreferer();
 if ($exttype) {
-    $exttype = str_replace(array('&quot;', '|', '$'), array('"', '(', ')'), $exttype);
+    $exttype = str_replace(['&quot;', '|', '$'], ['"', '(', ')'], $exttype);
     $exttype = json_decode($exttype);
 }
 if ($jsondetoken = json_decode($token)) {
     $token = $jsondetoken;
 }
-$gets = array(
+$gets = [
     'allowcreate' => $allowcreate,
     'type' => $type,
     'range' => $range,
@@ -37,9 +37,9 @@ $gets = array(
     'token' => $token,
     'formhash' => $formhash,
     'filename' => $filename
-);
+];
 $json = json_encode($gets);
-$allowvisit = array('file', 'searchfile', 'json', 'ajax', 'search', 'save', 'home', 'group');
+$allowvisit = ['file', 'searchfile', 'json', 'ajax', 'search', 'save', 'home', 'group'];
 if ($do) {
     if (!in_array($do, $allowvisit)) {
         showmessage('access_denied', dreferer());

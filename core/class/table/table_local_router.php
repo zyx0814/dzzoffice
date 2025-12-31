@@ -30,12 +30,12 @@ class table_local_router extends dzz_table {
     }
 
     public function fetch_all_orderby_priority($available = false) {
-        $data = array();
+        $data = [];
         $where = '1';
         if ($available) {
             $where .= ' and `available`>0';
         }
-        foreach (DB::fetch_all("SELECT * FROM %t WHERE $where ORDER BY priority DESC ", array($this->_table)) as $value) {
+        foreach (DB::fetch_all("SELECT * FROM %t WHERE $where ORDER BY priority DESC ", [$this->_table]) as $value) {
             $value['router'] = unserialize($value['router']);
             $value['drouter'] = self::getRouterDetail($value['router']);
             $data[$value['routerid']] = $value;
@@ -53,7 +53,7 @@ class table_local_router extends dzz_table {
                     else $html .= "文件后缀：不限制";
                     break;
                 case 'size':
-                    $sizearr = array();
+                    $sizearr = [];
                     if (is_numeric($value['lt'])) $sizearr[] = "大于" . formatsize($value['lt'] * 1024 * 1024);
                     if (is_numeric($value['gt'])) $sizearr[] = "小于" . formatsize($value['gt'] * 1024 * 1024);
                     if ($sizearr) $html .= '<br>文件大小：' . implode(' and ', $sizearr);
@@ -88,7 +88,7 @@ class table_local_router extends dzz_table {
             if (!$ldata = C::t('local_storage')->fetch($value['remoteid'])) {
                 continue;
             } else {
-                $available = DB::result_first("select available from %t where bz = %s", array('connect', $ldata['bz']));
+                $available = DB::result_first("select available from %t where bz = %s", ['connect', $ldata['bz']]);
                 if ($available < 1) continue;
             }
             //云停用跳转
@@ -105,4 +105,4 @@ class table_local_router extends dzz_table {
     }
 }
 
-?>
+

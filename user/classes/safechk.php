@@ -30,10 +30,7 @@ class Safechk {
             } else {
 
                 $start = ($hlen > 3) ? 3 : $hlen;
-                $hidestr = '';
-                for ($i = 0; $i <= $hlen; $i++) {
-                    $hidestr .= '*';
-                }
+                $hidestr = str_repeat('*', $hlen + 1);
                 $emailarr[0] = substr_replace($emailarr[0], $hidestr, $start, $hlen);
             }
             $val = $emailarr[0] . '@' . $emailarr[1];

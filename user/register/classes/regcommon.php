@@ -30,40 +30,40 @@ class Regcommon {
 
             if ($uid == -1) {
 
-                showTips(array('error' => lang('profile_nickname_illegal')), $type);
+                showTips(['error' => lang('profile_nickname_illegal')], $type);
 
             } elseif ($uid == -2) {
 
-                showTips(array('error' => lang('profile_nickname_protect')), $type);
+                showTips(['error' => lang('profile_nickname_protect')], $type);
 
             } elseif ($uid == -3) {
 
-                showTips(array('error' => lang('profile_nickname_duplicate')), $type);
+                showTips(['error' => lang('profile_nickname_duplicate')], $type);
 
             } elseif ($uid == -4) {
 
-                showTips(array('error' => lang('profile_email_illegal')), $type);
+                showTips(['error' => lang('profile_email_illegal')], $type);
 
             } elseif ($uid == -5) {
 
-                showTips(array('error' => lang('profile_email_domain_illegal')), $type);
+                showTips(['error' => lang('profile_email_domain_illegal')], $type);
 
             } elseif ($uid == -6) {
 
-                showTips(array('error' => lang('profile_email_duplicate')), $type);
+                showTips(['error' => lang('profile_email_duplicate')], $type);
 
             } elseif ($uid == -7) {
 
-                showTips(array('error' => lang('profile_username_illegal')), $type);
+                showTips(['error' => lang('profile_username_illegal')], $type);
 
             } else {
 
-                showTips(array('error' => lang('undefined_action')), $type);
+                showTips(['error' => lang('undefined_action')], $type);
             }
 
         } elseif (empty($uid)) {
 
-            showTips(array('error' => lang('register_empty_data')), $type);
+            showTips(['error' => lang('register_empty_data')], $type);
 
         }
 

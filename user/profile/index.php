@@ -15,7 +15,7 @@ $uid = intval($_G['uid']);
 $verify = C::t('user_verify')->fetch($_G['uid']);//验证信息
 $userinfo = C::t('user_profile')->get_userprofile_by_uid($uid);//用户资料信息
 $userstatus = C::t('user_status')->fetch($uid);//用户状态
-$userstatus['profileprogress'] = $userstatus['profileprogress'] ? $userstatus['profileprogress'] : 0;
+$userstatus['profileprogress'] = $userstatus['profileprogress'] ?: 0;
 $space = dzzgetspace($_G['uid']);
 $vid = intval($_GET['vid']);
 $my_username = false;
@@ -32,7 +32,7 @@ if (empty($_G['cache']['profilesetting'])) {
 }
 
 if (submitcheck('profilesubmit')) {
-    $setarr = $verifyarr = $errorarr = $userarr = array();
+    $setarr = $verifyarr = $errorarr = $userarr = [];
     if($my_username) {
         //用户名验证
         $username = trim($_GET['username']);
@@ -88,19 +88,19 @@ if (submitcheck('profilesubmit')) {
             }
         } else {
             $_GET['vid'] = $vid = 0;
-            $verifyconfig = array();
+            $verifyconfig = [];
         }
     }
 
     foreach ($_POST as $key => $value) {
         $field = $_G['cache']['profilesetting'][$key];
-        if (in_array($field['formtype'], array('text', 'textarea'))) {
+        if (in_array($field['formtype'], ['text', 'textarea'])) {
             $value = $censor->replace($value);
         }
         if ($field && !$field['available']) {
             continue;
         } elseif ($key == 'site') {
-            if (!in_array(strtolower(substr($value, 0, 6)), array('http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://')) && !preg_match('/^static\//', $value) && !preg_match('/^data\//', $value)) {
+            if (!in_array(strtolower(substr($value, 0, 6)), ['http:/', 'https:', 'ftp://', 'rtsp:/', 'mms://']) && !preg_match('/^static\//', $value) && !preg_match('/^data\//', $value)) {
                 $value = 'http://' . $value;
             }
         }
@@ -197,7 +197,7 @@ if (submitcheck('profilesubmit')) {
                 unset($verifyinfo['field'][$key]);
                 continue;
             }
-            if (empty($verifyarr[$key]) && !isset($verifyarr[$key]) && isset($verifyinfo['field'][$key])) {
+            if (!isset($verifyarr[$key]) && isset($verifyinfo['field'][$key])) {
                 $verifyarr[$key] = !empty($fvalue) && $key != $fvalue ? $fvalue : $space[$key];
             }
         }
@@ -211,8 +211,8 @@ if (submitcheck('profilesubmit')) {
         $setarr['zodiac'] = get_zodiac($_POST['birthyear']);
     }
     //资料展示权限
-    $privacys = isset($_POST['privacy']) ? $_POST['privacy'] : array();
-    $setarrs = array();
+    $privacys = isset($_POST['privacy']) ? $_POST['privacy'] : [];
+    $setarrs = [];
     foreach ($setarr as $k => $v) {
         $setarrs[$k]['value'] = $v;
         $setarrs[$k]['privacy'] = isset($privacys[$k]) ? $privacys[$k] : '';
@@ -234,17 +234,17 @@ if (submitcheck('profilesubmit')) {
         }
 
         C::t('user_verify_info')->delete_by_uid($_G['uid'], $vid);
-        $setverify = array(
+        $setverify = [
             'uid' => $_G['uid'],
             'username' => $_G['username'],
             'verifytype' => $vid,
             'field' => serialize($verifyarr),
             'dateline' => $_G['timestamp'],
             'orgid' => intval($verifyarr['department'])
-        );
+        ];
         C::t('user_verify_info')->insert($setverify);
         if (!(C::t('user_verify')->count_by_uid($_G['uid']))) {
-            C::t('user_verify')->insert(array('uid' => $_G['uid']));
+            C::t('user_verify')->insert(['uid' => $_G['uid']]);
         }
 
         if ($_G['setting']['verify'][$vid]['available']) {
@@ -253,14 +253,14 @@ if (submitcheck('profilesubmit')) {
             foreach (C::t('user')->fetch_all_by_adminid(1) as $value) {
                 if ($value['uid'] != $_G['uid']) {
                     //发送通知
-                    $notevars = array(
+                    $notevars = [
                         'from_id' => $appid,
                         'from_idtype' => 'app',
                         'url' => ADMINSCRIPT . '?mod=member&op=verify&vid=' . $vid,
                         'author' => $_G['username'],
                         'authorid' => $_G['uid'],
                         'title' => $vid ? $_G['setting']['verify'][$vid]['title'] : '资料审核',
-                    );
+                    ];
                     $action = 'profile_moderate';
                     $type = 'profile_moderate_' . $vid;
 
@@ -270,18 +270,18 @@ if (submitcheck('profilesubmit')) {
         }
     }
     countprofileprogress();//计算资料完整度
-    $message = $vid ? lang('profile_verify_verifying', array('verify' => $verifyconfig['title'])) : '';
+    $message = $vid ? lang('profile_verify_verifying', ['verify' => $verifyconfig['title']]) : '';
     profile_showsuccess($message);//资料修改提示
 } else {
     $vid = !empty($_GET['vid']) ? intval($_GET['vid']) : 0;
     $privacy = C::t('user_profile')->fetch_privacy_by_uid($uid);
-    $allowitems = array();
+    $allowitems = [];
     if ($vid) {
         if (empty($_G['setting']['verify'][$vid]['groupid']) || in_array($_G['groupid'], $_G['setting']['verify'][$vid]['groupid'])) {
             $allowitems = $_G['setting']['verify'][$vid]['field'];
         }
     } else {
-        $verifyfieldid = array();
+        $verifyfieldid = [];
         //在认证里的资料项只在认证页里出现
         foreach ($_G['setting']['verify'] as $key => $value) {
             if (!empty($value['field'])) {
@@ -298,7 +298,7 @@ if (submitcheck('profilesubmit')) {
     $showbtn = ($vid && $verify['verify' . $vid] != 1) || empty($vid);
     if (!empty($verify) && is_array($verify)) {
         foreach ($verify as $key => $flag) {
-            if (in_array($key, array('verify1', 'verify2', 'verify3', 'verify4', 'verify5', 'verify6', 'verify7')) && $flag == 1) {
+            if (in_array($key, ['verify1', 'verify2', 'verify3', 'verify4', 'verify5', 'verify6', 'verify7']) && $flag == 1) {
                 $verifyid = intval(substr($key, -1, 1));
                 if ($_G['setting']['verify'][$verifyid]['available']) {
                     foreach ($_G['setting']['verify'][$verifyid]['field'] as $field) {
@@ -316,10 +316,10 @@ if (submitcheck('profilesubmit')) {
             }
         }
     }
-    $htmls = $settings = array();
+    $htmls = $settings = [];
     foreach ($allowitems as $fieldid) {
         if ($fieldid != 'timeoffset') {
-            $html = profile_setting($fieldid, $space, $vid ? false : true);
+            $html = profile_setting($fieldid, $space, !$vid);
             if ($html) {
                 $settings[$fieldid] = $_G['cache']['profilesetting'][$fieldid];
                 $htmls[$fieldid] = $html;

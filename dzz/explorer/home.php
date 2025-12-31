@@ -26,19 +26,19 @@ if ($folderinfo = C::t('folder')->fetch_folderinfo_by_fid($fid)) {
     $folderpathstr = implode('\\', $folderpatharr);
     //统计打开次数
     if ($rid = C::t('resources')->fetch_rid_by_fid($fid)) {
-        $setarr = array(
+        $setarr = [
             'uid' => $uid,
             'views' => 1,
             'opendateline' => TIMESTAMP,
             'fid' => $fid
-        );
+        ];
         C::t('resources_statis')->add_statis_by_rid($rid, $setarr);
     } else {
-        $setarr = array(
+        $setarr = [
             'uid' => $uid,
             'views' => 1,
             'opendateline' => TIMESTAMP
-        );
+        ];
         C::t('resources_statis')->add_statis_by_fid($fid, $setarr);
     }
 }

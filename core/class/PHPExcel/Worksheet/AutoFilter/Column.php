@@ -49,7 +49,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	 *
 	 * @var string[]
 	 */
-	private static $_filterTypes = array(
+	private static $_filterTypes = [
 		//	Currently we're not handling
 		//		colorFilter
 		//		extLst
@@ -58,7 +58,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 		self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER,
 		self::AUTOFILTER_FILTERTYPE_DYNAMICFILTER,
 		self::AUTOFILTER_FILTERTYPE_TOPTENFILTER,
-	);
+    ];
 
 	/* Multiple Rule Connections */
 	const AUTOFILTER_COLUMN_JOIN_AND	= 'and';
@@ -69,10 +69,10 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	 *
 	 * @var string[]
 	 */
-	private static $_ruleJoins = array(
+	private static $_ruleJoins = [
 		self::AUTOFILTER_COLUMN_JOIN_AND,
 		self::AUTOFILTER_COLUMN_JOIN_OR,
-	);
+    ];
 
 	/**
 	 * Autofilter
@@ -111,7 +111,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	 *
 	 * @var array of PHPExcel_Worksheet_AutoFilter_Column_Rule
 	 */
-	private $_ruleset = array();
+	private $_ruleset = [];
 
 
 	/**
@@ -119,7 +119,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	 *
 	 * @var array of mixed
 	 */
-	private $_attributes = array();
+	private $_attributes = [];
 
 
 	/**
@@ -244,7 +244,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	 *	@throws	PHPExcel_Exception
 	 *	@return PHPExcel_Worksheet_AutoFilter_Column
 	 */
-	public function setAttributes($pAttributes = array()) {
+	public function setAttributes($pAttributes = []) {
 		$this->_attributes = $pAttributes;
 
 		return $this;
@@ -358,7 +358,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	 * @return	PHPExcel_Worksheet_AutoFilter_Column
 	 */
 	public function clearRules() {
-		$this->_ruleset = array();
+		$this->_ruleset = [];
 		$this->setJoin(self::AUTOFILTER_COLUMN_JOIN_OR);
 
 		return $this;
@@ -379,7 +379,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 				}
 			} elseif ((is_array($value)) && ($key == '_ruleset')) {
 				//	The columns array of PHPExcel_Worksheet_AutoFilter objects
-				$this->$key = array();
+				$this->$key = [];
 				foreach ($value as $k => $v) {
 					$this->$key[$k] = clone $v;
 					// attach the new cloned Rule to this new cloned Autofilter Cloned object

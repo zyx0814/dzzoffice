@@ -113,8 +113,8 @@ class perm_check {
             return perm_binPerm::getGroupPower('read');
         }
         $perm = ($newperm) ? intval($newperm) : intval($folder['perm']);
+        $power = new perm_binPerm($perm);
         if ($folder['gid']) {
-            $power = new perm_binPerm($perm);
             if ($power->isPower('flag')) {//不继承，使用此权限
                 return $perm;
             } else { //继承上级，查找上级
@@ -125,7 +125,6 @@ class perm_check {
                 }
             }
         } else {
-            $power = new perm_binPerm($perm);
             if ($power->isPower('flag')) {//不继承，使用此权限
                 return $power->mergePower(self::getuserPerm());
             } else { //继承上级，查找上级
@@ -303,7 +302,7 @@ class perm_check {
         }
         // 第三方挂载权限检查（非Dzz盘场景）
         if (($bz && $bz != 'dzz') || ($arr['bz'] && $arr['bz'] != 'dzz')) {
-            return self::checkperm_Container($arr['pfid'], $action, $bz ? $bz : $arr['bz']);
+            return self::checkperm_Container($arr['pfid'], $action, $bz ?: $arr['bz']);
         } else {
             // 处理操作类型：rename等效于edit；根据文件归属拼接权限后缀（1=本人，2=他人）
             $action = ($action == 'rename') ? 'edit' : $action;
@@ -327,7 +326,7 @@ class perm_check {
              * 2. 若pfid为0（顶级目录，无父级），则使用fid（当前目录自身ID）替代，解决顶级目录权限判断失效问题；
              * 3. 仅顶级目录场景会用到fid，非顶级目录始终以pfid为准。
              */
-            $fid = $arr['pfid'] ? $arr['pfid'] : $arr['fid'];
+            $fid = $arr['pfid'] ?: $arr['fid'];
             if (!$fid) return false;
             return self::containerPerm($fid, $action);
         }

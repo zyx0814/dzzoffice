@@ -41,7 +41,7 @@ class ResultTransformer {
 
     public function metaDataTransformer(CommandInterface $command, ResponseInterface $response, Result $result) {
         $headers = $response->getHeaders();
-        $metadata = array();
+        $metadata = [];
         foreach ($headers as $key => $value) {
             if (strpos($key, "x-cos-meta-") === 0) {
                 $metadata[substr($key, 11)] = $value[0];
@@ -75,7 +75,7 @@ class ResultTransformer {
     public function getSelectContents($result) {
         $f = $result['RawData'];
         while (!$f->eof()) {
-            $data = array();
+            $data = [];
             $tmp = $f->read(4);
             if (empty($tmp)) {
                 break;
@@ -84,7 +84,7 @@ class ResultTransformer {
             $headers_length = (int)(unpack("N", $f->read(4))[1]);
             $body_length = $totol_length - $headers_length - 16;
             $predule_crc = (int)(unpack("N", $f->read(4))[1]);
-            $headers = array();
+            $headers = [];
             for ($offset = 0; $offset < $headers_length;) {
                 $key_length = (int)(unpack("C", $f->read(1))[1]);
                 $key = $f->read($key_length);

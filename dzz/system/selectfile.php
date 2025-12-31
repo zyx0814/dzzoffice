@@ -17,7 +17,7 @@ $selhome = isset($_GET['selhome']) ? $_GET['selhome'] : 0;//展示网盘0不展�
 $selorg = isset($_GET['selorg']) ? $_GET['selorg'] : 0;//展示机构0不展示
 $selgroup = isset($_GET['selgroup']) ? $_GET['selgroup'] : 0;//展示群组0不展示
 $range = isset($_GET['range']) ? $_GET['range'] : 0;//是否限制展示0不限定
-$gets = array(
+$gets = [
     'allowcreate' => $allowcreate,
     'nosearch' => 1,
     'inwindow' => 1,
@@ -26,7 +26,7 @@ $gets = array(
     'selorg' => $selorg,
     'selgroup' => $selgroup,
     'range' => $range
-);
+];
 $theurl = MOD_URL . "&op=filelist&callback=" . $callback . '&' . url_implode($gets);
 include template('selectfile');
 exit();

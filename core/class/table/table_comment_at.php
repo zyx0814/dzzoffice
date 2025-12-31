@@ -21,10 +21,10 @@ class table_comment_at extends dzz_table {
     }
 
     public function fetch_all_cids_by_uid($uid, $timestamp = 0, $count = 0) {
-        $cids = array();
-        if ($count) return DB::result_first("select COUNT(*) from %t where uid=%d and dateline>%d", array($this->_table, $uid, $timestamp));
-        foreach (DB::fetch_all("select cid from %t where uid=%d and dateline>%d", array($this->_table, $uid, $timestamp)) as $value) {
-            $tids[] = $value['cid'];
+        $cids = [];
+        if ($count) return DB::result_first("select COUNT(*) from %t where uid=%d and dateline>%d", [$this->_table, $uid, $timestamp]);
+        foreach (DB::fetch_all("select cid from %t where uid=%d and dateline>%d", [$this->_table, $uid, $timestamp]) as $value) {
+            $cids[] = $value['cid'];
         }
         return array_unique($cids);
     }
@@ -32,7 +32,7 @@ class table_comment_at extends dzz_table {
     public function insert_by_cid($cid, $uids) {
         if (!$cid || !$uids) return false;
         foreach ($uids as $uid) {
-            parent::insert(array('cid' => $cid, 'uid' => $uid, 'dateline' => TIMESTAMP), 0, 1);
+            parent::insert(['cid' => $cid, 'uid' => $uid, 'dateline' => TIMESTAMP], 0, 1);
         }
 
     }
@@ -40,13 +40,13 @@ class table_comment_at extends dzz_table {
     public function delete_by_cid($cids) {
         if (!$cids) return false;
         if (!is_array($cids)) {
-            $cids = array($cids);
+            $cids = [$cids];
         }
         return DB::delete($this->_table, "cid IN (" . dimplode($cids) . ")");
     }
 
     public function copy_by_cid($ocid, $cid) {
-        foreach (DB::fetch_all("select * from %t where cid=%d", array($this->_table, $ocid)) as $value) {
+        foreach (DB::fetch_all("select * from %t where cid=%d", [$this->_table, $ocid]) as $value) {
             $value['cid'] = $cid;
             parent::insert($value, 0, 1);
         }
@@ -55,4 +55,4 @@ class table_comment_at extends dzz_table {
 
 }
 
-?>
+

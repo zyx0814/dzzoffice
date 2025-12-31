@@ -11,7 +11,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 }
 include_once DZZ_ROOT . './data/extdata/exts.php';
 require_once libfile('function/user', '', 'user');
-$grouptitle = array('0' => lang('all'), '-1' => lang('visitors_visible'), '1' => lang('members_available'), '2' => lang('section_administrators_available'), '3' => lang('system_administrators_available'));
+$grouptitle = ['0' => lang('all'), '-1' => lang('visitors_visible'), '1' => lang('members_available'), '2' => lang('section_administrators_available'), '3' => lang('system_administrators_available')];
 $navtitle = lang('编辑应用') . ' - ' . lang('appname');
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $appid = intval($_GET['appid']);
@@ -24,11 +24,11 @@ if (submitcheck('appsubmit')) {
     $app_path = getstr($_GET['app_path']);
     $_GET['appdesc'] = getstr($_GET['appdesc']);
     $_GET['feature'] = getstr($_GET['feature']);
-    $_GET['taginput'] = str_replace(array(',', "'", '，'), '', trim($_GET['taginput']));
+    $_GET['taginput'] = str_replace([',', "'", '，'], '', trim($_GET['taginput']));
     $_GET['fileextinput'] = trim($_GET['fileextinput']);
     if (!empty($_GET['fileextinput'])) $_GET['fileext'][] = $_GET['fileextinput'];
     if (!empty($_GET['taginput'])) $_GET['tag'][] = $_GET['taginput'];
-    $setarr = array(
+    $setarr = [
         'appname' => getstr($_GET['appname'], 80, 0, 0, 0, -1),
         'appurl' => trim($_GET['appurl']),
         'appadminurl' => $appadminurl,
@@ -46,7 +46,7 @@ if (submitcheck('appsubmit')) {
         'group' => intval($_GET['group']),
         'open' => intval($_GET['open']),
         'nodup' => intval($_GET['nodup'])
-    );
+    ];
 
     //判断依序的参数是否有值
     $msg = '';
@@ -55,11 +55,11 @@ if (submitcheck('appsubmit')) {
     if (!$setarr['identifier']) $msg .= lang('application_identifier') . lang('not_empty');
     if (!$setarr['app_path']) $msg .= lang('application_app_path') . lang('not_empty');
 
-    if (($oappid = DB::result_first("select appid from %t where appurl=%s", array('app_market', $setarr['appurl']))) && $oappid != $appid) {
+    if (($oappid = DB::result_first("select appid from %t where appurl=%s", ['app_market', $setarr['appurl']])) && $oappid != $appid) {
         $msg .= lang('application_site') . lang('already_exist');
     }
 
-    if (($oappid = DB::result_first("select appid from %t where identifier=%s", array('app_market', $setarr['identifier']))) && $oappid != $appid) {
+    if (($oappid = DB::result_first("select appid from %t where identifier=%s", ['app_market', $setarr['identifier']])) && $oappid != $appid) {
         $msg .= lang('application_identifier') . lang('already_exist');
     }
 
@@ -102,14 +102,14 @@ if (submitcheck('appsubmit')) {
     //处理标签
     C::t('app_tag')->addtags(dhtmlspecialchars($_GET['tag']), $appid);
     //更新上传图片的id
-    if ($picids) C::t('app_pic')->update($picids, array('appid' => $appid));
+    if ($picids) C::t('app_pic')->update($picids, ['appid' => $appid]);
     C::t('app_open')->insert_by_exts($appid, dhtmlspecialchars($_GET['fileext']));
 
     //处理组织机构
     if ($setarr['group'] != 1) {
-        $orgids = array();
+        $orgids = [];
     } else {//只有用户可用时才设置部门
-        $orgids = $_GET['orgids'] ? explode(',', $_GET['orgids']) : array();
+        $orgids = $_GET['orgids'] ? explode(',', $_GET['orgids']) : [];
     }
     C::t('app_organization')->replace_orgids_by_appid($appid, $orgids);
 
@@ -137,24 +137,24 @@ if (submitcheck('appsubmit')) {
         $navtitle = lang('edit_app') . ' - ' . lang('appname');
     }
     include_once libfile('function/organization');
-    $sexts = array();
+    $sexts = [];
     foreach ($exts as $ext) {
-        $sexts[] = array('name' => $ext);
+        $sexts[] = ['name' => $ext];
     }
     $fileext_source = htmlspecialchars(json_encode($sexts));
     $orglist = C::t('organization')->fetch_all_by_forgid(0);
-    $tags = DB::fetch_all("SELECT tagname FROM %t WHERE hot>0 ORDER BY HOT DESC limit 50", array('app_tag'));
-    $tag_source = array();
+    $tags = DB::fetch_all("SELECT tagname FROM %t WHERE hot>0 ORDER BY HOT DESC limit 50", ['app_tag']);
+    $tag_source = [];
     foreach ($tags as $value) {
-        $tag_source[] = array('name' => $value['tagname']);
+        $tag_source[] = ['name' => $value['tagname']];
     }
     $tag_source = htmlspecialchars(json_encode($tag_source));
-    $app = array();
+    $app = [];
     if ($app = dstripslashes(C::t('app_market')->fetch($appid))) {
         if ($app['appico'] != 'dzz/images/default/icodefault.png' && !preg_match("/^(http|ftp|https|mms)\:\/\/(.+?)/i", $app['appico'])) {
             $app['appico'] = $_G['setting']['attachurl'] . $app['appico'];
         }
-        $apptags = array();
+        $apptags = [];
         foreach (C::t('app_relative')->fetch_all_by_appid($app['appid']) as $value) {
             $apptags[] = $value['tagname'];
         }
@@ -164,7 +164,7 @@ if (submitcheck('appsubmit')) {
             $app['tags'] = '';
         //$app['fileext']=$app['fileext']?explode(',',$app['fileext']):array();
 
-        $open = $sel = array();
+        $open = $sel = [];
         $orgids = C::t('app_organization')->fetch_orgids_by_appid($app['appid']);
         if ($orgids) {
             $sel_org = C::t('organization')->fetch_all($orgids);
@@ -184,8 +184,8 @@ if (submitcheck('appsubmit')) {
             }
         }
         $sel = implode(',', $sel);
-        $openarr = json_encode(array('orgids' => $open));
-        $piclist = array();
+        $openarr = json_encode(['orgids' => $open]);
+        $piclist = [];
         $list = C::t('app_pic')->fetch_all_by_appid($appid, false, true);
         foreach ($list as $value) {
             $value['pic'] = getAttachUrl($value);
@@ -193,7 +193,7 @@ if (submitcheck('appsubmit')) {
             $piclist[] = $value;
         }
     } else {
-        $app = array();
+        $app = [];
         $app['hideInMarket'] = 0;
         $app['isshow'] = 1;
         $app['havetask'] = 1;
@@ -204,14 +204,14 @@ if (submitcheck('appsubmit')) {
 }
 function app_pic_delete($picids) {
     if (!is_array($picids))
-        $picids = array($picids);
+        $picids = [$picids];
     foreach ($picids as $picid) {
         C::t('app_pic')->delete_by_picid($picid);
     }
 }
 function dzz_app_pic_save($FILE, $dir = 'appimg') {
     global $_G;
-    $imageext = array('jpg', 'jpeg', 'png', 'gif', 'webp');
+    $imageext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     $ext = strtolower(substr(strrchr($FILE['name'], '.'), 1, 10));
     if (!in_array($ext, $imageext)) return '文件格式不允许';
     $subdir = $subdir1 = $subdir2 = '';
@@ -223,16 +223,15 @@ function dzz_app_pic_save($FILE, $dir = 'appimg') {
     if (!$attach = io_dzz::UploadSave($FILE)) {
         return '应用图片上传失败';
     }
-    $setarr = array(
+    $setarr = [
         'uid' => $_G['uid'],
-        'username' => $_G['username'] ? $_G['username'] : $_G['clientip'],
+        'username' => $_G['username'] ?: $_G['clientip'],
         'dateline' => $_G['timestamp'],
         'aid' => $attach['aid'],
-    );
+    ];
     if ($setarr['picid'] = DB::insert('app_pic', $setarr, 1)) {
         C::t('attachment')->addcopy_by_aid($attach['aid']);
         return $setarr;
     }
     return false;
 }
-?>

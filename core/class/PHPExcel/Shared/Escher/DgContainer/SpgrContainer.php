@@ -46,7 +46,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer
 	 *
 	 * @var array
 	 */
-	private $_children = array();
+	private $_children = [];
 
 	/**
 	 * Set parent Shape Group Container
@@ -94,7 +94,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer
 	 */
 	public function getAllSpContainers()
 	{
-		$allSpContainers = array();
+		$allSpContainers = [];
 
 		foreach ($this->_children as $child) {
 			if ($child instanceof PHPExcel_Shared_Escher_DgContainer_SpgrContainer) {

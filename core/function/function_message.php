@@ -4,7 +4,7 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-function dshowmessage($message, $url_forward = '', $values = array(), $extraparam = array(), $custom = 0) {
+function dshowmessage($message, $url_forward = '', $values = [], $extraparam = [], $custom = 0) {
     global $_G, $show_message;
 
     if ($extraparam['break']) {
@@ -12,7 +12,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
     }
     $_G['inshowmessage'] = true;
 
-    $param = array(
+    $param = [
         'header' => false,       // 是否发送 HTTP 头
         'timeout' => null,       // 是否自动跳转
         'refreshtime' => 3,      // 跳转延迟（默认3秒）
@@ -29,7 +29,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
         'extrajs' => '',         // 额外 JS 代码
         'striptags' => false,    // 是否过滤 HTML 标签
         'showid' => ''           // 指定消息渲染的 DOM ID
-    );
+    ];
 
     $navtitle = lang('board_message');
 
@@ -58,7 +58,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
         $param[$k] = $v;
     }
     if (array_key_exists('set', $extraparam)) {
-        $setdata = array('1' => array('msgtype' => 3));
+        $setdata = ['1' => ['msgtype' => 3]];
         if ($setdata[$extraparam['set']]) {
             foreach ($setdata[$extraparam['set']] as $k => $v) {
                 $param[$k] = $v;
@@ -104,7 +104,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
 
     if (isset($_GET['ajaxdata'])) {
         if ($_GET['ajaxdata'] === 'json') {
-            helper_output::json(array('code' => 1, 'msg' => $show_message, 'message' => $show_message, 'data' => $values));
+            helper_output::json(['code' => 1, 'msg' => $show_message, 'message' => $show_message, 'data' => $values]);
         } else if ($_GET['ajaxdata'] === 'html') {
             helper_output::html($show_message);
         }
@@ -162,8 +162,8 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
     }
     if ($handlekey) {
         if ($param['showdialog']) {
-            $modes = array('alert_error' => 'alert', 'alert_right' => 'right', 'alert_info' => 'notice');
-            $extra .= 'hideWindow(\'' . $handlekey . '\');showDialog(\'' . $show_jsmessage . '\', \'' . $modes[$alerttype] . '\', null, ' . ($param['locationtime'] !== null ? 'function () { window.location.href =\'' . $url_forward_js . '\'; }' : 'null') . ', 0, null, null, null, null, ' . ($param['closetime'] ? $param['closetime'] : 'null') . ', ' . ($param['locationtime'] ? $param['locationtime'] : 'null') . ');';
+            $modes = ['alert_error' => 'alert', 'alert_right' => 'right', 'alert_info' => 'notice'];
+            $extra .= 'hideWindow(\'' . $handlekey . '\');showDialog(\'' . $show_jsmessage . '\', \'' . $modes[$alerttype] . '\', null, ' . ($param['locationtime'] !== null ? 'function () { window.location.href =\'' . $url_forward_js . '\'; }' : 'null') . ', 0, null, null, null, null, ' . ($param['closetime'] ?: 'null') . ', ' . ($param['locationtime'] ?: 'null') . ');';
             $param['closetime'] = null;
             $st = '';
             if ($param['showmsg']) {
@@ -180,7 +180,7 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
         $extra .= 'setTimeout("window.location.href =\'' . $url_forward_js . '\';", ' . $refreshtime . ');';
     }
     $show_message .= $extra ? '<script type="text/javascript" reload="1">' . $extra . $st . '</script>' : '';
-    $show_message .= $param['extrajs'] ? $param['extrajs'] : '';
+    $show_message .= $param['extrajs'] ?: '';
     if ((defined('template') && template == '1') || $_G['config']['template'] == '1') {
         include template('common/showmessage', 'lyear');
     } else {
@@ -188,4 +188,3 @@ function dshowmessage($message, $url_forward = '', $values = array(), $extrapara
     }
     exit();
 }
-?>

@@ -12,7 +12,6 @@ if (!defined('IN_DZZ')) {
 }
 
 class table_organization extends dzz_table {
-    private $_uids = array();
 
     public function __construct() {
 
@@ -32,7 +31,7 @@ class table_organization extends dzz_table {
     public function fetch_all_by_forgid($forgid, $count = 0, $type = 0) {
         if ($count) $sql = 'SELECT COUNT(*) FROM %t WHERE forgid= %d';
         else $sql = 'SELECT * FROM %t WHERE forgid= %d';
-        $param = array($this->_table, $forgid);
+        $param = [$this->_table, $forgid];
         if ($type > -1) {
             $sql .= ' and `type`=%d';
             $param[] = $type;
@@ -49,11 +48,11 @@ class table_organization extends dzz_table {
     */
     public function fetch_all_by_uid($uid, $type = -1) {
         if (empty($uid)) $uid = getglobal('uid');
-        if (!$uid) return array();
+        if (!$uid) return [];
         if ($orgids = C::t('organization_user')->fetch_orgids_by_uid($uid, $type)) {
             parent::fetch_all($orgids);
         }
-        return array();
+        return [];
     }
 
     //插入数据
@@ -69,9 +68,9 @@ class table_organization extends dzz_table {
     //查询机构群组信息
     public function fetch_all_orggroup($uid, $getmember = true) {
         global $_G;
-        $groups = array();
+        $groups = [];
         if ($_G['adminid'] == 1) {
-            $orgs = DB::fetch_all("select * from %t where `type`=%d and forgid = %d order by disp", array($this->_table, 0, 0));
+            $orgs = DB::fetch_all("select * from %t where `type`=%d and forgid = %d order by disp", [$this->_table, 0, 0]);
             foreach ($orgs as $v) {
                 $groups['org'][] = $v;
             }
@@ -79,7 +78,7 @@ class table_organization extends dzz_table {
             if ($uid) {
                 $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid);
                 $orgids = array_unique($orgids);
-                $toporgids = array();
+                $toporgids = [];
                 foreach (parent::fetch_all($orgids) as $v) {
                     if ($v['type'] == 0) {
                         $patharr = explode('-', $v['pathkey']);
@@ -115,10 +114,10 @@ class table_organization extends dzz_table {
     }
 
     public function fetch_group_by_uid($uid, $foreces = false) {//查询自定义群组，$foreces=true为jstree加载内容，进行群组开启判断
-        $groups = array();
+        $groups = [];
         if (!$uid) return $groups;
         $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid, 1);
-        foreach (DB::fetch_all("select * from %t where `orgid` IN(%n) order by disp", array($this->_table, $orgids)) as $orginfo) {
+        foreach (DB::fetch_all("select * from %t where `orgid` IN(%n) order by disp", [$this->_table, $orgids]) as $orginfo) {
             if ($foreces) {
                 if ($orginfo['syatemon'] == 0) {//系统管理员关闭群组
                     continue;
@@ -144,10 +143,10 @@ class table_organization extends dzz_table {
 
     public function delete_by_orgid($orgid) {
         if (!$org = parent::fetch($orgid)) {
-            return array('error' => lang('remove_error_object_inexistence'));
+            return ['error' => lang('remove_error_object_inexistence')];
         }
-        if (self::fetch_all_by_forgid($org['orgid'], true) || ($org['fid'] && DB::result_first("select count(*) from %t where pfid = %d and isdelete < 1", array('resources', $org['fid'])))) {
-            return array('error' => lang('remove_error_check_the_content'));
+        if (self::fetch_all_by_forgid($org['orgid'], true) || ($org['fid'] && DB::result_first("select count(*) from %t where pfid = %d and isdelete < 1", ['resources', $org['fid']]))) {
+            return ['error' => lang('remove_error_check_the_content')];
         }
 
         //删除对应目录
@@ -170,7 +169,7 @@ class table_organization extends dzz_table {
             }
             return $org;
         } else {
-            return array('error' => lang('delete_error'));
+            return ['error' => lang('delete_error')];
         }
     }
 
@@ -179,16 +178,16 @@ class table_organization extends dzz_table {
     public function ismember($orgid, $uid = 0, $onlychild = false) {
         if (!$uid) $uid = getglobal('uid');
         $pathkey = '_' . $orgid . '_';
-        $orgids = array();
+        $orgids = [];
         if ($onlychild) {
             $pathkey = $pathkey . '.+';
         } else {
             $pathkey = $pathkey . '.*';
         }
-        foreach (DB::fetch_all("select orgid from %t where pathkey regexp %s", array($this->_table, $pathkey)) as $v) {
+        foreach (DB::fetch_all("select orgid from %t where pathkey regexp %s", [$this->_table, $pathkey]) as $v) {
             $orgids[] = $v['orgid'];
         }
-        if (DB::result_first("select count(*) from %t where uid = %d and orgid in (%n) ", array('organization_user', $uid, $orgids)) > 0) {
+        if (DB::result_first("select count(*) from %t where uid = %d and orgid in (%n) ", ['organization_user', $uid, $orgids]) > 0) {
             return true;
         }
         return false;
@@ -196,15 +195,15 @@ class table_organization extends dzz_table {
 
     //获取机构群组下级
     public function fetch_org_by_uidorgid($uid, $orgid) {
-        $resultarr = array();
+        $resultarr = [];
         //如果该用户是当前部门普通成员则不获取下级机构信息,如果是下级机构成员或当前机构管理员则获取下级部门信息
         if (C::t('organization_admin')->chk_memberperm($orgid, $uid)) {//如果是管理员
             $resultarr = self::fetch_all_by_forgid($orgid, 0, 0);
 
         } elseif ($this->ismember($orgid, $uid, true)) {//如果是当前机构或部门下级的成员
             $orgids = C::t('organization_user')->fetch_orgids_by_uid($uid, 0);
-            $pathkeyarr = DB::fetch_all("select pathkey from %t where orgid in (%n) ", array($this->_table, $orgids));
-            $porgids = array();
+            $pathkeyarr = DB::fetch_all("select pathkey from %t where orgid in (%n) ", [$this->_table, $orgids]);
+            $porgids = [];
             foreach ($pathkeyarr as $v) {
                 $vs = str_replace('_', '', $v['pathkey']);
                 $varr = explode('-', $vs);
@@ -212,7 +211,7 @@ class table_organization extends dzz_table {
             }
 
             $orgsarr = self::fetch_all_by_forgid($orgid, 0, 0);
-            $orgidarr = array();
+            $orgidarr = [];
             foreach ($orgsarr as $v) {
 
                 if (!in_array($v['orgid'], $orgidarr) && in_array($v['orgid'], $porgids)) {
@@ -233,7 +232,7 @@ class table_organization extends dzz_table {
 
     //获取包含当前机构或部门包含下级的orgid
     public function get_all_contaionchild_orgid($orgid, $uid) {
-        $orgids = array();
+        $orgids = [];
         if (!$org = self::fetch($orgid)) {
             return $orgids;
         }
@@ -244,9 +243,9 @@ class table_organization extends dzz_table {
         if (C::t('organization_admin')->chk_memberperm($orgid, $uid)) {//如果是管理员
             $orgids = self::get_childorg_by_orgid($orgid);
         } elseif ($this->ismember($uid, $orgid, true)) {//如果不是管理员，判断是否是下级成员
-            $orgidarrs = array();
+            $orgidarrs = [];
             //获取当前用户所在的所有群组id
-            foreach (DB::fetch_all("select o.orgid,o.pathkey,o.manageon,o.diron from %t u left join %t o on o.orgid = u.orgid where u.uid = %d and o.type = 0", array('organization_user', 'organization', $uid)) as $v) {
+            foreach (DB::fetch_all("select o.orgid,o.pathkey,o.manageon,o.diron from %t u left join %t o on o.orgid = u.orgid where u.uid = %d and o.type = 0", ['organization_user', 'organization', $uid]) as $v) {
                 $pathkey = $v['pathkey'];
                 $orgidarr = explode('-', str_replace('_', '', $pathkey));
                 if (in_array($orgid, $orgidarr)) {
@@ -262,10 +261,10 @@ class table_organization extends dzz_table {
 
     //获取当前部门或机构的下级
     public function get_childorg_by_orgid($orgid) {
-        $orgidarr = array();
+        $orgidarr = [];
         if (!$orgid) return $orgidarr;
-        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", array($this->_table, $orgid));
-        $orgids = DB::fetch_all("select orgid from %t where pathkey regexp %s ", array($this->_table, '^' . $pathkey . '.*'));
+        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", [$this->_table, $orgid]);
+        $orgids = DB::fetch_all("select orgid from %t where pathkey regexp %s ", [$this->_table, '^' . $pathkey . '.*']);
         foreach ($orgids as $v) {
             $orgidarr[] = $v['orgid'];
         }
@@ -274,7 +273,7 @@ class table_organization extends dzz_table {
 
     //获取机构群组的上级id
     public function fetch_parent_by_orgid($orgid, $onlyid = true) {
-        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", array($this->_table, $orgid));
+        $pathkey = DB::result_first("select pathkey from %t where orgid = %d", [$this->_table, $orgid]);
         $path = str_replace('_', '', $pathkey);
         $patharr = explode('-', $path);
         if ($onlyid) {
@@ -291,7 +290,7 @@ class table_organization extends dzz_table {
             $parent = parent::fetch($org['forgid']);
             if ($parent['diron'] < 1) return false;
         }
-        if (parent::update($orgid, array('diron' => $available))) {
+        if (parent::update($orgid, ['diron' => $available])) {
             //self::setFolderByOrgid($orgid);
             //include_once libfile('function/cache');
             //updatecache('organization');
@@ -308,7 +307,7 @@ class table_organization extends dzz_table {
             $top = parent::fetch($toporgid);
             if ($top['manageon'] < 1) return false;
         }*/
-        if (parent::update($orgid, array('manageon' => $groupon))) {
+        if (parent::update($orgid, ['manageon' => $groupon])) {
             return true;
         }
         return false;
@@ -319,7 +318,7 @@ class table_organization extends dzz_table {
         if ($indesk > 0) {
             if ($org['available'] < 1) return false;
         }
-        if (parent::update($orgid, array('indesk' => $indesk))) {
+        if (parent::update($orgid, ['indesk' => $indesk])) {
             /*include_once libfile('function/cache');
             updatecache('organization');*/
             return true;
@@ -337,10 +336,10 @@ class table_organization extends dzz_table {
 
         if ($fid = DB::result_first("select fid from " . DB::table('folder') . " where gid='{$orgid}' and flag='organization'")) {
             if (C::t('folder')->rename_by_fid($fid, $org['orgname'])) {
-                self::update($orgid, array('fid' => $fid));
+                self::update($orgid, ['fid' => $fid]);
             }
         } else {
-            $folder = array('fname' => C::t('folder')->getFolderName($org['orgname'], $pfid, $org['fid']),
+            $folder = ['fname' => C::t('folder')->getFolderName($org['orgname'], $pfid, $org['fid']),
                 'pfid' => $pfid,
                 'display' => $org['disp'],
                 'flag' => 'organization',
@@ -349,11 +348,11 @@ class table_organization extends dzz_table {
                 'uid' => getglobal('uid'),
                 'username' => getglobal('username'),
                 'perm' => perm_binPerm::getGroupPower('read')
-            );
+            ];
             $fid = C::t('folder')->insert($folder, 0);
         }
         if ($fid) {
-            self::update($org['orgid'], array('fid' => $fid));
+            self::update($org['orgid'], ['fid' => $fid]);
             return $fid;
         }
         return false;
@@ -361,8 +360,8 @@ class table_organization extends dzz_table {
 
     public function sequenceByForgid($forgid) {
 
-        foreach (DB::fetch_all("select orgid from %t where forgid=%d and type='0' order by disp", array($this->_table, $forgid)) as $key => $value) {
-            parent::update($value['orgid'], array('disp' => $key));
+        foreach (DB::fetch_all("select orgid from %t where forgid=%d and type='0' order by disp", [$this->_table, $forgid]) as $key => $value) {
+            parent::update($value['orgid'], ['disp' => $key]);
         }
     }
 
@@ -371,7 +370,7 @@ class table_organization extends dzz_table {
         if (!$org = parent::fetch($orgid)) return false;
         $ceof = 0;
         $wheresql = "forgid=%d and type='0' ";
-        $param = array($this->_table, $forgid);
+        $param = [$this->_table, $forgid];
         if ($org['disp'] > $disp) {//向前移动
             $wheresql .= " and disp>=%d and disp<%d ";
             $param[] = $disp;
@@ -384,24 +383,24 @@ class table_organization extends dzz_table {
             $ceof = -1;
         }
         foreach (DB::fetch_all("select orgid,disp from %t where $wheresql", $param) as $value) {
-            parent::update($value['orgid'], array('disp' => $value['disp'] + $ceof));
+            parent::update($value['orgid'], ['disp' => $value['disp'] + $ceof]);
             //self::wx_update($value['orgid']);
         }
 
 
-        if ($return = parent::update($orgid, array('disp' => $disp, 'forgid' => $forgid))) {
+        if ($return = parent::update($orgid, ['disp' => $disp, 'forgid' => $forgid])) {
 
             if ($org['forgid'] != $forgid) {
                 self::sequenceByForgid($org['forgid']);
                 //检查重名
                 $orgname = self::get_uniqueName_by_forgid($forgid, $org['orgname'], $org['orgid']);
                 if ($orgname != $org['orgname']) {//有重名
-                    self::update_by_orgid($org['orgid'], array('orgname' => $orgname));
+                    self::update_by_orgid($org['orgid'], ['orgname' => $orgname]);
                 }
                 //重新设置所有下级机构的共享目录
                 if ($pathkey = self::setPathkeyByOrgid($orgid)) {
                     $like = '^' . $pathkey;
-                    foreach (DB::fetch_all("select orgid from %t where pathkey REGEXP %s", array($this->_table, $like)) as $value) {
+                    foreach (DB::fetch_all("select orgid from %t where pathkey REGEXP %s", [$this->_table, $like]) as $value) {
                         self::setFolderByOrgid($value['orgid']);
                     }
                 }
@@ -415,13 +414,12 @@ class table_organization extends dzz_table {
 
     public function getDispByOrgid($borgid) {
         $data = parent::fetch($borgid);
-        $disp = $data['disp'] + 1;
         // DB::query("update %t SET disp=disp+1 where disp>=%d and forgid=%d", array($this->_table, $disp, $data['forgid']));
-        return $disp;
+        return $data['disp'] + 1;
     }
 
     public function chk_by_orgname($orgname, $type = 0, $forgid = 0) {
-        if (DB::result_first("select count(*) from %t where orgname = %s and `type` = %d and forgid = %d", array($this->_table, $orgname, $type, $forgid)) > 0) {
+        if (DB::result_first("select count(*) from %t where orgname = %s and `type` = %d and forgid = %d", [$this->_table, $orgname, $type, $forgid]) > 0) {
             return false;
         }
         return true;
@@ -443,13 +441,13 @@ class table_organization extends dzz_table {
             }
             //添加对应动态
             $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($fid, $setarr['orgid']);
-            $eventdata = array('groupname' => $setarr['orgname'], 'uid' => $uid, 'username' => $username, 'hash' => $hash);
+            $eventdata = ['groupname' => $setarr['orgname'], 'uid' => $uid, 'username' => $username, 'hash' => $hash];
             C::t('resources_event')->addevent_by_pfid($fid, 'create_group', 'create', $eventdata, $setarr['orgid'], '', $setarr['orgname']);//记录事件
             self::setPathkeyByOrgid($setarr['orgid']);
             if ($setarr['type'] == '0') {
                 //更新disp
-                foreach (DB::fetch_all("select orgid,disp from %t where forgid=%d and type='0' and disp>=%d and orgid!=%d", array($this->_table, $setarr['forgid'], intval($setarr['disp']), $setarr['orgid'])) as $value) {
-                    parent::update($value['orgid'], array('disp' => $value['disp'] + 1));
+                foreach (DB::fetch_all("select orgid,disp from %t where forgid=%d and type='0' and disp>=%d and orgid!=%d", [$this->_table, $setarr['forgid'], intval($setarr['disp']), $setarr['orgid']]) as $value) {
+                    parent::update($value['orgid'], ['disp' => $value['disp'] + 1]);
                 }
             }
 
@@ -477,8 +475,8 @@ class table_organization extends dzz_table {
             self::setPathkeyByOrgid($setarr['orgid']);
             if (isset($setarr['type']) && $setarr['type'] == 0) self::syn_organization($setarr['orgid']);
             //更新disp
-            foreach (DB::fetch_all("select orgid,disp from %t where forgid=%d and type='0' and disp>=%d and orgid!=%d", array($this->_table, $setarr['forgid'], $setarr['disp'], $setarr['orgid'])) as $value) {
-                parent::update($value['orgid'], array('disp' => $value['disp'] + 1));
+            foreach (DB::fetch_all("select orgid,disp from %t where forgid=%d and type='0' and disp>=%d and orgid!=%d", [$this->_table, $setarr['forgid'], $setarr['disp'], $setarr['orgid']]) as $value) {
+                parent::update($value['orgid'], ['disp' => $value['disp'] + 1]);
             }
             return $setarr;
         }
@@ -486,7 +484,7 @@ class table_organization extends dzz_table {
         return false;
     }
 
-    public function syn_organization($data = array(), $type = "update") {
+    public function syn_organization($data = [], $type = "update") {
         if ($type == "update") {
             Hook::listen('syntoline_department', $data);//注册绑定到三方部门表
         } else if ($type == "delete") {
@@ -500,8 +498,8 @@ class table_organization extends dzz_table {
             $fid = $org['fid'];
             $name = self::get_uniqueName_by_forgid($org['forgid'], getstr($setarr['orgname']), $orgid);
             if (C::t('folder')->rename_by_fid($fid, $name)) {
-                if (parent::update($orgid, array('orgname' => $name))) {
-                    $body_data = array('username' => getglobal('username'), 'oldname' => $org['orgname'], 'newname' => $name);
+                if (parent::update($orgid, ['orgname' => $name])) {
+                    $body_data = ['username' => getglobal('username'), 'oldname' => $org['orgname'], 'newname' => $name];
                     $event_body = 'update_group_name';
                     C::t('resources_event')->addevent_by_pfid($org['fid'], $event_body, 'update_groupname', $body_data, $orgid, '', $org['orgname']);//记录事件 
                     if ($synwx && $org['type'] == 0) self::syn_organization($orgid);
@@ -512,7 +510,7 @@ class table_organization extends dzz_table {
 
         if (isset($setarr['perm']) && $setarr['perm']) {
             $fid = $org['fid'];
-            C::t('folder')->update($fid, array('perm' => $setarr['perm']));
+            C::t('folder')->update($fid, ['perm' => $setarr['perm']]);
             unset($setarr['perm']);
         }
         if (isset($setarr['desc'])) {
@@ -533,7 +531,7 @@ class table_organization extends dzz_table {
             }
             $org = array_merge($org, $setarr);
             self::setFolderByOrgid($org['orgid']);
-            $body_data = array('username' => getglobal('username'));
+            $body_data = ['username' => getglobal('username')];
             $event_body = 'update_group_setting';
             C::t('resources_event')->addevent_by_pfid($org['fid'], $event_body, 'update_setting', $body_data, $orgid, '', $org['orgname']);//记录事件
             self::setPathkeyByOrgid($orgid);
@@ -549,7 +547,7 @@ class table_organization extends dzz_table {
         return $ids[0];
     }
 
-    public function getUpOrgidTree($orgid, $pids = array()) {
+    public function getUpOrgidTree($orgid, $pids = []) {
         global $_G;
         if ($org = C::t('organization')->fetch($orgid)) {
             //$pids[]=$orgid;
@@ -564,14 +562,14 @@ class table_organization extends dzz_table {
         if (!$org = parent::fetch($orgid)) return false;
         if ($org['type'] > 0) {
             $pathkey = '_' . $orgid . '_';
-            if (parent::update($org['orgid'], array('pathkey' => $pathkey))) return $pathkey;
+            if (parent::update($org['orgid'], ['pathkey' => $pathkey])) return $pathkey;
             return false;
         } else {
             if ($force || empty($org['pathkey'])) {//没有pathkey,
                 // include_once libfile('function/organization');
                 if ($ids = self::getUpOrgidTree($org['orgid'])) {
                     $pathkey = '_' . implode('_-_', $ids) . '_';
-                    if (parent::update($org['orgid'], array('pathkey' => $pathkey))) return $pathkey;
+                    if (parent::update($org['orgid'], ['pathkey' => $pathkey])) return $pathkey;
                 }
                 return false;
             }
@@ -583,8 +581,8 @@ class table_organization extends dzz_table {
             }
             if ($org['pathkey'] == $npathkey) return $npathkey; //没有改变；
             $like = '^' . $org['pathkey'];
-            foreach (DB::fetch_all("select orgid,pathkey from %t where pathkey REGEXP %s", array($this->_table, $like)) as $value) {
-                parent::update($value['orgid'], array('pathkey' => str_replace($org['pathkey'], $npathkey, $value['pathkey'])));
+            foreach (DB::fetch_all("select orgid,pathkey from %t where pathkey REGEXP %s", [$this->_table, $like]) as $value) {
+                parent::update($value['orgid'], ['pathkey' => str_replace($org['pathkey'], $npathkey, $value['pathkey'])]);
             }
             /*if (DB::query("update %t set pathkey=REPLACE(pathkey,%s,%s) where pathkey REGEXP %s", array($this->_table, $org['pathkey'], $npathkey, $like))) {
                 return $npathkey;
@@ -600,8 +598,8 @@ class table_organization extends dzz_table {
         if ($org['type'] > 0) {//群主类型不同步至微信
             return false;
         }
-        $wx = new qyWechat(array('appid' => $_G['setting']['CorpID'], 'appsecret' => $_G['setting']['CorpSecret'], 'agentid' => 0));
-        $wd = array();
+        $wx = new qyWechat(['appid' => $_G['setting']['CorpID'], 'appsecret' => $_G['setting']['CorpSecret'], 'agentid' => 0]);
+        $wd = [];
         if ($wxdepart = $wx->getDepartment()) {
             foreach ($wxdepart['department'] as $value) {
                 $wd[$value['id']] = $value;
@@ -620,7 +618,7 @@ class table_organization extends dzz_table {
         }
         $parentid = ($org['forgid'] == 0 ? 1 : $forg['worgid']);
         if ($org['worgid'] && $wd[$org['worgid']] && $parentid == $wd[$org['worgid']]['parentid']) {//更新机构信息
-            $data = array("id" => $org['worgid']);
+            $data = ["id" => $org['worgid']];
 
             if ($wd[$org['worgid']]['name'] != $org['orgname']) $data['name'] = $org['orgname'];
             if ($wd[$org['worgid']]['parentid'] != $parentid) $data['parentid'] = $parentid;
@@ -636,19 +634,19 @@ class table_organization extends dzz_table {
             return $org['worgid'];
 
         } else {
-            $data = array(
+            $data = [
                 "name" => $org['orgname'],   //部门名称
                 "parentid" => $org['forgid'] == 0 ? 1 : $forg['worgid'],         //父部门id
                 "order" => $org['disp'] + 1,            //(非必须)在父部门中的次序。从1开始，数字越大排序越靠后
-            );
+            ];
             if ($ret = $wx->createDepartment($data)) {
-                parent::update($orgid, array('worgid' => $ret['id']));
+                parent::update($orgid, ['worgid' => $ret['id']]);
                 return $ret['id'];
             } else {
                 if ($wx->errCode == '60008') {//部门的worgid不正确导致的问题
                     foreach ($wd as $value) {
                         if ($value['name'] == $data['name'] && $value['parentid'] = $data['parentid']) {
-                            C::t('organization')->update($org['orgid'], array('worgid' => $value['id']));
+                            C::t('organization')->update($org['orgid'], ['worgid' => $value['id']]);
                             return $value['id'];
                         }
                     }
@@ -662,7 +660,7 @@ class table_organization extends dzz_table {
     }
 
     public function getPathByOrgid($orgid, $space = '-') {
-        $ret = array();
+        $ret = [];
         if ($org = parent::fetch($orgid)) {
             $ids = explode('-', str_replace('_', '', $org['pathkey']));
             $arr = parent::fetch_all($ids);
@@ -679,14 +677,14 @@ class table_organization extends dzz_table {
         global $_G;
         $uid = $_G['uid'];
         //获取当前用户参与的机构和群组
-        $orgids = array();
-        $orgids_admin = array();
-        $orgids_member = array();
+        $orgids = [];
+        $orgids_admin = [];
+        $orgids_member = [];
         $explorer_setting = get_resources_some_setting();
         if ($isadmin && $_G['adminid'] == 1) {
-            $orgdatas = DB::fetch_all("select orgid,`type` from %t where 1", array('organization'));
+            $orgdatas = DB::fetch_all("select orgid,`type` from %t where 1", ['organization']);
         } else {
-            $orgdatas = DB::fetch_all("select u.orgid,o.`type` from %t u left join %t o on u.orgid=o.orgid where uid = %d", array('organization_user', 'organization', $uid));
+            $orgdatas = DB::fetch_all("select u.orgid,o.`type` from %t u left join %t o on u.orgid=o.orgid where uid = %d", ['organization_user', 'organization', $uid]);
         }
         foreach ($orgdatas as $v) {
             if (!$explorer_setting['grouponperm'] && $v['type'] == 1) {
@@ -701,28 +699,28 @@ class table_organization extends dzz_table {
         foreach ($orgids as $val) {
             //当前机构或部门管理员，查询所有下级和上级
             if (C::t('organization_admin')->chk_memberperm($val, $uid)) {
-                $path = DB::result_first("select pathkey from %t where orgid = %d", array($this->_table, $val));
-                $patharr = DB::fetch_all("select pathkey from %t where pathkey regexp %s and available = %d", array($this->_table, '^' . $path . '.*', 1));
+                $path = DB::result_first("select pathkey from %t where orgid = %d", [$this->_table, $val]);
+                $patharr = DB::fetch_all("select pathkey from %t where pathkey regexp %s and available = %d", [$this->_table, '^' . $path . '.*', 1]);
                 foreach ($patharr as $v) {
                     $pathstr = str_replace('_', '', $v['pathkey']);
                     if ($orgidarr = explode('-', $pathstr)) $orgids_admin = array_merge($orgids_admin, $orgidarr);
                 }
 
             } else {//当前部门成员查询所有上级机构
-                $path = DB::result_first("select pathkey from %t where orgid = %d and available = %d and diron = %d", array($this->_table, $val, 1, 1));
+                $path = DB::result_first("select pathkey from %t where orgid = %d and available = %d and diron = %d", [$this->_table, $val, 1, 1]);
                 $pathstr = str_replace('_', '', $path);
                 if ($orgidarr = explode('-', $pathstr)) $orgids_member = array_merge($orgids_member, $orgidarr);
 
             }
         }
-        $member_orgids = array();
+        $member_orgids = [];
         //判断参与群组的群组开启和文件开启
-        foreach (DB::fetch_all('select manageon,diron,orgid from %t where orgid in(%n)', array($this->_table, $orgids_member)) as $v) {
+        foreach (DB::fetch_all('select manageon,diron,orgid from %t where orgid in(%n)', [$this->_table, $orgids_member]) as $v) {
             if ($v['manageon'] && $v['diron']) {
                 $member_orgids[] = $v['orgid'];
             }
         }
-        return array('orgids' => array_unique(array_merge($orgids_admin, $member_orgids)), 'orgids_admin' => array_unique($orgids_admin), 'orgids_member' => array_unique(array_diff($member_orgids, $orgids_admin)));
+        return ['orgids' => array_unique(array_merge($orgids_admin, $member_orgids)), 'orgids_admin' => array_unique($orgids_admin), 'orgids_member' => array_unique(array_diff($member_orgids, $orgids_admin))];
     }
 
     //获取用户管理的所有群组orgid
@@ -730,12 +728,12 @@ class table_organization extends dzz_table {
         global $_G;
         $uid = $_G['uid'];
         $explorer_setting = get_resources_some_setting();
-        $manageorgid = DB::fetch_all("select orgid from %t where uid = %d", array('organization_admin', $uid));
-        $orgids = array();
-        $orgarr = array();
+        $manageorgid = DB::fetch_all("select orgid from %t where uid = %d", ['organization_admin', $uid]);
+        $orgids = [];
+        $orgarr = [];
         foreach ($manageorgid as $v) {
             if (!in_array($v['orgid'], $orgarr)) {
-                $info = DB::fetch_first("select pathkey,type from %t where orgid = %d", array($this->_table, $v['orgid']));
+                $info = DB::fetch_first("select pathkey,type from %t where orgid = %d", [$this->_table, $v['orgid']]);
                 if (!$explorer_setting['grouponperm'] && $info['type'] == 1) {
                     continue;
                 }
@@ -743,9 +741,9 @@ class table_organization extends dzz_table {
                     continue;
                 }
                 $pathkey = $info['pathkey'];
-                $orgidarr = DB::fetch_all("select orgid,orgname from %t where pathkey regexp %s ", array($this->_table, '^' . $pathkey . '.*'));
+                $orgidarr = DB::fetch_all("select orgid,orgname from %t where pathkey regexp %s ", [$this->_table, '^' . $pathkey . '.*']);
                 foreach ($orgidarr as $val) {
-                    $orgids[$val['orgid']] = array('orgid' => $val['orgid'], 'orgname' => $val['orgname']);
+                    $orgids[$val['orgid']] = ['orgid' => $val['orgid'], 'orgname' => $val['orgname']];
                     $orgarr[] = $val['orgid'];
                 }
             }
@@ -756,21 +754,21 @@ class table_organization extends dzz_table {
     //我参与的所有群组和机构
     public function fetch_all_part_org() {
         $uid = getglobal('uid');
-        $orgid = array();
-        foreach (DB::fetch_all("select orgid from %t where uid = %d", array('organization_user', $uid)) as $v) {
+        $orgid = [];
+        foreach (DB::fetch_all("select orgid from %t where uid = %d", ['organization_user', $uid]) as $v) {
             $orgid[] = $v['orgid'];
         }
         $orgid = array_unique($orgid);
         $explorer_setting = get_resources_some_setting();
-        $orgarr = array();
-        foreach (DB::fetch_all("select * from %t where orgid in(%n)", array($this->_table, $orgid)) as $v) {
+        $orgarr = [];
+        foreach (DB::fetch_all("select * from %t where orgid in(%n)", [$this->_table, $orgid]) as $v) {
             if (!$explorer_setting['grouponperm'] && $v['type'] == 1) {
                 continue;
             }
             if (!$explorer_setting['orgonperm'] && $v['type'] == 0) {
                 continue;
             }
-            $org = array('orgid' => $v['orgid'], 'orgname' => $v['orgname']);
+            $org = ['orgid' => $v['orgid'], 'orgname' => $v['orgname']];
             $orgarr[] = $org;
         }
         return $orgarr;
@@ -779,10 +777,10 @@ class table_organization extends dzz_table {
     //获取群组类型
     public function get_grouptype_by_orgid($orgid) {
         if (!is_array($orgid)) {
-            return DB::result_first("select `type` from %t where orgid = %d", array($this->_table, $orgid));
+            return DB::result_first("select `type` from %t where orgid = %d", [$this->_table, $orgid]);
         } else {
-            $orgtypes = array();
-            foreach (DB::fetch_all("select orgid,`type` from %t where orgid in(%n)", array($this->_table, $orgid)) as $v) {
+            $orgtypes = [];
+            foreach (DB::fetch_all("select orgid,`type` from %t where orgid in(%n)", [$this->_table, $orgid]) as $v) {
                 if ($v['type'] == 0) {
                     $orgtypes['org'][] = $v['orgid'];
                 } else {
@@ -799,7 +797,7 @@ class table_organization extends dzz_table {
         static $i = 0;
         if (empty($orgname)) $orgname = lang('new_department');
 
-        if (DB::result_first("select COUNT(*) from %t where orgname=%s and  forgid=%d and orgid!=%d", array($this->_table, $orgname, $forgid, $orgid))) {
+        if (DB::result_first("select COUNT(*) from %t where orgname=%s and  forgid=%d and orgid!=%d", [$this->_table, $orgname, $forgid, $orgid])) {
             $orgname = preg_replace("/\(\d+\)/i", '', $orgname) . '(' . ($i + 1) . ')';
             $i += 1;
             return self::get_uniqueName_by_forgid($forgid, $orgname);
@@ -827,7 +825,7 @@ class table_organization extends dzz_table {
             //当前机构或部门已使用空间大小
             $allotspace += intval($org['usesize']);
             //下级部门分配空间大小
-            foreach (DB::fetch_all("select orgid from %t where forgid = %d", array($this->_table, $orgid)) as $val) {
+            foreach (DB::fetch_all("select orgid from %t where forgid = %d", [$this->_table, $orgid]) as $val) {
                 $allotspace += self::get_orgallotspace_by_orgid($val['orgid']);
             }
         }
@@ -859,7 +857,7 @@ class table_organization extends dzz_table {
         } elseif ($systemspace > 0) {//设置系统空间限制时
 
             //获取所有顶级机构和群组空间限制值
-            $fpathkey = DB::fetch_all("select maxspacesize,orgid from %t where forgid = 0", array($this->_table));
+            $fpathkey = DB::fetch_all("select maxspacesize,orgid from %t where forgid = 0", [$this->_table]);
 
             $allotspace = 0;
             foreach ($fpathkey as $v) {
@@ -890,7 +888,7 @@ class table_organization extends dzz_table {
      *从下到上依次查找，如果未找到空间限制，则获取系统空间限制，返回值单位为B
      * */
     public function get_parent_maxspacesize_by_pathkey($pathkey, $currentorgid) {
-        $arr = array('orgid' => '', 'maxspacesize' => '');
+        $arr = ['orgid' => '', 'maxspacesize' => ''];
         $pathkeys = explode('-', $pathkey);
         $pathkeys = array_reverse($pathkeys);
         foreach ($pathkeys as $v) {
@@ -908,7 +906,7 @@ class table_organization extends dzz_table {
                     exit(json_encode(array('error'=>'没有权限')));
                 }*/
                 //获取当前层分配空间大小
-                $result = DB::result_first("select maxspacesize from %t where orgid = %d", array($this->_table, $orgid));
+                $result = DB::result_first("select maxspacesize from %t where orgid = %d", [$this->_table, $orgid]);
 
                 if ($result > 0 || $result == -1) {
 
@@ -1032,10 +1030,10 @@ class table_organization extends dzz_table {
     //获取我有管理权限的机构和部门(包括下级部门）orgids
     public function fetch_all_manage_orgids_by_uid($uids, $sub = true) {
         if (!is_array($uids)) $uids = (array)$uids;
-        if (!$orgids = C::t('organization_admin')->fetch_orgids_by_uid($uids)) return array();
+        if (!$orgids = C::t('organization_admin')->fetch_orgids_by_uid($uids)) return [];
         $sql = "1";
-        $param = array($this->_table);
-        $sqlarr = array();
+        $param = [$this->_table];
+        $sqlarr = [];
         if ($sub) {
             foreach (parent::fetch_all($orgids) as $value) {
                 $sqlarr[] = 'pathkey regexp %s';
@@ -1054,8 +1052,8 @@ class table_organization extends dzz_table {
     //删除文件夹时，更新群组信息；$force=true时，删除群组；
     public function delete_by_fid($fid, $force = true) {
         if (empty($fid)) return false;
-        foreach (DB::fetch_all("select orgid from %t where fid=%d", array($this->_table, $fid)) as $value) {
-            parent::update($value['orgid'], array('fid' => 0));
+        foreach (DB::fetch_all("select orgid from %t where fid=%d", [$this->_table, $fid]) as $value) {
+            parent::update($value['orgid'], ['fid' => 0]);
             if ($force) {
                 self::delete_by_orgid($value['orgid'], true);
             }

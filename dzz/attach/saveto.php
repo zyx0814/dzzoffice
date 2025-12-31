@@ -16,7 +16,7 @@ $explorer_setting = get_resources_some_setting();
 if (!$explorer_setting['useronperm']) {
     topshowmessage(lang('no_privilege'));
 }
-$fid = DB::result_first("select fid from %t where flag='home' and uid= %d", array('folder', $_G['uid']));
+$fid = DB::result_first("select fid from %t where flag='home' and uid= %d", ['folder', $_G['uid']]);
 if (!$fid) {
     topshowmessage('未查询到我的网盘目录');
 }
@@ -45,4 +45,4 @@ if ($_GET['type'] == 'link') {
 }
 if (isset($icoarr['error'])) topshowmessage($icoarr['error']);
 topshowmessage(lang('saved_my_documents'));
-?>
+

@@ -39,10 +39,10 @@ class PHPExcel_Shared_Font
 	const AUTOSIZE_METHOD_APPROX	= 'approx';
 	const AUTOSIZE_METHOD_EXACT		= 'exact';
 
-	private static $_autoSizeMethods = array(
+	private static $_autoSizeMethods = [
 		self::AUTOSIZE_METHOD_APPROX,
 		self::AUTOSIZE_METHOD_EXACT,
-	);
+    ];
 
 	/** Character set codes used by BIFF5-8 in Font records */
 	const CHARSET_ANSI_LATIN				= 0x00;
@@ -148,45 +148,45 @@ class PHPExcel_Shared_Font
 	 *
 	 * @var array
 	 */
-	public static $defaultColumnWidths = array(
-		'Arial' => array(
-			 1 => array('px' => 24, 'width' => 12.00000000),
-			 2 => array('px' => 24, 'width' => 12.00000000),
-			 3 => array('px' => 32, 'width' => 10.66406250),
-			 4 => array('px' => 32, 'width' => 10.66406250),
-			 5 => array('px' => 40, 'width' => 10.00000000),
-			 6 => array('px' => 48, 'width' =>  9.59765625),
-			 7 => array('px' => 48, 'width' =>  9.59765625),
-			 8 => array('px' => 56, 'width' =>  9.33203125),
-			 9 => array('px' => 64, 'width' =>  9.14062500),
-			10 => array('px' => 64, 'width' =>  9.14062500),
-		),
-		'Calibri' => array(
-			 1 => array('px' => 24, 'width' => 12.00000000),
-			 2 => array('px' => 24, 'width' => 12.00000000),
-			 3 => array('px' => 32, 'width' => 10.66406250),
-			 4 => array('px' => 32, 'width' => 10.66406250),
-			 5 => array('px' => 40, 'width' => 10.00000000),
-			 6 => array('px' => 48, 'width' =>  9.59765625),
-			 7 => array('px' => 48, 'width' =>  9.59765625),
-			 8 => array('px' => 56, 'width' =>  9.33203125),
-			 9 => array('px' => 56, 'width' =>  9.33203125),
-			10 => array('px' => 64, 'width' =>  9.14062500),
-			11 => array('px' => 64, 'width' =>  9.14062500),
-		),
-		'Verdana' => array(
-			 1 => array('px' => 24, 'width' => 12.00000000),
-			 2 => array('px' => 24, 'width' => 12.00000000),
-			 3 => array('px' => 32, 'width' => 10.66406250),
-			 4 => array('px' => 32, 'width' => 10.66406250),
-			 5 => array('px' => 40, 'width' => 10.00000000),
-			 6 => array('px' => 48, 'width' =>  9.59765625),
-			 7 => array('px' => 48, 'width' =>  9.59765625),
-			 8 => array('px' => 64, 'width' =>  9.14062500),
-			 9 => array('px' => 72, 'width' =>  9.00000000),
-			10 => array('px' => 72, 'width' =>  9.00000000),
-		),
-	);
+	public static $defaultColumnWidths = [
+		'Arial' => [
+			 1 => ['px' => 24, 'width' => 12.00000000],
+			 2 => ['px' => 24, 'width' => 12.00000000],
+			 3 => ['px' => 32, 'width' => 10.66406250],
+			 4 => ['px' => 32, 'width' => 10.66406250],
+			 5 => ['px' => 40, 'width' => 10.00000000],
+			 6 => ['px' => 48, 'width' =>  9.59765625],
+			 7 => ['px' => 48, 'width' =>  9.59765625],
+			 8 => ['px' => 56, 'width' =>  9.33203125],
+			 9 => ['px' => 64, 'width' =>  9.14062500],
+			10 => ['px' => 64, 'width' =>  9.14062500],
+        ],
+		'Calibri' => [
+			 1 => ['px' => 24, 'width' => 12.00000000],
+			 2 => ['px' => 24, 'width' => 12.00000000],
+			 3 => ['px' => 32, 'width' => 10.66406250],
+			 4 => ['px' => 32, 'width' => 10.66406250],
+			 5 => ['px' => 40, 'width' => 10.00000000],
+			 6 => ['px' => 48, 'width' =>  9.59765625],
+			 7 => ['px' => 48, 'width' =>  9.59765625],
+			 8 => ['px' => 56, 'width' =>  9.33203125],
+			 9 => ['px' => 56, 'width' =>  9.33203125],
+			10 => ['px' => 64, 'width' =>  9.14062500],
+			11 => ['px' => 64, 'width' =>  9.14062500],
+        ],
+		'Verdana' => [
+			 1 => ['px' => 24, 'width' => 12.00000000],
+			 2 => ['px' => 24, 'width' => 12.00000000],
+			 3 => ['px' => 32, 'width' => 10.66406250],
+			 4 => ['px' => 32, 'width' => 10.66406250],
+			 5 => ['px' => 40, 'width' => 10.00000000],
+			 6 => ['px' => 48, 'width' =>  9.59765625],
+			 7 => ['px' => 48, 'width' =>  9.59765625],
+			 8 => ['px' => 64, 'width' =>  9.14062500],
+			 9 => ['px' => 72, 'width' =>  9.00000000],
+			10 => ['px' => 72, 'width' =>  9.00000000],
+        ],
+    ];
 
 	/**
 	 * Set autoSize method
@@ -260,7 +260,7 @@ class PHPExcel_Shared_Font
 		// Special case if there are one or more newline characters ("\n")
 		if (strpos($cellText, "\n") !== false) {
 			$lineTexts = explode("\n", $cellText);
-			$lineWitdhs = array();
+			$lineWitdhs = [];
 			foreach ($lineTexts as $lineText) {
 				$lineWidths[] = self::calculateColumnWidth($font, $lineText, $rotation = 0, $defaultFont);
 			}
@@ -325,9 +325,7 @@ class PHPExcel_Shared_Font
 		$upperLeftCornerY  = $textBox[7];
 
 		// Consider the rotation when calculating the width
-		$textWidth = max($lowerRightCornerX - $upperLeftCornerX, $upperRightCornerX - $lowerLeftCornerX);
-
-		return $textWidth;
+        return max($lowerRightCornerX - $upperLeftCornerX, $upperRightCornerX - $lowerLeftCornerX);
 	}
 
 	/**
@@ -383,8 +381,7 @@ class PHPExcel_Shared_Font
 		}
 
 		// pixel width is an integer
-		$columnWidth = (int) $columnWidth;
-		return $columnWidth;
+        return (int) $columnWidth;
 	}
 
 	/**

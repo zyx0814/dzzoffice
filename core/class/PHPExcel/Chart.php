@@ -351,10 +351,10 @@ class PHPExcel_Chart
 	 * @return array	an associative array containing the cell address, X-Offset and Y-Offset from the top left of that cell
 	 */
 	public function getTopLeftPosition() {
-		return array( 'cell'	=> $this->_topLeftCellRef,
+		return ['cell'	=> $this->_topLeftCellRef,
 					  'xOffset'	=> $this->_topLeftXOffset,
 					  'yOffset'	=> $this->_topLeftYOffset
-					);
+        ];
 	}
 
 	/**
@@ -400,9 +400,9 @@ class PHPExcel_Chart
 	 * @return integer[]
 	 */
 	public function getTopLeftOffset() {
-		return array( 'X' => $this->_topLeftXOffset,
+		return ['X' => $this->_topLeftXOffset,
 					  'Y' => $this->_topLeftYOffset
-					);
+        ];
 	}
 
 	public function setTopLeftXOffset($xOffset) {
@@ -449,10 +449,10 @@ class PHPExcel_Chart
 	 * @return array	an associative array containing the cell address, X-Offset and Y-Offset from the top left of that cell
 	 */
 	public function getBottomRightPosition() {
-		return array( 'cell'	=> $this->_bottomRightCellRef,
+		return ['cell'	=> $this->_bottomRightCellRef,
 					  'xOffset'	=> $this->_bottomRightXOffset,
 					  'yOffset'	=> $this->_bottomRightYOffset
-					);
+        ];
 	}
 
 	public function setBottomRightCell($cell) {
@@ -492,9 +492,9 @@ class PHPExcel_Chart
 	 * @return integer[]
 	 */
 	public function getBottomRightOffset() {
-		return array( 'X' => $this->_bottomRightXOffset,
+		return ['X' => $this->_bottomRightXOffset,
 					  'Y' => $this->_bottomRightYOffset
-					);
+        ];
 	}
 
 	public function setBottomRightXOffset($xOffset) {

@@ -12,7 +12,7 @@ class caiji {
     private $_url;
     private $_content = '';
     private $_charset = '';
-    private $_meta = array();
+    private $_meta = [];
     private $_title = '';
     private $_redirect = 0;
     private $_proxy = '';
@@ -35,7 +35,7 @@ class caiji {
             $content = ($this->_content);
             require_once DZZ_ROOT . './dzz/class/class_encode.php';
             $p = new Encode_Core();
-            $this->_charset = $p->get_encoding(strip_tags($this->_content));
+            $this->_charset = $p::get_encoding(strip_tags($this->_content));
         }
         if (!$this->_charset) $this->_charset = 'UTF-8';
         return $this->_charset;
@@ -118,4 +118,4 @@ class caiji {
 
 }
 
-?>
+
