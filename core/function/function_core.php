@@ -32,7 +32,7 @@ function dzzMD5($file, $maxchunk = 100, $chunksize_first = 256) {
     $filesize = filesize($file);
     $chunk = round($filesize / $maxchunk);
     if ($chunk < $chunksize_first) $chunk = $chunksize_first;
-    if (!$fp = fopen($file)) {
+    if (!$fp = fopen($file, 'r')) {
         return false;
     }
     $i = 0;
@@ -676,7 +676,7 @@ function avatar($uid, $size = 'middle', $returnsrc = FALSE, $real = FALSE, $stat
         $dir2 = substr($uid, 3, 2);
         $dir3 = substr($uid, 5, 2);
         $file = 'data/avatar/' . $dir1 . '/' . $dir2 . '/' . $dir3 . '/' . substr($uid, -2) . ($real ? '_real' : '') . '_avatar_' . $size . '.jpg';
-        return $returnsrc ? $file : '<img src="' . $file . '" onerror="this.onerror=null;this.src=\'data/avatar/noavatar_' . $size . '.gif\'" />';
+        return $returnsrc ? $file : '<img src="' . $file . '" onerror="this.onerror=null;this.src=\'data/avatar/noavatar_' . $size . '.png\'" />';
     }
 }
 

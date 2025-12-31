@@ -14,10 +14,10 @@
 </div>
 <div align="center">
   <div>
-    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice?tab=readme-ov-file#-安装部署" title="PHP版本要求"><img src="https://img.shields.io/badge/PHP-%3E%3D7.0-brightgreen?style=flat-square&logo=php" alt="PHP版本要求" /></a>
+    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice?tab=readme-ov-file#-安装部署" title="PHP版本要求"><img src="https://img.shields.io/badge/PHP-%3E%3D7.4-brightgreen?style=flat-square&logo=php" alt="PHP版本要求" /></a>
     <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice?tab=readme-ov-file#-安装部署" title="数据库版本要求"><img src="https://img.shields.io/badge/MySQL/MariaDB-%3E%3D5.7-blue?style=flat-square&logo=mysql" alt="数据库版本要求" /></a>
     <a target="_blank" href="https://www.dzzoffice.com/licenses/license.txt" title="DzzOffice 开源协议"><img src="https://img.shields.io/github/license/zyx0814/dzzoffice?style=flat-square&logo=gnu&color=orange" alt="开源协议" /></a>
-    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/UPDATE.md" title="DzzOffice 最新版本"><img src="https://img.shields.io/badge/version-v2.4.0-blue.svg" alt="最新版本" /></a>
+    <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/UPDATE.md" title="DzzOffice 最新版本"><img src="https://img.shields.io/badge/version-v2.4.1-blue.svg" alt="最新版本" /></a>
     <a target="_blank" href="https://gitee.com/zyx0814/dzzoffice/stargazers"><img src="https://gitee.com/zyx0814/dzzoffice/badge/star.svg?theme=dark" alt="Gitee Star" /></a>
     <a target="_blank" href="https://github.com/zyx0814/dzzoffice/stargazers"><img src="https://img.shields.io/github/stars/zyx0814/dzzoffice?style=flat-square&logo=github&color=yellow" alt="GitHub Stars" /></a>
     <a target="_blank" href="https://github.com/zyx0814/dzzoffice/network/members"><img src="https://img.shields.io/github/forks/zyx0814/dzzoffice?style=flat-square&logo=github&color=blue" alt="GitHub Forks" /></a>
