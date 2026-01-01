@@ -68,7 +68,9 @@ class table_resources_statis extends dzz_table {
             foreach ($statis as $v) {
                 $fileinfo = C::t('resources')->fetch_info_by_rid($v);
                 $insertarr = ['rid' => $v, 'editdateline' => $fileinfo['dateline'], 'pfid' => $fileinfo['pfid'], 'uid' => $uid, 'opendateline' => $fileinfo['dateline'], 'edituid' => $uid];
-                if ($fileinfo['oid'] && $fileinfo['type'] == 'folder')
+                if ($fileinfo['oid'] && $fileinfo['type'] == 'folder') {
+                    $insertarr['fid'] = $fileinfo['oid'];
+                }
                 if (!parent::insert($insertarr, 1)) {
                     $index = array_search($v, $rids);
                     unset($rids[$index]);
@@ -92,7 +94,10 @@ class table_resources_statis extends dzz_table {
         $editsql = substr($editsql, 0, -1);
         $wheresql = ' where  rid in (%n)';
         $params[] = $rids;
-        return true;
+        if (DB::query("update %t set $editsql $wheresql", $params)) {
+            return true;
+        }
+        return false;
     }
 
     public function delete_by_rid($rid) {

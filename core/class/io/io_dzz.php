@@ -2034,9 +2034,6 @@ class io_dzz extends io_api {
                 //删除回收站数据
                 C::t('resources_recyle')->delete_by_rid($icoarr['rid']);
             } else {
-                if (!DB::result_first("select isdelete from %t where rid = %s", ['resources', $rid])) {
-                    return;
-                }
                 $recoverarr = ['isdelete' => 0, 'deldateline' => 0, 'pfid' => $icoarr['pfid']];
                 //如果目录下有同名文件,则恢复时生成新的文件名
                 if ($ricoid = $this->getRepeatIDByName($icoarr['name'], $icoarr['pfid'], false)) {

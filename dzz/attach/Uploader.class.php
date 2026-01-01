@@ -14,12 +14,12 @@ if (!defined('IN_DZZ')) {
 class Uploader {
     private $fileField; //文件域名
     private $file; //文件上传对象
-    //文件上传对象
+    private $base64; //文件上传对象
     private $config; //配置信息
     private $oriName; //原始文件名
     private $fileName; //新文件名
-    //完整文件名,即从当前配置目录开始的URL
-    //完整文件名,即从当前配置目录开始的URL
+    private $fullName; //完整文件名,即从当前配置目录开始的URL
+    private $filePath; //完整文件名,即从当前配置目录开始的URL
     private $fileSize; //文件大小
     private $fileType; //文件类型
     private $stateInfo; //上传状态信息,

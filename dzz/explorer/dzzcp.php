@@ -17,7 +17,6 @@ $refer = dreferer();
 if ($do == 'deleteIco') {//删除文件到回收站
     $arr = [];
     $names = [];
-    $i = 0;
     $icoids = $_GET['rids'];
     $ridarr = [];
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
@@ -41,7 +40,6 @@ if ($do == 'deleteIco') {//删除文件到回收站
                 $arr['sucessicoids'][$return['rid']] = $return['rid'];
                 $arr['msg'][$return['rid']] = 'success';
                 $ridarr[] = $return['rid'];
-                $i++;
             } else {
                 $arr['msg'][$return['rid']] = $return['error'];
             }
@@ -51,8 +49,7 @@ if ($do == 'deleteIco') {//删除文件到回收站
     if (!empty($ridarr)) {
         C::t('resources_clipboard')->update_data_by_delrid($ridarr);
     }
-    echo json_encode($arr);
-    exit();
+    exit(json_encode($arr));
 } elseif ($do == 'copyfile') {//复制或者剪切文件到云粘贴板
     $rids = isset($_GET['rids']) ? $_GET['rids'] : '';
     $bzrid = isset($_GET['rid']) ? $_GET['rid'] : '';
@@ -74,13 +71,6 @@ if ($do == 'deleteIco') {//删除文件到回收站
         $arr = ['msg' => 'success', 'rid' => $rids, 'copyid' => $return['copyid'], 'type' => $return['type']];
     }
     exit(json_encode($arr));
-} elseif ($do == 'deletecopy') {
-    $return = C::t('resources_clipboard')->delete_by_uid();
-    if ($return) {
-        exit(json_encode(['success' => true]));
-    } else {
-        exit(json_encode(['error' => true]));
-    }
 } elseif ($do == 'rename') {
     if (!$path = dzzdecode($_GET['path'])) {
         exit(json_encode(['error' => lang('parameter_error')]));
@@ -152,9 +142,7 @@ if ($do == 'deleteIco') {//删除文件到回收站
     exit();
 } elseif ($do == 'recoverFile') {//恢复文件
     $arr = [];
-    $i = 0;
     $icoids = $_GET['rids'];
-    $ridarr = [];
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     foreach ($icoids as $icoid) {
         $icoid = dzzdecode($icoid);
@@ -168,12 +156,9 @@ if ($do == 'deleteIco') {//删除文件到回收站
             $return = IO::Recover($icoid);
         }
         if (!$return['error']) {
-            //处理数据
             $arr['sucessicoids'][$return['rid']] = $return['rid'];
             $arr['msg'][$return['rid']] = 'success';
             $arr['name'][$return['rid']] = $return['name'];
-            $ridarr[] = $return['rid'];
-            $i++;
         } else {
             $arr['msg'][$return['rid']] = $return['error'];
         }
@@ -183,7 +168,6 @@ if ($do == 'deleteIco') {//删除文件到回收站
     $rids = C::t('resources_recyle')->fetch_all_rid();
     if (count($rids) < 1) exit(json_encode(['error' => lang('recycle_not_data')]));
     foreach ($rids as $icoid) {
-        //$icoid=dzzdecode($icoid);
         if (empty($icoid)) {
             continue;
         }
@@ -195,12 +179,9 @@ if ($do == 'deleteIco') {//删除文件到回收站
         }
 
         if (!$return['error']) {
-            //处理数据
             $arr['sucessicoids'][$return['rid']] = $return['rid'];
             $arr['msg'][$return['rid']] = 'success';
             $arr['name'][$return['rid']] = $return['name'];
-            $ridarr[] = $return['rid'];
-            $i++;
         } else {
             $arr['msg'][$return['rid']] = $return['error'];
         }
@@ -208,9 +189,7 @@ if ($do == 'deleteIco') {//删除文件到回收站
     exit(json_encode($arr));
 } elseif ($do == 'finallydelete') {//彻底删除文件
     $arr = [];
-    $i = 0;
     $icoids = $_GET['rids'];
-    $ridarr = [];
     $bz = isset($_GET['bz']) ? trim($_GET['bz']) : '';
     foreach ($icoids as $icoid) {
         $icoid = dzzdecode($icoid);
@@ -223,8 +202,6 @@ if ($do == 'deleteIco') {//删除文件到回收站
             $arr['sucessicoids'][$return['rid']] = $return['rid'];
             $arr['msg'][$return['rid']] = 'success';
             $arr['name'][$return['rid']] = $return['name'];
-            $ridarr[] = $return['rid'];
-            $i++;
         } else {
             $arr['msg'][$return['rid']] = $return['error'];
         }
@@ -241,8 +218,6 @@ if ($do == 'deleteIco') {//删除文件到回收站
             $arr['sucessicoids'][$return['rid']] = $return['rid'];
             $arr['msg'][$return['rid']] = 'success';
             $arr['name'][$return['rid']] = $return['name'];
-            $ridarr[] = $return['rid'];
-            $i++;
         } else {
             $arr['msg'][$return['rid']] = $return['error'];
         }
