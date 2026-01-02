@@ -33,6 +33,7 @@ else{
 
 include  template('admin');
 //调用./template/admin.htm模板；
-/*//调用./template/sub/admin.htm 模板,按下面的方式；
-include template('sub/admin');
 /*
+调用./template/sub/admin.htm 模板,按下面的方式；
+include template('sub/admin');
+*/

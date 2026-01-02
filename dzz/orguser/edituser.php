@@ -27,7 +27,7 @@ if ($do == 'add') {
         foreach ($_GET['orgids'] as $key => $orgid) {
             if (!$orgid)
                 continue;
-            if (C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'], 1)) {
+            if (C::t('organization_admin')->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
                 $orgids[$orgid] = intval($_GET['jobids'][$key]);
             }
         }
@@ -199,14 +199,13 @@ if ($do == 'add') {
             if ($orgid) $orgids[$orgid] = intval($_GET['jobids'][$key]);
         }
 
+        //处理用户部门和职位
+        if ($orgids) C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
+        //处理上司职位;
+        C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
+
         $user = C::t('user')->fetch_by_uid($uid);
-        if (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member'])) {
-            //处理用户部门和职位
-            C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
-
-            //处理上司职位;
-            C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
-
+        if ((C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member'])) || $_G['adminid'] != 1 && $user['adminid'] == 1) {
             showmessage('edit_user_success', MOD_URL);
         }
 
@@ -281,7 +280,7 @@ if ($do == 'add') {
         }
         $setarr = ['username' => $username,'nickname' => $nickname, 'email' => $email, 'phone' => $phone, 'weixinid' => $weixinid];
         if($uid != $_G['uid']) {
-            //禁用创始人验证
+            //禁用创始人验证，防止创始人账号禁用其他创始人账号
             $status = intval($_GET['status']) ? 1 : 0;
             if ($status == 1 && C::t('user')->checkfounder($user)) {
                 showmessage('is_root_user');
@@ -310,11 +309,6 @@ if ($do == 'add') {
             $setarr['secques'] = '';
         }
         C::t('user')->update($uid, $setarr);
-        if($uid != $_G['uid']) {
-            if ($setarr['status'] != $user['status']) {
-                logStatusChange($uid, $user['status'], $setarr['status']);
-            }
-        }
         if($_G[ 'adminid'] == 1) {
             //处理管理员
             C::t('user')->setAdministror($uid, intval($_GET['groupid']));
@@ -327,10 +321,6 @@ if ($do == 'add') {
         } else {
             C::t('user_field')->insert(['uid' => $uid, 'userspace' => $userspace, 'perm' => 0, 'iconview' => 2]);
         }
-        //处理用户部门和职位
-        if ($orgids) C::t('organization_user')->replace_orgid_by_uid($uid, $orgids);
-        //处理上司职位;
-        C::t('organization_upjob')->insert_by_uid($uid, intval($_GET['upjobid']));
         Hook::listen('syntoline_user', $uid, 'edit');//注册绑定到钉钉部门表
         showmessage('edit_user_success', MOD_URL);
     } else {
@@ -376,7 +366,12 @@ if ($do == 'add') {
             $upjob = ['jobid' => 0, 'depart' => lang('please_select_a_organization_or_department'), 'name' => lang('none')];
         }
         $perm = 1;
-        if (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member'])) {
+        $isadmin = 0;
+        //禁止编辑管理员账号
+        if ($_G['adminid'] != 1 && $user['adminid'] == 1) {
+            $perm = 0;
+            $isadmin = 1;
+        } elseif (C::t('user')->checkfounder($user) && !C::t('user')->checkfounder($_G['member'])) {
             $perm = 0;
         }
         include template('edituser');

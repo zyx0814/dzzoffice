@@ -225,15 +225,11 @@ function implodearray($array, $skip = []) {
             if (empty($skip) || !in_array($key, $skip, true)) {
                 if (is_array($value)) {
                     $return .= "$key={" . implodearray($value, $skip) . "}; ";
-                } elseif (!empty($value)) {
-                    $return .= "$key=$value; ";
                 } else {
-                    $return .= '';
+                    $return .= "$key=$value; ";
                 }
             }
         }
     }
     return $return;
 }
-
-

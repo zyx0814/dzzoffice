@@ -2960,26 +2960,3 @@ function getonlinemember($uids) {
 		}
 	}
 }
-/**
- * 记录用户状态变更日志
- * 
- * @param int $uid 用户ID
- * @param int|null $oldStatus 旧状态值（可选，为null时不记录旧状态）
- * @param int $newStatus 新状态值
- * @param string $logType 日志类型
- * @return void
- */
-function logStatusChange($uid, $oldStatus = null, $newStatus, $logType = 'otherlog') {
-    $newStatusText = $newStatus == 1 ? '启用' : '禁用';
-    
-    if ($oldStatus !== null) {
-        if ($oldStatus == $newStatus) {
-            return;
-        }
-        $oldStatusText = $oldStatus == 1 ? '启用' : '禁用';
-        $logContent = "用户UID：{$uid}，状态变更：从{$oldStatusText}改为{$newStatusText}";
-    } else {
-        $logContent = "用户UID：{$uid}，状态变更为：{$newStatusText}";
-    }
-    writelog($logType, $logContent);
-}

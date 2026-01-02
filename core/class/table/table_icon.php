@@ -22,19 +22,19 @@ class table_icon extends dzz_table {
 
     public function delete_by_did($did) {
         global $_G;
-        $icon = self::fetch($did);
+        $icon = parent::fetch($did);
         @unlink($_G['setting']['attachdir'] . $icon['pic']);
-        return self::delete($did);
+        return parent::delete($did);
     }
 
     public function update_copys_by_did($did, $ceof = 1) {
         global $_G;
-        if ($icon = self::fetch($did)) {
+        if ($icon = parent::fetch($did)) {
             if ($icon['check'] < 2 && ($icon['copys'] + $ceof) < 1 && $icon['check'] < 1) {
                 @unlink($_G['setting']['attachdir'] . $icon['pic']);
-                C::t('icon')->delete($did);
+                parent::delete($did);
             } else {
-                C::t('icon')->update($did, ['copys' => $icon['copys'] + $ceof]);
+                parent::update($did, ['copys' => $icon['copys'] + $ceof]);
             }
         }
     }

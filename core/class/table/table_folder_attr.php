@@ -40,7 +40,7 @@ class table_folder_attr extends dzz_table {
             if ($setarr['skey'] == 'icon') {
                 $o = parent::fetch($id);
             }
-            $ret = parent::update($id, $setarr);
+            parent::update($id, $setarr);
         } else {
             $id = parent::insert($setarr, 1);
         }
@@ -82,7 +82,7 @@ class table_folder_attr extends dzz_table {
             'skey' => $skey,
             'svalue' => $val,
         ];
-        return self::insert($searr);
+        return self::insert($setarr);
 
     }
 
@@ -131,7 +131,7 @@ class table_folder_attr extends dzz_table {
         $settings = [];
         foreach (DB::fetch_all("select * from %t where fid = %d", [$this->_table, $fid]) as $v) {
             if ($v['skey'] == 'icon') {
-                $v['svalue'] = C::t('attachment')->getThumbByAid($value['svalue']);
+                $v['svalue'] = C::t('attachment')->getThumbByAid($v['svalue']);
             }
             $settings[$v['skey']] = $v['svalue'];
         }

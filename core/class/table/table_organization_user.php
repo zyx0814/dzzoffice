@@ -18,6 +18,15 @@ class table_organization_user extends dzz_table {
         parent::__construct();
     }
 
+    //插入数据
+    public function insert($arr, $return_insert_id = false, $replace = false, $silent = false) {
+        if ($ret = parent::insert($arr, $return_insert_id, $replace, $silent)) {
+            $log = '向orgid(' . $arr['orgid'] . ')添加用户(UID:' . $arr['uid'] . ')：';
+            writelog('updatelog', $log);
+        }
+        return $ret;
+    }
+
     public function insert_by_orgid($orgid, $uids, $jobid = 0) {
         if (!$uids || !$orgid) return [];
         if (!$org = C::t('organization')->fetch($orgid)) {
@@ -26,7 +35,7 @@ class table_organization_user extends dzz_table {
         if (!is_array($uids)) $uids = [$uids];
         $ret = [];
         foreach ($uids as $v) {
-            if (parent::insert(["orgid" => $orgid, 'uid' => $v, 'jobid' => $jobid, 'dateline' => TIMESTAMP], 1, 1)) {
+            if (self::insert(["orgid" => $orgid, 'uid' => $v, 'jobid' => $jobid, 'dateline' => TIMESTAMP], 1, 1)) {
                 $ret[$v] = $v;
             }
         }
@@ -138,7 +147,9 @@ class table_organization_user extends dzz_table {
                 }
             }
         }
-        if ($uids && $return = DB::delete($this->_table, "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'")) {
+        if ($uids && DB::delete($this->_table, "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'")) {
+            $log = '移除在orgid(' . $orgid . ')中的用户(' . implode(',', $uids) . ')：';
+            writelog('deletelog', $log);
             //删除管理员表数据
             DB::delete('organization_admin', "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'");
             include_once libfile('function/cache');
@@ -284,7 +295,7 @@ class table_organization_user extends dzz_table {
                 DB::delete($this->_table, "orgid='{$org['forgid']}' and uid='{$value['uid']}'");
             } else {
                 $value['orgid'] = $org['forgid'];
-                parent::insert($value);
+                self::insert($value);
             }
         }
 

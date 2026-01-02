@@ -19,6 +19,15 @@ class table_user extends dzz_table {
 
         parent::__construct();
     }
+    //更新数据
+    public function update($uid, $data, $unbuffered = false, $replace = false) {
+        if ($ret = parent::update($uid, $data, $unbuffered, $replace)) {
+            $log = '修改用户(UID:' . $uid . ')信息：';
+            $log .= implodearray($data, ['password', 'password1', 'password2']);
+            writelog('updatelog', $log);
+        }
+        return $ret;
+    }
 
     /*public function fetch_safebindstatus($uid){
         $uid = intval($uid);
@@ -48,16 +57,8 @@ class table_user extends dzz_table {
             'regip' => $_G['clientip'],
             'groupid' => $groupid
         ];
-        $setarr['uid'] = parent::insert($setarr, 1);
+        $setarr['uid'] = self::insert($setarr, 1);
         return $setarr;
-    }
-
-    public function update_password($uid, $password) {
-        $uid = intval($uid);
-        if (parent::update($uid, ['password' => $password])) {
-            return true;
-        }
-        return false;
     }
 
     public function user_register($userArr, $addorg = 1) {
@@ -88,31 +89,15 @@ class table_user extends dzz_table {
         if (self::checkfounder($user)) {//创始人不能删除
             return false;
         }
-
-        if (parent::delete($uid)) {
-            C::t('user_field')->delete($uid);
-            C::t('user_profile')->delete($uid);
-            C::t('user_status')->delete($uid);
-            C::t('user_setting')->delete_by_uid($uid);
-            C::t('organization_user')->delete_by_uid($uid, 0);
-
-            //删除用户文件
-            if ($homefid = DB::result_first("select fid from %t where uid=%d and flag='home' ", ['folder', $uid])) {
-                C::t('folder')->delete_by_fid($homefid, true);
-            }
-
-            Hook::listen('syntoline_user', $uid, 'del');//删除对应到三方用户表
-            return true;
-        }
-        return false;
+        return self::delete($uid);
     }
 
     public function checkfounder($user) {
-
-        $founders = str_replace(' ', '', getglobal('config/admincp/founder'));
         if (!$user['uid'] || $user['groupid'] != 1 || $user['adminid'] != 1) {
             return false;
-        } elseif (empty($founders)) {
+        }
+        $founders = str_replace(' ', '', getglobal('config/admincp/founder'));
+        if (empty($founders)) {
             return false;
         } elseif (strexists(",$founders,", ",$user[uid],")) {
             return true;
@@ -131,7 +116,7 @@ class table_user extends dzz_table {
         }
         $arr = [];
         if ($groupid == 1) {
-            parent::update($uid, ['adminid' => 1, 'groupid' => 1]);
+            self::update($uid, ['adminid' => 1, 'groupid' => 1]);
         } else {
             if (empty($groupid)) $groupid = 9;
             //因为用户组权限开放，所有这里就不强制设为机构管理员了，以免用户组权限被覆盖
@@ -140,34 +125,11 @@ class table_user extends dzz_table {
             // } elseif($groupid == 2) {
             //     $groupid=9;
             // }
-            parent::update($uid, ['adminid' => 0, 'groupid' => $groupid]);
-        }
-    }
-
-    public function update_credits($uid, $credits) {
-        if ($uid) {
-            $data = ['credits' => intval($credits)];
-            DB::update($this->_table, $data, ['uid' => intval($uid)], 'UNBUFFERED');
-            $this->update_cache($uid, $data);
-        }
-    }
-
-    public function update_by_groupid($groupid, $data) {
-        $uids = [];
-        $groupid = dintval($groupid, true);
-        if ($groupid && $this->_allowmem) {
-            $uids = array_keys($this->fetch_all_by_groupid($groupid));
-        }
-        if ($groupid && !empty($data) && is_array($data)) {
-            DB::update($this->_table, $data, DB::field('groupid', $groupid), 'UNBUFFERED');
-        }
-        if ($uids) {
-            $this->update_cache($uids, $data);
+            self::update($uid, ['adminid' => 0, 'groupid' => $groupid]);
         }
     }
 
     public function fetch_userbasic_by_uid($uid) {
-
         return DB::fetch_first("select uid,email,username from %t where uid = %d", [$this->_table, $uid]);
     }
 
@@ -427,32 +389,14 @@ class table_user extends dzz_table {
         return $memberlist;
     }
 
-
-    public function insert($uid, $ip = false, $groupid = false, $extdata = false, $adminid = 0) {
-        if (($uid = dintval($uid))) {
-            $profile = isset($extdata['profile']) ? $extdata['profile'] : [];
-            //$profile['uid'] = $uid;
-            $base = [
-                'uid' => $uid,
-                'adminid' => intval($adminid),
-                'groupid' => intval($groupid),
-                'regdate' => TIMESTAMP,
-                'emailstatus' => intval($extdata['emailstatus']),
-
-            ];
-            $status = [
-                'uid' => $uid,
-                'regip' => (string)$ip,
-                'lastip' => (string)$ip,
-                'lastvisit' => TIMESTAMP,
-                'lastactivity' => TIMESTAMP,
-                'lastsendmail' => 0
-            ];
-
-            parent::update($uid, $base);
-            C::t('user_status')->insert($status, false, true);
-            C::t('user_profile')->update($uid, $profile);
+    //添加用户
+    public function insert($arr, $return_insert_id = false, $replace = false, $silent = false) {
+        if ($uid = parent::insert($arr, 1)) {
+            $log = '添加用户(UID:' . $uid . ')信息：';
+            $log .= implodearray($arr, ['password', 'password1', 'password2']);
+            writelog('updatelog', $log);
         }
+        return $uid;
     }
 
     public function insert_user($userarr, $groupid = 9, $profilearr = []) {
@@ -473,7 +417,7 @@ class table_user extends dzz_table {
             'phone' => $userarr['phone'],
             'phonestatus' => $userarr['phonestatus']
         ];
-        $uid = parent::insert($setarr, 1);
+        $uid = self::insert($setarr, 1);
         if ($uid) {
             $status = [
                 'uid' => $uid,
@@ -492,13 +436,6 @@ class table_user extends dzz_table {
         } else {
             return false;
         }
-
-
-    }
-
-    public function insert_user_setarr($setarr) {
-        if (empty($setarr)) return;
-        return parent::insert($setarr, 1);
     }
 
     public function delete($val, $unbuffered = false, $fetch_archive = 0) {
@@ -515,6 +452,23 @@ class table_user extends dzz_table {
                     $data[$uid] = $uid;
                 }
                 memory('set', 'deleteuids', $data, 86400 * 2);
+            }
+            if ($ret) {
+                $log = '删除了用户UID：' . $uid;
+                writelog('deletelog', $log);
+
+                C::t('user_field')->delete($uid);
+                C::t('user_profile')->delete($uid);
+                C::t('user_status')->delete($uid);
+                C::t('user_setting')->delete_by_uid($uid);
+                C::t('organization_user')->delete_by_uid($uid, 0);
+
+                //删除用户文件
+                if ($homefid = DB::result_first("select fid from %t where uid=%d and flag='home' ", ['folder', $uid])) {
+                    C::t('folder')->delete_by_fid($homefid, true);
+                }
+
+                Hook::listen('syntoline_user', $uid, 'del');//删除对应到三方用户表
             }
         }
         return $ret;

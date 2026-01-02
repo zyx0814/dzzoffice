@@ -239,30 +239,6 @@ if (!submitcheck('settingsubmit')) {
         $settingnew['orgmemorySpace'] = isset($settingnew['orgmemorySpace']) ? intval($settingnew['orgmemorySpace']) : 0;
         $settingnew['groupmerorySpace'] = isset($settingnew['groupmerorySpace']) ? intval($setting['groupmerorySpace']) : 0;
         $settingnew['systemSpace'] = isset($settingnew['systemSpace']) ? intval($settingnew['systemSpace']) : 0;
-        /*$setarr =array(//接收设置数据处理
-            //'usermemoryOn' => isset($setting['usermemoryOn'])?$setting['usermemoryOn']:0,
-            //'mermoryusersetting' => $setting['mermoryusersetting'],
-            //'memoryorgusers' => $setting['memoryorgusers'],
-            'memorySpace' => intval($setting['memorySpace']),
-            //'organizationOn' => isset($setting['organizationOn'])?$setting['organizationOn']:0,
-            'orgmemorySpace' => isset($setting['orgmemorySpace'])?intval($setting['orgmemorySpace']):0,
-            //'groupOn' =>  isset($setting['groupOn'])?$setting['groupOn']:'',
-            'groupmerorySpace'=>isset($setting['groupmerorySpace'])?intval($setting['groupmerorySpace']):0,
-            'systemSpace'=>isset($setting['systemSpace'])?intval($setting['systemSpace']):0,
-        );
-        if(C::t('setting')->update_batch($setarr)){
-            //更新缓存
-            updatecache('setting');
-            //更新机构最大空间值,部门不做处理
-            if($setarr['orgmemorySpace']){
-                DB::update('organization',array('maxspacesize'=>$setarr['orgmemorySpace']),array('`type`'=>0,'forgid'=>0));
-            }
-            //更新群组最大空间值
-            if($setarr['groupmerorySpace']){
-                DB::update('organization',array('maxspacesize'=>$setarr['groupmerorySpace']),array('`type`'=>1));
-            }
-
-        }*/
     } elseif ($operation == 'datetime') {
         if (isset($settingnew['timeformat'])) {
             $settingnew['timeformat'] = $settingnew['timeformat'] == '24' ? 'H:i' : 'h:i A';

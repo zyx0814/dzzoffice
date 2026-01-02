@@ -29,7 +29,7 @@ class table_app_market extends dzz_table {
         return $ret;
     }
 
-    public function fetch_by_appid($appid, $havecount = false, $outputurl = false) { //返回一条数据同时加载统计表数据
+    public function fetch_by_appid($appid, $outputurl = false) { //返回一条数据同时加载统计表数据
         global $_G;
         $appid = intval($appid);
         if (!$data = parent::fetch($appid)) return [];
@@ -41,17 +41,10 @@ class table_app_market extends dzz_table {
         $data['title'] = $data['appname'];
         $data['url'] = $outputurl ? outputurl(replace_canshu($data['appurl'])) : replace_canshu($data['appurl']);
         $data['noticeurl'] = replace_canshu($data['noticeurl']);
-        if ($havecount) {
-            $data['viewnum'] = intval($count['viewnum']);
-            $data['replynum'] = intval($count['replynum']);
-            $data['downnum'] = intval($count['downnum']);
-            $data['star'] = intval($count['star']);
-            $data['starnum'] = intval($count['starnum']);
-        }
         return $data;
     }
 
-    public function fetch_all_by_appid($appids, $havecount = false) { //返回数据同时加载统计表数据
+    public function fetch_all_by_appid($appids) { //返回数据同时加载统计表数据
         global $_G;
         if (!$appids) return false;
         if (!is_array($appids)) {
@@ -69,13 +62,6 @@ class table_app_market extends dzz_table {
             $data['title'] = $data['appname'];
             $data['url'] = replace_canshu($data['appurl']);
             $data['noticeurl'] = replace_canshu($data['noticeurl']);
-            if ($havecount) {
-                $data['viewnum'] = intval($count['viewnum']);
-                $data['replynum'] = intval($count['replynum']);
-                $data['downnum'] = intval($count['downnum']);
-                $data['star'] = intval($count['star']);
-                $data['starnum'] = intval($count['starnum']);
-            }
             $return[$appid] = $data;
         }
         return $return;

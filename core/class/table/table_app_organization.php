@@ -73,7 +73,7 @@ class table_app_organization extends dzz_table {
             }
         }
         if ($orgids) {
-            $appids = C::t('app_organization')->fetch_appids_by_orgid($orgids);
+            $appids = self::fetch_appids_by_orgid($orgids);
         } else {
             $appids = [];
         }

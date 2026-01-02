@@ -414,7 +414,7 @@ function uc_add_user($username, $password, $email, $nickname = '', $uid = 0, $qu
         'regdate' => TIMESTAMP,
     ];
 
-    $setarr['uid'] = DB::insert('user', $setarr, 1);
+    $setarr['uid'] = C::t('user')->insert($setarr, 1);
     return $setarr;
 }
 

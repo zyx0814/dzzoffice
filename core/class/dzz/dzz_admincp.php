@@ -51,7 +51,7 @@ class dzz_admincp {
 
     function writecplog() {
         global $_G;
-        $extralog = implodearray(['GET' => $_GET, 'POST' => $_POST], ['formhash', 'submit', 'addsubmit', 'admin_password', 'sid', 'action']);
+        $extralog = implodearray(['GET' => $_GET, 'POST' => $_POST], ['formhash', 'submit', 'admin_password', 'sid']);
         writelog('cplog', $extralog);
     }
 
@@ -187,11 +187,11 @@ class dzz_admincp {
 
 
     function checkfounder($user) {
-
-        $founders = str_replace(' ', '', $this->cpsetting['founder']);
         if (!$user['uid'] || $user['groupid'] != 1 || $user['adminid'] != 1) {
             return false;
-        } elseif (empty($founders)) {
+        }
+        $founders = str_replace(' ', '', $this->cpsetting['founder']);
+        if (empty($founders)) {
             return true;
         } elseif (strexists(",$founders,", ",{$user['uid']},")) {
             return true;

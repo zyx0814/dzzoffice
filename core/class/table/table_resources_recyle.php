@@ -234,7 +234,8 @@ class table_resources_recyle extends dzz_table {
                     }
                 }
             }
-            if (DB::update('resources', ['isdelete' => 0, 'deldateline' => 0], ['rid' => $rid]) && parent::delete($id)) {
+
+            if (C::t('resources')->update_by_rid($rid, ['isdelete' => 0, 'deldateline' => 0]) && parent::delete($id)) {
                 $hash = C::t('resources_event')->get_showtpl_hash_by_gpfid($result['pfid'], $result['gid']);
                 $eventdata = [
                     'username' => getglobal('username'),

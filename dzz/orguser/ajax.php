@@ -399,7 +399,7 @@ if ($do == 'upload') {//上传图片文件
     if (!empty($delete_uids)) {
         $delete_count = 0;
         foreach ($delete_uids as $uid) {
-            if (C::t('organization_admin')->delete_by_uid_orgid($uid, $orgid)) {
+            if ($adminModel->delete_by_uid_orgid($uid, $orgid)) {
                 $delete_count++;
             } else {
                 exit(json_encode(['error' => lang('add_administrator_unsuccess')]));
@@ -471,11 +471,12 @@ if ($do == 'upload') {//上传图片文件
     if ($status == 1 && C::t('user')->checkfounder($user)) {
         exit(json_encode(['error' => lang('is_root_user')]));
     }
+    //禁止禁用管理员账号
+    if ($_G['adminid'] != 1 && $user['adminid'] == 1) {
+        exit(json_encode(['error' => '非系统管理员禁止操作管理员账号']));
+    }
     $setarr = ['status' => intval($_GET['status'])];
     if(C::t('user')->update($uid, $setarr)) {
-        if ($setarr['status'] != $user['status']) {
-            logStatusChange($uid, $user['status'], $setarr['status']);
-        }
         exit(json_encode(['success' => true]));
     } else {
         exit(json_encode(['error' => lang('do_failed')]));

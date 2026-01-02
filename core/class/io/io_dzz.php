@@ -1687,7 +1687,7 @@ class io_dzz extends io_api {
                 'md5' => $md5,
                 'dateline' => $_G['timestamp'],
             ];
-            if ($attach['aid'] = DB::insert('attachment', ($attach), 1)) {
+            if ($attach['aid'] = C::t('attachment')->insert($attach, 1)) {
                 C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], $attach['filesize']);
                 dfsockopen($_G['siteurl'] . 'misc.php?mod=movetospace&aid=' . $attach['aid'] . '&remoteid=0', 0, '', '', FALSE, '', 1, false);
 

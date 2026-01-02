@@ -167,10 +167,10 @@ class table_folder extends dzz_table {
                 'fsperm' => perm_FolderSPerm::flagPower('home')
             ];
             if ($rootfid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$uid}' and flag='home' ")) {
-                C::t('folder')->update($rootfid, ['fname' => $root['fname'], 'isdelete' => 0, 'pfid' => 0, 'fsperm' => $root['fsperm'], 'perm' => $root['perm']]);
+                self::update($rootfid, ['fname' => $root['fname'], 'isdelete' => 0, 'pfid' => 0, 'fsperm' => $root['fsperm'], 'perm' => $root['perm']]);
             } else {
-                $rootfid = C::t('folder')->insert($root);
-                C::t('folder')->update_perm_inherit_by_fid($rootfid);
+                $rootfid = self::insert($root);
+                self::update_perm_inherit_by_fid($rootfid);
             }
             $root['fid'] = $rootfid;
             $root['path'] = C::t('resources_path')->fetch_pathby_pfid($rootfid);
@@ -249,7 +249,7 @@ class table_folder extends dzz_table {
                 ];
                 C::t('resources_statis')->add_statis_by_fid($fid, $statisdata);
                 //更改folder数据
-                return parent::update($fid, ['fname' => $name]);
+                return self::update($fid, ['fname' => $name]);
             } else {
                 return false;
             }
@@ -441,7 +441,7 @@ class table_folder extends dzz_table {
         $infoarr = [];
         $temp = [];
         $where = [];
-        $folder = C::t('folder')->fetch_folderinfo_by_fid($pfid);
+        $folder = self::fetch_folderinfo_by_fid($pfid);
         if (!$folder) {
             return $infoarr;
         }
@@ -484,7 +484,7 @@ class table_folder extends dzz_table {
         global $_G;
         $pfid = intval($pfid);
         $infoarr = [];
-        $folder = C::t('folder')->fetch_folderinfo_by_fid($pfid);
+        $folder = self::fetch_folderinfo_by_fid($pfid);
         if (!$folder) {
             return $infoarr;
         }

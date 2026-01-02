@@ -29,7 +29,7 @@
 				</div>
 			</script>
 			<script type="text/html" id="switchTpl">
-				<input type="checkbox" name="status" value="{{d.uid}}" lay-skin="switch" lay-text="{lang normal}|{lang forbidden}" lay-filter="sexDemo" {{ d.status == 1 ? '' : 'checked' }}>
+				<input type="checkbox" name="status" value="{{d.uid}}" lay-skin="switch" lay-text="{lang normal}|{lang forbidden}" lay-filter="sexDemo" {{ d.status == 1 ? '' : 'checked' }} {{ adminid != 1 && d.groupid == 1 ? 'disabled="disabled"' : '' }}>
 			</script>
 			<script type="text/html" id="usernameTpl">
 				<span class="img-avatar-36 {{ d.online ? 'user-status-info' : 'user-status-secondary' }}"
@@ -41,8 +41,7 @@
 				</a>
 			</script>
 			<script type="text/html" id="selectTpl">
-				{{#  var isNotSuperAdmin = adminid != 1; }}
-				<select name="city" lay-filter="selectTpl" lay-append-to="body" {{#  if(isNotSuperAdmin){ }}disabled="disabled"{{#  } }}>
+				<select name="city" lay-filter="selectTpl" lay-append-to="body" {{#  if(adminid != 1){ }}disabled="disabled"{{#  } }}>
 					<option value="0">{lang unknown}</option>
 					 {{#
 						layui.each(usergroups, function(groupid, group){ }}

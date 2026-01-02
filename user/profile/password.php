@@ -83,7 +83,7 @@ if ($do == 'editpass') {
             $password = preg_match('/^\w{32}$/', $_GET['password']) ? $_GET['password'] : md5($_GET['password']);
             $password = md5($password . $member['salt']);
         }
-        if ($password && C::t('user')->update_password($_G['uid'], $password)) {
+        if ($password && C::t('user')->update($_G['uid'], ['password' => $password])) {
             showTips(['success' => lang('update_password_success')], $type);
             exit();
         }

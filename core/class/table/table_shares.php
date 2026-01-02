@@ -157,7 +157,7 @@ class table_shares extends dzz_table {
         return false;
     }
 
-    public function update_by_id($id, $setarr,$bz='') {
+    public function update_by_id($id, $setarr, $bz='') {
         if (empty($setarr)) return false;
         if (!$id) return false;
         global $_G;

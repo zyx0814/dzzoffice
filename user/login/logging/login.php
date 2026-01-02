@@ -11,9 +11,6 @@ if (!defined('IN_DZZ')) {
 global $_G;
 $setting = isset($_G['setting']) ? $_G['setting'] : '';
 
-if (empty($setting)) {
-    $setting = C::t('setting')->fetch_all([], true);
-}
 if ($_G['uid'] > 0) {
     if ($_G['setting']['bbclosed']) {
         include template('site_close');
@@ -25,7 +22,7 @@ if ($_G['uid'] > 0) {
     $href = str_replace("'", "\'", $location);
     $href = preg_replace("/user\.php\?mod\=login.*?$/i", "", $location);
 
-    writelog('loginlog', '登录成功');
+    //writelog('loginlog', '登录成功');
     showmessage('login_succeed_no_redirect', $href);
 }
 $_G['allow_loginmod'] = $setting['allow_loginmod'] = unserialize($setting['allow_loginmod']);
