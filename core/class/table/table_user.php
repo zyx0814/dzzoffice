@@ -21,11 +21,27 @@ class table_user extends dzz_table {
     }
     //更新数据
     public function update($uid, $data, $unbuffered = false, $replace = false) {
-        if ($ret = parent::update($uid, $data, $unbuffered, $replace)) {
-            $log = '修改用户(UID:' . $uid . ')信息：';
-            $log .= implodearray($data, ['password', 'password1', 'password2']);
-            writelog('updatelog', $log);
+        $ret = parent::update($uid, $data, $unbuffered, $replace);
+        if ($ret) {
+            $fields = ['username', 'password', 'groupid', 'status', 'email'];
+            
+            $isfield = false;
+            foreach ($fields as $field) {
+                if (isset($data[$field])) {
+                    $isfield = true;
+                    break;
+                }
+            }
+
+            if ($isfield) {
+                if (isset($data['password'])) {
+                    $data['password'] = '****';
+                }
+
+                writelog('updatelog', '修改用户(UID:' . $uid . ')信息：' . implodearray($data),);
+            }
         }
+
         return $ret;
     }
 
@@ -392,7 +408,7 @@ class table_user extends dzz_table {
     //添加用户
     public function insert($arr, $return_insert_id = false, $replace = false, $silent = false) {
         if ($uid = parent::insert($arr, 1)) {
-            $log = '添加用户(UID:' . $uid . ')信息：';
+            $log = '添加用户(UID:' . $uid . ')：';
             $log .= implodearray($arr, ['password', 'password1', 'password2']);
             writelog('updatelog', $log);
         }

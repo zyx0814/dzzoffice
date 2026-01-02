@@ -21,7 +21,7 @@ class table_organization_user extends dzz_table {
     //插入数据
     public function insert($arr, $return_insert_id = false, $replace = false, $silent = false) {
         if ($ret = parent::insert($arr, $return_insert_id, $replace, $silent)) {
-            $log = '向orgid(' . $arr['orgid'] . ')添加用户(UID:' . $arr['uid'] . ')：';
+            $log = '向orgid(' . $arr['orgid'] . ')添加用户(UID:' . $arr['uid'] . ')';
             writelog('updatelog', $log);
         }
         return $ret;
