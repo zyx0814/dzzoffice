@@ -23,7 +23,7 @@ class table_user extends dzz_table {
     public function update($uid, $data, $unbuffered = false, $replace = false) {
         $ret = parent::update($uid, $data, $unbuffered, $replace);
         if ($ret) {
-            $fields = ['username', 'password', 'groupid', 'status', 'email'];
+            $fields = ['username', 'password', 'groupid', 'status', 'email', 'phone', 'nickname', 'adminid', 'salt'];
             
             $isfield = false;
             foreach ($fields as $field) {
