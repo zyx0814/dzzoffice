@@ -67,7 +67,7 @@ class table_organization extends dzz_table {
             } elseif ($type == 0) {
                 $log .= '部门';
             }
-            $log .= '，名称：' . $arr['name'] . ';';
+            $log .= '，名称：' . $arr['orgname'] . ';';
             $log .= json_encode($arr, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             writelog('updatelog', $log);
             if (intval($arr['aid'])) {//如果有头像图片，增加copys
@@ -80,7 +80,7 @@ class table_organization extends dzz_table {
     //删除
     public function delete($orgid, $unbuffered = false) {
         if ($ret = parent::delete($orgid)) {
-            $log = '删除了orgid(' . $orgid . ')：';
+            $log = '删除了orgid(' . $orgid . ')';
             writelog('deletelog', $log);
         }
         return $ret;

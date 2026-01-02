@@ -148,7 +148,7 @@ class table_organization_user extends dzz_table {
             }
         }
         if ($uids && DB::delete($this->_table, "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'")) {
-            $log = '移除在orgid(' . $orgid . ')中的用户(' . implode(',', $uids) . ')：';
+            $log = '移除在orgid(' . $orgid . ')中的用户(' . implode(',', $uids) . ')';
             writelog('deletelog', $log);
             //删除管理员表数据
             DB::delete('organization_admin', "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'");

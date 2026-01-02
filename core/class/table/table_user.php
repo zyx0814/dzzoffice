@@ -409,7 +409,8 @@ class table_user extends dzz_table {
     public function insert($arr, $return_insert_id = false, $replace = false, $silent = false) {
         if ($uid = parent::insert($arr, 1)) {
             $log = '添加用户(UID:' . $uid . ')：';
-            $log .= implodearray($arr, ['password', 'password1', 'password2']);
+            $arr['password'] = '******';
+            $log .= implodearray($arr);
             writelog('updatelog', $log);
         }
         return $uid;
