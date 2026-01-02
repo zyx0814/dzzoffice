@@ -77,16 +77,6 @@ class table_organization extends dzz_table {
         return $orgid;
     }
 
-    //更新
-    public function update($orgid, $data, $unbuffered = false, $replace = false) {
-        if ($ret = parent::update($orgid, $data, $unbuffered, $replace)) {
-            $log = '更新了orgid(' . $orgid . ')信息：';
-            $log .= json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-            writelog('updatelog', $log);
-        }
-        return $ret;
-    }
-
     //删除
     public function delete($orgid, $unbuffered = false) {
         if ($ret = parent::delete($orgid)) {
@@ -321,7 +311,7 @@ class table_organization extends dzz_table {
             $parent = parent::fetch($org['forgid']);
             if ($parent['diron'] < 1) return false;
         }
-        if (self::update($orgid, ['diron' => $available])) {
+        if (parent::update($orgid, ['diron' => $available])) {
             //self::setFolderByOrgid($orgid);
             //include_once libfile('function/cache');
             //updatecache('organization');
@@ -338,7 +328,7 @@ class table_organization extends dzz_table {
             $top = parent::fetch($toporgid);
             if ($top['manageon'] < 1) return false;
         }*/
-        if (self::update($orgid, ['manageon' => $groupon])) {
+        if (parent::update($orgid, ['manageon' => $groupon])) {
             return true;
         }
         return false;
@@ -349,7 +339,7 @@ class table_organization extends dzz_table {
         if ($indesk > 0) {
             if ($org['available'] < 1) return false;
         }
-        if (self::update($orgid, ['indesk' => $indesk])) {
+        if (parent::update($orgid, ['indesk' => $indesk])) {
             /*include_once libfile('function/cache');
             updatecache('organization');*/
             return true;
@@ -367,7 +357,7 @@ class table_organization extends dzz_table {
 
         if ($fid = DB::result_first("select fid from " . DB::table('folder') . " where gid='{$orgid}' and flag='organization'")) {
             if (C::t('folder')->rename_by_fid($fid, $org['orgname'])) {
-                self::update($orgid, ['fid' => $fid]);
+                parent::update($orgid, ['fid' => $fid]);
             }
         } else {
             $folder = ['fname' => C::t('folder')->getFolderName($org['orgname'], $pfid, $org['fid']),
@@ -383,7 +373,7 @@ class table_organization extends dzz_table {
             $fid = C::t('folder')->insert($folder, 0);
         }
         if ($fid) {
-            self::update($org['orgid'], ['fid' => $fid]);
+            parent::update($org['orgid'], ['fid' => $fid]);
             return $fid;
         }
         return false;
@@ -392,7 +382,7 @@ class table_organization extends dzz_table {
     public function sequenceByForgid($forgid) {
 
         foreach (DB::fetch_all("select orgid from %t where forgid=%d and type='0' order by disp", [$this->_table, $forgid]) as $key => $value) {
-            self::update($value['orgid'], ['disp' => $key]);
+            parent::update($value['orgid'], ['disp' => $key]);
         }
     }
 
@@ -414,12 +404,12 @@ class table_organization extends dzz_table {
             $ceof = -1;
         }
         foreach (DB::fetch_all("select orgid,disp from %t where $wheresql", $param) as $value) {
-            self::update($value['orgid'], ['disp' => $value['disp'] + $ceof]);
+            parent::update($value['orgid'], ['disp' => $value['disp'] + $ceof]);
             //self::wx_update($value['orgid']);
         }
 
 
-        if ($return = self::update($orgid, ['disp' => $disp, 'forgid' => $forgid])) {
+        if ($return = parent::update($orgid, ['disp' => $disp, 'forgid' => $forgid])) {
 
             if ($org['forgid'] != $forgid) {
                 self::sequenceByForgid($org['forgid']);
@@ -478,7 +468,7 @@ class table_organization extends dzz_table {
             if ($setarr['type'] == '0') {
                 //更新disp
                 foreach (DB::fetch_all("select orgid,disp from %t where forgid=%d and type='0' and disp>=%d and orgid!=%d", [$this->_table, $setarr['forgid'], intval($setarr['disp']), $setarr['orgid']]) as $value) {
-                    self::update($value['orgid'], ['disp' => $value['disp'] + 1]);
+                    parent::update($value['orgid'], ['disp' => $value['disp'] + 1]);
                 }
             }
 
@@ -507,7 +497,7 @@ class table_organization extends dzz_table {
             if (isset($setarr['type']) && $setarr['type'] == 0) self::syn_organization($setarr['orgid']);
             //更新disp
             foreach (DB::fetch_all("select orgid,disp from %t where forgid=%d and type='0' and disp>=%d and orgid!=%d", [$this->_table, $setarr['forgid'], $setarr['disp'], $setarr['orgid']]) as $value) {
-                self::update($value['orgid'], ['disp' => $value['disp'] + 1]);
+                parent::update($value['orgid'], ['disp' => $value['disp'] + 1]);
             }
             return $setarr;
         }
@@ -529,7 +519,7 @@ class table_organization extends dzz_table {
             $fid = $org['fid'];
             $name = self::get_uniqueName_by_forgid($org['forgid'], getstr($setarr['orgname']), $orgid);
             if (C::t('folder')->rename_by_fid($fid, $name)) {
-                if (self::update($orgid, ['orgname' => $name])) {
+                if (parent::update($orgid, ['orgname' => $name])) {
                     $body_data = ['username' => getglobal('username'), 'oldname' => $org['orgname'], 'newname' => $name];
                     $event_body = 'update_group_name';
                     C::t('resources_event')->addevent_by_pfid($org['fid'], $event_body, 'update_groupname', $body_data, $orgid, '', $org['orgname']);//记录事件 
@@ -548,7 +538,7 @@ class table_organization extends dzz_table {
             $setarr['desc'] = htmlspecialchars($setarr['desc']);
         }
         if (empty($setarr)) return true;
-        if (self::update($orgid, $setarr)) {
+        if (parent::update($orgid, $setarr)) {
             //处理图标copys数
             if (isset($setarr['aid'])) {
                 $oaid = intval($org['aid']);
@@ -592,14 +582,14 @@ class table_organization extends dzz_table {
         if (!$org = parent::fetch($orgid)) return false;
         if ($org['type'] > 0) {
             $pathkey = '_' . $orgid . '_';
-            if (self::update($org['orgid'], ['pathkey' => $pathkey])) return $pathkey;
+            if (parent::update($org['orgid'], ['pathkey' => $pathkey])) return $pathkey;
             return false;
         } else {
             if ($force || empty($org['pathkey'])) {//没有pathkey,
                 // include_once libfile('function/organization');
                 if ($ids = self::getUpOrgidTree($org['orgid'])) {
                     $pathkey = '_' . implode('_-_', $ids) . '_';
-                    if (self::update($org['orgid'], ['pathkey' => $pathkey])) return $pathkey;
+                    if (parent::update($org['orgid'], ['pathkey' => $pathkey])) return $pathkey;
                 }
                 return false;
             }
@@ -612,7 +602,7 @@ class table_organization extends dzz_table {
             if ($org['pathkey'] == $npathkey) return $npathkey; //没有改变；
             $like = '^' . $org['pathkey'];
             foreach (DB::fetch_all("select orgid,pathkey from %t where pathkey REGEXP %s", [$this->_table, $like]) as $value) {
-                self::update($value['orgid'], ['pathkey' => str_replace($org['pathkey'], $npathkey, $value['pathkey'])]);
+                parent::update($value['orgid'], ['pathkey' => str_replace($org['pathkey'], $npathkey, $value['pathkey'])]);
             }
             /*if (DB::query("update %t set pathkey=REPLACE(pathkey,%s,%s) where pathkey REGEXP %s", array($this->_table, $org['pathkey'], $npathkey, $like))) {
                 return $npathkey;
@@ -670,13 +660,13 @@ class table_organization extends dzz_table {
                 "order" => $org['disp'] + 1,            //(非必须)在父部门中的次序。从1开始，数字越大排序越靠后
             ];
             if ($ret = $wx->createDepartment($data)) {
-                self::update($orgid, ['worgid' => $ret['id']]);
+                parent::update($orgid, ['worgid' => $ret['id']]);
                 return $ret['id'];
             } else {
                 if ($wx->errCode == '60008') {//部门的worgid不正确导致的问题
                     foreach ($wd as $value) {
                         if ($value['name'] == $data['name'] && $value['parentid'] = $data['parentid']) {
-                            self::update($org['orgid'], ['worgid' => $value['id']]);
+                            parent::update($org['orgid'], ['worgid' => $value['id']]);
                             return $value['id'];
                         }
                     }
@@ -1083,7 +1073,7 @@ class table_organization extends dzz_table {
     public function delete_by_fid($fid, $force = true) {
         if (empty($fid)) return false;
         foreach (DB::fetch_all("select orgid from %t where fid=%d", [$this->_table, $fid]) as $value) {
-            self::update($value['orgid'], ['fid' => 0]);
+            parent::update($value['orgid'], ['fid' => 0]);
             if ($force) {
                 self::delete_by_orgid($value['orgid'], true);
             }
