@@ -178,32 +178,33 @@ class dzz_error {
     public static function show_error($type, $errormsg, $phpmsg = '', $typemsg = '', $backtraceid = '') {
         global $_G;
         ob_end_clean();
-        $gzip = $_G['gzipcompress'];
+        $gzip = isset($_G['gzipcompress']) ? $_G['gzipcompress'] : false;
         ob_start($gzip ? 'ob_gzhandler' : null);
         header("HTTP/1.1 503 Service Temporarily Unavailable");
         header("Status: 503 Service Temporarily Unavailable");
         header("Retry-After: 3600");
-        $host = $_SERVER['HTTP_HOST'];
-        $title = $type == 'db' ? 'Database' : 'System';
+        $showError = isset($_G['config']['security']['error']['showerror']) ? $_G['config']['security']['error']['showerror'] : 2;
+        $title = ($showError !=0) ? ($type == 'db' ? 'Database' : 'System') : 'General';
+        $charset = isset($_G['config']['output']['charset']) ? $_G['config']['output']['charset'] : 'UTF-8';
+        $clientIp = isset($_G['clientip']) ? $_G['clientip'] : 'Unknown';
+        $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'Unknown Host';
         echo <<<EOT
 <!DOCTYPE html>
 <html>
 <head>
     <title>$host - $title Error</title>
-    <meta charset="{$_G['config']['output']['charset']}" />
+    <meta charset="{$charset}" />
     <meta name="renderer" content="webkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="ROBOTS" content="NOINDEX,NOFOLLOW,NOARCHIVE" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style type="text/css">
-    <!--
     body { background-color: white; color: black; font: 9pt/11pt verdana, arial, sans-serif;}
     #container { max-width: 1024px; margin: auto; }
     #message   { max-width: 1024px; color: black; }
 
     .red  {color: red;}
-    a:link     { font: 9pt/11pt verdana, arial, sans-serif; color: red; }
-    a:visited  { font: 9pt/11pt verdana, arial, sans-serif; color: #4e4e4e; }
+    a     {color: red; }
     h1 { color: #FF0000; font: 18pt "Verdana"; margin-bottom: 0.5em;}
     .bg1{ background-color: #FFFFCC;}
     .bg2{ background-color: #EEEEEE;}
@@ -223,7 +224,7 @@ class dzz_error {
     .help {
         background: #F3F3F3;
         border-radius: 10px 10px 10px 10px;
-        font: 12px verdana, arial, sans-serif;
+        font: 14px verdana, arial, sans-serif;
         text-align: center;
         line-height: 160%;
         padding: 1em;
@@ -240,7 +241,6 @@ class dzz_error {
         margin-top: 1em;
         padding: 4px;
     }
-    -->
     </style>
 </head>
 <body>
@@ -248,16 +248,14 @@ class dzz_error {
 <h1>Dzz! $title Error</h1>
 
 EOT;
-        if (defined('CORE_VERSION')) {
-            $VERSION = CORE_VERSION;
-        } else {
-            $VERSION = 'Unknown';
-        }
-        echo '<p>Time: ' . date('Y-m-d H:i:s O') . ' IP: ' . $_G['clientip'] . ' version: ' . $VERSION . ' BackTraceID: ' . $backtraceid . '</p>';
-        if (!empty($errormsg)) {
+        echo '<p>Time: ' . date('Y-m-d H:i:s O') . ' IP: ' . $clientIp . ' BackTraceID: ' . $backtraceid . '</p>';
+        if(!empty($errormsg) && $showError != 0) {
             echo '<div class="info">' . $errormsg . '</div>';
         }
-        if (!empty($phpmsg)) {
+        if($showError == 0) {
+			echo '<div class="info"><p>您好，系统暂时发生异常，无法完成您当前的操作</p></div>';
+		}
+        if(!empty($phpmsg) && $showError == 1) {
             echo '<div class="info">';
             echo '<p><strong>PHP Debug</strong></p>';
             echo '<table cellpadding="5" cellspacing="1" width="100%" class="table">';
@@ -279,14 +277,8 @@ EOT;
         }
         echo '<div class="help">' . lang('suggestion_user') . '</div>';
         echo '<div class="help">' . lang('suggestion') . '</div>';
-
-        $endmsg = lang('error_end_message', ['host' => $host]);
-        echo <<<EOT
-<div class="help">$endmsg</div>
-</div>
-</body>
-</html>
-EOT;
+        echo '<div class="help"><a href="http://' . $host . '">' . $host . '</a> 已经将此出错信息详细记录在<a href="admin.php?mod=systemlog&operation=errorlog&keyword=' . $backtraceid . '" target="_blank">系统日志-系统错误</a>中, 由此给您带来的访问不便我们深感歉意</div>';
+        echo '</div></body></html>';
     }
 
     public static function clear($message) {

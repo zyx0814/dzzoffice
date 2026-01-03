@@ -1,10 +1,10 @@
 <ul class="nav-drawer nav-stacked nav-pills">
     <li class="nav-item">
-		<a href="javascript:;" class="nav-link type-btn active" data-type=""><i class="mdi mdi-file-document-outline"></i><span>{lang all}</span></a>
+		<a href="javascript:;" class="nav-link type-btn <!--{if !$type}-->active<!--{/if}-->" data-type=""><i class="mdi mdi-file-document-outline"></i><span>{lang all}</span></a>
 	</li>
 	<!--{loop $typeinfo $key $value}-->
 	<li class="nav-item">
-		<a href="javascript:;" class="nav-link type-btn" data-type="$key"><i class="mdi $value['icon']"></i><span>$value['name']</span></a>
+		<a href="javascript:;" class="nav-link type-btn <!--{if $type==$key}-->active<!--{/if}-->" data-type="$key"><i class="mdi $value['icon']"></i><span>$value['name']</span></a>
 	</li>
 	<!--{/loop}-->
 </ul>

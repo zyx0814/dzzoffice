@@ -14,6 +14,8 @@ Hook::listen('adminlogin');
 $uid = $_G['uid'];
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $orgid = isset($_GET['orgid']) ? intval($_GET['orgid']) : '';
+$type = isset($_GET['type']) ? trim($_GET['type']) : '';
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $typeinfo = [
     'recycle' => ['name' => lang('recycle'), 'icon' => 'mdi-delete'],
     'image' => ['name' => lang('photo'), 'icon' => 'mdi-file-image'],
@@ -57,11 +59,9 @@ if ($do == 'delete') {
     exit(json_encode($response));
 } elseif ($do == 'getinfo') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
-    $type = isset($_GET['type']) ? trim($_GET['type']) : '';
     $pfid = isset($_GET['pfid']) ? intval($_GET['pfid']) : '';
     $field = isset($_GET['field']) ? $_GET['field'] : 'dateline';
     $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
-    $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $start = ($page - 1) * $limit;
     $validfields = ['name', 'size', 'type', 'username', 'dateline'];

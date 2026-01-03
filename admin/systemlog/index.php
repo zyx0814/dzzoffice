@@ -6,12 +6,12 @@ $returntype = isset($_GET['returnType']) ? $_GET['returnType'] : 'json';//返回
 $navtitle = lang('appname');
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $operation = isset($_GET['operation']) ? $_GET['operation'] : 'cplog';
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 $systemlog_setting = unserialize($_G["setting"]["systemlog_setting"]);
 if ($do == 'getinfo') {
     $operationarr = array_keys($systemlog_setting);
     $operation = in_array($operation, $operationarr) ? $operation : "cplog";
     $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
-    $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $start = ($page - 1) * $limit;
     $logdir = DZZ_ROOT . './data/log/';

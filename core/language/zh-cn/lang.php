@@ -905,7 +905,7 @@ $lang = [
     'error_end_message' => '<a href="http://{host}">{host}</a> 已经将此出错信息详细记录, 由此给您带来的访问不便我们深感歉意',
     'mobile_error_end_message' => '<a href="http://{host}">{host}</a> 此错误给您带来的不便我们深感歉意',
     'suggestion_user' => '如果您是用户，建议您尝试刷新页面、关闭所有浏览器窗口重新进行操作。如果无法解决，建议您完整截图本页面并保存，随后向站点管理员反馈此问题',
-    'suggestion' => '如果您是系统管理员，建议您尝试在系统工具中<a href="admin.php?mod=system" target="_blank">更新缓存</a> 以解决问题。若怀疑是插件导致的问题，请附上完整截图联系插件供应方获取帮助，或携带截图通过官方渠道寻求解决方案。若确认是程序自身的Bug，请直接向我们提交Issue，以便我们及时修复。',
+    'suggestion' => '如果您是系统管理员，建议您尝试在系统工具中 <a href="admin.php?mod=system" target="_blank">更新缓存</a> 以解决问题。若怀疑是插件导致的问题，请附上完整截图联系插件供应方获取帮助，或携带截图通过官方渠道寻求解决方案。若确认是程序自身的Bug，请直接向我们 <a href="https://github.com/zyx0814/dzzoffice/issues" target="_blank">提交Issue</a>，以便我们及时修复。',
 
     'file_upload_error_-101' => '上传失败！上传文件不存在或不合法，请返回。',
     'file_upload_error_-102' => '上传失败！非图片类型文件，请返回。',

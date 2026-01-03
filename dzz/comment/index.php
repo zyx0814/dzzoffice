@@ -14,12 +14,12 @@ $uid = $_G['uid'];
 include_once libfile('function/appperm');
 $navtitle = $global_appinfo['appname'] ?: lang('appname');
 $do = isset($_GET['do']) ? $_GET['do'] : '';
+$type = isset($_GET['type']) ? trim($_GET['type']) : '';
+$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 if ($do == 'getinfo') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'desc';
-    $type = isset($_GET['type']) ? trim($_GET['type']) : '';
     $field = isset($_GET['field']) ? $_GET['field'] : 'dateline';
     $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
-    $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $start = ($page - 1) * $limit;
     $validfields = ['edittime', 'edituid', 'authorid', 'dateline', 'ip', 'xtllq', 'message'];

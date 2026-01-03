@@ -41,7 +41,7 @@
 						  <div class="row">
 							<label class="col-sm-4 col-form-label">{lang name}</label>
 							<div class="col-sm-8">
-							  <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="{lang filemanage_file_user}">
+							  <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="{lang filemanage_file_user}" value="$keyword">
 							</div>
 						  </div>
 						</div>
@@ -82,14 +82,16 @@
 </main>
 <script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script>
-	var type = '';
+	var type = '$type';
 	var pfid = '';
+	var keyword = $('#keyword').val();
 	layui.use('table', function(){
 	  var table = layui.table;
 	  table.render({
 		elem: '#table',
 		url: '{MOD_URL}&do=getinfo&ajaxdata=json',
 		toolbar: '#toolbar',
+		where: {type: type,keyword: keyword},
 		title: '文件管理数据表格',
 		autoSort: false,
 		even:true,
@@ -321,11 +323,20 @@
 			// 获取搜索关键词
 			var keyword = $('#keyword').val();
 			table.reloadData('table', {
-				where: { keyword: keyword,orgid:$('#sel_orgid_{$org['orgid']}').val()},
+				where: {type: type, keyword: keyword,orgid:$('#sel_orgid_{$org['orgid']}').val()},
 				page: {
 					curr: 1 //重新从第 1 页开始
 				}
 			});
+			try {
+			var currentUrl = new URL(window.location.href);
+            if (keyword) {
+                currentUrl.searchParams.set('keyword', keyword);
+            } else {
+                currentUrl.searchParams.delete('keyword');
+            }
+            history.pushState(null, null, currentUrl.toString());
+			} catch (e) {}
 		});
 		$(document).on('click', '.fid-btn', function() {
 			var fid = $(this).data('fid');
@@ -349,6 +360,11 @@
 			curr: 1 //重新从第 1 页开始
 		  }
 		});
+		try {
+		var currentUrl = new URL(window.location.href);
+		currentUrl.searchParams.delete('keyword');
+		history.pushState(null, null, currentUrl.toString());
+		} catch (e) {}
 	  });
 	  // 类型按钮功能
 	  $(document).on('click', '.type-btn', function() {
@@ -367,6 +383,16 @@
 			curr: 1 //重新从第 1 页开始
 		  }
 		});
+		try {
+		var currentUrl = new URL(window.location.href);
+		if (type) {
+			currentUrl.searchParams.set('type', type);
+		} else {
+			currentUrl.searchParams.delete('type');
+		}
+		currentUrl.searchParams.delete('keyword');
+		history.pushState(null, null, currentUrl.toString());
+		} catch (e) {}
 	  });
 	  function checkStatusBtn() {
 		var checkStatus = table.checkStatus('table');

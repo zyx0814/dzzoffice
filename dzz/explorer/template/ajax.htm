@@ -727,9 +727,7 @@
                 $(form).find('.delshare').removeClass('hide');
                 $('#shareid').val(data['shareid']);
                 $('#delshare').val(1);
-                <!--{if $share['id']}-->
-                layer.msg('分享编辑成功', {offset:'10px'});
-                <!--{else}-->
+                layer.msg('{lang share_creation_success}', {offset:'10px'});
                 <!--{if !$more}-->
                 var filemanage = _filemanage.cons[_filemanage.winid];
 	            var containid = 'filemanage-' + _filemanage.winid;
@@ -738,8 +736,6 @@
                 if (icoblock.length > 0) {
                     icoblock.find('.status-share').removeClass('hide');
                 }
-                layer.msg('{lang share_creation_success}', {offset:'10px'});
-                <!--{/if}-->
                 <!--{/if}-->
                 <!--{if $table}-->
                 tablereload();
@@ -771,7 +767,6 @@
                     if (icoblock.length > 0) {
                         icoblock.find('.status-share').addClass('hide');
                     }
-                    layer.msg('{lang share_creation_success}', {offset:'10px'});
                     <!--{/if}-->
                     hideWindow('share');
                 } else {

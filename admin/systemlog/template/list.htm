@@ -21,7 +21,7 @@
                 <div class="card-search mb-2-5">
                     <div class="row">
                         <div class="col-sm-4">
-                            <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="{lang keywords}" value="$_GET['keyword']">
+                            <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="{lang keywords}" value="$keyword">
                         </div>
                         <div class="col-md-4">
                             <button type="submit" class="btn btn-primary me-1" id="search-btn">{lang search}</button>
@@ -45,7 +45,7 @@
 </main>
 <script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <script>
-    var operation = '{$_GET['operation']}';
+    var operation = '{$operation}';
     var keyword = $('#keyword').val();
     layui.use('table', function () {
         var table = layui.table;
@@ -123,7 +123,7 @@
                     break;
                 case 'get':
                     table.reloadData('table', {
-                        where: {operation: operation,keyword:$('#keyword').val()}, // 清空搜索参数
+                        where: {operation: operation,keyword:$('#keyword').val()},
                         page: {
                             curr: 1 //重新从第 1 页开始
                         }
@@ -176,6 +176,15 @@
                     curr: 1 //重新从第 1 页开始
                 }
             });
+            try {
+            var currentUrl = new URL(window.location.href);
+            if (keyword) {
+                currentUrl.searchParams.set('keyword', keyword);
+            } else {
+                currentUrl.searchParams.delete('keyword');
+            }
+            history.pushState(null, null, currentUrl.toString());
+            } catch (e) {}
         });
         // 重置按钮功能
         $('#refreshsearch').click(function () {
@@ -186,6 +195,11 @@
                     curr: 1 //重新从第 1 页开始
                 }
             });
+            try {
+            var currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.delete('keyword');
+            history.pushState(null, null, currentUrl.toString());
+            } catch (e) {}
         });
         // 类型按钮功能
         $(document).on('click', '.type-btn', function () {
@@ -202,6 +216,16 @@
                     curr: 1 //重新从第 1 页开始
                 }
             });
+            try {
+            var currentUrl = new URL(window.location.href);
+            if (operation) {
+                currentUrl.searchParams.set('operation', operation);
+            } else {
+                currentUrl.searchParams.delete('operation');
+            }
+            currentUrl.searchParams.delete('keyword');
+            history.pushState(null, null, currentUrl.toString());
+            } catch (e) {}
         });
         function checkStatusBtn() {
             var checkStatus = table.checkStatus('table');

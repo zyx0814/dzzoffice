@@ -78,24 +78,13 @@
 		initSort: {
 			field: 'dateline',
 			type: 'desc'
+		},
+		done: function(res, curr, count) {
+			checkStatusBtn();
 		}
 	  });
 	  table.on('checkbox(table)', function(obj){
-		var checkStatus = table.checkStatus(obj.config.id);
-		var isChecked = checkStatus.data.length > 0;
-		var buttonIds = ['getCheckDataBtn', 'deletebtn', 'forbiddenbtn', 'allowbtn'];
-		buttonIds.forEach(function(btnId) {
-			var btn = document.getElementById(btnId);
-			if (btn) {
-				if (isChecked) {
-					btn.removeAttribute('disabled');
-					btn.classList.remove('layui-btn-disabled');
-				} else {
-					btn.setAttribute('disabled', 'disabled');
-					btn.classList.add('layui-btn-disabled');
-				}
-			}
-		});
+		checkStatusBtn();
 	});
 	table.on('toolbar(table)', function(obj){
 		var checkStatus = table.checkStatus(obj.config.id);
@@ -279,6 +268,15 @@
 			curr: 1
 		  }
 		});
+		try {
+		var currentUrl = new URL(window.location.href);
+		if (keyword) {
+			currentUrl.searchParams.set('keyword', keyword);
+		} else {
+			currentUrl.searchParams.delete('keyword');
+		}
+		history.pushState(null, null, currentUrl.toString());
+		} catch (e) {}
 	  });
 	   $('#refreshsearch').click(function() {
         $('#keyword').val('');
@@ -288,12 +286,16 @@
 			curr: 1
 		  }
 		});
+		try {
+		var currentUrl = new URL(window.location.href);
+		currentUrl.searchParams.delete('keyword');
+		history.pushState(null, null, currentUrl.toString());
+		} catch (e) {}
 	  });
 	  $(document).on('click', '.type-btn', function() {
 		$('.type-btn').removeClass('active');
 		$(this).addClass('active');
 		$('#keyword').val('');
-		operation = $(this).data('operation');
 		type = $(this).data('type');
 		table.reloadData('table', {
 		  where: {type: type},
@@ -301,7 +303,34 @@
 			curr: 1
 		  }
 		});
+		try {
+		var currentUrl = new URL(window.location.href);
+		if (type) {
+			currentUrl.searchParams.set('type', type);
+		} else {
+			currentUrl.searchParams.delete('type');
+		}
+		currentUrl.searchParams.delete('keyword');
+		history.pushState(null, null, currentUrl.toString());
+		} catch (e) {}
 	  });
+	  function checkStatusBtn() {
+		var checkStatus = table.checkStatus('table');
+		var isChecked = checkStatus.data.length > 0;
+		var buttonIds = ['getCheckDataBtn', 'deletebtn'];
+		buttonIds.forEach(function(btnId) {
+			var btn = document.getElementById(btnId);
+			if (btn) {
+				if (isChecked) {
+					btn.removeAttribute('disabled');
+					btn.classList.remove('layui-btn-disabled');
+				} else {
+					btn.setAttribute('disabled', 'disabled');
+					btn.classList.add('layui-btn-disabled');
+				}
+			}
+		});
+	}
 	});
 </script>
 <script src="dzz/comment/scripts/lyear_comment.js?{VERHASH}" type="text/javascript"></script> 
