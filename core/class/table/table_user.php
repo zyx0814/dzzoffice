@@ -473,18 +473,30 @@ class table_user extends dzz_table {
             if ($ret) {
                 $log = '删除了用户UID：' . $uid;
                 writelog('deletelog', $log);
-
+                //删除用户字段
                 C::t('user_field')->delete($uid);
+                //删除用户资料
                 C::t('user_profile')->delete($uid);
+                //删除用户状态
                 C::t('user_status')->delete($uid);
+                //删除用户设置
                 C::t('user_setting')->delete_by_uid($uid);
+                //删除用户组织关系(含organization_admin表)
                 C::t('organization_user')->delete_by_uid($uid, 0);
-
+                //删除用户认证信息
+                C::t('user_verify')->delete($uid);
+                C::t('user_verify_info')->delete_by_uid($uid);
+                
                 //删除用户文件
                 if ($homefid = DB::result_first("select fid from %t where uid=%d and flag='home' ", ['folder', $uid])) {
                     C::t('folder')->delete_by_fid($homefid, true);
                 }
-
+                //删除用户邮件代发列表
+                C::t('mailcron')->delete_by_touid($uid);
+                //删除用户通知
+                C::t('notification')->delete_by_uid($uid);
+                //删除用户
+                C::t('onlinetime')->delete($uid);
                 Hook::listen('syntoline_user', $uid, 'del');//删除对应到三方用户表
             }
         }

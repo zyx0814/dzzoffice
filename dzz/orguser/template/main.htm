@@ -375,6 +375,9 @@
 						if(uids.length === 0) {
 							return showmessage('请选择用户', 'danger', 3000, 1);
 						}
+						if (adminid != 1) {
+							return showmessage('{lang no_privilege}', 'danger', 3000, 1);
+						}
 						layer.confirm('{lang orguser_tree_delete}', {title:'{lang delete}('+data.length+')个用户', skin:'lyear-skin-danger'}, function(index){
 							layer.msg(__lang.please_wait, {offset:'10px',time:0});
 							jQuery.post('{MOD_URL}&op=ajax&do=delete&type=user', {'uids': uids}, function(json) {

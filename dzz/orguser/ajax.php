@@ -155,7 +155,7 @@ if ($do == 'upload') {//上传图片文件
             exit(json_encode(['msg' => lang('delete_error')]));
         }
     }
-}  elseif ($do == 'remove') {
+} elseif ($do == 'remove') {
     $forgid = intval($_GET['forgid']);
     $uids = (array)$_GET['uids'];
     if ($forgid) {
@@ -231,7 +231,7 @@ if ($do == 'upload') {//上传图片文件
     } else {
         $disp = intval($_GET['position']);
         $forgid = intval($_GET['forgid']);
-        if (empty($forgid) || empty($orgid)) {
+        if (empty($orgid)) {
             exit(json_encode(['error' => '请先选择部门']));
         }
         if($_G['adminid'] != 1) {
@@ -368,9 +368,19 @@ if ($do == 'upload') {//上传图片文件
     if(!$orgid) {
         exit(json_encode(['error' => lang('no_privilege')]));
     }
+    $org = C::t('organization')->fetch($orgid) ?: [];
+    if (!$org) {
+        exit(json_encode(['error' => 'no_org']));
+    }
     $adminModel = C::t('organization_admin');
-    if (!$adminModel->ismoderator_by_uid_orgid($orgid, $_G['uid'])) {
-        exit(json_encode(['error' => lang('no_privilege')]));
+    if ($_G['adminid'] != 1) {//非系统管理员才判断权限
+        if ($org['forgid']) {//如果是子部门，还需要上级部门的管理权限才能设置管理员
+            if (!$adminModel->ismoderator_by_uid_orgid($org['forgid'], $_G['uid'])) {
+                exit(json_encode(['error' => lang('no_privilege')]));
+            }
+        } else {//顶级机构只能由系统管理员设置管理员
+            exit(json_encode(['error' => lang('no_privilege')]));
+        }
     }
     $uids = [];
     $uid_arr = explode(',', $_GET['uids']);

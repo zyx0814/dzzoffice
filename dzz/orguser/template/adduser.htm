@@ -106,7 +106,7 @@
     <div class="row mb-3">
       <label class="col-sm-2" for="groupid">{lang usergroup}</label>
       <div class="col-sm-10">
-        <select class="form-select" name="groupid" id="groupid"<!--{if $_G[ 'adminid']!=1}--> disabled="disabled"<!--{/if}-->>
+        <select class="form-select" name="groupid" id="groupid"<!--{if $_G['adminid']!=1}--> disabled="disabled"<!--{/if}-->>
           <!--{loop $_G['cache']['usergroups'] $groupid $group}-->
           <!--{{if !in_array($groupid ,array('2','3','4','5','6','7','8'))}-->
           <option <!--{if $groupid==9}-->selected="selected"<!--{/if}-->value="$groupid">$group['grouptitle']</option>
@@ -238,30 +238,30 @@
 		if(jQuery('#email').val() == '') {
 			jQuery('#email').focus();
       jQuery('#email').addClass('is-invalid');
-			showmessage('{lang login_email_required}', 'danger', 1000, 1);
+			showmessage('{lang login_email_required}', 'danger', 3000, 1);
 			return false;
 		}
 		if(jQuery('#username').val() == '') {
 			jQuery('#username').focus();
       jQuery('#username').addClass('is-invalid');
-			showmessage('{lang name_will}', 'danger', 1000, 1);
+			showmessage('{lang name_will}', 'danger', 3000, 1);
 			return false;
 		}
 
 		if(jQuery('#password').val() == '') {
 			jQuery('#password').focus();
       jQuery('#password').addClass('is-invalid');
-			showmessage('{lang none_write_login_password}', 'danger', 1000, 1);
+			showmessage('{lang none_write_login_password}', 'danger', 3000, 1);
 			return false;
 		}
 		if(jQuery('#password2').val() == '') {
-			showmessage('{lang none_write_affirm_password}', 'danger', 1000, 1);
+			showmessage('{lang none_write_affirm_password}', 'danger', 3000, 1);
 			jQuery('#password2').focus();
       jQuery('#password2').addClass('is-invalid');
 			return false;
 		}
 		if(jQuery('#password').val() != jQuery('#password2').val()) {
-			showmessage('{lang profile_passwd_notmatch}', 'danger', 1000, 1);
+			showmessage('{lang profile_passwd_notmatch}', 'danger', 3000, 1);
 			jQuery('#password').focus();
       jQuery('#password').addClass('is-invalid');
 			return false;
@@ -275,20 +275,23 @@
 				return false;
 			}
 		});
-		if(flag) return false;
+		if(flag) {
+      showmessage('{lang please_check_form}', 'danger', 3000, 1);
+      return false;
+    }
 		//判定微信号和手机
 		var phone = jQuery('#phone').val();
 		if(phone != '' && phone.match(/^\d+$/) == null) {
       jQuery('#phone').addClass('is-invalid');
 			jQuery('#phone').focus();
-			showmessage('{lang phone_number_illegal}', 'danger', 1000, 1);
+			showmessage('{lang phone_number_illegal}', 'danger', 3000, 1);
 			return false;
 		}
 		var weixinid = jQuery('#weixinid').val();
 		if(weixinid != '' && weixinid.match(/^[a-zA-Z\d_]{5,}$/) == null) {
       jQuery('#weixinid').addClass('is-invalid');
 			jQuery('#weixinid').focus();
-			showmessage('{lang weixin_illegal}', 'danger', 1000, 1);
+			showmessage('{lang weixin_illegal}', 'danger', 3000, 1);
 			return false;
 		}
     showmessage('{lang In_the_save}','','3000',0);

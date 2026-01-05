@@ -118,7 +118,12 @@ class table_organization_user extends dzz_table {
         }
 
         $return = DB::query($sql, $param);
-
+        if ($type != 1) {
+            //删除管理员表数据
+            C::t('organization_admin')->delete_by_uid($uid);
+            //删除职位表数据
+            C::t('organization_upjob')->delete_by_uid($uid);
+        }
         // 同步逻辑
         if ($return > 0) {
             self::syn_user($uid);
@@ -375,8 +380,6 @@ class table_organization_user extends dzz_table {
         //获取操作用户权限
         $doperm = C::t('organization_admin')->chk_memberperm($gid, $_G['uid']);
         if ($perm == 2 && $doperm != 2) return ['error' => lang('no_privilege')];//检查权限
-
-        $permtitle = lang('explorer_gropuperm');
         //查詢用戶是否存在
         if ($result = DB::fetch_first("select ou.*,u.username from %t ou 
             left join %t u on ou.uid=u.uid where ou.orgid=%d and ou.uid = %d", [$this->_table, 'user', $gid, $uid])) {

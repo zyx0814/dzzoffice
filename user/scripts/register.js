@@ -152,7 +152,7 @@ function check_submit(form){
 		}
 	});
 	if(error) {
-		showmessage('请先检查表单内容是否正确','error',2000,1);
+		showmessage(__lang.please_check_form,'error',2000,1);
 		return false;
 	}
 	var url = jQuery(form).attr('action');

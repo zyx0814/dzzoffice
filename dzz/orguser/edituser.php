@@ -130,7 +130,7 @@ if ($do == 'add') {
         //插入用户状态表
         $status = ['uid' => $uid, 'regip' => '', 'lastip' => '', 'lastvisit' => TIMESTAMP, 'lastactivity' => TIMESTAMP, 'lastsendmail' => 0];
         C::t('user_status')->insert($status, false, true);
-        if($_G[ 'adminid'] == 1) {
+        if($_G['adminid'] == 1) {
             //处理管理员
             C::t('user')->setAdministror($uid, intval($_GET['groupid']));
         }
@@ -211,7 +211,6 @@ if ($do == 'add') {
 
         //用户名验证
         $username = trim($_GET['username']);
-
         $usernamelen = dstrlen($_GET['username']);
         if ($usernamelen < 3) {
             showmessage('profile_username_tooshort');
@@ -309,7 +308,7 @@ if ($do == 'add') {
             $setarr['secques'] = '';
         }
         C::t('user')->update($uid, $setarr);
-        if($_G[ 'adminid'] == 1) {
+        if($_G['adminid'] == 1) {
             //处理管理员
             C::t('user')->setAdministror($uid, intval($_GET['groupid']));
         }

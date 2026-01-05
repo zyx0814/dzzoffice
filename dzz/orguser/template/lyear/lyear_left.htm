@@ -22,7 +22,7 @@
 	<a class="newdir_1" href="javascript:;" onclick="jstree_create_dir();return false;" title="{lang creation_bottom_section}"></a>
 	<a class="import " href="{MOD_URL}&op=import" title="{lang import_user}" target="_blank"></a>
 	<a class="guide" href="javascript:;" onclick="showWindow('guide','{MOD_URL}&op=ajax&do=guide');return false;" title="{lang moderate_explain}"></a>
-	<!--{if $_G[ 'adminid']==1}--><a class="set" href="javascript:;" onclick="showWindow('orgwindow','{MOD_URL}&op=ajax&do=set','get',0);return false;" title="{lang set}"></a><!--{/if}-->
+	<!--{if $_G['adminid']==1}--><a class="set" href="javascript:;" onclick="showWindow('orgwindow','{MOD_URL}&op=ajax&do=set','get',0);return false;" title="{lang set}"></a><!--{/if}-->
 </div>
 <div id="classtree" class="classtree-container" style="padding:5px 0;overflow:hidden;border-top:1px solid #FFF;"></div>
 <script type="text/javascript">
@@ -359,9 +359,7 @@
 			if(needsave) {
 				jQuery.post('{MOD_URL}&op=ajax&do=move&t=' + new Date().getTime(), post, function(json) {
 					if(json.error) {
-						showmessage(json.error, 'danger', 3000, 1, null, function() {
-							window.location.reload();
-						});
+						showmessage(json.error, 'danger', 3000, 1);
 					} else if(json.success) {
 						showmessage(__lang.move_success,'success',3000,1);
 					}

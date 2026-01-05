@@ -119,7 +119,7 @@
     <label for="userspace" class="col-sm-2">{lang user_set_space}</label>
       <div class="col-sm-10">
         <div class="input-group">
-          <input type="text" class="form-control" id="userspace" <!--{if $_G[ 'adminid']!=1 || !$perm}-->disabled="disabled"<!--{/if}-->name="userspace" value="$userfield['userspace']" autocomplete="off">
+          <input type="text" class="form-control" id="userspace" <!--{if $_G['adminid']!=1 || !$perm}-->disabled="disabled"<!--{/if}-->name="userspace" value="$userfield['userspace']" autocomplete="off">
           <span class="input-group-text">M</span>
         </div>
         <ul class="form-text">
@@ -145,7 +145,7 @@
     <div class="row mb-3">
       <label class="col-sm-2" for="groupid">{lang usergroup}</label>
       <div class="col-sm-10">
-        <select class="form-select" name="groupid" id="groupid" <!--{if $_G[ 'adminid']!=1}--> disabled="disabled"<!--{/if}-->>
+        <select class="form-select" name="groupid" id="groupid" <!--{if $_G['adminid']!=1}--> disabled="disabled"<!--{/if}-->>
           <!--{loop $_G['cache']['usergroups'] $groupid $group}-->
           <!--{if !in_array($groupid ,array('3','4','5','6','7','8'))}-->
           <option <!--{if $user['groupid']==$groupid}-->selected="selected"<!--{/if}--> value="$groupid" <!--{if $groupid == 2}-->disabled<!--{/if}-->>$group['grouptitle']</option>
@@ -282,13 +282,13 @@ function account_submit() {
   if(jQuery('#email').val() == '') {
     jQuery('#email').focus();
     jQuery('#email').addClass('is-invalid');
-    showmessage('{lang login_email_required}', 'danger', 1000, 1);
+    showmessage('{lang login_email_required}', 'danger', 3000, 1);
     return false;
   }
   if(jQuery('#username').val() == '') {
     jQuery('#username').focus();
     jQuery('#username').addClass('is-invalid');
-    showmessage('{lang name_will}', 'danger', 1000, 1);
+    showmessage('{lang name_will}', 'danger', 3000, 1);
     return false;
   }
 
@@ -296,6 +296,7 @@ function account_submit() {
   if((jQuery('#password').val() != '' || jQuery('#password2').val() != '') && jQuery('#password').val() != jQuery('#password2').val()){
     jQuery('#password').addClass('is-invalid');
     jQuery('#password').focus();
+    showmessage('{lang please_check_form}', 'danger', 3000, 1);
     return false;
   } 
   
@@ -307,21 +308,24 @@ function account_submit() {
       return false;
     }
   });
-  if(flag) return false;
+  if(flag) {
+    showmessage('{lang please_check_form}', 'danger', 3000, 1);
+    return false;
+  }
   
   //判定微信号和手机
   var phone = jQuery('#phone').val();
   if(phone != '' && phone.match(/^\d+$/) == null) {
     jQuery('#phone').focus();
     jQuery('#phone').addClass('is-invalid');
-    showmessage('{lang phone_number_illegal}', 'danger', 1000, 1);
+    showmessage('{lang phone_number_illegal}', 'danger', 3000, 1);
     return false;
   }
   var weixinid = jQuery('#weixinid').val();
   if(weixinid != '' && weixinid.match(/^[a-zA-Z\d_]{5,}$/) == null) {
     jQuery('#weixinid').focus();
     jQuery('#weixinid').addClass('is-invalid');
-    showmessage('{lang weixin_illegal}', 'danger', 1000, 1);
+    showmessage('{lang weixin_illegal}', 'danger', 3000, 1);
     return false;
   }
   showmessage('{lang In_the_save}','','3000',0);

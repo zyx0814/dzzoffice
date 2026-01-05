@@ -408,7 +408,7 @@ function show_error(fieldid, extrainfo) {
 		
 		document.getElementById('showerror_'+fieldid).innerHTML = "{lang check_date_item} " + extrainfo;
 		$(fieldid).focus();
-    showmessage('请先检查表单内容是否正确','error',3000,1);
+    showmessage('{lang please_check_form}','error',3000,1);
 	}
 }
 function show_success(message) {

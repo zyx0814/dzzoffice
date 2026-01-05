@@ -1478,4 +1478,5 @@ $lang = [
     'cloud_type_disk' => 'Local Disk',
     'cloud_type_local'=>'Local',
     'system_close' => 'System Closed',
+    'please_check_form' => 'Please check the form',
 ];

@@ -101,14 +101,10 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
     } elseif ($_G['setting']['bbclosed'] > 0 && $result['member']['adminid'] != 1) {
         showTips(['error' => lang('site_closed_please_admin')], $type);
     }
-
     if ($result['status'] > 0) {
-
         //设置登录
         setloginstatus($result['member'], $_GET['cookietime'] ? 2592000 : 0);
-
         if ($_G['member']['lastip'] && $_G['member']['lastvisit']) {
-
             dsetcookie('lip', $_G['member']['lastip'] . ',' . $_G['member']['lastvisit']);
         }
 
@@ -124,8 +120,6 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
 
         writelog('loginlog', '登录成功');
         showTips(['success' => ['message' => lang('login_succeed_no_redirect'), 'url_forward' => $href]], $type);
-
-
     } else {//登录失败记录日志 
         //写入日志
         $password = preg_replace("/^(.{".round(strlen($_GET['password']) / 4)."})(.+?)(.{".round(strlen($_GET['password']) / 6)."})$/s", "\\1***\\3", $_GET['password']);
@@ -135,15 +129,10 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
         loginfailed($_GET['email']);//更新登录失败记录
 
         if ($_G['member_loginperm'] > 1) {
-
             showTips(['error' => lang('login_invalid', ['loginperm' => $_G['member_loginperm'] - 1])], $type);
-
         } elseif ($_G['member_loginperm'] == -1) {
-
             showTips(['error' => lang('login_password_invalid')], $type);
-
         } else {
-
             showTips(['error' => lang('login_strike', ['forbiddentime' => $_G['setting']['forbiddentime'] ?: 900])], $type);
         }
     }

@@ -1499,4 +1499,5 @@ $lang = [
     'cloud_type_disk' => '本地磁盘',
     'cloud_type_local'=>'内置',
     'system_close' => '系统关闭，请稍后再试',
+    'please_check_form' => '请先检查表单内容是否正确',
 ];
