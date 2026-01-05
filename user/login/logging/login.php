@@ -43,6 +43,7 @@ if (!isset($_GET['loginsubmit'])) {//是否提交
     if ($seccodecheck) $seccode = random(6, 1);
 
     $referer = (isset($_GET['referer'])) ? $_GET['referer'] : dreferer();
+    $referer = preg_replace("/user\.php\?mod\=login.*?$/i", "", $referer);
 
     $_G['sso_referer'] = $referer;
 
