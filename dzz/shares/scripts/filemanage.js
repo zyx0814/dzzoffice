@@ -1404,6 +1404,7 @@ _filemanage.NewIco = function (type, fid) {
 	} else if (type === 'newLink') {
 		showWindow('newLink', _explorer.appUrl + '&op=ajax&sid='+sid+'&do=' + type + '&fid=' + fid,'get','0');
 	} else {
+		showmessage(__lang.please_wait, 'error', 3000, 1);
 		$.post(_explorer.appUrl + '&op=ajax&do=newIco&type=' + type, {
 			'fid': fid,
 			'sid':sid,

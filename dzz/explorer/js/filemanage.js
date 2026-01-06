@@ -1995,6 +1995,7 @@ _filemanage.NewIco = function (type, fid) {
 	} else if (type === 'newLink') {
 		showWindow('newLink', _explorer.appUrl + '&op=ajax&do=' + type + '&fid=' + fid, 'get', 0);
 	} else {
+		layer.msg(__lang.please_wait, {offset:'10px',time:0});
 		$.post(_explorer.appUrl + '&op=ajax&do=newIco&type=' + type, {
 			'fid': fid,
 			'bz': bz

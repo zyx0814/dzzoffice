@@ -906,7 +906,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
             $f = fopen($local_test_key, "wb");
             fwrite($f, $body);
             fclose($f);
-            $this->cosClient->upload();
+            $this->cosClient->upload($bucket=$this->bucket,
+                                     $key=$key,
+                                     $body=fopen($local_test_key, "rb"),
+                                     $options=['PartSize'=>1024 * 1024 + 1]);
             $rt = $this->cosClient->getObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $download_md5 = base64_encode(md5($rt['Body'], true));
             $this->assertEquals($md5, $download_md5);
@@ -1036,7 +1039,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
                 'test-meta' => 'qwe-23ds-ad-xcz.asd.*qweqw'
             ];
             $body = $this->generateRandomString(2*1024*1024+1023);
-            $this->cosClient->upload();
+            $this->cosClient->upload($bucket=$this->bucket,
+                                     $key=$key,
+                                     $body=$body,
+                                     $options=['PartSize'=>1024 * 1024 + 1, 'Metadata'=>$meta]);
             $rt = $this->cosClient->headObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $this->assertEquals($rt['Metadata'], $meta);
         } catch (ServiceResponseException $e) {
@@ -1095,7 +1101,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
             $key = '你好.txt';
             $body = $this->generateRandomString(2*1024*1024+1023);
             $md5 = base64_encode(md5($body, true));
-            $this->cosClient->upload();
+            $this->cosClient->upload($bucket=$this->bucket,
+                                     $key=$key,
+                                     $body=$body,
+                                     $options=['PartSize'=>1024 * 1024 + 1]);
             $rt = $this->cosClient->getObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $download_md5 = base64_encode(md5($rt['Body'], true));
             $this->assertEquals($md5, $download_md5);
@@ -1127,7 +1136,11 @@ class COSTest extends \PHPUnit_Framework_TestCase
                                           'Key' => $key,
                                           'UploadId' => $uploadId]);
             $this->assertEquals(count($rt['Parts']), 1);
-            $this->cosClient->resumeUpload();
+            $this->cosClient->resumeUpload($bucket=$this->bucket,
+                                           $key=$key,
+                                           $body=$body,
+                                           $uploadId=$uploadId,
+                                           $options=['PartSize'=>$partSize]);
             $rt = $this->cosClient->getObject(['Bucket'=>$this->bucket, 'Key'=>$key]);
             $download_md5 = base64_encode(md5($rt['Body'], true));
             $this->assertEquals($md5, $download_md5);
@@ -1286,7 +1299,10 @@ class COSTest extends \PHPUnit_Framework_TestCase
             $dst_key = 'hi.txt';
             $body = $this->generateRandomString(2*1024*1024+333);
             $md5 = base64_encode(md5($body, true));
-            $this->cosClient->upload();
+            $this->cosClient->upload($bucket=$this->bucket,
+                                     $key=$src_key,
+                                     $body=$body,
+                                     $options=['PartSize'=>1024 * 1024 + 1]);
             $this->cosClient->copy($bucket=$this->bucket,
                                    $key=$dst_key, 
                                    $copySource = ['Bucket'=>$this->bucket,
