@@ -160,10 +160,8 @@ class UploadHandler {
         switch ($last) {
             case 'g':
                 $val *= 1024;
-                break;
             case 'm':
                 $val *= 1024;
-                break;
             case 'k':
                 $val *= 1024;
         }

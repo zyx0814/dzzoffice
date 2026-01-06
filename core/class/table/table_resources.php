@@ -17,7 +17,7 @@ class table_resources extends dzz_table {
     }
 
     public function insert_data($data, $rid = '') {
-        $data['rid'] = ($rid) ?: self::create_id();
+        $data['rid'] = $rid ?: self::create_id();
         if (parent::insert($data)) {
             return $data['rid'];
         }

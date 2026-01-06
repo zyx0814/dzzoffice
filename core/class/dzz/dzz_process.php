@@ -34,7 +34,7 @@ class dzz_process {
     private static function _find($name, $ttl) {
 
         if (!dzz_process::_cmd('get', $name)) {
-            if(dzz_process::_cmd('add', $name, $ttl)) {
+            if(dzz_process::_cmd('add', $name, $ttl) == true) {
 				$ret = false;
 			} else {
 				$ret = true;

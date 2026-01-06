@@ -733,19 +733,16 @@ class PHPExcel_Chart_Renderer_jpgraph
 			switch ($chartType) {
 				case 'area3DChart' :
 					$dimensions = '3d';
-                    break;
                 case 'areaChart' :
 					$this->_renderPlotLine($i,True,True,$dimensions);
 					break;
 				case 'bar3DChart' :
 					$dimensions = '3d';
-                    break;
                 case 'barChart' :
 					$this->_renderPlotBar($i,$dimensions);
 					break;
 				case 'line3DChart' :
 					$dimensions = '3d';
-                    break;
                 case 'lineChart' :
 					$this->_renderPlotLine($i,False,True,$dimensions);
 					break;
@@ -795,31 +792,26 @@ class PHPExcel_Chart_Renderer_jpgraph
 		switch ($chartType) {
 			case 'area3DChart' :
 				$dimensions = '3d';
-                break;
             case 'areaChart' :
 				$this->_renderAreaChart($groupCount,$dimensions);
 				break;
 			case 'bar3DChart' :
 				$dimensions = '3d';
-                break;
             case 'barChart' :
 				$this->_renderBarChart($groupCount,$dimensions);
 				break;
 			case 'line3DChart' :
 				$dimensions = '3d';
-                break;
             case 'lineChart' :
 				$this->_renderLineChart($groupCount,$dimensions);
 				break;
 			case 'pie3DChart' :
 				$dimensions = '3d';
-                break;
             case 'pieChart' :
 				$this->_renderPieChart($groupCount,$dimensions,False,False);
 				break;
 			case 'doughnut3DChart' :
 				$dimensions = '3d';
-                break;
             case 'doughnutChart' :
 				$this->_renderPieChart($groupCount,$dimensions,True,True);
 				break;
@@ -834,7 +826,6 @@ class PHPExcel_Chart_Renderer_jpgraph
 				break;
 			case 'surface3DChart' :
 				$dimensions = '3d';
-                break;
             case 'surfaceChart' :
 				$this->_renderContourChart($groupCount,$dimensions);
 				break;

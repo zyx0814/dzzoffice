@@ -83,7 +83,7 @@ class Hook {
                 foreach ($name as $val) {
                     $results[$key] = self::exec($val, $break, $tag, $params, $extra);
 
-                    if (false === $results[$key] || $break) {
+                    if (false === $results[$key] || $break == true) {
                         break;
 
                     } elseif ($once) {
@@ -97,7 +97,7 @@ class Hook {
 
                 $results[$key] = self::exec($name, $break, $tag, $params, $extra);
 
-                if (false === $results[$key] || $break) {
+                if (false === $results[$key] || $break == true) {
 
                     // 如果返回false 则中断行为执行
                     break;

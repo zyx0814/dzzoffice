@@ -238,7 +238,6 @@ class PHPExcel_Cell
 				break;
 			case PHPExcel_Cell_DataType::TYPE_STRING2:
 				$pDataType = PHPExcel_Cell_DataType::TYPE_STRING;
-                break;
             case PHPExcel_Cell_DataType::TYPE_STRING:
 			case PHPExcel_Cell_DataType::TYPE_INLINE:
 				$this->_value = PHPExcel_Cell_DataType::checkString($pValue);
@@ -257,6 +256,7 @@ class PHPExcel_Cell
 				break;
 			default:
 				throw new PHPExcel_Exception('Invalid datatype: ' . $pDataType);
+				break;
         }
 
 		// set the datatype

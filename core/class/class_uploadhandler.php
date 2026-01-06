@@ -350,10 +350,8 @@ class UploadHandler
         switch($last) {
             case 'g':
                 $val *= 1024;
-                break;
             case 'm':
                 $val *= 1024;
-                break;
             case 'k':
                 $val *= 1024;
         }
@@ -761,7 +759,6 @@ class UploadHandler
             case 'gif':
             case 'png':
                 imagecolortransparent($new_img, imagecolorallocate($new_img, 0, 0, 0));
-                break;
             case 'png':
                 imagealphablending($new_img, false);
                 imagesavealpha($new_img, true);
@@ -1116,7 +1113,7 @@ class UploadHandler
 	public function getPath($filename,$dir='dzz'){
 		global $_G;
         $pathinfo = pathinfo($filename);
-        $ext = $pathinfo['extension']?:'';
+        $ext = $pathinfo['extension'] ?: '';
         if($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])){
             $ext='dzz';
         }
@@ -1138,7 +1135,7 @@ class UploadHandler
 		if($md5 && $attach=DB::fetch_first("select * from %t where md5=%s and filesize=%d", ['attachment',$md5,$filesize])){
 			$attach['filename']=$filename;
 			$pathinfo = pathinfo($filename);
-			$ext = $pathinfo['extension']?:'';
+			$ext = $pathinfo['extension'] ?:'';
 			$attach['filetype']=$ext;
 			if(in_array(strtolower($attach['filetype']), ['png','jpeg','jpg','gif','bmp'])){
 				$attach['img']=C::t('attachment')->getThumbByAid($attach,$this->options['thumbnail']['max-width'],$this->options['thumbnail']['max-height']);
@@ -1154,7 +1151,7 @@ class UploadHandler
 		}else{
 			$target=self::getPath($filename);
 			$pathinfo = pathinfo($filename);
-			$ext = $pathinfo['extension']?:'';
+			$ext = $pathinfo['extension'] ?:'';
 			if($ext && in_array(strtolower($ext) ,getglobal('setting/unRunExts'))){
 				$unrun=1;
 			}else{
