@@ -2,7 +2,7 @@
 	<!--{eval
 	$navs = [
         [
-            'icon' => 'mdi-card-text-outline',
+            'icon' => 'mdi-tune',
             'lang' => 'basicSet',
             'hasSubnav' => true,
             'activeops' => ['basic', 'datetime', 'upload', 'at', 'notification'],
@@ -33,7 +33,7 @@
             'op' => 'space'
         ],
         [
-            'icon' => 'mdi-view-week',
+            'icon' => 'mdi-email',
             'lang' => 'mail',
             'hasSubnav' => true,
             'activeops' => ['mail', 'mailcheck'],
@@ -67,6 +67,12 @@
             'lang' => 'words_management',
             'hasSubnav' => false,
             'op' => 'censor'
+        ],
+        [
+            'icon' => 'mdi-card-text',
+            'lang' => 'system_config',
+            'hasSubnav' => false,
+            'op' => 'config'
         ]
     ];
 	$currentGroup = [];

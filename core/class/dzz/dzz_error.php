@@ -183,7 +183,7 @@ class dzz_error {
         header("HTTP/1.1 503 Service Temporarily Unavailable");
         header("Status: 503 Service Temporarily Unavailable");
         header("Retry-After: 3600");
-        $showError = isset($_G['config']['security']['error']['showerror']) ? $_G['config']['security']['error']['showerror'] : 2;
+        $showError = isset($_G['config']['security']['error']['showerror']) ? $_G['config']['security']['error']['showerror'] : 1;
         $title = ($showError !=0) ? ($type == 'db' ? 'Database' : 'System') : 'General';
         $charset = isset($_G['config']['output']['charset']) ? $_G['config']['output']['charset'] : 'UTF-8';
         $clientIp = isset($_G['clientip']) ? $_G['clientip'] : 'Unknown';

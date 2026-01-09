@@ -144,7 +144,6 @@ $lang = [
     'dbname' => '数据库名',
     'tablepre' => '数据表前缀',
     'company' => '站点名称',
-    'init_log' => '初始化记录',
     'clear_dir' => '清空目录',
     'select_db' => '选择数据库',
     'create_table' => '建立数据表',

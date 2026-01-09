@@ -464,10 +464,6 @@ function show_header() {
 	function $(id) {
 		return document.getElementById(id);
 	}
-
-	function showmessage(message) {
-		document.getElementById('progress').innerHTML = message;
-	}
 </script>
 </head>
 <body>
@@ -513,15 +509,6 @@ function show_footer($quit = true) {
 </html>
 EOT;
     $quit && exit();
-}
-
-function loginit($logfile) {
-    global $lang;
-    showjsmessage($lang['init_log'] . ' ' . $logfile);
-    if ($fp = @fopen('./forumdata/logs/' . $logfile . '.php', 'w')) {
-        fwrite($fp, '<' . '?PHP exit(); ?' . ">\n");
-        fclose($fp);
-    }
 }
 
 function showjsmessage($message) {
@@ -683,7 +670,7 @@ function show_install() {
             window.location = 'index.php?method=ext_info';
         }
     </script>
-    <h2><?php echo lang('db_installing_title'); ?></h2>
+    <h2 id="install_title"><?php echo lang('db_installing_title'); ?></h2>
     <div id="notice"></div>
     <div class="pContainer">
         <div id="progress" class="progress" style="width:0%"></div>
@@ -944,7 +931,6 @@ function show_error($type, $errors = '', $quit = false) {
     global $lang, $step, $runqueryerror;
     $title = lang($type);
     $comment = lang($type . '_comment', false);
-    $errormsg = '';
     if (!empty($errors)) {
         foreach ((array)$errors as $k => $v) {
             if (is_numeric($k)) {
@@ -959,7 +945,7 @@ function show_error($type, $errors = '', $quit = false) {
     }
 
     if ($quit) {
-        echo '<br /><span class="red">' . $lang['error_quit_msg'] . '</span><br /><br /><br /><br /><br /><br />';
+        echo "<script type=\"text/javascript\">document.getElementById('install_title').innerHTML = '<span class=\"red\">{$lang['error_quit_msg']}</span>';</script>";
     }
 
     echo '</div>';

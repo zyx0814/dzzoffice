@@ -9,24 +9,10 @@
 if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
     exit('Access Denied');
 }
-include_once libfile('function/cache');
 $operation = empty($_GET['operation']) ? 'basic' : trim($_GET['operation']);
-$setting = C::t('setting')->fetch_all(null);
-if ($setting['thumbsize']) {
-    $setting['thumbsize'] = unserialize($setting['thumbsize']);
-    foreach ($setting['thumbsize'] as $key => $value) {
-        $value['width'] = intval($value['width']);
-        if (!$value['width']) {
-            $value['width'] = ($key == 'samll' ? 256 : ($key == 'middle' ? 800 : 1440));
-        }
-        $value['height'] = intval($value['height']);
-        if (!$value['height']) {
-            $value['height'] = ($key == 'samll' ? 256 : ($key == 'middle' ? 600 : 900));
-        }
-        $setting['thumbsize'][$key] = $value;
-    }
-}
+$setting = C::t('setting')->fetch_all();
 if (!submitcheck('settingsubmit')) {
+    $isheader = true;
     if ($operation == 'basic') {
         $navtitle = lang('members_verify_base') . ' - ' . lang('appname');
         $spacesize = DB::result_first("select maxspacesize from " . DB::table('usergroup_field') . " where groupid='9'");
@@ -41,6 +27,20 @@ if (!submitcheck('settingsubmit')) {
         }
         $setting['sitebeian'] = dhtmlspecialchars($setting['sitebeian']);
         $applist = DB::fetch_all("select appname,identifier from %t where isshow>0 and `available`>0 and app_path='dzz' ORDER BY disp", ['app_market']);
+        if ($setting['thumbsize']) {
+            $setting['thumbsize'] = unserialize($setting['thumbsize']);
+            foreach ($setting['thumbsize'] as $key => $value) {
+                $value['width'] = intval($value['width']);
+                if (!$value['width']) {
+                    $value['width'] = ($key == 'samll' ? 256 : ($key == 'middle' ? 800 : 1440));
+                }
+                $value['height'] = intval($value['height']);
+                if (!$value['height']) {
+                    $value['height'] = ($key == 'samll' ? 256 : ($key == 'middle' ? 600 : 900));
+                }
+                $setting['thumbsize'][$key] = $value;
+            }
+        }
     } elseif ($operation == 'upload') {
         $setting['maxChunkSize'] = round($setting['maxChunkSize'] / (1024 * 1024), 2);
         $navtitle = lang('upload_download_set') . ' - ' . lang('appname');
@@ -69,6 +69,7 @@ if (!submitcheck('settingsubmit')) {
         $navtitle = lang('loginSet') . ' - ' . lang('appname');
     } elseif ($operation == 'space') {//获取空间设置结果
         $navtitle = lang('spaceSet') . ' - ' . lang('appname');
+        $isheader = false;
     } elseif ($operation == 'permgroup') {
         $perms = get_permsarray();//获取所有权限;
         $permgroups = C::t('resources_permgroup')->fetch_all();
@@ -123,8 +124,13 @@ if (!submitcheck('settingsubmit')) {
         loadcache('censor');
         $badwords = $_G['cache']['censor']['words'];
         $replace = empty($_G['cache']['censor']['replace']) ? '*' : $_G['cache']['censor']['replace'];
+        $isheader = false;
+    } elseif ($operation == 'config') {
+        $navtitle = lang('system_config') . ' - ' . lang('appname');
+        $isheader = false;
     }
 } else {
+    include_once libfile('function/cache');
     $settingnew = $_GET['settingnew'];
     if ($operation == 'basic') {
         $settingnew['sitename'] = dhtmlspecialchars($settingnew['sitename']);
@@ -163,7 +169,6 @@ if (!submitcheck('settingsubmit')) {
         foreach ($group as $key => $value) {
             C::t('usergroup_field')->update(intval($key), ['maxspacesize' => intval($value['maxspacesize']), 'maxattachsize' => intval($value['maxattachsize']), 'attachextensions' => trim($value['attachextensions'])]);
         }
-        include_once libfile('function/cache');
         updatecache('usergroups');
     } elseif ($operation == 'notification') {
         $settingnew['notificationrefresh'] = intval($settingnew['notificationrefresh']);
@@ -311,4 +316,3 @@ function dateformat($string, $operation = 'formalise') {
 }
 
 include template('main');
-

@@ -260,11 +260,6 @@ if ($method == 'show_license') {
         install_districtdata();
         showjsmessage(lang('import_division_data1'));
 
-        $yearmonth = date('Ym_', time());
-        loginit($yearmonth . 'loginlog');
-        loginit($yearmonth . 'cplog');
-        loginit($yearmonth . 'errorlog');
-
         dir_clear(ROOT_PATH . './data/template');
         dir_clear(ROOT_PATH . './data/cache');
 

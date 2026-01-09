@@ -2,7 +2,7 @@
 <!--{template lyear:header_simple_end}-->
 <main class="bs-main-container">
   <div class="container-fluid">
-    <!--{if $operation !== 'censor' && $operation !== 'space'}-->
+    <!--{if $isheader}-->
     <div class="card">
         <div class="card-body">
             <ul class="nav nav-pills">
@@ -344,7 +344,7 @@
               <input class="btn btn-primary btn-round bodyloading" id="submit_editsubmit" name="settingsubmit"  value="{lang save_changes}" type="submit">
             </dl>
           </form>
-          <script type="text/javascript" src="static/lyear/js/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+          <script type="text/javascript" src="static/lyear/js/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js?{VERHASH}"></script>
           <script type="text/javascript">
           $(document).ready(function(){
               // 初始化数值
@@ -1394,6 +1394,14 @@
               <input class="btn btn-primary btn-round bodyloading" name="settingsubmit" value="{lang save_changes}" type="submit">
             </dl> 
           </form>
+          <!--{elseif $operation=='config'}-->
+          <div class="alert alert-info fs-6">
+              <strong>系统配置修改指引：</strong>
+              <ul class="mb-0">
+                <li>1. <code>config/config_default.php</code> 是配置文件模板，系统默认支持的配置都包含在此，内有相应配置说明；</li>
+                <li>2. 如需调整系统配置，请复制 <code>config/config_default.php</code> 中的对应配置项，到 <code>config/config.php</code> 文件中修改；</li>
+              </ul>
+          </div>
           <!--{/if}--> 
       </div>
     </div>
