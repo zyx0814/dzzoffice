@@ -31,8 +31,8 @@ class dbstuff {
         if (!$this->link->real_connect($dbhost, $dbuser, $dbpw, $dbname, null, $unix_socket, MYSQLI_CLIENT_COMPRESS)) {
             $this->halt('Can not connect to MySQL server');
         }
-        if (version_compare($this->version(), '5.7', '<')) {
-            $this->halt('MySQL version must be 5.7 or greater');
+        if (version_compare($this->version(), '5.5.3', '<')) {
+            $this->halt('MySQL version must be 5.5.3 or greater');
         }
 
         if ($dbcharset) {
