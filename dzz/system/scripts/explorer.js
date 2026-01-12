@@ -14,7 +14,7 @@ _explorer = function (json) {
     _explorer.extopen = json.extopen || {}; //打开方式信息
     _explorer.sourcedata = json.sourcedata || []; //所有文件信息
     _explorer.type = json.fileselectiontype || 0;//文件选择类型，0为选择文件,1为保存文件，2选择位置
-    _explorer.defaultselect = json.defaultselect;
+    _explorer.defaultselect = json.defaultselect || '';
     _explorer.allowcreate = json.allowcreate;
     _explorer.mulitype = json.mulitype || 0;//是否允许多选，默认不允许
     _explorer.permfilter = json.permfilter || '';//文件检索写入权限过滤
@@ -303,17 +303,11 @@ _explorer.routerule = function (path, prefix) {
     return false;
 };
 _explorer.hashHandler = function () { //处理页面hash变化
-    var hash = location.hash;
-    hash = hash.replace(/^#/i, '');
+    var hash = location.hash.replace(/^#/i, '');
     _explorer.jstree_select(hash);
     if (!hash) {
-        if (_explorer.defaultselect) {
-            hash = _explorer.defaultselect;
-            _explorer.jstree_select(hash);
-        } else {
-            return false;
-        }
-    }
+		hash = _explorer.defaultselect;
+	}
     if (hash === _explorer.hash) {
         return false;
     }
@@ -345,12 +339,6 @@ _explorer.getRightContent = function (hash, container) { //处理右侧页面加
 _explorer.jstree_select = function (hash) {
     if (!hash) {
         hash = location.hash.replace('#', '');
-    }
-    if (!hash) {
-        hash = $('#position').find("li[flag='home']").attr('hashs');
-    }
-    if (!hash) {
-        hash = '';
     }
     var op = hash.replace(/&(.+?)$/ig, ''); //(hash,'op');
     var fid = _explorer.getUrlParam(hash, 'fid');

@@ -156,43 +156,110 @@
 </header>
 <script type="text/javascript">
 jQuery(document).ready(function(e) {
-_header.init('{FORMHASH}');//初始化头部效果
-_notice.getNotificationCount();
+    _header.init('{FORMHASH}');//初始化头部效果
+    _notice.getNotificationCount();
 });
-_notice={};
-_notice.flashStep=1;
-_notice.checkurl='index.php?mod=system&op=notification&filter=checknew';
-_notice.normalTitle= document.title;
-_notice.getNotificationCount=function(){
-jQuery.getJSON(_notice.checkurl,function(json){
-var sum=parseInt(json.sum);
-_notice.showTips(sum);
-if(json.timeout>0) window.setTimeout(_notice.getNotificationCount,json.timeout);
+
+var _notice = {
+    flashStep: 1,//标题闪烁的步数
+    checkurl: 'index.php?mod=system&op=notification&filter=checknew',
+    normalTitle: document.title,
+    flashTimer: null, // 存储标题闪烁定时器，便于销毁
+    pollTimer: null,  // 存储轮询定时器，便于销毁
+    
+    // 获取通知数量
+    getNotificationCount: function() {
+        var self = this;
+        jQuery.getJSON(self.checkurl)
+            .done(function(json) {
+                var sum = parseInt(json.sum) || 0;
+                self.showTips(sum);
+                // 清除旧的轮询定时器，避免重复创建
+                if (self.pollTimer) clearTimeout(self.pollTimer);
+                // 仅当timeout有效时，创建新的轮询定时器
+                if (json.timeout > 0 && json.timeout >= 1000) { // 限制最小间隔1秒
+                    self.pollTimer = setTimeout(function() {
+                        self.getNotificationCount();
+                    }, json.timeout);
+                }
+            })
+            .fail(function() {
+                // 请求失败时，延迟重试（默认10秒后）
+                if (self.pollTimer) clearTimeout(self.pollTimer);
+                self.pollTimer = setTimeout(function() {
+                    self.getNotificationCount();
+                }, 10000);
+            });
+    },
+    
+    // 显示通知提示
+    showTips: function(sum) {
+        if (sum > 0) {
+            jQuery('#dzz_notification>span.badge').html(sum).removeClass('d-none');
+            jQuery('#dzz_notification>span.dzz').hide();
+            // 启用标题闪烁（仅当有新通知且窗口未激活时）
+            if (!document.hasFocus()) {
+                this.flashTitle();
+            }
+        } else {
+            jQuery('#dzz_notification>span.badge').addClass('d-none');
+            jQuery('#dzz_notification>span.dzz').show();
+            // 停止标题闪烁
+            this.stopFlashTitle();
+        }
+    },
+    
+    // 标题闪烁
+    flashTitle: function() {
+        var self = this;
+        // 先停止旧的闪烁定时器，避免叠加
+        self.stopFlashTitle();
+        
+        // 检测窗口是否激活
+        var CurrentActive = document.hasFocus();
+        if (CurrentActive) {
+            document.title = self.normalTitle;
+            return;
+        }
+        
+        self.flashTimer = setInterval(function() {
+            self.flashStep++;
+            if (self.flashStep === 3) self.flashStep = 1;
+            if (self.flashStep === 1) {
+                document.title = "【您有新的通知】";
+            } else {
+                document.title="【$_G['setting']['sitename']】";
+            }
+        }, 500);
+    },
+    
+    // 停止标题闪烁
+    stopFlashTitle: function() {
+        if (this.flashTimer) {
+            clearInterval(this.flashTimer);
+            this.flashTimer = null;
+            document.title = this.normalTitle;
+            this.flashStep = 1;
+        }
+    },
+    
+    // 销毁所有定时器
+    destroy: function() {
+        this.stopFlashTitle();
+        if (this.pollTimer) {
+            clearTimeout(this.pollTimer);
+            this.pollTimer = null;
+        }
+    }
+};
+
+// 页面卸载时销毁所有定时器，彻底释放资源
+jQuery(window).on('unload', function() {
+    _notice.destroy();
 });
-}
-_notice.showTips=function(sum){
-if(sum>0){
-jQuery('#dzz_notification>span.badge').html(sum).removeClass('d-none');
-jQuery('#dzz_notification>span.dzz').hide();
-//_notice.flashTitle();
-}else{
-jQuery('#dzz_notification>span.badge').addClass('d-none');
-jQuery('#dzz_notification>span.dzz').show();
-//_notice.flashTitle(1);
-}
-}
-_notice.flashTitle=function(flag){
-//仅窗口不在焦点时闪烁title，回到焦点时停止闪烁并将title恢复正常
-if(flag ||　CurrentActive){//当前处于焦点
-document.title=_notice.normalTitle;
-_notice.flashTitleRun = false;
-return;//退出循环
-}
-_notice.flashTitleRun = true;
-_notice.flashStep++;
-if (_notice.flashStep==3) {_notice.flashStep=1;}
-if (_notice.flashStep==1) {document.title="【您有新的通知】";}
-if (_notice.flashStep==2) {document.title="【$_G['setting']['sitename']】";}
-setTimeout(function(){_notice.flashTitle();},500);  //循环
-}
+
+// 窗口激活时，停止标题闪烁
+jQuery(window).on('focus', function() {
+    _notice.stopFlashTitle();
+});
 </script>

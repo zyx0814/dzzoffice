@@ -206,19 +206,23 @@
         var node = data.node;
         var hash = node.li_attr.hashs;
         var ohash = window.location.hash.replace('#', '');
-        if(!hash){
-            inst.open_node(node);
-            inst.deselect_node(node);
-            _explorer.jstree_select(ohash);
+        if(ohash.replace(/&do=\w+/i,'')== hash){
         }else{
-            if (ohash.replace(/&do=\w+/i, '') == hash) {
-            } else {
-                location.hash = hash;
-            }
-            inst.open_node(node);
+          location.hash=hash;
         }
+        inst.open_node(node);
         return false;
     });
+    $('#position').off('ready.jstree').on('ready.jstree', function(e) {
+      var inst = $("#position").jstree(true);
+      var hash = location.hash;
+      if(hash) {
+        var hash = (hash.replace(/^#/,''));
+          _explorer.jstree_select(hash);
+      }else{
+        location.hash='{$defaultselect['hash']}';
+      }
+  });
     //地址栏获取焦点
     $(document).off('click.address-container').on('click.address-container', '.address-container', function () {
         $('.borderInput').show().select();
