@@ -38,7 +38,7 @@ class table_user extends dzz_table {
                     $data['password'] = '****';
                 }
 
-                writelog('updatelog', '修改用户(UID:' . $uid . ')信息：' . implodearray($data),);
+                writelog('updatelog', '修改用户(UID:' . $uid . ')信息：' . implodearray($data));
             }
         }
 
