@@ -30,10 +30,14 @@ function addFormEvent(formid, focus, email){
 			checkusername(jQuery(this));
 		}
 	});
-	if (email) {
+	if (email != 1) {
 		jQuery('#email').on('blur keyup', function () {
 			if(this.value == '') {
-				errormessage(jQuery(this), __lang.register_email_tips1);
+				if (email == 2) {
+					errormessage(jQuery(this));
+				}  else {
+					errormessage(jQuery(this), __lang.register_email_tips1);
+				}
 			}else{
 				checkemail(jQuery(this));
 			}

@@ -23,27 +23,27 @@
     <input type="hidden" name="referer" value="$referer"/>
     <input type="hidden" name="handlekey" value="$_GET[handlekey]"/>
 		<!--{if $_GET[action] != 'activation'}-->
-    <!--{if !$_G['setting']['regemail']}-->
+    <!--{if !$_G['setting']['regemail'] || $_G['setting']['regemail'] == 2}-->
     <div class="mb-3 has-feedback">
-			<span class="mdi mdi-mail" aria-hidden="true"></span>
-      <input type="text" class="form-control" id="email" name="email" autocomplete="off" placeholder="{lang register_email_tips}" required/>
-      <span id="chk_email" class="help-msg text-danger"></span> 
+      <span class="mdi mdi-mail" aria-hidden="true"></span>
+      <input type="text" class="form-control" id="email" name="email" autocomplete="off" placeholder="{lang register_email_tips}"/>
+      <span class="form-text"><!--{if $_G['setting']['regemail'] == 2}-->{lang certificate}<!--{else}-->{lang required}<!--{/if}-->,{lang login_email}<span id="chk_email" class="help-msg text-danger"></span></span>
     </div>
     <!--{/if}-->
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-account" aria-hidden="true"></span>
       <input type="text" class="form-control" id="username" name="username" autocomplete="off" placeholder="{lang username}" required/>
-      <span id="chk_username" class="help-msg text-danger"></span>
+      <span class="form-text">{lang required},{lang login_username}<span id="chk_username" class="help-msg text-danger"></span></span>
     </div>
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-lock" aria-hidden="true"></span>
       <input type="password" class="form-control" id="password" name="password" autocomplete="off" placeholder="{lang register_password_tips}" required/>
-      <span id="chk_password" class="help-msg text-danger"></span> 
+      <span class="form-text">{lang required},{lang user_login_password}<span id="chk_password" class="help-msg text-danger"></span></span>
     </div>
     <div class="mb-3 has-feedback">
 			<span class="mdi mdi-lock" aria-hidden="true"></span>
       <input type="password" class="form-control" id="password2" name="password2" autocomplete="off" placeholder="{lang register_repassword_tips}" required>
-      <span id="chk_password2" class="help-msg text-danger"></span> 
+      <span class="form-text">{lang required},{lang user_login_password}<span id="chk_password2" class="help-msg text-danger"></span></span>
     </div>
     <!--{loop $_G['cache']['fields_register'] $field}-->
       <!--{if $htmls[$field['fieldid']]}-->
@@ -94,7 +94,7 @@
 	
 	jQuery(document).ready(function (e) {
 	
-		addFormEvent('registerform',1<!--{if !$_G['setting']['regemail']}-->,1<!--{/if}-->);
+		addFormEvent('registerform',1,{$regemail});
 		if (jQuery('.ie8,.ie9').length) { //ie8模拟placeholder;
 			jQuery(':input[placeholder]').each(function () {
 				jQuery(this).placeholder();

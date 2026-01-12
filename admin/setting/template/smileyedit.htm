@@ -82,7 +82,7 @@
 				var prefix=trim($(pre + 'prefix').value);
 				var suffix=trim($(pre + 'suffix').value);
 				var page=parseInt( '$page'); 
-				var middle=$(pre + 'middle').value==1 ? $(pre + 'url_' + i).value.substr(0,$(pre + 'url_' + i).value.lastIndexOf( '.')) : ($(pre + 'middle').value==2 ? i + page * 10 : ($(pre + 'middle').value==3 ? $(pre + 'code_'+ i).attributes[ 'smileyid'].nodeValue:$(pre + 'title_'+ i).value)); 
+				var middle=$(pre + 'middle').value==1 ? $(pre + 'url_' + i).value.substr(0,$(pre + 'url_' + i).value.lastIndexOf( '.')) : ($(pre + 'middle').value==2 ? i + page * 10 : ($(pre + 'middle').value==3 ? $(pre + 'code_'+ i).attributes['smileyid'].nodeValue:$(pre + 'title_'+ i).value)); 
 				if(!prefix || prefix=='{lang prefix}' || !suffix || suffix=='{lang suffix}' ) {
 				 alert( '{lang seeting_smileyedit_prefix}'); 
 				 return; 
@@ -95,7 +95,7 @@
 	 	smiliesnum=parseInt(smiliesnum); 
 	 	if(smiliesnum > 1) { 
 	 		for(var i = 1; i < smiliesnum; i++) { 
-	 			$( 'code_' + i).value='{:' + '$id' + '_' + $( 'code_'+ i).attributes[ 'smileyid'].nodeValue + ':}'; 
+	 			$( 'code_' + i).value='{:' + '$id' + '_' + $( 'code_'+ i).attributes['smileyid'].nodeValue + ':}'; 
 	 		} 
 	 	} 
 	 } 

@@ -20,6 +20,8 @@ class Register {
             }
             showmessage('login_succeed', $url_forward ?: './', ['username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['uid']], []);
 
+        } elseif ($setting['bbclosed']) {
+            showmessage('site_closed_please_admin');
         } elseif (!$setting['regclosed']) {//判断是否开启注册，如果未开启则提示
 
             if ($_GET['action'] == 'activation' || $_GET['activationauth']) {

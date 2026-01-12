@@ -917,14 +917,18 @@
               <label class="col-sm-2">注册邮箱字段</label>
               <div class="col-sm-10">
                 <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" id="regemail1" name="settingnew[regemail]" value="1" <!--{if $setting[regemail]}-->checked<!--{/if}-->>
+                  <input class="form-check-input" type="radio" id="regemail1" name="settingnew[regemail]" value="1" <!--{if $setting[regemail] == 1}-->checked<!--{/if}-->>
                   <label class="form-check-label" for="regemail1">{lang hide}</label>
                 </div>
                 <div class="form-check form-check-inline">
                   <input class="form-check-input" type="radio" id="regemail2" name="settingnew[regemail]" value="0" <!--{if !$setting[regemail]}-->checked<!--{/if}-->>
-                  <label class="form-check-label" for="regemail2">{lang show}</label>
+                  <label class="form-check-label" for="regemail2">必填</label>
                 </div>
-              <span class="form-text">显示邮箱字段时必须填写邮箱信息，隐藏邮箱字段时系统会自动生成邮箱信息</span>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="regemail3" name="settingnew[regemail]" value="2" <!--{if $setting[regemail] == 2}-->checked<!--{/if}-->>
+                  <label class="form-check-label" for="regemail3">选填</label>
+                </div>
+              <span class="form-text">当选择"隐藏"或"选填"且用户未提供邮箱信息时，系统会自动生成邮箱信息。</span>
               </div>
             </div>
             <dl class="mb-3 d-grid">

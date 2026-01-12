@@ -12,23 +12,6 @@ if (!defined('IN_DZZ')) {
 $setting = $_G['setting'];
 $showregisterform = 1;
 Hook::listen('register_before');//注册预处理钩子
-if ($_G['uid']) {
-    $url_forward = dreferer();
-    if (strpos($url_forward, 'user.php') !== false) {
-        $url_forward = 'index.php';
-    }
-    showmessage('login_succeed', $url_forward ?: './', ['username' => $_G['member']['username'], 'usergroup' => $_G['group']['grouptitle'], 'uid' => $_G['uid']], []);
-} elseif ($setting['bbclosed']) {
-    showmessage('site_closed_please_admin');
-} elseif (!$setting['regclosed']) {
-    if ($_GET['action'] == 'activation' || $_GET['activationauth']) {
-        if (!$setting['ucactivation'] && !$setting['closedallowactivation']) {
-            showmessage('register_disable_activation');
-        }
-    } elseif (!$setting['regstatus']) {
-        showmessage(!$setting['regclosemessage'] ? 'register_disable' : str_replace(["\r", "\n"], '', $setting['regclosemessage']));
-    }
-}
 $seccodecheck = $setting['seccodestatus'] & 1;
 
 //判断是否提交
@@ -63,6 +46,7 @@ if (!submitcheck('regsubmit')) {
     $navtitle = $setting['reglinkname'];
 
     $dreferer = dreferer();
+    $regemail = intval($_G['setting']['regemail']);
     if ($setting['loginset']['template'] == 3) {
         include template('register3');
     } else {
