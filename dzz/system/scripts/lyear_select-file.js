@@ -472,11 +472,7 @@ _selectfile.Open = function (rid, extid, title) {
         var extdata_url = extopen_replace(data, extid);
         if (extdata_url) {
             extdata_url = extdata_url.replace(/{\w+}/g, '');
-            if (extdata_url.indexOf('dzzjs:OpenPicWin') === 0) {
-                jQuery('img[data-original]:visible').dzzthumb();
-                jQuery('.Icoblock[rid=' + rid + '] img[data-original]').trigger('click');
-                return;
-            } else if (extdata_url.indexOf('dzzjs:') === 0) {
+            if (extdata_url.indexOf('dzzjs:') === 0) {
                 window.open(data.url);
                 return;
             } else {
@@ -1112,7 +1108,9 @@ _selectfile.NewIco = function (type, fid) {
                 });
 		  	}
 		  },'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage(__lang.do_failed, 'error', 3000, 1);
+            parent.layer.alert(__lang.do_failed, {
+                skin: 'lyear-skin-danger'
+            });
         });
     } else {
         $.post(_explorer.appUrl + '&do=ajax&operation=newIco&template=1&type=' + type, {
@@ -1128,7 +1126,9 @@ _selectfile.NewIco = function (type, fid) {
                 });
             }
         }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-            showmessage(__lang.do_failed, 'error', 3000, 1);
+            parent.layer.alert(__lang.do_failed, {
+                skin: 'lyear-skin-danger'
+            });
         });
     }
 };
@@ -1303,7 +1303,9 @@ _selectfile.delIco = function (rid, noconfirm) {
         _selectfile.removeridmore(rids);
 
     }, 'json').fail(function (jqXHR, textStatus, errorThrown) {
-        showmessage(__lang.do_failed, 'error', 3000, 1);
+        parent.layer.alert(__lang.do_failed, {
+            skin: 'lyear-skin-danger'
+        });
     });
 };
 _selectfile.removerid = function (rid) {
