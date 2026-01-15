@@ -75,7 +75,12 @@ if ($operation == 'filelist') {
             }
 
             $userdata[$value['uid']] = $value['username'];
-            $data[$key] = $value;
+            $data['data'][$key] = $value;
+        }
+        if (count($data) >= $perpage) {
+            $data['total'] = $start + $perpage * 2 - 1;
+        } else {
+            $data['total'] = $start + count($data);
         }
     } else {
         list($prex, $id) = explode('-', $sid);

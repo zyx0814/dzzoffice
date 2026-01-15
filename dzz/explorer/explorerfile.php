@@ -63,7 +63,7 @@ if ($do == 'filelist') {
             exit(json_encode(['error' => lang('file_not_exist')]));
         }
         if (!perm_check::checkperm('read', $folder)) {
-            exit(json_encode(['error' => lang('file_read_no_privilege')]));
+            exit(json_encode(['error' => lang('folder_read_no_privilege')]));
         }
         if ($folder['error']) {
             exit(json_encode(['error' => $folder['error']]));
@@ -89,7 +89,12 @@ if ($do == 'filelist') {
                     continue;
                 }
             }
-            $data[$key] = $value;
+            $data['data'][$key] = $value;
+        }
+        if (count($data) >= $perpage) {
+            $data['total'] = $start + $perpage * 2 - 1;
+        } else {
+            $data['total'] = $start + count($data);
         }
     } else {
         list($prex, $id) = explode('-', $sid);
