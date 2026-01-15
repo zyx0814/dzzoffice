@@ -298,10 +298,14 @@ class perm_check {
         if ($_G['uid'] < 1) return false;
         // 网络挂载文件：仅本人可访问
         if ($arr['bz'] && $arr['bz'] !== 'dzz') {
-            if ($arr['uid'] !== $_G['uid']) return false;
+            if ($arr['uid'] == $_G['uid']) {
+                return true;
+            } else {
+                return false;
+            }
         }
         // 第三方挂载权限检查（非Dzz盘场景）
-        if (($bz && $bz != 'dzz') || ($arr['bz'] && $arr['bz'] != 'dzz')) {
+        if ($bz && $bz != 'dzz') {
             return self::checkperm_Container($arr['pfid'], $action, $bz ?: $arr['bz']);
         } else {
             // 处理操作类型：rename等效于edit；根据文件归属拼接权限后缀（1=本人，2=他人）
