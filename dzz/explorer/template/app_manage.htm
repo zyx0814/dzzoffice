@@ -268,6 +268,15 @@
 				<span class="form-text">设置文件上传时并发数量，不支持文件夹并发上传</span>
 			</div>
 		</div>
+		<div class="row mb-3">
+			<label class="col-sm-2" for="displayHideFile">显示隐藏文件</label>
+			<div class="col-sm-10">
+				<div class="form-check form-switch">
+					<input type="checkbox" class="form-check-input" name="setting[explorer_displayHideFile]" id="displayHideFile" <!--{if $setting['explorer_displayHideFile']}-->checked <!--{/if}--> />
+				</div>
+				<span class="form-text">隐藏文件:以.或~开头的文件; 开启后隐藏文件会显示;只对挂载的本地磁盘生效。</span>
+			</div>
+		</div>
 		<!--{/if}-->
 		<dl class="mb-3 d-grid">
             <input type="submit" value="{lang affirm}" class="btn btn-primary btn-round bodyloading"/>

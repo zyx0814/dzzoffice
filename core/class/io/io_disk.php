@@ -545,12 +545,24 @@ class io_disk extends io_api {
         if (!is_dir($filepath)) {
             return ['error' => lang('folder_not_exist')];
         }
+        global $_G;
+        $displayHideFile = $_G['setting']['explorer_displayHideFile'];
         $icosdata = [];
         foreach (new DirectoryIterator($filepath) as $file) {
             if ($file->isDot()) {
                 continue;
             }
+            if (!$file->isReadable()) {
+                continue;
+            }
             $filename = diconv($file->getFilename(), $this->encode, CHARSET);
+            if (!$displayHideFile) {
+                // 过滤以 . 或 ~ 开头的隐藏文件
+                $firstChar = substr($filename, 0, 1);
+                if ($firstChar == '.' || $firstChar == '~') {
+                    continue;
+                }
+            }
             if ($file->isDir()) {
                 $fileinfo = [
                     'path' => ($bzarr['path1'] ? ($bzarr['path1'] . '/') : '') . $filename,
