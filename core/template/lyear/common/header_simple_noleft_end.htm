@@ -253,11 +253,6 @@ var _notice = {
     }
 };
 
-// 页面卸载时销毁所有定时器，彻底释放资源
-jQuery(window).on('unload', function() {
-    _notice.destroy();
-});
-
 // 窗口激活时，停止标题闪烁
 jQuery(window).on('focus', function() {
     _notice.stopFlashTitle();
