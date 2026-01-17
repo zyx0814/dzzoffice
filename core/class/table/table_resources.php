@@ -358,6 +358,9 @@ class table_resources extends dzz_table {
         if ($data = $this->fetch_cache($cachekey)) {
             $data['preview'] = $preview;
             $data['sid'] = $sid;
+            // 因为每个用户的权限可能不同，所以该参数用实时数据
+            $data['sperm'] = perm_check::getridPerm(['rid' => $data['rid'], 'uid' => $data['uid'], 'sperm' => $data['sperm'], 'perm' => $data['perm'], 'pfid' => $data['pfid'], 'gid' => $data['gid']]);
+            if (!$data['perm']) $data['perm'] = $data['sperm'];
             return $data;
         }
         $data = [];
