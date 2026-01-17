@@ -95,7 +95,12 @@
                     file.error = settings.i18n('acceptFileTypes');
                 } else if (options.maxFileSize && file.size >
                         options.maxFileSize) {
-                    file.error = settings.i18n('maxFileSize');
+                            var i = -1;
+                            do {
+                                options.maxFileSize = options.maxFileSize / 1024;
+                                i++;
+                            } while (options.maxFileSize > 99);
+                    file.error = settings.i18n('maxFileSize') + '最大允许：' + Math.max(options.maxFileSize, 0).toFixed(1) + ['KB', 'MB', 'GB', 'TB', 'PB', 'EB'][i];
                 } else if ($.type(file.size) === 'number' &&
                         file.size < options.minFileSize) {
                     file.error = settings.i18n('minFileSize');

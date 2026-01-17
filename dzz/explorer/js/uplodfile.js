@@ -234,8 +234,9 @@ function fileupload(el, fid) {
     var imgicon = '<img src="dzz/images/extimg/' + ext + '.png" onerror="replace_img(this)" style="width:24px;height:24px;position:absolute;left:0;"/>';
     var typerule = new RegExp(attachextensions, 'i');
 	var uploadtips = (typerule.test(file.name)) ? '排队' : __lang.allow_file_type;
+
     if(maxfileSize && (maxfileSize < file.size)){
-        uploadtips = '文件太大了！';
+        uploadtips = '文件超出大小限制！当前: ' + formatSize(file.size) + '，最大允许: ' + formatSize(maxfileSize);
     }
     var html =
         '<div class="process" style="position:absolute;z-index:-1;background-color:#e8f5e9;height:100%;-webkit-transition:width 0.6s ease;-o-transition:width 0.6s ease;transition:width 0.6s ease;width:0%;"></div> <div class="dialog-info"> <div class="upload-file-name">' +

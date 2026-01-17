@@ -50,9 +50,9 @@
     jQuery.getScript('{MOD_PATH}/js/uplodfile.js?{VERHASH}');
     jQuery(document).ready(function(e) {
         var hash=location.hash;
-        var fid = $('#fidinput').val();
 		var path=_explorer.getUrlParam(hash,'path');
 		if(!path) path='';
+		var fid = $('#fidinput').val();
         _filemanage.getData(_explorer.appUrl+'&op=explorerfile&do=filelist&sid=f-'+fid+'&bz={$bz}&path='+path);
     });
 </script>

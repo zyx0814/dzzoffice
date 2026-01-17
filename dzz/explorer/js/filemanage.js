@@ -724,6 +724,7 @@ _filemanage.prototype.setToolButton = function () { //设置工具栏
 		el.find('.clone').remove();
 		el.find('.history').remove();
 		el.find('.dynamic').remove();
+		el.find('.perm').remove();
 	}
 	_filemanage.SetMoreButton();
 };
@@ -940,6 +941,7 @@ function contextmenuico(rid) {
 		el.find('.clone').remove();
 		el.find('.history').remove();
 		el.find('.dynamic').remove();
+		el.find('.perm').remove();
 	}
 	if (!el.find('.menu-item').length) {
 		el.hide();
