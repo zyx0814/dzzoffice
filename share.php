@@ -104,7 +104,7 @@ if (!$url = (IO::getStream($path))) {
 if (is_array($url)) exit($url['error']);
 
 //如果是阻止运行的后缀名时，直接调用;
-if ($ext && in_array($ext, $_G['setting']['unRunExts'])) {
+if ($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])) {
     $mime = 'text/plain';
 } else {
     $mime = dzz_mime::get_type($ext);

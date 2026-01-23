@@ -1152,7 +1152,7 @@ class UploadHandler
 			$target=self::getPath($filename);
 			$pathinfo = pathinfo($filename);
 			$ext = $pathinfo['extension'] ?:'';
-			if($ext && in_array(strtolower($ext) ,getglobal('setting/unRunExts'))){
+			if($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])){
 				$unrun=1;
 			}else{
 				$unrun=0;
