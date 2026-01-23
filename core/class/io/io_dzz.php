@@ -449,7 +449,7 @@ class io_dzz extends io_api {
             $event = 'edit_file';
             C::t('resources_event')->addevent_by_pfid($icoarr['pfid'], $event, 'edit', $eventdata, $icoarr['gid'], $icoarr['rid'], $icoarr['name']);
         }
-        return C::t('resources')->fetch_by_rid($rid);
+        return C::t('resources')->fetch_by_rid($rid, true);
     }
     //查找目录下的同名文件
     //@param string $filename  文件名称
@@ -977,7 +977,7 @@ class io_dzz extends io_api {
         }
         if (($ondup == 'overwrite') && ($rid = $this->getRepeatIDByName($fname, $pfid, true))) {//如果目录下有同名目录
             $data = [];
-            $data['icoarr'] = C::t('resources')->fetch_by_rid($rid);
+            $data['icoarr'] = C::t('resources')->fetch_by_rid($rid, true);
             $data['folderarr'] = $this->getFolderByIcosdata($data['icoarr']);
             return $data;
         } else $fname = $this->getFolderName($fname, $pfid); //重命名
@@ -1053,7 +1053,7 @@ class io_dzz extends io_api {
                     ];
                     C::t('resources_event')->addevent_by_pfid($setarr1['pfid'], $event, 'create', $eventdata, $setarr1['gid'], $setarr1['rid'], $setarr1['name']);
                 }
-                return ['icoarr' => C::t('resources')->fetch_by_rid($setarr1['rid']), 'folderarr' => $setarr];
+                return ['icoarr' => C::t('resources')->fetch_by_rid($setarr1['rid'], true), 'folderarr' => $setarr];
             } else {
                 C::t('folder')->delete_by_fid($setarr['fid'], true);
                 return ['error' => lang('data_error')];
@@ -1409,7 +1409,7 @@ class io_dzz extends io_api {
             if (empty($data['icoarr'])) {
                 $data['icoarr'] = [];
                 if ($rid = DB::result_first("select rid from %t where type='folder' and oid=%d", ['resources', $data['pfid']])) {
-                    $data['icoarr'][] = C::t('resources')->fetch_by_rid($rid);
+                    $data['icoarr'][] = C::t('resources')->fetch_by_rid($rid, true);
                 }
             }
             return $data;
@@ -1481,7 +1481,7 @@ class io_dzz extends io_api {
             if ($ondup == 'overwrite') {//覆盖
                 return $this->overwriteUpload($fileContent, $rid, $filename, $partinfo, $force);
             } else if ($ondup == 'ignore') {//忽略
-                if (!$icoarr = C::t('resources')->fetch_by_rid($rid)) {
+                if (!$icoarr = C::t('resources')->fetch_by_rid($rid, true)) {
                     return ['error' => lang('file_not_exist1')];
                 }
                 if (!$icoarr['msg']) {
@@ -1547,7 +1547,7 @@ class io_dzz extends io_api {
 
     public function overwriteUpload($fileContent, $rid, $filename, $partinfo = [], $force = false) {
         global $_G;
-        if (!$icoarr = C::t('resources')->fetch_by_rid($rid)) {
+        if (!$icoarr = C::t('resources')->fetch_by_rid($rid, true)) {
             return ['error' => lang('file_not_exist')];
         }
         if ($icoarr['isdelete']) {
@@ -1811,7 +1811,7 @@ class io_dzz extends io_api {
      */
     public function CopyTo($rid, $pfid, $iscopy = 0, $force = 0) {
         try {
-            $data = C::t('resources')->fetch_by_rid($rid);
+            $data = C::t('resources')->fetch_by_rid($rid, true);
 
             if (is_numeric($pfid)) {//如果目标位置也是本地
                 if ($data['type'] == 'folder') {//判断上级目录不能移动到下级目录中
@@ -2281,7 +2281,7 @@ class io_dzz extends io_api {
             //addtoconfig($icoarr);
         }
         if ($icoarr['type'] == 'folder') C::t('folder')->update($icoarr['oid'], ['isdelete' => 0]);
-        $return['icoarr'] = C::t('resources')->fetch_by_rid($icoarr['rid']);
+        $return['icoarr'] = C::t('resources')->fetch_by_rid($icoarr['rid'], true);
         $return['icoarr']['monthdate'] = dgmdate($return['icoarr']['dateline'], 'm-d');
         $return['icoarr']['hourdate'] = dgmdate($return['icoarr']['dateline'], 'H:i');
         unset($icoarr);

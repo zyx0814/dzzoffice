@@ -279,7 +279,7 @@ if ($do == 'filelist') {
     }
     if ($total = DB::result_first("$countsql $wheresql", $param)) {
         foreach (DB::fetch_all("$sql $wheresql $ordersql $limitsql", $param) as $value) {
-            if ($arr = C::t('resources')->fetch_by_rid($value['rid'])) {
+            if ($arr = C::t('resources')->fetch_by_rid($value['rid'], true)) {
                 if ($arr['isdelete']) $arr['relpath'] = lang('explorer_recycle_name');
                 $data[$arr['rid']] = $arr;
                 $folderids[$value['pfid']] = $arr['pfid'];

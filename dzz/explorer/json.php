@@ -38,7 +38,7 @@ if ($clipboardinfo) {
 
     $files = explode(',', $clipboardinfo['files']);
     foreach ($files as $v) {
-        $resourcesdata = C::t('resources')->fetch_by_rid($v);
+        $resourcesdata = C::t('resources')->fetch_by_rid($v, true);
         if ($resourcesdata['type'] == 'folder') {
             $folderdata[$resourcesdata['fid']] = C::t('folder')->fetch_by_fid($resourcedata['oid']);
         }

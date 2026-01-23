@@ -225,33 +225,36 @@ if ($do == 'deleteIco') {//删除文件到回收站
     exit(json_encode($arr));
 } elseif ($do == 'uploadnewVersion') {//更新文件版本
     $rid = isset($_GET['rid']) ? $_GET['rid'] : '';
+    $aid = isset($_GET['aid']) ? intval($_GET['aid']) : 0;
+    if (!$rid || !$aid) {
+        exit(json_encode(array('error' => '参数错误')));
+    }
+    $attach = C::t('attachment')->fetch($aid);
+    if (!$attach) {
+        exit(json_encode(array('error' => '文件不存在')));
+    }
+    $name = getstr($_GET['name']);
     $setarr = [
         'uid' => $uid,
         'username' => $_G['username'],
-        'name' => getstr($_GET['name']),
+        'name' => $name ?: $attach['filename'],
         'aid' => intval($_GET['aid']),
-        'size' => intval($_GET['size']),
-        'ext' => $_GET['ext'],
+        'size' => $attach['filesize'],
+        'ext' => $attach['filetype'],
         'dateline' => TIMESTAMP
     ];
     $return = C::t('resources_version')->add_new_version_by_rid($rid, $setarr);
     if ($return['error']) {
         exit(json_encode(['error' => $return['error']]));
     } else {
-        $statisdata = [
-            'uid' => $_G['uid'],
-            'edits' => 1,
-            'editdateline' => TIMESTAMP
-        ];
-        C::t('resources_statis')->add_statis_by_rid($rid, $statisdata);
-        $resources = C::t('resources')->fetch_by_rid($rid);
+        $resources = C::t('resources')->fetch_by_rid($rid, true);
         exit(json_encode(['success' => true, 'data' => $return, 'filedata' => $resources]));
     }
 } elseif ($do == 'setpramiryversion') {//设置主版本
     $vid = isset($_GET['vid']) ? intval($_GET['vid']) : '';
     $return = C::t('resources_version')->set_primary_version_by_vid($vid);
     if ($return['rid']) {
-        $resourcesdata = C::t('resources')->fetch_by_rid($return['rid']);
+        $resourcesdata = C::t('resources')->fetch_by_rid($return['rid'], true);
         exit(json_encode(['success' => true, 'data' => $resourcesdata]));
     } else {
         exit(json_encode(['error' => true, 'msg' => $return['error']]));

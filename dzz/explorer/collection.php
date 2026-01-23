@@ -54,7 +54,7 @@ if ($do == 'filelist') {
     $data = [];
     $folderids = $folderdata = [];
     foreach ($collects as $v) {
-        $val = C::t('resources')->fetch_by_rid($v['rid']);
+        $val = C::t('resources')->fetch_by_rid($v['rid'], true);
         if (!$explorer_setting['useronperm'] && $val['gid'] == 0) {
             continue;
         }

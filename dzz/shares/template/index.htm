@@ -383,6 +383,8 @@
 	var layuiModules = {
         dropdown: null
     };
+	var attachextensions = '';
+	var maxfileSize = null;
 	jQuery(document).ready(function(e) {
 		jQuery('[data-toggle="tooltip"]').tooltip();
 		layui.use(function(){
@@ -490,6 +492,6 @@
 <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script> 
 <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script> 
 <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script> 
-<script type="text/javascript" src="{MOD_PATH}/scripts/uplodfile.lang.js?{VERHASH}"></script>
+<script type="text/javascript" src="{MOD_PATH}/scripts/uplodfile.js?{VERHASH}"></script>
 <script src="static/lyear/js/layui/layui.js?{VERHASH}"></script>
 <!--{template lyear:footer_simple}-->

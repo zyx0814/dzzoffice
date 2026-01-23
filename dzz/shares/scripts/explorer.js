@@ -5,7 +5,7 @@
  * @link        http://www.dzzoffice.com
  * @author      zyx(zyx@dzz.cc)
  */
-_hotkey={};
+var _hotkey={};
 _hotkey.ctrl=0;
 _hotkey.alt=0;
 _hotkey.shift=0;
@@ -93,6 +93,14 @@ _explorer.getConfig = function (url, callback) {
 	});
 };
 _explorer.initEvents = function () { //初始化页面事件
+	if (_explorer.space && _explorer.space.attachextensions) {
+		attachextensions = (_explorer.space.attachextensions.indexOf('|') != -1) ? _explorer.space.attachextensions.join('|') : _explorer.space.attachextensions;
+		if (attachextensions) attachextensions = "(\.|\/)(" + (attachextensions.join('|')) + ")$";
+		else attachextensions = "\.*$";
+	}
+	if (_explorer.space && _explorer.space.maxattachsize) {
+		maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
+	}
 	_explorer.getRightContent('','');
 	//右侧加载完成事件
 	_explorer.Scroll($('.scroll-y'));

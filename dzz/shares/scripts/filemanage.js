@@ -831,10 +831,8 @@ _filemanage.prototype.createIcosContainer = function () {
 		}
 	});
 	if (this.fid) {
-		$.getScript(MOD_PATH + '/scripts/uplodfile.js', function () {
-			jQuery('.wangpan-upload-file').each(function () {
-				fileupload(jQuery(this), self.fid);
-			});
+		jQuery('.wangpan-upload-file').each(function () {
+			fileupload(jQuery(this), self.fid);
 		});
 	}
 	if (this.total < 1 && jQuery('#' + containerid).find('.emptyPage').length == 0) {

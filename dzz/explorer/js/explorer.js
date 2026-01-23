@@ -41,6 +41,14 @@ _explorer.getConfig = function (url, callback) {
 	});
 };
 _explorer.initEvents = function () { //初始化页面事件
+	if (_explorer.space && _explorer.space.attachextensions) {
+		attachextensions = (_explorer.space.attachextensions.indexOf('|') != -1) ? _explorer.space.attachextensions.join('|') : _explorer.space.attachextensions;
+		if (attachextensions) attachextensions = "(\.|\/)(" + (attachextensions.join('|')) + ")$";
+		else attachextensions = "\.*$";
+	}
+	if (_explorer.space && _explorer.space.maxattachsize) {
+		maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
+	}
 	//hashchange事件
 	$(window).on('hashchange', function () {
 		_explorer.hashHandler();
@@ -929,16 +937,16 @@ function historyupload(obj,rid) {
                 $.post(MOD_URL+'&op=dzzcp&do=uploadnewVersion', {
                     'rid': rid,
                     'aid': filedata.aid,
-                    'name': filedata.filename,
-                    'ext': filedata.filetype,
-                    'size': filedata.filesize,
+                    'name': filedata.filename
                 }, function (data) {
                     if (data['success']) {
                         var resourcesdata = data['filedata'];
                         $('.detailsimage').attr('src', SITEURL + resourcesdata['img']);
                         $('.right-imgname').html(resourcesdata['name']).attr('title', resourcesdata['name']);
-                        _explorer.sourcedata.icos[data['filedata'].rid] = data['filedata'];
-                        _filemanage.cons['f-' + data['filedata'].pfid].CreateIcos(data['filedata'], true);
+                        _explorer.sourcedata.icos[resourcesdata.rid] = resourcesdata;
+						if (_filemanage.cons['f-' + resourcesdata.pfid]) {
+                        	_filemanage.cons['f-' + resourcesdata.pfid].CreateIcos(resourcesdata, true);
+						}
                         resourcesdata.vid = 0;
 						if ($('.version-tab').hasClass('active')) {
 							jQuery('.version-tab').click();
@@ -1030,3 +1038,215 @@ function checkStatusBtn(id) {
 		}
 	});
 }
+
+_explorer.isPower=function(power,action){//判断有无权限;
+	var actionArr={ 'flag' 		: 1,		//标志位为1表示权限设置,否则表示未设置，继承上级；
+					'read1'		: 2,		//读取自己的文件
+					'read2'		: 4,		//读取所有文件
+					'delete1'		: 8,		//删除自己的文件
+					'delete2'		: 16,		//删除所有文件
+					'edit1'		: 32,		//编辑自己的文件
+					'edit2'		: 64,		//编辑所有文件
+					'download1'   : 128,		//下载自己的文件
+					'download2'	: 256,		//下载所有文件
+					'copy1'       : 512,		//拷贝自己的文件
+					'copy2'       : 1024,		//拷贝所有文件
+					'upload'		: 2048,		//上传
+					// 'newtype'		: 4096,		//新建其他类型文件（除文件夹、网址、dzz文档、视频、快捷方式以外）
+					'folder'      : 8192,		//新建文件夹
+					// 'link'    	: 16384,	//新建网址
+					// 'dzzdoc'   	: 32768,	//新建dzz文档  
+					// 'video'		: 65536,	//新建视频
+					// 'shortcut'	: 131072,	//快捷方式
+					'share'   	: 262144,	//分享
+					'approve' : 524288, //审批
+					'comment' : 1048576, //评论
+	};
+	var perm = actionArr[action];
+	if(perm < 1) return false;
+	// 位运算：权限值与操作位的交集不为0，则有权限
+	return (parseInt(power) & perm) !== 0;
+}
+_explorer.FolderSPower=function(power,action){//判断有无权限;
+	var actionArr={   'delete'  : 1,		
+  					  'folder'  : 2,		
+					  'link'   	: 4,		
+					  'upload'  : 8,      
+					  'document': 16,
+					  'dzzdoc'	: 32,
+					  'app'	  	: 64,
+					  'widget'	: 128,	
+					  'user'    : 256,
+					  'shortcut': 512,
+					  'discuss' :1024,
+					  'download' :2048	 	 
+	};
+	if(action=='copy') action='delete';
+	if(parseInt(actionArr[action])<1) return true;
+	//权限比较时，进行与操作，得到0的话，表示没有权限  
+    if( (power & parseInt(actionArr[action])) == parseInt(actionArr[action]) ) return false;  
+    return true; 
+}
+
+_explorer.Permission_Container=function(action,fid){
+	//预处理些权限
+	if(!_explorer.sourcedata.folder[fid]) return false;
+	var perm=_explorer.sourcedata.folder[fid].perm;
+	var sperm=_explorer.sourcedata.folder[fid].fsperm;	
+	var gid=_explorer.sourcedata.folder[fid].gid;
+	//首先判断超级权限
+	if(!_explorer.FolderSPower(sperm,action)) return false;
+	if(_explorer.space.uid<1) return false;//游客没有权限；
+	/*if(_explorer.space.self>1){
+		 return true;//系统管理员有权限
+	}*/
+	if(gid>0){
+		if(action=='admin'){
+			if(_explorer.space.self>1 || _explorer.sourcedata.folder[fid].ismoderator>0) return true;
+			else return false;
+		}else if(action=='rename'){
+			action='edit';
+		}else if(action=='multiselect'){
+			action='copy';
+		}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
+			action='upload';
+		}
+	}else{
+		if(action=='admin' || action=='multiselect'){
+			//是自己的目录有管理权限
+			if(_explorer.space.uid==_explorer.sourcedata.folder[fid].uid) return true;
+			//云端的资源默认都有管理权限；
+			if(_explorer.sourcedata.folder[fid].bz) return true;
+		}
+		if(action=='rename'){
+			action='edit';
+		}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
+			action='upload';
+		}
+	}
+	if(jQuery.inArray(action,['read','delete','edit','download','copy'])>-1){
+		if(_explorer.myuid==_explorer.sourcedata.folder[fid].uid) action+='1';
+		else action+='2';
+	}
+	return _explorer.isPower(perm,action);
+}
+
+_explorer.Permission=function(action,data){
+	if(_explorer.myuid<1) return false; //游客无权限；
+	if(data.isdelete>0) return true; //回收站有权限；
+	var fid=data.pfid;
+	if(action=='download'){ //不是附件类型的不能下载
+		if(data.type!='document' && data.type!='attach' && data.type!='image' && data.type!='folder') return false;
+	}else if(action=='copy'){ //回收站内不能复制
+		if(data.flag=='recycle') return false;
+	}else if(action=='paste'){ //没有复制或剪切，没法粘帖
+		if(_explorer.cut.icos.length<1) return false;
+		action=_explorer.sourcedata.icos[_explorer.cut.icos[0]].type;
+	}else if(action=='chmod'){ //修改权限
+		if(data.bz && data.bz.split(':')[0]=='ftp') return true;
+		else return false;
+	}else if(action=='rename'){ //重命名
+		if(data.type=='folder' && data.bz && (data.bz.split(':')[0]=='ALIOSS' || data.bz.split(':')[0]=='qiniu')) return false;
+		action='edit';
+	}else if(action=='multiselect'){
+		action='copy';
+	}else if(action=='drag'){
+		if(data.gid>0) action='copy';
+		else action='admin';
+	}else if(jQuery.inArray(action,['link','dzzdoc','newtype'])>-1 ){
+		action='upload';
+	}
+	if(jQuery.inArray(action,['read','delete','edit','download','copy'])>-1){
+		if(_explorer.myuid==data.uid) action+='1';
+		else action+='2';
+	}
+	//判断文件自身权限；
+	if (data.sperm && data.sperm>0) {
+		return _explorer.isPower(data.sperm,action);
+	}
+	//判断容器权限；
+	if(_explorer.sourcedata.folder[fid]) {
+		return _explorer.Permission_Container(action,fid);
+	} else {
+		if(data.gid>0){
+			if(action=='admin'){
+				if(_explorer.space.self>1) return true;
+				else return false;
+			}
+		}else{
+			if(action=='admin' || action=='multiselect'){
+				//是自己的目录有管理权限
+				if(_explorer.space.uid==data.uid) return true;
+				//云端的资源默认都有管理权限；
+				if(data.bz) return true;
+			}
+		}
+		return _explorer.isPower(data.perm,action);
+	}
+};
+
+var _hotkey={};
+_hotkey.ctrl=0;
+_hotkey.alt=0;
+_hotkey.shift=0;
+_hotkey.init=function(){
+	_hotkey.ctrl=0;
+	_hotkey.alt=0;
+	_hotkey.shift=0;
+}
+jQuery(document).on('keydown',function(event){
+	event=event?event:window.event;
+	var tag = event.srcElement ? event.srcElement :event.target;
+	if(/input|textarea/i.test(tag.tagName)){
+		return true;
+	}
+	var e;
+	if (event.which !="") { e = event.which; }
+	else if (event.charCode != "") { e = event.charCode; }
+	else if (event.keyCode != "") { e = event.keyCode; }
+	switch(e){
+		case 17:
+			_hotkey.ctrl=1;
+			break;
+		case 18:
+			_hotkey.alt=1;
+			break;
+		case 16:
+			_hotkey.shift=1;
+			break;
+	}
+ });
+jQuery(document).on('keyup',function(event){
+	event=event?event:window.event;
+	var tag = event.srcElement ? event.srcElement :event.target;
+	if(/input|textarea/i.test(tag.tagName)){
+		return true;
+	}
+	var e;
+	if (event.which !="") { e = event.which; }
+	else if (event.charCode != "") { e = event.charCode; }
+	else if (event.keyCode != "") { e = event.keyCode; }
+	switch(e){
+		case 17:
+			_hotkey.ctrl=0;
+			break;
+		case 18:
+			_hotkey.alt=0;
+			break;
+		case 16:
+			_hotkey.shift=0;
+			break;
+		case 46:case 110: //delete
+			try{
+				if(_explorer.selectall.icos.length>0){
+					_filemanage.delIco(_config.selectall.icos[0]);
+				}
+			}catch(e){}
+			break;
+		case 69://Ctrl + Alt + E
+			try{
+				if(_hotkey.alt && _hotkey.ctrl) _header.loging_close();
+			}catch(e){}
+			break;
+	}
+ });

@@ -3,23 +3,6 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 
-function getfileinfo($icoid, $sid = false) {
-    if (preg_match('/^dzz:[gu]id_\d+:.+?/i', $icoid)) {
-        $dir = dirname($icoid) . '/';
-
-        if (!$pfid = C::t('resources_path')->fetch_fid_bypath($dir)) {
-            return false;
-        }
-        $filename = basename($icoid);
-        if (!$rid = DB::result_first("select rid from %t where pfid = %d and name = %s", ['resources', $pfid, $filename])) {
-            return false;
-        }
-        return C::t('resources')->fetch_by_rid($rid, '', false, $sid);
-    } elseif (preg_match('/\w{32}/i', $icoid)) {
-        return C::t('resources')->fetch_by_rid($icoid, '', false, $sid);
-    }
-}
-
 function dzzMD5($file, $maxchunk = 100, $chunksize_first = 256) {
     /*
     获取文件的dzzhash值
@@ -2181,10 +2164,9 @@ function getTxtAttachByMd5($message, $filename_title, $ext) {
     global $_G;
     @set_time_limit(0);
     $filename = date('His') . '' . strtolower(random(16));
-    //$ext=strtolower(substr(strrchr($filename_title, '.'), 1, 10));
 
     if (!$ext) $ext = 'dzzdoc';
-    if ($ext && in_array($ext, $_G['setting']['unRunExts'])) {
+    if ($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])) {
         $unrun = 1;
     } else {
         $unrun = 0;

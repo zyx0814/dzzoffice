@@ -26,9 +26,18 @@ class table_shares extends dzz_table {
             foreach (DB::fetch_all("select pfid from %t where rid in(%n)", ['resources', $rids]) as $v) {
                 $pfids[] = $v['pfid'];
             }
+            if (!$pfids) {
+                return ['error' => '分享文件路径不能为空'];
+            }
             $pfids = array_unique($pfids);
             if (count($pfids) > 1) {
                 return ['error' => lang('Only_allow_sharing_filesinsamedirectory')];
+            }
+            global $_G;
+            if ($_G['adminid'] != 1) {
+                if (!perm_check::checkperm_Container($pfids[0], 'share')) {
+                    return ['error' => lang('file_share_no_privilege')];
+                }
             }
             $fileinfo = C::t('resources')->fetch_info_by_rid($rids[0]);
             $setarr['gid'] = $fileinfo['gid'];
@@ -160,11 +169,18 @@ class table_shares extends dzz_table {
     public function update_by_id($id, $setarr, $bz='') {
         if (empty($setarr)) return false;
         if (!$id) return false;
+        if (!$shareinfo = parent::fetch($id)) {
+            return ['error' => lang('share_not_exists')];
+        }
         global $_G;
-        $rid = $setarr['filepath'];
-        $more = false;
+        if ($_G['adminid'] != 1) {
+            if (!perm_check::checkperm_Container($shareinfo['pfid'], 'share')) {
+                return ['error' => lang('file_share_no_privilege')];
+            }
+        }
         if(!$bz) {
-            $rids = explode(',', $rid);
+            $more = false;
+            $rids = explode(',', $setarr['filepath']);
             if (count($rids) > 1) $more = true;
             $fileinfo = C::t('resources')->fetch_info_by_rid($rids[0]);
             if ($more) {

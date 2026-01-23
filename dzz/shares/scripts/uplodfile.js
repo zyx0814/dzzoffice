@@ -1,5 +1,18 @@
-var _upload = {};
+__lang.upload_processing;
+__lang.upload_finish;
+__lang.upload_succeed;
+__lang.upload_failure;
+__lang.cancel;
+__lang.upload_failed;
+__lang.are_uploading1;
+__lang.allow_file_type;
+__lang.file_too_large;
+__lang.finish;
+__lang.already_cancel;
+__lang.completed;
+__lang.update_finish;
 
+var _upload = {};
 _upload.total = 0;
 _upload.completed = 0;
 _upload.succeed = 0;//成功数量
@@ -9,17 +22,6 @@ _upload.filelist = $('.fileList');
 _upload.fid = null;
 _upload.maxli=10;//设置为0时，不缓存添加数据功能
 _upload.datas=[];
-var attachextensions = '';
-var maxfileSize = null;
-if (_explorer.space && _explorer.space.attachextensions) {
-    attachextensions = (_explorer.space.attachextensions.indexOf('|') != -1) ? _explorer.space.attachextensions.join('|') : _explorer.space.attachextensions;
-    attachextensions = "(\.|\/)(" + attachextensions + ")$";
-} else {
-    attachextensions = "\.*$";
-}
-if (_explorer.space && _explorer.space.maxattachsize) {
-    maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
-}
 function fileupload(el, fid) {
     if (_explorer.sourcedata.folder[1].bz) {
 		fid = _explorer.sourcedata.folder[1].path;

@@ -261,16 +261,8 @@ if ($do == 'filelist') {
             $count = DB::result_first("select count(*) from %t $wheresql $ordersql $limitsql", $params);
             //获取分享数据
             foreach (DB::fetch_all("select rid from %t $wheresql $ordersql $limitsql", $params) as $v) {
-                $fileinfo = getfileinfo($v['rid'], $sid);
-                if (!$fileinfo) {
-                    continue;
-                }
-                if ($fileinfo['rid']) {
-                    $fileinfo['dpath'] = dzzencode('sid:' . $sid . '_' . $fileinfo['rid']);
-                }
-                if ($fileinfo['attachment']) {
-                    unset($fileinfo['attachment']);
-                }
+                $fileinfo = C::t('resources')->fetch_by_rid($v['rid'], true, false, $sid);
+                $fileinfo['dpath'] = dzzencode('sid:' . $sid . '_' . $fileinfo['rid']);
                 if (isset($fileinfo['relativepath'])) {
                     unset($fileinfo['relativepath']);
                 }

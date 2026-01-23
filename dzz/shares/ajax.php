@@ -311,9 +311,9 @@ if ($do == 'uploads') {//上传新文件(指新建)
             foreach ($patharr as $v) {
                 $path = dzzdecode($v);
                 if ($path && preg_match('/^sid:([^\_]+)_/', $path)) {
-                    $v = preg_replace('/^sid:[^\_]+_/', '', $path);
+                    $path = preg_replace('/^sid:[^\_]+_/', '', $path);
                 }
-                $rids[] = $v;
+                $rids[] = $path;
             }
             $first_path = '';
             if (!$_G['adminid'] && $share['uid'] !== $_G['uid']) {

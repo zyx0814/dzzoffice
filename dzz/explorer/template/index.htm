@@ -58,6 +58,8 @@
         table: null,
         laydate: null,
     };
+    var attachextensions = '';
+    var maxfileSize = null;
 	jQuery(document).ready(function(e) {
         layui.use(['dropdown', 'form', 'table'],function(){
             layuiModules.dropdown = layui.dropdown;
@@ -135,10 +137,8 @@
     }
 </script>
 <script type="text/javascript" src="{MOD_PATH}/js/explorer.js?{VERHASH}"></script>
-<script type="text/javascript" src="{MOD_PATH}/js/_perm.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/filemanage.js?{VERHASH}"></script>
 <script type="text/javascript" src="{MOD_PATH}/js/_select.js?{VERHASH}"></script>
-<script type="text/javascript" src="{MOD_PATH}/js/_hotkey.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/bootstrap-datepicker/bootstrap-datepicker.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/select2/select2.min.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/lyear/js/jstree/jstree.min.js?{VERHASH}"></script>
@@ -151,5 +151,5 @@
 <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-process.js?{VERHASH}"></script>
 <script type="text/javascript" src="static/jquery_file_upload/jquery.fileupload-validate.js?{VERHASH}"></script>
-<script type="text/javascript" src="{MOD_PATH}/js/uplodfile.lang.js?{VERHASH}"></script>
+<script type="text/javascript" src="{MOD_PATH}/js/uplodfile.js?{VERHASH}"></script>
 <!--{template lyear:footer_simple}-->

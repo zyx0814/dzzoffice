@@ -36,8 +36,6 @@ class io_Qcos extends io_api {
         $this->uid = $_G['adminid'] ? $_G['uid'] : 0;
         $this->_rootname = $arr['name'];
         $this->perm = perm_binPerm::getGroupPower('all');
-
-        //$this->init($path);
     }
 
     /*
@@ -691,7 +689,6 @@ class io_Qcos extends io_api {
     public function _formatMeta($meta, $arr) {
         global $_G, $documentexts, $imageexts;
         $icosdata = [];
-        ///print_r($meta);print_r($arr);exit($this->bucket);
         if ($this->uid) {
             $uid = $this->uid;
             $userinfo = getuserbyuid($uid);

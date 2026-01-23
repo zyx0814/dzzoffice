@@ -23,7 +23,7 @@ if ($do == 'filelist') {
     $recents = $data = [];
     $recents = DB::fetch_all("select * from %t where uid = %d and rid != '' order by opendateline desc, editdateline desc $limitsql", $param);
     foreach ($recents as $v) {
-        if ($val = C::t('resources')->fetch_by_rid($v['rid'])) {
+        if ($val = C::t('resources')->fetch_by_rid($v['rid'], true)) {
             if (!$explorer_setting['useronperm'] && $val['gid'] == 0) {
                 continue;
             }

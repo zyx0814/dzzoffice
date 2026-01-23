@@ -138,7 +138,7 @@ if ($do == 'delsearchcat') {//删除搜索类型
         $folderids = $folderdata = [];
         if ($total = DB::result_first("SELECT COUNT(*) FROM %t r LEFT JOIN %t f ON r.pfid=f.fid $wheresql", $param)) {
             foreach (DB::fetch_all("SELECT rid FROM %t r LEFT JOIN %t f ON r.pfid=f.fid $wheresql $ordersql $limitsql", $param) as $value) {
-                if ($arr = C::t('resources')->fetch_by_rid($value['rid'])) {
+                if ($arr = C::t('resources')->fetch_by_rid($value['rid'], true)) {
                     $data[$arr['rid']] = $arr;
                     $folderids[$arr['pfid']] = $arr['pfid'];
                     if ($arr['type'] == 'folder') $folderids[$arr['oid']] = $arr['oid'];

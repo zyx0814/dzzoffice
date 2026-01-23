@@ -352,7 +352,7 @@ class table_resources extends dzz_table {
         return $resourcedata;
     }
 
-    public function fetch_by_rid($rid, $force_from_db = false, $preview = false, $sid = false) { //返回一条数据同时加载资源表数据
+    public function fetch_by_rid($rid, $isfilter = false, $preview = false, $sid = false) { //返回一条数据同时加载资源表数据
         global $_G;
         $cachekey = 'resourcesdata_' . $rid;
         if ($data = $this->fetch_cache($cachekey)) {
@@ -361,6 +361,9 @@ class table_resources extends dzz_table {
             // 因为每个用户的权限可能不同，所以该参数用实时数据
             $data['sperm'] = perm_check::getridPerm(['rid' => $data['rid'], 'uid' => $data['uid'], 'sperm' => $data['sperm'], 'perm' => $data['perm'], 'pfid' => $data['pfid'], 'gid' => $data['gid']]);
             if (!$data['perm']) $data['perm'] = $data['sperm'];
+            if ($isfilter) {
+                unset($data['attachment']);
+            }
             return $data;
         }
         $data = [];
@@ -412,6 +415,9 @@ class table_resources extends dzz_table {
         if (!$data['perm']) $data['perm'] = $data['sperm'];
         Hook::listen('filter_resource_rid', $data);//数据过滤挂载点
         $this->store_cache($cachekey, $data);
+        if ($isfilter) {
+            unset($data['attachment']);
+        }
         return $data;
     }
 
