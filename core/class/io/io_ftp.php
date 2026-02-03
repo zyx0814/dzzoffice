@@ -48,10 +48,12 @@ class io_ftp extends io_api {
                 $this->conn = $ftp;
             } else {
                 $this->error = 'ftp not connect';
+                return $this;
             }
 
         } else {
             $this->error = 'need authorize';
+            return $this;
         }
         $this->perm = perm_binPerm::getGroupPower('all');
         return $this;
@@ -175,6 +177,7 @@ class io_ftp extends io_api {
     //获取文件流；
     //$path: 路径
     public function getStream($path) {
+        if ($this->error) return false;
         global $_G;
         $arr = $this->parsePath($path);
         $filename = basename($path);
@@ -479,6 +482,7 @@ class io_ftp extends io_api {
      *$force>0 强制刷新，不读取缓存数据；
     */
     public function getMeta($path, $force = 0) {
+        if ($this->error) return ['error' => $this->error];
         $bzarr = $this->parsePath($path);
         $meta = [];
         if ($path == $this->_root) {

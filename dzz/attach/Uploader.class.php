@@ -314,7 +314,7 @@ class Uploader {
     public function getPath($filename, $dir = 'dzz') {
         global $_G;
         $ext = strtolower(trim($this->fileType, '.'));
-        if ($ext && in_array($ext, getglobal('setting/unRunExts'))) {
+        if ($ext && in_array($ext, $_G['setting']['unRunExts'])) {
             $ext = 'dzz';
         }
         $subdir = $subdir1 = $subdir2 = '';
@@ -354,7 +354,7 @@ class Uploader {
             $target = self::getPath($filename);
 
             $ext = strtolower(trim($this->fileType, '.'));
-            if ($ext && in_array($ext, getglobal('setting/unRunExts'))) {
+            if ($ext && in_array($ext, $_G['setting']['unRunExts'])) {
                 $unrun = 1;
             } else {
                 $unrun = 0;

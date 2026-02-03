@@ -101,9 +101,9 @@ if ($_GET['step'] == 'start') {
         updatecache('setting');
         show_msg('您的站点未关闭，正在关闭，请稍后...', $theurl . '?step=start', 5000);
     }
-    $phpversion = PHP_VERSION;
-    $msg = 'php版本不支持，仅支持php7.0+，建议使用php7.4或php8.0+<br>当前版本：' . $phpversion . '<br><br><a href="' . $theurl . '?step=prepare' . ($_GET['from'] ? '&from=' . rawurlencode($_GET['from']) . '&frommd5=' . rawurlencode($_GET['frommd5']) : '') . '">已更换PHP版本，开始升级</a>';
-    if (strcmp($phpversion, '7+') < 0) {
+    if (version_compare(PHP_VERSION, '7.2.0', '<')) {
+        $phpversion = PHP_VERSION;
+        $msg = 'php版本不支持，仅支持php7.2+，建议使用php7.4或php8.0+<br>当前版本：' . $phpversion . '<br><br><a href="' . $theurl . '?step=prepare' . ($_GET['from'] ? '&from=' . rawurlencode($_GET['from']) . '&frommd5=' . rawurlencode($_GET['frommd5']) : '') . '">已更换PHP版本，开始升级</a>';
         show_msg($msg);
     }
     show_msg('<h2>说明：</h1>本升级程序会参照最新的SQL文件，对数据库进行同步升级。<br>

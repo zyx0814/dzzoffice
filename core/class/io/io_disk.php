@@ -38,6 +38,7 @@ class io_disk extends io_api {
 
         } else {
             $this->error = 'need authorize';
+            return $this;
         }
         $this->perm = perm_binPerm::getGroupPower('all');
         return $this;
@@ -301,6 +302,7 @@ class io_disk extends io_api {
     //获取文件流；
     //$path: 路径
     public function getStream($path) {
+        if ($this->error) return false;
         $arr = $this->parsePath($path);
         if (!$ret = realpath($this->attachdir . $arr['path'])) {
             return ['error' => lang('file_not_exist')];
@@ -373,6 +375,7 @@ class io_disk extends io_api {
         $cachepath = str_replace(':', '/', $path);
         $cachepath = preg_replace("/\/+/", '/', str_replace(':', '/', $path));
         if (!$data = IO::getMeta($path)) return false;
+        if ($data['error']) return false;
         $enable_cache = true; //是否启用缓存
         $quality = 80;
         $target = $imgcachePath . ($cachepath) . '.' . $width . '_' . $height . '_' . $thumbtype . '.jpeg';
@@ -614,6 +617,7 @@ class io_disk extends io_api {
      *$force>0 强制刷新，不读取缓存数据；
     */
     public function getMeta($path, $force = 0) {
+        if ($this->error) return ['error' => $this->error];
         $bzarr = $this->parsePath($path);
         $meta = [];
         if ($path == $this->_root) {

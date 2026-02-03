@@ -67,7 +67,7 @@ $filesock_items = ['fsockopen', 'pfsockopen', 'stream_socket_client'];
 $env_items =
     [
     'os' => ['c' => 'PHP_OS', 'r' => 'notset', 'b' => 'Linux'],
-    'php' => ['c' => 'PHP_VERSION', 'r' => '7.4+', 'b' => '8+'],
+    'php' => ['c' => 'PHP_VERSION', 'r' => '7.2+', 'b' => '8+'],
     'php_bit' => ['c' => 'PHP_INT_SIZE', 'r' => '32位<br>(32位不支持2G以上文件上传下载)', 'b' => '64位'],
     'attachmentupload' => ['r' => 'notset', 'b' => '50M'],
     'gdversion' => ['r' => '1.0', 'b' => '2.0'],
