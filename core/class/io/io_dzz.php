@@ -126,16 +126,22 @@ class io_dzz extends io_api {
             Hook::listen('io_dzz_getstream_attach', $attach);//挂载点
             $bz = io_remote::getBzByRemoteid($attach['remote']);
             if ($bz == 'dzz') {
-                return $_G['setting']['attachdir'] . $attach['attachment'];
+                $filepath = $_G['setting']['attachdir'] . $attach['attachment'];
+                if ($fop && !file_exists($filepath)) return false;
+                return $filepath;
             } else {
                 return IO::getStream($bz . '/' . $attach['attachment'], $fop);
             }
         } elseif (strpos($path, 'dzz::') === 0) {
             if (strpos($path, '../') !== false) return '';
-            return $_G['setting']['attachdir'] . preg_replace("/^dzz::/", '', $path);
+            $filepath = $_G['setting']['attachdir'] . preg_replace("/^dzz::/", '', $path);
+            if ($fop && !file_exists($filepath)) return false;
+            return $filepath;
         } elseif (strpos($path, 'TMP::') === 0) {
             $tmp = str_replace('\\', '/', sys_get_temp_dir());
-            return str_replace('TMP::', $tmp . '/', $path);
+            $filepath = str_replace('TMP::', $tmp . '/', $path);
+            if ($fop && !file_exists($filepath)) return false;
+            return $filepath;
         } elseif (preg_match('/\w{32}/i', $path)) {
             $icoarr = C::t('resources')->fetch_by_rid($path);
             if (!$icoarr) return false;
@@ -146,7 +152,9 @@ class io_dzz extends io_api {
                 if ($icoarr['type'] == 'video' || $icoarr['type'] == 'link') {
                     return $icoarr['url'];
                 }
-                return $_G['setting']['attachdir'] . $icoarr['attachment'];
+                $filepath = $_G['setting']['attachdir'] . $icoarr['attachment'];
+                if ($fop && !file_exists($filepath)) return false;
+                return $filepath;
             }
         } elseif (preg_match('/^dzz:[gu]id_\d+:.+?/i', $path)) {
             $dir = dirname($path) . '/';
@@ -2081,7 +2089,6 @@ class io_dzz extends io_api {
     public function FileMove($rid, $pfid, $first = true, $force = false) {
         global $_G;
         @set_time_limit(0);
-        @ini_set("memory_limit", "512M");
         //判断目标目录是否存在
         if (!$tfolder = C::t('folder')->fetch($pfid)) {
             return ['error' => lang('target_location_not_exist')];
@@ -2151,13 +2158,13 @@ class io_dzz extends io_api {
                             unset($value);
                             unset($folder);
                         } catch (Exception $e) {
-
+                            return ['error' => lang('movement_error')];
                         }
                     }
                     //修改分享表状态
                     C::t('shares')->change_by_rid($icoarr['rid'], '-5');
                     //删除原文件夹数据
-                    DB::delete('resources', ['rid' => $icoarr['rid']]);
+                    C::t('resources')->delete($icoarr['rid']);
                     //删除路径表数据
                     DB::delete('resources_path', ['fid' => $icoarr['oid']]);
                     //删除文件夹表数据
@@ -2461,7 +2468,7 @@ class io_dzz extends io_api {
         global $_G;
         $ext = strtolower(substr(strrchr($FILE['name'], '.'), 1));
         $target = IO::getPath($ext ? ('.' . $ext) : '', 'dzz');
-        if ($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])) {
+        if ($ext && in_array(strtolower($ext), (array)$_G['setting']['unRunExts'])) {
             $unrun = 1;
         } else {
             $unrun = 0;

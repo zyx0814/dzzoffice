@@ -51,7 +51,7 @@ class io_remote {
             $path = $bz . '/' . $attach['attachment'];
         }
         if ($re = IO::MoveToSpace($path, $attach)) {
-            if ($re['error']) {
+            if (is_array($re) && $re['error']) {
                 return $re;
             } else {
                 return $remoteid;
@@ -80,7 +80,7 @@ class io_remote {
             C::t('local_storage')->update_usesize_by_remoteid($attach['remote'], -$attach['filesize']);
             $attach['remote'] = $remoteid;
             return $attach;
-        } elseif ($re['error']) {
+        } elseif (is_array($re) && $re['error']) {
             $attach['error'] = $re['error'];
             return $attach;
         } else {

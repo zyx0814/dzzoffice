@@ -519,7 +519,7 @@ class dzz_io {
             $ext = strtolower($pathinfo['extension']);
             $target = self::getPath($ext ? ('.' . $ext) : '', 'dzz');
             $ext = $pathinfo['extension'] ?: '';
-            if ($ext && in_array(strtolower($ext), $_G['setting']['unRunExts'])) {
+            if ($ext && in_array(strtolower($ext), (array)$_G['setting']['unRunExts'])) {
                 $unrun = 1;
             } else {
                 $unrun = 0;
@@ -569,7 +569,7 @@ class dzz_io {
     }
     public static function getPath($ext, $dir = 'dzz') {
         global $_G;
-        if ($ext && in_array(trim($ext, '.'), $_G['setting']['unRunExts'])) {
+        if ($ext && in_array(trim($ext, '.'), (array)$_G['setting']['unRunExts'])) {
             $ext = '.dzz';
         }
         $subdir = $subdir1 = $subdir2 = '';

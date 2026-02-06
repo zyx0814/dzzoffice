@@ -14,7 +14,7 @@ include libfile('function/organization');
 $op = isset($_GET['op']) ? $_GET['op'] : '';
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if (submitcheck('appsubmit')) {
-    $dels = $_GET['del'];
+    $dels = (array)$_GET['del'];
     $allids = [];
     foreach ($_GET['disp'] as $key => $value) {
         if (!in_array($key, $dels))

@@ -978,7 +978,7 @@ class io_qiniu extends io_api {
         static $i = 0;
         if (!$this->icosdatas) $this->icosdatas = $this->listFiles($path);
         $names = [];
-        foreach ($icosdatas as $value) {
+        foreach ($this->icosdatas as $value) {
             $names[] = $value['name'];
         }
         if (in_array($name, $names)) {

@@ -12,7 +12,7 @@ if (!defined('IN_DZZ') || !defined('IN_ADMIN')) {
 $navtitle = lang('dzzpan') . ' - ' . lang('routing_management') . ' - ' . lang('cloud_set');
 if (submitcheck('routersubmit')) {
     $_GET = dhtmlspecialchars($_GET);
-    $delete = $_GET['delete'];
+    $delete = (array)$_GET['delete'];
     foreach ($_GET['name'] as $routerid => $value) {
         if (in_array($routerid, $delete)) continue;
         $setarr = [
@@ -25,7 +25,6 @@ if (submitcheck('routersubmit')) {
     C::t('local_router')->delete($delete);
     showmessage('do_success', dreferer());
 } else {
-
     $storage = [];
     foreach (C::t('local_storage')->fetch_all_orderby_disp() as $key => $value) {
         $value['fusesize'] = formatsize($value['usesize']);

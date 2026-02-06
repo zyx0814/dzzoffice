@@ -113,7 +113,7 @@ if ($_GET['step'] == 'start') {
 } elseif ($_GET['step'] == 'waitingdb') {
     $query = DB::fetch_all("SHOW FULL PROCESSLIST");
     foreach ($query as $row) {
-        if (in_array(md5($row['Info']), $_GET['sql'])) {
+        if (in_array(md5($row['Info']), (array)$_GET['sql'])) {
             $list .= '[时长]:' . $row['Time'] . '秒 [状态]:<b>' . $row['State'] . '</b>[信息]:' . $row['Info'] . '<br><br>';
         }
     }

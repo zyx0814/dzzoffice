@@ -354,7 +354,7 @@ class Uploader {
             $target = self::getPath($filename);
 
             $ext = strtolower(trim($this->fileType, '.'));
-            if ($ext && in_array($ext, $_G['setting']['unRunExts'])) {
+            if ($ext && in_array($ext, (array)$_G['setting']['unRunExts'])) {
                 $unrun = 1;
             } else {
                 $unrun = 0;

@@ -421,7 +421,7 @@ function checkprofile($fieldid, &$value) {
         $arr = [];
         $value = explode('\n', $value);
         foreach ($value as $op) {
-            if (in_array(trim($op), trim($field['choices']))) {
+            if (in_array(trim($op), $field['choices'])) {
                 $arr[] = trim($op);
             }
         }

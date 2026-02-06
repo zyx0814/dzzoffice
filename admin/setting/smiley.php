@@ -138,7 +138,7 @@ if (!$operation) {
         $unsfast = [];
         if (is_array($_GET['displayorder'])) {
             foreach ($_GET['displayorder'] as $key => $val) {
-                if (!in_array($key, $_GET['fast'])) {
+                if (!in_array($key, (array)$_GET['fast'])) {
                     $unsfast[] = $key;
                 }
                 $_GET['displayorder'][$key] = intval($_GET['displayorder'][$key]);
