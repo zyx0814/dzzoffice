@@ -46,6 +46,9 @@ if ($do == 'edit') {
         $usergroups = C::t('usergroup')->fetch_all_not([6, 7]);
     } else {
         foreach ($_G['setting']['verify'] as $key => $value) {
+            if(!is_array($value)) {
+				continue;
+			}
             $_G['setting']['verify'][$key]['icon'] = str_replace($_G['setting']['attachurl'], '', $value['icon']);
             $_G['setting']['verify'][$key]['unverifyicon'] = str_replace($_G['setting']['attachurl'], '', $value['unverifyicon']);
         }

@@ -538,8 +538,8 @@ function fileext($filename) {
 
 function formhash($specialadd = '') {
     global $_G;
-    $hashadd = defined('IN_ADMIN') ? 'Only For Dzz! Admin Control Panel' : '';
-    return substr(md5(substr($_G['timestamp'], 0, -7) . $_G['username'] . $_G['uid'] . $_G['authkey'] . $hashadd . $specialadd), 8, 8);
+    //$hashadd = defined('IN_ADMIN') ? 'Only For Dzz! Admin Control Panel' : '';
+    return substr(md5(substr($_G['timestamp'], 0, -7) . $_G['username'] . $_G['uid'] . $_G['authkey'] . $specialadd), 8, 8);
 }
 
 function checkrobot($useragent = '') {
