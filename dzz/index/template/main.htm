@@ -68,7 +68,7 @@
 			<i class="mdi mdi-chart-bubble bg-icon"></i> 
 			<div class="hero-left">
 				<div class="user-meta">
-					<div class="greeting-text"><span id="greeting">早上好！</span>$_G['username']</div>
+					<div class="greeting-text"><span id="greeting">{$greeting}</span>$_G['username']</div>
 					<div class="meta-info">
 						<span class="meta-badge"><i class="mdi mdi-identifier me-1"></i> UID: $_G['uid']</span>
 						<span class="meta-badge"><i class="mdi mdi-email-outline me-1"></i> $_G['member']['email']</span>
@@ -77,8 +77,8 @@
 			</div>
 
 			<div class="hero-clock">
-				<div class="clock-time" id="time">--:--:--</div>
-				<div class="clock-date"><span id="current-date"></span><span class="ps-2" id="weekday"></span></div>
+				<div class="clock-time" id="time">{$currentTime}</div>
+				<div class="clock-date"><span id="current-date">{$currentDate}</span><span class="ps-2" id="weekday">{$weekday}</span></div>
 			</div>
 		</div>
 		<div class="stats-grid row">
@@ -117,7 +117,7 @@
 						<span class="text-muted">加入时间</span>
 					</div>
 					<div class="stat-value"><!--{eval echo dgmdate($_G['member']['regdate'])}--></div> 
-					<div class="text-muted">已加入 <span class="fw-bold text-primary">$regdatedays</span> 天</div>
+					<div class="text-muted">已加入 <span class="fw-bold text-primary">$regdatedays</span></div>
 					</div>
 				</div>
 			</div>
