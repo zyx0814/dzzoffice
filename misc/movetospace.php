@@ -14,9 +14,7 @@ if (!defined('IN_DZZ')) {
 $remoteid = intval($_GET['remoteid']);
 $aid = intval($_GET['aid']);
 if ($attach = C::t('attachment')->fetch($aid)) {
-
     $re = io_remote::Migrate($attach, $remoteid);
     if ($re['error']) exit($re['error']);
 }
 exit('success');
-

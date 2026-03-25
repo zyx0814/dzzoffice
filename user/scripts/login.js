@@ -11,6 +11,7 @@ function loginsub(formid,rspaceid){
     jQuery.post(url+'&returnType='+type,formData,function(json){
         if(json['success']){
             showmessage(json['success']['message'],"success",0,1);
+            jQuery('#'+rspaceid).html('');
 			setTimeout(function() {
                 location.href = json['success']['url_forward'];
             }, 1000);
