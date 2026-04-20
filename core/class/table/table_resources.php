@@ -52,8 +52,9 @@ class table_resources extends dzz_table {
         if ($infoarr['type'] == 'folder') {
             $updatepath = true;
         }
+        if ($sid) $infoarr['sid'] = $sid;
         $fid = $infoarr['pfid'];
-        if (!perm_check::checkperm('edit', $infoarr)) {
+        if (!perm_check::checkperm('rename', $infoarr)) {
             return ['error' => lang('file_edit_no_privilege')];
         }
         if (self::update_by_rid($rid, ['name' => $newname])) {
