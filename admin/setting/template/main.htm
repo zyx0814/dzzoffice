@@ -1152,13 +1152,9 @@
             </dl>
           </form>
           <!--{elseif $operation=='sec'}-->
-          <div class="row mb-3">
-            <label class="col-sm-2">{lang board_message}</label>
-            <div class="col-sm-10">
-              <ul class="form-text">
-                {lang setting_mainboard_message_state}
-              </ul>
-            </div>
+          <div class="mt-2 alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>{lang board_message}</strong><ul class="mb-0">{lang setting_mainboard_message_state}</ul>
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
           </div>
           <form id="cpform" action="{MOD_URL}" method="post" name="cpform">
             <input type="hidden" value="{FORMHASH}" name="formhash">

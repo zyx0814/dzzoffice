@@ -130,14 +130,16 @@ class table_user_setting extends dzz_table {
     public function fetch_all_user_setting($uid = 0) {
         if (!$uid) $uid = getglobal('uid');
         if (!$uid) return [];
-        $settings = [];
         $cachekey = 'settings_' . $uid;
-        if (!($settings = $this->fetch_cache($cachekey))) {
+        if ($ret = $this->fetch_cache($cachekey)) {
+            return $ret;
+        } else {
+            $data = [];
             foreach (DB::fetch_all("select * from %t where uid = %d", [$this->_table, $uid]) as $v) {
-                $settings[$v['skey']] = $v['svalue'];
+                $data[$v['skey']] = $v['svalue'];
             }
-            $this->store_cache($cachekey, $settings);
+            $this->store_cache($cachekey, $data);
+            return $data;
         }
-        return $settings;
     }
 }

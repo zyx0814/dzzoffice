@@ -56,7 +56,7 @@ class table_resources extends dzz_table {
         if (!perm_check::checkperm('edit', $infoarr)) {
             return ['error' => lang('file_edit_no_privilege')];
         }
-        if (self::update_by_rid($rid, ['name' => $newname, 'dateline' => TIMESTAMP])) {
+        if (self::update_by_rid($rid, ['name' => $newname])) {
             $position = C::t('resources_path')->fetch_pathby_pfid($fid);
             $position = preg_replace('/dzz:(.+?):/', '', $position);
             if ($updatepath) {
