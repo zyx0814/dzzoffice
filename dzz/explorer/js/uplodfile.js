@@ -24,12 +24,6 @@ _upload.maxli=10;//设置为0时，不缓存添加数据功能
 _upload.datas=[];
 _upload.ondup = '';
 _upload.limitConcurrentUploads = 3;
-if (_explorer.space && _explorer.space.explorermyset && _explorer.space.explorermyset.ondup) {
-    _upload.ondup =  parseInt(_explorer.space.explorermyset.ondup) > 0 ? '&ondup=' + parseInt(_explorer.space.explorermyset.ondup) : '';
-}
-if (_explorer.space && _explorer.space.limitConcurrentUploads) {
-    _upload.limitConcurrentUploads =  _explorer.space.limitConcurrentUploads > 0 ? _explorer.space.limitConcurrentUploads : 3;
-}
 function fileupload(el, fid) {
     el.off();
     if (_explorer.hash.indexOf('cloud') != -1) {

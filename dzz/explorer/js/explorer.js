@@ -49,6 +49,12 @@ _explorer.initEvents = function () { //初始化页面事件
 	if (_explorer.space && _explorer.space.maxattachsize) {
 		maxfileSize =  parseInt(_explorer.space.maxattachsize) > 0 ? parseInt(_explorer.space.maxattachsize) : null;
 	}
+	if (_explorer.space && _explorer.space.explorermyset && _explorer.space.explorermyset.ondup) {
+		_upload.ondup =  parseInt(_explorer.space.explorermyset.ondup) > 0 ? '&ondup=' + parseInt(_explorer.space.explorermyset.ondup) : '';
+	}
+	if (_explorer.space && _explorer.space.limitConcurrentUploads) {
+		_upload.limitConcurrentUploads =  _explorer.space.limitConcurrentUploads > 0 ? _explorer.space.limitConcurrentUploads : 3;
+	}
 	//hashchange事件
 	$(window).on('hashchange', function () {
 		_explorer.hashHandler();
