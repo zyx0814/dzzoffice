@@ -1567,7 +1567,10 @@ class io_dzz extends io_api {
         if (!$force && !perm_check::checkperm_Container($icoarr['pfid'], 'upload', '' , $folder['uid'])) {
             return ['error' => lang('folder_upload_no_privilege')];
         }
-        $target = $icoarr['attachment'];
+        //$target = $icoarr['attachment'];
+        $pathinfo = pathinfo($filename);
+        $ext = strtolower($pathinfo['extension']);
+        $target = IO::getPath($ext ? ('.' . $ext) : '', 'dzz');
         if ($partinfo['ispart']) {
             if ($partinfo['partnum'] == 1) {
                 file_put_contents($_G['setting']['attachdir'] . './' . $target, $fileContent);
