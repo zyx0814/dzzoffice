@@ -59,7 +59,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
                 if (empty($_GET['availablenew'][$id])) {
                     $newcron['nextrun'] = '0';
                 }
-                DB::update('cron', $newcron, "cronid='{$id}'");
+                DB::update('cron', $newcron, ['cronid' => intval($id)]);
             }
         }
 
@@ -77,7 +77,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
                 $cronfile = DZZ_ROOT . './core/cron/' . $cron['filename'];
             }
             if (!file_exists($cronfile)) {
-                DB::update('cron', ['available' => '0', 'nextrun' => '0',], "cronid='$cron[cronid]'");
+                DB::update('cron', ['available' => '0', 'nextrun' => '0',], ['cronid' => $cron['cronid']]);
             }
         }
         updatecache('setting');
@@ -87,7 +87,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
     }
 } else {
     $cronid = empty($_GET['run']) ? $_GET['edit'] : $_GET['run'];
-    $cron = DB::fetch_first("SELECT * FROM " . DB::table('cron') . " WHERE cronid='$cronid'");
+    $cron = DB::fetch_first("SELECT * FROM %t WHERE cronid=%s", array('cron', $cronid));
     if (!$cron) {
         $msg = lang('cron_not_found');
         $redirecturl = BASESCRIPT . '?mod=system&op=cron';
@@ -158,7 +158,7 @@ if (empty($_GET['edit']) && empty($_GET['run'])) {
                 exit();
             }
 
-            DB::update('cron', ['weekday' => $_GET['weekdaynew'], 'day' => $daynew, 'hour' => $_GET['hournew'], 'minute' => $minutenew, 'filename' => trim($_GET['filenamenew']),], "cronid='$cronid'");
+            DB::update('cron', ['weekday' => $_GET['weekdaynew'], 'day' => $daynew, 'hour' => $_GET['hournew'], 'minute' => $minutenew, 'filename' => trim($_GET['filenamenew'])], ['cronid' => $cronid]);
 
             dzz_cron::run($cronid);
 

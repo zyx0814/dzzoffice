@@ -21,7 +21,7 @@ class table_app_open extends dzz_table {
 
     public function setDefault($extid) {
         $data = self::fetch($extid);
-        DB::update($this->_table, ['isdefault' => 0], "ext='{$data['ext']}'");
+        DB::update($this->_table, ['isdefault' => 0], ['ext' => $data['ext']]);
         $this->clear_cache('ext_all');
         return self::update($extid, ['isdefault' => 1]);
     }
@@ -43,7 +43,7 @@ class table_app_open extends dzz_table {
             }
         }
         $this->clear_cache('ext_all');
-        return DB::delete($this->_table, " appid='{$appid}'");
+        return DB::delete($this->_table, " appid='" . intval($appid) . "'");
     }
 
     public function insert_by_exts($appid, $exts) {
@@ -52,7 +52,7 @@ class table_app_open extends dzz_table {
         //删除原来的ext
         $oexts = [];
         $delids = [];
-        $oextarr = DB::fetch_all("select * from " . DB::table('app_open') . " where appid='{$appid}'");
+        $oextarr = DB::fetch_all("select * from %t where appid=%d", array('app_open', $appid));
         foreach ($oextarr as $value) {
             $oexts[] = $value['ext'];
             if (!in_array($value['ext'], $exts)) $delids[] = $value['extid'];

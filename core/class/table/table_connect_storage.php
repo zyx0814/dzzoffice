@@ -25,7 +25,7 @@ class table_connect_storage extends dzz_table {
     public function fetch_by_id($id) {
 
         $value = self::fetch($id);
-        $cloud = DB::fetch_first("select * from " . DB::table('connect') . " where bz='{$value['bz']}'");
+        $cloud = DB::fetch_first("select * from %t where bz=%s", array('connect', $value['bz']));
         $value['access_id'] = authcode($value['access_id'], 'DECODE', $value['bz']) ? authcode($value['access_id'], 'DECODE', $value['bz']) : $value['access_id'];
         if (!$value['cloudname']) $value['cloudname'] = $cloud['name'] . ':' . ($value['bucket'] ?: cutstr($value['access_id'], 4, ''));
         if ($value['bucket']) $value['bucket'] .= '/';

@@ -36,7 +36,7 @@ function dzz_explorer_folder_init() {//初始化目录
         'fsperm' => perm_FolderSPerm::flagPower('home')
 
     ];
-    if ($rootfid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G['uid']}' and flag='home' ")) {
+    if ($rootfid = DB::result_first("select fid from %t where uid=%d and flag=%s", array('folder', $_G['uid'], 'home'))) {
         C::t('folder')->update($rootfid, ['fname' => $root['fname'], 'isdelete' => 0, 'pfid' => 0, 'fsperm' => $root['fsperm'], 'perm' => $root['perm']]);
     } else {
         $rootfid = C::t('folder')->insert($root);
@@ -63,7 +63,7 @@ function dzz_explorer_searchcat_info_init() {
         ],
     ];
     foreach ($searchcat as $v) {
-        if (DB::result_first("select count(*) from " . DB::table('resources_cat') . " where catname = '" . $v['catname'] . "' and uid =" . $_G['uid']) > 0) {
+        if (DB::result_first("select count(*) from %t where catname=%s and uid=%d", array('resources_cat', $v['catname'], $_G['uid'])) > 0) {
             continue;
         } else {
             C::t('resources_cat')->insert_cat($v);

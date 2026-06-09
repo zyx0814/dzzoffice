@@ -889,7 +889,7 @@ class io_dzz extends io_api {
 
     //检查名称是否重复
     public function check_name_repeat($name, $pfid) {
-        return DB::result_first("select rid from " . DB::table('resources') . " where name='{$name}' and  pfid='{$pfid}'");
+        return DB::result_first("select rid from %t where name=%s and pfid=%d", array('resources', $name, $pfid));
     }
 
     //过滤文件名称
@@ -943,7 +943,7 @@ class io_dzz extends io_api {
                 $top[$k] = $v;
             }
         }
-        if ($topfid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$_G['uid']}' and fname = '{$top['fname']}' and flag='{$top['flag']}' ")) {
+        if ($topfid = DB::result_first("select fid from %t where uid=%d and fname=%s and flag=%s", array('folder', $_G['uid'], $top['fname'], $top['flag']))) {
             C::t('folder')->update($topfid, $top);
         } else {
             $appid = $params['appid'] ?: 0;
@@ -1717,7 +1717,7 @@ class io_dzz extends io_api {
         }
         $gid = $folder['gid'];
         $clink = [];
-        if (!$clink = DB::fetch_first("select * from " . DB::table("collect") . " where ourl='{$link}' and  type = 'link'")) {
+        if (!$clink = DB::fetch_first("select * from %t where ourl=%s and type=%s", array("collect", $link, 'link'))) {
             $arr = [];
             require_once dzz_libfile('class/caiji');
             $caiji = new caiji($link);
@@ -2325,7 +2325,7 @@ class io_dzz extends io_api {
                 $checkperm = false;
             }
             $success = 0;
-            $gid = DB::result_first("select gid from " . DB::table('folder') . " where fid='{$pfid}'");
+            $gid = DB::result_first("select gid from %t where fid=%d", array('folder', $pfid));
             $targetpatharr = C::t('resources_path')->fetch_pathby_pfid($pfid, true);//目标路径
             $targetpath = $targetpatharr['path'];
 
@@ -2482,7 +2482,7 @@ class io_dzz extends io_api {
         }
         $md5 = md5_file($filepath);
 
-        if ($md5 && $attach = DB::fetch_first("select * from " . DB::table('attachment') . " where md5='{$md5}'")) {
+        if ($md5 && $attach = DB::fetch_first("select * from %t where md5=%s", array('attachment', $md5))) {
             $attach['filename'] = $FILE['name'];
             @unlink($filepath);
             unset($attach['attachment']);

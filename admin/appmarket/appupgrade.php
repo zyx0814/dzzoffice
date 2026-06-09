@@ -27,8 +27,9 @@ $order = 'ORDER BY disp';
 $start = ($page - 1) * $perpage;
 $apps = [];
 if ($keyword) {
-    if ($count = DB::result_first("SELECT COUNT(*) FROM " . DB::table('app_market') . " WHERE upgrade_version!='' and available>0 and  appname like '%$keyword%' or vendor like '%$keyword%'")) {
-        $apps = DB::fetch_all("SELECT * FROM " . DB::table('app_market') . " WHERE  upgrade_version!='' and available>0 and appname like '%$keyword%' or vendor like '%$keyword%' $order limit $start,$perpage");
+    $keyword_like = '%' . $keyword . '%';
+    if ($count = DB::result_first("SELECT COUNT(*) FROM %t WHERE upgrade_version!=%s and available>0 and (appname like %s or vendor like %s)", array('app_market', '', $keyword_like, $keyword_like))) {
+        $apps = DB::fetch_all("SELECT * FROM %t WHERE upgrade_version!=%s and available>0 and (appname like %s or vendor like %s) $order limit %d,%d", array('app_market', '', $keyword_like, $keyword_like, $start, $perpage));
         $multi = multi($count, $perpage, $page, $theurl, 'pull-right');
     }
 } elseif ($tagid) {

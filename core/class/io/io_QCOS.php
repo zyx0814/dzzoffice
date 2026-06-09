@@ -45,7 +45,7 @@ class io_Qcos extends io_api {
         global $_G;
         $bzarr = explode(':', $bz);
         $id = trim($bzarr[1]);
-        if (!$root = DB::fetch_first("select * from " . DB::table(self::T) . " where  id='{$id}'")) {
+        if (!$root = DB::fetch_first("select * from %t where id=%d", array(self::T, $id))) {
             return ['error' => 'need authorize to ' . $bzarr[0]];
         }
         if (!$isguest && $root['uid'] > 0 && $root['uid'] != $_G['uid']) return ['error' => 'need authorize to qcos'];
@@ -256,8 +256,8 @@ class io_Qcos extends io_api {
                 'dateline' => TIMESTAMP,
                 'hostname' => $schema . ':' . $region
             ];
-            if ($id = DB::result_first("select id from " . DB::table(self::T) . " where uid='{$uid}' and access_id='{$access_id}' and bucket='{$bucket}'")) {
-                DB::update(self::T, $setarr, "id ='{$id}'");
+            if ($id = DB::result_first("select id from %t where uid=%d and access_id=%s and bucket=%s", array(self::T, $uid, $access_id, $bucket))) {
+                DB::update(self::T, $setarr, "id ='" . intval($id) . "'");
             } else {
                 $id = DB::insert(self::T, $setarr, 1);
             }

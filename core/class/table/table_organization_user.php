@@ -60,12 +60,12 @@ class table_organization_user extends dzz_table {
         $insertids = array_diff($orgids, $Oorgids);
         $delids = array_diff($Oorgids, $orgids);
         $updateids = array_diff($orgids, $delids, $insertids);
-        if ($delids) DB::delete($this->_table, "uid='{$uid}' and orgid IN (" . dimplode($delids) . ")");
+        if ($delids) DB::delete($this->_table, "uid='" . intval($uid) . "' and orgid IN (" . dimplode($delids) . ")");
         foreach ($insertids as $orgid) {
             if ($orgid > 0) self::insert_by_orgid($orgid, $uid, $orgarr[$orgid]);
         }
         foreach ($updateids as $orgid) {
-            if ($orgid > 0) DB::update($this->_table, ['jobid' => $orgarr[$orgid]], "orgid='{$orgid}' and uid='{$uid}'");
+            if ($orgid > 0) DB::update($this->_table, ['jobid' => $orgarr[$orgid]], "orgid='" . intval($orgid) . "' and uid='" . intval($uid) . "'");
         }
         return true;
     }
@@ -81,13 +81,13 @@ class table_organization_user extends dzz_table {
         $insertids = array_diff($orgids, $Oorgids);
         $delids = array_diff($Oorgids, $orgids);
         $updateids = array_diff($orgids, $delids, $insertids);
-        //if ($delids) DB::delete($this->_table, "uid='{$uid}' and orgid IN (" . dimplode($delids) . ")");
+        //if ($delids) DB::delete($this->_table, "uid='" . intval($uid) . "' and orgid IN (" . dimplode($delids) . ")");
 
         foreach ($insertids as $orgid) {
             if ($orgid > 0) self::insert_by_orgid($orgid, $uid, $orgarr[$orgid]);
         }
         foreach ($updateids as $orgid) {
-            if ($orgid > 0) DB::update($this->_table, ['jobid' => $orgarr[$orgid]], "orgid='{$orgid}' and uid='{$uid}'");
+            if ($orgid > 0) DB::update($this->_table, ['jobid' => $orgarr[$orgid]], "orgid='" . intval($orgid) . "' and uid='" . intval($uid) . "'");
         }
 
         return true;
@@ -152,11 +152,11 @@ class table_organization_user extends dzz_table {
                 }
             }
         }
-        if ($uids && DB::delete($this->_table, "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'")) {
+        if ($uids && DB::delete($this->_table, "uid IN (" . dimplode($uids) . ") and orgid='" . intval($orgid) . "'")) {
             $log = '移除在orgid(' . $orgid . ')中的用户(' . implode(',', $uids) . ')';
             writelog('deletelog', $log);
             //删除管理员表数据
-            DB::delete('organization_admin', "uid IN (" . dimplode($uids) . ") and orgid='{$orgid}'");
+            DB::delete('organization_admin', "uid IN (" . dimplode($uids) . ") and orgid='" . intval($orgid) . "'");
             include_once libfile('function/cache');
             updatecache('organization');
             self::syn_user($uids);
@@ -297,7 +297,7 @@ class table_organization_user extends dzz_table {
         foreach (DB::fetch_all("select * from %t where orgid=%d", [$this->_table, $orgid]) as $value) {
             if (DB::result_first("select COUNT(*) from %t where orgid=%d and uid=%d", [$this->_table, $org['forgid'], $value['uid']])) {
                 C::t('organization_admin')->delete_by_uid_orgid($value['uid'], $orgid);
-                DB::delete($this->_table, "orgid='{$org['forgid']}' and uid='{$value['uid']}'");
+                DB::delete($this->_table, "orgid='" . intval($org['forgid']) . "' and uid='" . intval($value['uid']) . "'");
             } else {
                 $value['orgid'] = $org['forgid'];
                 self::insert($value);

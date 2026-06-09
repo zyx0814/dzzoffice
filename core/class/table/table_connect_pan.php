@@ -26,7 +26,7 @@ class table_connect_pan extends dzz_table {
     public function fetch_by_id($id) {
 
         $value = self::fetch($id);
-        $cloud = DB::fetch_first("select * from " . DB::table('connect') . " where bz='{$value['bz']}'");
+        $cloud = DB::fetch_first("select * from %t where bz=%s", array('connect', $value['bz']));
         if (!$value['cloudname']) $value['cloudname'] = $cloud['name'] . ':' . ($value['cusername'] ?: $cloud['cuid']);
         return [
             'id' => $value['id'],

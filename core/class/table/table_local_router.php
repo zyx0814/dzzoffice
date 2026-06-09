@@ -76,7 +76,7 @@ class table_local_router extends dzz_table {
     }
 
     public function delete_by_remoteid($remoteid) {
-        return DB::delete($this->_table, "remoteid='{$remoteid}'");
+        return DB::delete($this->_table, "remoteid='" . intval($remoteid) . "'");
     }
 
     //根据路由规则筛选出存储位置

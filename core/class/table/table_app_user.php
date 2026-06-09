@@ -19,17 +19,17 @@ class table_app_user extends dzz_table {
 
     public function delete_by_uid_appid($uid, $appid) {
         if (!$appid) return false;
-        return DB::delete($this->_table, " appid='{$appid}' and uid='{$uid}'");
+        return DB::delete($this->_table, " appid='" . intval($appid) . "' and uid='" . intval($uid) . "'");
     }
 
     public function delete_by_appid($appid) {
         if (!$appid) return false;
-        return DB::delete($this->_table, " appid='{$appid}'");
+        return DB::delete($this->_table, " appid='" . intval($appid) . "'");
     }
 
     public function update_lasttime($uid, $appid, $lasttime) {
         if (!$uid) return false;
-        if (DB::query("update " . DB::table($this->_table) . " set lasttime=" . intval($lasttime) . ", num=num+1 where appid='{$appid}' and uid='{$uid}'")) {
+        if (DB::query("update %t set lasttime=%d, num=num+1 where appid=%d and uid=%d", array($this->_table, intval($lasttime), $appid, $uid))) {
 
         } else {
             parent::insert(['uid' => $uid, 'appid' => $appid, 'lasttime' => $lasttime, 'dateline' => TIMESTAMP, 'num' => 1], false, true);
@@ -43,7 +43,7 @@ class table_app_user extends dzz_table {
         $oids = [];
         $delids = [];
         $insertids = [];
-        $oarr = DB::fetch_all("select * from " . DB::table('app_user') . " where uid='{$uid}'");
+        $oarr = DB::fetch_all("select * from %t where uid=%d", array('app_user', $uid));
         foreach ($oarr as $value) {
             $oids[] = $value['appid'];
             if (!in_array($value['appid'], $appids)) $delids[] = $value['id'];

@@ -26,7 +26,7 @@ class table_connect_ftp extends dzz_table {
     public function fetch_by_id($id) {
 
         $value = self::fetch($id);
-        $cloud = DB::fetch_first("select * from " . DB::table('connect') . " where bz='{$value['bz']}'");
+        $cloud = DB::fetch_first("select * from %t where bz=%s", array('connect', $value['bz']));
         return [
             'id' => $value['id'],
             'fid' => md5($cloud['bz'] . ':' . $value['id'] . ':' . $cloud['root']),

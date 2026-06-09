@@ -29,7 +29,7 @@ class io_disk extends io_api {
     public function __construct($path) {
         $bzarr = explode(':', $path);
         $did = trim($bzarr[1]);
-        if ($config = DB::fetch_first("select * from " . DB::table(self::T) . " where  id='{$did}'")) {
+        if ($config = DB::fetch_first("select * from %t where id=%d", array(self::T, $did))) {
             $this->_root = 'disk:' . $config['id'] . ':';
             $this->uid = $config['uid'];
             $this->encode = $config['charset'];
@@ -138,7 +138,7 @@ class io_disk extends io_api {
             }
             $config['uid'] = $uid;
             if ($id = DB::result_first("select id from %t where uid=%d and attachdir=%s", [self::T, $uid, $config['attachdir']])) {
-                DB::update(self::T, $config, "id ='{$id}'");
+                DB::update(self::T, $config, "id ='" . intval($id) . "'");
             } else {
                 $config['dateline'] = TIMESTAMP;
                 $id = DB::insert(self::T, $config, 1);

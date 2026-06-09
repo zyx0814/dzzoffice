@@ -21,7 +21,7 @@ class table_app_open_default extends dzz_table {
     }
 
     public function delete_by_extid($extid) {
-        return DB::delete($this->_table, " extid='{$extid}'");
+        return DB::delete($this->_table, " extid='" . intval($extid) . "'");
     }
 
     public function insert_default_by_uid($uid, $extid, $ext) {

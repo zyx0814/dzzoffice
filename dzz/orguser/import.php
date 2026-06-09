@@ -279,10 +279,10 @@ if ($do == 'importing') {
             if ($jobid) {
                 if ($isappend) {//增量导入时
                     if (!DB::result_first("select COUNT(*) from %t where uid=%d and orgid=%d and jobid>0 ", ['organization_user', $uid, $orgid])) {
-                        DB::update('organization_user', ['jobid' => $jobid], "uid='{$uid}' and orgid='{$orgid}'");
+                        DB::update('organization_user', ['jobid' => $jobid], "uid='" . intval($uid) . "' and orgid='" . intval($orgid) . "'");
                     }
                 } else {//覆盖导入时
-                    DB::update('organization_user', ['jobid' => $jobid], "uid='{$uid}' and orgid='{$orgid}'");
+                    DB::update('organization_user', ['jobid' => $jobid], "uid='" . intval($uid) . "' and orgid='" . intval($orgid) . "'");
                 }
             }
         }

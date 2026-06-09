@@ -30,7 +30,7 @@ class table_resources_tag extends dzz_table {
                 $deltagnames[] = $tag['tagname'];
             }
         }
-        if ($ret = DB::delete($this->_table, "rid ='{$rid}' and tid IN(" . dimplode($tids) . ")")) {
+        if ($ret = DB::delete($this->_table, "rid ='" . daddslashes($rid) . "' and tid IN(" . dimplode($tids) . ")")) {
             //减少使用数
             C::t('tag')->addhot_by_tid($tids, -1);
             if ($event) {

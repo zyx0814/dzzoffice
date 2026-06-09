@@ -102,7 +102,7 @@ class table_user_setting extends dzz_table {
         foreach ($skeys as $skey) {
             $cachekeys[] = $uid . '_' . $skey;
         }
-        if ($ret = DB::delete($this->_table, "skey IN (" . dimplode($skeys) . ") and uid=" . $uid)) {
+        if ($ret = DB::delete($this->_table, "skey IN (" . dimplode($skeys) . ") and uid=" . intval($uid))) {
             $this->clear_cache($cachekeys);
             $this->clear_cache($uid);
             return $ret;

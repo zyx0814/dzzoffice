@@ -436,20 +436,20 @@ class dzz_io {
 
     public static function getCloud($bz) {
         $bzarr = explode(':', $bz);
-        $cloud = DB::fetch_first("select * from " . DB::table('connect') . " where bz='{$bzarr[0]}'");
+        $cloud = DB::fetch_first("select * from %t where bz=%s", array('connect', $bzarr[0]));
         if ($cloud['type'] == 'pan') {
-            $root = DB::fetch_first("select * from " . DB::table($cloud['dname']) . " where  id='{$bzarr[1]}'");
+            $root = DB::fetch_first("select * from %t where id=%d", array($cloud['dname'], $bzarr[1]));
             if (!$root['cloudname']) $root['cloudname'] = $cloud['name'] . ':' . ($root['cusername'] ?: $root['cuid']);
         } elseif ($cloud['type'] == 'storage') {
-            $root = DB::fetch_first("select * from " . DB::table($cloud['dname']) . " where id='{$bzarr[1]}'");
+            $root = DB::fetch_first("select * from %t where id=%d", array($cloud['dname'], $bzarr[1]));
             $root['access_id'] = authcode($root['access_id'], 'DECODE', $root['bz']);
             if (!$root['cloudname']) $root['cloudname'] = $cloud['name'] . ':' . ($root['bucket'] ?: cutstr($root['access_id'], 4, $dot = ''));
         } elseif ($cloud['type'] == 'ftp') {
-            $root = DB::fetch_first("select * from " . DB::table($cloud['dname']) . " where id='{$bzarr[1]}'");
+            $root = DB::fetch_first("select * from %t where id=%d", array($cloud['dname'], $bzarr[1]));
         } elseif ($cloud['type'] == 'disk') {
-            $root = DB::fetch_first("select * from " . DB::table($cloud['dname']) . " where id='{$bzarr[1]}'");
+            $root = DB::fetch_first("select * from %t where id=%d", array($cloud['dname'], $bzarr[1]));
         } else {
-            $root = DB::fetch_first("select * from " . DB::table($cloud['dname']) . " where id='{$bzarr[1]}'");
+            $root = DB::fetch_first("select * from %t where id=%d", array($cloud['dname'], $bzarr[1]));
         }
         $root['cloudtype'] = $cloud['type'];
         $root['name'] = $cloud['name'];

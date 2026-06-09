@@ -105,7 +105,7 @@ elseif(isset($_GET[\'' . $viewcachek . '\'])) {
 			echo \'<a href="' . $debugfile . '?k=' . $akey . '&' . $viewcachek . '&c=\'.$names[\'cname\'].\'" target="_blank" style="float:left;width:200px">\'.$names[\'cname\'].\'</a>\';
 		}
 	} else {
-		$cache = DB::fetch_first("SELECT * FROM ".DB::table("syscache")." WHERE cname=\'".$_GET[\'c\']."\'");
+		$cache = DB::fetch_first("SELECT * FROM %t WHERE cname=%s", array("syscache", $_GET['c']));
 		echo \'$_G[\\\'cache\\\'][\'.$_GET[\'c\'].\']<br>\';
 		debug($cache[\'ctype\'] ? dunserialize($cache[\'data\']) : $cache[\'data\']);
 	}

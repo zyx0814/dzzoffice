@@ -69,7 +69,7 @@ if (submitcheck('appsubmit')) {
     $iconnew = '';
     $target = '';
     if ($appid) {
-        $target = DB::result_first("select appico from " . DB::table('app_market') . " where appid='{$appid}'");
+        $target = DB::result_first("select appico from %t where appid=%d", array('app_market', $appid));
     }
     if ($_FILES['iconnew']) {
         if ($_FILES['iconnew']['tmp_name']) {

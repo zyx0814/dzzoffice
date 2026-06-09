@@ -262,7 +262,7 @@ class table_resources_recyle extends dzz_table {
             $rids .= "'" . $v . "',";
         }
         $rids = substr($rids, 0, -1);
-        DB::delete($this->_table, "rid in (" . $rids . ")");
+        DB::delete($this->_table, "rid in (" . daddslashes($rids) . ")");
         return true;
     }
 

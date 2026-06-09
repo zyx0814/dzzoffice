@@ -109,7 +109,7 @@ class io_baiduPCS extends io_api {
         global $_G;
         $bzarr = explode(':', $path);
         $bd_uid = trim($bzarr[1]);
-        if ($baidu = DB::fetch_first("select access_token,cloudname,cusername,uid from " . DB::table(self::T) . " where  id='{$bd_uid}'")) {
+        if ($baidu = DB::fetch_first("select access_token,cloudname,cusername,uid from %t where id=%d", array(self::T, $bd_uid))) {
 
             if (!$isguest && $baidu['uid'] > 0 && $baidu['uid'] != $_G['uid']) return ['error' => 'need authorize to baiduPCS'];
             $access_token = $baidu['access_token'];
@@ -129,7 +129,7 @@ class io_baiduPCS extends io_api {
         $bzarr = explode(':', $path);
         $bd_uid = trim($bzarr[1]);
         $cloud = DB::fetch_first("select `key` , `secret` from " . DB::table('connect') . " where bz='baiduPCS'");
-        if ($baidu = DB::fetch_first("select id,access_token,refresh_token from " . DB::table('connect_pan') . " where  id='{$bd_uid}'")) {
+        if ($baidu = DB::fetch_first("select id,access_token,refresh_token from %t where id=%d", array('connect_pan', $bd_uid))) {
             $auth = new BaiduOAuth2($cloud['key'], $cloud['secret']);
             if ($token = $auth->getAccessTokenByRefreshToken($baidu['refresh_token'], $baidu['scope'])) {
                 $token['refreshtime'] = TIMESTAMP;
@@ -193,8 +193,8 @@ class io_baiduPCS extends io_api {
                 $token['portrait'] = $userinfo['portrait'];
             }
             if ($token['cuid']) {
-                if ($id = DB::result_first("select id from " . DB::table(self::T) . " where uid='{$token['uid']}' and cuid='{$token['cuid']}' and bz='baiduPCS'")) {
-                    DB::update(self::T, $token, "id ='{$id}'");
+                if ($id = DB::result_first("select id from %t where uid=%d and cuid=%d and bz=%s", array(self::T, $token['uid'], $token['cuid'], 'baiduPCS'))) {
+                    DB::update(self::T, $token, "id ='" . intval($id) . "'");
                 } else {
                     $token['bz'] = 'baiduPCS';
                     $token['dateline'] = TIMESTAMP;

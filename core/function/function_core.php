@@ -1828,7 +1828,7 @@ function getPathByPfid($pfid, $arr = [], $count = 0) {
     //static $count=0;
     if ($count > 100) return $arr; //防止死循环；
     else $count++;
-    if ($value = DB::fetch_first("select pfid,fid,fname from " . DB::table('folder') . " where fid='{$pfid}'")) {
+    if ($value = DB::fetch_first("select pfid,fid,fname from %t where fid=%d", array('folder', $pfid))) {
         $arr[$value['fid']] = $value['fname'];
         if ($value['pfid'] > 0 && $value['pfid'] != $pfid) $arr = getPathByPfid($value['pfid'], $arr, $count);
     }
@@ -1841,7 +1841,7 @@ function getTopFid($fid, $i = 0, $arr = []) {
     $arr[] = $fid;
     if ($i > 100) return $arr; //防止死循环；
     else $i++;
-    if ($pfid = DB::result_first("select pfid from " . DB::table('folder') . " where fid='{$fid}'")) {
+    if ($pfid = DB::result_first("select pfid from %t where fid=%d", array('folder', $fid))) {
         if ($pfid != $fid) $arr = getTopFid($pfid, $i, $arr);
     }
     return $arr;
@@ -1936,7 +1936,7 @@ function dzzgetspace($uid) {
 
     //获取相关设置信息
     if ($space['uid']) {
-        $config = DB::fetch_first("select usesize,attachextensions,maxattachsize,addsize,buysize,perm,userspace from " . DB::table('user_field') . " where uid='{$uid}'");
+        $config = DB::fetch_first("select usesize,attachextensions,maxattachsize,addsize,buysize,perm,userspace from %t where uid=%d", array('user_field', $uid));
         if($config) {
             $config['perm'] = ($config['perm'] < 1) ? $usergroup['perm'] : $config['perm'];
             $config['attachextensions'] = ($config['attachextensions'] < 0) ? $usergroup['attachextensions'] : $config['attachextensions'];

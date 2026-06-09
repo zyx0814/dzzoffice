@@ -352,10 +352,10 @@ class table_organization extends dzz_table {
         if ($org['forgid'] == 0) {
             $pfid = 0;
         } else {
-            $pfid = DB::result_first("select fid from " . DB::table($this->_table) . " where orgid='{$org['forgid']}'");
+            $pfid = DB::result_first("select fid from %t where orgid=%d", array($this->_table, $org['forgid']));
         }
 
-        if ($fid = DB::result_first("select fid from " . DB::table('folder') . " where gid='{$orgid}' and flag='organization'")) {
+        if ($fid = DB::result_first("select fid from %t where gid=%d and flag=%s", array('folder', $orgid, 'organization'))) {
             if (C::t('folder')->rename_by_fid($fid, $org['orgname'])) {
                 parent::update($orgid, ['fid' => $fid]);
             }

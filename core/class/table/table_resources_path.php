@@ -106,7 +106,7 @@ class table_resources_path extends dzz_table {
         return false;
     }
     /*public function delete_by_pathkey($pathkey){
-        return DB::delete($this->_table,"pathkey = ".$pathkey);
+        return DB::delete($this->_table, ['pathkey' => $pathkey]);
     }*/
     //通过pathkey获取文件夹下级及自身fid
     public function fetch_folder_containfid_by_pfid($pfid) {

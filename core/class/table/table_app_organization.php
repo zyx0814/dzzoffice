@@ -28,7 +28,7 @@ class table_app_organization extends dzz_table {
         if (!is_array($orgids)) $orgids = [$orgids];
         $insertids = array_diff($orgids, $Oorgids);
         $delids = array_diff($Oorgids, $orgids);
-        if ($delids) DB::delete($this->_table, "appid='{$appid}' and orgid IN (" . dimplode($delids) . ")");
+        if ($delids) DB::delete($this->_table, "appid='" . intval($appid) . "' and orgid IN (" . dimplode($delids) . ")");
         foreach ($insertids as $orgid) {
             if ($orgid > 0) self::insert($appid, $orgid);
         }
@@ -36,7 +36,7 @@ class table_app_organization extends dzz_table {
     }
 
     public function delete_by_appid($appid) {
-        return DB::delete($this->_table, "appid='{$appid}'");
+        return DB::delete($this->_table, "appid='" . intval($appid) . "'");
     }
 
     public function delete_by_orgid($orgids) {

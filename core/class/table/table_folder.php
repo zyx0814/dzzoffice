@@ -166,7 +166,7 @@ class table_folder extends dzz_table {
                 'innav' => 1,
                 'fsperm' => perm_FolderSPerm::flagPower('home')
             ];
-            if ($rootfid = DB::result_first("select fid from " . DB::table('folder') . " where uid='{$uid}' and flag='home' ")) {
+            if ($rootfid = DB::result_first("select fid from %t where uid=%d and flag=%s", array('folder', $uid, 'home'))) {
                 self::update($rootfid, ['fname' => $root['fname'], 'isdelete' => 0, 'pfid' => 0, 'fsperm' => $root['fsperm'], 'perm' => $root['perm']]);
             } else {
                 $rootfid = self::insert($root);

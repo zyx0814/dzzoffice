@@ -36,11 +36,11 @@ if ($bz && $bz !== 'dzz') {
     while ($value = DB::fetch($query)) {
         $type = $value['type'];
         if (in_array($type, ['pan', 'storage', 'ftp', 'disk'])) {
-            $baseWhere = "bz = '{$value['bz']}'";
             if (!$_G['adminid']) {
-                $baseWhere .= " AND uid = '{$_G['uid']}'";
+                $subQuery = DB::fetch_all("SELECT * FROM %t WHERE bz=%s AND uid=%d", array($value['dname'], $value['bz'], $_G['uid']));
+            } else {
+                $subQuery = DB::fetch_all("SELECT * FROM %t WHERE bz=%s", array($value['dname'], $value['bz']));
             }
-            $subQuery = DB::fetch_all("SELECT * FROM " . DB::table($value['dname']) . " WHERE {$baseWhere}");
             foreach ($subQuery as $value1) {
                 $cloudid = "{$value['bz']}:{$value1['id']}:";
                 if ($value1['uid']) {

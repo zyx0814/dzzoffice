@@ -20,7 +20,7 @@ if (submitcheck('addcloudsubmit')) {
     if (empty($_GET['bz'])) {
         $error[] = lang('identifier_can_not_empty');
     }
-    if (DB::result_first("select COUNT(*) from " . DB::table('connect') . " where bz='{$_GET['bz']}'")) {
+    if (DB::result_first("select COUNT(*) from %t where bz=%s", array('connect', $_GET['bz']))) {
         $error[] = lang('designator') . $_GET['bz'] . lang('already_existed');
     }
     if ($error)

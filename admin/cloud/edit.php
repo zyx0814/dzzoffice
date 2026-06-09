@@ -29,8 +29,8 @@ if ($_GET['do'] == 'usercloud') {
         $start = ($page - 1) * $perpage;
         $theurl = BASESCRIPT . '?mod=cloud&op=edit&do=usercloud&bz=' . $bz;
         $dname = $cloud['dname'];
-        $count = DB::result_first("select COUNT(*) from " . DB::table($dname) . " where bz='{$bz}' and uid>0");
-        foreach (DB::fetch_all("select t.*, u.username from " . DB::table($dname) . " as t LEFT JOIN " . DB::table('user') . " as u on t.uid = u.uid where bz='{$bz}' and t.uid>0 order by dateline DESC limit $start,$perpage") as $value1) {
+        $count = DB::result_first("select COUNT(*) from %t where bz=%s and uid>0", array($dname, $bz));
+        foreach (DB::fetch_all("select t.*, u.username from %t as t LEFT JOIN %t as u on t.uid = u.uid where bz=%s and t.uid>0 order by dateline DESC limit %d,%d", array($dname, 'user', $bz, $start, $perpage)) as $value1) {
             if ($cloud['type'] == 'pan') {
                 if (!$value1['cloudname']) $value1['cloudname'] = $cloud['name'] . ':' . ($value1['cusername'] ?: $value1['cuid']);
             } elseif ($cloud['type'] == 'storage') {

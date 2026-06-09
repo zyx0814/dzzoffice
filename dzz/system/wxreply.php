@@ -36,9 +36,9 @@ switch ($type) {
     case qyWechat::MSGTYPE_EVENT:
         $data = $weObj->getRev()->getRevData();//{"ToUserName":"wx735f8743226a8656","FromUserName":"dzz-1","CreateTime":"1413865073","MsgType":"event","AgentID":"0","Event":"unsubscribe","EventKey":{}
         if ($data['Event'] == 'unsubscribe') {
-            DB::update('user', ['wechat_status' => 4], "wechat_userid='{$data[FromUserName]}'");
+            DB::update('user', ['wechat_status' => 4], ['wechat_userid' => $data['FromUserName']]);
         } elseif ($data['Event'] == 'subscribe') {
-            DB::update('user', ['wechat_status' => 1], "wechat_userid='{$data[FromUserName]}'");
+            DB::update('user', ['wechat_status' => 1], ['wechat_userid' => $data['FromUserName']]);
             //发送关注成功消息
             $weObj->text($_G['setting']['sitename'] . lang('news_platform_send_here'))->reply();
         } elseif ($data['Event'] == 'view') {

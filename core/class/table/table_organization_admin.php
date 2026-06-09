@@ -95,7 +95,7 @@ class table_organization_admin extends dzz_table {
     }
 
     public function delete_by_uid($uid) {
-        if ($return = DB::delete($this->_table, "uid='{$uid}'")) {
+        if ($return = DB::delete($this->_table, "uid='" . intval($uid) . "'")) {
             self::update_groupid_by_uid($uid);
             return $return;
         } else return false;
@@ -117,7 +117,7 @@ class table_organization_admin extends dzz_table {
     }
 
     public function delete_by_uid_orgid($uid, $orgid) {
-        if ($return = DB::delete($this->_table, "uid='{$uid}' and orgid='{$orgid}'")) {
+        if ($return = DB::delete($this->_table, "uid='" . intval($uid) . "' and orgid='" . intval($orgid) . "'")) {
             self::update_groupid_by_uid($uid);
             return $return;
         } else return false;

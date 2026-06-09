@@ -30,7 +30,7 @@ class io_ftp extends io_api {
     public function __construct($path) {
         $bzarr = explode(':', $path);
         $ftpid = trim($bzarr[1]);
-        if ($config = DB::fetch_first("select * from " . DB::table(self::T) . " where  id='{$ftpid}'")) {
+        if ($config = DB::fetch_first("select * from %t where id=%s", array(self::T, $ftpid))) {
             $this->_root = 'ftp:' . $config['id'] . ':';
             $this->uid = $config['uid'];
             $this->encode = $config['charset'];
@@ -127,7 +127,7 @@ class io_ftp extends io_api {
             if ($ftp->connect()) {
                 $config['uid'] = $uid;
                 if ($id = DB::result_first("select id from %t where uid=%d and host=%s and port=%d and username=%s", [self::T, $uid, $config['host'], $config['port'], $config['username']])) {
-                    DB::update(self::T, $config, "id ='{$id}'");
+                    DB::update(self::T, $config, ['id' => $id]);
                 } else {
                     $config['dateline'] = TIMESTAMP;
                     $id = DB::insert(self::T, $config, 1);

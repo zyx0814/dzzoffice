@@ -27,7 +27,7 @@ class table_connect extends dzz_table {
         $data = [];
         if ($onlyuser) $available = 1;
         else  $available = 0;
-        $query = DB::query("SELECT * FROM " . DB::table($this->_table) . " WHERE available > '{$available}' and type!='local' ORDER BY disp");
+        $query = DB::query("SELECT * FROM %t WHERE available > %d and type!=%s ORDER BY disp", array($this->_table, $available, 'local'));
         while ($value = DB::fetch($query)) {
             //检测可用性
             if ($value['type'] == 'pan' && (empty($value['key']) || empty($value['secret']))) {
@@ -50,7 +50,7 @@ class table_connect extends dzz_table {
         $data = self::fetch_all_by_available();
         $folderdata = [];
         foreach ($data as $value) {
-            foreach (DB::fetch_all("select id from " . DB::table($value['dname']) . " where uid>0 && uid='{$uid}'") as $value1) {
+            foreach (DB::fetch_all("select id from %t where uid>0 && uid=%d", array($value['dname'], $uid)) as $value1) {
 
                 $arr = C::t($value['dname'])->fetch_by_id($value1['id']);
                 $folderdata[$arr['fid']] = $arr;
