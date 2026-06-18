@@ -30160,6 +30160,7 @@ UE.plugin.register("autoupload", function () {
                     loader.setAttribute("src", link);
                     loader.setAttribute("_src", link);
                     loader.setAttribute("alt", data.original || "");
+                    loader.setAttribute('class','dzz-image');
                     loader.removeAttribute("id");
                     me.trigger("contentchange", loader);
                 }

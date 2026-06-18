@@ -10,7 +10,6 @@ if (!defined('IN_DZZ')) {
     exit('Access Denied');
 }
 include_once libfile('function/appperm');
-Hook::listen('check_login');
 $navtitle = $global_appinfo['appname'] ?: lang('appname');
 $orgid = 'other';
 $orgtree = [];
