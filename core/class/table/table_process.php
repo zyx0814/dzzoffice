@@ -21,9 +21,10 @@ class table_process extends dzz_table {
     }
 
     public function delete_process($name, $time) {
-        $name = addslashes($name);
-        return DB::delete('process', "processid='" . daddslashes($name) . "' OR expiry<" . intval($time));
+        return DB::delete('process', [
+            'where' => 'processid=%s OR expiry<%d',
+            'arg' => [$name, $time],
+        ]);
     }
 }
-
 

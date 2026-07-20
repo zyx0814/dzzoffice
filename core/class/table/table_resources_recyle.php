@@ -256,14 +256,14 @@ class table_resources_recyle extends dzz_table {
     }
 
     public function delete_by_rid($rid) {
-        if (!is_array($rid)) $rid = (array)$rid;
-        $rids = '';
-        foreach ($rid as $v) {
-            $rids .= "'" . $v . "',";
+        if (!is_array($rid)) {
+            $rid = (array)$rid;
         }
-        $rids = substr($rids, 0, -1);
-        DB::delete($this->_table, "rid in (" . daddslashes($rids) . ")");
-        return true;
+
+        return DB::delete($this->_table, [
+            'where' => 'rid IN (%n)',
+            'arg' => [$rid],
+        ]);
     }
 
     //彻底删除
