@@ -118,6 +118,10 @@ $(document).on('click', '#emptysearchcondition', function () {
    // allowseracrinputwrite = true;
 	resetting_condition();
 	$('#searchval').val('').focus();
+    var recenttargetDom = document.querySelector('.document-data[data-hash="recent"]');
+    if (recenttargetDom) {
+        recenttargetDom.click();
+    }
 })
 
 //搜索js，默认单条件搜索
