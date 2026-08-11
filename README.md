@@ -1,4 +1,4 @@
-﻿﻿<div align="center">
+﻿<div align="center">
   <a href="https://github.com/zyx0814/dzzoffice" title="DzzOffice 开源协同办公系统">
     <img src="./static/image/common/logo.png" width="128px" alt="DzzOffice 开源协同办公系统" />
   </a>
@@ -138,4 +138,4 @@ DzzOffice 是一款开源办公套件，旨在为企业和团队提供类似于�
 
 ## Star 历史
 
-[![Star History Chart](https://api.star-history.com/svg?repos=zyx0814/dzzoffice&type=Date)](https://www.star-history.com/#zyx0814/dzzoffice&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=zyx0814/dzzoffice&type=Date)](https://star-history.dera.page/#zyx0814/dzzoffice&Date)
