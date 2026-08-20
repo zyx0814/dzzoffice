@@ -125,7 +125,9 @@ function env_check(&$env_items) {
             $env_items[$key]['current'] = PHP_VERSION;
         } elseif ($key == 'php_bit') {
             $env_items[$key]['current'] = phpBuild64() ? 64 : 32;
-        } elseif ($key == 'attachmentupload') {
+        } elseif($key == 'mysql') {
+			$env_items[$key]['current'] = class_exists('mysqli') ? 'mysql_enable' : 'disable';
+		} elseif ($key == 'attachmentupload') {
             $env_items[$key]['current'] = @ini_get('file_uploads') ? getmaxupload() : 'unknown';
         } elseif ($key == 'allow_url_fopen') {
             $env_items[$key]['current'] = @ini_get('allow_url_fopen') ?: 'unknown';
@@ -303,8 +305,7 @@ function show_env_result(&$env_items, &$dirfile_items, &$func_items, &$filesock_
         echo $func_str . $func_strextra;
         echo "</table></div>\n";
     }
-    echo "<div class=\"box\"><h2 class=\"title\">其他检查</h2>\n";
-    echo "<p class=\"tb\">数据库需使用 MySQL >= 5.7 或 MariaDB >= 10.2</p></div>\n";
+
     show_next_step(2, $error_code);
     show_footer();
 }
