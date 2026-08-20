@@ -27,6 +27,7 @@ class table_user_setting extends dzz_table {
         }
         //更新缓存
         $this->clear_cache($cachkeys);
+        $this->clear_cache('settings_' . $uid);
         $this->clear_cache($uid);
         return true;
     }
@@ -45,6 +46,7 @@ class table_user_setting extends dzz_table {
         }
         //更新缓存
         $this->clear_cache($cachkeys);
+        $this->clear_cache('settings_' . $uid);
         $this->clear_cache($uid);
         return true;
     }
@@ -62,6 +64,7 @@ class table_user_setting extends dzz_table {
         }
         //更新缓存
         $this->clear_cache($uid . '_' . $skey);
+        $this->clear_cache('settings_' . $uid);
         $this->clear_cache($uid);
         return true;
     }
@@ -77,6 +80,7 @@ class table_user_setting extends dzz_table {
         parent::insert($setarr, 0, 1);
         //更新缓存
         $this->clear_cache($uid . '_' . $skey);
+        $this->clear_cache('settings_' . $uid);
         $this->clear_cache($uid);
         return true;
     }
@@ -104,6 +108,7 @@ class table_user_setting extends dzz_table {
         }
         if ($ret = DB::delete($this->_table, "skey IN (" . dimplode($skeys) . ") and uid=" . intval($uid))) {
             $this->clear_cache($cachekeys);
+            $this->clear_cache('settings_' . $uid);
             $this->clear_cache($uid);
             return $ret;
         }
@@ -113,12 +118,17 @@ class table_user_setting extends dzz_table {
     public function delete_by_uid($uids) { //删除设置
         $uids = (array)$uids;
         $cachekeys = [];
+        $cachekeys_set = [];
 
         foreach (DB::fetch_all("select skey,uid from %t where uid IN (%n)", [$this->_table, $uids]) as $value) {
             $cachekeys[] = $value['uid'] . '_' . $value['skey'];
         }
+        foreach ($uids as $uid) {
+            $cachekeys_set[] = 'settings_' . $uid;
+        }
         if ($ret = DB::delete($this->_table, "uid IN (" . dimplode($uids) . ")")) {
             $this->clear_cache($cachekeys);
+            $this->clear_cache($cachekeys_set);
             $this->clear_cache($uids);
             return $ret;
         }

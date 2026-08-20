@@ -16,9 +16,9 @@ if (CURMODULE) {
     if ($appinfo['appid']) {
         global $global_appinfo;
         $global_appinfo = $appinfo;
-        if ($_G['adminid']) return;
+        if ($_G['adminid']) return;//系统管理员不需要权限验证
         if (!$appinfo['available']) showmessage($appinfo['appname'] . ' 应用已关闭，请联系管理员。');
-        if ($appinfo['group'] == 0) return;
+        if ($appinfo['group'] == 0) return;//0表示全员可用
         if ($_G['uid']) {
             if ($appinfo['group'] == -1) showmessage($appinfo['appname'] . ' 应用仅限游客访问，请联系管理员。');
             if ($appinfo['group'] == 3) showmessage($appinfo['appname'] . ' 应用仅限管理员访问，请联系管理员。');
