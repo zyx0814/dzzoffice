@@ -82,9 +82,6 @@ li{list-style:none}
 .filemanage .detail_tr.Icoselected{background:#3779ff;transition:all 0.2s ease-in 0s}
 .filemanage .detail_tr.Icoselected td{border-bottom:1px solid transparent;color:#FFFFFF}
 .filemanage .Icoselected .IcoText_folder,.filemanage .Icoselected .detail_item_td{color:#FFFFFF}
-.filemanage .detail_header_asc_1 span,.filemanage .detail_header_asc_0 span{display:none}
-.filemanage .detail_header_asc_0 .dzz-expand-more{display:inline-block;color:#3779ff}
-.filemanage .detail_header_asc_1 .dzz-expand-less{display:inline-block;color:#3779ff}
 .icoimgContainer.icoimgContainer_image{width:98px;height:88px;overflow:hidden}
 #middleconMenu{position:relative;padding:0}
 .Icoblock.middleicon{margin:0.5rem 0.8rem 0.3rem 0.5rem;width:100px;height:125px;position:relative;float:left;padding:0;z-index:10;overflow:visible}
@@ -107,3 +104,4 @@ li{list-style:none}
 .select-filebottom .input-black .input-label{text-align:right;min-width:63px}
 .emptyPage{text-align:center;position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);-moz-transform:translate(-50%,-50%)}
 .emptyPage .emptyPage-text{font-size:16px;color:#AAAAAA;cursor:default}
+.filemanage .detail_header_td_div .dzz-meundropdown{font-size: 18px;vertical-align: middle;}

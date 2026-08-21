@@ -286,11 +286,9 @@ to{opacity:1}
 .filemanage .detail_item_name{margin:0 10px;line-height:30px;font-size:12px;height:30px;text-shadow:1px 1px 1px #FFF;font-weight:700;overflow:hidden;word-wrap:nowrap}
 .filemanage .detail_item_name span{cursor:pointer}
 .filemanage .detail_item_hover{overflow:hidden;word-wrap:nowrap;position:relative;line-height:50px}
-.filemanage .detail_header_asc_1 span,.filemanage .detail_header_asc_0 span{display:none}
-.filemanage .detail_header_asc_1 .mdi-chevron-up{display:inline-block;color:#3779ff}
-.filemanage .detail_header_asc_0 .mdi-chevron-down{display:inline-block;color:#3779ff}
 .filemanage .detail_text{text-shadow:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:inherit;display:inline-block;float:left;word-break:break-all}
 .filemanage .detail_header_td_div{overflow:hidden;position:relative;white-space:nowrap;text-overflow:ellipsis}
+.filemanage .detail_header_td_div .dzz-meundropdown{font-size: 18px;vertical-align: middle;}
 .filemanage td,.filemanage th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;height:32px;line-height:32px}
 .selectall-box{padding-left:5px;width:auto;display:inline-block;line-height:64px}
 .selectall-box .mdi-close{cursor:pointer;display:inline-block}

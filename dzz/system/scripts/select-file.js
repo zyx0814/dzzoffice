@@ -115,8 +115,12 @@ _selectfile.get_template = function (sid, whole, disp, asc) {
         //替换参数
         str = str.replace(/\{asc_\d\}/g, obj.asc);
         var regx = new RegExp('\{show_' + obj.disp + '\}', 'ig');
-        str = str.replace(regx, 'inline-block');
-        str = str.replace(/\{show_\d}/ig, 'none');
+		if (obj.asc == 1) {
+			str = str.replace(regx, 'dzz dzz-expand-less dzz-meundropdown');
+		} else {
+			str = str.replace(regx, 'dzz dzz-expand-more dzz-meundropdown');
+		}
+		str = str.replace(/\{show_\d}/ig, 'dzz dzz-paixu text-muted ');
     } else {
         switch (obj.view) {
             case 0:

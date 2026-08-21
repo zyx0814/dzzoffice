@@ -184,6 +184,9 @@ class dzz_error {
         header("Status: 503 Service Temporarily Unavailable");
         header("Retry-After: 3600");
         $showError = isset($_G['config']['security']['error']['showerror']) ? $_G['config']['security']['error']['showerror'] : 1;
+        if (defined('DZZ_DEBUG') && DZZ_DEBUG) {//调试模式强制显示全部信息
+            $showError = 3;
+        }
         $title = ($showError !=0) ? ($type == 'db' ? 'Database' : 'System') : 'General';
         $charset = isset($_G['config']['output']['charset']) ? $_G['config']['output']['charset'] : 'UTF-8';
         $clientIp = isset($_G['clientip']) ? $_G['clientip'] : 'Unknown';
@@ -255,26 +258,53 @@ EOT;
         if($showError == 0) {
 			echo '<div class="info"><p>您好，系统暂时发生异常，无法完成您当前的操作</p></div>';
 		}
-        if(!empty($phpmsg) && $showError == 1) {
-            echo '<div class="info">';
-            echo '<p><strong>PHP Debug</strong></p>';
-            echo '<table cellpadding="5" cellspacing="1" width="100%" class="table">';
-            if (is_array($phpmsg)) {
-                echo '<tr class="bg2"><td>No.</td><td>File</td><td>Line</td><td>Code</td></tr>';
-                foreach ($phpmsg as $k => $msg) {
-                    $k++;
-                    echo '<tr class="bg1">';
-                    echo '<td>' . $k . '</td>';
-                    echo '<td>' . $msg['file'] . '</td>';
-                    echo '<td>' . $msg['line'] . '</td>';
-                    echo '<td>' . $msg['function'] . '</td>';
-                    echo '</tr>';
+        if(!empty($phpmsg)) {
+            if($showError == 1 || $showError == 3) {
+                echo '<div class="info">';
+                echo '<p><strong>PHP Debug</strong></p>';
+                echo '<table cellpadding="5" cellspacing="1" width="100%" class="table">';
+                if (is_array($phpmsg)) {
+                    echo '<tr class="bg2"><td>No.</td><td>File</td><td>Line</td><td>Code</td></tr>';
+                    foreach ($phpmsg as $k => $msg) {
+                        $k++;
+                        echo '<tr class="bg1">';
+                        echo '<td>' . $k . '</td>';
+                        echo '<td>' . $msg['file'] . '</td>';
+                        echo '<td>' . $msg['line'] . '</td>';
+                        echo '<td>' . $msg['function'] . '</td>';
+                        echo '</tr>';
+                    }
+                } else {
+                    echo '<tr><td><ul>' . $phpmsg . '</ul></td></tr>';
                 }
-            } else {
-                echo '<tr><td><ul>' . $phpmsg . '</ul></td></tr>';
+                echo '</table></div>';
             }
-            echo '</table></div>';
+            if($showError == 3) {
+                echo '<div class="info">';
+                echo '<p><strong>System Info</strong></p>';
+                echo '<table cellpadding="5" cellspacing="1" width="100%" class="table">';
+                if(defined('DZZ_ROOT')) {
+                    include_once DZZ_ROOT.'./core/core_version.php';
+                }
+                if(defined('CORE_VERSION') && defined('CORE_RELEASE')) {
+                    echo '<tr class="bg2"><td>Version</td><td>Dzz '.CORE_VERSION.' Release '.CORE_RELEASE.'</td></tr>';
+                }
+                if(defined('PHP_OS') && function_exists('php_uname')) {
+                    echo '<tr class="bg2"><td>OS</td><td>'.PHP_OS.' / '.php_uname().'</td></tr>';
+                }
+                if(defined('PHP_VERSION') && defined('PHP_SAPI')) {
+                    echo '<tr class="bg2"><td>PHP</td><td>'.PHP_VERSION.' '.PHP_SAPI.(!empty($_SERVER['SERVER_SOFTWARE']) ? ' on '.$_SERVER['SERVER_SOFTWARE'] : '').'</td></tr>';
+                }
+                if(method_exists('helper_dbtool', 'dbversion') && class_exists('DB')) {
+                    echo '<tr class="bg2"><td>MySQL</td><td>'.helper_dbtool::dbversion().'</td></tr>';
+                }
+                if(function_exists('memory') && ($v = memory('check'))) {
+                    echo '<tr class="bg2"><td>Memory</td><td>'.$v.'</td></tr>';
+                }
+                echo '</table></div>';
+            }
         }
+        
         echo '<div class="help">' . lang('suggestion_user') . '</div>';
         echo '<div class="help">' . lang('suggestion') . '</div>';
         echo '<div class="help"><a href="http://' . $host . '">' . $host . '</a> 已经将此出错信息详细记录在<a href="admin.php?mod=systemlog&operation=errorlog&keyword=' . $backtraceid . '" target="_blank">系统日志-系统错误</a>中, 由此给您带来的访问不便我们深感歉意</div>';
