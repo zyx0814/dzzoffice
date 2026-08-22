@@ -92,11 +92,15 @@ if ($do == 'saveIndex') {
 function human_time($time)
 {
     try {
-        // 时间戳转 DateTime（支持 int 时间戳）
         $join = new DateTime();
         $join->setTimestamp($time);
+        $join->setTime(0, 0, 0);
         
         $now = new DateTime();
+        $now->setTime(0, 0, 0);
+        if ($join > $now) {
+            return '时间异常';
+        }
         $diff = $join->diff($now);
 
         $result = '';
@@ -104,7 +108,7 @@ function human_time($time)
         if ($diff->m > 0) $result .= $diff->m . '个月';
         if ($diff->d > 0) $result .= $diff->d . '天';
 
-        return $result ?: '今天加入';
+        return $result ?: '今天';
     } catch (Exception $e) {
         return '时间异常';
     }
