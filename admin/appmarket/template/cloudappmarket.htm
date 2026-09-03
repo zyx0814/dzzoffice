@@ -27,7 +27,7 @@
 	<div class="container-fluid">
 	  <div class="card">
 		<header class="card-header flex-container">
-			<a href="{MOD_URL}" class="dcolor">{lang total}<span class="num">$total</span>{lang ge}{lang app}</a>
+			<a href="{MOD_URL}" class="dcolor">{lang total}{lang search_results_found}<span class="num">$total</span>{lang ge}{lang app}</a>
 		</header>
 		<div class="card-body">
 			<div class="alert alert-warning" role="alert">
@@ -63,10 +63,10 @@
 					<div id="progess_{$value[mid]}">
 						<div class="progress-bar upgrade_progess" role="progressbar" id="upgrade_progess_{$value[mid]}"></div>
 						</div>
-					<a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" class="view-detail" title="$value[name]"><img src="$value[coverimg]" alt="$value[name]" /></a>
+					<a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" data-mid="$value['mid']" class="view-detail" title="$value[name]"><img src="$value[coverimg]" alt="$value[name]" /></a>
 				</div>
 				<div class="card-body">
-					<h5 class="card-title"><a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" target="_blank" class="dcolor view-detail text-truncate" title="$value[name]">$value[name]</a><span class="badge rounded-pill bg-success" title="最新版本：$value[version]">V&nbsp;$value[version]</span></h5>
+					<h5 class="card-title"><a href="javascript:;" data-href="{$cloudurl}?mod=dzzmarket&op=ajax&do=view&mid=$value[mid]&refer=$refer" data-mid="$value['mid']" target="_blank" class="dcolor view-detail text-truncate" title="$value[name]">$value[name]</a><span class="badge rounded-pill bg-success" title="最新版本：$value[version]">V&nbsp;$value[version]</span></h5>
 					<p class="card-text text-truncate">{eval echo $value['desc_short']?$value['desc_short']:lang('none');}</p>
 				</div>
 				<ul class="list-group list-group-flush">
@@ -121,7 +121,10 @@
     <div class="modal-content">
 		<div class="modal-header">
 			<h4 class="modal-title text-truncate" id="return_create_newdir"></h4>
-			<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+			<div class="float-end">
+				<a class="mdi mdi-open-in-new modal-fullscreen-btn1" href="" target="_blank" title="前往官网查看"></a>
+				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+			</div>
 		</div>
       <div class="modal-body"> </div>
       <div class="modal-footer">
@@ -193,12 +196,14 @@
 	function showBuyInfo(obj,size){
 		var url=jQuery(obj).data('href');
 		var title=jQuery(obj).attr('title');
+		var mid=jQuery(obj).data('mid');
 		if(size){
 			jQuery('.modal .modal-dialog').addClass(size);
 		}
 		jQuery.get(url,function(html){
 			html=html.replace(/src=\"index\.php/ig,'src="$cloudurl');
 			jQuery('.modal .modal-body').html(html);
+			jQuery('.modal-fullscreen-btn1').attr('href', ajaxurl+'?mod=dzzmarket&op=view&mid='+mid);
 		});
 		jQuery('.modal .modal-title').html(title);
 		jQuery('.modal').modal('show');

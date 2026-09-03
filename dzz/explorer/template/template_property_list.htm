@@ -12,6 +12,12 @@
 <!--文件详情开始-->
 <!--{if $fileinfo['ftype']}-->
 <div class="row mb-1"> 
+    <label class="col-sm-3 text-muted">{lang name}</label>
+    <div class="col-sm-9">$fileinfo['name']</div>
+</div>
+<!--{/if}-->
+<!--{if $fileinfo['ftype']}-->
+<div class="row mb-1"> 
     <label class="col-sm-3 text-muted">{lang type}</label>
     <div class="col-sm-9">$fileinfo['ftype']</div>
 </div>

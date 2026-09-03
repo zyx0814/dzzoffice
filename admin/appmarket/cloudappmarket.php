@@ -26,7 +26,16 @@ $order = in_array($orderid, $orderarr) ? $orderid : 'disp';
 $classid = intval($_GET['classid']);
 $price = intval($_GET['price']);
 $nettypetitle = ['1' => '内网', '2' => '外网'];
-$post_data = ["siteuniqueid" => $_G["setting"]["siteuniqueid"], "page" => $page, "type" => 1, "classid" => $classid, "price" => $price,"nettype" => $nettype,"order" => $order];
+$post_data = [
+    "siteuniqueid" => $_G["setting"]["siteuniqueid"],
+    "page" => $page,
+    "type" => 1,
+    "classid" => $classid,
+    "price" => $price,
+    "nettype" => $nettype,
+    "order" => $order,
+    "keyword" => $keyword
+];
 $json = curlcloudappmarket($url, $post_data);
 $json = json_decode($json, true);
 $list = [];

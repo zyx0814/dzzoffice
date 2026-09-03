@@ -476,17 +476,23 @@
 <!--{if !$error}-->
 <div class="modal-header">
     <h4 class="modal-title text-truncate">
-        <!--{if $fileinfo['ismulti']}-->
-        <i class="mdi mdi-file-multiple text-primary"></i> {lang more_select}
-        <!--{else}-->
-        <!--{if $fileinfo['img']}-->
+        <!--{if $fileinfo['isgroup'] && $fileinfo['gid']}-->
+        {eval echo avatar_group($fileinfo['gid']);}
+        <!--{elseif $fileinfo['flag'] == 'home'}-->
+        <i class="mdi mdi-account-box text-primary right-topicon"></i>
+        <!--{elseif $fileinfo['ismulti']}-->
+        <i class="mdi mdi-file-multiple text-primary"></i>
+        <!--{elseif $bz && $fileinfo['bz']}-->
+        <img src="dzz/images/default/system/{$fileinfo['bz']}.png">
+        <!--{elseif $fileinfo['img']}-->
         <img src="$fileinfo['img']" class="wh-32 pe-1">
-        <!--{/if}-->
-        <!--{if $fileinfo[fname]}-->
-        $fileinfo[fname]
         <!--{else}-->
-        $fileinfo[name]
+        <img src="dzz/images/default/system/folder.png" class="wh-32 pe-1">
         <!--{/if}-->
+        <!--{if $fileinfo['ismulti']}-->
+        {lang more_select}
+        <!--{elseif $fileinfo[name]}-->$fileinfo[name]
+        <!--{elseif $fileinfo[fname]}-->$fileinfo[fname]
         <!--{/if}-->
     </h4>
     <div class="float-end">

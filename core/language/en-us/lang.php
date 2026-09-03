@@ -1423,7 +1423,7 @@ $lang = [
     'directory_name_can_not_empty' => 'Directory name cannot be empty',
     'folder_name_can_not_empty' => 'Folder name cannot be empty',
     'no_target_folderID' => 'No Target Folder ID',
-    'page_not_found' => 'Sorry, but that page seems to no longer exist.',
+    'page_not_found' => 'The application does not exist. Please contact the administrator.',
     'is_encrypted' => 'Encrypted',
     'is_root_user' => 'Founder account cannot be disabled',
     'error' => 'Error',
@@ -1479,4 +1479,5 @@ $lang = [
     'cloud_type_local'=>'Local',
     'system_close' => 'System Closed',
     'please_check_form' => 'Please check the form',
+    'search_result' => 'Search results found',
 ];

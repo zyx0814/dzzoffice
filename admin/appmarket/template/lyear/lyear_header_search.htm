@@ -21,6 +21,16 @@
 				
  </form>
 </div>
+<!--{elseif $_GET['op']=='cloudappmarket'}-->
+ <div class="input-search">
+ <form name="search" action="{MOD_URL}" method="get">
+    <input type="hidden" name="mod" value="{MOD_NAME}" /> 
+    <input type="hidden" name="op" value="cloudappmarket" />
+    <i class="input-search-icon mdi mdi-magnify" aria-hidden="true" onclick="this.parentNode.submit()"></i>
+    <input type="text" class="form-control search  form-search" name="keyword" value="$_GET[keyword]" placeholder="{lang application_name_suppliers}" id="searchval">
+	 <span aria-hidden="true" id="emptysearchcondition" class="header-closebutton mdi mdi-close"></span>			
+ </form>
+</div>
 <!--{elseif $_GET['op']=='upgrade'}-->
  <div class="input-search">
  <form name="search" action="{MOD_URL}" method="get">

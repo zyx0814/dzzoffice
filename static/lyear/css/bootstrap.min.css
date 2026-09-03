@@ -1095,7 +1095,7 @@ textarea.form-control-lg{min-height:calc(1.5em + 1rem + 2px)}
 }@media (min-width:1200px){.modal-xl{max-width:1140px}
 .modal-dialog{width:900px;max-width:900px}
 }.modal-fullscreen{width:100vw;max-width:none;height:100%;margin:0}
-.modal-fullscreen-btn{border:none;background-color:transparent;color:#000;opacity:0.6;font-size:22px;line-height:1.3;font-weight:700;margin:-0.5rem -0.5rem -0.5rem auto}
+.modal-fullscreen-btn,.modal-fullscreen-btn1{border:none;background-color:transparent;color:#000;opacity:0.6;font-size:22px;line-height:1.3;font-weight:700;margin:-0.5rem -0.5rem -0.5rem auto}
 .modal-fullscreen-btn .mdi:before{width:1.5rem;height:1.5rem;vertical-align:middle;content:"\f0293";line-height:1}
 .modal-fullscreen-btn:hover{opacity:.8}
 .modal-fullscreen .modal-fullscreen-btn{opacity:.95}

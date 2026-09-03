@@ -1444,7 +1444,7 @@ $lang = [
     'directory_name_can_not_empty' => '目录名称不能为空',
     'folder_name_can_not_empty' => '文件夹名称不能为空',
     'no_target_folderID' => '没有目标文件夹ID',
-    'page_not_found' => '很抱歉，但是那个页面看起来已经不存在了。',
+    'page_not_found' => '该应用不存在，请联系管理员',
     'is_encrypted' => '已加密',
     'is_root_user' => '创始人账号不能禁用',
     'error' => '错误',
@@ -1500,4 +1500,5 @@ $lang = [
     'cloud_type_local'=>'内置',
     'system_close' => '系统关闭，请稍后再试',
     'please_check_form' => '请先检查表单内容是否正确',
+    'search_results_found' => '搜索到',
 ];
