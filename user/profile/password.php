@@ -32,7 +32,7 @@ if ($do == 'editpass') {
         chk_submitroule($type);
 
         //验证码
-        if (!check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
+        if ($seccodecheck && !check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
             showTips(['error' => lang('submit_seccode_invalid')], $type);
         }
         //验证原密码
@@ -83,9 +83,14 @@ if ($do == 'editpass') {
             $password = preg_match('/^\w{32}$/', $_GET['password']) ? $_GET['password'] : md5($_GET['password']);
             $password = md5($password . $member['salt']);
         }
-        if ($password && C::t('user')->update($_G['uid'], ['password' => $password])) {
-            showTips(['success' => lang('update_password_success')], $type);
-            exit();
+        if ($password) {
+            if ($password == $member['password']) {
+                showTips(['error' => '新旧密码不能相同'], $type);
+            }
+            if (C::t('user')->update($_G['uid'], ['password' => $password])) {
+                showTips(['success' => lang('update_password_success')], $type);
+                exit();
+            }
         }
         showTips(['error' => lang('update_password_failed')], $type);
         exit();
