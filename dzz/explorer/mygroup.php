@@ -13,7 +13,7 @@ $do = isset($_GET['do']) ? trim($_GET['do']) : '';
 if ($do == 'filelist') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
     $field = isset($_GET['sort']) ? $_GET['sort'] : 'dateline';
-    $limit = empty($_GET['limit']) ? 50 : $_GET['limit'];
+    $limit = empty($_GET['limit']) ? 50 : intval($_GET['limit']);
     $startdate = isset($_GET['startdate']) ? trim($_GET['startdate']) : '';
     $enddate = isset($_GET['enddate']) ? trim($_GET['enddate']) : '';
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;

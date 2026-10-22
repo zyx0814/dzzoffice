@@ -22,7 +22,7 @@ if ($do == 'getinfo') {
     $type = isset($_GET['type']) ? trim($_GET['type']) : '';
     $status = isset($_GET['status']) ? intval($_GET['status']) : null;
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
-    $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
+    $limit = empty($_GET['limit']) ? 20 : intval($_GET['limit']);
     $start = ($page - 1) * $limit;
     if ($field =='status') {
         $field = 's.status';

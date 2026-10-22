@@ -19,7 +19,7 @@ $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
 if ($do == 'getinfo') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'desc';
     $field = isset($_GET['field']) ? $_GET['field'] : 'dateline';
-    $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
+    $limit = empty($_GET['limit']) ? 20 : intval($_GET['limit']);
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $start = ($page - 1) * $limit;
     $validfields = ['edittime', 'edituid', 'authorid', 'dateline', 'ip', 'xtllq', 'message'];

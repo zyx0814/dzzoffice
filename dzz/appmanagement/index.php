@@ -129,7 +129,7 @@ if ($do == 'stats') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
     $ismember = isset($_GET['ismember']) ? trim($_GET['ismember']) : '';
     $field = isset($_GET['field']) ? $_GET['field'] : 'lastactivity';
-    $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
+    $limit = empty($_GET['limit']) ? 20 : intval($_GET['limit']);
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $start = ($page - 1) * $limit;
     $validfields = ['sid','uid', 'groupid','ip','lastactivity','lastolupdate'];
@@ -316,6 +316,7 @@ function getUptime(){
     ];
     $time = '';
     if ($_G['config']['system_os'] == 'windows') {
+        if (!function_exists('shell_exec')) return 'shell_exec扩展不可用';
         $res = shell_exec('WMIC OS Get LastBootUpTime');
         $time = explode("\r\n", $res);
         $time = isset($time[1]) ? intval($time[1]) : '';

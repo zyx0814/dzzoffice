@@ -29,7 +29,7 @@ if ($do == 'getinfo') {
     $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
     $type = isset($_GET['type']) ? trim($_GET['type']) : '';
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
-    $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
+    $limit = empty($_GET['limit']) ? 20 : intval($_GET['limit']);
     $start = ($page - 1) * $limit;
     $username = trim($_GET['username']);
     $uid = intval($_GET['uid']);

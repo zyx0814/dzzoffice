@@ -61,7 +61,7 @@ if ($do == 'delete') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
     $pfid = isset($_GET['pfid']) ? intval($_GET['pfid']) : '';
     $field = isset($_GET['field']) ? $_GET['field'] : 'dateline';
-    $limit = empty($_GET['limit']) ? 20 : $_GET['limit'];
+    $limit = empty($_GET['limit']) ? 20 : intval($_GET['limit']);
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $start = ($page - 1) * $limit;
     $validfields = ['name', 'size', 'type', 'username', 'dateline'];

@@ -25,7 +25,7 @@ if ($do == 'delshare') {
 } elseif ($do == 'filelist') {
     $order = isset($_GET['order']) ? $_GET['order'] : 'DESC';
     $field = isset($_GET['sort']) ? $_GET['sort'] : 'dateline';
-    $limit = empty($_GET['limit']) ? 50 : $_GET['limit'];
+    $limit = empty($_GET['limit']) ? 50 : intval($_GET['limit']);
     $page = (isset($_GET['page'])) ? intval($_GET['page']) : 1;
     $start = ($page - 1) * $limit;
     $validfields = ['title','downs','count','dateline','endtime'];

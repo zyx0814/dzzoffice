@@ -5,7 +5,8 @@ if (!defined('IN_DZZ')) {
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 if ($do == 'saveIndex') {
     if (!$_G['uid']) exit(json_encode(['error' => 'notlogin']));
-    $appids = implode(',', $_GET['appids']);
+    $ids = $_GET['appids'] ? $_GET['appids'] : [];
+    $appids = implode(',', $ids);
     $ret = C::t('user_setting')->update_by_skey('index_simple_appids', $appids);
     exit(json_encode(['success' => $ret]));
 } else {
