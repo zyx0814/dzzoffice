@@ -913,7 +913,7 @@ $lang =
     'upgrade_ftp_upload_error' => 'Error uploading file {file} via FTP. Please modify file permissions and re-upload, or re-set the FTP account {upgradeurl}',
     'upgrade_copy_error' => 'Error copying file {file}. Please check if the original file exists, re-copy it, or upload the copied file via FTP {upgradeurl}',
     'upgrade_file_successful' => 'File upgrade completed, will enter database upgrade {upgradeurl}',
-    'upgrade_successful' => 'Congratulations, upgrade successful! <br />Your current version is: [DzzOffice{version}] <br /><br />For security reasons, upgrade files have been saved to the {save_update_dir} directory, <br />Backup files have been saved to the {save_back_dir} directory {upgradeurl}',
+    'upgrade_successful' => '<div class="mdi-48px mdi mdi-check-circle text-primary lead rounded-circle"></div><p class="fw-bolder text-primary">Congratulations, upgrade successful!</p>Your current version is: [DzzOffice{version}] <br /><br />For security reasons, upgrade files have been saved to the {save_update_dir} directory, <br />Backup files have been saved to the {save_back_dir} directory {upgradeurl}',
 
     'filecheck_nofound_md5file' => 'Verification file does not exist, cannot perform this operation {upgradeurl}',
     'upgrade_param_error' => 'Incorrect request parameters',

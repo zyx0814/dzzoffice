@@ -919,7 +919,7 @@ $lang =
     'upgrade_ftp_upload_error' => 'ftp上传文件 {file} 出错， 请修改文件权限后重新上传 或 重新设置ftp账号 {upgradeurl}',
     'upgrade_copy_error' => '复制文件 {file} 出错，请检测原始文件是否存在，重新复制 或 通过ftp上传复制文件 {upgradeurl}',
     'upgrade_file_successful' => '文件升级成功，即将进入更新数据库 {upgradeurl}',
-    'upgrade_successful' => '恭喜您，升级成功! <br />您当前的版本为：[DzzOffice{version}] <br /><br />为安全起见，升级文件已保存至{save_update_dir}目录，<br />备份文件已保存至{save_back_dir}目录 {upgradeurl}',
+    'upgrade_successful' => '<div class="mdi-48px mdi mdi-check-circle text-primary lead rounded-circle"></div><p class="fw-bolder text-primary">恭喜您，升级成功! </p>您当前的版本为：[DzzOffice{version}] <br /><br />为安全起见，升级文件已保存至{save_update_dir}目录，<br />备份文件已保存至{save_back_dir}目录 {upgradeurl}',
 
     'filecheck_nofound_md5file' => '不存在校验文件，无法进行此操作 {upgradeurl}',
     'upgrade_param_error' => '请求的参数不正确',
