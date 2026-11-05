@@ -643,6 +643,10 @@ class dzz_app extends dzz_base {
         $data = [];
         if (file_exists($tagfile)) {//文件存在则导入文件
             $data = include $tagfile;
+            //不是数组就重置为空数组
+            if (!is_array($data)) {
+                $data = [];
+            }
             //if(is_array($data)) $data=array_unique($data);
         }
         if ($data) {
