@@ -1,0 +1,36 @@
+<table class="layui-hide" id="filestats" lay-filter="filestats"></table>
+<script>
+	jQuery(document).ready(function(e) {
+	  layuiModules.table.render({
+		elem: '#filestats',
+		url: '{MOD_URL}&op=filestats&do=filelist&ajaxdata=json',
+		toolbar: '#toolbar',
+		title: '文件统计数据表格',
+        even:true,
+        totalRow: true,
+        cellMinWidth:120,
+        height: $('.middleconMenu').outerHeight(),
+		text: {
+			none: '<div class="emptyPage"><img src="static/image/common/no_list.png"><p class="emptyPage-text">{lang not_group}</p></div>'
+		},
+		page: {
+		  limit: 50, // 默认显示20行
+		  limits: [10, 20, 50, 100, 200, 500, 1000,2000,5000] // 可选的行数
+		}
+		,cols: [[
+            {title: 'ID',width:80, fixed: 'left',type: 'numbers', totalRow: '总计：'}
+		  ,{field:'ext', title: '{lang type}', align: 'center', sort: true, totalRow: '{{= d.TOTAL_ROW.extnum }}'}
+		  ,{field:'extnum', title: '{lang number}', align: 'center', sort: true, totalRow: '{{= d.TOTAL_ROW.filenum }}'}
+		  ,{field:'size', title: '{lang big_small}', align: 'center',sort: true, templet: function(d){return formatSize(d.size);}, totalRow: '{{= d.TOTAL_ROW.totalsize }}'}
+		]],
+		initSort: {
+			field: 'extnum',
+			type: 'desc'
+		}
+	  });
+    //触发排序事件 
+	layuiModules.table.on('sort(filestats)', function(obj){
+        layer.msg('该排序结果为前端根据当前页数据进行排序', {offset:'10px'});
+	});
+});
+</script>

@@ -35,16 +35,16 @@
 				</div>
 			</div>
 			<div class="card-body">
+				<div class="input-group mb-3">
+					<label class="input-group-text" for="filename">{lang filename}</label>
+					<input type="text" class="form-control pull-left" name="filename" id="filename" placeholder="{lang filename}" value="$filename">
+					<label class="input-group-text" for="username">{lang creator}</label>
+					<input type="text" class="form-control" id="username" placeholder="{lang creator}" value="$username">
+					<label class="input-group-text" for="fileext">{lang filename_extension}</label>
+					<input type="text" class="form-control" id="fileext" placeholder="{lang filename_extension}" value="$fileext">
+        		</div>
 				<div class="card-search mb-2-5">
 					  <div class="row">
-						<div class="col-md-4">
-						  <div class="row">
-							<label class="col-sm-4 col-form-label">{lang name}</label>
-							<div class="col-sm-8">
-							  <input type="text" class="form-control pull-left" name="keyword" id="keyword" placeholder="{lang filemanage_file_user}" value="$keyword">
-							</div>
-						  </div>
-						</div>
 						<div class="col-md-4">
 						  <div class="row">
 							<div class="dropdown org">
@@ -55,6 +55,9 @@
 								</div>
 							</div>
 						  </div>
+						</div>
+						<div class="col-md-4">
+							
 						</div>
 						<div class="col-md-4">
 						  <button type="submit" class="btn btn-primary me-1" id="search-btn">{lang search}</button>
@@ -84,14 +87,16 @@
 <script>
 	var type = '$type';
 	var pfid = '';
-	var keyword = $('#keyword').val();
+	var filename = $('#filename').val();
+	var username = $('#username').val();
+	var fileext = $('#fileext').val();
 	layui.use('table', function(){
 	  var table = layui.table;
 	  table.render({
 		elem: '#table',
 		url: '{MOD_URL}&do=getinfo&ajaxdata=json',
 		toolbar: '#toolbar',
-		where: {type: type,keyword: keyword},
+		where: {type: type, filename: filename, username: username, fileext: fileext},
 		title: '文件管理数据表格',
 		autoSort: false,
 		even:true,
@@ -126,9 +131,7 @@
 		},
 		done: function(res, curr, count) {
 			checkStatusBtn();
-			if(res.breadcrumb) {
-				$('#breadcrumb').html(res.breadcrumb);
-			}
+			$('#breadcrumb').html(res.breadcrumb ? res.breadcrumb : '');
 		}
 	  });
 	 table.on('checkbox(table)', function(obj){
@@ -225,7 +228,14 @@
 				break;
 				case 'get':
 				table.reloadData('table', {
-					where: {type: type,keyword:$('#keyword').val(),orgid:$('#sel_orgid_{$org['orgid']}').val(),pfid: pfid},
+					where: {
+						type: type,
+						filename:$('#filename').val(),
+						username:$('#username').val(),
+						fileext:$('#fileext').val(),
+						orgid:$('#sel_orgid_{$org['orgid']}').val(),
+						pfid: pfid
+					},
 					page: {
 						curr: 1
 					}
@@ -321,19 +331,37 @@
 		// 搜索按钮功能
 		$(document).on('click', '#search-btn', function() {
 			// 获取搜索关键词
-			var keyword = $('#keyword').val();
+			filename = $('#filename').val();
+			username = $('#username').val();
+			fileext = $('#fileext').val();
 			table.reloadData('table', {
-				where: {type: type, keyword: keyword,orgid:$('#sel_orgid_{$org['orgid']}').val()},
+				where: {
+					type: type,
+					filename: filename,
+					username: username,
+					fileext: fileext,
+					orgid:$('#sel_orgid_{$org['orgid']}').val()
+				},
 				page: {
 					curr: 1 //重新从第 1 页开始
 				}
 			});
 			try {
 			var currentUrl = new URL(window.location.href);
-            if (keyword) {
-                currentUrl.searchParams.set('keyword', keyword);
+			if (filename) {
+                currentUrl.searchParams.set('filename', filename);
             } else {
-                currentUrl.searchParams.delete('keyword');
+                currentUrl.searchParams.delete('filename');
+            }
+			if (username) {
+                currentUrl.searchParams.set('username', username);
+            } else {
+                currentUrl.searchParams.delete('username');
+            }
+			if (fileext) {
+                currentUrl.searchParams.set('fileext', fileext);
+			} else {
+                currentUrl.searchParams.delete('fileext');
             }
             history.pushState(null, null, currentUrl.toString());
 			} catch (e) {}
@@ -351,7 +379,9 @@
 	   $('#refreshsearch').click(function() {
 		// 清空表单内容
         $('#sel_orgid_{$org['orgid']}').val('');
-        $('#keyword').val('');
+        $('#filename').val('');
+		$('#username').val('');
+		$('#fileext').val('');
 		// 重置按钮内容
 		$('#orgid_{$org['orgid']}_Menu').text('$org[depart]');
 		table.reloadData('table', {
@@ -362,7 +392,9 @@
 		});
 		try {
 		var currentUrl = new URL(window.location.href);
-		currentUrl.searchParams.delete('keyword');
+		currentUrl.searchParams.delete('filename');
+		currentUrl.searchParams.delete('username');
+		currentUrl.searchParams.delete('fileext');
 		history.pushState(null, null, currentUrl.toString());
 		} catch (e) {}
 	  });
@@ -374,7 +406,9 @@
 		$(this).addClass('active');
 		// 获取当前的 type 值
 		type = $(this).data('type');
-		$('#keyword').val('');
+		$('#filename').val('');
+		$('#username').val('');
+		$('#fileext').val('');
 		$('#sel_orgid_{$org['orgid']}').val('');
 		$('#orgid_{$org['orgid']}_Menu').text('$org[depart]');
 		table.reloadData('table', {
@@ -390,7 +424,9 @@
 		} else {
 			currentUrl.searchParams.delete('type');
 		}
-		currentUrl.searchParams.delete('keyword');
+		currentUrl.searchParams.delete('filename');
+		currentUrl.searchParams.delete('username');
+		currentUrl.searchParams.delete('fileext');
 		history.pushState(null, null, currentUrl.toString());
 		} catch (e) {}
 	  });

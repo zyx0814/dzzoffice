@@ -407,7 +407,7 @@ _explorer.topMenu = function (hash, fid) {
 	var shownewbuild = false;
 	if (hash) {
 		//根据hash值判断是否显示在头部
-		if (hash == 'groupmanage' || hash == 'app' || hash == 'dynamic' || hash == 'mygroup' || hash.indexOf('share') == 0) {
+		if (hash == 'groupmanage' || hash == 'app' || hash == 'dynamic' || hash == 'mygroup' || hash.indexOf('share') == 0 || hash == 'filestats') {
 			jQuery('.navtopheader').css('display', 'none');
 			jQuery('.rightswitch').hide();
 			if(hash.indexOf('recycle') == 0 || hash.indexOf('cloud') == 0){
@@ -428,7 +428,7 @@ _explorer.topMenu = function (hash, fid) {
 			}
 		}
 		_explorer.toggleRight();
-		if (hash.indexOf('home') == 0 || (hash.indexOf('group') == 0 && hash.indexOf('groupmanage') == -1)) { //判断hash隐藏或显示新建上传
+		if (hash.indexOf('home') == 0 || (hash.indexOf('group') == 0 && hash.indexOf('groupmanage') == -1) || hash.indexOf('filestats') == 0) { //判断hash隐藏或显示新建上传
 			jQuery('.new-buildMenu').show();
             shownewbuild = true;
 		} else {

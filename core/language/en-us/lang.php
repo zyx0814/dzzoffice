@@ -1349,6 +1349,11 @@ $lang = [
     'oauth_ALIOSS_bucket' => 'Select the bucket to manage; click the link on the left to automatically get the bucket list',
     'select_node_address' => 'Select Node Address',
     'oauth_ALIOSS_node17' => 'Endpoint，When selecting an internal network address, ensure the server and cloud storage bucket are in the same node.',
+    'oauth_Minio_add'=>'Add Minio Cloud Storage',
+	'oauth_Minio_storage'=>'Minio cloud storage',
+	'oauth_Minio_bucket'=>'Fill in the bucket of Minio cloud storage',
+	'oauth_Minio_endpoint'=>'Minio address',
+	'oauth_Minio_endpoint_tip'=>'Minio cloud storage endpoint address',
 
     // admin/cloud/template/auth_qcos.html
     'oauth_QCOS_add_ALY' => 'Add Tencent Cloud Storage',
@@ -1480,4 +1485,5 @@ $lang = [
     'system_close' => 'System Closed',
     'please_check_form' => 'Please check the form',
     'search_result' => 'Search results found',
+    'filestats' => 'File statistics',
 ];

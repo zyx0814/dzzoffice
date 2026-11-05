@@ -15,7 +15,9 @@ $uid = $_G['uid'];
 $do = isset($_GET['do']) ? $_GET['do'] : '';
 $orgid = isset($_GET['orgid']) ? intval($_GET['orgid']) : '';
 $type = isset($_GET['type']) ? trim($_GET['type']) : '';
-$keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : '';
+$filename = isset($_GET['filename']) ? trim($_GET['filename']) : '';
+$username = isset($_GET['username']) ? trim($_GET['username']) : '';
+$fileext = isset($_GET['fileext']) ? trim($_GET['fileext']) : '';
 $typeinfo = [
     'recycle' => ['name' => lang('recycle'), 'icon' => 'mdi-delete'],
     'image' => ['name' => lang('photo'), 'icon' => 'mdi-file-image'],
@@ -74,10 +76,17 @@ if ($do == 'delete') {
     $sql = "type!='app' and type!='shortcut'";
     $foldername = [];
     $param = [];
-    if ($keyword) {
-        $sql .= ' and (name like %s OR username=%s)';
-        $param[] = '%' . $keyword . '%';
-        $param[] = $keyword;
+    if ($filename) {
+        $sql .= ' and name like %s';
+        $param[] = '%' . $filename . '%';
+    }
+    if ($username) {
+        $sql .= ' and username like %s';
+        $param[] = '%' . $username . '%';
+    }
+    if ($fileext) {
+        $sql .= ' and ext in (%n)';
+        $param[] = $fileext;
     }
     if ($type) {
         if($type == 'recycle') {

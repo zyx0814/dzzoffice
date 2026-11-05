@@ -144,7 +144,7 @@
 				},
 				done: function(res, curr, count) {
 					checkStatusBtn();
-					$('.title_orgname').html(res.orgname);
+					$('.title_orgname').html(res.orgname ? res.orgname : '');
 					orgid = res.orgid;
 					adminid = res.adminid;
 					if(res.orgid) {
