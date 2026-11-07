@@ -8,7 +8,11 @@ class helper_dbtool {
 
     public static function dbversion() {
         $db = & DB::object();
-		return $db->version();
+		if ($db) {
+            return $db->version();
+        } else {
+            return false;
+        }
     }
 
     public static function dbsize() {

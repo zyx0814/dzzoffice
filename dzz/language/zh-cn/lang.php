@@ -251,7 +251,6 @@ $lang = [
     'property_filedate' => '创建时间：',
     'property_size' => '大  小：',
     'property_creator' => '创 建 者：',
-    'property_info_size' => '{fsize}&nbsp;({size}&nbsp;字节)',
     'property_info_contain' => '{count}项({filenum}&nbsp;个文件，{foldernum}&nbsp;个文件夹)',
     'privacy_settings' => '隐私设置',
     'friend_-1' => '继承父级',

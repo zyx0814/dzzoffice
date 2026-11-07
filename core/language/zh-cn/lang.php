@@ -1522,4 +1522,5 @@ $lang = [
     'please_check_form' => '请先检查表单内容是否正确',
     'search_results_found' => '搜索到',
     'filestats' => '文件统计',
+    'property_info_size' => '{fsize}&nbsp;({size}&nbsp;字节)',
 ];

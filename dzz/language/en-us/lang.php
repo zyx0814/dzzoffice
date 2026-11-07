@@ -252,7 +252,6 @@ $lang = [
     'property_filedate' => 'Created:',
     'property_size' => 'Size:',
     'property_creator' => 'Creator:',
-    'property_info_size' => '{fsize}&nbsp;({size}&nbsp;bytes)',
     'property_info_contain' => '{count} items ({filenum}&nbsp;files, {foldernum}&nbsp;folders)',
     'privacy_settings' => 'Privacy Settings',
     'friend_-1' => 'Inherit from Parent',

@@ -1486,4 +1486,5 @@ $lang = [
     'please_check_form' => 'Please check the form',
     'search_result' => 'Search results found',
     'filestats' => 'File statistics',
+    'property_info_size' => '{fsize}&nbsp;({size}&nbsp;bytes)',
 ];
