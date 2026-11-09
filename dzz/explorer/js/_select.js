@@ -174,6 +174,9 @@ _select.prototype.Move=function(e)
 		var XX=e.clientX;
 		var YY=e.clientY;
 	}
+	var bbox = this.board.getBoundingClientRect();
+    XX = Math.max(bbox.left,  Math.min(XX, bbox.right));
+    YY = Math.max(bbox.top,   Math.min(YY, bbox.bottom));
 	if(!this.mousedowndoing && (Math.abs(this.oldx-XX)>5 || Math.abs(this.oldy-YY)>5)){
 		this.PreMove(e);
 	}
@@ -224,6 +227,9 @@ _select.prototype.Moved=function(e)
 		var XX=e.clientX;
 		var YY=e.clientY;
 	}
+	var bbox = this.board.getBoundingClientRect();
+    XX = Math.max(bbox.left,  Math.min(XX, bbox.right));
+    YY = Math.max(bbox.top,   Math.min(YY, bbox.bottom));
 	if(BROWSER.ie){
 		if(XX>this.oldx && YY > this.oldy){
 			this.setSelected(true);

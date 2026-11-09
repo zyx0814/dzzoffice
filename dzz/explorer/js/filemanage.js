@@ -600,6 +600,14 @@ _filemanage.prototype.CreateIcos = function (data, flag) {
 		layuiModules.dropdown.open('right_ico');
 		return false;
 	});
+	el.find('.showrightico').on('click',function(e){
+		var options = {
+			content: contextmenuico(el.attr('rid'))
+		}
+		layuiModules.dropdown.reloadData('right_ico',options);
+		layuiModules.dropdown.open('right_ico');
+		return false;
+	});
 	//检测已选中
 	if (jQuery.inArray(data.rid, _filemanage.selectall.icos) > -1) {
 		el.addClass('Icoselected');
