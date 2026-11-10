@@ -17,6 +17,9 @@ class filesock_stream extends filesock_base {
 		$headerlist['User-Agent'] = $this->useragent;
 		$headerlist['Host'] = $this->host.':'.$this->port;
 		$headerlist['Connection'] = 'Close';
+		if($this->position && $this->limit) {
+			$headerlist['Range'] = 'bytes='.$this->position.'-'.($this->position + $this->limit - 1);
+		}
 		if($this->method == 'POST') {
 			if($this->encodetype == 'application/x-www-form-urlencoded') {
 				$data = http_build_query($this->post);
@@ -146,7 +149,8 @@ class filesock_stream extends filesock_base {
 				}
 				$GLOBALS['filesockheader'] = $this->filesockheader = $headers;
 	
-				if($this->position) {
+				$israngedresponse = $this->position && preg_match('/^HTTP\/\S+\s+206\b/m', $headers);
+				if($this->position && !$israngedresponse) {
 					for($i=0; $i<$this->position; $i++) {
 						fgetc($fp);
 					}
